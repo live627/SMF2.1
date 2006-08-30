@@ -1060,7 +1060,7 @@ CREATE TABLE {$db_prefix}members (
   realName tinytext NOT NULL,
   instantMessages smallint(5) NOT NULL default 0,
   unreadMessages smallint(5) NOT NULL default 0,
-  buddy_list tinytext NOT NULL,
+  buddy_list text NOT NULL,
   pm_ignore_list tinytext NOT NULL,
   messageLabels text NOT NULL,
   passwd varchar(64) NOT NULL default '',
