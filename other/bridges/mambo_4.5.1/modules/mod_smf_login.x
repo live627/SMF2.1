@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<mosinstall type="module" version="4.5.1">
+	<name>Login Form</name>
+	<author>Simple Machines</author>
+	<creationDate>October 2005</creationDate>
+	<copyright>(C) Simple Machines</copyright>
+	<license>SMF License</license>
+	<authorEmail>admin@simplemachines.org</authorEmail>
+	<authorUrl>www.simplemachines.org</authorUrl>
+	<version>1.1.6</version>
+	<description>This module displays a Username and Password login form. It also displays a link to retrieve a forgotten password. If user registration is enabled, (refer to the Configuration settings), then another link will be shown to invite users to self-register.</description>
+	<files>
+		<filename module="mod_smf_login">mod_smf_login.php</filename>
+	</files>
+	<params>
+		<param name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="A suffix to be applied to the css class of the module (table.moduletable), this allows individual module styling" />
+		<param name="pretext" type="text" default="" label="Pre-text" description="This is the Text or HTML that is displayed above the login form" />
+		<param name="posttext" type="text" default="" label="Post-text" description="This is the Text or HTML that is displayed below the login form" />
+		<param name="smf_align" type="list" default="center" label="Align" description="Defines how the module will be displayed: left, center, right * Standard is right *">
+			<option value="left">Left</option>
+			<option value="center">Center</option>
+			<option value="right">Right</option>
+		</param>
+		<param name="login" type="radio" default="0" label="Login Redirection URL" description="What page will the login redirect to after login">
+			<option value="0">Back to the Mambo Homepage</option>
+			<option value="1">Back to the SMF Main Page </option>
+			<option value="2">Back to the page from which the user logged in</option>
+		</param>
+		<param name="logout" type="radio" default="0" label="Logout Redirection URL" description="What page will the logout redirect to">
+			<option value="0">Back to the Mambo Homepage</option>
+			<option value="1">Back to the SMF Main Page </option>
+			<option value="2">Back to the page from which the user logged out</option>
+		</param>
+		<param name="login_message" type="radio" default="0" label="Login Message" description="Show/Hide the javascript Pop-up indicating Login Success">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="logout_message" type="radio" default="0" label="Logout Message" description="Show/Hide the javascript Pop-up indicating Logout Success">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="greeting" type="radio" default="1" label="Greeting" description="Show/Hide the simple greeting text">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="name" type="list" default="0" label="Name/Username">
+			<option value="0">Username</option>
+			<option value="1">Name</option>
+		</param>
+		<param name="smf_personal_welcome" type="radio" default="1" label="Personal welome" description="Show/Hide the personal welcome * Hello Username *">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="smf_notification" type="radio" default="1" label="Notify" description="Show/Hide the displaying of the logged in message * Hello xxx, you have x messages, y are new *">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="smf_unread" type="radio" default="1" label="Unread" description="Show/Hide the displaying of unread message since last visit">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="smf_new_answers" type="radio" default="1" label="New Answers" description="Show/Hide the displaying of new answers to own posts">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="smf_new_pms" type="radio" default="1" label="New PMs" description="Show/Hide the displaying of new PMs (private messages)">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="smf_loggedin_time" type="radio" default="1" label="Logged in Time" description="Show/Hide the displaying of the time the user was already looged in">
+			<option value="0">Hide</option>
+			<option value="1">Show</option>
+		</param>
+		<param name="smf_logout_button" type="radio" default="1" label="Use Logout Button" description="Use the logout button, or a text link">
+			<option value="0">Text</option>
+			<option value="1">Image</option>
+		</param>
+		<param name="smf_logout_button_image" type="text" default="" label="Set your own logout button image" description="Type in the URL of the image you wish to use for the logout button" />
+	</params>
+</mosinstall>

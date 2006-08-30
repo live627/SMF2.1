@@ -1,0 +1,232 @@
+// *** QuickReply object.
+function QuickReply(oOptions)
+{
+	this.opt = oOptions;
+	this.bCollapsed = this.opt.bDefaultCollapsed;
+}
+
+// When a user presses quote, put it in the quick reply box (if expanded).
+QuickReply.prototype.quote = function (iMessageId, sSessionId)
+{
+	if (this.bCollapsed)
+		window.location.href = this.opt.sScriptUrl + '?action=post;quote=' + iMessageId + ';topic=' + this.opt.iTopicId + '.' + this.opt.iStart + ';sesc=' + sSessionId;
+	else
+	{
+		// Doing it the XMLhttp way?
+		if (window.XMLHttpRequest)
+		{
+			ajax_indicator(true);
+			getXMLDocument(this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';xml', this.onQuoteReceived);
+		}
+		// Or with a smart popup!
+		else
+			reqWin(this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId, 240, 90);
+
+		// Move the view to the quick reply box.
+		if (navigator.appName == 'Microsoft Internet Explorer')
+			window.location.hash = this.opt.sJumpAnchor;
+		else
+			window.location.hash = '#' + this.opt.sJumpAnchor;
+	}
+}
+
+// This is the callback function used after the XMLhttp request.
+QuickReply.prototype.onQuoteReceived = function (oXMLDoc)
+{
+	var sQuoteText = '';
+
+	for (var i = 0; i < oXMLDoc.getElementsByTagName('quote')[0].childNodes.length; i++)
+		sQuoteText += oXMLDoc.getElementsByTagName('quote')[0].childNodes[i].nodeValue;
+
+	replaceText(sQuoteText, document.forms.postmodify.message);
+
+	ajax_indicator(false);
+}
+
+// The function handling the swapping of the quick reply.
+QuickReply.prototype.swap = function ()
+{
+	document.getElementById(this.opt.sImageId).src = this.opt.sImagesUrl + "/" + (this.bCollapsed ? this.opt.sImageCollapsed : this.opt.sImageExpanded);
+	document.getElementById(this.opt.sContainerId).style.display = this.bCollapsed ? '' : 'none';
+
+	this.bCollapsed = !this.bCollapsed;
+}
+
+
+// *** QuickModify object.
+function QuickModify(oOptions)
+{
+	this.opt = oOptions;
+	this.bInEditMode = false;
+	this.sCurMessageId = '';
+	this.oCurMessageDiv = null;
+	this.oCurSubjectDiv = null;
+	this.sMessageBuffer = '';
+	this.sSubjectBuffer = '';
+	this.bXmlHttpCapable = this.isXmlHttpCapable();
+
+	// Show the edit buttons
+	if (this.bXmlHttpCapable)
+	{
+		for (var i = document.images.length - 1; i >= 0; i--)
+			if (document.images[i].id.substr(0, 14) == 'modify_button_')
+				document.images[i].style.display = '';
+	}
+}
+
+// Determine whether the quick modify can actualy be used.
+QuickModify.prototype.isXmlHttpCapable = function ()
+{
+	if (typeof(window.XMLHttpRequest) == 'undefined')
+		return false;
+
+	// Opera didn't always support POST requests. So test it first.
+	if (typeof(window.opera) != 'undefined')
+	{
+		var test = new XMLHttpRequest();
+		if (typeof(test.setRequestHeader) != 'function')
+			return false;
+	}
+
+	return true;
+}
+
+// Function called when a user presses the edit button.
+QuickModify.prototype.modifyMsg = function (iMessageId, sSessionId)
+{
+	if (!this.bXmlHttpCapable)
+		return;
+
+	// First cancel if there's another message still being edited.
+	if (this.bInEditMode)
+		this.modifyCancel();
+
+	// At least NOW we're in edit mode
+	this.bInEditMode = true;
+
+	// Send out the XMLhttp request to get more info
+	ajax_indicator(true);
+	getXMLDocument.call(this, this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';modify;xml', this.onMessageReceived);
+}
+
+// The callback function used for the XMLhttp request retrieving the message.
+QuickModify.prototype.onMessageReceived = function (XMLDoc)
+{
+	var sBodyText = '', sSubjectText = '';
+
+	// Grab the message ID.
+	this.sCurMessageId = XMLDoc.getElementsByTagName('message')[0].getAttribute('id');
+
+	// Replace the body part.
+	for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
+		sBodyText += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
+	this.oCurMessageDiv = document.getElementById(this.sCurMessageId);
+	this.sMessageBuffer = getInnerHTML(this.oCurMessageDiv);
+
+	// Actually create the content, with a bodge for dissapearing dollar signs.
+	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/\$/g, '{&dollarfix;$}').replace(/%body%/, sBodyText).replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/\{&dollarfix;\$\}/g, '$'));
+	
+	// Replace the subject part.
+	this.oCurSubjectDiv = document.getElementById('subject_' + this.sCurMessageId.substr(4));
+	this.sSubjectBuffer = getInnerHTML(this.oCurSubjectDiv);
+
+	sSubjectText = XMLDoc.getElementsByTagName('subject')[0].childNodes[0].nodeValue.replace(/\$/g, '{&dollarfix;$}');
+	setInnerHTML(this.oCurSubjectDiv, this.opt.sTemplateSubjectEdit.replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g, '$'));
+
+	// No longer show the 'loading...' sign.
+	ajax_indicator(false);
+}
+
+// Function in case the user presses cancel (or other circumstances cause it).
+QuickModify.prototype.modifyCancel = function ()
+{
+	// Roll back the HTML to its original state.
+	setInnerHTML(this.oCurMessageDiv, this.sMessageBuffer);
+	setInnerHTML(this.oCurSubjectDiv, this.sSubjectBuffer);
+
+	// No longer in edit mode, that's right.
+	this.bInEditMode = false;
+
+	return false;
+}
+
+// The function called after a user want to save his pressious message.
+QuickModify.prototype.modifySave = function (sSessionId)
+{
+	// We cannot save if we weren't in edit mode.
+	if (!this.bInEditMode)
+		return true;
+
+	var i, x = new Array();
+	x[x.length] = 'subject=' + escape(textToEntities(document.forms.quickModForm['subject'].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+	x[x.length] = 'message=' + escape(textToEntities(document.forms.quickModForm['message'].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+	x[x.length] = 'topic=' + parseInt(document.forms.quickModForm.elements['topic'].value);
+	x[x.length] = 'msg=' + parseInt(document.forms.quickModForm.elements['msg'].value);
+
+	// Send in the XMLhttp request and let's hope for the best.
+	ajax_indicator(true);
+	sendXMLDocument.call(this, this.opt.sScriptUrl + "?action=jsmodify;topic=" + this.opt.iTopicId + ";sesc=" + sSessionId + ";xml", x.join("&"), this.onModifyDone);
+
+	return false;
+}
+
+// Callback function of the XMLhttp request sending the modified message.
+QuickModify.prototype.onModifyDone = function (XMLDoc)
+{
+	// If we didn't get a valid document, just cancel.
+	if (!XMLDoc)
+	{
+		this.modifyCancel();
+		return;
+	}
+
+	var message = XMLDoc.getElementsByTagName('smf')[0].getElementsByTagName('message')[0];
+	var body = message.getElementsByTagName('body')[0];
+	var error = message.getElementsByTagName('error')[0];
+
+	if (body)
+	{
+		// Show new body.
+		var bodyText = '';
+		for (i = 0; i < body.childNodes.length; i++)
+			bodyText += body.childNodes[i].nodeValue;
+
+		this.sMessageBuffer = this.opt.sTemplateBodyNormal.replace(/%body%/, bodyText.replace(/\$/g, '{&dollarfix;$}')).replace(/\{&dollarfix;\$\}/g,'$');
+		setInnerHTML(this.oCurMessageDiv, this.sMessageBuffer);
+
+		// Show new subject.
+		var oSubject = message.getElementsByTagName('subject')[0];
+		var sSubjectText = oSubject.childNodes[0].nodeValue.replace(/\$/g, '{&dollarfix;$}');
+		this.sSubjectBuffer = this.opt.sTemplateSubjectNormal.replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g,'$');
+		setInnerHTML(this.oCurSubjectDiv, this.sSubjectBuffer);
+		
+		// If this is the first message, also update the topic subject.
+		if (oSubject.getAttribute('is_first') == '1')
+			setInnerHTML(document.getElementById('top_subject'), this.opt.sTemplateTopSubject.replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g, '$'));
+
+		// Show this message as 'modified on x by y'.
+		if (this.opt.bShowModify)
+			setInnerHTML(document.getElementById('modified_' + this.sCurMessageId.substr(4)), message.getElementsByTagName('modified')[0].childNodes[0].nodeValue);
+	}
+	else if (error)
+	{
+		setInnerHTML(document.getElementById('error_box'), error.childNodes[0].nodeValue);
+		document.forms.quickModForm.message.style.border = error.getAttribute('in_body') == '1' ? this.opt.sErrorBorderStyle : '';
+		document.forms.quickModForm.subject.style.border = error.getAttribute('in_subject') == '1' ? this.opt.sErrorBorderStyle : '';
+	}
+
+	ajax_indicator(false);
+}
+
+// *** Other functions...
+function expandThumb(thumbID)
+{
+	var img = document.getElementById('thumb_' + thumbID);
+	var link = document.getElementById('link_' + thumbID);
+	var tmp = img.src;
+	img.src = link.href;
+	link.href = tmp;
+	img.style.width = '';
+	img.style.height = '';
+	return false;
+}

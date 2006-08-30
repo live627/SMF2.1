@@ -1,0 +1,960 @@
+/* ATTENTION: You don't need to run or use this file!  The convert.php script does everything for you! */
+
+/******************************************************************************/
+---~ name: "phpBB2"
+/******************************************************************************/
+---~ version: "SMF 2.0 Alpha"
+---~ settings: "/extension.inc", "/config.php"
+---~ defines: IN_PHPBB
+---~ from_prefix: "`$dbname`.$table_prefix"
+---~ table_test: "{$from_prefix}users"
+
+/******************************************************************************/
+--- Converting ranks...
+/******************************************************************************/
+
+DELETE FROM {$to_prefix}membergroups
+WHERE groupName LIKE 'phpBB %';
+
+---* {$to_prefix}membergroups
+---{
+if (!isset($_SESSION['convert_num_stars']))
+{
+	$_SESSION['convert_num_stars'] = 1;
+
+	// Got some ranks to move, so go do it... first remove the post based membergroups from the table.
+	// !!! We must keep group id 4 as a post group.  MUST!!
+	convert_query("
+		DELETE FROM {$to_prefix}membergroups
+		WHERE minPosts != -1
+			AND ID_GROUP > 4");
+}
+
+if ($row['minPosts'] > -1)
+{
+	$row['stars'] = sprintf("%d#star.gif", $_SESSION['convert_num_stars']);
+	if ($_SESSION['convert_num_stars'] < 5)
+		$_SESSION['convert_num_stars']++;
+}
+---}
+SELECT
+	SUBSTRING(CONCAT('phpBB ', rank_title), 1, 255) AS groupName,
+	rank_image AS stars, IF(rank_special = 0, rank_min, -1) AS minPosts,
+	'' AS onlineColor
+FROM {$from_prefix}ranks
+ORDER BY rank_min;
+---*
+
+/******************************************************************************/
+--- Converting groups...
+/******************************************************************************/
+
+---* {$to_prefix}membergroups
+SELECT
+	SUBSTRING(CONCAT('phpBB ', group_name), 1, 255) AS groupName,
+	-1 AS minPosts, '' AS stars, '' AS onlineColor
+FROM {$from_prefix}groups
+WHERE group_single_user = 0;
+---*
+
+/******************************************************************************/
+--- Converting members...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}members;
+TRUNCATE {$to_prefix}attachments;
+
+---* {$to_prefix}members
+---{
+// Got the board timezone?
+if (!isset($board_timezone))
+{
+	$request2 = convert_query("
+		SELECT config_value
+		FROM {$from_prefix}config
+		WHERE config_name = 'board_timezone'
+		LIMIT 1");
+	list ($board_timezone) = mysql_fetch_row($request2);
+	mysql_free_result($request2);
+
+	// Find out where uploaded avatars go (attachments dir.)
+	$request2 = convert_query("
+		SELECT value
+		FROM {$to_prefix}settings
+		WHERE variable = 'attachmentUploadDir'
+		LIMIT 1");
+	list ($smf_attachments_dir) = mysql_fetch_row($request2);
+	mysql_free_result($request2);
+
+	$request2 = convert_query("
+		SELECT config_value
+		FROM {$from_prefix}config
+		WHERE config_name = 'avatar_path'
+		LIMIT 1");
+	$phpbb_avatar_upload_path = $_POST['path_from'] . '/' . mysql_result($request2, 0, 'config_value');
+	mysql_free_result($request2);
+}
+
+// timeOffset = phpBB user TZ - phpBB board TZ.
+$row['timeOffset'] = $row['timeOffset'] - $board_timezone;
+
+if ($row['user_avatar_type'] == 0)
+	$row['avatar'] = '';
+// If the avatar type is uploaded (type = 1) copy avatar as an attachment with the correct name.
+elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
+{
+	$smf_avatar_filename = 'avatar_' . $row['ID_MEMBER'] . strrchr($row['avatar'], '.');
+	copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $smf_attachments_dir . '/' . $smf_avatar_filename);
+
+	convert_query("
+		INSERT INTO {$to_prefix}attachments
+			(ID_MSG, ID_MEMBER, filename)
+		VALUES (0, $row[ID_MEMBER], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255))");
+	$row['avatar'] = '';
+}
+elseif ($row['user_avatar_type'] == 3)
+	$row['avatar'] = substr('gallery/' . $row['avatar'], 1, 255);
+unset($row['user_avatar_type']);
+
+$row['signature'] = preg_replace('~\[size=([789]|[012]\d)\]~i', '[size=$1px]', $row['signature']);
+if ($row['signature_uid'] != '')
+	$row['signature'] = preg_replace('~(:u:|:1:|:)' . preg_quote($row['signature_uid'], '~') . '~i', '', $row['signature']);
+$row['signature'] = substr($row['signature'], 1, 65534);
+unset($row['signature_uid']);
+---}
+SELECT
+	u.user_id AS ID_MEMBER, SUBSTRING(u.username, 1, 80) AS memberName,
+	SUBSTRING(u.username, 1, 255) AS realName,
+	SUBSTRING(u.user_password, 1, 64) AS passwd, u.user_lastvisit AS lastLogin,
+	u.user_regdate AS dateRegistered,
+	SUBSTRING(u.user_from, 1, 255) AS location,
+	u.user_posts AS posts, IF(u.user_level = 1, 1, mg.ID_GROUP) AS ID_GROUP,
+	u.user_new_privmsg AS instantMessages,
+	SUBSTRING(u.user_email, 1, 255) AS emailAddress,
+	u.user_unread_privmsg AS unreadMessages,
+	SUBSTRING(u.user_msnm, 1, 255) AS MSN,
+	SUBSTRING(u.user_aim, 1, 16) AS AIM,
+	SUBSTRING(u.user_icq, 1, 255) AS ICQ,
+	SUBSTRING(u.user_yim, 1, 32) AS YIM,
+	SUBSTRING(u.user_website, 1, 255) AS websiteTitle,
+	SUBSTRING(u.user_website, 1, 255) AS websiteUrl,
+	u.user_allow_viewonline AS showOnline, u.user_timezone AS timeOffset,
+	IF(u.user_viewemail = 1, 0, 1) AS hideEmail, u.user_avatar AS avatar,
+	REPLACE(u.user_sig, '\n', '<br />') AS signature,
+	u.user_sig_bbcode_uid AS signature_uid, u.user_avatar_type,
+	u.user_notify_pm AS pm_email_notify, u.user_active AS is_activated,
+	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS messageLabels,
+	'' AS personalText, '' AS timeFormat, '' AS usertitle, '' AS memberIP,
+	'' AS secretQuestion, '' AS secretAnswer, '' AS validation_code,
+	'' AS additionalGroups, '' AS smileySet, '' AS passwordSalt
+FROM {$from_prefix}users AS u
+	LEFT JOIN {$from_prefix}ranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
+	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.groupName = CONCAT('phpBB ', r.rank_title))
+WHERE u.user_id != -1
+GROUP BY u.user_id;
+---*
+
+/******************************************************************************/
+--- Converting additional member groups...
+/******************************************************************************/
+
+---# Checking memberships...
+---{
+while (true)
+{
+	pastTime($substep);
+
+	$result = convert_query("
+		SELECT mg.ID_GROUP, mem.ID_MEMBER
+		FROM ({$from_prefix}groups AS g, {$from_prefix}user_group AS ug, {$to_prefix}members AS mem, {$to_prefix}membergroups AS mg)
+		WHERE g.group_single_user = 0
+			AND ug.group_id = g.group_id
+			AND mem.ID_MEMBER = ug.user_id
+			AND BINARY mg.groupName = CONCAT('phpBB ', g.group_name)
+		ORDER BY ID_MEMBER
+		LIMIT $_REQUEST[start], 250");
+	$additionalGroups = '';
+	$last_member = 0;
+	while ($row = mysql_fetch_assoc($result))
+	{
+		if (empty($last_member))
+			$last_member = $row['ID_MEMBER'];
+
+		if ($last_member != $row['ID_MEMBER'])
+		{
+			$additionalGroups = addslashes($additionalGroups);
+
+			convert_query("
+				UPDATE {$to_prefix}members
+				SET additionalGroups = '$additionalGroups'
+				WHERE ID_MEMBER = $last_member
+				LIMIT 1");
+			$last_member = $row['ID_MEMBER'];
+			$additionalGroups = $row['ID_GROUP'];
+		}
+		else
+		{
+			if ($additionalGroups == '')
+				$additionalGroups = $row['ID_GROUP'];
+			else
+				$additionalGroups = $additionalGroups . ',' . $row['ID_GROUP'];
+		}
+	}
+
+	$_REQUEST['start'] += 250;
+	if (mysql_num_rows($result) < 250)
+		break;
+
+	mysql_free_result($result);
+}
+$_REQUEST['start'] = 0;
+
+if ($last_member != 0)
+{
+	$additionalGroups = addslashes($additionalGroups);
+
+	convert_query("
+		UPDATE {$to_prefix}members
+		SET additionalGroups = '$additionalGroups'
+		WHERE ID_MEMBER = $last_member
+		LIMIT 1");
+}
+---}
+---#
+
+/******************************************************************************/
+--- Converting categories...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}categories;
+
+---* {$to_prefix}categories
+SELECT
+	cat_id AS ID_CAT, SUBSTRING(cat_title, 1, 255) AS name,
+	cat_order AS catOrder
+FROM {$from_prefix}categories;
+---*
+
+/******************************************************************************/
+--- Converting boards...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}boards;
+
+DELETE FROM {$to_prefix}board_permissions
+WHERE ID_BOARD != 0;
+
+---* {$to_prefix}boards
+SELECT
+	forum_id AS ID_BOARD, forum_order AS boardOrder, forum_posts AS numPosts,
+	forum_last_post_id AS ID_LAST_MSG, SUBSTRING(forum_name, 1, 255) AS name,
+	cat_id AS ID_CAT, SUBSTRING(forum_desc, 1, 65534) AS description,
+	forum_topics AS numTopics,
+	CASE auth_read
+		WHEN 0 THEN '-1,0,2'
+		WHEN 1 THEN '0,2'
+		WHEN 3 THEN '2'
+		ELSE ''
+	END AS memberGroups
+FROM {$from_prefix}forums
+WHERE forum_id > 0;
+---*
+
+/******************************************************************************/
+--- Converting topics...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}topics;
+TRUNCATE {$to_prefix}log_topics;
+TRUNCATE {$to_prefix}log_boards;
+TRUNCATE {$to_prefix}log_mark_read;
+
+---* {$to_prefix}topics
+SELECT
+	t.topic_id AS ID_TOPIC, t.topic_type = 1 AS isSticky,
+	t.topic_first_post_id AS ID_FIRST_MSG, t.topic_last_post_id AS ID_LAST_MSG,
+	t.topic_poster AS ID_MEMBER_STARTED, p.poster_id AS ID_MEMBER_UPDATED,
+	t.forum_id AS ID_BOARD, v.vote_id AS ID_POLL, t.topic_status = 1 AS locked,
+	t.topic_replies AS numReplies, t.topic_views AS numViews
+FROM {$from_prefix}topics AS t
+	LEFT JOIN {$from_prefix}posts AS p ON (p.post_id = t.topic_last_post_id)
+	LEFT JOIN {$from_prefix}vote_desc AS v ON (v.topic_id = t.topic_id)
+/* // !!! WHERE t.topic_moved_id = 0 */
+GROUP BY t.topic_id
+HAVING ID_FIRST_MSG != 0
+	AND ID_LAST_MSG != 0;
+---*
+
+/******************************************************************************/
+--- Converting posts (this may take some time)...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}messages;
+
+---* {$to_prefix}messages 200
+---{
+$row['body'] = preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$1px]', $row['body']);
+---}
+SELECT
+	p.post_id AS ID_MSG, p.topic_id AS ID_TOPIC, p.post_time AS posterTime,
+	p.poster_id AS ID_MEMBER,
+	SUBSTRING(IFNULL(u.user_email, ''), 1, 255) AS posterEmail,
+	SUBSTRING(IF(IFNULL(pt.post_subject, '') = '', t.topic_title, pt.post_subject), 1, 255) AS subject,
+	SUBSTRING(IF(IFNULL(p.post_username, '') = '', u.username, p.post_username), 1, 255) AS posterName,
+	p.enable_smilies AS smileysEnabled, p.post_edit_time AS modifiedTime,
+	CONCAT_WS('.', CONV(SUBSTRING(p.poster_ip, 1, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 3, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 5, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 7, 2), 16, 10)) AS posterIP,
+	SUBSTRING(REPLACE(REPLACE(IF(pt.bbcode_uid = '', pt.post_text, REPLACE(REPLACE(REPLACE(pt.post_text, CONCAT(':u:', pt.bbcode_uid), ''), CONCAT(':1:', pt.bbcode_uid), ''), CONCAT(':', pt.bbcode_uid), '')), '\n', '<br />'), '"', '"'), 1, 65534) AS body,
+	p.forum_id AS ID_BOARD, '' AS modifiedName, 'xx' AS icon
+FROM ({$from_prefix}posts AS p, {$from_prefix}posts_text AS pt, {$from_prefix}topics AS t)
+	LEFT JOIN {$from_prefix}users AS u ON (u.user_id = p.poster_id)
+WHERE pt.post_id = p.post_id
+	AND t.topic_id = p.topic_id;
+---*
+
+/******************************************************************************/
+--- Converting polls...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}polls;
+TRUNCATE {$to_prefix}poll_choices;
+TRUNCATE {$to_prefix}log_polls;
+
+---* {$to_prefix}polls
+SELECT
+	vote_id AS ID_POLL, SUBSTRING(vote_text, 1, 255) AS question,
+	t.topic_poster AS ID_MEMBER, vote_start + vote_length AS expireTime,
+	SUBSTRING(IFNULL(u.username, ''), 1, 255) AS posterName
+FROM ({$from_prefix}vote_desc AS vd, {$from_prefix}topics AS t)
+	LEFT JOIN {$from_prefix}users AS u ON (u.user_id = t.topic_poster)
+WHERE vd.topic_id = t.topic_id;
+---*
+
+/******************************************************************************/
+--- Converting poll options...
+/******************************************************************************/
+
+---* {$to_prefix}poll_choices
+SELECT
+	vote_id AS ID_POLL, vote_option_id AS ID_CHOICE,
+	SUBSTRING(vote_option_text, 1, 255) AS label, vote_result AS votes
+FROM {$from_prefix}vote_results
+GROUP BY vote_id, vote_option_id;
+---*
+
+/******************************************************************************/
+--- Converting poll votes...
+/******************************************************************************/
+
+---* {$to_prefix}log_polls
+SELECT vote_id AS ID_POLL, vote_user_id AS ID_MEMBER
+FROM {$from_prefix}vote_voters
+WHERE vote_user_id > 0
+GROUP BY vote_id, vote_user_id;
+---*
+
+/******************************************************************************/
+--- Converting personal messages (step 1)...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}personal_messages;
+
+---* {$to_prefix}personal_messages
+SELECT
+	pm.privmsgs_id AS ID_PM, pm.privmsgs_from_userid AS ID_MEMBER_FROM,
+	pm.privmsgs_type IN (0, 1, 3) AS deletedBySender,
+	pm.privmsgs_date AS msgtime,
+	SUBSTRING(uf.username, 1, 255) AS fromName,
+	SUBSTRING(pm.privmsgs_subject, 1, 255) AS subject,
+	SUBSTRING(REPLACE(IF(pmt.privmsgs_bbcode_uid = '', pmt.privmsgs_text, REPLACE(REPLACE(pmt.privmsgs_text, CONCAT(':1:', pmt.privmsgs_bbcode_uid), ''), CONCAT(':', pmt.privmsgs_bbcode_uid), '')), '\n', '<br />'), 1, 65534) AS body
+FROM ({$from_prefix}privmsgs AS pm, {$from_prefix}privmsgs_text AS pmt)
+	LEFT JOIN {$from_prefix}users AS uf ON (uf.user_id = pm.privmsgs_from_userid)
+WHERE pmt.privmsgs_text_id = pm.privmsgs_id;
+---*
+
+/******************************************************************************/
+--- Converting personal messages (step 2)...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}pm_recipients;
+
+---* {$to_prefix}pm_recipients
+SELECT
+	pm.privmsgs_id AS ID_PM, pm.privmsgs_to_userid AS ID_MEMBER,
+	pm.privmsgs_type = 5 AS is_read, pm.privmsgs_type IN (2, 4) AS deleted,
+	'' AS labels
+FROM ({$from_prefix}privmsgs AS pm, {$from_prefix}privmsgs_text AS pmt)
+	LEFT JOIN {$from_prefix}users AS uf ON (uf.user_id = pm.privmsgs_from_userid)
+WHERE pmt.privmsgs_text_id = pm.privmsgs_id;
+---*
+
+/******************************************************************************/
+--- Converting topic notifications...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}log_notify;
+
+---* {$to_prefix}log_notify
+SELECT user_id AS ID_MEMBER, topic_id AS ID_TOPIC
+FROM {$from_prefix}topics_watch;
+---*
+
+/******************************************************************************/
+--- Converting board access...
+/******************************************************************************/
+
+---# Do all board permissions...
+---{
+// Select all boards/forums.
+$request = convert_query("
+	SELECT
+		CASE auth_post WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_post,
+		CASE auth_reply WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_reply,
+		CASE auth_edit WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_edit,
+		CASE auth_sticky WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_sticky,
+		CASE auth_announce WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_announce,
+		CASE auth_delete WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_delete,
+		CASE auth_vote WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_vote,
+		CASE auth_pollcreate WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_pollcreate,
+		forum_id AS ID_BOARD
+	FROM {$from_prefix}forums");
+while ($row = mysql_fetch_assoc($request))
+{
+	// Accumulate permissions in here - the keys are ID_GROUPs.
+	$this_board = array(
+		'-1' => array(),
+		'0' => array(),
+		'2' => array(),
+		'3' => array(),
+	);
+
+	$row['auth_post'] = $row['auth_post'] == '' ? array() : explode(',', $row['auth_post']);
+	$row['auth_reply'] = $row['auth_reply'] == '' ? array() : explode(',', $row['auth_reply']);
+	$row['auth_edit'] = $row['auth_edit'] == '' ? array() : explode(',', $row['auth_edit']);
+	$row['auth_sticky'] = $row['auth_sticky'] == '' ? array() : explode(',', $row['auth_sticky']);
+	$row['auth_announce'] = $row['auth_announce'] == '' ? array() : explode(',', $row['auth_announce']);
+	$row['auth_delete'] = $row['auth_delete'] == '' ? array() : explode(',', $row['auth_delete']);
+	$row['auth_vote'] = $row['auth_vote'] == '' ? array() : explode(',', $row['auth_vote']);
+	$row['auth_pollcreate'] = $row['auth_pollcreate'] == '' ? array() : explode(',', $row['auth_pollcreate']);
+
+	foreach ($row['auth_post'] as $g)
+		$this_board[$g] = array('post_new', 'mark_notify', 'mark_any_notify');
+
+	foreach ($row['auth_reply'] as $g)
+		$this_board[$g][] = 'post_reply_any';
+
+	foreach ($row['auth_edit'] as $g)
+		$this_board[$g][] = 'modify_own';
+
+	foreach ($row['auth_sticky'] as $g)
+		$this_board[$g][] = 'make_sticky';
+
+	foreach ($row['auth_announce'] as $g)
+		$this_board[$g][] = 'announce_topic';
+
+	foreach ($row['auth_delete'] as $g)
+	{
+		$this_board[$g][] = 'remove_own';
+		$this_board[$g][] = 'delete_own';
+	}
+
+	foreach ($row['auth_vote'] as $g)
+	{
+		$this_board[$g][] = 'poll_vote';
+		$this_board[$g][] = 'poll_view';
+	}
+
+	foreach ($row['auth_pollcreate'] as $g)
+	{
+		$this_board[$g][] = 'poll_post';
+		$this_board[$g][] = 'poll_add_own';
+	}
+
+	$setString = '';
+	foreach ($this_board as $ID_GROUP => $permissions)
+	{
+		foreach ($permissions as $perm)
+			$setString .= "
+			($ID_GROUP, $row[ID_BOARD], '$perm'),";
+	}
+
+	if ($setString != '')
+		convert_query("
+			INSERT INTO {$to_prefix}board_permissions
+				(ID_GROUP, ID_BOARD, permission)
+			VALUES" . substr($setString, 0, -1));
+}
+mysql_free_result($request);
+---}
+---#
+
+/******************************************************************************/
+--- Converting group access...
+/******************************************************************************/
+
+---# Now do the group ones...
+---{
+// Select all auth_access records.
+$request = convert_query("
+	SELECT
+		aa.forum_id AS ID_BOARD, mg.ID_GROUP AS ID_GROUP, aa.auth_post,
+		aa.auth_reply, aa.auth_edit, aa.auth_delete, aa.auth_sticky,
+		aa.auth_announce, aa.auth_vote, aa.auth_pollcreate, aa.auth_mod
+	FROM ({$from_prefix}auth_access AS aa, {$from_prefix}groups AS g, {$to_prefix}membergroups AS mg)
+	WHERE g.group_id = aa.group_id
+		AND BINARY mg.groupName = CONCAT('phpBB ', g.group_name)");
+while ($row = mysql_fetch_assoc($request))
+{
+	$this_group = array();
+
+	if ($row['auth_post'] || $row['auth_mod'])
+	{
+		$this_group[] = 'post_new';
+		$this_group[] = 'mark_notify';
+		$this_group[] = 'mark_any_notify';
+	}
+	if ($row['auth_reply'] || $row['auth_mod'])
+		$this_group[] = 'post_reply_any';
+	if ($row['auth_edit'] || $row['auth_mod'])
+		$this_group[] = 'modify_own';
+	if ($row['auth_delete'] || $row['auth_mod'])
+	{
+		$this_group[] = 'remove_own';
+		$this_group[] = 'delete_own';
+	}
+	if ($row['auth_sticky'] || $row['auth_mod'])
+		$this_group[] = 'make_sticky';
+	if ($row['auth_announce'] || $row['auth_mod'])
+		$this_group[] = 'announce_topic';
+	if ($row['auth_pollcreate'] || $row['auth_mod'])
+	{
+		$this_group[] = 'poll_post';
+		$this_group[] = 'poll_add_own';
+	}
+	if ($row['auth_vote'] || $row['auth_mod'])
+	{
+		$this_group[] = 'poll_vote';
+		$this_group[] = 'poll_view';
+	}
+	if ($row['auth_mod'])
+	{
+		$this_group[] = 'moderate_board';
+		$this_group[] = 'remove_any';
+		$this_group[] = 'lock_any';
+		$this_group[] = 'lock_own';
+		$this_group[] = 'merge_any';
+		$this_group[] = 'modify_any';
+		$this_group[] = 'modify_own';
+		$this_group[] = 'move_any';
+		$this_group[] = 'poll_add_any';
+		$this_group[] = 'poll_edit_any';
+		$this_group[] = 'poll_remove_any';
+		$this_group[] = 'post_reply_own';
+		$this_group[] = 'delete_any';
+		$this_group[] = 'report_any';
+		$this_group[] = 'send_topic';
+		$this_group[] = 'split_any';
+	}
+
+	$setString = '';
+	$this_group = array_unique($this_group);
+	foreach ($this_group as $perm)
+	{
+		$setString .= "
+			($row[ID_GROUP], $row[ID_BOARD], '$perm'),";
+	}
+
+	if ($setString != '')
+		convert_query("
+			INSERT IGNORE INTO {$to_prefix}board_permissions
+				(ID_GROUP, ID_BOARD, permission)
+			VALUES" . substr($setString, 0, -1));
+
+	// Give group access to board.
+	$result = convert_query("
+		SELECT memberGroups
+		FROM {$to_prefix}boards
+		WHERE ID_BOARD = $row[ID_BOARD]
+		LIMIT 1");
+	list ($memberGroups) = mysql_fetch_row($result);
+	mysql_free_result($result);
+
+	convert_query("
+		UPDATE {$to_prefix}boards
+		SET memberGroups = '" . implode(',', array_unique(explode(',', $memberGroups . ',' . $row['ID_GROUP']))) . "'
+		WHERE ID_BOARD = $row[ID_BOARD]
+		LIMIT 1");
+}
+mysql_free_result($request);
+---}
+---#
+
+/******************************************************************************/
+--- Converting moderators...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}moderators;
+
+---* {$to_prefix}moderators
+SELECT u.user_id AS ID_MEMBER, aa.forum_id AS ID_BOARD
+FROM ({$from_prefix}users AS u, {$from_prefix}groups AS g, {$from_prefix}user_group AS ug, {$from_prefix}auth_access AS aa)
+WHERE ug.user_id = u.user_id
+	AND ug.group_id = aa.group_id
+	AND g.group_id = aa.group_id
+	AND g.group_single_user = 1
+	AND aa.auth_mod = 1
+GROUP BY aa.forum_id, u.user_id;
+---*
+
+/******************************************************************************/
+--- Converting avatar gallery images...
+/******************************************************************************/
+
+---# Copying over avatar directory...
+---{
+function copy_dir($source, $dest)
+{
+	if (!is_dir($source) || !($dir = opendir($source)))
+		return;
+
+	while ($file = readdir($dir))
+	{
+		if ($file == '.' || $file == '..')
+			continue;
+
+		// If we have a directory create it on the destination and copy contents into it!
+		if (is_dir($source . '/' . $file))
+		{
+			@mkdir($dest . '/' . $file, 0777);
+			copy_dir($source . '/' . $file, $dest . '/' . $file);
+		}
+		else
+			copy($source . '/' . $file, $dest . '/' . $file);
+	}
+	closedir($dir);
+}
+
+// Find the path for phpBB gallery avatars.
+$request = convert_query("
+	SELECT config_value
+	FROM {$from_prefix}config
+	WHERE config_name = 'avatar_gallery_path'
+	LIMIT 1");
+list ($phpbb_avatar_gallery_path) = mysql_fetch_row($request);
+mysql_free_result($request);
+
+// Find the path for SMF avatars.
+$request = convert_query("
+	SELECT value
+	FROM {$to_prefix}settings
+	WHERE variable = 'avatar_directory'
+	LIMIT 1");
+list ($smf_avatar_directory) = mysql_fetch_row($request);
+mysql_free_result($request);
+
+$phpbb_avatar_gallery_path = $_POST['path_from'] . '/' . $phpbb_avatar_gallery_path;
+
+// Copy gallery avatars...
+@mkdir($smf_avatar_directory . '/gallery', 0777);
+copy_dir($phpbb_avatar_gallery_path, $smf_avatar_directory . '/gallery');
+---}
+---#
+
+/******************************************************************************/
+--- Converting censored words...
+/******************************************************************************/
+
+DELETE FROM {$to_prefix}settings
+WHERE variable IN ('censor_vulgar', 'censor_proper');
+
+---# Moving censored words...
+---{
+$result = convert_query("
+	SELECT word, replacement
+	FROM {$from_prefix}words");
+$censor_vulgar = array();
+$censor_proper = array();
+while ($row = mysql_fetch_assoc($result))
+{
+	$censor_vulgar[] = $row['word'];
+	$censor_proper[] = $row['replacement'];
+}
+mysql_free_result($result);
+
+$censored_vulgar = addslashes(implode("\n", $censor_vulgar));
+$censored_proper = addslashes(implode("\n", $censor_proper));
+
+convert_query("
+	REPLACE INTO {$to_prefix}settings
+		(variable, value)
+	VALUES ('censor_vulgar', '$censored_vulgar'),
+		('censor_proper', '$censored_proper')");
+---}
+---#
+
+/******************************************************************************/
+--- Converting reserved names...
+/******************************************************************************/
+
+DELETE FROM {$to_prefix}settings
+WHERE variable = 'reserveNames';
+
+---# Moving reserved names...
+---{
+$result = convert_query("
+	SELECT disallow_username
+	FROM {$from_prefix}disallow");
+$disallow = array();
+while ($row = mysql_fetch_assoc($result))
+	$disallow[] = str_replace('*', '', $row['disallow_username']);
+mysql_free_result($result);
+
+$disallowed = addslashes(implode("\n", $disallow));
+
+convert_query("
+	REPLACE INTO {$to_prefix}settings
+		(variable, value)
+	VALUES ('reserveNames', '$disallowed')");
+---}
+---#
+
+/******************************************************************************/
+--- Converting banned users...
+/******************************************************************************/
+
+TRUNCATE {$to_prefix}ban_items;
+TRUNCATE {$to_prefix}ban_groups;
+
+---# Moving banned entries...
+---{
+while (true)
+{
+	pastTime($substep);
+
+	$result = convert_query("
+		SELECT ban_id, ban_userid, ban_ip, ban_email
+		FROM {$from_prefix}banlist
+		LIMIT $_REQUEST[start], 250");
+	$ban_time = time();
+	while ($row = mysql_fetch_assoc($result))
+	{
+		convert_query("
+			INSERT INTO {$to_prefix}ban_groups
+				(name, ban_time, expire_time, reason, notes, cannot_access)
+			VALUES ('migrated_ban_" . $row['ban_id'] . "', $ban_time, NULL, '', 'Migrated from phpBB2', 1)");
+		$ID_BAN_GROUP = mysql_insert_id();
+
+		if (empty($ID_BAN_GROUP))
+			continue;
+
+		if ($row['ban_email'])
+		{
+			convert_query("
+				INSERT INTO {$to_prefix}ban_items
+					(ID_BAN_GROUP, email_address, hostname)
+				VALUES ($ID_BAN_GROUP, '" . $row['ban_email'] . "', '')");
+			continue;
+		}
+		if ($row['ban_ip'])
+		{
+			list ($octet1, $octet2, $octet3, $octet4) = explode(':', chunk_split($row['ban_ip'], 2, ':'));
+
+			$ip_high1 = hexdec($octet1);
+			$ip_low1 = $ip_high1 == 255 ? 0 : $ip_high1;
+
+			$ip_high2 = hexdec($octet2);
+			$ip_low2 = $ip_high2 == 255 ? 0 : $ip_high2;
+
+			$ip_high3 = hexdec($octet3);
+			$ip_low3 = $ip_high3 == 255 ? 0 : $ip_high3;
+
+			$ip_high4 = hexdec($octet4);
+			$ip_low4 = $ip_high4 == 255 ? 0 : $ip_high4;
+
+			convert_query("
+				INSERT INTO {$to_prefix}ban_items
+					(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, email_address, hostname)
+				VALUES ($ID_BAN_GROUP, $ip_low1, $ip_high1, $ip_low2, $ip_high2, $ip_low3, $ip_high3, $ip_low4, $ip_high4, '', '')");
+			continue;
+		}
+		if ($row['ban_userid'])
+		{
+			convert_query("
+				INSERT INTO {$to_prefix}ban_items
+					(ID_BAN_GROUP, ID_MEMBER, email_address, hostname)
+				VALUES ($ID_BAN_GROUP, $row[ban_userid], '', '')");
+		}
+	}
+
+	$_REQUEST['start'] += 250;
+	if (mysql_num_rows($result) < 250)
+		break;
+
+	mysql_free_result($result);
+}
+$_REQUEST['start'] = 0;
+---}
+---#
+
+/******************************************************************************/
+--- Converting settings...
+/******************************************************************************/
+
+---# Moving settings...
+---{
+$result = convert_query("
+	SELECT config_name, config_value AS value
+	FROM {$from_prefix}config");
+$setString = array();
+while ($row = mysql_fetch_assoc($result))
+{
+	if ($row['config_name'] == 'sitename')
+		$phpbb_forum_name = $row['value'];
+	elseif ($row['config_name'] == 'board_email')
+		$phpbb_admin_email = $row['value'];
+	// No translation required... ;).
+	elseif (in_array($row['config_name'], array('smtp_host', 'smtp_username', 'smtp_password')))
+		$setString[] = "'$row[config_name]', '" . addslashes($row['value']) . "'";
+	elseif ($row['config_name'] == 'require_activation')
+		$setString[] = "'registration_method', '" . addslashes($row['value']) . "'";
+	elseif ($row['config_name'] == 'flood_interval')
+		$setString[] = "'spamWaitTime', '" . addslashes($row['value']) . "'";
+	elseif ($row['config_name'] == 'avatar_max_width')
+	{
+		$setString[] = "'avatar_max_width_external', '" . addslashes($row['value']) . "'";
+		$setString[] = "'avatar_max_width_upload', '" . addslashes($row['value']) . "'";
+	}
+	elseif ($row['config_name'] == 'avatar_max_height')
+	{
+		$setString[] = "'avatar_max_height_external', '" . addslashes($row['value']) . "'";
+		$setString[] = "'avatar_max_height_upload', '" . addslashes($row['value']) . "'";
+	}
+	elseif ($row['config_name'] == 'max_sig_chars')
+		$setString[] = "'signature_settings', '1," . addslashes($row['value']) . ",5,0,1,0,0,0:'";
+	elseif ($row['config_name'] == 'session_length')
+		$setString[] = "'databaseSession_lifteim', '" . addslashes($row['value']) . "'";
+	elseif ($row['config_name'] == 'gzip_compress')
+		$setString[] = "'enableCompressedOutput', '" . addslashes($row['value']) . "'";
+	elseif ($row['config_name'] == 'record_users_online')
+		$setString[] = "'mostOnline', '" . addslashes($row['value']) . "'";
+	elseif ($row['config_name'] == 'record_online_date')
+		$setString[] = "'mostDate', '" . addslashes($row['value']) . "'";
+	elseif ($row['config_name'] == 'smtp_email')
+		$setString[] = "'mail_type', '" . ($row['value'] == 1 ? '1' : '0') . "'";
+}
+mysql_free_result($result);
+
+convert_query("
+	REPLACE INTO {$to_prefix}settings
+		(variable, value)
+	VALUES (" . implode("),
+		(", $setString) . ")");
+
+updateSettingsFile(array(
+	'mbname' => '\'' . addcslashes($phpbb_forum_name, '\'\\') . '\'',
+	'webmaster_email' => '\'' . addcslashes($phpbb_admin_email, '\'\\') . '\''
+));
+---}
+---#
+
+/******************************************************************************/
+--- Converting attachment mod (if installed)...
+/******************************************************************************/
+
+---# Checking for attachments table, and copying data.
+---{
+$result = convert_query("
+	SHOW TABLES FROM " . preg_replace('~`\..*$~', '', $from_prefix) . "`
+	LIKE '" . preg_replace('~^`.+?`\.~', '', $from_prefix) . "attachments'");
+list ($tableExists) = mysql_fetch_row($result);
+mysql_free_result($result);
+
+// Doesn't exist?
+if (!$tableExists)
+	return;
+
+if (!isset($ID_ATTACH))
+{
+	$result = convert_query("
+		SELECT MAX(ID_ATTACH) + 1
+		FROM {$to_prefix}attachments");
+	list ($ID_ATTACH) = mysql_fetch_row($result);
+	mysql_free_result($result);
+
+	$result = convert_query("
+		SELECT value
+		FROM {$to_prefix}settings
+		WHERE variable = 'attachmentUploadDir'
+		LIMIT 1");
+	list ($attachmentUploadDir) = mysql_fetch_row($result);
+	mysql_free_result($result);
+
+	// Get the original path... we'll copy it over for them!
+	$result = convert_query("
+		SELECT config_value
+		FROM {$from_prefix}attachments_config
+		WHERE config_name = 'upload_dir'
+		LIMIT 1");
+	list ($oldAttachmentDir) = mysql_fetch_row($result);
+	mysql_free_result($result);
+
+	if (substr($oldAttachmentDir, 0, 2) == '..')
+		$oldAttachmentDir = $_POST['path_from'] . '/' . $oldAttachmentDir;
+	elseif (substr($oldAttachmentDir, 0, 1) != '/')
+		$oldAttachmentDir = $_POST['path_from'] . '/' . $oldAttachmentDir;
+	if (empty($oldAttachmentDir) || !file_exists($oldAttachmentDir))
+		$oldAttachmentDir = $_POST['path_from'] . '/files';
+}
+
+if (empty($ID_ATTACH))
+	$ID_ATTACH = 1;
+
+while (true)
+{
+	pastTime($substep);
+
+	$result = convert_query("
+		SELECT
+			a.post_id AS ID_MSG, ad.real_filename AS filename, ad.physical_filename AS encrypted,
+			ad.download_count AS downloads, ad.filesize AS size
+		FROM ({$from_prefix}attachments AS a, {$from_prefix}attachments_desc AS ad)
+		WHERE a.post_id != 0
+			AND ad.attach_id = a.attach_id
+		LIMIT $_REQUEST[start], 100");
+	$attachments = array();
+	while ($row = mysql_fetch_assoc($result))
+	{
+		if (!file_exists($oldAttachmentDir . '/' . $row['encrypted']))
+			$row['encrypted'] = strtr($row['encrypted'], '& ', '__');
+
+		// Get the true filesize in case the old db lied!
+		$fileSize = filesize($oldAttachmentDir . '/' . $row['encrypted']);
+		if (!is_integer($fileSize))
+			continue;
+
+		// Frankly I don't care whether they want encrypted filenames - they're having it - too dangerous.
+		$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+
+		if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $newfilename))
+		{
+			$attachments[] = "($ID_ATTACH, $fileSize, SUBSTRING('" . addslashes($row['filename']) . "', 1, 255), $row[ID_MSG], $row[downloads])";
+
+			$ID_ATTACH++;
+		}
+	}
+
+	if (!empty($attachments))
+		convert_query("
+			INSERT INTO {$to_prefix}attachments
+				(ID_ATTACH, size, filename, ID_MSG, downloads)
+			VALUES " . implode(', ', $attachments));
+
+	$_REQUEST['start'] += 100;
+	if (mysql_num_rows($result) < 100)
+		break;
+
+	mysql_free_result($result);
+}
+
+$_REQUEST['start'] = 0;
+---}
+---#

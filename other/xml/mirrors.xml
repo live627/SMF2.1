@@ -1,0 +1,63 @@
+<?php
+	require_once('/home/simple/public_html/community/SSI.php');
+	$customize_prefix = 'simple_customize.';
+
+	echo '
+<?xml version="1.0"?>
+
+<mirror-list>
+	<!-- List of mirrors which hold the downloads. -->
+	<mirrors>
+		<mirror type="charter" name="www.simplemachines.org">http://www.simplemachines.org/download/index.php/</mirror>
+		<mirror name="www.simplemachines.org">http://www.simplemachines.org/download/index.php/</mirror>
+	</mirrors>
+
+	<!-- List of current install releases. -->
+	<installs>';
+	// get the current versions
+	$res = db_query("
+		SELECT verName, obsolete, fileName, public
+		FROM {$customize_prefix}smfVersions
+		WHERE obsolete != 1
+		ORDER BY displayOrder DESC", __FILE__, __LINE__);
+	while ($row = mysql_fetch_assoc($res))
+		echo '
+		<install ', $row['public'] != 1? 'type="charter" ' : '', 'name="SMF ', $row['verName'], '">', $row['fileName'], '</install>';
+	mysql_free_result($res);
+		
+	echo '	
+	</installs>
+
+	<!-- Language files available. -->
+	<languages>
+		<language type="charter" name="Arabic">arabic</language>
+		<language type="charter" name="Deutsch">german</language>
+		<language type="charter" name="Espa&ntilde;ol">spanish</language>
+		<language type="charter" name="Finnish">finnish</language>
+		<language type="charter" name="Fran&ccedil;ais">french</language>
+		<language type="charter" name="Greek">greek</language>
+		<language type="charter" name="Nederlands">dutch</language>
+		<language type="charter" name="Norsk">norsk</language>
+		<language type="charter" name="Portugu&ecirc;s">portuguese</language>
+		<language type="charter" name="Simplified Chinese">chinese_simplified</language>
+		<language type="charter" name="Thai">thai</language>
+		<language type="charter" name="Traditional Chinese">chinese-traditional</language>
+		<language type="charter" name="Traditional Chinese (UTF-8)">chinese-traditional-utf8</language>
+		<language type="charter" name="T&uuml;rk&ccedil;e">turkish</language>
+		<language name="Arabic">arabic</language>
+		<language name="Deutsch">german</language>
+		<language name="Espa&ntilde;ol">spanish</language>
+		<language name="Finnish">finnish</language>
+		<language name="Fran&ccedil;ais">french</language>
+		<language name="Greek">greek</language>
+		<language name="Nederlands">dutch</language>
+		<language name="Norsk">norsk</language>
+		<language name="Portugu&ecirc;s">portuguese</language>
+		<language name="Simplified Chinese">chinese_simplified</language>
+		<language name="Thai">thai</language>
+		<language name="Traditional Chinese">chinese-traditional</language>
+		<language name="Traditional Chinese (UTF-8)">chinese-traditional-utf8</language>
+		<language name="T&uuml;rk&ccedil;e">turkish</language>
+	</languages>
+</mirror-list>';
+?>

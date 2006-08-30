@@ -1,0 +1,34 @@
+Tentative Roadmap for SMF 1.1:
+================================================================================
+
+SMF 1.1 RC2
+--------------------------------------------------------------------------------
+ - resolve any bugs found in Beta 3 or Beta 3 Public.
+ - clean up and split some templates to make it easier to modify themes.
+ - more comments and better organized code, aka code review.
+ - attempt to track down any and all possible injections, and fix them.
+ - write up tutorials for very advanced things, introduction to coding style,
+   how to write common things for modifications, etc.
+
+
+Later
+--------------------------------------------------------------------------------
+ - reply to all, conversations, and such things in PersonalMessage.
+ - new download page with options for default language, theme, etc.
+ - Dreamweaver/Frontpage "friendly" theme, if possible, using inline PHP.
+ - better handling of children and parents where access is absent from parents
+   but not from the child.
+ - integrate in Jabber with Edgar. (maybe not.)
+ - both the from and to board's permissions should be checked on move. (??)
+ - don't change email address in profile until it's verified. (maybe RC1/2?)
+ - group by group permissions for themes, and better theme settings.
+ - offer some themes, and possibly modifications, to Charter Members only.
+ - try to get more smiley sets available and options in the packages.
+ - have more templates fully commented with documentation.
+ - get comments on tutorials and review them, make sure they are still correct.
+ - contact some marketing places and try to get them to consider game, project,
+   and the like themed themes - like a "Gunbound Theme" for enthusiasts.
+   Won't necessarily be free or anything, but might.
+ - create a poll for which themes to be used in the next version and ask for
+   people to create some - the 1.0 default will be in the list, of course.
+ - try to get accessability and usability concerns resolved for any new themes.

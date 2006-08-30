@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="style.xslt"?>
+<!DOCTYPE smf:helpfile [
+	<!ENTITY copyright "&#169;">
+	<!ENTITY space "&#160;">
+]>
+<!-- Don't translate tags, attributes or entities. -->
+<smf:helpfile subject="pm" xml:space="preserve" xmlns:smf="http://www.simplemachines.org/">
+	<!-- The language element should match the language directory in Themes/default/images and is case-sensitive. -->
+	<language>dutch</language>
+	<visit-simple-machines>Bezoek Simple Machines!</visit-simple-machines>
+	<title>SMF Gebruikershelp: Persoonlijk bericht</title>
+	<menu>
+		<help page="index">Inleiding</help>
+		<help page="registering">Registreren</help>
+		<help page="loginout">Inloggen</help>
+		<help page="profile">Profiel</help>
+		<help page="posting">Posten</help>
+		<help page="here">Persoonlijk&space;bericht</help>
+		<help page="searching">Zoeken</help>
+	</menu>
+	<intro>
+		<paragraph>SMF gaat helemaal over gemeenschappen en communicatie. Er zijn heel wat manieren om te communiceren, zoals posten op de forums, persoonlijke berichten, e-mail, ICQ, AIM, YIM. Deze communicatiemethodes zijn doorgaans enkel beschikbaar aan leden, maar de forum beheerders kunnen gasten toestaan om te posten in de rubrieken, waardoor ongeregistreerde gasten <emphasis>niet</emphasis> alles kunnen doen behalve de ledenlijst bekijken en persoonlijke berichten zenden aan leden.</paragraph>
+	</intro>
+	<section id="pm">
+		<secheading>Persoonlijke berichten</secheading>
+		<subsection id="description">
+			<subheading>Beschrijving</subheading>
+				<paragraph>E-mail kan dan wel een goede manier zijn om direct met leden te communiceren, maar in een forum verband heeft het ook heel wat nadelen: je moet je e-mail applicatie openen om een bericht te schrijven en te versturen, de ontvanger moet zijn of haar e-mail applicatie openen en zijn of haar e-mail controleren, je bericht zal verschijnen tussen alle andere e-mails en het kan verscheidene minuten of zelf een uur duren vooraleer een e-mail de ontvanger bereikt.</paragraph>
+				<paragraph>SMF biedt een sneller en privé-gerichter alternatief tot e-mail. Persoonlijke berichten op de forums worden onmiddellijk afgeleverd in de persoonlijke inbox van de ontvanger. De mail wordt volledig verzonden en ontvangen binnen SMF, zodat noch jijzelf, noch de ontvanger een ander programma moet openen of SMF verlaten. Persoonlijke berichten bieden ook aan zowel zender als ontvanger een grotere privacy omdat niemands e-mailadres wordt getoond. Persoonlijke berichten tonen enkel de gebruikersnaam en naam van beide partijen.</paragraph>
+				<paragraph>Wanneer een ontvanger niet online is blijven de persoonlijke berichten in de PB box van het lid totdat hij/zij de volgende keer inlogt en zijn/haar berichten leest en/of verwijdert. Het systeem van de persoonlijke berichten van SMF is een losstaand, privé-gericht e-mail systeem.</paragraph>
+		</subsection>
+		<subsection id="reading">
+			<subheading>Je berichten lezen</subheading>
+				<paragraph>Om je berichten te lezen moet je <link page="loginout">ingelogd zijn</link>, en vervolgens de link volgen die luidt 'Hoi, [gebruikersnaam], je hebt <link ref="interface">x berichten</link>, x zijn nieuw.'</paragraph>
+		</subsection>
+	</section>
+	<section id="interface">
+		<secheading>De PB interface</secheading>
+			<paragraph>De PB interface werkt op een zelfde manier als de <link page="index" ref="message">berichtenindex</link>. Hieronder tonen we enkel de inbox interface, maar het postvak uit werkt op dezelfde manier:</paragraph>
+			<pm-demo>
+				<!-- This data is used to demonstrate the personal message interface -->
+				<forum-name>Forum naam</forum-name>
+				<personal-messages>Persoonlijke berichten</personal-messages>
+				<inbox>Inbox</inbox>
+				<alt-delete>Verwijder alle berichten in je Inbox</alt-delete>
+				<alt-outbox>Postvak uit</alt-outbox>
+				<alt-new-message>Nieuw bericht</alt-new-message>
+				<alt-reload>Controleer op nieuwe berichten</alt-reload>
+				<date>Datum</date>
+				<from>Van</from>
+				<subject>Onderwerp</subject>
+				<date-time>Datum en tijd van het bericht</date-time>
+				<member>Ander lid</member>
+				<about>Bericht onderwerp</about>
+				<delete>Verwijder</delete>
+				<pages>Pagina's</pages>
+			</pm-demo>
+			<list>
+				<item>Sommige forums tonen de <term>navigatieboom</term> bovenaan, op een plaatsbesparende horizontale manier.</item>
+				<item>De hoofd<action>verwijder</action> knop verwijdert alle berichten in je inbox (of postvak uit). Merk wel dat de checkbox en onderste <action>verwijder</action> knop eveneens toelaten geselecteerde berichten te verwijderen, waarbij de bovenste checkbox alles selecteert.</item>
+				<item>De <action>Postvak uit</action> knop leidt naar je postvak uit, waarna de knop uiteraard een <action>Inbox</action> knop wordt.</item>
+				<item>De <action>Nieuw bericht</action> knop laat je toe een nieuw bericht te starten, wat heel veel lijkt op een <link page="posting" ref="newtopic">nieuw onderwerp starten</link>.</item>
+				<item>Via de <action>Herladen</action> knop wordt op nieuwe berichten gecheckt door de pagina te vernieuwen.</item>
+				<item>De <sort-by>Datum</sort-by>, <sort-by>Van</sort-by> en <sort-by>Onderwerp</sort-by> links laten je toe om de kolommen volgens deze parameters te sorteren (waarbij <sort-by>Datum</sort-by> ook toelaat te kiezen tussen aflopende of oplopende volgorde, zoals aangegeven door de kleine pijl).</item>
+				<item>De hoofdtitel van het onderwerp linkt naar de start van het bericht, dat zich lager op dezelfde pagina bevindt.</item>
+				<item>De 'Pagina's' tekst linkt naar verdere berichtenpagina's.</item>
+			</list>
+		<subsection id="starting">
+			<subheading>Een bericht starten of beantwoorden</subheading>
+				<paragraph>Er zijn verschillende manieren om een nieuw persoonlijk bericht te starten, maar telkens is vereist dat je <link page="loginout">ingelogd</link> bent:</paragraph>
+			<list>
+				<item>Je kan via de link 'Hoi, [username], je hebt <link ref="interface">x berichten</link>, x zijn nieuw' naar je inbox gaan, waar je vervolgens op de <action>Nieuw bericht</action> knop klikt.</item>
+				<item>Je kan op de naam van een ander lid klikken, en vervolgens op <action>Stuur dit lid een privé boodschap</action> in zijn/haar <link page="profile" ref="info-all">profiel</link> samenvatting.</item>
+				<item>Je kan meteen een nieuw bericht starten door het <icon>IM on/offline</icon> icoon in de gebruikersinfo aan te klikken dat je terugvindt in elke post van een lid.</item>
+				<item>Je kan meteen een nieuw bericht starten door het <icon>PM on/offline</icon> icoon in het <term>Dit lid is</term> veld aan te klikken in zijn/haar <link page="profile" ref="info-all">profiel</link> samenvatting. (Dit icoon of deze link wordt vaak gedupliceerd in de gebruikersinfo zoals hierboven beschreven.) </item>
+				<item>Een bericht beantwoorden wat heel veel lijkt op <link page="posting" ref="reply">een onderwerp beantwoorden</link>.</item>
+			</list>
+		</subsection>
+	</section>
+	<copyright>
+		Copyright &copyright; 2001-2006 <link site="http://www.lewismedia.com/">Lewis Media</link>. Alle rechten voorbehouden.
+	</copyright>
+</smf:helpfile>

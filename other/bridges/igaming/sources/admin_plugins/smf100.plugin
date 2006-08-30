@@ -1,0 +1,6 @@
+<?php
+
+$plugin_filename = '../packages/smf100.inc.php';
+$plugin_title = 'SMF Module Package - 1.0.0';
+
+?>

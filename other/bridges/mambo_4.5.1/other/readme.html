@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>Mambo/Joomla Bridge Installation Guide</title>
+		<style type="text/css">
+			body
+			{
+				background-color: #E5E5E8;
+				margin: 0px;
+				padding: 0px;
+			}
+			body, td
+			{
+				color: #000000;
+				font-size: small;
+				font-family: verdana, sans-serif;
+			}
+			div#header
+			{
+				background-image: url(Themes/default/images/catbg.jpg);
+				background-repeat: repeat-x;
+				background-color: #88A6C0;
+				padding: 22px 4% 12px 4%;
+				color: white;
+				font-family: Georgia, serif;
+				font-size: xx-large;
+				border-bottom: 1px solid black;
+				height: 40px;
+			}
+			div#content
+			{
+				padding: 20px 30px;
+			}
+
+			div.panel
+			{
+				border: 1px solid gray;
+				background-color: #F6F6F6;
+				margin: 1ex 0 3ex 0;
+				padding: 1.2ex;
+			}
+			div.panel h2
+			{
+				margin: 0;
+				margin-bottom: 2ex;
+				padding-bottom: 3px;
+				border-bottom: 1px dashed black;
+				font-size: 14pt;
+				font-weight: normal;
+			}
+
+			dl
+			{
+				margin-left: 3ex;
+			}
+			dt
+			{
+				font-style: italic;
+			}
+			dd
+			{
+				margin-bottom: 1ex;
+			}
+
+			div.code
+			{
+				margin: 1ex 3ex 2ex 3ex;
+				padding: 3px;
+				background-color: #FAFAFA;
+				font-family: monospace;
+				overflow: auto;
+			}
+			div.code span.comment
+			{
+				font-style: italic;
+				color: #000066;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="header">
+			<div title="Millenia">SMF-Mambo/Joomla bridge</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">Before you start</h2>
+
+				Make sure you have both Mambo (or Joomla) and Simple Machines Forum (SMF) installed. Realize that SMF is not a component, but a stand-alone forum. The bridge will only integrate your SMF-forum with your Mambo/Joomla site.<br />
+				<b>Please do not remove any of the copyrights of your SMF-forum.</b><br />
+				<br />
+				Always <b>back up your database</b> and site prior to installations and test any additions you make to your site locally first and do NOT add anything to your live site unless tested thoroughly, extensively, securely and wisely!
+				<br />
+				Make sure the following folders are writable (chmod 777) before installing the component:
+				<br />&nbsp;	/components
+				<br />&nbsp;	/modules
+				<br />&nbsp;	/mambots/system
+				<br />&nbsp;	/administrator/components
+			</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">Installing the SMF-Forum Component in Mambo/Joomla</h2>
+
+				Install com_smf.zip as a Mambo/Joomla component, and change the values in the configuration via the Mambo backend. Please use the absolute path. There is a lot of confusion surrounding relative paths. You are best to use the absolute path. If somehow your absolute path is not detected correctly, enter your SMF admin panel, click Edit Server Settings and copy the path you'll find under SMF Directory.<br />
+				<br />
+				There are two formats to display your Mambo/Forum integration:
+				<ul type="none" style="list-style-type: none;">
+					<li>&raquo; <b>Wrapped</b><br />
+					You are using SMF through the Mambo/Joomla bridge. The Forum appears "wrapped" in the Mambo/Joomla tables. You might have to make some necessery changes in your forum files in order to show a fitting lay-out.</li>
+					<li>&raquo; <b>Unwrapped</b><br />
+					You are still using SMF through Mambo/Joomla, but it doesn't have the look of a wrapped forum. It looks stand-alone, but it is actually loading through Mambo. This is set in the Mambo/Joomla config for the component.
+				</ul>
+				<br />
+				There are several options for the user registration form:  Bridge, SMF, Mambo/Joomla default, Community Builder, and MamboCharge.  The bridge registration form looks very much like the default Mambo/Joomla registration, but functions quite differently.  If you choose to use this option, make sure to configure the registration component as well.  All registration types will register new users into both Mambo/Joomla and SMF, but some users may not appear in SMF until after their first login.
+				<br /><br />
+				Also make sure to configure your login module.  Set the params to your liking, and make sure to click Save at the top of the page.
+			</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">Mambo template changes</h2>
+
+				The changes to the Mambo template are still required for this version of the bridge.  <font color=red> These changes are not required for Joomla.</font>  Copy the code below, and paste it into the header area (between the &lt;head&gt; and &lt;/head&gt; tags) of your Mambo template.
+				<div class="code">
+				&lt;?php <br />
+global $sc, $context, $settings;<br />
+<br />
+if (!defined('SMF')){<br />
+// Get the configuration.  This will tell Mambo where SMF is, and some integration settings<br />
+	$database-&gt;setQuery("<br />
+				SELECT `variable`, `value1`<br />
+				FROM #__smf_config<br />
+				");<br />
+	$variables = $database-&gt;loadAssocList();<br />
+<br />	
+	foreach ($variables as $variable){<br />
+		$variable_name = $variable['variable'];<br />
+		$$variable_name = $variable['value1'];<br />
+	}<br />
+  require ($smf_path."/SSI.php");<br />
+}<br />
+<br />
+$sc = &$context['session_id'];<br />
+$_SESSION['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];<br />
+<br />
+mysql_select_db($mosConfig_db);<br />
+<br />
+	echo '<br />
+	&lt;script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js?beta4"&gt;&lt;/script&gt;<br />
+	&lt;script language="JavaScript" type="text/javascript"&gt;&lt;!-- // --&gt;&lt;![CDATA[<br />
+		var smf_theme_url = "', $settings['theme_url'], '";<br />
+		var smf_images_url = "', $settings['images_url'], '";<br />
+		var smf_scripturl = "', $scripturl, '";<br />
+		var smf_session_id = "', $context['session_id'], '";<br />
+	// ]]&gt;&lt;/script&gt;';<br />
+<br />
+echo '<br />
+	&lt;link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc1" /&gt;<br />
+	&lt;link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/print.css?beta4" media="print" /&gt;<br />
+	&lt;link rel="help" href="', $scripturl, '?action=help" target="_blank" /&gt;<br />
+	&lt;link rel="search" href="' . $scripturl . '?action=search" /&gt;<br />
+	&lt;link rel="contents" href="', $scripturl, '" /&gt;';<br />
+?&gt;<br />
+				</div>
+				<br />
+				You will also need to make sure to add the next line just below the &lt;/body&gt; (the <b>closing</b> body tag at the bottom) tag of the template.
+				<div class="code">
+				&lt;?php mysql_select_db($GLOBALS['db_name']); ?&gt;
+				</div>
+			</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">Separate Databases:</h2>
+		
+				If you have installed Mambo/Joomla and SMF with Fantastico, or you installed them in separate databases intentionally, you will need to grant permission to the database users to access each others' databases.  If you have your forum and CMS installed in separate databases, and you have not granted access properly, you will most likely run into the "_LOGIN_INCOMPLETE" error in Joomla.
+				<br /><br />
+				Here's how to grant database permissions:
+				<br /><br />
+				1) Go to your site's cPanel.  Click on MySQL databases. (Do not Proceed to PhpMyAdmin!)
+				<br /><br />
+				2) Near the bottom of the page, you will find two dropdown menus side-by-side.  One is labelled "User:" and the other "Db:".
+				<br /><br />
+				3) In the first dropdown, select your SMF database user, and in the second dropdown, select the  Mambo/Joomla database.  Click the button that is labelled "Add User to Db".
+				<br /><br />
+				4) Now go back to the same page again, and do the same, adding your Mambo/Joomla User to your SMF database.
+				<br /><br />
+				Now you are set up to run your forum and CMS in separate databases.
+				<br /><br />
+				With some Joomla templates, you may end up with this error appearing at the bottom of the page:
+				<br /><br />
+				Database Error: Table 'db_joomla.smf_sessions' doesn't exist<br />
+				File: /home/user/public_html/joomla/forum/Sources/Load.php<br />
+				Line: 1886<br />
+				Warning: Unknown(): A session is active. You cannot change the session module's ini settings at this time. in Unknown on line 0
+				<br /><br />
+				If that happens, please add this to the bottom of your Joomla template:
+				<div class="code">
+				&lt;?php mysql_select_db($GLOBALS['db_name']); ?&gt;
+				</div>
+			</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">3rd Party Developer Tabs in Admin Panel</h2>
+
+				This bridge comes with the capability for 3rd party developers to add their own tabs to the bridge config panel.
+				
+				This can be done by adding a tab file to include by the bridge, and defining it in the bridge config table appropriately.
+				
+				For example, if you have a component called com_example, and you want to have a tab in the bridge define something in the com_example component, you can create the tab in a file called example_tab.php.  You'll need to add that file to your com_example.xml installer, and also a query to let the bridge config know it's there:
+				
+				<div class="code">
+					INSERT INTO #__smf_config (`variable`, `value1`) VALUES ('3rdPartyTab', 'administrator/components/com_example/example_tab.php')
+				</div>
+				
+				And that's all!  It will be included in the SMF bridge component configuration.
+			</div>
+		</div>
+	</body>
+</html>

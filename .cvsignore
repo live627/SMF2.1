@@ -1,0 +1,9 @@
+Settings.php
+Settings_bak.php
+*.dsw
+*.dsp
+*.log
+*.phpproj
+*.sln
+*.suo
+*.zip

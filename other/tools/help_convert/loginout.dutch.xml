@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="style.xslt"?>
+<!DOCTYPE smf:helpfile [
+	<!ENTITY copyright "&#169;">
+	<!ENTITY space "&#160;">
+]>
+<!-- Don't translate tags, attributes or entities. -->
+<smf:helpfile subject="loginout" xml:space="preserve" xmlns:smf="http://www.simplemachines.org/">
+	<!-- The language element should match the language directory in Themes/default/images and is case-sensitive. -->
+	<language>dutch</language>
+	<visit-simple-machines>Bezoek Simple Machines!</visit-simple-machines>
+	<title>SMF Gebruikershelp: In- en uitloggen</title>
+	<menu>
+		<help page="index">Inleiding</help>
+		<help page="registering">Registreren</help>
+		<help page="here">Inloggen</help>
+		<help page="profile">Profiel</help>
+		<help page="posting">Posten</help>
+		<help page="pm">Persoonlijk&space;bericht</help>
+		<help page="searching">Zoeken</help>
+	</menu>
+	<intro>
+		<paragraph>Nadat je het <link page="registering">registratie</link> proces hebt doorlopen zal je voor de eerste maal op de site kunnen inloggen. Daarna zal je kunnen kiezen of je voor onbepaalde tijd ingelogd wenst te blijven of dat je wilt uitloggen aan het einde van je bezoek.</paragraph>
+	</intro>
+	<section id="login">
+		<secheading>Inloggen</secheading>
+		<paragraph>Of je nu pas net geregistreerd bent of eenvoudig uitgelogd bent na een vorig bezoek, je zal steeds een keuze krijgen tussen het inlog scherm en de snelle inlog optie.</paragraph>
+		<subsection id="screen">
+			<subheading>Het inlog scherm</subheading>
+			<paragraph>Aangezien dit scherm (toegankelijk vanuit de <action>inlog</action> optie van het <link page="index" ref="main">hoofdmenu</link>) niet alleen de plaats is waar je naartoe wordt gebracht wanneer je registratie is volbracht, maar ook het eerste is wat je ziet in een 'alleen voor leden' forum, zullen we dit het eerst beschrijven:</paragraph>
+			<login-screen-demo>
+				<!-- This data is used to demonstrate the standard login screen. -->
+				<login>Inloggen</login>
+				<username>Gebruikersnaam</username>
+				<password>Wachtwoord</password>
+				<minutes>Aantal minuten dat je blijft ingelogd</minutes>
+				<always>Blijf ingelogd</always>
+				<forgot>Wachtwoord vergeten?</forgot>
+			</login-screen-demo>
+			<paragraph>De <field>Gebruikersnaam</field> en <field>Wachtwoord</field> velden spreken voor zich. <check>Aantal minuten dat je blijft ingelogd</check> betekent eenvoudigweg het aantal minuten dat de cookie dat je ingelogd houdt, actief blijft vooraleer te vervallen en je opnieuw moet inloggen. Het is dus niet aan te raden om een hele lange tijdsperiode in te vullen wanneer je een computer moet delen en je waarschijnlijk zal vergeten uit te loggen. Indien niemand anders toegang heeft tot je computer dan kan het de voorkeur verdienen om <check>Blijf ingelogd</check> aan te duiden.</paragraph>
+		</subsection>
+		<subsection id="quick">
+			<subheading>De snelle inlog optie</subheading>
+			<paragraph>Hoewel veel forums eveneens een snelle inlog mogelijkheid hebben om je toe te laten vanaf elk scherm in te loggen, kan de positie op de pagina verschillen van forum tot forum. In het SMF standaard thema bevindt het zich bovenaan de pagina, in het inklapbaar deel. In andere thema's gebaseerd op het oude YaBB SE forum zal het eerder onderaan te vinden zijn. Wanneer het niet zichtbaar is en niet is ingeklapt is deze optie of niet geimplementeerd (zodat je het inlog scherm vanuit het <link page="index" ref="main">hoofdmenu</link> moet bereiken), of ben je al ingelogd (in dit geval zal het hoofdmenu een <action>Uitlog</action> optie bevatten).</paragraph>
+			<quick-login-demo>
+				<!-- This data used to demonstrate the quick login box. -->
+				<hour>1 uur</hour>
+				<day>1 dag</day>
+				<week>1 week</week>
+				<month>1 maand</month>
+				<forever>blijvend</forever>
+				<caption>Log in met gebruikersnaam, wachtwoord en sessie lengte</caption>
+			</quick-login-demo>
+			<paragraph>Om de snelle inlog optie te gebruiken dien je je gebruikersnaam en wachtwoord in te vullen, de lengte van je sessie uit het menu te selecteren, en op <action>Inloggen</action> te klikken. Gelieve er rekening mee te houden dat <option>Blijvend</option>, zoals <check>Blijf ingelogd</check>, betekent dat de computer je blijft herinneren tot de de volgende keer uitlogt en niet dat je altijd online moet blijven.</paragraph>
+		</subsection>
+	</section>
+	<section id="logout">
+		<secheading>Uitloggen</secheading>
+		<paragraph>Wanneer je stopt met het doorbladeren van het forum, kan je er voor kiezen om uit te loggen. Wanneer je een computer deelt met anderen kan het een slecht idee zijn om jezelf ingelogd te laten. Selecteer dan de <action>Log uit</action> optie in het <link page="index" ref="main">hoofdmenu</link> en je zal uitgelogd worden uit het forum, waardoor je meteen de status van gast krijgt, en je naam verdwijnt uit de lijst van online gebruikers. Je forum identiteit wordt op die manier gewaarborgd tot je opnieuw beslist om in te loggen.</paragraph>
+	</section>
+	<section id="reminder">
+		<secheading>Wachtwoordherinnering</secheading>
+		<paragraph>Wanneer je probeert in te loggen op het forum, maar je je wachtwoord bent vergeten of kwijtgeraakt, kan je dit oplossen door gebruik te maken van de optie <action>Wachtwoord vergeten?</action> in het <link ref="screen">inlog</link> scherm.</paragraph>
+		<password-reminder-demo>
+			<!-- This data is used to demonstrate the password reminder screen. -->
+			<password-reminder>Wachtwoord vergeten?</password-reminder>
+			<username-email>Gebruikersnaam/e-mail:</username-email>
+			<send>Zenden</send>
+			<user>door gebruiker</user>
+			<email>door e-mail</email>
+			<question>Stel me mijn vraag</question>
+			<help-text>Je kan je wachtwoord niet terughalen, maar je kan een nieuw wachtwoord instellen door te klikken op de link die je zal worden toegestuurd via e-mail.   Je kan ook de optie kiezen om een nieuw wachtwoord in te stellen door je geheime vraag te beantwoorden.</help-text>
+		</password-reminder-demo>
+		<paragraph>Je kan ofwel je gebruikersnaam, ofwel je e-mailadres invullen, op voorwaarde dat je de juiste optie selecteert. Klik vervolgens op de knop <action>Zenden</action> om jezelf een e-mail te laten sturen met een link om je wachtwoord opnieuw in te stellen. Het is ook mogelijk om een e-mail te vermijden wanneer je een geheime vraag en antwoord hebt ingesteld in je profiel, maar wees voorzichtig met vragen die iedereen kan beantwoorden of met antwoorden die iedereen kan raden (zoals 'wat is de eerste kleur van de regenboog', ...)!</paragraph>
+	</section>
+	<copyright>
+		Copyright &copyright; 2001-2006 <link site="http://www.lewismedia.com/">Lewis Media</link>. Alle rechten voorbehouden.
+	</copyright>
+</smf:helpfile>

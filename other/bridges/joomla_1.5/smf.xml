@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<mosinstall type="component" version="4.5.1">
+	<name>smf</name>
+	<creationDate>2005.09.05</creationDate>
+	<author>Simple Machines</author>
+	<copyright>(C) Copyright 2005 by Simple Machines.</copyright>
+	<authorEmail>everythi@everything-science.com</authorEmail>
+	<authorUrl>www.simplemachines.org</authorUrl>
+	<version>1.1.4</version>
+
+	<description>This is the bridge component for Simple Machines Forum.</description>
+
+	<files>
+		<filename>smf.php</filename>
+		<filename>language/eng_GB.php</filename>
+		<filename>language/germanf.php</filename>
+		<filename>language/germani.php</filename>
+		<filename>language/french.php</filename>
+		<filename>language/norwegian.php</filename>
+		<filename>language/dutch.php</filename>
+		<filename>language/turkish.php</filename>
+        <filename>language/italian.php</filename>
+	</files>
+
+	<install>
+		<queries>
+			<query> 
+				INSERT INTO #__menu 
+					(`menutype`,`name`,`link`,`type`,`published`,`parent`,`componentid`,`sublevel`,`ordering`,`checked_out`,`checked_out_time`,`pollid`,`browserNav`,`access`,`utaccess`,`params`)
+				VALUES ("mainmenu", "Forum", "index.php?option=com_smf", "components", 1, 0, 19, 0, 8, 0, "0000-00-00 00:00:00", 0, 0, 0, 3, "")
+			</query>
+		</queries>
+	</install>
+
+	<uninstall>
+		<queries>
+			<query>
+				DELETE FROM #__menu 
+				WHERE link="index.php?option=com_smf"
+			</query>
+		</queries>
+	</uninstall>
+
+	<installfile>install.smf.php</installfile>
+	<uninstallfile>uninstall.smf.php</uninstallfile>
+
+	<administration>
+		<menu>SMF Bridge</menu>
+
+		<submenu>
+			<menu task="config">Configuration</menu>
+		</submenu>
+
+		<files>
+			<filename>install.smf.php</filename>
+			<filename>admin.smf.php</filename>
+			<filename>config.smf.php</filename>
+			<filename>toolbar.smf.php</filename>
+			<filename>toolbar.smf.html.php</filename>
+			<filename>uninstall.smf.php</filename>
+			<filename>install.smf_registration.php</filename>
+			<filename>admin.smf_registration.php</filename>
+			<filename>config.smf_registration.php</filename>
+			<filename>toolbar.smf_registration.php</filename>
+			<filename>toolbar.smf_registration.html.php</filename>
+			<filename>uninstall.smf_registration.php</filename>
+			<filename>smf_registration.php</filename>
+			<filename>smf_registration.html.php</filename>
+			<filename>smf_registration.xml</filename>
+			<filename>modules/mod_smf_login.php</filename>
+			<filename>modules/mod_smf_login.x</filename>
+			<filename>bots/SMF_header_include.php</filename>
+			<filename>bots/SMF_header_include.x</filename>
+		</files>
+	</administration>
+</mosinstall>

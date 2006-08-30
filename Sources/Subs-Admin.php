@@ -1,0 +1,313 @@
+<?php
+/******************************************************************************
+* Subs-Admin.php                                                              *
+*******************************************************************************
+* SMF: Simple Machines Forum                                                  *
+* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
+* =========================================================================== *
+* Software Version:           SMF 2.0 Alpha                                   *
+* Software by:                Simple Machines (http://www.simplemachines.org) *
+* Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
+* Support, News, Updates at:  http://www.simplemachines.org                   *
+*******************************************************************************
+* This program is free software; you may redistribute it and/or modify it     *
+* under the terms of the provided license as published by Lewis Media.        *
+*                                                                             *
+* This program is distributed in the hope that it is and will be useful,      *
+* but WITHOUT ANY WARRANTIES; without even any implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
+*                                                                             *
+* See the "license.txt" file for details of the Simple Machines license.      *
+* The latest version can always be found at http://www.simplemachines.org.    *
+******************************************************************************/
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/*	This file contains functions that are specifically done by administrators.
+
+	void getServerVersions(array checkFor)
+		- get a list of versions that are currently installed on the server.
+
+	void getFileVersions(array versionOptions)
+		- get detailed version information about the physical SMF files on the
+		  server.
+		- the input parameter allows to set whether to include SSI.php and
+		  whether the results should be sorted.
+		- returns an array containing information on source files, templates
+		  and language files found in the default theme directory (grouped by
+		  language).
+
+	void updateSettingsFile(array config_vars)
+		- updates the Settings.php file with the changes in config_vars.
+		- expects config_vars to be an associative array, with the keys as the
+		  variable names in Settings.php, and the values the varaible values.
+		- does not escape or quote values.
+		- preserves case, formatting, and additional options in file.
+		- writes nothing if the resulting file would be less than 10 lines
+		  in length (sanity check for read lock.)
+*/
+
+
+function getServerVersions($checkFor)
+{
+	global $txt, $db_connection, $_PHPA;
+
+	loadLanguage('Admin');
+
+	$versions = array();
+
+	// Is GD available?  If it is, we should show version information for it too.
+	if (in_array('gd', $checkFor) && function_exists('gd_info'))
+	{
+		$temp = gd_info();
+		$versions['gd'] = array('title' => $txt['support_versions_gd'], 'version' => $temp['GD Version']);
+	}
+
+	// Now lets check for MySQL.
+	if (in_array('mysql_server', $checkFor))
+	{
+		if (!isset($db_connection) || $db_connection === false)
+			trigger_error('getServerVersions(): you need to be connected to MySQL in order to get its server version', E_USER_NOTICE);
+		else
+		{
+			$versions['mysql_server'] = array('title' => $txt['support_versions_mysql'], 'version' => '');
+			$request = db_query("
+				SELECT VERSION()", __FILE__, __LINE__);
+			list ($versions['mysql_server']['version']) = mysql_fetch_row($request);
+			mysql_free_result($request);
+		}
+	}
+
+	// Check to see if we have any accelerators installed...
+	if (in_array('mmcache', $checkFor) && defined('MMCACHE_VERSION'))
+		$versions['mmcache'] = array('title' => 'Turck MMCache', 'version' => MMCACHE_VERSION);
+	if (in_array('eaccelerator', $checkFor) && defined('EACCELERATOR_VERSION'))
+		$versions['eaccelerator'] = array('title' => 'eAccelerator', 'version' => EACCELERATOR_VERSION);
+	if (in_array('phpa', $checkFor) && isset($_PHPA))
+		$versions['phpa'] = array('title' => 'ionCube PHP-Accelerator', 'version' => $_PHPA['VERSION']);
+	if (in_array('apc', $checkFor) && extension_loaded('apc'))
+		$versions['apc'] = array('title' => 'Alternative PHP Cache', 'version' => phpversion('apc'));
+
+	if (in_array('php', $checkFor))
+		$versions['php'] = array('title' => 'PHP', 'version' => PHP_VERSION);
+
+	if (in_array('server', $checkFor))
+		$versions['server'] = array('title' => $txt['support_versions_server'], 'version' => $_SERVER['SERVER_SOFTWARE']);
+
+	return $versions;
+}
+
+// Search through source, theme and language files to determine their version.
+function getFileVersions(&$versionOptions)
+{
+	global $boarddir, $sourcedir, $settings;
+
+	// Default place to find the languages would be the default theme dir.
+	$lang_dir = $settings['default_theme_dir'] . '/languages';
+
+	$version_info = array(
+		'file_versions' => array(),
+		'default_template_versions' => array(),
+		'template_versions' => array(),
+		'default_language_versions' => array(),
+	);
+
+	// Find the version in SSI.php's file header.
+	if (!empty($versionOptions['include_ssi']) && file_exists($boarddir . '/SSI.php'))
+	{
+		$fp = fopen($boarddir . '/SSI.php', 'rb');
+		$header = fread($fp, 4096);
+		fclose($fp);
+
+		// The comment looks rougly like... that.
+		if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+			$version_info['file_versions']['SSI.php'] = $match[1];
+		// Not found!  This is bad.
+		else
+			$version_info['file_versions']['SSI.php'] = '??';
+	}
+
+	// Load all the files in the Sources directory, except this file and the redirect.
+	$Sources_dir = dir($sourcedir);
+	while ($entry = $Sources_dir->read())
+	{
+		if (substr($entry, -4) === '.php' && !is_dir($sourcedir . '/' . $entry) && $entry !== 'index.php')
+		{
+			// Read the first 4k from the file.... enough for the header.
+			$fp = fopen($sourcedir . '/' . $entry, 'rb');
+			$header = fread($fp, 4096);
+			fclose($fp);
+
+			// Look for the version comment in the file header.
+			if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+				$version_info['file_versions'][$entry] = $match[1];
+			// It wasn't found, but the file was... show a '??'.
+			else
+				$version_info['file_versions'][$entry] = '??';
+		}
+	}
+	$Sources_dir->close();
+
+	// Load all the files in the default template directory - and the current theme if applicable.
+	$directories = array('default_template_versions' => $settings['default_theme_dir']);
+	if ($settings['theme_id'] != 1)
+		$directories += array('template_versions' => $settings['theme_dir']);
+
+	foreach ($directories as $type => $dirname)
+	{
+		$This_dir = dir($dirname);
+		while ($entry = $This_dir->read())
+		{
+			if (substr($entry, -12) == 'template.php' && !is_dir($dirname . '/' . $entry))
+			{
+				// Read the first 768 bytes from the file.... enough for the header.
+				$fp = fopen($dirname . '/' . $entry, 'rb');
+				$header = fread($fp, 768);
+				fclose($fp);
+
+				// Look for the version comment in the file header.
+				if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . preg_quote(basename($entry, '.template.php'), '~') . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+					$version_info[$type][$entry] = $match[1];
+				// It wasn't found, but the file was... show a '??'.
+				else
+					$version_info[$type][$entry] = '??';
+			}
+		}
+		$This_dir->close();
+	}
+
+	// Load up all the files in the default language directory and sort by language.
+	$This_dir = dir($lang_dir);
+	while ($entry = $This_dir->read())
+	{
+		if (substr($entry, -4) == '.php' && $entry != 'index.php' && !is_dir($lang_dir . '/' . $entry))
+		{
+			// Read the first 768 bytes from the file.... enough for the header.
+			$fp = fopen($lang_dir . '/' . $entry, 'rb');
+			$header = fread($fp, 768);
+			fclose($fp);
+
+			// Split the file name off into useful bits.
+			list ($name, $language) = explode('.', $entry);
+
+			// Look for the version comment in the file header.
+			if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . preg_quote($name, '~') . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+				$version_info['default_language_versions'][$language][$name] = $match[1];
+			// It wasn't found, but the file was... show a '??'.
+			else
+				$version_info['default_language_versions'][$language][$name] = '??';
+		}
+	}
+	$This_dir->close();
+
+	// Sort the file versions by filename.
+	if (!empty($versionOptions['sort_results']))
+	{
+		ksort($version_info['file_versions']);
+		ksort($version_info['default_template_versions']);
+		ksort($version_info['template_versions']);
+		ksort($version_info['default_language_versions']);
+
+		// For languages sort each language too.
+		foreach ($version_info['default_language_versions'] as $language => $dummy)
+			ksort($version_info['default_language_versions'][$language]);
+	}
+	return $version_info;
+}
+
+
+// Update the Settings.php file.
+function updateSettingsFile($config_vars)
+{
+	global $boarddir;
+
+	// Load the file.  Break it up based on \r or \n, and then clean out extra characters.
+	$settingsArray = file_get_contents($boarddir . '/Settings.php');
+	if (strpos($settingsArray, "\n") !== false)
+		$settingsArray = explode("\n", $settingsArray);
+	elseif (strpos($settingsArray, "\r") !== false)
+		$settingsArray = explode("\r", $settingsArray);
+	else
+		return;
+
+	// Make sure we got a good file.
+	if (count($config_vars) == 1 && isset($config_vars['db_last_error']))
+	{
+		$temp = trim(implode("\n", $settingsArray));
+		if (substr($temp, 0, 5) != '<?php' || substr($temp, -2) != '?' . '>')
+			return;
+		if (strpos($temp, 'sourcedir') === false || strpos($temp, 'boarddir') === false || strpos($temp, 'cookiename') === false)
+			return;
+	}
+
+	// Presumably, the file has to have stuff in it for this function to be called :P.
+	if (count($settingsArray) < 10)
+		return;
+
+	foreach ($settingsArray as $k => $dummy)
+		$settingsArray[$k] = strtr($dummy, array("\r" => '')) . "\n";
+
+	for ($i = 0, $n = count($settingsArray); $i < $n; $i++)
+	{
+		// Don't trim or bother with it if it's not a variable.
+		if (substr($settingsArray[$i], 0, 1) != '$')
+			continue;
+
+		$settingsArray[$i] = trim($settingsArray[$i]) . "\n";
+
+		// Look through the variables to set....
+		foreach ($config_vars as $var => $val)
+		{
+			if (strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
+			{
+				$comment = strstr(substr($settingsArray[$i], strpos($settingsArray[$i], ';')), '#');
+				$settingsArray[$i] = '$' . $var . ' = ' . $val . ';' . ($comment == '' ? '' : "\t\t" . rtrim($comment)) . "\n";
+
+				// This one's been 'used', so to speak.
+				unset($config_vars[$var]);
+			}
+		}
+
+		if (substr(trim($settingsArray[$i]), 0, 2) == '?' . '>')
+			$end = $i;
+	}
+
+	// This should never happen, but apparently it is happening.
+	if (empty($end) || $end < 10)
+		$end = count($settingsArray) - 1;
+
+	// Still more?  Add them at the end.
+	if (!empty($config_vars))
+	{
+		if (trim($settingsArray[$end]) == '?' . '>')
+			$settingsArray[$end++] = '';
+		else
+			$end++;
+
+		foreach ($config_vars as $var => $val)
+			$settingsArray[$end++] = '$' . $var . ' = ' . $val . ';' . "\n";
+		$settingsArray[$end] = '?' . '>';
+	}
+	else
+		$settingsArray[$end] = trim($settingsArray[$end]);
+
+	// Sanity error checking: the file needs to be at least 12 lines.
+	if (count($settingsArray) < 12)
+		return;
+
+	// Blank out the file - done to fix a oddity with some servers.
+	$fp = @fopen($boarddir . '/Settings.php', 'w');
+
+	// Is it even writable, though?
+	if ($fp)
+	{
+		fclose($fp);
+
+		$fp = fopen($boarddir . '/Settings.php', 'r+');
+		foreach ($settingsArray as $line)
+			fwrite($fp, strtr($line, "\r", ''));
+		fclose($fp);
+	}
+}
+
+?>

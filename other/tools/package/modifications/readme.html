@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>SMF Package SDK</title>
+		<style type="text/css">
+			body
+			{
+				font-family: Verdana, sans-serif;
+				background-color: #D4D4D4;
+				margin: 0;
+			}
+			body, td
+			{
+				font-size: 10pt;
+			}
+			div#header
+			{
+				background-color: white;
+				padding: 22px 4% 12px 4%;
+				font-family: Georgia, serif;
+				font-size: xx-large;
+				border-bottom: 1px solid black;
+				height: 40px;
+			}
+			div#content
+			{
+				padding: 20px 30px;
+			}
+
+			div.panel
+			{
+				border: 1px solid gray;
+				background-color: #F0F0F0;
+				margin: 1ex 0 3ex 0;
+				padding: 1.2ex;
+			}
+			div.panel h2
+			{
+				margin: 0;
+				margin-bottom: 2ex;
+				padding-bottom: 3px;
+				border-bottom: 1px dashed black;
+				font-size: 14pt;
+				font-weight: normal;
+			}
+
+			dl
+			{
+				margin-left: 3ex;
+			}
+			dt
+			{
+				font-style: italic;
+			}
+			dd
+			{
+				margin-bottom: 1ex;
+			}
+
+			div.code
+			{
+				margin: 1ex 3ex 2ex 3ex;
+				padding: 3px;
+				background-color: #FAFAFA;
+				font-family: monospace;
+				overflow: auto;
+			}
+			div.code span.comment
+			{
+				font-style: italic;
+				color: #000066;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="header">
+			<div title="Masamune">SMF Package Software Development Kit</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">Welcome to the world of modding!</h2>
+
+				This software development kit, for package and mod developers, is here to help people quickly begin to create packages and modifications for SMF.  More thorough and advanced information can always be found on Simple Machines' <a href="http://mods.simplemachines.org/docs/">mod site documentation pages</a>.<br />
+				<br />
+				You can find the following information in this file:<br />
+
+				<ul type="none" style="list-style-type: none;">
+					<li>&raquo; <a href="#files">Files contained in this folder.</a></li>
+					<li>&raquo; <a href="#modification">Making a modification file.</a></li>
+					<li>&raquo; <a href="#avatars">Creating a package just to install avatars.</a></li>
+					<li>&raquo; <a href="#language">Packaging language files for installation.</a></li>
+					<li>&raquo; <a href="#packaging">How you can distribute the files.</a></li>
+				</ul>
+
+				For more information, you can always post on <a href="http://www.simplemachines.org/community/index.php">the forum</a> asking questions, exchanging ideas and comments, or just plain bragging about how much better your package is than anyone else's.
+			</div>
+
+			<div class="panel">
+				<h2 id="files">What's available in this folder?</h2>
+
+				You should notice a few files that came with this readme.  They are all examples to help give you a better understanding of how to create a package.  They are as follows:
+
+				<dl>
+					<dt>add_settings.php</dt>
+					<dd>An example of how to add settings to the database in a package.  This file can be used by the package manager, and outside it.</dd>
+
+					<dt>boardmod.mod</dt>
+					<dd>A boardmod format modification file example.  Note that this format's use is deprecated and should thus be avoided.</dd>
+
+					<dt>modification.xml</dt>
+					<dd>This is an example of a more advanced, xml based format for creating modification files.</dd>
+
+					<dt>package-info.xml</dt>
+					<dd>An example package-info manifest file. (it describes what files are in a package and what to do with them.)</dd>
+
+					<dt>package-info_advanced.xml</dt>
+					<dd>A much more advanced example of a package-info manifest, utilizing the features of the package system.</dd>
+
+					<dt>readme.html</dt>
+					<dd>This file, describing the use of the above files and what you can do with them.</dd>
+				</dl>
+
+				All of these files, with the exception of the one you are currently viewing, are best viewed and edited with the text editor of your choice.  If you can, try to read through them all and get a feel for what they are doing.
+			</div>
+
+			<div class="panel">
+				<h2 id="modification">Creating a basic modification</h2>
+
+				One of the most popular types of package is a modification or mod.  This is a package that modifies files in SMF so they work differently - adding, removing, or changing functionality.  A large part of the package manager's advanced functions are built just to accommodate modifications.<br />
+				<br />
+				However, if you're reading this... chances are you just want a more casual description.  For this, open the <tt>modification.xml</tt> file included in this kit.  Inside, you will see a basic example framework for modifying a specific file.  A simplified version is as follows: (blue is only for comments.)<br />
+
+				<div class="code">
+<span class="comment">This tells it what file to edit.  Among others, you can use $sourcedir, $themedir, and $languagedir.</span><br />
+&lt;file name=&quot;$sourcedir/Subs.php&quot;&gt;<br />
+<br />
+&nbsp; &nbsp;&lt;operation&gt;<br />
+<br />
+&nbsp; &nbsp; &nbsp; <span class="comment">The position attribute should tell the position relative to the code you want to add.</span><br />
+&nbsp; &nbsp; &nbsp; &lt;search position=&quot;before&quot;&gt;&lt;![CDATA[<b><br />
+Search for some code to add stuff after.<br />
+</b>]]&gt;&lt;/search&gt;<br />
+<br />
+&nbsp; &nbsp; &nbsp; <span class="comment">The code to add in the described location.</span><br />
+&nbsp; &nbsp; &nbsp; &lt;add&gt;&lt;![CDATA[<b><br />
+This is what to add.<br />
+</b>]]&gt;&lt;/add&gt;<br />
+<br />
+&nbsp; &nbsp;&lt;/operation&gt;<br />
+<br />
+&lt;/file&gt;
+				</div>
+
+				You can use the file part (element) as many times as you have files to modify.  Then, inside that you can have as many operations as you want.  In fact, even in the operations you can have more than one search - for example, one for <em>before</em> and one for <em>after</em> - just to make sure you find the right part of the file. (which is very important.)<br />
+				<br />
+				On that note, try to make sure all the searches you make won't match any place but where you want them to.  And, always test your modification before giving it out.... you never know if a typo might do you in!<br />
+				<br />
+				You may notice the &lt;![CDATA[...]]&gt; used there.  This simply makes it so you can use &lt;, &gt;, &quot;, &amp;, and etc., without using &amp;amp; or something.  And, the letters &quot;CDATA&quot; stand for &quot;character data&quot;, meaning that it takes what's inside there literally - not as html/xml.  The only restriction is that you cannot have ]]&gt; inside it (because that's how it closes.)<br />
+				<br />
+				Once you have the modification file sorted out, you need to modify the package-info file to make use of it.  Open up package-info.xml, and make sure the <tt>&lt;type&gt;</tt> part says <b>modification</b>.  Then make <tt>&lt;install&gt;</tt> look something like this: (not the blue parts!)<br />
+
+				<div class="code">
+&lt;install&gt;<br />
+
+&nbsp; &nbsp;<span class="comment">Change this to the name of your readme file - if you have any.</span><br />
+&nbsp; &nbsp;&lt;readme&gt;readme.txt&lt;/readme&gt;<br />
+
+&nbsp; &nbsp;<span class="comment">Whatever filename you gave your modification file.</span><br />
+&nbsp; &nbsp;&lt;modification&gt;modification.xml&lt;/modification&gt;<br />
+
+&nbsp; &nbsp;<span class="comment">Add this only if you need to add settings - see add_settings.php. (most likely not.)</span><br />
+&nbsp; &nbsp;&lt;code&gt;add_settings.php&lt;/code&gt;<br />
+
+&lt;/install&gt;
+				</div>
+
+				With that done, you're ready to <a href="#packaging">package, test, and distribute your package</a>.
+			</div>
+
+			<div class="panel">
+				<h2 id="avatars">Creating a package of avatars</h2>
+
+				Okay, so you have a bunch of avatars, a lot of graphical talent, and the need to let everyone see your avatars.  No problem, we've got it covered ;).<br />
+				<br />
+				All you need to do is open up package_info.xml, and change a few things.  First, change the <tt>&lt;type&gt;modification&lt;/type&gt;</tt> part to say 'avatar' instead of 'modification'.  Next, find the big long part that starts with <tt>&lt;install&gt;</tt> and ends with <tt>&lt;/install&gt;</tt>, and replace it with something like this:
+
+				<div class="code">
+&lt;install&gt;<br />
+<br />
+&nbsp; &nbsp;&lt;readme&gt;readme.txt&lt;/readme&gt;<br />
+<br />
+&nbsp; &nbsp;&lt;require-dir name="Cool_Avatars!" destination="$avatardir" /&gt;<br />
+<br />
+&lt;/install&gt;
+				</div>
+
+				If you don't have/want a readme, take out the whole readme line.  Change Cool_Avatars! to whatever directory name you want to have your avatars in... (it's best to use a separate directory...) and bam, you're ready to go!  All you need now is to read the stuff on <a href="#packaging">packaging it all up</a>.
+			</div>
+
+			<div class="panel">
+				<h2 id="language">Packaging together some language files</h2>
+
+				Translating is a difficult and time consuming job, and for this reason making packages for the finished product should, by all rights, be easy.  Luckily, it is!<br />
+				<br />
+				Just like with avatars and modifications, you will need to edit package_info.xml to change a few things.  First, change the <tt>&lt;type&gt;modification&lt;/type&gt;</tt> part to say 'language' instead of 'modification'.  Next, find the big long part that starts with <tt>&lt;install&gt;</tt> and ends with <tt>&lt;/install&gt;</tt>, and replace it with something like this:
+
+				<div class="code">
+&lt;install&gt;<br />
+<br />
+&nbsp; &nbsp;&lt;readme&gt;readme.txt&lt;/readme&gt;<br />
+<br />
+&nbsp; &nbsp;&lt;require-dir name="languages" destination="$themedir" /&gt;<br />
+&nbsp; &nbsp;&lt;require-dir name="langname" destination="$themedir/images" /&gt;<br />
+<br />
+&lt;/install&gt;
+				</div>
+
+				This assumes that the "languages" folder includes the language files themselves, and the "langname" folder has all the language specific images in it.  You don't have to have a readme, so if you don't want one just remove that line entirely.
+				<br />
+				Now all that's left is <a href="#packaging">packaging it all up</a>.
+			</div>
+
+			<div class="panel">
+				<h2 id="packaging">Putting the whole thing together</h2>
+
+				Now that you have all your files ready, there are just a few things left to do.  First, we're going to edit package-info.xml just a little more, to include information about the package, which makes it so everyone knows the name, version, and etc. for upgrade and support reasons.<br />
+				<br />
+				Near the top, you should see three elements (tags): id, version, and name.  Name is easy, just change it to the name of the package.... version should probably be 1.0 or similar.  The id should be a specific format - your username, a colon, and then the package name.  Ideally, the id should have no spaces in it. (don't worry, the package-info.xml file has more details.)<br />
+				<br />
+				With that done, you'll want to zip it up.  You can compress it with either the zip or tar.gz formats.  The second is less common, but compresses more effectively.  Either way you do it, compress the files into one archive - and you've got a package!<br />
+				<br />
+				And remember - testing is everything.  It's easy to make a little typo that will mess the whole thing up, so try it on a clean install of SMF before you give it out!<br />
+				<br />
+
+				<h2>A last note on paths</h2>
+
+				As a last note, it's also very important, when writing modifications, not to use &quot;<tt>Sources/Filename</tt>&quot;.  It is a common practice to store those files outside of <cite>public_html</cite>, and so you should use the special package manager paths: <tt>$sourcedir/filename</tt>, <tt>$boarddir/filename</tt>, etc.  Others available are <tt>$themedir</tt>, <tt>$languagedir</tt>, <tt>$avatardir</tt>, and <tt>$smileysdir</tt>.<br />
+				<br />
+				Thanks for contributing,<br />
+				Simple Machines
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>SMF 2.0 Alpha Update Guide</title>
+		<style type="text/css">
+			body
+			{
+				background-color: #E5E5E8;
+				margin: 0px;
+				padding: 0px;
+			}
+			body, td
+			{
+				color: #000000;
+				font-size: small;
+				font-family: verdana, sans-serif;
+			}
+			div#header
+			{
+				background-image: url(Themes/default/images/catbg.jpg);
+				background-repeat: repeat-x;
+				background-color: #88A6C0;
+				padding: 22px 4% 12px 4%;
+				color: white;
+				font-family: Georgia, serif;
+				font-size: xx-large;
+				border-bottom: 1px solid black;
+				height: 40px;
+			}
+			div#content
+			{
+				padding: 20px 30px;
+			}
+
+			div.panel
+			{
+				border: 1px solid gray;
+				background-color: #F6F6F6;
+				margin: 1ex 0 3ex 0;
+				padding: 1.2ex;
+			}
+			div.panel h2
+			{
+				margin: 0;
+				margin-bottom: 2ex;
+				padding-bottom: 3px;
+				border-bottom: 1px dashed black;
+				font-size: 14pt;
+				font-weight: normal;
+			}
+
+			dl
+			{
+				margin-left: 3ex;
+			}
+			dt
+			{
+				font-style: italic;
+			}
+			dd
+			{
+				margin-bottom: 1ex;
+			}
+
+			div.code
+			{
+				margin: 1ex 3ex 2ex 3ex;
+				padding: 3px;
+				background-color: #FAFAFA;
+				font-family: monospace;
+				overflow: auto;
+			}
+			div.code span.comment
+			{
+				font-style: italic;
+				color: #000066;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="header">
+			<div title="Belgimine">SMF 2.0 Alpha Update Guide</div>
+		</div>
+		<div id="content">
+			<div class="panel">
+				<h2 id="contents">Updating your forum</h2>
+
+				Thank you for deciding to update your installation of <a href="http://www.simplemachines.org/smf/">SMF</a>.  Before you get started, please remember that there is <a href="http://www.simplemachines.org/community/index.php">a place for help at www.simplemachines.org</a> if you run into any problems at all.<br />
+				<br />
+				If you are looking to convert from YaBB SE or a version of SMF older than the previous release, you may have downloaded the wrong package.  Please check <a href="http://www.simplemachines.org/download.php">the downloads page</a> for more information.<br />
+				<br />
+				You can find the following information in this file:<br />
+
+				<ul type="none" style="list-style-type: none;">
+					<li>&raquo; <a href="#uploading">Uploading SMF onto your webserver.</a></li>
+					<li>&raquo; <a href="#finishing">Finishing the update and cleaning up.</a></li>
+				</ul>
+			</div>
+
+			<div class="panel">
+				<h2 id="uploading">Uploading the files</h2>
+
+				The first thing you need to do is upload all of the files in this package, excluding this file itself, to your server.  You should upload it to the same directory as your previous installation of SMF.  If you are given the option to &quot;resume&quot; uploads, make sure you do not do that - you must upload all of the files.  You may wish to make sure that all of the files were uploaded, such as those in <tt>Themes/default/languages</tt>, because some FTP clients have been known to drop files.  Additionally, if you are using any languages other than English please make sure to upload their updated versions as well.<br />
+				<br />
+				After you have finished uploading the files, point your browser to http://www.yourdomain.tld/forum/upgrade.php - where www.yourdomain.tld/forum is the URL to where you uploaded it.  You should then see a page asking you for a few bits of information.<br />
+				<br />
+				In most cases, you'll want to have &quot;Put the forum into maintenance mode during upgrade.&quot; checked, because it will ensure that nothing is messed with while the upgrader is working.  You may also wish to check &quot;Backup tables in your database...&quot;, which will make a backup of your old information and tables before making any changes in the database.
+			</div>
+
+			<div class="panel">
+				<h2 id="finishing">Finishing everything up</h2>
+
+				From this point, the upgrader should walk you through everything else.<br />
+				<br />
+				Please remember to delete upgrade.php after finishing the installation.  If you do not delete it, it is possible that someone could compromise the security of your forum with it.<br />
+				<br />
+				Good luck!<br />
+				Simple Machines
+			</div>
+		</div>
+	</body>
+</html>
