@@ -247,6 +247,7 @@ $txt['remove_filtered_results'] = 'Eliminar todos los resultados filtrados';
 $txt['sure_about_errorlog_remove'] = '&#191;Est&#225;s seguro de desear eliminar todos los mensajes de errores?';
 $txt['reverse_direction'] = 'Invertir cronol&oacute;gicamente el orden de la lista';
 // Untranslated!
+$txt['filter_only_file'] = 'Only show the errors from this file';
 $txt['error_type'] = 'Type of error';
 $txt['filter_only_type'] = 'Only show the errors of this type';
 $txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';

@@ -234,6 +234,8 @@ $txt['remove_selection'] = 'Verwijder selectie';
 $txt['remove_filtered_results'] = 'Verwijder alle gefilterde resultaten';
 $txt['sure_about_errorlog_remove'] = 'Weet je zeker dat je alle foutmeldingen wilt verwijderen?';
 $txt['reverse_direction'] = 'Omgekeerde chronologische volgorde van de lijst';
+// !!! Untranslated
+$txt['filter_only_file'] = 'Only show the errors from this file';
 
 // Untranslated!
 $txt['error_type'] = 'Type of error';

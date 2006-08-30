@@ -112,7 +112,18 @@ function template_error_log()
 								<div style="float: left;"><a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=message;value=', $error['message']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_message'], '" /></a></div>
 								<div style="float: left; margin-left: 1ex;">', $error['message']['html'], '</div>
 							</td>
-						</tr>
+						</tr>';
+		if (!empty($error['file']))
+			echo '<tr>
+							<td class="windowbg2" colspan="2">
+								<div style="float: left;"><a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=file;value=', $error['file']['search'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '" /></a></div>
+								<div style="float: left; margin-left: 1ex;">
+									', $txt[1003], ': ', $error['file']['link'], '<br />
+									', $txt[1004], ': ', $error['file']['line'], '
+								</div>
+							</td>
+						</tr>';
+		echo '
 					</table></td>
 				</tr>';
 	}

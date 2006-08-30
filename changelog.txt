@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2465 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2466 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -106,6 +106,7 @@ August 2006
  ! No longer block requests with cookies containing numeric keys. (QueryString.php)
  ! Updated editor to show fonts as drop-downs. Moved some elements around. Updated to ensure the non-html mode works on Opera etc. (Subs-Editor.php, editor.js)
  ! ssi_recentTopics now puts the number of replies and views into context too. (SSI.php)
+ ! Store the file and line information for the error log in seperate columns.  (Errors.php, ManageErrors.php, Errors template, Admin language files, install_2-0.sql, upgrade_2-0.sql)
 
 
 July 2006

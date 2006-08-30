@@ -239,6 +239,7 @@ $txt['error_type'] = 'Type of error';
 $txt['filter_only_type'] = 'Only show the errors of this type';
 $txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';
 $txt['error_bad_line'] = 'The line you specified is invalid.';
+$txt['filter_only_file'] = 'Only show the errors from this file';
 
 // Untranslated!
 $txt['errortype_all'] = 'All errors';

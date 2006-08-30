@@ -71,6 +71,8 @@ function ViewErrorLog()
 		'url' => &$txt['error_url'],
 		'message' => &$txt['error_message'],
 		'errorType' => &$txt['error_type'],
+		'file' => $txt[1003],
+		'line' => $txt[1004],
 	);
 
 	// Set up the filtering...
@@ -78,7 +80,7 @@ function ViewErrorLog()
 		$filter = array(
 			'variable' => $_GET['filter'],
 			'value' => array(
-				'sql' => addslashes($_GET['filter'] == 'message' || $_GET['filter'] == 'url' ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : addcslashes($_GET['value'], '\\_%'))
+				'sql' => addslashes(in_array($_GET['filter'], array('message', 'url', 'file')) ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : addcslashes($_GET['value'], '\\_%'))
 			),
 			'href' => ';filter=' . $_GET['filter'] . ';value=' . $_GET['value'],
 			'entity' => $filters[$_GET['filter']]
@@ -113,15 +115,17 @@ function ViewErrorLog()
 
 	// Find and sort out the errors.
 	$request = db_query("
-		SELECT ID_ERROR, ID_MEMBER, ip, url, logTime, message, session, errorType
+		SELECT ID_ERROR, ID_MEMBER, ip, url, logTime, message, session, errorType, file, line
 		FROM {$db_prefix}log_errors" . (isset($filter) ? "
 		WHERE $filter[variable] LIKE '{$filter['value']['sql']}'" : '') . "
 		ORDER BY ID_ERROR " . ($context['sort_direction'] == 'down' ? 'DESC' : '') . "
 		LIMIT $_GET[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 	$context['errors'] = array();
 	$members = array();
-	// construct the string used in the preg_match
+
+/*	// construct the string used in the preg_match
 	$preg_str = '~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~';
+*/
 	while ($row = mysql_fetch_assoc($request))
 	{
 		$search_message = preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '%', addcslashes($row['message'], '\\_%'));
@@ -129,14 +133,15 @@ function ViewErrorLog()
 			$search_message = addcslashes($row['message'], '\\_%');
 		$show_message = strtr(strtr(preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '$1', $row['message']), array("\r" => '', '<br />' => "\n", '<' => '&lt;', '>' => '&gt;', '"' => '&quot;')), array("\n" => '<br />'));
 
-		// Is a file being shown?
+/*		// Is a file being shown?
 		if (preg_match($preg_str, $show_message, $matches))
 		{
 			$filename = base64_encode($matches[2]);
 			$show_message=preg_replace($preg_str, '<br />$1<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . $filename . ';line=$4" onclick="return reqWin(\''.$scripturl.'?action=admin;area=errorlog;file='.$filename.';line=$4\', 600, 400, false);">$2</a><br />$3$4', $show_message);
 		}
+*/
 
-		$context['errors'][] = array(
+		$context['errors'][$row['ID_ERROR']] = array(
 			'member' => array(
 				'id' => $row['ID_MEMBER'],
 				'ip' => $row['ip'],
@@ -149,7 +154,7 @@ function ViewErrorLog()
 				'href' => base64_encode(addcslashes($row['url'], '\\_%'))
 			),
 			'message' => array(
-				'html' => sprintf($show_message, $txt[1003], $txt[1004]),
+				'html' => $show_message,
 				'href' => base64_encode($search_message)
 			),
 			'id' => $row['ID_ERROR'],
@@ -157,7 +162,16 @@ function ViewErrorLog()
 				'type' => $row['errorType'],
 				'name' => isset($txt['errortype_'.$row['errorType']]) ? $txt['errortype_'.$row['errorType']] : $row['errorType'],
 			),
+			'file' => array(),
 		);
+		if (!empty($row['file']) && !empty($row['line']))
+			$context['errors'][$row['ID_ERROR']]['file'] = array(
+				'file' => $row['file'],
+				'line' => $row['line'],
+				'href' => $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'],
+				'link' => '<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'] . '" onclick="return reqWin(this.href, 600, 400, false);">' . $row['file'] . '</a>',
+				'search' => base64_encode($row['file']),
+			);
 
 		// Make a list of members to load later.
 		$members[$row['ID_MEMBER']] = $row['ID_MEMBER'];

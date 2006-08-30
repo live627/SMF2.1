@@ -87,10 +87,16 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 
 	// Add a file and line to the error message?
 	// Don't use the actual txt entries for file and line but instead use %1$s for file and %2$s for line
-	if ($file != null)
-		$error_message .= '<br />%1$s: ' . $file;
-	if ($line != null)
-		$error_message .= '<br />%2$s: ' . $line;
+	if ($file == null)
+		$file = '';
+	else
+		// Window style slashes don't play well, lets convert them to the unix style.
+		$file = addslashes(str_replace('\\', '/', $file));
+
+	if ($line == null)
+		$line = 0;
+	else
+		$line = (int) $line;
 
 	// Just in case there's no ID_MEMBER or IP set yet.
 	if (empty($user_info['id']))
@@ -122,8 +128,8 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	// Insert the error into the database.
 	db_query("
 		INSERT INTO {$db_prefix}log_errors
-			(ID_MEMBER, logTime, ip, url, message, session, errorType)
-		VALUES ($user_info[id], " . time() . ", SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$query_string', 1, 65534), SUBSTRING('" . addslashes($error_message) . "', 1, 65534), '$sc', '$error_type')", false, false) or die($error_message);
+			(ID_MEMBER, logTime, ip, url, message, session, errorType, file, line)
+		VALUES ($user_info[id], " . time() . ", SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$query_string', 1, 65534), SUBSTRING('" . addslashes($error_message) . "', 1, 65534), '$sc', '$error_type', SUBSTRING('$file', 1, 255), $line)", false, false) or die($error_message);
 
 	// Return the message to make things simpler.
 	return $error_message;

@@ -388,13 +388,58 @@ if (@$modSettings['smfVersion'] < '2.0')
 ---#
 
 /******************************************************************************/
---- Adding Error Type Specification.
+--- Upgrading the error log.
 /******************************************************************************/
 
 ---# Adding error type column to log_errors table...
 ALTER TABLE {$db_prefix}log_errors
-ADD errorType char(15) NOT NULL default 'general';
+ADD errorType char(15) NOT NULL default 'general',
+ADD file tinytext NOT NULL default '',
+ADD line mediumint(8) unsigned NOT NULL default '0';
 ---#
+
+---{
+$request = upgrade_query("
+	SELECT COUNT(*)
+	FROM {$db_prefix}log_errors");
+list($totalActions) = mysql_fetch_row($request);
+mysql_free_result($request);
+
+$_GET['m'] = !empty($_GET['m']) ? (int) $_GET['m'] : '0';
+
+while ($_GET['m'] < $totalActions)
+{
+	nextSubStep($substep);
+
+	$request = upgrade_query("
+		SELECT ID_ERROR, message, file, line
+		FROM {$db_prefix}log_errors
+		LIMIT $_GET[m], 500");
+	while($row = mysql_fetch_assoc($request))
+	{	
+		preg_match('~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~', $row['message'], $matches);
+		if (!empty($matches[2]) && !empty($matches[4]) && empty($row['file']) && empty($row['line']))
+		{
+			$row['file'] = $matches[2];
+			$row['line'] = (int) $matches[4];
+			$row['message'] = preg_replace('~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~', '', $row['message']);
+		}
+		else
+			continue;
+
+		upgrade_query("
+			UPDATE {$db_prefix}log_errors
+			SET file = SUBSTRING('$row[file]', 1, 255),
+				line = $row[line],
+				message = SUBSTRING('$row[message]', 1, 65535)
+			WHERE ID_ERROR = $row[ID_ERROR]
+			LIMIT 1");
+	}
+
+	$_GET['m'] += 500;
+}
+unset($_GET['m']);
+---}
 
 /******************************************************************************/
 --- Adding Scheduled Tasks Data.
@@ -682,7 +727,7 @@ ADD ignoreBoards tinytext NOT NULL default '';
 ---#
 
 /******************************************************************************/
---- Add some columns to log_actions
+--- Adding some columns to moderation log
 /******************************************************************************/
 ---# Add the columns and the keys to log_actions ...
 ALTER TABLE {$db_prefix}log_actions
@@ -697,26 +742,25 @@ ADD KEY ID_MSG (ID_MSG);
 ---{
 $request = upgrade_query("
 	SELECT COUNT(*)
-	FROM {$db_prefix}log_actions
-	WHERE ID_BOARD = 0
-		AND ID_TOPIC = 0
-		AND ID_MSG = 0");
-list($needFixActions) = mysql_fetch_row($request);
+	FROM {$db_prefix}log_actions");
+list($totalActions) = mysql_fetch_row($request);
 mysql_free_result($request);
 
-while ($needFixActions)
+$_GET['m'] = !empty($_GET['m']) ? (int) $_GET['m'] : '0';
+
+while ($_GET['m'] < $totalActions)
 {
 	nextSubStep($substep);
 
 	$mrequest = upgrade_query("
-		SELECT ID_ACTION, extra
+		SELECT ID_ACTION, extra, ID_BOARD, ID_TOPIC, ID_MSG
 		FROM {$db_prefix}log_actions
-		WHERE ID_BOARD = 0
-			AND ID_TOPIC = 0
-			AND ID_MSG = 0
-		LIMIT 0, 500");
+		LIMIT $_GET[m], 500");
+
 	while ($row = mysql_fetch_assoc($mrequest))
 	{
+		if (!empty($row['ID_BOARD']) || !empty($row['ID_TOPIC']) || !empty($row['ID_MSG']))
+			continue;
 		$row['extra'] = @unserialize($row['extra']);
 		// Corrupt?
 		$row['extra'] = is_array($row['extra']) ? $row['extra'] : array();
@@ -773,7 +817,9 @@ while ($needFixActions)
 		$row['extra'] = addslashes(serialize($row['extra']));
 		upgrade_query("UPDATE {$db_prefix}log_actions SET ID_BOARD=$board_id, ID_TOPIC=$topic_id, ID_MSG=$msg_id, extra='$row[extra]' WHERE ID_ACTION=$row[ID_ACTION]");
 	}
+	$_GET['m'] += 500;
 }
+unset($_GET['m']);
 ---}
 ---#
 

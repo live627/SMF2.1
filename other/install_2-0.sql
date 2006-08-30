@@ -764,6 +764,8 @@ CREATE TABLE {$db_prefix}log_errors (
   message text NOT NULL,
   session char(32) NOT NULL default '                                ',
   errorType char(15) NOT NULL default 'general',
+  file tinytext NOT NULL default '',
+  line mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (ID_ERROR),
   KEY logTime (logTime),
   KEY ID_MEMBER (ID_MEMBER),
