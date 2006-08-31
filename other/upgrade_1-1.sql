@@ -2525,7 +2525,7 @@ upgrade_query("
 
 ---# Adding column to hold the boards being ignored ...
 ALTER TABLE {$db_prefix}members
-CHANGE buddy_list text NOT NULL;
+CHANGE COLUMN buddy_list buddy_list text NOT NULL;
 ---#
 
 /******************************************************************************/
