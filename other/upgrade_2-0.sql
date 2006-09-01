@@ -391,9 +391,10 @@ if (@$modSettings['smfVersion'] < '2.0')
 --- Upgrading the error log.
 /******************************************************************************/
 
----# Adding error type column to log_errors table...
+---# Adding columns to log_errors table...
 ALTER TABLE {$db_prefix}log_errors
-ADD errorType char(15) NOT NULL default 'general',
+ADD errorType char(15) NOT NULL default 'general';
+ALTER TABLE {$db_prefix}log_errors
 ADD file tinytext NOT NULL default '',
 ADD line mediumint(8) unsigned NOT NULL default '0';
 ---#
@@ -420,9 +421,9 @@ while ($_GET['m'] < $totalActions)
 		preg_match('~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~', $row['message'], $matches);
 		if (!empty($matches[2]) && !empty($matches[4]) && empty($row['file']) && empty($row['line']))
 		{
-			$row['file'] = $matches[2];
+			$row['file'] = addslashes(str_replace('\\', '/', $matches[2]));
 			$row['line'] = (int) $matches[4];
-			$row['message'] = preg_replace('~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~', '', $row['message']);
+			$row['message'] = addslashes(preg_replace('~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~', '', $row['message']));
 		}
 		else
 			continue;
