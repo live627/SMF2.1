@@ -2,6 +2,25 @@ var smf_formSubmitted = false;
 var lastKeepAliveCheck = new Date().getTime();
 var smf_editorArray = new Array();
 
+// Some very basic browser detection - from Mozilla's sniffer page.
+var ua = navigator.userAgent.toLowerCase();
+
+var is_ff = ua.indexOf("firefox") != -1;
+var is_gecko = ua.indexOf('gecko') != -1;
+var is_opera = ua.indexOf("opera") != -1;
+var is_safari13beta = ua.indexOf('applewebkit') != -1;
+
+var is_ie = ua.indexOf("msie") != -1  && !is_opera;
+var is_ie4 = is_ie && ua.indexOf("msie 4") != -1;
+var is_ie5 = is_ie && ua.indexOf("msie 5") != -1;
+var is_ie50 = is_ie && ua.indexOf("msie 5.0") != -1;
+var is_ie55 = is_ie && ua.indexOf("msie 5.5") != -1;
+var is_ie5up = is_ie && !is_ie4;
+var is_ie6 = is_ie && ua.indexOf("msie 6") != -1;
+var is_ie6up = is_ie5up && !is_ie55 && !is_ie5;
+var is_ie7 = is_ie && ua.indexOf("msie 7") != -1;
+var is_ie7up = is_ie6up && !is_ie6;
+
 // Define document.getElementById for Internet Explorer 4.
 if (typeof(document.getElementById) == "undefined")
 	document.getElementById = function (id)
@@ -13,29 +32,12 @@ if (typeof(document.getElementById) == "undefined")
 else if (!window.XMLHttpRequest && window.ActiveXObject)
 	window.XMLHttpRequest = function ()
 	{
-		return new ActiveXObject(navigator.userAgent.indexOf("MSIE 5") != -1 ? "Microsoft.XMLHTTP" : "MSXML2.XMLHTTP");
+		return new ActiveXObject(is_ie5 ? "Microsoft.XMLHTTP" : "MSXML2.XMLHTTP");
 	};
 
 // Some older versions of Mozilla don't have this, for some reason.
 if (typeof(document.forms) == "undefined")
 	document.forms = document.getElementsByTagName("form");
-
-// Some very basic browser detection.
-var smf_browser = 'unknown';
-if (navigator.userAgent.indexOf("Firefox") != -1)
-	smf_browser = 'firefox';
-else if (navigator.appVersion.indexOf("MSIE") != -1)
-{
-	temp = navigator.appVersion.split("MSIE");
-	version = parseFloat(temp[1]);
-
-	if (version >= 5.5)
-		smf_browser = 'ie'
-	else
-		smf_browser = 'ie5';
-}
-else if  (navigator.appVersion.indexOf("Opera") != -1)
-	smf_browser = 'opera';
 
 // Load an XML document using XMLHttpRequest.
 function getXMLDocument(sUrl, funcCallback)
@@ -246,7 +248,7 @@ function submitonce(theform)
 function submitThisOnce(form)
 {
 	// Hateful, hateful fix for Safari 1.3 beta.
-	if (navigator.userAgent.indexOf('AppleWebKit') != -1)
+	if (is_safari13beta)
 		return !smf_formSubmitted;
 
 	if (typeof(form.form) != "undefined")
@@ -479,7 +481,7 @@ function hashLoginPassword(doForm, cur_session_id)
 	doForm.hash_passwrd.value = hex_sha1(hex_sha1(doForm.user.value.toLowerCase() + doForm.passwrd.value) + cur_session_id);
 
 	// It looks nicer to fill it with asterisks, but Firefox will try to save that.
-	if (navigator.userAgent.indexOf("Firefox/") != -1)
+	if (is_ff != -1)
 		doForm.passwrd.value = "";
 	else
 		doForm.passwrd.value = doForm.passwrd.value.replace(/./g, "*");
@@ -617,7 +619,7 @@ function ajax_indicator(turn_on)
 	var indicator = document.getElementById("ajax_in_progress");
 	if (indicator != null)
 	{
-		if (navigator.appName == "Microsoft Internet Explorer" && navigator.userAgent.indexOf("MSIE 7") == -1)
+		if (navigator.appName == "Microsoft Internet Explorer" && !is_ie7up)
 		{
 			indicator.style.top = document.documentElement.scrollTop;
 		}

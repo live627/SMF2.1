@@ -941,7 +941,7 @@ while ($_GET['m'] < $totalMembers)
 		FROM {$db_prefix}members AS mem
 			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.ID_MEMBER = mem.ID_MEMBER AND pmr.deleted = 0)
 		WHERE mem.ID_MEMBER > $_GET[m]
-			AND mem.ID_MEMBER <= $_GET[m] + 256
+			AND mem.ID_MEMBER <= $_GET[m] + 128
 		GROUP BY mem.ID_MEMBER
 		HAVING instantMessages_real != instantMessages
 		LIMIT 256");
@@ -954,7 +954,7 @@ while ($_GET['m'] < $totalMembers)
 			LIMIT 1");
 	}
 
-	$_GET['m'] += 256;
+	$_GET['m'] += 128;
 }
 unset($_GET['m']);
 ---}
@@ -979,7 +979,7 @@ while ($_GET['m'] < $totalMembers)
 		FROM {$db_prefix}members AS mem
 			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.ID_MEMBER = mem.ID_MEMBER AND pmr.deleted = 0 AND pmr.is_read = 0)
 		WHERE mem.ID_MEMBER > $_GET[m]
-			AND mem.ID_MEMBER <= $_GET[m] + 256
+			AND mem.ID_MEMBER <= $_GET[m] + 128
 		GROUP BY mem.ID_MEMBER
 		HAVING unreadMessages_real != unreadMessages
 		LIMIT 256");
@@ -992,7 +992,7 @@ while ($_GET['m'] < $totalMembers)
 			LIMIT 1");
 	}
 
-	$_GET['m'] += 256;
+	$_GET['m'] += 128;
 }
 unset($_GET['m']);
 ---}

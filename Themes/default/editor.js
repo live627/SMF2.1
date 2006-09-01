@@ -6,7 +6,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	this.currentText = '';
 	var showDebug = true;
 	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
-	var htmlPossible = smf_browser == 'ie5' || smf_browser == 'firefox';
+	var htmlPossible = is_ie5up || is_ff;
 
 	var frameHandle = null;
 	var frameElement = null;
@@ -167,7 +167,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			frameDocument.write("<html><head></head><body></body></html>");
 			frameDocument.close();
 	
-			if (smf_browser != 'ie' && smf_browser != 'ie5')
+			if (!is_ie)
 			{
 				frameDocument.designMode = 'off';
 				frameDocument.designMode = 'on';
@@ -178,7 +178,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			}
 
 			// Attach our events.
-			if (smf_browser == 'firefox')
+			if (is_ff)
 			{
 				frameDocument.addEventListener('keyup', editorKeyUp, true);
 				frameDocument.addEventListener('mouseup', editorKeyUp, true);
@@ -697,7 +697,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			promptText = 'Please enter the URL you wish to link to.';
 
 		// IE has a nice prompt for this - others don't.
-		if (type != 'email' && type != 'ftp' && (smf_browser == 'ie' || smf_browser == 'ie5'))
+		if (type != 'email' && type != 'ftp' && is_ie)
 			smf_execCommand('createlink', true, 'http://');
 		else
 		{
@@ -737,7 +737,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 	function getSelect(wantText)
 	{
-		if ((smf_browser == 'ie' || smf_browser == 'ie5') && frameDocument.selection)
+		if (is_ie && frameDocument.selection)
 		{
 			if (wantText)
 				return frameDocument.selection.createRange().text;
@@ -759,7 +759,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		if (!selection)
 			return;
 
-		if ((smf_browser == 'ie' || smf_browser == 'ie5') && selection.createRange)
+		if (is_ie && selection.createRange)
 			return selection.createRange();
 
 		return selection.getRangeAt(0);
@@ -773,7 +773,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		if (!range)
 			return null;
 
-		if ((smf_browser == 'ie' || smf_browser == 'ie5'))
+		if (is_ie)
 		{
 			if (range.item)
 				return range.item(0);
