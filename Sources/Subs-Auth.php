@@ -383,7 +383,7 @@ function show_db_error($loadavg = false)
 // Find members by email address, username, or real name.
 function findMembers($names, $use_wildcards = false, $buddies_only = false, $max = null)
 {
-	global $db_prefix, $scripturl, $user_info, $modSettings, $func;
+	global $db_prefix, $scripturl, $user_info, $modSettings, $smffunc;
 
 	// If it's not already an array, make it one.
 	if (!is_array($names))
@@ -393,7 +393,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	foreach ($names as $i => $name)
 	{
 		// Add slashes, trim, and fix wildcards for each name.
-		$names[$i] = addslashes(trim($func['strtolower']($name)));
+		$names[$i] = addslashes(trim($smffunc['strtolower']($name)));
 
 		$maybe_email |= strpos($name, '@') !== false;
 
@@ -447,7 +447,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 
 function JSMembers()
 {
-	global $context, $scripturl, $user_info, $func;
+	global $context, $scripturl, $user_info, $smffunc;
 
 	checkSession('get');
 
@@ -463,7 +463,7 @@ function JSMembers()
 	}
 
 	if (isset($_REQUEST['search']))
-		$context['last_search'] = $func['htmlspecialchars'](stripslashes($_REQUEST['search']), ENT_QUOTES);
+		$context['last_search'] = $smffunc['htmlspecialchars'](stripslashes($_REQUEST['search']), ENT_QUOTES);
 	else
 		$_REQUEST['start'] = 0;
 
@@ -484,7 +484,7 @@ function JSMembers()
 	// If the user has done a search, well - search.
 	if (isset($_REQUEST['search']))
 	{
-		$_REQUEST['search'] = $func['htmlspecialchars'](stripslashes($_REQUEST['search']), ENT_QUOTES);
+		$_REQUEST['search'] = $smffunc['htmlspecialchars'](stripslashes($_REQUEST['search']), ENT_QUOTES);
 
 		$context['results'] = findMembers(array($_REQUEST['search']), true, $context['buddy_search']);
 		$total_results = count($context['results']);
@@ -513,12 +513,12 @@ function JSMembers()
 
 function RequestMembers()
 {
-	global $user_info, $db_prefix, $txt, $func;
+	global $user_info, $db_prefix, $txt, $smffunc;
 
 	checkSession('get');
 
-	$_REQUEST['search'] = $func['htmlspecialchars'](stripslashes($_REQUEST['search'])) . '*';
-	$_REQUEST['search'] = addslashes(trim($func['strtolower']($_REQUEST['search'])));
+	$_REQUEST['search'] = $smffunc['htmlspecialchars'](stripslashes($_REQUEST['search'])) . '*';
+	$_REQUEST['search'] = addslashes(trim($smffunc['strtolower']($_REQUEST['search'])));
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	if (function_exists('iconv'))
@@ -631,7 +631,7 @@ function resetPassword($memID, $username = null)
 // This function simply checks whether a password meets the current forum rules.
 function validatePassword($password, $username, $restrict_in = array())
 {
-	global $modSettings, $func;
+	global $modSettings, $smffunc;
 
 	// Perform basic requirements first.
 	if (strlen($password) < (empty($modSettings['password_strength']) ? 4 : 8))
@@ -644,7 +644,7 @@ function validatePassword($password, $username, $restrict_in = array())
 	// Otherwise, perform the medium strength test - checking if password appears in the restricted string.
 	if (preg_match('~\b' . preg_quote($password, '~') . '\b~', implode(' ', $restrict_in)) != 0)
 		return 'restricted_words';
-	elseif ($func['strpos']($password, $username) !== false)
+	elseif ($smffunc['strpos']($password, $username) !== false)
 		return 'restricted_words';
 
 	// !!! If pspell is available, use it on the word, and return restricted_words if it doesn't give "bad spelling"?
@@ -655,7 +655,7 @@ function validatePassword($password, $username, $restrict_in = array())
 
 	// Otherwise, hard test next, check for numbers and letters, uppercase too.
 	$good = preg_match('~(\D\d|\d\D)~', $password) != 0;
-	$good &= $func['strtolower']($password) != $password;
+	$good &= $smffunc['strtolower']($password) != $password;
 
 	return $good ? null : 'chars';
 }

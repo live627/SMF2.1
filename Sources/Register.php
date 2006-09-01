@@ -44,7 +44,7 @@ if (!defined('SMF'))
 function Register()
 {
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
-	global $db_prefix, $language, $scripturl, $func;
+	global $db_prefix, $language, $scripturl, $smffunc;
 
 	// Check if the administrator has it disabled.
 	if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 3)
@@ -104,7 +104,7 @@ function Register()
 					continue;
 
 				$context['languages'][] = array(
-					'name' => $func['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
+					'name' => $smffunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
 					'selected' => $selectedLanguage == $matches[1],
 					'filename' => $matches[1],
 				);
@@ -138,7 +138,7 @@ function Register()
 function Register2()
 {
 	global $scripturl, $txt, $modSettings, $db_prefix, $context, $sourcedir;
-	global $user_info, $options, $settings, $func;
+	global $user_info, $options, $settings, $smffunc;
 
 	// Well, if you don't agree, you can't register.
 	if (!empty($modSettings['requireAgreement']) && (empty($_POST['regagree']) || $_POST['regagree'] == 'no'))

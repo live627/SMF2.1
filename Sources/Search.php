@@ -206,7 +206,7 @@ function PlushSearch2()
 {
 	global $scripturl, $modSettings, $sourcedir, $txt, $db_prefix, $db_connection;
 	global $user_info, $ID_MEMBER, $context, $options, $messages_request, $boards_can;
-	global $excludedWords, $participants, $func;
+	global $excludedWords, $participants, $smffunc;
 
 	// !!! Add spam protection.
 
@@ -358,7 +358,7 @@ function PlushSearch2()
 		$userQuery = '';
 	else
 	{
-		$userString = strtr($func['htmlspecialchars'](stripslashes($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
+		$userString = strtr($smffunc['htmlspecialchars'](stripslashes($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
@@ -514,7 +514,7 @@ function PlushSearch2()
 	$stripped_query = preg_replace('~([\x0B\0' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']);
 
 	// Make the query lower case. It's gonna be case insensitive anyway.
-	$stripped_query = un_htmlspecialchars($func['strtolower']($stripped_query));
+	$stripped_query = un_htmlspecialchars($smffunc['strtolower']($stripped_query));
 
 	// This (hidden) setting will do fulltext searching in the most basic way.
 	if (!empty($modSettings['search_simple_fulltext']))
@@ -704,20 +704,20 @@ function PlushSearch2()
 			if (preg_match('~^\w+$~', $word) === 0)
 			{
 				$did_you_mean['search'][] = '"' . $word . '"';
-				$did_you_mean['display'][] = '&quot;' . $func['htmlspecialchars']($word) . '&quot;';
+				$did_you_mean['display'][] = '&quot;' . $smffunc['htmlspecialchars']($word) . '&quot;';
 				continue;
 			}
 			// For some strange reason spell check can crash PHP on decimals.
 			elseif (preg_match('~\d~', $word) === 1)
 			{
 				$did_you_mean['search'][] = $word;
-				$did_you_mean['display'][] = $func['htmlspecialchars']($word);
+				$did_you_mean['display'][] = $smffunc['htmlspecialchars']($word);
 				continue;
 			}
 			elseif (pspell_check($pspell_link, $word))
 			{
 				$did_you_mean['search'][] = $word;
-				$did_you_mean['display'][] = $func['htmlspecialchars']($word);
+				$did_you_mean['display'][] = $smffunc['htmlspecialchars']($word);
 				continue;
 			}
 
@@ -725,7 +725,7 @@ function PlushSearch2()
 			foreach ($suggestions as $i => $s)
 			{
 				// Search is case insensitive.
-				if ($func['strtolower']($s) == $func['strtolower']($word))
+				if ($smffunc['strtolower']($s) == $smffunc['strtolower']($word))
 					unset($suggestions[$i]);
 			}
 
@@ -734,13 +734,13 @@ function PlushSearch2()
 			{
 				$suggestions = array_values($suggestions);
 				$did_you_mean['search'][] = $suggestions[0];
-				$did_you_mean['display'][] = '<em><b>' . $func['htmlspecialchars']($suggestions[0]) . '</b></em>';
+				$did_you_mean['display'][] = '<em><b>' . $smffunc['htmlspecialchars']($suggestions[0]) . '</b></em>';
 				$found_misspelling = true;
 			}
 			else
 			{
 				$did_you_mean['search'][] = $word;
-				$did_you_mean['display'][] = $func['htmlspecialchars']($word);
+				$did_you_mean['display'][] = $smffunc['htmlspecialchars']($word);
 			}
 		}
 
@@ -755,12 +755,12 @@ function PlushSearch2()
 				if (preg_match('~^\w+$~', $word) == 0)
 				{
 					$temp_excluded['search'][] = '-"' . $word . '"';
-					$temp_excluded['display'][] = '-&quot;' . $func['htmlspecialchars']($word) . '&quot;';
+					$temp_excluded['display'][] = '-&quot;' . $smffunc['htmlspecialchars']($word) . '&quot;';
 				}
 				else
 				{
 					$temp_excluded['search'][] = '-' . $word;
-					$temp_excluded['display'][] = '-' . $func['htmlspecialchars']($word);
+					$temp_excluded['display'][] = '-' . $smffunc['htmlspecialchars']($word);
 				}
 			}
 
@@ -782,9 +782,9 @@ function PlushSearch2()
 	// Let the user adjust the search query, should they wish?
 	$context['search_params'] = $search_params;
 	if (isset($context['search_params']['search']))
-		$context['search_params']['search'] = $func['htmlspecialchars']($context['search_params']['search']);
+		$context['search_params']['search'] = $smffunc['htmlspecialchars']($context['search_params']['search']);
 	if (isset($context['search_params']['userspec']))
-		$context['search_params']['userspec'] = $func['htmlspecialchars']($context['search_params']['userspec']);
+		$context['search_params']['userspec'] = $smffunc['htmlspecialchars']($context['search_params']['userspec']);
 
 
 	// *** Encode all search params
@@ -1540,7 +1540,7 @@ function prepareSearchContext($reset = false)
 {
 	global $txt, $modSettings, $db_prefix, $scripturl, $ID_MEMBER;
 	global $memberContext, $context, $settings, $options, $messages_request;
-	global $boards_can, $participants, $func;
+	global $boards_can, $participants, $smffunc;
 
 	// Remember which message this is.  (ie. reply #83)
 	static $counter = null;
@@ -1598,7 +1598,7 @@ function prepareSearchContext($reset = false)
 		if (strlen($message['body']) > $charLimit)
 		{
 			if (empty($context['key_words']))
-				$message['body'] = $func['strlen']($message['body']) > $charLimit ? $func['substr']($message['body'], 0, $charLimit) . '<b>...</b>' : $message['body'];
+				$message['body'] = $smffunc['strlen']($message['body']) > $charLimit ? $smffunc['substr']($message['body'], 0, $charLimit) . '<b>...</b>' : $message['body'];
 			else
 			{
 				$matchString = '';
@@ -1743,7 +1743,7 @@ function prepareSearchContext($reset = false)
 	foreach ($context['key_words'] as $query)
 	{
 		// Fix the international characters in the keyword too.
-		$query = strtr($func['htmlspecialchars']($query), array('\\\'' => '\''));
+		$query = strtr($smffunc['htmlspecialchars']($query), array('\\\'' => '\''));
 
 		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? stripslashes('\$1') : '<b class=\"highlight\">\$1</b>'", $body_highlighted);
 		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<b class="highlight">$1</b>', $subject_highlighted);

@@ -824,7 +824,7 @@ function template_servers()
 
 function template_package_list()
 {
-	global $context, $settings, $options, $txt, $scripturl, $func;
+	global $context, $settings, $options, $txt, $scripturl, $smffunc;
 
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
@@ -882,7 +882,7 @@ function template_package_list()
 				// Show the mod type?
 				if ($package['type'] != '')
 					echo '
-						', $txt['package24'], ':&nbsp; ', $func['ucwords']($func['strtolower']($package['type'])), '<br />';
+						', $txt['package24'], ':&nbsp; ', $smffunc['ucwords']($smffunc['strtolower']($package['type'])), '<br />';
 				// Show the version number?
 				if ($package['version'] != '')
 					echo '

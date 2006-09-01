@@ -39,7 +39,7 @@ function MessageIndex()
 {
 	global $txt, $scripturl, $board, $db_prefix;
 	global $modSettings, $ID_MEMBER;
-	global $context, $options, $settings, $board_info, $user_info, $func;
+	global $context, $options, $settings, $board_info, $user_info, $smffunc;
 
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_messageindex';
@@ -484,11 +484,11 @@ function MessageIndex()
 
 			// Limit them to 128 characters - do this FIRST because it's a lot of wasted censoring otherwise.
 			$row['firstBody'] = strip_tags(strtr(parse_bbc($row['firstBody'], $row['firstSmileys'], $row['ID_FIRST_MSG']), array('<br />' => '&#10;')));
-			if ($func['strlen']($row['firstBody']) > 128)
-				$row['firstBody'] = $func['substr']($row['firstBody'], 0, 128) . '...';
+			if ($smffunc['strlen']($row['firstBody']) > 128)
+				$row['firstBody'] = $smffunc['substr']($row['firstBody'], 0, 128) . '...';
 			$row['lastBody'] = strip_tags(strtr(parse_bbc($row['lastBody'], $row['lastSmileys'], $row['ID_LAST_MSG']), array('<br />' => '&#10;')));
-			if ($func['strlen']($row['lastBody']) > 128)
-				$row['lastBody'] = $func['substr']($row['lastBody'], 0, 128) . '...';
+			if ($smffunc['strlen']($row['lastBody']) > 128)
+				$row['lastBody'] = $smffunc['substr']($row['lastBody'], 0, 128) . '...';
 
 			// Censor the subject and message preview.
 			censorText($row['firstSubject']);

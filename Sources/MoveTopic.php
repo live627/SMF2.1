@@ -148,7 +148,7 @@ function MoveTopic()
 function MoveTopic2()
 {
 	global $txt, $board, $topic, $scripturl, $sourcedir, $modSettings;
-	global $db_prefix, $ID_MEMBER, $board, $language, $user_info, $func;
+	global $db_prefix, $ID_MEMBER, $board, $language, $user_info, $smffunc;
 
 	// Make sure this form hasn't been submitted before.
 	checkSubmitOnce('check');
@@ -217,7 +217,7 @@ function MoveTopic2()
 	// Rename the topic...
 	if (isset($_POST['reset_subject'], $_POST['custom_subject']) && $_POST['custom_subject'] != '')
 	{
-		$_POST['custom_subject'] = $func['htmlspecialchars']($_POST['custom_subject']);
+		$_POST['custom_subject'] = $smffunc['htmlspecialchars']($_POST['custom_subject']);
 
 		if (isset($_POST['enforce_subject']))
 		{
@@ -259,7 +259,7 @@ function MoveTopic2()
 		if ($user_info['language'] != $language)
 			loadLanguage('index', $language);
 
-		$_POST['reason'] = $func['htmlspecialchars']($_POST['reason'], ENT_QUOTES);
+		$_POST['reason'] = $smffunc['htmlspecialchars']($_POST['reason'], ENT_QUOTES);
 		preparsecode($_POST['reason']);
 
 		// Add a URL onto the message.

@@ -662,7 +662,7 @@ function MessageSearch()
 function MessageSearch2()
 {
 	global $scripturl, $modSettings, $user_info, $context, $txt, $db_prefix;
-	global $ID_MEMBER, $memberContext, $func;
+	global $ID_MEMBER, $memberContext, $smffunc;
 
 	if (!empty($context['load_average']) && !empty($modSettings['loadavg_search']) && $context['load_average'] >= $modSettings['loadavg_search'])
 		fatal_lang_error('loadavg_search_disabled', false);
@@ -719,7 +719,7 @@ function MessageSearch2()
 		$userQuery = '';
 	else
 	{
-		$userString = strtr($func['htmlspecialchars'](stripslashes($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
+		$userString = strtr($smffunc['htmlspecialchars'](stripslashes($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
@@ -784,7 +784,7 @@ function MessageSearch2()
 	foreach ($matches[1] as $index => $word)
 		if ($word == '-')
 		{
-			$word = $func['strtolower'](trim($searchArray[$index]));
+			$word = $smffunc['strtolower'](trim($searchArray[$index]));
 			if (strlen($word) > 0)
 				$excludedWords[] = addslashes($word);
 			unset($searchArray[$index]);
@@ -794,7 +794,7 @@ function MessageSearch2()
 	foreach ($tempSearch as $index => $word)
 		if (strpos(trim($word), '-') === 0)
 		{
-			$word = substr($func['strtolower'](trim($word)), 1);
+			$word = substr($smffunc['strtolower'](trim($word)), 1);
 			if (strlen($word) > 0)
 				$excludedWords[] = addslashes($word);
 			unset($tempSearch[$index]);
@@ -805,13 +805,13 @@ function MessageSearch2()
 	// Trim everything and make sure there are no words that are the same.
 	foreach ($searchArray as $index => $value)
 	{
-		$searchArray[$index] = $func['strtolower'](trim($value));
+		$searchArray[$index] = $smffunc['strtolower'](trim($value));
 		if ($searchArray[$index] == '')
 			unset($searchArray[$index]);
 		else
 		{
 			// Sort out entities first.
-			$searchArray[$index] = $func['htmlspecialchars']($searchArray[$index]);
+			$searchArray[$index] = $smffunc['htmlspecialchars']($searchArray[$index]);
 			$searchArray[$index] = addslashes($searchArray[$index]);
 		}
 	}
@@ -1022,7 +1022,7 @@ function MessageSearch2()
 function MessagePost()
 {
 	global $txt, $sourcedir, $db_prefix, $ID_MEMBER, $scripturl, $modSettings;
-	global $context, $options, $func, $language, $user_info;
+	global $context, $options, $smffunc, $language, $user_info;
 
 	isAllowedTo('pm_send');
 
@@ -1086,7 +1086,7 @@ function MessagePost()
 			cache_put_data('response_prefix', $context['response_prefix'], 600);
 		}
 		$form_subject = $row_quoted['subject'];
-		if ($context['reply'] && trim($context['response_prefix']) != '' && $func['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
+		if ($context['reply'] && trim($context['response_prefix']) != '' && $smffunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
 			$form_subject = $context['response_prefix'] . $form_subject;
 
 		if (isset($_REQUEST['quote']))
@@ -1210,7 +1210,7 @@ function MessagePost()
 function messagePostError($error_types, $to, $bcc)
 {
 	global $txt, $context, $scripturl, $modSettings, $db_prefix, $ID_MEMBER;
-	global $func, $user_info;
+	global $smffunc, $user_info;
 
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 
@@ -1225,8 +1225,8 @@ function messagePostError($error_types, $to, $bcc)
 	// Set everything up like before....
 	$context['to'] = stripslashes($to);
 	$context['bcc'] = stripslashes($bcc);
-	$context['subject'] = isset($_REQUEST['subject']) ? $func['htmlspecialchars'](stripslashes($_REQUEST['subject'])) : '';
-	$context['message'] = isset($_REQUEST['message']) ? str_replace(array('  '), array('&nbsp; '), $func['htmlspecialchars'](stripslashes($_REQUEST['message']))) : '';
+	$context['subject'] = isset($_REQUEST['subject']) ? $smffunc['htmlspecialchars'](stripslashes($_REQUEST['subject'])) : '';
+	$context['message'] = isset($_REQUEST['message']) ? str_replace(array('  '), array('&nbsp; '), $smffunc['htmlspecialchars'](stripslashes($_REQUEST['message']))) : '';
 	$context['copy_to_outbox'] = !empty($_REQUEST['outbox']);
 	$context['reply'] = !empty($_REQUEST['replied_to']);
 
@@ -1306,7 +1306,7 @@ function messagePostError($error_types, $to, $bcc)
 function MessagePost2()
 {
 	global $txt, $ID_MEMBER, $context, $sourcedir;
-	global $db_prefix, $user_info, $modSettings, $scripturl, $func;
+	global $db_prefix, $user_info, $modSettings, $scripturl, $smffunc;
 
 	isAllowedTo('pm_send');
 	require_once($sourcedir . '/Subs-Auth.php');
@@ -1333,7 +1333,7 @@ function MessagePost2()
 		$post_errors[] = 'no_subject';
 	if (!isset($_REQUEST['message']) || $_REQUEST['message'] == '')
 		$post_errors[] = 'no_message';
-	elseif (!empty($modSettings['max_messageLength']) && $func['strlen']($_REQUEST['message']) > $modSettings['max_messageLength'])
+	elseif (!empty($modSettings['max_messageLength']) && $smffunc['strlen']($_REQUEST['message']) > $modSettings['max_messageLength'])
 		$post_errors[] = 'long_message';
 	if (empty($_REQUEST['to']) && empty($_REQUEST['bcc']) && empty($_REQUEST['u']))
 		$post_errors[] = 'no_to';
@@ -1344,14 +1344,14 @@ function MessagePost2()
 
 	// If they did, give a chance to make ammends.
 	if (!empty($post_errors))
-		return messagePostError($post_errors, $func['htmlspecialchars']($_REQUEST['to']), $func['htmlspecialchars']($_REQUEST['bcc']));
+		return messagePostError($post_errors, $smffunc['htmlspecialchars']($_REQUEST['to']), $smffunc['htmlspecialchars']($_REQUEST['bcc']));
 
 	// Want to take a second glance before you send?
 	if (isset($_REQUEST['preview']))
 	{
 		// Set everything up to be displayed.
-		$context['preview_subject'] = $func['htmlspecialchars'](stripslashes($_REQUEST['subject']));
-		$context['preview_message'] = $func['htmlspecialchars'](stripslashes($_REQUEST['message']), ENT_QUOTES);
+		$context['preview_subject'] = $smffunc['htmlspecialchars'](stripslashes($_REQUEST['subject']));
+		$context['preview_message'] = $smffunc['htmlspecialchars'](stripslashes($_REQUEST['message']), ENT_QUOTES);
 		preparsecode($context['preview_message'], true);
 
 		// Parse out the BBC if it is enabled.
@@ -1412,7 +1412,7 @@ function MessagePost2()
 		{
 			foreach ($rec as $index => $member)
 				if (strlen(trim($member)) > 0)
-					$input[$rec_type][$index] = $func['htmlspecialchars']($func['strtolower'](stripslashes(trim($member))));
+					$input[$rec_type][$index] = $smffunc['htmlspecialchars']($smffunc['strtolower'](stripslashes(trim($member))));
 				else
 					unset($input[$rec_type][$index]);
 		}
@@ -1427,12 +1427,12 @@ function MessagePost2()
 			$member['name'] = strtr($member['name'], array('&#039;' => '\''));
 
 			foreach ($input as $rec_type => $to_members)
-				if (array_intersect(array($func['strtolower']($member['username']), $func['strtolower']($member['name']), $func['strtolower']($member['email'])), $to_members))
+				if (array_intersect(array($smffunc['strtolower']($member['username']), $smffunc['strtolower']($member['name']), $smffunc['strtolower']($member['email'])), $to_members))
 				{
 					$recipients[$rec_type][] = $member['id'];
 
 					// Get rid of this username. The ones that remain were not found.
-					$input[$rec_type] = array_diff($input[$rec_type], array($func['strtolower']($member['username']), $func['strtolower']($member['name']), $func['strtolower']($member['email'])));
+					$input[$rec_type] = array_diff($input[$rec_type], array($smffunc['strtolower']($member['username']), $smffunc['strtolower']($member['name']), $smffunc['strtolower']($member['email'])));
 				}
 		}
 	}
@@ -1888,7 +1888,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 // This function handles adding, deleting and editing labels on messages.
 function ManageLabels()
 {
-	global $txt, $context, $db_prefix, $ID_MEMBER, $scripturl, $func;
+	global $txt, $context, $db_prefix, $ID_MEMBER, $scripturl, $smffunc;
 
 	// Build the link tree elements...
 	$context['linktree'][] = array(
@@ -1916,10 +1916,10 @@ function ManageLabels()
 		// Adding a new label?
 		if (isset($_POST['add']))
 		{
-			$_POST['label'] = strtr($func['htmlspecialchars'](trim($_POST['label'])), array(',' => '&#044;'));
+			$_POST['label'] = strtr($smffunc['htmlspecialchars'](trim($_POST['label'])), array(',' => '&#044;'));
 
-			if ($func['strlen']($_POST['label']) > 30)
-				$_POST['label'] = $func['substr']($_POST['label'], 0, 30);
+			if ($smffunc['strlen']($_POST['label']) > 30)
+				$_POST['label'] = $smffunc['substr']($_POST['label'], 0, 30);
 			if ($_POST['label'] != '')
 				$the_labels[] = $_POST['label'];
 		}
@@ -1948,10 +1948,10 @@ function ManageLabels()
 					continue;
 				elseif (isset($_POST['label_name'][$id]))
 				{
-					$_POST['label_name'][$id] = trim(strtr($func['htmlspecialchars']($_POST['label_name'][$id]), array(',' => '&#044;')));
+					$_POST['label_name'][$id] = trim(strtr($smffunc['htmlspecialchars']($_POST['label_name'][$id]), array(',' => '&#044;')));
 
-					if ($func['strlen']($strlen_label) > 30)
-						$_POST['label_name'][$id] = $func['substr']($_POST['label_name'][$id], 0, 30);
+					if ($smffunc['strlen']($strlen_label) > 30)
+						$_POST['label_name'][$id] = $smffunc['substr']($_POST['label_name'][$id], 0, 30);
 					if ($_POST['label_name'][$id] != '')
 					{
 						$the_labels[(int) $id] = $_POST['label_name'][$id];
@@ -2024,7 +2024,7 @@ function ManageLabels()
 function ReportMessage()
 {
 	global $txt, $context, $scripturl, $sourcedir, $db_prefix, $ID_MEMBER;
-	global $user_info, $language, $modSettings, $func;
+	global $user_info, $language, $modSettings, $smffunc;
 
 	// Check that this feature is even enabled!
 	if (empty($modSettings['enableReportPM']) || empty($_REQUEST['pmsg']))
@@ -2134,7 +2134,7 @@ function ReportMessage()
 
 				// Plonk it in the array ;)
 				$messagesToSend[$cur_language] = array(
-					'subject' => ($func['strpos']($subject, $txt['pm_report_pm_subject']) === false ? $txt['pm_report_pm_subject'] : '') . $subject,
+					'subject' => ($smffunc['strpos']($subject, $txt['pm_report_pm_subject']) === false ? $txt['pm_report_pm_subject'] : '') . $subject,
 					'body' => $report_body,
 					'recipients' => array(
 						'to' => array(),

@@ -839,7 +839,7 @@ function comma_format($number, $override_decimal_count = false)
 // Format a time to make it look purdy.
 function timeformat($logTime, $show_today = true)
 {
-	global $user_info, $txt, $db_prefix, $modSettings, $func;
+	global $user_info, $txt, $db_prefix, $modSettings, $smffunc;
 
 	// Offset the time.
 	$time = $logTime + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
@@ -879,7 +879,7 @@ function timeformat($logTime, $show_today = true)
 	{
 		foreach (array('%a', '%A', '%b', '%B') as $token)
 			if (strpos($str, $token) !== false)
-				$str = str_replace($token, $func['ucwords'](strftime($token, $time)), $str);
+				$str = str_replace($token, $smffunc['ucwords'](strftime($token, $time)), $str);
 	}
 	else
 	{
@@ -917,14 +917,14 @@ if (!function_exists('stripos'))
 // Shorten a subject + internationalization concerns.
 function shorten_subject($subject, $len)
 {
-	global $func;
+	global $smffunc;
 
 	// It was already short enough!
-	if ($func['strlen']($subject) <= $len)
+	if ($smffunc['strlen']($subject) <= $len)
 		return $subject;
 
 	// Shorten it by the length it was too long, and strip off junk from the end.
-	return $func['substr']($subject, 0, $len) . '...';
+	return $smffunc['substr']($subject, 0, $len) . '...';
 }
 
 // The current time with offset.
@@ -3578,13 +3578,13 @@ function host_from_ip($ip)
 // Chops a string into words and prepares them to be inserted into (or searched from) the database.
 function text2words($text, $max_chars = 20, $encrypt = false)
 {
-	global $func, $context;
+	global $smffunc, $context;
 
 	// Step 1: Remove entities/things we don't consider words:
 	$words = preg_replace('~([\x0B\0' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', strtr($text, array('<br />' => ' ')));
 
 	// Step 2: Entities we left to letters, where applicable, lowercase.
-	$words = un_htmlspecialchars($func['strtolower']($words));
+	$words = un_htmlspecialchars($smffunc['strtolower']($words));
 
 	// Step 3: Ready to split apart and index!
 	$words = explode(' ', $words);

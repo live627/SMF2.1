@@ -332,18 +332,18 @@ function fix_possible_url($val)
 
 function cdata_parse($data, $ns = '')
 {
-	global $func;
+	global $smffunc;
 
 	$cdata = '<![CDATA[';
 
-	for ($pos = 0, $n = $func['strlen']($data); $pos < $n; null)
+	for ($pos = 0, $n = $smffunc['strlen']($data); $pos < $n; null)
 	{
 		$positions = array(
-			$func['strpos']($data, '&', $pos),
-			$func['strpos']($data, ']', $pos),
+			$smffunc['strpos']($data, '&', $pos),
+			$smffunc['strpos']($data, ']', $pos),
 		);
 		if ($ns != '')
-			$positions[] = $func['strpos']($data, '<', $pos);
+			$positions[] = $smffunc['strpos']($data, '<', $pos);
 		foreach ($positions as $k => $dummy)
 		{
 			if ($dummy === false)
@@ -354,37 +354,37 @@ function cdata_parse($data, $ns = '')
 		$pos = empty($positions) ? $n : min($positions);
 
 		if ($pos - $old > 0)
-			$cdata .= $func['substr']($data, $old, $pos - $old);
+			$cdata .= $smffunc['substr']($data, $old, $pos - $old);
 		if ($pos >= $n)
 			break;
 
-		if ($func['substr']($data, $pos, 1) == '<')
+		if ($smffunc['substr']($data, $pos, 1) == '<')
 		{
-			$pos2 = $func['strpos']($data, '>', $pos);
+			$pos2 = $smffunc['strpos']($data, '>', $pos);
 			if ($pos2 === false)
 				$pos2 = $n;
-			if ($func['substr']($data, $pos + 1, 1) == '/')
-				$cdata .= ']]></' . $ns . ':' . $func['substr']($data, $pos + 2, $pos2 - $pos - 1) . '<![CDATA[';
+			if ($smffunc['substr']($data, $pos + 1, 1) == '/')
+				$cdata .= ']]></' . $ns . ':' . $smffunc['substr']($data, $pos + 2, $pos2 - $pos - 1) . '<![CDATA[';
 			else
-				$cdata .= ']]><' . $ns . ':' . $func['substr']($data, $pos + 1, $pos2 - $pos) . '<![CDATA[';
+				$cdata .= ']]><' . $ns . ':' . $smffunc['substr']($data, $pos + 1, $pos2 - $pos) . '<![CDATA[';
 			$pos = $pos2 + 1;
 		}
-		elseif ($func['substr']($data, $pos, 1) == ']')
+		elseif ($smffunc['substr']($data, $pos, 1) == ']')
 		{
 			$cdata .= ']]>&#093;<![CDATA[';
 			$pos++;
 		}
-		elseif ($func['substr']($data, $pos, 1) == '&')
+		elseif ($smffunc['substr']($data, $pos, 1) == '&')
 		{
-			$pos2 = $func['strpos']($data, ';', $pos);
+			$pos2 = $smffunc['strpos']($data, ';', $pos);
 			if ($pos2 === false)
 				$pos2 = $n;
-			$ent = $func['substr']($data, $pos + 1, $pos2 - $pos - 1);
+			$ent = $smffunc['substr']($data, $pos + 1, $pos2 - $pos - 1);
 
-			if ($func['substr']($data, $pos + 1, 1) == '#')
-				$cdata .= ']]>' . $func['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
+			if ($smffunc['substr']($data, $pos + 1, 1) == '#')
+				$cdata .= ']]>' . $smffunc['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
 			elseif (in_array($ent, array('amp', 'lt', 'gt', 'quot')))
-				$cdata .= ']]>' . $func['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
+				$cdata .= ']]>' . $smffunc['substr']($data, $pos, $pos2 - $pos + 1) . '<![CDATA[';
 			// !!! ??
 
 			$pos = $pos2 + 1;
@@ -506,7 +506,7 @@ function getXmlMembers($xml_format)
 function getXmlNews($xml_format)
 {
 	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $func;
+	global $query_this_board, $smffunc;
 
 	/* Find the latest posts that:
 		- are the first post in their topic.
@@ -531,8 +531,8 @@ function getXmlNews($xml_format)
 	while ($row = mysql_fetch_assoc($request))
 	{
 		// Limit the length of the message, if the option is set.
-		if (!empty($modSettings['xmlnews_maxlen']) && $func['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
-			$row['body'] = strtr($func['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
+		if (!empty($modSettings['xmlnews_maxlen']) && $smffunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
+			$row['body'] = strtr($smffunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
 
 		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
 
@@ -597,7 +597,7 @@ function getXmlNews($xml_format)
 function getXmlRecent($xml_format)
 {
 	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $func;
+	global $query_this_board, $smffunc;
 
 	$request = db_query("
 		SELECT m.ID_MSG
@@ -638,8 +638,8 @@ function getXmlRecent($xml_format)
 	while ($row = mysql_fetch_assoc($request))
 	{
 		// Limit the length of the message, if the option is set.
-		if (!empty($modSettings['xmlnews_maxlen']) && $func['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
-			$row['body'] = strtr($func['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
+		if (!empty($modSettings['xmlnews_maxlen']) && $smffunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
+			$row['body'] = strtr($smffunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
 
 		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
 

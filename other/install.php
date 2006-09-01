@@ -908,7 +908,7 @@ function doStep2a()
 function doStep2()
 {
 	global $txt, $db_prefix, $db_connection, $HTTP_SESSION_VARS, $cookiename;
-	global $func, $db_character_set, $mbname, $context, $scripturl, $boardurl;
+	global $smffunc, $db_character_set, $mbname, $context, $scripturl, $boardurl;
 	global $current_smf_version;
 
 	// Load the SQL server login information.
@@ -1107,7 +1107,7 @@ function doStep2()
 	updateStats('topic');
 
 	// This function is needed to do the updateStats('subject') call.
-	$func['strtolower'] = $db_character_set === 'utf8' || $txt['lang_character_set'] === 'UTF-8' ? create_function('$string', '
+	$smffunc['strtolower'] = $db_character_set === 'utf8' || $txt['lang_character_set'] === 'UTF-8' ? create_function('$string', '
 		return $string;') : 'strtolower';
 
 	$request = mysql_query("

@@ -48,7 +48,7 @@ if (!defined('SMF'))
 // At the moment this is only used for returning WYSIWYG data...
 function EditorMain()
 {
-	global $context, $func;
+	global $context, $smffunc;
 
 	checkSession('get');
 
@@ -75,7 +75,7 @@ function EditorMain()
 		$context['message'] = html_to_bbc($_REQUEST['message']);
 	}
 
-	$context['message'] = $func['htmlspecialchars']($context['message']);
+	$context['message'] = $smffunc['htmlspecialchars']($context['message']);
 }
 
 // Convert only the BBC that can be edited in HTML mode for the editor.

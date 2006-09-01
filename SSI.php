@@ -245,7 +245,7 @@ function ssi_logout($redirect_to = '', $output_method = 'echo')
 function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method = 'echo')
 {
 	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
-	global $modSettings, $func;
+	global $modSettings, $smffunc;
 
 	if ($exclude_boards === null && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0)
 		$exclude_boards = array($modSettings['recycle_board']);
@@ -274,8 +274,8 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 	while ($row = mysql_fetch_assoc($request))
 	{
 		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']), array('<br />' => '&#10;')));
-		if ($func['strlen']($row['body']) > 128)
-			$row['body'] = $func['substr']($row['body'], 0, 128) . '...';
+		if ($smffunc['strlen']($row['body']) > 128)
+			$row['body'] = $smffunc['substr']($row['body'], 0, 128) . '...';
 
 		// Censor it!
 		censorText($row['subject']);
@@ -338,7 +338,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_method = 'echo')
 {
 	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
-	global $modSettings, $func;
+	global $modSettings, $smffunc;
 
 	if ($exclude_boards === null && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0)
 		$exclude_boards = array($modSettings['recycle_board']);
@@ -375,8 +375,8 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_metho
 	while ($row = mysql_fetch_assoc($request))
 	{
 		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']), array('<br />' => '&#10;')));
-		if ($func['strlen']($row['body']) > 128)
-			$row['body'] = $func['substr']($row['body'], 0, 128) . '...';
+		if ($smffunc['strlen']($row['body']) > 128)
+			$row['body'] = $smffunc['substr']($row['body'], 0, 128) . '...';
 
 		// Censor the subject.
 		censorText($row['subject']);
@@ -1235,7 +1235,7 @@ function ssi_todaysCalendar($output_method = 'echo')
 function ssi_boardNews($board = null, $limit = null, $start = null, $length = null, $output_method = 'echo')
 {
 	global $scripturl, $db_prefix, $txt, $settings, $modSettings, $context;
-	global $func;
+	global $smffunc;
 
 	loadLanguage('Stats');
 
@@ -1314,15 +1314,15 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	while ($row = mysql_fetch_assoc($request))
 	{
 		// If we want to limit the length of the post.
-		if (!empty($length) && $func['strlen']($row['body']) > $length)
+		if (!empty($length) && $smffunc['strlen']($row['body']) > $length)
 		{
-			$row['body'] = $func['substr']($row['body'], 0, $length);
+			$row['body'] = $smffunc['substr']($row['body'], 0, $length);
 
 			// The first space or line break. (<br />, etc.)
 			$cutoff = max(strrpos($row['body'], ' '), strrpos($row['body'], '<'));
 
 			if ($cutoff !== false)
-				$row['body'] = $func['substr']($row['body'], 0, $cutoff);
+				$row['body'] = $smffunc['substr']($row['body'], 0, $cutoff);
 			$row['body'] .= '...';
 		}
 

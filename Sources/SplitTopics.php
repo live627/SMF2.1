@@ -483,7 +483,7 @@ function SplitSelectionExecute()
 function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 {
 	global $db_prefix, $ID_MEMBER, $user_info, $topic, $board, $modSettings;
-	global $func;
+	global $smffunc;
 
 	// Nothing to split?
 	if (empty($splitMessages))
@@ -612,7 +612,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		fatal_lang_error('smf273');
 
 	// Move the messages over to the other topic.
-	 $new_subject = $func['htmlspecialchars']($new_subject);
+	 $new_subject = $smffunc['htmlspecialchars']($new_subject);
 	db_query("
 		UPDATE {$db_prefix}messages
 		SET
@@ -817,7 +817,7 @@ function MergeIndex()
 function MergeExecute($topics = array())
 {
 	global $db_prefix, $user_info, $txt, $context, $scripturl, $sourcedir;
-	global $func, $language, $modSettings;
+	global $smffunc, $language, $modSettings;
 
 	// The parameters of MergeExecute were set, so this must've been an internal call.
 	if (!empty($topics))
@@ -1007,7 +1007,7 @@ function MergeExecute($topics = array())
 
 	// Determine the subject of the newly merged topic - was a custom subject specified?
 	if (empty($_POST['subject']) && isset($_POST['custom_subject']) && $_POST['custom_subject'] != '')
-		$target_subject = $func['htmlspecialchars']($_POST['custom_subject']);
+		$target_subject = $smffunc['htmlspecialchars']($_POST['custom_subject']);
 	// A subject was selected from the list.
 	elseif (!empty($topic_data[(int) $_POST['subject']]['subject']))
 		$target_subject = addslashes($topic_data[(int) $_POST['subject']]['subject']);
