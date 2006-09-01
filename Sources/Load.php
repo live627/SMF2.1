@@ -248,6 +248,10 @@ function reloadSettings()
 			return implode(\'\', $words);')) : 'ucwords',
 	);
 
+	// Some mods may already be using $func, so lets be nice and make it accessible to them, but only if its not defined yet.
+	if (!isset($func))
+		$func = &$smffunc;
+
 	// Setting the timezone is a requirement for some functions in PHP >= 5.1.
 	if (isset($modSettings['default_timezone']) && function_exists('date_default_timezone_set'))
 		date_default_timezone_set($modSettings['default_timezone']);
