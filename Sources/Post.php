@@ -93,7 +93,7 @@ function Post()
 {
 	global $txt, $scripturl, $topic, $db_prefix, $modSettings, $board;
 	global $ID_MEMBER, $user_info, $sc, $board_info, $context, $settings;
-	global $sourcedir, $options, $smffunc, $language;
+	global $sourcedir, $options, $smfFunc, $language;
 
 	loadLanguage('Post');
 
@@ -409,7 +409,7 @@ function Post()
 				// Validate the name and email.
 				if (!isset($_REQUEST['guestname']) || trim(strtr($_REQUEST['guestname'], '_', ' ')) == '')
 					$context['post_error']['no_name'] = true;
-				elseif ($smffunc['strlen']($_REQUEST['guestname']) > 25)
+				elseif ($smfFunc['strlen']($_REQUEST['guestname']) > 25)
 					$context['post_error']['long_name'] = true;
 				else
 				{
@@ -452,15 +452,15 @@ function Post()
 		$context['can_announce'] &= $context['becomes_approved'];
 
 		// Set up the inputs for the form.
-		$form_subject = strtr($smffunc['htmlspecialchars'](stripslashes($_REQUEST['subject'])), array("\r" => '', "\n" => '', "\t" => ''));
-		$form_message = $smffunc['htmlspecialchars'](stripslashes($_REQUEST['message']), ENT_QUOTES);
+		$form_subject = strtr($smfFunc['htmlspecialchars'](stripslashes($_REQUEST['subject'])), array("\r" => '', "\n" => '', "\t" => ''));
+		$form_message = $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['message']), ENT_QUOTES);
 
 		// Make sure the subject isn't too long - taking into account special characters.
-		if ($smffunc['strlen']($form_subject) > 100)
-			$form_subject = $smffunc['substr']($form_subject, 0, 100);
+		if ($smfFunc['strlen']($form_subject) > 100)
+			$form_subject = $smfFunc['substr']($form_subject, 0, 100);
 
 		// Have we inadvertently trimmed off the subject of useful information?
-		if ($smffunc['htmltrim']($form_subject) === '')
+		if ($smfFunc['htmltrim']($form_subject) === '')
 			$context['post_error']['no_subject'] = true;
 
 		// Any errors occurred?
@@ -486,7 +486,7 @@ function Post()
 
 		if (isset($_REQUEST['poll']))
 		{
-			$context['question'] = isset($_REQUEST['question']) ? $smffunc['htmlspecialchars'](stripslashes(trim($_REQUEST['question']))) : '';
+			$context['question'] = isset($_REQUEST['question']) ? $smfFunc['htmlspecialchars'](stripslashes(trim($_REQUEST['question']))) : '';
 
 			$context['choices'] = array();
 			$choice_id = 0;
@@ -737,7 +737,7 @@ function Post()
 			mysql_free_result($request);
 
 			// Add 'Re: ' to the front of the quoted subject.
-			if (trim($context['response_prefix']) != '' && $smffunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
+			if (trim($context['response_prefix']) != '' && $smfFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
 				$form_subject = $context['response_prefix'] . $form_subject;
 
 			// Censor the message and subject.
@@ -760,7 +760,7 @@ function Post()
 			$form_subject = $first_subject;
 
 			// Add 'Re: ' to the front of the subject.
-			if (trim($context['response_prefix']) != '' && $form_subject != '' && $smffunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
+			if (trim($context['response_prefix']) != '' && $form_subject != '' && $smfFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
 				$form_subject = $context['response_prefix'] . $form_subject;
 
 			// Censor the subject.
@@ -1024,7 +1024,7 @@ function Post()
 function Post2()
 {
 	global $board, $topic, $txt, $db_prefix, $modSettings, $sourcedir, $context;
-	global $ID_MEMBER, $user_info, $board_info, $options, $smffunc;
+	global $ID_MEMBER, $user_info, $board_info, $options, $smfFunc;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
 	if (!empty($_POST['editor_mode']) && isset($_POST['message']))
@@ -1260,7 +1260,7 @@ function Post2()
 
 		if ($_POST['guestname'] == '' || $_POST['guestname'] == '_')
 			$post_errors[] = 'no_name';
-		if ($smffunc['strlen']($_POST['guestname']) > 25)
+		if ($smfFunc['strlen']($_POST['guestname']) > 25)
 			$post_errors[] = 'long_name';
 
 		if (empty($modSettings['guest_post_no_email']))
@@ -1287,16 +1287,16 @@ function Post2()
 	}
 
 	// Check the subject and message.
-	if (!isset($_POST['subject']) || $smffunc['htmltrim']($_POST['subject']) === '')
+	if (!isset($_POST['subject']) || $smfFunc['htmltrim']($_POST['subject']) === '')
 		$post_errors[] = 'no_subject';
-	if (!isset($_POST['message']) || $smffunc['htmltrim']($_POST['message']) === '')
+	if (!isset($_POST['message']) || $smfFunc['htmltrim']($_POST['message']) === '')
 		$post_errors[] = 'no_message';
-	elseif (!empty($modSettings['max_messageLength']) && $smffunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
+	elseif (!empty($modSettings['max_messageLength']) && $smfFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
 		$post_errors[] = 'long_message';
 	else
 	{
 		// Prepare the message a bit for some additional testing.
-		$_POST['message'] = $smffunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
+		$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
 
 		// Preparse code. (Zef)
 		if ($user_info['is_guest'])
@@ -1304,10 +1304,10 @@ function Post2()
 		preparsecode($_POST['message']);
 
 		// Let's see if there's still some content left without the tags.
-		if ($smffunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '')
+		if ($smfFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '')
 			$post_errors[] = 'no_message';
 	}
-	if (isset($_POST['calendar']) && !isset($_REQUEST['deleteevent']) && $smffunc['htmltrim']($_POST['evtitle']) === '')
+	if (isset($_POST['calendar']) && !isset($_REQUEST['deleteevent']) && $smfFunc['htmltrim']($_POST['evtitle']) === '')
 		$post_errors[] = 'no_event';
 	// You are not!
 	if (isset($_POST['message']) && strtolower($_POST['message']) == 'i am the administrator.' && !$user_info['is_admin'])
@@ -1384,13 +1384,13 @@ function Post2()
 	@set_time_limit(300);
 
 	// Add special html entities to the subject, name, and email.
-	$_POST['subject'] = strtr($smffunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
+	$_POST['subject'] = strtr($smfFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
 	$_POST['guestname'] = htmlspecialchars($_POST['guestname']);
 	$_POST['email'] = htmlspecialchars($_POST['email']);
 
 	// At this point, we want to make sure the subject isn't too long.
-	if ($smffunc['strlen']($_POST['subject']) > 100)
-		$_POST['subject'] = addslashes($smffunc['substr'](stripslashes($_POST['subject']), 0, 100));
+	if ($smfFunc['strlen']($_POST['subject']) > 100)
+		$_POST['subject'] = addslashes($smfFunc['substr'](stripslashes($_POST['subject']), 0, 100));
 
 	// Make the poll...
 	if (isset($_REQUEST['poll']))
@@ -1659,7 +1659,7 @@ function Post2()
 				UPDATE {$db_prefix}calendar
 				SET endDate = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "',
 					startDate = '" . strftime('%Y-%m-%d', $start_time) . "',
-					title = '" . $smffunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES) . "'
+					title = '" . $smfFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES) . "'
 				WHERE ID_EVENT = $_REQUEST[eventid]
 				LIMIT 1", __FILE__, __LINE__);
 		}
@@ -2107,7 +2107,7 @@ function getTopic()
 function QuoteFast()
 {
 	global $db_prefix, $modSettings, $user_info, $txt, $settings, $context;
-	global $sourcedir, $smffunc;
+	global $sourcedir, $smfFunc;
 
 	loadLanguage('Post');
 	if (!isset($_REQUEST['xml']))
@@ -2176,7 +2176,7 @@ function QuoteFast()
 		$context['quote']['text'] = strtr(un_htmlspecialchars($context['quote']['xml']), array('\'' => '\\\'', '\\' => '\\\\', "\n" => '\\n', '</script>' => '</\' + \'script>'));
 		$context['quote']['xml'] = strtr($context['quote']['xml'], array('&nbsp;' => '&#160;', '<' => '&lt;', '>' => '&gt;'));
 
-		$context['quote']['mozilla'] = strtr($smffunc['htmlspecialchars']($context['quote']['text']), array('&quot;' => '"'));
+		$context['quote']['mozilla'] = strtr($smfFunc['htmlspecialchars']($context['quote']['text']), array('&quot;' => '"'));
 	}
 	// !!! Needs a nicer interface.
 	// In case our message has been removed in the meantime.
@@ -2202,7 +2202,7 @@ function QuoteFast()
 function JavaScriptModify()
 {
 	global $db_prefix, $sourcedir, $modSettings, $board, $topic, $txt;
-	global $user_info, $ID_MEMBER, $context, $smffunc, $language;
+	global $user_info, $ID_MEMBER, $context, $smfFunc, $language;
 
 	// We have to have a topic!
 	if (empty($topic))
@@ -2248,13 +2248,13 @@ function JavaScriptModify()
 	}
 
 	$post_errors = array();
-	if (isset($_POST['subject']) && $smffunc['htmltrim']($_POST['subject']) !== '')
+	if (isset($_POST['subject']) && $smfFunc['htmltrim']($_POST['subject']) !== '')
 	{
-		$_POST['subject'] = strtr($smffunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
+		$_POST['subject'] = strtr($smfFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
 
 		// Maximum number of characters.
-		if ($smffunc['strlen']($_POST['subject']) > 100)
-			$_POST['subject'] = addslashes($smffunc['substr'](stripslashes($_POST['subject']), 0, 100));
+		if ($smfFunc['strlen']($_POST['subject']) > 100)
+			$_POST['subject'] = addslashes($smfFunc['substr'](stripslashes($_POST['subject']), 0, 100));
 	}
 	else
 	{
@@ -2264,23 +2264,23 @@ function JavaScriptModify()
 
 	if (isset($_POST['message']))
 	{
-		if ($smffunc['htmltrim']($_POST['message']) === '')
+		if ($smfFunc['htmltrim']($_POST['message']) === '')
 		{
 			$post_errors[] = 'no_message';
 			unset($_POST['message']);
 		}
-		elseif (!empty($modSettings['max_messageLength']) && $smffunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
+		elseif (!empty($modSettings['max_messageLength']) && $smfFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
 		{
 			$post_errors[] = 'long_message';
 			unset($_POST['message']);
 		}
 		else
 		{
-			$_POST['message'] = $smffunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
+			$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
 
 			preparsecode($_POST['message']);
 
-			if ($smffunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '')
+			if ($smfFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '')
 			{
 				$post_errors[] = 'no_message';
 				unset($_POST['message']);

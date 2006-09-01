@@ -559,7 +559,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 {
 	global $db_prefix, $user_info, $txt, $modSettings, $user_profile;
 	global $newpassemail, $validationCode, $context, $settings, $sourcedir;
-	global $smffunc;
+	global $smfFunc;
 
 	// These make life easier....
 	$old_profile = &$user_profile[$memID];
@@ -1690,7 +1690,7 @@ function showPosts($memID)
 function editBuddies($memID)
 {
 	global $txt, $scripturl, $modSettings, $db_prefix;
-	global $context, $user_profile, $memberContext, $smffunc;
+	global $context, $user_profile, $memberContext, $smfFunc;
 
 	// Do a quick check to ensure people aren't getting here illegally!
 	if (!$context['user']['is_owner'] || empty($modSettings['enable_buddylist']))
@@ -1722,7 +1722,7 @@ function editBuddies($memID)
 	elseif (isset($_POST['new_buddy']))
 	{
 		// Prepare the string for extraction...
-		$_POST['new_buddy'] = strtr($smffunc['htmlspecialchars'](stripslashes($_POST['new_buddy']), ENT_QUOTES), array('&quot;' => '"'));
+		$_POST['new_buddy'] = strtr($smfFunc['htmlspecialchars'](stripslashes($_POST['new_buddy']), ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_POST['new_buddy'], $matches);
 		$new_buddies = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_POST['new_buddy']))));
 
@@ -2378,7 +2378,7 @@ function account($memID)
 {
 	global $context, $settings, $user_profile, $txt, $db_prefix;
 	global $scripturl, $memberGroups, $modSettings, $language, $user_info;
-	global $smffunc;
+	global $smfFunc;
 
 	// Allow an administrator to edit the username?
 	$context['allow_edit_username'] = isset($_GET['changeusername']) && allowedTo('admin_forum');
@@ -2465,7 +2465,7 @@ function account($memID)
 					continue;
 
 				$context['languages'][$matches[1]] = array(
-					'name' => $smffunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
+					'name' => $smfFunc['ucwords'](strtr($matches[1], array('_' => ' ', '-utf8' => ''))),
 					'selected' => $selectedLanguage == $matches[1],
 					'filename' => $matches[1],
 				);

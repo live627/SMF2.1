@@ -327,10 +327,10 @@ function addslashes__recursive($var)
 // Adds html entities to the array/variable.  Uses two underscores to guard against overloading.
 function htmlspecialchars__recursive($var)
 {
-	global $smffunc;
+	global $smfFunc;
 
 	if (!is_array($var))
-		return isset($smffunc) ? $smffunc['htmlspecialchars']($var, ENT_QUOTES) : htmlspecialchars($var, ENT_QUOTES);
+		return isset($smfFunc) ? $smfFunc['htmlspecialchars']($var, ENT_QUOTES) : htmlspecialchars($var, ENT_QUOTES);
 
 	// Add the htmlspecialchars to every element.
 	return array_map('htmlspecialchars__recursive', $var);
@@ -370,11 +370,11 @@ function stripslashes__recursive($var)
 // Trim a string including the HTML space, character 160.
 function htmltrim__recursive($var)
 {
-	global $smffunc;
+	global $smfFunc;
 	
 	// Remove spaces (32), tabs (9), returns (13, 10, and 11), nulls (0), and hard spaces. (160)
 	if (!is_array($var))
-		return isset($smffunc) ? $smffunc['htmltrim']($var) : trim($var, " \t\n\r\x0B\0\xA0");
+		return isset($smfFunc) ? $smfFunc['htmltrim']($var) : trim($var, " \t\n\r\x0B\0\xA0");
 
 	// Go through all the elements and remove the whitespace.
 	return array_map('htmltrim__recursive', $var);

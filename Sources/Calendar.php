@@ -436,10 +436,10 @@ function calendarHolidayArray($low_date, $high_date)
 // Consolidating the various INSERT statements into this function.
 function calendarInsertEvent($id_board, $id_topic, $title, $id_member, $month, $day, $year, $span)
 {
-	global $db_prefix, $modSettings, $smffunc;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	// Add special chars to the title.
-	$title = $smffunc['htmlspecialchars']($title, ENT_QUOTES);
+	$title = $smfFunc['htmlspecialchars']($title, ENT_QUOTES);
 
 	// Add some sanity checking to the span.
 	$span = empty($span) || trim($span) == '' ? 0 : min((int) $modSettings['cal_maxspan'], (int) $span - 1);
@@ -495,7 +495,7 @@ function calendarCanLink()
 function CalendarPost()
 {
 	global $context, $txt, $db_prefix, $user_info, $sourcedir, $scripturl;
-	global $modSettings, $topic, $smffunc;
+	global $modSettings, $topic, $smfFunc;
 
 	// Well - can they?
 	isAllowedTo('calendar_post');
@@ -561,7 +561,7 @@ function CalendarPost()
 				SET 
 					startDate = '" . strftime('%Y-%m-%d', $start_time) . "',
 					endDate = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "', 
-					title = '" . $smffunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES) . "'
+					title = '" . $smfFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES) . "'
 				WHERE ID_EVENT = $_REQUEST[eventid]
 				LIMIT 1", __FILE__, __LINE__);
 		}

@@ -123,7 +123,7 @@ if (!defined('SMF'))
 // Load the $modSettings array.
 function reloadSettings()
 {
-	global $modSettings, $db_prefix, $boarddir, $smffunc, $txt, $db_character_set;
+	global $modSettings, $db_prefix, $boarddir, $smfFunc, $txt, $db_character_set;
 	global $mysql_set_mode;
 
 	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
@@ -175,21 +175,21 @@ function reloadSettings()
 
 	// Set a list of common functions.
 	$ent_list = empty($modSettings['disableEntityCheck']) ? '&(#\d{1,7}|quot|amp|lt|gt|nbsp);' : '&(#021|quot|amp|lt|gt|nbsp);';
-	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smffunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
+	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smfFunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
 
-	$smffunc = array(
+	$smfFunc = array(
 		'entity_fix' => create_function('$string', '
 			$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;
 			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) ? \'\' : \'&#\' . $num . \';\';'),
 		'substr' => create_function('$string, $start, $length = null', '
-			global $smffunc;
+			global $smfFunc;
 			$ent_arr = preg_split(\'~(&#' . (empty($modSettings['disableEntityCheck']) ? '\d{1,7}' : '021') . ';|&quot;|&amp;|&lt;|&gt;|&nbsp;|.)~' . ($utf8 ? 'u' : '') . '\', ' . implode('$string', $ent_check) . ', -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 			return $length === null ? implode(\'\', array_slice($ent_arr, $start)) : implode(\'\', array_slice($ent_arr, $start, $length));'),
 		'strlen' => create_function('$string', '
-			global $smffunc;
+			global $smfFunc;
 			return strlen(preg_replace(\'~' . $ent_list . ($utf8 ? '|.~u' : '~') . '\', \'_\', ' . implode('$string', $ent_check) . '));'),
 		'strpos' => create_function('$haystack, $needle, $offset = 0', '
-			global $smffunc;
+			global $smfFunc;
 			$haystack_arr = preg_split(\'~(&#' . (empty($modSettings['disableEntityCheck']) ? '\d{1,7}' : '021') . ';|&quot;|&amp;|&lt;|&gt;|&nbsp;|.)~' . ($utf8 ? 'u' : '') . '\', ' . implode('$haystack', $ent_check) . ', -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 			$haystack_size = count($haystack_arr);
 			if (strlen($needle) === 1)
@@ -213,15 +213,15 @@ function reloadSettings()
 				return false;
 			}'),
 		'htmlspecialchars' => create_function('$string, $quote_style = ENT_COMPAT, $charset = \'ISO-8859-1\'', '
-			global $smffunc;
+			global $smfFunc;
 			return ' . strtr($ent_check[0], array('&' => '&amp;'))  . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ';'),
 		'htmltrim' => create_function('$string', '
-			global $smffunc;
+			global $smfFunc;
 			return preg_replace(\'~^([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}' : '\xA0') . ($utf8 && @version_compare(PHP_VERSION, '5.1.0') != -1 ? '\pZ' : '') . ']|&nbsp;)+|([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}' : '\xA0') . ($utf8 && @version_compare(PHP_VERSION, '5.1.0') != -1 ? '\pZ' : '') . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
 		'truncate' => create_function('$string, $length', (empty($modSettings['disableEntityCheck']) ? '
-			global $smffunc;
+			global $smfFunc;
 			$string = ' . implode('$string', $ent_check) . ';' : '') . '
-			preg_match(\'~^(' . $ent_list . '|.){\' . $smffunc[\'strlen\'](substr($string, 0, $length)) . \'}~'.  ($utf8 ? 'u' : '') . '\', $string, $matches);
+			preg_match(\'~^(' . $ent_list . '|.){\' . $smfFunc[\'strlen\'](substr($string, 0, $length)) . \'}~'.  ($utf8 ? 'u' : '') . '\', $string, $matches);
 			$string = $matches[0];
 			while (strlen($string) > $length)
 				$string = preg_replace(\'~(' . $ent_list . '|.)$~'.  ($utf8 ? 'u' : '') . '\', \'\', $string);
@@ -237,20 +237,20 @@ function reloadSettings()
 			require_once($sourcedir . \'/Subs-Charset.php\');
 			return utf8_strtoupper($string);')) : 'strtoupper',
 		'ucfirst' => $utf8 ? create_function('$string', '
-			global $smffunc;
-			return $smffunc[\'strtoupper\']($smffunc[\'substr\']($string, 0, 1)) . $smffunc[\'substr\']($string, 1);') : 'ucfirst',
+			global $smfFunc;
+			return $smfFunc[\'strtoupper\']($smfFunc[\'substr\']($string, 0, 1)) . $smfFunc[\'substr\']($string, 1);') : 'ucfirst',
 		'ucwords' => $utf8 ? (function_exists('mb_convert_case') ? create_function('$string', '
 			return mb_convert_case($string, MB_CASE_TITLE, \'UTF-8\');') : create_function('$string', '
-			global $smffunc;
+			global $smfFunc;
 			$words = preg_split(\'~([\s\r\n\t]+)~\', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
 			for ($i = 0, $n = count($words); $i < $n; $i += 2)
-				$words[$i] = $smffunc[\'ucfirst\']($words[$i]);
+				$words[$i] = $smfFunc[\'ucfirst\']($words[$i]);
 			return implode(\'\', $words);')) : 'ucwords',
 	);
 
 	// Some mods may already be using $func, so lets be nice and make it accessible to them, but only if its not defined yet.
 	if (!isset($func))
-		$func = &$smffunc;
+		$func = &$smfFunc;
 
 	// Setting the timezone is a requirement for some functions in PHP >= 5.1.
 	if (isset($modSettings['default_timezone']) && function_exists('date_default_timezone_set'))
@@ -912,7 +912,7 @@ function loadMemberContext($user)
 {
 	global $memberContext, $user_profile, $txt, $scripturl, $user_info;
 	global $context, $modSettings, $ID_MEMBER, $board_info, $settings;
-	global $db_prefix, $smffunc;
+	global $db_prefix, $smfFunc;
 	static $dataLoaded = array();
 
 	// If this person's data is already loaded, skip it.
@@ -1037,7 +1037,7 @@ function loadMemberContext($user)
 			'image_href' => $settings['images_url'] . '/' . ($profile['buddy'] ? 'buddy_' : '') . ($profile['is_online'] ? 'useron' : 'useroff') . '.gif',
 			'label' => &$txt[$profile['is_online'] ? 'online4' : 'online5']
 		),
-		'language' => $smffunc['ucwords'](strtr($profile['lngfile'], array('_' => ' ', '-utf8' => ''))),
+		'language' => $smfFunc['ucwords'](strtr($profile['lngfile'], array('_' => ' ', '-utf8' => ''))),
 		'is_activated' => isset($profile['is_activated']) ? $profile['is_activated'] : 1,
 		'is_banned' => isset($profile['is_activated']) ? $profile['is_activated'] >= 10 : 0,
 		'options' => $profile['options'],

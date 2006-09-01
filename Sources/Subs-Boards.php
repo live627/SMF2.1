@@ -390,7 +390,7 @@ function getMsgMemberID($messageID)
 // Modify the settings and position of a board.
 function modifyBoard($board_id, &$boardOptions)
 {
-	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smffunc;
+	global $sourcedir, $cat_tree, $boards, $boardList, $modSettings, $db_prefix, $smfFunc;
 
 	// Get some basic information about all boards and categories.
 	getBoardTree();
@@ -537,7 +537,7 @@ function modifyBoard($board_id, &$boardOptions)
 		if (isset($boardOptions['moderator_string']) && trim($boardOptions['moderator_string']) != '')
 		{
 			// Divvy out the usernames, remove extra space.
-			$moderator_string = strtr($smffunc['htmlspecialchars'](stripslashes($boardOptions['moderator_string']), ENT_QUOTES), array('&quot;' => '"'));
+			$moderator_string = strtr($smfFunc['htmlspecialchars'](stripslashes($boardOptions['moderator_string']), ENT_QUOTES), array('&quot;' => '"'));
 			preg_match_all('~"([^"]+)"~', $moderator_string, $matches);
 			$moderators = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $moderator_string)));
 			for ($k = 0, $n = count($moderators); $k < $n; $k++)

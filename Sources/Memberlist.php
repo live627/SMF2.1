@@ -147,7 +147,7 @@ function Memberlist()
 function MLAll()
 {
 	global $txt, $scripturl, $db_prefix, $user_info;
-	global $modSettings, $context, $smffunc;
+	global $modSettings, $context, $smfFunc;
 
 	// The chunk size for the cached index.
 	$cache_step_size = 500;
@@ -215,7 +215,7 @@ function MLAll()
 
 	if (!is_numeric($_REQUEST['start']))
 	{
-		if (preg_match('~^[^\']~' . ($context['utf8'] ? 'u' : ''), $smffunc['strtolower']($_REQUEST['start']), $match) === 0)
+		if (preg_match('~^[^\']~' . ($context['utf8'] ? 'u' : ''), $smfFunc['strtolower']($_REQUEST['start']), $match) === 0)
 			fatal_error('Hacker?', false);
 
 		$_REQUEST['start'] = $match[0];
@@ -351,7 +351,7 @@ function MLAll()
 		$last_letter = '';
 		foreach ($context['members'] as $i => $dummy)
 		{
-			$this_letter = $smffunc['strtolower']($smffunc['substr']($context['members'][$i]['name'], 0, 1));
+			$this_letter = $smfFunc['strtolower']($smfFunc['substr']($context['members'][$i]['name'], 0, 1));
 
 			if ($this_letter != $last_letter && preg_match('~[a-z]~', $this_letter) === 1)
 			{

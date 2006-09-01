@@ -170,7 +170,7 @@ if (!defined('SMF'))
 // Parses some bbc before sending into the database...
 function preparsecode(&$message, $previewing = false)
 {
-	global $user_info, $modSettings, $smffunc, $context;
+	global $user_info, $modSettings, $smfFunc, $context;
 
 	// This line makes all languages *theoretically* work even with the wrong charset ;).
 	//$message = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $message);
@@ -751,7 +751,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 function sendpm($recipients, $subject, $message, $store_outbox = false, $from = null)
 {
 	global $db_prefix, $ID_MEMBER, $scripturl, $txt, $user_info, $language;
-	global $modSettings, $smffunc;
+	global $modSettings, $smfFunc;
 
 	// Initialize log array.
 	$log = array(
@@ -770,8 +770,8 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		$user_info['name'] = $from['name'];
 
 	// This is the one that will go in their inbox.
-	$htmlmessage = $smffunc['htmlspecialchars']($message, ENT_QUOTES);
-	$htmlsubject = $smffunc['htmlspecialchars']($subject);
+	$htmlmessage = $smfFunc['htmlspecialchars']($message, ENT_QUOTES);
+	$htmlsubject = $smfFunc['htmlspecialchars']($subject);
 	preparsecode($htmlmessage);
 
 	// Integrated PMs
@@ -786,7 +786,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		{
 			if (!is_numeric($recipients[$rec_type][$id]))
 			{
-				$recipients[$rec_type][$id] = $smffunc['strtolower'](trim(preg_replace('/[<>&"\'=\\\]/', '', $recipients[$rec_type][$id])));
+				$recipients[$rec_type][$id] = $smfFunc['strtolower'](trim(preg_replace('/[<>&"\'=\\\]/', '', $recipients[$rec_type][$id])));
 				$usernames[$recipients[$rec_type][$id]] = 0;
 			}
 		}
@@ -798,8 +798,8 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			FROM {$db_prefix}members
 			WHERE memberName IN ('" . implode("', '", array_keys($usernames)) . "')", __FILE__, __LINE__);
 		while ($row = mysql_fetch_assoc($request))
-			if (isset($usernames[$smffunc['strtolower']($row['memberName'])]))
-				$usernames[$smffunc['strtolower']($row['memberName'])] = $row['ID_MEMBER'];
+			if (isset($usernames[$smfFunc['strtolower']($row['memberName'])]))
+				$usernames[$smfFunc['strtolower']($row['memberName'])] = $row['ID_MEMBER'];
 		mysql_free_result($request);
 
 		// Replace the usernames with IDs. Drop usernames that couldn't be found.
@@ -1186,7 +1186,7 @@ function server_parse($message, $socket, $response)
 // Makes sure the calendar post is valid.
 function calendarValidatePost()
 {
-	global $modSettings, $txt, $sourcedir, $smffunc;
+	global $modSettings, $txt, $sourcedir, $smfFunc;
 
 	if (!isset($_POST['deleteevent']))
 	{
@@ -1231,10 +1231,10 @@ function calendarValidatePost()
 			fatal_lang_error('calendar16', false);
 
 		// No title?
-		if ($smffunc['htmltrim']($_POST['evtitle']) === '')
+		if ($smfFunc['htmltrim']($_POST['evtitle']) === '')
 			fatal_lang_error('calendar17', false);
-		if ($smffunc['strlen']($_POST['evtitle']) > 30)
-			$_POST['evtitle'] = $smffunc['substr']($_POST['evtitle'], 0, 30);
+		if ($smfFunc['strlen']($_POST['evtitle']) > 30)
+			$_POST['evtitle'] = $smfFunc['substr']($_POST['evtitle'], 0, 30);
 		$_POST['evtitle'] = str_replace(';', '', $_POST['evtitle']);
 	}
 }
@@ -1370,7 +1370,7 @@ function theme_postbox($msg)
 
 function SpellCheck()
 {
-	global $txt, $context, $smffunc;
+	global $txt, $context, $smfFunc;
 
 	// A list of "words" we know about but pspell doesn't.
 	$known_words = array('smf', 'php', 'mysql', 'www', 'gif', 'jpeg', 'png', 'http', 'smfisawesome', 'grandia', 'terranigma', 'rpgs');
@@ -1435,7 +1435,7 @@ function SpellCheck()
 
 		// If the word is a known word, or spelled right...
 		// !!! Add an option for uppercase skipping?
-		if (in_array($smffunc['strtolower']($check_word), $known_words) || pspell_check($pspell_link, $check_word) || strtoupper($check_word) == $check_word)
+		if (in_array($smfFunc['strtolower']($check_word), $known_words) || pspell_check($pspell_link, $check_word) || strtoupper($check_word) == $check_word)
 		{
 			// Add on this word's length, and continue.
 			$last_occurance += strlen($alphas[0][$i]);

@@ -42,7 +42,7 @@ if (!defined('SMF'))
 // Get the latest post.
 function getLastPost()
 {
-	global $db_prefix, $user_info, $scripturl, $modSettings, $smffunc;
+	global $db_prefix, $user_info, $scripturl, $modSettings, $smfFunc;
 
 	// Find it by the board - better to order by board than sort the entire messages table.
 	$request = db_query("
@@ -64,8 +64,8 @@ function getLastPost()
 	censorText($row['body']);
 
 	$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled']), array('<br />' => '&#10;')));
-	if ($smffunc['strlen']($row['body']) > 128)
-		$row['body'] = $smffunc['substr']($row['body'], 0, 128) . '...';
+	if ($smfFunc['strlen']($row['body']) > 128)
+		$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
 
 	// Send the data.
 	return array(
@@ -82,7 +82,7 @@ function getLastPost()
 
 function getLastPosts($showlatestcount)
 {
-	global $scripturl, $txt, $db_prefix, $user_info, $modSettings, $smffunc;
+	global $scripturl, $txt, $db_prefix, $user_info, $modSettings, $smfFunc;
 
 	// Find all the posts.  Newer ones will have higher IDs.  (assuming the last 20 * number are accessable...)
 	// !!!SLOW This query is now slow, NEEDS to be fixed.  Maybe break into two?
@@ -110,8 +110,8 @@ function getLastPosts($showlatestcount)
 		censorText($row['body']);
 
 		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']), array('<br />' => '&#10;')));
-		if ($smffunc['strlen']($row['body']) > 128)
-			$row['body'] = $smffunc['substr']($row['body'], 0, 128) . '...';
+		if ($smfFunc['strlen']($row['body']) > 128)
+			$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
 
 		// Build the array.
 		$posts[] = array(
@@ -432,7 +432,7 @@ function RecentPosts()
 function UnreadTopics()
 {
 	global $board, $txt, $scripturl, $db_prefix, $sourcedir;
-	global $ID_MEMBER, $user_info, $context, $settings, $modSettings, $smffunc;
+	global $ID_MEMBER, $user_info, $context, $settings, $modSettings, $smfFunc;
 
 	// Guests can't have unread things, we don't know anything about them.
 	is_not_guest();
@@ -1018,11 +1018,11 @@ function UnreadTopics()
 
 		// Clip the strings first because censoring is slow :/. (for some reason?)
 		$row['firstBody'] = strip_tags(strtr(parse_bbc($row['firstBody'], $row['firstSmileys'], $row['ID_FIRST_MSG']), array('<br />' => '&#10;')));
-		if ($smffunc['strlen']($row['firstBody']) > 128)
-			$row['firstBody'] = $smffunc['substr']($row['firstBody'], 0, 128) . '...';
+		if ($smfFunc['strlen']($row['firstBody']) > 128)
+			$row['firstBody'] = $smfFunc['substr']($row['firstBody'], 0, 128) . '...';
 		$row['lastBody'] = strip_tags(strtr(parse_bbc($row['lastBody'], $row['lastSmileys'], $row['ID_LAST_MSG']), array('<br />' => '&#10;')));
-		if ($smffunc['strlen']($row['lastBody']) > 128)
-			$row['lastBody'] = $smffunc['substr']($row['lastBody'], 0, 128) . '...';
+		if ($smfFunc['strlen']($row['lastBody']) > 128)
+			$row['lastBody'] = $smfFunc['substr']($row['lastBody'], 0, 128) . '...';
 
 		// Do a bit of censoring...
 		censorText($row['firstSubject']);

@@ -277,7 +277,7 @@ function deleteMembers($users)
 function registerMember(&$regOptions)
 {
 	global $scripturl, $txt, $modSettings, $db_prefix, $context, $sourcedir;
-	global $user_info, $options, $settings, $smffunc;
+	global $user_info, $options, $settings, $smfFunc;
 
 	loadLanguage('Login');
 
@@ -313,8 +313,8 @@ function registerMember(&$regOptions)
 	$regOptions['username'] = preg_replace('~[\t\n\r\x0B\0' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . ']+~' . ($context['utf8'] ? 'u' : ''), ' ', $regOptions['username']);
 
 	// Don't use too long a name.
-	if ($smffunc['strlen']($regOptions['username']) > 25)
-		$regOptions['username'] = $smffunc['htmltrim']($smffunc['substr']($regOptions['username'], 0, 25));
+	if ($smfFunc['strlen']($regOptions['username']) > 25)
+		$regOptions['username'] = $smfFunc['htmltrim']($smfFunc['substr']($regOptions['username'], 0, 25));
 
 	// Only these characters are permitted.
 	if (preg_match('~[<>&"\'=\\\]~', $regOptions['username']) != 0 || $regOptions['username'] == '_' || $regOptions['username'] == '|' || strpos($regOptions['username'], '[code') !== false || strpos($regOptions['username'], '[/code') !== false)
@@ -542,9 +542,9 @@ function registerMember(&$regOptions)
 // Check if a name is in the reserved words list. (name, current member id, name/username?.)
 function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true)
 {
-	global $user_info, $modSettings, $db_prefix, $smffunc;
+	global $user_info, $modSettings, $db_prefix, $smfFunc;
 
-	 $checkName = $smffunc['strtolower']($name);
+	 $checkName = $smfFunc['strtolower']($name);
 
 	// Administrators are never restricted ;).
 	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
@@ -560,9 +560,9 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true)
 				continue;
 
 			// Case sensitive name?
-			$reservedCheck = empty($modSettings['reserveCase']) ? $smffunc['strtolower']($reserved) : $reserved;
+			$reservedCheck = empty($modSettings['reserveCase']) ? $smfFunc['strtolower']($reserved) : $reserved;
 			// If it's not just entire word, check for it in there somewhere...
-			if ($checkMe == $reservedCheck || ($smffunc['strpos']($checkMe, $reservedCheck) !== false && empty($modSettings['reserveWord'])))
+			if ($checkMe == $reservedCheck || ($smfFunc['strpos']($checkMe, $reservedCheck) !== false && empty($modSettings['reserveWord'])))
 				fatal_lang_error(244, 'password', array($reserved));
 		}
 
