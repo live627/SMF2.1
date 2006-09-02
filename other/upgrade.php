@@ -28,7 +28,7 @@ define('SMF_LANG_VERSION', '2.0 Alpha');
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '3.23.28';
 
-$timeLimitThreshold = 10;
+$timeLimitThreshold = 3;
 $install_path = dirname(__FILE__);
 
 if (!empty($_SERVER['argv']) && php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))

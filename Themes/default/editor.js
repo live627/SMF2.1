@@ -177,6 +177,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				frameDocument.body.contentEditable = true;
 			}
 
+			// Get the fonts.
+			frameHandle.style.display = '';
+			frameWindow.focus();
+			getFonts();
+			if (!mode)
+				frameHandle.style.display = 'none';
+
 			// Attach our events.
 			if (is_ff)
 			{
@@ -189,6 +196,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				frameDocument.onmouseup = editorKeyUp;
 			}
 		}
+		else
+			getFonts();
 
 		// Insert any default text.
 		InsertText(currentText, true);
@@ -198,9 +207,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			frameWindow.focus();
 		else
 			textHandle.focus();
-
-		// Get all the fonts we can have.
-		getFonts();
 
 		// Do any select boxes.
 		for (i in selectControls)
