@@ -44,8 +44,9 @@ $txt['queryless_urls'] = 'Search engine friendly URLs<div class="smalltext"><b>A
 $txt['max_image_width'] = 'Max width of posted pictures (0 = disable)';
 $txt['max_image_height'] = 'Max height of posted pictures (0 = disable)';
 $txt['enableReportPM'] = 'Enable reporting of personal messages';
-$txt['max_pm_recipients'] = 'Maximum number of recipients allowed in a personal message.<div class="smalltext">(0 for no limit, admin\'s are exempt)</div>';
-$txt['pm_posts_verification'] = 'Post count under which users must enter code when sending messages.<div class="smalltext">(0 for no limit, admin\'s are exempt)</div>';
+$txt['max_pm_recipients'] = 'Maximum number of recipients allowed in a personal message.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
+$txt['pm_posts_verification'] = 'Post count under which users must enter code when sending personal messages.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
+$txt['pm_posts_per_hour'] = 'Number of personal messages a user may send in an hour.<div class="smalltext">(0 for no limit, moderators are excempt)</div>';
 
 $txt['mods_cat_layout'] = 'Layout and Options';
 $txt['compactTopicPagesEnable'] = 'Limit number of displayed page links';

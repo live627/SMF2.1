@@ -965,12 +965,8 @@ function Post()
 	$context['subject'] = addcslashes($form_subject, '"');
 	$context['message'] = str_replace(array('"', '<', '>', '  '), array('&quot;', '&lt;', '&gt;', ' &nbsp;'), $form_message);
 
-	// Needed for WYSIWYG and message icons.
+	// Needed for message icons.
 	require_once($sourcedir . '/Subs-Editor.php');
-
-	// If we have WYSIWYG available then make a compatible version of this.
-	if (!empty($modSettings['enable_wysiwyg']))
-		$context['wysiwyg_message'] = bbc_to_html($context['message']);
 
 	$context['attached'] = '';
 	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));

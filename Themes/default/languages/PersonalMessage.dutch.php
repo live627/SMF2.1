@@ -34,6 +34,7 @@ $txt['pm_error_ignored_by_user'] = 'Gebruiker \'%s\' heeft je PM geblokkeerd.';
 $txt['pm_error_data_limit_reached'] = 'PM kon niet verstuurd worden aan \'%s\' vanwege het overschrijden van de PM limiet.';
 $txt['pm_successfully_sent'] = 'PM succesvol verstuurd aan \'%s\'.';
 $txt['pm_too_many_recipients'] = 'Het is niet toegestaan persoonlijke berichten te versturen naar %d ontvangers tegelijk.';
+$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
 $txt['pm_send_report'] = 'Verzendrapport';
 $txt['pm_save_outbox'] = 'Bewaar een kopie in mijn postvak uit';
 $txt['pm_undisclosed_recipients'] = 'Niet-getoonde ontvangers';

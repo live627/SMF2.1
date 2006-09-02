@@ -46,7 +46,8 @@ $txt['max_image_height'] = 'Max. H&ouml;he geposteter Bilder (0 = deaktiviert da
 $txt['enableReportPM'] = 'Aktiviere das Melden von Privaten Mitteilungen';
 $txt['max_pm_recipients'] = 'Max. Anzahl von Empf&auml;ngern in einer Privaten Mitteilung <div class="smalltext">(0 f&uuml;r kein Limit, Administratoren sind ausgenommen)</div>';
 // Untranslated!
-$txt['pm_posts_verification'] = 'Post count under which users must enter code when sending messages.<div class="smalltext">(0 for no limit, admin\'s are exempt)</div>';
+$txt['pm_posts_verification'] = 'Post count under which users must enter code when sending personal messages.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
+$txt['pm_posts_per_hour'] = 'Number of personal messages a user may send in an hour.<div class="smalltext">(0 for no limit, moderators are excempt)</div>';
 
 $txt['mods_cat_layout'] = 'Layout';
 $txt['compactTopicPagesEnable'] = 'Kompakte Seitenanzeige aktivieren';

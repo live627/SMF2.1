@@ -1037,7 +1037,7 @@ function MessagePost()
 	}
 
 	// Extract out the spam settings - cause it's neat.
-	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification']) = explode(',', $modSettings['pm_spam_settings']);
+	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
 
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 
@@ -1045,6 +1045,22 @@ function MessagePost()
 	$context['page_title'] = $txt[148];
 
 	$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);
+
+	// Check whether we've gone over the limit of messages we can send per hour.
+	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
+	{
+		// How many have they sent this last hour?
+		$request = db_query("
+			SELECT COUNT(ID_PM)
+			FROM {$db_prefix}personal_messages
+			WHERE ID_MEMBER_FROM = $user_info[id]
+				AND msgtime > " . (time() - 3600), __FILE__, __LINE__);
+		list ($posted) = mysql_fetch_row($request);
+		mysql_free_result($request);
+
+		if ($posted >= $modSettings['pm_posts_per_hour'])
+			fatal_error(sprintf($txt['pm_too_many_per_hour'], $modSettings['pm_posts_per_hour']));
+	}
 
 	// Quoting/Replying to a message?
 	if (!empty($_REQUEST['pmsg']))
@@ -1315,7 +1331,39 @@ function MessagePost2()
 		loadLanguage('InstantMessage');
 
 	// Extract out the spam settings - it saves database space!
-	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification']) = explode(',', $modSettings['pm_spam_settings']);
+	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
+
+	// Check whether we've gone over the limit of messages we can send per hour - fatal error if fails!
+	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
+	{
+		// How many have they sent this last hour?
+		$request = db_query("
+			SELECT COUNT(ID_PM)
+			FROM {$db_prefix}personal_messages
+			WHERE ID_MEMBER_FROM = $user_info[id]
+				AND msgtime > " . (time() - 3600), __FILE__, __LINE__);
+		list ($posted) = mysql_fetch_row($request);
+		mysql_free_result($request);
+
+		if ($posted >= $modSettings['pm_posts_per_hour'])
+			fatal_error(sprintf($txt['pm_too_many_per_hour'], $modSettings['pm_posts_per_hour']));
+	}
+
+	// If we came from WYSIWYG then turn it back into BBC regardless.
+	if (!empty($_POST['editor_mode']) && isset($_POST['message']))
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		// We strip and add slashes back here - so we don't forget!
+		$_POST['message'] = stripslashes($_POST['message']);
+		$_POST['message'] = html_to_bbc($_POST['message']);
+		$_POST['message'] = addslashes($_POST['message']);
+
+		// We need to unhtml it now as it gets done shortly.
+		$_POST['message'] = un_htmlspecialchars($_POST['message']);
+
+		// We need this incase of errors etc.
+		$_REQUEST['message'] = $_POST['message'];
+	}
 
 	// Initialize the errors we're about to make.
 	$post_errors = array();

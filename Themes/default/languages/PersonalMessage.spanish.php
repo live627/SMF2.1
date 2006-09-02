@@ -35,6 +35,7 @@ $txt['pm_error_data_limit_reached'] = 'El mensaje personal no se pudo enviar a \
 $txt['pm_successfully_sent'] = 'El mensaje personal se envi&oacute; satisfactoriamente a \'%s\'.';
 // Untranslated!
 $txt['pm_too_many_recipients'] = 'You may not send personal messages to more than %d recipient(s) at once.';
+$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
 $txt['pm_send_report'] = 'Enviar reporte';
 $txt['pm_save_outbox'] = 'Guardar una copia en mi buz&oacute;n de salida';
 $txt['pm_undisclosed_recipients'] = 'Destinatario(s) sin revelar';

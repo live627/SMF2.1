@@ -99,21 +99,26 @@ if (empty($modSettings['signature_settings']))
 ---}
 ---#
 
----# Adding PM spam protection settings.
+---# Updating spam protection settings.
 ---{
 if (empty($modSettings['pm_spam_settings']))
 {
 	if (isset($modSettings['max_pm_recipients']))
-		$modSettings['pm_spam_settings'] = (int) $modSettings['max_pm_recipients'] . ',5';
+		$modSettings['pm_spam_settings'] = (int) $modSettings['max_pm_recipients'] . ',5,20';
 	else
-		$modSettings['pm_spam_settings'] = '10,5';
-
-	upgrade_query("
-		INSERT IGNORE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES
-			('pm_spam_settings', '$modSettings[pm_spam_settings]')");
+		$modSettings['pm_spam_settings'] = '10,5,20';
 }
+elseif (substr_count($modSettings['pm_spam_settings'], ',') == 1)
+{
+	$modSettings['pm_spam_settings'] .= ',20';
+}
+
+upgrade_query("
+	INSERT IGNORE INTO {$db_prefix}settings
+		(variable, value)
+	VALUES
+		('pm_spam_settings', '$modSettings[pm_spam_settings]')");
+
 upgrade_query("
 	DELETE FROM {$db_prefix}settings
 	WHERE variable = 'max_pm_recipients'");

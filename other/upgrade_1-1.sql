@@ -280,6 +280,27 @@ if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '1.1 Beta
 ---}
 ---#
 
+---# Adding PM spam protection settings.
+---{
+if (empty($modSettings['pm_spam_settings']))
+{
+	if (isset($modSettings['max_pm_recipients']))
+		$modSettings['pm_spam_settings'] = (int) $modSettings['max_pm_recipients'] . ',5,20';
+	else
+		$modSettings['pm_spam_settings'] = '10,5,20';
+
+	upgrade_query("
+		INSERT IGNORE INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('pm_spam_settings', '$modSettings[pm_spam_settings]')");
+}
+upgrade_query("
+	DELETE FROM {$db_prefix}settings
+	WHERE variable = 'max_pm_recipients'");
+---}
+---#
+
 ---# Cleaning old values from "settings"...
 DELETE FROM {$db_prefix}settings
 WHERE variable IN ('modlog_enabled', 'localCookies', 'globalCookies', 'send_welcomeEmail', 'search_method', 'notify_new_registration', 'removeNestedQuotes', 'smiley_enable', 'smiley_sets_enable')

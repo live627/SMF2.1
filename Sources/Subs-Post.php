@@ -1251,7 +1251,7 @@ function calendarValidatePost()
 function theme_postbox($msg)
 {
 	global $txt, $modSettings, $db_prefix;
-	global $context, $settings, $user_info;
+	global $context, $settings, $user_info, $sourcedir;
 
 	// Switch between default images and back... mostly in case you don't have an PersonalMessage template, but do ahve a Post template.
 	if (isset($settings['use_default_images']) && $settings['use_default_images'] == 'defaults' && isset($settings['default_template']))
@@ -1275,6 +1275,13 @@ function theme_postbox($msg)
 		'postform' => array(),
 		'popup' => array(),
 	);
+
+	// If we have WYSIWYG available then make a compatible version of the message.
+	if (!empty($modSettings['enable_wysiwyg']))
+	{
+		require_once($sourcedir . '/Subs-Editor.php');
+		$context['wysiwyg_message'] = bbc_to_html($msg);
+	}
 
 	// Load smileys - don't bother to run a query if we're not using the database's ones anyhow.
 	if (empty($modSettings['smiley_enable']) && $user_info['smiley_set'] != 'none')

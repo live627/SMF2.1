@@ -240,7 +240,7 @@ function ModifyBasicSettings()
 	if (isset($_GET['save']))
 	{
 		// Fix PM settings.
-		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'];
+		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
 		$save_vars = $config_vars;
 		$save_vars[] = array('text', 'pm_spam_settings');
 
@@ -251,9 +251,10 @@ function ModifyBasicSettings()
 	}
 
 	// Hack for PM spam settings.
-	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification']) = explode(',', $modSettings['pm_spam_settings']);
+	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
 	$config_vars[] = array('int', 'max_pm_recipients');
 	$config_vars[] = array('int', 'pm_posts_verification');
+	$config_vars[] = array('int', 'pm_posts_per_hour');
 
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=basic';
 	$context['settings_title'] = $txt['mods_cat_features'];

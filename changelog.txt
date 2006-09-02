@@ -1,8 +1,19 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2472 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2473 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+September 2006
+--------------------------------------------------------------------------------
+ ! Do some slightly more advanced javascript browser protection. (script.js, editor.js)
+ ! Allow post editing and basic moderation when in wireless mode - only wap2 or imode. (Display.php, LockTopic.php, Wireless template)
+ & Added some langauge entries for the above change. (Wireless language files)
+ ! Fixed the line break being used in non-windows systems in mails sent by sendmail. (Load.php, Subs-Post.php)
+ + Added option for showing visual verification on Personal Message page. (PersonalMessage.php, PersonalMessage template, upgrade_1-1.sql, install_1-1.sql, ModSettings.php)
+ + Added option to limit number of personal messages to be sent in one go. (PersonalMessage.php, upgrade_1-1.sql, install_1-1.sql, ModSettings.php)
+ & Added language entries for above changes. (Help, ModSettings, PersonalMessage language files)
+
+
 August 2006
 --------------------------------------------------------------------------------
  ! Fixed an undefined index notice in the 1.0 upgrade script. (upgrade_1-0.sql)
@@ -110,10 +121,6 @@ August 2006
  ! When parsing smileys use the smiley code as the alt text and the smileys description as the title text. (Subs.php)
  ! Changed the column type to allow for a larger buddy list. (upgrade_1-1.sql, install_2-0.sql)
  ! To allow easier integration, change the usage of the $func variable to $smfFunc.  (several files)
- ! Do some slightly more advanced javascript browser protection. (script.js, editor.js)
- ! Allow post editing and basic moderation when in wireless mode - only wap2 or imode. (Display.php, LockTopic.php, Wireless template)
- & Added some langauge entries for the above change. (Wireless language files)
- ! Fixed the line break being used in non-windows systems in mails sent by sendmail. (Load.php, Subs-Post.php)
 
 
 July 2006

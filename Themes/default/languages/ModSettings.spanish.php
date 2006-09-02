@@ -48,9 +48,10 @@ $txt['max_image_width'] = 'Ancho m&aacute;ximo de las im&aacute;genes en los men
 $txt['max_image_height'] = 'Altura m&aacute;xima de las im&aacute;genes en los mensajes (0 = desactivar)';
 // Untranslated!
 $txt['enableReportPM'] = 'Enable reporting of personal messages';
-$txt['max_pm_recipients'] = 'Maximum number of recipients allowed in a personal message.<div class="smalltext">(0 for no limit, admin\'s are exempt)</div>';
+$txt['max_pm_recipients'] = 'Maximum number of recipients allowed in a personal message.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
 // Untranslated!
-$txt['pm_posts_verification'] = 'Post count under which users must enter code when sending messages.<div class="smalltext">(0 for no limit, admin\'s are exempt)</div>';
+$txt['pm_posts_verification'] = 'Post count under which users must enter code when sending personal messages.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
+$txt['pm_posts_per_hour'] = 'Number of personal messages a user may send in an hour.<div class="smalltext">(0 for no limit, moderators are excempt)</div>';
 
 $txt['mods_cat_layout'] = 'Dise&ntilde;o (Temas)';
 $txt['compactTopicPagesEnable'] = 'Activar Mod de Tema Compacto';

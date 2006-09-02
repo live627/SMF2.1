@@ -367,6 +367,7 @@ $helptxt['enableReportPM'] = 'Deze optie zorgt ervoor dat je gebruikers persoonl
 $helptxt['max_pm_recipients'] = 'Deze optie stelt je in staat een maximum aantal ontvangers per persoonlijk bericht dat een forumlid stuurt in te stellen. Dit kan helpen om misbruik van het PM-systeem te voorkomen. Merk op dat leden die nieuwsbrieven kunnen versturen uitgezonderd zijn. Stel in op nul voor geen limiet.';
 // Untranslated!
 $helptxt['pm_posts_verification'] = 'This setting will force users to enter a code shown on a verification image each time they are sending a personal message. Only users with a post count below the number set will need to enter the code - this should help combat automated spamming scripts.';
+$helptxt['pm_posts_per_hour'] = 'This will limit the number of personal messages which may be sent by a user in a one hour period. This does not affect admins or moderators.';
 
 $helptxt['default_personalText'] = 'Stelt de standaard tekst in die een gebruiker als &quot;persoonlijke tekst&quot; zal hebben.';
 

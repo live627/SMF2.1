@@ -302,6 +302,7 @@ $helptxt['enableReportPM'] = 'Diese Option erlaubt den Benutzern das Melden von 
 $helptxt['max_pm_recipients'] = 'Diese Option erlaubt die Vergabe einer max. Anzahl von Empf&auml;ngern, die ein Benutzer beim Schreiben einer Privaten Mitteilung eingeben kann. Dies soll helfen, dass sogenannte Spammen im Forum zu vermeiden. Benutzer mit der Berechtigung zum Senden von Newslettern sind von dieser Beschr&auml;nkung ausgeschlossen. Geben Sie null f&uuml;r kein Limit ein.';
 // Untranslated!
 $helptxt['pm_posts_verification'] = 'This setting will force users to enter a code shown on a verification image each time they are sending a personal message. Only users with a post count below the number set will need to enter the code - this should help combat automated spamming scripts.';
+$helptxt['pm_posts_per_hour'] = 'This will limit the number of personal messages which may be sent by a user in a one hour period. This does not affect admins or moderators.';
 
 $helptxt['default_personalText'] = 'Gibt den Text an, der als standardm&auml;&szlig;iger &quot;Pers&ouml;nlicher Text&quot; angezeigt wird.';
 

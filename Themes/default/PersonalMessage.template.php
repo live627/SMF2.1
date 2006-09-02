@@ -822,7 +822,7 @@ function template_send()
 	{
 		echo '
 		<br />
-		<table border="0" width="75%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
+		<table border="0" width="80%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td>', $txt['pm_send_report'], '</td>
 			</tr>
@@ -842,7 +842,7 @@ function template_send()
 	if (isset($context['preview_message']))
 	echo '
 		<br />
-		<table border="0" width="75%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
+		<table border="0" width="80%" cellspacing="1" cellpadding="3" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td>', $context['preview_subject'], '</td>
 			</tr>
@@ -855,7 +855,7 @@ function template_send()
 
 	// Main message editing box.
 	echo '
-		<table border="0" width="75%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
+		<table border="0" width="80%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
 			<tr class="titlebg">
 				<td><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt[321], '" title="', $txt[321], '" />&nbsp;', $txt[321], '</td>
 			</tr><tr>
