@@ -9,6 +9,14 @@ if (empty($_GET['format']))
 
 $latest_news = array(
 	array(
+		'time' => 1111111111,
+
+		'subject_english' => 'SMF 1.1',
+		'message_english' => 'SMF 1.1 has gone gold!  If you are using an older version, please upgrade as soon as possible - many things have been changed and fixed, and mods and packages will expect you to be using 1.1.  If you need any help upgrading custom modifications to the new version, please feel free to ask us at our forum.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=110854.0',
+		'author_english' => 'Grudge',
+	),
+	array(
 		'time' => 1156203139,
 
 		'subject_english' => 'SMF 1.1 RC3',
@@ -84,7 +92,7 @@ $latest_news = array(
 		'subject_turkish' => 'SMF 1.1 RC2',
 		'message_turkish' => 'SMF 1.1 için son RC sürüm artik indirilebilir! Lütfen daha detayli bilgi için duyuruyu okuyunuz - ve gelistirilme asamasindaki yazilimlari kullanmakta tereddütleriniz varsa güncellemeyi yapmayiniz. Bu sürüm için paket yöneticisi üzerinden güncellemeler mümkün degildir.',
 	),
-
+/*
 	array(
 		'time' => 1127227317,
 
@@ -162,7 +170,7 @@ $latest_news = array(
 		'message_german' => 'Viele &Auml;nderungen und Fixes sind in der Beta 2 von SMF 1.1 gemacht worden. Sollten Sie Beta 1 benutzen, empfehlen wir dringend ein Update sobald es Ihnen m&ouml;glich ist.',
 	),
 
-/*	array(
+	array(
 		'time' => 1112071534,
 
 		'subject_english' => 'SMF 1.0.3',
@@ -450,6 +458,12 @@ if (window.smfVersion < "SMF 1.1" && window.smfVersion != "SMF 1.0.4")
 */
 
 ?>
+
+if (window.smfVersion < "SMF 1.1")
+{
+	window.smfUpdateNotice = 'SMF 1.1 Final has now been released. To take advantage of the improvements available in SMF 1.1 we recommend upgrading as soon as is practical.';
+	window.smfUpdateCritical = false;
+}
 
 if (document.getElementById("yourVersion"))
 {

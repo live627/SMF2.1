@@ -26,27 +26,13 @@ if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($modified_since) >= 
 	die;
 }
 
-$smfVersions = array(
-	'SMF 1.0' => 'SMF 1.0.8',
-	'SMF 1.1' => 'SMF 1.1 RC3',
-	'SMF Development Edition' => 'SMF Development Edition',
-);
-
-$default = $smfVersions['SMF 1.0'];
-if (isset($_GET['version']))
-{
-	foreach($smfVersions AS $branchVersion => $latestVersion)
-		if (strpos($_GET['version'], $branchVersion) !== false)
-		{
-			$version = $latestVersion;
-			break;
-		}
-}
-
-if (empty($version))
-{
-	$version = $default;
-}
+// Do as little PHP as poss.
+if (isset($_GET['version']) && strpos($_GET['version'], 'SMF 1.0') !== false)
+	$version = 'SMF 1.0.8';
+if (isset($_GET['version']) && strpos($_GET['version'], 'SMF 1.1') !== false)
+	$version = 'SMF 1.1';
+else
+	$version = 'SMF Development Edition';
 
 echo 'window.smfVersion = "' . $version . '";';
 
