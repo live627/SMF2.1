@@ -996,13 +996,11 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false)
 				return "";');
 
 		// Convert all 'special' characters to HTML entities.
-		preg_replace('~[\x80-\x{10FFFF}]~eu', '$entityConvert("\1")', $string);
-
-		return array($charset, $string, '7bit');
+		return array($charset, preg_replace('~([\x80-\x{10FFFF}])~eu', '$entityConvert("\1")', $string), '7bit');
 	}
 
 	// We don't need to mess with the subject line if no special characters were in it..
-	elseif (!$hotmail_fix &preg_match('~([^\x09\x0A\x0D\x20-\x7F])~', $string) === 1)
+	elseif (!$hotmail_fix && preg_match('~([^\x09\x0A\x0D\x20-\x7F])~', $string) === 1)
 	{
 		// replace special characters...
 		$string = preg_replace('~([^\x09\x0A\x0D\x20\x25-\x3C\x3E\x41-\x5A\x61-\x7A])~e', 'sprintf("=%02X", ord("\1"))', $string);

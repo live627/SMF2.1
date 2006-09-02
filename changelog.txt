@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2474 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2475 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -11,6 +11,7 @@ September 2006
  ! Fixed the line break being used in non-windows systems in mails sent by sendmail. (Load.php, Subs-Post.php)
  + Added option to limit number of personal messages to be sent in one go. (PersonalMessage.php, upgrade_1-1.sql, install_1-1.sql, ModSettings.php)
  & Added language entries for above changes. (Help, ModSettings, PersonalMessage language files)
+ ! The hotmail fix didn't work properly. (Subs-Post.php)
 
 
 August 2006
