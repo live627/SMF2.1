@@ -289,16 +289,32 @@ function template_imode_display()
 		echo '
 			<tr><td>', $message['first_new'] ? '
 				<a name="new"></a>' : '', '
-				<b>', $message['member']['name'], '</b>:<br />
+				<b>', $message['member']['name'], '</b>:
+				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 				', $wireless_message, '
 			</td></tr>';
 	}
 	echo '
 			<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</td></tr>
 			<tr><td>&#59115; <a href="', $context['links']['up'], ';imode" accesskey="0">', $txt['wireless_navigation_index'], '</a></td></tr>', !empty($context['links']['next']) ? '
-			<tr><td><a href="' . $context['links']['next'] . ';imode" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></td></tr>' : '', !empty($context['links']['prev']) ? '
-			<tr><td><a href="' . $context['links']['prev'] . ';imode" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></td></tr>' : '', $context['can_reply'] ? '
-			<tr><td><a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';imode">' . $txt[146] . '</a></td></tr>' : '', '
+			<tr><td><a href="' . $context['links']['next'] . ';imode' . $context['wireless_moderate'] . '" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></td></tr>' : '', !empty($context['links']['prev']) ? '
+			<tr><td><a href="' . $context['links']['prev'] . ';imode' . $context['wireless_moderate'] . '" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></td></tr>' : '', $context['can_reply'] ? '
+			<tr><td><a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';imode">' . $txt[146] . '</a></td></tr>' : '';
+
+	if (!empty($context['wireless_more']) && empty($context['wireless_moderate']))
+		echo '
+			<tr><td><a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';moderate;imode">', $txt['wireless_display_moderate'], '</a></td></tr>';
+	elseif (!empty($context['wireless_moderate']))
+	{
+		if ($context['can_sticky'])
+			echo '
+				<tr><td><a href="', $scripturl, '?action=sticky;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';imode">', $txt['wireless_display_' . ($context['is_sticky'] ? 'unsticky' : 'sticky')], '</a></td></tr>';
+		if ($context['can_lock'])
+			echo '
+				<tr><td><a href="', $scripturl, '?action=lock;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';imode">', $txt['wireless_display_' . ($context['is_locked'] ? 'unlock' : 'lock')], '</a></td></tr>';
+	}
+
+	echo '
 		</table>';
 }
 
@@ -679,7 +695,8 @@ function template_wap2_display()
 		echo $message['first_new'] ? '
 		<a name="new"></a>' : '', '
 		<p class="windowbg', $alternate ? '' : '2', '">
-			<b>', $message['member']['name'], '</b>:<br />
+			<b>', $message['member']['name'], '</b>:
+			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 			', $wireless_message, '
 		</p>';
 		$alternate = !$alternate;
@@ -687,9 +704,22 @@ function template_wap2_display()
 	echo '
 		<p class="titlebg">', $txt['wireless_navigation'], '</p>
 		<p class="windowbg">[0] <a href="', $context['links']['up'], ';wap2" accesskey="0">', $txt['wireless_navigation_index'], '</a></p>', !empty($context['links']['next']) ? '
-		<p class="windowbg">[#] <a href="' . $context['links']['next'] . ';wap2" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></p>' : '', !empty($context['links']['prev']) ? '
-		<p class="windowbg">[*] <a href="' . $context['links']['prev'] . ';wap2" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></p>' : '', $context['can_reply'] ? '
+		<p class="windowbg">[#] <a href="' . $context['links']['next'] . ';wap2' . $context['wireless_moderate'] . '" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></p>' : '', !empty($context['links']['prev']) ? '
+		<p class="windowbg">[*] <a href="' . $context['links']['prev'] . ';wap2' . $context['wireless_moderate'] . '" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></p>' : '', $context['can_reply'] ? '
 		<p class="windowbg"><a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';wap2">' . $txt[146] . '</a></p>' : '';
+
+	if (!empty($context['wireless_more']) && empty($context['wireless_moderate']))
+		echo '
+		<p class="windowbg"><a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';moderate;wap2">', $txt['wireless_display_moderate'], '</a></p>';
+	elseif (!empty($context['wireless_moderate']))
+	{
+		if ($context['can_sticky'])
+			echo '
+				<p class="windowbg"><a href="', $scripturl, '?action=sticky;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';wap2">', $txt['wireless_display_' . ($context['is_sticky'] ? 'unsticky' : 'sticky')], '</a></p>';
+		if ($context['can_lock'])
+			echo '
+				<p class="windowbg"><a href="', $scripturl, '?action=lock;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], ';wap2">', $txt['wireless_display_' . ($context['is_locked'] ? 'unlock' : 'lock')], '</a></p>';
+	}
 }
 
 function template_wap2_login()

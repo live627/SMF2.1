@@ -643,7 +643,6 @@ function removeMessage($message, $decreasePostCount = true)
 			FROM {$db_prefix}messages
 			WHERE ID_TOPIC = $row[ID_TOPIC]
 				AND ID_MSG != $message
-			GROUP BY approved
 			ORDER BY approved DESC, ID_MSG DESC
 			LIMIT 1", __FILE__, __LINE__);
 		$row2 = mysql_fetch_assoc($request);

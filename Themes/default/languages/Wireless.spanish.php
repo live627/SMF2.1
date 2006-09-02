@@ -31,4 +31,12 @@ $txt['wireless_pm_reply_to'] = 'Responder a';
 $txt['wireless_recent_unread_posts'] = 'Unread posts';
 $txt['wireless_recent_unread_replies'] = 'Unread replies';
 
+// Untranslated!
+$txt['wireless_display_edit'] = 'Edit';
+$txt['wireless_display_moderate'] = 'Moderate';
+$txt['wireless_display_sticky'] = 'Sticky';
+$txt['wireless_display_unsticky'] = 'Un-Sticky';
+$txt['wireless_display_lock'] = 'Lock';
+$txt['wireless_display_unlock'] = 'Unlock';
+
 ?>

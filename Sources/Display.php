@@ -773,6 +773,7 @@ function Display()
 	// Now set all the wonderful, wonderful permissions... like moderation ones...
 	$common_permissions = array(
 		'can_approve' => 'approve_posts',
+		'can_ban' => 'manage_bans',
 		'can_sticky' => 'make_sticky',
 		'can_merge' => 'merge_any',
 		'can_split' => 'split_any',
@@ -812,6 +813,14 @@ function Display()
 
 	// Start this off for quick moderation - it will be or'd for each post.
 	$context['can_remove_post'] = allowedTo('delete_any') || (allowedTo('delete_replies') && $context['user']['started']);
+
+	// Wireless shows a "more" if you can do anything special.
+	if (WIRELESS && WIRELESS_PROTOCOL != 'wap')
+	{
+		//!!! Add banning.
+		$context['wireless_more'] = $context['can_sticky'] || $context['can_lock'] || allowedTo('modify_any');
+		$context['wireless_moderate'] = isset($_GET['moderate']) ? ';moderate' : '';
+	}
 
 	// Load up the "double post" sequencing magic.
 	if (!empty($options['display_quick_reply']))

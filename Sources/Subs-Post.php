@@ -2519,11 +2519,10 @@ function updateLastMessages($setboards, $ID_MSG = 0)
 			$parents = getBoardParents($ID_BOARD);
 
 		// Ignore any parents on the top child level.
+		//!!! Why?
 		foreach ($parents as $id => $parent)
 		{
-			if ($parent['level'] == 0)
-				unset($parent[$id]);
-			else
+			if ($parent['level'] != 0)
 			{
 				// If we're already doing this one as a board, is this a higher last modified?
 				if (isset($lastMsg[$id]) && $lastMsg[$ID_BOARD] > $lastMsg[$id])
@@ -2533,6 +2532,9 @@ function updateLastMessages($setboards, $ID_MSG = 0)
 			}
 		}
 	}
+
+	// Note to help understand what is happening here. For parents we update the timestamp of the last message for determining
+	// whether there are child boards which have not been read. For the boards themselves we update both this and ID_LAST_MSG.
 
 	$board_updates = array();
 	$parent_updates = array();
