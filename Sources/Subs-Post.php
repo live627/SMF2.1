@@ -527,6 +527,12 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
 	global $db_prefix;
 
+	// Use sendmail if it's set or if no SMTP server is set.
+	$use_sendmail = empty($modSettings['mail_type']) || $modSettings['smtp_host'] == '';
+
+	// Line breaks need to be \r\n only in windows or for SMTP.
+	$line_break = $context['server']['is_windows'] || !$use_sendmail ? "\r\n" : "\n";
+
 	// So far so good.
 	$mail_result = true;
 
@@ -560,14 +566,14 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 
 	// Get rid of slashes and entities.
 	$subject = un_htmlspecialchars(stripslashes($subject));
-	// Make the message use \r\n's only.
-	$message = str_replace(array("\r", "\n"), array('', "\r\n"), stripslashes($message));
+	// Make the message use the proper line breaks.
+	$message = str_replace(array("\r", "\n"), array('', $line_break), stripslashes($message));
 
 	// Make sure hotmail mails are sent as HTML so that HTML entities work.
 	if ($hotmail_fix && !$send_html)
 	{
 		$send_html = true;
-		$message = strtr($message, array("\r\n" => "<br />\r\n"));
+		$message = strtr($message, array($line_break => '<br />' . $line_break));
 		$message = preg_replace('~(' . preg_quote($scripturl, '~') . '([?/][\w\-_%\.,\?&;=#]+)?)~', '<a href="$1">$1</a>', $message);
 	}
 
@@ -575,21 +581,22 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	list (, $subject) = mimespecialchars($subject, true, $hotmail_fix);
 
 	// Construct the mail headers...
-	$headers = 'From: "' . $from_name . '" <' . (empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from']) . ">\r\n";
-	$headers .= $from !== null ? 'Reply-To: <' . $from . ">\r\n" : '';
-	$headers .= 'Return-Path: ' . (empty($modSettings['mail_from']) ? $webmaster_email: $modSettings['mail_from']) . "\r\n";
-	$headers .= 'Date: ' . gmdate('D, d M Y H:i:s') . ' +0000' . "\r\n";
+	$headers = 'From: "' . $from_name . '" <' . (empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from']) . '>' . $line_break;
+	$headers .= $from !== null ? 'Reply-To: <' . $from . '>' . $line_break : '';
+	$headers .= 'Return-Path: ' . (empty($modSettings['mail_from']) ? $webmaster_email: $modSettings['mail_from']) . $line_break;
+	$headers .= 'Date: ' . gmdate('D, d M Y H:i:s') . ' +0000' . $line_break;
 
 	if ($message_id !== null && empty($modSettings['mail_no_message_id']))
-		$headers .= 'Message-ID: <' . md5($scripturl . microtime()) . '-' . $message_id . strstr(empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from'], '@') . ">\r\n";
-	$headers .= "X-Mailer: SMF\r\n";
+		$headers .= 'Message-ID: <' . md5($scripturl . microtime()) . '-' . $message_id . strstr(empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from'], '@') . '>' . $line_break;
+	$headers .= 'X-Mailer: SMF' . $line_break;
 
+	// pass this to the integration before we start modifying the output -- it'll make it easier later
 	if (isset($modSettings['integrate_outgoing_email']) && function_exists($modSettings['integrate_outgoing_email']))
 	{
 		if ($modSettings['integrate_outgoing_email']($subject, $message, $headers) === false)
 			return false;
-	}	
-	
+	}
+
 	$charset = isset($context['character_set']) ? $context['character_set'] : $txt['lang_character_set'];
 
 	list ($charset, $message, $encoding) = mimespecialchars($message, false, $hotmail_fix);
@@ -599,30 +606,30 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	{
 		// This should send a text message with MIME multipart/alternative stuff.
 		$mime_boundary = 'SMF-' . md5($message . time());
-		$headers .= 'Mime-Version: 1.0' . "\r\n";
-		$headers .= 'Content-Type: multipart/alternative; boundary="' . $mime_boundary . '"' . "\r\n";
+		$headers .= 'Mime-Version: 1.0' . $line_break;
+		$headers .= 'Content-Type: multipart/alternative; boundary="' . $mime_boundary . '"' . $line_break;
 		$headers .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding);
 
 		// Save the original message...
 		$orig_message = $message;
 
 		// But, then, dump it and use a plain one for dinosaur clients.
-		$message = un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => "\r\n")))) . "\r\n--" . $mime_boundary . "\r\n";
+		$message = un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => $line_break)))) . $line_break . '--' . $mime_boundary . $line_break;
 
 		// This is the plain text version.  Even if no one sees it, we need it for spam checkers.
-		$message .= 'Content-Type: text/plain; charset=' . $charset . "\r\n";
-		$message .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding) . "\r\n\r\n";
-		$message .= un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => "\r\n")))) . "\r\n--" . $mime_boundary . "\r\n";
+		$message .= 'Content-Type: text/plain; charset=' . $charset . $line_break;
+		$message .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding) . $line_break . $line_break;
+		$message .= un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => $line_break)))) . $line_break . '--' . $mime_boundary . $line_break;
 
 		// This is the actual HTML message, prim and proper.  If we wanted images, they could be inlined here (with multipart/related, etc.)
-		$message .= 'Content-Type: text/html; charset=' . $charset . "\r\n";
-		$message .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding) . "\r\n\r\n";
-		$message .= $orig_message . "\r\n--" . $mime_boundary . '--';
+		$message .= 'Content-Type: text/html; charset=' . $charset . $line_break;
+		$message .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding) . $line_break . $line_break;
+		$message .= $orig_message . $line_break . '--' . $mime_boundary . '--';
 	}
 	// Text is good too.
 	else
 	{
-		$headers .= 'Content-Type: text/plain; charset=' . $charset . "\r\n";
+		$headers .= 'Content-Type: text/plain; charset=' . $charset . $line_break;
 		if ($encoding != '')
 			$headers .= 'Content-Transfer-Encoding: ' . $encoding;
 	}
@@ -630,20 +637,21 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	// Are we using the mail queue, if so this is where we butt in...
 	if (!empty($modSettings['mail_queue']) && $priority < 4)
 		return AddMailQueue(false, $to_array, $subject, $message, $headers, $send_html, $priority);
+
 	// If it's a priority mail, send it now - note though that this should NOT be used for sending many at once.
 	elseif (!empty($modSettings['mail_queue']) && !empty($modSettings['mail_limit']))
 	{
-		list ($mt, $mn) = @explode('|', $modSettings['mail_recent']);
-		if (empty($mn) || time() > $mt + 60)
-			$mr = time() . '|' . 1;
+		list ($last_mail_time, $mails_this_minute) = @explode('|', $modSettings['mail_recent']);
+		if (empty($mails_this_minute) || time() > $last_mail_time + 60)
+			$new_queue_stat = time() . '|' . 1;
 		else
-			$mr = $mt . '|' . ((int) $mn + 1);
+			$new_queue_stat = $mt . '|' . ((int) $mails_this_minute + 1);
 
-		updateSettings(array('mail_recent' => $mr));
+		updateSettings(array('mail_recent' => $new_queue_stat));
 	}
 
 	// SMTP or sendmail?
-	if (empty($modSettings['mail_type']) || $modSettings['smtp_host'] == '')
+	if ($use_sendmail)
 	{
 		$subject = strtr($subject, array("\r" => '', "\n" => ''));
 		if (!empty($modSettings['mail_strip_carriage']))
@@ -667,7 +675,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		}
 	}
 	else
-		$mail_result = $mail_result  && smtp_mail($to_array, $subject, $message, $send_html ? $headers : "Mime-Version: 1.0\r\n" . $headers);
+		$mail_result = $mail_result  && smtp_mail($to_array, $subject, $message, $send_html ? $headers : 'Mime-Version: 1.0' . $line_break . $headers);
 
 	// Everything go smoothly?
 	return $mail_result;

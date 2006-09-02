@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2471 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2472 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -113,6 +113,7 @@ August 2006
  ! Do some slightly more advanced javascript browser protection. (script.js, editor.js)
  ! Allow post editing and basic moderation when in wireless mode - only wap2 or imode. (Display.php, LockTopic.php, Wireless template)
  & Added some langauge entries for the above change. (Wireless language files)
+ ! Fixed the line break being used in non-windows systems in mails sent by sendmail. (Load.php, Subs-Post.php)
 
 
 July 2006
