@@ -1144,7 +1144,7 @@ function doStep2()
 							var theCheck = document.getElementById ? document.getElementById("delete_self") : document.all.delete_self;
 							var tempImage = new Image();
 
-							tempImage.src = "', $_SERVER['PHP_SELF'], '?delete=1&" + (new Date().getTime());
+							tempImage.src = "', $_SERVER['PHP_SELF'], '?delete=1&ts_" + (new Date().getTime());
 							tempImage.width = 0;
 							theCheck.disabled = true;
 						}

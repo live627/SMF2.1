@@ -785,7 +785,7 @@ function doStep2()
 				{
 					var theImage = document.getElementById ? document.getElementById("delete_upgrader") : document.all.delete_upgrader;
 
-					theImage.src = "', $_SERVER['PHP_SELF'], '?delete=1&" + (new Date().getTime());
+					theImage.src = "', $_SERVER['PHP_SELF'], '?delete=1&ts_" + (new Date().getTime());
 					theCheck.disabled = true;
 				}
 			// ]]></script>
