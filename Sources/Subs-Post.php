@@ -645,7 +645,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		if (empty($mails_this_minute) || time() > $last_mail_time + 60)
 			$new_queue_stat = time() . '|' . 1;
 		else
-			$new_queue_stat = $mt . '|' . ((int) $mails_this_minute + 1);
+			$new_queue_stat = $last_mail_time . '|' . ((int) $mails_this_minute + 1);
 
 		updateSettings(array('mail_recent' => $new_queue_stat));
 	}
