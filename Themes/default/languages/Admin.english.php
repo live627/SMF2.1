@@ -269,6 +269,7 @@ $txt['maintain_general'] = 'General Maintenance';
 $txt['maintain_recount'] = 'Recount all forum totals and statistics.';
 $txt['maintain_errors'] = 'Find and repair any errors.';
 $txt['maintain_logs'] = 'Empty out unimportant logs.';
+$txt['maintain_cache'] = 'Empty the file cache.';
 $txt['maintain_optimize'] = 'Optimize all tables to improve performance.';
 $txt['maintain_version'] = 'Check all files against current versions.';
 $txt['maintain_return'] = 'Back to Forum Maintenance';

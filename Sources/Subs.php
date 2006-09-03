@@ -3422,7 +3422,8 @@ function db_debug_junk()
 	$total_size = 0;
 	for ($i = 0, $n = count($files); $i < $n; $i++)
 	{
-		$total_size += filesize($files[$i]);
+		if (file_exists($files[$i]))
+			$total_size += filesize($files[$i]);
 		$files[$i] = strtr($files[$i], array($boarddir => '.'));
 	}
 

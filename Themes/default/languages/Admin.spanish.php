@@ -285,6 +285,8 @@ $txt['maintain_general'] = 'Mantenimiento General';
 $txt['maintain_recount'] = 'Recontar todos los totales del foro y estad&iacute;sticas.';
 $txt['maintain_errors'] = 'Buscar y reparar cualquier error encontrado.';
 $txt['maintain_logs'] = 'Eliminar logs no importantes.';
+// Untranslated!
+$txt['maintain_cache'] = 'Empty the file cache.';
 $txt['maintain_optimize'] = 'Optimizar todas las tablas para mejorar el rendimiento.';
 $txt['maintain_version'] = 'Revisar todos los archivos contra las versiones actuales.';
 // Untranslated!

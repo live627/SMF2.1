@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2479 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2480 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -16,6 +16,7 @@ September 2006
  ! Conversion of $func to $smfFunc missed a couple spots. (Search.php)
  ! When checking how many personal messages a user has sent the last hour - count the recipients not the messages. (PersonalMessage.php)
  ! If the user has some special characters in their password, check to see if they still have an old hash when logging in. (LogInOut.php)
+ & Add a link in maintenance for manually emptying the cache folder. (MananageMaintenance.php, Admin template, Admin language files)
 
 
 August 2006

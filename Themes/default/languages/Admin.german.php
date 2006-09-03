@@ -273,6 +273,8 @@ $txt['maintain_general'] = 'Generelle Wartung';
 $txt['maintain_recount'] = 'Statistiken und Forumswerte neu berechnen';
 $txt['maintain_errors'] = 'Fehler finden und reparieren';
 $txt['maintain_logs'] = 'Unwichtige Protokolle l&ouml;schen';
+// Untranslated!
+$txt['maintain_cache'] = 'Empty the file cache.';
 $txt['maintain_optimize'] = 'Optimiere Tabellen, um die Performance zu steigern';
 $txt['maintain_version'] = 'Alle Dateien auf neue Versionen &uuml;berpr&uuml;fen';
 $txt['maintain_return'] = 'Zur&uuml;ck zur Wartung des Forums';

@@ -99,6 +99,7 @@ function ManageMaintenance()
 
 	// So many things you can - but frankly I won't let you - just these!
 	$subActions = array(
+		'cleancache' => 'Maintenance',
 		'convertentities' => 'ConvertEntities',
 		'convertutf8' => 'ConvertUtf8',
 		'destroy' => 'Maintenance',
@@ -152,7 +153,7 @@ function ManageMaintenance()
 function Maintenance()
 {
 	global $context, $txt, $db_prefix, $user_info, $db_character_set;
-	global $modSettings;
+	global $modSettings, $cachedir;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'logs')
 	{
@@ -197,6 +198,16 @@ function Maintenance()
 			<div style="margin-top: 7%; font-size: 500%; color: red;"><b>You lazy bum!</b></div>
 			</body></html>';
 		obExit(false);
+	}
+	elseif (isset($_GET['sa']) && $_GET['sa'] == 'cleancache' && is_dir($cachedir))
+	{
+		// Just wipe the whole cache directory!
+		$dh = opendir($cachedir);
+		while ($file = readdir($dh))
+			@unlink($cachedir . '/' . $file);
+		closedir($dh);
+
+		$context['maintenance_finished'] = true;
 	}
 	else
 		$context['maintenance_finished'] = isset($_GET['done']);

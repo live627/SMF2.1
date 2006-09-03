@@ -275,6 +275,8 @@ $txt['maintain_general'] = 'Algemeen onderhoud';
 $txt['maintain_recount'] = 'Herbereken alle forum totalen en statistieken.';
 $txt['maintain_errors'] = 'Zoek en repareer alle fouten.';
 $txt['maintain_logs'] = 'Leeg alle onbelangrijke logs.';
+// Untranslated!
+$txt['maintain_cache'] = 'Empty the file cache.';
 $txt['maintain_optimize'] = 'Optimaliseer alle tabellen om de performance te verbeteren.';
 $txt['maintain_version'] = 'Controleer de versies van alle bestanden ten opzichte van de huidige versies.';
 $txt['maintain_return'] = 'Terug naar forumonderhoud';

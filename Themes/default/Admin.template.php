@@ -1016,6 +1016,7 @@ function template_maintain()
 					<a href="', $scripturl, '?action=admin;area=maintain;sa=logs">', $txt['maintain_logs'], '</a><br />', $context['convert_utf8'] ? '
 					<a href="' . $scripturl . '?action=admin;area=maintain;sa=convertutf8">' . $txt['utf8_title'] . '</a><br />' : '', $context['convert_entities'] ? '
 					<a href="' . $scripturl . '?action=admin;area=maintain;sa=convertentities">' . $txt['entity_convert_title'] . '</a><br />' : '', '
+					<a href="', $scripturl, '?action=admin;area=maintain;sa=cleancache">', $txt['maintain_cache'], '</a><br />
 				</td>
 			</tr>';
 
