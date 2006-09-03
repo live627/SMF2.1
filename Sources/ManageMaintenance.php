@@ -202,10 +202,7 @@ function Maintenance()
 	elseif (isset($_GET['sa']) && $_GET['sa'] == 'cleancache' && is_dir($cachedir))
 	{
 		// Just wipe the whole cache directory!
-		$dh = opendir($cachedir);
-		while ($file = readdir($dh))
-			@unlink($cachedir . '/' . $file);
-		closedir($dh);
+		clean_cache();
 
 		$context['maintenance_finished'] = true;
 	}

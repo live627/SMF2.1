@@ -765,6 +765,9 @@ function doStep2()
 	if (!empty($_GET['maint']))
 		echo ' Successful.', $endl;
 
+	// Clean any old cache files away.
+	clean_cache();
+
 	if ($command_line)
 	{
 		echo $endl;
@@ -1776,6 +1779,24 @@ function print_error($message, $fatal = false)
 
 	if ($fatal)
 		exit;
+}
+
+// Empty out the cache folder.
+function clean_cache($type = '')
+{
+	global $cachedir;
+
+	// No directory = no game.
+	if (!is_dir($cachedir))
+		return;
+
+	$dh = opendir($cachedir);
+	while ($file = readdir($dh))
+	{
+		if (!$type || substr($file, 0, strlen($type)) == $type)
+			@unlink($cachedir . '/' . $file);
+	}
+	closedir($dh);
 }
 
 ?>

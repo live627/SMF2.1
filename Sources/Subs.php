@@ -228,6 +228,9 @@ if (!defined('SMF'))
 
 	string create_button(string filename, string alt, string label, bool custom = '')
 		// !!!
+
+	void clean_cache(type = '')
+		// !!!
 */
 
 // Do a query.  Takes care of errors too.
@@ -3493,6 +3496,9 @@ function db_debug_junk()
 	echo '
 	<a href="' . $scripturl . '?action=viewquery;sa=hide">[' . (empty($_SESSION['view_queries']) ? 'show' : 'hide') . ' queries]</a>
 </div></body></html>';
+
+	//!!! Clean the language cache - to enable developers to not have to manually do it.
+	clean_cache('lang');
 }
 
 // Get an attachment's encrypted filename.  If $new is true, won't check for file existence.
@@ -3631,6 +3637,24 @@ function create_button($name, $alt, $label = '', $custom = '')
 		return '<img src="' . $settings['images_url'] . '/buttons/' . $name . '" alt="' . $txt[$alt] . '" ' . $custom . ' />' . ($label != '' ? '<b>' . $txt[$label] . '</b>' : '');
 	else
 		return '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/' . $name . '" alt="' . $txt[$alt] . '" ' . $custom . ' />';
+}
+
+// Empty out the cache folder.
+function clean_cache($type = '')
+{
+	global $cachedir;
+
+	// No directory = no game.
+	if (!is_dir($cachedir))
+		return;
+
+	$dh = opendir($cachedir);
+	while ($file = readdir($dh))
+	{
+		if (!$type || substr($file, 0, strlen($type)) == $type)
+			@unlink($cachedir . '/' . $file);
+	}
+	closedir($dh);
 }
 
 ?>

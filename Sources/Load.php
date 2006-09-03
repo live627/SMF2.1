@@ -1363,20 +1363,19 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 	{
 		$context['template_layers'] = array(WIRELESS_PROTOCOL);
 		loadTemplate('Wireless');
-		loadLanguage('Wireless');
-		loadLanguage('index');
+		loadLanguage('Wireless+index+Modifications');
 	}
 	// Output is fully XML, so no need for the index template.
 	elseif (isset($_REQUEST['xml']))
 	{
-		loadLanguage('index');
+		loadLanguage('index+Modifications');
 		loadTemplate('Xml');
 		$context['template_layers'] = array();
 	}
 	// These actions don't require the index template at all.
 	elseif (!empty($_REQUEST['action']) && in_array($_REQUEST['action'], $simpleActions))
 	{
-		loadLanguage('index');
+		loadLanguage('index+Modifications');
 		$context['template_layers'] = array();
 	}
 	else
@@ -1397,12 +1396,9 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 		foreach ($templates as $template)
 		{
 			loadTemplate($template);
-			loadLanguage($template, '', false);
+			loadLanguage($template . '+Modifications', '', false);
 		}
 	}
-
-	// Load the Modifications language file, always ;). (but don't sweat it if it doesn't exist.)
-	loadLanguage('Modifications', '', false);
 
 	// Initialize the theme.
 	loadSubTemplate('init', 'ignore');
@@ -1515,7 +1511,8 @@ function loadSubTemplate($sub_template_name, $fatal = false)
 // Load a language file.  Tries the current and default themes as well as the user and global languages.
 function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload = false)
 {
-	global $boarddir, $boardurl, $user_info, $language_dir, $language, $settings, $context, $txt, $db_show_debug;
+	global $boarddir, $boardurl, $user_info, $language_dir, $language, $settings, $context, $txt;
+	global $cachedir, $db_show_debug;
 	static $already_loaded = array();
 
 	// Default to the user's language.
@@ -1525,49 +1522,75 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 	if (!$force_reload && isset($already_loaded[$template_name]) && $already_loaded[$template_name] == $lang)
 		return $lang;
 
-	// Obviously, the current theme is most important to check.
-	$attempts = array(
-		array($settings['theme_dir'], $template_name, $lang, $settings['theme_url']),
-		array($settings['theme_dir'], $template_name, $language, $settings['theme_url']),
-	);
+	// What theme are we in?
+	$theme_name = basename($settings['theme_url']);
 
-	// Do we have a base theme to worry about?
-	if (isset($settings['base_theme_dir']))
+	// Is this cached - if not recache!
+	if (!file_exists($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php'))
 	{
-		$attempts[] = array($settings['base_theme_dir'], $template_name, $lang, $settings['base_theme_url']);
-		$attempts[] = array($settings['base_theme_dir'], $template_name, $language, $settings['base_theme_url']);
-	}
+		// Open the file to write to.
+		$fh = fopen($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php', 'w');
+		fwrite($fh, "<?php\n");
 
-	// Fallback on the default theme if necessary.
-	$attempts[] = array($settings['default_theme_dir'], $template_name, $lang, $settings['default_theme_url']);
-	$attempts[] = array($settings['default_theme_dir'], $template_name, $language, $settings['default_theme_url']);
-
-	// Try to include the language file.
-	foreach ($attempts as $k => $file)
-		if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
+		// For each file open it up and write it out!
+		foreach (explode('+', $template_name) as $template)
 		{
-			$language_dir = $file[0] . '/languages';
-			$lang = $file[2];
-			// Hmmm... do we really still need this?
-			$language_url = $file[3];
-			template_include($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php');
-			
-			// Remember what we have loaded, and in which language.
-			$already_loaded[$file[1]] = $lang;
+			// Obviously, the current theme is most important to check.
+			$attempts = array(
+				array($settings['theme_dir'], $template, $lang, $settings['theme_url']),
+				array($settings['theme_dir'], $template, $language, $settings['theme_url']),
+			);
+		
+			// Do we have a base theme to worry about?
+			if (isset($settings['base_theme_dir']))
+			{
+				$attempts[] = array($settings['base_theme_dir'], $template, $lang, $settings['base_theme_url']);
+				$attempts[] = array($settings['base_theme_dir'], $template, $language, $settings['base_theme_url']);
+			}
+		
+			// Fallback on the default theme if necessary.
+			$attempts[] = array($settings['default_theme_dir'], $template, $lang, $settings['default_theme_url']);
+			$attempts[] = array($settings['default_theme_dir'], $template, $language, $settings['default_theme_url']);
 
-			break;
+			// Try to find the language file.
+			foreach ($attempts as $k => $file)
+				if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
+				{
+					foreach (file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php') as $line)
+					{
+						if (substr($line, 0, 2) != '?>' && substr($line, 0, 2) != '<?')
+							fwrite($fh, $line);
+					}
+
+					// Hmmm... do we really still need this?
+					$language_url = $file[3];
+					$lang = $file[2];
+		
+					break;
+				}
+	
+			// That couldn't be found!  Log the error, but *try* to continue normally.
+			if (!isset($language_url))
+			{
+				if ($fatal)
+					log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
+				return false;
+			}
+			else
+				unset($language_url);
 		}
 
-	// That couldn't be found!  Log the error, but *try* to continue normally.
-	if (!isset($language_url))
-	{
-		if ($fatal)
-			log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
-		return false;
+		fwrite($fh, "?>");
+		fclose($fh);
 	}
 
 	if ($db_show_debug === true)
-		$context['debug']['language_files'][] = $template_name . '.' . $lang . ' (' . basename($language_url) . ')';
+		$context['debug']['language_files'][] = $template_name . '.' . $lang . ' (' . $theme_name . ')';
+
+	template_include($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php');
+
+	// Remember what we have loaded, and in which language.
+	$already_loaded[$template_name] = $lang;
 
 	//!!! /**************** 2.0 ALPHA FIXES - START ********************/
 	if (!in_array($lang, array('dutch', 'english', 'german', 'spanish')))

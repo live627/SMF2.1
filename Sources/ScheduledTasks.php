@@ -344,20 +344,7 @@ function scheduled_approval_notification()
 // Empty out the cache folder.
 function scheduled_clean_cache()
 {
-	global $cachedir;
-
-	// Even if this fails return true to stop it repeating...
-	if (!is_dir($cachedir))
-		return true;
-
-	$dh = opendir($cachedir);
-	while ($file = readdir($dh))
-	{
-		// If it's data delete it!
-		if (substr($file, 0, 4) == 'data')
-			@unlink($cachedir . '/' . $file);
-	}
-	closedir($dh);
+	clean_cache('data');
 
 	// Log we've done it...
 	return true;

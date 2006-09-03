@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2480 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2481 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -17,6 +17,8 @@ September 2006
  ! When checking how many personal messages a user has sent the last hour - count the recipients not the messages. (PersonalMessage.php)
  ! If the user has some special characters in their password, check to see if they still have an old hash when logging in. (LogInOut.php)
  & Add a link in maintenance for manually emptying the cache folder. (MananageMaintenance.php, Admin template, Admin language files)
+ ! Added a function to empty the cache folder - and made it empty the cache folder when upgrading, installing a mod - and always when in debug mode. (Subs.php, Packages.php, Themes.php, ScheduledTask.php, upgrade.php)
+ ! When loading a language copy it to the cache folder to speed up the loading process. Allow loading more than one language file at once. (Load.php)
 
 
 August 2006
