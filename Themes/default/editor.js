@@ -6,7 +6,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	this.currentText = '';
 	var showDebug = true;
 	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
-	var htmlPossible = is_ie5up || is_ff;
+	//!!! This partly works on opera - it's a rubbish browser for JS.
+	//var richTextPossible = is_ie5up || is_ff || is_opera9up;
+	var richTextPossible = is_ie5up || is_ff;
 
 	var frameHandle = null;
 	var frameElement = null;
@@ -114,8 +116,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		textHandle = document.getElementById(uniqueId);
 		currentText = getInnerHTML(textHandle);
 
+		if (typeof(text) != "undefined")
+			currentText = text;
+
 		// Create the iFrame element.
-		if (htmlPossible)
+		if (richTextPossible)
 		{
 			frameElement = document.createElement('iframe');
 			frameHandle = textHandle.parentNode.appendChild(frameElement);
@@ -150,74 +155,79 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				frameHandle.style.display = 'none';
 				breadHandle.style.display = 'none';
 			}
+
+			setTimeout(InitIframe, 100);
 		}
+		// If we can't do advanced stuff then just do the basics.
+		else
+		{
+			// Cannot have WYSIWYG anyway!
+			mode = 0;
 
-		setTimeout(InitIframe, 100);
+			getFonts();
 
-		if (typeof(text) != "undefined")
-			currentText = text;
+			initClose();
+		}
 	}
 
 	// Actually get the iframe up and running.
 	function InitIframe()
 	{
 		// Finally get the document... and the window for focusing the mind (/window)
-		if (htmlPossible)
+		frameDocument = frameElement.contentWindow.document;
+		frameWindow = frameElement.contentWindow;
+
+		// Populate it first.
+		frameDocument.open();
+		frameDocument.write("<html><head></head><body></body></html>");
+		frameDocument.close();
+
+		if (!is_ie)
 		{
-			frameDocument = frameElement.contentWindow.document;
-			frameWindow = frameElement.contentWindow;
-	
-			// Populate it first.
-			frameDocument.open();
-			frameDocument.write("<html><head></head><body></body></html>");
-			frameDocument.close();
-	
-			if (!is_ie)
-			{
-				frameDocument.designMode = 'off';
-				frameDocument.designMode = 'on';
-			}
-			else
-			{
-				frameDocument.body.contentEditable = true;
-			}
-
-			// Get the fonts.
-			frameHandle.style.display = '';
-			frameWindow.focus();
-			getFonts();
-			if (!mode)
-				frameHandle.style.display = 'none';
-
-			// Attach our events.
-			if (is_ff)
-			{
-				frameDocument.addEventListener('keyup', editorKeyUp, true);
-				frameDocument.addEventListener('mouseup', editorKeyUp, true);
-			}
-			else
-			{
-				frameDocument.onkeyup = editorKeyUp;
-				frameDocument.onmouseup = editorKeyUp;
-			}
+			frameDocument.designMode = 'off';
+			frameDocument.designMode = 'on';
 		}
 		else
-			getFonts();
+		{
+			frameDocument.body.contentEditable = true;
+		}
 
-		// Insert any default text.
+		// Get the fonts.
+		frameHandle.style.display = '';
+		setFocus();
+		getFonts();
+		if (!mode)
+			frameHandle.style.display = 'none';
+
+		// Attach our events.
+		if (is_ff)
+		{
+			frameDocument.addEventListener('keyup', editorKeyUp, true);
+			frameDocument.addEventListener('mouseup', editorKeyUp, true);
+		}
+		else
+		{
+			frameDocument.onkeyup = editorKeyUp;
+			frameDocument.onmouseup = editorKeyUp;
+		}
+
+		initClose();
+
+		return true;
+	}
+
+	// The final elements of initalisation.
+	function initClose()
+	{
+		// Set the text.
 		InsertText(currentText, true);
 
 		// Better make us the focus!
-		if (mode)
-			frameWindow.focus();
-		else
-			textHandle.focus();
+		setFocus();
 
-		// Do any select boxes.
+		// And add the select controls.
 		for (i in selectControls)
 			addSelect(selectControls[i]);
-
-		return true;
 	}
 
 	function editorKeyUp(ev)
@@ -379,12 +389,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		}
 		else
 		{
+			setFocus();
 			if (mode)
 			{
-				frameWindow.focus();
-
 				// IE croaks if you have an image selected and try to insert!
-				if (typeof(frameDocument.selection) != 'undefined' && frameDocument.selection.type != 'Text')
+				if (typeof(frameDocument.selection) != 'undefined' && frameDocument.selection.type != 'Text' && frameDocument.selection.clear)
 					frameDocument.selection.clear();
 
 				range = getRange();
@@ -437,7 +446,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			}
 			else
 			{
-				textHandle.focus();
 				replaceText(text, textHandle);
 			}
 		}
@@ -545,11 +553,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		if (!ev)
 			ev = window.event;
 
+		setFocus();
+
 		// In text this is easy...
 		if (!mode)
 		{
-			textHandle.focus();
-
 			if (buttonControls[this.code])
 			{
 				// Replace?
@@ -566,9 +574,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		}
 		else
 		{
-			// Check we have the thing in focus!
-			frameWindow.focus();
-
 			// Is it easy?
 			if (simpleExec[this.code])
 			{
@@ -600,10 +605,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		if (!ev)
 			ev = window.event;
 
-		if (!mode)
-			textHandle.focus();
-		else
-			frameWindow.focus();
+		setFocus();
 
 		value = document.getElementById('sel_' + this.code).value;
 
@@ -821,7 +823,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		var curFonts = new Array('Arial', 'Arial Black', 'Impact', 'Verdana', 'Times New Roman', 'Georgia', 'Andale Mono', 'Trebuchet MS', 'Comic Sans MS');
 
 		// If we can't do html they can't see it anyway.
-		if (!htmlPossible)
+		if (!richTextPossible)
 		{
 			foundFonts = curFonts;
 			return;
@@ -850,6 +852,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	// Toggle wysiwyg/normal mode.
 	function ToggleView(view)
 	{
+		if (!richTextPossible)
+			alert('Your browser does not support Rich Text editing.');
+
 		// Overriding or alternating?
 		if (typeof(view) != "undefined")
 			mode = view;
@@ -911,7 +916,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			breadHandle.style.display = '';
 			textHandle.style.display = 'none';
 			InsertText(text, true);
-			frameWindow.focus();
 		}
 		else
 		{
@@ -922,8 +926,10 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			breadHandle.style.display = 'none';
 			textHandle.style.display = '';
 			InsertText(text, true);
-			textHandle.focus();
 		}
+
+		// Focus, focus, focus.
+		setFocus();
 
 		// Rebuild the bread crumb!
 		updateEditorControls();
@@ -965,5 +971,14 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		smileyPopupWindow.document.write('\n</script>');
 		smileyPopupWindow.document.write('\n\t</body>\n</html>');
 		smileyPopupWindow.document.close();
+	}
+
+	// Set the focus for the editing window.
+	function setFocus()
+	{
+		if (!mode)
+			textHandle.focus();
+		else
+			frameWindow.focus();
 	}
 }
