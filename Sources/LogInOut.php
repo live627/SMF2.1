@@ -334,6 +334,9 @@ function Login2()
 			$other_passwords[] = md5(md5($user_settings['passwordSalt']) . md5($_REQUEST['passwrd']));
 		}
 
+		// Maybe they are using a hash from before the password fix.
+		$other_passwords[] = sha1(strtolower($user_settings['memberName']) . addslashes(un_htmlspecialchars(stripslashes($_REQUEST['passwrd']))));
+
 		// Whichever encryption it was using, let's make it use SMF's now ;).
 		if (in_array($user_settings['passwd'], $other_passwords))
 		{
