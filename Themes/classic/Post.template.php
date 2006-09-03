@@ -891,7 +891,7 @@ function template_postbox(&$message)
 					<b' . (isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? ' style="color: red;"' : '') . '>' . $txt[72] . ':</b>
 				</td>
 				<td>
-					<textarea class="editor" name="' . $context['post_box_name'] . '" id="' . $context['post_box_name'] . '" rows="' . $context['post_box_rows'] . '" cols="' . $context['post_box_columns'] . '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '">' . $message . '</textarea>
+					<textarea class="editor" name="', $context['post_box_name'], '" id="', $context['post_box_name'], '" rows="', $context['post_box_rows'], '" cols="', $context['post_box_columns'], '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="width: ', $context['post_box_width'], '; height: ', $context['post_box_height'], ';', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $message, '</textarea>
 					<input type="hidden" name="editor_mode" id="editor_mode" value="', empty($modSettings['enable_wysiwyg']) ? 0 : 1, '" />
 				</td>
 			</tr>';
@@ -947,7 +947,7 @@ function template_postbox(&$message)
 
 	// Initialise my friend!
 	echo '
-		editorHandle', $context['post_box_name'], '.init(', !empty($modSettings['enable_wysiwyg']) ? '\'' . $context['wysiwyg_message'] . '\'' : '', ');
+		editorHandle', $context['post_box_name'], '.init(\'', !empty($modSettings['enable_wysiwyg']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');
 		smf_editorArray[smf_editorArray.length] = editorHandle', $context['post_box_name'], ';
 	// ]]></script>';
 }

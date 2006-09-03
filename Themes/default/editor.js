@@ -99,11 +99,16 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		return mode ? 1 : 0;
 	}
 
-	function init(text)
+	function init(text, editWidth, editHeight)
 	{
 		if (init.hasRun)
 			return false;
 		init.hasRun = true;
+
+		if (!editWidth)
+			editWidth = '70%';
+		if (!editHeight)
+			editHeight = '150px';
 
 		// Set the textHandle.	
 		textHandle = document.getElementById(uniqueId);
@@ -127,13 +132,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				textHandle.style.display = 'none';
 	
 				// Size the iframe to something sensible.
-				frameHandle.style.width = '90%';
-				frameHandle.style.height = '150px';
+				frameHandle.style.width = editWidth;
+				frameHandle.style.height = editHeight;
 				frameHandle.style.visibility = 'visible';
 	
 				if (showDebug)
 				{
-					breadHandle.style.width = '90%';
+					breadHandle.style.width = editWidth;
 					breadHandle.style.height = '20px';
 					breadHandle.className = 'windowbg2';
 					breadHandle.style.border = '1px black solid';

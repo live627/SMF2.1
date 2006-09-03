@@ -1353,6 +1353,10 @@ function theme_postbox($msg)
 		$context['post_box_columns'] = 60;
 	if (!isset($context['post_box_rows']))
 		$context['post_box_rows'] = 12;
+	if (!isset($context['post_box_width']))
+		$context['post_box_width'] = '70%';
+	if (!isset($context['post_box_height']))
+		$context['post_box_height'] = '150px';
 	if (!isset($context['post_box_name']))
 		$context['post_box_name'] = 'message';
 	if (!isset($context['post_form']))

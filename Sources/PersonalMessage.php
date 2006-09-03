@@ -1047,18 +1047,19 @@ function MessagePost()
 	$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);
 
 	// Check whether we've gone over the limit of messages we can send per hour.
-	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
+	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
 	{
-		// How many have they sent this last hour?
+		// How many messages have they sent this last hour?
 		$request = db_query("
-			SELECT COUNT(ID_PM)
-			FROM {$db_prefix}personal_messages
-			WHERE ID_MEMBER_FROM = $user_info[id]
-				AND msgtime > " . (time() - 3600), __FILE__, __LINE__);
-		list ($posted) = mysql_fetch_row($request);
+			SELECT COUNT(pr.ID_PM) AS postCount
+			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pr)
+			WHERE pm.ID_MEMBER_FROM = $user_info[id]
+				AND pm.msgtime > " . (time() - 3600) . "
+				AND pr.ID_PM = pm.ID_PM", __FILE__, __LINE__);
+		list ($postCount) = mysql_fetch_row($request);
 		mysql_free_result($request);
 
-		if ($posted >= $modSettings['pm_posts_per_hour'])
+		if (!empty($postCount) && $postCount >= $modSettings['pm_posts_per_hour'])
 			fatal_error(sprintf($txt['pm_too_many_per_hour'], $modSettings['pm_posts_per_hour']));
 	}
 
@@ -1334,18 +1335,19 @@ function MessagePost2()
 	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
 
 	// Check whether we've gone over the limit of messages we can send per hour - fatal error if fails!
-	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
+	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
 	{
 		// How many have they sent this last hour?
 		$request = db_query("
-			SELECT COUNT(ID_PM)
-			FROM {$db_prefix}personal_messages
-			WHERE ID_MEMBER_FROM = $user_info[id]
-				AND msgtime > " . (time() - 3600), __FILE__, __LINE__);
-		list ($posted) = mysql_fetch_row($request);
+			SELECT COUNT(pr.ID_PM) AS postCount
+			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pr)
+			WHERE pm.ID_MEMBER_FROM = $user_info[id]
+				AND pm.msgtime > " . (time() - 3600) . "
+				AND pr.ID_PM = pm.ID_PM", __FILE__, __LINE__);
+		list ($postCount) = mysql_fetch_row($request);
 		mysql_free_result($request);
 
-		if ($posted >= $modSettings['pm_posts_per_hour'])
+		if (!empty($postCount) && $postCount >= $modSettings['pm_posts_per_hour'])
 			fatal_error(sprintf($txt['pm_too_many_per_hour'], $modSettings['pm_posts_per_hour']));
 	}
 
