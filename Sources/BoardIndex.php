@@ -423,10 +423,10 @@ function BoardIndex()
 	{
 		require_once($sourcedir . '/Recent.php');
 
-		if (($context['latest_posts'] = cache_get_data('boardindex-latest_posts:' . md5($user_info['query_see_board'] . $user_info['language']), 180)) == null)
+		if (($context['latest_posts'] = cache_get_data('boardindex-latest_posts:' . md5($user_info['query_wanna_see_board'] . $user_info['language']), 180)) == null)
 		{
 			$context['latest_posts'] = getLastPosts($settings['number_recent_posts']);
-			cache_put_data('boardindex-latest_posts:' . md5($user_info['query_see_board'] . $user_info['language']), $context['latest_posts'], 180);
+			cache_put_data('boardindex-latest_posts:' . md5($user_info['query_wanna_see_board'] . $user_info['language']), $context['latest_posts'], 180);
 		}
 		// We have to clean up the cached data a bit.
 		else

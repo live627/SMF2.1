@@ -97,7 +97,7 @@ function getLastPosts($showlatestcount)
 			AND t.ID_TOPIC = m.ID_TOPIC
 			AND b.ID_BOARD = t.ID_BOARD" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 			AND b.ID_BOARD != $modSettings[recycle_board]" : '') . "
-			AND $user_info[query_see_board]
+			AND $user_info[query_wanna_see_board]
 			AND t.approved = 1
 			AND m.approved = 1
 		ORDER BY m.ID_MSG DESC
