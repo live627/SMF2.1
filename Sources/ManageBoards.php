@@ -599,7 +599,7 @@ function EditBoard2()
 		{
 			// New boards by default go to the bottom of the category.
 			if (empty($_POST['new_cat']))
-				$boardOptions['target_category'] = $_POST['cur_cat'];
+				$boardOptions['target_category'] = (int) $_POST['cur_cat'];
 			if (!isset($boardOptions['move_to']))
 				$boardOptions['move_to'] = 'bottom';
 

@@ -151,14 +151,14 @@ function smf_main()
 	// Load the current board's information.
 	loadBoard();
 
+	// Load the current user's permissions.
+	loadPermissions();
+
 	// Load the current theme.  (note that ?theme=1 will also work, may be used for guest theming.)
 	loadTheme();
 
 	// Check if the user should be disallowed access.
 	is_not_banned();
-
-	// Load the current user's permissions.
-	loadPermissions();
 
 	// If we are in a topic and don't have permission to approve it then duck out now.
 	if (!empty($topic) && empty($board_info['cur_topic_approved']) && !allowedTo('approve_posts'))
