@@ -140,7 +140,7 @@ function RemoveOldTopics2()
 	global $db_prefix, $modSettings;
 
 	isAllowedTo('admin_forum');
-	checkSession('post', 'maintain');
+	checkSession('post', 'admin');
 
 	// No boards at all?  Forget it then :/.
 	if (empty($_POST['boards']))

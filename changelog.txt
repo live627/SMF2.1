@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2484 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2485 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -24,6 +24,7 @@ September 2006
  ! Javascript doesn't like HTML entities. (Mambo/Joomla bridge/smf.php)
  ! The recent topics on the board index should respect the ignore boards setting. (BoardIndex.php, Recent.php)
  ! Fixed a problem when there are no message icons. (Subs-Editor.php)
+ ! Removing topics via the forum maintenance page was not checking for the correct refer page. (RemoveTopic.php)
 
 August 2006
 --------------------------------------------------------------------------------
