@@ -525,7 +525,7 @@ function getMessageIcons($board_id)
 				SELECT title, filename
 				FROM {$db_prefix}message_icons
 				WHERE ID_BOARD IN (0, $board_id)", __FILE__, __LINE__);
-			$icons = array();
+			$icon_data = array();
 			while ($row = mysql_fetch_assoc($request))
 				$icon_data[] = $row;
 			mysql_free_result($request);
