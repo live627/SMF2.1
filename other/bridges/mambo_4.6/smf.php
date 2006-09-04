@@ -160,7 +160,11 @@ function ob_mambofix($buffer)
 	$buffer = str_replace('href="#', 'href="' . $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'] . '#', $buffer);
 	$buffer = str_replace('"' . $scripturl . '?', '"' . $myurl, $buffer);
 	$buffer = str_replace('"' . $scripturl . '"', '"' . substr($myurl, 0, -5) . '"', $buffer);
+	$buffer = str_replace('\'' . $scripturl . '?', '\'' . $myurl, $buffer);
 	$buffer = str_replace('\'' . $scripturl, '\'' . $myurl, $buffer);
+	//Don't forget XML feeds
+	$buffer = str_replace('<link>'.$scripturl, '<link>'.$myurl, $buffer );
+	$buffer = str_replace('<link>'.$scripturl, '<link>'.$myurl, $buffer );
 
 	$buffer = str_replace($scripturl . '#', substr($myurl, 0, -5) . '#', $buffer);
 	$buffer = str_replace('option=com_smf;Itemid=' . $Itemid . ';', '', $buffer);
@@ -231,8 +235,8 @@ function mambo_smf_url($url)
 
 	if ($Itemid == 0)
 		$Itemid = (int) $_REQUEST['Itemid'];
-
-	$myurl = $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
+	//The ampersands need to be non-entities, because they are used mainly in javascript
+	$myurl = $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&Itemid=' . $Itemid . '&';
 	$url = str_replace($scripturl . '?', $myurl, $url);
 	$url = str_replace($scripturl, $myurl, $url);
 	
@@ -249,7 +253,7 @@ function mambo_smf_exit($with_output)
 
 	if (!$with_output || $wrapped !='true')
 	{		
-		$buffer = mambo_smf_url($buffer);
+		//$buffer = mambo_smf_url($buffer);
 		$buffer = ob_mambofix($buffer);
 		echo $buffer;	
 		exit;
@@ -524,10 +528,15 @@ function integrate_outgoing_email($subject, &$message, $headers)
 	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid;
 	
 	$message = str_replace ($scripturl, '"="' . $scripturl, $message);
-	$message .= '"';
+	$message = str_replace ('#new', '"#new', $message);
+	$message .= '"="';
 	$message = ob_mambofix($message);
 	$message = str_replace ('"="', ' ', $message);
+	$message = str_replace ('"#new', '#new', $message);
 	$message = trim($message);
+	$message = un_htmlspecialchars($message);
+	$message = str_replace ('____', '
+', $message ); //yes, it looks ridiculous, but it works :P
 	return true;
 	
 /*		if ($mosConfig_sef == '1'){		
@@ -1004,7 +1013,7 @@ function integrate_pre_load () {
 			if (isset($_REQUEST['lang']))
 				$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)];
     
-		} else
+		} else if ($synch_lang == 'true')
 			$GLOBALS['language'] = $mosConfig_lang;
 	}
 }
