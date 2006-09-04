@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2486 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2487 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -27,6 +27,7 @@ September 2006
  ! Removing topics via the forum maintenance page was not checking for the correct refer page. (RemoveTopic.php)
  ! Load the permissions before loading the theme, so that the permission checks are actually meaningful. (index.php)
  ! Fixed a problem with the cur_cat parameter when adding a new board. (ManageBoards.php)
+ + Add logout functionality to Mambo 4.6 login bot. (Mambo 4.6 bridge/SMF_login.php)
 
 August 2006
 --------------------------------------------------------------------------------
