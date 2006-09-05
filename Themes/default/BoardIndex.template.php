@@ -218,7 +218,7 @@ function template_main()
 		$mark_read_button = array('markread' => array('text' => 452, 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=all;sesc=' . $context['session_id']));
 
 		// Show the mark all as read button?
-		if ($settings['show_mark_read'])
+		if ($settings['show_mark_read'] && !empty($context['categories']))
 				echo '
 				<table cellpadding="0" cellspacing="0" border="0" style="position: relative; top: -5px;">
 					<tr>
