@@ -508,32 +508,48 @@ function loadBoard()
 	global $txt, $db_prefix, $scripturl, $context, $modSettings;
 	global $board_info, $board, $topic, $ID_MEMBER, $user_info;
 
-	// Have they by chance specified a message id but nothing else?
-	if (empty($_REQUEST['action']) && empty($topic) && empty($board) && !empty($_REQUEST['msg']))
-	{
-		// Make sure the message id is really an int
-		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
-		$request = db_query("
-			SELECT ID_TOPIC
-			FROM {$db_prefix}messages
-			WHERE ID_MSG = $_REQUEST[msg]
-			LIMIT 1", __FILE__, __LINE__);
-
-		// So did it find anything?
-		if (mysql_num_rows($request))
-		{
-			list ($topic) = mysql_fetch_row($request);
-			mysql_free_result($request);
-			redirectexit('topic=' . $topic . '.msg' . $_REQUEST['msg'] . '#msg' . $_REQUEST['msg']);
-		}
-	}
-
 	// Assume they are not a moderator.
 	$user_info['is_mod'] = false;
 	$context['user']['is_mod'] = &$user_info['is_mod'];
 
 	// Start the linktree off empty..
 	$context['linktree'] = array();
+
+	// Have they by chance specified a message id but nothing else?
+	if (empty($_REQUEST['action']) && empty($topic) && empty($board) && !empty($_REQUEST['msg']))
+	{
+		// Make sure the message id is really an int.
+		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
+
+		// Looking through the message table can be slow, so try using the cache first.
+		if (($topic = cache_get_data('msg_topic-' . $_REQUEST['msg'], 120)) === NULL)
+		{
+			$request = db_query("
+				SELECT ID_TOPIC
+				FROM {$db_prefix}messages
+				WHERE ID_MSG = $_REQUEST[msg]
+				LIMIT 1", __FILE__, __LINE__);
+
+			// So did it find anything?
+			if (mysql_num_rows($request))
+			{
+				list ($topic) = mysql_fetch_row($request);
+				mysql_free_result($request);
+				// Save save save.
+				cache_put_data('msg_topic-' . $_REQUEST['msg'], $topic, 120);
+			}
+		}
+		
+		// Remember redirection is the key to avoiding fallout from your bosses.
+		if (!empty($topic))
+			redirectexit('topic=' . $topic . '.msg' . $_REQUEST['msg'] . '#msg' . $_REQUEST['msg']);
+		else
+		{
+			loadPermissions();
+			loadTheme();
+			fatal_lang_error('topic_gone', false);
+		}
+	}
 
 	// Load this board only if it is specified.
 	if (empty($board) && empty($topic))

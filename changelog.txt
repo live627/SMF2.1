@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2488 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2489 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -29,6 +29,8 @@ September 2006
  ! Fixed a problem with the cur_cat parameter when adding a new board. (ManageBoards.php)
  + Add logout functionality to Mambo 4.6 login bot. (Mambo 4.6 bridge/SMF_login.php)
  * In the default theme, don't show the mark all as read button if the user can not see any boards.  (BoardIndex template)
+ ! If the user specifies an invalid message id in the url, give an error. (Load.php)
+ ! Use the cache when messages are specified in the url.  (Load.php)
 
 
 August 2006
