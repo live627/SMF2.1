@@ -366,8 +366,8 @@ $helptxt['password_strength'] = 'This setting determines the strength required f
 	</ul>';
 
 $helptxt['coppaAge'] = 'The value specified in this box will determine the minimum age that new members must be to be granted immediate access to the forums.
-	On registration they will be prompted to confirm whether they are over this age, and if not will either have their application rejected or suspended awaiting parental approval - dependant on the type of restriction choosen.
-	If a value of 0 is choosen for this setting then all other age restriction settings shall be ignored.';
+	On registration they will be prompted to confirm whether they are over this age, and if not will either have their application rejected or suspended awaiting parental approval - dependant on the type of restriction chosen.
+	If a value of 0 is chosen for this setting then all other age restriction settings shall be ignored.';
 $helptxt['coppaType'] = 'If age restrictions are enabled, then this setting will define that happens when a user below the minimum age attempts to register with your forum. There are two possible choices:
 	<ul>
 		<li>

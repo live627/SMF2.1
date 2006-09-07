@@ -85,7 +85,7 @@ $txt['admin_browse_ip'] = 'IP Address';
 $txt['admin_browse_registered'] = 'Registered';
 $txt['admin_browse_id'] = 'ID';
 $txt['admin_browse_with_selected'] = 'With Selected';
-$txt['admin_browse_no_members_approval'] = 'No members currently awaite approval.';
+$txt['admin_browse_no_members_approval'] = 'No members currently await approval.';
 $txt['admin_browse_no_members_activate'] = 'No members currently have not activated their accounts.';
 
 // Don't use entities in the below strings, except the main ones. (lt, gt, quot.)
