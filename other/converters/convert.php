@@ -1313,7 +1313,13 @@ function doStep2()
 
 	if ($_GET['substep'] <= 10)
 	{
-		while (true)
+		$request = convert_query("
+			SELECT COUNT(*)
+			FROM {$to_prefix}attachments");
+		list ($attachments) = mysql_fetch_row($request);
+		mysql_free_result($request);
+
+		while ($_REQUEST['start'] < $attachments)
 		{
 			$request = convert_query("
 				SELECT ID_ATTACH, filename, attachmentType
@@ -1322,7 +1328,7 @@ function doStep2()
 					AND (RIGHT(filename, 4) IN ('.gif', '.jpg', '.png', '.bmp') OR RIGHT(filename, 5) = '.jpeg')
 					AND width = 0
 					AND height = 0
-				LIMIT 500");
+				LIMIT $_REQUEST[start], 500");
 			if (mysql_num_rows($request) == 0)
 				break;
 			while ($row = mysql_fetch_assoc($request))
@@ -1348,9 +1354,11 @@ function doStep2()
 			mysql_free_result($request);
 
 			// More?
+			$_REQUEST['start'] += 500;
 			pastTime(10);
 		}
 
+		$_REQUEST['start'] = 0;
 		pastTime(11);
 	}
 
@@ -1403,18 +1411,23 @@ function show_header()
 		<style type="text/css">
 			body
 			{
-				font-family: Verdana, sans-serif;
-				background-color: #D4D4D4;
-				margin: 0;
+				background-color: #E5E5E8;
+				margin: 0px;
+				padding: 0px;
 			}
 			body, td
 			{
-				font-size: 10pt;
+				color: #000000;
+				font-size: small;
+				font-family: verdana, sans-serif;
 			}
 			div#header
 			{
-				background-color: white;
+				background-image: url(Themes/default/images/catbg.jpg);
+				background-repeat: repeat-x;
+				background-color: #88A6C0;
 				padding: 22px 4% 12px 4%;
+				color: white;
 				font-family: Georgia, serif;
 				font-size: xx-large;
 				border-bottom: 1px solid black;
@@ -1422,7 +1435,7 @@ function show_header()
 			}
 			div#content
 			{
-				margin: 20px 30px;
+				padding: 20px 30px;
 			}
 			div.error_message
 			{
@@ -1434,7 +1447,7 @@ function show_header()
 			div.panel
 			{
 				border: 1px solid gray;
-				background-color: #F0F0F0;
+				background-color: #F6F6F6;
 				margin: 1ex 0;
 				padding: 1.2ex;
 			}
@@ -1463,7 +1476,7 @@ function show_header()
 				padding-top: 2px;
 				font-weight: bold;
 				white-space: nowrap;
-				padding-right: 2ex;
+				padding-', empty($txt['lang_rtl']) ? 'right' : 'left', ': 2ex;
 			}
 		</style>
 	</head>
