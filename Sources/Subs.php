@@ -1288,7 +1288,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'glow',
 				'type' => 'unparsed_commas',
-				'test' => '[#0-9a-z\-]{3,12},([012]\d{1,2}|\d{1,2})(,[^]]+)?\]',
+				'test' => '[#0-9a-zA-Z\-]{3,12},([012]\d{1,2}|\d{1,2})(,[^]]+)?\]',
 				'before' => $context['browser']['is_ie'] ? '<table border="0" cellpadding="0" cellspacing="0" style="display: inline; vertical-align: middle; font: inherit;"><tr><td style="filter: Glow(color=$1, strength=$2); font: inherit;">' : '<span style="background-color: $1;">',
 				'after' => $context['browser']['is_ie'] ? '</td></tr></table> ' : '</span>',
 			),
@@ -1522,7 +1522,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'shadow',
 				'type' => 'unparsed_commas',
-				'test' => '[#0-9a-z\-]{3,12},(left|right|top|bottom|[0123]\d{0,2})\]',
+				'test' => '[#0-9a-zA-Z\-]{3,12},(left|right|top|bottom|[0123]\d{0,2})\]',
 				'before' => $context['browser']['is_ie'] ? '<span style="filter: Shadow(color=$1, direction=$2); height: 1.2em;\">' : '<span style="text-shadow: $1 $2">',
 				'after' => '</span>',
 				'validate' => $context['browser']['is_ie'] ? create_function('&$tag, &$data, $disabled', '
