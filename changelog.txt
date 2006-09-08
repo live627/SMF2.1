@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2491 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2492 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -33,6 +33,7 @@ September 2006
  ! Use the cache when messages are specified in the url.  (Load.php)
  ! When using SSI, automatically flush the mail queue buffer.  (Subs-Post.php)
  ! Allow the use of uppercase letters when specifying the color for the glow and shadow tags. (Subs.php)
+ ! Simplified the checking process for selecting the active tab. (Subs.php)
 
 
 August 2006

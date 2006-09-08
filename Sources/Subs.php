@@ -3147,16 +3147,13 @@ function setupThemeContext()
 	// Figure out which action we are doing so we can set the active tab.
 	// Default to home.
 	$current_action = 'home';
-	if (in_array($context['current_action'], array('admin', 'ban', 'boardrecount', 'cleanperms', 'detailedversion', 'dumpdb', 'featuresettings', 'featuresettings2', 'findmember', 'maintain', 'manageattachments', 'manageboards', 'managecalendar', 'managesearch', 'membergroups', 'news', 'optimizetables', 'packageget', 'packages', 'permissions', 'pgdownload', 'postsettings', 'regcenter', 'repairboards', 'reports', 'serversettings', 'serversettings2', 'smileys', 'viewErrorLog', 'viewmembers')))
-		$current_action = 'admin';
-	elseif (in_array($context['current_action'], array('search', 'admin', 'calendar', 'profile', 'mlist', 'register', 'login', 'help', 'pm')))
+	 
+	if (in_array($context['current_action'], array('admin', 'calendar', 'help', 'login', 'moderate', 'mlist', 'pm', 'profile', 'register', 'search',)))
 		$current_action = $context['current_action'];
 	elseif ($context['current_action'] == 'search2')
 		$current_action = 'search';
 	elseif ($context['current_action'] == 'theme')
 		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
-	elseif (substr($context['current_action'], 0, 3) == 'mod')
-		$current_action = 'moderate';
 
 	// Now we put the buttons in the context so the theme can use them.
 	$contxt['menu_buttons'] = array();
