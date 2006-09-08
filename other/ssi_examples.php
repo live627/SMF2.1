@@ -8,6 +8,7 @@ require(dirname(__FILE__) . '/SSI.php');
 		<title> << :: SMF SSI.php 2.0 Alpha :: >> </title><?php
 
 	echo '
+		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/style.css" />
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
 		<style type="text/css">
