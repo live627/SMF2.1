@@ -1507,7 +1507,7 @@ function SpellCheck()
 function sendNotifications($topics, $type, $exclude = array())
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $ID_MEMBER, $modSettings, $sourcedir;
+	global $ID_MEMBER, $modSettings, $sourcedir, $context;
 
 	$notification_types = array(
 		'reply' => array('subject' => 'notification_reply_subject', 'message' => 'notification_reply'),
@@ -1638,7 +1638,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		{
 			sendmail($row['emailAddress'], sprintf($txt[$current_type['subject']], $topicData[$row['ID_TOPIC']]['subject']),
 				$message . "\n\n" .
-				$txt['regards_team'], null, 'm' . $topicData[$row['ID_TOPIC']]['last_id']);
+				sprintf($txt['regards_team'], $context['forum_name']), null, 'm' . $topicData[$row['ID_TOPIC']]['last_id']);
 			$sent++;
 		}
 	}
@@ -2396,7 +2396,7 @@ function approveTopics($topics, $approve = true)
 function sendApprovalNotifications(&$topicData)
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $modSettings, $sourcedir;
+	global $modSettings, $sourcedir, $context;
 
 	// Clean up the data...
 	if (!is_array($topicData) || empty($topicData))
@@ -2478,7 +2478,7 @@ function sendApprovalNotifications(&$topicData)
 			{
 				sendmail($row['emailAddress'], sprintf($txt['notification_reply_subject'], $msg['subject']),
 					$message . "\n\n" .
-					$txt['regards_team'], null, 'm' . $msg['id']);
+					sprintf($txt['regards_team'], $context['forum_name']), null, 'm' . $msg['id']);
 				$sent++;
 			}
 			$sent_this_time = true;
@@ -2599,7 +2599,7 @@ function updateLastMessages($setboards, $ID_MSG = 0)
 // This simple function gets a list of all administrators and sends them an email to let them know a new member has joined.
 function adminNotify($type, $memberID, $memberName = null)
 {
-	global $txt, $db_prefix, $modSettings, $language, $scripturl, $user_info;
+	global $txt, $db_prefix, $modSettings, $language, $scripturl, $user_info, $context;
 
 	// If the setting isn't enabled then just exit.
 	if (empty($modSettings['notify_new_registration']))
@@ -2659,7 +2659,7 @@ function adminNotify($type, $memberID, $memberName = null)
 				"$scripturl?action=admin;area=viewmembers;sa=browse;type=approve\n\n";
 
 		// And do the actual sending...
-		sendmail($row['emailAddress'], $txt['admin_notify_subject'], $message . $txt['regards_team'], null, null, false, 0);
+		sendmail($row['emailAddress'], $txt['admin_notify_subject'], $message . sprintf($txt['regards_team'], $context['forum_name']), null, null, false, 0);
 	}
 	mysql_free_result($request);
 

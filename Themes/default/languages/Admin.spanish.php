@@ -52,7 +52,7 @@ $txt[571] = 'Cr&eacute;ditos';
 $txt[584] = 'Mostrar y requerir carta de aceptaci&oacute;n cuando se registren';
 $txt[608] = 'Borrar usuarios seleccionados';
 $txt[610] = 'Reparar todos los Foros y Temas';
-$txt[644] = 'Este es tu &quot;{$txt.admin_center}&quot;.  Aqu&iacute; puedes modificar la configuraci&oacute;n del foro, ver logs, instalar paquetes, manejar temas, y muchas otras cosas.<div style="margin-top: 1ex;">Si tienes algun problema, por favor revisa la p&aacute;gina de &quot;Soporte &amp; Cr&eacute;ditos&quot;.  Si la informaci&oacute;n ah&iacute; no te sirve, si&eacute;ntete libre de <a href="http://www.simplemachines.org/community/index.php?board=16.0" target="_blank">visitarnos para solicitar ayuda</a> acerca de tu problema.</div>Tambi&eacute;n puedes encontrar respuestas a tus preguntas y problemas haciendo <i>click</i> en los s&iacute;mbolos <img src="{$settings.images_url}/helptopics.gif" alt="{$txt.help}" title="{$txt.help}" border="0" /> para obtener mayor informaci&oacute;n de las funciones en cuesti&oacute;n.<br /><br />Traducci&oacute;n al espa&ntilde;ol por <a href="http://OmarBazavilvazo.com" target="_blank">Omar Bazavilvazo</a>.';
+$txt[644] = 'Este es tu &quot;%1$s&quot;.  Aqu&iacute; puedes modificar la configuraci&oacute;n del foro, ver logs, instalar paquetes, manejar temas, y muchas otras cosas.<div style="margin-top: 1ex;">Si tienes algun problema, por favor revisa la p&aacute;gina de &quot;Soporte &amp; Cr&eacute;ditos&quot;.  Si la informaci&oacute;n ah&iacute; no te sirve, si&eacute;ntete libre de <a href="http://www.simplemachines.org/community/index.php?board=16.0" target="_blank">visitarnos para solicitar ayuda</a> acerca de tu problema.</div>Tambi&eacute;n puedes encontrar respuestas a tus preguntas y problemas haciendo <i>click</i> en los s&iacute;mbolos <img src="{$images_url}/helptopics.gif" alt="%2$s" title="%3$s" border="0" /> para obtener mayor informaci&oacute;n de las funciones en cuesti&oacute;n.<br /><br />Traducci&oacute;n al espa&ntilde;ol por <a href="http://OmarBazavilvazo.com" target="_blank">Omar Bazavilvazo</a>.';
 $txt[670] = 'Favor de poner una noticia en cada cuadro. Algunos tags BBC, como <span title="&iquest;Est&aacute;s en negritas?">[b]</span>, <span title="&iexcl;Cursivas!">[i]</span> and <span title="Los corchetes son grandiosos, &iquest;no?">[u]</span> est&aacute;n permitidos en las noticias, as&iacute; como smileys y HTML. Limpia el cuadro de cualquier elemento de las noticias para eliminarlo.';
 $txt[684] = 'Administradores del Foro';
 $txt[699] = 'Los Nombres Reservados impiden que los usuarios registren ciertos nombres de usuario o usen esas palabras en sus nombres a mostrar. Escoge las opciones que desees usar en la parte inferior antes de enviar el formulario.';
@@ -75,7 +75,6 @@ $txt['smf8'] = 'Nombre de la base de datos:';
 $txt['smf11'] = 'Carta de Aceptaci&oacute;n';
 $txt['smf12'] = 'Esta Carta de Aceptaci&oacute;n se muestra cuando un usuario registra una cuenta en el foro y tiene que ser aceptada para que los usuarios puedan continuar registr&aacute;ndose.';
 $txt['smf54'] = 'Prefijo en las tablas de la base de datos:';
-$txt['smf55'] = 'Deja presionada la tecla ctrl para seleccionar m&uacute;ltiples elementos.  Haz <i>click</i> en el bot&oacute;n {$txt.modify} cuando termines.';
 $txt['smf73'] = 'Listado de errores del foro';
 $txt['smf74'] = 'Los siguientes errores est&aacute;n presentes en tu foro (vac&iacute;o si ninguno)';
 $txt['smf85'] = '&iquest;Deseas arreglar esos errores?';
@@ -359,7 +358,7 @@ $txt['maintenance1'] = 'Asunto a mostrar:';
 $txt['maintenance2'] = 'Mensaje a mostrar:';
 
 $txt['errlog1'] = 'Ver log de errores del foro';
-$txt['errlog2'] = 'El log de errores registra cada error encontrado en tu foro.  Para eliminar cualquier error de la base de datos, selecciona la casilla, y haz <i>click</i> en el bot&oacute;n  {$txt.remove} ubicado en la parte inferior de la p&aacute;gina.';
+$txt['errlog2'] = 'El log de errores registra cada error encontrado en tu foro.  Para eliminar cualquier error de la base de datos, selecciona la casilla, y haz <i>click</i> en el bot&oacute;n %1$s ubicado en la parte inferior de la p&aacute;gina.';
 
 $txt['theme4'] = 'Configuraci&oacute;n del Tema';
 $txt['theme_current_settings'] = 'Tema actual';

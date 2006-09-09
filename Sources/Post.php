@@ -476,6 +476,9 @@ function Post()
 				if ($post_error == 'messages')
 					continue;
 
+				if ($post_error == 'long_message')
+					$txt['error_' . $post_error] = sprintf($txt['error_' . $post_error], $modSettings['max_messageLength']);
+
 				$context['post_error']['messages'][] = $txt['error_' . $post_error];
 
 				// If it's not a minor error flag it as such.
@@ -925,7 +928,7 @@ function Post()
 
 	if (isset($oldTopicError))
 	{
-		$context['post_error']['messages'][] = $txt['error_old_topic'];
+		$context['post_error']['messages'][] = sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']);
 		$context['error_type'] = 'minor';
 	}
 
@@ -1365,6 +1368,9 @@ function Post2()
 		foreach ($post_errors as $post_error)
 		{
 			$context['post_error'][$post_error] = true;
+			if ($post_error == 'long_message')
+				$txt['error_' . $post_error] = sprintf($txt['error_' . $post_error], $modSettings['max_messageLength']);
+
 			$context['post_error']['messages'][] = $txt['error_' . $post_error];
 		}
 
@@ -1904,7 +1910,7 @@ function AnnouncementSend()
 
 			$announcements[$cur_language] = array(
 				'subject' => $txt['notifyXAnn2'] . ': ' . $context['topic_subject'],
-				'body' => $message . "\n\n" . $txt['notifyXAnn3'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . $txt['regards_team'],
+				'body' => $message . "\n\n" . $txt['notifyXAnn3'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . sprintf($txt['regards_team'], $context['forum_name']),
 				'recipients' => array(),
 			);
 		}
@@ -2033,13 +2039,13 @@ function notifyMembersBoard(&$topicData)
 					$txt['notify_boards_once'] . "\n\n" .
 					(!empty($rowmember['notifySendBody']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
+					sprintf($txt['regards_team'], $context['forum_name']), null, 't' . $topicData[$key]['topic']);
 			elseif (empty($rowmember['notifyRegularity']))
 				sendmail($rowmember['emailAddress'], $send_subject,
 					sprintf($txt['notify_boards'], $topicData[$key]['subject'], $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new', un_htmlspecialchars($topicData[$key]['name'])) .
 					(!empty($rowmember['notifySendBody']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
+					sprintf($txt['regards_team'], $context['forum_name']), null, 't' . $topicData[$key]['topic']);
 
 			$sentOnceAlready = 1;
 		}

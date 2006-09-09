@@ -763,7 +763,7 @@ function AdminApprove()
 					"$txt[admin_approve_accept_desc] $txt[719] $member[name]\n\n" .
 					"$txt[701]\n" .
 					"$scripturl?action=profile\n\n" .
-					$txt['regards_team']);
+					sprintf($txt['regards_team'], $context['forum_name']));
 			}
 		}
 	}
@@ -796,7 +796,7 @@ function AdminApprove()
 				"$txt[hello_guest] $member[name]!\n\n" .
 				"$txt[admin_approve_require_activation] $txt[admin_approve_remind_desc2]\n" .
 				"$scripturl?action=activate;u=$member[id];code=$validation_code\n\n" .
-				$txt['regards_team']);
+				sprintf($txt['regards_team'], $context['forum_name']));
 		}
 	}
 	// Are we rejecting them?
@@ -816,7 +816,7 @@ function AdminApprove()
 				sendmail($member['email'], $txt['admin_approve_reject'],
 					"$member[name],\n\n" .
 					"$txt[admin_approve_reject_desc]\n\n" .
-					$txt['regards_team']);
+					sprintf($txt['regards_team'], $context['forum_name']));
 			}
 		}
 	}
@@ -837,7 +837,7 @@ function AdminApprove()
 				sendmail($member['email'], $txt['admin_approve_delete'],
 					"$member[name],\n\n" .
 					"$txt[admin_approve_delete_desc]\n\n" .
-					$txt['regards_team']);
+					sprintf($txt['regards_team'], $context['forum_name']));
 			}
 		}
 	}
@@ -853,7 +853,7 @@ function AdminApprove()
 				"$member[name],\n\n" .
 				"$txt[admin_approve_remind_desc] $context[forum_name].\n\n$txt[admin_approve_remind_desc2]\n\n" .
 				"$scripturl?action=activate;u=$member[id];code=$member[code]\n\n" .
-				$txt['regards_team']);
+				sprintf($txt['regards_team'], $context['forum_name']));
 		}
 	}
 

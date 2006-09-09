@@ -202,7 +202,7 @@ function template_main_above()
 	}
 	// Otherwise they're a guest - send them a lovely greeting...
 	else
-		echo $txt['welcome_guest'];
+		echo sprintf($txt['welcome_guest'], $txt['guest_title']);
 
 	// Now, onto our second set of info, are they logged in again?
 	if ($context['user']['is_logged'])

@@ -236,7 +236,7 @@ function template_main()
 	<div class="tborder" ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'style="width: 100%;"' : '', '>
 		<div class="catbg" style="padding: 6px; vertical-align: middle; text-align: center; ">
 			<a href="#" onclick="infoHeader.toggle(); return false;"><img id="upshrink_ic" src="', $settings['images_url'], '/', empty($options['collapse_header_ic']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" style="margin-right: 2ex;" align="right" /></a>
-			', $txt[685], '
+			', sprintf($txt['info_center_title'], $context['forum_name']), '
 		</div>
 		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>
 			<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">';
@@ -397,7 +397,7 @@ function template_main()
 	if (!empty($context['users_online']))
 	{
 		echo '
-							', $txt['users_active'], ':<br />', implode(', ', $context['list_users_online']);
+							', sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
 
 		// Showing membergroups?
 		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))

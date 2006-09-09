@@ -51,7 +51,7 @@ $txt['moderate'] = 'Moderate';
 $txt['save'] = 'Speichern';
 
 $txt['modify'] = '&Auml;ndern';
-$txt['forum_index'] = '{$context.forum_name} - Index';
+$txt['forum_index'] = '%1$s - Index';
 $txt['members'] = 'Mitglieder';
 $txt['board_name'] = 'Boardname';
 $txt['posts'] = 'Beitr&auml;ge';
@@ -111,13 +111,13 @@ $txt['help'] = 'Hilfe';
 $txt['remove_message'] = 'Beitrag l&ouml;schen';
 $txt['notify'] = 'Benachrichtigen';
 $txt['notify_request'] = 'M&ouml;chten Sie eine Benachrichtigung per E-Mail, wenn eine Antwort zu diesem Thema geschrieben wird?';
-$txt['regards_team'] = "Lieben Gru&#223;,\ndas " . '{$context.forum_name} Team.';
+$txt['regards_team'] = 'Lieben Gru&#223;,\\ndas %1$s Team.';
 // Use numeric entities in the below string.
 $txt['notify_replies'] = '&#220;ber Antworten benachrichtigen';
 $txt['move_topic'] = 'Thema verschieben';
 $txt['move_to'] = 'Verschieben nach';
 $txt['pages'] = 'Seiten';
-$txt['users_active'] = 'Aktive Benutzer in den letzten {$modSettings.lastActive} Minuten';
+$txt['users_active'] = 'Aktive Benutzer in den letzten %1$d Minuten';
 $txt['personal_messages'] = 'Private Mitteilungen';
 $txt['reply_quote'] = 'Zitieren';
 $txt['reply'] = 'Antwort';
@@ -172,7 +172,7 @@ $txt['female'] = 'Weiblich';
 
 $txt['error_invalid_characters_username'] = 'Ung&uuml;ltiges Zeichen im Benutzernamen.';
 
-$txt['welcome_guest'] = 'Willkommen <b>{$txt.guest_title}</b>. Bitte <a href="{$scripturl}?action=login">einloggen</a> oder <a href="{$scripturl}?action=register">registrieren</a>.';
+$txt['welcome_guest'] = 'Willkommen <b>%1$s</b>. Bitte <a href="{$scripturl}?action=login">einloggen</a> oder <a href="{$scripturl}?action=register">registrieren</a>.';
 $txt['welcome_guest_activate'] = '<br />Haben Sie Ihre <a href="{$scripturl}?action=activate">Aktivierungs E-Mail</a> &uuml;bersehen?';
 $txt['hello_member'] = 'Hallo';
 // Use numeric entities in the below string.
@@ -249,8 +249,8 @@ $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
 $txt[452] = 'Alle Beitr&auml;ge als gelesen markieren';
 
-$txt[454] = 'Hei&szlig;es Thema (mehr als {$modSettings.hotTopicPosts} Antworten)';
-$txt[455] = 'Sehr hei&szlig;es Thema (mehr als {$modSettings.hotTopicVeryPosts} Antworten)';
+$txt['hot_topics'] = 'Hei&szlig;es Thema (mehr als %1$d Antworten)';
+$txt['very_hot_topics'] = 'Sehr hei&szlig;es Thema (mehr als %1$d Antworten)';
 $txt[456] = 'Thema geschlossen';
 $txt[457] = 'Normales Thema';
 $txt['participation_caption'] = 'Themen auf die Sie geantwortet haben';
@@ -316,14 +316,14 @@ $txt[668] = 'Seite drucken';
 $txt[679] = 'Es muss eine g&uuml;ltige E-Mail Adresse sein.';
 
 $txt[683] = 'Ich bin ein Freak!!';
-$txt[685] = '{$context.forum_name} - Info-Center';
+$txt['info_center_title'] = '%s - Info-Center';
 
 $txt[707] = 'Senden Sie dieses Thema';
 
 $txt['sendtopic_title'] = 'Senden Sie das Thema &quot;%s&quot; einem Freund.';
 // Use numeric entities in the below three strings.
 $txt['sendtopic_dear'] = 'Hallo %s,';
-$txt['sendtopic_this_topic'] = 'Sehen Sie sich bitte folgendes Thema an: %s, am {$context.forum_name}. Klicken Sie dazu auf den Link';
+$txt['sendtopic_this_topic'] = 'Sehen Sie sich bitte folgendes Thema an: %s, am %s. Klicken Sie dazu auf den Link';
 $txt['sendtopic_thanks'] = 'Danke';
 $txt['sendtopic_sender_name'] = 'Ihr Name';
 $txt['sendtopic_sender_email'] = 'Ihre E-Mail Adresse';
@@ -344,7 +344,7 @@ $txt[1003] = 'Datei';
 $txt[1004] = 'Zeile';
 // Use numeric entities in the below string.
 $txt[1005] = 'SMF hat einen Datenbankfehler entdeckt und versucht ihn automatisch zu reparieren. Wenn Sie erneut Probleme haben sollten oder weiterhin diese E-Mails erhalten, kontaktieren Sie bitte Ihren Serveranbieter.';
-$txt['database_error_versions'] = '<b>Achtung:</b> Ihre Datenbank scheint veraltet zu sein! Ihre Dateien haben die Version {$forum_version}, wogegen die Datenbank die Version {$modSettings.smfVersion} hat. Es wird dringend empfohlen, die neueste Version der upgrade.php auszuführen.';
+$txt['database_error_versions'] = '<b>Achtung:</b> Ihre Datenbank scheint veraltet zu sein! Ihre Dateien haben die Version %s, wogegen die Datenbank die Version %s hat. Es wird dringend empfohlen, die neueste Version der upgrade.php auszuführen.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'Ein Fehler ist im Templatesystem des Forums aufgetreten! Dieses Problem sollte nur tempor&auml;r auftreten, bitte versuchen Sie es sp&auml;ter nochmal. Sollten Sie die Fehlermeldung weiterhin erhalten, kontaktieren Sie bitte den Administrator.<br /><br />Sie k&ouml;nnen versuchen die Seite zu <a href="javascript:location.reload();">aktualisieren</a>.';
 $txt['template_parse_error_details'] = 'Ein Problem trat beim Laden des <tt><b>%1$s</b></tt> Templates oder der Sprachdatei auf. Bitte &uuml;berpr&uuml;fen Sie die Syntax und probieren es erneut. Bitte beachten Sie, dass einzelne Anf&uuml;hrungszeichen (<tt>\'</tt>) oft mit einem Slash (<tt>\\</tt>) auskommentiert werden m&uuml;ssen. Um n&auml;here Informationen von PHP zum Fehler zu erhalten, probieren Sie <a href="{$boardurl}%1$s">die Seite direkt aufzurufen</a>.<br /><br />Sie k&ouml;nnen auch versuchen, die Seite zu <a href="javascript:location.reload();">aktualisieren</a> oder das <a href="{$scripturl}?theme=1">Standard-Theme</a> zu benutzen.';
@@ -438,7 +438,7 @@ $txt['online8'] = 'Status';
 $txt['topbottom4'] = 'Nach oben';
 $txt['topbottom5'] = 'Nach unten';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by {$forum_version}</a> | 
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
 $txt['calendar3'] = 'Geburtstage:';

@@ -8,7 +8,7 @@ $txt[71] = 'Message icon';
 $txt[77] = 'The Subject field was not filled out. It is required.';
 $txt[78] = 'The Message Body was not filled out. It is required.';
 // Use numeric entities in the below string.
-$txt[130] = "Regards,\nThe " . '{$context.forum_name} Team.';
+$txt[130] = "Regards,\nThe " . '{$forumname} Team.';
 $txt[252] = 'Add BBC tags';
 $txt[253] = 'Bold';
 $txt[254] = 'Italicized';
@@ -154,7 +154,7 @@ $txt['error_new_reply'] = 'Warning - while you were typing a new reply has been 
 $txt['error_new_replies'] = 'Warning - while you were typing %d new replies have been posted. You may wish to review your post.';
 $txt['error_new_reply_reading'] = 'Warning - while you were reading a new reply has been posted. You may wish to review your post.';
 $txt['error_new_replies_reading'] = 'Warning - while you were reading %d new replies have been posted. You may wish to review your post.';
-$txt['error_old_topic'] = 'Warning: this topic has not been posted in for at least {$modSettings.oldTopicDays} days.<br />Unless you\'re sure you want to reply, please consider starting a new topic.';
+$txt['error_old_topic'] = 'Warning: this topic has not been posted in for at least %d days.<br />Unless you\'re sure you want to reply, please consider starting a new topic.';
 
 // Use numeric entities in the below sixteen strings.
 $txt['notification_reply_subject'] = 'Topic reply: %s';
@@ -189,8 +189,8 @@ $txt['announce_regular_members'] = 'Regular Members';
 
 $txt['digest_subject_daily'] = 'Daily Digest';
 $txt['digest_subject_weekly'] = 'Weekly Digest';
-$txt['digest_intro_daily'] = 'Below is a summary of all activity in your subscribed boards and topics at {$GLOBALS.mbname} today. To unsubscribe please visit the link below.';
-$txt['digest_intro_weekly'] = 'Below is a summary of all activity in your subscribed boards and topics at {$GLOBALS.mbname} this week. To unsubscribe please visit the link below.';$txt['digest_new_topics'] =
+$txt['digest_intro_daily'] = 'Below is a summary of all activity in your subscribed boards and topics at %s today. To unsubscribe please visit the link below.';
+$txt['digest_intro_weekly'] = 'Below is a summary of all activity in your subscribed boards and topics at %s this week. To unsubscribe please visit the link below.';
 $txt['digest_new_topics'] = 'The following topics have been started';
 $txt['digest_new_topics_line'] = '"%s" in "%s"';
 $txt['digest_new_replies'] = 'Replies have been made in the following topics';

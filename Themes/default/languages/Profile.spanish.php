@@ -157,13 +157,13 @@ $txt['profileEdit'] = 'Editar Perfil';
 $txt['account'] = 'Configuraci&oacute;n de la cuenta';
 $txt['account_info'] = '&Eacute;sta es la configuraci&oacute;n de tu cuenta. Esta p&aacute;gina contiene toda la informaci&oacute;n critica que te identifica en el foro. Por razones de seguridad, debes introducir tu contrase&ntilde;a (actual) para poder modificar esta informaci&oacute;n.';
 $txt['forumProfile'] = 'Informaci&oacute;n del Perfil del foro';
-$txt['forumProfile_info'] = 'Tu puedes cambiar tu informaci&oacute;n personal en esta p&aacute;gina. Esta informaci&oacute;n ser&aacute; mostrada a trav&eacute;s de {$context.forum_name}. Si no quieres compartir esta informaci&oacute;n , simplemente d&eacute;jalo en blanco - nada aqu&iacute; es obligatorio.';
+$txt['forumProfile_info'] = 'Tu puedes cambiar tu informaci&oacute;n personal en esta p&aacute;gina. Esta informaci&oacute;n ser&aacute; mostrada a trav&eacute;s de {$forumname}. Si no quieres compartir esta informaci&oacute;n , simplemente d&eacute;jalo en blanco - nada aqu&iacute; es obligatorio.';
 $txt['theme'] = 'Configuraci&oacute;n de Apariencia y Dise&ntilde;o';
 $txt['theme_info'] = 'Esta secci&oacute;n te permite personalizar la apariencia y el dise&ntilde;o del foro.';
 $txt['notification'] = 'Notificaciones y email';
 $txt['notification_info'] = 'SMF permite que se te env&iacute;en notificaciones cuando haya respuestas a los mensajes, nuevos temas, y anuncios del foro. Puedes cambiar estos valores aqu&iacute;, o revisar los temas y foros de los que actualmente est&aacute;s recibiendo notificaciones.';
 $txt['pmprefs'] = 'Configuraci&oacute;n de Mensajes Personales';
-$txt['pmprefs_info'] = 'Otros usuarios de  {$context.forum_name} pueden contactarte directamente, pero a veces puede que desees ignorar los mensajes de alguien.  Esta p&aacute;gina te permite hacerlo, adem&aacute;s de otras cosas.';
+$txt['pmprefs_info'] = 'Otros usuarios de  {$forumname} pueden contactarte directamente, pero a veces puede que desees ignorar los mensajes de alguien.  Esta p&aacute;gina te permite hacerlo, adem&aacute;s de otras cosas.';
 // Untranslated!
 $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';

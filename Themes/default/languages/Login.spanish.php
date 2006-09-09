@@ -19,9 +19,9 @@ $txt[585] = 'Acepto';
 $txt[586] = 'No acepto';
 $txt[633] = '&iexcl;Advertencia!';
 $txt[634] = 'Solamente usuarios registrados tienen acceso a esta secci&oacute;n.';
-$txt[635] = 'Por favor ingresa abajo o haz click';
-$txt[636] = '-aqu&iacute;-';
-$txt[637] = 'para registrar una cuenta en {$context.forum_name}.';
+$txt['login_below'] = 'Por favor ingresa abajo o haz click';
+$txt['login_or_register'] = '-aqu&iacute;-';
+$txt['login_with_forum'] = 'para registrar una cuenta en %s.';
 // Use numeric entities in the below two strings.
 $txt[701] = 'Lo puedes cambiar despu&#233;s de ingresar en la p&#225;gina de perfil, o visitando esta p&#225;gina despu&#233;s de que ingreses:';
 $txt[719] = 'Tu nombre de usuario es: ';
@@ -35,13 +35,13 @@ $txt['register_age_confirmation'] = 'Tengo por lo menos %d a&ntilde;os';
 $txt['register_subject'] = 'Bienvenido a ' . $context['forum_name'];
 
 // For the below three messages, %1$s is the display name, %2$s is the username, %3$s is the password, %4$s is the activation code, and %5$s is the activation link (the last two are only for activation.)
-$txt['register_immediate_message'] = 'Haz registrado una cuenta en  {$context.forum_name}, %1$s!\\n\\nEl nombre de usuario de tu cuenta es %2$s y su contrase&#241;a es %3$s.\\n\\nPuedes cambiar tu contrase&#241;a despues que ingreses, en la p&#225;gina de perfil, o visitando esta p&#225;gina una vez que ingreses:\\n\\n{$scripturl}?action=profile\\n\\n' . $txt[130];
-$txt['register_activate_message'] = 'Haz registrado una cuenta en {$context.forum_name}, %1$s!\\n\\nEl nombre de usuario de tu cuenta es %2$s y su contrase&#241;a es %3$s (que puede ser cambiada despu&#233;s.)\\n\\nAntes de que puedas ingresar, debes primero activar tu cuenta. Para hacerlo, por favor sigue este enlace:\\n\\n%5$s\\n\\nEn caso que tengas alg&#250;n problema con la activaci&#243;n, por favor usa el c&#243;digo "%4$s".\\n\\n' . $txt[130];
-$txt['register_pending_message'] = 'Tu solicitud de registro en {$context.forum_name} ha sido recibida, %1$s.\\n\\nEl nombre de usuario con el que te registraste fue %2$s y su contrase&#241;a fue %3$s.\\n\\nAntes de que puedas ingresar y utilizar el foro, tu solicitud ser&#225; revisada y aprobada.  Cuando esto suceda, recibir&#225;s otro email desde esta direcci&#243;n.\\n\\n' . $txt[130];
+$txt['register_immediate_message'] = 'Haz registrado una cuenta en  {$forumname}, %1$s!\\n\\nEl nombre de usuario de tu cuenta es %2$s y su contrase&#241;a es %3$s.\\n\\nPuedes cambiar tu contrase&#241;a despues que ingreses, en la p&#225;gina de perfil, o visitando esta p&#225;gina una vez que ingreses:\\n\\n{$scripturl}?action=profile\\n\\n{$regards}';
+$txt['register_activate_message'] = 'Haz registrado una cuenta en {$forumname}, %1$s!\\n\\nEl nombre de usuario de tu cuenta es %2$s y su contrase&#241;a es %3$s (que puede ser cambiada despu&#233;s.)\\n\\nAntes de que puedas ingresar, debes primero activar tu cuenta. Para hacerlo, por favor sigue este enlace:\\n\\n%5$s\\n\\nEn caso que tengas alg&#250;n problema con la activaci&#243;n, por favor usa el c&#243;digo "%4$s".\\n\\n{$regards}';
+$txt['register_pending_message'] = 'Tu solicitud de registro en {$forumname} ha sido recibida, %1$s.\\n\\nEl nombre de usuario con el que te registraste fue %2$s y su contrase&#241;a fue %3$s.\\n\\nAntes de que puedas ingresar y utilizar el foro, tu solicitud ser&#225; revisada y aprobada.  Cuando esto suceda, recibir&#225;s otro email desde esta direcci&#243;n.\\n\\n{$regards}';
 
 // For the below two messages, %1$s is the user's display name, %2$s is their username, %3$s is the activation code, and %4$s is the activation link (the last two are only for activation.)
-$txt['resend_activate_message'] = 'Haz registrado una cuenta en {$context.forum_name}, %1$s!\\n\\nTu nombre de usuario es "%2$s".\\n\\nAntes de que puedas ingresar, debes primero activar tu cuenta. Para hacerlo, por favor sigue este enlace:\\n\\n%4$s\\n\\nEn caso que tengas alg&#250;n problema con la activaci&#243;n, por favor usa el c&#243;digo "%3$s".\\n\\n' . $txt[130];
-$txt['resend_pending_message'] = 'Tu solicitud de registro en {$context.forum_name} ha sido recibida, %1$s.\\n\\nEl nombre de usuario con el que te registraste fue %2$s.\\n\\nAntes de que puedas ingresar y utilizar el foro, tu solicitud ser&#225; revisada y aprobada.  Cuando esto suceda, recibir&#225;s otro email desde esta direcci&#243;n.\\n\\n' . $txt[130];
+$txt['resend_activate_message'] = 'Haz registrado una cuenta en {$forumname}, %1$s!\\n\\nTu nombre de usuario es "%2$s".\\n\\nAntes de que puedas ingresar, debes primero activar tu cuenta. Para hacerlo, por favor sigue este enlace:\\n\\n%4$s\\n\\nEn caso que tengas alg&#250;n problema con la activaci&#243;n, por favor usa el c&#243;digo "%3$s".\\n\\n{$regards}';
+$txt['resend_pending_message'] = 'Tu solicitud de registro en {$forumname} ha sido recibida, %1$s.\\n\\nEl nombre de usuario con el que te registraste fue %2$s.\\n\\nAntes de que puedas ingresar y utilizar el foro, tu solicitud ser&#225; revisada y aprobada.  Cuando esto suceda, recibir&#225;s otro email desde esta direcci&#243;n.\\n\\n{$regards}';
 
 $txt['ban_register_prohibited'] = 'Lo siento, no est&aacute;s autorizado para registrarte en este foro';
 $txt['under_age_registration_prohibited'] = 'Lo sentimos, pero no se permite el registro en este foro de personas menores de %d a&ntilde;os';
@@ -140,7 +140,7 @@ $txt['admin_notify_profile'] = '%s ha firmado como nuevo usuario del foro. Haz <
 $txt['admin_notify_approval'] = 'Antes de que este usuario pueda publicar mensajes debe tener primero su cuenta aprobada. Haz <i>click</i> en el enlace para ir a la pantalla de aprobaci&#243;n.';
 
 $txt['coppa_title'] = 'Foro con restricci&oacute;n de edad';
-$txt['coppa_after_registration'] = 'Gracias por registrarte con {$context.forum_name}.<br /><br />Debido a que est&aacute;s por debajo de la edad de {MINIMUM_AGE}, hay un requerimiento legal
+$txt['coppa_after_registration'] = 'Gracias por registrarte con {$forumname}.<br /><br />Debido a que est&aacute;s por debajo de la edad de {MINIMUM_AGE}, hay un requerimiento legal
 	para obtener el permiso de tus padres/tutor antes de que puedas empezar a usar tu cuenta. Para proceder con la activaci&oacute;n de la cuenta por favor imprime la forma que a continuaci&oacute;n se muestra:';
 $txt['coppa_form_link_popup'] = 'Cargar la forma en una ventana nueva';
 $txt['coppa_form_link_download'] = 'Descargar forma';
@@ -153,7 +153,7 @@ $txt['coppa_send_by_phone'] = 'Alternativamente, haz que le hablen al administra
 $txt['coppa_form_title'] = 'Forma de permiso para registrarse en ' . $context['forum_name'];
 $txt['coppa_form_address'] = 'Direcci&oacute;n';
 $txt['coppa_form_date'] = 'Fecha';
-$txt['coppa_form_body'] = 'Yo {PARENT_NAME},<br /><br />doy el permiso para que {CHILD_NAME} (child name) se convierta en un usuario registrado del foro: {$context.forum_name}, con el nombre de usuario: {USER_NAME}.<br /><br />Entiendo que cierta informaci&oacute;n personal proporcionada por {USER_NAME} puede que sea mostrada a otros usuarios del foro.<br /><br />Firmado por:<br />{PARENT_NAME} (Padre/Tutor).';
+$txt['coppa_form_body'] = 'Yo {PARENT_NAME},<br /><br />doy el permiso para que {CHILD_NAME} (child name) se convierta en un usuario registrado del foro: {$forumname}, con el nombre de usuario: {USER_NAME}.<br /><br />Entiendo que cierta informaci&oacute;n personal proporcionada por {USER_NAME} puede que sea mostrada a otros usuarios del foro.<br /><br />Firmado por:<br />{PARENT_NAME} (Padre/Tutor).';
 
 // Untranslated!
 $txt['visual_verification_label'] = 'Visual verification';

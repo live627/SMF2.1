@@ -228,7 +228,7 @@ function template_main_above()
 	else
 	{
 		echo '
-							', $txt['welcome_guest'], '<br />
+							', sprintf($txt['welcome_guest'], $txt['guest_title']), '<br />
 							', $context['current_time'], '<br />
 
 							<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>

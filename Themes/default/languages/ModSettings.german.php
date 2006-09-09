@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.german.php.
 
-$txt['smf3'] = 'Hier k&ouml;nnen Sie die Einstellungen von speziellen Funktionen des Forums &auml;ndern. F&uuml;r weitere Optionen schauen Sie bitte in den <a href="{$scripturl}?action=admin;area=theme;sa=settings;th={$settings.theme_id};sesc={$context.session_id}">Theme-Einstellungen</a> nach. <b>Klicken Sie auf die Hilfe-Symbole f&uuml;r weitere Informationen zu den Funktionen.</b>';
+$txt['smf3'] = 'Hier k&ouml;nnen Sie die Einstellungen von speziellen Funktionen des Forums &auml;ndern. F&uuml;r weitere Optionen schauen Sie bitte in den <a href="{$scripturl}?action=theme;sa=settings;th=%s;sesc=%s">Theme-Einstellungen</a> nach. <b>Klicken Sie auf die Hilfe-Symbole f&uuml;r weitere Informationen zu den Funktionen.</b>';
 
 $txt['mods_cat_features'] = 'Standard-Funktionen';
 $txt['pollMode'] = 'Umfrage Modus';

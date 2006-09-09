@@ -196,7 +196,7 @@ function template_main()
 <br />
 <table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 	<tr class="titlebg">
-		<td align="center" colspan="2">', $txt[685], '</td>
+		<td align="center" colspan="2">', sprintf($txt['info_center_title'], $context['forum_name']), '</td>
 	</tr>';
 
 	// This is the "Recent Posts" bar.
@@ -392,7 +392,7 @@ function template_main()
 	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
 	if (!empty($context['users_online']))
 		echo '
-				', $txt['users_active'], ':<br />', implode(', ', $context['list_users_online']);
+				', sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
 
 	echo '
 			</span>

@@ -51,7 +51,7 @@ $txt['moderate'] = 'Moderate';
 $txt['save'] = 'Opslaan';
 
 $txt['modify'] = 'Verander';
-$txt['forum_index'] = '{$context.forum_name} - Forumindex';
+$txt['forum_index'] = '%1$s - Forumindex';
 $txt['members'] = 'Geregistreerde leden';
 $txt['board_name'] = 'Forumnaam';
 $txt['posts'] = 'Berichten';
@@ -112,12 +112,12 @@ $txt['remove_message'] = 'Verwijder berichten';
 $txt['notify'] = 'Bericht';
 $txt['notify_request'] = 'Wil je een e-mail ontvangen als iemand antwoord geeft op dit topic?';
 // Use numeric entities in the below string.
-$txt['regards_team'] = "Met vriendelijke groet,\n\nHet " . '{$context.forum_name}team.';
+$txt['regards_team'] = 'Met vriendelijke groet,\\n\\nHet %1$s team.';
 $txt['notify_replies'] = 'Bericht bij reacties';
 $txt['move_topic'] = 'Verplaats topic';
 $txt['move_to'] = 'Verplaats naar';
 $txt['pages'] = 'Pagina\'s';
-$txt['users_active'] = 'Gebruikers actief in de laatste {$modSettings.lastActive} minuten';
+$txt['users_active'] = 'Gebruikers actief in de laatste %1$d minuten';
 $txt['personal_messages'] = 'Persoonlijk bericht';
 $txt['reply_quote'] = 'Antwoord met citaat';
 $txt['reply'] = 'Antwoord';
@@ -172,7 +172,7 @@ $txt['female'] = 'Vrouw';
 
 $txt['error_invalid_characters_username'] = 'Onjuiste letters/cijfers gebruikt in je gebruikersnaam.';
 
-$txt['welcome_guest'] = 'Welkom, <b>{$txt.guest_title}</b>. Alsjeblieft <a href="{$scripturl}?action=login">inloggen</a> of <a href="{$scripturl}?action=register">registreren</a>.';
+$txt['welcome_guest'] = 'Welkom, <b>%1$s</b>. Alsjeblieft <a href="{$scripturl}?action=login">inloggen</a> of <a href="{$scripturl}?action=register">registreren</a>.';
 $txt['welcome_guest_activate'] = '<br />De <a href="{$scripturl}?action=activate">activerings e-mail</a> gemist?';
 $txt['hello_member'] = 'Hoi,';
 // Use numeric entities in the below string.
@@ -249,8 +249,8 @@ $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
 $txt[452] = 'Markeer alle berichten als gelezen';
 
-$txt[454] = 'Populair topic (meer dan 15 reacties)';
-$txt[455] = 'Zeer populair topic (meer dan 25 reacties)';
+$txt['hot_topics'] = 'Populair topic (meer dan %1$d reacties)';
+$txt['very_hot_topics'] = 'Zeer populair topic (meer dan %1$d reacties)';
 $txt[456] = 'Gesloten topic';
 $txt[457] = 'Normaal topic';
 $txt['participation_caption'] = 'Topic waaraan je hebt deelgenomen';
@@ -316,14 +316,14 @@ $txt[668] = 'Print pagina';
 $txt[679] = 'Dit moet een geldig e-mailadres zijn.';
 
 $txt[683] = 'een heleboel';
-$txt[685] = '{$context.forum_name} - Info Center';
+$txt['info_center_title'] = '%s - Info Center';
 
 $txt[707] = 'Stuur dit topic';
 
 $txt['sendtopic_title'] = 'Stuur dit onderwerp &#171; %s &#187; naar een vriend!';
 // Use numeric entities in the below three strings.
 $txt['sendtopic_dear'] = 'Beste %s,';
-$txt['sendtopic_this_topic'] = 'Dit topic moet je eens lezen: %s, op {$context.forum_name}.  Om het te bekijken kun je op de volgende link klikken';
+$txt['sendtopic_this_topic'] = 'Dit topic moet je eens lezen: %s, op %s.  Om het te bekijken kun je op de volgende link klikken';
 $txt['sendtopic_thanks'] = 'Bedankt';
 $txt['sendtopic_sender_name'] = 'Je naam';
 $txt['sendtopic_sender_email'] = 'Je e-mailadres';
@@ -344,7 +344,7 @@ $txt[1003] = 'Bestand';
 $txt[1004] = 'Regel';
 // Use numeric entities in the below string.
 $txt[1005] = 'SMF heeft een fout in je database gedetecteerd en automatisch geprobeerd deze te repareren. Als de problemen blijven bestaan of als je voortdurend deze e-mails krijgt, neem contact op met je provider.';
-$txt['database_error_versions'] = '<b>Let op:</b> Het ziet er naar uit dat je database geupgrade zou moeten worden. De versie van je forumbestanden is momenteel {$forum_version}, terwijl je database op dit moment nog staat op versie SMF {$modSettings.smfVersion}. Het is aan te bevelen om de laatste versie van upgrade.php uit te voeren.';
+$txt['database_error_versions'] = '<b>Let op:</b> Het ziet er naar uit dat je database geupgrade zou moeten worden. De versie van je forumbestanden is momenteel %s, terwijl je database op dit moment nog staat op versie SMF %s. Het is aan te bevelen om de laatste versie van upgrade.php uit te voeren.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'Het lijkt erop dat er iets verkeerd gegaan is op het forum met het template systeem. Dit probleeem zou alleen tijdelijk moeten zijn, kom later terug en probeer het opnieuw. Als je dit probleem blijft krijgen, neem dan contact op met de administrator.<br /><br />Je kunt ook proberen om <a href="javascript:location.reload();">deze pagina te verversen</a>.';
 $txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="{$boardurl}%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="{$scripturl}?theme=1">use the default theme</a>.';
@@ -438,7 +438,7 @@ $txt['online8'] = 'Status';
 $txt['topbottom4'] = 'Omhoog';
 $txt['topbottom5'] = 'Omlaag';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by {$forum_version}</a> | 
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
 $txt['calendar3'] = 'Verjaardagen:';

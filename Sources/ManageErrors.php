@@ -236,7 +236,7 @@ function ViewErrorLog()
 	$context['admin_tabs'] = array(
 		'title' => $txt['errlog1'],
 		'help' => 'error_log',
-		'description' => $txt['errlog2'],
+		'description' => sprintf($txt['errlog2'], $txt['remove']),
 		'tabs' => array(
 			'all' => array(
 				'title' => $txt['errortype_all'],

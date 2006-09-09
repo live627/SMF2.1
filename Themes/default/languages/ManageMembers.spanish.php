@@ -125,14 +125,14 @@ $txt['admin_browse_outstanding_go'] = 'Realizar Acci&oacute;n';
 
 // Use numeric entities in the below nine strings.
 $txt['admin_approve_reject'] = 'Registro rechazado';
-$txt['admin_approve_reject_desc'] = 'Lamento informarte que tu solicitud para pertenecer al foro {$context.forum_name} ha sido rechazada.';
+$txt['admin_approve_reject_desc'] = 'Lamento informarte que tu solicitud para pertenecer al foro {$forumname} ha sido rechazada.';
 $txt['admin_approve_delete'] = 'Cuenta borrada';
-$txt['admin_approve_delete_desc'] = 'Tu cuenta en {$context.forum_name} ha sido borrada.  Probablemente fue debido a que nunca activaste tu cuenta, en cuyo caso puedes registrarte nuevamente.';
+$txt['admin_approve_delete_desc'] = 'Tu cuenta en {$forumname} ha sido borrada.  Probablemente fue debido a que nunca activaste tu cuenta, en cuyo caso puedes registrarte nuevamente.';
 $txt['admin_approve_remind'] = 'Recordatorio de Registro';
 $txt['admin_approve_remind_desc'] = 'Tu no has activado tu cuenta a&#250;n en';
 $txt['admin_approve_remind_desc2'] = 'Favor de hacer click en el enlace siguiente para activar tu cuenta:';
 $txt['admin_approve_accept_desc'] = 'Tu cuenta ha sido activada manualmente por el administrador. Ya puedes ingresar y publicar mensajes.';
 // Untranslated!
-$txt['admin_approve_require_activation'] = 'Your account on {$context.forum_name} has been approved by the forum administrator, and must now be activated before you can begin posting.';
+$txt['admin_approve_require_activation'] = 'Your account on {$forumname} has been approved by the forum administrator, and must now be activated before you can begin posting.';
 
 ?>

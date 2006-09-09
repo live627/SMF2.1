@@ -220,7 +220,7 @@ function template_main()
 <br />
 <div class="tborder"><table border="0" width="100%" cellspacing="1" cellpadding="4">
 	<tr class="titlebg">
-		<td align="center" colspan="2">', $txt[685], '</td>
+		<td align="center" colspan="2">', sprintf($txt['info_center_title'], $context['forum_name']), '</td>
 	</tr>';
 
 	// This is the "Recent Posts" bar.
@@ -416,7 +416,7 @@ function template_main()
 	if (!empty($context['users_online']))
 	{
 		echo '
-				', $txt['users_active'], ':<br />', implode(', ', $context['list_users_online']);
+				', sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
 
 		// Showing membergroups?
 		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))

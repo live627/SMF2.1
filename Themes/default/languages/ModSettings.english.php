@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-$txt['smf3'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="{$scripturl}?action=admin;area=theme;sa=settings;th={$settings.theme_id};sesc={$context.session_id}">theme settings</a> for more options.  Click the help icons for more information about a setting.';
+$txt['smf3'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="{$scripturl}?action=theme;sa=settings;th=%s;sesc=%s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
 
 $txt['mods_cat_features'] = 'Basic Features';
 $txt['pollMode'] = 'Poll mode';

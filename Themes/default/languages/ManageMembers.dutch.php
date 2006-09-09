@@ -121,13 +121,13 @@ $txt['admin_browse_outstanding_go'] = 'Voer actie uit';
 
 // Use numeric entities in the below nine strings.
 $txt['admin_approve_reject'] = 'Registratie afgewezen';
-$txt['admin_approve_reject_desc'] = 'Het spijt me te moeten mededelen dat je aanmelding op ons forum {$context.forum_name} is afgewezen.';
+$txt['admin_approve_reject_desc'] = 'Het spijt me te moeten mededelen dat je aanmelding op ons forum {$forumname} is afgewezen.';
 $txt['admin_approve_delete'] = 'Account verwijderd';
-$txt['admin_approve_delete_desc'] = 'Je account op {$context.forum_name} is verwijderd.  Het zou kunnen dat dat komt omdat je je account nooit hebt geactiveerd, in welk geval je je weer opnieuw zou kunnen registreren.';
+$txt['admin_approve_delete_desc'] = 'Je account op {$forumname} is verwijderd.  Het zou kunnen dat dat komt omdat je je account nooit hebt geactiveerd, in welk geval je je weer opnieuw zou kunnen registreren.';
 $txt['admin_approve_remind'] = 'Registratieherinnering';
 $txt['admin_approve_remind_desc'] = 'Je hebt nog steeds je account niet geactiveerd op';
 $txt['admin_approve_remind_desc2'] = 'Klik op onderstaande link om je account te activeren:';
 $txt['admin_approve_accept_desc'] = 'Je account is handmatig geactiveerd door de admin en je kunt nu inloggen en berichten plaatsen.';
-$txt['admin_approve_require_activation'] = 'Je account op {$context.forum_name} is goedgekeurd door de forumbeheerder, en moet nu geactiveerd worden alvorens je kunt beginnen met het plaatsen van berichten.';
+$txt['admin_approve_require_activation'] = 'Je account op {$forumname} is goedgekeurd door de forumbeheerder, en moet nu geactiveerd worden alvorens je kunt beginnen met het plaatsen van berichten.';
 
 ?>

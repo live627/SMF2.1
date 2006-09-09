@@ -89,6 +89,7 @@ if (!defined('SMF'))
 		- accessed via ?action=admin;area=maintain;sa=recount.
 
 	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
+		// !!
 */
 
 // The maintenance access point.
@@ -1362,9 +1363,12 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 					{
 						if (substr($line, 0, 2) != '?>' && substr($line, 0, 2) != '<?')
 						{
-							// Some strings contain other variables.
-							$line = preg_replace('~\{\$(\w+?)\}~', '\' . $GLOBALS[\'$1\'] . \'', $line);
-							$line = preg_replace('~\{\$(\w+?)\.(\w+?)\}~', '\' . $GLOBALS[\'$1\'][\'$2\'] . \'', $line);
+							// Some common variables get parsed in...
+							$line = strtr($line, array('{$scripturl}' => '\' . $scripturl . \''));
+							$line = strtr($line, array('{$boardurl}' => '\' . $boardurl . \''));
+							$line = strtr($line, array('{$imagesurl}' => '\' . $settings[\'images_url\'] . \''));
+							$line = strtr($line, array('{$forumname}' => '\' . $context[\'forum_name\'] . \''));
+							$line = strtr($line, array('{$regards}' => '\' . $txt[\'regards_team\'] . \''));
 							$line = preg_replace('~\{\\\\\$~', '{$', $line);
 							$line = preg_replace('~\{NL\}~', '\\\\n', $line);
 							fwrite($fh, $line);
@@ -1375,8 +1379,11 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				else
 				{
 					$fc = implode('', file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'));
-					$fc = preg_replace('~\{\$(\w+?)\}~', '\' . $GLOBALS[\'$1\'] . \'', $fc);
-					$fc = preg_replace('~\{\$(\w+?)\.(\w+?)\}~', '\' . $GLOBALS[\'$1\'][\'$2\'] . \'', $fc);
+					$fc = strtr($fc, array('{$scripturl}' => '\' . $scripturl . \''));
+					$fc = strtr($fc, array('{$boardurl}' => '\' . $boardurl . \''));
+					$fc = strtr($fc, array('{$imagesurl}' => '\' . $settings[\'images_url\'] . \''));
+					$fc = strtr($fc, array('{$forumname}' => '\' . $context[\'forum_name\'] . \''));
+					$fc = strtr($fc, array('{$regards}' => '\' . $txt[\'regards_team\'] . \''));
 					$fc = preg_replace('~\{\\\\\$~', '{$', $fc);
 					$fc = preg_replace('~\{NL\}~', '\\\\n', $fc);
 					$fc = preg_replace('~<\?php~', '', $fc);

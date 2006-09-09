@@ -692,6 +692,7 @@ PHP_FUNCTION(smflib_db_error)
 	if (can_admin_forum && SMFLIB_GET_GLOBAL_Z(forum_version) && !SMFLIB_EMPTY_PP(forum_version) && SMFLIB_GET_KEY_VAL_ZZ(*modSettings, smfVersion) && Z_STRLEN_PP(forum_version) > 4 && SMFLIB_CMP_NOT_EQ_SZ(Z_STRVAL_PP(forum_version) + 4, Z_STRLEN_PP(forum_version) - 4, *smfVersion) && !SMFLIB_STRPOS_ZC(*forum_version, "Demo") && !SMFLIB_STRPOS_ZC(*forum_version, "CVS"))
 	{
 		// PHP: $context['error_message'] .= '<br /><br />' . $txt['database_error_versions'];
+		//!!! This doesn't do sprintf
 		if (SMFLIB_GET_KEY_VAL_ZZ(*txt, database_error_versions))
 		{
 			input_str = *error_message;

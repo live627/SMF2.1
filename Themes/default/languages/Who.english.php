@@ -85,7 +85,7 @@ $txt['whoallow_viewmembers'] = 'Viewing a list of members.';
 
 $txt['who_topic'] = 'Viewing the topic <a href="{$scripturl}?topic=%d.0">%s</a>.';
 $txt['who_board'] = 'Viewing the board <a href="{$scripturl}?board=%d.0">%s</a>.';
-$txt['who_index'] = 'Viewing the board index of <a href="{$scripturl}">{$context.forum_name}</a>.';
+$txt['who_index'] = 'Viewing the board index of <a href="{$scripturl}">{$forumname}</a>.';
 $txt['who_viewprofile'] = 'Viewing <a href="{$scripturl}?action=profile;u=%d">%s</a>\'s profile.';
 $txt['who_profile'] = 'Editing the profile of <a href="{$scripturl}?action=profile;u=%d">%s</a>.';
 $txt['who_post'] = 'Posting a new topic in <a href="{$scripturl}?board=%d.0">%s</a>.';

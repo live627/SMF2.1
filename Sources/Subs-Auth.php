@@ -626,7 +626,7 @@ function resetPassword($memID, $username = null)
 		"$txt[719]$user, $txt[492] $newPassword\n\n" .
 		"$txt[701]\n" .
 		"$scripturl?action=profile\n\n" .
-		$txt['regards_team']);
+		sprintf($txt['regards_team'], $context['forum_name']));
 }
 
 // This function simply checks whether a password meets the current forum rules.

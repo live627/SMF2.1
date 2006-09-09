@@ -85,7 +85,7 @@ $txt['whoallow_viewmembers'] = 'Viendo la lista de usuarios.';
 
 $txt['who_topic'] = 'Viendo el tema <a href="{$scripturl}?topic=%d.0">%s</a>.';
 $txt['who_board'] = 'Viendo el foro <a href="{$scripturl}?board=%d.0">%s</a>.';
-$txt['who_index'] = 'Viendo el &iacute;ndice del foro <a href="{$scripturl}">{$context.forum_name}</a>.';
+$txt['who_index'] = 'Viendo el &iacute;ndice del foro <a href="{$scripturl}">{$forumname}</a>.';
 $txt['who_viewprofile'] = 'Viendo el perfil de <a href="{$scripturl}?action=profile;u=%d">%s</a>.';
 $txt['who_profile'] = 'Editando el perfil de <a href="{$scripturl}?action=profile;u=%d">%s</a>.';
 $txt['who_post'] = 'Publicando un nuevo tema en <a href="{$scripturl}?board=%d.0">%s</a>.';

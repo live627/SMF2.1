@@ -169,6 +169,7 @@ echo '
 	// Otherwise they're a guest - so politely ask them to register or login.
 	else
 	{
+		$txt['welcome_guest'] = sprintf($txt['welcome_guest'], $txt['guest_title']);
 		$txt['welcome_guest'] = str_replace($boardurl.'/index.php?', $scripturl , $txt['welcome_guest']);
 		$txt['welcome_guest'] = str_replace($scripturl.'?',$scripturl,$txt['welcome_guest']);
 		$txt['welcome_guest'] = str_replace($scripturl.'&amp;action=login', sefReltoAbs($scripturl.'&amp;action=login'), $txt['welcome_guest']);

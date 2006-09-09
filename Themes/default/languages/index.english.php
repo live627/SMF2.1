@@ -50,7 +50,7 @@ $txt['moderate'] = 'Moderate';
 $txt['save'] = 'Save';
 
 $txt['modify'] = 'Modify';
-$txt['forum_index'] = '{$context.forum_name} - Index';
+$txt['forum_index'] = '%1$s - Index';
 $txt['members'] = 'Members';
 $txt['board_name'] = 'Board name';
 $txt['posts'] = 'Posts';
@@ -111,12 +111,12 @@ $txt['remove_message'] = 'Remove message';
 $txt['notify'] = 'Notify';
 $txt['notify_request'] = 'Do you want a notification email if someone replies to this topic?';
 // Use numeric entities in the below string.
-$txt['regards_team'] = "Regards,\nThe " . '{$context.forum_name} Team.';
+$txt['regards_team'] = 'Regards,\\nThe %1$s Team.';
 $txt['notify_replies'] = 'Notify of replies';
 $txt['move_topic'] = 'Move Topic';
 $txt['move_to'] = 'Move to';
 $txt['pages'] = 'Pages';
-$txt['users_active'] = 'Users active in past {$modSettings.lastActive} minutes';
+$txt['users_active'] = 'Users active in past %1$d minutes';
 $txt['personal_messages'] = 'Personal Messages';
 $txt['reply_quote'] = 'Reply with quote';
 $txt['reply'] = 'Reply';
@@ -170,7 +170,7 @@ $txt['female'] = 'Female';
 
 $txt['error_invalid_characters_username'] = 'Invalid character used in Username.';
 
-$txt['welcome_guest'] = 'Welcome, <b>{$txt.guest_title}</b>. Please <a href="{$scripturl}?action=login">login</a> or <a href="{$scripturl}?action=register">register</a>.';
+$txt['welcome_guest'] = 'Welcome, <b>%1$s</b>. Please <a href="{$scripturl}?action=login">login</a> or <a href="{$scripturl}?action=register">register</a>.';
 $txt['welcome_guest_activate'] = '<br />Did you miss your <a href="{$scripturl}?action=activate">activation email?</a>';
 $txt['hello_member'] = 'Hey,';
 // Use numeric entities in the below string.
@@ -246,8 +246,8 @@ $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
 $txt[452] = 'Mark ALL messages as read';
 
-$txt[454] = 'Hot Topic (More than {$modSettings.hotTopicPosts} replies)';
-$txt[455] = 'Very Hot Topic (More than {$modSettings.hotTopicVeryPosts} replies)';
+$txt['hot_topics'] = 'Hot Topic (More than %1$d replies)';
+$txt['very_hot_topics'] = 'Very Hot Topic (More than %1$d replies)';
 $txt[456] = 'Locked Topic';
 $txt[457] = 'Normal Topic';
 $txt['participation_caption'] = 'Topic you have posted in';
@@ -313,14 +313,14 @@ $txt[668] = 'Print Page';
 $txt[679] = 'This must be a valid email address.';
 
 $txt[683] = 'I am a geek!!';
-$txt[685] = '{$context.forum_name} - Info Center';
+$txt['info_center_title'] = '%s - Info Center';
 
 $txt[707] = 'Send this topic';
 
 $txt['sendtopic_title'] = 'Send the topic &quot;%s&quot; to a friend.';
 // Use numeric entities in the below three strings.
 $txt['sendtopic_dear'] = 'Dear %s,';
-$txt['sendtopic_this_topic'] = 'I want you to check out "%s" on {$context.forum_name}.  To view it, please click this link';
+$txt['sendtopic_this_topic'] = 'I want you to check out "%s" on %s.  To view it, please click this link';
 $txt['sendtopic_thanks'] = 'Thanks';
 $txt['sendtopic_sender_name'] = 'Your name';
 $txt['sendtopic_sender_email'] = 'Your email address';
@@ -341,7 +341,7 @@ $txt[1003] = 'File';
 $txt[1004] = 'Line';
 // Use numeric entities in the below string.
 $txt[1005] = 'SMF has detected and automatically tried to repair an error in your database.  If you continue to have problems, or continue to receive these emails, please contact your host.';
-$txt['database_error_versions'] = '<b>Note:</b> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version {$forum_version}, while your database is at version {$modSettings.smfVersion}. The above error might possibly go away if you execute the latest version of upgrade.php.';
+$txt['database_error_versions'] = '<b>Note:</b> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version %s, while your database is at version %s. The above error might possibly go away if you execute the latest version of upgrade.php.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'It seems something has gone sour on the forum with the template system.  This problem should only be temporary, so please come back later and try again.  If you continue to see this message, please contact the administrator.<br /><br />You can also try <a href="javascript:location.reload();">refreshing this page</a>.';
 $txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="{$boardurl}%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="{$scripturl}?theme=1">use the default theme</a>.';
@@ -433,7 +433,7 @@ $txt['online8'] = 'Status';
 $txt['topbottom4'] = 'Go Up';
 $txt['topbottom5'] = 'Go Down';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by {$forum_version}</a> | 
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
 $txt['calendar3'] = 'Birthdays:';

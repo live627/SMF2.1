@@ -205,7 +205,7 @@ function ssi_welcome($output_method = 'echo')
 	if ($output_method == 'echo')
 	{
 		if ($context['user']['is_guest'])
-			echo $txt['welcome_guest'];
+			echo sprintf($txt['welcome_guest'], $txt['guest_title']);
 		else
 			echo $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', allowedTo('pm_read') ? ', ' . $txt[152] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] == '1' ? $txt[471] : $txt[153]) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == '1' ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
 	}

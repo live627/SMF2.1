@@ -47,7 +47,7 @@ $txt[571] = 'Credits';
 $txt[584] = 'Laat de forumregels zien wanneer iemand zich registreert?';
 $txt[608] = 'Verwijder alle geselecteerde leden';
 $txt[610] = 'Repareer het forum en al zijn berichten';
-$txt[644] = 'Dit is je \'{$txt.admin_center}\'. Je kunt hier je instellingen en template veranderen, en je forum onderhouden.<br /><br />Lees eerst de handleiding om alles te begrijpen, en wees voorzichtig met deze functies! Je kunt het antwoord op al je vragen vinden op het <a href="http://www.simplemachines.org/community/index.php" target="_blank">support forum</a> of de troubleshootingsectie in de handleiding.';
+$txt[644] = 'Dit is je \'%1$s\'. Je kunt hier je instellingen en template veranderen, en je forum onderhouden.<br /><br />Lees eerst de handleiding om alles te begrijpen, en wees voorzichtig met deze functies! Je kunt het antwoord op al je vragen vinden op het <a href="http://www.simplemachines.org/community/index.php" target="_blank">support forum</a> of de troubleshootingsectie in de handleiding.';
 $txt[670] = 'Plaats &eacute;&eacute;n nieuwsitem per veld. Enkele BBC tags, zoals [b], [i] en [u] zijn toegestaan in het nieuws, evenals smileys en HTML. Maak een veld leeg om het te verwijderen.';
 $txt[684] = 'Forumbeheerders';
 $txt[699] = 'Gereserveerde namen zorgen ervoor dat leden deze namen niet kunnen gebruiken als gebruikersnaam of als getoonde naam. Kies de opties beneden voordat je wijzigingen doorvoert.';
@@ -70,7 +70,6 @@ $txt['smf8'] = 'Databasenaam:';
 $txt['smf11'] = 'Registratieovereenkomst';
 $txt['smf12'] = 'Deze overeenkomst wordt getoond wanneer een gebruiker zich registreert op het forum en moet geaccepteerd worden voordat de gebruiker verder kan met de registratie.';
 $txt['smf54'] = 'Databasetabelvoorvoegsel:';
-$txt['smf55'] = 'Houd de Ctrl-toets ingedrukt om meerdere keuzes tegelijk te selecteren.  Klik op de {$txt.modify}-knop als je klaar bent.';
 $txt['smf73'] = 'Lijst van foutmeldingen';
 $txt['smf74'] = 'De volgende foutmeldingen zijn ontstaan (leeg bij geen fouten)';
 $txt['smf85'] = 'Wil je deze fouten herstellen?';
@@ -347,7 +346,7 @@ $txt['maintenance1'] = 'Weer te geven onderwerp';
 $txt['maintenance2'] = 'Weer te geven bericht';
 
 $txt['errlog1'] = 'Foutenlogbestand';
-$txt['errlog2'] = 'Het fouten logbestand slaat alle fouten in chronologische volgorde op. Om de fouten te verwijderen, moet je deze aanvinken en op de {$txt.remove} knop onderaan de pagina drukken.';
+$txt['errlog2'] = 'Het fouten logbestand slaat alle fouten in chronologische volgorde op. Om de fouten te verwijderen, moet je deze aanvinken en op de %1$s knop onderaan de pagina drukken.';
 
 $txt['theme4'] = 'Thema-instellingen';
 $txt['theme_current_settings'] = 'Huidige thema';

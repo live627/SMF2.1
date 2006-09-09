@@ -539,7 +539,7 @@ function scheduled_daily_digest()
 		$langtxt[$lang] = array(
 			'subject' => $txt['digest_subject_' . ($is_weekly ? 'weekly' : 'daily')],
 			'char_set' => $txt['lang_character_set'],
-			'intro' => $txt['digest_intro_' . ($is_weekly ? 'weekly' : 'daily')],
+			'intro' => sprintf($txt['digest_intro_' . ($is_weekly ? 'weekly' : 'daily')], $mbname),
 			'new_topics' => $txt['digest_new_topics'],
 			'topic_lines' => $txt['digest_new_topics_line'],
 			'new_replies' => $txt['digest_new_replies'],
@@ -553,7 +553,7 @@ function scheduled_daily_digest()
 			'move' => $txt['digest_mod_act_move'],
 			'merge' => $txt['digest_mod_act_merge'],
 			'split' => $txt['digest_mod_act_split'],
-			'bye' => $txt['regards_team'],
+			'bye' => sprintf($txt['regards_team'], $context['forum_name']),
 		);
 	}
 
@@ -634,7 +634,7 @@ function scheduled_daily_digest()
 			$email['body'] .= "\n";
 
 		// Then just say our goodbyes!
-		$email['body'] .= "\n\n$txt['regards_team']";
+		$email['body'] .= "\n\n" . sprintf($txt['regards_team'], $context['forum_name']);
 
 		// Send it - low priority!
 		sendmail($email['email'], $email['subject'], $email['body'], null, null, false, 0);

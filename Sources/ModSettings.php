@@ -97,7 +97,7 @@ if (!defined('SMF'))
 // This function passes control through to the relevant tab.
 function ModifyFeatureSettings()
 {
-	global $context, $txt, $scripturl, $modSettings, $sourcedir;
+	global $context, $txt, $scripturl, $modSettings, $sourcedir, $settings;
 
 	//!!! Temp
 	if (isset($_GET['save']))
@@ -130,7 +130,7 @@ function ModifyFeatureSettings()
 	$context['admin_tabs'] = array(
 		'title' => &$txt['modSettings_title'],
 		'help' => 'modsettings',
-		'description' => $txt['smf3'],
+		'description' => sprintf($txt['smf3'], $settings['theme_id'], $context['session_id']),
 		'tabs' => array(
 			'basic' => array(
 				'title' => $txt['mods_cat_features'],

@@ -121,7 +121,7 @@ function SendTopic()
 	// And off we go!
 	sendmail($_POST['r_email'], $txt['topic'] . ': ' . $row['subject'] . ' (' . $txt[318] . ' ' . $_POST['y_name'] . ')',
 		sprintf($txt['sendtopic_dear'], $_POST['r_name']) . "\n\n" .
-		sprintf($txt['sendtopic_this_topic'], $row['subject']) . ":\n\n" .
+		sprintf($txt['sendtopic_this_topic'], $row['subject'], $context['forum_name']) . ":\n\n" .
 		$scripturl . '?topic=' . $topic . ".0\n\n" .
 		(!empty($_POST['comment']) ? $txt['sendtopic2'] . ":\n" . $_POST['comment'] . "\n\n" : '') .
 		$txt['sendtopic_thanks'] . ",\n" .
@@ -182,7 +182,7 @@ function ReportToModerator()
 // Send the emails.
 function ReportToModerator2()
 {
-	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $ID_MEMBER, $modSettings, $sourcedir, $language;
+	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $ID_MEMBER, $modSettings, $sourcedir, $language, $context;
 
 	// Check their session... don't want them redirected here without their knowledge.
 	checkSession();
@@ -295,7 +295,7 @@ function ReportToModerator2()
 			$scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'] . "\n\n" .
 			$txt['rtm_email_comment'] . ":\n" .
 			$_POST['comment'] . "\n\n" .
-			$txt['regards_team'], $user_info['email']);
+			sprintf($txt['regards_team'], $context['forum_name']), $user_info['email']);
 	}
 	mysql_free_result($request);
 

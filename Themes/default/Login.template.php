@@ -90,7 +90,7 @@ function template_kick_guest()
 	echo '
 					<td class="windowbg" style="padding-top: 2ex; padding-bottom: 2ex;">
 						', empty($context['kick_message']) ? $txt[634] : $context['kick_message'], '<br />
-						', $txt[635], ' <a href="', $scripturl, '?action=register">', $txt[636], '</a> ', $txt[637], '
+						', $txt['login_below'], ' <a href="', $scripturl, '?action=register">', $txt['login_or_register'], '</a> ', sprintf($txt['login_with_forum'], $context['forum_name']), '
 					</td>';
 
 	// And now the login information.

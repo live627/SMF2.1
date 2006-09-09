@@ -51,7 +51,7 @@ $txt['moderate'] = 'Moderate';
 $txt['save'] = 'Guardar';
 
 $txt['modify'] = 'Modificar';
-$txt['forum_index'] = '{$context.forum_name} - &Iacute;ndice';
+$txt['forum_index'] = '%1$s - &Iacute;ndice';
 $txt['members'] = 'Usuarios';
 $txt['board_name'] = 'Nombre del foro';
 $txt['posts'] = 'Mensajes';
@@ -112,12 +112,12 @@ $txt['remove_message'] = 'Eliminar mensaje';
 $txt['notify'] = 'Notificar';
 $txt['notify_request'] = '&#191;Deseas una notificaci&oacute;n por email si alguien responde a este tema?';
 // Use numeric entities in the below string.
-$txt['regards_team'] = "Saludos,\nEl equipo " . '{$context.forum_name}.';
+$txt['regards_team'] = 'Saludos,\\nEl equipo %1$s.';
 $txt['notify_replies'] = 'Notificar respuestas';
 $txt['move_topic'] = 'Mover tema';
 $txt['move_to'] = 'Mover a';
 $txt['pages'] = 'P&aacute;ginas';
-$txt['users_active'] = 'Usuarios activos en los &uacute;ltimos {$modSettings.lastActive} minutos';
+$txt['users_active'] = 'Usuarios activos en los &uacute;ltimos %1$d minutos';
 $txt['personal_messages'] = 'Mensajes Personales';
 $txt['reply_quote'] = 'Responder con cita';
 $txt['reply'] = 'Respuesta';
@@ -172,7 +172,7 @@ $txt['female'] = 'Femenino';
 
 $txt['error_invalid_characters_username'] = 'Car&aacute;cter inv&aacute;lido en el nombre de usuario.';
 
-$txt['welcome_guest'] = 'Bienvenido(a), <b>{$txt.guest_title}</b>. Favor de <a href="{$scripturl}?action=login">ingresar</a> o <a href="{$scripturl}?action=register">registrarse</a>.';
+$txt['welcome_guest'] = 'Bienvenido(a), <b>%1$s</b>. Favor de <a href="{$scripturl}?action=login">ingresar</a> o <a href="{$scripturl}?action=register">registrarse</a>.';
 $txt['welcome_guest_activate'] = '<br />&iquest;Perdiste tu  <a href="{$scripturl}?action=activate">email de activaci&oacute;n?</a>';
 $txt['hello_member'] = 'Hola,';
 // Use numeric entities in the below string.
@@ -249,8 +249,8 @@ $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
 $txt[452] = 'Marcar TODOS los mensajes como le&iacute;dos';
 
-$txt[454] = 'Tema candente (M&aacute;s de {$modSettings.hotTopicPosts} respuestas)';
-$txt[455] = 'Tema muy candente (M&aacute;s de {$modSettings.hotTopicVeryPosts} respuestas)';
+$txt['hot_topics'] = 'Tema candente (M&aacute;s de %1$d respuestas)';
+$txt['very_hot_topics'] = 'Tema muy candente (M&aacute;s de %1$d respuestas)';
 $txt[456] = 'Tema bloqueado';
 $txt[457] = 'Tema normal';
 $txt['participation_caption'] = 'Temas en los que has publicado';
@@ -316,14 +316,14 @@ $txt[668] = 'Imprimir P&aacute;gina';
 $txt[679] = 'Debe ser una direcci&oacute;n v&aacute;lida de email.';
 
 $txt[683] = 'un mont&oacute;n';
-$txt[685] = '{$context.forum_name} - Centro de Informaci&oacute;n';
+$txt['info_center_title'] = '%s - Centro de Informaci&oacute;n';
 
 $txt[707] = 'Enviar tema';
 
 $txt['sendtopic_title'] = 'Enviar tema &#171; %s &#187; a un amigo.';
 // Use numeric entities in the below three strings.
 $txt['sendtopic_dear'] = 'Estimado %s,';
-$txt['sendtopic_this_topic'] = 'Quiero que revises el siguiente tema: %s, en {$context.forum_name}. Para verlo, haz click en la siguiente liga';
+$txt['sendtopic_this_topic'] = 'Quiero que revises el siguiente tema: %s, en %s. Para verlo, haz click en la siguiente liga';
 $txt['sendtopic_thanks'] = 'Gracias';
 $txt['sendtopic_sender_name'] = 'Tu nombre';
 $txt['sendtopic_sender_email'] = 'Tu direcci&oacute;n de email';
@@ -344,7 +344,7 @@ $txt[1003] = 'Archivo';
 $txt[1004] = 'L&iacute;nea';
 // Use numeric entities in the below string.
 $txt[1005] = 'SMF ha detectado errores en la base de datos, y los ha tratado de corregir autom&#225;ticamente.  Si los problemas persisten, o sigues obteniendo estos correos, favor de contactar a tu proveedor de webhosting.';
-$txt['database_error_versions'] = '<b>Nota:</b> Parece que tu base de datos puede necesitar una actualizaci&oacute;n. La versi&oacute;n de los archivos de tu foro est&aacute;n en la versi&oacute;n {$forum_version}, mientras que tu base de datos est&aacute; en la versi&oacute;n de SMF {$modSettings.smfVersion}. Te recomendamos que ejecutes la &uacute;ltima versi&oacuten de upgrade.php.';
+$txt['database_error_versions'] = '<b>Nota:</b> Parece que tu base de datos puede necesitar una actualizaci&oacute;n. La versi&oacute;n de los archivos de tu foro est&aacute;n en la versi&oacute;n %s, mientras que tu base de datos est&aacute; en la versi&oacute;n de SMF %s. Te recomendamos que ejecutes la &uacute;ltima versi&oacuten de upgrade.php.';
 $txt['template_parse_error'] = '&iexcl;Error al parsear el Template!';
 $txt['template_parse_error_message'] = 'Parece que algo se ha estropeado en el foro con el sistema de temas.  Este problema puede que solamente sea temporal, por favor, regresa en unos momentos e intentalo nuevamente.  Si continuas viendo este mensaje, por favor contacta al administrador.<br /><br />Puedes intentar <a href="javascript:location.reload();">actualizar esta p&aacute;gina</a>.';
 $txt['template_parse_error_details'] = 'Hubo un problema cargando el tema o archivo de idioma <tt><b>%1$s</b></tt>.  Por favor revisa la sintaxis e intenta nuevamente - recuerda, los ap&oacute;strofes (<tt>\'</tt>) por lo general deben tener una secuencia de escape con la diagonal invertida (<tt>\\</tt>).  Para ver informaci&#243;n especifica del error del sitio de PHP intenta <a href="{$boardurl}%1$s">acceder al archivo directamente</a>.<br /><br />Puedes intentar <a href="javascript:location.reload();">actualizar esta p&aacute;gina</a> o <a href="{$scripturl}?theme=1">usar el tema de default</a>.';
@@ -438,7 +438,7 @@ $txt['online8'] = 'Status';
 $txt['topbottom4'] = 'Ir Arriba';
 $txt['topbottom5'] = 'Ir Abajo';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by {$forum_version}</a> | 
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
 $txt['calendar3'] = 'Cumplea&ntilde;os:';

@@ -142,7 +142,7 @@ function template_main_above()
 	// Otherwise they're a guest - so politely ask them to register or login.
 	else
 		echo '
-				', $txt['welcome_guest'];
+				', sprintf($txt['welcome_guest'], $txt['guest_title']);
 
 	echo '
 				<br />', $context['current_time'], '

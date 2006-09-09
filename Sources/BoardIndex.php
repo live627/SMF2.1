@@ -453,7 +453,7 @@ function BoardIndex()
 	if ($context['show_calendar'])
 		$context['show_calendar'] = calendarDoIndex();
 
-	$context['page_title'] = $txt['forum_index'];
+	$context['page_title'] = sprintf($txt['forum_index'], $context['forum_name']);
 }
 
 // Called from the BoardIndex to display the current day's events on the board index.

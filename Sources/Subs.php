@@ -3352,6 +3352,8 @@ function theme_copyright($get_it = false)
 		$forum_copyright = preg_replace('~(<a href="http://www.simplemachines.org/"[^>]+>)</a>~', '$1' . $match[1] . '</a>', $forum_copyright);
 	}
 
+	// Put in the version...
+	$forum_copyright = sprintf($forum_copyright, $forum_version);
 	echo '
 		<span class="smalltext" style="display: inline; visibility: visible; font-family: Verdana, Arial, sans-serif;">';
 

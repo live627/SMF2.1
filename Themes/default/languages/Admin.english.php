@@ -46,7 +46,7 @@ $txt[571] = 'Credits';
 $txt[584] = 'Show and require agreement letter when registering';
 $txt[608] = 'Delete Selected Members';
 $txt[610] = 'Repair All Boards and Topics';
-$txt[644] = 'This is your &quot;{$txt.admin_center}&quot;.  From here, you can edit settings, maintain your forum, view logs, install packages, manage themes, and many other things.<div style="margin-top: 1ex;">If you have any trouble, please look at the &quot;Support &amp; Credits&quot; page.  If the information there doesn\'t help you, feel free to <a href="http://www.simplemachines.org/community/index.php" target="_blank">look to us for help</a> with the problem.</div>You may also find answers to your questions or problems by clicking the <img src="{$settings.images_url}/helptopics.gif" alt="{$txt.help}" title="{$txt.help}" border="0" /> symbols for more information on the related functions.';
+$txt[644] = 'This is your &quot;%1$s&quot;.  From here, you can edit settings, maintain your forum, view logs, install packages, manage themes, and many other things.<div style="margin-top: 1ex;">If you have any trouble, please look at the &quot;Support &amp; Credits&quot; page.  If the information there doesn\'t help you, feel free to <a href="http://www.simplemachines.org/community/index.php" target="_blank">look to us for help</a> with the problem.</div>You may also find answers to your questions or problems by clicking the <img src="{$images_url}/helptopics.gif" alt="%2$s" title="%3$s" border="0" /> symbols for more information on the related functions.';
 $txt[670] = 'Please place one news item per box. Some BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys and HTML. Clear a news item\'s text box to remove it.';
 $txt[684] = 'Forum Administrators';
 $txt[699] = 'Reserved names will keep members from registering certain usernames or using these words in their displayed names. Choose the options you wish to use from the bottom before submitting.';
@@ -69,7 +69,6 @@ $txt['smf8'] = 'Database Name:';
 $txt['smf11'] = 'Registration Agreement';
 $txt['smf12'] = 'This agreement is shown when a user registers an account on this forum and has to be accepted before users can continue registration.';
 $txt['smf54'] = 'Database Tables Prefix:';
-$txt['smf55'] = 'Hold down the ctrl key to select multiple entries.  Click the {$txt.modify} button when you are done.';
 $txt['smf73'] = 'Listing of forum errors';
 $txt['smf74'] = 'The following errors are fouling up your forum';
 $txt['smf85'] = 'Would you like to fix these errors?';
@@ -338,7 +337,7 @@ $txt['maintenance1'] = 'Subject for display:';
 $txt['maintenance2'] = 'Message for display:';
 
 $txt['errlog1'] = 'Forum Error Log';
-$txt['errlog2'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the {$txt.remove} button at the bottom of the page.';
+$txt['errlog2'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the %1$s button at the bottom of the page.';
 
 $txt['theme4'] = 'Theme Settings';
 $txt['theme_current_settings'] = 'Current Theme';

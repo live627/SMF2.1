@@ -511,7 +511,7 @@ function ModifyProfile2()
 			"$txt[activate_reactivate_mail]\n\n" .
 			"$scripturl?action=activate;u=$memID;code=$validationCode\n\n" .
 			"$txt[activate_code]: $validationCode\n\n" .
-			$txt['regards_team']);
+			sprintf($txt['regards_team'], $context['forum_name']));
 
 		// Log the user out.
 		db_query("

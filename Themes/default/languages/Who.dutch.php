@@ -85,7 +85,7 @@ $txt['whoallow_viewmembers'] = 'Bekijkt de lijst met leden.';
 
 $txt['who_topic'] = 'Bekijkt topic <a href="{$scripturl}?topic=%d.0">%s</a>.';
 $txt['who_board'] = 'Bekijkt board <a href="{$scripturl}?board=%d.0">%s</a>.';
-$txt['who_index'] = 'Bekijkt de forumindexpagina van <a href="{$scripturl}">{$context.forum_name}</a>.';
+$txt['who_index'] = 'Bekijkt de forumindexpagina van <a href="{$scripturl}">{$forumname}</a>.';
 $txt['who_viewprofile'] = 'Bekijkt <a href="{$scripturl}?action=profile;u=%d">%s</a>\'s profiel.';
 $txt['who_profile'] = 'Wijzigt het profiel van <a href="{$scripturl}?action=profile;u=%d">%s</a>.';
 $txt['who_post'] = 'Plaatst een nieuw topic in <a href="{$scripturl}?board=%d.0">%s</a>.';

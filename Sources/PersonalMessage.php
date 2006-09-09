@@ -1301,7 +1301,11 @@ function messagePostError($error_types, $to, $bcc)
 	{
 		$context['post_error'][$error_type] = true;
 		if (isset($txt['error_' . $error_type]))
+		{
+			if ($error_type == 'long_message')
+				$txt['error_' . $error_type] = sprintf($txt['error_' . $error_type], $modSettings['max_messageLength']);
 			$context['post_error']['messages'][] = $txt['error_' . $error_type];
+		}
 	}
 
 	// Check whether we need to show the code again.

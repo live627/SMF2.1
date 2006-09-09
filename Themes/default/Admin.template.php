@@ -169,7 +169,7 @@ function template_admin()
 			</tr><tr>
 				<td class="windowbg" valign="top" style="padding: 7px;">
 					<b>', $txt['hello_guest'], ' ', $context['user']['name'], '!</b>
-					<div style="font-size: 0.85em; padding-top: 1ex;">', $txt[644], '</div>
+					<div style="font-size: 0.85em; padding-top: 1ex;">', sprintf($txt[644], $txt['admin_center'], $txt['help'], $txt['help']), '</div>
 				</td>
 			</tr>
 		</table>';
