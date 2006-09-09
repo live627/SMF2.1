@@ -179,8 +179,6 @@ $txt['ban_remove_selected_confirm'] = 'Weet je zeker dat je de geselecteerde ban
 $txt['ban_modify'] = 'Bewerk';
 $txt['ban_name'] = 'Ban-naam';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt['ban_name_empty'] = 'De naam van de ban is leeggelaten.';
-$txt['ban_name_exists'] = 'De naam van deze ban (\'%s\') bestaat reeds. Kies een andere naam alsjeblieft.';
 $txt['ban_edit'] = 'Bewerk ban';
 $txt['ban_add_notes'] = '<b>Let op</b>: na het aanmaken van bovenstaande ban kun je meer items toevoegen die de ban in werking stellen, zoals IP-adressen, hostnamen en e-mailadressen.';
 $txt['ban_expired'] = 'Verlopen / uitgeschakeld';
@@ -233,8 +231,6 @@ $txt['filter_only_file'] = 'Only show the errors from this file';
 // Untranslated!
 $txt['error_type'] = 'Type of error';
 $txt['filter_only_type'] = 'Only show the errors of this type';
-$txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';
-$txt['error_bad_line'] = 'The line you specified is invalid.';
 
 // Untranslated!
 $txt['errortype_all'] = 'All errors';

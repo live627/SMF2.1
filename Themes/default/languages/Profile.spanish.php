@@ -18,7 +18,6 @@ $txt[329] = 'Reinicializar formulario';
 $txt[349] = 'Idioma que deseas usar';
 $txt[420] = 'Edad';
 $txt[422] = '(sin imagen)';
-$txt[453] = 'El usuario del cual tratas de ver su perfil no existe.';
 $txt[458] = '&uacute;ltimos mensajes de: ';
 $txt[459] = 'Informaci&oacute;n Adicional';
 $txt[460] = 'Mostrar los &uacute;ltimos';
@@ -169,8 +168,6 @@ $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
 $txt['ignoreboards'] = 'Ignore Boards Options';
 $txt['ignoreboards_info'] = 'This page lets you ignore particular boards.  When a board is ignored, the new post indicator will not show up on the board index.  New posts will not show up using the "unread post" search link (when searching it will not look in those boards) however, ignored boards will still appear on the board index and upon entering will show which topics have new posts.  When using the "unread replies" link, new posts in an ignored board will still be shown.';
-$txt['ignoreboards_disallowed'] = 'The option to ignore boards has not been enabled.';
-
 
 $txt['profileAction'] = 'Acciones';
 $txt['deleteAccount'] = 'Borrar esta cuenta';
@@ -183,7 +180,6 @@ $txt['errors_by'] = 'Mensajes de error por';
 $txt['errors_desc'] = 'Debajo hay una lista con todos los errores recientes que este usuario ha generado/experimentado.';
 $txt['errors_from_ip'] = 'Mensajes de error desde el IP (rango)';
 $txt['errors_from_ip_desc'] = 'Debajo est&aacute; la lista de todos los mensajes de error generados desde esta IP (rango)';
-$txt['invalid_ip'] = 'Direcci&oacute;n IP inv&aacute;lida. Nota que solamente se permiten los asteriscos (*) como m&aacute;scaras, ej. 127.0.*.*';
 $txt['ip_address'] = 'Direcci&oacute;n IP';
 $txt['ips_in_errors'] = 'IPs usadas en los mensajes de error';
 $txt['ips_in_messages'] = 'IPs usadas en los mensajes';

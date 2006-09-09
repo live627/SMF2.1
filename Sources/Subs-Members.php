@@ -377,7 +377,7 @@ function registerMember(&$regOptions)
 		LIMIT 1", __FILE__, __LINE__);
 	// !!! Separate the sprintf?
 	if (mysql_num_rows($request) != 0)
-		fatal_error(sprintf($txt[730], htmlspecialchars($regOptions['email'])), false);
+		fatal_lang_error(730, false, array(htmlspecialchars($regOptions['email'])));
 	mysql_free_result($request);
 
 	// Some of these might be overwritten. (the lower ones that are in the arrays below.)

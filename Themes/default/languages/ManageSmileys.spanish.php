@@ -37,9 +37,6 @@ $txt['smileys_add_upload_all'] = 'Usar la misma imagen para todas las coleccione
 $txt['smileys_add_upload_for1'] = 'Imagen para la';
 $txt['smileys_add_upload_for2'] = 'colecci&oacute;n';
 
-$txt['smileys_upload_error_types'] = 'La Imagen solamente puede tener las siguientes extensiones:';
-$txt['smileys_upload_error_notwritable'] = 'Los siguientes directorios de smileys no son escribibles:';
-
 $txt['smileys_edit'] = 'Editar Smileys';
 $txt['smileys_enable_note'] = '(de lo contrario, los smileys por defecto ser&aacute;n utilizados.)';
 $txt['smileys_code'] = 'C&oacute;digo';

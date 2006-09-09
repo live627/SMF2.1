@@ -151,8 +151,6 @@ $txt['package_file_contents'] = 'Inhoud van het bestand';
 $txt['package_upload_title'] = 'Upload een pakket';
 $txt['package_upload_select'] = 'Pakket om te uploaden';
 $txt['package_upload'] = 'Upload';
-$txt['package_upload_error_supports'] = 'Het pakketbeheerscherm laat momenteel de volgende bestandstypes toe: ';
-$txt['package_upload_error_broken'] = 'Het pakket dat je probeerde te uploaden is niet een geldig pakket of is beschadigd.';
 $txt['package_uploaded_success'] = 'Package succesvol geupload ';
 $txt['package_uploaded_successfully'] = 'Het pakket is succesvol geupload';
 

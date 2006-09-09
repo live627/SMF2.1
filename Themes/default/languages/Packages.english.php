@@ -151,8 +151,6 @@ $txt['package_file_contents'] = 'Contents of file';
 $txt['package_upload_title'] = 'Upload a Package';
 $txt['package_upload_select'] = 'Package to Upload';
 $txt['package_upload'] = 'Upload';
-$txt['package_upload_error_supports'] = 'The package manager currently allows only these file types: ';
-$txt['package_upload_error_broken'] = 'The package you tried to upload either is not a valid package or has become corrupted.';
 $txt['package_uploaded_success'] = 'Package uploaded successfully';
 $txt['package_uploaded_successfully'] = 'The package has been uploaded successfully';
 

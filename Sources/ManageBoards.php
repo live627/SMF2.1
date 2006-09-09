@@ -374,7 +374,7 @@ function EditCategory2()
 		if (isset($_POST['delete_action']) && $_POST['delete_action'] == 1)
 		{
 			if (empty($_POST['cat_to']))
-				fatal_error($txt['mboards_delete_error']);
+				fatal_lang_error('mboards_delete_error');
 
 			deleteCategories(array($_POST['cat']), (int) $_POST['cat_to']);
 		}
@@ -621,7 +621,7 @@ function EditBoard2()
 		if (isset($_POST['delete_action']) && $_POST['delete_action'] == 1)
 		{
 			if (empty($_POST['board_to']))
-				fatal_error($txt['mboards_delete_board_error']);
+				fatal_lang_error('mboards_delete_board_error');
 
 			deleteBoards(array($_POST['boardid']), (int) $_POST['board_to']);
 		}

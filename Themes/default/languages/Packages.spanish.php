@@ -154,8 +154,6 @@ $txt['package_file_contents'] = 'Contenido del archivo';
 $txt['package_upload_title'] = 'Subir un paquete';
 $txt['package_upload_select'] = 'Paquete a subir';
 $txt['package_upload'] = 'Subir';
-$txt['package_upload_error_supports'] = 'Actualmente el manejador de paquetes s&oacute;lo permite estos tipos de archivos: ';
-$txt['package_upload_error_broken'] = 'El paquete que intentaste subir no es un paquete v&aacute;lido o est&aacute; corrupto.';
 $txt['package_uploaded_success'] = 'Paquete subido satisfactoriamente';
 $txt['package_uploaded_successfully'] = 'El paquete ha sido subido satisfactoriamente';
 

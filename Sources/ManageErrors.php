@@ -327,14 +327,14 @@ function ViewFile()
 
 	// Make sure the file we are looking for is one they are allowed to look at
 	if (!is_readable($file))
-		fatal_error($txt['error_bad_file']);
+		fatal_lang_error('error_bad_file', true, array($file));
 
 	// get the min and max lines
 	$min = $line - 20 <= 0 ? 1 : $line - 20;
 	$max = $line + 21; // One additional line to make everything work out correctly
 
 	if ($max <= 0 || $min >= $max)
-		fatal_error(sprintf($txt['error_bad_line'], $file));
+		fatal_lang_error('error_bad_line');
 
 	$file_data = explode("<br />", highlight_php_code(htmlspecialchars(implode('', file($file)))));
 

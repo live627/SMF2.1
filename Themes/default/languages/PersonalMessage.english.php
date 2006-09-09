@@ -35,8 +35,6 @@ $txt['pm_error_user_not_found'] = 'Unable to find member \'%s\'.';
 $txt['pm_error_ignored_by_user'] = 'User \'%s\' has blocked your personal message.';
 $txt['pm_error_data_limit_reached'] = 'PM could not be sent to \'%s\' as their inbox is full!';
 $txt['pm_successfully_sent'] = 'PM successfully sent to \'%s\'.';
-$txt['pm_too_many_recipients'] = 'You may not send personal messages to more than %d recipient(s) at once.';
-$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
 $txt['pm_send_report'] = 'Send report';
 $txt['pm_save_outbox'] = 'Save a copy in my outbox';
 $txt['pm_undisclosed_recipients'] = 'Undisclosed recipients';
@@ -72,7 +70,6 @@ $txt['pm_msg_label_apply'] = 'Add Label';
 $txt['pm_msg_label_remove'] = 'Remove Label';
 $txt['pm_msg_label_inbox'] = 'Inbox';
 $txt['pm_sel_label_title'] = 'Label Selected';
-$txt['labels_too_many'] = 'Sorry, %s messages already had the maximum amount of labels allowed!';
 
 // Sidebar Headings.
 $txt['pm_labels'] = 'Labels';

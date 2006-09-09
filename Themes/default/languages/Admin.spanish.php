@@ -190,8 +190,6 @@ $txt['ban_modify'] = 'Modificar';
 // Untranslated!
 $txt['ban_name'] = 'Name';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt['ban_name_empty'] = 'The name of the ban was left empty';
-$txt['ban_name_exists'] = 'The name of this ban already exists. Please chose a different name.';
 $txt['ban_edit'] = 'Edit ban';
 $txt['ban_add_notes'] = '<b>Note</b>: after creating the above ban, you can add additional entries that trigger the ban, like IP addresses, hostnames and email adresses.';
 $txt['ban_expired'] = 'Expired / disabled';
@@ -243,8 +241,6 @@ $txt['reverse_direction'] = 'Invertir cronol&oacute;gicamente el orden de la lis
 $txt['filter_only_file'] = 'Only show the errors from this file';
 $txt['error_type'] = 'Type of error';
 $txt['filter_only_type'] = 'Only show the errors of this type';
-$txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';
-$txt['error_bad_line'] = 'The line you specified is invalid.';
 
 // Untranslated!
 $txt['errortype_all'] = 'All errors';

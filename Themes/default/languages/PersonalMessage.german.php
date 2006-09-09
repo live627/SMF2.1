@@ -35,9 +35,6 @@ $txt['pm_error_user_not_found'] = 'Kann Mitglied \'%s\' nicht finden.';
 $txt['pm_error_ignored_by_user'] = 'Mitglied \'%s\' hat Ihre Mitteilungen geblockt.';
 $txt['pm_error_data_limit_reached'] = 'Mitteilung konnte wegen des max. Limit nicht an \'%s\' gesendet werden.';
 $txt['pm_successfully_sent'] = 'Mitteilung erfolgreich an \'%s\' gesendet.';
-$txt['pm_too_many_recipients'] = 'Sie k&ouml;nnen keine Privaten Mitteilungen an mehr wie %d Empf&auml;nger gleichzeitig schicken.';
-// Untranslated!
-$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
 $txt['pm_send_report'] = 'Report senden';
 $txt['pm_save_outbox'] = 'Kopie im Ausgang speichern';
 $txt['pm_undisclosed_recipients'] = 'Verdeckter Empf&auml;nger';
@@ -69,7 +66,6 @@ $txt['pm_msg_label_apply'] = 'Label hinzuf&uuml;gen';
 $txt['pm_msg_label_remove'] = 'Label entfernen';
 $txt['pm_msg_label_inbox'] = 'Posteingang';
 $txt['pm_sel_label_title'] = 'Ausgew&auml;hlte kennzeichnen';
-$txt['labels_too_many'] = '%s Mitteilungen haben schon die max. Anzahl an erlaubten Labels!';
 
 $txt['pm_labels'] = 'Labels';
 $txt['pm_messages'] = 'Mitteilungen';

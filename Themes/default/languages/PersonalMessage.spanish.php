@@ -35,9 +35,6 @@ $txt['pm_error_user_not_found'] = 'No se pudo encontrar al usuario \'%s\'.';
 $txt['pm_error_ignored_by_user'] = 'El usuario \'%s\' ha bloqueado tu mensaje personal.';
 $txt['pm_error_data_limit_reached'] = 'El mensaje personal no se pudo enviar a \'%s\' deb&iacute;do a que excediste el l&iacute;mite de mensajes personales.';
 $txt['pm_successfully_sent'] = 'El mensaje personal se envi&oacute; satisfactoriamente a \'%s\'.';
-// Untranslated!
-$txt['pm_too_many_recipients'] = 'You may not send personal messages to more than %d recipient(s) at once.';
-$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
 $txt['pm_send_report'] = 'Enviar reporte';
 $txt['pm_save_outbox'] = 'Guardar una copia en mi buz&oacute;n de salida';
 $txt['pm_undisclosed_recipients'] = 'Destinatario(s) sin revelar';
@@ -70,7 +67,6 @@ $txt['pm_msg_label_apply'] = 'Agregar etiqueta';
 $txt['pm_msg_label_remove'] = 'Eliminar etiqueta';
 $txt['pm_msg_label_inbox'] = 'Bandeja de Entrada';
 $txt['pm_sel_label_title'] = 'Etiquetar seleccionados';
-$txt['labels_too_many'] = '&iexcl;Lo sentimos, %s mensajes ya tienen el n&uacute;mero m&aacute;ximo de etiquetas permitido!';
 
 $txt['pm_labels'] = 'Etiquetas';
 $txt['pm_messages'] = 'Mensajes';

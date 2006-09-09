@@ -25,7 +25,6 @@ $txt['login_with_forum'] = 'om jezelf vrijblijvend te registreren op het %s foru
 // Use numeric entities in the below two strings.
 $txt[701] = 'je kunt het nog veranderen nadat je bent ingelogd door naar je profiel te gaan:';
 $txt[719] = 'Je gebruikersnaam is: ';
-$txt[730] = 'Dit e-mailadres (%s) is al in gebruik door een geregistreerd lid! Als je denkt dat dit een vergissing is, ga dan naar de login pagina en gebruik de wachtwoord vergeten optie met dit e-mailadres.';
 
 $txt['login_hash_error'] = 'De wachtwoordbeveiliging is recentelijk opgewaardeerd. Voer je wachtwoord opnieuw in.';
 
@@ -68,8 +67,6 @@ $txt['coppa_not_completed2'] = 'Meer details nodig?';
 $txt['awaiting_delete_account'] = 'Je hebt je account verwijderd! Als je je account wilt herstellen, vink &quot;Herstel mijn account&quot; aan en probeer opnieuw.';
 $txt['undelete_account'] = 'Herstel mijn account';
 
-$txt['change_email_success'] = 'Je e-mailadres is veranderd en een nieuwe activeringsmail is verstuurd naar het nieuwe adres.';
-$txt['resend_email_success'] = 'Een nieuwe activeringsmail is succesvol verstuurd.';
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'Nieuwe wachtwoord gegevens';
 $txt['change_password_1'] = 'Je inloggegevens voor';
@@ -110,7 +107,6 @@ $txt['admin_setting_coppaPost'] = 'Postadres waar het goedkeuringsformulier naar
 $txt['admin_setting_coppaPost_desc'] = 'Alleen van toepassing als de leeftijdsrestrictie ingesteld staat';
 $txt['admin_setting_coppaFax'] = 'Faxnummer waar de goedkeuring naar gefaxt kan worden';
 $txt['admin_setting_coppaPhone'] = 'Telefoonnummer voor ouders om contact op te nemen voor leeftijdsrestrictievragen';
-$txt['admin_setting_coppa_require_contact'] = 'Je moet of een postadres of een faxnummer invoeren als ouderlijke goedkeuring vereist is.';
 
 $txt['admin_register'] = 'Registratie van een nieuw lid';
 $txt['admin_register_desc'] = 'Vanaf hier kun je nieuwe leden registreren en hen, indien gewenst, de details mailen.';

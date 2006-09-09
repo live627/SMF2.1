@@ -1060,7 +1060,7 @@ function MessagePost()
 		mysql_free_result($request);
 
 		if (!empty($postCount) && $postCount >= $modSettings['pm_posts_per_hour'])
-			fatal_error(sprintf($txt['pm_too_many_per_hour'], $modSettings['pm_posts_per_hour']));
+			fatal_lang_error('pm_too_many_per_hour', true, array($modSettings['pm_posts_per_hour']));
 	}
 
 	// Quoting/Replying to a message?
@@ -1352,7 +1352,7 @@ function MessagePost2()
 		mysql_free_result($request);
 
 		if (!empty($postCount) && $postCount >= $modSettings['pm_posts_per_hour'])
-			fatal_error(sprintf($txt['pm_too_many_per_hour'], $modSettings['pm_posts_per_hour']));
+			fatal_lang_error('pm_too_many_per_hour', true, array($modSettings['pm_posts_per_hour']));
 	}
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
@@ -1694,7 +1694,7 @@ function MessageActionsApply()
 		// Any errors?
 		// !!! Separate the sprintf?
 		if (!empty($updateErrors))
-			fatal_error(sprintf($txt['labels_too_many'], $updateErrors));
+			fatal_lang_error('labels_too_many', true, array($updateErrors));
 	}
 
 	// Back to the folder.

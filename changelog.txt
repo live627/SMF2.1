@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2495 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2496 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -42,6 +42,8 @@ September 2006
  ! If the cache directory is not writable, put in a workaround. (ManageMaintenance.php)
  + Added a new tool, convert_languages.php, to enable theme and language authors to update their files to 2.0. (converter_languages.php)
  ! Display a warning if the cache directory is not writable. (Subs.php, index language files)
+ ! Use fatal_lang_error instead of fatal_error whenever possible. (several files)
+ & Moved error messages affected by the above into the Errors language files.  (several language files)
 
 
 August 2006

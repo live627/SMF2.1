@@ -37,9 +37,6 @@ $txt['smileys_add_upload_all'] = 'Gebruik hetzelfde plaatje voor alle smileysets
 $txt['smileys_add_upload_for1'] = 'Plaatje voor de ';
 $txt['smileys_add_upload_for2'] = 'set';
 
-$txt['smileys_upload_error_types'] = 'Plaatje kan alleen maar de volgende extensies hebben:';
-$txt['smileys_upload_error_notwritable'] = 'De volgende smiley-directories zijn niet schrijfbaar:';
-
 $txt['smileys_edit'] = 'Bewerk smileys';
 $txt['smileys_enable_note'] = '(anders zullen de standaard smileys worden gebruikt)';
 $txt['smileys_code'] = 'Code';

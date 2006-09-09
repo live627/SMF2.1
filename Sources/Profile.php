@@ -1350,7 +1350,7 @@ function summary($memID)
 
 	// Attempt to load the member's profile data.
 	if (!loadMemberContext($memID) || !isset($memberContext[$memID]))
-		fatal_error($txt[453] . ' - ' . $memID, false);
+		fatal_lang_error(453, false, array($memID));
 
 	// Set up the stuff and load the user.
 	$context += array(
@@ -2073,7 +2073,7 @@ function TrackIP($memID = 0)
 		$context['ip'] = $user_profile[$memID]['memberIP'];
 
 	if (preg_match('/^\d{1,3}\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/', $context['ip']) == 0)
-		fatal_error($txt['invalid_ip'], false);
+		fatal_lang_error('invalid_ip', false);
 
 	$dbip = str_replace('*', '%', $context['ip']);
 	$dbip = strpos($dbip, '%') === false ? "= '$dbip'" : "LIKE '$dbip'";
@@ -3370,7 +3370,7 @@ function ignoreboards($memID)
 
 	// Have the admins enabled this option?
 	if (empty($modSettings['allow_ignore_boards']))
-		fatal_error($txt['ignoreboards_disallowed'], 'user');
+		fatal_lang_error('ignoreboards_disallowed', 'user');
 
 	// Find all the boards this user is allowed to see.
 	$request = db_query("

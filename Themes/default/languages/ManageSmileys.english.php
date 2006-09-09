@@ -35,9 +35,6 @@ $txt['smileys_add_upload_all'] = 'Same image for all sets';
 $txt['smileys_add_upload_for1'] = 'Image for the';
 $txt['smileys_add_upload_for2'] = 'set';
 
-$txt['smileys_upload_error_types'] = 'Image can only have the following extensions:';
-$txt['smileys_upload_error_notwritable'] = 'The following smiley directories are not writable:';
-
 $txt['smileys_edit'] = 'Edit Smileys';
 $txt['smileys_enable_note'] = '(otherwise, the default smileys will be used.)';
 $txt['smileys_code'] = 'Code';

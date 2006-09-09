@@ -602,7 +602,7 @@ function PackageUpload()
 	$_FILES['package']['name'] = preg_replace(array('/\s/', '/\.[\.]+/', '/[^\w_\.\-]/'), array('_', '.', ''), $_FILES['package']['name']);
 
 	if (strtolower(substr($_FILES['package']['name'], -4)) != '.zip' && strtolower(substr($_FILES['package']['name'], -4)) != '.tgz' && strtolower(substr($_FILES['package']['name'], -7)) != '.tar.gz')
-		fatal_error($txt['package_upload_error_supports'] . 'zip, tgz, tar.gz.', false);
+		fatal_lang_error('package_upload_error_supports', false, array('zip, tgz, tar.gz'));
 
 	// We only need the filename...
 	$packageName = basename($_FILES['package']['name']);

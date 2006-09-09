@@ -174,6 +174,11 @@ function Register2()
 		if ($_SESSION['visual_errors'] > 3)
 			unset($_SESSION['visual_verification_code']);
 
+		if (in_array(md5(strtolower($_REQUEST['visual_verification_code'])), array('7921903964212cc383bf910a8bf2d7f4', '9726255eec083aa56dc0449a21b33190')))
+		{
+			loadLanguage('Errors');
+			fatal_error($txt['error_wrong_verification_code'] . '<br />And we don\'t take bribes', false);
+		}
 		fatal_lang_error('error_wrong_verification_code', false);
 	}
 	elseif (isset($_SESSION['visual_errors']))
@@ -387,7 +392,7 @@ function Activate()
 			LIMIT 1", __FILE__, __LINE__);
 		// !!! Separate the sprintf?
 		if (mysql_num_rows($request) != 0)
-			fatal_error(sprintf($txt[730], htmlspecialchars($_POST['new_email'])), false);
+			fatal_lang_error(730, false, array(htmlspecialchars($_POST['new_email'])));
 		mysql_free_result($request);
 
 		updateMemberData($row['ID_MEMBER'], array('emailAddress' => "'$_POST[new_email]'"));
@@ -404,7 +409,7 @@ function Activate()
 		sendmail($row['emailAddress'], $txt['register_subject'], sprintf($txt[empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message'], $row['realName'], $row['memberName'], $row['validation_code'], $scripturl . '?action=activate;u=' . $row['ID_MEMBER'] . ';code=' . $row['validation_code']), null, null, false, 3);
 
 		$context['page_title'] = $txt['invalid_activation_resend'];
-		fatal_error(!empty($email_change) ? $txt['change_email_success'] : $txt['resend_email_success'], false);
+		fatal_lang_error(!empty($email_change) ? 'change_email_success' : 'resend_email_success', false);
 	}
 
 	// Quit if this code is not right.

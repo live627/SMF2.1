@@ -25,7 +25,6 @@ $txt['login_with_forum'] = 'im %s.';
 // Use numeric entities in the below two strings.
 $txt[701] = 'Nach dem Einloggen k&#246;nnen Sie es in Ihrem Profil &#228;ndern oder folgende Seite benutzen:';
 $txt[719] = 'Ihr Benutzername ist: ';
-$txt[730] = 'Diese E-Mail Adresse (%s) wird bereits von einem anderen Mitglied verwendet! Wenn Sie Ihr Passwort vergessen haben, k&ouml;nnen Sie es sich &uuml;ber die Passwort-Erinnerung auf der Login-Seite zusenden lassen.';
 
 $txt['login_hash_error'] = 'Die Passwortsicherheit wurde aktualisiert. Bitte geben Sie Ihr Passwort erneut ein.';
 
@@ -67,8 +66,6 @@ $txt['coppa_not_completed2'] = 'Weitere Details?';
 $txt['awaiting_delete_account'] = 'Sie haben Ihr Benutzerkonto gel&ouml;scht! M&ouml;chten Sie es wiederherstellen, aktivieren Sie die &quot;Wiederherstellen meines Benutzerkontos&quot; Option und versuchen Sie es erneut.';
 $txt['undelete_account'] = 'Wiederherstellen meines Benutzerkontos';
 
-$txt['change_email_success'] = 'Ihre E-Mail Adresse wurde ge&auml;ndert. Eine neue Aktivierungs E-Mail wurde gesendet.';
-$txt['resend_email_success'] = 'Eine neue Aktivierungs E-Mail wurde erfolgreich gesendet';
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'Neue Login-Daten';
 $txt['change_password_1'] = 'Ihre Login-Daten von';
@@ -110,7 +107,6 @@ $txt['admin_setting_coppaPost'] = 'Postadresse, an welche die Genehmigung gesend
 $txt['admin_setting_coppaPost_desc'] = 'Nur ben&ouml;tigt, wenn Altersbeschr&auml;nkung aktiviert';
 $txt['admin_setting_coppaFax'] = 'Faxnummer, an welche die Genehmigung gefaxt werden soll';
 $txt['admin_setting_coppaPhone'] = 'Kontaktnummer f&uuml;r Eltern/Erziehungsberechtigte mit Fragen zur Altersbegrenzung';
-$txt['admin_setting_coppa_require_contact'] = 'Sie m&uuml;ssen entweder eine Postadresse oder eine Faxnummer eingeben, wenn die Genehmigung durch Eltern/Erziehungsberechtigte erfordert wird.';
 
 $txt['admin_register'] = 'Registrierung neuer Mitglieder';
 $txt['admin_register_desc'] = 'Hier k&ouml;nnen Sie neue Mitglieder im Forum registrieren und Ihnen bei Bedarf die Details per E-Mail schicken.';

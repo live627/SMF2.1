@@ -35,8 +35,6 @@ $txt['pm_error_user_not_found'] = 'Kan gebruiker \'%s\' niet vinden.';
 $txt['pm_error_ignored_by_user'] = 'Gebruiker \'%s\' heeft je PM geblokkeerd.';
 $txt['pm_error_data_limit_reached'] = 'PM kon niet verstuurd worden aan \'%s\' vanwege het overschrijden van de PM limiet.';
 $txt['pm_successfully_sent'] = 'PM succesvol verstuurd aan \'%s\'.';
-$txt['pm_too_many_recipients'] = 'Het is niet toegestaan persoonlijke berichten te versturen naar %d ontvangers tegelijk.';
-$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
 $txt['pm_send_report'] = 'Verzendrapport';
 $txt['pm_save_outbox'] = 'Bewaar een kopie in mijn postvak uit';
 $txt['pm_undisclosed_recipients'] = 'Niet-getoonde ontvangers';
@@ -68,7 +66,6 @@ $txt['pm_msg_label_apply'] = 'Voeg label toe';
 $txt['pm_msg_label_remove'] = 'Verwijder label';
 $txt['pm_msg_label_inbox'] = 'Inbox';
 $txt['pm_sel_label_title'] = 'Geselecteerde label';
-$txt['labels_too_many'] = 'Sorry, %s berichten hadden reeds het maximaal aantal toegestane labels!';
 
 $txt['pm_labels'] = 'Labels';
 $txt['pm_messages'] = 'Berichten';

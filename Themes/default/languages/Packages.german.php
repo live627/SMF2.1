@@ -152,8 +152,6 @@ $txt['package_file_contents'] = 'Inhalt der Datei';
 $txt['package_upload_title'] = 'Paket hochladen';
 $txt['package_upload_select'] = 'Hochzuladendes Paket';
 $txt['package_upload'] = 'Hochladen';
-$txt['package_upload_error_supports'] = 'Der Paketmanager erlaubt nur folgende Datei Typen hochzuladen: ';
-$txt['package_upload_error_broken'] = 'Das Paket welches Sie hochladen m&ouml;chten ist ung&uuml;ltig oder kaputt.';
 $txt['package_uploaded_success'] = 'Paket erfolgreich hochgeladen';
 $txt['package_uploaded_successfully'] = 'Das Paket wurde erfolgreich hochgeladen';
 

@@ -179,8 +179,6 @@ $txt['ban_remove_selected_confirm'] = 'Sind Sie sicher, dass Sie die ausgew&auml
 $txt['ban_modify'] = '&Auml;ndern';
 $txt['ban_name'] = 'Name';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt['ban_name_empty'] = 'Das Namensfeld wurde nicht ausgef&uuml;llt!';
-$txt['ban_name_exists'] = 'Der Name des Banns existiert bereits. Bitte w&auml;hlen Sie einen anderen Namen.';
 $txt['ban_edit'] = 'Bann editieren';
 $txt['ban_add_notes'] = '<b>Achtung</b>: Nachdem Sie den obenstehenden Bann erstellt haben, k&ouml;nnen Sie sp&auml;ter weitere Merkmale hinzuf&uuml;gen, z.B. IP-Adressen, Hostnamen und E-Mail Adressen.';
 $txt['ban_expired'] = 'Abgelaufen/Deaktiviert';
@@ -230,8 +228,6 @@ $txt['reverse_direction'] = 'Chronologische Reihenfolge der Liste &auml;ndern';
 // Untranslated!
 $txt['error_type'] = 'Type of error';
 $txt['filter_only_type'] = 'Only show the errors of this type';
-$txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';
-$txt['error_bad_line'] = 'The line you specified is invalid.';
 $txt['filter_only_file'] = 'Only show the errors from this file';
 
 // Untranslated!

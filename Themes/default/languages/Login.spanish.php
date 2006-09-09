@@ -25,7 +25,6 @@ $txt['login_with_forum'] = 'para registrar una cuenta en %s.';
 // Use numeric entities in the below two strings.
 $txt[701] = 'Lo puedes cambiar despu&#233;s de ingresar en la p&#225;gina de perfil, o visitando esta p&#225;gina despu&#233;s de que ingreses:';
 $txt[719] = 'Tu nombre de usuario es: ';
-$txt[730] = 'Esa direcci&oacute;n de email (%s) est&aacute; siendo usada por un usuario registrado. Si crees que es un error, ve a la p&aacute;gina de ingreso y usa la funci&oacute;n recordar contrase&ntilde;a con esa direcci&oacute;n.';
 
 $txt['login_hash_error'] = 'El esquema para la seguridad de las contrase&ntilde;as ha sido actualizado recientemente.  Por favor, introduce tu contrase&ntilde;a nuevamente.';
 
@@ -69,8 +68,6 @@ $txt['coppa_not_completed2'] = '&iquest;Necesitas m&aacute;s detalles?';
 $txt['awaiting_delete_account'] = '&iexcl;Tu cuenta ha sido marcada para borrarse!<br />Si deseas restaurar tu cuenta, For favor selecciona la casilla &quot;Reactivar mi cuenta&quot;, e ingresa nuevamente.';
 $txt['undelete_account'] = 'Reactivar mi cuenta';
 
-$txt['change_email_success'] = 'Tu direcci&oacute;n de email ha sido cambiada, y se le ha enviado un nuevo email de activaci&oacute;n.';
-$txt['resend_email_success'] = 'Un nuevo email de activaci&oacute;n ha sido enviado satisfactoriamente.';
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'Detalles de la nueva contrase&#241;a';
 $txt['change_password_1'] = 'Tus datos para ingresar en';
@@ -113,7 +110,6 @@ $txt['admin_setting_coppaPost'] = 'Direcci&oacute;n postal a la que se debe envi
 $txt['admin_setting_coppaPost_desc'] = 'Solo aplica cuando la restricci&oacute;n de edad est&aacute; activada';
 $txt['admin_setting_coppaFax'] = 'N&uacute;mero de fax al cual las formas de aprobaci&oacute;n deber&aacute;n enviarse';
 $txt['admin_setting_coppaPhone'] = 'T&eacute;lefono en el que se pueden contactar a los padres/tutor con preguntas referentes a la restricci&oacute;n de edad';
-$txt['admin_setting_coppa_require_contact'] = 'Debes proporcionar una direcci&oacute;n o fax de contacto si la aprobaci&oacute;n de los padres/tutor es requerida.';
 
 $txt['admin_register'] = 'Registro de un nuevo usuario';
 $txt['admin_register_desc'] = 'Desde aqu&iacute; puedes registrar en el foro nuevos usuarios y, de as&iacute; desearlo, enviarles sus detalles por email.';

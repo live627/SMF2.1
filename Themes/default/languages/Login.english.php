@@ -25,7 +25,6 @@ $txt['login_with_forum'] = 'with %s.';
 // Use numeric entities in the below two strings.
 $txt[701] = 'You may change it after you login by going to the profile page, or by visiting this page after you login:';
 $txt[719] = 'Your username is: ';
-$txt[730] = 'That email address (%s) is being used by a registered member already. If you feel this is a mistake, go to the login page and use the password reminder with that address.';
 
 $txt['login_hash_error'] = 'Password security has recently been upgraded.  Please enter your password again.';
 
@@ -68,8 +67,6 @@ $txt['coppa_not_completed2'] = 'Need more details?';
 $txt['awaiting_delete_account'] = 'Your account has been marked for deletion!<br />If you wish to restore your account, please check the &quot;Reactivate my account&quot; box, and login again.';
 $txt['undelete_account'] = 'Reactivate my account';
 
-$txt['change_email_success'] = 'Your email address has been changed, and a new activation email has been sent to it.';
-$txt['resend_email_success'] = 'A new activation email has successfully been sent.';
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'New Password Details';
 $txt['change_password_1'] = 'Your login details at';
@@ -109,7 +106,6 @@ $txt['admin_setting_coppaPost'] = 'Postal address to which approval forms should
 $txt['admin_setting_coppaPost_desc'] = 'Only applies if age restriction is in place';
 $txt['admin_setting_coppaFax'] = 'Fax number to which approval forms should be faxed';
 $txt['admin_setting_coppaPhone'] = 'Contact number for parents to contact with age restriction queries';
-$txt['admin_setting_coppa_require_contact'] = 'You must enter either a postal or fax contact if parent/guardian approval is required.';
 
 $txt['admin_register'] = 'Registration of new member';
 $txt['admin_register_desc'] = 'From here you can register new members into the forum, and if desired, email them their details.';

@@ -513,7 +513,7 @@ function BanEdit()
 
 		$addBan = !empty($_POST['add_ban']);
 		if (empty($_POST['ban_name']))
-			fatal_error($txt['ban_name_empty'], false);
+			fatal_lang_error('ban_name_empty', false);
 		// Check whether a ban with this name already exists.
 		$request = db_query("
 			SELECT ID_BAN_GROUP
@@ -523,7 +523,7 @@ function BanEdit()
 			LIMIT 1", __FILE__, __LINE__);
 		// !!! Separate the sprintf?
 		if (mysql_num_rows($request) == 1)
-			fatal_error(sprintf($txt['ban_name_exists'], $_POST['ban_name']), false);
+			fatal_lang_error('ban_name_exists', false, array($_POST['ban_name']));
 		mysql_free_result($request);
 
 		$_POST['reason'] = htmlspecialchars($_POST['reason'], ENT_QUOTES);
@@ -812,6 +812,10 @@ function BanEdit()
 			}
 		}
 	}
+
+	// Template needs this to show errors using javascript
+	loadLanguage('Errors');
+
 	$context['sub_template'] = 'ban_edit';
 }
 

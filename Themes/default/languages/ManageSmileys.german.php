@@ -37,9 +37,6 @@ $txt['smileys_add_upload_all'] = 'Benutze gleiches Bild f&uuml;r alle Sets';
 $txt['smileys_add_upload_for1'] = 'Bild f&uuml;r das';
 $txt['smileys_add_upload_for2'] = 'Set';
 
-$txt['smileys_upload_error_types'] = 'Bilder k&ouml;nnen nur folgende Formate haben:';
-$txt['smileys_upload_error_notwritable'] = 'Das folgende Smiley Verzeichnis ist nicht beschreibbar:';
-
 $txt['smileys_edit'] = 'Smileys &auml;ndern';
 $txt['smileys_enable_note'] = '(wenn deaktiviert, werden nur die Standard-Smileys angezeigt)';
 $txt['smileys_code'] = 'Code';

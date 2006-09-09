@@ -22,13 +22,17 @@ $txt[242] = 'Onjuiste letters/cijfers gebruikt in je naam.';
 $txt[243] = 'Onjuiste letters/cijfers gebruikt in je e-mail.';
 $txt[244] = 'De gebruikersnaam die je hebt geprobeert te registreren is al gereserveerd! Probeer een andere gebruikersnaam. Gereserveerde naam: %s';
 $txt[337] = 'Dit gedeelte accepteert alleen nummers tussen de 0-9';
+$txt[453] = 'Het lid waar je het profiel van wilt bekijken bestaat niet! - %1$s';
 $txt[472] = 'Dit bericht bestaat niet op dit board.';
+$txt[730] = 'Dit e-mailadres (%s) is al in gebruik door een geregistreerd lid! Als je denkt dat dit een vergissing is, ga dan naar de login pagina en gebruik de wachtwoord vergeten optie met dit e-mailadres.';
 
 $txt['smf26'] = 'Je hebt geen optie gekozen.';
 $txt['smf27'] = 'Of deze poll bestaat niet, of de poll is vergrendeld, of je probeert een tweede keer te stemmen.';
 $txt['smf28'] = 'Deze optie is alleen beschikbaar voor geregistreerde leden.';
 $txt['smf31'] = 'Dit is vergrendeld door een beheerder.  Je kunt deze niet ontgrendelen.';
+$txt['smf60'] = 'Sorry, je hebt nog niet voldoende berichten gepost om Karma te kunnen bewerken - je hebt tenminste %1$d.';
 $txt['smf61'] = 'Sorry, je kunt niet je eigen Karma bewerken.';
+$txt['smf62'] = 'Sorry, je kunt deze actie niet zo snel achter elkaar uitvoeren.  Je zult even moeten wachten %1$s %2$s.';
 $txt['smf63'] = 'Sorry, deze feature is niet geactiveerd.';
 $txt['smf115b'] = 'Geen toegang tot de uploadmap van de bijlagen!';
 $txt['smf122'] = 'Het bestand is te groot. Het maximumformaat is %d KB.';
@@ -178,6 +182,8 @@ $txt['no_ban_admin'] = 'Je mag geen admin bannen, je dient deze dan eerst een la
 $txt['no_bantype_selected'] = 'Geen bantype geselecteerd';
 $txt['ban_not_found'] = 'Ban niet gevonden';
 $txt['ban_unknown_restriction_type'] = 'Type restrictie niet bekend';
+$txt['ban_name_empty'] = 'De naam van de ban is leeggelaten.';
+$txt['ban_name_exists'] = 'De naam van deze ban (\'%s\') bestaat reeds. Kies een andere naam alsjeblieft.';
 
 $txt['recycle_no_valid_board'] = 'Geen geldig board geselecteerd voor berichten recycling';
 
@@ -203,10 +209,14 @@ $txt['rtm_not_own'] = 'Je kunt niet je eigen bericht melden aan de moderators, d
 
 $txt['no_dump_database'] = 'Alleen admins kunnen een backup van de database maken!';
 $txt['pm_not_yours'] = 'De IM die je probeert te quoten is niet van jou, of bestaat geheel niet, ga terug en probeer het opnieuw.';
+$txt['pm_too_many_recipients'] = 'Het is niet toegestaan persoonlijke berichten te versturen naar %d ontvangers tegelijk.';
+$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
+$txt['labels_too_many'] = 'Sorry, %s berichten hadden reeds het maximaal aantal toegestane labels!';
 $txt['mangled_post'] = 'Foute data - ga terug en probeer het opnieuw.';
 $txt['quoted_post_deleted'] = 'Het bericht dat je wilde quoten bestaat niet meer, is inmiddels verwijderd of is niet meer zichtbaar voor je.';
 
 $txt['register_only_once'] = 'Sorry, maar je mag niet meerdere accounts registreren op dezelfde tijd vanaf dezelfde computer.';
+$txt['admin_setting_coppa_require_contact'] = 'Je moet of een postadres of een faxnummer invoeren als ouderlijke goedkeuring vereist is.';
 
 $txt['error_long_name'] = 'De naam die je gebruikt hebt was te lang.';
 $txt['error_no_name'] = 'Je hebt geen naam ingevuld.';
@@ -225,6 +235,8 @@ $txt['error_bad_bcc'] = 'E&eacute;n of meer \'bcc\'-geadresseerden konden niet w
 $txt['error_form_already_submitted'] = 'Je hebt dit bericht reeds een keer verstuurd! Het zou kunnen dat je per ongeluk dubbel geklikt hebt of geprobeerd hebt om te verversen.';
 $txt['error_poll_few'] = 'Je moet tenminste twee keuzes invullen!';
 $txt['error_wrong_verification_code'] = 'De letters die je hebt ingevoerd komen niet overeen met de letters van het getoonde plaatje.';
+$txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';
+$txt['error_bad_line'] = 'The line you specified is invalid.';
 
 $txt['smiley_not_found'] = 'Smiley niet gevonden.';
 $txt['smiley_has_no_code'] = 'Er is geen code voor deze smiley ingevuld.';
@@ -250,6 +262,8 @@ $txt['package_cant_uninstall'] = 'Deze packages is of nooit geinstalleerd gewees
 $txt['package_cant_download'] = 'Je kunt geen nieuwe packages downloaden of installeren omdat de package directory niet schrijfbaar is!';
 $txt['package_upload_error'] = 'Kan de package niet uploaden, controleer de directory permissies!';
 $txt['package_upload_error_exists'] = 'Het bestand dat je aan het uploaden bent, bestaat reeds op de server. Verwijder het eerst en probeer het daarna opnieuw.';
+$txt['package_upload_error_supports'] = 'Het pakketbeheerscherm laat momenteel de volgende bestandstypes toe: %1$s.';
+$txt['package_upload_error_broken'] = 'Het pakket dat je probeerde te uploaden is niet een geldig pakket of is beschadigd.';
 
 $txt['no_membergroup_selected'] = 'Geen ledengroep geselecteerd';
 $txt['membergroup_does_not_exist'] = 'De ledengroep bestaat niet of is ongeldig.';
@@ -311,4 +325,14 @@ $txt['st_cannot_retrieve_file'] = 'Could not retrieve the file %1$s.';
 $txt['admin_file_not_found'] = 'Could not load the requested file: %1$s.';
 $txt['themes_none_selectable'] = 'At least one theme must be selectable.';
 $txt['themes_default_selectable'] = 'The overall forum default theme must be a selectable theme.';
+$txt['ignoreboards_disallowed'] = 'The option to ignore boards has not been enabled.';
+
+$txt['mboards_delete_error'] = 'Geen categorie geselecteerd!';
+$txt['mboards_delete_board_error'] = 'Geen board geselecteerd!';
+
+$txt['smileys_upload_error_notwritable'] = 'De volgende smiley-directories zijn niet schrijfbaar: %1$s';
+$txt['smileys_upload_error_types'] = 'Plaatje kan alleen maar de volgende extensies hebben: %1$s.';
+
+$txt['change_email_success'] = 'Je e-mailadres is veranderd en een nieuwe activeringsmail is verstuurd naar het nieuwe adres.';
+$txt['resend_email_success'] = 'Een nieuwe activeringsmail is succesvol verstuurd.';
 ?>

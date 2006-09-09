@@ -53,7 +53,7 @@ function ModifyKarma()
 	// If you don't have enough posts, tough luck.
 	// !!! Should this be dropped in favor of post group permissions?  Should this apply to the member you are smiting/applauding?
 	if ($user_info['posts'] < $modSettings['karmaMinPosts'])
-		fatal_error($txt['smf60'] . $modSettings['karmaMinPosts'] . '.', true);
+		fatal_lang_error('smf60', true, array($modSettings['karmaMinPosts']));
 
 	// And you can't modify your own, punk! (use the profile if you need to.)
 	if (empty($_REQUEST['uid']) || (int) $_REQUEST['uid'] == $ID_MEMBER)
@@ -104,7 +104,7 @@ function ModifyKarma()
 	{
 		// If you are gonna try to repeat.... don't allow it.
 		if ($action == $dir)
-			fatal_error($txt['smf62'] . ' ' . $modSettings['karmaWaitTime'] . ' ' . $txt[578] . '.', false);
+			fatal_lang_error('smf62', false, array($modSettings['karmaWaitTime'], $txt[578]));
 
 		// You decided to go back on your previous choice?
 		db_query("

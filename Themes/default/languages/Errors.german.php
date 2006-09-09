@@ -22,13 +22,17 @@ $txt[242] = 'Ung&uuml;ltiges Zeichen im Namen.';
 $txt[243] = 'Ung&uuml;ltiges Zeichen in der E-Mail Adresse.';
 $txt[244] = 'Der Benutzername, den Sie registrieren m&ouml;chten, enth&auml;lt einen reservierten Namen. Bitte versuchen Sie einen anderen Namen. Reservierte Namen: %s';
 $txt[337] = 'Dieses Feld akzeptiert nur Zahlen von 0-9';
+$txt[453] = 'Dieses Mitglied ist nicht vorhanden. Das Profil kann nicht editiert werden. - %1$s';
 $txt[472] = 'Dieses Thema ist im Forum nicht vorhanden.';
+$txt[730] = 'Diese E-Mail Adresse (%s) wird bereits von einem anderen Mitglied verwendet! Wenn Sie Ihr Passwort vergessen haben, k&ouml;nnen Sie es sich &uuml;ber die Passwort-Erinnerung auf der Login-Seite zusenden lassen.';
 
 $txt['smf26'] = 'Keine Umfrageoption ausgew&auml;hlt.';
 $txt['smf27'] = 'Umfrage ist nicht vorhanden, geschlossen oder Sie haben versucht zweimal abzustimmen.';
 $txt['smf28'] = 'Diese Funktion steht nur registrierten Mitgliedern zur Verf&uuml;gung.';
 $txt['smf31'] = 'Dieses Thema wurde von einem Administrator geschlossen. Sie k&ouml;nnen es nicht &ouml;ffnen.';
+$txt['smf60'] = 'Sie haben zu wenige Beitr&auml;ge geschrieben, um das Karma zu &auml;ndern - Sie brauchen mindestens %1$d.';
 $txt['smf61'] = 'Sie d&uuml;rfen Ihr eigenes Karma nicht &auml;ndern.';
+$txt['smf62'] = 'Sie k&ouml;nnen nicht wiederholt abstimmen. Bitte warten Sie %1$s %2$s.';
 $txt['smf63'] = 'Diese Funktion ist deaktiviert.';
 $txt['smf115b'] = 'Es kann auf den Upload-Pfad der Dateianh&auml;nge nicht zugegriffen werden.';
 $txt['smf122'] = 'Die Datei ist zu gro&szlig;. Die max. Gr&ouml;&szlig;e f&uuml;r Dateianh&auml;nge ist %d KB.';
@@ -178,6 +182,8 @@ $txt['no_ban_admin'] = 'Sie k&ouml;nnen keinen Administrator bannen - Sie m&uuml
 $txt['no_bantype_selected'] = 'Kein Bann-Typ gew&auml;hlt.';
 $txt['ban_not_found'] = 'Bann nicht gefunden!';
 $txt['ban_unknown_restriction_type'] = 'Einschr&auml;nkung nicht bekannt.';
+$txt['ban_name_empty'] = 'Das Namensfeld wurde nicht ausgef&uuml;llt!';
+$txt['ban_name_exists'] = 'Der Name des Banns existiert bereits. Bitte w&auml;hlen Sie einen anderen Namen.';
 
 $txt['recycle_no_valid_board'] = 'Kein g&uuml;ltiges Board f&uuml;r wiederherzustellende Themen gew&auml;hlt!';
 
@@ -202,10 +208,15 @@ $txt['rtm_not_own'] = 'Sie k&ouml;nnen Ihre eigenen Beitr&auml;ge nicht dem Mode
 
 $txt['no_dump_database'] = 'Datensicherungen k&ouml;nnen nur von Administratoren gemacht werden!';
 $txt['pm_not_yours'] = 'Die Private Mitteilung, die Sie zitieren m&ouml;chten, ist nicht Ihre eigene bzw. exisitiert nicht. Bitte gehen Sie zur&uuml;ck und versuchen Sie es erneut.';
+$txt['pm_too_many_recipients'] = 'Sie k&ouml;nnen keine Privaten Mitteilungen an mehr wie %d Empf&auml;nger gleichzeitig schicken.';
+// Untranslated!
+$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
+$txt['labels_too_many'] = '%s Mitteilungen haben schon die max. Anzahl an erlaubten Labels!';
 $txt['mangled_post'] = 'Fehlende Formulardaten - bitte gehen Sie zur&uuml;ck und versuchen Sie es erneut.';
 $txt['quoted_post_deleted'] = 'Der Beitrag, den Sie zitieren m&ouml;chten, existiert nicht, wurde gel&ouml;scht oder ist f&uuml;r Sie nicht mehr einsehbar.';
 
 $txt['register_only_once'] = 'Sie d&uuml;rfen nicht mehrere Benutzerkonten zur gleichen Zeit f&uuml;r den gleichen Computer registrieren.';
+$txt['admin_setting_coppa_require_contact'] = 'Sie m&uuml;ssen entweder eine Postadresse oder eine Faxnummer eingeben, wenn die Genehmigung durch Eltern/Erziehungsberechtigte erfordert wird.';
 $txt['error_long_name'] = 'Der Name den Sie verwenden ist zu lang.';
 $txt['error_no_name'] = 'Kein Name vorhanden.';
 $txt['error_bad_name'] = 'Der Name kann nicht verwendet werden, weil er reserviert ist.';
@@ -224,6 +235,8 @@ $txt['error_form_already_submitted'] = 'Sie haben den Beitrag gerade erst geschr
 $txt['error_poll_few'] = 'Sie m&uuml;ssen mindestens 2 M&ouml;glichkeiten w&auml;hlen!';
 // Untranslated!
 $txt['error_wrong_verification_code'] = 'The letters you typed don\'t match the letters that were shown in the picture.';
+$txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';
+$txt['error_bad_line'] = 'The line you specified is invalid.';
 
 $txt['smiley_not_found'] = 'Smiley nicht gefunden.';
 $txt['smiley_has_no_code'] = 'F&uuml;r diesen Smiley wurde kein Code gefunden.';
@@ -249,6 +262,8 @@ $txt['package_cant_uninstall'] = 'Dieses Paket wurde noch nie installiert oder s
 $txt['package_cant_download'] = 'Sie k&ouml;nnen keine Pakete herunterladen bzw. installieren, da das Paket-Verzeichnis oder enthaltene Dateien nicht &uuml;berschreibbar sind!';
 $txt['package_upload_error'] = 'Das Paket konnte nicht hochgeladen werden, bitte &uuml;berpr&uuml;fen Sie Ihre Verzeichnisberechtigungen!';
 $txt['package_upload_error_exists'] = 'Die Datei, die Sie hochladen m&ouml;chten, exisitiert schon auf dem Server. Bitte l&ouml;schen Sie diese erst und versuchen Sie es erneut.';
+$txt['package_upload_error_supports'] = 'Der Paketmanager erlaubt nur folgende Datei Typen hochzuladen: %1$s.';
+$txt['package_upload_error_broken'] = 'Das Paket welches Sie hochladen m&ouml;chten ist ung&uuml;ltig oder kaputt.';
 
 $txt['no_membergroup_selected'] = 'Keine Mitgliedergruppe gew&auml;hlt.';
 $txt['membergroup_does_not_exist'] = 'Die Mitgliedergruppe existiert nicht oder ist ung&uuml;ltig.';
@@ -310,4 +325,14 @@ $txt['st_cannot_retrieve_file'] = 'Could not retrieve the file %1$s.';
 $txt['admin_file_not_found'] = 'Could not load the requested file: %1$s.';
 $txt['themes_none_selectable'] = 'At least one theme must be selectable.';
 $txt['themes_default_selectable'] = 'The overall forum default theme must be a selectable theme.';
+$txt['ignoreboards_disallowed'] = 'The option to ignore boards has not been enabled.';
+
+$txt['mboards_delete_error'] = 'Keine Kategorie ausgew&auml;hlt!';
+$txt['mboards_delete_board_error'] = 'Kein Board ausgew&auml;hlt!';
+
+$txt['smileys_upload_error_notwritable'] = 'Das folgende Smiley Verzeichnis ist nicht beschreibbar: %1$s';
+$txt['smileys_upload_error_types'] = 'Bilder k&ouml;nnen nur folgende Formate haben: %1$s.';
+
+$txt['change_email_success'] = 'Ihre E-Mail Adresse wurde ge&auml;ndert. Eine neue Aktivierungs E-Mail wurde gesendet.';
+$txt['resend_email_success'] = 'Eine neue Aktivierungs E-Mail wurde erfolgreich gesendet';
 ?>

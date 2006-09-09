@@ -417,7 +417,7 @@ function AddSmiley()
 					$writeErrors[] = $set['path'];
 			}
 			if (!empty($writeErrors))
-				fatal_error($txt['smileys_upload_error_notwritable'] . ' ' . implode(', ', $writeErrors));
+				fatal_lang_error('smileys_upload_error_notwritable', true, array(implode(', ', $writeErrors)));
 		}
 
 		// Uploading just one smiley for all of them?
@@ -431,7 +431,7 @@ function AddSmiley()
 
 			// We only allow image files - it's THAT simple - no messing around here...
 			if (!in_array(strtolower(substr(strrchr($_FILES['uploadSmiley']['name'], '.'), 1)), $allowedTypes))
-				fatal_error($txt['smileys_upload_error_types'] . ' ' . implode(', ', $allowedTypes) . '.', false);
+				fatal_lang_error('smileys_upload_error_types', false, array(implode(', ', $allowedTypes)));
 
 			// We only need the filename...
 			$destName = basename($_FILES['uploadSmiley']['name']);
@@ -499,7 +499,7 @@ function AddSmiley()
 
 				// We only allow image files - it's THAT simple - no messing around here...
 				if (!in_array(strtolower(substr(strrchr($_FILES['individual_' . $set['name']]['name'], '.'), 1)), $allowedTypes))
-					fatal_error($txt['smileys_upload_error_types'] . ' ' . implode(', ', $allowedTypes) . '.', false);
+					fatal_lang_error('smileys_upload_error_types', false, array(implode(', ', $allowedTypes)));
 
 				// We only need the filename...
 				$destName = basename($_FILES['individual_' . $set['name']]['name']);

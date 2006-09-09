@@ -22,13 +22,17 @@ $txt[242] = 'Car&aacute;cter inv&aacute;lido en el nombre.';
 $txt[243] = 'Car&aacute;cter inv&aacute;lido en el Email.';
 $txt[244] = 'El nombre de usuario que trataste de registrar contiene el nombre reservado\'%s\'. Por favor intenta otro nombre de usuario.';
 $txt[337] = 'Este campo s&oacute;lo acepta n&uacute;meros del 0-9';
+$txt[453] = 'El usuario del cual tratas de ver su perfil no existe. - %1$s';
 $txt[472] = 'Este tema no existe en el foro.';
+$txt[730] = 'Esa direcci&oacute;n de email (%s) est&aacute; siendo usada por un usuario registrado. Si crees que es un error, ve a la p&aacute;gina de ingreso y usa la funci&oacute;n recordar contrase&ntilde;a con esa direcci&oacute;n.';
 
 $txt['smf26'] = 'No seleccionaste una opci&oacute;n del voto.';
 $txt['smf27'] = 'Esa encuesta no existe, o ha sido bloqueada, o intentaste votar m&aacute;s de una vez.';
 $txt['smf28'] = 'Esta opci&oacute;n est&aacute; disponible solamente para usuarios registrados.';
 $txt['smf31'] = 'Fue bloqueada por un administrador.  No la puedes desbloquear.';
+$txt['smf60'] = 'Lo siento, no tienes mensajes suficientes para modificar el karma - necesitas al menos %1$d.';
 $txt['smf61'] = 'Lo siento, no est&aacute;s autorizado para modificar tu propio karma.';
+$txt['smf62'] = 'Lo siento, no puedes repetir una acci&oacute;n de karma sin esperar %1$s %2$s.';
 $txt['smf63'] = 'Lo siento, esta funci&oacute;n ha sido desactivada.';
 $txt['smf115b'] = '&iexcl;No se puede accesar al directorio de los archivos adjuntos!';
 $txt['smf122'] = 'Tu archivo es demasiado grande. El tama&ntilde;o m&aacute;ximo permitido para archivos adjuntos es %d KB.';
@@ -180,6 +184,8 @@ $txt['no_ban_admin'] = '&iexcl;No puedes prohibirle el acceso a un administrador
 $txt['no_bantype_selected'] = 'No se seleccion&oacute; el tipo prohibici&oacute;n de acceso';
 $txt['ban_not_found'] = 'No se encontr&oacute; esta restricci&oacute;n de acceso';
 $txt['ban_unknown_restriction_type'] = 'Tipo de restricci&oacute;n desconocida';
+$txt['ban_name_empty'] = 'The name of the ban was left empty';
+$txt['ban_name_exists'] = 'The name of this ban already exists. Please chose a different name.';
 
 $txt['recycle_no_valid_board'] = 'No se ha seleccionado un foro v&aacute;lido para reciclar temas';
 
@@ -204,11 +210,16 @@ $txt['rtm_not_own'] = '&iexcl;No puedes reportar tus propios mensajes al moderad
 
 $txt['no_dump_database'] = 'iexcl;Solamente los administradores pueden hacer respaldos de la base de datos!';
 $txt['pm_not_yours'] = 'El mensaje personal que est&aacute;s tratando de citar no es tuyo o no existe, por favor regresa e intenta nuevamente.';
+// Untranslated!
+$txt['pm_too_many_recipients'] = 'You may not send personal messages to more than %d recipient(s) at once.';
+$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
+$txt['labels_too_many'] = '&iexcl;Lo sentimos, %s mensajes ya tienen el n&uacute;mero m&aacute;ximo de etiquetas permitido!';
 $txt['mangled_post'] = 'Datos de la forma destrozados - por favor regresa e intenta nuevamente.';
 // Untranslated!
 $txt['quoted_post_deleted'] = 'The post you are trying to quote either does not exist, was deleted, or is no longer viewable by you.';
 
 $txt['register_only_once'] = 'Lo sentimos, pero no tienes permitido el registrar m&uacute;ltiples cuentas al mismo tiempo desde la misma computadora.';
+$txt['admin_setting_coppa_require_contact'] = 'Debes proporcionar una direcci&oacute;n o fax de contacto si la aprobaci&oacute;n de los padres/tutor es requerida.';
 
 $txt['error_long_name'] = 'El nombre que utilizaste fue muy largo.';
 $txt['error_no_name'] = 'No se proporcion&oacute; ning&uacute;n nombre.';
@@ -228,6 +239,8 @@ $txt['error_form_already_submitted'] = '&iexcl;Ya haz enviado previamente este m
 $txt['error_poll_few'] = '&iexcl;Debes tener al menos dos opciones!';
 // Untranslated!
 $txt['error_wrong_verification_code'] = 'The letters you typed don\'t match the letters that were shown in the picture.';
+$txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %s';
+$txt['error_bad_line'] = 'The line you specified is invalid.';
 
 $txt['smiley_not_found'] = 'No se encontr&oacute; el smiley.';
 $txt['smiley_has_no_code'] = 'No se proporcion&oacute; c&oacute;digo para este smiley.';
@@ -253,6 +266,8 @@ $txt['package_cant_uninstall'] = 'Este paquete o nunca fue instalado, o ya ha si
 $txt['package_cant_download'] = '&iexcl;No puedes descargar o instalar nuevos paquetes ya que no se puede escribir en el directorio &quot;Packages&quot;!';
 $txt['package_upload_error'] = '&iexcl;No se pudo subir el paquete, favor de revisar los permisos del directorio!';
 $txt['package_upload_error_exists'] = 'El archivo que est&aacute;s subiendo ya existe en el servidor. Favor de borrarlo e intentar nuevamente.';
+$txt['package_upload_error_supports'] = 'Actualmente el manejador de paquetes s&oacute;lo permite estos tipos de archivos: %1$s.';
+$txt['package_upload_error_broken'] = 'El paquete que intentaste subir no es un paquete v&aacute;lido o est&aacute; corrupto.';
 
 $txt['no_membergroup_selected'] = 'No se seleccion&oacute; ning&uacute;n grupo de usuarios';
 // Untranslated!
@@ -321,4 +336,14 @@ $txt['st_cannot_retrieve_file'] = 'Could not retrieve the file %1$s.';
 $txt['admin_file_not_found'] = 'Could not load the requested file: %1$s.';
 $txt['themes_none_selectable'] = 'At least one theme must be selectable.';
 $txt['themes_default_selectable'] = 'The overall forum default theme must be a selectable theme.';
+$txt['ignoreboards_disallowed'] = 'The option to ignore boards has not been enabled.';
+
+$txt['mboards_delete_error'] = '&iexcl;No se seleccion&oacute; ninguna categor&iacute;a!';
+$txt['mboards_delete_board_error'] = '&iexcl;No se seleccion&oacute; ning&uacute;n foro!';
+
+$txt['smileys_upload_error_notwritable'] = 'Los siguientes directorios de smileys no son escribibles: %1$s';
+$txt['smileys_upload_error_types'] = 'La Imagen solamente puede tener las siguientes extensiones: %1$s.';
+
+$txt['change_email_success'] = 'Tu direcci&oacute;n de email ha sido cambiada, y se le ha enviado un nuevo email de activaci&oacute;n.';
+$txt['resend_email_success'] = 'Un nuevo email de activaci&oacute;n ha sido enviado satisfactoriamente.';
 ?>

@@ -22,13 +22,17 @@ $txt[242] = 'Invalid character used in Name.';
 $txt[243] = 'Invalid character used in email.';
 $txt[244] = 'The username you tried to use contains the reserved name \'%s\'. Please try another username.';
 $txt[337] = 'This field only accepts numbers from 0-9';
+$txt[453] = 'The user whose profile you are trying to view does not exist. - %1$s';
 $txt[472] = 'This topic doesn\'t exist on this board.';
+$txt[730] = 'That email address (%s) is being used by a registered member already. If you feel this is a mistake, go to the login page and use the password reminder with that address.';
 
 $txt['smf26'] = 'You didn\'t select a vote option.';
 $txt['smf27'] = 'Either that poll doesn\'t exist, the poll has been locked, or you tried to vote twice.';
 $txt['smf28'] = 'This option is only available to registered members.';
 $txt['smf31'] = 'This was locked by an administrator.  You cannot unlock it.';
+$txt['smf60'] = 'Sorry, you don\'t have enough posts to modify karma - you need at least %1$d.';
 $txt['smf61'] = 'Sorry, you are not permitted to modify your own karma.';
+$txt['smf62'] = 'Sorry, you can\'t repeat a karma action without waiting %1$s %2$s.';
 $txt['smf63'] = 'Sorry, this feature is disabled.';
 $txt['smf115b'] = 'Cannot access attachments upload path!';
 $txt['smf122'] = 'Your file is too large. The maximum attachment size allowed is %d KB.';
@@ -177,6 +181,8 @@ $txt['no_ban_admin'] = 'You may not ban an admin - You must demote them first!';
 $txt['no_bantype_selected'] = 'No ban type was selected';
 $txt['ban_not_found'] = 'Ban not found';
 $txt['ban_unknown_restriction_type'] = 'Restriction type unknown';
+$txt['ban_name_empty'] = 'The name of the ban was left empty';
+$txt['ban_name_exists'] = 'The name of this ban already exists. Please chose a different name.';
 
 $txt['recycle_no_valid_board'] = 'No valid board selected for recycle topics';
 
@@ -203,8 +209,12 @@ $txt['no_dump_database'] = 'Only administrators can make database backups!';
 $txt['pm_not_yours'] = 'The personal message you\'re trying to quote is not your own or does not exist, please go back and try again.';
 $txt['mangled_post'] = 'Mangled form data - please go back and try again.';
 $txt['quoted_post_deleted'] = 'The post you are trying to quote either does not exist, was deleted, or is no longer viewable by you.';
+$txt['pm_too_many_recipients'] = 'You may not send personal messages to more than %d recipient(s) at once.';
+$txt['pm_too_many_per_hour'] = 'You have exceeded the limit of %d personal messages per hour.';
+$txt['labels_too_many'] = 'Sorry, %s messages already had the maximum amount of labels allowed!';
 
 $txt['register_only_once'] = 'Sorry, but you\'re not allowed to register multiple accounts at the same time from the same computer.';
+$txt['admin_setting_coppa_require_contact'] = 'You must enter either a postal or fax contact if parent/guardian approval is required.';
 
 $txt['error_long_name'] = 'The name you tried to use was too long.';
 $txt['error_no_name'] = 'No name was provided.';
@@ -223,6 +233,8 @@ $txt['error_bad_bcc'] = 'One or more \'bcc\'-recipients could not be found.';
 $txt['error_form_already_submitted'] = 'You already submitted this post!  You might have accidently double clicked, or tried to refresh.';
 $txt['error_poll_few'] = 'You must have at least two choices!';
 $txt['error_wrong_verification_code'] = 'The letters you typed don\'t match the letters that were shown in the picture.';
+$txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %1$s';
+$txt['error_bad_line'] = 'The line you specified is invalid.';
 
 $txt['smiley_not_found'] = 'Smiley not found.';
 $txt['smiley_has_no_code'] = 'No code for this smiley was given.';
@@ -248,6 +260,8 @@ $txt['package_cant_uninstall'] = 'This package was either never installed or was
 $txt['package_cant_download'] = 'You cannot download or install new packages because the Packages directory or one of the files in it are not writable!';
 $txt['package_upload_error'] = 'Could not upload package, please check directory permissions!';
 $txt['package_upload_error_exists'] = 'The file you are uploading already exists on the server. Please delete it first then try again.';
+$txt['package_upload_error_supports'] = 'The package manager currently allows only these file types: %1$s.';
+$txt['package_upload_error_broken'] = 'The package you tried to upload either is not a valid package or has become corrupted.';
 
 $txt['no_membergroup_selected'] = 'No membergroup selected';
 $txt['membergroup_does_not_exist'] = 'The membergroup doesn\'t exist or is invalid.';
@@ -310,4 +324,14 @@ $txt['admin_file_not_found'] = 'Could not load the requested file: %1$s.';
 
 $txt['themes_none_selectable'] = 'At least one theme must be selectable.';
 $txt['themes_default_selectable'] = 'The overall forum default theme must be a selectable theme.';
+$txt['ignoreboards_disallowed'] = 'The option to ignore boards has not been enabled.';
+
+$txt['mboards_delete_error'] = 'No category selected!';
+$txt['mboards_delete_board_error'] = 'No board selected!';
+
+$txt['smileys_upload_error_notwritable'] = 'The following smiley directories are not writable: %1$s';
+$txt['smileys_upload_error_types'] = 'Image can only have the following extensions: %1$s.';
+
+$txt['change_email_success'] = 'Your email address has been changed, and a new activation email has been sent to it.';
+$txt['resend_email_success'] = 'A new activation email has successfully been sent.';
 ?>
