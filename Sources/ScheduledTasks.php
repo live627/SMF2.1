@@ -414,6 +414,7 @@ function scheduled_daily_digest()
 
 	// We'll want this...
 	require_once($sourcedir . '/Subs-Post.php');
+	loadEssentialThemeData();
 
 	$is_weekly = !empty($is_weekly) ? 1 : 0;
 
