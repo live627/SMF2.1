@@ -209,29 +209,58 @@ function doStep1()
 					$fileContents = preg_replace('~\' \. \'~', '', $fileContents);
 					$needs_edit = true;
 				}
-		
-				// Fix any variables.
+				// Scripturl?
+				if ($type != 'Install' && preg_match('~\' \. \$scripturl \. \'~', $fileContents))
+				{
+					$fileContents = preg_replace('~\' \. \$scripturl \. \'~', '{$scripturl}', $fileContents);
+					$needs_edit = true;
+				}
+				// Boardurl?
+				if ($type != 'Install' && preg_match('~\' \. \$boardurl \. \'~', $fileContents))
+				{
+					$fileContents = preg_replace('~\' \. \$boardurl \. \'~', '{$boardurl}', $fileContents);
+					$needs_edit = true;
+				}
+				// Forum name?
+				if ($type != 'Install' && preg_match('~\' \. \$context\[\'forum_name\'\] \. \'~', $fileContents))
+				{
+					$fileContents = preg_replace('~\' \. \$context\[\'forum_name\'\] \. \'~', '{$forumname}', $fileContents);
+					$needs_edit = true;
+				}
+				// Imagesurl?
+				if ($type != 'Install' && preg_match('~\' \. \$settings\[\'images_url\'\] \. \'~', $fileContents))
+				{
+					$fileContents = preg_replace('~\' \. \$settings\[\'images_url\'\] \. \'~', '{$imagesurl}', $fileContents);
+					$needs_edit = true;
+				}
+				// Regards?
+				if ($type != 'Install' && preg_match('~\' \. \$txt\[130\]~', $fileContents))
+				{
+					$fileContents = preg_replace('~\' \. \$txt\[130\]~', '{$regards}\'', $fileContents);
+					$needs_edit = true;
+				}
+				// Remove variables.
 				if ($type != 'Install' && preg_match('~\' \. \$(\w*) \. \'~', $fileContents))
 				{
-					$fileContents = preg_replace('~\' \. \$(\w*) \. \'~', "{\$$1}", $fileContents);
+					$fileContents = preg_replace('~\' \. \$(\w*) \. \'~', "%s", $fileContents);
 					$needs_edit = true;
 				}
 				// And any double arrays.
 				if ($type != 'Install' && preg_match('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', $fileContents))
 				{
-					$fileContents = preg_replace('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "{\$$1.$2}", $fileContents);
+					$fileContents = preg_replace('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "%s", $fileContents);
 					$needs_edit = true;
 				}
 				// Do the same for ones which are only half opened.
 				if ($type != 'Install' && preg_match('~\$(\w*) \. \'~', $fileContents))
 				{
-					$fileContents = preg_replace('~\$(\w*) \. \'~', "'{\$$1}", $fileContents);
+					$fileContents = preg_replace('~\$(\w*) \. \'~', "'%s", $fileContents);
 					$needs_edit = true;
 				}
 				// And any double arrays.
 				if ($type != 'Install' && preg_match('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', $fileContents))
 				{
-					$fileContents = preg_replace('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "'{\$$1.$2}", $fileContents);
+					$fileContents = preg_replace('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "'%s", $fileContents);
 					$needs_edit = true;
 				}
 	
@@ -498,26 +527,13 @@ function doStep4()
 	echo '
 		</ul><br />';
 
-	// Actually do the work?
-	if ($needsRunning)
-	{
-		echo '
+	// Actually do the work!
+	echo '
 		<form action="convert_languages.php?step=5" method="post">
 			<div align="center">
-				<input type="submit" value="Make The Changes" />
+				<input type="submit" value="Continue" />
 			</div>
 		</form><br />';
-	}
-	// Otherwise to the end!
-	else
-	{
-		echo '
-		<form action="convert_languages.php?step=6" method="post">
-			<div align="center">
-				<input type="submit" value="Skip" />
-			</div>
-		</form><br />';
-	}
 }
 
 // Make the theme changes.
@@ -568,6 +584,23 @@ function doStep5()
 				}
 
 				$fileContents = str_replace($findArray, $replaceArray, $fileContents);
+
+				// Get in some sprintf.
+				if (strpos($entry, 'template') !== false)
+				{
+					$changes = array(
+						'~([^\(])\$txt\[\'users_active\'\]~' => '$1sprintf($txt[\'users_active\'], $modSettings[\'lastActive\'])',
+						'~([^\(])\$txt\[\'welcome_guest\'\]~' => '$1sprintf($txt[\'welcome_guest\'], $txt[\'guest_title\'])',
+						'~([^\(])\$txt\[\'hot_topics\'\]~' => '$1sprintf($txt[\'hot_topics\'], $modSettings[\'hotTopicPosts\'])',
+						'~([^\(])\$txt\[\'very_hot_topics\'\]~' => '$1sprintf($txt[\'very_hot_topics\'], $modSettings[\'hotTopicVeryPosts\'])',
+						'~([^\(])\$txt\[\'info_center_title\'\]~' => '$1sprintf($txt[\'info_center_title\'], $context[\'forum_name\'])',
+						'~([^\(])\$txt\[\'login_with_forum\'\]~' => '$1sprintf($txt[\'login_with_forum\'], $context[\'forum_name\'])',
+					);
+					$before = strlen($fileContents);
+					$fileContents = preg_replace(array_keys($changes), array_values($changes), $fileContents);
+					if (strlen($fileContents) != $before)
+						$findArray[] = 1;
+				}
 
 				// Write the changes.
 				if (!empty($findArray))
