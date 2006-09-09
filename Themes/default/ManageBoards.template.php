@@ -157,7 +157,7 @@ function template_modify_category()
 									<input type="submit" name="add" value="', $txt['mboards_add_cat_button'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />';
 	else
 		echo '
-									<input type="submit" name="edit" value="', $txt[17], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />
+									<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />
 									<input type="submit" name="delete" value="', $txt['mboards_delete_cat'], '" onclick="return confirm(\'', $txt['catConfirm'], '\');" />';
 	echo '
 								</td>
@@ -399,7 +399,7 @@ function template_modify_board()
 									<input type="submit" name="add" value="', $txt['mboards_new_board'], '" onclick="return !isEmptyText(this.form.board_name);" />';
 	else
 		echo '
-									<input type="submit" name="edit" value="', $txt[17], '" onclick="return !isEmptyText(this.form.board_name);" />
+									<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.board_name);" />
 									<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');" />';
 	echo '
 								</td>

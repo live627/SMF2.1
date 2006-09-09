@@ -62,7 +62,7 @@ function template_latest_news()
 	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr>
 			<td class="catbg">
-				<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['mc_latest_news'], '
+				<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['mc_latest_news'], '
 			</td>
 		</tr><tr>
 			<td class="windowbg2" valign="top" style="height: 18ex; padding: 0;">
@@ -85,7 +85,7 @@ function template_latest_news()
 
 				for (var i = 0; i < window.smfAnnouncements.length; i++)
 				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "</a> ', $txt[30], ' " + window.smfAnnouncements[i].time + "</div>";
+					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "</a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "</div>";
 					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
 					str += "\n		" + window.smfAnnouncements[i].message;
 					str += "\n	</div>";
@@ -223,7 +223,7 @@ function template_reported_posts()
 			<tr class="titlebg">
 				<td>', $context['view_closed'] ? $txt['mc_reportedp_closed'] : $txt['mc_reportedp_open'], '</td>
 			</tr><tr class="catbg">
-				<td>', $txt[139], ': ', $context['page_index'], '</td>
+				<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 			</tr>';
 
 	// Loop through and print out each report!
@@ -277,7 +277,7 @@ function template_reported_posts()
 			<tr class="catbg">
 				<td>
 					<div style="float: left;">
-						', $txt[139], ': ', $context['page_index'], '
+						', $txt['pages'], ': ', $context['page_index'], '
 					</div>
 					<div style="float: right;">
 						', !$context['view_closed'] ? '<input type="submit" name="close_selected" value="' . $txt['mc_reportedp_close_selected'] . '" />' : '', '
@@ -318,7 +318,7 @@ function template_unapproved_posts()
 	else
 		echo '
 			<tr class="catbg">
-				<td>', $txt[139], ': ', $context['page_index'], '</td>
+				<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 			</tr>';
 
 	echo '
@@ -339,7 +339,7 @@ function template_unapproved_posts()
 								&nbsp;<a href="', $scripturl, '#', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a>
 							</td>
 							<td class="middletext" align="right" style="padding: 0 1ex; white-space: nowrap;">
-								', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt[30], ': ', $item['time'], '
+								', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '
 							</td>
 						</tr>
 						<tr>
@@ -380,7 +380,7 @@ function template_unapproved_posts()
 						<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
 						<option value="delete">&nbsp;--&nbsp;', $txt['smf138'], '</option>
 					</select>
-					<noscript><input type="submit" name="submit" value="', $txt[161], '" /></noscript>
+					<noscript><input type="submit" name="submit" value="', $txt['go'], '" /></noscript>
 				</td>
 			</tr>
 		</table>
@@ -414,7 +414,7 @@ function template_unapproved_attachments()
 	else
 		echo '
 			<tr class="catbg">
-				<td colspan="5">', $txt[139], ': ', $context['page_index'], '</td>
+				<td colspan="5">', $txt['pages'], ': ', $context['page_index'], '</td>
 			</tr>
 			<tr class="titlebg">
 				<td>', $txt['mc_unapproved_attach_name'], '</td>
@@ -458,7 +458,7 @@ function template_unapproved_attachments()
 						<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
 						<option value="delete">&nbsp;--&nbsp;', $txt['smf138'], '</option>
 					</select>
-					<noscript><input type="submit" name="submit" value="', $txt[161], '" /></noscript>
+					<noscript><input type="submit" name="submit" value="', $txt['go'], '" /></noscript>
 				</td>
 			</tr>
 		</table>

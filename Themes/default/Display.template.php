@@ -185,7 +185,7 @@ function template_main()
 	echo '
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr>
-		<td class="middletext" valign="bottom" style="padding-bottom: 4px;">', $txt[139], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><b>' . $txt['topbottom5'] . '</b></a>' : '', '</td>
+		<td class="middletext" valign="bottom" style="padding-bottom: 4px;">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><b>' . $txt['topbottom5'] . '</b></a>' : '', '</td>
 		<td align="right" style="padding-right: 1ex;">
 			<div class="nav" style="margin-bottom: 2px;"> ', $context['previous_next'], '</div>
 			<table cellpadding="0" cellspacing="0">
@@ -204,9 +204,9 @@ function template_main()
 				<td valign="middle" width="2%" style="padding-left: 6px;">
 						<img src="', $settings['images_url'], '/topic/', $context['class'], '.gif" align="bottom" alt="" />
 				</td>
-				<td width="13%"> ', $txt[29], '</td>
+				<td width="13%"> ', $txt['author'], '</td>
 				<td valign="middle" width="85%" style="padding-left: 6px;" id="top_subject">
-						', $txt[118], ': ', $context['subject'], ' &nbsp;(', $txt[641], ' ', $context['num_views'], ' ', $txt[642], ')
+						', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt[641], ' ', $context['num_views'], ' ', $txt[642], ')
 				</td>
 		</tr>';
 	if (!empty($settings['display_who_viewing']))
@@ -217,10 +217,10 @@ function template_main()
 
 		// Show just numbers...?
 		if ($settings['display_who_viewing'] == 1)
-				echo count($context['view_members']), ' ', count($context['view_members']) == 1 ? $txt['who_member'] : $txt[19];
+				echo count($context['view_members']), ' ', count($context['view_members']) == 1 ? $txt['who_member'] : $txt['members'];
 		// Or show the actual people viewing the topic?
 		else
-			echo empty($context['view_members_list']) ? '0 ' . $txt[19] : implode(', ', $context['view_members_list']) . ((empty($context['view_num_hidden']) || $context['can_moderate_forum']) ? '' : ' (+ ' . $context['view_num_hidden'] . ' ' . $txt['hidden'] . ')');
+			echo empty($context['view_members_list']) ? '0 ' . $txt['members'] : implode(', ', $context['view_members_list']) . ((empty($context['view_num_hidden']) || $context['can_moderate_forum']) ? '' : ' (+ ' . $context['view_num_hidden'] . ' ' . $txt['hidden'] . ')');
 
 		// Now show how many guests are here too.
 		echo $txt['who_and'], $context['view_num_guests'], ' ', $context['view_num_guests'] == 1 ? $txt['guest'] : $txt['guests'], $txt['who_viewing_topic'], '
@@ -312,11 +312,11 @@ function template_main()
 			// Show the member's gender icon?
 			if (!empty($settings['show_gender']) && $message['member']['gender']['image'] != '')
 				echo '
-								', $txt[231], ': ', $message['member']['gender']['image'], '<br />';
+								', $txt['gender'], ': ', $message['member']['gender']['image'], '<br />';
 
 			// Show how many posts they have made.
 			echo '
-								', $txt[26], ': ', $message['member']['posts'], '<br />
+								', $txt['posts'], ': ', $message['member']['posts'], '<br />
 								<br />';
 
 			// Show avatars, images, etc.?
@@ -343,7 +343,7 @@ function template_main()
 				// Don't show the profile button if you're not allowed to view the profile.
 				if ($message['member']['can_view_profile'])
 					echo '
-								<a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt[27] . '" title="' . $txt[27] . '" border="0" />' : $txt[27]), '</a>';
+								<a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a>';
 
 				// Don't show an icon if they haven't specified a website.
 				if ($message['member']['website']['url'] != '')
@@ -353,7 +353,7 @@ function template_main()
 				// Don't show the email address if they want it hidden.
 				if (empty($message['member']['hide_email']))
 					echo '
-								<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt[69] . '" title="' . $txt[69] . '" border="0" />' : $txt[69]), '</a>';
+								<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
@@ -366,7 +366,7 @@ function template_main()
 			echo '
 								<br />
 								<br />
-								<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt[69] . '" title="' . $txt[69] . '" border="0" />' : $txt[69]), '</a>';
+								<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '
@@ -382,7 +382,7 @@ function template_main()
 
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
 		echo '
-									<div class="smalltext">&#171; <b>', !empty($message['counter']) ? $txt[146] . ' #' . $message['counter'] : '', ' ', $txt[30], ':</b> ', $message['time'], ' &#187;</div></td>
+									<div class="smalltext">&#171; <b>', !empty($message['counter']) ? $txt['reply'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</b> ', $message['time'], ' &#187;</div></td>
 								<td align="', !$context['right_to_left'] ? 'right' : 'left', '" valign="bottom" height="20" style="font-size: smaller;">';
 
 		// Maybe we can approve it, maybe we should?
@@ -408,7 +408,7 @@ function template_main()
 		// How about... even... remove it entirely?!
 		if ($message['can_remove'])
 			echo '
-					<a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt[154], '?\');">', $remove_button, '</a>';
+					<a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
 
 		// What about splitting it off the rest of the topic?
 		if ($context['can_split'])
@@ -491,7 +491,7 @@ function template_main()
 		// Show "« Last Edit: Time by Person »" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
-									&#171; <i>', $txt[211], ': ', $message['modified']['time'], ' ', $txt[525], ' ', $message['modified']['name'], '</i> &#187;';
+									&#171; <i>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt[525], ' ', $message['modified']['name'], '</i> &#187;';
 
 		echo '
 								</td>
@@ -553,7 +553,7 @@ function template_main()
 	echo '
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr>
-		<td class="middletext">', $txt[139], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><b>' . $txt['topbottom4'] . '</b></a>' : '', '</td>
+		<td class="middletext">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><b>' . $txt['topbottom4'] . '</b></a>' : '', '</td>
 		<td align="right" style="padding-right: 1ex;">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
@@ -576,7 +576,7 @@ function template_main()
 
 	$mod_buttons = array(
 		'move' => array('test' => 'can_move', 'text' => 132, 'image' => 'admin_move.gif', 'lang' => true, 'url' => $scripturl . '?action=movetopic;topic=' . $context['current_topic'] . '.0'),
-		'delete' => array('test' => 'can_delete', 'text' => 63, 'image' => 'admin_rem.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt[162] . '\');"', 'url' => $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id']),
+		'delete' => array('test' => 'can_delete', 'text' => 63, 'image' => 'admin_rem.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['are_sure_remove_topic'] . '\');"', 'url' => $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id']),
 		'lock' => array('test' => 'can_lock', 'text' => empty($context['is_locked']) ? 'smf279' : 'smf280', 'image' => 'admin_lock.gif', 'lang' => true, 'url' => $scripturl . '?action=lock;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
 		'sticky' => array('test' => 'can_sticky', 'text' => empty($context['is_sticky']) ? 'smf277' : 'smf278', 'image' => 'admin_sticky.gif', 'lang' => true, 'url' => $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id']),
 		'merge' => array('test' => 'can_merge', 'text' => 'smf252', 'image' => 'merge.gif', 'lang' => true, 'url' => $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic']),
@@ -628,7 +628,7 @@ function template_main()
 				<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
 				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
 				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
-				<input type="submit" name="post" value="', $txt[105], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
+				<input type="submit" name="post" value="', $txt['post'], '" onclick="return submitThisOnce(this);" accesskey="s" tabindex="2" />
 				<input type="submit" name="preview" value="', $txt[507], '" onclick="return submitThisOnce(this);" accesskey="p" tabindex="4" />';
 		if ($context['show_spellchecking'])
 			echo '
@@ -680,11 +680,11 @@ function template_main()
 			sScriptUrl: "', $scripturl, '",
 			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
 			iTopicId: ', $context['current_topic'], ',
-			sTemplateBodyEdit: \'<div id="error_box" style="padding: 4px; color: red;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;">%body%</textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt[10], '" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" onclick="return oQuickModify.modifyCancel();" /></div>\',
+			sTemplateBodyEdit: \'<div id="error_box" style="padding: 4px; color: red;"></div><textarea class="editor" name="message" rows="12" style="width: 94%; margin-bottom: 10px;">%body%</textarea><br /><input type="hidden" name="sc" value="', $context['session_id'], '" /><input type="hidden" name="topic" value="', $context['current_topic'], '" /><input type="hidden" name="msg" value="%msg_id%" /><div style="text-align: center;"><input type="submit" name="post" value="', $txt['save'], '" onclick="return oQuickModify.modifySave(\\\'' . $context['session_id'] . '\\\');" accesskey="s" />&nbsp;&nbsp;', $context['show_spellchecking'] ? '<input type="button" value="' . $txt['spell_check'] . '" onclick="spellCheck(\\\'quickModForm\\\', \\\'message\\\');" />&nbsp;&nbsp;' : '', '<input type="submit" name="cancel" value="', $txt['modify_cancel'], '" onclick="return oQuickModify.modifyCancel();" /></div>\',
 			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="60" style="width: 99%;"  maxlength="80" />\',
 			sTemplateBodyNormal: \'%body%\',
 			sTemplateSubjectNormal: \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\',
-			sTemplateTopSubject: "', $txt[118], ': %subject% &nbsp;(', $txt[641], ' ', $context['num_views'], ' ', $txt[642], ')",
+			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt[641], ' ', $context['num_views'], ' ', $txt[642], ')",
 			sErrorBorderStyle: "1px solid red"
 		});
 

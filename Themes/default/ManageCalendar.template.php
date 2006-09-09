@@ -12,7 +12,7 @@ function template_manage_holidays()
 		<tr class="titlebg">
 			<td colspan="3">', $txt['current_holidays'], '</td>
 		</tr><tr class="catbg">
-			<td colspan="3">', $txt[139], ': ', $context['page_index'], '</td>
+			<td colspan="3">', $txt['pages'], ': ', $context['page_index'], '</td>
 		</tr><tr class="titlebg">
 			<td align="left">', $txt['holidays_title'], '</td>
 			<td align="left">', $txt[317], '</td>

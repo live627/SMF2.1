@@ -161,7 +161,7 @@ function RecentPosts()
 	}
 
 	loadTemplate('Recent');
-	$context['page_title'] = $txt[214];
+	$context['page_title'] = $txt['recent_posts'];
 
 	if (isset($_REQUEST['start']) && $_REQUEST['start'] > 95)
 		$_REQUEST['start'] = 95;
@@ -1059,7 +1059,7 @@ function UnreadTopics()
 				$pages = '&#171; ' . $tmppages[0] . ' ' . $tmppages[1] . ' ... ' . $tmppages[count($tmppages) - 2] . ' ' . $tmppages[count($tmppages) - 1];
 
 			if (!empty($modSettings['enableAllMessages']) && $topic_length < $modSettings['enableAllMessages'])
-				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt[190] . '</a>';
+				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt['all'] . '</a>';
 			$pages .= ' &#187;';
 		}
 		else
@@ -1085,7 +1085,7 @@ function UnreadTopics()
 					'name' => $row['firstPosterName'],
 					'id' => $row['ID_FIRST_MEMBER'],
 					'href' => $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'],
-					'link' => !empty($row['ID_FIRST_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] . '" title="' . $txt[92] . ' ' . $row['firstPosterName'] . '">' . $row['firstPosterName'] . '</a>' : $row['firstPosterName']
+					'link' => !empty($row['ID_FIRST_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $row['firstPosterName'] . '">' . $row['firstPosterName'] . '</a>' : $row['firstPosterName']
 				),
 				'time' => timeformat($row['firstPosterTime']),
 				'timestamp' => forum_time(true, $row['firstPosterTime']),

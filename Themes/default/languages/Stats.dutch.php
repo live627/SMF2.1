@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Stats
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt[888] = 'Hoogst aantal bezoekers (tegelijkertijd) ';
 
 $txt['smf_stats_1'] = 'Statistiekenoverzicht';

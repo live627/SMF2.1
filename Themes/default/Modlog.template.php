@@ -14,7 +14,7 @@ function template_main()
 				<table border="0" cellspacing="1" cellpadding="4" width="100%">
 					<tr class="titlebg">
 						<td>
-							<div style="float: left;"><a href="', $scripturl, '?action=helpadmin;help=modlog" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt[119] . '" align="top" /></a> ', $txt['modlog_moderation_log'], '</div>
+							<div style="float: left;"><a href="', $scripturl, '?action=helpadmin;help=modlog" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" align="top" /></a> ', $txt['modlog_moderation_log'], '</div>
 							<div align="right">', empty($context['search_params']) ? $txt['modlog_total_entries'] : $txt['modlog_search_result'], ': ', $context['entry_count'], '</div>
 						</td>
 					</tr>
@@ -26,7 +26,7 @@ function template_main()
 	if (!empty($context['page_index']))
 		echo '
 					<tr class="catbg">
-						<td>', $txt[139], ': ', $context['page_index'], '</td>
+						<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 					</tr>';
 	echo '
 				</table>
@@ -110,7 +110,7 @@ function template_main()
 	if (!empty($context['page_index']))
 		echo '
 					<tr class="catbg">
-						<td>', $txt[139], ': ', $context['page_index'], '</td>
+						<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 					</tr>';
 
 	echo '

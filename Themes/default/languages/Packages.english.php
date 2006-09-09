@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Packages
 
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
 $txt['smf154'] = 'Proceed';
 $txt['smf160'] = 'Modification file was extracted, but this modification also comes with a PHP script which should be executed before it will work';
 $txt['smf161'] = 'Run';

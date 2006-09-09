@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageMail
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['mailqueue_desc'] = 'Vanaf deze pagina kun je je mailinstellingen configureren, alsmede de huidige mailwachtrij bekijken en beheren als deze ingeschakeld is.';
 $txt['mailqueue_browse'] = 'Wachtrij doorbladeren';
 $txt['mailqueue_settings'] = 'Mailinstellingen';

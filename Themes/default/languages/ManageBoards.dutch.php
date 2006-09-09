@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageBoards
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt[41] = 'Beheer Boards en Categorie&euml;n';
 $txt[43] = 'Positie';
 $txt[44] = 'Volledige naam';

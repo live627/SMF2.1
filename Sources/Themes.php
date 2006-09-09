@@ -1787,23 +1787,23 @@ function template_menu()
 
 	// Show the [home] and [help] buttons.
 	echo \'
-				<a href="\', $scripturl, \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt[103] . \'" border="0" />\' : $txt[103]), \'</a>\', $context[\'menu_separator\'], \'
-				<a href="\', $scripturl, \'?action=help" target="_blank">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/help.gif" alt="\' . $txt[119] . \'" border="0" />\' : $txt[119]), \'</a>\', $context[\'menu_separator\'];
+				<a href="\', $scripturl, \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/home.gif" alt="\' . $txt['home'] . \'" border="0" />\' : $txt['home']), \'</a>\', $context[\'menu_separator\'], \'
+				<a href="\', $scripturl, \'?action=help" target="_blank">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/help.gif" alt="\' . $txt['help'] . \'" border="0" />\' : $txt['help']), \'</a>\', $context[\'menu_separator\'];
 
 	// How about the [search] button?
 	if ($context[\'allow_search\'])
 		echo \'
-				<a href="\', $scripturl, \'?action=search">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/search.gif" alt="\' . $txt[182] . \'" border="0" />\' : $txt[182]), \'</a>\', $context[\'menu_separator\'];
+				<a href="\', $scripturl, \'?action=search">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/search.gif" alt="\' . $txt['search'] . \'" border="0" />\' : $txt['search']), \'</a>\', $context[\'menu_separator\'];
 
 	// Is the user allowed to administrate at all? ([admin])
 	if ($context[\'allow_admin\'])
 		echo \'
-				<a href="\', $scripturl, \'?action=admin">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/admin.gif" alt="\' . $txt[2] . \'" border="0" />\' : $txt[2]), \'</a>\', $context[\'menu_separator\'];
+				<a href="\', $scripturl, \'?action=admin">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/admin.gif" alt="\' . $txt['admin'] . \'" border="0" />\' : $txt['admin']), \'</a>\', $context[\'menu_separator\'];
 
 	// Edit Profile... [profile]
 	if ($context[\'allow_edit_profile\'])
 		echo \'
-				<a href="\', $scripturl, \'?action=profile">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/profile.gif" alt="\' . $txt[79] . \'" border="0" />\' : $txt[467]), \'</a>\', $context[\'menu_separator\'];
+				<a href="\', $scripturl, \'?action=profile">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/profile.gif" alt="\' . $txt['profile'] . \'" border="0" />\' : $txt[467]), \'</a>\', $context[\'menu_separator\'];
 
 	// The [calendar]!
 	if ($context[\'allow_calendar\'])
@@ -1814,13 +1814,13 @@ function template_menu()
 	if ($context[\'user\'][\'is_guest\'])
 	{
 		echo \'
-				<a href="\', $scripturl, \'?action=login">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/login.gif" alt="\' . $txt[34] . \'" border="0" />\' : $txt[34]), \'</a>\', $context[\'menu_separator\'], \'
-				<a href="\', $scripturl, \'?action=register">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/register.gif" alt="\' . $txt[97] . \'" border="0" />\' : $txt[97]), \'</a>\';
+				<a href="\', $scripturl, \'?action=login">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/login.gif" alt="\' . $txt['login'] . \'" border="0" />\' : $txt['login']), \'</a>\', $context[\'menu_separator\'], \'
+				<a href="\', $scripturl, \'?action=register">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/register.gif" alt="\' . $txt['register'] . \'" border="0" />\' : $txt['register']), \'</a>\';
 	}
 	// Otherwise, they might want to [logout]...
 	else
 		echo \'
-				<a href="\', $scripturl, \'?action=logout;sesc=\', $context[\'session_id\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/logout.gif" alt="\' . $txt[108] . \'" border="0" />\' : $txt[108]), \'</a>\';
+				<a href="\', $scripturl, \'?action=logout;sesc=\', $context[\'session_id\'], \'">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/logout.gif" alt="\' . $txt['logout'] . \'" border="0" />\' : $txt['logout']), \'</a>\';
 }
 
 ?>';
@@ -1874,7 +1874,7 @@ function template_menu()
 		// <yabb im>
 		'im' => '\';
 	if ($context[\'user\'][\'is_logged\'] && $context[\'allow_pm\'])
-		echo $txt[152], \' <a href="\', $scripturl, \'?action=pm">\', $context[\'user\'][\'messages\'], \' \', ($context[\'user\'][\'messages\'] != 1 ? $txt[153] : $txt[471]), \'</a>\', $txt[\'newmessages4\'], \'  \', $context[\'user\'][\'unread_messages\'], \' \', ($context[\'user\'][\'unread_messages\'] == 1 ? $txt[\'newmessages0\'] : $txt[\'newmessages1\']), \'.\';
+		echo $txt['msg_alert_you_have'], \' <a href="\', $scripturl, \'?action=pm">\', $context[\'user\'][\'messages\'], \' \', ($context[\'user\'][\'messages\'] != 1 ? $txt['msg_alert_messages'] : $txt[471]), \'</a>\', $txt[\'newmessages4\'], \'  \', $context[\'user\'][\'unread_messages\'], \' \', ($context[\'user\'][\'unread_messages\'] == 1 ? $txt[\'newmessages0\'] : $txt[\'newmessages1\']), \'.\';
 	echo ' . "'",
 		// <yabb time>
 		'time' => '\' . $context[\'current_time\'] . \'',
@@ -1892,7 +1892,7 @@ function template_menu()
 
 	// Show a random news item? (or you could pick one from news_lines...)
 	if (!empty($settings[\'enable_news\']))
-		echo \'<b>\', $txt[102], \':</b> \', $context[\'random_news_line\'];
+		echo \'<b>\', $txt['news'], \':</b> \', $context[\'random_news_line\'];
 
 	echo ' . "'",
 		// <yabb main>
@@ -1922,7 +1922,7 @@ function template_main_below()
 					<option value="43200">\', $txt[\'smf49\'], \'</option>
 					<option value="-1" selected="selected">\', $txt[\'smf50\'], \'</option>
 				</select>
-				<input type="submit" value="\', $txt[34], \'" /><br />
+				<input type="submit" value="\', $txt['login'], \'" /><br />
 				\', $txt[\'smf52\'], \'
 			</form>
 		</td></tr>

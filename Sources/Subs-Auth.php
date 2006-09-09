@@ -210,7 +210,7 @@ function KickGuest()
 	$_SESSION['login_url'] = $_SERVER['REQUEST_URL'];
 
 	$context['sub_template'] = 'kick_guest';
-	$context['page_title'] = $txt[34];
+	$context['page_title'] = $txt['login'];
 }
 
 // Display a message about the forum being in maintenance mode, etc.
@@ -230,7 +230,7 @@ function InMaintenance()
 
 function adminLogin()
 {
-	global $context, $scripturl, $txt;
+	global $context, $scripturl, $txt, $user_info;
 
 	loadLanguage('Admin');
 	loadTemplate('Login');
@@ -267,6 +267,7 @@ function adminLogin()
 	// They used a wrong password, log it and unset that.
 	if (isset($_POST['admin_hash_pass']) || isset($_POST['admin_pass']))
 	{
+		$txt['security_wrong'] = sprintf($txt['security_wrong'], isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $txt['unknown'], $_SERVER['HTTP_USER_AGENT'], $user_info['ip']);
 		log_error($txt['security_wrong'], 'critical');
 
 		if (isset($_POST['admin_hash_pass']))
@@ -285,7 +286,7 @@ function adminLogin()
 
 	// And title the page something like "Login".
 	if (!isset($context['page_title']))
-		$context['page_title'] = $txt[34];
+		$context['page_title'] = $txt['login'];
 
 	obExit();
 
@@ -602,8 +603,8 @@ function resetPassword($memID, $username = null)
 		if (in_array($user, array('_', '|')) || preg_match('~[<>&"\'=\\\]~', $user) != 0 || strpos($user, '[code') !== false || strpos($user, '[/code') !== false)
 			fatal_lang_error(240, false);
 
-		if (stristr($user, $txt[28]) !== false)
-			fatal_lang_error(244, true, array($txt[28]));
+		if (stristr($user, $txt['guest_title']) !== false)
+			fatal_lang_error(244, true, array($txt['guest_title']));
 
 		require_once($sourcedir . '/Subs-Members.php');
 		if (isReservedName($user, $memID, false))
@@ -625,7 +626,7 @@ function resetPassword($memID, $username = null)
 		"$txt[719]$user, $txt[492] $newPassword\n\n" .
 		"$txt[701]\n" .
 		"$scripturl?action=profile\n\n" .
-		$txt[130]);
+		$txt['regards_team']);
 }
 
 // This function simply checks whether a password meets the current forum rules.

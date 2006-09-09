@@ -65,7 +65,7 @@ function ViewErrorLog()
 
 	// You can filter by any of the following columns:
 	$filters = array(
-		'ID_MEMBER' => &$txt[35],
+		'ID_MEMBER' => &$txt['username'],
 		'ip' => &$txt['ip_address'],
 		'session' => &$txt['session'],
 		'url' => &$txt['error_url'],
@@ -195,7 +195,7 @@ function ViewErrorLog()
 		$members[0] = array(
 			'ID_MEMBER' => 0,
 			'memberName' => '',
-			'realName' => $txt[28]
+			'realName' => $txt['guest_title']
 		);
 
 		// Go through each error and tack the data on.
@@ -205,7 +205,7 @@ function ViewErrorLog()
 			$context['errors'][$id]['member']['username'] = $members[$memID]['memberName'];
 			$context['errors'][$id]['member']['name'] = $members[$memID]['realName'];
 			$context['errors'][$id]['member']['href'] = empty($memID) ? '' : $scripturl . '?action=profile;u=' . $memID;
-			$context['errors'][$id]['member']['link'] = empty($memID) ? $txt[28] : '<a href="' . $scripturl . '?action=profile;u=' . $memID . '">' . $context['errors'][$id]['member']['name'] . '</a>';
+			$context['errors'][$id]['member']['link'] = empty($memID) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $memID . '">' . $context['errors'][$id]['member']['name'] . '</a>';
 		}
 	}
 

@@ -1,6 +1,22 @@
 <?php
 // Version: 2.0 Alpha; index
 
+/* Important note about language files in SMF 2.0 upwards:
+	1) All language entries in SMF 2.0 are cached. All edits should therefore be made through the admin menu. If you do
+	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
+	   the cache go to Admin => Maintenance => Clean Cache.
+
+	2) Unlike earlier versions of SMF the text in these files is not *pure* PHP. Variables are parsed out when cached
+	   to make understanding language entries easier. As such please follow the following rules:
+
+		a) All individual variables need not be escaped and should be written as {$varname}. i.e. $scripturl => {$scripturl}
+		b) All array variables should have their index appended to the var name above with a dot.
+			e.g. $modSettings['memberCount'] => {$modSettings.memberCount}
+		c) All strings should use single quotes, not double quotes for enclosing the string.
+		d) As a result of (c) all newline characters (etc) need to be escaped. i.e. "\n" is now '\\n'.
+
+*/
+
 global $forum_copyright, $forum_version, $webmaster_email;
 
 // Locale (strftime, pspell_new) and spelling. (pspell_new, can be left as '' normally.)
@@ -28,165 +44,162 @@ $txt['newmessages1'] = 'are new';
 $txt['newmessages3'] = 'New';
 $txt['newmessages4'] = ',';
 
-$txt[2] = 'Admin';
+$txt['admin'] = 'Admin';
 $txt['moderate'] = 'Moderate';
 
-$txt[10] = 'Save';
+$txt['save'] = 'Save';
 
-$txt[17] = 'Modify';
-$txt[18] = $context['forum_name'] . ' - Index';
-$txt[19] = 'Members';
-$txt[20] = 'Board name';
-$txt[21] = 'Posts';
-$txt[22] = 'Last post';
+$txt['modify'] = 'Modify';
+$txt['forum_index'] = '{$context.forum_name} - Index';
+$txt['members'] = 'Members';
+$txt['board_name'] = 'Board name';
+$txt['posts'] = 'Posts';
 
-$txt[24] = '(No subject)';
-$txt[26] = 'Posts';
-$txt[27] = 'View Profile';
-$txt[28] = 'Guest';
-$txt[29] = 'Author';
-$txt[30] = 'on';
-$txt[31] = 'Remove';
-$txt[33] = 'Start new topic';
+$txt['no_subject'] = '(No subject)';
+$txt['view_profile'] = 'View Profile';
+$txt['guest_title'] = 'Guest';
+$txt['author'] = 'Author';
+$txt['on'] = 'on';
+$txt['remove'] = 'Remove';
+$txt['start_new_topic'] = 'Start new topic';
 
-$txt[34] = 'Login';
+$txt['login'] = 'Login';
 // Use numeric entities in the below string.
-$txt[35] = 'Username';
-$txt[36] = 'Password';
+$txt['username'] = 'Username';
+$txt['password'] = 'Password';
 
-$txt[40] = 'That username does not exist.';
+$txt['username_no_exist'] = 'That username does not exist.';
 
-$txt[62] = 'Board Moderator';
-$txt[63] = 'Remove Topic';
-$txt[64] = 'Topics';
-$txt[66] = 'Modify message';
-$txt[68] = 'Name';
-$txt[69] = 'Email';
-$txt[70] = 'Subject';
-$txt[72] = 'Message';
+$txt['board_moderator'] = 'Board Moderator';
+$txt['remove_topic'] = 'Remove Topic';
+$txt['topics'] = 'Topics';
+$txt['modify_msg'] = 'Modify message';
+$txt['name'] = 'Name';
+$txt['email'] = 'Email';
+$txt['subject'] = 'Subject';
+$txt['message'] = 'Message';
 
-$txt[79] = 'Profile';
+$txt['profile'] = 'Profile';
 
-$txt[81] = 'Choose password';
-$txt[82] = 'Verify password';
-$txt[87] = 'Position';
+$txt['choose_pass'] = 'Choose password';
+$txt['verify_pass'] = 'Verify password';
+$txt['position'] = 'Position';
 
-$txt[92] = 'View the profile of';
-$txt[94] = 'Total';
-$txt[95] = 'Posts';
-$txt[96] = 'Website';
-$txt[97] = 'Register';
+$txt['profile_of'] = 'View the profile of';
+$txt['total'] = 'Total';
+$txt['posts_made'] = 'Posts';
+$txt['website'] = 'Website';
+$txt['register'] = 'Register';
 
-$txt[101] = 'Message Index';
-$txt[102] = 'News';
-$txt[103] = 'Home';
+$txt['message_index'] = 'Message Index';
+$txt['news'] = 'News';
+$txt['home'] = 'Home';
 
-$txt[104] = 'Lock/Unlock Topic';
-$txt[105] = 'Post';
-$txt[106] = 'An Error Has Occurred!';
-$txt[107] = 'at';
-$txt[108] = 'Logout';
-$txt[109] = 'Started by';
-$txt[110] = 'Replies';
-$txt[111] = 'Last post';
-$txt[114] = 'Administration Login';
+$txt['lock_unlock'] = 'Lock/Unlock Topic';
+$txt['post'] = 'Post';
+$txt['error_occured'] = 'An Error Has Occurred!';
+$txt['at'] = 'at';
+$txt['logout'] = 'Logout';
+$txt['started_by'] = 'Started by';
+$txt['replies'] = 'Replies';
+$txt['last_post'] = 'Last post';
+$txt['admin_login'] = 'Administration Login';
 // Use numeric entities in the below string.
-$txt[118] = 'Topic';
-$txt[119] = 'Help';
-$txt[121] = 'Remove message';
-$txt[125] = 'Notify';
-$txt[126] = 'Do you want a notification email if someone replies to this topic?';
+$txt['topic'] = 'Topic';
+$txt['help'] = 'Help';
+$txt['remove_message'] = 'Remove message';
+$txt['notify'] = 'Notify';
+$txt['notify_request'] = 'Do you want a notification email if someone replies to this topic?';
 // Use numeric entities in the below string.
-$txt[130] = "Regards,\nThe " . $context['forum_name'] . ' Team.';
-$txt[131] = 'Notify of replies';
-$txt[132] = 'Move Topic';
-$txt[133] = 'Move to';
-$txt[139] = 'Pages';
-$txt[140] = 'Users active in past ' . $modSettings['lastActive'] . ' minutes';
-$txt[144] = 'Personal Messages';
-$txt[145] = 'Reply with quote';
-$txt[146] = 'Reply';
+$txt['regards_team'] = "Regards,\nThe " . '{$context.forum_name} Team.';
+$txt['notify_replies'] = 'Notify of replies';
+$txt['move_topic'] = 'Move Topic';
+$txt['move_to'] = 'Move to';
+$txt['pages'] = 'Pages';
+$txt['users_active'] = 'Users active in past {$modSettings.lastActive} minutes';
+$txt['personal_messages'] = 'Personal Messages';
+$txt['reply_quote'] = 'Reply with quote';
+$txt['reply'] = 'Reply';
 $txt['approve'] = 'Approve';
 $txt['approve_all'] = 'approve all';
 $txt['attach_awaiting_approve'] = 'Attachments awaiting approval';
 
-$txt[151] = 'No messages...';
-$txt[152] = 'you have';
-$txt[153] = 'messages';
-$txt[154] = 'Remove this message';
+$txt['msg_alert_none'] = 'No messages...';
+$txt['msg_alert_you_have'] = 'you have';
+$txt['msg_alert_messages'] = 'messages';
+$txt['remove_message'] = 'Remove this message';
 
-$txt[158] = 'Users Online';
-$txt[159] = 'Personal Message';
-$txt[160] = 'Jump to';
-$txt[161] = 'go';
-$txt[162] = 'Are you sure you want to remove this topic?';
-$txt[163] = 'Yes';
-$txt[164] = 'No';
+$txt['online_users'] = 'Users Online';
+$txt['personal_message'] = 'Personal Message';
+$txt['jump_to'] = 'Jump to';
+$txt['go'] = 'go';
+$txt['are_sure_remove_topic'] = 'Are you sure you want to remove this topic?';
+$txt['yes'] = 'Yes';
+$txt['no'] = 'No';
 
-$txt[166] = 'Search Results';
+$txt['search_results'] = 'Search Results';
 $txt[167] = 'End of results';
-$txt[170] = 'Sorry, no matches were found';
-$txt[176] = 'on';
+$txt['search_no_results'] = 'Sorry, no matches were found';
+$txt['search_on'] = 'on';
 
-$txt[182] = 'Search';
-$txt[190] = 'All';
+$txt['search'] = 'Search';
+$txt['all'] = 'All';
 
-$txt[193] = 'Back';
-$txt[194] = 'Password reminder';
-$txt[195] = 'Topic started by';
-$txt[196] = 'Title';
-$txt[197] = 'Post by';
-$txt[200] = 'Searchable list of all registered members.';
-$txt[201] = 'Please welcome';
-$txt[208] = 'Administration Center';
-$txt[211] = 'Last Edit';
-$txt[212] = 'Would you like to deactivate notification on this topic?';
+$txt['back'] = 'Back';
+$txt['password_reminder'] = 'Password reminder';
+$txt['topic_started'] = 'Topic started by';
+$txt['title'] = 'Title';
+$txt['post_by'] = 'Post by';
+$txt['memberlist_searchable'] = 'Searchable list of all registered members.';
+$txt['welcome_member'] = 'Please welcome';
+$txt['admin_center'] = 'Administration Center';
+$txt['last_edit'] = 'Last Edit';
+$txt['notify_deactivate'] = 'Would you like to deactivate notification on this topic?';
 
-$txt[214] = 'Recent Posts';
+$txt['recent_posts'] = 'Recent Posts';
 
-$txt[227] = 'Location';
-$txt[231] = 'Gender';
-$txt[233] = 'Date Registered';
+$txt['location'] = 'Location';
+$txt['gender'] = 'Gender';
+$txt['date_registered'] = 'Date Registered';
 
-$txt[234] = 'View the most recent posts on the forum.';
-$txt[235] = 'is the most recently updated topic';
+$txt['recent_view'] = 'View the most recent posts on the forum.';
+$txt['recent_updated'] = 'is the most recently updated topic';
 
-$txt[238] = 'Male';
-$txt[239] = 'Female';
+$txt['male'] = 'Male';
+$txt['female'] = 'Female';
 
-$txt[240] = 'Invalid character used in Username.';
+$txt['error_invalid_characters_username'] = 'Invalid character used in Username.';
 
-$txt['welcome_guest'] = 'Welcome, <b>' . $txt[28] . '</b>. Please <a href="' . $scripturl . '?action=login">login</a> or <a href="' . $scripturl . '?action=register">register</a>.';
-$txt['welcome_guest_activate'] = '<br />Did you miss your <a href="' . $scripturl . '?action=activate">activation email?</a>';
+$txt['welcome_guest'] = 'Welcome, <b>{$txt.guest_title}</b>. Please <a href="{$scripturl}?action=login">login</a> or <a href="{$scripturl}?action=register">register</a>.';
+$txt['welcome_guest_activate'] = '<br />Did you miss your <a href="{$scripturl}?action=activate">activation email?</a>';
 $txt['hello_member'] = 'Hey,';
 // Use numeric entities in the below string.
 $txt['hello_guest'] = 'Welcome,';
-$txt[247] = 'Hey,';
-$txt[248] = 'Welcome,';
-$txt[249] = 'Please';
-$txt[250] = 'Back';
-$txt[251] = 'Please select a destination';
+$txt['welmsg_hey'] = 'Hey,';
+$txt['welmsg_welcome'] = 'Welcome,';
+$txt['welmsg_please'] = 'Please';
+$txt['select_destination'] = 'Please select a destination';
 
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt[279] = 'Posted by';
 
-$txt[287] = 'Smiley';
-$txt[288] = 'Angry';
-$txt[289] = 'Cheesy';
-$txt[290] = 'Laugh';
-$txt[291] = 'Sad';
-$txt[292] = 'Wink';
-$txt[293] = 'Grin';
-$txt[294] = 'Shocked';
-$txt[295] = 'Cool';
-$txt[296] = 'Huh';
-$txt[450] = 'Roll Eyes';
-$txt[451] = 'Tongue';
-$txt[526] = 'Embarrassed';
-$txt[527] = 'Lips sealed';
-$txt[528] = 'Undecided';
-$txt[529] = 'Kiss';
-$txt[530] = 'Cry';
+$txt['icon_smiley'] = 'Smiley';
+$txt['icon_angry'] = 'Angry';
+$txt['icon_cheesy'] = 'Cheesy';
+$txt['icon_laugh'] = 'Laugh';
+$txt['icon_sad'] = 'Sad';
+$txt['icon_wink'] = 'Wink';
+$txt['icon_grin'] = 'Grin';
+$txt['icon_shocked'] = 'Shocked';
+$txt['icon_cool'] = 'Cool';
+$txt['icon_huh'] = 'Huh';
+$txt['icon_rolleyes'] = 'Roll Eyes';
+$txt['icon_tongue'] = 'Tongue';
+$txt['icon_embarrassed'] = 'Embarrassed';
+$txt['icon_lips'] = 'Lips sealed';
+$txt['icon_undecided'] = 'Undecided';
+$txt['icon_kiss'] = 'Kiss';
+$txt['icon_cry'] = 'Cry';
 
 $txt[298] = 'Moderator';
 $txt[299] = 'Moderators';
@@ -233,8 +246,8 @@ $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
 $txt[452] = 'Mark ALL messages as read';
 
-$txt[454] = 'Hot Topic (More than ' . $modSettings['hotTopicPosts'] . ' replies)';
-$txt[455] = 'Very Hot Topic (More than ' . $modSettings['hotTopicVeryPosts'] . ' replies)';
+$txt[454] = 'Hot Topic (More than {$modSettings.hotTopicPosts} replies)';
+$txt[455] = 'Very Hot Topic (More than {$modSettings.hotTopicVeryPosts} replies)';
 $txt[456] = 'Locked Topic';
 $txt[457] = 'Normal Topic';
 $txt['participation_caption'] = 'Topic you have posted in';
@@ -300,14 +313,14 @@ $txt[668] = 'Print Page';
 $txt[679] = 'This must be a valid email address.';
 
 $txt[683] = 'I am a geek!!';
-$txt[685] = $context['forum_name'] . ' - Info Center';
+$txt[685] = '{$context.forum_name} - Info Center';
 
 $txt[707] = 'Send this topic';
 
 $txt['sendtopic_title'] = 'Send the topic &quot;%s&quot; to a friend.';
 // Use numeric entities in the below three strings.
 $txt['sendtopic_dear'] = 'Dear %s,';
-$txt['sendtopic_this_topic'] = 'I want you to check out "%s" on ' . $context['forum_name'] . '.  To view it, please click this link';
+$txt['sendtopic_this_topic'] = 'I want you to check out "%s" on {$context.forum_name}.  To view it, please click this link';
 $txt['sendtopic_thanks'] = 'Thanks';
 $txt['sendtopic_sender_name'] = 'Your name';
 $txt['sendtopic_sender_email'] = 'Your email address';
@@ -328,10 +341,10 @@ $txt[1003] = 'File';
 $txt[1004] = 'Line';
 // Use numeric entities in the below string.
 $txt[1005] = 'SMF has detected and automatically tried to repair an error in your database.  If you continue to have problems, or continue to receive these emails, please contact your host.';
-$txt['database_error_versions'] = '<b>Note:</b> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version ' . $forum_version . ', while your database is at version ' . $modSettings['smfVersion'] . '. The above error might possibly go away if you execute the latest version of upgrade.php.';
+$txt['database_error_versions'] = '<b>Note:</b> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version {$forum_version}, while your database is at version {$modSettings.smfVersion}. The above error might possibly go away if you execute the latest version of upgrade.php.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'It seems something has gone sour on the forum with the template system.  This problem should only be temporary, so please come back later and try again.  If you continue to see this message, please contact the administrator.<br /><br />You can also try <a href="javascript:location.reload();">refreshing this page</a>.';
-$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
+$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="{$boardurl}%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="{$scripturl}?theme=1">use the default theme</a>.';
 
 $txt['smf10'] = '<b>Today</b> at ';
 $txt['smf10b'] = '<b>Yesterday</b> at ';
@@ -402,6 +415,9 @@ $txt['smf298'] = 'Advanced search';
 $txt['smf299'] = 'MAJOR SECURITY RISK:';
 $txt['smf300'] = 'You have not removed ';
 
+$txt['cache_writable_head'] = 'Performance Warning';
+$txt['cache_writable'] = 'The cache directory is not writable - this will adversely affect the performance of your forum.';
+
 $txt['smf301'] = 'Page created in ';
 $txt['smf302'] = ' seconds with ';
 $txt['smf302b'] = ' queries.';
@@ -417,7 +433,7 @@ $txt['online8'] = 'Status';
 $txt['topbottom4'] = 'Go Up';
 $txt['topbottom5'] = 'Go Down';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> | 
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by {$forum_version}</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
 $txt['calendar3'] = 'Birthdays:';
@@ -523,7 +539,7 @@ $txt['notification_disable_topic'] = 'Are you sure you wish to disable notificat
 $txt['rtm1'] = 'Report to moderator';
 
 $txt['unread_topics_visit'] = 'Recent Unread Topics';
-$txt['unread_topics_visit_none'] = 'No unread topics found since your last visit.  <a href="' . $scripturl . '?action=unread;all">Click here to try all unread topics</a>.';
+$txt['unread_topics_visit_none'] = 'No unread topics found since your last visit.  <a href="{$scripturl}?action=unread;all">Click here to try all unread topics</a>.';
 $txt['unread_topics_all'] = 'All Unread Topics';
 $txt['unread_replies'] = 'Updated Topics';
 

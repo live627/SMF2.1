@@ -155,7 +155,7 @@ echo '
 
 
 		echo '<br />
-			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['images_url'] . '/' . $context['user']['language'] . '/logout.gif').'" alt="' . $txt[108] . '" style="margin: 2px 0;" border="0" />' : $txt[108], '</a>';
+			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['images_url'] . '/' . $context['user']['language'] . '/logout.gif').'" alt="' . $txt['logout'] . '" style="margin: 2px 0;" border="0" />' : $txt['logout'], '</a>';
 	}
 	// Otherwise they're a guest - so politely ask them to register or login.
 	else
@@ -190,7 +190,7 @@ echo '
 			$txt['welcome_guest'] = str_replace($scripturl.'action=activate', sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode'), $txt['welcome_guest']);
 		break;		
 	}
-		$txt[34] = str_replace('&?','&', $txt[34]);
+		$txt['login'] = str_replace('&?','&', $txt['login']);
 		if (!isset($login))
 			{$login = '';}
 		if (!isset($message_login))
@@ -203,8 +203,8 @@ echo '
 			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
 
 			<form action="', sefReltoAbs($scripturl . 'action=login2'), '" method="post" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-				',$txt[35],': <input type="text" name="user" size="10" /> 
-				',$txt[36],': <input type="password" name="passwrd" size="10" />
+				',$txt['username'],': <input type="text" name="user" size="10" /> 
+				',$txt['password'],': <input type="password" name="passwrd" size="10" />
 				<select name="cookielength">
 					<option value="60">', $txt['smf53'], '</option>
 					<option value="1440">', $txt['smf47'], '</option>
@@ -212,7 +212,7 @@ echo '
 					<option value="302400">', $txt['smf49'], '</option>
 					<option value="-1" selected="selected">', $txt['smf50'], '</option>
 				</select>
-				<input type="submit" value="', $txt[34], '" /><br />
+				<input type="submit" value="', $txt['login'], '" /><br />
 				<span class="middletext">', $txt['smf52'], '</span>
 				<input type="hidden" name="hash_passwrd" value="" />
 				<input type="hidden" name="op2" value="login" />

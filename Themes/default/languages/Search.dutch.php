@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Search
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt[183] = 'Stel zoekparameters in';
 $txt[189] = 'Kies een board waar je in wilt zoeken, of selecteer alle boards';
 $txt[343] = 'Alle zoektermen moeten overeenkomen';

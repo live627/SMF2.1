@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Search
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt[183] = 'Establecer par&aacute;metros de b&uacute;squeda';
 $txt[189] = 'Escoge un foro en el que se buscar&aacute;, o buscar en todos';
 $txt[343] = 'Coincidir todas las palabras';

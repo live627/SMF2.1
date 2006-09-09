@@ -556,7 +556,7 @@ function Post()
 				censorText($context['preview_message']);
 			}
 			else
-				$context['preview_subject'] = '<i>' . $txt[24] . '</i>';
+				$context['preview_subject'] = '<i>' . $txt['no_subject'] . '</i>';
 		}
 
 		// Set up the checkboxes.
@@ -567,7 +567,7 @@ function Post()
 
 		// Set the destination action for submission.
 		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . (isset($_REQUEST['msg']) ? ';msg=' . $_REQUEST['msg'] . ';sesc=' . $sc : '') . (isset($_REQUEST['poll']) ? ';poll' : '');
-		$context['submit_label'] = isset($_REQUEST['msg']) ? $txt[10] : $txt[105];
+		$context['submit_label'] = isset($_REQUEST['msg']) ? $txt['save'] : $txt['post'];
 
 		// Previewing an edit?
 		if (isset($_REQUEST['msg']))
@@ -698,7 +698,7 @@ function Post()
 
 		// Set the destinaton.
 		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . ';msg=' . $_REQUEST['msg'] . ';sesc=' . $sc . (isset($_REQUEST['poll']) ? ';poll' : '');
-		$context['submit_label'] = $txt[10];
+		$context['submit_label'] = $txt['save'];
 	}
 	// Posting...
 	else
@@ -714,7 +714,7 @@ function Post()
 		}
 		$context['destination'] = 'post2;start=' . $_REQUEST['start'] . (isset($_REQUEST['poll']) ? ';poll' : '');
 
-		$context['submit_label'] = $txt[105];
+		$context['submit_label'] = $txt['post'];
 
 		// Posting a quoted reply?
 		if (!empty($topic) && !empty($_REQUEST['quote']))
@@ -935,18 +935,18 @@ function Post()
 	elseif ($context['make_event'])
 		$context['page_title'] = $context['event']['id'] == -1 ? $txt['calendar23'] : $txt['calendar20'];
 	elseif (isset($_REQUEST['msg']))
-		$context['page_title'] = $txt[66];
+		$context['page_title'] = $txt['modify_msg'];
 	elseif (isset($_REQUEST['subject'], $context['preview_subject']))
 		$context['page_title'] = $txt[507] . ' - ' . strip_tags($context['preview_subject']);
 	elseif (empty($topic))
-		$context['page_title'] = $txt[33];
+		$context['page_title'] = $txt['start_new_topic'];
 	else
 		$context['page_title'] = $txt[25];
 
 	// Build the link tree.
 	if (empty($topic))
 		$context['linktree'][] = array(
-			'name' => '<i>' . $txt[33] . '</i>'
+			'name' => '<i>' . $txt['start_new_topic'] . '</i>'
 		);
 	else
 		$context['linktree'][] = array(
@@ -1271,7 +1271,7 @@ function Post2()
 			}
 
 			// Now make sure this email address is not banned from posting.
-			isBannedEmail($_POST['email'], 'cannot_post', sprintf($txt['you_are_post_banned'], $txt[28]));
+			isBannedEmail($_POST['email'], 'cannot_post', sprintf($txt['you_are_post_banned'], $txt['guest_title']));
 		}
 
 		// Incase they are making multiple posts this visit, help them along by storing their name.
@@ -1904,7 +1904,7 @@ function AnnouncementSend()
 
 			$announcements[$cur_language] = array(
 				'subject' => $txt['notifyXAnn2'] . ': ' . $context['topic_subject'],
-				'body' => $message . "\n\n" . $txt['notifyXAnn3'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . $txt[130],
+				'body' => $message . "\n\n" . $txt['notifyXAnn3'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . $txt['regards_team'],
 				'recipients' => array(),
 			);
 		}
@@ -2033,13 +2033,13 @@ function notifyMembersBoard(&$topicData)
 					$txt['notify_boards_once'] . "\n\n" .
 					(!empty($rowmember['notifySendBody']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					$txt[130], null, 't' . $topicData[$key]['topic']);
+					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
 			elseif (empty($rowmember['notifyRegularity']))
 				sendmail($rowmember['emailAddress'], $send_subject,
 					sprintf($txt['notify_boards'], $topicData[$key]['subject'], $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new', un_htmlspecialchars($topicData[$key]['name'])) .
 					(!empty($rowmember['notifySendBody']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					$txt[130], null, 't' . $topicData[$key]['topic']);
+					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
 
 			$sentOnceAlready = 1;
 		}

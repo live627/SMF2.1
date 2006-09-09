@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageSmileys
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['smiley_sets'] = 'Smileysets';
 $txt['smiley_sets_save'] = 'Opslaan';
 $txt['smiley_sets_add'] = 'Nieuwe smiley set';

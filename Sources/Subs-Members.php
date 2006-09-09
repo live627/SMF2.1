@@ -320,8 +320,8 @@ function registerMember(&$regOptions)
 	if (preg_match('~[<>&"\'=\\\]~', $regOptions['username']) != 0 || $regOptions['username'] == '_' || $regOptions['username'] == '|' || strpos($regOptions['username'], '[code') !== false || strpos($regOptions['username'], '[/code') !== false)
 		fatal_lang_error(240, false);
 
-	if (stristr($regOptions['username'], $txt[28]) !== false)
-		fatal_lang_error(244, 'general', array($txt[28]));
+	if (stristr($regOptions['username'], $txt['guest_title']) !== false)
+		fatal_lang_error(244, 'general', array($txt['guest_title']));
 
 	// !!! Separate the sprintf?
 	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($regOptions['email'])) === 0 || strlen(stripslashes($regOptions['email'])) > 255)

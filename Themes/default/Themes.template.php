@@ -13,7 +13,7 @@ function template_main()
 			<table width="80%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
 					<td colspan="3">
-						<a href="', $scripturl, '?action=helpadmin;help=themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a>
+						<a href="', $scripturl, '?action=helpadmin;help=themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a>
 						', $txt['themeadmin_title'], '
 					</td>
 				</tr>
@@ -74,7 +74,7 @@ function template_main()
 					<td class="smalltext">&nbsp; <a href="', $scripturl, '?action=theme;sa=pick;u=0;sesc=', $context['session_id'], '">', $txt['theme_select'], '</a></td>
 				</tr>
 				<tr class="windowbg2">
-					<td colspan="3" align="center" valign="middle" style="padding-top: 2ex; padding-bottom: 2ex;"><input type="submit" name="submit" value="' . $txt[10] . '" /></td>
+					<td colspan="3" align="center" valign="middle" style="padding-top: 2ex; padding-bottom: 2ex;"><input type="submit" name="submit" value="' . $txt['save'] . '" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -84,7 +84,7 @@ function template_main()
 	echo '
 		<table width="80%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder" style="margin-bottom: 2ex; margin-top: 2ex;">
 			<tr class="titlebg">
-				<td><a href="', $scripturl, '?action=helpadmin;help=latest_themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['theme_latest'], '</td>
+				<td><a href="', $scripturl, '?action=helpadmin;help=latest_themes" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['theme_latest'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2" id="themeLatest">', $txt['theme_latest_fetch'], '</td>
@@ -100,7 +100,7 @@ function template_main()
 		<form action="', $scripturl, '?action=admin;area=theme;sa=install" method="post" accept-charset="', $context['character_set'], '" enctype="multipart/form-data" onsubmit="return confirm(\'', $txt['theme_install_new_confirm'], '\');">
 			<table width="80%" border="0" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
-					<td><a href="', $scripturl, '?action=helpadmin;help=theme_install" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['theme_install'], '</td>
+					<td><a href="', $scripturl, '?action=helpadmin;help=theme_install" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['theme_install'], '</td>
 				</tr>';
 
 	// Here's a little box for installing a new theme.
@@ -339,7 +339,7 @@ function template_set_options()
 
 	echo '
 				<tr class="windowbg2">
-					<td align="center" colspan="2"><br /><input type="submit" name="submit" value="', $txt[10], '" /></td>
+					<td align="center" colspan="2"><br /><input type="submit" name="submit" value="', $txt['save'], '" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -354,7 +354,7 @@ function template_set_settings()
 		<form action="', $scripturl, '?action=admin;area=theme;sa=settings;th=', $context['theme_settings']['theme_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<table border="0" width="80%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
-					<td colspan="2"><a href="', $scripturl, '?action=helpadmin;help=theme_settings" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['theme4'], ' - ', $context['theme_settings']['name'], '</td>
+					<td colspan="2"><a href="', $scripturl, '?action=helpadmin;help=theme_settings" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['theme4'], ' - ', $context['theme_settings']['name'], '</td>
 				</tr>';
 
 	// !!! Why can't I edit the default theme popup.
@@ -435,7 +435,7 @@ function template_set_settings()
 
 	echo '
 				<tr class="windowbg2">
-					<td align="center" colspan="2" style="padding-top: 1ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt[10], '" /></td>
+					<td align="center" colspan="2" style="padding-top: 1ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['save'], '" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -484,7 +484,7 @@ function template_installed()
 				<td>
 					<a href="', $scripturl, '?action=admin;area=theme;sa=settings;th=', $context['installed_theme']['id'], ';sesc=', $context['session_id'], '">', $context['installed_theme']['name'], '</a> ', $txt['theme_installed_message'], '<br />
 					<br />
-					<a href="', $scripturl, '?action=admin;area=theme;sa=admin;sesc=', $context['session_id'], '">', $txt[250], '</a>
+					<a href="', $scripturl, '?action=admin;area=theme;sa=admin;sesc=', $context['session_id'], '">', $txt['back'], '</a>
 				</td>
 			</tr>
 		</table>';

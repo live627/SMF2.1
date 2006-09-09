@@ -1,18 +1,20 @@
 <?php
 // Version: 2.0 Alpha; Admin
 
-$txt[4] = 'Boards';
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
+$txt['admin_boards'] = 'Boards';
 $txt[5] = 'Members';
-$txt[6] = 'Newsletters';
-$txt[7] = 'News';
-$txt[8] = 'Membergroups';
-$txt[9] = 'Manage members';
+$txt['admin_newsletters'] = 'Newsletters';
+$txt['admin_news'] = 'News';
+$txt['admin_groups'] = 'Membergroups';
+$txt['admin_members'] = 'Manage members';
 $txt[11] = 'Below is a listing of all the members currently registered with your forum.';
 $txt[65] = 'Next';
-$txt[135] = 'Censored Words';
+$txt['admin_censored_words'] = 'Censored Words';
 $txt[136] = 'Put the word to be censored on the left, and what to change it to on the right.';
 $txt[141] = 'Due to the public nature of forums there may be some words that you wish to prohibit being posted by users of your forum. You can enter any words below that you wish to be censored whenever used by a member.<br />Blank a box to remove that word.';
-$txt[207] = 'Reserved Names';
+$txt['admin_reserved_names'] = 'Reserved Names';
 $txt[216] = 'Edit Your Forum Template';
 $txt[222] = 'Server Settings';
 $txt[338] = 'Send an email to the above email list';
@@ -27,12 +29,6 @@ $txt[355] = 'Webmaster Email Address';
 $txt[356] = 'SMF Directory';
 $txt[360] = 'Sources Directory';
 $txt['cachedir'] = 'Cache Directory';
-$txt[365] = 'Title BG Color';
-$txt[366] = 'Title Text Color';
-$txt[367] = 'Window BG Color';
-$txt[368] = 'Window BG Color #2';
-$txt[369] = 'Category BG Color';
-$txt[370] = 'Table Border Color';
 $txt[379] = 'Enable News?';
 $txt[380] = 'Enable Guest Posting?';
 $txt[388] = 'News Fader Title Color';
@@ -50,7 +46,7 @@ $txt[571] = 'Credits';
 $txt[584] = 'Show and require agreement letter when registering';
 $txt[608] = 'Delete Selected Members';
 $txt[610] = 'Repair All Boards and Topics';
-$txt[644] = 'This is your &quot;' . $txt[208] . '&quot;.  From here, you can edit settings, maintain your forum, view logs, install packages, manage themes, and many other things.<div style="margin-top: 1ex;">If you have any trouble, please look at the &quot;Support &amp; Credits&quot; page.  If the information there doesn\'t help you, feel free to <a href="http://www.simplemachines.org/community/index.php" target="_blank">look to us for help</a> with the problem.</div>You may also find answers to your questions or problems by clicking the <img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt[119] . '" title="' . $txt[119] . '" border="0" /> symbols for more information on the related functions.';
+$txt[644] = 'This is your &quot;{$txt.admin_center}&quot;.  From here, you can edit settings, maintain your forum, view logs, install packages, manage themes, and many other things.<div style="margin-top: 1ex;">If you have any trouble, please look at the &quot;Support &amp; Credits&quot; page.  If the information there doesn\'t help you, feel free to <a href="http://www.simplemachines.org/community/index.php" target="_blank">look to us for help</a> with the problem.</div>You may also find answers to your questions or problems by clicking the <img src="{$settings.images_url}/helptopics.gif" alt="{$txt.help}" title="{$txt.help}" border="0" /> symbols for more information on the related functions.';
 $txt[670] = 'Please place one news item per box. Some BBC tags, such as <span title="Are you bold?">[b]</span>, <span title="I tall icks!!">[i]</span> and <span title="Brackets are great, no?">[u]</span> are allowed in your news, as well as smileys and HTML. Clear a news item\'s text box to remove it.';
 $txt[684] = 'Forum Administrators';
 $txt[699] = 'Reserved names will keep members from registering certain usernames or using these words in their displayed names. Choose the options you wish to use from the bottom before submitting.';
@@ -73,7 +69,7 @@ $txt['smf8'] = 'Database Name:';
 $txt['smf11'] = 'Registration Agreement';
 $txt['smf12'] = 'This agreement is shown when a user registers an account on this forum and has to be accepted before users can continue registration.';
 $txt['smf54'] = 'Database Tables Prefix:';
-$txt['smf55'] = 'Hold down the ctrl key to select multiple entries.  Click the ' . $txt[17] . ' button when you are done.';
+$txt['smf55'] = 'Hold down the ctrl key to select multiple entries.  Click the {$txt.modify} button when you are done.';
 $txt['smf73'] = 'Listing of forum errors';
 $txt['smf74'] = 'The following errors are fouling up your forum';
 $txt['smf85'] = 'Would you like to fix these errors?';
@@ -135,14 +131,12 @@ $txt['email_address'] = 'Email Address';
 $txt['ip_address'] = 'IP address';
 $txt['member_id'] = 'ID';
 
-$txt['security_wrong'] = 'Administration login attempt!' . "\n" .
-	'Referer: ' . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'unknown') . "\n" .
-	'User agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
-	'IP: ' . $GLOBALS['user_info']['ip'];
+$txt['unknown'] = 'unknown';
+$txt['security_wrong'] = 'Administration login attempt!\\nReferer: %1$s\\nUser agent: %2$s\\nIP: %3$s';
 
 $txt['email_as_html'] = 'Send in HTML format.  (with this you can put normal HTML in the email.)';
 $txt['email_parsed_html'] = 'Add &lt;br /&gt;s and &amp;nbsp;s to this message.';
-$txt['email_variables'] = 'In this message you can use a few &quot;variables&quot;.  Click <a href="' . $scripturl . '?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">here</a> for more information.';
+$txt['email_variables'] = 'In this message you can use a few &quot;variables&quot;.  Click <a href="{$scripturl}?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">here</a> for more information.';
 $txt['email_force'] = 'Send this to members even if they have chosen not to receive announcements.';
 $txt['email_as_pms'] = 'Send this to these groups using personal messages.';
 $txt['email_continue'] = 'Continue';
@@ -344,7 +338,7 @@ $txt['maintenance1'] = 'Subject for display:';
 $txt['maintenance2'] = 'Message for display:';
 
 $txt['errlog1'] = 'Forum Error Log';
-$txt['errlog2'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the ' . $txt[31] . ' button at the bottom of the page.';
+$txt['errlog2'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the {$txt.remove} button at the bottom of the page.';
 
 $txt['theme4'] = 'Theme Settings';
 $txt['theme_current_settings'] = 'Current Theme';

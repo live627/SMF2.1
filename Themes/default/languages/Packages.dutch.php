@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Packages
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['smf154'] = 'Ga verder';
 $txt['smf160'] = 'MOD-bestand is uitgepakt, maar bij deze MOD hoort een PHP-script dat eerst dient te worden uitgevoerd';
 $txt['smf161'] = 'Starten';

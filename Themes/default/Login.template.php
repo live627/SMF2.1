@@ -13,7 +13,7 @@ function template_login()
 			<table border="0" width="400" cellspacing="0" cellpadding="4" class="tborder" align="center">
 				<tr class="titlebg">
 					<td colspan="2">
-						<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt[34], '
+						<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['login'], '
 					</td>';
 
 	// Did they make a mistake last time?
@@ -36,10 +36,10 @@ function template_login()
 	// Now just get the basic information - username, password, etc.
 	echo '
 				</tr><tr class="windowbg">
-					<td width="50%" align="right"><b>', $txt[35], ':</b></td>
+					<td width="50%" align="right"><b>', $txt['username'], ':</b></td>
 					<td><input type="text" name="user" size="20" value="', $context['default_username'], '" /></td>
 				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt[36], ':</b></td>
+					<td align="right"><b>', $txt['password'], ':</b></td>
 					<td><input type="password" name="passwrd" value="', $context['default_password'], '" size="20" /></td>
 				</tr><tr class="windowbg">
 					<td align="right"><b>', $txt[497], ':</b></td>
@@ -55,7 +55,7 @@ function template_login()
 					<td><input type="checkbox" name="undelete" class="check" /></td>
 				</tr><tr class="windowbg">';
 	echo '
-					<td align="center" colspan="2"><input type="submit" value="', $txt[34], '" style="margin-top: 2ex;" /></td>
+					<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
 				</tr><tr class="windowbg">
 					<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt[315], '</a><br /><br /></td>
 				</tr>
@@ -96,15 +96,15 @@ function template_kick_guest()
 	// And now the login information.
 	echo '
 				</tr><tr class="titlebg">
-					<td><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt[34], '</td>
+					<td><img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['login'], '</td>
 				</tr><tr>
 					<td class="windowbg">
 						<table border="0" cellpadding="3" cellspacing="0" align="center">
 							<tr>
-								<td align="right"><b>', $txt[35], ':</b></td>
+								<td align="right"><b>', $txt['username'], ':</b></td>
 								<td><input type="text" name="user" size="20" /></td>
 							</tr><tr>
-								<td align="right"><b>', $txt[36], ':</b></td>
+								<td align="right"><b>', $txt['password'], ':</b></td>
 								<td><input type="password" name="passwrd" size="20" /></td>
 							</tr><tr>
 								<td align="right"><b>', $txt[497], ':</b></td>
@@ -113,7 +113,7 @@ function template_kick_guest()
 								<td align="right"><b>', $txt[508], ':</b></td>
 								<td><input type="checkbox" name="cookieneverexp" class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
 							</tr><tr>
-								<td align="center" colspan="2"><input type="submit" value="', $txt[34], '" style="margin-top: 2ex;" /></td>
+								<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
 							</tr><tr>
 								<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt[315], '</a><br /><br /></td>
 							</tr>
@@ -149,7 +149,7 @@ function template_maintenance()
 			</td>
 			<td class="windowbg">', $context['description'], '</td>
 		</tr><tr class="titlebg">
-			<td colspan="2">', $txt[114], '</td>
+			<td colspan="2">', $txt['admin_login'], '</td>
 		</tr><tr>';
 
 	// And now all the same basic login stuff from before.
@@ -157,9 +157,9 @@ function template_maintenance()
 			<td colspan="2" class="windowbg">
 				<table border="0" width="90%" align="center">
 					<tr>
-						<td><b>', $txt[35], ':</b></td>
+						<td><b>', $txt['username'], ':</b></td>
 						<td><input type="text" name="user" size="15" /></td>
-						<td><b>', $txt[36], ':</b></td>
+						<td><b>', $txt['password'], ':</b></td>
 						<td><input type="password" name="passwrd" size="10" /> &nbsp;</td>
 					</tr><tr>
 						<td><b>', $txt[497], ':</b></td>
@@ -167,7 +167,7 @@ function template_maintenance()
 						<td><b>', $txt[508], ':</b></td>
 						<td><input type="checkbox" name="cookieneverexp" class="check" /></td>
 					</tr><tr>
-						<td align="center" colspan="4"><input type="submit" value="', $txt[34], '" style="margin-top: 1ex; margin-bottom: 1ex;" /></td>
+						<td align="center" colspan="4"><input type="submit" value="', $txt['login'], '" style="margin-top: 1ex; margin-bottom: 1ex;" /></td>
 					</tr>
 				</table>
 			</td>
@@ -189,7 +189,7 @@ function template_admin_login()
 	<table border="0" width="400" cellspacing="0" cellpadding="3" class="tborder" align="center">
 		<tr class="titlebg">
 			<td align="left">
-				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt[34], '
+				<img src="', $settings['images_url'], '/icons/login_sm.gif" alt="" align="top" /> ', $txt['login'], '
 			</td>
 		</tr>';
 
@@ -197,8 +197,8 @@ function template_admin_login()
 	echo '
 		<tr class="windowbg">
 			<td align="center" style="padding: 1ex 0;">
-				<b>', $txt[36], ':</b> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="middle" /></a><br />
-				<input type="submit" value="', $txt[34], '" style="margin-top: 2ex;" />
+				<b>', $txt['password'], ':</b> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="middle" /></a><br />
+				<input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" />
 			</td>
 		</tr>
 	</table>';

@@ -629,7 +629,7 @@ function loadBoard()
 						'id' => $row['ID_MODERATOR'],
 						'name' => $row['realName'],
 						'href' => $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt[62] . '">' . $row['realName'] . '</a>'
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['realName'] . '</a>'
 					);
 			}
 			while ($row = mysql_fetch_assoc($request));
@@ -966,7 +966,7 @@ function loadMemberContext($user)
 	censorText($profile['location']);
 
 	// Set things up to be used before hand.
-	$gendertxt = $profile['gender'] == 2 ? $txt[239] : ($profile['gender'] == 1 ? $txt[238] : '');
+	$gendertxt = $profile['gender'] == 2 ? $txt['female'] : ($profile['gender'] == 1 ? $txt['male'] : '');
 	$profile['signature'] = str_replace(array("\n", "\r"), array('<br />', ''), $profile['signature']);
 	$profile['signature'] = parse_bbc($profile['signature'], true, 'sig' . $profile['ID_MEMBER']);
 
@@ -999,7 +999,7 @@ function loadMemberContext($user)
 		'buddies' => $buddy_list,
 		'title' => !empty($modSettings['titlesEnable']) ? $profile['usertitle'] : '',
 		'href' => $scripturl . '?action=profile;u=' . $profile['ID_MEMBER'],
-		'link' => '<a href="' . $scripturl . '?action=profile;u=' . $profile['ID_MEMBER'] . '" title="' . $txt[92] . ' ' . $profile['realName'] . '">' . $profile['realName'] . '</a>',
+		'link' => '<a href="' . $scripturl . '?action=profile;u=' . $profile['ID_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $profile['realName'] . '">' . $profile['realName'] . '</a>',
 		'email' => &$profile['emailAddress'],
 		'hide_email' => $profile['emailAddress'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($profile['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum') && $ID_MEMBER != $profile['ID_MEMBER']),
 		'email_public' => (empty($profile['hideEmail']) || empty($modSettings['allow_hideEmail'])) && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']),
@@ -1277,7 +1277,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 		'email' => &$user_info['email']
 	);
 	if ($context['user']['is_guest'])
-		$context['user']['name'] = &$txt[28];
+		$context['user']['name'] = &$txt['guest_title'];
 	else
 		$context['user']['name'] = &$user_info['name'];
 
@@ -1539,8 +1539,8 @@ function loadSubTemplate($sub_template_name, $fatal = false)
 // Load a language file.  Tries the current and default themes as well as the user and global languages.
 function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload = false)
 {
-	global $boarddir, $boardurl, $user_info, $language_dir, $language, $settings, $context, $txt;
-	global $cachedir, $db_show_debug;
+	global $user_info, $language, $settings, $context;
+	global $cachedir, $db_show_debug, $sourcedir;
 	static $already_loaded = array();
 
 	// Default to the user's language.
@@ -1553,69 +1553,19 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 	// What theme are we in?
 	$theme_name = basename($settings['theme_url']);
 
-	// Is this cached - if not recache!
+	// Is this cached? If not recache!
+	$do_include = true;
 	if (!file_exists($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php'))
 	{
-		// Open the file to write to.
-		$fh = fopen($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php', 'w');
-		fwrite($fh, "<?php\n");
-
-		// For each file open it up and write it out!
-		foreach (explode('+', $template_name) as $template)
-		{
-			// Obviously, the current theme is most important to check.
-			$attempts = array(
-				array($settings['theme_dir'], $template, $lang, $settings['theme_url']),
-				array($settings['theme_dir'], $template, $language, $settings['theme_url']),
-			);
-		
-			// Do we have a base theme to worry about?
-			if (isset($settings['base_theme_dir']))
-			{
-				$attempts[] = array($settings['base_theme_dir'], $template, $lang, $settings['base_theme_url']);
-				$attempts[] = array($settings['base_theme_dir'], $template, $language, $settings['base_theme_url']);
-			}
-		
-			// Fallback on the default theme if necessary.
-			$attempts[] = array($settings['default_theme_dir'], $template, $lang, $settings['default_theme_url']);
-			$attempts[] = array($settings['default_theme_dir'], $template, $language, $settings['default_theme_url']);
-
-			// Try to find the language file.
-			foreach ($attempts as $k => $file)
-				if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
-				{
-					foreach (file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php') as $line)
-					{
-						if (substr($line, 0, 2) != '?>' && substr($line, 0, 2) != '<?')
-							fwrite($fh, $line);
-					}
-
-					// Hmmm... do we really still need this?
-					$language_url = $file[3];
-					$lang = $file[2];
-		
-					break;
-				}
-	
-			// That couldn't be found!  Log the error, but *try* to continue normally.
-			if (!isset($language_url))
-			{
-				if ($fatal)
-					log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
-				return false;
-			}
-			else
-				unset($language_url);
-		}
-
-		fwrite($fh, "?>");
-		fclose($fh);
+		require_once($sourcedir . '/ManageMaintenance.php');
+		$do_include = cacheLanguage($template_name, $lang, $fatal, $theme_name);
 	}
 
 	if ($db_show_debug === true)
 		$context['debug']['language_files'][] = $template_name . '.' . $lang . ' (' . $theme_name . ')';
 
-	template_include($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php');
+	if ($do_include)
+		template_include($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php');
 
 	// Remember what we have loaded, and in which language.
 	$already_loaded[$template_name] = $lang;
@@ -1623,7 +1573,7 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 	//!!! /**************** 2.0 ALPHA FIXES - START ********************/
 	if (!in_array($lang, array('dutch', 'english', 'german', 'spanish')))
 	{
-		global $sourcedir, $txtChanges;
+		global $txtChanges;
 		require_once($sourcedir . '/FixLanguage.php');
 		applyTxtFixes();
 	}
@@ -1674,7 +1624,7 @@ function getBoardParents($id_parent)
 						'id' => $row['ID_MODERATOR'],
 						'name' => $row['realName'],
 						'href' => $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt[62] . '">' . $row['realName'] . '</a>'
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['realName'] . '</a>'
 					);
 				}
 		}
@@ -1758,7 +1708,7 @@ function loadJumpTo()
 function template_include($filename, $once = false)
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-	global $language_dir, $user_info, $boardurl, $boarddir, $sourcedir;
+	global $user_info, $boardurl, $boarddir, $sourcedir;
 	global $maintenance, $mtitle, $mmessage;
 	static $templates = array();
 

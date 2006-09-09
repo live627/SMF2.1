@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Themes
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['themeadmin_explain'] = 'Thema\'s zijn de verschillende uiterlijken van je forum. Deze instellingen hebben invloed op de selectie van thema\'s en welke thema\'s gasten en andere leden gebruiken.';
 
 $txt['theme_allow'] = 'Sta leden toe hun eigen thema te selecteren?';

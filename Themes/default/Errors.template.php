@@ -28,7 +28,7 @@ function template_fatal_error()
 
 	// Show a back button (using javascript.)
 	echo '
-<div align="center" style="margin-top: 2ex;"><a href="javascript:history.go(-1)">', $txt[250], '</a></div>';
+<div align="center" style="margin-top: 2ex;"><a href="javascript:history.go(-1)">', $txt['back'], '</a></div>';
 }
 
 function template_error_log()
@@ -46,7 +46,7 @@ function template_error_log()
 				<tr>
 					<td colspan="2" class="titlebg">
 						<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-							<td>', $txt[139], ': ', $context['page_index'], '</td>
+							<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 						</tr></table>
 					</td>
 				</tr>';
@@ -139,14 +139,14 @@ function template_error_log()
 	else
 		echo '
 				<tr>
-					<td colspan="2" class="windowbg2">', $txt[151], '</td>
+					<td colspan="2" class="windowbg2">', $txt['msg_alert_none'], '</td>
 				</tr>';
 
 	echo '
 				<tr>
 					<td colspan="2" class="titlebg">
 						<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-							<td>', $txt[139], ': ', $context['page_index'], '</td>
+							<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 						</tr></table>
 					</td>
 				</tr>

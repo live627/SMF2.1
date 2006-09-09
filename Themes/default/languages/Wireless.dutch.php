@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Wireless
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['wireless_error_home'] = 'Boardindex';
 $txt['wireless_error_notyet'] = 'Sorry, deze sectie is niet beschikbaar voor mobiele gebruikers op dit moment.';
 

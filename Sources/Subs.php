@@ -1458,7 +1458,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'link' => array('match' => '(?:board=\d+;)?((?:topic|threadid)=[\dmsg#\./]{1,40}(?:;start=[\dmsg#\./]{1,40})?|action=profile;u=\d+)'),
 					'date' => array('match' => '(\d+)', 'validate' => 'timeformat'),
 				),
-				'before' => '<div class="quoteheader"><a href="' . $scripturl . '?{link}">' . $txt['smf239'] . ': {author} ' . $txt[176] . ' {date}</a></div><div class="quote">',
+				'before' => '<div class="quoteheader"><a href="' . $scripturl . '?{link}">' . $txt['smf239'] . ': {author} ' . $txt['search_on'] . ' {date}</a></div><div class="quote">',
 				'after' => '</div>',
 				'block_level' => true,
 			),
@@ -2427,7 +2427,7 @@ function parsesmileys(&$message)
 		{
 			$smileysfrom = array('>:D', ':D', '::)', '>:(', ':)', ';)', ';D', ':(', ':o', '8)', ':P', '???', ':-[', ':-X', ':-*', ':\'(', ':-\\', '^-^', 'O0', 'C:-)', '0:)');
 			$smileysto = array('evil.gif', 'cheesy.gif', 'rolleyes.gif', 'angry.gif', 'smiley.gif', 'wink.gif', 'grin.gif', 'sad.gif', 'shocked.gif', 'cool.gif', 'tongue.gif', 'huh.gif', 'embarrassed.gif', 'lipsrsealed.gif', 'kiss.gif', 'cry.gif', 'undecided.gif', 'azn.gif', 'afro.gif', 'police.gif', 'angel.gif');
-			$smileysdescs = array('', $txt[289], $txt[450], $txt[288], $txt[287], $txt[292], $txt[293], $txt[291], $txt[294], $txt[295], $txt[451], $txt[296], $txt[526], $txt[527], $txt[529], $txt[530], $txt[528], '', '', '', '');
+			$smileysdescs = array('', $txt['icon_cheesy'], $txt['icon_rolleyes'], $txt['icon_angry'], $txt['icon_smiley'], $txt['icon_wink'], $txt['icon_grin'], $txt['icon_sad'], $txt['icon_shocked'], $txt['icon_cool'], $txt['icon_tongue'], $txt['icon_huh'], $txt['icon_embarrassed'], $txt['icon_lips'], $txt['icon_kiss'], $txt['icon_cry'], $txt['icon_undecided'], '', '', '', '');
 		}
 		else
 		{
@@ -3081,22 +3081,22 @@ function setupThemeContext()
 	// All the buttons we can possible want and then some.
 	$buttons = array(
 		'home' => array(
-			'title' => $txt[103],
+			'title' => $txt['home'],
 			'href' => $scripturl,
 			'show' => true,
 		),
 		'help' => array(
-			'title' => $txt[119],
+			'title' => $txt['help'],
 			'href' => $scripturl . '?action=help',
 			'show' => true,
 		),
 		'search' => array(
-			'title' => $txt[182],
+			'title' => $txt['search'],
 			'href' => $scripturl . '?action=search',
 			'show' => $context['allow_search'],
 		),
 		'admin' => array(
-			'title' => $txt[2],
+			'title' => $txt['admin'],
 			'href' => $scripturl . '?action=admin',
 			'show' => $context['allow_admin'],
 		),
@@ -3106,7 +3106,7 @@ function setupThemeContext()
 			'show' => $context['allow_moderation_center'],
 		),
 		'profile' => array(
-			'title' => $txt[79],
+			'title' => $txt['profile'],
 			'href' => $scripturl . '?action=profile',
 			'show' => $context['allow_edit_profile'],
 		),
@@ -3126,18 +3126,18 @@ function setupThemeContext()
 			'show' => $context['allow_memberlist'],
 		),
 		'login' => array(
-			'title' => $txt[34],
+			'title' => $txt['login'],
 			'href' => $scripturl . '?action=login',
 			'show' => $user_info['is_guest'],
 		),
 		'register' => array(
-			'title' => $txt[97],
+			'title' => $txt['register'],
 			'href' => $scripturl . '?action=register',
 			'show' => $user_info['is_guest'],
 			'is_last' => true,
 		),
 		'logout' => array(
-			'title' => $txt[108],
+			'title' => $txt['logout'],
 			'href' => $scripturl . '?action=logout;sesc=' . $context['session_id'],
 			'show' => !$user_info['is_guest'],
 			'is_last' => true,
@@ -3244,7 +3244,7 @@ function template_rawdata()
 
 function template_header()
 {
-	global $txt, $modSettings, $context, $settings, $user_info, $boarddir;
+	global $txt, $modSettings, $context, $settings, $user_info, $boarddir, $cachedir;
 
 	setupThemeContext();
 
@@ -3277,17 +3277,21 @@ function template_header()
 					unset($securityFiles[$i]);
 			}
 
-			if (!empty($securityFiles))
+			if (!empty($securityFiles) || !is_writable($cachedir))
 			{
 				echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', $txt['smf299'], '</b><br />
+			<b style="text-decoration: underline;">', empty($securityFiles) ? $txt['cache_writable_head'] : $txt['smf299'], '</b><br />
 			<div style="padding-left: 6ex;">';
 
 				foreach ($securityFiles as $securityFile)
 					echo '
-			', $txt['smf300'], '<b>', $securityFile, '</b>!<br />';
+				', $txt['smf300'], '<b>', $securityFile, '</b>!<br />';
+
+				if (!is_writable($cachedir))
+					echo '
+				<b>', $txt['cache_writable'], '</b><br />';
 
 				echo '
 			</div>
@@ -3299,7 +3303,7 @@ function template_header()
 		{
 			echo '
 				<div class="windowbg" style="margin: 2ex; padding: 2ex; border: 2px dashed red; color: red;">
-					', sprintf($txt['you_are_post_banned'], $user_info['is_guest'] ? $txt[28] : $user_info['name']);
+					', sprintf($txt['you_are_post_banned'], $user_info['is_guest'] ? $txt['guest_title'] : $user_info['name']);
 
 			if (!empty($_SESSION['ban']['cannot_post']['reason']))
 				echo '

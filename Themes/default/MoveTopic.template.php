@@ -12,10 +12,10 @@ function template_main()
 	<form action="', $scripturl, '?action=movetopic2;topic=', $context['current_topic'], '.0" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this);">
 		<table border="0" width="400" cellspacing="0" cellpadding="4" align="center" class="tborder">
 			<tr class="titlebg">
-				<td>', $txt[132], '</td>
+				<td>', $txt['move_topic'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="middle" align="center" style="padding-bottom: 1ex; padding-top: 2ex;">
-					<b>', $txt[133], ':</b> <select name="toboard">';
+					<b>', $txt['move_to'], ':</b> <select name="toboard">';
 
 	// Show dashes (-) before the board name if it's a child.
 /*	foreach ($context['boards'] as $board)
@@ -49,7 +49,7 @@ function template_main()
 						<textarea name="reason" rows="3" cols="40">', $txt['movetopic_default'], '</textarea><br />
 					</div>
 					<br />
-					<input type="submit" value="', $txt[132], '" onclick="return submitThisOnce(this);" accesskey="s" />
+					<input type="submit" value="', $txt['move_topic'], '" onclick="return submitThisOnce(this);" accesskey="s" />
 				</td>
 			</tr>
 		</table>';

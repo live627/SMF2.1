@@ -331,7 +331,7 @@ function template_event_post()
 	echo '
 							<tr align="center">
 								<td colspan="2">
-									<input type="submit" value="', empty($context['event']['new']) ? $txt[10] : $txt[105], '" />';
+									<input type="submit" value="', empty($context['event']['new']) ? $txt['save'] : $txt['post'], '" />';
 	// Delete button?
 	if (empty($context['event']['new']))
 		echo '

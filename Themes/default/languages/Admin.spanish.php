@@ -1,19 +1,21 @@
 <?php
 // Version: 2.0 Alpha; Admin
 
-$txt[4] = 'Foros';
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
+$txt['admin_boards'] = 'Foros';
 $txt[5] = 'Usuarios';
-$txt[6] = 'Boletines de Noticias';
-$txt[7] = 'Noticias';
-$txt[8] = 'Grupos de usuarios';
+$txt['admin_newsletters'] = 'Boletines de Noticias';
+$txt['admin_news'] = 'Noticias';
+$txt['admin_groups'] = 'Grupos de usuarios';
 // Untranslated! - Manage Members
-$txt[9] = 'Ver todos los usuarios';
+$txt['admin_members'] = 'Ver todos los usuarios';
 $txt[11] = 'Debajo est&aacute; el listado de todos los usuarios registrados actualmente en tu foro.';
 $txt[65] = 'Siguiente';
-$txt[135] = 'Palabras censuradas';
+$txt['admin_censored_words'] = 'Palabras censuradas';
 $txt[136] = 'Escribe la palabra a ser censurada en la izquierda, y la palabra por la que se cambiar&aacute; en la derecha.';
 $txt[141] = 'Debido a la naturaleza p&uacute;blica de los foros, puede que haya algunas palabras que desees prohibir que se publiquen por usuarios en tu foro. Puedes introducir cualquier palabra que desees que se censure cuando sea usada por alg&uacute;n usuario.<br />Para eliminar una palabra, limpia su cuadro de texto.';
-$txt[207] = 'Nombres reservados';
+$txt['admin_reserved_names'] = 'Nombres reservados';
 $txt[216] = 'Editar la plantilla del foro';
 $txt[222] = 'Configuraci&oacute;n del Servidor';
 $txt[338] = 'Enviar un email a los usuarios de la lista superior';
@@ -29,12 +31,6 @@ $txt[356] = 'Directorio SMF';
 $txt[360] = 'Directorio de Fuentes';
 // Untranslated!
 $txt['cachedir'] = 'Cache Directory';
-$txt[365] = 'Color de fondo del t&iacute;tulo';
-$txt[366] = 'Color del texto del t&iacute;tulo';
-$txt[367] = 'Color de fondo de la ventana';
-$txt[368] = 'Color de fondo #2 de la ventana';
-$txt[369] = 'Color de fondo de la categor&iacute;a';
-$txt[370] = 'Color del borde de la tabla';
 $txt[379] = '&iquest;Activar Noticias?';
 $txt[380] = '&iquest;Permitir publicar mensajes a los visitantes?';
 $txt[388] = 'Color del t&iacute;tulo del Cuadro de Noticias';
@@ -56,7 +52,7 @@ $txt[571] = 'Cr&eacute;ditos';
 $txt[584] = 'Mostrar y requerir carta de aceptaci&oacute;n cuando se registren';
 $txt[608] = 'Borrar usuarios seleccionados';
 $txt[610] = 'Reparar todos los Foros y Temas';
-$txt[644] = 'Este es tu &quot;' . $txt[208] . '&quot;.  Aqu&iacute; puedes modificar la configuraci&oacute;n del foro, ver logs, instalar paquetes, manejar temas, y muchas otras cosas.<div style="margin-top: 1ex;">Si tienes algun problema, por favor revisa la p&aacute;gina de &quot;Soporte &amp; Cr&eacute;ditos&quot;.  Si la informaci&oacute;n ah&iacute; no te sirve, si&eacute;ntete libre de <a href="http://www.simplemachines.org/community/index.php?board=16.0" target="_blank">visitarnos para solicitar ayuda</a> acerca de tu problema.</div>Tambi&eacute;n puedes encontrar respuestas a tus preguntas y problemas haciendo <i>click</i> en los s&iacute;mbolos <img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt[119] . '" title="' . $txt[119] . '" border="0" /> para obtener mayor informaci&oacute;n de las funciones en cuesti&oacute;n.<br /><br />Traducci&oacute;n al espa&ntilde;ol por <a href="http://OmarBazavilvazo.com" target="_blank">Omar Bazavilvazo</a>.';
+$txt[644] = 'Este es tu &quot;{$txt.admin_center}&quot;.  Aqu&iacute; puedes modificar la configuraci&oacute;n del foro, ver logs, instalar paquetes, manejar temas, y muchas otras cosas.<div style="margin-top: 1ex;">Si tienes algun problema, por favor revisa la p&aacute;gina de &quot;Soporte &amp; Cr&eacute;ditos&quot;.  Si la informaci&oacute;n ah&iacute; no te sirve, si&eacute;ntete libre de <a href="http://www.simplemachines.org/community/index.php?board=16.0" target="_blank">visitarnos para solicitar ayuda</a> acerca de tu problema.</div>Tambi&eacute;n puedes encontrar respuestas a tus preguntas y problemas haciendo <i>click</i> en los s&iacute;mbolos <img src="{$settings.images_url}/helptopics.gif" alt="{$txt.help}" title="{$txt.help}" border="0" /> para obtener mayor informaci&oacute;n de las funciones en cuesti&oacute;n.<br /><br />Traducci&oacute;n al espa&ntilde;ol por <a href="http://OmarBazavilvazo.com" target="_blank">Omar Bazavilvazo</a>.';
 $txt[670] = 'Favor de poner una noticia en cada cuadro. Algunos tags BBC, como <span title="&iquest;Est&aacute;s en negritas?">[b]</span>, <span title="&iexcl;Cursivas!">[i]</span> and <span title="Los corchetes son grandiosos, &iquest;no?">[u]</span> est&aacute;n permitidos en las noticias, as&iacute; como smileys y HTML. Limpia el cuadro de cualquier elemento de las noticias para eliminarlo.';
 $txt[684] = 'Administradores del Foro';
 $txt[699] = 'Los Nombres Reservados impiden que los usuarios registren ciertos nombres de usuario o usen esas palabras en sus nombres a mostrar. Escoge las opciones que desees usar en la parte inferior antes de enviar el formulario.';
@@ -79,7 +75,7 @@ $txt['smf8'] = 'Nombre de la base de datos:';
 $txt['smf11'] = 'Carta de Aceptaci&oacute;n';
 $txt['smf12'] = 'Esta Carta de Aceptaci&oacute;n se muestra cuando un usuario registra una cuenta en el foro y tiene que ser aceptada para que los usuarios puedan continuar registr&aacute;ndose.';
 $txt['smf54'] = 'Prefijo en las tablas de la base de datos:';
-$txt['smf55'] = 'Deja presionada la tecla ctrl para seleccionar m&uacute;ltiples elementos.  Haz <i>click</i> en el bot&oacute;n ' . $txt[17] . ' cuando termines.';
+$txt['smf55'] = 'Deja presionada la tecla ctrl para seleccionar m&uacute;ltiples elementos.  Haz <i>click</i> en el bot&oacute;n {$txt.modify} cuando termines.';
 $txt['smf73'] = 'Listado de errores del foro';
 $txt['smf74'] = 'Los siguientes errores est&aacute;n presentes en tu foro (vac&iacute;o si ninguno)';
 $txt['smf85'] = '&iquest;Deseas arreglar esos errores?';
@@ -142,14 +138,12 @@ $txt['email_address'] = 'Direcci&oacute;n Email';
 $txt['ip_address'] = 'Direcci&oacute;n IP';
 $txt['member_id'] = 'ID';
 
-$txt['security_wrong'] = '&iexcl;Intento de ingreso a administraci&oacute;n!' . "\n" .
-	'Referer: ' . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'desconocido') . "\n" .
-	'User agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
-	'IP: ' . $GLOBALS['user_info']['ip'];
+$txt['unknown'] = 'desconocido';
+$txt['security_wrong'] = '&iexcl;Intento de ingreso a administraci&oacute;n!\\nReferer: %1$s\\nUser agent: %2$s\\nIP: %3$s';
 
 $txt['email_as_html'] = 'Enviar en formato HTML.  (con esto, puedes poner HTML en el email.)';
 $txt['email_parsed_html'] = 'Agregar &lt;br /&gt;s y &amp;nbsp;s a este mensaje.';
-$txt['email_variables'] = 'En este mensaje puedes usar algunas &quot;variables&quot;.  Haz <i>click</i> <a href="' . $scripturl . '?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">aqu&iacute;</a> para m&aacute;s informaci&oacute;n.';
+$txt['email_variables'] = 'En este mensaje puedes usar algunas &quot;variables&quot;.  Haz <i>click</i> <a href="{$scripturl}?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">aqu&iacute;</a> para m&aacute;s informaci&oacute;n.';
 $txt['email_force'] = 'Enviar a estos usuarios a&uacute;n si ellos eligieron no recibir anuncios.';
 $txt['email_as_pms'] = 'Enviar esto a esos grupos usando mensajes personales.';
 $txt['email_continue'] = 'Continuar';
@@ -365,7 +359,7 @@ $txt['maintenance1'] = 'Asunto a mostrar:';
 $txt['maintenance2'] = 'Mensaje a mostrar:';
 
 $txt['errlog1'] = 'Ver log de errores del foro';
-$txt['errlog2'] = 'El log de errores registra cada error encontrado en tu foro.  Para eliminar cualquier error de la base de datos, selecciona la casilla, y haz <i>click</i> en el bot&oacute;n  ' . $txt[31] . ' ubicado en la parte inferior de la p&aacute;gina.';
+$txt['errlog2'] = 'El log de errores registra cada error encontrado en tu foro.  Para eliminar cualquier error de la base de datos, selecciona la casilla, y haz <i>click</i> en el bot&oacute;n  {$txt.remove} ubicado en la parte inferior de la p&aacute;gina.';
 
 $txt['theme4'] = 'Configuraci&oacute;n del Tema';
 $txt['theme_current_settings'] = 'Tema actual';

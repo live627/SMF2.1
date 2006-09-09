@@ -123,7 +123,7 @@ function ViewMembers()
 
 	// Setup the admin tabs.
 	$context['admin_tabs'] = array(
-		'title' => $txt[9],
+		'title' => $txt['admin_members'],
 		'help' => 'view_members',
 		'description' => $txt[11],
 		'tabs' => array(),
@@ -402,7 +402,7 @@ function ViewMemberlist()
 	$context['params_url'] = $context['sub_action'] == 'query' ? ';sa=query;params=' . base64_encode($where) : '';
 
 	// Get the title and sub template ready..
-	$context['page_title'] = $txt[9];
+	$context['page_title'] = $txt['admin_members'];
 	$context['sub_template'] = 'view_members';
 
 	// Determine whether to show the 'delete members' checkboxes.
@@ -411,12 +411,12 @@ function ViewMemberlist()
 	// All the columns they have to pick from...
 	$context['columns'] = array(
 		'ID_MEMBER' => array('label' => $txt['member_id']),
-		'memberName' => array('label' => $txt[35]),
+		'memberName' => array('label' => $txt['username']),
 		'realName' => array('label' => $txt['display_name']),
 		'emailAddress' => array('label' => $txt['email_address']),
 		'memberIP' => array('label' => $txt['ip_address']),
 		'lastLogin' => array('label' => $txt['viewmembers_online']),
-		'posts' => array('label' => $txt[26])
+		'posts' => array('label' => $txt['posts'])
 	);
 
 	// Default sort column to 'memberName' if the current one is unknown or not set.
@@ -533,7 +533,7 @@ function SearchMembers()
 	}
 	mysql_free_result($request);
 
-	$context['page_title'] = $txt[9];
+	$context['page_title'] = $txt['admin_members'];
 	$context['sub_template'] = 'search_members';
 }
 
@@ -543,7 +543,7 @@ function MembersAwaitingActivation()
 	global $txt, $context, $db_prefix, $scripturl, $modSettings;
 
 	// Not a lot here!
-	$context['page_title'] = $txt[9];
+	$context['page_title'] = $txt['admin_members'];
 	$context['sub_template'] = 'admin_browse';
 	$context['browse_type'] = isset($_REQUEST['type']) ? $_REQUEST['type'] : (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? 'activate' : 'approve');
 	if (isset($context['admin_tabs']['tabs'][$context['browse_type']]))
@@ -763,7 +763,7 @@ function AdminApprove()
 					"$txt[admin_approve_accept_desc] $txt[719] $member[name]\n\n" .
 					"$txt[701]\n" .
 					"$scripturl?action=profile\n\n" .
-					$txt[130]);
+					$txt['regards_team']);
 			}
 		}
 	}
@@ -796,7 +796,7 @@ function AdminApprove()
 				"$txt[hello_guest] $member[name]!\n\n" .
 				"$txt[admin_approve_require_activation] $txt[admin_approve_remind_desc2]\n" .
 				"$scripturl?action=activate;u=$member[id];code=$validation_code\n\n" .
-				$txt[130]);
+				$txt['regards_team']);
 		}
 	}
 	// Are we rejecting them?
@@ -816,7 +816,7 @@ function AdminApprove()
 				sendmail($member['email'], $txt['admin_approve_reject'],
 					"$member[name],\n\n" .
 					"$txt[admin_approve_reject_desc]\n\n" .
-					$txt[130]);
+					$txt['regards_team']);
 			}
 		}
 	}
@@ -837,7 +837,7 @@ function AdminApprove()
 				sendmail($member['email'], $txt['admin_approve_delete'],
 					"$member[name],\n\n" .
 					"$txt[admin_approve_delete_desc]\n\n" .
-					$txt[130]);
+					$txt['regards_team']);
 			}
 		}
 	}
@@ -853,7 +853,7 @@ function AdminApprove()
 				"$member[name],\n\n" .
 				"$txt[admin_approve_remind_desc] $context[forum_name].\n\n$txt[admin_approve_remind_desc2]\n\n" .
 				"$scripturl?action=activate;u=$member[id];code=$member[code]\n\n" .
-				$txt[130]);
+				$txt['regards_team']);
 		}
 	}
 

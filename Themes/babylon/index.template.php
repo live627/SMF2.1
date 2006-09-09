@@ -185,7 +185,7 @@ function template_main_above()
 
 		// Only tell them about their messages if they can read their messages!
 		if ($context['allow_pm'])
-			echo ', ', $txt[152], ' <a href="', $scripturl, '?action=pm">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt[153] : $txt[471], '</a>', $txt['newmessages4'], ' ', $context['user']['unread_messages'], ' ', $context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1'];
+			echo ', ', $txt['msg_alert_you_have'], ' <a href="', $scripturl, '?action=pm">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt[471], '</a>', $txt['newmessages4'], ' ', $context['user']['unread_messages'], ' ', $context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1'];
 		echo '.<br />';
 
 		// Is the forum in maintenance mode?
@@ -243,7 +243,7 @@ function template_main_above()
 										<option value="43200">', $txt['smf49'], '</option>
 										<option value="-1" selected="selected">', $txt['smf50'], '</option>
 									</select>
-									<input type="submit" value="', $txt[34], '" /><br />
+									<input type="submit" value="', $txt['login'], '" /><br />
 									', $txt['smf52'], '
 									<input type="hidden" name="hash_passwrd" value="" />
 								</div>
@@ -256,8 +256,8 @@ function template_main_above()
 
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 						<div style="margin-top: 7px;">
-							<b>', $txt[182], ': </b><input type="text" name="search" value="" style="width: 190px;" />&nbsp;
-							<input type="submit" name="submit" value="', $txt[182], '" style="width: 8ex;" />&nbsp;
+							<b>', $txt['search'], ': </b><input type="text" name="search" value="" style="width: 190px;" />&nbsp;
+							<input type="submit" name="submit" value="', $txt['search'], '" style="width: 8ex;" />&nbsp;
 							<a href="', $scripturl, '?action=search;advanced">', $txt['smf298'], '</a>
 							<input type="hidden" name="advanced" value="0" />';
 
@@ -293,7 +293,7 @@ function template_main_above()
 					<div class="headerbodies" style="width: 260px; position: relative; background-image: url(', $settings['images_url'], '/box_bg.gif);">
 						<img src="', $settings['images_url'], '/', $context['user']['language'], '/keystats.gif" style="position: absolute; left: -1px; top: -16px;" alt="" />
 						<div style="', !$context['browser']['is_ie'] ? 'min-height: 35px;' : 'height: 4em;', ' padding: 5px;" class="smalltext">
-							<b>', $context['common_stats']['total_posts'], '</b> ', $txt[95], ' ', $txt['smf88'], ' <b>', $context['common_stats']['total_topics'], '</b> ', $txt[64], ' ', $txt[525], ' <span style="white-space: nowrap;"><b>', $context['common_stats']['total_members'], '</b> ', $txt[19], '</span><br />
+							<b>', $context['common_stats']['total_posts'], '</b> ', $txt['posts_made'], ' ', $txt['smf88'], ' <b>', $context['common_stats']['total_topics'], '</b> ', $txt['topics'], ' ', $txt[525], ' <span style="white-space: nowrap;"><b>', $context['common_stats']['total_members'], '</b> ', $txt['members'], '</span><br />
 							', $txt[656], ': <b> ', $context['common_stats']['latest_member']['link'], '</b>
 						</div>
 					</div>';

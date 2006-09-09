@@ -185,7 +185,7 @@ function MessageMain()
 	// Build the linktree for all the actions...
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=pm',
-		'name' => $txt[144]
+		'name' => $txt['personal_messages']
 	);
 
 	$subActions = array(
@@ -487,7 +487,7 @@ function MessageFolder()
 		while ($row = mysql_fetch_assoc($request))
 		{
 			if ($context['folder'] == 'outbox' || empty($row['bcc']))
-				$recipients[$row['ID_PM']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['ID_MEMBER_TO']) ? $txt[28] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER_TO'] . '">' . $row['toName'] . '</a>';
+				$recipients[$row['ID_PM']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['ID_MEMBER_TO']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER_TO'] . '">' . $row['toName'] . '</a>';
 
 			if ($row['ID_MEMBER_TO'] == $ID_MEMBER && $context['folder'] != 'outbox')
 			{
@@ -559,14 +559,14 @@ function prepareMessageContext($reset = false)
 		return(false);
 
 	// Use '(no subject)' if none was specified.
-	$message['subject'] = $message['subject'] == '' ? $txt[24] : $message['subject'];
+	$message['subject'] = $message['subject'] == '' ? $txt['no_subject'] : $message['subject'];
 
 	// Load the message's information - if it's not there, load the guest information.
 	if (!loadMemberContext($message['ID_MEMBER_FROM']))
 	{
 		$memberContext[$message['ID_MEMBER_FROM']]['name'] = $message['fromName'];
 		$memberContext[$message['ID_MEMBER_FROM']]['id'] = 0;
-		$memberContext[$message['ID_MEMBER_FROM']]['group'] = $txt[28];
+		$memberContext[$message['ID_MEMBER_FROM']]['group'] = $txt['guest_title'];
 		$memberContext[$message['ID_MEMBER_FROM']]['link'] = $message['fromName'];
 		$memberContext[$message['ID_MEMBER_FROM']]['email'] = '';
 		$memberContext[$message['ID_MEMBER_FROM']]['hide_email'] = true;
@@ -941,7 +941,7 @@ function MessageSearch2()
 		while ($row = mysql_fetch_assoc($request))
 		{
 			if ($context['folder'] == 'outbox' || empty($row['bcc']))
-				$recipients[$row['ID_PM']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['ID_MEMBER_TO']) ? $txt[28] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER_TO'] . '">' . $row['toName'] . '</a>';
+				$recipients[$row['ID_PM']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['ID_MEMBER_TO']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER_TO'] . '">' . $row['toName'] . '</a>';
 
 			if ($row['ID_MEMBER_TO'] == $ID_MEMBER && $context['folder'] != 'outbox')
 			{
@@ -972,14 +972,14 @@ function MessageSearch2()
 		while ($row = mysql_fetch_assoc($request))
 		{
 			// If there's no message subject, use the default.
-			$row['subject'] = $row['subject'] == '' ? $txt[24] : $row['subject'];
+			$row['subject'] = $row['subject'] == '' ? $txt['no_subject'] : $row['subject'];
 
 			// Load this posters context info, if it ain't there then fill in the essentials...
 			if (!loadMemberContext($row['ID_MEMBER_FROM']))
 			{
 				$memberContext[$row['ID_MEMBER_FROM']]['name'] = $row['fromName'];
 				$memberContext[$row['ID_MEMBER_FROM']]['id'] = 0;
-				$memberContext[$row['ID_MEMBER_FROM']]['group'] = $txt[28];
+				$memberContext[$row['ID_MEMBER_FROM']]['group'] = $txt['guest_title'];
 				$memberContext[$row['ID_MEMBER_FROM']]['link'] = $row['fromName'];
 				$memberContext[$row['ID_MEMBER_FROM']]['email'] = '';
 				$memberContext[$row['ID_MEMBER_FROM']]['hide_email'] = true;
@@ -1191,7 +1191,7 @@ function MessagePost()
 	}
 
 	// Set the defaults...
-	$context['subject'] = $form_subject != '' ? $form_subject : $txt[24];
+	$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];
 	$context['message'] = str_replace(array('"', '<', '>'), array('&quot;', '&lt;', '&gt;'), $form_message);
 	$context['to'] = isset($_REQUEST['to']) ? stripslashes($_REQUEST['to']) : '';
 	$context['bcc'] = isset($_REQUEST['bcc']) ? stripslashes($_REQUEST['bcc']) : '';

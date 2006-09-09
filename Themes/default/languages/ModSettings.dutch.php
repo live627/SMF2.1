@@ -1,7 +1,9 @@
 <?php
 // Version: 2.0 Alpha; ModSettings
 
-$txt['smf3'] = 'Met deze pagina kun je alle features, mods, en basis opties van het forum aan te passen.  Lees de <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id'] . ';sesc=' . $context['session_id'] . '">thema instellingen</a> voor meer opties.  klik op de help icoontjes voor meer informatie over een instelling.';
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
+$txt['smf3'] = 'Met deze pagina kun je alle features, mods, en basis opties van het forum aan te passen.  Lees de <a href="{$scripturl}?action=admin;area=theme;sa=settings;th={$settings.theme_id};sesc={$context.session_id}">thema instellingen</a> voor meer opties.  klik op de help icoontjes voor meer informatie over een instelling.';
 
 $txt['mods_cat_features'] = 'Basisinstellingen';
 $txt['pollMode'] = 'Pollmodus';
@@ -119,7 +121,7 @@ $txt['cache_memcached'] = 'Memcache-instellingen';
 // Untranslated!
 $txt['signature_settings'] = 'Signatures';
 $txt['signature_settings_desc'] = 'Use the settings on this page to decide how member signatures should be treated in SMF.';
-$txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="' . $scripturl . '?action=admin;area=featuresettings;sa=sig;apply">here</a> to apply rules to all existing signatures.';
+$txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="{$scripturl}?action=admin;area=featuresettings;sa=sig;apply">here</a> to apply rules to all existing signatures.';
 $txt['signature_enable'] = 'Enable signatures';
 $txt['signature_max_length'] = 'Aantal toegelaten karakters in het profiel<div class="smalltext">(0 voor geen maximum)</div>';
 // Untranslated!

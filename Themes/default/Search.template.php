@@ -60,7 +60,7 @@ function template_main()
 					<b>', $txt[582], ':</b><br />
 					<table border="0" cellpadding="5" cellspacing="0"><tr>
 						<td><input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" /></td>
-						<td>&nbsp;<input type="submit" name="submit" value="', $txt[182], '" /></td>
+						<td>&nbsp;<input type="submit" name="submit" value="', $txt['search'], '" /></td>
 					</tr>';
 		if (empty($modSettings['search_simple_fulltext']))
 			echo '
@@ -179,7 +179,7 @@ function template_main()
 
 		echo '
 					<br />
-					<div style="padding: 2px;"><input type="submit" name="submit" value="', $txt[182], '" /></div>';
+					<div style="padding: 2px;"><input type="submit" name="submit" value="', $txt['search'], '" /></div>';
 	}
 
 	echo '
@@ -240,7 +240,7 @@ function template_results()
 	{
 		echo '
 	<div style="padding: 3px;">', theme_linktree(), '</div>
-	<div class="middletext">', $txt[139], ': ', $context['page_index'], '</div>';
+	<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		// Quick moderation set to checkboxes? Oh, how fun :/.
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
@@ -255,9 +255,9 @@ function template_results()
 			echo '
 				<td width="4%"></td>
 				<td width="4%"></td>
-				<td width="56%">', $txt[70], '</td>
+				<td width="56%">', $txt['subject'], '</td>
 				<td width="6%" align="center">', $txt['search_relevance'], '</td>
-				<td width="12%">', $txt[109], '</td>
+				<td width="12%">', $txt['started_by'], '</td>
 				<td width="18%" align="center">', $txt['search_date_posted'], '</td>';
 
 			if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
@@ -325,7 +325,7 @@ function template_results()
 				{
 					if ($topic['quick_mod']['remove'])
 						echo '
-					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=remove;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt[63], '" title="', $txt[63], '" /></a>';
+					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=remove;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt['remove_topic'], '" title="', $txt['remove_topic'], '" /></a>';
 					if ($topic['quick_mod']['lock'])
 						echo '
 					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['smf279'], '" title="', $txt['smf279'], '" /></a>';
@@ -336,7 +336,7 @@ function template_results()
 					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['smf277'], '" title="', $txt['smf277'], '" /></a>';
 					if ($topic['quick_mod']['move'])
 						echo '
-					<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt[132], '" title="', $txt[132], '" /></a>';
+					<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
 				}
 				echo '
 				</td>';
@@ -396,7 +396,7 @@ function template_results()
 		</form>';
 
 		echo '
-		<div class="middletext">', $txt[139], ': ', $context['page_index'], '</div>';
+		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		if ($settings['linktree_inline'])
 			echo '
@@ -426,7 +426,7 @@ function template_results()
 	{
 		echo '
 		<div style="padding: 3px;">', theme_linktree(), '</div>
-		<div class="middletext">', $txt[139], ': ', $context['page_index'], '</div>';
+		<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		if (empty($context['topics']))
 			echo '
@@ -463,11 +463,11 @@ function template_results()
 									<td>
 										<div style="float: left; width: 3ex;">&nbsp;', $message['counter'], '&nbsp;</div>
 										<div style="float: left;">&nbsp;', $topic['category']['link'], ' / ', $topic['board']['link'], ' / <a href="', $scripturl, '?topic=', $topic['id'], '.', $message['start'], ';topicseen#msg', $message['id'], '">', $message['subject_highlighted'], '</a></div>
-										<div align="right">', $txt[30], ': ', $message['time'], '&nbsp;</div>
+										<div align="right">', $txt['on'], ': ', $message['time'], '&nbsp;</div>
 									</td>
 								</tr><tr class="catbg">
 									<td>
-										<div style="float: left;">', $txt[109], ' ', $topic['first_post']['member']['link'], ', ', $txt[72], ' ', $txt[525], ' ', $message['member']['link'], '</div>
+										<div style="float: left;">', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt[525], ' ', $message['member']['link'], '</div>
 										<div align="right">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
 									</td>
 								</tr><tr>
@@ -486,7 +486,7 @@ function template_results()
 		}
 
 		echo '
-			<div class="middletext">', $txt[139], ': ', $context['page_index'], '</div>';
+			<div class="middletext">', $txt['pages'], ': ', $context['page_index'], '</div>';
 
 		if ($settings['linktree_inline'])
 			echo '

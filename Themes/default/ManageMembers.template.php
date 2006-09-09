@@ -10,7 +10,7 @@ function template_view_members()
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="catbg">
 				<td align="left" colspan="8">
-					<b>', $txt[139], ':</b> ', $context['page_index'], '
+					<b>', $txt['pages'], ':</b> ', $context['page_index'], '
 				</td>
 			</tr>
 			<tr class="titlebg">';
@@ -120,7 +120,7 @@ function template_search_members()
 								</select>
 							</td>
 							<td align="left"><input type="text" name="mem_id" value="" size="6" /></td>
-							<th align="right">', $txt[35], ':</th>
+							<th align="right">', $txt['username'], ':</th>
 							<td align="left"><input type="text" name="membername" value="" /> </td>
 						</tr><tr>
 							<th align="right">', $txt['age'], ':</th>
@@ -137,7 +137,7 @@ function template_search_members()
 							<th align="right">', $txt['email_address'], ':</th>
 							<td align="left"><input type="text" name="email" value="" /></td>
 						</tr><tr>
-							<th align="right">', $txt[26], ':</th>
+							<th align="right">', $txt['posts'], ':</th>
 							<td align="center">
 								<select name="types[posts]">
 									<option value="--">&lt;</option>
@@ -148,10 +148,10 @@ function template_search_members()
 								</select>
 							</td>
 							<td align="left"><input type="text" name="posts" value="" size="6" /></td>
-							<th align="right">', $txt[96], ':</th>
+							<th align="right">', $txt['website'], ':</th>
 							<td align="left"><input type="text" name="website" value="" /></td>
 						</tr><tr>
-							<th align="right">', $txt[233], ':</th>
+							<th align="right">', $txt['date_registered'], ':</th>
 							<td align="center">
 								<select name="types[reg_date]">
 									<option value="--">&lt;</option>
@@ -162,7 +162,7 @@ function template_search_members()
 								</select>
 							</td>
 							<td align="left"><input type="text" name="reg_date" value="" /> <span class="smalltext">', $txt['date_format'], '</span></td>
-							<th align="right">', $txt[227], ':</th>
+							<th align="right">', $txt['location'], ':</th>
 							<td align="left"><input type="text" name="location" value="" /></td>
 						</tr><tr>
 							<th align="right">', $txt['viewmembers_online'], ':</th>
@@ -179,11 +179,11 @@ function template_search_members()
 							<th align="right">', $txt['ip_address'], ':</th>
 							<td align="left"><input type="text" name="ip" value="" /></td>
 						</tr><tr>
-							<th align="right">', $txt[231], ':</th>
+							<th align="right">', $txt['gender'], ':</th>
 							<td align="left" colspan="2">
 								<label for="gender-0"><input type="checkbox" name="gender[]" value="0" id="gender-0" checked="checked" class="check" /> ', $txt['undefined_gender'], '</label>&nbsp;&nbsp;
-								<label for="gender-1"><input type="checkbox" name="gender[]" value="1" id="gender-1" checked="checked" class="check" /> ', $txt[238], '</label>&nbsp;&nbsp;
-								<label for="gender-2"><input type="checkbox" name="gender[]" value="2" id="gender-2" checked="checked" class="check" /> ', $txt[239], '</label>
+								<label for="gender-1"><input type="checkbox" name="gender[]" value="1" id="gender-1" checked="checked" class="check" /> ', $txt['male'], '</label>&nbsp;&nbsp;
+								<label for="gender-2"><input type="checkbox" name="gender[]" value="2" id="gender-2" checked="checked" class="check" /> ', $txt['female'], '</label>
 							</td>
 							<th align="right">', $txt['messenger_address'], ':</th>
 							<td align="left"><input type="text" name="messenger" value="" /></td>
@@ -326,7 +326,7 @@ function template_admin_browse()
 	echo '
 					// ]]></script>
 
-				', $txt[139], ': ', $context['page_index'], '
+				', $txt['pages'], ': ', $context['page_index'], '
 				</td>
 			</tr>
 			<tr class="titlebg">';
@@ -389,7 +389,7 @@ function template_admin_browse()
 									<option value="', $filter['type'], '"', $filter['selected'] ? ' selected="selected"' : '', '>', $filter['desc'], ' - ', $filter['amount'], ' ', $filter['amount'] == 1 ? $txt['user'] : $txt['users'], '</option>';
 			echo '
 								</select>
-								<noscript><input type="submit" value="', $txt[161], '" name="filter" /></noscript>';
+								<noscript><input type="submit" value="', $txt['go'], '" name="filter" /></noscript>';
 		}
 		// What about if we only have one filter, but it's not the "standard" filter - show them what they are looking at.
 		if (!empty($context['show_filter']) && !empty($context['available_filters']))
@@ -407,7 +407,7 @@ function template_admin_browse()
 									<option value="', $key, '">', $desc, '</option>';
 	echo '
 								</select>
-								<noscript><input type="submit" value="', $txt[161], '" /></noscript>
+								<noscript><input type="submit" value="', $txt['go'], '" /></noscript>
 								<input type="hidden" name="type" value="', $context['browse_type'], '" />
 								<input type="hidden" name="sort" value="', $context['sort_by'], '" />
 								<input type="hidden" name="start" value="', $context['start'], '" />
@@ -423,7 +423,7 @@ function template_admin_browse()
 
 	echo '
 			<tr class="catbg">
-				<td colspan="6">', $txt[139], ': ', $context['page_index'], '</td>
+				<td colspan="6">', $txt['pages'], ': ', $context['page_index'], '</td>
 			</tr>
 		</table></div>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />

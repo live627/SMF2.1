@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageBoards
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt[41] = 'Boards verwalten';
 $txt[43] = 'Reihenfolge';
 $txt[44] = 'Vollst&auml;ndiger Name';

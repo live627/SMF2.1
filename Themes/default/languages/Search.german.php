@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Search
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt[183] = 'Suchparameter einstellen';
 $txt[189] = 'W&auml;hlen Sie eine Kategorie aus, in welcher gesucht werden soll oder durchsuchen Sie alle';
 $txt[343] = '&Uuml;bereinstimmung aller W&ouml;rter';

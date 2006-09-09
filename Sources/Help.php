@@ -87,7 +87,7 @@ function ShowAdminHelp()
 	loadTemplate('Help');
 
 	// Set the page title to something relevant.
-	$context['page_title'] = $context['forum_name'] . ' - ' . $txt[119];
+	$context['page_title'] = $context['forum_name'] . ' - ' . $txt['help'];
 
 	// Don't show any template layers, just the popup sub template.
 	$context['template_layers'] = array();

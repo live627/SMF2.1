@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Help
 
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
 global $helptxt;
 $helptxt = array();
 
@@ -278,7 +280,7 @@ $helptxt['enableEmbeddedFlash'] = 'This option will allow your users to use Flas
 	just like images.  This could pose a security risk, although few have successfully exploited it.
 	USE AT YOUR OWN RISK!';
 // !!! Add more information about how to use them here.
-$helptxt['xmlnews_enable'] = 'Allows people to link to <a href="' . $scripturl . '?action=.xml;sa=news">Recent news</a>
+$helptxt['xmlnews_enable'] = 'Allows people to link to <a href="{$scripturl}?action=.xml;sa=news">Recent news</a>
 	and similar data.  It is also recommended that you limit the size of recent posts/news because, when rss data
 	is displayed in some clients, like Trillian, it is expected to be truncated.';
 $helptxt['hotTopicPosts'] = 'Change the number of posts for a topic to reach the state of a &quot;hot&quot; or
@@ -290,15 +292,15 @@ $helptxt['globalCookies'] = 'Makes log in cookies available across subdomains.  
 $helptxt['securityDisable'] = 'This <i>disables</i> the additional password check for the administration section. This is not recommended!';
 $helptxt['securityDisable_why'] = 'This is your current password. (the same one you use to login.)<br /><br />Having to type this helps ensure that you want to do whatever administration you are doing, and that it is <b>you</b> doing it.';
 $helptxt['emailmembers'] = 'In this message you can use a few &quot;variables&quot;.  These are:<br />
-	{$board_url} - The URL to your forum.<br />
-	{$current_time} - The current time.<br />
-	{$member.email} - The current member\'s email.<br />
-	{$member.link} - The current member\'s link.<br />
-	{$member.id} - The current member\'s id.<br />
-	{$member.name} - The current member\'s name.  (for personalization.)<br />
-	{$latest_member.link} - The most recently registered member\'s link.<br />
-	{$latest_member.id} - The most recently registered member\'s id.<br />
-	{$latest_member.name} - The most recently registered member\'s name.';
+	{\$board_url} - The URL to your forum.<br />
+	{\$current_time} - The current time.<br />
+	{\$member.email} - The current member\'s email.<br />
+	{\$member.link} - The current member\'s link.<br />
+	{\$member.id} - The current member\'s id.<br />
+	{\$member.name} - The current member\'s name.  (for personalization.)<br />
+	{\$latest_member.link} - The most recently registered member\'s link.<br />
+	{\$latest_member.id} - The most recently registered member\'s id.<br />
+	{\$latest_member.name} - The most recently registered member\'s name.';
 $helptxt['attachmentEncryptFilenames'] = 'Encrypting attachment filenames allows you to have more than one attachment of the
 	same name, to safely use .php files for attachments, and heightens security.  It, however, could make it more
 	difficult to rebuild your database if something drastic happened.';
@@ -389,7 +391,7 @@ $helptxt['latest_packages'] = 'Here you can see some of the most popular and som
 $helptxt['latest_themes'] = 'This area shows a few of the latest and most popular themes from <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.  It may not show up properly if your computer can\'t find <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>, though.';
 
 $helptxt['secret_why_blank'] = 'For your security, the answer to your question (as well as your password) is encrypted in such a way that SMF can only tell you if get it right, so it can never tell you (or anyone else, importantly!) what your answer or password is.';
-$helptxt['moderator_why_missing'] = 'Since moderation is done on a board-by-board basis, you have to make members moderators from the <a href="javascript:window.open(\'' . $scripturl . '?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
+$helptxt['moderator_why_missing'] = 'Since moderation is done on a board-by-board basis, you have to make members moderators from the <a href="javascript:window.open(\'{$scripturl}?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
 
 $helptxt['permissions'] = 'Permissions are how you either allow groups to, or deny groups from, doing specific things.<br /><br />You can modify multiple boards at once with the checkboxes, or look at the permissions for a specific group by clicking \'Modify.\'';
 $helptxt['permissions_board'] = 'If a board is set to \'Global,\' it means that the board will not have any special permissions.  \'Local\' means it will have its own permissions - separate from the global ones.  This allows you to have a board that has more or less permissions than another, without requiring you to set them for each and every board.';

@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManagePermissions
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt['permissions_title'] = 'Berechtigungen editieren';
 $txt['permissions_modify'] = '&Auml;ndern';
 $txt['permissions_access'] = 'Zugriff';

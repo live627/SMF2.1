@@ -13,8 +13,8 @@ function template_main()
 		<td align="right">';
 	if (!$settings['show_stats_index'])
 		echo '
-			', $txt[19], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt[95], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt[64], ': ', $context['common_stats']['total_topics'], '
-			', ($settings['show_latest_member'] ? '<br />' . $txt[201] . ' <b>' . $context['common_stats']['latest_member']['link'] . '</b>' . $txt[581] : '');
+			', $txt['members'], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', $context['common_stats']['total_topics'], '
+			', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <b>' . $context['common_stats']['latest_member']['link'] . '</b>' . $txt[581] : '');
 	echo '
 		</td>
 	</tr>
@@ -25,7 +25,7 @@ function template_main()
 	{
 		echo '
 <div class="tborder" style="border-bottom: 0;">
-	<div class="titlebg" align="center" style="padding: 5px 5px 5px 5px;">', $txt[102], '</div>
+	<div class="titlebg" align="center" style="padding: 5px 5px 5px 5px;">', $txt['news'], '</div>
 </div>
 <table border="0" width="100%" cellspacing="0" cellpadding="5" class="tborder" style="border-bottom: 0;">
 	<tr>
@@ -83,10 +83,10 @@ function template_main()
 	echo '
 <table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
 	<tr class="titlebg">
-		<td colspan="2">', $txt[20], '</td>
+		<td colspan="2">', $txt['board_name'], '</td>
 		<td width="6%" align="center">', $txt[330], '</td>
-		<td width="6%" align="center">', $txt[21], '</td>
-		<td width="22%" align="center">', $txt[22], '</td>
+		<td width="6%" align="center">', $txt['posts'], '</td>
+		<td width="22%" align="center">', $txt['last_post'], '</td>
 	</tr>';
 
 	/* Each category in categories is made up of:
@@ -204,12 +204,12 @@ function template_main()
 	{
 		echo '
 	<tr>
-		<td class="catbg" colspan="2">', $txt[214], '</td>
+		<td class="catbg" colspan="2">', $txt['recent_posts'], '</td>
 	</tr>
 	<tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
 			<a href="', $scripturl, '?action=recent">
-				<img src="', $settings['images_url'], '/post/xx.gif" alt="', $txt[214], '" border="0" /></a>
+				<img src="', $settings['images_url'], '/post/xx.gif" alt="', $txt['recent_posts'], '" border="0" /></a>
 		</td>
 		<td class="windowbg2">';
 
@@ -218,9 +218,9 @@ function template_main()
 		{
 			// latest_post has link, href, time, subject, short_subject (shortened with...), and topic. (its id.)
 			echo '
-			<b><a href="', $scripturl, '?action=recent">', $txt[214], '</a></b><br />
+			<b><a href="', $scripturl, '?action=recent">', $txt['recent_posts'], '</a></b><br />
 			<span class="smalltext">
-				', $txt[234], ' &quot;', $context['latest_post']['link'], '&quot; ', $txt[235], ' (', $context['latest_post']['time'], ')<br />
+				', $txt['recent_view'], ' &quot;', $context['latest_post']['link'], '&quot; ', $txt['recent_updated'], ' (', $context['latest_post']['time'], ')<br />
 			</span>';
 		}
 		// Show lots of posts.
@@ -311,7 +311,7 @@ function template_main()
 		</td>
 		<td class="windowbg2" width="100%">
 			<b>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $txt[332] . '</a>' : $txt[332], '</b><br />
-			<span class="smalltext">', $txt[200], '</span>
+			<span class="smalltext">', $txt['memberlist_searchable'], '</span>
 		</td>
 	</tr>';
 	}
@@ -334,7 +334,7 @@ function template_main()
 					', $txt[490], ': <b>', $context['common_stats']['total_topics'], '</b> &nbsp;&nbsp;&nbsp;&nbsp; ', $txt[489], ': <b>', $context['common_stats']['total_posts'], '</b><br />
 					', !empty($context['latest_post']) ? $txt[659] . ':
 					&quot;' . $context['latest_post']['link'] . '&quot;  (' . $context['latest_post']['time'] . ')<br />' : '', '
-					<a href="', $scripturl, '?action=recent">', $txt[234], '</a>', $context['show_stats'] ? '<br />
+					<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 					<a href="' . $scripturl . '?action=stats">' . $txt['smf223'] . '</a>' : '', '
 				</td>
 				<td class="smalltext">
@@ -354,10 +354,10 @@ function template_main()
 	// "Users online" - in order of activity.
 	echo '
 	<tr>
-		<td class="catbg" colspan="2">', $txt[158], '</td>
+		<td class="catbg" colspan="2">', $txt['online_users'], '</td>
 	</tr><tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
-			', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<img src="', $settings['images_url'], '/icons/online.gif" alt="', $txt[158], '" border="0" />', $context['show_who'] ? '</a>' : '', '
+			', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<img src="', $settings['images_url'], '/icons/online.gif" alt="', $txt['online_users'], '" border="0" />', $context['show_who'] ? '</a>' : '', '
 		</td>
 		<td class="windowbg2" width="100%">';
 
@@ -392,7 +392,7 @@ function template_main()
 	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
 	if (!empty($context['users_online']))
 		echo '
-				', $txt[140], ':<br />', implode(', ', $context['list_users_online']);
+				', $txt['users_active'], ':<br />', implode(', ', $context['list_users_online']);
 
 	echo '
 			</span>
@@ -404,15 +404,15 @@ function template_main()
 	{
 		echo '
 	<tr>
-		<td class="catbg" colspan="2">', $txt[159], '</td>
+		<td class="catbg" colspan="2">', $txt['personal_message'], '</td>
 	</tr><tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
-			', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img src="', $settings['images_url'], '/message_sm.gif" alt="', $txt[159], '" border="0" />', $context['allow_pm'] ? '</a>' : '', '
+			', $context['allow_pm'] ? '<a href="' . $scripturl . '?action=pm">' : '', '<img src="', $settings['images_url'], '/message_sm.gif" alt="', $txt['personal_message'], '" border="0" />', $context['allow_pm'] ? '</a>' : '', '
 		</td>
 		<td class="windowbg2" valign="top">
-			<b><a href="', $scripturl, '?action=pm">', $txt[159], '</a></b><br />
+			<b><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></b><br />
 			<span class="smalltext">
-				', $txt[660], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt[471] : $txt[153], '.... ', $txt[661], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt[662] . '</a>' : '', ' ', $txt[663], '
+				', $txt[660], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt[471] : $txt['msg_alert_messages'], '.... ', $txt[661], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt[662] . '</a>' : '', ' ', $txt[663], '
 			</span>
 		</td>
 	</tr>';
@@ -424,22 +424,22 @@ function template_main()
 		echo '
 	<tr>
 		<td class="catbg" colspan="2">
-			', $txt[34], ' <a href="', $scripturl, '?action=reminder" class="smalltext">(' . $txt[315] . ')</a>
+			', $txt['login'], ' <a href="', $scripturl, '?action=reminder" class="smalltext">(' . $txt[315] . ')</a>
 		</td>
 	</tr>
 	<tr>
 		<td class="windowbg" width="20" align="center">
 			<a href="', $scripturl, '?action=login">
-				<img src="', $settings['images_url'], '/icons/login.gif" alt="', $txt[34], '" border="0" /></a>
+				<img src="', $settings['images_url'], '/icons/login.gif" alt="', $txt['login'], '" border="0" /></a>
 		</td>
 		<td class="windowbg2" valign="middle">
 			<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 				<table border="0" cellpadding="2" cellspacing="0" align="center" width="100%"><tr>
 					<td valign="middle" align="left">
-						<label for="user"><b>', $txt[35], ':</b><br /><input type="text" name="user" id="user" size="15" /></label>
+						<label for="user"><b>', $txt['username'], ':</b><br /><input type="text" name="user" id="user" size="15" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="passwrd"><b>', $txt[36], ':</b><br /><input type="password" name="passwrd" id="passwrd" size="15" /></label>
+						<label for="passwrd"><b>', $txt['password'], ':</b><br /><input type="password" name="passwrd" id="passwrd" size="15" /></label>
 					</td>
 					<td valign="middle" align="left">
 						<label for="cookielength"><b>', $txt[497], ':</b><br /><input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></label>
@@ -448,7 +448,7 @@ function template_main()
 						<label for="cookieneverexp"><b>', $txt[508], ':</b><br /><input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="check" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<input type="submit" value="', $txt[34], '" />
+						<input type="submit" value="', $txt['login'], '" />
 					</td>
 				</tr></table>
 			</form>

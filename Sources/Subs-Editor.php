@@ -502,12 +502,12 @@ function getMessageIcons($board_id)
 			array('value' => 'exclamation', 'name' => $txt[284]),
 			array('value' => 'question', 'name' => $txt[285]),
 			array('value' => 'lamp', 'name' => $txt[286]),
-			array('value' => 'smiley', 'name' => $txt[287]),
-			array('value' => 'angry', 'name' => $txt[288]),
-			array('value' => 'cheesy', 'name' => $txt[289]),
-			array('value' => 'grin', 'name' => $txt[293]),
-			array('value' => 'sad', 'name' => $txt[291]),
-			array('value' => 'wink', 'name' => $txt[292])
+			array('value' => 'smiley', 'name' => $txt['icon_smiley']),
+			array('value' => 'angry', 'name' => $txt['icon_angry']),
+			array('value' => 'cheesy', 'name' => $txt['icon_cheesy']),
+			array('value' => 'grin', 'name' => $txt['icon_grin']),
+			array('value' => 'sad', 'name' => $txt['icon_sad']),
+			array('value' => 'wink', 'name' => $txt['icon_wink'])
 		);
 
 		foreach ($icons as $k => $dummy)

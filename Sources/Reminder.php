@@ -131,12 +131,12 @@ function RemindMail()
 		"$txt[reminder_mail]:\n\n" .
 		"$scripturl?action=reminder;sa=setpassword;u=$row[ID_MEMBER];code=$password\n\n" .
 		"$txt[512]: $user_info[ip]\n\n" .
-		"$txt[35]: $row[memberName]\n\n" .
-		$txt[130]);
+		"$txt['username']: $row[memberName]\n\n" .
+		$txt['regards_team']);
 
 	// Set up the template.
 	$context += array(
-		'page_title' => &$txt[194],
+		'page_title' => &$txt['password_reminder'],
 		'sub_template' => 'sent',
 		'description' => &$txt['reminder_sent']
 	);

@@ -1,18 +1,20 @@
 <?php
 // Version: 2.0 Alpha; Admin
 
-$txt[4] = 'Boards';
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
+$txt['admin_boards'] = 'Boards';
 $txt[5] = 'Leden';
-$txt[6] = 'Nieuwsbrieven';
-$txt[7] = 'Nieuws';
-$txt[8] = 'Ledengroepen';
-$txt[9] = 'Beheer leden';
+$txt['admin_newsletters'] = 'Nieuwsbrieven';
+$txt['admin_news'] = 'Nieuws';
+$txt['admin_groups'] = 'Ledengroepen';
+$txt['admin_members'] = 'Beheer leden';
 $txt[11] = 'Hieronder staat een lijst van alle leden die momenteel geregistreerd zijn op je forum.';
 $txt[65] = 'Volgende';
-$txt[135] = 'Gecensureerde woorden';
+$txt['admin_censored_words'] = 'Gecensureerde woorden';
 $txt[136] = 'Plaats het te censureren woord links, en het vervangingswoord rechts.';
 $txt[141] = 'Vanwege het openbare karkater van forums kan het zijn dat je wilt voorkomen dat bepaalde woorden op het forum worden gebruikt. Je kunt hieronder opgeven welke woorden je wilt censureren.<br />Maak een veld leeg om het woord te verwijderen.';
-$txt[207] = 'Gereserveerde namen';
+$txt['admin_reserved_names'] = 'Gereserveerde namen';
 $txt[216] = 'Verander je template';
 $txt[222] = 'Serverinstellingen';
 $txt[338] = 'Zend post naar alle leden';
@@ -28,12 +30,6 @@ $txt[356] = 'SMF-directory';
 $txt[360] = 'Sources-directory';
 // Untranslated!
 $txt['cachedir'] = 'Cache Directory';
-$txt[365] = 'Titel-achtergrondkleur';
-$txt[366] = 'Titel-tekstkleur';
-$txt[367] = 'Window-achtergrondkleur';
-$txt[368] = 'Window-achtergrondkleur nr.2';
-$txt[369] = 'Categorie-achtergrondkleur';
-$txt[370] = 'Tabelrandkleur';
 $txt[379] = 'Gebruik normale nieuwsweergave?';
 $txt[380] = 'Gasten mogen posten?';
 $txt[388] = 'nieuwsbalk-titelkleur';
@@ -51,7 +47,7 @@ $txt[571] = 'Credits';
 $txt[584] = 'Laat de forumregels zien wanneer iemand zich registreert?';
 $txt[608] = 'Verwijder alle geselecteerde leden';
 $txt[610] = 'Repareer het forum en al zijn berichten';
-$txt[644] = 'Dit is je \'' . $txt[208] . '\'. Je kunt hier je instellingen en template veranderen, en je forum onderhouden.<br /><br />Lees eerst de handleiding om alles te begrijpen, en wees voorzichtig met deze functies! Je kunt het antwoord op al je vragen vinden op het <a href="http://www.simplemachines.org/community/index.php" target="_blank">support forum</a> of de troubleshootingsectie in de handleiding.';
+$txt[644] = 'Dit is je \'{$txt.admin_center}\'. Je kunt hier je instellingen en template veranderen, en je forum onderhouden.<br /><br />Lees eerst de handleiding om alles te begrijpen, en wees voorzichtig met deze functies! Je kunt het antwoord op al je vragen vinden op het <a href="http://www.simplemachines.org/community/index.php" target="_blank">support forum</a> of de troubleshootingsectie in de handleiding.';
 $txt[670] = 'Plaats &eacute;&eacute;n nieuwsitem per veld. Enkele BBC tags, zoals [b], [i] en [u] zijn toegestaan in het nieuws, evenals smileys en HTML. Maak een veld leeg om het te verwijderen.';
 $txt[684] = 'Forumbeheerders';
 $txt[699] = 'Gereserveerde namen zorgen ervoor dat leden deze namen niet kunnen gebruiken als gebruikersnaam of als getoonde naam. Kies de opties beneden voordat je wijzigingen doorvoert.';
@@ -74,7 +70,7 @@ $txt['smf8'] = 'Databasenaam:';
 $txt['smf11'] = 'Registratieovereenkomst';
 $txt['smf12'] = 'Deze overeenkomst wordt getoond wanneer een gebruiker zich registreert op het forum en moet geaccepteerd worden voordat de gebruiker verder kan met de registratie.';
 $txt['smf54'] = 'Databasetabelvoorvoegsel:';
-$txt['smf55'] = 'Houd de Ctrl-toets ingedrukt om meerdere keuzes tegelijk te selecteren.  Klik op de ' . $txt[17] . '-knop als je klaar bent.';
+$txt['smf55'] = 'Houd de Ctrl-toets ingedrukt om meerdere keuzes tegelijk te selecteren.  Klik op de {$txt.modify}-knop als je klaar bent.';
 $txt['smf73'] = 'Lijst van foutmeldingen';
 $txt['smf74'] = 'De volgende foutmeldingen zijn ontstaan (leeg bij geen fouten)';
 $txt['smf85'] = 'Wil je deze fouten herstellen?';
@@ -136,14 +132,12 @@ $txt['email_address'] = 'E-mailadres';
 $txt['ip_address'] = 'IP-adres';
 $txt['member_id'] = 'ID';
 
-$txt['security_wrong'] = 'Beheer-inlogpoging!' . "\n" .
-	'Referentie: ' . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'onbekend') . "\n" .
-	'Browser: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
-	'IP: ' . $GLOBALS['user_info']['ip'];
+$txt['unknown'] = 'onbekend';
+$txt['security_wrong'] = 'Beheer-inlogpoging!\\nReferentie: %1$s\\nBrowser: %2$s\\nIP: %3$s';
 
 $txt['email_as_html'] = 'Stuur in HTML-formaat (hiermee kun je HTML in de e-mail gebruiken).';
 $txt['email_parsed_html'] = 'Voeg &lt;br /&gt;s en &amp;nbsp;s toe aan dit bericht.';
-$txt['email_variables'] = 'In dit bericht kun je een aantal &quot;variabelen&quot; gebruiken. Klik <a href="' . $scripturl . '?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> voor meer informatie.';
+$txt['email_variables'] = 'In dit bericht kun je een aantal &quot;variabelen&quot; gebruiken. Klik <a href="{$scripturl}?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> voor meer informatie.';
 $txt['email_force'] = 'Stuur dit ook aan leden die ervoor gekozen hebben geen aankondigingen te ontvangen.';
 $txt['email_as_pms'] = 'Stuur dit aan deze groepen door middel van Persoonlijke Berichten.';
 $txt['email_continue'] = 'Ga verder';
@@ -353,7 +347,7 @@ $txt['maintenance1'] = 'Weer te geven onderwerp';
 $txt['maintenance2'] = 'Weer te geven bericht';
 
 $txt['errlog1'] = 'Foutenlogbestand';
-$txt['errlog2'] = 'Het fouten logbestand slaat alle fouten in chronologische volgorde op. Om de fouten te verwijderen, moet je deze aanvinken en op de ' . $txt[31] . ' knop onderaan de pagina drukken.';
+$txt['errlog2'] = 'Het fouten logbestand slaat alle fouten in chronologische volgorde op. Om de fouten te verwijderen, moet je deze aanvinken en op de {$txt.remove} knop onderaan de pagina drukken.';
 
 $txt['theme4'] = 'Thema-instellingen';
 $txt['theme_current_settings'] = 'Huidige thema';

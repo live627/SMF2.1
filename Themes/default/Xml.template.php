@@ -42,7 +42,7 @@ function template_modifydone()
 	if (empty($context['message']['errors']))
 	{
 		echo '
-		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt[211] . ': ' . $context['message']['modified']['time'] . ' ' . $txt[525] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>
+		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt[525] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>
 		<subject is_first="', $context['message']['first_in_topic'] ? '1' : '0', '"><![CDATA[', $context['message']['subject'], ']]></subject>
 		<body><![CDATA[', $context['message']['body'], ']]></body>';
 	}
@@ -64,7 +64,7 @@ function template_modifytopicdone()
 	if (empty($context['message']['errors']))
 	{
 		echo '
-		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt[211] . ': ' . $context['message']['modified']['time'] . ' ' . $txt[525] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>
+		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt[525] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>
 		<subject><![CDATA[', $context['message']['subject'], ']]></subject>';
 	}
 	else

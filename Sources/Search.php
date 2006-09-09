@@ -71,7 +71,7 @@ function PlushSearch1()
 	// Link tree....
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=search',
-		'name' => $txt[182]
+		'name' => $txt['search']
 	);
 
 	// If you got back from search2 by using the linktree, you get your original search parameters back.
@@ -801,7 +801,7 @@ function PlushSearch2()
 	// ... and add the links to the link tree.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=search;params=' . $context['params'],
-		'name' => $txt[182]
+		'name' => $txt['search']
 	);
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=search2;params=' . $context['params'],
@@ -1493,13 +1493,13 @@ function PlushSearch2()
 		$context['icon_sources'][$icon] = 'images_url';
 
 	$context['sub_template'] = 'results';
-	$context['page_title'] = $txt[166];
+	$context['page_title'] = $txt['search_results'];
 	$context['get_topics'] = 'prepareSearchContext';
 	$context['can_send_pm'] = allowedTo('pm_send');
 
 	$context['jump_to'] = array(
-		'label' => addslashes(un_htmlspecialchars($txt[160])),
-		'board_name' => addslashes(un_htmlspecialchars($txt[251])),
+		'label' => addslashes(un_htmlspecialchars($txt['jump_to'])),
+		'board_name' => addslashes(un_htmlspecialchars($txt['select_destination'])),
 	);
 
 	// Get a list of boards to move these messages to.
@@ -1561,10 +1561,10 @@ function prepareSearchContext($reset = false)
 		return false;
 
 	// Can't have an empty subject can we?
-	$message['subject'] = $message['subject'] != '' ? $message['subject'] : $txt[24];
+	$message['subject'] = $message['subject'] != '' ? $message['subject'] : $txt['no_subject'];
 
-	$message['first_subject'] = $message['first_subject'] != '' ? $message['first_subject'] : $txt[24];
-	$message['last_subject'] = $message['last_subject'] != '' ? $message['last_subject'] : $txt[24];
+	$message['first_subject'] = $message['first_subject'] != '' ? $message['first_subject'] : $txt['no_subject'];
+	$message['last_subject'] = $message['last_subject'] != '' ? $message['last_subject'] : $txt['no_subject'];
 
 	// If it couldn't load, or the user was a guest.... someday may be done with a guest table.
 	if (!loadMemberContext($message['ID_MEMBER']))
@@ -1572,7 +1572,7 @@ function prepareSearchContext($reset = false)
 		// Notice this information isn't used anywhere else.... *cough guest table cough*.
 		$memberContext[$message['ID_MEMBER']]['name'] = $message['posterName'];
 		$memberContext[$message['ID_MEMBER']]['id'] = 0;
-		$memberContext[$message['ID_MEMBER']]['group'] = $txt[28];
+		$memberContext[$message['ID_MEMBER']]['group'] = $txt['guest_title'];
 		$memberContext[$message['ID_MEMBER']]['link'] = $message['posterName'];
 		$memberContext[$message['ID_MEMBER']]['email'] = $message['posterEmail'];
 	}
@@ -1682,7 +1682,7 @@ function prepareSearchContext($reset = false)
 				'id' => $message['first_member_id'],
 				'name' => $message['first_member_name'],
 				'href' => !empty($message['first_member_id']) ? $scripturl . '?action=profile;u=' . $message['first_member_id'] : '',
-				'link' => !empty($message['first_member_id']) ? '<a href="' . $scripturl . '?action=profile;u=' . $message['first_member_id'] . '" title="' . $txt[92] . ' ' . $message['first_member_name'] . '">' . $message['first_member_name'] . '</a>' : $message['first_member_name']
+				'link' => !empty($message['first_member_id']) ? '<a href="' . $scripturl . '?action=profile;u=' . $message['first_member_id'] . '" title="' . $txt['profile_of'] . ' ' . $message['first_member_name'] . '">' . $message['first_member_name'] . '</a>' : $message['first_member_name']
 			)
 		),
 		'last_post' => array(
@@ -1698,7 +1698,7 @@ function prepareSearchContext($reset = false)
 				'id' => $message['last_member_id'],
 				'name' => $message['last_member_name'],
 				'href' => !empty($message['last_member_id']) ? $scripturl . '?action=profile;u=' . $message['last_member_id'] : '',
-				'link' => !empty($message['last_member_id']) ? '<a href="' . $scripturl . '?action=profile;u=' . $message['last_member_id'] . '" title="' . $txt[92] . ' ' . $message['last_member_name'] . '">' . $message['last_member_name'] . '</a>' : $message['last_member_name']
+				'link' => !empty($message['last_member_id']) ? '<a href="' . $scripturl . '?action=profile;u=' . $message['last_member_id'] . '" title="' . $txt['profile_of'] . ' ' . $message['last_member_name'] . '">' . $message['last_member_name'] . '</a>' : $message['last_member_name']
 			)
 		),
 		'board' => array(

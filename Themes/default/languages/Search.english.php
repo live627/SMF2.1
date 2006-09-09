@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Search
 
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
 $txt[183] = 'Set Search Parameters';
 $txt[189] = 'Choose a board to search in, or search all';
 $txt[343] = 'Match all words';

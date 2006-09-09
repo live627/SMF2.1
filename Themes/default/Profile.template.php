@@ -112,7 +112,7 @@ function template_summary()
 		<td class="windowbg" width="420">
 			<table border="0" cellspacing="0" cellpadding="2" width="100%">
 				<tr>
-					<td><b>', $txt[68], ': </b></td>
+					<td><b>', $txt['name'], ': </b></td>
 					<td>', $context['member']['name'], '</td>
 				</tr>';
 	if (!empty($modSettings['titlesEnable']) && $context['member']['title'] != '')
@@ -128,7 +128,7 @@ function template_summary()
 					<td><b>', $txt[86], ': </b></td>
 					<td>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</td>
 				</tr><tr>
-					<td><b>', $txt[87], ': </b></td>
+					<td><b>', $txt['position'], ': </b></td>
 					<td>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</td>
 				</tr>';
 
@@ -172,7 +172,7 @@ function template_summary()
 				</tr>';
 	echo '
 				<tr>
-					<td><b>', $txt[233], ': </b></td>
+					<td><b>', $txt['date_registered'], ': </b></td>
 					<td>', $context['member']['registered'], '</td>
 				</tr><tr>
 					<td><b>', $txt['lastLoggedIn'], ': </b></td>
@@ -236,7 +236,7 @@ function template_summary()
 					<td><b>', $txt[604], ': </b></td>
 					<td>', $context['member']['yim']['link_text'], '</td>
 				</tr><tr>
-					<td><b>', $txt[69], ': </b></td>
+					<td><b>', $txt['email'], ': </b></td>
 					<td>';
 
 	// Only show the email address if it's not hidden.
@@ -255,7 +255,7 @@ function template_summary()
 	echo '
 					</td>
 				</tr><tr>
-					<td><b>', $txt[96], ': </b></td>
+					<td><b>', $txt['website'], ': </b></td>
 					<td><a href="', $context['member']['website']['url'], '" target="_blank">', $context['member']['website']['title'], '</a></td>
 				</tr><tr>
 					<td><b>', $txt[113], ' </b></td>
@@ -272,13 +272,13 @@ function template_summary()
 				</tr><tr>
 					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
 				</tr><tr>
-					<td><b>', $txt[231], ': </b></td>
+					<td><b>', $txt['gender'], ': </b></td>
 					<td>', $context['member']['gender']['name'], '</td>
 				</tr><tr>
 					<td><b>', $txt[420], ':</b></td>
 					<td>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/bdaycake.gif" width="40" alt="" />' : ''), '</td>
 				</tr><tr>
-					<td><b>', $txt[227], ':</b></td>
+					<td><b>', $txt['location'], ':</b></td>
 					<td>', $context['member']['location'], '</td>
 				</tr><tr>
 					<td><b>', $txt['local_time'], ':</b></td>
@@ -362,7 +362,7 @@ function template_showPosts()
 		echo '
 			<tr class="catbg3">
 				<td colspan="3">
-					', $txt[139], ': ', $context['page_index'], '
+					', $txt['pages'], ': ', $context['page_index'], '
 				</td>
 			</tr>
 		</table>';
@@ -389,7 +389,7 @@ function template_showPosts()
 								&nbsp;<a href="', $scripturl, '#', $post['category']['id'], '">', $post['category']['name'], '</a> / <a href="', $scripturl, '?board=', $post['board']['id'], '.0">', $post['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $post['topic'], '.', $post['start'], '#msg', $post['id'], '">', $post['subject'], '</a>
 							</td>
 							<td class="middletext" align="right" style="padding: 0 1ex; white-space: nowrap;">
-								', $txt[30], ': ', $post['time'], '
+								', $txt['on'], ': ', $post['time'], '
 							</td>
 						</tr>
 						<tr>
@@ -402,7 +402,7 @@ function template_showPosts()
 
 			if ($post['can_delete'])
 				echo '
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;start=', $context['start'], ';delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt[154], '?\');">', $remove_button, '</a>';
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;start=', $context['start'], ';delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $remove_button, '</a>';
 			if ($post['can_delete'] && ($post['can_mark_notify'] || $post['can_reply']))
 				echo '
 								', $context['menu_separator'];
@@ -431,7 +431,7 @@ function template_showPosts()
 		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr>
 				<td colspan="3" class="catbg3">
-					', $txt[139], ': ', $context['page_index'], '
+					', $txt['pages'], ': ', $context['page_index'], '
 				</td>
 			</tr>
 		</table>';
@@ -441,7 +441,7 @@ function template_showPosts()
 		echo '
 			<tr class="windowbg2">
 				<td>
-					', $txt[170], '
+					', $txt['search_no_results'], '
 				</td>
 			</tr>
 		</table>';
@@ -460,9 +460,9 @@ function template_editBuddies()
 				</td>
 			</tr>
 			<tr class="catbg3">
-				<td width="20%">', $txt[68], '</td>
+				<td width="20%">', $txt['name'], '</td>
 				<td>', $txt['online8'], '</td>
-				<td>', $txt[69], '</td>
+				<td>', $txt['email'], '</td>
 				<td align="center">', $txt[513], '</td>
 				<td align="center">', $txt[603], '</td>
 				<td align="center">', $txt[604], '</td>
@@ -485,7 +485,7 @@ function template_editBuddies()
 			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 				<td>', $buddy['link'], '</td>
 				<td align="center"><a href="', $buddy['online']['href'], '"><img src="', $buddy['online']['image_href'], '" alt="', $buddy['online']['label'], '" title="', $buddy['online']['label'], '" /></a></td>
-				<td align="center">', ($buddy['hide_email'] ? '' : '<a href="mailto:' . $buddy['email'] . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt[69] . '" title="' . $txt[69] . ' ' . $buddy['name'] . '" /></a>'), '</td>
+				<td align="center">', ($buddy['hide_email'] ? '' : '<a href="mailto:' . $buddy['email'] . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $buddy['name'] . '" /></a>'), '</td>
 				<td align="center">', $buddy['icq']['link'], '</td>
 				<td align="center">', $buddy['aim']['link'], '</td>
 				<td align="center">', $buddy['yim']['link'], '</td>
@@ -588,11 +588,11 @@ function template_trackUser()
 					</td>
 				</tr><tr class="titlebg">
 					<td colspan="4">
-						', $txt[139], ': ', $context['page_index'], '
+						', $txt['pages'], ': ', $context['page_index'], '
 					</td>
 				</tr><tr class="catbg3">
 					<td>', $txt['ip_address'], '</td>
-					<td>', $txt[72], '</td>
+					<td>', $txt['message'], '</td>
 					<td>', $txt[317], '</td>
 				</tr>';
 
@@ -711,7 +711,7 @@ function template_trackIP()
 					</td>
 				</tr><tr class="titlebg">
 					<td colspan="4">
-						<b>', $txt[139], ':</b> ', $context['message_page_index'], '
+						<b>', $txt['pages'], ':</b> ', $context['message_page_index'], '
 					</td>
 				</tr><tr class="catbg3">
 					<td>', $txt['ip_address'], '</td>
@@ -761,12 +761,12 @@ function template_trackIP()
 					</td>
 				</tr><tr class="titlebg">
 					<td colspan="4">
-						', $txt[139], ': ', $context['error_page_index'], '
+						', $txt['pages'], ': ', $context['error_page_index'], '
 					</td>
 				</tr><tr class="catbg3">
 					<td>', $txt['ip_address'], '</td>
 					<td>', $txt['display_name'], '</td>
-					<td>', $txt[72], '</td>
+					<td>', $txt['message'], '</td>
 					<td>', $txt[317], '</td>
 				</tr>';
 	if (empty($context['error_messages']))
@@ -1112,7 +1112,7 @@ function template_account()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt[79], '
+						', $txt['profile'], '
 					</td>
 				</tr>';
 
@@ -1137,7 +1137,7 @@ function template_account()
 							</tr>
 							<tr>
 								<td width="40%">
-									<b>', $txt[35], ': </b>
+									<b>', $txt['username'], ': </b>
 								</td>
 								<td>
 									<input type="text" name="memberName" size="30" value="', $context['member']['username'], '" />
@@ -1147,7 +1147,7 @@ function template_account()
 			echo '
 							<tr>
 								<td width="40%">
-									<b>', $txt[35], ': </b>', $context['user']['is_admin'] ? '
+									<b>', $txt['username'], ': </b>', $context['user']['is_admin'] ? '
 									<div class="smalltext">(<a href="' . $scripturl . '?action=profile;u=' . $context['member']['id'] . ';sa=account;changeusername" style="font-style: italic;">' . $txt['username_change'] . '</a>)</div>' : '', '
 								</td>
 								<td>
@@ -1158,7 +1158,7 @@ function template_account()
 		echo '
 							<tr>
 								<td>
-									<b', (isset($context['modify_error']['no_name']) || isset($context['modify_error']['name_taken']) ? ' style="color: red;"' : ''), '>', $txt[68], ': </b>
+									<b', (isset($context['modify_error']['no_name']) || isset($context['modify_error']['name_taken']) ? ' style="color: red;"' : ''), '>', $txt['name'], ': </b>
 									<div class="smalltext">', $txt[518], '</div>
 								</td>
 								<td>', ($context['allow_edit_name'] ? '<input type="text" name="realName" size="30" value="' . $context['member']['name'] . '" />' : $context['member']['name']), '</td>
@@ -1168,7 +1168,7 @@ function template_account()
 		if ($context['user']['is_admin'])
 			echo '
 							<tr>
-								<td><b>', $txt[233], ':</b></td>
+								<td><b>', $txt['date_registered'], ':</b></td>
 								<td><input type="text" name="dateRegistered" size="30" value="', $context['member']['registered'], '" /></td>
 							</tr>
 							<tr>
@@ -1248,7 +1248,7 @@ function template_account()
 							<tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 							</tr><tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_email']) || isset($context['modify_error']['no_email']) || isset($context['modify_error']['email_taken']) ? ' style="color: red;"' : ''), '>', $txt[69], ': </b><div class="smalltext">', $txt[679], '</div></td>
+								<td width="40%"><b', (isset($context['modify_error']['bad_email']) || isset($context['modify_error']['no_email']) || isset($context['modify_error']['email_taken']) ? ' style="color: red;"' : ''), '>', $txt['email'], ': </b><div class="smalltext">', $txt[679], '</div></td>
 								<td><input type="text" name="emailAddress" size="30" value="', $context['member']['email'], '" /></td>
 							</tr>';
 
@@ -1277,10 +1277,10 @@ function template_account()
 							<tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 							</tr><tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_new_password']) ? ' style="color: red;"' : ''), '>', $txt[81], ': </b><div class="smalltext">', $txt[596], '</div></td>
+								<td width="40%"><b', (isset($context['modify_error']['bad_new_password']) ? ' style="color: red;"' : ''), '>', $txt['choose_pass'], ': </b><div class="smalltext">', $txt[596], '</div></td>
 								<td><input type="password" name="passwrd1" size="20" /></td>
 							</tr><tr>
-								<td width="40%"><b>', $txt[82], ': </b></td>
+								<td width="40%"><b>', $txt['verify_pass'], ': </b></td>
 								<td><input type="password" name="passwrd2" size="20" /></td>
 							</tr>';
 
@@ -1319,7 +1319,7 @@ function template_forumProfile()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt[79], '
+						', $txt['profile'], '
 					</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" height="25" style="padding: 2ex;">
@@ -1422,16 +1422,16 @@ function template_forumProfile()
 									<input type="text" name="bday2" size="2" maxlength="2" value="', $context['member']['birth_date']['day'], '" />
 								</td>
 							</tr><tr>
-								<td width="40%"><b>', $txt[227], ': </b></td>
+								<td width="40%"><b>', $txt['location'], ': </b></td>
 								<td><input type="text" name="location" size="50" value="', $context['member']['location'], '" /></td>
 							</tr>
 							<tr>
-								<td width="40%"><b>', $txt[231], ': </b></td>
+								<td width="40%"><b>', $txt['gender'], ': </b></td>
 								<td>
 									<select name="gender" size="1">
 										<option value="0"></option>
-										<option value="1"', ($context['member']['gender']['name'] == 'm' ? ' selected="selected"' : ''), '>', $txt[238], '</option>
-										<option value="2"', ($context['member']['gender']['name'] == 'f' ? ' selected="selected"' : ''), '>', $txt[239], '</option>
+										<option value="1"', ($context['member']['gender']['name'] == 'm' ? ' selected="selected"' : ''), '>', $txt['male'], '</option>
+										<option value="2"', ($context['member']['gender']['name'] == 'f' ? ' selected="selected"' : ''), '>', $txt['female'], '</option>
 									</select>
 								</td>
 							</tr><tr>
@@ -1559,7 +1559,7 @@ function template_forumProfile()
 								<td valign="top"><b>', $modSettings['karmaLabel'], '</b></td>
 								<td>
 									', $modSettings['karmaApplaudLabel'], ' <input type="text" name="karmaGood" size="4" value="', $context['member']['karma']['good'], '" onchange="setInnerHTML(document.getElementById(\'karmaTotal\'), this.value - this.form.karmaBad.value);" style="margin-right: 2ex;" /> ', $modSettings['karmaSmiteLabel'], ' <input type="text" name="karmaBad" size="4" value="', $context['member']['karma']['bad'], '" onchange="this.form.karmaGood.onchange();" /><br />
-									(', $txt[94], ': <span id="karmaTotal">', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</span>)
+									(', $txt['total'], ': <span id="karmaTotal">', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</span>)
 								</td>
 							</tr>';
 	}
@@ -1715,7 +1715,7 @@ function template_theme()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" border="0" align="top" />&nbsp;
-						', $txt[79], '
+						', $txt['profile'], '
 					</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" height="25" style="padding: 2ex;">
@@ -1762,7 +1762,7 @@ function template_theme()
 							<tr>
 								<td width="40%">
 									<b>', $txt[486], ':</b><br />
-									<a href="', $scripturl, '?action=helpadmin;help=time_format" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="', !$context['right_to_left'] ? 'left' : 'right', '" style="', !$context['right_to_left'] ? 'padding-right' : 'padding-left', ': 1ex;" /></a>
+									<a href="', $scripturl, '?action=helpadmin;help=time_format" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="', !$context['right_to_left'] ? 'left' : 'right', '" style="', !$context['right_to_left'] ? 'padding-right' : 'padding-left', ': 1ex;" /></a>
 									<span class="smalltext">', $txt[479], '</span>
 								</td>
 								<td>
@@ -1890,7 +1890,7 @@ function template_notification()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt[79], '
+						', $txt['profile'], '
 					</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" height="25" style="padding: 2ex;">
@@ -1958,8 +1958,8 @@ function template_notification()
 	if (!empty($context['topic_notifications']))
 	{
 		echo '
-							<td class="titlebg" width="71%">' . $txt[70] . '</td>
-							<td class="titlebg" width="24%">' . $txt[109] . '</td>
+							<td class="titlebg" width="71%">' . $txt['subject'] . '</td>
+							<td class="titlebg" width="24%">' . $txt['started_by'] . '</td>
 							<td class="titlebg" width="5%"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></td>
 						</tr>';
 		foreach ($context['topic_notifications'] as $topic)
@@ -1985,7 +1985,7 @@ function template_notification()
 		echo '
 						<tr class="catbg">
 							<td colspan="3">
-								<b>', $txt[139], ':</b> ', $context['page_index'], '
+								<b>', $txt['pages'], ':</b> ', $context['page_index'], '
 							</td>
 						</tr>
 						<tr>
@@ -2078,7 +2078,7 @@ function template_pmprefs()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt[79], '
+						', $txt['profile'], '
 					</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" style="padding: 2ex;">
@@ -2151,7 +2151,7 @@ function template_groupMembership()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt[79], '
+						', $txt['profile'], '
 					</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" style="padding: 2ex;">
@@ -2327,7 +2327,7 @@ function template_ignoreboards()
 				<tr class="titlebg">
 					<td height="26">
 						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt[79], '
+						', $txt['profile'], '
 					</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" style="padding: 2ex;">
@@ -2424,7 +2424,7 @@ function template_deleteAccount()
 							</td>
 							<td class="windowbg2" align="', !$context['right_to_left'] ? 'left' : 'right', '">
 								<input type="password" name="oldpasswrd" size="20" />&nbsp;&nbsp;&nbsp;&nbsp;
-								<input type="submit" value="', $txt[163], '" />
+								<input type="submit" value="', $txt['yes'], '" />
 								<input type="hidden" name="sc" value="', $context['session_id'], '" />
 								<input type="hidden" name="userID" value="', $context['member']['id'], '" />
 								<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />

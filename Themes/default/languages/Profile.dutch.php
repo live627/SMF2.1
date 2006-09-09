@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Profile
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt[80] = 'Je mag het profiel van dit lid niet veranderen...';
 $txt[83] = 'Websitetitel (optioneel)';
 $txt[84] = 'Websiteadres (optioneel)';
@@ -65,7 +67,7 @@ $txt['pswd3'] = 'Stel me mijn vraag';
 $txt['pswd4'] = 'Je kunt niet je wachtwoord opvragen, maar wel een nieuwe instellen door op een link te klikken die je wordt toegestuurd per mail. Je kunt ook een nieuw wachtwoord instellen door het beantwoorden van je geheime vraag.';
 $txt['pswd5'] = 'Sorry, maar de combinatie van geheime vraag en antwoord in je profiel klopt niet.  Klik op de terug knop, en probeer het nog eens op de juiste wijze.';
 $txt['pswd6'] = 'Geef het antwoord op je vraag, en het wachtwoord dat je zou willen gebruiken.  Het wachtwoord zal worden aangepast indien het antwoord juist is.';
-$txt['pswd8'] = 'Je wachtwoord is aangepast.<br />Klik <a href="' . $scripturl . '?action=login">hier</a> om in te loggen.';
+$txt['pswd8'] = 'Je wachtwoord is aangepast.<br />Klik <a href="{$scripturl}?action=login">hier</a> om in te loggen.';
 $txt['secret_why_blank'] = 'Waarom is dit leeg?';
 
 $txt['theme1a'] = 'Huidig thema';
@@ -154,13 +156,13 @@ $txt['profileEdit'] = 'Profiel wijzigen';
 $txt['account'] = 'Account-gerelateerde instellingen';
 $txt['account_info'] = 'Dit zijn je account instellingen. Deze pagina bevat alle informatie die jou identificeert op het forum. Uit veiligheidsoverwegingen dien je je huidige wachtwoord in te geven om de veranderingen door te kunnen voeren.';
 $txt['forumProfile'] = 'Forumprofielinformatie';
-$txt['forumProfile_info'] = 'Je kunt hier je persoonlijke informatie aanpassen. Deze informatie wordt getoond op ' . $context['forum_name'] . '. Indien je dit niet wilt, sla dit dan over en laat het leeg.';
+$txt['forumProfile_info'] = 'Je kunt hier je persoonlijke informatie aanpassen. Deze informatie wordt getoond op {$context.forum_name}. Indien je dit niet wilt, sla dit dan over en laat het leeg.';
 $txt['theme'] = 'Lay-out voorkeuren';
 $txt['theme_info'] = 'Deze sectie laat je de lay-out van het forum zelf aanpassen.';
 $txt['notification'] = 'Notificaties en e-mail';
 $txt['notification_info'] = 'Je kunt met SMF berichten ontvangen als er reacties zijn op berichten, bij nieuwe topics, en nieuwsberichten. Je kunt deze instellingen hier aanpassen of bekijken van welke topics en boards je momenteel notificaties ontvangt.';
 $txt['pmprefs'] = 'Persoonlijke berichten opties';
-$txt['pmprefs_info'] = 'Andere leden van ' . $context['forum_name'] . ' kunnen persoonlijk contact met je opnemen, maar soms wil je iemands persoonlijke berichten juist negeren. Je kunt dat hier instellen.';
+$txt['pmprefs_info'] = 'Andere leden van {$context.forum_name} kunnen persoonlijk contact met je opnemen, maar soms wil je iemands persoonlijke berichten juist negeren. Je kunt dat hier instellen.';
 // Untranslated!
 $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
@@ -328,7 +330,7 @@ $txt['request_group_membership_desc'] = 'Before you can join this group your mem
 $txt['submit_request'] = 'Submit Request';
 $txt['request_membership_email_subject'] = 'New Group Application';
 // In the following email, %1$s is the recipients name, %2$s the requesting member, %3$s the group and %4$s the reason.
-$txt['request_membership_email_message'] = '%1$s,' . "\n\n" . '%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:' . "\n\n" . '%4$s' . "\n\n" . 'You can approve or reject this application by clicking the link below:' . "\n\n" . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
+$txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
 
 //!!! Untranslated
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';

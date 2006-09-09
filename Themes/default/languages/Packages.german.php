@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Packages
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt['smf154'] = 'Fortsetzen';
 $txt['smf160'] = 'Paket wurde entpackt. Es enth&auml;lt jedoch eine PHP Datei, welche gestartet werden muss bevor die Modifikation funktioniert';
 $txt['smf161'] = 'Starten';

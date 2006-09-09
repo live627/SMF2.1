@@ -439,21 +439,21 @@ function Display()
 		{
 			// No limit! (actually, there is a limit, but...)
 			$modSettings['defaultMaxMessages'] = -1;
-			$context['page_index'] .= empty($modSettings['compactTopicPagesEnable']) ? '<b>' . $txt[190] . '</b> ' : '[<b>' . $txt[190] . '</b>] ';
+			$context['page_index'] .= empty($modSettings['compactTopicPagesEnable']) ? '<b>' . $txt['all'] . '</b> ' : '[<b>' . $txt['all'] . '</b>] ';
 
 			// Set start back to 0...
 			$_REQUEST['start'] = 0;
 		}
 		// They aren't using it, but the *option* is there, at least.
 		else
-			$context['page_index'] .= '&nbsp;<a href="' . $scripturl . '?topic=' . $topic . '.0;all">' . $txt[190] . '</a> ';
+			$context['page_index'] .= '&nbsp;<a href="' . $scripturl . '?topic=' . $topic . '.0;all">' . $txt['all'] . '</a> ';
 	}
 
 	// Build the link tree.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?topic=' . $topic . '.0',
 		'name' => $topicinfo['subject'],
-		'extra_before' => $settings['linktree_inline'] ? $txt[118] . ': ' : ''
+		'extra_before' => $settings['linktree_inline'] ? $txt['topic'] . ': ' : ''
 	);
 
 	// Build a list of this board's moderators.
@@ -463,7 +463,7 @@ function Display()
 	{
 		// Add a link for each moderator...
 		foreach ($board_info['moderators'] as $mod)
-			$context['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $mod['id'] . '" title="' . $txt[62] . '">' . $mod['name'] . '</a>';
+			$context['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $mod['id'] . '" title="' . $txt['board_moderator'] . '">' . $mod['name'] . '</a>';
 
 		// And show it after the board's name.
 		$context['linktree'][count($context['linktree']) - 2]['extra_after'] = ' (' . (count($context['link_moderators']) == 1 ? $txt[298] : $txt[299]) . ': ' . implode(', ', $context['link_moderators']) . ')';
@@ -759,7 +759,7 @@ function Display()
 	}
 
 	$context['jump_to'] = array(
-		'label' => addslashes(un_htmlspecialchars($txt[160])),
+		'label' => addslashes(un_htmlspecialchars($txt['jump_to'])),
 		'board_name' => un_htmlspecialchars($board_info['name']),
 		'child_level' => $board_info['child_level'],
 	);
@@ -872,7 +872,7 @@ function prepareDisplayContext($reset = false)
 		$context['icon_sources'][$message['icon']] = 'images_url';
 
 	// If you're a lazy bum, you probably didn't give a subject...
-	$message['subject'] = $message['subject'] != '' ? $message['subject'] : $txt[24];
+	$message['subject'] = $message['subject'] != '' ? $message['subject'] : $txt['no_subject'];
 
 	// Are you allowed to remove at least a single reply?
 	$context['can_remove_post'] |= allowedTo('delete_own') && (empty($modSettings['edit_disable_time']) || $message['posterTime'] + $modSettings['edit_disable_time'] * 60 >= time()) && $message['ID_MEMBER'] == $user_info['id'];
@@ -883,7 +883,7 @@ function prepareDisplayContext($reset = false)
 		// Notice this information isn't used anywhere else....
 		$memberContext[$message['ID_MEMBER']]['name'] = $message['posterName'];
 		$memberContext[$message['ID_MEMBER']]['id'] = 0;
-		$memberContext[$message['ID_MEMBER']]['group'] = $txt[28];
+		$memberContext[$message['ID_MEMBER']]['group'] = $txt['guest_title'];
 		$memberContext[$message['ID_MEMBER']]['link'] = $message['posterName'];
 		$memberContext[$message['ID_MEMBER']]['email'] = $message['posterEmail'];
 		$memberContext[$message['ID_MEMBER']]['hide_email'] = $message['posterEmail'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']);

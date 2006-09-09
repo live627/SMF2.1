@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageSmileys
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt['smiley_sets'] = 'Conjuntos de Smileys';
 $txt['smiley_sets_save'] = 'Guardar Cambios';
 $txt['smiley_sets_add'] = 'Nueva colecci&oacute;n de smileys';

@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManagePermissions
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt['permissions_title'] = 'Manejar Permisos';
 $txt['permissions_modify'] = 'Modificar';
 $txt['permissions_access'] = 'Tiene acceso';

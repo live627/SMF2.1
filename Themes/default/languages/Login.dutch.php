@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Login
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt[37] = 'Je moet wel een gebruikersnaam invullen.';
 $txt[38] = 'Wachtwoord was leeg';
 $txt[39] = 'Wachtwoord niet correct';
@@ -19,7 +21,7 @@ $txt[633] = 'Waarschuwing!';
 $txt[634] = 'Alleen geregistreerde leden mogen in dit gedeelte komen.';
 $txt[635] = 'Log hieronder in of klik op';
 $txt[636] = 'deze link';
-$txt[637] = 'om jezelf vrijblijvend te registreren op het ' . $context['forum_name'] . ' forum.';
+$txt[637] = 'om jezelf vrijblijvend te registreren op het {$context.forum_name} forum.';
 // Use numeric entities in the below two strings.
 $txt[701] = 'je kunt het nog veranderen nadat je bent ingelogd door naar je profiel te gaan:';
 $txt[719] = 'Je gebruikersnaam is: ';
@@ -33,13 +35,13 @@ $txt['register_age_confirmation'] = 'Ik ben tenminste %d jaar oud';
 $txt['register_subject'] = 'Welkom op ' . $context['forum_name'];
 
 // For the below three messages, %1$s is the display name, %2$s is the username, %3$s is the password, %4$s is the activation code, and %5$s is the activation link (the last two are only for activation.)
-$txt['register_immediate_message'] = 'Je bent nu geregistreerd met een account op ' . $context['forum_name'] . ', %1$s!' . "\n\n" . 'De gebruikersnaam van je account is %2$s en je wachtwoord is %3$s.' . "\n\n" . 'Je kunt je wachtwoord veranderen, nadat je bent ingelogd, door naar je profiel te gaan of door na het inloggen naar deze pagina te gaan:' . "\n\n" . $scripturl . '?action=profile' . "\n\n" . $txt[130];
-$txt['register_activate_message'] = 'Je bent nu geregistreerd met een account bij ' . $context['forum_name'] . ', %1$s!' . "\n\n" . 'De gebruikersnaam van je account is %2$s en je wachtwoord is %3$s (welke later kan worden aangepast)' . "\n\n" . 'Voordat je kunt inloggen moet je eerst je account activeren. Om dat te doen klik op de volgende link:' . "\n\n" . '%5$s' . "\n\n" . 'Mocht je problemen hebben bij de activering, gebruik de code "%4$s".' . "\n\n" . $txt[130];
-$txt['register_pending_message'] = 'Je registratieverzoek bij ' . $context['forum_name'] . ' is ontvangen, %1$s.' . "\n\n" . 'De gebruikersnaam waarmee je geregistreerd bent was %2$s en het wachtwoord was %3$s.' . "\n\n" . 'Voordat je in kunt loggen en gebruik kunt gaan maken van het forum, moet je verzoek beoordeeld en goedgekeurd worden.  Als dit gebeurt, ontvang je een andere e-mail vanaf dit adres.' . "\n\n" . $txt[130];
+$txt['register_immediate_message'] = 'Je bent nu geregistreerd met een account op {$context.forum_name}, %1$s!\\n\\nDe gebruikersnaam van je account is %2$s en je wachtwoord is %3$s.\\n\\nJe kunt je wachtwoord veranderen, nadat je bent ingelogd, door naar je profiel te gaan of door na het inloggen naar deze pagina te gaan:\\n\\n{$scripturl}?action=profile\\n\\n' . $txt[130];
+$txt['register_activate_message'] = 'Je bent nu geregistreerd met een account bij {$context.forum_name}, %1$s!\\n\\nDe gebruikersnaam van je account is %2$s en je wachtwoord is %3$s (welke later kan worden aangepast)\\n\\nVoordat je kunt inloggen moet je eerst je account activeren. Om dat te doen klik op de volgende link:\\n\\n%5$s\\n\\nMocht je problemen hebben bij de activering, gebruik de code "%4$s".\\n\\n' . $txt[130];
+$txt['register_pending_message'] = 'Je registratieverzoek bij {$context.forum_name} is ontvangen, %1$s.\\n\\nDe gebruikersnaam waarmee je geregistreerd bent was %2$s en het wachtwoord was %3$s.\\n\\nVoordat je in kunt loggen en gebruik kunt gaan maken van het forum, moet je verzoek beoordeeld en goedgekeurd worden.  Als dit gebeurt, ontvang je een andere e-mail vanaf dit adres.\\n\\n' . $txt[130];
 
 // For the below two messages, %1$s is the user's display name, %2$s is their username, %3$s is the activation code, and %4$s is the activation link (the last two are only for activation.)
-$txt['resend_activate_message'] = 'Je bent nu geregistreerd met een account bij ' . $context['forum_name'] . ', %1$s!' . "\n\n" . 'Je gebruikersnaam is "%2$s".' . "\n\n" . 'Voordat je in kunt loggen moet je eerst je account activeren. Om dat te doen, klik op de volgende link:' . "\n\n" . '%4$s' . "\n\n" . 'Mocht je problemen hebben bij de activering, gebruik de code "%3$s".' . "\n\n" . $txt[130];
-$txt['resend_pending_message'] = 'Je registratieverzoek bij ' . $context['forum_name'] . ' is ontvangen, %1$s.' . "\n\n" . 'De gebruikersnaam waarmee je geregistreerd bent was %2$s.' . "\n\n" . 'Voordat je in kunt loggen en beginnen met het gebruik van het forum moet je verzoek eerst beoordeeld en goedgekeurd worden. Als dit gebeurt, ontvang je een andere e-mail vanaf dit adres.' . "\n\n" . $txt[130];
+$txt['resend_activate_message'] = 'Je bent nu geregistreerd met een account bij {$context.forum_name}, %1$s!\\n\\nJe gebruikersnaam is "%2$s".\\n\\nVoordat je in kunt loggen moet je eerst je account activeren. Om dat te doen, klik op de volgende link:\\n\\n%4$s\\n\\nMocht je problemen hebben bij de activering, gebruik de code "%3$s".\\n\\n' . $txt[130];
+$txt['resend_pending_message'] = 'Je registratieverzoek bij {$context.forum_name} is ontvangen, %1$s.\\n\\nDe gebruikersnaam waarmee je geregistreerd bent was %2$s.\\n\\nVoordat je in kunt loggen en beginnen met het gebruik van het forum moet je verzoek eerst beoordeeld en goedgekeurd worden. Als dit gebeurt, ontvang je een andere e-mail vanaf dit adres.\\n\\n' . $txt[130];
 
 $txt['ban_register_prohibited'] = 'Sorry, je mag je niet registreren op dit forum';
 $txt['under_age_registration_prohibited'] = 'Sorry, maar gebruikers onder de leeftijd van %d mogen zich niet registreren op dit forum';
@@ -134,7 +136,7 @@ $txt['admin_notify_profile'] = '%s heeft zich net als nieuw lid op je forum gere
 $txt['admin_notify_approval'] = 'Voordat dit lid kan beginnen met het plaatsen van berichten moet zijn account worden goedgekeurd. Klik op de link hieronder om naar het goedkeuringsscherm te gaan.';
 
 $txt['coppa_title'] = 'Leeftijdsbeperkt forum';
-$txt['coppa_after_registration'] = 'Dank je voor je regstratie op ' . $context['forum_name'] . '.<br /><br />Als lid onder de leeftijd van {MINIMUM_AGE} jaar is er een wettelijke verplichting om de goedkeuring van ouders of voogd te krijgen voordat je gebruik mag maken van je account. Print onderstaand formulier uit om activering van je account te regelen:';
+$txt['coppa_after_registration'] = 'Dank je voor je regstratie op {$context.forum_name}.<br /><br />Als lid onder de leeftijd van {MINIMUM_AGE} jaar is er een wettelijke verplichting om de goedkeuring van ouders of voogd te krijgen voordat je gebruik mag maken van je account. Print onderstaand formulier uit om activering van je account te regelen:';
 $txt['coppa_form_link_popup'] = 'Laad het formulier in een nieuw venster';
 $txt['coppa_form_link_download'] = 'Download formulier';
 $txt['coppa_send_to_one_option'] = 'Zorg er daarna voor dat je ouders of voogd het ingevulde formulier opsturen per:';
@@ -146,7 +148,7 @@ $txt['coppa_send_by_phone'] = 'Eventueel kun je hen ook laten bellen naar de for
 $txt['coppa_form_title'] = 'Toestemmingsformulier voor registratie op ' . $context['forum_name'];
 $txt['coppa_form_address'] = 'Adres';
 $txt['coppa_form_date'] = 'Datum';
-$txt['coppa_form_body'] = 'Ik {PARENT_NAME},<br /><br />geef toestemming aan {CHILD_NAME} (naam kind) om volwaardig geregistreerd lid te worden op het forum: ' . $context['forum_name'] . ', met de gebruikersnaam: {USER_NAME}.<br /><br />Ik begrijp dat bepaalde persoonlijke informatie door {USER_NAME} ingevuld getoond kan worden aan andere gebruikers van het forum.<br /><br />Getekend:<br />{PARENT_NAME} (Ouder/Voogd).';
+$txt['coppa_form_body'] = 'Ik {PARENT_NAME},<br /><br />geef toestemming aan {CHILD_NAME} (naam kind) om volwaardig geregistreerd lid te worden op het forum: {$context.forum_name}, met de gebruikersnaam: {USER_NAME}.<br /><br />Ik begrijp dat bepaalde persoonlijke informatie door {USER_NAME} ingevuld getoond kan worden aan andere gebruikers van het forum.<br /><br />Getekend:<br />{PARENT_NAME} (Ouder/Voogd).';
 
 $txt['visual_verification_label'] = 'Visuele verificatie';
 $txt['visual_verification_description'] = 'Typ de letters die getoond worden in het plaatje';

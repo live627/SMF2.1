@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageMembers
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 // Untranslated!
 $txt['groups'] = 'Groups';
 $txt['viewing_groups'] = 'Viewing Membergroups';
@@ -119,13 +121,13 @@ $txt['admin_browse_outstanding_go'] = 'Ausf&uuml;hren';
 
 // Use numeric entities in the below nine strings.
 $txt['admin_approve_reject'] = 'Anmeldung verweigert';
-$txt['admin_approve_reject_desc'] = 'Wir m&#252;ssen Ihnen leider mitteilen, dass Ihre Anmeldung im ' . $context['forum_name'] . ' verweigert wurde.';
+$txt['admin_approve_reject_desc'] = 'Wir m&#252;ssen Ihnen leider mitteilen, dass Ihre Anmeldung im {$context.forum_name} verweigert wurde.';
 $txt['admin_approve_delete'] = 'Benutzerkonto gel&#246;scht';
-$txt['admin_approve_delete_desc'] = 'Ihr Benutzerkonto im ' . $context['forum_name'] . ' wurde gel&#246;scht. Eventuell haben Sie Ihr Benutzerkonto nie aktiviert! In diesem Fall k&#246;nnen Sie sich erneut registrieren.';
+$txt['admin_approve_delete_desc'] = 'Ihr Benutzerkonto im {$context.forum_name} wurde gel&#246;scht. Eventuell haben Sie Ihr Benutzerkonto nie aktiviert! In diesem Fall k&#246;nnen Sie sich erneut registrieren.';
 $txt['admin_approve_remind'] = 'Registrierungs-Erinnerung';
 $txt['admin_approve_remind_desc'] = 'Sie haben Ihr Benutzerkonto noch nicht aktiviert';
 $txt['admin_approve_remind_desc2'] = 'Bitte klicken Sie auf den folgenden Link, um Ihr Benutzerkonto zu aktivieren:';
 $txt['admin_approve_accept_desc'] = 'Ihr Benutzerkonto wurde vom Administrator manuell aktiviert. Sie k&#246;nnen sich jetzt einloggen und schreiben.';
-$txt['admin_approve_require_activation'] = 'Ihr Benutzerkonto im ' . $context['forum_name'] . ' wurde vom Administrator genehmigt und muss von Ihnen aktiviert werden, bevor Sie einen Beitrag schreiben k&#246;nnen.';
+$txt['admin_approve_require_activation'] = 'Ihr Benutzerkonto im {$context.forum_name} wurde vom Administrator genehmigt und muss von Ihnen aktiviert werden, bevor Sie einen Beitrag schreiben k&#246;nnen.';
 
 ?>

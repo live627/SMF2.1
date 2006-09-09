@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageSmileys
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt['smiley_sets'] = 'Smiley-Sets';
 $txt['smiley_sets_save'] = '&Auml;nderungen speichern';
 $txt['smiley_sets_add'] = 'Neues Smiley-Set';

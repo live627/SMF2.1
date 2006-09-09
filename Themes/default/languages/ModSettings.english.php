@@ -1,7 +1,9 @@
 <?php
 // Version: 2.0 Alpha; ModSettings
 
-$txt['smf3'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id'] . ';sesc=' . $context['session_id'] . '">theme settings</a> for more options.  Click the help icons for more information about a setting.';
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
+$txt['smf3'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="{$scripturl}?action=admin;area=theme;sa=settings;th={$settings.theme_id};sesc={$context.session_id}">theme settings</a> for more options.  Click the help icons for more information about a setting.';
 
 $txt['mods_cat_features'] = 'Basic Features';
 $txt['pollMode'] = 'Poll mode';
@@ -111,7 +113,7 @@ $txt['cache_memcached'] = 'Memcache settings';
 
 $txt['signature_settings'] = 'Signature Settings';
 $txt['signature_settings_desc'] = 'Use the settings on this page to decide how member signatures should be treated in SMF.';
-$txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="' . $scripturl . '?action=admin;area=featuresettings;sa=sig;apply">here</a> to apply rules to all existing signatures.';
+$txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="{$scripturl}?action=admin;area=featuresettings;sa=sig;apply">here</a> to apply rules to all existing signatures.';
 $txt['signature_enable'] = 'Enable signatures';
 $txt['signature_max_length'] = 'Maximum allowed characters<div class="smalltext">(0 for no max.)</div>';
 $txt['signature_max_lines'] = 'Maximum amount of lines<div class="smalltext">(0 for no max)</div>';

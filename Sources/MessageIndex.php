@@ -86,7 +86,7 @@ function MessageIndex()
 	if (!empty($board_info['moderators']))
 	{
 		foreach ($board_info['moderators'] as $mod)
-			$context['link_moderators'][] ='<a href="' . $scripturl . '?action=profile;u=' . $mod['id'] . '" title="' . $txt[62] . '">' . $mod['name'] . '</a>';
+			$context['link_moderators'][] ='<a href="' . $scripturl . '?action=profile;u=' . $mod['id'] . '" title="' . $txt['board_moderator'] . '">' . $mod['name'] . '</a>';
 
 		$context['linktree'][count($context['linktree']) - 1]['extra_after'] = ' (' . (count($context['link_moderators']) == 1 ? $txt[298] : $txt[299]) . ': ' . implode(', ', $context['link_moderators']) . ')';
 	}
@@ -233,9 +233,9 @@ function MessageIndex()
 					'id' => $row_board['ID_MODERATOR'],
 					'name' => $row_board['modRealName'],
 					'href' => $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt[62] . '">' . $row_board['modRealName'] . '</a>'
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>'
 				);
-				$context['boards'][$row_board['ID_BOARD']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt[62] . '">' . $row_board['modRealName'] . '</a>';
+				$context['boards'][$row_board['ID_BOARD']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
 			}
 		}
 		mysql_free_result($result);
@@ -525,7 +525,7 @@ function MessageIndex()
 					$pages = '&#171; ' . $tmppages[0] . ' ' . $tmppages[1] . ' ... ' . $tmppages[count($tmppages) - 2] . ' ' . $tmppages[count($tmppages) - 1];
 
 				if (!empty($modSettings['enableAllMessages']) && $topic_length < $modSettings['enableAllMessages'])
-					$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt[190] . '</a>';
+					$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt['all'] . '</a>';
 				$pages .= ' &#187;';
 			}
 			else
@@ -557,7 +557,7 @@ function MessageIndex()
 						'name' => $row['firstDisplayName'],
 						'id' => $row['firstID_MEMBER'],
 						'href' => !empty($row['firstID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['firstID_MEMBER'] : '',
-						'link' => !empty($row['firstID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['firstID_MEMBER'] . '" title="' . $txt[92] . ' ' . $row['firstDisplayName'] . '">' . $row['firstDisplayName'] . '</a>' : $row['firstDisplayName']
+						'link' => !empty($row['firstID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['firstID_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $row['firstDisplayName'] . '">' . $row['firstDisplayName'] . '</a>' : $row['firstDisplayName']
 					),
 					'time' => timeformat($row['firstPosterTime']),
 					'timestamp' => forum_time(true, $row['firstPosterTime']),
@@ -633,7 +633,7 @@ function MessageIndex()
 	}
 
 	$context['jump_to'] = array(
-		'label' => addslashes(un_htmlspecialchars($txt[160])),
+		'label' => addslashes(un_htmlspecialchars($txt['jump_to'])),
 		'board_name' => un_htmlspecialchars($board_info['name']),
 		'child_level' => $board_info['child_level'],
 	);

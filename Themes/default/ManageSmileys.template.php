@@ -247,7 +247,7 @@ function template_editsmileys()
 						<option value="popup">', $txt['smileys_show_on_popup'], '</option>
 						<option value="delete">', $txt['smileys_remove'], '</option>
 					</select>
-					<noscript><input type="submit" name="perform_action" value="', $txt[161], '" /></noscript>
+					<noscript><input type="submit" name="perform_action" value="', $txt['go'], '" /></noscript>
 				</td>
 			</tr>
 		</table>

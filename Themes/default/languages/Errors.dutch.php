@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Errors
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt[1] = 'Je hebt geen toegang tot dit gedeelte van het forum';
 
 $txt[73] = 'Alleen beheerders en administrators mogen direct berichten verwijderen.';
@@ -12,9 +14,9 @@ $txt[93] = 'Jij mag dit topic niet sluiten of heropenen';
 $txt[100] = 'Die gebruikersnaam bestaat al, kies een andere...';
 $txt[134] = 'Je mag geen topics verplaatsen...';
 $txt[138] = 'Alleen voor leden...';
-$txt[165] = 'Om een bericht te kunnen plaatsen moet je <a href="' . $scripturl . '?action=login">ingelogd zijn</a>. Heb je nog geen account, <a href="' . $scripturl . '?action=register">registreer</a> je dan even.';
+$txt[165] = 'Om een bericht te kunnen plaatsen moet je <a href="{$scripturl}?action=login">ingelogd zijn</a>. Heb je nog geen account, <a href="{$scripturl}?action=register">registreer</a> je dan even.';
 $txt[213] = 'Wachtwoord is niet hetzelfde!';
-$txt[223] = 'Sorry, je moet <a href="' . $scripturl . '?action=login">inloggen</a> of jezelf <a href="' . $scripturl . '?action=register">registreren</a> voordat je dit kunt doen!';
+$txt[223] = 'Sorry, je moet <a href="{$scripturl}?action=login">inloggen</a> of jezelf <a href="{$scripturl}?action=register">registreren</a> voordat je dit kunt doen!';
 $txt[241] = 'Onjuiste letters/cijfers gebruikt in je wachtwoord.';
 $txt[242] = 'Onjuiste letters/cijfers gebruikt in je naam.';
 $txt[243] = 'Onjuiste letters/cijfers gebruikt in je e-mail.';
@@ -215,7 +217,7 @@ $txt['error_no_event'] = 'Geen gebeurtenisnaam was ingevuld.';
 $txt['error_no_subject'] = 'Geen onderwerp ingevuld.';
 $txt['error_no_question'] = 'De poll dient een vraag te bevatten!';
 $txt['error_no_message'] = 'Het bericht is leeggelaten.';
-$txt['error_long_message'] = 'Het bericht overschrijdt de maximum toegstane lengte (' . $modSettings['max_messageLength'] . ' karakters).';
+$txt['error_long_message'] = 'Het bericht overschrijdt de maximum toegstane lengte ({$modSettings.max_messageLength} karakters).';
 $txt['error_session_timeout'] = 'Je sessie is verlopen. Verstuur je bericht nog een keer.';
 $txt['error_no_to'] = 'Geen ontvangers gespecificeerd.';
 $txt['error_bad_to'] = 'E&eacute;n of meer \'aan\'-geadresseerden konden niet worden gevonden.';

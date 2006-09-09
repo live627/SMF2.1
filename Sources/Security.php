@@ -178,7 +178,7 @@ function is_not_guest($message = '')
 	// Use the kick_guest sub template...
 	$context['kick_message'] = $message;
 	$context['sub_template'] = 'kick_guest';
-	$context['page_title'] = $txt[34];
+	$context['page_title'] = $txt['login'];
 
 	obExit();
 
@@ -329,7 +329,7 @@ function is_not_banned($forceCheck = false)
 				LIMIT 1", __FILE__, __LINE__);
 
 		// 'Log' the user out.  Can't have any funny business... (save the name!)
-		$old_name = isset($user_info['name']) && $user_info['name'] != '' ? $user_info['name'] : $txt[28];
+		$old_name = isset($user_info['name']) && $user_info['name'] != '' ? $user_info['name'] : $txt['guest_title'];
 		$user_info['name'] = '';
 		$user_info['username'] = '';
 		$user_info['is_guest'] = true;
@@ -339,7 +339,7 @@ function is_not_banned($forceCheck = false)
 		$context['user'] = array(
 			'id' => 0,
 			'username' => '',
-			'name' => $txt[28],
+			'name' => $txt['guest_title'],
 			'is_guest' => true,
 			'is_logged' => false,
 			'is_admin' => false,
@@ -515,7 +515,7 @@ function isBannedEmail($email, $restriction, $error)
 		log_ban($_SESSION['ban']['cannot_access']['ids']);
 		$_SESSION['ban']['last_checked'] = time();
 
-		fatal_error(sprintf($txt[430], $txt[28]) . $_SESSION['ban']['cannot_access']['reason'], false);
+		fatal_error(sprintf($txt[430], $txt['guest_title']) . $_SESSION['ban']['cannot_access']['reason'], false);
 	}
 
 	if (!empty($ban_ids))

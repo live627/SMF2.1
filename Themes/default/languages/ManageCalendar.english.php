@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageCalendar
 
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
 $txt['calendar_desc'] = 'From here you can modify all aspects of the calendar.';
 
 // Calendar Settings

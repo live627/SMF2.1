@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Reports
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt['generate_reports_desc'] = 'Hier k&ouml;nnen Sie verschiedene Berichte erstellen, die bei der Administration des Forums helfen sollen. W&auml;hlen Sie einfach eine der untenstehenden Optionen aus.';
 $txt['generate_reports_continue'] = 'Weiter';
 $txt['generate_reports_type'] = 'W&auml;hle Art des Berichts';
@@ -81,8 +83,6 @@ $txt['member_group_settings'] = 'Einstellungen';
 $txt['member_group_access'] = 'Board-Zugang';
 
 // Board info.
-$txt['yes'] = 'Ja';
-$txt['no'] = 'Nein';
 $txt['none'] = 'Keine';
 $txt['board_category'] = 'Kategorie';
 $txt['board_parent'] = '&Uuml;bergeordnetes Board';

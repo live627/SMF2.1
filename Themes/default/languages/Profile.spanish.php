@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Profile
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt[80] = 'No est&aacute;s autorizado para cambiar este perfil.';
 $txt[83] = 'T&iacute;tulo de tu sitio Web';
 $txt[84] = 'URL de tu sitio Web';
@@ -65,7 +67,7 @@ $txt['pswd3'] = 'Preg&uacute;ntame mi Pregunta secreta';
 $txt['pswd4'] = 'No puedes obtener tu contrase&ntilde;a, pero puedes especificar una nueva visitando la liga que se te envi&oacute; por email.  Tienes tambi&eacute;n la opci&oacute;n de especificar una nueva contrase&ntilde;a contestando tu pregunta secreta.';
 $txt['pswd5'] = 'Lo sentimos, pero t&uacute; no especificaste una combinaci&oacute;n v&aacute;lida de Pregunta secreta y Respuesta en tu perfil.  Por favor haz click en el bot&oacute;n Atr&aacute;s, y usa el m&eacute;todo por defecto para obtener tu contrase&ntilde;a.';
 $txt['pswd6'] = 'Por favor introduce la respuesta a tu pregunta secreta, as&iacute; como la nueva contrase&ntilde;a que deseas usar.  Tu contrase&ntilde;a ser&aacute; cambiada al nuevo valor especificado en caso que contestes correctamente la pregunta secreta.';
-$txt['pswd8'] = 'Tu contrase&ntilde;a ha sido cambiada exitosamente. Haz <br />click <a href="' . $scripturl . '?action=login">aqu&iacute;</a> para ingresar.';
+$txt['pswd8'] = 'Tu contrase&ntilde;a ha sido cambiada exitosamente. Haz <br />click <a href="{$scripturl}?action=login">aqu&iacute;</a> para ingresar.';
 $txt['secret_why_blank'] = '&iquest;porqu&eacute; esto est&aacute; en blanco?';
 
 $txt['theme1a'] = 'Tema actual';
@@ -155,13 +157,13 @@ $txt['profileEdit'] = 'Editar Perfil';
 $txt['account'] = 'Configuraci&oacute;n de la cuenta';
 $txt['account_info'] = '&Eacute;sta es la configuraci&oacute;n de tu cuenta. Esta p&aacute;gina contiene toda la informaci&oacute;n critica que te identifica en el foro. Por razones de seguridad, debes introducir tu contrase&ntilde;a (actual) para poder modificar esta informaci&oacute;n.';
 $txt['forumProfile'] = 'Informaci&oacute;n del Perfil del foro';
-$txt['forumProfile_info'] = 'Tu puedes cambiar tu informaci&oacute;n personal en esta p&aacute;gina. Esta informaci&oacute;n ser&aacute; mostrada a trav&eacute;s de ' . $context['forum_name'] . '. Si no quieres compartir esta informaci&oacute;n , simplemente d&eacute;jalo en blanco - nada aqu&iacute; es obligatorio.';
+$txt['forumProfile_info'] = 'Tu puedes cambiar tu informaci&oacute;n personal en esta p&aacute;gina. Esta informaci&oacute;n ser&aacute; mostrada a trav&eacute;s de {$context.forum_name}. Si no quieres compartir esta informaci&oacute;n , simplemente d&eacute;jalo en blanco - nada aqu&iacute; es obligatorio.';
 $txt['theme'] = 'Configuraci&oacute;n de Apariencia y Dise&ntilde;o';
 $txt['theme_info'] = 'Esta secci&oacute;n te permite personalizar la apariencia y el dise&ntilde;o del foro.';
 $txt['notification'] = 'Notificaciones y email';
 $txt['notification_info'] = 'SMF permite que se te env&iacute;en notificaciones cuando haya respuestas a los mensajes, nuevos temas, y anuncios del foro. Puedes cambiar estos valores aqu&iacute;, o revisar los temas y foros de los que actualmente est&aacute;s recibiendo notificaciones.';
 $txt['pmprefs'] = 'Configuraci&oacute;n de Mensajes Personales';
-$txt['pmprefs_info'] = 'Otros usuarios de  ' . $context['forum_name'] . ' pueden contactarte directamente, pero a veces puede que desees ignorar los mensajes de alguien.  Esta p&aacute;gina te permite hacerlo, adem&aacute;s de otras cosas.';
+$txt['pmprefs_info'] = 'Otros usuarios de  {$context.forum_name} pueden contactarte directamente, pero a veces puede que desees ignorar los mensajes de alguien.  Esta p&aacute;gina te permite hacerlo, adem&aacute;s de otras cosas.';
 // Untranslated!
 $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
@@ -333,7 +335,7 @@ $txt['request_group_membership_desc'] = 'Before you can join this group your mem
 $txt['submit_request'] = 'Submit Request';
 $txt['request_membership_email_subject'] = 'New Group Application';
 // In the following email, %1$s is the recipients name, %2$s the requesting member, %3$s the group and %4$s the reason.
-$txt['request_membership_email_message'] = '%1$s,' . "\n\n" . '%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:' . "\n\n" . '%4$s' . "\n\n" . 'You can approve or reject this application by clicking the link below:' . "\n\n" . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
+$txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
 
 //!!! Untranslated
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';

@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Stats
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt[888] = 'Am meisten online';
 
 $txt['smf_stats_1'] = 'Statistik Center';

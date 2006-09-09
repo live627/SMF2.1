@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ModerationCenter
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 //!!! Untranslated - Whole file needs translation
 $txt['moderation_center'] = 'Moderation Center';
 $txt['mc_main'] = 'Main';
@@ -10,7 +12,7 @@ $txt['mc_groups'] = 'Groups';
 $txt['mc_reported_posts'] = 'Reported Posts';
 $txt['mc_view_groups'] = 'View Groups';
 
-$txt['mc_description'] = 'This is your &quot;Moderation Center&quot;. From here you can perform all the moderation actions assigned to yourself by the Administrator. This home page contains a summary of all the latest happenings in your community. You can personalize the layout by clicking <a href="' . $scripturl . '?action=moderate;sa=personalize">here</a>.';
+$txt['mc_description'] = 'This is your &quot;Moderation Center&quot;. From here you can perform all the moderation actions assigned to yourself by the Administrator. This home page contains a summary of all the latest happenings in your community. You can personalize the layout by clicking <a href="{$scripturl}?action=moderate;sa=personalize">here</a>.';
 $txt['mc_group_requests'] = 'Group Requests';
 $txt['mc_unapproved_posts'] = 'Unapproved Posts';
 $txt['mc_unapproved_attachments'] = 'Unapproved Attachments';
@@ -61,9 +63,9 @@ $txt['mc_groupr_warning'] = 'Are you sure you wish to do this?';
 $txt['mc_group_email_sub_approve'] = 'Group Membership Approval';
 $txt['mc_group_email_sub_reject'] = 'Group Membership Rejection';
 // The below emails are sent for group request outcomes. %1$s is membername, %2$s is group name, %3$s is the reason for rejection in the case of rejection with a manual reason.
-$txt['mc_group_email_request_reject'] = '%1$s,' . "\n\n" . 'We\'re sorry to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been rejected.\n\n" . $txt[130];
-$txt['mc_group_email_request_reject_reason'] = '%1$s,' . "\n\n" . 'We\'re sorry to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been rejected.\n\nThis is due to the following reason:\n\n" . '%3$s' . "\n\n" . $txt[130];
-$txt['mc_group_email_request_approve'] = '%1$s,' . "\n\n" . 'We\'re pleased to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been accepted, and your account has been updated to include this new membergroup.\n\n" . $txt[130];
+$txt['mc_group_email_request_reject'] = '%1$s,\\n\\nWe\'re sorry to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been rejected.\n\n" . $txt[130];
+$txt['mc_group_email_request_reject_reason'] = '%1$s,\\n\\nWe\'re sorry to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been rejected.\n\nThis is due to the following reason:\n\n" . '%3$s\\n\\n' . $txt[130];
+$txt['mc_group_email_request_approve'] = '%1$s,\\n\\nWe\'re pleased to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been accepted, and your account has been updated to include this new membergroup.\n\n" . $txt[130];
 
 $txt['mc_unapproved_attachments_none_found'] = 'No unapproved attachments found!';
 $txt['mc_unapproved_replies_none_found'] = 'No unapproved posts found!';

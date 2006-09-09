@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Themes
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt['themeadmin_explain'] = 'Los temas son los diferente dise&ntilde;os de tu foro.  Estas configuraciones afectan la selecci&oacute;n de temas, y cuales temas usan los visitantes y los otros usuarios.';
 
 $txt['theme_allow'] = '&iquest;Permitirle a los usuarios seleccionar su propio tema?';

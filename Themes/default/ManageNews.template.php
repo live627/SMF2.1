@@ -46,7 +46,7 @@ function template_edit_news()
 						</noscript>
 					</td>
 					<td colspan="2" valign="bottom" align="right" style="padding: 1ex;">
-						<input type="submit" name="save_items" value="', $txt[10], '" /> <input type="submit" name="delete_selection" value="', $txt['editnews_remove_selected'], '" onclick="return confirm(\'', $txt['editnews_remove_confirm'], '\');" />
+						<input type="submit" name="save_items" value="', $txt['save'], '" /> <input type="submit" name="delete_selection" value="', $txt['editnews_remove_selected'], '" onclick="return confirm(\'', $txt['editnews_remove_confirm'], '\');" />
 					</td>
 				</tr>
 			</table>
@@ -62,7 +62,7 @@ function template_email_members()
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" accept-charset="', $context['character_set'], '">
 			<table width="600" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
-					<td>', $txt[6], '</td>
+					<td>', $txt['admin_newsletters'], '</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" style="padding: 2ex;">', $txt['smf250'], '</td>
 				</tr><tr>
@@ -107,7 +107,7 @@ function template_email_members_compose()
 			<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
 					<td>
-						<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt[6], '
+						<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
 					</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" style="padding: 2ex;">', $txt[735], '</td>
@@ -149,7 +149,7 @@ function template_email_members_send()
 			<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
 					<td>
-						<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt[6], '
+						<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
 					</td>
 				</tr><tr>
 					<td class="windowbg2"><b>', $context['percentage_done'], '% ', $txt['email_done'], '</b></td>

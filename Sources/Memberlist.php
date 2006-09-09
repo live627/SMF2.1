@@ -90,14 +90,14 @@ function Memberlist()
 			'width' => '20'
 		),
 		'realName' => array(
-			'label' => $txt[35]
+			'label' => $txt['username']
 		),
 		'emailAddress' => array(
 			'label' => $txt[307],
 			'width' => '25'
 		),
 		'websiteUrl' => array(
-			'label' => $txt[96],
+			'label' => $txt['website'],
 			'width' => '25'
 		),
 		'ICQ' => array(
@@ -117,13 +117,13 @@ function Memberlist()
 			'width' => '25'
 		),
 		'ID_GROUP' => array(
-			'label' => $txt[87]
+			'label' => $txt['position']
 		),
 		'registered' => array(
-			'label' => $txt[233]
+			'label' => $txt['date_registered']
 		),
 		'posts' => array(
-			'label' => $txt[21],
+			'label' => $txt['posts'],
 			'width' => '115',
 			'colspan' => '2'
 		)

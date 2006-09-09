@@ -172,7 +172,7 @@ function template_by_board()
 					<td colspan="2">', $txt['permissions_boards'], '</td>
 				</tr>
 				<tr class="catbg">
-					<td>', $txt[20], '</td>
+					<td>', $txt['board_name'], '</td>
 					<td>', $txt['permissions_profile'], '</td>
 				</tr>';
 	foreach ($context['boards'] as $board)
@@ -434,7 +434,7 @@ function template_modify_group()
 							echo '
 							<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 								<td valign="top" width="10" style="padding-right: 1ex;">
-									', $permission['show_help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=permissionhelp_' . $permission['id'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt[119] . '" /></a>' : '', '
+									', $permission['show_help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=permissionhelp_' . $permission['id'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : '', '
 								</td>';
 							if ($permission['has_own_any'])
 							{

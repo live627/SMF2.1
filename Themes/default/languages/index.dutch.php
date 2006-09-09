@@ -1,6 +1,22 @@
 <?php
 // Version: 2.0 Alpha; index
 
+/* Important note about language files in SMF 2.0 upwards:
+	1) All language entries in SMF 2.0 are cached. All edits should therefore be made through the admin menu. If you do
+	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
+	   the cache go to Admin => Maintenance => Clean Cache.
+
+	2) Unlike earlier versions of SMF the text in these files is not *pure* PHP. Variables are parsed out when cached
+	   to make understanding language entries easier. As such please follow the following rules:
+
+		a) All individual variables need not be escaped and should be written as {$varname}. i.e. $scripturl => {$scripturl}
+		b) All array variables should have their index appended to the var name above with a dot.
+			e.g. $modSettings['memberCount'] => {$modSettings.memberCount}
+		c) All strings should use single quotes, not double quotes for enclosing the string.
+		d) As a result of (c) all newline characters (etc) need to be escaped. i.e. "\n" is now '\\n'.
+
+*/
+
 global $forum_copyright, $forum_version, $webmaster_email;
 
 // Locale (strftime, pspell_new) and spelling. (pspell_new, can be left as '' normally.)
@@ -28,167 +44,164 @@ $txt['newmessages1'] = 'zijn nieuw';
 $txt['newmessages3'] = 'Nieuw';
 $txt['newmessages4'] = ',';
 
-$txt[2] = 'Beheer';
+$txt['admin'] = 'Beheer';
 // Untranslated!
 $txt['moderate'] = 'Moderate';
 
-$txt[10] = 'Opslaan';
+$txt['save'] = 'Opslaan';
 
-$txt[17] = 'Verander';
-$txt[18] = $context['forum_name'] . ' - Forumindex';
-$txt[19] = 'Geregistreerde leden';
-$txt[20] = 'Forumnaam';
-$txt[21] = 'Berichten';
-$txt[22] = 'Laatste bericht';
+$txt['modify'] = 'Verander';
+$txt['forum_index'] = '{$context.forum_name} - Forumindex';
+$txt['members'] = 'Geregistreerde leden';
+$txt['board_name'] = 'Forumnaam';
+$txt['posts'] = 'Berichten';
 
-$txt[24] = '(Geen onderwerp)';
-$txt[26] = 'Berichten';
-$txt[27] = 'Bekijk profiel';
-$txt[28] = 'Gast';
-$txt[29] = 'Auteur';
-$txt[30] = 'Gepost op';
-$txt[31] = 'Verwijder';
-$txt[33] = 'Begin een nieuw topic';
+$txt['no_subject'] = '(Geen onderwerp)';
+$txt['view_profile'] = 'Bekijk profiel';
+$txt['guest_title'] = 'Gast';
+$txt['author'] = 'Auteur';
+$txt['on'] = 'Gepost op';
+$txt['remove'] = 'Verwijder';
+$txt['start_new_topic'] = 'Begin een nieuw topic';
 
-$txt[34] = 'Inloggen';
+$txt['login'] = 'Inloggen';
 // Use numeric entities in the below string.
-$txt[35] = 'Gebruikersnaam';
-$txt[36] = 'Wachtwoord';
+$txt['username'] = 'Gebruikersnaam';
+$txt['password'] = 'Wachtwoord';
 
-$txt[40] = 'Gebruikersnaam bestaat niet.';
+$txt['username_no_exist'] = 'Gebruikersnaam bestaat niet.';
 
-$txt[62] = 'Board-moderator';
-$txt[63] = 'Verwijder topic';
-$txt[64] = 'topics';
-$txt[66] = 'Bewerk bericht';
-$txt[68] = 'Naam';
-$txt[69] = 'E-mail';
-$txt[70] = 'Onderwerp';
-$txt[72] = 'Bericht';
+$txt['board_moderator'] = 'Board-moderator';
+$txt['remove_topic'] = 'Verwijder topic';
+$txt['topics'] = 'topics';
+$txt['modify_msg'] = 'Bewerk bericht';
+$txt['name'] = 'Naam';
+$txt['email'] = 'E-mail';
+$txt['subject'] = 'Onderwerp';
+$txt['message'] = 'Bericht';
 
-$txt[79] = 'Profiel';
+$txt['profile'] = 'Profiel';
 
-$txt[81] = 'Kies wachtwoord';
-$txt[82] = 'Wachtwoord nog een keer';
-$txt[87] = 'Positie';
+$txt['choose_pass'] = 'Kies wachtwoord';
+$txt['verify_pass'] = 'Wachtwoord nog een keer';
+$txt['position'] = 'Positie';
 
-$txt[92] = 'Bekijk profiel van';
-$txt[94] = 'Totaal';
-$txt[95] = 'aantal berichten';
-$txt[96] = 'Website';
-$txt[97] = 'Registreren';
+$txt['profile_of'] = 'Bekijk profiel van';
+$txt['total'] = 'Totaal';
+$txt['posts_made'] = 'aantal berichten';
+$txt['website'] = 'Website';
+$txt['register'] = 'Registreren';
 
-$txt[101] = 'Berichtenindex';
-$txt[102] = 'Nieuws';
-$txt[103] = 'Startpagina';
+$txt['message_index'] = 'Berichtenindex';
+$txt['news'] = 'Nieuws';
+$txt['home'] = 'Startpagina';
 
-$txt[104] = 'Sluiten/Openen topic';
-$txt[105] = 'Verzenden';
-$txt[106] = 'Er is een fout opgetreden !';
-$txt[107] = 'om';
-$txt[108] = 'Uitloggen';
-$txt[109] = 'Gestart door';
-$txt[110] = 'Reacties';
-$txt[111] = 'Laatste bericht';
-$txt[114] = 'Administratie Login';
+$txt['lock_unlock'] = 'Sluiten/Openen topic';
+$txt['post'] = 'Verzenden';
+$txt['error_occured'] = 'Er is een fout opgetreden !';
+$txt['at'] = 'om';
+$txt['logout'] = 'Uitloggen';
+$txt['started_by'] = 'Gestart door';
+$txt['replies'] = 'Reacties';
+$txt['last_post'] = 'Laatste bericht';
+$txt['admin_login'] = 'Administratie Login';
 // Use numeric entities in the below string.
-$txt[118] = 'Topic';
-$txt[119] = 'Help';
-$txt[121] = 'Verwijder berichten';
-$txt[125] = 'Bericht';
-$txt[126] = 'Wil je een e-mail ontvangen als iemand antwoord geeft op dit topic?';
+$txt['topic'] = 'Topic';
+$txt['help'] = 'Help';
+$txt['remove_message'] = 'Verwijder berichten';
+$txt['notify'] = 'Bericht';
+$txt['notify_request'] = 'Wil je een e-mail ontvangen als iemand antwoord geeft op dit topic?';
 // Use numeric entities in the below string.
-$txt[130] = "Met vriendelijke groet,\n\nHet " . $context['forum_name'] . 'team.';
-$txt[131] = 'Bericht bij reacties';
-$txt[132] = 'Verplaats topic';
-$txt[133] = 'Verplaats naar';
-$txt[139] = 'Pagina\'s';
-$txt[140] = 'Gebruikers actief in de laatste ' . $modSettings['lastActive'] . ' minuten';
-$txt[144] = 'Persoonlijk bericht';
-$txt[145] = 'Antwoord met citaat';
-$txt[146] = 'Antwoord';
+$txt['regards_team'] = "Met vriendelijke groet,\n\nHet " . '{$context.forum_name}team.';
+$txt['notify_replies'] = 'Bericht bij reacties';
+$txt['move_topic'] = 'Verplaats topic';
+$txt['move_to'] = 'Verplaats naar';
+$txt['pages'] = 'Pagina\'s';
+$txt['users_active'] = 'Gebruikers actief in de laatste {$modSettings.lastActive} minuten';
+$txt['personal_messages'] = 'Persoonlijk bericht';
+$txt['reply_quote'] = 'Antwoord met citaat';
+$txt['reply'] = 'Antwoord';
 // Untranslated!
 $txt['approve'] = 'Approve';
 $txt['approve_all'] = 'approve all';
 $txt['attach_awaiting_approve'] = 'Attachments awaiting approval';
 
-$txt[151] = 'Geen berichten...';
-$txt[152] = 'je hebt';
-$txt[153] = 'persoonlijke berichten';
-$txt[154] = 'Verwijder dit bericht';
+$txt['msg_alert_none'] = 'Geen berichten...';
+$txt['msg_alert_you_have'] = 'je hebt';
+$txt['msg_alert_messages'] = 'persoonlijke berichten';
+$txt['remove_message'] = 'Verwijder dit bericht';
 
-$txt[158] = 'Gebruikers Online';
-$txt[159] = 'Priv&eacute; berichten';
-$txt[160] = 'Ga naar';
-$txt[161] = 'ga';
-$txt[162] = 'Weet je zeker dat je dit topic wilt verwijderen?';
-$txt[163] = 'Ja';
-$txt[164] = 'Nee';
+$txt['online_users'] = 'Gebruikers Online';
+$txt['personal_message'] = 'Priv&eacute; berichten';
+$txt['jump_to'] = 'Ga naar';
+$txt['go'] = 'ga';
+$txt['are_sure_remove_topic'] = 'Weet je zeker dat je dit topic wilt verwijderen?';
+$txt['yes'] = 'Ja';
+$txt['no'] = 'Nee';
 
-$txt[166] = 'Zoek resultaten';
+$txt['search_results'] = 'Zoek resultaten';
 $txt[167] = 'Einde van de resultaten';
-$txt[170] = 'Sorry, geen berichten gevonden';
-$txt[176] = 'op';
+$txt['search_no_results'] = 'Sorry, geen berichten gevonden';
+$txt['search_on'] = 'op';
 
-$txt[182] = 'Zoek';
-$txt[190] = 'Allemaal';
+$txt['search'] = 'Zoek';
+$txt['all'] = 'Allemaal';
 
-$txt[193] = 'Terug';
-$txt[194] = 'Wachtwoord vergeten?';
-$txt[195] = 'Topic gestart door';
-$txt[196] = 'Titel';
-$txt[197] = 'Bericht door';
-$txt[200] = 'Doorzoekbare lijst van alle geregistreerde leden.';
-$txt[201] = 'Een warm welkom voor';
-$txt[208] = 'Beheerscherm';
-$txt[211] = 'Laatste verandering';
-$txt[212] = 'Wil je de mogelijkheid van antwoord uit zetten in deze topic ?';
+$txt['back'] = 'Terug';
+$txt['password_reminder'] = 'Wachtwoord vergeten?';
+$txt['topic_started'] = 'Topic gestart door';
+$txt['title'] = 'Titel';
+$txt['post_by'] = 'Bericht door';
+$txt['memberlist_searchable'] = 'Doorzoekbare lijst van alle geregistreerde leden.';
+$txt['welcome_member'] = 'Een warm welkom voor';
+$txt['admin_center'] = 'Beheerscherm';
+$txt['last_edit'] = 'Laatste verandering';
+$txt['notify_deactivate'] = 'Wil je de mogelijkheid van antwoord uit zetten in deze topic ?';
 
-$txt[214] = 'Recente berichten';
+$txt['recent_posts'] = 'Recente berichten';
 
-$txt[227] = 'Lokatie';
-$txt[231] = 'Geslacht';
-$txt[233] = 'Datum van registratie';
+$txt['location'] = 'Lokatie';
+$txt['gender'] = 'Geslacht';
+$txt['date_registered'] = 'Datum van registratie';
 
-$txt[234] = 'Bekijk de meest recente berichten op het forum.';
-$txt[235] = 'is een van de meest recente topics';
+$txt['recent_view'] = 'Bekijk de meest recente berichten op het forum.';
+$txt['recent_updated'] = 'is een van de meest recente topics';
 
-$txt[238] = 'Man';
-$txt[239] = 'Vrouw';
+$txt['male'] = 'Man';
+$txt['female'] = 'Vrouw';
 
-$txt[240] = 'Onjuiste letters/cijfers gebruikt in je gebruikersnaam.';
+$txt['error_invalid_characters_username'] = 'Onjuiste letters/cijfers gebruikt in je gebruikersnaam.';
 
-$txt['welcome_guest'] = 'Welkom, <b>' . $txt[28] . '</b>. Alsjeblieft <a href="' . $scripturl . '?action=login">inloggen</a> of <a href="' . $scripturl . '?action=register">registreren</a>.';
-$txt['welcome_guest_activate'] = '<br />De <a href="' . $scripturl . '?action=activate">activerings e-mail</a> gemist?';
+$txt['welcome_guest'] = 'Welkom, <b>{$txt.guest_title}</b>. Alsjeblieft <a href="{$scripturl}?action=login">inloggen</a> of <a href="{$scripturl}?action=register">registreren</a>.';
+$txt['welcome_guest_activate'] = '<br />De <a href="{$scripturl}?action=activate">activerings e-mail</a> gemist?';
 $txt['hello_member'] = 'Hoi,';
 // Use numeric entities in the below string.
 $txt['hello_guest'] = 'Welkom,';
-$txt[247] = 'Hoi,';
-$txt[248] = 'Welkom,';
-$txt[249] = 'Alsjeblieft';
-$txt[250] = 'Terug';
-$txt[251] = 'Selecteer een bestemming';
+$txt['welmsg_hey'] = 'Hoi,';
+$txt['welmsg_welcome'] = 'Welkom,';
+$txt['welmsg_please'] = 'Alsjeblieft';
+$txt['select_destination'] = 'Selecteer een bestemming';
 
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt[279] = 'Geplaatst door';
 
-$txt[287] = 'Lachebek';
-$txt[288] = 'Boos';
-$txt[289] = 'Lachen';
-$txt[290] = 'Lach';
-$txt[291] = 'Droevig';
-$txt[292] = 'Knipoog';
-$txt[293] = 'Grijns';
-$txt[294] = 'Geschrokken';
-$txt[295] = 'Cool';
-$txt[296] = 'Verbaasd';
-$txt[450] = 'Rollende ogen';
-$txt[451] = 'Tong';
-$txt[526] = 'Beschaamd';
-$txt[527] = 'Lippen verzegeld';
-$txt[528] = 'Ik weet het niet';
-$txt[529] = 'Kus';
-$txt[530] = 'Huilen';
+$txt['icon_smiley'] = 'Lachebek';
+$txt['icon_angry'] = 'Boos';
+$txt['icon_cheesy'] = 'Lachen';
+$txt['icon_laugh'] = 'Lach';
+$txt['icon_sad'] = 'Droevig';
+$txt['icon_wink'] = 'Knipoog';
+$txt['icon_grin'] = 'Grijns';
+$txt['icon_shocked'] = 'Geschrokken';
+$txt['icon_cool'] = 'Cool';
+$txt['icon_huh'] = 'Verbaasd';
+$txt['icon_rolleyes'] = 'Rollende ogen';
+$txt['icon_tongue'] = 'Tong';
+$txt['icon_embarrassed'] = 'Beschaamd';
+$txt['icon_lips'] = 'Lippen verzegeld';
+$txt['icon_undecided'] = 'Ik weet het niet';
+$txt['icon_kiss'] = 'Kus';
+$txt['icon_cry'] = 'Huilen';
 
 $txt[298] = 'Beheerder';
 $txt[299] = 'Beheerders';
@@ -303,14 +316,14 @@ $txt[668] = 'Print pagina';
 $txt[679] = 'Dit moet een geldig e-mailadres zijn.';
 
 $txt[683] = 'een heleboel';
-$txt[685] = $context['forum_name'] . ' - Info Center';
+$txt[685] = '{$context.forum_name} - Info Center';
 
 $txt[707] = 'Stuur dit topic';
 
 $txt['sendtopic_title'] = 'Stuur dit onderwerp &#171; %s &#187; naar een vriend!';
 // Use numeric entities in the below three strings.
 $txt['sendtopic_dear'] = 'Beste %s,';
-$txt['sendtopic_this_topic'] = 'Dit topic moet je eens lezen: %s, op ' . $context['forum_name'] . '.  Om het te bekijken kun je op de volgende link klikken';
+$txt['sendtopic_this_topic'] = 'Dit topic moet je eens lezen: %s, op {$context.forum_name}.  Om het te bekijken kun je op de volgende link klikken';
 $txt['sendtopic_thanks'] = 'Bedankt';
 $txt['sendtopic_sender_name'] = 'Je naam';
 $txt['sendtopic_sender_email'] = 'Je e-mailadres';
@@ -331,10 +344,10 @@ $txt[1003] = 'Bestand';
 $txt[1004] = 'Regel';
 // Use numeric entities in the below string.
 $txt[1005] = 'SMF heeft een fout in je database gedetecteerd en automatisch geprobeerd deze te repareren. Als de problemen blijven bestaan of als je voortdurend deze e-mails krijgt, neem contact op met je provider.';
-$txt['database_error_versions'] = '<b>Let op:</b> Het ziet er naar uit dat je database geupgrade zou moeten worden. De versie van je forumbestanden is momenteel ' . $forum_version . ', terwijl je database op dit moment nog staat op versie SMF ' . $modSettings['smfVersion'] . '. Het is aan te bevelen om de laatste versie van upgrade.php uit te voeren.';
+$txt['database_error_versions'] = '<b>Let op:</b> Het ziet er naar uit dat je database geupgrade zou moeten worden. De versie van je forumbestanden is momenteel {$forum_version}, terwijl je database op dit moment nog staat op versie SMF {$modSettings.smfVersion}. Het is aan te bevelen om de laatste versie van upgrade.php uit te voeren.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'Het lijkt erop dat er iets verkeerd gegaan is op het forum met het template systeem. Dit probleeem zou alleen tijdelijk moeten zijn, kom later terug en probeer het opnieuw. Als je dit probleem blijft krijgen, neem dan contact op met de administrator.<br /><br />Je kunt ook proberen om <a href="javascript:location.reload();">deze pagina te verversen</a>.';
-$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
+$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="{$boardurl}%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="{$scripturl}?theme=1">use the default theme</a>.';
 
 $txt['smf10'] = '<b>Vandaag</b> om ';
 $txt['smf10b'] = '<b>Gisteren</b> om ';
@@ -406,6 +419,10 @@ $txt['smf298'] = 'Geavanceerd zoeken';
 $txt['smf299'] = 'GROOT BEVEILIGINGSRISICO:';
 $txt['smf300'] = 'Je hebt het volgende bestand niet verwijderd: ';
 
+// Untranslated!
+$txt['cache_writable_head'] = 'Performance Warning';
+$txt['cache_writable'] = 'The cache directory is not writable - this will adversely affect the performance of your forum.';
+
 $txt['smf301'] = 'Pagina opgebouwd in ';
 $txt['smf302'] = ' seconden met ';
 $txt['smf302b'] = ' queries.';
@@ -421,7 +438,7 @@ $txt['online8'] = 'Status';
 $txt['topbottom4'] = 'Omhoog';
 $txt['topbottom5'] = 'Omlaag';
 
-$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by ' . $forum_version . '</a> | 
+$forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by {$forum_version}</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
 $txt['calendar3'] = 'Verjaardagen:';
@@ -529,7 +546,7 @@ $txt['notification_disable_topic'] = 'Weet je zeker dat je notificatie van nieuw
 $txt['rtm1'] = 'Meld dit bericht aan de moderator';
 
 $txt['unread_topics_visit'] = 'Recente ongelezen topics';
-$txt['unread_topics_visit_none'] = 'Geen ongelezen topics gevonden sinds je laatste bezoek <a href="' . $scripturl . '?action=unread;all">Klik hier om alle ongelezen berichten te tonen</a>.';
+$txt['unread_topics_visit_none'] = 'Geen ongelezen topics gevonden sinds je laatste bezoek <a href="{$scripturl}?action=unread;all">Klik hier om alle ongelezen berichten te tonen</a>.';
 $txt['unread_topics_all'] = 'Alle ongelezen berichten';
 $txt['unread_replies'] = 'Ongelezen berichten';
 

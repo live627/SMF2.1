@@ -38,7 +38,7 @@ function template_main()
 			</tr><tr>
 				<td class="windowbg" valign="middle" align="center">
 					', $txt['smf259'], '<br /><br />
-					<a href="', $scripturl, '?board=', $context['current_board'], '.0">', $txt[101], '</a><br />
+					<a href="', $scripturl, '?board=', $context['current_board'], '.0">', $txt['message_index'], '</a><br />
 					<a href="', $scripturl, '?topic=', $context['old_topic'], '.0">', $txt['smf260'], '</a><br />
 					<a href="', $scripturl, '?topic=', $context['new_topic'], '.0">', $txt['smf258'], '</a>
 				</td>
@@ -70,7 +70,7 @@ function template_select()
 				</tr>
 				<tr class="catbg">
 					<td colspan="2" height="18">
-						<b>', $txt[139], ':</b> <span id="pageindex_not_selected">', $context['not_selected']['page_index'], '</span>
+						<b>', $txt['pages'], ':</b> <span id="pageindex_not_selected">', $context['not_selected']['page_index'], '</span>
 					</td>
 				</tr>';
 	foreach ($context['not_selected']['messages'] as $message)
@@ -98,7 +98,7 @@ function template_select()
 				</tr>
 				<tr class="catbg">
 					<td colspan="2" height="18">
-						<b>', $txt[139], ':</b> <span id="pageindex_selected">', $context['selected']['page_index'], '</span>
+						<b>', $txt['pages'], ':</b> <span id="pageindex_selected">', $context['selected']['page_index'], '</span>
 					</td>
 				</tr>';
 	if (!empty($context['selected']['messages']))
@@ -206,7 +206,7 @@ function template_merge_done()
 					<br />
 					' . $txt['smf264'] . '<br />
 					<br />
-					<a href="' . $scripturl . '?board=' . $context['target_board'] . '.0">' . $txt[101] . '</a><br />
+					<a href="' . $scripturl . '?board=' . $context['target_board'] . '.0">' . $txt['message_index'] . '</a><br />
 					<a href="' . $scripturl . '?topic=' . $context['target_topic'] . '.0">' . $txt['smf265'] . '</a>
 				</td>
 			</tr>
@@ -228,7 +228,7 @@ function template_merge()
 			<tr>
 				<td colspan="2" class="titlebg">
 					<table cellpadding="0" cellspacing="0" border="0"><tr>
-						<td><b>' . $txt[139] . ':</b> ' . $context['page_index'] . '</td>
+						<td><b>' . $txt['pages'] . ':</b> ' . $context['page_index'] . '</td>
 					</tr></table>
 				</td>
 			</tr>
@@ -281,7 +281,7 @@ function template_merge()
 											<a href="' . $scripturl . '?action=mergetopics;sa=options;board=' . $context['current_board'] . '.0;from=' . $context['origin_topic'] . ';to=' . $topic['id'] . ';sesc=' . $context['session_id'] . '">' . $merge_button . '</a>&nbsp;
 										</td>
 										<td valign="middle" style="white-space: nowrap;">
-											<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank">' . $topic['subject'] . '</a> ' . $txt[109] . ' ' . $topic['poster']['link'] . '
+											<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '
 										</td>
 									</tr>';
 	echo '									
@@ -294,7 +294,7 @@ function template_merge()
 			<tr>
 				<td colspan="2" class="titlebg">
 					<table cellpadding="0" cellspacing="0" border="0"><tr>
-						<td><b>' . $txt[139] . ':</b> ' . $context['page_index'] . '</td>
+						<td><b>' . $txt['pages'] . ':</b> ' . $context['page_index'] . '</td>
 					</tr></table>
 				</td>
 			</tr>
@@ -317,9 +317,9 @@ function template_merge_extra_options()
 						<table border="0" cellspacing="1" cellpadding="2" width="100%" align="center" class="bordercolor">
 							<tr class="titlebg">
 								<td>' . $txt['merge_check'] . '</td>
-								<td>' . $txt[70] . '</td>
-								<td>' . $txt[109] . '</td>
-								<td>' . $txt[111] . '</td>
+								<td>' . $txt['subject'] . '</td>
+								<td>' . $txt['started_by'] . '</td>
+								<td>' . $txt['last_post'] . '</td>
 								<td width="70">' . $txt['merge_include_notifications'] . '</td>
 							</tr>';
 	foreach ($context['topics'] as $topic)
@@ -390,7 +390,7 @@ function template_merge_extra_options()
 			echo '
 						<tr>
 							<td>
-								<input type="radio" name="poll" value="' . $poll['id'] . '"' . ($poll['selected'] ? ' checked="checked"' : '') . ' class="check" /> ' . $poll['question'] . ' (' . $txt[118] . ': <a href="' . $scripturl . '?topic=' . $poll['topic']['id'] . '.0" target="_blank">' . $poll['topic']['subject'] . '</a>)
+								<input type="radio" name="poll" value="' . $poll['id'] . '"' . ($poll['selected'] ? ' checked="checked"' : '') . ' class="check" /> ' . $poll['question'] . ' (' . $txt['topic'] . ': <a href="' . $scripturl . '?topic=' . $poll['topic']['id'] . '.0" target="_blank">' . $poll['topic']['subject'] . '</a>)
 							</td>
 						</tr>';
 		echo '

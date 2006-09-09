@@ -445,7 +445,7 @@ function setup_fatal_error_context($error_message)
 	
 	if (!isset($context['error_title']))
 	{
-		$context['error_title'] = $txt[106];
+		$context['error_title'] = $txt['error_occured'];
 		$context['error_message'] = $error_message;
 	}
 

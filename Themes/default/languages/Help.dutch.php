@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Help
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 global $helptxt;
 
 $helptxt = array();
@@ -310,7 +312,7 @@ $helptxt['enableEmbeddedFlash'] = 'Deze optie zorgt ervoor dat je gebruikers fla
 	mogelijk een beveiligingsrisico zijn, hoewel slechts weinig mensen het
 	succesvol hebben misbruikt. GEBRUIK OP EIGEN RISICO!';
 $helptxt['xmlnews_enable'] = 'Zorgt ervoor dat mensen kunnen verwijzen naar
-	<a href="' . $scripturl . '?action=.xml;sa=news">Actuele berichten</a> en
+	<a href="{$scripturl}?action=.xml;sa=news">Actuele berichten</a> en
 	gelijkwaardige gegevens.  Het is ook aan te bevelen dat je de grootte van
 	de (nieuws)berichten te beperken, omdat wanneer rss data bij sommige
 	clients zoals Trillian getoond wordt het te verwachten is dat het wordt
@@ -326,15 +328,15 @@ $helptxt['globalCookies'] = '
 $helptxt['securityDisable'] = 'Dit <i>deactiveert</i> de extra wachtwoord controle voor het admin gedeelte. Het wordt aangeraden dit NIET te deactiveren!';
 $helptxt['securityDisable_why'] = 'Dit is je huidige wachtwoord.<br /><br />Dit is een extra controle om te bepalen dat <b>jij</b> toegang hebt tot dit gedeelte.';
 $helptxt['emailmembers'] = 'In dit bericht kun je een aantal &quot;variabelen&quot; gebruiken.  Te weten:<br />
-	{$board_url} - De URL naar je forum.<br />
-	{$current_time} - De huidige tijd.<br />
-	{$member.email} - Het huidige e-mailadres van het lid.<br />
-	{$member.link} - De huidige link van de gebruiker.<br />
-	{$member.id} - Het huidige ID van het lid.<br />
-	{$member.name} - De huidige naam van het lid.<br />
-	{$latest_member.link} - Het meest recent aangemelde lid link.<br />
-	{$latest_member.id} - Het meest recent aangemelde lid ID.<br />
-	{$latest_member.name} - Het meest recent aangemelde lid naam.';
+	{\$board_url} - De URL naar je forum.<br />
+	{\$current_time} - De huidige tijd.<br />
+	{\$member.email} - Het huidige e-mailadres van het lid.<br />
+	{\$member.link} - De huidige link van de gebruiker.<br />
+	{\$member.id} - Het huidige ID van het lid.<br />
+	{\$member.name} - De huidige naam van het lid.<br />
+	{\$latest_member.link} - Het meest recent aangemelde lid link.<br />
+	{\$latest_member.id} - Het meest recent aangemelde lid ID.<br />
+	{\$latest_member.name} - Het meest recent aangemelde lid naam.';
 $helptxt['attachmentEncryptFilenames'] = 'Versleutelen van bestandsnamen van bijlagen zorgt ervoor dat je meerdere bestanden met dezelfde naam kunt gebruiken en verhoogt de veiligheid.  Het kan echter er ook voor zorgen dat het herstellen van de database een stuk lastiger wordt indien er iets
 	is fout gegaan.';
 
@@ -425,7 +427,7 @@ $helptxt['latest_packages'] = 'Hier kun je enkele populaire of willekeurige pack
 $helptxt['latest_themes'] = 'Hier zie je de laatste en meest populaire thema\'s van <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.  Het kan zijn dat het niet verschijnt als je pc geen verbinding kan maken met <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';
 
 $helptxt['secret_why_blank'] = 'Voor de veiligheid is het antwoord op je vraag (en ook je wachtwoord) ge-encrypt zodat alleen SMF kan bepalen of het antwoord juist is, het kan je dus niet aangeven (en ook niet iemand anders!) wat het antwoord of je wachtwoord is.';
-$helptxt['moderator_why_missing'] = 'Daar modereren gedaan wordt op basis van boards, dien je leden moderator te maken via de <a href="javascript:window.open(\'' . $scripturl . '?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
+$helptxt['moderator_why_missing'] = 'Daar modereren gedaan wordt op basis van boards, dien je leden moderator te maken via de <a href="javascript:window.open(\'{$scripturl}?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
 
 $helptxt['permissions'] = 'Permissies geven aan welke groepen wel of niet bepaalde rechten in bepaalde boards hebben.<br /><br />Je kunt meerdere boards tegelijk bewerken of bij een specifieke groep kijken door te klikken op \'Bewerken.\'';
 $helptxt['permissions_board'] = 'Als een board is ingesteld op \'Globaal,\' houdt dit in dat het board geen speciale permissies heeft.  \'Lokaal\' houdt in dat het board specifieke permissies heeft - apart van de Globale permissies.  Op deze manier kun je boards hebben die meer of minder permissies hebben dan een ander board, zonder dit voor ieder board apart in te moeten stellen.';

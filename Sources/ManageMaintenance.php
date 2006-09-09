@@ -87,6 +87,8 @@ if (!defined('SMF'))
 		- updates member count, latest member, topic count, and message count.
 		- redirects back to ?action=admin;area=maintain when complete.
 		- accessed via ?action=admin;area=maintain;sa=recount.
+
+	bool cacheLanguage(string template_name, string language, bool fatal, string theme_name)
 */
 
 // The maintenance access point.
@@ -1310,6 +1312,104 @@ function AdminBoardRecount()
 	CalculateNextTrigger();
 
 	redirectexit('action=admin;area=maintain;done');
+}
+
+// This function caches the relevant language files, and if the cache doesn't work includes them with eval.
+function cacheLanguage($template_name, $lang, $fatal, $theme_name)
+{
+	global $language, $settings, $txt;
+	global $cachedir;
+
+	// Is the file writable?
+	$can_write = is_writable($cachedir) ? 1 : 0;
+	// By default include it afterwards.
+	$do_include = true;
+
+	// Open the file to write to.
+	if ($can_write)
+	{
+		$fh = fopen($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php', 'w');
+		fwrite($fh, "<?php\n");
+	}
+
+	// For each file open it up and write it out!
+	foreach (explode('+', $template_name) as $template)
+	{
+		// Obviously, the current theme is most important to check.
+		$attempts = array(
+			array($settings['theme_dir'], $template, $lang, $settings['theme_url']),
+			array($settings['theme_dir'], $template, $language, $settings['theme_url']),
+		);
+	
+		// Do we have a base theme to worry about?
+		if (isset($settings['base_theme_dir']))
+		{
+			$attempts[] = array($settings['base_theme_dir'], $template, $lang, $settings['base_theme_url']);
+			$attempts[] = array($settings['base_theme_dir'], $template, $language, $settings['base_theme_url']);
+		}
+	
+		// Fallback on the default theme if necessary.
+		$attempts[] = array($settings['default_theme_dir'], $template, $lang, $settings['default_theme_url']);
+		$attempts[] = array($settings['default_theme_dir'], $template, $language, $settings['default_theme_url']);
+
+		// Try to find the language file.
+		foreach ($attempts as $k => $file)
+			if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
+			{
+				if ($can_write)
+				{
+					foreach (file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php') as $line)
+					{
+						if (substr($line, 0, 2) != '?>' && substr($line, 0, 2) != '<?')
+						{
+							// Some strings contain other variables.
+							$line = preg_replace('~\{\$(\w+?)\}~', '\' . $GLOBALS[\'$1\'] . \'', $line);
+							$line = preg_replace('~\{\$(\w+?)\.(\w+?)\}~', '\' . $GLOBALS[\'$1\'][\'$2\'] . \'', $line);
+							$line = preg_replace('~\{\\\\\$~', '{$', $line);
+							fwrite($fh, $line);
+						}
+					}
+				}
+				// If the cache directory is not writable we're having a bad day.
+				else
+				{
+					$fc = implode('', file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'));
+					$fc = preg_replace('~\{\$(\w+?)\}~', '\' . $GLOBALS[\'$1\'] . \'', $fc);
+					$fc = preg_replace('~\{\$(\w+?)\.(\w+?)\}~', '\' . $GLOBALS[\'$1\'][\'$2\'] . \'', $fc);
+					$fc = preg_replace('~\{\\\\\$~', '{$', $fc);
+					$fc = preg_replace('~<\?php~', '', $fc);
+					$fc = preg_replace('~\?>~', '', $fc);
+					eval($fc);
+
+					// Mark that we're messed up!
+					$do_include = false;
+				}
+
+				// Hmmm... do we really still need this?
+				$language_url = $file[3];
+				$lang = $file[2];
+	
+				break;
+			}
+
+		// That couldn't be found!  Log the error, but *try* to continue normally.
+		if (!isset($language_url))
+		{
+			if ($fatal)
+				log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
+			return false;
+		}
+		else
+			unset($language_url);
+	}
+
+	if ($can_write)
+	{
+		fwrite($fh, "?>");
+		fclose($fh);
+	}
+
+	return $do_include;
 }
 
 ?>

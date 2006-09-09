@@ -127,7 +127,7 @@ function MoveTopic()
 	if (empty($context['categories']))
 		fatal_lang_error('moveto_noboards', false);
 
-	$context['page_title'] = $txt[132];
+	$context['page_title'] = $txt['move_topic'];
 
 	$context['back_to_topic'] = isset($_REQUEST['goback']);
 

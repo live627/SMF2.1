@@ -153,9 +153,9 @@ function BoardIndex()
 					'id' => $row_board['ID_MODERATOR'],
 					'name' => $row_board['modRealName'],
 					'href' => $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt[62] . '">' . $row_board['modRealName'] . '</a>'
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>'
 				);
-				$this_category[$row_board['ID_BOARD']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt[62] . '">' . $row_board['modRealName'] . '</a>';
+				$this_category[$row_board['ID_BOARD']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
 			}
 		}
 		// Found a child board.... make sure we've found its parent and the child hasn't been set already.
@@ -453,7 +453,7 @@ function BoardIndex()
 	if ($context['show_calendar'])
 		$context['show_calendar'] = calendarDoIndex();
 
-	$context['page_title'] = $txt[18];
+	$context['page_title'] = $txt['forum_index'];
 }
 
 // Called from the BoardIndex to display the current day's events on the board index.

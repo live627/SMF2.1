@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageCalendar
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['calendar_desc'] = 'Hier kun je alle aspecten van de kalender wijzigen.';
 
 // Calendar Settings

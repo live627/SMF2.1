@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Reports
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 // Untranslated!
 $txt['generate_reports_desc'] = 'From this section you can generate a variety of reports to assist in the administration of your forum. Simply follow the steps below to select the option of your choice.';
 $txt['generate_reports_continue'] = 'Continue';
@@ -85,8 +87,6 @@ $txt['member_group_access'] = 'Board Access';
 
 // Board info.
 // Untranslated!
-$txt['yes'] = 'Yes';
-$txt['no'] = 'No';
 $txt['none'] = 'None';
 $txt['board_category'] = 'Category';
 $txt['board_parent'] = 'Parent Board';

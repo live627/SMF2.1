@@ -119,7 +119,7 @@ function SendTopic()
 	$row['subject'] = un_htmlspecialchars($row['subject']);
 
 	// And off we go!
-	sendmail($_POST['r_email'], $txt[118] . ': ' . $row['subject'] . ' (' . $txt[318] . ' ' . $_POST['y_name'] . ')',
+	sendmail($_POST['r_email'], $txt['topic'] . ': ' . $row['subject'] . ' (' . $txt[318] . ' ' . $_POST['y_name'] . ')',
 		sprintf($txt['sendtopic_dear'], $_POST['r_name']) . "\n\n" .
 		sprintf($txt['sendtopic_this_topic'], $row['subject']) . ":\n\n" .
 		$scripturl . '?topic=' . $topic . ".0\n\n" .
@@ -295,7 +295,7 @@ function ReportToModerator2()
 			$scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'] . "\n\n" .
 			$txt['rtm_email_comment'] . ":\n" .
 			$_POST['comment'] . "\n\n" .
-			$txt[130], $user_info['email']);
+			$txt['regards_team'], $user_info['email']);
 	}
 	mysql_free_result($request);
 

@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManagePermissions
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['permissions_title'] = 'Permissies bewerken';
 $txt['permissions_modify'] = 'Aanpassen';
 $txt['permissions_access'] = 'Toegang';

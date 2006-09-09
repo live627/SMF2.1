@@ -74,7 +74,7 @@ function Login()
 	}
 
 	// Get the template ready.... not really much else to do.
-	$context['page_title'] = $txt[34];
+	$context['page_title'] = $txt['login'];
 	$context['default_username'] = &$_REQUEST['u'];
 	$context['default_password'] = '';
 	$context['never_expire'] = false;
@@ -170,8 +170,8 @@ function Login2()
 	$context['default_username'] = isset($_REQUEST['user']) ? htmlspecialchars(stripslashes($_REQUEST['user'])) : '';
 	$context['default_password'] = '';
 	$context['never_expire'] = $modSettings['cookieTime'] == 525600 || $modSettings['cookieTime'] == 3153600;
-	$context['login_error'] = &$txt[106];
-	$context['page_title'] = $txt[34];
+	$context['login_error'] = &$txt['error_occured'];
+	$context['page_title'] = $txt['login'];
 
 	// You forgot to type your username, dummy!
 	if (!isset($_REQUEST['user']) || $_REQUEST['user'] == '')
@@ -190,7 +190,7 @@ function Login2()
 	// No funky symbols either.
 	if (preg_match('~[<>&"\'=\\\]~', $_REQUEST['user']) != 0)
 	{
-		$context['login_error'] = &$txt[240];
+		$context['login_error'] = &$txt['error_invalid_characters_username'];
 		return;
 	}
 
@@ -222,7 +222,7 @@ function Login2()
 		// Let them try again, it didn't match anything...
 		if (mysql_num_rows($request) == 0)
 		{
-			$context['login_error'] = &$txt[40];
+			$context['login_error'] = &$txt['username_no_exist'];
 			return;
 		}
 	}

@@ -78,7 +78,7 @@ function AdminMain()
 	$context['admin_areas']['forum'] = array(
 		'title' => $txt[427],
 		'areas' => array(
-			'index' => array($txt[208], 'Admin.php', 'AdminHome'),
+			'index' => array($txt['admin_center'], 'Admin.php', 'AdminHome'),
 			'credits' => array($txt['support_credits_title'], 'Admin.php', 'AdminHome'),
 			'version' => array('', 'Admin.php', 'VersionDetail', 'select' => 'index'),
 		),
@@ -116,7 +116,7 @@ function AdminMain()
 		);
 
 		if (allowedTo('manage_boards'))
-			$context['admin_areas']['layout']['areas']['manageboards'] =  array($txt[4], 'ManageBoards.php', 'ManageBoards');
+			$context['admin_areas']['layout']['areas']['manageboards'] =  array($txt['admin_boards'], 'ManageBoards.php', 'ManageBoards');
 
 		if (allowedTo(array('admin_forum', 'moderate_forum')))
 			$context['admin_areas']['layout']['areas']['postsettings'] = array($txt['manageposts'], 'ManagePosts.php', 'ManagePostSettings');
@@ -144,7 +144,7 @@ function AdminMain()
 			$context['admin_areas']['members']['areas']['viewmembers'] = array($txt[5], 'ManageMembers.php', 'ViewMembers');
 
 		if (allowedTo('manage_membergroups'))
-			$context['admin_areas']['members']['areas']['membergroups'] = array($txt[8], 'ManageMembergroups.php', 'ModifyMembergroups');
+			$context['admin_areas']['members']['areas']['membergroups'] = array($txt['admin_groups'], 'ManageMembergroups.php', 'ModifyMembergroups');
 
 		if (allowedTo('manage_permissions'))
 			$context['admin_areas']['members']['areas']['permissions'] = array($txt['edit_permissions'], 'ManagePermissions.php', 'ModifyPermissions');
@@ -263,7 +263,7 @@ function AdminHome()
 	$context['can_admin'] = allowedTo('admin_forum');
 
 	$context['sub_template'] = $context['admin_area'] == 'credits' ? 'credits' : 'admin';
-	$context['page_title'] = $context['admin_area'] == 'credits' ? $txt['support_credits_title'] : $txt[208];
+	$context['page_title'] = $context['admin_area'] == 'credits' ? $txt['support_credits_title'] : $txt['admin_center'];
 
 	// The format of this array is: permission, action, title, description.
 	$quick_admin_tasks = array(

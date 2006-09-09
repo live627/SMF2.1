@@ -1,12 +1,14 @@
 <?php
 // Version: 2.0 Alpha; Post
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt[25] = 'Antworten';
 $txt[71] = 'Symbol';
 $txt[77] = 'Betreff wurde nicht angegeben (erforderlich).';
 $txt[78] = 'Textfeld wurde nicht ausgef&uuml;llt (erforderlich).';
 // Use numeric entities in the below string.
-$txt[130] = "Mit freundlichen Gr&#252;&#223;en,\ndas " . $context['forum_name'] . ' Team.';
+$txt[130] = "Mit freundlichen Gr&#252;&#223;en,\ndas " . '{$context.forum_name} Team.';
 $txt[252] = 'BBC Tags hinzuf&uuml;gen';
 $txt[253] = 'Fett';
 $txt[254] = 'Kursiv';
@@ -68,7 +70,7 @@ $txt[532] = 'Schriftgr&ouml;sse';
 $txt[533] = 'Schriftart';
 
 // Use numeric entities in the below five strings.
-$txt['notify_boards'] = '\'%s\', ein neuer Beitrag wurde in einem Board geschrieben, welches Sie beobachten.' . "\n\n" . 'Sie k&#246;nnen ihn nachlesen unter' . "\n" . '%s' . "\n\n";
+$txt['notify_boards'] = '\'%s\', ein neuer Beitrag wurde in einem Board geschrieben, welches Sie beobachten.\\n\\nSie k&#246;nnen ihn nachlesen unter\\n%s\\n\\n';
 $txt['notify_boards_subject'] = 'Neues Thema: %s';
 $txt['notify_boards_once'] = 'Es k&#246;nnten mehrere Themen geschrieben worden sein, Sie erhalten aber keine weiteren Benachrichtigungen, bis Sie diese gelesen haben.';
 $txt['notifyUnsubscribe'] = 'Klicken Sie hier, um das Thema abzubestellen';
@@ -97,7 +99,7 @@ $txt['attachment_requires_approval'] = 'Note that any files attached will not be
 
 // Use numeric entities in the below three strings.
 $txt['notifyXAnn2'] = 'Neue Ank&#252;ndigung';
-$txt['notifyXAnn3'] = 'Um diese Ank&#252;ndigung abzubestellen, loggen Sie sich in das Forum ein und entfernen im Profil den Haken von "E-Mail Benachrichtigung bei neuen Ank&#252;ndigungen schicken".' . "\n\n" . 'Sie k&#246;nnen die ganze Ank&#252;ndigung unter folgendem Link lesen:';
+$txt['notifyXAnn3'] = 'Um diese Ank&#252;ndigung abzubestellen, loggen Sie sich in das Forum ein und entfernen im Profil den Haken von "E-Mail Benachrichtigung bei neuen Ank&#252;ndigungen schicken".\\n\\nSie k&#246;nnen die ganze Ank&#252;ndigung unter folgendem Link lesen:';
 $txt['notifyXOnce2'] = 'Es k&#246;nnten mehrere Antworten geschrieben worden sein, Sie erhalten aber keine weiteren Benachrichtigungen, bis Sie diese gelesen haben.';
 
 $txt['rtm2'] = 'Kommentar eingeben';
@@ -154,25 +156,25 @@ $txt['error_new_reply'] = 'Achtung - w&auml;hrend Sie geantwortet haben, ist ein
 $txt['error_new_replies'] = 'Achtung - w&auml;hrend Sie geantwortet haben, sind %d neue Beitr&auml;ge geschrieben worden. Sie sollten das Thema erneut lesen.';
 $txt['error_new_reply_reading'] = 'Achtung - w&auml;hrend Sie das Thema gelesen haben, wurde ein neuer Beitrag geschrieben. Sie sollten das Thema erneut lesen.';
 $txt['error_new_replies_reading'] = 'Achtung - w&auml;hrend Sie das Thema gelesen haben, wurden %d neue Beitr&auml;ge geschrieben. Sie sollten das Thema erneut lesen.';
-$txt['error_old_topic'] = 'Warnung: In diesem Thema wurde seit ' . $modSettings['oldTopicDays'] . ' Tagen nicht mehr geantwortet.<br />Sollten Sie Ihrer Antwort nicht sicher sein, starten Sie ein neues Thema.';
+$txt['error_old_topic'] = 'Warnung: In diesem Thema wurde seit {$modSettings.oldTopicDays} Tagen nicht mehr geantwortet.<br />Sollten Sie Ihrer Antwort nicht sicher sein, starten Sie ein neues Thema.';
 
 // Use numeric entities in the below sixteen strings.
 $txt['notification_reply_subject'] = 'Antwort: %s';
-$txt['notification_reply'] = 'Eine Antwort von %s wurde zu einem Thema geschrieben, welches Sie beobachten.' . "\n\n" . 'Lesen Sie die Antwort unter ';
+$txt['notification_reply'] = 'Eine Antwort von %s wurde zu einem Thema geschrieben, welches Sie beobachten.\\n\\nLesen Sie die Antwort unter ';
 $txt['notification_sticky_subject'] = 'Thema fixiert: %s';
-$txt['notification_sticky'] = 'Ein Thema, welches Sie beobachten, wurde von %s fixiert.' . "\n\n" . 'Lesen Sie das Thema unter: ';
+$txt['notification_sticky'] = 'Ein Thema, welches Sie beobachten, wurde von %s fixiert.\\n\\nLesen Sie das Thema unter: ';
 $txt['notification_lock_subject'] = 'Thema geschlossen: %s';
-$txt['notification_lock'] = 'Ein Thema, welches Sie beobachten, wurde von %s geschlossen.' . "\n\n" . 'Lesen Sie das Thema unter: ';
+$txt['notification_lock'] = 'Ein Thema, welches Sie beobachten, wurde von %s geschlossen.\\n\\nLesen Sie das Thema unter: ';
 $txt['notification_unlock_subject'] = 'Thema ge&#246;ffnet: %s';
-$txt['notification_unlock'] = 'Ein Thema, welches Sie beobachten, wurde von %s wieder ge&#246;ffnet.' . "\n\n" . 'Lesen Sie das Thema unter: ';
+$txt['notification_unlock'] = 'Ein Thema, welches Sie beobachten, wurde von %s wieder ge&#246;ffnet.\\n\\nLesen Sie das Thema unter: ';
 $txt['notification_remove_subject'] = 'Thema gel&#246;scht: %s';
 $txt['notification_remove'] = 'Ein Thema, welches Sie beobachten, wurde von %s gel&#246;scht.';
 $txt['notification_move_subject'] = 'Thema verschoben: %s';
-$txt['notification_move'] = 'Ein Thema, welches Sie beobachten, wurde von %s in ein anderes Board verschoben.' . "\n\n" . 'Lesen Sie das Thema unter: ';
+$txt['notification_move'] = 'Ein Thema, welches Sie beobachten, wurde von %s in ein anderes Board verschoben.\\n\\nLesen Sie das Thema unter: ';
 $txt['notification_merge_subject'] = 'Thema zusammengef&#252;hrt: %s';
-$txt['notification_merge'] = 'Ein Thema, welches Sie beobachten, wurde von %s mit einem anderen Thema zusammengef&#252;hrt.' . "\n\n" . 'Lesen Sie das neue Thema unter: ';
+$txt['notification_merge'] = 'Ein Thema, welches Sie beobachten, wurde von %s mit einem anderen Thema zusammengef&#252;hrt.\\n\\nLesen Sie das neue Thema unter: ';
 $txt['notification_split_subject'] = 'Thema geteilt: %s';
-$txt['notification_split'] = 'Ein Thema welches Sie beobachten, wurde von %s in ein oder mehrere Themen geteilt.' . "\n\n" . 'Lesen Sie das verbliebene Thema unter: ';
+$txt['notification_split'] = 'Ein Thema welches Sie beobachten, wurde von %s in ein oder mehrere Themen geteilt.\\n\\nLesen Sie das verbliebene Thema unter: ';
 
 // Use numeric entities in the below two strings.
 $txt['notification_reply_body'] = 'Die Antwort lautet:';
@@ -190,8 +192,8 @@ $txt['announce_regular_members'] = 'Normale Mitglieder';
 // Untranslated!
 $txt['digest_subject_daily'] = 'Daily Digest';
 $txt['digest_subject_weekly'] = 'Weekly Digest';
-$txt['digest_intro_daily'] = 'Below is a summary of all activity in your subscribed boards and topics at ' . $GLOBALS['mbname'] . ' today. To unsubscribe please visit the link below.';
-$txt['digest_intro_weekly'] = 'Below is a summary of all activity in your subscribed boards and topics at ' . $GLOBALS['mbname'] . ' this week. To unsubscribe please visit the link below.';$txt['digest_new_topics'] =
+$txt['digest_intro_daily'] = 'Below is a summary of all activity in your subscribed boards and topics at {$GLOBALS.mbname} today. To unsubscribe please visit the link below.';
+$txt['digest_intro_weekly'] = 'Below is a summary of all activity in your subscribed boards and topics at {$GLOBALS.mbname} this week. To unsubscribe please visit the link below.';$txt['digest_new_topics'] =
 $txt['digest_new_topics'] = 'The following topics have been started';
 $txt['digest_new_topics_line'] = '"%s" in "%s"';
 $txt['digest_new_replies'] = 'Replies have been made in the following topics';

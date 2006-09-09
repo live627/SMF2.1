@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Themes
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt['themeadmin_explain'] = 'Themes ver&auml;ndern das Aussehen Ihres Forums. Diese Einstellungen beeinflussen das Ausw&auml;hlen der Themes - welche von G&auml;sten und welche nur von Mitgliedern gew&auml;hlt werden d&uuml;rfen.';
 
 $txt['theme_allow'] = 'Mitgliedern erlauben, eigene Themes zu w&auml;hlen?';

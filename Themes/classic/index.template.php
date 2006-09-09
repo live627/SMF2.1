@@ -123,7 +123,7 @@ function template_main_above()
 	if ($context['user']['is_logged'])
 	{
 		echo '
-				', $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', $context['allow_pm'] ? ', ' . $txt[152] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] != 1 ? $txt[153] : $txt[471]) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
+				', $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', $context['allow_pm'] ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt[471]) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == 1 ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
 
 		// Are there any members waiting for approval?
 		if (!empty($context['unapproved_members']))
@@ -163,7 +163,7 @@ function template_main_above()
 		echo '
 		<tr class="windowbg2">
 			<td colspan="2" height="24" class="tborder" style="border-width: 1px 0 0 0; padding-left: 1ex;">
-				<b>', $txt[102], ':</b> ', $context['random_news_line'], '
+				<b>', $txt['news'], ':</b> ', $context['random_news_line'], '
 			</td>
 		</tr>';
 
@@ -201,7 +201,7 @@ function template_main_below()
 					<option value="43200">', $txt['smf49'], '</option>
 					<option value="-1" selected="selected">', $txt['smf50'], '</option>
 				</select>
-				<input type="submit" value="', $txt[34], '" /><br />
+				<input type="submit" value="', $txt['login'], '" /><br />
 				', $txt['smf52'], '
 				<input type="hidden" name="hash_passwrd" value="" />
 			</form>

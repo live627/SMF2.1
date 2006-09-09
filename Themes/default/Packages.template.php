@@ -328,7 +328,7 @@ function template_list()
 
 	echo '
 					</ol>
-					<a href="', $scripturl, '?action=admin;area=packages">[ ', $txt[193], ' ]</a>
+					<a href="', $scripturl, '?action=admin;area=packages">[ ', $txt['back'], ' ]</a>
 				</td>
 			</tr>
 		</table>';
@@ -414,7 +414,7 @@ function template_browse()
 	echo '
 		<table width="100%" cellspacing="0" cellpadding="4" border="0" class="tborder">
 			<tr class="titlebg">
-				<td><a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['packages_latest'], '</td>
+				<td><a href="', $scripturl, '?action=helpadmin;help=latest_packages" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['packages_latest'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2" id="packagesLatest">', $txt['packages_latest_fetch'], '</td>
@@ -946,7 +946,7 @@ function template_downloaded()
 						</tr>
 					</table>
 					<br />
-					<a href="' . $scripturl . '?action=admin;area=packages;get' . (isset($context['package_server']) ? ';sa=browse;server=' . $context['package_server'] : '') . '">[ ' . $txt[193] . ' ]</a>
+					<a href="' . $scripturl . '?action=admin;area=packages;get' . (isset($context['package_server']) ? ';sa=browse;server=' . $context['package_server'] : '') . '">[ ' . $txt['back'] . ' ]</a>
 				</td>
 			</tr>
 		</table>';
@@ -970,7 +970,7 @@ function template_install_options()
 					<br />
 
 					<label for="package_make_backups"><input type="checkbox" name="package_make_backups" id="package_make_backups" value="1" class="check"', $context['package_make_backups'] ? ' checked="checked"' : '', ' /> ', $txt['package_install_options_make_backups'], '</label><br />
-					<div align="center" style="padding-top: 2ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt[10], '" /></div>
+					<div align="center" style="padding-top: 2ex; padding-bottom: 1ex;"><input type="submit" name="submit" value="', $txt['save'], '" /></div>
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 				</form>
 			</div>

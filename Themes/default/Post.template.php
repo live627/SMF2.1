@@ -138,7 +138,7 @@ function template_main()
 				{
 					var newTable = \'<span id="new_replies"></span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
 					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt[280], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt[279], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt[260], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
+						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt[280], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt[260], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
 					newTable += \'</table>\';
 					setOuterHTML(document.getElementById("new_replies"), newTable);
 				}
@@ -324,7 +324,7 @@ function template_main()
 		echo '
 							<tr>
 								<td align="right" style="font-weight: bold;', isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) || isset($context['post_error']['bad_name']) ? 'color: red;' : '', '" id="caption_guestname">
-									', $txt[68], ':
+									', $txt['name'], ':
 								</td>
 								<td>
 									<input type="text" name="guestname" size="25" value="', $context['name'], '" tabindex="', $context['tabindex']++, '" />
@@ -335,7 +335,7 @@ function template_main()
 			echo '
 							<tr>
 								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? 'color: red;' : '', '" id="caption_email">
-									', $txt[69], ':
+									', $txt['email'], ':
 								</td>
 								<td>
 									<input type="text" name="email" size="25" value="', $context['email'], '" tabindex="', $context['tabindex']++, '" />
@@ -433,7 +433,7 @@ function template_main()
 	echo '
 							<tr>
 								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_subject']) ? 'color: red;' : '', '" id="caption_subject">
-									', $txt[70], ':
+									', $txt['subject'], ':
 								</td>
 								<td>
 									<input type="text" name="subject"', $context['subject'] == '' ? '' : ' value="' . $context['subject'] . '"', ' tabindex="', $context['tabindex']++, '" size="80" maxlength="80" />
@@ -518,7 +518,7 @@ function template_main()
 		echo '
 									<tr>
 										<td valign="top" align="right">
-											<b>', $txt[211], ':</b>
+											<b>', $txt['last_edit'], ':</b>
 										</td>
 										<td>
 											', $context['last_modified'], '
@@ -728,7 +728,7 @@ function template_main()
 							<tr class="catbg">
 								<td colspan="2" align="left" class="smalltext">
 									<div style="float: right;">', $txt[280], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
-									', $txt[279], ': ', $post['poster'], '
+									', $txt['posted_by'], ': ', $post['poster'], '
 								</td>
 							</tr><tr class="windowbg2">
 								<td colspan="2" class="smalltext" id="msg', $post['id'], '" width="100%">
@@ -853,7 +853,7 @@ function template_postbox(&$message)
 							<option value="orange">', $txt[267], '</option>
 							<option value="purple">', $txt[268], '</option>
 							<option value="blue">', $txt[269], '</option>
-							<option value="beige">', $txt[270], '</option>
+							<option value="beige">', $txt['posted_by'], '</option>
 							<option value="brown">', $txt[271], '</option>
 							<option value="teal">', $txt[272], '</option>
 							<option value="navy">', $txt[273], '</option>
@@ -1143,7 +1143,7 @@ function template_announce()
 					</td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
-						<input type="submit" value="', $txt[105], '" />
+						<input type="submit" value="', $txt['post'], '" />
 					</td>
 				</tr>
 			</table>

@@ -72,7 +72,7 @@ function Register()
 		$context['coppa_desc'] = sprintf($txt['register_age_confirmation'], $modSettings['coppaAge']);
 	}
 
-	$context['page_title'] = $txt[97];
+	$context['page_title'] = $txt['register'];
 
 	// If you have to agree to the agreement, it needs to be fetched from the file.
 	if ($context['require_agreement'])
@@ -311,7 +311,7 @@ function Register2()
 		loadTemplate('Register');
 
 		$context += array(
-			'page_title' => &$txt[97],
+			'page_title' => &$txt['register'],
 			'sub_template' => 'after',
 			'description' => $modSettings['registration_method'] == 2 ? $txt['approval_after_registration'] : $txt['activate_after_registration']
 		);

@@ -60,7 +60,7 @@ function template_admin_above()
 		// Show a help item?
 		if (!empty($context['admin_tabs']['help']))
 			echo '
-							<a href="', $scripturl, '?action=helpadmin;help=', $context['admin_tabs']['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ';
+							<a href="', $scripturl, '?action=helpadmin;help=', $context['admin_tabs']['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
 		echo '
 							', $context['admin_tabs']['title'], '
 						</td>
@@ -165,7 +165,7 @@ function template_admin()
 	echo '
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
-				<td align="center" colspan="2" class="largetext">', $txt[208], '</td>
+				<td align="center" colspan="2" class="largetext">', $txt['admin_center'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="top" style="padding: 7px;">
 					<b>', $txt['hello_guest'], ' ', $context['user']['name'], '!</b>
@@ -197,7 +197,7 @@ function template_admin()
 				<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 					<tr>
 						<td class="catbg">
-							<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['smf217'], '
+							<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['smf217'], '
 						</td>
 					</tr><tr>
 						<td class="windowbg2" valign="top" style="height: 18ex; padding: 0;">
@@ -282,7 +282,7 @@ function template_admin()
 
 				for (var i = 0; i < window.smfAnnouncements.length; i++)
 				{
-					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "</a> ', $txt[30], ' " + window.smfAnnouncements[i].time + "</div>";
+					str += "\n	<div style=\"padding-bottom: 2px;\"><a hre" + "f=\"" + window.smfAnnouncements[i].href + "\">" + window.smfAnnouncements[i].subject + "</a> ', $txt['on'], ' " + window.smfAnnouncements[i].time + "</div>";
 					str += "\n	<div style=\"padding-left: 2ex; margin-bottom: 1.5ex; border-top: 1px dashed;\">"
 					str += "\n		" + window.smfAnnouncements[i].message;
 					str += "\n	</div>";
@@ -418,7 +418,7 @@ function template_credits()
 	echo '
 		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder" style="margin-top: 2ex;">
 			<tr class="titlebg">
-				<td><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['support_latest'], '</td>
+				<td><a href="', $scripturl, '?action=helpadmin;help=latest_support" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['support_latest'], '</td>
 			</tr><tr>
 				<td class="windowbg2">
 					<div id="latestSupport">', $txt['support_latest_fetch'], '</div>
@@ -750,7 +750,7 @@ function template_edit_censored()
 		<form action="', $scripturl, '?action=admin;area=postsettings;sa=censor" method="post" accept-charset="', $context['character_set'], '">
 			<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
-					<td colspan="2">', $txt[135], '</td>
+					<td colspan="2">', $txt['admin_censored_words'], '</td>
 				</tr><tr class="windowbg2">
 					<td align="center">
 						<table width="100%">
@@ -790,7 +790,7 @@ function template_edit_censored()
 								</td>
 							</tr><tr>
 								<td colspan="2" align="right">
-									<input type="submit" name="save_censor" value="', $txt[10], '" />
+									<input type="submit" name="save_censor" value="', $txt['save'], '" />
 								</td>
 							</tr>
 						</table>
@@ -982,7 +982,7 @@ function template_edit_signature_settings()
 				</td>
 			</tr><tr class="windowbg2">
 				<td align="right" colspan="2">
-					<input type="submit" name="save_settings" value="', $txt[10], '" />
+					<input type="submit" name="save_settings" value="', $txt['save'], '" />
 				</td>
 			</tr>
 		</table>
@@ -1005,7 +1005,7 @@ function template_maintain()
 	echo '
 		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
-				<td><a href="', $scripturl, '?action=helpadmin;help=maintenance_general" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['maintain_general'], '</td>
+				<td><a href="', $scripturl, '?action=helpadmin;help=maintenance_general" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['maintain_general'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2" style="line-height: 1.3; padding-bottom: 2ex;">
@@ -1023,7 +1023,7 @@ function template_maintain()
 	// Backing up the database...?  Good idea!
 	echo '
 			<tr class="titlebg">
-				<td><a href="', $scripturl, '?action=helpadmin;help=maintenance_backup" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['maintain_backup'], '</td>
+				<td><a href="', $scripturl, '?action=helpadmin;help=maintenance_backup" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['maintain_backup'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2" style="padding-bottom: 1ex;">
@@ -1043,7 +1043,7 @@ function template_maintain()
 	// Pruning any older posts.
 	echo '
 			<tr class="titlebg">
-				<td><a href="', $scripturl, '?action=helpadmin;help=maintenance_rot" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" align="top" /></a> ', $txt['maintain_old'], '</td>
+				<td><a href="', $scripturl, '?action=helpadmin;help=maintenance_rot" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['maintain_old'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2">
@@ -1249,7 +1249,7 @@ function template_show_settings()
 			echo '
 					<tr class="titlebg">
 						<td colspan="3">
-							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt[119] . '" /></a>' : ''), ' 
+							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), ' 
 							', $config_var['label'], '</td>
 					</tr>';
 
@@ -1280,7 +1280,7 @@ function template_show_settings()
 				// Show the [?] button.
 				if ($config_var['help'])
 					echo '
-							<td class="windowbg2" valign="top" width="16"><a name="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt[119], '" border="0" align="top" /></a></td>';
+							<td class="windowbg2" valign="top" width="16"><a name="setting_', $config_var['name'], '" href="', $scripturl, '?action=helpadmin;help=', $config_var['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" border="0" align="top" /></a></td>';
 				else
 					echo '
 							<td class="windowbg2"><a name="setting_', $config_var['name'], '"></a></td>';
@@ -1346,7 +1346,7 @@ function template_show_settings()
 	}
 	echo '
 					</tr><tr>
-						<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt[10], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
+						<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
 					</tr>
 				</table>
 			</td></tr>

@@ -105,7 +105,7 @@ function ManagePostSettings()
 	}
 	if (allowedTo('moderate_forum'))
 		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt[135],
+			'title' => $txt['admin_censored_words'],
 			'description' => $txt[141],
 			'href' => $scripturl . '?action=admin;area=postsettings;sa=censor',
 			'is_selected' => $_REQUEST['sa'] == 'censor',
@@ -201,7 +201,7 @@ function SetCensor()
 	}
 
 	$context['sub_template'] = 'edit_censored';
-	$context['page_title'] = $txt[135];
+	$context['page_title'] = $txt['admin_censored_words'];
 }
 
 // Modify all settings related to posts and posting.

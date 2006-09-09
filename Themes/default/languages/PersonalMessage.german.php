@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; PersonalMessage
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt[143] = 'Private Mitteilungen';
 $txt[148] = 'Senden';
 $txt[150] = 'An';
@@ -16,7 +18,7 @@ $txt[535] = 'Empf&auml;nger';
 // Don't translate the word "SUBJECT" here, as it is used to format the message - use numeric entities as well.
 $txt[561] = 'Neue Private Mitteilung: SUBJECT';
 // Don't translate SENDER or MESSAGE in this language string; they are replaced with the corresponding text - use numeric entities too.
-$txt[562] = 'Sie haben eine Private Mitteilung von SENDER im Forum ' . $context['forum_name'] . ' erhalten.' . "\n\n" . 'WICHTIG: Das ist nur eine Benachrichtigung - bitte antworten Sie nicht auf diese E-Mail!' . "\n\n" . 'Die Nachricht, die an Sie gesendet wurde:' . "\n\n" . 'MESSAGE';
+$txt[562] = 'Sie haben eine Private Mitteilung von SENDER im Forum {$context.forum_name} erhalten.\\n\\nWICHTIG: Das ist nur eine Benachrichtigung - bitte antworten Sie nicht auf diese E-Mail!\\n\\nDie Nachricht, die an Sie gesendet wurde:\\n\\nMESSAGE';
 $txt[748] = '(mehrere Empf&auml;nger als \'username1, username2\')';
 // Use numeric entities in the below string.
 $txt['instant_reply'] = 'Auf diese Mitteilung antworten:';

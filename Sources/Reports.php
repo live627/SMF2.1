@@ -210,7 +210,7 @@ function BoardReport()
 	$request = db_query("
 		SELECT ID_GROUP, groupName, onlineColor
 		FROM {$db_prefix}membergroups", __FILE__, __LINE__);
-	$groups = array(-1 => $txt[28], 0 => $txt['full_member']);
+	$groups = array(-1 => $txt['guest_title'], 0 => $txt['full_member']);
 	while ($row = mysql_fetch_assoc($request))
 		$groups[$row['ID_GROUP']] = empty($row['onlineColor']) ? $row['groupName'] : '<span style="color: ' . $row['onlineColor'] . '">' . $row['groupName'] . '</span>';
 	mysql_free_result($request);

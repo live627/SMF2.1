@@ -14,7 +14,7 @@ function template_main()
 						<td width="42%">', $txt['membergroups_name'], '</td>
 						<td width="12%" align="center">', $txt['membergroups_stars'], '</td>
 						<td width="10%" align="center">', $txt['membergroups_members_top'], '</td>
-						<td width="10%" align="center">', $txt[17], '</td>
+						<td width="10%" align="center">', $txt['modify'], '</td>
 					</tr>';
 	foreach ($context['groups']['regular'] as $group)
 	{
@@ -48,7 +48,7 @@ function template_main()
 						<td width="12%" align="center">', $txt['membergroups_stars'], '</td>
 						<td width="10%" align="center">', $txt['membergroups_members_top'], '</td>
 						<td width="12%" align="center">', $txt['membergroups_min_posts'], '</td>
-						<td width="10%" align="center">', $txt[17], '</td>
+						<td width="10%" align="center">', $txt['modify'], '</td>
 					</tr>';
 	foreach ($context['groups']['post'] as $group)
 	{
@@ -392,9 +392,9 @@ function template_group_members()
 				</tr>
 				<tr class="windowbg2">
 					<td align="left">
-						<b>', $txt[68], ':</b> <span ', $context['group']['onlineColor'] ? 'style="color: ' . $context['group']['onlineColor'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
+						<b>', $txt['name'], ':</b> <span ', $context['group']['onlineColor'] ? 'style="color: ' . $context['group']['onlineColor'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
 						', $context['group']['description'] ? '<br /><b>' . $txt['membergroups_members_description'] . ':</b> ' . $context['group']['description'] : '', '
-						<br /><b>', $txt[19], ':</b> ', $context['total_members'];
+						<br /><b>', $txt['members'], ':</b> ', $context['total_members'];
 	// Any group moderators to show?
 	if (!empty($context['group']['moderators']))
 	{
@@ -415,14 +415,14 @@ function template_group_members()
 					<td colspan="6" align="left">', $txt['membergroups_members_group_members'], '</td>
 				</tr>
 				<tr class="catbg">
-					<td colspan="6" align="left">', $txt[139], ': ', $context['page_index'], '</td>
+					<td colspan="6" align="left">', $txt['pages'], ': ', $context['page_index'], '</td>
 				</tr>
 				<tr class="titlebg">
-					<td><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt[68], $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-					<td><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=email', $context['sort_by'] == 'email' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt[69], $context['sort_by'] == 'email' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+					<td><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt['name'], $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+					<td><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=email', $context['sort_by'] == 'email' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt['email'], $context['sort_by'] == 'email' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 					<td><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=active', $context['sort_by'] == 'active' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt['membergroups_members_last_active'], $context['sort_by'] == 'active' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-					<td><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=registered', $context['sort_by'] == 'registered' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt[233], $context['sort_by'] == 'registered' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-					<td', empty($context['group']['assignable']) ? ' colspan="2"' : '', '><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=posts', $context['sort_by'] == 'posts' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt[21], $context['sort_by'] == 'posts' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>';
+					<td><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=registered', $context['sort_by'] == 'registered' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt['date_registered'], $context['sort_by'] == 'registered' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+					<td', empty($context['group']['assignable']) ? ' colspan="2"' : '', '><a href="', $scripturl, '?action=', $context['current_action'], (isset($context['admin_area']) ? ';area=' . $context['admin_area'] : ''), ';sa=members;start=', $context['start'], ';sort=posts', $context['sort_by'] == 'posts' && $context['sort_direction'] == 'up' ? ';desc' : '', ';group=', $context['group']['id'], '">', $txt['posts'], $context['sort_by'] == 'posts' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>';
 	if (!empty($context['group']['assignable']))
 		echo '
 					<td width="4%" align="center"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></td>';
@@ -502,8 +502,8 @@ function template_group_index()
 				<td colspan="2" align="left">', $context['page_title'], '</td>
 			</tr>
 			<tr class="catbg">
-				<td align="left" width="90%">', $txt[68], '</td>
-				<td align="center">', $txt[19], '</td>
+				<td align="left" width="90%">', $txt['name'], '</td>
+				<td align="center">', $txt['members'], '</td>
 			</tr>';
 
 	$alternate = 0;
@@ -574,7 +574,7 @@ function template_group_requests()
 			<tr class="titlebg">
 				<td colspan="4">', $txt['mc_group_requests'], '</td>
 			</tr><tr class="catbg">
-				<td colspan="4">', $txt[139], ': ', $context['page_index'], '</td>
+				<td colspan="4">', $txt['pages'], ': ', $context['page_index'], '</td>
 			</tr><tr class="titlebg">
 				<td width="22%">', $txt['mc_groupr_member'], '</td>
 				<td width="22%">', $txt['mc_groupr_group'], '</td>
@@ -608,7 +608,7 @@ function template_group_requests()
 			<tr class="catbg">
 				<td colspan="4">
 					<div style="float: left;">
-						', $txt[139], ': ', $context['page_index'], '
+						', $txt['pages'], ': ', $context['page_index'], '
 					</div>
 					<div style="float: right;">
 						<select name="req_action" onchange="if (this.value != 0 && (this.value == \'reason\' || confirm(\'', $txt['mc_groupr_warning'], '\'))) this.form.submit();">
@@ -618,7 +618,7 @@ function template_group_requests()
 							<option value="reject">', $txt['mc_groupr_reject'], '</option>
 							<option value="reason">', $txt['mc_groupr_reject_w_reason'], '</option>
 						</select>
-						<input type="submit" name="go" value="', $txt[161], '" onclick="var sel = document.getElementById(\'req_action\'); if (sel.value != 0 && sel.value != \'reason\' && !confirm(\'', $txt['mc_groupr_warning'], '\')) return false;" />
+						<input type="submit" name="go" value="', $txt['go'], '" onclick="var sel = document.getElementById(\'req_action\'); if (sel.value != 0 && sel.value != \'reason\' && !confirm(\'', $txt['mc_groupr_warning'], '\')) return false;" />
 					</div>
 				</td>
 			</tr>

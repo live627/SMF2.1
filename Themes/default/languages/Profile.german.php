@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Profile
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt[80] = 'Sie haben keine Berechtigung, dieses Profil zu &auml;ndern.';
 $txt[83] = 'Titel der Webseite';
 $txt[84] = 'URL der Webseite';
@@ -65,7 +67,7 @@ $txt['pswd3'] = 'Stellen Sie mir meine geheime Frage';
 $txt['pswd4'] = 'Sie k&ouml;nnen Ihr Passwort nicht abfragen aber Sie k&ouml;nnen ein neues festlegen, wenn Sie dem Link folgen, welcher Ihnen per E-Mail zugesendet werden kann. Sie haben auch die M&ouml;glichkeit, Ihre geheime Frage zu beantworten und somit ein neues Passwort festzulegen.';
 $txt['pswd5'] = 'Sie haben keine g&uuml;ltige Kombination von Geheimfrage und -antwort im Benutzerprofil angegeben. Bitte klicken Sie auf den [Zur&uuml;ck] Button und benutzen Sie die Standardmethode, um Ihr Passwort zu erlangen.';
 $txt['pswd6'] = 'Bitte geben Sie die Antwort auf Ihre geheime Frage und das Passwort das Sie ben&uuml;tzen m&ouml;chten ein. Ihr Passwort wird auf die neue Eingabe ge&auml;ndert - vorausgesetzt, Sie beantworten die Frage richtig.';
-$txt['pswd8'] = 'Ihr Passwort wurde erfolgreich ge&auml;ndert.<br />Klicken Sie <a href="' . $scripturl . '?action=login">hier</a> zum Login.';
+$txt['pswd8'] = 'Ihr Passwort wurde erfolgreich ge&auml;ndert.<br />Klicken Sie <a href="{$scripturl}?action=login">hier</a> zum Login.';
 $txt['secret_why_blank'] = 'Warum ist dieses Feld leer?';
 
 $txt['theme1a'] = 'Aktuelles Theme';
@@ -328,7 +330,7 @@ $txt['request_group_membership_desc'] = 'Before you can join this group your mem
 $txt['submit_request'] = 'Submit Request';
 $txt['request_membership_email_subject'] = 'New Group Application';
 // In the following email, %1$s is the recipients name, %2$s the requesting member, %3$s the group and %4$s the reason.
-$txt['request_membership_email_message'] = '%1$s,' . "\n\n" . '%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:' . "\n\n" . '%4$s' . "\n\n" . 'You can approve or reject this application by clicking the link below:' . "\n\n" . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
+$txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
 
 //!!! Untranslated
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';

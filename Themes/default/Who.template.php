@@ -38,7 +38,7 @@ function template_main()
 		}
 
 		echo '
-				<span', $member['is_hidden'] ? ' style="font-style: italic;"' : '', '>', $member['is_guest'] ? $member['name'] : '<a href="' . $member['href'] . '" title="' . $txt[92] . ' ' . $member['name'] . '"' . (empty($member['color']) ? '' : ' style="color: ' . $member['color'] . '"') . '>' . $member['name'] . '</a>', '</span>';
+				<span', $member['is_hidden'] ? ' style="font-style: italic;"' : '', '>', $member['is_guest'] ? $member['name'] : '<a href="' . $member['href'] . '" title="' . $txt['profile_of'] . ' ' . $member['name'] . '"' . (empty($member['color']) ? '' : ' style="color: ' . $member['color'] . '"') . '>' . $member['name'] . '</a>', '</span>';
 
 		if (!empty($member['ip']))
 			echo '
@@ -56,7 +56,7 @@ function template_main()
 
 	echo '
 		<tr class="titlebg">
-			<td colspan="3"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+			<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 		</tr>
 	</table>';
 }

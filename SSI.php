@@ -238,7 +238,7 @@ function ssi_logout($redirect_to = '', $output_method = 'echo')
 	if ($context['user']['is_guest'])
 		return false;
 
-	echo '<a href="', $scripturl, '?action=logout;sesc=', $sc, '">', $txt[108], '</a>';
+	echo '<a href="', $scripturl, '?action=logout;sesc=', $sc, '">', $txt['logout'], '</a>';
 }
 
 // Recent post list:   [board] Subject by Poster	Date
@@ -513,7 +513,7 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 			<tr>
 				<th align="left">', $txt['smf82'], '</th>
 				<th align="left">', $txt[330], '</th>
-				<th align="left">', $txt[21], '</th>
+				<th align="left">', $txt['posts'], '</th>
 			</tr>';
 	foreach ($boards as $board)
 		echo '
@@ -583,7 +583,7 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 			<tr>
 				<th align="left"></th>
 				<th align="left">', $txt[301], '</th>
-				<th align="left">', $txt[110], '</th>
+				<th align="left">', $txt['replies'], '</th>
 			</tr>';
 	foreach ($topics as $topic)
 		echo '
@@ -762,14 +762,14 @@ function ssi_login($redirect_to = '', $output_method = 'echo')
 		<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '">
 			<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
 				<tr>
-					<td align="right"><label for="user">', $txt[35], ':</label>&nbsp;</td>
+					<td align="right"><label for="user">', $txt['username'], ':</label>&nbsp;</td>
 					<td><input type="text" id="user" name="user" size="9" value="', $user_info['username'], '" /></td>
 				</tr><tr>
-					<td align="right"><label for="passwrd">', $txt[36], ':</label>&nbsp;</td>
+					<td align="right"><label for="passwrd">', $txt['password'], ':</label>&nbsp;</td>
 					<td><input type="password" name="passwrd" id="passwrd" size="9" /></td>
 				</tr><tr>
 					<td><input type="hidden" name="cookielength" value="-1" /></td>
-					<td><input type="submit" value="', $txt[34], '" /></td>
+					<td><input type="submit" value="', $txt['login'], '" /></td>
 				</tr>
 			</table>
 		</form>';

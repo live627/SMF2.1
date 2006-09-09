@@ -50,7 +50,7 @@ function template_browse()
 			</td>
 		</tr>
 		<tr class="catbg">
-			<td align="left" colspan="4" style="padding: 5px;"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+			<td align="left" colspan="4" style="padding: 5px;"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 		</tr>
 	</table>';
 }

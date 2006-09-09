@@ -62,7 +62,7 @@ echo '
 <form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
 	<table border="0" width="100%" cellpadding="3" cellspacing="0" class="tborder">
 		<tr class="titlebg">
-			<td>', $txt[97], ' - ', $txt[517], '</td>
+			<td>', $txt['register'], ' - ', $txt[517], '</td>
 		</tr><tr class="windowbg">
 			<td width="100%">
 				<table cellpadding="3" cellspacing="0" border="0" width="100%">
@@ -76,7 +76,7 @@ echo '
 						</td>
 					</tr><tr>
 						<td width="40%">
-							<b>', $txt[69], ':</b>
+							<b>', $txt['email'], ':</b>
 							<div class="smalltext">', $txt[679], '</div>
 						</td>
 						<td>
@@ -91,14 +91,14 @@ echo '
 						</td>
 					</tr><tr>
 						<td width="40%">
-							<b>', $txt[81], ':</b>
+							<b>', $txt['choose_pass'], ':</b>
 						</td>
 						<td>
 							<input type="password" name="passwrd1" size="30" tabindex="', $context['tabindex']++, '" />
 						</td>
 					</tr><tr>
 						<td width="40%">
-							<b>', $txt[82], ':</b>
+							<b>', $txt['verify_pass'], ':</b>
 						</td>
 						<td>
 							<input type="password" name="passwrd2" size="30" tabindex="', $context['tabindex']++, '" />
@@ -166,7 +166,7 @@ echo '
 	echo '
 	<br />
 	<div align="center">
-		<input type="submit" name="regSubmit" value="', $txt[97], '" />
+		<input type="submit" name="regSubmit" value="', $txt['register'], '" />
 	</div>
 </form>';
 
@@ -423,7 +423,7 @@ function template_admin_register()
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="100%" colspan="2" align="right">
-					<input type="submit" name="regSubmit" value="', $txt[97], '" />
+					<input type="submit" name="regSubmit" value="', $txt['register'], '" />
 					<input type="hidden" name="sa" value="register" />
 				</td>
 			</tr>
@@ -462,7 +462,7 @@ function template_edit_agreement()
 					<textarea cols="70" rows="20" name="agreement" style="width: 94%; margin-bottom: 1ex;">', $context['agreement'], '</textarea><br />
 					<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt[584], '.</label><br />
 					<br />
-					<input type="submit" value="', $txt[10], '" />
+					<input type="submit" value="', $txt['save'], '" />
 					<input type="hidden" name="sa" value="agreement" />
 				</td>
 			</tr>
@@ -495,7 +495,7 @@ function template_edit_reserved_words()
 								<label for="matchname"><input type="checkbox" name="matchname" id="matchname" ', $context['reserved_word_options']['match_name'] ? 'checked="checked"' : '', ' class="check" /> ', $txt[729], '</label><br />
 							</div>
 
-							<input type="submit" value="', $txt[10], '" name="save_reserved_names" style="margin: 1ex;" />
+							<input type="submit" value="', $txt['save'], '" name="save_reserved_names" style="margin: 1ex;" />
 						</div>
 					</td>
 				</tr>
@@ -627,7 +627,7 @@ function template_admin_settings()
 							</td>
 						</tr><tr class="windowbg2">
 							<td width="100%" colspan="3" align="right">
-								<input type="submit" name="save" value="', $txt[10], '" />
+								<input type="submit" name="save" value="', $txt['save'], '" />
 								<input type="hidden" name="sa" value="settings" />
 							</td>
 						</tr>

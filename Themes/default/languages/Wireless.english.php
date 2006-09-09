@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Wireless
 
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
 $txt['wireless_error_home'] = 'Board index';
 $txt['wireless_error_notyet'] = 'Sorry, this section isn\'t available for wireless users at this time.';
 

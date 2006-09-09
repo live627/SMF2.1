@@ -255,7 +255,7 @@ function template_main_above()
 										<option value="43200">', $txt['smf49'], '</option>
 										<option value="-1" selected="selected">', $txt['smf50'], '</option>
 									</select>
-									<input type="submit" value="', $txt[34], '" /><br />
+									<input type="submit" value="', $txt['login'], '" /><br />
 									<span class="middletext">', $txt['smf52'], '</span>
 									<input type="hidden" name="hash_passwrd" value="" />
 								</form>';
@@ -277,14 +277,14 @@ function template_main_above()
 	if (!empty($settings['enable_news']))
 		echo '
 				<td width="90%" class="titlebg2">
-					<span class="smalltext"><b>', $txt[102], '</b>: ', $context['random_news_line'], '</span>
+					<span class="smalltext"><b>', $txt['news'], '</b>: ', $context['random_news_line'], '</span>
 				</td>';
 	echo '
 				<td class="titlebg2" align="right" nowrap="nowrap" valign="top">
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 						<a href="', $scripturl, '?action=search;advanced"><img src="'.$settings['images_url'].'/filter.gif" align="middle" style="margin: 0 1ex;" alt="" /></a>
 						<input type="text" name="search" value="" style="width: 190px;" />&nbsp;
-						<input type="submit" name="submit" value="', $txt[182], '" style="width: 11ex;" />
+						<input type="submit" name="submit" value="', $txt['search'], '" style="width: 11ex;" />
 						<input type="hidden" name="advanced" value="0" />';
 
 	// Search within current topic?

@@ -8,13 +8,13 @@ function template_main()
 	echo '
 			<table border="0" width="100%" cellspacing="0" cellpadding="3" class="tborder">
 				<tr class="titlebg">
-					<td>', $txt[125], '</td>
+					<td>', $txt['notify'], '</td>
 				</tr>
 				<tr class="windowbg">
 					<td>
-						', $context['notification_set'] ? $txt[212] : $txt[126], '<br />
+						', $context['notification_set'] ? $txt['notify_deactivate'] : $txt['notify_request'], '<br />
 						<br />
-						<b><a href="', $scripturl, '?action=notify;sa=', $context['notification_set'] ? 'off' : 'on', ';topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', $txt[163], '</a> - <a href="', $context['topic_href'], '">', $txt[164], '</a></b>
+						<b><a href="', $scripturl, '?action=notify;sa=', $context['notification_set'] ? 'off' : 'on', ';topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $context['topic_href'], '">', $txt['no'], '</a></b>
 					</td>
 				</tr>
 			</table>';
@@ -27,13 +27,13 @@ function template_notify_board()
 	echo '
 			<table border="0" width="100%" cellspacing="0" cellpadding="3" class="tborder">
 				<tr class="titlebg">
-					<td>', $txt[125], '</td>
+					<td>', $txt['notify'], '</td>
 				</tr>
 				<tr class="windowbg">
 					<td>
 						', $context['notification_set'] ? $txt['notifyboard_turnoff'] : $txt['notifyboard_turnon'], '<br />
 						<br />
-						<b><a href="', $scripturl, '?action=notifyboard;sa=', $context['notification_set'] ? 'off' : 'on', ';board=', $context['current_board'], '.', $context['start'], ';sesc=', $context['session_id'], '">', $txt[163], '</a> - <a href="', $context['board_href'], '">', $txt[164], '</a></b>
+						<b><a href="', $scripturl, '?action=notifyboard;sa=', $context['notification_set'] ? 'off' : 'on', ';board=', $context['current_board'], '.', $context['start'], ';sesc=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="', $context['board_href'], '">', $txt['no'], '</a></b>
 					</td>
 				</tr>
 			</table>';

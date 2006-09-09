@@ -10,7 +10,7 @@ function template_main()
 	<form action="', $scripturl, '?action=reminder;sa=mail" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="400" cellspacing="0" cellpadding="4" align="center" class="tborder">
 			<tr class="titlebg">
-				<td colspan="2">', $txt[194], '</td>
+				<td colspan="2">', $txt['password_reminder'], '</td>
 			</tr><tr class="windowbg">
 				<td colspan="2" class="smalltext" style="padding: 2ex;">', $txt['pswd4'], '</td>
 			</tr><tr class="windowbg2">
@@ -55,15 +55,15 @@ function template_set_password()
 				<td colspan="2">', $context['page_title'], '</td>
 			</tr><tr class="windowbg">
 				<td width="45%">
-					<b>', $txt[81], ': </b><br />
+					<b>', $txt['choose_pass'], ': </b><br />
 					<span class="smalltext">', $txt[596], '</span>
 				</td>
 				<td valign="top"><input type="password" name="passwrd1" size="22" /></td>
 			</tr><tr class="windowbg">
-				<td width="45%"><b>', $txt[82], ': </b></td>
+				<td width="45%"><b>', $txt['verify_pass'], ': </b></td>
 				<td><input type="password" name="passwrd2" size="22" /></td>
 			</tr><tr class="windowbg">
-				<td colspan="2" align="right"><input type="submit" value="', $txt[10], '" /></td>
+				<td colspan="2" align="right"><input type="submit" value="', $txt['save'], '" /></td>
 			</tr>
 		</table>
 		<input type="hidden" name="code" value="', $context['code'], '" />
@@ -81,7 +81,7 @@ function template_ask()
 	<form action="', $scripturl, '?action=reminder;sa=secret2" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="440" cellspacing="0" cellpadding="4" class="tborder" align="center">
 			<tr class="titlebg">
-				<td colspan="2">', $txt[194], '</td>
+				<td colspan="2">', $txt['password_reminder'], '</td>
 			</tr><tr class="windowbg">
 				<td colspan="2" class="smalltext" style="padding: 2ex;">', $txt['pswd6'], '</td>
 			</tr><tr class="windowbg2">
@@ -92,15 +92,15 @@ function template_ask()
 				<td><input type="text" name="secretAnswer" size="22" /></td>
 			</tr><tr class="windowbg2">
 				<td width="45%">
-					<b>', $txt[81], ': </b><br />
+					<b>', $txt['choose_pass'], ': </b><br />
 					<span class="smalltext">', $txt[596], '</span>
 				</td>
 				<td valign="top"><input type="password" name="passwrd1" size="22" /></td>
 			</tr><tr class="windowbg2">
-				<td width="45%"><b>', $txt[82], ': </b></td>
+				<td width="45%"><b>', $txt['verify_pass'], ': </b></td>
 				<td><input type="password" name="passwrd2" size="22" /></td>
 			</tr><tr class="windowbg2">
-				<td colspan="2" align="right" style="padding: 1ex;"><input type="submit" value="', $txt[10], '" /></td>
+				<td colspan="2" align="right" style="padding: 1ex;"><input type="submit" value="', $txt['save'], '" /></td>
 			</tr>
 		</table>
 

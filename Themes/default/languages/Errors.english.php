@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Errors
 
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
 $txt[1] = 'You are not allowed to access this section';
 
 $txt[73] = 'Only Moderators can use the direct remove function, please remove this message through the modify feature.';
@@ -12,7 +14,7 @@ $txt[93] = 'You are not allowed to lock or unlock this topic; you must be a mode
 $txt[100] = 'The username you tried to use already exists.';
 $txt[134] = 'You are not allowed to move topics...';
 $txt[138] = 'This service is only for members...';
-$txt[165] = 'To post you must be logged in. If you don\'t have an account yet, please <a href="' . $scripturl . '?action=register">register</a>.';
+$txt[165] = 'To post you must be logged in. If you don\'t have an account yet, please <a href="{$scripturl}?action=register">register</a>.';
 $txt[213] = 'Passwords aren\'t the same.';
 $txt[223] = 'Sorry, you must register before using this feature.';
 $txt[241] = 'Invalid character used in Password.';
@@ -213,7 +215,7 @@ $txt['error_no_event'] = 'No event name has been given.';
 $txt['error_no_subject'] = 'No subject was filled in.';
 $txt['error_no_question'] = 'No question was filled in for this poll.';
 $txt['error_no_message'] = 'The message body was left empty.';
-$txt['error_long_message'] = 'The message exceeds the maximum allowed length (' . $modSettings['max_messageLength'] . ' characters).';
+$txt['error_long_message'] = 'The message exceeds the maximum allowed length ({$modSettings.max_messageLength} characters).';
 $txt['error_session_timeout'] = 'Your session timed out while posting. Please try to re-submit your message.';
 $txt['error_no_to'] = 'No recipients specified.';
 $txt['error_bad_to'] = 'One or more \'to\'-recipients could not be found.';

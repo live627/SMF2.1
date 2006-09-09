@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Reports
 
+// Important! Before editing these language files please read the text at the topic of index.dutch.php.
+
 $txt['generate_reports_desc'] = 'In deze sectie kun je een diversiteit aan rapporten genereren die helpen bij het beheer van je forum. Volg simpelweg de stappen hieronder en kies de gewenste optie.';
 $txt['generate_reports_continue'] = 'Doorgaan';
 $txt['generate_reports_type'] = 'Selecteer rapporttype';
@@ -81,8 +83,6 @@ $txt['member_group_settings'] = 'Instellingen';
 $txt['member_group_access'] = 'Boardtoegang';
 
 // Board info.
-$txt['yes'] = 'Ja';
-$txt['no'] = 'Nee';
 $txt['none'] = 'Geen';
 $txt['board_category'] = 'Categorie';
 $txt['board_parent'] = 'Ouderboard';

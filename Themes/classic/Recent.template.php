@@ -10,7 +10,7 @@ function template_main()
 			<table width="100%" cellpadding="3" cellspacing="0" border="0" class="tborder">
 				<tr>
 					<td align="left" class="catbg" width="100%" height="30">
-						<b>', $txt[139], ':</b> ', $context['page_index'], '
+						<b>', $txt['pages'], ':</b> ', $context['page_index'], '
 					</td>
 				</tr>
 			</table>
@@ -24,12 +24,12 @@ function template_main()
 					<td>
 						<div style="float: left; width: 3ex;">&nbsp;', $post['counter'], '&nbsp;</div>
 						<div style="float: left;">&nbsp;', $post['category']['link'], ' / ', $post['board']['link'], ' / ', $post['link'], '</div>
-						<div align="right">&nbsp;', $txt[30], ': ', $post['time'], '&nbsp;</div>
+						<div align="right">&nbsp;', $txt['on'], ': ', $post['time'], '&nbsp;</div>
 					</td>
 				</tr>
 				<tr>
 					<td class="catbg" colspan="3">
-						', $txt[109], ' ', $post['first_poster']['link'], ' - ', $txt[22], ' ', $txt[525], ' ', $post['poster']['link'], '
+						', $txt['started_by'], ' ', $post['first_poster']['link'], ' - ', $txt['last_post'], ' ', $txt[525], ' ', $post['poster']['link'], '
 					</td>
 				</tr>
 				<tr>
@@ -42,20 +42,20 @@ function template_main()
 
 		if ($post['can_delete'])
 			echo '
-								<a href="', $scripturl, '?action=recent;delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt[154], '?\');">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete.gif" alt="' . $txt[121] . '" border="0" />' : $txt[31], '</a>';
+								<a href="', $scripturl, '?action=recent;delete=', $post['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete.gif" alt="' . $txt['remove_message'] . '" border="0" />' : $txt['remove'], '</a>';
 		if ($post['can_delete'] && ($post['can_mark_notify'] || $post['can_reply']))
 			echo '
 								', $context['menu_separator'];
 		if ($post['can_reply'])
 			echo '
-						<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/reply_sm.gif" alt="' . $txt[146] . '" border="0" />' : $txt[146], '</a>', $context['menu_separator'], '
-						<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], ';quote=', $post['id'], ';sesc=', $context['session_id'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/quote.gif" alt="' . $txt[145] . '" border="0" />' : $txt[145], '</a>';
+						<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/reply_sm.gif" alt="' . $txt['reply'] . '" border="0" />' : $txt['reply'], '</a>', $context['menu_separator'], '
+						<a href="', $scripturl, '?action=post;topic=', $post['topic'], '.', $post['start'], ';quote=', $post['id'], ';sesc=', $context['session_id'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/quote.gif" alt="' . $txt['reply_quote'] . '" border="0" />' : $txt['reply_quote'], '</a>';
 		if ($post['can_reply'] && $post['can_mark_notify'])
 			echo '
 						', $context['menu_separator'];
 		if ($post['can_mark_notify'])
 			echo '
-						<a href="', $scripturl, '?action=notify;topic=', $post['topic'], '.', $post['start'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/notify_sm.gif" alt="' . $txt[131] . '" border="0" />' : $txt[131], '</a>';
+						<a href="', $scripturl, '?action=notify;topic=', $post['topic'], '.', $post['start'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/notify_sm.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies'], '</a>';
 
 		echo '</td>
 				</tr>
@@ -67,7 +67,7 @@ function template_main()
 			<table width="100%" cellpadding="3" cellspacing="0" border="0" class="tborder">
 				<tr>
 					<td align="left" class="catbg" width="100%" height="30">
-						<b>', $txt[139], ':</b> ', $context['page_index'], '
+						<b>', $txt['pages'], ':</b> ', $context['page_index'], '
 					</td>
 				</tr>
 			</table>';
@@ -92,7 +92,7 @@ function template_unread()
 		<div style="padding: 1px;" class="bordercolor">
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="catbg">
 				<tr>
-					<td valign="middle"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>', $settings['show_mark_read'] ? '
+					<td valign="middle"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>', $settings['show_mark_read'] ? '
 					<td align="right" nowrap="nowrap" style="font-size: smaller;"><a href="' . $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]) . '</a></td>' : '', '
 				</tr>
 			</table>
@@ -103,14 +103,14 @@ function template_unread()
 	if (!empty($context['topics']))
 		echo '
 				<td width="10%" colspan="2">&nbsp;</td>
-				<td><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[70], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
-				<td width="14%"><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[109], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
-				<td width="4%" align="center"><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[110], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
+				<td><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
+				<td width="14%"><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['started_by'], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
+				<td width="4%" align="center"><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
 				<td width="4%" align="center"><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=views', $context['sort_by'] == 'views' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[301], $context['sort_by'] == 'views' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
-				<td width="24%"><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[111], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>';
+				<td width="24%"><a href="', $scripturl, '?action=unread', $context['showing_all_topics'] ? ';all' : '', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>';
 	else
 		echo '
-				<td width="100%" colspan="7">', $context['showing_all_topics'] ? $txt[151] : $txt['unread_topics_visit_none'], '</td>';
+				<td width="100%" colspan="7">', $context['showing_all_topics'] ? $txt['msg_alert_none'] : $txt['unread_topics_visit_none'], '</td>';
 	echo '
 			</tr>';
 
@@ -151,7 +151,7 @@ function template_unread()
 		<div style="padding: 1px;" class="bordercolor">
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="catbg">
 				<tr>
-					<td valign="middle"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>', $settings['show_mark_read'] ? '
+					<td valign="middle"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>', $settings['show_mark_read'] ? '
 					<td align="right" nowrap="nowrap" style="font-size: smaller;"><a href="' . $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]) . '</a></td>' : '', '
 				</tr>
 			</table>
@@ -190,7 +190,7 @@ function template_replies()
 		<div style="padding: 1px;" class="bordercolor">
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="catbg">
 				<tr>
-					<td valign="middle"><b>' . $txt[139] . ':</b> ' . $context['page_index'] . '</td>
+					<td valign="middle"><b>' . $txt['pages'] . ':</b> ' . $context['page_index'] . '</td>
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">';
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
 		echo '
@@ -206,14 +206,14 @@ function template_replies()
 	if (!empty($context['topics']))
 		echo '
 				<td width="10%" colspan="2">&nbsp;</td>
-				<td><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[70], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
-				<td width="14%"><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[109], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
-				<td width="4%" align="center"><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[110], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
+				<td><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
+				<td width="14%"><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=starter', $context['sort_by'] == 'starter' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['started_by'], $context['sort_by'] == 'starter' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
+				<td width="4%" align="center"><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=replies', $context['sort_by'] == 'replies' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['replies'], $context['sort_by'] == 'replies' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
 				<td width="4%" align="center"><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=views', $context['sort_by'] == 'views' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[301], $context['sort_by'] == 'views' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>
-				<td width="24%"><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt[111], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>';
+				<td width="24%"><a href="', $scripturl, '?action=unreadreplies', $context['querystring_board_limits'], ';sort=last_post', $context['sort_by'] == 'last_post' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['last_post'], $context['sort_by'] == 'last_post' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" border="0" />' : '', '</a></td>';
 	else
 		echo '
-				<td width="100%" colspan="7">' . $txt[151] . '</td>';
+				<td width="100%" colspan="7">' . $txt['msg_alert_none'] . '</td>';
 	echo '
 			</tr>';
 
@@ -245,7 +245,7 @@ function template_replies()
 		<div style="padding: 1px;" class="bordercolor">
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="catbg">
 				<tr>
-					<td valign="middle"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+					<td valign="middle"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">';
 
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))

@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; ManageBoards
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt[41] = 'Manejar Foros y Categor&iacute;as';
 $txt[43] = 'Orden';
 $txt[44] = 'Nombre completo';

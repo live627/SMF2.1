@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Errors
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt[1] = 'No est&aacute;s autorizado para entrar a esta secci&oacute;n';
 
 $txt[73] = 'S&oacute;lo Moderadores pueden usar la funci&oacute;n de eliminado directo, por favor elimina este mensaje a trav&eacute;s de la funci&oacute;n modificar.';
@@ -12,7 +14,7 @@ $txt[93] = 'No est&aacute;s autorizado para bloquear o desbloquear este tema; de
 $txt[100] = 'El nombre de usuario que trataste de registrar ya existe.';
 $txt[134] = 'No est&aacute;s autorizado para mover temas...';
 $txt[138] = 'Este servicio es solo para usuarios...';
-$txt[165] = 'Para publicar debes haber ingresado. Si no tienes todav&iacute;a una cuenta, <a href="' . $scripturl . '?action=register">reg&iacute;strate</a>.';
+$txt[165] = 'Para publicar debes haber ingresado. Si no tienes todav&iacute;a una cuenta, <a href="{$scripturl}?action=register">reg&iacute;strate</a>.';
 $txt[213] = 'No coinciden las contrase&ntilde;as.';
 $txt[223] = 'Lo siento, debes estar registrado antes de usar esta funci&oacute;n.';
 $txt[241] = 'Car&aacute;cter inv&aacute;lido en la contrase&ntilde;a';
@@ -217,7 +219,7 @@ $txt['error_no_event'] = 'No se proporcion&oacute; un nombre de evento.';
 $txt['error_no_subject'] = 'No se llen&oacute; el asunto.';
 $txt['error_no_question'] = '&iexcl;La encuesta debe tener una pregunta!';
 $txt['error_no_message'] = 'El cuerpo del mensaje se dej&oacute; vac&iacute;.';
-$txt['error_long_message'] = 'El mensaje excede la longit&uacute;d m&aacute;xima permitida (' . $modSettings['max_messageLength'] . ' caracteres).';
+$txt['error_long_message'] = 'El mensaje excede la longit&uacute;d m&aacute;xima permitida ({$modSettings.max_messageLength} caracteres).';
 $txt['error_session_timeout'] = 'Tu sesi&oacute;n ha expirado. Favor de reenviar tu mensaje.';
 $txt['error_no_to'] = 'No se especificaron destinatarios.';
 $txt['error_bad_to'] = 'No se encontraron uno o mas destinatarios-\'para\'.';

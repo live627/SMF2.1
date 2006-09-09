@@ -1289,22 +1289,22 @@ function theme_postbox($msg)
 	if (empty($modSettings['smiley_enable']) && $user_info['smiley_set'] != 'none')
 		$context['smileys']['postform'][] = array(
 			'smileys' => array(
-				array('code' => ':)', 'filename' => 'smiley.gif', 'description' => $txt[287]),
-				array('code' => ';)', 'filename' => 'wink.gif', 'description' => $txt[292]),
-				array('code' => ':D', 'filename' => 'cheesy.gif', 'description' => $txt[289]),
-				array('code' => ';D', 'filename' => 'grin.gif', 'description' => $txt[293]),
-				array('code' => '>:(', 'filename' => 'angry.gif', 'description' => $txt[288]),
-				array('code' => ':(', 'filename' => 'sad.gif', 'description' => $txt[291]),
-				array('code' => ':o', 'filename' => 'shocked.gif', 'description' => $txt[294]),
-				array('code' => '8)', 'filename' => 'cool.gif', 'description' => $txt[295]),
-				array('code' => '???', 'filename' => 'huh.gif', 'description' => $txt[296]),
-				array('code' => '::)', 'filename' => 'rolleyes.gif', 'description' => $txt[450]),
-				array('code' => ':P', 'filename' => 'tongue.gif', 'description' => $txt[451]),
-				array('code' => ':-[', 'filename' => 'embarrassed.gif', 'description' => $txt[526]),
-				array('code' => ':-X', 'filename' => 'lipsrsealed.gif', 'description' => $txt[527]),
-				array('code' => ':-\\', 'filename' => 'undecided.gif', 'description' => $txt[528]),
-				array('code' => ':-*', 'filename' => 'kiss.gif', 'description' => $txt[529]),
-				array('code' => ':\'(', 'filename' => 'cry.gif', 'description' => $txt[530])
+				array('code' => ':)', 'filename' => 'smiley.gif', 'description' => $txt['icon_smiley']),
+				array('code' => ';)', 'filename' => 'wink.gif', 'description' => $txt['icon_wink']),
+				array('code' => ':D', 'filename' => 'cheesy.gif', 'description' => $txt['icon_cheesy']),
+				array('code' => ';D', 'filename' => 'grin.gif', 'description' => $txt['icon_grin']),
+				array('code' => '>:(', 'filename' => 'angry.gif', 'description' => $txt['icon_angry']),
+				array('code' => ':(', 'filename' => 'sad.gif', 'description' => $txt['icon_sad']),
+				array('code' => ':o', 'filename' => 'shocked.gif', 'description' => $txt['icon_shocked']),
+				array('code' => '8)', 'filename' => 'cool.gif', 'description' => $txt['icon_cool']),
+				array('code' => '???', 'filename' => 'huh.gif', 'description' => $txt['icon_huh']),
+				array('code' => '::)', 'filename' => 'rolleyes.gif', 'description' => $txt['icon_rolleyes']),
+				array('code' => ':P', 'filename' => 'tongue.gif', 'description' => $txt['icon_tongue']),
+				array('code' => ':-[', 'filename' => 'embarrassed.gif', 'description' => $txt['icon_embarrassed']),
+				array('code' => ':-X', 'filename' => 'lipsrsealed.gif', 'description' => $txt['icon_lips']),
+				array('code' => ':-\\', 'filename' => 'undecided.gif', 'description' => $txt['icon_undecided']),
+				array('code' => ':-*', 'filename' => 'kiss.gif', 'description' => $txt['icon_kiss']),
+				array('code' => ':\'(', 'filename' => 'cry.gif', 'description' => $txt['icon_cry'])
 			),
 			'last' => true,
 		);
@@ -1638,7 +1638,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		{
 			sendmail($row['emailAddress'], sprintf($txt[$current_type['subject']], $topicData[$row['ID_TOPIC']]['subject']),
 				$message . "\n\n" .
-				$txt[130], null, 'm' . $topicData[$row['ID_TOPIC']]['last_id']);
+				$txt['regards_team'], null, 'm' . $topicData[$row['ID_TOPIC']]['last_id']);
 			$sent++;
 		}
 	}
@@ -1695,7 +1695,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		if (empty($posterOptions['id']))
 		{
 			$posterOptions['id'] = 0;
-			$posterOptions['name'] = $txt[28];
+			$posterOptions['name'] = $txt['guest_title'];
 			$posterOptions['email'] = '';
 		}
 		elseif ($posterOptions['id'] != $ID_MEMBER)
@@ -1710,7 +1710,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			{
 				trigger_error('createPost(): Invalid member id ' . $posterOptions['id'], E_USER_NOTICE);
 				$posterOptions['id'] = 0;
-				$posterOptions['name'] = $txt[28];
+				$posterOptions['name'] = $txt['guest_title'];
 				$posterOptions['email'] = '';
 			}
 			else
@@ -2478,7 +2478,7 @@ function sendApprovalNotifications(&$topicData)
 			{
 				sendmail($row['emailAddress'], sprintf($txt['notification_reply_subject'], $msg['subject']),
 					$message . "\n\n" .
-					$txt[130], null, 'm' . $msg['id']);
+					$txt['regards_team'], null, 'm' . $msg['id']);
 				$sent++;
 			}
 			$sent_this_time = true;
@@ -2659,7 +2659,7 @@ function adminNotify($type, $memberID, $memberName = null)
 				"$scripturl?action=admin;area=viewmembers;sa=browse;type=approve\n\n";
 
 		// And do the actual sending...
-		sendmail($row['emailAddress'], $txt['admin_notify_subject'], $message . $txt[130], null, null, false, 0);
+		sendmail($row['emailAddress'], $txt['admin_notify_subject'], $message . $txt['regards_team'], null, null, false, 0);
 	}
 	mysql_free_result($request);
 

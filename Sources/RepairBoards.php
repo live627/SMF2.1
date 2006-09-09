@@ -95,7 +95,7 @@ function RepairBoards()
 						<br />', $context['repair_errors']) . '<br />
 						<br />
 						' . $txt['smf85'] . '<br />
-						<b><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;sesc=' . $sc . '">' . $txt[163] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt[164] . '</a></b>';
+						<b><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;sesc=' . $sc . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['no'] . '</a></b>';
 		}
 		else
 			$context['raw_data'] .= '

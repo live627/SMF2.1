@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Profile
 
+// Important! Before editing these language files please read the text at the topic of index.english.php.
+
 $txt[80] = 'You are not allowed to change this person\'s profile.';
 $txt[83] = 'Website title';
 $txt[84] = 'Website URL';
@@ -65,7 +67,7 @@ $txt['pswd3'] = 'Ask me my question';
 $txt['pswd4'] = 'You can\'t retrieve your password, but you can set a new one by following a link sent to you by email.  You also have the option of setting a new password by answering your secret question.';
 $txt['pswd5'] = 'Sorry, but you did not specify a valid combination of Secret Question and Answer in your profile.  Please click on the back button, and use the default method of obtaining your password.';
 $txt['pswd6'] = 'Please enter the answer to your question, and the password you would like to use.  Your password will be changed to the one you select provided you answer the question correctly.';
-$txt['pswd8'] = 'Your password was changed successfully.<br />Click <a href="' . $scripturl . '?action=login">here</a> to login.';
+$txt['pswd8'] = 'Your password was changed successfully.<br />Click <a href="{$scripturl}?action=login">here</a> to login.';
 $txt['secret_why_blank'] = 'why is this blank?';
 
 $txt['theme1a'] = 'Current Theme';
@@ -153,13 +155,13 @@ $txt['profileEdit'] = 'Modify Profile';
 $txt['account'] = 'Account Settings';
 $txt['account_info'] = 'These are your account settings. This page holds all critical information that identifies you on this forum. For security reasons, you will need to enter your (current) password to make changes to this information.';
 $txt['forumProfile'] = 'Forum Profile';
-$txt['forumProfile_info'] = 'You can change your personal information on this page. This information will be displayed throughout ' . $context['forum_name'] . '. If you aren\'t comfortable with sharing some information, simply skip it - nothing here is required.';
+$txt['forumProfile_info'] = 'You can change your personal information on this page. This information will be displayed throughout {$context.forum_name}. If you aren\'t comfortable with sharing some information, simply skip it - nothing here is required.';
 $txt['theme'] = 'Look and Layout';
 $txt['theme_info'] = 'This section allows you to customize the look and layout of the forum.';
 $txt['notification'] = 'Notifications';
 $txt['notification_info'] = 'SMF allows you to be notified of replies to posts, newly posted topics, and forum announcements. You can change those settings here, or oversee the topics and boards you are currently receiving notifications for.';
 $txt['pmprefs'] = 'Personal Message Options';
-$txt['pmprefs_info'] = 'Other members of ' . $context['forum_name'] . ' can contact you personally, but sometimes you may want to ignore someone\'s messages.  This page allows you to set that, among other things.';
+$txt['pmprefs_info'] = 'Other members of {$context.forum_name} can contact you personally, but sometimes you may want to ignore someone\'s messages.  This page allows you to set that, among other things.';
 $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
 $txt['ignoreboards'] = 'Ignore Boards Options';
@@ -324,7 +326,7 @@ $txt['request_group_membership_desc'] = 'Before you can join this group your mem
 $txt['submit_request'] = 'Submit Request';
 $txt['request_membership_email_subject'] = 'New Group Application';
 // In the following email, %1$s is the recipients name, %2$s the requesting member, %3$s the group and %4$s the reason.
-$txt['request_membership_email_message'] = '%1$s,' . "\n\n" . '%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:' . "\n\n" . '%4$s' . "\n\n" . 'You can approve or reject this application by clicking the link below:' . "\n\n" . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
+$txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt[130];
 
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
 

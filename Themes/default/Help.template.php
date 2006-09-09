@@ -92,7 +92,7 @@ function template_find_members()
 				</tr>
 				<tr class="windowbg">
 					<td align="right" colspan="2">
-						<input type="submit" value="', $txt[182], '" />
+						<input type="submit" value="', $txt['search'], '" />
 						<input type="button" value="', $txt['find_close'], '" onclick="window.close();" />
 					</td>
 				</tr>
@@ -118,7 +118,7 @@ function template_find_members()
 			echo '
 				<tr class="', $alternate ? 'windowbg2' : 'windowbg', '" valign="middle">
 					<td align="left">
-						<a href="', $result['href'], '" target="_blank"><img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt[27] . '" title="' . $txt[27] . '" border="0" /></a>
+						<a href="', $result['href'], '" target="_blank"><img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" /></a>
 						<a href="javascript:void(0);" onclick="addMember(this.title); return false;" title="', $result['username'], '">', $result['name'], '</a>
 					</td>
 				</tr>';
@@ -128,7 +128,7 @@ function template_find_members()
 
 		echo '
 				<tr class="titlebg">
-					<td align="left">', $txt[139], ': ', $context['page_index'], '</td>
+					<td align="left">', $txt['pages'], ': ', $context['page_index'], '</td>
 				</tr>';
 	}
 

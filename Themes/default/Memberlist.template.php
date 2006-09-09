@@ -68,14 +68,14 @@ function template_main()
 			echo '
 				<table width="100%" cellpadding="0" cellspacing="0" border="0">
 					<tr>
-						<td>', $txt[139], ': ', $context['page_index'], '</td>
+						<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 						<td align="right">', $context['letter_links'] . '</td>
 					</tr>
 				</table>';
 		// If this is a result of a search then just show the page numbers.
 		else
 			echo '
-				', $txt[139], ': ', $context['page_index'];
+				', $txt['pages'], ': ', $context['page_index'];
 
 		echo '
 			</td>
@@ -114,7 +114,7 @@ function template_main()
 				', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['text'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="middle" />' : $member['online']['label'], $context['can_send_pm'] ? '</a>' : '', '
 			</td>
 			<td class="windowbg" align="left">', $member['link'], '</td>
-			<td class="windowbg2">', $member['hide_email'] ? '' : '<a href="mailto:' . $member['email'] . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt[69] . '" title="' . $txt[69] . ' ' . $member['name'] . '" /></a>', '</td>
+			<td class="windowbg2">', $member['hide_email'] ? '' : '<a href="mailto:' . $member['email'] . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $member['name'] . '" /></a>', '</td>
 			<td class="windowbg">', $member['website']['url'] != '' ? '<a href="' . $member['website']['url'] . '" target="_blank"><img src="' . $settings['images_url'] . '/www.gif" alt="' . $member['website']['title'] . '" title="' . $member['website']['title'] . '" /></a>' : '', '</td>
 			<td class="windowbg2">', $member['icq']['link'], '</td>
 			<td class="windowbg2">', $member['aim']['link'], '</td>
@@ -132,13 +132,13 @@ function template_main()
 	else
 		echo '
 		<tr>
-			<td colspan="12" class="windowbg">', $txt[170], '</td>
+			<td colspan="12" class="windowbg">', $txt['search_no_results'], '</td>
 		</tr>';
 
 	// Show the page numbers again. (makes 'em easier to find!)
 	echo '
 		<tr>
-			<td class="titlebg" colspan="12">', $txt[139], ': ', $context['page_index'], '</td>
+			<td class="titlebg" colspan="12">', $txt['pages'], ': ', $context['page_index'], '</td>
 		</tr>
 	</table>';
 
@@ -216,7 +216,7 @@ function template_search()
 				<tr>
 					<td colspan="2" align="left">
 						<br />
-						<b>', $txt[582], ':</b> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt[182] . '" style="margin-left: 20px;" /><br />
+						<b>', $txt[582], ':</b> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt['search'] . '" style="margin-left: 20px;" /><br />
 						<br />
 					</td>
 				</tr>

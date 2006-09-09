@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Errors
 
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
 $txt[1] = 'Sie haben keinen Zugriff auf diesen Bereich!';
 
 $txt[73] = 'Nur Moderatoren k&ouml;nnen die direkte L&ouml;schfunktion benutzen, bitte l&ouml;schen Sie diesen Eintrag mit der \'Bearbeiten\' Funktion.';
@@ -213,7 +215,7 @@ $txt['error_no_event'] = 'Kein Ereignis-Titel angegeben.';
 $txt['error_no_subject'] = 'Kein Betreff angegeben.';
 $txt['error_no_question'] = 'Frage wurde nicht angegeben.';
 $txt['error_no_message'] = 'Textfeld wurde nicht ausgef&uuml;llt.';
-$txt['error_long_message'] = 'Beitrag hat die max. L&auml;nge erreicht (' . $modSettings['max_messageLength'] . ' Zeichen).';
+$txt['error_long_message'] = 'Beitrag hat die max. L&auml;nge erreicht ({$modSettings.max_messageLength} Zeichen).';
 $txt['error_session_timeout'] = 'Ihre Sitzung ist abgelaufen. Bitte senden Sie Ihren Beitrag erneut.';
 $txt['error_no_to'] = 'Kein Empf&auml;nger angegeben.';
 $txt['error_bad_to'] = 'Ein oder mehrere \'An\'-Empf&auml;nger k&ouml;nnen nicht gefunden werden.';

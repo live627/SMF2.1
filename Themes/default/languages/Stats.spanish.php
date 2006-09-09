@@ -1,6 +1,8 @@
 <?php
 // Version: 2.0 Alpha; Stats
 
+// Important! Before editing these language files please read the text at the topic of index.spanish.php.
+
 $txt[888] = 'M&aacute;x. usuarios conectados (simult&aacute;neamente)';
 
 $txt['smf_stats_1'] = 'Centro de Estad&iacute;sticas';

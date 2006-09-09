@@ -1,18 +1,20 @@
 <?php
 // Version: 2.0 Alpha; Admin
 
-$txt[4] = 'Boards verwalten';
+// Important! Before editing these language files please read the text at the topic of index.german.php.
+
+$txt['admin_boards'] = 'Boards verwalten';
 $txt[5] = 'Mitglieder verwalten';
-$txt[6] = 'E-Mail an Mitglieder';
-$txt[7] = 'News editieren';
-$txt[8] = 'Mitgliedergruppen verwalten';
-$txt[9] = 'Alle Mitglieder anzeigen';
+$txt['admin_newsletters'] = 'E-Mail an Mitglieder';
+$txt['admin_news'] = 'News editieren';
+$txt['admin_groups'] = 'Mitgliedergruppen verwalten';
+$txt['admin_members'] = 'Alle Mitglieder anzeigen';
 $txt[11] = 'Hier ist eine Liste der Benutzer, welche im Forum registriert sind.';
 $txt[65] = 'N&auml;chster';
-$txt[135] = 'Zensierte W&ouml;rter';
+$txt['admin_censored_words'] = 'Zensierte W&ouml;rter';
 $txt[136] = 'Schreiben Sie das zu zensierende Wort auf die linke, das Wort was angezeigt werden soll auf die rechte Seite.';
 $txt[141] = 'Aufgrund der &Ouml;ffentlichkeit eines Forums haben Sie die M&ouml;glichkeit, einige W&ouml;rter zu verbieten. Auf dieser Seite k&ouml;nnen Sie die W&ouml;rter eintragen, welche nicht von den Mitgliedern benutzt werden d&uuml;rfen.<br />L&ouml;schen Sie den Inhalt eines Textfeldes, um das Wort zu entfernen.';
-$txt[207] = 'Reservierte Namen';
+$txt['admin_reserved_names'] = 'Reservierte Namen';
 $txt[216] = 'Forum-Template editieren';
 $txt[222] = 'Server-Einstellungen';
 $txt[338] = 'Nachricht f&uuml;r obenstehende Liste';
@@ -28,12 +30,6 @@ $txt[356] = 'SMF Verzeichnis';
 $txt[360] = 'Sources Verzeichnis';
 // Untranslated!
 $txt['cachedir'] = 'Cache Directory';
-$txt[365] = 'Titel Hintergrundfarbe';
-$txt[366] = 'Titel Textfarbe';
-$txt[367] = 'Fenster Hintergrundfarbe';
-$txt[368] = 'Fenster Hintergrundfarbe #2';
-$txt[369] = 'Kategorie Hintergrundfarbe';
-$txt[370] = 'Farbe der Tabellenrahmen';
 $txt[379] = 'News aktivieren?';
 $txt[380] = 'Schreibrecht f&uuml;r G&auml;ste?';
 $txt[388] = 'News-Fader Titelfarbe';
@@ -51,7 +47,7 @@ $txt[571] = 'Credits';
 $txt[584] = 'Nutzungsbedingungen anzeigen und bei Registrierung Zustimmung verlangen?';
 $txt[608] = 'Ausgew&auml;hlte Mitglieder l&ouml;schen';
 $txt[610] = 'Alle Boards und Themen reparieren';
-$txt[644] = 'Das ist Ihr \'' . $txt[208] . '\'. Hier k&ouml;nnen Sie die Einstellungen &auml;ndern, das Forum warten, Protokolle anschauen, Pakete installieren, die Themes verwalten und viele weitere Optionen ver&auml;ndern.<br /><br />Sollten Sie Probleme haben, lesen Sie bitte den Abschnitt "Allgemeiner Support &amp; Fehler" im Bereich Support &amp; Credits. Bitte klicken Sie auch das <img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt[119] . '" border="0" /> Symbol an, um eine Beschreibung der Funktion zu erhalten. Sollten diese Informationen nicht helfen, k&ouml;nnen Sie auch im <a href="http://www.simplemachines.org/community/index.php" target="_blank">Support Forum</a> nach Hilfe fragen.';
+$txt[644] = 'Das ist Ihr \'{$txt.admin_center}\'. Hier k&ouml;nnen Sie die Einstellungen &auml;ndern, das Forum warten, Protokolle anschauen, Pakete installieren, die Themes verwalten und viele weitere Optionen ver&auml;ndern.<br /><br />Sollten Sie Probleme haben, lesen Sie bitte den Abschnitt "Allgemeiner Support &amp; Fehler" im Bereich Support &amp; Credits. Bitte klicken Sie auch das <img src="{$settings.images_url}/helptopics.gif" alt="{$txt.help}" border="0" /> Symbol an, um eine Beschreibung der Funktion zu erhalten. Sollten diese Informationen nicht helfen, k&ouml;nnen Sie auch im <a href="http://www.simplemachines.org/community/index.php" target="_blank">Support Forum</a> nach Hilfe fragen.';
 $txt[670] = 'Hier k&ouml;nnen Sie News-Meldungen hinzuf&uuml;gen oder l&ouml;schen. Bitte schreiben Sie eine News-Meldung pro Textfeld. BBC Tags wie [b], [i] und [u] sind erlaubt, ebenso Smileys und HTML Code. L&ouml;schen Sie den Text eines Textfeldes um die Meldung zu entfernen oder benutzen Sie die betreffende Checkbox in Verbindung mit dem rechten Button.';
 $txt[684] = 'Administratoren';
 $txt[699] = 'Reservierte Namen hindern Benutzer daran, sich unter diesem Namen anzumelden oder ihn im angezeigten Namen zu verwenden. W&auml;hlen Sie die ben&ouml;tigten Optionen vor dem Speichern.';
@@ -74,7 +70,7 @@ $txt['smf8'] = 'Datenbank Name:';
 $txt['smf11'] = 'Nutzungsbedingungen editieren';
 $txt['smf12'] = 'Die Nutzungsbedingungen werden nur angezeigt, wenn sie bei der Registrierung akzeptiert werden m&uuml;ssen.';
 $txt['smf54'] = 'Datenbank Prefix der Tabellen:';
-$txt['smf55'] = 'Dr&uuml;cken Sie die Strg-Taste, um mehrere Eintr&auml;ge auszuw&auml;hlen. Klicken Sie den ' . $txt[17] . ' Button wenn Sie fertig sind.';
+$txt['smf55'] = 'Dr&uuml;cken Sie die Strg-Taste, um mehrere Eintr&auml;ge auszuw&auml;hlen. Klicken Sie den {$txt.modify} Button wenn Sie fertig sind.';
 $txt['smf73'] = 'Liste der Fehler';
 $txt['smf74'] = 'Folgende Fehler sind im Forum aufgetreten (leer wenn keine)';
 $txt['smf85'] = 'M&ouml;chten Sie diese Fehler reparieren?';
@@ -136,14 +132,12 @@ $txt['email_address'] = 'E-Mail Adresse';
 $txt['ip_address'] = 'IP-Adresse';
 $txt['member_id'] = 'ID';
 
-$txt['security_wrong'] = 'Administrator Login Versuch!' . "\n" .
-	'Referer: ' . (isset($_SERVER['HTTP_REFERER'])? $_SERVER['HTTP_REFERER'] : 'unbekannt') . "\n" .
-	'User agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
-	'IP: ' . $GLOBALS['user_info']['ip'];
+$txt['unknown'] = 'unbekannt';
+$txt['security_wrong'] = 'Administrator Login Versuch!\\nReferer: %1$s\\nUser agent: %2$s\\nIP: %3$s';
 
 $txt['email_as_html'] = 'Sendet E-Mail im HTML Format (HTML Code in der E-Mail m&ouml;glich)';
 $txt['email_parsed_html'] = 'F&uuml;gt &lt;br /&gt; und &amp;nbsp; in die Nachricht ein';
-$txt['email_variables'] = 'In dieser Mitteilung k&ouml;nnen Sie &quot;Variablen&quot; benutzen. Klicken Sie <a href="' . $scripturl . '?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> f&uuml;r mehr Informationen.';
+$txt['email_variables'] = 'In dieser Mitteilung k&ouml;nnen Sie &quot;Variablen&quot; benutzen. Klicken Sie <a href="{$scripturl}?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> f&uuml;r mehr Informationen.';
 $txt['email_force'] = 'Sendet die Nachricht auch zu Benutzern, welche das Empfangen von Ank&uuml;ndigungen deaktiviert haben.';
 $txt['email_as_pms'] = 'Sendet die Nachricht als Private Mitteilung zu den ausgew&auml;hlten Benutzern.';
 $txt['email_continue'] = 'Weiter';
@@ -352,7 +346,7 @@ $txt['maintenance1'] = 'Betreff f&uuml;r die Meldung:';
 $txt['maintenance2'] = 'Nachricht f&uuml;r die Meldung:';
 
 $txt['errlog1'] = 'Fehlerprotokoll anzeigen';
-$txt['errlog2'] = 'Das Fehlerprotokoll zeigt jeden im Board aufgetretenen Fehler an. Um Fehler aus der Datenbank zu l&ouml;schen, markieren Sie die Checkbox und klicken den &quot;' . $txt[31] . '&quot; Button.';
+$txt['errlog2'] = 'Das Fehlerprotokoll zeigt jeden im Board aufgetretenen Fehler an. Um Fehler aus der Datenbank zu l&ouml;schen, markieren Sie die Checkbox und klicken den &quot;{$txt.remove}&quot; Button.';
 
 $txt['theme4'] = 'Theme-Einstellungen';
 $txt['theme_current_settings'] = 'Aktuelles Theme';

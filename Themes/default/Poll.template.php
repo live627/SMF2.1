@@ -121,7 +121,7 @@ function template_main()
 							</tr><tr>
 								<td align="center" colspan="2">
 									<span class="smalltext"><br />' . $txt['smf16'] . '</span><br />
-									<input type="submit" name="post" value="' . $txt[10] . '" onclick="return submitThisOnce(this);" accesskey="s" />
+									<input type="submit" name="post" value="' . $txt['save'] . '" onclick="return submitThisOnce(this);" accesskey="s" />
 									<input type="submit" name="preview" value="' . $txt[507] . '" onclick="return submitThisOnce(this);" accesskey="p" />
 								</td>
 							</tr><tr>

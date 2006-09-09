@@ -90,7 +90,7 @@ function template_folder()
 	if (!$context['show_delete'])
 		echo '
 		<tr>
-			<td class="windowbg" colspan="5">', $txt[151], '</td>
+			<td class="windowbg" colspan="5">', $txt['msg_alert_none'], '</td>
 		</tr>';
 	$next_alternate = false;
 	while ($message = $context['get_pmessage']())
@@ -111,7 +111,7 @@ function template_folder()
 	<div class="bordercolor" style="padding: 1px; ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'width: 100%;' : '', '">
 		<table width="100%" cellpadding="2" cellspacing="0" border="0"><tr class="catbg" valign="middle">
 			<td>
-				<div style="float: left;">', $txt[139], ': ', $context['page_index'], '</div>
+				<div style="float: left;">', $txt['pages'], ': ', $context['page_index'], '</div>
 				<div style="float: right;">&nbsp;';
 
 	if ($context['show_delete'])
@@ -238,8 +238,8 @@ function template_folder()
 		echo '
 		<table cellpadding="4" cellspacing="0" border="0" width="100%" class="bordercolor">
 			<tr class="titlebg">
-				<td width="16%">&nbsp;', $txt[29], '</td>
-				<td>', $txt[118], '</td>
+				<td width="16%">&nbsp;', $txt['author'], '</td>
+				<td>', $txt['topic'], '</td>
 			</tr>
 		</table>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
@@ -304,11 +304,11 @@ function template_folder()
 				// Show the member's gender icon?
 				if (!empty($settings['show_gender']) && $message['member']['gender']['image'] != '')
 					echo '
-									', $txt[231], ': ', $message['member']['gender']['image'], '<br />';
+									', $txt['gender'], ': ', $message['member']['gender']['image'], '<br />';
 
 				// Show how many posts they have made.
 				echo '
-									', $txt[26], ': ', $message['member']['posts'], '<br />
+									', $txt['posts'], ': ', $message['member']['posts'], '<br />
 									<br />';
 
 				// Show avatars, images, etc.?
@@ -331,13 +331,13 @@ function template_folder()
 				if ($settings['show_profile_buttons'])
 				{
 					echo '
-									<a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt[27] . '" title="' . $txt[27] . '" />' : $txt[27]), '</a>';
+									<a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" />' : $txt['view_profile']), '</a>';
 					if ($message['member']['website']['url'] != '')
 						echo '
 									<a href="', $message['member']['website']['url'], '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt[515] . '" title="' . $message['member']['website']['title'] . '" />' : $txt[515]), '</a>';
 					if (empty($message['member']['hide_email']))
 						echo '
-									<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt[69] . '" title="' . $txt[69] . '" />' : $txt[69]), '</a>';
+									<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
 					if (!$context['user']['is_guest'] && $context['can_send_pm'])
 						echo '
 									<a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['label'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($message['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . $message['member']['online']['label'] . '" />' : $message['member']['online']['label'], '</a>';
@@ -347,7 +347,7 @@ function template_folder()
 				echo '
 									<br />
 									<br />
-									<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt[69] . '" title="' . $txt[69] . '" />' : $txt[69]), '</a>';
+									<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
 			echo '
 								</div>
 							</td>
@@ -367,7 +367,7 @@ function template_folder()
 			elseif ($context['folder'] != 'outbox')
 				echo '(', $txt['pm_undisclosed_recipients'], ')';
 
-			echo ' <b> ', $txt[30], ':</b> ', $message['time'], ' &#187;</div>';
+			echo ' <b> ', $txt['on'], ':</b> ', $message['time'], ' &#187;</div>';
 
 			// If we're in the outbox, show who it was sent to besides the "To:" people.
 			if (!empty($message['recipients']['bcc']))
@@ -402,7 +402,7 @@ function template_folder()
 										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote">', $forward_button, '</a>', $context['menu_separator'];
 			}
 			echo '
-										<a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';sesc=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt[154]), '?\');">', $delete_button, '</a>
+										<a href="', $scripturl, '?action=pm;sa=pmactions;pm_actions[', $message['id'], ']=delete;f=', $context['folder'], ';start=', $context['start'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';sesc=', $context['session_id'], '" onclick="return confirm(\'', addslashes($txt['remove_message']), '?\');">', $delete_button, '</a>
 										<input style="vertical-align: middle;" type="checkbox" name="pms[]" id="deletedisplay', $message['id'], '" value="', $message['id'], '" class="check" onclick="document.getElementById(\'deletelisting', $message['id'], '\').checked = this.checked;" />
 									</td>
 								</tr></table>
@@ -501,7 +501,7 @@ function template_folder()
 		<table cellpadding="3" cellspacing="0" border="0" width="100%">
 			<tr class="catbg" valign="middle">
 				<td height="25">
-					<div style="float: left;">', $txt[139], ': ', $context['page_index'], '</div>
+					<div style="float: left;">', $txt['pages'], ': ', $context['page_index'], '</div>
 					<div style="float: right;"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['smf249'], '\')) return false;" /></div>
 				</td>
 			</tr>
@@ -678,7 +678,7 @@ function template_search_results()
 				<td colspan="3">', $txt['pm_search_results'], '</td>
 			</tr>
 			<tr class="catbg" height="30">
-				<td colspan="3"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr>
 		</table><br />';
 	}
@@ -690,7 +690,7 @@ function template_search_results()
 				<td colspan="3">', $txt['pm_search_results'], '</td>
 			</tr>
 			<tr class="catbg">
-				<td colspan="3"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr>
 			<tr class="titlebg">
 				<td width="30%">', $txt[317], '</td>
@@ -715,7 +715,7 @@ function template_search_results()
 					', $message['counter'], '&nbsp;&nbsp;<a href="', $message['href'], '">', $message['subject'], '</a>
 					</div>
 					<div style="float: right;">
-						', $txt[176], ': ', $message['time'], '
+						', $txt['search_on'], ': ', $message['time'], '
 					</div>
 				</td>
 			</tr>
@@ -789,7 +789,7 @@ function template_search_results()
 		echo '
 		<table width="98%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-width: 0 1px 1px 1px;">
 			<tr class="catbg" height="30">
-				<td colspan="3"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr>
 		</table>';
 	}
@@ -803,7 +803,7 @@ function template_search_results()
 
 		echo '
 			<tr class="catbg">
-				<td colspan="3"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr>
 		</table>';
 	}
@@ -896,7 +896,7 @@ function template_send()
 	// Subject of personal message.
 	echo '
 							<tr>
-								<td align="right"><b', (isset($context['post_error']['no_subject']) ? ' style="color: red;"' : ''), '>', $txt[70], ':</b></td>
+								<td align="right"><b', (isset($context['post_error']['no_subject']) ? ' style="color: red;"' : ''), '>', $txt['subject'], ':</b></td>
 								<td><input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" /></td>
 							</tr>';
 
@@ -979,7 +979,7 @@ function template_send()
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td class="windowbg2">', $txt[318], ': ', $context['quoted_message']['member']['name'], '</td>
-							<td class="windowbg2" align="right">', $txt[30], ': ', $context['quoted_message']['time'], '</td>
+							<td class="windowbg2" align="right">', $txt['on'], ': ', $context['quoted_message']['time'], '</td>
 						</tr>
 					</table>
 				</td>
@@ -1166,7 +1166,7 @@ function template_ask_delete()
 				<td class="windowbg">
 					', $txt[413], '<br />
 					<br />
-					<b><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';sesc=', $context['session_id'], '">', $txt[163], '</a> - <a href="javascript:history.go(-1);">', $txt[164], '</a></b>
+					<b><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';sesc=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></b>
 				</td>
 			</tr>
 		</table>';
@@ -1240,7 +1240,7 @@ function template_labels()
 		echo '
 			<tr class="catbg3">
 				<td align="right" colspan="2">
-					<input type="submit" name="save" value="', $txt[10], '" style="font-weight: normal;" />
+					<input type="submit" name="save" value="', $txt['save'], '" style="font-weight: normal;" />
 					<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="return confirm(\'', $txt['pm_labels_delete'], '\');" />
 				</td>
 			</tr>';

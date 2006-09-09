@@ -332,7 +332,7 @@ function ModifyProfile($post_errors = array())
 
 	// Set the page title if it's not already set...
 	if (!isset($context['page_title']))
-		$context['page_title'] = $txt[79] . ' - ' . $txt[$_REQUEST['sa']];
+		$context['page_title'] = $txt['profile'] . ' - ' . $txt[$_REQUEST['sa']];
 
 	if (isset($_REQUEST['updated']) && empty($post_errors))
 		$context['profile_updated'] = $context['user']['is_owner'] ? $txt['profile_updated_own'] : sprintf($txt['profile_updated_else'], $context['member']['name']);
@@ -511,7 +511,7 @@ function ModifyProfile2()
 			"$txt[activate_reactivate_mail]\n\n" .
 			"$scripturl?action=activate;u=$memID;code=$validationCode\n\n" .
 			"$txt[activate_code]: $validationCode\n\n" .
-			$txt[130]);
+			$txt['regards_team']);
 
 		// Log the user out.
 		db_query("
@@ -531,7 +531,7 @@ function ModifyProfile2()
 		// Send them to the done-with-registration-login screen.
 		loadTemplate('Register');
 		$context += array(
-			'page_title' => &$txt[79],
+			'page_title' => &$txt['profile'],
 			'sub_template' => 'after',
 			'description' => &$txt['activate_changed_email']
 		);
@@ -1355,7 +1355,7 @@ function summary($memID)
 	// Set up the stuff and load the user.
 	$context += array(
 		'allow_hide_email' => !empty($modSettings['allow_hideEmail']),
-		'page_title' => $txt[92] . ' ' . $memberContext[$memID]['name'],
+		'page_title' => $txt['profile_of'] . ' ' . $memberContext[$memID]['name'],
 		'can_send_pm' => allowedTo('pm_send'),
 		'can_have_buddy' => allowedTo('profile_identity_own') && !empty($modSettings['enable_buddylist']),
 	);
@@ -2008,7 +2008,7 @@ function trackUser($memID)
 	$request = db_query("
 		SELECT
 			le.logTime, le.ip, le.url, le.message, IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER,
-			IFNULL(mem.realName, '$txt[28]') AS display_name, mem.memberName
+			IFNULL(mem.realName, '$txt[guest_title]') AS display_name, mem.memberName
 		FROM {$db_prefix}log_errors AS le
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = le.ID_MEMBER)
 		WHERE le.ID_MEMBER = $memID
@@ -2067,7 +2067,7 @@ function TrackIP($memID = 0)
 		loadTemplate('Profile');
 		loadLanguage('Profile');
 		$context['sub_template'] = 'trackIP';
-		$context['page_title'] = $txt[79];
+		$context['page_title'] = $txt['profile'];
 	}
 	else
 		$context['ip'] = $user_profile[$memID]['memberIP'];
@@ -2146,7 +2146,7 @@ function TrackIP($memID = 0)
 	$request = db_query("
 		SELECT
 			le.logTime, le.ip, le.url, le.message, IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER,
-			IFNULL(mem.realName, '$txt[28]') AS display_name, mem.memberName
+			IFNULL(mem.realName, '$txt[guest_title]') AS display_name, mem.memberName
 		FROM {$db_prefix}log_errors AS le
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = le.ID_MEMBER)
 		WHERE le.ip $dbip
@@ -2841,7 +2841,7 @@ function pmprefs($memID)
 
 	$context['buddy_list'] = substr($buddy_list, 1);
 	$context['ignore_list'] = $pm_ignore_list;
-	$context['page_title'] = $txt['pmprefs'] . ': ' . $txt[144];
+	$context['page_title'] = $txt['pmprefs'] . ': ' . $txt['personal_messages'];
 
 	loadThemeOptions($memID);
 }
@@ -3136,7 +3136,7 @@ function deleteAccount($memID)
 
 	// Can they do this, or will they need approval?
 	$context['needs_approval'] = $context['user']['is_owner'] && !empty($modSettings['approveAccountDeletion']) && !allowedTo('moderate_forum');
-	$context['page_title'] = $txt['deleteAccount'] . ': ' . $txt[144];
+	$context['page_title'] = $txt['deleteAccount'] . ': ' . $txt['personal_messages'];
 }
 
 function deleteAccount2($profile_vars, $post_errors, $memID)

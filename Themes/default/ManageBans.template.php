@@ -9,7 +9,7 @@ function template_main()
 	<form action="', $scripturl, '?action=admin;area=ban;sa=list" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['ban_remove_selected_confirm'], '\');">
 		<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
 			<tr class="catbg3">
-				<td colspan="8"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+				<td colspan="8"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr><tr class="titlebg">';
 	foreach ($context['columns'] as $column)
 	{
@@ -44,7 +44,7 @@ function template_main()
 				<td align="left" valign="top" class="windowbg">', $ban['expires'], '</td>
 				<td align="center" valign="top" class="windowbg">', $ban['num_entries'], '</td>
 				<td align="center" valign="top" class="windowbg2">
-					&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=edit;sort=', $context['sort_by'], $context['sort_direction'] == 'up' ? ';desc' : '',';bg=', $ban['id'], '">', $txt[17], '</a>
+					&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=edit;sort=', $context['sort_by'], $context['sort_direction'] == 'up' ? ';desc' : '',';bg=', $ban['id'], '">', $txt['modify'], '</a>
 				</td>
 				<td align="center" valign="top" class="windowbg2"><input type="checkbox" name="remove[]" value="', $ban['id'], '" class="check" /></td>
 			</tr>';
@@ -53,7 +53,7 @@ function template_main()
 			<tr class="catbg3">
 				<td colspan="8" align="left">
 					<div style="float: left;">
-						<b>', $txt[139], ':</b> ', $context['page_index'], '
+						<b>', $txt['pages'], ':</b> ', $context['page_index'], '
 					</div>
 					<div style="float: right;">
 						<input type="submit" name="removeBans" value="', $txt['ban_remove_selected'], '" />
@@ -220,9 +220,9 @@ function template_ban_edit()
 				elseif ($ban_item['type'] == 'hostname')
 					echo '<b>', $txt['hostname'], ':</b>&nbsp;', $ban_item['hostname'];
 				elseif ($ban_item['type'] == 'email')
-					echo '<b>', $txt[69], ':</b>&nbsp;', $ban_item['email'];
+					echo '<b>', $txt['email'], ':</b>&nbsp;', $ban_item['email'];
 				elseif ($ban_item['type'] == 'user')
-					echo '<b>', $txt[35], ':</b>&nbsp;', $ban_item['user']['link'];
+					echo '<b>', $txt['username'], ':</b>&nbsp;', $ban_item['user']['link'];
 				echo '
 						</td>
 						<td class="windowbg" align="center">', $ban_item['hits'], '</td>
@@ -334,7 +334,7 @@ function template_browse_triggers()
 			<td colspan="4">', $txt['ban_trigger_browse'], '</td>
 		</tr><tr class="catbg3">
 			<td colspan="4">
-				<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=ip">', $context['selected_entity'] == 'ip' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt[512], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=hostname">', $context['selected_entity'] == 'hostname' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['hostname'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=email">', $context['selected_entity'] == 'email' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt[69], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=member">', $context['selected_entity'] == 'member' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt[35], '</a>
+				<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=ip">', $context['selected_entity'] == 'ip' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt[512], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=hostname">', $context['selected_entity'] == 'hostname' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['hostname'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=email">', $context['selected_entity'] == 'email' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['email'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=member">', $context['selected_entity'] == 'member' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['username'], '</a>
 			</td>
 		</tr><tr class="titlebg">
 			<th align="left">', $txt['ban_banned_entity'], '</th>
@@ -367,7 +367,7 @@ function template_browse_triggers()
 			</td>
 		</tr>
 		<tr class="catbg3">
-			<td align="left" colspan="5" style="padding: 5px;"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+			<td align="left" colspan="5" style="padding: 5px;"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 		</tr>
 	</table>
 </form>';
@@ -381,7 +381,7 @@ function template_ban_log()
 	<form action="', $scripturl, '?action=admin;area=ban;sa=log" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
 			<tr class="catbg3">
-				<td colspan="7"><b>', $txt[139], ':</b> ', $context['page_index'], '</td>
+				<td colspan="7"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr><tr class="titlebg">
 				<th>
 					<a href="', $scripturl, '?action=admin;area=ban;sa=log;sort=ip', $context['sort_direction'] == 'up' ? ';desc' : '', ';start=', $context['start'], '">' . $txt['ban_log_ip'], $context['sort'] == 'ip' ? '&nbsp;<img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a>

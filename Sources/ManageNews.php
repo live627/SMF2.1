@@ -102,14 +102,14 @@ function ManageNews()
 	);
 	if (allowedTo('edit_news'))
 		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt[7],
+			'title' => $txt['admin_news'],
 			'description' => $txt[670],
 			'href' => $scripturl . '?action=admin;area=news',
 			'is_selected' => $_REQUEST['sa'] == 'editnews',
 		);
 	if (allowedTo('send_mail'))
 		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt[6],
+			'title' => $txt['admin_newsletters'],
 			'description' => $txt['news_mailing_desc'],
 			'href' => $scripturl . '?action=admin;area=news;sa=mailingmembers',
 			'is_selected' => substr($_REQUEST['sa'], 0, 7) == 'mailing',
@@ -182,14 +182,14 @@ function EditNews()
 		);
 
 	$context['sub_template'] = 'edit_news';
-	$context['page_title'] = $txt[7];
+	$context['page_title'] = $txt['admin_news'];
 }
 
 function SelectMailingMembers()
 {
 	global $txt, $db_prefix, $context, $modSettings;
 
-	$context['page_title'] = $txt[6];
+	$context['page_title'] = $txt['admin_newsletters'];
 
 	$context['sub_template'] = 'email_members';
 
@@ -370,12 +370,12 @@ function ComposeMailing()
 	}
 	else
 	{
-		$context['page_title'] = $txt[6];
+		$context['page_title'] = $txt['admin_newsletters'];
 
 		// Just send the to list to the template.
 		$context['addresses'] = implode('; ', $list);
-		$context['default_subject'] = $context['forum_name'] . ': ' . $txt[70];
-		$context['default_message'] = $txt[72] . "\n\n" . $txt[130] . "\n\n{\$board_url}";
+		$context['default_subject'] = $context['forum_name'] . ': ' . $txt['subject'];
+		$context['default_message'] = $txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n{\$board_url}";
 
 		$context['sub_template'] = 'email_members_compose';
 	}
@@ -513,7 +513,7 @@ function SendMailing()
 	// Still more to do?
 	if (count($cleanlist) > $context['start'])
 	{
-		$context['page_title'] = $txt[6];
+		$context['page_title'] = $txt['admin_newsletters'];
 
 		$context['sub_template'] = 'email_members_send';
 		return;
@@ -526,7 +526,7 @@ function ModifyNewsSettings()
 {
 	global $context, $db_prefix, $sourcedir, $modSettings, $txt, $scripturl;
 
-	$context['page_title'] = $txt[7] . ' - ' . $txt['settings'];
+	$context['page_title'] = $txt['admin_news'] . ' - ' . $txt['settings'];
 	$context['sub_template'] = 'show_settings';
 
 	// Needed for the inline permission functions, and the settings template.
