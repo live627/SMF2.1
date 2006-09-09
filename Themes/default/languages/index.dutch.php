@@ -183,7 +183,7 @@ $txt['welmsg_please'] = 'Alsjeblieft';
 $txt['select_destination'] = 'Selecteer een bestemming';
 
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt[279] = 'Geplaatst door';
+$txt['posted_by'] = 'Geplaatst door';
 
 $txt['icon_smiley'] = 'Lachebek';
 $txt['icon_angry'] = 'Boos';

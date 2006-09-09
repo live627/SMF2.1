@@ -183,7 +183,7 @@ $txt['welmsg_please'] = 'Bitte';
 $txt['select_destination'] = 'Bitte w&auml;hlen Sie ein Ziel';
 
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt[279] = 'Autor';
+$txt['posted_by'] = 'Autor';
 
 $txt['icon_smiley'] = 'Smiley';
 $txt['icon_angry'] = '&Auml;rgerlich';

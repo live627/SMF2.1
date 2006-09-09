@@ -1366,6 +1366,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 							$line = preg_replace('~\{\$(\w+?)\}~', '\' . $GLOBALS[\'$1\'] . \'', $line);
 							$line = preg_replace('~\{\$(\w+?)\.(\w+?)\}~', '\' . $GLOBALS[\'$1\'][\'$2\'] . \'', $line);
 							$line = preg_replace('~\{\\\\\$~', '{$', $line);
+							$line = preg_replace('~\{NL\}~', '\\\\n', $line);
 							fwrite($fh, $line);
 						}
 					}
@@ -1377,6 +1378,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 					$fc = preg_replace('~\{\$(\w+?)\}~', '\' . $GLOBALS[\'$1\'] . \'', $fc);
 					$fc = preg_replace('~\{\$(\w+?)\.(\w+?)\}~', '\' . $GLOBALS[\'$1\'][\'$2\'] . \'', $fc);
 					$fc = preg_replace('~\{\\\\\$~', '{$', $fc);
+					$fc = preg_replace('~\{NL\}~', '\\\\n', $fc);
 					$fc = preg_replace('~<\?php~', '', $fc);
 					$fc = preg_replace('~\?>~', '', $fc);
 					eval($fc);

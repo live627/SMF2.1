@@ -181,7 +181,7 @@ $txt['welmsg_please'] = 'Please';
 $txt['select_destination'] = 'Please select a destination';
 
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt[279] = 'Posted by';
+$txt['posted_by'] = 'Posted by';
 
 $txt['icon_smiley'] = 'Smiley';
 $txt['icon_angry'] = 'Angry';
