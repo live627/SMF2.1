@@ -1318,7 +1318,7 @@ function AdminBoardRecount()
 // This function caches the relevant language files, and if the cache doesn't work includes them with eval.
 function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 {
-	global $language, $settings, $txt;
+	global $language, $settings, $txt, $db_prefix;
 	global $cachedir;
 
 	// Is the file writable?
@@ -1364,12 +1364,6 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 						if (substr($line, 0, 2) != '?>' && substr($line, 0, 2) != '<?')
 						{
 							// Some common variables get parsed in...
-							$line = strtr($line, array('{$scripturl}' => '\' . $scripturl . \''));
-							$line = strtr($line, array('{$boardurl}' => '\' . $boardurl . \''));
-							$line = strtr($line, array('{$imagesurl}' => '\' . $settings[\'images_url\'] . \''));
-							$line = strtr($line, array('{$forumname}' => '\' . $context[\'forum_name\'] . \''));
-							$line = strtr($line, array('{$regards}' => '\' . $txt[\'regards_team\'] . \''));
-							$line = preg_replace('~\{\\\\\$~', '{$', $line);
 							$line = preg_replace('~\{NL\}~', '\\\\n', $line);
 							fwrite($fh, $line);
 						}
@@ -1379,12 +1373,6 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				else
 				{
 					$fc = implode('', file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'));
-					$fc = strtr($fc, array('{$scripturl}' => '\' . $scripturl . \''));
-					$fc = strtr($fc, array('{$boardurl}' => '\' . $boardurl . \''));
-					$fc = strtr($fc, array('{$imagesurl}' => '\' . $settings[\'images_url\'] . \''));
-					$fc = strtr($fc, array('{$forumname}' => '\' . $context[\'forum_name\'] . \''));
-					$fc = strtr($fc, array('{$regards}' => '\' . $txt[\'regards_team\'] . \''));
-					$fc = preg_replace('~\{\\\\\$~', '{$', $fc);
 					$fc = preg_replace('~\{NL\}~', '\\\\n', $fc);
 					$fc = preg_replace('~<\?php~', '', $fc);
 					$fc = preg_replace('~\?>~', '', $fc);
@@ -1410,6 +1398,27 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		}
 		else
 			unset($language_url);
+
+		// If this includes the index template put in the language settings too.
+		if ($template == 'index')
+		{
+			$request = db_query("
+				SELECT time_format, number_format, charset, locale, dictionary, rtl, image_lang
+				FROM {$db_prefix}languages
+				WHERE codename = '$lang'", __FILE__, __LINE__);
+			$row = mysql_fetch_assoc($request);
+			if (!empty($row))
+			{
+				foreach ($row as $k => $v)
+				{
+					if ($can_write)
+						fwrite($fh, '$txt[\'' . $k . '\'] = \'' . $v . "';\n");
+					else
+						$txt[$k] = $v;
+				}
+			}
+			mysql_free_result($request);
+		}
 	}
 
 	if ($can_write)

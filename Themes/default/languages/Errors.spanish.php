@@ -14,7 +14,7 @@ $txt[93] = 'No est&aacute;s autorizado para bloquear o desbloquear este tema; de
 $txt[100] = 'El nombre de usuario que trataste de registrar ya existe.';
 $txt[134] = 'No est&aacute;s autorizado para mover temas...';
 $txt[138] = 'Este servicio es solo para usuarios...';
-$txt[165] = 'Para publicar debes haber ingresado. Si no tienes todav&iacute;a una cuenta, <a href="{$scripturl}?action=register">reg&iacute;strate</a>.';
+$txt[165] = 'Para publicar debes haber ingresado. Si no tienes todav&iacute;a una cuenta, <a href="' . $scripturl . '?action=register">reg&iacute;strate</a>.';
 $txt[213] = 'No coinciden las contrase&ntilde;as.';
 $txt[223] = 'Lo siento, debes estar registrado antes de usar esta funci&oacute;n.';
 $txt[241] = 'Car&aacute;cter inv&aacute;lido en la contrase&ntilde;a';

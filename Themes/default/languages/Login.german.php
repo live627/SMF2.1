@@ -34,13 +34,13 @@ $txt['register_age_confirmation'] = 'Ich bin mindestens %d Jahre alt';
 $txt['register_subject'] = 'Willkommen im ' . $context['forum_name'];
 
 // For the below three messages, %1$s is the display name, %2$s is the username, %3$s is the password, %4$s is the activation code, and %5$s is the activation link (the last two are only for activation.)
-$txt['register_immediate_message'] = 'Sie sind jetzt mit einem Benutzerkonto im {$forumname} registriert, %1$s!\\n\\nIhr Benutzername ist %2$s und das Passwort lautet %3$s.\\n\\nSie k&#246;nnen Ihr Passwort nach dem Einloggen &#228;ndern, indem Sie in Ihr Profil gehen oder folgende Seite besuchen:\\n\\n{$scripturl}?action=profile\\n\\n{$regards}';
-$txt['register_activate_message'] = 'Sie sind jetzt mit einem Benutzerkonto im {$forumname} registriert, %1$s!\\n\\nIhr Benutzername ist %2$s und das Passwort lautet %3$s (es kann sp&#228;ter ge&#228;ndert werden).\\n\\nBevor Sie sich einloggen k&#246;nnen, m&#252;ssen Sie auf folgender Seite Ihr Benutzerkonto aktivieren:\\n\\n%5$s\\n\\nSollten Sie Probleme mit der Aktivierung haben, benutzen Sie bitte diesen Code "%4$s".\\n\\n{$regards}';
-$txt['register_pending_message'] = 'Ihre Registrierung im {$forumname} haben wir erhalten, %1$s.\\n\\nIhr gew&#228;hlter Benutzername ist %2$s und das Passwort lautet %3$s.\\n\\nBevor Sie sich einloggen und das Forum benutzen k&#246;nnen, muss Ihr Benutzerkonto zuerst vom Administrator genehmigt werden. Wenn das erfolgt ist, erhalten Sie eine weitere E-Mail.\\n\\n{$regards}';
+$txt['register_immediate_message'] = 'Sie sind jetzt mit einem Benutzerkonto im ' . $context['forum_name'] . ' registriert, %1$s!\\n\\nIhr Benutzername ist %2$s und das Passwort lautet %3$s.\\n\\nSie k&#246;nnen Ihr Passwort nach dem Einloggen &#228;ndern, indem Sie in Ihr Profil gehen oder folgende Seite besuchen:\\n\\n' . $scripturl . '?action=profile\\n\\n' . $txt['regards_team'];
+$txt['register_activate_message'] = 'Sie sind jetzt mit einem Benutzerkonto im ' . $context['forum_name'] . ' registriert, %1$s!\\n\\nIhr Benutzername ist %2$s und das Passwort lautet %3$s (es kann sp&#228;ter ge&#228;ndert werden).\\n\\nBevor Sie sich einloggen k&#246;nnen, m&#252;ssen Sie auf folgender Seite Ihr Benutzerkonto aktivieren:\\n\\n%5$s\\n\\nSollten Sie Probleme mit der Aktivierung haben, benutzen Sie bitte diesen Code "%4$s".\\n\\n' . $txt['regards_team'];
+$txt['register_pending_message'] = 'Ihre Registrierung im ' . $context['forum_name'] . ' haben wir erhalten, %1$s.\\n\\nIhr gew&#228;hlter Benutzername ist %2$s und das Passwort lautet %3$s.\\n\\nBevor Sie sich einloggen und das Forum benutzen k&#246;nnen, muss Ihr Benutzerkonto zuerst vom Administrator genehmigt werden. Wenn das erfolgt ist, erhalten Sie eine weitere E-Mail.\\n\\n' . $txt['regards_team'];
 
 // For the below two messages, %1$s is the user's display name, %2$s is their username, %3$s is the activation code, and %4$s is the activation link (the last two are only for activation.)
-$txt['resend_activate_message'] = 'Sie sind jetzt mit einem Benutzerkonto im {$forumname} registriert, %1$s!\\n\\nIhr Benutzername ist "%2$s".\\n\\nBevor Sie sich einloggen k&#246;nnen, m&#252;ssen Sie auf folgender Seite Ihr Benutzerkonto aktivieren:\\n\\n%4$s\\n\\nSollten Sie Probleme mit der Aktivierung haben, benutzen Sie bitte diesen Code "%3$s".\\n\\n{$regards}';
-$txt['resend_pending_message'] = 'Ihre Registrierung im {$forumname} haben wir erhalten, %1$s.\\n\\nIhr gew&#228;hlter Benutzername ist %2$s.\\n\\nBevor Sie sich einloggen und das Forum benutzen k&#246;nnen, muss Ihr Benutzerkonto zuerst genehmigt werden. Wenn das erfolgt ist, erhalten Sie eine weitere E-Mail.\\n\\n{$regards}';
+$txt['resend_activate_message'] = 'Sie sind jetzt mit einem Benutzerkonto im ' . $context['forum_name'] . ' registriert, %1$s!\\n\\nIhr Benutzername ist "%2$s".\\n\\nBevor Sie sich einloggen k&#246;nnen, m&#252;ssen Sie auf folgender Seite Ihr Benutzerkonto aktivieren:\\n\\n%4$s\\n\\nSollten Sie Probleme mit der Aktivierung haben, benutzen Sie bitte diesen Code "%3$s".\\n\\n' . $txt['regards_team'];
+$txt['resend_pending_message'] = 'Ihre Registrierung im ' . $context['forum_name'] . ' haben wir erhalten, %1$s.\\n\\nIhr gew&#228;hlter Benutzername ist %2$s.\\n\\nBevor Sie sich einloggen und das Forum benutzen k&#246;nnen, muss Ihr Benutzerkonto zuerst genehmigt werden. Wenn das erfolgt ist, erhalten Sie eine weitere E-Mail.\\n\\n' . $txt['regards_team'];
 
 $txt['ban_register_prohibited'] = 'Sie haben nicht die Erlaubnis, sich in diesem Forum zu registrieren';
 $txt['under_age_registration_prohibited'] = 'Benutzer, die j&uuml;nger als %d Jahre sind, d&uuml;rfen sich in diesem Forum nicht registrieren';
@@ -132,7 +132,7 @@ $txt['admin_notify_profile'] = '%s hat sich als neues Mitglied in Ihrem Forum an
 $txt['admin_notify_approval'] = 'Bevor das Mitglied Beitr&#228;ge schreiben kann, muss das Benutzerkonto mit Hilfe des folgenden Links zuerst genehmigt werden.';
 
 $txt['coppa_title'] = 'Altersbeschr&auml;nktes Forum';
-$txt['coppa_after_registration'] = 'Du hast Dich im {$forumname} registriert.<br /><br />Du f&auml;llst als Benutzer unter die Altergrenze von {MINIMUM_AGE}. Daher ist eine Genehmigung von Deinen Eltern/Erziehungsberechtigten erforderlich, welche Dir erlaubt das Benutzerkonto zu benutzen. Um das Benutzerkonto aktivieren zu lassen, drucke bitte folgendes Formular aus:';
+$txt['coppa_after_registration'] = 'Du hast Dich im ' . $context['forum_name'] . ' registriert.<br /><br />Du f&auml;llst als Benutzer unter die Altergrenze von {MINIMUM_AGE}. Daher ist eine Genehmigung von Deinen Eltern/Erziehungsberechtigten erforderlich, welche Dir erlaubt das Benutzerkonto zu benutzen. Um das Benutzerkonto aktivieren zu lassen, drucke bitte folgendes Formular aus:';
 $txt['coppa_form_link_popup'] = 'Lade das Formular in ein neues Fenster';
 $txt['coppa_form_link_download'] = 'Lade das Formular herunter';
 $txt['coppa_send_to_one_option'] = 'Danach m&uuml;ssen Deine Eltern/Erziehungsberechtigte das Formular per:';
@@ -144,7 +144,7 @@ $txt['coppa_send_by_phone'] = 'Alternativ k&ouml;nnen Sie auch den Administrator
 $txt['coppa_form_title'] = 'Erlaubnis zum Registrieren im ' . $context['forum_name'];
 $txt['coppa_form_address'] = 'Adresse';
 $txt['coppa_form_date'] = 'Datum';
-$txt['coppa_form_body'] = 'Ich, {PARENT_NAME},<br /><br />erlaube {CHILD_NAME} (Name des Kindes) ein registrierter Benutzer des Forums {$forumname} mit dem Benutzernamen {USER_NAME} zu werden.<br /><br />Ich bin damit einverstanden, dass bestimmte pers&ouml;nliche Angaben von {USER_NAME} auch von anderen Benutzern im Forum einsehbar sind.<br /><br />Unterschrift:<br />{PARENT_NAME} (Eltern/Erziehungsberechtigte).';
+$txt['coppa_form_body'] = 'Ich, {PARENT_NAME},<br /><br />erlaube {CHILD_NAME} (Name des Kindes) ein registrierter Benutzer des Forums ' . $context['forum_name'] . ' mit dem Benutzernamen {USER_NAME} zu werden.<br /><br />Ich bin damit einverstanden, dass bestimmte pers&ouml;nliche Angaben von {USER_NAME} auch von anderen Benutzern im Forum einsehbar sind.<br /><br />Unterschrift:<br />{PARENT_NAME} (Eltern/Erziehungsberechtigte).';
 
 // Untranslated!
 $txt['visual_verification_label'] = 'Visual verification';

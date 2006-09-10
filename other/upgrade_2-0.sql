@@ -142,6 +142,31 @@ upgrade_query("
 ---#
 
 /******************************************************************************/
+--- Adding language management.
+/******************************************************************************/
+
+---# Creating "languages" table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}languages (
+	ID_LANG smallint(5) NOT NULL auto_increment,
+	codename varchar(12) NOT NULL default '',
+	name tinytext NOT NULL default '',
+	author tinytext NOT NULL default '',
+	version varchar(30) NOT NULL default '',
+	last_updated int(10) NOT NULL default '0',
+	time_format tinytext NOT NULL default '',
+	number_format tinytext NOT NULL default '',
+	charset tinytext NOT NULL default '',
+	locale tinytext NOT NULL default '',
+	dictionary tinytext NOT NULL default '',
+	rtl tinyint(3) NOT NULL default '0',
+	image_lang varchar(12) NOT NULL default '',
+	active tinyint(3) NOT NULL default '1',
+	PRIMARY KEY (ID_LANG),
+	UNIQUE codename (codename)
+) TYPE=MyISAM;
+---#
+
+/******************************************************************************/
 --- Adding email digest functionality.
 /******************************************************************************/
 

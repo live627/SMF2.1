@@ -169,7 +169,7 @@ function template_main_above()
 				<td valign="top">
 					<div class="headertitles" style="margin-right: 5px; position: relative;"><img src="', $settings['images_url'], '/blank.gif" height="12" alt="" /></div>
 					<div class="headerbodies" style="position: relative; margin-right: 5px; background-image: url(', $settings['images_url'], '/box_bg.gif);">
-						<img src="', $settings['images_url'], '/', $context['user']['language'], '/userinfo.gif" style="position: absolute; left: ', $context['browser']['is_ie5'] || $context['browser']['is_ie4'] ? '0' : '-1px', '; top: -16px; clear: both;" alt="" />
+						<img src="', $settings['lang_images_url'], '/userinfo.gif" style="position: absolute; left: ', $context['browser']['is_ie5'] || $context['browser']['is_ie4'] ? '0' : '-1px', '; top: -16px; clear: both;" alt="" />
 						<table width="99%" cellpadding="0" cellspacing="5" border="0"><tr>';
 
 	if (!empty($context['user']['avatar']))
@@ -283,7 +283,7 @@ function template_main_above()
 		echo '
 					<div class="headertitles" style="width: 260px;"><img src="', $settings['images_url'], '/blank.gif" height="12" alt="" /></div>
 					<div class="headerbodies" style="width: 260px; position: relative; background-image: url(', $settings['images_url'], '/box_bg.gif); margin-bottom: 8px;">
-						<img src="', $settings['images_url'], '/', $context['user']['language'], '/newsbox.gif" style="position: absolute; left: -1px; top: -16px;" alt="" />
+						<img src="', $settings['lang_images_url'], '/newsbox.gif" style="position: absolute; left: -1px; top: -16px;" alt="" />
 						<div style="height: 50px; overflow: auto; padding: 5px;" class="smalltext">', $context['random_news_line'], '</div>
 					</div>';
 
@@ -291,7 +291,7 @@ function template_main_above()
 	echo '
 					<div class="headertitles" style="width: 260px;"><img src="', $settings['images_url'], '/blank.gif" height="12" alt="" /></div>
 					<div class="headerbodies" style="width: 260px; position: relative; background-image: url(', $settings['images_url'], '/box_bg.gif);">
-						<img src="', $settings['images_url'], '/', $context['user']['language'], '/keystats.gif" style="position: absolute; left: -1px; top: -16px;" alt="" />
+						<img src="', $settings['lang_images_url'], '/keystats.gif" style="position: absolute; left: -1px; top: -16px;" alt="" />
 						<div style="', !$context['browser']['is_ie'] ? 'min-height: 35px;' : 'height: 4em;', ' padding: 5px;" class="smalltext">
 							<b>', $context['common_stats']['total_posts'], '</b> ', $txt['posts_made'], ' ', $txt['smf88'], ' <b>', $context['common_stats']['total_topics'], '</b> ', $txt['topics'], ' ', $txt[525], ' <span style="white-space: nowrap;"><b>', $context['common_stats']['total_members'], '</b> ', $txt['members'], '</span><br />
 							', $txt[656], ': <b> ', $context['common_stats']['latest_member']['link'], '</b>
@@ -466,7 +466,7 @@ function template_menu()
 			continue;
 		else
 			echo '
-				<a href="', $button['href'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/' . $act . '.gif" alt="' . $button['title'] . '" border="0" />' : $button['title'], '</a>', !empty($button['is_last']) ? '' : $context['menu_separator'];
+				<a href="', $button['href'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/' . $act . '.gif" alt="' . $button['title'] . '" border="0" />' : $button['title'], '</a>', !empty($button['is_last']) ? '' : $context['menu_separator'];
 }
 
 // Generate a strip of buttons, out of buttons.

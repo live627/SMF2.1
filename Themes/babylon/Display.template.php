@@ -203,7 +203,7 @@ function template_main()
 
 	// Show a "go down" link?
 	if (!empty($modSettings['topbottomEnable']))
-		echo $context['menu_separator'], '<a href="#bot">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/go_down.gif" alt="' . $txt['topbottom5'] . '" border="0" align="top" />' : $txt['topbottom5'], '</a>';
+		echo $context['menu_separator'], '<a href="#bot">', $settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['topbottom5'] . '" border="0" align="top" />' : $txt['topbottom5'], '</a>';
 
 	echo '
 					</td>
@@ -211,19 +211,19 @@ function template_main()
 
 	$buttonArray = array();
 	if ($context['can_reply'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';num_replies=' . $context['num_replies'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/reply.gif" alt="' . $txt['reply'] . '" border="0" />' : $txt['reply']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';num_replies=' . $context['num_replies'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/reply.gif" alt="' . $txt['reply'] . '" border="0" />' : $txt['reply']) . '</a>';
 	if ($context['can_mark_notify'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
 
 	// This is a special case; if they can see mark unread, put it at the top... otherwise show add poll.
 	if ($context['user']['is_logged'] && $settings['show_mark_read'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/markunread.gif" alt="' . $txt['mark_unread'] . '" border="0" />' : $txt['mark_unread']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markunread.gif" alt="' . $txt['mark_unread'] . '" border="0" />' : $txt['mark_unread']) . '</a>';
 	elseif ($context['can_add_poll'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=editpoll;add;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/addpoll.gif" alt="' . $txt['add_poll'] . '" border="0" />' : $txt['add_poll']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=editpoll;add;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/addpoll.gif" alt="' . $txt['add_poll'] . '" border="0" />' : $txt['add_poll']) . '</a>';
 
 	if ($context['can_send_topic'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/sendtopic.gif" alt="' . $txt[707] . '" border="0" />' : $txt[707]) . '</a>';
-	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/print.gif" alt="' . $txt[465] . '" border="0" />' : $txt[465]) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt[707] . '" border="0" />' : $txt[707]) . '</a>';
+	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt[465] . '" border="0" />' : $txt[465]) . '</a>';
 
 	echo implode($context['menu_separator'], $buttonArray);
 
@@ -394,31 +394,31 @@ function template_main()
 		// Maybe we can approve it, maybe we should?
 		if ($message['can_approve'])
 			echo '
-									<a href="', $scripturl, '?action=moderate;area=postmod;sa=approve;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/approve.gif" alt="' . $txt['approve'] . '" border="0" />' : $txt['approve']), '</a>';
+									<a href="', $scripturl, '?action=moderate;area=postmod;sa=approve;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/approve.gif" alt="' . $txt['approve'] . '" border="0" />' : $txt['approve']), '</a>';
 
 		// Can they reply?  Have they turned on quick reply?
 		if ($context['can_reply'] && !empty($options['display_quick_reply']))
 			echo '
-									<a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';sesc=', $context['session_id'], '" onclick="oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\'); return false;">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/quote.gif" alt="' . $txt['reply_quote'] . '" border="0" />' : $txt['reply_quote']), '</a>';
+									<a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';sesc=', $context['session_id'], '" onclick="oQuickReply.quote(', $message['id'], ', \'', $context['session_id'], '\'); return false;">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/quote.gif" alt="' . $txt['reply_quote'] . '" border="0" />' : $txt['reply_quote']), '</a>';
 		// So... quick reply is off, but they *can* reply?
 		elseif ($context['can_reply'])
 			echo '
-									<a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';sesc=', $context['session_id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/quote.gif" alt="' . $txt['reply_quote'] . '" border="0" />' : $txt['reply_quote']), '</a>';
+									<a href="', $scripturl, '?action=post;quote=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';num_replies=', $context['num_replies'], ';sesc=', $context['session_id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/quote.gif" alt="' . $txt['reply_quote'] . '" border="0" />' : $txt['reply_quote']), '</a>';
 
 		// Can the user modify the contents of this post?
 		if ($message['can_modify'])
 			echo '
-									<a href="', $scripturl, '?action=post;msg=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/modify.gif" alt="' . $txt['modify_msg'] . '" border="0" />' : $txt['modify']), '</a>';
+									<a href="', $scripturl, '?action=post;msg=', $message['id'], ';topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/modify.gif" alt="' . $txt['modify_msg'] . '" border="0" />' : $txt['modify']), '</a>';
 
 		// How about... even... remove it entirely?!
 		if ($message['can_remove'])
 			echo '
-									<a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete.gif" alt="' . $txt['remove_message'] . '" border="0" />' : $txt['remove']), '</a>';
+									<a href="', $scripturl, '?action=deletemsg;topic=', $context['current_topic'], '.', $context['start'], ';msg=', $message['id'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['remove_message'], '?\');">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/delete.gif" alt="' . $txt['remove_message'] . '" border="0" />' : $txt['remove']), '</a>';
 
 		// What about splitting it off the rest of the topic?
 		if ($context['can_split'])
 			echo '
-									<a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/split.gif" alt="' . $txt['smf251'] . '" border="0" />' : $txt['smf251']), '</a>';
+									<a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/split.gif" alt="' . $txt['smf251'] . '" border="0" />' : $txt['smf251']), '</a>';
 
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
@@ -556,25 +556,25 @@ function template_main()
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
 					<td>
-						<a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/go_up.gif" alt="' . $txt['topbottom4'] . '" border="0" align="top" />' : $txt['topbottom4']) . '</a>' : ''), '
+						<a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['topbottom4'] . '" border="0" align="top" />' : $txt['topbottom4']) . '</a>' : ''), '
 					</td>
 					<td align="', !$context['right_to_left'] ? 'right' : 'left', '" style="font-size: smaller;">';
 
 	$buttonArray = array();
 	if ($context['can_reply'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';num_replies=' . $context['num_replies'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/reply.gif" alt="' . $txt['reply'] . '" border="0" />' : $txt['reply']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';num_replies=' . $context['num_replies'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/reply.gif" alt="' . $txt['reply'] . '" border="0" />' : $txt['reply']) . '</a>';
 	if ($context['can_mark_notify'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
 
 	// Another special case, similar to above but reversed.  Show "add poll" unless they can't - then show unread here too.
 	if ($context['can_add_poll'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=editpoll;add;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/addpoll.gif" alt="' . $txt['add_poll'] . '" border="0" />' : $txt['add_poll']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=editpoll;add;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/addpoll.gif" alt="' . $txt['add_poll'] . '" border="0" />' : $txt['add_poll']) . '</a>';
 	elseif ($context['user']['is_logged'] && $settings['show_mark_read'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/markunread.gif" alt="' . $txt['mark_unread'] . '" border="0" />' : $txt['mark_unread']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markunread.gif" alt="' . $txt['mark_unread'] . '" border="0" />' : $txt['mark_unread']) . '</a>';
 
 	if ($context['can_send_topic'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/sendtopic.gif" alt="' . $txt[707] . '" border="0" />' : $txt[707]) . '</a>';
-	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/print.gif" alt="' . $txt[465] . '" border="0" />' : $txt[465]) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt[707] . '" border="0" />' : $txt[707]) . '</a>';
+	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt[465] . '" border="0" />' : $txt[465]) . '</a>';
 
 	echo implode($context['menu_separator'], $buttonArray);
 
@@ -710,23 +710,23 @@ function theme_show_mod_buttons()
 	$moderationButtons = array();
 
 	if ($context['can_move'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=movetopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_move.gif" alt="' . $txt['move_topic'] . '" border="0" />' : $txt['move_topic']) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=movetopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_move.gif" alt="' . $txt['move_topic'] . '" border="0" />' : $txt['move_topic']) . '</a>';
 	if ($context['can_delete'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['are_sure_remove_topic'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_rem.gif" alt="' . $txt['remove_topic'] . '" border="0" />' : $txt['remove_topic']) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['are_sure_remove_topic'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_rem.gif" alt="' . $txt['remove_topic'] . '" border="0" />' : $txt['remove_topic']) . '</a>';
 	if ($context['can_lock'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=lock;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_lock.gif" alt="' . (empty($context['is_locked']) ? $txt['smf279'] : $txt['smf280']) . '" border="0" />' : (empty($context['is_locked']) ? $txt['smf279'] : $txt['smf280'])) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=lock;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_lock.gif" alt="' . (empty($context['is_locked']) ? $txt['smf279'] : $txt['smf280']) . '" border="0" />' : (empty($context['is_locked']) ? $txt['smf279'] : $txt['smf280'])) . '</a>';
 	if ($context['can_sticky'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_sticky.gif" alt="' . (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278']) . '" border="0" />' : (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278'])) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_sticky.gif" alt="' . (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278']) . '" border="0" />' : (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278'])) . '</a>';
 	if ($context['can_merge'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/merge.gif" alt="' . $txt['smf252'] . '" border="0" />' : $txt['smf252']) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/merge.gif" alt="' . $txt['smf252'] . '" border="0" />' : $txt['smf252']) . '</a>';
 	if ($context['can_remove_poll'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 
 	if ($context['calendar_post'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/linktocal.gif" alt="' . $txt['calendar37'] . '" border="0" />' : $txt['calendar37']) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/linktocal.gif" alt="' . $txt['calendar37'] . '" border="0" />' : $txt['calendar37']) . '</a>';
 
 	if ($context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
-		$moderationButtons[] = $settings['use_image_buttons'] ? '<input type="image" name="submit" id="quickmodSubmit" src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/delete_selected.gif" alt="' . $txt['quickmod_delete_selected'] . '" />' : '<a href="javascript:document.forms.quickModForm.submit();" id="quickmodSubmit">' . $txt['quickmod_delete_selected'] . '</a>';
+		$moderationButtons[] = $settings['use_image_buttons'] ? '<input type="image" name="submit" id="quickmodSubmit" src="' . $settings['lang_images_url'] . '/delete_selected.gif" alt="' . $txt['quickmod_delete_selected'] . '" />' : '<a href="javascript:document.forms.quickModForm.submit();" id="quickmodSubmit">' . $txt['quickmod_delete_selected'] . '</a>';
 
 	return implode($context['menu_separator'], $moderationButtons);
 }

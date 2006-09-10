@@ -8,7 +8,7 @@ $txt[71] = 'Berichticoon';
 $txt[77] = 'Je hebt geen onderwerp ingevuld, dit is echter een vereiste';
 $txt[78] = 'Je moet wel een bericht intypen, dit is een vereiste';
 // Use numeric entities in the below string.
-$txt[130] = "Met vriendelijke groet,\n\nHet " . '{$forumname}-team';
+$txt[130] = "Met vriendelijke groet,\n\nHet " . $context['forum_name'] . '-team';
 $txt[252] = 'Voeg BBC-tags toe';
 $txt[253] = 'Vet';
 $txt[254] = 'Schuin';

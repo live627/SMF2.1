@@ -123,7 +123,7 @@ function template_main()
 				<td class="catbg" height="30">
 					<table cellpadding="3" cellspacing="0" width="100%">
 						<tr>
-							<td><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/go_down.gif" alt="' . $txt['topbottom5'] . '" border="0" align="top" />' : $txt['topbottom5']) . '</a>' : '', '</td>
+							<td><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['topbottom5'] . '" border="0" align="top" />' : $txt['topbottom5']) . '</a>' : '', '</td>
 							<td align="', !$context['right_to_left'] ? 'right' : 'left', '" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 						</tr>
 					</table>
@@ -192,7 +192,7 @@ function template_main()
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new'] && $context['user']['is_logged'])
 				echo '
-						<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['images_url'], '/', $context['user']['language'], '/new.gif" alt="', $txt[302], '" border="0" /></a>';
+						<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt[302], '" border="0" /></a>';
 
 			echo '
 						<span class="smalltext" id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</span>
@@ -298,7 +298,7 @@ function template_main()
 				<td class="catbg" width="100%" height="30">
 					<table cellpadding="3" cellspacing="0" width="100%">
 						<tr>
-							<td><a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/go_up.gif" alt="' . $txt['topbottom4'] . '" border="0" align="top" />' : $txt['topbottom4']) . '</a>' : '', '</td>
+							<td><a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['topbottom4'] . '" border="0" align="top" />' : $txt['topbottom4']) . '</a>' : '', '</td>
 							<td align="', !$context['right_to_left'] ? 'right' : 'left', '" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 						</tr>
 					</table>
@@ -396,19 +396,19 @@ function theme_show_buttons()
 
 	// If they are logged in, and the mark read buttons are enabled..
 	if ($context['user']['is_logged'] && $settings['show_mark_read'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=markasread;sa=board;board=' . $context['current_board'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/markread.gif" alt="' . $txt[300] . '" border="0" />' : $txt[300]) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=markasread;sa=board;board=' . $context['current_board'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt[300] . '" border="0" />' : $txt[300]) . '</a>';
 
 	// If the user has permission to show the notification button... ask them if they're sure, though.
 	if ($context['can_mark_notify'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=notifyboard;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';board=' . $context['current_board'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_board'] : $txt['notification_enable_board']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=notifyboard;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';board=' . $context['current_board'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_board'] : $txt['notification_enable_board']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
 
 	// Are they allowed to post new topics?
 	if ($context['can_post_new'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new_topic.gif" alt="' . $txt['start_new_topic'] . '" border="0" />' : $txt['start_new_topic']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/new_topic.gif" alt="' . $txt['start_new_topic'] . '" border="0" />' : $txt['start_new_topic']) . '</a>';
 
 	// How about new polls, can the user post those?
 	if ($context['can_post_poll'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;poll">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new_poll.gif" alt="' . $txt['smf20'] . '" border="0" />' : $txt['smf20']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;poll">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/new_poll.gif" alt="' . $txt['smf20'] . '" border="0" />' : $txt['smf20']) . '</a>';
 
 	return implode($context['menu_separator'], $buttonArray);
 }

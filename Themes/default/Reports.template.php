@@ -65,7 +65,7 @@ function template_main()
 	if (empty($settings['use_tabs']))
 		echo '
 
-					<a href="', $scripturl, '?action=reports;rt=', $context['report_type'], ';st=print" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/print.gif" alt="' . $txt[465] . '" border="0" />' : $txt[465]), '</a>';
+					<a href="', $scripturl, '?action=reports;rt=', $context['report_type'], ';st=print" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt[465] . '" border="0" />' : $txt[465]), '</a>';
 	echo '
 				</div>
 			</div>

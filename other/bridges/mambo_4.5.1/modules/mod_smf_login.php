@@ -155,7 +155,7 @@ echo '
 
 
 		echo '<br />
-			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['images_url'] . '/' . $context['user']['language'] . '/logout.gif').'" alt="' . $txt['logout'] . '" style="margin: 2px 0;" border="0" />' : $txt['logout'], '</a>';
+			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['lang_images_url'] . '/logout.gif').'" alt="' . $txt['logout'] . '" style="margin: 2px 0;" border="0" />' : $txt['logout'], '</a>';
 	}
 	// Otherwise they're a guest - so politely ask them to register or login.
 	else

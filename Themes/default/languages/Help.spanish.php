@@ -275,7 +275,7 @@ $helptxt['enableEmbeddedFlash'] = 'Esta opci&oacute;n le permitir&aacute; a tus 
 	como si fueran im&aacute;genes.  Esto es un posible riesgo de seguridad, aunque pocos han podido explorarlo.
 	&iexcl;USALO BAJO TU PROPIO RIESGO!';
 // !!! Add more information about how to use them here.
-$helptxt['xmlnews_enable'] = 'Permite hacer una liga a las <a href="{$scripturl}?action=.xml;sa=news">Noticas Recientes</a>
+$helptxt['xmlnews_enable'] = 'Permite hacer una liga a las <a href="%s?action=.xml;sa=news">Noticas Recientes</a>
 	y datos similares.  Se recomienda que limites el tama&ntilde;o de los mensajes/noticias porque cuando los datos rss se muestran
 	en algunos clientes como Trillian, se trunca la informaci&oacute;n.';
 $helptxt['hotTopicPosts'] = 'Cambia el n&uacute;mero de mensajes en un tema necesarios para alcanzar el estado de &quot;caliente&quot; o
@@ -390,7 +390,7 @@ $helptxt['latest_packages'] = 'Aqu&iacute; puedes ver algunos de los m&aacute;s 
 $helptxt['latest_themes'] = 'Esta &aacute;rea muestra algunos de los &uacute;ltimos y m&aacute;s populares temas de <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.  Puede que no se muestre correctamente si tu computadora no puede encontrar <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';
 
 $helptxt['secret_why_blank'] = 'Por tu seguridad, la respuesta a tu pregunta (as&iacute; como tu contrase&ntilde;a) est&aacute; encriptada de una manera en la que SMF puede decirte solamente si est&aacute; correcta, as&iacute;, jam&aacute;s podr&aacute; decirte (&iexcl;o a alguien m&aacute;s, que es lo importante!) cual es tu respuesta o tu contrase&ntilde;a.';
-$helptxt['moderator_why_missing'] = 'Debido a que la moderaci&oacute;n se realiza en cada foro, debes hacer a un usuario moderador desde la <a href="javascript:window.open(\'{$scripturl}?action=admin;area=manageboards\'); self.close();">interface de manejo de foros</a>.';
+$helptxt['moderator_why_missing'] = 'Debido a que la moderaci&oacute;n se realiza en cada foro, debes hacer a un usuario moderador desde la <a href="javascript:window.open(\'%s?action=admin;area=manageboards\'); self.close();">interface de manejo de foros</a>.';
 
 $helptxt['permissions'] = 'A trav&eacute;s de los permisos les permites o impides a los grupos hacer cosas espec&iacute;ficas.<br /><br />Puedes modificar varios foros al mismo tiempo usando las casillas, o busca en los permisos por un grupo espec&iacute;fico al hacer click en \'Modificar.\'';
 $helptxt['permissions_board'] = 'Si un foro se especifica como \'Global,\' significa que el foro no tendr&aacute; permisos especiales.  \'Local\' significa que tendr&aacute; sus propios permisos - separados de los globales.  Esto te permite tener un foro que tiene m&aacute;s (o menos) permisos que otro, sin que sea necesario que los especifiques para cada uno de los foros.';

@@ -14,7 +14,7 @@ $txt[93] = 'You are not allowed to lock or unlock this topic; you must be a mode
 $txt[100] = 'The username you tried to use already exists.';
 $txt[134] = 'You are not allowed to move topics...';
 $txt[138] = 'This service is only for members...';
-$txt[165] = 'To post you must be logged in. If you don\'t have an account yet, please <a href="{$scripturl}?action=register">register</a>.';
+$txt[165] = 'To post you must be logged in. If you don\'t have an account yet, please <a href="' . $scripturl . '?action=register">register</a>.';
 $txt[213] = 'Passwords aren\'t the same.';
 $txt[223] = 'Sorry, you must register before using this feature.';
 $txt[241] = 'Invalid character used in Password.';

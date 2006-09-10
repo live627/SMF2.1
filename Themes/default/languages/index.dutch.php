@@ -6,14 +6,10 @@
 	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 	   the cache go to Admin => Maintenance => Clean Cache.
 
-	2) Unlike earlier versions of SMF the text in these files is not *pure* PHP. Variables are parsed out when cached
-	   to make understanding language entries easier. As such please follow the following rules:
+	2) Please also follow the following rules:
 
-		a) All individual variables need not be escaped and should be written as {$varname}. i.e. $scripturl => {$scripturl}
-		b) All array variables should have their index appended to the var name above with a dot.
-			e.g. $modSettings['memberCount'] => {$modSettings.memberCount}
-		c) All strings should use single quotes, not double quotes for enclosing the string.
-		d) As a result of (c) all newline characters (etc) need to be escaped. i.e. "\n" is now '\\n'.
+		a) All strings should use single quotes, not double quotes for enclosing the string.
+		b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
 
 */
 
@@ -172,8 +168,8 @@ $txt['female'] = 'Vrouw';
 
 $txt['error_invalid_characters_username'] = 'Onjuiste letters/cijfers gebruikt in je gebruikersnaam.';
 
-$txt['welcome_guest'] = 'Welkom, <b>%1$s</b>. Alsjeblieft <a href="{$scripturl}?action=login">inloggen</a> of <a href="{$scripturl}?action=register">registreren</a>.';
-$txt['welcome_guest_activate'] = '<br />De <a href="{$scripturl}?action=activate">activerings e-mail</a> gemist?';
+$txt['welcome_guest'] = 'Welkom, <b>%1$s</b>. Alsjeblieft <a href="' . $scripturl . '?action=login">inloggen</a> of <a href="' . $scripturl . '?action=register">registreren</a>.';
+$txt['welcome_guest_activate'] = '<br />De <a href="' . $scripturl . '?action=activate">activerings e-mail</a> gemist?';
 $txt['hello_member'] = 'Hoi,';
 // Use numeric entities in the below string.
 $txt['hello_guest'] = 'Welkom,';
@@ -347,7 +343,7 @@ $txt[1005] = 'SMF heeft een fout in je database gedetecteerd en automatisch gepr
 $txt['database_error_versions'] = '<b>Let op:</b> Het ziet er naar uit dat je database geupgrade zou moeten worden. De versie van je forumbestanden is momenteel %s, terwijl je database op dit moment nog staat op versie SMF %s. Het is aan te bevelen om de laatste versie van upgrade.php uit te voeren.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'Het lijkt erop dat er iets verkeerd gegaan is op het forum met het template systeem. Dit probleeem zou alleen tijdelijk moeten zijn, kom later terug en probeer het opnieuw. Als je dit probleem blijft krijgen, neem dan contact op met de administrator.<br /><br />Je kunt ook proberen om <a href="javascript:location.reload();">deze pagina te verversen</a>.';
-$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="{$boardurl}%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="{$scripturl}?theme=1">use the default theme</a>.';
+$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
 
 $txt['smf10'] = '<b>Vandaag</b> om ';
 $txt['smf10b'] = '<b>Gisteren</b> om ';
@@ -544,7 +540,7 @@ $txt['notification_disable_topic'] = 'Weet je zeker dat je notificatie van nieuw
 $txt['rtm1'] = 'Meld dit bericht aan de moderator';
 
 $txt['unread_topics_visit'] = 'Recente ongelezen topics';
-$txt['unread_topics_visit_none'] = 'Geen ongelezen topics gevonden sinds je laatste bezoek <a href="{$scripturl}?action=unread;all">Klik hier om alle ongelezen berichten te tonen</a>.';
+$txt['unread_topics_visit_none'] = 'Geen ongelezen topics gevonden sinds je laatste bezoek <a href="' . $scripturl . '?action=unread;all">Klik hier om alle ongelezen berichten te tonen</a>.';
 $txt['unread_topics_all'] = 'Alle ongelezen berichten';
 $txt['unread_replies'] = 'Ongelezen berichten';
 

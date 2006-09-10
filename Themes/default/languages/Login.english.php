@@ -34,13 +34,13 @@ $txt['register_age_confirmation'] = 'I am at least %d years old';
 $txt['register_subject'] = 'Welcome to ' . $context['forum_name'];
 
 // For the below three messages, %1$s is the display name, %2$s is the username, %3$s is the password, %4$s is the activation code, and %5$s is the activation link (the last two are only for activation.)
-$txt['register_immediate_message'] = 'You are now registered with an account at {$forumname}, %1$s!\\n\\nYour account\'s username is %2$s and its password is %3$s.\\n\\nYou may change your password after you login by going to your profile, or by visiting this page after you login:\\n\\n{$scripturl}?action=profile\\n\\n{$regards}';
-$txt['register_activate_message'] = 'You are now registered with an account at {$forumname}, %1$s!\\n\\nYour account\'s username is %2$s and its password is %3$s (which can be changed later.)\\n\\nBefore you can login, you first need to activate your account. To do so, please follow this link:\\n\\n%5$s\\n\\nShould you have any problems with activation, please use the code "%4$s".\\n\\n{$regards}';
-$txt['register_pending_message'] = 'Your registration request at {$forumname} has been received, %1$s.\\n\\nThe username you registered with was %2$s and the password was %3$s.\\n\\nBefore you can login and start using the forum, your request will be reviewed and approved.  When this happens, you will receive another email from this address.\\n\\n{$regards}';
+$txt['register_immediate_message'] = 'You are now registered with an account at ' . $context['forum_name'] . ', %1$s!\\n\\nYour account\'s username is %2$s and its password is %3$s.\\n\\nYou may change your password after you login by going to your profile, or by visiting this page after you login:\\n\\n' . $scripturl . '?action=profile\\n\\n' . $txt['regards_team'];
+$txt['register_activate_message'] = 'You are now registered with an account at ' . $context['forum_name'] . ', %1$s!\\n\\nYour account\'s username is %2$s and its password is %3$s (which can be changed later.)\\n\\nBefore you can login, you first need to activate your account. To do so, please follow this link:\\n\\n%5$s\\n\\nShould you have any problems with activation, please use the code "%4$s".\\n\\n' . $txt['regards_team'];
+$txt['register_pending_message'] = 'Your registration request at ' . $context['forum_name'] . ' has been received, %1$s.\\n\\nThe username you registered with was %2$s and the password was %3$s.\\n\\nBefore you can login and start using the forum, your request will be reviewed and approved.  When this happens, you will receive another email from this address.\\n\\n' . $txt['regards_team'];
 
 // For the below two messages, %1$s is the user's display name, %2$s is their username, %3$s is the activation code, and %4$s is the activation link (the last two are only for activation.)
-$txt['resend_activate_message'] = 'You are now registered with an account at {$forumname}, %1$s!\\n\\nYour username is "%2$s".\\n\\nBefore you can login, you first need to activate your account. To do so, please follow this link:\\n\\n%4$s\\n\\nShould you have any problems with activation, please use the code "%3$s".\\n\\n{$regards}';
-$txt['resend_pending_message'] = 'Your registration request at {$forumname} has been received, %1$s.\\n\\nThe username you registered with was %2$s.\\n\\nBefore you can login and start using the forum, your request will be reviewed and approved.  When this happens, you will receive another email from this address.\\n\\n{$regards}';
+$txt['resend_activate_message'] = 'You are now registered with an account at ' . $context['forum_name'] . ', %1$s!\\n\\nYour username is "%2$s".\\n\\nBefore you can login, you first need to activate your account. To do so, please follow this link:\\n\\n%4$s\\n\\nShould you have any problems with activation, please use the code "%3$s".\\n\\n' . $txt['regards_team'];
+$txt['resend_pending_message'] = 'Your registration request at ' . $context['forum_name'] . ' has been received, %1$s.\\n\\nThe username you registered with was %2$s.\\n\\nBefore you can login and start using the forum, your request will be reviewed and approved.  When this happens, you will receive another email from this address.\\n\\n' . $txt['regards_team'];
 
 $txt['ban_register_prohibited'] = 'Sorry, you are not allowed to register on this forum.';
 $txt['under_age_registration_prohibited'] = 'Sorry, but users under the age of %d are not allowed to register on this forum.';
@@ -131,7 +131,7 @@ $txt['admin_notify_profile'] = '%s has just signed up as a new member of your fo
 $txt['admin_notify_approval'] = 'Before this member can begin posting they must first have their account approved. Click the link below to go to the approval screen.';
 
 $txt['coppa_title'] = 'Age Restricted Forum';
-$txt['coppa_after_registration'] = 'Thank you for registering with {$forumname}.<br /><br />Because you fall under the age of {MINIMUM_AGE}, it is a legal requirement
+$txt['coppa_after_registration'] = 'Thank you for registering with ' . $context['forum_name'] . '.<br /><br />Because you fall under the age of {MINIMUM_AGE}, it is a legal requirement
 	to obtain your parent or guardian\'s permission before you may begin to use your account.  To arrange for account activation please print off the form below:';
 $txt['coppa_form_link_popup'] = 'Load Form In New Window';
 $txt['coppa_form_link_download'] = 'Download Form as Text File';
@@ -144,7 +144,7 @@ $txt['coppa_send_by_phone'] = 'Alternatively, arrange for them to phone the admi
 $txt['coppa_form_title'] = 'Permission form for registration at ' . $context['forum_name'];
 $txt['coppa_form_address'] = 'Address';
 $txt['coppa_form_date'] = 'Date';
-$txt['coppa_form_body'] = 'I {PARENT_NAME},<br /><br />Give permission for {CHILD_NAME} (child name) to become a fully registered member of the forum: {$forumname}, with the username: {USER_NAME}.<br /><br />I understand that certain personal information entered by {USER_NAME} may be shown to other users of the forum.<br /><br />Signed:<br />{PARENT_NAME} (Parent/Guardian).';
+$txt['coppa_form_body'] = 'I {PARENT_NAME},<br /><br />Give permission for {CHILD_NAME} (child name) to become a fully registered member of the forum: ' . $context['forum_name'] . ', with the username: {USER_NAME}.<br /><br />I understand that certain personal information entered by {USER_NAME} may be shown to other users of the forum.<br /><br />Signed:<br />{PARENT_NAME} (Parent/Guardian).';
 
 $txt['visual_verification_label'] = 'Visual verification';
 $txt['visual_verification_description'] = 'Type the letters shown in the picture';

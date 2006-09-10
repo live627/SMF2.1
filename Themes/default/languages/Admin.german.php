@@ -47,7 +47,7 @@ $txt[571] = 'Credits';
 $txt[584] = 'Nutzungsbedingungen anzeigen und bei Registrierung Zustimmung verlangen?';
 $txt[608] = 'Ausgew&auml;hlte Mitglieder l&ouml;schen';
 $txt[610] = 'Alle Boards und Themen reparieren';
-$txt[644] = 'Das ist Ihr \'%1$s\'. Hier k&ouml;nnen Sie die Einstellungen &auml;ndern, das Forum warten, Protokolle anschauen, Pakete installieren, die Themes verwalten und viele weitere Optionen ver&auml;ndern.<br /><br />Sollten Sie Probleme haben, lesen Sie bitte den Abschnitt "Allgemeiner Support &amp; Fehler" im Bereich Support &amp; Credits. Bitte klicken Sie auch das <img src="{$imagesurl}/helptopics.gif" alt="%2$s" title="%3$s" border="0" /> Symbol an, um eine Beschreibung der Funktion zu erhalten. Sollten diese Informationen nicht helfen, k&ouml;nnen Sie auch im <a href="http://www.simplemachines.org/community/index.php" target="_blank">Support Forum</a> nach Hilfe fragen.';
+$txt[644] = 'Das ist Ihr \'%1$s\'. Hier k&ouml;nnen Sie die Einstellungen &auml;ndern, das Forum warten, Protokolle anschauen, Pakete installieren, die Themes verwalten und viele weitere Optionen ver&auml;ndern.<br /><br />Sollten Sie Probleme haben, lesen Sie bitte den Abschnitt "Allgemeiner Support &amp; Fehler" im Bereich Support &amp; Credits. Bitte klicken Sie auch das <img src="' . $settings['images_url'] . '/helptopics.gif" alt="%2$s" title="%3$s" border="0" /> Symbol an, um eine Beschreibung der Funktion zu erhalten. Sollten diese Informationen nicht helfen, k&ouml;nnen Sie auch im <a href="http://www.simplemachines.org/community/index.php" target="_blank">Support Forum</a> nach Hilfe fragen.';
 $txt[670] = 'Hier k&ouml;nnen Sie News-Meldungen hinzuf&uuml;gen oder l&ouml;schen. Bitte schreiben Sie eine News-Meldung pro Textfeld. BBC Tags wie [b], [i] und [u] sind erlaubt, ebenso Smileys und HTML Code. L&ouml;schen Sie den Text eines Textfeldes um die Meldung zu entfernen oder benutzen Sie die betreffende Checkbox in Verbindung mit dem rechten Button.';
 $txt[684] = 'Administratoren';
 $txt[699] = 'Reservierte Namen hindern Benutzer daran, sich unter diesem Namen anzumelden oder ihn im angezeigten Namen zu verwenden. W&auml;hlen Sie die ben&ouml;tigten Optionen vor dem Speichern.';
@@ -136,7 +136,7 @@ $txt['security_wrong'] = 'Administrator Login Versuch!\\nReferer: %1$s\\nUser ag
 
 $txt['email_as_html'] = 'Sendet E-Mail im HTML Format (HTML Code in der E-Mail m&ouml;glich)';
 $txt['email_parsed_html'] = 'F&uuml;gt &lt;br /&gt; und &amp;nbsp; in die Nachricht ein';
-$txt['email_variables'] = 'In dieser Mitteilung k&ouml;nnen Sie &quot;Variablen&quot; benutzen. Klicken Sie <a href="{$scripturl}?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> f&uuml;r mehr Informationen.';
+$txt['email_variables'] = 'In dieser Mitteilung k&ouml;nnen Sie &quot;Variablen&quot; benutzen. Klicken Sie <a href="' . $scripturl . '?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> f&uuml;r mehr Informationen.';
 $txt['email_force'] = 'Sendet die Nachricht auch zu Benutzern, welche das Empfangen von Ank&uuml;ndigungen deaktiviert haben.';
 $txt['email_as_pms'] = 'Sendet die Nachricht als Private Mitteilung zu den ausgew&auml;hlten Benutzern.';
 $txt['email_continue'] = 'Weiter';

@@ -1970,7 +1970,7 @@ function template_notification()
 								', $topic['link'];
 
 			if ($topic['new'])
-				echo ' <a href="', $topic['new_href'], '"><img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new.gif" alt="', $txt[302], '" /></a>';
+				echo ' <a href="', $topic['new_href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt[302], '" /></a>';
 
 			echo '<br />
 								<span class="smalltext"><i>' . $txt['smf88'] . ' ' . $topic['board']['link'] . '</i></span>
@@ -2033,7 +2033,7 @@ function template_notification()
 							<td class="windowbg" valign="middle" width="48%">', $board['link'];
 
 		if ($board['new'])
-			echo ' <a href="', $board['href'], '"><img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new.gif" alt="', $txt[302], '" /></a>';
+			echo ' <a href="', $board['href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt[302], '" /></a>';
 
 		echo '</td>
 							<td class="windowbg2" valign="middle" width="5%">

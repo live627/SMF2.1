@@ -1638,7 +1638,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		{
 			sendmail($row['emailAddress'], sprintf($txt[$current_type['subject']], $topicData[$row['ID_TOPIC']]['subject']),
 				$message . "\n\n" .
-				sprintf($txt['regards_team'], $context['forum_name']), null, 'm' . $topicData[$row['ID_TOPIC']]['last_id']);
+				$txt['regards_team'], null, 'm' . $topicData[$row['ID_TOPIC']]['last_id']);
 			$sent++;
 		}
 	}

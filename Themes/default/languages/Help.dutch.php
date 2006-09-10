@@ -312,7 +312,7 @@ $helptxt['enableEmbeddedFlash'] = 'Deze optie zorgt ervoor dat je gebruikers fla
 	mogelijk een beveiligingsrisico zijn, hoewel slechts weinig mensen het
 	succesvol hebben misbruikt. GEBRUIK OP EIGEN RISICO!';
 $helptxt['xmlnews_enable'] = 'Zorgt ervoor dat mensen kunnen verwijzen naar
-	<a href="{$scripturl}?action=.xml;sa=news">Actuele berichten</a> en
+	<a href="%s?action=.xml;sa=news">Actuele berichten</a> en
 	gelijkwaardige gegevens.  Het is ook aan te bevelen dat je de grootte van
 	de (nieuws)berichten te beperken, omdat wanneer rss data bij sommige
 	clients zoals Trillian getoond wordt het te verwachten is dat het wordt
@@ -427,7 +427,7 @@ $helptxt['latest_packages'] = 'Hier kun je enkele populaire of willekeurige pack
 $helptxt['latest_themes'] = 'Hier zie je de laatste en meest populaire thema\'s van <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.  Het kan zijn dat het niet verschijnt als je pc geen verbinding kan maken met <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';
 
 $helptxt['secret_why_blank'] = 'Voor de veiligheid is het antwoord op je vraag (en ook je wachtwoord) ge-encrypt zodat alleen SMF kan bepalen of het antwoord juist is, het kan je dus niet aangeven (en ook niet iemand anders!) wat het antwoord of je wachtwoord is.';
-$helptxt['moderator_why_missing'] = 'Daar modereren gedaan wordt op basis van boards, dien je leden moderator te maken via de <a href="javascript:window.open(\'{$scripturl}?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
+$helptxt['moderator_why_missing'] = 'Daar modereren gedaan wordt op basis van boards, dien je leden moderator te maken via de <a href="javascript:window.open(\'%s?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
 
 $helptxt['permissions'] = 'Permissies geven aan welke groepen wel of niet bepaalde rechten in bepaalde boards hebben.<br /><br />Je kunt meerdere boards tegelijk bewerken of bij een specifieke groep kijken door te klikken op \'Bewerken.\'';
 $helptxt['permissions_board'] = 'Als een board is ingesteld op \'Globaal,\' houdt dit in dat het board geen speciale permissies heeft.  \'Lokaal\' houdt in dat het board specifieke permissies heeft - apart van de Globale permissies.  Op deze manier kun je boards hebben die meer of minder permissies hebben dan een ander board, zonder dit voor ieder board apart in te moeten stellen.';

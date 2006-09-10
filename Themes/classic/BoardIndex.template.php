@@ -175,13 +175,13 @@ function template_main()
 		echo '
 	<tr class="titlebg">
 		<td colspan="2" align="left">
-			<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new_some.gif" alt="' . $txt[333] . '" border="0" />&nbsp;&nbsp;<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new_none.gif" alt="' . $txt[334] . '" border="0" />
+			<img src="' . $settings['lang_images_url'] . '/new_some.gif" alt="' . $txt[333] . '" border="0" />&nbsp;&nbsp;<img src="' . $settings['lang_images_url'] . '/new_none.gif" alt="' . $txt[334] . '" border="0" />
 		</td>
 		<td colspan="3" align="right" class="smalltext">';
 		// Show the mark all as read button?
 		if ($settings['show_mark_read'])
 			echo '
-			<a href="', $scripturl, '?action=markasread;sa=all;sesc=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]), '</a>';
+			<a href="', $scripturl, '?action=markasread;sa=all;sesc=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]), '</a>';
 		echo '
 		</td>
 	</tr>';

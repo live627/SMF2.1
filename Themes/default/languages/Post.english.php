@@ -8,7 +8,7 @@ $txt[71] = 'Message icon';
 $txt[77] = 'The Subject field was not filled out. It is required.';
 $txt[78] = 'The Message Body was not filled out. It is required.';
 // Use numeric entities in the below string.
-$txt[130] = "Regards,\nThe " . '{$forumname} Team.';
+$txt[130] = "Regards,\nThe " . $context['forum_name'] . ' Team.';
 $txt[252] = 'Add BBC tags';
 $txt[253] = 'Bold';
 $txt[254] = 'Italicized';

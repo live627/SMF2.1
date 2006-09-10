@@ -254,7 +254,7 @@ $helptxt['enablePostHTML'] = 'Erlaubt das Benutzen von h&auml;ufigen HTML Befehl
 $helptxt['themes'] = 'Hier k&ouml;nnen Sie das Standard- bzw. Gäste-Theme w&auml;hlen sowie andere Optionen einstellen. Klicken Sie im rechten Rahmen auf ein Theme, um die Einstellungen daf&uuml;r zu &auml;ndern.';
 $helptxt['theme_install'] = 'Dies erlaubt Ihnen, neue Themes zu installieren. Sie k&ouml;nnen ein schon vorhandenes Verzeichniss nutzen, ein Zip-Paket hochladen oder das vorhandene Theme kopieren<br /><br />Beachten Sie, dass das Verzeichnis bzw. das Zip-Paket die Datei <tt>theme_info.xml</tt> enthalten muss.';
 $helptxt['enableEmbeddedFlash'] = 'Diese Option erlaubt es Benutzern, Flash in ihren Beitr&auml;gen zu nutzen (wie Bilder). Das kann ein Sicherheitsrisiko darstellen! BENUTZUNG AUF EIGENE GEFAHR!';
-$helptxt['xmlnews_enable'] = 'Erlaubt Benutzern zu den <a href="{$scripturl}?action=.xml;sa=news">Letzten Neuigkeiten</a> zu verlinken. Es wird empfohlen, die Gr&ouml;&szlig;e der Neuesten Beitr&auml;ge/News zu begrenzen, da es zu falschen Darstellungen in manchen Programmen wie Trillian kommen kann.';
+$helptxt['xmlnews_enable'] = 'Erlaubt Benutzern zu den <a href="%s?action=.xml;sa=news">Letzten Neuigkeiten</a> zu verlinken. Es wird empfohlen, die Gr&ouml;&szlig;e der Neuesten Beitr&auml;ge/News zu begrenzen, da es zu falschen Darstellungen in manchen Programmen wie Trillian kommen kann.';
 $helptxt['hotTopicPosts'] = '&Auml;ndert die Zahl der Beitr&auml;ge, nach denen ein Thema den Status &quot;hei&szlig;&quot; oder &quot;sehr hei&szlig;&quot; erh&auml;lt.';
 $helptxt['globalCookies'] = '
 	Erm&ouml;glicht die Nutzung von Subdomains unabh&auml;ngigen Cookies. Ein Beispiel:<br />
@@ -362,7 +362,7 @@ $helptxt['latest_packages'] = 'Hier k&ouml;nnen Sie ein paar der beliebtesten un
 $helptxt['latest_themes'] = 'Dieser Bereich zeigt die neuesten und beliebtesten Themes von<a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a> an. Sollte er nicht sichtbar sein, kann Ihr Copmuter wahrscheinlich nicht zu <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a> verbinden.';
 
 $helptxt['secret_why_blank'] = 'Zu Ihrer Sicherheit wird die Antwort (genauso wie Ihr Passwort) zu Ihrer Frage verschl&uuml;sselt, so dass SMF Ihnen nur sagen kann ob es richtig ist, jedoch nicht die Antwort oder das Passwort selbst nennen kann!';
-$helptxt['moderator_why_missing'] = 'Da die Moderatoren von Board zu Board ausgew&auml;hlt werden, m&uuml;ssen Sie diese im Bereich <a href="javascript:window.open(\'{$scripturl}?action=admin;area=manageboards\'); self.close();">Verwalte Boards</a> eintragen.';
+$helptxt['moderator_why_missing'] = 'Da die Moderatoren von Board zu Board ausgew&auml;hlt werden, m&uuml;ssen Sie diese im Bereich <a href="javascript:window.open(\'%s?action=admin;area=manageboards\'); self.close();">Verwalte Boards</a> eintragen.';
 
 $helptxt['permissions'] = 'Berechtigungen haben die Funktion, bestimmten Gruppen Aktionen zu erlauben oder zu verbieten<br /><br />Sie k&ouml;nnen mit Hilfe der Check-Boxen mehrere Boards gleichzeitig &auml;ndern oder die Berechtigungen einer bestimmten Gruppe &auml;ndern, in dem Sie auf \'&Auml;ndern\' klicken.';
 $helptxt['permissions_board'] = 'Wenn ein Board auf \'Global\' gesetzt ist, hat es keine speziellen Berechtigungen. \'Lokal\' dagegen hat eigene Berechtigungen, welche sich von anderen Boards unterscheiden und somit unterschiedliche Berechtigungen zwischen den Boards erlaubt.';

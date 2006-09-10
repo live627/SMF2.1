@@ -243,7 +243,7 @@ function template_main()
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new'] && $context['user']['is_logged'])
 					echo '
-							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['images_url'], '/', $context['user']['language'], '/new.gif" alt="', $txt[302], '" /></a>';
+							<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt[302], '" /></a>';
 
 			echo '
 							<small id="pages' . $topic['first_post']['id'] . '">', $topic['pages'], '</small>

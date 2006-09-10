@@ -136,7 +136,7 @@ $txt['security_wrong'] = 'Beheer-inlogpoging!\\nReferentie: %1$s\\nBrowser: %2$s
 
 $txt['email_as_html'] = 'Stuur in HTML-formaat (hiermee kun je HTML in de e-mail gebruiken).';
 $txt['email_parsed_html'] = 'Voeg &lt;br /&gt;s en &amp;nbsp;s toe aan dit bericht.';
-$txt['email_variables'] = 'In dit bericht kun je een aantal &quot;variabelen&quot; gebruiken. Klik <a href="{$scripturl}?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> voor meer informatie.';
+$txt['email_variables'] = 'In dit bericht kun je een aantal &quot;variabelen&quot; gebruiken. Klik <a href="' . $scripturl . '?action=helpadmin;help=emailmembers" onclick="return reqWin(this.href);" class="help">hier</a> voor meer informatie.';
 $txt['email_force'] = 'Stuur dit ook aan leden die ervoor gekozen hebben geen aankondigingen te ontvangen.';
 $txt['email_as_pms'] = 'Stuur dit aan deze groepen door middel van Persoonlijke Berichten.';
 $txt['email_continue'] = 'Ga verder';

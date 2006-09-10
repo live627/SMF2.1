@@ -8,7 +8,7 @@ $txt[71] = 'Icono del mensaje';
 $txt[77] = 'El campo Asunto no puede estar vac&iacute;o. Es requerido';
 $txt[78] = 'El campo Mensaje no puede estar vac&iacute;o.';
 // Use numeric entities in the below string.
-$txt[130] = "Saludos,\nEl equipo " . '{$forumname}.';
+$txt[130] = "Saludos,\nEl equipo " . $context['forum_name'] . '.';
 $txt[252] = 'Agregar tags BBC';
 $txt[253] = 'Negrita';
 $txt[254] = 'Cursiva';

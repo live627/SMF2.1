@@ -727,7 +727,7 @@ function template_main()
 			echo '
 							<tr class="catbg">
 								<td colspan="2" align="left" class="smalltext">
-									<div style="float: right;">', $txt[280], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
+									<div style="float: right;">', $txt[280], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
 									', $txt['posted_by'], ': ', $post['poster'], '
 								</td>
 							</tr><tr class="windowbg2">

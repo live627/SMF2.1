@@ -816,7 +816,7 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 // Formats a number to display in the style of the admin's choosing.
 function comma_format($number, $override_decimal_count = false)
 {
-	global $modSettings;
+	global $txt;
 	static $thousands_separator = null, $decimal_separator = null, $decimal_count = null;
 
 	// !!! Should, perhaps, this just be handled in the language files, and not a mod setting?
@@ -826,7 +826,7 @@ function comma_format($number, $override_decimal_count = false)
 	if ($decimal_separator === null)
 	{
 		// Not set for whatever reason?
-		if (empty($modSettings['number_format']) || preg_match('~^1([^\d]*)?234([^\d]*)(0*?)$~', $modSettings['number_format'], $matches) != 1)
+		if (empty($txt['number_format']) || preg_match('~^1([^\d]*)?234([^\d]*)(0*?)$~', $txt['number_format'], $matches) != 1)
 			return $number;
 
 		// Cache these each load...
@@ -3639,7 +3639,7 @@ function create_button($name, $alt, $label = '', $custom = '')
 	elseif (!empty($settings['use_buttons']))
 		return '<img src="' . $settings['images_url'] . '/buttons/' . $name . '" alt="' . $txt[$alt] . '" ' . $custom . ' />' . ($label != '' ? '<b>' . $txt[$label] . '</b>' : '');
 	else
-		return '<img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/' . $name . '" alt="' . $txt[$alt] . '" ' . $custom . ' />';
+		return '<img src="' . $settings['lang_images_url'] . '/' . $name . '" alt="' . $txt[$alt] . '" ' . $custom . ' />';
 }
 
 // Empty out the cache folder.

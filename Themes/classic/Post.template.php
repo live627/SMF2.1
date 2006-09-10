@@ -138,7 +138,7 @@ function template_main()
 				{
 					var newTable = \'<span id="new_replies"></span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
 					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt[280], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="', $settings['images_url'], '/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" border="0" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt[260], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
+						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt[280], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['preview_new'], '" border="0" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt[260], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
 					newTable += \'</table>\';
 					setOuterHTML(document.getElementById("new_replies"), newTable);
 				}
@@ -706,7 +706,7 @@ function template_main()
 									', $txt['posted_by'], ': ', $post['poster'], '
 								</td>
 								<td align="right" class="smalltext">
-									', $txt[280], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['images_url'] . '/' . $context['user']['language'] . '/new.gif" alt="' . $txt['preview_new'] . '" border="0" />' : '', '
+									', $txt[280], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" border="0" />' : '', '
 								</td>
 							</tr><tr class="windowbg2">
 								<td align="right" colspan="2" class="smalltext">

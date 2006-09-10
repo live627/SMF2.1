@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2496 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2497 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -37,7 +37,6 @@ September 2006
  ! Make the php version of SSI examples use the forum character set.  (ssi_examples.php)
  ! The daily digest was causing blank errors to occur.  (ScheduledTasks.php)
  & Renamed a heap load of language entries and removed a few legacy ones. (index, Admin language files, FixLanguage.php)
- + Language entries are now parsed before storing in the cache - updated language entries to support this. (Load.php, Several language files)
  ! Put the language file parsing code out of Load.php to keep it clean. (Load.php, ManageMaintenance.php)
  ! If the cache directory is not writable, put in a workaround. (ManageMaintenance.php)
  + Added a new tool, convert_languages.php, to enable theme and language authors to update their files to 2.0. (converter_languages.php)

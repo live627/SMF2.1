@@ -305,7 +305,7 @@ function template_manual_intro()
 		// To back support the classic theme we do a little hack here...
 		if (file_exists($settings['theme_dir'] . '/images/' . $context['user']['language'] . '/new_some.gif'))
 			echo '
-				<img src="', $settings['images_url'], '/', $context['user']['language'], '/new_some.gif" alt="', $txt['manual_index_new_posts'], '" border="0" />&nbsp;&nbsp;<img src="', $settings['images_url'], '/', $context['user']['language'], '/new_none.gif" alt="', $txt['manual_index_no_new'], '" border="0" />';
+				<img src="', $settings['lang_images_url'], '/new_some.gif" alt="', $txt['manual_index_new_posts'], '" border="0" />&nbsp;&nbsp;<img src="', $settings['lang_images_url'], '/new_none.gif" alt="', $txt['manual_index_no_new'], '" border="0" />';
 		else
 			echo '
 				<img src="', $settings['images_url'], '/new_some.gif" alt="" align="middle" />&nbsp; ', $txt['manual_index_new_posts'], '<img src="', $settings['images_url'], '/new_none.gif" alt="" align="middle" style="margin-left: 4ex;" />&nbsp; ', $txt['manual_index_no_new'];
@@ -409,7 +409,7 @@ function template_manual_intro()
 				<tr>
 					<td class="windowbg2" valign="middle" align="center" width="5%"><img src="', $settings['images_url'], '/topic/my_normal_poll.gif" alt="" /></td>
 					<td class="windowbg2" valign="middle" align="center" width="4%"><img src="', $settings['images_url'], '/post/xx.gif" alt="" align="middle" /></td>
-					<td class="windowbg" valign="middle"><a href="', $scripturl, '?action=help;page=index#topic" class="board">', $txt['manual_index_topic_subject'], '</a> <a href="', $scripturl, '?action=help;page=index#topic"><img id="message-new-or-not" src="', $settings['images_url'], '/', $context['user']['language'], '/new.gif" border="0" alt="', $txt['manual_index_new'], '" name="message-new-or-not" /></a></td>
+					<td class="windowbg" valign="middle"><a href="', $scripturl, '?action=help;page=index#topic" class="board">', $txt['manual_index_topic_subject'], '</a> <a href="', $scripturl, '?action=help;page=index#topic"><img id="message-new-or-not" src="', $settings['lang_images_url'], '/new.gif" border="0" alt="', $txt['manual_index_new'], '" name="message-new-or-not" /></a></td>
 					<td class="windowbg2" valign="middle" width="14%"><a href="', $scripturl, '?action=help;page=profile" class="board">', $txt['manual_index_topic_starter'], '</a></td>
 					<td class="windowbg" valign="middle" width="4%" align="center">0</td>
 					<td class="windowbg" valign="middle" width="4%" align="center">0</td>

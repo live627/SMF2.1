@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.german.php.
 
-$txt['smf3'] = 'Hier k&ouml;nnen Sie die Einstellungen von speziellen Funktionen des Forums &auml;ndern. F&uuml;r weitere Optionen schauen Sie bitte in den <a href="{$scripturl}?action=theme;sa=settings;th=%s;sesc=%s">Theme-Einstellungen</a> nach. <b>Klicken Sie auf die Hilfe-Symbole f&uuml;r weitere Informationen zu den Funktionen.</b>';
+$txt['smf3'] = 'Hier k&ouml;nnen Sie die Einstellungen von speziellen Funktionen des Forums &auml;ndern. F&uuml;r weitere Optionen schauen Sie bitte in den <a href="' . $scripturl . '?action=theme;sa=settings;th=%s;sesc=%s">Theme-Einstellungen</a> nach. <b>Klicken Sie auf die Hilfe-Symbole f&uuml;r weitere Informationen zu den Funktionen.</b>';
 
 $txt['mods_cat_features'] = 'Standard-Funktionen';
 $txt['pollMode'] = 'Umfrage Modus';
@@ -112,7 +112,7 @@ $txt['cache_memcached'] = 'MemCache-Einstellungen';
 // Untranslated!
 $txt['signature_settings'] = 'Signatures';
 $txt['signature_settings_desc'] = 'Use the settings on this page to decide how member signatures should be treated in SMF.';
-$txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="{$scripturl}?action=admin;area=featuresettings;sa=sig;apply">here</a> to apply rules to all existing signatures.';
+$txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="' . $scripturl . '?action=admin;area=featuresettings;sa=sig;apply">here</a> to apply rules to all existing signatures.';
 $txt['signature_enable'] = 'Enable signatures';
 $txt['signature_max_length'] = 'Max. Zeichen in Signaturen<div class="smalltext">(0 f&uuml;r kein Limit)</div>';
 // Untranslated!

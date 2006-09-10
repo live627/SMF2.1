@@ -506,7 +506,7 @@ function loadUserSettings()
 function loadBoard()
 {
 	global $txt, $db_prefix, $scripturl, $context, $modSettings;
-	global $board_info, $board, $topic, $ID_MEMBER, $user_info;
+	global $board_info, $board, $topic, $user_info;
 
 	// Assume they are not a moderator.
 	$user_info['is_mod'] = false;
@@ -661,7 +661,7 @@ function loadBoard()
 	if (!empty($board))
 	{
 		// Now check if the user is a moderator.
-		$user_info['is_mod'] = isset($board_info['moderators'][$ID_MEMBER]);
+		$user_info['is_mod'] = isset($board_info['moderators'][$user_info['id']]);
 
 		if (count(array_intersect($user_info['groups'], $board_info['groups'])) == 0 && !$user_info['is_admin'])
 			$board_info['error'] = 'access';
@@ -939,7 +939,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 function loadMemberContext($user)
 {
 	global $memberContext, $user_profile, $txt, $scripturl, $user_info;
-	global $context, $modSettings, $ID_MEMBER, $board_info, $settings;
+	global $context, $modSettings, $board_info, $settings;
 	global $db_prefix, $smfFunc;
 	static $dataLoaded = array();
 
@@ -995,13 +995,13 @@ function loadMemberContext($user)
 		'id' => &$profile['ID_MEMBER'],
 		'is_guest' => $profile['ID_MEMBER'] == 0,
 		'is_buddy' => $profile['buddy'],
-		'is_reverse_buddy' => in_array($ID_MEMBER, $buddy_list),
+		'is_reverse_buddy' => in_array($user_info['id'], $buddy_list),
 		'buddies' => $buddy_list,
 		'title' => !empty($modSettings['titlesEnable']) ? $profile['usertitle'] : '',
 		'href' => $scripturl . '?action=profile;u=' . $profile['ID_MEMBER'],
 		'link' => '<a href="' . $scripturl . '?action=profile;u=' . $profile['ID_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $profile['realName'] . '">' . $profile['realName'] . '</a>',
 		'email' => &$profile['emailAddress'],
-		'hide_email' => $profile['emailAddress'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($profile['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum') && $ID_MEMBER != $profile['ID_MEMBER']),
+		'hide_email' => $profile['emailAddress'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($profile['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum') && $user_info['id'] != $profile['ID_MEMBER']),
 		'email_public' => (empty($profile['hideEmail']) || empty($modSettings['allow_hideEmail'])) && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']),
 		'registered' => empty($profile['dateRegistered']) ? $txt[470] : timeformat($profile['dateRegistered']),
 		'registered_timestamp' => empty($profile['dateRegistered']) ? 0 : forum_time(true, $profile['dateRegistered']),
@@ -1054,7 +1054,7 @@ function loadMemberContext($user)
 		'karma' => array(
 			'good' => &$profile['karmaGood'],
 			'bad' => &$profile['karmaBad'],
-			'allow' => !$user_info['is_guest'] && $user_info['posts'] >= $modSettings['karmaMinPosts'] && allowedTo('karma_edit') && !empty($modSettings['karmaMode']) && $ID_MEMBER != $user
+			'allow' => !$user_info['is_guest'] && $user_info['posts'] >= $modSettings['karmaMinPosts'] && allowedTo('karma_edit') && !empty($modSettings['karmaMode']) && $user_info['id'] != $user
 		),
 		'ip' => htmlspecialchars($profile['memberIP']),
 		'online' => array(
@@ -1085,7 +1085,7 @@ function loadMemberContext($user)
 // Load a theme, by ID.
 function loadTheme($ID_THEME = 0, $initialize = true)
 {
-	global $ID_MEMBER, $user_info, $board_info, $sc;
+	global $user_info, $user_settings, $board_info, $sc;
 	global $db_prefix, $txt, $boardurl, $scripturl, $mbname, $modSettings;
 	global $context, $settings, $options, $sourcedir, $ssi_theme;
 
@@ -1129,7 +1129,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 	else
 		$ID_THEME = (int) $ID_THEME;
 
-	$member = empty($ID_MEMBER) ? -1 : $ID_MEMBER;
+	$member = empty($user_info['id']) ? -1 : $user_info['id'];
 
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2 && ($temp = cache_get_data('theme_settings-' . $ID_THEME . ':' . $member, 60)) != null)
 	{
@@ -1267,7 +1267,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 
 	// Set up the contextual user array.
 	$context['user'] = array(
-		'id' => &$ID_MEMBER,
+		'id' => &$user_info['id'],
 		'is_logged' => !$user_info['is_guest'],
 		'is_guest' => &$user_info['is_guest'],
 		'is_admin' => &$user_info['is_admin'],
@@ -1431,12 +1431,19 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 	// Initialize the theme.
 	loadSubTemplate('init', 'ignore');
 
+	// Allow overriding the board wide time/number formats.
+	if (empty($user_settings['timeFormat']) && !empty($txt['time_format']))
+		$user_info['time_format'] = $txt['time_format'];
+	$txt['number_format'] = empty($txt['number_format']) ? empty($modSettings['number_format']) ? '' : $modSettings['number_format'] : $txt['number_format'];
+
 	if (isset($settings['use_default_images']) && $settings['use_default_images'] == 'always')
 	{
 		$settings['theme_url'] = $settings['default_theme_url'];
 		$settings['images_url'] = $settings['default_images_url'];
 		$settings['theme_dir'] = $settings['default_theme_dir'];
 	}
+	// Make a special URL for the language.
+	$settings['lang_images_url'] = $settings['images_url'] . '/' . (!empty($txt['image_lang']) ? $txt['image_lang'] : $user_info['language']);
 
 	// Set the character set from the template.
 	$context['character_set'] = empty($modSettings['global_character_set']) ? $txt['lang_character_set'] : $modSettings['global_character_set'];

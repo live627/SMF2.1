@@ -6,14 +6,10 @@
 	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 	   the cache go to Admin => Maintenance => Clean Cache.
 
-	2) Unlike earlier versions of SMF the text in these files is not *pure* PHP. Variables are parsed out when cached
-	   to make understanding language entries easier. As such please follow the following rules:
+	2) Please also follow the following rules:
 
-		a) All individual variables need not be escaped and should be written as {$varname}. i.e. $scripturl => {$scripturl}
-		b) All array variables should have their index appended to the var name above with a dot.
-			e.g. $modSettings['memberCount'] => {$modSettings.memberCount}
-		c) All strings should use single quotes, not double quotes for enclosing the string.
-		d) As a result of (c) all newline characters (etc) need to be escaped. i.e. "\n" is now '\\n'.
+		a) All strings should use single quotes, not double quotes for enclosing the string.
+		b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
 
 */
 
@@ -172,8 +168,8 @@ $txt['female'] = 'Femenino';
 
 $txt['error_invalid_characters_username'] = 'Car&aacute;cter inv&aacute;lido en el nombre de usuario.';
 
-$txt['welcome_guest'] = 'Bienvenido(a), <b>%1$s</b>. Favor de <a href="{$scripturl}?action=login">ingresar</a> o <a href="{$scripturl}?action=register">registrarse</a>.';
-$txt['welcome_guest_activate'] = '<br />&iquest;Perdiste tu  <a href="{$scripturl}?action=activate">email de activaci&oacute;n?</a>';
+$txt['welcome_guest'] = 'Bienvenido(a), <b>%1$s</b>. Favor de <a href="' . $scripturl . '?action=login">ingresar</a> o <a href="' . $scripturl . '?action=register">registrarse</a>.';
+$txt['welcome_guest_activate'] = '<br />&iquest;Perdiste tu  <a href="' . $scripturl . '?action=activate">email de activaci&oacute;n?</a>';
 $txt['hello_member'] = 'Hola,';
 // Use numeric entities in the below string.
 $txt['hello_guest'] = 'Bienvenido(a),';
@@ -347,7 +343,7 @@ $txt[1005] = 'SMF ha detectado errores en la base de datos, y los ha tratado de 
 $txt['database_error_versions'] = '<b>Nota:</b> Parece que tu base de datos puede necesitar una actualizaci&oacute;n. La versi&oacute;n de los archivos de tu foro est&aacute;n en la versi&oacute;n %s, mientras que tu base de datos est&aacute; en la versi&oacute;n de SMF %s. Te recomendamos que ejecutes la &uacute;ltima versi&oacuten de upgrade.php.';
 $txt['template_parse_error'] = '&iexcl;Error al parsear el Template!';
 $txt['template_parse_error_message'] = 'Parece que algo se ha estropeado en el foro con el sistema de temas.  Este problema puede que solamente sea temporal, por favor, regresa en unos momentos e intentalo nuevamente.  Si continuas viendo este mensaje, por favor contacta al administrador.<br /><br />Puedes intentar <a href="javascript:location.reload();">actualizar esta p&aacute;gina</a>.';
-$txt['template_parse_error_details'] = 'Hubo un problema cargando el tema o archivo de idioma <tt><b>%1$s</b></tt>.  Por favor revisa la sintaxis e intenta nuevamente - recuerda, los ap&oacute;strofes (<tt>\'</tt>) por lo general deben tener una secuencia de escape con la diagonal invertida (<tt>\\</tt>).  Para ver informaci&#243;n especifica del error del sitio de PHP intenta <a href="{$boardurl}%1$s">acceder al archivo directamente</a>.<br /><br />Puedes intentar <a href="javascript:location.reload();">actualizar esta p&aacute;gina</a> o <a href="{$scripturl}?theme=1">usar el tema de default</a>.';
+$txt['template_parse_error_details'] = 'Hubo un problema cargando el tema o archivo de idioma <tt><b>%1$s</b></tt>.  Por favor revisa la sintaxis e intenta nuevamente - recuerda, los ap&oacute;strofes (<tt>\'</tt>) por lo general deben tener una secuencia de escape con la diagonal invertida (<tt>\\</tt>).  Para ver informaci&#243;n especifica del error del sitio de PHP intenta <a href="' . $boardurl . '%1$s">acceder al archivo directamente</a>.<br /><br />Puedes intentar <a href="javascript:location.reload();">actualizar esta p&aacute;gina</a> o <a href="' . $scripturl . '?theme=1">usar el tema de default</a>.';
 
 $txt['smf10'] = '<b>Hoy a las</b> ';
 $txt['smf10b'] = '<b>Ayer</b> a las ';
@@ -544,7 +540,7 @@ $txt['notification_disable_topic'] = '&iquest;Est&aacute;s seguro que deseas des
 $txt['rtm1'] = 'Reportar al moderador';
 
 $txt['unread_topics_visit'] = 'Nuevos temas no le&iacute;dos';
-$txt['unread_topics_visit_none'] = 'No se han encontrado temas no le&iacute;dos desde tu &uacute;ltima visita.  <a href="{$scripturl}?action=unread;all">Haz <i>click</i> aqu&iacute; para intentar todos los temas no le&iacute;dos</a>.';
+$txt['unread_topics_visit_none'] = 'No se han encontrado temas no le&iacute;dos desde tu &uacute;ltima visita.  <a href="' . $scripturl . '?action=unread;all">Haz <i>click</i> aqu&iacute; para intentar todos los temas no le&iacute;dos</a>.';
 $txt['unread_topics_all'] = 'Todos los temas no le&iacute;dos';
 $txt['unread_replies'] = 'Temas actualizados';
 

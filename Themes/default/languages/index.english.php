@@ -6,14 +6,10 @@
 	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 	   the cache go to Admin => Maintenance => Clean Cache.
 
-	2) Unlike earlier versions of SMF the text in these files is not *pure* PHP. Variables are parsed out when cached
-	   to make understanding language entries easier. As such please follow the following rules:
+	2) Please also follow the following rules:
 
-		a) All individual variables need not be escaped and should be written as {$varname}. i.e. $scripturl => {$scripturl}
-		b) All array variables should have their index appended to the var name above with a dot.
-			e.g. $modSettings['memberCount'] => {$modSettings.memberCount}
-		c) All strings should use single quotes, not double quotes for enclosing the string.
-		d) As a result of (c) all newline characters (etc) need to be escaped. i.e. "\n" is now '\\n'.
+		a) All strings should use single quotes, not double quotes for enclosing the string.
+		b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
 
 */
 
@@ -170,8 +166,8 @@ $txt['female'] = 'Female';
 
 $txt['error_invalid_characters_username'] = 'Invalid character used in Username.';
 
-$txt['welcome_guest'] = 'Welcome, <b>%1$s</b>. Please <a href="{$scripturl}?action=login">login</a> or <a href="{$scripturl}?action=register">register</a>.';
-$txt['welcome_guest_activate'] = '<br />Did you miss your <a href="{$scripturl}?action=activate">activation email?</a>';
+$txt['welcome_guest'] = 'Welcome, <b>%1$s</b>. Please <a href="' . $scripturl . '?action=login">login</a> or <a href="' . $scripturl . '?action=register">register</a>.';
+$txt['welcome_guest_activate'] = '<br />Did you miss your <a href="' . $scripturl . '?action=activate">activation email?</a>';
 $txt['hello_member'] = 'Hey,';
 // Use numeric entities in the below string.
 $txt['hello_guest'] = 'Welcome,';
@@ -344,7 +340,7 @@ $txt[1005] = 'SMF has detected and automatically tried to repair an error in you
 $txt['database_error_versions'] = '<b>Note:</b> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version %s, while your database is at version %s. The above error might possibly go away if you execute the latest version of upgrade.php.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'It seems something has gone sour on the forum with the template system.  This problem should only be temporary, so please come back later and try again.  If you continue to see this message, please contact the administrator.<br /><br />You can also try <a href="javascript:location.reload();">refreshing this page</a>.';
-$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="{$boardurl}%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="{$scripturl}?theme=1">use the default theme</a>.';
+$txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
 
 $txt['smf10'] = '<b>Today</b> at ';
 $txt['smf10b'] = '<b>Yesterday</b> at ';
@@ -537,7 +533,7 @@ $txt['notification_disable_topic'] = 'Are you sure you wish to disable notificat
 $txt['rtm1'] = 'Report to moderator';
 
 $txt['unread_topics_visit'] = 'Recent Unread Topics';
-$txt['unread_topics_visit_none'] = 'No unread topics found since your last visit.  <a href="{$scripturl}?action=unread;all">Click here to try all unread topics</a>.';
+$txt['unread_topics_visit_none'] = 'No unread topics found since your last visit.  <a href="' . $scripturl . '?action=unread;all">Click here to try all unread topics</a>.';
 $txt['unread_topics_all'] = 'All Unread Topics';
 $txt['unread_replies'] = 'Updated Topics';
 

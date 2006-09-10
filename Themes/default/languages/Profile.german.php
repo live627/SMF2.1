@@ -66,7 +66,7 @@ $txt['pswd3'] = 'Stellen Sie mir meine geheime Frage';
 $txt['pswd4'] = 'Sie k&ouml;nnen Ihr Passwort nicht abfragen aber Sie k&ouml;nnen ein neues festlegen, wenn Sie dem Link folgen, welcher Ihnen per E-Mail zugesendet werden kann. Sie haben auch die M&ouml;glichkeit, Ihre geheime Frage zu beantworten und somit ein neues Passwort festzulegen.';
 $txt['pswd5'] = 'Sie haben keine g&uuml;ltige Kombination von Geheimfrage und -antwort im Benutzerprofil angegeben. Bitte klicken Sie auf den [Zur&uuml;ck] Button und benutzen Sie die Standardmethode, um Ihr Passwort zu erlangen.';
 $txt['pswd6'] = 'Bitte geben Sie die Antwort auf Ihre geheime Frage und das Passwort das Sie ben&uuml;tzen m&ouml;chten ein. Ihr Passwort wird auf die neue Eingabe ge&auml;ndert - vorausgesetzt, Sie beantworten die Frage richtig.';
-$txt['pswd8'] = 'Ihr Passwort wurde erfolgreich ge&auml;ndert.<br />Klicken Sie <a href="{$scripturl}?action=login">hier</a> zum Login.';
+$txt['pswd8'] = 'Ihr Passwort wurde erfolgreich ge&auml;ndert.<br />Klicken Sie <a href="' . $scripturl . '?action=login">hier</a> zum Login.';
 $txt['secret_why_blank'] = 'Warum ist dieses Feld leer?';
 
 $txt['theme1a'] = 'Aktuelles Theme';
