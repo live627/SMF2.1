@@ -481,7 +481,7 @@ $txt['attachment_manager_browse'] = 'Examinar archivos';
 $txt['attachment_manager_maintenance'] = 'Mantenimiento de Archivos';
 $txt['attachment_manager_save'] = 'Guardar';
 
-$txt['attachmentEnable'] = 'Modo Archivos adjuntos';
+$txt['attachment_manager_settings'] = 'Modo Archivos adjuntos';
 $txt['attachmentEnable_deactivate'] = 'Desactivar Archivos adjuntos';
 $txt['attachmentEnable_enable_all'] = 'Activar todos los Archivos adjuntos';
 $txt['attachmentEnable_disable_new'] = 'Desactivar nuevos Archivos adjuntos';
@@ -510,7 +510,7 @@ $txt['option_html_resize'] = 'Permitirle al HTML ajustarle el tama&ntilde;o';
 // Untranslated!
 $txt['option_js_resize'] = 'Resize it with JavaScript';
 $txt['option_download_and_resize'] = 'Descargarlo y ajustarle el tama&ntilde;o (se necesita del m&oacute;dulo GD)';
-$txt['avatar_allow_upload'] = 'Permitirle a los usuarios subir sus propios avatares';
+$txt['avatar_upload'] = 'Permitirle a los usuarios subir sus propios avatares';
 $txt['avatar_max_width_upload'] = 'Ancho m&aacute;ximo de avatar subido';
 $txt['avatar_max_height_upload'] = 'Alto m&aacute;ximo de avatar subido';
 $txt['avatar_resize_upload'] = 'Ajustarle el tama&ntilde;o a los avatares muy grandes';

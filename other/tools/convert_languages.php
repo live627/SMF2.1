@@ -167,14 +167,10 @@ function doStep1()
 		   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 		   the cache go to Admin => Maintenance => Clean Cache.
 	
-		2) Unlike earlier versions of SMF the text in these files is not *pure* PHP. Variables are parsed out when cached
-		   to make understanding language entries easier. As such please follow the following rules:
+		2) Please also follow the following rules:
 	
-			a) All individual variables need not be escaped and should be written as {$varname}. i.e. $scripturl => {$scripturl}
-			b) All array variables should have their index appended to the var name above with a dot.
-				e.g. $modSettings[\'memberCount\'] => {$modSettings.memberCount}
-			c) All strings should use single quotes, not double quotes for enclosing the string.
-			d) As a result of (c) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
+			a) All strings should use single quotes, not double quotes for enclosing the string.
+			b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
 	
 	*/';
 					$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$1$long_warning\n\n", $fileContents);
@@ -209,38 +205,18 @@ function doStep1()
 					$fileContents = preg_replace('~\' \. \'~', '', $fileContents);
 					$needs_edit = true;
 				}
-				// Scripturl?
-				if ($type != 'Install' && preg_match('~\' \. \$scripturl \. \'~', $fileContents))
+				// Scripturl/Boardurl?
+				if ($type != 'Install' && $type != 'Help' && preg_match('~\$(scripturl|boardurl)~', $fileContents, $match))
 				{
-					$fileContents = preg_replace('~\' \. \$scripturl \. \'~', '{$scripturl}', $fileContents);
-					$needs_edit = true;
+					$fileContents = preg_replace('~\$(scripturl|boardurl)~', "#$1", $fileContents);
 				}
-				// Boardurl?
-				if ($type != 'Install' && preg_match('~\' \. \$boardurl \. \'~', $fileContents))
+				// Forumname/images/regards?
+				if ($type != 'Install' && $type != 'Help' && preg_match('~\$(context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\]~', $fileContents, $match))
 				{
-					$fileContents = preg_replace('~\' \. \$boardurl \. \'~', '{$boardurl}', $fileContents);
-					$needs_edit = true;
-				}
-				// Forum name?
-				if ($type != 'Install' && preg_match('~\' \. \$context\[\'forum_name\'\] \. \'~', $fileContents))
-				{
-					$fileContents = preg_replace('~\' \. \$context\[\'forum_name\'\] \. \'~', '{$forumname}', $fileContents);
-					$needs_edit = true;
-				}
-				// Imagesurl?
-				if ($type != 'Install' && preg_match('~\' \. \$settings\[\'images_url\'\] \. \'~', $fileContents))
-				{
-					$fileContents = preg_replace('~\' \. \$settings\[\'images_url\'\] \. \'~', '{$imagesurl}', $fileContents);
-					$needs_edit = true;
-				}
-				// Regards?
-				if ($type != 'Install' && preg_match('~\' \. \$txt\[130\]~', $fileContents))
-				{
-					$fileContents = preg_replace('~\' \. \$txt\[130\]~', '{$regards}\'', $fileContents);
-					$needs_edit = true;
+					$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\])~', "#$1", $fileContents);
 				}
 				// Remove variables.
-				if ($type != 'Install' && preg_match('~\' \. \$(\w*) \. \'~', $fileContents))
+				if ($type != 'Install' && preg_match('~\' \. \$(\w*) \. \'~', $fileContents, $match))
 				{
 					$fileContents = preg_replace('~\' \. \$(\w*) \. \'~', "%s", $fileContents);
 					$needs_edit = true;
@@ -262,6 +238,11 @@ function doStep1()
 				{
 					$fileContents = preg_replace('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "'%s", $fileContents);
 					$needs_edit = true;
+				}
+				// Put back in any variables.
+				if ($type != 'Install' && $type != 'Help' && preg_match('~#(context|settings|txt|boardurl|scripturl)~', $fileContents, $match))
+				{
+					$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$1", $fileContents);
 				}
 	
 				if ($needs_edit)
@@ -324,27 +305,14 @@ function doStep2()
 				// Load the file.
 				$fileContents = implode('', file($langdir . '/' . $entry));
 	
-				if (isset($txtChanges[$name]))
-				{
-					foreach ($txtChanges[$name] as $find => $replace)
+				foreach ($txtChanges as $type => $set)
+					foreach ($txtChanges[$type] as $find => $replace)
 					{
 						// Normal entries.
 						if (is_integer($find))
 							$find2 = '$txt[' . $find . ']';
 						else
 							$find2 = '$txt[\'' . $find . '\']';
-						if (strpos($fileContents, $find2) !== false)
-						{
-							$files[$entry]['need_replacing']++;
-							$needsRunning = true;
-						}
-					}
-				}
-				// Also checked for parsed entries.
-				foreach ($txtChanges as $type => $set)
-					foreach ($txtChanges[$type] as $find => $replace)
-					{
-						$find2 = '{$txt.' . $find . '}';
 						if (strpos($fileContents, $find2) !== false)
 						{
 							$files[$entry]['need_replacing']++;
@@ -407,12 +375,11 @@ function doStep3()
 	
 				// Load the file.
 				$fileContents = implode('', file($langdir . '/' . $entry));
-	
-				if (!empty($txtChanges[$name]))
-				{
-					$findArray = array();
-					$replaceArray = array();
-					foreach ($txtChanges[$name] as $find => $replace)
+
+				$findArray = array();
+				$replaceArray = array();	
+				foreach ($txtChanges as $type => $set)
+					foreach ($txtChanges[$type] as $find => $replace)
 					{
 						$find2 = is_integer($find) ? '$txt[' . $find . ']' : '$txt[\'' . $find . '\']';
 	
@@ -425,26 +392,14 @@ function doStep3()
 								$replaceArray[] = '$txt[\'' . $replace . '\']';
 						}
 					}
-					// Also do parsed bits.
-					foreach ($txtChanges as $type => $set)
-						foreach ($txtChanges[$type] as $find => $replace)
-						{
-							$find2 = '{$txt.' . $find . '}';
-							if (strpos($fileContents, $find2) !== false)
-							{
-								$findArray[] = $find2;
-								$replaceArray[] = '{$txt.' . $replace . '}';
-							}
-						}
+
+				if (!empty($findArray))
+				{
 					$fileContents = str_replace($findArray, $replaceArray, $fileContents);
 	
-					// Write the changes.
-					if (!empty($findArray))
-					{
-						$fp = fopen($langdir . '/' . $entry, 'w');
-						fwrite($fp, $fileContents);
-						fclose($fp);
-					}
+					$fp = fopen($langdir . '/' . $entry, 'w');
+					fwrite($fp, $fileContents);
+					fclose($fp);
 				}
 			}
 		}

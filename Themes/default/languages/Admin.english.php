@@ -455,7 +455,7 @@ $txt['attachment_manager_browse'] = 'Browse files';
 $txt['attachment_manager_maintenance'] = 'File maintenance';
 $txt['attachment_manager_save'] = 'Save';
 
-$txt['attachmentEnable'] = 'Attachments mode';
+$txt['attachment_manager_settings'] = 'Attachments mode';
 $txt['attachmentEnable_deactivate'] = 'Disable attachments';
 $txt['attachmentEnable_enable_all'] = 'Enable all attachments';
 $txt['attachmentEnable_disable_new'] = 'Disable new attachments';

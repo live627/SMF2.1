@@ -8,7 +8,7 @@ $txt[71] = 'Symbol';
 $txt[77] = 'Betreff wurde nicht angegeben (erforderlich).';
 $txt[78] = 'Textfeld wurde nicht ausgef&uuml;llt (erforderlich).';
 // Use numeric entities in the below string.
-$txt[130] = "Mit freundlichen Gr&#252;&#223;en,\ndas " . $context['forum_name'] . ' Team.';
+$txt['regards_team'] = "Mit freundlichen Gr&#252;&#223;en,\ndas " . $context['forum_name'] . ' Team.';
 $txt[252] = 'BBC Tags hinzuf&uuml;gen';
 $txt[253] = 'Fett';
 $txt[254] = 'Kursiv';

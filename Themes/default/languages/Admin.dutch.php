@@ -466,7 +466,7 @@ $txt['attachment_manager_browse'] = 'Bekijk bestanden';
 $txt['attachment_manager_maintenance'] = 'Bestandsonderhoud';
 $txt['attachment_manager_save'] = 'Opslaan';
 
-$txt['attachmentEnable'] = 'Bijlagemodus';
+$txt['attachment_manager_settings'] = 'Bijlagemodus';
 $txt['attachmentEnable_deactivate'] = 'Deactiveer bijlagen';
 $txt['attachmentEnable_enable_all'] = 'Activeer alle bijlagen';
 $txt['attachmentEnable_disable_new'] = 'Deactiveer nieuwe bijlagen';

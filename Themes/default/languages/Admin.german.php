@@ -465,7 +465,7 @@ $txt['attachment_manager_browse'] = 'Dateien durchsuchen';
 $txt['attachment_manager_maintenance'] = 'Dateien warten';
 $txt['attachment_manager_save'] = 'Speichern';
 
-$txt['attachmentEnable'] = 'Einstellungen f&uuml;r Dateianh&auml;nge';
+$txt['attachment_manager_settings'] = 'Einstellungen f&uuml;r Dateianh&auml;nge';
 $txt['attachmentEnable_deactivate'] = 'Dateianh&auml;nge deaktivieren';
 $txt['attachmentEnable_enable_all'] = 'Alle Dateianh&auml;nge aktivieren';
 $txt['attachmentEnable_disable_new'] = 'Neue Dateanh&auml;nge deaktivieren';
