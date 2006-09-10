@@ -1056,6 +1056,9 @@ function scheduled_birthdayemails()
 		}
 	}
 
+	// Flush the mail queue, just in case.
+	AddMailQueue(true);
+
 	return true;
 }
 ?>
