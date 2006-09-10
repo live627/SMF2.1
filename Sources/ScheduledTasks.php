@@ -970,10 +970,10 @@ function scheduled_fetchSMfiles()
 	
 	mysql_free_result($request);
 
-	// We're gonna need fetch_web_data() to pull this off
+	// We're gonna need fetch_web_data() to pull this off.
 	require_once($sourcedir . '/Subs-Package.php');
 
-	// Just in case we run into a problem
+	// Just in case we run into a problem.
 	loadEssentialThemeData();
 	loadLanguage('Errors', $language);
 	
@@ -993,7 +993,7 @@ function scheduled_fetchSMfiles()
 			continue;
 		}
 
-		// Save the file to the database
+		// Save the file to the database.
 		db_query("
 			UPDATE {$db_prefix}admin_info_files
 			SET data = SUBSTRING('" . addslashes($file_data) . "', 1, 65534)
@@ -1003,4 +1003,59 @@ function scheduled_fetchSMfiles()
 	return true;
 }
 
+function scheduled_birthdayemails()
+{
+	global $db_prefix, $modSettings, $sourcedir, $mbname, $txt;
+
+	// Need this in order to load the language files.
+	loadEssentialThemeData();
+
+	// Going to need this to send the emails.
+	require_once($sourcedir . '/Subs-Post.php');
+
+	// Get the month and day of today.
+	$month = date('n'); // Month without leading zeros.
+	$day = date('j'); // Day without leading zeros.
+
+	// So who are the lucky ones?  Don't include those who don't want them.
+	$result = db_query("
+		SELECT ID_MEMBER, realName, lngfile, emailAddress
+		FROM {$db_prefix}members
+		WHERE MONTH(birthdate) = $month
+			AND DAY(birthdate) = $day
+			AND notifyAnnouncements = 1", __FILE__, __LINE__);
+
+	// Group them by languages.
+	$birthdays = array();
+	while ($row = mysql_fetch_assoc($result))
+	{
+		if (!isset($birthdays[$row['lngfile']]))
+			$birthdays[$row['lngfile']] = array();
+		$birthdays[$row['lngfile']][$row['ID_MEMBER']] = array(
+			'name' => $row['realName'],
+			'email' => $row['emailAddress']
+		);
+	}
+	mysql_free_result($result);
+
+	// Send out the greetings!
+	foreach($birthdays AS $lang)
+	{
+		// Why the PM language file?  Um because the birthday message is personal?
+		loadLanguage('PersonalMessage', $lang);
+
+		foreach($lang AS $recp)
+		{
+			sendmail($recp['email'], sprintf($txt['birthday_email_subject'], $mbname, $recp['name']), sprintf($txt['birthday_email'], $mbname, $recp['name']));
+
+			// Try to stop a timeout, this would be bad...
+			@set_time_limit(300);
+			if (function_exists('apache_reset_timeout'))
+				apache_reset_timeout();
+
+		}
+	}
+
+	return true;
+}
 ?>

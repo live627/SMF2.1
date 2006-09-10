@@ -494,14 +494,15 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}scheduled_tasks (
 
 ---# Populating Scheduled Task Table...
 INSERT IGNORE INTO {$db_prefix}scheduled_tasks
-	(ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit, disabled, task)
+	(nextTime, timeOffset, timeRegularity, timeUnit, disabled, task)
 VALUES
-	(1, 0, 0, 2, 'h', 0, 'approval_notification'),
-	(2, 0, 0, 7, 'd', 0, 'auto_optimize'),
-	(3, 0, 0, 12, 'h', 0, 'clean_cache'),
-	(5, 0, 0, 1, 'd', 0, 'daily_digest'),
-	(6, 0, 0, 1, 'w', 0, 'weekly_digest'),
-	(7, 0, 0, 1, 'd', 0, 'fetchSMfiles');
+	(0, 0, 2, 'h', 0, 'approval_notification'),
+	(0, 0, 7, 'd', 0, 'auto_optimize'),
+	(0, 0, 12, 'h', 0, 'clean_cache'),
+	(0, 0, 1, 'd', 0, 'daily_digest'),
+	(0, 0, 1, 'w', 0, 'weekly_digest'),
+	(0, 0, 1, 'd', 0, 'fetchSMfiles'),
+	(0, -55800, 1, 'd', 1, 'birthdayemails');
 ---#
 
 ---# Moving auto optimise settings to scheduled task...

@@ -1368,16 +1368,17 @@ function template_view_scheduled_tasks()
 	<form action="', $scripturl, '?action=admin;area=maintain;sa=tasks" method="post" accept-charset="', $context['character_set'], '">
 		<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
-				<td colspan="4">', $txt['maintain_tasks'], '</td>
+				<td colspan="5">', $txt['maintain_tasks'], '</td>
 			</tr>
 			<tr class="catbg">
-				<td colspan="4">', $txt['scheduled_tasks_header'], '</td>
+				<td colspan="5">', $txt['scheduled_tasks_header'], '</td>
 			</tr>
 			<tr class="titlebg">
 				<td>', $txt['scheduled_tasks_name'], '</td>
 				<td>', $txt['scheduled_tasks_next_time'], '</td>
 				<td>', $txt['scheduled_tasks_regularity'], '</td>
 				<td width="6%">', $txt['scheduled_tasks_enabled'], '</td>
+				<td width="6%">', $txt['scheduled_tasks_run_now'], '</td>
 			</tr>';
 
 	$alternate = 0;
@@ -1395,19 +1396,23 @@ function template_view_scheduled_tasks()
 					<input type="hidden" name="task[', $task['id'], ']" id="task[', $task['id'], ']" value="0" />
 					<input type="checkbox" name="task[', $task['id'], ']" id="task[', $task['id'], ']" ', !$task['disabled'] ? 'checked="checked"' : '', ' class="check" />
 				</td>
+				<td align="center">
+					<input type="checkbox" name="run_task[', $task['id'], ']" id="run_task[', $task['id'], ']" class="check" />
+				</td>
 			</tr>';
 		$alternate = !$alternate;
 	}
 
 	echo '
 			<tr class="titlebg">
-				<td colspan="4" align="right">
+				<td colspan="5" align="right">
 					<div style="float: left;">
 						[<a href="', $scripturl, '?action=admin;area=maintain;sa=tasklog">', $txt['scheduled_view_log'], '</a>]
 					</div>
 					<div style="float: right;">
 						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 						<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" />
+						<input type="submit" name="run" value="', $txt['scheduled_tasks_run_now'], '" />
 					</div>
 				</td>
 			</tr>

@@ -132,4 +132,13 @@ $txt['pm_visual_verification_label'] = 'Verification';
 $txt['pm_visual_verification_desc'] = 'Please enter the code in the image above to send this pm.';
 $txt['pm_visual_verification_listen'] = 'Listen to the Letters';
 
+// Untranslated!
+// %1$s is the display name, %2$s is the forum name
+$txt['birthday_email'] = 'Dear %1$s,
+
+   We here at %2$s would like to wish you a happy birthday.  May this day and the year to follow be full of joy.
+
+Regards,
+The %2$s Team.';
+$txt['birthday_email_subject'] = 'Happy birthday from %1$s.';
 ?>

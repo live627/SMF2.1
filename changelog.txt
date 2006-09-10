@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2497 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2498 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -43,6 +43,8 @@ September 2006
  ! Display a warning if the cache directory is not writable. (Subs.php, index language files)
  ! Use fatal_lang_error instead of fatal_error whenever possible. (several files)
  & Moved error messages affected by the above into the Errors language files.  (several language files)
+ + Added a birthday email task, which is off by default. (ScheduledTasks.php, PersonalMessage language files, install_2-0.sql, upgrade_2-0.sql)
+ + Added an option to manually trigger a task to run. (ManageMaintenance.php, Admin template, Admin language files)
 
 
 August 2006

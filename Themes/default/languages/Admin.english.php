@@ -287,6 +287,7 @@ $txt['scheduled_tasks_name'] = 'Task Name';
 $txt['scheduled_tasks_next_time'] = 'Next Due';
 $txt['scheduled_tasks_regularity'] = 'Regularity';
 $txt['scheduled_tasks_enabled'] = 'Enabled';
+$txt['scheduled_tasks_run_now'] = 'Run Task Now';
 $txt['scheduled_tasks_save_changes'] = 'Save Changes';
 
 // Untranslated!

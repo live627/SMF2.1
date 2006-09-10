@@ -275,6 +275,53 @@ function ScheduledTasks()
 		CalculateNextTrigger();
 	}
 
+	// Want to run any of the tasks?
+	if (isset($_REQUEST['run']) && isset($_POST['run_task']))
+	{
+		// Lets figure out which ones they want to run.
+		$tasks = array();
+		foreach($_POST['run_task'] AS $task => $dummy)
+			$tasks[] = (int) $task;
+
+		// Load up the tasks.
+		$request = db_query("
+			SELECT ID_TASK, task
+			FROM {$db_prefix}scheduled_tasks
+			WHERE ID_TASK IN (" . implode(', ', $tasks) . ")
+			LIMIT " . count($tasks), __FILE__, __LINE__);
+		
+		// Lets get it on!
+		require_once($sourcedir . '/ScheduledTasks.php');
+		ignore_user_abort(true);
+		while ($row = mysql_fetch_assoc($request))
+		{
+			$start_time = microtime();
+			// The functions got to exist for us to use it.
+			if (!function_exists('scheduled_' . $row['task']))
+				continue;
+
+			// Try to stop a timeout, this would be bad...
+			@set_time_limit(300);
+			if (function_exists('apache_reset_timeout'))
+				apache_reset_timeout();
+
+			// Do the task...
+			$completed = call_user_func('scheduled_' . $row['task']);
+
+			// Log that we did it ;)
+			if ($completed)
+			{
+				$total_time = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $start_time)), 3);
+				db_query("
+					INSERT INTO {$db_prefix}log_scheduled_tasks
+						(ID_TASK, timeRun, timeTaken)
+					VALUES
+						($row[ID_TASK], " . time() . ", $total_time)", __FILE__, __LINE__);
+			}
+
+		}
+	}
+
 	// Get the tasks, all of them, now - dammit!
 	$request = db_query("
 		SELECT ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit, disabled, task
