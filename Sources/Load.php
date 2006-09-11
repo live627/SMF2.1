@@ -136,11 +136,6 @@ if (!defined('SMF'))
 function reloadSettings()
 {
 	global $modSettings, $db_prefix, $boarddir, $smfFunc, $txt, $db_character_set;
-	global $mysql_set_mode;
-
-	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
-	if (isset($mysql_set_mode) && $mysql_set_mode === true)
-		db_query("SET sql_mode = '', AUTOCOMMIT = 1", false, false);
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (isset($db_character_set))
@@ -189,7 +184,7 @@ function reloadSettings()
 	$ent_list = empty($modSettings['disableEntityCheck']) ? '&(#\d{1,7}|quot|amp|lt|gt|nbsp);' : '&(#021|quot|amp|lt|gt|nbsp);';
 	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smfFunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
 
-	$smfFunc = array(
+	$smfFunc += array(
 		'entity_fix' => create_function('$string', '
 			$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;
 			return $num < 0x20 || $num > 0x10FFFF || ($num >= 0xD800 && $num <= 0xDFFF) ? \'\' : \'&#\' . $num . \';\';'),

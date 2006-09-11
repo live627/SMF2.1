@@ -57,35 +57,16 @@ require_once($sourcedir . '/Subs.php');
 require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
+require_once($sourcedir . '/Database.php');
 
 if (@version_compare(PHP_VERSION, '4.2.3') != 1)
 	require_once($sourcedir . '/Subs-Compat.php');
 
-// Connect to the MySQL database.
-// If a SSI username and password have been specified use them
-if (!empty($ssi_db_user))
-{
-	if (empty($db_persist))
-		$db_connection = @mysql_connect($db_server, $ssi_db_user, $ssi_db_passwd);
-	else
-		$db_connection = @mysql_pconnect($db_server, $ssi_db_user, $ssi_db_passwd);
-}
+// Create a variable to store some SMF specific functions in.
+$smfFunc = array();
 
-// Use the regular username and password if an SSI specific one hasn't been provided or it failed to connect
-if (!isset($db_connection) || $db_connection === false)
-{
-	if (empty($db_persist))
-		$db_connection = @mysql_connect($db_server, $db_user, $db_passwd);
-	else
-		$db_connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
-	if ($db_connection === false)
-		return false;
-}
-// Add the database onto the prefix to avoid conflicts with other scripts.
-if (strpos($db_prefix, '.') === false)
-	$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
-else
-	@mysql_select_db($db_name, $db_connection);
+// Initate the database connection and define some database functions to use.
+db_initiate();
 
 // Load installed 'Mods' settings.
 reloadSettings();

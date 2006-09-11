@@ -49,6 +49,7 @@ require_once($sourcedir . '/Subs.php');
 require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
+require_once($sourcedir . '/Database.php');
 
 // Using an old version of PHP?
 if (@version_compare(PHP_VERSION, '4.2.3') != 1)
@@ -58,15 +59,11 @@ if (@version_compare(PHP_VERSION, '4.2.3') != 1)
 if (!empty($maintenance) && $maintenance == 2)
 	db_fatal_error();
 
-// Connect to the MySQL database.
-if (empty($db_persist))
-	$db_connection = @mysql_connect($db_server, $db_user, $db_passwd);
-else
-	$db_connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
+// Create a variable to store some SMF specific functions in.
+$smfFunc = array();
 
-// Show an error if the connection couldn't be made.
-if (!$db_connection || !@mysql_select_db($db_name, $db_connection))
-	db_fatal_error();
+// Initate the database connection and define some database functions to use.
+db_initiate();
 
 // Load the settings from the settings table, and perform operations like optimizing.
 reloadSettings();
