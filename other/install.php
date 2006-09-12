@@ -970,6 +970,7 @@ function doStep2()
 	require_once($sourcedir . '/Load.php');
 	require_once($sourcedir . '/Security.php');
 	require_once($sourcedir . '/Subs-Auth.php');
+	require_once($sourcedir . '/Database.php');
 
 	// Define the sha1 function, if it doesn't exist.
 	if (!function_exists('sha1'))
