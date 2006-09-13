@@ -183,6 +183,8 @@ function applyTxtFixes()
 				$helptxt[$new] = $helptxt[$old];
 			elseif (isset($txt[$old]))
 				$txt[$new] = $txt[$old];
+			elseif (isset($txt[$new]) && !isset($txt[$old]))
+				$txt[$old] = $txt[$new];
 		}
 }
 
