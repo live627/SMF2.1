@@ -1102,7 +1102,7 @@ function ssi_quickSearch($output_method = 'echo')
 
 	echo '
 		<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
-			<input type="hidden" name="advanced" value="0" /><input type="text" name="search" size="30" /> <input type="submit" name="submit" value="', $txt[182], '" />
+			<input type="hidden" name="advanced" value="0" /><input type="text" name="search" size="30" /> <input type="submit" name="submit" value="', $txt['search'], '" />
 		</form>';
 }
 
