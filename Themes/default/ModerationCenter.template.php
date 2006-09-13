@@ -307,7 +307,7 @@ function template_unapproved_posts()
 
 	// Make up some buttons
 	$approve_button = create_button('approve.gif', 'approve', 'approve', 'align="middle"');
-	$remove_button = create_button('delete.gif', 121, 31, 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 
 	// No posts?
 	if (empty($context['unapproved_items']))
@@ -403,7 +403,7 @@ function template_unapproved_attachments()
 
 	// The ever popular approve button, with the massively unpopular delete.
 	$approve_button = create_button('approve.gif', 'approve', 'approve', 'align="middle"');
-	$remove_button = create_button('delete.gif', 121, 31, 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 
 	// None awaiting?
 	if (empty($context['unapproved_items']))

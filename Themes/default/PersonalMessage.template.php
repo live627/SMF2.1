@@ -245,11 +245,11 @@ function template_folder()
 		<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
 
 		// Cache some handy buttons.
-		$quote_button = create_button('quote.gif', 145, 'smf240', 'align="middle"');
-		$reply_button = create_button('im_reply.gif', 146, 146, 'align="middle"');
+		$quote_button = create_button('quote.gif', 'reply_quote', 'smf240', 'align="middle"');
+		$reply_button = create_button('im_reply.gif', 'reply', 'reply', 'align="middle"');
 		$reply_all_button = create_button('im_reply_all.gif', 'reply_to_all', 'reply_to_all', 'align="middle"');
-		$forward_button = create_button('quote.gif', 145, 145, 'align="middle"');
-		$delete_button = create_button('delete.gif', 154, 31, 'align="middle"');
+		$forward_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
+		$delete_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 
 		while ($message = $context['get_pmessage']())
 		{
@@ -741,8 +741,8 @@ function template_search_results()
 
 			if ($context['can_send_pm'])
 			{
-				$quote_button = create_button('quote.gif', 145, 145, 'align="middle"');
-				$reply_button = create_button('im_reply.gif', 146, 146, 'align="middle"');
+				$quote_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
+				$reply_button = create_button('im_reply.gif', 'reply', 'reply', 'align="middle"');
 				// You can only reply if they are not a guest...
 				if (!$message['member']['is_guest'])
 					echo '

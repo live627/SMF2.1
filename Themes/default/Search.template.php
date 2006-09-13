@@ -441,9 +441,9 @@ function template_results()
 			foreach ($topic['matches'] as $message)
 			{
 				// Create buttons row.
-				$quote_button = create_button('quote.gif', 145, 145, 'align="middle"');
-				$reply_button = create_button('reply_sm.gif', 146, 146, 'align="middle"');
-				$notify_button = create_button('notify_sm.gif', 131, 131, 'align="middle"');
+				$quote_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');
+				$reply_button = create_button('reply_sm.gif', 'reply', 'reply', 'align="middle"');
+				$notify_button = create_button('notify_sm.gif', 'notify_replies', 'notify_replies', 'align="middle"');
 				$buttonArray = array();
 				if ($topic['can_reply'])
 				{

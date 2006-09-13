@@ -368,10 +368,10 @@ function template_showPosts()
 		</table>';
 
 		// Button shortcuts
-		$quote_button = create_button('quote.gif', 145, 'smf240', 'align="middle"');
-		$reply_button = create_button('reply_sm.gif', 146, 146, 'align="middle"');
-		$remove_button = create_button('delete.gif', 121, 31, 'align="middle"');
-		$notify_button = create_button('notify_sm.gif', 131, 125, 'align="middle"');
+		$quote_button = create_button('quote.gif', 'reply_quote', 'smf240', 'align="middle"');
+		$reply_button = create_button('reply_sm.gif', 'reply', 'reply', 'align="middle"');
+		$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
+		$notify_button = create_button('notify_sm.gif', 'notify_replies', 'notify', 'align="middle"');
 
 		// For every post to be displayed, give it its own subtable, and show the important details of the post.
 		foreach ($context['posts'] as $post)

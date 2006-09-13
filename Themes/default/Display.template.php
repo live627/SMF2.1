@@ -235,9 +235,9 @@ function template_main()
 <form action="', $scripturl, '?action=quickmod2;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" name="quickModForm" id="quickModForm" style="margin: 0;" onsubmit="return oQuickEdit.bInEditMode ? oQuickEdit.modifySave(\'' . $context['session_id'] . '\') : confirm(\'' . $txt['quickmod_confirm'] . '\');">';
 
 	// These are some cache image buttons we may want.
-	$reply_button = create_button('quote.gif', 145, 'smf240', 'align="middle"');
-	$modify_button = create_button('modify.gif', 66, 17, 'align="middle"');
-	$remove_button = create_button('delete.gif', 121, 31, 'align="middle"');
+	$reply_button = create_button('quote.gif', 'reply_quote', 'smf240', 'align="middle"');
+	$modify_button = create_button('modify.gif', 'modify_msg', 'modify', 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 	$split_button = create_button('split.gif', 'smf251', 'smf251', 'align="middle"');
 	$approve_button = create_button('approve.gif', 'approve', 'approve', 'align="middle"');
 
