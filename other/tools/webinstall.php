@@ -23,7 +23,6 @@
 
 // !!! On upgrade, warn about installed.list!
 
-$GLOBALS['current_smf_version'] = '2.0 Alpha';
 $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '3.23.28';
 
@@ -100,6 +99,11 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 				font-weight: bold;
 				white-space: nowrap;
 				padding-right: 2ex;
+			}
+			.smalltext
+			{
+				font-size: x-small;
+				font-family: verdana, sans-serif;
 			}
 		</style>
 	</head>
@@ -237,6 +241,20 @@ function doStep0()
 		return false;
 	}
 
+	// Make sure this stuff is set, if not go to the defaults
+	if (!isset($_SESSION['is_logged_in']))
+	{
+		$_SESSION['is_logged_in'] = false;
+		$_SESSION['is_charter'] = false;
+		$_SESSION['is_beta_tester'] = false;
+		$_SESSION['is_team'] = false;
+
+		$_SESSION['access'] = array(0);
+
+		$_SESSION['can_cvs'] = false;
+		$_SESSION['user_data'] = '';
+	}
+
 	$install_info = fetch_install_info();
 
 	echo '
@@ -256,16 +274,16 @@ function doStep0()
 
 						<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 1ex;">
 							<tr>
-								<td width="26%" valign="top" class="textbox" style="padding-bottom: 1ex;"><label>', $txt['charter_login'], ':</label></td>
+								<td width="26%" valign="top" class="textbox" style="padding-bottom: 1ex;"><label>', $txt['member_login'], ':</label></td>
 								<td valign="top">';
 
-	if (empty($_SESSION['is_charter']))
+	if (empty($_SESSION['is_logged_in']))
 		echo '
-									<span style="white-space: nowrap;"><label for="charter_username">', $txt['charter_username'], ':</label> <input type="text" size="20" name="charter_username" id="charter_username" value="', isset($_POST['charter_username']) ? $_POST['charter_username'] : '', '" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.charter_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span>
-									<span style="white-space: nowrap;"><label for="charter_password">', $txt['charter_password'], ':</label> <input type="password" size="20" name="charter_password" id="charter_password" value="" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.charter_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span> <noscript><input type="submit" name="verify" value="', $txt['charter_verify'], '" /></noscript>
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['charter_login_info'], '</div>';
+									<span style="white-space: nowrap;"><label for="member_username">', $txt['member_username'], ':</label> <input type="text" size="20" name="member_username" id="member_username" value="', isset($_POST['member_username']) ? $_POST['member_username'] : '', '" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span>
+									<span style="white-space: nowrap;"><label for="member_password">', $txt['member_password'], ':</label> <input type="password" size="20" name="member_password" id="member_password" value="" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span> <noscript><input type="submit" name="verify" value="', $txt['member_verify'], '" /></noscript>
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['member_login_info'], '</div>';
 	else
-		echo $txt['charter_verify_done'], ' (<a href="', $_SERVER['PHP_SELF'], '?step=1&amp;logout=1">', $txt['charter_verify_logout'], '</a>)';
+		echo $txt['member_verify_done'], ' (<a href="', $_SERVER['PHP_SELF'], '?step=1&amp;logout=1">', $txt['member_verify_logout'], '</a>)';
 
 	echo '
 								</td>
@@ -291,6 +309,14 @@ function doStep0()
 	}
 
 	echo '
+								</td>';
+
+	if (!empty($_SESSION['can_cvs']))
+		echo '
+							</tr><tr>
+								<td width="26%" valign="top" class="textbox"><label for="use_cvs">', $txt['download_cvs'], ':</label></td>
+								<td style="padding-bottom: 1ex;">
+									<input type="checkbox" name="use_cvs" id="use_cvs" value="1" /> ', $txt['yes'], '
 								</td>';
 
 	if (count($install_info['mirrors']) > 1)
@@ -320,21 +346,33 @@ function doStep0()
 	echo '
 							</tr><tr>
 								<td width="26%" valign="top" class="textbox"><label>', $txt['package_info_languages'], ':</label></td>
-								<td style="padding-bottom: 1ex;">';
+								<td style="padding-bottom: 1ex;">
+									<table cellpadding="0" cellspacing="0" border="0" width="100%">';
 
 	$alternate = true;
-	foreach ($install_info['languages'] as $file => $name)
+	foreach ($install_info['languages'] as $file => $data)
 	{
 		if ($alternate)
 			echo '
-										<div style="float: left; width: 32ex;"><label for="language-', $file, '"><input type="checkbox" name="languages[]" id="language-', $file, '" value="', $file, '" /> ', $name, '</label></div>';
-		else
+										<tr>';
+		echo '
+											<td>
+												<label for="language-', $file, '">
+													<input type="checkbox" name="languages[]" id="language-', $file, '" value="', $file, '" /> 
+													<strong>', $data['name'], '</strong> <span class="smalltext">(SMF ', implode(', SMF ', $data['versions']), ')</span>
+												</label>
+											</td>';
+		if (!$alternate)
 			echo '
-										<label for="language-', $file, '"><input type="checkbox" name="languages[]" id="language-', $file, '" value="', $file, '" /> ', $name, '</label><br />';
+										</tr>';
 		$alternate = !$alternate;
 	}
-
+	if (!$alternate)
+		echo '
+											<td>&nbsp;</td>
+										</tr>';
 	echo '
+									</table>
 								</td>
 							</tr>
 						</table>
@@ -356,13 +394,27 @@ function doStep1()
 {
 	global $txt, $ftp;
 
-	if (!empty($_POST['verify']) || (!empty($_POST['charter_username']) && !empty($_POST['charter_password'])))
+	if (!empty($_POST['verify']) || (!empty($_POST['member_username']) && !empty($_POST['member_password'])))
 	{
-		$pass_data = 'web_user=' . base64_encode($_POST['charter_username']) . '&web_pass=' . sha1(sha1(strtolower($_POST['charter_username']) . $_POST['charter_password']) . 'w$--IN5~2a');
+		$pass_data = 'web_user=' . base64_encode($_POST['member_username']) . '&web_pass=' . sha1(sha1(strtolower($_POST['member_username']) . $_POST['member_password']) . 'w$--IN5~2a');
 
-		$data = (int) fetch_web_data('http://www.simplemachines.org/download.php', $pass_data);
-		$_SESSION['is_charter'] = !empty($data);
-		$_SESSION['charter_data'] = $_SESSION['is_charter'] ? '?' . $pass_data : '';
+		$data = (int) fetch_web_data('http://www.simplemachines.org/download/index.php', $pass_data);
+
+		$_SESSION['is_logged_in'] = !empty($data);
+		$_SESSION['is_charter'] = $data === 2;
+		$_SESSION['is_beta_tester'] = $data === 3;
+		$_SESSION['is_team'] = $data === 4;
+
+		if ($_SESSION['is_team'])
+			$_SESSION['access'] = array(0,1,2);
+		elseif($_SESSION['is_charter'] || $_SESSION['is_beta_tester'])
+			$_SESSION['access'] = array(0,2);
+		else
+			$_SESSION['access'] = array(0);
+
+		$_SESSION['can_cvs'] = $_SESSION['is_team'] || $_SESSION['is_beta_tester'];
+
+		$_SESSION['user_data'] = $_SESSION['is_logged_in'] ? '?' . $pass_data : '';
 
 		if (empty($data))
 		{
@@ -370,7 +422,7 @@ function doStep1()
 						<br />
 						<div style="margin: 0 1ex 2ex 1ex; padding: 1.5ex; border: 2px dashed #cc5566; background-color: #ffd9df;">
 							<div style="float: left; width: 2ex; font-size: 2em; color: red;">X</div>
-							', $txt['error_not_charter'], '
+							', $txt['error_not_member'], '
 						</div>';
 
 		}
@@ -379,8 +431,15 @@ function doStep1()
 	}
 	elseif (isset($_GET['logout']))
 	{
+		$_SESSION['is_logged_in'] = false;
 		$_SESSION['is_charter'] = false;
-		$_SESSION['charter_data'] = '';
+		$_SESSION['is_beta_tester'] = false;
+		$_SESSION['is_team'] = false;
+
+		$_SESSION['access'] = array(0);
+
+		$_SESSION['can_cvs'] = false;
+		$_SESSION['user_data'] = '';
 
 		return doStep0();
 	}
@@ -407,15 +466,25 @@ function doStep1()
 		else
 			$ext = '.tar';
 
+		if (!empty($_SESSION['can_cvs']) && !empty($_POST['use_cvs']) && $ext == '.tar.gz')
+		{
+			// CVS files only have the branch numbers on them and not the actual version.
+			preg_match('~(smf_[\d]-[\d])(.*)~', $_POST['filename'], $match);
+			$_POST['filename'] = $match[1] . '-cvs' . date('Ymd') . '_';
+		}
+
 		if (file_exists(dirname(__FILE__) . '/Settings.php') && !file_exists(dirname(__FILE__) . '/install.php'))
 			$files_to_download[] = $_POST['mirror'] . $_POST['filename'] . 'upgrade' . $ext;
 		else
 			$files_to_download[] = $_POST['mirror'] . $_POST['filename'] . 'install' . $ext;
 
 		if (isset($_POST['languages']))
+		{
+			$version_selected = str_replace('SMF ', '', $_SESSION['install_info']['install'][$_POST['filename']]);
 			foreach ($_POST['languages'] as $lang)
-				$files_to_download[] = $_POST['mirror'] . $_POST['filename'] . $lang . $ext;
-
+				if (isset($_SESSION['install_info']['languages'][$lang]) && in_array($version_selected, $_SESSION['install_info']['languages'][$lang]['versions']))
+					$files_to_download[] = $_POST['mirror'] . $_POST['filename'] . $lang . $ext;
+		}
 		$_SESSION['files_to_download'] = $files_to_download;
 	}
 
@@ -549,7 +618,7 @@ function doStep2()
 
 	foreach ($_SESSION['files_to_download'] as $i => $file)
 	{
-		$data = fetch_web_data($file, isset($_SESSION['charter_data']) ? $_SESSION['charter_data'] : '');
+		$data = fetch_web_data($file, isset($_SESSION['user_data']) ? $_SESSION['user_data'] : '');
 
 		if (function_exists('gzinflate'))
 			$data = extract_gzip($data);
@@ -569,8 +638,13 @@ function doStep2()
 		file_put_contents(dirname(__FILE__) . '/smf_install' . $i . '.tmp', $data);
 	}
 
-	$_SESSION['charter_data'] = '';
+	$_SESSION['is_logged_in'] = false;
 	$_SESSION['is_charter'] = false;
+	$_SESSION['is_beta_tester'] = false;
+	$_SESSION['is_team'] = false;
+	$_SESSION['access'] = array(0);
+	$_SESSION['can_cvs'] = false;
+	$_SESSION['user_data'] = '';
 
 	if (time() - $GLOBALS['start_time'] < 10)
 		return doStep3();
@@ -698,6 +772,8 @@ function fetch_web_data($url, $post_data = '')
 		}
 		else
 		{
+			if (substr($post_data,0,1) === '?')
+				$post_data = substr($post_data, 1);
 			fwrite($fp, 'POST ' . $match[6] . " HTTP/1.0\r\n");
 			fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? '443' : '') : ':' . $match[5]) . "\r\n");
 			fwrite($fp, 'User-Agent: PHP/SMF' . "\r\n");
@@ -860,31 +936,43 @@ function fetch_install_info()
 		'install' => array(),
 		'languages' => array(),
 	);
+	
+	$vers = array();
 
-	if (!empty($_SESSION['is_charter']))
+	// Get mirrors.
+	preg_match_all('~<mirror name="([^"]+)">([^<]+)</mirror>~', $install_info, $matches, PREG_SET_ORDER);
+	foreach ($matches as $match)
+		$info['mirrors'][$match[2]] = $match[1];
+
+	// Get install packages.
+	preg_match_all('~<install access="([^"]+)" name="([^"]+)">([^<]+)</install>~', $install_info, $matches, PREG_SET_ORDER);
+	foreach ($matches as $match)
+		if (in_array($match[1], $_SESSION['access']))
+		{
+			$info['install'][$match[3]] = $match[2];
+			$vers[] = str_replace('SMF ', '', $match[2]);
+		}
+
+	// Get language packages.
+	preg_match_all('~<language name="([^"]+)" versions="([^"]+)">([^<]+)</language>~', $install_info, $matches, PREG_SET_ORDER);
+	foreach ($matches as $match)
 	{
-		preg_match_all('~<mirror type="charter" name="([^"]+)">([^<]+)</mirror>~', $install_info, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match)
-			$info['mirrors'][$match[2]] = $match[1];
-		preg_match_all('~<install type="charter" name="([^"]+)">([^<]+)</install>~', $install_info, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match)
-			$info['install'][$match[2]] = $match[1];
-		preg_match_all('~<language type="charter" name="([^"]+)">([^<]+)</language>~', $install_info, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match)
-			$info['languages'][$match[2]] = $match[1];
+		$versions = explode(', ', $match[2]);
+		foreach($versions AS $id => $ver)
+			if (!in_array($ver, $vers))
+				unset($versions[$ver]);
+		
+		if (empty($versions))
+			continue;
+
+		$info['languages'][$match[3]] = array(
+			'name' => $match[1],
+			'versions' => explode(', ', $match[2]),
+		);
 	}
-	else
-	{
-		preg_match_all('~<mirror name="([^"]+)">([^<]+)</mirror>~', $install_info, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match)
-			$info['mirrors'][$match[2]] = $match[1];
-		preg_match_all('~<install name="([^"]+)">([^<]+)</install>~', $install_info, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match)
-			$info['install'][$match[2]] = $match[1];
-		preg_match_all('~<language name="([^"]+)">([^<]+)</language>~', $install_info, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match)
-			$info['languages'][$match[2]] = $match[1];
-	}
+
+	// Put it into the session data for later use.
+	$_SESSION['install_info'] = $info;
 
 	return $info;
 }
@@ -1020,15 +1108,15 @@ function load_language_data()
 	$txt['extraction_complete_info'] = 'The download and extraction seemed to complete successfully.  Please click continue to finish the rest of the installation.';
 
 	$txt['package_info'] = 'Package information';
-	$txt['package_info_info'] = 'Here you can optionally select your package, languages, and other options.  If you enter your Charter Membership information, you can install Charter Member only packages.';
-	$txt['charter_login'] = 'Charter Member login';
-	$txt['charter_login_info'] = '<noscript>Please enable JavaScript.</noscript> (leave blank if you don\'t have a membership.)';
-	$txt['charter_username'] = 'Username';
-	$txt['charter_password'] = 'Password';
-	$txt['charter_verify'] = 'Verify';
-	$txt['charter_verify_done'] = 'Account verified.';
-	$txt['charter_verify_logout'] = 'logout';
-	$txt['error_not_charter'] = 'The username and password you provided were rejected.<br />Either you are not a Charter Member, your password is wrong, or you need to wait to try to login again.';
+	$txt['package_info_info'] = 'Here you can optionally select your package, languages, and other options.  If you log into your Simple Machines Community Forum account you will be able to install all packages available to you.';
+	$txt['member_login'] = 'Simple Machines Community Forum Member login';
+	$txt['member_login_info'] = '<noscript>Please enable JavaScript.</noscript> (leave blank if you don\'t have a membership.)';
+	$txt['member_username'] = 'Username';
+	$txt['member_password'] = 'Password';
+	$txt['member_verify'] = 'Verify';
+	$txt['member_verify_done'] = 'Account verified.';
+	$txt['member_verify_logout'] = 'logout';
+	$txt['error_not_member'] = 'The username and password you provided were rejected.<br />Either you are not a member of Simple Machines Community Forum, your password is wrong, or you need to wait to try to login again.';
 	$txt['package_info_version'] = 'Version to install';
 	$txt['package_info_mirror'] = 'Mirror';
 	$txt['package_info_languages'] = 'Additional languages';
@@ -1040,6 +1128,10 @@ function load_language_data()
 
 	$txt['upgrade_process'] = 'Performing an upgrade';
 	$txt['upgrade_process_info'] = 'The installer found an installation of SMF in this directory.  The package you select below will be upgraded over your current version if you continue.  If you want to install fresh, please empty this directory first.';
+
+	$txt['yes'] = 'Yes';
+	$txt['download_cvs'] = 'Download the CVS version';
+
 }
 
 // http://www.faqs.org/rfcs/rfc959.html
