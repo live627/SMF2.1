@@ -261,11 +261,20 @@ function doStep0()
 				<form action="', $_SERVER['PHP_SELF'], '?step=1" method="post">';
 
 	if (file_exists(dirname(__FILE__) . '/Settings.php') && !file_exists(dirname(__FILE__) . '/install.php'))
+	{
 		echo '
 					<div class="panel">
 						<h2>', $txt['upgrade_process'], '</h2>
-						<h3>', $txt['upgrade_process_info'], '</h3>
+						<h3>', $txt['upgrade_process_info'], '</h3>';
+
+		if (!is_dir(dirname(__FILE__) . '/Sources') || !is_dir(dirname(__FILE__) . '/Themes'))
+			echo '
+						<div class="error_message">
+							', $txt['source_theme_location_problem'], '
+						</div>';
+		echo '
 					</div>';
+	}
 
 	echo '
 					<div class="panel">
@@ -1131,6 +1140,8 @@ function load_language_data()
 
 	$txt['yes'] = 'Yes';
 	$txt['download_cvs'] = 'Download the CVS version';
+
+	$txt['source_theme_location_problem'] = 'It appears that your source file or theme file directory is not in the default location.  After the package file is downloaded and uncompressed you will need to manually move the files to the correct location, prior to running the upgrade.php script.';
 
 }
 
