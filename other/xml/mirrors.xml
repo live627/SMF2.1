@@ -4,62 +4,96 @@
 	if (!isset($smfFunc) && isset($func))
 		$smfFunc = $func;
 
+	// Gather all the information together first and then display it.
+	// It doesn't get updated all too often so don't get it too often.
+	if (($data = cache_get_data('mirrors-xml-data', 3600)) === null)
+	{
+		$data = array(
+			'mirrors' => array(),
+			'releases' => array(),
+			'languages' => array(),
+		);
+
+		// Get the mirrors!
+		$data['mirrors'][] = array(
+			'name' => 'www.simplemachines.org',
+			'url' => 'http://www.simplemachines.org/download/index.php/',
+		);
+
+		// Get the releases!
+		$result = db_query("
+			SELECT ver.verName, ver.fileName, ver.public, IFNULL( pkg.access, 1 ) AS access
+			FROM {$customize_prefix}smfVersions AS ver
+			LEFT JOIN {$download_prefix}packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.fileName, 'install', '%' ) ) 
+			WHERE obsolete !=1
+			ORDER BY displayOrder DESC", __FILE__, __LINE__);
+
+		while ( $row = mysql_fetch_assoc($result) )
+			$data['releases'][] = array(
+				'name' => 'SMF ' . $row['verName'],
+				'file' => $row['fileName'],
+				'access' => $row['access'],
+			);
+
+		mysql_free_result($result);
+
+		// Finally get the languages!
+		$result = db_query("
+			SELECT ver.verName, ver.fileName, pkg.filename
+			FROM customize.smfVersions AS ver
+			LEFT JOIN downloads.download_packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.fileName, '%' ) AND pkg.release_type =1 ) 
+			WHERE obsolete !=1
+				AND NOT ISNULL( pkg.filename ) 
+			ORDER BY displayOrder DESC, pkg.filename ASC", __FILE__, __LINE__);
+
+		while ($row = mysql_fetch_assoc($result))
+		{
+			$lang = str_replace($row['fileName'], '', $row['filename']);
+			if (!isset($data['languages'][$lang]))
+				$data['languages'][$lang] = array(
+					'name' => $smfFunc['htmlspecialchars']($lang),
+					'access' => $row['access'],
+					'versions' => array(),
+				);
+			$data['languages'][$lang]['versions'][] = $row['verName'];
+		}
+
+		mysql_free_result($result);
+
+		// Finally store the results for later use.
+		cache_put_data('mirrors-xml-data', $data, 3600);
+	}
+
 	echo '<?xml version="1.0"?>
 
 <mirror-list>
 	<!-- List of mirrors which hold the downloads. -->
-	<mirrors>
-		<mirror name="www.simplemachines.org">http://www.simplemachines.org/download/index.php/</mirror>
+	<mirrors>';
+
+	foreach($data['mirrors'] AS $mirror)
+		echo '
+		<mirror name="', $mirror['name'], '">', $mirror['url'], '</mirror>';
+	
+	echo '
 	</mirrors>
 
 	<!-- List of current install releases. -->
 	<installs>';
-	// get the current versions
-	$res = db_query("
-		SELECT ver.verName, ver.fileName, ver.public, IFNULL( pkg.access, 1 ) AS access
-		FROM {$customize_prefix}smfVersions AS ver
-		LEFT JOIN {$download_prefix}packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.fileName, 'install', '%' ) ) 
-		WHERE obsolete !=1
-		ORDER BY displayOrder DESC", __FILE__, __LINE__);
-	while ( $row = mysql_fetch_assoc($res) )
+
+	foreach($data['releases'] AS $release)
 		echo '
-		<install access="', $row['access'], '" name="SMF ', $row['verName'], '">', $row['fileName'], '</install>';
-	mysql_free_result($res);
+		<install access="', $release['access'], '" name="', $release['name'], '">', $release['file'], '</install>';
 		
 	echo '	
 	</installs>';
 
-	// Lets go and get the languages we are offerring.
-	$res = db_query("
-		SELECT ver.verName, ver.fileName, pkg.filename
-		FROM customize.smfVersions AS ver
-		LEFT JOIN downloads.download_packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.fileName, '%' ) AND pkg.release_type =1 ) 
-		WHERE obsolete !=1
-			AND NOT ISNULL( pkg.filename ) 
-		ORDER BY displayOrder DESC, pkg.filename ASC", __FILE__, __LINE__);
-
-	$languages = array();
-
-	while ($row = mysql_fetch_assoc($res))
-	{
-		$lang = str_replace($row['fileName'], '', $row['filename']);
-		if (!isset($languages[$lang]))
-			$languages[$lang] = array(
-				'name' => $smfFunc['htmlspecialchars']($lang),
-				'access' => $row['access'],
-				'versions' => array(),
-			);
-		$languages[$lang]['versions'][] = $row['verName'];
-	}
-
-	mysql_free_result($res);
 
 	echo '
 
 	<!-- Language files available. -->
 	<languages>';
 
-	foreach($languages AS $language)
+	foreach($data['languages'] AS $language)
 		echo '
 		<language name="', $language['name'], '" versions="', implode(', ', $language['versions']), '">', $language['name'], '</language>';
 
