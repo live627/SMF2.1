@@ -155,11 +155,11 @@ function Who()
 	// Load up the guest user.
 	$memberContext[0] = array(
 		'id' => 0,
-		'name' => $txt[28],
-		'group' => $txt[28],
+		'name' => $txt['guest_title'],
+		'group' => $txt['guest_title'],
 		'href' => '',
-		'link' => $txt[28],
-		'email' => $txt[28],
+		'link' => $txt['guest_title'],
+		'email' => $txt['guest_title'],
 		'is_guest' => true
 	);
 
