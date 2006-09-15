@@ -198,6 +198,7 @@ function initialize_inputs()
 
 	// Force an integer step, defaulting to 0.
 	$_GET['step'] = (int) @$_GET['step'];
+	$_GET['substep'] = (int) @$_GET['substep'];
 }
 
 function doStep0()
@@ -479,6 +480,7 @@ function doStep1()
 		{
 			// CVS files only have the branch numbers on them and not the actual version.
 			preg_match('~(smf_[\d]-[\d])(.*)~', $_POST['filename'], $match);
+			$_POST['filename_unmodified'] = $_POST['filename'];
 			$_POST['filename'] = $match[1] . '-cvs' . date('Ymd') . '_';
 		}
 
@@ -489,12 +491,13 @@ function doStep1()
 
 		if (isset($_POST['languages']))
 		{
-			$version_selected = str_replace('SMF ', '', $_SESSION['install_info']['install'][$_POST['filename']]);
+			$version_selected = str_replace('SMF ', '', $_SESSION['install_info']['install'][isset($_POST['filename_unmodified']) ? $_POST['filename_unmodified'] : $_POST['filename']]);
 			foreach ($_POST['languages'] as $lang)
 				if (isset($_SESSION['install_info']['languages'][$lang]) && in_array($version_selected, $_SESSION['install_info']['languages'][$lang]['versions']))
 					$files_to_download[] = $_POST['mirror'] . $_POST['filename'] . $lang . $ext;
 		}
 		$_SESSION['files_to_download'] = $files_to_download;
+		$_SESSION['files_to_download_total'] = count($files_to_download);
 	}
 
 	if (substr(__FILE__, 1, 2) == ':\\')
@@ -627,6 +630,9 @@ function doStep2()
 
 	foreach ($_SESSION['files_to_download'] as $i => $file)
 	{
+		if ($i < $_GET['substep'])
+			continue;
+
 		$data = fetch_web_data($file, isset($_SESSION['user_data']) ? $_SESSION['user_data'] : '');
 
 		if (function_exists('gzinflate'))
@@ -645,6 +651,48 @@ function doStep2()
 		}
 
 		file_put_contents(dirname(__FILE__) . '/smf_install' . $i . '.tmp', $data);
+
+		if ($i < ($_SESSION['files_to_download_total']-1))
+		{
+			$query_string = '?step=2&substep=' . ($i+1);
+			$percent_done_total = round((($i+1) / $_SESSION['files_to_download_total']) * 100, 2);
+			// Pausing time!
+			echo '
+				<div class="panel">
+					<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
+					<h3>
+						This downloading of the files has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="continue">continue button</label> below to keep going.
+					</h3>
+					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+						<b>Download Progress:</b>
+						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+							<div style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $percent_done_total, '%</div>
+							<div style="width: ', $percent_done_total, '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
+						</div>
+					</div>
+					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
+						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+					</form>
+					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+						window.onload = doAutoSubmit;
+						var countdown = 3;
+
+						function doAutoSubmit()
+						{
+							if (countdown == 0)
+								document.autoSubmit.submit();
+							else if (countdown == -1)
+								return;
+
+							document.autoSubmit.b.value = "Continue (" + countdown + ")";
+							countdown--;
+
+							setTimeout("doAutoSubmit();", 1000);
+						}
+					// ]]></script>
+				</div>';
+			return true;
+		}
 	}
 
 	$_SESSION['is_logged_in'] = false;
@@ -655,17 +703,31 @@ function doStep2()
 	$_SESSION['can_cvs'] = false;
 	$_SESSION['user_data'] = '';
 
-	if (time() - $GLOBALS['start_time'] < 10)
-		return doStep3();
-
 	echo '
 				<div class="panel">
 					<h2>', $txt['download_successful'], '</h2>
 					<h3>', $txt['download_successful_info'], '</h3>
 
-					<form action="', $_SERVER['PHP_SELF'], '?step=3" method="post">
-						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['download_successful_continue'], '" /></div>
+					<form action="', $_SERVER['PHP_SELF'], '?step=3" method="post" name="autoSubmit">
+						<div align="right" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['download_successful_continue'], '" /></div>
 					</form>
+					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+						window.onload = doAutoSubmit;
+						var countdown = 3;
+
+						function doAutoSubmit()
+						{
+							if (countdown == 0)
+								document.autoSubmit.submit();
+							else if (countdown == -1)
+								return;
+
+							document.autoSubmit.b.value = "Continue (" + countdown + ")";
+							countdown--;
+
+							setTimeout("doAutoSubmit();", 1000);
+						}
+					// ]]></script>
 				</div>';
 
 	return true;
@@ -680,6 +742,9 @@ function doStep3()
 
 	foreach ($_SESSION['files_to_download'] as $i => $file)
 	{
+		if ($i < $_GET['substep'])
+			continue;
+
 		$fp = fopen(dirname(__FILE__) . '/smf_install' . $i . '.tmp', 'rb');
 		$data = '';
 		while (!feof($fp))
@@ -701,6 +766,49 @@ function doStep3()
 			extract_tar($data, dirname(__FILE__), null);
 
 			unlink('smf_install' . $i . '.tmp');
+		}
+
+		if ($i < ($_SESSION['files_to_download_total']-1))
+		{
+			$query_string = '?step=3&substep=' . ($i+1);
+			$percent_done_total = round((($i+1) / $_SESSION['files_to_download_total']) * 100, 2);
+
+			// Pausing time!
+			echo '
+				<div class="panel">
+					<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
+					<h3>
+						This extraction of the files has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="continue">continue button</label> below to keep going.
+					</h3>
+					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
+						<b>Uncompression Progress:</b>
+						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+							<div style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $percent_done_total, '%</div>
+							<div style="width: ', $percent_done_total, '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
+						</div>
+					</div>
+					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
+						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+					</form>
+					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+						window.onload = doAutoSubmit;
+						var countdown = 3;
+
+						function doAutoSubmit()
+						{
+							if (countdown == 0)
+								document.autoSubmit.submit();
+							else if (countdown == -1)
+								return;
+
+							document.autoSubmit.b.value = "Continue (" + countdown + ")";
+							countdown--;
+
+							setTimeout("doAutoSubmit();", 1000);
+						}
+					// ]]></script>
+				</div>';
+			return true;
 		}
 	}
 
@@ -883,8 +991,10 @@ function extract_tar($data, $destination, $ftp)
 		$current['data'] = substr($data, ++$offset << 9, $current['size']);
 		$offset += $size;
 
+		$filename = array_pop(explode('/', $current['filename']));
+
 		// Not a directory and doesn't exist already...
-		if (substr($current['filename'], -1, 1) != '/')
+		if (substr($current['filename'], -1, 1) != '/' && strpos($filename, '.') !== false)
 		{
 			if (strpos($current['filename'], '/') !== false)
 			{
@@ -1141,7 +1251,7 @@ function load_language_data()
 	$txt['yes'] = 'Yes';
 	$txt['download_cvs'] = 'Download the CVS version';
 
-	$txt['source_theme_location_problem'] = 'It appears that your source file or theme file directory is not in the default location.  After the package file is downloaded and uncompressed you will need to manually move the files to the correct location, prior to running the upgrade.php script.';
+	$txt['source_theme_location_problem'] = 'It appears that your source file or theme file directory is not in the default location.  After the package file is downloaded and uncompressed you will need to manually move the files to the correct location.';
 
 }
 
