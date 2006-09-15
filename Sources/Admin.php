@@ -267,7 +267,7 @@ function AdminHome()
 
 	// The format of this array is: permission, action, title, description.
 	$quick_admin_tasks = array(
-		array('', 'admin;credits', 'support_credits_title', 'support_credits_info'),
+		array('', 'credits', 'support_credits_title', 'support_credits_info'),
 		array('admin_forum', 'featuresettings', 'modSettings_title', 'modSettings_info'),
 		array('admin_forum', 'maintain', 'maintain_title', 'maintain_info'),
 		array('manage_permissions', 'permissions', 'edit_permissions', 'edit_permissions_info'),
@@ -284,8 +284,8 @@ function AdminHome()
 			continue;
 
 		$context['quick_admin_tasks'][] = array(
-			'href' => $scripturl . '?action=' . $task[1],
-			'link' => '<a href="' . $scripturl . '?action=' . $task[1] . '">' . $txt[$task[2]] . '</a>',
+			'href' => $scripturl . '?action=admin;area=' . $task[1],
+			'link' => '<a href="' . $scripturl . '?action=admin;area=' . $task[1] . '">' . $txt[$task[2]] . '</a>',
 			'title' => $txt[$task[2]],
 			'description' => $txt[$task[3]],
 			'is_last' => false
