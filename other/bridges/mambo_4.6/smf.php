@@ -155,18 +155,27 @@ function ob_mambofix($buffer)
 
 	$myurl = $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
 	
+	// jumpto redirects
 	$buffer = str_replace('"?board=', $mosConfig_sef=='1' ? '"/board,' : '"&amp;board=', $buffer);
 	$buffer = str_replace('"?action=', $mosConfig_sef=='1' ? '"/action,' : '"&amp;action=', $buffer);
+	//relative anchors
 	$buffer = str_replace('href="#', 'href="' . $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'] . '#', $buffer);
+	//get rid of the question mark
 	$buffer = str_replace('"' . $scripturl . '?', '"' . $myurl, $buffer);
+	//if it's the forum index, we don't need a trailing ampersand
 	$buffer = str_replace('"' . $scripturl . '"', '"' . substr($myurl, 0, -5) . '"', $buffer);
+	//make sure there are no html entities in the javascript of the unwrapped forum
+	if ($mosConfig_sef != '1' && $wrapped != 'true')
+		$buffer = str_replace('var smf_scripturl = "'.substr($myurl, 0, -5).'"', un_htmlspecialchars('var smf_scripturl = "'.substr($myurl, 0, -5).'"'), $buffer);
+	//Sometimes links are inside single quotes
 	$buffer = str_replace('\'' . $scripturl . '?', '\'' . $myurl, $buffer);
 	$buffer = str_replace('\'' . $scripturl, '\'' . $myurl, $buffer);
 	//Don't forget XML feeds
 	$buffer = str_replace('<link>'.$scripturl, '<link>'.$myurl, $buffer );
 	$buffer = str_replace('<link>'.$scripturl, '<link>'.$myurl, $buffer );
-
+	//An ampersand followed by a # is not kosher
 	$buffer = str_replace($scripturl . '#', substr($myurl, 0, -5) . '#', $buffer);
+	//SMF admin panel does some funky things after admin login...luckily it's easy to fix
 	$buffer = str_replace('option=com_smf;Itemid=' . $Itemid . ';', '', $buffer);
 
 	// New bridged profile options.  Not yet available
@@ -215,15 +224,11 @@ function ob_mambofix($buffer)
 			$sefurl = sefReltoAbs(substr($nonsefurl, strlen($mosConfig_live_site) + 3, strlen($nonsefurl) - strlen($mosConfig_live_site) - 4));
 			$sefurl = str_replace(";", "/", $sefurl);
 			$sefurl = str_replace("=", ",", $sefurl);
-			//Fix for anything previous to Joomla! 1.0.10
-			if ($_VERSION->PRODUCT != 'Joomla!' || ($_VERSION->PRODUCT == 'Joomla!' && $_VERSION->DEV_LEVEL <= '9'))
-				$sefurl = substr($sefurl, 0, strpos($sefurl, 'option')) . preg_replace('/(\/)([^,]*)(#)/', '$1$2,$2$3', substr($sefurl, strpos($sefurl, 'option'), strlen($sefurl)));
+			$sefurl = substr($sefurl, 0, strpos($sefurl, 'option')) . preg_replace('/(\/)([^,]*)(#)/', '$1$2,$2$3', substr($sefurl, strpos($sefurl, 'option'), strlen($sefurl)));
 			$sefurl = substr($sefurl, 0, strpos($sefurl, 'option')) . preg_replace('/(\/)([^,]*)(\/)/', '$1$2,$2$3', substr($sefurl, strpos($sefurl, 'option'), strlen($sefurl)));
 			if (substr($sefurl, strlen($sefurl) - 1, 1) == '/')
 				$sefurl = substr($sefurl, 0, strlen($sefurl) - 1);
-			$buffer = str_replace(substr($nonsefurl,1,strlen($nonsefurl)), '"' . $sefurl . '"', $buffer);
-			//Fix for Joomla! 1.0.10 fragment
-			$buffer = str_replace("/#", "#", $buffer);
+			$buffer = str_replace(substr($nonsefurl, 1, strlen($nonsefurl)), '"' . $sefurl . '"', $buffer);
 		}
 	}
 	return $buffer;
@@ -282,9 +287,13 @@ function mambo_smf_exit($with_output)
 	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?rc3"></script>' );
 	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "'. $settings['theme_url']. '";
-		var smf_images_url = "'. $settings['images_url']. '";
-		var smf_scripturl = "'. un_htmlspecialchars(mambo_smf_url($scripturl)) . '";
-		var smf_session_id = "'. $context['session_id'] . '";
+		var smf_images_url = "'. $settings['images_url']. '";');
+	if ($mosConfig_sef=='1')
+		$mainframe->addCustomHeadTag( ob_mambofix('var smf_scripturl = "'. $scripturl . '";'));
+	else
+		$mainframe->addCustomHeadTag( 'var smf_scripturl = "'. un_htmlspecialchars(mambo_smf_url($scripturl)) . '";');
+	
+	$mainframe->addCustomHeadTag( '	var smf_session_id = "'. $context['session_id'] . '";
 		// ]]></script>' );
 	if ($smf_css == 'true'){
 		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?rc3" />' );
@@ -679,23 +688,9 @@ function integrate_login($username, $passwd, $cookielength)
 	$lifetime = time() + (60 * $cookielength);
 	setcookie('usercookie[username]', $username, $lifetime, '/');
 	setcookie('usercookie[password]', $passwd, $lifetime, '/');
-	setcookie('sessioncookie', '', -3600, '/');
-	
-	//Let's make sure this works in both Mambo and Joomla
+
 	$sessionCookieName = md5('site' . $mosConfig_live_site);
 	setcookie($sessionCookieName, '', -3600, '/');
-	
-	//Joomla 1.0.8 compatibility
-	
-	if (isset($_VERSION) && $_VERSION->PRODUCT == 'Joomla!' && $_VERSION->DEV_LEVEL >= '8'){
-		$remCookieName 	= mosMainFrame::remCookieName_User();
-						//Joomla 1.0.9 compatibility
-                        if ($_VERSION->DEV_LEVEL>='9')
-							$remCookieValue = mosMainFrame::remCookieValue_User( $username ) . mosMainFrame::remCookieValue_Pass( $passwd ) . $row['id'];
-                        else
-							$remCookieValue = mosMainFrame::remCookieValue_User( $username ) . mosMainFrame::remCookieValue_Pass( $passwd );
-		setcookie( $remCookieName, $remCookieValue, $lifetime, '/' );
-	}
 
 	
 	//Let's try to minimize the effects of those nasty extra sessions
@@ -778,18 +773,9 @@ function integrate_logout ($username)
 
 	setcookie('usercookie[username]', $username, time() - 3600, '/');
 	setcookie('usercookie[password]', '', time() - 3600, '/');
-	setcookie('sessioncookie' , '' , time() - 3600 , '/');
 
-	//Let's make sure this works in both Mambo and Joomla
 	$sessionCookieName = md5('site' . $mosConfig_live_site);
 	setcookie($sessionCookieName, '', time() - 3600, '/');
-	
-	//Joomla 1.0.8 compatibilty
-	if (isset($_VERSION) && $_VERSION->PRODUCT == 'Joomla!' && $_VERSION->DEV_LEVEL >= '8'){
-		$lifetime 		= time() - 86400;
-		$remCookieName 	= mosMainFrame::remCookieName_User();
-		setcookie( $remCookieName, ' ', $lifetime, '/' );
-	}
 
 	mysql_select_db($mosConfig_db);
 
@@ -998,6 +984,15 @@ function integrate_register($Options, $theme_vars)
 
 function integrate_pre_load () {
 
+
+// Try to modify settings so that bridging is less problematic if people have the wrong settings
+	global $modSettings;
+
+	//Turn off compressed output
+	$modSettings['enableCompressedOutput'] = '0';
+	//Turn off local cookies
+	$modSettings['localCookies'] = '0';
+
 // Change the SMF language according to the Mambo/Joomla settings
 
 	global $mosConfig_lang, $language, $synch_lang, $language_conversion;
@@ -1007,16 +1002,33 @@ function integrate_pre_load () {
 
 		if (isset($_COOKIE['mbfcookie']) || isset($_REQUEST['lang'])){
           
-			if (isset($_COOKIE['mbfcookie']['lang']))
-				$GLOBALS['language'] = $language_conversion[$_COOKIE['mbfcookie']['lang']];
+			if (isset($_COOKIE['mbfcookie']['lang'])){ 
+				if (isset($language_conversion[$_COOKIE['mbfcookie']['lang']]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[$_COOKIE['mbfcookie']['lang']] . '.php'))
+					$GLOBALS['language'] = $language_conversion[$_COOKIE['mbfcookie']['lang']];
+				else if (isset($language_conversion[$_COOKIE['mbfcookie']['lang']]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[$_COOKIE['mbfcookie']['lang']] . '-utf8.php'))
+					$GLOBALS['language'] = $language_conversion[$_COOKIE['mbfcookie']['lang']] . '-utf8';
+				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_COOKIE['mbfcookie']['lang'] . '.php'))
+					$GLOBALS['language'] = $_COOKIE['mbfcookie']['lang'];
+				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_COOKIE['mbfcookie']['lang'] . '-utf8.php'))
+					$GLOBALS['language'] = $_COOKIE['mbfcookie']['lang'] . '-utf8';
+			}
 
-			if (isset($_REQUEST['lang']))
-				$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)];
-    
+			if (isset($_REQUEST['lang'])){
+				if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '.php'))
+					$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)];
+				else if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8.php'))
+					$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8';					
+				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '.php'))
+					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '-utf8.php'))
+					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+			}
+			
 		} else if ($synch_lang == 'true')
 			$GLOBALS['language'] = $mosConfig_lang;
 	}
 }
+
 
 function integrate_whos_online ($actions) {
 

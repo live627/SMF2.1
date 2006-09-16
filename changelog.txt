@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2502 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2503 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -53,6 +53,7 @@ September 2006
  ! Missing globals in bridge resend password. (Mambo/Joomla bridge/smf_registration.php) 
  ! Try to change some of the settings in case users don't do it themselves. (Mambo/Joomla bridge/smf.php)
  ! Get rid of the extra slash When going from the Xoops admin panel to the SMF admin panel. (Xoops bridge/admin/index.php)
+ ! Recurse changes from Mambo/Joomla bridge to Mambo 4.6 bridge, and remove Joomla-specific code. (several files)
 
 
 
