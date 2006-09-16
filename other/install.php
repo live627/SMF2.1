@@ -187,7 +187,7 @@ function initialize_inputs()
 			$ftp->chdir($_SESSION['installer_temp_ftp']['path']);
 
 			$ftp->unlink('install.php');
-			$ftp->unlink('webinstall.sql');
+			$ftp->unlink('webinstall.php');
 			$ftp->unlink('install_2-0.sql');
 
 			$ftp->close();
@@ -197,7 +197,7 @@ function initialize_inputs()
 		else
 		{
 			@unlink(__FILE__);
-			@unlink(dirname(__FILE__) . '/webinstall.sql');
+			@unlink(dirname(__FILE__) . '/webinstall.php');
 			@unlink(dirname(__FILE__) . '/install_2-0.sql');
 		}
 

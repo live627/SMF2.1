@@ -144,6 +144,7 @@ function initialize_inputs()
 		@unlink(dirname(__FILE__) . '/upgrade_1-0.sql');
 		@unlink(dirname(__FILE__) . '/upgrade_1-1.sql');
 		@unlink(dirname(__FILE__) . '/upgrade_2-0.sql');
+		@unlink(dirname(__FILE__) . '/webinstall.php');
 
 		header('Location: http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']) . dirname($_SERVER['PHP_SELF']) . '/Themes/default/images/blank.gif');
 		exit;

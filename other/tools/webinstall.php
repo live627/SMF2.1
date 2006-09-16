@@ -32,19 +32,21 @@ initialize_inputs();
 $start_time = time();
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>', $txt['smf_installer'], '</title>
 		<style type="text/css">
 			body
 			{
-				font-family: Verdana, sans-serif;
-				background-color: #D4D4D4;
+				background-color: #E5E5E8;
 				margin: 0;
+				padding: 0;
 			}
 			body, td
 			{
-				font-size: 10pt;
+				color: #000000;
+				font-size: small;
+				font-family: verdana, sans-serif;
 			}
 			div#header
 			{
@@ -69,7 +71,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 			div.panel
 			{
 				border: 1px solid gray;
-				background-color: #F0F0F0;
+				background-color: #F6F6F6;
 				margin: 1ex 0;
 				padding: 1.2ex;
 			}
