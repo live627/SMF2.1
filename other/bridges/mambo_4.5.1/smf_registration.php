@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC3                                     *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -107,6 +107,7 @@ function sendNewPass($option)
 {
 	global $database, $Itemid, $mosConfig_live_site, $mosConfig_sitename;
 	global $db_prefix ,$mosConfig_dbprefix, $mosConfig_db, $db_name;
+	global $mosConfig_mailfrom, $mosConfig_fromname;
 
 	$_live_site = $mosConfig_live_site;
 	$_sitename = $mosConfig_sitename;
@@ -250,8 +251,8 @@ function saveRegistration($option)
 	global $modSettings,$user_settings,$context, $database, $my, $acl, $db_name;
 	global $user_info, $mosConfig_sitename, $mosConfig_live_site, $mosConfig_sef;
 	global $mosConfig_useractivation, $mosConfig_allowUserRegistration;
-	global $mosConfig_mailfrom, $mosConfig_fromname, $mosConfig_mailfrom;
-	global $mosConfig_fromname, $mosConfig_dbprefix,$db_prefix, $pm_on_reg;
+	global $mosConfig_mailfrom, $mosConfig_fromname;
+	global $mosConfig_dbprefix, $db_prefix, $pm_on_reg;
 	global $smf_path, $use_realname, $sourcedir, $mosConfig_db, $cb_reg;
 
 	if ($mosConfig_allowUserRegistration == '0') 

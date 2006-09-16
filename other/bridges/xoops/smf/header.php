@@ -21,6 +21,6 @@
 * The latest version can always be found at http://www.simplemachines.org.    *
 ******************************************************************************/
 include '../../mainfile.php';
-include XOOPS_ROOT_PATH.'/modules/smf/functions.php';
+
 include XOOPS_ROOT_PATH.'/modules/smf/config.php';
 ?>

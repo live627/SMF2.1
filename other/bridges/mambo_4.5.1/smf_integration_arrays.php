@@ -6,7 +6,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC3                                     *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -95,6 +95,7 @@ $language_conversion = array(
 							'sh' => 'serbo-croatian',
 							'sr' => 'serbian',
 							'sq' => 'albanian',
+							'sv' => 'swedish',
 							'tg' => 'tajik',
 							'th' => 'thai',
 							'tr' => 'turkish',

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC2                                     *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -89,7 +89,7 @@ $buffer = ob_get_contents();
 ob_end_clean();
 ob_start();
 
-// --- This means that the buffer may be mambofix'd twice - see above ob_start.
+// --- This means that the buffer may be xoopsfix'd twice - see above ob_start.
 echo ob_xoopsfix($buffer);
 
 if (!in_array('main', $context['template_layers']))
@@ -166,11 +166,11 @@ function xoops_smf_exit($with_output)
 	ob_end_clean();
 
 
-	$smf_header = '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?rc2"></script>
+	$smf_header = '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "' . $settings['theme_url'] . '";
 		var smf_images_url = "' . $settings['images_url'] . '";
-		var smf_scripturl = "' . $scripturl . '";
+		var smf_scripturl = "' . ob_xoopsfix($scripturl) . '";
 		var smf_session_id = "'. $context['session_id'] . '";
 	// ]]></script>
 	<title>' . $context['page_title'] . '</title>';
@@ -215,6 +215,10 @@ function integrate_login ($username, $password, $cookietime)
 		UPDATE " . XOOPS_DB_PREFIX . "_session
 		SET sess_data = '$sess_data'
 		WHERE sess_id = '$sess_id'");
+		
+	if ($xoopsConfig['use_mysession'] && $xoopsConfig['session_name'] != '') {
+        setcookie($xoopsConfig['session_name'], session_id(), time()+(60 * $xoopsConfig['session_expire']), '/',  '', 0);
+    }
 	
 	mysql_select_db($db_name);
 }
@@ -264,8 +268,8 @@ function integrate_validate_login ($username, $password, $cookietime)
 
 		mysql_query ("
 			INSERT INTO {$db_prefix}members 
-				(memberName, realName, passwd, emailAddress, dateRegistered, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, secretQuestion, additionalGroups) 
-			VALUES ('$username', '$xoops_user[uname]', '$xoops_user[pass]', '$xoops_user[email]', '$xoops_user[user_regdate]', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(memberName, realName, passwd, emailAddress, dateRegistered, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups) 
+			VALUES ('$username', '$xoops_user[uname]', '$xoops_user[pass]', '$xoops_user[email]', '$xoops_user[user_regdate]', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 		$memberID = db_insert_id();
 		
 		updateStats('member', $memberID, $xoops_user['uname']);

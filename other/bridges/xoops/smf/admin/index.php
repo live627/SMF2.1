@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 2.0 Alpha                                   *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -22,7 +22,7 @@
 ******************************************************************************/
 
 include '../../../include/cp_header.php';
-include '../functions.php';
+// include '../functions.php';
 include '../config.php';
 xoops_cp_header();
 echo"<table width='100%' border='0' cellspacing='1' class='outer'>"
@@ -36,7 +36,7 @@ else {
 <table border="0" cellpadding="4" cellspacing="1" width="100%">
 
 <tr class='bg1' align="left">
-	<td><span class='fg2'><a href="<?php echo $smfUrl['root'];?>/index.php?action=admin"><?php echo _MI_ADMIN;?></a></span></td>
+	<td><span class='fg2'><a href="<?php echo $smfUrl['root'];?>index.php?action=admin"><?php echo _MI_ADMIN;?></a></span></td>
 	<td><span class='fg2'><?php echo _MI_ADMIN_DESC;?></span></td>
 </tr>
 
