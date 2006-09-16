@@ -242,7 +242,7 @@ function doStep0()
 		return false;
 	}
 
-	// Make sure this stuff is set, if not go to the defaults
+	// Make sure this stuff is set, if not go to the default values.
 	if (!isset($_SESSION['is_logged_in']))
 	{
 		$_SESSION['is_logged_in'] = false;
@@ -659,19 +659,19 @@ function doStep2()
 			// Pausing time!
 			echo '
 				<div class="panel">
-					<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
+					<h2 style="margin-top: 2ex;">', $txt['not_done_yet'], '</h2>
 					<h3>
-						This downloading of the files has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="continue">continue button</label> below to keep going.
+						', $txt['download_paused'], '
 					</h3>
 					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-						<b>Download Progress:</b>
+						<b>', $txt['download_progress'], ':</b>
 						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
 							<div style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $percent_done_total, '%</div>
 							<div style="width: ', $percent_done_total, '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
 						</div>
 					</div>
 					<form action="', $_SERVER['PHP_SELF'], $query_string, '" method="post" name="autoSubmit">
-						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="Continue" /></div>
+						<div align="right" style="margin: 1ex;"><input name="b" type="submit" value="', $txt['continue'], '" /></div>
 					</form>
 					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -684,7 +684,7 @@ function doStep2()
 							else if (countdown == -1)
 								return;
 
-							document.autoSubmit.b.value = "Continue (" + countdown + ")";
+							document.autoSubmit.b.value = "', $txt['continue'], ' (" + countdown + ")";
 							countdown--;
 
 							setTimeout("doAutoSubmit();", 1000);
@@ -709,7 +709,7 @@ function doStep2()
 					<h3>', $txt['download_successful_info'], '</h3>
 
 					<form action="', $_SERVER['PHP_SELF'], '?step=3" method="post" name="autoSubmit">
-						<div align="right" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['download_successful_continue'], '" /></div>
+						<div align="right" style="margin: 1ex;"><input type="submit" name="b" value="', $txt['continue'], '" /></div>
 					</form>
 					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 						window.onload = doAutoSubmit;
@@ -722,7 +722,7 @@ function doStep2()
 							else if (countdown == -1)
 								return;
 
-							document.autoSubmit.b.value = "Continue (" + countdown + ")";
+							document.autoSubmit.b.value = "', $txt['continue'], ' (" + countdown + ")";
 							countdown--;
 
 							setTimeout("doAutoSubmit();", 1000);
@@ -776,12 +776,12 @@ function doStep3()
 			// Pausing time!
 			echo '
 				<div class="panel">
-					<h2 style="margin-top: 2ex;">Not quite done yet!</h2>
+					<h2 style="margin-top: 2ex;">', $txt['not_done_yet'], '</h2>
 					<h3>
-						This extraction of the files has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="continue">continue button</label> below to keep going.
+						', $txt['extraction_paused'], '
 					</h3>
 					<div style="padding-left: 20%; padding-right: 20%; margin-top: 1ex;">
-						<b>Uncompression Progress:</b>
+						<b>', $txt['extraction_progress'], ':</b>
 						<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
 							<div style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $percent_done_total, '%</div>
 							<div style="width: ', $percent_done_total, '%; height: 12pt; z-index: 1; background-color: red;">&nbsp;</div>
@@ -831,7 +831,7 @@ function doStep3()
 					<h3>', $txt['extraction_complete_info'], '</h3>
 
 					<form action="', strtr(dirname($_SERVER['PHP_SELF']), array(basename(__FILE__) => 'install.php')), '" method="post">
-						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['download_successful_continue'], '" /></div>
+						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['continue'], '" /></div>
 					</form>
 				</div>';
 
@@ -1222,7 +1222,7 @@ function load_language_data()
 	$txt['ftp_connect'] = 'Connect';
 	$txt['download_successful'] = 'Download successful';
 	$txt['download_successful_info'] = 'The installation archive has been downloaded successfully.  Next, the files within it will be extracted to their destination - if you are sure you want to do this, please click continue.';
-	$txt['download_successful_continue'] = 'Continue';
+	$txt['continue'] = 'Continue';
 	$txt['extraction_complete'] = 'Extraction complete!';
 	$txt['extraction_complete_info'] = 'The download and extraction seemed to complete successfully.  Please click continue to finish the rest of the installation.';
 
@@ -1252,6 +1252,15 @@ function load_language_data()
 	$txt['download_cvs'] = 'Download the CVS version';
 
 	$txt['source_theme_location_problem'] = 'It appears that your source file or theme file directory is not in the default location.  After the package file is downloaded and uncompressed you will need to manually move the files to the correct location.';
+
+	$txt['not_done_yet'] = 'Not quite done yet!';
+
+	$txt['download_paused'] = 'This downloading of the files has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="continue">continue button</label> below to keep going.';
+
+	$txt['extraction_paused'] = 'This extraction of the files has been paused to avoid overloading your server.  Don\'t worry, nothing\'s wrong - simply click the <label for="continue">continue button</label> below to keep going.';
+
+	$txt['extraction_progress'] = 'Extraction Progress';
+	$txt['download_progress'] = 'Download Progress';
 
 }
 
