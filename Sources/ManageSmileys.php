@@ -1101,7 +1101,12 @@ function EditMessageIcons()
 			// Do a huge replace ;)
 			$insert = array();
 			foreach ($context['icons'] as $id => $icon)
+			{
+				if ($id != 0)
+					$icon['title'] = addslashes($icon['title']);
+
 				$insert[] = "($id, $icon[board_id], SUBSTRING('$icon[title]', 1, 80), SUBSTRING('$icon[filename]', 1, 80), $icon[true_order])";
+			}
 
 			db_query("
 				REPLACE INTO {$db_prefix}message_icons
