@@ -1274,7 +1274,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'php',
 				'type' => 'unparsed_content',
-				'content' => '$1',
+				'content' => '<div class="phpcode">$1</div>',
 				'validate' => isset($disabled['php']) ? null : create_function('&$tag, &$data, $disabled', '
 					if (!isset($disabled[\'php\']))
 					{

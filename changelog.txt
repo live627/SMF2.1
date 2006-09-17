@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2504 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2505 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -55,6 +55,7 @@ September 2006
  ! Get rid of the extra slash When going from the Xoops admin panel to the SMF admin panel. (Xoops bridge/admin/index.php)
  ! Recurse changes from Mambo/Joomla bridge to Mambo 4.6 bridge, and remove Joomla-specific code. (several files)
  ! When adding a new message icon, make sure to escape the titles of the current icons. (ManageSmileys.php)
+ ! The php tag wasn't acting like a proper block level tag. (Subs.php)
 
 
 
