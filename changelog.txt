@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2508 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2509 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -61,6 +61,7 @@ September 2006
  + Added an xmlHTTP'ed icon dropdown, allowing to change message icons from the display page. (Post.php, Xml.php, Display template, script.js)
  ! Inline modification wasn't working properly in IE 5.0. (xml_topic.js)
  ! Brought back the 'Go' button for the jumpto fanatics. (script.js, Display template)
+ ! Search results could in some cases get a relevance above 100%. (Search.php)
 
 
 August 2006
