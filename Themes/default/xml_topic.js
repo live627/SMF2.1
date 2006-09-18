@@ -52,7 +52,6 @@ QuickReply.prototype.swap = function ()
 	this.bCollapsed = !this.bCollapsed;
 }
 
-
 // *** QuickModify object.
 function QuickModify(oOptions)
 {
@@ -106,7 +105,11 @@ QuickModify.prototype.modifyMsg = function (iMessageId, sSessionId)
 
 	// Send out the XMLhttp request to get more info
 	ajax_indicator(true);
-	getXMLDocument.call(this, this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';modify;xml', this.onMessageReceived);
+
+	// For IE 5.0 support, 'call' is not yet used.
+	this.tmpMethod = getXMLDocument;
+	this.tmpMethod(this.opt.sScriptUrl + '?action=quotefast;quote=' + iMessageId + ';sesc=' + sSessionId + ';modify;xml', this.onMessageReceived);
+	delete this.tmpMethod;
 }
 
 // The callback function used for the XMLhttp request retrieving the message.

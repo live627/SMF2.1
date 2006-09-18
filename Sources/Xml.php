@@ -37,6 +37,9 @@ function XMLhttpMain()
 		'jumpto' => array(
 			'function' => 'GetJumpTo',
 		),
+		'messageicons' => array(
+			'function' => 'ListMessageIcons',
+		),
 	);
 	if (!isset($_REQUEST['sa'], $sub_actions[$_REQUEST['sa']]))
 		fatal_error('Action doesn\'t exist');
@@ -78,6 +81,16 @@ function GetJumpTo()
 	mysql_free_result($request);
 
 	$context['sub_template'] = 'jump_to';
+}
+
+function ListMessageIcons()
+{
+	global $context, $sourcedir, $board;
+
+	require_once($sourcedir . '/Subs-Editor.php');
+	$context['icons'] = getMessageIcons($board);
+
+	$context['sub_template'] = 'message_icons';
 }
 
 ?>

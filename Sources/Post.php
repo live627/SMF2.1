@@ -2228,7 +2228,7 @@ function JavaScriptModify()
 	mysql_free_result($request);
 
 	// Change either body or subject requires permissions to modify messages.
-	if (isset($_POST['message']) || isset($_POST['subject']) || isset($_POST['icon']))
+	if (isset($_POST['message']) || isset($_POST['subject']) || isset($_REQUEST['icon']))
 	{
 		if ($row['ID_MEMBER'] == $ID_MEMBER && !allowedTo('modify_any'))
 		{
@@ -2258,7 +2258,7 @@ function JavaScriptModify()
 		if ($smfFunc['strlen']($_POST['subject']) > 100)
 			$_POST['subject'] = addslashes($smfFunc['substr'](stripslashes($_POST['subject']), 0, 100));
 	}
-	else
+	elseif (isset($_POST['subject']))
 	{
 		$post_errors[] = 'no_subject';
 		unset($_POST['subject']);
@@ -2317,7 +2317,7 @@ function JavaScriptModify()
 			'id' => $row['ID_MSG'],
 			'subject' => isset($_POST['subject']) ? $_POST['subject'] : null,
 			'body' => isset($_POST['message']) ? $_POST['message'] : null,
-			'icon' => isset($_POST['icon']) ? preg_replace('~[\./\\\\*\':"<>]~', '', $_POST['icon']) : null,
+			'icon' => isset($_REQUEST['icon']) ? preg_replace('~[\./\\\\*\':"<>]~', '', $_REQUEST['icon']) : null,
 		);
 		$topicOptions = array(
 			'id' => $topic,
@@ -2329,7 +2329,7 @@ function JavaScriptModify()
 		$posterOptions = array();
 
 		// Only consider marking as editing if they have edited the subject, message or icon.
-		if ((isset($_POST['subject']) && $_POST['subject'] != $row['subject']) || (isset($_POST['message']) && $_POST['message'] != $row['body']) || (isset($_POST['icon']) && $_POST['icon'] != $row['icon']))
+		if ((isset($_POST['subject']) && $_POST['subject'] != $row['subject']) || (isset($_POST['message']) && $_POST['message'] != $row['body']) || (isset($_REQUEST['icon']) && $_REQUEST['icon'] != $row['icon']))
 		{
 			// And even then only if the time has passed...
 			if (time() - $row['posterTime'] > $modSettings['edit_wait_time'] || $ID_MEMBER != $row['ID_MEMBER'])
@@ -2393,7 +2393,7 @@ function JavaScriptModify()
 			$context['message']['body'] = parse_bbc($context['message']['body'], $row['smileysEnabled'], $row['ID_MSG']);
 		}
 		// Topic?
-		elseif (empty($post_errors) && isset($msgOptions['subject']))
+		elseif (empty($post_errors))
 		{
 			$context['sub_template'] = 'modifytopicdone';
 			$context['message'] = array(
@@ -2403,7 +2403,7 @@ function JavaScriptModify()
 					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
 					'name' => isset($msgOptions['modify_time']) ? stripslashes($msgOptions['modify_name']) : '',
 				),
-				'subject' => stripslashes($msgOptions['subject']),
+				'subject' => isset($msgOptions['subject']) ? stripslashes($msgOptions['subject']) : '',
 			);
 
 			censorText($context['message']['subject']);

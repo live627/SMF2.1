@@ -418,7 +418,8 @@ function template_results()
 					sBoardChildLevelIndicator: "==",
 					sBoardPrefix: "=> ",
 					sCatSeparator: "-----------------------------",
-					sCatPrefix: ""
+					sCatPrefix: "",
+					sGoButtonLabel: "', $txt['go'], '"
 				});
 		// ]]></script>';
 	}

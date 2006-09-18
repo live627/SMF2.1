@@ -374,7 +374,7 @@ function template_main()
 						</td>
 						<td valign="top" width="85%" height="100%">
 							<table width="100%" border="0"><tr>
-								<td valign="middle"><a href="', $message['href'], '"><img src="', $message['icon_url'] . '" alt="" border="0" /></a></td>
+								<td valign="middle"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></td>
 								<td valign="middle">
 									<div style="font-weight: bold;" id="subject_', $message['id'], '">
 										<a href="', $message['href'], '">', $message['subject'], '</a>
@@ -426,7 +426,7 @@ function template_main()
 							</tr></table>
 							<hr width="100%" size="1" class="hrcolor" />
 							<div class="post"', $message['can_modify'] ? ' id="msg_' . $message['id'] . '"' : '', '>', $message['body'], '</div>', $message['can_modify'] ? '
-							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" align="right" id="modify_button_' . $message['id'] . '" style="cursor: pointer; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '' , '
+							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" align="right" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '' , '
 						</td>
 					</tr>';
 
@@ -697,7 +697,29 @@ function template_main()
 			sBoardChildLevelIndicator: "==",
 			sBoardPrefix: "=> ",
 			sCatSeparator: "-----------------------------",
-			sCatPrefix: ""
+			sCatPrefix: "",
+			sGoButtonLabel: "', $txt['go'], '"
+		});
+
+		aIconLists[aIconLists.length] = new IconList({
+			sBackReference: "aIconLists[" + aIconLists.length + "]",
+			sIconIdPrefix: "msg_icon_",
+			sScriptUrl: "', $scripturl, '",
+			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
+			iBoardId: ', $context['current_board'], ',
+			iTopicId: ', $context['current_topic'], ',
+			sSessionId: "', $context['session_id'], '",
+			sLabelIconList: "Message Icon",
+			sBoxBackground: "transparent",
+			sBoxBackgroundHover: "#ffffff",
+			iBoxBorderWidthHover: 1,
+			sBoxBorderColorHover: "#adadad" ,
+			sContainerBackground: "#ffffff",
+			sContainerBorder: "1px solid #adadad",
+			sItemBorder: "1px solid #ffffff",
+			sItemBorderHover: "1px dotted gray",
+			sItemBackground: "transparent",
+			sItemBackgroundHover: "#e0e0f0"
 		});
 	}
 // ]]></script>';

@@ -64,7 +64,9 @@ function template_modifytopicdone()
 	if (empty($context['message']['errors']))
 	{
 		echo '
-		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt[525] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>
+		<modified><![CDATA[', empty($context['message']['modified']['time']) ? '' : '&#171; <i>' . $txt['last_edit'] . ': ' . $context['message']['modified']['time'] . ' ' . $txt[525] . ' ' . $context['message']['modified']['name'] . '</i> &#187;', ']]></modified>';
+		if (!empty($context['message']['subject']))
+			echo '
 		<subject><![CDATA[', $context['message']['subject'], ']]></subject>';
 	}
 	else
@@ -254,6 +256,19 @@ function template_jump_to()
 			echo '
 	<item type="board" id="', $board['id'], '" childlevel="', $board['child_level'], '"><![CDATA[', $board['name'], ']]></item>';
 	}
+	echo '
+</smf>';
+}
+
+function template_message_icons()
+{
+	global $context, $settings, $options;
+
+	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
+<smf>';
+	foreach ($context['icons'] as $icon)
+		echo '
+	<icon value="', $icon['value'], '" url="', $icon['url'], '"><![CDATA[', $icon['name'], ']]></icon>';
 	echo '
 </smf>';
 }

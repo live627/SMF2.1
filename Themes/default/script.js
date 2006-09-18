@@ -63,7 +63,12 @@ function getXMLDocument(sUrl, funcCallback)
 				return;
 
 			if (oMyDoc.responseXML != null && oMyDoc.status == 200)
-				funcCallback.call(oCaller, oMyDoc.responseXML);
+			{
+				// A primitive substitute for the call method to support IE 5.0.
+				oCaller.tmpMethod = funcCallback;
+				oCaller.tmpMethod(oMyDoc.responseXML);
+				delete oCaller.tmpMethod;
+			}
 		};
 	}
 	oMyDoc.open('GET', sUrl, bAsync);
@@ -528,7 +533,7 @@ function expandPages(spanNode, baseURL, firstPage, lastPage, perPage)
 		replacement += '<a class="navPages" href="' + baseURL.replace(/%d/, i) + '">' + (1 + i / perPage) + '</a> ';
 
 	if (oldLastPage > 0)
-		replacement += '<span style="font-weight: bold; cursor: pointer;" onclick="expandPages(this, \'' + baseURL + '\', ' + lastPage + ', ' + oldLastPage + ', ' + perPage + ');"> ... </span> ';
+		replacement += '<span style="font-weight: bold; cursor: ' + (is_ie && !is_ie6up ? 'hand' : 'pointer') + ';" onclick="expandPages(this, \'' + baseURL + '\', ' + lastPage + ', ' + oldLastPage + ', ' + perPage + ');"> ... </span> ';
 
 	// Replace the dots by the new page links.
 	setInnerHTML(spanNode, replacement);
@@ -656,7 +661,7 @@ function smf_unhtmlspecialchars(text)
 	return text;
 }
 
-function createAddEventListener(oTarget)
+function createEventListener(oTarget)
 {
 	if (typeof(oTarget.addEventListener) == 'undefined')
 	{
@@ -666,6 +671,10 @@ function createAddEventListener(oTarget)
 			{
 				oTarget.attachEvent("on" + sEvent, funcHandler);
 			}
+			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture)
+			{
+				oTarget.detachEvent("on" + sEvent, funcHandler);
+			}
 		}
 		else
 		{
@@ -673,7 +682,27 @@ function createAddEventListener(oTarget)
 			{
 				oTarget["on" + sEvent] = funcHandler;
 			}
+			oTarget.removeEventListener = function (sEvent, funcHandler, bCapture) 
+			{
+				oTarget["on" + sEvent] = null;
+			}
 		}
+	}
+}
+
+function findCoords(oElement)
+{
+	if (typeof(oElement.tagName) == 'undefined')
+		return {'iX': 0, 'iY': 0};
+
+	var bSkipMe = in_array(oElement.tagName.toLowerCase(), ['tr', 'form', 'div']);
+
+	if (oElement.parentNode == null || typeof(oElement.parentNode.offsetLeft) == 'undefined')
+		return {'iX': bSkipMe ? 0 : oElement.offsetLeft, 'iY': bSkipMe ? 0 : oElement.offsetTop};
+	else
+	{
+		var aAdd = findCoords(oElement.parentNode);
+		return {'iX': (bSkipMe ? 0 : oElement.offsetLeft) + aAdd.iX, 'iY': (bSkipMe ? 0 : oElement.offsetTop) + aAdd.iY};
 	}
 }
 
@@ -709,7 +738,7 @@ function grabJumpToContent()
 // This'll contain all JumpTo objects on the page.
 var aJumpTo = new Array();
 
-// JumpTo class.
+// *** JumpTo class.
 function JumpTo(oJumpToOptions)
 {
 	this.opt = oJumpToOptions;
@@ -723,7 +752,7 @@ JumpTo.prototype.showSelect = function ()
 	var sChildLevelPrefix = '';
 	for (var i = this.opt.iCurBoardChildLevel; i > 0; i--)
 		sChildLevelPrefix += this.opt.sBoardChildLevelIndicator;
-	setInnerHTML(document.getElementById(this.opt.sContainerId), this.opt.sJumpToTemplate.replace(/%select_id%/, this.opt.sContainerId + '_select').replace(/%dropdown_list%/, '<select name="' + this.opt.sContainerId + '_select" id="' + this.opt.sContainerId + '_select" ' + (typeof(document.implementation) == 'undefined' ? 'onmouseover="grabJumpToContent();" ' : '') + (typeof(document.onbeforeactivate) == 'undefined' ? 'onfocus' : 'onbeforeactivate') + '="grabJumpToContent();"><option value="?board=' + this.opt.iCurBoardId + '.0">' + sChildLevelPrefix + this.opt.sBoardPrefix + this.opt.sCurBoardName + '</option></select>'));
+	setInnerHTML(document.getElementById(this.opt.sContainerId), this.opt.sJumpToTemplate.replace(/%select_id%/, this.opt.sContainerId + '_select').replace(/%dropdown_list%/, '<select name="' + this.opt.sContainerId + '_select" id="' + this.opt.sContainerId + '_select" ' + (typeof(document.implementation) == 'undefined' ? 'onmouseover="grabJumpToContent();" ' : '') + (typeof(document.onbeforeactivate) == 'undefined' ? 'onfocus' : 'onbeforeactivate') + '="grabJumpToContent();"><option value="?board=' + this.opt.iCurBoardId + '.0">' + sChildLevelPrefix + this.opt.sBoardPrefix + this.opt.sCurBoardName + '</option></select>&nbsp;<input type="button" value="' + this.opt.sGoButtonLabel + '" onclick="window.location.href = \'' + smf_scripturl + '?board=' + this.opt.iCurBoardId + '.0\';" />'));
 	this.dropdownList = document.getElementById(this.opt.sContainerId + '_select');
 }
 
@@ -800,4 +829,157 @@ JumpTo.prototype.fillSelect = function (aBoardsAndCategories)
 		if (this.selectedIndex > 0 && this.options[this.selectedIndex].value)
 			window.location.href = smf_scripturl + this.options[this.selectedIndex].value.substr(smf_scripturl.indexOf('?') == -1 || this.options[this.selectedIndex].value.substr(0, 1) != '?' ? 0 : 1);
 	}
+}
+
+// A global array containing all IconList objects.
+var aIconLists = new Array();
+
+// *** IconList object.
+function IconList(oOptions)
+{
+	if (!window.XMLHttpRequest)
+		return;
+
+	this.opt = oOptions;
+	this.bListLoaded = false;
+	this.oContainerDiv = null;
+	this.funcMousedownHandler = null;
+	this.funcParent = this;
+	this.iCurMessageId = 0;
+	this.iCurTimeout = 0;
+
+	this.initIcons();
+}
+
+// Replace all message icons by icons with hoverable and clickable div's.
+IconList.prototype.initIcons = function ()
+{
+	for (var i = document.images.length - 1, iPrefixLength = this.opt.sIconIdPrefix.length; i >= 0; i--)
+		if (document.images[i].id.substr(0, iPrefixLength) == this.opt.sIconIdPrefix)
+			setOuterHTML(document.images[i], '<div title="' + this.opt.sLabelIconList + '" onclick="' + this.opt.sBackReference + '.openPopup(this, ' + document.images[i].id.substr(iPrefixLength) + ')" onmouseover="' + this.opt.sBackReference + '.onBoxHover(this, true)" onmouseout="' + this.opt.sBackReference + '.onBoxHover(this, false)" style="background: ' + this.opt.sBoxBackground + '; cursor: ' + (is_ie && !is_ie6up ? 'hand' : 'pointer') + '; padding: 3px; text-align: center;"><img src="' + document.images[i].src + '" alt="' + document.images[i].alt + '" style="margin: 0px; padding: ' + (is_ie ? '3px' : '3px 0px 3px 0px') + ';" /></div>');
+}
+
+// Event for the mouse hovering over the original icon.
+IconList.prototype.onBoxHover = function (oDiv, bMouseOver)
+{
+	oDiv.style.border = bMouseOver ? this.opt.iBoxBorderWidthHover + 'px solid ' + this.opt.sBoxBorderColorHover : '';
+	oDiv.style.background = bMouseOver ? this.opt.sBoxBackgroundHover : this.opt.sBoxBackground;
+	oDiv.style.padding = bMouseOver ? (3 - this.opt.iBoxBorderWidthHover) + 'px' : '3px'
+}
+
+// Show the list of icons after the user clicked the original icon.
+IconList.prototype.openPopup = function (oDiv, iMessageId)
+{
+	if (!this.bListLoaded && this.oContainerDiv == null)
+	{
+		// Create a container div.
+		this.oContainerDiv = document.createElement('div');
+		this.oContainerDiv.id = 'iconList';
+		this.oContainerDiv.style.display = 'none';
+		this.oContainerDiv.style.cursor = is_ie && !is_ie6up ? 'hand' : 'pointer';
+		this.oContainerDiv.style.position = 'absolute';
+		this.oContainerDiv.style.width = oDiv.clientWidth + 'px';
+		this.oContainerDiv.style.background = this.opt.sContainerBackground;
+		this.oContainerDiv.style.border = this.opt.sContainerBorder;
+		this.oContainerDiv.style.padding = '1px';
+		this.oContainerDiv.style.textAlign = 'center';
+		document.body.appendChild(this.oContainerDiv);
+
+		// Start to fetch its contents.
+		ajax_indicator(true);
+		this.tmpMethod = getXMLDocument;
+		this.tmpMethod(this.opt.sScriptUrl + '?action=xmlhttp;sa=messageicons;board=' + this.opt.iBoardId + ';xml', this.onIconsReceived);
+		delete this.tmpMethod;
+
+		createEventListener(document.body);
+	}
+
+	this.iCurMessageId = iMessageId;
+
+	// Set the position of the container.
+	var aPos = findCoords(oDiv);
+	if (is_ie50)
+		aPos.iY += 4;
+
+	this.oContainerDiv.style.top = (aPos.iY + oDiv.offsetHeight) + 'px';
+	this.oContainerDiv.style.left = (aPos.iX - 1) + 'px';
+	this.oClickedIcon = oDiv;
+
+	if (this.bListLoaded)
+		this.oContainerDiv.style.display = 'block';
+
+	document.body.addEventListener('mousedown', this.onWindowMouseDown, false);
+}
+
+// Setup the list of icons once it is received through xmlHTTP.
+IconList.prototype.onIconsReceived = function (oXMLDoc)
+{
+	var icons = oXMLDoc.getElementsByTagName('smf')[0].getElementsByTagName('icon');
+	var sItems = '';
+
+	for (var i = 0, n = icons.length; i < n; i++)
+		sItems += '<div onmouseover="' + this.opt.sBackReference + '.onItemHover(this, true)" onmouseout="' + this.opt.sBackReference + '.onItemHover(this, false);" onmousedown="' + this.opt.sBackReference + '.onItemMouseDown(this, \'' + icons[i].getAttribute('value') + '\');" style="padding: 3px 0px 3px 0px; margin-left: auto; margin-right: auto; border: ' + this.opt.sItemBorder + '; background: ' + this.opt.sItemBackground + '"><img src="' + icons[i].getAttribute('url') + '" alt="' + icons[i].getAttribute('name') + '" title="' + icons[i].firstChild.nodeValue + '" border="0" /></div>';
+
+	setInnerHTML(this.oContainerDiv, sItems);
+	this.oContainerDiv.style.display = 'block';
+	this.bListLoaded = true;
+
+	if (is_ie)
+		this.oContainerDiv.style.width = this.oContainerDiv.clientWidth + 'px';
+	
+	ajax_indicator(false);
+}
+
+// Event handler for hovering over the icons.
+IconList.prototype.onItemHover = function (oDiv, bMouseOver)
+{
+	oDiv.style.background = bMouseOver ? this.opt.sItemBackgroundHover : this.opt.sItemBackground;
+	oDiv.style.border = bMouseOver ? this.opt.sItemBorderHover : this.opt.sItemBorder;
+	if (this.iCurTimeout != 0)
+		window.clearTimeout(this.iCurTimeout);
+	if (bMouseOver)
+		this.onBoxHover(this.oClickedIcon, true);
+	else
+		this.iCurTimeout = window.setTimeout(this.opt.sBackReference + '.collapseList();', 500);
+}
+
+// Event handler for clicking on one of the icons.
+IconList.prototype.onItemMouseDown = function (oDiv, sNewIcon)
+{
+	if (this.iCurMessageId != 0)
+	{
+		ajax_indicator(true);
+		this.tmpMethod = getXMLDocument;
+		var oXMLDoc = this.tmpMethod(this.opt.sScriptUrl + '?action=jsmodify;topic=' + this.opt.iTopicId + ';msg=' + this.iCurMessageId + ';sesc=' + this.opt.sSessionId + ';icon=' + sNewIcon + ';xml');
+		delete this.tmpMethod;
+		ajax_indicator(false);
+
+		var oMessage = oXMLDoc.responseXML.getElementsByTagName('smf')[0].getElementsByTagName('message')[0];
+		if (oMessage.getElementsByTagName('error').length == 0)
+		{
+			if (this.opt.bShowModify && oMessage.getElementsByTagName('modified').length != 0)
+				setInnerHTML(document.getElementById('modified_' + this.iCurMessageId), oMessage.getElementsByTagName('modified')[0].childNodes[0].nodeValue);
+			this.oClickedIcon.getElementsByTagName('img')[0].src = oDiv.getElementsByTagName('img')[0].src;
+		}
+	}
+}
+
+// Event handler for clicking outside the list (will make the list disappear).
+IconList.prototype.onWindowMouseDown = function ()
+{
+	for (var i = aIconLists.length - 1; i >= 0; i--)
+	{
+		aIconLists[i].funcParent.tmpMethod = aIconLists[i].collapseList;
+		aIconLists[i].funcParent.tmpMethod();
+		delete aIconLists[i].funcParent.tmpMethod;
+	}
+}
+
+// Collapse the list of icons.
+IconList.prototype.collapseList = function()
+{
+	this.onBoxHover(this.oClickedIcon, false);
+	this.oContainerDiv.style.display = 'none';
+	this.iCurMessageId = 0;
+	document.body.removeEventListener('mousedown', this.onWindowMouseDown, false);
 }

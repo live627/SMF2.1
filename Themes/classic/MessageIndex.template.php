@@ -302,7 +302,8 @@ function template_main()
 			sBoardChildLevelIndicator: "==",
 			sBoardPrefix: "=> ",
 			sCatSeparator: "-----------------------------",
-			sCatPrefix: ""
+			sCatPrefix: "",
+			sGoButtonLabel: "', $txt['go'], '"
 		});
 // ]]></script>';
 }

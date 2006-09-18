@@ -380,7 +380,7 @@ function template_main()
 						</td>
 						<td valign="top" width="85%" height="100%">
 							<table width="100%" border="0"><tr>
-								<td valign="middle"><a href="', $message['href'], '"><img src="', $message['icon_url'] . '" alt="" border="0" /></a></td>
+								<td valign="middle"><img src="', $message['icon_url'] . '" alt="" border="0"', $message['can_modify'] ? ' id="msg_icon_' . $message['id'] . '"' : '', ' /></td>
 								<td valign="middle">
 									<div style="font-weight: bold;" id="subject_', $message['id'], '">
 										<a href="', $message['href'], '">', $message['subject'], '</a>
@@ -696,7 +696,29 @@ function template_main()
 			sBoardChildLevelIndicator: "==",
 			sBoardPrefix: "=> ",
 			sCatSeparator: "-----------------------------",
-			sCatPrefix: ""
+			sCatPrefix: "",
+			sGoButtonLabel: "', $txt['go'], '"
+		});
+
+		aIconLists[aIconLists.length] = new IconList({
+			sBackReference: "aIconLists[" + aIconLists.length + "]",
+			sIconIdPrefix: "msg_icon_",
+			sScriptUrl: "', $scripturl, '",
+			bShowModify: ', $settings['show_modify'] ? 'true' : 'false', ',
+			iBoardId: ', $context['current_board'], ',
+			iTopicId: ', $context['current_topic'], ',
+			sSessionId: "', $context['session_id'], '",
+			sLabelIconList: "Message Icon",
+			sBoxBackground: "transparent",
+			sBoxBackgroundHover: "#ffffff",
+			iBoxBorderWidthHover: 1,
+			sBoxBorderColorHover: "#adadad" ,
+			sContainerBackground: "#ffffff",
+			sContainerBorder: "1px solid #adadad",
+			sItemBorder: "1px solid #ffffff",
+			sItemBorderHover: "1px dotted gray",
+			sItemBackground: "transparent",
+			sItemBackgroundHover: "#e0e0f0"
 		});
 	}
 // ]]></script>';
