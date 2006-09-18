@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2505 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2506 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -56,6 +56,7 @@ September 2006
  ! Recurse changes from Mambo/Joomla bridge to Mambo 4.6 bridge, and remove Joomla-specific code. (several files)
  ! When adding a new message icon, make sure to escape the titles of the current icons. (ManageSmileys.php)
  ! The php tag wasn't acting like a proper block level tag. (Subs.php)
+ ! Make sure bridge registration is compatible with Mambo 4.6. (Mambo 4.6 bridge/smf_registration.php)
 
 
 

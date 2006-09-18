@@ -150,7 +150,7 @@ function ob_mambofix($buffer)
 	global $bridge_reg, $Itemid, $_VERSION, $wrapped;
 
 	//Don't rewrite URLs if this is a database dump 
-	if ($_REQUEST['action'] == 'dumpdb')
+	if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'dumpdb')
 		return;
 
 	$myurl = $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
@@ -255,7 +255,7 @@ function mambo_smf_url($url)
 
 function mambo_smf_exit($with_output)
 {
-	global $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css;
+	global $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css, $mosConfig_sef;
 
 	$buffer = ob_get_contents();
 	ob_end_clean();
@@ -294,7 +294,7 @@ function mambo_smf_exit($with_output)
 		var smf_theme_url = "'. $settings['theme_url']. '";
 		var smf_images_url = "'. $settings['images_url']. '";');
 	if ($mosConfig_sef=='1')
-		$mainframe->addCustomHeadTag( ob_mambofix('var smf_scripturl = "'. $scripturl . '";'));
+		$mainframe->addCustomHeadTag( ob_mambofix('var smf_scripturl ="'. $scripturl . '";'));
 	else
 		$mainframe->addCustomHeadTag( 'var smf_scripturl = "'. un_htmlspecialchars(mambo_smf_url($scripturl)) . '";');
 	
@@ -1015,7 +1015,7 @@ function integrate_pre_load () {
 
 
 // Try to modify settings so that bridging is less problematic if people have the wrong settings
-	global $modSettings;
+	global $modSettings, $smf_path;
 
 	//Turn off compressed output
 	$modSettings['enableCompressedOutput'] = '0';

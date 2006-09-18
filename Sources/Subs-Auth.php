@@ -75,8 +75,8 @@ if (!defined('SMF'))
 
 	array findMembers(array names, bool use_wildcards = false,
 			bool buddies_only = false, int max = none)
-		- searches members of whom the username, display name, or e-mail adress
-		  match the given pattern of the array names.
+		- searches for members whose username, display name, or e-mail address 
+		  match the given pattern of array names.
 		- accepts wildcards ? and * in the patern if use_wildcards is set.
 		- retrieves a maximum of max members, if passed.
 		- searches only buddies if buddies_only is set.

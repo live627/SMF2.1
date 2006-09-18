@@ -25,23 +25,26 @@
 /** ensure this file is being included by a parent file */
 if (!defined('_VALID_MOS'))
 	die('Direct Access to this location is not allowed.');
+	
+global $mosConfig_absolute_path, $database, $db_name, $mosConfig_db, $sourcedir;
+global $mosConfig_dbprefix,$db_prefix, $pm_on_reg, $use_realname, $cb_reg, $im, $agreement_required;
+	
+$database =& mamboDatabase::getInstance();
+$mainframe =& mosMainFrame::getInstance();
 
 $task = mosGetParam($_REQUEST, 'task', '');
 require_once($mainframe->getPath('front_html'));
 
-global $mosConfig_absolute_path, $database, $db_name, $mosConfig_db, $sourcedir;
-global $mosConfig_dbprefix,$db_prefix, $pm_on_reg, $use_realname, $cb_reg, $im, $agreement_required;
-
-    // Get the configuration.  This will tell Mambo where SMF is, and some integration settings
+// Get the configuration.  This will tell Mambo where SMF is, and some integration settings
 	$database->setQuery("
 				SELECT `variable`, `value1`
 				FROM #__smf_config
 				");
-	$variables = $database->loadAssocList();
+	$variables = $database->loadRowList();
 	
 	foreach ($variables as $variable){
-		$variable_name = $variable['variable'];
-		$$variable_name = $variable['value1'];
+		$variable_name = $variable[0];
+		$$variable_name = $variable[1];
 	}
 	
 	if (!defined('SMF'))
