@@ -198,6 +198,17 @@ function initialize_inputs()
 		exit;
 	}
 
+	// Perhaps they don't want to use a chmod of 777.
+	if (isset($_GET['chmod']) && is_numeric($_GET['chmod']))
+	{
+		// Make sure they passed us a valid mode.
+		if (preg_match('~^([0]?[0-7]{3})$~', $_GET['chmod']) !== 0)
+		{
+			// Store it.
+			$_SESSION['chmod'] = $_GET['chmod'];
+		}
+	}
+
 	// Force an integer step, defaulting to 0.
 	$_GET['step'] = (int) @$_GET['step'];
 	$_GET['substep'] = (int) @$_GET['substep'];
@@ -260,6 +271,16 @@ function doStep0()
 
 	$install_info = fetch_install_info();
 
+	if ($install_info === false)
+	{
+		echo '
+				<div class="error_message">
+					<div style="color: red;">', $txt['cant_fetch_install_info'], '</div>
+					<br />
+					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+				</div>';
+	}
+
 	echo '
 				<form action="', $_SERVER['PHP_SELF'], '?step=1" method="post">';
 
@@ -292,7 +313,7 @@ function doStep0()
 	if (empty($_SESSION['is_logged_in']))
 		echo '
 									<span style="white-space: nowrap;"><label for="member_username">', $txt['member_username'], ':</label> <input type="text" size="20" name="member_username" id="member_username" value="', isset($_POST['member_username']) ? $_POST['member_username'] : '', '" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span>
-									<span style="white-space: nowrap;"><label for="member_password">', $txt['member_password'], ':</label> <input type="password" size="20" name="member_password" id="member_password" value="" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span> <noscript><input type="submit" name="verify" value="', $txt['member_verify'], '" /></noscript>
+									<span style="white-space: nowrap;"><label for="member_password">', $txt['member_password'], ':</label> <input type="password" size="20" name="member_password" id="member_password" value="" style="margin-right: 3ex;" onchange="if (this.value != \'\' && this.form.member_password.value != \'\') {this.form.verify.value = \'1\'; this.form.submit();}" /></span> <input type="submit" name="verify" value="', $txt['member_verify'], '" />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['member_login_info'], '</div>';
 	else
 		echo $txt['member_verify_done'], ' (<a href="', $_SERVER['PHP_SELF'], '?step=1&amp;logout=1">', $txt['member_verify_logout'], '</a>)';
@@ -400,6 +421,12 @@ function doStep0()
 					</div>
 					<input type="hidden" name="verify" value="0" />
 				</form>';
+	
+	if (isset($_SESSION['chmod']))
+		echo '
+				<div class="panel">
+					', sprintf($txt['chmod_accept'], $_SESSION['chmod']), '
+				</div>';
 }
 
 function doStep1()
@@ -579,6 +606,8 @@ function doStep2()
 {
 	global $txt, $ftp;
 
+	$chmod = isset($_SESSION['chmod']) ? octdec($_SESSION['chmod']) : 0777;
+
 	if (isset($_POST['ftp_username']))
 	{
 		$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
@@ -595,7 +624,7 @@ function doStep2()
 			foreach ($_SESSION['files_to_download'] as $i => $file)
 			{
 				$ftp->create_file('smf_install' . $i . '.tmp');
-				$ftp->chmod('smf_install' . $i . '.tmp', 0777);
+				$ftp->chmod('smf_install' . $i . '.tmp', $chmod);
 			}
 
 			if (!file_exists(dirname(__FILE__) . '/smf_install0.tmp'))
@@ -644,9 +673,9 @@ function doStep2()
 		{
 			echo '
 					<div class="error_message">
-						<div style="color: red;">', $txt['error_unable_download'], '</div>
+						<div style="color: red;">', sprintf($txt['error_unable_download'], $file), '</div>
 						<br />
-						<a href="', $_SERVER['PHP_SELF'], '?step=1">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+						<a href="', $_SERVER['PHP_SELF'], '?step=1&substep=', $i, '">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 					</div>';
 
 			return false;
@@ -738,6 +767,8 @@ function doStep2()
 function doStep3()
 {
 	global $txt;
+
+	$chmod = isset($_SESSION['chmod']) ? octdec($_SESSION['chmod']) : 0777;
 
 	if (@ini_get('memory_limit') < 16)
 		@ini_set('memory_limit', '16M');
@@ -965,6 +996,8 @@ function extract_tar($data, $destination, $ftp)
 	$blocks = strlen($data) / 512 - 1;
 	$offset = 0;
 
+	$chmod = isset($_SESSION['chmod']) ? octdec($_SESSION['chmod']) : 0777;
+
 	$return = array();
 
 	while ($offset < $blocks)
@@ -1011,10 +1044,10 @@ function extract_tar($data, $destination, $ftp)
 						if ($ftp != null)
 						{
 							$ftp->create_dir($dirpath . $dir);
-							$ftp->chmod($dirpath . $dir, 0777);
+							$ftp->chmod($dirpath . $dir, $chmod);
 						}
 						else
-							mkdir($destination . '/' . $dirpath . $dir, 0777);
+							mkdir($destination . '/' . $dirpath . $dir, $chmod);
 					}
 
 					$dirpath .= $dir . '/';
@@ -1024,7 +1057,7 @@ function extract_tar($data, $destination, $ftp)
 			if ($ftp != null)
 			{
 				$ftp->create_file($current['filename']);
-				$ftp->chmod($current['filename'], 0777);
+				$ftp->chmod($current['filename'], $chmod);
 			}
 			file_put_contents($destination . '/' . $current['filename'], $current['data']);
 		}
@@ -1039,10 +1072,10 @@ function extract_tar($data, $destination, $ftp)
 				if ($ftp != null)
 				{
 					$ftp->create_dir($current['filename']);
-					$ftp->chmod($current['filename'], 0777);
+					$ftp->chmod($current['filename'], $chmod);
 				}
 				else
-					mkdir($destination . '/' . $current['filename'], 0777);
+					mkdir($destination . '/' . $current['filename'], $chmod);
 			}
 		}
 	}
@@ -1051,6 +1084,9 @@ function extract_tar($data, $destination, $ftp)
 function fetch_install_info()
 {
 	$install_info = fetch_web_data('http://www.simplemachines.org/smf/mirrors.xml');
+
+	if ($install_info === false)
+		return false;
 
 	$info = array(
 		'mirrors' => array(),
@@ -1204,7 +1240,7 @@ function load_language_data()
 	$txt['error_session_save_path'] = 'Please inform your host that the <b>session.save_path specified in php.ini</b> is not valid!  It needs to be changed to a directory that <b>exists</b>, and is <b>writable</b> by the user PHP is running under.<br />';
 	$txt['error_mysql_missing'] = 'The installer was unable to detect MySQL support in PHP.  Please ask your host to ensure that PHP was compiled with MySQL, or that the proper extension is being loaded.';
 	$txt['error_not_right_path'] = 'Sorry, the path must exist and point to the same place this installer was uploaded to.';
-	$txt['error_unable_download'] = 'The installer was unable to download the installation archive from the server.  Please try using the regular installer package instead.';
+	$txt['error_unable_download'] = 'The installer was unable to download the archive (%1$s) from the server.  <a href="%1$s" target="_blank">Please try using the regular installer package instead.</a>';
 	$txt['error_ftp_no_connect'] = 'Unable to connect to FTP server with this combination of details.';
 	$txt['ftp_please_note'] = 'Before you proceed, please note that <b>the contents of the directory this file is in may be overwritten</b>.  This installer will check to make sure that the path you specify points to where this file is, but please be careful not to overwrite anything important!';
 	$txt['ftp_login'] = 'Your FTP connection information';
@@ -1264,6 +1300,9 @@ function load_language_data()
 	$txt['extraction_progress'] = 'Extraction Progress';
 	$txt['download_progress'] = 'Download Progress';
 
+	$txt['cant_fetch_install_info'] = 'We are sorry but the installer was unable to download the installation package details from the Simple Machines website.  You may download the packages manually by using the <a href="http://www.simplemachines.org/download/">SMF Download</a> page.';
+
+	$txt['chmod_accept'] = 'Files will now be created using the permission of %1$s.';
 }
 
 // http://www.faqs.org/rfcs/rfc959.html
