@@ -652,4 +652,5 @@ $txt['ajax_in_progress'] = 'Loading...';
 
 $txt['mod_reports_waiting'] = 'There are currently %1$d moderator reports open.';
 
+$txt['view_unread_category'] = 'Unread Posts';
 ?>

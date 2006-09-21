@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2510 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2511 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -63,6 +63,7 @@ September 2006
  ! Brought back the 'Go' button for the jumpto fanatics. (script.js, Display template)
  ! Search results could in some cases get a relevance above 100%. (Search.php)
  ! Check for additional problematic values in the starting value for the memberlist. (Memberlist.php)
+ * Added a link to view the unread posts for a particular category to the board index.  (BoardIndex template, index language files)
 
 
 August 2006

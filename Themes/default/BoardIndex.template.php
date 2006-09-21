@@ -99,7 +99,15 @@ function template_main()
 				<a href="', $category['collapse_href'], '">', $category['collapse_image'], '</a>';
 
 		echo '
-				', $category['link'], '
+				', $category['link'];
+				
+		if (!$context['user']['is_guest'])
+			echo '
+				<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';">
+					<a href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>
+				</div>';
+
+		echo '
 		</div>';
 
 		// Assuming the category hasn't been collapsed...

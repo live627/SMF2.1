@@ -91,8 +91,8 @@ function template_main()
 	{
 		echo '
 <div class="tborder"><table border="0" width="100%" cellspacing="1" cellpadding="5">
-	<tr>
-		<td colspan="4" class="catbg', $category['new'] ? '2' : '', '" height="18">';
+	<tr class="catbg', $category['new'] ? '2' : '', '">
+		<td colspan="', $context['user']['is_guest'] ? '4' : '3', '" height="18">';
 
 		// If this category even can collapse, show a link to collapse it.
 		if ($category['can_collapse'])
@@ -101,7 +101,15 @@ function template_main()
 
 		echo '
 			', $category['link'], '
-		</td>
+		</td>';
+
+		if (!$context['user']['is_guest'])
+			echo '
+		<td height="18" align="', $context['right_to_left'] ? 'left' : 'right', '">
+			<a href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>
+		</td>';
+
+		echo '
 	</tr>';
 
 		// Assuming the category hasn't been collapsed...
