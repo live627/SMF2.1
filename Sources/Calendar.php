@@ -671,7 +671,7 @@ function CalendarPost()
 	loadTemplate('Calendar');
 	$context['sub_template'] = 'event_post';
 
-	$context['page_title'] = isset($_REQUEST['eventid']) ? $txt['calendar20'] : $txt['calendar23'];
+	$context['page_title'] = isset($_REQUEST['eventid']) ? $txt['calendar20'] : $txt['calendar_post_event'];
 	$context['linktree'][] = array(
 		'name' => $context['page_title'],
 	);

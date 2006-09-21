@@ -936,7 +936,7 @@ function Post()
 	if (isset($_REQUEST['poll']))
 		$context['page_title'] = $txt['smf20'];
 	elseif ($context['make_event'])
-		$context['page_title'] = $context['event']['id'] == -1 ? $txt['calendar23'] : $txt['calendar20'];
+		$context['page_title'] = $context['event']['id'] == -1 ? $txt['calendar_post_event'] : $txt['calendar20'];
 	elseif (isset($_REQUEST['msg']))
 		$context['page_title'] = $txt['modify_msg'];
 	elseif (isset($_REQUEST['subject'], $context['preview_subject']))

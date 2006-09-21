@@ -68,7 +68,7 @@ function Memberlist()
 	// $subActions array format:
 	// 'subaction' => array('label', 'function', 'is_selected')
 	$subActions = array(
-		'all' => array(&$txt[303], 'MLAll', $context['listing_by'] == 'all'),
+		'all' => array(&$txt['view_all_members'], 'MLAll', $context['listing_by'] == 'all'),
 		'search' => array(&$txt['mlist_search'], 'MLSearch', $context['listing_by'] == 'search'),
 	);
 
@@ -93,7 +93,7 @@ function Memberlist()
 			'label' => $txt['username']
 		),
 		'emailAddress' => array(
-			'label' => $txt[307],
+			'label' => $txt['email'],
 			'width' => '25'
 		),
 		'websiteUrl' => array(
@@ -255,11 +255,11 @@ function MLAll()
 	$context['start'] = $_REQUEST['start'] + 1;
 	$context['end'] = min($_REQUEST['start'] + $modSettings['defaultMaxMembers'], $context['num_members']);
 
-	$context['page_title'] = $txt[308] . ' ' . $context['start'] . ' ' . $txt[311] . ' ' . $context['end'];
+	$context['page_title'] = sprintf($txt['viewing_members'], $context['start'], $context['end']);
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=mlist;sort=' . $_REQUEST['sort'] . ';start=' . $_REQUEST['start'],
 		'name' => &$context['page_title'],
-		'extra_after' => ' (' . $txt[309] . ' ' . $context['num_members'] . ' ' . $txt[310] . ')'
+		'extra_after' => ' (' . sprintf($txt['of_total_members'], $context['num_members']) . ')'
 	);
 
 	// List out the different sorting methods...

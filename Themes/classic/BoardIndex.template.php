@@ -130,7 +130,7 @@ function template_main()
 				// Show the "Moderators: ".  Each has name, href, link, and id. (but we're gonna use link_moderators.)
 				if (!empty($board['moderators']))
 					echo '<i class="smalltext"><br />
-			', count($board['moderators']) == 1 ? $txt[298] : $txt[299], ': ', implode(', ', $board['link_moderators']), '</i>';
+			', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</i>';
 
 				// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
 				if (!empty($board['children']))
@@ -424,7 +424,7 @@ function template_main()
 		echo '
 	<tr>
 		<td class="catbg" colspan="2">
-			', $txt['login'], ' <a href="', $scripturl, '?action=reminder" class="smalltext">(' . $txt[315] . ')</a>
+			', $txt['login'], ' <a href="', $scripturl, '?action=reminder" class="smalltext">(' . $txt['forgot_your_password'] . ')</a>
 		</td>
 	</tr>
 	<tr>

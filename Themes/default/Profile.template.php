@@ -368,7 +368,7 @@ function template_showPosts()
 		</table>';
 
 		// Button shortcuts
-		$quote_button = create_button('quote.gif', 'reply_quote', 'smf240', 'align="middle"');
+		$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
 		$reply_button = create_button('reply_sm.gif', 'reply', 'reply', 'align="middle"');
 		$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 		$notify_button = create_button('notify_sm.gif', 'notify_replies', 'notify', 'align="middle"');
@@ -1970,7 +1970,7 @@ function template_notification()
 								', $topic['link'];
 
 			if ($topic['new'])
-				echo ' <a href="', $topic['new_href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt[302], '" /></a>';
+				echo ' <a href="', $topic['new_href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt['new'], '" /></a>';
 
 			echo '<br />
 								<span class="smalltext"><i>' . $txt['smf88'] . ' ' . $topic['board']['link'] . '</i></span>
@@ -2033,7 +2033,7 @@ function template_notification()
 							<td class="windowbg" valign="middle" width="48%">', $board['link'];
 
 		if ($board['new'])
-			echo ' <a href="', $board['href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt[302], '" /></a>';
+			echo ' <a href="', $board['href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt['new'], '" /></a>';
 
 		echo '</td>
 							<td class="windowbg2" valign="middle" width="5%">

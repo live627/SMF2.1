@@ -57,7 +57,7 @@ function template_login()
 	echo '
 					<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
 				</tr><tr class="windowbg">
-					<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt[315], '</a><br /><br /></td>
+					<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a><br /><br /></td>
 				</tr>
 			</table>
 
@@ -115,7 +115,7 @@ function template_kick_guest()
 							</tr><tr>
 								<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
 							</tr><tr>
-								<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt[315], '</a><br /><br /></td>
+								<td align="center" colspan="2" class="smalltext"><a href="', $scripturl, '?action=reminder">', $txt['forgot_your_password'], '</a><br /><br /></td>
 							</tr>
 						</table>
 					</td>

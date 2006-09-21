@@ -134,7 +134,7 @@ $txt['yes'] = 'Yes';
 $txt['no'] = 'No';
 
 $txt['search_results'] = 'Search Results';
-$txt[167] = 'End of results';
+$txt['search_end_results'] = 'End of results';
 $txt['search_no_results'] = 'Sorry, no matches were found';
 $txt['search_on'] = 'on';
 
@@ -197,22 +197,21 @@ $txt['icon_undecided'] = 'Undecided';
 $txt['icon_kiss'] = 'Kiss';
 $txt['icon_cry'] = 'Cry';
 
-$txt[298] = 'Moderator';
-$txt[299] = 'Moderators';
+$txt['moderator'] = 'Moderator';
+$txt['moderators'] = 'Moderators';
 
-$txt[300] = 'Mark Topics as Read for this Board';
-$txt[301] = 'Views';
-$txt[302] = 'New';
+$txt['mark_board_read'] = 'Mark Topics as Read for this Board';
+$txt['views'] = 'Views';
+$txt['new'] = 'New';
 
-$txt[303] = 'View all members';
-$txt[305] = 'View';
-$txt[307] = 'Email';
+$txt['view_all_members'] = 'View all members';
+$txt['view'] = 'View';
+$txt['email'] = 'Email';
 
-$txt[308] = 'Viewing Members';
-$txt[309] = 'of';
-$txt[310] = 'total members';
-$txt[311] = 'to';
-$txt[315] = 'Forgot your password?';
+$txt['viewing_members'] = 'Viewing Members %1$s to %2$s';
+$txt['of_total_members'] = 'of %1$s total members';
+
+$txt['forgot_your_password'] = 'Forgot your password?';
 
 $txt[317] = 'Date';
 // Use numeric entities in the below string.
@@ -377,11 +376,11 @@ $txt['smf223'] = '[More Stats]';
 // Use numeric entities in the below three strings.
 $txt['smf238'] = 'Code';
 $txt['smf239'] = 'Quote from';
-$txt['smf240'] = 'Quote';
+$txt['quote'] = 'Quote';
 
 $txt['merge_to_topic_id'] = 'ID of target topic';
-$txt['smf251'] = 'Split Topic';
-$txt['smf252'] = 'Merge Topics';
+$txt['split'] = 'Split Topic';
+$txt['merge'] = 'Merge Topics';
 $txt['smf254'] = 'Subject For New Topic';
 $txt['smf255'] = 'Only split this post.';
 $txt['smf256'] = 'Split topic after and including this post.';
@@ -444,7 +443,7 @@ $txt['calendar13'] = 'Post In:';
 $txt['calendar20'] = 'Edit Event';
 $txt['calendar21'] = 'Delete this event?';
 $txt['calendar22'] = 'Delete Event';
-$txt['calendar23'] = 'Post Event';
+$txt['calendar_post_event'] = 'Post Event';
 $txt['calendar24'] = 'Calendar';
 $txt['calendar37'] = 'Link to Calendar';
 $txt['calendar43'] = 'Link Event';

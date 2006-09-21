@@ -192,7 +192,7 @@ function SplitIndex()
 		'subject' => $_REQUEST['subname']
 	);
 	$context['sub_template'] = 'ask';
-	$context['page_title'] = $txt['smf251'];
+	$context['page_title'] = $txt['split'];
 }
 
 // Alright, you've decided what you want to do with it.... now to do it.
@@ -238,7 +238,7 @@ function SplitExecute()
 
 	$context['old_topic'] = $topic;
 	$context['new_topic'] = splitTopic($topic, $messagesToBeSplit, $_POST['subname']);
-	$context['page_title'] = $txt['smf251'];
+	$context['page_title'] = $txt['split'];
 }
 
 // Get a selective list of topics...
@@ -249,7 +249,7 @@ function SplitSelectTopics()
 	// For determining what they can see...
 	$approveQuery = allowedTo('approve_posts') ? '1' : 'approved = 1';
 
-	$context['page_title'] = $txt['smf251'] . ' - ' . $txt['smf257'];
+	$context['page_title'] = $txt['split'] . ' - ' . $txt['smf257'];
 
 	// Haven't selected anything have we?
 	$_SESSION['split_selection'][$topic] = empty($_SESSION['split_selection'][$topic]) ? array() : $_SESSION['split_selection'][$topic];
@@ -476,7 +476,7 @@ function SplitSelectionExecute()
 
 	$context['old_topic'] = $topic;
 	$context['new_topic'] = splitTopic($topic, $_SESSION['split_selection'][$topic], $_POST['subname']);
-	$context['page_title'] = $txt['smf251'];
+	$context['page_title'] = $txt['split'];
 }
 
 // Split a topic in two topics.
@@ -753,7 +753,7 @@ function MergeIndex()
 	$context['origin_topic'] = $_GET['from'];
 	$context['origin_subject'] = $subject;
 	$context['origin_js_subject'] = addcslashes(addslashes($subject), '/');
-	$context['page_title'] = $txt['smf252'];
+	$context['page_title'] = $txt['merge'];
 
 	// Check which boards you have merge permissions on.
 	$merge_boards = boardsAllowedTo('merge_any');
@@ -989,7 +989,7 @@ function MergeExecute($topics = array())
 		foreach ($topic_data as $id => $topic)
 			$context['topics'][$id]['selected'] = $topic['id'] == $firstTopic;
 
-		$context['page_title'] = $txt['smf252'];
+		$context['page_title'] = $txt['merge'];
 		$context['sub_template'] = 'merge_extra_options';
 		return;
 	}
@@ -1282,7 +1282,7 @@ function MergeDone()
 	$context['target_board'] = $_GET['targetboard'];
 	$context['target_topic'] = $_GET['to'];
 
-	$context['page_title'] = $txt['smf252'];
+	$context['page_title'] = $txt['merge'];
 	$context['sub_template'] = 'merge_done';
 }
 

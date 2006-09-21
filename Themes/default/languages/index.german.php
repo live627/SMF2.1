@@ -136,7 +136,7 @@ $txt['yes'] = 'Ja';
 $txt['no'] = 'Nein';
 
 $txt['search_results'] = 'Suchergebnisse';
-$txt[167] = 'Ende der Ergebnisse';
+$txt['search_end_results'] = 'Ende der Ergebnisse';
 $txt['search_no_results'] = 'Keine &Uuml;bereinstimmungen gefunden';
 $txt['search_on'] = 'am';
 
@@ -199,22 +199,22 @@ $txt['icon_undecided'] = 'Unentschlossen';
 $txt['icon_kiss'] = 'K&uuml;sschen';
 $txt['icon_cry'] = 'Weinen';
 
-$txt[298] = 'Moderator';
-$txt[299] = 'Moderatoren';
+$txt['moderator'] = 'Moderator';
+$txt['moderators'] = 'Moderatoren';
 
-$txt[300] = 'Alle Themen im Board als gelesen markieren';
-$txt[301] = 'Aufrufe';
-$txt[302] = 'Neu';
+$txt['mark_board_read'] = 'Alle Themen im Board als gelesen markieren';
+$txt['views'] = 'Aufrufe';
+$txt['new'] = 'Neu';
 
-$txt[303] = 'Mitglieder anzeigen';
-$txt[305] = 'Anzeigen';
-$txt[307] = 'E-Mail';
+$txt['view_all_members'] = 'Mitglieder anzeigen';
+$txt['view'] = 'Anzeigen';
+$txt['email'] = 'E-Mail';
 
-$txt[308] = 'Mitglieder anzeigen';
-$txt[309] = 'von';
-$txt[310] = 'Mitglieder insgesamt';
-$txt[311] = 'bis';
-$txt[315] = 'Passwort vergessen?';
+// Untranslated!
+$txt['viewing_members'] = 'Viewing Members %1$s to %2$s';
+$txt['of_total_members'] = 'of %1$s total members';
+
+$txt['forgot_your_password'] = 'Passwort vergessen?';
 
 $txt[317] = 'Datum';
 // Use numeric entities in the below string.
@@ -380,12 +380,12 @@ $txt['smf223'] = '[Weitere Statistiken]';
 // Use numeric entities in the below three strings.
 $txt['smf238'] = 'Code';
 $txt['smf239'] = 'Zitat von';
-$txt['smf240'] = 'Zitat';
+$txt['quote'] = 'Zitat';
 
 // Untranslated
 $txt['merge_to_topic_id'] = 'ID of target topic';
-$txt['smf251'] = 'Thema teilen';
-$txt['smf252'] = 'Themen zusammenf&uuml;hren';
+$txt['split'] = 'Thema teilen';
+$txt['merge'] = 'Themen zusammenf&uuml;hren';
 $txt['smf254'] = 'Betreff f&uuml;r das neue Thema';
 $txt['smf255'] = 'Nur diesen Beitrag trennen.';
 $txt['smf256'] = 'Thema bis und inkl. diesem Beitrag aufteilen.';
@@ -449,7 +449,7 @@ $txt['calendar13'] = 'Erstellen in:';
 $txt['calendar20'] = 'Ereignis editieren';
 $txt['calendar21'] = 'Dieses Ereignis löschen?';
 $txt['calendar22'] = 'L&ouml;sche Ereignis';
-$txt['calendar23'] = 'Erstelle Ereignis';
+$txt['calendar_post_event'] = 'Erstelle Ereignis';
 $txt['calendar24'] = 'Kalender';
 $txt['calendar37'] = 'Link zum Kalender';
 $txt['calendar43'] = 'Ereignis verlinken';

@@ -136,7 +136,7 @@ $txt['yes'] = 'S&iacute;';
 $txt['no'] = 'No';
 
 $txt['search_results'] = 'Resultados de la b&uacute;squeda';
-$txt[167] = 'Fin de resultados';
+$txt['search_end_results'] = 'Fin de resultados';
 $txt['search_no_results'] = 'Lo siento, no se encontraron mensajes';
 $txt['search_on'] = 'en';
 
@@ -199,22 +199,22 @@ $txt['icon_undecided'] = 'Indeciso';
 $txt['icon_kiss'] = 'Beso';
 $txt['icon_cry'] = 'Llorar';
 
-$txt[298] = 'Moderador';
-$txt[299] = 'Moderadores';
+$txt['moderator'] = 'Moderador';
+$txt['moderators'] = 'Moderadores';
 
-$txt[300] = 'Marcar Temas como le&iacute;dos para este foro';
-$txt[301] = 'Vistas';
-$txt[302] = 'Nuevo';
+$txt['mark_board_read'] = 'Marcar Temas como le&iacute;dos para este foro';
+$txt['views'] = 'Vistas';
+$txt['new'] = 'Nuevo';
 
-$txt[303] = 'Ver todos los usuarios';
-$txt[305] = 'Ver';
-$txt[307] = 'Email';
+$txt['view_all_members'] = 'Ver todos los usuarios';
+$txt['view'] = 'Ver';
+$txt['email'] = 'Email';
 
-$txt[308] = 'Viendo usuarios';
-$txt[309] = 'de';
-$txt[310] = 'usuarios totales';
-$txt[311] = 'a';
-$txt[315] = '&iquest;Olvidaste tu contrase&ntilde;a?';
+// Untranslated!
+$txt['viewing_members'] = 'Viewing Members %1$s to %2$s';
+$txt['of_total_members'] = 'of %1$s total members';
+
+$txt['forgot_your_password'] = '&iquest;Olvidaste tu contrase&ntilde;a?';
 
 $txt[317] = 'Fecha';
 // Use numeric entities in the below string.
@@ -380,12 +380,12 @@ $txt['smf223'] = '[M&aacute;s Estad&iacute;sticas]';
 // Use numeric entities in the below three strings.
 $txt['smf238'] = 'C&#243;digo';
 $txt['smf239'] = 'Cita de';
-$txt['smf240'] = 'Citar';
+$txt['quote'] = 'Citar';
 
 // Untranslated
 $txt['merge_to_topic_id'] = 'ID of target topic';
-$txt['smf251'] = 'Dividir Tema';
-$txt['smf252'] = 'Combinar Temas';
+$txt['split'] = 'Dividir Tema';
+$txt['merge'] = 'Combinar Temas';
 $txt['smf254'] = 'Asunto para el nuevo tema';
 $txt['smf255'] = 'S&oacute;lo dividir este mensaje.';
 $txt['smf256'] = 'Dividir tema a partir de este mensaje (incluy&eacute;ndolo).';
@@ -448,7 +448,7 @@ $txt['calendar13'] = 'Publicar en:';
 $txt['calendar20'] = 'Editar evento';
 $txt['calendar21'] = '&iquest;Borrar este evento?';
 $txt['calendar22'] = 'Borrar evento';
-$txt['calendar23'] = 'Publicar evento';
+$txt['calendar_post_event'] = 'Publicar evento';
 $txt['calendar24'] = 'Calendario';
 $txt['calendar37'] = 'Ligar al calendario';
 $txt['calendar43'] = 'Enlazar evento';

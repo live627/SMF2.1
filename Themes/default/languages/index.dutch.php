@@ -136,7 +136,7 @@ $txt['yes'] = 'Ja';
 $txt['no'] = 'Nee';
 
 $txt['search_results'] = 'Zoek resultaten';
-$txt[167] = 'Einde van de resultaten';
+$txt['search_end_results'] = 'Einde van de resultaten';
 $txt['search_no_results'] = 'Sorry, geen berichten gevonden';
 $txt['search_on'] = 'op';
 
@@ -199,22 +199,22 @@ $txt['icon_undecided'] = 'Ik weet het niet';
 $txt['icon_kiss'] = 'Kus';
 $txt['icon_cry'] = 'Huilen';
 
-$txt[298] = 'Beheerder';
-$txt[299] = 'Beheerders';
+$txt['moderator'] = 'Beheerder';
+$txt['moderators'] = 'Beheerders';
 
-$txt[300] = 'Markeer alle berichten als gelezen';
-$txt[301] = 'Gelezen';
-$txt[302] = 'Nieuw';
+$txt['mark_board_read'] = 'Markeer alle berichten als gelezen';
+$txt['views'] = 'Gelezen';
+$txt['new'] = 'Nieuw';
 
-$txt[303] = 'Bekijk alle gebruikers';
-$txt[305] = 'Bekijk';
-$txt[307] = 'E-mail';
+$txt['view_all_members'] = 'Bekijk alle gebruikers';
+$txt['view'] = 'Bekijk';
+$txt['email'] = 'E-mail';
 
-$txt[308] = 'Bekijk de leden';
-$txt[309] = 'van de';
-$txt[310] = 'totaal aantal leden';
-$txt[311] = 'tot';
-$txt[315] = 'Wachtwoord vergeten?';
+// Untranslated!
+$txt['viewing_members'] = 'Viewing Members %1$s to %2$s';
+$txt['of_total_members'] = 'of %1$s total members';
+
+$txt['forgot_your_password'] = 'Wachtwoord vergeten?';
 
 $txt[317] = 'Datum';
 // Use numeric entities in the below string.
@@ -380,12 +380,12 @@ $txt['smf223'] = '[Meer statistieken]';
 // Use numeric entities in the below three strings.
 $txt['smf238'] = 'Code';
 $txt['smf239'] = 'Citaat van';
-$txt['smf240'] = 'Citaat';
+$txt['quote'] = 'Citaat';
 
 // Untranslated
 $txt['merge_to_topic_id'] = 'ID of target topic';
-$txt['smf251'] = 'Splits topic';
-$txt['smf252'] = 'Voeg topic samen';
+$txt['split'] = 'Splits topic';
+$txt['merge'] = 'Voeg topic samen';
 $txt['smf254'] = 'Titel van het nieuwe topic';
 $txt['smf255'] = 'Splits alleen dit bericht';
 $txt['smf256'] = 'Splits topic vanaf dit bericht.';
@@ -449,7 +449,7 @@ $txt['calendar13'] = 'Post in:';
 $txt['calendar20'] = 'Bewerk deze gebeurtenis';
 $txt['calendar21'] = 'Deze gebeurtenis verwijderen?';
 $txt['calendar22'] = 'Verwijder deze gebeurtenis';
-$txt['calendar23'] = 'Post gebeurtenis';
+$txt['calendar_post_event'] = 'Post gebeurtenis';
 $txt['calendar24'] = 'Kalender';
 $txt['calendar37'] = 'Link naar de kalender';
 $txt['calendar43'] = 'Link gebeurtenis';

@@ -121,7 +121,7 @@ function template_main()
 	// Show a little "post event" button?
 	if ($context['can_post'])
 		echo '
-						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';sesc=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar23', 'calendar23', 'align="middle"'), '</a>';
+						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';sesc=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar_post_event', 'calendar_post_event', 'align="middle"'), '</a>';
 	echo '
 					</td>
 					<td align="center">
@@ -139,13 +139,13 @@ function template_main()
 							<option value="', $year, '"', $year == $context['current_year'] ? ' selected="selected"' : '', '>', $year, '</option>';
 	echo '
 						</select>&nbsp;
-						<input type="submit" value="', $txt[305], '" />
+						<input type="submit" value="', $txt['view'], '" />
 					</td>
 					<td align="center">';
 	// Show another post button just for symmetry.
 	if ($context['can_post'])
 		echo '
-						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';sesc=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar23', 'calendar23', 'align="middle"'), '</a>';
+						<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';sesc=', $context['session_id'], '">', create_button('calendarpe.gif', 'calendar_post_event', 'calendar_post_event', 'align="middle"'), '</a>';
 	echo '
 					</td>
 					<td align="', !$context['right_to_left'] ? 'right' : 'left', '">';

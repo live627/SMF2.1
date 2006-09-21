@@ -132,7 +132,7 @@ function ViewMembers()
 	{
 		$context['admin_tabs']['tabs'] = array(
 			'viewmembers' => array(
-				'title' => $txt[303],
+				'title' => $txt['view_all_members'],
 				'description' => $txt[11],
 				'href' => $scripturl . '?action=admin;area=viewmembers;sa=all',
 				'is_selected' => $_REQUEST['sa'] == 'all',

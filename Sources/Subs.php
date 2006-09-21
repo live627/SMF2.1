@@ -1288,7 +1288,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'quote',
-				'before' => '<div class="quoteheader">' . $txt['smf240'] . '</div><div class="quote">',
+				'before' => '<div class="quoteheader">' . $txt['quote'] . '</div><div class="quote">',
 				'after' => '</div>',
 				'block_level' => true,
 			),

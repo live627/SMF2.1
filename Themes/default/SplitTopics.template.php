@@ -10,7 +10,7 @@ function template_ask()
 		<input type="hidden" name="at" value="', $context['message']['id'], '" />
 		<table border="0" width="400" cellspacing="0" cellpadding="3" align="center" class="tborder">
 			<tr class="titlebg">
-				<td>', $txt['smf251'], '</td>
+				<td>', $txt['split'], '</td>
 			</tr><tr class="windowbg">
 				<td align="center" style="padding-top: 2ex; padding-bottom: 1ex;">
 					<b><label for="subname">', $txt['smf254'], '</label>:</b> <input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" /><br />
@@ -19,7 +19,7 @@ function template_ask()
 					<input type="radio" name="step2" value="afterthis" class="check" /> ', $txt['smf256'], '<br />
 					<input type="radio" name="step2" value="selective" class="check" /> ', $txt['smf257'], '<br />
 					<br />
-					<input type="submit" value="', $txt['smf251'], '" />
+					<input type="submit" value="', $txt['split'], '" />
 				</td>
 			</tr>
 		</table>
@@ -34,7 +34,7 @@ function template_main()
 	echo '
 		<table border="0" width="400" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
 			<tr class="titlebg">
-				<td>', $txt['smf251'], '</td>
+				<td>', $txt['split'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="middle" align="center">
 					', $txt['smf259'], '<br /><br />
@@ -54,13 +54,13 @@ function template_select()
 		<form action="', $scripturl, '?action=splittopics;sa=splitSelection;board=', $context['current_board'], '.0" method="post" accept-charset="', $context['character_set'], '"><input type="hidden" name="topic" value="', $context['current_topic'], '" />
 		<table width="100%"><tr><td colspan="2" align="center">
 			<input type="hidden" name="subname" value="', $context['new_subject'], '" />
-			<input type="submit" value="', $txt['smf251'], '" />
+			<input type="submit" value="', $txt['split'], '" />
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		</td></tr><tr><td valign="top" width="50%">
 			<table id="table_not_selected" border="0" width="98%" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
 				<tr class="titlebg">
 					<td colspan="2">
-						', $txt['smf251'], ' - ', $txt['smf257'], '
+						', $txt['split'], ' - ', $txt['smf257'], '
 					</td>
 				</tr>
 				<tr class="windowbg">
@@ -200,7 +200,7 @@ function template_merge_done()
 	echo '
 		<table border="0" width="400" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
 			<tr class="titlebg">
-				<td>' . $txt['smf252'] . '</td>
+				<td>' . $txt['merge'] . '</td>
 			</tr><tr>
 				<td class="windowbg" valign="middle" align="center">
 					<br />
@@ -220,7 +220,7 @@ function template_merge()
 	echo '
 		<table border="0" width="540" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
 			<tr class="catbg3">
-				<td>' . $txt['smf252'] . '</td>
+				<td>' . $txt['merge'] . '</td>
 			</tr>
 			<tr>
 				<td class="windowbg">' . $txt['smf276'] . '</td>
@@ -245,7 +245,7 @@ function template_merge()
 								<form action="', $scripturl , '?action=mergetopics;sa=options" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
 									<input type="hidden" name="topics[]" value="', $context['origin_topic'], '" />
 									<input type="text" name="topics[]" />
-									<input type="submit" value="', $txt['smf252'], '" />
+									<input type="submit" value="', $txt['merge'], '" />
 								</form>
 							</td>
 						</tr><tr>';
@@ -273,7 +273,7 @@ function template_merge()
 							<td align="left" style="white-space: nowrap;">
 								<table>';
 
-	$merge_button = create_button('merge.gif', 'smf252', '');
+	$merge_button = create_button('merge.gif', 'merge', '');
 	foreach ($context['topics'] as $topic)
 		echo '
 									<tr>
@@ -309,7 +309,7 @@ function template_merge_extra_options()
 		<form action="', $scripturl, '?action=mergetopics;sa=execute;" method="post" accept-charset="', $context['character_set'], '">
 			<table border="0" width="100%" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
 				<tr class="titlebg">
-					<td>', $txt['smf252'], '</td>
+					<td>', $txt['merge'], '</td>
 				</tr><tr>
 					<td class="catbg">', $txt['merge_topic_list'], '</td>
 				</tr><tr>
@@ -405,7 +405,7 @@ function template_merge_extra_options()
 	echo '
 				<tr>
 					<td class="windowbg" align="right">
-						<input type="submit" value="' . $txt['smf252'] . '" />
+						<input type="submit" value="' . $txt['merge'] . '" />
 						<input type="hidden" name="sa" value="execute" />
 					</td>
 				</tr>

@@ -591,7 +591,7 @@ function template_manual_intro()
 																&laquo; ', $txt['manual_index_post_date_time'], ' &raquo;
 															</div>
 														</td>
-														<td align="right" valign="bottom" height="20" style="font-size: smaller;"><a href="', $scripturl, '?action=help;page=post#quote">', create_button('quote.gif', 'manual_index_reply_quote', 'smf240', 'align="middle"'), '</a></td>
+														<td align="right" valign="bottom" height="20" style="font-size: smaller;"><a href="', $scripturl, '?action=help;page=post#quote">', create_button('quote.gif', 'manual_index_reply_quote', 'quote', 'align="middle"'), '</a></td>
 													</tr>
 												</table>
 												<hr width="100%" size="1" class="hrcolor" />

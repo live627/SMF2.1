@@ -245,7 +245,7 @@ function template_folder()
 		<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
 
 		// Cache some handy buttons.
-		$quote_button = create_button('quote.gif', 'reply_quote', 'smf240', 'align="middle"');
+		$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
 		$reply_button = create_button('im_reply.gif', 'reply', 'reply', 'align="middle"');
 		$reply_all_button = create_button('im_reply_all.gif', 'reply_to_all', 'reply_to_all', 'align="middle"');
 		$forward_button = create_button('quote.gif', 'reply_quote', 'reply_quote', 'align="middle"');

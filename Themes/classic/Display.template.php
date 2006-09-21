@@ -401,7 +401,7 @@ function template_main()
 		// What about splitting it off the rest of the topic?
 		if ($context['can_split'])
 			echo '
-									<a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/split.gif" alt="' . $txt['smf251'] . '" border="0" />' : $txt['smf251']), '</a>';
+									<a href="', $scripturl, '?action=splittopics;topic=', $context['current_topic'], '.0;at=', $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/split.gif" alt="' . $txt['split'] . '" border="0" />' : $txt['split']), '</a>';
 
 		// Show a checkbox for quick moderation?
 		if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $message['can_remove'])
@@ -722,7 +722,7 @@ function theme_show_mod_buttons()
 	if ($context['can_sticky'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_sticky.gif" alt="' . (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278']) . '" border="0" />' : (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278'])) . '</a>';
 	if ($context['can_merge'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/merge.gif" alt="' . $txt['smf252'] . '" border="0" />' : $txt['smf252']) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/merge.gif" alt="' . $txt['merge'] . '" border="0" />' : $txt['merge']) . '</a>';
 	if ($context['can_remove_poll'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 
