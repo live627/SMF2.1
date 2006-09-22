@@ -313,18 +313,28 @@ function PackageGBrowse()
 		$the_version = $_SESSION['version_emulate'];
 
 	$packageNum = 0;
+	$packageSection = 0;
 
 	$sections = $listing->set('section');
 	foreach ($sections as $i => $section)
 	{
+		$context['package_list'][$packageSection] = array(
+			'title' => '',
+			'text' => '',
+			'items' => array(),
+		);
+
 		$packages = $section->set('title|heading|text|remote|rule|modification|language|avatar-pack|theme|smiley-set');
 		foreach ($packages as $thisPackage)
 		{
-			$package = &$context['package_list'][];
-			$package['type'] = $thisPackage->name();
+			$package = array(
+				'type' => $thisPackage->name(),
+			);
 
+			if (in_array($package['type'], array('title', 'text')))
+				$context['package_list'][$packageSection][$package['type']] = $thisPackage->fetch('.');
 			// It's a Title, Heading, Rule or Text.
-			if (in_array($package['type'], array('title', 'heading', 'text', 'rule')))
+			elseif (in_array($package['type'], array('heading', 'rule')))
 				$package['name'] = $thisPackage->fetch('.');
 			// It's a Remote link.
 			elseif ($package['type'] == 'remote')
@@ -463,30 +473,39 @@ function PackageGBrowse()
 
 			$packageNum = in_array($package['type'], array('title', 'heading', 'text', 'remote', 'rule')) ? 0 : $packageNum + 1;
 			$package['count'] = $packageNum;
+			
+			if (!in_array($package['type'], array('title', 'text')))
+				$context['package_list'][$packageSection]['items'][] = $package;
+
 		}
+
+		$packageSection++;
 	}
-	
+
 	// Lets make sure we get a nice new spiffy clean $package to work with.  Otherwise we get PAIN!
 	unset($package);
 
-	foreach ($context['package_list'] as $i => $package)
+	foreach ($context['package_list'] as $ps_id => $packageSection)
 	{
-		if ($package['count'] == 0 || isset($package['can_install']))
-			continue;
-
-		$context['package_list'][$i]['can_install'] = false;
-
-		$packageInfo = getPackageInfo($url . '/' . $package['filename']);
-		if (!empty($packageInfo) && $packageInfo['xml']->exists('install'))
+		foreach($packageSection['items'] as $i => $package)
 		{
-			$installs = $packageInfo['xml']->set('install');
-			foreach ($installs as $install)
-				if (!$install->exists('@for') || matchPackageVersion($the_version, $install->fetch('@for')))
-				{
-					// Okay, this one is good to go.
-					$context['package_list'][$i]['can_install'] = true;
-					break;
-				}
+			if ($package['count'] == 0 || isset($package['can_install']))
+				continue;
+
+			$context['package_list'][$ps_id]['items'][$i]['can_install'] = false;
+
+			$packageInfo = getPackageInfo($url . '/' . $package['filename']);
+			if (!empty($packageInfo) && $packageInfo['xml']->exists('install'))
+			{
+				$installs = $packageInfo['xml']->set('install');
+				foreach ($installs as $install)
+					if (!$install->exists('@for') || matchPackageVersion($the_version, $install->fetch('@for')))
+					{
+						// Okay, this one is good to go.
+						$context['package_list'][$ps_id]['items'][$i]['can_install'] = true;
+						break;
+					}
+			}
 		}
 	}
 }

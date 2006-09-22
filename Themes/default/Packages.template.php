@@ -843,73 +843,90 @@ function template_package_list()
 	// List out the packages...
 	else
 	{
-		foreach ($context['package_list'] as $package)
+		foreach ($context['package_list'] as $i => $packageSection)
 		{
-			// A title.
-			if ($package['is_title'])
+			echo '
+			<h2><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</h2>';
+			
+			if (!empty($packageSection['text']))
 				echo '
-					<b style="font-size: larger;">', $package['name'], '</b><br /><br />';
-			// A heading.
-			elseif ($package['is_heading'])
-				echo '
-					<b style="font-size: larger;">', $package['name'], '</b><br /><br />';
-			// Textual message. Could be empty just for a blank line...
-			elseif ($package['is_text'])
-				echo '
-					', $package['name'], '<br /><br />';
-			// This is supposed to be a rule..
-			elseif ($package['is_line'])
-				echo '
-					<hr width="100%" />';
-			// A remote link.
-			elseif ($package['is_remote'])
-				echo '
-					<b>', $package['link'], '</b><br /><br />';
-			// Otherwise, it's a package.
-			else
+			<h3>', $packageSection['text'], '</h3>';
+
+			echo '
+			<div id="package_section_', $i, '" class="tborder">';
+
+			$alt = false;
+
+			foreach($packageSection['items'] AS $id => $package)
 			{
-				// 1. Some mod [ Download ].
-				echo '
-					', $package['count'], '. ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['smf190'] . ' ]</a>': $package['name'];
-
-				// Mark as installed and current?
-				if ($package['is_installed'] && !$package['is_newer'])
-					echo '<img src="', $settings['images_url'], '/icons/package_', $package['is_current'] ? 'installed' : 'old', '.gif" width="12" height="11" align="middle" style="margin-left: 2ex;" alt="', $package['is_current'] ? $txt['package_installed_current'] : $txt['package_installed_old'], '" />';
-
-				echo '
-					<div>';
-
-				// Show the mod type?
-				if ($package['type'] != '')
+				// Textual message. Could be empty just for a blank line...
+				if ($package['is_text'])
 					echo '
+					', $package['name'], '<br /><br />';
+				// This is supposed to be a rule..
+				elseif ($package['is_line'])
+					echo '
+					<hr />';
+				// A remote link.
+				elseif ($package['is_remote'])
+					echo '
+					<b>', $package['link'], '</b><br /><br />';
+				// Otherwise, it's a package.
+				else
+				{
+					echo '
+					<div class="windowbg', $alt ? '2' : '', '">';
+					// 1. Some mod [ Download ].
+					echo '
+						<span style="font-size: larger;">
+						<a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['count'], '. ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['smf190'] . ' ]</a>': $package['name'];
+
+					// Mark as installed and current?
+					if ($package['is_installed'] && !$package['is_newer'])
+						echo '<img src="', $settings['images_url'], '/icons/package_', $package['is_current'] ? 'installed' : 'old', '.gif" width="12" height="11" align="middle" style="margin-left: 2ex;" alt="', $package['is_current'] ? $txt['package_installed_current'] : $txt['package_installed_old'], '" />';
+
+					echo '</span>
+						<div id="package_section_', $i, '_pkg_', $id, '">';
+
+					// Show the mod type?
+					if ($package['type'] != '')
+						echo '
 						', $txt['package24'], ':&nbsp; ', $smfFunc['ucwords']($smfFunc['strtolower']($package['type'])), '<br />';
-				// Show the version number?
-				if ($package['version'] != '')
-					echo '
+					// Show the version number?
+					if ($package['version'] != '')
+						echo '
 						', $txt['pacman3'], ':&nbsp; ', $package['version'], '<br />';
-				// How 'bout the author?
-				if (!empty($package['author']) && $package['author']['name'] != '')
-					echo '
+					// How 'bout the author?
+					if (!empty($package['author']) && $package['author']['name'] != '')
+						echo '
 						', $txt['pacman4'], ':&nbsp; ', $package['author']['link'], '<br />';
-				// The homepage....
-				if ($package['author']['website']['link'] != '')
-					echo '
+					// The homepage....
+					if ($package['author']['website']['link'] != '')
+						echo '
 						', $txt['pacman6'], ':&nbsp; ', $package['author']['website']['link'], '<br />';
 
-				// Desciption: bleh bleh!
-				// Location of file: http://someplace/.
-				echo '
+					// Desciption: bleh bleh!
+					// Location of file: http://someplace/.
+					echo '
 						', $txt['pacman10'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a>
-					</div>
-					<div style="max-height: 15em; overflow: auto;">', $txt['pacman9'], ':&nbsp; ', $package['description'], '</div>
-					<br />';
+							<div style="max-height: 15em; overflow: auto;">', $txt['pacman9'], ':&nbsp; ', $package['description'], '</div>
+						</div>
+						<br />
+					</div>';
+					$alt = !$alt;
+				}
 			}
+			echo '
+				</div>';
+
 		}
 		echo '
 					<br />';
+
 	}
 
 	echo '
+					</div>
 					</td>
 				</tr>
 			</table>
@@ -922,6 +939,36 @@ function template_package_list()
 					</td>
 				</tr>
 			</table>';
+		// Now go through and turn off all the sections.
+		if (!empty($context['package_list']))
+		{
+			echo '
+			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+			foreach($context['package_list'] as $section => $ps)
+			{
+				echo '
+
+					var ps_', $section, ' = new smfToggle("package_section_', $section, '", false);
+					ps_', $section, '.useCookie(0);
+					ps_', $section, '.addToggleImage("ps_img_', $section, '", "/upshrink.gif", "/upshrink2.gif");
+					ps_', $section, '.addTogglePanel("package_section_', $section, '");
+					ps_', $section, '.toggle();';
+
+				foreach($ps['items'] AS $id => $package)
+				{
+					if (!$package['is_text'] && !$package['is_line'] && !$package['is_remote'])
+						echo '
+
+						var ps_', $section, '_pkg_', $id, ' = new smfToggle("package_section_', $section, '_pkg_', $id, '", false);
+						ps_', $section, '_pkg_', $id, '.useCookie(0);
+						ps_', $section, '_pkg_', $id, '.addToggleImage("ps_img_', $section, '_pkg_', $id, '", "/upshrink.gif", "/upshrink2.gif");
+						ps_', $section, '_pkg_', $id, '.addTogglePanel("package_section_', $section, '_pkg_', $id, '");
+						ps_', $section, '_pkg_', $id, '.toggle()';
+				}
+			}
+			echo '
+			// ]]></script>';
+		}
 }
 
 function template_downloaded()
