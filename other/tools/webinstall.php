@@ -205,7 +205,7 @@ function initialize_inputs()
 		if (preg_match('~^([0]?[0-7]{3})$~', $_GET['chmod']) !== 0)
 		{
 			// Store it.
-			$_SESSION['chmod'] = $_GET['chmod'];
+			$_SESSION['chmod'] = octdec($_GET['chmod']);
 		}
 	}
 
@@ -419,14 +419,13 @@ function doStep0()
 
 						<div style="margin-right: 1ex;" align="right"><input type="submit" value="', $txt['package_info_ready'], '" /></div>
 					</div>
+					<div class="panel">
+						<h2>', $txt['chmod_header'], '</h2>
+						', $txt['chmod_desc'], '<br />
+						<label for="chmod_input">', $txt['chmod_header'], ':</label> <input type="text" id="chmod_input" name="chmod" value="', isset($_SESSION['chmod']) ? decoct($_SESSION['chmod']) : '777', '" />
+					</div>
 					<input type="hidden" name="verify" value="0" />
 				</form>';
-	
-	if (isset($_SESSION['chmod']))
-		echo '
-				<div class="panel">
-					', sprintf($txt['chmod_accept'], $_SESSION['chmod']), '
-				</div>';
 }
 
 function doStep1()
@@ -606,7 +605,7 @@ function doStep2()
 {
 	global $txt, $ftp;
 
-	$chmod = isset($_SESSION['chmod']) ? octdec($_SESSION['chmod']) : 0777;
+	$chmod = isset($_SESSION['chmod']) ? $_SESSION['chmod'] : 0777;
 
 	if (isset($_POST['ftp_username']))
 	{
@@ -768,7 +767,7 @@ function doStep3()
 {
 	global $txt;
 
-	$chmod = isset($_SESSION['chmod']) ? octdec($_SESSION['chmod']) : 0777;
+	$chmod = isset($_SESSION['chmod']) ? $_SESSION['chmod'] : 0777;
 
 	if (@ini_get('memory_limit') < 16)
 		@ini_set('memory_limit', '16M');
@@ -996,7 +995,7 @@ function extract_tar($data, $destination, $ftp)
 	$blocks = strlen($data) / 512 - 1;
 	$offset = 0;
 
-	$chmod = isset($_SESSION['chmod']) ? octdec($_SESSION['chmod']) : 0777;
+	$chmod = isset($_SESSION['chmod']) ? $_SESSION['chmod'] : 0777;
 
 	$return = array();
 
@@ -1302,7 +1301,8 @@ function load_language_data()
 
 	$txt['cant_fetch_install_info'] = 'We are sorry but the installer was unable to download the installation package details from the Simple Machines website.  You may download the packages manually by using the <a href="http://www.simplemachines.org/download/">SMF Download</a> page.';
 
-	$txt['chmod_accept'] = 'Files will now be created using the permission of %1$s.';
+	$txt['chmod_desc'] = 'Some hosts require that PHP scripts not have a file permission of 777.  If you are on one of these hosts, or if you recieve an error code of 500 after the packages are downloaded and extracted, please change the file permission in the below field.  A common alternate value is 775.';
+	$txt['chmod_header'] = 'File Permission';
 }
 
 // http://www.faqs.org/rfcs/rfc959.html
