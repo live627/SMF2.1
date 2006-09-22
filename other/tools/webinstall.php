@@ -199,13 +199,13 @@ function initialize_inputs()
 	}
 
 	// Perhaps they don't want to use a chmod of 777.
-	if (isset($_GET['chmod']) && is_numeric($_GET['chmod']))
+	if (isset($_REQUEST['chmod']) && is_numeric($_REQUEST['chmod']))
 	{
 		// Make sure they passed us a valid mode.
-		if (preg_match('~^([0]?[0-7]{3})$~', $_GET['chmod']) !== 0)
+		if (preg_match('~^([0]?[0-7]{3})$~', $_REQUEST['chmod']) !== 0)
 		{
 			// Store it.
-			$_SESSION['chmod'] = octdec($_GET['chmod']);
+			$_SESSION['chmod'] = octdec($_REQUEST['chmod']);
 		}
 	}
 
@@ -482,7 +482,7 @@ function doStep1()
 		return doStep0();
 	}
 
-	if (!isset($_POST['agree']) && $_GET['step'] == '1')
+	if (!isset($_POST['agree']) && !empty($_SESSION['agree']) && $_GET['step'] == '1')
 	{
 		echo '
 						<br />
@@ -496,6 +496,7 @@ function doStep1()
 
 	if (isset($_POST['mirror']))
 	{
+		$_SESSION['agree'] = true;
 		// Build file list ;).
 		$files_to_download = array();
 
@@ -1384,7 +1385,7 @@ class ftp_connection
 			return false;
 
 		// Convert the chmod value from octal (0777) to text ("777").
-		fwrite($this->connection, 'SITE CHMOD ' . decoct($chmod) . ' ' . $ftp_file . "\r\n");
+		fwrite($this->connection, 'SITE chmod ' . decoct($chmod) . ' ' . $ftp_file . "\r\n");
 		if (!$this->check_response(200))
 		{
 			$this->error = 'bad_file';
