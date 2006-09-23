@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2513 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2514 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -67,6 +67,8 @@ September 2006
  ! Changed the way that packages where displayed on the server list. (PackageGet.php, Packages template)
  ! When synching users from Mambo/Joomla to SMF, check to see if the admin wants usernames or real names as display in SMF. (Mambo/Joomla bridge/admin.smf.php)
  ! SEF URLs work differently in Mambo 4.6 (Mambo 4.6 bridge/smf.php)
+ ! Change all URLs in RSS feeds to bridged URLs. (Mambo/Joomla bridge/smf.php)
+ ! Not all special characters were converted correctly in bridged outgoing emails (Mambo/Joomla bridge/smf.php)
 
 
 August 2006

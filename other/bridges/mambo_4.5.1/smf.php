@@ -171,8 +171,12 @@ function ob_mambofix($buffer)
 	$buffer = str_replace('\'' . $scripturl . '?', '\'' . $myurl, $buffer);
 	$buffer = str_replace('\'' . $scripturl, '\'' . $myurl, $buffer);
 	//Don't forget XML feeds
+	$buffer = str_replace('<link>'.$scripturl . '?', '<link>'.$myurl, $buffer );
 	$buffer = str_replace('<link>'.$scripturl, '<link>'.$myurl, $buffer );
-	$buffer = str_replace('<link>'.$scripturl, '<link>'.$myurl, $buffer );
+	$buffer = str_replace('<comments>'.$scripturl . '?', '<comments>'.$myurl, $buffer );
+	$buffer = str_replace('<comments>'.$scripturl, '<comments>'.$myurl, $buffer );
+	$buffer = str_replace('<guid>'.$scripturl . '?', '<guid>'.$myurl, $buffer );
+	$buffer = str_replace('<guid>'.$scripturl, '<guid>'.$myurl, $buffer );
 	//An ampersand followed by a # is not kosher
 	$buffer = str_replace($scripturl . '#', substr($myurl, 0, -5) . '#', $buffer);
 	//SMF admin panel does some funky things after admin login...luckily it's easy to fix
@@ -541,15 +545,23 @@ function integrate_change_member_data ($memberNames, $var, $value)
 function integrate_outgoing_email($subject, &$message, $headers)
 {
 	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid;
-	
+
+	//First, we need to set up the email so that ob_mambofdix knows what to do with it
 	$message = str_replace ($scripturl, '"="' . $scripturl, $message);
+	//Next, let's make sure that URLs with # and . characters don't get mashed up
 	$message = str_replace ('#new', '"#new', $message);
+	$message = preg_replace ('/(\.[0-9])/', '"$1', $message);
 	$message .= '"="';
 	$message = ob_mambofix($message);
+	//Now we need to undo those changes so the email looks normal again
 	$message = str_replace ('"="', ' ', $message);
 	$message = str_replace ('"#new', '#new', $message);
+	$message = str_replace ('".', '.', $message);
+	//THis is an email, after all, so let's make sure entities and specail characters are text, not HTML
 	$message = trim($message);
+    $message = html_entity_decode($message);
 	$message = un_htmlspecialchars($message);
+	//No idea why sefReltoAbs does this, but....
 	$message = str_replace ('____', '
 ', $message ); //yes, it looks ridiculous, but it works :P
 	return true;
