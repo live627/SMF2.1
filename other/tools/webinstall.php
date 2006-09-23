@@ -1302,7 +1302,7 @@ function load_language_data()
 
 	$txt['cant_fetch_install_info'] = 'We are sorry but the installer was unable to download the installation package details from the Simple Machines website.  You may download the packages manually by using the <a href="http://www.simplemachines.org/download/">SMF Download</a> page.';
 
-	$txt['chmod_desc'] = 'Some hosts require that PHP scripts not have a file permission of 777.  If you are on one of these hosts, or if you recieve an error code of 500 after the packages are downloaded and extracted, please change the file permission in the below field.  A common alternate value is 775.';
+	$txt['chmod_desc'] = 'Some hosts require that PHP scripts not have a file permission of 777.  If you are on one of these hosts, or if you recieve an error code of 500 after the packages are downloaded and extracted, please change the file permission in the below field.  A common alternate value is 755.';
 	$txt['chmod_header'] = 'File Permission';
 }
 
