@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC3                                     *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -101,7 +101,7 @@ switch ($task)
 	case "synch_groups":
 		synch_groups($option);
 	break;
-	
+
 	case 'cancel':
 	default:
 		mosRedirect( 'index2.php' );	
@@ -509,7 +509,7 @@ function saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridg
 
 function mos2smf ($option){
 
-	global $smf_path, $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $database;
+	global $smf_path, $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $database, $use_realname;
 
 	$database->setQuery("
 				SELECT `variable`, `value1`
@@ -584,7 +584,7 @@ function mos2smf ($option){
 			// if the username doesn't exist in SMF, create it
 			$write_user = "INSERT INTO {$db_prefix}members 
 							(memberName, realName, passwd, emailAddress, dateRegistered) 
-							VALUES ('$mos_row[0]','$mos_row[4]','$mos_row[1]','$mos_row[2]', '$mos_row[3]')";
+							VALUES ('$mos_row[0]','".($use_realname=='true' ? $mos_row[4] : $mos_row[0])."','$mos_row[1]','$mos_row[2]', '$mos_row[3]')";
 			$write_result = mysql_query ($write_user);
 			echo "<font color=green>" . $mos_row[0] . " added to SMF <br /></font>";	  
 		}
@@ -655,6 +655,11 @@ function smf2mos ($option){
 	$smf_sql = "SELECT memberName, realName, passwd, emailAddress FROM {$db_prefix}members";
 
 	$smf_result = mysql_query($smf_sql);
+// Redirect users who try to access /forum directly
+if (strpos($_SERVER['QUERY_STRING'], 'dlattach') === false)
+{
+        if(!defined('_VALID_MOS')){ header("Location: /index.php?option=com_smf&Itemid=XX");}
+}
 
 	while ($smf_row = mysql_fetch_array($smf_result,MYSQL_NUM)) {
 		$smf_user = $smf_row[0];
@@ -664,7 +669,7 @@ function smf2mos ($option){
 		$mos_result = mysql_query ($mos_sql);
 
 		$mos_row = mysql_fetch_array($mos_result);
-
+		$smf_row[1] = addslashes($smf_row[1]);
 		// if the username already exists in both, don't do anything
 		if ($mos_row[0]!='')
 			echo "<font color=red><strong>" . $mos_row[0] . " already exists<br /></strong></font>";

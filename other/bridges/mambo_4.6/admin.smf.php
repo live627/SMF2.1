@@ -77,16 +77,16 @@ switch ($task)
 				$database->setQuery("SELECT ID_GROUP, groupName
 						FROM {$db_prefix}membergroups
 						");
-				$smf_groups = $database->loadAssocList();
+				$smf_groups = $database->loadRowList();
 	
 				mysql_select_db($mosConfig_db);
 	
 				$sync_group = array();
 	
 				foreach ($smf_groups as $smf_group=>$group_info){
-					$sync_group_name = strtr($group_info['groupName'], array(' ' => '_', '.'=>'_', '\''=>''));
+					$sync_group_name = strtr($group_info[1], array(' ' => '_', '.'=>'_', '\''=>''));
 					$sync_group_value = $$sync_group_name;
-					$sync_group[$group_info['ID_GROUP']] = $sync_group_value;
+					$sync_group[$group_info[0]] = $sync_group_value;
 				}
 			}
 
@@ -108,7 +108,7 @@ switch ($task)
 
 function showConfig($option, $cb_reg)
 {
-	global $mosConfig_absolute_path, $database, $mosConfig_live_site;
+	global $mosConfig_absolute_path, $database, $mosConfig_live_site, $database;
 	global $smfbLanguage, $mosConfig_dbprefix, $smf_path, $bridge_reg;
 	global $wrapped, $db_name, $db_prefix, $mosConfig_db;
 
@@ -130,15 +130,15 @@ function showConfig($option, $cb_reg)
 				SELECT `group_id`, `name`
 				FROM #__core_acl_aro_groups
 				");
-	$mambo_groups = $database->loadAssocList();
-	$mambo_groups[] = array('group_id'=>'0', 'name'=>'Guest');
+	$mambo_groups = $database->loadRowList();
+	$mambo_groups[] = array(0=>'0', 1=>'Guest');
 	
 	$database->setQuery("
 				SELECT `value1`, `value2`
 				FROM #__smf_config
 				WHERE variable = 'sync_group'
 				");
-	$sync_groups = $database->loadAssocList();	
+	$sync_groups = $database->loadRowList();	
 	
 	if (! @include_once ($smf_path . "/Settings.php")){
 		$not_saved = true;
@@ -147,7 +147,7 @@ function showConfig($option, $cb_reg)
 	$database->setQuery("SELECT ID_GROUP, groupName
 				FROM {$db_prefix}membergroups
 				");
-	$smf_groups = $database->loadAssocList();
+	$smf_groups = $database->loadRowList();
 	
 	mysql_select_db($mosConfig_db);
 	
@@ -318,19 +318,19 @@ function showConfig($option, $cb_reg)
 			foreach ($smf_groups as $smf_group){
 				echo '<tr>
 						<td width="25%" align="left" valign="top"></td>
-						<td align="left" valign="top">',$smf_group['groupName'],'</td>
+						<td align="left" valign="top">',$smf_group[1],'</td>
 						<td align="left" valign="top">
-						<select name="', $smf_group['groupName'],'">';
+						<select name="', $smf_group[1],'">';
 						//Has this group already been sync'd?
 						$sync_selected = '';
 						foreach ($sync_groups as $sync_group) {							
-							if ($sync_group['value1'] == $smf_group['ID_GROUP']){
-								$sync_selected = $sync_group['value2'];
+							if ($sync_group[0] == $smf_group[0]){
+								$sync_selected = $sync_group[1];
 							}
 						}
 						foreach ($mambo_groups as $mambo_group) {							
 							echo '
-								<option value="',$mambo_group['group_id'],'"', (($mambo_group['name'] == 'Registered' && $sync_selected == '' ) || $mambo_group['group_id'] == $sync_selected ) ? ' selected="selected"' : '', '>', $mambo_group['name'], '</option>';
+								<option value="',$mambo_group[0],'"', (($mambo_group[1] == 'Registered' && $sync_selected == '' ) || $mambo_group[0] == $sync_selected ) ? ' selected="selected"' : '', '>', $mambo_group[1], '</option>';
 						}
 						echo '</select>
 						</td>
@@ -401,11 +401,11 @@ function showConfig($option, $cb_reg)
 				FROM #__smf_config
 				WHERE `variable` = '3rdPartyTab'
 				");		
-		$tp_tabs = $database->loadAssocList();
+		$tp_tabs = $database->loadRowList();
 		
 		if ($tp_tabs!=''){
 			foreach ($tp_tabs as $tp_tab){
-				@include ($tp_tab['value1']);
+				@include ($tp_tab[0]);
 			}
 		}
 		
@@ -488,8 +488,8 @@ function saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridg
 			SELECT `value2`
 			FROM #__smf_config
 			WHERE (`variable` = 'sync_group' AND `value1`='$smf_group')");
-		$result['check'] = $database->loadAssocList();
-		if ($result['check']['value2']){
+		$result['check'] = $database->loadRowList();
+		if ($result['check'][0]){
 			$database->setQuery("
 				UPDATE #__smf_config
 				SET `value2` = '$mambo_group'
@@ -509,31 +509,34 @@ function saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridg
 
 function mos2smf ($option){
 
-	global $smf_path, $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $database;
+	global $smf_path, $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $database, $use_realname;
+
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
 
 	$database->setQuery("
 				SELECT `variable`, `value1`
 				FROM #__smf_config
 				");
-	$variables = $database->loadAssocList();
+	$variables = $database->loadRowList();
 	
 	foreach ($variables as $variable){
-		$variable_name = $variable['variable'];
-		$$variable_name = $variable['value1'];
+		$variable_name = $variable[0];
+		$$variable_name = $variable[1];
 	}
 
 	$database->setQuery("
 				SELECT `group_id`, `name`
 				FROM #__core_acl_aro_groups
 				");
-	$mambo_groups = $database->loadAssocList();
+	$mambo_groups = $database->loadRowList();
 	
 	$database->setQuery("
 				SELECT `value1`, `value2`
 				FROM #__smf_config
 				WHERE variable = 'sync_group'
 				");
-	$sync_groups = $database->loadAssocList();
+	$sync_groups = $database->loadRowList();
 
 	require_once ($smf_path . "/SSI.php");
 
@@ -584,7 +587,7 @@ function mos2smf ($option){
 			// if the username doesn't exist in SMF, create it
 			$write_user = "INSERT INTO {$db_prefix}members 
 							(memberName, realName, passwd, emailAddress, dateRegistered) 
-							VALUES ('$mos_row[0]','$mos_row[4]','$mos_row[1]','$mos_row[2]', '$mos_row[3]')";
+							VALUES ('$mos_row[0]','" . ($use_realname=='true' ? $mos_row[4] : $mos_row[0])."','$mos_row[1]','$mos_row[2]', '$mos_row[3]')";
 			$write_result = mysql_query ($write_user);
 			echo "<font color=green>" . $mos_row[0] . " added to SMF <br /></font>";	  
 		}
@@ -604,25 +607,25 @@ function smf2mos ($option){
 				SELECT `variable`, `value1`
 				FROM #__smf_config
 				");
-	$variables = $database->loadAssocList();
+	$variables = $database->loadRowList();
 	
 	foreach ($variables as $variable){
-		$variable_name = $variable['variable'];
-		$$variable_name = $variable['value1'];
+		$variable_name = $variable[0];
+		$$variable_name = $variable[1];
 	}
 
 	$database->setQuery("
 				SELECT `group_id`, `name`
 				FROM #__core_acl_aro_groups
 				");
-	$mambo_groups = $database->loadAssocList();
+	$mambo_groups = $database->loadRowList();
 	
 	$database->setQuery("
 				SELECT `value1`, `value2`
 				FROM #__smf_config
 				WHERE variable = 'sync_group'
 				");
-	$sync_groups = $database->loadAssocList();
+	$sync_groups = $database->loadRowList();
 
 	require_once ($smf_path . "/SSI.php");
 
@@ -715,12 +718,12 @@ function synch_groups ($option){
 				SELECT `group_id`, `name`
 				FROM #__core_acl_aro_groups
 				");
-	$mambo_groups = $database->loadAssocList();
+	$mambo_groups = $database->loadRowList();
 
 	$mgroups = array();
 	
     foreach ($mambo_groups as $mgroup){
-		$mgroups[$mgroup['group_id']] = $mgroup['name'];
+		$mgroups[$mgroup[0]] = $mgroup[1];
 	}
 	
 	echo '
@@ -740,11 +743,11 @@ function synch_groups ($option){
 				SELECT `variable`, `value1`
 				FROM #__smf_config
 				");
-	$variables = $database->loadAssocList();
+	$variables = $database->loadRowList();
 	
 	foreach ($variables as $variable){
-		$variable_name = $variable['variable'];
-		$$variable_name = $variable['value1'];
+		$variable_name = $variable[0];
+		$$variable_name = $variable[1];
 	}
 	
 	require_once ($smf_path . "/SSI.php");	

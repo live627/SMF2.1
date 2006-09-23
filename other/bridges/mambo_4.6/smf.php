@@ -153,13 +153,13 @@ function ob_mambofix($buffer)
 	global $scripturl, $mosConfig_live_site, $mosConfig_sef, $boardurl;
 	global $bridge_reg, $Itemid, $_VERSION;
 
-	$myurl = $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
+	$myurl = $mosConfig_live_site . '/index.php?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
 	
 	// jumpto redirects
 	$buffer = str_replace('"?board=', $mosConfig_sef=='1' ? '"/board,' : '"&amp;board=', $buffer);
 	$buffer = str_replace('"?action=', $mosConfig_sef=='1' ? '"/action,' : '"&amp;action=', $buffer);
 	//relative anchors
-	$buffer = str_replace('href="#', 'href="' . $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'] . '#', $buffer);
+	$buffer = str_replace('href="#', 'href="' . $mosConfig_live_site . '/index.php?' . $_SERVER['QUERY_STRING'] . '#', $buffer);
 	//get rid of the question mark
 	$buffer = str_replace('"' . $scripturl . '?', '"' . $myurl, $buffer);
 	//if it's the forum index, we don't need a trailing ampersand
@@ -210,8 +210,8 @@ function ob_mambofix($buffer)
 	}
 
 	// Don't forget attachments and CAPTCHA
-	$buffer = str_replace($myurl . 'action=dlattach', $boardurl . '/' . basename($_SERVER['PHP_SELF']) . '?action=dlattach', $buffer);
-	$buffer = str_replace($myurl . 'action=verificationcode', $boardurl . '/' . basename($_SERVER['PHP_SELF']) . '?action=verificationcode', $buffer);
+	$buffer = str_replace($myurl . 'action=dlattach', $boardurl . '/index.php?action=dlattach', $buffer);
+	$buffer = str_replace($myurl . 'action=verificationcode', $boardurl . '/index.php?action=verificationcode', $buffer);
 
 	//And Niko's Arcade Mod
 	$buffer = str_replace($myurl . 'action=arcade;sa=download;file=swf', $boardurl . '/' . basename($_SERVER['PHP_SELF']) . '?action=arcade;sa=download;file=swf', $buffer);
@@ -281,7 +281,7 @@ function mambo_smf_exit($with_output)
 	else
 		$menu_item['id'] = 1;	
 
-	$myurl = basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $menu_item['id'] . '&amp;';
+	$myurl = 'index.php?option=com_smf&amp;Itemid=' . $menu_item['id'] . '&amp;';
 	$c_handler->_buffer = ob_mambofix($buffer);
 	
 	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?rc3"></script>' );
@@ -289,7 +289,7 @@ function mambo_smf_exit($with_output)
 		var smf_theme_url = "'. $settings['theme_url']. '";
 		var smf_images_url = "'. $settings['images_url']. '";');
 	if ($mosConfig_sef=='1')
-		$mainframe->addCustomHeadTag( ob_mambofix('var smf_scripturl = "'. $scripturl . '";'));
+		$mainframe->addCustomHeadTag( ob_mambofix('var smf_scripturl ="'. $scripturl . '";'));
 	else
 		$mainframe->addCustomHeadTag( 'var smf_scripturl = "'. un_htmlspecialchars(mambo_smf_url($scripturl)) . '";');
 	
@@ -376,7 +376,7 @@ function mambo_smf_exit($with_output)
 	{
 		if ($link_num > 0) { // Don't show first linktree element, because forum menu item will already be in Mambo Pathway.
 			//If there is a url and this is not the last link item, show as a link. Otherwise just show.
-			$mainframe->appendPathWay((ob_mambofix('<a href="' . $tree['url'] . '" class="pathway">') . $tree['name'] . '</a>') . ' ');
+			$mainframe->appendPathWay('<img src="images/M_images/arrow.png" />' . (ob_mambofix('<a href="' . $tree['url'] . '" class="pathway">') . $tree['name'] . '</a>') . ' ');
 		}
 	}	
 
@@ -712,7 +712,7 @@ function integrate_login($username, $passwd, $cookielength)
 	if (!isset($Itemid) || $Itemid == 0)
 		$Itemid = (int) $_REQUEST['Itemid'];
 
-	$myurl = $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
+	$myurl = $mosConfig_live_site . '/index.php?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
 
 
 	// Default, in case we couldn't find anything, or the admin forgot to configure the login module
@@ -755,7 +755,7 @@ function integrate_redirect (&$setLocation, $refresh)
 {
 	global $boardurl, $mosConfig_live_site, $mosConfig_sef;
 
-	$myurl = basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $_REQUEST['Itemid'] . '&amp;' ;
+	$myurl = 'index.php?option=com_smf&amp;Itemid=' . $_REQUEST['Itemid'] . '&amp;' ;
 	
 	if ($setLocation == '')
 		$setLocation = $mosConfig_sef == 1 ? sefReltoAbs($myurl) : $mosConfig_live_site . '/' . $myurl;
@@ -992,6 +992,8 @@ function integrate_pre_load () {
 	$modSettings['enableCompressedOutput'] = '0';
 	//Turn off local cookies
 	$modSettings['localCookies'] = '0';
+	//Turn off SEF in SMF
+	$modSettings['queryless_urls'] = '';
 
 // Change the SMF language according to the Mambo/Joomla settings
 

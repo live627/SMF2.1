@@ -7,7 +7,7 @@
 	<authorEmail>admin@simplemachines.org</authorEmail>
 	<authorUrl>www.simplemachines.org</authorUrl>
 	<version>1.1</version>
-	<description>This is a common registration for Mambo 4.5.3/Joomla and SMF.  This will register new members into both Mambo/Joomla and SMF.</description>
+	<description>This is a common registration for Mambo 4.6 and SMF.  This will register new members into both Mambo and SMF.</description>
 	<files>
 		<filename>smf_registration.php</filename>
 		<filename>smf_registration.html.php</filename>
@@ -19,15 +19,9 @@
 	<uninstall>
 		<queries></queries>
 	</uninstall>
-	<installfile>install.smf_registration.php</installfile>
 	<uninstallfile>uninstall.smf_registration.php</uninstallfile>
 	<administration>
-		<menu>Simple Machines Forum Registration</menu>
-		<submenu>
-			<menu task="config">Edit Config</menu>
-		</submenu>
 		<files>
-			<filename>install.smf_registration.php</filename>
 			<filename>uninstall.smf_registration.php</filename>
 			<filename>toolbar.smf_registration.php</filename>
 			<filename>toolbar.smf_registration.html.php</filename>
