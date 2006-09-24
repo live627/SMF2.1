@@ -761,6 +761,8 @@ function doStep2()
 		$changes['maintenance'] = '0';
 	}
 
+	// Make a backup of Settings.php first as otherwise earlier changes are lost.
+	copy($boarddir . '/Settings.php', $boarddir . '/Settings_bak.php');
 	changeSettings($changes);
 
 	if (!empty($_GET['maint']))

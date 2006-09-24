@@ -449,7 +449,7 @@ function SetQuickGroups()
 
 	// No groups where selected.
 	if (empty($_POST['group']))
-		redirectexit('action=admin;area=permissions;boardid=' . $_REQUEST['boardid']);
+		redirectexit('action=admin;area=permissions;pid=' . $_REQUEST['pid']);
 
 	// Set a predefined permission profile.
 	if (!empty($_POST['predefined']))
@@ -466,41 +466,6 @@ function SetQuickGroups()
 				setPermissionLevel($_POST['predefined'], $group_id);
 		}
 	}
-	//!!! This is defunct!
-	// Set the permissions of the selected groups to that of their permissions in a different board.
-	elseif (isset($_POST['from_board']) && $_POST['from_board'] != 'empty')
-	{
-		// Just checking the input.
-		if (!is_numeric($_POST['from_board']))
-			redirectexit('action=admin;area=permissions;boardid=' . $_REQUEST['boardid']);
-
-		// Fetch all the board permissions for these groups.
-		$request = db_query("
-			SELECT ID_GROUP, permission, addDeny
-			FROM {$db_prefix}board_permissions
-			WHERE ID_BOARD = $_POST[from_board]
-				AND ID_GROUP IN (" . implode(',', $_POST['group']) . ")", __FILE__, __LINE__);
-
-		$target_perms = array();
-		while ($row = mysql_fetch_assoc($request))
-			$target_perms[] = "('$row[permission]', $row[ID_GROUP], $_REQUEST[boardid], $row[addDeny])";
-		mysql_free_result($request);
-
-		// Delete the previous global board permissions...
-		db_query("
-			DELETE FROM {$db_prefix}board_permissions
-			WHERE ID_GROUP IN (" . implode(', ', $_POST['group']) . ")
-				AND ID_BOARD = $_REQUEST[boardid]", __FILE__, __LINE__);
-
-		// And insert the copied permissions.
-		if (!empty($target_perms))
-		{
-			db_query("
-				INSERT IGNORE INTO {$db_prefix}board_permissions
-					(permission, ID_GROUP, ID_BOARD, addDeny)
-				VALUES " . implode(',', $target_perms), __FILE__, __LINE__);
-		}
-	}
 	// Set a permission profile based on the permissions of a selected group.
 	elseif ($_POST['copy_from'] != 'empty')
 	{
@@ -513,7 +478,7 @@ function SetQuickGroups()
 
 		// No groups left? Too bad.
 		if (empty($_POST['group']))
-			redirectexit('action=admin;area=permissions;boardid=' . $_REQUEST['pid']);
+			redirectexit('action=admin;area=permissions;pid=' . $_REQUEST['pid']);
 
 		if (empty($_REQUEST['pid']))
 		{

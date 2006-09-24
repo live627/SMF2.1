@@ -104,7 +104,7 @@ if (empty($modSettings['signature_settings']))
 if (empty($modSettings['pm_spam_settings']))
 {
 	if (isset($modSettings['max_pm_recipients']))
-		$modSettings['pm_spam_settings'] = (int) $modSettings['max_pm_recipients'] . ',5,20';
+		$modSettings['pm_spam_settings'] = $modSettings['max_pm_recipients'] . ',5,20';
 	else
 		$modSettings['pm_spam_settings'] = '10,5,20';
 }

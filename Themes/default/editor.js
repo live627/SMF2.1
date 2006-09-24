@@ -76,7 +76,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	breadCrumbNameStyles[6] = new Array('font-style', 'italic', 'i');
 
 	// All the fonts in the world.
-	var foundFonts = new Array();
+	var fontFaces = new Array('Arial', 'Arial Black', 'Impact', 'Verdana', 'Times New Roman', 'Georgia', 'Andale Mono', 'Trebuchet MS', 'Comic Sans MS');
 	// Font maps (HTML => CSS size)
 	var fontSizes = new Array(0, 8, 10, 12, 14, 18, 24, 36);
 	// Color maps! (hex => name)
@@ -116,8 +116,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		textHandle = document.getElementById(uniqueId);
 		currentText = getInnerHTML(textHandle);
 
-		if (typeof(text) != "undefined")
+		// Ensure the currentText is set correctly depending on the mode.
+		if (typeof(text) != "undefined" && mode == 1)
 			currentText = text;
+		else if (mode == 0)
+			currentText = smf_unhtmlspecialchars(currentText);
 
 		// Create the iFrame element.
 		if (richTextPossible)
@@ -156,15 +159,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				breadHandle.style.display = 'none';
 			}
 
-			setTimeout(InitIframe, 100);
+			setTimeout(InitIframe, 200);
 		}
 		// If we can't do advanced stuff then just do the basics.
 		else
 		{
 			// Cannot have WYSIWYG anyway!
 			mode = 0;
-
-			getFonts();
 
 			initClose();
 		}
@@ -192,12 +193,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			frameDocument.body.contentEditable = true;
 		}
 
-		// Get the fonts.
-		frameHandle.style.display = '';
-		setFocus();
-		getFonts();
-		if (!mode)
-			frameHandle.style.display = 'none';
+		frameHandle.style.display = mode ? '' : 'none';
 
 		// Attach our events.
 		if (is_ff)
@@ -267,7 +263,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		curTag = getCurElement();
 
 		i = 0;
-		while (curTag.nodeName.toLowerCase() != 'body' && i < max_length)
+		while (curTag && curTag.nodeName.toLowerCase() != 'body' && i < max_length)
 		{
 			crumb[i] = curTag;
 			curTag = curTag.parentNode;
@@ -510,8 +506,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		if (selType == 'face')
 		{
 			// Add in the other options.
-			for (i = 0; i < foundFonts.length; i++)
-				selectHandle.options[selectHandle.options.length] = new Option(foundFonts[i], foundFonts[i].toLowerCase());
+			for (i = 0; i < fontFaces.length; i++)
+				selectHandle.options[selectHandle.options.length] = new Option(fontFaces[i], fontFaces[i].toLowerCase());
 		}
 
 		selectHandle.onchange = SelectChangeHandler;
@@ -543,7 +539,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		else
 		{
 			uniqueid = 1000 + Math.floor(Math.random() * 100000);
-			InsertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + uniqueid + '_' + name + '" align="bottom" alt="" title="' + desc + '" />');
+			InsertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + uniqueid + '_' + name + '" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
 		}
 	}
 
@@ -815,38 +811,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				return node;
 		}
 		return null;
-	}
-
-	// Get which fonts are actually installed - we'll only show ones the user will see - kind of tricks them ;)
-	function getFonts()
-	{
-		var curFonts = new Array('Arial', 'Arial Black', 'Impact', 'Verdana', 'Times New Roman', 'Georgia', 'Andale Mono', 'Trebuchet MS', 'Comic Sans MS');
-
-		// If we can't do html they can't see it anyway.
-		if (!richTextPossible)
-		{
-			foundFonts = curFonts;
-			return;
-		}
-
-		// Just an insertion point.
-		curNode = getCurElement();
-
-		// Create our test node.
-		fontText = frameDocument.createTextNode('font&nbsp;testing&nbsp;-#cool');
-		fontCheck = frameDocument.createElement('span');
-		fontCheck.appendChild(fontText);
-		curNode.appendChild(fontCheck);
-
-		startWidth = fontCheck.offsetWidth;
-
-		for (i = 0; i < curFonts.length; i++)
-		{
-			fontCheck.style.fontFamily = curFonts[i];
-			if (fontCheck.offsetWidth != startWidth)
-				foundFonts.push(curFonts[i]);
-		}
-		curNode.removeChild(fontCheck);
 	}
 
 	// Toggle wysiwyg/normal mode.

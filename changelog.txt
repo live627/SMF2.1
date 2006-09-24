@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2514 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2515 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -69,6 +69,13 @@ September 2006
  ! SEF URLs work differently in Mambo 4.6 (Mambo 4.6 bridge/smf.php)
  ! Change all URLs in RSS feeds to bridged URLs. (Mambo/Joomla bridge/smf.php)
  ! Not all special characters were converted correctly in bridged outgoing emails (Mambo/Joomla bridge/smf.php)
+ ! Upgrade was sometimes losing changes to the Settings.php file. (upgrade.php)
+ ! Fixed javascript error when updating editor breadcrumb without selected text. (editor.js)
+ ! Only use the IE 5.0 function call work around if you have to - it causes an error on IE6. (script.js)
+ ! Don't bother trying to auto-detect fonts. Whilst clever it seems to be more buggy than it's worth. (editor.js)
+ ! The text editor wasn't working quite right in non-wysiwyg mode. (editor.js)
+ * Editing a permission profile was showing membergroup permissions. (ManagePermissions template)
+ ! Doing add/remove permissions on a profile was not saving. (ManagePermissions.php)
 
 
 August 2006

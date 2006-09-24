@@ -64,10 +64,17 @@ function getXMLDocument(sUrl, funcCallback)
 
 			if (oMyDoc.responseXML != null && oMyDoc.status == 200)
 			{
+				if (funcCallback.call)
+				{
+					funcCallback.call(oCaller, oMyDoc.responseXML);
+				}
 				// A primitive substitute for the call method to support IE 5.0.
-				oCaller.tmpMethod = funcCallback;
-				oCaller.tmpMethod(oMyDoc.responseXML);
-				delete oCaller.tmpMethod;
+				else
+				{
+					oCaller.tmpMethod = funcCallback;
+					oCaller.tmpMethod(oMyDoc.responseXML);
+					delete oCaller.tmpMethod;
+				}
 			}
 		};
 	}

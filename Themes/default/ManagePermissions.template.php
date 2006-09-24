@@ -68,19 +68,6 @@ function template_permission_index()
 								<option value="maintenance">' . $txt['permitgroups_maintenance'] . '</option>
 							</select><br /><br />';
 
-	if (!empty($context['board']) && !empty($context['copy_boards']))
-	{
-		echo '
-							', $txt['permissions_copy_from_board'], ':
-							<select name="from_board">
-								<option value="empty">(', $txt['permissions_select_board'], ')</option>';
-		foreach ($context['copy_boards'] as $board)
-			echo '
-								<option value="', $board['id'], '">', $board['name'], '</option>';
-		echo '
-							</select><br /><br />';
-	}
-
 	echo '
 							', $txt['permissions_like_group'], ':
 							<select name="copy_from">
@@ -105,7 +92,7 @@ function template_permission_index()
 								<option value="">(', $txt['permissions_select_permission'], ')</option>';
 	foreach ($context['permissions'] as $permissionType)
 	{
-		if ($permissionType['id'] == 'membergroup' && !empty($context['board']))
+		if ($permissionType['id'] == 'membergroup' && !empty($context['profile']))
 			continue;
 
 		foreach ($permissionType['columns'] as $column)
@@ -155,7 +142,7 @@ function template_permission_index()
 
 	if (!empty($context['profile']))
 		echo '
-			<input type="hidden" name="boardid" value="', $context['profile']['id'], '" />';
+			<input type="hidden" name="pid" value="', $context['profile']['id'], '" />';
 
 	echo '
 			<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
