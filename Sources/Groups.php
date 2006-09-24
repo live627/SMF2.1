@@ -240,7 +240,7 @@ function MembergroupMembers()
 
 		foreach ($memberNames as $index => $memberName)
 		{
-			$memberNames[$index] = trim($memberNames[$index]);
+			$memberNames[$index] = trim(strtolower($memberNames[$index]));
 
 			if (strlen($memberNames[$index]) == 0)
 				unset($memberNames[$index]);
@@ -249,7 +249,7 @@ function MembergroupMembers()
 		$request = db_query("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}members
-			WHERE (memberName IN ('" . implode("', '", $memberNames) . "') OR realName IN ('" . implode("', '", $memberNames) . "'))
+			WHERE (LOWER(memberName) IN ('" . implode("', '", $memberNames) . "') OR LOWER(realName) IN ('" . implode("', '", $memberNames) . "'))
 				AND ID_GROUP != $_REQUEST[group]
 				AND NOT FIND_IN_SET($_REQUEST[group], additionalGroups)
 			LIMIT " . count($memberNames), __FILE__, __LINE__);

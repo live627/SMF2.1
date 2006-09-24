@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2515 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2516 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -76,6 +76,7 @@ September 2006
  ! The text editor wasn't working quite right in non-wysiwyg mode. (editor.js)
  * Editing a permission profile was showing membergroup permissions. (ManagePermissions template)
  ! Doing add/remove permissions on a profile was not saving. (ManagePermissions.php)
+ ! Ensure adding a member to a group is case insensitive. (Groups.php)
 
 
 August 2006
