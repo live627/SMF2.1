@@ -240,7 +240,7 @@ function MembergroupMembers()
 
 		foreach ($memberNames as $index => $memberName)
 		{
-			$memberNames[$index] = trim(strtolower($memberNames[$index]));
+			$memberNames[$index] = trim($smfFunc['strtolower']($memberNames[$index]));
 
 			if (strlen($memberNames[$index]) == 0)
 				unset($memberNames[$index]);
