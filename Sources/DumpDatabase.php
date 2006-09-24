@@ -271,7 +271,13 @@ function getTableSQLData($tableName)
 
 		// Add a default...?
 		if (isset($row['Default']))
-			$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . mysql_escape_string($row['Default']) . "'");
+		{
+			// Make a special case of auto-timestamp.
+			if ($row['Default'] == 'CURRENT_TIMESTAMP')
+				$schema_create .= ' /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */';
+			else
+				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . mysql_escape_string($row['Default']) . "'");
+		}
 
 		// And now any extra information. (such as auto_increment.)
 		$schema_create .= ($row['Extra'] != '' ? ' ' . $row['Extra'] : '') . ',' . $crlf;
