@@ -651,4 +651,12 @@ $txt['entity_convert_only_utf8'] = 'The database needs to be in UTF-8 format bef
 $txt['entity_convert_introduction'] = 'This function will convert all characters that are stored in the database as HTML-entities to UTF-8 characters. This is especially useful when you have just converted your forum from a character set like ISO-8859-1 while non-latin characters were used on the forum. The browser then sends all characters as HTML-entities. For example, the HTML-entity &amp;#945; represents the greek letter &#945; (alpha). Converting entities to UTF-8 will improve searching and sorting of text and reduce storage size.';
 $txt['entity_convert_proceed'] = 'Proceed';
 
+$txt['copyright_ends_in'] = 'Your subscription to remove the SMF copyright notice ends in <b>%1$s</b> days.';
+$txt['copyright_click_renew'] = 'Click <a href="http://www.simplemachines.org/copyright/renew.php?key=%1$s" style="color: red;">here</a> to renew';
+$txt['copyright_removal'] = 'Copyright Removal';
+$txt['copyright_removal_desc'] = 'In order to remove the copyright from your SMF installation you will need the code purchased from the Simple Machines website. If you have not yet purchased a code please click <a href="http://www.simplemachines.org/copyright/index.php">here</a>. Once the code has been entered and verified the copyright will be hidden until your subscription expires. The time remaining will be shown on the admin center.';
+$txt['copyright_code'] = 'Copyright Code';
+$txt['copyright_failed'] = 'Sorry - but the code you entered is incorrect. Please ensure that your forum URL matches that entered when purchasing the subscription.';
+$txt['copyright_proceed'] = 'Proceed';
+
 ?>

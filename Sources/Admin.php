@@ -54,6 +54,9 @@ if (!defined('SMF'))
 		- loads the view_versions sub template (in the Admin template.)
 		- accessed through ?action=admin;area=version.
 
+	void ManageCopyright()
+		// !!!
+
 	void CleanupPermissions()
 		- cleans up file permissions, in the hopes of making things work
 		  smoother and potentially more securely.
@@ -81,6 +84,7 @@ function AdminMain()
 			'index' => array($txt['admin_center'], 'Admin.php', 'AdminHome'),
 			'credits' => array($txt['support_credits_title'], 'Admin.php', 'AdminHome'),
 			'version' => array('', 'Admin.php', 'VersionDetail', 'select' => 'index'),
+			'copyright' => array('', 'Admin.php', 'ManageCopyright', 'select' => 'index'),
 		),
 	);
 
@@ -209,7 +213,7 @@ function AdminMain()
 // The main administration section.
 function AdminHome()
 {
-	global $sourcedir, $db_prefix, $forum_version, $txt, $scripturl, $context, $user_info;
+	global $sourcedir, $db_prefix, $forum_version, $txt, $scripturl, $context, $user_info, $boardurl, $modSettings;
 
 	// You have to be able to do at least one of the below to see this page.
 	isAllowedTo(array('admin_forum', 'manage_permissions', 'moderate_forum', 'manage_membergroups', 'manage_bans', 'send_mail', 'edit_news', 'manage_boards', 'manage_smileys', 'manage_attachments'));
@@ -235,6 +239,59 @@ function AdminHome()
 <div style="margin-top: 1ex;"><b>Graphic Designers:</b> Bjoern "Bloc" Kristiansen, Alienine (Adrian), A.M.A, babylonking, BlackouT, Burpee, diplomat, Eren "forsakenlad" Yasarkurt, Hyper Piranha, Killer Possum, Mystica, Nico "aliencowfarm" Boer, Philip "Meriadoc" Renich and Tippmaster.</div>
 <div style="margin-top: 1ex;"><b>Site team:</b> Douglas, dschwab9, and Tim.</div>
 <div style="margin-top: 1ex;">And for anyone we may have missed, thank you!</div>';
+
+	// Copyright?
+	if (!empty($modSettings['copy_settings']) || !empty($modSettings['copyright_key']))
+	{
+		if (empty($modSettings['copy_settings']))
+			$modSettings['copy_settings'] = 'a,0';
+
+		// Not done it yet...
+		if (empty($_SESSION['copy_expire']))
+		{
+			list ($key, $expires) = explode(',', $modSettings['copy_settings']);
+			// Get the expired date.
+			$fp = @fsockopen("www.simplemachines.org", 80, $errno, $errstr, 1);
+			if ($fp)
+			{
+				$out = "GET /smf/copyright/check_copyright.php?site=" . base64_encode($boardurl) . "&key=" . $key . "&version=" . base64_encode($forum_version) . " HTTP/1.1\r\n";
+				$out .= "Host: www.simplemachines.org\r\n";
+				$out .= "Connection: Close\r\n\r\n";
+				fwrite($fp, $out);
+	
+				$return_data = '';
+				while (!feof($fp))
+					$return_data .= fgets($fp, 128);
+				fclose($fp);
+
+				// Get the expire date.
+				$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
+				$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
+
+				if ($return_data != 'void')
+				{
+					list ($_SESSION['copy_expire'], $modSettings['copyright_key']) = explode('|', $return_data);
+					$_SESSION['copy_key'] = $key;
+					$modSettings['copy_settings'] = $key . ',' . (int) $return_data;
+					updateSettings(array('copy_settings' => $modSettings['copy_settings'], 'copyright_key' => $modSettings['copyright_key']));
+				}
+				else
+				{
+					$_SESSION['copy_expire'] = '';
+					db_query("
+						DELETE FROM {$db_prefix}settings
+						WHERE variable = 'copy_settings'
+							OR variable = 'copyright_key'", __FILE__, __LINE__);
+				}
+			}
+		}
+
+		if ($_SESSION['copy_expire'] && $_SESSION['copy_expire'] > time())
+		{
+			$context['copyright_expires'] = (int) (($_SESSION['copy_expire'] - time()) / 3600 / 24);
+			$context['copyright_key'] = $_SESSION['copy_key'];
+		}
+	}		
 
 	// This makes it easier to get the latest news with your time format.
 	$context['time_format'] = urlencode($user_info['time_format']);
@@ -339,6 +396,57 @@ function VersionDetail()
 
 	$context['sub_template'] = 'view_versions';
 	$context['page_title'] = $txt[429];
+}
+
+// Allow users to remove their copyright.
+function ManageCopyright()
+{
+	global $forum_version, $txt, $sourcedir, $context, $boardurl;
+
+	isAllowedTo('admin_forum');
+
+	if (isset($_POST['copy_code']))
+	{
+		checkSession('post');
+
+		$_POST['copy_code'] = urlencode($_POST['copy_code']);
+
+		// Check the actual code.
+		$fp = @fsockopen("www.simplemachines.org", 80, $errno, $errstr);
+		if ($fp)
+		{
+			$out = "GET /smf/copyright/check_copyright.php?site=" . base64_encode($boardurl) . "&key=" . $_POST['copy_code'] . "&version=" . base64_encode($forum_version) . " HTTP/1.1\r\n";
+			$out .= "Host: www.simplemachines.org\r\n";
+			$out .= "Connection: Close\r\n\r\n";
+			fwrite($fp, $out);
+
+			$return_data = '';
+			while (!feof($fp))
+				$return_data .= fgets($fp, 128);
+			fclose($fp);
+
+			// Get the data back
+			$return_data = substr($return_data, strpos($return_data, 'STARTCOPY') + 9);
+			$return_data = trim(substr($return_data, 0, strpos($return_data, 'ENDCOPY')));
+
+			if ($return_data != 'void')
+			{
+				echo $return_data;
+				list ($_SESSION['copy_expire'], $modSettings['copyright_key']) = explode('|', $return_data);
+				$_SESSION['copy_key'] = $key;
+				$modSettings['copy_settings'] = $key . ',' . (int) $return_data;
+				updateSettings(array('copy_settings' => $modSettings['copy_settings'], 'copyright_key' => $modSettings['copyright_key']));
+				redirectexit('action=admin');
+			}
+			else
+			{
+				fatal_lang_error('copyright_failed');
+			}
+		}
+	}
+
+	$context['sub_template'] = 'manage_copyright';
+	$context['page_title'] = $txt['copyright_removal'];
 }
 
 // Clean up the permissions one way or another.

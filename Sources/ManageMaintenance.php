@@ -1447,7 +1447,8 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 			unset($language_url);
 
 		// If this includes the index template put in the language settings too.
-		if ($template == 'index')
+		//!!! Remove this for now - we may add it back later.
+		/*if ($template == 'index')
 		{
 			$request = db_query("
 				SELECT time_format, number_format, charset, locale, dictionary, rtl, image_lang
@@ -1465,7 +1466,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				}
 			}
 			mysql_free_result($request);
-		}
+		}*/
 	}
 
 	if ($can_write)
