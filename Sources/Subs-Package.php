@@ -757,6 +757,7 @@ function packageRequireFTP($destination_url, $files = null)
 			'destination' => $destination_url,
 		);
 
+		$context['page_title'] = $txt['package_ftp_necessary'];
 		$context['sub_template'] = 'ftp_required';
 		obExit();
 	}

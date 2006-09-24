@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2517 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2518 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -78,6 +78,7 @@ September 2006
  ! Doing add/remove permissions on a profile was not saving. (ManagePermissions.php)
  ! Ensure adding a member to a group is case insensitive. (Groups.php)
  ! Ensure the log_online timestamp is backed up correctly. (DumpDatabase.php)
+ ! Added a page title to the page that requests ftp details. (Subs-Package.php)
 
 
 August 2006
