@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2519 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2520 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -81,6 +81,7 @@ September 2006
  ! Added a page title to the page that requests ftp details. (Subs-Package.php)
  ! Try to repair all theme's settings, not just the default theme. (repair_settings.php)
  + Added an option to download a package by entering the url alone. (PackageGet.php, Packages template, Packages language files)
+ ! Search wasn't always including the subject matches properly. (Search.php)
 
 
 August 2006

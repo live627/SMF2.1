@@ -1340,7 +1340,7 @@ function PlushSearch2()
 			}
 
 			// Insert subject-only matches.
-			elseif ($_SESSION['search_cache']['num_results'] < $modSettings['search_max_results'] && $numSubjectResults !== 0)
+			if ($_SESSION['search_cache']['num_results'] < $modSettings['search_max_results'] && $numSubjectResults !== 0)
 			{
 				db_query("
 					INSERT IGNORE INTO {$db_prefix}log_search_results
@@ -1361,7 +1361,7 @@ function PlushSearch2()
 					WHERE lst.ID_TOPIC = t.ID_TOPIC" . (empty($modSettings['search_max_results']) ? '' : "
 					LIMIT " . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])), __FILE__, __LINE__);
 
-				$_SESSION['search_cache']['num_results'] = db_affected_rows();
+				$_SESSION['search_cache']['num_results'] += db_affected_rows();
 			}
 			else
 				$_SESSION['search_cache']['num_results'] = 0;
