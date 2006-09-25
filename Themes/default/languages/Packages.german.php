@@ -167,4 +167,9 @@ $txt['package_cleanperms_free'] = 'Alle Dateien sind &uuml;berschreibbar.';
 $txt['package_cleanperms_restrictive'] = 'Die min. ben&ouml;tigte Anzahl der Dateien ist &uuml;berschreibbar.';
 $txt['package_cleanperms_go'] = 'Los';
 
+// Untranslated!
+$txt['package_download_by_url'] = 'Download a package by url';
+$txt['package_download_filename'] = 'Name of the file';
+$txt['package_download_filename_info'] = 'Optional value.  Should be used when the url does not end in the filename.  For example: index.php?mod=5';
+
 ?>

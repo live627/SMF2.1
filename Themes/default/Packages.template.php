@@ -804,6 +804,27 @@ function template_servers()
 						<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
 					</form>
 				</td>
+			</tr><tr>
+				<td class="catbg">', $txt['package_download_by_url'], '</td>
+			</tr>
+				<td class="windowbg2">
+					<form action="', $scripturl, '?action=admin;area=packages;get;sa=download;byurl;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+						<table border="0" cellspacing="0" cellpadding="4">
+							<tr>
+								<td valign="top"><b>' . $txt['smf187'] . ':</b></td>
+								<td valign="top"><input type="text" name="package" size="50" value="http://" /></td>
+							</tr><tr>
+								<td valign="top"><b>', $txt['package_download_filename'], ':</b></td>
+								<td valign="top">
+									<input type="text" name="filename" size="50" /><br />
+									<span class="smalltext">', $txt['package_download_filename_info'], '</span>
+								</td>
+							</tr><tr>
+								<td colspan="2"><input type="submit" value="', $txt['smf190'], '" /></td>
+							</tr>
+						</table>
+					</form>
+				</td>
 			</tr>
 		</table>
 		<br />

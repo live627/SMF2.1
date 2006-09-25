@@ -546,7 +546,11 @@ function PackageDownload()
 		$url = '';
 	}
 
-	$package_name = basename($_REQUEST['package']);
+	if (isset($_REQUEST['byurl']) && !empty($_POST['filename']))
+		$package_name = basename($_REQUEST['filename']);
+	else
+		$package_name = basename($_REQUEST['package']);
+
 	if (isset($_REQUEST['conflict']) || (isset($_REQUEST['auto']) && file_exists($boarddir . '/Packages/' . $package_name)))
 	{
 		// Find the extension, change abc.tar.gz to abc_1.tar.gz...

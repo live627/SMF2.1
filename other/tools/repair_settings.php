@@ -76,6 +76,9 @@ $txt['theme_url'] = 'Default Theme URL';
 $txt['images_url'] = 'Default Theme Images URL';
 $txt['theme_dir'] = 'Default Theme Directory';
 
+$txt['theme_path_url_settings'] = 'Paths &amp; URLs For Themes';
+$txt['theme_path_url_settings_info'] = 'These are the paths and URLs to your SMF themes.';
+
 if (isset($_POST['submit']))
 	set_settings();
 
@@ -249,14 +252,16 @@ function show_settings()
 				$settings[$row[0]] = $row[1];
 			@mysql_free_result($request);
 
+			// Load all the themes.
 			$request = @mysql_query("
-				SELECT variable, value
+				SELECT variable, value, ID_THEME
 				FROM $settings[db_prefix]themes
-				WHERE ID_THEME = 1
-					AND variable IN ('theme_dir', 'theme_url', 'images_url')
-				LIMIT 3");
+				WHERE ID_MEMBER = 0
+					AND variable IN ('theme_dir', 'theme_url', 'images_url', 'name')");
+			
+			$theme_settings = array();
 			while ($row = @mysql_fetch_row($request))
-				$settings[$row[0]] = $row[1];
+				$theme_settings[$row[2]][$row[0]] = $row[1];
 			@mysql_free_result($request);
 
 			$show_db_settings = $request;
@@ -292,10 +297,8 @@ function show_settings()
 			'avatar_directory' => array('db', 'string'),
 			'smileys_url' => array('db', 'string'),
 			'smileys_dir' => array('db', 'string'),
-			'theme_url' => array('theme', 'string'),
-			'images_url' => array('theme', 'string'),
-			'theme_dir' => array('theme', 'string'),
-		)
+		),
+		'theme_path_url_settings' => array(),
 	);
 
 	$host = empty($_SERVER['HTTP_HOST']) ? $_SERVER['SERVER_NAME'] . (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' ? '' : ':' . $_SERVER['SERVER_PORT']) : $_SERVER['HTTP_HOST'];
@@ -324,11 +327,37 @@ function show_settings()
 		$known_settings['path_url_settings']['smileys_dir'][2] = realpath(dirname(__FILE__) . '/Smileys');
 	}
 
-	if (file_exists(dirname(__FILE__) . '/Themes/default'))
+/*	if (file_exists(dirname(__FILE__) . '/Themes/default'))
 	{
 		$known_settings['path_url_settings']['theme_url'][2] = $url . '/Themes/default';
 		$known_settings['path_url_settings']['images_url'][2] = $url . '/Themes/default/images';
 		$known_settings['path_url_settings']['theme_dir'][2] = realpath(dirname(__FILE__) . '/Themes/default');
+	}
+*/
+
+	// Create the values for the themes.
+	foreach($theme_settings AS $id => $theme)
+	{
+		$this_theme = ($pos = strpos($theme['theme_url'], '/Themes/')) !== false ? substr($theme['theme_url'], $pos+8) : '';
+		if (!empty($this_theme))
+			$exist = file_exists(dirname(__FILE__) . '/Themes/' . $this_theme);
+		else
+			$exist = false;
+
+		$known_settings['theme_path_url_settings'] += array(
+			'theme_'. $id.'_theme_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme : null),
+			'theme_'. $id.'_images_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme . '/images' : null),
+			'theme_' . $id . '_dir' => array('theme', 'string', $exist && !empty($this_theme) ? realpath(dirname(__FILE__) . '/Themes/' . $this_theme) : null),
+		);
+		$settings += array(
+			'theme_' . $id . '_theme_url' => $theme['theme_url'],
+			'theme_' . $id . '_images_url' => $theme['images_url'],
+			'theme_' . $id . '_dir' => $theme['theme_dir'],
+		);
+		
+		$txt['theme_' . $id . '_theme_url'] = $theme['name'] . ' URL';
+		$txt['theme_' . $id . '_images_url'] = $theme['name'] . ' Images URL';
+		$txt['theme_' . $id . '_dir'] = $theme['name'] . ' Directory';
 	}
 
 	if (isset($attempt) && $attempt)
@@ -451,7 +480,7 @@ function show_settings()
 			elseif ($info[1] == 'string')
 			{
 				echo '
-								<input type="text" name="', $info[0], 'settings[', $setting, ']" id="', $setting, '" value="', isset($settings[$setting]) ? $settings[$setting] : '', '" size="', $settings_section == 'path_url_settings' ? '60" style="width: 80%;' : '30', '" />';
+								<input type="text" name="', $info[0], 'settings[', $setting, ']" id="', $setting, '" value="', isset($settings[$setting]) ? $settings[$setting] : '', '" size="', $settings_section == 'path_url_settings' || $settings_section == 'theme_path_url_settings' ? '60" style="width: 80%;' : '30', '" />';
 
 				if (isset($info[2]))
 					echo '
@@ -576,9 +605,16 @@ function set_settings()
 
 	$setString = '';
 	foreach ($theme_updates as $var => $val)
-		$setString .= "
-				(1, 0, '$var', SUBSTRING('$val', 1, 65534)),";
+	{
+		// Extract the data
+		preg_match('~theme_([\d]+)_(.+)~', $var, $match);
+		if (empty($match[0]))
+			continue;
 
+		$setString .= "
+				($match[1], 0, '$match[2]', SUBSTRING('$val', 1, 65534)),";
+	}
+	
 	if (!empty($setString))
 		@mysql_query("
 			REPLACE INTO {$db_prefix}themes
