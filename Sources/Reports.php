@@ -331,11 +331,12 @@ function BoardPermissionsReport()
 	}
 	mysql_free_result($request);
 
-	// Get all the possible membergroups!
+	// Get all the possible membergroups, except admin!
 	$request = db_query("
 		SELECT ID_GROUP, groupName
 		FROM {$db_prefix}membergroups
-		WHERE $group_clause" . (empty($modSettings['permission_enable_postgroups']) ? "
+		WHERE $group_clause
+			AND ID_GROUP != 1" . (empty($modSettings['permission_enable_postgroups']) ? "
 			AND minPosts = -1" : '') . "
 		ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
 	if (!isset($_REQUEST['groups']) || in_array(-1, $_REQUEST['groups']) || in_array(0, $_REQUEST['groups']))
@@ -568,11 +569,12 @@ function GroupPermissionsReport()
 	else
 		$clause = 'ID_GROUP != 3';
 
-	// Get all the possible membergroups!
+	// Get all the possible membergroups, except admin!
 	$request = db_query("
 		SELECT ID_GROUP, groupName
 		FROM {$db_prefix}membergroups
-		WHERE $clause" . (empty($modSettings['permission_enable_postgroups']) ? "
+		WHERE $clause
+			ID_GROUP !- 1" . (empty($modSettings['permission_enable_postgroups']) ? "
 			AND minPosts = -1" : '') . "
 		ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
 	if (!isset($_REQUEST['groups']) || in_array(-1, $_REQUEST['groups']) || in_array(0, $_REQUEST['groups']))
