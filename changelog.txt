@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2523 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2524 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -86,7 +86,7 @@ September 2006
  ! Show local moderators as being able to access all boards since in reality a moderator can always access their board. (Reports.php)
  ! Some configurable number format options were not showing the decimal separator. (Load.php)
  ! The 'most popular boards by activity' statistics were not always showing the proper boards. (Profile.php)
-
+ ! If a guest tries to post with a reserved name, handle it as a post error instead of causing a fatal error. (Post.php, Subs-Members.php)
 
 August 2006
 --------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ if (!defined('SMF'))
 		- allows to perform several checks on the input, e.g. reserved names.
 		- adjusts member statistics.
 
-	bool isReservedName(string name, int ID_MEMBER = 0, bool is_name = true)
+	bool isReservedName(string name, int ID_MEMBER = 0, bool is_name = true, bool fatal = true)
 		- checks if name is a reserved name or username.
 		- if is_name is false, the name is assumed to be a username.
 		- the ID_MEMBER variable is used to ignore duplicate matches with the
@@ -540,7 +540,7 @@ function registerMember(&$regOptions)
 }
 
 // Check if a name is in the reserved words list. (name, current member id, name/username?.)
-function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true)
+function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal = true)
 {
 	global $user_info, $modSettings, $db_prefix, $smfFunc;
 
@@ -563,12 +563,18 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true)
 			$reservedCheck = empty($modSettings['reserveCase']) ? $smfFunc['strtolower']($reserved) : $reserved;
 			// If it's not just entire word, check for it in there somewhere...
 			if ($checkMe == $reservedCheck || ($smfFunc['strpos']($checkMe, $reservedCheck) !== false && empty($modSettings['reserveWord'])))
-				fatal_lang_error(244, 'password', array($reserved));
+				if ($fatal)
+					fatal_lang_error(244, 'password', array($reserved));
+				else
+					return true;
 		}
 
 		$censor_name = $name;
 		if (censorText($censor_name) != $name)
-			fatal_lang_error('name_censored', 'password', array($name));
+			if ($fatal)
+				fatal_lang_error('name_censored', 'password', array($name));
+			else
+				return true;
 	}
 
 	// Get rid of any SQL parts of the reserved name...

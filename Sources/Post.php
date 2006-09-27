@@ -414,7 +414,7 @@ function Post()
 				else
 				{
 					require_once($sourcedir . '/Subs-Members.php');
-					if (isReservedName(htmlspecialchars($_REQUEST['guestname'])))
+					if (isReservedName(htmlspecialchars($_REQUEST['guestname']), 0, true, false))
 						$context['post_error']['bad_name'] = true;
 				}
 
@@ -1347,7 +1347,7 @@ function Post2()
 	{
 		// If user is a guest, make sure the chosen name isn't taken.
 		require_once($sourcedir . '/Subs-Members.php');
-		if (isReservedName($_POST['guestname']) && (!isset($row['posterName']) || $_POST['guestname'] != $row['posterName']))
+		if (isReservedName($_POST['guestname'], 0, true, false) && (!isset($row['posterName']) || $_POST['guestname'] != $row['posterName']))
 			$post_errors[] = 'bad_name';
 	}
 	// If the user isn't a guest, get his or her name and email.
