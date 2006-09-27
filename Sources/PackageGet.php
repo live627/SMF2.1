@@ -518,6 +518,9 @@ function PackageDownload()
 	// Use the downloaded sub template.
 	$context['sub_template'] = 'downloaded';
 
+	// Security is good...
+	checkSession('get');
+
 	if (isset($_GET['server']))
 	{
 		$server = (int) $_GET['server'];
@@ -539,8 +542,6 @@ function PackageDownload()
 	}
 	else
 	{
-		checkSession('get');
-
 		// Initialize the requried variables.
 		$server = '';
 		$url = '';

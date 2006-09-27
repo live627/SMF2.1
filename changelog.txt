@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2525 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2526 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -88,6 +88,7 @@ September 2006
  ! The 'most popular boards by activity' statistics were not always showing the proper boards. (Profile.php)
  ! If a guest tries to post with a reserved name, handle it as a post error instead of causing a fatal error. (Post.php, Subs-Members.php)
  ! Preview wasn't working on the WYSIWYG editor. (editor.js, Post.php, Post template)
+ ! Check the session when downloading a package. (PackageGet.php)
 
 August 2006
 --------------------------------------------------------------------------------
