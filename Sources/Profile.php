@@ -1832,23 +1832,18 @@ function statPanel($memID)
 	$context['num_polls'] = comma_format($context['num_polls']);
 	$context['num_votes'] = comma_format($context['num_votes']);
 
-	// Most popular boards by posts / activity.  We should include all posts, but that isn't practical.
-	// !!!SLOW This query uses a filesort. Adding an ID_MEMBER key to messages would greatly reduce the load. The current key (participation) opens up the scope to all the messages from the topics the member has posted in. It would also allow the removal of the topics table.
+	// Grab the board this member posted in most often.
 	$result = db_query("
 		SELECT
-			b.ID_BOARD, b.name, COUNT(*) AS messageCount" . ($modSettings['totalMessages'] <= 100000 ? ",
-			b.numPosts" : '') . "
-		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b, {$db_prefix}topics AS t)
+			b.ID_BOARD, b.name, b.numPosts, COUNT(*) AS messageCount
+		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
 		WHERE m.ID_MEMBER = $memID
-			AND b.ID_BOARD = t.ID_BOARD
-			AND t.ID_TOPIC = m.ID_TOPIC
-			AND $user_info[query_see_board]" . ($modSettings['totalMessages'] > 100000 ? "
-			AND m.ID_TOPIC > " . ($modSettings['totalTopics'] - 10000) : '') . "
-		GROUP BY t.ID_BOARD
+			AND b.ID_BOARD = m.ID_BOARD
+			AND $user_info[query_see_board]
+		GROUP BY b.ID_BOARD
 		ORDER BY messageCount DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['popular_boards'] = array();
-	$context['board_activity'] = array();
 	$maxPosts = 0;
 	while ($row = mysql_fetch_assoc($result))
 	{
@@ -1861,45 +1856,37 @@ function statPanel($memID)
 			'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
 			'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>',
 			'posts_percent' => 0,
-			'total_posts' => isset($row['numPosts']) ? $row['numPosts'] : 0
+			'total_posts' => $row['numPosts'],
 		);
 	}
 	mysql_free_result($result);
 
-	if ($modSettings['totalMessages'] > 100000 && !empty($context['popular_boards']))
-	{
-		$request = db_query("
-			SELECT ID_BOARD, COUNT(*) + SUM(numReplies) AS messageCount
-			FROM {$db_prefix}topics
-			WHERE ID_TOPIC > " . ($modSettings['totalTopics'] - 10000) . "
-				AND ID_BOARD IN (" . implode(', ', array_keys($context['popular_boards'])) . ")
-			GROUP BY ID_BOARD", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
-			$context['board_activity'][$row['ID_BOARD']] = $row['messageCount'] == 0 ? 0 : comma_format(($context['popular_boards'][$row['ID_BOARD']]['posts'] * 100) / $row['messageCount'], 2);
-		mysql_free_result($request);
-		$context['hide_num_posts'] = true;
-	}
-	else
-	{
-		foreach ($context['popular_boards'] as $ID_BOARD => $board_data)
-			$context['board_activity'][$ID_BOARD] = $board_data['total_posts'] == 0 ? 0 : comma_format(($board_data['posts'] * 100) / $board_data['total_posts'], 2);
-	}
+	// Now that we know the total, calculate the percentage.
+	foreach ($context['popular_boards'] as $ID_BOARD => $board_data)
+		$context['board_activity'][$ID_BOARD] = $board_data['total_posts'] == 0 ? 0 : comma_format(($board_data['posts'] * 100) / $board_data['total_posts'], 2);
 
-	// Sort the boards out...
-	arsort($context['board_activity']);
-
-	foreach ($context['board_activity'] as $ID_BOARD => $dummy)
+	// Now get the 10 boards this user has most often participated in.
+	$result = db_query("
+		SELECT
+			b.ID_BOARD, b.name, IF(COUNT(*) > b.numPosts, 1, COUNT(*) / b.numPosts) * 100 AS percentage
+		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
+		WHERE m.ID_MEMBER = $memID
+			AND b.ID_BOARD = m.ID_BOARD
+			AND $user_info[query_see_board]
+		GROUP BY b.ID_BOARD
+		ORDER BY percentage DESC
+		LIMIT 10", __FILE__, __LINE__);
+	$context['board_activity'] = array();
+	while ($row = mysql_fetch_assoc($result))
 	{
-		$context['board_activity'][$ID_BOARD] = array(
+		$context['board_activity'][$row['ID_BOARD']] = array(
 			'id' => $ID_BOARD,
-			'href' => $context['popular_boards'][$ID_BOARD]['href'],
-			'link' => $context['popular_boards'][$ID_BOARD]['link'],
-			'percent' => $dummy
+			'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>',
+			'percent' => $row['percentage'],
 		);
-
-		if ($maxPosts > 0)
-			$context['popular_boards'][$ID_BOARD]['posts_percent'] = round(($context['popular_boards'][$ID_BOARD]['posts'] * 100) / $maxPosts, 2);
 	}
+	mysql_free_result($result);
 
 	// Posting activity by time.
 	$result = db_query("

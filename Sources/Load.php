@@ -165,16 +165,7 @@ function reloadSettings()
 			$modSettings['defaultMaxMembers'] = 30;
 
 		if (!empty($modSettings['cache_enable']))
-		{
-			// To lighten the load, let's clean it up a bit first.  They don't need to be strings.
-			foreach ($modSettings as $k => $v)
-			{
-				if (strlen($v) != 0 && is_numeric($v))
-					$modSettings[$k] = strpos($v, '.') === false ? (int) $v : (float) $v;
-			}
-
 			cache_put_data('modSettings', $modSettings, 90);
-		}
 	}
 
 	// UTF-8 in regular expressions is unsupported on PHP(win) versions < 4.2.3.
