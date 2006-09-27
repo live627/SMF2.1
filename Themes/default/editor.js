@@ -34,6 +34,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	this.InsertText = InsertText;
 	this.InsertSmiley = InsertSmiley;
 	this.getMode = getMode;
+	this.getText = getText;
 	this.showMoreSmileys = showMoreSmileys;
 	this.doSubmit = DoSubmit;
 	var buttonControls = new Array();
@@ -99,6 +100,40 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	function getMode()
 	{
 		return mode ? 1 : 0;
+	}
+
+	// Return the current text.
+	function getText(prepareEntities, modeOverride)
+	{
+		curMode = typeof(modeOverride) != "undefined" ? modeOverride : mode;
+
+		if (!curMode || !frameDocument)
+		{
+			text = textHandle.value;
+			if (prepareEntities)
+			{
+				text = text.replace(/</g, '#smlt#');
+				text = text.replace(/>/g, '#smgt#');
+				text = text.replace(/&/g, '#smamp#');
+			}
+		}
+		else
+		{
+			text = frameDocument.body.innerHTML;
+			if (prepareEntities)
+			{
+				text = text.replace(/&lt;/g, '#smlt#');
+				text = text.replace(/&gt;/g, '#smgt#');
+				text = text.replace(/&amp;/g, '#smamp#');
+			}
+		}
+
+		// Clean it up - including removing semi-colons.
+		text = text.replace(/&nbsp;/g, ' ');
+		text = text.replace(/;/g, '#smcol#');
+
+		// Return it.
+		return text;
 	}
 
 	function init(text, editWidth, editHeight)
@@ -838,25 +873,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			return;
 		}
 
-		// Get the right data - and also protect certain HTML elements.
-		if (mode)
-		{
-			text = textHandle.value;
-			text = text.replace(/</g, '#smlt#');
-			text = text.replace(/>/g, '#smgt#');
-			text = text.replace(/&/g, '#smamp#');
-		}
-		else
-		{
-			text = frameDocument.body.innerHTML;
-			text = text.replace(/&lt;/g, '#smlt#');
-			text = text.replace(/&gt;/g, '#smgt#');
-			text = text.replace(/&amp;/g, '#smamp#');
-		}
-
-		// Clean it up - including removing semi-colons.
-		text = text.replace(/&nbsp;/g, ' ');
-		text = text.replace(/;/g, '#smcol#');
+		// Get the text.
+		text = getText(true, !view);
 		text = escape(text);
 
 		getXMLDocument(smf_scripturl + '?action=jseditor;view=' + (view ? 1 : 0) + ';sesc=' + cur_session_id + ';xml;message=' + text, onToggleDataReceived);

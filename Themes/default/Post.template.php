@@ -62,7 +62,13 @@ function template_main()
 
 					for (i in textFields)
 						if (document.forms.postmodify.elements[textFields[i]])
-							x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+						{
+							// Handle the WYSIWYG editor.
+							if (textFields[i] == "message" && editorHandlemessage && editorHandlemessage.getMode() == 1)
+								x[x.length] = "editor_mode=1&" + textFields[i] + "=" + escape(textToEntities(editorHandlemessage.getText(true).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+							else
+								x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+						}
 					for (i in numericFields)
 						if (document.forms.postmodify.elements[numericFields[i]] && typeof(document.forms.postmodify[numericFields[i]].value) != "undefined")
 							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);

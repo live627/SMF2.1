@@ -1026,19 +1026,20 @@ function Post2()
 	global $ID_MEMBER, $user_info, $board_info, $options, $smfFunc;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
-	if (!empty($_POST['editor_mode']) && isset($_POST['message']))
+	if (!empty($_REQUEST['editor_mode']) && isset($_REQUEST['message']))
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
+
 		// We strip and add slashes back here - so we don't forget!
-		$_POST['message'] = stripslashes($_POST['message']);
-		$_POST['message'] = html_to_bbc($_POST['message']);
-		$_POST['message'] = addslashes($_POST['message']);
+		$_REQUEST['message'] = stripslashes($_REQUEST['message']);
+		$_REQUEST['message'] = html_to_bbc($_REQUEST['message']);
+		$_REQUEST['message'] = addslashes($_REQUEST['message']);
 
 		// We need to unhtml it now as it gets done shortly.
-		$_POST['message'] = un_htmlspecialchars($_POST['message']);
+		$_REQUEST['message'] = un_htmlspecialchars($_REQUEST['message']);
 
-		// We need this incase of errors etc.
-		$_REQUEST['message'] = $_POST['message'];
+		// We need this for everything else.
+		$_POST['message'] = $_REQUEST['message'];
 	}
 
 	// Previewing? Go back to start.
