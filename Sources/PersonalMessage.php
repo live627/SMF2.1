@@ -605,7 +605,7 @@ function prepareMessageContext($reset = false)
 
 function MessageSearch()
 {
-	global $context, $txt;
+	global $context, $txt, $scripturl;
 
 	if (isset($_REQUEST['params']))
 	{
@@ -657,6 +657,10 @@ function MessageSearch()
 	$context['simple_search'] = isset($context['search_params']['advanced']) ? empty($context['search_params']['advanced']) : !empty($modSettings['simpleSearch']) && !isset($_REQUEST['advanced']);
 	$context['page_title'] = $txt['pm_search_title'];
 	$context['sub_template'] = 'search';
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=pm;sa=search',
+		'name' => $txt['pm_search_bar_title'],
+	);
 }
 
 function MessageSearch2()
@@ -1016,6 +1020,10 @@ function MessageSearch2()
 	$context['page_title'] = $txt['pm_search_title'];
 	$context['sub_template'] = 'search_results';
 	$context['pm_area'] = 'search';
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=pm;sa=search',
+		'name' => $txt['pm_search_bar_title'],
+	);
 }
 
 // Send a new message?
