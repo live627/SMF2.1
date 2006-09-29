@@ -94,9 +94,7 @@ function MoveTopic()
 		SELECT b.ID_BOARD, b.name, b.childLevel, c.name AS catName, c.ID_CAT
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
-		WHERE b.ID_BOARD != $board
-			AND $user_info[query_see_board]" /* . (!in_array(0, $boards) ? "
-			AND b.ID_BOARD IN (" . implode(', ', $boards) . ")" : '') .*/, __FILE__, __LINE__);
+		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$context['boards'] = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
@@ -105,14 +103,6 @@ function MoveTopic()
 				'name' => $row['catName'],
 				'boards' => array(),
 			);
-
-/*		$context['boards'][] = array(
-			'id' => $row['ID_BOARD'],
-			'name' => $row['name'],
-			'category' => $row['catName'],
-			'child_level' => $row['childLevel'],
-			'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['ID_BOARD']
-		);*/
 
 		$context['categories'][$row['ID_CAT']]['boards'][] = array(
 			'id' => $row['ID_BOARD'],
@@ -192,10 +182,6 @@ function MoveTopic2()
 
 	// The destination board must be numeric.
 	$_POST['toboard'] = (int) $_POST['toboard'];
-
-	// !!!
-	/*if (!in_array($_POST['toboard'], $boards) && !in_array(0, $boards))
-		fatal_lang_error('smf232');*/
 
 	// Make sure they can see the board they are trying to move to (and get whether posts count in the target board).
 	$request = db_query("

@@ -6,8 +6,6 @@ function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
-//	echo '<pre>'; print_r($context); echo '</pre>';
-
 	echo '
 	<form action="', $scripturl, '?action=movetopic2;topic=', $context['current_topic'], '.0" method="post" accept-charset="', $context['character_set'], '" onsubmit="submitonce(this);">
 		<table border="0" width="400" cellspacing="0" cellpadding="4" align="center" class="tborder">
@@ -17,17 +15,13 @@ function template_main()
 				<td class="windowbg" valign="middle" align="center" style="padding-bottom: 1ex; padding-top: 2ex;">
 					<b>', $txt['move_to'], ':</b> <select name="toboard">';
 
-	// Show dashes (-) before the board name if it's a child.
-/*	foreach ($context['boards'] as $board)
-		echo '
-						<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['category'], ' ', str_repeat('-', 1 + $board['child_level']), ' ', $board['name'], '</option>';*/
 	foreach ($context['categories'] AS $category)
 	{
 		echo '
 						<optgroup label="', $category['name'], '">';
 		foreach($category['boards'] AS $board)
 			echo '
-							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level']-1) . '=&gt;' : '', $board['name'], '</option>';
+							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', $board['id'] == $context['current_board'] ? ' disabled="disabled"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level']-1) . '=&gt;' : '', $board['name'], '</option>';
 		echo '
 						</optgroup>';
 	}
