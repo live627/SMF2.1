@@ -54,7 +54,7 @@ if (!defined('SMF'))
 // Move a topic.  Give the moderator a chance to post a reason.
 function MoveTopic()
 {
-	global $txt, $board, $topic, $db_prefix, $user_info, $context, $ID_MEMBER, $language;
+	global $txt, $board, $topic, $db_prefix, $user_info, $context, $ID_MEMBER, $language, $scripturl, $settings;
 
 	if (empty($topic))
 		fatal_lang_error(1);
@@ -118,6 +118,17 @@ function MoveTopic()
 		fatal_lang_error('moveto_noboards', false);
 
 	$context['page_title'] = $txt['move_topic'];
+
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?topic=' . $topic . '.0',
+		'name' => $context['subject'],
+		'extra_before' => $settings['linktree_inline'] ? $txt['topic'] . ': ' : '',
+	);
+
+	$context['linktree'][] = array(
+		'name' => $txt['move_topic'],
+	);
+
 
 	$context['back_to_topic'] = isset($_REQUEST['goback']);
 
