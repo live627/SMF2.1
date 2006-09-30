@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2529 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2530 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -92,6 +92,7 @@ September 2006
  ! Show the current board on the selection box for moving a topic, just make sure it's not selectable. (MoveTopic.php, MoveTopic template)
  ! Show the linktree on the move topic page. (MoveTopic.php, MoveTopic template)
  ! Show the search section in the linktree in the personal message area. (PersonalMessage.php)
+ ! Fixed the integration problems caused by the database changed. (SSI.php, Database.php)
 
 August 2006
 --------------------------------------------------------------------------------

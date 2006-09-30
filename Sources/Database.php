@@ -65,7 +65,7 @@ if (!defined('SMF'))
 function db_initiate()
 {
 	global $smfFunc, $db_persist, $db_connection, $db_server, $db_user, $db_passwd, $db_name;
-	global $mysql_set_mode, $ssi_db_user, $ssi_db_passwd;
+	global $mysql_set_mode, $ssi_db_user, $ssi_db_passwd, $db_prefix;
 
 	// Map some database specific functions.
 	$smfFunc += array(
@@ -96,7 +96,13 @@ function db_initiate()
 	}
 
 	// Show an error if the connection couldn't be made.
-	if (!$db_connection || !@mysql_select_db($db_name, $db_connection))
+	if (!$db_connection)
+		db_fatal_error();
+
+	// If we are using SSI make the database name part of the prefix, if not just connect to the database.
+	if (SMF == 'SSI' && strpos($db_prefix, '.') === false)
+		$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
+	elseif (!@mysql_select_db($db_name, $db_connection) && SMF != 'SSI')
 		db_fatal_error();
 
 	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
