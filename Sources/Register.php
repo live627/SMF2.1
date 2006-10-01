@@ -289,7 +289,7 @@ function Register2()
 	// Include the additional options that might have been filled in.
 	foreach ($possible_strings as $var)
 		if (isset($_POST[$var]))
-			$regOptions['extra_register_vars'][$var] = '\'' . $_POST[$var] . '\'';
+			$regOptions['extra_register_vars'][$var] = '\'' . $smfFunc['htmlspecialchars']($_POST[$var]) . '\'';
 	foreach ($possible_ints as $var)
 		if (isset($_POST[$var]))
 			$regOptions['extra_register_vars'][$var] = (int) $_POST[$var];
