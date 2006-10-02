@@ -568,7 +568,7 @@ function RequestMembers()
 // This function generates a random password for a user and emails it to them.
 function resetPassword($memID, $username = null)
 {
-	global $db_prefix, $scripturl, $context, $txt, $sourcedir;
+	global $db_prefix, $scripturl, $context, $txt, $sourcedir, $modSettings;
 
 	// Language... and a required file.
 	loadLanguage('Login');
