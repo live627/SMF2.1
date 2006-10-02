@@ -3111,7 +3111,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 // Present a screen to make sure the user wants to be deleted
 function deleteAccount($memID)
 {
-	global $txt, $context, $ID_MEMBER, $modSettings;
+	global $txt, $context, $ID_MEMBER, $modSettings, $user_profile;
 
 	if (!$context['user']['is_owner'])
 		isAllowedTo('profile_remove_any');
@@ -3123,7 +3123,7 @@ function deleteAccount($memID)
 
 	// Can they do this, or will they need approval?
 	$context['needs_approval'] = $context['user']['is_owner'] && !empty($modSettings['approveAccountDeletion']) && !allowedTo('moderate_forum');
-	$context['page_title'] = $txt['deleteAccount'] . ': ' . $txt['personal_messages'];
+	$context['page_title'] = $txt['deleteAccount'] . ': ' . $user_profile[$memID]['realName'];
 }
 
 function deleteAccount2($profile_vars, $post_errors, $memID)

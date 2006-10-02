@@ -1,8 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2531 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2532 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+October 2006
+--------------------------------------------------------------------------------
+ ! Fixed the page title on the user account deletion confirmation page. (Profile.php)
+
+
 September 2006
 --------------------------------------------------------------------------------
  ! Do some slightly more advanced javascript browser protection. (script.js, editor.js)
@@ -94,6 +99,7 @@ September 2006
  ! Show the search section in the linktree in the personal message area. (PersonalMessage.php)
  ! Fixed the integration problems caused by the database changed. (SSI.php, Database.php)
  ! Check to make sure the limit is a positive value when showing a feed. (News.php)
+
 
 August 2006
 --------------------------------------------------------------------------------
