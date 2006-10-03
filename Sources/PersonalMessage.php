@@ -605,7 +605,7 @@ function prepareMessageContext($reset = false)
 
 function MessageSearch()
 {
-	global $context, $txt, $scripturl;
+	global $context, $txt, $scripturl, $modSettings;
 
 	if (isset($_REQUEST['params']))
 	{

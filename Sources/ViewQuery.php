@@ -37,7 +37,7 @@ if (!defined('SMF'))
 // See the queries....
 function ViewQuery()
 {
-	global $scripturl, $user_info, $settings, $context, $db_connection;
+	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings;
 
 	// Don't allow except for administrators.
 	isAllowedTo('admin_forum');
