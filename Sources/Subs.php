@@ -1,4 +1,4 @@
-<?php
+ <?php
 /******************************************************************************
 * Subs.php                                                                    *
 *******************************************************************************
@@ -3014,7 +3014,7 @@ function setupThemeContext()
 		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
 
 	// Now we put the buttons in the context so the theme can use them.
-	$contxt['menu_buttons'] = array();
+	$context['menu_buttons'] = array();
 	foreach($buttons AS $act => $button)
 		if (!empty($button['show']))
 		{
