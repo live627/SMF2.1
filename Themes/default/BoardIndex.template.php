@@ -93,6 +93,12 @@ function template_main()
 		<div class="catbg', $category['new'] ? '2' : '', '" style="padding: 5px 5px 5px 10px;">';
 		$first = false;
 
+		if (!$context['user']['is_guest'])
+			echo '
+				<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';">
+					<a href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>
+				</div>';
+
 		// If this category even can collapse, show a link to collapse it.
 		if ($category['can_collapse'])
 			echo '
@@ -100,12 +106,6 @@ function template_main()
 
 		echo '
 				', $category['link'];
-				
-		if (!$context['user']['is_guest'])
-			echo '
-				<div style="float: ', $context['right_to_left'] ? 'left' : 'right', ';">
-					<a href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>
-				</div>';
 
 		echo '
 		</div>';
