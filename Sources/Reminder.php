@@ -162,7 +162,7 @@ function setPassword()
 
 function setPassword2()
 {
-	global $db_prefix, $context, $txt;
+	global $db_prefix, $context, $txt, $modSettings;
 
 	if (empty($_POST['u']) || !isset($_POST['passwrd1']) || !isset($_POST['passwrd2']))
 		fatal_lang_error(1, false);

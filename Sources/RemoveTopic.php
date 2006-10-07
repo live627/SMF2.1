@@ -85,7 +85,7 @@ function RemoveTopic2()
 // Remove just a single post.
 function DeleteMessage()
 {
-	global $ID_MEMBER, $db_prefix, $topic, $board;
+	global $ID_MEMBER, $db_prefix, $topic, $board, $modSettings;
 
 	checkSession('get');
 

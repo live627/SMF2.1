@@ -348,6 +348,9 @@ function ViewMemberlist()
 						$query_parts[] = "{$param_info['db_fields'][0]} > '0000-12-31'";
 					}
 				}
+				// Special case - equals a date.
+				elseif ($param_info['type'] == 'date' && $_POST['types'][$param_name] == '=')
+					$query_parts[] = $param_info['db_fields'][0] . ' > ' . $_POST[$param_name] . ' AND ' . $param_info['db_fields'][0] . ' < ' . ($_POST[$param_name] + 86400);
 				else
 					$query_parts[] = $param_info['db_fields'][0] . ' ' . $range_trans[$_POST['types'][$param_name]] . ' ' . $_POST[$param_name];
 			}

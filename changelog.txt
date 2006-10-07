@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2533 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2534 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -7,6 +7,11 @@ October 2006
 --------------------------------------------------------------------------------
  ! Fixed the page title on the user account deletion confirmation page. (Profile.php)
  ! The modSettings variable wasn't in the global list for the reset password function, making the integration call worthless. (Subs-Auth.php)
+ ! The "Find Members" box loses track of whether it's buddies only on pagination. (Subs-Auth.php)
+ ! Fixed various times where some necessary globals were missing. (ManageBoards.php, ManageSmileys.php, Reminder.php, RemoveTopic.php)
+ * Only show dividers between BBC buttons if there are some within the dividers. (Post templates)
+ ! Searching for member details by date was often a fruitless experience. (ManageMembers.php)
+ * Try to avoid the "register button won't work" scenario on register. (Register template)
 
 
 September 2006

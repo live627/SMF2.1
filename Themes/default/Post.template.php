@@ -807,6 +807,7 @@ function template_postbox(&$message)
 			'hr' => array('code' => 'hr', 'before' => '[hr]', 'description' => $txt[531]),
 		);
 
+		$found_button = false;
 		// Here loop through the array, printing the images/rows/separators!
 		foreach ($context['bbc_tags'][0] as $image => $tag)
 		{
@@ -817,12 +818,17 @@ function template_postbox(&$message)
 				if (!empty($context['disabled_tags'][$tag['code']]))
 					continue;
 
+				$found_button = true;
+
 				// Okay... we have the link. Now for the image and the closing </a>!
 				echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
 			}
 			// I guess it's a divider...
-			else
+			elseif ($found_button)
+			{
 				echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
+				$found_button = false;
+			}
 		}
 
 		// Show the font drop down...
@@ -868,6 +874,7 @@ function template_postbox(&$message)
 						</select>';
 		echo '<br />';
 
+		$found_button = false;
 		// Print the buttom row of buttons!
 		foreach ($context['bbc_tags'][1] as $image => $tag)
 		{
@@ -877,12 +884,17 @@ function template_postbox(&$message)
 				if (!empty($context['disabled_tags'][$tag['code']]))
 					continue;
 
+				$found_button = true;
+
 				// Okay... we have the link. Now for the image and the closing </a>!
 				echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
 			}
 			// I guess it's a divider...
-			else
+			elseif ($found_button)
+			{
 				echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
+				$found_button = false;
+			}
 		}
 
 		//!!! Temp!

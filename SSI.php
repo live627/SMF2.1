@@ -1242,6 +1242,9 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	else
 		$length = (int) $length;
 
+	$limit = max(0, $limit);
+	$start = max(0, $start);
+
 	// Make sure guests can see this board.
 	$request = db_query("
 		SELECT ID_BOARD

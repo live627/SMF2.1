@@ -36,7 +36,9 @@ function template_before()
 	function checkAgree()
 	{
 		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || isEmptyText(document.forms.creator.passwrd1) || !document.forms.creator.regagree.checked;
-	}';
+		setTimeout("checkAgree();", 1000);
+	}
+	setTimeout("checkAgree();", 1000);';
 
 	if ($context['visual_verification'])
 	{
