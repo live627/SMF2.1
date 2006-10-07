@@ -465,7 +465,7 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 	$replaces = array();
 
 	if ($hasEqualSign)
-		preg_match_all('~\[(' . $myTag . ')=([^\]]*?)\]~is', $message, $matches);
+		preg_match_all('~\[(' . $myTag . ')=([^\]]*?)\](.+?)\[/(' . $myTag . ')\]~is', $message, $matches);
 	else
 		preg_match_all('~\[(' . $myTag . ($hasExtra ? '(?:[^\]]*?)' : '') . ')\](.+?)\[/(' . $myTag . ')\]~is', $message, $matches);
 
@@ -476,6 +476,8 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 		$this_tag = $matches[1][$k];
 		if (!$hasEqualSign)
 			$this_close = $matches[3][$k];
+		else
+			$this_close = $matches[4][$k];
 
 		$found = false;
 		foreach ($protocols as $protocol)
@@ -503,7 +505,9 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 		elseif (!$found)
 			$replace = $protocols[0] . '://' . $replace;
 
-		if ($hasEqualSign)
+		if ($hasEqualSign && $embeddedUrl)
+			$replaces['[' . $matches[1][$k] . '=' . $matches[2][$k] . ']' . $matches[3][$k] . '[/' . $matches[4][$k] . ']'] = '[' . $this_tag . '=' . $replace . ']' . $matches[3][$k] . '[/' . $this_close . ']';
+		elseif ($hasEqualSign)
 			$replaces['[' . $matches[1][$k] . '=' . $matches[2][$k] . ']'] = '[' . $this_tag . '=' . $replace . ']';
 		elseif ($embeddedUrl)
 			$replaces['[' . $matches[1][$k] . ']' . $matches[2][$k] . '[/' . $matches[3][$k] . ']'] = '[' . $this_tag . '=' . $replace . ']' . $matches[2][$k] . '[/' . $this_close . ']';

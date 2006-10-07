@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2534 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2535 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -12,6 +12,7 @@ October 2006
  * Only show dividers between BBC buttons if there are some within the dividers. (Post templates)
  ! Searching for member details by date was often a fruitless experience. (ManageMembers.php)
  * Try to avoid the "register button won't work" scenario on register. (Register template)
+ ! When fixing BBC tags make sure to always assign a closing tag. (Subs-Post.php)
 
 
 September 2006
