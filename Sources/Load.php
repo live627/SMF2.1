@@ -1456,13 +1456,13 @@ function loadTemplate($template_name, $fatal = true)
 	if (file_exists($settings['theme_dir'] . '/' . $template_name . '.template.php'))
 	{
 		template_include($settings['theme_dir'] . '/' . $template_name . '.template.php', true);
-		$template_name .= ' (' . basename($settings['theme_dir']) . ')';
+		$actual_template = $template_name . ' (' . basename($settings['theme_dir']) . ')';
 	}
 	// Are we using a base theme?  If so, does it have the template?
 	elseif (isset($settings['base_theme_dir']) && file_exists($settings['base_theme_dir'] . '/' . $template_name . '.template.php'))
 	{
 		template_include($settings['base_theme_dir'] . '/' . $template_name . '.template.php', true);
-		$template_name .= ' (' . basename($settings['base_theme_dir']) . ')';
+		$actual_template = $template_name . ' (' . basename($settings['base_theme_dir']) . ')';
 	}
 	// Perhaps we'll just use the default template, then...
 	elseif (file_exists($settings['default_theme_dir'] . '/' . $template_name . '.template.php'))
@@ -1470,7 +1470,7 @@ function loadTemplate($template_name, $fatal = true)
 		// Make it known that this template uses different directories...
 		$settings['default_template'] = true;
 		template_include($settings['default_theme_dir'] . '/' . $template_name . '.template.php', true);
-		$template_name .= ' (' . basename($settings['default_theme_dir']) . ')';
+		$actual_template = $template_name . ' (' . basename($settings['default_theme_dir']) . ')';
 	}
 	// Hmmm... doesn't exist?!  I don't suppose the directory is wrong, is it?
 	elseif (!file_exists($settings['default_theme_dir']) && file_exists($boarddir . '/Themes/default'))
@@ -1501,7 +1501,11 @@ function loadTemplate($template_name, $fatal = true)
 		loadTemplate('Combat');
 
 	if ($db_show_debug === true)
-		$context['debug']['templates'][] = $template_name;
+		$context['debug']['templates'][] = $actual_template;
+
+	// If they have specified an initialization function for this template, go ahead and call it now.
+	if (function_exists('template_' . $template_name . '_init'))
+		call_user_func('template_' . $template_name . '_init');
 }
 
 // Load a sub template... fatal is for templates that shouldn't get a 'pretty' error screen.
