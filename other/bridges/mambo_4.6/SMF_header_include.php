@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC2                                     *
+* Software Version:           SMF 1.1                                     *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -65,7 +65,7 @@ function SMF_header_include( ) {
 		else
 			$menu_item = 1;	
 
-		$myurl = basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $menu_item . '&amp;';
+		$myurl = 'index.php?option=com_smf&amp;Itemid=' . $menu_item . '&amp;';
 			
 		require_once ($smf_path."/SSI.php");
 		

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1                                         *
+* Software Version:           SMF 2.0                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -447,7 +447,7 @@ function saveRegistration($option)
 		$database->setQuery("
 			SELECT name, email 
 			FROM {$mosConfig_dbprefix}users
-			WHERE usertype = 'superadministrator'");
+			WHERE usertype = 'Super Administrator'");
 		$rows = $database->loadObjectList();
 		$row2 = $rows[0];
 		$adminName2 = $row2->name;
@@ -531,7 +531,7 @@ function resendActivationForm($option)
 function resend_activation($option)
 {
 	global $database, $Itemid, $mosConfig_live_site, $mosConfig_sitename;
-	global $db_prefix,$mosConfig_dbprefix, $mosConfig_sef;
+	global $db_prefix,$mosConfig_dbprefix, $mosConfig_sef,$mosConfig_fromname,$mosConfig_mailfrom;
 
 	$_live_site = $mosConfig_live_site;
 	$_sitename = $mosConfig_sitename;

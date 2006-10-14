@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC3                                     *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -77,7 +77,7 @@ $smf_logout_button_image = $params->get('smf_logout_button_image');
 
 mysql_select_db($db_name);
 echo '
-<div class="module" style="position: relative; margin-right: 5px;">
+<div class="module" style="margin-right: 5px;">
 	<table width="99%" cellpadding="0" cellspacing="5" border="0" align="', $smf_align, '">
 		<tr>', empty($context['user']['avatar']) ? '' : '
 			<td valign="top" align="' . $smf_align . '">' . $context['user']['avatar']['image'] . '
@@ -117,7 +117,7 @@ echo '
 		// Are there any members waiting for approval?
 		if (!empty($context['unapproved_members']))
 			echo '<br />
-			', $context['unapproved_members'] == 1 ? $txt['approve_thereis'] : $txt['approve_thereare'], ' <a href="', sefReltoAbs($scripturl. 'action=admin;area=regcenter').'">', $context['unapproved_members'] == 1 ? $txt['approve_member'] : $context['unapproved_members'] . ' ' . $txt['approve_members'], '</a> ', $txt['approve_members_waiting'];
+			', $context['unapproved_members'] == 1 ? $txt['approve_thereis'] : $txt['approve_thereare'], ' <a href="', sefReltoAbs($scripturl. 'action=regcenter').'">', $context['unapproved_members'] == 1 ? $txt['approve_member'] : $context['unapproved_members'] . ' ' . $txt['approve_members'], '</a> ', $txt['approve_members_waiting'];
 
 
 		// Show the total time logged in?
@@ -155,12 +155,11 @@ echo '
 
 
 		echo '<br />
-			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['lang_images_url'] . '/logout.gif').'" alt="' . $txt['logout'] . '" style="margin: 2px 0;" border="0" />' : $txt['logout'], '</a>';
+			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['images_url'] . '/' . $context['user']['language'] . '/logout.gif').'" alt="' . $txt[108] . '" style="margin: 2px 0;" border="0" />' : $txt[108], '</a>';
 	}
 	// Otherwise they're a guest - so politely ask them to register or login.
 	else
 	{
-		$txt['welcome_guest'] = sprintf($txt['welcome_guest'], $txt['guest_title']);
 		$txt['welcome_guest'] = str_replace($boardurl.'/index.php?', $scripturl , $txt['welcome_guest']);
 		$txt['welcome_guest'] = str_replace($scripturl.'?', $scripturl, $txt['welcome_guest']);
 		$txt['welcome_guest'] = str_replace($scripturl.'action=login', sefReltoAbs($scripturl.'action=login'), $txt['welcome_guest']);
@@ -191,7 +190,7 @@ echo '
 			$txt['welcome_guest'] = str_replace($scripturl.'action=activate', sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode'), $txt['welcome_guest']);
 		break;		
 	}
-		$txt['login'] = str_replace('&?','&', $txt['login']);
+		$txt[34] = str_replace('&?','&', $txt[34]);
 		if (!isset($login))
 			{$login = '';}
 		if (!isset($message_login))
@@ -204,8 +203,8 @@ echo '
 			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
 
 			<form action="', sefReltoAbs($scripturl . 'action=login2'), '" method="post" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-				',$txt['username'],': <input type="text" name="user" size="10" /> 
-				',$txt['password'],': <input type="password" name="passwrd" size="10" />
+				',$txt[35],': <input type="text" name="user" size="10" /> 
+				',$txt[36],': <input type="password" name="passwrd" size="10" />
 				<select name="cookielength">
 					<option value="60">', $txt['smf53'], '</option>
 					<option value="1440">', $txt['smf47'], '</option>
@@ -213,7 +212,7 @@ echo '
 					<option value="302400">', $txt['smf49'], '</option>
 					<option value="-1" selected="selected">', $txt['smf50'], '</option>
 				</select>
-				<input type="submit" value="', $txt['login'], '" /><br />
+				<input type="submit" value="', $txt[34], '" /><br />
 				<span class="middletext">', $txt['smf52'], '</span>
 				<input type="hidden" name="hash_passwrd" value="" />
 				<input type="hidden" name="op2" value="login" />

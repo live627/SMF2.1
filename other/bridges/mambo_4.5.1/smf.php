@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1                                         *
+* Software Version:           SMF 2.0                                        *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -96,7 +96,7 @@ global $bridge_reg, $menu, $Itemid, $context, $cb_reg, $database, $smf_css, $syn
 $_SERVER['QUERY_STRING'] = strtr($_SERVER['QUERY_STRING'], array('&amp;?' => '&amp;', '&?' => '&amp;' , '#' => '.'));
 
 
-require_once ('smf_integration_arrays.php');
+require_once ($mosConfig_absolute_path . '/components/com_smf/smf_integration_arrays.php');
 
 // Are Mambo and SMF using the same database connection?
 if (empty($Itemid) && $database->_resource == $db_connection)
@@ -259,7 +259,7 @@ function mambo_smf_url($url)
 
 function mambo_smf_exit($with_output)
 {
-	global $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css, $mosConfig_sef;
+	global $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css, $mosConfig_sef, $mosConfig_debug, $db_name;
 
 	$buffer = ob_get_contents();
 	ob_end_clean();
@@ -278,8 +278,8 @@ function mambo_smf_exit($with_output)
 
 	$_MOS_OPTION['buffer'] = ob_mambofix($buffer);
 
-	if ($database->_resource == $db_connection)
-		mysql_select_db($mosConfig_db);
+
+	mysql_select_db($mosConfig_db);
 	
 	$result = mysql_query("
 			SELECT id 
@@ -413,6 +413,8 @@ function mambo_smf_exit($with_output)
 	}
 
 	doGzip();
+	
+	mysql_select_db($db_name);
 
 	die;
 }
@@ -544,7 +546,7 @@ function integrate_change_member_data ($memberNames, $var, $value)
 
 function integrate_outgoing_email($subject, &$message, $headers)
 {
-	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid;
+	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid, $hotmail_fix;
 
 	//First, we need to set up the email so that ob_mambofdix knows what to do with it
 	$message = str_replace ($scripturl, '"="' . $scripturl, $message);
@@ -564,6 +566,7 @@ function integrate_outgoing_email($subject, &$message, $headers)
 	//No idea why sefReltoAbs does this, but....
 	$message = str_replace ('____', '
 ', $message ); //yes, it looks ridiculous, but it works :P
+	$hotmail_fix = false;
 	return true;
 	
 /*		if ($mosConfig_sef == '1'){		
@@ -1033,7 +1036,9 @@ function integrate_pre_load () {
 	$modSettings['enableCompressedOutput'] = '0';
 	//Turn off local cookies
 	$modSettings['localCookies'] = '0';
-
+	//Turn off SEF in SMF
+	$modSettings['queryless_urls'] = '';
+	
 // Change the SMF language according to the Mambo/Joomla settings
 
 	global $mosConfig_lang, $language, $synch_lang, $language_conversion;

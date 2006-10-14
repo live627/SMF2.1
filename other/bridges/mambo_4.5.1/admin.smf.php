@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1                                         *
+* Software Version:           SMF 2.0                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -488,8 +488,8 @@ function saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridg
 			SELECT `value2`
 			FROM #__smf_config
 			WHERE (`variable` = 'sync_group' AND `value1`='$smf_group')");
-		$result['check'] = $database->loadAssocList();
-		if ($result['check']['value2']){
+		$result['check'] = $database->loadResult();
+		if ($result['check'] != 0){
 			$database->setQuery("
 				UPDATE #__smf_config
 				SET `value2` = '$mambo_group'

@@ -144,10 +144,11 @@ function showConfig($option, $cb_reg)
 		$not_saved = true;
 	}
 	mysql_select_db($db_name);
-	$database->setQuery("SELECT ID_GROUP, groupName
+	$query = mysql_query("SELECT ID_GROUP, groupName
 				FROM {$db_prefix}membergroups
 				");
-	$smf_groups = $database->loadRowList();
+	$smf_groups = mysql_fetch_array($query);
+	
 	
 	mysql_select_db($mosConfig_db);
 	
@@ -756,15 +757,16 @@ function synch_groups ($option){
 	
 	mysql_select_db($db_name);
 	
-	$database->setQuery("
+	$query = mysql_query("
 				SELECT `ID_MEMBER`, `realName`, `memberName`, `ID_GROUP`
 				FROM {$db_prefix}members
 				ORDER BY `ID_MEMBER` ASC
 				");
 				
-	$members = $database->loadRowList();
+	$members = mysql_fetch_array($query);
+	mysql_free_result($query);
 	
-		mysql_select_db($mosConfig_db);
+	mysql_select_db($mosConfig_db);
 	
 	echo '<a href="index2.php?option=com_smf&task=config">Return to Bridge configuration</a><br />';
 	

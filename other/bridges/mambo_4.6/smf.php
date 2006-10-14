@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC3                                     *
+* Software Version:           SMF 1.1                                     *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -100,7 +100,7 @@ $mainframe =& mosMainFrame::getInstance();
 $_SERVER['QUERY_STRING'] = strtr($_SERVER['QUERY_STRING'], array('&amp;?' => '&amp;', '&?' => '&amp;' , '#' => '.'));
 
 
-require_once ('smf_integration_arrays.php');
+require_once ($mosConfig_absolute_path . '/components/com_smf/smf_integration_arrays.php');
 
 // Are Mambo and SMF using the same database connection?
 if (empty($Itemid) && $database->_resource == $db_connection)
@@ -225,11 +225,10 @@ function ob_mambofix($buffer)
 		preg_match_all('~([\(=]")' . preg_quote($mosConfig_live_site . '/index.php?option=com_smf') . '([^"]*)"{1}~', $buffer, $nonsefurls);
 		foreach($nonsefurls[0] as $nonsefurl)
 		{
-			$sefurl = sefReltoAbs(substr($nonsefurl, strlen($mosConfig_live_site) + 3, strlen($nonsefurl) - strlen($mosConfig_live_site) - 4));
+			$nqsefurl = substr($nonsefurl, 0, strpos($nonsefurl, 'option')) . preg_replace('/(\;)([^=#]*)([#"])/', '$1$2=$2$3', substr($nonsefurl, strpos($nonsefurl, 'option'), strlen($nonsefurl)));
+			$sefurl = sefReltoAbs(substr($nqsefurl, strlen($mosConfig_live_site) + 3, strlen($nqsefurl) - strlen($mosConfig_live_site) - 4));
 			$sefurl = str_replace(";", "/", $sefurl);
 			$sefurl = str_replace("=", ",", $sefurl);
-			$sefurl = substr($sefurl, 0, strpos($sefurl, 'option')) . preg_replace('/(\/)([^,]*)(#)/', '$1$2,$2$3', substr($sefurl, strpos($sefurl, 'option'), strlen($sefurl)));
-			$sefurl = substr($sefurl, 0, strpos($sefurl, 'option')) . preg_replace('/(\/)([^,]*)(\/)/', '$1$2,$2$3', substr($sefurl, strpos($sefurl, 'option'), strlen($sefurl)));
 			if (substr($sefurl, strlen($sefurl) - 1, 1) == '/')
 				$sefurl = substr($sefurl, 0, strlen($sefurl) - 1);
 			$buffer = str_replace(substr($nonsefurl, 1, strlen($nonsefurl)), '"' . $sefurl . '"', $buffer);
@@ -255,7 +254,11 @@ function mambo_smf_url($url)
 
 function mambo_smf_exit($with_output)
 {
-	global $c_handler, $indextype, $mambothandler, $configuration, $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css, $context;
+	global $c_handler, $indextype, $mambothandler, $configuration, $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css, $context, $db_name;
+
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
+	$configuration =& mamboCore::getMamboCore();
 
 	$buffer = ob_get_contents();
 	ob_end_clean();
@@ -378,9 +381,9 @@ function mambo_smf_exit($with_output)
 	
 	foreach ($context['linktree'] as $link_num => $tree)
 	{
-		if ($link_num > 0) { // Don't show first linktree element, because forum menu item will already be in Mambo Pathway.
+		if ($link_num > 0 && $tree['name']!='' && isset($tree['name'])) { // Don't show first linktree element, because forum menu item will already be in Mambo Pathway.
 			//If there is a url and this is not the last link item, show as a link. Otherwise just show.
-			$mainframe->appendPathWay('<img src="images/M_images/arrow.png" />' . (ob_mambofix('<a href="' . $tree['url'] . '" class="pathway">') . $tree['name'] . '</a>') . ' ');
+			$mainframe->appendPathWay((ob_mambofix('<a href="' . $tree['url'] . '" class="pathway">') . $tree['name'] . '</a>') . ' <img src="images/M_images/arrow.png" /> ' );
 		}
 	}	
 
@@ -404,10 +407,10 @@ function mambo_smf_exit($with_output)
 
     $configuration->doGzip();
 
-// displays queries performed for page
-if ($configuration->get('mosConfig_debug') AND $adminside != 3) $database->displayLogged();
+	// displays queries performed for page
+	if ($configuration->get('mosConfig_debug') AND $adminside != 3) $database->displayLogged();
 
-mysql_select_db($db_name);
+	mysql_select_db($db_name);
 	die;
 }
 
@@ -1009,7 +1012,7 @@ function integrate_pre_load () {
 
 // Change the SMF language according to the Mambo/Joomla settings
 
-	global $mosConfig_lang, $language, $synch_lang, $language_conversion;
+	global $mosConfig_lang, $language, $synch_lang, $language_conversion, $smf_path;
 
 
 	if(isset($mosConfig_lang) && $synch_lang == 'true'){
@@ -1035,11 +1038,12 @@ function integrate_pre_load () {
 				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '.php'))
 					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
 				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '-utf8.php'))
-					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';
 			}
 			
 		} else if ($synch_lang == 'true')
 			$GLOBALS['language'] = $mosConfig_lang;
+		loadLanguage ('default', $language);
 	}
 }
 
