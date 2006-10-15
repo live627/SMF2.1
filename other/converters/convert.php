@@ -900,7 +900,7 @@ function run_php_converter()
 
 function doStep2()
 {
-	global $convert_data, $from_prefix, $to_prefix;
+	global $convert_data, $from_prefix, $to_prefix, $modSettings;
 
 	$_GET['step'] = '2';
 
