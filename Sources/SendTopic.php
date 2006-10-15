@@ -42,7 +42,7 @@ if (!defined('SMF'))
 
 	void ReportToModerator2()
 		- sends off emails to all the moderators.
-		- sends to moderators and global moderators. (1 and 2)
+		- sends to administrators and global moderators. (1 and 2)
 		- called by ReportToModerator(), and thus has the same permission
 		  and setting requirements as it does.
 		- accessed through ?action=reporttm when posting.
