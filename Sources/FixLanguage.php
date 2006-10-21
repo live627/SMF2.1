@@ -1,5 +1,29 @@
 <?php
+/******************************************************************************
+* FixLanguage.php                                                             *
+*******************************************************************************
+* SMF: Simple Machines Forum                                                  *
+* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
+* =========================================================================== *
+* Software Version:           SMF 2.0 Alpha                                   *
+* Software by:                Simple Machines (http://www.simplemachines.org) *
+* Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
+* Support, News, Updates at:  http://www.simplemachines.org                   *
+*******************************************************************************
+* This program is free software; you may redistribute it and/or modify it     *
+* under the terms of the provided license as published by Lewis Media.        *
+*                                                                             *
+* This program is distributed in the hope that it is and will be useful,      *
+* but WITHOUT ANY WARRANTIES; without even any implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
+*                                                                             *
+* See the "license.txt" file for details of the Simple Machines license.      *
+* The latest version can always be found at http://www.simplemachines.org.    *
+******************************************************************************/
+if (!defined('SMF'))
+	die('Hacking attempt...');
 
+//!!! No longer the case!
 /* This file is used during the development of SMF 2.0 to keep track of text key changes. It will be deleted
    before distribution and it's only purpose is to ensure people using a non-default language are not left
    with errors. Eventually these key changes will form part of the translator for 2.0.
@@ -200,6 +224,225 @@ function applyTxtFixes()
 			elseif (isset($txt[$new]) && !isset($txt[$old]))
 				$txt[$old] = $txt[$new];
 		}
+}
+
+// Fix the formatting of a legacy file
+function fixLanguageFile($filename, $type, $lang, $test = false)
+{
+	global $txtChanges;
+
+	if (!file_exists($filename))
+		return -1;
+
+	$edit_count = -1;
+
+	// Load the file.
+	$fileContents = implode('', file($filename));
+
+	// The warning for editing files direct?
+	if ($type != 'index' && $type != 'Install' && preg_match('~//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*//\s[\w\d\s!\.&;]*index\.' . $lang . '\.php\.~', $fileContents, $matches) == false)
+	{
+		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$1// Important! Before editing these language files please read the text at the topic of index.$lang.php.\n\n", $fileContents);
+		$edit_count = 0;
+	}
+	// Instructions on index?
+	if ($type == 'index' && preg_match('~//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*/\*~', $fileContents, $matches) == false)
+	{
+		$long_warning = '/* Important note about language files in SMF 2.0 upwards:
+1) All language entries in SMF 2.0 are cached. All edits should therefore be made through the admin menu. If you do
+edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
+the cache go to Admin => Maintenance => Clean Cache.
+
+2) Please also follow the following rules:
+
+a) All strings should use single quotes, not double quotes for enclosing the string.
+b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
+
+*/';
+		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$1$long_warning\n\n", $fileContents);
+
+		$edit_count = 0;
+	}
+	// Fix up the help file with existing indexes.
+	if ($type == 'Help' && preg_match('~\\t\{\$~', $fileContents))
+	{
+		$fileContents = preg_replace('~\\t\{\$~', "\t{" . '\\\\' . "$", $fileContents);
+		$edit_count = 0;
+	}
+	// Remove double quotes where easy.
+	if ($type != 'Install' && preg_match('~"\\\\n"~', $fileContents, $matches))
+	{
+		$fileContents = preg_replace('~"\\\\n"~', '\'\\\\\\\\n\'', $fileContents);
+		// Fix for the comment.
+		$fileContents = strtr($fileContents, array('i.e. \'\\\\n\'' => 'i.e. "\\n"'));
+		$edit_count = 0;
+	}
+	// More double quotes
+	if ($type != 'Install' && preg_match('~"\\\\n\\\\n"~', $fileContents, $matches))
+	{
+		$fileContents = preg_replace('~"\\\\n\\\\n"~', '\'\\\\\\\\n\\\\\\\\n\'', $fileContents);
+		// Fix for the comment.
+		$fileContents = strtr($fileContents, array('i.e. \'\\\\n\\\\n\'' => 'i.e. "\\n\\n"'));
+		$edit_count = 0;
+	}
+	// More silly amounts of joins.
+	if ($type != 'Install' && preg_match('~\' \. \'~', $fileContents, $matches))
+	{
+		$fileContents = preg_replace('~\' \. \'~', '', $fileContents);
+		$edit_count = 0;
+	}
+	// Scripturl/Boardurl?
+	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(scripturl|boardurl)~', $fileContents, $match))
+	{
+		$fileContents = preg_replace('~\$(scripturl|boardurl)~', "#$1", $fileContents);
+	}
+	// Forumname/images/regards?
+	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\]~', $fileContents, $match))
+	{
+		$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\])~', "#$1", $fileContents);
+	}
+	// Remove variables.
+	if ($type != 'Install' && preg_match('~\' \. \$(\w*) \. \'~', $fileContents, $match))
+	{
+		$fileContents = preg_replace('~\' \. \$(\w*) \. \'~', "%s", $fileContents);
+		$edit_count = 0;
+	}
+	// And any double arrays.
+	if ($type != 'Install' && preg_match('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', $fileContents))
+	{
+		$fileContents = preg_replace('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "%s", $fileContents);
+		$edit_count = 0;
+	}
+	// Do the same for ones which are only half opened.
+	if ($type != 'Install' && preg_match('~\$(\w*) \. \'~', $fileContents))
+	{
+		$fileContents = preg_replace('~\$(\w*) \. \'~', "'%s", $fileContents);
+		$edit_count = 0;
+	}
+	// And any double arrays.
+	if ($type != 'Install' && preg_match('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', $fileContents))
+	{
+		$fileContents = preg_replace('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "'%s", $fileContents);
+		$edit_count = 0;
+	}
+	// Put back in any variables.
+	if ($type != 'Install' && $type != 'Help' && preg_match('~#(context|settings|txt|boardurl|scripturl)~', $fileContents, $match))
+	{
+		$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$1", $fileContents);
+	}
+
+	foreach ($txtChanges as $langType => $set)
+		foreach ($txtChanges[$langType] as $find => $replace)
+		{
+			$find2 = is_integer($find) ? '$txt[' . $find . ']' : '$txt[\'' . $find . '\']';
+
+			if (strpos($fileContents, $find2) !== false)
+			{
+				$findArray[] = $find2;
+				if (is_integer($replace))
+					$replaceArray[] = '$txt[' . $replace . ']';
+				else
+					$replaceArray[] = '$txt[\'' . $replace . '\']';
+			}
+		}
+
+	if (!empty($findArray))
+	{
+		if ($edit_count == -1)
+			$edit_count = 0;
+		$edit_count += count($findArray);
+
+		$fileContents = str_replace($findArray, $replaceArray, $fileContents);
+	}
+
+	// Need no edits at all?
+	if ($edit_count == -1)
+		return -1;
+
+	// Making some changes?
+	if (!$test)
+	{
+		$fp = fopen($filename, 'w');
+		fwrite($fp, $fileContents);
+		fclose($fp);
+	}
+
+	return $edit_count;
+}
+
+// Fix a legacy template.
+function fixTemplateFile($filename, $test = false)
+{
+	global $txtChanges;
+
+	if (!file_exists($filename))
+		return -1;
+
+	$edit_count = -1;
+
+	// Load the file.
+	$fileContents = implode('', file($filename));
+	$findArray = array();
+	$replaceArray = array();
+
+	foreach ($txtChanges as $type => $section)
+	{
+		foreach ($txtChanges[$type] as $find => $replace)
+		{
+			$find2 = is_integer($find) ? '$txt[' . $find . ']' : '$txt[\'' . $find . '\']';
+
+			if (strpos($fileContents, $find2) !== false)
+			{
+				$findArray[] = $find2;
+				if (is_integer($replace))
+					$replaceArray[] = '$txt[' . $replace . ']';
+				else
+					$replaceArray[] = '$txt[\'' . $replace . '\']';
+			}
+
+			// Check for ones in quotes too.
+			$find2 = '\'$txt[' . $find . ']\'';
+			if (strpos($fileContents, $find2) !== false)
+			{
+				$findArray[] = $find2;
+				$replaceArray[] = '\'$txt[' . $replace . ']\'';
+			}
+		}
+	}
+
+	// Finally, some potential sprintf changes....
+	$changes = array(
+		'~([^\(])\$txt\[\'users_active\'\]~' => '$1sprintf($txt[\'users_active\'], $modSettings[\'lastActive\'])',
+		'~([^\(])\$txt\[\'welcome_guest\'\]~' => '$1sprintf($txt[\'welcome_guest\'], $txt[\'guest_title\'])',
+		'~([^\(])\$txt\[\'hot_topics\'\]~' => '$1sprintf($txt[\'hot_topics\'], $modSettings[\'hotTopicPosts\'])',
+		'~([^\(])\$txt\[\'very_hot_topics\'\]~' => '$1sprintf($txt[\'very_hot_topics\'], $modSettings[\'hotTopicVeryPosts\'])',
+		'~([^\(])\$txt\[\'info_center_title\'\]~' => '$1sprintf($txt[\'info_center_title\'], $context[\'forum_name\'])',
+		'~([^\(])\$txt\[\'login_with_forum\'\]~' => '$1sprintf($txt[\'login_with_forum\'], $context[\'forum_name\'])',
+	);
+	$before = strlen($fileContents);
+	$fileContents = preg_replace(array_keys($changes), array_values($changes), $fileContents);
+	// Make sure we note we've changed something...
+	if (strlen($fileContents) != $before)
+		$findArray[] = 1;
+
+	if (!empty($findArray))
+	{
+		if ($edit_count == -1)
+			$edit_count = 0;
+		$edit_count += count($findArray);
+
+		$fileContents = str_replace($findArray, $replaceArray, $fileContents);
+	}
+
+	// Making those changes?
+	if (!$test)
+	{
+		$fp = fopen($filename, 'w');
+		fwrite($fp, $fileContents);
+		fclose($fp);
+	}
+
+	return $edit_count;
 }
 
 ?>

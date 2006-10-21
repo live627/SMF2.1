@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2537 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2538 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -16,6 +16,7 @@ October 2006
  + Added the ability to provide an optional initialization function for each template. (Load.php)
  ! Make sure that Mambo/Joomla bridges do not use the $database object for accessing the SMF database. (several files)
  ! When saving the config, Joomla was adding in new rows when it should have been updating existing rows. (Mambo/Joomla bridge/admin.smf.php)
+ + Added new version of upgrade - requires admin login, uses AJAX, upgrades/reinstalls mods and templates. (upgrade.php)
 
 
 September 2006
