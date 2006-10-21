@@ -29,7 +29,7 @@ $GLOBALS['required_php_version'] = '4.1.0';
 $GLOBALS['required_mysql_version'] = '3.23.28';
 
 // General options for the script.
-$timeLimitThreshold = 10;
+$timeLimitThreshold = 3;
 $upgrade_path = dirname(__FILE__);
 $upgradeurl = $_SERVER['PHP_SELF'];
 // Where the SMF images etc are kept.
