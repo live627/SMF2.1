@@ -1256,7 +1256,7 @@ function calendarValidatePost()
 // Prints a post box.  Used everywhere you post or send.
 function theme_postbox($msg)
 {
-	global $txt, $modSettings, $db_prefix;
+	global $txt, $modSettings, $db_prefix, $options;
 	global $context, $settings, $user_info, $sourcedir;
 
 	// Switch between default images and back... mostly in case you don't have an PersonalMessage template, but do ahve a Post template.
@@ -1283,7 +1283,7 @@ function theme_postbox($msg)
 	);
 
 	// If we have WYSIWYG available then make a compatible version of the message.
-	if (!empty($modSettings['enable_wysiwyg']))
+	if (empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']))
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 		$context['wysiwyg_message'] = bbc_to_html($msg);

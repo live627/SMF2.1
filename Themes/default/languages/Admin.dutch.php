@@ -586,6 +586,8 @@ $txt['enableEmbeddedFlash'] = 'Laat Flash zien? (anders getoond als link)';
 $txt['enableEmbeddedFlash_warning'] = 'zou een beveiligingsrisico kunnen zijn';
 $txt['enableSpellChecking'] = 'Stel spellingscontrole in';
 $txt['enableSpellChecking_warning'] = 'dit werkt niet op alle servers!';
+// Untranslated!
+$txt['disable_wysiwyg'] = 'Disable WYSIWYG editor';
 $txt['max_messageLength'] = 'Maximale grootte van een bericht';
 $txt['max_messageLength_zero'] = '0 voor geen maximum';
 $txt['fixLongWords'] = 'Woorden afbreken met meer letters dan';

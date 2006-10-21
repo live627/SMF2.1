@@ -248,6 +248,7 @@ $txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by d
 $txt['popup_messages'] = 'Show a popup when you receive new messages?';
 $txt['recent_posts_at_top'] = 'Show most recent posts at the top.';
 $txt['recent_pms_at_top'] = 'Show most recent personal messages at top.';
+$txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
 $txt['timeformat_easy0'] = '(Forum Default)';
 $txt['timeformat_easy1'] = 'Month Day, Year, HH:MM:SS a/pm';

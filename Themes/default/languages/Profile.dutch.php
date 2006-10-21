@@ -250,6 +250,8 @@ $txt['copy_to_outbox'] = 'Sla standaard een Persoonlijk Bericht op in m\'n postv
 $txt['popup_messages'] = 'Een pop-up scherm tonen indien je een nieuwe persoonlijk bericht hebt?';
 $txt['recent_posts_at_top'] = 'Toon meest recente berichten bovenaan.';
 $txt['recent_pms_at_top'] = 'Toon meest recente Persoonlijke Berichten bovenaan.';
+// Untranslated!
+$txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
 $txt['timeformat_easy0'] = '(Forumstandaard)';
 $txt['timeformat_easy1'] = 'Maand Dag, Jaar, HH:MM:SS a/pm';

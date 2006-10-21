@@ -52,6 +52,11 @@ function template_options()
 			'default' => true,
 		),
 		array(
+			'id' => 'wysiwyg_default',
+			'label' => $txt['wysiwyg_default'],
+			'default' => false,
+		),
+		array(
 			'id' => 'popup_messages',
 			'label' => $txt['popup_messages'],
 			'default' => true,

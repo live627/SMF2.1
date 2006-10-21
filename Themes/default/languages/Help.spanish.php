@@ -305,6 +305,8 @@ $helptxt['oldTopicDays'] = 'Si esta opci&oacute;n est&aacute; activada se le mos
 $helptxt['edit_wait_time'] = 'N&uacute;mero de segundos que deben transcurrir despu&eacute;s de la publicaci&oacute;n de un mensaje, para que se registre la fecha de la &uacute;ltima modificaci&oacute;n.';
 $helptxt['edit_disable_time'] = 'N&uacute;mero de minutos transcurridos permitidos antes de que un usuario no pueda continuar editando un mensaje que ellos han publicado. Pon 0 para desactivarlo. <br /><br /><i>Note: Esto no tendr&aacute; efecto en los usuarios que tengan el permiso para editar los mensajes de otros usuarios.</i>';
 $helptxt['enableSpellChecking'] = 'Activar la revisi&oacute;n de ortograf&iacute;a. DEBES tener la librer&iacute;a pspell instalada en tu servidor y configurado PHP para la utilice. Tu servidor ' . (function_exists('pspell_new') == 1 ? 'SI' : 'NO') . ' parece que tenga esta opci&oacute;n configurada.';
+// Untranslated!
+$helptxt['disable_wysiwyg'] = 'This setting disallows all users from using the WYSIWYG (&quot;What You See Is What You Get&quot;) editor on the post page.';
 $helptxt['lastActive'] = 'Especifica el n&uacute;mero de minutos en los que, antes de ese tiempo, un usuario se sigue mostrando activo en el &iacute;ndice del foro. El default son 15 minutos.';
 
 $helptxt['autoOptDatabase'] = 'Esta opci&oacute;n optimiza automaticamente la base de datos cada X d&iacute;as.  Especifica 1 para realizar una optimizaci&oacute;n diaria.  Asimismo, puedes especificar un m&aacute;ximo n&uacute;mero de usuarios en l&iacute;nea, para que no sobrecargues tu servidor o incomodes a muchos usuarios.';

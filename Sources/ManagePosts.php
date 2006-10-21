@@ -224,6 +224,7 @@ function ModifyPostSettings()
 			array('check', 'enableEmbeddedFlash', 'subtext' => $txt['enableEmbeddedFlash_warning']),
 			// Note show the warning as read if pspell not installed!
 			array('check', 'enableSpellChecking', 'subtext' => (function_exists('pspell_new') ? $txt['enableSpellChecking_warning'] : ('<span style="color: red;">' . $txt['enableSpellChecking_warning'] . '</span>'))),
+			array('check', 'disable_wysiwyg'),
 		'',
 			// Posting limits...
 			array('int', 'max_messageLength', 'subtext' => $txt['max_messageLength_zero'], 'postinput' => $txt['manageposts_characters']),

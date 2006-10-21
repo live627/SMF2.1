@@ -616,6 +616,8 @@ $txt['enableEmbeddedFlash'] = 'Incrustar flash? (de lo contrario, mostrarlo como
 $txt['enableEmbeddedFlash_warning'] = '&iexcl;puede ser un riesgo de seguridad!';
 $txt['enableSpellChecking'] = 'Activar la correcci&oacute;n ortogr&aacute;fica';
 $txt['enableSpellChecking_warning'] = '&iexcl;esto no funciona en todos los servidores!</div>';
+// Untranslated!
+$txt['disable_wysiwyg'] = 'Disable WYSIWYG editor';
 $txt['max_messageLength'] = 'Caracteres m&aacute;ximos permitidos en los mensajes';
 $txt['max_messageLength_zero'] = '0 para que no haya m&aacute;x';
 $txt['fixLongWords'] = 'Partir palabras que tengan m&aacute;s letras que';

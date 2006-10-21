@@ -4,7 +4,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	this.uid = uniqueId;
 	this.textHandle = 'NULL';
 	this.currentText = '';
-	var showDebug = true;
+	var showDebug = false;
 	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
 	//!!! This partly works on opera - it's a rubbish browser for JS.
 	//var richTextPossible = is_ie5up || is_ff || is_opera9up;
@@ -168,25 +168,29 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			breadElement = document.createElement('div');
 			breadHandle = frameHandle.parentNode.appendChild(breadElement);
 			breadHandle.id = 'bread_' . uid;
+			breadHandle.style.display = 'none';
 
+			// Size the iframe to something sensible.
+			frameHandle.style.width = editWidth;
+			frameHandle.style.height = editHeight;
+			frameHandle.style.visibility = 'visible';
+
+			if (showDebug)
+			{
+				breadHandle.style.width = editWidth;
+				breadHandle.style.height = '20px';
+				breadHandle.className = 'windowbg2';
+				breadHandle.style.border = '1px black solid';
+				breadHandle.style.visibility = 'visible';
+				breadHandle.style.display = '';
+			}
+	
 			// Show the iframe only if wysiwyg is on.
 			if (mode)
 			{
 				textHandle.style.display = 'none';
-	
-				// Size the iframe to something sensible.
-				frameHandle.style.width = editWidth;
-				frameHandle.style.height = editHeight;
 				frameHandle.style.visibility = 'visible';
-	
-				if (showDebug)
-				{
-					breadHandle.style.width = editWidth;
-					breadHandle.style.height = '20px';
-					breadHandle.className = 'windowbg2';
-					breadHandle.style.border = '1px black solid';
-					breadHandle.style.visibility = 'visible';
-				}
+				breadHandle.style.visibility = 'visible';
 			}
 			else
 			{
@@ -283,9 +287,12 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	function updateEditorControls()
 	{
 		// Assume nothing.
-		selectControls['face'].value = '';
-		selectControls['size'].value = '';
-		selectControls['color'].value = '';
+		if (selectControls['face'])
+			selectControls['face'].value = '';
+		if (selectControls['size'])
+			selectControls['size'].value = '';
+		if (selectControls['color'])
+			selectControls['color'].value = '';
 
 		// Everything else is specific to HTML mode.
 		if (!mode)
@@ -394,7 +401,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		if (selectControls['color'] && typeof(selectControls['size']) == 'object')
 			selectControls['color'].value = curFontColor ;
 
-		setInnerHTML(breadElement, tree);
+		if (showDebug)
+			setInnerHTML(breadElement, tree);
 	}
 
 	// Set the HTML content to be that of the text box - if we are in wysiwyg mode.
@@ -530,12 +538,12 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	function addSelect(selType)
 	{
 		selectHandle = document.getElementById('sel_' + selType);
+		if (!selectHandle)
+			return;
+
 		selectHandle.code = selType;
 
 		selectControls[selType] = selectHandle;
-
-		if (!selectHandle)
-			return;
 
 		// Font face box!
 		if (selType == 'face')

@@ -345,6 +345,8 @@ $helptxt['oldTopicDays'] = 'Als deze optie is ingesteld, wordt er een waarschuwi
 $helptxt['edit_wait_time'] = 'Aantal seconden die gebruikt mogen worden om een bericht te bewerken.';
 $helptxt['edit_disable_time'] = 'Aantal minuten die mogen verstrijken, voordat een lid zijn bericht niet langer meer kan wijzigen. Stel op 0 in om deze feature uit te schakelen.<br /><br /><i>Let op: dit be&iuml;nvloedt niet gebruikers met de permissie om andermans bericht aan te passen.</i>';
 $helptxt['enableSpellChecking'] = 'Spellingscontrole activeren. De pspell library dient ge&iuml;nstalleerd te zijn op de server en de PHP configuratie moet ingesteld zijn om de pspell library te gebruiken. Jouw server heeft deze mogelijkheid ' . (function_exists('pspell_new') ? 'WEL' : 'NIET') . ' actief.';
+// Untranslated!
+$helptxt['disable_wysiwyg'] = 'This setting disallows all users from using the WYSIWYG (&quot;What You See Is What You Get&quot;) editor on the post page.';
 $helptxt['lastActive'] = 'Stel hier het aantal minuten in dat leden nog actief worden weergegeven op het forum na hun laatste activiteit. Standaard is dit 15 minuten.';
 
 $helptxt['autoOptDatabase'] = 'Deze optie optimaliseert de database om de zoveel dagen. Stel het in op 1 als je dit elke dag wilt doen. Je kunt ook het maximum aantal gebruikers opgeven dat online mag zijn op dat moment zodat de server niet te zwaar belast zal worden.';

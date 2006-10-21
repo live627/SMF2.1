@@ -740,7 +740,7 @@ function template_postbox(&$message)
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/editor.js"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_smileys_url = \'', $settings['smileys_url'], '\';
-		var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['enable_wysiwyg']) ? 'false' : 'true', ');
+		var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 'true' : 'false', ');
 	// ]]></script>';
 
 	if ($context['show_bbc'])
@@ -808,9 +808,6 @@ function template_postbox(&$message)
 				// Okay... we have the link. Now for the image and the closing </a>!
 				echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
 			}
-			// I guess it's a divider...
-			else
-				echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
 		}
 
 		// Print a drop down list for all the colors we allow!
@@ -846,15 +843,14 @@ function template_postbox(&$message)
 				// Okay... we have the link. Now for the image and the closing </a>!
 				echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
 			}
-			// I guess it's a divider...
-			else
-				echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
 		}
 
 		//!!! Temp!
-		if (!empty($modSettings['enable_wysiwyg']))
+		if (empty($modSettings['disable_wysiwyg']))
+		{
 			echo '
-			<a href="javascript:void(0);" onclick="editorHandle', $context['post_box_name'], '.ToggleView();">Toggle</a>';
+			<a href="javascript:void(0);" onclick="editorHandle', $context['post_box_name'], '.ToggleView();"><img src="', $settings['images_url'], '/bbc/face.gif" alt="Toggle" title="Toggle" align="bottom" width="23" height="22" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
+		}
 
 		echo '
 				</td>
@@ -898,7 +894,7 @@ function template_postbox(&$message)
 				</td>
 				<td>
 					<textarea class="editor" name="', $context['post_box_name'], '" id="', $context['post_box_name'], '" rows="', $context['post_box_rows'], '" cols="', $context['post_box_columns'], '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="width: ', $context['post_box_width'], '; height: ', $context['post_box_height'], ';', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $message, '</textarea>
-					<input type="hidden" name="editor_mode" id="editor_mode" value="', empty($modSettings['enable_wysiwyg']) ? 0 : 1, '" />
+					<input type="hidden" name="editor_mode" id="editor_mode" value="', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 1 : 0, '" />
 				</td>
 			</tr>';
 
@@ -953,7 +949,7 @@ function template_postbox(&$message)
 
 	// Initialise my friend!
 	echo '
-		editorHandle', $context['post_box_name'], '.init(\'', !empty($modSettings['enable_wysiwyg']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');
+		editorHandle', $context['post_box_name'], '.init(\'', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');
 		smf_editorArray[smf_editorArray.length] = editorHandle', $context['post_box_name'], ';
 	// ]]></script>';
 }

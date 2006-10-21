@@ -280,6 +280,8 @@ $helptxt['oldTopicDays'] = 'Ist diese Option aktiviert, wird dem Benutzer eine W
 $helptxt['edit_wait_time'] = 'Anzahl der Sekunden, bevor das Datum des letzten Editierens gespeichert wird.';
 $helptxt['edit_disable_time'] = 'Anzahl in Minuten, nach denen ein Benutzer seine eigenen Beitr&auml;ge noch editieren darf. Setzen Sie den Wert auf 0, um die Funktion zu deaktivieren.<br /><br /><i>Beachten Sie: Diese Option hat keinen Effekt auf die Benutzer, welche Beitr&auml;ge anderer Mitglieder editieren d&uuml;rfen.</i>';
 $helptxt['enableSpellChecking'] = 'Aktiviert die Rechtschreibepr&uuml;fung. Sie M&Uuml;SSEN die pspell Bibliothek auf dem Server installiert haben und PHP muss so konfiguriert sein, dass es selbige auch benutzt. Ihr Server ' . (function_exists('pspell_new') ? 'HAT' : 'HAT NICHT') . ' diese Funktion.';
+// Untranslated!
+$helptxt['disable_wysiwyg'] = 'This setting disallows all users from using the WYSIWYG (&quot;What You See Is What You Get&quot;) editor on the post page.';
 $helptxt['lastActive'] = 'Gibt die Anzahl der Minuten an, in welcher die Besucher auf dem Board-Index als aktiv gekennzeichnet werden. Standard sind 15 Minuten.';
 
 $helptxt['autoOptDatabase'] = 'Diese Funktion optimiert die Datenbank alle angegebenen Tage. Geben Sie 1 ein, um die Datenbank t&auml;glich zu optimieren. Sie k&ouml;nnen ebenfalls eine max. Zahl von Benutzern angeben die online sind, damit es keine Probleme mit der Servergeschwindigkeit gibt.';

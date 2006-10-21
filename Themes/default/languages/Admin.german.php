@@ -585,6 +585,8 @@ $txt['enableEmbeddedFlash'] = 'Flash einbetten statt Link anzeigen';
 $txt['enableEmbeddedFlash_warning'] = 'Das kann ein Sicherheitsrisiko sein!';
 $txt['enableSpellChecking'] = 'Rechtschreibepr&uuml;fung aktivieren';
 $txt['enableSpellChecking_warning'] = 'Funktioniert nicht auf allen Servern!';
+// Untranslated!
+$txt['disable_wysiwyg'] = 'Disable WYSIWYG editor';
 $txt['max_messageLength'] = 'Max. Zeichen pro Beitrag';
 $txt['max_messageLength_zero'] = '0 f&uuml;r kein Limit';
 $txt['fixLongWords'] = 'Teile W&ouml;rter mit mehr als x Buchstaben auf';

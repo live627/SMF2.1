@@ -252,6 +252,8 @@ $txt['copy_to_outbox'] = 'Guardar, por defecto, una copia de cada Mensaje Person
 $txt['popup_messages'] = '&iquest;Mostrar un popup cuando recibas un nuevo mensaje?';
 $txt['recent_posts_at_top'] = 'Mostrar los mensajes m&aacute;s recientes en la parte superior';
 $txt['recent_pms_at_top'] = 'Mostrar los mensajes personales m&aacute;s recientes en la parte superior.';
+// Untranslated!
+$txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
 $txt['timeformat_easy0'] = '(Default del Foro)';
 $txt['timeformat_easy1'] = 'Mes D&iacute;a, A&ntilde;o, HH:MM:SS a/pm';

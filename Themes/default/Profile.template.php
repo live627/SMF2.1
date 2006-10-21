@@ -1840,7 +1840,20 @@ function template_theme()
 												<input type="hidden" name="default_options[view_newest_pm_first]" value="0" />
 												<label for="view_newest_pm_first"><input type="checkbox" name="default_options[view_newest_pm_first]" id="view_newest_pm_first" value="1"', !empty($context['member']['options']['view_newest_pm_first']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['recent_pms_at_top'], '</label>
 											</td>
-										</tr><tr>
+										</tr>';
+
+	// Choose WYSIWYG settings?
+	if (empty($modSettings['disable_wysiwyg']))
+		echo '
+										<tr>
+											<td colspan="2">
+												<input type="hidden" name="default_options[wysiwyg_default]" value="0" />
+												<label for="wysiwyg_default"><input type="checkbox" name="default_options[wysiwyg_default]" id="wysiwyg_default" value="1"', !empty($context['member']['options']['wysiwyg_default']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['wysiwyg_default'], '</label>
+											</td>
+										</tr>';
+
+	echo '
+										<tr>
 											<td colspan="2"><label for="calendar_start_day">', $txt['calendar_start_day'], ':</label>
 												<select name="default_options[calendar_start_day]" id="calendar_start_day">
 													<option value="0"', empty($context['member']['options']['calendar_start_day']) ? ' selected="selected"' : '', '>', $txt['days'][0], '</option>

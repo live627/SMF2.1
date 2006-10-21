@@ -250,6 +250,8 @@ $txt['copy_to_outbox'] = 'Eine Kopie jeder Privaten Mitteilung im Ausgang ablege
 $txt['popup_messages'] = 'PopUp Fenster anzeigen, wenn Sie neue Private Mitteilungen erhalten?';
 $txt['recent_posts_at_top'] = 'Zeige die neuesten Beitr&auml;ge am Anfang';
 $txt['recent_pms_at_top'] = 'Zeige die neuesten Privaten Mitteilungen am Anfang';
+// Untranslated!
+$txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
 $txt['timeformat_easy0'] = '(Forum Standard)';
 $txt['timeformat_easy1'] = 'Monat Tag, Jahr, HH:MM:SS a/pm';
