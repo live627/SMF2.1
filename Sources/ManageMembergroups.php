@@ -217,7 +217,7 @@ function MembergroupIndex()
 		foreach ($dummy as $id => $data)
 		{
 			if ($data['href'] != '')
-				$context['groups'][$temp][$id]['link'] = '<a href="' . $data['href'] . '">' . $data['num_members'] . '</a>';
+				$context['groups'][$temp][$id]['link'] = '<a href="' . $data['href'] . '">' . $data['name'] . '</a>';
 			else
 				$context['groups'][$temp][$id]['link'] = '';
 		}
@@ -511,10 +511,10 @@ function EditMembergroup()
 				while ($row = mysql_fetch_assoc($request))
 					$updates[$row['additionalGroups']][] = $row['ID_MEMBER'];
 				mysql_free_result($request);
-	
+
 				foreach ($updates as $additionalGroups => $memberArray)
 					updateMemberData($memberArray, array('additionalGroups' => '\'' . implode(',', array_merge(explode(',', $additionalGroups), array((int) $_REQUEST['group']))) . '\''));
-	
+
 				db_query("
 					UPDATE {$db_prefix}members
 					SET ID_GROUP = 0
@@ -580,7 +580,7 @@ function EditMembergroup()
 				$mod_insert = array();
 				foreach ($group_moderators as $moderator)
 					$mod_insert[] = "($_REQUEST[group], $moderator)";
-	
+
 				db_query("
 					INSERT INTO {$db_prefix}group_moderators
 						(ID_GROUP, ID_MEMBER)

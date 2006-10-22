@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2540 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2541 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -20,6 +20,7 @@ October 2006
  + Added user interface to enable WYSIWYG editor. (Profile template, Post template, Settings template)
  & Added language entries for the above change. (Admin, Help, Profile language files)
  & Fixed small typos in admin panel. (Admin.english.php, Themes.english.php)
+ * Linked membergroup name to the list of members in that group. (ManageMembergroups, ManageMembergroups.template)
 
 
 September 2006
@@ -67,9 +68,9 @@ September 2006
  + Moved the database specific functions to their own file. (index.php, SSI.php, Database.php, Errors.php, Load.php, Subs.php)
  ! Updated the quick admin tasks links to use the proper link format. (Admin.php)
  ! Make sure that there are no HTML entities in bridged unwrapped javascript. (Mambo/Joomla bridge/smf.php)
- ! Add some missing languages to the synch array. (Mambo/Joomla bridge/smf_integration_arrays.php) 
+ ! Add some missing languages to the synch array. (Mambo/Joomla bridge/smf_integration_arrays.php)
  ! Try every possibility for language synching to avoid template errors. (Mambo/Joomla bridge/smf.php)
- ! Missing globals in bridge resend password. (Mambo/Joomla bridge/smf_registration.php) 
+ ! Missing globals in bridge resend password. (Mambo/Joomla bridge/smf_registration.php)
  ! Try to change some of the settings in case users don't do it themselves. (Mambo/Joomla bridge/smf.php)
  ! Get rid of the extra slash When going from the Xoops admin panel to the SMF admin panel. (Xoops bridge/admin/index.php)
  ! Recurse changes from Mambo/Joomla bridge to Mambo 4.6 bridge, and remove Joomla-specific code. (several files)
