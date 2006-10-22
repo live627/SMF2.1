@@ -124,4 +124,61 @@ $txt['signature_max_image_width'] = 'Maximum width of signature images (pixels)<
 $txt['signature_max_image_height'] = 'Maximum height of signature images (pixels)<div class="smalltext">(0 for no max)</div>';
 $txt['signature_max_font_size'] = 'Maximum font size allowed in signatures<div class="smalltext">(0 for no max)</div>';
 
+// Untranslated!
+$txt['custom_profile_shorttitle'] = 'Profile Fields';
+$txt['custom_profile_title'] = 'Custom Profile Fields';
+$txt['custom_profile_desc'] = 'From this page you can create your own custom profile fields that fit in with your own forums requirements';
+$txt['custom_profile_active'] = 'Active';
+$txt['custom_profile_fieldname'] = 'Field Name';
+$txt['custom_profile_fieldtype'] = 'Field Type';
+$txt['custom_profile_make_new'] = 'New Field';
+$txt['custom_profile_none'] = 'You have not created any custom profile fields yet!';
+
+// Untranslated!
+$txt['custom_profile_type_text'] = 'Text';
+$txt['custom_profile_type_textarea'] = 'Large Text';
+$txt['custom_profile_type_select'] = 'Selection';
+$txt['custom_profile_type_check'] = 'Checkbox';
+
+// Untranslated!
+$txt['custom_add_title'] = 'Add Profile Field';
+$txt['custom_edit_title'] = 'Edit Profile Field';
+$txt['custom_edit_general'] = 'Display Settings';
+$txt['custom_edit_input'] = 'Input Settings';
+$txt['custom_edit_advanced'] = 'Advanced Settings';
+$txt['custom_edit_name'] = 'Name';
+$txt['custom_edit_desc']  ='Description';
+$txt['custom_edit_profile'] = 'Profile Section';
+$txt['custom_edit_profile_desc'] = 'Section of profile this is edited in.';
+$txt['custom_edit_profile_none'] = 'None';
+$txt['custom_edit_registration'] = 'Show on Registration';
+$txt['custom_edit_display'] = 'Show on Topic View';
+$txt['custom_edit_picktype'] = 'Field Type';
+
+// Untranslated!
+$txt['custom_edit_max_length'] = 'Maximum Length';
+$txt['custom_edit_max_length_desc'] = '(0 for no limit)';
+$txt['custom_edit_dimension'] = 'Dimensions';
+$txt['custom_edit_dimension_row'] = 'Rows';
+$txt['custom_edit_dimension_col'] = 'Columns';
+$txt['custom_edit_bbc'] = 'Allow BBC?';
+$txt['custom_edit_options'] = 'Options';
+$txt['custom_edit_options_desc'] = 'Leave option box blank to remove. Radio button selects default option.';
+$txt['custom_edit_options_more'] = 'More';
+$txt['custom_edit_default'] = 'Default State';
+$txt['custom_edit_active'] = 'Active';
+$txt['custom_edit_active_desc'] = 'If not selected this field will not be shown to anyone.';
+$txt['custom_edit_private'] = 'Private';
+$txt['custom_edit_private_desc'] = 'If selected only admins can see this field.';
+$txt['custom_edit_mask'] = 'Input Mask';
+$txt['custom_edit_mask_desc'] = 'For text fields an input mask can be selected to validate the data.';
+$txt['custom_edit_mask_none'] = 'None';
+$txt['custom_edit_mask_email'] = 'Valid Email';
+$txt['custom_edit_mask_number'] = 'Numeric';
+$txt['custom_edit_mask_regex'] = 'Regex (Advanced)';
+
+// Untranslated!
+// Use numeric entities in the string below!
+$txt['custom_edit_delete_sure'] = 'Are you sure you wish to delete this field - all related user data will be lost!';
+
 ?>

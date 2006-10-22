@@ -309,6 +309,14 @@ $helptxt['enableSpellChecking'] = 'Activar la revisi&oacute;n de ortograf&iacute
 $helptxt['disable_wysiwyg'] = 'This setting disallows all users from using the WYSIWYG (&quot;What You See Is What You Get&quot;) editor on the post page.';
 $helptxt['lastActive'] = 'Especifica el n&uacute;mero de minutos en los que, antes de ese tiempo, un usuario se sigue mostrando activo en el &iacute;ndice del foro. El default son 15 minutos.';
 
+// Untranslated!
+$helptxt['customoptions'] = 'This section defines the options that a user may choose from a drop down list. There are a few key points to note in this section:
+	<ul>
+		<li><b>Default Option:</b> Whichever option box has the &quot;radio button&quot; next to it selected will be the default selection for the user when they enter their profile.</li>
+		<li><b>Removing Options:</b> To remove an option simply empty the text box for that option - all users with that selected will have their option cleared.</li>
+		<li><b>Reordering Options:</b> You can reorder the options by moving text around between the boxes. However - an important note - you must make sure you do <b>not</b> change the text when reordering options as otherwise user data will be lost.</li>
+	</ul>';
+
 $helptxt['autoOptDatabase'] = 'Esta opci&oacute;n optimiza automaticamente la base de datos cada X d&iacute;as.  Especifica 1 para realizar una optimizaci&oacute;n diaria.  Asimismo, puedes especificar un m&aacute;ximo n&uacute;mero de usuarios en l&iacute;nea, para que no sobrecargues tu servidor o incomodes a muchos usuarios.';
 $helptxt['autoFixDatabase'] = 'Esto arreglar&aacute; autom&aacute;ticamente tablas en la base de datos con problemas, y continuar&aacute; como si nada hubiera sucedido.  Esto puede ser &uacute;til, ya que la &uacute;nica manera de arreglar este tipo de problemas, es REPARANDO la tabla, y tu foro no estar&aacute; ca&iacute;do hasta que te des cuenta.  Se te enviar&aacute; un email cuando esto suceda.';
 

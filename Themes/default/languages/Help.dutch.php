@@ -349,6 +349,14 @@ $helptxt['enableSpellChecking'] = 'Spellingscontrole activeren. De pspell librar
 $helptxt['disable_wysiwyg'] = 'This setting disallows all users from using the WYSIWYG (&quot;What You See Is What You Get&quot;) editor on the post page.';
 $helptxt['lastActive'] = 'Stel hier het aantal minuten in dat leden nog actief worden weergegeven op het forum na hun laatste activiteit. Standaard is dit 15 minuten.';
 
+// Untranslated!
+$helptxt['customoptions'] = 'This section defines the options that a user may choose from a drop down list. There are a few key points to note in this section:
+	<ul>
+		<li><b>Default Option:</b> Whichever option box has the &quot;radio button&quot; next to it selected will be the default selection for the user when they enter their profile.</li>
+		<li><b>Removing Options:</b> To remove an option simply empty the text box for that option - all users with that selected will have their option cleared.</li>
+		<li><b>Reordering Options:</b> You can reorder the options by moving text around between the boxes. However - an important note - you must make sure you do <b>not</b> change the text when reordering options as otherwise user data will be lost.</li>
+	</ul>';
+
 $helptxt['autoOptDatabase'] = 'Deze optie optimaliseert de database om de zoveel dagen. Stel het in op 1 als je dit elke dag wilt doen. Je kunt ook het maximum aantal gebruikers opgeven dat online mag zijn op dat moment zodat de server niet te zwaar belast zal worden.';
 $helptxt['autoFixDatabase'] = 'Dit zal automatisch beschadigde tabellen repareren.  Je krijgt een e-mail als dit gebeurt.';
 

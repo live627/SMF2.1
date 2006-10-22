@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2541 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2542 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -21,6 +21,9 @@ October 2006
  & Added language entries for the above change. (Admin, Help, Profile language files)
  & Fixed small typos in admin panel. (Admin.english.php, Themes.english.php)
  * Linked membergroup name to the list of members in that group. (ManageMembergroups, ManageMembergroups.template)
+ + Added option to create custom profile fields from the admin console. (upgrade_2-0.sql, install_2-0.sql, Profile.php, Register.php, ModSettings.php)
+ * Updated several templates to show custom profile fields. (Display, Profile, Register templates)
+ & Added many language files for above change. (ModSettings, Errors, Help language files)
 
 
 September 2006

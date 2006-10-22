@@ -45,6 +45,9 @@ if (!defined('SMF'))
 	void makeAvatarChanges(int ID_MEMBER, array &errors)
 		// !!!
 
+	void makeCustomFieldChanges(int ID_MEMBER, string area)
+		// !!!
+
 	void summary(int ID_MEMBER)
 		// !!!
 
@@ -94,6 +97,9 @@ if (!defined('SMF'))
 		// !!!
 
 	void loadThemeOptions(int ID_MEMBER)
+		// !!!
+
+	void loadCustomFields(int ID_MEMBER, string area)
 		// !!!
 	
 	void ignoreboards(int ID_MEMBER)
@@ -1091,6 +1097,8 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		makeThemeChanges($memID, isset($_POST['ID_THEME']) ? (int) $_POST['ID_THEME'] : $old_profile['ID_THEME']);
 		makeAvatarChanges($memID, $post_errors);
 		makeNotificationChanges($memID);
+		if (!empty($_REQUEST['sa']))
+			makeCustomFieldChanges($memID, $_REQUEST['sa']);
 
 		foreach ($profile_bools as $var)
 			if (isset($_POST[$var]))
@@ -1343,6 +1351,68 @@ function makeAvatarChanges($memID, &$post_errors)
 		$_POST['avatar'] = '';
 }
 
+// Save any changes to the custom profile fields...
+function makeCustomFieldChanges($memID, $area)
+{
+	global $db_prefix, $context, $smfFunc, $user_profile;
+
+	$where = $area == 'register' ? "showReg = 1" : "showProfile = '$area'";
+
+	// Load the fields we are saving too - make sure we save valid data (etc).
+	$request = db_query("
+		SELECT colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions, defaultValue, mask
+		FROM {$db_prefix}custom_fields
+		WHERE $where
+			AND active = 1", __FILE__, __LINE__);
+	$changes = array();
+	while ($row = mysql_fetch_assoc($request))
+	{
+		// Validate the user data.
+		if ($row['fieldType'] == 'check')
+			$value = isset($_POST['customfield'][$row['colName']]) ? 1 : 0;
+		elseif ($row['fieldType'] == 'select')
+		{
+			$value = $row['defaultValue'];
+			foreach (explode(',', $row['fieldOptions']) as $k => $v)
+				if (isset($_POST['customfield'][$row['colName']]) && $_POST['customfield'][$row['colName']] == $k)
+					$value = $v;
+		}
+		// Otherwise some form of text!
+		else
+		{
+			$value = isset($_POST['customfield'][$row['colName']]) ? $_POST['customfield'][$row['colName']] : '';
+			if ($row['fieldLength'])
+				$value = $smfFunc['substr']($value, 0, $row['fieldLength']);
+
+			// Any masks?
+			if ($row['fieldType'] == 'text' && !empty($row['mask']) && $row['mask'] != 'none')
+			{
+				//!!! We never error on this - just ignore it at the moment...
+				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($value)) === 0 || strlen(stripslashes($value)) > 255))
+					$value = '';
+				elseif ($row['mask'] == 'number')
+				{
+					$value = (int) $value;
+				}
+				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), stripslashes($value)) === 0)
+					$value = '';
+			}
+		}
+
+		$user_profile[$memID]['options'][$row['colName']] = $value;
+		$changes[] = "('$row[colName]', '$value', $memID)";
+	}
+	mysql_free_result($request);
+
+	// Make those changes!
+	if (!empty($changes))
+		db_query("
+			REPLACE INTO {$db_prefix}themes
+				(variable, value, ID_MEMBER)
+			VALUES
+				" . implode(',', $changes), __FILE__, __LINE__);
+}
+
 // View a summary.
 function summary($memID)
 {
@@ -1492,6 +1562,8 @@ function summary($memID)
 		}
 		mysql_free_result($request);
 	}
+
+	loadCustomFields($memID);
 }
 
 // Show all posts by the current user
@@ -2462,6 +2534,7 @@ function account($memID)
 	}
 
 	loadThemeOptions($memID);
+	loadCustomFields($memID, 'account');
 }
 
 function forumProfile($memID)
@@ -2552,6 +2625,7 @@ function forumProfile($memID)
 	$context['avatar_selected'] = substr(strrchr($context['member']['avatar']['server_pic'], '/'), 1);
 
 	loadThemeOptions($memID);
+	loadCustomFields($memID, 'forumProfile');
 }
 
 // Recursive function to retrieve avatar files
@@ -2683,6 +2757,7 @@ function theme($memID)
 	}
 
 	loadThemeOptions($memID);
+	loadCustomFields($memID, 'theme');
 
 	loadLanguage('Settings');
 }
@@ -2831,6 +2906,7 @@ function pmprefs($memID)
 	$context['page_title'] = $txt['pmprefs'] . ': ' . $txt['personal_messages'];
 
 	loadThemeOptions($memID);
+	loadCustomFields($memID, 'pmprefs');
 }
 
 // Function to allow the user to choose group membership etc...
@@ -3349,6 +3425,77 @@ function loadThemeOptions($memID)
 				$context['member']['options'][$k] = $v;
 		}
 	}
+}
+
+// Load any custom fields for this area... no area means load all, 'summary' loads all public ones.
+function loadCustomFields($memID, $area = 'summary')
+{
+	global $db_prefix, $context, $txt, $user_profile;
+
+	// Get the right restrictions in place...
+	$where = 'active = 1';
+	if ($area == 'summary' && !allowedTo('admin_forum'))
+		$where .= ' AND private = 0';
+	elseif ($area == 'register')
+		$where .= ' AND showReg = 1';
+	elseif ($area != 'summary' && $area != 'register')
+		$where .= " AND showProfile = '$area'";
+
+	// Load all the relevant fields - and data.
+	$request = db_query("
+		SELECT colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
+			defaultValue, bbc
+		FROM {$db_prefix}custom_fields
+		WHERE $where", __FILE__, __LINE__);
+	$context['custom_fields'] = array();
+	while ($row = mysql_fetch_assoc($request))
+	{
+		// Shortcut.
+		$exists = $memID && isset($user_profile[$memID]['options'][$row['colName']]);
+		$value = $exists && $user_profile[$memID]['options'][$row['colName']] ? $user_profile[$memID]['options'][$row['colName']] : '';
+
+		// HTML for the input form.
+		$output_html = $value;
+		if ($row['fieldType'] == 'check')
+		{
+			$true = (!$exists && $row['defaultValue']) || $value;
+			$input_html = '<input type="checkbox" name="customfield[' . $row['colName'] . ']" ' . ($true ? 'checked="checked"' : '') . ' class="check" />';
+			$output_html = $true ? $txt['yes'] : $txt['no'];
+		}
+		elseif ($row['fieldType'] == 'select')
+		{
+			$input_html = '<select name="customfield[' . $row['colName'] . ']">';
+			$options = explode(',', $row['fieldOptions']);
+			foreach ($options as $k => $v)
+			{
+				$true = (!$exists && $row['defaultValue'] == $v) || $value == $v;
+				$input_html .= '<option value="' . $k . '" ' . ($true ? 'selected="selected"' : '') . '>' . $v . '</option>';
+				if ($true)
+					$output_html = $v;
+			}
+
+			$input_html .= '</select>';
+		}
+		elseif ($row['fieldType'] == 'text')
+			$input_html = '<input type="text" name="customfield[' . $row['colName'] . ']" ' . ($row['fieldLength'] != 0 ? 'maxlength="' . $row['fieldLength'] . '"' : '') . ' value="' . $value . '" />';
+		else
+		{
+			@list ($rows, $cols) = @explode(',', $row['defaultValue']);
+			$input_html = '<textarea name="customfield[' . $row['colName'] . ']" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $value . '</textarea>';
+			if ($row['bbc'])
+				$output_html = parse_bbc($output_html);
+		}
+
+		$context['custom_fields'][] = array(
+			'name' => $row['fieldName'],
+			'desc' => $row['fieldDesc'],
+			'type' => $row['fieldType'],
+			'input_html' => $input_html,
+			'output_html' => $output_html,
+			'value' => $value,
+		);
+	}
+	mysql_free_result($request);
 }
 
 function ignoreboards($memID)

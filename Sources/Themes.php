@@ -699,7 +699,7 @@ function SetThemeSettings()
 
 	$old_id = $settings['theme_id'];
 	// Settings that need to be retained as they are template settings.
-	$template_settings = array('use_default_images', 'doctype', 'theme_version', 'use_tabs', 'use_buttons', 'seperate_sticky_lock');
+	$template_settings = array('use_default_images', 'doctype', 'theme_version', 'use_tabs', 'use_buttons', 'seperate_sticky_lock', 'lang_images_url');
 	$old_settings = array();
 	foreach ($template_settings as $setting)
 		if (isset($settings[$setting]))

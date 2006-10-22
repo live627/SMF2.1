@@ -1693,4 +1693,237 @@ function template_convert_entities()
 		</table>';
 }
 
+// Template for showing custom profile fields.
+function template_show_custom_profile()
+{
+	global $context, $txt, $settings, $scripturl;
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tborder">
+			<tr class="titlebg">
+				<td colspan="4">', $txt['custom_profile_title'], '</td>
+			</tr><tr class="windowbg">
+				<td width="62%"><b>', $txt['custom_profile_fieldname'], '</b></td>
+				<td width="15%"><b>', $txt['custom_profile_fieldtype'], '</b></td>
+				<td width="8%" align="center"><b>', $txt['custom_profile_active'], '</b></td>
+				<td width="15%" align="center"><b>', $txt['modify'], '</b></td>
+			</tr>';
+
+	foreach ($context['profile_fields'] as $field)
+		echo '
+			<tr class="windowbg">
+				<td>
+					', $field['name'], '
+					<div class="smalltext">', $field['desc'], '</div>
+				</td>
+				<td>', isset($txt['custom_profile_type_' . $field['type']]) ? $txt['custom_profile_type_' . $field['type']] : $field['type'], '</td>
+				<td align="center">', $field['active'] ? $txt['yes'] : $txt['no'], '</td>
+				<td align="center"><a href="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;fid=', $field['id'], ';sesc=', $context['session_id'], '">', $txt['modify'], '</a></td>
+			</tr>';
+
+	if (empty($context['profile_fields']))
+		echo '
+			<tr class="windowbg2">
+				<td colspan="4" align="center">', $txt['custom_profile_none'], '</td>
+			</tr>';
+
+	echo '
+			<tr class="titlebg">
+				<td colspan="4" align="right">
+					<input type="submit" name="new_field" value="', $txt['custom_profile_make_new'], '" />
+				</td>
+			</tr>
+		</table>
+	</form>';
+}
+
+// Edit a profile field?
+function template_edit_profile_field()
+{
+	global $context, $txt, $settings, $scripturl;
+
+	// All the javascript for this page - quite a bit!
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function updateInputBoxes()
+		{
+			curType = document.getElementById("field_type").value;
+			document.getElementById("max_length_div").style.display = curType == "text" || curType == "textarea" ? "" : "none";
+			document.getElementById("dimension_div").style.display = curType == "textarea" ? "" : "none";
+			document.getElementById("bbc_div").style.display = curType == "textarea" ? "" : "none";
+			document.getElementById("options_div").style.display = curType == "select" ? "" : "none";
+			document.getElementById("default_div").style.display = curType == "check" ? "" : "none";
+			document.getElementById("mask_div").style.display = curType == "text" ? "" : "none";
+			document.getElementById("regex_div").style.display = curType == "text" && document.getElementById("mask").value == "regex" ? "" : "none";
+			document.getElementById("display").disabled = false;
+			// Cannot show this on the topic
+			if (curType == "textarea")
+			{
+				document.getElementById("display").checked = false;
+				document.getElementById("display").disabled = true;
+			}
+		}
+
+		var startOptID = ', count($context['field']['options']), ';
+		function addOption()
+		{
+			setOuterHTML(document.getElementById("addopt"), \'<br /><input type="radio" name="default_select" value="\' + startOptID + \'" id="\' + startOptID + \'" /><input type="text" name="select_option[\' + startOptID + \']" value="" /><span id="addopt"></span>\');
+			startOptID++;
+		}
+	// ]]></script>';
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;fid=', $context['fid'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+		<table width="80%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder">
+			<tr class="titlebg">
+				<td colspan="2">', $context['page_title'], '</td>
+			</tr><tr class="catbg">
+				<td colspan="2">', $txt['custom_edit_general'], ':</td>
+			</tr><tr class="windowbg2">
+				<td width="50%"><b>', $txt['custom_edit_name'], ':</b></td>
+				<td width="50%">
+					<input type="text" name="field_name" value="', $context['field']['name'], '" size="20" maxlength="40" />
+				</td>
+			</tr><tr class="windowbg2" valign="top">
+				<td width="50%"><b>', $txt['custom_edit_desc'], ':</b></td>
+				<td width="50%">
+					<textarea name="field_desc" rows="3" cols="40">', $context['field']['desc'], '</textarea>
+				</td>
+			</tr><tr class="windowbg2" valign="top">
+				<td width="50%">
+					<b>', $txt['custom_edit_profile'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_profile_desc'], '</div>
+				</td>
+				<td width="50%">
+					<select name="profile_area">
+						<option value="none" ', $context['field']['profile_area'] == 'none' ? 'selected="selected"' : '', '>', $txt['custom_edit_profile_none'], '</option>
+						<option value="account" ', $context['field']['profile_area'] == 'account' ? 'selected="selected"' : '', '>', $txt['account'], '</option>
+						<option value="forumProfile" ', $context['field']['profile_area'] == 'forumProfile' ? 'selected="selected"' : '', '>', $txt['forumProfile'], '</option>
+						<option value="theme" ', $context['field']['profile_area'] == 'theme' ? 'selected="selected"' : '', '>', $txt['theme'], '</option>
+						<option value="pmprefs" ', $context['field']['profile_area'] == 'pmprefs' ? 'selected="selected"' : '', '>', $txt['pmprefs'], '</option>
+					</select>
+				</td>
+			</tr><tr class="windowbg2">
+				<td width="50%"><b>', $txt['custom_edit_registration'], ':</b></td>
+				<td width="50%">
+					<input type="checkbox" name="reg" id="reg" ', $context['field']['reg'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr><tr class="windowbg2">
+				<td width="50%"><b>', $txt['custom_edit_display'], ':</b></td>
+				<td width="50%">
+					<input type="checkbox" name="display" id="display" ', $context['field']['display'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr><tr class="catbg">
+				<td colspan="2">', $txt['custom_edit_input'], ':</td>
+			</tr><tr class="windowbg2" valign="top">
+				<td width="50%">
+					<b>', $txt['custom_edit_picktype'], ':</b>
+				</td>
+				<td width="50%">
+					<select name="field_type" id="field_type" onchange="updateInputBoxes();">
+						<option value="text" ', $context['field']['type'] == 'text' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_text'], '</option>
+						<option value="textarea" ', $context['field']['type'] == 'textarea' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_textarea'], '</option>
+						<option value="select" ', $context['field']['type'] == 'select' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_select'], '</option>
+						<option value="check" ', $context['field']['type'] == 'check' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_check'], '</option>
+					</select>
+				</td>
+			</tr><tr class="windowbg2" valign="top" id="max_length_div">
+				<td width="50%">
+					<b>', $txt['custom_edit_max_length'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_max_length_desc'], '</div>
+				</td>
+				<td width="50%">
+					<input type="text" name="max_length" value="', $context['field']['max_length'], '" size="7" maxlength="6" />
+				</td>
+			</tr><tr class="windowbg2" valign="top" id="dimension_div">
+				<td width="50%">
+					<b>', $txt['custom_edit_dimension'], ':</b>
+				</td>
+				<td width="50%">
+					<b>', $txt['custom_edit_dimension_row'], ':</b> <input type="text" name="rows" value="', $context['field']['rows'], '" size="5" maxlength="3" />
+					<b>', $txt['custom_edit_dimension_col'], ':</b> <input type="text" name="cols" value="', $context['field']['cols'], '" size="5" maxlength="3" />
+				</td>
+			</tr><tr class="windowbg2" id="bbc_div">
+				<td width="50%"><b>', $txt['custom_edit_bbc'], '</b></td>
+				<td width="50%">
+					<input type="checkbox" name="bbc" ', $context['field']['bbc'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr><tr class="windowbg2" valign="top" id="options_div">
+				<td width="50%">
+					<a href="', $scripturl, '?action=helpadmin;help=customoptions" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a>
+					<b>', $txt['custom_edit_options'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_options_desc'], '</div>
+				</td>
+				<td width="50%">';
+
+	foreach ($context['field']['options'] as $k => $option)
+	{
+		echo '
+					', $k == 0 ? '' : '<br />', '<input type="radio" name="default_select" value="', $k, '" id="', $k, '" ', $context['field']['default_select'] == $option ? 'checked="checked"' : '', '/><input type="text" name="select_option[', $k, ']" value="', $option, '" />';
+	}
+	echo '
+					<span id="addopt"></span>
+					[<a href="" onclick="addOption(); return false;">', $txt['custom_edit_options_more'], '</a>]
+				</td>
+			</tr><tr class="windowbg2" id="default_div">
+				<td width="50%"><b>', $txt['custom_edit_default'], ':</b></td>
+				<td width="50%">
+					<input type="checkbox" name="default_check" ', $context['field']['default_check'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr><tr class="catbg">
+				<td colspan="2">', $txt['custom_edit_advanced'], ':</td>
+			</tr><tr class="windowbg2" valign="top" id="mask_div">
+				<td width="50%">
+					<b>', $txt['custom_edit_mask'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_mask_desc'], '</div>
+				</td>
+				<td width="50%">
+					<select name="mask" id="mask" onchange="updateInputBoxes();">
+						<option value="none" ', $context['field']['mask'] == 'none' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_none'], '</option>
+						<option value="email" ', $context['field']['mask'] == 'email' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_email'], '</option>
+						<option value="number" ', $context['field']['mask'] == 'number' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_number'], '</option>
+						<option value="regex" ', substr($context['field']['mask'], 0, 5) == 'regex' ? 'selected="selected"' : '', '>', $txt['custom_edit_mask_regex'], '</option>
+					</select>
+					<div id="regex_div">
+						<input type="text" name="regex" value="', $context['field']['regex'], '" size="30" />
+					</div>
+				</td>
+			</tr><tr class="windowbg2">
+				<td width="50%">
+					<b>', $txt['custom_edit_private'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_private_desc'], '</div>
+				</td>
+				<td width="50%">
+					<input type="checkbox" name="private" ', $context['field']['private'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr><tr class="windowbg2">
+				<td width="50%">
+					<b>', $txt['custom_edit_active'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_active_desc'], '</div>
+				</td>
+				<td width="50%">
+					<input type="checkbox" name="active" ', $context['field']['active'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr><tr class="titlebg">
+				<td colspan="4" align="center">
+					<input type="submit" name="save" value="', $txt['save'], '" />';
+
+	if ($context['fid'])
+		echo '
+					<input type="submit" name="delete" value="', $txt['smf138'], '" onclick="return confirm(\'', $txt['custom_edit_delete_sure'], '\');" />';
+
+	echo '
+				</td>
+			</tr>
+		</table>
+	</form>';
+
+	// Get the java bits right!
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		updateInputBoxes();
+	// ]]></script>';
+}
+
 ?>

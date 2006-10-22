@@ -295,6 +295,24 @@ function template_summary()
 					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
 				</tr>';
 
+	// Are there any custom profile fields for the summary?
+	if (!empty($context['custom_fields']))
+	{
+		foreach ($context['custom_fields'] as $field)
+		{
+			echo '
+				<tr valign="top">
+					<td><b>', $field['name'], ':</b></td>
+					<td>', $field['output_html'], '</td>
+				</tr>';
+		}
+
+		echo '
+				<tr>
+					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
+				</tr>';
+	}
+
 	// Show the users signature.
 	if ($context['signature_enabled'])
 		echo '
@@ -2490,6 +2508,24 @@ function template_deleteAccount()
 function template_profile_save()
 {
 	global $context, $settings, $options, $txt;
+
+	// Are there any custom profile fields - if so print them!
+	if (!empty($context['custom_fields']))
+	{
+		echo '
+							<tr>
+								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
+							</tr>';
+
+		foreach ($context['custom_fields'] as $field)
+		{
+			echo '
+							<tr valign="top">
+								<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
+								<td>', $field['input_html'], '</td>
+							</tr>';
+		}
+	}
 
 	echo '
 							<tr>

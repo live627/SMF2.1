@@ -142,6 +142,32 @@ upgrade_query("
 ---#
 
 /******************************************************************************/
+--- Adding custom profile fields.
+/******************************************************************************/
+
+---# Creating "custom_fields" table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
+	ID_FIELD smallint(5) NOT NULL auto_increment,
+	colName varchar(12) NOT NULL default '',
+	fieldName varchar(40) NOT NULL default '',
+	fieldDesc tinytext NOT NULL,
+	fieldType varchar(8) NOT NULL default 'text',
+	fieldLength smallint(5) NOT NULL default '255',
+	fieldOptions tinytext NOT NULL,
+	mask tinytext NOT NULL,
+	showReg tinyint(3) NOT NULL default '0',
+	showDisplay tinyint(3) NOT NULL default '0',
+	showProfile varchar(20) NOT NULL default 'forumProfile',
+	private tinyint(3) NOT NULL default '0',
+	active tinyint(3) NOT NULL default '1',
+	bbc tinyint(3) NOT NULL default '0',
+	defaultValue varchar(8) NOT NULL default '0',
+	PRIMARY KEY (ID_FIELD),
+	UNIQUE colName (colName)
+) TYPE=MyISAM;
+---#
+
+/******************************************************************************/
 --- Adding email digest functionality.
 /******************************************************************************/
 

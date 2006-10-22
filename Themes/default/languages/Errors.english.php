@@ -334,4 +334,8 @@ $txt['smileys_upload_error_types'] = 'Image can only have the following extensio
 
 $txt['change_email_success'] = 'Your email address has been changed, and a new activation email has been sent to it.';
 $txt['resend_email_success'] = 'A new activation email has successfully been sent.';
+
+$txt['custom_option_need_name'] = 'The profile option must have a name!';
+$txt['custom_option_not_unique'] = 'Field name is not unique!';
+
 ?>

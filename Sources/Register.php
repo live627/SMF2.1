@@ -44,7 +44,7 @@ if (!defined('SMF'))
 function Register()
 {
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
-	global $db_prefix, $language, $scripturl, $smfFunc;
+	global $db_prefix, $language, $scripturl, $smfFunc, $sourcedir;
 
 	// Check if the administrator has it disabled.
 	if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 3)
@@ -112,6 +112,10 @@ function Register()
 			$dir->close();
 		}
 	}
+
+	// Any custom fields we want filled in?
+	require_once($sourcedir . '/Profile.php');
+	loadCustomFields(0, 'register');
 
 	// Generate a visual verification code to make sure the user is no bot.
 	$context['visual_verification'] = empty($modSettings['disable_visual_verification']);
@@ -307,6 +311,10 @@ function Register2()
 
 	$memberID = registerMember($regOptions);
 
+	// We'll do custom fields after as then we get to use the helper function!
+	require_once($sourcedir . '/Profile.php');
+	makeCustomFieldChanges($memberID, 'register');
+ 
 	// If COPPA has been selected then things get complicated, setup the template.
 	if (!empty($modSettings['coppaAge']) && !isset($_POST['skip_coppa']))
 		redirectexit('action=coppa;member=' . $memberID);

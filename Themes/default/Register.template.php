@@ -31,8 +31,10 @@ function template_before()
 	echo '
 
 		return true;
-	}
+	}';
 
+	if ($context['require_agreement'])
+		echo '
 	function checkAgree()
 	{
 		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || isEmptyText(document.forms.creator.passwrd1) || !document.forms.creator.regagree.checked;
@@ -91,7 +93,23 @@ echo '
 
 	echo '
 						</td>
-					</tr><tr>
+					</tr>';
+
+	// Are there any custom fields?
+	if (!empty($context['custom_fields']))
+	{
+		foreach ($context['custom_fields'] as $field)
+		{
+			echo '
+					<tr valign="top">
+						<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
+						<td>', $field['input_html'], '</td>
+					</tr>';
+		}
+	}
+
+	echo '
+					<tr>
 						<td width="40%">
 							<b>', $txt['choose_pass'], ':</b>
 						</td>

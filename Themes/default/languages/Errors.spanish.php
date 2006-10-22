@@ -346,4 +346,9 @@ $txt['smileys_upload_error_types'] = 'La Imagen solamente puede tener las siguie
 
 $txt['change_email_success'] = 'Tu direcci&oacute;n de email ha sido cambiada, y se le ha enviado un nuevo email de activaci&oacute;n.';
 $txt['resend_email_success'] = 'Un nuevo email de activaci&oacute;n ha sido enviado satisfactoriamente.';
+
+// Untranslated!
+$txt['custom_option_need_name'] = 'The profile option must have a name!';
+$txt['custom_option_not_unique'] = 'Field name is not unique!';
+
 ?>

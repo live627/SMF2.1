@@ -47,6 +47,12 @@ if (!defined('SMF'))
 	void pauseSignatureApplySettings()
 		// !!!
 
+	void ShowCustomProfiles()
+		// !!!
+
+	void EditCustomProfiles()
+		// !!!
+
 	Adding new settings to the $modSettings array:
 	---------------------------------------------------------------------------
 // !!!
@@ -120,6 +126,8 @@ function ModifyFeatureSettings()
 		'layout' => 'ModifyLayoutSettings',
 		'karma' => 'ModifyKarmaSettings',
 		'sig' => 'ModifySignatureSettings',
+		'profile' => 'ShowCustomProfiles',
+		'profileedit' => 'EditCustomProfiles',
 	);
 
 	// By default do the basic settings.
@@ -148,6 +156,11 @@ function ModifyFeatureSettings()
 				'title' => $txt['signature_settings'],
 				'description' => $txt['signature_settings_desc'],
 				'href' => $scripturl . '?action=admin;area=featuresettings;sa=sig;sesc=' . $context['session_id'],
+			),
+			'profile' => array(
+				'title' => $txt['custom_profile_shorttitle'],
+				'description' => $txt['custom_profile_desc'],
+				'href' => $scripturl . '?action=admin;area=featuresettings;sa=profile;sesc=' . $context['session_id'],
 				'is_last' => true,
 			),
 		),
@@ -610,6 +623,314 @@ function pauseSignatureApplySettings()
 	$context['continue_percent'] = min($context['continue_percent'], 100);
 
 	obExit();
+}
+
+// Show all the custom profile fields available to the user.
+function ShowCustomProfiles()
+{
+	global $txt, $scripturl, $context, $settings, $sc, $db_prefix;
+
+	$context['page_title'] = $txt['custom_profile_title'];
+	$context['sub_template'] = 'show_custom_profile';
+
+	// Load all the fields.
+	$request = db_query("
+		SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, active
+		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
+	$context['profile_fields'] = array();
+	while ($row = mysql_fetch_assoc($request))
+	{
+		$context['profile_fields'][] = array(
+			'id' => $row['ID_FIELD'],
+			'col' => $row['colName'],
+			'name' => $row['fieldName'],
+			'desc' => $row['fieldDesc'],
+			'type' => $row['fieldType'],
+			'active' => $row['active'],
+		);
+	}
+	mysql_free_result($request);
+}
+
+// Edit some profile fields?
+function EditCustomProfiles()
+{
+	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc;
+
+	// Sort out the context!
+	$context['fid'] = isset($_GET['fid']) ? (int) $_GET['fid'] : 0;
+	$context['admin_tabs']['tabs']['profile']['is_selected'] = true;
+	$context['page_title'] = $context['fid'] ? $txt['custom_edit_title'] : $txt['custom_add_title'];
+	$context['sub_template'] = 'edit_profile_field';
+
+	// Load the profile language for section names.
+	loadLanguage('Profile');
+
+	if ($context['fid'])
+	{
+		$request = db_query("
+			SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
+				showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask
+			FROM {$db_prefix}custom_fields
+			WHERE ID_FIELD = $context[fid]", __FILE__, __LINE__);
+		$context['field'] = array();
+		while ($row = mysql_fetch_assoc($request))
+		{
+			if ($row['fieldType'] == 'textarea')
+				@list ($rows, $cols) = @explode(',', $row['defaultValue']);
+			else
+			{
+				$rows = 3;
+				$cols = 30;
+			}
+
+			$context['field'] = array(
+				'name' => $row['fieldName'],
+				'desc' => $row['fieldDesc'],
+				'colname' => $row['colName'],
+				'profile_area' => $row['showProfile'],
+				'reg' => $row['showReg'],
+				'display' => $row['showDisplay'],
+				'type' => $row['fieldType'],
+				'max_length' => $row['fieldLength'],
+				'rows' => $rows,
+				'cols' => $cols,
+				'bbc' => $row['bbc'] ? true : false,
+				'default_check' => $row['fieldType'] == 'check' && $row['defaultValue'] ? true : false,
+				'default_select' => $row['fieldType'] == 'select' ? $row['defaultValue'] : '',
+				'options' => strlen($row['fieldOptions']) > 1 ? explode(',', $row['fieldOptions']) : array('', '', ''),
+				'active' => $row['active'],
+				'private' => $row['private'],
+				'mask' => $row['mask'],
+				'regex' => substr($row['mask'], 0, 5) == 'regex' ? substr($row['mask'], 5) : '',
+			);
+		}
+		mysql_free_result($request);
+	}
+
+	// Setup the default values as needed.
+	if (empty($context['field']))
+		$context['field'] = array(
+			'name' => '',
+			'desc' => '',
+			'profile_area' => 'forumProfile',
+			'reg' => false,
+			'display' => false,
+			'type' => 'text',
+			'max_length' => 255,
+			'rows' => 4,
+			'cols' => 30,
+			'bbc' => false,
+			'default_check' => false,
+			'default_select' => '',
+			'options' => array('', '', ''),
+			'active' => true,
+			'private' => false,
+			'mask' => 'none',
+			'regex' => '',
+		);
+
+	// Are we saving?
+	if (isset($_POST['save']))
+	{
+		// Everyone needs a name - even the (bracket) unknown...
+		if (trim($_POST['field_name']) == '')
+			fatal_lang_error('custom_option_need_name');
+		$_POST['field_name'] = $smfFunc['htmlspecialchars']($_POST['field_name']);
+		$_POST['field_desc'] = $smfFunc['htmlspecialchars']($_POST['field_desc']);
+
+		// Checkboxes...
+		$showReg = isset($_POST['reg']) ? 1 : 0;
+		$showDisplay = isset($_POST['display']) ? 1 : 0;
+		$bbc = isset($_POST['bbc']) ? 1 : 0;
+		$showProfile = $_POST['profile_area'];
+		$active = isset($_POST['active']) ? 1 : 0;
+		$private = isset($_POST['private']) ? 1 : 0;
+
+		// Some masking stuff...
+		$mask = isset($_POST['mask']) ? $_POST['mask'] : '';
+		if ($mask == 'regex' && isset($_POST['regex']))
+			$mask .= $_POST['regex'];
+
+		$fieldLength = isset($_POST['max_length']) ? (int) $_POST['max_length'] : 255;
+
+		// Select options?
+		$fieldOptions = '';
+		$newOptions = array();
+		$default = isset($_POST['default_check']) && $_POST['field_type'] == 'check' ? 1 : '';
+		if (!empty($_POST['select_option']) && $_POST['field_type'] == 'select')
+		{
+			foreach ($_POST['select_option'] as $k => $v)
+			{
+				// Clean, clean, clean...
+				$v = $smfFunc['htmlspecialchars']($v);
+				$v = strtr($v, array(',' => ''));
+
+				// Nada, zip, etc...
+				if (trim($v) == '')
+					continue;
+
+				// Otherwise, save it boy.
+				$fieldOptions .= $v . ',';
+				// This is just for working out what happened with old options...
+				$newOptions[$k] = $v;
+
+				// Is it default?
+				if (isset($_POST['default_select']) && $_POST['default_select'] == $k)
+					$default = $v;
+			}
+			$fieldOptions = substr($fieldOptions, 0, -1);
+		}
+
+		// Text area has default has dimensions
+		if ($_POST['field_type'] == 'textarea')
+			$default = (int) $_POST['rows'] . ',' . (int) $_POST['cols'];
+
+		// Come up with the unique name?
+		if (empty($context['fid']))
+		{
+			$colname = strtr(substr($_POST['field_name'], 0, 8), array(' ' => ''));
+			preg_match('~([\w\d_-]+)~', $colname, $matches);
+			if (!isset($matches[1]))
+				fatal_lang_error('custom_option_not_unique');
+			$colname = strtolower($matches[1]);
+
+			// Check this is unique.
+			$unique = false;
+			while ($unique == false)
+			{
+				$request = db_query("
+					SELECT ID_FIELD
+					FROM {$db_prefix}custom_fields
+					WHERE colName = '$colname'", __FILE__, __LINE__);
+				if (mysql_num_rows($request) == 0)
+					$unique = true;
+				else
+					$colname .= rand(0, 9);
+				mysql_free_result($request);
+
+				if (strlen($colname) >= 12 && !$unique)
+					fatal_lang_error('custom_option_not_unique');
+			}
+		}
+		// Work out what to do with the user data otherwise...
+		else
+		{
+			// Anything going to check or select is pointless keeping - as is anything coming from check!
+			if (($_POST['field_type'] == 'check' && $context['field']['type'] != 'check')
+				|| ($_POST['field_type'] == 'select' && $context['field']['type'] != 'select')
+				|| ($context['field']['type'] == 'check' && $_POST['field_type'] != 'check'))
+			{
+				db_query("
+					DELETE FROM {$db_prefix}themes
+					WHERE variable = '" . $context['field']['colname'] . "'
+						AND ID_MEMBER > 0", __FILE__, __LINE__);
+			}
+			// Otherwise - if the select is edited may need to adjust!
+			elseif ($_POST['field_type'] == 'select')
+			{
+				$optionChanges = array();
+				$takenKeys = array();
+				// Work out what's changed!
+				foreach ($context['field']['options'] as $k => $option)
+				{
+					if (trim($option) == '')
+						continue;
+
+					// Still exists?
+					if (in_array($option, $newOptions))
+					{
+						$takenKeys[] = $k;
+						continue;
+					}
+
+					// Damn - it's gone!
+					$optionChanges[$k] = strtr($option, array("'" => "\'"));
+				}
+
+				// Finally - have we renamed it - or is it really gone?
+				foreach ($optionChanges as $k => $option)
+				{
+					// Just been renamed?
+					if (!in_array($k, $takenKeys) && !empty($newOptions[$k]))
+						db_query("
+							UPDATE {$db_prefix}themes
+							SET value = '" . $newOptions[$k] . "'
+							WHERE variable = '" . $context['field']['colname'] . "'
+								AND value = '$option'
+								AND ID_MEMBER > 0", __FILE__, __LINE__);
+				}
+			}
+			//!!! Maybe we should adjust based on new text length limits?
+		}
+
+		// Do the insertion/updates.
+		if ($context['fid'])
+		{
+			db_query("
+				UPDATE {$db_prefix}custom_fields
+				SET fieldName = '$_POST[field_name]', fieldDesc = '$_POST[field_desc]',
+					fieldType = '$_POST[field_type]', fieldLength = $fieldLength,
+					fieldOptions = '$fieldOptions', showReg = $showReg, showDisplay = $showDisplay,
+					showProfile = '$showProfile', private = $private, active = $active, defaultValue = '$default',
+					bbc = $bbc, mask = '$mask'
+				WHERE ID_FIELD = $context[fid]", __FILE__, __LINE__);
+
+			// Just clean up any old selects - these are a pain!
+			if ($_POST['field_type'] == 'select' && !empty($newOptions))
+				db_query("
+					DELETE FROM {$db_prefix}themes
+					WHERE variable = '" . $context['field']['colname'] . "'
+						AND value NOT IN ('" . implode("', '", $newOptions) . "')
+						AND ID_MEMBER > 0", __FILE__, __LINE__);
+		}
+		else
+		{
+			db_query("
+				INSERT INTO {$db_prefix}custom_fields
+					(colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
+					showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask)
+				VALUES
+					('$colname', '$_POST[field_name]', '$_POST[field_desc]', '$_POST[field_type]',
+					$fieldLength, '$fieldOptions', $showReg, $showDisplay, '$showProfile', $private,
+					$active, '$default', $bbc, '$mask')", __FILE__, __LINE__);
+		}
+	}
+	// Deleting?
+	elseif (isset($_POST['delete']) && $context['field']['colname'])
+	{
+		// Delete the user data first.
+		db_query("
+			DELETE FROM {$db_prefix}themes
+			WHERE variable = '" . $context['field']['colname'] . "'
+				AND ID_MEMBER > 0", __FILE__, __LINE__);
+		// Finally - the field itself is gone!
+		db_query("
+			DELETE FROM {$db_prefix}custom_fields
+			WHERE ID_FIELD = $context[fid]
+			LIMIT 1", __FILE__, __LINE__);
+	}
+
+	// Rebuild display cache etc.
+	if (isset($_POST['delete']) || isset($_POST['save']))
+	{
+		$request = db_query("
+			SELECT colName, fieldName
+			FROM {$db_prefix}custom_fields
+			WHERE showDisplay = 1
+				AND active = 1
+				AND private = 0", __FILE__, __LINE__);
+		$fields = array();
+		while ($row = mysql_fetch_assoc($request))
+		{
+			$fields[] = strtr($row['colName'], array('|' => '', ';' => '')) . ';' . strtr($row['fieldName'], array('|' => '', ';' => ''));
+		}
+		mysql_free_result($request);
+
+		$fields = implode('|', $fields);
+		updateSettings(array('displayFields' => strtr($fields, array("'" => "\'"))));
+		redirectexit('action=admin;area=featuresettings;sa=profile');
+	}
 }
 
 ?>

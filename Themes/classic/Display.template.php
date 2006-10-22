@@ -305,8 +305,21 @@ function template_main()
 
 			// Show how many posts they have made.
 			echo '
-								', $txt['posts'], ': ', $message['member']['posts'], '<br />
-								<br />';
+								', $txt['posts'], ': ', $message['member']['posts'], '<br />';
+
+			// Any custom fields?
+			if (!empty($modSettings['displayFields']))
+			{
+				foreach (explode('|', $modSettings['displayFields']) as $custom)
+				{
+					@list ($field, $title) = explode(';', $custom);
+					if (!empty($title) && !empty($message['member']['options'][$field]))
+						echo '
+								', $title, ': ', $message['member']['options'][$field], '<br />';
+				}
+			}
+
+			echo '<br />';
 
 			// Show avatars, images, etc.?
 			if (!empty($settings['show_user_images']) && empty($options['show_no_avatars']) && !empty($message['member']['avatar']['image']))

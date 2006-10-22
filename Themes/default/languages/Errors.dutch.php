@@ -335,4 +335,9 @@ $txt['smileys_upload_error_types'] = 'Plaatje kan alleen maar de volgende extens
 
 $txt['change_email_success'] = 'Je e-mailadres is veranderd en een nieuwe activeringsmail is verstuurd naar het nieuwe adres.';
 $txt['resend_email_success'] = 'Een nieuwe activeringsmail is succesvol verstuurd.';
+
+// Untranslated!
+$txt['custom_option_need_name'] = 'The profile option must have a name!';
+$txt['custom_option_not_unique'] = 'Field name is not unique!';
+
 ?>

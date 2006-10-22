@@ -284,6 +284,14 @@ $helptxt['enableSpellChecking'] = 'Aktiviert die Rechtschreibepr&uuml;fung. Sie 
 $helptxt['disable_wysiwyg'] = 'This setting disallows all users from using the WYSIWYG (&quot;What You See Is What You Get&quot;) editor on the post page.';
 $helptxt['lastActive'] = 'Gibt die Anzahl der Minuten an, in welcher die Besucher auf dem Board-Index als aktiv gekennzeichnet werden. Standard sind 15 Minuten.';
 
+// Untranslated!
+$helptxt['customoptions'] = 'This section defines the options that a user may choose from a drop down list. There are a few key points to note in this section:
+	<ul>
+		<li><b>Default Option:</b> Whichever option box has the &quot;radio button&quot; next to it selected will be the default selection for the user when they enter their profile.</li>
+		<li><b>Removing Options:</b> To remove an option simply empty the text box for that option - all users with that selected will have their option cleared.</li>
+		<li><b>Reordering Options:</b> You can reorder the options by moving text around between the boxes. However - an important note - you must make sure you do <b>not</b> change the text when reordering options as otherwise user data will be lost.</li>
+	</ul>';
+
 $helptxt['autoOptDatabase'] = 'Diese Funktion optimiert die Datenbank alle angegebenen Tage. Geben Sie 1 ein, um die Datenbank t&auml;glich zu optimieren. Sie k&ouml;nnen ebenfalls eine max. Zahl von Benutzern angeben die online sind, damit es keine Probleme mit der Servergeschwindigkeit gibt.';
 $helptxt['autoFixDatabase'] = 'Diese Funktion repariert automatisch auftretende Fehler, wobei die Benutzer nichts davon merken werden. Das kann sinnvoll sein, andererseits ist das Forum solange funktionsunt&uuml;chtig, bis Sie es selbst merken werden. Ihnen wird in dem Fall eine E-Mail zugesendet.';
 
