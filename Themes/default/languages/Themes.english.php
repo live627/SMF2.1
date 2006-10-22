@@ -110,8 +110,8 @@ $txt['themeadmin_list_reset_go'] = 'Attempt to reset all themes';
 $txt['themeadmin_reset_tip'] = 'Each theme may have its own custom options for selection by your members.  These include things like &quot;quick reply&quot;, avatars and signatures, layout options, and other similar options.  Here you can change the defaults or reset everyone\'s options.<br /><br />Please note that some themes may use the default options, in which case they will not have their own options.';
 $txt['themeadmin_reset_defaults'] = 'Reset default (guest) options for this theme';
 $txt['themeadmin_reset_defaults_current'] = 'options currently set.';
-$txt['themeadmin_reset_members'] = 'Reset all member\'s current options for this theme';
-$txt['themeadmin_reset_remove'] = 'Remove all member\'s options and use the defaults';
+$txt['themeadmin_reset_members'] = 'Reset all members\' current options for this theme';
+$txt['themeadmin_reset_remove'] = 'Remove all members\' options and use the defaults';
 $txt['themeadmin_reset_remove_current'] = 'members currently using their own options.';
 // Don't use entities in the below string.
 $txt['themeadmin_reset_remove_confirm'] = 'Are you sure you want to remove all theme options?\\nThis may reset some custom profile fields as well.';
