@@ -34,7 +34,7 @@ SELECT
 	'' AS personalText, '' AS ICQ, '' AS AIM, '' AS YIM, '' AS MSN,
 	'' AS timeFormat, '' AS memberIP, '' AS secretQuestion, '' AS secretAnswer,
 	'' AS validation_code, '' AS additionalGroups, '' AS smileySet,
-	'' AS passwordSalt
+	'' AS passwordSalt, '' AS memberIP2
 FROM {$from_prefix}Users
 WHERE U_Number != 0;
 ---*
@@ -111,7 +111,7 @@ SELECT
 	p.B_Posted AS posterTime, p.B_PosterId AS ID_MEMBER,
 	SUBSTRING(p.B_Subject, 1, 255) AS subject,
 	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS posterName,
-	SUBSTRING(p.B_IP AS posterIP, 1, 255) AS posterIP,
+	SUBSTRING(p.B_IP, 1, 255) AS posterIP,
 	SUBSTRING(IFNULL(u.U_Email, ''), 1, 255) AS posterEmail,
 	b.Bo_Number AS ID_BOARD,
 	SUBSTRING(REPLACE(p.B_Body, '<br>', '<br />'), 1, 65534) AS body,
@@ -144,7 +144,7 @@ SELECT
 	pt.B_PosterId AS ID_MEMBER, pt.B_Number AS ID_TOPIC,
 	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS posterName,
 	pm.P_NoResults AS hideResults
-FROM ({$from_prefix}Pollquestions AS pq, {$from_prefix}Pollmain AS pm, {$from_prefix}Posts AS pt)
+FROM ({$from_prefix}PollQuestions AS pq, {$from_prefix}PollMain AS pm, {$from_prefix}Posts AS pt)
 	LEFT JOIN {$from_prefix}Users AS u ON (u.U_Number = pt.B_PosterId)
 WHERE pm.P_Id = pq.P_PollId
 	AND pt.B_Poll = pq.P_PollId
@@ -160,8 +160,8 @@ GROUP BY pq.P_PollId;
 SELECT
 	po.P_QuestionNum AS ID_POLL, po.P_OptionNum AS ID_CHOICE,
 	SUBSTRING(po.P_Option, 1, 255) AS label, COUNT(pv.P_QuestionNum) AS votes
-FROM {$from_prefix}Polloptions AS po
-	LEFT JOIN {$from_prefix}pollvotes AS pv ON (po.P_QuestionNum = pv.P_QuestionNum AND po.P_OptionNum = pv.P_OptionNum)
+FROM {$from_prefix}PollOptions AS po
+	LEFT JOIN {$from_prefix}PollVotes AS pv ON (po.P_QuestionNum = pv.P_QuestionNum AND po.P_OptionNum = pv.P_OptionNum)
 GROUP BY po.P_QuestionNum, po.P_OptionNum;
 ---*
 
@@ -243,7 +243,7 @@ while (true)
 
 	$result = convert_query("
 		SELECT Add_Owner AS ID_MEMBER, Add_Member AS ID_BUDDY
-		FROM {$from_prefix}Addressbook
+		FROM {$from_prefix}AddressBook
 		LIMIT $_REQUEST[start], 250");
 	while ($row = mysql_fetch_assoc($result))
 	{
@@ -276,17 +276,13 @@ $_REQUEST['start'] = 0;
 $no_add = true;
 $keys = array('ID_ATTACH', 'size', 'filename', 'ID_MSG', 'downloads');
 
-// Doesn't exist?
-if (empty($GLOBALS['config']['files']) || !file_exists($GLOBALS['config']['files']) || !file_exists($GLOBALS['config']['files'] . '/' . $row['filename']))
-	continue;
-
 // Try to get a better filename!
-$oldFilename = $row['filename'];
+$oldFilename = $row['ID_MDG'] . '-' .$row['filename'];
 $row['filename'] = strpos($oldFilename, '-') !== false ? substr($oldFilename, strpos($oldFilename, '-') + 1) : $oldFilename;
 $row['size'] = filesize($GLOBALS['config']['files'] . '/' . $row['filename']);
 
 $newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
-if (strlen($newfilename) < = 255 && copy($GLOBALS['config']['files'] . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
+if (strlen($newfilename) <= 255 && copy($GLOBALS['config']['files'] . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 {
 	$rows[] = "$ID_ATTACH, $row[size], '" . addslashes($row['filename']) . "', $row[ID_MSG], $row[downloads]";
 
