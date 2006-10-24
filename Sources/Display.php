@@ -243,6 +243,10 @@ function Display()
 			
 			// We need to reverse the start as well in this case.
 			$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $topicinfo['numReplies'] - $context['start_from'];
+
+			if (empty($modSettings['allow_msg_index']))
+				$context['html_headers'] .= '
+	<meta name="robots" content="noindex" />';
 		}
 	}
 
