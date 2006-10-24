@@ -1305,6 +1305,8 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 		'is_web_tv' => strpos($_SERVER['HTTP_USER_AGENT'], 'WebTV') !== false,
 		'is_konqueror' => strpos($_SERVER['HTTP_USER_AGENT'], 'Konqueror') !== false,
 		'is_firefox' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== false,
+		'is_firefox1' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox/1.') !== false,
+		'is_firefox2' => strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox/2.') !== false,
 	);
 
 	$context['browser']['is_gecko'] = strpos($_SERVER['HTTP_USER_AGENT'], 'Gecko') !== false && !$context['browser']['is_safari'] && !$context['browser']['is_konqueror'];
@@ -1316,7 +1318,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 	$context['browser']['is_ie5'] = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 5.0') !== false && !$context['browser']['is_opera'] && !$context['browser']['is_gecko'] && !$context['browser']['is_web_tv'];
 
 	$context['browser']['is_ie'] = $context['browser']['is_ie4'] || $context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] || $context['browser']['is_ie6'] || $context['browser']['is_ie7'];
-	$context['browser']['needs_size_fix'] = ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] || $context['browser']['is_ie4'] || $context['browser']['is_opera6']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') === false;
+	$context['browser']['needs_size_fix'] = ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] || $context['browser']['is_ie4'] || $context['browser']['is_ie7'] || $context['browser']['is_opera6']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') === false;
 
 	// This isn't meant to be reliable, it's just meant to catch most bots to prevent PHPSESSID from showing up.
 	$ci_user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);

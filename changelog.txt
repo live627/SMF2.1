@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2542 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2543 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -24,6 +24,8 @@ October 2006
  + Added option to create custom profile fields from the admin console. (upgrade_2-0.sql, install_2-0.sql, Profile.php, Register.php, ModSettings.php)
  * Updated several templates to show custom profile fields. (Display, Profile, Register templates)
  & Added many language files for above change. (ModSettings, Errors, Help language files)
+ + Added browser detection for Firefox 1 and Firefox 2 specifically. (Load.php)
+ ! IE7 needed text size fix. (Load.php)
 
 
 September 2006
