@@ -883,10 +883,9 @@ function run_php_converter()
 
 	for ($_GET['cstep'] = max(1, $_GET['cstep']); function_exists('convertStep' . $_GET['cstep']); $_GET['cstep']++)
 	{
+		call_user_func('convertStep' . $_GET['cstep']);
 		$_GET['substep'] = 0;
 		pastTime(0);
-
-		call_user_func('convertStep' . $_GET['cstep']);
 
 		echo ' Successful.<br />';
 		flush();
@@ -951,18 +950,59 @@ function doStep2()
 	if ($_GET['substep'] <= 1)
 	{
 		$request = convert_query("
-			SELECT ID_BOARD, MAX(ID_MSG) AS ID_LAST_MSG, MAX(posterTime) AS lastUpdated
+			SELECT ID_BOARD, MAX(ID_MSG) AS ID_LAST_MSG, MAX(modifiedTime) AS lastEdited
 			FROM {$to_prefix}messages
 			GROUP BY ID_BOARD");
+		$modifyData = array();
+		$modifyMsg = array();
 		while ($row = mysql_fetch_assoc($request))
 		{
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET ID_LAST_MSG = $row[ID_LAST_MSG], lastUpdated = $row[lastUpdated]
+				SET ID_LAST_MSG = $row[ID_LAST_MSG], ID_MSG_UPDATED = $row[ID_LAST_MSG]
 				WHERE ID_BOARD = $row[ID_BOARD]
 				LIMIT 1");
+			$modifyData[$row['ID_BOARD']] = array(
+				'last_msg' => $row['ID_LAST_MSG'],
+				'lastEdited' => $row['lastEdited'],
+			);
+			$modifyMsg[] = $row['ID_LAST_MSG'];
 		}
 		mysql_free_result($request);
+
+		// Are there any boards where the updated message is not the last?
+		if (!empty($modifyMsg))
+		{
+			$request = convert_query("
+				SELECT ID_BOARD, ID_MSG, modifiedTime, posterTime
+				FROM {$to_prefix}messages
+				WHERE ID_MSG IN (" . implode(',', $modifyMsg) . ")");
+			while ($row = mysql_fetch_assoc($request))
+			{
+				// Have we got a message modified before this was posted?
+				if (max($row['modifiedTime'], $row['posterTime']) < $modifyData[$row['ID_BOARD']]['lastEdited'])
+				{
+					// Work out the ID of the message (This seems long but it won't happen much.
+					$request2 = convert_query("
+						SELECT ID_MSG
+						FROM {$to_prefix}messages
+						WHERE modifiedTime = " . $modifyData[$row['ID_BOARD']]['lastEdited'] . "
+						LIMIT 1");
+					if (mysql_num_rows($request2) != 0)
+					{
+						list ($ID_MSG) = mysql_fetch_row($request2);
+
+						convert_query("
+							UPDATE {$to_prefix}boards
+							SET ID_MSG_UPDATED = $ID_MSG
+							WHERE ID_BOARD = $row[ID_BOARD]
+							LIMIT 1");
+					}
+					mysql_free_result($request2);
+				}
+			}
+			mysql_free_result($request);
+		}
 
 		pastTime(2);
 	}
