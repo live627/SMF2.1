@@ -75,6 +75,11 @@ function template_main_above()
 	// ]]></script>
 	<title>', $context['page_title'], '</title>';
 
+	// Please don't index these Mr Robot.
+	if (!empty($context['robot_no_index']))
+		echo '
+	<meta name="robots" content="noindex" />';
+
 	// The ?rc2 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />

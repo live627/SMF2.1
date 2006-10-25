@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2544 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2545 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -26,7 +26,8 @@ October 2006
  & Added many language files for above change. (ModSettings, Errors, Help language files)
  + Added browser detection for Firefox 1 and Firefox 2 specifically. (Load.php)
  ! IE7 needed text size fix. (Load.php)
- + Tell robots not to index topics that are accessed by way of .msg, however allow the admin to override this behavior. (Display.php)
+ + Added the ability to tell bots not to index a page. (index templates)
+ + Tell robots not to index topics that are being accessed with .msg, prev_next, ;all, or by printing the topic. (Display.php)
 
 
 September 2006

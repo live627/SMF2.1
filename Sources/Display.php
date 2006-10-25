@@ -138,6 +138,9 @@ function Display()
 
 		// Go to the newest message on this topic.
 		$_REQUEST['start'] = 'new';
+
+		// Duplicate link!  Tell the robots not to link this.
+		$context['robot_no_index'] = true;
 	}
 
 	// Add 1 to the number of views of this topic.
@@ -244,9 +247,7 @@ function Display()
 			// We need to reverse the start as well in this case.
 			$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $topicinfo['numReplies'] - $context['start_from'];
 
-			if (empty($modSettings['allow_msg_index']))
-				$context['html_headers'] .= '
-	<meta name="robots" content="noindex" />';
+			$context['robot_no_index'] = true;
 		}
 	}
 
@@ -415,7 +416,10 @@ function Display()
 		unset($_REQUEST['all']);
 	// Otherwise, it must be allowed... so pretend start was -1.
 	elseif (isset($_REQUEST['all']))
+	{
 		$_REQUEST['start'] = -1;
+		$context['robot_no_index'] = true;
+	}
 
 	// Construct the page index, allowing for the .START method...
 	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $topicinfo['numReplies'] + 1, $modSettings['defaultMaxMessages'], true);

@@ -9,6 +9,7 @@ function template_print_above()
 <html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
+		<meta name="robots" content="noindex" />
 		<title>', $txt[668], ' - ', $context['topic_subject'], '</title>
 		<style type="text/css">
 			body

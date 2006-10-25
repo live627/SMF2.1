@@ -77,6 +77,11 @@ function template_main_above()
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
 	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/print.css?rc2" media="print" />';
 
+	// Please don't index these Mr Robot.
+	if (!empty($context['robot_no_index']))
+		echo '
+	<meta name="robots" content="noindex" />';
+
 	/* Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are big...)
 		Thus, in Internet Explorer 4, 5, and Opera 6 this will show fonts one size smaller than usual.
 		Note that this is affected by whether IE 6 is in standards compliance mode.. if not, it will also be big.
