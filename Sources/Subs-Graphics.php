@@ -24,7 +24,10 @@
 * Do not remove this portion of the header, or use these functions except     *
 * from the original author. To get it, please navigate to:                    *
 * http://www.yamasoft.com/php-gif.zip                                         *
+*******************************************************************************
+* TrueType fonts supplied by www.LarabieFonts.com                             *
 ******************************************************************************/
+
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -1279,6 +1282,11 @@ function showCodeImage($code)
 {
 	global $settings;
 
+	// Is this GD2? Needed for pixel size.
+	$testGD = get_extension_funcs('gd');
+	$gd2 = in_array('imagecreatetruecolor', $testGD) && function_exists('imagecreatetruecolor');
+	unset($testGD);
+
 	// The amount of pixels inbetween characters.
 	$character_spacing = 1;
 
@@ -1299,9 +1307,14 @@ function showCodeImage($code)
 	// Get a list of the available fonts.
 	$font_dir = dir($settings['default_theme_dir'] . '/fonts');
 	$font_list = array();
+	$ttfont_list = array();
 	while ($entry = $font_dir->read())
+	{
 		if (preg_match('~^(.+)\.gdf$~', $entry, $matches) === 1)
 			$font_list[] = $entry;
+		elseif (preg_match('~^(.+)\.ttf$~', $entry, $matches) === 1)
+			$ttfont_list[] = $entry;
+	}
 
 	if (empty($font_list))
 		return false;
@@ -1324,7 +1337,7 @@ function showCodeImage($code)
 		$loaded_fonts[$font_index] = imageloadfont($settings['default_theme_dir'] . '/fonts/' . $font_list[$font_index]);
 
 	// Determine the dimensions of each character.
-	$total_width = $character_spacing * strlen($code) - 1;
+	$total_width = $character_spacing * strlen($code) + 10;
 	$max_height = 0;
 	foreach ($characters as $char_index => $character)
 	{
@@ -1345,6 +1358,7 @@ function showCodeImage($code)
 	// Randomize the foreground color a little.
 	for ($i = 0; $i < 3; $i++)
 		$foreground_color[$i] = rand(max($foreground_color[$i] - 3, 0), min($foreground_color[$i] + 3, 255));
+	$fg_color = imagecolorallocate($code_image, $foreground_color[0], $foreground_color[1], $foreground_color[2]);
 
 	// Color for the dots.
 	for ($i = 0; $i < 3; $i++)
@@ -1355,24 +1369,64 @@ function showCodeImage($code)
 	$cur_x = 0;
 	foreach ($characters as $char_index => $character)
 	{
-		// Rotating the characters a little...
-		if (function_exists('imagerotate'))
+		// Can we use true type fonts?
+		$can_do_ttf = function_exists('imagettftext');
+		if (!empty($can_do_ttf))
 		{
-			$char_image = function_exists('imagecreatetruecolor') ? imagecreatetruecolor($character['width'], $character['height']) : imagecreate($character['width'], $character['height']);
-			$char_bgcolor = imagecolorallocate($char_image, $background_color[0], $background_color[1], $background_color[2]);
-			imagefilledrectangle($char_image, 0, 0, $character['width'] - 1, $character['height'] - 1, $char_bgcolor);
-			imagechar($char_image, $loaded_fonts[$character['font']], 0, 0, $character['id'], imagecolorallocate($char_image, rand(max($foreground_color[0] - 2, 0), $foreground_color[0]), rand(max($foreground_color[1] - 2, 0), $foreground_color[1]), rand(max($foreground_color[2] - 2, 0), $foreground_color[2])));
-			$rotated_char = imagerotate($char_image, rand(-100, 100) / 10, $char_bgcolor);
-			imagecopy($code_image, $rotated_char, $cur_x, 0, 0, 0, $character['width'], $character['height']);
-			imagedestroy($rotated_char);
-			imagedestroy($char_image);
+			// GD2 handles font size differently.
+			$font_size = $gd2 ? rand(15, 18) : rand(18, 25);
+
+			// Work out the sizes - also fix the character width cause TTF not quite so wide!
+			$font_x = $cur_x + 5;
+			$font_y = $max_height - rand(2, 8);
+
+			// What font face?
+			if (!empty($ttfont_list))
+			{
+				$fontface = $settings['default_theme_dir'] . '/fonts/' . $ttfont_list[rand(0, count($ttfont_list) - 1)];
+				//log_error($fontface);
+			}
+
+			// What color are we to do it in?
+			$is_reverse = rand(0, 1);
+			$char_color = imagecolorallocate($code_image, rand(max($foreground_color[0] - 2, 0), $foreground_color[0]), rand(max($foreground_color[1] - 2, 0), $foreground_color[1]), rand(max($foreground_color[2] - 2, 0), $foreground_color[2]));
+
+			$angle = rand(-100, 100) / 10;
+			$show_letter = rand(0, 1) ? $character['id'] : strtolower($character['id']);
+			$fontcord = @imagettftext($code_image, 18, $angle, $font_x, $font_y, $char_color, $fontface, $show_letter);
+			if (empty($fontcord))
+				$can_do_ttf = false;
+			elseif ($is_reverse)
+			{
+				imagefilledpolygon($code_image, $fontcord, 4, $fg_color);
+				// Put the character back!
+				imagettftext($code_image, 18, $angle, $font_x, $font_y, $randomness_color, $fontface, $show_letter);
+			}
+
+			if ($can_do_ttf)
+				$cur_x = max($fontcord[2], $fontcord[4]) + 3;
 		}
 
-		// Sorry, no rotation available.
-		else
-			imagechar($code_image, $loaded_fonts[$character['font']], $cur_x, floor(($max_height - $character['height']) / 2), $character['id'], imagecolorallocate($code_image, rand(max($foreground_color[0] - 2, 0), $foreground_color[0]), rand(max($foreground_color[1] - 2, 0), $foreground_color[1]), rand(max($foreground_color[2] - 2, 0), $foreground_color[2])));
-
-		$cur_x += $character['width'] + $character_spacing;
+		if (!$can_do_ttf)
+		{
+			// Rotating the characters a little...
+			if (function_exists('imagerotate'))
+			{
+				$char_image = function_exists('imagecreatetruecolor') ? imagecreatetruecolor($character['width'], $character['height']) : imagecreate($character['width'], $character['height']);
+				$char_bgcolor = imagecolorallocate($char_image, $background_color[0], $background_color[1], $background_color[2]);
+				imagefilledrectangle($char_image, 0, 0, $character['width'] - 1, $character['height'] - 1, $char_bgcolor);
+				imagechar($char_image, $loaded_fonts[$character['font']], 0, 0, $character['id'], imagecolorallocate($char_image, rand(max($foreground_color[0] - 2, 0), $foreground_color[0]), rand(max($foreground_color[1] - 2, 0), $foreground_color[1]), rand(max($foreground_color[2] - 2, 0), $foreground_color[2])));
+				$rotated_char = imagerotate($char_image, rand(-100, 100) / 10, $char_bgcolor);
+				imagecopy($code_image, $rotated_char, $cur_x, 0, 0, 0, $character['width'], $character['height']);
+				imagedestroy($rotated_char);
+				imagedestroy($char_image);
+			}
+	
+			// Sorry, no rotation available.
+			else
+				imagechar($code_image, $loaded_fonts[$character['font']], $cur_x, floor(($max_height - $character['height']) / 2), $character['id'], imagecolorallocate($code_image, rand(max($foreground_color[0] - 2, 0), $foreground_color[0]), rand(max($foreground_color[1] - 2, 0), $foreground_color[1]), rand(max($foreground_color[2] - 2, 0), $foreground_color[2])));
+			$cur_x += $character['width'] + $character_spacing;
+		}
 	}
 
 	// Make the background color transparent.
@@ -1381,10 +1435,10 @@ function showCodeImage($code)
 	// Add some randomness to the background.
 	for ($i = rand(0, 2); $i < $max_height; $i += rand(1, 2))
 		for ($j = rand(0, 10); $j < $total_width; $j += rand(1, 15))
-			imagesetpixel($code_image, $j, $i, $randomness_color);
+			imagesetpixel($code_image, $j, $i, rand(0, 1) ? $fg_color : $randomness_color);
 
 	// Put in some lines too.
-	$num_lines = 3;
+	$num_lines = 2;
 	for ($i = 0; $i < $num_lines; $i++)
 	{
 		if (rand(0, 1))
@@ -1400,7 +1454,7 @@ function showCodeImage($code)
 			$x1 = 0; $x2 = $total_width;
 		}
 
-		imageline($code_image, $x1, $y1, $x2, $y2, $randomness_color);
+		imageline($code_image, $x1, $y1, $x2, $y2, rand (0, 1) ? $fg_color : $randomness_color);
 	}
 
 	// Show the image.
@@ -1432,7 +1486,7 @@ function showLetterImage($letter)
 	$font_dir = dir($settings['default_theme_dir'] . '/fonts');
 	$font_list = array();
 	while ($entry = $font_dir->read())
-		if ($entry{0} !== '.' && is_dir($settings['default_theme_dir'] . '/fonts/' . $entry))
+		if ($entry{0} !== '.' && is_dir($settings['default_theme_dir'] . '/fonts/' . $entry) && file_exists($settings['default_theme_dir'] . '/fonts/' . $entry . '.gdf'))
 			$font_list[] = $entry;
 
 	if (empty($font_list))

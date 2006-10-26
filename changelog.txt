@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2545 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2546 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -28,6 +28,8 @@ October 2006
  ! IE7 needed text size fix. (Load.php)
  + Added the ability to tell bots not to index a page. (index templates)
  + Tell robots not to index topics that are being accessed with .msg, prev_next, ;all, or by printing the topic. (Display.php)
+ ! CAPTCHA now uses truetype fonts wherever possible to give slightly clearer images. (Subs-Graphics.php, several fonts)
+ ! Fixed bug in showLetterImage that caused the function to often fail. (Subs-Graphics.php)
 
 
 September 2006
