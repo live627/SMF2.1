@@ -62,7 +62,7 @@ if (!defined('SMF'))
 // This function works out what to do!
 function AutoTask()
 {
-	global $db_prefix, $time_start, $modSettings;
+	global $db_prefix, $time_start, $modSettings, $smfFunc;
 
 	// Special case for doing the mail queue.
 	if (isset($_GET['scheduled']) && $_GET['scheduled'] == 'mailq')
@@ -70,7 +70,7 @@ function AutoTask()
 	else
 	{
 		// Select the next task to do.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_TASK, task, nextTime, timeOffset, timeRegularity, timeUnit
 			FROM {$db_prefix}scheduled_tasks
 			WHERE disabled = 0
@@ -78,10 +78,10 @@ function AutoTask()
 				AND nextTime != 0
 			ORDER BY nextTime ASC
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) != 0)
+		if ($smfFunc['db_num_rows']($request) != 0)
 		{
 			// The two important things really...
-			$row = mysql_fetch_assoc($request);
+			$row = $smfFunc['db_fetch_assoc']($request);
 
 			// When should this next be run?
 			$nextTime = next_time($row['timeRegularity'], $row['timeUnit'], $row['timeOffset']);
@@ -102,7 +102,7 @@ function AutoTask()
 				$nextTime += $duration;
 
 			// Update it now, so no others run this!
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}scheduled_tasks
 				SET nextTime = $nextTime
 				WHERE ID_TASK = $row[ID_TASK]
@@ -121,7 +121,7 @@ function AutoTask()
 				if ($completed)
 				{
 					$total_time = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)), 3);
-					db_query("
+					$smfFunc['db_query']("
 						INSERT INTO {$db_prefix}log_scheduled_tasks
 							(ID_TASK, timeRun, timeTaken)
 						VALUES
@@ -129,10 +129,10 @@ function AutoTask()
 				}
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Get the next timestamp right.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT nextTime
 			FROM {$db_prefix}scheduled_tasks
 			WHERE disabled = 0
@@ -140,11 +140,11 @@ function AutoTask()
 			ORDER BY nextTime ASC
 			LIMIT 1", __FILE__, __LINE__);
 		// No new task scheduled yet?
-		if (mysql_num_rows($request) === 0)
+		if ($smfFunc['db_num_rows']($request) === 0)
 			$nextEvent = 0;
 		else
-			list ($nextEvent) = mysql_fetch_row($request);
-		mysql_free_result($request);
+			list ($nextEvent) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		updateSettings(array('next_task_time' => $nextEvent));
 	}
@@ -162,10 +162,10 @@ function AutoTask()
 // Function to sending out approval notices to moderators etc.
 function scheduled_approval_notification()
 {
-	global $db_prefix, $scripturl, $modSettings, $mbname, $txt, $sourcedir;
+	global $db_prefix, $scripturl, $modSettings, $mbname, $txt, $sourcedir, $smfFunc;
 
 	// Grab all the items awaiting approval and sort type then board - clear up any things that are no longer relvant.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT aq.ID_MSG, aq.ID_ATTACH, aq.ID_EVENT, m.ID_TOPIC, m.ID_BOARD, m.subject, t.ID_FIRST_MSG,
 			b.ID_PROFILE
 		FROM ({$db_prefix}approval_queue AS aq, {$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
@@ -174,7 +174,7 @@ function scheduled_approval_notification()
 			AND b.ID_BOARD = m.ID_BOARD", __FILE__, __LINE__);
 	$notices = array();
 	$profiles = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// If this is no longer around we'll ignore it.
 		if (empty($row['ID_TOPIC']))
@@ -197,10 +197,10 @@ function scheduled_approval_notification()
 		// Store the profile for a bit later.
 		$profiles[$row['ID_BOARD']] = $row['ID_PROFILE'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Delete it all!
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}approval_queue", __FILE__, __LINE__);
 
 	// If nothing quit now.
@@ -210,14 +210,14 @@ function scheduled_approval_notification()
 	// Now we need to think about finding out *who* can approve - this is hard!
 
 	// First off, get all the groups with this permission and sort by board.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, ID_PROFILE, addDeny
 		FROM {$db_prefix}board_permissions
 		WHERE permission = 'approve_posts'
 			AND ID_PROFILE IN (" . implode(', ', $profiles) . ")", __FILE__, __LINE__);
 	$perms = array();
 	$addGroups = array(1);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Sorry guys, but we have to ignore guests AND members - it would be too many otherwise.
 		if ($row['ID_GROUP'] < 2)
@@ -229,27 +229,27 @@ function scheduled_approval_notification()
 		if ($row['addDeny'])
 			$addGroups[] = $row['ID_GROUP'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Grab the moderators if they have permission!
 	$mods = array();
 	$members = array();
 	if (in_array(2, $addGroups))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, ID_BOARD
 			FROM {$db_prefix}moderators", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$mods[$row['ID_MEMBER']][$row['ID_BOARD']] = true;
 			// Make sure they get included in the big loop.
 			$members[] = $row['ID_MEMBER'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Come along one and all... until we reject you ;)
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, realName, emailAddress, lngfile, ID_GROUP, additionalGroups
 		FROM {$db_prefix}members
 		WHERE ID_GROUP IN (" . implode(', ', $addGroups) . ")
@@ -257,7 +257,7 @@ function scheduled_approval_notification()
 			" . (empty($members) ? '' : " OR ID_MEMBER IN (" . implode(', ', $members) . ")") . "
 		ORDER BY lngfile", __FILE__, __LINE__);
 	$members = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$members[$row['ID_MEMBER']] = array(
 			'id' => $row['ID_MEMBER'],
 			'groups' => array_merge(explode(',', $row['additionalGroups']), array($row['ID_GROUP'])),
@@ -265,7 +265,7 @@ function scheduled_approval_notification()
 			'email' => $row['emailAddress'],
 			'name' => $row['realName'],		
 		);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get the mailing stuff.
 	require_once($sourcedir . '/Subs-Post.php');
@@ -353,7 +353,7 @@ function scheduled_clean_cache()
 // Auto optimize the database?
 function scheduled_auto_optimize()
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	// By default do it now!
 	$delay = false;
@@ -364,11 +364,11 @@ function scheduled_auto_optimize()
 	// Otherwise are we restricting the number of people online for this?
 	if (!empty($modSettings['autoOptMaxOnline']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(*)
 			FROM {$db_prefix}log_online", __FILE__, __LINE__);
-		list ($dont_do_it) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($dont_do_it) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		if ($dont_do_it > $modSettings['autoOptMaxOnline'])
 			$delay = true;
@@ -381,26 +381,26 @@ function scheduled_auto_optimize()
 	// Handle if things are prefixed with a database name.
 	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SHOW TABLES
 			FROM `" . strtr($match[1], array('`' => '')) . "`
 			LIKE '" . str_replace('_', '\_', $match[2]) . "%'", __FILE__, __LINE__);
 	}
 	else
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SHOW TABLES
 			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'", __FILE__, __LINE__);
 	}
 
 	$tables = array();
-	while ($row = mysql_fetch_row($request))
+	while ($row = $smfFunc['db_fetch_row']($request))
 		$tables[] = $row[0];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Actually do the optimisation.
 	foreach ($tables as $table)
-		db_query("
+		$smfFunc['db_query']("
 			OPTIMIZE TABLE `$table`", __FILE__, __LINE__);
 
 	// Return for the log...
@@ -419,7 +419,7 @@ function scheduled_daily_digest()
 	$is_weekly = !empty($is_weekly) ? 1 : 0;
 
 	// Right - get all the notification data FIRST.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ln.ID_TOPIC, IFNULL(t.ID_BOARD, ln.ID_BOARD) AS ID_BOARD, mem.emailAddress, mem.memberName, mem.notifyTypes,
 			mem.lngfile, mem.ID_MEMBER
 		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}members AS mem)
@@ -430,7 +430,7 @@ function scheduled_daily_digest()
 	$members = array();
 	$langs = array();
 	$notify = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($members[$row['ID_MEMBER']]))
 		{
@@ -451,26 +451,26 @@ function scheduled_daily_digest()
 		else
 			$notify['boards'][$row['ID_BOARD']][] = $row['ID_MEMBER'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($boards))
 		return true;
 
 	// Just get the board names.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_BOARD, name
 		FROM {$db_prefix}boards
 		WHERE ID_BOARD IN (" . implode(',', $boards) . ")", __FILE__, __LINE__);
 	$boards = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$boards[$row['ID_BOARD']] = $row['name'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($boards))
 		return true;
 
 	// Get the actual topics...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ld.note_type, t.ID_TOPIC, t.ID_BOARD, t.ID_MEMBER_STARTED, m.ID_MSG, m.subject,
 			b.name AS boardName
 		FROM ({$db_prefix}log_digest AS ld, {$db_prefix}topics AS t,
@@ -481,7 +481,7 @@ function scheduled_daily_digest()
 			AND b.ID_BOARD = t.ID_BOARD
 			AND m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
 	$types = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($types[$row['note_type']][$row['ID_BOARD']]))
 			$types[$row['note_type']][$row['ID_BOARD']] = array(
@@ -525,7 +525,7 @@ function scheduled_daily_digest()
 		if (!empty($notify['boards'][$row['ID_BOARD']]))
 			$types[$row['note_type']][$row['ID_BOARD']]['lines'][$row['ID_TOPIC']]['members'] = array_merge($types[$row['note_type']][$row['ID_BOARD']]['lines'][$row['ID_TOPIC']]['members'], $notify['boards'][$row['ID_BOARD']]);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($types))
 		return true;
@@ -643,10 +643,10 @@ function scheduled_daily_digest()
 	// Clean up...
 	if ($is_weekly)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_digest
 			WHERE daily != 0", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_digest
 			SET daily = 2
 			WHERE daily = 0", __FILE__, __LINE__);
@@ -654,10 +654,10 @@ function scheduled_daily_digest()
 	else
 	{
 		// Clear any only weekly ones, and stop us from sending daily again.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_digest
 			WHERE daily = 2", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_digest
 			SET daily = 1
 			WHERE daily = 0", __FILE__, __LINE__);
@@ -665,7 +665,7 @@ function scheduled_daily_digest()
 
 	// Just incase the member changes their settings mark this as sent.
 	$members = array_keys($members);
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_notify
 		SET sent = 1
 		WHERE ID_MEMBER IN (" . implode(',', $members) . ")", __FILE__, __LINE__);
@@ -687,7 +687,7 @@ function scheduled_weekly_digest()
 // Send a bunch of emails from the mail queue.
 function ReduceMailQueue($number = false, $override_limit = false)
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	// By default send 20 at once.
 	if (!$number)
@@ -702,12 +702,12 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	{
 		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 20 : 10;
 		
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}settings
 			SET value = " . (time() + $delay) . "
 			WHERE variable = 'mail_next_send'
 				AND value = '$modSettings[mail_next_send]'", __FILE__, __LINE__);
-		if (mysql_affected_rows() == 0)
+		if ($smfFunc['db_affected_rows']() == 0)
 			return false;
 		$modSettings['mail_next_send'] = $delay;
 	}
@@ -739,14 +739,14 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	}
 
 	// Now we know how many we're sending, let's send them.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT /*!40001 SQL_NO_CACHE */ ID_MAIL, recipient, body, subject, headers, send_html
 		FROM {$db_prefix}mail_queue
 		ORDER BY priority DESC, ID_MAIL ASC
 		LIMIT $number", __FILE__, __LINE__);
 	$ids = array();
 	$emails = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// We want to delete these from the database ASAP, so just get the data and go.
 		$ids[] = $row['ID_MAIL'];
@@ -758,11 +758,11 @@ function ReduceMailQueue($number = false, $override_limit = false)
 			'send_html' => $row['send_html'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Delete, delete, delete!!!
 	if (!empty($ids))
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}mail_queue
 			WHERE ID_MAIL IN (" . implode(',', $ids) . ")
 			LIMIT $number", __FILE__, __LINE__);
@@ -771,7 +771,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	if (count($ids) < $number)
 	{
 		// Only update the setting if no-one else has beaten us to it.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}settings
 			SET value = '0'
 			WHERE variable = 'mail_next_send'
@@ -812,7 +812,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 // Calculate the next time the passed tasks should be triggered.
 function CalculateNextTrigger($tasks = array(), $forceUpdate = false)
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	$task_query = '';
 	if (!is_array($tasks))
@@ -829,13 +829,13 @@ function CalculateNextTrigger($tasks = array(), $forceUpdate = false)
 	$nextTaskTime = empty($tasks) ? 9999999999 : $modSettings['next_task_time'];
 
 	// Get the critical info for the tasks.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit
 		FROM {$db_prefix}scheduled_tasks
 		WHERE disabled = 0
 			$task_query", __FILE__, __LINE__);
 	$tasks = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$nextTime = next_time($row['timeRegularity'], $row['timeUnit'], $row['timeOffset']);
 
@@ -849,11 +849,11 @@ function CalculateNextTrigger($tasks = array(), $forceUpdate = false)
 		if ($nextTime < $nextTaskTime)
 			$nextTaskTime = $nextTime;
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Now make the changes!
 	foreach ($tasks as $id => $time)
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}scheduled_tasks
 			SET nextTime = $time
 			WHERE ID_TASK = $id", __FILE__, __LINE__);
@@ -929,15 +929,15 @@ function next_time($regularity, $unit, $offset)
 // This loads the bare minimum data to allow us to load language files!
 function loadEssentialThemeData()
 {
-	global $settings, $modSettings, $db_prefix;
+	global $settings, $modSettings, $db_prefix, $smfFunc;
 
 	// Get all the default theme variables.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT ID_THEME, variable, value
 		FROM {$db_prefix}themes
 		WHERE ID_MEMBER = 0
 			AND ID_THEME IN (1, $modSettings[theme_guests])", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		$settings[$row['variable']] = $row['value'];
 
@@ -945,21 +945,21 @@ function loadEssentialThemeData()
 		if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['ID_THEME'] == '1')
 			$settings['default_' . $row['variable']] = $row['value'];
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 }
 
 function scheduled_fetchSMfiles()
 {
-	global $db_prefix, $sourcedir, $txt, $language, $settings, $forum_version, $modSettings;
+	global $db_prefix, $sourcedir, $txt, $language, $settings, $forum_version, $modSettings, $smfFunc;
 
 	// What files do we want to get
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_FILE, filename, path, parameters
 		FROM {$db_prefix}admin_info_files", __FILE__, __LINE__);
 
 	$js_files = array();
 	
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$js_files[$row['ID_FILE']] = array(
 			'filename' => $row['filename'],
@@ -968,7 +968,7 @@ function scheduled_fetchSMfiles()
 		);
 	}
 	
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// We're gonna need fetch_web_data() to pull this off.
 	require_once($sourcedir . '/Subs-Package.php');
@@ -994,7 +994,7 @@ function scheduled_fetchSMfiles()
 		}
 
 		// Save the file to the database.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}admin_info_files
 			SET data = SUBSTRING('" . addslashes($file_data) . "', 1, 65534)
 			WHERE ID_FILE = $ID_FILE
@@ -1005,7 +1005,7 @@ function scheduled_fetchSMfiles()
 
 function scheduled_birthdayemails()
 {
-	global $db_prefix, $modSettings, $sourcedir, $mbname, $txt;
+	global $db_prefix, $modSettings, $sourcedir, $mbname, $txt, $smfFunc;
 
 	// Need this in order to load the language files.
 	loadEssentialThemeData();
@@ -1018,7 +1018,7 @@ function scheduled_birthdayemails()
 	$day = date('j'); // Day without leading zeros.
 
 	// So who are the lucky ones?  Don't include those who don't want them.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT ID_MEMBER, realName, lngfile, emailAddress
 		FROM {$db_prefix}members
 		WHERE MONTH(birthdate) = $month
@@ -1027,7 +1027,7 @@ function scheduled_birthdayemails()
 
 	// Group them by languages.
 	$birthdays = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		if (!isset($birthdays[$row['lngfile']]))
 			$birthdays[$row['lngfile']] = array();
@@ -1036,7 +1036,7 @@ function scheduled_birthdayemails()
 			'email' => $row['emailAddress']
 		);
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// Send out the greetings!
 	foreach($birthdays AS $lang)

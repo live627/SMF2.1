@@ -63,7 +63,7 @@ if (!defined('SMF'))
 // Log an error, if the option is on.
 function log_error($error_message, $error_type = 'general', $file = null, $line = null)
 {
-	global $db_prefix, $txt, $modSettings, $sc, $user_info;
+	global $db_prefix, $txt, $modSettings, $sc, $user_info, $smfFunc;
 
 	// Check if error logging is actually on.
 	if (empty($modSettings['enableErrorLogging']))
@@ -114,7 +114,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	
 
 	// Insert the error into the database.
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}log_errors
 			(ID_MEMBER, logTime, ip, url, message, session, errorType, file, line)
 		VALUES ($user_info[id], " . time() . ", SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$query_string', 1, 65534), SUBSTRING('" . addslashes($error_message) . "', 1, 65534), '$sc', '$error_type', SUBSTRING('$file', 1, 255), $line)", false, false) or die($error_message);

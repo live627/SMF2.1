@@ -217,7 +217,7 @@ if (!defined('SMF'))
 // Update some basic statistics...
 function updateStats($type, $parameter1 = null, $parameter2 = null)
 {
-	global $db_prefix, $sourcedir, $modSettings;
+	global $db_prefix, $sourcedir, $modSettings, $smfFunc;
 
 	switch ($type)
 	{
@@ -230,29 +230,29 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2)
 		{
 			// Update the latest activated member (highest ID_MEMBER) and count.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT COUNT(*), MAX(ID_MEMBER)
 				FROM {$db_prefix}members
 				WHERE is_activated = 1", __FILE__, __LINE__);
-			list ($changes['totalMembers'], $changes['latestMember']) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($changes['totalMembers'], $changes['latestMember']) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 
 			// Get the latest activated member's display name.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT realName
 				FROM {$db_prefix}members
 				WHERE ID_MEMBER = " . (int) $changes['latestMember'] . "
 				LIMIT 1", __FILE__, __LINE__);
-			list ($changes['latestRealName']) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 
 			// Update the amount of members awaiting approval - ignoring COPPA accounts, as you can't approve them until you get permission.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT COUNT(*)
 				FROM {$db_prefix}members
 				WHERE is_activated IN (3, 4)", __FILE__, __LINE__);
-			list ($changes['unapprovedMembers']) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($changes['unapprovedMembers']) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 		}
 		// If $parameter1 is a number, it's the new ID_MEMBER and #2 is the real name for a new registration.
 		elseif ($parameter1 !== null && $parameter1 !== false)
@@ -266,20 +266,20 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		elseif ($parameter1 !== false)
 		{
 			// Update the latest member (highest ID_MEMBER) and count.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT COUNT(*), MAX(ID_MEMBER)
 				FROM {$db_prefix}members", __FILE__, __LINE__);
-			list ($changes['totalMembers'], $changes['latestMember']) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($changes['totalMembers'], $changes['latestMember']) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 
 			// Get the latest member's display name.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT realName
 				FROM {$db_prefix}members
 				WHERE ID_MEMBER = " . (int) $changes['latestMember'] . "
 				LIMIT 1", __FILE__, __LINE__);
-			list ($changes['latestRealName']) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 		}
 
 		updateSettings($changes);
@@ -291,11 +291,11 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		else
 		{
 			// SUM and MAX on a smaller table is better for InnoDB tables.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT SUM(numPosts) AS totalMessages, MAX(ID_LAST_MSG) AS maxMsgID
 				FROM {$db_prefix}boards", __FILE__, __LINE__);
-			$row = mysql_fetch_assoc($result);
-			mysql_free_result($result);
+			$row = $smfFunc['db_fetch_assoc']($result);
+			$smfFunc['db_free_result']($result);
 
 			updateSettings(array(
 				'totalMessages' => $row['totalMessages'],
@@ -306,7 +306,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 
 	case 'subject':
 		// Remove the previous subject (if any).
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_search_subjects
 			WHERE ID_TOPIC = " . (int) $parameter1, __FILE__, __LINE__);
 
@@ -321,7 +321,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 				$inserts[] = "'$word', $parameter1";
 
 			if (!empty($inserts))
-				db_query("
+				$smfFunc['db_query']("
 					INSERT INTO {$db_prefix}log_search_subjects
 						(word, ID_TOPIC)
 					VALUES (" . implode('),
@@ -336,12 +336,12 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		{
 			// Get the number of topics - a SUM is better for InnoDB tables.
 			// We also ignore the recycle bin here because there will probably be a bunch of one-post topics there.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT SUM(numTopics) AS totalTopics
 				FROM {$db_prefix}boards" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 				WHERE ID_BOARD != $modSettings[recycle_board]" : ''), __FILE__, __LINE__);
-			$row = mysql_fetch_assoc($result);
-			mysql_free_result($result);
+			$row = $smfFunc['db_fetch_assoc']($result);
+			$smfFunc['db_free_result']($result);
 
 			updateSettings(array('totalTopics' => $row['totalTopics']));
 		}
@@ -375,14 +375,14 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		if (($postgroups = cache_get_data('updateStats:postgroups', 360)) == null)
 		{
 			// Fetch the postgroups!
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_GROUP, minPosts
 				FROM {$db_prefix}membergroups
 				WHERE minPosts != -1", __FILE__, __LINE__);
 			$postgroups = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$postgroups[$row['ID_GROUP']] = $row['minPosts'];
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			// Sort them this way because if it's done with MySQL it causes a filesort :(.
 			arsort($postgroups);
@@ -404,7 +404,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		}
 
 		// A big fat CASE WHEN... END is faster than a zillion UPDATE's ;).
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}members
 			SET ID_POST_GROUP = CASE$conditions
 					ELSE 0
@@ -420,7 +420,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 // Assumes the data has been slashed.
 function updateMemberData($members, $data)
 {
-	global $db_prefix, $modSettings, $ID_MEMBER, $user_info;
+	global $db_prefix, $modSettings, $ID_MEMBER, $user_info, $smfFunc;
 
 	if (is_array($members))
 		$condition = 'ID_MEMBER IN (' . implode(', ', $members) . ')
@@ -461,13 +461,13 @@ function updateMemberData($members, $data)
 			else
 			{
 				$memberNames = array();
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT memberName
 					FROM {$db_prefix}members
 					WHERE $condition", __FILE__, __LINE__);
-				while ($row = mysql_fetch_assoc($request))
+				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$memberNames[] = $row['memberName'];
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 			}
 
 			if (!empty($memberNames))
@@ -499,7 +499,7 @@ function updateMemberData($members, $data)
 			$var = $val,";
 	}
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}members
 		SET" . substr($setString, 0, -1) . '
 		WHERE ' . $condition, __FILE__, __LINE__);
@@ -529,7 +529,7 @@ function updateMemberData($members, $data)
 // All input variables and values are assumed to have escaped apostrophes(')!
 function updateSettings($changeArray, $update = false)
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	if (empty($changeArray) || !is_array($changeArray))
 		return;
@@ -539,7 +539,7 @@ function updateSettings($changeArray, $update = false)
 	{
 		foreach ($changeArray as $variable => $value)
 		{
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}settings
 				SET value = " . ($value === true ? 'value + 1' : ($value === false ? 'value - 1' : "'$value'")) . "
 				WHERE variable = '$variable'
@@ -570,7 +570,7 @@ function updateSettings($changeArray, $update = false)
 	if (empty($replaceArray))
 		return;
 
-	db_query("
+	$smfFunc['db_query']("
 		REPLACE INTO {$db_prefix}settings
 			(variable, value)
 		VALUES " . implode(',
@@ -2270,7 +2270,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 // Parse smileys in the passed message.
 function parsesmileys(&$message)
 {
-	global $modSettings, $db_prefix, $txt, $user_info, $context;
+	global $modSettings, $db_prefix, $txt, $user_info, $context, $smfFunc;
 	static $smileyfromcache = array(), $smileytocache = array();
 
 	// No smiley set at all?!
@@ -2292,19 +2292,19 @@ function parsesmileys(&$message)
 			// Load the smileys in reverse order by length so they don't get parsed wrong.
 			if (($temp = cache_get_data('parsing_smileys', 480)) == null)
 			{
-				$result = db_query("
+				$result = $smfFunc['db_query']("
 					SELECT code, filename, description
 					FROM {$db_prefix}smileys", __FILE__, __LINE__);
 				$smileysfrom = array();
 				$smileysto = array();
 				$smileysdescs = array();
-				while ($row = mysql_fetch_assoc($result))
+				while ($row = $smfFunc['db_fetch_assoc']($result))
 				{
 					$smileysfrom[] = $row['code'];
 					$smileysto[] = $row['filename'];
 					$smileysdescs[] = $row['description'];
 				}
-				mysql_free_result($result);
+				$smfFunc['db_free_result']($result);
 
 				cache_put_data('parsing_smileys', array($smileysfrom, $smileysto, $smileysdescs), 480);
 			}
@@ -2360,7 +2360,7 @@ function highlight_php_code($code)
 // Put this user in the online log.
 function writeLog($force = false)
 {
-	global $db_prefix, $ID_MEMBER, $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board;
+	global $db_prefix, $ID_MEMBER, $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc;
 
 	// If we are showing who is viewing a topic, let's see if we are, and force an update if so - to make it accurate.
 	if (!empty($settings['display_who_viewing']) && ($topic || $board))
@@ -2400,14 +2400,14 @@ function writeLog($force = false)
 	{
 		if ($do_delete)
 		{
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_online
 				WHERE logTime < NOW() - INTERVAL " . ($modSettings['lastActive'] * 60) . " SECOND
 					AND session != '$session_id'", __FILE__, __LINE__);
 			cache_put_data('log_online-update', time(), 10);
 		}
 
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_online
 			SET logTime = NOW(), ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized'
 			WHERE session = '$session_id'
@@ -2424,11 +2424,11 @@ function writeLog($force = false)
 	if (empty($_SESSION['log_time']))
 	{
 		if ($do_delete || !empty($ID_MEMBER))
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_online
 				WHERE " . ($do_delete ? "logTime < NOW() - INTERVAL " . ($modSettings['lastActive'] * 60) . ' SECOND' : '') . ($do_delete && !empty($ID_MEMBER) ? ' OR ' : '') . (empty($ID_MEMBER) ? '' : "ID_MEMBER = $ID_MEMBER"), __FILE__, __LINE__);
 
-		db_query("
+		$smfFunc['db_query']("
 			" . ($do_delete ? 'INSERT IGNORE' : 'REPLACE') . " INTO {$db_prefix}log_online
 				(session, ID_MEMBER, logTime, ip, url)
 			VALUES ('$session_id', $ID_MEMBER, NOW(), IFNULL(INET_ATON('$user_info[ip]'), 0), '$serialized')", __FILE__, __LINE__);
@@ -2604,7 +2604,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 // Usage: logAction('remove', array('starter' => $ID_MEMBER_STARTED));
 function logAction($action, $extra = array())
 {
-	global $db_prefix, $ID_MEMBER, $modSettings, $user_info;
+	global $db_prefix, $ID_MEMBER, $modSettings, $user_info, $smfFunc;
 
 	if (!is_array($extra))
 		trigger_error('logAction(): data is not an array with action \'' . $action . '\'', E_USER_NOTICE);
@@ -2656,7 +2656,7 @@ function logAction($action, $extra = array())
 	
 	if (!empty($modSettings['modlog_enabled']))
 	{
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}log_actions
 				(logTime, ID_MEMBER, ip, action, ID_BOARD, ID_TOPIC, ID_MSG, extra)
 			VALUES (" . time() . ", $ID_MEMBER, SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$action', 1, 30),
@@ -2672,7 +2672,7 @@ function logAction($action, $extra = array())
 // Track Statistics.
 function trackStats($stats = array())
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 	static $cache_stats = array();
 
 	if (empty($modSettings['trackStats']))
@@ -2693,14 +2693,14 @@ function trackStats($stats = array())
 	}
 
 	$date = strftime('%Y-%m-%d', forum_time(false));
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_activity
 		SET" . substr($setStringUpdate, 0, -1) . "
 		WHERE date = '$date'
 		LIMIT 1", __FILE__, __LINE__);
 	if (db_affected_rows() == 0)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}log_activity
 				(date, " . implode(', ', array_keys($cache_stats)) . ")
 			VALUES ('$date', " . implode(', ', $cache_stats) . ')', __FILE__, __LINE__);
@@ -2715,21 +2715,21 @@ function trackStats($stats = array())
 // Make sure the user isn't posting over and over again.
 function spamProtection($error_type)
 {
-	global $modSettings, $txt, $db_prefix, $user_info;
+	global $modSettings, $txt, $db_prefix, $user_info, $smfFunc;
 
 	// Delete old entries... if you can moderate this board or this is login, override spamWaitTime with 2.
 	if ($error_type == 'spam' && !allowedTo('moderate_board'))
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_floodcontrol
 			WHERE logTime < " . (time() - $modSettings['spamWaitTime']), __FILE__, __LINE__);
 	else
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_floodcontrol
 			WHERE (logTime < " . (time() - 2) . " AND ip = '$user_info[ip]')
 				OR logTime < " . (time() - $modSettings['spamWaitTime']), __FILE__, __LINE__);
 
 	// Add a new entry, deleting the old if necessary.
-	db_query("
+	$smfFunc['db_query']("
 		REPLACE INTO {$db_prefix}log_floodcontrol
 			(ip, logTime)
 		VALUES (SUBSTRING('$user_info[ip]', 1, 16), " . time() . ")", __FILE__, __LINE__);

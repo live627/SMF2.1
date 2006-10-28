@@ -96,14 +96,14 @@ function ManageMail()
 // Display the mail queue...
 function BrowseMailQueue()
 {
-	global $scripturl, $context, $db_prefix, $modSettings, $txt;
+	global $scripturl, $context, $db_prefix, $modSettings, $txt, $smfFunc;
 
 	// How many items do we have?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*) AS queueSize, MIN(time_sent) AS oldest
 		FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
-	list ($mailQueueSize, $mailOldest) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($mailQueueSize, $mailOldest) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['oldest_mail'] = empty($mailOldest) ? 'N/A' : time_since(time() - $mailOldest);
 	$context['mail_queue_size'] = comma_format($mailQueueSize);
@@ -112,13 +112,13 @@ function BrowseMailQueue()
 	$context['start'] = $_REQUEST['start'];
 
 	// Even if it's disabled we should still show the mail queue, incase there's stuff left!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MAIL, time_sent, recipient, priority, subject
 		FROM {$db_prefix}mail_queue
 		ORDER BY ID_MAIL ASC
 		LIMIT $context[start], 20", __FILE__, __LINE__);
 	$context['mails'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['mails'][] = array(
 			'id' => $row['ID_MAIL'],
@@ -130,7 +130,7 @@ function BrowseMailQueue()
 			'subject' => strlen($row['subject']) > 50 ? substr($row['subject'], 0, 47) . '...' : $row['subject'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Setup the template stuff.
 	loadTemplate('ManageMail');
@@ -174,7 +174,7 @@ function ModifyMailSettings()
 // This function clears the mail queue of all emails, and at the end redirects to browse.
 function ClearMailQueue()
 {
-	global $sourcedir, $db_prefix;
+	global $sourcedir, $db_prefix, $smfFunc;
 
 	checkSession('get');
 
@@ -185,11 +185,11 @@ function ClearMailQueue()
 	if (!isset($_GET['te']))
 	{
 		// How many items do we have?
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(*) AS queueSize
 			FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
-		list ($_GET['te']) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($_GET['te']) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 	}
 	else
 		$_GET['te'] = (int) $_GET['te'];

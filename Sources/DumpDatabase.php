@@ -24,7 +24,7 @@ if (!defined('SMF'))
 	die('Hacking attempt...');
 
 /*	This file has a single job - database backup.  Note that, because of the
-	nature of its output, it uses the db_query() function without __FILE__ or
+	nature of its output, it uses the $smfFunc['db_query']() function without __FILE__ or
 	__LINE__ so errors won't be outputted.
 
 	void DumpDatabase2()
@@ -49,7 +49,7 @@ if (!defined('SMF'))
 // Dumps the database to a file.
 function DumpDatabase2()
 {
-	global $db_name, $db_prefix, $scripturl, $context, $modSettings, $crlf;
+	global $db_name, $db_prefix, $scripturl, $context, $modSettings, $crlf, $smfFunc;
 
 	// Administrators only!
 	if (!allowedTo('admin_forum'))
@@ -131,20 +131,20 @@ function DumpDatabase2()
 	// Get all tables in the database....
 	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
 	{
-		$queryTables = db_query("
+		$queryTables = $smfFunc['db_query']("
 			SHOW TABLES
 			FROM `" . strtr($match[1], array('`' => '')) . "`
 			LIKE '" . str_replace('_', '\_', $match[2]) . "%'", false, false);
 	}
 	else
 	{
-		$queryTables = db_query("
+		$queryTables = $smfFunc['db_query']("
 			SHOW TABLES
 			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'", false, false);
 	}
 
 	// Dump each table.
-	while ($tableName = mysql_fetch_row($queryTables))
+	while ($tableName = $smfFunc['db_fetch_row']($queryTables))
 	{
 		if (function_exists('apache_reset_timeout'))
 			apache_reset_timeout();
@@ -183,7 +183,7 @@ function DumpDatabase2()
 			$get_rows,
 			'# --------------------------------------------------------', $crlf;
 	}
-	mysql_free_result($queryTables);
+	$smfFunc['db_free_result']($queryTables);
 
 	echo
 		$crlf,
@@ -195,34 +195,34 @@ function DumpDatabase2()
 // Get the content (INSERTs) for a table.
 function getTableContent($tableName)
 {
-	global $crlf;
+	global $crlf, $smfFunc;
 
 	// Get everything from the table.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT /*!40001 SQL_NO_CACHE */ *
 		FROM `$tableName`", false, false);
 
 	// The number of rows, just for record keeping and breaking INSERTs up.
-	$num_rows = @mysql_num_rows($result);
+	$num_rows = @$smfFunc['db_num_rows']($result);
 	$current_row = 0;
 
 	if ($num_rows == 0)
 		return '';
 
-	$fields = array_keys(mysql_fetch_assoc($result));
-	mysql_data_seek($result, 0);
+	$fields = array_keys($smfFunc['db_fetch_assoc']($result));
+	$smfFunc['db_data_seek']($result, 0);
 
 	// Start it off with the basic INSERT INTO.
 	$data = 'INSERT INTO `' . $tableName . '`' . $crlf . "\t(`" . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
 
 	// Loop through each row.
-	while ($row = mysql_fetch_row($result))
+	while ($row = $smfFunc['db_fetch_row']($result))
 	{
 		$current_row++;
 
 		// Get the fields in this row...
 		$field_list = array();
-		for ($j = 0; $j < mysql_num_fields($result); $j++)
+		for ($j = 0; $j < $smfFunc['db_num_fields']($result); $j++)
 		{
 			// Try to figure out the type of each field. (NULL, number, or 'string'.)
 			if (!isset($row[$j]))
@@ -230,7 +230,7 @@ function getTableContent($tableName)
 			elseif (is_numeric($row[$j]))
 				$field_list[] = $row[$j];
 			else
-				$field_list[] = "'" . mysql_escape_string($row[$j]) . "'";
+				$field_list[] = "'" . $smfFunc['db_escape_string']($row[$j]) . "'";
 		}
 
 		// 'Insert' the data.
@@ -246,7 +246,7 @@ function getTableContent($tableName)
 		else
 			$data .= ',' . $crlf . "\t";
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// Return an empty string if there were no rows.
 	return $num_rows == 0 ? '' : $data;
@@ -255,16 +255,16 @@ function getTableContent($tableName)
 // Get the schema (CREATE) for a table.
 function getTableSQLData($tableName)
 {
-	global $crlf;
+	global $crlf, $smfFunc;
 
 	// Start the create table...
 	$schema_create = 'CREATE TABLE `' . $tableName . '` (' . $crlf;
 
 	// Find all the fields.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SHOW FIELDS
 		FROM `$tableName`", false, false);
-	while ($row = @mysql_fetch_assoc($result))
+	while ($row = @$smfFunc['db_fetch_assoc']($result))
 	{
 		// Make the CREATE for this column.
 		$schema_create .= '  ' . $row['Field'] . ' ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
@@ -276,23 +276,23 @@ function getTableSQLData($tableName)
 			if ($row['Default'] == 'CURRENT_TIMESTAMP')
 				$schema_create .= ' /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */';
 			else
-				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . mysql_escape_string($row['Default']) . "'");
+				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . $smfFunc['db_escape_string']($row['Default']) . "'");
 		}
 
 		// And now any extra information. (such as auto_increment.)
 		$schema_create .= ($row['Extra'] != '' ? ' ' . $row['Extra'] : '') . ',' . $crlf;
 	}
-	@mysql_free_result($result);
+	@$smfFunc['db_free_result']($result);
 
 	// Take off the last comma.
 	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
 
 	// Find the keys.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SHOW KEYS
 		FROM `$tableName`", false, false);
 	$indexes = array();
-	while ($row = @mysql_fetch_assoc($result))
+	while ($row = @$smfFunc['db_fetch_assoc']($result))
 	{
 		// IS this a primary key, unique index, or regular index?
 		$row['Key_name'] = $row['Key_name'] == 'PRIMARY' ? 'PRIMARY KEY' : (empty($row['Non_unique']) ? 'UNIQUE ' : ($row['Comment'] == 'FULLTEXT' || (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT') ? 'FULLTEXT ' : 'KEY ')) . $row['Key_name'];
@@ -307,7 +307,7 @@ function getTableSQLData($tableName)
 		else
 			$indexes[$row['Key_name']][$row['Seq_in_index']] = $row['Column_name'];
 	}
-	@mysql_free_result($result);
+	@$smfFunc['db_free_result']($result);
 
 	// Build the CREATEs for the keys.
 	foreach ($indexes as $keyname => $columns)
@@ -319,11 +319,11 @@ function getTableSQLData($tableName)
 	}
 
 	// Now just get the comment and type... (MyISAM, etc.)
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SHOW TABLE STATUS
 		LIKE '" . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . "'", false, false);
-	$row = @mysql_fetch_assoc($result);
-	@mysql_free_result($result);
+	$row = @$smfFunc['db_fetch_assoc']($result);
+	@$smfFunc['db_free_result']($result);
 
 	// Probably MyISAM.... and it might have a comment.
 	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');

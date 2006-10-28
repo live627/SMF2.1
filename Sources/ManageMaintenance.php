@@ -156,36 +156,36 @@ function ManageMaintenance()
 function Maintenance()
 {
 	global $context, $txt, $db_prefix, $user_info, $db_character_set;
-	global $modSettings, $cachedir;
+	global $modSettings, $cachedir, $smfFunc;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'logs')
 	{
 		// No one's online now.... MUHAHAHAHA :P.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_online", __FILE__, __LINE__);
 
 		// Dump the banning logs.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_banned", __FILE__, __LINE__);
 
 		// Start ID_ERROR back at 0 and dump the error log.
-		db_query("
+		$smfFunc['db_query']("
 			TRUNCATE {$db_prefix}log_errors", __FILE__, __LINE__);
 
 		// Clear out the spam log.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_floodcontrol", __FILE__, __LINE__);
 
 		// Clear out the karma actions.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_karma", __FILE__, __LINE__);
 
 		// Last but not least, the search logs!
-		db_query("
+		$smfFunc['db_query']("
 			TRUNCATE {$db_prefix}log_search_topics", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			TRUNCATE {$db_prefix}log_search_messages", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			TRUNCATE {$db_prefix}log_search_results", __FILE__, __LINE__);
 
 		updateSettings(array('search_pointer' => 0));
@@ -213,13 +213,13 @@ function Maintenance()
 		$context['maintenance_finished'] = isset($_GET['done']);
 
 	// Grab some boards maintenance can be done on.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT b.ID_BOARD, b.name, b.childLevel, c.name AS catName, c.ID_CAT
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$context['categories'] = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		if (!isset($context['categories'][$row['ID_CAT']]))
 			$context['categories'][$row['ID_CAT']] = array(
@@ -233,9 +233,9 @@ function Maintenance()
 			'child_level' => $row['childLevel']
 		);
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
-	$context['convert_utf8'] = (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', mysql_get_server_info())) <= 0;
+	$context['convert_utf8'] = (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smfFunc['db_server_info']())) <= 0;
 	$context['convert_entities'] = isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
 
 	$context['sub_template'] = 'maintain';
@@ -246,7 +246,7 @@ function Maintenance()
 // List all the scheduled task in place on the forum.
 function ScheduledTasks()
 {
-	global $context, $txt, $db_prefix, $sourcedir;
+	global $context, $txt, $db_prefix, $sourcedir, $smfFunc;
 
 	// Mama, setup the template first - cause it's like the most important bit, like pickle in a sandwich.
 	// ... ironically I don't like pickle. </grudge>
@@ -267,7 +267,7 @@ function ScheduledTasks()
 				$enablers[] = (int) $id;
 
 		// Do the update!
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}scheduled_tasks
 			SET disabled = IF (ID_TASK IN (" . implode(', ', $enablers) . "), 0, 1)", __FILE__, __LINE__);
 
@@ -284,7 +284,7 @@ function ScheduledTasks()
 			$tasks[] = (int) $task;
 
 		// Load up the tasks.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_TASK, task
 			FROM {$db_prefix}scheduled_tasks
 			WHERE ID_TASK IN (" . implode(', ', $tasks) . ")
@@ -293,7 +293,7 @@ function ScheduledTasks()
 		// Lets get it on!
 		require_once($sourcedir . '/ScheduledTasks.php');
 		ignore_user_abort(true);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$start_time = microtime();
 			// The functions got to exist for us to use it.
@@ -312,7 +312,7 @@ function ScheduledTasks()
 			if ($completed)
 			{
 				$total_time = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $start_time)), 3);
-				db_query("
+				$smfFunc['db_query']("
 					INSERT INTO {$db_prefix}log_scheduled_tasks
 						(ID_TASK, timeRun, timeTaken)
 					VALUES
@@ -323,11 +323,11 @@ function ScheduledTasks()
 	}
 
 	// Get the tasks, all of them, now - dammit!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit, disabled, task
 		FROM {$db_prefix}scheduled_tasks", __FILE__, __LINE__);
 	$context['tasks'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Find the next for regularity - don't offset as it's always server time!
 		$offset = sprintf($txt['scheduled_task_reg_starting'], date("H:i", $row['timeOffset']));
@@ -346,13 +346,13 @@ function ScheduledTasks()
 
 	// You see - Mike sucks - and can't work out how to do in C++ what PHP can do with it's eyes closed - pah! He no programmer ;)
 	// TWlrZSBTdWNrcyBCYWxscyBhbmQgSXMgTXkgQmlhdGNoISE=
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Function for editing a task.
 function EditTask()
 {
-	global $context, $txt, $db_prefix, $sourcedir;
+	global $context, $txt, $db_prefix, $sourcedir, $smfFunc;
 
 	// Just set up some lovely context stuff.
 	$context['admin_tabs']['tabs']['tasks']['is_selected'] = true;
@@ -396,7 +396,7 @@ function EditTask()
 		$disabled = !isset($_POST['enabled']) ? 1 : 0;
 
 		// Do the update!
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}scheduled_tasks
 			SET disabled = $disabled, timeOffset = $offset, timeUnit = '$unit',
 				timeRegularity = $interval
@@ -410,16 +410,16 @@ function EditTask()
 	}
 
 	// Load the task, understand? Que? Que?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit, disabled, task
 		FROM {$db_prefix}scheduled_tasks
 		WHERE ID_TASK = $_GET[tid]", __FILE__, __LINE__);
 
 	// Should never, ever, happen!
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(1);
 
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['task'] = array(
 			'id' => $row['ID_TASK'],
@@ -434,13 +434,13 @@ function EditTask()
 			'unit' => $row['timeUnit'],			
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Show the log of all tasks that have taken place.
 function TaskLog()
 {
-	global $scripturl, $db_prefix, $context, $txt;
+	global $scripturl, $db_prefix, $context, $txt, $smfFunc;
 
 	// How many per page?
 	$entries_per_page = 20;
@@ -450,35 +450,35 @@ function TaskLog()
 	{
 		checkSession();
 
-		db_query("
+		$smfFunc['db_query']("
 			TRUNCATE {$db_prefix}log_scheduled_tasks", __FILE__, __LINE__);
 	}
 
 	// Count the total number of task log entries.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_scheduled_tasks", __FILE__, __LINE__);
-	list ($num_task_log_entries) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($num_task_log_entries) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=maintain;sa=tasklog', $_REQUEST['start'], $num_task_log_entries, $entries_per_page);
 	$context['start'] = $_REQUEST['start'];
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lst.ID_LOG, lst.ID_TASK, lst.timeRun, lst.timeTaken, st.task
 		FROM {$db_prefix}log_scheduled_tasks AS lst, {$db_prefix}scheduled_tasks AS st
 		WHERE st.ID_TASK = lst.ID_TASK
 		ORDER BY ID_LOG DESC
 		LIMIT $_REQUEST[start], $entries_per_page", __FILE__, __LINE__);
 	$context['log_entries'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['log_entries'][] = array(
 			'id' => $row['ID_LOG'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
 			'time_run' => timeformat($row['timeRun']),
 			'time_taken' => $row['timeTaken'],
 		);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Just context bits...
 	$context['sub_template'] = 'task_log';
@@ -491,7 +491,7 @@ function TaskLog()
 function ConvertUtf8()
 {
 	global $scripturl, $context, $txt, $language, $db_prefix, $db_character_set;
-	global $modSettings, $user_info, $sourcedir;
+	global $modSettings, $user_info, $sourcedir, $smfFunc;
 
 	// Show me your badge!
 	isAllowedTo('admin_forum');
@@ -523,10 +523,10 @@ function ConvertUtf8()
 	);
 
 	// Get a list of character sets supported by your MySQL server.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SHOW CHARACTER SET", __FILE__, __LINE__);
 	$db_charsets = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$db_charsets[] = $row['Charset'];
 
 	// Character sets supported by both MySQL and SMF's language files.
@@ -536,16 +536,16 @@ function ConvertUtf8()
 	if (!isset($_POST['proceed']))
 	{
 		// Character set conversions are only supported as of MySQL 4.1.2.
-		if (version_compare('4.1.2', preg_replace('~\-.+?$~', '', mysql_get_server_info())) > 0)
+		if (version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smfFunc['db_server_info']())) > 0)
 			fatal_lang_error('utf8_db_version_too_low');
 
 		// Use the messages.body column as indicator for the database charset.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SHOW FULL COLUMNS
 			FROM {$db_prefix}messages
 			LIKE 'body'", __FILE__, __LINE__);
-		$column_info = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$column_info = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		// A collation looks like latin1_swedish. We only need the character set.
 		list($context['database_charset']) = explode('_', $column_info['Collation']);
@@ -688,16 +688,16 @@ function ConvertUtf8()
 
 	// Grab a list of tables.
 	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) === 1)
-		$queryTables = db_query("
+		$queryTables = $smfFunc['db_query']("
 			SHOW TABLE STATUS
 			FROM `" . strtr($match[1], array('`' => '')) . "`
 			LIKE '" . str_replace('_', '\_', $match[2]) . "%'", __FILE__, __LINE__);
 	else
-		$queryTables = db_query("
+		$queryTables = $smfFunc['db_query']("
 			SHOW TABLE STATUS
 			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'", __FILE__, __LINE__);
 
-	while ($table_info = mysql_fetch_assoc($queryTables))
+	while ($table_info = $smfFunc['db_fetch_assoc']($queryTables))
 	{
 		// Just to make sure it doesn't time out.
 		if (function_exists('apache_reset_timeout'))
@@ -706,10 +706,10 @@ function ConvertUtf8()
 		$table_charsets = array();
 
 		// Loop through each column.
-		$queryColumns = db_query("
+		$queryColumns = $smfFunc['db_query']("
 			SHOW FULL COLUMNS 
 			FROM $table_info[Name]", __FILE__, __LINE__);
-		while ($column_info = mysql_fetch_assoc($queryColumns))
+		while ($column_info = $smfFunc['db_fetch_assoc']($queryColumns))
 		{
 			// Only text'ish columns have a character set and need converting.
 			if (strpos($column_info['Type'], 'text') !== false || strpos($column_info['Type'], 'char') !== false)
@@ -726,7 +726,7 @@ function ConvertUtf8()
 				}
 			}
 		}
-		mysql_free_result($queryColumns);
+		$smfFunc['db_free_result']($queryColumns);
 
 		// Only change the column if the data doesn't match the current charset.
 		if ((count($table_charsets) === 1 && key($table_charsets) !== $charsets[$_POST['src_charset']]) || count($table_charsets) > 1)
@@ -748,7 +748,7 @@ function ConvertUtf8()
 			}
 
 			// Change the columns to binary form.
-			db_query("
+			$smfFunc['db_query']("
 				ALTER TABLE $table_info[Name]" . substr($updates_blob, 0, -1), __FILE__, __LINE__);
 
 			// Convert the character set if MySQL has no native support for it.
@@ -760,23 +760,23 @@ function ConvertUtf8()
 						$update .= "
 							$column[Field] = " . strtr($replace, array('%field%' => $column['Field'])) . ',';
 				
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE $table_info[Name]
 					SET " . substr($update, 0, -1), __FILE__, __LINE__);
 			}
 
 			// Change the columns back, but with the proper character set.
-			db_query("
+			$smfFunc['db_query']("
 				ALTER TABLE $table_info[Name]" . substr($updates_text, 0, -1), __FILE__, __LINE__);
 		}
 
 		// Now do the actual conversion (if still needed).
 		if ($charsets[$_POST['src_charset']] !== 'utf8')
-			db_query("
+			$smfFunc['db_query']("
 				ALTER TABLE $table_info[Name]
 				CONVERT TO CHARACTER SET utf8", __FILE__, __LINE__);
 	}
-	mysql_free_result($queryTables);
+	$smfFunc['db_free_result']($queryTables);
 
 	// Let the settings know we have a new character set.
 	updateSettings(array('global_character_set' => 'UTF-8'));
@@ -795,7 +795,7 @@ function ConvertUtf8()
 // Convert HTML-entities to their UTF-8 character equivalents.
 function ConvertEntities()
 {
-	global $db_prefix, $db_character_set, $modSettings, $context, $sourcedir;
+	global $db_prefix, $db_character_set, $modSettings, $context, $sourcedir, $smfFunc;
 
 	isAllowedTo('admin_forum');
 
@@ -862,18 +862,18 @@ function ConvertEntities()
 
 		// Get a list of text columns.
 		$columns = array();
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SHOW FULL COLUMNS 
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
-		while ($column_info = mysql_fetch_assoc($request))
+		while ($column_info = $smfFunc['db_fetch_assoc']($request))
 			if (strpos($column_info['Type'], 'text') !== false || strpos($column_info['Type'], 'char') !== false)
 				$columns[] = $column_info['Field'];
 
 		// Get the column with the (first) primary key.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SHOW KEYS
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['Key_name'] === 'PRIMARY' && $row['Seq_in_index'] == 1)
 			{
@@ -881,18 +881,18 @@ function ConvertEntities()
 				break;
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// No primary key, no glory.
 		if (empty($primary_key))
 			continue;
 
 		// Get the maximum value for the primary key.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT MAX($primary_key)
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
-		list($max_value) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list($max_value) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		if (empty($max_value))
 			continue;
@@ -900,13 +900,13 @@ function ConvertEntities()
 		while ($context['start'] <= $max_value)
 		{
 			// Retrieve a list of rows that has at least one entity to convert.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT $primary_key, " . implode(', ', $columns) . "
 				FROM {$db_prefix}$cur_table
 				WHERE $primary_key BETWEEN $context[start] AND $context[start] + 499
 					AND (" . implode(" LIKE '%&#%' OR ", $columns) . " LIKE '%&#%')
 				LIMIT 500", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				$changes = array();
 				foreach ($row as $column_name => $column_value)
@@ -915,7 +915,7 @@ function ConvertEntities()
 				
 				// Update the row.
 				if (!empty($changes))
-					db_query("
+					$smfFunc['db_query']("
 						UPDATE {$db_prefix}$cur_table
 						SET 
 							" . implode(",
@@ -923,7 +923,7 @@ function ConvertEntities()
 						WHERE $primary_key = " . $row[$primary_key] . "
 						LIMIT 1", __FILE__, __LINE__);
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 			$context['start'] += 500;
 
 			// After ten seconds interrupt.
@@ -951,7 +951,7 @@ function ConvertEntities()
 // Optimize the database's tables.
 function OptimizeTables()
 {
-	global $db_name, $txt, $context, $scripturl, $sourcedir;
+	global $db_name, $txt, $context, $scripturl, $sourcedir, $smfFunc;
 
 	isAllowedTo('admin_forum');
 
@@ -964,26 +964,26 @@ function OptimizeTables()
 	$context['sub_template'] = 'optimize';
 
 	// Get a list of tables, as well as how many there are.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SHOW TABLE STATUS
 		FROM `$db_name`", false, false);
 	$tables = array();
 
 	if (!$result)
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SHOW TABLES
 			FROM `$db_name`", __FILE__, __LINE__);
-		while ($table = mysql_fetch_row($result))
+		while ($table = $smfFunc['db_fetch_row']($result))
 			$tables[] = array('table_name' => $row[0]);
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 	}
 	else
 	{
 		$i = 0;
-		while ($table = mysql_fetch_assoc($result))
-			$tables[] = $table + array('table_name' => mysql_tablename($result, $i++));
-		mysql_free_result($result);
+		while ($table = $smfFunc['db_fetch_assoc']($result))
+			$tables[] = $table + array('table_name' => $smfFunc['db_tablename']($result, $i++));
+		$smfFunc['db_free_result']($result);
 	}
 
 	// If there aren't any tables then I believe that would mean the world has exploded...
@@ -996,10 +996,10 @@ function OptimizeTables()
 	foreach ($tables as $table)
 	{
 		// Optimize the table!  We use backticks here because it might be a custom table.
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			OPTIMIZE TABLE `$table[table_name]`", __FILE__, __LINE__);
-		$row = mysql_fetch_assoc($result);
-		mysql_free_result($result);
+		$row = $smfFunc['db_fetch_assoc']($result);
+		$smfFunc['db_free_result']($result);
 
 		if (!isset($row['Msg_text']) || strpos($row['Msg_text'], 'already') === false || !isset($table['Data_free']) || $table['Data_free'] != 0)
 			$context['optimized_tables'][] = array(
@@ -1021,7 +1021,7 @@ function OptimizeTables()
 function AdminBoardRecount()
 {
 	global $txt, $db_prefix, $context, $scripturl, $modSettings, $sourcedir;
-	global $time_start;
+	global $time_start, $smfFunc;
 
 	isAllowedTo('admin_forum');
 
@@ -1034,11 +1034,11 @@ function AdminBoardRecount()
 	@set_time_limit(600);
 
 	// Step the number of topics at a time so things don't time out...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT MAX(ID_TOPIC)
 		FROM {$db_prefix}topics", __FILE__, __LINE__);
-	list ($max_topics) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($max_topics) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$increment = min(ceil($max_topics / 4), 2000);
 	if (empty($_REQUEST['start']))
@@ -1053,7 +1053,7 @@ function AdminBoardRecount()
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT /*!40001 SQL_NO_CACHE */ t.ID_TOPIC, t.numReplies, t.unapprovedPosts,
 					IF (COUNT(ma.ID_MSG), COUNT(ma.ID_MSG) - 1, 0) AS realNumReplies, COUNT(mu.ID_MSG) AS realUnapprovedPosts
 				FROM {$db_prefix}topics AS t
@@ -1063,13 +1063,13 @@ function AdminBoardRecount()
 					AND t.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
 				GROUP BY t.ID_TOPIC
 				HAVING realNumReplies != numReplies OR realUnapprovedPosts != unapprovedPosts", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
-				db_query("
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}topics
 					SET numReplies = $row[realNumReplies], unapprovedPosts = $row[realUnapprovedPosts]
 					WHERE ID_TOPIC = $row[ID_TOPIC]
 					LIMIT 1", __FILE__, __LINE__);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
 
@@ -1089,26 +1089,26 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 1)
 	{
 		if (empty($_REQUEST['start']))
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}boards
 				SET numPosts = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT /*!40001 SQL_NO_CACHE */ m.ID_BOARD, COUNT(*) AS realNumPosts
 				FROM {$db_prefix}messages AS m
 				WHERE m.ID_TOPIC > " . ($_REQUEST['start']) . "
 					AND m.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
 					AND m.approved = 1
 				GROUP BY m.ID_BOARD", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
-				db_query("
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET numPosts = numPosts + $row[realNumPosts]
 					WHERE ID_BOARD = $row[ID_BOARD]
 					LIMIT 1", __FILE__, __LINE__);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
 
@@ -1128,26 +1128,26 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 2)
 	{
 		if (empty($_REQUEST['start']))
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}boards
 				SET numTopics = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, COUNT(*) AS realNumTopics
 				FROM {$db_prefix}topics AS t
 				WHERE t.approved = 1
 					AND t.ID_TOPIC > " . ($_REQUEST['start']) . "
 					AND t.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
 				GROUP BY t.ID_BOARD", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
-				db_query("
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET numTopics = numTopics + $row[realNumTopics]
 					WHERE ID_BOARD = $row[ID_BOARD]
 					LIMIT 1", __FILE__, __LINE__);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
 
@@ -1167,26 +1167,26 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 3)
 	{
 		if (empty($_REQUEST['start']))
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}boards
 				SET unapprovedPosts = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT /*!40001 SQL_NO_CACHE */ m.ID_BOARD, COUNT(*) AS realUnapprovedPosts
 				FROM {$db_prefix}messages AS m
 				WHERE m.ID_TOPIC > " . ($_REQUEST['start']) . "
 					AND m.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
 					AND m.approved = 0
 				GROUP BY m.ID_BOARD", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
-				db_query("
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET unapprovedPosts = unapprovedPosts + $row[realUnapprovedPosts]
 					WHERE ID_BOARD = $row[ID_BOARD]
 					LIMIT 1", __FILE__, __LINE__);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
 
@@ -1206,26 +1206,26 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 4)
 	{
 		if (empty($_REQUEST['start']))
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}boards
 				SET unapprovedTopics = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, COUNT(*) AS realUnapprovedTopics
 				FROM {$db_prefix}topics AS t
 				WHERE t.approved = 0
 					AND t.ID_TOPIC > " . ($_REQUEST['start']) . "
 					AND t.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
 				GROUP BY t.ID_BOARD", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
-				db_query("
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET unapprovedTopics = unapprovedTopics + $row[realUnapprovedTopics]
 					WHERE ID_BOARD = $row[ID_BOARD]
 					LIMIT 1", __FILE__, __LINE__);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
 
@@ -1244,25 +1244,25 @@ function AdminBoardRecount()
 	// Get all members with wrong number of personal messages.
 	if ($_REQUEST['step'] <= 5)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT /*!40001 SQL_NO_CACHE */ mem.ID_MEMBER, COUNT(pmr.ID_PM) AS realNum, mem.instantMessages
 			FROM {$db_prefix}members AS mem
 				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (mem.ID_MEMBER = pmr.ID_MEMBER AND pmr.deleted = 0)
 			GROUP BY mem.ID_MEMBER
 			HAVING realNum != instantMessages", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			updateMemberData($row['ID_MEMBER'], array('instantMessages' => $row['realNum']));
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT /*!40001 SQL_NO_CACHE */ mem.ID_MEMBER, COUNT(pmr.ID_PM) AS realNum, mem.unreadMessages
 			FROM {$db_prefix}members AS mem
 				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (mem.ID_MEMBER = pmr.ID_MEMBER AND pmr.deleted = 0 AND pmr.is_read = 0)
 			GROUP BY mem.ID_MEMBER
 			HAVING realNum != unreadMessages", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			updateMemberData($row['ID_MEMBER'], array('unreadMessages' => $row['realNum']));
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 		{
@@ -1278,7 +1278,7 @@ function AdminBoardRecount()
 	{
 		while ($_REQUEST['start'] < $modSettings['maxMsgID'])
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, m.ID_MSG
 				FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 				WHERE t.ID_TOPIC = m.ID_TOPIC
@@ -1286,12 +1286,12 @@ function AdminBoardRecount()
 					AND m.ID_MSG <= " . ($_REQUEST['start'] + $increment) . "
 					AND m.ID_BOARD != t.ID_BOARD", __FILE__, __LINE__);
 			$boards = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$boards[$row['ID_BOARD']][] = $row['ID_MSG'];
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			foreach ($boards as $board_id => $messages)
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}messages
 					SET ID_BOARD = $board_id
 					WHERE ID_MSG IN (" . implode(', ', $messages) . ")
@@ -1312,16 +1312,16 @@ function AdminBoardRecount()
 	}
 
 	// Update the latest message of each board.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT /*!40001 SQL_NO_CACHE */ b.ID_BOARD, b.ID_PARENT, b.ID_LAST_MSG, MAX(m.ID_MSG) AS localLastMsg, b.childLevel
 		FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS m)
 		WHERE b.ID_BOARD = m.ID_BOARD
 			AND m.approved = 1
 		GROUP BY ID_BOARD", __FILE__, __LINE__);
 	$resort_me = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$resort_me[$row['childLevel']][] = $row;
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	krsort($resort_me);
 
@@ -1337,7 +1337,7 @@ function AdminBoardRecount()
 
 			// If what is and what should be the latest message differ, an update is necessary.
 			if ($curLastMsg != $row['ID_LAST_MSG'])
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET ID_LAST_MSG = $curLastMsg
 					WHERE ID_BOARD = $row[ID_BOARD]
@@ -1366,7 +1366,7 @@ function AdminBoardRecount()
 function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 {
 	global $language, $settings, $txt, $db_prefix;
-	global $cachedir;
+	global $cachedir, $smfFunc;
 
 	// Is the file writable?
 	$can_write = is_writable($cachedir) ? 1 : 0;
@@ -1450,11 +1450,11 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		//!!! Remove this for now - we may add it back later.
 		/*if ($template == 'index')
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT time_format, number_format, charset, locale, dictionary, rtl, image_lang
 				FROM {$db_prefix}languages
 				WHERE codename = '$lang'", __FILE__, __LINE__);
-			$row = mysql_fetch_assoc($request);
+			$row = $smfFunc['db_fetch_assoc']($request);
 			if (!empty($row))
 			{
 				foreach ($row as $k => $v)
@@ -1465,7 +1465,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 						$txt[$k] = $v;
 				}
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}*/
 	}
 

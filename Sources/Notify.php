@@ -48,7 +48,7 @@ if (!defined('SMF'))
 // Turn on/off notifications...
 function Notify()
 {
-	global $db_prefix, $scripturl, $txt, $topic, $ID_MEMBER, $context;
+	global $db_prefix, $scripturl, $txt, $topic, $ID_MEMBER, $context, $smfFunc;
 
 	// Make sure they aren't a guest or something - guests can't really receive notifications!
 	is_not_guest();
@@ -65,14 +65,14 @@ function Notify()
 		loadTemplate('Notify');
 
 		// Find out if they have notification set for this topic already.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}log_notify
 			WHERE ID_MEMBER = $ID_MEMBER
 				AND ID_TOPIC = $topic
 			LIMIT 1", __FILE__, __LINE__);
-		$context['notification_set'] = mysql_num_rows($request) != 0;
-		mysql_free_result($request);
+		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
+		$smfFunc['db_free_result']($request);
 
 		// Set the template variables...
 		$context['topic_href'] = $scripturl . '?topic=' . $topic . '.' . $_REQUEST['start'];
@@ -86,7 +86,7 @@ function Notify()
 		checkSession('get');
 
 		// Attempt to turn notifications on.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}log_notify
 				(ID_MEMBER, ID_TOPIC)
 			VALUES ($ID_MEMBER, $topic)", __FILE__, __LINE__);
@@ -96,7 +96,7 @@ function Notify()
 		checkSession('get');
 
 		// Just turn notifications off.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_notify
 			WHERE ID_MEMBER = $ID_MEMBER
 				AND ID_TOPIC = $topic
@@ -109,7 +109,7 @@ function Notify()
 
 function BoardNotify()
 {
-	global $db_prefix, $scripturl, $txt, $board, $ID_MEMBER, $user_info, $context;
+	global $db_prefix, $scripturl, $txt, $board, $ID_MEMBER, $user_info, $context, $smfFunc;
 
 	// Permissions are an important part of anything ;).
 	is_not_guest();
@@ -126,14 +126,14 @@ function BoardNotify()
 		loadTemplate('Notify');
 
 		// Find out if they have notification set for this topic already.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}log_notify
 			WHERE ID_MEMBER = $ID_MEMBER
 				AND ID_BOARD = $board
 			LIMIT 1", __FILE__, __LINE__);
-		$context['notification_set'] = mysql_num_rows($request) != 0;
-		mysql_free_result($request);
+		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
+		$smfFunc['db_free_result']($request);
 
 		// Set the template variables...
 		$context['board_href'] = $scripturl . '?board=' . $board . '.' . $_REQUEST['start'];
@@ -149,7 +149,7 @@ function BoardNotify()
 		checkSession('get');
 
 		// Turn notification on.  (note this just blows smoke if it's already on.)
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}log_notify
 				(ID_MEMBER, ID_BOARD)
 			VALUES ($ID_MEMBER, $board)", __FILE__, __LINE__);
@@ -160,7 +160,7 @@ function BoardNotify()
 		checkSession('get');
 
 		// Turn notification off for this board.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_notify
 			WHERE ID_MEMBER = $ID_MEMBER
 				AND ID_BOARD = $board

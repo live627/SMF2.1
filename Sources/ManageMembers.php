@@ -74,7 +74,7 @@ if (!defined('SMF'))
 
 function ViewMembers()
 {
-	global $txt, $scripturl, $context, $modSettings, $db_prefix;
+	global $txt, $scripturl, $context, $modSettings, $db_prefix, $smfFunc;
 
 	$subActions = array(
 		'all' => array('ViewMemberlist', 'moderate_forum'),
@@ -95,7 +95,7 @@ function ViewMembers()
 	loadTemplate('ManageMembers');
 
 	// Get counts on every type of activation - for sections and filtering alike.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*) AS totalMembers, is_activated
 		FROM {$db_prefix}members
 		WHERE is_activated != 1
@@ -103,9 +103,9 @@ function ViewMembers()
 	$context['activation_numbers'] = array();
 	$context['awaiting_activation'] = 0;
 	$context['awaiting_approval'] = 0;
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['activation_numbers'][$row['is_activated']] = $row['totalMembers'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	foreach ($context['activation_numbers'] as $activation_type => $total_members)
 	{
@@ -178,7 +178,7 @@ function ViewMembers()
 // View all members.
 function ViewMemberlist()
 {
-	global $txt, $scripturl, $db_prefix, $context, $modSettings, $sourcedir;
+	global $txt, $scripturl, $db_prefix, $context, $modSettings, $sourcedir, $smfFunc;
 
 	// Set the current sub action.
 	$context['sub_action'] = $_REQUEST['sa'];
@@ -210,12 +210,12 @@ function ViewMemberlist()
 		);
 		$context['postgroups'] = array();
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_GROUP, groupName, minPosts
 			FROM {$db_prefix}membergroups
 			WHERE ID_GROUP != 3
 			ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['minPosts'] == -1)
 				$context['membergroups'][] = array(
@@ -229,7 +229,7 @@ function ViewMemberlist()
 					'name' => $row['groupName']
 				);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Some data about the form fields and how they are linked to the database.
 		$params = array(
@@ -445,25 +445,25 @@ function ViewMemberlist()
 		$num_members = $modSettings['totalMembers'];
 	else
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(*)
 			FROM {$db_prefix}members
 			WHERE $where", __FILE__, __LINE__);
-		list ($num_members) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($num_members) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Construct the page links.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=viewmembers' . $context['params_url'] . ';sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $num_members, $modSettings['defaultMaxMembers']);
 	$context['start'] = (int) $_REQUEST['start'];
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, memberName, realName, emailAddress, memberIP, lastLogin, posts, is_activated
 		FROM {$db_prefix}members" . ($context['sub_action'] == 'query' && !empty($where) ? "
 		WHERE $where" : '') . "
 		ORDER BY $_REQUEST[sort]" . (!isset($_REQUEST['desc']) ? '' : ' DESC') . "
 		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Calculate number of days since last online.
 		if (empty($row['lastLogin']))
@@ -497,13 +497,13 @@ function ViewMemberlist()
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>'
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Search the member list, using one or more criteria.
 function SearchMembers()
 {
-	global $db_prefix, $context, $txt;
+	global $db_prefix, $context, $txt, $smfFunc;
 
 	// Get a list of all the membergroups and postgroups that can be selected.
 	$context['membergroups'] = array(
@@ -515,12 +515,12 @@ function SearchMembers()
 	);
 	$context['postgroups'] = array();
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, groupName, minPosts
 		FROM {$db_prefix}membergroups
 		WHERE ID_GROUP != 3
 		ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($row['minPosts'] == -1)
 			$context['membergroups'][] = array(
@@ -534,7 +534,7 @@ function SearchMembers()
 				'name' => $row['groupName']
 			);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['page_title'] = $txt['admin_members'];
 	$context['sub_template'] = 'search_members';
@@ -543,7 +543,7 @@ function SearchMembers()
 // List all members who are awaiting approval / activation
 function MembersAwaitingActivation()
 {
-	global $txt, $context, $db_prefix, $scripturl, $modSettings;
+	global $txt, $context, $db_prefix, $scripturl, $modSettings, $smfFunc;
 
 	// Not a lot here!
 	$context['page_title'] = $txt['admin_members'];
@@ -606,12 +606,12 @@ function MembersAwaitingActivation()
 	$context['sort_direction'] = !isset($_REQUEST['desc']) ? 'down' : 'up';
 
 	// Calculate the number of results.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}members
 		WHERE is_activated = $context[current_filter]", __FILE__, __LINE__);
-	list ($context['num_members']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($context['num_members']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Construct the page links.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'] . ';sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['num_members'], $modSettings['defaultMaxMembers']);
@@ -644,14 +644,14 @@ function MembersAwaitingActivation()
 			'remind' => $txt['admin_browse_w_remind'] . ' ' . $txt['admin_browse_w_email'],
 		);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, memberName, emailAddress, memberIP, dateRegistered
 		FROM {$db_prefix}members
 		WHERE is_activated = $context[current_filter]
 		ORDER BY $_REQUEST[sort]" . (!isset($_REQUEST['desc']) ? '' : ' DESC') . "
 		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
 
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['members'][] = array(
 			'id' => $row['ID_MEMBER'],
 			'username' => $row['memberName'],
@@ -661,13 +661,13 @@ function MembersAwaitingActivation()
 			'ip' => $row['memberIP'],
 			'dateRegistered' => timeformat($row['dateRegistered']),
 		);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Do the approve/activate/delete stuff
 function AdminApprove()
 {
-	global $txt, $context, $db_prefix, $scripturl, $modSettings, $sourcedir, $language, $user_info;
+	global $txt, $context, $db_prefix, $scripturl, $modSettings, $sourcedir, $language, $user_info, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -704,13 +704,13 @@ function AdminApprove()
 	}
 
 	// Get information on each of the members, things that are important to us, like email address...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, memberName, realName, emailAddress, validation_code, lngfile
 		FROM {$db_prefix}members
 		WHERE is_activated = $current_filter$condition
 		ORDER BY lngfile", __FILE__, __LINE__);
 
-	$member_count = mysql_num_rows($request);
+	$member_count = $smfFunc['db_num_rows']($request);
 
 	// If no results then just return!
 	if ($member_count == 0)
@@ -719,7 +719,7 @@ function AdminApprove()
 	$member_info = array();
 	$members = array();
 	// Fill the info array.
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$members[] = $row['ID_MEMBER'];
 		$member_info[] = array(
@@ -731,13 +731,13 @@ function AdminApprove()
 			'code' => $row['validation_code']
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Are we activating or approving the members?
 	if ($_POST['todo'] == 'ok' || $_POST['todo'] == 'okemail')
 	{
 		// Approve/activate this member.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}members
 			SET validation_code = '', is_activated = 1
 			WHERE is_activated = $current_filter$condition
@@ -780,7 +780,7 @@ function AdminApprove()
 			$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
 			// Set these members for activation - I know this includes two ID_MEMBER checks but it's safer than bodging $condition ;).
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}members
 				SET validation_code = '$validation_code', is_activated = 0
 				WHERE is_activated = $current_filter

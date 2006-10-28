@@ -351,7 +351,7 @@ function ModifyKarmaSettings()
 // You'll never guess what this function does...
 function ModifySignatureSettings()
 {
-	global $context, $txt, $modSettings, $db_prefix, $sig_start;
+	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc;
 
 	// Applying to ALL signatures?!!
 	if (isset($_GET['apply']))
@@ -364,21 +364,21 @@ function ModifySignatureSettings()
 		$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
 		$done = false;
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT MAX(ID_MEMBER)
 			FROM {$db_prefix}members", __FILE__, __LINE__);
-		list ($context['max_member']) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($context['max_member']) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		while (!$done)
 		{
 			$changes = array();
 
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_MEMBER, signature
 				FROM {$db_prefix}members
 				WHERE ID_MEMBER BETWEEN $_GET[step] AND $_GET[step] + 49", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// Apply all the rules we can realistically do.
 				$sig = strtr($row['signature'], array('<br />' => "\n"));
@@ -493,15 +493,15 @@ function ModifySignatureSettings()
 				if ($sig != $row['signature'])
 					$changes[$row['ID_MEMBER']] = addslashes($sig);
 			}
-			if (mysql_num_rows($request) == 0)
+			if ($smfFunc['db_num_rows']($request) == 0)
 				$done = true;
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			// Do we need to delete what we have?
 			if (!empty($changes))
 			{
 				foreach ($changes as $id => $sig)
-					db_query("
+					$smfFunc['db_query']("
 						UPDATE {$db_prefix}members
 						SET signature = '$sig'
 						WHERE ID_MEMBER = $id
@@ -628,17 +628,17 @@ function pauseSignatureApplySettings()
 // Show all the custom profile fields available to the user.
 function ShowCustomProfiles()
 {
-	global $txt, $scripturl, $context, $settings, $sc, $db_prefix;
+	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc;
 
 	$context['page_title'] = $txt['custom_profile_title'];
 	$context['sub_template'] = 'show_custom_profile';
 
 	// Load all the fields.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, active
 		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
 	$context['profile_fields'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['profile_fields'][] = array(
 			'id' => $row['ID_FIELD'],
@@ -649,7 +649,7 @@ function ShowCustomProfiles()
 			'active' => $row['active'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Edit some profile fields?
@@ -668,13 +668,13 @@ function EditCustomProfiles()
 
 	if ($context['fid'])
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
 				showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask
 			FROM {$db_prefix}custom_fields
 			WHERE ID_FIELD = $context[fid]", __FILE__, __LINE__);
 		$context['field'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['fieldType'] == 'textarea')
 				@list ($rows, $cols) = @explode(',', $row['defaultValue']);
@@ -705,7 +705,7 @@ function EditCustomProfiles()
 				'regex' => substr($row['mask'], 0, 5) == 'regex' ? substr($row['mask'], 5) : '',
 			);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Setup the default values as needed.
@@ -799,15 +799,15 @@ function EditCustomProfiles()
 			$unique = false;
 			while ($unique == false)
 			{
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT ID_FIELD
 					FROM {$db_prefix}custom_fields
 					WHERE colName = '$colname'", __FILE__, __LINE__);
-				if (mysql_num_rows($request) == 0)
+				if ($smfFunc['db_num_rows']($request) == 0)
 					$unique = true;
 				else
 					$colname .= rand(0, 9);
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 
 				if (strlen($colname) >= 12 && !$unique)
 					fatal_lang_error('custom_option_not_unique');
@@ -821,7 +821,7 @@ function EditCustomProfiles()
 				|| ($_POST['field_type'] == 'select' && $context['field']['type'] != 'select')
 				|| ($context['field']['type'] == 'check' && $_POST['field_type'] != 'check'))
 			{
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}themes
 					WHERE variable = '" . $context['field']['colname'] . "'
 						AND ID_MEMBER > 0", __FILE__, __LINE__);
@@ -853,7 +853,7 @@ function EditCustomProfiles()
 				{
 					// Just been renamed?
 					if (!in_array($k, $takenKeys) && !empty($newOptions[$k]))
-						db_query("
+						$smfFunc['db_query']("
 							UPDATE {$db_prefix}themes
 							SET value = '" . $newOptions[$k] . "'
 							WHERE variable = '" . $context['field']['colname'] . "'
@@ -867,7 +867,7 @@ function EditCustomProfiles()
 		// Do the insertion/updates.
 		if ($context['fid'])
 		{
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}custom_fields
 				SET fieldName = '$_POST[field_name]', fieldDesc = '$_POST[field_desc]',
 					fieldType = '$_POST[field_type]', fieldLength = $fieldLength,
@@ -878,7 +878,7 @@ function EditCustomProfiles()
 
 			// Just clean up any old selects - these are a pain!
 			if ($_POST['field_type'] == 'select' && !empty($newOptions))
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}themes
 					WHERE variable = '" . $context['field']['colname'] . "'
 						AND value NOT IN ('" . implode("', '", $newOptions) . "')
@@ -886,7 +886,7 @@ function EditCustomProfiles()
 		}
 		else
 		{
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}custom_fields
 					(colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
 					showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask)
@@ -900,12 +900,12 @@ function EditCustomProfiles()
 	elseif (isset($_POST['delete']) && $context['field']['colname'])
 	{
 		// Delete the user data first.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}themes
 			WHERE variable = '" . $context['field']['colname'] . "'
 				AND ID_MEMBER > 0", __FILE__, __LINE__);
 		// Finally - the field itself is gone!
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}custom_fields
 			WHERE ID_FIELD = $context[fid]
 			LIMIT 1", __FILE__, __LINE__);
@@ -914,18 +914,18 @@ function EditCustomProfiles()
 	// Rebuild display cache etc.
 	if (isset($_POST['delete']) || isset($_POST['save']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT colName, fieldName
 			FROM {$db_prefix}custom_fields
 			WHERE showDisplay = 1
 				AND active = 1
 				AND private = 0", __FILE__, __LINE__);
 		$fields = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$fields[] = strtr($row['colName'], array('|' => '', ';' => '')) . ';' . strtr($row['fieldName'], array('|' => '', ';' => ''));
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		$fields = implode('|', $fields);
 		updateSettings(array('displayFields' => strtr($fields, array("'" => "\'"))));

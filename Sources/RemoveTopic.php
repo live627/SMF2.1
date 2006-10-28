@@ -45,7 +45,7 @@ if (!defined('SMF'))
 // Completely remove an entire topic.
 function RemoveTopic2()
 {
-	global $ID_MEMBER, $db_prefix, $topic, $board, $sourcedir;
+	global $ID_MEMBER, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
 
 	// Make sure they aren't being lead around by someone. (:@)
 	checkSession('get');
@@ -53,14 +53,14 @@ function RemoveTopic2()
 	// This file needs to be included for sendNotifications().
 	require_once($sourcedir . '/Subs-Post.php');
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT t.ID_MEMBER_STARTED, ms.subject, t.approved
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ms)
 		WHERE t.ID_TOPIC = $topic
 			AND ms.ID_MSG = t.ID_FIRST_MSG
 		LIMIT 1", __FILE__, __LINE__);
-	list ($starter, $subject, $approved) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($starter, $subject, $approved) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	if ($starter == $ID_MEMBER && !allowedTo('remove_any'))
 		isAllowedTo('remove_own');
@@ -85,21 +85,21 @@ function RemoveTopic2()
 // Remove just a single post.
 function DeleteMessage()
 {
-	global $ID_MEMBER, $db_prefix, $topic, $board, $modSettings;
+	global $ID_MEMBER, $db_prefix, $topic, $board, $modSettings, $smfFunc;
 
 	checkSession('get');
 
 	$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT t.ID_MEMBER_STARTED, m.ID_MEMBER, m.subject, m.posterTime, m.approved
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
 		WHERE t.ID_TOPIC = $topic
 			AND m.ID_TOPIC = $topic
 			AND m.ID_MSG = $_REQUEST[msg]
 		LIMIT 1", __FILE__, __LINE__);
-	list ($starter, $poster, $subject, $post_time, $approved) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($starter, $poster, $subject, $post_time, $approved) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Verify they can see this!
 	if (!$approved)
@@ -137,7 +137,7 @@ function DeleteMessage()
 // So long as you are sure... all old posts will be gone.
 function RemoveOldTopics2()
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	isAllowedTo('admin_forum');
 	checkSession('post', 'admin');
@@ -168,16 +168,16 @@ function RemoveOldTopics2()
 			AND t.isSticky = 0';
 
 	// All we're gonna do here is grab the ID_TOPICs and send them to removeTopics().
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT t.ID_TOPIC
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
 		WHERE m.ID_MSG = t.ID_LAST_MSG
 			AND m.posterTime < " . (time() - 3600 * 24 * $_POST['maxdays']) . "$condition
 			AND t.ID_BOARD IN (" . implode(', ', array_keys($_POST['boards'])) . ')', __FILE__, __LINE__);
 	$topics = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$topics[] = $row['ID_TOPIC'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	removeTopics($topics, false, true);
 
@@ -190,7 +190,7 @@ function RemoveOldTopics2()
 // Removes the passed ID_TOPICs. (permissions are NOT checked here!)
 function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = false)
 {
-	global $db_prefix, $sourcedir, $modSettings;
+	global $db_prefix, $sourcedir, $modSettings, $smfFunc;
 
 	// Nothing to do?
 	if (empty($topics))
@@ -210,7 +210,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	// Decrease the post counts.
 	if ($decreasePostCount)
 	{
-		$requestMembers = db_query("
+		$requestMembers = $smfFunc['db_query']("
 			SELECT m.ID_MEMBER, COUNT(*) AS posts
 			FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
 			WHERE m.ID_TOPIC $condition
@@ -218,39 +218,39 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 				AND m.icon != 'recycled'
 				AND b.countPosts = 0
 			GROUP BY m.ID_MEMBER", __FILE__, __LINE__);
-		if (mysql_num_rows($requestMembers) > 0)
+		if ($smfFunc['db_num_rows']($requestMembers) > 0)
 		{
-			while ($rowMembers = mysql_fetch_assoc($requestMembers))
+			while ($rowMembers = $smfFunc['db_fetch_assoc']($requestMembers))
 				updateMemberData($rowMembers['ID_MEMBER'], array('posts' => 'posts - ' . $rowMembers['posts']));
 		}
-		mysql_free_result($requestMembers);
+		$smfFunc['db_free_result']($requestMembers);
 	}
 
 	// Recycle topics that aren't in the recycle board...
 	if (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 && !$ignoreRecycling)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_TOPIC
 			FROM {$db_prefix}topics
 			WHERE ID_TOPIC $condition
 				AND ID_BOARD != $modSettings[recycle_board]
 			LIMIT " . count($topics), __FILE__, __LINE__);
-		if (mysql_num_rows($request) > 0)
+		if ($smfFunc['db_num_rows']($request) > 0)
 		{
 			// Get topics that will be recycled.
 			$recycleTopics = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$recycleTopics[] = $row['ID_TOPIC'];
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			// Mark recycled topics as recycled.
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}messages
 				SET icon = 'recycled'
 				WHERE ID_TOPIC IN (" . implode(', ', $recycleTopics) . ")", __FILE__, __LINE__);
 
 			// De-sticky and unlock topics.
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}topics
 				SET
 					locked = 0,
@@ -268,7 +268,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			$condition = 'IN (' . implode(', ', $topics) . ')';
 		}
 		else
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 	}
 
 	// Still topics left to delete?
@@ -278,13 +278,13 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	$adjustBoards = array();
 
 	// Find out how many posts we are deleting.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_BOARD, approved, COUNT(*) AS numTopics, SUM(unapprovedPosts) AS unapprovedPosts,
 			SUM(numReplies) AS numReplies
 		FROM {$db_prefix}topics
 		WHERE ID_TOPIC $condition
 		GROUP BY ID_BOARD, approved", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($adjustBoards[$row['ID_BOARD']]['numPosts']))
 		{
@@ -306,12 +306,12 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		else
 			$adjustBoards[$row['ID_BOARD']]['unapprovedTopics'] += $row['numTopics'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Decrease the posts/topics...
 	foreach ($adjustBoards as $stats)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET
 				numPosts = IF($stats[numPosts] > numPosts, 0, numPosts - $stats[numPosts]),
@@ -323,29 +323,29 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	}
 
 	// Remove Polls.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_POLL
 		FROM {$db_prefix}topics
 		WHERE ID_TOPIC $condition
 			AND ID_POLL > 0
 		LIMIT " . count($topics), __FILE__, __LINE__);
 	$polls = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$polls[] = $row['ID_POLL'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (!empty($polls))
 	{
 		$pollCondition = count($polls) == 1 ? '= ' . $polls[0] : 'IN (' . implode(', ', $polls) . ')';
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}polls
 			WHERE ID_POLL $pollCondition
 			LIMIT " . count($polls), __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}poll_choices
 			WHERE ID_POLL $pollCondition", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_polls
 			WHERE ID_POLL $pollCondition", __FILE__, __LINE__);
 	}
@@ -361,43 +361,43 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 
 		$words = array();
 		$messages = array();
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MSG, body
 			FROM {$db_prefix}messages
 			WHERE ID_TOPIC $condition", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$words = array_merge($words, text2words($row['body'], $customIndexSettings['bytes_per_word'], true));
 			$messages[] = $row['ID_MSG'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 		$words = array_unique($words);
 
 		if (!empty($words) && !empty($messages))
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_search_words
 				WHERE ID_WORD IN (" . implode(', ', $words) . ")
 					AND ID_MSG IN (" . implode(', ', $messages) . ')', __FILE__, __LINE__);
 	}
 
 	// Delete anything related to the topic.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}messages
 		WHERE ID_TOPIC $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}calendar
 		WHERE ID_TOPIC $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_topics
 		WHERE ID_TOPIC $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_notify
 		WHERE ID_TOPIC $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}topics
 		WHERE ID_TOPIC $condition
 		LIMIT " . count($topics), __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_search_subjects
 		WHERE ID_TOPIC $condition", __FILE__, __LINE__);
 
@@ -416,12 +416,12 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 // Remove a specific message (including permission checks).
 function removeMessage($message, $decreasePostCount = true)
 {
-	global $db_prefix, $board, $sourcedir, $modSettings, $ID_MEMBER, $user_info;
+	global $db_prefix, $board, $sourcedir, $modSettings, $ID_MEMBER, $user_info, $smfFunc;
 
 	if (empty($message) || !is_numeric($message))
 		return false;
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			m.ID_MEMBER, m.icon, m.posterTime, m.subject," . (empty($modSettings['search_custom_index_config']) ? '' : ' m.body,') . "
 			m.approved, t.ID_TOPIC, t.ID_FIRST_MSG, t.ID_LAST_MSG, t.numReplies, t.ID_BOARD,
@@ -432,10 +432,10 @@ function removeMessage($message, $decreasePostCount = true)
 			AND t.ID_TOPIC = m.ID_TOPIC
 			AND b.ID_BOARD = t.ID_BOARD
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		return false;
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($board) || $row['ID_BOARD'] != $board)
 	{
@@ -547,22 +547,22 @@ function removeMessage($message, $decreasePostCount = true)
 	if (!empty($modSettings['recycle_enable']) && $row['ID_BOARD'] != $modSettings['recycle_board'] && $row['icon'] != 'recycled')
 	{
 		// Check if the recycle board exists and if so get the read status.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT (IFNULL(lb.ID_MSG, 0) >= b.ID_MSG_UPDATED) AS isSeen
 			FROM {$db_prefix}boards AS b
 				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = $ID_MEMBER)
 			WHERE b.ID_BOARD = $modSettings[recycle_board]", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('recycle_no_valid_board');
-		list ($isRead) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($isRead) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		// Even if it's being recycled respect approval state.
 		$unapprovedPosts = $row['approved'] ? 0 : 1;
 		$approved = !$unapprovedPosts;
 
 		// Insert a new topic in the recycle board.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}topics
 				(ID_BOARD, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, ID_FIRST_MSG, ID_LAST_MSG, unapprovedPosts, approved)
 			VALUES ($modSettings[recycle_board], $row[ID_MEMBER], $row[ID_MEMBER], $message, $message, $unapprovedPosts, $approved)", __FILE__, __LINE__);
@@ -573,7 +573,7 @@ function removeMessage($message, $decreasePostCount = true)
 		// If the topic creation went successful, move the message.
 		if ($topicID > 0)
 		{
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}messages
 				SET
 					ID_TOPIC = $topicID,
@@ -583,7 +583,7 @@ function removeMessage($message, $decreasePostCount = true)
 				LIMIT 1", __FILE__, __LINE__);
 
 			// Take any reported posts with us...
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}log_reported
 				SET
 					ID_TOPIC = $topicID,
@@ -592,21 +592,21 @@ function removeMessage($message, $decreasePostCount = true)
 
 			// Mark recycled topic as read.
 			if (!$user_info['is_guest'])
-				db_query("
+				$smfFunc['db_query']("
 					REPLACE INTO {$db_prefix}log_topics
 						(ID_TOPIC, ID_MEMBER, ID_MSG)
 					VALUES ($topicID, $ID_MEMBER, $modSettings[maxMsgID])", __FILE__, __LINE__);
 
 			// Mark recycle board as seen, if it was marked as seen before.
 			if (!empty($isRead) && !$user_info['is_guest'])
-				db_query("
+				$smfFunc['db_query']("
 					REPLACE INTO {$db_prefix}log_boards
 						(ID_BOARD, ID_MEMBER, ID_MSG)
 					VALUES ($modSettings[recycle_board], $ID_MEMBER, $modSettings[maxMsgID])", __FILE__, __LINE__);
 
 			// Add one topic and post to the recycle bin board.
 			if ($approved)
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET
 						numTopics = numTopics + 1,
@@ -614,7 +614,7 @@ function removeMessage($message, $decreasePostCount = true)
 					WHERE ID_BOARD = $modSettings[recycle_board]
 					LIMIT 1", __FILE__, __LINE__);
 			else
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET
 						unapprovedTopics = unapprovedTopics + 1,
@@ -638,17 +638,17 @@ function removeMessage($message, $decreasePostCount = true)
 	if ($row['ID_LAST_MSG'] == $message)
 	{
 		// Find the last message, set it, and decrease the post count.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MSG, ID_MEMBER
 			FROM {$db_prefix}messages
 			WHERE ID_TOPIC = $row[ID_TOPIC]
 				AND ID_MSG != $message
 			ORDER BY approved DESC, ID_MSG DESC
 			LIMIT 1", __FILE__, __LINE__);
-		$row2 = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$row2 = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}topics
 			SET
 				ID_LAST_MSG = $row2[ID_MSG],
@@ -660,7 +660,7 @@ function removeMessage($message, $decreasePostCount = true)
 	}
 	// Only decrease post counts.
 	else
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}topics
 			SET " . ($row['approved'] ? "
 				numReplies = IF(numReplies = 0, 0, numReplies - 1)" : "
@@ -668,7 +668,7 @@ function removeMessage($message, $decreasePostCount = true)
 			WHERE ID_TOPIC = $row[ID_TOPIC]
 			LIMIT 1", __FILE__, __LINE__);
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}boards
 		SET " . ($row['approved'] ? "
 			numPosts = IF(numPosts = 0, 0, numPosts - 1)" : "
@@ -685,7 +685,7 @@ function removeMessage($message, $decreasePostCount = true)
 	if (!$recycle)
 	{
 		// Remove the message!
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}messages
 			WHERE ID_MSG = $message
 			LIMIT 1", __FILE__, __LINE__);
@@ -695,7 +695,7 @@ function removeMessage($message, $decreasePostCount = true)
 			$customIndexSettings = unserialize($modSettings['search_custom_index_config']);
 			$words = text2words($row['body'], $customIndexSettings['bytes_per_word'], true);
 			if (!empty($words))
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}log_search_words
 					WHERE ID_WORD IN (" . implode(', ', $words) . ")
 						AND ID_MSG = $message", __FILE__, __LINE__);

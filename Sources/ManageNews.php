@@ -187,7 +187,7 @@ function EditNews()
 
 function SelectMailingMembers()
 {
-	global $txt, $db_prefix, $context, $modSettings;
+	global $txt, $db_prefix, $context, $modSettings, $smfFunc;
 
 	$context['page_title'] = $txt['admin_newsletters'];
 
@@ -209,13 +209,13 @@ function SelectMailingMembers()
 	}
 
 	// Get all the extra groups as well as Administrator and Global Moderator.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mg.ID_GROUP, mg.groupName, mg.minPosts
 		FROM {$db_prefix}membergroups AS mg" . (empty($modSettings['permission_enable_postgroups']) ? "
 		WHERE mg.minPosts = -1" : '') . "
 		GROUP BY mg.ID_GROUP
 		ORDER BY mg.minPosts, IF(mg.ID_GROUP < 4, mg.ID_GROUP, 4), mg.groupName", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['groups'][$row['ID_GROUP']] = array(
 			'id' => $row['ID_GROUP'],
@@ -228,35 +228,35 @@ function SelectMailingMembers()
 		else
 			$postGroups[$row['ID_GROUP']] = $row['ID_GROUP'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// If we have post groups, let's count the number of members...
 	if (!empty($postGroups))
 	{
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT mem.ID_POST_GROUP AS ID_GROUP, COUNT(*) AS member_count
 			FROM {$db_prefix}members AS mem
 			WHERE mem.ID_POST_GROUP IN (" . implode(', ', $postGroups) . ")
 			GROUP BY mem.ID_POST_GROUP", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['ID_GROUP']]['member_count'] += $row['member_count'];
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 	}
 
 	if (!empty($normalGroups))
 	{
 		// Find people who are members of this group...
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT ID_GROUP, COUNT(*) AS member_count
 			FROM {$db_prefix}members
 			WHERE ID_GROUP IN (" . implode(',', $normalGroups) . ")
 			GROUP BY ID_GROUP", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['ID_GROUP']]['member_count'] += $row['member_count'];
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 
 		// Also do those who have it as an additional membergroup - this ones more yucky...
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT mg.ID_GROUP, COUNT(*) AS member_count
 			FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
 			WHERE mg.ID_GROUP IN (" . implode(',', $normalGroups) . ")
@@ -264,18 +264,18 @@ function SelectMailingMembers()
 				AND mem.ID_GROUP != mg.ID_GROUP
 				AND FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups)
 			GROUP BY mg.ID_GROUP", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['ID_GROUP']]['member_count'] += $row['member_count'];
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 	}
 
 	// Any moderators?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(DISTINCT ID_MEMBER) AS num_distinct_mods
 		FROM {$db_prefix}moderators
 		LIMIT 1", __FILE__, __LINE__);
-	list ($context['groups'][3]['member_count']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($context['groups'][3]['member_count']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['can_send_pm'] = allowedTo('pm_send');
 }
@@ -283,7 +283,7 @@ function SelectMailingMembers()
 // Email your members...
 function ComposeMailing()
 {
-	global $txt, $db_prefix, $sourcedir, $context;
+	global $txt, $db_prefix, $sourcedir, $context, $smfFunc;
 
 	$list = array();
 	$do_pm = !empty($_POST['sendPM']);
@@ -293,7 +293,7 @@ function ComposeMailing()
 				AND mem.notifyAnnouncements = 1';
 				
 	// Get a list of all full banned users.  Use their Username and email to find them.  Only get the ones that can't login to turn off notification.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mem.ID_MEMBER
 		FROM {$db_prefix}ban_groups AS bg
 		LEFT JOIN {$db_prefix}ban_items AS bi ON (bg.ID_BAN_GROUP = bi.ID_BAN_GROUP)
@@ -303,9 +303,9 @@ function ComposeMailing()
 		GROUP BY mem.ID_MEMBER", __FILE__, __LINE__);
 
 	$banMembers = array();
-	while ($row = mysql_fetch_row($request))
+	while ($row = $smfFunc['db_fetch_row']($request))
 		list ($banMembers[]) = $row;
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$condition .= empty($banMembers) ? '' : '
 				AND mem.ID_MEMBER NOT IN (' . implode(', ', $banMembers) . ')';
@@ -313,14 +313,14 @@ function ComposeMailing()
 	// Did they select moderators too?
 	if (!empty($_POST['who']) && in_array(3, $_POST['who']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT DISTINCT " . ($do_pm ? 'mem.memberName' : 'mem.emailAddress') . " AS identifier
 			FROM ({$db_prefix}members AS mem, {$db_prefix}moderators AS mods)
 			WHERE mem.ID_MEMBER = mods.ID_MEMBER
 				AND mem.is_activated = 1$condition", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$list[] = $row['identifier'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		unset($_POST['who'][3], $_POST['who'][3]);
 	}
@@ -328,14 +328,14 @@ function ComposeMailing()
 	// How about regular members?
 	if (!empty($_POST['who']) && in_array(0, $_POST['who']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT " . ($do_pm ? 'mem.memberName' : 'mem.emailAddress') . " AS identifier
 			FROM {$db_prefix}members AS mem
 			WHERE mem.ID_GROUP = 0
 				AND mem.is_activated = 1$condition", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$list[] = $row['identifier'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		unset($_POST['who'][0], $_POST['who'][0]);
 	}
@@ -346,15 +346,15 @@ function ComposeMailing()
 		foreach ($_POST['who'] as $k => $v)
 			$_POST['who'][$k] = (int) $v;
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT " . ($do_pm ? 'mem.memberName' : 'mem.emailAddress') . " AS identifier
 			FROM ({$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
 			WHERE (mg.ID_GROUP = mem.ID_GROUP OR FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups) OR mg.ID_GROUP = mem.ID_POST_GROUP)
 				AND mg.ID_GROUP IN (" . implode(',', $_POST['who']) . ")
 				AND mem.is_activated = 1$condition", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$list[] = $row['identifier'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Tear out duplicates....
@@ -383,7 +383,7 @@ function ComposeMailing()
 
 function SendMailing()
 {
-	global $txt, $db_prefix, $sourcedir, $context;
+	global $txt, $db_prefix, $sourcedir, $context, $smfFunc;
 	global $scripturl, $modSettings, $user_info;
 
 	checkSession();
@@ -476,11 +476,11 @@ function SendMailing()
 			$_POST['message'] = '<html>' . $_POST['message'] . '</html>';
 	}
 
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT realName, memberName, ID_MEMBER, emailAddress
 		FROM {$db_prefix}members
 		WHERE emailAddress IN ('" . implode("', '", $send_list) . "')", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		unset($send_list[$row['emailAddress']]);
 
@@ -494,7 +494,7 @@ function SendMailing()
 		// Send the actual email off, replacing the member dependent variables.
 		sendmail($row['emailAddress'], str_replace($from_member, $to_member, addslashes($_POST['subject'])), str_replace($from_member, $to_member, addslashes($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// Send the emails to people who weren't members....
 	if (!empty($send_list))

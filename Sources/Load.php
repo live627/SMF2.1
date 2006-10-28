@@ -28,7 +28,6 @@ if (!defined('SMF'))
 
 	void reloadSettings()
 		- loads or reloads the $modSettings array.
-		- takes care of mysql_set_mode, if set.
 		- loads any integration settings, SMF_INTEGRATION_SETTINGS, etc.
 
 	void loadUserSettings()
@@ -102,6 +101,10 @@ if (!defined('SMF'))
 	void loadSession()
 		// !!!
 
+	void loadDatabase()
+		- takes care of mysql_set_mode, if set.
+		// !!!
+
 	bool sessionOpen(string session_save_path, string session_name)
 	bool sessionClose()
 	bool sessionRead(string session_id)
@@ -139,21 +142,21 @@ function reloadSettings()
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (isset($db_character_set))
-		db_query("
+		$smfFunc['db_query']("
 			SET NAMES $db_character_set", __FILE__, __LINE__);
 
 	// Try to load it from the cache first; it'll never get cached if the setting is off.
 	if (($modSettings = cache_get_data('modSettings', 90)) == null)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT variable, value
 			FROM {$db_prefix}settings", false, false);
 		$modSettings = array();
 		if (!$request)
 			db_fatal_error();
-		while ($row = mysql_fetch_row($request))
+		while ($row = $smfFunc['db_fetch_row']($request))
 			$modSettings[$row[0]] = $row[1];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 
 		// Do a few things to protect against missing settings or settings with invalid values...
@@ -289,7 +292,7 @@ function reloadSettings()
 // Load all the important user information...
 function loadUserSettings()
 {
-	global $modSettings, $user_settings, $sourcedir;
+	global $modSettings, $user_settings, $sourcedir, $smfFunc;
 	global $ID_MEMBER, $db_prefix, $cookiename, $user_info, $language;
 
 	// Check first the integration, then the cookie, and last the session.
@@ -327,14 +330,14 @@ function loadUserSettings()
 		// Is the member data cached?
 		if (empty($modSettings['cache_enable']) || $modSettings['cache_enable'] < 2 || ($user_settings = cache_get_data('user_settings-' . $ID_MEMBER, 60)) == null)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT mem.*, IFNULL(a.ID_ATTACH, 0) AS ID_ATTACH, a.filename, a.attachmentType
 				FROM {$db_prefix}members AS mem
 					LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_MEMBER = $ID_MEMBER)
 				WHERE mem.ID_MEMBER = $ID_MEMBER
 				LIMIT 1", __FILE__, __LINE__);
-			$user_settings = mysql_fetch_assoc($request);
-			mysql_free_result($request);
+			$user_settings = $smfFunc['db_fetch_assoc']($request);
+			$smfFunc['db_free_result']($request);
 
 			if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 				cache_put_data('user_settings-' . $ID_MEMBER, $user_settings, 60);
@@ -370,13 +373,13 @@ function loadUserSettings()
 		if (SMF != 'SSI' && !isset($_REQUEST['xml']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != '.xml') && empty($_SESSION['ID_MSG_LAST_VISIT']) && (empty($modSettings['cache_enable']) || ($_SESSION['ID_MSG_LAST_VISIT'] = cache_get_data('user_last_visit-' . $ID_MEMBER, 5 * 3600)) === null))
 		{
 			// Do a quick query to make sure this isn't a mistake.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT posterTime
 				FROM {$db_prefix}messages
 				WHERE ID_MSG = $user_settings[ID_MSG_LAST_VISIT]
 				LIMIT 1", __FILE__, __LINE__);
-			list ($visitTime) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($visitTime) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 
 			$_SESSION['ID_MSG_LAST_VISIT'] = $user_settings['ID_MSG_LAST_VISIT'];
 
@@ -492,7 +495,7 @@ function loadUserSettings()
 function loadBoard()
 {
 	global $txt, $db_prefix, $scripturl, $context, $modSettings;
-	global $board_info, $board, $topic, $user_info;
+	global $board_info, $board, $topic, $user_info, $smfFunc;
 
 	// Assume they are not a moderator.
 	$user_info['is_mod'] = false;
@@ -510,17 +513,17 @@ function loadBoard()
 		// Looking through the message table can be slow, so try using the cache first.
 		if (($topic = cache_get_data('msg_topic-' . $_REQUEST['msg'], 120)) === NULL)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_TOPIC
 				FROM {$db_prefix}messages
 				WHERE ID_MSG = $_REQUEST[msg]
 				LIMIT 1", __FILE__, __LINE__);
 
 			// So did it find anything?
-			if (mysql_num_rows($request))
+			if ($smfFunc['db_num_rows']($request))
 			{
-				list ($topic) = mysql_fetch_row($request);
-				mysql_free_result($request);
+				list ($topic) = $smfFunc['db_fetch_row']($request);
+				$smfFunc['db_free_result']($request);
 				// Save save save.
 				cache_put_data('msg_topic-' . $_REQUEST['msg'], $topic, 120);
 			}
@@ -561,7 +564,7 @@ function loadBoard()
 
 	if (empty($temp))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				c.ID_CAT, b.name AS bname, b.description, b.numTopics, b.memberGroups,
 				b.ID_PARENT, c.name AS cname, IFNULL(mem.ID_MEMBER, 0) AS ID_MODERATOR,
@@ -575,9 +578,9 @@ function loadBoard()
 			WHERE b.ID_BOARD = " . (empty($topic) ? $board : "t.ID_BOARD
 				AND t.ID_TOPIC = $topic"), __FILE__, __LINE__);
 		// If there aren't any, skip.
-		if (mysql_num_rows($request) > 0)
+		if ($smfFunc['db_num_rows']($request) > 0)
 		{
-			$row = mysql_fetch_assoc($request);
+			$row = $smfFunc['db_fetch_assoc']($request);
 
 			// Set the current board.
 			if (!empty($row['ID_BOARD']))
@@ -618,7 +621,7 @@ function loadBoard()
 						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['realName'] . '</a>'
 					);
 			}
-			while ($row = mysql_fetch_assoc($request));
+			while ($row = $smfFunc['db_fetch_assoc']($request));
 
 			if (!empty($modSettings['cache_enable']) && (empty($topic) || $modSettings['cache_enable'] == 3))
 			{
@@ -638,7 +641,7 @@ function loadBoard()
 			$topic = null;
 			$board = 0;
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	if (!empty($topic))
@@ -698,7 +701,7 @@ function loadBoard()
 // Load this user's permissions.
 function loadPermissions()
 {
-	global $user_info, $db_prefix, $board, $board_info, $modSettings;
+	global $user_info, $db_prefix, $board, $board_info, $modSettings, $smfFunc;
 
 	if ($user_info['is_admin'])
 	{
@@ -726,19 +729,19 @@ function loadPermissions()
 	if (empty($user_info['permissions']))
 	{
 		// Get the general permissions.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT permission, addDeny
 			FROM {$db_prefix}permissions
 			WHERE ID_GROUP IN (" . implode(', ', $user_info['groups']) . ')', __FILE__, __LINE__);
 		$removals = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['addDeny']))
 				$removals[] = $row['permission'];
 			else
 				$user_info['permissions'][] = $row['permission'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (isset($cache_groups))
 			cache_put_data('permissions:' . $cache_groups, array($user_info['permissions'], $removals), 240);
@@ -751,19 +754,19 @@ function loadPermissions()
 		if (!isset($board_info['profile']))
 			fatal_lang_error('smf232');
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT permission, addDeny
 			FROM {$db_prefix}board_permissions
 			WHERE ID_GROUP IN (" . implode(', ', $user_info['groups']) . ")
 				AND ID_PROFILE = $board_info[profile]", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['addDeny']))
 				$removals[] = $row['permission'];
 			else
 				$user_info['permissions'][] = $row['permission'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Remove all the permissions they shouldn't have ;).
@@ -780,7 +783,7 @@ function loadPermissions()
 // Loads an array of users' data by ID or memberName.
 function loadMemberData($users, $is_name = false, $set = 'normal')
 {
-	global $user_profile, $db_prefix, $modSettings, $board_info;
+	global $user_profile, $db_prefix, $modSettings, $board_info, $smfFunc;
 
 	// Can't just look for no users :P.
 	if (empty($users))
@@ -856,30 +859,30 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	if (!empty($users))
 	{
 		// Load the member's data.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT$select_columns
 			FROM {$db_prefix}members AS mem$select_tables
 			WHERE mem." . ($is_name ? 'memberName' : 'ID_MEMBER') . (count($users) == 1 ? " = '" . current($users) . "'" : " IN ('" . implode("', '", $users) . "')"), __FILE__, __LINE__);
 		$new_loaded_ids = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$new_loaded_ids[] = $row['ID_MEMBER'];
 			$loaded_ids[] = $row['ID_MEMBER'];
 			$row['options'] = array();
 			$user_profile[$row['ID_MEMBER']] = $row;
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	if (!empty($new_loaded_ids) && $set !== 'minimal')
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT *
 			FROM {$db_prefix}themes
 			WHERE ID_MEMBER" . (count($new_loaded_ids) == 1 ? ' = ' . $new_loaded_ids[0] : ' IN (' . implode(', ', $new_loaded_ids) . ')'), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$user_profile[$row['ID_MEMBER']]['options'][$row['variable']] = $row['value'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	if (!empty($new_loaded_ids) && !empty($modSettings['cache_enable']) && $modSettings['cache_enable'] == 3)
@@ -893,13 +896,13 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	{
 		if (($row = cache_get_data('moderator_group_info', 480)) == null)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT groupName AS member_group, onlineColor AS member_group_color, stars
 				FROM {$db_prefix}membergroups
 				WHERE ID_GROUP = 3
 				LIMIT 1", __FILE__, __LINE__);
-			$row = mysql_fetch_assoc($request);
-			mysql_free_result($request);
+			$row = $smfFunc['db_fetch_assoc']($request);
+			$smfFunc['db_free_result']($request);
 
 			cache_put_data('moderator_group_info', $row, 480);
 		}
@@ -1073,7 +1076,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 {
 	global $user_info, $user_settings, $board_info, $sc;
 	global $db_prefix, $txt, $boardurl, $scripturl, $mbname, $modSettings;
-	global $context, $settings, $options, $sourcedir, $ssi_theme;
+	global $context, $settings, $options, $sourcedir, $ssi_theme, $smfFunc;
 
 	// The theme was specified by parameter.
 	if (!empty($ID_THEME))
@@ -1130,13 +1133,13 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 	if (empty($flag))
 	{
 			// Load variables from the current or default theme, global or this user's.
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT variable, value, ID_MEMBER, ID_THEME
 			FROM {$db_prefix}themes
 			WHERE ID_MEMBER" . (empty($themeData[0]) ? " IN (-1, 0, $member)" : " = $member") . "
 				AND ID_THEME" . ($ID_THEME == 1 ? ' = 1' : " IN ($ID_THEME, 1)"), __FILE__, __LINE__);
 		// Pick between $settings and $options depending on whose data it is.
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// If this is the theme_dir of the default theme, store it.
 			if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['ID_THEME'] == '1' && empty($row['ID_MEMBER']))
@@ -1146,7 +1149,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 			if (!isset($themeData[$row['ID_MEMBER']][$row['variable']]) || $row['ID_THEME'] != '1')
 				$themeData[$row['ID_MEMBER']][$row['variable']] = substr($row['variable'], 0, 5) == 'show_' ? $row['value'] == '1' : $row['value'];
 		}
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 
 		if (!empty($themeData[-1]))
 			foreach ($themeData[-1] as $k => $v)
@@ -1585,14 +1588,14 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 // Get all parent boards (requires first parent as parameter)
 function getBoardParents($id_parent)
 {
-	global $db_prefix, $scripturl, $txt;
+	global $db_prefix, $scripturl, $txt, $smfFunc;
 
 	$boards = array();
 
 	// Loop while the parent is non-zero.
 	while ($id_parent != 0)
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT
 				b.ID_PARENT, b.name, $id_parent AS ID_BOARD, IFNULL(mem.ID_MEMBER, 0) AS ID_MODERATOR,
 				mem.realName, b.childLevel
@@ -1601,9 +1604,9 @@ function getBoardParents($id_parent)
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = mods.ID_MEMBER)
 			WHERE b.ID_BOARD = $id_parent", __FILE__, __LINE__);
 		// In the EXTREMELY unlikely event this happens, give an error message.
-		if (mysql_num_rows($result) == 0)
+		if ($smfFunc['db_num_rows']($result) == 0)
 			fatal_lang_error('parent_not_found', 'critical');
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			if (!isset($boards[$row['ID_BOARD']]))
 			{
@@ -1627,7 +1630,7 @@ function getBoardParents($id_parent)
 					);
 				}
 		}
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 	}
 
 	return $boards;
@@ -1670,20 +1673,20 @@ function &censorText(&$text)
 // Create a little jumpto box.
 function loadJumpTo()
 {
-	global $db_prefix, $context, $user_info;
+	global $db_prefix, $context, $user_info, $smfFunc;
 
 	if (isset($context['jump_to']))
 		return;
 
 	// Find the boards/cateogories they can see.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.childLevel
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$context['jump_to'] = array();
 	$this_cat = array('id' => -1);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($this_cat['id'] != $row['ID_CAT'])
 		{
@@ -1700,7 +1703,7 @@ function loadJumpTo()
 			'is_current' => isset($context['current_board']) && $row['ID_BOARD'] == $context['current_board']
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Load the template/language file using eval or require? (with eval we can show an error message!)
@@ -1974,32 +1977,32 @@ function sessionClose()
 
 function sessionRead($session_id)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// Look for it in the database.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT data
 		FROM {$db_prefix}sessions
 		WHERE session_id = '" . addslashes($session_id) . "'
 		LIMIT 1", __FILE__, __LINE__);
-	list ($sess_data) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($sess_data) = $smfFunc['db_fetch_row']($result);
+	$smfFunc['db_free_result']($result);
 
 	return $sess_data;
 }
 
 function sessionWrite($session_id, $data)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// First try to update an existing row...
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		UPDATE {$db_prefix}sessions
 		SET data = '" . addslashes($data) . "', last_update = " . time() . "
 		WHERE session_id = '" . addslashes($session_id) . "'
@@ -2007,7 +2010,7 @@ function sessionWrite($session_id, $data)
 
 	// If that didn't work, try inserting a new one.
 	if (db_affected_rows() == 0)
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}sessions
 				(session_id, data, last_update)
 			VALUES ('" . addslashes($session_id) . "', '" . addslashes($data) . "', " . time() . ")", __FILE__, __LINE__);
@@ -2017,13 +2020,13 @@ function sessionWrite($session_id, $data)
 
 function sessionDestroy($session_id)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	if (preg_match('~^[A-Za-z0-9]{16,32}$~', $session_id) == 0)
 		return false;
 
 	// Just delete the row...
-	return db_query("
+	return $smfFunc['db_query']("
 		DELETE FROM {$db_prefix}sessions
 		WHERE session_id = '" . addslashes($session_id) . "'
 		LIMIT 1", __FILE__, __LINE__);
@@ -2031,16 +2034,37 @@ function sessionDestroy($session_id)
 
 function sessionGC($max_lifetime)
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	// Just set to the default or lower?  Ignore it for a higher value. (hopefully)
 	if (!empty($modSettings['databaseSession_lifetime']) && ($max_lifetime <= 1440 || $modSettings['databaseSession_lifetime'] > $max_lifetime))
 		$max_lifetime = max($modSettings['databaseSession_lifetime'], 60);
 
 	// Clean up ;).
-	return db_query("
+	return $smfFunc['db_query']("
 		DELETE FROM {$db_prefix}sessions
 		WHERE last_update < " . (time() - $max_lifetime), __FILE__, __LINE__);
+}
+
+function loadDatabase()
+{
+	global $db_persist, $db_connection, $db_server, $db_user, $db_passwd;
+	global $db_type, $db_name, $ssi_db_user, $ssi_db_passwd, $db_prefix, $sourcedir;
+
+	// Figure out what type of database we are using.
+	if (empty($db_type) || file_exists($sourcedir . '/Subs-DB-' . $db_type . '.php'))
+		$db_type = 'mysql';
+
+	// Load the file for the database.
+	require_once($sourcedir . '/Subs-DB-' . $db_type . '.php');
+
+	// If we are in SSI try them first, but don't worry if it doesn't work, we have the normal username and password we can use.
+	if ( SMF == 'SSI' && !empty($ssi_db_user) && !empty($ssi_db_passwd))
+		$db_connection = smf_db_initiate($db_server, $db_name, $ssi_db_user, $ssi_db_passwd, array('persist' => $db_persist, 'non_fatal' => true, 'dont_select_db' => true));
+
+	// Either we aren't in SSI mode, or it failed.  
+	if (empty($db_connection))
+		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, array('persist' => $db_persist, 'dont_select_db' => SMF == 'SSI'));
 }
 
 function cache_put_data($key, $value, $ttl = 120)

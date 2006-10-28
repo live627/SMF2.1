@@ -51,17 +51,17 @@ function XMLhttpMain()
 // Get a list of boards and categories used for the jumpto dropdown.
 function GetJumpTo()
 {
-	global $db_prefix, $user_info, $context;
+	global $db_prefix, $user_info, $context, $smfFunc;
 
 	// Find the boards/cateogories they can see.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.childLevel
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$context['jump_to'] = array();
 	$this_cat = array('id' => -1);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($this_cat['id'] != $row['ID_CAT'])
 		{
@@ -78,7 +78,7 @@ function GetJumpTo()
 			'is_current' => isset($context['current_board']) && $row['ID_BOARD'] == $context['current_board']
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'jump_to';
 }

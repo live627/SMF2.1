@@ -133,7 +133,7 @@ function RegCenter()
 // This function allows the admin to register a new member by hand.
 function AdminRegister()
 {
-	global $txt, $context, $db_prefix, $sourcedir, $scripturl;
+	global $txt, $context, $db_prefix, $sourcedir, $scripturl, $smfFunc;
 
 	// Setup the "tab", just incase an error occurs.
 	$context['admin_tabs']['tabs']['register']['is_selected'] = true;
@@ -179,7 +179,7 @@ function AdminRegister()
 	$context['page_title'] = $txt['registration_center'];
 
 	// Load the assignable member groups.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT groupName, ID_GROUP
 		FROM {$db_prefix}membergroups
 		WHERE ID_GROUP != 3
@@ -187,9 +187,9 @@ function AdminRegister()
 			AND ID_GROUP != 1") . "
 		ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
 	$context['member_groups'] = array(0 => &$txt['admin_register_group_none']);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['member_groups'][$row['ID_GROUP']] = $row['groupName'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // I hereby agree not to be a lazy bum.

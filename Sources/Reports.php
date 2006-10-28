@@ -189,7 +189,7 @@ function ReportsMain()
 // Standard report about what settings the boards have.
 function BoardReport()
 {
-	global $context, $db_prefix, $txt, $sourcedir;
+	global $context, $db_prefix, $txt, $sourcedir, $smfFunc;
 
 	// Load the permission profiles.
 	require_once($sourcedir . '/ManagePermissions.php');
@@ -197,23 +197,23 @@ function BoardReport()
 	loadPermissionProfiles();
 
 	// Get every moderator.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mods.ID_BOARD, mods.ID_MEMBER, mem.realName
 		FROM ({$db_prefix}moderators AS mods, {$db_prefix}members AS mem)
 		WHERE mem.ID_MEMBER = mods.ID_MEMBER", __FILE__, __LINE__);
 	$moderators = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$moderators[$row['ID_BOARD']][] = $row['realName'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get all the possible membergroups!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, groupName, onlineColor
 		FROM {$db_prefix}membergroups", __FILE__, __LINE__);
 	$groups = array(-1 => $txt['guest_title'], 0 => $txt['full_member']);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$groups[$row['ID_GROUP']] = empty($row['onlineColor']) ? $row['groupName'] : '<span style="color: ' . $row['onlineColor'] . '">' . $row['groupName'] . '</span>';
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// All the fields we'll show.
 	$boardSettings = array(
@@ -233,7 +233,7 @@ function BoardReport()
 	setKeys('cols');
 
 	// Go through each board!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT b.ID_BOARD, b.name, b.numPosts, b.numTopics, b.countPosts, b.memberGroups, b.override_theme, b.ID_PROFILE,
 			c.name AS catName, IFNULL(par.name, '$txt[none]') AS parentName, IFNULL(th.value, '$txt[none]') AS themeName
 		FROM {$db_prefix}boards AS b
@@ -241,7 +241,7 @@ function BoardReport()
 			LEFT JOIN {$db_prefix}boards AS par ON (par.ID_BOARD = b.ID_PARENT)
 			LEFT JOIN {$db_prefix}themes AS th ON (th.ID_THEME = b.ID_THEME AND variable = 'name')", __FILE__, __LINE__);
 	$boards = array(0 => array('name' => $txt['global_boards']));
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Each board has it's own table.
 		newTable($row['name'], '', 'left', 'auto', 'left', 200, 'left');
@@ -283,13 +283,13 @@ function BoardReport()
 		// Next add the main data.
 		addData($boardData);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Generate a report on the current permissions by board and membergroup.
 function BoardPermissionsReport()
 {
-	global $context, $db_prefix, $txt, $modSettings;
+	global $context, $db_prefix, $txt, $modSettings, $smfFunc;
 
 	if (isset($_REQUEST['boards']))
 	{
@@ -316,12 +316,12 @@ function BoardPermissionsReport()
 		$group_clause = '1';
 
 	// Fetch all the board names.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_BOARD, name, ID_PROFILE
 		FROM {$db_prefix}boards
 		WHERE $board_clause", __FILE__, __LINE__);
 	$profiles = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$boards[$row['ID_BOARD']] = array(
 			'name' => $row['name'],
@@ -329,10 +329,10 @@ function BoardPermissionsReport()
 		);
 		$profiles[] = $row['ID_PROFILE'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get all the possible membergroups, except admin!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, groupName
 		FROM {$db_prefix}membergroups
 		WHERE $group_clause
@@ -343,9 +343,9 @@ function BoardPermissionsReport()
 		$memberGroups = array('col' => '', -1 => $txt['membergroups_guests'], 0 => $txt['membergroups_members']);
 	else
 		$memberGroups = array('col' => '');
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$memberGroups[$row['ID_GROUP']] = $row['groupName'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Make sure that every group is represented - plus in rows!
 	setKeys('rows', $memberGroups);
@@ -353,14 +353,14 @@ function BoardPermissionsReport()
 	// Cache every permission setting, to make sure we don't miss any allows.
 	$permissions = array();
 	$board_permissions = array();
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_PROFILE, ID_GROUP, addDeny, permission
 		FROM {$db_prefix}board_permissions
 		WHERE ID_PROFILE IN (" . implode(', ', $profiles) . ")
 			AND $group_clause" . (empty($modSettings['permission_enable_deny']) ? "
 			AND addDeny = 1" : '') . "
 		ORDER BY ID_PROFILE, permission", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		foreach ($boards as $id => $board)
 			if ($board['profile'] == $row['ID_PROFILE'])
@@ -375,7 +375,7 @@ function BoardPermissionsReport()
 			);
 		}
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Now cycle through the board permissions array... lots to do ;)
 	foreach ($board_permissions as $board => $groups)
@@ -462,20 +462,20 @@ function BoardPermissionsReport()
 // Show what the membergroups are made of.
 function MemberGroupsReport()
 {
-	global $context, $db_prefix, $txt, $settings, $modSettings;
+	global $context, $db_prefix, $txt, $settings, $modSettings, $smfFunc;
 
 	// Fetch all the board names.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_BOARD, name, memberGroups, ID_PROFILE
 		FROM {$db_prefix}boards", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$boards[$row['ID_BOARD']] = array(
 			'id' => $row['ID_BOARD'],
 			'name' => $row['name'],
 			'profile' => $row['ID_PROFILE'],
 			'groups' => array_merge(array(1), explode(',', $row['memberGroups'])),
 		);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Standard settings.
 	$mgSettings = array(
@@ -502,7 +502,7 @@ function MemberGroupsReport()
 	addData($mgSettings);
 
 	// Now start cycling the membergroups!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mg.ID_GROUP, mg.groupName, mg.onlineColor, mg.minPosts, mg.maxMessages, mg.stars, IF(bp.permission IS NOT NULL OR mg.ID_GROUP = 1, 1, 0) AS can_moderate
 		FROM {$db_prefix}membergroups AS mg
 			LEFT JOIN {$db_prefix}board_permissions AS bp ON (bp.ID_GROUP = mg.ID_GROUP AND bp.ID_PROFILE = 1 AND bp.permission = 'moderate_board')
@@ -527,9 +527,9 @@ function MemberGroupsReport()
 			'stars' => ''
 		),
 	);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$rows[] = $row;
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	foreach ($rows as $row)
 	{
@@ -554,7 +554,7 @@ function MemberGroupsReport()
 // Show the large variety of group permissions assigned to each membergroup.
 function GroupPermissionsReport()
 {
-	global $context, $db_prefix, $txt, $modSettings;
+	global $context, $db_prefix, $txt, $modSettings, $smfFunc;
 
 	if (isset($_REQUEST['groups']))
 	{
@@ -570,7 +570,7 @@ function GroupPermissionsReport()
 		$clause = 'ID_GROUP != 3';
 
 	// Get all the possible membergroups, except admin!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, groupName
 		FROM {$db_prefix}membergroups
 		WHERE $clause
@@ -581,9 +581,9 @@ function GroupPermissionsReport()
 		$groups = array('col' => '', -1 => $txt['membergroups_guests'], 0 => $txt['membergroups_members']);
 	else
 		$groups = array('col' => '');
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$groups[$row['ID_GROUP']] = $row['groupName'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Make sure that every group is represented!
 	setKeys('rows', $groups);
@@ -598,14 +598,14 @@ function GroupPermissionsReport()
 	addSeperator($txt['board_perms_permission']);
 
 	// Now the big permission fetch!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, addDeny, permission
 		FROM {$db_prefix}permissions
 		WHERE $clause" . (empty($modSettings['permission_enable_deny']) ? "
 			AND addDeny = 1" : '') . "
 		ORDER BY permission", __FILE__, __LINE__);
 	$lastPermission = null;
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// If this is a new permission flush the last row.
 		if ($row['permission'] != $lastPermission)
@@ -626,7 +626,7 @@ function GroupPermissionsReport()
 		else
 			$curData[$row['ID_GROUP']] = '<span style="color: red;">' . $txt['board_perms_deny'] . '</span>';
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Flush the last data!
 	addData($curData);
@@ -635,31 +635,31 @@ function GroupPermissionsReport()
 // Report for showing all the forum staff members - quite a feat!
 function StaffReport()
 {
-	global $sourcedir, $context, $db_prefix, $txt;
+	global $sourcedir, $context, $db_prefix, $txt, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Members.php');
 
 	// Fetch all the board names.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_BOARD, name
 		FROM {$db_prefix}boards", __FILE__, __LINE__);
 	$boards = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$boards[$row['ID_BOARD']] = $row['name'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get every moderator.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mods.ID_BOARD, mods.ID_MEMBER
 		FROM {$db_prefix}moderators AS mods", __FILE__, __LINE__);
 	$moderators = array();
 	$local_mods = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$moderators[$row['ID_MEMBER']][] = $row['ID_BOARD'];
 		$local_mods[$row['ID_MEMBER']] = $row['ID_MEMBER'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get a list of global moderators (i.e. members with moderation powers).
 	$global_mods = array_intersect(membersAllowedTo('moderate_board', 0), membersAllowedTo('approve_posts', 0), membersAllowedTo('remove_any', 0), membersAllowedTo('modify_any', 0));
@@ -675,13 +675,13 @@ function StaffReport()
 		fatal_lang_error('report_error_too_many_staff');
 
 	// Get all the possible membergroups!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, groupName, onlineColor
 		FROM {$db_prefix}membergroups", __FILE__, __LINE__);
 	$groups = array(0 => $txt['full_member']);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$groups[$row['ID_GROUP']] = empty($row['onlineColor']) ? $row['groupName'] : '<span style="color: ' . $row['onlineColor'] . '">' . $row['groupName'] . '</span>';
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// All the fields we'll show.
 	$staffSettings = array(
@@ -695,12 +695,12 @@ function StaffReport()
 	setKeys('cols');
 
 	// Get each member!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, realName, ID_GROUP, posts, lastLogin
 		FROM {$db_prefix}members
 		WHERE ID_MEMBER IN (" . implode(',', $allStaff) . ")
 		ORDER BY realName", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Each member gets their own table!.
 		newTable($row['realName'], '', 'left', 'auto', 'left', 200, 'center');
@@ -734,7 +734,7 @@ function StaffReport()
 		// Next add the main data.
 		addData($staffData);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // This function creates a new table of data, most functions will only use it once.

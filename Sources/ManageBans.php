@@ -160,7 +160,7 @@ function Ban()
 // List all the bans.
 function BanList()
 {
-	global $txt, $db_prefix, $context, $ban_request, $scripturl, $user_info;
+	global $txt, $db_prefix, $context, $ban_request, $scripturl, $user_info, $smfFunc;
 
 	// User pressed the 'remove selection button'.
 	if (!empty($_POST['removeBans']) && !empty($_POST['remove']) && is_array($_POST['remove']))
@@ -172,11 +172,11 @@ function BanList()
 			$_POST['remove'][(int) $index] = (int) $ban_id;
 
 		// Unban them all!
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}ban_groups
 			WHERE ID_BAN_GROUP IN (" . implode(', ', $_POST['remove']) . ')
 			LIMIT ' . count($_POST['remove']), __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}ban_items
 			WHERE ID_BAN_GROUP IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
 
@@ -276,18 +276,18 @@ function BanList()
 	$context['sort_direction'] = !isset($_REQUEST['desc']) ? 'down' : 'up';
 
 	// Get the total amount of entries.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}ban_groups", __FILE__, __LINE__);
-	list ($totalBans) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($totalBans) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Create the page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=ban;sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $totalBans, 20);
 	$context['start'] = $_REQUEST['start'];
 
 	// Get the banned values.
-	$ban_request = db_query("
+	$ban_request = $smfFunc['db_query']("
 		SELECT bg.ID_BAN_GROUP, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes, COUNT(bi.ID_BAN) AS num_entries
 		FROM {$db_prefix}ban_groups AS bg
 			LEFT JOIN {$db_prefix}ban_items AS bi ON (bi.ID_BAN_GROUP = bg.ID_BAN_GROUP)
@@ -308,12 +308,12 @@ function BanList()
 // Call-back function for the template to retrieve a row of ban data.
 function getBanEntry($reset = false)
 {
-	global $scripturl, $ban_request, $txt, $context;
+	global $scripturl, $ban_request, $txt, $context, $smfFunc;
 
 	if ($ban_request == false)
 		return false;
 
-	if (!($row = mysql_fetch_assoc($ban_request)))
+	if (!($row = $smfFunc['db_fetch_assoc']($ban_request)))
 		return false;
 
 	$output = array(
@@ -331,7 +331,7 @@ function getBanEntry($reset = false)
 
 function BanEdit()
 {
-	global $txt, $db_prefix, $modSettings, $context, $ban_request, $scripturl;
+	global $txt, $db_prefix, $modSettings, $context, $ban_request, $scripturl, $smfFunc;
 
 	$_REQUEST['bg'] = empty($_REQUEST['bg']) ? 0 : (int) $_REQUEST['bg'];
 
@@ -406,15 +406,15 @@ function BanEdit()
 			$_POST['email'] = strtolower(str_replace('*', '%', $_POST['email']));
 
 			// Check the user is not banning an admin.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_MEMBER
 				FROM {$db_prefix}members
 				WHERE (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups))
 					AND emailAddress LIKE '$_POST[email]'
 				LIMIT 1", __FILE__, __LINE__);
-			if (mysql_num_rows($request) != 0)
+			if ($smfFunc['db_num_rows']($request) != 0)
 				fatal_lang_error('no_ban_admin', 'critical');
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			if ($newBan)
 				$inserts['email_address'] = "'$_POST[email]'";
@@ -432,15 +432,15 @@ function BanEdit()
 		{
 			$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars($_POST['user'], ENT_QUOTES));
 
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_MEMBER, (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups)) AS isAdmin
 				FROM {$db_prefix}members
 				WHERE memberName = '$_POST[user]' OR realName = '$_POST[user]'
 				LIMIT 1", __FILE__, __LINE__);
-			if (mysql_num_rows($request) == 0)
+			if ($smfFunc['db_num_rows']($request) == 0)
 				fatal_lang_error('invalid_username', false);
-			list ($memberid, $isAdmin) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($memberid, $isAdmin) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
 			if ($isAdmin)
 				fatal_lang_error('no_ban_admin', 'critical');
@@ -461,12 +461,12 @@ function BanEdit()
 			fatal_lang_error('no_bantype_selected', false);
 
 		if ($newBan)
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}ban_items
 					(" . implode(', ', array_keys($inserts)) . ")
 				VALUES (" . implode(', ', $inserts) . ")", __FILE__, __LINE__);
 		else
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}ban_items
 				SET $update
 				WHERE ID_BAN = " . (int) $_REQUEST['bi'] . "
@@ -495,7 +495,7 @@ function BanEdit()
 		foreach ($_POST['ban_items'] as $key => $value)
 			$_POST['ban_items'][$key] = (int) $value;
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}ban_items
 			WHERE ID_BAN IN (" . implode(', ', $_POST['ban_items']) . ")
 				AND ID_BAN_GROUP = $_REQUEST[bg]
@@ -515,16 +515,16 @@ function BanEdit()
 		if (empty($_POST['ban_name']))
 			fatal_lang_error('ban_name_empty', false);
 		// Check whether a ban with this name already exists.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_BAN_GROUP
 			FROM {$db_prefix}ban_groups
 			WHERE name = '$_POST[ban_name]'" . ($addBan ? '' : "
 				AND ID_BAN_GROUP != $_REQUEST[bg]") . "
 			LIMIT 1", __FILE__, __LINE__);
 		// !!! Separate the sprintf?
-		if (mysql_num_rows($request) == 1)
+		if ($smfFunc['db_num_rows']($request) == 1)
 			fatal_lang_error('ban_name_exists', false, array($_POST['ban_name']));
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		$_POST['reason'] = htmlspecialchars($_POST['reason'], ENT_QUOTES);
 		$_POST['notes'] = htmlspecialchars($_POST['notes'], ENT_QUOTES);
@@ -574,15 +574,15 @@ function BanEdit()
 					{
 						$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars($_POST['user'], ENT_QUOTES));
 
-						$request = db_query("
+						$request = $smfFunc['db_query']("
 							SELECT ID_MEMBER, (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups)) AS isAdmin
 							FROM {$db_prefix}members
 							WHERE memberName = '$_POST[user]' OR realName = '$_POST[user]'
 							LIMIT 1", __FILE__, __LINE__);
-						if (mysql_num_rows($request) == 0)
+						if ($smfFunc['db_num_rows']($request) == 0)
 							fatal_lang_error('invalid_username', false);
-						list ($_POST['bannedUser'], $isAdmin) = mysql_fetch_row($request);
-						mysql_free_result($request);
+						list ($_POST['bannedUser'], $isAdmin) = $smfFunc['db_fetch_row']($request);
+						$smfFunc['db_free_result']($request);
 
 						if ($isAdmin)
 							fatal_lang_error('no_ban_admin', 'critical');
@@ -612,7 +612,7 @@ function BanEdit()
 			}
 
 			// Yes yes, we're ready to add now.
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}ban_groups
 					(name, ban_time, expire_time, cannot_access, cannot_register, cannot_post, cannot_login, reason, notes)
 				VALUES
@@ -621,13 +621,13 @@ function BanEdit()
 
 			// Now that the ban group is added, add some triggers as well.
 			if (!empty($ban_triggers) && !empty($_REQUEST['bg']))
-				db_query("
+				$smfFunc['db_query']("
 					INSERT INTO {$db_prefix}ban_items
 						(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, ID_MEMBER)
 					VALUES ($_REQUEST[bg], " . implode("), ($_REQUEST[bg], ", $ban_triggers) . ')', __FILE__, __LINE__);
 		}
 		else
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}ban_groups
 				SET
 					name = '$_POST[ban_name]',
@@ -650,7 +650,7 @@ function BanEdit()
 	if (!empty($_REQUEST['bg']))
 	{
 		$context['ban_items'] = array();
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				bi.ID_BAN, bi.hostname, bi.email_address, bi.ID_MEMBER, bi.hits,
 				bi.ip_low1, bi.ip_high1, bi.ip_low2, bi.ip_high2, bi.ip_low3, bi.ip_high3, bi.ip_low4, bi.ip_high4,
@@ -660,9 +660,9 @@ function BanEdit()
 				LEFT JOIN {$db_prefix}ban_items AS bi ON (bi.ID_BAN_GROUP = bg.ID_BAN_GROUP)
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = bi.ID_MEMBER)
 			WHERE bg.ID_BAN_GROUP = $_REQUEST[bg]", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('ban_not_found', false);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (!isset($context['ban']))
 			{
@@ -719,14 +719,14 @@ function BanEdit()
 				else
 				{
 					unset($context['ban_items'][$row['ID_BAN']]);
-					db_query("
+					$smfFunc['db_query']("
 						DELETE FROM {$db_prefix}ban_items
 						WHERE ID_BAN = $row[ID_BAN]
 						LIMIT 1", __FILE__, __LINE__);
 				}
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 	// Not an existing one, then it's probably a new one.
 	else
@@ -761,16 +761,16 @@ function BanEdit()
 		// Overwrite some of the default form values if a user ID was given.
 		if (!empty($_REQUEST['u']))
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_MEMBER, realName, memberIP, emailAddress
 				FROM {$db_prefix}members
 				WHERE ID_MEMBER = " . (int) $_REQUEST['u'] . "
 				LIMIT 1", __FILE__, __LINE__);
-			if (mysql_num_rows($request) > 0)
+			if ($smfFunc['db_num_rows']($request) > 0)
 			{
-				list ($context['ban_suggestions']['member']['id'], $context['ban_suggestions']['member']['name'], $context['ban_suggestions']['main_ip'], $context['ban_suggestions']['email']) = mysql_fetch_row($request);
+				list ($context['ban_suggestions']['member']['id'], $context['ban_suggestions']['member']['name'], $context['ban_suggestions']['main_ip'], $context['ban_suggestions']['email']) = $smfFunc['db_fetch_row']($request);
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			if (!empty($context['ban_suggestions']['member']['id']))
 			{
@@ -786,26 +786,26 @@ function BanEdit()
 
 				// Find some additional IP's used by this member.
 				$context['ban_suggestions']['message_ips'] = array();
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT DISTINCT posterIP
 					FROM {$db_prefix}messages
 					WHERE ID_MEMBER = " . (int) $_REQUEST['u'] . "
 						AND posterIP RLIKE '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'
 					ORDER BY posterIP", __FILE__, __LINE__);
-				while ($row = mysql_fetch_assoc($request))
+				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$context['ban_suggestions']['message_ips'][] = $row['posterIP'];
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 
 				$context['ban_suggestions']['error_ips'] = array();
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT DISTINCT ip
 					FROM {$db_prefix}log_errors
 					WHERE ID_MEMBER = " . (int) $_REQUEST['u'] . "
 						AND ip RLIKE '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'
 					ORDER BY ip", __FILE__, __LINE__);
-				while ($row = mysql_fetch_assoc($request))
+				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$context['ban_suggestions']['error_ips'][] = $row['ip'];
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 
 				// Borrowing a few language strings from profile.
 				loadLanguage('Profile');
@@ -821,7 +821,7 @@ function BanEdit()
 
 function BanEditTrigger()
 {
-	global $context, $db_prefix;
+	global $context, $db_prefix, $smfFunc;
 
 	$context['sub_template'] = 'ban_edit_trigger';
 
@@ -854,7 +854,7 @@ function BanEditTrigger()
 	}
 	else
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				bi.ID_BAN, bi.ID_BAN_GROUP, bi.hostname, bi.email_address, bi.ID_MEMBER,
 				bi.ip_low1, bi.ip_high1, bi.ip_low2, bi.ip_high2, bi.ip_low3, bi.ip_high3, bi.ip_low4, bi.ip_high4,
@@ -864,10 +864,10 @@ function BanEditTrigger()
 			WHERE ID_BAN = " . (int) $_REQUEST['bi'] . "
 				AND ID_BAN_GROUP = " . (int) $_REQUEST['bg'] . "
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('ban_not_found', false);
-		$row = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$row = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		$context['ban_trigger'] = array(
 			'id' => $row['ID_BAN'],
@@ -895,7 +895,7 @@ function BanEditTrigger()
 
 function BanBrowseTriggers()
 {
-	global $db_prefix, $modSettings, $context, $scripturl;
+	global $db_prefix, $modSettings, $context, $scripturl, $smfFunc;
 
 	if (!empty($_POST['remove_triggers']) && !empty($_POST['remove']) && is_array($_POST['remove']))
 	{
@@ -905,7 +905,7 @@ function BanBrowseTriggers()
 		foreach ($_POST['remove'] as $key => $value)
 			$_POST['remove'][$key] = $value;
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}ban_items
 			WHERE ID_BAN IN (" . implode(', ', $_POST['remove']) . ")
 			LIMIT " . count($_POST['remove']), __FILE__, __LINE__);
@@ -943,12 +943,12 @@ function BanBrowseTriggers()
 
 	$context['selected_entity'] = isset($_REQUEST['entity']) && isset($query[$_REQUEST['entity']]) ? $_REQUEST['entity'] : 'ip';
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM ({$db_prefix}ban_items AS bi" . ($context['selected_entity'] == 'member' ? ", {$db_prefix}members AS mem" : '') . ")
 		WHERE " . $query[$context['selected_entity']]['where'], __FILE__, __LINE__);
-	list ($num_items) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($num_items) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=ban;sa=browse;entity=' . $context['selected_entity'], $_REQUEST['start'], $num_items, $modSettings['defaultMaxMessages']);
 	$context['start'] = $_REQUEST['start'];
@@ -956,14 +956,14 @@ function BanBrowseTriggers()
 
 	if (!empty($num_items))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT bi.ID_BAN, " . $query[$context['selected_entity']]['select'] . ", bi.hits, bg.ID_BAN_GROUP, bg.name
 			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg" . ($context['selected_entity'] == 'member' ? ", {$db_prefix}members AS mem" : '') . ")
 			WHERE " . $query[$context['selected_entity']]['where'] . "
 				AND bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
 			ORDER BY " . $query[$context['selected_entity']]['orderby'] . "
 			LIMIT $context[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$context['ban_items'][$row['ID_BAN']] = array(
 				'id' => $row['ID_BAN'],
@@ -992,14 +992,14 @@ function BanBrowseTriggers()
 				$context['ban_items'][$row['ID_BAN']]['entity'] = $context['ban_items'][$row['ID_BAN']]['member']['link'];
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 	$context['sub_template'] = 'browse_triggers';
 }
 
 function BanLog()
 {
-	global $db_prefix, $scripturl, $context;
+	global $db_prefix, $scripturl, $context, $smfFunc;
 
 	$sort_columns = array(
 		'name' => 'mem.realName',
@@ -1018,7 +1018,7 @@ function BanLog()
 
 		// 'Delete all entries' button was pressed.
 		if (!empty($_POST['removeAll']))
-			db_query("
+			$smfFunc['db_query']("
 				TRUNCATE {$db_prefix}log_banned", __FILE__, __LINE__);
 
 		// 'Delte selection' button was pressed.
@@ -1028,18 +1028,18 @@ function BanLog()
 			foreach ($_POST['remove'] as $index => $log_id)
 				$_POST['remove'][$index] = (int) $log_id;
 
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_banned
 				WHERE ID_BAN_LOG IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
 		}
 	}
 
 	// Count the total number of log entries.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_banned", __FILE__, __LINE__);
-	list ($num_ban_log_entries) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($num_ban_log_entries) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Set start if not already set.
 	$_REQUEST['start'] = empty($_REQUEST['start']) || $_REQUEST['start'] < 0 ? 0 : (int) $_REQUEST['start'];
@@ -1056,14 +1056,14 @@ function BanLog()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=ban;sa=log;sort=' . $context['sort'] . ($context['sort_direction'] == 'down' ? ';desc' : ''), $_REQUEST['start'], $num_ban_log_entries, $entries_per_page);
 	$context['start'] = $_REQUEST['start'];
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lb.ID_BAN_LOG, lb.ID_MEMBER, IFNULL(lb.ip, '-') AS ip, IFNULL(lb.email, '-') AS email, lb.logTime, IFNULL(mem.realName, '') AS realName
 		FROM {$db_prefix}log_banned AS lb
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lb.ID_MEMBER)
 		ORDER BY " . $sort_columns[$context['sort']] . (isset($_REQUEST['desc']) ? ' DESC' : '') . "
 		LIMIT $_REQUEST[start], $entries_per_page", __FILE__, __LINE__);
 	$context['log_entries'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['log_entries'][] = array(
 			'id' => $row['ID_BAN_LOG'],
 			'member' => array(
@@ -1076,7 +1076,7 @@ function BanLog()
 			'email' => $row['email'],
 			'date' => timeformat($row['logTime']),
 		);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'ban_log';
 }
@@ -1132,13 +1132,13 @@ function ip2range($fullip)
 
 function updateBanMembers()
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	$updates = array();
 	$newMembers = array();
 
 	// Find members that haven't been marked as 'banned'...yet.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mem.ID_MEMBER, mem.is_activated + 10 AS new_value
 		FROM ({$db_prefix}ban_groups AS bg, {$db_prefix}ban_items AS bi, {$db_prefix}members AS mem)
 		WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
@@ -1146,31 +1146,31 @@ function updateBanMembers()
 			AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
 			AND (mem.ID_MEMBER = bi.ID_MEMBER OR mem.emailAddress LIKE bi.email_address)
 			AND mem.is_activated < 10", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$updates[$row['new_value']][] = $row['ID_MEMBER'];
 		$newMembers[] = $row['ID_MEMBER'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// We welcome our new members in the realm of the banned.
 	if (!empty($newMembers))
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_online
 			WHERE ID_MEMBER IN (" . implode(', ', $newMembers) . ")
 			LIMIT " . count($newMembers), __FILE__, __LINE__);
 
 	// Find members that are wrongfully marked as banned.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mem.ID_MEMBER, mem.is_activated - 10 AS new_value
 		FROM {$db_prefix}members AS mem
 			LEFT JOIN {$db_prefix}ban_items AS bi ON (bi.ID_MEMBER = mem.ID_MEMBER OR mem.emailAddress LIKE bi.email_address)
 			LEFT JOIN {$db_prefix}ban_groups AS bg ON (bg.ID_BAN_GROUP = bi.ID_BAN_GROUP AND bg.cannot_access = 1 AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . "))
 		WHERE (bi.ID_BAN IS NULL OR bg.ID_BAN_GROUP IS NULL)
 			AND mem.is_activated >= 10", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$updates[$row['new_value']][] = $row['ID_MEMBER'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (!empty($updates))
 		foreach ($updates as $newStatus => $members)

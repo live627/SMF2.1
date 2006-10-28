@@ -190,7 +190,7 @@ function is_not_guest($message = '')
 function is_not_banned($forceCheck = false)
 {
 	global $txt, $db_prefix, $ID_MEMBER, $modSettings, $context, $user_info;
-	global $sourcedir, $cookiename, $user_settings;
+	global $sourcedir, $cookiename, $user_settings, $smfFunc;
 
 	// You cannot be banned if you are an admin - doesn't help if you log out.
 	if ($user_info['is_admin'])
@@ -250,7 +250,7 @@ function is_not_banned($forceCheck = false)
 				'cannot_post',
 				'cannot_register',
 			);
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT bi.ID_BAN, bi.email_address, bi.ID_MEMBER, bg.cannot_access, bg.cannot_register,
 					bg.cannot_post, bg.cannot_login, bg.reason, IFNULL(bg.expire_time, 0) AS expire_time
 				FROM ({$db_prefix}ban_groups AS bg, {$db_prefix}ban_items AS bi)
@@ -258,7 +258,7 @@ function is_not_banned($forceCheck = false)
 					AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
 					AND (" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
 			// Store every type of ban that applies to you in your session.
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				foreach ($restrictions as $restriction)
 					if (!empty($row[$restriction]))
@@ -272,7 +272,7 @@ function is_not_banned($forceCheck = false)
 							$flag_is_activated = true;
 					}
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 
 		// Mark the cannot_access and cannot_post bans as being 'hit'.
@@ -294,7 +294,7 @@ function is_not_banned($forceCheck = false)
 		$bans = explode(',', $_COOKIE[$cookiename . '_']);
 		foreach ($bans as $key => $value)
 			$bans[$key] = (int) $value;
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT bi.ID_BAN, bg.reason
 			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
 			WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
@@ -302,12 +302,12 @@ function is_not_banned($forceCheck = false)
 				AND bg.cannot_access = 1
 				AND bi.ID_BAN IN (" . implode(', ', $bans) . ")
 			LIMIT " . count($bans), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$_SESSION['ban']['cannot_access']['ids'][] = $row['ID_BAN'];
 			$_SESSION['ban']['cannot_access']['reason'] = $row['reason'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// My mistake. Next time better.
 		if (!isset($_SESSION['ban']['cannot_access']))
@@ -323,7 +323,7 @@ function is_not_banned($forceCheck = false)
 	{
 		// We don't wanna see you!
 		if (!$user_info['is_guest'])
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_online
 				WHERE ID_MEMBER = $ID_MEMBER
 				LIMIT 1", __FILE__, __LINE__);
@@ -368,13 +368,13 @@ function is_not_banned($forceCheck = false)
 	elseif (isset($_SESSION['ban']['cannot_login']) && !$user_info['is_guest'])
 	{
 		// !!! Why doesn't this use the function made for logging bans?
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}ban_items
 			SET hits = hits + 1
 			WHERE ID_BAN IN (" . implode(', ', $_SESSION['ban']['cannot_login']['ids']) . ')', __FILE__, __LINE__);
 
 		// Log this ban.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}log_banned
 				(ID_MEMBER, ip, email, logTime)
 			VALUES ($ID_MEMBER, SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$user_info[email]', 1, 255), " . time() . ')', __FILE__, __LINE__);
@@ -455,20 +455,20 @@ function banPermissions()
 // Log a ban in the database.
 function log_ban($ban_ids = array(), $email = null)
 {
-	global $db_prefix, $user_info, $ID_MEMBER;
+	global $db_prefix, $user_info, $ID_MEMBER, $smfFunc;
 
 	// Don't log web accelerators, it's very confusing...
 	if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 		return;
 
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}log_banned
 			(ID_MEMBER, ip, email, logTime)
 		VALUES ($ID_MEMBER, SUBSTRING('$user_info[ip]', 1, 16), '" . ($email === null ? ($user_info['is_guest'] ? '' : $user_info['email']) : $email) . "', " . time() . ')', __FILE__, __LINE__);
 
 	// One extra point for these bans.
 	if (!empty($ban_ids))
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}ban_items
 			SET hits = hits + 1
 			WHERE ID_BAN IN (" . implode(', ', $ban_ids) . ')', __FILE__, __LINE__);
@@ -477,7 +477,7 @@ function log_ban($ban_ids = array(), $email = null)
 // Checks if a given email address might be banned.
 function isBannedEmail($email, $restriction, $error)
 {
-	global $db_prefix, $txt;
+	global $db_prefix, $txt, $smfFunc;
 
 	// Can't ban an empty email
 	if (empty($email) || trim($email) == '')
@@ -488,13 +488,13 @@ function isBannedEmail($email, $restriction, $error)
 	$ban_reason = isset($_SESSION['ban'][$restriction]) ? $_SESSION['ban'][$restriction]['reason'] : '';
 
 	// ...and add to that the email address you're trying to register.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT bi.ID_BAN, bg.$restriction, bg.cannot_access, bg.reason
 		FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
 		WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
 			AND '$email' LIKE bi.email_address
 			AND (bg.$restriction = 1 OR bg.cannot_access = 1)", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!empty($row['cannot_access']))
 		{
@@ -507,7 +507,7 @@ function isBannedEmail($email, $restriction, $error)
 			$ban_reason = $row['reason'];
 		}
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// You're in biiig trouble.  Banned for the rest of this session!
 	if (isset($_SESSION['ban']['cannot_access']))
@@ -649,7 +649,7 @@ function checkSubmitOnce($action, $is_fatal = true)
 // Check the user's permissions.
 function allowedTo($permission, $boards = null)
 {
-	global $user_info, $db_prefix, $modSettings, $ID_MEMBER;
+	global $user_info, $db_prefix, $modSettings, $ID_MEMBER, $smfFunc;
 
 	//!!! For testing only... remove this before release. Quick dirty way to test approving/unapproving posts.
 	//!!! For normal use this line should be commented!!!!!!!
@@ -686,7 +686,7 @@ function allowedTo($permission, $boards = null)
 	elseif (!is_array($boards))
 		$boards = array($boards);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT MIN(bp.addDeny) AS addDeny
 		FROM ({$db_prefix}boards AS b, {$db_prefix}board_permissions AS bp)
 			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = b.ID_BOARD AND mods.ID_MEMBER = $ID_MEMBER)
@@ -698,13 +698,13 @@ function allowedTo($permission, $boards = null)
 		GROUP BY b.ID_BOARD", __FILE__, __LINE__);
 
 	// Make sure they can do it on all of the boards.
-	if (mysql_num_rows($request) != count($boards))
+	if ($smfFunc['db_num_rows']($request) != count($boards))
 		return false;
 
 	$result = true;
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$result &= !empty($row['addDeny']);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// If the query returned 1, they can do it... otherwise, they can't.
 	return $result;
@@ -764,7 +764,7 @@ function isAllowedTo($permission, $boards = null)
 // Return the boards a user has a certain (board) permission on. (array(0) if all.)
 function boardsAllowedTo($permission)
 {
-	global $db_prefix, $ID_MEMBER, $user_info, $modSettings;
+	global $db_prefix, $ID_MEMBER, $user_info, $modSettings, $smfFunc;
 
 	// Administrators are all powerful, sorry.
 	if ($user_info['is_admin'])
@@ -773,7 +773,7 @@ function boardsAllowedTo($permission)
 	// All groups the user is in except 'moderator'.
 	$groups = array_diff($user_info['groups'], array(3));
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT b.ID_BOARD, bp.addDeny
 		FROM ({$db_prefix}boards AS b, {$db_prefix}board_permissions AS bp)
 			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = b.ID_BOARD AND mods.ID_MEMBER = $ID_MEMBER)
@@ -783,14 +783,14 @@ function boardsAllowedTo($permission)
 			AND (mods.ID_MEMBER IS NOT NULL OR bp.ID_GROUP != 3)", __FILE__, __LINE__);
 	$boards = array();
 	$deny_boards = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (empty($row['addDeny']))
 			$deny_boards[] = $row['ID_BOARD'];
 		else
 			$boards[] = $row['ID_BOARD'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$boards = array_values(array_diff($boards, $deny_boards));
 

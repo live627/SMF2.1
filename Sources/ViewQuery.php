@@ -37,7 +37,7 @@ if (!defined('SMF'))
 // See the queries....
 function ViewQuery()
 {
-	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings;
+	global $scripturl, $user_info, $settings, $context, $db_connection, $modSettings, $smfFunc;
 
 	// Don't allow except for administrators.
 	isAllowedTo('admin_forum');
@@ -125,13 +125,13 @@ function ViewQuery()
 		// Explain the query.
 		if ($query_id == $q && $is_select_query)
 		{
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				EXPLAIN " . $select, false, false);
 			if ($result === false)
 			{
 				echo '
 		<table border="1" cellpadding="4" cellspacing="0" style="empty-cells: show; font-family: serif; margin-bottom: 2ex;">
-			<tr><td>', mysql_error($db_connection), '</td></tr>
+			<tr><td>', $smfFunc['db_error']($db_connection), '</td></tr>
 		</table>';
 				continue;
 			}
@@ -139,7 +139,7 @@ function ViewQuery()
 			echo '
 		<table border="1" rules="all" cellpadding="4" cellspacing="0" style="empty-cells: show; font-family: serif; margin-bottom: 2ex;">';
 
-			$row = mysql_fetch_assoc($result);
+			$row = $smfFunc['db_fetch_assoc']($result);
 
 			echo '
 			<tr>
@@ -147,8 +147,8 @@ function ViewQuery()
 				<th>', array_keys($row)) . '</th>
 			</tr>';
 
-			mysql_data_seek($result, 0);
-			while ($row = mysql_fetch_assoc($result))
+			$smfFunc['db_data_seek']($result, 0);
+			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
 				echo '
 			<tr>
@@ -156,7 +156,7 @@ function ViewQuery()
 				<td>', $row) . '</td>
 			</tr>';
 			}
-			mysql_free_result($result);
+			$smfFunc['db_free_result']($result);
 
 			echo '
 		</table>';

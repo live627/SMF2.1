@@ -195,7 +195,7 @@ function ThemesMain()
 
 function ThemeAdmin()
 {
-	global $context, $db_prefix, $sc, $boarddir, $modSettings;
+	global $context, $db_prefix, $sc, $boarddir, $modSettings, $smfFunc;
 
 	loadLanguage('Admin');
 	isAllowedTo('admin_forum');
@@ -211,14 +211,14 @@ function ThemeAdmin()
 		$knownThemes = !empty($modSettings['knownThemes']) ? explode(',',$modSettings['knownThemes']) : array();
 
 		// Load up all the themes.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME, value AS name
 			FROM {$db_prefix}themes
 			WHERE variable = 'name'
 				AND ID_MEMBER = 0
 			ORDER BY ID_THEME", __FILE__, __LINE__);
 		$context['themes'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$context['themes'][] = array(
 				'id' => $row['ID_THEME'],
@@ -226,7 +226,7 @@ function ThemeAdmin()
 				'known' => in_array($row['ID_THEME'], $knownThemes),
 			);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Can we create a new theme?
 		$context['can_create_new'] = is_writable($boarddir . '/Themes');
@@ -267,7 +267,7 @@ function ThemeAdmin()
 
 function ThemeList()
 {
-	global $context, $db_prefix, $boarddir, $boardurl;
+	global $context, $db_prefix, $boarddir, $boardurl, $smfFunc;
 
 	loadLanguage('Admin');
 	isAllowedTo('admin_forum');
@@ -276,15 +276,15 @@ function ThemeList()
 	{
 		checkSession();
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME, variable, value
 			FROM {$db_prefix}themes
 			WHERE variable IN ('theme_dir', 'theme_url', 'images_url', 'base_theme_dir', 'base_theme_url', 'base_images_url')
 				AND ID_MEMBER = 0", __FILE__, __LINE__);
 		$themes = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$themes[$row['ID_THEME']][$row['variable']] = $row['value'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		$_POST['reset_dir'] = stripslashes($_POST['reset_dir']);
 		$_POST['reset_url'] = stripslashes($_POST['reset_url']);
@@ -311,7 +311,7 @@ function ThemeList()
 
 		if (!empty($setValues))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				REPLACE INTO {$db_prefix}themes
 					(ID_THEME, ID_MEMBER, variable, value)
 				VALUES " . implode(',
@@ -325,13 +325,13 @@ function ThemeList()
 
 	loadTemplate('Themes');
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_THEME, variable, value
 		FROM {$db_prefix}themes
 		WHERE variable IN ('name', 'theme_dir', 'theme_url', 'images_url')
 			AND ID_MEMBER = 0", __FILE__, __LINE__);
 	$context['themes'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($context['themes'][$row['ID_THEME']]))
 			$context['themes'][$row['ID_THEME']] = array(
@@ -339,7 +339,7 @@ function ThemeList()
 			);
 		$context['themes'][$row['ID_THEME']][$row['variable']] = $row['value'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	foreach ($context['themes'] as $i => $theme)
 	{
@@ -369,7 +369,7 @@ function ThemeList()
 // Administrative global settings.
 function SetThemeOptions()
 {
-	global $txt, $sc, $context, $settings, $db_prefix, $modSettings;
+	global $txt, $sc, $context, $settings, $db_prefix, $modSettings, $smfFunc;
 
 	$_GET['th'] = isset($_GET['th']) ? (int) $_GET['th'] : (isset($_GET['id']) ? (int) $_GET['id'] : 0);
 
@@ -379,13 +379,13 @@ function SetThemeOptions()
 	{
 		checkSession('get');
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME, variable, value
 			FROM {$db_prefix}themes
 			WHERE variable IN ('name', 'theme_dir')
 				AND ID_MEMBER = 0", __FILE__, __LINE__);
 		$context['themes'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (!isset($context['themes'][$row['ID_THEME']]))
 				$context['themes'][$row['ID_THEME']] = array(
@@ -395,25 +395,25 @@ function SetThemeOptions()
 				);
 			$context['themes'][$row['ID_THEME']][$row['variable']] = $row['value'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME, COUNT(*) AS value
 			FROM {$db_prefix}themes
 			WHERE ID_MEMBER = -1
 			GROUP BY ID_THEME", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['themes'][$row['ID_THEME']]['num_default_options'] = $row['value'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME, COUNT(DISTINCT ID_MEMBER) AS value
 			FROM {$db_prefix}themes
 			WHERE ID_MEMBER > 0
 			GROUP BY ID_THEME", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['themes'][$row['ID_THEME']]['num_members'] = $row['value'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		foreach ($context['themes'] as $k => $v)
 		{
@@ -462,13 +462,13 @@ function SetThemeOptions()
 
 			// Are there options in non-default themes set that should be cleared?
 			if (!empty($old_settings))
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}themes
 					WHERE ID_THEME != 1
 						AND ID_MEMBER = -1
 						AND variable IN ('" . implode("', '", $old_settings) . "')", __FILE__, __LINE__);
 
-			db_query("
+			$smfFunc['db_query']("
 				REPLACE INTO {$db_prefix}themes
 					(ID_MEMBER, ID_THEME, variable, value)
 				VALUES $setString", __FILE__, __LINE__);
@@ -495,7 +495,7 @@ function SetThemeOptions()
 				continue;
 			elseif ($_POST['default_options_master'][$opt] == 1)
 			{
-				db_query("
+				$smfFunc['db_query']("
 					REPLACE INTO {$db_prefix}themes
 						(ID_MEMBER, ID_THEME, variable, value)
 					SELECT ID_MEMBER, 1, SUBSTRING('$opt', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)
@@ -505,7 +505,7 @@ function SetThemeOptions()
 			}
 			elseif ($_POST['default_options_master'][$opt] == 2)
 			{
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}themes
 					WHERE variable = '$opt'
 						AND ID_MEMBER > 0", __FILE__, __LINE__);
@@ -514,7 +514,7 @@ function SetThemeOptions()
 
 		// Delete options from other themes.
 		if (!empty($old_settings))
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}themes
 				WHERE ID_THEME != 1
 					AND ID_MEMBER > 0
@@ -526,7 +526,7 @@ function SetThemeOptions()
 				continue;
 			elseif ($_POST['options_master'][$opt] == 1)
 			{
-				db_query("
+				$smfFunc['db_query']("
 					REPLACE INTO {$db_prefix}themes
 						(ID_MEMBER, ID_THEME, variable, value)
 					SELECT ID_MEMBER, $_GET[th], SUBSTRING('$opt', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)
@@ -534,7 +534,7 @@ function SetThemeOptions()
 			}
 			elseif ($_POST['options_master'][$opt] == 2)
 			{
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}themes
 					WHERE variable = '$opt'
 						AND ID_MEMBER > 0
@@ -548,7 +548,7 @@ function SetThemeOptions()
 	{
 		checkSession('get');
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}themes
 			WHERE ID_MEMBER > 0
 				AND ID_THEME = $_GET[th]", __FILE__, __LINE__);
@@ -582,15 +582,15 @@ function SetThemeOptions()
 
 	if (empty($_REQUEST['who']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT variable, value
 			FROM {$db_prefix}themes
 			WHERE ID_THEME IN (1, " . $_GET['th'] . ")
 				AND ID_MEMBER = -1", __FILE__, __LINE__);
 		$context['theme_options'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['theme_options'][$row['variable']] = $row['value'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		$context['theme_options_reset'] = false;
 	}
@@ -626,7 +626,7 @@ function SetThemeOptions()
 // Administrative global settings.
 function SetThemeSettings()
 {
-	global $txt, $sc, $context, $settings, $db_prefix, $modSettings, $sourcedir;
+	global $txt, $sc, $context, $settings, $db_prefix, $modSettings, $sourcedir, $smfFunc;
 
 	if (empty($_GET['th']) && empty($_GET['id']))
 		return ThemeAdmin();
@@ -670,7 +670,7 @@ function SetThemeSettings()
 			// Get rid of the last comma.
 			$setString = substr($setString, 0, strlen($setString) - 1);
 
-			db_query("
+			$smfFunc['db_query']("
 				REPLACE INTO {$db_prefix}themes
 					(ID_MEMBER, ID_THEME, variable, value)
 				VALUES $setString", __FILE__, __LINE__);
@@ -749,7 +749,7 @@ function SetThemeSettings()
 // Remove a theme from the database.
 function RemoveTheme()
 {
-	global $db_prefix, $modSettings, $sc;
+	global $db_prefix, $modSettings, $sc, $smfFunc;
 
 	checkSession('get');
 
@@ -769,11 +769,11 @@ function RemoveTheme()
 			unset($known[$i]);
 	}
 
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}themes
 		WHERE ID_THEME = $_GET[th]", __FILE__, __LINE__);
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}members
 		SET ID_THEME = 0
 		WHERE ID_THEME = $_GET[th]", __FILE__, __LINE__);
@@ -795,7 +795,7 @@ function RemoveTheme()
 // Choose a theme from a list.
 function PickTheme()
 {
-	global $txt, $db_prefix, $sc, $context, $modSettings, $user_info, $ID_MEMBER, $language;
+	global $txt, $db_prefix, $sc, $context, $modSettings, $user_info, $ID_MEMBER, $language, $smfFunc;
 
 	checkSession('get');
 
@@ -863,13 +863,13 @@ function PickTheme()
 	{
 		$context['current_member'] = (int) $_REQUEST['u'];
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER = $context[current_member]
 			LIMIT 1", __FILE__, __LINE__);
-		list ($context['current_theme']) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($context['current_theme']) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 	}
 	// Get the theme name and descriptions.
 	$context['available_themes'] = array();
@@ -877,14 +877,14 @@ function PickTheme()
 	{
 		$knownThemes = implode("', '", explode(',', $modSettings['knownThemes']));
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME, variable, value
 			FROM {$db_prefix}themes
 			WHERE variable IN ('name', 'theme_url', 'theme_dir', 'images_url')" . (!allowedTo('admin_forum') ? "
 				AND ID_THEME IN ('$knownThemes')" : '') . "
 				AND ID_THEME != 0
 			LIMIT " . count(explode(',', $modSettings['knownThemes'])) * 8, __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (!isset($context['available_themes'][$row['ID_THEME']]))
 				$context['available_themes'][$row['ID_THEME']] = array(
@@ -894,7 +894,7 @@ function PickTheme()
 				);
 			$context['available_themes'][$row['ID_THEME']][$row['variable']] = $row['value'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Okay, this is a complicated problem: the default theme is 1, but they aren't allowed to access 1!
@@ -908,11 +908,11 @@ function PickTheme()
 	else
 		$guest_theme = $modSettings['theme_guests'];
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_THEME, COUNT(*) AS theCount
 		FROM {$db_prefix}members
 		GROUP BY ID_THEME DESC", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Figure out which theme it is they are REALLY using.
 		if (!empty($modSettings['knownThemes']) && !in_array($row['ID_THEME'], explode(',',$modSettings['knownThemes'])))
@@ -925,7 +925,7 @@ function PickTheme()
 		else
 			$context['available_themes'][$guest_theme]['num_users'] += $row['theCount'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	foreach ($context['available_themes'] as $ID_THEME => $theme_data)
 	{
@@ -970,7 +970,7 @@ function PickTheme()
 
 function ThemeInstall()
 {
-	global $sourcedir, $boarddir, $boardurl, $db_prefix, $txt, $context, $settings, $modSettings;
+	global $sourcedir, $boarddir, $boardurl, $db_prefix, $txt, $context, $settings, $modSettings, $smfFunc;
 
 	checkSession('request');
 
@@ -983,15 +983,15 @@ function ThemeInstall()
 
 	if (isset($_GET['theme_id']))
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT value
 			FROM {$db_prefix}themes
 			WHERE ID_THEME = " . (int) $_GET['theme_id'] . "
 				AND ID_MEMBER = 0
 				AND variable = 'name'
 			LIMIT 1", __FILE__, __LINE__);
-		list ($theme_name) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($theme_name) = $smfFunc['db_fetch_row']($result);
+		$smfFunc['db_free_result']($result);
 
 		$context['sub_template'] = 'installed';
 		$context['page_title'] = $txt['theme_installed'];
@@ -1119,7 +1119,7 @@ function ThemeInstall()
 			{
 				$install_info['based_on'] = preg_replace('~[^A-Za-z0-9\-_ ]~', '', $install_info['based_on']);
 
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT th.value AS base_theme_dir, th2.value AS base_theme_url" . (!empty($explicit_images) ? '' : ", th3.value AS images_url") . "
 					FROM ({$db_prefix}themes AS th, {$db_prefix}themes AS th2" . (!empty($explicit_images) ? '' : ", {$db_prefix}themes AS th3") . ")
 					WHERE th.ID_MEMBER = 0
@@ -1132,8 +1132,8 @@ function ThemeInstall()
 						AND th3.ID_MEMBER = 0
 						AND th3.variable = 'images_url'") . "
 					LIMIT 1", __FILE__, __LINE__);
-				$temp = mysql_fetch_assoc($request);
-				mysql_free_result($request);
+				$temp = $smfFunc['db_fetch_assoc']($request);
+				$smfFunc['db_free_result']($request);
 
 				// !!! An error otherwise?
 				if (is_array($temp))
@@ -1149,11 +1149,11 @@ function ThemeInstall()
 		}
 
 		// Find the newest ID_THEME.
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT MAX(ID_THEME)
 			FROM {$db_prefix}themes", __FILE__, __LINE__);
-		list ($ID_THEME) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($ID_THEME) = $smfFunc['db_fetch_row']($result);
+		$smfFunc['db_free_result']($result);
 
 		// This will be theme number...
 		$ID_THEME++;
@@ -1164,7 +1164,7 @@ function ThemeInstall()
 				($ID_THEME, SUBSTRING('" . addslashes($var) . "', 1, 255), SUBSTRING('" . addslashes($val) . "', 1, 65534)),";
 		$setString = substr($setString, 0, -1);
 
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}themes
 				(ID_THEME, variable, value)
 			VALUES$setString", __FILE__, __LINE__);
@@ -1208,7 +1208,7 @@ function WrapAction()
 // Set an option via javascript.
 function SetJavaScript()
 {
-	global $db_prefix, $ID_MEMBER, $settings, $user_info;
+	global $db_prefix, $ID_MEMBER, $settings, $user_info, $smfFunc;
 
 	// Sorry, guests can't do this.
 	if ($user_info['is_guest'])
@@ -1226,7 +1226,7 @@ function SetJavaScript()
 		$settings['theme_id'] = isset($_GET['th']) ? (int) $_GET['th'] : (int) $_GET['id'];
 
 	// Update the option.
-	db_query("
+	$smfFunc['db_query']("
 		REPLACE INTO {$db_prefix}themes
 			(ID_THEME, ID_MEMBER, variable, value)
 		VALUES ($settings[theme_id], $ID_MEMBER, SUBSTRING('$_GET[var]', 1, 255), SUBSTRING('" . (is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']) . "', 1, 65534))", __FILE__, __LINE__);
@@ -1239,7 +1239,7 @@ function SetJavaScript()
 
 function EditTheme()
 {
-	global $context, $settings, $db_prefix, $scripturl, $boarddir;
+	global $context, $settings, $db_prefix, $scripturl, $boarddir, $smfFunc;
 
 	if (isset($_REQUEST['preview']))
 	{
@@ -1263,14 +1263,14 @@ function EditTheme()
 	{
 		checkSession('get');
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_THEME, variable, value
 			FROM {$db_prefix}themes
 			WHERE variable IN ('name', 'theme_dir', 'theme_templates', 'theme_layers')
 				AND ID_MEMBER = 0
 				AND ID_THEME != 1", __FILE__, __LINE__);
 		$context['themes'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (!isset($context['themes'][$row['ID_THEME']]))
 				$context['themes'][$row['ID_THEME']] = array(
@@ -1280,7 +1280,7 @@ function EditTheme()
 				);
 			$context['themes'][$row['ID_THEME']][$row['variable']] = $row['value'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		foreach ($context['themes'] as $k => $v)
 		{
@@ -1324,14 +1324,14 @@ function EditTheme()
 	$context['session_error'] = false;
 
 	// Get the directory of the theme we are editing.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT value, ID_THEME
 		FROM {$db_prefix}themes
 		WHERE variable = 'theme_dir'
 			AND ID_THEME = $_GET[th]
 		LIMIT 1", __FILE__, __LINE__);
-	list ($theme_dir, $context['theme_id']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($theme_dir, $context['theme_id']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	if (!isset($_REQUEST['filename']))
 	{
@@ -1401,14 +1401,14 @@ function EditTheme()
 			// Check for a parse error!
 			if (substr($_REQUEST['filename'], -13) == '.template.php' && is_writable($theme_dir) && @ini_get('display_errors'))
 			{
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT value
 					FROM {$db_prefix}themes
 					WHERE variable = 'theme_url'
 						AND ID_THEME = $_GET[th]
 					LIMIT 1", __FILE__, __LINE__);
-				list ($theme_url) = mysql_fetch_row($request);
-				mysql_free_result($request);
+				list ($theme_url) = $smfFunc['db_fetch_row']($request);
+				$smfFunc['db_free_result']($request);
 
 				$fp = fopen($theme_dir . '/tmp_' . session_id() . '.php', 'w');
 				fwrite($fp, $_POST['entire_file']);
@@ -1562,7 +1562,7 @@ function get_file_listing($path, $relative)
 
 function CopyTemplate()
 {
-	global $context, $settings, $db_prefix;
+	global $context, $settings, $db_prefix, $smfFunc;
 
 	isAllowedTo('admin_forum');
 	loadTemplate('Themes');
@@ -1571,15 +1571,15 @@ function CopyTemplate()
 
 	$_GET['th'] = isset($_GET['th']) ? (int) $_GET['th'] : (int) $_GET['id'];
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT th1.value, th1.ID_THEME, th2.value
 		FROM {$db_prefix}themes AS th1
 			LEFT JOIN {$db_prefix}themes AS th2 ON (th2.variable = 'base_theme_dir' AND th2.ID_THEME = $_GET[th])
 		WHERE th1.variable = 'theme_dir'
 			AND th1.ID_THEME = $_GET[th]
 		LIMIT 1", __FILE__, __LINE__);
-	list ($theme_dir, $context['theme_id'], $base_theme_dir) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($theme_dir, $context['theme_id'], $base_theme_dir) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	if (isset($_REQUEST['template']) && preg_match('~[\./\\\\:\0]~', $_REQUEST['template']) == 0)
 	{

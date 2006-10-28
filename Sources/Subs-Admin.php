@@ -50,7 +50,7 @@ if (!defined('SMF'))
 
 function getServerVersions($checkFor)
 {
-	global $txt, $db_connection, $_PHPA;
+	global $txt, $db_connection, $_PHPA, $smfFunc;
 
 	loadLanguage('Admin');
 
@@ -71,10 +71,10 @@ function getServerVersions($checkFor)
 		else
 		{
 			$versions['mysql_server'] = array('title' => $txt['support_versions_mysql'], 'version' => '');
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT VERSION()", __FILE__, __LINE__);
-			list ($versions['mysql_server']['version']) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($versions['mysql_server']['version']) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 		}
 	}
 

@@ -388,7 +388,7 @@ function EditCategory2()
 // Modify a specific board..
 function EditBoard()
 {
-	global $txt, $db_prefix, $context, $cat_tree, $boards, $boardList, $sourcedir;
+	global $txt, $db_prefix, $context, $cat_tree, $boards, $boardList, $sourcedir, $smfFunc;
 
 	loadTemplate('ManageBoards');
 	require_once($sourcedir . '/Subs-Boards.php');
@@ -449,12 +449,12 @@ function EditBoard()
 	);
 
 	// Load membergroups.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT groupName, ID_GROUP, minPosts
 		FROM {$db_prefix}membergroups
 		WHERE ID_GROUP > 3 OR ID_GROUP = 2
 		ORDER BY minPosts, ID_GROUP != 2, groupName", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($_REQUEST['sa'] == 'newboard' && $row['minPosts'] == -1)
 			$curBoard['memberGroups'][] = $row['ID_GROUP'];
@@ -466,7 +466,7 @@ function EditBoard()
 			'is_post_group' => $row['minPosts'] != -1,
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	foreach ($boardList[$curBoard['category']] as $boardid)
 	{
@@ -513,27 +513,27 @@ function EditBoard()
 			'selected' => $catID == $curBoard['category']
 		);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mem.realName
 		FROM ({$db_prefix}moderators AS mods, {$db_prefix}members AS mem)
 		WHERE mods.ID_BOARD = $_REQUEST[boardid]
 			AND mem.ID_MEMBER = mods.ID_MEMBER", __FILE__, __LINE__);
 	$context['board']['moderators'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['board']['moderators'][] = $row['realName'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['board']['moderator_list'] = empty($context['board']['moderators']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['board']['moderators']) . '&quot;';
 
 	// Get all the themes...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_THEME AS id, value AS name
 		FROM {$db_prefix}themes
 		WHERE variable = 'name'", __FILE__, __LINE__);
 	$context['themes'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['themes'][] = $row;
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (!isset($_REQUEST['delete']))
 	{
@@ -634,7 +634,7 @@ function EditBoard2()
 
 function ModifyCat()
 {
-	global $db_prefix, $cat_tree, $boardList, $boards, $sourcedir;
+	global $db_prefix, $cat_tree, $boardList, $boards, $sourcedir, $smfFunc;
 
 	// Get some information about the boards and the cats.
 	require_once($sourcedir . '/Subs-Boards.php');
@@ -648,14 +648,14 @@ function ModifyCat()
 	$_POST['id'] = substr($_POST['id'][1], 0, 3);
 
 	// Select the stuff we need from the DB.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT CONCAT('$_POST[id]s ar', 'e,o ', '$allowed_sa[2]e, ')
 		FROM {$db_prefix}categories
 		LIMIT 1", __FILE__, __LINE__);
-	list ($cat) = mysql_fetch_row($request);
+	list ($cat) = $smfFunc['db_fetch_row']($request);
 
 	// Free resources.
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// This would probably never happen, but just to be sure.
 	if ($cat .= $allowed_sa[1])
@@ -666,7 +666,7 @@ function ModifyCat()
 
 function EditBoardSettings()
 {
-	global $context, $txt, $db_prefix, $sourcedir, $modSettings, $scripturl;
+	global $context, $txt, $db_prefix, $sourcedir, $modSettings, $scripturl, $smfFunc;
 
 	$context['page_title'] = $txt[41] . ' - ' . $txt['settings'];
 
@@ -680,13 +680,13 @@ function EditBoardSettings()
 
 	// Load the boards list - for the recycle bin!
 	$recycle_boards = array('');
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT b.ID_BOARD, b.name AS bName, c.name AS cName
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$recycle_boards[$row['ID_BOARD']] = $row['cName'] . ' - ' . $row['bName'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Here and the board settings...
 	$config_vars = array(

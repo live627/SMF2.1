@@ -159,7 +159,7 @@ function ModBlockWatchedUsers()
 // Show a list of the most recent reported posts.
 function ModBlockReportedPosts()
 {
-	global $context, $db_prefix, $user_info, $scripturl;
+	global $context, $db_prefix, $user_info, $scripturl, $smfFunc;
 
 	$context['reported_posts'] = array();
 	// Can they even moderate any boards?
@@ -167,7 +167,7 @@ function ModBlockReportedPosts()
 		return 'reported_posts_block';
 
 	// By George, that means we in a position to get the reports, jolly good.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lr.ID_REPORT, lr.ID_MSG, lr.ID_TOPIC, lr.ID_BOARD, lr.ID_MEMBER, lr.subject,
 			lr.num_reports, IFNULL(mem.realName, lr.membername) AS author_name,
 			IFNULL(mem.ID_MEMBER, 0) AS ID_AUTHOR		
@@ -178,7 +178,7 @@ function ModBlockReportedPosts()
 			AND lr.ignore_all = 0
 		ORDER BY lr.time_updated DESC
 		LIMIT 10", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['reported_posts'][] = array(
 			'id' => $row['ID_REPORT'],
@@ -195,7 +195,7 @@ function ModBlockReportedPosts()
 			'num_reports' => $row['num_reports'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return 'reported_posts_block';
 }
@@ -203,7 +203,7 @@ function ModBlockReportedPosts()
 // Show a list of all the group requests they can see.
 function ModBlockGroupRequests()
 {
-	global $context, $db_prefix, $user_info, $scripturl;
+	global $context, $db_prefix, $user_info, $scripturl, $smfFunc;
 
 	$context['group_requests'] = array();
 	// Make sure they can even moderate someone!
@@ -211,7 +211,7 @@ function ModBlockGroupRequests()
 		return 'group_requests_block';
 
 	// What requests are outstanding?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lgr.ID_REQUEST, lgr.ID_MEMBER, lgr.ID_GROUP, lgr.time_applied, mem.memberName, mg.groupName
 		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
 		WHERE " . ($user_info['mod_cache']['gq'] == 1 ? '1' : 'lgr.' . $user_info['mod_cache']['gq']) . "
@@ -219,7 +219,7 @@ function ModBlockGroupRequests()
 			AND mg.ID_GROUP = lgr.ID_GROUP
 		ORDER BY lgr.ID_REQUEST DESC
 		LIMIT 10", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['group_requests'][] = array(
 			'id' => $row['ID_REQUEST'],
@@ -237,7 +237,7 @@ function ModBlockGroupRequests()
 			'time_submitted' => timeformat($row['time_applied']),
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return 'group_requests_block';
 }
@@ -246,7 +246,7 @@ function ModBlockGroupRequests()
 // Browse all the reported posts...
 function ReportedPosts()
 {
-	global $txt, $context, $scripturl, $modSettings, $user_info, $db_prefix;
+	global $txt, $context, $scripturl, $modSettings, $user_info, $db_prefix, $smfFunc;
 
 	// This comes under the umbrella of moderating posts.
 	if (empty($user_info['mod_cache']['bq']))
@@ -293,7 +293,7 @@ function ReportedPosts()
 		$_GET['rid'] = (int) $_GET['rid'];
 
 		// Update the report...
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_reported
 			SET " . (isset($_GET['ignore']) ? 'ignore_all = ' . (int) $_GET['ignore'] : 'closed = ' . (int) $_GET['close']) . "
 			WHERE ID_REPORT = $_GET[rid]
@@ -315,7 +315,7 @@ function ReportedPosts()
 
 		if (!empty($toClose))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}log_reported
 				SET closed = 1
 				WHERE ID_REPORT IN (" . implode(',', $toClose) . ")
@@ -328,20 +328,20 @@ function ReportedPosts()
 	}
 
 	// How many entries are we viewing?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_reported AS lr
 		WHERE closed = $context[view_closed]
 			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']), __FILE__, __LINE__);
-	list ($context['total_reports']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($context['total_reports']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// So, that means we can page index, yes?
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=reports' . ($context['view_closed'] ? ';c=1' : ''), $_GET['start'], $context['total_reports'], 10);
 	$context['start'] = $_GET['start'];
 
 	// By George, that means we in a position to get the reports, golly good.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lr.ID_REPORT, lr.ID_MSG, lr.ID_TOPIC, lr.ID_BOARD, lr.ID_MEMBER, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
 			IFNULL(mem.realName, lr.membername) AS author_name, IFNULL(mem.ID_MEMBER, 0) AS ID_AUTHOR		
@@ -353,7 +353,7 @@ function ReportedPosts()
 		LIMIT $context[start], 10", __FILE__, __LINE__);
 	$context['reports'] = array();
 	$report_ids = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$report_ids[] = $row['ID_REPORT'];
 		$context['reports'][$row['ID_REPORT']] = array(
@@ -376,18 +376,18 @@ function ReportedPosts()
 			'ignore' => $row['ignore_all']
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Now get all the people who reported it.
 	if (!empty($report_ids))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT lrc.ID_COMMENT, lrc.ID_REPORT, lrc.time_sent, lrc.comment,
 				IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, IFNULL(mem.realName, lrc.membername) AS reporter
 			FROM {$db_prefix}log_reported_comments AS lrc
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lrc.ID_MEMBER)
 			WHERE ID_REPORT IN (" . implode(',', $report_ids) . ")", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['ID_MEMBER'] == 0 || !isset($context['reports'][$row['ID_REPORT']]['comments'][$row['ID_MEMBER']]))
 				$context['reports'][$row['ID_REPORT']]['comments'][$row['ID_MEMBER']] = array(
@@ -402,7 +402,7 @@ function ReportedPosts()
 					),
 				);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 }
 
@@ -436,16 +436,16 @@ function ModerateGroups()
 // How many open reports do we have?
 function recountOpenReports()
 {
-	global $user_info, $db_prefix, $context;
+	global $user_info, $db_prefix, $context, $smfFunc;
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_reported
 		WHERE " . $user_info['mod_cache']['bq'] . "
 			AND closed = 0
 			AND ignore_all = 0", __FILE__, __LINE__);
-	list ($open_reports) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($open_reports) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$_SESSION['rc'] = array(
 		'id' => $user_info['id'],
@@ -458,7 +458,7 @@ function recountOpenReports()
 
 function ModReport()
 {
-	global $db_prefix, $user_info, $context, $sourcedir, $scripturl, $txt;
+	global $db_prefix, $user_info, $context, $sourcedir, $scripturl, $txt, $smfFunc;
 
 	// Have to at least give us something
 	if (empty($_REQUEST['report']))
@@ -468,7 +468,7 @@ function ModReport()
 	$_REQUEST['report'] = (int) $_REQUEST['report'];
 
 	// Get the report details, need this so we can limit access to a particular board
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lr.ID_REPORT, lr.ID_MSG, lr.ID_TOPIC, lr.ID_BOARD, lr.ID_MEMBER, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
 			IFNULL(mem.realName, lr.membername) AS author_name, IFNULL(mem.ID_MEMBER, 0) AS ID_AUTHOR		
@@ -479,12 +479,12 @@ function ModReport()
 		LIMIT 1", __FILE__, __LINE__);
 	
 	// So did we find anything?
-	if (!mysql_num_rows($request))
+	if (!$smfFunc['db_num_rows']($request))
 		fatal_lang_error('mc_no_modreport_found');
 
 	// Woohoo we found a report and they can see it!  Bad news is we have more work to do
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 	
 	$context['report'] = array(
 		'id' => $row['ID_REPORT'],
@@ -511,13 +511,13 @@ function ModReport()
 	);
 
 	// So what bad things do the reporters have to say about it?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lrc.ID_COMMENT, lrc.ID_REPORT, lrc.time_sent, lrc.comment,
 			IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, IFNULL(mem.realName, lrc.membername) AS reporter
 		FROM {$db_prefix}log_reported_comments AS lrc
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lrc.ID_MEMBER)
 		WHERE ID_REPORT = " . $context['report']['id'], __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($row['ID_MEMBER'] == 0 || !isset($context['report']['comments'][$row['ID_MEMBER']]))
 			$context['report']['comments'][$row['ID_MEMBER']] = array(
@@ -532,7 +532,7 @@ function ModReport()
 				),
 			);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// What have the other moderators done to this message?
 	// !!! Should this limit the results to the boards the mod can see or not?

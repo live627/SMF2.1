@@ -54,7 +54,7 @@ if (!defined('SMF'))
 // Send a topic to a friend.
 function SendTopic()
 {
-	global $topic, $txt, $db_prefix, $context, $scripturl, $sourcedir;
+	global $topic, $txt, $db_prefix, $context, $scripturl, $sourcedir, $smfFunc;
 
 	// Check permissions...
 	isAllowedTo('send_topic');
@@ -64,16 +64,16 @@ function SendTopic()
 		fatal_lang_error(472, false);
 
 	// Get the topic's subject.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.subject
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 		WHERE t.ID_TOPIC = $topic
 			AND t.ID_FIRST_MSG = m.ID_MSG
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(472, false);
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Censor the subject....
 	censorText($row['subject']);
@@ -134,7 +134,7 @@ function SendTopic()
 // Report a post to the moderator... ask for a comment.
 function ReportToModerator()
 {
-	global $txt, $db_prefix, $topic, $modSettings, $user_info, $ID_MEMBER, $context;
+	global $txt, $db_prefix, $topic, $modSettings, $user_info, $ID_MEMBER, $context, $smfFunc;
 
 	// You can't use this if it's off or you are not allowed to do it.
 	isAllowedTo('report_any');
@@ -151,17 +151,17 @@ function ReportToModerator()
 	$_GET['msg'] = empty($_GET['msg']) ? (int) $_GET['mid'] : (int) $_GET['msg'];
 
 	// Check the message's ID - don't want anyone reporting a post they can't even see!
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT m.ID_MSG, m.ID_MEMBER, t.ID_MEMBER_STARTED
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 		WHERE m.ID_MSG = $_GET[msg]
 			AND m.ID_TOPIC = $topic
 			AND t.ID_TOPIC = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($result) == 0)
+	if ($smfFunc['db_num_rows']($result) == 0)
 		fatal_lang_error('smf232');
-	list ($_GET['msg'], $member, $starter) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($_GET['msg'], $member, $starter) = $smfFunc['db_fetch_row']($result);
+	$smfFunc['db_free_result']($result);
 
 	// If they can't modify their post, then they should be able to report it... otherwise it is illogical.
 	if ($member == $ID_MEMBER && (allowedTo(array('modify_own', 'modify_any')) || ($ID_MEMBER == $starter && allowedTo('modify_replies'))))
@@ -182,7 +182,7 @@ function ReportToModerator()
 // Send the emails.
 function ReportToModerator2()
 {
-	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $ID_MEMBER, $modSettings, $sourcedir, $language, $context;
+	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $ID_MEMBER, $modSettings, $sourcedir, $language, $context, $smfFunc;
 
 	// Check their session... don't want them redirected here without their knowledge.
 	checkSession();
@@ -196,17 +196,17 @@ function ReportToModerator2()
 	// Get the basic topic information, and make sure they can see it.
 	$_POST['msg'] = (int) $_POST['msg'];
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.ID_TOPIC, m.ID_BOARD, m.subject, m.body, m.ID_MEMBER AS ID_POSTER, m.posterName, mem.realName
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (m.ID_MEMBER = mem.ID_MEMBER)
 		WHERE m.ID_MSG = $_POST[msg]
 			AND m.ID_TOPIC = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232');
-	$message = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$message = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	if ($message['ID_POSTER'] == $ID_MEMBER)
 		fatal_lang_error('rtm_not_own', false);
@@ -219,7 +219,7 @@ function ReportToModerator2()
 	require_once($sourcedir . '/Subs-Members.php');
 	$moderators = membersAllowedTo('moderate_board', $board);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, emailAddress, lngfile
 		FROM {$db_prefix}members
 		WHERE ID_MEMBER IN (" . implode(', ', $moderators) . ")
@@ -227,21 +227,21 @@ function ReportToModerator2()
 		ORDER BY lngfile", __FILE__, __LINE__);
 
 	// Check that moderators do exist!
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('rtm11', false);
 
 	// If we get here, I believe we should make a record of this, for historical significance, yabber.
 	if (empty($modSettings['disable_log_report']))
 	{
-		$request2 = db_query("
+		$request2 = $smfFunc['db_query']("
 			SELECT ID_REPORT, ignore_all
 			FROM {$db_prefix}log_reported
 			WHERE ID_MSG = $_POST[msg]
 				AND (closed = 0 OR ignore_all = 1)
 			ORDER BY ignore_all DESC", __FILE__, __LINE__);
-		if (mysql_num_rows($request2) != 0)
-			list ($ID_REPORT, $ignore) = mysql_fetch_row($request2);
-		mysql_free_result($request2);
+		if ($smfFunc['db_num_rows']($request2) != 0)
+			list ($ID_REPORT, $ignore) = $smfFunc['db_fetch_row']($request2);
+		$smfFunc['db_free_result']($request2);
 
 		// If we're just going to ignore these, then who gives a monkeys...
 		if (!empty($ignore))
@@ -249,7 +249,7 @@ function ReportToModerator2()
 
 		// Already reported? My god, we could be dealing with a real rogue here...
 		if (!empty($ID_REPORT))
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}log_reported
 				SET num_reports = num_reports + 1, time_updated = " . time() . "
 				WHERE ID_REPORT = $ID_REPORT", __FILE__, __LINE__);
@@ -261,7 +261,7 @@ function ReportToModerator2()
 			if (empty($message['realName']))
 				$message['realName'] = $message['posterName'];
 
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}log_reported
 					(ID_MSG, ID_TOPIC, ID_BOARD, ID_MEMBER, membername, subject, body, time_started, time_updated,
 						num_reports, closed)
@@ -276,7 +276,7 @@ function ReportToModerator2()
 		{
 			$posterComment = strtr(htmlspecialchars($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
 
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}log_reported_comments
 					(ID_REPORT, ID_MEMBER, membername, comment, time_sent)
 				VALUES
@@ -285,7 +285,7 @@ function ReportToModerator2()
 	}
 
 	// Send every moderator an email.
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		loadLanguage('Post', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
 
@@ -297,7 +297,7 @@ function ReportToModerator2()
 			$_POST['comment'] . "\n\n" .
 			sprintf($txt['regards_team'], $context['forum_name']), $user_info['email']);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Keep track of when the mod reports get updated, that way we know when we need to look again.
 	updateSettings(array('last_mod_report_action' => time()));

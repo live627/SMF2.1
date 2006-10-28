@@ -313,7 +313,7 @@ function adminLogin_outputPostVars($k, $v)
 function show_db_error($loadavg = false)
 {
 	global $sourcedir, $mbname, $maintenance, $mtitle, $mmessage, $modSettings;
-	global $db_connection, $webmaster_email, $db_last_error, $db_error_send;
+	global $db_connection, $webmaster_email, $db_last_error, $db_error_send, $smfFunc;
 
 	// Don't cache this page!
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -337,7 +337,7 @@ function show_db_error($loadavg = false)
 				updateSettingsFile(array('db_last_error' => time()));
 
 			// Language files aren't loaded yet :(.
-			$mysql_error = @mysql_error($db_connection);
+			$mysql_error = @$smfFunc['db_error']($db_connection);
 			@mail($webmaster_email, $mbname . ': SMF Database Error!', 'There has been a problem with the database!' . ($mysql_error == '' ? '' : "\nMySQL reported:\n" . $mysql_error) . "\n\nThis is a notice email to let you know that SMF could not connect to the database, contact your host if this continues.");
 		}
 	}
@@ -421,7 +421,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 		$email_condition = '';
 
 	// Search by username, display name, and email address.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, memberName, realName, emailAddress, hideEmail
 		FROM {$db_prefix}members
 		WHERE (memberName $comparison '" . implode("' OR memberName $comparison '", $names) . "'
@@ -429,7 +429,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 			" . ($buddies_only ? 'AND ID_MEMBER IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
 			AND is_activated IN (1, 11)" . ($max == null ? '' : "
 		LIMIT " . (int) $max), __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$results[$row['ID_MEMBER']] = array(
 			'id' => $row['ID_MEMBER'],
@@ -440,7 +440,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>'
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Return all the results.
 	return $results;
@@ -525,14 +525,14 @@ function RequestMembers()
 	if (function_exists('iconv'))
 		header('Content-Type: text/plain; charset=UTF-8');
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT realName
 		FROM {$db_prefix}members
 		WHERE realName LIKE '$_REQUEST[search]'" . (isset($_REQUEST['buddies']) ? '
 			AND ID_MEMBER IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
 			AND is_activated IN (1, 11)
 		LIMIT " . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'), __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (function_exists('iconv'))
 		{
@@ -560,7 +560,7 @@ function RequestMembers()
 
 		echo $row['realName'], "\n";
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	obExit(false);
 }
@@ -568,19 +568,19 @@ function RequestMembers()
 // This function generates a random password for a user and emails it to them.
 function resetPassword($memID, $username = null)
 {
-	global $db_prefix, $scripturl, $context, $txt, $sourcedir, $modSettings;
+	global $db_prefix, $scripturl, $context, $txt, $sourcedir, $modSettings, $smfFunc;
 
 	// Language... and a required file.
 	loadLanguage('Login');
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Get some important details.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT memberName, emailAddress
 		FROM {$db_prefix}members
 		WHERE ID_MEMBER = $memID", __FILE__, __LINE__);
-	list ($user, $email) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($user, $email) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	if ($username !== null)
 	{
@@ -664,21 +664,21 @@ function validatePassword($password, $username, $restrict_in = array())
 // Quickly find out what this user can and cannot do.
 function rebuildModCache()
 {
-	global $db_prefix, $user_info;
+	global $db_prefix, $user_info, $smfFunc;
 
 	// What groups can they moderate?
 	$group_query = allowedTo('manage_membergroups') ? 1 : 0;
 
 	if ($group_query == 0)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_GROUP
 			FROM {$db_prefix}group_moderators
 			WHERE ID_MEMBER = $user_info[id]", __FILE__, __LINE__);
 		$groups = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$groups[] = $row['ID_GROUP'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (empty($groups))
 			$group_query = '0';
@@ -710,13 +710,13 @@ function rebuildModCache()
 	$boards_mod = array();
 	if (!$user_info['is_guest'])
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_BOARD
 			FROM {$db_prefix}moderators
 			WHERE ID_MEMBER = $user_info[id]", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$boards_mod[] = $row['ID_BOARD'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	$mod_query = empty($boards_mod) ? '0' : 'b.ID_BOARD IN (' . implode(',', $boards_mod) . ')';

@@ -146,7 +146,7 @@ function Packages()
 // Test install a package.
 function PackageInstallTest()
 {
-	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $db_prefix;
+	global $boarddir, $txt, $context, $scripturl, $sourcedir, $modSettings, $db_prefix, $smfFunc;
 
 	// You have to specify a file!!
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -223,17 +223,17 @@ function PackageInstallTest()
 		fatal_lang_error(1, false);
 
 	// Load up any custom themes we may want to install into...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_THEME, variable, value
 		FROM {$db_prefix}themes
 		WHERE (ID_THEME = 1 OR ID_THEME IN ($modSettings[knownThemes]))
 			AND variable IN ('name', 'theme_dir')", __FILE__, __LINE__);
 	$theme_paths = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$theme_paths[$row['ID_THEME']][$row['variable']] = $row['value'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get the package info...
 	$packageInfo = getPackageInfo($context['filename']);
@@ -247,17 +247,17 @@ function PackageInstallTest()
 	$context['is_installed'] = false;
 
 	// See if it is installed?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT version, themes_installed
 		FROM {$db_prefix}log_packages
 		WHERE package_id = '" . addslashes($packageInfo['id']) . "'
 			AND install_state = 1", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Wait, it's not installed yet!
 	if (!isset($old_version) && $context['uninstalling'])
@@ -468,7 +468,7 @@ function PackageInstallTest()
 function PackageInstall()
 {
 	global $boarddir, $txt, $context, $boardurl, $scripturl, $sourcedir, $modSettings;
-	global $db_prefix, $user_info, $ID_MEMBER;
+	global $db_prefix, $user_info, $ID_MEMBER, $smfFunc;
 
 	// If there's no file, what are we installing?
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -542,17 +542,17 @@ function PackageInstall()
 	}
 
 	// Now load up the paths of the themes that we need to know about.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_THEME, variable, value
 		FROM {$db_prefix}themes
 		WHERE ID_THEME IN (" . implode(',', $custom_themes) . ")
 			AND variable IN ('name', 'theme_dir')", __FILE__, __LINE__);
 	$theme_paths = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$theme_paths[$row['ID_THEME']][$row['variable']] = $row['value'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get the package info...
 	$packageInfo = getPackageInfo($context['filename']);
@@ -573,17 +573,17 @@ function PackageInstall()
 	$context['is_installed'] = false;
 
 	// Is it actually installed?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT version, themes_installed
 		FROM {$db_prefix}log_packages
 		WHERE package_id = '" . addslashes($packageInfo['id']) . "'
 			AND install_state = 1", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Wait, it's not installed yet!
 	// !!! TODO: Replace with a better error message!
@@ -696,7 +696,7 @@ function PackageInstall()
 		package_put_contents($boarddir . '/Packages/installed.list', time());
 
 		// See if this is already installed, and change it's state as required.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_INSTALL, install_state
 			FROM {$db_prefix}log_packages
 			WHERE install_state != 0
@@ -705,12 +705,12 @@ function PackageInstall()
 			ORDER BY time_installed DESC
 			LIMIT 1", __FILE__, __LINE__);
 		$is_upgrade = false;
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// Uninstalling?
 			if ($context['uninstalling'])
 			{
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}log_packages
 					SET install_state = 0, member_removed = '$user_info[name]', ID_MEMBER_REMOVED = $ID_MEMBER,
 						time_removed = " . time() . "
@@ -731,7 +731,7 @@ function PackageInstall()
 			// What failed steps?
 			$failed_step_insert = addslashes(serialize($failed_steps));
 		
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}log_packages
 					(filename, name, package_id, version, ID_MEMBER_INSTALLED, member_installed, time_installed,
 					install_state, failed_steps, themes_installed)
@@ -741,7 +741,7 @@ function PackageInstall()
 					$ID_MEMBER, '$user_info[name]', " . time() . ", " . ($is_upgrade ? 2 : 1) . ", '$failed_step_insert',
 					'$themes_installed')", __FILE__, __LINE__);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		$context['install_finished'] = true;
 	}
@@ -856,7 +856,7 @@ function InstalledList()
 // Empty out the installed list.
 function FlushInstall()
 {
-	global $boarddir, $sourcedir, $db_prefix;
+	global $boarddir, $sourcedir, $db_prefix, $smfFunc;
 
 	include_once($sourcedir . '/Subs-Package.php');
 
@@ -864,7 +864,7 @@ function FlushInstall()
 	package_put_contents($boarddir . '/Packages/installed.list', time());
 
 	// Set everything as uninstalled.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_packages
 		SET install_state = 0", __FILE__, __LINE__);
 

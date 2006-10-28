@@ -51,7 +51,7 @@ if (!defined('SMF'))
 // View the forum's error log.
 function ViewErrorLog()
 {
-	global $db_prefix, $scripturl, $txt, $context, $modSettings, $user_profile, $filter, $boarddir, $sourcedir, $themedir;
+	global $db_prefix, $scripturl, $txt, $context, $modSettings, $user_profile, $filter, $boarddir, $sourcedir, $themedir, $smfFunc;
 
 	// Viewing contents of a file?
 	if (isset($_GET['file']))
@@ -91,12 +91,12 @@ function ViewErrorLog()
 		deleteErrors();
 
 	// Just how many errors are there?
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_errors" . (isset($filter) ? "
 		WHERE $filter[variable] LIKE '{$filter['value']['sql']}'" : ''), __FILE__, __LINE__);
-	list ($num_errors) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($num_errors) = $smfFunc['db_fetch_row']($result);
+	$smfFunc['db_free_result']($result);
 
 	// If this filter is empty...
 	if ($num_errors == 0 && isset($filter))
@@ -114,7 +114,7 @@ function ViewErrorLog()
 	$context['start'] = $_GET['start'];
 
 	// Find and sort out the errors.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_ERROR, ID_MEMBER, ip, url, logTime, message, session, errorType, file, line
 		FROM {$db_prefix}log_errors" . (isset($filter) ? "
 		WHERE $filter[variable] LIKE '{$filter['value']['sql']}'" : '') . "
@@ -126,7 +126,7 @@ function ViewErrorLog()
 /*	// construct the string used in the preg_match
 	$preg_str = '~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~';
 */
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$search_message = preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '%', addcslashes($row['message'], '\\_%'));
 		if ($search_message == $filter['value']['sql'])
@@ -176,20 +176,20 @@ function ViewErrorLog()
 		// Make a list of members to load later.
 		$members[$row['ID_MEMBER']] = $row['ID_MEMBER'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Load the member data.
 	if (!empty($members))
 	{
 		// Get some additional member info...
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, memberName, realName
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER IN (" . implode(', ', $members) . ")
 			LIMIT " . count($members), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$members[$row['ID_MEMBER']] = $row;
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// This is a guest...
 		$members[0] = array(
@@ -249,12 +249,12 @@ function ViewErrorLog()
 	
 	$sum = 0;
 	// What type of errors do we have and how many do we have?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT errorType, COUNT(*) AS numErrors
 		FROM {$db_prefix}log_errors
 		GROUP BY errorType
 		ORDER BY errorType='critical' DESC, errorType ASC", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Total errors so far?
 		$sum += $row['numErrors'];
@@ -266,7 +266,7 @@ function ViewErrorLog()
 			'is_selected' => isset($filter) && $filter['value']['sql'] == addslashes(addcslashes($row['errorType'], '\\_%')),
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Update the all errors tab with the total number of errors
 	$context['admin_tabs']['tabs']['all']['title'] .= ' (' . $sum . ')';
@@ -286,24 +286,24 @@ function ViewErrorLog()
 // Delete errors from the database.
 function deleteErrors()
 {
-	global $db_prefix, $filter;
+	global $db_prefix, $filter, $smfFunc;
 
 	// Make sure the session exists and is correct; otherwise, might be a hacker.
 	checkSession();
 
 	// Delete all or just some?
 	if (isset($_POST['delall']) && !isset($filter))
-		db_query("
+		$smfFunc['db_query']("
 			TRUNCATE {$db_prefix}log_errors", __FILE__, __LINE__);
 	// Deleting all with a filter?
 	elseif (isset($_POST['delall']) && isset($filter))
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_errors
 			WHERE $filter[variable] LIKE '" . $filter['value']['sql'] . "'", __FILE__, __LINE__);
 	// Just specific errors?
 	elseif (!empty($_POST['delete']))
 	{
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_errors
 			WHERE ID_ERROR IN (" . implode(',', array_unique($_POST['delete'])) . ')', __FILE__, __LINE__);
 

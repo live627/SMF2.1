@@ -48,7 +48,7 @@ if (!defined('SMF'))
 function BoardIndex()
 {
 	global $txt, $scripturl, $db_prefix, $user_info, $sourcedir;
-	global $modSettings, $context, $settings;
+	global $modSettings, $context, $settings, $smfFunc;
 
 	// For wireless, we use the Wireless template...
 	if (WIRELESS)
@@ -63,7 +63,7 @@ function BoardIndex()
 	);
 
 	// Find all boards and categories, as well as related information.  This will be sorted by the natural order of boards and categories, which we control.
-	$result_boards = db_query("
+	$result_boards = $smfFunc['db_query']("
 		SELECT
 			c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.description,
 			b.numPosts, b.numTopics, b.unapprovedPosts, b.unapprovedTopics, b.ID_PARENT,
@@ -87,7 +87,7 @@ function BoardIndex()
 
 	// Run through the categories and boards....
 	$context['categories'] = array();
-	while ($row_board = mysql_fetch_assoc($result_boards))
+	while ($row_board = $smfFunc['db_fetch_assoc']($result_boards))
 	{
 		$ignoreThisBoard = in_array($row_board['ID_BOARD'], $user_info['ignoreboards']);
 		$row_board['isRead'] = !empty($row_board['isRead']) || $ignoreThisBoard ? '1' : '0';
@@ -278,10 +278,10 @@ function BoardIndex()
 				'ref' => &$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'],
 			);
 	}
-	mysql_free_result($result_boards);
+	$smfFunc['db_free_result']($result_boards);
 
 	// Load the users online right now.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT
 			lo.ID_MEMBER, lo.logTime, mem.realName, mem.memberName, mem.showOnline,
 			mg.onlineColor, mg.ID_GROUP, mg.groupName
@@ -298,7 +298,7 @@ function BoardIndex()
 
 	$context['show_buddies'] = !empty($user_info['buddies']);
 
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		if (empty($row['realName']))
 		{
@@ -344,7 +344,7 @@ function BoardIndex()
 				'color' => $row['onlineColor']
 			);
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	krsort($context['users_online']);
 	krsort($context['list_users_online']);
@@ -376,16 +376,16 @@ function BoardIndex()
 		// One or more stats are not up-to-date?
 		if (!isset($modSettings['mostOnlineUpdated']) || $modSettings['mostOnlineUpdated'] != $date)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT mostOn
 				FROM {$db_prefix}log_activity
 				WHERE date = '$date'
 				LIMIT 1", __FILE__, __LINE__);
 
 			// The log_activity hasn't got an entry for today?
-			if (mysql_num_rows($request) == 0)
+			if ($smfFunc['db_num_rows']($request) == 0)
 			{
-				db_query("
+				$smfFunc['db_query']("
 					INSERT IGNORE INTO {$db_prefix}log_activity
 						(date, mostOn)
 					VALUES ('$date', $total_users)", __FILE__, __LINE__);
@@ -393,14 +393,14 @@ function BoardIndex()
 			// There's an entry in log_activity on today...
 			else
 			{
-				list ($modSettings['mostOnlineToday']) = mysql_fetch_row($request);
+				list ($modSettings['mostOnlineToday']) = $smfFunc['db_fetch_row']($request);
 
 				if ($total_users > $modSettings['mostOnlineToday'])
 					trackStats(array('mostOn' => $total_users));
 
 				$total_users = max($total_users, $modSettings['mostOnlineToday']);
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			updateSettings(array('mostOnlineUpdated' => $date, 'mostOnlineToday' => $total_users));
 		}

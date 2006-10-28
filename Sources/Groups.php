@@ -81,10 +81,10 @@ function Groups()
 // This very simply lists the groups, nothing snazy.
 function GroupList()
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings;
+	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc;
 
 	// Yep, find the groups...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mg.ID_GROUP, mg.groupName, mg.description, mg.groupType, mg.onlineColor, mg.hidden,
 			mg.stars, !ISNULL(gm.ID_MEMBER) AS can_moderate
 		FROM {$db_prefix}membergroups AS mg
@@ -96,7 +96,7 @@ function GroupList()
 	$context['groups'] = array();
 	$group_ids = array();
 	$context['can_moderate'] = allowedTo('manage_membergroups');
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// We only list the groups they can see.
 		if ($row['hidden'] && !$row['can_moderate'] && !allowedTo('manage_membergroups'))
@@ -117,24 +117,24 @@ function GroupList()
 		$context['can_moderate'] |= $row['can_moderate'];
 		$group_ids[] = $row['ID_GROUP'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Count up the members separately...
 	if (!empty($group_ids))
 	{
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT ID_GROUP, COUNT(*) AS num_members
 			FROM {$db_prefix}members
 			WHERE ID_GROUP IN (" . implode(', ', $group_ids) . ")
 			GROUP BY ID_GROUP", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 
 		// Only do additional groups if we can moderate...
 		if ($context['can_moderate'])
 		{
-			$query = db_query("
+			$query = $smfFunc['db_query']("
 				SELECT mg.ID_GROUP, COUNT(*) AS num_members
 				FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
 				WHERE mg.ID_GROUP IN (" . implode(', ', $group_ids) . ")
@@ -142,9 +142,9 @@ function GroupList()
 					AND mem.ID_GROUP != mg.ID_GROUP
 					AND FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups)
 				GROUP BY mg.ID_GROUP", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($query))
+			while ($row = $smfFunc['db_fetch_assoc']($query))
 				$context['groups'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
-			mysql_free_result($query);
+			$smfFunc['db_free_result']($query);
 		}
 	}
 
@@ -164,17 +164,17 @@ function MembergroupMembers()
 		fatal_lang_error('membergroup_does_not_exist', false);
 
 	// Load up the group details.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP AS id, groupName AS name, minPosts = -1 AS assignable, hidden, onlineColor,
 			stars, description, minPosts != -1 AS is_post_group
 		FROM {$db_prefix}membergroups
 		WHERE ID_GROUP = $_REQUEST[group]
 		LIMIT 1", __FILE__, __LINE__);
 	// Doesn't exist?
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('membergroup_does_not_exist', false);
-	$context['group'] = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$context['group'] = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Fix the stars.
 	$context['group']['stars'] = explode('#', $context['group']['stars']);
@@ -187,13 +187,13 @@ function MembergroupMembers()
 	);
 
 	// Load all the group moderators, for fun.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mem.ID_MEMBER, mem.realName
 		FROM ({$db_prefix}group_moderators AS mods, {$db_prefix}members AS mem)
 		WHERE mods.ID_GROUP = $_REQUEST[group]
 			AND mem.ID_MEMBER = mods.ID_MEMBER", __FILE__, __LINE__);
 	$context['group']['moderators'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['group']['moderators'][] = array(
 			'id' => $row['ID_MEMBER'],
@@ -203,7 +203,7 @@ function MembergroupMembers()
 		if ($user_info['id'] == $row['ID_MEMBER'])
 			$context['group']['can_moderate'] = true;
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// If this group is hidden then it can only "exists" if the user can moderate it!
 	if ($context['group']['hidden'] && !$context['group']['can_moderate'])
@@ -246,7 +246,7 @@ function MembergroupMembers()
 				unset($memberNames[$index]);
 		}
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}members
 			WHERE (LOWER(memberName) IN ('" . implode("', '", $memberNames) . "') OR LOWER(realName) IN ('" . implode("', '", $memberNames) . "'))
@@ -254,9 +254,9 @@ function MembergroupMembers()
 				AND NOT FIND_IN_SET($_REQUEST[group], additionalGroups)
 			LIMIT " . count($memberNames), __FILE__, __LINE__);
 		$members = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$members[] = $row['ID_MEMBER'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// !!! Add $_POST['additional'] to templates!
 
@@ -296,26 +296,26 @@ function MembergroupMembers()
 		$where = $context['group']['is_post_group'] ? "ID_POST_GROUP = $_REQUEST[group]" : "ID_GROUP = $_REQUEST[group]";
 
 	// Count members of the group.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}members
 		WHERE $where", __FILE__, __LINE__);
-	list ($context['total_members']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($context['total_members']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Create the page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=membergroups;sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
 	$context['start'] = $_REQUEST['start'];
 
 	// Load up all members of this group.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, memberName, realName, emailAddress, memberIP, dateRegistered, lastLogin, posts, is_activated
 		FROM {$db_prefix}members
 		WHERE $where
 		ORDER BY $querySort " . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . "
 		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
 	$context['members'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$last_online = empty($row['lastLogin']) ? $txt['never'] : timeformat($row['lastLogin']);
 
@@ -334,7 +334,7 @@ function MembergroupMembers()
 			'is_activated' => $row['is_activated'] % 10 == 1,
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Select the template.
 	$context['sub_template'] = 'group_members';
@@ -344,7 +344,7 @@ function MembergroupMembers()
 // Show and manage all group requests.
 function GroupRequests()
 {
-	global $txt, $db_prefix, $context, $scripturl, $user_info, $sourcedir;
+	global $txt, $db_prefix, $context, $scripturl, $user_info, $sourcedir, $smfFunc;
 
 	// Set up the template stuff...
 	$context['page_title'] = $txt['mc_group_requests'];
@@ -378,7 +378,7 @@ function GroupRequests()
 		else
 		{
 			// Get the details of all the members concerned...
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT lgr.ID_REQUEST, lgr.ID_MEMBER, lgr.ID_GROUP, mem.emailAddress, mem.ID_GROUP AS primary_group,
 					mem.additionalGroups AS additional_groups, mem.lngfile, mem.memberName, mem.notifyTypes,
 					mg.hidden, mg.groupName
@@ -390,7 +390,7 @@ function GroupRequests()
 				ORDER BY mem.lngfile", __FILE__, __LINE__);
 			$email_details = array();
 			$group_changes = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// If we are approving work out what their new group is.
 				if ($_POST['req_action'] == 'approve')
@@ -433,10 +433,10 @@ function GroupRequests()
 						'language' => $row['lngfile'],
 					);					
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			// Remove the evidence...
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_group_requests
 				WHERE ID_REQUEST IN (" . implode(',', $_POST['groupr']) . ")", __FILE__, __LINE__);
 
@@ -458,7 +458,7 @@ function GroupRequests()
 							if ($value == 0 || trim($value) == '')
 								unset($groups['add'][$key]);
 
-						db_query("
+						$smfFunc['db_query']("
 							UPDATE {$db_prefix}members
 							SET ID_GROUP = $groups[primary], additionalGroups = '" . implode(',', $groups['add']) . "'
 							WHERE ID_MEMBER = $id", __FILE__, __LINE__);
@@ -501,12 +501,12 @@ function GroupRequests()
 	}
 
 	// There *could* be many, so paginate.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_group_requests AS lgr
 		WHERE $where", __FILE__, __LINE__);
-	list ($context['total_requests']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($context['total_requests']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// So, that means we can page index, yes?
 	$context['page_index'] = constructPageIndex($scripturl . '?action=groups;sa=requests', $_GET['start'], $context['total_requests'], 10);
@@ -514,7 +514,7 @@ function GroupRequests()
 
 	// Fetch all the group requests...
 	//!!! What can they actually see?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT lgr.ID_REQUEST, lgr.ID_MEMBER, lgr.ID_GROUP, lgr.time_applied, lgr.reason,
 			mem.memberName, mg.groupName, mg.onlineColor
 		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
@@ -524,7 +524,7 @@ function GroupRequests()
 		ORDER BY lgr.ID_REQUEST DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['group_requests'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['group_requests'][] = array(
 			'id' => $row['ID_REQUEST'],
@@ -544,7 +544,7 @@ function GroupRequests()
 			'time_submitted' => timeformat($row['time_applied']),
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 ?>

@@ -38,7 +38,7 @@ if (!defined('SMF'))
 // Modify a user's karma.
 function ModifyKarma()
 {
-	global $modSettings, $db_prefix, $txt, $ID_MEMBER, $user_info, $topic;
+	global $modSettings, $db_prefix, $txt, $ID_MEMBER, $user_info, $topic, $smfFunc;
 
 	// If the mod is disabled, show an error.
 	if (empty($modSettings['karmaMode']))
@@ -66,7 +66,7 @@ function ModifyKarma()
 	$dir = $_REQUEST['sa'] != 'applaud' ? -1 : 1;
 
 	// Delete any older items from the log. (karmaWaitTime is by hour.)
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_karma
 		WHERE " . time() . " - logTime > " . (int) ($modSettings['karmaWaitTime'] * 3600), __FILE__, __LINE__);
 
@@ -77,22 +77,22 @@ function ModifyKarma()
 	if (!empty($modSettings['karmaTimeRestrictAdmins']) || !allowedTo('moderate_forum'))
 	{
 		// Find out if this user has done this recently...
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT action
 			FROM {$db_prefix}log_karma
 			WHERE ID_TARGET = $_REQUEST[uid]
 				AND ID_EXECUTOR = $ID_MEMBER
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) > 0)
-			list ($action) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		if ($smfFunc['db_num_rows']($request) > 0)
+			list ($action) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// They haven't, not before now, anyhow.
 	if (empty($action) || empty($modSettings['karmaWaitTime']))
 	{
 		// Put it in the log.
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_karma
 				(action, ID_TARGET, ID_EXECUTOR, logTime)
 			VALUES ($dir, $_REQUEST[uid], $ID_MEMBER, " . time() . ')', __FILE__, __LINE__);
@@ -107,7 +107,7 @@ function ModifyKarma()
 			fatal_lang_error('smf62', false, array($modSettings['karmaWaitTime'], $txt[578]));
 
 		// You decided to go back on your previous choice?
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_karma
 			SET action = $dir, logTime = " . time() . "
 			WHERE ID_TARGET = $_REQUEST[uid]

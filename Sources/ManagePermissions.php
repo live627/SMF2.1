@@ -149,7 +149,7 @@ function ModifyPermissions()
 
 function PermissionIndex()
 {
-	global $db_prefix, $txt, $scripturl, $context, $settings, $modSettings;
+	global $db_prefix, $txt, $scripturl, $context, $settings, $modSettings, $smfFunc;
 
 	$context['page_title'] = $txt['permissions_title'];
 
@@ -160,12 +160,12 @@ function PermissionIndex()
 	loadPermissionProfiles();
 
 	// Determine the number of ungrouped members.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}members
 		WHERE ID_GROUP = 0", __FILE__, __LINE__);
-	list ($num_members) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($num_members) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Fill the context variable with 'Guests' and 'Regular Members'.
 	$context['groups'] = array(
@@ -213,12 +213,12 @@ function PermissionIndex()
 	$normalGroups = array();
 
 	// Query the database defined membergroups.
-	$query = db_query("
+	$query = $smfFunc['db_query']("
 		SELECT ID_GROUP, ID_PARENT, groupName, minPosts, onlineColor, stars
 		FROM {$db_prefix}membergroups" . (empty($modSettings['permission_enable_postgroups']) ? "
 		WHERE minPosts = -1" : '') . "
 		ORDER BY ID_PARENT = -2 DESC, minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($query))
+	while ($row = $smfFunc['db_fetch_assoc']($query))
 	{
 		// If it's inherited just ass it as a child.
 		if ($row['ID_PARENT'] != -2)
@@ -255,35 +255,35 @@ function PermissionIndex()
 		else
 			$postGroups[$row['ID_GROUP']] = $row['ID_GROUP'];
 	}
-	mysql_free_result($query);
+	$smfFunc['db_free_result']($query);
 
 	// Get the number of members in this post group.
 	if (!empty($postGroups))
 	{
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT ID_POST_GROUP AS ID_GROUP, COUNT(*) AS num_members
 			FROM {$db_prefix}members
 			WHERE ID_POST_GROUP IN (" . implode(', ', $postGroups) . ")
 			GROUP BY ID_POST_GROUP", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 	}
 
 	if (!empty($normalGroups))
 	{
 		// First, the easy one!
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT ID_GROUP, COUNT(*) AS num_members
 			FROM {$db_prefix}members
 			WHERE ID_GROUP IN (" . implode(', ', $normalGroups) . ")
 			GROUP BY ID_GROUP", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 
 		// This one is slower, but it's okay... careful not to count twice!
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT mg.ID_GROUP, COUNT(*) AS num_members
 			FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
 			WHERE mg.ID_GROUP IN (" . implode(', ', $normalGroups) . ")
@@ -291,9 +291,9 @@ function PermissionIndex()
 				AND mem.ID_GROUP != mg.ID_GROUP
 				AND FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups)
 			GROUP BY mg.ID_GROUP", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($query))
+		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 	}
 
 	foreach ($context['groups'] as $id => $data)
@@ -320,27 +320,27 @@ function PermissionIndex()
 
 	if (empty($_REQUEST['pid']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_GROUP, COUNT(*) AS numPermissions, addDeny
 			FROM {$db_prefix}permissions
 			GROUP BY ID_GROUP, addDeny", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (isset($context['groups'][(int) $row['ID_GROUP']]) && (!empty($row['addDeny']) || $row['ID_GROUP'] != -1))
 				$context['groups'][(int) $row['ID_GROUP']]['num_permissions'][empty($row['addDeny']) ? 'denied' : 'allowed'] = $row['numPermissions'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Get the "default" profile permissions too.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_PROFILE, ID_GROUP, COUNT(*) AS numPermissions, addDeny
 			FROM {$db_prefix}board_permissions
 			WHERE ID_PROFILE = 1
 			GROUP BY ID_GROUP, addDeny", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (isset($context['groups'][(int) $row['ID_GROUP']]) && (!empty($row['addDeny']) || $row['ID_GROUP'] != -1))
 				$context['groups'][(int) $row['ID_GROUP']]['num_permissions'][empty($row['addDeny']) ? 'denied' : 'allowed'] += $row['numPermissions'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 	else
 	{
@@ -350,17 +350,17 @@ function PermissionIndex()
 		$context['admin_tabs']['tabs']['board_permissions']['is_selected'] = true;
 		$context['admin_tabs']['tabs']['index']['is_selected'] = false;
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_PROFILE, ID_GROUP, COUNT(*) AS numPermissions, addDeny
 			FROM {$db_prefix}board_permissions
 			WHERE ID_PROFILE = $_REQUEST[pid]
 			GROUP BY ID_PROFILE, ID_GROUP, addDeny", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (isset($context['groups'][(int) $row['ID_GROUP']]) && (!empty($row['addDeny']) || $row['ID_GROUP'] != -1))
 				$context['groups'][(int) $row['ID_GROUP']]['num_permissions'][empty($row['addDeny']) ? 'denied' : 'allowed'] += $row['numPermissions'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		$context['profile'] = array(
 			'id' => $_REQUEST['pid'],
@@ -374,14 +374,14 @@ function PermissionIndex()
 
 function PermissionByBoard()
 {
-	global $context, $db_prefix, $modSettings, $txt;
+	global $context, $db_prefix, $modSettings, $txt, $smfFunc;
 
 	$context['page_title'] = $txt['permissions_boards'];
 
 	// Load all permission profiles.
 	loadPermissionProfiles();
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT b.ID_BOARD, b.name, COUNT(mods.ID_MEMBER) AS moderators, b.memberGroups, b.childLevel,
 			b.ID_PROFILE
 		FROM {$db_prefix}boards AS b
@@ -390,7 +390,7 @@ function PermissionByBoard()
 		GROUP BY ID_BOARD
 		ORDER BY boardOrder", __FILE__, __LINE__);
 	$context['boards'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Format the profile name.
 		$profile_name = $context['profiles'][$row['ID_PROFILE']]['name'];
@@ -413,14 +413,14 @@ function PermissionByBoard()
 			'profile_name' => $profile_name,
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'by_board';
 }
 
 function SetQuickGroups()
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	checkSession();
 
@@ -483,14 +483,14 @@ function SetQuickGroups()
 		if (empty($_REQUEST['pid']))
 		{
 			// Retrieve current permissions of group.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT permission, addDeny
 				FROM {$db_prefix}permissions
 				WHERE ID_GROUP = $_POST[copy_from]", __FILE__, __LINE__);
 			$target_perm = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$target_perm[$row['permission']] = $row['addDeny'];
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			$insert_string = '';
 			foreach ($_POST['group'] as $group_id)
@@ -498,7 +498,7 @@ function SetQuickGroups()
 					$insert_string .= "('$perm', $group_id, $addDeny),";
 
 			// Delete the previous permissions...
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}permissions
 				WHERE ID_GROUP IN (" . implode(', ', $_POST['group']) . ")", __FILE__, __LINE__);
 
@@ -508,7 +508,7 @@ function SetQuickGroups()
 				$insert_string = substr($insert_string, 0, -1);
 
 				// ..and insert the new ones.
-				db_query("
+				$smfFunc['db_query']("
 					INSERT IGNORE INTO {$db_prefix}permissions
 						(permission, ID_GROUP, addDeny)
 					VALUES $insert_string", __FILE__, __LINE__);
@@ -516,15 +516,15 @@ function SetQuickGroups()
 		}
 
 		// Now do the same for the board permissions.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT permission, addDeny
 			FROM {$db_prefix}board_permissions
 			WHERE ID_GROUP = $_POST[copy_from]
 				AND ID_PROFILE = $bid", __FILE__, __LINE__);
 		$target_perm = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$target_perm[$row['permission']] = $row['addDeny'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		$insert_string = '';
 		foreach ($_POST['group'] as $group_id)
@@ -532,7 +532,7 @@ function SetQuickGroups()
 				$insert_string .= "('$perm', $group_id, $bid, $addDeny),";
 
 		// Delete the previous global board permissions...
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}board_permissions
 			WHERE ID_GROUP IN (" . implode(', ', $_POST['group']) . ")
 				AND ID_PROFILE = $bid", __FILE__, __LINE__);
@@ -542,7 +542,7 @@ function SetQuickGroups()
 		{
 			$insert_string = substr($insert_string, 0, -1);
 
-			db_query("
+			$smfFunc['db_query']("
 				INSERT IGNORE INTO {$db_prefix}board_permissions
 					(permission, ID_GROUP, ID_PROFILE, addDeny)
 				VALUES $insert_string", __FILE__, __LINE__);
@@ -564,12 +564,12 @@ function SetQuickGroups()
 		if ($_POST['add_remove'] == 'clear')
 		{
 			if ($permissionType == 'membergroup')
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}permissions
 					WHERE ID_GROUP IN (" . implode(', ', $_POST['group']) . ")
 						AND permission = '$permission'", __FILE__, __LINE__);
 			else
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}board_permissions
 					WHERE ID_GROUP IN (" . implode(', ', $_POST['group']) . ")
 						AND ID_PROFILE = $bid
@@ -580,7 +580,7 @@ function SetQuickGroups()
 		{
 			$addDeny = $_POST['add_remove'] == 'add' ? '1' : '0';
 			if ($permissionType == 'membergroup')
-				db_query("
+				$smfFunc['db_query']("
 					REPLACE INTO {$db_prefix}permissions
 						(permission, ID_GROUP, addDeny)
 					VALUES
@@ -588,7 +588,7 @@ function SetQuickGroups()
 						('$permission', ", $_POST['group']) . ", $addDeny)", __FILE__, __LINE__);
 			// Board permissions go into the other table.
 			else
-				db_query("
+				$smfFunc['db_query']("
 					REPLACE INTO {$db_prefix}board_permissions
 						(permission, ID_GROUP, ID_PROFILE, addDeny)
 					VALUES
@@ -606,7 +606,7 @@ function SetQuickGroups()
 // Switch a board from one permission profile to another.
 function SwitchBoard()
 {
-	global $db_prefix, $modSettings, $context, $txt;
+	global $db_prefix, $modSettings, $context, $txt, $smfFunc;
 
 	$_GET['boardid'] = (int) $_GET['boardid'];
 
@@ -614,13 +614,13 @@ function SwitchBoard()
 	loadPermissionProfiles();
 
 	// Load the board details.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_BOARD, name, ID_PROFILE
 		FROM {$db_prefix}boards
 		WHERE ID_BOARD = $_GET[boardid]", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		redirectexit('action=admin;area=permissions;sa=board');
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['board'] = array(
 			'id' => $row['ID_BOARD'],
@@ -628,7 +628,7 @@ function SwitchBoard()
 			'profile' => $row['ID_PROFILE'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Cycle through the permission profile types and sort them.
 	$context['predefined_profiles'] = array();
@@ -678,7 +678,7 @@ function SwitchBoard()
 			// Otherwise we need to create a new profile for this board.
 			else
 			{
-				db_query("
+				$smfFunc['db_query']("
 					INSERT INTO {$db_prefix}permission_profiles
 						(profile_name, ID_PARENT)
 					VALUES
@@ -687,24 +687,24 @@ function SwitchBoard()
 				$profile_id = db_insert_id();
 
 				// Assuming it worked copy the previous profile across.
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT ID_GROUP, permission, addDeny
 					FROM {$db_prefix}board_permissions
 					WHERE ID_PROFILE = " . $context['board']['profile'], __FILE__, __LINE__);
 				$inserts = array();
-				while ($row = mysql_fetch_assoc($request))
+				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$inserts[] = "($profile_id, $row[ID_GROUP], '$row[permission]', $row[addDeny])";
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 
 				if (!empty($inserts))
-					db_query("
+					$smfFunc['db_query']("
 						INSERT INTO {$db_prefix}board_permissions
 							(ID_PROFILE, ID_GROUP, permission, addDeny)
 						VALUES
 							" . implode(',', $inserts), __FILE__, __LINE__);
 
 				// Link the board to the profile.
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET ID_PROFILE = $profile_id
 					WHERE ID_BOARD = $_GET[boardid]", __FILE__, __LINE__);
@@ -731,7 +731,7 @@ function SwitchBoard()
 		if ($profile_id != $context['board']['profile'])
 		{
 			// Update the board first.
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}boards
 				SET ID_PROFILE = $profile_id
 				WHERE ID_BOARD = $_GET[boardid]", __FILE__, __LINE__);
@@ -741,16 +741,16 @@ function SwitchBoard()
 			if ($old_profile != 1 && $context['profiles'][$old_profile]['parent'] == $_GET['boardid'])
 			{
 				// All the old sk00l boards get this new profile.
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET ID_PROFILE = $profile_id
 					WHERE ID_PROFILE = $old_profile", __FILE__, __LINE__);
 
 				// The old permissions are gone, the old profile is dead!
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}board_permissions
 					WHERE ID_PROFILE = $old_profile", __FILE__, __LINE__);
-				db_query("
+				$smfFunc['db_query']("
 					DELETE FROM {$db_prefix}permission_profiles
 					WHERE ID_PROFILE = $old_profile", __FILE__, __LINE__);
 			}
@@ -770,7 +770,7 @@ function SwitchBoard()
 
 function ModifyMembergroup()
 {
-	global $db_prefix, $context, $txt, $modSettings;
+	global $db_prefix, $context, $txt, $modSettings, $smfFunc;
 
 	// It's not likely you'd end up here with this setting disabled.
 	if ($_GET['group'] == 1)
@@ -783,13 +783,13 @@ function ModifyMembergroup()
 
 	if ($context['group']['id'] > 0)
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT groupName, ID_PARENT
 			FROM {$db_prefix}membergroups
 			WHERE ID_GROUP = {$context['group']['id']}
 			LIMIT 1", __FILE__, __LINE__);
-		list ($context['group']['name'], $parent) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($context['group']['name'], $parent) = $smfFunc['db_fetch_row']($result);
+		$smfFunc['db_free_result']($result);
 
 		// Cannot edit an inherited group!
 		if ($parent != -2)
@@ -818,28 +818,28 @@ function ModifyMembergroup()
 	);
 	if ($context['group']['id'] != 3 && !$context['local'])
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT permission, addDeny
 			FROM {$db_prefix}permissions
 			WHERE ID_GROUP = $_GET[group]", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 			$permissions['membergroup'][empty($row['addDeny']) ? 'denied' : 'allowed'][] = $row['permission'];
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 		$context['permissions']['membergroup']['show'] = true;
 	}
 	else
 		$context['permissions']['membergroup']['show'] = false;
 
 	// Fetch current board permissions.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT permission, addDeny
 		FROM {$db_prefix}board_permissions
 		WHERE ID_GROUP = {$context['group']['id']}
 			AND ID_PROFILE = " . max(1, $context['profile']['id']), __FILE__, __LINE__);
 
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 		$permissions['board'][empty($row['addDeny']) ? 'denied' : 'allowed'][] = $row['permission'];
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 	$context['permissions']['board']['show'] = true;
 
 	// Loop through each permission and set whether it's checked.
@@ -870,7 +870,7 @@ function ModifyMembergroup()
 
 function ModifyMembergroup2()
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	checkSession();
 
@@ -882,13 +882,13 @@ function ModifyMembergroup2()
 		$parent = -2;
 	else
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT ID_PARENT
 			FROM {$db_prefix}membergroups
 			WHERE ID_GROUP = $_GET[group]
 			LIMIT 1", __FILE__, __LINE__);
-		list ($parent) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($parent) = $smfFunc['db_fetch_row']($result);
+		$smfFunc['db_free_result']($result);
 	}
 
 	if ($parent != -2)
@@ -913,11 +913,11 @@ function ModifyMembergroup2()
 	// Insert the general permissions.
 	if ($_GET['group'] != 3 && empty($_GET['pid']))
 	{
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}permissions
 			WHERE ID_GROUP = $_GET[group]", __FILE__, __LINE__);
 		if (!empty($givePerms['membergroup']))
-			db_query("
+			$smfFunc['db_query']("
 				INSERT IGNORE INTO {$db_prefix}permissions
 					(ID_GROUP, permission, addDeny)
 				VALUES ($_GET[group], '" . implode("),
@@ -926,12 +926,12 @@ function ModifyMembergroup2()
 
 	// Insert the boardpermissions.
 	$profileid = max(1, $_GET['pid']);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}board_permissions
 		WHERE ID_GROUP = $_GET[group]
 			AND ID_PROFILE = $profileid", __FILE__, __LINE__);
 	if (!empty($givePerms['board']))
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}board_permissions
 				(ID_GROUP, ID_PROFILE, permission, addDeny)
 			VALUES ($_GET[group], $profileid, '" . implode("),
@@ -949,7 +949,7 @@ function ModifyMembergroup2()
 // Screen for modifying general permission settings.
 function GeneralPermissionSettings()
 {
-	global $context, $db_prefix, $modSettings, $sourcedir, $txt, $scripturl;
+	global $context, $db_prefix, $modSettings, $sourcedir, $txt, $scripturl, $smfFunc;
 
 	$context['page_title'] = $txt['permission_settings_title'];
 	$context['sub_template'] = 'show_settings';
@@ -981,10 +981,10 @@ function GeneralPermissionSettings()
 		// Clear all deny permissions...if we want that.
 		if (empty($modSettings['permission_enable_deny']))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}permissions
 				WHERE addDeny = 0", __FILE__, __LINE__);
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}board_permissions
 				WHERE addDeny = 0", __FILE__, __LINE__);
 		}
@@ -994,22 +994,22 @@ function GeneralPermissionSettings()
 		{
 			// Get a list of postgroups.
 			$post_groups = array();
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_GROUP
 				FROM {$db_prefix}membergroups
 				WHERE minPosts != -1", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$post_groups[] = $row['ID_GROUP'];
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			// Remove'em.
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}permissions
 				WHERE ID_GROUP IN (" . implode(', ', $post_groups) . ')', __FILE__, __LINE__);
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}board_permissions
 				WHERE ID_GROUP IN (" . implode(', ', $post_groups) . ')', __FILE__, __LINE__);
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}membergroups
 				SET ID_PARENT = -2
 				WHERE ID_PARENT IN (" . implode(', ', $post_groups) . ')', __FILE__, __LINE__);
@@ -1024,7 +1024,7 @@ function GeneralPermissionSettings()
 // Set the permission level for a specific profile, group, or group for a profile.
 function setPermissionLevel($level, $group, $profile = 'null')
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// Levels by group... restrict, standard, moderator, maintenance.
 	$groupLevels = array(
@@ -1181,20 +1181,20 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		if (empty($groupLevels['global'][$level]))
 			return;
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}permissions
 			WHERE ID_GROUP = $group", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}board_permissions
 			WHERE ID_GROUP = $group
 				AND ID_PROFILE = 1", __FILE__, __LINE__);
 
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}permissions
 				(ID_GROUP, permission)
 			VALUES ($group, '" . implode("'),
 				($group, '", $groupLevels['global'][$level]) . "')", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}board_permissions
 				(ID_PROFILE, ID_GROUP, permission)
 			VALUES (1, $group, '" . implode("'),
@@ -1208,7 +1208,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		if (!empty($groupLevels['global'][$level]))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}board_permissions
 				WHERE ID_GROUP = $group
 					AND ID_PROFILE = $profile", __FILE__, __LINE__);
@@ -1216,7 +1216,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		if (!empty($groupLevels['board'][$level]))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}board_permissions
 					(ID_PROFILE, ID_GROUP, permission)
 				VALUES ($profile, $group, '" . implode("'),
@@ -1228,7 +1228,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 	{
 		$profile = (int) $profile;
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}board_permissions
 			WHERE ID_PROFILE = $profile", __FILE__, __LINE__);
 
@@ -1236,25 +1236,25 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			return;
 
 		// Get all the groups...
-		$query = db_query("
+		$query = $smfFunc['db_query']("
 			SELECT ID_GROUP
 			FROM {$db_prefix}membergroups
 			WHERE ID_GROUP > 3
 			ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
-		while ($row = mysql_fetch_row($query))
+		while ($row = $smfFunc['db_fetch_row']($query))
 		{
 			$group = $row[0];
 
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}board_permissions
 					(ID_PROFILE, ID_GROUP, permission)
 				VALUES ($profile, $group, '" . implode("'),
 					($profile, $group, '", $boardLevels[$level]) . "')", __FILE__, __LINE__);
 		}
-		mysql_free_result($query);
+		$smfFunc['db_free_result']($query);
 
 		// Add permissions for ungrouped members.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}board_permissions
 				(ID_PROFILE, ID_GROUP, permission)
 			VALUES ($profile, 0, '" . implode("'),
@@ -1466,7 +1466,7 @@ function loadAllPermissions()
 // Initialize a form with inline permissions.
 function init_inline_permissions($permissions, $excluded_groups = array())
 {
-	global $context, $db_prefix, $txt, $modSettings;
+	global $context, $db_prefix, $txt, $modSettings, $smfFunc;
 
 	loadLanguage('ManagePermissions');
 	loadTemplate('ManagePermissions');
@@ -1493,16 +1493,16 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 			),
 		);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP, IF(addDeny = 0, 'deny', 'on') AS status, permission
 		FROM {$db_prefix}permissions
 		WHERE ID_GROUP IN (-1, 0)
 			AND permission IN ('" . implode("', '", $permissions) . "')", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context[$row['permission']][$row['ID_GROUP']]['status'] = $row['status'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mg.ID_GROUP, mg.groupName, mg.minPosts, IFNULL(p.addDeny, -1) AS status, p.permission
 		FROM {$db_prefix}membergroups AS mg
 			LEFT JOIN {$db_prefix}permissions AS p ON (p.ID_GROUP = mg.ID_GROUP AND p.permission  IN ('" . implode("', '", $permissions) . "'))
@@ -1510,7 +1510,7 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 			AND mg.ID_PARENT = -2" . (empty($modSettings['permission_enable_postgroups']) ? "
 			AND mg.minPosts = -1" : '') . "
 		ORDER BY mg.minPosts, IF(mg.ID_GROUP < 4, mg.ID_GROUP, 4), mg.groupName", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Initialize each permission as being 'off' until proven otherwise.
 		foreach ($permissions as $permission)
@@ -1524,7 +1524,7 @@ function init_inline_permissions($permissions, $excluded_groups = array())
 
 		$context[$row['permission']][$row['ID_GROUP']]['status'] = empty($row['status']) ? 'deny' : ($row['status'] == 1 ? 'on' : 'off');
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Some permissions cannot be given to certain groups. Remove the groups.
 	foreach ($excluded_groups as $group)
@@ -1551,7 +1551,7 @@ function theme_inline_permissions($permission)
 // Save the permissions of a form containing inline permissions.
 function save_inline_permissions($permissions)
 {
-	global $context, $db_prefix;
+	global $context, $db_prefix, $smfFunc;
 
 	// No permissions? Not a great deal to do here.
 	if (!allowedTo('manage_permissions'))
@@ -1571,13 +1571,13 @@ function save_inline_permissions($permissions)
 	}
 
 	// Remove the old permissions...
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}permissions
 		WHERE permission IN ('" . implode("', '", $permissions) . "')", __FILE__, __LINE__);
 
 	// ...and replace them with new ones.
 	if ($insertRows != '')
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}permissions
 				(ID_GROUP, permission, addDeny)
 			VALUES " . substr($insertRows, 2), __FILE__, __LINE__);
@@ -1591,15 +1591,15 @@ function save_inline_permissions($permissions)
 
 function loadPermissionProfiles()
 {
-	global $context, $db_prefix, $txt;
+	global $context, $db_prefix, $txt, $smfFunc;
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT pp.ID_PROFILE, pp.profile_name, IFNULL(b.ID_BOARD, 0) AS ID_PARENT, IFNULL(b.name, '') AS boardName
 		FROM {$db_prefix}permission_profiles AS pp
 			LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = pp.ID_PARENT)
 		ORDER BY ID_PARENT", __FILE__, __LINE__);
 	$context['profiles'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Format the label nicely.
 		if (!empty($row['ID_PARENT']))
@@ -1616,13 +1616,13 @@ function loadPermissionProfiles()
 			'parent' => $row['ID_PARENT'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // Add/Edit/Delete profiles.
 function EditPermissionProfiles()
 {
-	global $db_prefix, $context, $txt;
+	global $db_prefix, $context, $txt, $smfFunc;
 
 	// Setup the template, first for fun.
 	$context['page_title'] = $txt['permissions_profile_edit'];
@@ -1636,7 +1636,7 @@ function EditPermissionProfiles()
 		$_POST['copy_from'] = (int) $_POST['copy_from'];
 
 		// Insert the profile itself.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}permission_profiles
 				(profile_name, ID_PARENT)
 			VALUES
@@ -1644,17 +1644,17 @@ function EditPermissionProfiles()
 		$profile_id = db_insert_id();
 
 		// Load the permissions from the one it's being copied from.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_GROUP, permission, addDeny
 			FROM {$db_prefix}board_permissions
 			WHERE ID_PROFILE = $_POST[copy_from]", __FILE__, __LINE__);
 		$inserts = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$inserts[] = "($profile_id, $row[ID_GROUP], '$row[permission]', $row[addDeny])";
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($inserts))
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}board_permissions
 					(ID_PROFILE, ID_GROUP, permission, addDeny)
 				VALUES
@@ -1666,7 +1666,7 @@ function EditPermissionProfiles()
 		checkSession();
 
 		foreach ($_POST['predef'] as $id => $label)
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}permission_profiles
 				SET profile_name = '$label'
 				WHERE ID_PROFILE = $id", __FILE__, __LINE__);
@@ -1679,17 +1679,17 @@ function EditPermissionProfiles()
 		$_GET['pid'] = (int) $_GET['pid'];
 
 		// Verify it's not in use...
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_BOARD
 			FROM {$db_prefix}boards
 			WHERE ID_PROFILE = $_GET[pid]
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) != 0 || $_GET['pid'] == 1)
+		if ($smfFunc['db_num_rows']($request) != 0 || $_GET['pid'] == 1)
 			fatal_lang_error(1);
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Oh well, delete.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}permission_profiles
 			WHERE ID_PROFILE = $_GET[pid]", __FILE__, __LINE__);
 	}
@@ -1698,14 +1698,14 @@ function EditPermissionProfiles()
 	loadPermissionProfiles();
 
 	// Work out what ones are in use.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_PROFILE
 		FROM {$db_prefix}boards
 		GROUP BY ID_PROFILE", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		if (isset($context['profiles'][$row['ID_PROFILE']]))
 			$context['profiles'][$row['ID_PROFILE']]['in_use'] = true;
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Actually, what are predefined?
 	$context['predefined'] = array();
@@ -1733,14 +1733,14 @@ function EditPermissionProfiles()
 // This function updates the permissions of any groups based off this group.
 function updateChildPermissions($parents, $profile = null)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// All the parent groups to sort out.
 	if (!is_array($parents))
 		$parents = array($parents);
 
 	// Find all the children of this group.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_PARENT, ID_GROUP
 		FROM {$db_prefix}membergroups
 		WHERE ID_PARENT != -2
@@ -1748,13 +1748,13 @@ function updateChildPermissions($parents, $profile = null)
 	$children = array();
 	$parents = array();
 	$child_groups = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$children[$row['ID_PARENT']][] = $row['ID_GROUP'];
 		$child_groups[] = $row['ID_GROUP'];
 		$parents[] = $row['ID_PARENT'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	$parents = array_unique($parents);
 
@@ -1766,24 +1766,24 @@ function updateChildPermissions($parents, $profile = null)
 	if ($profile < 1 || $profile === null)
 	{
 		// Fetch all the parent permissions.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_GROUP, permission, addDeny
 			FROM {$db_prefix}permissions
 			WHERE ID_GROUP IN (" . implode(', ', $parents) . ")", __FILE__, __LINE__);
 		$permissions = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			foreach ($children[$row['ID_GROUP']] as $child)
 				$permissions[] = "($child, '$row[permission]', $row[addDeny])";
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}permissions
 			WHERE ID_GROUP IN (" . implode(',', $child_groups) . ")", __FILE__, __LINE__);
 
 		// Finally insert.
 		if (!empty($permissions))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}permissions
 					(ID_GROUP, permission, addDeny)
 				VALUES
@@ -1797,18 +1797,18 @@ function updateChildPermissions($parents, $profile = null)
 		$profileQuery = $profile === null ? '' : ' AND ID_PROFILE = ' . ($profile ? $profile : 1);
 
 		// Again, get all the parent permissions.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_PROFILE, ID_GROUP, permission, addDeny
 			FROM {$db_prefix}board_permissions
 			WHERE ID_GROUP IN (" . implode(', ', $parents) . ")
 				$profileQuery", __FILE__, __LINE__);
 		$permissions = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			foreach ($children[$row['ID_GROUP']] as $child)
 				$permissions[] = "($child, $row[ID_PROFILE], '$row[permission]', $row[addDeny])";
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}board_permissions
 			WHERE ID_GROUP IN (" . implode(',', $child_groups) . ")
 				$profileQuery", __FILE__, __LINE__);
@@ -1816,7 +1816,7 @@ function updateChildPermissions($parents, $profile = null)
 		// Do the insert.
 		if (!empty($permissions))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}board_permissions
 					(ID_GROUP, ID_PROFILE, permission, addDeny)
 				VALUES

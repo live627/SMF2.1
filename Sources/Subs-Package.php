@@ -510,13 +510,13 @@ function url_exists($url)
 // Load the installed packages.
 function loadInstalledPackages()
 {
-	global $boarddir, $db_prefix;
+	global $boarddir, $db_prefix, $smfFunc;
 
 	// First, check that the database is valid, installed.list is still king.
 	$install_file = implode('', file($boarddir . '/Packages/installed.list'));
 	if (trim($install_file) == '')
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_packages
 			SET install_state = 0", __FILE__, __LINE__);
 
@@ -525,14 +525,14 @@ function loadInstalledPackages()
 	}
 
 	// Load the packages from the database - note this is ordered by install time to ensure latest package uninstalled first.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_INSTALL, package_id, filename, name, version
 		FROM {$db_prefix}log_packages
 		WHERE install_state != 0
 		ORDER BY time_installed DESC", __FILE__, __LINE__);
 	$installed = array();
 	$found = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Already found this? If so don't add it twice!
 		if (in_array($row['package_id'], $found))
@@ -548,7 +548,7 @@ function loadInstalledPackages()
 			'version' => $row['version'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return $installed;
 }
@@ -2171,7 +2171,7 @@ function package_crypt($pass)
 
 function package_create_backup($id = 'backup')
 {
-	global $db_prefix, $sourcedir, $boarddir;
+	global $db_prefix, $sourcedir, $boarddir, $smfFunc;
 
 	$files = array();
 
@@ -2189,14 +2189,14 @@ function package_create_backup($id = 'backup')
 		$sourcedir => empty($_REQUEST['use_full_paths']) ? 'Sources/' : strtr($sourcedir . '/', '\\', '/')
 	);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT value
 		FROM {$db_prefix}themes
 		WHERE ID_MEMBER = 0
 			AND variable = 'theme_dir'", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$dirs[$row['value']] = empty($_REQUEST['use_full_paths']) ? 'Themes/' . basename($row['value']) . '/' : strtr($row['value'] . '/', '\\', '/');
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	while (!empty($dirs))
 	{

@@ -37,23 +37,23 @@ if (!defined('SMF'))
 function PrintTopic()
 {
 	global $db_prefix, $topic, $txt, $scripturl, $context;
-	global $board_info;
+	global $board_info, $smfFunc;
 
 	if (empty($topic))
 		fatal_lang_error(472, false);
 
 	// Get the topic starter information.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.posterTime, IFNULL(mem.realName, m.posterName) AS posterName
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
 		WHERE m.ID_TOPIC = $topic
 		ORDER BY ID_MSG
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232');
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Lets "output" all that info.
 	loadTemplate('Printpage');
@@ -64,14 +64,14 @@ function PrintTopic()
 	$context['post_time'] = timeformat($row['posterTime'], false);
 
 	// Split the topics up so we can print them.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT subject, posterTime, body, IFNULL(mem.realName, posterName) AS posterName
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
 		WHERE ID_TOPIC = $topic
 		ORDER BY ID_MSG", __FILE__, __LINE__);
 	$context['posts'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Censor the subject and message.
 		censorText($row['subject']);
@@ -88,7 +88,7 @@ function PrintTopic()
 		if (!isset($context['topic_subject']))
 			$context['topic_subject'] = $row['subject'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 ?>

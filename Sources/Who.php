@@ -59,7 +59,7 @@ if (!defined('SMF'))
 // Who's online, and what are they doing?
 function Who()
 {
-	global $db_prefix, $context, $scripturl, $user_info, $txt, $modSettings, $ID_MEMBER, $memberContext;
+	global $db_prefix, $context, $scripturl, $user_info, $txt, $modSettings, $ID_MEMBER, $memberContext, $smfFunc;
 
 	// Permissions, permissions, permissions.
 	isAllowedTo('who_view');
@@ -99,20 +99,20 @@ function Who()
 		$conditions[] = '(lo.ID_MEMBER != 0)';
 
 	// Get the total amount of members online.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_online AS lo
 			LEFT JOIN {$db_prefix}members AS mem ON (lo.ID_MEMBER = mem.ID_MEMBER)" . (!empty($conditions) ? "
 		WHERE " . implode(' AND ', $conditions) : ''), __FILE__, __LINE__);
-	list ($totalMembers) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($totalMembers) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Prepare some page index variables.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=who;sort=' . $context['sort_by'] . (isset($_REQUEST['asc']) ? ';asc' : '') . (isset($_REQUEST['hideguests']) ? ';hideguests' : ''), $_REQUEST['start'], $totalMembers, $modSettings['defaultMaxMembers']);
 	$context['start'] = $_REQUEST['start'];
 
 	// Look for people online, provided they don't mind if you see they are.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			(UNIX_TIMESTAMP(lo.logTime) - UNIX_TIMESTAMP() + " . time() . ") AS logTime,
 			lo.ID_MEMBER, lo.url, INET_NTOA(lo.ip) AS ip, mem.realName, lo.session,
@@ -126,7 +126,7 @@ function Who()
 	$context['members'] = array();
 	$member_ids = array();
 	$url_data = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$actions = @unserialize($row['url']);
 		if ($actions === false)
@@ -147,7 +147,7 @@ function Who()
 		$url_data[$row['session']] = array($row['url'], $row['ID_MEMBER']);
 		$member_ids[] = $row['ID_MEMBER'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Load the user data for these members.
 	loadMemberData($member_ids);
@@ -190,7 +190,7 @@ function Who()
 
 function determineActions($urls)
 {
-	global $txt, $db_prefix, $user_info, $ID_MEMBER, $modSettings;
+	global $txt, $db_prefix, $user_info, $ID_MEMBER, $modSettings, $smfFunc;
 
 	if (!allowedTo('who_view'))
 		return array();
@@ -304,7 +304,7 @@ function determineActions($urls)
 				// Find out what message they are accessing.
 				$msgid = (int) (isset($actions['msg']) ? $actions['msg'] : (isset($actions['quote']) ? $actions['quote'] : 0));
 
-				$result = db_query("
+				$result = $smfFunc['db_query']("
 					SELECT m.ID_TOPIC, m.subject
 					FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS m, {$db_prefix}topics AS t)
 					WHERE $user_info[query_see_board]
@@ -314,9 +314,9 @@ function determineActions($urls)
 						AND t.approved = 1
 						AND m.approved = 1
 					LIMIT 1", __FILE__, __LINE__);
-				list ($ID_TOPIC, $subject) = mysql_fetch_row($result);
+				list ($ID_TOPIC, $subject) = $smfFunc['db_fetch_row']($result);
 				$data[$k] = sprintf($txt['whopost_' . $actions['action']], $ID_TOPIC, $subject);
-				mysql_free_result($result);
+				$smfFunc['db_free_result']($result);
 
 				if (empty($ID_TOPIC))
 					$data[$k] = $txt['who_hidden'];
@@ -341,7 +341,7 @@ function determineActions($urls)
 	// Load topic names.
 	if (!empty($topic_ids))
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT t.ID_TOPIC, m.subject
 			FROM ({$db_prefix}boards AS b, {$db_prefix}topics AS t, {$db_prefix}messages AS m)
 			WHERE $user_info[query_see_board]
@@ -350,42 +350,42 @@ function determineActions($urls)
 				AND m.ID_MSG = t.ID_FIRST_MSG
 				AND t.approved = 1
 			LIMIT " . count($topic_ids), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Show the topic's subject for each of the actions.
 			foreach ($topic_ids[$row['ID_TOPIC']] as $k => $session_text)
 				$data[$k] = sprintf($session_text, $row['ID_TOPIC'], censorText($row['subject']));
 		}
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 	}
 
 	// Load board names.
 	if (!empty($board_ids))
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT b.ID_BOARD, b.name
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[query_see_board]
 				AND b.ID_BOARD IN (" . implode(', ', array_keys($board_ids)) . ")
 			LIMIT " . count($board_ids), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Put the board name into the string for each member...
 			foreach ($board_ids[$row['ID_BOARD']] as $k => $session_text)
 				$data[$k] = sprintf($session_text, $row['ID_BOARD'], $row['name']);
 		}
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 	}
 
 	// Load member names for the profile.
 	if (!empty($profile_ids) && (allowedTo('profile_view_any') || allowedTo('profile_view_own')))
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT ID_MEMBER, realName
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER IN (" . implode(', ', array_keys($profile_ids)) . ")
 			LIMIT " . count($profile_ids), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// If they aren't allowed to view this person's profile, skip it.
 			if (!allowedTo('profile_view_any') && $ID_MEMBER != $row['ID_MEMBER'])
@@ -395,7 +395,7 @@ function determineActions($urls)
 			foreach ($profile_ids[$row['ID_MEMBER']] as $k => $session_text)
 				$data[$k] = sprintf($session_text, $row['ID_MEMBER'], $row['realName']);
 		}
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 	}
 
 	if (!is_array($urls))

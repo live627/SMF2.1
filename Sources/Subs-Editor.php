@@ -110,7 +110,7 @@ function bbc_to_html($text)
 // The harder one - wysiwyg to BBC!
 function html_to_bbc($text)
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => ''));
@@ -144,14 +144,14 @@ function html_to_bbc($text)
 
 			if (!empty($names))
 			{
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT code, filename
 					FROM {$db_prefix}smileys
 					WHERE filename IN (" . implode(', ', $names) . ")", __FILE__, __LINE__);
 				$mappings = array();
-				while ($row = mysql_fetch_assoc($request))
+				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$mappings[$row['filename']] = $row['code'];
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 	
 				foreach ($matches[1] as $k => $file)
 					if (isset($mappings[$file]))
@@ -489,7 +489,7 @@ function html_to_bbc($text)
 
 function getMessageIcons($board_id)
 {
-	global $modSettings, $context, $db_prefix, $txt, $settings;
+	global $modSettings, $context, $db_prefix, $txt, $settings, $smfFunc;
 
 	if (empty($modSettings['messageIcons_enable']))
 	{
@@ -521,14 +521,14 @@ function getMessageIcons($board_id)
 	{
 		if (($temp = cache_get_data('posting_icons-' . $board_id, 480)) == null)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT title, filename
 				FROM {$db_prefix}message_icons
 				WHERE ID_BOARD IN (0, $board_id)", __FILE__, __LINE__);
 			$icon_data = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$icon_data[] = $row;
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			cache_put_data('posting_icons-' . $board_id, $icon_data, 480);
 		}

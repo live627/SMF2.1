@@ -96,7 +96,7 @@ if (!defined('SMF'))
 // This helps organize things...
 function MessageMain()
 {
-	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $db_prefix, $ID_MEMBER;
+	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $db_prefix, $ID_MEMBER, $smfFunc;
 
 	// No guests!
 	is_not_guest();
@@ -121,12 +121,12 @@ function MessageMain()
 	if (!$user_info['is_admin'])
 	{
 		// !!! Why do we do this?  It seems like if they have any limit we should use it.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT MAX(maxMessages) AS topLimit, MIN(maxMessages) AS bottomLimit
 			FROM {$db_prefix}membergroups
 			WHERE ID_GROUP IN (" . implode(', ', $user_info['groups']) . ')', __FILE__, __LINE__);
-		list ($maxMessage, $minMessage) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($maxMessage, $minMessage) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		$context['message_limit'] = $minMessage == 0 ? 0 : $maxMessage;
 	}
@@ -154,12 +154,12 @@ function MessageMain()
 	$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
 
 	// !!! The idea would be to cache this information in the members table, and invlidate it when they are sent messages.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT labels, is_read, COUNT(*) AS num
 		FROM {$db_prefix}pm_recipients
 		WHERE ID_MEMBER = $ID_MEMBER
 		GROUP BY labels, is_read", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		$this_labels = explode(',', $row['labels']);
 		foreach ($this_labels as $this_label)
@@ -169,7 +169,7 @@ function MessageMain()
 				$context['labels'][(int) $this_label]['unread_messages'] += $row['num'];
 		}
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// This determines if we have more labels than just the standard inbox.
 	$context['currently_using_labels'] = count($context['labels']) > 1 ? 1 : 0;
@@ -292,7 +292,7 @@ function messageIndexBar($area)
 function MessageFolder()
 {
 	global $txt, $scripturl, $db_prefix, $ID_MEMBER, $modSettings, $context;
-	global $messages_request, $user_info, $recipients, $options;
+	global $messages_request, $user_info, $recipients, $options, $smfFunc;
 
 	// Make sure the starting location is valid.
 	if (isset($_GET['start']) && $_GET['start'] != 'new')
@@ -367,19 +367,19 @@ function MessageFolder()
 
 	// Figure out how many messages there are.
 	if ($context['folder'] == 'outbox')
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(*)
 			FROM {$db_prefix}personal_messages
 			WHERE ID_MEMBER_FROM = $ID_MEMBER
 				AND deletedBySender = 0", __FILE__, __LINE__);
 	else
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(*)
 			FROM {$db_prefix}pm_recipients AS pmr
 			WHERE pmr.ID_MEMBER = $ID_MEMBER
 				AND pmr.deleted = 0$labelQuery", __FILE__, __LINE__);
-	list ($max_messages) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($max_messages) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Only show the button if there are messages to delete.
 	$context['show_delete'] = $max_messages > 0;
@@ -401,22 +401,22 @@ function MessageFolder()
 		else
 		{
 			if ($context['folder'] == 'outbox')
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT COUNT(*)
 					FROM {$db_prefix}personal_messages
 					WHERE ID_MEMBER_FROM = $ID_MEMBER
 						AND deletedBySender = 0
 						AND ID_PM " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
 			else
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT COUNT(*)
 					FROM {$db_prefix}pm_recipients AS pmr
 					WHERE pmr.ID_MEMBER = $ID_MEMBER
 						AND pmr.deleted = 0$labelQuery
 						AND ID_PM " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
 
-			list ($_GET['start']) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($_GET['start']) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
 			// To stop the page index's being abnormal, start the page on the page the message would normally be located on...
 			$_GET['start'] = $modSettings['defaultMaxMessages'] * (int) ($_GET['start'] / $modSettings['defaultMaxMessages']);
@@ -442,7 +442,7 @@ function MessageFolder()
 
 	// Load the messages up...
 	// !!!SLOW This query uses a filesort. (inbox only.)
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT pm.ID_PM, pm.ID_MEMBER_FROM
 		FROM ({$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? ')' . ($context['sort_by'] == 'name' ? "
 			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.ID_PM = pm.ID_PM)" : '') : ", {$db_prefix}pm_recipients AS pmr)") . ($context['sort_by'] == 'name' ? ("
@@ -459,7 +459,7 @@ function MessageFolder()
 	$pms = array();
 	$posters = $context['folder'] == 'outbox' ? array($ID_MEMBER) : array();
 	$recipients = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($recipients[$row['ID_PM']]))
 		{
@@ -472,19 +472,19 @@ function MessageFolder()
 			);
 		}
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (!empty($pms))
 	{
 		// Get recipients (don't include bcc-recipients for your inbox, you're not supposed to know :P).
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT pmr.ID_PM, mem_to.ID_MEMBER AS ID_MEMBER_TO, mem_to.realName AS toName, pmr.bcc, pmr.labels, pmr.is_read
 			FROM {$db_prefix}pm_recipients AS pmr
 				LEFT JOIN {$db_prefix}members AS mem_to ON (mem_to.ID_MEMBER = pmr.ID_MEMBER)
 			WHERE pmr.ID_PM IN (" . implode(', ', $pms) . ")", __FILE__, __LINE__);
 		$context['message_labels'] = array();
 		$context['message_replied'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($context['folder'] == 'outbox' || empty($row['bcc']))
 				$recipients[$row['ID_PM']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['ID_MEMBER_TO']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER_TO'] . '">' . $row['toName'] . '</a>';
@@ -501,7 +501,7 @@ function MessageFolder()
 				}
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Load any users....
 		$posters = array_unique($posters);
@@ -509,7 +509,7 @@ function MessageFolder()
 			loadMemberData($posters);
 
 		// Execute the query!
-		$messages_request = db_query("
+		$messages_request = $smfFunc['db_query']("
 			SELECT pm.ID_PM, pm.subject, pm.ID_MEMBER_FROM, pm.body, pm.msgtime, pm.fromName
 			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? "
 				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.ID_PM = pm.ID_PM)" : '') . ($context['sort_by'] == 'name' ? "
@@ -531,7 +531,7 @@ function MessageFolder()
 // Get a personal message for the theme.  (used to save memory.)
 function prepareMessageContext($reset = false)
 {
-	global $txt, $scripturl, $modSettings, $context, $messages_request, $memberContext, $recipients;
+	global $txt, $scripturl, $modSettings, $context, $messages_request, $memberContext, $recipients, $smfFunc;
 
 	// Count the current message number....
 	static $counter = null;
@@ -551,10 +551,10 @@ function prepareMessageContext($reset = false)
 
 	// Reset the data?
 	if ($reset == true)
-		return @mysql_data_seek($messages_request, 0);
+		return @$smfFunc['db_data_seek']($messages_request, 0);
 
 	// Get the next one... bail if anything goes wrong.
-	$message = mysql_fetch_assoc($messages_request);
+	$message = $smfFunc['db_fetch_assoc']($messages_request);
 	if (!$message)
 		return(false);
 
@@ -739,23 +739,23 @@ function MessageSearch2()
 
 		// Who matches those criteria?
 		// !!! This doesn't support outbox searching.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}members
 			WHERE realName LIKE '" . implode("' OR realName LIKE '", $possible_users) . "'", __FILE__, __LINE__);
 		// Simply do nothing if there're too many members matching the criteria.
-		if (mysql_num_rows($request) > $maxMembersToSearch)
+		if ($smfFunc['db_num_rows']($request) > $maxMembersToSearch)
 			$userQuery = '';
-		elseif (mysql_num_rows($request) == 0)
+		elseif ($smfFunc['db_num_rows']($request) == 0)
 			$userQuery = "AND pm.ID_MEMBER_FROM = 0 AND (pm.fromName LIKE '" . implode("' OR pm.fromName LIKE '", $possible_users) . "')";
 		else
 		{
 			$memberlist = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$memberlist[] = $row['ID_MEMBER'];
 			$userQuery = "AND (pm.ID_MEMBER_FROM IN (" . implode(', ', $memberlist) . ") OR (pm.ID_MEMBER_FROM = 0 AND (pm.fromName LIKE '" . implode("' OR pm.fromName LIKE '", $possible_users) . "')))";
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Setup the sorting variables...
@@ -899,7 +899,7 @@ function MessageSearch2()
 
 	// Get all the matching messages... using standard search only (No caching and the like!)
 	// !!! This doesn't support outbox searching yet.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT pm.ID_PM, pm.ID_MEMBER_FROM
 		FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
 		WHERE pm.ID_PM = pmr.ID_PM" . ($context['folder'] == 'inbox' ? "
@@ -913,12 +913,12 @@ function MessageSearch2()
 		LIMIT $context[start], $modSettings[search_results_per_page]", __FILE__, __LINE__);
 	$foundMessages = array();
 	$posters = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$foundMessages[] = $row['ID_PM'];
 		$posters[] = $row['ID_MEMBER_FROM'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Load the users...
 	$posters = array_unique($posters);
@@ -935,14 +935,14 @@ function MessageSearch2()
 	if (!empty($foundMessages))
 	{
 		// Now get recipients (but don't include bcc-recipients for your inbox, you're not supposed to know :P!)
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				pmr.ID_PM, mem_to.ID_MEMBER AS ID_MEMBER_TO, mem_to.realName AS toName,
 				pmr.bcc, pmr.labels, pmr.is_read
 			FROM {$db_prefix}pm_recipients AS pmr
 				LEFT JOIN {$db_prefix}members AS mem_to ON (mem_to.ID_MEMBER = pmr.ID_MEMBER)
 			WHERE pmr.ID_PM IN (" . implode(', ', $foundMessages) . ")", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($context['folder'] == 'outbox' || empty($row['bcc']))
 				$recipients[$row['ID_PM']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['ID_MEMBER_TO']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER_TO'] . '">' . $row['toName'] . '</a>';
@@ -966,14 +966,14 @@ function MessageSearch2()
 		}
 
 		// Prepare the query for the callback!
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT pm.ID_PM, pm.subject, pm.ID_MEMBER_FROM, pm.body, pm.msgtime, pm.fromName
 			FROM {$db_prefix}personal_messages AS pm
 			WHERE pm.ID_PM IN (" . implode(',', $foundMessages) . ")
 			ORDER BY $search_params[sort] $search_params[sort_dir]
 			LIMIT " . count($foundMessages), __FILE__, __LINE__);
 		$counter = 0;
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// If there's no message subject, use the default.
 			$row['subject'] = $row['subject'] == '' ? $txt['no_subject'] : $row['subject'];
@@ -1013,7 +1013,7 @@ function MessageSearch2()
 				'counter' => ++$counter,
 			);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Finish off the context.
@@ -1058,14 +1058,14 @@ function MessagePost()
 	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
 	{
 		// How many messages have they sent this last hour?
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(pr.ID_PM) AS postCount
 			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pr)
 			WHERE pm.ID_MEMBER_FROM = $user_info[id]
 				AND pm.msgtime > " . (time() - 3600) . "
 				AND pr.ID_PM = pm.ID_PM", __FILE__, __LINE__);
-		list ($postCount) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($postCount) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($postCount) && $postCount >= $modSettings['pm_posts_per_hour'])
 			fatal_lang_error('pm_too_many_per_hour', true, array($modSettings['pm_posts_per_hour']));
@@ -1077,7 +1077,7 @@ function MessagePost()
 		$_REQUEST['pmsg'] = (int) $_REQUEST['pmsg'];
 
 		// Get the quoted message (and make sure you're allowed to see this quote!).
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				pm.ID_PM, pm.body, pm.subject, pm.msgtime, mem.memberName,
 				IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, IFNULL(mem.realName, pm.fromName) AS realName
@@ -1088,10 +1088,10 @@ function MessagePost()
 				AND pmr.ID_PM = $_REQUEST[pmsg]
 				AND pmr.ID_MEMBER = $ID_MEMBER") . "
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('pm_not_yours', false);
-		$row_quoted = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$row_quoted = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		// Censor the message.
 		censorText($row_quoted['subject']);
@@ -1167,16 +1167,16 @@ function MessagePost()
 			$membersTo[] = '&quot;' . $row_quoted['realName'] . '&quot;';
 
 			// Now to get the others.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT mem.realName
 				FROM {$db_prefix}pm_recipients AS pmr
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = pmr.ID_MEMBER)
 				WHERE pmr.ID_PM = $_REQUEST[pmsg]
 					AND pmr.ID_MEMBER != $ID_MEMBER
 					AND bcc = 0", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$membersTo[] = '&quot;' . htmlspecialchars($row['realName']) . '&quot;';
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 		else
 		{
@@ -1184,14 +1184,14 @@ function MessagePost()
 			foreach ($_REQUEST['u'] as $key => $uID)
 				$_REQUEST['u'][$key] = (int) $uID;
 
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT realName
 				FROM {$db_prefix}members
 				WHERE ID_MEMBER IN (" . implode(', ', $_REQUEST['u']) . ")
 				LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$membersTo[] = '&quot;' . $row['realName'] . '&quot;';
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 
 		// Create the 'to' string - Quoting it, just in case it's something like bob,i,like,commas,man.
@@ -1259,7 +1259,7 @@ function messagePostError($error_types, $to, $bcc)
 	{
 		$_REQUEST['replied_to'] = (int) $_REQUEST['replied_to'];
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				pm.ID_PM, pm.body, pm.subject, pm.msgtime, mem.memberName,
 				IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, IFNULL(mem.realName, pm.fromName) AS realName
@@ -1270,10 +1270,10 @@ function messagePostError($error_types, $to, $bcc)
 				AND pmr.ID_PM = $_REQUEST[replied_to]
 				AND pmr.ID_MEMBER = $ID_MEMBER") . "
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('pm_not_yours', false);
-		$row_quoted = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$row_quoted = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		censorText($row_quoted['subject']);
 		censorText($row_quoted['body']);
@@ -1350,14 +1350,14 @@ function MessagePost2()
 	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
 	{
 		// How many have they sent this last hour?
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(pr.ID_PM) AS postCount
 			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pr)
 			WHERE pm.ID_MEMBER_FROM = $user_info[id]
 				AND pm.msgtime > " . (time() - 3600) . "
 				AND pr.ID_PM = pm.ID_PM", __FILE__, __LINE__);
-		list ($postCount) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($postCount) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($postCount) && $postCount >= $modSettings['pm_posts_per_hour'])
 			fatal_lang_error('pm_too_many_per_hour', true, array($modSettings['pm_posts_per_hour']));
@@ -1504,14 +1504,14 @@ function MessagePost2()
 		foreach ($_REQUEST['u'] as $key => $uID)
 			$_REQUEST['u'][$key] = (int) $uID;
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER IN (" . implode(',', $_REQUEST['u']) . ")
 			LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$recipients['to'][] = $row['ID_MEMBER'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Before we send the PM, let's make sure we don't have an abuse of numbers.
@@ -1550,7 +1550,7 @@ function MessagePost2()
 	// Mark the message as "replied to".
 	if (!empty($context['send_log']['sent']) && !empty($_REQUEST['replied_to']) && isset($_REQUEST['f']) && $_REQUEST['f'] == 'inbox')
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}pm_recipients
 			SET is_read = is_read | 2
 			WHERE ID_PM = " . (int) $_REQUEST['replied_to'] . "
@@ -1569,7 +1569,7 @@ function MessagePost2()
 // This function lists all buddies for wireless protocols.
 function WirelessAddBuddy()
 {
-	global $scripturl, $txt, $db_prefix, $user_info, $context;
+	global $scripturl, $txt, $db_prefix, $user_info, $context, $smfFunc;
 
 	isAllowedTo('pm_send');
 	$context['page_title'] = $txt['wireless_pm_add_buddy'];
@@ -1584,27 +1584,27 @@ function WirelessAddBuddy()
 	$context['buddies'] = array();
 	if (!empty($user_info['buddies']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, realName
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER IN (" . implode(',', $user_info['buddies']) . ")
 			ORDER BY realName
 			LIMIT " . count($user_info['buddies']), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['buddies'][] = array(
 				'id' => $row['ID_MEMBER'],
 				'name' => $row['realName'],
 				'selected' => in_array($row['ID_MEMBER'], $current_buddies),
 				'add_href' => $base_url . $row['ID_MEMBER'],
 			);
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 }
 
 // This function performs all additional stuff...
 function MessageActionsApply()
 {
-	global $txt, $db_prefix, $ID_MEMBER, $context, $user_info, $options;
+	global $txt, $db_prefix, $ID_MEMBER, $context, $user_info, $options, $smfFunc;
 
 	checkSession('request');
 
@@ -1660,13 +1660,13 @@ function MessageActionsApply()
 		$updateErrors = 0;
 
 		// Get information about each message...
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_PM, labels
 			FROM {$db_prefix}pm_recipients
 			WHERE ID_MEMBER = $ID_MEMBER
 				AND ID_PM IN (" . implode(',', array_keys($to_label)) . ")
 			LIMIT " . count($to_label), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$labels = $row['labels'] == '' ? array('-1') : explode(',', trim($row['labels']));
 
@@ -1689,7 +1689,7 @@ function MessageActionsApply()
 				$updateErrors++;
 			else
 			{
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}pm_recipients
 					SET labels = '$set'
 					WHERE ID_PM = $row[ID_PM]
@@ -1697,7 +1697,7 @@ function MessageActionsApply()
 					LIMIT 1", __FILE__, __LINE__);
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Any errors?
 		// !!! Separate the sprintf?
@@ -1745,7 +1745,7 @@ function MessageKillAll()
 // This function allows the user to delete all messages older than so many days.
 function MessagePrune()
 {
-	global $txt, $context, $db_prefix, $ID_MEMBER, $scripturl;
+	global $txt, $context, $db_prefix, $ID_MEMBER, $scripturl, $smfFunc;
 
 	// Actually delete the messages.
 	if (isset($_REQUEST['age']))
@@ -1759,27 +1759,27 @@ function MessagePrune()
 		$toDelete = array();
 
 		// Select all the messages they have sent older than $deleteTime.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_PM
 			FROM {$db_prefix}personal_messages
 			WHERE deletedBySender = 0
 				AND ID_MEMBER_FROM = $ID_MEMBER
 				AND msgtime < $deleteTime", __FILE__, __LINE__);
-		while ($row = mysql_fetch_row($request))
+		while ($row = $smfFunc['db_fetch_row']($request))
 			$toDelete[] = $row[0];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Select all messages in their inbox older than $deleteTime.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT pmr.ID_PM
 			FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
 			WHERE pmr.deleted = 0
 				AND pmr.ID_MEMBER = $ID_MEMBER
 				AND pm.ID_PM = pmr.ID_PM
 				AND pm.msgtime < $deleteTime", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$toDelete[] = $row['ID_PM'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Delete the actual messages.
 		deleteMessages($toDelete);
@@ -1801,7 +1801,7 @@ function MessagePrune()
 // Delete the specified personal messages.
 function deleteMessages($personal_messages, $folder = null, $owner = null)
 {
-	global $ID_MEMBER, $db_prefix, $user_info;
+	global $ID_MEMBER, $db_prefix, $user_info, $smfFunc;
 
 	if ($owner === null)
 		$owner = array($ID_MEMBER);
@@ -1826,7 +1826,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 
 	if ($folder == 'outbox' || $folder === null)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}personal_messages
 			SET deletedBySender = 1
 			WHERE ID_MEMBER_FROM IN (" . implode(', ', $owner) . ")
@@ -1835,14 +1835,14 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 	if ($folder != 'outbox' || $folder === null)
 	{
 		// Calculate the number of messages each member's gonna lose...
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, COUNT(*) AS numDeletedMessages, IF(is_read & 1, 1, 0) AS is_read
 			FROM {$db_prefix}pm_recipients
 			WHERE ID_MEMBER IN (" . implode(', ', $owner) . ")
 				AND deleted = 0$where
 			GROUP BY ID_MEMBER, is_read", __FILE__, __LINE__);
 		// ...And update the statistics accordingly - now including unread messages!.
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['is_read'])
 				updateMemberData($row['ID_MEMBER'], array('instantMessages' => $where == '' ? 0 : "instantMessages - $row[numDeletedMessages]"));
@@ -1857,10 +1857,10 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 					$user_info['unread_messages'] -= $row['numDeletedMessages'];
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Do the actual deletion.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}pm_recipients
 			SET deleted = 1
 			WHERE ID_MEMBER IN (" . implode(', ', $owner) . ")
@@ -1868,7 +1868,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 	}
 
 	// If sender and recipients all have deleted their message, it can be removed.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT pm.ID_PM, pmr.ID_PM AS recipient
 		FROM {$db_prefix}personal_messages AS pm
 			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.ID_PM = pm.ID_PM AND deleted = 0)
@@ -1876,18 +1876,18 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 			" . str_replace('ID_PM', 'pm.ID_PM', $where) . "
 		HAVING recipient IS null", __FILE__, __LINE__);
 	$remove_pms = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$remove_pms[] = $row['ID_PM'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (!empty($remove_pms))
 	{
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}personal_messages
 			WHERE ID_PM IN (" . implode(', ', $remove_pms) . ")
 			LIMIT " . count($remove_pms), __FILE__, __LINE__);
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}pm_recipients
 			WHERE ID_PM IN (" . implode(', ', $remove_pms) . ')', __FILE__, __LINE__);
 	}
@@ -1896,12 +1896,12 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 // Mark personal messages read.
 function markMessages($personal_messages = null, $label = null, $owner = null)
 {
-	global $ID_MEMBER, $db_prefix, $context;
+	global $ID_MEMBER, $db_prefix, $context, $smfFunc;
 
 	if ($owner === null)
 		$owner = $ID_MEMBER;
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}pm_recipients
 		SET is_read = is_read | 1
 		WHERE ID_MEMBER = $owner
@@ -1919,14 +1919,14 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 	// If something wasn't marked as read, get the number of unread messages remaining.
 	if (db_affected_rows() > 0)
 	{
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT labels, COUNT(*) AS num
 			FROM {$db_prefix}pm_recipients
 			WHERE ID_MEMBER = $owner
 				AND NOT (is_read & 1)
 			GROUP BY labels", __FILE__, __LINE__);
 		$total_unread = 0;
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			$total_unread += $row['num'];
 
@@ -1937,7 +1937,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 			foreach ($this_labels as $this_label)
 				$context['labels'][(int) $this_label]['unread_messages'] += $row['num'];
 		}
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 
 		updateMemberData($owner, array('unreadMessages' => $total_unread));
 
@@ -2045,11 +2045,11 @@ function ManageLabels()
 			}
 
 			// Now find the messages to change.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_PM, labels
 				FROM {$db_prefix}pm_recipients
 				WHERE FIND_IN_SET('" . implode("', labels) OR FIND_IN_SET('", $searchArray) . "', labels)", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// Do the long task of updating them...
 				$toChange = explode(',', $row['labels']);
@@ -2067,14 +2067,14 @@ function ManageLabels()
 					$toChange[] = '-1';
 
 				// Update the message.
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}pm_recipients
 					SET labels = '" . implode(',', array_unique($toChange)) . "'
 					WHERE ID_PM = $row[ID_PM]
 						AND ID_MEMBER = $ID_MEMBER
 					LIMIT 1", __FILE__, __LINE__);
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 
 		// To make the changes appear right away, redirect.
@@ -2102,15 +2102,15 @@ function ReportMessage()
 
 		// !!! I don't like being able to pick who to send it to.  Favoritism, etc. sucks.
 		// Now, get all the administrators.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, realName
 			FROM {$db_prefix}members
 			WHERE ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups)
 			ORDER BY realName", __FILE__, __LINE__);
 		$context['admins'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['admins'][$row['ID_MEMBER']] = $row['realName'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// How many admins in total?
 		$context['admin_count'] = count($context['admins']);
@@ -2119,7 +2119,7 @@ function ReportMessage()
 	else
 	{
 		// First, pull out the message contents, and verify it actually went to them!
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT pm.subject, pm.body, pm.msgtime, pm.ID_MEMBER_FROM, IFNULL(m.realName, pm.fromName) AS senderName
 			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pmr)
 				LEFT JOIN {$db_prefix}members AS m ON (m.ID_MEMBER = pm.ID_MEMBER_FROM)
@@ -2129,16 +2129,16 @@ function ReportMessage()
 				AND pmr.deleted = 0
 			LIMIT 1", __FILE__, __LINE__);
 		// Can only be a hacker here!
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(1, false);
-		list ($subject, $body, $time, $memberFromID, $memberFromName) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($subject, $body, $time, $memberFromID, $memberFromName) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		// Remove the line breaks...
 		$body = preg_replace('~<br( /)?' . '>~i', "\n", $body);
 
 		// Get any other recipients of the email.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT mem_to.ID_MEMBER AS ID_MEMBER_TO, mem_to.realName AS toName, pmr.bcc
 			FROM {$db_prefix}pm_recipients AS pmr
 				LEFT JOIN {$db_prefix}members AS mem_to ON (mem_to.ID_MEMBER = pmr.ID_MEMBER)
@@ -2146,7 +2146,7 @@ function ReportMessage()
 				AND pmr.ID_MEMBER != $ID_MEMBER", __FILE__, __LINE__);
 		$recipients = array();
 		$hidden_recipients = 0;
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// If it's hidden still don't reveal their names - privacy after all ;)
 			if ($row['bcc'])
@@ -2154,13 +2154,13 @@ function ReportMessage()
 			else
 				$recipients[] = '[url=' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER_TO'] . ']' . $row['toName'] . '[/url]';
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if ($hidden_recipients)
 			$recipients[] = sprintf($txt['pm_report_pm_hidden'], $hidden_recipients);
 
 		// Now let's get out and loop through the admins.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, realName, lngfile
 			FROM {$db_prefix}members
 			WHERE (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups))
@@ -2168,7 +2168,7 @@ function ReportMessage()
 			ORDER BY lngfile", __FILE__, __LINE__);
 
 		// Maybe we shouldn't advertise this?
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(1, false);
 
 		$memberFromName = un_htmlspecialchars($memberFromName);
@@ -2176,7 +2176,7 @@ function ReportMessage()
 		// Prepare the message storage array.
 		$messagesToSend = array();
 		// Loop through each admin, and add them to the right language pile...
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// Need to send in the correct language!
 			$cur_language = empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'];
@@ -2208,7 +2208,7 @@ function ReportMessage()
 			// Add them to the list.
 			$messagesToSend[$cur_language]['recipients']['to'][$row['ID_MEMBER']] = $row['ID_MEMBER'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Send a different email for each language.
 		foreach ($messagesToSend as $lang => $message)

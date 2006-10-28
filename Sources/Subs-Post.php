@@ -688,7 +688,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 // Add an email to the mail queue.
 function AddMailQueue($flush = false, $to_array = array(), $subject = '', $message = '', $headers = '', $send_html = false, $priority = 1)
 {
-	global $db_prefix, $context, $modSettings;
+	global $db_prefix, $context, $modSettings, $smfFunc;
 
 	static $cur_insert = array();
 	static $cur_insert_len = 0;
@@ -697,7 +697,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	if (($flush || $cur_insert_len > 800000)&& !empty($cur_insert))
 	{
 		// Explode out the query and run it.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}mail_queue
 				(time_sent, recipient, body, subject, headers, send_html, priority)
 			VALUES
@@ -714,7 +714,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	{
 		$nextSendTime = time() + 10;
 
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}settings
 			SET value = '$nextSendTime'
 			WHERE variable = 'mail_next_send'
@@ -740,7 +740,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 		if ($this_insert_len + $cur_insert_len > 1000000)
 		{
 			// Flush out what we have so far.
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}mail_queue
 					(time_sent, recipient, body, subject, headers, send_html, priority)
 				VALUES
@@ -809,14 +809,14 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	}
 	if (!empty($usernames))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, memberName
 			FROM {$db_prefix}members
 			WHERE memberName IN ('" . implode("', '", array_keys($usernames)) . "')", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (isset($usernames[$smfFunc['strtolower']($row['memberName'])]))
 				$usernames[$smfFunc['strtolower']($row['memberName'])] = $row['ID_MEMBER'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Replace the usernames with IDs. Drop usernames that couldn't be found.
 		foreach ($recipients as $rec_type => $rec)
@@ -844,7 +844,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	// Combine 'to' and 'bcc' recipients.
 	$all_to = array_merge($recipients['to'], $recipients['bcc']);
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			mem.memberName, mem.realName, mem.ID_MEMBER, mem.emailAddress, mem.lngfile, mg.maxMessages,
 			mem.pm_email_notify, mem.instantMessages," . (allowedTo('moderate_forum') ? ' 0' : "
@@ -857,7 +857,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		ORDER BY mem.lngfile
 		LIMIT " . count($all_to), __FILE__, __LINE__);
 	$notifications = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Has the receiver gone over their message limit, assuming that neither they nor the sender are important?!
 		if (!empty($row['maxMessages']) && $row['maxMessages'] <= $row['instantMessages'] && !allowedTo('moderate_forum') && !$row['is_admin'])
@@ -880,14 +880,14 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 		$log['sent'][] = sprintf(isset($txt['pm_successfully_sent']) ? $txt['pm_successfully_sent'] : '', $row['realName']);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Only 'send' the message if there are any recipients left.
 	if (empty($all_to))
 		return $log;
 
 	// Insert the message itself and then grab the last insert id.
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}personal_messages
 			(ID_MEMBER_FROM, deletedBySender, fromName, msgtime, subject, body)
 		VALUES ($from[id], " . ($store_outbox ? '0' : '1') . ", SUBSTRING('$from[username]', 1, 255), " . time() . ", SUBSTRING('$htmlsubject', 1, 255), SUBSTRING('$htmlmessage', 1, 65534))", __FILE__, __LINE__);
@@ -897,7 +897,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	if (!empty($ID_PM))
 	{
 		// Some people think manually deleting personal_messages is fun... it's not. We protect against it though :)
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}pm_recipients
 			WHERE ID_PM = $ID_PM", __FILE__, __LINE__);
 
@@ -905,7 +905,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		foreach ($all_to as $to)
 			$insertRows[] = "($ID_PM, $to, " . (in_array($to, $recipients['bcc']) ? '1' : '0') . ')';
 
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}pm_recipients
 				(ID_PM, ID_MEMBER, bcc)
 			VALUES " . implode(',
@@ -1256,7 +1256,7 @@ function calendarValidatePost()
 // Prints a post box.  Used everywhere you post or send.
 function theme_postbox($msg)
 {
-	global $txt, $modSettings, $db_prefix, $options;
+	global $txt, $modSettings, $db_prefix, $options, $smfFunc;
 	global $context, $settings, $user_info, $sourcedir;
 
 	// Switch between default images and back... mostly in case you don't have an PersonalMessage template, but do ahve a Post template.
@@ -1316,12 +1316,12 @@ function theme_postbox($msg)
 	{
 		if (($temp = cache_get_data('posting_smileys', 480)) == null)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT code, filename, description, smileyRow, hidden
 				FROM {$db_prefix}smileys
 				WHERE hidden IN (0, 2)
 				ORDER BY smileyRow, smileyOrder", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				$row['code'] = htmlspecialchars($row['code']);
 				$row['filename'] = htmlspecialchars($row['filename']);
@@ -1329,7 +1329,7 @@ function theme_postbox($msg)
 
 				$context['smileys'][empty($row['hidden']) ? 'postform' : 'popup'][$row['smileyRow']]['smileys'][] = $row;
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			cache_put_data('posting_smileys', $context['smileys'], 480);
 		}
@@ -1511,7 +1511,7 @@ function SpellCheck()
 function sendNotifications($topics, $type, $exclude = array())
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $ID_MEMBER, $modSettings, $sourcedir, $context;
+	global $ID_MEMBER, $modSettings, $sourcedir, $context, $smfFunc;
 
 	$notification_types = array(
 		'reply' => array('subject' => 'notification_reply_subject', 'message' => 'notification_reply'),
@@ -1533,7 +1533,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		$topics = array($topics);
 
 	// Get the subject and body...
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT mf.subject, ml.body, ml.ID_MEMBER, t.ID_LAST_MSG, t.ID_TOPIC,
 			IFNULL(mem.realName, ml.posterName) AS posterName
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS mf, {$db_prefix}messages AS ml)
@@ -1543,7 +1543,7 @@ function sendNotifications($topics, $type, $exclude = array())
 			AND ml.ID_MSG = t.ID_LAST_MSG
 		LIMIT 1", __FILE__, __LINE__);
 	$topicData = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		// Clean it up.
 		censorText($row['subject']);
@@ -1560,7 +1560,7 @@ function sendNotifications($topics, $type, $exclude = array())
 			'exclude' => '',
 		);
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// Work out any exclusions...
 	foreach ($topics as $key => $id)
@@ -1577,14 +1577,14 @@ function sendNotifications($topics, $type, $exclude = array())
 	$digest_insert = array();
 	foreach ($topicData as $id => $data)
 		$digest_insert[] = "($data[topic], $data[last_id], '$type', " . ((int) $data['exclude']) . ')';
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}log_digest
 			(ID_TOPIC, ID_MSG, note_type, exclude)
 		VALUES
 			" . implode(', ', $digest_insert), __FILE__, __LINE__);
 
 	// Find the members with notification on for this topic.
-	$members = db_query("
+	$members = $smfFunc['db_query']("
 		SELECT
 			mem.ID_MEMBER, mem.emailAddress, mem.notifyRegularity, mem.notifyTypes, mem.notifySendBody, mem.lngfile,
 			ln.sent, mem.ID_GROUP, mem.additionalGroups, b.memberGroups, mem.ID_POST_GROUP, t.ID_MEMBER_STARTED,
@@ -1601,7 +1601,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		GROUP BY mem.ID_MEMBER, ln.ID_TOPIC
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	$sent = 0;
-	while ($row = mysql_fetch_assoc($members))
+	while ($row = $smfFunc['db_fetch_assoc']($members))
 	{
 		// Don't do the excluded...
 		if ($topicData[$row['ID_TOPIC']]['exclude'] == $row['ID_MEMBER'])
@@ -1646,14 +1646,14 @@ function sendNotifications($topics, $type, $exclude = array())
 			$sent++;
 		}
 	}
-	mysql_free_result($members);
+	$smfFunc['db_free_result']($members);
 
 	if (isset($current_language) && $current_language != $user_info['language'])
 		loadLanguage('Post');
 
 	// Sent!
 	if ($type == 'reply' && !empty($sent))
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_notify
 			SET sent = 1
 			WHERE ID_TOPIC IN (" . implode(',', $topics) . ")
@@ -1664,7 +1664,7 @@ function sendNotifications($topics, $type, $exclude = array())
 	{
 		foreach ($topicData as $id => $data)
 			if ($data['exclude'])
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}log_notify
 					SET sent = 0
 					WHERE ID_TOPIC = $id
@@ -1679,7 +1679,7 @@ function sendNotifications($topics, $type, $exclude = array())
 // - Mandatory parameters are set.
 function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings;
+	global $db_prefix, $user_info, $ID_MEMBER, $txt, $modSettings, $smfFunc;
 
 	// Set optional parameters to the default value.
 	$msgOptions['icon'] = empty($msgOptions['icon']) ? 'xx' : $msgOptions['icon'];
@@ -1704,13 +1704,13 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		}
 		elseif ($posterOptions['id'] != $ID_MEMBER)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT memberName, emailAddress
 				FROM {$db_prefix}members
 				WHERE ID_MEMBER = $posterOptions[id]
 				LIMIT 1", __FILE__, __LINE__);
 			// Couldn't find the current poster?
-			if (mysql_num_rows($request) == 0)
+			if ($smfFunc['db_num_rows']($request) == 0)
 			{
 				trigger_error('createPost(): Invalid member id ' . $posterOptions['id'], E_USER_NOTICE);
 				$posterOptions['id'] = 0;
@@ -1718,8 +1718,8 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				$posterOptions['email'] = '';
 			}
 			else
-				list ($posterOptions['name'], $posterOptions['email']) = mysql_fetch_row($request);
-			mysql_free_result($request);
+				list ($posterOptions['name'], $posterOptions['email']) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 		}
 		else
 		{
@@ -1736,7 +1736,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$new_topic = empty($topicOptions['id']);
 
 	// Insert the post.
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}messages
 			(ID_BOARD, ID_TOPIC, ID_MEMBER, subject, body, posterName, posterEmail, posterTime,
 			posterIP, smileysEnabled, modifiedName, icon, approved)
@@ -1750,7 +1750,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Fix the attachments.
 	if (!empty($msgOptions['attachments']))
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}attachments
 			SET ID_MSG = $msgOptions[id]
 			WHERE ID_ATTACH IN (" . implode(', ', $msgOptions['attachments']) . ')', __FILE__, __LINE__);
@@ -1758,7 +1758,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// Insert a new topic (if the topicID was left empty.
 	if ($new_topic)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}topics
 				(ID_BOARD, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, ID_FIRST_MSG, ID_LAST_MSG, locked, isSticky, numViews, ID_POLL, unapprovedPosts, approved)
 			VALUES ($topicOptions[board], $posterOptions[id], $posterOptions[id], $msgOptions[id], $msgOptions[id],
@@ -1771,7 +1771,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		if (empty($topicOptions['id']))
 		{
 			// We should delete the post that did work, though...
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}messages
 				WHERE ID_MSG = $msgOptions[id]
 				LIMIT 1", __FILE__, __LINE__);
@@ -1780,7 +1780,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		}
 
 		// Fix the message with the topic.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}messages
 			SET ID_TOPIC = $topicOptions[id]
 			WHERE ID_MSG = $msgOptions[id]
@@ -1798,7 +1798,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		$countChange = $msgOptions['approved'] ? 'numReplies = numReplies + 1' : 'unapprovedPosts = unapprovedPosts + 1';
 
 		// Update the number of replies and the lock/sticky status.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}topics
 			SET
 				" . ($msgOptions['approved'] ? "ID_MEMBER_UPDATED = $posterOptions[id], ID_LAST_MSG = $msgOptions[id]," : '') . "
@@ -1814,28 +1814,28 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Creating is modifying...in a way.
 	//!!! Why not set ID_MSG_MODIFIED on the insert?
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET ID_MSG_MODIFIED = $msgOptions[id]
 		WHERE ID_MSG = $msgOptions[id]", __FILE__, __LINE__);
 
 	// Increase the number of posts and topics on the board.
 	if ($msgOptions['approved'])
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET numPosts = numPosts + 1" . ($new_topic ? ', numTopics = numTopics + 1' : '') . "
 			WHERE ID_BOARD = $topicOptions[board]
 			LIMIT 1", __FILE__, __LINE__);
 	else
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET unapprovedPosts = unapprovedPosts + 1" . ($new_topic ? ', unapprovedTopics = unapprovedTopics + 1' : '') . "
 			WHERE ID_BOARD = $topicOptions[board]
 			LIMIT 1", __FILE__, __LINE__);
 
 		// Add to the approval queue too.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}approval_queue
 				(ID_MSG)
 			VALUES
@@ -1848,7 +1848,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		// Since it's likely they *read* it before replying, let's try an UPDATE first.
 		if (!$new_topic)
 		{
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}log_topics
 				SET ID_MSG = $msgOptions[id] + 1
 				WHERE ID_MEMBER = $ID_MEMBER
@@ -1859,7 +1859,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		}
 
 		if (empty($flag))
-			db_query("
+			$smfFunc['db_query']("
 				REPLACE INTO {$db_prefix}log_topics
 					(ID_TOPIC, ID_MEMBER, ID_MSG)
 				VALUES ($topicOptions[id], $ID_MEMBER, $msgOptions[id] + 1)", __FILE__, __LINE__);
@@ -1875,7 +1875,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$inserts .= "($word, $msgOptions[id]),\n";
 
 		if (!empty($inserts))
-			db_query("
+			$smfFunc['db_query']("
 				INSERT IGNORE INTO {$db_prefix}log_search_words
 					(ID_WORD, ID_MSG)
 				VALUES
@@ -1913,7 +1913,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 // !!!
 function createAttachment(&$attachmentOptions)
 {
-	global $db_prefix, $modSettings, $sourcedir;
+	global $db_prefix, $modSettings, $sourcedir, $smfFunc;
 
 	$attachmentOptions['errors'] = array();
 	if (!isset($attachmentOptions['post']))
@@ -1991,14 +1991,14 @@ function createAttachment(&$attachmentOptions)
 			$attachmentOptions['errors'][] = 'bad_filename';
 
 		// Check if there's another file with that name...
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_ATTACH
 			FROM {$db_prefix}attachments
 			WHERE filename = '" . strtolower($attachmentOptions['name']) . "'
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) > 0)
+		if ($smfFunc['db_num_rows']($request) > 0)
 			$attachmentOptions['errors'][] = 'taken_filename';
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	if (!empty($attachmentOptions['errors']))
@@ -2007,7 +2007,7 @@ function createAttachment(&$attachmentOptions)
 	if (!is_writable($modSettings['attachmentUploadDir']))
 		fatal_lang_error('attachments_no_write', 'critical');
 
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}attachments
 			(ID_MSG, filename, size, width, height, approved)
 		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
@@ -2018,7 +2018,7 @@ function createAttachment(&$attachmentOptions)
 
 	// If it's not approved add to the approval queue.
 	if (!$attachmentOptions['approved'])
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}approval_queue
 				(ID_ATTACH, ID_MSG)
 			VALUES
@@ -2036,7 +2036,7 @@ function createAttachment(&$attachmentOptions)
 		list ($attachmentOptions['width'], $attachmentOptions['height']) = @getimagesize($attachmentOptions['destination']);
 
 		if (!empty($attachmentOptions['width']) && !empty($attachmentOptions['height']))
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}attachments
 				SET
 					width = " . (int) $attachmentOptions['width'] . ",
@@ -2063,7 +2063,7 @@ function createAttachment(&$attachmentOptions)
 			$thumb_size = filesize($attachmentOptions['destination'] . '_thumb');
 
 			// To the database we go!
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}attachments
 					(ID_MSG, attachmentType, filename, size, width, height, approved)
 				VALUES (" . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
@@ -2071,7 +2071,7 @@ function createAttachment(&$attachmentOptions)
 
 			if (!empty($attachmentOptions['thumb']))
 			{
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}attachments
 					SET ID_THUMB = $attachmentOptions[thumb]
 					WHERE ID_ATTACH = $attachmentOptions[id]
@@ -2088,7 +2088,7 @@ function createAttachment(&$attachmentOptions)
 // !!!
 function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $ID_MEMBER, $modSettings;
+	global $db_prefix, $user_info, $ID_MEMBER, $modSettings, $smfFunc;
 
 	$topicOptions['poll'] = isset($topicOptions['poll']) ? (int) $topicOptions['poll'] : null;
 	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ? $topicOptions['lock_mode'] : null;
@@ -2110,12 +2110,12 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		
 		if (!empty($modSettings['search_custom_index_config']))
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT body
 				FROM {$db_prefix}messages
 				WHERE ID_MSG = $msgOptions[id]", __FILE__, __LINE__);
-			list ($old_body) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($old_body) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 		}
 	}
 	if (!empty($msgOptions['modify_time']))
@@ -2128,7 +2128,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		$messages_columns[] = "smileysEnabled = " . (empty($msgOptions['smileys_enabled']) ? '0' : '1');
 
 	// Change the post.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET " . implode(', ', $messages_columns) . "
 		WHERE ID_MSG = $msgOptions[id]
@@ -2137,7 +2137,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// Lock and or sticky the post.
 	if ($topicOptions['sticky_mode'] !== null || $topicOptions['lock_mode'] !== null || $topicOptions['poll'] !== null)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}topics
 			SET
 				isSticky = " . ($topicOptions['sticky_mode'] === null ? 'isSticky' : $topicOptions['sticky_mode']) . ",
@@ -2149,7 +2149,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Mark inserted topic as read.
 	if (!empty($topicOptions['mark_as_read']) && !$user_info['is_guest'])
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_topics
 				(ID_TOPIC, ID_MEMBER, ID_MSG)
 			VALUES ($topicOptions[id], $ID_MEMBER, $modSettings[maxMsgID])", __FILE__, __LINE__);
@@ -2164,7 +2164,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		// Calculate the words to remove from the index.
 		$removed_words = array_diff(array_diff($old_index, $new_index), $stopwords);
 		if (!empty($removed_words))
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_search_words
 				WHERE ID_MSG = $msgOptions[id]
 					AND ID_WORD IN (" . implode(", ", $removed_words) . ")
@@ -2173,7 +2173,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		// Calculate the new words to be indexed.
 		$inserted_words = array_diff(array_diff($new_index, $old_index), $stopwords);
 		if (!empty($inserted_words))
-			db_query("
+			$smfFunc['db_query']("
 				INSERT IGNORE INTO {$db_prefix}log_search_words
 					(ID_WORD, ID_MSG)
 				VALUES
@@ -2184,14 +2184,14 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	if (isset($msgOptions['subject']))
 	{
 		// Only update the subject if this was the first message in the topic.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_TOPIC
 			FROM {$db_prefix}topics
 			WHERE ID_FIRST_MSG = $msgOptions[id]
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 1)
+		if ($smfFunc['db_num_rows']($request) == 1)
 			updateStats('subject', $topicOptions['id'], $msgOptions['subject']);
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Finally, if we are setting the approved state we need to do much more work :(
@@ -2204,7 +2204,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 // Approve (or not) some posts... without permission checks...
 function approvePosts($msgs, $approve = true)
 {
-	global $db_prefix, $sourcedir;
+	global $db_prefix, $sourcedir, $smfFunc;
 
 	if (!is_array($msgs))
 		$msgs = array($msgs);
@@ -2213,7 +2213,7 @@ function approvePosts($msgs, $approve = true)
 		return false;
 
 	// May as well start at the beginning, working out *what* we need to change.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.ID_MSG, m.approved, m.ID_TOPIC, m.ID_BOARD, t.ID_FIRST_MSG, t.ID_LAST_MSG,
 			m.body, m.subject, IFNULL(mem.realName, m.posterName) AS posterName, m.ID_MEMBER,
 			t.approved AS topic_approved
@@ -2228,7 +2228,7 @@ function approvePosts($msgs, $approve = true)
 	$board_changes = array();
 	$notification_topics = array();
 	$notification_posts = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Easy...
 		$msgs[] = $row['ID_MSG'];
@@ -2296,13 +2296,13 @@ function approvePosts($msgs, $approve = true)
 		$board_changes[$row['ID_BOARD']]['unapproved_posts'] += $approve ? -1 : 1;
 		$board_changes[$row['ID_BOARD']]['posts'] += $approve ? 1 : -1;
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($msgs))
 		return;
 
 	// Now we have the differences make the changes, first the easy one.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET approved = " . ($approve ? 1 : 0) . "
 		WHERE ID_MSG IN (" . implode(',', $msgs) . ")", __FILE__, __LINE__);
@@ -2310,20 +2310,20 @@ function approvePosts($msgs, $approve = true)
 	// If we were unapproving find the last msg in the topics...
 	if (!$approve)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_TOPIC, MAX(ID_MSG) AS ID_LAST_MSG
 			FROM {$db_prefix}messages
 			WHERE ID_TOPIC IN (" . implode(',', $topics) . ")
 				AND approved = 1
 			GROUP BY ID_TOPIC", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$topic_changes[$row['ID_TOPIC']]['ID_LAST_MSG'] = $row['ID_LAST_MSG'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// ... next the topics...
 	foreach ($topic_changes as $id => $changes)
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}topics
 			SET approved = $changes[approved], unapprovedPosts = unapprovedPosts + $changes[unapproved_posts],
 				numReplies = numReplies + $changes[replies], ID_LAST_MSG = $changes[ID_LAST_MSG]
@@ -2331,7 +2331,7 @@ function approvePosts($msgs, $approve = true)
 
 	// ... finally the boards...
 	foreach ($board_changes as $id => $changes)
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET numPosts = numPosts + $changes[posts], unapprovedPosts = unapprovedPosts + $changes[unapproved_posts],
 				numTopics = numTopics + $changes[topics], unapprovedTopics = unapprovedTopics + $changes[unapproved_topics]
@@ -2348,7 +2348,7 @@ function approvePosts($msgs, $approve = true)
 		if (!empty($notification_posts))
 			sendApprovalNotifications($notification_posts);
 
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}approval_queue
 			WHERE ID_MSG IN (" . implode(',', $msgs) . ")
 				AND ID_ATTACH = 0", __FILE__, __LINE__);
@@ -2356,7 +2356,7 @@ function approvePosts($msgs, $approve = true)
 	// If unapproving add to the approval queue!
 	else
 	{
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}approval_queue
 				(ID_MSG)
 			VALUES
@@ -2372,7 +2372,7 @@ function approvePosts($msgs, $approve = true)
 // Approve topics?
 function approveTopics($topics, $approve = true)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	if (!is_array($topics))
 		$topics = array($topics);
@@ -2383,15 +2383,15 @@ function approveTopics($topics, $approve = true)
 	$approve_type = $approve ? 0 : 1;
 
 	// Just get the messages to be approved and pass through...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MSG
 		FROM {$db_prefix}messages
 		WHERE ID_TOPIC IN (" . implode(',', $topics) . ")
 			AND approved = $approve_type", __FILE__, __LINE__);
 	$msgs = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$msgs[] = $row['ID_MSG'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return approvePosts($msgs, $approve);
 }
@@ -2400,7 +2400,7 @@ function approveTopics($topics, $approve = true)
 function sendApprovalNotifications(&$topicData)
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $modSettings, $sourcedir, $context;
+	global $modSettings, $sourcedir, $context, $smfFunc;
 
 	// Clean up the data...
 	if (!is_array($topicData) || empty($topicData))
@@ -2421,14 +2421,14 @@ function sendApprovalNotifications(&$topicData)
 	}
 
 	// These need to go into the digest too...
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}log_digest
 			(ID_TOPIC, ID_MSG, note_type, exclude)
 		VALUES
 			" . implode(', ', $digest_insert), __FILE__, __LINE__);
 
 	// Find everyone who needs to know about this.
-	$members = db_query("
+	$members = $smfFunc['db_query']("
 		SELECT
 			mem.ID_MEMBER, mem.emailAddress, mem.notifyRegularity, mem.notifyTypes, mem.notifySendBody, mem.lngfile,
 			ln.sent, mem.ID_GROUP, mem.additionalGroups, b.memberGroups, mem.ID_POST_GROUP, t.ID_MEMBER_STARTED,
@@ -2445,7 +2445,7 @@ function sendApprovalNotifications(&$topicData)
 		GROUP BY mem.ID_MEMBER, ln.ID_TOPIC
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	$sent = 0;
-	while ($row = mysql_fetch_assoc($members))
+	while ($row = $smfFunc['db_fetch_assoc']($members))
 	{
 		if ($row['ID_GROUP'] != 1)
 		{
@@ -2488,14 +2488,14 @@ function sendApprovalNotifications(&$topicData)
 			$sent_this_time = true;
 		}
 	}
-	mysql_free_result($members);
+	$smfFunc['db_free_result']($members);
 
 	if (isset($current_language) && $current_language != $user_info['language'])
 		loadLanguage('Post');
 
 	// Sent!
 	if (!empty($sent))
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_notify
 			SET sent = 1
 			WHERE ID_TOPIC IN (" . implode(',', $topics) . ")
@@ -2505,7 +2505,7 @@ function sendApprovalNotifications(&$topicData)
 // Update the last message in a board, and its parents.
 function updateLastMessages($setboards, $ID_MSG = 0)
 {
-	global $db_prefix, $board_info, $board, $modSettings;
+	global $db_prefix, $board_info, $board, $modSettings, $smfFunc;
 
 	if (!is_array($setboards))
 		$setboards = array($setboards);
@@ -2514,16 +2514,16 @@ function updateLastMessages($setboards, $ID_MSG = 0)
 	if (!$ID_MSG)
 	{
 		// Find the latest message on this board (highest ID_MSG.)
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_BOARD, MAX(ID_LAST_MSG) AS ID_MSG
 			FROM {$db_prefix}topics
 			WHERE ID_BOARD IN (" . implode(', ', $setboards) . ")
 				AND approved = 1
 			GROUP BY ID_BOARD", __FILE__, __LINE__);
 		$lastMsg = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$lastMsg[$row['ID_BOARD']] = $row['ID_MSG'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 	else
 	{
@@ -2583,7 +2583,7 @@ function updateLastMessages($setboards, $ID_MSG = 0)
 	// Now commit the changes!
 	foreach ($parent_updates as $ID_MSG => $boards)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET ID_MSG_UPDATED = $ID_MSG
 			WHERE ID_BOARD IN (" . implode(',', $boards) . ")
@@ -2592,7 +2592,7 @@ function updateLastMessages($setboards, $ID_MSG = 0)
 	}
 	foreach ($board_updates as $ID_MSG => $boards)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET ID_LAST_MSG = $ID_MSG, ID_MSG_UPDATED = $ID_MSG
 			WHERE ID_BOARD IN (" . implode(',', $boards) . ")
@@ -2603,7 +2603,7 @@ function updateLastMessages($setboards, $ID_MSG = 0)
 // This simple function gets a list of all administrators and sends them an email to let them know a new member has joined.
 function adminNotify($type, $memberID, $memberName = null)
 {
-	global $txt, $db_prefix, $modSettings, $language, $scripturl, $user_info, $context;
+	global $txt, $db_prefix, $modSettings, $language, $scripturl, $user_info, $context, $smfFunc;
 
 	// If the setting isn't enabled then just exit.
 	if (empty($modSettings['notify_new_registration']))
@@ -2612,41 +2612,41 @@ function adminNotify($type, $memberID, $memberName = null)
 	if ($memberName == null)
 	{
 		// Get the new user's name....
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT realName
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER = $memberID
 			LIMIT 1", __FILE__, __LINE__);
-		list ($memberName) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($memberName) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	$toNotify = array();
 	$groups = array();
 
 	// All membergroups who can approve members.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP
 		FROM {$db_prefix}permissions
 		WHERE permission = 'moderate_forum'
 			AND addDeny = 1
 			AND ID_GROUP != 0", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$groups[] = $row['ID_GROUP'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Add administrators too...
 	$groups[] = 1;
 	$groups = array_unique($groups);
 
 	// Get a list of all members who have ability to approve accounts - these are the people who we inform.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, lngfile, emailAddress
 		FROM {$db_prefix}members
 		WHERE (ID_GROUP IN (" . implode(', ', $groups) . ") OR FIND_IN_SET(" . implode(', additionalGroups) OR FIND_IN_SET(', $groups) . ", additionalGroups))
 			AND notifyTypes != 4
 		ORDER BY lngfile", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Post it in this members language.
 		$needed_language = empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'];
@@ -2665,7 +2665,7 @@ function adminNotify($type, $memberID, $memberName = null)
 		// And do the actual sending...
 		sendmail($row['emailAddress'], $txt['admin_notify_subject'], $message . sprintf($txt['regards_team'], $context['forum_name']), null, null, false, 0);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (isset($current_language) && $current_language != $user_info['language'])
 		loadLanguage('Login');

@@ -89,7 +89,7 @@ if (!defined('SMF'))
 // Mark a board or multiple boards read.
 function markBoardsRead($boards, $unread = false)
 {
-	global $db_prefix, $ID_MEMBER, $modSettings;
+	global $db_prefix, $ID_MEMBER, $modSettings, $smfFunc;
 
 	// Force $boards to be an array.
 	if (!is_array($boards))
@@ -106,11 +106,11 @@ function markBoardsRead($boards, $unread = false)
 	{
 		// Clear out all the places where this lovely info is stored.
 		// !! Maybe not log_mark_read?
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_mark_read
 			WHERE ID_BOARD IN (" . implode(', ', $boards) . ")
 				AND ID_MEMBER = $ID_MEMBER", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_boards
 			WHERE ID_BOARD IN (" . implode(', ', $boards) . ")
 				AND ID_MEMBER = $ID_MEMBER", __FILE__, __LINE__);
@@ -125,29 +125,29 @@ function markBoardsRead($boards, $unread = false)
 		$setString = substr($setString, 0, -1);
 
 		// Update log_mark_read and log_boards.
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_mark_read
 				(ID_MSG, ID_MEMBER, ID_BOARD)
 			VALUES$setString", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_boards
 				(ID_MSG, ID_MEMBER, ID_BOARD)
 			VALUES$setString", __FILE__, __LINE__);
 	}
 
 	// Get rid of useless log_topics data, because log_mark_read is better for it - even if marking unread - I think so...
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT MIN(ID_TOPIC)
 		FROM {$db_prefix}log_topics
 		WHERE ID_MEMBER = $ID_MEMBER", __FILE__, __LINE__);
-	list ($lowest_topic) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($lowest_topic) = $smfFunc['db_fetch_row']($result);
+	$smfFunc['db_free_result']($result);
 
 	if (empty($lowest_topic))
 		return;
 
 	// !!!SLOW This query seems to eat it sometimes.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT lt.ID_TOPIC
 		FROM ({$db_prefix}log_topics AS lt, {$db_prefix}topics AS t /*!40000 USE INDEX (PRIMARY) */)
 		WHERE t.ID_TOPIC = lt.ID_TOPIC
@@ -155,12 +155,12 @@ function markBoardsRead($boards, $unread = false)
 			AND t.ID_BOARD IN (" . implode(', ', $boards) . ")
 			AND lt.ID_MEMBER = $ID_MEMBER", __FILE__, __LINE__);
 	$topics = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 		$topics[] = $row['ID_TOPIC'];
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	if (!empty($topics))
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_topics
 			WHERE ID_MEMBER = $ID_MEMBER
 				AND ID_TOPIC IN (" . implode(', ', $topics) . ")
@@ -170,7 +170,7 @@ function markBoardsRead($boards, $unread = false)
 // Mark one or more boards as read.
 function MarkRead()
 {
-	global $board, $topic, $user_info, $board_info, $ID_MEMBER, $db_prefix, $modSettings;
+	global $board, $topic, $user_info, $board_info, $ID_MEMBER, $db_prefix, $modSettings, $smfFunc;
 
 	// No Guests allowed!
 	is_not_guest();
@@ -180,14 +180,14 @@ function MarkRead()
 	if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'all')
 	{
 		// Find all the boards this user can see.
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT b.ID_BOARD
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 		$boards = array();
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 			$boards[] = $row['ID_BOARD'];
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 
 		if (!empty($boards))
 			markBoardsRead($boards, isset($_REQUEST['unread']));
@@ -211,7 +211,7 @@ function MarkRead()
 			$setString .= "
 				($modSettings[maxMsgID], $ID_MEMBER, " . (int) $ID_TOPIC . "),";
 
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_topics
 				(ID_MSG, ID_MEMBER, ID_TOPIC)
 			VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
@@ -227,31 +227,31 @@ function MarkRead()
 		if (!empty($_GET['t']))
 		{
 			// Get the latest message before this one.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT MAX(ID_MSG)
 				FROM {$db_prefix}messages
 				WHERE ID_TOPIC = $topic
 					AND ID_MSG < " . (int) $_GET['t'], __FILE__, __LINE__);
-			list ($earlyMsg) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($earlyMsg) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 		}
 
 		if (empty($earlyMsg))
 		{
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT ID_MSG
 				FROM {$db_prefix}messages
 				WHERE ID_TOPIC = $topic
 				ORDER BY ID_MSG
 				LIMIT " . (int) $_REQUEST['start'] . ", 1", __FILE__, __LINE__);
-			list ($earlyMsg) = mysql_fetch_row($result);
-			mysql_free_result($result);
+			list ($earlyMsg) = $smfFunc['db_fetch_row']($result);
+			$smfFunc['db_free_result']($result);
 		}
 
 		$earlyMsg--;
 
 		// Use a time one second earlier than the first time: blam, unread!
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_topics
 				(ID_MSG, ID_MEMBER, ID_TOPIC)
 			VALUES ($earlyMsg, $ID_MEMBER, $topic)", __FILE__, __LINE__);
@@ -283,7 +283,7 @@ function MarkRead()
 			// They want to mark the entire tree starting with the boards specified
 			// The easist thing is to just get all the boards they can see, but since we've specified the top of tree we ignore some of them
 
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT b.ID_BOARD, b.ID_PARENT
 				FROM {$db_prefix}boards AS b
 				WHERE $user_info[query_see_board]
@@ -291,10 +291,10 @@ function MarkRead()
 					AND b.ID_BOARD NOT IN (" . implode(', ', $boards) . ")
 				ORDER BY childLevel ASC
 				", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				if (in_array($row['ID_PARENT'], $boards))
 					$boards[] = $row['ID_BOARD'];
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 			
 		}
 
@@ -307,15 +307,15 @@ function MarkRead()
 		if (empty($clauses))
 			redirectexit();
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT b.ID_BOARD
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[query_see_board]
 				AND b." . implode(" OR b.", $clauses), __FILE__, __LINE__);
 		$boards = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$boards[] = $row['ID_BOARD'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (empty($boards))
 			redirectexit();
@@ -331,24 +331,24 @@ function MarkRead()
 		if (!isset($_REQUEST['unread']))
 		{
 			// Find all the boards this user can see.
-			$result = db_query("
+			$result = $smfFunc['db_query']("
 				SELECT b.ID_BOARD
 				FROM {$db_prefix}boards AS b
 				WHERE b.ID_PARENT IN (" . implode(', ', $boards) . ")
 					AND $user_info[query_see_board]", __FILE__, __LINE__);
-			if (mysql_num_rows($result) > 0)
+			if ($smfFunc['db_num_rows']($result) > 0)
 			{
 				$setString = '';
-				while ($row = mysql_fetch_assoc($result))
+				while ($row = $smfFunc['db_fetch_assoc']($result))
 					$setString .= "
 						($modSettings[maxMsgID], $ID_MEMBER, $row[ID_BOARD]),";
 
-				db_query("
+				$smfFunc['db_query']("
 					REPLACE INTO {$db_prefix}log_boards
 						(ID_MSG, ID_MEMBER, ID_BOARD)
 					VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
 			}
-			mysql_free_result($result);
+			$smfFunc['db_free_result']($result);
 
 			if (empty($board))
 				redirectexit();
@@ -368,21 +368,21 @@ function MarkRead()
 // Get the ID_MEMBER associated with the specified message.
 function getMsgMemberID($messageID)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// Find the topic and make sure the member still exists.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT IFNULL(mem.ID_MEMBER, 0)
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
 		WHERE m.ID_MSG = " . (int) $messageID . "
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($result) > 0)
-		list ($memberID) = mysql_fetch_row($result);
+	if ($smfFunc['db_num_rows']($result) > 0)
+		list ($memberID) = $smfFunc['db_fetch_row']($result);
 	// The message doesn't even exist.
 	else
 		$memberID = 0;
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	return $memberID;
 }
@@ -471,14 +471,14 @@ function modifyBoard($board_id, &$boardOptions)
 
 		// Fix the children of this board.
 		if (!empty($childList) && !empty($childUpdates))
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}boards
 				SET " . implode(',
 					', $childUpdates) . "
 				WHERE ID_BOARD IN (" . implode(', ', $childList) . ')', __FILE__, __LINE__);
 
 		// Make some room for this spot.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET boardOrder = boardOrder + " . (1 + count($childList)) . "
 			WHERE boardOrder > $after
@@ -517,7 +517,7 @@ function modifyBoard($board_id, &$boardOptions)
 
 	// Do the updates (if any).
 	if (!empty($boardUpdates))
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET
 				" . implode(',
@@ -529,7 +529,7 @@ function modifyBoard($board_id, &$boardOptions)
 	if (isset($boardOptions['moderators']) || isset($boardOptions['moderator_string']))
 	{
 		// Reset current moderators for this board - if there are any!
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}moderators
 			WHERE ID_BOARD = $board_id", __FILE__, __LINE__);
 
@@ -552,14 +552,14 @@ function modifyBoard($board_id, &$boardOptions)
 			$boardOptions['moderators'] = array();
 			if (!empty($moderators))
 			{
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT ID_MEMBER
 					FROM {$db_prefix}members
 					WHERE memberName IN ('" . implode("','", $moderators) . "') OR realName IN ('" . implode("','", $moderators) . "')
 					LIMIT " . count($moderators), __FILE__, __LINE__);
-				while ($row = mysql_fetch_assoc($request))
+				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$boardOptions['moderators'][] = $row['ID_MEMBER'];
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 			}
 		}
 
@@ -571,7 +571,7 @@ function modifyBoard($board_id, &$boardOptions)
 				$setString .= "
 						($board_id, $moderator),";
 
-			db_query("
+			$smfFunc['db_query']("
 				INSERT INTO {$db_prefix}moderators
 					(ID_BOARD, ID_MEMBER)
 				VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
@@ -588,7 +588,7 @@ function modifyBoard($board_id, &$boardOptions)
 // Create a new board and set it's properties and position.
 function createBoard($boardOptions)
 {
-	global $boards, $db_prefix, $modSettings;
+	global $boards, $db_prefix, $modSettings, $smfFunc;
 
 	// Trigger an error if one of the required values is not set.
 	if (!isset($boardOptions['board_name']) || trim($boardOptions['board_name']) == '' || !isset($boardOptions['move_to']) || !isset($boardOptions['target_category']))
@@ -610,7 +610,7 @@ function createBoard($boardOptions)
 	);
 
 	// Insert a board, the settings are dealt with later.
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}boards
 			(ID_CAT, name, description, boardOrder, memberGroups)
 		VALUES ($boardOptions[target_category], SUBSTRING('$boardOptions[board_name]', 1, 255), '', 0, '-1,0')", __FILE__, __LINE__);
@@ -629,15 +629,15 @@ function createBoard($boardOptions)
 
 		if (!empty($boards[$board_id]['parent']))
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_PROFILE
 				FROM {$db_prefix}boards
 				WHERE ID_BOARD = " . (int) $boards[$board_id]['parent'] . "
 				LIMIT 1", __FILE__, __LINE__);
-			list ($boardOptions['profile']) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($boardOptions['profile']) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}boards
 				SET ID_PROFILE = $boardOptions[profile]
 				WHERE ID_BOARD = $board_id", __FILE__, __LINE__);
@@ -651,7 +651,7 @@ function createBoard($boardOptions)
 // Remove one or more boards.
 function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 {
-	global $db_prefix, $sourcedir, $boards;
+	global $db_prefix, $sourcedir, $boards, $smfFunc;
 
 	// No boards to delete? Return!
 	if (empty($boards_to_remove))
@@ -685,46 +685,46 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	}
 
 	// Delete ALL topics in the selected boards (done first so topics can't be marooned.)
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_TOPIC
 		FROM {$db_prefix}topics
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ')', __FILE__, __LINE__);
 	$topics = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$topics[] = $row['ID_TOPIC'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	require_once($sourcedir . '/RemoveTopic.php');
 	removeTopics($topics, false);
 
 	// Delete the board's logs.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_mark_read
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ')', __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_boards
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ')', __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_notify
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ')', __FILE__, __LINE__);
 
 	// Delete this board's moderators.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}moderators
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ')', __FILE__, __LINE__);
 
 	// Delete any extra events in the calendar.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}calendar
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ')', __FILE__, __LINE__);
 
 	// Delete any message icons that only appear on these boards.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}message_icons
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ')', __FILE__, __LINE__);
 
 	// Delete the boards.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}boards
 		WHERE ID_BOARD IN (" . implode(', ', $boards_to_remove) . ")
 		LIMIT " . count($boards_to_remove), __FILE__, __LINE__);
@@ -741,13 +741,13 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	// Make sure we only delete profiles not in use, and not predefined.
 	if (!empty($profiles))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT p.ID_PROFILE, p.ID_PARENT, IFNULL(b.ID_BOARD, 0) AS remainingBoard
 			FROM {$db_prefix}permission_profiles AS p
 				LEFT JOIN {$db_prefix}boards AS b ON (b.ID_PROFILE = p.ID_PROFILE AND b.ID_BOARD NOT IN (" . implode(', ', $boards_to_remove) . "))
 			GROUP BY ID_PROFILE", __FILE__, __LINE__);
 		$profiles = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// Nothing left, and can be deleted?
 			if (empty($row['remainingBoard']) && $row['ID_PARENT'])
@@ -756,15 +756,15 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 			elseif ($row['ID_PARENT'] && in_array($row['ID_PARENT'], $boards_to_remove))
 				$profiles['update'][$row['ID_PROFILE']] = $row['remainingBoard'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Delete now defunct ones.
 		if (!empty($profiles['delete']))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}permission_profiles
 				WHERE ID_PROFILE IN (" . implode(', ', $profiles['delete']) . ")", __FILE__, __LINE__);
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}board_permissions
 				WHERE ID_PROFILE IN (" . implode(', ', $profiles['delete']) . ")", __FILE__, __LINE__);
 		}
@@ -773,7 +773,7 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 		if (!empty($profiles['update']))
 		{
 			foreach ($profiles['update'] as $profile => $board)
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}permission_profiles
 					SET ID_PARENT = $board
 					WHERE ID_PROFILE = $profile", __FILE__, __LINE__);
@@ -794,7 +794,7 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 // Put all boards in the right order.
 function reorderBoards()
 {
-	global $db_prefix, $cat_tree, $boardList, $boards;
+	global $db_prefix, $cat_tree, $boardList, $boards, $smfFunc;
 
 	getBoardTree();
 
@@ -804,7 +804,7 @@ function reorderBoards()
 	{
 		foreach ($boardList[$catID] as $boardID)
 			if ($boards[$boardID]['order'] != ++$boardOrder)
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}boards
 					SET boardOrder = $boardOrder
 					WHERE ID_BOARD = $boardID
@@ -812,7 +812,7 @@ function reorderBoards()
 	}
 
 	// Sort the records of the boards table on the boardOrder value.
-	db_query("
+	$smfFunc['db_query']("
 		ALTER TABLE {$db_prefix}boards
 		ORDER BY boardOrder", __FILE__, __LINE__);
 }
@@ -821,20 +821,20 @@ function reorderBoards()
 // Fixes the children of a board by setting their childLevels to new values.
 function fixChildren($parent, $newLevel, $newParent)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// Grab all children of $parent...
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT ID_BOARD
 		FROM {$db_prefix}boards
 		WHERE ID_PARENT = $parent", __FILE__, __LINE__);
 	$children = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 		$children[] = $row['ID_BOARD'];
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// ...and set it to a new parent and childLevel.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}boards
 		SET ID_PARENT = $newParent, childLevel = $newLevel
 		WHERE ID_PARENT = $parent
@@ -848,10 +848,10 @@ function fixChildren($parent, $newLevel, $newParent)
 // Load a lot of usefull information regarding the boards and categories.
 function getBoardTree()
 {
-	global $db_prefix, $cat_tree, $boards, $boardList, $txt, $modSettings;
+	global $db_prefix, $cat_tree, $boards, $boardList, $txt, $modSettings, $smfFunc;
 
 	// Getting all the board and category information you'd ever wanted.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			IFNULL(b.ID_BOARD, 0) AS ID_BOARD, b.ID_PARENT, b.name AS bName, b.description, b.childLevel,
 			b.boardOrder, b.countPosts, b.memberGroups, b.ID_THEME, b.override_theme, b.ID_PROFILE,
@@ -862,7 +862,7 @@ function getBoardTree()
 	$cat_tree = array();
 	$boards = array();
 	$last_board_order = 0;
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!isset($cat_tree[$row['ID_CAT']]))
 		{
@@ -921,7 +921,7 @@ function getBoardTree()
 
 				// Wrong childlevel...we can silently fix this...
 				if ($boards[$row['ID_PARENT']]['tree']['node']['level'] != $row['childLevel'] - 1)
-					db_query("
+					$smfFunc['db_query']("
 						UPDATE {$db_prefix}boards
 						SET childLevel = " . ($boards[$row['ID_PARENT']]['tree']['node']['level'] + 1) . "
 						WHERE ID_BOARD = $row[ID_BOARD]", __FILE__, __LINE__);
@@ -935,7 +935,7 @@ function getBoardTree()
 			}
 		}
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get a list of all the boards in each category (using recursion).
 	$boardList = array();

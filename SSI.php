@@ -58,7 +58,6 @@ require_once($sourcedir . '/Subs.php');
 require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
-require_once($sourcedir . '/Database.php');
 
 if (@version_compare(PHP_VERSION, '4.2.3') != 1)
 	require_once($sourcedir . '/Subs-Compat.php');
@@ -67,7 +66,7 @@ if (@version_compare(PHP_VERSION, '4.2.3') != 1)
 $smfFunc = array();
 
 // Initate the database connection and define some database functions to use.
-db_initiate();
+loadDatabase();
 
 // Load installed 'Mods' settings.
 reloadSettings();

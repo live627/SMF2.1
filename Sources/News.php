@@ -71,7 +71,7 @@ if (!defined('SMF'))
 function ShowXmlFeed()
 {
 	global $db_prefix, $board, $board_info, $context, $scripturl, $txt, $modSettings, $user_info;
-	global $query_this_board;
+	global $query_this_board, $smfFunc;
 
 	// If it's not enabled, die.
 	if (empty($modSettings['xmlnews_enable']))
@@ -91,29 +91,29 @@ function ShowXmlFeed()
 
 		if (count($_REQUEST['c']) == 1)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT name
 				FROM {$db_prefix}categories
 				WHERE ID_CAT = " . (int) $_REQUEST['c'][0], __FILE__, __LINE__);
-			list ($feed_title) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($feed_title) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
 			$feed_title = ' - ' . strip_tags($feed_title);
 		}
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT b.ID_BOARD, b.numPosts
 			FROM {$db_prefix}boards AS b
 			WHERE b.ID_CAT IN (" . implode(', ', $_REQUEST['c']) . ")
 				AND $user_info[query_see_board]", __FILE__, __LINE__);
 		$total_cat_posts = 0;
 		$boards = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$boards[] = $row['ID_BOARD'];
 			$total_cat_posts += $row['numPosts'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($boards))
 			$query_this_board = 'b.ID_BOARD IN (' . implode(', ', $boards) . ')';
@@ -129,7 +129,7 @@ function ShowXmlFeed()
 		foreach ($_REQUEST['boards'] as $i => $b)
 			$_REQUEST['boards'][$i] = (int) $b;
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT b.ID_BOARD, b.numPosts, b.name
 			FROM {$db_prefix}boards AS b
 			WHERE b.ID_BOARD IN (" . implode(', ', $_REQUEST['boards']) . ")
@@ -137,12 +137,12 @@ function ShowXmlFeed()
 			LIMIT " . count($_REQUEST['boards']), __FILE__, __LINE__);
 
 		// Either the board specified doesn't exist or you have no access.
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('smf232');
 
 		$total_posts = 0;
 		$boards = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (count($_REQUEST['boards']) == 1)
 				$feed_title = ' - ' . strip_tags($row['name']);
@@ -150,7 +150,7 @@ function ShowXmlFeed()
 			$boards[] = $row['ID_BOARD'];
 			$total_posts += $row['numPosts'];
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($boards))
 			$query_this_board = 'b.ID_BOARD IN (' . implode(', ', $boards) . ')';
@@ -162,13 +162,13 @@ function ShowXmlFeed()
 	}
 	elseif (!empty($board))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT numPosts
 			FROM {$db_prefix}boards
 			WHERE ID_BOARD = $board
 			LIMIT 1", __FILE__, __LINE__);
-		list ($total_posts) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($total_posts) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		$feed_title = ' - ' . strip_tags($board_info['name']);
 
@@ -455,16 +455,16 @@ function dumpTags($data, $i, $tag = null, $xml_format = '')
 
 function getXmlMembers($xml_format)
 {
-	global $db_prefix, $scripturl;
+	global $db_prefix, $scripturl, $smfFunc;
 
 	// Find the most recent members.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, memberName, realName, dateRegistered, lastLogin
 		FROM {$db_prefix}members
 		ORDER BY ID_MEMBER DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$data = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Make the data look rss-ish.
 		if ($xml_format == 'rss' || $xml_format == 'rss2')
@@ -498,7 +498,7 @@ function getXmlMembers($xml_format)
 				'link' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER']
 			);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return $data;
 }
@@ -513,7 +513,7 @@ function getXmlNews($xml_format)
 		- are on an any board OR in a specified board.
 		- can be seen by this user.
 		- are actually the latest posts. */
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, t.ID_TOPIC, t.ID_BOARD,
 			b.name AS bname, t.numReplies, m.ID_MEMBER, IFNULL(mem.realName, m.posterName) AS posterName,
@@ -528,7 +528,7 @@ function getXmlNews($xml_format)
 		ORDER BY t.ID_FIRST_MSG DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$data = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Limit the length of the message, if the option is set.
 		if (!empty($modSettings['xmlnews_maxlen']) && $smfFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
@@ -589,7 +589,7 @@ function getXmlNews($xml_format)
 				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0'
 			);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return $data;
 }
@@ -599,7 +599,7 @@ function getXmlRecent($xml_format)
 	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
 	global $query_this_board, $smfFunc;
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.ID_MSG
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
 		WHERE m.ID_BOARD = " . (empty($board) ? "b.ID_BOARD" : "$board
@@ -609,15 +609,15 @@ function getXmlRecent($xml_format)
 		ORDER BY m.ID_MSG DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$messages = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$messages[] = $row['ID_MSG'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($messages))
 		return array();
 
 	// Find the most recent posts this user can see.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, m.ID_TOPIC, t.ID_BOARD,
 			b.name AS bname, t.numReplies, m.ID_MEMBER, mf.ID_MEMBER AS ID_FIRST_MEMBER,
@@ -635,7 +635,7 @@ function getXmlRecent($xml_format)
 		ORDER BY m.ID_MSG DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$data = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Limit the length of the message, if the option is set.
 		if (!empty($modSettings['xmlnews_maxlen']) && $smfFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
@@ -705,7 +705,7 @@ function getXmlRecent($xml_format)
 				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
 			);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return $data;
 }

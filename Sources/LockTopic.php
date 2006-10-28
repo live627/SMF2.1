@@ -44,7 +44,7 @@ if (!defined('SMF'))
 // Locks a topic... either by way of a moderator or the topic starter.
 function LockTopic()
 {
-	global $db_prefix, $topic, $user_info, $sourcedir, $board;
+	global $db_prefix, $topic, $user_info, $sourcedir, $board, $smfFunc;
 
 	// Just quit if there's no topic to lock.
 	if (empty($topic))
@@ -56,13 +56,13 @@ function LockTopic()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Find out who started the topic - in case User Topic Locking is enabled.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER_STARTED, locked
 		FROM {$db_prefix}topics
 		WHERE ID_TOPIC = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	list ($starter, $locked) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($starter, $locked) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Can you lock topics here, mister?
 	$user_lock = !allowedTo('lock_any');
@@ -85,7 +85,7 @@ function LockTopic()
 		fatal_lang_error('smf31', 'user');
 
 	// Actually lock the topic in the database with the new value.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}topics
 		SET locked = $locked
 		WHERE ID_TOPIC = $topic
@@ -104,7 +104,7 @@ function LockTopic()
 // Sticky a topic.  Can't be done by topic starters - that would be annoying!
 function Sticky()
 {
-	global $db_prefix, $modSettings, $topic, $sourcedir;
+	global $db_prefix, $modSettings, $topic, $sourcedir, $smfFunc;
 
 	// Make sure the user can sticky it, and they are stickying *something*.
 	isAllowedTo('make_sticky');
@@ -123,16 +123,16 @@ function Sticky()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Is this topic already stickied, or no?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT isSticky
 		FROM {$db_prefix}topics
 		WHERE ID_TOPIC = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	list ($isSticky) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($isSticky) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Toggle the sticky value.... pretty simple ;).
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}topics
 		SET isSticky = " . (empty($isSticky) ? 1 : 0) . "
 		WHERE ID_TOPIC = $topic

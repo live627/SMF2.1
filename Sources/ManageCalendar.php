@@ -79,7 +79,7 @@ function ManageCalendar()
 // The function that handles adding, and deleting holiday data
 function ModifyHolidays()
 {
-	global $txt, $context, $db_prefix, $scripturl;
+	global $txt, $context, $db_prefix, $scripturl, $smfFunc;
 
 	loadTemplate('ManageCalendar');
 
@@ -95,7 +95,7 @@ function ModifyHolidays()
 			$_REQUEST['holiday'][$id] = (int) $id;
 
 		// Now the IDs are "safe" do the delete...
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}calendar_holidays
 			WHERE ID_HOLIDAY IN (" . implode(', ', $_REQUEST['holiday']) . ")
 			LIMIT " . count($_REQUEST['holiday']), __FILE__, __LINE__);
@@ -104,34 +104,34 @@ function ModifyHolidays()
 	}
 
 	// Total amount of holidays... for pagination.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}calendar_holidays", __FILE__, __LINE__);
-	list ($context['holidayCount']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($context['holidayCount']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=managecalendar;sa=holidays', $_REQUEST['start'], $context['holidayCount'], 20);
 
 	// Now load up all the holidays into a lovely large array.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_HOLIDAY, YEAR(eventDate) AS year, MONTH(eventDate) AS month, DAYOFMONTH(eventDate) AS day, title
 		FROM {$db_prefix}calendar_holidays
 		ORDER BY title
 		LIMIT $_REQUEST[start], 20", __FILE__, __LINE__);
 	$context['holidays'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['holidays'][] = array(
 			'id' => $row['ID_HOLIDAY'],
 			'date' => $row['day'] . ' ' . $txt['months'][$row['month']] . ' ' . ($row['year'] == '0004' ? '(' . $txt['every_year'] . ')' : $row['year']),
 			'title' => $row['title']
 		);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 // This function is used for adding/editing a specific holiday
 function EditHoliday()
 {
-	global $txt, $context, $db_prefix, $scripturl;
+	global $txt, $context, $db_prefix, $scripturl, $smfFunc;
 
 	loadTemplate('ManageCalendar');
 
@@ -146,19 +146,19 @@ function EditHoliday()
 		checkSession();
 
 		if (isset($_REQUEST['delete']))
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}calendar_holidays
 				WHERE ID_HOLIDAY = $_REQUEST[holiday]", __FILE__, __LINE__);
 		else
 		{
 			$date = strftime($_REQUEST['year'] <= 4 ? '0004-%m-%d' : '%Y-%m-%d', mktime(0, 0, 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']));
 			if (isset($_REQUEST['edit']))
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}calendar_holidays
 					SET eventDate = '$date', title = '$_REQUEST[title]'
 					WHERE ID_HOLIDAY = $_REQUEST[holiday]", __FILE__, __LINE__);
 			else
-				db_query("
+				$smfFunc['db_query']("
 					INSERT INTO {$db_prefix}calendar_holidays
 						(eventDate, title)
 					VALUES
@@ -182,12 +182,12 @@ function EditHoliday()
 	// If it's not new load the data.
 	else
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_HOLIDAY, YEAR(eventDate) AS year, MONTH(eventDate) AS month, DAYOFMONTH(eventDate) AS day, title
 			FROM {$db_prefix}calendar_holidays
 			WHERE ID_HOLIDAY = $_REQUEST[holiday]
 			LIMIT 1", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['holiday'] = array(
 				'id' => $row['ID_HOLIDAY'],
 				'day' => $row['day'],
@@ -195,7 +195,7 @@ function EditHoliday()
 				'year' => $row['year'] <= 4 ? 0 : $row['year'],
 				'title' => $row['title']
 			);
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Last day for the drop down?
@@ -204,7 +204,7 @@ function EditHoliday()
 
 function ModifyCalendarSettings()
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $sourcedir, $scripturl;
+	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $sourcedir, $scripturl, $smfFunc;
 
 	// Get the settings template fired up.
 	require_once($sourcedir .'/ManageServer.php');
@@ -216,13 +216,13 @@ function ModifyCalendarSettings()
 
 	// Load the boards list.
 	$boards = array('');
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT b.ID_BOARD, b.name AS bName, c.name AS cName
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$boards[$row['ID_BOARD']] = $row['cName'] . ' - ' . $row['bName'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Look, all the calendar settings - of which there are many!
 	$config_vars = array(

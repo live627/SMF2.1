@@ -42,7 +42,7 @@ if (!defined('SMF'))
 // Show the moderation log
 function ViewModlog()
 {
-	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info;
+	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc;
 
 	$context['can_delete'] = allowedTo('admin_forum');
 	$user_info['modlog_query'] = $context['can_delete'] ? '1' : (empty($user_info['mod_cache']['bq']) ? 'lm.ID_ACTION=0' : 'lm.' . $user_info['mod_cache']['bq']);
@@ -58,11 +58,11 @@ function ViewModlog()
 
 	// Handle deletion...
 	if (isset($_POST['removeall']) && $context['can_delete'])
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_actions
 			WHERE logtime < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
 	elseif (!empty($_POST['remove']) && isset($_POST['delete']) && $context['can_delete'])
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_actions
 			WHERE ID_ACTION IN ('" . implode("', '", array_unique($_POST['delete'])) . "')
 				AND logTime < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
@@ -167,15 +167,15 @@ function ViewModlog()
 	}
 
 	// Count the amount of entries in total for pagination.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_actions AS lm
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lm.ID_MEMBER)
 			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))
 		WHERE" . (!empty($search_params['string']) ? " INSTR($search_params[type_sql], '$search_params[string]')
 			AND" : '') . " $user_info[modlog_query]", __FILE__, __LINE__);
-	list ($context['entry_count']) = mysql_fetch_row($result);
-	mysql_free_result($result);
+	list ($context['entry_count']) = $smfFunc['db_fetch_row']($result);
+	$smfFunc['db_free_result']($result);
 
 	// Create the page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=modlog;order=' . $context['order'] . $context['dir'] . (!empty($context['search_params']) ? ';params=' . $context['search_params'] : ''), $_REQUEST['start'], $context['entry_count'], $context['displaypage']);
@@ -187,7 +187,7 @@ function ViewModlog()
 
 function getModLogEntries($search_param = '', $order= '', $limit = 0)
 {
-	global $db_prefix, $context, $scripturl, $txt;
+	global $db_prefix, $context, $scripturl, $txt, $smfFunc;
 
 	// Construct our limit.
 	if (empty($limit))
@@ -205,7 +205,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 	$seeIP = allowedTo('moderate_forum');
 	
 	// Here we have the query getting the log details.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT
 			lm.ID_ACTION, lm.ID_MEMBER, lm.ip, lm.logTime, lm.action, lm.ID_BOARD, lm.ID_TOPIC, lm.ID_MSG, lm.extra,
 			mem.realName, mg.groupName
@@ -221,7 +221,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 	$boards = array();
 	$members = array();
 	$context['entries'] = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		$row['extra'] = unserialize($row['extra']);
 
@@ -289,16 +289,16 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 			'action' => isset($descriptions[$row['action']]) ? $descriptions[$row['action']] : $row['action'],
 		);
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	if (!empty($boards))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_BOARD, name
 			FROM {$db_prefix}boards
 			WHERE ID_BOARD IN (" . implode(', ', array_keys($boards)) . ")
 			LIMIT " . count(array_keys($boards)), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			foreach ($boards[$row['ID_BOARD']] as $action)
 			{
@@ -311,18 +311,18 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 					$context['entries'][$action]['extra']['board'] = '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '">' . $row['name'] . '</a>';
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	if (!empty($topics))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ms.subject, t.ID_TOPIC
 			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ms)
 			WHERE t.ID_TOPIC IN (" . implode(', ', array_keys($topics)) . ")
 				AND ms.ID_MSG = t.ID_FIRST_MSG
 			LIMIT " . count(array_keys($topics)), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			foreach ($topics[$row['ID_TOPIC']] as $action)
 			{
@@ -343,17 +343,17 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 					$this_action['extra']['new_topic'] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . (isset($this_action['extra']['message']) ? 'msg' . $this_action['extra']['message'] . '#msg' . $this_action['extra']['message'] : '0') . '">' . $row['subject'] . '</a>';
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	if (!empty($members))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT realName, ID_MEMBER
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER IN (" . implode(', ', array_keys($members)) . ")
 			LIMIT " . count(array_keys($members)), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			foreach ($members[$row['ID_MEMBER']] as $action)
 			{
@@ -368,7 +368,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 				$context['entries'][$action]['extra']['member'] = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>';
 			}
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 	
 	// Make any message info links so its easier to go find that message

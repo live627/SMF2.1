@@ -44,7 +44,7 @@ if (!defined('SMF'))
 function Register()
 {
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
-	global $db_prefix, $language, $scripturl, $smfFunc, $sourcedir;
+	global $db_prefix, $language, $scripturl, $smfFunc, $sourcedir, $smfFunc;
 
 	// Check if the administrator has it disabled.
 	if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 3)
@@ -339,7 +339,7 @@ function Register2()
 
 function Activate()
 {
-	global $db_prefix, $context, $txt, $modSettings, $scripturl, $sourcedir;
+	global $db_prefix, $context, $txt, $modSettings, $scripturl, $sourcedir, $smfFunc;
 
 	loadLanguage('Login');
 	loadTemplate('Login');
@@ -359,7 +359,7 @@ function Activate()
 	}
 
 	// Get the code from the database...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, validation_code, memberName, realName, emailAddress, is_activated, passwd
 		FROM {$db_prefix}members" . (empty($_REQUEST['u']) ? "
 		WHERE memberName = '$_POST[user]' OR emailAddress = '$_POST[user]'" : "
@@ -367,7 +367,7 @@ function Activate()
 		LIMIT 1", __FILE__, __LINE__);
 
 	// Does this user exist at all?
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$context['sub_template'] = 'retry_activate';
 		$context['page_title'] = $txt['invalid_userid'];
@@ -376,8 +376,8 @@ function Activate()
 		return;
 	}
 
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Change their email address? (they probably tried a fake one first :P.)
 	if (isset($_POST['new_email'], $_REQUEST['passwd']) && sha1(strtolower($row['memberName']) . $_REQUEST['passwd']) == $row['passwd'])
@@ -393,15 +393,15 @@ function Activate()
 		isBannedEmail($_POST['new_email'], 'cannot_register', $txt['ban_register_prohibited']);
 
 		// Ummm... don't even dare try to take someone else's email!!
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}members
 			WHERE emailAddress = '$_POST[new_email]'
 			LIMIT 1", __FILE__, __LINE__);
 		// !!! Separate the sprintf?
-		if (mysql_num_rows($request) != 0)
+		if ($smfFunc['db_num_rows']($request) != 0)
 			fatal_lang_error(730, false, array(htmlspecialchars($_POST['new_email'])));
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		updateMemberData($row['ID_MEMBER'], array('emailAddress' => "'$_POST[new_email]'"));
 		$row['emailAddress'] = stripslashes($_POST['new_email']);
@@ -468,7 +468,7 @@ function Activate()
 // This function will display the contact information for the forum, as well a form to fill in.
 function CoppaForm()
 {
-	global $context, $modSettings, $txt, $db_prefix;
+	global $context, $modSettings, $txt, $db_prefix, $smfFunc;
 
 	loadLanguage('Login');
 	loadTemplate('Register');
@@ -478,15 +478,15 @@ function CoppaForm()
 		fatal_lang_error(1);
 
 	// Get the user details...
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT memberName
 		FROM {$db_prefix}members
 		WHERE ID_MEMBER = " . (int) $_GET['member'] . "
 			AND is_activated = 5", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(1);
-	list ($username) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($username) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	if (isset($_GET['form']))
 	{

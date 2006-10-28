@@ -150,7 +150,7 @@ function SplitTopics()
 // Part 1: General stuff.
 function SplitIndex()
 {
-	global $txt, $topic, $db_prefix, $context;
+	global $txt, $topic, $db_prefix, $context, $smfFunc;
 
 	// Validate "at".
 	if (empty($_GET['at']))
@@ -161,7 +161,7 @@ function SplitIndex()
 	$approveQuery = allowedTo('approve_posts') ? ' AND m.approved = 1' : '';
 
 	// Retrieve the subject and stuff of the specific topic/message.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.subject, t.numReplies, t.ID_FIRST_MSG, t.approved
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 		WHERE m.ID_MSG = $_GET[at]
@@ -169,10 +169,10 @@ function SplitIndex()
 			AND m.ID_TOPIC = $topic
 			AND t.ID_TOPIC = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf272');
-	list ($_REQUEST['subname'], $numReplies, $ID_FIRST_MSG, $approved) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($_REQUEST['subname'], $numReplies, $ID_FIRST_MSG, $approved) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// If not approved validate they can see it.
 	if (!$approved)
@@ -198,7 +198,7 @@ function SplitIndex()
 // Alright, you've decided what you want to do with it.... now to do it.
 function SplitExecute()
 {
-	global $txt, $board, $topic, $db_prefix, $context, $ID_MEMBER, $user_info;
+	global $txt, $board, $topic, $db_prefix, $context, $ID_MEMBER, $user_info, $smfFunc;
 
 	// They blanked the subject name.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
@@ -220,14 +220,14 @@ function SplitExecute()
 	if ($_POST['step2'] == 'afterthis')
 	{
 		// Fetch the message IDs of the topic that are at or after the message.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MSG
 			FROM {$db_prefix}messages
 			WHERE ID_TOPIC = $topic
 				AND ID_MSG >= $_POST[at]", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$messagesToBeSplit[] = $row['ID_MSG'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 	// Only the selected message has to be split. That should be easy.
 	elseif ($_POST['step2'] == 'onlythis')
@@ -244,7 +244,7 @@ function SplitExecute()
 // Get a selective list of topics...
 function SplitSelectTopics()
 {
-	global $txt, $scripturl, $topic, $db_prefix, $context, $modSettings, $original_msgs;
+	global $txt, $scripturl, $topic, $db_prefix, $context, $modSettings, $original_msgs, $smfFunc;
 
 	// For determining what they can see...
 	$approveQuery = allowedTo('approve_posts') ? '1' : 'approved = 1';
@@ -284,7 +284,7 @@ function SplitSelectTopics()
 			'not_selected' => array(),
 			'selected' => array(),
 		);
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MSG
 			FROM {$db_prefix}messages
 			WHERE ID_TOPIC = $topic" . (empty($_SESSION['split_selection'][$topic]) ? '' : "
@@ -293,14 +293,14 @@ function SplitSelectTopics()
 			ORDER BY ID_MSG DESC
 			LIMIT " . $context['not_selected']['start'] . ", $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 		// You can't split the last message off.
-		if (empty($context['not_selected']['start']) && mysql_num_rows($request) <= 1 && $_REQUEST['move'] == 'down')
+		if (empty($context['not_selected']['start']) && $smfFunc['db_num_rows']($request) <= 1 && $_REQUEST['move'] == 'down')
 			$_REQUEST['move'] = '';
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$original_msgs['not_selected'][] = $row['ID_MSG'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 		if (!empty($_SESSION['split_selection'][$topic]))
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_MSG
 				FROM {$db_prefix}messages
 				WHERE ID_TOPIC = $topic
@@ -308,9 +308,9 @@ function SplitSelectTopics()
 					AND $approveQuery
 				ORDER BY ID_MSG DESC
 				LIMIT " . $context['selected']['start'] . ", $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$original_msgs['selected'][] = $row['ID_MSG'];
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 	}
 
@@ -330,28 +330,28 @@ function SplitSelectTopics()
 	// Make sure the selection is still accurate.
 	if (!empty($_SESSION['split_selection'][$topic]))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MSG
 			FROM {$db_prefix}messages
 			WHERE ID_TOPIC = $topic
 				AND ID_MSG IN (" . implode(', ', $_SESSION['split_selection'][$topic]) . ")
 				AND $approveQuery", __FILE__, __LINE__);
 		$_SESSION['split_selection'][$topic] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$_SESSION['split_selection'][$topic][] = $row['ID_MSG'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Get the number of messages (not) selected to be split.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT " . (empty($_SESSION['split_selection'][$topic]) ? '0' : 'm.ID_MSG IN (' .implode(', ', $_SESSION['split_selection'][$topic]) . ')') . " AS is_selected, COUNT(*) AS num_messages
 		FROM {$db_prefix}messages AS m
 		WHERE m.ID_TOPIC = $topic
 			AND $approveQuery
 		GROUP BY is_selected", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context[empty($row['is_selected']) ? 'not_selected' : 'selected']['num_messages'] = $row['num_messages'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Fix an oversized starting page (to make sure both pageindexes are properly set).
 	if ($context['selected']['start'] >= $context['selected']['num_messages'])
@@ -363,7 +363,7 @@ function SplitSelectTopics()
 	$context['selected']['page_index'] = constructPageIndex($scripturl . '?action=splittopics;sa=selectTopics;subname=' . strtr(urlencode($_REQUEST['subname']), array('%' => '%%')) . ';topic=' . $topic . '.' . $context['not_selected']['start'] . ';start2=%d', $context['selected']['start'], $context['selected']['num_messages'], $modSettings['defaultMaxMessages'], true);
 
 	// Get the messages and stick them into an array.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.subject, IFNULL(mem.realName, m.posterName) AS realName, m.body, m.ID_MSG, m.smileysEnabled
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
@@ -373,7 +373,7 @@ function SplitSelectTopics()
 		ORDER BY m.ID_MSG DESC
 		LIMIT " . $context['not_selected']['start'] . ", $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 	$context['messages'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		censorText($row['subject']);
 		censorText($row['body']);
@@ -387,13 +387,13 @@ function SplitSelectTopics()
 			'poster' => $row['realName'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Now get the selected messages.
 	if (!empty($_SESSION['split_selection'][$topic]))
 	{
 		// Get the messages and stick them into an array.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT m.subject, IFNULL(mem.realName, m.posterName) AS realName, m.body, m.ID_MSG, m.smileysEnabled
 			FROM {$db_prefix}messages AS m
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
@@ -403,7 +403,7 @@ function SplitSelectTopics()
 			ORDER BY m.ID_MSG DESC
 			LIMIT " . $context['selected']['start'] . ", $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 		$context['messages'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			censorText($row['subject']);
 			censorText($row['body']);
@@ -417,7 +417,7 @@ function SplitSelectTopics()
 				'poster' => $row['realName']
 			);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// The XMLhttp method only needs the stuff that changed, so let's compare.
@@ -496,17 +496,17 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		$ID_BOARD = $board;
 	else
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_BOARD
 			FROM {$db_prefix}topics
 			WHERE ID_TOPIC = $split1_ID_TOPIC
 			LIMIT 1", __FILE__, __LINE__);
-		list ($ID_BOARD) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($ID_BOARD) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Find the new first and last not in the list. (old topic)
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT MIN(m.ID_MSG) AS myID_FIRST_MSG, MAX(m.ID_MSG) AS myID_LAST_MSG, COUNT(*) AS messageCount,
 			t.isSticky, t.approved AS topicApproved, m.approved
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
@@ -517,9 +517,9 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		ORDER BY m.approved DESC
 		LIMIT 2", __FILE__, __LINE__);
 	// You can't select ALL the messages!
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf271b', false);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$isSticky = $row['isSticky'];
 		$split1_approved = $row['topicApproved'];
@@ -547,12 +547,12 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 			$split1_unapprovedposts = $row['messageCount'];
 		}
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 	$split1_firstMem = getMsgMemberID($split1_firstMsg);
 	$split1_lastMem = getMsgMemberID($split1_lastMsg);
 
 	// Find the first and last in the list. (new topic)
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT MIN(ID_MSG) AS myID_FIRST_MSG, MAX(ID_MSG) AS myID_LAST_MSG, COUNT(*) AS messageCount,
 			approved
 		FROM {$db_prefix}messages
@@ -560,7 +560,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 			AND ID_TOPIC = $split1_ID_TOPIC
 		GROUP BY ID_TOPIC, approved DESC
 		LIMIT 2", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// As before get the right first and last message dependant on approved state...
 		if (empty($split2_firstMsg) || $row['myID_FIRST_MSG'] < $split2_firstMsg)
@@ -590,7 +590,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 			$split2_unapprovedposts = $row['messageCount'];
 		}
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 	$split2_firstMem = getMsgMemberID($split2_firstMsg);
 	$split2_lastMem = getMsgMemberID($split2_lastMsg);
 
@@ -603,7 +603,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		fatal_lang_error('smf268', false);
 
 	// We're off to insert the new topic!  Use 0 for now to avoid UNIQUE errors.
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}topics
 			(ID_BOARD, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, ID_FIRST_MSG, ID_LAST_MSG, numReplies, unapprovedPosts, approved, isSticky)
 		VALUES ($ID_BOARD, $split2_firstMem, $split2_lastMem, 0, 0, $split2_replies, $split2_unapprovedposts, $split2_approved, $isSticky)", __FILE__, __LINE__);
@@ -613,7 +613,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// Move the messages over to the other topic.
 	 $new_subject = $smfFunc['htmlspecialchars']($new_subject);
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET
 			ID_TOPIC = $split2_ID_TOPIC,
@@ -625,13 +625,13 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	updateStats('subject', $split2_ID_TOPIC, $new_subject);
 
 	// Any associated reported posts better follow...
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_reported
 		SET ID_TOPIC = $split2_ID_TOPIC
 		WHERE ID_MSG IN ($postList)", __FILE__, __LINE__);
 
 	// Mess with the old topic's first, last, and number of messages.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}topics
 		SET
 			numReplies = $split1_replies,
@@ -644,7 +644,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		LIMIT 1", __FILE__, __LINE__);
 
 	// Now, put the first/last message back to what they should be.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}topics
 		SET
 			ID_FIRST_MSG = $split2_firstMsg,
@@ -654,7 +654,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// If the new topic isn't approved ensure the first message flags this just in case.
 	if (!$split2_approved)
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}messages
 			SET approved = 0
 			WHERE ID_MSG = $split2_firstMsg
@@ -662,7 +662,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 			LIMIT 1", __FILE__, __LINE__);
 
 	// The board has more topics now (Or more unapproved ones!).
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}boards
 		SET " . ($split2_approved ? "
 			numTopics = numTopics + 1" : "
@@ -672,7 +672,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// We're going to assume they bothered to read it before splitting it.
 	if (!$user_info['is_guest'])
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_topics
 				(ID_MSG, ID_MEMBER, ID_TOPIC)
 			VALUES ($modSettings[maxMsgID], $ID_MEMBER, $split2_ID_TOPIC)", __FILE__, __LINE__);
@@ -713,7 +713,7 @@ function MergeTopics()
 // Merge two topics together.
 function MergeIndex()
 {
-	global $txt, $board, $context;
+	global $txt, $board, $context, $smfFunc;
 	global $scripturl, $topic, $db_prefix, $user_info, $modSettings;
 
 	$_REQUEST['targetboard'] = isset($_REQUEST['targetboard']) ? (int) $_REQUEST['targetboard'] : $board;
@@ -724,19 +724,19 @@ function MergeIndex()
 	$approveQuery = $can_approve_boards == array(0) || in_array($_REQUEST['targetboard'], $can_approve_boards) ? 'AND t.approved = 1' : '';
 
 	// How many topics are on this board?  (used for paging.)
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT COUNT(*)
 		FROM {$db_prefix}topics AS t
 		WHERE t.ID_BOARD = $_REQUEST[targetboard]
 			$approveQuery", __FILE__, __LINE__);
-	list ($topiccount) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($topiccount) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Make the page list.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=mergetopics;from=' . $_GET['from'] . ';targetboard=' . $_REQUEST['targetboard'] . ';board=' . $board . '.%d', $_REQUEST['start'], $topiccount, $modSettings['defaultMaxTopics'], true);
 
 	// Get the topic's subject.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.subject
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 		WHERE m.ID_MSG = t.ID_FIRST_MSG
@@ -744,10 +744,10 @@ function MergeIndex()
 			AND t.ID_BOARD = $board
 			$approveQuery
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232');
-	list ($subject) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($subject) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Tell the template a few things..
 	$context['origin_topic'] = $_GET['from'];
@@ -762,23 +762,23 @@ function MergeIndex()
 		fatal_lang_error('cannot_merge_any', 'user');
 
 	// Get a list of boards they can navigate to to merge.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT b.ID_BOARD, b.name AS bName, c.name AS cName
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
 		WHERE $user_info[query_see_board]" . (!in_array(0, $merge_boards) ? "
 			AND b.ID_BOARD IN (" . implode(', ', $merge_boards) . ")" : ''), __FILE__, __LINE__);
 	$context['boards'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['boards'][] = array(
 			'id' => $row['ID_BOARD'],
 			'name' => $row['bName'],
 			'category' => $row['cName']
 		);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get some topics to merge it with.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT t.ID_TOPIC, m.subject, m.ID_MEMBER, IFNULL(mem.realName, m.posterName) AS posterName
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
@@ -789,7 +789,7 @@ function MergeIndex()
 		ORDER BY " . (!empty($modSettings['enableStickyTopics']) ? 't.isSticky DESC, ' : '') . "t.ID_LAST_MSG DESC
 		LIMIT $_REQUEST[start], $modSettings[defaultMaxTopics]", __FILE__, __LINE__);
 	$context['topics'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		censorText($row['subject']);
 
@@ -805,7 +805,7 @@ function MergeIndex()
 			'js_subject' => addcslashes(addslashes($row['subject']), '/')
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($context['topics']) && count($context['boards']) <= 1)
 		fatal_lang_error('merge_need_more_topics');
@@ -846,7 +846,7 @@ function MergeExecute($topics = array())
 	$can_approve_boards = boardsAllowedTo('approve_posts');
 
 	// Get info about the topics and polls that will be merged.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			t.ID_TOPIC, t.ID_BOARD, t.ID_POLL, t.numViews, t.isSticky, t.approved, t.numReplies, t.unapprovedPosts,
 			m1.subject, m1.posterTime AS time_started, IFNULL(mem1.ID_MEMBER, 0) AS ID_MEMBER_STARTED, IFNULL(mem1.realName, m1.posterName) AS name_started,
@@ -859,14 +859,14 @@ function MergeExecute($topics = array())
 			AND m2.ID_MSG = t.ID_LAST_MSG
 		ORDER BY t.ID_FIRST_MSG
 		LIMIT " . count($topics), __FILE__, __LINE__);
-	if (mysql_num_rows($request) < 2)
+	if ($smfFunc['db_num_rows']($request) < 2)
 		fatal_lang_error('smf263');
 	$num_views = 0;
 	$isSticky = 0;
 	$boardTotals = array();
 	$boards = array();
 	$polls = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Make a note for the board counts...
 		if (!isset($boardTotals[$row['ID_BOARD']]))
@@ -919,7 +919,7 @@ function MergeExecute($topics = array())
 
 		$isSticky = max($isSticky, $row['isSticky']);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// If we didn't get any topics then they've been messing with unapproved stuff.
 	if (empty($topic_data))
@@ -933,7 +933,7 @@ function MergeExecute($topics = array())
 		fatal_lang_error('cannot_merge_any', 'user');
 
 	// Make sure they can see all boards....
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT b.ID_BOARD
 		FROM {$db_prefix}boards AS b
 		WHERE b.ID_BOARD IN (" . implode(', ', $boards) . ")
@@ -941,22 +941,22 @@ function MergeExecute($topics = array())
 			AND b.ID_BOARD IN (" . implode(', ', $merge_boards) . ")" : '') . "
 		LIMIT " . count($boards), __FILE__, __LINE__);
 	// If the number of boards that's in the output isn't exactly the same as we've put in there, you're in trouble.
-	if (mysql_num_rows($request) != count($boards))
+	if ($smfFunc['db_num_rows']($request) != count($boards))
 		fatal_lang_error('smf232');
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	if (empty($_REQUEST['sa']) || $_REQUEST['sa'] == 'options')
 	{
 		if (count($polls) > 1)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT t.ID_TOPIC, t.ID_POLL, m.subject, p.question
 				FROM ({$db_prefix}polls AS p, {$db_prefix}topics AS t, {$db_prefix}messages AS m)
 				WHERE p.ID_POLL IN (" . implode(', ', $polls) . ")
 					AND t.ID_POLL = p.ID_POLL
 					AND m.ID_MSG = t.ID_FIRST_MSG
 				LIMIT " . count($polls), __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['polls'][] = array(
 					'id' => $row['ID_POLL'],
 					'topic' => array(
@@ -966,23 +966,23 @@ function MergeExecute($topics = array())
 					'question' => $row['question'],
 					'selected' => $row['ID_TOPIC'] == $firstTopic
 				);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 		if (count($boards) > 1)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_BOARD, name
 				FROM {$db_prefix}boards
 				WHERE ID_BOARD IN (" . implode(', ', $boards) . ")
 				ORDER BY name
 				LIMIT " . count($boards), __FILE__, __LINE__);
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['boards'][] = array(
 					'id' => $row['ID_BOARD'],
 					'name' => $row['name'],
 					'selected' => $row['ID_BOARD'] == $topic_data[$firstTopic]['board']
 				);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 
 		$context['topics'] = $topic_data;
@@ -1016,14 +1016,14 @@ function MergeExecute($topics = array())
 		$target_subject = addslashes($topic_data[$firstTopic]['subject']);
 
 	// Get the first and last message and the number of messages....
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT approved, MIN(ID_MSG) AS firstMsg, MAX(ID_MSG) AS lastMsg, COUNT(*) AS messageCount
 		FROM {$db_prefix}messages
 		WHERE ID_TOPIC IN (" . implode(', ', $topics) . ")
 		GROUP BY approved
 		ORDER BY approved DESC", __FILE__, __LINE__);
 	$topicApproved = 1;
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// If this is approved, or is fully unapproved.
 		if ($row['approved'] || !isset($first_msg))
@@ -1054,7 +1054,7 @@ function MergeExecute($topics = array())
 			$num_unapproved = $row['messageCount'];
 		}
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Ensure we have a board stat for the target board.
 	if (!isset($boardTotals[$target_board]))
@@ -1077,31 +1077,31 @@ function MergeExecute($topics = array())
 	$boardTotals[$target_board]['posts'] -= $topicApproved ? $num_replies + 1 : $num_replies;
 
 	// Get the member ID of the first and last message.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER
 		FROM {$db_prefix}messages
 		WHERE ID_MSG IN ($first_msg, $last_msg)
 		ORDER BY ID_MSG
 		LIMIT 2", __FILE__, __LINE__);
-	list ($member_started) = mysql_fetch_row($request);
-	list ($member_updated) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($member_started) = $smfFunc['db_fetch_row']($request);
+	list ($member_updated) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Assign the first topic ID to be the merged topic.
 	$ID_TOPIC = min($topics);
 
 	// Delete the remaining topics.
 	$deleted_topics = array_diff($topics, array($ID_TOPIC));
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}topics
 		WHERE ID_TOPIC IN (" . implode(', ', $deleted_topics) . ")
 		LIMIT " . count($deleted_topics), __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_search_subjects
 		WHERE ID_TOPIC IN (" . implode(', ', $deleted_topics) . ")", __FILE__, __LINE__);
 
 	// Asssign the properties of the newly merged topic.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}topics
 		SET
 			ID_BOARD = $target_board,
@@ -1133,7 +1133,7 @@ function MergeExecute($topics = array())
 	}
 
 	// Change the topic IDs of all messages that will be merged.  Also adjust subjects if 'enforce subject' was checked.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET
 			ID_TOPIC = $ID_TOPIC,
@@ -1142,7 +1142,7 @@ function MergeExecute($topics = array())
 		WHERE ID_TOPIC IN (" . implode(', ', $topics) . ")", __FILE__, __LINE__);
 
 	// Any reported posts should reflect the new board.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_reported
 		SET
 			ID_TOPIC = $ID_TOPIC,
@@ -1150,14 +1150,14 @@ function MergeExecute($topics = array())
 		WHERE ID_TOPIC IN (" . implode(', ', $topics) . ")", __FILE__, __LINE__);
 
 	// Change the subject of the first message...
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET subject = '$target_subject'
 		WHERE ID_MSG = $first_msg
 		LIMIT 1", __FILE__, __LINE__);
 
 	// Adjust all calendar events to point to the new topic.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}calendar
 		SET
 			ID_TOPIC = $ID_TOPIC,
@@ -1165,29 +1165,29 @@ function MergeExecute($topics = array())
 		WHERE ID_TOPIC IN (" . implode(', ', $deleted_topics) . ")", __FILE__, __LINE__);
 
 	// Merge log topic entries.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, MIN(ID_MSG) AS new_ID_MSG
 		FROM {$db_prefix}log_topics
 		WHERE ID_TOPIC IN (" . implode(', ', $topics) . ")
 		GROUP BY ID_MEMBER", __FILE__, __LINE__);
-	if (mysql_num_rows($request) > 0)
+	if ($smfFunc['db_num_rows']($request) > 0)
 	{
 		$replaceEntries = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$replaceEntries[] = "($row[ID_MEMBER], $ID_TOPIC, $row[new_ID_MSG])";
 
-		db_query("
+		$smfFunc['db_query']("
 			REPLACE INTO {$db_prefix}log_topics
 				(ID_MEMBER, ID_TOPIC, ID_MSG)
 			VALUES " . implode(', ', $replaceEntries), __FILE__, __LINE__);
 		unset($replaceEntries);
 
 		// Get rid of the old log entries.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_topics
 			WHERE ID_TOPIC IN (" . implode(', ', $deleted_topics) . ")", __FILE__, __LINE__);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Merge topic notifications.
 	if (!empty($_POST['notifications']) && is_array($_POST['notifications']))
@@ -1195,41 +1195,41 @@ function MergeExecute($topics = array())
 		// Check if the notification array contains valid topics.
 		if (count(array_diff($_POST['notifications'], $topics)) > 0)
 			fatal_lang_error('smf232');
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, MAX(sent) AS sent
 			FROM {$db_prefix}log_notify
 			WHERE ID_TOPIC IN (" . implode(', ', $_POST['notifications']) . ")
 			GROUP BY ID_MEMBER", __FILE__, __LINE__);
-		if (mysql_num_rows($request) > 0)
+		if ($smfFunc['db_num_rows']($request) > 0)
 		{
 			$replaceEntries = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$replaceEntries[] = "($row[ID_MEMBER], $ID_TOPIC, 0, $row[sent])";
 
-			db_query("
+			$smfFunc['db_query']("
 				REPLACE INTO {$db_prefix}log_notify
 					(ID_MEMBER, ID_TOPIC, ID_BOARD, sent)
 				VALUES " . implode(', ', $replaceEntries), __FILE__, __LINE__);
 			unset($replaceEntries);
 
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}log_topics
 				WHERE ID_TOPIC IN (" . implode(', ', $deleted_topics) . ")", __FILE__, __LINE__);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Get rid of the redundant polls.
 	if (!empty($deleted_polls))
 	{
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}polls
 			WHERE ID_POLL IN (" . implode(', ', $deleted_polls) . ")
 			LIMIT 1", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}poll_choices
 			WHERE ID_POLL IN (" . implode(', ', $deleted_polls) . ")", __FILE__, __LINE__);
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_polls
 			WHERE ID_POLL IN (" . implode(', ', $deleted_polls) . ")", __FILE__, __LINE__);
 	}
@@ -1237,7 +1237,7 @@ function MergeExecute($topics = array())
 	// Cycle through each board...
 	foreach ($boardTotals as $ID_BOARD => $stats)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}boards
 			SET
 				numTopics = IF($stats[topics] > numTopics, 0, numTopics - $stats[topics]),
@@ -1249,13 +1249,13 @@ function MergeExecute($topics = array())
 	}
 
 	// Determine the board the final topic resides in
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_BOARD
 		FROM {$db_prefix}topics
 		WHERE ID_TOPIC=$ID_TOPIC
 		LIMIT 1", __FILE__, __LINE__);
-	list($ID_BOARD) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list($ID_BOARD) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	require_once($sourcedir . '/Subs-Post.php');
 

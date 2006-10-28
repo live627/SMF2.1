@@ -73,7 +73,7 @@ function RemindMe()
 // Email a reminder.
 function RemindMail()
 {
-	global $db_prefix, $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email;
+	global $db_prefix, $context, $txt, $scripturl, $sourcedir, $user_info, $webmaster_email, $smfFunc;
 
 	checkSession();
 
@@ -82,26 +82,26 @@ function RemindMail()
 		fatal_lang_error(40, false);
 
 	// Find the user!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, realName, memberName, emailAddress, is_activated, validation_code
 		FROM {$db_prefix}members
 		WHERE memberName = '$_POST[user]'
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 	{
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, realName, memberName, emailAddress, is_activated, validation_code
 			FROM {$db_prefix}members
 			WHERE emailAddress = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(40, false);
 	}
 
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// If the user isn't activated/approved, give them some feedback on what to do next.
 	if ($row['is_activated'] != 1)
@@ -162,7 +162,7 @@ function setPassword()
 
 function setPassword2()
 {
-	global $db_prefix, $context, $txt, $modSettings;
+	global $db_prefix, $context, $txt, $modSettings, $smfFunc;
 
 	if (empty($_POST['u']) || !isset($_POST['passwrd1']) || !isset($_POST['passwrd2']))
 		fatal_lang_error(1, false);
@@ -178,7 +178,7 @@ function setPassword2()
 	loadLanguage('Login');
 
 	// Get the code as it should be from the database.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT validation_code, memberName
 		FROM {$db_prefix}members
 		WHERE ID_MEMBER = $_POST[u]
@@ -187,11 +187,11 @@ function setPassword2()
 		LIMIT 1", __FILE__, __LINE__);
 
 	// Does this user exist at all?
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('invalid_userid', false);
 
-	list ($realCode, $username) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($realCode, $username) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Quit if this code is not right.
 	if (empty($_POST['code']) || substr($realCode, 0, 10) != substr(md5($_POST['code']), 0, 10))
@@ -217,7 +217,7 @@ function setPassword2()
 // Get the secret answer.
 function secretAnswerInput()
 {
-	global $txt, $db_prefix, $context;
+	global $txt, $db_prefix, $context, $smfFunc;
 
 	checkSession();
 
@@ -226,26 +226,26 @@ function secretAnswerInput()
 		fatal_lang_error(40, false);
 
 	// Get the stuff....
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT realName, memberName, secretQuestion
 		FROM {$db_prefix}members
 		WHERE memberName = '$_POST[user]'
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 	{
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT realName, memberName, secretQuestion
 			FROM {$db_prefix}members
 			WHERE emailAddress = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(40, false);
 	}
 
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// If there is NO secret question - then throw an error.
 	if (trim($row['secretQuestion']) == '')
@@ -261,7 +261,7 @@ function secretAnswerInput()
 
 function secretAnswer2()
 {
-	global $txt, $db_prefix, $context, $modSettings;
+	global $txt, $db_prefix, $context, $modSettings, $smfFunc;
 
 	checkSession();
 
@@ -272,26 +272,26 @@ function secretAnswer2()
 	loadLanguage('Login');
 
 	// Get the information from the database.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, realName, memberName, secretAnswer, secretQuestion
 		FROM {$db_prefix}members
 		WHERE memberName = '$_POST[user]'
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 	{
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER, realName, memberName, secretAnswer, secretQuestion
 			FROM {$db_prefix}members
 			WHERE emailAddress = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(40, false);
 	}
 
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Check if the secret answer is correct.
 	if ($row['secretQuestion'] == '' || $row['secretAnswer'] == '' || md5(stripslashes($_POST['secretAnswer'])) != $row['secretAnswer'])

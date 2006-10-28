@@ -273,7 +273,7 @@ function CalendarMain()
 // This is used by the board index to only find members of the current day. (month PLUS one!)
 function calendarBirthdayArray($low_date, $high_date)
 {
-	global $db_prefix, $scripturl, $modSettings;
+	global $db_prefix, $scripturl, $modSettings, $smfFunc;
 
 	// Birthdays people set without specifying a year (no age, see?) are the easiest ;).
 	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
@@ -287,7 +287,7 @@ function calendarBirthdayArray($low_date, $high_date)
 	$year_high = (int) substr($high_date, 0, 4);
 
 	// Collect all of the birthdays for this month.  I know, it's a painful query.
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT ID_MEMBER, realName, YEAR(birthdate) AS birthYear, birthdate
 		FROM {$db_prefix}members
 		WHERE YEAR(birthdate) != '0001'
@@ -296,7 +296,7 @@ function calendarBirthdayArray($low_date, $high_date)
 				OR DATE_FORMAT(birthdate, '{$year_high}-%m-%d') BETWEEN '$low_date' AND '$high_date'") . ")
 			AND is_activated = 1", __FILE__, __LINE__);
 	$bday = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		if ($year_low != $year_high)
 			$age_year = substr($row['birthdate'], 5) < substr($high_date, 5) ? $year_high : $year_low;
@@ -310,7 +310,7 @@ function calendarBirthdayArray($low_date, $high_date)
 			'is_last' => false
 		);
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// Set is_last, so the themes know when to stop placing separators.
 	foreach ($bday as $mday => $array)
@@ -322,7 +322,7 @@ function calendarBirthdayArray($low_date, $high_date)
 // Create an array of events occurring in this day/month.
 function calendarEventArray($low_date, $high_date, $use_permissions = true)
 {
-	global $db_prefix, $scripturl, $modSettings, $user_info, $sc;
+	global $db_prefix, $scripturl, $modSettings, $user_info, $sc, $smfFunc;
 
 	$low_date_time = sscanf($low_date, '%04d-%02d-%02d');
 	$low_date_time = mktime(0, 0, 0, $low_date_time[1], $low_date_time[2], $low_date_time[0]);
@@ -330,7 +330,7 @@ function calendarEventArray($low_date, $high_date, $use_permissions = true)
 	$high_date_time = mktime(0, 0, 0, $high_date_time[1], $high_date_time[2], $high_date_time[0]);
 
 	// Find all the calendar info...
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT
 			cal.ID_EVENT, cal.startDate, cal.endDate, cal.title, cal.ID_MEMBER, cal.ID_TOPIC,
 			cal.ID_BOARD, b.memberGroups, t.ID_FIRST_MSG, t.approved, b.ID_BOARD
@@ -341,7 +341,7 @@ function calendarEventArray($low_date, $high_date, $use_permissions = true)
 			AND cal.endDate >= '$low_date'" . ($use_permissions ? "
 			AND (cal.ID_BOARD = 0 OR $user_info[query_wanna_see_board])" : ''), __FILE__, __LINE__);
 	$events = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		// If the attached topic is not approved then for the moment pretend it's unlinked.
 		//!!! This should be fixed to show them all and then sort by approval state later?
@@ -388,7 +388,7 @@ function calendarEventArray($low_date, $high_date, $use_permissions = true)
 				);
 		}
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	// If we're doing normal contextual data, go through and make things clear to the templates ;).
 	if ($use_permissions)
@@ -403,7 +403,7 @@ function calendarEventArray($low_date, $high_date, $use_permissions = true)
 // Builds an array of holiday strings for a particular month.  Note... month PLUS 1 not just month.
 function calendarHolidayArray($low_date, $high_date)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// Get the lowest and highest dates for "all years".
 	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
@@ -413,13 +413,13 @@ function calendarHolidayArray($low_date, $high_date)
 		$allyear_part = "eventDate BETWEEN '0004" . substr($low_date, 4) . "' AND '0004" . substr($high_date, 4) . "'";
 
 	// Find some holidays... ;).
-	$result = db_query("
+	$result = $smfFunc['db_query']("
 		SELECT eventDate, YEAR(eventDate) AS year, title
 		FROM {$db_prefix}calendar_holidays
 		WHERE eventDate BETWEEN '$low_date' AND '$high_date'
 			OR $allyear_part", __FILE__, __LINE__);
 	$holidays = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
 			$event_year = substr($row['eventDate'], 5) < substr($high_date, 5) ? substr($high_date, 0, 4) : substr($low_date, 0, 4);
@@ -428,7 +428,7 @@ function calendarHolidayArray($low_date, $high_date)
 
 		$holidays[$event_year . substr($row['eventDate'], 4)][] = $row['title'];
 	}
-	mysql_free_result($result);
+	$smfFunc['db_free_result']($result);
 
 	return $holidays;
 }
@@ -445,7 +445,7 @@ function calendarInsertEvent($id_board, $id_topic, $title, $id_member, $month, $
 	$span = empty($span) || trim($span) == '' ? 0 : min((int) $modSettings['cal_maxspan'], (int) $span - 1);
 
 	// Insert the event!
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}calendar
 			(ID_BOARD, ID_TOPIC, title, ID_MEMBER, startDate, endDate)
 		VALUES ($id_board, $id_topic, SUBSTRING('$title', 1, 48), $id_member, '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year)) . "', '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year) + $span * 86400) . "')", __FILE__, __LINE__);
@@ -456,7 +456,7 @@ function calendarInsertEvent($id_board, $id_topic, $title, $id_member, $month, $
 // Returns true if this user is allowed to link the topic in question.
 function calendarCanLink()
 {
-	global $db_prefix, $user_info, $topic, $board;
+	global $db_prefix, $user_info, $topic, $board, $smfFunc;
 
 	// If you can't post, you can't link.
 	isAllowedTo('calendar_post');
@@ -471,12 +471,12 @@ function calendarCanLink()
 	if (!allowedTo('admin_forum') && !allowedTo('moderate_board'))
 	{
 		// Not admin or a moderator of this board. You better be the owner - or else.
-		$result = db_query("
+		$result = $smfFunc['db_query']("
 			SELECT ID_MEMBER_STARTED
 			FROM {$db_prefix}topics
 			WHERE ID_TOPIC = $topic
 			LIMIT 1", __FILE__, __LINE__);
-		if ($row = mysql_fetch_assoc($result))
+		if ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Not the owner of the topic.
 			if ($row['ID_MEMBER_STARTED'] != $user_info['id'])
@@ -485,7 +485,7 @@ function calendarCanLink()
 		// Topic/Board doesn't exist.....
 		else
 			fatal_lang_error('calendar40', 'general');
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 	}
 
 	// If you got this far, it's okay.
@@ -520,13 +520,13 @@ function CalendarPost()
 		if ($_REQUEST['eventid'] > 0 && !allowedTo('calendar_edit_any'))
 		{
 			// Get the event's poster.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_MEMBER
 				FROM {$db_prefix}calendar
 				WHERE ID_EVENT = $_REQUEST[eventid]
 				LIMIT 1", __FILE__, __LINE__);
-			list ($poster) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($poster) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
 			// Finally, test if they can either edit ANY, or just their own...
 			if (!allowedTo('calendar_edit_any'))
@@ -545,7 +545,7 @@ function CalendarPost()
 			calendarInsertEvent(0, 0, $_POST['evtitle'], $user_info['id'], $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
 		// Deleting...
 		elseif (isset($_REQUEST['deleteevent']))
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}calendar
 				WHERE ID_EVENT = $_REQUEST[eventid]
 				LIMIT 1", __FILE__, __LINE__);
@@ -556,7 +556,7 @@ function CalendarPost()
 			$span = empty($modSettings['cal_allowspan']) || empty($_POST['span']) || $_POST['span'] == 1 || empty($modSettings['cal_maxspan']) || $_POST['span'] > $modSettings['cal_maxspan'] ? 0 : min((int) $modSettings['cal_maxspan'], (int) $_POST['span'] - 1);
 			$start_time = mktime(0, 0, 0, (int) $_REQUEST['month'], (int) $_REQUEST['day'], (int) $_REQUEST['year']);
 
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}calendar
 				SET 
 					startDate = '" . strftime('%Y-%m-%d', $start_time) . "',
@@ -602,13 +602,13 @@ function CalendarPost()
 		if (empty($boards))
 			fatal_lang_error('cannot_post_new', 'permission');
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.childLevel
 			FROM {$db_prefix}boards AS b
 				LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
 			WHERE $user_info[query_see_board]" . (in_array(0, $boards) ? '' : "
 				AND b.ID_BOARD IN (" . implode(', ', $boards) . ")"), __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['event']['boards'][] = array(
 				'id' => $row['ID_BOARD'],
 				'name' => $row['boardName'],
@@ -619,11 +619,11 @@ function CalendarPost()
 					'name' => $row['catName']
 				)
 			);
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 	else
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				c.ID_EVENT, c.ID_BOARD, c.ID_TOPIC, MONTH(c.startDate) AS month,
 				DAYOFMONTH(c.startDate) AS day, YEAR(c.startDate) AS year,
@@ -633,10 +633,10 @@ function CalendarPost()
 				LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = c.ID_TOPIC)
 			WHERE c.ID_EVENT = $_REQUEST[eventid]", __FILE__, __LINE__);
 		// If nothing returned, we are in poo, poo.
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(1);
-		$row = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$row = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		// If it has a board, then they should be editing it within the topic.
 		if ($row['ID_TOPIC'] && $row['ID_FIRST_MSG'])

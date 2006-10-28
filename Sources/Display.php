@@ -73,7 +73,7 @@ function Display()
 {
 	global $scripturl, $txt, $db_prefix, $modSettings, $context, $settings;
 	global $options, $sourcedir, $user_info, $board_info, $topic, $board;
-	global $attachments, $messages_request, $topicinfo, $language;
+	global $attachments, $messages_request, $topicinfo, $language, $smfFunc;
 
 	// What are you gonna display if these are empty?!
 	if (empty($topic))
@@ -103,7 +103,7 @@ function Display()
 			$gt_lt = $_REQUEST['prev_next'] == 'prev' ? '>' : '<';
 			$order = $_REQUEST['prev_next'] == 'prev' ? '' : ' DESC';
 
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT t2.ID_TOPIC
 				FROM ({$db_prefix}topics AS t, {$db_prefix}topics AS t2)
 				WHERE t.ID_TOPIC = $topic" . (empty($modSettings['enableStickyTopics']) ? "
@@ -115,12 +115,12 @@ function Display()
 				LIMIT 1", __FILE__, __LINE__);
 
 			// No more left.
-			if (mysql_num_rows($request) == 0)
+			if ($smfFunc['db_num_rows']($request) == 0)
 			{
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 
 				// Roll over - if we're going prev, get the last - otherwise the first.
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT ID_TOPIC
 					FROM {$db_prefix}topics
 					WHERE ID_BOARD = $board
@@ -130,8 +130,8 @@ function Display()
 			}
 
 			// Now you can be sure $topic is the ID_TOPIC to view.
-			list ($topic) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($topic) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
 			$context['current_topic'] = $topic;
 		}
@@ -146,7 +146,7 @@ function Display()
 	// Add 1 to the number of views of this topic.
 	if (empty($_SESSION['last_read_topic']) || $_SESSION['last_read_topic'] != $topic)
 	{
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}topics
 			SET numViews = numViews + 1
 			WHERE ID_TOPIC = $topic
@@ -156,7 +156,7 @@ function Display()
 	}
 
 	// Get all the important topic info.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT
 			t.numReplies, t.numViews, t.locked, ms.subject, t.isSticky, t.ID_POLL,
 			t.ID_MEMBER_STARTED, t.ID_FIRST_MSG, t.ID_LAST_MSG, t.approved,
@@ -166,10 +166,10 @@ function Display()
 		WHERE t.ID_TOPIC = $topic
 			AND ms.ID_MSG = t.ID_FIRST_MSG
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(472, false);
-	$topicinfo = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$topicinfo = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// The start isn't a number; it's information about what to do, where to go.
 	if (!is_numeric($_REQUEST['start']))
@@ -186,15 +186,15 @@ function Display()
 			else
 			{
 				// Find the earliest unread message in the topic. (the use of topics here is just for both tables.)
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1 AS new_from
 					FROM {$db_prefix}topics AS t
 						LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = $topic AND lt.ID_MEMBER = $user_info[id])
 						LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = $board AND lmr.ID_MEMBER = $user_info[id])
 					WHERE t.ID_TOPIC = $topic
 					LIMIT 1", __FILE__, __LINE__);
-				list ($new_from) = mysql_fetch_row($request);
-				mysql_free_result($request);
+				list ($new_from) = $smfFunc['db_fetch_row']($request);
+				$smfFunc['db_free_result']($request);
 
 				// Fall through to the next if statement.
 				$_REQUEST['start'] = 'msg' . $new_from;
@@ -210,13 +210,13 @@ function Display()
 			else
 			{
 				// Find the number of messages posted before said time...
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT COUNT(*)
 					FROM {$db_prefix}messages
 					WHERE posterTime < $timestamp
 						AND ID_TOPIC = $topic", __FILE__, __LINE__);
-				list ($context['start_from']) = mysql_fetch_row($request);
-				mysql_free_result($request);
+				list ($context['start_from']) = $smfFunc['db_fetch_row']($request);
+				$smfFunc['db_free_result']($request);
 
 				// Handle view_newest_first options, and get the correct start value.
 				$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $topicinfo['numReplies'] - $context['start_from'];
@@ -234,14 +234,14 @@ function Display()
 			else
 			{
 				// Find the start value for that message......
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT COUNT(*)
 					FROM {$db_prefix}messages
 					WHERE ID_MSG < $virtual_msg
 						AND ID_TOPIC = $topic
 						AND approved = 1", __FILE__, __LINE__);
-				list ($context['start_from']) = mysql_fetch_row($request);
-				mysql_free_result($request);
+				list ($context['start_from']) = $smfFunc['db_fetch_row']($request);
+				$smfFunc['db_free_result']($request);
 			}
 			
 			// We need to reverse the start as well in this case.
@@ -275,12 +275,12 @@ function Display()
 	// Guests can't mark topics read or for notifications, just can't sorry.
 	if (!$user_info['is_guest'])
 	{
-		db_query("
+		$smfFunc['db_query']("
 			INSERT IGNORE INTO {$db_prefix}log_topics (ID_MEMBER, ID_TOPIC, ID_MSG)
 			VALUES ($user_info[id], $topic, $modSettings[maxMsgID]) 
 			/*!40100 ON DUPLICATE KEY UPDATE ID_MSG = $modSettings[maxMsgID] */", __FILE__, __LINE__);
 		if (db_affected_rows() === 0)
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}log_topics
 				SET ID_MSG = $modSettings[maxMsgID]
 				WHERE ID_MEMBER = $user_info[id]
@@ -288,14 +288,14 @@ function Display()
 				LIMIT 1", __FILE__, __LINE__);
 
 		// Check for notifications on this topic OR board.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT sent, ID_TOPIC
 			FROM {$db_prefix}log_notify
 			WHERE (ID_TOPIC = $topic OR ID_BOARD = $board)
 				AND ID_MEMBER = $user_info[id]
 			LIMIT 2", __FILE__, __LINE__);
 		$do_once = true;
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// Find if this topic is marked for notification...
 			if (!empty($row['ID_TOPIC']))
@@ -304,7 +304,7 @@ function Display()
 			// Only do this once, but mark the notifications as "not sent yet" for next time.
 			if (!empty($row['sent']) && $do_once)
 			{
-				db_query("
+				$smfFunc['db_query']("
 					UPDATE {$db_prefix}log_notify
 					SET sent = 0
 					WHERE (ID_TOPIC = $topic OR ID_BOARD = $board)
@@ -321,7 +321,7 @@ function Display()
 		elseif (isset($_REQUEST['topicseen']))
 		{
 			// Use the mark read tables... and the last visit to figure out if this should be read or not.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT COUNT(*)
 				FROM {$db_prefix}topics AS t
 					LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.ID_BOARD = $board AND lb.ID_MEMBER = $user_info[id])
@@ -330,8 +330,8 @@ function Display()
 					AND t.ID_LAST_MSG > IFNULL(lb.ID_MSG, 0)
 					AND t.ID_LAST_MSG > IFNULL(lt.ID_MSG, 0)" . (empty($_SESSION['ID_MSG_LAST_VISIT']) ? '' : "
 					AND t.ID_LAST_MSG > $_SESSION[ID_MSG_LAST_VISIT]"), __FILE__, __LINE__);
-			list ($numNewTopics) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($numNewTopics) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
 			// If there're no real new topics in this board, mark the board as seen.
 			if (empty($numNewTopics))
@@ -346,7 +346,7 @@ function Display()
 		// Mark board as seen if we came using last post link from BoardIndex. (or other places...)
 		if (isset($_REQUEST['boardseen']))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				REPLACE INTO {$db_prefix}log_boards
 					(ID_MSG, ID_MEMBER, ID_BOARD)
 				VALUES ($modSettings[maxMsgID], $user_info[id], $board)", __FILE__, __LINE__);
@@ -362,7 +362,7 @@ function Display()
 		$context['view_num_hidden'] = 0;
 
 		// Search for members who have this topic set in their GET data.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				lo.ID_MEMBER, lo.logTime, mem.realName, mem.memberName, mem.showOnline,
 				mg.onlineColor, mg.ID_GROUP, mg.groupName
@@ -370,7 +370,7 @@ function Display()
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lo.ID_MEMBER)
 				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))
 			WHERE INSTR(lo.url, 's:5:\"topic\";i:$topic;') OR lo.session = '" . ($user_info['is_guest'] ? 'ip' . $user_info['ip'] : session_id()) . "'", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['ID_MEMBER']))
 				continue;
@@ -403,8 +403,8 @@ function Display()
 		}
 
 		// The number of guests is equal to the rows minus the ones we actually used ;).
-		$context['view_num_guests'] = mysql_num_rows($request) - count($context['view_members']);
-		mysql_free_result($request);
+		$context['view_num_guests'] = $smfFunc['db_num_rows']($request) - count($context['view_members']);
+		$smfFunc['db_free_result']($request);
 
 		// Sort the list.
 		krsort($context['view_members']);
@@ -523,14 +523,14 @@ function Display()
 			$date_string = $matches[0];
 
 		// Any calendar information for this topic?
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT cal.ID_EVENT, cal.startDate, cal.endDate, cal.title, cal.ID_MEMBER, mem.realName
 			FROM {$db_prefix}calendar AS cal
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = cal.ID_MEMBER)
 			WHERE cal.ID_TOPIC = $topic
 			ORDER BY startDate", __FILE__, __LINE__);
 		$context['linked_calendar_events'] = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// Prepare the dates for being formatted.
 			$startDate = sscanf($row['startDate'], '%04d-%02d-%02d');
@@ -550,7 +550,7 @@ function Display()
 				'is_last' => false
 			);
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($context['linked_calendar_events']))
 			$context['linked_calendar_events'][count($context['linked_calendar_events']) - 1]['is_last'] = true;
@@ -560,7 +560,7 @@ function Display()
 	if ($context['is_poll'])
 	{
 		// Get the question and if it's locked.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				p.question, p.votingLocked, p.hideResults, p.expireTime, p.maxVotes, p.changeVote,
 				p.ID_MEMBER, IFNULL(mem.realName, p.posterName) AS posterName,
@@ -571,11 +571,11 @@ function Display()
 			WHERE p.ID_POLL = $topicinfo[ID_POLL]
 			GROUP BY p.ID_POLL
 			LIMIT 1", __FILE__, __LINE__);
-		$pollinfo = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$pollinfo = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		// Get all the options, and calculate the total votes.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT pc.ID_CHOICE, pc.label, pc.votes, IFNULL(lp.ID_CHOICE, -1) AS votedThis
 			FROM {$db_prefix}poll_choices AS pc
 				LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.ID_CHOICE = pc.ID_CHOICE AND lp.ID_POLL = $topicinfo[ID_POLL] AND lp.ID_MEMBER = $user_info[id])
@@ -583,14 +583,14 @@ function Display()
 		$pollOptions = array();
 		$realtotal = 0;
 		$pollinfo['has_voted'] = false;
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			censorText($row['label']);
 			$pollOptions[$row['ID_CHOICE']] = $row;
 			$realtotal += $row['votes'];
 			$pollinfo['has_voted'] |= $row['votedThis'] != -1;
 		}
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		// Set up the basic poll information.
 		$context['poll'] = array(
@@ -682,7 +682,7 @@ function Display()
 	}
 
 	// Get each post and poster in this topic.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MSG, ID_MEMBER
 		FROM {$db_prefix}messages
 		WHERE ID_TOPIC = $topic
@@ -692,13 +692,13 @@ function Display()
 
 	$messages = array();
 	$posters = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!empty($row['ID_MEMBER']))
 			$posters[] = $row['ID_MEMBER'];
 		$messages[] = $row['ID_MSG'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 	$posters = array_unique($posters);
 
 	$attachments = array();
@@ -709,7 +709,7 @@ function Display()
 		// Fetch attachments.
 		if (!empty($modSettings['attachmentEnable']) && allowedTo('view_attachments'))
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT
 					a.ID_ATTACH, a.ID_MSG, a.filename, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
 					a.width, a.height" . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ",
@@ -720,14 +720,14 @@ function Display()
 					AND a.attachmentType = 0
 					" . (allowedTo('approve_posts') ? '' : ' AND a.approved = 1'), __FILE__, __LINE__);
 			$temp = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				$temp[$row['ID_ATTACH']] = $row;
 
 				if (!isset($attachments[$row['ID_MSG']]))
 					$attachments[$row['ID_MSG']] = array();
 			}
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 
 			// This is better than sorting it with the query...
 			ksort($temp);
@@ -739,7 +739,7 @@ function Display()
 		// What?  It's not like it *couldn't* be only guests in this topic...
 		if (!empty($posters))
 			loadMemberData($posters);
-		$messages_request = db_query("
+		$messages_request = $smfFunc['db_query']("
 			SELECT
 				ID_MSG, icon, subject, posterTime, posterIP, ID_MEMBER, modifiedTime, modifiedName, body,
 				smileysEnabled, posterName, posterEmail, approved,
@@ -838,7 +838,7 @@ function Display()
 // Callback for the message display.
 function prepareDisplayContext($reset = false)
 {
-	global $settings, $txt, $modSettings, $scripturl, $options, $user_info;
+	global $settings, $txt, $modSettings, $scripturl, $options, $user_info, $smfFunc;
 	global $memberContext, $context, $messages_request, $topic, $attachments, $topicinfo;
 
 	static $counter = null;
@@ -853,10 +853,10 @@ function prepareDisplayContext($reset = false)
 
 	// Start from the beginning...
 	if ($reset)
-		return @mysql_data_seek($messages_request, 0);
+		return @$smfFunc['db_data_seek']($messages_request, 0);
 
 	// Attempt to get the next message.
-	$message = mysql_fetch_assoc($messages_request);
+	$message = $smfFunc['db_fetch_assoc']($messages_request);
 	if (!$message)
 		return false;
 
@@ -952,7 +952,7 @@ function prepareDisplayContext($reset = false)
 // Download an attachment.
 function Download()
 {
-	global $txt, $modSettings, $db_prefix, $user_info, $scripturl, $context, $sourcedir;
+	global $txt, $modSettings, $db_prefix, $user_info, $scripturl, $context, $sourcedir, $smfFunc;
 
 	$context['no_last_modified'] = true;
 
@@ -964,7 +964,7 @@ function Download()
 
 	if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'avatar')
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT filename, ID_ATTACH, attachmentType, approved
 			FROM {$db_prefix}attachments
 			WHERE ID_ATTACH = $_REQUEST[attach]
@@ -978,7 +978,7 @@ function Download()
 		isAllowedTo('view_attachments');
 
 		// Make sure this attachment is on this board.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT a.filename, a.ID_ATTACH, a.attachmentType, a.approved
 			FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS m, {$db_prefix}attachments AS a)
 			WHERE b.ID_BOARD = m.ID_BOARD
@@ -987,10 +987,10 @@ function Download()
 				AND a.ID_ATTACH = $_REQUEST[attach]
 			LIMIT 1", __FILE__, __LINE__);
 	}
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(1, false);
-	list ($real_filename, $ID_ATTACH, $attachmentType, $is_approved) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($real_filename, $ID_ATTACH, $attachmentType, $is_approved) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// If it isn't yet approved, do they have permission to view it?
 	if (!$is_approved && ($attachmentType == 0 || $attachmentType == 3))
@@ -998,7 +998,7 @@ function Download()
 		
 	// Update the download counter (unless it's a thumbnail).
 	if ($attachmentType != 3)
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE LOW_PRIORITY {$db_prefix}attachments
 			SET downloads = downloads + 1
 			WHERE ID_ATTACH = $ID_ATTACH
@@ -1133,7 +1133,7 @@ function Download()
 
 function loadAttachmentContext($ID_MSG)
 {
-	global $attachments, $modSettings, $txt, $scripturl, $topic, $db_prefix, $sourcedir;
+	global $attachments, $modSettings, $txt, $scripturl, $topic, $db_prefix, $sourcedir, $smfFunc;
 
 	// Set up the attachment info - based on code by Meriadoc.
 	$attachmentData = array();
@@ -1184,14 +1184,14 @@ function loadAttachmentContext($ID_MSG)
 						$thumb_filename = addslashes($attachment['filename'] . '_thumb');
 
 						// Add this beauty to the database.
-						db_query("
+						$smfFunc['db_query']("
 							INSERT INTO {$db_prefix}attachments
 								(ID_MSG, attachmentType, filename, size, width, height)
 							VALUES ($ID_MSG, 3, '$thumb_filename', " . (int) $thumb_size . ", " . (int) $attachment['thumb_width'] . ", " . (int) $attachment['thumb_height'] . ")", __FILE__, __LINE__);
 						$attachment['ID_THUMB'] = db_insert_id();
 						if (!empty($attachment['ID_THUMB']))
 						{
-							db_query("
+							$smfFunc['db_query']("
 								UPDATE {$db_prefix}attachments
 								SET ID_THUMB = $attachment[ID_THUMB]
 								WHERE ID_ATTACH = $attachment[ID_ATTACH]
@@ -1261,7 +1261,7 @@ function approved_attach_sort($a, $b)
 // In-topic quick moderation.
 function QuickInTopicModeration()
 {
-	global $sourcedir, $db_prefix, $topic, $board, $ID_MEMBER;
+	global $sourcedir, $db_prefix, $topic, $board, $ID_MEMBER, $smfFunc;
 
 	// Check the session = get or post.
 	checkSession('request');
@@ -1281,13 +1281,13 @@ function QuickInTopicModeration()
 	// Allowed to delete replies to their messages?
 	elseif (allowedTo('delete_replies'))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER_STARTED
 			FROM {$db_prefix}topics
 			WHERE ID_TOPIC = $topic
 			LIMIT 1", __FILE__, __LINE__);
-		list ($starter) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($starter) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		$allowed_all = $starter == $ID_MEMBER;
 	}
@@ -1299,7 +1299,7 @@ function QuickInTopicModeration()
 		isAllowedTo('delete_own');
 
 	// Allowed to remove which messages?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MSG, subject, ID_MEMBER, posterTime
 		FROM {$db_prefix}messages
 		WHERE ID_MSG IN (" . implode(', ', $messages) . ")
@@ -1307,23 +1307,23 @@ function QuickInTopicModeration()
 			AND ID_MEMBER = $ID_MEMBER" : '') . "
 		LIMIT " . count($messages), __FILE__, __LINE__);
 	$messages = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!$allowed_all && !empty($modSettings['edit_disable_time']) && $row['posterTime'] + $modSettings['edit_disable_time'] * 60 < time())
 			continue;
 
 		$messages[$row['ID_MSG']] = array($row['subject'], $row['ID_MEMBER']);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get the first message in the topic - because you can't delete that!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_FIRST_MSG, ID_LAST_MSG
 		FROM {$db_prefix}topics
 		WHERE ID_TOPIC = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	list ($first_message, $last_message) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($first_message, $last_message) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Delete all the messages we know they can delete. ($messages)
 	foreach ($messages as $message => $info)

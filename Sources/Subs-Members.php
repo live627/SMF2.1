@@ -87,7 +87,7 @@ if (!defined('SMF'))
 // Delete a group of/single member.
 function deleteMembers($users)
 {
-	global $db_prefix, $sourcedir, $modSettings, $ID_MEMBER;
+	global $db_prefix, $sourcedir, $modSettings, $ID_MEMBER, $smfFunc;
 
 	// If it's not an array, make it so!
 	if (!is_array($users))
@@ -124,16 +124,16 @@ function deleteMembers($users)
 	// Make sure they aren't trying to delete administrators if they aren't one.  But don't bother checking if it's just themself.
 	if (!allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $ID_MEMBER))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_MEMBER
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER IN (" . implode(', ', $users) . ")
 				AND (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups) != 0)
 			LIMIT " . count($users), __FILE__, __LINE__);
 		$admins = array();
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$admins[] = $row['ID_MEMBER'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($admins))
 			$users = array_diff($users, $admins);
@@ -153,73 +153,73 @@ function deleteMembers($users)
 	}
 
 	// Make these peoples' posts guest posts.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET ID_MEMBER = 0" . (!empty($modSettings['allow_hideEmail']) ? ", posterEmail = ''" : '') . "
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}polls
 		SET ID_MEMBER = 0
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
 	// Make these peoples' posts guest first posts and last posts.
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}topics
 		SET ID_MEMBER_STARTED = 0
 		WHERE ID_MEMBER_STARTED $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}topics
 		SET ID_MEMBER_UPDATED = 0
 		WHERE ID_MEMBER_UPDATED $condition", __FILE__, __LINE__);
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_actions
 		SET ID_MEMBER = 0
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_banned
 		SET ID_MEMBER = 0
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_errors
 		SET ID_MEMBER = 0
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
 	// Delete the member.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}members
 		WHERE ID_MEMBER $condition
 		LIMIT " . count($users), __FILE__, __LINE__);
 
 	// Delete the logs...
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_boards
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_group_requests
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_karma
 		WHERE ID_TARGET $condition
 			OR ID_EXECUTOR $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_mark_read
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_notify
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_online
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_polls
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_topics
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}collapsed_categories
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
@@ -227,7 +227,7 @@ function deleteMembers($users)
 	require_once($sourcedir . '/PersonalMessage.php');
 	deleteMessages(null, null, $users);
 
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}personal_messages
 		SET ID_MEMBER_FROM = 0
 		WHERE ID_MEMBER_FROM $condition", __FILE__, __LINE__);
@@ -237,37 +237,37 @@ function deleteMembers($users)
 	removeAttachments('a.ID_MEMBER ' . $condition);
 
 	// It's over, no more moderation for you.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}moderators
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}group_moderators
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
 	// If you don't exist we can't ban you.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}ban_items
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
 	// Remove individual theme settings.
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}themes
 		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
 
 	// These users are nobody's buddy nomore.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER, pm_ignore_list, buddy_list
 		FROM {$db_prefix}members
 		WHERE FIND_IN_SET(" . implode(', pm_ignore_list) OR FIND_IN_SET(', $users) . ', pm_ignore_list) OR FIND_IN_SET(' . implode(', buddy_list) OR FIND_IN_SET(', $users) . ', buddy_list)', __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
-		db_query("
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}members
 			SET
 				pm_ignore_list = '" . implode(',', array_diff(explode(',', $row['pm_ignore_list']), $users)) . "',
 				buddy_list = '" . implode(',', array_diff(explode(',', $row['buddy_list']), $users)) . "'
 			WHERE ID_MEMBER = $row[ID_MEMBER]
 			LIMIT 1", __FILE__, __LINE__);
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Make sure no member's birthday is still sticking in the calendar...
 	updateStats('calendar');
@@ -369,16 +369,16 @@ function registerMember(&$regOptions)
 		isBannedEmail($regOptions['email'], 'cannot_register', $txt['ban_register_prohibited']);
 
 	// Check if the email address is in use.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER
 		FROM {$db_prefix}members
 		WHERE emailAddress = '$regOptions[email]'
 			OR emailAddress = '$regOptions[username]'
 		LIMIT 1", __FILE__, __LINE__);
 	// !!! Separate the sprintf?
-	if (mysql_num_rows($request) != 0)
+	if ($smfFunc['db_num_rows']($request) != 0)
 		fatal_lang_error(730, false, array(htmlspecialchars($regOptions['email'])));
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Some of these might be overwritten. (the lower ones that are in the arrays below.)
 	$regOptions['register_vars'] = array(
@@ -441,13 +441,13 @@ function registerMember(&$regOptions)
 
 		// Check if this group is assignable.
 		$unassignableGroups = array(-1, 3);
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_GROUP
 			FROM {$db_prefix}membergroups
 			WHERE minPosts != -1", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$unassignableGroups[] = $row['ID_GROUP'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if (in_array($regOptions['register_vars']['ID_GROUP'], $unassignableGroups))
 			$regOptions['register_vars']['ID_GROUP'] = 0;
@@ -469,7 +469,7 @@ function registerMember(&$regOptions)
 		$modSettings['integrate_register']($regOptions, $theme_vars);
 
 	// Register them into the database.
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}members
 			(" . implode(', ', array_keys($regOptions['register_vars'])) . ")
 		VALUES (" . implode(', ', $regOptions['register_vars']) . ')', __FILE__, __LINE__);
@@ -488,7 +488,7 @@ function registerMember(&$regOptions)
 		foreach ($theme_vars as $var => $val)
 			$setString .= "
 				($memberID, SUBSTRING('$var', 1, 255), SUBSTRING('$val', 1, 65534)),";
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}themes
 				(ID_MEMBER, variable, value)
 			VALUES " . substr($setString, 0, -1), __FILE__, __LINE__);
@@ -581,27 +581,27 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 	$checkName = strtr($name, array('_' => '\\_', '%' => '\\%'));
 
 	// Make sure they don't want someone else's name.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_MEMBER
 		FROM {$db_prefix}members
 		WHERE " . (empty($current_ID_MEMBER) ? '' : "ID_MEMBER != $current_ID_MEMBER
 			AND ") . "(realName LIKE '$checkName' OR memberName LIKE '$checkName')
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) > 0)
+	if ($smfFunc['db_num_rows']($request) > 0)
 	{
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 		return true;
 	}
 
 	// Does name case insensitive match a member group name?
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT ID_GROUP
 		FROM {$db_prefix}membergroups
 		WHERE groupName LIKE '$checkName'
 		LIMIT 1", __FILE__, __LINE__);
-	if (mysql_num_rows($request) > 0)
+	if ($smfFunc['db_num_rows']($request) > 0)
 	{
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 		return true;
 	}
 
@@ -612,7 +612,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 // Get a list of groups that have a given permission (on a given board).
 function groupsAllowedTo($permission, $board_id = null)
 {
-	global $db_prefix, $modSettings, $board_info;
+	global $db_prefix, $modSettings, $board_info, $smfFunc;
 
 	// Admins are allowed to do anything.
 	$memberGroups = array(
@@ -623,13 +623,13 @@ function groupsAllowedTo($permission, $board_id = null)
 	// Assume we're dealing with regular permissions (like profile_view_own).
 	if ($board_id === null)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT ID_GROUP, addDeny
 			FROM {$db_prefix}permissions
 			WHERE permission = '$permission'", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$memberGroups[$row['addDeny'] === '1' ? 'allowed' : 'denied'][] = $row['ID_GROUP'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Otherwise it's time to look at the board.
@@ -640,27 +640,27 @@ function groupsAllowedTo($permission, $board_id = null)
 			$profile_id = $board_info['profile'];
 		elseif ($board_id !== 0)
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_PROFILE
 				FROM {$db_prefix}boards
 				WHERE ID_BOARD = $board_id
 				LIMIT 1", __FILE__, __LINE__);
-			if (mysql_num_rows($request) == 0)
+			if ($smfFunc['db_num_rows']($request) == 0)
 				fatal_lang_error('smf232');
-			list ($profile_id) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($profile_id) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 		}
 		else
 			$profile_id = 1;
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT bp.ID_GROUP, bp.addDeny
 			FROM {$db_prefix}board_permissions AS bp
 			WHERE bp.permission = '$permission'
 				AND bp.ID_PROFILE = $profile_id", __FILE__, __LINE__);
-		while ($row = mysql_fetch_assoc($request))
+		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$memberGroups[$row['addDeny'] === '1' ? 'allowed' : 'denied'][] = $row['ID_GROUP'];
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// Denied is never allowed.
@@ -672,7 +672,7 @@ function groupsAllowedTo($permission, $board_id = null)
 // Get a list of members that have a given permission (on a given board).
 function membersAllowedTo($permission, $board_id = null)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	$memberGroups = groupsAllowedTo($permission, $board_id);
 
@@ -682,16 +682,16 @@ function membersAllowedTo($permission, $board_id = null)
 	$exclude_moderators = in_array(3, $memberGroups['denied']) && $board_id !== null;
 	$memberGroups['denied'] = array_diff($memberGroups['denied'], array(3));
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mem.ID_MEMBER
 		FROM {$db_prefix}members AS mem" . ($include_moderators || $exclude_moderators ? "
 			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_MEMBER = mem.ID_MEMBER AND ID_BOARD = $board_id)" : '') . "
 		WHERE (" . ($include_moderators ? "mods.ID_MEMBER IS NOT NULL OR " : '') . 'ID_GROUP IN (' . implode(', ', $memberGroups['allowed']) . ") OR FIND_IN_SET(" . implode(', mem.additionalGroups) OR FIND_IN_SET(', $memberGroups['allowed']) . ", mem.additionalGroups))" . (empty($memberGroups['denied']) ? '' : "
 			AND NOT (" . ($exclude_moderators ? "mods.ID_MEMBER IS NOT NULL OR " : '') . 'ID_GROUP IN (' . implode(', ', $memberGroups['denied']) . ") OR FIND_IN_SET(" . implode(', mem.additionalGroups) OR FIND_IN_SET(', $memberGroups['denied']) . ", mem.additionalGroups))"), __FILE__, __LINE__);
 	$members = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$members[] = $row['ID_MEMBER'];
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	return $members;
 }
@@ -699,26 +699,26 @@ function membersAllowedTo($permission, $board_id = null)
 // This function is used to reassociate members with relevant posts.
 function reattributePosts($memID, $email = false, $post_count = false)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// !!! This should be done by memberName not email, or by both.
 
 	// Firstly, if $email isn't passed find out the members email address.
 	if ($email === false)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT emailAddress
 			FROM {$db_prefix}members
 			WHERE ID_MEMBER = $memID
 			LIMIT 1", __FILE__, __LINE__);
-		list ($email) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($email) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 	}
 
 	// If they want the post count restored then we need to do some research.
 	if ($post_count)
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT COUNT(*)
 			FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
 			WHERE m.ID_MEMBER = 0
@@ -726,14 +726,14 @@ function reattributePosts($memID, $email = false, $post_count = false)
 				AND m.icon != 'recycled'
 				AND b.ID_BOARD = m.ID_BOARD
 				AND b.countPosts = 1", __FILE__, __LINE__);
-		list ($messageCount) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($messageCount) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		updateMemberData($memID, array('posts' => 'posts + ' . $messageCount));
 	}
 
 	// Finally, update the posts themselves!
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}messages
 		SET ID_MEMBER = $memID
 		WHERE posterEmail = '$email'", __FILE__, __LINE__);

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2546 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2547 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -30,6 +30,9 @@ October 2006
  + Tell robots not to index topics that are being accessed with .msg, prev_next, ;all, or by printing the topic. (Display.php)
  ! CAPTCHA now uses truetype fonts wherever possible to give slightly clearer images. (Subs-Graphics.php, several fonts)
  ! Fixed bug in showLetterImage that caused the function to often fail. (Subs-Graphics.php)
+ ! Changed all occurrences of mysql_ functions to use the generalized database functions in smfFunc (Almost all source files)
+ + Added the ability to specify a different database to use other then MySQL. (Load.php, index.php, SSI.php)
+ ! Moved the Database.php file to the Subs-Db-mysql.php file. (Database.php, Subs-Db-mysql.php)
 
 
 September 2006

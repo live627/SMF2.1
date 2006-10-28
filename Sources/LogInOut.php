@@ -89,7 +89,7 @@ function Login()
 // Perform the actual logging-in.
 function Login2()
 {
-	global $txt, $db_prefix, $scripturl, $user_info, $user_settings;
+	global $txt, $db_prefix, $scripturl, $user_info, $user_settings, $smfFunc;
 	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
 
 	// Load cookie authentication stuff.
@@ -204,31 +204,31 @@ function Login2()
 		}
 
 	// Load the data up!
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT passwd, ID_MEMBER, ID_GROUP, lngfile, is_activated, emailAddress, additionalGroups, memberName, passwordSalt
 		FROM {$db_prefix}members
 		WHERE memberName = '$_REQUEST[user]'
 		LIMIT 1", __FILE__, __LINE__);
 	// Probably mistyped or their email, try it as an email address. (memberName first, though!)
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 	{
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT passwd, ID_MEMBER, ID_GROUP, lngfile, is_activated, emailAddress, additionalGroups, memberName, passwordSalt
 			FROM {$db_prefix}members
 			WHERE emailAddress = '$_REQUEST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		// Let them try again, it didn't match anything...
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 		{
 			$context['login_error'] = &$txt['username_no_exist'];
 			return;
 		}
 	}
 
-	$user_settings = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$user_settings = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// What is the true activation status of this account?
 	$activation_status = $user_settings['is_activated'] > 10 ? $user_settings['is_activated'] - 10 : $user_settings['is_activated'];
@@ -409,7 +409,7 @@ function Login2()
 	updateMemberData($user_info['id'], array('lastLogin' => time(), 'memberIP' => '\'' . $user_info['ip'] . '\''));
 
 	// Get rid of the online entry for that old guest....
-	db_query("
+	$smfFunc['db_query']("
 		DELETE FROM {$db_prefix}log_online
 		WHERE session = 'ip$user_info[ip]'
 		LIMIT 1", __FILE__, __LINE__);
@@ -425,7 +425,7 @@ function Login2()
 // Log the user out.
 function Logout($internal = false)
 {
-	global $db_prefix, $sourcedir, $user_info, $user_settings, $context, $modSettings;
+	global $db_prefix, $sourcedir, $user_info, $user_settings, $context, $modSettings, $smfFunc;
 
 	// Make sure they aren't being auto-logged out.
 	if (!$internal)
@@ -443,7 +443,7 @@ function Logout($internal = false)
 			call_user_func($modSettings['integrate_logout'], $user_settings['memberName']);
 	
 		// If you log out, you aren't online anymore :P.
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_online
 			WHERE ID_MEMBER = $user_info[id]
 			LIMIT 1", __FILE__, __LINE__);

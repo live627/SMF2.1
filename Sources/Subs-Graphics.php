@@ -97,7 +97,7 @@ if (!defined('SMF'))
 
 function downloadAvatar($url, $memID, $max_width, $max_height)
 {
-	global $modSettings, $db_prefix, $sourcedir, $gd2;
+	global $modSettings, $db_prefix, $sourcedir, $gd2, $smfFunc;
 
 	$destName = 'avatar_' . $memID . '.' . (!empty($modSettings['avatar_download_png']) ? 'png' : 'jpeg');
 
@@ -126,7 +126,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 	require_once($sourcedir . '/ManageAttachments.php');
 	removeAttachments('a.ID_MEMBER = ' . $memID);
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}attachments
 			(ID_MEMBER, attachmentType, filename, size)
 		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', 1)", __FILE__, __LINE__);
@@ -187,7 +187,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			list ($width, $height) = getimagesize($destName);
 
 			// Write filesize in the database.
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}attachments
 				SET size = " . filesize($destName) . ", width = " . (int) $width . ", height = " . (int) $height . "
 				WHERE ID_ATTACH = $attachID
@@ -199,7 +199,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	}
 	else
 	{
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}attachments
 			WHERE ID_ATTACH = $attachID
 			LIMIT 1", __FILE__, __LINE__);

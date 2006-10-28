@@ -213,7 +213,7 @@ function AdminMain()
 // The main administration section.
 function AdminHome()
 {
-	global $sourcedir, $db_prefix, $forum_version, $txt, $scripturl, $context, $user_info, $boardurl, $modSettings;
+	global $sourcedir, $db_prefix, $forum_version, $txt, $scripturl, $context, $user_info, $boardurl, $modSettings, $smfFunc;
 
 	// You have to be able to do at least one of the below to see this page.
 	isAllowedTo(array('admin_forum', 'manage_permissions', 'moderate_forum', 'manage_membergroups', 'manage_bans', 'send_mail', 'edit_news', 'manage_boards', 'manage_smileys', 'manage_attachments'));
@@ -278,7 +278,7 @@ function AdminHome()
 				else
 				{
 					$_SESSION['copy_expire'] = '';
-					db_query("
+					$smfFunc['db_query']("
 						DELETE FROM {$db_prefix}settings
 						WHERE variable = 'copy_settings'
 							OR variable = 'copyright_key'", __FILE__, __LINE__);
@@ -479,22 +479,22 @@ function CleanupPermissions()
 // Get one of the admin information files from Simple Machines.
 function DisplayAdminFile()
 {
-	global $db_prefix, $context, $modSettings;
+	global $db_prefix, $context, $modSettings, $smfFunc;
 
 	// Danger Will Robinson.
 	$_REQUEST['filename'] = addslashes($_REQUEST['filename']);
 	
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT data, filetype
 		FROM {$db_prefix}admin_info_files
 		WHERE filename = '$_REQUEST[filename]'
 		LIMIT 1", __FILE__, __LINE__);
 
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('admin_file_not_found', true, array($_REQUEST['filename']));
 
-	list ($file_data, $filetype) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($file_data, $filetype) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	$context['template_layers'] = array();
 	// Lets make sure we aren't going to output anything nasty.

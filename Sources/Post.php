@@ -124,7 +124,7 @@ function Post()
 	// Check if it's locked.  It isn't locked if no topic is specified.
 	if (!empty($topic))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				t.locked, IFNULL(ln.ID_TOPIC, 0) AS notify, t.isSticky, t.ID_POLL, t.numReplies, mf.ID_MEMBER,
 				t.ID_FIRST_MSG, mf.subject, GREATEST(ml.posterTime, ml.modifiedTime) AS lastPostTime
@@ -134,8 +134,8 @@ function Post()
 				LEFT JOIN {$db_prefix}messages AS ml ON (ml.ID_MSG = t.ID_LAST_MSG)
 			WHERE t.ID_TOPIC = $topic
 			LIMIT 1", __FILE__, __LINE__);
-		list ($locked, $context['notify'], $sticky, $pollID, $context['num_replies'], $ID_MEMBER_POSTER, $ID_FIRST_MSG, $first_subject, $lastPostTime) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($locked, $context['notify'], $sticky, $pollID, $context['num_replies'], $ID_MEMBER_POSTER, $ID_FIRST_MSG, $first_subject, $lastPostTime) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		// If this topic already has a poll, they sure can't add another.
 		if (isset($_REQUEST['poll']) && $pollID > 0)
@@ -268,15 +268,15 @@ function Post()
 			}
 
 			// Get the current event information.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT
 					ID_MEMBER, title, MONTH(startDate) AS month, DAYOFMONTH(startDate) AS day,
 					YEAR(startDate) AS year, (TO_DAYS(endDate) - TO_DAYS(startDate)) AS span
 				FROM {$db_prefix}calendar
 				WHERE ID_EVENT = " . $context['event']['id'] . "
 				LIMIT 1", __FILE__, __LINE__);
-			$row = mysql_fetch_assoc($request);
-			mysql_free_result($request);
+			$row = $smfFunc['db_fetch_assoc']($request);
+			$smfFunc['db_free_result']($request);
 
 			// Make sure the user is allowed to edit this event.
 			if ($row['ID_MEMBER'] != $ID_MEMBER)
@@ -315,14 +315,14 @@ function Post()
 			$boards = boardsAllowedTo('post_new');
 			if (empty($boards))
 				fatal_lang_error('cannot_post_new', 'user');
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.childLevel
 				FROM {$db_prefix}boards AS b
 					LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
 				WHERE $user_info[query_see_board]" . (in_array(0, $boards) ? '' : "
 					AND b.ID_BOARD IN (" . implode(', ', $boards) . ")"), __FILE__, __LINE__);
 			$context['event']['boards'] = array();
-			while ($row = mysql_fetch_assoc($request))
+			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['event']['boards'][] = array(
 					'id' => $row['ID_BOARD'],
 					'name' => $row['boardName'],
@@ -333,7 +333,7 @@ function Post()
 						'name' => $row['catName']
 					)
 				);
-			mysql_free_result($request);
+			$smfFunc['db_free_result']($request);
 		}
 
 		// Find the last day of the month.
@@ -577,12 +577,12 @@ function Post()
 		{
 			if (!empty($modSettings['attachmentEnable']))
 			{
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT IFNULL(size, -1) AS filesize, filename, ID_ATTACH, approved
 					FROM {$db_prefix}attachments
 					WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
 						 AND attachmentType = 0", __FILE__, __LINE__);
-				while ($row = mysql_fetch_assoc($request))
+				while ($row = $smfFunc['db_fetch_assoc']($request))
 				{
 					if ($row['filesize'] <= 0)
 						continue;
@@ -592,20 +592,20 @@ function Post()
 						'approved' => $row['approved'],
 					);
 				}
-				mysql_free_result($request);
+				$smfFunc['db_free_result']($request);
 			}
 
 			// Allow moderators to change names....
 			if (allowedTo('moderate_forum'))
 			{
-				$request = db_query("
+				$request = $smfFunc['db_query']("
 					SELECT ID_MEMBER, posterName, posterEmail
 					FROM {$db_prefix}messages
 					WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
 						AND ID_TOPIC = $topic
 					LIMIT 1", __FILE__, __LINE__);
-				$row = mysql_fetch_assoc($request);
-				mysql_free_result($request);
+				$row = $smfFunc['db_fetch_assoc']($request);
+				$smfFunc['db_free_result']($request);
 
 				if (empty($row['ID_MEMBER']))
 				{
@@ -625,7 +625,7 @@ function Post()
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
 		// Get the existing message.
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				m.ID_MEMBER, m.modifiedTime, m.smileysEnabled, m.body,
 				m.posterName, m.posterEmail, m.subject, m.icon, m.approved,
@@ -639,14 +639,14 @@ function Post()
 				AND t.ID_TOPIC = $topic", __FILE__, __LINE__);
 		// The message they were trying to edit was most likely deleted.
 		// !!! Change this error message?
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('smf232', false);
-		$row = mysql_fetch_assoc($request);
+		$row = $smfFunc['db_fetch_assoc']($request);
 
 		$attachment_stuff = array($row);
-		while ($row2 = mysql_fetch_assoc($request))
+		while ($row2 = $smfFunc['db_fetch_assoc']($request))
 			$attachment_stuff[] = $row2;
-		mysql_free_result($request);
+		$smfFunc['db_free_result']($request);
 
 		if ($row['ID_MEMBER'] == $ID_MEMBER && !allowedTo('modify_any'))
 		{
@@ -725,7 +725,7 @@ function Post()
 			checkSession('get');
 
 			// Make sure they _can_ quote this post, and if so get it.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT m.subject, IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime, m.body
 				FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
@@ -734,10 +734,10 @@ function Post()
 					AND $user_info[query_see_board]
 					" . (allowedTo('approve_posts') ? '' : ' AND m.approved = 1') . "
 				LIMIT 1", __FILE__, __LINE__);
-			if (mysql_num_rows($request) == 0)
+			if ($smfFunc['db_num_rows']($request) == 0)
 				fatal_lang_error('quoted_post_deleted', false);
-			list ($form_subject, $mname, $mdate, $form_message) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($form_subject, $mname, $mdate, $form_message) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 
 			// Add 'Re: ' to the front of the quoted subject.
 			if (trim($context['response_prefix']) != '' && $smfFunc['strpos']($form_subject, trim($context['response_prefix'])) !== 0)
@@ -787,13 +787,13 @@ function Post()
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT COUNT(*), SUM(size)
 				FROM {$db_prefix}attachments
 				WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
 					AND attachmentType = 0", __FILE__, __LINE__);
-			list ($quantity, $total_size) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 		}
 		else
 		{
@@ -1062,14 +1062,14 @@ function Post2()
 	// Replying to a topic?
 	if (!empty($topic) && !isset($_REQUEST['msg']))
 	{
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT t.locked, t.isSticky, t.ID_POLL, t.numReplies, m.ID_MEMBER
 			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
 			WHERE t.ID_TOPIC = $topic
 				AND m.ID_MSG = t.ID_FIRST_MSG
 			LIMIT 1", __FILE__, __LINE__);
-		list ($tmplocked, $tmpstickied, $pollID, $numReplies, $ID_MEMBER_POSTER) = mysql_fetch_row($request);
-		mysql_free_result($request);
+		list ($tmplocked, $tmpstickied, $pollID, $numReplies, $ID_MEMBER_POSTER) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
 
 		// Don't allow a post if it's locked.
 		if ($tmplocked != 0 && !allowedTo('moderate_board'))
@@ -1170,7 +1170,7 @@ function Post2()
 	{
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
-		$request = db_query("
+		$request = $smfFunc['db_query']("
 			SELECT
 				m.ID_MEMBER, m.posterName, m.posterEmail, m.posterTime, m.approved,
 				t.ID_FIRST_MSG, t.locked, t.isSticky, t.ID_MEMBER_STARTED AS ID_MEMBER_POSTER
@@ -1178,10 +1178,10 @@ function Post2()
 			WHERE m.ID_MSG = $_REQUEST[msg]
 				AND t.ID_TOPIC = $topic
 			LIMIT 1", __FILE__, __LINE__);
-		if (mysql_num_rows($request) == 0)
+		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('smf272', false);
-		$row = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$row = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		if (!empty($row['locked']) && !allowedTo('moderate_board'))
 			fatal_lang_error(90, false);
@@ -1447,13 +1447,13 @@ function Post2()
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT COUNT(*), SUM(size)
 				FROM {$db_prefix}attachments
 				WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
 					AND attachmentType = 0", __FILE__, __LINE__);
-			list ($quantity, $total_size) = mysql_fetch_row($request);
-			mysql_free_result($request);
+			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
 		}
 		else
 		{
@@ -1538,7 +1538,7 @@ function Post2()
 	if (isset($_REQUEST['poll']))
 	{
 		// Create the poll.
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}polls
 				(question, hideResults, maxVotes, expireTime, ID_MEMBER, posterName, changeVote)
 			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes],
@@ -1555,7 +1555,7 @@ function Post2()
 			$i++;
 		}
 
-		db_query("
+		$smfFunc['db_query']("
 			INSERT INTO {$db_prefix}poll_choices
 				(ID_POLL, ID_CHOICE, label)
 			VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
@@ -1635,12 +1635,12 @@ function Post2()
 		if (!allowedTo('calendar_edit_any'))
 		{
 			// Get the event's poster.
-			$request = db_query("
+			$request = $smfFunc['db_query']("
 				SELECT ID_MEMBER
 				FROM {$db_prefix}calendar
 				WHERE ID_EVENT = $_REQUEST[eventid]", __FILE__, __LINE__);
-			$row2 = mysql_fetch_assoc($request);
-			mysql_free_result($request);
+			$row2 = $smfFunc['db_fetch_assoc']($request);
+			$smfFunc['db_free_result']($request);
 
 			// Silly hacker, Trix are for kids. ...probably trademarked somewhere, this is FAIR USE! (parody...)
 			isAllowedTo('calendar_edit_' . ($row2['ID_MEMBER'] == $ID_MEMBER ? 'own' : 'any'));
@@ -1648,7 +1648,7 @@ function Post2()
 
 		// Delete it?
 		if (isset($_REQUEST['deleteevent']))
-			db_query("
+			$smfFunc['db_query']("
 				DELETE FROM {$db_prefix}calendar
 				WHERE ID_EVENT = $_REQUEST[eventid]
 				LIMIT 1", __FILE__, __LINE__);
@@ -1658,7 +1658,7 @@ function Post2()
 			$span = !empty($modSettings['cal_allowspan']) && !empty($_REQUEST['span']) ? min((int) $modSettings['cal_maxspan'], (int) $_REQUEST['span'] - 1) : 0;
 			$start_time = mktime(0, 0, 0, (int) $_REQUEST['month'], (int) $_REQUEST['day'], (int) $_REQUEST['year']);
 
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}calendar
 				SET endDate = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "',
 					startDate = '" . strftime('%Y-%m-%d', $start_time) . "',
@@ -1675,7 +1675,7 @@ function Post2()
 		// Mark all the parents read.  (since you just posted and they will be unread.)
 		if (!empty($board_info['parent_boards']))
 		{
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}log_boards
 				SET ID_MSG = $modSettings[maxMsgID]
 				WHERE ID_MEMBER = $ID_MEMBER
@@ -1687,13 +1687,13 @@ function Post2()
 	if (!empty($_POST['notify']))
 	{
 		if (allowedTo('mark_any_notify'))
-			db_query("
+			$smfFunc['db_query']("
 				INSERT IGNORE INTO {$db_prefix}log_notify
 					(ID_MEMBER, ID_TOPIC, ID_BOARD)
 				VALUES ($ID_MEMBER, $topic, 0)", __FILE__, __LINE__);
 	}
 	elseif (!$newTopic)
-		db_query("
+		$smfFunc['db_query']("
 			DELETE FROM {$db_prefix}log_notify
 			WHERE ID_MEMBER = $ID_MEMBER
 				AND ID_TOPIC = $topic
@@ -1734,7 +1734,7 @@ function Post2()
 	if (!empty($_REQUEST['goback']))
 	{
 		// Mark the board as read.... because it might get confusing otherwise.
-		db_query("
+		$smfFunc['db_query']("
 			UPDATE {$db_prefix}log_boards
 			SET ID_MSG = $modSettings[maxMsgID]
 			WHERE ID_MEMBER = $ID_MEMBER
@@ -1783,7 +1783,7 @@ function AnnounceTopic()
 // Allow a user to chose the membergroups to send the announcement to.
 function AnnouncementSelectMembergroup()
 {
-	global $db_prefix, $txt, $context, $topic, $board, $board_info;
+	global $db_prefix, $txt, $context, $topic, $board, $board_info, $smfFunc;
 
 	$groups = array_merge($board_info['groups'], array(1));
 	foreach ($groups as $id => $group)
@@ -1800,14 +1800,14 @@ function AnnouncementSelectMembergroup()
 	}
 
 	// Get all membergroups that have access to the board the announcement was made on.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mg.ID_GROUP, mg.groupName, COUNT(mem.ID_MEMBER) AS num_members
 		FROM {$db_prefix}membergroups AS mg
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_GROUP = mg.ID_GROUP OR FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups) OR mg.ID_GROUP = mem.ID_POST_GROUP)
 		WHERE mg.ID_GROUP IN (" . implode(', ', $groups) . ")
 		GROUP BY mg.ID_GROUP
 		ORDER BY mg.minPosts, IF(mg.ID_GROUP < 4, mg.ID_GROUP, 4), mg.groupName", __FILE__, __LINE__);
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['groups'][$row['ID_GROUP']] = array(
 			'id' => $row['ID_GROUP'],
@@ -1815,16 +1815,16 @@ function AnnouncementSelectMembergroup()
 			'member_count' => $row['num_members'],
 		);
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get the subject of the topic we're about to announce.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.subject
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 		WHERE t.ID_TOPIC = $topic
 			AND m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
-	list ($context['topic_subject']) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($context['topic_subject']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	censorText($context['announce_topic']['subject']);
 
@@ -1838,7 +1838,7 @@ function AnnouncementSelectMembergroup()
 function AnnouncementSend()
 {
 	global $db_prefix, $topic, $board, $board_info, $context, $modSettings;
-	global $language, $scripturl, $txt, $ID_MEMBER, $sourcedir;
+	global $language, $scripturl, $txt, $ID_MEMBER, $sourcedir, $smfFunc;
 
 	checkSession();
 
@@ -1860,13 +1860,13 @@ function AnnouncementSend()
 		$_POST['who'][$id] = in_array((int) $mg, $groups) ? (int) $mg : 0;
 
 	// Get the topic subject and censor it.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT m.ID_MSG, m.subject, m.body
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 		WHERE t.ID_TOPIC = $topic
 			AND m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
-	list ($ID_MSG, $context['topic_subject'], $message) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($ID_MSG, $context['topic_subject'], $message) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	censorText($context['topic_subject']);
 	censorText($message);
@@ -1877,7 +1877,7 @@ function AnnouncementSend()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Select the email addresses for this batch.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT mem.ID_MEMBER, mem.emailAddress, mem.lngfile
 		FROM {$db_prefix}members AS mem
 		WHERE mem.ID_MEMBER != $ID_MEMBER" . (!empty($modSettings['allow_disableAnnounce']) ? '
@@ -1889,7 +1889,7 @@ function AnnouncementSend()
 		LIMIT $chunkSize", __FILE__, __LINE__);
 
 	// All members have received a mail. Go to the next screen.
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		if (!empty($_REQUEST['move']) && allowedTo('move_any'))
 			redirectexit('action=movetopic;topic=' . $topic . '.0' . (empty($_REQUEST['goback']) ? '' : ';goback'));
@@ -1900,7 +1900,7 @@ function AnnouncementSend()
 	}
 
 	// Loop through all members that'll receive an announcement in this batch.
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$cur_language = empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'];
 
@@ -1919,7 +1919,7 @@ function AnnouncementSend()
 		$announcements[$cur_language]['recipients'][$row['ID_MEMBER']] = $row['emailAddress'];
 		$context['start'] = $row['ID_MEMBER'];
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	// For each language send a different mail - low priority...
 	foreach ($announcements as $lang => $mail)
@@ -1941,7 +1941,7 @@ function AnnouncementSend()
 function notifyMembersBoard(&$topicData)
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $ID_MEMBER, $modSettings, $sourcedir, $board;
+	global $ID_MEMBER, $modSettings, $sourcedir, $board, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -1979,14 +1979,14 @@ function notifyMembersBoard(&$topicData)
 	$digest_insert = array();
 	foreach ($topicData as $id => $data)
 		$digest_insert[] = "($data[topic], $data[msg], 'topic', $user_info[id])";
-	db_query("
+	$smfFunc['db_query']("
 		INSERT INTO {$db_prefix}log_digest
 			(ID_TOPIC, ID_MSG, note_type, exclude)
 		VALUES
 			" . implode(', ', $digest_insert), __FILE__, __LINE__);
 
 	// Find the members with notification on for this board.
-	$members = db_query("
+	$members = $smfFunc['db_query']("
 		SELECT
 			mem.ID_MEMBER, mem.emailAddress, mem.notifyRegularity, mem.notifySendBody, mem.lngfile,
 			ln.sent, ln.ID_BOARD, mem.ID_GROUP, mem.additionalGroups, b.memberGroups,
@@ -2001,7 +2001,7 @@ function notifyMembersBoard(&$topicData)
 			AND ln.ID_MEMBER = mem.ID_MEMBER
 		GROUP BY mem.ID_MEMBER
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
-	while ($rowmember = mysql_fetch_assoc($members))
+	while ($rowmember = $smfFunc['db_fetch_assoc']($members))
 	{
 		if ($rowmember['ID_GROUP'] != 1)
 		{
@@ -2051,10 +2051,10 @@ function notifyMembersBoard(&$topicData)
 			$sentOnceAlready = 1;
 		}
 	}
-	mysql_free_result($members);
+	$smfFunc['db_free_result']($members);
 
 	// Sent!
-	db_query("
+	$smfFunc['db_query']("
 		UPDATE {$db_prefix}log_notify
 		SET sent = 1
 		WHERE ID_BOARD IN (" . implode(',', $board_index) . ")
@@ -2064,7 +2064,7 @@ function notifyMembersBoard(&$topicData)
 // Get the topic for display purposes.
 function getTopic()
 {
-	global $topic, $db_prefix, $modSettings, $context;
+	global $topic, $db_prefix, $modSettings, $context, $smfFunc;
 
 	// Calculate the amount of new replies.
 	$newReplies = empty($_REQUEST['num_replies']) || $context['num_replies'] <= $_REQUEST['num_replies'] ? 0 : $context['num_replies'] - $_REQUEST['num_replies'];
@@ -2077,7 +2077,7 @@ function getTopic()
 		LIMIT ' . (int) $modSettings['topicSummaryPosts'];
 
 	// If you're modifying, get only those posts before the current one. (otherwise get all.)
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime, m.body, m.smileysEnabled, m.ID_MSG
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
@@ -2085,7 +2085,7 @@ function getTopic()
 			AND m.ID_MSG < " . (int) $_REQUEST['msg'] : '') . "
 		ORDER BY m.ID_MSG DESC$limit", __FILE__, __LINE__);
 	$context['previous_posts'] = array();
-	while ($row = mysql_fetch_assoc($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Censor, BBC, ...
 		censorText($row['body']);
@@ -2104,7 +2104,7 @@ function getTopic()
 		if (!empty($newReplies))
 			$newReplies--;
 	}
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 }
 
 function QuoteFast()
@@ -2123,7 +2123,7 @@ function QuoteFast()
 	// Where we going if we need to?
 	$context['post_box_name'] = isset($_GET['pb']) ? $_GET['pb'] : '';
 
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 		SELECT IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime, m.body, m.ID_TOPIC, m.subject
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
@@ -2131,12 +2131,12 @@ function QuoteFast()
 			AND b.ID_BOARD = m.ID_BOARD
 			AND $user_info[query_see_board]
 		LIMIT 1", __FILE__, __LINE__);
-	$context['close_window'] = mysql_num_rows($request) == 0;
+	$context['close_window'] = $smfFunc['db_num_rows']($request) == 0;
 
-	if (mysql_num_rows($request) != 0)
+	if ($smfFunc['db_num_rows']($request) != 0)
 	{
-		$row = mysql_fetch_assoc($request);
-		mysql_free_result($request);
+		$row = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
 
 		// Censor the message!
 		censorText($row['body']);
@@ -2215,7 +2215,7 @@ function JavaScriptModify()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Assume the first message if no message ID was given.
-	$request = db_query("
+	$request = $smfFunc['db_query']("
 			SELECT 
 				t.locked, t.numReplies, t.ID_MEMBER_STARTED, t.ID_FIRST_MSG,
 				m.ID_MSG, m.ID_MEMBER, m.posterTime, m.subject, m.smileysEnabled, m.body, m.icon
@@ -2223,10 +2223,10 @@ function JavaScriptModify()
 			WHERE m.ID_MSG = " . (empty($_REQUEST['msg']) ? 't.ID_FIRST_MSG' : (int) $_REQUEST['msg']) . "
 				AND m.ID_TOPIC = $topic
 				AND t.ID_TOPIC = $topic", __FILE__, __LINE__);
-	if (mysql_num_rows($request) == 0)
+	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232', false);
-	$row = mysql_fetch_assoc($request);
-	mysql_free_result($request);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Change either body or subject requires permissions to modify messages.
 	if (isset($_POST['message']) || isset($_POST['subject']) || isset($_REQUEST['icon']))
@@ -2359,7 +2359,7 @@ function JavaScriptModify()
 				cache_put_data('response_prefix', $context['response_prefix'], 600);
 			}
 
-			db_query("
+			$smfFunc['db_query']("
 				UPDATE {$db_prefix}messages
 				SET subject = '$context[response_prefix]$_POST[subject]'
 				WHERE ID_TOPIC = $topic

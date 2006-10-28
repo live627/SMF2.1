@@ -25,7 +25,7 @@ if (!defined('SMF'))
 
 /*	This file has all the main functions in it that relate to the database.
 
-	void db_initiate()
+	void smf_db_initiate()
 		- Sets up the $smfFunc variables and values to use.
 
 	resource db_query(string database_query, string __FILE__, int __LINE__)
@@ -62,10 +62,9 @@ if (!defined('SMF'))
 */
 
 // Initialize the database settings
-function db_initiate()
+function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_options = array())
 {
-	global $smfFunc, $db_persist, $db_connection, $db_server, $db_user, $db_passwd, $db_name;
-	global $mysql_set_mode, $ssi_db_user, $ssi_db_passwd, $db_prefix;
+	global $smfFunc, $mysql_set_mode;
 
 	// Map some database specific functions.
 	$smfFunc += array(
@@ -74,47 +73,53 @@ function db_initiate()
 		'db_fetch_row' => 'mysql_fetch_row',
 		'db_free_result' => 'mysql_free_result',
 		'db_num_rows' => 'mysql_num_rows',
+		'db_data_seek' => 'mysql_data_seek',
+		'db_num_fields' => 'mysql_num_fields',
+		'db_escape_string' => 'mysql_escape_string',
+		'db_server_info' => 'mysql_get_server_info',
+		'db_tablename' => 'mysql_tablename',
+		'db_affected_rows' => 'mysql_affected_rows',
+		'db_error' => 'mysql_error',
 	);
 
-	// Connect to the MySQL database.
-	// If a SSI username and password have been specified use them, and we are using SSI.
-	if (!empty($ssi_db_user) && SMF == 'SSI')
+	if (!empty($db_options['persist']))
+		$connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
+	else
+		$connection = @mysql_connect($db_server, $db_user, $db_passwd);
+
+	// Something's wrong, show an error if its fatal (which we assume it is)
+	if (!$connection)
 	{
-		if (empty($db_persist))
-			$db_connection = @mysql_connect($db_server, $ssi_db_user, $ssi_db_passwd);
+		if (!empty($db_options['non_fatal']))
+			return null;
 		else
-			$db_connection = @mysql_pconnect($db_server, $ssi_db_user, $ssi_db_passwd);
+			db_fatal_error();
 	}
 
-	// Connect if we aren't using SSI or if it failed.
-	if (!isset($db_connection) || $db_connection === false)
+	// Select the database, unless told not to
+	if (empty($db_options['dont_select_db']))
 	{
-		if (empty($db_persist))
-			$db_connection = @mysql_connect($db_server, $db_user, $db_passwd);
-		else
-			$db_connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
+		if (!@mysql_select_db($db_name, $connection) && empty($db_options['non_fatal']))
+			db_fatal_error();
 	}
-
-	// Show an error if the connection couldn't be made.
-	if (!$db_connection)
-		db_fatal_error();
-
-	// If we are using SSI make the database name part of the prefix, if not just connect to the database.
-	if (SMF == 'SSI' && strpos($db_prefix, '.') === false)
+	else
 		$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
-	elseif (!@mysql_select_db($db_name, $db_connection) && SMF != 'SSI')
-		db_fatal_error();
+
 
 	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
 	if (isset($mysql_set_mode) && $mysql_set_mode === true)
-		db_query("SET sql_mode = '', AUTOCOMMIT = 1", false, false);
+		db_query("SET sql_mode = '', AUTOCOMMIT = 1", false, false, $connection);
 
+	return $connection;
 }
 
 // Do a query.  Takes care of errors too.
-function db_query($db_string, $file, $line)
+function db_query($db_string, $file, $line, $connection = null)
 {
 	global $db_cache, $db_count, $db_connection, $db_show_debug, $modSettings;
+
+	// Decide which connection to use.
+	$connection = $connection == null ? $db_connection : $connection;
 
 	// Comments that are allowed in a query are preg_removed.
 	static $allowed_comments_from = array(
@@ -209,9 +214,9 @@ function db_query($db_string, $file, $line)
 		}
 	}
 
-	$ret = mysql_query($db_string, $db_connection);
+	$ret = mysql_query($db_string, $connection);
 	if ($ret === false && $file !== false)
-		$ret = db_error($db_string, $file, $line);
+		$ret = db_error($db_string, $file, $line, $connection);
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -220,30 +225,33 @@ function db_query($db_string, $file, $line)
 	return $ret;
 }
 
-function db_affected_rows()
+function db_affected_rows($connection = null)
 {
 	global $db_connection;
 
-	return mysql_affected_rows($db_connection);
+	return mysql_affected_rows($connection == null ? $db_connection : $connection);
 }
 
-function db_insert_id()
+function db_insert_id($connection = null)
 {
 	global $db_connection;
 
-	return mysql_insert_id($db_connection);
+	return mysql_insert_id($connection == null ? $db_connection : $connection);
 }
 
 // Database error!
-function db_error($db_string, $file, $line)
+function db_error($db_string, $file, $line, $connection = null)
 {
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
 	global $db_server, $db_user, $db_passwd, $db_name, $db_show_debug, $ssi_db_user, $ssi_db_passwd;
 
+	// Decide which connection to use
+	$connection = $connection == null ? $db_connection : $connection;
+
 	// This is the error message...
-	$query_error = mysql_error($db_connection);
-	$query_errno = mysql_errno($db_connection);
+	$query_error = mysql_error($connection);
+	$query_errno = mysql_errno($connection);
 
 	// Error numbers:
 	//    1016: Can't open file '....MYI'
@@ -337,10 +345,10 @@ function db_error($db_string, $file, $line)
 		// Check for the "lost connection" or "deadlock found" errors - and try it just one more time.
 		if (in_array($query_errno, array(1205, 1213, 2006, 2013)))
 		{
-			if (in_array($query_errno, array(2006, 2013)))
+			if (in_array($query_errno, array(2006, 2013)) && $db_connection == $connection)
 			{
 				// Are we in SSI mode?  If so try that username and password first
-				if (SMF == 'SSI')
+				if (SMF == 'SSI' && !empty($ssi_db_user) && !empty($ssi_db_passwd))
 				{
 					if (empty($db_persist))
 						$db_connection = @mysql_connect($db_server, $ssi_db_user, $ssi_db_passwd);
