@@ -148,7 +148,7 @@ function MoveTopic()
 // Execute the move.
 function MoveTopic2()
 {
-	global $txt, $board, $topic, $scripturl, $sourcedir, $modSettings;
+	global $txt, $board, $topic, $scripturl, $sourcedir, $modSettings, $context;
 	global $db_prefix, $ID_MEMBER, $board, $language, $user_info, $smfFunc;
 
 	// Make sure this form hasn't been submitted before.

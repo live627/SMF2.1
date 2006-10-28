@@ -795,7 +795,7 @@ function RemoveTheme()
 // Choose a theme from a list.
 function PickTheme()
 {
-	global $txt, $db_prefix, $sc, $context, $modSettings, $user_info, $ID_MEMBER, $language, $smfFunc;
+	global $txt, $db_prefix, $sc, $context, $modSettings, $user_info, $ID_MEMBER, $language, $smfFunc, $settings;
 
 	checkSession('get');
 
@@ -1243,15 +1243,8 @@ function EditTheme()
 
 	if (isset($_REQUEST['preview']))
 	{
-		//loadLanguage('Settings');
-
-		//$context['sub_template'] = 'rawdata';
-		//$context['raw_data'] = isset($txt['preview_html']) ? $txt['preview_html'] : '';
-
-		//$_SESSION['ID_THEME'] = (int) $_GET['old'];
+		// !!! Should this be removed?
 		die;
-
-		return;
 	}
 
 	isAllowedTo('admin_forum');

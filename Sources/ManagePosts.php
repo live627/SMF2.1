@@ -303,7 +303,7 @@ function ModifyPostSettings()
 // Bulletin Board Code...a lot of Bulletin Board Code.
 function ModifyBBCSettings()
 {
-	global $context, $txt, $modSettings;
+	global $context, $txt, $modSettings, $helptxt;
 
 	// Setup the template.
 	$context['sub_template'] = 'edit_bbc_settings';

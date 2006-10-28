@@ -351,7 +351,7 @@ function ModifyKarmaSettings()
 // You'll never guess what this function does...
 function ModifySignatureSettings()
 {
-	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc;
+	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc, $helptxt;
 
 	// Applying to ALL signatures?!!
 	if (isset($_GET['apply']))

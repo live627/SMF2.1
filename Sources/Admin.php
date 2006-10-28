@@ -401,7 +401,7 @@ function VersionDetail()
 // Allow users to remove their copyright.
 function ManageCopyright()
 {
-	global $forum_version, $txt, $sourcedir, $context, $boardurl;
+	global $forum_version, $txt, $sourcedir, $context, $boardurl, $modSettings;
 
 	isAllowedTo('admin_forum');
 

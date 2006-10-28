@@ -614,7 +614,7 @@ function getPackageInfo($gzfilename)
 
 function packageRequireFTP($destination_url, $files = null)
 {
-	global $context, $modSettings, $package_ftp, $boarddir;
+	global $context, $modSettings, $package_ftp, $boarddir, $txt;
 
 	// Try to make them writable the manual way.
 	if ($files !== null)
@@ -791,7 +791,7 @@ function packageRequireFTP($destination_url, $files = null)
 // Parses a package-info.xml file - method can be 'install', 'upgrade', or 'uninstall'.
 function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install', $previous_version = '')
 {
-	global $boarddir, $forum_version;
+	global $boarddir, $forum_version, $context;
 
 	// Mayday!  That action doesn't exist!!
 	if (empty($packageXML) || !$packageXML->exists($method))
