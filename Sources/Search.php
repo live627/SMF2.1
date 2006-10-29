@@ -94,6 +94,15 @@ function PlushSearch1()
 		$context['search_params']['search'] = htmlspecialchars($context['search_params']['search']);
 	if (isset($context['search_params']['userspec']))
 		$context['search_params']['userspec'] = htmlspecialchars(stripslashes($context['search_params']['userspec']));
+	if (!empty($context['search_params']['searchtype']))
+		$context['search_params']['searchtype'] = 2;
+	if (!empty($context['search_params']['minage']))
+		$context['search_params']['minage'] = (int) $context['search_params']['minage'];
+	if (!empty($context['search_params']['maxage']))
+		$context['search_params']['maxage'] = (int) $context['search_params']['maxage'];
+
+	$context['search_params']['show_complete'] = !empty($context['search_params']['show_complete']);
+	$context['search_params']['subject_only'] = !empty($context['search_params']['subject_only']);
 
 	// Load the error text strings if there were errors in the search.
 	if (!empty($context['search_errors']))
@@ -350,7 +359,7 @@ function PlushSearch2()
 	}
 
 	// Default the user name to a wildcard matching every user (*).
-	if (!empty($search_params['user_spec']) || (!empty($_REQUEST['userspec']) && $_REQUEST['userspec'] != '*'))
+	if (!empty($search_params['userspec']) || (!empty($_REQUEST['userspec']) && $_REQUEST['userspec'] != '*'))
 		$search_params['userspec'] = isset($search_params['userspec']) ? $search_params['userspec'] : $_REQUEST['userspec'];
 
 	// If there's no specific user, then don't mention it in the main query.

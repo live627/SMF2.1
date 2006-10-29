@@ -625,6 +625,18 @@ function MessageSearch()
 	if (isset($context['search_params']['userspec']))
 		$context['search_params']['userspec'] = htmlspecialchars(stripslashes($context['search_params']['userspec']));
 
+	if (!empty($context['search_params']['searchtype']))
+		$context['search_params']['searchtype'] = 2;
+
+	if (!empty($context['search_params']['minage']))
+		$context['search_params']['minage'] = (int) $context['search_params']['minage'];
+
+	if (!empty($context['search_params']['maxage']))
+		$context['search_params']['maxage'] = (int) $context['search_params']['maxage'];
+
+	$context['search_params']['subject_only'] = !empty($context['search_params']['subject_only']);
+	$context['search_params']['show_complete'] = !empty($context['search_params']['show_complete']);
+
 	// Create the array of labels to be searched.
 	$context['search_labels'] = array();
 	$searchedLabels = isset($context['search_params']['labels']) && $context['search_params']['labels'] != '' ? explode(',', $context['search_params']['labels']) : array();
