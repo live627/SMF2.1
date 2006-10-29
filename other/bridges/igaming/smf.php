@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                  *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
 * =========================================================================== *
-* Software Version:           SMF 1.1 RC3                                     *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org) *
 * Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
 * Support, News, Updates at:  http://www.simplemachines.org                   *
@@ -102,7 +102,7 @@ function ob_igfix($buffer)
 
 function integrate_pre_load ()
 {
-	global $modsettings, $db;
+	global $modSettings, $db;
 
 	//if (isset($_POST['sc'])){
 	//  $GLOBALS['sc'] = $_POST['sc'];
@@ -177,7 +177,7 @@ function integrate_login($username, $password, $cookietime)
 
 function integrate_reset_pass($old_username, $username, $password)
 {
-	global $ig_admin_group, $db;
+	global $ig_admin_group, $db, $user_settings;
 	
 	$groups = explode(',', $user_settings['additionalGroups']);
 	$admin_group = $user_settings['ID_GROUP'] == $ig_admin_group || in_array($ig_admin_group, $user_settings['additionalGroups']);

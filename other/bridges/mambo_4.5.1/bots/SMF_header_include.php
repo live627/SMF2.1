@@ -32,7 +32,7 @@ $_MAMBOTS->registerFunction( 'onAfterStart', 'SMF_header_include' );
 function SMF_header_include( ) {
 
 	global $mainframe, $database, $scripturl, $db_connection, $db_passwd, $maintenance, $db_server, $options;
-	global $db_name, $db_user, $db_prefix, $db_persist, $db_error_send, $db_last_error, $sc, $context;
+	global $db_name, $db_user, $db_prefix, $db_persist, $db_error_send, $db_last_error, $sc, $context, $modSettings;
 	global $settings, $mosConfig_db, $sourcedir, $mosConfig_live_site, $mosConfig_sef, $mosConfig_dbprefix;
     
 	//Gallery2 bridge+SEF compatibility (Damage control)

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2547 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2548 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -33,6 +33,7 @@ October 2006
  ! Changed all occurrences of mysql_ functions to use the generalized database functions in smfFunc (Almost all source files)
  + Added the ability to specify a different database to use other then MySQL. (Load.php, index.php, SSI.php)
  ! Moved the Database.php file to the Subs-Db-mysql.php file. (Database.php, Subs-Db-mysql.php)
+ ! Changed Xoops login integration hook to use Xoops native authorization objects. (Xoops bridge/index.php)
 
 
 September 2006

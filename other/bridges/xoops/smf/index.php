@@ -134,11 +134,18 @@ function integrate_outgoing_email($subject, &$message, $headers)
 
 function integrate_pre_load ()
 {
-	global $modsettings, $sc, $context;
+	global $modSettings, $sc, $context;
 
 	loadSession();
 	cleanRequest();
 
+	//Turn off compressed output
+	$modSettings['enableCompressedOutput'] = '0';
+	//Turn off local cookies
+	$modSettings['localCookies'] = '0';
+	//Turn off SEF in SMF
+	$modSettings['queryless_urls'] = '';
+	
 	if (isset($_GET['sesc']))
 		$_SESSION['rand_code'] = $_GET['sesc'];
 
@@ -190,9 +197,11 @@ function xoops_smf_exit($with_output)
 
 function integrate_login ($username, $password, $cookietime)
 {
-	global $xoopsConfig, $db_name;
+	global $xoopsConfig, $db_name, $user_settings;
+	
+	//Get the user from Xoops
 	mysql_select_db(XOOPS_DB_NAME);
-	$pwd = $_REQUEST['passwrd'];
+	$pwd = $_REQUEST['passwrd'] != '' ? md5($_REQUEST['passwrd']) : 'migrated';
 	$sess_id = $_COOKIE[session_name()];
 	
 	$request = mysql_query("
@@ -200,6 +209,30 @@ function integrate_login ($username, $password, $cookietime)
 		FROM " . XOOPS_DB_PREFIX . "_users
 		WHERE uname = '$username'");
 	$user = mysql_fetch_assoc($request);
+
+	//What?  No user in Xoops?
+	if ($user === false || mysql_num_rows($request) === 0){
+		mysql_query("
+			INSERT INTO " . XOOPS_DB_PREFIX . "_users
+				(name, uname, email, pass, user_regdate)
+			VALUES ('" . (isset($user_settings['memberName']) ? $user_settings['memberName'] : $user_settings['memberName']) . "', '" . $user_settings['memberName'] . "', '" . $user_settings['emailAddress'] . "', '$pwd', '" . $user_settings['dateRegistered'] . "')");
+
+		$xoops_id = mysql_insert_id();
+
+		mysql_query( "
+			INSERT INTO " . XOOPS_DB_PREFIX . "_groups_users_link
+				(groupid, uid)
+			VALUES ('2', '$xoops_id');");
+			
+		mysql_free_result($request);
+		//Now there is definitely a user there
+		$request = mysql_query("
+			SELECT uid, theme
+			FROM " . XOOPS_DB_PREFIX . "_users
+			WHERE uname = '$username'");
+		$user = mysql_fetch_assoc($request);		
+	}
+	
 	mysql_free_result($request);
 
 	$request = mysql_query("
@@ -209,17 +242,47 @@ function integrate_login ($username, $password, $cookietime)
 	$group = mysql_fetch_array($request);
 	mysql_free_result($request);
 
-	$sess_data = 'xoopsUserId|s:' . strlen($user['uid']) . ':"' . $user['uid'] . '";xoopsUserGroups|' . addslashes(serialize($group)) . ';xoopsUserTheme|s:' . strlen($user['theme']) . ':"' . addslashes($user['theme']) . '";';
+	
+$member_handler =& xoops_gethandler('member');
+$myts =& MyTextsanitizer::getInstance();
 
-	$login = mysql_query("
-		UPDATE " . XOOPS_DB_PREFIX . "_session
-		SET sess_data = '$sess_data'
-		WHERE sess_id = '$sess_id'");
-		
-	if ($xoopsConfig['use_mysession'] && $xoopsConfig['session_name'] != '') {
+include_once XOOPS_ROOT_PATH.'/class/auth/authfactory.php';
+include_once XOOPS_ROOT_PATH.'/language/'.$xoopsConfig['language'].'/user.php';
+$xoopsAuth =& XoopsAuthFactory::getAuthConnection($myts->addSlashes($username));
+$user = $xoopsAuth->authenticate($myts->addSlashes($username), $myts->addSlashes($_REQUEST['passwrd']));
+
+if (false != $user) {
+    if (0 == $user->getVar('level')) {
+        redirect_header(XOOPS_URL.'/index.php', 5, _US_NOACTTPADM);
+        exit();
+    }
+    if ($xoopsConfig['closesite'] == 1) {
+        $allowed = false;
+        foreach ($user->getGroups() as $group) {
+            if (in_array($group, $xoopsConfig['closesite_okgrp']) || XOOPS_GROUP_ADMIN == $group) {
+                $allowed = true;
+                break;
+            }
+        }
+        if (!$allowed) {
+            redirect_header(XOOPS_URL.'/index.php', 1, _NOPERM);
+            exit();
+        }
+    }
+    $user->setVar('last_login', time());
+    if (!$member_handler->insertUser($user)) {
+    }
+    $_SESSION = array();
+    $_SESSION['xoopsUserId'] = $user->getVar('uid');
+    $_SESSION['xoopsUserGroups'] = $user->getGroups();
+    if ($xoopsConfig['use_mysession'] && $xoopsConfig['session_name'] != '') {
         setcookie($xoopsConfig['session_name'], session_id(), time()+(60 * $xoopsConfig['session_expire']), '/',  '', 0);
     }
-	
+    $user_theme = $user->getVar('theme');
+    if (in_array($user_theme, $xoopsConfig['theme_set_allowed'])) {
+        $_SESSION['xoopsUserTheme'] = $user_theme;
+    }
+}
 	mysql_select_db($db_name);
 }
 

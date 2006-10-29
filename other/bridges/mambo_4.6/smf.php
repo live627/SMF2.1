@@ -151,7 +151,7 @@ echo '
 function ob_mambofix($buffer)
 {
 	global $scripturl, $mosConfig_live_site, $mosConfig_sef, $boardurl;
-	global $bridge_reg, $Itemid, $_VERSION;
+	global $bridge_reg, $Itemid, $_VERSION, $wrapped;
 
 	$myurl = $mosConfig_live_site . '/index.php?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
 	
