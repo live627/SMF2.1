@@ -602,7 +602,7 @@ function EditPoll2()
 			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes], $_POST[poll_expire], $ID_MEMBER, SUBSTRING('$user_info[username]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
 
 		// Set the poll ID.
-		$bcinfo['ID_POLL'] = db_insert_id();
+		$bcinfo['ID_POLL'] = db_insert_id("{$db_prefix}polls", 'ID_POLL');
 
 		// Link the poll to the topic
 		$smfFunc['db_query']("

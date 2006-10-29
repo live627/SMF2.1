@@ -41,7 +41,7 @@ if (!defined('SMF'))
 		- handles the current connection so the forum with other connections
 		  active at the same time.
 
-	int db_insert_id()
+	int db_insert_id(string table_name, string auto_increment_field, resource database_connection = null)
 		- should always be used in place of mysql_insert_id.
 		- returns the most recently generated auto_increment column.
 		- handles the current connection so the forum with other connections
@@ -62,25 +62,36 @@ if (!defined('SMF'))
 */
 
 // Initialize the database settings
-function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_options = array())
+function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix, $db_options = array())
 {
 	global $smfFunc, $mysql_set_mode;
 
-	// Map some database specific functions.
-	$smfFunc += array(
-		'db_query' => 'db_query',
-		'db_fetch_assoc' => 'mysql_fetch_assoc',
-		'db_fetch_row' => 'mysql_fetch_row',
-		'db_free_result' => 'mysql_free_result',
-		'db_num_rows' => 'mysql_num_rows',
-		'db_data_seek' => 'mysql_data_seek',
-		'db_num_fields' => 'mysql_num_fields',
-		'db_escape_string' => 'mysql_escape_string',
-		'db_server_info' => 'mysql_get_server_info',
-		'db_tablename' => 'mysql_tablename',
-		'db_affected_rows' => 'mysql_affected_rows',
-		'db_error' => 'mysql_error',
+	// Just some debugging code, make sure to remove it before release.
+	$parameters = array(
+		'server' => $db_server,
+		'name' => $db_name,
+		'user' => $db_user,
+		'pass' => $db_passwd,
+		'opts' => $db_options,
 	);
+	//echo '<pre>'; print_r($parameters); echo '</pre>';
+
+	// Map some database specific functions, only do this once.
+	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'mysql_fetch_assoc')
+		$smfFunc += array(
+			'db_query' => 'db_query',
+			'db_fetch_assoc' => 'mysql_fetch_assoc',
+			'db_fetch_row' => 'mysql_fetch_row',
+			'db_free_result' => 'mysql_free_result',
+			'db_num_rows' => 'mysql_num_rows',
+			'db_data_seek' => 'mysql_data_seek',
+			'db_num_fields' => 'mysql_num_fields',
+			'db_escape_string' => 'mysql_escape_string',
+			'db_server_info' => 'mysql_get_server_info',
+			'db_tablename' => 'mysql_tablename',
+			'db_affected_rows' => 'mysql_affected_rows',
+			'db_error' => 'mysql_error',
+		);
 
 	if (!empty($db_options['persist']))
 		$connection = @mysql_pconnect($db_server, $db_user, $db_passwd);
@@ -91,16 +102,22 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_options
 	if (!$connection)
 	{
 		if (!empty($db_options['non_fatal']))
+		{
 			return null;
+		}
 		else
+		{
 			db_fatal_error();
+		}
 	}
 
 	// Select the database, unless told not to
 	if (empty($db_options['dont_select_db']))
 	{
 		if (!@mysql_select_db($db_name, $connection) && empty($db_options['non_fatal']))
+		{
 			db_fatal_error();
+		}
 	}
 	else
 		$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
@@ -232,10 +249,11 @@ function db_affected_rows($connection = null)
 	return mysql_affected_rows($connection == null ? $db_connection : $connection);
 }
 
-function db_insert_id($connection = null)
+function db_insert_id($table, $field, $connection = null)
 {
 	global $db_connection;
 
+	// MySQL doesn't need the table or field information.
 	return mysql_insert_id($connection == null ? $db_connection : $connection);
 }
 

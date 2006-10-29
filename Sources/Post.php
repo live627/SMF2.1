@@ -1543,7 +1543,7 @@ function Post2()
 				(question, hideResults, maxVotes, expireTime, ID_MEMBER, posterName, changeVote)
 			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes],
 				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $ID_MEMBER, SUBSTRING('$_POST[guestname]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
-		$ID_POLL = db_insert_id();
+		$ID_POLL = db_insert_id("{$db_prefix}polls", 'ID_POLL');
 
 		// Create each answer choice.
 		$i = 0;

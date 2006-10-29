@@ -473,7 +473,7 @@ function registerMember(&$regOptions)
 		INSERT INTO {$db_prefix}members
 			(" . implode(', ', array_keys($regOptions['register_vars'])) . ")
 		VALUES (" . implode(', ', $regOptions['register_vars']) . ')', __FILE__, __LINE__);
-	$memberID = db_insert_id();
+	$memberID = db_insert_id("{$db_prefix}members", 'ID_MEMBER');
 
 	// Grab their real name and send emails using it.
 	$realName = substr($regOptions['register_vars']['realName'], 1, -1);

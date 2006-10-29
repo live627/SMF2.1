@@ -130,7 +130,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		INSERT INTO {$db_prefix}attachments
 			(ID_MEMBER, attachmentType, filename, size)
 		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', 1)", __FILE__, __LINE__);
-	$attachID = db_insert_id();
+	$attachID = db_insert_id("{$db_prefix}attachments", 'ID_ATTACH');
 
 	$destName = (empty($modSettings['custom_avatar_enabled']) ? $modSettings['attachmentUploadDir'] : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
 

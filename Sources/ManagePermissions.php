@@ -684,7 +684,7 @@ function SwitchBoard()
 					VALUES
 						('', $_GET[boardid])", __FILE__, __LINE__);
 				// Get the new number.
-				$profile_id = db_insert_id();
+				$profile_id = db_insert_id("{$db_prefix}permission_profiles", 'ID_PROFILE');
 
 				// Assuming it worked copy the previous profile across.
 				$request = $smfFunc['db_query']("
@@ -1641,7 +1641,7 @@ function EditPermissionProfiles()
 				(profile_name, ID_PARENT)
 			VALUES
 				('$_POST[profile_name]', 0)", __FILE__, __LINE__);
-		$profile_id = db_insert_id();
+		$profile_id = db_insert_id("{$db_prefix}permission_profiles", 'ID_PROFILE');
 
 		// Load the permissions from the one it's being copied from.
 		$request = $smfFunc['db_query']("

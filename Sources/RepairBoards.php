@@ -184,7 +184,7 @@ function RepairBoards()
 						(ID_BOARD, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, ID_FIRST_MSG, ID_LAST_MSG, numReplies)
 					VALUES ($row[ID_BOARD], $memberStartedID, $memberUpdatedID,
 						$row[myID_FIRST_MSG], $row[myID_LAST_MSG], $row[myNumReplies])", __FILE__, __LINE__);
-				$newTopicID = db_insert_id();
+				$newTopicID = db_insert_id("{$db_prefix}topics", 'ID_TOPIC');
 
 				$smfFunc['db_query']("
 					UPDATE {$db_prefix}messages
@@ -294,7 +294,7 @@ function RepairBoards()
 					INSERT INTO {$db_prefix}boards
 						(ID_CAT, name, description, numTopics, numPosts, memberGroups)
 					VALUES ($salvageCatID, 'Salvaged board', '', $topicArray[myNumTopics], $topicArray[myNumPosts], '1')", __FILE__, __LINE__);
-				$newBoardID = db_insert_id();
+				$newBoardID = db_insert_id("{$db_prefix}boards", 'ID_BOARD');
 
 				$smfFunc['db_query']("
 					UPDATE {$db_prefix}topics
@@ -1886,7 +1886,7 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_category_error', false);
 		}
 
-		$salvageCatID = db_insert_id();
+		$salvageCatID = db_insert_id("{$db_prefix}categories", 'ID_CAT');
 	}
 
 	// Check to see if a 'Salvage Board' exists, if not => insert one.
@@ -1912,7 +1912,7 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_board_error', false);
 		}
 
-		$salvageBoardID = db_insert_id();
+		$salvageBoardID = db_insert_id("{$db_prefix}boards", 'ID_BOARD');
 	}
 
 	$smfFunc['db_query']("

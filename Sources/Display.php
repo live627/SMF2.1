@@ -1188,7 +1188,7 @@ function loadAttachmentContext($ID_MSG)
 							INSERT INTO {$db_prefix}attachments
 								(ID_MSG, attachmentType, filename, size, width, height)
 							VALUES ($ID_MSG, 3, '$thumb_filename', " . (int) $thumb_size . ", " . (int) $attachment['thumb_width'] . ", " . (int) $attachment['thumb_height'] . ")", __FILE__, __LINE__);
-						$attachment['ID_THUMB'] = db_insert_id();
+						$attachment['ID_THUMB'] = db_insert_id("{$db_prefix}attachments", 'ID_ATTACH');
 						if (!empty($attachment['ID_THUMB']))
 						{
 							$smfFunc['db_query']("

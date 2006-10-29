@@ -268,7 +268,7 @@ function ReportToModerator2()
 				VALUES
 					($_POST[msg], $message[ID_TOPIC], $message[ID_BOARD], $message[ID_POSTER], '$message[realName]', '$message[subject]', '$message[body]', " . time() . ",
 						" . time() . ", 1, 0)", __FILE__, __LINE__);
-			$ID_REPORT = db_insert_id();
+			$ID_REPORT = db_insert_id("{$db_prefix}log_reported", 'ID_REPORT');
 		}
 
 		// Now just add our report...

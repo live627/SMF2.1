@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2549 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2550 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -36,6 +36,7 @@ October 2006
  ! Changed Xoops login integration hook to use Xoops native authorization objects. (Xoops bridge/index.php)
  ! Some search parameters weren't being sanatized when accessing a previous search, leading to a potential XSS vulnerability (PersonalMessage.php, Search.php)
  ! Minor typo in PlushSearch2 prevented "user" search parameter from being remembered when trying to access a previous search (Search.php)
+ ! When requesting the insert id from the database pass along the table and column names. (Several files)
 
 
 September 2006

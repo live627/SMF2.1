@@ -891,7 +891,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		INSERT INTO {$db_prefix}personal_messages
 			(ID_MEMBER_FROM, deletedBySender, fromName, msgtime, subject, body)
 		VALUES ($from[id], " . ($store_outbox ? '0' : '1') . ", SUBSTRING('$from[username]', 1, 255), " . time() . ", SUBSTRING('$htmlsubject', 1, 255), SUBSTRING('$htmlmessage', 1, 65534))", __FILE__, __LINE__);
-	$ID_PM = db_insert_id();
+	$ID_PM = db_insert_id("{$db_prefix}personal_messages", 'ID_PM');
 
 	// Add the recipients.
 	if (!empty($ID_PM))
@@ -1742,7 +1742,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			posterIP, smileysEnabled, modifiedName, icon, approved)
 		VALUES ($topicOptions[board], $topicOptions[id], $posterOptions[id], SUBSTRING('$msgOptions[subject]', 1, 255), SUBSTRING('$msgOptions[body]', 1, 65534), SUBSTRING('$posterOptions[name]', 1, 255), SUBSTRING('$posterOptions[email]', 1, 255), " . time() . ",
 			SUBSTRING('$posterOptions[ip]', 1, 255), " . ($msgOptions['smileys_enabled'] ? '1' : '0') . ", '', SUBSTRING('$msgOptions[icon]', 1, 16), $msgOptions[approved])", __FILE__, __LINE__);
-	$msgOptions['id'] = db_insert_id();
+	$msgOptions['id'] = db_insert_id("{$db_prefix}messages", 'ID_MSG');
 
 	// Something went wrong creating the message...
 	if (empty($msgOptions['id']))
@@ -1765,7 +1765,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				" . ($topicOptions['lock_mode'] === null ? '0' : $topicOptions['lock_mode']) . ', ' .
 				($topicOptions['sticky_mode'] === null ? '0' : $topicOptions['sticky_mode']) . ", 0,
 				" . ($topicOptions['poll'] === null ? '0' : $topicOptions['poll']) . ', ' . ($msgOptions['approved'] ? 0 : 1) . ", $msgOptions[approved])", __FILE__, __LINE__);
-		$topicOptions['id'] = db_insert_id();
+		$topicOptions['id'] = db_insert_id("{$db_prefix}topics", 'ID_TOPIC');
 
 		// The topic couldn't be created for some reason.
 		if (empty($topicOptions['id']))
@@ -2011,7 +2011,7 @@ function createAttachment(&$attachmentOptions)
 		INSERT INTO {$db_prefix}attachments
 			(ID_MSG, filename, size, width, height, approved)
 		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
-	$attachmentOptions['id'] = db_insert_id();
+	$attachmentOptions['id'] = db_insert_id("{$db_prefix}attachments", 'ID_ATTACH');
 
 	if (empty($attachmentOptions['id']))
 		return false;
@@ -2067,7 +2067,7 @@ function createAttachment(&$attachmentOptions)
 				INSERT INTO {$db_prefix}attachments
 					(ID_MSG, attachmentType, filename, size, width, height, approved)
 				VALUES (" . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
-			$attachmentOptions['thumb'] = db_insert_id();
+			$attachmentOptions['thumb'] = db_insert_id("{$db_prefix}attachments", 'ID_ATTACH');
 
 			if (!empty($attachmentOptions['thumb']))
 			{

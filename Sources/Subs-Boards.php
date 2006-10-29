@@ -614,7 +614,7 @@ function createBoard($boardOptions)
 		INSERT INTO {$db_prefix}boards
 			(ID_CAT, name, description, boardOrder, memberGroups)
 		VALUES ($boardOptions[target_category], SUBSTRING('$boardOptions[board_name]', 1, 255), '', 0, '-1,0')", __FILE__, __LINE__);
-	$board_id = db_insert_id();
+	$board_id = db_insert_id("{$db_prefix}boards", 'ID_BOARD');
 
 	if (empty($board_id))
 		return 0;

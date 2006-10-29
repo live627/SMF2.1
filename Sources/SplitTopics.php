@@ -607,7 +607,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		INSERT INTO {$db_prefix}topics
 			(ID_BOARD, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, ID_FIRST_MSG, ID_LAST_MSG, numReplies, unapprovedPosts, approved, isSticky)
 		VALUES ($ID_BOARD, $split2_firstMem, $split2_lastMem, 0, 0, $split2_replies, $split2_unapprovedposts, $split2_approved, $isSticky)", __FILE__, __LINE__);
-	$split2_ID_TOPIC = db_insert_id();
+	$split2_ID_TOPIC = db_insert_id("{$db_prefix}topics", 'ID_TOPIC');
 	if ($split2_ID_TOPIC <= 0)
 		fatal_lang_error('smf273');
 

@@ -2663,7 +2663,7 @@ function logAction($action, $extra = array())
 				$board_id, $topic_id, $msg_id,
 				SUBSTRING('" . addslashes(serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
 
-		return db_insert_id();
+		return db_insert_id("{$db_prefix}log_actions", 'ID_ACTION');
 	}
 
 	return false;

@@ -568,7 +568,7 @@ function removeMessage($message, $decreasePostCount = true)
 			VALUES ($modSettings[recycle_board], $row[ID_MEMBER], $row[ID_MEMBER], $message, $message, $unapprovedPosts, $approved)", __FILE__, __LINE__);
 
 		// Capture the ID of the new topic...
-		$topicID = db_insert_id();
+		$topicID = db_insert_id("{$db_prefix}topics", 'ID_TOPIC');
 
 		// If the topic creation went successful, move the message.
 		if ($topicID > 0)
