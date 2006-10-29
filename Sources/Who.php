@@ -70,11 +70,29 @@ function Who()
 
 	// Load the 'Who' template.
 	loadTemplate('Who');
+	loadLanguage('Who');
 
 	// Sort out... the column sorting.
 	$sort_methods = array(
 		'user' => 'mem.realName',
 		'time' => 'lo.logTime'
+	);
+
+	$show_methods = array(
+		'members' => '(lo.ID_MEMBER != 0)',
+		'guests' => '(lo.ID_MEMBER = 0)',
+		'all' => '',
+	);
+
+	// Store the sort methods and the show types for use in the template.
+	$context['sort_methods'] = array(
+		'user' => $txt['who_user'],
+		'time' => $txt['who_time'],
+	);
+	$context['show_methods'] = array(
+		'all' => $txt['who_show_all'],
+		'members' => $txt['who_show_members_only'],
+		'guests' => $txt['who_show_guests_only'],
 	);
 
 	// By default order by last time online.
@@ -90,13 +108,20 @@ function Who()
 		$_REQUEST['sort'] = $sort_methods[$_REQUEST['sort']];
 	}
 
-	$context['sort_direction'] = isset($_REQUEST['asc']) ? 'up' : 'down';
+	$context['sort_direction'] = isset($_REQUEST['asc']) || (isset($_REQUEST['sort_dir']) && $_REQUEST['sort_dir'] == 'asc') ? 'up' : 'down';
 
 	$conditions = array();
 	if (!allowedTo('moderate_forum'))
 		$conditions[] = '(IFNULL(mem.showOnline, 1) = 1)';
-	if (isset($_REQUEST['hideguests']))
-		$conditions[] = '(lo.ID_MEMBER != 0)';
+	if (!isset($_REQUEST['show']) || !isset($show_methods[$_REQUEST['show']]) || $_REQUEST['show'] == 'all')
+	{
+		$context['show_by'] = 'all';
+	}
+	else
+	{
+		$context['show_by'] = $_REQUEST['show'];
+		$conditions[] = $show_methods[$_REQUEST['show']];
+	}
 
 	// Get the total amount of members online.
 	$request = $smfFunc['db_query']("
@@ -108,7 +133,7 @@ function Who()
 	$smfFunc['db_free_result']($request);
 
 	// Prepare some page index variables.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=who;sort=' . $context['sort_by'] . (isset($_REQUEST['asc']) ? ';asc' : '') . (isset($_REQUEST['hideguests']) ? ';hideguests' : ''), $_REQUEST['start'], $totalMembers, $modSettings['defaultMaxMembers']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=who;sort=' . $context['sort_by'] . (isset($_REQUEST['asc']) ? ';asc' : '') . ';show=' . $context['show_by'], $_REQUEST['start'], $totalMembers, $modSettings['defaultMaxMembers']);
 	$context['start'] = $_REQUEST['start'];
 
 	// Look for people online, provided they don't mind if you see they are.
@@ -186,6 +211,7 @@ function Who()
 
 	// Some people can't send personal messages...
 	$context['can_send_pm'] = allowedTo('pm_send');
+
 }
 
 function determineActions($urls)
@@ -194,7 +220,6 @@ function determineActions($urls)
 
 	if (!allowedTo('who_view'))
 		return array();
-	loadLanguage('Who');
 
 	// Actions that require a specific permission level.
 	$allowedActions = array(

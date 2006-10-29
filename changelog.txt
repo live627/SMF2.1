@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2550 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2551 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -37,6 +37,7 @@ October 2006
  ! Some search parameters weren't being sanatized when accessing a previous search, leading to a potential XSS vulnerability (PersonalMessage.php, Search.php)
  ! Minor typo in PlushSearch2 prevented "user" search parameter from being remembered when trying to access a previous search (Search.php)
  ! When requesting the insert id from the database pass along the table and column names. (Several files)
+ + Added an interface for determining who to show and in what order for the who's online page. (Who.php, Who template, Who language files)
 
 
 September 2006

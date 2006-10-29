@@ -58,7 +58,33 @@ function template_main()
 		<tr class="titlebg">
 			<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 		</tr>
-	</table>';
+	</table>
+	<form action="', $scripturl, '?action=who" method="post" accept-charset="', $context['character_set'], '">
+		', $txt['who_show1'], '
+		<select name="show">';
+
+	foreach($context['show_methods'] AS $value => $label)
+		echo '
+			<option value="', $value, '" ', $value == $context['show_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
+	echo '
+		</select>
+		', $txt['who_show2'], '
+		<select name="sort">';
+
+	foreach($context['sort_methods'] AS $value => $label)
+		echo '
+			<option value="', $value, '" ', $value == $context['sort_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
+
+	echo '
+		</select>
+		', $txt['who_show3'], '
+		<select name="sort_dir">
+			<option value="desc">', $txt['who_sort_desc'], '</option>
+			<option value="asc" ', $context['sort_direction'] == 'up' ? 'selected="selected"' : '', '>', $txt['who_sort_asc'], '</option>
+		</select>
+		', $txt['who_show4'], '
+		<input type="submit" />
+	</form>';
 }
 
 ?>

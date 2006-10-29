@@ -8,6 +8,16 @@ $txt['who_unknown'] = '<em>Onbekende actie</em>';
 $txt['who_user'] = 'Gebruiker';
 $txt['who_time'] = 'Tijd';
 $txt['who_action'] = 'Actie';
+//!!! Untranslated
+$txt['who_show1'] = 'Show ';
+$txt['who_show2'] = ' and sort them by ';
+$txt['who_show3'] = ' in ';
+$txt['who_show4'] = ' order.';
+$txt['who_show_members_only'] = 'Members Only';
+$txt['who_show_guests_only'] = 'Guests Only';
+$txt['who_show_all'] = 'Everyone';
+$txt['who_sort_asc'] = 'Ascending';
+$txt['who_sort_desc'] = 'Descending';
 
 $txt['whoall_activate'] = 'Activeert zijn/haar account.';
 $txt['whoall_help'] = 'Bekijkt <a href="' . $scripturl . '?action=help">de helppagina</a>.';

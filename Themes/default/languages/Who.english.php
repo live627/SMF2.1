@@ -8,6 +8,15 @@ $txt['who_unknown'] = '<em>Unknown Action</em>';
 $txt['who_user'] = 'User';
 $txt['who_time'] = 'Time';
 $txt['who_action'] = 'Action';
+$txt['who_show1'] = 'Show ';
+$txt['who_show2'] = ' and sort them by ';
+$txt['who_show3'] = ' in ';
+$txt['who_show4'] = ' order.';
+$txt['who_show_members_only'] = 'Members Only';
+$txt['who_show_guests_only'] = 'Guests Only';
+$txt['who_show_all'] = 'Everyone';
+$txt['who_sort_asc'] = 'Ascending';
+$txt['who_sort_desc'] = 'Descending';
 
 $txt['whoall_activate'] = 'Activating their account.';
 $txt['whoall_help'] = 'Viewing the <a href="' . $scripturl . '?action=help">help page</a>.';
