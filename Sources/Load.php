@@ -2052,7 +2052,7 @@ function loadDatabase()
 	global $db_type, $db_name, $ssi_db_user, $ssi_db_passwd, $db_prefix, $sourcedir;
 
 	// Figure out what type of database we are using.
-	if (empty($db_type) || file_exists($sourcedir . '/Subs-DB-' . $db_type . '.php'))
+	if (empty($db_type) || file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
 		$db_type = 'mysql';
 
 	// Load the file for the database.
