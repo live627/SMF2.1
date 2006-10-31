@@ -220,6 +220,7 @@ function determineActions($urls)
 
 	if (!allowedTo('who_view'))
 		return array();
+	loadLanguage('Who');
 
 	// Actions that require a specific permission level.
 	$allowedActions = array(
