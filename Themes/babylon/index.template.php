@@ -72,6 +72,8 @@ function template_main_above()
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_images_url = "', $settings['images_url'], '";
 		var smf_scripturl = "', $scripturl, '";
+		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
+		var smf_charset = "', $context['character_set'], '";
 	// ]]></script>
 	<title>', $context['page_title'], '</title>';
 
