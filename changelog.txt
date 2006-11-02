@@ -1,8 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2552 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2553 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+November 2006
+--------------------------------------------------------------------------------
+ ! Previewing a post wasn't respecting the disable smiley option. (Post templates)
+
+
 October 2006
 --------------------------------------------------------------------------------
  ! Fixed the page title on the user account deletion confirmation page. (Profile.php)
@@ -30,12 +35,12 @@ October 2006
  + Tell robots not to index topics that are being accessed with .msg, prev_next, ;all, or by printing the topic. (Display.php)
  ! CAPTCHA now uses truetype fonts wherever possible to give slightly clearer images. (Subs-Graphics.php, several fonts)
  ! Fixed bug in showLetterImage that caused the function to often fail. (Subs-Graphics.php)
- ! Changed all occurrences of mysql_ functions to use the generalized database functions in smfFunc (Almost all source files)
+ ! Changed all occurrences of mysql_ functions to use the generalized database functions in smfFunc. (Almost all source files)
  + Added the ability to specify a different database to use other then MySQL. (Load.php, index.php, SSI.php)
  ! Moved the Database.php file to the Subs-Db-mysql.php file. (Database.php, Subs-Db-mysql.php)
  ! Changed Xoops login integration hook to use Xoops native authorization objects. (Xoops bridge/index.php)
- ! Some search parameters weren't being sanatized when accessing a previous search, leading to a potential XSS vulnerability (PersonalMessage.php, Search.php)
- ! Minor typo in PlushSearch2 prevented "user" search parameter from being remembered when trying to access a previous search (Search.php)
+ ! Some search parameters weren't being sanatized when accessing a previous search, leading to a potential XSS vulnerability. (PersonalMessage.php, Search.php)
+ ! Minor typo in PlushSearch2 prevented "user" search parameter from being remembered when trying to access a previous search. (Search.php)
  ! When requesting the insert id from the database pass along the table and column names. (Several files)
  + Added an interface for determining who to show and in what order for the who's online page. (Who.php, Who template, Who language files)
  ! Encrypted login failed for some character sets when the username or password contained non-western characters. (sha1.js, script.js, Load.php, index template)

@@ -59,6 +59,10 @@ function template_main()
 						"eventid", "calendar", "year", "month", "day",
 						"poll_max_votes", "poll_expire", "poll_change_vote", "poll_hide"
 					];
+					var checkboxFields = [
+						"ns",
+					];
+
 
 					for (i in textFields)
 						if (document.forms.postmodify.elements[textFields[i]])
@@ -72,6 +76,9 @@ function template_main()
 					for (i in numericFields)
 						if (document.forms.postmodify.elements[numericFields[i]] && typeof(document.forms.postmodify[numericFields[i]].value) != "undefined")
 							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
+					for (i in checkboxFields)
+						if (document.forms.postmodify.elements[checkboxFields[i]] && document.forms.postmodify.elements[checkboxFields[i]].checked)
+							x[x.length] = checkboxFields[i] + "=" + document.forms.postmodify.elements[checkboxFields[i]].value;
 
 					sendXMLDocument(smf_scripturl + "?action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);
 
