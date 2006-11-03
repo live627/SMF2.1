@@ -1010,38 +1010,18 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false)
 	// We don't need to mess with the subject line if no special characters were in it..
 	elseif (!$hotmail_fix && preg_match('~([^\x09\x0A\x0D\x20-\x7F])~', $string) === 1)
 	{
-		// replace special characters...
-		$string = preg_replace('~([^\x09\x0A\x0D\x20\x25-\x3C\x3E\x41-\x5A\x61-\x7A])~e', 'sprintf("=%02X", ord("\1"))', $string);
+		// Base64 encode.
+		$string = base64_encode($string);
 
-		$start_with = $with_charset ? '=?' . $charset . '?Q?' : '';
-		$end_with = $with_charset ? '?=' : '';
-		$num_chars = 76 - strlen($start_with) - strlen($end_with);
+		// Show the characterset and the transfer-encoding for header strings.
+		if ($with_charset)
+			$string = '=?' . $charset . '?B?' . $string . '?=';
 
+		// Break it up in lines (mail body).
+		else
+			$string = chunk_split($string);
 
-/*		// Add soft breaks after 76 characters.
-		$lines = explode("\r\n", $string);
-		foreach ($lines as $i => $dummy)
-		{
-			$result = array();
-			foreach (explode("\r\n", $lines[$i]) as $line)
-			{
-				while (true)
-				{
-					if (strlen($line) <= $num_chars)
-					{
-						$result[] = $line;
-						break;
-					}
-					$cut_at = $line{$num_chars - 2} === '=' ?  $num_chars - 2 : ($line{$num_chars - 3} === '=' ? $num_chars - 3 : $num_chars - 1);
-					$result[] = substr($line, 0, $cut_at);// . '=';
-					$line = substr($line, $cut_at);
-				}
-			}
-			$lines[$i] = implode("$end_with\r\n$start_with", $result);
-		}
-		return array($charset, $start_with . implode("$end_with\r\n$start_with", $lines) . $end_with, 'quoted-printable');
-*/		
-		return array($charset, $start_with . $string . $end_with, 'quoted-printable');
+		return array($charset, $string, 'base64');
 	}
 
 	else

@@ -1,11 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2553 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2554 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
 November 2006
 --------------------------------------------------------------------------------
  ! Previewing a post wasn't respecting the disable smiley option. (Post templates)
+ ! Changing the transfer-encoding method to base64 as it appears to be better supported by webmail clients. (Subs-Post.php)
 
 
 October 2006
