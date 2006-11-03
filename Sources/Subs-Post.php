@@ -581,8 +581,8 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		$message = preg_replace('~(' . preg_quote($scripturl, '~') . '([?/][\w\-_%\.,\?&;=#]+)?)~', '<a href="$1">$1</a>', $message);
 	}
 
-	list (, $from_name) = mimespecialchars(addcslashes($from !== null ? $from : $context['forum_name'], '<>()\'\\"'), true, $hotmail_fix);
-	list (, $subject) = mimespecialchars($subject, true, $hotmail_fix);
+	list (, $from_name) = mimespecialchars(addcslashes($from !== null ? $from : $context['forum_name'], '<>()\'\\"'), true, $hotmail_fix, $line_break);
+	list (, $subject) = mimespecialchars($subject, true, $hotmail_fix, $line_break);
 
 	// Construct the mail headers...
 	$headers = 'From: "' . $from_name . '" <' . (empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from']) . '>' . $line_break;
@@ -603,7 +603,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 
 	$charset = isset($context['character_set']) ? $context['character_set'] : $txt['lang_character_set'];
 
-	list ($charset, $message, $encoding) = mimespecialchars($message, false, $hotmail_fix);
+	list ($charset, $message, $encoding) = mimespecialchars($message, false, $hotmail_fix, $line_break);
 
 	// Sending HTML?  Let's plop in some basic stuff, then.
 	if ($send_html)
@@ -943,7 +943,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 }
 
 // Prepare text strings for sending as email body or header.
-function mimespecialchars($string, $with_charset = true, $hotmail_fix = false)
+function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $line_break = "\r\n")
 {
 	global $context;
 
@@ -1019,7 +1019,7 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false)
 
 		// Break it up in lines (mail body).
 		else
-			$string = chunk_split($string);
+			$string = chunk_split($string, 76, $line_break);
 
 		return array($charset, $string, 'base64');
 	}
