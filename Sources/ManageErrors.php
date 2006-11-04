@@ -123,23 +123,12 @@ function ViewErrorLog()
 	$context['errors'] = array();
 	$members = array();
 
-/*	// construct the string used in the preg_match
-	$preg_str = '~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~';
-*/
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$search_message = preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '%', addcslashes($row['message'], '\\_%'));
 		if ($search_message == $filter['value']['sql'])
 			$search_message = addcslashes($row['message'], '\\_%');
 		$show_message = strtr(strtr(preg_replace('~&lt;span class=&quot;remove&quot;&gt;(.+?)&lt;/span&gt;~', '$1', $row['message']), array("\r" => '', '<br />' => "\n", '<' => '&lt;', '>' => '&gt;', '"' => '&quot;')), array("\n" => '<br />'));
-
-/*		// Is a file being shown?
-		if (preg_match($preg_str, $show_message, $matches))
-		{
-			$filename = base64_encode($matches[2]);
-			$show_message=preg_replace($preg_str, '<br />$1<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . $filename . ';line=$4" onclick="return reqWin(\''.$scripturl.'?action=admin;area=errorlog;file='.$filename.';line=$4\', 600, 400, false);">$2</a><br />$3$4', $show_message);
-		}
-*/
 
 		$context['errors'][$row['ID_ERROR']] = array(
 			'member' => array(
@@ -165,13 +154,18 @@ function ViewErrorLog()
 			'file' => array(),
 		);
 		if (!empty($row['file']) && !empty($row['line']))
+		{
+			// Sometimes we get eval errors that add on text to the file.  Try to get rid of that.
+			$row['file_clean'] = preg_replace('~ *\(.*eval\?\)~', '', $row['file']);
+
 			$context['errors'][$row['ID_ERROR']]['file'] = array(
 				'file' => $row['file'],
 				'line' => $row['line'],
-				'href' => $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'] . '" onclick="return reqWin(this.href, 600, 400, false);">' . $row['file'] . '</a>',
+				'href' => $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file_clean']) . ';line=' . $row['line'],
+				'link' => '<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file_clean']) . ';line=' . $row['line'] . '" onclick="return reqWin(this.href, 600, 400, false);">' . $row['file'] . '</a>',
 				'search' => base64_encode($row['file']),
 			);
+		}
 
 		// Make a list of members to load later.
 		$members[$row['ID_MEMBER']] = $row['ID_MEMBER'];
