@@ -83,7 +83,7 @@ function template_main()
 
 	/* Each category in categories is made up of:
 	id, href, link, name, is_collapsed (is it collapsed?), can_collapse (is it okay if it is?),
-	new (is it new?), collapse_href (href to collapse/expand), collapse_image (up/down iamge),
+	new (is it new?), collapse_href (href to collapse/expand), collapse_image (up/down image),
 	and boards. (see below.) */
 	$first = true;
 	foreach ($context['categories'] as $category)
