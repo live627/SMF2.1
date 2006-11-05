@@ -970,7 +970,9 @@ function doStep2()
 	require_once($sourcedir . '/Load.php');
 	require_once($sourcedir . '/Security.php');
 	require_once($sourcedir . '/Subs-Auth.php');
-	require_once($sourcedir . '/Database.php');
+
+/*	$smfFunc = array();
+	$db_connection = loadDatabase();*/
 
 	// Define the sha1 function, if it doesn't exist.
 	if (!function_exists('sha1'))
@@ -1054,8 +1056,8 @@ function doStep2()
 
 		$request = mysql_query("
 			INSERT INTO {$db_prefix}members
-				(memberName, realName, passwd, emailAddress, ID_GROUP, posts, dateRegistered, hideEmail, passwordSalt, lngfile, personalText, avatar, memberIP, buddy_list, pm_ignore_list, messageLabels, websiteTitle, websiteUrl, location, ICQ, MSN, signature, usertitle, secretQuestion, additionalGroups)
-			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '" . (isset($_SERVER['REMOTE_ADDR']) ? addslashes(substr(stripslashes($_SERVER['REMOTE_ADDR']), 0, 255)) : '') . "', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(memberName, realName, passwd, emailAddress, ID_GROUP, posts, dateRegistered, hideEmail, passwordSalt, lngfile, personalText, avatar, memberIP, buddy_list, pm_ignore_list, messageLabels, websiteTitle, websiteUrl, location, ICQ, MSN, signature, usertitle, secretQuestion, additionalGroups, ignoreBoards)
+			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '" . (isset($_SERVER['REMOTE_ADDR']) ? addslashes(substr(stripslashes($_SERVER['REMOTE_ADDR']), 0, 255)) : '') . "', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 
 		// Awww, crud!
 		if ($request === false)
