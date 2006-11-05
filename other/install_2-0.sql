@@ -10,7 +10,7 @@ CREATE TABLE {$db_prefix}admin_info_files (
   path tinytext NOT NULL,
   parameters tinytext NOT NULL,
   data text NOT NULL,
-  filetype tinytext NOT NULL default '',
+  filetype tinytext NOT NULL,
   PRIMARY KEY (ID_FILE),
   KEY filename (filename(30))
 ) TYPE=MYISAM;
@@ -788,7 +788,7 @@ CREATE TABLE {$db_prefix}log_errors (
   message text NOT NULL,
   session char(32) NOT NULL default '                                ',
   errorType char(15) NOT NULL default 'general',
-  file tinytext NOT NULL default '',
+  file tinytext NOT NULL,
   line mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (ID_ERROR),
   KEY logTime (logTime),
@@ -1125,7 +1125,7 @@ CREATE TABLE {$db_prefix}members (
   ID_POST_GROUP smallint(5) unsigned NOT NULL default '0',
   totalTimeLoggedIn int(10) unsigned NOT NULL default '0',
   passwordSalt varchar(5) NOT NULL default '',
-  ignoreBoards tinytext NOT NULL default '',
+  ignoreBoards tinytext NOT NULL,
   PRIMARY KEY (ID_MEMBER),
   KEY memberName (memberName(30)),
   KEY dateRegistered (dateRegistered),
