@@ -564,7 +564,7 @@ function ConvertUtf8()
 		loadLanguage('index', $user_info['language'], true);
 
 		// Show a warning if the character set seems not to be supported.
-		if (!isset($charsets[$context['charset_detected']]))
+		if (!isset($charsets[strtr(strtolower($context['charset_detected']), array('utf' => 'UTF', 'iso' => 'ISO'))]))
 		{
 			$context['charset_warning'] = sprintf($txt['utf8_charset_not_supported'], $txt['lang_character_set']);
 

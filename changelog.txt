@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2559 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2560 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -10,6 +10,7 @@ November 2006
  ! Try to strip off the eval errors from the file names in the error log, so it'll link to the file correctly. (ManageErrors.php)
  ! Fixed the spelling checker not work properly for non-western and UTF character sets. (spellcheck.js, Subs-Post.php)
  ! The JavaScript function php_strtolower wasn't working properly on all servers. (sha1.js)
+ ! Made the recognition of the character set for the UTF8 conversion function case insensitive. (ManageMaintenance.php)
 
 
 October 2006
