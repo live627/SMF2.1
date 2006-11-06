@@ -218,7 +218,7 @@ function reloadSettings()
 			return ' . strtr($ent_check[0], array('&' => '&amp;'))  . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ';'),
 		'htmltrim' => create_function('$string', '
 			global $smfFunc;
-			return preg_replace(\'~^([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}' : '\xA0') . ($utf8 && @version_compare(PHP_VERSION, '5.1.0') != -1 ? '\pZ' : '') . ']|&nbsp;)+|([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}' : '\xA0') . ($utf8 && @version_compare(PHP_VERSION, '5.1.0') != -1 ? '\pZ' : '') . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
+			return preg_replace(\'~^([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}\x{E28080}-\x{E2808F}\x{E280AF}\x{E2809F}\x{E38080}\x{EFBBBF}' : '\xA0') . ']|&nbsp;)+|([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}\x{E28080}-\x{E2808F}\x{E280AF}\x{E2809F}\x{E38080}\x{EFBBBF}' : '\xA0') . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
 		'truncate' => create_function('$string, $length', (empty($modSettings['disableEntityCheck']) ? '
 			global $smfFunc;
 			$string = ' . implode('$string', $ent_check) . ';' : '') . '

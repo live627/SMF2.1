@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2563 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2564 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -15,6 +15,7 @@ November 2006
  * The inline subject editor on the message index in some cases cancelled on selecting the input box. (xml_board.js, MessageIndex template)
  ! A missing email address in a package could cause two undefined indexes. (PackageGet.php, Packages template)
  ! Redirect to the theme list after deleting a theme. (Themes.php)
+ ! Applied a different method to trim spaces for UTF-8 strings as the previous one didn't appear to be working on all servers. (Load.php)
 
 
 October 2006
