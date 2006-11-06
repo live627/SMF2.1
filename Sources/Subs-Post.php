@@ -1391,7 +1391,7 @@ function SpellCheck()
 	pspell_new('en');
 
 	// Next, the dictionary in question may not exist.  So, we try it... but...
-	$pspell_link = pspell_new($txt['lang_dictionary'], $txt['lang_spelling'], '', strtr($txt['lang_character_set'], array('iso-' => 'iso', 'ISO-' => 'iso')), PSPELL_FAST | PSPELL_RUN_TOGETHER);
+	$pspell_link = pspell_new($txt['lang_dictionary'], $txt['lang_spelling'], '', strtr($context['character_set'], array('iso-' => 'iso', 'ISO-' => 'iso')), PSPELL_FAST | PSPELL_RUN_TOGETHER);
 	error_reporting($old);
 	ob_end_clean();
 
@@ -1402,75 +1402,36 @@ function SpellCheck()
 	if (!isset($_POST['spellstring']) || !$pspell_link)
 		die;
 
-	// Can't have any \n's or \r's in javascript strings.
-	$mystr = trim(str_replace(array("\r", "\n"), array('', '_|_'), stripslashes($_POST['spellstring'])));
-
-	$alphas = 'אבגדהוחטיךכלםמןסעףפץצרשתûü‎ÿ[:alpha:]\'';
-	preg_match_all('~(?:<[^>]+>)|(?:\[[^ ][^\]]*\])|(?:&[^; ]+;)|(?<=^|[^' . $alphas . '])([' . $alphas . ']+)~si', $mystr, $alphas, PREG_PATTERN_ORDER);
-
-	// Do this after because the js doesn't count '\"' as two, but PHP does.
+	// Construct a bit of Javascript code.
 	$context['spell_js'] = '
 		var txt = {"done": "' . $txt['spellcheck_done'] . '"};
-		var mispstr = "' . str_replace(array('\\', '"', '</script>'), array('\\\\', '\\"', '<" + "/script>'), $mystr) . '";
+		var mispstr = window.opener.document.forms[spell_formname][spell_fieldname].value;
 		var misps = Array(';
 
-	// This is some sanity checking: they should be chronological.
-	$last_occurance = 0;
+	// Get all the words (Javascript already seperated them).
+	$alphas = explode("\n", stripslashes(strtr($_POST['spellstring'], array("\r" => ''))));
 
 	$found_words = false;
-	$code_block = false;
-	for ($i = 0, $n = count($alphas[0]); $i < $n; $i++)
+	for ($i = 0, $n = count($alphas); $i < $n; $i++)
 	{
-		// Check if we're inside a code block...
-		if (preg_match('~\[/?code\]~i', $alphas[0][$i]))
-			$code_block = !$code_block;
-
-		// Code block?  No word?
-		if (empty($alphas[1][$i]) || $code_block)
-		{
-			$last_occurance += strlen($alphas[0][$i]);
-			continue;
-		}
-
-		$check_word = $alphas[1][$i];
-		if (substr($check_word, 0, 1) == '\'')
-			$check_word = substr($check_word, 1);
-		if (substr($check_word, -1) == '\'')
-			$check_word = substr($check_word, 0, -1);
+		// Words are sent like 'word|offset_begin|offset_end'.
+		$check_word = explode('|', $alphas[$i]);
 
 		// If the word is a known word, or spelled right...
-		// !!! Add an option for uppercase skipping?
-		if (in_array($smfFunc['strtolower']($check_word), $known_words) || pspell_check($pspell_link, $check_word) || strtoupper($check_word) == $check_word)
-		{
-			// Add on this word's length, and continue.
-			$last_occurance += strlen($alphas[0][$i]);
+		if (in_array($smfFunc['strtolower']($check_word[0]), $known_words) || pspell_check($pspell_link, $check_word[0]))
 			continue;
-		}
 
 		// Find the word, and move up the "last occurance" to here.
-		if ($last_occurance <= strlen($mystr))
-			$last_occurance = strpos($mystr, $alphas[0][$i], $last_occurance + 1);
 		$found_words = true;
 
 		// Add on the javascript for this misspelling.
 		$context['spell_js'] .= '
-			new misp("' . $alphas[1][$i] . '", ' . (int) $last_occurance . ', ' . ($last_occurance + strlen($alphas[1][$i]) - 1) . ', [';
+			new misp("' . strtr($check_word[0], array('\\' => '\\\\', '"' => '\\"', '<' => '', '&gt;' => '')) . '", ' . (int) $check_word[1] . ', ' . (int) $check_word[2] . ', [';
 
 		// If there are suggestions, add them in...
-		$suggestions = pspell_suggest($pspell_link, $check_word);
+		$suggestions = pspell_suggest($pspell_link, $check_word[0]);
 		if (!empty($suggestions))
-		{
-			for ($j = 0, $k = count($suggestions); $j < $k; $j++)
-			{
-				// Add back the quotes...
-				if (substr($alphas[1][$i], 0, 1) == '\'')
-					$suggestions[$j] = '\'' . $suggestions[$j];
-				if (substr($alphas[1][$i], -1) == '\'')
-					$suggestions[$j] = $suggestions[$j] . '\'';
-			}
-
 			$context['spell_js'] .= '"' . join('", "', $suggestions) . '"';
-		}
 
 		$context['spell_js'] .= ']),';
 	}
