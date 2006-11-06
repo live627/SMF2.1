@@ -11,11 +11,18 @@ function modify_topic(topic_id, first_msg_id, cur_session_id)
 		if (typeof(test.setRequestHeader) != "function")
 			return;
 	}
-	cur_topic_id = topic_id;
 
 	if (in_edit_mode == 1)
-		modify_topic_cancel();
+	{
+		if (cur_topic_id == topic_id)
+			return;
+		else
+			modify_topic_cancel();
+	}
+
 	in_edit_mode = 1;
+	mouse_on_div = 1;
+	cur_topic_id = topic_id;
 
 	if (typeof window.ajax_indicator == "function")
 		ajax_indicator(true);
