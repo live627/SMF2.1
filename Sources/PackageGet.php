@@ -420,7 +420,7 @@ function PackageGBrowse()
 					else
 						$package['author']['name'] = $default_author;
 
-					if ($package['author']['email'] != '')
+					if (!empty($package['author']['email']))
 					{
 						// Only put the "mailto:" if it looks like a valid email address.  Some may wish to put a link to an SMF IM Form or other web mail form.
 						$package['author']['href'] = preg_match('~^[\w\.\-]+@[\w][\w\-\.]+[\w]$~', $package['author']['email']) != 0 ? 'mailto:' . $package['author']['email'] : $package['author']['email'];

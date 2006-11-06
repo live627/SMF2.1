@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2561 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2562 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -13,6 +13,7 @@ November 2006
  ! Made the recognition of the character set for the UTF8 conversion function case insensitive. (ManageMaintenance.php)
  * The inline subject editor on the message index now allows 'enter' as save-key. (MessageIndex template)
  * The inline subject editor on the message index in some cases cancelled on selecting the input box. (xml_board.js, MessageIndex template)
+ ! A missing email address in a package could cause two undefined indexes. (PackageGet.php, Packages template)
 
 
 October 2006

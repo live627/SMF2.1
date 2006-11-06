@@ -918,7 +918,7 @@ function template_package_list()
 						echo '
 						', $txt['pacman3'], ':&nbsp; ', $package['version'], '<br />';
 					// How 'bout the author?
-					if (!empty($package['author']) && $package['author']['name'] != '')
+					if (!empty($package['author']) && $package['author']['name'] != '' && isset($package['author']['link']))
 						echo '
 						', $txt['pacman4'], ':&nbsp; ', $package['author']['link'], '<br />';
 					// The homepage....
