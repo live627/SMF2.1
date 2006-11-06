@@ -789,7 +789,7 @@ function RemoveTheme()
 	// Remove any cached language files to keep space minimum!
 	clean_cache('lang');
 
-	redirectexit('action=admin;area=theme;sa=admin;sesc=' . $sc);
+	redirectexit('action=admin;area=theme;sa=list;sesc=' . $sc);
 }
 
 // Choose a theme from a list.
