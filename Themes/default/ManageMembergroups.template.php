@@ -22,7 +22,7 @@ function template_main()
 					<tr>
 						<td class="windowbg2">', empty($group['color']) ? ( $group['can_search'] ? $group['link'] : $group['name'] ) : '<span style="color: ' . $group['color'] . '">' . ( $group['can_search'] ? $group['link'] : $group['name'] ) . '</span>', $group['id'] == 1 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_administrator" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 3 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_moderator" onclick="return reqWin(this.href);">?</a>)' : ''), '</td>
 						<td class="windowbg2" align="left">', $group['stars'], '</td>
-						<td class="windowbg" align="center">', $group['can_search'] ? $group['link'] : $group['num_members'], '</td>
+						<td class="windowbg" align="center">', $group['num_members'] , '</td>
 						<td class="windowbg2" align="center"><a href="' . $scripturl . '?action=admin;area=membergroups;sa=edit;group=' . $group['id'] . '">' . $txt['membergroups_modify'] . '</a></td>
 					</tr>';
 	}
