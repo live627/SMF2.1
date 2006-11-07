@@ -574,7 +574,7 @@ function GroupPermissionsReport()
 		SELECT ID_GROUP, groupName
 		FROM {$db_prefix}membergroups
 		WHERE $clause
-			ID_GROUP !- 1" . (empty($modSettings['permission_enable_postgroups']) ? "
+			ID_GROUP != 1" . (empty($modSettings['permission_enable_postgroups']) ? "
 			AND minPosts = -1" : '') . "
 		ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
 	if (!isset($_REQUEST['groups']) || in_array(-1, $_REQUEST['groups']) || in_array(0, $_REQUEST['groups']))
