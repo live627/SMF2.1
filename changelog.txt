@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2564 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2565 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -16,6 +16,8 @@ November 2006
  ! A missing email address in a package could cause two undefined indexes. (PackageGet.php, Packages template)
  ! Redirect to the theme list after deleting a theme. (Themes.php)
  ! Applied a different method to trim spaces for UTF-8 strings as the previous one didn't appear to be working on all servers. (Load.php)
+ ! Some post moderation queries were giving database errors if the user wasn't an admin. (PostModeration.php)
+ * Allow the user to collapse the news fader. (BoardIndex templates)
 
 
 October 2006

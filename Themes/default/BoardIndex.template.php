@@ -23,13 +23,21 @@ function template_main()
 	// Show the news fader?  (assuming there are things to show...)
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
-		echo '
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		// Create the main header object.
+		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
+		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '");
+		smfNewsFadeToggle.addToggleImage("newsupshrink", "/collapse.gif", "/expand.gif");
+		smfNewsFadeToggle.addTogglePanel("smfNewsFader");
+	// ]]></script>
 	<table border="0" width="100%" class="tborder" cellspacing="' , ($context['browser']['is_ie'] || $context['browser']['is_opera6']) ? '1' : '0' , '" cellpadding="4" style="margin-bottom: 2ex;">
 		<tr>
-			<td class="catbg"> &nbsp;', $txt['news'], '</td>
+			<td class="catbg"><a href="#" onclick="smfNewsFadeToggle.toggle(); return false;"><img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex;" /></a>&nbsp;', $txt['news'], '</td>
 		</tr>
 		<tr>
-			<td valign="middle" align="center" height="60">';
+			<td valign="middle" align="center" height="60" id="smfNewsFader"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
 
 		// Prepare all the javascript settings.
 		echo '

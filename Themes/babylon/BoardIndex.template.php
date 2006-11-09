@@ -24,13 +24,21 @@ function template_main()
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
 	{
 		echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		// Create the main header object.
+		var smfNewsFadeToggle = new smfToggle("smfNewsFadeScroller", ', empty($options['collapse_news_fader']) ? 'false' : 'true', ');
+		smfNewsFadeToggle.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+		smfNewsFadeToggle.setOptions("collapse_news_fader", "', $context['session_id'], '");
+		smfNewsFadeToggle.addToggleImage("newsupshrink", "/collapse.gif", "/expand.gif");
+		smfNewsFadeToggle.addTogglePanel("smfNewsFader");
+	// ]]></script>
 <div class="tborder" style="margin-bottom: 2ex;">
 	<table border="0" width="100%" cellspacing="1" cellpadding="4">
 		<tr class="titlebg" align="center">
-			<td>', $txt['news'], '</td>
+			<td><a href="#" onclick="smfNewsFadeToggle.toggle(); return false;"><img id="newsupshrink" src="', $settings['images_url'], '/', empty($options['collapse_news_fader']) ? 'collapse.gif' : 'expand.gif', '" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="margin: 0 1ex;" /></a>', $txt['news'], '</td>
 		</tr>
 		<tr>
-			<td valign="middle" align="center" style="height: 60px;">';
+			<td valign="middle" align="center" style="height: 60px;" id="smfNewsFader"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
 
 		// Prepare all the javascript settings.
 		echo '

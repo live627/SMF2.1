@@ -114,6 +114,7 @@ function UnapprovedPosts()
 		$request = $smfFunc['db_query']("
 			SELECT m.ID_MSG, m.ID_MEMBER, m.ID_BOARD, t.ID_TOPIC, t.ID_FIRST_MSG, t.ID_MEMBER_STARTED
 			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+			LEFT JOIN {$db_prefix}boards AS b ON (t.ID_BOARD = b.ID_BOARD)
 			WHERE m.ID_MSG IN (" . implode(',', $toAction) . ")
 				AND m.approved = 0
 				AND t.ID_TOPIC = m.ID_TOPIC
@@ -328,6 +329,7 @@ function UnapprovedAttachments()
 		$request = $smfFunc['db_query']("
 			SELECT a.ID_ATTACH
 			FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m)
+			LEFT JOIN {$db_prefix}boards AS board ON (m.ID_BOARD = b.ID_BOARD)
 			WHERE a.ID_ATTACH IN (" . implode(',', $attachments) . ")
 				AND a.approved = 0
 				AND a.attachmentType = 0
