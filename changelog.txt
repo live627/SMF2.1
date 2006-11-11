@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2566 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2567 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -19,6 +19,7 @@ November 2006
  ! Some post moderation queries were giving database errors if the user wasn't an admin. (PostModeration.php)
  * Allow the user to collapse the news fader. (BoardIndex templates)
  ! Allow the database specific file to modify the database prefix if needed. (Load.php, Subs-Db-mysql.php)
+ * Firefox doesn't display horizontal scrollbars when needed in code tags, so use some javascript to make it happen. (index templates)
 
 
 October 2006

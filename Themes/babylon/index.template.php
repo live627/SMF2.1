@@ -366,7 +366,7 @@ function template_main_below()
 		</div>';
 
 	// This is an interesting bug in Internet Explorer AND Safari.  Rather annoying, it makes overflows just not tall enough.
-	if (($context['browser']['is_ie'] && !$context['browser']['is_ie4']) || $context['browser']['is_mac_ie'] || $context['browser']['is_safari'])
+	if (($context['browser']['is_ie'] && !$context['browser']['is_ie4']) || $context['browser']['is_mac_ie'] || $context['browser']['is_safari'] || $context['browser']['is_firefox'])
 	{
 		// The purpose of this code is to fix the height of overflow: auto div blocks, because IE can't figure it out for itself.
 		echo '
@@ -387,6 +387,19 @@ function template_main_below()
 						codeFix[i].style.height = (codeFix[i].offsetHeight + 20) + "px";
 				}
 			}';
+		elseif ($context['browser']['is_firefox'])
+			echo '
+			window.addEventListener("load", smf_codeFix, false);
+			function smf_codeFix()
+			{
+				var codeFix = document.getElementsByTagName ? document.getElementsByTagName("div") : document.all.tags("div");
+
+				for (var i = 0; i < codeFix.length; i++)
+				{
+					if (codeFix[i].className == "code" && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0))
+						codeFix[i].style.overflow = "scroll";
+				}
+			}';			
 		else
 		{
 			echo '
