@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2565 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2566 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -18,6 +18,7 @@ November 2006
  ! Applied a different method to trim spaces for UTF-8 strings as the previous one didn't appear to be working on all servers. (Load.php)
  ! Some post moderation queries were giving database errors if the user wasn't an admin. (PostModeration.php)
  * Allow the user to collapse the news fader. (BoardIndex templates)
+ ! Allow the database specific file to modify the database prefix if needed. (Load.php, Subs-Db-mysql.php)
 
 
 October 2006

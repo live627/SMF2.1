@@ -2070,6 +2070,10 @@ function loadDatabase()
 	// Safe guard here, if there isn't a valid connection lets put a stop to it.
 	if (!$db_connection)
 		db_fatal_error();
+
+	// If in SSI mode fix up the prefix.
+	if (SMF == 'SSI')
+		db_fix_prefix($db_prefix, $db_name);
 }
 
 function cache_put_data($key, $value, $ttl = 120)

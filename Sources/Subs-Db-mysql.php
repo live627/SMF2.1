@@ -62,7 +62,7 @@ if (!defined('SMF'))
 */
 
 // Initialize the database settings
-function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix, $db_options = array())
+function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
 	global $smfFunc, $mysql_set_mode;
 
@@ -112,22 +112,20 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 	}
 
 	// Select the database, unless told not to
-	if (empty($db_options['dont_select_db']))
-	{
-		if (!@mysql_select_db($db_name, $connection) && empty($db_options['non_fatal']))
-		{
-			db_fatal_error();
-		}
-	}
-	else
-		$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
-
+	if (empty($db_options['dont_select_db']) && !@mysql_select_db($db_name, $connection) && empty($db_options['non_fatal']))
+		db_fatal_error();
 
 	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
 	if (isset($mysql_set_mode) && $mysql_set_mode === true)
 		db_query("SET sql_mode = '', AUTOCOMMIT = 1", false, false, $connection);
 
 	return $connection;
+}
+
+// Fix up the prefix so it doesn't require the database to be selected.
+function db_fix_prefix (&$db_prefix, $db_name)
+{
+	$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
 }
 
 // Do a query.  Takes care of errors too.
