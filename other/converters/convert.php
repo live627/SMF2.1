@@ -1413,7 +1413,7 @@ function doStep3()
 
 	echo '
 				<h2 style="margin-top: 2ex;">Conversion Complete</h2>
-				<h3>Congratulations, the conversion has completed sucessfully.  If you have or had any problems with this converter, or need help using SMF, please feel free to <a href="http://www.simplemachines.org/community/index.php">look to us for support</a>.</h3>';
+				<h3>Congratulations, the conversion has completed successfully.  If you have or had any problems with this converter, or need help using SMF, please feel free to <a href="http://www.simplemachines.org/community/index.php">look to us for support</a>.</h3>';
 
 	if (is_writable(dirname(__FILE__)) && is_writable(__FILE__))
 		echo '
