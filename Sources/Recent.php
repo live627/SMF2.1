@@ -45,14 +45,14 @@ function getLastPost()
 	global $db_prefix, $user_info, $scripturl, $modSettings, $smfFunc;
 
 	// Find it by the board - better to order by board than sort the entire messages table.
-	$request = $smfFunc['db_query']("
-		SELECT ml.posterTime, ml.subject, ml.ID_TOPIC, ml.posterName, LEFT(ml.body, 384) AS body, ml.smileysEnabled
+	$request = $smfFunc['db_query']('', "
+		SELECT ml.poster_time, ml.subject, ml.id_topic, ml.poster_name, LEFT(ml.body, 384) AS body, ml.smileys_enabled
 		FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS ml)
-		WHERE ml.ID_MSG = b.ID_LAST_MSG" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.ID_BOARD != $modSettings[recycle_board]" : '') . "
+		WHERE ml.id_msg = b.id_last_msg" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
+			AND b.id_board != $modSettings[recycle_board]" : '') . "
 			AND $user_info[query_wanna_see_board]
 			AND ml.approved = 1
-		ORDER BY b.ID_MSG_UPDATED DESC
+		ORDER BY b.id_msg_updated DESC
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		return array();
@@ -63,20 +63,20 @@ function getLastPost()
 	censorText($row['subject']);
 	censorText($row['body']);
 
-	$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled']), array('<br />' => '&#10;')));
+	$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled']), array('<br />' => '&#10;')));
 	if ($smfFunc['strlen']($row['body']) > 128)
 		$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
 
 	// Send the data.
 	return array(
-		'topic' => $row['ID_TOPIC'],
+		'topic' => $row['id_topic'],
 		'subject' => $row['subject'],
 		'short_subject' => shorten_subject($row['subject'], 24),
 		'preview' => $row['body'],
-		'time' => timeformat($row['posterTime']),
-		'timestamp' => forum_time(true, $row['posterTime']),
-		'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new;topicseen#new',
-		'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new;topicseen#new">' . $row['subject'] . '</a>'
+		'time' => timeformat($row['poster_time']),
+		'timestamp' => forum_time(true, $row['poster_time']),
+		'href' => $scripturl . '?topic=' . $row['id_topic'] . '.new;topicseen#new',
+		'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.new;topicseen#new">' . $row['subject'] . '</a>'
 	);
 }
 
@@ -86,21 +86,21 @@ function getLastPosts($showlatestcount)
 
 	// Find all the posts.  Newer ones will have higher IDs.  (assuming the last 20 * number are accessable...)
 	// !!!SLOW This query is now slow, NEEDS to be fixed.  Maybe break into two?
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			m.posterTime, m.subject, m.ID_TOPIC, m.ID_MEMBER, m.ID_MSG,
-			IFNULL(mem.realName, m.posterName) AS posterName, t.ID_BOARD, b.name AS bName,
-			LEFT(m.body, 384) AS body, m.smileysEnabled
+			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, t.id_board, b.name AS board_name,
+			LEFT(m.body, 384) AS body, m.smileys_enabled
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE m.ID_MSG >= " . max(0, $modSettings['maxMsgID'] - 20 * $showlatestcount) . "
-			AND t.ID_TOPIC = m.ID_TOPIC
-			AND b.ID_BOARD = t.ID_BOARD" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.ID_BOARD != $modSettings[recycle_board]" : '') . "
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_msg >= " . max(0, $modSettings['maxMsgID'] - 20 * $showlatestcount) . "
+			AND t.id_topic = m.id_topic
+			AND b.id_board = t.id_board" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
+			AND b.id_board != $modSettings[recycle_board]" : '') . "
 			AND $user_info[query_wanna_see_board]
 			AND t.approved = 1
 			AND m.approved = 1
-		ORDER BY m.ID_MSG DESC
+		ORDER BY m.id_msg DESC
 		LIMIT $showlatestcount", __FILE__, __LINE__);
 	$posts = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -109,33 +109,33 @@ function getLastPosts($showlatestcount)
 		censorText($row['subject']);
 		censorText($row['body']);
 
-		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']), array('<br />' => '&#10;')));
+		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
 		if ($smfFunc['strlen']($row['body']) > 128)
 			$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
 
 		// Build the array.
 		$posts[] = array(
 			'board' => array(
-				'id' => $row['ID_BOARD'],
-				'name' => $row['bName'],
-				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bName'] . '</a>'
+				'id' => $row['id_board'],
+				'name' => $row['board_name'],
+				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['board_name'] . '</a>'
 			),
-			'topic' => $row['ID_TOPIC'],
+			'topic' => $row['id_topic'],
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'href' => empty($row['ID_MEMBER']) ? '' : $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => empty($row['ID_MEMBER']) ? $row['posterName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>'
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>'
 			),
 			'subject' => $row['subject'],
 			'short_subject' => shorten_subject($row['subject'], 24),
 			'preview' => $row['body'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
-			'raw_timestamp' => $row['posterTime'],
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#msg' . $row['ID_MSG'],
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>'
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
+			'raw_timestamp' => $row['poster_time'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#msg' . $row['id_msg'],
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#msg' . $row['id_msg'] . '">' . $row['subject'] . '</a>'
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -146,7 +146,7 @@ function getLastPosts($showlatestcount)
 // Find the ten most recent posts.
 function RecentPosts()
 {
-	global $txt, $scripturl, $db_prefix, $user_info, $context, $ID_MEMBER, $modSettings, $sourcedir, $board, $smfFunc;
+	global $txt, $scripturl, $db_prefix, $user_info, $context, $id_member, $modSettings, $sourcedir, $board, $smfFunc;
 
 	// They're deleting something... just skip back to it.
 	if (isset($_GET['delete']))
@@ -174,10 +174,10 @@ function RecentPosts()
 
 		if (count($_REQUEST['c']) == 1)
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT name
 				FROM {$db_prefix}categories
-				WHERE ID_CAT = " . $_REQUEST['c'][0] . "
+				WHERE id_cat = " . $_REQUEST['c'][0] . "
 				LIMIT 1", __FILE__, __LINE__);
 			list ($name) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -191,29 +191,29 @@ function RecentPosts()
 			);
 		}
 
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.numPosts
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.num_posts
 			FROM {$db_prefix}boards AS b
-			WHERE b.ID_CAT IN (" . implode(', ', $_REQUEST['c']) . ")
+			WHERE b.id_cat IN (" . implode(', ', $_REQUEST['c']) . ")
 				AND $user_info[query_see_board]", __FILE__, __LINE__);
 		$total_cat_posts = 0;
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$boards[] = $row['ID_BOARD'];
-			$total_cat_posts += $row['numPosts'];
+			$boards[] = $row['id_board'];
+			$total_cat_posts += $row['num_posts'];
 		}
 		$smfFunc['db_free_result']($request);
 
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'b.ID_BOARD IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
 
 		// If this category has a significant number of posts in it...
 		if ($total_cat_posts > 100 && $total_cat_posts > $modSettings['totalMessages'] / 15)
 			$query_this_board .= '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 400 - $_REQUEST['start'] * 7);
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 400 - $_REQUEST['start'] * 7);
 
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;c=' . implode(',', $_REQUEST['c']), $_REQUEST['start'], min(100, $total_cat_posts), 10, false);
 	}
@@ -223,57 +223,57 @@ function RecentPosts()
 		foreach ($_REQUEST['boards'] as $i => $b)
 			$_REQUEST['boards'][$i] = (int) $b;
 
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.numPosts
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.num_posts
 			FROM {$db_prefix}boards AS b
-			WHERE b.ID_BOARD IN (" . implode(', ', $_REQUEST['boards']) . ")
+			WHERE b.id_board IN (" . implode(', ', $_REQUEST['boards']) . ")
 				AND $user_info[query_see_board]
 			LIMIT " . count($_REQUEST['boards']), __FILE__, __LINE__);
 		$total_posts = 0;
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$boards[] = $row['ID_BOARD'];
-			$total_posts += $row['numPosts'];
+			$boards[] = $row['id_board'];
+			$total_posts += $row['num_posts'];
 		}
 		$smfFunc['db_free_result']($request);
 
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'b.ID_BOARD IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
 
 		// If these boards have a significant number of posts in them...
 		if ($total_posts > 100 && $total_posts > $modSettings['totalMessages'] / 12)
 			$query_this_board .= '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 500 - $_REQUEST['start'] * 9);
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 500 - $_REQUEST['start'] * 9);
 
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;boards=' . implode(',', $_REQUEST['boards']), $_REQUEST['start'], min(100, $total_posts), 10, false);
 	}
 	elseif (!empty($board))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT numPosts
+		$request = $smfFunc['db_query']('', "
+			SELECT num_posts
 			FROM {$db_prefix}boards
-			WHERE ID_BOARD = $board
+			WHERE id_board = $board
 			LIMIT 1", __FILE__, __LINE__);
 		list ($total_posts) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
-		$query_this_board = 'b.ID_BOARD = ' . $board;
+		$query_this_board = 'b.id_board = ' . $board;
 
 		// If this board has a significant number of posts in it...
 		if ($total_posts > 80 && $total_posts > $modSettings['totalMessages'] / 10)
 			$query_this_board .= '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 600 - $_REQUEST['start'] * 10);
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 600 - $_REQUEST['start'] * 10);
 
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent;board=' . $board . '.%d', $_REQUEST['start'], min(100, $total_posts), 10, true);
 	}
 	else
 	{
 		$query_this_board = $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.ID_BOARD != $modSettings[recycle_board]" : ''). '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_REQUEST['start'] * 6);
+			AND b.id_board != $modSettings[recycle_board]" : ''). '
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_REQUEST['start'] * 6);
 
 		// !!! This isn't accurate because we ignore the recycle bin.
 		$context['page_index'] = constructPageIndex($scripturl . '?action=recent', $_REQUEST['start'], min(100, $modSettings['totalMessages']), 10, false);
@@ -286,17 +286,17 @@ function RecentPosts()
 
 	// Find the 10 most recent messages they can *view*.
 	// !!!SLOW This query is really slow still, probably?
-	$request = $smfFunc['db_query']("
-		SELECT m.ID_MSG
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_msg
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE b.ID_BOARD = m.ID_BOARD
+		WHERE b.id_board = m.id_board
 			AND $query_this_board
 			AND m.approved = 1
-		ORDER BY m.ID_MSG DESC
+		ORDER BY m.id_msg DESC
 		LIMIT $_REQUEST[start], 10", __FILE__, __LINE__);
 	$messages = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$messages[] = $row['ID_MSG'];
+		$messages[] = $row['id_msg'];
 	$smfFunc['db_free_result']($request);
 
 	// Looks like nothin's happen here... or, at least, nothin' you can see...
@@ -307,21 +307,21 @@ function RecentPosts()
 	}
 
 	// Get all the most recent posts.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			m.ID_MSG, m.subject, m.smileysEnabled, m.posterTime, m.body, m.ID_TOPIC, t.ID_BOARD, b.ID_CAT,
-			b.name AS bname, c.name AS cname, t.numReplies, m.ID_MEMBER, m2.ID_MEMBER AS ID_FIRST_MEMBER,
-			IFNULL(mem2.realName, m2.posterName) AS firstPosterName, t.ID_FIRST_MSG,
-			IFNULL(mem.realName, m.posterName) AS posterName, t.ID_LAST_MSG
+			m.id_msg, m.subject, m.smileys_enabled, m.poster_time, m.body, m.id_topic, t.id_board, b.id_cat,
+			b.name AS bname, c.name AS cname, t.num_replies, m.id_member, m2.id_member AS ID_FIRST_MEMBER,
+			IFNULL(mem2.real_name, m2.poster_name) AS firstPosterName, t.id_first_msg,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, t.id_last_msg
 		FROM ({$db_prefix}messages AS m, {$db_prefix}messages AS m2, {$db_prefix}topics AS t, {$db_prefix}boards AS b, {$db_prefix}categories AS c)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.ID_MEMBER = m2.ID_MEMBER)
-		WHERE m2.ID_MSG = t.ID_FIRST_MSG
-			AND t.ID_TOPIC = m.ID_TOPIC
-			AND b.ID_BOARD = t.ID_BOARD
-			AND c.ID_CAT = b.ID_CAT
-			AND m.ID_MSG IN (" . implode(', ', $messages) . ")
-		ORDER BY m.ID_MSG DESC
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.id_member = m2.id_member)
+		WHERE m2.id_msg = t.id_first_msg
+			AND t.id_topic = m.id_topic
+			AND b.id_board = t.id_board
+			AND c.id_cat = b.id_cat
+			AND m.id_msg IN (" . implode(', ', $messages) . ")
+		ORDER BY m.id_msg DESC
 		LIMIT " . count($messages), __FILE__, __LINE__);
 	$counter = $_REQUEST['start'] + 1;
 	$context['posts'] = array();
@@ -333,31 +333,31 @@ function RecentPosts()
 		censorText($row['subject']);
 
 		// BBC-atize the message.
-		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
+		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// And build the array.
-		$context['posts'][$row['ID_MSG']] = array(
-			'id' => $row['ID_MSG'],
+		$context['posts'][$row['id_msg']] = array(
+			'id' => $row['id_msg'],
 			'counter' => $counter++,
 			'category' => array(
-				'id' => $row['ID_CAT'],
+				'id' => $row['id_cat'],
 				'name' => $row['cname'],
-				'href' => $scripturl . '#' . $row['ID_CAT'],
-				'link' => '<a href="' . $scripturl . '#' . $row['ID_CAT'] . '">' . $row['cname'] . '</a>'
+				'href' => $scripturl . '#' . $row['id_cat'],
+				'link' => '<a href="' . $scripturl . '#' . $row['id_cat'] . '">' . $row['cname'] . '</a>'
 			),
 			'board' => array(
-				'id' => $row['ID_BOARD'],
+				'id' => $row['id_board'],
 				'name' => $row['bname'],
-				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
+				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['bname'] . '</a>'
 			),
-			'topic' => $row['ID_TOPIC'],
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>',
-			'start' => $row['numReplies'],
+			'topic' => $row['id_topic'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '">' . $row['subject'] . '</a>',
+			'start' => $row['num_replies'],
 			'subject' => $row['subject'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
 			'first_poster' => array(
 				'id' => $row['ID_FIRST_MEMBER'],
 				'name' => $row['firstPosterName'],
@@ -365,21 +365,21 @@ function RecentPosts()
 				'link' => empty($row['ID_FIRST_MEMBER']) ? $row['firstPosterName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] . '">' . $row['firstPosterName'] . '</a>'
 			),
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'href' => empty($row['ID_MEMBER']) ? '' : $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => empty($row['ID_MEMBER']) ? $row['posterName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>'
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>'
 			),
 			'message' => $row['body'],
 			'can_reply' => false,
 			'can_mark_notify' => false,
 			'can_delete' => false,
-			'delete_possible' => ($row['ID_FIRST_MSG'] != $row['ID_MSG'] || $row['ID_LAST_MSG'] == $row['ID_MSG']) && (empty($modSettings['edit_disable_time']) || $row['posterTime'] + $modSettings['edit_disable_time'] * 60 >= time()),
+			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
 		);
 
-		if ($ID_MEMBER == $row['ID_FIRST_MEMBER'])
-			$board_ids['own'][$row['ID_BOARD']][] = $row['ID_MSG'];
-		$board_ids['any'][$row['ID_BOARD']][] = $row['ID_MSG'];
+		if ($id_member == $row['ID_FIRST_MEMBER'])
+			$board_ids['own'][$row['id_board']][] = $row['id_msg'];
+		$board_ids['any'][$row['id_board']][] = $row['id_msg'];
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -417,7 +417,7 @@ function RecentPosts()
 
 				// Okay, looks like they can do it for these posts.
 				foreach ($board_ids[$type][$board_id] as $counter)
-					if ($type == 'any' || $context['posts'][$counter]['poster']['id'] == $ID_MEMBER)
+					if ($type == 'any' || $context['posts'][$counter]['poster']['id'] == $id_member)
 						$context['posts'][$counter][$allowed] = true;
 			}
 		}
@@ -432,7 +432,7 @@ function RecentPosts()
 function UnreadTopics()
 {
 	global $board, $txt, $scripturl, $db_prefix, $sourcedir;
-	global $ID_MEMBER, $user_info, $context, $settings, $modSettings, $smfFunc;
+	global $id_member, $user_info, $context, $settings, $modSettings, $smfFunc;
 
 	// Guests can't have unread things, we don't know anything about them.
 	is_not_guest();
@@ -472,30 +472,30 @@ function UnreadTopics()
 			$boards[] = (int) $board;
 
 		// The easist thing is to just get all the boards they can see, but since we've specified the top of tree we ignore some of them
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.ID_PARENT
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.id_parent
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[query_wanna_see_board]
-				AND childLevel > 0
-				AND b.ID_BOARD NOT IN (" . implode(', ', $boards) . ")
-			ORDER BY childLevel ASC
+				AND child_level > 0
+				AND b.id_board NOT IN (" . implode(', ', $boards) . ")
+			ORDER BY child_level ASC
 			", __FILE__, __LINE__);
 			
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			if (in_array($row['ID_PARENT'], $boards))
-				$boards[] = $row['ID_BOARD'];
+			if (in_array($row['id_parent'], $boards))
+				$boards[] = $row['id_board'];
 				
 		$smfFunc['db_free_result']($request);
 
 		if(empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'ID_BOARD IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
 		$context['querystring_board_limits'] = ';boards=' . implode(',', $boards) . ';start=%d';
 	}
 	elseif (!empty($board))
 	{
-		$query_this_board = 'ID_BOARD = ' . $board;
+		$query_this_board = 'id_board = ' . $board;
 		$context['querystring_board_limits'] = ';board=' . $board . '.%d';
 	}
 	elseif (!empty($_REQUEST['boards']))
@@ -504,20 +504,20 @@ function UnreadTopics()
 		foreach ($_REQUEST['boards'] as $i => $b)
 			$_REQUEST['boards'][$i] = (int) $b;
 
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[query_see_board]
-				AND b.ID_BOARD IN (" . implode(', ', $_REQUEST['boards']) . ")", __FILE__, __LINE__);
+				AND b.id_board IN (" . implode(', ', $_REQUEST['boards']) . ")", __FILE__, __LINE__);
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$boards[] = $row['ID_BOARD'];
+			$boards[] = $row['id_board'];
 		$smfFunc['db_free_result']($request);
 
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'ID_BOARD IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
 		$context['querystring_board_limits'] = ';boards=' . implode(',', $boards) . ';start=%d';
 	}
 	elseif (!empty($_REQUEST['c']))
@@ -527,58 +527,58 @@ function UnreadTopics()
 			$_REQUEST['c'][$i] = (int) $c;
 
 		$see_board = isset($_REQUEST['action']) && $_REQUEST['action'] == 'unreadreplies' ? 'query_see_board' : 'query_wanna_see_board';
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[$see_board]
-				AND b.ID_CAT IN (" . implode(', ', $_REQUEST['c']) . ")", __FILE__, __LINE__);
+				AND b.id_cat IN (" . implode(', ', $_REQUEST['c']) . ")", __FILE__, __LINE__);
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$boards[] = $row['ID_BOARD'];
+			$boards[] = $row['id_board'];
 		$smfFunc['db_free_result']($request);
 
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'ID_BOARD IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
 		$context['querystring_board_limits'] = ';c=' . implode(',', $_REQUEST['c']) . ';start=%d';
 	}
 	else
 	{
 		$see_board = isset($_REQUEST['action']) && $_REQUEST['action'] == 'unreadreplies' ? 'query_see_board' : 'query_wanna_see_board';
 		// Don't bother to show deleted posts!
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[$see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-				AND b.ID_BOARD != " . (int) $modSettings['recycle_board'] : ''), __FILE__, __LINE__);
+				AND b.id_board != " . (int) $modSettings['recycle_board'] : ''), __FILE__, __LINE__);
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$boards[] = $row['ID_BOARD'];
+			$boards[] = $row['id_board'];
 		$smfFunc['db_free_result']($request);
 
 		if (empty($boards))
 			fatal_lang_error('error_no_boards_selected');
 
-		$query_this_board = 'ID_BOARD IN (' . implode(', ', $boards) . ')';
+		$query_this_board = 'id_board IN (' . implode(', ', $boards) . ')';
 		$context['querystring_board_limits'] = ';start=%d';
 		$context['no_board_limits'] = true;
 	}
 
 	$sort_methods = array(
 		'subject' => 'ms.subject',
-		'starter' => 'IFNULL(mems.realName, ms.posterName)',
-		'replies' => 't.numReplies',
-		'views' => 't.numViews',
-		'first_post' => 't.ID_TOPIC',
-		'last_post' => 't.ID_LAST_MSG'
+		'starter' => 'IFNULL(mems.real_name, ms.poster_name)',
+		'replies' => 't.num_replies',
+		'views' => 't.num_views',
+		'first_post' => 't.id_topic',
+		'last_post' => 't.id_last_msg'
 	);
 
 	// The default is the most logical: newest first.
 	if (!isset($_REQUEST['sort']) || !isset($sort_methods[$_REQUEST['sort']]))
 	{
 		$context['sort_by'] = 'last_post';
-		$_REQUEST['sort'] = 't.ID_LAST_MSG';
+		$_REQUEST['sort'] = 't.id_last_msg';
 		$ascending = isset($_REQUEST['asc']);
 
 		$context['querystring_sort_limits'] = $ascending ? ';asc' : '';
@@ -596,10 +596,10 @@ function UnreadTopics()
 
 	if (!empty($_REQUEST['c']) && is_array($_REQUEST['c']) && count($_REQUEST['c']) == 1)
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT name
 			FROM {$db_prefix}categories
-			WHERE ID_CAT = " . (int) $_REQUEST['c'][0] . "
+			WHERE id_cat = " . (int) $_REQUEST['c'][0] . "
 			LIMIT 1", __FILE__, __LINE__);
 		list ($name) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -641,32 +641,32 @@ function UnreadTopics()
 
 	// This part is the same for each query.
 	$select_clause = '
-				ms.subject AS firstSubject, ms.posterTime AS firstPosterTime, ms.ID_TOPIC, t.ID_BOARD, b.name AS bname,
-				t.numReplies, t.numViews, ms.ID_MEMBER AS ID_FIRST_MEMBER, ml.ID_MEMBER AS ID_LAST_MEMBER,
-				ml.posterTime AS lastPosterTime, IFNULL(mems.realName, ms.posterName) AS firstPosterName,
-				IFNULL(meml.realName, ml.posterName) AS lastPosterName, ml.subject AS lastSubject,
-				ml.icon AS lastIcon, ms.icon AS firstIcon, t.ID_POLL, t.isSticky, t.locked, ml.modifiedTime AS lastModifiedTime,
-				IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1 AS new_from, LEFT(ml.body, 384) AS lastBody, LEFT(ms.body, 384) AS firstBody,
-				ml.smileysEnabled AS lastSmileys, ms.smileysEnabled AS firstSmileys, t.ID_FIRST_MSG, t.ID_LAST_MSG';
+				ms.subject AS first_subject, ms.poster_time AS first_poster_time, ms.id_topic, t.id_board, b.name AS bname,
+				t.num_replies, t.num_views, ms.id_member AS ID_FIRST_MEMBER, ml.id_member AS ID_LAST_MEMBER,
+				ml.poster_time AS last_poster_time, IFNULL(mems.real_name, ms.poster_name) AS firstPosterName,
+				IFNULL(meml.real_name, ml.poster_name) AS lastPosterName, ml.subject AS last_subject,
+				ml.icon AS last_icon, ms.icon AS first_icon, t.id_poll, t.is_sticky, t.locked, ml.modified_time AS lastModifiedTime,
+				IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, LEFT(ml.body, 384) AS last_body, LEFT(ms.body, 384) AS first_body,
+				ml.smileys_enabled AS last_smileys, ms.smileys_enabled AS first_smileys, t.id_first_msg, t.id_last_msg';
 
 	if ($context['showing_all_topics'])
 	{
 		if (!empty($board))
 		{
-			$request = $smfFunc['db_query']("
-				SELECT MIN(ID_MSG)
+			$request = $smfFunc['db_query']('', "
+				SELECT MIN(id_msg)
 				FROM {$db_prefix}log_mark_read
-				WHERE ID_MEMBER = $ID_MEMBER
-					AND ID_BOARD = $board", __FILE__, __LINE__);
+				WHERE id_member = $id_member
+					AND id_board = $board", __FILE__, __LINE__);
 			list ($earliest_msg) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 		}
 		else
 		{
-			$request = $smfFunc['db_query']("
-				SELECT MIN(lmr.ID_MSG)
+			$request = $smfFunc['db_query']('', "
+				SELECT MIN(lmr.id_msg)
 				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = b.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $id_member)
 				WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 			list ($earliest_msg) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -683,10 +683,10 @@ function UnreadTopics()
 			else
 			{
 				// This query is pretty slow, but it's needed to ensure nothing crucial is ignored.
-				$request = $smfFunc['db_query']("
-					SELECT MIN(ID_MSG)
+				$request = $smfFunc['db_query']('', "
+					SELECT MIN(id_msg)
 					FROM {$db_prefix}log_topics
-					WHERE ID_MEMBER = $ID_MEMBER", __FILE__, __LINE__);
+					WHERE id_member = $id_member", __FILE__, __LINE__);
 				list ($earliest_msg2) = $smfFunc['db_fetch_row']($request);
 				$smfFunc['db_free_result']($request);
 
@@ -701,24 +701,24 @@ function UnreadTopics()
 		}
 	}
 
-	// !!! Add modifiedTime in for logTime check?
+	// !!! Add modified_time in for log_time check?
 
 	if ($modSettings['totalMessages'] > 100000 && $context['showing_all_topics'])
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DROP TABLE IF EXISTS {$db_prefix}log_topics_unread", false, false);
 
 		// Let's copy things out of the log_topics table, to reduce searching.
-		$have_temp_table = $smfFunc['db_query']("
+		$have_temp_table = $smfFunc['db_query']('', "
 			CREATE TEMPORARY TABLE {$db_prefix}log_topics_unread (
-				PRIMARY KEY (ID_TOPIC)
+				PRIMARY KEY (id_topic)
 			)
-			SELECT lt.ID_TOPIC, lt.ID_MSG
+			SELECT lt.id_topic, lt.id_msg
 			FROM ({$db_prefix}topics AS t, {$db_prefix}log_topics AS lt)
-			WHERE lt.ID_TOPIC = t.ID_TOPIC
-				AND lt.ID_MEMBER = $ID_MEMBER
+			WHERE lt.id_topic = t.id_topic
+				AND lt.id_member = $id_member
 				AND t.$query_this_board" . (!empty($earliest_msg) ? "
-				AND t.ID_LAST_MSG > $earliest_msg" : '') . "
+				AND t.id_last_msg > $earliest_msg" : '') . "
 				AND t.approved = 1", false, false) !== false;
 	}
 	else
@@ -726,15 +726,15 @@ function UnreadTopics()
 
 	if ($context['showing_all_topics'] && $have_temp_table)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT COUNT(*), MIN(t.ID_LAST_MSG)
+		$request = $smfFunc['db_query']('', "
+			SELECT COUNT(*), MIN(t.id_last_msg)
 			FROM {$db_prefix}topics AS t
-				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.ID_TOPIC = t.ID_TOPIC)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
+				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
 			WHERE t.$query_this_board" . ($context['showing_all_topics'] && !empty($earliest_msg) ? "
-				AND t.ID_LAST_MSG > $earliest_msg" : "
-				AND t.ID_LAST_MSG > $_SESSION[ID_MSG_LAST_VISIT]") . "
-				AND IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) < t.ID_LAST_MSG
+				AND t.id_last_msg > $earliest_msg" : "
+				AND t.id_last_msg > $_SESSION[id_msg_last_visit]") . "
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
 				AND approved = 1", __FILE__, __LINE__);
 		list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -767,36 +767,36 @@ function UnreadTopics()
 		else
 			$min_message = (int) $min_message;
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT $select_clause
 			FROM ({$db_prefix}messages AS ms, {$db_prefix}messages AS ml, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-				LEFT JOIN {$db_prefix}members AS mems ON (mems.ID_MEMBER = ms.ID_MEMBER)
-				LEFT JOIN {$db_prefix}members AS meml ON (meml.ID_MEMBER = ml.ID_MEMBER)
-				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.ID_TOPIC = t.ID_TOPIC)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
-			WHERE t.ID_TOPIC = ms.ID_TOPIC
-				AND b.ID_BOARD = t.ID_BOARD
+				LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)
+				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)
+				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+			WHERE t.id_topic = ms.id_topic
+				AND b.id_board = t.id_board
 				AND b.$query_this_board
-				AND ms.ID_MSG = t.ID_FIRST_MSG
-				AND ml.ID_MSG = t.ID_LAST_MSG
-				AND t.ID_LAST_MSG >= $min_message
-				AND IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) < t.ID_LAST_MSG
+				AND ms.id_msg = t.id_first_msg
+				AND ml.id_msg = t.id_last_msg
+				AND t.id_last_msg >= $min_message
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
 				AND t.approved = 1
 			ORDER BY " . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
 			LIMIT $_REQUEST[start], $modSettings[defaultMaxTopics]", __FILE__, __LINE__);
 	}
 	elseif ($is_topics)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT COUNT(*), MIN(t.ID_LAST_MSG)
+		$request = $smfFunc['db_query']('', "
+			SELECT COUNT(*), MIN(t.id_last_msg)
 			FROM {$db_prefix}topics AS t" . ($have_temp_table ? "
-				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.ID_TOPIC = t.ID_TOPIC)" : "
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $ID_MEMBER)") . "
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
+				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)" : "
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)") . "
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
 			WHERE t.$query_this_board" . ($context['showing_all_topics'] && !empty($earliest_msg) ? "
-				AND t.ID_LAST_MSG > $earliest_msg" : "
-				AND t.ID_LAST_MSG > $_SESSION[ID_MSG_LAST_VISIT]") . "
-				AND IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) < t.ID_LAST_MSG
+				AND t.id_last_msg > $earliest_msg" : "
+				AND t.id_last_msg > $_SESSION[id_msg_last_visit]") . "
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
 				AND t.approved = 1", __FILE__, __LINE__);
 		list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -829,21 +829,21 @@ function UnreadTopics()
 		else
 			$min_message = (int) $min_message;
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT $select_clause
 			FROM ({$db_prefix}messages AS ms, {$db_prefix}messages AS ml, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-				LEFT JOIN {$db_prefix}members AS mems ON (mems.ID_MEMBER = ms.ID_MEMBER)
-				LEFT JOIN {$db_prefix}members AS meml ON (meml.ID_MEMBER = ml.ID_MEMBER)" . ($have_temp_table ? "
-				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.ID_TOPIC = t.ID_TOPIC)" : "
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $ID_MEMBER)") . "
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
-			WHERE t.ID_TOPIC = ms.ID_TOPIC
-				AND b.ID_BOARD = t.ID_BOARD
+				LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)
+				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)" . ($have_temp_table ? "
+				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)" : "
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)") . "
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+			WHERE t.id_topic = ms.id_topic
+				AND b.id_board = t.id_board
 				AND b.$query_this_board
-				AND ms.ID_MSG = t.ID_FIRST_MSG
-				AND ml.ID_MSG = t.ID_LAST_MSG
-				AND t.ID_LAST_MSG >= $min_message
-				AND IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) < ml.ID_MSG
+				AND ms.id_msg = t.id_first_msg
+				AND ml.id_msg = t.id_last_msg
+				AND t.id_last_msg >= $min_message
+				AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < ml.id_msg
 				AND t.approved = 1
 			ORDER BY " . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
 			LIMIT $_REQUEST[start], $modSettings[defaultMaxTopics]", __FILE__, __LINE__);
@@ -852,72 +852,72 @@ function UnreadTopics()
 	{
 		if ($modSettings['totalMessages'] > 100000)
 		{
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				DROP TABLE IF EXISTS {$db_prefix}topics_posted_in", false, false);
 
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				DROP TABLE IF EXISTS {$db_prefix}log_topics_posted_in", false, false);
 
 			$sortKey_joins = array(
 				'ms.subject' => "
-					INNER JOIN {$db_prefix}messages AS ms ON (ms.ID_MSG = t.ID_FIRST_MSG)",
-				'IFNULL(mems.realName, ms.posterName)' => "
-					INNER JOIN {$db_prefix}messages AS ms ON (ms.ID_MSG = t.ID_FIRST_MSG)
-					LEFT JOIN {$db_prefix}members AS mems ON (mems.ID_MEMBER = ms.ID_MEMBER)",
+					INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)",
+				'IFNULL(mems.real_name, ms.poster_name)' => "
+					INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
+					LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)",
 			);
 
 			// The main benefit of this temporary table is not that it's faster; it's that it avoids locks later.
-			$have_temp_table = $smfFunc['db_query']("
+			$have_temp_table = $smfFunc['db_query']('', "
 				CREATE TEMPORARY TABLE {$db_prefix}topics_posted_in (
-					ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-					ID_BOARD smallint(5) unsigned NOT NULL default '0',
-					ID_LAST_MSG int(10) unsigned NOT NULL default '0',
-					ID_MSG int(10) unsigned NOT NULL default '0',
-					PRIMARY KEY (ID_TOPIC)
+					id_topic mediumint(8) unsigned NOT NULL default '0',
+					id_board smallint(5) unsigned NOT NULL default '0',
+					id_last_msg int(10) unsigned NOT NULL default '0',
+					id_msg int(10) unsigned NOT NULL default '0',
+					PRIMARY KEY (id_topic)
 				)
-				SELECT t.ID_TOPIC, t.ID_BOARD, t.ID_LAST_MSG, IFNULL(lmr.ID_MSG, 0) AS ID_MSG" . (!in_array($_REQUEST['sort'], array('t.ID_LAST_MSG', 't.ID_TOPIC')) ? ", $_REQUEST[sort] AS sortKey" : '') . "
+				SELECT t.id_topic, t.id_board, t.id_last_msg, IFNULL(lmr.id_msg, 0) AS id_msg" . (!in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? ", $_REQUEST[sort] AS sortKey" : '') . "
 				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)" . (isset($sortKey_joins[$_REQUEST['sort']]) ? $sortKey_joins[$_REQUEST['sort']] : '') . "
-				WHERE m.ID_MEMBER = $ID_MEMBER
-					AND t.ID_TOPIC = m.ID_TOPIC" . (!empty($board) ? "
-					AND t.ID_BOARD = $board" : '') . "
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)" . (isset($sortKey_joins[$_REQUEST['sort']]) ? $sortKey_joins[$_REQUEST['sort']] : '') . "
+				WHERE m.id_member = $id_member
+					AND t.id_topic = m.id_topic" . (!empty($board) ? "
+					AND t.id_board = $board" : '') . "
 					AND t.approved = 1
-				GROUP BY m.ID_TOPIC", false, false) !== false;
+				GROUP BY m.id_topic", false, false) !== false;
 
 			// If that worked, create a sample of the log_topics table too.
 			if ($have_temp_table)
-				$have_temp_table = $smfFunc['db_query']("
+				$have_temp_table = $smfFunc['db_query']('', "
 					CREATE TEMPORARY TABLE {$db_prefix}log_topics_posted_in (
-						PRIMARY KEY (ID_TOPIC)
+						PRIMARY KEY (id_topic)
 					)
-					SELECT lt.ID_TOPIC, lt.ID_MSG
+					SELECT lt.id_topic, lt.id_msg
 					FROM ({$db_prefix}log_topics AS lt, {$db_prefix}topics_posted_in AS pi)
-					WHERE lt.ID_MEMBER = $ID_MEMBER
-						AND lt.ID_TOPIC = pi.ID_TOPIC", false, false) !== false;
+					WHERE lt.id_member = $id_member
+						AND lt.id_topic = pi.id_topic", false, false) !== false;
 		}
 
 		if ($have_temp_table)
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT COUNT(*)
 				FROM ({$db_prefix}topics_posted_in AS pi)
-					LEFT JOIN {$db_prefix}log_topics_posted_in AS lt ON (lt.ID_TOPIC = pi.ID_TOPIC)
+					LEFT JOIN {$db_prefix}log_topics_posted_in AS lt ON (lt.id_topic = pi.id_topic)
 				WHERE pi.$query_this_board
-					AND IFNULL(lt.ID_MSG, pi.ID_MSG) < pi.ID_LAST_MSG", __FILE__, __LINE__);
+					AND IFNULL(lt.id_msg, pi.id_msg) < pi.id_last_msg", __FILE__, __LINE__);
 			list ($num_topics) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 		}
 		else
 		{
-			$request = $smfFunc['db_query']("
-				SELECT COUNT(DISTINCT t.ID_TOPIC), MIN(t.ID_LAST_MSG)
+			$request = $smfFunc['db_query']('', "
+				SELECT COUNT(DISTINCT t.id_topic), MIN(t.id_last_msg)
 				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $ID_MEMBER)
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
+					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
 				WHERE t.$query_this_board
-					AND m.ID_TOPIC = t.ID_TOPIC
-					AND m.ID_MEMBER = $ID_MEMBER
-					AND IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) < t.ID_LAST_MSG
+					AND m.id_topic = t.id_topic
+					AND m.id_member = $id_member
+					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
 					AND t.approved = 1", __FILE__, __LINE__);
 			list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -950,34 +950,34 @@ function UnreadTopics()
 		}
 
 		if ($have_temp_table)
-			$request = $smfFunc['db_query']("
-				SELECT t.ID_TOPIC
+			$request = $smfFunc['db_query']('', "
+				SELECT t.id_topic
 				FROM {$db_prefix}topics_posted_in AS t
-					LEFT JOIN {$db_prefix}log_topics_posted_in AS lt ON (lt.ID_TOPIC = t.ID_TOPIC)
+					LEFT JOIN {$db_prefix}log_topics_posted_in AS lt ON (lt.id_topic = t.id_topic)
 				WHERE t.$query_this_board
-					AND IFNULL(lt.ID_MSG, t.ID_MSG) < t.ID_LAST_MSG
-				ORDER BY " . (in_array($_REQUEST['sort'], array('t.ID_LAST_MSG', 't.ID_TOPIC')) ? $_REQUEST['sort'] : 't.sortKey') . ($ascending ? '' : ' DESC') . "
+					AND IFNULL(lt.id_msg, t.id_msg) < t.id_last_msg
+				ORDER BY " . (in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? $_REQUEST['sort'] : 't.sortKey') . ($ascending ? '' : ' DESC') . "
 				LIMIT $_REQUEST[start], $modSettings[defaultMaxTopics]", __FILE__, __LINE__);
 		else
-			$request = $smfFunc['db_query']("
-				SELECT DISTINCT t.ID_TOPIC
+			$request = $smfFunc['db_query']('', "
+				SELECT DISTINCT t.id_topic
 				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m" . (strpos($_REQUEST['sort'], 'ms.') === false ? '' : ", {$db_prefix}messages AS ms") . ')' . (strpos($_REQUEST['sort'], 'mems.') === false ? '' : "
-					LEFT JOIN {$db_prefix}members AS mems ON (mems.ID_MEMBER = ms.ID_MEMBER)") ."
-					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $ID_MEMBER)
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
-				WHERE m.ID_TOPIC = t.ID_TOPIC
-					AND m.ID_MEMBER = $ID_MEMBER
+					LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)") ."
+					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+				WHERE m.id_topic = t.id_topic
+					AND m.id_member = $id_member
 					AND t.$query_this_board
-					AND t.ID_LAST_MSG >= " . (int) $min_message . "
-					AND IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) < t.ID_LAST_MSG" . (strpos($_REQUEST['sort'], 'ms.') !== false ? "
-					AND ms.ID_MSG = t.ID_FIRST_MSG" : '') . "
+					AND t.id_last_msg >= " . (int) $min_message . "
+					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg" . (strpos($_REQUEST['sort'], 'ms.') !== false ? "
+					AND ms.id_msg = t.id_first_msg" : '') . "
 					AND t.approved = 1
 				ORDER BY " . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
 				LIMIT $_REQUEST[start], $modSettings[defaultMaxTopics]", __FILE__, __LINE__);
 
 		$topics = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$topics[] = $row['ID_TOPIC'];
+			$topics[] = $row['id_topic'];
 		$smfFunc['db_free_result']($request);
 
 		// Sanity... where have you gone?
@@ -991,18 +991,18 @@ function UnreadTopics()
 			return;
 		}
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT $select_clause
 			FROM ({$db_prefix}messages AS ms, {$db_prefix}messages AS ml, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-				LEFT JOIN {$db_prefix}members AS mems ON (mems.ID_MEMBER = ms.ID_MEMBER)
-				LEFT JOIN {$db_prefix}members AS meml ON (meml.ID_MEMBER = ml.ID_MEMBER)
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $ID_MEMBER)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = t.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
-			WHERE t.ID_TOPIC IN (" . implode(', ', $topics) . ")
-				AND t.ID_TOPIC = ms.ID_TOPIC
-				AND b.ID_BOARD = t.ID_BOARD
-				AND ms.ID_MSG = t.ID_FIRST_MSG
-				AND ml.ID_MSG = t.ID_LAST_MSG
+				LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)
+				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+			WHERE t.id_topic IN (" . implode(', ', $topics) . ")
+				AND t.id_topic = ms.id_topic
+				AND b.id_board = t.id_board
+				AND ms.id_msg = t.id_first_msg
+				AND ml.id_msg = t.id_last_msg
 			ORDER BY " . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
 			LIMIT " . count($topics), __FILE__, __LINE__);
 	}
@@ -1011,44 +1011,44 @@ function UnreadTopics()
 	$topic_ids = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if ($row['ID_POLL'] > 0 && $modSettings['pollMode'] == '0')
+		if ($row['id_poll'] > 0 && $modSettings['pollMode'] == '0')
 			continue;
 
-		$topic_ids[] = $row['ID_TOPIC'];
+		$topic_ids[] = $row['id_topic'];
 
 		// Clip the strings first because censoring is slow :/. (for some reason?)
-		$row['firstBody'] = strip_tags(strtr(parse_bbc($row['firstBody'], $row['firstSmileys'], $row['ID_FIRST_MSG']), array('<br />' => '&#10;')));
-		if ($smfFunc['strlen']($row['firstBody']) > 128)
-			$row['firstBody'] = $smfFunc['substr']($row['firstBody'], 0, 128) . '...';
-		$row['lastBody'] = strip_tags(strtr(parse_bbc($row['lastBody'], $row['lastSmileys'], $row['ID_LAST_MSG']), array('<br />' => '&#10;')));
-		if ($smfFunc['strlen']($row['lastBody']) > 128)
-			$row['lastBody'] = $smfFunc['substr']($row['lastBody'], 0, 128) . '...';
+		$row['first_body'] = strip_tags(strtr(parse_bbc($row['first_body'], $row['first_smileys'], $row['id_first_msg']), array('<br />' => '&#10;')));
+		if ($smfFunc['strlen']($row['first_body']) > 128)
+			$row['first_body'] = $smfFunc['substr']($row['first_body'], 0, 128) . '...';
+		$row['last_body'] = strip_tags(strtr(parse_bbc($row['last_body'], $row['last_smileys'], $row['id_last_msg']), array('<br />' => '&#10;')));
+		if ($smfFunc['strlen']($row['last_body']) > 128)
+			$row['last_body'] = $smfFunc['substr']($row['last_body'], 0, 128) . '...';
 
 		// Do a bit of censoring...
-		censorText($row['firstSubject']);
-		censorText($row['firstBody']);
+		censorText($row['first_subject']);
+		censorText($row['first_body']);
 
 		// But don't do it twice, it can be a slow ordeal!
-		if ($row['ID_FIRST_MSG'] == $row['ID_LAST_MSG'])
+		if ($row['id_first_msg'] == $row['id_last_msg'])
 		{
-			$row['lastSubject'] = $row['firstSubject'];
-			$row['lastBody'] = $row['firstBody'];
+			$row['last_subject'] = $row['first_subject'];
+			$row['last_body'] = $row['first_body'];
 		}
 		else
 		{
-			censorText($row['lastSubject']);
-			censorText($row['lastBody']);
+			censorText($row['last_subject']);
+			censorText($row['last_body']);
 		}
 
 		// Decide how many pages the topic should have.
-		$topic_length = $row['numReplies'] + 1;
+		$topic_length = $row['num_replies'] + 1;
 		if ($topic_length > $modSettings['defaultMaxMessages'])
 		{
 			$tmppages = array();
 			$tmpa = 1;
 			for ($tmpb = 0; $tmpb < $topic_length; $tmpb += $modSettings['defaultMaxMessages'])
 			{
-				$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . $tmpb . ';topicseen">' . $tmpa . '</a>';
+				$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . $tmpb . ';topicseen">' . $tmpa . '</a>';
 				$tmpa++;
 			}
 			// Show links to all the pages?
@@ -1059,7 +1059,7 @@ function UnreadTopics()
 				$pages = '&#171; ' . $tmppages[0] . ' ' . $tmppages[1] . ' ... ' . $tmppages[count($tmppages) - 2] . ' ' . $tmppages[count($tmppages) - 1];
 
 			if (!empty($modSettings['enableAllMessages']) && $topic_length < $modSettings['enableAllMessages'])
-				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt['all'] . '</a>';
+				$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;all">' . $txt['all'] . '</a>';
 			$pages .= ' &#187;';
 		}
 		else
@@ -1069,91 +1069,91 @@ function UnreadTopics()
 		if (empty($modSettings['messageIconChecks_disable']))
 		{
 			// First icon first... as you'd expect.
-			if (!isset($context['icon_sources'][$row['firstIcon']]))
-				$context['icon_sources'][$row['firstIcon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['firstIcon'] . '.gif') ? 'images_url' : 'default_images_url';
+			if (!isset($context['icon_sources'][$row['first_icon']]))
+				$context['icon_sources'][$row['first_icon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['first_icon'] . '.gif') ? 'images_url' : 'default_images_url';
 			// Last icon... last... duh.
-			if (!isset($context['icon_sources'][$row['lastIcon']]))
-				$context['icon_sources'][$row['lastIcon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['lastIcon'] . '.gif') ? 'images_url' : 'default_images_url';
+			if (!isset($context['icon_sources'][$row['last_icon']]))
+				$context['icon_sources'][$row['last_icon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['last_icon'] . '.gif') ? 'images_url' : 'default_images_url';
 		}
 
 		// And build the array.
-		$context['topics'][$row['ID_TOPIC']] = array(
-			'id' => $row['ID_TOPIC'],
+		$context['topics'][$row['id_topic']] = array(
+			'id' => $row['id_topic'],
 			'first_post' => array(
-				'id' => $row['ID_FIRST_MSG'],
+				'id' => $row['id_first_msg'],
 				'member' => array(
 					'name' => $row['firstPosterName'],
 					'id' => $row['ID_FIRST_MEMBER'],
 					'href' => $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'],
 					'link' => !empty($row['ID_FIRST_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $row['firstPosterName'] . '">' . $row['firstPosterName'] . '</a>' : $row['firstPosterName']
 				),
-				'time' => timeformat($row['firstPosterTime']),
-				'timestamp' => forum_time(true, $row['firstPosterTime']),
-				'subject' => $row['firstSubject'],
-				'preview' => $row['firstBody'],
-				'icon' => $row['firstIcon'],
-				'icon_url' => $settings[$context['icon_sources'][$row['firstIcon']]] . '/post/' . $row['firstIcon'] . '.gif',
-				'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;topicseen',
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;topicseen">' . $row['firstSubject'] . '</a>'
+				'time' => timeformat($row['first_poster_time']),
+				'timestamp' => forum_time(true, $row['first_poster_time']),
+				'subject' => $row['first_subject'],
+				'preview' => $row['first_body'],
+				'icon' => $row['first_icon'],
+				'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.gif',
+				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen',
+				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;topicseen">' . $row['first_subject'] . '</a>'
 			),
 			'last_post' => array(
-				'id' => $row['ID_LAST_MSG'],
+				'id' => $row['id_last_msg'],
 				'member' => array(
 					'name' => $row['lastPosterName'],
 					'id' => $row['ID_LAST_MEMBER'],
 					'href' => $scripturl . '?action=profile;u=' . $row['ID_LAST_MEMBER'],
 					'link' => !empty($row['ID_LAST_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_LAST_MEMBER'] . '">' . $row['lastPosterName'] . '</a>' : $row['lastPosterName']
 				),
-				'time' => timeformat($row['lastPosterTime']),
-				'timestamp' => forum_time(true, $row['lastPosterTime']),
-				'subject' => $row['lastSubject'],
-				'preview' => $row['lastBody'],
-				'icon' => $row['lastIcon'],
-				'icon_url' => $settings[$context['icon_sources'][$row['lastIcon']]] . '/post/' . $row['lastIcon'] . '.gif',
-				'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . ';topicseen#msg' . $row['ID_LAST_MSG'],
-				'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . ';topicseen#msg' . $row['ID_LAST_MSG'] . '">' . $row['lastSubject'] . '</a>'
+				'time' => timeformat($row['last_poster_time']),
+				'timestamp' => forum_time(true, $row['last_poster_time']),
+				'subject' => $row['last_subject'],
+				'preview' => $row['last_body'],
+				'icon' => $row['last_icon'],
+				'icon_url' => $settings[$context['icon_sources'][$row['last_icon']]] . '/post/' . $row['last_icon'] . '.gif',
+				'href' => $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . ';topicseen#msg' . $row['id_last_msg'],
+				'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . ';topicseen#msg' . $row['id_last_msg'] . '">' . $row['last_subject'] . '</a>'
 			),
 			'new_from' => $row['new_from'],
-			'new_href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['new_from'] . ';topicseen#new',
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['new_from']) . ';topicseen' . ($row['numReplies'] == 0 ? '' : 'new'),
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['new_from']) . ';topicseen#msg' . $row['new_from'] . '">' . $row['firstSubject'] . '</a>',
-			'is_sticky' => !empty($modSettings['enableStickyTopics']) && !empty($row['isSticky']),
+			'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . ';topicseen#new',
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['new_from']) . ';topicseen' . ($row['num_replies'] == 0 ? '' : 'new'),
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['new_from']) . ';topicseen#msg' . $row['new_from'] . '">' . $row['first_subject'] . '</a>',
+			'is_sticky' => !empty($modSettings['enableStickyTopics']) && !empty($row['is_sticky']),
 			'is_locked' => !empty($row['locked']),
-			'is_poll' => $modSettings['pollMode'] == '1' && $row['ID_POLL'] > 0,
-			'is_hot' => $row['numReplies'] >= $modSettings['hotTopicPosts'],
-			'is_very_hot' => $row['numReplies'] >= $modSettings['hotTopicVeryPosts'],
+			'is_poll' => $modSettings['pollMode'] == '1' && $row['id_poll'] > 0,
+			'is_hot' => $row['num_replies'] >= $modSettings['hotTopicPosts'],
+			'is_very_hot' => $row['num_replies'] >= $modSettings['hotTopicVeryPosts'],
 			'is_posted_in' => false,
-			'icon' => $row['firstIcon'],
-			'icon_url' => $settings[$context['icon_sources'][$row['firstIcon']]] . '/post/' . $row['firstIcon'] . '.gif',
-			'subject' => $row['firstSubject'],
+			'icon' => $row['first_icon'],
+			'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.gif',
+			'subject' => $row['first_subject'],
 			'pages' => $pages,
-			'replies' => $row['numReplies'],
-			'views' => $row['numViews'],
+			'replies' => $row['num_replies'],
+			'views' => $row['num_views'],
 			'board' => array(
-				'id' => $row['ID_BOARD'],
+				'id' => $row['id_board'],
 				'name' => $row['bname'],
-				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bname'] . '</a>'
+				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['bname'] . '</a>'
 			)
 		);
 
-		determineTopicClass($context['topics'][$row['ID_TOPIC']]);
+		determineTopicClass($context['topics'][$row['id_topic']]);
 	}
 	$smfFunc['db_free_result']($request);
 
 	if ($is_topics && !empty($modSettings['enableParticipation']) && !empty($topic_ids))
 	{
-		$result = $smfFunc['db_query']("
-			SELECT ID_TOPIC
+		$result = $smfFunc['db_query']('', "
+			SELECT id_topic
 			FROM {$db_prefix}messages
-			WHERE ID_TOPIC IN (" . implode(', ', $topic_ids) . ")
-				AND ID_MEMBER = $ID_MEMBER", __FILE__, __LINE__);
+			WHERE id_topic IN (" . implode(', ', $topic_ids) . ")
+				AND id_member = $id_member", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
-			if (empty($context['topics'][$row['ID_TOPIC']]['is_posted_in']))
+			if (empty($context['topics'][$row['id_topic']]['is_posted_in']))
 			{
-				$context['topics'][$row['ID_TOPIC']]['is_posted_in'] = true;
-				$context['topics'][$row['ID_TOPIC']]['class'] = 'my_' . $context['topics'][$row['ID_TOPIC']]['class'];
+				$context['topics'][$row['id_topic']]['is_posted_in'] = true;
+				$context['topics'][$row['id_topic']]['class'] = 'my_' . $context['topics'][$row['id_topic']]['class'];
 			}
 		}
 		$smfFunc['db_free_result']($result);

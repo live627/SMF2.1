@@ -128,7 +128,7 @@ function PackageServers()
 	$context['page_title'] .= ' - ' . $txt['download_packages'];
 
 	// Load the list of servers.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT ID_SERVER, name, url
 		FROM {$db_prefix}package_servers", __FILE__, __LINE__);
 	$context['servers'] = array();
@@ -217,7 +217,7 @@ function PackageGBrowse()
 		$server = (int) $_GET['server'];
 
 		// Query the server list to find the current server.
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT name, url
 			FROM {$db_prefix}package_servers
 			WHERE ID_SERVER = $server
@@ -526,7 +526,7 @@ function PackageDownload()
 		$server = (int) $_GET['server'];
 
 		// Query the server table to find the requested server.
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT name, url
 			FROM {$db_prefix}package_servers
 			WHERE ID_SERVER = $server
@@ -680,7 +680,7 @@ function PackageServerAdd()
 	if (substr($_POST['serverurl'], -1) == '/')
 		$_POST['serverurl'] = substr($_POST['serverurl'], 0, -1);
 
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}package_servers
 			(name, url)
 		VALUES (SUBSTRING('$_POST[servername]', 1, 255), SUBSTRING('$_POST[serverurl]', 1, 255))", __FILE__, __LINE__);
@@ -693,7 +693,7 @@ function PackageServerRemove()
 {
 	global $db_prefix, $smfFunc;
 
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}package_servers
 		WHERE ID_SERVER = " . (int) $_GET['server'] . "
 		LIMIT 1", __FILE__, __LINE__);

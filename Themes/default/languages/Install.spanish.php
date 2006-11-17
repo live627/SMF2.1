@@ -94,18 +94,21 @@ $txt['install_settings_stats_title'] = 'Allow Simple Machines to Collect Basic S
 $txt['install_settings_stats_info'] = 'If enabled, this will allow Simple Machines to visit your site once a month to collect basic statistics. This will help us make decisions as to which configurations to optimize the software for. For more information please visit our <a href="http://www.simplemachines.org/about/stats.php" target="_blank">info page</a>.';
 $txt['install_settings_proceed'] = 'Proceder';
 
-$txt['mysql_settings'] = 'Configuraci&oacute;n del Servidor MySQL';
-$txt['mysql_settings_info'] = 'Estas son las opciones que se usar&aacute;n para tu servidor MySQL. Si no sabes los valores, pregunta a tu proveedor de alojamiento qu&eacute; significan.';
-$txt['mysql_settings_server'] = 'Nombre del servidor MySQL';
-$txt['mysql_settings_server_info'] = 'Casi siempre es localhost - si no lo sabes, puedes intentar localhost.';
-$txt['mysql_settings_username'] = 'Nombre de usuario MySQL';
-$txt['mysql_settings_username_info'] = 'Especifica aqu&iacute; el nombre de usuario que necesitas para conectarte a tu base de datos MySQL.<br />Si no lo sabes, intenta con el nombre de usuario de tu cuenta ftp, la mayor&iacute;a de las veces es el mismo.';
-$txt['mysql_settings_password'] = 'Contrase&ntilde;a de MySQL';
-$txt['mysql_settings_password_info'] = 'Aqu&iacute;, introduce la contrase&ntilde;a para conectarte a tu base de datos MySQL.<br />Si no la sabes, intenta con la contrase&ntilde;a de tu cuenta ftp.';
-$txt['mysql_settings_database'] = 'Nombre de la base de datos MySQL';
-$txt['mysql_settings_database_info'] = 'Especifica el nombre de la base de datos en la que deseas que SMF almacene sus datos.<br />Si esta base de datos no existe, el instalador intentar&aacute; crearla.';
-$txt['mysql_settings_prefix'] = 'Prefijo para las tablas MySQL';
-$txt['mysql_settings_prefix_info'] = 'El prefijo para cada tabla de la base de datos.  <b>&iexcl;No instales dos foros con el mismo prefijo!</b><br />Este valor permite varias instalaciones en una base de datos.';
+// Untranslated!
+$txt['db_settings'] = 'Database Server Settings';
+$txt['db_settings_info'] = 'These are the settings to use for your database server.  If you don\'t know the values, you should ask your host what they are.';
+$txt['db_settings_type'] = 'Database Type';
+$txt['db_settings_type_info'] = 'Multiple supported database types were detected - which do you wish to use.';
+$txt['db_settings_server'] = 'Nombre del servidor';
+$txt['db_settings_server_info'] = 'Casi siempre es localhost - si no lo sabes, puedes intentar localhost.';
+$txt['db_settings_username'] = 'Nombre de usuario';
+$txt['db_settings_username_info'] = 'Especifica aqu&iacute; el nombre de usuario que necesitas para conectarte a tu base de datos.<br />Si no lo sabes, intenta con el nombre de usuario de tu cuenta ftp, la mayor&iacute;a de las veces es el mismo.';
+$txt['db_settings_password'] = 'Contrase&ntilde;a de';
+$txt['db_settings_password_info'] = 'Aqu&iacute;, introduce la contrase&ntilde;a para conectarte a tu base de datos.<br />Si no la sabes, intenta con la contrase&ntilde;a de tu cuenta ftp.';
+$txt['db_settings_database'] = 'Nombre de la base de datos';
+$txt['db_settings_database_info'] = 'Especifica el nombre de la base de datos en la que deseas que SMF almacene sus datos.<br />Si esta base de datos no existe, el instalador intentar&aacute; crearla.';
+$txt['db_settings_prefix'] = 'Prefijo para las tablas';
+$txt['db_settings_prefix_info'] = 'El prefijo para cada tabla de la base de datos.  <b>&iexcl;No instales dos foros con el mismo prefijo!</b><br />Este valor permite varias instalaciones en una base de datos.';
 
 $txt['user_settings'] = 'Crea tu cuenta';
 $txt['user_settings_info'] = 'Ahora el instalador crear&aacute; una nueva cuenta de administrador para t&iacute;.';
@@ -117,7 +120,7 @@ $txt['user_settings_again'] = 'Contrase&ntilde;a';
 $txt['user_settings_again_info'] = '(Para verificarla.)';
 $txt['user_settings_email'] = 'Direcci&oacute;n email';
 $txt['user_settings_email_info'] = 'Introduce tu direcci&oacute;n de email.  <b>Debe ser una direcci&oacute;n v&aacute;lida.</b>';
-$txt['user_settings_database'] = 'Contrase&ntilde;a de la base de datos MySQL';
+$txt['user_settings_database'] = 'Contrase&ntilde;a de la base de datos';
 $txt['user_settings_database_info'] = 'El instalador necesita que le proporciones la contrase&ntilde;a de la base de datos para crear una cuenta de administrador, por razones de seguridad.';
 $txt['user_settings_proceed'] = 'Finalizar';
 
@@ -143,21 +146,25 @@ $txt['error_missing_files'] = '&iexcl;Imposible encontrar archivos imprescindibl
 $txt['error_session_save_path'] = '&iexcl;Por favor informa a tu proveedor de alojamiento que el valor de <b>session.save_path especificado en php.ini</b> es inv&aacute;lido! Necesita ser cambiado  a un directorio que <b>exista</b>, y que sea <b>escribible</b> por el usuario bajo el cual se est&aacute; ejecutando PHP.<br />';
 $txt['error_windows_chmod'] = 'Est&aacute;s en un servidor Windows, y algunos de los archivos cruciales no son escribibles.  Solicita a tu proveedor de alojamiento que le otorgue <b>permisos de escritura</b> al usuario bajo el cual se est&aacute; ejecutando PHP.  Los siguientes archivos o directorios deben ser escribibles:';
 $txt['error_ftp_no_connect'] = 'Imposible conectarse al servidor FTP con esta combinaci&oacute;n de valores.';
-$txt['error_mysql_connect'] = 'No se puede conectar al servidor de la base de datos MySQL con los valores proporcionados.<br /><br />Si no est&aacute; seguro de qu&eacute; valores proporcionar, por favor contacta a tu proveedor de alojamiento.';
-$txt['error_mysql_too_low'] = 'La versi&oacute;n de MySQL que tu servidor de base de datos est&aacute; utilizando es demasiado vieja, y no cumple los requisitos m&iacute;nimos de SMF.<br /><br />Solicita a tu proveedor de alojamiento que la actualice, o te proporcione una nueva, y si no lo hacen cambia a un proveedor de alojamiento diferente.';
-$txt['error_mysql_database'] = 'El instalador no pudo accesar a la base de datos &quot;<i>%s</i>&quot;.  En algunos servidores, tienes que crear la base de datos en tu panel de control antes que SMF pueda usarla.  Algunos tambi&eacute;n a&ntilde;aden prefijos - como tu nombre de usuario- a los nombres de la bases de datos.';
-$txt['error_mysql_queries'] = 'Algunas de las consultas SQL no fueron ejecutadas exit&oacute;samente.  Esto puede ser causado por una versi&oacute;n no soportada o muy antigua de MySQL.<br /><br />Informaci&oacute;n t&eacute;cnica acerca de las consultas SQL:';
-$txt['error_mysql_queries_line'] = 'L&iacute;nea #';
-$txt['error_mysql_missing'] = 'El instalador no pudo detectar soporte para MySQL en PHP.  Preg&uacute;ntale a tu proveedor de alojamiento si PHP fue compilado con soporte para MySQL, o si la extensi&oacute;n apropiada est&aacute; cargada.';
+// Untranslated!
+$txt['error_db_file'] = 'Cannot find database source script! Please check file %s is within your forum source directory.';
+$txt['error_db_connect'] = 'No se puede conectar al servidor de la base de datos con los valores proporcionados.<br /><br />Si no est&aacute; seguro de qu&eacute; valores proporcionar, por favor contacta a tu proveedor de alojamiento.';
+$txt['error_db_too_low'] = 'The version of your database server is very old, and does not meet SMF\'s minimum requirements.<br /><br />Please ask your host to either upgrade it or supply a new one, and if they won\'t, please try a different host.';
+$txt['error_db_database'] = 'El instalador no pudo accesar a la base de datos &quot;<i>%s</i>&quot;.  En algunos servidores, tienes que crear la base de datos en tu panel de control antes que SMF pueda usarla.  Algunos tambi&eacute;n a&ntilde;aden prefijos - como tu nombre de usuario- a los nombres de la bases de datos.';
+// Untranslated!
+$txt['error_db_queries'] = 'Some of the queries were not executed properly.  This could be caused by an unsupported (development or old) version of your database software.<br /><br />Technical information about the queries:';
+$txt['error_db_queries_line'] = 'L&iacute;nea #';
+// Untranslated!
+$txt['error_db_missing'] = 'The installer was unable to detect any database support in PHP.  Please ask your host to ensure that PHP was compiled with the desired database, or that the proper extension is being loaded.';
 $txt['error_session_missing'] = 'El instalador no detecto soporte para sesiones en la instalaci&oacute;n de PHP en tu servidor.  P&iacute;dele por favor a tu proveedor de hospedaje que se asegure que PHP haya sido compilado con soporte para sesiones (De hecho, lo debieron haber compilado expl&iacute;citamente in dicho soporte.)';
 $txt['error_user_settings_again_match'] = '&iexcl;Has escrito dos contrase&ntilde;as completamente diferentes.!';
 $txt['error_user_settings_taken'] = 'Lo sentimos, ya existe un usuario registrado con ese usuario o contrase&ntilde;a.<br /><br />No se cre&oacute; una nueva cuenta.';
 $txt['error_user_settings_query'] = 'Ha ocurrido un error en la base de datos cuando se trataba de crear un administrador.  El error ha sido:';
 $txt['error_subs_missing'] = 'No es posible encontrar el archivo Sources/Subs.php. Comprueba que lo has subido correctamente, e int&eacute;ntalo nuevamente.';
-$txt['error_mysql_alter_priv'] = 'La cuenta de MySQL que especificaste no tiene permiso para las funciones ALTER, CREATE, o DROP en las tablas de la base de datos; &eacute;stos comandos son necesarios para el funcionamiento correcto de SMF.';
+$txt['error_db_alter_priv'] = 'La cuenta de datos que especificaste no tiene permiso para las funciones ALTER, CREATE, o DROP en las tablas de la base de datos; &eacute;stos comandos son necesarios para el funcionamiento correcto de SMF.';
 // Untranslated!
 $txt['error_versions_do_not_match'] = 'The installer has detected another version of SMF already installed with the specified information.  If you are trying to upgrade, you should use the upgrader, not the installer.<br /><br />Otherwise, you may wish to use different information, or create a backup and then delete the data currently in the database.';
 $txt['error_mod_security'] = 'The installer has detected the mod_security module is installed on your web server. Mod_security will block submitted forms even before SMF gets a say in anything. SMF has a built-in security scanner that will work more effectively than mod_security and that won\'t block submitted forms.<br /><br /><a href="http://www.simplemachines.org/redirect/mod_security">More information about disabling mod_security</a>';
-$txt['error_utf8_mysql_version'] = 'The current version of your database doesn\'t support the use of the UTF-8 character set. You can still install SMF without any problems, but only with UTF-8 support unchecked. If you would like to switch over to UTF-8 in the future (e.g. after the MySQL server of your forum has been upgraded to a version >= 4.1), you can convert your forum to UTF-8 through the admin panel.';
+$txt['error_utf8_version'] = 'The current version of your database doesn\'t support the use of the UTF-8 character set. You can still install SMF without any problems, but only with UTF-8 support unchecked. If you would like to switch over to UTF-8 in the future (e.g. after the database server of your forum has been upgraded to version >= %s), you can convert your forum to UTF-8 through the admin panel.';
 
 ?>

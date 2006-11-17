@@ -104,10 +104,10 @@ function Login2()
 		else
 			trigger_error('Login2(): Cannot be logged in without a session or cookie', E_USER_ERROR);
 
-		$user_settings['passwordSalt'] = substr(md5(rand()), 0, 4);
-		updateMemberData($user_info['id'], array('passwordSalt' => '\'' . $user_settings['passwordSalt'] . '\''));
+		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
+		updateMemberData($user_info['id'], array('password_salt' => '\'' . $user_settings['password_salt'] . '\''));
 
-		setLoginCookie($timeout - time(), $user_info['id'], sha1($user_settings['passwd'] . $user_settings['passwordSalt']));
+		setLoginCookie($timeout - time(), $user_info['id'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
 
 		redirectexit('action=login2;sa=check;member=' . $user_info['id'], $context['server']['needs_login_fix']);
 	}
@@ -204,20 +204,20 @@ function Login2()
 		}
 
 	// Load the data up!
-	$request = $smfFunc['db_query']("
-		SELECT passwd, ID_MEMBER, ID_GROUP, lngfile, is_activated, emailAddress, additionalGroups, memberName, passwordSalt
+	$request = $smfFunc['db_query']('', "
+		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 		FROM {$db_prefix}members
-		WHERE memberName = '$_REQUEST[user]'
+		WHERE member_name = '$_REQUEST[user]'
 		LIMIT 1", __FILE__, __LINE__);
-	// Probably mistyped or their email, try it as an email address. (memberName first, though!)
+	// Probably mistyped or their email, try it as an email address. (member_name first, though!)
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']("
-			SELECT passwd, ID_MEMBER, ID_GROUP, lngfile, is_activated, emailAddress, additionalGroups, memberName, passwordSalt
+		$request = $smfFunc['db_query']('', "
+			SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 			FROM {$db_prefix}members
-			WHERE emailAddress = '$_REQUEST[user]'
+			WHERE email_address = '$_REQUEST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		// Let them try again, it didn't match anything...
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -236,7 +236,7 @@ function Login2()
 	// Check if the account is activated - COPPA first...
 	if ($activation_status == 5)
 	{
-		$context['login_error'] = $txt['coppa_not_completed1'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['ID_MEMBER'] . '">' . $txt['coppa_not_completed2'] . '</a>';
+		$context['login_error'] = $txt['coppa_not_completed1'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_not_completed2'] . '</a>';
 		return;
 	}
 	// Awaiting approval still?
@@ -255,16 +255,16 @@ function Login2()
 		// Otherwise reactivate!
 		else
 		{
-			updateMemberData($user_settings['ID_MEMBER'], array('is_activated' => 1));
+			updateMemberData($user_settings['id_member'], array('is_activated' => 1));
 			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 0 ? $modSettings['unapprovedMembers'] - 1 : 0)));
 		}
 	}
 	// Standard activation?
 	elseif ($activation_status != 1)
 	{
-		log_error($txt['activate_not_completed1'] . ' - <span class="remove">' . $user_settings['memberName'] . '</span>', false);
+		log_error($txt['activate_not_completed1'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', false);
 
-		$context['login_error'] = $txt['activate_not_completed1'] . ' <a href="' . $scripturl . '?action=activate;sa=resend;u=' . $user_settings['ID_MEMBER'] . '">' . $txt['activate_not_completed2'] . '</a>';
+		$context['login_error'] = $txt['activate_not_completed1'] . ' <a href="' . $scripturl . '?action=activate;sa=resend;u=' . $user_settings['id_member'] . '">' . $txt['activate_not_completed2'] . '</a>';
 		return;
 	}
 
@@ -289,7 +289,7 @@ function Login2()
 				redirectexit('action=reminder');
 			else
 			{
-				log_error($txt[39] . ' - <span class="remove">' . $user_settings['memberName'] . '</span>', 'user');
+				log_error($txt[39] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
 				$context['disable_login_hashing'] = true;
 				$context['login_error'] = $txt[39];
@@ -298,7 +298,7 @@ function Login2()
 		}
 	}
 	else
-		$sha_passwd = sha1(strtolower($user_settings['memberName']) . un_htmlspecialchars(stripslashes($_REQUEST['passwrd'])));
+		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars(stripslashes($_REQUEST['passwrd'])));
 
 	// Bad password!  Thought you could fool the database?!
 	if ($user_settings['passwd'] != $sha_passwd)
@@ -307,15 +307,15 @@ function Login2()
 		$other_passwords = array();
 
 		// None of the below cases will be used most of the time (because the salt is normally set.)
-		if ($user_settings['passwordSalt'] == '')
+		if ($user_settings['password_salt'] == '')
 		{
 			// YaBB SE, Discus, MD5 (used a lot), SHA-1 (used some), SMF 1.0.x, IkonBoard, and none at all.
 			$other_passwords[] = crypt($_REQUEST['passwrd'], substr($_REQUEST['passwrd'], 0, 2));
 			$other_passwords[] = crypt($_REQUEST['passwrd'], substr($user_settings['passwd'], 0, 2));
 			$other_passwords[] = md5($_REQUEST['passwrd']);
 			$other_passwords[] = sha1($_REQUEST['passwrd']);
-			$other_passwords[] = md5_hmac($_REQUEST['passwrd'], strtolower($user_settings['memberName']));
-			$other_passwords[] = md5($_REQUEST['passwrd'] . strtolower($user_settings['memberName']));
+			$other_passwords[] = md5_hmac($_REQUEST['passwrd'], strtolower($user_settings['member_name']));
+			$other_passwords[] = md5($_REQUEST['passwrd'] . strtolower($user_settings['member_name']));
 			$other_passwords[] = $_REQUEST['passwrd'];
 
 			// This one is a strange one... MyPHP, crypt() on the MD5 hash.
@@ -329,22 +329,22 @@ function Login2()
 		elseif (strlen($user_settings['passwd']) == 32)
 		{
 			// vBulletin 3 style hashing?  Let's welcome them with open arms \o/.
-			$other_passwords[] = md5(md5($_REQUEST['passwrd']) . $user_settings['passwordSalt']);
+			$other_passwords[] = md5(md5($_REQUEST['passwrd']) . $user_settings['password_salt']);
 			// Hmm.. p'raps it's Invision 2 style?
-			$other_passwords[] = md5(md5($user_settings['passwordSalt']) . md5($_REQUEST['passwrd']));
+			$other_passwords[] = md5(md5($user_settings['password_salt']) . md5($_REQUEST['passwrd']));
 		}
 
 		// Maybe they are using a hash from before the password fix.
-		$other_passwords[] = sha1(strtolower($user_settings['memberName']) . addslashes(un_htmlspecialchars(stripslashes($_REQUEST['passwrd']))));
+		$other_passwords[] = sha1(strtolower($user_settings['member_name']) . addslashes(un_htmlspecialchars(stripslashes($_REQUEST['passwrd']))));
 
 		// Whichever encryption it was using, let's make it use SMF's now ;).
 		if (in_array($user_settings['passwd'], $other_passwords))
 		{
 			$user_settings['passwd'] = $sha_passwd;
-			$user_settings['passwordSalt'] = substr(md5(rand()), 0, 4);
+			$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
 
 			// Update the password and set up the hash.
-			updateMemberData($user_settings['ID_MEMBER'], array('passwd' => '\'' . $user_settings['passwd'] . '\'', 'passwordSalt' => '\'' . $user_settings['passwordSalt'] . '\''));
+			updateMemberData($user_settings['id_member'], array('passwd' => '\'' . $user_settings['passwd'] . '\'', 'password_salt' => '\'' . $user_settings['password_salt'] . '\''));
 		}
 		// Okay, they for sure didn't enter the password!
 		else
@@ -359,7 +359,7 @@ function Login2()
 			else
 			{
 				// Log an error so we know that it didn't go well in the error log.
-				log_error($txt[39] . ' - <span class="remove">' . $user_settings['memberName'] . '</span>', 'user');
+				log_error($txt[39] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
 				$context['login_error'] = $txt[39];
 				return;
@@ -367,29 +367,29 @@ function Login2()
 		}
 	}
 	// Correct password, but they've got no salt; fix it!
-	elseif ($user_settings['passwordSalt'] == '')
+	elseif ($user_settings['password_salt'] == '')
 	{
-		$user_settings['passwordSalt'] = substr(md5(rand()), 0, 4);
-		updateMemberData($user_settings['ID_MEMBER'], array('passwordSalt' => '\'' . $user_settings['passwordSalt'] . '\''));
+		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
+		updateMemberData($user_settings['id_member'], array('password_salt' => '\'' . $user_settings['password_salt'] . '\''));
 	}
 
 	if (isset($modSettings['integrate_login']) && function_exists($modSettings['integrate_login']))
-		$modSettings['integrate_login']($user_settings['memberName'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']);
+		$modSettings['integrate_login']($user_settings['member_name'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']);
 
 	// Get ready to set the cookie...
-	$username = $user_settings['memberName'];
-	$user_info['id'] = $user_settings['ID_MEMBER'];
+	$username = $user_settings['member_name'];
+	$user_info['id'] = $user_settings['id_member'];
 
 	// Bam!  Cookie set.  A session too, just incase.
-	setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['ID_MEMBER'], sha1($user_settings['passwd'] . $user_settings['passwordSalt']));
+	setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['id_member'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
 
 	// Reset the login threshold.
 	if (isset($_SESSION['failed_login']))
 		unset($_SESSION['failed_login']);
 
 	$user_info['is_guest'] = false;
-	$user_settings['additionalGroups'] = explode(',', $user_settings['additionalGroups']);
-	$user_info['is_admin'] = $user_settings['ID_GROUP'] == 1 || in_array(1, $user_settings['additionalGroups']);
+	$user_settings['additional_groups'] = explode(',', $user_settings['additional_groups']);
+	$user_info['is_admin'] = $user_settings['id_group'] == 1 || in_array(1, $user_settings['additional_groups']);
 
 	// Are you banned?
 	is_not_banned(true);
@@ -403,16 +403,15 @@ function Login2()
 
 	// Don't stick the language or theme after this point.
 	unset($_SESSION['language']);
-	unset($_SESSION['ID_THEME']);
+	unset($_SESSION['id_theme']);
 
 	// You've logged in, haven't you?
-	updateMemberData($user_info['id'], array('lastLogin' => time(), 'memberIP' => '\'' . $user_info['ip'] . '\''));
+	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\''));
 
 	// Get rid of the online entry for that old guest....
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_online
-		WHERE session = 'ip$user_info[ip]'
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE session = 'ip$user_info[ip]'", __FILE__, __LINE__);
 	$_SESSION['log_time'] = 0;
 
 	// Just log you back out if it's in maintenance mode and you AREN'T an admin.
@@ -440,18 +439,17 @@ function Logout($internal = false)
 	if (!$user_info['is_guest'])
 	{
 		if (isset($modSettings['integrate_logout']) && function_exists($modSettings['integrate_logout']))
-			call_user_func($modSettings['integrate_logout'], $user_settings['memberName']);
+			call_user_func($modSettings['integrate_logout'], $user_settings['member_name']);
 	
 		// If you log out, you aren't online anymore :P.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_online
-			WHERE ID_MEMBER = $user_info[id]
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 	}
 
 	$_SESSION['log_time'] = 0;
 
-	// Empty the cookie! (set it in the past, and for ID_MEMBER = 0)
+	// Empty the cookie! (set it in the past, and for id_member = 0)
 	setLoginCookie(-3600, 0);
 
 	// Off to the merry board index we go!

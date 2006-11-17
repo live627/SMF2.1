@@ -162,8 +162,8 @@ function integrate_login($username, $password, $cookietime)
 	global $ig_admin_group, $db, $user_settings;
 	
 	//If $admin_group is true, we want to migrate this user to iGaming.
-	$groups = explode(',', $user_settings['additionalGroups']);
-	$admin_group = $user_settings['ID_GROUP'] == $ig_admin_group || in_array($ig_admin_group, $user_settings['additionalGroups']);
+	$groups = explode(',', $user_settings['additional_groups']);
+	$admin_group = $user_settings['id_group'] == $ig_admin_group || in_array($ig_admin_group, $user_settings['additional_groups']);
 	
 	//Note that this is going to be a SHA1 password, so this user will need to change their password in their profile 
 	//before they will be able to login to the iGaming admin panel
@@ -172,15 +172,15 @@ function integrate_login($username, $password, $cookietime)
 		$rs = $db->Execute("
 			INSERT INTO sp_members
 				(`ID` , `PSEUDO` , `PASS` , `EMAIL` , `NOM` , `PRIV` , `ACTIF` )
-			VALUES ('' , '$username' , '$password' , '$user_settings[emailAddress]' , 'Administrator' , '0' , '1' )");
+			VALUES ('' , '$username' , '$password' , '$user_settings[email_address]' , 'Administrator' , '0' , '1' )");
 }
 
 function integrate_reset_pass($old_username, $username, $password)
 {
 	global $ig_admin_group, $db, $user_settings;
 	
-	$groups = explode(',', $user_settings['additionalGroups']);
-	$admin_group = $user_settings['ID_GROUP'] == $ig_admin_group || in_array($ig_admin_group, $user_settings['additionalGroups']);
+	$groups = explode(',', $user_settings['additional_groups']);
+	$admin_group = $user_settings['id_group'] == $ig_admin_group || in_array($ig_admin_group, $user_settings['additional_groups']);
 
 	$password = md5($password);
 

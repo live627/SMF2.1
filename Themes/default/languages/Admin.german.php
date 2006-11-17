@@ -423,7 +423,7 @@ $txt['support_title'] = 'Support Informationen';
 $txt['support_versions_current'] = 'Aktuelle SMF Version';
 $txt['support_versions_forum'] = 'Forum Version';
 $txt['support_versions_php'] = 'PHP Version';
-$txt['support_versions_mysql'] = 'MySQL Version';
+$txt['support_versions_db'] = '%s Version';
 $txt['support_versions_server'] = 'Server Version';
 $txt['support_versions_gd'] = 'GD Version';
 $txt['support_versions'] = 'Versionsinformation';
@@ -465,7 +465,7 @@ $txt['attachment_manager_browse'] = 'Dateien durchsuchen';
 $txt['attachment_manager_maintenance'] = 'Dateien warten';
 $txt['attachment_manager_save'] = 'Speichern';
 
-$txt['attachment_manager_settings'] = 'Einstellungen f&uuml;r Dateianh&auml;nge';
+$txt['attachmentEnable'] = 'Einstellungen f&uuml;r Dateianh&auml;nge';
 $txt['attachmentEnable_deactivate'] = 'Dateianh&auml;nge deaktivieren';
 $txt['attachmentEnable_enable_all'] = 'Alle Dateianh&auml;nge aktivieren';
 $txt['attachmentEnable_disable_new'] = 'Neue Dateanh&auml;nge deaktivieren';

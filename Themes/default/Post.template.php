@@ -200,9 +200,9 @@ function template_main()
 		echo '
 			function pollOptions()
 			{
-				var expireTime = document.getElementById("poll_expire");
+				var expire_time = document.getElementById("poll_expire");
 
-				if (isEmptyText(expireTime) || expireTime.value == 0)
+				if (isEmptyText(expire_time) || expire_time.value == 0)
 				{
 					document.forms.postmodify.poll_hide[2].disabled = true;
 					if (document.forms.postmodify.poll_hide[2].checked)

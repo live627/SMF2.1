@@ -95,7 +95,7 @@ function ViewMembers()
 	loadTemplate('ManageMembers');
 
 	// Get counts on every type of activation - for sections and filtering alike.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*) AS totalMembers, is_activated
 		FROM {$db_prefix}members
 		WHERE is_activated != 1
@@ -210,23 +210,23 @@ function ViewMemberlist()
 		);
 		$context['postgroups'] = array();
 
-		$request = $smfFunc['db_query']("
-			SELECT ID_GROUP, groupName, minPosts
+		$request = $smfFunc['db_query']('', "
+			SELECT id_group, group_name, min_posts
 			FROM {$db_prefix}membergroups
-			WHERE ID_GROUP != 3
-			ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
+			WHERE id_group != 3
+			ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if ($row['minPosts'] == -1)
+			if ($row['min_posts'] == -1)
 				$context['membergroups'][] = array(
-					'id' => $row['ID_GROUP'],
-					'name' => $row['groupName'],
+					'id' => $row['id_group'],
+					'name' => $row['group_name'],
 					'can_be_additional' => true
 				);
 			else
 				$context['postgroups'][] = array(
-					'id' => $row['ID_GROUP'],
-					'name' => $row['groupName']
+					'id' => $row['id_group'],
+					'name' => $row['group_name']
 				);
 		}
 		$smfFunc['db_free_result']($request);
@@ -234,7 +234,7 @@ function ViewMemberlist()
 		// Some data about the form fields and how they are linked to the database.
 		$params = array(
 			'mem_id' => array(
-				'db_fields' => array('ID_MEMBER'),
+				'db_fields' => array('id_member'),
 				'type' => 'int',
 				'range' => true
 			),
@@ -249,12 +249,12 @@ function ViewMemberlist()
 				'range' => true
 			),
 			'reg_date' => array(
-				'db_fields' => array('dateRegistered'),
+				'db_fields' => array('date_registered'),
 				'type' => 'date',
 				'range' => true
 			),
 			'last_online' => array(
-				'db_fields' => array('lastLogin'),
+				'db_fields' => array('last_login'),
 				'type' => 'date',
 				'range' => true
 			),
@@ -264,20 +264,20 @@ function ViewMemberlist()
 				'values' => array('0', '1', '2'),
 			),
 			'activated' => array(
-				'db_fields' => array('IF(is_activated IN (1, 11), 1, 0)'),
+				'db_fields' => array('CASE WHEN is_activated IN (1, 11) THEN 1 ELSE 0 END'),
 				'type' => 'checkbox',
 				'values' => array('0', '1'),
 			),
 			'membername' => array(
-				'db_fields' => array('memberName', 'realName'),
+				'db_fields' => array('member_name', 'real_name'),
 				'type' => 'string'
 			),
 			'email' => array(
-				'db_fields' => array('emailAddress'),
+				'db_fields' => array('email_address'),
 				'type' => 'string'
 			),
 			'website' => array(
-				'db_fields' => array('websiteTitle', 'websiteUrl'),
+				'db_fields' => array('website_title', 'website_url'),
 				'type' => 'string'
 			),
 			'location' => array(
@@ -285,11 +285,11 @@ function ViewMemberlist()
 				'type' => 'string'
 			),
 			'ip' => array(
-				'db_fields' => array('memberIP'),
+				'db_fields' => array('member_ip'),
 				'type' => 'string'
 			),
 			'messenger' => array(
-				'db_fields' => array('ICQ', 'AIM', 'YIM', 'MSN'),
+				'db_fields' => array('icq', 'aim', 'yim', 'msn'),
 				'type' => 'string'
 			)
 		);
@@ -377,12 +377,12 @@ function ViewMemberlist()
 
 		// Primary membergroups, but only if at least was was not selected.
 		if (!empty($_POST['membergroups'][1]) && count($context['membergroups']) != count($_POST['membergroups'][1]))
-			$mg_query_parts[] = "ID_GROUP IN (" . implode(", ", $_POST['membergroups'][1]) . ")";
+			$mg_query_parts[] = "id_group IN (" . implode(", ", $_POST['membergroups'][1]) . ")";
 
 		// Additional membergroups (these are only relevant if not all primary groups where selected!).
 		if (!empty($_POST['membergroups'][2]) && (empty($_POST['membergroups'][1]) || count($context['membergroups']) != count($_POST['membergroups'][1])))
 			foreach ($_POST['membergroups'][2] as $mg)
-				$mg_query_parts[] = "FIND_IN_SET(" . (int) $mg . ", additionalGroups)";
+				$mg_query_parts[] = "FIND_IN_SET(" . (int) $mg . ", additional_groups)";
 
 		// Combine the one or two membergroup parts into one query part linked with an OR.
 		if (!empty($mg_query_parts))
@@ -390,7 +390,7 @@ function ViewMemberlist()
 
 		// Get all selected post count related membergroups.
 		if (!empty($_POST['postgroups']) && count($_POST['postgroups']) != count($context['postgroups']))
-			$query_parts[] = "ID_POST_GROUP IN (" . implode(", ", $_POST['postgroups']) . ")";
+			$query_parts[] = "id_post_group IN (" . implode(", ", $_POST['postgroups']) . ")";
 
 		// Construct the where part of the query.
 		$where = empty($query_parts) ? '1' : implode('
@@ -413,18 +413,18 @@ function ViewMemberlist()
 
 	// All the columns they have to pick from...
 	$context['columns'] = array(
-		'ID_MEMBER' => array('label' => $txt['member_id']),
-		'memberName' => array('label' => $txt['username']),
-		'realName' => array('label' => $txt['display_name']),
-		'emailAddress' => array('label' => $txt['email_address']),
-		'memberIP' => array('label' => $txt['ip_address']),
-		'lastLogin' => array('label' => $txt['viewmembers_online']),
+		'id_member' => array('label' => $txt['member_id']),
+		'member_name' => array('label' => $txt['username']),
+		'real_name' => array('label' => $txt['display_name']),
+		'email_address' => array('label' => $txt['email_address']),
+		'member_ip' => array('label' => $txt['ip_address']),
+		'last_login' => array('label' => $txt['viewmembers_online']),
 		'posts' => array('label' => $txt['posts'])
 	);
 
-	// Default sort column to 'memberName' if the current one is unknown or not set.
+	// Default sort column to 'member_name' if the current one is unknown or not set.
 	if (!isset($_REQUEST['sort']) || !isset($context['columns'][$_REQUEST['sort']]))
-		$_REQUEST['sort'] = 'memberName';
+		$_REQUEST['sort'] = 'member_name';
 
 	// Provide extra information about each column - the link, whether it's selected, etc.
 	foreach ($context['columns'] as $col => $dummy)
@@ -445,7 +445,7 @@ function ViewMemberlist()
 		$num_members = $modSettings['totalMembers'];
 	else
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members
 			WHERE $where", __FILE__, __LINE__);
@@ -457,8 +457,8 @@ function ViewMemberlist()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=viewmembers' . $context['params_url'] . ';sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $num_members, $modSettings['defaultMaxMembers']);
 	$context['start'] = (int) $_REQUEST['start'];
 
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, memberName, realName, emailAddress, memberIP, lastLogin, posts, is_activated
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, real_name, email_address, member_ip, last_login, posts, is_activated
 		FROM {$db_prefix}members" . ($context['sub_action'] == 'query' && !empty($where) ? "
 		WHERE $where" : '') . "
 		ORDER BY $_REQUEST[sort]" . (!isset($_REQUEST['desc']) ? '' : ' DESC') . "
@@ -466,12 +466,12 @@ function ViewMemberlist()
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Calculate number of days since last online.
-		if (empty($row['lastLogin']))
+		if (empty($row['last_login']))
 			$difference = $txt['never'];
 		else
 		{
 			// Today or some time ago?
-			$difference = jeffsdatediff($row['lastLogin']);
+			$difference = jeffsdatediff($row['last_login']);
 			if (empty($difference))
 				$difference = $txt['viewmembers_today'];
 			elseif ($difference == 1)
@@ -485,16 +485,16 @@ function ViewMemberlist()
 			$difference = '<i title="' . $txt['not_activated'] . '">' . $difference . '</i>';
 
 		$context['members'][] = array(
-			'id' => $row['ID_MEMBER'],
-			'username' => $row['memberName'],
-			'name' => $row['realName'],
-			'email' => $row['emailAddress'],
-			'ip' => $row['memberIP'],
+			'id' => $row['id_member'],
+			'username' => $row['member_name'],
+			'name' => $row['real_name'],
+			'email' => $row['email_address'],
+			'ip' => $row['member_ip'],
 			'last_active' => $difference,
 			'is_activated' => $row['is_activated'] % 10 == 1,
 			'posts' => $row['posts'],
-			'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>'
+			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -515,23 +515,23 @@ function SearchMembers()
 	);
 	$context['postgroups'] = array();
 
-	$request = $smfFunc['db_query']("
-		SELECT ID_GROUP, groupName, minPosts
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group, group_name, min_posts
 		FROM {$db_prefix}membergroups
-		WHERE ID_GROUP != 3
-		ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
+		WHERE id_group != 3
+		ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if ($row['minPosts'] == -1)
+		if ($row['min_posts'] == -1)
 			$context['membergroups'][] = array(
-				'id' => $row['ID_GROUP'],
-				'name' => $row['groupName'],
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
 				'can_be_additional' => true
 			);
 		else
 			$context['postgroups'][] = array(
-				'id' => $row['ID_GROUP'],
-				'name' => $row['groupName']
+				'id' => $row['id_group'],
+				'name' => $row['group_name']
 			);
 	}
 	$smfFunc['db_free_result']($request);
@@ -580,16 +580,16 @@ function MembersAwaitingActivation()
 
 	// The columns that can be sorted.
 	$context['columns'] = array(
-		'ID_MEMBER' => array('label' => $txt['admin_browse_id']),
-		'memberName' => array('label' => $txt['admin_browse_username']),
-		'emailAddress' => array('label' => $txt['admin_browse_email']),
-		'memberIP' => array('label' => $txt['admin_browse_ip']),
-		'dateRegistered' => array('label' => $txt['admin_browse_registered']),
+		'id_member' => array('label' => $txt['admin_browse_id']),
+		'member_name' => array('label' => $txt['admin_browse_username']),
+		'email_address' => array('label' => $txt['admin_browse_email']),
+		'member_ip' => array('label' => $txt['admin_browse_ip']),
+		'date_registered' => array('label' => $txt['admin_browse_registered']),
 	);
 
-	// Default sort column to 'dateRegistered' if the current one is unknown or not set.
+	// Default sort column to 'date_registered' if the current one is unknown or not set.
 	if (!isset($_REQUEST['sort']) || !isset($context['columns'][$_REQUEST['sort']]))
-		$_REQUEST['sort'] = 'dateRegistered';
+		$_REQUEST['sort'] = 'date_registered';
 
 	// Provide extra information about each column - the link, whether it's selected, etc.
 	foreach ($context['columns'] as $col => $dummy)
@@ -606,7 +606,7 @@ function MembersAwaitingActivation()
 	$context['sort_direction'] = !isset($_REQUEST['desc']) ? 'down' : 'up';
 
 	// Calculate the number of results.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}members
 		WHERE is_activated = $context[current_filter]", __FILE__, __LINE__);
@@ -644,8 +644,8 @@ function MembersAwaitingActivation()
 			'remind' => $txt['admin_browse_w_remind'] . ' ' . $txt['admin_browse_w_email'],
 		);
 
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, memberName, emailAddress, memberIP, dateRegistered
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, email_address, member_ip, date_registered
 		FROM {$db_prefix}members
 		WHERE is_activated = $context[current_filter]
 		ORDER BY $_REQUEST[sort]" . (!isset($_REQUEST['desc']) ? '' : ' DESC') . "
@@ -653,13 +653,13 @@ function MembersAwaitingActivation()
 
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['members'][] = array(
-			'id' => $row['ID_MEMBER'],
-			'username' => $row['memberName'],
-			'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['memberName'] . '</a>',
-			'email' => $row['emailAddress'],
-			'ip' => $row['memberIP'],
-			'dateRegistered' => timeformat($row['dateRegistered']),
+			'id' => $row['id_member'],
+			'username' => $row['member_name'],
+			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+			'email' => $row['email_address'],
+			'ip' => $row['member_ip'],
+			'date_registered' => timeformat($row['date_registered']),
 		);
 	$smfFunc['db_free_result']($request);
 }
@@ -691,7 +691,7 @@ function AdminApprove()
 	{
 		$timeBefore = time() - 86400 * (int) $_POST['time_passed'];
 		$condition = "
-			AND dateRegistered < $timeBefore";
+			AND date_registered < $timeBefore";
 	}
 	// Coming from checkboxes - validate the members passed through to us.
 	else
@@ -700,12 +700,12 @@ function AdminApprove()
 		foreach ($_POST['todoAction'] as $id)
 			$members[] = (int) $id;
 		$condition = "
-			AND ID_MEMBER IN (" . implode(', ', $members) . ")";
+			AND id_member IN (" . implode(', ', $members) . ")";
 	}
 
 	// Get information on each of the members, things that are important to us, like email address...
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, memberName, realName, emailAddress, validation_code, lngfile
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, real_name, email_address, validation_code, lngfile
 		FROM {$db_prefix}members
 		WHERE is_activated = $current_filter$condition
 		ORDER BY lngfile", __FILE__, __LINE__);
@@ -721,12 +721,12 @@ function AdminApprove()
 	// Fill the info array.
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$members[] = $row['ID_MEMBER'];
+		$members[] = $row['id_member'];
 		$member_info[] = array(
-			'id' => $row['ID_MEMBER'],
-			'username' => $row['memberName'],
-			'name' => $row['realName'],
-			'email' => $row['emailAddress'],
+			'id' => $row['id_member'],
+			'username' => $row['member_name'],
+			'name' => $row['real_name'],
+			'email' => $row['email_address'],
 			'language' => empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'],
 			'code' => $row['validation_code']
 		);
@@ -737,7 +737,7 @@ function AdminApprove()
 	if ($_POST['todo'] == 'ok' || $_POST['todo'] == 'okemail')
 	{
 		// Approve/activate this member.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
 			SET validation_code = '', is_activated = 1
 			WHERE is_activated = $current_filter$condition
@@ -779,13 +779,13 @@ function AdminApprove()
 			// Generate a random activation code.
 			$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
-			// Set these members for activation - I know this includes two ID_MEMBER checks but it's safer than bodging $condition ;).
-			$smfFunc['db_query']("
+			// Set these members for activation - I know this includes two id_member checks but it's safer than bodging $condition ;).
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}members
 				SET validation_code = '$validation_code', is_activated = 0
 				WHERE is_activated = $current_filter
 					$condition
-					AND ID_MEMBER = $member[id]
+					AND id_member = $member[id]
 				LIMIT 1", __FILE__, __LINE__);
 
 			if (empty($current_language) || $current_language != $member['language'])
@@ -876,7 +876,7 @@ function AdminApprove()
 
 	// If they haven't been deleted, update the post group statistics on them...
 	if (!in_array($_POST['todo'], array('delete', 'deleteemail', 'reject', 'rejectemail', 'remind')))
-		updateStats('postgroups', 'ID_MEMBER IN (' . implode(', ', $members) . ')');
+		updateStats('postgroups', 'id_member IN (' . implode(', ', $members) . ')');
 
 	redirectexit('action=admin;area=viewmembers;sa=browse;type=' . $_REQUEST['type'] . ';sort=' . $_REQUEST['sort'] . ';filter=' . $current_filter . ';start=' . $_REQUEST['start']);
 }

@@ -36,7 +36,7 @@ if (!defined('SMF'))
 	array determineActions(array urls)
 		- determine the actions of the members passed in urls.
 		- urls should be a single url (string) or an array of arrays, each
-		  inner array being (serialized request data, ID_MEMBER).
+		  inner array being (serialized request data, id_member).
 		- returns an array of descriptions if you passed an array, otherwise
 		  the string describing their current location.
 
@@ -59,7 +59,7 @@ if (!defined('SMF'))
 // Who's online, and what are they doing?
 function Who()
 {
-	global $db_prefix, $context, $scripturl, $user_info, $txt, $modSettings, $ID_MEMBER, $memberContext, $smfFunc;
+	global $db_prefix, $context, $scripturl, $user_info, $txt, $modSettings, $id_member, $memberContext, $smfFunc;
 
 	// Permissions, permissions, permissions.
 	isAllowedTo('who_view');
@@ -74,13 +74,13 @@ function Who()
 
 	// Sort out... the column sorting.
 	$sort_methods = array(
-		'user' => 'mem.realName',
-		'time' => 'lo.logTime'
+		'user' => 'mem.real_name',
+		'time' => 'lo.log_time'
 	);
 
 	$show_methods = array(
-		'members' => '(lo.ID_MEMBER != 0)',
-		'guests' => '(lo.ID_MEMBER = 0)',
+		'members' => '(lo.id_member != 0)',
+		'guests' => '(lo.id_member = 0)',
 		'all' => '',
 	);
 
@@ -99,7 +99,7 @@ function Who()
 	if (!isset($_REQUEST['sort']) || !isset($sort_methods[$_REQUEST['sort']]))
 	{
 		$context['sort_by'] = 'time';
-		$_REQUEST['sort'] = 'lo.logTime';
+		$_REQUEST['sort'] = 'lo.log_time';
 	}
 	// Otherwise default to ascending.
 	else
@@ -112,7 +112,7 @@ function Who()
 
 	$conditions = array();
 	if (!allowedTo('moderate_forum'))
-		$conditions[] = '(IFNULL(mem.showOnline, 1) = 1)';
+		$conditions[] = '(IFNULL(mem.show_online, 1) = 1)';
 	if (!isset($_REQUEST['show']) || !isset($show_methods[$_REQUEST['show']]) || $_REQUEST['show'] == 'all')
 	{
 		$context['show_by'] = 'all';
@@ -124,10 +124,10 @@ function Who()
 	}
 
 	// Get the total amount of members online.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (lo.ID_MEMBER = mem.ID_MEMBER)" . (!empty($conditions) ? "
+			LEFT JOIN {$db_prefix}members AS mem ON (lo.id_member = mem.id_member)" . (!empty($conditions) ? "
 		WHERE " . implode(' AND ', $conditions) : ''), __FILE__, __LINE__);
 	list ($totalMembers) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -137,14 +137,14 @@ function Who()
 	$context['start'] = $_REQUEST['start'];
 
 	// Look for people online, provided they don't mind if you see they are.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			(UNIX_TIMESTAMP(lo.logTime) - UNIX_TIMESTAMP() + " . time() . ") AS logTime,
-			lo.ID_MEMBER, lo.url, INET_NTOA(lo.ip) AS ip, mem.realName, lo.session,
-			mg.onlineColor, IFNULL(mem.showOnline, 1) AS showOnline
+			(UNIX_TIMESTAMP(lo.log_time) - UNIX_TIMESTAMP() + " . time() . ") AS log_time,
+			lo.id_member, lo.url, INET_NTOA(lo.ip) AS ip, mem.real_name, lo.session,
+			mg.online_color, IFNULL(mem.show_online, 1) AS show_online
 		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (lo.ID_MEMBER = mem.ID_MEMBER)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))" . (!empty($conditions) ? "
+			LEFT JOIN {$db_prefix}members AS mem ON (lo.id_member = mem.id_member)
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" . (!empty($conditions) ? "
 		WHERE " . implode(' AND ', $conditions) : '') . "
 		ORDER BY $_REQUEST[sort] " . (isset($_REQUEST['asc']) ? 'ASC' : 'DESC') . "
 		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
@@ -159,18 +159,18 @@ function Who()
 
 		// Send the information to the template.
 		$context['members'][$row['session']] = array(
-			'id' => $row['ID_MEMBER'],
+			'id' => $row['id_member'],
 			'ip' => allowedTo('moderate_forum') ? $row['ip'] : '',
 			// It is *going* to be today or yesterday, so why keep that information in there?
-			'time' => strtr(timeformat($row['logTime']), array($txt['smf10'] => '', $txt['smf10b'] => '')),
-			'timestamp' => forum_time(true, $row['logTime']),
+			'time' => strtr(timeformat($row['log_time']), array($txt['smf10'] => '', $txt['smf10b'] => '')),
+			'timestamp' => forum_time(true, $row['log_time']),
 			'query' => $actions,
-			'is_hidden' => $row['showOnline'] == 0,
-			'color' => empty($row['onlineColor']) ? '' : $row['onlineColor']
+			'is_hidden' => $row['show_online'] == 0,
+			'color' => empty($row['online_color']) ? '' : $row['online_color']
 		);
 
-		$url_data[$row['session']] = array($row['url'], $row['ID_MEMBER']);
-		$member_ids[] = $row['ID_MEMBER'];
+		$url_data[$row['session']] = array($row['url'], $row['id_member']);
+		$member_ids[] = $row['id_member'];
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -216,7 +216,7 @@ function Who()
 
 function determineActions($urls)
 {
-	global $txt, $db_prefix, $user_info, $ID_MEMBER, $modSettings, $smfFunc;
+	global $txt, $db_prefix, $user_info, $id_member, $modSettings, $smfFunc;
 
 	if (!allowedTo('who_view'))
 		return array();
@@ -246,7 +246,7 @@ function determineActions($urls)
 	);
 
 	if (!is_array($urls))
-		$url_list = array(array($urls, $ID_MEMBER));
+		$url_list = array(array($urls, $id_member));
 	else
 		$url_list = $urls;
 
@@ -330,21 +330,21 @@ function determineActions($urls)
 				// Find out what message they are accessing.
 				$msgid = (int) (isset($actions['msg']) ? $actions['msg'] : (isset($actions['quote']) ? $actions['quote'] : 0));
 
-				$result = $smfFunc['db_query']("
-					SELECT m.ID_TOPIC, m.subject
+				$result = $smfFunc['db_query']('', "
+					SELECT m.id_topic, m.subject
 					FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS m, {$db_prefix}topics AS t)
 					WHERE $user_info[query_see_board]
-						AND m.ID_MSG = $msgid
-						AND m.ID_BOARD = b.ID_BOARD
-						AND t.ID_TOPIC = m.ID_TOPIC
+						AND m.id_msg = $msgid
+						AND m.id_board = b.id_board
+						AND t.id_topic = m.id_topic
 						AND t.approved = 1
 						AND m.approved = 1
 					LIMIT 1", __FILE__, __LINE__);
-				list ($ID_TOPIC, $subject) = $smfFunc['db_fetch_row']($result);
-				$data[$k] = sprintf($txt['whopost_' . $actions['action']], $ID_TOPIC, $subject);
+				list ($id_topic, $subject) = $smfFunc['db_fetch_row']($result);
+				$data[$k] = sprintf($txt['whopost_' . $actions['action']], $id_topic, $subject);
 				$smfFunc['db_free_result']($result);
 
-				if (empty($ID_TOPIC))
+				if (empty($id_topic))
 					$data[$k] = $txt['who_hidden'];
 			}
 			// Viewable only by administrators.. (if it starts with whoadmin, it's admin only!)
@@ -367,20 +367,20 @@ function determineActions($urls)
 	// Load topic names.
 	if (!empty($topic_ids))
 	{
-		$result = $smfFunc['db_query']("
-			SELECT t.ID_TOPIC, m.subject
+		$result = $smfFunc['db_query']('', "
+			SELECT t.id_topic, m.subject
 			FROM ({$db_prefix}boards AS b, {$db_prefix}topics AS t, {$db_prefix}messages AS m)
 			WHERE $user_info[query_see_board]
-				AND t.ID_TOPIC IN (" . implode(', ', array_keys($topic_ids)) . ")
-				AND t.ID_BOARD = b.ID_BOARD
-				AND m.ID_MSG = t.ID_FIRST_MSG
+				AND t.id_topic IN (" . implode(', ', array_keys($topic_ids)) . ")
+				AND t.id_board = b.id_board
+				AND m.id_msg = t.id_first_msg
 				AND t.approved = 1
 			LIMIT " . count($topic_ids), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Show the topic's subject for each of the actions.
-			foreach ($topic_ids[$row['ID_TOPIC']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, $row['ID_TOPIC'], censorText($row['subject']));
+			foreach ($topic_ids[$row['id_topic']] as $k => $session_text)
+				$data[$k] = sprintf($session_text, $row['id_topic'], censorText($row['subject']));
 		}
 		$smfFunc['db_free_result']($result);
 	}
@@ -388,17 +388,17 @@ function determineActions($urls)
 	// Load board names.
 	if (!empty($board_ids))
 	{
-		$result = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.name
+		$result = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.name
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[query_see_board]
-				AND b.ID_BOARD IN (" . implode(', ', array_keys($board_ids)) . ")
+				AND b.id_board IN (" . implode(', ', array_keys($board_ids)) . ")
 			LIMIT " . count($board_ids), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Put the board name into the string for each member...
-			foreach ($board_ids[$row['ID_BOARD']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, $row['ID_BOARD'], $row['name']);
+			foreach ($board_ids[$row['id_board']] as $k => $session_text)
+				$data[$k] = sprintf($session_text, $row['id_board'], $row['name']);
 		}
 		$smfFunc['db_free_result']($result);
 	}
@@ -406,20 +406,20 @@ function determineActions($urls)
 	// Load member names for the profile.
 	if (!empty($profile_ids) && (allowedTo('profile_view_any') || allowedTo('profile_view_own')))
 	{
-		$result = $smfFunc['db_query']("
-			SELECT ID_MEMBER, realName
+		$result = $smfFunc['db_query']('', "
+			SELECT id_member, real_name
 			FROM {$db_prefix}members
-			WHERE ID_MEMBER IN (" . implode(', ', array_keys($profile_ids)) . ")
+			WHERE id_member IN (" . implode(', ', array_keys($profile_ids)) . ")
 			LIMIT " . count($profile_ids), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// If they aren't allowed to view this person's profile, skip it.
-			if (!allowedTo('profile_view_any') && $ID_MEMBER != $row['ID_MEMBER'])
+			if (!allowedTo('profile_view_any') && $id_member != $row['id_member'])
 				continue;
 
 			// Set their action on each - session/text to sprintf.
-			foreach ($profile_ids[$row['ID_MEMBER']] as $k => $session_text)
-				$data[$k] = sprintf($session_text, $row['ID_MEMBER'], $row['realName']);
+			foreach ($profile_ids[$row['id_member']] as $k => $session_text)
+				$data[$k] = sprintf($session_text, $row['id_member'], $row['real_name']);
 		}
 		$smfFunc['db_free_result']($result);
 	}

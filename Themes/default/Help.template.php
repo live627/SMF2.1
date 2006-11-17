@@ -1013,19 +1013,19 @@ function template_manual_profile()
 											</td>
 										</tr>
 										<tr>
-											<td><b>ICQ:</b></td>
+											<td><b>icq:</b></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>AIM:</b></td>
+											<td><b>aim:</b></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>MSN:</b></td>
+											<td><b>msn:</b></td>
 											<td></td>
 										</tr>
 										<tr>
-											<td><b>YIM:</b></td>
+											<td><b>yim:</b></td>
 											<td></td>
 										</tr>
 										<tr>

@@ -491,7 +491,7 @@ $txt['attach_downloaded'] = 'gedownload';
 $txt['attach_viewed'] = 'bekeken';
 $txt['attach_times'] = 'keer';
 
-$txt['MSN'] = 'MSN';
+$txt['msn'] = 'MSN';
 
 $txt['settings'] = 'Instellingen';
 $txt['never'] = 'Nooit';

@@ -99,7 +99,7 @@ function showConfig($option)
 				</td>
 			</tr>
 			<tr>
-				<td width="25%" align="left" valign="top">Ask for ICQ, AIM, YIM, MSN?</td>
+				<td width="25%" align="left" valign="top">Ask for icq, aim, yim, msn?</td>
 				<td align="left" valign="top">
 					<input type="checkbox" name="im"', $im == 'on' ? ' checked="checked"' : '', ' />&nbsp;&nbsp;
 				</td>

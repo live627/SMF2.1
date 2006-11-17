@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2568 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2569 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -22,6 +22,8 @@ November 2006
  * Firefox doesn't display horizontal scrollbars when needed in code tags, so use some javascript to make it happen. (index templates)
  * Added a class to the containing div for the help window and for the audio verification. (Help and Register template)
  * Cleaned up the HTML a little for the audio verification. (Register template)
+ + Added initial support for PostgreSQL. (Subs-Db-postgresql.php, install.php, Most other files)
+ ! Ensure scheduled tasks can never get into a state where they don't run. (Load.php, ScheduledTasks.php)
 
 
 October 2006

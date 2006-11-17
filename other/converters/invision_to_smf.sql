@@ -52,25 +52,25 @@ $row['signature'] = addslashes(preg_replace(
 $row['signature'] = substr(strtr(strtr($row['signature'], '<>', '[]'), array('[br /]' => '<br />')), 0, 65534);
 ---}
 SELECT
-	id AS ID_MEMBER, SUBSTRING(name, 1, 80) AS memberName,
-	joined AS dateRegistered, posts,
-	IF(mgroup = {$INFO['admin_group']}, 1, IF(mgroup > 5, mgroup + 3, 0)) AS ID_GROUP,
-	last_visit AS lastLogin, SUBSTRING(name, 1, 255) AS realName,
-	msg_total AS instantMessages, SUBSTRING(password, 1, 64) AS passwd,
-	SUBSTRING(email, 1, 255) AS emailAddress,
-	SUBSTRING(website, 1, 255) AS websiteTitle,
-	SUBSTRING(website, 1, 255) AS websiteUrl,
+	id AS id_member, SUBSTRING(name, 1, 80) AS member_name,
+	joined AS date_registered, posts,
+	IF(mgroup = {$INFO['admin_group']}, 1, IF(mgroup > 5, mgroup + 3, 0)) AS id_group,
+	last_visit AS last_login, SUBSTRING(name, 1, 255) AS real_name,
+	msg_total AS instant_messages, SUBSTRING(password, 1, 64) AS passwd,
+	SUBSTRING(email, 1, 255) AS email_address,
+	SUBSTRING(website, 1, 255) AS website_title,
+	SUBSTRING(website, 1, 255) AS website_url,
 	SUBSTRING(location, 1, 255) AS location,
-	SUBSTRING(icq_number, 1, 255) AS ICQ, signature,
+	SUBSTRING(icq_number, 1, 255) AS icq, signature,
 	IF (bday_year = 0 AND bday_month != 0 AND bday_day != 0, CONCAT('0004-', bday_month, '-', bday_day), CONCAT_WS('-', IF(bday_year <= 4, 1, bday_year), IF(bday_month = 0, 1, bday_month), IF(bday_day = 0, 1, bday_day))) AS birthdate,
-	SUBSTRING(aim_name, 1, 16) AS AIM, SUBSTRING(yahoo, 1, 32) AS YIM,
-	SUBSTRING(msnname, 1, 255) AS MSN, hide_email AS hideEmail,
+	SUBSTRING(aim_name, 1, 16) AS aim, SUBSTRING(yahoo, 1, 32) AS yim,
+	SUBSTRING(msnname, 1, 255) AS msn, hide_email AS hide_email,
 	SUBSTRING(IF(avatar = 'noavatar' OR INSTR(avatar, 'upload') > 0, '', avatar), 1, 255) AS avatar,
 	email_pm AS pm_email_notify, '' AS lngfile, '' AS buddy_list,
-	'' AS pm_ignore_list, '' AS messageLabels, '' AS personalText,
-	'' AS timeFormat, '' AS usertitle, '' AS memberIP, '' AS secretQuestion,
-	'' AS secretAnswer, '' AS validation_code, '' AS additionalGroups,
-	'' AS smileySet, '' AS passwordSalt
+	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
+	'' AS time_format, '' AS usertitle, '' AS member_ip, '' AS secret_question,
+	'' AS secret_answer, '' AS validation_code, '' AS additional_groups,
+	'' AS smiley_set, '' AS password_salt
 FROM {$from_prefix}members
 WHERE id != 0;
 ---*
@@ -82,7 +82,7 @@ WHERE id != 0;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT id AS ID_CAT, SUBSTRING(name, 1, 255) AS name, position AS catOrder
+SELECT id AS id_cat, SUBSTRING(name, 1, 255) AS name, position AS cat_order
 FROM {$from_prefix}categories
 WHERE id >= 0;
 ---*
@@ -94,14 +94,14 @@ WHERE id >= 0;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	id AS ID_BOARD, topics AS numTopics, posts AS numPosts,
+	id AS id_board, topics AS num_topics, posts AS num_posts,
 	SUBSTRING(name, 1, 255) AS name, 
-	SUBSTRING(description, 1, 65534) AS description, position AS boardOrder,
-	category AS ID_CAT, parent_id AS ID_PARENT, '-1,0' AS memberGroups
+	SUBSTRING(description, 1, 65534) AS description, position AS board_order,
+	category AS id_cat, parent_id AS id_parent, '-1,0' AS member_groups
 FROM {$from_prefix}forums;
 ---*
 
@@ -116,17 +116,17 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.tid AS ID_TOPIC, t.pinned AS isSticky, t.forum_id AS ID_BOARD,
-	t.starter_id AS ID_MEMBER_STARTED, t.last_poster_id AS ID_MEMBER_UPDATED,
-	pl.pid AS ID_POLL, t.posts AS numReplies, t.views AS numViews,
-	MIN(p.pid) AS ID_FIRST_MSG, MAX(p.pid) AS ID_LAST_MSG,
+	t.tid AS id_topic, t.pinned AS is_sticky, t.forum_id AS id_board,
+	t.starter_id AS id_member_started, t.last_poster_id AS id_member_updated,
+	pl.pid AS id_poll, t.posts AS num_replies, t.views AS num_views,
+	MIN(p.pid) AS id_first_msg, MAX(p.pid) AS id_last_msg,
 	t.state = 'closed' AS locked
 FROM ({$from_prefix}topics AS t, {$from_prefix}posts AS p)
 	LEFT JOIN {$from_prefix}polls AS pl ON (pl.tid = t.tid)
 WHERE p.topic_id = t.tid
 GROUP BY t.tid
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
 /******************************************************************************/
@@ -171,14 +171,14 @@ $row['body'] = addslashes(preg_replace(
 $row['body'] = strtr(strtr($row['body'], '<>', '[]'), array('[br /]' => '<br />'));
 ---}
 SELECT
-	p.pid AS ID_MSG, p.topic_id AS ID_TOPIC, p.post_date AS posterTime,
-	p.author_id AS ID_MEMBER, SUBSTRING(t.title, 1, 255) AS subject,
-	SUBSTRING(p.author_name, 1, 255) AS posterName,
-	SUBSTRING(p.ip_address, 1, 255) AS posterIP,
-	p.use_emo AS smileysEnabled, p.edit_time AS modifiedTime,
-	SUBSTRING(p.edit_name, 1, 255) AS modifiedName, t.forum_id AS ID_BOARD,
+	p.pid AS id_msg, p.topic_id AS id_topic, p.post_date AS poster_time,
+	p.author_id AS id_member, SUBSTRING(t.title, 1, 255) AS subject,
+	SUBSTRING(p.author_name, 1, 255) AS poster_name,
+	SUBSTRING(p.ip_address, 1, 255) AS poster_ip,
+	p.use_emo AS smileys_enabled, p.edit_time AS modified_time,
+	SUBSTRING(p.edit_name, 1, 255) AS modified_name, t.forum_id AS id_board,
 	SUBSTRING(REPLACE(p.post, '<br>', '<br />'), 1, 65534) AS body,
-	SUBSTRING(mem.email, 1, 255) AS posterEmail, 'xx' AS icon
+	SUBSTRING(mem.email, 1, 255) AS poster_email, 'xx' AS icon
 FROM {$from_prefix}posts AS p
 	LEFT JOIN {$from_prefix}topics AS t ON (t.tid = p.topic_id)
 	LEFT JOIN {$from_prefix}members AS mem ON (mem.id = p.author_id);
@@ -194,8 +194,8 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	p.pid AS ID_POLL, SUBSTRING(p.poll_question, 1, 255) AS question,
-	p.starter_id AS ID_MEMBER, SUBSTRING(mem.name, 1, 255) AS posterName
+	p.pid AS id_poll, SUBSTRING(p.poll_question, 1, 255) AS question,
+	p.starter_id AS id_member, SUBSTRING(mem.name, 1, 255) AS poster_name
 FROM {$from_prefix}polls AS p
 	LEFT JOIN {$from_prefix}members AS mem ON (mem.id = p.starter_id);
 ---*
@@ -207,7 +207,7 @@ FROM {$from_prefix}polls AS p
 ---* {$to_prefix}poll_choices
 ---{
 $no_add = true;
-$keys = array('ID_POLL', 'ID_CHOICE', 'label', 'votes');
+$keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 $choices = @unserialize(stripslashes($row['choices']));
 
@@ -215,10 +215,10 @@ if (is_array($choices))
 	foreach ($choices as $choice)
 	{
 		$choice = addslashes_recursive($choice);
-		$rows[] = "$row[ID_POLL], SUBSTRING('" . implode("', 1, 255), '", $choice) . "'";
+		$rows[] = "$row[id_poll], SUBSTRING('" . implode("', 1, 255), '", $choice) . "'";
 	}
 ---}
-SELECT pid AS ID_POLL, choices
+SELECT pid AS id_poll, choices
 FROM {$from_prefix}polls;
 ---*
 
@@ -227,7 +227,7 @@ FROM {$from_prefix}polls;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT pl.pid AS ID_POLL, v.member_id AS ID_MEMBER
+SELECT pl.pid AS id_poll, v.member_id AS id_member
 FROM {$from_prefix}voters AS v
 	LEFT JOIN {$from_prefix}polls AS pl ON (pl.tid = v.tid);
 ---*
@@ -274,8 +274,8 @@ $row['body'] = addslashes(preg_replace(
 $row['body'] = substr(strtr(strtr($row['body'], '<>', '[]'), array('[br /]' => '<br />')), 0, 65534);
 ---}
 SELECT
-	pm.msg_id AS ID_PM, pm.from_id AS ID_MEMBER_FROM, pm.msg_date AS msgtime,
-	SUBSTRING(uf.name, 1, 255) AS fromName,
+	pm.msg_id AS id_pm, pm.from_id AS id_member_from, pm.msg_date AS msgtime,
+	SUBSTRING(uf.name, 1, 255) AS from_name,
 	SUBSTRING(pm.title, 1, 255) AS subject,
 	SUBSTRING(pm.message, 1, 65534) AS body
 FROM {$from_prefix}messages AS pm
@@ -291,7 +291,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT 
-	msg_id AS ID_PM, recipient_id AS ID_MEMBER, read_state = 1 AS is_read,
+	msg_id AS id_pm, recipient_id AS id_member, read_state = 1 AS is_read,
 	'' AS labels
 FROM {$from_prefix}messages
 WHERE vid != 'sent';
@@ -304,7 +304,7 @@ WHERE vid != 'sent';
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT member_id AS ID_MEMBER, topic_id AS ID_TOPIC
+SELECT member_id AS id_member, topic_id AS id_topic
 FROM {$from_prefix}tracker;
 ---*
 
@@ -313,7 +313,7 @@ FROM {$from_prefix}tracker;
 /******************************************************************************/
 
 ---* {$to_prefix}log_notify
-SELECT member_id AS ID_MEMBER, forum_id AS ID_BOARD
+SELECT member_id AS id_member, forum_id AS id_board
 FROM {$from_prefix}forum_tracker;
 ---*
 
@@ -324,7 +324,7 @@ FROM {$from_prefix}forum_tracker;
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT member_id AS ID_MEMBER, forum_id AS ID_BOARD
+SELECT member_id AS id_member, forum_id AS id_board
 FROM {$from_prefix}moderators
 WHERE member_id != -1;
 ---*
@@ -334,10 +334,10 @@ WHERE member_id != -1;
 /******************************************************************************/
 
 DELETE FROM {$to_prefix}permissions
-WHERE ID_GROUP > 8;
+WHERE id_group > 8;
 
 DELETE FROM {$to_prefix}membergroups
-WHERE ID_GROUP > 8;
+WHERE id_group > 8;
 
 ---# Transforming permissions...
 ---{
@@ -365,7 +365,7 @@ while (true)
 
 	$result = convert_query("
 		SELECT
-			g_id AS ID_GROUP, g_title AS groupName, g_max_messages AS maxMessages,
+			g_id AS id_group, g_title AS group_name, g_max_messages AS max_messages,
 			g_view_board AS view_stats, g_mem_info AS view_mlist,
 			g_view_board AS who_view, g_use_search AS search_posts, g_email_friend AS send_topic,
 			g_edit_profile AS profile_identity_own, g_post_new_topics AS post_new,
@@ -386,28 +386,28 @@ while (true)
 	{
 		$row = addslashes_recursive($row);
 		// If this is NOT an existing membergroup add it (1-5 = existing.)
-		if ($row['ID_GROUP'] > 5)
+		if ($row['id_group'] > 5)
 		{
 			convert_query("
 				INSERT INTO {$to_prefix}membergroups
-					(ID_GROUP, groupName, maxMessages, onlineColor, stars)
+					(id_group, group_name, max_messages, online_color, stars)
 				VALUES
-					($row[ID_GROUP] + 3, SUBSRING('$row[groupName]', 1, 255), $row[maxMessages], '', '')");
-			$groupID = $row['ID_GROUP'] + 3;
+					($row[id_group] + 3, SUBSRING('$row[group_name]', 1, 255), $row[max_messages], '', '')");
+			$groupID = $row['id_group'] + 3;
 		}
 		else
 		{
-			if ($row['ID_GROUP'] == 2)
+			if ($row['id_group'] == 2)
 				$groupID = -1;
-			elseif ($row['ID_GROUP'] == 3)
+			elseif ($row['id_group'] == 3)
 				$groupID = 0;
 			else
-				$groupID = $row['ID_GROUP'];
+				$groupID = $row['id_group'];
 		}
 
-		unset($row['ID_GROUP']);
-		unset($row['groupName']);
-		unset($row['maxMessages']);
+		unset($row['id_group']);
+		unset($row['group_name']);
+		unset($row['max_messages']);
 
 		foreach ($row as $key => $value)
 			if ($value == 1)
@@ -420,7 +420,7 @@ while (true)
 	if (!empty($perms))
 		convert_query("
 			REPLACE INTO {$to_prefix}permissions
-				(ID_GROUP, permission)
+				(id_group, permission)
 			VALUES (" . implode('),
 				(', $perms) . ")");
 
@@ -472,15 +472,15 @@ global $groupMask;
 
 // We need to load the member groups that we care about at all.
 $result = convert_query("
-	SELECT g_id AS ID_GROUP, g_perm_id AS perms
+	SELECT g_id AS id_group, g_perm_id AS perms
 	FROM {$from_prefix}groups
 	WHERE g_id != 5 AND g_id != 1 AND g_id != 4");
 $groups = array();
 $groupMask = array();
 while ($row = mysql_fetch_assoc($result))
 {
-	$groups[] = $row['ID_GROUP'];
-	$groupMask[$row['ID_GROUP']] = $row['perms'];
+	$groups[] = $row['id_group'];
+	$groupMask[$row['id_group']] = $row['perms'];
 }
 mysql_free_result($result);
 
@@ -533,7 +533,7 @@ while (true)
 	pastTime($substep);
 
 	$result = convert_query("
-		SELECT id AS ID_BOARD, start_perms, reply_perms, read_perms, upload_perms
+		SELECT id AS id_board, start_perms, reply_perms, read_perms, upload_perms
 		FROM {$from_prefix}forums
 		LIMIT $_REQUEST[start], 100");
 	$perms = array();
@@ -562,8 +562,8 @@ while (true)
 				// Update the board with allowed groups - appears twice in case board is hidden... makes sense to me :)
 				convert_query("
 					UPDATE {$to_prefix}boards
-					SET memberGroups = '" . implode(', ', $affectedGroups) . "'
-					WHERE ID_BOARD = $row[ID_BOARD]");
+					SET member_groups = '" . implode(', ', $affectedGroups) . "'
+					WHERE id_board = $row[id_board]");
 			}
 		}
 		else
@@ -579,8 +579,8 @@ while (true)
 				// Update the board with allowed groups - appears twice in case board is hidden... makes sense to me :)
 				convert_query("
 					UPDATE {$to_prefix}boards
-					SET memberGroups = '" . implode(', ', $affectedGroups) . "'
-					WHERE ID_BOARD = $row[ID_BOARD]");
+					SET member_groups = '" . implode(', ', $affectedGroups) . "'
+					WHERE id_board = $row[id_board]");
 			}
 			else
 			{
@@ -622,14 +622,14 @@ while (true)
 			// Now we have $tempGroup filled with all the permissions for each group - better do something with it!
 			foreach ($tempGroup as $groupno => $group)
 				foreach ($group as $permission => $dummy)
-					$perms[] = '(' . $row['ID_BOARD'] . ', ' . $groupno . ', \'' . $permission . '\')';
+					$perms[] = '(' . $row['id_board'] . ', ' . $groupno . ', \'' . $permission . '\')';
 		}
 	}
 
 	if (!empty($perms))
 		convert_query("
 			REPLACE INTO {$to_prefix}board_permissions
-				(ID_BOARD, ID_GROUP, permission)
+				(id_board, id_group, permission)
 			VALUES " . implode(',
 				', $perms));
 
@@ -737,21 +737,21 @@ updateSettingsFile(array(
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('ID_ATTACH', 'size', 'filename', 'ID_MSG', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
-$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+$newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($INFO['upload_dir'] . '/' . $row['oldEncrypt'], $attachmentUploadDir . '/' . $newfilename))
 {
-	$rows[] = "$ID_ATTACH, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[ID_MSG], $row[downloads]";
+	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
 
-	$ID_ATTACH++;
+	$id_attach++;
 }
 ---}
 SELECT
-	pid AS ID_MSG, attach_id AS oldEncrypt, attach_hits AS downloads,
+	pid AS id_msg, attach_id AS oldEncrypt, attach_hits AS downloads,
 	attach_file AS filename
 FROM {$from_prefix}posts
 WHERE IFNULL(attach_id, '') != '';
@@ -764,21 +764,21 @@ WHERE IFNULL(attach_id, '') != '';
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('ID_ATTACH', 'size', 'filename', 'ID_MEMBER');
+$keys = array('id_attach', 'size', 'filename', 'id_member');
 
 if (empty($INFO['upload_dir']) || !file_exists($INFO['upload_dir']))
 	$INFO['upload_dir'] = $_POST['path_from'] . '/uploads';
 
 $oldFileName = substr($row['avatar'], 7);
-$newfilename = getAttachmentFilename($oldFileName, $ID_ATTACH);
+$newfilename = getAttachmentFilename($oldFileName, $id_attach);
 if (strlen($newfilename) <= 255 && copy($INFO['upload_dir'] . '/' . $oldFileName, $attachmentUploadDir . '/' . $newfilename))
 {
-	$rows[] = "$ID_ATTACH, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($oldFileName) . "', $row[ID_MEMBER]";
+	$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($oldFileName) . "', $row[id_member]";
 
-	$ID_ATTACH++;
+	$id_attach++;
 }
 ---}
-SELECT avatar, id AS ID_MEMBER
+SELECT avatar, id AS id_member
 FROM {$from_prefix}members
 WHERE INSTR(avatar, 'upload') != 0;
 ---*

@@ -144,7 +144,7 @@ function html_to_bbc($text)
 
 			if (!empty($names))
 			{
-				$request = $smfFunc['db_query']("
+				$request = $smfFunc['db_query']('', "
 					SELECT code, filename
 					FROM {$db_prefix}smileys
 					WHERE filename IN (" . implode(', ', $names) . ")", __FILE__, __LINE__);
@@ -521,10 +521,10 @@ function getMessageIcons($board_id)
 	{
 		if (($temp = cache_get_data('posting_icons-' . $board_id, 480)) == null)
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT title, filename
 				FROM {$db_prefix}message_icons
-				WHERE ID_BOARD IN (0, $board_id)", __FILE__, __LINE__);
+				WHERE id_board IN (0, $board_id)", __FILE__, __LINE__);
 			$icon_data = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$icon_data[] = $row;

@@ -67,7 +67,7 @@ function UnapprovedPosts()
 	if ($approve_boards == array(0))
 		$approve_query = '';
 	elseif (!empty($approve_boards))
-		$approve_query = ' AND m.ID_BOARD IN (' . implode(',', $approve_boards) . ')';
+		$approve_query = ' AND m.id_board IN (' . implode(',', $approve_boards) . ')';
 	// Nada, zip, etc...
 	else
 		$approve_query = ' AND 0';
@@ -111,24 +111,24 @@ function UnapprovedPosts()
 		$any_array = $curAction == 'approve' ? $approve_boards : $delete_any_boards;
 
 		// Now for each message work out whether it's actually a topic, and what board it's on.
-		$request = $smfFunc['db_query']("
-			SELECT m.ID_MSG, m.ID_MEMBER, m.ID_BOARD, t.ID_TOPIC, t.ID_FIRST_MSG, t.ID_MEMBER_STARTED
+		$request = $smfFunc['db_query']('', "
+			SELECT m.id_msg, m.id_member, m.id_board, t.id_topic, t.id_first_msg, t.id_member_started
 			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-			LEFT JOIN {$db_prefix}boards AS b ON (t.ID_BOARD = b.ID_BOARD)
-			WHERE m.ID_MSG IN (" . implode(',', $toAction) . ")
+			LEFT JOIN {$db_prefix}boards AS b ON (t.id_board = b.id_board)
+			WHERE m.id_msg IN (" . implode(',', $toAction) . ")
 				AND m.approved = 0
-				AND t.ID_TOPIC = m.ID_TOPIC
+				AND t.id_topic = m.id_topic
 				AND $user_info[query_see_board]", __FILE__, __LINE__);
 		$toAction = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// If it's not within what our view is ignore it...
-			if (($row['ID_MSG'] == $row['ID_FIRST_MSG'] && $context['current_view'] != 'topics') || ($row['ID_MSG'] != $row['ID_FIRST_MSG'] && $context['current_view'] != 'replies'))
+			if (($row['id_msg'] == $row['id_first_msg'] && $context['current_view'] != 'topics') || ($row['id_msg'] != $row['id_first_msg'] && $context['current_view'] != 'replies'))
 				continue;
 
 			$can_add = false;
 			// If we're approving this is simple.
-			if ($curAction == 'approve' && ($any_array == array(0) || in_array($row['ID_BOARD'], $any_array)))
+			if ($curAction == 'approve' && ($any_array == array(0) || in_array($row['id_board'], $any_array)))
 			{
 				$can_add = true;
 			}
@@ -136,18 +136,18 @@ function UnapprovedPosts()
 			elseif ($curAction == 'delete')
 			{
 				// Own post is easy!
-				if ($row['ID_MEMBER'] == $user_info['id'] && ($delete_own_boards == array(0) || in_array($row['ID_BOARD'], $delete_own_boards)))
+				if ($row['id_member'] == $user_info['id'] && ($delete_own_boards == array(0) || in_array($row['id_board'], $delete_own_boards)))
 					$can_add = true;
 				// Is it a reply to their own topic?
-				elseif ($row['ID_MEMBER'] == $row['ID_MEMBER_STARTED'] && $row['ID_MSG'] != $row['ID_FIRST_MSG'] && ($delete_own_replies == array(0) || in_array($row['ID_BOARD'], $delete_own_replies)))
+				elseif ($row['id_member'] == $row['id_member_started'] && $row['id_msg'] != $row['id_first_msg'] && ($delete_own_replies == array(0) || in_array($row['id_board'], $delete_own_replies)))
 					$can_add = true;
 				// Someone elses?
-				elseif ($row['ID_MEMBER'] != $user_info['id'] && ($delete_any_boards == array(0) || in_array($row['ID_BOARD'], $delete_any_boards)))
+				elseif ($row['id_member'] != $user_info['id'] && ($delete_any_boards == array(0) || in_array($row['id_board'], $delete_any_boards)))
 					$can_add = true;
 			}
 
 			if ($can_add)
-				$toAction[] = $context['current_view'] == 'topics' ? $row['ID_TOPIC'] : $row['ID_MSG'];
+				$toAction[] = $context['current_view'] == 'topics' ? $row['id_topic'] : $row['id_msg'];
 		}
 		$smfFunc['db_free_result']($request);
 
@@ -177,24 +177,24 @@ function UnapprovedPosts()
 	}
 
 	// How many unapproved posts are there?
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
 		WHERE m.approved = 0
-			AND t.ID_TOPIC = m.ID_TOPIC
-			AND b.ID_BOARD = t.ID_BOARD
-			AND t.ID_FIRST_MSG != m.ID_MSG
+			AND t.id_topic = m.id_topic
+			AND b.id_board = t.id_board
+			AND t.id_first_msg != m.id_msg
 			AND $user_info[query_see_board]
 			$approve_query", __FILE__, __LINE__);
 	list ($context['total_unapproved_posts']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// What about topics?  Normally we'd use the table alias t for topics but lets use m so we don't have to redo our approve query.
-	$request = $smfFunc['db_query']("
-		SELECT COUNT(m.ID_TOPIC)
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(m.id_topic)
 		FROM ({$db_prefix}topics AS m, {$db_prefix}boards AS b)
 		WHERE m.approved = 0
-			AND b.ID_BOARD = m.ID_BOARD
+			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 			$approve_query", __FILE__, __LINE__);
 	list ($context['total_unapproved_topics']) = $smfFunc['db_fetch_row']($request);
@@ -224,17 +224,17 @@ function UnapprovedPosts()
 	);
 
 	// Get all unapproved posts.
-	$request = $smfFunc['db_query']("
-		SELECT m.ID_MSG, m.ID_TOPIC, m.ID_BOARD, m.subject, m.body, m.ID_MEMBER,
-			IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime,
-			t.ID_MEMBER_STARTED, t.ID_FIRST_MSG, b.name AS boardName, c.ID_CAT, c.name AS catName
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_msg, m.id_topic, m.id_board, m.subject, m.body, m.id_member,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
+			t.id_member_started, t.id_first_msg, b.name AS board_name, c.id_cat, c.name AS cat_name
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE m.approved = 0
-			AND t.ID_TOPIC = m.ID_TOPIC
-			AND b.ID_BOARD = m.ID_BOARD
-			AND t.ID_FIRST_MSG " . ($context['current_view'] == 'topics' ? '=' : '!=') . " m.ID_MSG
+			AND t.id_topic = m.id_topic
+			AND b.id_board = m.id_board
+			AND t.id_first_msg " . ($context['current_view'] == 'topics' ? '=' : '!=') . " m.id_msg
 			AND $user_info[query_see_board]
 			$approve_query
 		LIMIT $context[start], 10", __FILE__, __LINE__);
@@ -243,40 +243,40 @@ function UnapprovedPosts()
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Can delete is complicated, let's solve it first... is it their own post?
-		if ($row['ID_MEMBER'] == $user_info['id'] && ($delete_own_boards == array(0) || in_array($row['ID_BOARD'], $delete_own_boards)))
+		if ($row['id_member'] == $user_info['id'] && ($delete_own_boards == array(0) || in_array($row['id_board'], $delete_own_boards)))
 			$can_delete = true;
 		// Is it a reply to their own topic?
-		elseif ($row['ID_MEMBER'] == $row['ID_MEMBER_STARTED'] && $row['ID_MSG'] != $row['ID_FIRST_MSG'] && ($delete_own_replies == array(0) || in_array($row['ID_BOARD'], $delete_own_replies)))
+		elseif ($row['id_member'] == $row['id_member_started'] && $row['id_msg'] != $row['id_first_msg'] && ($delete_own_replies == array(0) || in_array($row['id_board'], $delete_own_replies)))
 			$can_delete = true;
 		// Someone elses?
-		elseif ($row['ID_MEMBER'] != $user_info['id'] && ($delete_any_boards == array(0) || in_array($row['ID_BOARD'], $delete_any_boards)))
+		elseif ($row['id_member'] != $user_info['id'] && ($delete_any_boards == array(0) || in_array($row['id_board'], $delete_any_boards)))
 			$can_delete = true;
 		else
 			$can_delete = false;
 
 		$context['unapproved_items'][] = array(
-			'id' => $row['ID_MSG'],
+			'id' => $row['id_msg'],
 			'counter' => $context['start'] + $count++,
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'subject' => $row['subject'],
 			'body' => parse_bbc($row['body']),
-			'time' => timeformat($row['posterTime']),
+			'time' => timeformat($row['poster_time']),
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'link' => $row['ID_MEMBER'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>' : $row['posterName'],
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>' : $row['poster_name'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			),
 			'topic' => array(
-				'id' => $row['ID_TOPIC'],
+				'id' => $row['id_topic'],
 			),
 			'board' => array(
-				'id' => $row['ID_BOARD'],
-				'name' => $row['boardName'],
+				'id' => $row['id_board'],
+				'name' => $row['board_name'],
 			),
 			'category' => array(
-				'id' => $row['ID_CAT'],
-				'name' => $row['catName'],
+				'id' => $row['id_cat'],
+				'name' => $row['cat_name'],
 			),
 			'can_delete' => $can_delete,
 		);
@@ -299,7 +299,7 @@ function UnapprovedAttachments()
 	if ($approve_boards == array(0))
 		$approve_query = '';
 	elseif (!empty($approve_boards))
-		$approve_query = ' AND m.ID_BOARD IN (' . implode(',', $approve_boards) . ')';
+		$approve_query = ' AND m.id_board IN (' . implode(',', $approve_boards) . ')';
 	else
 		$approve_query = ' AND 0';
 
@@ -326,19 +326,19 @@ function UnapprovedAttachments()
 		require_once($sourcedir . '/ManageAttachments.php');
 
 		// Confirm the attachments are eligible for changing!
-		$request = $smfFunc['db_query']("
-			SELECT a.ID_ATTACH
+		$request = $smfFunc['db_query']('', "
+			SELECT a.id_attach
 			FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m)
-			LEFT JOIN {$db_prefix}boards AS board ON (m.ID_BOARD = b.ID_BOARD)
-			WHERE a.ID_ATTACH IN (" . implode(',', $attachments) . ")
+			LEFT JOIN {$db_prefix}boards AS board ON (m.id_board = b.id_board)
+			WHERE a.id_attach IN (" . implode(',', $attachments) . ")
 				AND a.approved = 0
-				AND a.attachmentType = 0
-				AND m.ID_MSG = a.ID_MSG
+				AND a.attachment_type = 0
+				AND m.id_msg = a.id_msg
 				AND $user_info[query_see_board]
 				$approve_query", __FILE__, __LINE__);
 		$attachments = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$attachments[] = $row['ID_ATTACH'];
+			$attachments[] = $row['id_attach'];
 		$smfFunc['db_free_result']($request);
 
 		// Assuming it wasn't all like, proper illegal, we can do the approving.
@@ -347,18 +347,18 @@ function UnapprovedAttachments()
 			if ($curAction == 'approve')
 				ApproveAttachments($attachments);
 			else
-				removeAttachments('a.ID_ATTACH IN (' . implode(', ', $attachments) . ')');
+				removeAttachments('a.id_attach IN (' . implode(', ', $attachments) . ')');
 		}
 	}
 
 	// How many unapproved attachments in total?
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m, {$db_prefix}boards AS b)
 		WHERE a.approved = 0
-			AND a.attachmentType = 0
-			AND m.ID_MSG = a.ID_MSG
-			AND b.ID_BOARD = m.ID_BOARD
+			AND a.attachment_type = 0
+			AND m.id_msg = a.id_msg
+			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 			$approve_query", __FILE__, __LINE__);
 	list ($context['total_unapproved_attachments']) = $smfFunc['db_fetch_row']($request);
@@ -368,18 +368,18 @@ function UnapprovedAttachments()
 	$context['start'] = $_GET['start'];
 
 	// Get all unapproved attachments.
-	$request = $smfFunc['db_query']("
-		SELECT a.ID_ATTACH, a.filename, a.size, m.ID_MSG, m.ID_TOPIC, m.ID_BOARD, m.subject, m.body, m.ID_MEMBER,
-			IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime,
-			t.ID_MEMBER_STARTED, t.ID_FIRST_MSG, b.name AS boardName, c.ID_CAT, c.name AS catName
+	$request = $smfFunc['db_query']('', "
+		SELECT a.id_attach, a.filename, a.size, m.id_msg, m.id_topic, m.id_board, m.subject, m.body, m.id_member,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
+			t.id_member_started, t.id_first_msg, b.name AS board_name, c.id_cat, c.name AS cat_name
 		FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE a.approved = 0
-			AND a.attachmentType = 0
-			AND m.ID_MSG = a.ID_MSG
-			AND t.ID_TOPIC = m.ID_TOPIC
-			AND b.ID_BOARD = m.ID_BOARD
+			AND a.attachment_type = 0
+			AND m.id_msg = a.id_msg
+			AND t.id_topic = m.id_topic
+			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 			$approve_query
 		LIMIT $context[start], 10", __FILE__, __LINE__);
@@ -387,33 +387,33 @@ function UnapprovedAttachments()
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['unapproved_items'][] = array(
-			'id' => $row['ID_ATTACH'],
+			'id' => $row['id_attach'],
 			'filename' => $row['filename'],
 			'size' => round($row['size'] / 1024, 2),
-			'time' => timeformat($row['posterTime']),
+			'time' => timeformat($row['poster_time']),
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'link' => $row['ID_MEMBER'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>' : $row['posterName'],
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>' : $row['poster_name'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			),
 			'message' => array(
-				'id' => $row['ID_MSG'],
+				'id' => $row['id_msg'],
 				'subject' => $row['subject'],
 				'body' => parse_bbc($row['body']),
-				'time' => timeformat($row['posterTime']),
-				'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+				'time' => timeformat($row['poster_time']),
+				'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			),
 			'topic' => array(
-				'id' => $row['ID_TOPIC'],
+				'id' => $row['id_topic'],
 			),
 			'board' => array(
-				'id' => $row['ID_BOARD'],
-				'name' => $row['boardName'],
+				'id' => $row['id_board'],
+				'name' => $row['board_name'],
 			),
 			'category' => array(
-				'id' => $row['ID_CAT'],
-				'name' => $row['catName'],
+				'id' => $row['id_cat'],
+				'name' => $row['cat_name'],
 			),
 		);
 	}
@@ -425,7 +425,7 @@ function UnapprovedAttachments()
 // Approve a post, just the one.
 function ApproveMessage()
 {
-	global $ID_MEMBER, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
+	global $id_member, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
 
 	checkSession('get');
 
@@ -435,12 +435,12 @@ function ApproveMessage()
 
 	isAllowedTo('approve_posts');
 
-	$request = $smfFunc['db_query']("
-		SELECT t.ID_MEMBER_STARTED, t.ID_FIRST_MSG, m.ID_MEMBER, m.subject, m.approved
+	$request = $smfFunc['db_query']('', "
+		SELECT t.id_member_started, t.id_first_msg, m.id_member, m.subject, m.approved
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-		WHERE t.ID_TOPIC = $topic
-			AND m.ID_TOPIC = $topic
-			AND m.ID_MSG = $_REQUEST[msg]
+		WHERE t.id_topic = $topic
+			AND m.id_topic = $topic
+			AND m.id_msg = $_REQUEST[msg]
 		LIMIT 1", __FILE__, __LINE__);
 	list ($starter, $first_msg, $poster, $subject, $approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -450,14 +450,14 @@ function ApproveMessage()
 	{
 		approveTopics($topic, !$approved);
 
-		if ($starter != $ID_MEMBER)
+		if ($starter != $id_member)
 			logAction('approve_topic', array('topic' => $topic, 'subject' => $subject, 'member' => $starter, 'board' => $board));
 	}
 	else
 	{
 		approvePosts($_REQUEST['msg'], !$approved);
 
-		if ($poster != $ID_MEMBER)
+		if ($poster != $id_member)
 			logAction('approve', array('topic' => $topic, 'subject' => $subject, 'member' => $poster, 'board' => $board));
 	}
 

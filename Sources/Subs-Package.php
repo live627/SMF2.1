@@ -516,7 +516,7 @@ function loadInstalledPackages()
 	$install_file = implode('', file($boarddir . '/Packages/installed.list'));
 	if (trim($install_file) == '')
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_packages
 			SET install_state = 0", __FILE__, __LINE__);
 
@@ -525,7 +525,7 @@ function loadInstalledPackages()
 	}
 
 	// Load the packages from the database - note this is ordered by install time to ensure latest package uninstalled first.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT ID_INSTALL, package_id, filename, name, version
 		FROM {$db_prefix}log_packages
 		WHERE install_state != 0
@@ -2189,10 +2189,10 @@ function package_create_backup($id = 'backup')
 		$sourcedir => empty($_REQUEST['use_full_paths']) ? 'Sources/' : strtr($sourcedir . '/', '\\', '/')
 	);
 
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT value
 		FROM {$db_prefix}themes
-		WHERE ID_MEMBER = 0
+		WHERE id_member = 0
 			AND variable = 'theme_dir'", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$dirs[$row['value']] = empty($_REQUEST['use_full_paths']) ? 'Themes/' . basename($row['value']) . '/' : strtr($row['value'] . '/', '\\', '/');

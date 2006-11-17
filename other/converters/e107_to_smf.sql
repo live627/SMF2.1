@@ -13,7 +13,7 @@
 /******************************************************************************/
 
 DELETE FROM {$to_prefix}membergroups
-WHERE groupName LIKE 'e107%';
+WHERE group_name LIKE 'e107%';
 
 ---{
 	$request = mysql_query("
@@ -38,7 +38,7 @@ WHERE groupName LIKE 'e107%';
 		if (!empty($inserts))
 			mysql_query("
 				INSERT INTO {$to_prefix}membergroups
-					(groupName, minPosts, onlineColor, stars)
+					(group_name, min_posts, online_color, stars)
 				VALUES " . substr($inserts, 0, -1));
 	}
 ---}
@@ -49,8 +49,8 @@ WHERE groupName LIKE 'e107%';
 
 ---* {$to_prefix}membergroups
 SELECT
-	SUBSTRING(CONCAT('e107 ', userclass_name), 1, 255) AS groupName,
-	-1 AS minPosts, '' AS onlineColor, '' AS stars
+	SUBSTRING(CONCAT('e107 ', userclass_name), 1, 255) AS group_name,
+	-1 AS min_posts, '' AS online_color, '' AS stars
 FROM {$from_prefix}userclass_classes;
 ---*
 
@@ -62,27 +62,27 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	u.user_id AS ID_MEMBER, SUBSTRING(u.user_name, 1, 80) AS memberName,
-	u.user_join AS dateRegistered, u.user_forums AS posts,
-	IF (u.user_admin = 1, 1, 0) AS ID_GROUP, u.user_lastvisit AS lastLogin, 
-	SUBSTRING(u.user_name, 1, 255) AS realName,
+	u.user_id AS id_member, SUBSTRING(u.user_name, 1, 80) AS member_name,
+	u.user_join AS date_registered, u.user_forums AS posts,
+	IF (u.user_admin = 1, 1, 0) AS id_group, u.user_lastvisit AS last_login, 
+	SUBSTRING(u.user_name, 1, 255) AS real_name,
 	SUBSTRING(u.user_password, 1, 64) AS passwd,
-	SUBSTRING(u.user_email, 1, 255) AS emailAddress, 0 AS gender,
+	SUBSTRING(u.user_email, 1, 255) AS email_address, 0 AS gender,
 	u.user_birthday AS birthdate,
-	SUBSTRING(REPLACE(u.user_homepage, 'http://', ''), 1, 255) AS websiteTitle, 
-	SUBSTRING(u.user_homepage, 1, 255) AS websiteUrl,
+	SUBSTRING(REPLACE(u.user_homepage, 'http://', ''), 1, 255) AS website_title, 
+	SUBSTRING(u.user_homepage, 1, 255) AS website_url,
 	SUBSTRING(u.user_location, 1, 255) AS location,
-	SUBSTRING(u.user_icq, 1, 255) AS ICQ, SUBSTRING(u.user_aim, 1, 16) AS AIM,
-	SUBSTRING(u.user_msn, 1, 255) AS MSN, u.user_hideemail AS hideEmail,
+	SUBSTRING(u.user_icq, 1, 255) AS icq, SUBSTRING(u.user_aim, 1, 16) AS aim,
+	SUBSTRING(u.user_msn, 1, 255) AS msn, u.user_hideemail AS hide_email,
 	SUBSTRING(u.user_signature, 1, 65534) AS signature,
-	IF(SUBSTRING(u.user_timezone, 1, 1) = '+', SUBSTRING(u.user_timezone, 2), u.user_timezone) AS timeOffset,
+	IF(SUBSTRING(u.user_timezone, 1, 1) = '+', SUBSTRING(u.user_timezone, 2), u.user_timezone) AS time_offset,
 	SUBSTRING(u.user_image, 1, 255) AS avatar,
 	SUBSTRING(u.user_customtitle, 1, 255) AS usertitle,
-	SUBSTRING(u.user_ip, 1, 255) AS memberIP, '' AS lngfile, '' AS buddy_list,
-	'' AS pm_ignore_list, '' AS messageLabels, '' AS personalText, '' AS YIM, 
-	'' AS timeFormat, '' AS secretQuestion, '' AS secretAnswer,
-	'' AS validation_code, '' AS additionalGroups, '' AS smileySet,
-	'' AS passwordSalt
+	SUBSTRING(u.user_ip, 1, 255) AS member_ip, '' AS lngfile, '' AS buddy_list,
+	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text, '' AS yim, 
+	'' AS time_format, '' AS secret_question, '' AS secret_answer,
+	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
+	'' AS password_salt
 FROM {$from_prefix}user AS u
 WHERE u.user_id > 0;
 ---*
@@ -98,37 +98,37 @@ while (true)
 	pastTime($substep);
 
 	$result = mysql_query("
-		SELECT u.user_id AS ID_MEMBER, mg.ID_GROUP
+		SELECT u.user_id AS id_member, mg.id_group
 		FROM ({$from_prefix}userclass_classes AS uc, {$from_prefix}user AS u, {$to_prefix}membergroups AS mg)
 		WHERE FIND_IN_SET(uc.userclass_id, REPLACE(u.user_class, '.', ','))
-			AND BINARY CONCAT('e107 ', uc.userclass_name) = mg.groupName
-		ORDER BY ID_MEMBER
+			AND BINARY CONCAT('e107 ', uc.userclass_name) = mg.group_name
+		ORDER BY id_member
 		LIMIT $_REQUEST[start], 250");
-	$additionalGroups = '';
+	$additional_groups = '';
 	$last_member = 0;
 	while ($row = mysql_fetch_assoc($result))
 	{
 		if (empty($last_member))
-			$last_member = $row['ID_MEMBER'];
+			$last_member = $row['id_member'];
 
-		if ($last_member != $row['ID_MEMBER'])
+		if ($last_member != $row['id_member'])
 		{
-			$additionalGroups = addslashes($additionalGroups);
+			$additional_groups = addslashes($additional_groups);
 
 			mysql_query("
 				UPDATE {$to_prefix}members
-				SET additionalGroups = '$additionalGroups'
-				WHERE ID_MEMBER = $last_member
+				SET additional_groups = '$additional_groups'
+				WHERE id_member = $last_member
 				LIMIT 1");
-			$last_member = $row['ID_MEMBER'];
-			$additionalGroups = $row['ID_GROUP'];
+			$last_member = $row['id_member'];
+			$additional_groups = $row['id_group'];
 		}
 		else
 		{
-			if ($additionalGroups == '')
-				$additionalGroups = $row['ID_GROUP'];
+			if ($additional_groups == '')
+				$additional_groups = $row['id_group'];
 			else
-				$additionalGroups .= ',' . $row['ID_GROUP'];
+				$additional_groups .= ',' . $row['id_group'];
 		}
 	}
 
@@ -142,12 +142,12 @@ $_REQUEST['start'] = 0;
 
 if ($last_member != 0)
 {
-	$additionalGroups = addslashes($additionalGroups);
+	$additional_groups = addslashes($additional_groups);
 
 	mysql_query("
 		UPDATE {$to_prefix}members
-		SET additionalGroups = '$additionalGroups'
-		WHERE ID_MEMBER = $last_member
+		SET additional_groups = '$additional_groups'
+		WHERE id_member = $last_member
 		LIMIT 1");
 }
 ---}
@@ -161,8 +161,8 @@ TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
 SELECT 
-	forum_id AS ID_CAT, SUBSTRING(forum_name, 1, 255) AS name,
-	forum_order AS catOrder
+	forum_id AS id_cat, SUBSTRING(forum_name, 1, 255) AS name,
+	forum_order AS cat_order
 FROM {$from_prefix}forum
 WHERE forum_parent = 0;
 ---*
@@ -174,14 +174,14 @@ WHERE forum_parent = 0;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	f.forum_id AS ID_BOARD, SUBSTRING(f.forum_name, 1, 255) AS name,
+	f.forum_id AS id_board, SUBSTRING(f.forum_name, 1, 255) AS name,
 	SUBSTRING(f.forum_description, 1, 65534) AS description,
-	f.forum_parent AS ID_CAT, f.forum_threads AS numTopics,
-	f.forum_threads + f.forum_replies AS numPosts, f.forum_order AS boardOrder,
+	f.forum_parent AS id_cat, f.forum_threads AS num_topics,
+	f.forum_threads + f.forum_replies AS num_posts, f.forum_order AS board_order,
 	CASE f.forum_class
 		WHEN 252 THEN '-1'
 		WHEN 255 THEN ''
@@ -189,11 +189,11 @@ SELECT
 		WHEN 251 THEN '0'
 		WHEN 254 THEN ''
 		WHEN 0 THEN '-1,0'
-		ELSE IFNULL(mg.ID_GROUP, '')
-	END AS memberGroups
+		ELSE IFNULL(mg.id_group, '')
+	END AS member_groups
 FROM {$from_prefix}forum AS f
 	LEFT JOIN {$from_prefix}userclass_classes AS uc ON (uc.userclass_id = f.forum_class)
-	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.groupName = CONCAT('e107 ', uc.userclass_name))
+	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('e107 ', uc.userclass_name))
 WHERE f.forum_parent > 0;
 ---*
 
@@ -208,12 +208,12 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.thread_id AS ID_TOPIC, t.thread_s AS isSticky,
-	t.thread_forum_id AS ID_BOARD, t.thread_id AS ID_FIRST_MSG,
-	IFNULL(tl.thread_id, t.thread_id) AS ID_LAST_MSG,
-	IFNULL(us.user_id, 0) AS ID_MEMBER_STARTED,
-	IFNULL(ul.user_id, IFNULL(us.user_id, 0)) AS ID_MEMBER_UPDATED, 
-	IFNULL(p.poll_id, 0) AS ID_POLL, COUNT(*) AS numReplies, t.thread_views AS numViews,
+	t.thread_id AS id_topic, t.thread_s AS is_sticky,
+	t.thread_forum_id AS id_board, t.thread_id AS id_first_msg,
+	IFNULL(tl.thread_id, t.thread_id) AS id_last_msg,
+	IFNULL(us.user_id, 0) AS id_member_started,
+	IFNULL(ul.user_id, IFNULL(us.user_id, 0)) AS id_member_updated, 
+	IFNULL(p.poll_id, 0) AS id_poll, COUNT(*) AS num_replies, t.thread_views AS num_views,
 	IF(t.thread_active = 1, 0, 1) AS locked
 FROM {$from_prefix}forum_t AS t
 	LEFT JOIN {$from_prefix}user AS us ON (us.user_id = SUBSTRING_INDEX(t.thread_user, '.', 1))
@@ -235,15 +235,15 @@ TRUNCATE {$to_prefix}messages;
 ---{
 $row['body'] = preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$1px]', $row['body']);
 ---}
-SELECT m.thread_id AS ID_MSG, 
-	IF(m.thread_parent = 0, m.thread_id, m.thread_parent) AS ID_TOPIC, 
-	m.thread_forum_id AS ID_BOARD, m.thread_datestamp AS posterTime, 
-	IFNULL(u.user_id, 0) AS ID_MEMBER,
+SELECT m.thread_id AS id_msg, 
+	IF(m.thread_parent = 0, m.thread_id, m.thread_parent) AS id_topic, 
+	m.thread_forum_id AS id_board, m.thread_datestamp AS poster_time, 
+	IFNULL(u.user_id, 0) AS id_member,
 	SUBSTRING(m.thread_name, 1, 255) AS subject,
-	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(m.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS posterName,
-	SUBSTRING(IFNULL(u.user_email, 'e107.imported@example.com'), 1, 255) AS posterEmail,
-	'0.0.0.0' AS posterIP, 1 AS smileysEnabled, m.thread_thread AS body,
-	'' AS modifiedName, 'xx' AS icon
+	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(m.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS poster_name,
+	SUBSTRING(IFNULL(u.user_email, 'e107.imported@example.com'), 1, 255) AS poster_email,
+	'0.0.0.0' AS poster_ip, 1 AS smileys_enabled, m.thread_thread AS body,
+	'' AS modified_name, 'xx' AS icon
 FROM {$from_prefix}forum_t AS m
 	LEFT JOIN {$from_prefix}user AS u ON (u.user_id = SUBSTRING_INDEX(m.thread_user, '.', 1));
 ---*
@@ -258,10 +258,10 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	p.poll_id AS ID_POLL, SUBSTRING(p.poll_title, 1, 255) AS question,
-	0 AS votingLocked, 1 AS maxVotes, p.poll_end_datestamp AS expireTime,
-	0 AS hideResults, 0 AS changeVote, p.poll_admin_id AS ID_MEMBER, 
-	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(t.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS posterName
+	p.poll_id AS id_poll, SUBSTRING(p.poll_title, 1, 255) AS question,
+	0 AS voting_locked, 1 AS max_votes, p.poll_end_datestamp AS expire_time,
+	0 AS hide_results, 0 AS change_vote, p.poll_admin_id AS id_member, 
+	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(t.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS poster_name
 FROM ({$from_prefix}poll AS p, {$from_prefix}forum_t AS t)
 WHERE p.poll_datestamp = t.thread_id;
 ---*
@@ -295,7 +295,7 @@ mysql_free_result($request);
 if ($inserts !== '')
 	mysql_query("
 		INSERT INTO {$to_prefix}poll_choices
-			(ID_POLL, ID_CHOICE, label, votes)
+			(id_poll, id_choice, label, votes)
 		VALUES " . substr($inserts, 0, -1));
 ---}
 
@@ -308,8 +308,8 @@ TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
 SELECT
-	pm.pm_id AS ID_PM, uf.user_id AS ID_MEMBER_FROM, 0 AS deletedBySender,
-	SUBSTRING(pm.pm_from_user, 1, 255) AS fromName,
+	pm.pm_id AS id_pm, uf.user_id AS id_member_from, 0 AS deleted_by_sender,
+	SUBSTRING(pm.pm_from_user, 1, 255) AS from_name,
 	pm.pm_sent_datestamp AS msgtime,
 	SUBSTRING(pm.pm_subject, 1, 255) AS subject,
 	SUBSTRING(pm.pm_message, 1, 65534) AS body
@@ -325,7 +325,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT 
-	pm.pm_id AS ID_PM, ut.user_id AS ID_MEMBER, 0 AS bcc, 
+	pm.pm_id AS id_pm, ut.user_id AS id_member, 0 AS bcc, 
 	IF (pm.pm_rcv_datestamp = 0, 0, 1) AS is_read, 0 AS deleted, '' AS labels
 FROM ({$from_prefix}pm_messages AS pm, {$from_prefix}user AS ut)
 WHERE ut.user_name = pm.pm_to_user;
@@ -339,7 +339,7 @@ TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
 SELECT 
-	u.user_id AS ID_MEMBER, t.thread_id AS ID_TOPIC, 0 AS sent
+	u.user_id AS id_member, t.thread_id AS id_topic, 0 AS sent
 FROM ({$from_prefix}forum_t AS t, {$from_prefix}user AS u)
 WHERE u.user_id = SUBSTRING_INDEX(t.thread_user, '.', 1)
 	AND t.thread_active = 99
@@ -366,8 +366,8 @@ mysql_free_result($request);
 if (!empty($readonlyBoards))
 	mysql_query("
 		UPDATE {$to_prefix}boards
-		SET ID_PROFILE = 4
-		WHERE ID_BOARD IN (" . implode(', ', $readonlyBoards) . ")
+		SET id_profile = 4
+		WHERE id_board IN (" . implode(', ', $readonlyBoards) . ")
 		LIMIT " . count($readonlyBoards));
 ---}
 ---#
@@ -379,7 +379,7 @@ if (!empty($readonlyBoards))
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT f.forum_id AS ID_BOARD, u.user_id AS ID_MEMBER
+SELECT f.forum_id AS id_board, u.user_id AS id_member
 FROM ({$from_prefix}forum AS f, {$from_prefix}user AS u)
 WHERE FIND_IN_SET(u.user_name, REPLACE(f.forum_moderators, ', ', ','));
 ---*
@@ -483,7 +483,7 @@ if (mysql_num_rows($request) > 0)
 
 	mysql_query("
 		INSERT INTO {$to_prefix}ban_items
-			(ID_BAN_GROUP, ID_MEMBER, email_address, hostname)
+			(ID_BAN_GROUP, id_member, email_address, hostname)
 		VALUES " . substr($inserts, 0, -1));
 }
 ---}

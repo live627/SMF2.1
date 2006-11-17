@@ -1,6 +1,6 @@
 <?php
 
-// Minor bug: [quote]'s won't refer to the right ID_TOPIC!
+// Minor bug: [quote]'s won't refer to the right id_topic!
 
 require_once(dirname(__FILE__) . '/SSI.php');
 set_time_limit(300);
@@ -23,24 +23,24 @@ if ($_GET['step'] <= 0)
 	// Create a new topics table.
 	db_query("
 		CREATE TABLE {$db_prefix}temp_topics (
-			ID_TOPIC mediumint(8) unsigned NOT NULL auto_increment,
-			isSticky tinyint(4) NOT NULL default '0',
-			ID_BOARD smallint(5) unsigned NOT NULL default '0',
-			ID_FIRST_MSG int(10) unsigned NOT NULL default '0',
-			ID_LAST_MSG int(10) unsigned NOT NULL default '0',
-			ID_MEMBER_STARTED mediumint(8) unsigned NOT NULL default '0',
-			ID_MEMBER_UPDATED mediumint(8) unsigned NOT NULL default '0',
-			ID_POLL mediumint(8) unsigned NOT NULL default '0',
-			numReplies int(11) NOT NULL default '0',
-			numViews int(11) NOT NULL default '0',
+			id_topic mediumint(8) unsigned NOT NULL auto_increment,
+			is_sticky tinyint(4) NOT NULL default '0',
+			id_board smallint(5) unsigned NOT NULL default '0',
+			id_first_msg int(10) unsigned NOT NULL default '0',
+			id_last_msg int(10) unsigned NOT NULL default '0',
+			id_member_started mediumint(8) unsigned NOT NULL default '0',
+			id_member_updated mediumint(8) unsigned NOT NULL default '0',
+			id_poll mediumint(8) unsigned NOT NULL default '0',
+			num_replies int(11) NOT NULL default '0',
+			num_views int(11) NOT NULL default '0',
 			locked tinyint(4) NOT NULL default '0',
 			OLD_ID_TOPIC mediumint(8) unsigned NOT NULL,
-			PRIMARY KEY (ID_TOPIC),
-			UNIQUE lastMessage (ID_LAST_MSG, ID_BOARD),
-			UNIQUE firstMessage (ID_FIRST_MSG, ID_BOARD),
-			UNIQUE poll (ID_POLL, ID_TOPIC),
-			KEY isSticky (isSticky),
-			KEY ID_BOARD (ID_BOARD)
+			PRIMARY KEY (id_topic),
+			UNIQUE lastMessage (id_last_msg, id_board),
+			UNIQUE firstMessage (id_first_msg, id_board),
+			UNIQUE poll (id_poll, id_topic),
+			KEY is_sticky (is_sticky),
+			KEY id_board (id_board)
 		) TYPE=MyISAM", __FILE__, __LINE__);
 
 	// Drop the old table if it's there.
@@ -57,10 +57,10 @@ if ($_GET['step'] <= 1)
 		db_query("
 			INSERT INTO {$db_prefix}temp_topics
 			SELECT
-				NULL, isSticky, ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, ID_POLL,
-				numReplies, numViews, locked, ID_TOPIC
+				NULL, is_sticky, id_board, id_first_msg, id_last_msg, id_member_started, id_member_updated, id_poll,
+				num_replies, num_views, locked, id_topic
 			FROM {$db_prefix}topics
-			ORDER BY ID_FIRST_MSG
+			ORDER BY id_first_msg
 			LIMIT $start, $maxOnce", __FILE__, __LINE__);
 
 		// If less rows were inserted than selected, we're done!
@@ -79,9 +79,9 @@ if ($_GET['step'] <= 2)
 		protectTimeOut('step=2;start=' . $start);
 
 		$result = db_query("
-			SELECT m.ID_MSG, t.ID_TOPIC
+			SELECT m.id_msg, t.id_topic
 			FROM ({$db_prefix}messages AS m, {$db_prefix}temp_topics AS t)
-			WHERE m.ID_TOPIC = t.OLD_ID_TOPIC
+			WHERE m.id_topic = t.OLD_ID_TOPIC
 			LIMIT $start, $maxOnce", __FILE__, __LINE__);
 
 		// All done!  No more attachments!
@@ -91,8 +91,8 @@ if ($_GET['step'] <= 2)
 		while ($row = mysql_fetch_assoc($result))
 			db_query("
 				UPDATE {$db_prefix}messages
-				SET ID_TOPIC = $row[ID_TOPIC]
-				WHERE ID_MSG = $row[ID_MSG]
+				SET id_topic = $row[id_topic]
+				WHERE id_msg = $row[id_msg]
 				LIMIT 1", __FILE__, __LINE__);
 		mysql_free_result($result);
 	}
@@ -118,16 +118,16 @@ if ($_GET['step'] <= 3)
 
 	// And fix the boards.
 	$request = db_query("
-		SELECT t.ID_BOARD, MAX(t.ID_LAST_MSG) AS ID_LAST_MSG, IFNULL(m.posterTime, 0) AS posterTime
+		SELECT t.id_board, MAX(t.id_last_msg) AS id_last_msg, IFNULL(m.poster_time, 0) AS poster_time
 		FROM {$db_prefix}topics AS t
-			LEFT JOIN {$db_prefix}messages AS m ON (m.ID_MSG = t.ID_LAST_MSG)
-		GROUP BY t.ID_BOARD", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
+		GROUP BY t.id_board", __FILE__, __LINE__);
 	while ($row = mysql_fetch_assoc($request))
 	{
 		db_query("
 			UPDATE {$db_prefix}boards
-			SET ID_LAST_MSG = $row[ID_LAST_MSG], lastUpdated = $row[posterTime]
-			WHERE ID_BOARD = $row[ID_BOARD]", __FILE__, __LINE__);
+			SET id_last_msg = $row[id_last_msg], lastUpdated = $row[poster_time]
+			WHERE id_board = $row[id_board]", __FILE__, __LINE__);
 	}
 	mysql_free_result($request);
 

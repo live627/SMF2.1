@@ -48,10 +48,10 @@ if (!defined('SMF'))
 		- allows to perform several checks on the input, e.g. reserved names.
 		- adjusts member statistics.
 
-	bool isReservedName(string name, int ID_MEMBER = 0, bool is_name = true, bool fatal = true)
+	bool isReservedName(string name, int id_member = 0, bool is_name = true, bool fatal = true)
 		- checks if name is a reserved name or username.
 		- if is_name is false, the name is assumed to be a username.
-		- the ID_MEMBER variable is used to ignore duplicate matches with the
+		- the id_member variable is used to ignore duplicate matches with the
 		  current member.
 
 	array groupsAllowedTo(string permission, int board_id = null)
@@ -70,7 +70,7 @@ if (!defined('SMF'))
 		- takes possible moderators (on board 'board_id') into account.
 		- returns an array containing member ID's.
 
-	int reattributePosts(int ID_MEMBER, string email = none, bool add_to_post_count = false)
+	int reattributePosts(int id_member, string email = none, bool add_to_post_count = false)
 		- reattribute guest posts to a specified member.
 		- does not check for any permissions.
 		- returns the number of successful reattributed posts.
@@ -87,7 +87,7 @@ if (!defined('SMF'))
 // Delete a group of/single member.
 function deleteMembers($users)
 {
-	global $db_prefix, $sourcedir, $modSettings, $ID_MEMBER, $smfFunc;
+	global $db_prefix, $sourcedir, $modSettings, $id_member, $smfFunc;
 
 	// If it's not an array, make it so!
 	if (!is_array($users))
@@ -106,7 +106,7 @@ function deleteMembers($users)
 		list ($user) = $users;
 		$condition = '= ' . $user;
 
-		if ($user == $ID_MEMBER)
+		if ($user == $id_member)
 			isAllowedTo('profile_remove_own');
 		else
 			isAllowedTo('profile_remove_any');
@@ -122,17 +122,17 @@ function deleteMembers($users)
 	}
 
 	// Make sure they aren't trying to delete administrators if they aren't one.  But don't bother checking if it's just themself.
-	if (!allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $ID_MEMBER))
+	if (!allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $id_member))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
 			FROM {$db_prefix}members
-			WHERE ID_MEMBER IN (" . implode(', ', $users) . ")
-				AND (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups) != 0)
+			WHERE id_member IN (" . implode(', ', $users) . ")
+				AND (id_group = 1 OR FIND_IN_SET(1, additional_groups) != 0)
 			LIMIT " . count($users), __FILE__, __LINE__);
 		$admins = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$admins[] = $row['ID_MEMBER'];
+			$admins[] = $row['id_member'];
 		$smfFunc['db_free_result']($request);
 
 		if (!empty($admins))
@@ -153,119 +153,119 @@ function deleteMembers($users)
 	}
 
 	// Make these peoples' posts guest posts.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}messages
-		SET ID_MEMBER = 0" . (!empty($modSettings['allow_hideEmail']) ? ", posterEmail = ''" : '') . "
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		SET id_member = 0" . (!empty($modSettings['allow_hide_email']) ? ", poster_email = ''" : '') . "
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}polls
-		SET ID_MEMBER = 0
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		SET id_member = 0
+		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// Make these peoples' posts guest first posts and last posts.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}topics
-		SET ID_MEMBER_STARTED = 0
-		WHERE ID_MEMBER_STARTED $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		SET id_member_started = 0
+		WHERE id_member_started $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}topics
-		SET ID_MEMBER_UPDATED = 0
-		WHERE ID_MEMBER_UPDATED $condition", __FILE__, __LINE__);
+		SET id_member_updated = 0
+		WHERE id_member_updated $condition", __FILE__, __LINE__);
 
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}log_actions
-		SET ID_MEMBER = 0
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		SET id_member = 0
+		WHERE id_member $condition", __FILE__, __LINE__);
 
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}log_banned
-		SET ID_MEMBER = 0
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		SET id_member = 0
+		WHERE id_member $condition", __FILE__, __LINE__);
 
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}log_errors
-		SET ID_MEMBER = 0
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		SET id_member = 0
+		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// Delete the member.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}members
-		WHERE ID_MEMBER $condition
+		WHERE id_member $condition
 		LIMIT " . count($users), __FILE__, __LINE__);
 
 	// Delete the logs...
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_boards
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_group_requests
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_karma
 		WHERE ID_TARGET $condition
 			OR ID_EXECUTOR $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_mark_read
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_notify
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_online
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_polls
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_topics
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}collapsed_categories
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// Delete personal messages.
 	require_once($sourcedir . '/PersonalMessage.php');
 	deleteMessages(null, null, $users);
 
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}personal_messages
-		SET ID_MEMBER_FROM = 0
-		WHERE ID_MEMBER_FROM $condition", __FILE__, __LINE__);
+		SET id_member_from = 0
+		WHERE id_member_from $condition", __FILE__, __LINE__);
 
 	// Delete avatar.
 	require_once($sourcedir . '/ManageAttachments.php');
-	removeAttachments('a.ID_MEMBER ' . $condition);
+	removeAttachments('a.id_member ' . $condition);
 
 	// It's over, no more moderation for you.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}moderators
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']("
+		WHERE id_member $condition", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}group_moderators
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// If you don't exist we can't ban you.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}ban_items
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// Remove individual theme settings.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}themes
-		WHERE ID_MEMBER $condition", __FILE__, __LINE__);
+		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// These users are nobody's buddy nomore.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, pm_ignore_list, buddy_list
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, pm_ignore_list, buddy_list
 		FROM {$db_prefix}members
 		WHERE FIND_IN_SET(" . implode(', pm_ignore_list) OR FIND_IN_SET(', $users) . ', pm_ignore_list) OR FIND_IN_SET(' . implode(', buddy_list) OR FIND_IN_SET(', $users) . ', buddy_list)', __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
 			SET
 				pm_ignore_list = '" . implode(',', array_diff(explode(',', $row['pm_ignore_list']), $users)) . "',
 				buddy_list = '" . implode(',', array_diff(explode(',', $row['buddy_list']), $users)) . "'
-			WHERE ID_MEMBER = $row[ID_MEMBER]
+			WHERE id_member = $row[id_member]
 			LIMIT 1", __FILE__, __LINE__);
 	$smfFunc['db_free_result']($request);
 
@@ -369,11 +369,11 @@ function registerMember(&$regOptions)
 		isBannedEmail($regOptions['email'], 'cannot_register', $txt['ban_register_prohibited']);
 
 	// Check if the email address is in use.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member
 		FROM {$db_prefix}members
-		WHERE emailAddress = '$regOptions[email]'
-			OR emailAddress = '$regOptions[username]'
+		WHERE email_address = '$regOptions[email]'
+			OR email_address = '$regOptions[username]'
 		LIMIT 1", __FILE__, __LINE__);
 	// !!! Separate the sprintf?
 	if ($smfFunc['db_num_rows']($request) != 0)
@@ -382,39 +382,39 @@ function registerMember(&$regOptions)
 
 	// Some of these might be overwritten. (the lower ones that are in the arrays below.)
 	$regOptions['register_vars'] = array(
-		'memberName' => "'$regOptions[username]'",
-		'emailAddress' => "'$regOptions[email]'",
+		'member_name' => "'$regOptions[username]'",
+		'email_address' => "'$regOptions[email]'",
 		'passwd' => '\'' . sha1(strtolower($regOptions['username']) . $regOptions['password']) . '\'',
-		'passwordSalt' => '\'' . substr(md5(rand()), 0, 4) . '\'',
+		'password_salt' => '\'' . substr(md5(rand()), 0, 4) . '\'',
 		'posts' => 0,
-		'dateRegistered' => time(),
-		'memberIP' => "'$user_info[ip]'",
+		'date_registered' => time(),
+		'member_ip' => "'$user_info[ip]'",
 		'validation_code' => "'$validation_code'",
-		'realName' => "'$regOptions[username]'",
-		'personalText' => '\'' . addslashes($modSettings['default_personalText']) . '\'',
+		'real_name' => "'$regOptions[username]'",
+		'personal_text' => '\'' . addslashes($modSettings['default_personal_text']) . '\'',
 		'pm_email_notify' => 1,
-		'ID_THEME' => 0,
-		'ID_POST_GROUP' => 4,
+		'id_theme' => 0,
+		'id_post_group' => 4,
 		'lngfile' => "''",
 		'buddy_list' => "''",
 		'pm_ignore_list' => "''",
-		'messageLabels' => "''",
-		'personalText' => "''",
-		'websiteTitle' => "''",
-		'websiteUrl' => "''",
+		'message_labels' => "''",
+		'personal_text' => "''",
+		'website_title' => "''",
+		'website_url' => "''",
 		'location' => "''",
-		'ICQ' => "''",
-		'AIM' => "''",
-		'YIM' => "''",
-		'MSN' => "''",
-		'timeFormat' => "''",
+		'icq' => "''",
+		'aim' => "''",
+		'yim' => "''",
+		'msn' => "''",
+		'time_format' => "''",
 		'signature' => "''",
 		'avatar' => "''",
 		'usertitle' => "''",
-		'secretQuestion' => "''",
-		'secretAnswer' => "''",
-		'additionalGroups' => "''",
-		'smileySet' => "''",
+		'secret_question' => "''",
+		'secret_answer' => "''",
+		'additional_groups' => "''",
+		'smiley_set' => "''",
 	);
 
 	// Setup the activation status on this new account so it is correct - firstly is it an under age account?
@@ -436,21 +436,21 @@ function registerMember(&$regOptions)
 
 	if (isset($regOptions['memberGroup']))
 	{
-		// Make sure the ID_GROUP will be valid, if this is an administator.
-		$regOptions['register_vars']['ID_GROUP'] = $regOptions['memberGroup'] == 1 && !allowedTo('admin_forum') ? 0 : $regOptions['memberGroup'];
+		// Make sure the id_group will be valid, if this is an administator.
+		$regOptions['register_vars']['id_group'] = $regOptions['memberGroup'] == 1 && !allowedTo('admin_forum') ? 0 : $regOptions['memberGroup'];
 
 		// Check if this group is assignable.
 		$unassignableGroups = array(-1, 3);
-		$request = $smfFunc['db_query']("
-			SELECT ID_GROUP
+		$request = $smfFunc['db_query']('', "
+			SELECT id_group
 			FROM {$db_prefix}membergroups
-			WHERE minPosts != -1", __FILE__, __LINE__);
+			WHERE min_posts != -1", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$unassignableGroups[] = $row['ID_GROUP'];
+			$unassignableGroups[] = $row['id_group'];
 		$smfFunc['db_free_result']($request);
 
-		if (in_array($regOptions['register_vars']['ID_GROUP'], $unassignableGroups))
-			$regOptions['register_vars']['ID_GROUP'] = 0;
+		if (in_array($regOptions['register_vars']['id_group'], $unassignableGroups))
+			$regOptions['register_vars']['id_group'] = 0;
 	}
 
 	// Integrate optional member settings to be set.
@@ -469,17 +469,17 @@ function registerMember(&$regOptions)
 		$modSettings['integrate_register']($regOptions, $theme_vars);
 
 	// Register them into the database.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}members
 			(" . implode(', ', array_keys($regOptions['register_vars'])) . ")
 		VALUES (" . implode(', ', $regOptions['register_vars']) . ')', __FILE__, __LINE__);
-	$memberID = db_insert_id("{$db_prefix}members", 'ID_MEMBER');
+	$memberID = db_insert_id("{$db_prefix}members", 'id_member');
 
 	// Grab their real name and send emails using it.
-	$realName = substr($regOptions['register_vars']['realName'], 1, -1);
+	$real_name = substr($regOptions['register_vars']['real_name'], 1, -1);
 
 	// Update the number of members and latest member's info - and pass the name, but remove the 's.
-	updateStats('member', $memberID, $realName);
+	updateStats('member', $memberID, $real_name);
 
 	// Theme variables too?
 	if (!empty($theme_vars))
@@ -488,9 +488,9 @@ function registerMember(&$regOptions)
 		foreach ($theme_vars as $var => $val)
 			$setString .= "
 				($memberID, SUBSTRING('$var', 1, 255), SUBSTRING('$val', 1, 65534)),";
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}themes
-				(ID_MEMBER, variable, value)
+				(id_member, variable, value)
 			VALUES " . substr($setString, 0, -1), __FILE__, __LINE__);
 	}
 
@@ -506,7 +506,7 @@ function registerMember(&$regOptions)
 			$email_message = 'register_immediate_message';
 
 		if (isset($email_message))
-			sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt[$email_message], $realName, $regOptions['username'], $regOptions['password'], $validation_code, $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code), null, null, false, 3);
+			sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt[$email_message], $real_name, $regOptions['username'], $regOptions['password'], $validation_code, $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code), null, null, false, 3);
 
 		// All admins are finished here.
 		return $memberID;
@@ -516,18 +516,18 @@ function registerMember(&$regOptions)
 	if ($regOptions['require'] == 'nothing')
 	{
 		if (!empty($regOptions['send_welcome_email']))
-			sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_immediate_message'], $realName, $regOptions['username'], $regOptions['password']), null, null, false, 4);
+			sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_immediate_message'], $real_name, $regOptions['username'], $regOptions['password']), null, null, false, 4);
 
 		// Send admin their notification.
 		adminNotify('standard', $memberID, $regOptions['username']);
 	}
 	// Need to activate their account - or fall under COPPA.
 	elseif ($regOptions['require'] == 'activation' || $regOptions['require'] == 'coppa')
-		sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_activate_message'], $realName, $regOptions['username'], $regOptions['password'], $validation_code, $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code), null, null, false, 4);
+		sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_activate_message'], $real_name, $regOptions['username'], $regOptions['password'], $validation_code, $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code), null, null, false, 4);
 	// Must be awaiting approval.
 	else
 	{
-		sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_pending_message'], $realName, $regOptions['username'], $regOptions['password']), null, null, false, 3);
+		sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_pending_message'], $real_name, $regOptions['username'], $regOptions['password']), null, null, false, 3);
 
 		// Admin gets informed here...
 		adminNotify('approval', $memberID, $regOptions['username']);
@@ -581,11 +581,11 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 	$checkName = strtr($name, array('_' => '\\_', '%' => '\\%'));
 
 	// Make sure they don't want someone else's name.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member
 		FROM {$db_prefix}members
-		WHERE " . (empty($current_ID_MEMBER) ? '' : "ID_MEMBER != $current_ID_MEMBER
-			AND ") . "(realName LIKE '$checkName' OR memberName LIKE '$checkName')
+		WHERE " . (empty($current_ID_MEMBER) ? '' : "id_member != $current_ID_MEMBER
+			AND ") . "(real_name LIKE '$checkName' OR member_name LIKE '$checkName')
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) > 0)
 	{
@@ -594,10 +594,10 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 	}
 
 	// Does name case insensitive match a member group name?
-	$request = $smfFunc['db_query']("
-		SELECT ID_GROUP
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group
 		FROM {$db_prefix}membergroups
-		WHERE groupName LIKE '$checkName'
+		WHERE group_name LIKE '$checkName'
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) > 0)
 	{
@@ -615,7 +615,7 @@ function groupsAllowedTo($permission, $board_id = null)
 	global $db_prefix, $modSettings, $board_info, $smfFunc;
 
 	// Admins are allowed to do anything.
-	$memberGroups = array(
+	$member_groups = array(
 		'allowed' => array(1),
 		'denied' => array(),
 	);
@@ -623,12 +623,12 @@ function groupsAllowedTo($permission, $board_id = null)
 	// Assume we're dealing with regular permissions (like profile_view_own).
 	if ($board_id === null)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_GROUP, addDeny
+		$request = $smfFunc['db_query']('', "
+			SELECT id_group, add_deny
 			FROM {$db_prefix}permissions
 			WHERE permission = '$permission'", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$memberGroups[$row['addDeny'] === '1' ? 'allowed' : 'denied'][] = $row['ID_GROUP'];
+			$member_groups[$row['add_deny'] === '1' ? 'allowed' : 'denied'][] = $row['id_group'];
 		$smfFunc['db_free_result']($request);
 	}
 
@@ -640,10 +640,10 @@ function groupsAllowedTo($permission, $board_id = null)
 			$profile_id = $board_info['profile'];
 		elseif ($board_id !== 0)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT ID_PROFILE
+			$request = $smfFunc['db_query']('', "
+				SELECT id_profile
 				FROM {$db_prefix}boards
-				WHERE ID_BOARD = $board_id
+				WHERE id_board = $board_id
 				LIMIT 1", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($request) == 0)
 				fatal_lang_error('smf232');
@@ -653,20 +653,20 @@ function groupsAllowedTo($permission, $board_id = null)
 		else
 			$profile_id = 1;
 
-		$request = $smfFunc['db_query']("
-			SELECT bp.ID_GROUP, bp.addDeny
+		$request = $smfFunc['db_query']('', "
+			SELECT bp.id_group, bp.add_deny
 			FROM {$db_prefix}board_permissions AS bp
 			WHERE bp.permission = '$permission'
-				AND bp.ID_PROFILE = $profile_id", __FILE__, __LINE__);
+				AND bp.id_profile = $profile_id", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$memberGroups[$row['addDeny'] === '1' ? 'allowed' : 'denied'][] = $row['ID_GROUP'];
+			$member_groups[$row['add_deny'] === '1' ? 'allowed' : 'denied'][] = $row['id_group'];
 		$smfFunc['db_free_result']($request);
 	}
 
 	// Denied is never allowed.
-	$memberGroups['allowed'] = array_diff($memberGroups['allowed'], $memberGroups['denied']);
+	$member_groups['allowed'] = array_diff($member_groups['allowed'], $member_groups['denied']);
 
-	return $memberGroups;
+	return $member_groups;
 }
 
 // Get a list of members that have a given permission (on a given board).
@@ -674,23 +674,23 @@ function membersAllowedTo($permission, $board_id = null)
 {
 	global $db_prefix, $smfFunc;
 
-	$memberGroups = groupsAllowedTo($permission, $board_id);
+	$member_groups = groupsAllowedTo($permission, $board_id);
 
-	$include_moderators = in_array(3, $memberGroups['allowed']) && $board_id !== null;
-	$memberGroups['allowed'] = array_diff($memberGroups['allowed'], array(3));
+	$include_moderators = in_array(3, $member_groups['allowed']) && $board_id !== null;
+	$member_groups['allowed'] = array_diff($member_groups['allowed'], array(3));
 
-	$exclude_moderators = in_array(3, $memberGroups['denied']) && $board_id !== null;
-	$memberGroups['denied'] = array_diff($memberGroups['denied'], array(3));
+	$exclude_moderators = in_array(3, $member_groups['denied']) && $board_id !== null;
+	$member_groups['denied'] = array_diff($member_groups['denied'], array(3));
 
-	$request = $smfFunc['db_query']("
-		SELECT mem.ID_MEMBER
+	$request = $smfFunc['db_query']('', "
+		SELECT mem.id_member
 		FROM {$db_prefix}members AS mem" . ($include_moderators || $exclude_moderators ? "
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_MEMBER = mem.ID_MEMBER AND ID_BOARD = $board_id)" : '') . "
-		WHERE (" . ($include_moderators ? "mods.ID_MEMBER IS NOT NULL OR " : '') . 'ID_GROUP IN (' . implode(', ', $memberGroups['allowed']) . ") OR FIND_IN_SET(" . implode(', mem.additionalGroups) OR FIND_IN_SET(', $memberGroups['allowed']) . ", mem.additionalGroups))" . (empty($memberGroups['denied']) ? '' : "
-			AND NOT (" . ($exclude_moderators ? "mods.ID_MEMBER IS NOT NULL OR " : '') . 'ID_GROUP IN (' . implode(', ', $memberGroups['denied']) . ") OR FIND_IN_SET(" . implode(', mem.additionalGroups) OR FIND_IN_SET(', $memberGroups['denied']) . ", mem.additionalGroups))"), __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_member = mem.id_member AND id_board = $board_id)" : '') . "
+		WHERE (" . ($include_moderators ? "mods.id_member IS NOT NULL OR " : '') . 'id_group IN (' . implode(', ', $member_groups['allowed']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['allowed']) . ", mem.additional_groups))" . (empty($member_groups['denied']) ? '' : "
+			AND NOT (" . ($exclude_moderators ? "mods.id_member IS NOT NULL OR " : '') . 'id_group IN (' . implode(', ', $member_groups['denied']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['denied']) . ", mem.additional_groups))"), __FILE__, __LINE__);
 	$members = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$members[] = $row['ID_MEMBER'];
+		$members[] = $row['id_member'];
 	$smfFunc['db_free_result']($request);
 
 	return $members;
@@ -701,15 +701,15 @@ function reattributePosts($memID, $email = false, $post_count = false)
 {
 	global $db_prefix, $smfFunc;
 
-	// !!! This should be done by memberName not email, or by both.
+	// !!! This should be done by member_name not email, or by both.
 
 	// Firstly, if $email isn't passed find out the members email address.
 	if ($email === false)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT emailAddress
+		$request = $smfFunc['db_query']('', "
+			SELECT email_address
 			FROM {$db_prefix}members
-			WHERE ID_MEMBER = $memID
+			WHERE id_member = $memID
 			LIMIT 1", __FILE__, __LINE__);
 		list ($email) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -718,14 +718,14 @@ function reattributePosts($memID, $email = false, $post_count = false)
 	// If they want the post count restored then we need to do some research.
 	if ($post_count)
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-			WHERE m.ID_MEMBER = 0
-				AND m.posterEmail = '$email'
+			WHERE m.id_member = 0
+				AND m.poster_email = '$email'
 				AND m.icon != 'recycled'
-				AND b.ID_BOARD = m.ID_BOARD
-				AND b.countPosts = 1", __FILE__, __LINE__);
+				AND b.id_board = m.id_board
+				AND b.count_posts = 1", __FILE__, __LINE__);
 		list ($messageCount) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -733,10 +733,10 @@ function reattributePosts($memID, $email = false, $post_count = false)
 	}
 
 	// Finally, update the posts themselves!
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}messages
-		SET ID_MEMBER = $memID
-		WHERE posterEmail = '$email'", __FILE__, __LINE__);
+		SET id_member = $memID
+		WHERE poster_email = '$email'", __FILE__, __LINE__);
 
 	return db_affected_rows();
 }
@@ -744,7 +744,7 @@ function reattributePosts($memID, $email = false, $post_count = false)
 // This simple function adds/removes the passed user from the current users buddy list.
 function BuddyListToggle()
 {
-	global $user_info, $ID_MEMBER;
+	global $user_info, $id_member;
 
 	checkSession('get');
 
@@ -763,7 +763,7 @@ function BuddyListToggle()
 		$user_info['buddies'][] = (int) $_REQUEST['u'];
 
 	// Update the settings.
-	updateMemberData($ID_MEMBER, array('buddy_list' => "'" . implode(',', $user_info['buddies']) . "'"));
+	updateMemberData($id_member, array('buddy_list' => "'" . implode(',', $user_info['buddies']) . "'"));
 
 	// Redirect back to the profile
 	redirectexit('action=profile;u=' . $_REQUEST['u']);

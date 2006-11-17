@@ -36,10 +36,10 @@ if (!defined('SMF'))
 	more information on that, please see its website, shown above.  The other
 	functions are as follows:
 
-	bool downloadAvatar(string url, int ID_MEMBER, int max_width,
+	bool downloadAvatar(string url, int id_member, int max_width,
 			int max_height)
 		- downloads file from url and stores it locally for avatar use
-		  by ID_MEMBER.
+		  by id_member.
 		- supports GIF, JPG, PNG, BMP and WBMP formats.
 		- detects if GD2 is available.
 		- if GIF support isn't present in GD, handles GIFs with gif_loadFile()
@@ -125,12 +125,12 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	unset($testGD);
 
 	require_once($sourcedir . '/ManageAttachments.php');
-	removeAttachments('a.ID_MEMBER = ' . $memID);
-	$smfFunc['db_query']("
+	removeAttachments('a.id_member = ' . $memID);
+	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}attachments
-			(ID_MEMBER, attachmentType, filename, size)
+			(id_member, attachment_type, filename, size)
 		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', 1)", __FILE__, __LINE__);
-	$attachID = db_insert_id("{$db_prefix}attachments", 'ID_ATTACH');
+	$attachID = db_insert_id("{$db_prefix}attachments", 'id_attach');
 
 	$destName = (empty($modSettings['custom_avatar_enabled']) ? $modSettings['attachmentUploadDir'] : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
 
@@ -187,10 +187,10 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			list ($width, $height) = getimagesize($destName);
 
 			// Write filesize in the database.
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}attachments
 				SET size = " . filesize($destName) . ", width = " . (int) $width . ", height = " . (int) $height . "
-				WHERE ID_ATTACH = $attachID
+				WHERE id_attach = $attachID
 				LIMIT 1", __FILE__, __LINE__);
 			return true;
 		}
@@ -199,9 +199,9 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	}
 	else
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}attachments
-			WHERE ID_ATTACH = $attachID
+			WHERE id_attach = $attachID
 			LIMIT 1", __FILE__, __LINE__);
 
 		@unlink($destName . '.tmp');

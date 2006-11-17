@@ -777,12 +777,12 @@ function doStep1()
 				// Are we doing attachments?  They're going to want a few things...
 				if ($special_table == $to_prefix . 'attachments')
 				{
-					if (!isset($ID_ATTACH, $attachmentUploadDir))
+					if (!isset($id_attach, $attachmentUploadDir))
 					{
 						$result = convert_query("
-							SELECT MAX(ID_ATTACH) + 1
+							SELECT MAX(id_attach) + 1
 							FROM {$to_prefix}attachments");
-						list ($ID_ATTACH) = mysql_fetch_row($result);
+						list ($id_attach) = mysql_fetch_row($result);
 						mysql_free_result($result);
 
 						$result = convert_query("
@@ -793,8 +793,8 @@ function doStep1()
 						list ($attachmentUploadDir) = mysql_fetch_row($result);
 						mysql_free_result($result);
 
-						if (empty($ID_ATTACH))
-							$ID_ATTACH = 1;
+						if (empty($id_attach))
+							$id_attach = 1;
 					}
 				}
 
@@ -817,13 +817,13 @@ function doStep1()
 						if ($special_table == $to_prefix . 'members')
 						{
 							// Let's ensure there are no illegal characters.
-							$row['memberName'] = preg_replace('/[<>&"\'=\\\]/is', '', $row['memberName']);
-							$row['realName'] = trim($row['realName'], " \t\n\r\x0B\0\xA0");
+							$row['member_name'] = preg_replace('/[<>&"\'=\\\]/is', '', $row['member_name']);
+							$row['real_name'] = trim($row['real_name'], " \t\n\r\x0B\0\xA0");
 
-							if (strpos($row['realName'], '<') !== false || strpos($row['realName'], '>') !== false || strpos($row['realName'], '& ') !== false)
-								$row['realName'] = htmlspecialchars($row['realName'], ENT_QUOTES);
+							if (strpos($row['real_name'], '<') !== false || strpos($row['real_name'], '>') !== false || strpos($row['real_name'], '& ') !== false)
+								$row['real_name'] = htmlspecialchars($row['real_name'], ENT_QUOTES);
 							else
-								$row['realName'] = strtr($row['realName'], array('\'' => '&#039;'));
+								$row['real_name'] = strtr($row['real_name'], array('\'' => '&#039;'));
 						}
 
 						if (empty($no_add))
@@ -909,17 +909,17 @@ function doStep2()
 	{
 		// Get all members with wrong number of personal messages.
 		$request = convert_query("
-			SELECT mem.ID_MEMBER, COUNT(pmr.ID_PM) AS realNum, mem.instantMessages
+			SELECT mem.id_member, COUNT(pmr.id_pm) AS realNum, mem.instant_messages
 			FROM {$to_prefix}members AS mem
-				LEFT JOIN {$to_prefix}pm_recipients AS pmr ON (mem.ID_MEMBER = pmr.ID_MEMBER AND pmr.deleted = 0)
-			GROUP BY mem.ID_MEMBER
-			HAVING realNum != instantMessages");
+				LEFT JOIN {$to_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = 0)
+			GROUP BY mem.id_member
+			HAVING realNum != instant_messages");
 		while ($row = mysql_fetch_assoc($request))
 		{
 			convert_query("
 				UPDATE {$to_prefix}members
-				SET instantMessages = $row[realNum]
-				WHERE ID_MEMBER = $row[ID_MEMBER]
+				SET instant_messages = $row[realNum]
+				WHERE id_member = $row[id_member]
 				LIMIT 1");
 
 			pastTime(0);
@@ -927,17 +927,17 @@ function doStep2()
 		mysql_free_result($request);
 
 		$request = convert_query("
-			SELECT mem.ID_MEMBER, COUNT(pmr.ID_PM) AS realNum, mem.unreadMessages
+			SELECT mem.id_member, COUNT(pmr.id_pm) AS realNum, mem.unread_messages
 			FROM {$to_prefix}members AS mem
-				LEFT JOIN {$to_prefix}pm_recipients AS pmr ON (mem.ID_MEMBER = pmr.ID_MEMBER AND pmr.deleted = 0 AND pmr.is_read = 0)
-			GROUP BY mem.ID_MEMBER
-			HAVING realNum != unreadMessages");
+				LEFT JOIN {$to_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = 0 AND pmr.is_read = 0)
+			GROUP BY mem.id_member
+			HAVING realNum != unread_messages");
 		while ($row = mysql_fetch_assoc($request))
 		{
 			convert_query("
 				UPDATE {$to_prefix}members
-				SET unreadMessages = $row[realNum]
-				WHERE ID_MEMBER = $row[ID_MEMBER]
+				SET unread_messages = $row[realNum]
+				WHERE id_member = $row[id_member]
 				LIMIT 1");
 
 			pastTime(0);
@@ -950,23 +950,23 @@ function doStep2()
 	if ($_GET['substep'] <= 1)
 	{
 		$request = convert_query("
-			SELECT ID_BOARD, MAX(ID_MSG) AS ID_LAST_MSG, MAX(modifiedTime) AS lastEdited
+			SELECT id_board, MAX(id_msg) AS id_last_msg, MAX(modified_time) AS lastEdited
 			FROM {$to_prefix}messages
-			GROUP BY ID_BOARD");
+			GROUP BY id_board");
 		$modifyData = array();
 		$modifyMsg = array();
 		while ($row = mysql_fetch_assoc($request))
 		{
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET ID_LAST_MSG = $row[ID_LAST_MSG], ID_MSG_UPDATED = $row[ID_LAST_MSG]
-				WHERE ID_BOARD = $row[ID_BOARD]
+				SET id_last_msg = $row[id_last_msg], id_msg_updated = $row[id_last_msg]
+				WHERE id_board = $row[id_board]
 				LIMIT 1");
-			$modifyData[$row['ID_BOARD']] = array(
-				'last_msg' => $row['ID_LAST_MSG'],
+			$modifyData[$row['id_board']] = array(
+				'last_msg' => $row['id_last_msg'],
 				'lastEdited' => $row['lastEdited'],
 			);
-			$modifyMsg[] = $row['ID_LAST_MSG'];
+			$modifyMsg[] = $row['id_last_msg'];
 		}
 		mysql_free_result($request);
 
@@ -974,28 +974,28 @@ function doStep2()
 		if (!empty($modifyMsg))
 		{
 			$request = convert_query("
-				SELECT ID_BOARD, ID_MSG, modifiedTime, posterTime
+				SELECT id_board, id_msg, modified_time, poster_time
 				FROM {$to_prefix}messages
-				WHERE ID_MSG IN (" . implode(',', $modifyMsg) . ")");
+				WHERE id_msg IN (" . implode(',', $modifyMsg) . ")");
 			while ($row = mysql_fetch_assoc($request))
 			{
 				// Have we got a message modified before this was posted?
-				if (max($row['modifiedTime'], $row['posterTime']) < $modifyData[$row['ID_BOARD']]['lastEdited'])
+				if (max($row['modified_time'], $row['poster_time']) < $modifyData[$row['id_board']]['lastEdited'])
 				{
 					// Work out the ID of the message (This seems long but it won't happen much.
 					$request2 = convert_query("
-						SELECT ID_MSG
+						SELECT id_msg
 						FROM {$to_prefix}messages
-						WHERE modifiedTime = " . $modifyData[$row['ID_BOARD']]['lastEdited'] . "
+						WHERE modified_time = " . $modifyData[$row['id_board']]['lastEdited'] . "
 						LIMIT 1");
 					if (mysql_num_rows($request2) != 0)
 					{
-						list ($ID_MSG) = mysql_fetch_row($request2);
+						list ($id_msg) = mysql_fetch_row($request2);
 
 						convert_query("
 							UPDATE {$to_prefix}boards
-							SET ID_MSG_UPDATED = $ID_MSG
-							WHERE ID_BOARD = $row[ID_BOARD]
+							SET id_msg_updated = $id_msg
+							WHERE id_board = $row[id_board]
 							LIMIT 1");
 					}
 					mysql_free_result($request2);
@@ -1010,23 +1010,23 @@ function doStep2()
 	if ($_GET['substep'] <= 2)
 	{
 		$request = convert_query("
-			SELECT ID_GROUP
+			SELECT id_group
 			FROM {$to_prefix}membergroups
-			WHERE minPosts = -1");
+			WHERE min_posts = -1");
 		$all_groups = array();
 		while ($row = mysql_fetch_assoc($request))
-			$all_groups[] = $row['ID_GROUP'];
+			$all_groups[] = $row['id_group'];
 		mysql_free_result($request);
 
 		$request = convert_query("
-			SELECT ID_BOARD, memberGroups
+			SELECT id_board, member_groups
 			FROM {$to_prefix}boards
-			WHERE FIND_IN_SET(0, memberGroups)");
+			WHERE FIND_IN_SET(0, member_groups)");
 		while ($row = mysql_fetch_assoc($request))
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET memberGroups = '" . implode(',', array_unique(array_merge($all_groups, explode(',', $row['memberGroups'])))) . "'
-				WHERE ID_BOARD = $row[ID_BOARD]
+				SET member_groups = '" . implode(',', array_unique(array_merge($all_groups, explode(',', $row['member_groups'])))) . "'
+				WHERE id_board = $row[id_board]
 				LIMIT 1");
 		mysql_free_result($request);
 
@@ -1037,16 +1037,16 @@ function doStep2()
 	{
 		// Get the number of messages...
 		$result = convert_query("
-			SELECT COUNT(*) AS totalMessages, MAX(ID_MSG) AS maxMsgID
+			SELECT COUNT(*) AS totalMessages, MAX(id_msg) AS maxMsgID
 			FROM {$to_prefix}messages");
 		$row = mysql_fetch_assoc($result);
 		mysql_free_result($result);
 
-		// Update the latest member.  (highest ID_MEMBER)
+		// Update the latest member.  (highest id_member)
 		$result = convert_query("
-			SELECT ID_MEMBER AS latestMember, realName AS latestRealName
+			SELECT id_member AS latestMember, real_name AS latestRealName
 			FROM {$to_prefix}members
-			ORDER BY ID_MEMBER DESC
+			ORDER BY id_member DESC
 			LIMIT 1");
 		if (mysql_num_rows($result))
 			$row += mysql_fetch_assoc($result);
@@ -1083,17 +1083,17 @@ function doStep2()
 	if ($_GET['substep'] <= 4)
 	{
 		$request = convert_query("
-			SELECT ID_GROUP, minPosts
+			SELECT id_group, min_posts
 			FROM {$to_prefix}membergroups
-			WHERE minPosts != -1
-			ORDER BY minPosts DESC");
+			WHERE min_posts != -1
+			ORDER BY min_posts DESC");
 		$post_groups = array();
 		while ($row = mysql_fetch_assoc($request))
-			$post_groups[$row['minPosts']] = $row['ID_GROUP'];
+			$post_groups[$row['min_posts']] = $row['id_group'];
 		mysql_free_result($request);
 
 		$request = convert_query("
-			SELECT ID_MEMBER, posts
+			SELECT id_member, posts
 			FROM {$to_prefix}members");
 		$mg_updates = array();
 		while ($row = mysql_fetch_assoc($request))
@@ -1106,22 +1106,22 @@ function doStep2()
 					break;
 				}
 
-			$mg_updates[$group][] = $row['ID_MEMBER'];
+			$mg_updates[$group][] = $row['id_member'];
 		}
 		mysql_free_result($request);
 
 		foreach ($mg_updates as $group_to => $update_members)
 			convert_query("
 				UPDATE {$to_prefix}members
-				SET ID_POST_GROUP = $group_to
-				WHERE ID_MEMBER IN (" . implode(', ', $update_members) . ")
+				SET id_post_group = $group_to
+				WHERE id_member IN (" . implode(', ', $update_members) . ")
 				LIMIT " . count($update_members));
 
 		// This isn't completely related, but should be rather quick.
 		convert_query("
 			UPDATE {$to_prefix}members
-			SET ICQ = ''
-			WHERE ICQ = '0'");
+			SET icq = ''
+			WHERE icq = '0'");
 
 		pastTime(5);
 	}
@@ -1130,20 +1130,20 @@ function doStep2()
 	{
 		// Needs to be done separately for each board.
 		$result_boards = convert_query("
-			SELECT ID_BOARD
+			SELECT id_board
 			FROM {$to_prefix}boards");
 		$boards = array();
 		while ($row_boards = mysql_fetch_assoc($result_boards))
-			$boards[] = $row_boards['ID_BOARD'];
+			$boards[] = $row_boards['id_board'];
 		mysql_free_result($result_boards);
 
-		foreach ($boards as $ID_BOARD)
+		foreach ($boards as $id_board)
 		{
 			// Get the number of topics, and iterate through them.
 			$result_topics = convert_query("
 				SELECT COUNT(*)
 				FROM {$to_prefix}topics
-				WHERE ID_BOARD = $ID_BOARD");
+				WHERE id_board = $id_board");
 			list ($num_topics) = mysql_fetch_row($result_topics);
 			mysql_free_result($result_topics);
 
@@ -1151,15 +1151,15 @@ function doStep2()
 			$result_posts = convert_query("
 				SELECT COUNT(*)
 				FROM {$to_prefix}messages
-				WHERE ID_BOARD = $ID_BOARD");
+				WHERE id_board = $id_board");
 			list ($num_posts) = mysql_fetch_row($result_posts);
 			mysql_free_result($result_posts);
 
 			// Fix the board's totals.
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET numTopics = $num_topics, numPosts = $num_posts
-				WHERE ID_BOARD = $ID_BOARD
+				SET num_topics = $num_topics, num_posts = $num_posts
+				WHERE id_board = $id_board
 				LIMIT 1");
 		}
 
@@ -1177,18 +1177,18 @@ function doStep2()
 		while ($_REQUEST['start'] < $topics)
 		{
 			$request = convert_query("
-				SELECT ID_TOPIC, (COUNT(*) - 1) AS numReplies
+				SELECT id_topic, (COUNT(*) - 1) AS num_replies
 				FROM {$to_prefix}messages
-				WHERE ID_TOPIC > $_REQUEST[start]
-					AND ID_TOPIC <= $_REQUEST[start] + 100
-				GROUP BY ID_TOPIC
+				WHERE id_topic > $_REQUEST[start]
+					AND id_topic <= $_REQUEST[start] + 100
+				GROUP BY id_topic
 				LIMIT 100");
 			while ($row = mysql_fetch_assoc($request))
 			{
 				convert_query("
 					UPDATE {$to_prefix}topics
-					SET numReplies = $row[numReplies]
-					WHERE ID_TOPIC = $row[ID_TOPIC]
+					SET num_replies = $row[num_replies]
+					WHERE id_topic = $row[id_topic]
 					LIMIT 1");
 			}
 			mysql_free_result($request);
@@ -1201,19 +1201,19 @@ function doStep2()
 		pastTime(7);
 	}
 
-	// Fix ID_CAT, ID_PARENT, and childLevel.
+	// Fix id_cat, id_parent, and child_level.
 	if ($_GET['substep'] <= 7)
 	{
 		// First, let's get an array of boards and parents.
 		$request = convert_query("
-			SELECT ID_BOARD, ID_PARENT, ID_CAT
+			SELECT id_board, id_parent, id_cat
 			FROM {$to_prefix}boards");
 		$child_map = array();
 		$cat_map = array();
 		while ($row = mysql_fetch_assoc($request))
 		{
-			$child_map[$row['ID_PARENT']][] = $row['ID_BOARD'];
-			$cat_map[$row['ID_BOARD']] = $row['ID_CAT'];
+			$child_map[$row['id_parent']][] = $row['id_board'];
+			$cat_map[$row['id_board']] = $row['id_cat'];
 		}
 		mysql_free_result($request);
 
@@ -1222,7 +1222,7 @@ function doStep2()
 		{
 			if ($parent != 0 && !isset($cat_map[$parent]))
 			{
-				// Perhaps it was supposed to be their ID_CAT?
+				// Perhaps it was supposed to be their id_cat?
 				foreach ($dummy as $board)
 				{
 					if (empty($cat_map[$board]))
@@ -1234,7 +1234,7 @@ function doStep2()
 			}
 		}
 
-		// The above ID_PARENTs and ID_CATs may all be wrong; we know ID_PARENT = 0 is right.
+		// The above ID_PARENTs and ID_CATs may all be wrong; we know id_parent = 0 is right.
 		$solid_parents = array(array(0, 0));
 		$fixed_boards = array();
 		while (!empty($solid_parents))
@@ -1257,8 +1257,8 @@ function doStep2()
 		{
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET ID_PARENT = " . (int) $fix[0] . ", ID_CAT = " . (int) $fix[1] . ", childLevel = " . (int) $fix[2] . "
-				WHERE ID_BOARD = " . (int) $board . "
+				SET id_parent = " . (int) $fix[0] . ", id_cat = " . (int) $fix[1] . ", child_level = " . (int) $fix[2] . "
+				WHERE id_board = " . (int) $board . "
 				LIMIT 1");
 		}
 
@@ -1267,17 +1267,17 @@ function doStep2()
 		{
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET childLevel = 0, ID_PARENT = 0" . (empty($fixed_boards) ? '' : "
-				WHERE ID_BOARD NOT IN (" . implode(', ', array_keys($fixed_boards)) . ")"));
+				SET child_level = 0, id_parent = 0" . (empty($fixed_boards) ? '' : "
+				WHERE id_board NOT IN (" . implode(', ', array_keys($fixed_boards)) . ")"));
 		}
 
 		// Last check: any boards not in a good category?
 		$request = convert_query("
-			SELECT ID_CAT
+			SELECT id_cat
 			FROM {$to_prefix}categories");
 		$real_cats = array();
 		while ($row = mysql_fetch_assoc($request))
-			$real_cats[] = $row['ID_CAT'];
+			$real_cats[] = $row['id_cat'];
 		mysql_free_result($request);
 
 		$fix_cats = array();
@@ -1297,8 +1297,8 @@ function doStep2()
 
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET ID_CAT = " . (int) $catch_cat . "
-				WHERE ID_CAT IN (" . implode(', ', array_unique($fix_cats)) . ")");
+				SET id_cat = " . (int) $catch_cat . "
+				WHERE id_cat IN (" . implode(', ', array_unique($fix_cats)) . ")");
 		}
 
 		pastTime(8);
@@ -1307,30 +1307,30 @@ function doStep2()
 	if ($_GET['substep'] <= 8)
 	{
 		$request = convert_query("
-			SELECT c.ID_CAT, c.catOrder, b.ID_BOARD, b.boardOrder
+			SELECT c.id_cat, c.cat_order, b.id_board, b.board_order
 			FROM {$to_prefix}categories AS c
-				LEFT JOIN {$to_prefix}boards AS b ON (b.ID_CAT = c.ID_CAT)
-			ORDER BY c.catOrder, b.childLevel, b.boardOrder, b.ID_BOARD");
-		$catOrder = -1;
-		$boardOrder = -1;
+				LEFT JOIN {$to_prefix}boards AS b ON (b.id_cat = c.id_cat)
+			ORDER BY c.cat_order, b.child_level, b.board_order, b.id_board");
+		$cat_order = -1;
+		$board_order = -1;
 		$curCat = -1;
 		while ($row = mysql_fetch_assoc($request))
 		{
-			if ($curCat != $row['ID_CAT'])
+			if ($curCat != $row['id_cat'])
 			{
-				$curCat = $row['ID_CAT'];
-				if (++$catOrder != $row['catOrder'])
+				$curCat = $row['id_cat'];
+				if (++$cat_order != $row['cat_order'])
 					convert_query("
 						UPDATE {$to_prefix}categories
-						SET catOrder = $catOrder
-						WHERE ID_CAT = $row[ID_CAT]
+						SET cat_order = $cat_order
+						WHERE id_cat = $row[id_cat]
 						LIMIT 1");
 			}
-			if (!empty($row['ID_BOARD']) && ++$boardOrder != $row['boardOrder'])
+			if (!empty($row['id_board']) && ++$board_order != $row['board_order'])
 				convert_query("
 					UPDATE {$to_prefix}boards
-					SET boardOrder = $boardOrder
-					WHERE ID_BOARD = $row[ID_BOARD]
+					SET board_order = $board_order
+					WHERE id_board = $row[id_board]
 					LIMIT 1");
 		}
 		mysql_free_result($request);
@@ -1342,7 +1342,7 @@ function doStep2()
 	{
 		convert_query("
 			ALTER TABLE {$to_prefix}boards
-			ORDER BY boardOrder");
+			ORDER BY board_order");
 
 		convert_query("
 			ALTER TABLE {$to_prefix}smileys
@@ -1362,7 +1362,7 @@ function doStep2()
 		while ($_REQUEST['start'] < $attachments)
 		{
 			$request = convert_query("
-				SELECT ID_ATTACH, filename, attachmentType
+				SELECT id_attach, filename, attachment_type
 				FROM {$to_prefix}attachments
 				WHERE ID_THUMB = 0
 					AND (RIGHT(filename, 4) IN ('.gif', '.jpg', '.png', '.bmp') OR RIGHT(filename, 5) = '.jpeg')
@@ -1373,10 +1373,10 @@ function doStep2()
 				break;
 			while ($row = mysql_fetch_assoc($request))
 			{
-				if ($row['attachmentType'] == 1)
+				if ($row['attachment_type'] == 1)
 					$filename = $modSettings['custom_avatar_dir'] . '/' . $row['filename'];
 				else
-					$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 				// Probably not one of the converted ones, then?
 				if (!file_exists($filename))
 					continue;
@@ -1388,7 +1388,7 @@ function doStep2()
 						SET
 							width = " . (int) $size[0] . ",
 							height = " . (int) $size[1] . "
-						WHERE ID_ATTACH = $row[ID_ATTACH]
+						WHERE id_attach = $row[id_attach]
 						LIMIT 1");
 			}
 			mysql_free_result($request);
@@ -1599,7 +1599,7 @@ function removeAllAttachments()
 
 	// !!! This should probably be done in chunks too.
 	$result = convert_query("
-		SELECT ID_ATTACH, filename
+		SELECT id_attach, filename
 		FROM {$to_prefix}attachments");
 	while ($row = mysql_fetch_assoc($result))
 	{
@@ -1607,7 +1607,7 @@ function removeAllAttachments()
 		$clean_name = strtr($row['filename'], 'ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');
 		$clean_name = strtr($clean_name, array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', 'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
 		$clean_name = preg_replace(array('/\s/', '/[^\w_\.\-]/'), array('_', ''), $clean_name);
-		$enc_name = $row['ID_ATTACH'] . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
+		$enc_name = $row['id_attach'] . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
 		$clean_name = preg_replace('~\.[\.]+~', '.', $clean_name);
 
 		if (file_exists($attachmentUploadDir . '/' . $enc_name))

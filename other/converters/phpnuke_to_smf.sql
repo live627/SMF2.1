@@ -20,7 +20,7 @@
 /******************************************************************************/
 
 DELETE FROM {$to_prefix}membergroups
-WHERE groupName LIKE 'phpBB %';
+WHERE group_name LIKE 'phpBB %';
 
 ---* {$to_prefix}membergroups
 ---{
@@ -32,11 +32,11 @@ if (!isset($_SESSION['convert_num_stars']))
 	// !!! We must keep group id 4 as a post group.  MUST!!
 	convert_query("
 		DELETE FROM {$to_prefix}membergroups
-		WHERE minPosts != -1
-			AND ID_GROUP > 4");
+		WHERE min_posts != -1
+			AND id_group > 4");
 }
 
-if ($row['minPosts'] > -1)
+if ($row['min_posts'] > -1)
 {
 	$row['stars'] = sprintf("%d#star.gif", $_SESSION['convert_num_stars']);
 	if ($_SESSION['convert_num_stars'] < 5)
@@ -44,9 +44,9 @@ if ($row['minPosts'] > -1)
 }
 ---}
 SELECT
-	SUBSTRING(CONCAT('phpBB ', rank_title), 1, 255) AS groupName,
-	rank_image AS stars, IF(rank_special = 0, rank_min, -1) AS minPosts,
-	'' AS onlineColor
+	SUBSTRING(CONCAT('phpBB ', rank_title), 1, 255) AS group_name,
+	rank_image AS stars, IF(rank_special = 0, rank_min, -1) AS min_posts,
+	'' AS online_color
 FROM {$from_prefix}bbranks
 ORDER BY rank_min;
 ---*
@@ -57,8 +57,8 @@ ORDER BY rank_min;
 
 ---* {$to_prefix}membergroups
 SELECT
-	SUBSTRING(CONCAT('phpBB ', group_name), 1, 255) AS groupName,
-	-1 AS minPosts, '' AS stars, '' AS onlineColor
+	SUBSTRING(CONCAT('phpBB ', group_name), 1, 255) AS group_name,
+	-1 AS min_posts, '' AS stars, '' AS online_color
 FROM {$from_prefix}bbgroups
 WHERE group_single_user = 0;
 ---*
@@ -101,21 +101,21 @@ if (!isset($board_timezone))
 	mysql_free_result($request2);
 }
 
-// timeOffset = phpBB user TZ - phpBB board TZ.
-$row['timeOffset'] = $row['timeOffset'] - $board_timezone;
+// time_offset = phpBB user TZ - phpBB board TZ.
+$row['time_offset'] = $row['time_offset'] - $board_timezone;
 
 if ($row['user_avatar_type'] == 0)
 	$row['avatar'] = '';
 // If the avatar type is uploaded (type = 1) copy avatar as an attachment with the correct name.
 elseif ($row['user_avatar_type'] == 1 && strlen($row['avatar']) > 0)
 {
-	$smf_avatar_filename = 'avatar_' . $row['ID_MEMBER'] . strrchr($row['avatar'], '.');
+	$smf_avatar_filename = 'avatar_' . $row['id_member'] . strrchr($row['avatar'], '.');
 	copy($phpbb_avatar_upload_path . '/' . $row['avatar'], $smf_attachments_dir . '/' . $smf_avatar_filename);
 
 	convert_query("
 		INSERT INTO {$to_prefix}attachments
-			(ID_MSG, ID_MEMBER, filename)
-		VALUES (0, $row[ID_MEMBER], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255))");
+			(id_msg, id_member, filename)
+		VALUES (0, $row[id_member], SUBSTRING('" . addslashes($smf_avatar_filename) . "', 1, 255))");
 	$row['avatar'] = '';
 }
 elseif ($row['user_avatar_type'] == 3)
@@ -128,36 +128,36 @@ if ($row['signature_uid'] != '')
 $row['signature'] = substr($row['signature'], 1, 65534);
 unset($row['signature_uid']);
 
-$row['dateRegistered'] = strtotime($row['dateRegistered']);
+$row['date_registered'] = strtotime($row['date_registered']);
 ---}
 SELECT
-	u.user_id AS ID_MEMBER, SUBSTRING(u.username, 1, 80) AS memberName,
-	SUBSTRING(u.username, 1, 255) AS realName,
-	SUBSTRING(u.user_password, 1, 64) AS passwd, u.user_lastvisit AS lastLogin,
-	u.user_regdate AS dateRegistered,
+	u.user_id AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
+	SUBSTRING(u.username, 1, 255) AS real_name,
+	SUBSTRING(u.user_password, 1, 64) AS passwd, u.user_lastvisit AS last_login,
+	u.user_regdate AS date_registered,
 	SUBSTRING(u.user_from, 1, 255) AS location,
-	u.user_posts AS posts, IF(u.user_level = 1, 1, mg.ID_GROUP) AS ID_GROUP,
-	u.user_new_privmsg AS instantMessages,
-	SUBSTRING(u.user_email, 1, 255) AS emailAddress,
-	u.user_unread_privmsg AS unreadMessages,
-	SUBSTRING(u.user_msnm, 1, 255) AS MSN,
-	SUBSTRING(u.user_aim, 1, 16) AS AIM,
-	SUBSTRING(u.user_icq, 1, 255) AS ICQ,
-	SUBSTRING(u.user_yim, 1, 32) AS YIM,
-	SUBSTRING(u.user_website, 1, 255) AS websiteTitle,
-	SUBSTRING(u.user_website, 1, 255) AS websiteUrl,
-	u.user_allow_viewonline AS showOnline, u.user_timezone AS timeOffset,
-	IF(u.user_viewemail = 1, 0, 1) AS hideEmail, u.user_avatar AS avatar,
+	u.user_posts AS posts, IF(u.user_level = 1, 1, mg.id_group) AS id_group,
+	u.user_new_privmsg AS instant_messages,
+	SUBSTRING(u.user_email, 1, 255) AS email_address,
+	u.user_unread_privmsg AS unread_messages,
+	SUBSTRING(u.user_msnm, 1, 255) AS msn,
+	SUBSTRING(u.user_aim, 1, 16) AS aim,
+	SUBSTRING(u.user_icq, 1, 255) AS icq,
+	SUBSTRING(u.user_yim, 1, 32) AS yim,
+	SUBSTRING(u.user_website, 1, 255) AS website_title,
+	SUBSTRING(u.user_website, 1, 255) AS website_url,
+	u.user_allow_viewonline AS show_online, u.user_timezone AS time_offset,
+	IF(u.user_viewemail = 1, 0, 1) AS hide_email, u.user_avatar AS avatar,
 	REPLACE(u.user_sig, '\n', '<br />') AS signature,
 	u.user_sig_bbcode_uid AS signature_uid, u.user_avatar_type,
 	u.user_notify_pm AS pm_email_notify, u.user_active AS is_activated,
-	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS messageLabels,
-	'' AS personalText, '' AS timeFormat, '' AS usertitle, '' AS memberIP,
-	'' AS secretQuestion, '' AS secretAnswer, '' AS validation_code,
-	'' AS additionalGroups, '' AS smileySet, '' AS passwordSalt
+	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
+	'' AS personal_text, '' AS time_format, '' AS usertitle, '' AS member_ip,
+	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}bbranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
-	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.groupName = CONCAT('phpBB ', r.rank_title))
+	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', r.rank_title))
 WHERE u.user_id != 1
 GROUP BY u.user_id;
 ---*
@@ -173,39 +173,39 @@ while (true)
 	pastTime($substep);
 
 	$result = convert_query("
-		SELECT mg.ID_GROUP, mem.ID_MEMBER
+		SELECT mg.id_group, mem.id_member
 		FROM {$from_prefix}bbgroups AS g
 			LEFT JOIN {$from_prefix}bbuser_group AS ug ON (ug.group_id = g.group_id)
-			LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.groupName = CONCAT('phpBB ', g.group_name))
-			LEFT JOIN {$to_prefix}members AS mem ON (mem.ID_MEMBER = ug.user_id)
+			LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', g.group_name))
+			LEFT JOIN {$to_prefix}members AS mem ON (mem.id_member = ug.user_id)
 		WHERE g.group_single_user = 0
-		ORDER BY ID_MEMBER
+		ORDER BY id_member
 		LIMIT $_REQUEST[start], 250");
-	$additionalGroups = '';
+	$additional_groups = '';
 	$last_member = 0;
 	while ($row = mysql_fetch_assoc($result))
 	{
 		if (empty($last_member))
-			$last_member = $row['ID_MEMBER'];
+			$last_member = $row['id_member'];
 
-		if ($last_member != $row['ID_MEMBER'])
+		if ($last_member != $row['id_member'])
 		{
-			$additionalGroups = addslashes($additionalGroups);
+			$additional_groups = addslashes($additional_groups);
 
 			convert_query("
 				UPDATE {$to_prefix}members
-				SET additionalGroups = '$additionalGroups'
-				WHERE ID_MEMBER = $last_member
+				SET additional_groups = '$additional_groups'
+				WHERE id_member = $last_member
 				LIMIT 1");
-			$last_member = $row['ID_MEMBER'];
-			$additionalGroups = $row['ID_GROUP'];
+			$last_member = $row['id_member'];
+			$additional_groups = $row['id_group'];
 		}
 		else
 		{
-			if ($additionalGroups == '')
-				$additionalGroups = $row['ID_GROUP'];
+			if ($additional_groups == '')
+				$additional_groups = $row['id_group'];
 			else
-				$additionalGroups = $additionalGroups . ',' . $row['ID_GROUP'];
+				$additional_groups = $additional_groups . ',' . $row['id_group'];
 		}
 	}
 
@@ -219,12 +219,12 @@ $_REQUEST['start'] = 0;
 
 if ($last_member != 0)
 {
-	$additionalGroups = addslashes($additionalGroups);
+	$additional_groups = addslashes($additional_groups);
 
 	convert_query("
 		UPDATE {$to_prefix}members
-		SET additionalGroups = '$additionalGroups'
-		WHERE ID_MEMBER = $last_member
+		SET additional_groups = '$additional_groups'
+		WHERE id_member = $last_member
 		LIMIT 1");
 }
 ---}
@@ -238,8 +238,8 @@ TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
 SELECT
-	cat_id AS ID_CAT, SUBSTRING(cat_title, 1, 255) AS name,
-	cat_order AS catOrder
+	cat_id AS id_cat, SUBSTRING(cat_title, 1, 255) AS name,
+	cat_order AS cat_order
 FROM {$from_prefix}bbcategories;
 ---*
 
@@ -250,20 +250,20 @@ FROM {$from_prefix}bbcategories;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	forum_id AS ID_BOARD, forum_order AS boardOrder, forum_posts AS numPosts,
-	forum_last_post_id AS ID_LAST_MSG, SUBSTRING(forum_name, 1, 255) AS name,
-	cat_id AS ID_CAT, SUBSTRING(forum_desc, 1, 65534) AS description,
-	forum_topics AS numTopics,
+	forum_id AS id_board, forum_order AS board_order, forum_posts AS num_posts,
+	forum_last_post_id AS id_last_msg, SUBSTRING(forum_name, 1, 255) AS name,
+	cat_id AS id_cat, SUBSTRING(forum_desc, 1, 65534) AS description,
+	forum_topics AS num_topics,
 	CASE auth_read
 		WHEN 0 THEN '-1,0,2'
 		WHEN 1 THEN '0,2'
 		WHEN 3 THEN '2'
 		ELSE ''
-	END AS memberGroups
+	END AS member_groups
 FROM {$from_prefix}bbforums;
 ---*
 
@@ -278,17 +278,17 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.topic_id AS ID_TOPIC, t.topic_type = 1 AS isSticky,
-	t.topic_first_post_id AS ID_FIRST_MSG, t.topic_last_post_id AS ID_LAST_MSG,
-	t.topic_poster AS ID_MEMBER_STARTED, p.poster_id AS ID_MEMBER_UPDATED,
-	t.forum_id AS ID_BOARD, v.vote_id AS ID_POLL, t.topic_status = 1 AS locked,
-	t.topic_replies AS numReplies, t.topic_views AS numViews
+	t.topic_id AS id_topic, t.topic_type = 1 AS is_sticky,
+	t.topic_first_post_id AS id_first_msg, t.topic_last_post_id AS id_last_msg,
+	t.topic_poster AS id_member_started, p.poster_id AS id_member_updated,
+	t.forum_id AS id_board, v.vote_id AS id_poll, t.topic_status = 1 AS locked,
+	t.topic_replies AS num_replies, t.topic_views AS num_views
 FROM {$from_prefix}bbtopics AS t
 	LEFT JOIN {$from_prefix}bbposts AS p ON (p.post_id = t.topic_last_post_id)
 	LEFT JOIN {$from_prefix}bbvote_desc AS v ON (v.topic_id = t.topic_id)
 GROUP BY t.topic_id
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
 /******************************************************************************/
@@ -302,15 +302,15 @@ TRUNCATE {$to_prefix}messages;
 $row['body'] = preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$1px]', $row['body']);
 ---}
 SELECT
-	p.post_id AS ID_MSG, p.topic_id AS ID_TOPIC, p.post_time AS posterTime,
-	p.poster_id AS ID_MEMBER,
-	SUBSTRING(IFNULL(u.user_email, ''), 1, 255) AS posterEmail,
+	p.post_id AS id_msg, p.topic_id AS id_topic, p.post_time AS poster_time,
+	p.poster_id AS id_member,
+	SUBSTRING(IFNULL(u.user_email, ''), 1, 255) AS poster_email,
 	SUBSTRING(IF(IFNULL(pt.post_subject, '') = '', t.topic_title, pt.post_subject), 1, 255) AS subject,
-	SUBSTRING(IF(IFNULL(p.post_username, '') = '', u.username, p.post_username), 1, 255) AS posterName,
-	p.enable_smilies AS smileysEnabled, p.post_edit_time AS modifiedTime,
-	CONCAT_WS('.', CONV(SUBSTRING(p.poster_ip, 1, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 3, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 5, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 7, 2), 16, 10)) AS posterIP,
+	SUBSTRING(IF(IFNULL(p.post_username, '') = '', u.username, p.post_username), 1, 255) AS poster_name,
+	p.enable_smilies AS smileys_enabled, p.post_edit_time AS modified_time,
+	CONCAT_WS('.', CONV(SUBSTRING(p.poster_ip, 1, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 3, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 5, 2), 16, 10), CONV(SUBSTRING(p.poster_ip, 7, 2), 16, 10)) AS poster_ip,
 	SUBSTRING(REPLACE(REPLACE(IF(pt.bbcode_uid = '', pt.post_text, REPLACE(REPLACE(REPLACE(pt.post_text, CONCAT(':u:', pt.bbcode_uid), ''), CONCAT(':1:', pt.bbcode_uid), ''), CONCAT(':', pt.bbcode_uid), '')), '\n', '<br />'), '"', '"'), 1, 65534) AS body,
-	p.forum_id AS ID_BOARD, '' AS modifiedName, 'xx' AS icon
+	p.forum_id AS id_board, '' AS modified_name, 'xx' AS icon
 FROM {$from_prefix}bbposts AS p
 	LEFT JOIN {$from_prefix}bbposts_text AS pt ON (pt.post_id = p.post_id)
 	LEFT JOIN {$from_prefix}bbtopics AS t ON (t.topic_id = p.topic_id)
@@ -327,9 +327,9 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	vote_id AS ID_POLL, SUBSTRING(vote_text, 1, 255) AS question,
-	t.topic_poster AS ID_MEMBER, vote_start + vote_length AS expireTime,
-	SUBSTRING(IFNULL(u.username, ''), 1, 255) AS posterName
+	vote_id AS id_poll, SUBSTRING(vote_text, 1, 255) AS question,
+	t.topic_poster AS id_member, vote_start + vote_length AS expire_time,
+	SUBSTRING(IFNULL(u.username, ''), 1, 255) AS poster_name
 FROM ({$from_prefix}bbvote_desc AS vd, {$from_prefix}bbtopics AS t)
 	LEFT JOIN {$from_prefix}users AS u ON (u.user_id = t.topic_poster)
 WHERE vd.topic_id = t.topic_id;
@@ -341,7 +341,7 @@ WHERE vd.topic_id = t.topic_id;
 
 ---* {$to_prefix}poll_choices
 SELECT
-	vote_id AS ID_POLL, vote_option_id AS ID_CHOICE,
+	vote_id AS id_poll, vote_option_id AS id_choice,
 	SUBSTRING(vote_option_text, 1, 255) AS label, vote_result AS votes
 FROM {$from_prefix}bbvote_results
 GROUP BY vote_id, vote_option_id;
@@ -352,7 +352,7 @@ GROUP BY vote_id, vote_option_id;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT vote_id AS ID_POLL, vote_user_id AS ID_MEMBER
+SELECT vote_id AS id_poll, vote_user_id AS id_member
 FROM {$from_prefix}bbvote_voters
 WHERE vote_user_id > 0
 GROUP BY vote_id, vote_user_id;
@@ -366,10 +366,10 @@ TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
 SELECT
-	pm.privmsgs_id AS ID_PM, pm.privmsgs_from_userid AS ID_MEMBER_FROM,
-	pm.privmsgs_type IN (0, 1, 3) AS deletedBySender,
+	pm.privmsgs_id AS id_pm, pm.privmsgs_from_userid AS id_member_from,
+	pm.privmsgs_type IN (0, 1, 3) AS deleted_by_sender,
 	pm.privmsgs_date AS msgtime,
-	SUBSTRING(uf.username, 1, 255) AS fromName,
+	SUBSTRING(uf.username, 1, 255) AS from_name,
 	SUBSTRING(pm.privmsgs_subject, 1, 255) AS subject,
 	SUBSTRING(REPLACE(IF(pmt.privmsgs_bbcode_uid = '', pmt.privmsgs_text, REPLACE(REPLACE(pmt.privmsgs_text, CONCAT(':1:', pmt.privmsgs_bbcode_uid), ''), CONCAT(':', pmt.privmsgs_bbcode_uid), '')), '\n', '<br />'), 1, 65534) AS body
 FROM {$from_prefix}bbprivmsgs AS pm
@@ -385,7 +385,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT
-	pm.privmsgs_id AS ID_PM, pm.privmsgs_to_userid AS ID_MEMBER,
+	pm.privmsgs_id AS id_pm, pm.privmsgs_to_userid AS id_member,
 	pm.privmsgs_type = 5 AS is_read, pm.privmsgs_type IN (2, 4) AS deleted,
 	'' AS labels
 FROM {$from_prefix}bbprivmsgs AS pm
@@ -400,7 +400,7 @@ FROM {$from_prefix}bbprivmsgs AS pm
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT user_id AS ID_MEMBER, topic_id AS ID_TOPIC
+SELECT user_id AS id_member, topic_id AS id_topic
 FROM {$from_prefix}bbtopics_watch;
 ---*
 
@@ -421,7 +421,7 @@ $request = convert_query("
 		CASE auth_delete WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_delete,
 		CASE auth_vote WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_vote,
 		CASE auth_pollcreate WHEN 0 THEN '-1,0,2,3' WHEN 1 THEN '0,2,3' WHEN 3 THEN '2,3' ELSE '' END AS auth_pollcreate,
-		forum_id AS ID_BOARD
+		forum_id AS id_board
 	FROM {$from_prefix}bbforums");
 while ($row = mysql_fetch_assoc($request))
 {
@@ -476,17 +476,17 @@ while ($row = mysql_fetch_assoc($request))
 	}
 
 	$setString = '';
-	foreach ($this_board as $ID_GROUP => $permissions)
+	foreach ($this_board as $id_group => $permissions)
 	{
 		foreach ($permissions as $perm)
 			$setString .= "
-			($ID_GROUP, $row[ID_BOARD], '$perm'),";
+			($id_group, $row[id_board], '$perm'),";
 	}
 
 	if ($setString != '')
 		convert_query("
 			INSERT INTO {$to_prefix}board_permissions
-				(ID_GROUP, ID_BOARD, permission)
+				(id_group, id_board, permission)
 			VALUES" . substr($setString, 0, -1));
 }
 mysql_free_result($request);
@@ -502,12 +502,12 @@ mysql_free_result($request);
 // Select all auth_access records.
 $request = convert_query("
 	SELECT
-		aa.forum_id AS ID_BOARD, mg.ID_GROUP AS ID_GROUP, aa.auth_post,
+		aa.forum_id AS id_board, mg.id_group AS id_group, aa.auth_post,
 		aa.auth_reply, aa.auth_edit, aa.auth_delete, aa.auth_sticky,
 		aa.auth_announce, aa.auth_vote, aa.auth_pollcreate, aa.auth_mod
 	FROM ({$from_prefix}bbauth_access AS aa, {$from_prefix}bbgroups AS g, {$to_prefix}membergroups AS mg)
 	WHERE g.group_id = aa.group_id
-		AND BINARY mg.groupName = CONCAT('phpBB ', g.group_name)");
+		AND BINARY mg.group_name = CONCAT('phpBB ', g.group_name)");
 while ($row = mysql_fetch_assoc($request))
 {
 	$this_group = array();
@@ -565,28 +565,28 @@ while ($row = mysql_fetch_assoc($request))
 	foreach ($this_group as $perm)
 	{
 		$setString .= "
-			($row[ID_GROUP], $row[ID_BOARD], '$perm'),";
+			($row[id_group], $row[id_board], '$perm'),";
 	}
 
 	if ($setString != '')
 		convert_query("
 			INSERT IGNORE INTO {$to_prefix}board_permissions
-				(ID_GROUP, ID_BOARD, permission)
+				(id_group, id_board, permission)
 			VALUES" . substr($setString, 0, -1));
 
 	// Give group access to board.
 	$result = convert_query("
-		SELECT memberGroups
+		SELECT member_groups
 		FROM {$to_prefix}boards
-		WHERE ID_BOARD = $row[ID_BOARD]
+		WHERE id_board = $row[id_board]
 		LIMIT 1");
-	list ($memberGroups) = mysql_fetch_row($result);
+	list ($member_groups) = mysql_fetch_row($result);
 	mysql_free_result($result);
 
 	convert_query("
 		UPDATE {$to_prefix}boards
-		SET memberGroups = '" . implode(',', array_unique(explode(',', $memberGroups . ',' . $row['ID_GROUP']))) . "'
-		WHERE ID_BOARD = $row[ID_BOARD]
+		SET member_groups = '" . implode(',', array_unique(explode(',', $member_groups . ',' . $row['id_group']))) . "'
+		WHERE id_board = $row[id_board]
 		LIMIT 1");
 }
 mysql_free_result($request);
@@ -600,7 +600,7 @@ mysql_free_result($request);
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT u.user_id AS ID_MEMBER, aa.forum_id AS ID_BOARD
+SELECT u.user_id AS id_member, aa.forum_id AS id_board
 FROM ({$from_prefix}users AS u, {$from_prefix}bbgroups AS g, {$from_prefix}bbuser_group AS ug, {$from_prefix}bbauth_access AS aa)
 WHERE ug.user_id = u.user_id
 	AND ug.group_id = aa.group_id
@@ -785,7 +785,7 @@ while (true)
 		{
 			convert_query("
 				INSERT INTO {$to_prefix}ban_items
-					(ID_BAN_GROUP, ID_MEMBER, email_address, hostname)
+					(ID_BAN_GROUP, id_member, email_address, hostname)
 				VALUES ($ID_BAN_GROUP, $row[ban_userid], '', '')");
 		}
 	}
@@ -877,12 +877,12 @@ mysql_free_result($result);
 if (!$tableExists)
 	return;
 
-if (!isset($ID_ATTACH))
+if (!isset($id_attach))
 {
 	$result = convert_query("
-		SELECT MAX(ID_ATTACH) + 1
+		SELECT MAX(id_attach) + 1
 		FROM {$to_prefix}attachments");
-	list ($ID_ATTACH) = mysql_fetch_row($result);
+	list ($id_attach) = mysql_fetch_row($result);
 	mysql_free_result($result);
 
 	$result = convert_query("
@@ -910,8 +910,8 @@ if (!isset($ID_ATTACH))
 		$oldAttachmentDir = $_POST['path_from'] . '/files';
 }
 
-if (empty($ID_ATTACH))
-	$ID_ATTACH = 1;
+if (empty($id_attach))
+	$id_attach = 1;
 
 while (true)
 {
@@ -919,7 +919,7 @@ while (true)
 
 	$result = convert_query("
 		SELECT
-			a.post_id AS ID_MSG, ad.real_filename AS filename, ad.physical_filename AS encrypted,
+			a.post_id AS id_msg, ad.real_filename AS filename, ad.physical_filename AS encrypted,
 			ad.download_count AS downloads, ad.filesize AS size
 		FROM ({$from_prefix}bbattachments AS a, {$from_prefix}bbattachments_desc AS ad)
 		WHERE a.post_id != 0
@@ -937,20 +937,20 @@ while (true)
 			continue;
 
 		// Frankly I don't care whether they want encrypted filenames - they're having it - too dangerous.
-		$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+		$newfilename = getAttachmentFilename($row['filename'], $id_attach);
 
 		if (strlen($newfilename) <= 255 && copy($oldAttachmentDir . '/' . $row['encrypted'], $attachmentUploadDir . '/' . $newfilename))
 		{
-			$attachments[] = "($ID_ATTACH, $fileSize, SUBSTRING('" . addslashes($row['filename']) . "', 1, 255), $row[ID_MSG], $row[downloads])";
+			$attachments[] = "($id_attach, $fileSize, SUBSTRING('" . addslashes($row['filename']) . "', 1, 255), $row[id_msg], $row[downloads])";
 
-			$ID_ATTACH++;
+			$id_attach++;
 		}
 	}
 
 	if (!empty($attachments))
 		convert_query("
 			INSERT INTO {$to_prefix}attachments
-				(ID_ATTACH, size, filename, ID_MSG, downloads)
+				(id_attach, size, filename, id_msg, downloads)
 			VALUES " . implode(', ', $attachments));
 
 	$_REQUEST['start'] += 100;

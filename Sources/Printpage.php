@@ -43,12 +43,12 @@ function PrintTopic()
 		fatal_lang_error(472, false);
 
 	// Get the topic starter information.
-	$request = $smfFunc['db_query']("
-		SELECT m.posterTime, IFNULL(mem.realName, m.posterName) AS posterName
+	$request = $smfFunc['db_query']('', "
+		SELECT m.poster_time, IFNULL(mem.real_name, m.poster_name) AS poster_name
 		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE m.ID_TOPIC = $topic
-		ORDER BY ID_MSG
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_topic = $topic
+		ORDER BY id_msg
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232');
@@ -60,16 +60,16 @@ function PrintTopic()
 	$context['template_layers'] = array('print');
 	$context['board_name'] = $board_info['name'];
 	$context['category_name'] = $board_info['cat']['name'];
-	$context['poster_name'] = $row['posterName'];
-	$context['post_time'] = timeformat($row['posterTime'], false);
+	$context['poster_name'] = $row['poster_name'];
+	$context['post_time'] = timeformat($row['poster_time'], false);
 
 	// Split the topics up so we can print them.
-	$request = $smfFunc['db_query']("
-		SELECT subject, posterTime, body, IFNULL(mem.realName, posterName) AS posterName
+	$request = $smfFunc['db_query']('', "
+		SELECT subject, poster_time, body, IFNULL(mem.real_name, poster_name) AS poster_name
 		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE ID_TOPIC = $topic
-		ORDER BY ID_MSG", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE id_topic = $topic
+		ORDER BY id_msg", __FILE__, __LINE__);
 	$context['posts'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -79,9 +79,9 @@ function PrintTopic()
 
 		$context['posts'][] = array(
 			'subject' => $row['subject'],
-			'member' => $row['posterName'],
-			'time' =>  timeformat($row['posterTime'], false),
-			'timestamp' => forum_time(true, $row['posterTime']),
+			'member' => $row['poster_name'],
+			'time' =>  timeformat($row['poster_time'], false),
+			'timestamp' => forum_time(true, $row['poster_time']),
 			'body' => parse_bbc($row['body'], 'print'),
 		);
 

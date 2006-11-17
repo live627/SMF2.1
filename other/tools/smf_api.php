@@ -28,11 +28,11 @@
 	without disturbing your script.  It defines several functions, all of
 	which start with the smf_ prefix.  These are:
 
-	bool smf_setLoginCookie(int length, string username or int ID_MEMBER,
+	bool smf_setLoginCookie(int length, string username or int id_member,
 			string password, bool encrypted = true)
 		- sets a cookie and session variables to log the user in, for length
 		  seconds from now.
-		- will find the ID_MEMBER for you if you specify a username.
+		- will find the id_member for you if you specify a username.
 		- please ensure that the username has slashes added to it.
 		- does no authentication, but if the cookie is wrong it won't work.
 		- expects the password to be pre-encrypted if encrypted is true.
@@ -58,9 +58,9 @@
 		  make this action show up properly on Who's Online - see Who.php for
 		  more details.
 
-	bool smf_isOnline(string username or int ID_MEMBER)
+	bool smf_is_online(string username or int id_member)
 		- checks if the specified member is currently online.
-		- will find the appropriate ID_MEMBER if username is given instead.
+		- will find the appropriate id_member if username is given instead.
 		- returns true if they are online, false otherwise.
 
 	string smf_logError(string error_message, string file, int line)
@@ -91,9 +91,9 @@
 		- returns null if no connection to the database has been made, and
 		  true or false depending on the user's permissions.
 
-	void smf_loadThemeData(int ID_THEME = default)
-		- if no ID_THEME is passed, the user's default theme will be used.
-		- allows 'theme' in the URL to specify the theme, only if ID_THEME is
+	void smf_loadThemeData(int id_theme = default)
+		- if no id_theme is passed, the user's default theme will be used.
+		- allows 'theme' in the URL to specify the theme, only if id_theme is
 		  not passed.
 		- loads theme settings into $smf_settings['theme'].
 		- loads theme options into $smf_user_info['theme'].
@@ -189,9 +189,9 @@ function smf_setLoginCookie($cookie_length, $id, $password = '', $encrypted = tr
 		$username = $id;
 
 		$result = smf_query("
-			SELECT ID_MEMBER
+			SELECT id_member
 			FROM $smf_settings[db_prefix]members
-			WHERE memberName = '$username'
+			WHERE member_name = '$username'
 			LIMIT 1", __FILE__, __LINE__);
 		list ($id) = mysql_fetch_row($result);
 		mysql_free_result($result);
@@ -215,9 +215,9 @@ function smf_setLoginCookie($cookie_length, $id, $password = '', $encrypted = tr
 			return false;
 
 		$result = smf_query("
-			SELECT memberName, passwordSalt
+			SELECT member_name, password_salt
 			FROM $smf_settings[db_prefix]members
-			WHERE ID_MEMBER = '" . (int) $id . "'
+			WHERE id_member = '" . (int) $id . "'
 			LIMIT 1", __FILE__, __LINE__);
 		list ($username, $salt) = mysql_fetch_row($result);
 		mysql_free_result($result);
@@ -290,27 +290,27 @@ function smf_authenticateUser()
 		// Fix a security hole in PHP 4.3.9 and below...
 		if (preg_match('~^a:[34]:\{i:0;(i:\d{1,6}|s:[1-8]:"\d{1,8}");i:1;s:(0|40):"([a-fA-F0-9]{40})?";i:2;[id]:\d{1,14};(i:3;i:\d;)?\}$~', $_COOKIE[$smf_settings['cookiename']]) == 1)
 		{
-			list ($ID_MEMBER, $password) = @unserialize($_COOKIE[$smf_settings['cookiename']]);
-			$ID_MEMBER = !empty($ID_MEMBER) ? (int) $ID_MEMBER : 0;
+			list ($id_member, $password) = @unserialize($_COOKIE[$smf_settings['cookiename']]);
+			$id_member = !empty($id_member) ? (int) $id_member : 0;
 		}
 		else
-			$ID_MEMBER = 0;
+			$id_member = 0;
 	}
 	elseif (isset($_SESSION['login_' . $smf_settings['cookiename']]))
 	{
-		list ($ID_MEMBER, $password, $login_span) = @unserialize(stripslashes($_SESSION['login_' . $smf_settings['cookiename']]));
-		$ID_MEMBER = !empty($ID_MEMBER) && $login_span > time() ? (int) $ID_MEMBER : 0;
+		list ($id_member, $password, $login_span) = @unserialize(stripslashes($_SESSION['login_' . $smf_settings['cookiename']]));
+		$id_member = !empty($id_member) && $login_span > time() ? (int) $id_member : 0;
 	}
 	else
-		$ID_MEMBER = 0;
+		$id_member = 0;
 
 	// Don't even bother if they have no authentication data.
-	if (!empty($ID_MEMBER))
+	if (!empty($id_member))
 	{
 		$request = smf_query("
 			SELECT *
 			FROM $smf_settings[db_prefix]members
-			WHERE ID_MEMBER = $ID_MEMBER
+			WHERE id_member = $id_member
 			LIMIT 1", __FILE__, __LINE__);
 		// Did we find 'im?  If not, junk it.
 		if (mysql_num_rows($request) != 0)
@@ -319,45 +319,45 @@ function smf_authenticateUser()
 			$smf_user_info += mysql_fetch_assoc($request);
 
 			if (strlen($password) == 40)
-				$check = sha1($smf_user_info['passwd'] . $smf_user_info['passwordSalt']) == $password;
+				$check = sha1($smf_user_info['passwd'] . $smf_user_info['password_salt']) == $password;
 			else
 				$check = false;
 
 			// Wrong password or not activated - either way, you're going nowhere.
-			$ID_MEMBER = $check && ($smf_user_info['is_activated'] == 1 || $smf_user_info['is_activated'] == 11) ? $smf_user_info['ID_MEMBER'] : 0;
+			$id_member = $check && ($smf_user_info['is_activated'] == 1 || $smf_user_info['is_activated'] == 11) ? $smf_user_info['id_member'] : 0;
 		}
 		else
-			$ID_MEMBER = 0;
+			$id_member = 0;
 		mysql_free_result($request);
 	}
 
-	if (empty($ID_MEMBER))
+	if (empty($id_member))
 		$smf_user_info = array('groups' => array(-1));
 	else
 	{
-		if (empty($smf_user_info['additionalGroups']))
-			$smf_user_info['groups'] = array($smf_user_info['ID_GROUP'], $smf_user_info['ID_POST_GROUP']);
+		if (empty($smf_user_info['additional_groups']))
+			$smf_user_info['groups'] = array($smf_user_info['id_group'], $smf_user_info['id_post_group']);
 		else
 			$smf_user_info['groups'] = array_merge(
-				array($smf_user_info['ID_GROUP'], $smf_user_info['ID_POST_GROUP']),
-				explode(',', $smf_user_info['additionalGroups'])
+				array($smf_user_info['id_group'], $smf_user_info['id_post_group']),
+				explode(',', $smf_user_info['additional_groups'])
 			);
 	}
 
 	// A few things to make life easier...
-	$smf_user_info['id'] = &$smf_user_info['ID_MEMBER'];
-	$smf_user_info['username'] = &$smf_user_info['memberName'];
-	$smf_user_info['name'] = &$smf_user_info['realName'];
-	$smf_user_info['email'] = &$smf_user_info['emailAddress'];
-	$smf_user_info['messages'] = &$smf_user_info['instantMessages'];
-	$smf_user_info['unread_messages'] = &$smf_user_info['unreadMessages'];
+	$smf_user_info['id'] = &$smf_user_info['id_member'];
+	$smf_user_info['username'] = &$smf_user_info['member_name'];
+	$smf_user_info['name'] = &$smf_user_info['real_name'];
+	$smf_user_info['email'] = &$smf_user_info['email_address'];
+	$smf_user_info['messages'] = &$smf_user_info['instant_messages'];
+	$smf_user_info['unread_messages'] = &$smf_user_info['unread_messages'];
 	$smf_user_info['language'] = empty($smf_user_info['lngfile']) || empty($smf_settings['userLanguage']) ? $smf_settings['language'] : $smf_user_info['lngfile'];
-	$smf_user_info['is_guest'] = $ID_MEMBER == 0;
+	$smf_user_info['is_guest'] = $id_member == 0;
 	$smf_user_info['is_admin'] = in_array(1, $smf_user_info['groups']);
 
 	// This might be set to "forum default"...
-	if (empty($smf_user_info['timeFormat']))
-		$smf_user_info['timeFormat'] = $smf_settings['time_format'];
+	if (empty($smf_user_info['time_format']))
+		$smf_user_info['time_format'] = $smf_settings['time_format'];
 
 	return !$smf_user_info['is_guest'];
 }
@@ -381,40 +381,40 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 	// !!! Validate username isn't already used?  Validate reserved, etc.?
 
 	$register_vars = array(
-		'memberName' => "'$username'",
-		'realName' => "'$username'",
-		'emailAddress' => "'" . addslashes($email) . "'",
+		'member_name' => "'$username'",
+		'real_name' => "'$username'",
+		'email_address' => "'" . addslashes($email) . "'",
 		'passwd' => "'" . sha1(strtolower($username) . $password) . "'",
-		'passwordSalt' => "'" . substr(md5(rand()), 0, 4) . "'",
+		'password_salt' => "'" . substr(md5(rand()), 0, 4) . "'",
 		'posts' => '0',
-		'dateRegistered' => (string) time(),
+		'date_registered' => (string) time(),
 		'is_activated' => '1',
-		'personalText' => "'" . addslashes($smf_settings['default_personalText']) . "'",
+		'personal_text' => "'" . addslashes($smf_settings['default_personal_text']) . "'",
 		'pm_email_notify' => '1',
-		'ID_THEME' => '0',
-		'ID_POST_GROUP' => '4',
+		'id_theme' => '0',
+		'id_post_group' => '4',
 		'lngfile' => "''",
 		'buddy_list' => "''",
 		'pm_ignore_list' => "''",
-		'messageLabels' => "''",
-		'websiteTitle' => "''",
-		'websiteUrl' => "''",
+		'message_labels' => "''",
+		'website_title' => "''",
+		'website_url' => "''",
 		'location' => "''",
-		'ICQ' => "''",
-		'AIM' => "''",
-		'YIM' => "''",
-		'MSN' => "''",
-		'timeFormat' => "''",
+		'icq' => "''",
+		'aim' => "''",
+		'yim' => "''",
+		'msn' => "''",
+		'time_format' => "''",
 		'signature' => "''",
 		'avatar' => "''",
 		'usertitle' => "''",
-		'memberIP' => "''",
-		'secretQuestion' => "''",
-		'secretAnswer' => "''",
+		'member_ip' => "''",
+		'secret_question' => "''",
+		'secret_answer' => "''",
 		'validation_code' => "''",
-		'additionalGroups' => "''",
-		'smileySet' => "''",
-		'passwordSalt' => "''",
+		'additional_groups' => "''",
+		'smiley_set' => "''",
+		'password_salt' => "''",
 	);
 
 	$register_vars = $extra_fields + $register_vars;
@@ -423,7 +423,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 		INSERT INTO $smf_settings[db_prefix]members
 			(" . implode(', ', array_keys($register_vars)) . ")
 		VALUES (" . implode(', ', $register_vars) . ')', __FILE__, __LINE__);
-	$ID_MEMBER = db_insert_id();
+	$id_member = db_insert_id();
 
 	smf_query("
 		UPDATE $smf_settings[db_prefix]settings
@@ -433,7 +433,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 	smf_query("
 		REPLACE INTO $smf_settings[db_prefix]settings
 			(variable, value)
-		VALUES ('latestMember', $ID_MEMBER),
+		VALUES ('latestMember', $id_member),
 			('latestRealName', '$username')", __FILE__, __LINE__);
 	smf_query("
 		UPDATE {$db_prefix}log_activity
@@ -455,11 +455,11 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 				($memberID, SUBSTRING('$var', 1, 255), SUBSTRING('$val', 1, 65534)),";
 		smf_query("
 			INSERT INTO $smf_settings[db_prefix]themes
-				(ID_MEMBER, variable, value)
+				(id_member, variable, value)
 			VALUES " . substr($setString, 0, -1), __FILE__, __LINE__);
 	}
 
-	return $ID_MEMBER;
+	return $id_member;
 }
 
 // Log the current user online.
@@ -487,30 +487,30 @@ function smf_logOnline($action = null)
 
 	$serialized = addslashes(serialize($serialized));
 
-	// Guests use 0, members use ID_MEMBER.
+	// Guests use 0, members use id_member.
 	if ($smf_user_info['is_guest'])
 	{
 		smf_query("
 			DELETE FROM $smf_settings[db_prefix]log_online
-			WHERE logTime < NOW() - INTERVAL $lastActive SECOND OR session = 'ip$_SERVER[REMOTE_ADDR]'", __FILE__, __LINE__);
+			WHERE log_time < " . (time() - $lastActive) . " OR session = 'ip$_SERVER[REMOTE_ADDR]'", __FILE__, __LINE__);
 		smf_query("
 			INSERT IGNORE INTO $smf_settings[db_prefix]log_online
-				(session, ID_MEMBER, ip, url)
+				(session, id_member, ip, url)
 			VALUES ('ip$_SERVER[REMOTE_ADDR]', 0, IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized')", __FILE__, __LINE__);
 	}
 	else
 	{
 		smf_query("
 			DELETE FROM $smf_settings[db_prefix]log_online
-			WHERE logTime < NOW() - INTERVAL $lastActive SECOND OR ID_MEMBER = $smf_user_info[id] OR session = '" . @session_id() . "'", __FILE__, __LINE__);
+			WHERE log_time < " . (time() - $lastActive) . " OR id_member = $smf_user_info[id] OR session = '" . @session_id() . "'", __FILE__, __LINE__);
 		smf_query("
 			INSERT IGNORE INTO $smf_settings[db_prefix]log_online
-				(session, ID_MEMBER, ip, url)
+				(session, id_member, ip, url)
 			VALUES ('" . @session_id() . "', $smf_user_info[id], IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized')", __FILE__, __LINE__);
 	}
 }
 
-function smf_isOnline($user)
+function smf_is_online($user)
 {
 	global $smf_settings, $smf_connection;
 
@@ -518,10 +518,10 @@ function smf_isOnline($user)
 		return false;
 
 	$result = smf_query("
-		SELECT lo.ID_MEMBER
+		SELECT lo.id_member
 		FROM $smf_settings[db_prefix]log_online AS lo" . (!is_integer($user) ? "
-			LEFT JOIN $smf_settings[db_prefix]members AS mem ON (mem.ID_MEMBER = lo.ID_MEMBER)" : '') . "
-		WHERE lo.ID_MEMBER = " . (int) $user . (!is_integer($user) ? " OR mem.memberName = '$user'" : '') . "
+			LEFT JOIN $smf_settings[db_prefix]members AS mem ON (mem.id_member = lo.id_member)" : '') . "
+		WHERE lo.id_member = " . (int) $user . (!is_integer($user) ? " OR mem.member_name = '$user'" : '') . "
 		LIMIT 1", __FILE__, __LINE__);
 	$return = mysql_num_rows($result) != 0;
 	mysql_free_result($result);
@@ -548,14 +548,14 @@ function smf_logError($error_message, $file = null, $line = null)
 	if ($line != null)
 		$error_message .= '<br />' . $line;
 
-	// Just in case there's no ID_MEMBER or IP set yet.
+	// Just in case there's no id_member or IP set yet.
 	if (empty($smf_user_info['id']))
 		$smf_user_info['id'] = 0;
 
 	// Insert the error into the database.
 	smf_query("
 		INSERT INTO $smf_settings[db_prefix]log_errors
-			(ID_MEMBER, logTime, ip, url, message, session)
+			(id_member, log_time, ip, url, message, session)
 		VALUES ($smf_user_info[id], " . time() . ", SUBSTRING('$_SERVER[REMOTE_ADDR]', 1, 16), SUBSTRING('" . (empty($_SERVER['QUERY_STRING']) ? '' : addslashes(htmlspecialchars('?' . $_SERVER['QUERY_STRING']))) . "', 1, 65534), SUBSTRING('" . addslashes($error_message) . "', 1, 65534), SUBSTRING('" . @session_id() . "', 1, 32))", __FILE__, __LINE__);
 
 	// Return the message to make things simpler.
@@ -563,15 +563,15 @@ function smf_logError($error_message, $file = null, $line = null)
 }
 
 // Format a time to make it look purdy.
-function smf_formatTime($logTime)
+function smf_formatTime($log_time)
 {
 	global $smf_user_info, $smf_settings;
 
 	// Offset the time - but we can't have a negative date!
-	$time = max($logTime + (@$smf_user_info['timeOffset'] + $smf_settings['time_offset']) * 3600, 0);
+	$time = max($log_time + (@$smf_user_info['time_offset'] + $smf_settings['time_offset']) * 3600, 0);
 
 	// Format some in caps, and then any other characters..
-	return strftime(strtr(!empty($smf_user_info['timeFormat']) ? $smf_user_info['timeFormat'] : $smf_settings['time_format'], array('%a' => ucwords(strftime('%a', $time)), '%A' => ucwords(strftime('%A', $time)), '%b' => ucwords(strftime('%b', $time)), '%B' => ucwords(strftime('%B', $time)))), $time);
+	return strftime(strtr(!empty($smf_user_info['time_format']) ? $smf_user_info['time_format'] : $smf_settings['time_format'], array('%a' => ucwords(strftime('%a', $time)), '%A' => ucwords(strftime('%A', $time)), '%b' => ucwords(strftime('%b', $time)), '%B' => ucwords(strftime('%B', $time)))), $time);
 }
 
 // Do a query, and if it fails log an error in the SMF error log.
@@ -607,14 +607,14 @@ function smf_allowedTo($permission)
 	if (!isset($smf_user_info['permissions']))
 	{
 		$result = smf_query("
-			SELECT permission, addDeny
+			SELECT permission, add_deny
 			FROM $smf_settings[db_prefix]permissions
-			WHERE ID_GROUP IN (" . implode(', ', $smf_user_info['groups']) . ")", __FILE__, __LINE__);
+			WHERE id_group IN (" . implode(', ', $smf_user_info['groups']) . ")", __FILE__, __LINE__);
 		$removals = array();
 		$smf_user_info['permissions'] = array();
 		while ($row = mysql_fetch_assoc($result))
 		{
-			if (empty($row['addDeny']))
+			if (empty($row['add_deny']))
 				$removals[] = $row['permission'];
 			else
 				$smf_user_info['permissions'][] = $row['permission'];
@@ -635,7 +635,7 @@ function smf_allowedTo($permission)
 		return false;
 }
 
-function smf_loadThemeData($ID_THEME = 0)
+function smf_loadThemeData($id_theme = 0)
 {
 	global $smf_settings, $smf_user_info, $smf_connection;
 
@@ -643,17 +643,17 @@ function smf_loadThemeData($ID_THEME = 0)
 		return null;
 
 	// The theme was specified by parameter.
-	if (!empty($ID_THEME))
-		$theme = (int) $ID_THEME;
+	if (!empty($id_theme))
+		$theme = (int) $id_theme;
 	// The theme was specified by REQUEST.
 	elseif (!empty($_REQUEST['theme']))
 	{
 		$theme = (int) $_REQUEST['theme'];
-		$_SESSION['ID_THEME'] = $theme;
+		$_SESSION['id_theme'] = $theme;
 	}
 	// The theme was specified by REQUEST... previously.
-	elseif (!empty($_SESSION['ID_THEME']))
-		$theme = (int) $_SESSION['ID_THEME'];
+	elseif (!empty($_SESSION['id_theme']))
+		$theme = (int) $_SESSION['id_theme'];
 	// The theme is just the user's choice. (might use ?board=1;theme=0 to force board theme.)
 	elseif (!empty($smf_user_info['theme']) && !isset($_REQUEST['theme']))
 		$theme = $smf_user_info['theme'];
@@ -661,7 +661,7 @@ function smf_loadThemeData($ID_THEME = 0)
 	else
 		$theme = $smf_settings['theme_guests'];
 
-	// Verify the ID_THEME... no foul play.
+	// Verify the id_theme... no foul play.
 	if (!empty($smf_settings['knownThemes']) && !empty($smf_settings['theme_allow']))
 	{
 		$themes = explode(',', $smf_settings['knownThemes']);
@@ -677,21 +677,21 @@ function smf_loadThemeData($ID_THEME = 0)
 
 	// Load variables from the current or default theme, global or this user's.
 	$result = smf_query("
-		SELECT variable, value, ID_MEMBER, ID_THEME
+		SELECT variable, value, id_member, id_theme
 		FROM $smf_settings[db_prefix]themes
-		WHERE ID_MEMBER IN (-1, 0, $member)
-			AND ID_THEME" . ($theme == 1 ? ' = 1' : " IN ($theme, 1)"), __FILE__, __LINE__);
+		WHERE id_member IN (-1, 0, $member)
+			AND id_theme" . ($theme == 1 ? ' = 1' : " IN ($theme, 1)"), __FILE__, __LINE__);
 	// Pick between $smf_settings['theme'] and $smf_user_info['theme'] depending on whose data it is.
 	$themeData = array(0 => array(), $member => array());
 	while ($row = mysql_fetch_assoc($result))
 	{
 		// If this is the themedir of the default theme, store it.
-		if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['ID_THEME'] == '1' && empty($row['ID_MEMBER']))
+		if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['id_theme'] == '1' && empty($row['id_member']))
 			$themeData[0]['default_' . $row['variable']] = $row['value'];
 
 		// If this isn't set yet, is a theme option, or is not the default theme..
-		if (!isset($themeData[$row['ID_MEMBER']][$row['variable']]) || $row['ID_THEME'] != '1')
-			$themeData[$row['ID_MEMBER']][$row['variable']] = substr($row['variable'], 0, 5) == 'show_' ? $row['value'] == '1' : $row['value'];
+		if (!isset($themeData[$row['id_member']][$row['variable']]) || $row['id_theme'] != '1')
+			$themeData[$row['id_member']][$row['variable']] = substr($row['variable'], 0, 5) == 'show_' ? $row['value'] == '1' : $row['value'];
 	}
 	mysql_free_result($result);
 

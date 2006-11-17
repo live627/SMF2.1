@@ -63,133 +63,133 @@ function BoardIndex()
 	);
 
 	// Find all boards and categories, as well as related information.  This will be sorted by the natural order of boards and categories, which we control.
-	$result_boards = $smfFunc['db_query']("
+	$result_boards = $smfFunc['db_query']('boardindex_fetch_boards', "
 		SELECT
-			c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.description,
-			b.numPosts, b.numTopics, b.unapprovedPosts, b.unapprovedTopics, b.ID_PARENT,
-			IFNULL(m.posterTime, 0) AS posterTime, IFNULL(mem.memberName, m.posterName) AS posterName,
-			m.subject, m.ID_TOPIC, IFNULL(mem.realName, m.posterName) AS realName,
-			" . ($user_info['is_guest'] ? "	1 AS isRead, 0 AS new_from" : "
-			(IFNULL(lb.ID_MSG, 0) >= b.ID_MSG_UPDATED) AS isRead, IFNULL(lb.ID_MSG, -1) + 1 AS new_from,
-			c.canCollapse, IFNULL(cc.ID_MEMBER, 0) AS isCollapsed") . ",
-			IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, m.ID_MSG,
-			IFNULL(mods_mem.ID_MEMBER, 0) AS ID_MODERATOR, mods_mem.realName AS modRealName
+			c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.description,
+			b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent,
+			IFNULL(m.poster_time, 0) AS poster_time, IFNULL(mem.member_name, m.poster_name) AS poster_name,
+			m.subject, m.id_topic, IFNULL(mem.real_name, m.poster_name) AS real_name,
+			" . ($user_info['is_guest'] ? "	1 AS is_read, 0 AS new_from" : "
+			(IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS is_read, IFNULL(lb.id_msg, -1) + 1 AS new_from,
+			c.can_collapse, IFNULL(cc.id_member, 0) AS is_collapsed") . ",
+			IFNULL(mem.id_member, 0) AS id_member, m.id_msg,
+			IFNULL(mods_mem.id_member, 0) AS ID_MODERATOR, mods_mem.real_name AS modRealName
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
-			LEFT JOIN {$db_prefix}messages AS m ON (m.ID_MSG = b.ID_LAST_MSG)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = $user_info[id])
-			LEFT JOIN {$db_prefix}collapsed_categories AS cc ON (cc.ID_CAT = c.ID_CAT AND cc.ID_MEMBER = $user_info[id])" : '') . "
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = b.ID_BOARD)
-			LEFT JOIN {$db_prefix}members AS mods_mem ON (mods_mem.ID_MEMBER = mods.ID_MEMBER)
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+			LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
+			LEFT JOIN {$db_prefix}collapsed_categories AS cc ON (cc.id_cat = c.id_cat AND cc.id_member = $user_info[id])" : '') . "
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+			LEFT JOIN {$db_prefix}members AS mods_mem ON (mods_mem.id_member = mods.id_member)
 		WHERE $user_info[query_see_board]" . (empty($modSettings['countChildPosts']) ? "
-			AND b.childLevel <= 1" : ''), __FILE__, __LINE__);
+			AND b.child_level <= 1" : ''), __FILE__, __LINE__);
 
 	// Run through the categories and boards....
 	$context['categories'] = array();
 	while ($row_board = $smfFunc['db_fetch_assoc']($result_boards))
 	{
-		$ignoreThisBoard = in_array($row_board['ID_BOARD'], $user_info['ignoreboards']);
-		$row_board['isRead'] = !empty($row_board['isRead']) || $ignoreThisBoard ? '1' : '0';
+		$ignoreThisBoard = in_array($row_board['id_board'], $user_info['ignoreboards']);
+		$row_board['is_read'] = !empty($row_board['is_read']) || $ignoreThisBoard ? '1' : '0';
 		// Haven't set this category yet.
-		if (empty($context['categories'][$row_board['ID_CAT']]))
+		if (empty($context['categories'][$row_board['id_cat']]))
 		{
-			$context['categories'][$row_board['ID_CAT']] = array(
-				'id' => $row_board['ID_CAT'],
-				'name' => $row_board['catName'],
-				'is_collapsed' => isset($row_board['canCollapse']) && $row_board['canCollapse'] == 1 && $row_board['isCollapsed'] > 0,
-				'can_collapse' => isset($row_board['canCollapse']) && $row_board['canCollapse'] == 1,
-				'collapse_href' => isset($row_board['canCollapse']) ? $scripturl . '?action=collapse;c=' . $row_board['ID_CAT'] . ';sa=' . ($row_board['isCollapsed'] > 0 ? 'expand' : 'collapse;') . '#' . $row_board['ID_CAT'] : '',
-				'collapse_image' => isset($row_board['canCollapse']) ? '<img src="' . $settings['images_url'] . '/' . ($row_board['isCollapsed'] > 0 ? 'expand.gif" alt="+"' : 'collapse.gif" alt="-"') . ' border="0" />' : '',
-				'href' => $scripturl . '#' . $row_board['ID_CAT'],
+			$context['categories'][$row_board['id_cat']] = array(
+				'id' => $row_board['id_cat'],
+				'name' => $row_board['cat_name'],
+				'is_collapsed' => isset($row_board['can_collapse']) && $row_board['can_collapse'] == 1 && $row_board['is_collapsed'] > 0,
+				'can_collapse' => isset($row_board['can_collapse']) && $row_board['can_collapse'] == 1,
+				'collapse_href' => isset($row_board['can_collapse']) ? $scripturl . '?action=collapse;c=' . $row_board['id_cat'] . ';sa=' . ($row_board['is_collapsed'] > 0 ? 'expand' : 'collapse;') . '#' . $row_board['id_cat'] : '',
+				'collapse_image' => isset($row_board['can_collapse']) ? '<img src="' . $settings['images_url'] . '/' . ($row_board['is_collapsed'] > 0 ? 'expand.gif" alt="+"' : 'collapse.gif" alt="-"') . ' border="0" />' : '',
+				'href' => $scripturl . '#' . $row_board['id_cat'],
 				'boards' => array(),
 				'new' => false
 			);
-			$context['categories'][$row_board['ID_CAT']]['link'] = '<a name="' . $row_board['ID_CAT'] . '" href="' . (isset($row_board['canCollapse']) ? $context['categories'][$row_board['ID_CAT']]['collapse_href'] : $context['categories'][$row_board['ID_CAT']]['href']) . '">' . $row_board['catName'] . '</a>';
+			$context['categories'][$row_board['id_cat']]['link'] = '<a name="' . $row_board['id_cat'] . '" href="' . (isset($row_board['can_collapse']) ? $context['categories'][$row_board['id_cat']]['collapse_href'] : $context['categories'][$row_board['id_cat']]['href']) . '">' . $row_board['cat_name'] . '</a>';
 		}
 
 		// If this board has new posts in it (and isn't the recycle bin!) then the category is new.
-		if (empty($modSettings['recycle_enable']) || $modSettings['recycle_board'] != $row_board['ID_BOARD'])
-			$context['categories'][$row_board['ID_CAT']]['new'] |= empty($row_board['isRead']) && $row_board['posterName'] != '';
+		if (empty($modSettings['recycle_enable']) || $modSettings['recycle_board'] != $row_board['id_board'])
+			$context['categories'][$row_board['id_cat']]['new'] |= empty($row_board['is_read']) && $row_board['poster_name'] != '';
 
 		// Collapsed category - don't do any of this.
-		if ($context['categories'][$row_board['ID_CAT']]['is_collapsed'])
+		if ($context['categories'][$row_board['id_cat']]['is_collapsed'])
 			continue;
 
 		// Let's save some typing.  Climbing the array might be slower, anyhow.
-		$this_category = &$context['categories'][$row_board['ID_CAT']]['boards'];
+		$this_category = &$context['categories'][$row_board['id_cat']]['boards'];
 
 		// This is a parent board.
-		if (empty($row_board['ID_PARENT']))
+		if (empty($row_board['id_parent']))
 		{
 			// Is this a new board, or just another moderator?
-			if (!isset($this_category[$row_board['ID_BOARD']]))
+			if (!isset($this_category[$row_board['id_board']]))
 			{
 				// Not a child.
 				$isChild = false;
 
-				$this_category[$row_board['ID_BOARD']] = array(
-					'new' => empty($row_board['isRead']),
-					'id' => $row_board['ID_BOARD'],
-					'name' => $row_board['boardName'],
+				$this_category[$row_board['id_board']] = array(
+					'new' => empty($row_board['is_read']),
+					'id' => $row_board['id_board'],
+					'name' => $row_board['board_name'],
 					'description' => $row_board['description'],
 					'moderators' => array(),
 					'link_moderators' => array(),
 					'children' => array(),
 					'link_children' => array(),
 					'children_new' => false,
-					'topics' => $row_board['numTopics'],
-					'posts' => $row_board['numPosts'],
-					'unapproved_topics' => $row_board['unapprovedTopics'],
-					'unapproved_posts' => $row_board['unapprovedPosts'] - $row_board['unapprovedTopics'],
-					'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['ID_BOARD'], $user_info['mod_cache']['ap'])),
-					'href' => $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0',
-					'link' => '<a href="' . $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0">' . $row_board['boardName'] . '</a>'
+					'topics' => $row_board['num_topics'],
+					'posts' => $row_board['num_posts'],
+					'unapproved_topics' => $row_board['unapproved_topics'],
+					'unapproved_posts' => $row_board['unapproved_posts'] - $row_board['unapproved_topics'],
+					'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['id_board'], $user_info['mod_cache']['ap'])),
+					'href' => $scripturl . '?board=' . $row_board['id_board'] . '.0',
+					'link' => '<a href="' . $scripturl . '?board=' . $row_board['id_board'] . '.0">' . $row_board['board_name'] . '</a>'
 				);
 			}
 			if (!empty($row_board['ID_MODERATOR']))
 			{
-				$this_category[$row_board['ID_BOARD']]['moderators'][$row_board['ID_MODERATOR']] = array(
+				$this_category[$row_board['id_board']]['moderators'][$row_board['ID_MODERATOR']] = array(
 					'id' => $row_board['ID_MODERATOR'],
 					'name' => $row_board['modRealName'],
 					'href' => $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'],
 					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>'
 				);
-				$this_category[$row_board['ID_BOARD']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
+				$this_category[$row_board['id_board']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
 			}
 		}
 		// Found a child board.... make sure we've found its parent and the child hasn't been set already.
-		elseif (isset($this_category[$row_board['ID_PARENT']]['children']) && !isset($this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]))
+		elseif (isset($this_category[$row_board['id_parent']]['children']) && !isset($this_category[$row_board['id_parent']]['children'][$row_board['id_board']]))
 		{
 			// A valid child!
 			$isChild = true;
 
-			$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']] = array(
-				'id' => $row_board['ID_BOARD'],
-				'name' => $row_board['boardName'],
+			$this_category[$row_board['id_parent']]['children'][$row_board['id_board']] = array(
+				'id' => $row_board['id_board'],
+				'name' => $row_board['board_name'],
 				'description' => $row_board['description'],
-				'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
-				'topics' => $row_board['numTopics'],
-				'posts' => $row_board['numPosts'],
-				'unapproved_topics' => $row_board['unapprovedTopics'],
-				'unapproved_posts' => $row_board['unapprovedPosts'] - $row_board['unapprovedTopics'],
-				'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['ID_BOARD'], $user_info['mod_cache']['ap'])),
-				'href' => $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0">' . $row_board['boardName'] . '</a>'
+				'new' => empty($row_board['is_read']) && $row_board['poster_name'] != '',
+				'topics' => $row_board['num_topics'],
+				'posts' => $row_board['num_posts'],
+				'unapproved_topics' => $row_board['unapproved_topics'],
+				'unapproved_posts' => $row_board['unapproved_posts'] - $row_board['unapproved_topics'],
+				'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['id_board'], $user_info['mod_cache']['ap'])),
+				'href' => $scripturl . '?board=' . $row_board['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row_board['id_board'] . '.0">' . $row_board['board_name'] . '</a>'
 			);
 
 			// Counting child board posts is... slow :/.
 			if (!empty($modSettings['countChildPosts']))
 			{
-				$this_category[$row_board['ID_PARENT']]['posts'] += $row_board['numPosts'];
-				$this_category[$row_board['ID_PARENT']]['topics'] += $row_board['numTopics'];
+				$this_category[$row_board['id_parent']]['posts'] += $row_board['num_posts'];
+				$this_category[$row_board['id_parent']]['topics'] += $row_board['num_topics'];
 			}
 
 			// Does this board contain new boards?
-			$this_category[$row_board['ID_PARENT']]['children_new'] |= empty($row_board['isRead']);
+			$this_category[$row_board['id_parent']]['children_new'] |= empty($row_board['is_read']);
 
 			// This is easier to use in many cases for the theme....
-			$this_category[$row_board['ID_PARENT']]['link_children'][] = &$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['link'];
+			$this_category[$row_board['id_parent']]['link_children'][] = &$this_category[$row_board['id_parent']]['children'][$row_board['id_board']]['link'];
 		}
 		// Child of a child... just add it on...
 		elseif (!empty($modSettings['countChildPosts']))
@@ -197,24 +197,24 @@ function BoardIndex()
 			if (!isset($parent_map))
 				$parent_map = array();
 
-			if (!isset($parent_map[$row_board['ID_PARENT']]))
+			if (!isset($parent_map[$row_board['id_parent']]))
 				foreach ($this_category as $id => $board)
 				{
-					if (!isset($board['children'][$row_board['ID_PARENT']]))
+					if (!isset($board['children'][$row_board['id_parent']]))
 						continue;
 
-					$parent_map[$row_board['ID_PARENT']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['ID_PARENT']]);
-					$parent_map[$row_board['ID_BOARD']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['ID_PARENT']]);
+					$parent_map[$row_board['id_parent']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['id_parent']]);
+					$parent_map[$row_board['id_board']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['id_parent']]);
 
 					break;
 				}
 
-			if (isset($parent_map[$row_board['ID_PARENT']]))
+			if (isset($parent_map[$row_board['id_parent']]))
 			{
-				$parent_map[$row_board['ID_PARENT']][0]['posts'] += $row_board['numPosts'];
-				$parent_map[$row_board['ID_PARENT']][0]['topics'] += $row_board['numTopics'];
-				$parent_map[$row_board['ID_PARENT']][1]['posts'] += $row_board['numPosts'];
-				$parent_map[$row_board['ID_PARENT']][1]['topics'] += $row_board['numTopics'];
+				$parent_map[$row_board['id_parent']][0]['posts'] += $row_board['num_posts'];
+				$parent_map[$row_board['id_parent']][0]['topics'] += $row_board['num_topics'];
+				$parent_map[$row_board['id_parent']][1]['posts'] += $row_board['num_posts'];
+				$parent_map[$row_board['id_parent']][1]['topics'] += $row_board['num_topics'];
 
 				continue;
 			}
@@ -229,25 +229,25 @@ function BoardIndex()
 		censorText($row_board['subject']);
 		$row_board['short_subject'] = shorten_subject($row_board['subject'], 24);
 		$this_last_post = array(
-			'id' => $row_board['ID_MSG'],
-			'time' => $row_board['posterTime'] > 0 ? timeformat($row_board['posterTime']) : $txt[470],
-			'timestamp' => forum_time(true, $row_board['posterTime']),
+			'id' => $row_board['id_msg'],
+			'time' => $row_board['poster_time'] > 0 ? timeformat($row_board['poster_time']) : $txt[470],
+			'timestamp' => forum_time(true, $row_board['poster_time']),
 			'subject' => $row_board['short_subject'],
 			'member' => array(
-				'id' => $row_board['ID_MEMBER'],
-				'username' => $row_board['posterName'] != '' ? $row_board['posterName'] : $txt[470],
-				'name' => $row_board['realName'],
-				'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row_board['ID_MEMBER'] : '',
-				'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : $txt[470],
+				'id' => $row_board['id_member'],
+				'username' => $row_board['poster_name'] != '' ? $row_board['poster_name'] : $txt[470],
+				'name' => $row_board['real_name'],
+				'href' => $row_board['poster_name'] != '' && !empty($row_board['id_member']) ? $scripturl . '?action=profile;u=' . $row_board['id_member'] : '',
+				'link' => $row_board['poster_name'] != '' ? (!empty($row_board['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '">' . $row_board['real_name'] . '</a>' : $row_board['real_name']) : $txt[470],
 			),
 			'start' => 'msg' . $row_board['new_from'],
-			'topic' => $row_board['ID_TOPIC']
+			'topic' => $row_board['id_topic']
 		);
 
 		// Provide the href and link.
 		if ($row_board['subject'] != '')
 		{
-			$this_last_post['href'] = $scripturl . '?topic=' . $row_board['ID_TOPIC'] . '.msg' . ($user_info['is_guest'] ? $modSettings['maxMsgID'] : $row_board['new_from']) . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new';
+			$this_last_post['href'] = $scripturl . '?topic=' . $row_board['id_topic'] . '.msg' . ($user_info['is_guest'] ? $modSettings['maxMsgID'] : $row_board['new_from']) . (empty($row_board['is_read']) ? ';boardseen' : '') . '#new';
 			$this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
 		}
 		else
@@ -257,37 +257,37 @@ function BoardIndex()
 		}
 
 		// Set the last post in the parent board.
-		if (empty($row_board['ID_PARENT']) || ($isChild && !empty($row_board['posterTime']) && $this_category[$row_board['ID_PARENT']]['last_post']['timestamp'] < forum_time(true, $row_board['posterTime'])))
-			$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'] = $this_last_post;
+		if (empty($row_board['id_parent']) || ($isChild && !empty($row_board['poster_time']) && $this_category[$row_board['id_parent']]['last_post']['timestamp'] < forum_time(true, $row_board['poster_time'])))
+			$this_category[$isChild ? $row_board['id_parent'] : $row_board['id_board']]['last_post'] = $this_last_post;
 		// Just in the child...?
 		if ($isChild)
 		{
-			$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['last_post'] = $this_last_post;
+			$this_category[$row_board['id_parent']]['children'][$row_board['id_board']]['last_post'] = $this_last_post;
 
 			// If there are no posts in this board, it really can't be new...
-			$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['new'] &= $row_board['posterName'] != '';
+			$this_category[$row_board['id_parent']]['children'][$row_board['id_board']]['new'] &= $row_board['poster_name'] != '';
 		}
 		// No last post for this board?  It's not new then, is it..?
-		elseif ($row_board['posterName'] == '')
-			$this_category[$row_board['ID_BOARD']]['new'] = false;
+		elseif ($row_board['poster_name'] == '')
+			$this_category[$row_board['id_board']]['new'] = false;
 
 		// Determine a global most recent topic.
-		if (!empty($row_board['posterTime']) && forum_time(true, $row_board['posterTime']) > $most_recent_topic['timestamp'] && !$ignoreThisBoard)
+		if (!empty($row_board['poster_time']) && forum_time(true, $row_board['poster_time']) > $most_recent_topic['timestamp'] && !$ignoreThisBoard)
 			$most_recent_topic = array(
-				'timestamp' => forum_time(true, $row_board['posterTime']),
-				'ref' => &$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'],
+				'timestamp' => forum_time(true, $row_board['poster_time']),
+				'ref' => &$this_category[$isChild ? $row_board['id_parent'] : $row_board['id_board']]['last_post'],
 			);
 	}
 	$smfFunc['db_free_result']($result_boards);
 
 	// Load the users online right now.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT
-			lo.ID_MEMBER, lo.logTime, mem.realName, mem.memberName, mem.showOnline,
-			mg.onlineColor, mg.ID_GROUP, mg.groupName
+			lo.id_member, lo.log_time, mem.real_name, mem.member_name, mem.show_online,
+			mg.online_color, mg.id_group, mg.group_name
 		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lo.ID_MEMBER)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)", __FILE__, __LINE__);
 
 	$context['users_online'] = array();
 	$context['list_users_online'] = array();
@@ -300,48 +300,48 @@ function BoardIndex()
 
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		if (empty($row['realName']))
+		if (empty($row['real_name']))
 		{
 			$context['num_guests']++;
 			continue;
 		}
-		elseif (empty($row['showOnline']) && !allowedTo('moderate_forum'))
+		elseif (empty($row['show_online']) && !allowedTo('moderate_forum'))
 		{
 			$context['num_users_hidden']++;
 			continue;
 		}
 
 		// Some basic color coding...
-		if (!empty($row['onlineColor']))
-			$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '" style="color: ' . $row['onlineColor'] . ';">' . $row['realName'] . '</a>';
+		if (!empty($row['online_color']))
+			$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" style="color: ' . $row['online_color'] . ';">' . $row['real_name'] . '</a>';
 		else
-			$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>';
+			$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 
-		$is_buddy = in_array($row['ID_MEMBER'], $user_info['buddies']);
+		$is_buddy = in_array($row['id_member'], $user_info['buddies']);
 		if ($is_buddy)
 		{
 			$context['num_buddies']++;
 			$link = '<b>' . $link . '</b>';
 		}
 
-		$context['users_online'][$row['logTime'] . $row['memberName']] = array(
-			'id' => $row['ID_MEMBER'],
-			'username' => $row['memberName'],
-			'name' => $row['realName'],
-			'group' => $row['ID_GROUP'],
-			'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+		$context['users_online'][$row['log_time'] . $row['member_name']] = array(
+			'id' => $row['id_member'],
+			'username' => $row['member_name'],
+			'name' => $row['real_name'],
+			'group' => $row['id_group'],
+			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			'link' => $link,
 			'is_buddy' => $is_buddy,
-			'hidden' => empty($row['showOnline']),
+			'hidden' => empty($row['show_online']),
 		);
 
-		$context['list_users_online'][$row['logTime'] . $row['memberName']] = empty($row['showOnline']) ? '<i>' . $link . '</i>' : $link;
+		$context['list_users_online'][$row['log_time'] . $row['member_name']] = empty($row['show_online']) ? '<i>' . $link . '</i>' : $link;
 
-		if (!isset($context['online_groups'][$row['ID_GROUP']]))
-			$context['online_groups'][$row['ID_GROUP']] = array(
-				'id' => $row['ID_GROUP'],
-				'name' => $row['groupName'],
-				'color' => $row['onlineColor']
+		if (!isset($context['online_groups'][$row['id_group']]))
+			$context['online_groups'][$row['id_group']] = array(
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
+				'color' => $row['online_color']
 			);
 	}
 	$smfFunc['db_free_result']($result);
@@ -376,7 +376,7 @@ function BoardIndex()
 		// One or more stats are not up-to-date?
 		if (!isset($modSettings['mostOnlineUpdated']) || $modSettings['mostOnlineUpdated'] != $date)
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT mostOn
 				FROM {$db_prefix}log_activity
 				WHERE date = '$date'
@@ -385,7 +385,7 @@ function BoardIndex()
 			// The log_activity hasn't got an entry for today?
 			if ($smfFunc['db_num_rows']($request) == 0)
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT IGNORE INTO {$db_prefix}log_activity
 						(date, mostOn)
 					VALUES ('$date', $total_users)", __FILE__, __LINE__);
@@ -524,7 +524,7 @@ function calendarDoIndex()
 
 		foreach ($events[strftime('%Y-%m-%d', $i)] as $ev => $event)
 		{
-			if (empty($event['topic']) || ((count(array_intersect($user_info['groups'], $event['allowed_groups'])) != 0 || allowedTo('admin_forum'))) && !in_array($event['ID_BOARD'], $user_info['ignoreboards']))
+			if (empty($event['topic']) || ((count(array_intersect($user_info['groups'], $event['allowed_groups'])) != 0 || allowedTo('admin_forum'))) && !in_array($event['id_board'], $user_info['ignoreboards']))
 			{
 				if (isset($duplicates[$events[strftime('%Y-%m-%d', $i)][$ev]['topic'] . $events[strftime('%Y-%m-%d', $i)][$ev]['title']]))
 				{
@@ -561,14 +561,14 @@ function calendarDoIndex()
 // Collapse or expand a category
 function CollapseCategory()
 {
-	global $ID_MEMBER, $sourcedir;
+	global $id_member, $sourcedir;
 
 	// Check if the input values are correct.
 	if (in_array($_REQUEST['sa'], array('expand', 'collapse', 'toggle')) && isset($_REQUEST['c']))
 	{
 		// And collapse/expand/toggle the category.
 		require_once($sourcedir . '/Subs-Categories.php');
-		collapseCategories(array((int) $_REQUEST['c']), $_REQUEST['sa'],array($ID_MEMBER));
+		collapseCategories(array((int) $_REQUEST['c']), $_REQUEST['sa'],array($id_member));
 	}
 
 	// And go back to the board index.

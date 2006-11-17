@@ -64,11 +64,11 @@ function SendTopic()
 		fatal_lang_error(472, false);
 
 	// Get the topic's subject.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT m.subject
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-		WHERE t.ID_TOPIC = $topic
-			AND t.ID_FIRST_MSG = m.ID_MSG
+		WHERE t.id_topic = $topic
+			AND t.id_first_msg = m.id_msg
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(472, false);
@@ -134,7 +134,7 @@ function SendTopic()
 // Report a post to the moderator... ask for a comment.
 function ReportToModerator()
 {
-	global $txt, $db_prefix, $topic, $modSettings, $user_info, $ID_MEMBER, $context, $smfFunc;
+	global $txt, $db_prefix, $topic, $modSettings, $user_info, $id_member, $context, $smfFunc;
 
 	// You can't use this if it's off or you are not allowed to do it.
 	isAllowedTo('report_any');
@@ -151,12 +151,12 @@ function ReportToModerator()
 	$_GET['msg'] = empty($_GET['msg']) ? (int) $_GET['mid'] : (int) $_GET['msg'];
 
 	// Check the message's ID - don't want anyone reporting a post they can't even see!
-	$result = $smfFunc['db_query']("
-		SELECT m.ID_MSG, m.ID_MEMBER, t.ID_MEMBER_STARTED
+	$result = $smfFunc['db_query']('', "
+		SELECT m.id_msg, m.id_member, t.id_member_started
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-		WHERE m.ID_MSG = $_GET[msg]
-			AND m.ID_TOPIC = $topic
-			AND t.ID_TOPIC = $topic
+		WHERE m.id_msg = $_GET[msg]
+			AND m.id_topic = $topic
+			AND t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($result) == 0)
 		fatal_lang_error('smf232');
@@ -164,7 +164,7 @@ function ReportToModerator()
 	$smfFunc['db_free_result']($result);
 
 	// If they can't modify their post, then they should be able to report it... otherwise it is illogical.
-	if ($member == $ID_MEMBER && (allowedTo(array('modify_own', 'modify_any')) || ($ID_MEMBER == $starter && allowedTo('modify_replies'))))
+	if ($member == $id_member && (allowedTo(array('modify_own', 'modify_any')) || ($id_member == $starter && allowedTo('modify_replies'))))
 		fatal_lang_error('rtm_not_own', false);
 
 	// Show the inputs for the comment, etc.
@@ -182,7 +182,7 @@ function ReportToModerator()
 // Send the emails.
 function ReportToModerator2()
 {
-	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $ID_MEMBER, $modSettings, $sourcedir, $language, $context, $smfFunc;
+	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $id_member, $modSettings, $sourcedir, $language, $context, $smfFunc;
 
 	// Check their session... don't want them redirected here without their knowledge.
 	checkSession();
@@ -196,22 +196,22 @@ function ReportToModerator2()
 	// Get the basic topic information, and make sure they can see it.
 	$_POST['msg'] = (int) $_POST['msg'];
 
-	$request = $smfFunc['db_query']("
-		SELECT m.ID_TOPIC, m.ID_BOARD, m.subject, m.body, m.ID_MEMBER AS ID_POSTER, m.posterName, mem.realName
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_topic, m.id_board, m.subject, m.body, m.id_member AS ID_POSTER, m.poster_name, mem.real_name
 		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (m.ID_MEMBER = mem.ID_MEMBER)
-		WHERE m.ID_MSG = $_POST[msg]
-			AND m.ID_TOPIC = $topic
+			LEFT JOIN {$db_prefix}members AS mem ON (m.id_member = mem.id_member)
+		WHERE m.id_msg = $_POST[msg]
+			AND m.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232');
 	$message = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
-	if ($message['ID_POSTER'] == $ID_MEMBER)
+	if ($message['ID_POSTER'] == $id_member)
 		fatal_lang_error('rtm_not_own', false);
 
-	$posterName = un_htmlspecialchars($message['realName']) . ($message['realName'] != $message['posterName'] ? ' (' . $message['posterName'] . ')' : '');
+	$poster_name = un_htmlspecialchars($message['real_name']) . ($message['real_name'] != $message['poster_name'] ? ' (' . $message['poster_name'] . ')' : '');
 	$reporterName = un_htmlspecialchars($user_info['name']) . ($user_info['name'] != $user_info['username'] && $user_info['username'] != '' ? ' (' . $user_info['username'] . ')' : '');
 	$subject = un_htmlspecialchars($message['subject']);
 
@@ -219,11 +219,11 @@ function ReportToModerator2()
 	require_once($sourcedir . '/Subs-Members.php');
 	$moderators = membersAllowedTo('moderate_board', $board);
 
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, emailAddress, lngfile
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, email_address, lngfile
 		FROM {$db_prefix}members
-		WHERE ID_MEMBER IN (" . implode(', ', $moderators) . ")
-			AND notifyTypes != 4
+		WHERE id_member IN (" . implode(', ', $moderators) . ")
+			AND notify_types != 4
 		ORDER BY lngfile", __FILE__, __LINE__);
 
 	// Check that moderators do exist!
@@ -233,10 +233,10 @@ function ReportToModerator2()
 	// If we get here, I believe we should make a record of this, for historical significance, yabber.
 	if (empty($modSettings['disable_log_report']))
 	{
-		$request2 = $smfFunc['db_query']("
+		$request2 = $smfFunc['db_query']('', "
 			SELECT ID_REPORT, ignore_all
 			FROM {$db_prefix}log_reported
-			WHERE ID_MSG = $_POST[msg]
+			WHERE id_msg = $_POST[msg]
 				AND (closed = 0 OR ignore_all = 1)
 			ORDER BY ignore_all DESC", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request2) != 0)
@@ -249,7 +249,7 @@ function ReportToModerator2()
 
 		// Already reported? My god, we could be dealing with a real rogue here...
 		if (!empty($ID_REPORT))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_reported
 				SET num_reports = num_reports + 1, time_updated = " . time() . "
 				WHERE ID_REPORT = $ID_REPORT", __FILE__, __LINE__);
@@ -258,15 +258,15 @@ function ReportToModerator2()
 		{
 			// Serve, Protect!
 			$message = addslashes__recursive($message);
-			if (empty($message['realName']))
-				$message['realName'] = $message['posterName'];
+			if (empty($message['real_name']))
+				$message['real_name'] = $message['poster_name'];
 
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_reported
-					(ID_MSG, ID_TOPIC, ID_BOARD, ID_MEMBER, membername, subject, body, time_started, time_updated,
+					(id_msg, id_topic, id_board, id_member, membername, subject, body, time_started, time_updated,
 						num_reports, closed)
 				VALUES
-					($_POST[msg], $message[ID_TOPIC], $message[ID_BOARD], $message[ID_POSTER], '$message[realName]', '$message[subject]', '$message[body]', " . time() . ",
+					($_POST[msg], $message[id_topic], $message[id_board], $message[ID_POSTER], '$message[real_name]', '$message[subject]', '$message[body]', " . time() . ",
 						" . time() . ", 1, 0)", __FILE__, __LINE__);
 			$ID_REPORT = db_insert_id("{$db_prefix}log_reported", 'ID_REPORT');
 		}
@@ -276,9 +276,9 @@ function ReportToModerator2()
 		{
 			$posterComment = strtr(htmlspecialchars($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
 
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_reported_comments
-					(ID_REPORT, ID_MEMBER, membername, comment, time_sent)
+					(ID_REPORT, id_member, membername, comment, time_sent)
 				VALUES
 					($ID_REPORT, $user_info[id], '$user_info[name]', '$posterComment', " . time() . ")", __FILE__, __LINE__);
 		}
@@ -290,8 +290,8 @@ function ReportToModerator2()
 		loadLanguage('Post', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
 
 		// Send it to the moderator.
-		sendmail($row['emailAddress'], $txt['rtm3'] . ': ' . $subject . ' ' . $txt['rtm4'] . ' ' . $posterName,
-			sprintf($txt['rtm_email1'], $subject) . ' ' . $posterName . ' ' . $txt['rtm_email2'] . ' ' . (empty($ID_MEMBER) ? $txt['guest'] . ' (' . $user_info['ip'] . ')' : $reporterName) . ' ' . $txt['rtm_email3'] . ":\n\n" .
+		sendmail($row['email_address'], $txt['rtm3'] . ': ' . $subject . ' ' . $txt['rtm4'] . ' ' . $poster_name,
+			sprintf($txt['rtm_email1'], $subject) . ' ' . $poster_name . ' ' . $txt['rtm_email2'] . ' ' . (empty($id_member) ? $txt['guest'] . ' (' . $user_info['ip'] . ')' : $reporterName) . ' ' . $txt['rtm_email3'] . ":\n\n" .
 			$scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'] . "\n\n" .
 			$txt['rtm_email_comment'] . ":\n" .
 			$_POST['comment'] . "\n\n" .

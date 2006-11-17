@@ -131,14 +131,14 @@ function DumpDatabase2()
 	// Get all tables in the database....
 	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
 	{
-		$queryTables = $smfFunc['db_query']("
+		$queryTables = $smfFunc['db_query']('', "
 			SHOW TABLES
 			FROM `" . strtr($match[1], array('`' => '')) . "`
 			LIKE '" . str_replace('_', '\_', $match[2]) . "%'", false, false);
 	}
 	else
 	{
-		$queryTables = $smfFunc['db_query']("
+		$queryTables = $smfFunc['db_query']('', "
 			SHOW TABLES
 			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'", false, false);
 	}
@@ -198,7 +198,7 @@ function getTableContent($tableName)
 	global $crlf, $smfFunc;
 
 	// Get everything from the table.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT /*!40001 SQL_NO_CACHE */ *
 		FROM `$tableName`", false, false);
 
@@ -261,7 +261,7 @@ function getTableSQLData($tableName)
 	$schema_create = 'CREATE TABLE `' . $tableName . '` (' . $crlf;
 
 	// Find all the fields.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SHOW FIELDS
 		FROM `$tableName`", false, false);
 	while ($row = @$smfFunc['db_fetch_assoc']($result))
@@ -288,7 +288,7 @@ function getTableSQLData($tableName)
 	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
 
 	// Find the keys.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SHOW KEYS
 		FROM `$tableName`", false, false);
 	$indexes = array();
@@ -319,7 +319,7 @@ function getTableSQLData($tableName)
 	}
 
 	// Now just get the comment and type... (MyISAM, etc.)
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SHOW TABLE STATUS
 		LIKE '" . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . "'", false, false);
 	$row = @$smfFunc['db_fetch_assoc']($result);

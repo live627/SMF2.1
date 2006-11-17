@@ -74,8 +74,8 @@ $txt['board_perms_group_read_only'] = 'This board does not allow posting';
 
 // Membergroup info!
 $txt['member_group_color'] = 'Color';
-$txt['member_group_minPosts'] = 'Minimum Posts';
-$txt['member_group_maxMessages'] = 'Max Personal Messages';
+$txt['member_group_min_posts'] = 'Minimum Posts';
+$txt['member_group_max_messages'] = 'Max Personal Messages';
 $txt['member_group_stars'] = 'Stars';
 $txt['member_group_settings'] = 'Settings';
 $txt['member_group_access'] = 'Board Access';

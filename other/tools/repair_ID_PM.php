@@ -15,10 +15,10 @@ if ($_GET['step'] <= 0)
 {
 	// Messages received by deleted members.
 	$result = db_query("
-		SELECT DISTINCT pmr.ID_MEMBER
+		SELECT DISTINCT pmr.id_member
 		FROM {$db_prefix}pm_recipients AS pmr
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = pmr.ID_MEMBER)
-		WHERE mem.ID_MEMBER IS NULL", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+		WHERE mem.id_member IS NULL", __FILE__, __LINE__);
 	$array = array();
 	while ($row = mysql_fetch_row($result))
 		$array[] = $row[0];
@@ -27,8 +27,8 @@ if ($_GET['step'] <= 0)
 	if (!empty($array))
 		db_query("
 			UPDATE {$db_prefix}pm_recipients
-			SET ID_MEMBER = 0, deleted = 1
-			WHERE ID_MEMBER IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
+			SET id_member = 0, deleted = 1
+			WHERE id_member IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
 }
 
 // Step 1: Update the messages of any senders who are no more.
@@ -38,10 +38,10 @@ if ($_GET['step'] <= 1)
 
 	// Messages sent by deleted members.
 	$result = db_query("
-		SELECT DISTINCT pm.ID_MEMBER_FROM
+		SELECT DISTINCT pm.id_member_from
 		FROM {$db_prefix}personal_messages AS pm
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = pm.ID_MEMBER_FROM)
-		WHERE mem.ID_MEMBER IS NULL", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+		WHERE mem.id_member IS NULL", __FILE__, __LINE__);
 	$array = array();
 	while ($row = mysql_fetch_row($result))
 		$array[] = $row[0];
@@ -50,8 +50,8 @@ if ($_GET['step'] <= 1)
 	if (!empty($array))
 		db_query("
 			UPDATE {$db_prefix}personal_messages
-			SET ID_MEMBER_FROM = 0, deletedBySender = 1
-			WHERE ID_MEMBER_FROM IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
+			SET id_member_from = 0, deleted_by_sender = 1
+			WHERE id_member_from IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
 }
 
 // Step 2: Remove any messages that should but haven't been deleted yet.
@@ -61,11 +61,11 @@ if ($_GET['step'] <= 2)
 
 	// First check for deleted messages by all of the recipients.
 	$result = db_query("
-		SELECT pm.ID_PM, MIN(pmr.deleted) AS allDeleted
+		SELECT pm.id_pm, MIN(pmr.deleted) AS allDeleted
 		FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pmr)
-		WHERE pm.deletedBySender = 1
-			AND pm.ID_PM = pmr.ID_PM
-		GROUP BY pm.ID_PM
+		WHERE pm.deleted_by_sender = 1
+			AND pm.id_pm = pmr.id_pm
+		GROUP BY pm.id_pm
 		HAVING allDeleted = 1", __FILE__, __LINE__);
 	$array = array();
 	while ($row = mysql_fetch_row($result))
@@ -76,10 +76,10 @@ if ($_GET['step'] <= 2)
 	{
 		db_query("
 			DELETE FROM {$db_prefix}pm_recipients
-			WHERE ID_PM IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
+			WHERE id_pm IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
 		db_query("
 			DELETE FROM {$db_prefix}personal_messages
-			WHERE ID_PM IN (" . implode(', ', $array) . ")
+			WHERE id_pm IN (" . implode(', ', $array) . ")
 			LIMIT " . count($array), __FILE__, __LINE__);
 	}
 }
@@ -89,12 +89,12 @@ if ($_GET['step'] <= 3)
 {
 	protectTimeOut('step=3');
 
-	// ID_PM is in the pm_recipients table but not the personal_messages table.
+	// id_pm is in the pm_recipients table but not the personal_messages table.
 	$result = db_query("
-		SELECT pm.ID_PM
+		SELECT pm.id_pm
 		FROM {$db_prefix}personal_messages AS pm
-			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.ID_PM = pm.ID_PM)
-		WHERE pmr.ID_PM IS NULL", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
+		WHERE pmr.id_pm IS NULL", __FILE__, __LINE__);
 	$array = array();
 	while ($row = mysql_fetch_row($result))
 		$array[] = $row[0];
@@ -103,15 +103,15 @@ if ($_GET['step'] <= 3)
 	if (!empty($array))
 		db_query("
 			DELETE FROM {$db_prefix}personal_messages
-			WHERE ID_PM IN (" . implode(', ', $array) . ")
+			WHERE id_pm IN (" . implode(', ', $array) . ")
 			LIMIT " . count($array), __FILE__, __LINE__);
 
-	// ID_PM is in the personal_messages table but not the pm_recipients table.
+	// id_pm is in the personal_messages table but not the pm_recipients table.
 	$result = db_query("
-		SELECT pmr.ID_PM
+		SELECT pmr.id_pm
 		FROM {$db_prefix}pm_recipients AS pmr
-			LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.ID_PM = pmr.ID_PM)
-		WHERE pm.ID_PM IS NULL", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+		WHERE pm.id_pm IS NULL", __FILE__, __LINE__);
 	$array = array();
 	while ($row = mysql_fetch_row($result))
 		$array[] = $row[0];
@@ -120,7 +120,7 @@ if ($_GET['step'] <= 3)
 	if (!empty($array))
 		db_query("
 			DELETE FROM {$db_prefix}pm_recipients
-			WHERE ID_PM IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
+			WHERE id_pm IN (" . implode(', ', $array) . ")", __FILE__, __LINE__);
 }
 
 // Step 3: Recount the total number of IM's for all the members.
@@ -129,12 +129,12 @@ if ($_GET['step'] <= 4)
 	protectTimeOut('step=4');
 
 	$result = db_query("
-		SELECT mem.ID_MEMBER, mem.instantMessages, COUNT(*) AS count
+		SELECT mem.id_member, mem.instant_messages, COUNT(*) AS count
 		FROM ({$db_prefix}pm_recipients AS pm, {$db_prefix}members AS mem)
 		WHERE pm.deleted != 1
-			AND pm.ID_MEMBER = mem.ID_MEMBER
-		GROUP BY mem.ID_MEMBER
-		HAVING count != instantMessages", __FILE__, __LINE__);
+			AND pm.id_member = mem.id_member
+		GROUP BY mem.id_member
+		HAVING count != instant_messages", __FILE__, __LINE__);
 	$array = array();
 	while ($row = mysql_fetch_assoc($result))
 		$array[] = $row;
@@ -143,8 +143,8 @@ if ($_GET['step'] <= 4)
 	foreach ($array as $member)
 		db_query("
 			UPDATE {$db_prefix}members
-			SET instantMessages = $member[count]
-			WHERE ID_MEMBER = $member[ID_MEMBER]
+			SET instant_messages = $member[count]
+			WHERE id_member = $member[id_member]
 			LIMIT 1", __FILE__, __LINE__);
 }
 

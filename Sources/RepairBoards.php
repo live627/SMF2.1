@@ -120,38 +120,38 @@ function RepairBoards()
 		if (empty($to_fix) || in_array('zero_ids', $to_fix))
 		{
 			// We don't allow 0's in the IDs...
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}topics
-				SET ID_TOPIC = NULL
-				WHERE ID_TOPIC = 0", __FILE__, __LINE__);
+				SET id_topic = NULL
+				WHERE id_topic = 0", __FILE__, __LINE__);
 
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}messages
-				SET ID_MSG = NULL
-				WHERE ID_MSG = 0", __FILE__, __LINE__);
+				SET id_msg = NULL
+				WHERE id_msg = 0", __FILE__, __LINE__);
 		}
 
 		// Remove all topics that have zero messages in the messages table.
 		if (empty($to_fix) || in_array('missing_messages', $to_fix))
 		{
-			$resultTopic = $smfFunc['db_query']("
-				SELECT t.ID_TOPIC, COUNT(m.ID_MSG) AS numMsg
+			$resultTopic = $smfFunc['db_query']('', "
+				SELECT t.id_topic, COUNT(m.id_msg) AS numMsg
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS m ON (m.ID_TOPIC = t.ID_TOPIC)
-				GROUP BY t.ID_TOPIC
+					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
+				GROUP BY t.id_topic
 				HAVING numMsg = 0", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($resultTopic) > 0)
 			{
 				$stupidTopics = array();
 				while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
-					$stupidTopics[] = $topicArray['ID_TOPIC'];
-				$smfFunc['db_query']("
+					$stupidTopics[] = $topicArray['id_topic'];
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}topics
-					WHERE ID_TOPIC IN (" . implode(',', $stupidTopics) . ')
+					WHERE id_topic IN (" . implode(',', $stupidTopics) . ')
 					LIMIT ' . count($stupidTopics), __FILE__, __LINE__);
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_topics
-					WHERE ID_TOPIC IN (" . implode(',', $stupidTopics) . ')', __FILE__, __LINE__);
+					WHERE id_topic IN (" . implode(',', $stupidTopics) . ')', __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopic);
 		}
@@ -159,37 +159,37 @@ function RepairBoards()
 		// Fix all messages that have a topic ID that cannot be found in the topics table.
 		if (empty($to_fix) || in_array('missing_topics', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT
-					m.ID_BOARD, m.ID_TOPIC, MIN(m.ID_MSG) AS myID_FIRST_MSG, MAX(m.ID_MSG) AS myID_LAST_MSG,
+					m.id_board, m.id_topic, MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg,
 					COUNT(*) - 1 AS myNumReplies
 				FROM {$db_prefix}messages AS m
-					LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = m.ID_TOPIC)
-				WHERE t.ID_TOPIC IS NULL
-				GROUP BY m.ID_TOPIC", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+				WHERE t.id_topic IS NULL
+				GROUP BY m.id_topic", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
 				// Only if we don't have a reasonable idea of where to put it.
-				if ($row['ID_BOARD'] == 0)
+				if ($row['id_board'] == 0)
 				{
 					createSalvageArea();
-					$row['ID_BOARD'] = $salvageBoardID;
+					$row['id_board'] = $salvageBoardID;
 				}
 
-				$memberStartedID = getMsgMemberID($row['myID_FIRST_MSG']);
-				$memberUpdatedID = getMsgMemberID($row['myID_LAST_MSG']);
+				$memberStartedID = getMsgMemberID($row['myid_first_msg']);
+				$memberUpdatedID = getMsgMemberID($row['myid_last_msg']);
 
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}topics
-						(ID_BOARD, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, ID_FIRST_MSG, ID_LAST_MSG, numReplies)
-					VALUES ($row[ID_BOARD], $memberStartedID, $memberUpdatedID,
-						$row[myID_FIRST_MSG], $row[myID_LAST_MSG], $row[myNumReplies])", __FILE__, __LINE__);
-				$newTopicID = db_insert_id("{$db_prefix}topics", 'ID_TOPIC');
+						(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, num_replies)
+					VALUES ($row[id_board], $memberStartedID, $memberUpdatedID,
+						$row[myid_first_msg], $row[myid_last_msg], $row[myNumReplies])", __FILE__, __LINE__);
+				$newTopicID = db_insert_id("{$db_prefix}topics", 'id_topic');
 
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
-					SET ID_TOPIC = $newTopicID, ID_BOARD = $row[ID_BOARD]
-					WHERE ID_TOPIC = $row[ID_TOPIC]", __FILE__, __LINE__);
+					SET id_topic = $newTopicID, id_board = $row[id_board]
+					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($result);
 
@@ -197,80 +197,80 @@ function RepairBoards()
 			$to_fix[] = 'stats_topics';
 		}
 
-		// Fix all ID_FIRST_MSG, ID_LAST_MSG in the topic table.
+		// Fix all id_first_msg, id_last_msg in the topic table.
 		if (empty($to_fix) || in_array('stats_topics', $to_fix))
 		{
-			$resultTopic = $smfFunc['db_query']("
+			$resultTopic = $smfFunc['db_query']('', "
 				SELECT
-					t.ID_TOPIC, t.ID_FIRST_MSG, t.ID_LAST_MSG,
-					IF (MIN(ma.ID_MSG),
-						IF (MIN(mu.ID_MSG),
-							IF (MIN(mu.ID_MSG) < MIN(ma.ID_MSG), mu.ID_MSG, ma.ID_MSG),
-						MIN(ma.ID_MSG)),
-					MIN(mu.ID_MSG)) AS myID_FIRST_MSG,
-					IF (MAX(ma.ID_MSG), MAX(ma.ID_MSG), MIN(mu.ID_MSG)) AS myID_LAST_MSG,
+					t.id_topic, t.id_first_msg, t.id_last_msg,
+					IF (MIN(ma.id_msg),
+						IF (MIN(mu.id_msg),
+							IF (MIN(mu.id_msg) < MIN(ma.id_msg), mu.id_msg, ma.id_msg),
+						MIN(ma.id_msg)),
+					MIN(mu.id_msg)) AS myid_first_msg,
+					IF (MAX(ma.id_msg), MAX(ma.id_msg), MIN(mu.id_msg)) AS myid_last_msg,
 					t.approved, mf.approved AS myApproved
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.ID_TOPIC = t.ID_TOPIC AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.ID_TOPIC = t.ID_TOPIC AND mu.approved = 0)
-					LEFT JOIN {$db_prefix}messages AS mf ON (mf.ID_MSG = t.ID_FIRST_MSG)
-				GROUP BY t.ID_TOPIC
-				HAVING ID_FIRST_MSG != myID_FIRST_MSG OR ID_LAST_MSG != myID_LAST_MSG
+					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				GROUP BY t.id_topic
+				HAVING id_first_msg != myid_first_msg OR id_last_msg != myid_last_msg
 					OR approved != myApproved", __FILE__, __LINE__);
 			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
 			{
-				$memberStartedID = getMsgMemberID($topicArray['myID_FIRST_MSG']);
-				$memberUpdatedID = getMsgMemberID($topicArray['myID_LAST_MSG']);
-				$smfFunc['db_query']("
+				$memberStartedID = getMsgMemberID($topicArray['myid_first_msg']);
+				$memberUpdatedID = getMsgMemberID($topicArray['myid_last_msg']);
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics
-					SET ID_FIRST_MSG = '$topicArray[myID_FIRST_MSG]',
-						ID_MEMBER_STARTED = '$memberStartedID', ID_LAST_MSG = '$topicArray[myID_LAST_MSG]',
-						ID_MEMBER_UPDATED = '$memberUpdatedID', approved = '$topicArray[myApproved]'
-					WHERE ID_TOPIC = $topicArray[ID_TOPIC]
+					SET id_first_msg = '$topicArray[myid_first_msg]',
+						id_member_started = '$memberStartedID', id_last_msg = '$topicArray[myid_last_msg]',
+						id_member_updated = '$memberUpdatedID', approved = '$topicArray[myApproved]'
+					WHERE id_topic = $topicArray[id_topic]
 					LIMIT 1", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopic);
 		}
 
-		// Fix all numReplies in the topic table.
+		// Fix all num_replies in the topic table.
 		if (empty($to_fix) || in_array('stats_topics2', $to_fix))
 		{
-			$resultTopic = $smfFunc['db_query']("
+			$resultTopic = $smfFunc['db_query']('', "
 				SELECT
-					t.ID_TOPIC, t.numReplies,
-					IF (COUNT(ma.ID_MSG), IF (mf.approved, COUNT(ma.ID_MSG) - 1, COUNT(ma.ID_MSG)), 0) AS myNumReplies
+					t.id_topic, t.num_replies,
+					IF (COUNT(ma.id_msg), IF (mf.approved, COUNT(ma.id_msg) - 1, COUNT(ma.id_msg)), 0) AS myNumReplies
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.ID_TOPIC = t.ID_TOPIC AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mf ON (mf.ID_MSG = t.ID_FIRST_MSG)
-				GROUP BY t.ID_TOPIC
-				HAVING numReplies != myNumReplies", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				GROUP BY t.id_topic
+				HAVING num_replies != myNumReplies", __FILE__, __LINE__);
 			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics
-					SET numReplies = '$topicArray[myNumReplies]'
-					WHERE ID_TOPIC = $topicArray[ID_TOPIC]
+					SET num_replies = '$topicArray[myNumReplies]'
+					WHERE id_topic = $topicArray[id_topic]
 					LIMIT 1", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopic);
 		}
 
-		// Fix all unapprovedPosts in the topic table.
+		// Fix all unapproved_posts in the topic table.
 		if (empty($to_fix) || in_array('stats_topics3', $to_fix))
 		{
-			$resultTopic = $smfFunc['db_query']("
+			$resultTopic = $smfFunc['db_query']('', "
 				SELECT
-					t.ID_TOPIC, t.unapprovedPosts, COUNT(mu.ID_MSG) AS myUnapprovedPosts
+					t.id_topic, t.unapproved_posts, COUNT(mu.id_msg) AS myUnapprovedPosts
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.ID_TOPIC = t.ID_TOPIC AND mu.approved = 0)
-				GROUP BY t.ID_TOPIC
-				HAVING unapprovedPosts != myUnapprovedPosts", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+				GROUP BY t.id_topic
+				HAVING unapproved_posts != myUnapprovedPosts", __FILE__, __LINE__);
 			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics
-					SET unapprovedPosts = '$topicArray[myUnapprovedPosts]'
-					WHERE ID_TOPIC = $topicArray[ID_TOPIC]
+					SET unapproved_posts = '$topicArray[myUnapprovedPosts]'
+					WHERE id_topic = $topicArray[id_topic]
 					LIMIT 1", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopic);
@@ -279,31 +279,31 @@ function RepairBoards()
 		// Fix all topics that have a board ID that cannot be found in the boards table.
 		if (empty($to_fix) || in_array('missing_boards', $to_fix))
 		{
-			$resultTopics = $smfFunc['db_query']("
-				SELECT t.ID_BOARD, COUNT(*) AS myNumTopics, COUNT(m.ID_MSG) AS myNumPosts
+			$resultTopics = $smfFunc['db_query']('', "
+				SELECT t.id_board, COUNT(*) AS myNumTopics, COUNT(m.id_msg) AS myNumPosts
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = t.ID_BOARD)
-					LEFT JOIN {$db_prefix}messages AS m ON (m.ID_TOPIC = t.ID_TOPIC)
-				WHERE b.ID_BOARD IS NULL
-				GROUP BY t.ID_BOARD", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
+				WHERE b.id_board IS NULL
+				GROUP BY t.id_board", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($resultTopics) > 0)
 				createSalvageArea();
 			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopics))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}boards
-						(ID_CAT, name, description, numTopics, numPosts, memberGroups)
+						(id_cat, name, description, num_topics, num_posts, member_groups)
 					VALUES ($salvageCatID, 'Salvaged board', '', $topicArray[myNumTopics], $topicArray[myNumPosts], '1')", __FILE__, __LINE__);
-				$newBoardID = db_insert_id("{$db_prefix}boards", 'ID_BOARD');
+				$newBoardID = db_insert_id("{$db_prefix}boards", 'id_board');
 
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics
-					SET ID_BOARD = $newBoardID
-					WHERE ID_BOARD = $topicArray[ID_BOARD]", __FILE__, __LINE__);
-				$smfFunc['db_query']("
+					SET id_board = $newBoardID
+					WHERE id_board = $topicArray[id_board]", __FILE__, __LINE__);
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
-					SET ID_BOARD = $newBoardID
-					WHERE ID_BOARD = $topicArray[ID_BOARD]", __FILE__, __LINE__);
+					SET id_board = $newBoardID
+					WHERE id_board = $topicArray[id_board]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopics);
 		}
@@ -311,20 +311,20 @@ function RepairBoards()
 		// Fix all boards that have a cat ID that cannot be found in the cats table.
 		if (empty($to_fix) || in_array('missing_categories', $to_fix))
 		{
-			$resultBoards = $smfFunc['db_query']("
-				SELECT b.ID_CAT
+			$resultBoards = $smfFunc['db_query']('', "
+				SELECT b.id_cat
 				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
-				WHERE c.ID_CAT IS NULL
-				GROUP BY b.ID_CAT", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+				WHERE c.id_cat IS NULL
+				GROUP BY b.id_cat", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($resultBoards) > 0)
 				createSalvageArea();
 			while ($boardArray = $smfFunc['db_fetch_assoc']($resultBoards))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET ID_CAT = $salvageCatID
-					WHERE ID_CAT = $boardArray[ID_CAT]", __FILE__, __LINE__);
+					SET id_cat = $salvageCatID
+					WHERE id_cat = $boardArray[id_cat]", __FILE__, __LINE__);
 
 			}
 			$smfFunc['db_free_result']($resultBoards);
@@ -333,21 +333,21 @@ function RepairBoards()
 		// Last step-make sure all non-guest posters still exist.
 		if (empty($to_fix) || in_array('missing_posters', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT m.ID_MSG
+			$result = $smfFunc['db_query']('', "
+				SELECT m.id_msg
 				FROM {$db_prefix}messages AS m
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-				WHERE m.ID_MEMBER != 0
-					AND mem.ID_MEMBER IS NULL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+				WHERE m.id_member != 0
+					AND mem.id_member IS NULL", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($result) > 0)
 			{
 				$guestMessages = array();
 				while ($row = $smfFunc['db_fetch_assoc']($result))
-					$guestMessages[] = $row['ID_MSG'];
-				$smfFunc['db_query']("
+					$guestMessages[] = $row['id_msg'];
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
-					SET ID_MEMBER = 0
-					WHERE ID_MSG IN (" . implode(',', $guestMessages) . ')
+					SET id_member = 0
+					WHERE id_msg IN (" . implode(',', $guestMessages) . ')
 					LIMIT ' . count($guestMessages), __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($result);
@@ -356,21 +356,21 @@ function RepairBoards()
 		// Fix all boards that have a parent ID that cannot be found in the boards table.
 		if (empty($to_fix) || in_array('missing_parents', $to_fix))
 		{
-			$resultParents = $smfFunc['db_query']("
-				SELECT b.ID_PARENT
+			$resultParents = $smfFunc['db_query']('', "
+				SELECT b.id_parent
 				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}boards AS p ON (p.ID_BOARD = b.ID_PARENT)
-				WHERE b.ID_PARENT != 0
-					AND (p.ID_BOARD IS NULL OR p.ID_BOARD = b.ID_BOARD)
-				GROUP BY b.ID_PARENT", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}boards AS p ON (p.id_board = b.id_parent)
+				WHERE b.id_parent != 0
+					AND (p.id_board IS NULL OR p.id_board = b.id_board)
+				GROUP BY b.id_parent", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($resultParents) > 0)
 				createSalvageArea();
 			while ($parentArray = $smfFunc['db_fetch_assoc']($resultParents))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET ID_PARENT = $salvageBoardID, ID_CAT = $salvageCatID, childLevel = 1
-					WHERE ID_PARENT = $parentArray[ID_PARENT]", __FILE__, __LINE__);
+					SET id_parent = $salvageBoardID, id_cat = $salvageCatID, child_level = 1
+					WHERE id_parent = $parentArray[id_parent]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultParents);
 		}
@@ -379,32 +379,32 @@ function RepairBoards()
 		{
 			if (version_compare($mysql_version, '4.0.4') >= 0)
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics AS t
-						LEFT JOIN {$db_prefix}polls AS p ON (p.ID_POLL = t.ID_POLL)
-					SET t.ID_POLL = 0
-					WHERE t.ID_POLL != 0
-						AND p.ID_POLL IS NULL", __FILE__, __LINE__);
+						LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+					SET t.id_poll = 0
+					WHERE t.id_poll != 0
+						AND p.id_poll IS NULL", __FILE__, __LINE__);
 			}
 			else
 			{
-				$resultPolls = $smfFunc['db_query']("
-					SELECT t.ID_POLL
+				$resultPolls = $smfFunc['db_query']('', "
+					SELECT t.id_poll
 					FROM {$db_prefix}topics AS t
-						LEFT JOIN {$db_prefix}polls AS p ON (p.ID_POLL = t.ID_POLL)
-					WHERE t.ID_POLL != 0
-						AND p.ID_POLL IS NULL
-					GROUP BY t.ID_POLL", __FILE__, __LINE__);
+						LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+					WHERE t.id_poll != 0
+						AND p.id_poll IS NULL
+					GROUP BY t.id_poll", __FILE__, __LINE__);
 				$polls = array();
 				while ($rowPolls = $smfFunc['db_fetch_assoc']($resultPolls))
-					$polls[] = $rowPolls['ID_POLL'];
+					$polls[] = $rowPolls['id_poll'];
 				$smfFunc['db_free_result']($resultPolls);
 
 				if (!empty($polls))
-					$smfFunc['db_query']("
+					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}topics
-						SET ID_POLL = 0
-						WHERE ID_POLL IN (" . implode(', ', $polls) . ")
+						SET id_poll = 0
+						WHERE id_poll IN (" . implode(', ', $polls) . ")
 						LIMIT " . count($polls), __FILE__, __LINE__);
 			}
 		}
@@ -413,223 +413,223 @@ function RepairBoards()
 		{
 			if (version_compare($mysql_version, '4.0.4') >= 0)
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}calendar AS cal
-						LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = cal.ID_TOPIC)
-					SET cal.ID_BOARD = 0, cal.ID_TOPIC = 0
-					WHERE cal.ID_TOPIC != 0
-						AND t.ID_TOPIC IS NULL", __FILE__, __LINE__);
+						LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
+					SET cal.id_board = 0, cal.id_topic = 0
+					WHERE cal.id_topic != 0
+						AND t.id_topic IS NULL", __FILE__, __LINE__);
 			}
 			else
 			{
-				$resultEvents = $smfFunc['db_query']("
-					SELECT cal.ID_TOPIC
+				$resultEvents = $smfFunc['db_query']('', "
+					SELECT cal.id_topic
 					FROM {$db_prefix}calendar AS cal
-						LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = cal.ID_TOPIC)
-					WHERE cal.ID_TOPIC != 0
-						AND t.ID_TOPIC IS NULL
-					GROUP BY cal.ID_TOPIC", __FILE__, __LINE__);
+						LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
+					WHERE cal.id_topic != 0
+						AND t.id_topic IS NULL
+					GROUP BY cal.id_topic", __FILE__, __LINE__);
 				$events = array();
 				while ($rowEvents = $smfFunc['db_fetch_assoc']($resultEvents))
-					$events[] = $rowEvents['ID_TOPIC'];
+					$events[] = $rowEvents['id_topic'];
 				$smfFunc['db_free_result']($resultEvents);
 
 				if (!empty($events))
-					$smfFunc['db_query']("
+					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}calendar
-						SET ID_TOPIC = 0, ID_BOARD = 0
-						WHERE ID_TOPIC IN (" . implode(', ', $events) . ")
+						SET id_topic = 0, id_board = 0
+						WHERE id_topic IN (" . implode(', ', $events) . ")
 						LIMIT " . count($events), __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_log_topics', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lt.ID_TOPIC
+			$result = $smfFunc['db_query']('', "
+				SELECT lt.id_topic
 				FROM {$db_prefix}log_topics AS lt
-					LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = lt.ID_TOPIC)
-				WHERE t.ID_TOPIC IS NULL
-				GROUP BY lt.ID_TOPIC", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lt.id_topic)
+				WHERE t.id_topic IS NULL
+				GROUP BY lt.id_topic", __FILE__, __LINE__);
 			$topics = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$topics[] = $row['ID_TOPIC'];
+				$topics[] = $row['id_topic'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($topics))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_topics
-					WHERE ID_TOPIC IN (" . implode(', ', $topics) . ")", __FILE__, __LINE__);
+					WHERE id_topic IN (" . implode(', ', $topics) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_log_topics_members', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lt.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lt.id_member
 				FROM {$db_prefix}log_topics AS lt
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lt.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-				GROUP BY lt.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lt.id_member)
+				WHERE mem.id_member IS NULL
+				GROUP BY lt.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['ID_MEMBER'];
+				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($members))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_topics
-					WHERE ID_MEMBER IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
+					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_log_boards', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lb.ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT lb.id_board
 				FROM {$db_prefix}log_boards AS lb
-					LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = lb.ID_BOARD)
-				WHERE b.ID_BOARD IS NULL
-				GROUP BY lb.ID_BOARD", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = lb.id_board)
+				WHERE b.id_board IS NULL
+				GROUP BY lb.id_board", __FILE__, __LINE__);
 			$boards = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$boards[] = $row['ID_BOARD'];
+				$boards[] = $row['id_board'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($boards))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_boards
-					WHERE ID_BOARD IN (" . implode(', ', $boards) . ")", __FILE__, __LINE__);
+					WHERE id_board IN (" . implode(', ', $boards) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_log_boards_members', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lb.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lb.id_member
 				FROM {$db_prefix}log_boards AS lb
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lb.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-				GROUP BY lb.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lb.id_member)
+				WHERE mem.id_member IS NULL
+				GROUP BY lb.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['ID_MEMBER'];
+				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($members))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_boards
-					WHERE ID_MEMBER IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
+					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_log_mark_read', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lmr.ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT lmr.id_board
 				FROM {$db_prefix}log_mark_read AS lmr
-					LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = lmr.ID_BOARD)
-				WHERE b.ID_BOARD IS NULL
-				GROUP BY lmr.ID_BOARD", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = lmr.id_board)
+				WHERE b.id_board IS NULL
+				GROUP BY lmr.id_board", __FILE__, __LINE__);
 			$boards = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$boards[] = $row['ID_BOARD'];
+				$boards[] = $row['id_board'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($boards))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_mark_read
-					WHERE ID_BOARD IN (" . implode(', ', $boards) . ")", __FILE__, __LINE__);
+					WHERE id_board IN (" . implode(', ', $boards) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_log_mark_read_members', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lmr.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lmr.id_member
 				FROM {$db_prefix}log_mark_read AS lmr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lmr.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-				GROUP BY lmr.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lmr.id_member)
+				WHERE mem.id_member IS NULL
+				GROUP BY lmr.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['ID_MEMBER'];
+				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($members))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_mark_read
-					WHERE ID_MEMBER IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
+					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_pms', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT pmr.ID_PM
+			$result = $smfFunc['db_query']('', "
+				SELECT pmr.id_pm
 				FROM {$db_prefix}pm_recipients AS pmr
-					LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.ID_PM = pmr.ID_PM)
-				WHERE pm.ID_PM IS NULL
-				GROUP BY pmr.ID_PM", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+				WHERE pm.id_pm IS NULL
+				GROUP BY pmr.id_pm", __FILE__, __LINE__);
 			$pms = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$pms[] = $row['ID_PM'];
+				$pms[] = $row['id_pm'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($pms))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}pm_recipients
-					WHERE ID_PM IN (" . implode(', ', $pms) . ")", __FILE__, __LINE__);
+					WHERE id_pm IN (" . implode(', ', $pms) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_recipients', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT pmr.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT pmr.id_member
 				FROM {$db_prefix}pm_recipients AS pmr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = pmr.ID_MEMBER)
-				WHERE pmr.ID_MEMBER != 0
-					AND mem.ID_MEMBER IS NULL
-				GROUP BY pmr.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+				WHERE pmr.id_member != 0
+					AND mem.id_member IS NULL
+				GROUP BY pmr.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['ID_MEMBER'];
+				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($members))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}pm_recipients
-					WHERE ID_MEMBER IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
+					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_senders', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT pm.ID_PM
+			$result = $smfFunc['db_query']('', "
+				SELECT pm.id_pm
 				FROM {$db_prefix}personal_messages AS pm
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = pm.ID_MEMBER_FROM)
-				WHERE pm.ID_MEMBER_FROM != 0
-					AND mem.ID_MEMBER IS NULL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+				WHERE pm.id_member_from != 0
+					AND mem.id_member IS NULL", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($result) > 0)
 			{
 				$guestMessages = array();
 				while ($row = $smfFunc['db_fetch_assoc']($result))
-					$guestMessages[] = $row['ID_PM'];
+					$guestMessages[] = $row['id_pm'];
 
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}personal_messages
-					SET ID_MEMBER_FROM = 0
-					WHERE ID_PM IN (" . implode(',', $guestMessages) . ')
+					SET id_member_from = 0
+					WHERE id_pm IN (" . implode(',', $guestMessages) . ')
 					LIMIT ' . count($guestMessages), __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($result);
@@ -637,43 +637,43 @@ function RepairBoards()
 
 		if (empty($to_fix) || in_array('missing_notify_members', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT ln.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT ln.id_member
 				FROM {$db_prefix}log_notify AS ln
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = ln.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-				GROUP BY ln.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
+				WHERE mem.id_member IS NULL
+				GROUP BY ln.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['ID_MEMBER'];
+				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($members))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_notify
-					WHERE ID_MEMBER IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
+					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_cached_subject', $to_fix))
 		{
-			$request = $smfFunc['db_query']("
-				SELECT t.ID_TOPIC, m.subject
+			$request = $smfFunc['db_query']('', "
+				SELECT t.id_topic, m.subject
 				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-					LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.ID_TOPIC = t.ID_TOPIC)
-				WHERE m.ID_MSG = t.ID_FIRST_MSG
-					AND lss.ID_TOPIC IS NULL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
+				WHERE m.id_msg = t.id_first_msg
+					AND lss.id_topic IS NULL", __FILE__, __LINE__);
 			$insertRows = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				foreach (text2words($row['subject']) as $word)
-					$insertRows[] = "'$word', $row[ID_TOPIC]";
+					$insertRows[] = "'$word', $row[id_topic]";
 				if (count($insertRows) > 500)
 				{
-					$smfFunc['db_query']("
+					$smfFunc['db_query']('', "
 						INSERT IGNORE INTO {$db_prefix}log_search_subjects
-							(word, ID_TOPIC)
+							(word, id_topic)
 						VALUES (" . implode('),
 							(', $insertRows) . ")", __FILE__, __LINE__);
 					$insertRows = array();
@@ -683,77 +683,77 @@ function RepairBoards()
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($insertRows))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT IGNORE INTO {$db_prefix}log_search_subjects
-						(word, ID_TOPIC)
+						(word, id_topic)
 					VALUES (" . implode('),
 						(', $insertRows) . ")", __FILE__, __LINE__);
 		}
 
 		if (empty($to_fix) || in_array('missing_topic_for_cache', $to_fix))
 		{
-			$request = $smfFunc['db_query']("
-				SELECT lss.ID_TOPIC
+			$request = $smfFunc['db_query']('', "
+				SELECT lss.id_topic
 				FROM {$db_prefix}log_search_subjects AS lss
-					LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = lss.ID_TOPIC)
-				WHERE t.ID_TOPIC IS NULL
-				GROUP BY lss.ID_TOPIC", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lss.id_topic)
+				WHERE t.id_topic IS NULL
+				GROUP BY lss.id_topic", __FILE__, __LINE__);
 			$deleteTopics = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$deleteTopics[] = $row['ID_TOPIC'];
+				$deleteTopics[] = $row['id_topic'];
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($deleteTopics))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_search_subjects
-					WHERE ID_TOPIC IN (" . implode(', ', $deleteTopics) . ')', __FILE__, __LINE__);
+					WHERE id_topic IN (" . implode(', ', $deleteTopics) . ')', __FILE__, __LINE__);
 		}
 
 		if (empty($to_fix) || in_array('missing_member_vote', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lp.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lp.id_member
 				FROM {$db_prefix}log_polls AS lp
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lp.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-				GROUP BY lp.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lp.id_member)
+				WHERE mem.id_member IS NULL
+				GROUP BY lp.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['ID_MEMBER'];
+				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($members))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_polls
-					WHERE ID_MEMBER IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
+					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('missing_log_poll_vote', $to_fix))
 		{
-			$request = $smfFunc['db_query']("
-				SELECT lp.ID_POLL
+			$request = $smfFunc['db_query']('', "
+				SELECT lp.id_poll
 				FROM {$db_prefix}log_polls AS lp
-					LEFT JOIN {$db_prefix}polls AS p ON (p.ID_POLL = lp.ID_POLL)
-				WHERE p.ID_POLL IS NULL
-				GROUP BY lp.ID_POLL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = lp.id_poll)
+				WHERE p.id_poll IS NULL
+				GROUP BY lp.id_poll", __FILE__, __LINE__);
 			$polls = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$polls[] = $row['ID_POLL'];
+				$polls[] = $row['id_poll'];
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($polls))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_polls
-					WHERE ID_POLL IN (" . implode(', ', $polls) . ")", __FILE__, __LINE__);
+					WHERE id_poll IN (" . implode(', ', $polls) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('report_missing_comments', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT lr.ID_REPORT
 				FROM {$db_prefix}log_reported AS lr
 					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.ID_REPORT = lr.ID_REPORT)
@@ -766,7 +766,7 @@ function RepairBoards()
 
 			if (!empty($reports))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_reported
 					WHERE ID_REPORT IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
 			}
@@ -774,7 +774,7 @@ function RepairBoards()
 
 		if (empty($to_fix) || in_array('comments_missing_report', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT lrc.ID_REPORT
 				FROM {$db_prefix}log_reported_comments AS lrc
 					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.ID_REPORT = lrc.ID_REPORT)
@@ -787,7 +787,7 @@ function RepairBoards()
 
 			if (!empty($reports))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_reported_comments
 					WHERE ID_REPORT IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
 			}
@@ -795,43 +795,43 @@ function RepairBoards()
 
 		if (empty($to_fix) || in_array('group_request_missing_member', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lgr.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lgr.id_member
 				FROM {$db_prefix}log_group_requests AS lgr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lgr.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-				GROUP BY lgr.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
+				WHERE mem.id_member IS NULL
+				GROUP BY lgr.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['ID_MEMBER'];
+				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($members))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_group_requests
-					WHERE ID_MEMBER IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
+					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('group_request_missing_group', $to_fix))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lgr.ID_GROUP
+			$result = $smfFunc['db_query']('', "
+				SELECT lgr.id_group
 				FROM {$db_prefix}log_group_requests AS lgr
-					LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = lgr.ID_GROUP)
-				WHERE mg.ID_GROUP IS NULL
-				GROUP BY lgr.ID_GROUP", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
+				WHERE mg.id_group IS NULL
+				GROUP BY lgr.id_group", __FILE__, __LINE__);
 			$groups = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$groups[] = $row['ID_GROUP'];
+				$groups[] = $row['id_group'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($groups))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_group_requests
-					WHERE ID_GROUP IN (" . implode(', ', $groups) . ")", __FILE__, __LINE__);
+					WHERE id_group IN (" . implode(', ', $groups) . ")", __FILE__, __LINE__);
 			}
 		}
 
@@ -912,18 +912,18 @@ function findForumErrors()
 	if ($_GET['step'] <= 0)
 	{
 		// Make a last-ditch-effort check to get rid of topics with zeros..
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}topics
-			WHERE ID_TOPIC = 0", __FILE__, __LINE__);
+			WHERE id_topic = 0", __FILE__, __LINE__);
 		list ($zeroTopics) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
 		// This is only going to be 1 or 0, but...
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}messages
-			WHERE ID_MSG = 0", __FILE__, __LINE__);
+			WHERE id_msg = 0", __FILE__, __LINE__);
 		list ($zeroMessages) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
@@ -941,14 +941,14 @@ function findForumErrors()
 	if ($_GET['step'] <= 1)
 	{
 		// Find messages that don't have existing topics.
-		$result = $smfFunc['db_query']("
-			SELECT m.ID_TOPIC, m.ID_MSG
+		$result = $smfFunc['db_query']('', "
+			SELECT m.id_topic, m.id_msg
 			FROM {$db_prefix}messages AS m
-				LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = m.ID_TOPIC)
-			WHERE t.ID_TOPIC IS NULL
-			ORDER BY m.ID_TOPIC, m.ID_MSG", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			WHERE t.id_topic IS NULL
+			ORDER BY m.id_topic, m.id_msg", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$context['repair_errors'][] = sprintf($txt['repair_missing_topics'], $row['ID_MSG'], $row['ID_TOPIC']);
+			$context['repair_errors'][] = sprintf($txt['repair_missing_topics'], $row['id_msg'], $row['id_topic']);
 		if ($smfFunc['db_num_rows']($result) != 0)
 			$to_fix[] = 'missing_topics';
 		$smfFunc['db_free_result']($result);
@@ -961,14 +961,14 @@ function findForumErrors()
 	if ($_GET['step'] <= 2)
 	{
 		// Find messages that don't have existing topics.
-		$result = $smfFunc['db_query']("
-			SELECT m.ID_TOPIC, m.ID_MSG
+		$result = $smfFunc['db_query']('', "
+			SELECT m.id_topic, m.id_msg
 			FROM {$db_prefix}messages AS m
-				LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = m.ID_TOPIC)
-			WHERE t.ID_TOPIC IS NULL
-			ORDER BY m.ID_TOPIC, m.ID_MSG", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			WHERE t.id_topic IS NULL
+			ORDER BY m.id_topic, m.id_msg", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$context['repair_errors'][] = sprintf($txt['repair_missing_topics'], $row['ID_MSG'], $row['ID_TOPIC']);
+			$context['repair_errors'][] = sprintf($txt['repair_missing_topics'], $row['id_msg'], $row['id_topic']);
 		if ($smfFunc['db_num_rows']($result) != 0)
 			$to_fix[] = 'missing_topics';
 		$smfFunc['db_free_result']($result);
@@ -980,8 +980,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 3)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_TOPIC)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_topic)
 			FROM {$db_prefix}topics", __FILE__, __LINE__);
 		list ($topics) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -991,15 +991,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $topics);
 
-			$result = $smfFunc['db_query']("
-				SELECT t.ID_TOPIC, COUNT(m.ID_MSG) AS numMsg
+			$result = $smfFunc['db_query']('', "
+				SELECT t.id_topic, COUNT(m.id_msg) AS numMsg
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS m ON (m.ID_TOPIC = t.ID_TOPIC)
-				WHERE t.ID_TOPIC BETWEEN $_GET[substep] AND $_GET[substep] + 999
-				GROUP BY t.ID_TOPIC
+					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
+				WHERE t.id_topic BETWEEN $_GET[substep] AND $_GET[substep] + 999
+				GROUP BY t.id_topic
 				HAVING numMsg = 0", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_messages'], $row['ID_TOPIC']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_messages'], $row['id_topic']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_messages';
 			$smfFunc['db_free_result']($result);
@@ -1012,44 +1012,44 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 4)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_TOPIC)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_topic)
 			FROM {$db_prefix}topics", __FILE__, __LINE__);
 		list ($topics) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
-		// Find topics with incorrect ID_FIRST_MSG/ID_LAST_MSG.
+		// Find topics with incorrect id_first_msg/id_last_msg.
 		for (; $_GET['substep'] < $topics; $_GET['substep'] += 1000)
 		{
 			pauseRepairProcess($to_fix, $topics);
 
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT
-					t.ID_TOPIC, t.ID_FIRST_MSG, t.ID_LAST_MSG,
-					IF (MIN(ma.ID_MSG),
-						IF (MIN(mu.ID_MSG),
-							IF (MIN(mu.ID_MSG) < MIN(ma.ID_MSG), mu.ID_MSG, ma.ID_MSG),
-						MIN(ma.ID_MSG)),
-					MIN(mu.ID_MSG)) AS myID_FIRST_MSG,
-					IF (MAX(ma.ID_MSG), MAX(ma.ID_MSG), MIN(mu.ID_MSG)) AS myID_LAST_MSG,
+					t.id_topic, t.id_first_msg, t.id_last_msg,
+					IF (MIN(ma.id_msg),
+						IF (MIN(mu.id_msg),
+							IF (MIN(mu.id_msg) < MIN(ma.id_msg), mu.id_msg, ma.id_msg),
+						MIN(ma.id_msg)),
+					MIN(mu.id_msg)) AS myid_first_msg,
+					IF (MAX(ma.id_msg), MAX(ma.id_msg), MIN(mu.id_msg)) AS myid_last_msg,
 					t.approved, mf.approved AS myApproved
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.ID_TOPIC = t.ID_TOPIC AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.ID_TOPIC = t.ID_TOPIC AND mu.approved = 0)
-					LEFT JOIN {$db_prefix}messages AS mf ON (mf.ID_MSG = t.ID_FIRST_MSG)
-				WHERE t.ID_TOPIC BETWEEN $_GET[substep] AND $_GET[substep] + 999
-				GROUP BY t.ID_TOPIC
-				HAVING ID_FIRST_MSG != myID_FIRST_MSG OR ID_LAST_MSG != myID_LAST_MSG
+					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				WHERE t.id_topic BETWEEN $_GET[substep] AND $_GET[substep] + 999
+				GROUP BY t.id_topic
+				HAVING id_first_msg != myid_first_msg OR id_last_msg != myid_last_msg
 					OR approved != myApproved
-				ORDER BY t.ID_TOPIC", __FILE__, __LINE__);
+				ORDER BY t.id_topic", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				if ($row['ID_FIRST_MSG'] != $row['myID_FIRST_MSG'])
-					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_1'], $row['ID_TOPIC'], $row['ID_FIRST_MSG']);
-				if ($row['ID_LAST_MSG'] != $row['myID_LAST_MSG'])
-					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_2'], $row['ID_TOPIC'], $row['ID_LAST_MSG']);
+				if ($row['id_first_msg'] != $row['myid_first_msg'])
+					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_1'], $row['id_topic'], $row['id_first_msg']);
+				if ($row['id_last_msg'] != $row['myid_last_msg'])
+					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_2'], $row['id_topic'], $row['id_last_msg']);
 				if ($row['approved'] != $row['myApproved'])
-					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_5'], $row['ID_TOPIC']);
+					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_5'], $row['id_topic']);
 			}
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'stats_topics';
@@ -1063,32 +1063,32 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 5)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_TOPIC)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_topic)
 			FROM {$db_prefix}topics", __FILE__, __LINE__);
 		list ($topics) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
-		// Find topics with incorrect numReplies.
+		// Find topics with incorrect num_replies.
 		for (; $_GET['substep'] < $topics; $_GET['substep'] += 1000)
 		{
 			pauseRepairProcess($to_fix, $topics);
 
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT
-					t.ID_TOPIC, t.numReplies,
-					IF (COUNT(ma.ID_MSG), IF (mf.approved, COUNT(ma.ID_MSG) - 1, COUNT(ma.ID_MSG)), 0) AS myNumReplies
+					t.id_topic, t.num_replies,
+					IF (COUNT(ma.id_msg), IF (mf.approved, COUNT(ma.id_msg) - 1, COUNT(ma.id_msg)), 0) AS myNumReplies
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.ID_TOPIC = t.ID_TOPIC AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mf ON (mf.ID_MSG = t.ID_FIRST_MSG)
-				WHERE t.ID_TOPIC BETWEEN $_GET[substep] AND $_GET[substep] + 999
-				GROUP BY t.ID_TOPIC
-				HAVING numReplies != myNumReplies
-				ORDER BY t.ID_TOPIC", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				WHERE t.id_topic BETWEEN $_GET[substep] AND $_GET[substep] + 999
+				GROUP BY t.id_topic
+				HAVING num_replies != myNumReplies
+				ORDER BY t.id_topic", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				if ($row['numReplies'] != $row['myNumReplies'])
-					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_3'], $row['ID_TOPIC'], $row['numReplies']);
+				if ($row['num_replies'] != $row['myNumReplies'])
+					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_3'], $row['id_topic'], $row['num_replies']);
 			}
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'stats_topics2';
@@ -1102,30 +1102,30 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 6)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_TOPIC)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_topic)
 			FROM {$db_prefix}topics", __FILE__, __LINE__);
 		list ($topics) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
-		// Find topics with incorrect unapprovedPosts.
+		// Find topics with incorrect unapproved_posts.
 		for (; $_GET['substep'] < $topics; $_GET['substep'] += 1000)
 		{
 			pauseRepairProcess($to_fix, $topics);
 
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT
-					t.ID_TOPIC, t.unapprovedPosts, COUNT(mu.ID_MSG) AS myUnapprovedPosts
+					t.id_topic, t.unapproved_posts, COUNT(mu.id_msg) AS myUnapprovedPosts
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.ID_TOPIC = t.ID_TOPIC AND mu.approved = 0)
-				WHERE t.ID_TOPIC BETWEEN $_GET[substep] AND $_GET[substep] + 999
-				GROUP BY t.ID_TOPIC
-				HAVING unapprovedPosts != myUnapprovedPosts
-				ORDER BY t.ID_TOPIC", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+				WHERE t.id_topic BETWEEN $_GET[substep] AND $_GET[substep] + 999
+				GROUP BY t.id_topic
+				HAVING unapproved_posts != myUnapprovedPosts
+				ORDER BY t.id_topic", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				if ($row['unapprovedPosts'] != $row['myUnapprovedPosts'])
-					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_4'], $row['ID_TOPIC'], $row['unapprovedPosts']);
+				if ($row['unapproved_posts'] != $row['myUnapprovedPosts'])
+					$context['repair_errors'][] = sprintf($txt['repair_stats_topics_4'], $row['id_topic'], $row['unapproved_posts']);
 			}
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'stats_topics3';
@@ -1139,8 +1139,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 7)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_TOPIC)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_topic)
 			FROM {$db_prefix}topics", __FILE__, __LINE__);
 		list ($topics) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1150,15 +1150,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $topics);
 
-			$result = $smfFunc['db_query']("
-				SELECT t.ID_TOPIC, t.ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT t.id_topic, t.id_board
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = t.ID_BOARD)
-				WHERE b.ID_BOARD IS NULL
-					AND t.ID_TOPIC BETWEEN $_GET[substep] AND $_GET[substep] + 999
-				ORDER BY t.ID_BOARD, t.ID_TOPIC", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+				WHERE b.id_board IS NULL
+					AND t.id_topic BETWEEN $_GET[substep] AND $_GET[substep] + 999
+				ORDER BY t.id_board, t.id_topic", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_boards'], $row['ID_TOPIC'], $row['ID_BOARD']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_boards'], $row['id_topic'], $row['id_board']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_boards';
 			$smfFunc['db_free_result']($result);
@@ -1172,14 +1172,14 @@ function findForumErrors()
 	if ($_GET['step'] <= 8)
 	{
 		// Find boards with nonexistent categories.
-		$result = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.ID_CAT
+		$result = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.id_cat
 			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
-			WHERE c.ID_CAT IS NULL
-			ORDER BY b.ID_CAT, b.ID_BOARD", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+			WHERE c.id_cat IS NULL
+			ORDER BY b.id_cat, b.id_board", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$context['repair_errors'][] = sprintf($txt['repair_missing_categories'], $row['ID_BOARD'], $row['ID_CAT']);
+			$context['repair_errors'][] = sprintf($txt['repair_missing_categories'], $row['id_board'], $row['id_cat']);
 		if ($smfFunc['db_num_rows']($result) != 0)
 			$to_fix[] = 'missing_categories';
 		$smfFunc['db_free_result']($result);
@@ -1191,8 +1191,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 9)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MSG)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_msg)
 			FROM {$db_prefix}messages", __FILE__, __LINE__);
 		list ($messages) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1202,16 +1202,16 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $messages);
 
-			$result = $smfFunc['db_query']("
-				SELECT m.ID_MSG, m.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT m.id_msg, m.id_member
 				FROM {$db_prefix}messages AS m
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-					AND m.ID_MEMBER != 0
-					AND m.ID_MSG BETWEEN $_GET[substep] AND $_GET[substep] + 1999
-				ORDER BY m.ID_MSG", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+				WHERE mem.id_member IS NULL
+					AND m.id_member != 0
+					AND m.id_msg BETWEEN $_GET[substep] AND $_GET[substep] + 1999
+				ORDER BY m.id_msg", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_posters'], $row['ID_MSG'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_posters'], $row['id_msg'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_posters';
 			$smfFunc['db_free_result']($result);
@@ -1225,15 +1225,15 @@ function findForumErrors()
 	if ($_GET['step'] <= 10)
 	{
 		// Find boards with nonexistent parents.
-		$result = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.ID_PARENT
+		$result = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.id_parent
 			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}boards AS p ON (p.ID_BOARD = b.ID_PARENT)
-			WHERE b.ID_PARENT != 0
-				AND (p.ID_BOARD IS NULL OR p.ID_BOARD = b.ID_BOARD)
-			ORDER BY b.ID_PARENT, b.ID_BOARD", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}boards AS p ON (p.id_board = b.id_parent)
+			WHERE b.id_parent != 0
+				AND (p.id_board IS NULL OR p.id_board = b.id_board)
+			ORDER BY b.id_parent, b.id_board", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$context['repair_errors'][] = sprintf($txt['repair_missing_parents'], $row['ID_BOARD'], $row['ID_PARENT']);
+			$context['repair_errors'][] = sprintf($txt['repair_missing_parents'], $row['id_board'], $row['id_parent']);
 		if ($smfFunc['db_num_rows']($result) != 0)
 			$to_fix[] = 'missing_parents';
 		$smfFunc['db_free_result']($result);
@@ -1245,8 +1245,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 11)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_POLL)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_poll)
 			FROM {$db_prefix}topics", __FILE__, __LINE__);
 		list ($polls) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1255,16 +1255,16 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $polls);
 
-			$result = $smfFunc['db_query']("
-				SELECT t.ID_POLL, t.ID_TOPIC
+			$result = $smfFunc['db_query']('', "
+				SELECT t.id_poll, t.id_topic
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}polls AS p ON (p.ID_POLL = t.ID_POLL)
-				WHERE t.ID_POLL != 0
-					AND t.ID_POLL BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND p.ID_POLL IS NULL
-				GROUP BY t.ID_POLL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+				WHERE t.id_poll != 0
+					AND t.id_poll BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND p.id_poll IS NULL
+				GROUP BY t.id_poll", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_polls'], $row['ID_TOPIC'], $row['ID_POLL']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_polls'], $row['id_topic'], $row['id_poll']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_polls';
 			$smfFunc['db_free_result']($result);
@@ -1277,8 +1277,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 12)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_TOPIC)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_topic)
 			FROM {$db_prefix}calendar", __FILE__, __LINE__);
 		list ($topics) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1287,16 +1287,16 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $topics);
 
-			$result = $smfFunc['db_query']("
-				SELECT cal.ID_TOPIC, cal.ID_EVENT
+			$result = $smfFunc['db_query']('', "
+				SELECT cal.id_topic, cal.id_event
 				FROM {$db_prefix}calendar AS cal
-					LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = cal.ID_TOPIC)
-				WHERE cal.ID_TOPIC != 0
-					AND cal.ID_TOPIC BETWEEN $_GET[substep] AND $_GET[substep] + 999
-					AND t.ID_TOPIC IS NULL
-				ORDER BY cal.ID_TOPIC", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
+				WHERE cal.id_topic != 0
+					AND cal.id_topic BETWEEN $_GET[substep] AND $_GET[substep] + 999
+					AND t.id_topic IS NULL
+				ORDER BY cal.id_topic", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_calendar_topics'], $row['ID_EVENT'], $row['ID_TOPIC']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_calendar_topics'], $row['id_event'], $row['id_topic']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_calendar_topics';
 			$smfFunc['db_free_result']($result);
@@ -1309,8 +1309,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 13)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_topics", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1319,14 +1319,14 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT lt.ID_TOPIC
+			$result = $smfFunc['db_query']('', "
+				SELECT lt.id_topic
 				FROM {$db_prefix}log_topics AS lt
-					LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = lt.ID_TOPIC)
-				WHERE t.ID_TOPIC IS NULL
-					AND lt.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 249", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lt.id_topic)
+				WHERE t.id_topic IS NULL
+					AND lt.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 249", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_topics'], $row['ID_TOPIC']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_topics'], $row['id_topic']);
 			if ($smfFunc['db_num_rows']($result) != 0 && !in_array('missing_log_topics', $to_fix))
 				$to_fix[] = 'missing_log_topics';
 			$smfFunc['db_free_result']($result);
@@ -1339,8 +1339,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 14)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_topics", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1349,15 +1349,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT lt.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lt.id_member
 				FROM {$db_prefix}log_topics AS lt
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lt.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-					AND lt.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 149
-				GROUP BY lt.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lt.id_member)
+				WHERE mem.id_member IS NULL
+					AND lt.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 149
+				GROUP BY lt.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_topics_members'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_topics_members'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0 && !in_array('missing_log_topics_members', $to_fix))
 				$to_fix[] = 'missing_log_topics_members';
 			$smfFunc['db_free_result']($result);
@@ -1370,8 +1370,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 15)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_boards", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1380,15 +1380,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT lb.ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT lb.id_board
 				FROM {$db_prefix}log_boards AS lb
-					LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = lb.ID_BOARD)
-				WHERE b.ID_BOARD IS NULL
-					AND lb.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-				GROUP BY lb.ID_BOARD", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = lb.id_board)
+				WHERE b.id_board IS NULL
+					AND lb.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+				GROUP BY lb.id_board", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_boards'], $row['ID_BOARD']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_boards'], $row['id_board']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_log_boards';
 			$smfFunc['db_free_result']($result);
@@ -1401,8 +1401,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 16)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_boards", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1411,15 +1411,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT lb.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lb.id_member
 				FROM {$db_prefix}log_boards AS lb
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lb.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-					AND lb.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-				GROUP BY lb.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lb.id_member)
+				WHERE mem.id_member IS NULL
+					AND lb.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+				GROUP BY lb.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_boards_members'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_boards_members'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_log_boards_members';
 			$smfFunc['db_free_result']($result);
@@ -1432,8 +1432,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 17)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_mark_read", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1442,15 +1442,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT lmr.ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT lmr.id_board
 				FROM {$db_prefix}log_mark_read AS lmr
-					LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = lmr.ID_BOARD)
-				WHERE b.ID_BOARD IS NULL
-					AND lmr.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-				GROUP BY lmr.ID_BOARD", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = lmr.id_board)
+				WHERE b.id_board IS NULL
+					AND lmr.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+				GROUP BY lmr.id_board", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_mark_read'], $row['ID_BOARD']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_mark_read'], $row['id_board']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_log_mark_read';
 			$smfFunc['db_free_result']($result);
@@ -1463,8 +1463,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 18)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_mark_read", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1473,15 +1473,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT lmr.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lmr.id_member
 				FROM {$db_prefix}log_mark_read AS lmr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lmr.ID_MEMBER)
-				WHERE mem.ID_MEMBER IS NULL
-					AND lmr.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-				GROUP BY lmr.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lmr.id_member)
+				WHERE mem.id_member IS NULL
+					AND lmr.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+				GROUP BY lmr.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_mark_read_members'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_mark_read_members'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_log_mark_read_members';
 			$smfFunc['db_free_result']($result);
@@ -1494,8 +1494,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 19)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_PM)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_pm)
 			FROM {$db_prefix}pm_recipients", __FILE__, __LINE__);
 		list ($pms) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1504,15 +1504,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $pms);
 
-			$result = $smfFunc['db_query']("
-				SELECT pmr.ID_PM
+			$result = $smfFunc['db_query']('', "
+				SELECT pmr.id_pm
 				FROM {$db_prefix}pm_recipients AS pmr
-					LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.ID_PM = pmr.ID_PM)
-				WHERE pm.ID_PM IS NULL
-					AND pmr.ID_PM BETWEEN $_GET[substep] AND $_GET[substep] + 499
-				GROUP BY pmr.ID_PM", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+				WHERE pm.id_pm IS NULL
+					AND pmr.id_pm BETWEEN $_GET[substep] AND $_GET[substep] + 499
+				GROUP BY pmr.id_pm", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_pms'], $row['ID_PM']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_pms'], $row['id_pm']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_pms';
 			$smfFunc['db_free_result']($result);
@@ -1525,8 +1525,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 20)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}pm_recipients", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1535,16 +1535,16 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT pmr.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT pmr.id_member
 				FROM {$db_prefix}pm_recipients AS pmr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = pmr.ID_MEMBER)
-				WHERE pmr.ID_MEMBER != 0
-					AND pmr.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND mem.ID_MEMBER IS NULL
-				GROUP BY pmr.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+				WHERE pmr.id_member != 0
+					AND pmr.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND mem.id_member IS NULL
+				GROUP BY pmr.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_recipients'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_recipients'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_recipients';
 			$smfFunc['db_free_result']($result);
@@ -1557,8 +1557,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 21)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_PM)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_pm)
 			FROM {$db_prefix}personal_messages", __FILE__, __LINE__);
 		list ($pms) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1567,15 +1567,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $pms);
 
-			$result = $smfFunc['db_query']("
-				SELECT pm.ID_PM, pm.ID_MEMBER_FROM
+			$result = $smfFunc['db_query']('', "
+				SELECT pm.id_pm, pm.id_member_from
 				FROM {$db_prefix}personal_messages AS pm
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = pm.ID_MEMBER_FROM)
-				WHERE pm.ID_MEMBER_FROM != 0
-					AND pm.ID_PM BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND mem.ID_MEMBER IS NULL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+				WHERE pm.id_member_from != 0
+					AND pm.id_pm BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND mem.id_member IS NULL", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_senders'], $row['ID_PM'], $row['ID_MEMBER_FROM']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_senders'], $row['id_pm'], $row['id_member_from']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_senders';
 			$smfFunc['db_free_result']($result);
@@ -1588,8 +1588,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 22)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_notify", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1598,15 +1598,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT ln.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT ln.id_member
 				FROM {$db_prefix}log_notify AS ln
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = ln.ID_MEMBER)
-				WHERE ln.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND mem.ID_MEMBER IS NULL
-				GROUP BY ln.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
+				WHERE ln.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND mem.id_member IS NULL
+				GROUP BY ln.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_notify_members'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_notify_members'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_notify_members';
 			$smfFunc['db_free_result']($result);
@@ -1619,17 +1619,17 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 23)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT t.ID_TOPIC, fm.subject
+		$request = $smfFunc['db_query']('', "
+			SELECT t.id_topic, fm.subject
 			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS fm)
-				LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.ID_TOPIC = t.ID_TOPIC)
-			WHERE fm.ID_MSG = t.ID_FIRST_MSG
-				AND lss.ID_TOPIC IS NULL", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
+			WHERE fm.id_msg = t.id_first_msg
+				AND lss.id_topic IS NULL", __FILE__, __LINE__);
 		$found_error = false;
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (count(text2words($row['subject'])) != 0)
 			{
-				$context['repair_errors'][] = sprintf($txt['repair_missing_cached_subject'], $row['ID_TOPIC']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_cached_subject'], $row['id_topic']);
 				$found_error = true;
 			}
 		$smfFunc['db_free_result']($request);
@@ -1644,11 +1644,11 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 24)
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT lss.word
 			FROM {$db_prefix}log_search_subjects AS lss
-				LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = lss.ID_TOPIC)
-			WHERE t.ID_TOPIC IS NULL", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lss.id_topic)
+			WHERE t.id_topic IS NULL", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['repair_errors'][] = sprintf($txt['repair_missing_topic_for_cache'], htmlspecialchars($row['word']));
 		if ($smfFunc['db_num_rows']($request) != 0)
@@ -1662,23 +1662,23 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 25)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_polls", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
 		for (; $_GET['substep'] < $members; $_GET['substep'] += 500)
 		{
-			$result = $smfFunc['db_query']("
-				SELECT lp.ID_POLL, lp.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lp.id_poll, lp.id_member
 				FROM {$db_prefix}log_polls AS lp
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lp.ID_MEMBER)
-				WHERE lp.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND mem.ID_MEMBER IS NULL
-				GROUP BY lp.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lp.id_member)
+				WHERE lp.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND mem.id_member IS NULL
+				GROUP BY lp.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_poll_member'], $row['ID_POLL'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_poll_member'], $row['id_poll'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_member_vote';
 			$smfFunc['db_free_result']($result);
@@ -1693,8 +1693,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 26)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_POLL)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_poll)
 			FROM {$db_prefix}log_polls", __FILE__, __LINE__);
 		list ($polls) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1703,15 +1703,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $polls);
 
-			$result = $smfFunc['db_query']("
-				SELECT lp.ID_POLL, lp.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lp.id_poll, lp.id_member
 				FROM {$db_prefix}log_polls AS lp
-					LEFT JOIN {$db_prefix}polls AS p ON (p.ID_POLL = lp.ID_POLL)
-				WHERE lp.ID_POLL BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND p.ID_POLL IS NULL
-				GROUP BY lp.ID_POLL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = lp.id_poll)
+				WHERE lp.id_poll BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND p.id_poll IS NULL
+				GROUP BY lp.id_poll", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_missing_log_poll_vote'], $row['ID_MEMBER'], $row['ID_POLL']);
+				$context['repair_errors'][] = sprintf($txt['repair_missing_log_poll_vote'], $row['id_member'], $row['id_poll']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'missing_log_poll_vote';
 			$smfFunc['db_free_result']($result);
@@ -1724,7 +1724,7 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 27)
 	{
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SELECT MAX(ID_REPORT)
 			FROM {$db_prefix}log_reported", __FILE__, __LINE__);
 		list ($polls) = $smfFunc['db_fetch_row']($result);
@@ -1734,7 +1734,7 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $polls);
 
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT lr.ID_REPORT, lr.subject
 				FROM {$db_prefix}log_reported AS lr
 					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.ID_REPORT = lr.ID_REPORT)
@@ -1755,7 +1755,7 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 28)
 	{
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SELECT MAX(ID_REPORT)
 			FROM {$db_prefix}log_reported_comments", __FILE__, __LINE__);
 		list ($polls) = $smfFunc['db_fetch_row']($result);
@@ -1765,7 +1765,7 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $polls);
 
-			$result = $smfFunc['db_query']("
+			$result = $smfFunc['db_query']('', "
 				SELECT lrc.ID_REPORT, lrc.membername
 				FROM {$db_prefix}log_reported_comments AS lrc
 					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.ID_REPORT = lrc.ID_REPORT)
@@ -1786,8 +1786,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 29)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}log_group_requests", __FILE__, __LINE__);
 		list ($members) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1796,15 +1796,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $members);
 
-			$result = $smfFunc['db_query']("
-				SELECT lgr.ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT lgr.id_member
 				FROM {$db_prefix}log_group_requests AS lgr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lgr.ID_MEMBER)
-				WHERE lgr.ID_MEMBER BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND mem.ID_MEMBER IS NULL
-				GROUP BY lgr.ID_MEMBER", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
+				WHERE lgr.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND mem.id_member IS NULL
+				GROUP BY lgr.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_group_request_missing_member'], $row['ID_MEMBER']);
+				$context['repair_errors'][] = sprintf($txt['repair_group_request_missing_member'], $row['id_member']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'group_request_missing_member';
 			$smfFunc['db_free_result']($result);
@@ -1817,8 +1817,8 @@ function findForumErrors()
 
 	if ($_GET['step'] <= 30)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_GROUP)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_group)
 			FROM {$db_prefix}log_group_requests", __FILE__, __LINE__);
 		list ($groups) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1827,15 +1827,15 @@ function findForumErrors()
 		{
 			pauseRepairProcess($to_fix, $groups);
 
-			$result = $smfFunc['db_query']("
-				SELECT lgr.ID_GROUP
+			$result = $smfFunc['db_query']('', "
+				SELECT lgr.id_group
 				FROM {$db_prefix}log_group_requests AS lgr
-					LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = lgr.ID_GROUP)
-				WHERE lgr.ID_GROUP BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND mg.ID_GROUP IS NULL
-				GROUP BY lgr.ID_GROUP", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
+				WHERE lgr.id_group BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND mg.id_group IS NULL
+				GROUP BY lgr.id_group", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_group_request_missing_group'], $row['ID_GROUP']);
+				$context['repair_errors'][] = sprintf($txt['repair_group_request_missing_group'], $row['id_group']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'group_request_missing_group';
 			$smfFunc['db_free_result']($result);
@@ -1865,8 +1865,8 @@ function createSalvageArea()
 	loadLanguage('Admin', $language);
 
 	// Check to see if a 'Salvage Category' exists, if not => insert one.
-	$result = $smfFunc['db_query']("
-		SELECT ID_CAT
+	$result = $smfFunc['db_query']('', "
+		SELECT id_cat
 		FROM {$db_prefix}categories
 		WHERE name = '" . addslashes($txt['salvaged_category_name']) . "'
 		LIMIT 1", __FILE__, __LINE__);
@@ -1876,9 +1876,9 @@ function createSalvageArea()
 
 	if (empty($salveageCatID))
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}categories
-				(name, catOrder)
+				(name, cat_order)
 			VALUES (SUBSTRING('" . addslashes($txt['salvaged_category_name']) . "', 1, 255), -1)", __FILE__, __LINE__);
 		if (db_affected_rows() <= 0)
 		{
@@ -1886,14 +1886,14 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_category_error', false);
 		}
 
-		$salvageCatID = db_insert_id("{$db_prefix}categories", 'ID_CAT');
+		$salvageCatID = db_insert_id("{$db_prefix}categories", 'id_cat');
 	}
 
 	// Check to see if a 'Salvage Board' exists, if not => insert one.
-	$result = $smfFunc['db_query']("
-		SELECT ID_BOARD
+	$result = $smfFunc['db_query']('', "
+		SELECT id_board
 		FROM {$db_prefix}boards
-		WHERE ID_CAT = $salvageCatID
+		WHERE id_cat = $salvageCatID
 			AND name = '" . addslashes($txt['salvaged_board_name']) . "'
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($result) != 0)
@@ -1902,9 +1902,9 @@ function createSalvageArea()
 
 	if (empty($salvageBoardID))
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}boards
-				(name, description, ID_CAT, memberGroups, boardOrder)
+				(name, description, id_cat, member_groups, board_order)
 			VALUES (SUBSTRING('" . addslashes($txt['salvaged_board_name']) . "', 1, 255), SUBSTRING('" . addslashes($txt['salvaged_board_description']) . "', 1, 255), $salvageCatID, '1', -1)", __FILE__, __LINE__);
 		if (db_affected_rows() <= 0)
 		{
@@ -1912,12 +1912,12 @@ function createSalvageArea()
 			fatal_lang_error('salvaged_board_error', false);
 		}
 
-		$salvageBoardID = db_insert_id("{$db_prefix}boards", 'ID_BOARD');
+		$salvageBoardID = db_insert_id("{$db_prefix}boards", 'id_board');
 	}
 
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('alter_table_boards', "
 		ALTER TABLE {$db_prefix}boards
-		ORDER BY boardOrder", __FILE__, __LINE__);
+		ORDER BY board_order", __FILE__, __LINE__);
 
 	// Restore the user's language.
 	loadLanguage('Admin');

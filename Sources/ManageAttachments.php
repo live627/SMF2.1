@@ -303,30 +303,30 @@ function BrowseFiles()
 	// Get the number of attachments.
 	$context['num_attachments'] = 0;
 	$context['num_thumbs'] = 0;
-	$request = $smfFunc['db_query']("
-		SELECT attachmentType, COUNT(*) AS num_attach
+	$request = $smfFunc['db_query']('', "
+		SELECT attachment_type, COUNT(*) AS num_attach
 		FROM {$db_prefix}attachments
-		WHERE attachmentType IN (0, 3)
-			AND ID_MEMBER = 0
-		GROUP BY attachmentType", __FILE__, __LINE__);
+		WHERE attachment_type IN (0, 3)
+			AND id_member = 0
+		GROUP BY attachment_type", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context[empty($row['attachmentType']) ? 'num_attachments' : 'num_thumbs'] = $row['num_attach'];
+		$context[empty($row['attachment_type']) ? 'num_attachments' : 'num_thumbs'] = $row['num_attach'];
 	$smfFunc['db_free_result']($request);
 
 	// Also get the avatar amount.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}attachments
-		WHERE ID_MEMBER != 0", __FILE__, __LINE__);
+		WHERE id_member != 0", __FILE__, __LINE__);
 	list ($context['num_avatars']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Allow for sorting of each column...
 	$sort_methods = array(
 		'name' => 'a.filename',
-		'date' => $context['browse_type'] == 'avatars' ? 'mem.lastLogin' : 'm.ID_MSG',
+		'date' => $context['browse_type'] == 'avatars' ? 'mem.last_login' : 'm.id_msg',
 		'size' => 'a.size',
-		'member' => 'mem.realName'
+		'member' => 'mem.real_name'
 	);
 
 	// Set up the importantant sorting variables... if they picked one...
@@ -349,53 +349,53 @@ function BrowseFiles()
 
 	// Choose a query depending on what we are viewing.
 	if ($context['browse_type'] == 'avatars')
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				'' AS ID_MSG, IFNULL(mem.realName, '$txt[470]') AS posterName, mem.lastLogin AS posterTime, 0 AS ID_TOPIC, a.ID_MEMBER,
-				a.ID_ATTACH, a.filename, a.attachmentType, a.size, a.width, a.height, a.downloads, '' AS subject, 0 AS ID_BOARD
+				'' AS id_msg, IFNULL(mem.real_name, '$txt[470]') AS poster_name, mem.last_login AS poster_time, 0 AS id_topic, a.id_member,
+				a.id_attach, a.filename, a.attachment_type, a.size, a.width, a.height, a.downloads, '' AS subject, 0 AS id_board
 			FROM {$db_prefix}attachments AS a
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = a.ID_MEMBER)
-			WHERE a.ID_MEMBER != 0
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)
+			WHERE a.id_member != 0
 			ORDER BY $_GET[sort] " . ($descending ? 'DESC' : 'ASC') . "
 			LIMIT $context[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 	else
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				m.ID_MSG, IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime, m.ID_TOPIC, m.ID_MEMBER,
-				a.ID_ATTACH, a.filename, a.attachmentType, a.size, a.width, a.height, a.downloads, mf.subject, t.ID_BOARD
-			FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}messages AS mf)
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-			WHERE a.ID_MSG = m.ID_MSG
-				AND a.attachmentType = " . ($context['browse_type'] == 'attachments' ? '0' : '3') . "
-				AND t.ID_TOPIC = m.ID_TOPIC
-				AND mf.ID_MSG = t.ID_FIRST_MSG
+				m.id_msg, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.id_topic, m.id_member,
+				a.id_attach, a.filename, a.attachment_type, a.size, a.width, a.height, a.downloads, mf.subject, t.id_board
+			FROM {$db_prefix}attachments AS a
+				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+				INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			WHERE a.attachment_type = " . ($context['browse_type'] == 'attachments' ? '0' : '3') . "
 			ORDER BY $_GET[sort] " . ($descending ? 'DESC' : 'ASC') . "
 			LIMIT $context[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 	$context['posts'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['posts'][] = array(
-			'id' => $row['ID_MSG'],
+			'id' => $row['id_msg'],
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'href' => empty($row['ID_MEMBER']) ? '' : $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => empty($row['ID_MEMBER']) ? $row['posterName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>'
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>'
 			),
-			'time' => empty($row['posterTime']) ? $txt['never'] : timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
+			'time' => empty($row['poster_time']) ? $txt['never'] : timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
 			'attachment' => array(
-				'id' => $row['ID_ATTACH'],
+				'id' => $row['id_attach'],
 				'size' => round($row['size'] / 1024, 2),
 				'width' => $row['width'],
 				'height' => $row['height'],
 				'name' => $row['filename'],
 				'downloads' => $row['downloads'],
-				'href' => $row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH']),
-				'link' => '<a href="' . ($row['attachmentType'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['ID_TOPIC'] . '.0;') . 'id=' . $row['ID_ATTACH'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . $row['filename'] . '</a>'
+				'href' => $row['attachment_type'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['id_topic'] . '.0;') . 'id=' . $row['id_attach']),
+				'link' => '<a href="' . ($row['attachment_type'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['id_topic'] . '.0;') . 'id=' . $row['id_attach'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . $row['filename'] . '</a>'
 			),
-			'topic' => $row['ID_TOPIC'],
+			'topic' => $row['id_topic'],
 			'subject' => $row['subject'],
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['subject'] . '</a>'
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>'
 		);
 	$smfFunc['db_free_result']($request);
 }
@@ -408,19 +408,19 @@ function MaintainFiles()
 	$context['sub_template'] = 'maintenance';
 
 	// Get the number of attachments....
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}attachments
-		WHERE attachmentType = 0
-			AND ID_MEMBER = 0", __FILE__, __LINE__);
+		WHERE attachment_type = 0
+			AND id_member = 0", __FILE__, __LINE__);
 	list ($context['num_attachments']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Also get the avatar amount....
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}attachments
-		WHERE ID_MEMBER != 0", __FILE__, __LINE__);
+		WHERE id_member != 0", __FILE__, __LINE__);
 	list ($context['num_avatars']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -468,26 +468,26 @@ function MoveAvatars()
 			fatal_lang_error('attachments_no_write', 'critical');
 	}
 
-	$request = $smfFunc['db_query']("
-		SELECT ID_ATTACH, ID_MEMBER, filename
+	$request = $smfFunc['db_query']('', "
+		SELECT id_attach, id_member, filename
 		FROM {$db_prefix}attachments
-		WHERE attachmentType = 0
-			AND ID_MEMBER > 0", __FILE__, __LINE__);
+		WHERE attachment_type = 0
+			AND id_member > 0", __FILE__, __LINE__);
 	$updatedAvatars = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+		$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 
 		if (rename($filename, $modSettings['custom_avatar_dir'] . '/' . $row['filename']))
-			$updatedAvatars[] = $row['ID_ATTACH'];
+			$updatedAvatars[] = $row['id_attach'];
 	}
 	$smfFunc['db_free_result']($request);
 
 	if (!empty($updatedAvatars))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}attachments
-			SET attachmentType = 1
-			WHERE ID_ATTACH IN (" . implode(', ', $updatedAvatars) . ')', __FILE__, __LINE__);
+			SET attachment_type = 1
+			WHERE id_attach IN (" . implode(', ', $updatedAvatars) . ')', __FILE__, __LINE__);
 
 	redirectexit('action=admin;area=manageattachments;sa=maintenance');
 }
@@ -504,20 +504,20 @@ function RemoveAttachmentByAge()
 	if ($_REQUEST['type'] != 'avatars')
 	{
 		// Get all the old attachments.
-		$messages = removeAttachments('a.attachmentType = 0 AND m.posterTime < ' . (time() - 24 * 60 * 60 * $_POST['age']), 'messages', true);
+		$messages = removeAttachments('a.attachment_type = 0 AND m.poster_time < ' . (time() - 24 * 60 * 60 * $_POST['age']), 'messages', true);
 
 		// Update the messages to reflect the change.
 		if (!empty($messages))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}messages
 				SET body = " . (!empty($_POST['notice']) ? "CONCAT(body, '<br /><br />$_POST[notice]')" : '') . "
-				WHERE ID_MSG IN (" . implode(', ', $messages) . ")
+				WHERE id_msg IN (" . implode(', ', $messages) . ")
 				LIMIT " . count($messages), __FILE__, __LINE__);
 	}
 	else
 	{
 		// Remove all the old avatars.
-		removeAttachments('a.ID_MEMBER != 0 AND mem.lastLogin < ' . (time() - 24 * 60 * 60 * $_POST['age']), 'members');
+		removeAttachments('a.id_member != 0 AND mem.last_login < ' . (time() - 24 * 60 * 60 * $_POST['age']), 'members');
 	}
 	redirectexit('action=admin;area=manageattachments' . (empty($_REQUEST['avatars']) ? '' : ';avatars'));
 }
@@ -529,14 +529,14 @@ function RemoveAttachmentBySize()
 	checkSession('post', 'manageattachments');
 
 	// Find humungous attachments.
-	$messages = removeAttachments('a.attachmentType = 0 AND a.size > ' . (1024 * $_POST['size']), 'messages', true);
+	$messages = removeAttachments('a.attachment_type = 0 AND a.size > ' . (1024 * $_POST['size']), 'messages', true);
 
 	// And make a note on the post.
 	if (!empty($messages))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}messages
 			SET body = " . (!empty($_POST['notice']) ? "CONCAT(body, '<br /><br />$_POST[notice]')" : '') . "
-			WHERE ID_MSG IN (" . implode(',', $messages) . ")
+			WHERE id_msg IN (" . implode(',', $messages) . ")
 			LIMIT " . count($messages), __FILE__, __LINE__);
 
 	redirectexit('action=admin;area=manageattachments;sa=maintenance');
@@ -556,17 +556,17 @@ function RemoveAttachment()
 			$attachments[] = (int) $removeID;
 
 		if ($_REQUEST['type'] == 'avatars' && !empty($attachments))
-			removeAttachments('a.ID_ATTACH IN (' . implode(', ', $attachments) . ')');
+			removeAttachments('a.id_attach IN (' . implode(', ', $attachments) . ')');
 		else if (!empty($attachments))
 		{
-			$messages = removeAttachments('a.ID_ATTACH IN (' . implode(', ', $attachments) . ')', 'messages', true);
+			$messages = removeAttachments('a.id_attach IN (' . implode(', ', $attachments) . ')', 'messages', true);
 
 			// And change the message to reflect this.
 			if (!empty($messages))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
 					SET body = CONCAT(body, '<br /><br />" . addslashes($txt['smf216']) . "')
-					WHERE ID_MSG IN (" . implode(', ', $messages) . ")
+					WHERE id_msg IN (" . implode(', ', $messages) . ")
 					LIMIT " . count($messages), __FILE__, __LINE__);
 		}
 	}
@@ -582,17 +582,17 @@ function RemoveAllAttachments()
 
 	checkSession('get', 'manageattachments');
 
-	$messages = removeAttachments('a.attachmentType = 0', '', true);
+	$messages = removeAttachments('a.attachment_type = 0', '', true);
 
 	if (!isset($_POST['notice']))
 		$_POST['notice'] = $txt['smf216'];
 
 	// Add the notice on the end of the changed messages.
 	if (!empty($messages))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}messages
 			SET body = CONCAT(body, '<br /><br />$_POST[notice]')
-			WHERE ID_MSG IN (" . implode(',', $messages) . ")
+			WHERE id_msg IN (" . implode(',', $messages) . ")
 			LIMIT " . count($messages), __FILE__, __LINE__);
 
 	redirectexit('action=admin;area=manageattachments;sa=maintenance');
@@ -609,29 +609,29 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	$parents = array();
 
 	// Get all the attachment names and ID_MSGs.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			a.filename, a.attachmentType, a.ID_ATTACH, a.ID_MEMBER" . ($query_type == 'messages' ? ', m.ID_MSG' : ', a.ID_MSG') . ",
-			IFNULL(thumb.ID_ATTACH, 0) AS ID_THUMB, thumb.filename AS thumb_filename, thumb_parent.ID_ATTACH AS ID_PARENT
-		FROM ({$db_prefix}attachments AS a" .($query_type == 'members' ? ", {$db_prefix}members AS mem" : ($query_type == 'messages' ? ", {$db_prefix}messages AS m" : '')) . ")
-			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.ID_ATTACH = a.ID_THUMB)
-			LEFT JOIN {$db_prefix}attachments AS thumb_parent ON (a.attachmentType = 3 AND thumb_parent.ID_THUMB = a.ID_ATTACH)
-		WHERE $condition" . ($query_type == 'messages' ? '
-			AND m.ID_MSG = a.ID_MSG' : '') . ($query_type == 'members' ? '
-			AND mem.ID_MEMBER = a.ID_MEMBER' : ''), __FILE__, __LINE__);
+			a.filename, a.attachment_type, a.id_attach, a.id_member" . ($query_type == 'messages' ? ', m.id_msg' : ', a.id_msg') . ",
+			IFNULL(thumb.id_attach, 0) AS ID_THUMB, thumb.filename AS thumb_filename, thumb_parent.id_attach AS id_parent
+		FROM {$db_prefix}attachments AS a" .($query_type == 'members' ? "
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)" : ($query_type == 'messages' ? "
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)" : '')) . "
+			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.ID_THUMB)
+			LEFT JOIN {$db_prefix}attachments AS thumb_parent ON (a.attachment_type = 3 AND thumb_parent.ID_THUMB = a.id_attach)
+		WHERE $condition", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Figure out the "encrypted" filename and unlink it ;).
-		if ($row['attachmentType'] == 1)
+		if ($row['attachment_type'] == 1)
 			@unlink($modSettings['custom_avatar_dir'] . '/' . $row['filename']);
 		else
 		{
-			$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+			$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 			@unlink($filename);
 
 			// If this was a thumb, the parent attachment should know about it.
-			if (!empty($row['ID_PARENT']))
-				$parents[] = $row['ID_PARENT'];
+			if (!empty($row['id_parent']))
+				$parents[] = $row['id_parent'];
 
 			// If this attachments has a thumb, remove it as well.
 			if (!empty($row['ID_THUMB']) && $autoThumbRemoval)
@@ -643,25 +643,25 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 		}
 
 		// Make a list.
-		if ($return_affected_messages && empty($row['attachmentType']))
-			$msgs[] = $row['ID_MSG'];
-		$attach[] = $row['ID_ATTACH'];
+		if ($return_affected_messages && empty($row['attachment_type']))
+			$msgs[] = $row['id_msg'];
+		$attach[] = $row['id_attach'];
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Removed attachments don't have to be updated anymore.
 	$parents = array_diff($parents, $attach);
 	if (!empty($parents))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}attachments
 			SET ID_THUMB = 0
-			WHERE ID_ATTACH IN (" . implode(', ', $parents) . ")
+			WHERE id_attach IN (" . implode(', ', $parents) . ")
 			LIMIT " . count($parents), __FILE__, __LINE__);
 
 	if (!empty($attach))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}attachments
-			WHERE ID_ATTACH IN (" . implode(', ', $attach) . ")
+			WHERE id_attach IN (" . implode(', ', $attach) . ")
 			LIMIT " . count($attach), __FILE__, __LINE__);
 
 	if ($return_affected_messages)
@@ -723,10 +723,10 @@ function RepairAttachments()
 	// Get stranded thumbnails.
 	if ($_GET['step'] <= 0)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_ATTACH)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_attach)
 			FROM {$db_prefix}attachments
-			WHERE attachmentType = 3", __FILE__, __LINE__);
+			WHERE attachment_type = 3", __FILE__, __LINE__);
 		list ($thumbnails) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
@@ -734,23 +734,23 @@ function RepairAttachments()
 		{
 			$to_remove = array();
 
-			$result = $smfFunc['db_query']("
-				SELECT thumb.ID_ATTACH, thumb.filename
+			$result = $smfFunc['db_query']('', "
+				SELECT thumb.id_attach, thumb.filename
 				FROM {$db_prefix}attachments AS thumb
-					LEFT JOIN {$db_prefix}attachments AS tparent ON (tparent.ID_THUMB = thumb.ID_ATTACH)
-				WHERE thumb.ID_ATTACH BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND thumb.attachmentType = 3
-					AND tparent.ID_ATTACH IS NULL
-				GROUP BY thumb.ID_ATTACH", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}attachments AS tparent ON (tparent.ID_THUMB = thumb.id_attach)
+				WHERE thumb.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND thumb.attachment_type = 3
+					AND tparent.id_attach IS NULL
+				GROUP BY thumb.id_attach", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				$to_remove[] = $row['ID_ATTACH'];
+				$to_remove[] = $row['id_attach'];
 				$context['repair_errors']['missing_thumbnail_parent']++;
 
 				// If we are repairing remove the file from disk now.
 				if ($fix_errors && in_array('missing_thumbnail_parent', $to_fix))
 				{
-					$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 					@unlink($filename);
 				}
 			}
@@ -760,10 +760,10 @@ function RepairAttachments()
 
 			// Do we need to delete what we have?
 			if ($fix_errors && !empty($to_remove) && in_array('missing_thumbnail_parent', $to_fix))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}attachments
-					WHERE ID_ATTACH IN (" . implode(', ', $to_remove) . ")
-						AND attachmentType = 3", __FILE__, __LINE__);
+					WHERE id_attach IN (" . implode(', ', $to_remove) . ")
+						AND attachment_type = 3", __FILE__, __LINE__);
 			
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
@@ -776,8 +776,8 @@ function RepairAttachments()
 	// Find parents which think they have thumbnails, but actually, don't.
 	if ($_GET['step'] <= 1)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_ATTACH)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_attach)
 			FROM {$db_prefix}attachments
 			WHERE ID_THUMB != 0", __FILE__, __LINE__);
 		list ($thumbnails) = $smfFunc['db_fetch_row']($result);
@@ -787,16 +787,16 @@ function RepairAttachments()
 		{
 			$to_update = array();
 
-			$result = $smfFunc['db_query']("
-				SELECT a.ID_ATTACH
+			$result = $smfFunc['db_query']('', "
+				SELECT a.id_attach
 				FROM {$db_prefix}attachments AS a
-					LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.ID_ATTACH = a.ID_THUMB)
-				WHERE a.ID_ATTACH BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.ID_THUMB)
+				WHERE a.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
 					AND a.ID_THUMB != 0
-					AND thumb.ID_ATTACH IS NULL", __FILE__, __LINE__);
+					AND thumb.id_attach IS NULL", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				$to_update[] = $row['ID_ATTACH'];
+				$to_update[] = $row['id_attach'];
 				$context['repair_errors']['parent_missing_thumbnail']++;
 			}
 			if ($smfFunc['db_num_rows']($result) != 0)
@@ -805,10 +805,10 @@ function RepairAttachments()
 
 			// Do we need to delete what we have?
 			if ($fix_errors && !empty($to_update) && in_array('parent_missing_thumbnail', $to_fix))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}attachments
 					SET ID_THUMB = 0
-					WHERE ID_ATTACH IN (" . implode(', ', $to_update) . ")", __FILE__, __LINE__);
+					WHERE id_attach IN (" . implode(', ', $to_update) . ")", __FILE__, __LINE__);
 			
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
@@ -821,8 +821,8 @@ function RepairAttachments()
 	// This may take forever I'm afraid, but life sucks... recount EVERY attachments!
 	if ($_GET['step'] <= 2)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_ATTACH)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_attach)
 			FROM {$db_prefix}attachments", __FILE__, __LINE__);
 		list ($thumbnails) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -832,28 +832,28 @@ function RepairAttachments()
 			$to_remove = array();
 			$errors_found = array();
 
-			$result = $smfFunc['db_query']("
-				SELECT ID_ATTACH, filename, size, attachmentType
+			$result = $smfFunc['db_query']('', "
+				SELECT id_attach, filename, size, attachment_type
 				FROM {$db_prefix}attachments
-				WHERE ID_ATTACH BETWEEN $_GET[substep] AND $_GET[substep] + 249", __FILE__, __LINE__);
+				WHERE id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 249", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
 				// Get the filename.
-				if ($row['attachmentType'] == 1)
+				if ($row['attachment_type'] == 1)
 					$filename = $modSettings['custom_avatar_dir'] . '/' . $row['filename'];
 				else
-					$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 
 				// File doesn't exist?
 				if (!file_exists($filename))
 				{
-					$to_remove[] = $row['ID_ATTACH'];
+					$to_remove[] = $row['id_attach'];
 					$context['repair_errors']['file_missing_on_disk']++;
 					$errors_found[] = 'file_missing_on_disk';
 
 					// Are we fixing this?
 					if ($fix_errors && in_array('file_missing_on_disk', $to_fix))
-						$to_remove[] = $row['ID_ATTACH'];
+						$to_remove[] = $row['id_attach'];
 
 				}
 				elseif (filesize($filename) == 0)
@@ -864,7 +864,7 @@ function RepairAttachments()
 					// Fixing?
 					if ($fix_errors && in_array('file_size_of_zero', $to_fix))
 					{
-						$to_remove[] = $row['ID_ATTACH'];
+						$to_remove[] = $row['id_attach'];
 						@unlink($filename);
 					}
 				}
@@ -876,10 +876,10 @@ function RepairAttachments()
 					// Fix it here?
 					if ($fix_errors && in_array('file_wrong_size', $to_fix))
 					{
-						$smfFunc['db_query']("
+						$smfFunc['db_query']('', "
 							UPDATE {$db_prefix}attachments
 							SET size = " . filesize($filename) . "
-							WHERE ID_ATTACH = $row[ID_ATTACH]
+							WHERE id_attach = $row[id_attach]
 							LIMIT 1", __FILE__, __LINE__);
 					}
 				}
@@ -896,10 +896,10 @@ function RepairAttachments()
 			// Do we need to delete what we have?
 			if ($fix_errors && !empty($to_remove))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}attachments
-					WHERE ID_ATTACH IN (" . implode(', ', $to_remove) . ")", __FILE__, __LINE__);
-				$smfFunc['db_query']("
+					WHERE id_attach IN (" . implode(', ', $to_remove) . ")", __FILE__, __LINE__);
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}attachments
 					SET ID_THUMB = 0
 					WHERE ID_THUMB IN (" . implode(', ', $to_remove) . ")", __FILE__, __LINE__);
@@ -916,8 +916,8 @@ function RepairAttachments()
 	// Get avatars with no members associated with them.
 	if ($_GET['step'] <= 3)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_ATTACH)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_attach)
 			FROM {$db_prefix}attachments", __FILE__, __LINE__);
 		list ($thumbnails) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -926,26 +926,26 @@ function RepairAttachments()
 		{
 			$to_remove = array();
 
-			$result = $smfFunc['db_query']("
-				SELECT a.ID_ATTACH, a.filename, a.attachmentType
+			$result = $smfFunc['db_query']('', "
+				SELECT a.id_attach, a.filename, a.attachment_type
 				FROM {$db_prefix}attachments AS a
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = a.ID_MEMBER)
-				WHERE a.ID_ATTACH BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND a.ID_MEMBER != 0
-					AND a.ID_MSG = 0
-					AND mem.ID_MEMBER IS NULL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)
+				WHERE a.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND a.id_member != 0
+					AND a.id_msg = 0
+					AND mem.id_member IS NULL", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				$to_remove[] = $row['ID_ATTACH'];
+				$to_remove[] = $row['id_attach'];
 				$context['repair_errors']['avatar_no_member']++;
 
 				// If we are repairing remove the file from disk now.
 				if ($fix_errors && in_array('avatar_no_member', $to_fix))
 				{
-					if ($row['attachmentType'] == 1)
+					if ($row['attachment_type'] == 1)
 						$filename = $modSettings['custom_avatar_dir'] . '/' . $row['filename'];
 					else
-						$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+						$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 					@unlink($filename);
 				}
 			}
@@ -955,11 +955,11 @@ function RepairAttachments()
 
 			// Do we need to delete what we have?
 			if ($fix_errors && !empty($to_remove) && in_array('avatar_no_member', $to_fix))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}attachments
-					WHERE ID_ATTACH IN (" . implode(', ', $to_remove) . ")
-						AND ID_MEMBER != 0
-						AND ID_MSG = 0", __FILE__, __LINE__);
+					WHERE id_attach IN (" . implode(', ', $to_remove) . ")
+						AND id_member != 0
+						AND id_msg = 0", __FILE__, __LINE__);
 			
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
@@ -972,8 +972,8 @@ function RepairAttachments()
 	// What about attachments, who are missing a message :'(
 	if ($_GET['step'] <= 4)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT MAX(ID_ATTACH)
+		$result = $smfFunc['db_query']('', "
+			SELECT MAX(id_attach)
 			FROM {$db_prefix}attachments", __FILE__, __LINE__);
 		list ($thumbnails) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -982,23 +982,23 @@ function RepairAttachments()
 		{
 			$to_remove = array();
 
-			$result = $smfFunc['db_query']("
-				SELECT a.ID_ATTACH, a.filename
+			$result = $smfFunc['db_query']('', "
+				SELECT a.id_attach, a.filename
 				FROM {$db_prefix}attachments AS a
-					LEFT JOIN {$db_prefix}messages AS m ON (m.ID_MSG = a.ID_MSG)
-				WHERE a.ID_ATTACH BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND a.ID_MEMBER = 0
-					AND a.ID_MSG != 0
-					AND m.ID_MSG IS NULL", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+				WHERE a.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND a.id_member = 0
+					AND a.id_msg != 0
+					AND m.id_msg IS NULL", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				$to_remove[] = $row['ID_ATTACH'];
+				$to_remove[] = $row['id_attach'];
 				$context['repair_errors']['attachment_no_msg']++;
 
 				// If we are repairing remove the file from disk now.
 				if ($fix_errors && in_array('attachment_no_msg', $to_fix))
 				{
-					$filename = getAttachmentFilename($row['filename'], $row['ID_ATTACH']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 					@unlink($filename);
 				}
 			}
@@ -1008,11 +1008,11 @@ function RepairAttachments()
 
 			// Do we need to delete what we have?
 			if ($fix_errors && !empty($to_remove) && in_array('attachment_no_msg', $to_fix))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}attachments
-					WHERE ID_ATTACH IN (" . implode(', ', $to_remove) . ")
-						AND ID_MEMBER = 0
-						AND ID_MSG != 0", __FILE__, __LINE__);
+					WHERE id_attach IN (" . implode(', ', $to_remove) . ")
+						AND id_member = 0
+						AND id_msg != 0", __FILE__, __LINE__);
 			
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
@@ -1085,16 +1085,16 @@ function ApproveAttach()
 	// If we are approving all ID's in a message , get the ID's.
 	if ($_GET['sa'] == 'all' && !empty($_GET['mid']))
 	{
-		$ID_MSG = (int) $_GET['mid'];
+		$id_msg = (int) $_GET['mid'];
 
-		$request = $smfFunc['db_query']("
-			SELECT ID_ATTACH
+		$request = $smfFunc['db_query']('', "
+			SELECT id_attach
 			FROM {$db_prefix}attachments
-			WHERE ID_MSG = $ID_MSG
+			WHERE id_msg = $id_msg
 				AND approved = 0
-				AND attachmentType = 0", __FILE__, __LINE__);
+				AND attachment_type = 0", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$attachments[] = $row['ID_ATTACH'];
+			$attachments[] = $row['id_attach'];
 		$smfFunc['db_free_result']($request);
 	}
 	elseif (!empty($_GET['aid']))
@@ -1107,23 +1107,23 @@ function ApproveAttach()
 	$allowed_boards = boardsAllowedTo('approve_posts');
 
 	// Validate the attachments exist and are the right approval state.
-	$request = $smfFunc['db_query']("
-		SELECT a.ID_ATTACH, m.ID_BOARD, m.ID_MSG, m.ID_TOPIC
+	$request = $smfFunc['db_query']('', "
+		SELECT a.id_attach, m.id_board, m.id_msg, m.id_topic
 		FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m)
-		WHERE a.ID_ATTACH IN (" . implode(',', $attachments) . ")
-			AND m.ID_MSG = a.ID_MSG
-			AND a.attachmentType = 0
+		WHERE a.id_attach IN (" . implode(',', $attachments) . ")
+			AND m.id_msg = a.id_msg
+			AND a.attachment_type = 0
 			AND a.approved = 0", __FILE__, __LINE__);
 	$attachments = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// We can only add it if we can approve in this board!
-		if ($allowed_boards = array(0) || in_array($row['ID_BOARD'], $allowed_boards))
+		if ($allowed_boards = array(0) || in_array($row['id_board'], $allowed_boards))
 		{
-			$attachments[] = $row['ID_ATTACH'];
+			$attachments[] = $row['id_attach'];
 
 			// Also come up witht he redirection URL.
-			$redirect = 'topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'];
+			$redirect = 'topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'];
 		}
 	}
 	$smfFunc['db_free_result']($request);
@@ -1135,7 +1135,7 @@ function ApproveAttach()
 	if ($is_approve)
 		ApproveAttachments($attachments);
 	else
-		removeAttachments('a.ID_ATTACH IN (' . implode(', ', $attachments) . ')');
+		removeAttachments('a.id_attach IN (' . implode(', ', $attachments) . ')');
 
 	// Return to the topic....
 	redirectexit($redirect);
@@ -1150,13 +1150,13 @@ function ApproveAttachments($attachments)
 		return 0;
 
 	// For safety, check for thumbnails...
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			a.ID_ATTACH, a.ID_MEMBER, IFNULL(thumb.ID_ATTACH, 0) AS ID_THUMB
+			a.id_attach, a.id_member, IFNULL(thumb.id_attach, 0) AS ID_THUMB
 		FROM {$db_prefix}attachments AS a
-			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.ID_ATTACH = a.ID_THUMB)
-		WHERE a.ID_ATTACH IN (" . implode(', ', $attachments) . ")
-			AND a.attachmentType = 0", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.ID_THUMB)
+		WHERE a.id_attach IN (" . implode(', ', $attachments) . ")
+			AND a.attachment_type = 0", __FILE__, __LINE__);
 	$attachments = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -1164,21 +1164,21 @@ function ApproveAttachments($attachments)
 		if (!empty($row['ID_THUMB']))
 			$attachments[] = $row['ID_THUMB'];
 
-		$attachments[] = $row['ID_ATTACH'];
+		$attachments[] = $row['id_attach'];
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Approving an attachment is not hard - it's easy.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}attachments
 		SET approved = 1
-		WHERE ID_ATTACH IN (" . implode(', ', $attachments) . ")
+		WHERE id_attach IN (" . implode(', ', $attachments) . ")
 			LIMIT " . count($attachments), __FILE__, __LINE__);
 
 	// Remove from the approval queue.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}approval_queue
-		WHERE ID_ATTACH IN (" . implode(', ', $attachments) . ")", __FILE__, __LINE__);
+		WHERE id_attach IN (" . implode(', ', $attachments) . ")", __FILE__, __LINE__);
 }
 
 ?>

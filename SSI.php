@@ -127,7 +127,7 @@ $context['linktree'] = array();
 
 // Load the user and their cookie, as well as their settings.
 loadUserSettings();
-// Load the current or SSI theme. (just ues $ssi_theme = ID_THEME;)
+// Load the current or SSI theme. (just ues $ssi_theme = id_theme;)
 loadTheme(isset($ssi_theme) ? (int) $ssi_theme : 0);
 
 // Take care of any banning that needs to be done.
@@ -236,25 +236,25 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 	// Find all the posts.  Newer ones will have higher IDs.
 	$request = db_query("
 		SELECT
-			m.posterTime, m.subject, m.ID_TOPIC, m.ID_MEMBER, m.ID_MSG, m.ID_BOARD, b.name AS bName,
-			IFNULL(mem.realName, m.posterName) AS posterName, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
-			IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) >= m.ID_MSG_MODIFIED AS isRead,
-			IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1 AS new_from') . ", LEFT(m.body, 384) AS body, m.smileysEnabled
+			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg, m.id_board, b.name AS board_name,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", LEFT(m.body, 384) AS body, m.smileys_enabled
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = m.ID_TOPIC AND lt.ID_MEMBER = $user_info[id])
-			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = m.ID_BOARD AND lmr.ID_MEMBER = $user_info[id])" : '') . "
-		WHERE m.ID_MSG >= " . ($modSettings['maxMsgID'] - 25 * min($num_recent, 5)) . "
-			AND b.ID_BOARD = m.ID_BOARD" . (empty($exclude_boards) ? '' : "
-			AND b.ID_BOARD NOT IN (" . implode(', ', $exclude_boards) . ")") . "
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
+			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = m.id_topic AND lt.id_member = $user_info[id])
+			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = m.id_board AND lmr.id_member = $user_info[id])" : '') . "
+		WHERE m.id_msg >= " . ($modSettings['maxMsgID'] - 25 * min($num_recent, 5)) . "
+			AND b.id_board = m.id_board" . (empty($exclude_boards) ? '' : "
+			AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
 			AND $user_info[query_wanna_see_board]
 			AND m.approved = 1
-		ORDER BY m.ID_MSG DESC
+		ORDER BY m.id_msg DESC
 		LIMIT $num_recent", __FILE__, __LINE__);
 	$posts = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
-		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']), array('<br />' => '&#10;')));
+		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
 		if ($smfFunc['strlen']($row['body']) > 128)
 			$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
 
@@ -265,25 +265,25 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 		// Build the array.
 		$posts[] = array(
 			'board' => array(
-				'id' => $row['ID_BOARD'],
-				'name' => $row['bName'],
-				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bName'] . '</a>'
+				'id' => $row['id_board'],
+				'name' => $row['board_name'],
+				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['board_name'] . '</a>'
 			),
-			'topic' => $row['ID_TOPIC'],
+			'topic' => $row['id_topic'],
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'href' => empty($row['ID_MEMBER']) ? '' : $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => empty($row['ID_MEMBER']) ? $row['posterName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>'
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>'
 			),
 			'subject' => $row['subject'],
 			'short_subject' => shorten_subject($row['subject'], 25),
 			'preview' => $row['body'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#new',
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>',
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#new',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'] . '">' . $row['subject'] . '</a>',
 			'new' => !empty($row['isRead']),
 			'new_from' => $row['new_from'],
 		);
@@ -334,28 +334,28 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_metho
 	// Find all the posts in distinct topics.  Newer ones will have higher IDs.
 	$request = db_query("
 		SELECT
-			m.posterTime, ms.subject, m.ID_TOPIC, m.ID_MEMBER, m.ID_MSG, b.ID_BOARD, b.name AS bName, t.numReplies, t.numViews,
-			IFNULL(mem.realName, m.posterName) AS posterName, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
-			IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, 0)) >= m.ID_MSG_MODIFIED AS isRead,
-			IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1 AS new_from') . ", LEFT(m.body, 384) AS body, m.smileysEnabled, m.icon
+			m.poster_time, ms.subject, m.id_topic, m.id_member, m.id_msg, b.id_board, b.name AS board_name, t.num_replies, t.num_views,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", LEFT(m.body, 384) AS body, m.smileys_enabled, m.icon
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b, {$db_prefix}messages AS ms)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $user_info[id])
-			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = b.ID_BOARD AND lmr.ID_MEMBER = $user_info[id])" : '') . "
-		WHERE t.ID_LAST_MSG >= " . ($modSettings['maxMsgID'] - 35 * min($num_recent, 5)) . "
-			AND t.ID_LAST_MSG = m.ID_MSG
-			AND b.ID_BOARD = t.ID_BOARD" . (empty($exclude_boards) ? '' : "
-			AND b.ID_BOARD NOT IN (" . implode(', ', $exclude_boards) . ")") . "
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
+			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
+			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $user_info[id])" : '') . "
+		WHERE t.id_last_msg >= " . ($modSettings['maxMsgID'] - 35 * min($num_recent, 5)) . "
+			AND t.id_last_msg = m.id_msg
+			AND b.id_board = t.id_board" . (empty($exclude_boards) ? '' : "
+			AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
 			AND $user_info[query_wanna_see_board]
-			AND ms.ID_MSG = t.ID_FIRST_MSG
+			AND ms.id_msg = t.id_first_msg
 			AND t.approved = 1
 			AND m.approved = 1
-		ORDER BY t.ID_LAST_MSG DESC
+		ORDER BY t.id_last_msg DESC
 		LIMIT $num_recent", __FILE__, __LINE__);
 	$posts = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
-		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']), array('<br />' => '&#10;')));
+		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
 		if ($smfFunc['strlen']($row['body']) > 128)
 			$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
 
@@ -369,27 +369,27 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_metho
 		// Build the array.
 		$posts[] = array(
 			'board' => array(
-				'id' => $row['ID_BOARD'],
-				'name' => $row['bName'],
-				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['bName'] . '</a>'
+				'id' => $row['id_board'],
+				'name' => $row['board_name'],
+				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['board_name'] . '</a>'
 			),
-			'topic' => $row['ID_TOPIC'],
+			'topic' => $row['id_topic'],
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'href' => empty($row['ID_MEMBER']) ? '' : $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => empty($row['ID_MEMBER']) ? $row['posterName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>'
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>'
 			),
 			'subject' => $row['subject'],
-			'replies' => $row['numReplies'],
-			'views' => $row['numViews'],
+			'replies' => $row['num_replies'],
+			'views' => $row['num_views'],
 			'short_subject' => shorten_subject($row['subject'], 25),
 			'preview' => $row['body'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . ';topicseen#new',
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#new">' . $row['subject'] . '</a>',
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#new',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#new">' . $row['subject'] . '</a>',
 			'new' => !empty($row['isRead']),
 			'new_from' => $row['new_from'],
 			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" align="middle" alt="' . $row['icon'] . '" border="0" />',
@@ -429,17 +429,17 @@ function ssi_topPoster($topNumber = 1, $output_method = 'echo')
 
 	// Find the latest poster.
 	$request = db_query("
-		SELECT ID_MEMBER, realName, posts
+		SELECT id_member, real_name, posts
 		FROM {$db_prefix}members
 		ORDER BY posts DESC
 		LIMIT $topNumber", __FILE__, __LINE__);
 	$return = array();
 	while ($row = mysql_fetch_assoc($request))
 		$return[] = array(
-			'id' => $row['ID_MEMBER'],
-			'name' => $row['realName'],
-			'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>',
+			'id' => $row['id_member'],
+			'name' => $row['real_name'],
+			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
 			'posts' => $row['posts']
 		);
 	mysql_free_result($request);
@@ -464,24 +464,24 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 	// Find boards with lots of posts.
 	$request = db_query("
 		SELECT
-			b.name, b.numTopics, b.numPosts, b.ID_BOARD," . (!$user_info['is_guest'] ? ' 1 AS isRead' : '
-			(IFNULL(lb.ID_MSG, 0) >= b.ID_LAST_MSG) AS isRead') . "
+			b.name, b.num_topics, b.num_posts, b.id_board," . (!$user_info['is_guest'] ? ' 1 AS isRead' : '
+			(IFNULL(lb.id_msg, 0) >= b.id_last_msg) AS isRead') . "
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = $user_info[id])
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
 		WHERE $user_info[query_wanna_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.ID_BOARD != " . (int) $modSettings['recycle_board'] : '') . "
-		ORDER BY b.numPosts DESC
+			AND b.id_board != " . (int) $modSettings['recycle_board'] : '') . "
+		ORDER BY b.num_posts DESC
 		LIMIT $num_top", __FILE__, __LINE__);
 	$boards = array();
 	while ($row = mysql_fetch_assoc($request))
 		$boards[] = array(
-			'id' => $row['ID_BOARD'],
-			'num_posts' => $row['numPosts'],
-			'num_topics' => $row['numTopics'],
+			'id' => $row['id_board'],
+			'num_posts' => $row['num_posts'],
+			'num_topics' => $row['num_topics'],
 			'name' => $row['name'],
 			'new' => empty($row['isRead']),
-			'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-			'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>'
+			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>'
 		);
 	mysql_free_result($request);
 
@@ -515,7 +515,7 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 	if ($modSettings['totalMessages'] > 100000)
 	{
 		$request = db_query("
-			SELECT ID_TOPIC
+			SELECT id_topic
 			FROM {$db_prefix}topics
 			WHERE num" . ($type != 'replies' ? 'Views' : 'Replies') . " != 0
 				AND approved = 1
@@ -523,20 +523,20 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 			LIMIT 100", __FILE__, __LINE__);
 		$topic_ids = array();
 		while ($row = mysql_fetch_assoc($request))
-			$topic_ids[] = $row['ID_TOPIC'];
+			$topic_ids[] = $row['id_topic'];
 		mysql_free_result($request);
 	}
 	else
 		$topic_ids = array();
 
 	$request = db_query("
-		SELECT m.subject, m.ID_TOPIC, t.numViews, t.numReplies
+		SELECT m.subject, m.id_topic, t.num_views, t.num_replies
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.ID_MSG = t.ID_FIRST_MSG
-			AND t.ID_BOARD = b.ID_BOARD" . (!empty($topic_ids) ? "
-			AND t.ID_TOPIC IN (" . implode(', ', $topic_ids) . ")" : '') . "
+		WHERE m.id_msg = t.id_first_msg
+			AND t.id_board = b.id_board" . (!empty($topic_ids) ? "
+			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : '') . "
 			AND $user_info[query_wanna_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.ID_BOARD != $modSettings[recycle_board]" : '') . "
+			AND b.id_board != $modSettings[recycle_board]" : '') . "
 			AND t.approved = 1
 		ORDER BY t.num" . ($type != 'replies' ? 'Views' : 'Replies') . " DESC
 		LIMIT $num_topics", __FILE__, __LINE__);
@@ -546,12 +546,12 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 		censorText($row['subject']);
 
 		$topics[] = array(
-			'id' => $row['ID_TOPIC'],
+			'id' => $row['id_topic'],
 			'subject' => $row['subject'],
-			'num_replies' => $row['numReplies'],
-			'num_views' => $row['numViews'],
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['subject'] . '</a>',
+			'num_replies' => $row['num_replies'],
+			'num_views' => $row['num_views'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>',
 		);
 	}
 	mysql_free_result($request);
@@ -645,11 +645,11 @@ function ssi_whosOnline($output_method = 'echo')
 	// Load the users online right now.
 	$result = db_query("
 		SELECT
-			lo.ID_MEMBER, lo.logTime, mem.realName, mem.memberName, mem.showOnline,
-			mg.onlineColor, mg.ID_GROUP
+			lo.id_member, lo.log_time, mem.real_name, mem.member_name, mem.show_online,
+			mg.online_color, mg.id_group
 		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lo.ID_MEMBER)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)", __FILE__, __LINE__);
 
 	$return['users'] = array();
 	$return['guests'] = 0;
@@ -659,31 +659,31 @@ function ssi_whosOnline($output_method = 'echo')
 
 	while ($row = mysql_fetch_assoc($result))
 	{
-		if (!isset($row['realName']))
+		if (!isset($row['real_name']))
 			$return['guests']++;
-		elseif (!empty($row['showOnline']) || allowedTo('moderate_forum'))
+		elseif (!empty($row['show_online']) || allowedTo('moderate_forum'))
 		{
 			// Some basic color coding...
-			if (!empty($row['onlineColor']))
-				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '" style="color: ' . $row['onlineColor'] . ';">' . $row['realName'] . '</a>';
+			if (!empty($row['online_color']))
+				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" style="color: ' . $row['online_color'] . ';">' . $row['real_name'] . '</a>';
 			else
-				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>';
+				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 
 			// Bold any buddies.
-			if ($show_buddies && in_array($row['ID_MEMBER'], $user_info['buddies']))
+			if ($show_buddies && in_array($row['id_member'], $user_info['buddies']))
 			{
 				$return['buddies']++;
 				$link = '<b>' . $link . '</b>';
 			}
 
-			$return['users'][$row['logTime'] . $row['memberName']] = array(
-				'id' => $row['ID_MEMBER'],
-				'username' => $row['memberName'],
-				'name' => $row['realName'],
-				'group' => $row['ID_GROUP'],
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+			$return['users'][$row['log_time'] . $row['member_name']] = array(
+				'id' => $row['id_member'],
+				'username' => $row['member_name'],
+				'name' => $row['real_name'],
+				'group' => $row['id_group'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 				'link' => $link,
-				'hidden' => empty($row['showOnline']),
+				'hidden' => empty($row['show_online']),
 				'is_last' => false,
 			);
 		}
@@ -774,18 +774,18 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		return array();
 
 	$request = db_query("
-		SELECT p.ID_POLL, p.question, t.ID_TOPIC, p.maxVotes
+		SELECT p.id_poll, p.question, t.id_topic, p.max_votes
 		FROM ({$db_prefix}polls AS p, {$db_prefix}boards AS b, {$db_prefix}topics AS t" . ($topPollInstead ? ", {$db_prefix}poll_choices AS pc" : '') . ")
-			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.ID_POLL = p.ID_POLL AND lp.ID_MEMBER = $user_info[id])
-		WHERE p.votingLocked = 0" . ($topPollInstead ? "
-			AND pc.ID_POLL = p.ID_POLL" : '') . "
-			AND lp.ID_CHOICE IS NULL
-			AND t.ID_POLL = p.ID_POLL
-			AND b.ID_BOARD = t.ID_BOARD
+			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = $user_info[id])
+		WHERE p.voting_locked = 0" . ($topPollInstead ? "
+			AND pc.id_poll = p.id_poll" : '') . "
+			AND lp.id_choice IS NULL
+			AND t.id_poll = p.id_poll
+			AND b.id_board = t.id_board
 			AND $user_info[query_wanna_see_board]" . (!in_array(0, $boardsAllowed) ? "
-			AND b.ID_BOARD IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
+			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
 			AND t.approved = 1
-		ORDER BY " . ($topPollInstead ? 'pc.votes' : 'p.ID_POLL') . " DESC
+		ORDER BY " . ($topPollInstead ? 'pc.votes' : 'p.id_poll') . " DESC
 		LIMIT 1", __FILE__, __LINE__);
 	$row = mysql_fetch_assoc($request);
 	mysql_free_result($request);
@@ -795,32 +795,32 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		return array();
 
 	$request = db_query("
-		SELECT COUNT(DISTINCT ID_MEMBER)
+		SELECT COUNT(DISTINCT id_member)
 		FROM {$db_prefix}log_polls
-		WHERE ID_POLL = $row[ID_POLL]", __FILE__, __LINE__);
+		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
 	list ($total) = mysql_fetch_row($request);
 	mysql_free_result($request);
 
 	$request = db_query("
-		SELECT ID_CHOICE, label, votes
+		SELECT id_choice, label, votes
 		FROM {$db_prefix}poll_choices
-		WHERE ID_POLL = $row[ID_POLL]", __FILE__, __LINE__);
+		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
 	$options = array();
 	while ($rowChoice = mysql_fetch_assoc($request))
 	{
 		censorText($rowChoice['label']);
 
-		$options[$rowChoice['ID_CHOICE']] = array($rowChoice['label'], $rowChoice['votes']);
+		$options[$rowChoice['id_choice']] = array($rowChoice['label'], $rowChoice['votes']);
 	}
 	mysql_free_result($request);
 
 	$return = array(
-		'id' => $row['ID_POLL'],
+		'id' => $row['id_poll'],
 		'image' => 'poll',
 		'question' => $row['question'],
 		'total_votes' => $total,
 		'is_locked' => false,
-		'topic' => $row['ID_TOPIC'],
+		'topic' => $row['id_topic'],
 		'options' => array()
 	);
 
@@ -836,11 +836,11 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 			'votes' => $option[1],
 			'bar' => '<span style="white-space: nowrap;"><img src="' . $settings['images_url'] . '/poll_left.gif" alt="" /><img src="' . $settings['images_url'] . '/poll_middle.gif" width="' . $barWide . '" height="12" alt="-" /><img src="' . $settings['images_url'] . '/poll_right.gif" alt="" /></span>',
 			'option' => parse_bbc($option[0]),
-			'vote_button' => '<input type="' . ($row['maxVotes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="check" />'
+			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="check" />'
 		);
 	}
 
-	$return['allowed_warning'] = $row['maxVotes'] > 1 ? sprintf($txt['poll_options6'], $row['maxVotes']) : '';
+	$return['allowed_warning'] = $row['max_votes'] > 1 ? sprintf($txt['poll_options6'], $row['max_votes']) : '';
 
 	if ($output_method != 'echo')
 		return $return;
@@ -885,13 +885,13 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 
 	$request = db_query("
 		SELECT
-			p.ID_POLL, p.question, p.votingLocked, p.hideResults, p.expireTime, p.maxVotes
+			p.id_poll, p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes
 		FROM ({$db_prefix}topics AS t, {$db_prefix}polls AS p, {$db_prefix}boards AS b)
-		WHERE p.ID_POLL = t.ID_POLL
-			AND t.ID_TOPIC = $topic
-			AND b.ID_BOARD = t.ID_BOARD
+		WHERE p.id_poll = t.id_poll
+			AND t.id_topic = $topic
+			AND b.id_board = t.id_board
 			AND $user_info[query_see_board]" . (!in_array(0, $boardsAllowed) ? "
-			AND b.ID_BOARD IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
+			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
 			AND t.approved = 1
 		LIMIT 1", __FILE__, __LINE__);
 
@@ -903,50 +903,50 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 	mysql_free_result($request);
 
 	// Check if they can vote.
-	if (!empty($row['expireTime']) && $row['expireTime'] < time())
+	if (!empty($row['expire_time']) && $row['expire_time'] < time())
 		$allow_vote = false;
-	elseif ($user_info['is_guest'] || !empty($row['votingLocked']) || !allowedTo('poll_vote'))
+	elseif ($user_info['is_guest'] || !empty($row['voting_locked']) || !allowedTo('poll_vote'))
 		$allow_vote = false;
 	else
 	{
 		$request = db_query("
-			SELECT ID_MEMBER
+			SELECT id_member
 			FROM {$db_prefix}log_polls
-			WHERE ID_POLL = $row[ID_POLL]
-				AND ID_MEMBER = $user_info[id]
+			WHERE id_poll = $row[id_poll]
+				AND id_member = $user_info[id]
 			LIMIT 1", __FILE__, __LINE__);
 		$allow_vote = mysql_num_rows($request) == 0;
 		mysql_free_result($request);
 	}
 
 	$request = db_query("
-		SELECT COUNT(DISTINCT ID_MEMBER)
+		SELECT COUNT(DISTINCT id_member)
 		FROM {$db_prefix}log_polls
-		WHERE ID_POLL = $row[ID_POLL]", __FILE__, __LINE__);
+		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
 	list ($total) = mysql_fetch_row($request);
 	mysql_free_result($request);
 
 	$request = db_query("
-		SELECT ID_CHOICE, label, votes
+		SELECT id_choice, label, votes
 		FROM {$db_prefix}poll_choices
-		WHERE ID_POLL = $row[ID_POLL]", __FILE__, __LINE__);
+		WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
 	$options = array();
 	$total_votes = 0;
 	while ($rowChoice = mysql_fetch_assoc($request))
 	{
 		censorText($rowChoice['label']);
 
-		$options[$rowChoice['ID_CHOICE']] = array($rowChoice['label'], $rowChoice['votes']);
+		$options[$rowChoice['id_choice']] = array($rowChoice['label'], $rowChoice['votes']);
 		$total_votes += $rowChoice['votes'];
 	}
 	mysql_free_result($request);
 
 	$return = array(
-		'id' => $row['ID_POLL'],
-		'image' => empty($pollinfo['votingLocked']) ? 'poll' : 'locked_poll',
+		'id' => $row['id_poll'],
+		'image' => empty($pollinfo['voting_locked']) ? 'poll' : 'locked_poll',
 		'question' => $row['question'],
 		'total_votes' => $total,
-		'is_locked' => !empty($pollinfo['votingLocked']),
+		'is_locked' => !empty($pollinfo['voting_locked']),
 		'allow_vote' => $allow_vote,
 		'topic' => $topic
 	);
@@ -963,11 +963,11 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 			'votes' => $option[1],
 			'bar' => '<span style="white-space: nowrap;"><img src="' . $settings['images_url'] . '/poll_left.gif" alt="" /><img src="' . $settings['images_url'] . '/poll_middle.gif" width="' . $barWide . '" height="12" alt="-" /><img src="' . $settings['images_url'] . '/poll_right.gif" alt="" /></span>',
 			'option' => parse_bbc($option[0]),
-			'vote_button' => '<input type="' . ($row['maxVotes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="check" />'
+			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '" class="check" />'
 		);
 	}
 
-	$return['allowed_warning'] = $row['maxVotes'] > 1 ? sprintf($txt['poll_options6'], $row['maxVotes']) : '';
+	$return['allowed_warning'] = $row['max_votes'] > 1 ? sprintf($txt['poll_options6'], $row['max_votes']) : '';
 
 	if ($output_method != 'echo')
 		return $return;
@@ -1044,12 +1044,12 @@ function ssi_pollVote()
 
 	// Check if they have already voted, or voting is locked.
 	$request = db_query("
-		SELECT IFNULL(lp.ID_CHOICE, -1) AS selected, p.votingLocked, p.expireTime, p.maxVotes, t.ID_TOPIC
+		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.expire_time, p.max_votes, t.id_topic
 		FROM ({$db_prefix}polls AS p, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.ID_POLL = p.ID_POLL AND lp.ID_MEMBER = $user_info[id])
-		WHERE p.ID_POLL = $_POST[poll]
-			AND t.ID_POLL = $_POST[poll]
-			AND b.ID_BOARD = t.ID_BOARD
+			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = $user_info[id])
+		WHERE p.id_poll = $_POST[poll]
+			AND t.id_poll = $_POST[poll]
+			AND b.id_board = t.id_board
 			AND $user_info[query_see_board]
 			AND t.approved = 1
 		LIMIT 1", __FILE__, __LINE__);
@@ -1058,12 +1058,12 @@ function ssi_pollVote()
 	$row = mysql_fetch_assoc($request);
 	mysql_free_result($request);
 
-	if (!empty($row['votingLocked']) || $row['selected'] != -1 || (!empty($row['expireTime']) && time() > $row['expireTime']))
-		redirectexit('topic=' . $row['ID_TOPIC'] . '.0');
+	if (!empty($row['voting_locked']) || $row['selected'] != -1 || (!empty($row['expire_time']) && time() > $row['expire_time']))
+		redirectexit('topic=' . $row['id_topic'] . '.0');
 
 	// Too many options checked?
-	if (count($_REQUEST['options']) > $row['maxVotes'])
-		redirectexit('topic=' . $row['ID_TOPIC'] . '.0');
+	if (count($_REQUEST['options']) > $row['max_votes'])
+		redirectexit('topic=' . $row['id_topic'] . '.0');
 
 	$options = array();
 	$setString = '';
@@ -1080,16 +1080,16 @@ function ssi_pollVote()
 	// Add their vote in to the tally.
 	db_query("
 		INSERT INTO {$db_prefix}log_polls
-			(ID_POLL, ID_MEMBER, ID_CHOICE)
+			(id_poll, id_member, id_choice)
 		VALUES $setString", __FILE__, __LINE__);
 	db_query("
 		UPDATE {$db_prefix}poll_choices
 		SET votes = votes + 1
-		WHERE ID_POLL = $_POST[poll]
-			AND ID_CHOICE IN (" . implode(', ', $options) . ")
+		WHERE id_poll = $_POST[poll]
+			AND id_choice IN (" . implode(', ', $options) . ")
 		LIMIT " . count($options), __FILE__, __LINE__);
 
-	redirectexit('topic=' . $row['ID_TOPIC'] . '.0');
+	redirectexit('topic=' . $row['id_topic'] . '.0');
 }
 
 // Show a search box.
@@ -1246,10 +1246,10 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 
 	// Make sure guests can see this board.
 	$request = db_query("
-		SELECT ID_BOARD
+		SELECT id_board
 		FROM {$db_prefix}boards
-		WHERE " . ($board === null ? '' : "ID_BOARD = $board
-			AND ") . "FIND_IN_SET(-1, memberGroups)
+		WHERE " . ($board === null ? '' : "id_board = $board
+			AND ") . "FIND_IN_SET(-1, member_groups)
 		LIMIT 1", __FILE__, __LINE__);
 	if (mysql_num_rows($request) == 0)
 	{
@@ -1269,15 +1269,15 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 
 	// Find the post ids.
 	$request = db_query("
-		SELECT ID_FIRST_MSG
+		SELECT id_first_msg
 		FROM {$db_prefix}topics
-		WHERE ID_BOARD = $board
+		WHERE id_board = $board
 			AND approved = 1
-		ORDER BY ID_FIRST_MSG DESC
+		ORDER BY id_first_msg DESC
 		LIMIT $start, $limit", __FILE__, __LINE__);
 	$posts = array();
 	while ($row = mysql_fetch_assoc($request))
-		$posts[] = $row['ID_FIRST_MSG'];
+		$posts[] = $row['id_first_msg'];
 	mysql_free_result($request);
 
 	if (empty($posts))
@@ -1286,13 +1286,13 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	// Find the posts.
 	$request = db_query("
 		SELECT
-			m.icon, m.subject, m.body, IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime,
-			t.numReplies, t.ID_TOPIC, m.ID_MEMBER, m.smileysEnabled, m.ID_MSG, t.locked
+			m.icon, m.subject, m.body, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
+			t.num_replies, t.id_topic, m.id_member, m.smileys_enabled, m.id_msg, t.locked
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE t.ID_FIRST_MSG IN (" . implode(', ', $posts) . ")
-			AND m.ID_MSG = t.ID_FIRST_MSG
-		ORDER BY t.ID_FIRST_MSG DESC
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE t.id_first_msg IN (" . implode(', ', $posts) . ")
+			AND m.id_msg = t.id_first_msg
+		ORDER BY t.id_first_msg DESC
 		LIMIT " . count($posts), __FILE__, __LINE__);
 	$return = array();
 	while ($row = mysql_fetch_assoc($request))
@@ -1310,7 +1310,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 			$row['body'] .= '...';
 		}
 
-		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
+		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// Check that this message icon is there...
 		if (empty($modSettings['messageIconChecks_disable']) && !isset($icon_sources[$row['icon']]))
@@ -1320,24 +1320,24 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 		censorText($row['body']);
 
 		$return[] = array(
-			'id' => $row['ID_TOPIC'],
-			'message_id' => $row['ID_MSG'],
+			'id' => $row['id_topic'],
+			'message_id' => $row['id_msg'],
 			'icon' => '<img src="' . $settings[$icon_sources[$row['icon']]] . '/post/' . $row['icon'] . '.gif" align="middle" alt="' . $row['icon'] . '" border="0" />',
 			'subject' => $row['subject'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
 			'body' => $row['body'],
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['numReplies'] . ' ' . ($row['numReplies'] == 1 ? $txt['smf_news_1'] : $txt['smf_news_2']) . '</a>',
-			'replies' => $row['numReplies'],
-			'comment_href' => !empty($row['locked']) ? '' : $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.' . $row['numReplies'] . ';num_replies=' . $row['numReplies'],
-			'comment_link' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.' . $row['numReplies'] . ';num_replies=' . $row['numReplies'] . '">' . $txt['smf_news_3'] . '</a>',
-			'new_comment' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.' . $row['numReplies'] . '">' . $txt['smf_news_3'] . '</a>',
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['num_replies'] . ' ' . ($row['num_replies'] == 1 ? $txt['smf_news_1'] : $txt['smf_news_2']) . '</a>',
+			'replies' => $row['num_replies'],
+			'comment_href' => !empty($row['locked']) ? '' : $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . ';num_replies=' . $row['num_replies'],
+			'comment_link' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . ';num_replies=' . $row['num_replies'] . '">' . $txt['smf_news_3'] . '</a>',
+			'new_comment' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . '">' . $txt['smf_news_3'] . '</a>',
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['posterName'],
-				'href' => !empty($row['ID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] : '',
-				'link' => !empty($row['ID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>' : $row['posterName']
+				'id' => $row['id_member'],
+				'name' => $row['poster_name'],
+				'href' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+				'link' => !empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>' : $row['poster_name']
 			),
 			'locked' => !empty($row['locked']),
 			'is_last' => false
@@ -1379,50 +1379,50 @@ function ssi_recentEvents($max_events = 7, $output_method = 'echo')
 	// Find all events which are happening in the near future that the member can see.
 	$request = db_query("
 		SELECT
-			cal.ID_EVENT, cal.startDate, cal.endDate, cal.title, cal.ID_MEMBER, cal.ID_TOPIC,
-			cal.ID_BOARD, t.ID_FIRST_MSG, t.approved
+			cal.id_event, cal.start_date, cal.end_date, cal.title, cal.id_member, cal.id_topic,
+			cal.id_board, t.id_first_msg, t.approved
 		FROM {$db_prefix}calendar AS cal
-			LEFT JOIN {$db_prefix}boards AS b ON (b.ID_BOARD = cal.ID_BOARD)
-			LEFT JOIN {$db_prefix}topics AS t ON (t.ID_TOPIC = cal.ID_TOPIC)
-		WHERE cal.startDate <= '" . strftime('%Y-%m-%d', forum_time(false)) . "'
-			AND cal.endDate >= '" . strftime('%Y-%m-%d', forum_time(false)) . "'
-			AND (cal.ID_BOARD = 0 OR $user_info[query_wanna_see_board])
-		ORDER BY cal.startDate DESC
+			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = cal.id_board)
+			LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
+		WHERE cal.start_date <= '" . strftime('%Y-%m-%d', forum_time(false)) . "'
+			AND cal.end_date >= '" . strftime('%Y-%m-%d', forum_time(false)) . "'
+			AND (cal.id_board = 0 OR $user_info[query_wanna_see_board])
+		ORDER BY cal.start_date DESC
 		LIMIT $max_events", __FILE__, __LINE__);
 	$return = array();
 	$duplicates = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
 		// Check if we've already come by an event linked to this same topic with the same title... and don't display it if we have.
-		if (!empty($duplicates[$row['title'] . $row['ID_TOPIC']]))
+		if (!empty($duplicates[$row['title'] . $row['id_topic']]))
 			continue;
 
 		// Censor the title.
 		censorText($row['title']);
 
-		if ($row['startDate'] < strftime('%Y-%m-%d', forum_time(false)))
+		if ($row['start_date'] < strftime('%Y-%m-%d', forum_time(false)))
 			$date = strftime('%Y-%m-%d', forum_time(false));
 		else
-			$date = $row['startDate'];
+			$date = $row['start_date'];
 
 		// If the topic it is attached to is not approved then don't link it.
-		if (!empty($row['ID_FIRST_MSG']) && !$row['approved'])
-			$row['ID_BOARD'] = $row['ID_TOPIC'] = $row['ID_FIRST_MSG'] = 0;
+		if (!empty($row['id_first_msg']) && !$row['approved'])
+			$row['id_board'] = $row['id_topic'] = $row['id_first_msg'] = 0;
 
 		$return[$date][] = array(
-			'id' => $row['ID_EVENT'],
+			'id' => $row['id_event'],
 			'title' => $row['title'],
-			'can_edit' => allowedTo('calendar_edit_any') || ($row['ID_MEMBER'] == $user_info['id'] && allowedTo('calendar_edit_own')),
-			'modify_href' => $scripturl . '?action=' . ($row['ID_BOARD'] == 0 ? 'calendar;sa=post;' : 'post;msg=' . $row['ID_FIRST_MSG'] . ';topic=' . $row['ID_TOPIC'] . '.0;calendar;') . 'eventid=' . $row['ID_EVENT'] . ';sesc=' . $sc,
-			'href' => $row['ID_BOARD'] == 0 ? '' : $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
-			'link' => $row['ID_BOARD'] == 0 ? $row['title'] : '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['title'] . '</a>',
-			'start_date' => $row['startDate'],
-			'end_date' => $row['endDate'],
+			'can_edit' => allowedTo('calendar_edit_any') || ($row['id_member'] == $user_info['id'] && allowedTo('calendar_edit_own')),
+			'modify_href' => $scripturl . '?action=' . ($row['id_board'] == 0 ? 'calendar;sa=post;' : 'post;msg=' . $row['id_first_msg'] . ';topic=' . $row['id_topic'] . '.0;calendar;') . 'eventid=' . $row['id_event'] . ';sesc=' . $sc,
+			'href' => $row['id_board'] == 0 ? '' : $scripturl . '?topic=' . $row['id_topic'] . '.0',
+			'link' => $row['id_board'] == 0 ? $row['title'] : '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['title'] . '</a>',
+			'start_date' => $row['start_date'],
+			'end_date' => $row['end_date'],
 			'is_last' => false
 		);
 
 		// Let's not show this one again, huh?
-		$duplicates[$row['title'] . $row['ID_TOPIC']] = true;
+		$duplicates[$row['title'] . $row['id_topic']] = true;
 	}
 	mysql_free_result($request);
 
@@ -1545,7 +1545,7 @@ function smf_loadCalendarInfo()
 	return !empty($context['calendar_holidays']) || !empty($context['calendar_birthdays']) || !empty($context['calendar_events']);
 }
 
-// Check the passed ID_MEMBER/password.  If $is_username is true, treats $id as a username.
+// Check the passed id_member/password.  If $is_username is true, treats $id as a username.
 function ssi_checkPassword($id = null, $password = null, $is_username = false)
 {
 	global $db_prefix, $sourcedir;
@@ -1555,9 +1555,9 @@ function ssi_checkPassword($id = null, $password = null, $is_username = false)
 		return;
 
 	$request = db_query("
-		SELECT passwd, memberName, is_activated
+		SELECT passwd, member_name, is_activated
 		FROM {$db_prefix}members
-		WHERE " . ($is_username ? 'memberName' : 'ID_MEMBER') . " = '$id'
+		WHERE " . ($is_username ? 'member_name' : 'id_member') . " = '$id'
 		LIMIT 1", __FILE__, __LINE__);
 	list ($pass, $user, $active) = mysql_fetch_row($request);
 	mysql_free_result($request);

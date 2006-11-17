@@ -95,16 +95,16 @@ function ModifyHolidays()
 			$_REQUEST['holiday'][$id] = (int) $id;
 
 		// Now the IDs are "safe" do the delete...
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}calendar_holidays
-			WHERE ID_HOLIDAY IN (" . implode(', ', $_REQUEST['holiday']) . ")
+			WHERE id_holiday IN (" . implode(', ', $_REQUEST['holiday']) . ")
 			LIMIT " . count($_REQUEST['holiday']), __FILE__, __LINE__);
 
 		updateStats('calendar');
 	}
 
 	// Total amount of holidays... for pagination.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}calendar_holidays", __FILE__, __LINE__);
 	list ($context['holidayCount']) = $smfFunc['db_fetch_row']($request);
@@ -113,15 +113,15 @@ function ModifyHolidays()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=managecalendar;sa=holidays', $_REQUEST['start'], $context['holidayCount'], 20);
 
 	// Now load up all the holidays into a lovely large array.
-	$request = $smfFunc['db_query']("
-		SELECT ID_HOLIDAY, YEAR(eventDate) AS year, MONTH(eventDate) AS month, DAYOFMONTH(eventDate) AS day, title
+	$request = $smfFunc['db_query']('', "
+		SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
 		FROM {$db_prefix}calendar_holidays
 		ORDER BY title
 		LIMIT $_REQUEST[start], 20", __FILE__, __LINE__);
 	$context['holidays'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['holidays'][] = array(
-			'id' => $row['ID_HOLIDAY'],
+			'id' => $row['id_holiday'],
 			'date' => $row['day'] . ' ' . $txt['months'][$row['month']] . ' ' . ($row['year'] == '0004' ? '(' . $txt['every_year'] . ')' : $row['year']),
 			'title' => $row['title']
 		);
@@ -146,21 +146,21 @@ function EditHoliday()
 		checkSession();
 
 		if (isset($_REQUEST['delete']))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}calendar_holidays
-				WHERE ID_HOLIDAY = $_REQUEST[holiday]", __FILE__, __LINE__);
+				WHERE id_holiday = $_REQUEST[holiday]", __FILE__, __LINE__);
 		else
 		{
 			$date = strftime($_REQUEST['year'] <= 4 ? '0004-%m-%d' : '%Y-%m-%d', mktime(0, 0, 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']));
 			if (isset($_REQUEST['edit']))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}calendar_holidays
-					SET eventDate = '$date', title = '$_REQUEST[title]'
-					WHERE ID_HOLIDAY = $_REQUEST[holiday]", __FILE__, __LINE__);
+					SET event_date = '$date', title = '$_REQUEST[title]'
+					WHERE id_holiday = $_REQUEST[holiday]", __FILE__, __LINE__);
 			else
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}calendar_holidays
-						(eventDate, title)
+						(event_date, title)
 					VALUES
 						('$date', SUBSTRING('$_REQUEST[title]', 1, 48))", __FILE__, __LINE__);
 		}
@@ -182,14 +182,14 @@ function EditHoliday()
 	// If it's not new load the data.
 	else
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_HOLIDAY, YEAR(eventDate) AS year, MONTH(eventDate) AS month, DAYOFMONTH(eventDate) AS day, title
+		$request = $smfFunc['db_query']('', "
+			SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
 			FROM {$db_prefix}calendar_holidays
-			WHERE ID_HOLIDAY = $_REQUEST[holiday]
+			WHERE id_holiday = $_REQUEST[holiday]
 			LIMIT 1", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['holiday'] = array(
-				'id' => $row['ID_HOLIDAY'],
+				'id' => $row['id_holiday'],
 				'day' => $row['day'],
 				'month' => $row['month'],
 				'year' => $row['year'] <= 4 ? 0 : $row['year'],
@@ -216,12 +216,12 @@ function ModifyCalendarSettings()
 
 	// Load the boards list.
 	$boards = array('');
-	$request = $smfFunc['db_query']("
-		SELECT b.ID_BOARD, b.name AS bName, c.name AS cName
+	$request = $smfFunc['db_query']('', "
+		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$boards[$row['ID_BOARD']] = $row['cName'] . ' - ' . $row['bName'];
+		$boards[$row['id_board']] = $row['cat_name'] . ' - ' . $row['board_name'];
 	$smfFunc['db_free_result']($request);
 
 	// Look, all the calendar settings - of which there are many!

@@ -413,7 +413,7 @@ $txt['support_title'] = 'Support Information';
 $txt['support_versions_current'] = 'Current SMF version';
 $txt['support_versions_forum'] = 'Forum version';
 $txt['support_versions_php'] = 'PHP version';
-$txt['support_versions_mysql'] = 'MySQL version';
+$txt['support_versions_db'] = '%s version';
 $txt['support_versions_server'] = 'Server version';
 $txt['support_versions_gd'] = 'GD version';
 $txt['support_versions'] = 'Version Information';
@@ -455,7 +455,7 @@ $txt['attachment_manager_browse'] = 'Browse files';
 $txt['attachment_manager_maintenance'] = 'File maintenance';
 $txt['attachment_manager_save'] = 'Save';
 
-$txt['attachment_manager_settings'] = 'Attachments mode';
+$txt['attachmentEnable'] = 'Attachments mode';
 $txt['attachmentEnable_deactivate'] = 'Disable attachments';
 $txt['attachmentEnable_enable_all'] = 'Enable all attachments';
 $txt['attachmentEnable_disable_new'] = 'Disable new attachments';

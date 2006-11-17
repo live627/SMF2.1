@@ -215,7 +215,7 @@ function integrate_login ($username, $password, $cookietime)
 		mysql_query("
 			INSERT INTO " . XOOPS_DB_PREFIX . "_users
 				(name, uname, email, pass, user_regdate)
-			VALUES ('" . (isset($user_settings['memberName']) ? $user_settings['memberName'] : $user_settings['memberName']) . "', '" . $user_settings['memberName'] . "', '" . $user_settings['emailAddress'] . "', '$pwd', '" . $user_settings['dateRegistered'] . "')");
+			VALUES ('" . (isset($user_settings['member_name']) ? $user_settings['member_name'] : $user_settings['member_name']) . "', '" . $user_settings['member_name'] . "', '" . $user_settings['email_address'] . "', '$pwd', '" . $user_settings['date_registered'] . "')");
 
 		$xoops_id = mysql_insert_id();
 
@@ -295,9 +295,9 @@ function integrate_validate_login ($username, $password, $cookietime)
 	mysql_select_db($db_name);
 
 	$request = mysql_query ("
-		SELECT ID_MEMBER
+		SELECT id_member
 		FROM {$db_prefix}members
-		WHERE memberName = '$username'
+		WHERE member_name = '$username'
 		LIMIT 1");
 	$smf_user = mysql_fetch_assoc($request);
 	
@@ -331,7 +331,7 @@ function integrate_validate_login ($username, $password, $cookietime)
 
 		mysql_query ("
 			INSERT INTO {$db_prefix}members 
-				(memberName, realName, passwd, emailAddress, dateRegistered, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups) 
+				(member_name, real_name, passwd, email_address, date_registered, lngfile, buddy_list, pm_ignore_list, message_labels, personal_text, website_title, website_url, location, icq, msn, signature, avatar, usertitle, member_ip, member_ip2, secret_question, additional_groups) 
 			VALUES ('$username', '$xoops_user[uname]', '$xoops_user[pass]', '$xoops_user[email]', '$xoops_user[user_regdate]', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 		$memberID = db_insert_id();
 		
@@ -372,7 +372,7 @@ function integrate_register ($Options, $theme_vars)
 	mysql_query("
 		INSERT INTO " . XOOPS_DB_PREFIX . "_users
 			(name, uname, email, pass, user_regdate)
-		VALUES (" . $Options['register_vars']['realName']. ", " . $Options['register_vars']['memberName'] . ", " . $Options['register_vars']['emailAddress'] . ", '" . md5($_POST['passwrd1']) . "', " . $Options['register_vars']['dateRegistered'] . ")");
+		VALUES (" . $Options['register_vars']['real_name']. ", " . $Options['register_vars']['member_name'] . ", " . $Options['register_vars']['email_address'] . ", '" . md5($_POST['passwrd1']) . "', " . $Options['register_vars']['date_registered'] . ")");
 
 	$xoops_id = mysql_insert_id();
 

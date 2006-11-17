@@ -33,76 +33,76 @@ if (!defined('SMF'))
 	void ModifyProfile2()
 		// !!!
 
-	void saveProfileChanges(array &profile_variables, array &errors, int ID_MEMBER)
+	void saveProfileChanges(array &profile_variables, array &errors, int id_member)
 		// !!!
 
-	void makeThemeChanges(int ID_MEMBER, int ID_THEME)
+	void makeThemeChanges(int id_member, int id_theme)
 		// !!!
 
-	void makeNotificationChanges(int ID_MEMBER)
+	void makeNotificationChanges(int id_member)
 		// !!!
 
-	void makeAvatarChanges(int ID_MEMBER, array &errors)
+	void makeAvatarChanges(int id_member, array &errors)
 		// !!!
 
-	void makeCustomFieldChanges(int ID_MEMBER, string area)
+	void makeCustomFieldChanges(int id_member, string area)
 		// !!!
 
-	void summary(int ID_MEMBER)
+	void summary(int id_member)
 		// !!!
 
-	void showPosts(int ID_MEMBER)
+	void showPosts(int id_member)
 		// !!!
 
-	void statPanel(int ID_MEMBER)
+	void statPanel(int id_member)
 		// !!!
 
-	void trackUser(int ID_MEMBER)
+	void trackUser(int id_member)
 		// !!!
 
-	void TrackIP(int ID_MEMBER = none)
+	void TrackIP(int id_member = none)
 		// !!!
 
-	void showPermissions(int ID_MEMBER)
+	void showPermissions(int id_member)
 		// !!!
 
-	void account(int ID_MEMBER)
+	void account(int id_member)
 		// !!!
 
-	void forumProfile(int ID_MEMBER)
+	void forumProfile(int id_member)
 		// !!!
 
 	array getAvatars(string directory, int level)
 		// !!!
 
-	void theme(int ID_MEMBER)
+	void theme(int id_member)
 		// !!!
 
-	void notification(int ID_MEMBER)
+	void notification(int id_member)
 		// !!!
 
-	void groupMembership(int ID_MEMBER)
+	void groupMembership(int id_member)
 		// !!!
 
-	void pmprefs(int ID_MEMBER)
+	void pmprefs(int id_member)
 		// !!!
 
-	void deleteAccount(int ID_MEMBER)
+	void deleteAccount(int id_member)
 		// !!!
 
-	void deleteAccount2(array profile_variables, array &errors, int ID_MEMBER)
+	void deleteAccount2(array profile_variables, array &errors, int id_member)
 		// !!!
 
 	void rememberPostData()
 		// !!!
 
-	void loadThemeOptions(int ID_MEMBER)
+	void loadThemeOptions(int id_member)
 		// !!!
 
-	void loadCustomFields(int ID_MEMBER, string area)
+	void loadCustomFields(int id_member, string area)
 		// !!!
 	
-	void ignoreboards(int ID_MEMBER)
+	void ignoreboards(int id_member)
 		// !!!
 
 	Adding new fields to the profile:
@@ -113,7 +113,7 @@ if (!defined('SMF'))
 // Allow the change or view of profiles...
 function ModifyProfile($post_errors = array())
 {
-	global $txt, $scripturl, $user_info, $context, $ID_MEMBER, $sourcedir, $user_profile, $modSettings;
+	global $txt, $scripturl, $user_info, $context, $id_member, $sourcedir, $user_profile, $modSettings;
 
 	// Don't reload this as we may have processed error strings.
 	if (empty($post_errors))
@@ -155,12 +155,12 @@ function ModifyProfile($post_errors = array())
 	// Did we get the user by name...
 	if (isset($_REQUEST['user']))
 		$memberResult = loadMemberData($_REQUEST['user'], true, 'profile');
-	// ... or by ID_MEMBER?
+	// ... or by id_member?
 	elseif (!empty($_REQUEST['u']))
 		$memberResult = loadMemberData((int) $_REQUEST['u'], false, 'profile');
 	// If it was just ?action=profile, edit your own profile.
 	else
-		$memberResult = loadMemberData($ID_MEMBER, false, 'profile');
+		$memberResult = loadMemberData($id_member, false, 'profile');
 
 	// Check if loadMemberData() has returned a valid result.
 	if (!is_array($memberResult))
@@ -170,7 +170,7 @@ function ModifyProfile($post_errors = array())
 	list ($memID) = $memberResult;
 
 	// Is this the profile of the user himself or herself?
-	$context['user']['is_owner'] = $memID == $ID_MEMBER;
+	$context['user']['is_owner'] = $memID == $id_member;
 
 	// No Subaction?
 	if (!isset($_REQUEST['sa']) || !isset($sa_allowed[$_REQUEST['sa']]))
@@ -270,7 +270,7 @@ function ModifyProfile($post_errors = array())
 		if (!$context['user']['is_owner'] && allowedTo('pm_send'))
 			$context['profile_areas']['profile_action']['areas']['send_pm'] = '<a href="' . $scripturl . '?action=pm;sa=send;u=' . $memID . '">' . $txt['profileSendIm'] . '</a>';
 		// We don't wanna ban admins, do we?
-		if (allowedTo('manage_bans') && $user_profile[$memID]['ID_GROUP'] != 1 && !in_array(1, explode(',', $user_profile[$memID]['additionalGroups'])))
+		if (allowedTo('manage_bans') && $user_profile[$memID]['id_group'] != 1 && !in_array(1, explode(',', $user_profile[$memID]['additional_groups'])))
 			$context['profile_areas']['profile_action']['areas']['banUser'] = '<a href="' . $scripturl . '?action=admin;area=ban;sa=add;u=' . $memID . '">' . $txt['profileBanUser'] . '</a>';
 
 		// You may remove your own account 'cuz it's yours or you're an admin.
@@ -291,37 +291,37 @@ function ModifyProfile($post_errors = array())
 
 	$context['member'] = array(
 		'id' => $memID,
-		'username' => $user_profile[$memID]['memberName'],
-		'name' => !isset($user_profile[$memID]['realName']) || $user_profile[$memID]['realName'] == '' ? '' : $user_profile[$memID]['realName'],
-		'email' => $user_profile[$memID]['emailAddress'],
+		'username' => $user_profile[$memID]['member_name'],
+		'name' => !isset($user_profile[$memID]['real_name']) || $user_profile[$memID]['real_name'] == '' ? '' : $user_profile[$memID]['real_name'],
+		'email' => $user_profile[$memID]['email_address'],
 		'posts' => empty($user_profile[$memID]['posts']) ? 0: (int) $user_profile[$memID]['posts'],
-		'hide_email' => empty($user_profile[$memID]['hideEmail']) ? 0 : $user_profile[$memID]['hideEmail'],
-		'show_online' => empty($user_profile[$memID]['showOnline']) ? 0 : $user_profile[$memID]['showOnline'],
-		'registered' => empty($user_profile[$memID]['dateRegistered']) ? $txt[470] : strftime('%Y-%m-%d', $user_profile[$memID]['dateRegistered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600),
-		'group' => $user_profile[$memID]['ID_GROUP'],
+		'hide_email' => empty($user_profile[$memID]['hide_email']) ? 0 : $user_profile[$memID]['hide_email'],
+		'show_online' => empty($user_profile[$memID]['show_online']) ? 0 : $user_profile[$memID]['show_online'],
+		'registered' => empty($user_profile[$memID]['date_registered']) ? $txt[470] : strftime('%Y-%m-%d', $user_profile[$memID]['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600),
+		'group' => $user_profile[$memID]['id_group'],
 		'gender' => array('name' => empty($user_profile[$memID]['gender']) ? '' : ($user_profile[$memID]['gender'] == 2 ? 'f' : 'm')),
 		'karma' => array(
-			'good' => empty($user_profile[$memID]['karmaGood']) ? '0' : $user_profile[$memID]['karmaGood'],
-			'bad' => empty($user_profile[$memID]['karmaBad']) ? '0' : $user_profile[$memID]['karmaBad'],
+			'good' => empty($user_profile[$memID]['karma_good']) ? '0' : $user_profile[$memID]['karma_good'],
+			'bad' => empty($user_profile[$memID]['karma_bad']) ? '0' : $user_profile[$memID]['karma_bad'],
 		),
 		'avatar' => array(
 			'name' => &$user_profile[$memID]['avatar'],
-			'href' => empty($user_profile[$memID]['ID_ATTACH']) ? '' : (empty($user_profile[$memID]['attachmentType']) ? $scripturl . '?action=dlattach;attach=' . $user_profile[$memID]['ID_ATTACH'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $user_profile[$memID]['filename']),
+			'href' => empty($user_profile[$memID]['id_attach']) ? '' : (empty($user_profile[$memID]['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $user_profile[$memID]['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $user_profile[$memID]['filename']),
 			'custom' => stristr($user_profile[$memID]['avatar'], 'http://') ? $user_profile[$memID]['avatar'] : 'http://',
 			'selection' => $user_profile[$memID]['avatar'] == '' || stristr($user_profile[$memID]['avatar'], 'http://') ? '' : $user_profile[$memID]['avatar'],
-			'ID_ATTACH' => &$user_profile[$memID]['ID_ATTACH'],
+			'id_attach' => &$user_profile[$memID]['id_attach'],
 			'filename' => &$user_profile[$memID]['filename'],
 			'allow_server_stored' => allowedTo('profile_server_avatar') || !$context['user']['is_owner'],
 			'allow_upload' => allowedTo('profile_upload_avatar') || !$context['user']['is_owner'],
 			'allow_external' => allowedTo('profile_remote_avatar') || !$context['user']['is_owner'],
 		),
-		'icq' => array('name' => !isset($user_profile[$memID]['ICQ']) ? '' : $user_profile[$memID]['ICQ']),
-		'aim' => array('name' => empty($user_profile[$memID]['AIM']) ? '' : str_replace('+', ' ', $user_profile[$memID]['AIM'])),
-		'yim' => array('name' => empty($user_profile[$memID]['YIM']) ? '' : $user_profile[$memID]['YIM']),
-		'msn' => array('name' => empty($user_profile[$memID]['MSN']) ? '' : $user_profile[$memID]['MSN']),
+		'icq' => array('name' => !isset($user_profile[$memID]['icq']) ? '' : $user_profile[$memID]['icq']),
+		'aim' => array('name' => empty($user_profile[$memID]['aim']) ? '' : str_replace('+', ' ', $user_profile[$memID]['aim'])),
+		'yim' => array('name' => empty($user_profile[$memID]['yim']) ? '' : $user_profile[$memID]['yim']),
+		'msn' => array('name' => empty($user_profile[$memID]['msn']) ? '' : $user_profile[$memID]['msn']),
 		'website' => array(
-			'title' => !isset($user_profile[$memID]['websiteTitle']) ? '' : $user_profile[$memID]['websiteTitle'],
-			'url' => !isset($user_profile[$memID]['websiteUrl']) ? '' : $user_profile[$memID]['websiteUrl'],
+			'title' => !isset($user_profile[$memID]['website_title']) ? '' : $user_profile[$memID]['website_title'],
+			'url' => !isset($user_profile[$memID]['website_url']) ? '' : $user_profile[$memID]['website_url'],
 		),
 	);
 
@@ -350,7 +350,7 @@ function ModifyProfile2()
 	global $txt, $modSettings;
 	global $cookiename, $context;
 	global $sourcedir, $scripturl, $db_prefix;
-	global $ID_MEMBER, $user_info;
+	global $id_member, $user_info;
 	global $context, $newpassemail, $user_profile, $validationCode, $smfFunc;
 
 	loadLanguage('Profile');
@@ -406,7 +406,7 @@ function ModifyProfile2()
 	list ($memID) = $memberResult;
 
 	// Are you modifying your own, or someone else's?
-	if ($ID_MEMBER == $memID)
+	if ($id_member == $memID)
 		$context['user']['is_owner'] = true;
 	else
 	{
@@ -430,11 +430,11 @@ function ModifyProfile2()
 		// Does the integration want to check passwords?
 		$good_password = false;
 		if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
-			if (call_user_func($modSettings['integrate_verify_password'], $user_profile[$memID]['memberName'], $_POST['oldpasswrd'], false) === true)
+			if (call_user_func($modSettings['integrate_verify_password'], $user_profile[$memID]['member_name'], $_POST['oldpasswrd'], false) === true)
 				$good_password = true;
 
 		// Bad password!!!
-		if (!$good_password && $user_info['passwd'] != sha1(strtolower($user_profile[$memID]['memberName']) . $_POST['oldpasswrd']))
+		if (!$good_password && $user_info['passwd'] != sha1(strtolower($user_profile[$memID]['member_name']) . $_POST['oldpasswrd']))
 			$post_errors[] = 'bad_password';
 	}
 
@@ -442,18 +442,18 @@ function ModifyProfile2()
 	unset($sa_allowed);
 
 	// If the user is an admin - see if they are resetting someones username.
-	if ($user_info['is_admin'] && isset($_POST['memberName']))
+	if ($user_info['is_admin'] && isset($_POST['member_name']))
 	{
 		// We'll need this...
 		require_once($sourcedir . '/Subs-Auth.php');
 
 		// Do the reset... this will send them an email too.
-		resetPassword($memID, $_POST['memberName']);
+		resetPassword($memID, $_POST['member_name']);
 	}
 
 	// Change the IP address in the database.
 	if ($context['user']['is_owner'])
-		$profile_vars['memberIP'] = "'$user_info[ip]'";
+		$profile_vars['member_ip'] = "'$user_info[ip]'";
 
 	if (isset($_POST['sa']) && $_POST['sa'] == 'ignoreboards' && empty($_POST['ignore_brd']))
 		$_POST['ignore_brd'] = array();	
@@ -492,7 +492,7 @@ function ModifyProfile2()
 	{
 		// If we've changed the password, notify any integration that may be listening in.
 		if (isset($profile_vars['passwd']) && isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
-			call_user_func($modSettings['integrate_reset_pass'], $user_profile[$memID]['memberName'], $user_profile[$memID]['memberName'], $_POST['passwrd1']);
+			call_user_func($modSettings['integrate_reset_pass'], $user_profile[$memID]['member_name'], $user_profile[$memID]['member_name'], $_POST['passwrd1']);
 
 		updateMemberData($memID, $profile_vars);
 	}
@@ -500,11 +500,11 @@ function ModifyProfile2()
 	// What if this is the newest member?
 	if ($modSettings['latestMember'] == $memID)
 		updateStats('member');
-	elseif (isset($profile_vars['realName']))
+	elseif (isset($profile_vars['real_name']))
 		updateSettings(array('memberlist_updated' => time()));
 
 	// If the member changed his/her birthdate, update calendar statistics.
-	if (isset($profile_vars['birthdate']) || isset($profile_vars['realName']))
+	if (isset($profile_vars['birthdate']) || isset($profile_vars['real_name']))
 		updateStats('calendar');
 
 	// Send an email?
@@ -513,16 +513,16 @@ function ModifyProfile2()
 		require_once($sourcedir . '/Subs-Post.php');
 
 		// Send off the email.
-		sendmail($_POST['emailAddress'], $txt['activate_reactivate_title'] . ' ' . $context['forum_name'],
+		sendmail($_POST['email_address'], $txt['activate_reactivate_title'] . ' ' . $context['forum_name'],
 			"$txt[activate_reactivate_mail]\n\n" .
 			"$scripturl?action=activate;u=$memID;code=$validationCode\n\n" .
 			"$txt[activate_code]: $validationCode\n\n" .
 			sprintf($txt['regards_team'], $context['forum_name']));
 
 		// Log the user out.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_online
-			WHERE ID_MEMBER = $memID", __FILE__, __LINE__);
+			WHERE id_member = $memID", __FILE__, __LINE__);
 		$_SESSION['log_time'] = 0;
 		$_SESSION['login_' . $cookiename] = serialize(array(0, '', 0));
 
@@ -549,7 +549,7 @@ function ModifyProfile2()
 		if (isset($_POST['passwrd1']) && $_POST['passwrd1'] != '')
 		{
 			require_once($sourcedir . '/Subs-Auth.php');
-			setLoginCookie(60 * $modSettings['cookieTime'], $memID, sha1(sha1(strtolower($user_profile[$memID]['memberName']) . un_htmlspecialchars(stripslashes($_POST['passwrd1']))) . $user_profile[$memID]['passwordSalt']));
+			setLoginCookie(60 * $modSettings['cookieTime'], $memID, sha1(sha1(strtolower($user_profile[$memID]['member_name']) . un_htmlspecialchars(stripslashes($_POST['passwrd1']))) . $user_profile[$memID]['password_salt']));
 		}
 
 		loadUserSettings();
@@ -584,33 +584,33 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 
 	// Arrays of all the changes - makes things easier.
 	$profile_bools = array(
-		'notifyAnnouncements', 'notifySendBody',
+		'notify_announcements', 'notify_send_body',
 	);
 	$profile_ints = array(
 		'pm_email_notify',
-		'notifyRegularity',
-		'notifyTypes',
-		'ICQ',
+		'notify_regularity',
+		'notify_types',
+		'icq',
 		'gender',
-		'ID_THEME',
+		'id_theme',
 	);
 	$profile_floats = array(
-		'timeOffset',
+		'time_offset',
 	);
 	$profile_strings = array(
-		'websiteUrl', 'websiteTitle',
-		'AIM', 'YIM',
+		'website_url', 'website_title',
+		'aim', 'yim',
 		'location', 'birthdate',
-		'timeFormat',
+		'time_format',
 		'buddy_list',
 		'pm_ignore_list',
-		'smileySet',
-		'signature', 'personalText', 'avatar',
-		'ignoreBoards',
+		'smiley_set',
+		'signature', 'personal_text', 'avatar',
+		'ignore_boards',
 	);
 
 	// Fix the spaces in messenger screennames...
-	$fix_spaces = array('MSN', 'AIM', 'YIM');
+	$fix_spaces = array('msn', 'aim', 'yim');
 	foreach ($fix_spaces as $var)
 	{
 		// !!! Why?
@@ -618,30 +618,30 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			$_POST[$var] = strtr($_POST[$var], ' ', '+');
 	}
 
-	// Make sure the MSN one is an email address, not something like 'none' :P.
-	if (isset($_POST['MSN']) && ($_POST['MSN'] == '' || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['MSN']) != 0))
-		$profile_strings[] = 'MSN';
+	// Make sure the msn one is an email address, not something like 'none' :P.
+	if (isset($_POST['msn']) && ($_POST['msn'] == '' || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['msn']) != 0))
+		$profile_strings[] = 'msn';
 
 	// Validate the title...
 	if (!empty($modSettings['titlesEnable']) && (allowedTo('profile_title_any') || (allowedTo('profile_title_own') && $context['user']['is_owner'])))
 		$profile_strings[] = 'usertitle';
 
-	// Validate the timeOffset...
-	if (isset($_POST['timeOffset']))
+	// Validate the time_offset...
+	if (isset($_POST['time_offset']))
 	{
-		$_POST['timeOffset'] = strtr($_POST['timeOffset'], ',', '.');
+		$_POST['time_offset'] = strtr($_POST['time_offset'], ',', '.');
 
-		if ($_POST['timeOffset'] < -23.5 || $_POST['timeOffset'] > 23.5)
+		if ($_POST['time_offset'] < -23.5 || $_POST['time_offset'] > 23.5)
 			$post_errors[] = 'bad_offset';
 	}
 
 	// Fix the URL...
-	if (isset($_POST['websiteUrl']))
+	if (isset($_POST['website_url']))
 	{
-		if (strlen(trim($_POST['websiteUrl'])) > 0 && strpos($_POST['websiteUrl'], '://') === false)
-			$_POST['websiteUrl'] = 'http://' . $_POST['websiteUrl'];
-		if (strlen($_POST['websiteUrl']) < 8)
-			$_POST['websiteUrl'] = '';
+		if (strlen(trim($_POST['website_url'])) > 0 && strpos($_POST['website_url'], '://') === false)
+			$_POST['website_url'] = 'http://' . $_POST['website_url'];
+		if (strlen($_POST['website_url']) < 8)
+			$_POST['website_url'] = '';
 	}
 
 	// !!! Should we check for this year and tell them they made a mistake :P? (based on coppa at least?)
@@ -670,14 +670,14 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 
 		if (preg_match('~(\A|,)\*(\Z|,)~s', $_POST['pm_ignore_list']) == 0)
 		{
-			$result = $smfFunc['db_query']("
-				SELECT ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT id_member
 				FROM {$db_prefix}members
-				WHERE memberName IN ('$_POST[pm_ignore_list]') OR realName IN ('$_POST[pm_ignore_list]')
+				WHERE member_name IN ('$_POST[pm_ignore_list]') OR real_name IN ('$_POST[pm_ignore_list]')
 				LIMIT " . (substr_count($_POST['pm_ignore_list'], '\', \'') + 1), __FILE__, __LINE__);
 			$_POST['pm_ignore_list'] = '';
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$_POST['pm_ignore_list'] .= $row['ID_MEMBER'] . ',';
+				$_POST['pm_ignore_list'] .= $row['id_member'] . ',';
 			$smfFunc['db_free_result']($result);
 
 			// !!! Did we find all the members?
@@ -695,14 +695,14 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 
 		if (trim($_POST['buddy_list']) != '')
 		{
-			$result = $smfFunc['db_query']("
-				SELECT ID_MEMBER
+			$result = $smfFunc['db_query']('', "
+				SELECT id_member
 				FROM {$db_prefix}members
-				WHERE memberName IN ('$_POST[buddy_list]') OR realName IN ('$_POST[buddy_list]')
+				WHERE member_name IN ('$_POST[buddy_list]') OR real_name IN ('$_POST[buddy_list]')
 				LIMIT " . (substr_count($_POST['buddy_list'], '\', \'') + 1), __FILE__, __LINE__);
 			$_POST['buddy_list'] = '';
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$_POST['buddy_list'] .= $row['ID_MEMBER'] . ',';
+				$_POST['buddy_list'] .= $row['id_member'] . ',';
 			$smfFunc['db_free_result']($result);
 
 			// !!! Did we find all the members?
@@ -724,17 +724,17 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			else
 				unset($_POST['ignore_brd'][$k]);
 		}
-		$_POST['ignoreBoards'] = implode(',', $_POST['ignore_brd']);
+		$_POST['ignore_boards'] = implode(',', $_POST['ignore_brd']);
 		unset($_POST['ignore_brd']);
 		
 	}
 
 	// Validate the smiley set.
-	if (isset($_POST['smileySet']))
+	if (isset($_POST['smiley_set']))
 	{
 		$smiley_sets = explode(',', $modSettings['smiley_sets_known']);
-		if (!in_array($_POST['smileySet'], $smiley_sets) && $_POST['smileySet'] != 'none')
-			$_POST['smileySet'] = '';
+		if (!in_array($_POST['smiley_set'], $smiley_sets) && $_POST['smiley_set'] != 'none')
+			$_POST['smiley_set'] = '';
 	}
 
 	// Make sure the signature isn't invalid.
@@ -871,31 +871,31 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 	if ($changeIdentity)
 	{
 		// This block is only concerned with display name validation.
-		if (isset($_POST['realName']) && (!empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum')) && trim($_POST['realName']) != $old_profile['realName'])
+		if (isset($_POST['real_name']) && (!empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum')) && trim($_POST['real_name']) != $old_profile['real_name'])
 		{
-			$_POST['realName'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['realName']));
-			if (trim($_POST['realName']) == '')
+			$_POST['real_name'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['real_name']));
+			if (trim($_POST['real_name']) == '')
 				$post_errors[] = 'no_name';
 			else
 			{
 				require_once($sourcedir . '/Subs-Members.php');
-				if (isReservedName($_POST['realName'], $memID))
+				if (isReservedName($_POST['real_name'], $memID))
 					$post_errors[] = 'name_taken';
 			}
 
-			if (isset($_POST['realName']))
-				$profile_vars['realName'] = '\'' . $_POST['realName'] . '\'';
+			if (isset($_POST['real_name']))
+				$profile_vars['real_name'] = '\'' . $_POST['real_name'] . '\'';
 		}
 
 		// Change the registration date.
-		if (!empty($_POST['dateRegistered']) && allowedTo('moderate_forum'))
+		if (!empty($_POST['date_registered']) && allowedTo('moderate_forum'))
 		{
 			// Bad date!  Go try again - please?
-			if (($_POST['dateRegistered'] = strtotime($_POST['dateRegistered'])) === -1)
+			if (($_POST['date_registered'] = strtotime($_POST['date_registered'])) === -1)
 				fatal_error($txt['smf233'] . ' ' . strftime('%d %b %Y ' . (strpos($user_info['time_format'], '%H') !== false ? '%I:%M:%S %p' : '%H:%M:%S'), forum_time(false)), false);
 			// As long as it doesn't equal 'N/A'...
-			elseif ($_POST['dateRegistered'] != $txt[470] && $_POST['dateRegistered'] != strtotime(strftime('%Y-%m-%d', $user_profile[$memID]['dateRegistered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600)))
-				$profile_vars['dateRegistered'] = $_POST['dateRegistered'] - ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
+			elseif ($_POST['date_registered'] != $txt[470] && $_POST['date_registered'] != strtotime(strftime('%Y-%m-%d', $user_profile[$memID]['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600)))
+				$profile_vars['date_registered'] = $_POST['date_registered'] - ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
 		}
 
 		// Change the number of posts.
@@ -903,9 +903,9 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			$profile_vars['posts'] = $_POST['posts'] != '' ? (int) strtr($_POST['posts'], array(',' => '', '.' => '', ' ' => '')) : '\'\'';
 
 		// This block is only concerned with email address validation..
-		if (isset($_POST['emailAddress']) && strtolower($_POST['emailAddress']) != strtolower($old_profile['emailAddress']))
+		if (isset($_POST['email_address']) && strtolower($_POST['email_address']) != strtolower($old_profile['email_address']))
 		{
-			$_POST['emailAddress'] = strtr($_POST['emailAddress'], array('&#039;' => '\\\''));
+			$_POST['email_address'] = strtr($_POST['email_address'], array('&#039;' => '\\\''));
 
 			// Prepare the new password, or check if they want to change their own.
 			if (!empty($modSettings['send_validation_onChange']) && !allowedTo('moderate_forum'))
@@ -917,32 +917,32 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			}
 
 			// Check the name and email for validity.
-			if (trim($_POST['emailAddress']) == '')
+			if (trim($_POST['email_address']) == '')
 				$post_errors[] = 'no_email';
-			if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['emailAddress'])) == 0)
+			if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['email_address'])) == 0)
 				$post_errors[] = 'bad_email';
 
 			// Email addresses should be and stay unique.
-			$request = $smfFunc['db_query']("
-				SELECT ID_MEMBER
+			$request = $smfFunc['db_query']('', "
+				SELECT id_member
 				FROM {$db_prefix}members
-				WHERE ID_MEMBER != $memID
-					AND emailAddress = '$_POST[emailAddress]'
+				WHERE id_member != $memID
+					AND email_address = '$_POST[email_address]'
 				LIMIT 1", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($request) > 0)
 				$post_errors[] = 'email_taken';
 			$smfFunc['db_free_result']($request);
 
-			$profile_vars['emailAddress'] = '\'' . $_POST['emailAddress'] . '\'';
+			$profile_vars['email_address'] = '\'' . $_POST['email_address'] . '\'';
 		}
 
 		// Hide email address?
-		if (isset($_POST['hideEmail']) && (!empty($modSettings['allow_hideEmail']) || allowedTo('moderate_forum')))
-			$profile_vars['hideEmail'] = empty($_POST['hideEmail']) ? '0' : '1';
+		if (isset($_POST['hide_email']) && (!empty($modSettings['allow_hide_email']) || allowedTo('moderate_forum')))
+			$profile_vars['hide_email'] = empty($_POST['hide_email']) ? '0' : '1';
 
 		// Are they allowed to change their hide status?
-		if (isset($_POST['showOnline']) && (!empty($modSettings['allow_hideOnline']) || allowedTo('moderate_forum')))
-			$profile_vars['showOnline'] = empty($_POST['showOnline']) ? '0' : '1';
+		if (isset($_POST['show_online']) && (!empty($modSettings['allow_hideOnline']) || allowedTo('moderate_forum')))
+			$profile_vars['show_online'] = empty($_POST['show_online']) ? '0' : '1';
 
 		// If they're trying to change the password, let's check they pick a sensible one.
 		if (isset($_POST['passwrd1']) && $_POST['passwrd1'] != '')
@@ -960,15 +960,15 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 				$post_errors[] = 'password_' . $passwordErrors;
 
 			// Set up the new password variable... ready for storage.
-			$profile_vars['passwd'] = '\'' . sha1(strtolower($old_profile['memberName']) . un_htmlspecialchars(stripslashes($_POST['passwrd1']))) . '\'';
+			$profile_vars['passwd'] = '\'' . sha1(strtolower($old_profile['member_name']) . un_htmlspecialchars(stripslashes($_POST['passwrd1']))) . '\'';
 		}
 
-		if (isset($_POST['secretQuestion']))
-			$profile_vars['secretQuestion'] = '\'' . $_POST['secretQuestion'] . '\'';
+		if (isset($_POST['secret_question']))
+			$profile_vars['secret_question'] = '\'' . $_POST['secret_question'] . '\'';
 
 		// Do you have a *secret* password?
-		if (isset($_POST['secretAnswer']) && $_POST['secretAnswer'] != '')
-			$profile_vars['secretAnswer'] = '\'' . md5($_POST['secretAnswer']) . '\'';
+		if (isset($_POST['secret_answer']) && $_POST['secret_answer'] != '')
+			$profile_vars['secret_answer'] = '\'' . md5($_POST['secret_answer']) . '\'';
 	}
 
 	// Things they can do if they are a forum moderator.
@@ -985,7 +985,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			}
 
 			if (isset($modSettings['integrate_activate']) && function_exists($modSettings['integrate_activate']))
-				call_user_func($modSettings['integrate_activate'], $old_profile['memberName']);
+				call_user_func($modSettings['integrate_activate'], $old_profile['member_name']);
 
 			// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
 			updateMemberData($memID, array('is_activated' => $old_profile['is_activated'] >= 10 ? '11' : '1', 'validation_code' => '\'\''));
@@ -998,50 +998,50 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			updateStats('member', false);
 		}
 
-		if (isset($_POST['karmaGood']))
-			$profile_vars['karmaGood'] = $_POST['karmaGood'] != '' ? (int) $_POST['karmaGood'] : '\'\'';
-		if (isset($_POST['karmaBad']))
-			$profile_vars['karmaBad'] = $_POST['karmaBad'] != '' ? (int) $_POST['karmaBad'] : '\'\'';
+		if (isset($_POST['karma_good']))
+			$profile_vars['karma_good'] = $_POST['karma_good'] != '' ? (int) $_POST['karma_good'] : '\'\'';
+		if (isset($_POST['karma_bad']))
+			$profile_vars['karma_bad'] = $_POST['karma_bad'] != '' ? (int) $_POST['karma_bad'] : '\'\'';
 	}
 
 	// Assigning membergroups (you need admin_forum permissions to change an admins' membergroups).
 	if (allowedTo('manage_membergroups'))
 	{
-		// The account page allows the change of your ID_GROUP - but not to admin!.
-		if (isset($_POST['ID_GROUP']) && (allowedTo('admin_forum') || ((int) $_POST['ID_GROUP'] != 1 && $old_profile['ID_GROUP'] != 1)))
-			$profile_vars['ID_GROUP'] = (int) $_POST['ID_GROUP'];
+		// The account page allows the change of your id_group - but not to admin!.
+		if (isset($_POST['id_group']) && (allowedTo('admin_forum') || ((int) $_POST['id_group'] != 1 && $old_profile['id_group'] != 1)))
+			$profile_vars['id_group'] = (int) $_POST['id_group'];
 
 		// Find the additional membergroups (if any)
-		if (isset($_POST['additionalGroups']) && is_array($_POST['additionalGroups']))
+		if (isset($_POST['additional_groups']) && is_array($_POST['additional_groups']))
 		{
-			foreach ($_POST['additionalGroups'] as $i => $group_id)
+			foreach ($_POST['additional_groups'] as $i => $group_id)
 			{
 				if ((int) $group_id == 0 || (!allowedTo('admin_forum') && (int) $group_id == 1))
-					unset($_POST['additionalGroups'][$i], $_POST['additionalGroups'][$i]);
+					unset($_POST['additional_groups'][$i], $_POST['additional_groups'][$i]);
 				else
-					$_POST['additionalGroups'][$i] = (int) $group_id;
+					$_POST['additional_groups'][$i] = (int) $group_id;
 			}
 
 			// Put admin back in there if you don't have permission to take it away.
-			if (!allowedTo('admin_forum') && in_array(1, explode(',', $old_profile['additionalGroups'])))
-				$_POST['additionalGroups'][] = 1;
+			if (!allowedTo('admin_forum') && in_array(1, explode(',', $old_profile['additional_groups'])))
+				$_POST['additional_groups'][] = 1;
 
-			$profile_vars['additionalGroups'] = '\'' . implode(',', $_POST['additionalGroups']) . '\'';
+			$profile_vars['additional_groups'] = '\'' . implode(',', $_POST['additional_groups']) . '\'';
 		}
 
 		// Too often, people remove delete their own account, or something.
-		if (in_array(1, explode(',', $old_profile['additionalGroups'])) || $old_profile['ID_GROUP'] == 1)
+		if (in_array(1, explode(',', $old_profile['additional_groups'])) || $old_profile['id_group'] == 1)
 		{
-			$stillAdmin = !isset($profile_vars['ID_GROUP']) || $profile_vars['ID_GROUP'] == 1 || (isset($_POST['additionalGroups']) && in_array(1, $_POST['additionalGroups']));
+			$stillAdmin = !isset($profile_vars['id_group']) || $profile_vars['id_group'] == 1 || (isset($_POST['additional_groups']) && in_array(1, $_POST['additional_groups']));
 
 			// If they would no longer be an admin, look for any other...
 			if (!$stillAdmin)
 			{
-				$request = $smfFunc['db_query']("
-					SELECT ID_MEMBER
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member
 					FROM {$db_prefix}members
-					WHERE (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups))
-						AND ID_MEMBER != $memID
+					WHERE (id_group = 1 OR FIND_IN_SET(1, additional_groups))
+						AND id_member != $memID
 					LIMIT 1", __FILE__, __LINE__);
 				list ($another) = $smfFunc['db_fetch_row']($request);
 				$smfFunc['db_free_result']($request);
@@ -1052,7 +1052,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		}
 
 		// If we are changing group status, update permission cache as necessary.
-		if (isset($profile_vars['ID_GROUP']) || isset($profile_vars['additionalGroups']))
+		if (isset($profile_vars['id_group']) || isset($profile_vars['additional_groups']))
 		{
 			if ($context['user']['is_owner'])
 				$_SESSION['mc']['time'] = 0;
@@ -1094,7 +1094,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 	// Here's where we sort out all the 'other' values...
 	if ($changeOther)
 	{
-		makeThemeChanges($memID, isset($_POST['ID_THEME']) ? (int) $_POST['ID_THEME'] : $old_profile['ID_THEME']);
+		makeThemeChanges($memID, isset($_POST['id_theme']) ? (int) $_POST['id_theme'] : $old_profile['id_theme']);
 		makeAvatarChanges($memID, $post_errors);
 		makeNotificationChanges($memID);
 		if (!empty($_REQUEST['sa']))
@@ -1114,12 +1114,12 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 				$profile_vars[$var] = '\'' . $_POST[$var] . '\'';
 	}
 
-	if (isset($profile_vars['ICQ']) && $profile_vars['ICQ'] == '0')
-		$profile_vars['ICQ'] = '\'\'';
+	if (isset($profile_vars['icq']) && $profile_vars['icq'] == '0')
+		$profile_vars['icq'] = '\'\'';
 }
 
 // Make any theme changes that are sent with the profile..
-function makeThemeChanges($memID, $ID_THEME)
+function makeThemeChanges($memID, $id_theme)
 {
 	global $db_prefix, $modSettings, $smfFunc;
 
@@ -1128,34 +1128,36 @@ function makeThemeChanges($memID, $ID_THEME)
 	if (isset($_POST['options']) && is_array($_POST['options']))
 	{
 		foreach ($_POST['options'] as $opt => $val)
-			$themeSetArray[] = '(' . $memID . ', ' . $ID_THEME . ", SUBSTRING('" . addslashes($opt) . "', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534))";
+			$themeSetArray[] = array($memID, $id_theme, "SUBSTRING('" . addslashes($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
+			//!!! $themeSetArray[] = '(' . $memID . ', ' . $id_theme . ", SUBSTRING('" . addslashes($opt) . "', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534))";
 	}
 
 	$erase_options = array();
 	if (isset($_POST['default_options']) && is_array($_POST['default_options']))
 		foreach ($_POST['default_options'] as $opt => $val)
 		{
-			$themeSetArray[] = "($memID, 1, SUBSTRING('" . addslashes($opt) . "', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534))";
+			$themeSetArray[] = array($memID, 1, "SUBSTRING('" . addslashes($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
+			//!!! $themeSetArray[] = "($memID, 1, SUBSTRING('" . addslashes($opt) . "', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534))";
 			$erase_options[] = addslashes($opt);
 		}
 
 	// If themeSetArray isn't still empty, send it to the database.
 	if (!empty($themeSetArray))
 	{
-		$smfFunc['db_query']("
-			REPLACE INTO {$db_prefix}themes
-				(ID_MEMBER, ID_THEME, variable, value)
-			VALUES " . implode(",
-				", $themeSetArray), __FILE__, __LINE__);
+		$smfFunc['db_insert']('replace',
+			"{$db_prefix}themes",
+			array('id_member', 'id_theme', 'variable', 'value'),
+			$themeSetArray,
+			array('id_member', 'id_theme', 'variable'));
 	}
 
 	if (!empty($erase_options))
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}themes
-			WHERE ID_THEME != 1
+			WHERE id_theme != 1
 				AND variable IN ('" . implode("', '", $erase_options) . "')
-				AND ID_MEMBER = $memID", __FILE__, __LINE__);
+				AND id_member = $memID", __FILE__, __LINE__);
 	}
 
 	$themes = explode(',', $modSettings['knownThemes']);
@@ -1175,13 +1177,13 @@ function makeNotificationChanges($memID)
 		foreach ($_POST['notify_boards'] as $index => $id)
 			$_POST['notify_boards'][$index] = (int) $id;
 
-		// ID_BOARD = 0 is reserved for topic notifications.
+		// id_board = 0 is reserved for topic notifications.
 		$_POST['notify_boards'] = array_diff($_POST['notify_boards'], array(0));
 
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_notify
-			WHERE ID_BOARD IN (" . implode(', ', $_POST['notify_boards']) . ")
-				AND ID_MEMBER = $memID", __FILE__, __LINE__);
+			WHERE id_board IN (" . implode(', ', $_POST['notify_boards']) . ")
+				AND id_member = $memID", __FILE__, __LINE__);
 	}
 
 	// We are editing topic notifications......
@@ -1193,10 +1195,10 @@ function makeNotificationChanges($memID)
 		// Make sure there are no zeros left.
 		$_POST['notify_topics'] = array_diff($_POST['notify_topics'], array(0));
 
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_notify
-			WHERE ID_TOPIC IN (" . implode(', ', $_POST['notify_topics']) . ")
-				AND ID_MEMBER = $memID", __FILE__, __LINE__);
+			WHERE id_topic IN (" . implode(', ', $_POST['notify_topics']) . ")
+				AND id_member = $memID", __FILE__, __LINE__);
 	}
 }
 
@@ -1239,12 +1241,12 @@ function makeAvatarChanges($memID, &$post_errors)
 		$_POST['avatar'] = preg_match('~^([\w _!@%*=\-#()\[\]&.,]+/)?[\w _!@%*=\-#()\[\]&.,]+$~', $_POST['avatar']) != 0 && preg_match('/\.\./', $_POST['avatar']) == 0 && file_exists($modSettings['avatar_directory'] . '/' . $_POST['avatar']) ? ($_POST['avatar'] == 'blank.gif' ? '' : $_POST['avatar']) : '';
 
 		// Get rid of their old avatar. (if uploaded.)
-		removeAttachments('a.ID_MEMBER = ' . $memID);
+		removeAttachments('a.id_member = ' . $memID);
 	}
 	elseif ($_POST['avatar_choice'] == 'external' && allowedTo('profile_remote_avatar') && strtolower(substr($_POST['userpicpersonal'], 0, 7)) == 'http://' && empty($modSettings['avatar_download_external']))
 	{
 		// Remove any attached avatar...
-		removeAttachments('a.ID_MEMBER = ' . $memID);
+		removeAttachments('a.id_member = ' . $memID);
 
 		$_POST['avatar'] = preg_replace('~action(=|%3d)(?!dlattach)~i', 'action-', $_POST['userpicpersonal']);
 
@@ -1324,14 +1326,14 @@ function makeAvatarChanges($memID, &$post_errors)
 				list ($width, $height) = getimagesize($_FILES['attachment']['tmp_name']);
 
 				// Remove previous attachments this member might have had.
-				removeAttachments('a.ID_MEMBER = ' . $memID);
+				removeAttachments('a.id_member = ' . $memID);
 
 				if (!rename($_FILES['attachment']['tmp_name'], $uploadDir . '/' . $destName))
 					fatal_lang_error('smf124', 'critical');
 
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}attachments
-						(ID_MEMBER, attachmentType, filename, size, width, height)
+						(id_member, attachment_type, filename, size, width, height)
 					VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . filesize($uploadDir . '/' . $destName) . ", " . (int) $width . ", " . (int) $height . ")", __FILE__, __LINE__);
 
 				// Attempt to chmod it.
@@ -1359,7 +1361,7 @@ function makeCustomFieldChanges($memID, $area)
 	$where = $area == 'register' ? "showReg = 1" : "showProfile = '$area'";
 
 	// Load the fields we are saving too - make sure we save valid data (etc).
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions, defaultValue, mask
 		FROM {$db_prefix}custom_fields
 		WHERE $where
@@ -1406,9 +1408,9 @@ function makeCustomFieldChanges($memID, $area)
 
 	// Make those changes!
 	if (!empty($changes))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			REPLACE INTO {$db_prefix}themes
-				(variable, value, ID_MEMBER)
+				(variable, value, id_member)
 			VALUES
 				" . implode(',', $changes), __FILE__, __LINE__);
 }
@@ -1424,7 +1426,7 @@ function summary($memID)
 
 	// Set up the stuff and load the user.
 	$context += array(
-		'allow_hide_email' => !empty($modSettings['allow_hideEmail']),
+		'allow_hide_email' => !empty($modSettings['allow_hide_email']),
 		'page_title' => $txt['profile_of'] . ' ' . $memberContext[$memID]['name'],
 		'can_send_pm' => allowedTo('pm_send'),
 		'can_have_buddy' => allowedTo('profile_identity_own') && !empty($modSettings['enable_buddylist']),
@@ -1432,8 +1434,8 @@ function summary($memID)
 	$context['member'] = &$memberContext[$memID];
 
 	// They haven't even been registered for a full day!?
-	$days_registered = (int) ((time() - $user_profile[$memID]['dateRegistered']) / (3600 * 24));
-	if (empty($user_profile[$memID]['dateRegistered']) || $days_registered < 1)
+	$days_registered = (int) ((time() - $user_profile[$memID]['date_registered']) / (3600 * 24));
+	if (empty($user_profile[$memID]['date_registered']) || $days_registered < 1)
 		$context['member']['posts_per_day'] = $txt[470];
 	else
 		$context['member']['posts_per_day'] = comma_format($context['member']['real_posts'] / $days_registered, 3);
@@ -1500,7 +1502,7 @@ function summary($memID)
 		$context['can_edit_ban'] = AllowedTo('manage_bans');
 
 		$ban_query = array();
-		$ban_query[] = "ID_MEMBER = " . $context['member']['id'];
+		$ban_query[] = "id_member = " . $context['member']['id'];
 
 		// Valid IP?
 		if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $memberContext[$memID]['ip'], $ip_parts) == 1)
@@ -1526,14 +1528,13 @@ function summary($memID)
 			$ban_query[] = "('" . addslashes($context['member']['email']) . "' LIKE bi.email_address)";
 
 		// So... are they banned?  Dying to know!
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT bg.ID_BAN_GROUP, bg.name, bg.cannot_access, bg.cannot_post, bg.cannot_register,
 				bg.cannot_login, bg.reason
 			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
 			WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
 				AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
-				AND (" . implode(' OR ', $ban_query) . ')
-			GROUP BY bg.ID_BAN_GROUP', __FILE__, __LINE__);
+				AND (" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// Work out what restrictions we actually have.
@@ -1549,7 +1550,7 @@ function summary($memID)
 			// Prepare the link for context.
 			$ban_explanation = sprintf($txt['user_cannot_due_to'], implode(', ', $ban_restrictions), '<a href="' . $scripturl . '?action=admin;area=ban;sa=edit;bg=' . $row['ID_BAN_GROUP'] . '">' . $row['name'] . '</a>');
 
-			$context['member']['bans'][] = array(
+			$context['member']['bans'][$row['ID_BAN_GROUP']] = array(
 				'reason' => empty($row['reason']) ? '' : '<br /><br /><b>' . $txt['ban_reason'] . ':</b> ' . $row['reason'],
 				'cannot' => array(
 					'access' => !empty($row['cannot_access']),
@@ -1570,7 +1571,7 @@ function summary($memID)
 function showPosts($memID)
 {
 	global $txt, $user_info, $scripturl, $modSettings, $db_prefix;
-	global $context, $user_profile, $ID_MEMBER, $sourcedir, $smfFunc;
+	global $context, $user_profile, $id_member, $sourcedir, $smfFunc;
 
 	// If just deleting a message, do it and then redirect back.
 	if (isset($_GET['delete']))
@@ -1593,20 +1594,20 @@ function showPosts($memID)
 	if (empty($_REQUEST['viewscount']) || !is_numeric($_REQUEST['viewscount']))
 		$_REQUEST['viewscount'] = '10';
 
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.ID_MEMBER = $memID
+		WHERE m.id_member = $memID
 			AND m.approved = 1
-			AND b.ID_BOARD = m.ID_BOARD
+			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]", __FILE__, __LINE__);
 	list ($msgCount) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	$request = $smfFunc['db_query']("
-		SELECT MIN(ID_MSG), MAX(ID_MSG)
+	$request = $smfFunc['db_query']('', "
+		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {$db_prefix}messages AS m
-		WHERE m.ID_MEMBER = $memID
+		WHERE m.id_member = $memID
 			AND m.approved = 1", __FILE__, __LINE__);
 	list ($min_msg_member, $max_msg_member) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -1634,30 +1635,30 @@ function showPosts($memID)
 	if ($msgCount > 1000)
 	{
 		$margin = floor(($max_msg_member - $min_msg_member) * (($start + $modSettings['defaultMaxMessages']) / $msgCount) + .1 * ($max_msg_member - $min_msg_member));
-		$range_limit = $reverse ? 'ID_MSG < ' . ($min_msg_member + $margin) : 'ID_MSG > ' . ($max_msg_member - $margin);
+		$range_limit = $reverse ? 'id_msg < ' . ($min_msg_member + $margin) : 'id_msg > ' . ($max_msg_member - $margin);
 	}
 
-	$context['page_title'] = $txt[458] . ' ' . $user_profile[$memID]['realName'];
+	$context['page_title'] = $txt[458] . ' ' . $user_profile[$memID]['real_name'];
 
 	// Find this user's posts.  The left join on categories somehow makes this faster, weird as it looks.
 	$looped = false;
 	while (true)
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				b.ID_BOARD, b.name AS bname, c.ID_CAT, c.name AS cname, m.ID_TOPIC, m.ID_MSG,
-				t.ID_MEMBER_STARTED, t.ID_FIRST_MSG, t.ID_LAST_MSG, m.body, m.smileysEnabled,
-				m.subject, m.posterTime
+				b.id_board, b.name AS bname, c.id_cat, c.name AS cname, m.id_topic, m.id_msg,
+				t.id_member_started, t.id_first_msg, t.id_last_msg, m.body, m.smileys_enabled,
+				m.subject, m.poster_time
 			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-				LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
-			WHERE m.ID_MEMBER = $memID
-				AND m.ID_TOPIC = t.ID_TOPIC
-				AND t.ID_BOARD = b.ID_BOARD" . (empty($range_limit) ? '' : "
+				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+			WHERE m.id_member = $memID
+				AND m.id_topic = t.id_topic
+				AND t.id_board = b.id_board" . (empty($range_limit) ? '' : "
 				AND $range_limit") . "
 				AND m.approved = 1
 				AND t.approved = 1
 				AND $user_info[query_see_board]
-			ORDER BY m.ID_MSG " . ($reverse ? 'ASC' : 'DESC') . "
+			ORDER BY m.id_msg " . ($reverse ? 'ASC' : 'DESC') . "
 			LIMIT $start, $maxIndex", __FILE__, __LINE__);
 
 		// Make sure we quit this loop.
@@ -1678,7 +1679,7 @@ function showPosts($memID)
 		censorText($row['subject']);
 
 		// Do the code.
-		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
+		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// And the array...
 		$context['posts'][$counter += $reverse ? -1 : 1] = array(
@@ -1686,27 +1687,27 @@ function showPosts($memID)
 			'counter' => $counter,
 			'category' => array(
 				'name' => $row['cname'],
-				'id' => $row['ID_CAT']
+				'id' => $row['id_cat']
 			),
 			'board' => array(
 				'name' => $row['bname'],
-				'id' => $row['ID_BOARD']
+				'id' => $row['id_board']
 			),
-			'topic' => $row['ID_TOPIC'],
+			'topic' => $row['id_topic'],
 			'subject' => $row['subject'],
-			'start' => 'msg' . $row['ID_MSG'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
-			'id' => $row['ID_MSG'],
+			'start' => 'msg' . $row['id_msg'],
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
+			'id' => $row['id_msg'],
 			'can_reply' => false,
 			'can_mark_notify' => false,
 			'can_delete' => false,
-			'delete_possible' => ($row['ID_FIRST_MSG'] != $row['ID_MSG'] || $row['ID_LAST_MSG'] == $row['ID_MSG']) && (empty($modSettings['edit_disable_time']) || $row['posterTime'] + $modSettings['edit_disable_time'] * 60 >= time()),
+			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
 		);
 
-		if ($ID_MEMBER == $row['ID_MEMBER_STARTED'])
-			$board_ids['own'][$row['ID_BOARD']][] = $counter;
-		$board_ids['any'][$row['ID_BOARD']][] = $counter;
+		if ($id_member == $row['id_member_started'])
+			$board_ids['own'][$row['id_board']][] = $counter;
+		$board_ids['any'][$row['id_board']][] = $counter;
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -1808,16 +1809,16 @@ function editBuddies($memID)
 
 		if (!empty($new_buddies))
 		{
-			// Now find out the ID_MEMBER of the buddy.
-			$request = $smfFunc['db_query']("
-				SELECT ID_MEMBER
+			// Now find out the id_member of the buddy.
+			$request = $smfFunc['db_query']('', "
+				SELECT id_member
 				FROM {$db_prefix}members
-				WHERE memberName IN ('" . implode("','", $new_buddies) . "') OR realName IN ('" . implode("','", $new_buddies) . "')
+				WHERE member_name IN ('" . implode("','", $new_buddies) . "') OR real_name IN ('" . implode("','", $new_buddies) . "')
 				LIMIT " . count($new_buddies), __FILE__, __LINE__);
 
 			// Add the new member to the buddies array.
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$buddiesArray[] = (int) $row['ID_MEMBER'];
+				$buddiesArray[] = (int) $row['id_member'];
 			$smfFunc['db_free_result']($request);
 
 			// Now update the current users buddy list.
@@ -1834,14 +1835,14 @@ function editBuddies($memID)
 
 	if (!empty($buddiesArray))
 	{
-		$result = $smfFunc['db_query']("
-			SELECT ID_MEMBER
+		$result = $smfFunc['db_query']('', "
+			SELECT id_member
 			FROM {$db_prefix}members
-			WHERE ID_MEMBER IN (" . implode(', ', $buddiesArray) . ")
-			ORDER BY realName
+			WHERE id_member IN (" . implode(', ', $buddiesArray) . ")
+			ORDER BY real_name
 			LIMIT " . (substr_count($user_profile[$memID]['buddy_list'], ',') + 1), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$buddies[] = $row['ID_MEMBER'];
+			$buddies[] = $row['id_member'];
 		$smfFunc['db_free_result']($result);
 	}
 
@@ -1863,39 +1864,39 @@ function statPanel($memID)
 {
 	global $txt, $scripturl, $db_prefix, $context, $user_profile, $user_info, $modSettings, $smfFunc;
 
-	$context['page_title'] = $txt['statPanel_showStats'] . ' ' . $user_profile[$memID]['realName'];
+	$context['page_title'] = $txt['statPanel_showStats'] . ' ' . $user_profile[$memID]['real_name'];
 
 	// General user statistics.
-	$timeDays = floor($user_profile[$memID]['totalTimeLoggedIn'] / 86400);
-	$timeHours = floor(($user_profile[$memID]['totalTimeLoggedIn'] % 86400) / 3600);
-	$context['time_logged_in'] = ($timeDays > 0 ? $timeDays . $txt['totalTimeLogged2'] : '') . ($timeHours > 0 ? $timeHours . $txt['totalTimeLogged3'] : '') . floor(($user_profile[$memID]['totalTimeLoggedIn'] % 3600) / 60) . $txt['totalTimeLogged4'];
+	$timeDays = floor($user_profile[$memID]['total_time_logged_in'] / 86400);
+	$timeHours = floor(($user_profile[$memID]['total_time_logged_in'] % 86400) / 3600);
+	$context['time_logged_in'] = ($timeDays > 0 ? $timeDays . $txt['totalTimeLogged2'] : '') . ($timeHours > 0 ? $timeHours . $txt['totalTimeLogged3'] : '') . floor(($user_profile[$memID]['total_time_logged_in'] % 3600) / 60) . $txt['totalTimeLogged4'];
 	$context['num_posts'] = comma_format($user_profile[$memID]['posts']);
 
 	// Number of topics started.
 	// !!!SLOW This query is sorta slow...
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}topics
-		WHERE ID_MEMBER_STARTED = $memID" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND ID_BOARD != $modSettings[recycle_board]" : ''), __FILE__, __LINE__);
+		WHERE id_member_started = $memID" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
+			AND id_board != $modSettings[recycle_board]" : ''), __FILE__, __LINE__);
 	list ($context['num_topics']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
 	// Number polls started.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}topics
-		WHERE ID_MEMBER_STARTED = $memID" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND ID_BOARD != $modSettings[recycle_board]" : '') . "
-			AND ID_POLL != 0", __FILE__, __LINE__);
+		WHERE id_member_started = $memID" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
+			AND id_board != $modSettings[recycle_board]" : '') . "
+			AND id_poll != 0", __FILE__, __LINE__);
 	list ($context['num_polls']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
 	// Number polls voted in.
-	$result = $smfFunc['db_query']("
-		SELECT COUNT(DISTINCT ID_POLL)
+	$result = $smfFunc['db_query']('', "
+		SELECT COUNT(DISTINCT id_poll)
 		FROM {$db_prefix}log_polls
-		WHERE ID_MEMBER = $memID", __FILE__, __LINE__);
+		WHERE id_member = $memID", __FILE__, __LINE__);
 	list ($context['num_votes']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -1905,80 +1906,80 @@ function statPanel($memID)
 	$context['num_votes'] = comma_format($context['num_votes']);
 
 	// Grab the board this member posted in most often.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT
-			b.ID_BOARD, b.name, b.numPosts, COUNT(*) AS messageCount
+			b.id_board, MAX(b.name) AS name, MAX(b.num_posts) AS num_posts, COUNT(*) AS message_count
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.ID_MEMBER = $memID
-			AND b.ID_BOARD = m.ID_BOARD
+		WHERE m.id_member = $memID
+			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
-		GROUP BY b.ID_BOARD
-		ORDER BY messageCount DESC
+		GROUP BY b.id_board
+		ORDER BY message_count DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['popular_boards'] = array();
 	$maxPosts = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		if ($row['messageCount'] > $maxPosts)
-			$maxPosts = $row['messageCount'];
+		if ($row['message_count'] > $maxPosts)
+			$maxPosts = $row['message_count'];
 
-		$context['popular_boards'][$row['ID_BOARD']] = array(
-			'id' => $row['ID_BOARD'],
-			'posts' => $row['messageCount'],
-			'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-			'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>',
+		$context['popular_boards'][$row['id_board']] = array(
+			'id' => $row['id_board'],
+			'posts' => $row['message_count'],
+			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
 			'posts_percent' => 0,
-			'total_posts' => $row['numPosts'],
+			'total_posts' => $row['num_posts'],
 		);
 	}
 	$smfFunc['db_free_result']($result);
 
 	// Now that we know the total, calculate the percentage.
-	foreach ($context['popular_boards'] as $ID_BOARD => $board_data)
-		$context['board_activity'][$ID_BOARD] = $board_data['total_posts'] == 0 ? 0 : comma_format(($board_data['posts'] * 100) / $board_data['total_posts'], 2);
+	foreach ($context['popular_boards'] as $id_board => $board_data)
+		$context['popular_boards'][$id_board]['posts_percent'] = $board_data['total_posts'] == 0 ? 0 : comma_format(($board_data['posts'] * 100) / $board_data['total_posts'], 2);
 
 	// Now get the 10 boards this user has most often participated in.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT
-			b.ID_BOARD, b.name, IF(COUNT(*) > b.numPosts, 1, COUNT(*) / b.numPosts) * 100 AS percentage
+			b.id_board, MAX(b.name) AS name, CASE WHEN COUNT(*) > MAX(b.num_posts) THEN 1 ELSE COUNT(*) / MAX(b.num_posts) END * 100 AS percentage
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.ID_MEMBER = $memID
-			AND b.ID_BOARD = m.ID_BOARD
+		WHERE m.id_member = $memID
+			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
-		GROUP BY b.ID_BOARD
+		GROUP BY b.id_board
 		ORDER BY percentage DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['board_activity'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		$context['board_activity'][$row['ID_BOARD']] = array(
-			'id' => $ID_BOARD,
-			'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-			'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>',
+		$context['board_activity'][$row['id_board']] = array(
+			'id' => $id_board,
+			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
 			'percent' => $row['percentage'],
 		);
 	}
 	$smfFunc['db_free_result']($result);
 
 	// Posting activity by time.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT
-			HOUR(FROM_UNIXTIME(posterTime + " . (($user_info['time_offset'] + $modSettings['time_offset']) * 3600) . ")) AS hour,
-			COUNT(*) AS postCount
+			HOUR(FROM_UNIXTIME(poster_time + " . (($user_info['time_offset'] + $modSettings['time_offset']) * 3600) . ")) AS hour,
+			COUNT(*) AS post_count
 		FROM {$db_prefix}messages
-		WHERE ID_MEMBER = $memID" . ($modSettings['totalMessages'] > 100000 ? "
-			AND ID_TOPIC > " . ($modSettings['totalTopics'] - 10000) : '') . "
+		WHERE id_member = $memID" . ($modSettings['totalMessages'] > 100000 ? "
+			AND id_topic > " . ($modSettings['totalTopics'] - 10000) : '') . "
 		GROUP BY hour", __FILE__, __LINE__);
 	$maxPosts = 0;
 	$context['posts_by_time'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		if ($row['postCount'] > $maxPosts)
-			$maxPosts = $row['postCount'];
+		if ($row['post_count'] > $maxPosts)
+			$maxPosts = $row['post_count'];
 
 		$context['posts_by_time'][$row['hour']] = array(
 			'hour' => $row['hour'],
-			'posts_percent' => $row['postCount']
+			'posts_percent' => $row['post_count']
 		);
 	}
 	$smfFunc['db_free_result']($result);
@@ -2007,18 +2008,18 @@ function trackUser($memID)
 	// Verify if the user has sufficient permissions.
 	isAllowedTo('moderate_forum');
 
-	$context['page_title'] = $txt['trackUser'] . ' - ' . $user_profile[$memID]['realName'];
+	$context['page_title'] = $txt['trackUser'] . ' - ' . $user_profile[$memID]['real_name'];
 
-	$context['last_ip'] = $user_profile[$memID]['memberIP'];
-	$context['member']['name'] = $user_profile[$memID]['realName'];
+	$context['last_ip'] = $user_profile[$memID]['member_ip'];
+	$context['member']['name'] = $user_profile[$memID]['real_name'];
 
 	// If this is a big forum, or a large posting user, let's limit the search.
 	if ($modSettings['totalMessages'] > 50000 && $user_profile[$memID]['posts'] > 500)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT MAX(ID_MSG)
+		$request = $smfFunc['db_query']('', "
+			SELECT MAX(id_msg)
 			FROM {$db_prefix}messages AS m
-			WHERE m.ID_MEMBER = $memID", __FILE__, __LINE__);
+			WHERE m.id_member = $memID", __FILE__, __LINE__);
 		list ($max_msg_member) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -2028,26 +2029,26 @@ function trackUser($memID)
 	
 	$ips = array();
 	// Get all IP addresses this user has used for his messages.
-	$request = $smfFunc['db_query']("
-		SELECT posterIP
+	$request = $smfFunc['db_query']('', "
+		SELECT poster_ip
 		FROM {$db_prefix}messages
-		WHERE ID_MEMBER = $memID
+		WHERE id_member = $memID
 		" . (isset($min_msg_member) ? "
-			AND ID_MSG >= $min_msg_member AND ID_MSG <= $max_msg_member" : '') . "
-		GROUP BY posterIP", __FILE__, __LINE__);
+			AND id_msg >= $min_msg_member AND id_msg <= $max_msg_member" : '') . "
+		GROUP BY poster_ip", __FILE__, __LINE__);
 	$context['ips'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$context['ips'][] = '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['posterIP'] . '">' . $row['posterIP'] . '</a>';
-		$ips[] = $row['posterIP'];
+		$context['ips'][] = '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['poster_ip'] . '">' . $row['poster_ip'] . '</a>';
+		$ips[] = $row['poster_ip'];
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Now also get the IP addresses from the error messages.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*) AS errorCount, ip
 		FROM {$db_prefix}log_errors
-		WHERE ID_MEMBER = $memID
+		WHERE id_member = $memID
 		GROUP BY ip", __FILE__, __LINE__);
 	$context['error_ips'] = array();
 	$totalErrors = 0;
@@ -2064,14 +2065,14 @@ function trackUser($memID)
 	$context['start'] = $_REQUEST['start'];
 
 	// Get a list of error messages from this ip (range).
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			le.logTime, le.ip, le.url, le.message, IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER,
-			IFNULL(mem.realName, '$txt[guest_title]') AS display_name, mem.memberName
+			le.log_time, le.ip, le.url, le.message, IFNULL(mem.id_member, 0) AS id_member,
+			IFNULL(mem.real_name, '$txt[guest_title]') AS display_name, mem.member_name
 		FROM {$db_prefix}log_errors AS le
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = le.ID_MEMBER)
-		WHERE le.ID_MEMBER = $memID
-		ORDER BY le.ID_ERROR DESC
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = le.id_member)
+		WHERE le.id_member = $memID
+		ORDER BY le.id_error DESC
 		LIMIT $context[start], 20", __FILE__, __LINE__);
 	$context['error_messages'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2079,8 +2080,8 @@ function trackUser($memID)
 			'ip' => $row['ip'],
 			'message' => strtr($row['message'], array('&lt;span class=&quot;remove&quot;&gt;' => '', '&lt;/span&gt;' => '')),
 			'url' => $row['url'],
-			'time' => timeformat($row['logTime']),
-			'timestamp' => forum_time(true, $row['logTime'])
+			'time' => timeformat($row['log_time']),
+			'timestamp' => forum_time(true, $row['log_time'])
 		);
 	$smfFunc['db_free_result']($request);
 
@@ -2089,25 +2090,25 @@ function trackUser($memID)
 	$context['members_in_range'] = array();
 	if (!empty($ips))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER, realName
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member, real_name
 			FROM {$db_prefix}members
-			WHERE ID_MEMBER != $memID
-				AND memberIP IN ('" . implode("', '", $ips) . "')", __FILE__, __LINE__);
+			WHERE id_member != $memID
+				AND member_ip IN ('" . implode("', '", $ips) . "')", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$context['members_in_range'][$row['ID_MEMBER']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>';
+				$context['members_in_range'][$row['id_member']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']("
-			SELECT mem.ID_MEMBER, mem.realName
+		$request = $smfFunc['db_query']('', "
+			SELECT mem.id_member, mem.real_name
 			FROM ({$db_prefix}messages AS m, {$db_prefix}members AS mem)
-			WHERE mem.ID_MEMBER = m.ID_MEMBER
-				AND mem.ID_MEMBER != $memID
-				AND m.posterIP IN ('" . implode("', '", $ips) . "')", __FILE__, __LINE__);
+			WHERE mem.id_member = m.id_member
+				AND mem.id_member != $memID
+				AND m.poster_ip IN ('" . implode("', '", $ips) . "')", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$context['members_in_range'][$row['ID_MEMBER']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>';
+				$context['members_in_range'][$row['id_member']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 		$smfFunc['db_free_result']($request);
 	}
 }
@@ -2129,7 +2130,7 @@ function TrackIP($memID = 0)
 		$context['page_title'] = $txt['profile'];
 	}
 	else
-		$context['ip'] = $user_profile[$memID]['memberIP'];
+		$context['ip'] = $user_profile[$memID]['member_ip'];
 
 	if (preg_match('/^\d{1,3}\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/', $context['ip']) == 0)
 		fatal_lang_error('invalid_ip', false);
@@ -2140,13 +2141,13 @@ function TrackIP($memID = 0)
 	$context['page_title'] = $txt['trackIP'] . ' - ' . $context['ip'];
 
 	// Get some totals for pagination.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}messages
-		WHERE posterIP $dbip", __FILE__, __LINE__);
+		WHERE poster_ip $dbip", __FILE__, __LINE__);
 	list ($totalMessages) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_errors
 		WHERE ip $dbip", __FILE__, __LINE__);
@@ -2158,72 +2159,72 @@ function TrackIP($memID = 0)
 	$context['message_page_index'] = constructPageIndex($scripturl . '?action=' . ($memID == 0 ? 'trackip;searchip=' . $context['ip'] : 'profile;u=' . $memID . ';sa=trackIP') . ';mesStart=%d;errStart=' . $context['error_start'], $context['message_start'], $totalMessages, 20, true);
 	$context['error_page_index'] = constructPageIndex($scripturl . '?action=' . ($memID == 0 ? 'trackip;searchip=' . $context['ip'] : 'profile;u=' . $memID . ';sa=trackIP') . ';mesStart=' . $context['message_start'] . ';errStart=%d', $context['error_start'], $totalErrors, 20, true);
 
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, realName AS display_name, memberIP
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, real_name AS display_name, member_ip
 		FROM {$db_prefix}members
-		WHERE memberIP $dbip", __FILE__, __LINE__);
+		WHERE member_ip $dbip", __FILE__, __LINE__);
 	$context['ips'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['ips'][$row['memberIP']][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['display_name'] . '</a>';
+		$context['ips'][$row['member_ip']][] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>';
 	$smfFunc['db_free_result']($request);
 
 	ksort($context['ips']);
 
 	// !!!SLOW This query is using a filesort.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			m.ID_MSG, m.posterIP, IFNULL(mem.realName, m.posterName) AS display_name, mem.ID_MEMBER,
-			m.subject, m.posterTime, m.ID_TOPIC, m.ID_BOARD
+			m.id_msg, m.poster_ip, IFNULL(mem.real_name, m.poster_name) AS display_name, mem.id_member,
+			m.subject, m.poster_time, m.id_topic, m.id_board
 		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE m.posterIP $dbip
-		ORDER BY m.ID_MSG DESC
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.poster_ip $dbip
+		ORDER BY m.id_msg DESC
 		LIMIT $context[message_start], 20", __FILE__, __LINE__);
 	$context['messages'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['messages'][] = array(
-			'ip' => $row['posterIP'],
+			'ip' => $row['poster_ip'],
 			'member' => array(
-				'id' => $row['ID_MEMBER'],
+				'id' => $row['id_member'],
 				'name' => $row['display_name'],
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['display_name'] . '</a>'
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>'
 			),
 			'board' => array(
-				'id' => $row['ID_BOARD'],
-				'href' => $scripturl . '?board=' . $row['ID_BOARD']
+				'id' => $row['id_board'],
+				'href' => $scripturl . '?board=' . $row['id_board']
 			),
-			'topic' => $row['ID_TOPIC'],
-			'id' => $row['ID_MSG'],
+			'topic' => $row['id_topic'],
+			'id' => $row['id_msg'],
 			'subject' => $row['subject'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime'])
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time'])
 		);
 	$smfFunc['db_free_result']($request);
 
 	// !!!SLOW This query is using a filesort.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			le.logTime, le.ip, le.url, le.message, IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER,
-			IFNULL(mem.realName, '$txt[guest_title]') AS display_name, mem.memberName
+			le.log_time, le.ip, le.url, le.message, IFNULL(mem.id_member, 0) AS id_member,
+			IFNULL(mem.real_name, '$txt[guest_title]') AS display_name, mem.member_name
 		FROM {$db_prefix}log_errors AS le
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = le.ID_MEMBER)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = le.id_member)
 		WHERE le.ip $dbip
-		ORDER BY le.ID_ERROR DESC
+		ORDER BY le.id_error DESC
 		LIMIT $context[error_start], 20", __FILE__, __LINE__);
 	$context['error_messages'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['error_messages'][] = array(
 			'ip' => $row['ip'],
 			'member' => array(
-				'id' => $row['ID_MEMBER'],
+				'id' => $row['id_member'],
 				'name' => $row['display_name'],
-				'href' => $row['ID_MEMBER'] > 0 ? $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] : '',
-				'link' => $row['ID_MEMBER'] > 0 ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['display_name'] . '</a>' : $row['display_name']
+				'href' => $row['id_member'] > 0 ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+				'link' => $row['id_member'] > 0 ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>' : $row['display_name']
 			),
 			'message' => strtr($row['message'], array('&lt;span class=&quot;remove&quot;&gt;' => '', '&lt;/span&gt;' => '')),
 			'url' => $row['url'],
-			'error_time' => timeformat($row['logTime'])
+			'error_time' => timeformat($row['log_time'])
 		);
 	$smfFunc['db_free_result']($request);
 
@@ -2284,48 +2285,48 @@ function showPermissions($memID)
 	loadPermissionProfiles();
 
 	$context['member']['id'] = $memID;
-	$context['member']['name'] = $user_profile[$memID]['realName'];
+	$context['member']['name'] = $user_profile[$memID]['real_name'];
 
 	$context['page_title'] = $txt['showPermissions'];
 	$board = empty($board) ? 0 : (int) $board;
 	$context['board'] = $board;
 
 	// Determine which groups this user is in.
-	if (empty($user_profile[$memID]['additionalGroups']))
+	if (empty($user_profile[$memID]['additional_groups']))
 		$curGroups = array();
 	else
-		$curGroups = explode(',', $user_profile[$memID]['additionalGroups']);
-	$curGroups[] = $user_profile[$memID]['ID_GROUP'];
-	$curGroups[] = $user_profile[$memID]['ID_POST_GROUP'];
+		$curGroups = explode(',', $user_profile[$memID]['additional_groups']);
+	$curGroups[] = $user_profile[$memID]['id_group'];
+	$curGroups[] = $user_profile[$memID]['id_post_group'];
 
 	// Load a list of boards for the jump box - except the defaults.
-	$request = $smfFunc['db_query']("
-		SELECT b.ID_BOARD, b.name, b.ID_PROFILE, b.memberGroups
+	$request = $smfFunc['db_query']('', "
+		SELECT b.id_board, b.name, b.id_profile, b.member_groups
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = b.ID_BOARD AND mods.ID_MEMBER = $memID)
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $memID)
 		WHERE $user_info[query_see_board]
-			AND b.ID_PROFILE != 1", __FILE__, __LINE__);
+			AND b.id_profile != 1", __FILE__, __LINE__);
 	$context['boards'] = array();
 	$context['no_access_boards'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if (count(array_intersect($curGroups, explode(',', $row['memberGroups']))) === 0)
+		if (count(array_intersect($curGroups, explode(',', $row['member_groups']))) === 0)
 			$context['no_access_boards'][] = array(
-				'id' => $row['ID_BOARD'],
+				'id' => $row['id_board'],
 				'name' => $row['name'],
 				'is_last' => false,
 			);
 
 		// Format the name of this profile.
-		$profile_name = $context['profiles'][$row['ID_PROFILE']]['name'];
-		if ($context['profiles'][$row['ID_PROFILE']]['parent'])
-			$profile_name = sprintf($txt['permissions_profile_' . ($context['profiles'][$row['ID_PROFILE']]['parent'] == $row['ID_BOARD'] ? 'custom' : 'as_board')], $profile_name);
+		$profile_name = $context['profiles'][$row['id_profile']]['name'];
+		if ($context['profiles'][$row['id_profile']]['parent'])
+			$profile_name = sprintf($txt['permissions_profile_' . ($context['profiles'][$row['id_profile']]['parent'] == $row['id_board'] ? 'custom' : 'as_board')], $profile_name);
 
-		$context['boards'][$row['ID_BOARD']] = array(
-			'id' => $row['ID_BOARD'],
+		$context['boards'][$row['id_board']] = array(
+			'id' => $row['id_board'],
 			'name' => $row['name'],
-			'selected' => $board == $row['ID_BOARD'],
-			'profile' => $row['ID_PROFILE'],
+			'selected' => $board == $row['id_board'],
+			'profile' => $row['id_profile'],
 			'profile_name' => $profile_name,
 		);
 	}
@@ -2347,19 +2348,19 @@ function showPermissions($memID)
 	$denied = array();
 
 	// Get all general permissions.
-	$result = $smfFunc['db_query']("
-		SELECT p.permission, p.addDeny, mg.groupName, p.ID_GROUP
+	$result = $smfFunc['db_query']('', "
+		SELECT p.permission, p.add_deny, mg.group_name, p.id_group
 		FROM {$db_prefix}permissions AS p
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = p.ID_GROUP)
-		WHERE p.ID_GROUP IN (" . implode(', ', $curGroups) . ")
-		ORDER BY p.addDeny DESC, p.permission, mg.minPosts, IF(mg.ID_GROUP < 4, mg.ID_GROUP, 4), mg.groupName", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = p.id_group)
+		WHERE p.id_group IN (" . implode(', ', $curGroups) . ")
+		ORDER BY p.add_deny DESC, p.permission, mg.min_posts, CASE WHEN mg.id_group < 4 THEN mg.id_group ELSE 4 END, mg.group_name", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		// We don't know about this permission, it doesn't exist :P.
 		if (!isset($txt['permissionname_' . $row['permission']]))
 			continue;
 
-		if (empty($row['addDeny']))
+		if (empty($row['add_deny']))
 			$denied[] = $row['permission'];
 
 		// Permissions that end with _own or _any consist of two parts.
@@ -2382,24 +2383,24 @@ function showPermissions($memID)
 			);
 
 		// Add the membergroup to either the denied or the allowed groups.
-		$context['member']['permissions']['general'][$row['permission']]['groups'][empty($row['addDeny']) ? 'denied' : 'allowed'][] = $row['ID_GROUP'] == 0 ? $txt['membergroups_members'] : $row['groupName'];
+		$context['member']['permissions']['general'][$row['permission']]['groups'][empty($row['add_deny']) ? 'denied' : 'allowed'][] = $row['id_group'] == 0 ? $txt['membergroups_members'] : $row['group_name'];
 
 		// Once denied is always denied.
-		$context['member']['permissions']['general'][$row['permission']]['is_denied'] |= empty($row['addDeny']);
+		$context['member']['permissions']['general'][$row['permission']]['is_denied'] |= empty($row['add_deny']);
 	}
 	$smfFunc['db_free_result']($result);
 
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			bp.addDeny, bp.permission, bp.ID_GROUP, mg.groupName" . (empty($board) ? '' : ',
-			b.ID_PROFILE, IF(mods.ID_MEMBER IS NULL, 0, 1) AS is_moderator') . "
+			bp.add_deny, bp.permission, bp.id_group, mg.group_name" . (empty($board) ? '' : ',
+			b.id_profile, CASE WHEN mods.id_member IS NULL THEN 0 ELSE 1 END AS is_moderator') . "
 		FROM ({$db_prefix}board_permissions AS bp" . (empty($board) ? ')' : ", {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = b.ID_BOARD AND mods.ID_MEMBER = $memID)") . "
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = bp.ID_GROUP)
-		WHERE bp.ID_PROFILE = " . (empty($board) ? '1' : 'b.ID_PROFILE') . "
-			AND bp.ID_GROUP IN (" . implode(', ', $curGroups) . "" . (empty($board) ? ')' : ", 3)
-			AND b.ID_BOARD = $board
-			AND (mods.ID_MEMBER IS NOT NULL OR bp.ID_GROUP != 3)"), __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $memID)") . "
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = bp.id_group)
+		WHERE bp.id_profile = " . (empty($board) ? '1' : 'b.id_profile') . "
+			AND bp.id_group IN (" . implode(', ', $curGroups) . "" . (empty($board) ? ')' : ", 3)
+			AND b.id_board = $board
+			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)"), __FILE__, __LINE__);
 
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -2426,9 +2427,9 @@ function showPermissions($memID)
 				'is_global' => empty($board),
 			);
 
-		$context['member']['permissions']['board'][$row['permission']]['groups'][empty($row['addDeny']) ? 'denied' : 'allowed'][$row['ID_GROUP']] = $row['ID_GROUP'] == 0 ? $txt['membergroups_members'] : $row['groupName'];
+		$context['member']['permissions']['board'][$row['permission']]['groups'][empty($row['add_deny']) ? 'denied' : 'allowed'][$row['id_group']] = $row['id_group'] == 0 ? $txt['membergroups_members'] : $row['group_name'];
 
-		$context['member']['permissions']['board'][$row['permission']]['is_denied'] |= empty($row['addDeny']);
+		$context['member']['permissions']['board'][$row['permission']]['is_denied'] |= empty($row['add_deny']);
 	}
 	$smfFunc['db_free_result']($request);
 }
@@ -2436,7 +2437,7 @@ function showPermissions($memID)
 function account($memID)
 {
 	global $context, $settings, $user_profile, $txt, $db_prefix;
-	global $scripturl, $memberGroups, $modSettings, $language, $user_info;
+	global $scripturl, $member_groups, $modSettings, $language, $user_info;
 	global $smfFunc;
 
 	// Allow an administrator to edit the username?
@@ -2447,14 +2448,14 @@ function account($memID)
 	$context['allow_edit_account'] = ($context['user']['is_owner'] && allowedTo('profile_identity_own')) || allowedTo('profile_identity_any');
 
 	// How about their email address... online status, and name?
-	$context['allow_hide_email'] = !empty($modSettings['allow_hideEmail']) || allowedTo('moderate_forum');
+	$context['allow_hide_email'] = !empty($modSettings['allow_hide_email']) || allowedTo('moderate_forum');
 	$context['allow_hide_online'] = !empty($modSettings['allow_hideOnline']) || allowedTo('moderate_forum');
 	$context['allow_edit_name'] = !empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum');
 
 	// Load up the existing contextual data.
 	$context['member'] += array(
-		'is_admin' => !empty($user_profile[$memID]['ID_GROUP']) && $user_profile[$memID]['ID_GROUP'] == 1,
-		'secret_question' => !isset($user_profile[$memID]['secretQuestion']) ? '' : $user_profile[$memID]['secretQuestion'],
+		'is_admin' => !empty($user_profile[$memID]['id_group']) && $user_profile[$memID]['id_group'] == 1,
+		'secret_question' => !isset($user_profile[$memID]['secret_question']) ? '' : $user_profile[$memID]['secret_question'],
 	);
 
 	// You need 'Manage Membergroups' permission for this.
@@ -2464,31 +2465,31 @@ function account($memID)
 			0 => array(
 				'id' => 0,
 				'name' => &$txt['no_primary_membergroup'],
-				'is_primary' => $user_profile[$memID]['ID_GROUP'] == 0,
+				'is_primary' => $user_profile[$memID]['id_group'] == 0,
 				'can_be_additional' => false,
 				'can_be_primary' => true,
 			)
 		);
-		$curGroups = explode(',', $user_profile[$memID]['additionalGroups']);
+		$curGroups = explode(',', $user_profile[$memID]['additional_groups']);
 
 		// Load membergroups, but only those groups the user can assign.
-		$request = $smfFunc['db_query']("
-			SELECT groupName, ID_GROUP, hidden
+		$request = $smfFunc['db_query']('', "
+			SELECT group_name, id_group, hidden
 			FROM {$db_prefix}membergroups
-			WHERE ID_GROUP != 3
-				AND minPosts = -1
-			ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
+			WHERE id_group != 3
+				AND min_posts = -1
+			ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// We should skip the administrator group if they don't have the admin_forum permission!
-			if ($row['ID_GROUP'] == 1 && !allowedTo('admin_forum'))
+			if ($row['id_group'] == 1 && !allowedTo('admin_forum'))
 				continue;
 
-			$context['member_groups'][$row['ID_GROUP']] = array(
-				'id' => $row['ID_GROUP'],
-				'name' => $row['groupName'],
-				'is_primary' => $user_profile[$memID]['ID_GROUP'] == $row['ID_GROUP'],
-				'is_additional' => in_array($row['ID_GROUP'], $curGroups),
+			$context['member_groups'][$row['id_group']] = array(
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
+				'is_primary' => $user_profile[$memID]['id_group'] == $row['id_group'],
+				'is_additional' => in_array($row['id_group'], $curGroups),
 				'can_be_additional' => true,
 				'can_be_primary' => !$row['hidden'],
 			);
@@ -2540,7 +2541,7 @@ function account($memID)
 function forumProfile($memID)
 {
 	global $context, $user_profile;
-	global $user_info, $txt, $ID_MEMBER, $modSettings;
+	global $user_info, $txt, $id_member, $modSettings;
 
 	$context['avatar_url'] = $modSettings['avatar_url'];
 	$context['allow_edit_title'] = allowedTo('profile_title_any') || (allowedTo('profile_title_own') && $context['user']['is_owner']);
@@ -2575,7 +2576,7 @@ function forumProfile($memID)
 		'birth_date' => empty($user_profile[$memID]['birthdate']) || $user_profile[$memID]['birthdate'] === '0001-01-01' ? '0000-00-00' : (substr($user_profile[$memID]['birthdate'], 0, 4) === '0004' ? '0000' . substr($user_profile[$memID]['birthdate'], 4) : $user_profile[$memID]['birthdate']),
 		'location' => !isset($user_profile[$memID]['location']) ? '' : $user_profile[$memID]['location'],
 		'title' => !isset($user_profile[$memID]['usertitle']) || $user_profile[$memID]['usertitle'] == '' ? '' : $user_profile[$memID]['usertitle'],
-		'blurb' => !isset($user_profile[$memID]['personalText']) ? '' : str_replace(array('<', '>', '&amp;#039;'), array('&lt;', '&gt;', '&#039;'), $user_profile[$memID]['personalText']),
+		'blurb' => !isset($user_profile[$memID]['personal_text']) ? '' : str_replace(array('<', '>', '&amp;#039;'), array('&lt;', '&gt;', '&#039;'), $user_profile[$memID]['personal_text']),
 		'signature' => !isset($user_profile[$memID]['signature']) ? '' : str_replace(array('<br />', '<', '>', '"', '\''), array("\n", '&lt;', '&gt;', '&quot;', '&#039;'), $user_profile[$memID]['signature']),
 	);
 
@@ -2587,7 +2588,7 @@ function forumProfile($memID)
 		'day' => $uday
 	);
 
-	if ($user_profile[$memID]['avatar'] == '' && $user_profile[$memID]['ID_ATTACH'] > 0 && $context['member']['avatar']['allow_upload'])
+	if ($user_profile[$memID]['avatar'] == '' && $user_profile[$memID]['id_attach'] > 0 && $context['member']['avatar']['allow_upload'])
 		$context['member']['avatar'] += array(
 			'choice' => 'upload',
 			'server_pic' => 'blank.gif',
@@ -2709,10 +2710,10 @@ function theme($memID)
 {
 	global $txt, $context, $user_profile, $db_prefix, $modSettings, $settings, $user_info, $smfFunc;
 
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT value
 		FROM {$db_prefix}themes
-		WHERE ID_THEME = " . (int) $user_profile[$memID]['ID_THEME'] . "
+		WHERE id_theme = " . (int) $user_profile[$memID]['id_theme'] . "
 			AND variable = 'name'
 		LIMIT 1", __FILE__, __LINE__);
 	list ($name) = $smfFunc['db_fetch_row']($request);
@@ -2720,14 +2721,14 @@ function theme($memID)
 
 	$context['member'] += array(
 		'theme' => array(
-			'id' => $user_profile[$memID]['ID_THEME'],
-			'name' => empty($user_profile[$memID]['ID_THEME']) ? $txt['theme_forum_default'] : $name
+			'id' => $user_profile[$memID]['id_theme'],
+			'name' => empty($user_profile[$memID]['id_theme']) ? $txt['theme_forum_default'] : $name
 		),
 		'smiley_set' => array(
-			'id' => empty($user_profile[$memID]['smileySet']) ? '' : $user_profile[$memID]['smileySet']
+			'id' => empty($user_profile[$memID]['smiley_set']) ? '' : $user_profile[$memID]['smiley_set']
 		),
-		'time_format' => !isset($user_profile[$memID]['timeFormat']) ? '' : $user_profile[$memID]['timeFormat'],
-		'time_offset' => empty($user_profile[$memID]['timeOffset']) ? '0' : $user_profile[$memID]['timeOffset'],
+		'time_format' => !isset($user_profile[$memID]['time_format']) ? '' : $user_profile[$memID]['time_format'],
+		'time_offset' => empty($user_profile[$memID]['time_offset']) ? '0' : $user_profile[$memID]['time_offset'],
 	);
 
 	$context['easy_timeformats'] = array(
@@ -2765,34 +2766,34 @@ function theme($memID)
 // Display the notifications and settings for changes.
 function notification($memID)
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $ID_MEMBER, $modSettings, $smfFunc;
+	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $id_member, $modSettings, $smfFunc;
 
 	// All the boards with notification on..
-	$request = $smfFunc['db_query']("
-		SELECT b.ID_BOARD, b.name, IFNULL(lb.ID_MSG, 0) AS boardRead, b.ID_MSG_UPDATED
+	$request = $smfFunc['db_query']('', "
+		SELECT b.id_board, b.name, IFNULL(lb.id_msg, 0) AS board_read, b.id_msg_updated
 		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = $ID_MEMBER)
-		WHERE ln.ID_MEMBER = $memID
-			AND b.ID_BOARD = ln.ID_BOARD
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)
+		WHERE ln.id_member = $memID
+			AND b.id_board = ln.id_board
 			AND $user_info[query_see_board]
-		ORDER BY b.boardOrder", __FILE__, __LINE__);
+		ORDER BY b.board_order", __FILE__, __LINE__);
 	$context['board_notifications'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['board_notifications'][] = array(
-			'id' => $row['ID_BOARD'],
+			'id' => $row['id_board'],
 			'name' => $row['name'],
-			'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-			'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>',
-			'new' => $row['boardRead'] < $row['ID_MSG_UPDATED']
+			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
+			'new' => $row['board_read'] < $row['id_msg_updated']
 		);
 	$smfFunc['db_free_result']($request);
 
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}boards AS b, {$db_prefix}topics AS t)
-		WHERE ln.ID_MEMBER = $memID
-			AND t.ID_TOPIC = ln.ID_TOPIC
-			AND b.ID_BOARD = t.ID_BOARD
+		WHERE ln.id_member = $memID
+			AND t.id_topic = ln.id_topic
+			AND b.id_board = t.id_board
 			AND $user_info[query_see_board]
 			AND t.approved = 1", __FILE__, __LINE__);
 	list ($num_topics) = $smfFunc['db_fetch_row']($request);
@@ -2801,23 +2802,21 @@ function notification($memID)
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=notification', $_REQUEST['start'], $num_topics, $modSettings['defaultMaxMessages']);
 
 	// All the topics with notification on...
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1 AS new_from, b.ID_BOARD, b.name,
-			t.ID_TOPIC, ms.subject, ms.ID_MEMBER, IFNULL(mem.realName, ms.posterName) AS realName,
-			ml.ID_MSG_MODIFIED
-		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}boards AS b, {$db_prefix}topics AS t, {$db_prefix}messages AS ms, {$db_prefix}messages AS ml)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = ms.ID_MEMBER)
-			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $ID_MEMBER)
-			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = b.ID_BOARD AND lmr.ID_MEMBER = $ID_MEMBER)
-		WHERE ln.ID_MEMBER = $memID
-			AND t.ID_TOPIC = ln.ID_TOPIC
-			AND ms.ID_MSG = t.ID_FIRST_MSG
-			AND ml.ID_MSG = t.ID_LAST_MSG
-			AND b.ID_BOARD = t.ID_BOARD
-			AND $user_info[query_see_board]
-			AND t.approved = 1
-		ORDER BY ms.ID_MSG DESC
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, b.id_board, b.name,
+			t.id_topic, ms.subject, ms.id_member, IFNULL(mem.real_name, ms.poster_name) AS real_name,
+			ml.id_msg_modified
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic AND t.approved = 1)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board AND $user_info[query_see_board])
+			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
+			INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ms.id_member)
+			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
+			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $id_member)
+		WHERE ln.id_member = $memID
+		ORDER BY ms.id_msg DESC
 		LIMIT $_REQUEST[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 	$context['topic_notifications'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2825,25 +2824,25 @@ function notification($memID)
 		censorText($row['subject']);
 
 		$context['topic_notifications'][] = array(
-			'id' => $row['ID_TOPIC'],
+			'id' => $row['id_topic'],
 			'poster' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['realName'],
-				'href' => empty($row['ID_MEMBER']) ? '' : $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => empty($row['ID_MEMBER']) ? $row['realName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>'
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => empty($row['id_member']) ? $row['real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 			),
 			'subject' => $row['subject'],
-			'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['subject'] . '</a>',
-			'new' => $row['new_from'] <= $row['ID_MSG_MODIFIED'],
+			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>',
+			'new' => $row['new_from'] <= $row['id_msg_modified'],
 			'new_from' => $row['new_from'],
-			'new_href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['new_from'] . '#new',
-			'new_link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['new_from'] . '#new">' . $row['subject'] . '</a>',
+			'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new',
+			'new_link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new">' . $row['subject'] . '</a>',
 			'board' => array(
-				'id' => $row['ID_BOARD'],
+				'id' => $row['id_board'],
 				'name' => $row['name'],
-				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>'
+				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>'
 			)
 		);
 	}
@@ -2851,10 +2850,10 @@ function notification($memID)
 
 	// What options are set?
 	$context['member'] += array(
-		'notify_announcements' => $user_profile[$memID]['notifyAnnouncements'],
-		'notify_send_body' => $user_profile[$memID]['notifySendBody'],
-		'notify_types' => $user_profile[$memID]['notifyTypes'],
-		'notify_regularity' => $user_profile[$memID]['notifyRegularity'],
+		'notify_announcements' => $user_profile[$memID]['notify_announcements'],
+		'notify_send_body' => $user_profile[$memID]['notify_send_body'],
+		'notify_types' => $user_profile[$memID]['notify_types'],
+		'notify_regularity' => $user_profile[$memID]['notify_regularity'],
 	);
 
 	// How many rows can we expect?
@@ -2875,14 +2874,14 @@ function pmprefs($memID)
 
 	if ($user_profile[$memID]['pm_ignore_list'] != '*')
 	{
-		$result = $smfFunc['db_query']("
-			SELECT realName
+		$result = $smfFunc['db_query']('', "
+			SELECT real_name
 			FROM {$db_prefix}members
-			WHERE FIND_IN_SET(ID_MEMBER, '" . $user_profile[$memID]['pm_ignore_list'] . "')
+			WHERE FIND_IN_SET(id_member, '" . $user_profile[$memID]['pm_ignore_list'] . "')
 			LIMIT " . (substr_count($user_profile[$memID]['pm_ignore_list'], ',') + 1), __FILE__, __LINE__);
 		$pm_ignore_list = '';
 		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$pm_ignore_list .= "\n" . $row['realName'];
+			$pm_ignore_list .= "\n" . $row['real_name'];
 		$smfFunc['db_free_result']($result);
 
 		$pm_ignore_list = substr($pm_ignore_list, 1);
@@ -2891,14 +2890,14 @@ function pmprefs($memID)
 		$pm_ignore_list = '*';
 
 	// Get all their "buddies"...
-	$result = $smfFunc['db_query']("
-		SELECT realName
+	$result = $smfFunc['db_query']('', "
+		SELECT real_name
 		FROM {$db_prefix}members
-		WHERE FIND_IN_SET(ID_MEMBER, '" . $user_profile[$memID]['buddy_list'] . "')
+		WHERE FIND_IN_SET(id_member, '" . $user_profile[$memID]['buddy_list'] . "')
 		LIMIT " . (substr_count($user_profile[$memID]['buddy_list'], ',') + 1), __FILE__, __LINE__);
 	$buddy_list = '';
 	while ($row = $smfFunc['db_fetch_assoc']($result))
-		$buddy_list .= "\n" . $row['realName'];
+		$buddy_list .= "\n" . $row['real_name'];
 	$smfFunc['db_free_result']($result);
 
 	$context['buddy_list'] = substr($buddy_list, 1);
@@ -2912,10 +2911,10 @@ function pmprefs($memID)
 // Function to allow the user to choose group membership etc...
 function groupMembership($memID)
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $ID_MEMBER, $modSettings, $smfFunc;
+	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $id_member, $modSettings, $smfFunc;
 
 	$curMember = $user_profile[$memID];
-	$context['primary_group'] = $curMember['ID_GROUP'];
+	$context['primary_group'] = $curMember['id_group'];
 
 	// Can they manage groups?
 	$context['can_manage_membergroups'] = allowedTo('manage_membergroups');
@@ -2923,8 +2922,8 @@ function groupMembership($memID)
 	$context['update_message'] = isset($_GET['msg']) && isset($txt['group_membership_msg_' . $_GET['msg']]) ? $txt['group_membership_msg_' . $_GET['msg']] : '';
 
 	// Get all the groups this user is a member of.
-	$groups = explode(',', $curMember['additionalGroups']);
-	$groups[] = $curMember['ID_GROUP'];
+	$groups = explode(',', $curMember['additional_groups']);
+	$groups[] = $curMember['id_group'];
 
 	// Ensure the query doesn't croak!
 	if (empty($groups))
@@ -2934,16 +2933,16 @@ function groupMembership($memID)
 		$groups[$k] = (int) $v;
 
 	// Get all the membergroups they can join.
-	$request = $smfFunc['db_query']("
-		SELECT mg.ID_GROUP, mg.groupName, mg.description, mg.groupType, mg.onlineColor, mg.hidden,
-			IFNULL(lgr.ID_MEMBER, 0) AS pending
+	$request = $smfFunc['db_query']('', "
+		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
+			IFNULL(lgr.id_member, 0) AS pending
 		FROM {$db_prefix}membergroups AS mg
-			LEFT JOIN {$db_prefix}log_group_requests AS lgr ON (lgr.ID_MEMBER = $memID AND lgr.ID_GROUP = mg.ID_GROUP)
-		WHERE (mg.ID_GROUP IN (" . implode(',', $groups) . ")
-			OR mg.groupType > 0)
-			AND mg.minPosts = -1
-			AND mg.ID_GROUP != 3
-		ORDER BY groupName", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}log_group_requests AS lgr ON (lgr.id_member = $memID AND lgr.id_group = mg.id_group)
+		WHERE (mg.id_group IN (" . implode(',', $groups) . ")
+			OR mg.group_type > 0)
+			AND mg.min_posts = -1
+			AND mg.id_group != 3
+		ORDER BY group_name", __FILE__, __LINE__);
 	// This beast will be our group holder.
 	$context['groups'] = array(
 		'member' => array(),
@@ -2952,24 +2951,24 @@ function groupMembership($memID)
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Can they edit their primary group?
-		if ($row['ID_GROUP'] == $context['primary_group'] && $row['groupType'] != 0)
+		if ($row['id_group'] == $context['primary_group'] && $row['group_type'] != 0)
 			$context['can_edit_primary'] = true;
 
 		// If they can't manage groups, and it's not publically joinable or already assigned, they can't see it.
-		if (!$context['can_manage_membergroups'] && $row['groupType'] == 0 && $row['ID_GROUP'] != $context['primary_group'])
+		if (!$context['can_manage_membergroups'] && $row['group_type'] == 0 && $row['id_group'] != $context['primary_group'])
 			continue;
 
-		$context['groups'][in_array($row['ID_GROUP'], $groups) ? 'member' : 'available'][$row['ID_GROUP']] = array(
-			'id' => $row['ID_GROUP'],
-			'name' => $row['groupName'],
+		$context['groups'][in_array($row['id_group'], $groups) ? 'member' : 'available'][$row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name'],
 			'desc' => $row['description'],
-			'color' => $row['onlineColor'],
-			'type' => $row['groupType'],
+			'color' => $row['online_color'],
+			'type' => $row['group_type'],
 			'pending' => $row['pending'],
-			'is_primary' => $row['ID_GROUP'] == $context['primary_group'],
+			'is_primary' => $row['id_group'] == $context['primary_group'],
 			'can_be_primary' => !$row['hidden'],
 			// Anything more than this needs to be done through account settings for security.
-			'can_leave' => $row['ID_GROUP'] != 1 && $row['groupType'] != 0 ? true : false,
+			'can_leave' => $row['id_group'] != 1 && $row['group_type'] != 0 ? true : false,
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -2993,7 +2992,7 @@ function groupMembership($memID)
 // This function actually makes all the group changes...
 function groupMembership2($profile_vars, $post_errors, $memID)
 {
-	global $ID_MEMBER, $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $txt, $smfFunc;
+	global $id_member, $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $txt, $smfFunc;
 
 	// Let's be extra cautious...
 	if (!$context['user']['is_owner'] || empty($modSettings['show_group_membership']))
@@ -3007,9 +3006,9 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	$context['can_manage_membergroups'] = allowedTo('manage_membergroups');
 
 	// By default the new primary is the old one.
-	$newPrimary = $old_profile['ID_GROUP'];
-	$addGroups = array_flip(explode(',', $old_profile['additionalGroups']));
-	$canChangePrimary = $old_profile['ID_GROUP'] == 0 ? 1 : 0;
+	$newPrimary = $old_profile['id_group'];
+	$addGroups = array_flip(explode(',', $old_profile['additional_groups']));
+	$canChangePrimary = $old_profile['id_group'] == 0 ? 1 : 0;
 	$changeType = isset($_POST['primary']) ? 'primary' : (isset($_POST['req']) ? 'request' : 'free');
 
 	// One way or another, we have a target group in mind...
@@ -3021,20 +3020,20 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		isAllowedTo('admin_forum');
 
 	// What ever we are doing, we need to determine if changing primary is possible!
-	$request = $smfFunc['db_query']("
-		SELECT ID_GROUP, groupType, hidden, groupName
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group, group_type, hidden, group_name
 		FROM {$db_prefix}membergroups
-		WHERE ID_GROUP IN ($group_id, $old_profile[ID_GROUP])", __FILE__, __LINE__);
+		WHERE id_group IN ($group_id, $old_profile[id_group])", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Is this the new group?
-		if ($row['ID_GROUP'] == $group_id)
+		if ($row['id_group'] == $group_id)
 		{
 			$foundTarget = true;
-			$groupName = $row['groupName'];
+			$group_name = $row['group_name'];
 
 			// Does the group type match what we're doing?
-			if (($changeType == 'request' && $row['groupType'] != 1) || ($changeType == 'free' && $row['groupType'] != 2))
+			if (($changeType == 'request' && $row['group_type'] != 1) || ($changeType == 'free' && $row['group_type'] != 2))
 				fatal_lang_error(1);
 
 			// We can't change the primary group if this is hidden!
@@ -3043,15 +3042,15 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		}
 
 		// If this is their old primary, can we change it?
-		if ($row['ID_GROUP'] == $old_profile['ID_GROUP'] && ($row['groupType'] != 0 || $context['can_manage_membergroups']) && $canChangePrimary !== false)
+		if ($row['id_group'] == $old_profile['id_group'] && ($row['group_type'] != 0 || $context['can_manage_membergroups']) && $canChangePrimary !== false)
 			$canChangePrimary = 1;
 
 		// If we are not doing a force primary move, don't do it automatically if current primary is not 0.
-		if ($changeType != 'primary' && $old_profile['ID_GROUP'] != 0)
+		if ($changeType != 'primary' && $old_profile['id_group'] != 0)
 			$canChangePrimary = false;
 
 		// If this is the one we are acting on, can we even act?
-		if (!$context['can_manage_membergroups'] && $row['groupType'] == 0)
+		if (!$context['can_manage_membergroups'] && $row['group_type'] == 0)
 			fatal_lang_error(1);
 	}
 	$smfFunc['db_free_result']($request);
@@ -3063,12 +3062,12 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	// Final security check, don't allow users to promote themselves to admin.
 	if ($context['can_manage_membergroups'] && !allowedTo('admin_forum'))
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(permission)
 			FROM {$db_prefix}permissions
-			WHERE ID_GROUP = $group_id
+			WHERE id_group = $group_id
 				AND permission = 'admin_forum'
-				AND addDeny = 1", __FILE__, __LINE__);
+				AND add_deny = 1", __FILE__, __LINE__);
 		list ($disallow) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -3082,9 +3081,9 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		$reason = htmlspecialchars($_POST['reason']);
 
 		// Log the request.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			INSERT IGNORE INTO {$db_prefix}log_group_requests
-				(ID_MEMBER, ID_GROUP, time_applied, reason)
+				(id_member, id_group, time_applied, reason)
 			VALUES
 				($memID, $group_id, " . time() . ", '$reason')", __FILE__, __LINE__);
 		if ($smfFunc['db_affected_rows']() == 0)
@@ -3094,13 +3093,13 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 		require_once($sourcedir . '/Subs-Post.php');
 
 		// Do we have any group moderators?
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
 			FROM {$db_prefix}group_moderators
-			WHERE ID_GROUP = $group_id", __FILE__, __LINE__);
+			WHERE id_group = $group_id", __FILE__, __LINE__);
 		$moderators = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$moderators[] = $row['ID_MEMBER'];
+			$moderators[] = $row['id_member'];
 		$smfFunc['db_free_result']($request);
 
 		// Otherwise this is the backup!
@@ -3112,11 +3111,11 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 
 		if (!empty($moderators))
 		{
-			$request = $smfFunc['db_query']("
-				SELECT ID_MEMBER, emailAddress, lngfile, memberName
+			$request = $smfFunc['db_query']('', "
+				SELECT id_member, email_address, lngfile, member_name
 				FROM {$db_prefix}members
-				WHERE ID_MEMBER IN (" . implode(', ', $moderators) . ")
-					AND notifyTypes != 4
+				WHERE id_member IN (" . implode(', ', $moderators) . ")
+					AND notify_types != 4
 				ORDER BY lngfile", __FILE__, __LINE__);
 			$lastLng = $user_info['language'];
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -3127,7 +3126,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 					$lastLng = $row['lngfile'];
 					loadLanguage('Profile', $row['lngfile'], false);
 				}
-				sendmail($row['emailAddress'], $txt['request_membership_email_subject'], sprintf($txt['request_membership_email_subject'], $row['memberName'], $old_profile['memberName'], $groupName, $reason));
+				sendmail($row['email_address'], $txt['request_membership_email_subject'], sprintf($txt['request_membership_email_subject'], $row['member_name'], $old_profile['member_name'], $group_name, $reason));
 			}
 			$smfFunc['db_free_result']($request);
 		}
@@ -3138,9 +3137,9 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	elseif ($changeType == 'free')
 	{
 		// Are we leaving?
-		if ($old_profile['ID_GROUP'] == $group_id || isset($addGroups[$group_id]))
+		if ($old_profile['id_group'] == $group_id || isset($addGroups[$group_id]))
 		{
-			if ($old_profile['ID_GROUP'] == $group_id)
+			if ($old_profile['id_group'] == $group_id)
 				$newPrimary = 0;
 			else
 				unset($addGroups[$group_id]);
@@ -3151,8 +3150,8 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 			// Can we change the primary, and do we want to?
 			if ($canChangePrimary)
 			{
-				if ($old_profile['ID_GROUP'] != 0)
-					$addGroups[$old_profile['ID_GROUP']] = -1;
+				if ($old_profile['id_group'] != 0)
+					$addGroups[$old_profile['id_group']] = -1;
 				$newPrimary = $group_id;
 			}
 			// Otherwise it's an additional group...
@@ -3163,8 +3162,8 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	// Finally, we must be setting the primary.
 	elseif ($canChangePrimary)
 	{
-		if ($old_profile['ID_GROUP'] != 0)
-			$addGroups[$old_profile['ID_GROUP']] = -1;
+		if ($old_profile['id_group'] != 0)
+			$addGroups[$old_profile['id_group']] = -1;
 		if (isset($addGroups[$group_id]))
 			unset($addGroups[$group_id]);
 		$newPrimary = $group_id;
@@ -3179,7 +3178,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	else
 		updateSettings(array('settings_updated' => time()));
 
-	updateMemberData($memID, array('ID_GROUP' => $newPrimary, 'additionalGroups' => "'$addGroups'"));
+	updateMemberData($memID, array('id_group' => $newPrimary, 'additional_groups' => "'$addGroups'"));
 
 	return $changeType;
 }
@@ -3187,7 +3186,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 // Present a screen to make sure the user wants to be deleted
 function deleteAccount($memID)
 {
-	global $txt, $context, $ID_MEMBER, $modSettings, $user_profile, $smfFunc;
+	global $txt, $context, $id_member, $modSettings, $user_profile, $smfFunc;
 
 	if (!$context['user']['is_owner'])
 		isAllowedTo('profile_remove_any');
@@ -3199,12 +3198,12 @@ function deleteAccount($memID)
 
 	// Can they do this, or will they need approval?
 	$context['needs_approval'] = $context['user']['is_owner'] && !empty($modSettings['approveAccountDeletion']) && !allowedTo('moderate_forum');
-	$context['page_title'] = $txt['deleteAccount'] . ': ' . $user_profile[$memID]['realName'];
+	$context['page_title'] = $txt['deleteAccount'] . ': ' . $user_profile[$memID]['real_name'];
 }
 
 function deleteAccount2($profile_vars, $post_errors, $memID)
 {
-	global $ID_MEMBER, $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $smfFunc;
+	global $id_member, $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $smfFunc;
 
 	// !!! Add a way to delete pms as well?
 
@@ -3218,16 +3217,16 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 	$old_profile = &$user_profile[$memID];
 
 	// Too often, people remove/delete their own only account.
-	if (in_array(1, explode(',', $old_profile['additionalGroups'])) || $old_profile['ID_GROUP'] == 1)
+	if (in_array(1, explode(',', $old_profile['additional_groups'])) || $old_profile['id_group'] == 1)
 	{
 		// Are you allowed to administrate the forum, as they are?
 		isAllowedTo('admin_forum');
 
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
 			FROM {$db_prefix}members
-			WHERE (ID_GROUP = 1 OR FIND_IN_SET(1, additionalGroups))
-				AND ID_MEMBER != $memID
+			WHERE (id_group = 1 OR FIND_IN_SET(1, additional_groups))
+				AND id_member != $memID
 			LIMIT 1", __FILE__, __LINE__);
 		list ($another) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -3240,7 +3239,7 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 	require_once($sourcedir . '/Subs-Members.php');
 
 	// Do you have permission to delete others profiles, or is that your profile you wanna delete?
-	if ($memID != $ID_MEMBER)
+	if ($memID != $id_member)
 	{
 		isAllowedTo('profile_remove_any');
 
@@ -3255,13 +3254,13 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 			if ($_POST['remove_type'] == 'topics')
 			{
 				// Fetch all topics started by this user within the time period.
-				$request = $smfFunc['db_query']("
-					SELECT t.ID_TOPIC
+				$request = $smfFunc['db_query']('', "
+					SELECT t.id_topic
 					FROM {$db_prefix}topics AS t
-					WHERE t.ID_MEMBER_STARTED = $memID", __FILE__, __LINE__);
+					WHERE t.id_member_started = $memID", __FILE__, __LINE__);
 				$topicIDs = array();
 				while ($row = $smfFunc['db_fetch_assoc']($request))
-					$topicIDs[] = $row['ID_TOPIC'];
+					$topicIDs[] = $row['id_topic'];
 				$smfFunc['db_free_result']($request);
 
 				// Actually remove the topics.
@@ -3270,15 +3269,15 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 			}
 
 			// Now delete the remaining messages.
-			$request = $smfFunc['db_query']("
-				SELECT m.ID_MSG
+			$request = $smfFunc['db_query']('', "
+				SELECT m.id_msg
 				FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-				WHERE m.ID_MEMBER = $memID
-					AND m.ID_TOPIC = t.ID_TOPIC
-					AND t.ID_FIRST_MSG != m.ID_MSG", __FILE__, __LINE__);
+				WHERE m.id_member = $memID
+					AND m.id_topic = t.id_topic
+					AND t.id_first_msg != m.id_msg", __FILE__, __LINE__);
 			// This could take a while... but ya know it's gonna be worth it in the end.
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				removeMessage($row['ID_MSG']);
+				removeMessage($row['id_msg']);
 			$smfFunc['db_free_result']($request);
 		}
 
@@ -3302,26 +3301,26 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 // This function 'remembers' the profile changes a user made after erronious input.
 function rememberPostData()
 {
-	global $context, $scripturl, $txt, $modSettings, $ID_MEMBER, $user_profile, $user_info;
+	global $context, $scripturl, $txt, $modSettings, $id_member, $user_profile, $user_info;
 
 	// Overwrite member settings with the ones you selected.
 	$context['member'] = array(
-		'is_owner' => $_REQUEST['userID'] == $ID_MEMBER,
-		'username' => $user_profile[$_REQUEST['userID']]['memberName'],
-		'name' => !isset($_POST['realName']) || $_POST['realName'] == '' ? $user_profile[$_REQUEST['userID']]['memberName'] : stripslashes($_POST['realName']),
+		'is_owner' => $_REQUEST['userID'] == $id_member,
+		'username' => $user_profile[$_REQUEST['userID']]['member_name'],
+		'name' => !isset($_POST['real_name']) || $_POST['real_name'] == '' ? $user_profile[$_REQUEST['userID']]['member_name'] : stripslashes($_POST['real_name']),
 		'id' => (int) $_REQUEST['userID'],
 		'title' => !isset($_POST['usertitle']) || $_POST['usertitle'] == '' ? '' : stripslashes($_POST['usertitle']),
-		'email' => isset($_POST['emailAddress']) ? $_POST['emailAddress'] : '',
-		'hide_email' => empty($_POST['hideEmail']) ? 0 : 1,
-		'show_online' => empty($_POST['showOnline']) ? 0 : 1,
-		'registered' => empty($_POST['dateRegistered']) || $_POST['dateRegistered'] == '0001-01-01' ? $txt[470] : strftime('%Y-%m-%d', $_POST['dateRegistered']),
-		'blurb' => !isset($_POST['personalText']) ? '' : str_replace(array('<', '>', '&amp;#039;'), array('&lt;', '&gt;', '&#039;'), stripslashes($_POST['personalText'])),
+		'email' => isset($_POST['email_address']) ? $_POST['email_address'] : '',
+		'hide_email' => empty($_POST['hide_email']) ? 0 : 1,
+		'show_online' => empty($_POST['show_online']) ? 0 : 1,
+		'registered' => empty($_POST['date_registered']) || $_POST['date_registered'] == '0001-01-01' ? $txt[470] : strftime('%Y-%m-%d', $_POST['date_registered']),
+		'blurb' => !isset($_POST['personal_text']) ? '' : str_replace(array('<', '>', '&amp;#039;'), array('&lt;', '&gt;', '&#039;'), stripslashes($_POST['personal_text'])),
 		'gender' => array(
 			'name' => empty($_POST['gender']) ? '' : ($_POST['gender'] == 2 ? 'f' : 'm')
 		),
 		'website' => array(
-			'title' => !isset($_POST['websiteTitle']) ? '' : stripslashes($_POST['websiteTitle']),
-			'url' => !isset($_POST['websiteUrl']) ? '' : stripslashes($_POST['websiteUrl']),
+			'title' => !isset($_POST['website_title']) ? '' : stripslashes($_POST['website_title']),
+			'url' => !isset($_POST['website_url']) ? '' : stripslashes($_POST['website_url']),
 		),
 		'birth_date' => array(
 			'month' => empty($_POST['bday1']) ? '00' : (int) $_POST['bday1'],
@@ -3331,56 +3330,56 @@ function rememberPostData()
 		'signature' => !isset($_POST['signature']) ? '' : str_replace(array('<', '>'), array('&lt;', '&gt;'), $_POST['signature']),
 		'location' => !isset($_POST['location']) ? '' : stripslashes($_POST['location']),
 		'icq' => array(
-			'name' => !isset($_POST['icq']) ? '' : stripslashes($_POST['ICQ'])
+			'name' => !isset($_POST['icq']) ? '' : stripslashes($_POST['icq'])
 		),
 		'aim' => array(
-			'name' => empty($_POST['aim']) ? '' : str_replace('+', ' ', $_POST['AIM'])
+			'name' => empty($_POST['aim']) ? '' : str_replace('+', ' ', $_POST['aim'])
 		),
 		'yim' => array(
-			'name' => empty($_POST['yim']) ? '' : stripslashes($_POST['YIM'])
+			'name' => empty($_POST['yim']) ? '' : stripslashes($_POST['yim'])
 		),
 		'msn' => array(
-			'name' => empty($_POST['msn']) ? '' : stripslashes($_POST['MSN'])
+			'name' => empty($_POST['msn']) ? '' : stripslashes($_POST['msn'])
 		),
 		'posts' => empty($_POST['posts']) ? 0 : (int) $_POST['posts'],
 		'avatar' => array(
 			'name' => &$_POST['avatar'],
-			'href' => empty($user_profile[$_REQUEST['userID']]['ID_ATTACH']) ? '' : (empty($user_profile[$_REQUEST['userID']]['attachmentType']) ? $scripturl . '?action=dlattach;attach=' . $user_profile[$_REQUEST['userID']]['ID_ATTACH'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $user_profile[$_REQUEST['userID']]['filename']),
+			'href' => empty($user_profile[$_REQUEST['userID']]['id_attach']) ? '' : (empty($user_profile[$_REQUEST['userID']]['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $user_profile[$_REQUEST['userID']]['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $user_profile[$_REQUEST['userID']]['filename']),
 			'custom' => stristr($_POST['avatar'], 'http://') ? $_POST['avatar'] : 'http://',
 			'selection' => $_POST['avatar'] == '' || stristr($_POST['avatar'], 'http://') ? '' : $_POST['avatar'],
 			'choice' => empty($_POST['avatar_choice']) ? 'server_stored' : $_POST['avatar_choice'],
 			'external' => empty($_POST['userpicpersonal']) ? 'http://' : $_POST['userpicpersonal'],
-			'ID_ATTACH' => empty($_POST['ID_ATTACH']) ? '0' : $_POST['ID_ATTACH'],
+			'id_attach' => empty($_POST['id_attach']) ? '0' : $_POST['id_attach'],
 		),
 		'karma' => array(
-			'good' => empty($_POST['karmaGood']) ? '0' : $_POST['karmaGood'],
-			'bad' => empty($_POST['karmaBad']) ? '0' : $_POST['karmaBad'],
+			'good' => empty($_POST['karma_good']) ? '0' : $_POST['karma_good'],
+			'bad' => empty($_POST['karma_bad']) ? '0' : $_POST['karma_bad'],
 		),
-		'time_format' => !isset($_POST['timeFormat']) ? '' : stripslashes($_POST['timeFormat']),
-		'time_offset' => empty($_POST['timeOffset']) ? '0' : $_POST['timeOffset'],
-		'secret_question' => !isset($_POST['secretQuestion']) ? '' : stripslashes($_POST['secretQuestion']),
+		'time_format' => !isset($_POST['time_format']) ? '' : stripslashes($_POST['time_format']),
+		'time_offset' => empty($_POST['time_offset']) ? '0' : $_POST['time_offset'],
+		'secret_question' => !isset($_POST['secret_question']) ? '' : stripslashes($_POST['secret_question']),
 		'theme' => array(
 			'id' => isset($context['member']['theme']['id']) ? $context['member']['theme']['id'] : 0,
 			'name' => isset($context['member']['theme']['name']) ? $context['member']['theme']['name'] : '',
 		),
-		'notify_announcements' => empty($_POST['notifyAnnouncements']) ? 0 : 1,
-		'notify_regularity' => empty($_POST['notifyRegularity']) ? 0 : 1,
-		'notify_send_body' => empty($_POST['notifySendBody']) ? 0 : (int) $_POST['notifySendBody'],
-		'notify_types' => empty($_POST['notifyTypes']) ? 0 : (int) $_POST['notifyTypes'],
-		'group' => isset($_POST['ID_GROUP']) ? $_POST['ID_GROUP'] : 0,
+		'notify_announcements' => empty($_POST['notify_announcements']) ? 0 : 1,
+		'notify_regularity' => empty($_POST['notify_regularity']) ? 0 : 1,
+		'notify_send_body' => empty($_POST['notify_send_body']) ? 0 : (int) $_POST['notify_send_body'],
+		'notify_types' => empty($_POST['notify_types']) ? 0 : (int) $_POST['notify_types'],
+		'group' => isset($_POST['id_group']) ? $_POST['id_group'] : 0,
 		'smiley_set' => array(
-			'id' => isset($_POST['smileySet']) ? $_POST['smileySet'] : (isset($context['member']['smiley_set']) ? $context['member']['smiley_set']['id'] : ''),
+			'id' => isset($_POST['smiley_set']) ? $_POST['smiley_set'] : (isset($context['member']['smiley_set']) ? $context['member']['smiley_set']['id'] : ''),
 			'name' => isset($context['member']['smiley_set']) ? $context['member']['smiley_set']['name'] : ''
 		),
 	);
 
-	// Overwrite the currently SET memberGroups with those you just selected.
-	if (allowedTo('manage_membergroups') && isset($_POST['ID_GROUP']))
+	// Overwrite the currently SET member_groups with those you just selected.
+	if (allowedTo('manage_membergroups') && isset($_POST['id_group']))
 	{
-		foreach ($context['member_groups'] as $ID_GROUP => $dummy)
+		foreach ($context['member_groups'] as $id_group => $dummy)
 		{
-			$context['member_groups'][$ID_GROUP]['is_primary'] = $ID_GROUP == $_POST['ID_GROUP'];
-			$context['member_groups'][$ID_GROUP]['is_additional'] = !empty($_POST['additionalGroups']) && in_array($ID_GROUP, $_POST['additionalGroups']);
+			$context['member_groups'][$id_group]['is_primary'] = $id_group == $_POST['id_group'];
+			$context['member_groups'][$id_group]['is_additional'] = !empty($_POST['additional_groups']) && in_array($id_group, $_POST['additional_groups']);
 		}
 	}
 
@@ -3398,15 +3397,15 @@ function loadThemeOptions($memID)
 		$context['member']['options'] = $options;
 	else
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER, variable, value
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member, variable, value
 			FROM {$db_prefix}themes
-			WHERE ID_THEME IN (1, " . (int) $user_profile[$memID]['ID_THEME'] . ")
-				AND ID_MEMBER IN (-1, $memID)", __FILE__, __LINE__);
+			WHERE id_theme IN (1, " . (int) $user_profile[$memID]['id_theme'] . ")
+				AND id_member IN (-1, $memID)", __FILE__, __LINE__);
 		$temp = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if ($row['ID_MEMBER'] == -1)
+			if ($row['id_member'] == -1)
 			{
 				$temp[$row['variable']] = $row['value'];
 				continue;
@@ -3442,7 +3441,7 @@ function loadCustomFields($memID, $area = 'summary')
 		$where .= " AND showProfile = '$area'";
 
 	// Load all the relevant fields - and data.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
 			defaultValue, bbc
 		FROM {$db_prefix}custom_fields
@@ -3507,29 +3506,29 @@ function ignoreboards($memID)
 		fatal_lang_error('ignoreboards_disallowed', 'user');
 
 	// Find all the boards this user is allowed to see.
-	$request = $smfFunc['db_query']("
-		SELECT b.ID_CAT, c.name AS catName, b.ID_BOARD, b.name, b.childLevel, 
-			". (!empty($user_profile[$memID]['ignoreBoards']) ? 'b.ID_BOARD IN (' . $user_profile[$memID]['ignoreBoards'] . ')' : 'false') ." AS is_ignored
+	$request = $smfFunc['db_query']('', "
+		SELECT b.id_cat, c.name AS cat_name, b.id_board, b.name, b.child_level, 
+			". (!empty($user_profile[$memID]['ignore_boards']) ? 'b.id_board IN (' . $user_profile[$memID]['ignore_boards'] . ')' : 'false') ." AS is_ignored
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$context['num_boards'] = $smfFunc['db_num_rows']($request);
 	$context['categories'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// This category hasn't been set up yet..
-		if (!isset($context['categories'][$row['ID_CAT']]))
-			$context['categories'][$row['ID_CAT']] = array(
-				'id' => $row['ID_CAT'],
-				'name' => $row['catName'],
+		if (!isset($context['categories'][$row['id_cat']]))
+			$context['categories'][$row['id_cat']] = array(
+				'id' => $row['id_cat'],
+				'name' => $row['cat_name'],
 				'boards' => array()
 			);
 
 		// Set this board up, and let the template know when it's a child.  (indent them..)
-		$context['categories'][$row['ID_CAT']]['boards'][$row['ID_BOARD']] = array(
-			'id' => $row['ID_BOARD'],
+		$context['categories'][$row['id_cat']]['boards'][$row['id_board']] = array(
+			'id' => $row['id_board'],
 			'name' => $row['name'],
-			'child_level' => $row['childLevel'],
+			'child_level' => $row['child_level'],
 			'selected' => $row['is_ignored'],
 		);
 	}

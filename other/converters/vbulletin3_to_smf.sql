@@ -16,26 +16,26 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	u.userid AS ID_MEMBER, SUBSTRING(u.username, 1, 80) AS memberName, 
-	SUBSTRING(u.username, 1, 255) AS realName,
+	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name, 
+	SUBSTRING(u.username, 1, 255) AS real_name,
 	SUBSTRING(u.password, 1, 64) AS passwd,
-	SUBSTRING(u.email, 1, 255) AS emailAddress,
-	SUBSTRING(u.homepage, 1, 255) AS websiteTitle,
-	SUBSTRING(u.homepage, 1, 255) AS websiteUrl,
-	SUBSTRING(u.icq, 1, 255) AS ICQ, SUBSTRING(u.aim, 1, 16) AS AIM,
-	SUBSTRING(u.yahoo, 1, 32) AS YIM,
+	SUBSTRING(u.email, 1, 255) AS email_address,
+	SUBSTRING(u.homepage, 1, 255) AS website_title,
+	SUBSTRING(u.homepage, 1, 255) AS website_url,
+	SUBSTRING(u.icq, 1, 255) AS icq, SUBSTRING(u.aim, 1, 16) AS aim,
+	SUBSTRING(u.yahoo, 1, 32) AS yim,
 	SUBSTRING(IF(u.customtitle, u.usertitle, ''), 1, 255) AS usertitle,
-	u.lastvisit AS lastLogin, u.joindate AS dateRegistered, u.posts,
-	u.reputation AS karmaGood, u.birthday_search AS birthdate,
-	SUBSTRING(u.ipaddress, 1, 255) AS memberIP,
-	SUBSTRING(u.msn, 1, 255) AS MSN,
-	CASE u.usergroupid WHEN 6 THEN 1 WHEN 5 THEN 2 WHEN 7 THEN 2 ELSE 0 END AS ID_GROUP,
-	SUBSTRING(u.salt, 1, 5) AS passwordSalt,
+	u.lastvisit AS last_login, u.joindate AS date_registered, u.posts,
+	u.reputation AS karma_good, u.birthday_search AS birthdate,
+	SUBSTRING(u.ipaddress, 1, 255) AS member_ip,
+	SUBSTRING(u.msn, 1, 255) AS msn,
+	CASE u.usergroupid WHEN 6 THEN 1 WHEN 5 THEN 2 WHEN 7 THEN 2 ELSE 0 END AS id_group,
+	SUBSTRING(u.salt, 1, 5) AS password_salt,
 	SUBSTRING(ut.signature, 1, 65534) AS signature, '' AS lngfile,
-	'' AS buddy_list, '' AS pm_ignore_list, '' AS messageLabels,
-	'' AS personalText, '' AS timeFormat, '' AS avatar, '' AS secretQuestion,
-	'' AS secretAnswer, '' AS validation_code, '' AS additionalGroups,
-	'' AS smileySet
+	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
+	'' AS personal_text, '' AS time_format, '' AS avatar, '' AS secret_question,
+	'' AS secret_answer, '' AS validation_code, '' AS additional_groups,
+	'' AS smiley_set
 FROM {$from_prefix}user AS u
 	LEFT JOIN {$from_prefix}usertextfield AS ut ON (ut.userid = u.userid)
 WHERE u.userid != 0;
@@ -49,8 +49,8 @@ TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
 SELECT 
-	forumid AS ID_CAT, SUBSTRING(title, 1, 255) AS name,
-	displayorder AS catOrder
+	forumid AS id_cat, SUBSTRING(title, 1, 255) AS name,
+	displayorder AS cat_order
 FROM {$from_prefix}forum
 WHERE parentid = -1;
 ---*
@@ -62,15 +62,15 @@ WHERE parentid = -1;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
-/* The converter will set ID_CAT for us based on ID_PARENT being wrong. */
+/* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
 SELECT
-	forumid AS ID_BOARD, SUBSTRING(title, 1, 255) AS name,
+	forumid AS id_board, SUBSTRING(title, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description,
-	displayorder AS boardOrder, replycount AS numPosts,
-	threadcount AS numTopics, parentid AS ID_PARENT, '-1,0' AS memberGroups
+	displayorder AS board_order, replycount AS num_posts,
+	threadcount AS num_topics, parentid AS id_parent, '-1,0' AS member_groups
 FROM {$from_prefix}forum
 WHERE parentid != -1;
 ---*
@@ -86,17 +86,17 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.threadid AS ID_TOPIC, t.forumid AS ID_BOARD, t.sticky AS isSticky,
-	t.pollid AS ID_POLL, t.views AS numViews, t.postuserid AS ID_MEMBER_STARTED,
-	ul.userid AS ID_MEMBER_UPDATED, t.replycount AS numReplies,
-	IF(t.open, 0, 1) AS locked, MIN(p.postid) AS ID_FIRST_MSG,
-	MAX(p.postid) AS ID_LAST_MSG
+	t.threadid AS id_topic, t.forumid AS id_board, t.sticky AS is_sticky,
+	t.pollid AS id_poll, t.views AS num_views, t.postuserid AS id_member_started,
+	ul.userid AS id_member_updated, t.replycount AS num_replies,
+	IF(t.open, 0, 1) AS locked, MIN(p.postid) AS id_first_msg,
+	MAX(p.postid) AS id_last_msg
 FROM ({$from_prefix}thread AS t, {$from_prefix}post AS p)
 	LEFT JOIN {$from_prefix}user AS ul ON (ul.username = t.lastposter)
 WHERE p.threadid = t.threadid
 GROUP BY t.threadid
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
 /******************************************************************************/
@@ -112,20 +112,20 @@ $row['body'] = preg_replace('~\[(quote)=([^\]]+)\]~i', '[$1=&quot;$2&quot;]', st
 $row['body'] = substr(preg_replace('~\[(url|email)=&quot;(.+?)&quot;\]~i', '[$1=$2]', $row['body']), 0, 65534);
 ---}
 SELECT
-	p.postid AS ID_MSG, p.threadid AS ID_TOPIC, p.dateline AS posterTime,
-	p.userid AS ID_MEMBER,
+	p.postid AS id_msg, p.threadid AS id_topic, p.dateline AS poster_time,
+	p.userid AS id_member,
 	SUBSTRING(IF(p.title = '', t.title, p.title), 1, 255) AS subject,
-	SUBSTRING(p.username, 1, 255) AS posterName,
-	SUBSTRING(p.ipaddress, 1, 255) AS posterIP, t.forumid AS ID_BOARD,
-	p.allowsmilie AS smileysEnabled,
-	REPLACE(p.pagetext, '<br>', '<br />') AS body, '' AS posterEmail,
-	'' AS modifiedName, 'xx' AS icon
+	SUBSTRING(p.username, 1, 255) AS poster_name,
+	SUBSTRING(p.ipaddress, 1, 255) AS poster_ip, t.forumid AS id_board,
+	p.allowsmilie AS smileys_enabled,
+	REPLACE(p.pagetext, '<br>', '<br />') AS body, '' AS poster_email,
+	'' AS modified_name, 'xx' AS icon
 FROM ({$from_prefix}post AS p, {$from_prefix}thread AS t)
 WHERE t.threadid = p.threadid;
 ---*
 
----* {$to_prefix}messages (update ID_MSG)
-SELECT postid AS ID_MSG, username AS modifiedName, dateline AS modifiedTime
+---* {$to_prefix}messages (update id_msg)
+SELECT postid AS id_msg, username AS modified_name, dateline AS modified_time
 FROM {$from_prefix}editlog
 ORDER BY dateline;
 ---*
@@ -140,11 +140,11 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	p.pollid AS ID_POLL, SUBSTRING(p.question, 1, 255) AS question,
-	IF(p.active = 0, 1, 0) AS votingLocked, p.multiple AS maxVotes,
-	SUBSTRING(IFNULL(t.postusername, 'Guest'), 1, 255) AS posterName,
-	IF(p.timeout = 0, 0, p.dateline + p.timeout * 86400) AS expireTime,
-	t.postuserid AS ID_MEMBER
+	p.pollid AS id_poll, SUBSTRING(p.question, 1, 255) AS question,
+	IF(p.active = 0, 1, 0) AS voting_locked, p.multiple AS max_votes,
+	SUBSTRING(IFNULL(t.postusername, 'Guest'), 1, 255) AS poster_name,
+	IF(p.timeout = 0, 0, p.dateline + p.timeout * 86400) AS expire_time,
+	t.postuserid AS id_member
 FROM {$from_prefix}poll AS p
 	LEFT JOIN {$from_prefix}thread AS t ON (t.pollid = p.pollid);
 ---*
@@ -156,14 +156,14 @@ FROM {$from_prefix}poll AS p
 ---* {$to_prefix}poll_choices
 ---{
 $no_add = true;
-$keys = array('ID_POLL', 'ID_CHOICE', 'label', 'votes');
+$keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 $options = explode('|||', $row['options']);
 $votes = explode('|||', $row['votes']);
 for ($i = 0, $n = count($options); $i < $n; $i++)
-	$rows[] = $row['ID_POLL'] . ', ' . ($i + 1) . ", '" . addslashes($options[$i]) . "', '" . @$votes[$i] . "'";
+	$rows[] = $row['id_poll'] . ', ' . ($i + 1) . ", '" . addslashes($options[$i]) . "', '" . @$votes[$i] . "'";
 ---}
-SELECT pollid AS ID_POLL, options, votes
+SELECT pollid AS id_poll, options, votes
 FROM {$from_prefix}poll;
 ---*
 
@@ -172,7 +172,7 @@ FROM {$from_prefix}poll;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT pollid AS ID_POLL, userid AS ID_MEMBER, voteoption AS ID_CHOICE
+SELECT pollid AS id_poll, userid AS id_member, voteoption AS id_choice
 FROM {$from_prefix}pollvote;
 ---*
 
@@ -187,8 +187,8 @@ TRUNCATE {$to_prefix}personal_messages;
 $row['body'] = preg_replace('~\[(quote)=([^\]]+)\]~i', '[$1=&quot;$2&quot;]', $row['body']);
 ---}
 SELECT
-	pm.pmid AS ID_PM, pmt.fromuserid AS ID_MEMBER_FROM, pmt.dateline AS msgtime,
-	SUBSTRING(pmt.fromusername, 1, 255) AS fromName,
+	pm.pmid AS id_pm, pmt.fromuserid AS id_member_from, pmt.dateline AS msgtime,
+	SUBSTRING(pmt.fromusername, 1, 255) AS from_name,
 	SUBSTRING(pmt.title, 1, 255) AS subject,
 	SUBSTRING(REPLACE(pmt.message, '<br>', '<br />'), 1, 65534) AS body
 FROM ({$from_prefix}pm AS pm, {$from_prefix}pmtext AS pmt)
@@ -204,7 +204,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT 
-	pm.pmid AS ID_PM, pm.touserid AS ID_MEMBER, pm.readtime != 0 AS is_read,
+	pm.pmid AS id_pm, pm.touserid AS id_member, pm.readtime != 0 AS is_read,
 	'' AS labels
 FROM {$from_prefix}pmreceipt AS pm;
 ---*
@@ -216,7 +216,7 @@ FROM {$from_prefix}pmreceipt AS pm;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT userid AS ID_MEMBER, threadid AS ID_TOPIC
+SELECT userid AS id_member, threadid AS id_topic
 FROM {$from_prefix}subscribethread;
 ---*
 
@@ -225,7 +225,7 @@ FROM {$from_prefix}subscribethread;
 /******************************************************************************/
 
 ---* {$to_prefix}log_notify
-SELECT userid AS ID_MEMBER, forumid AS ID_BOARD
+SELECT userid AS id_member, forumid AS id_board
 FROM {$from_prefix}subscribeforum;
 ---*
 
@@ -293,7 +293,7 @@ ORDER BY LENGTH(code) DESC;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('ID_ATTACH', 'size', 'filename', 'ID_MSG', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 if (!isset($vb_settings))
 {
@@ -312,7 +312,7 @@ if (!isset($vb_settings))
 	mysql_free_result($result);
 }
 
-$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+$newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (empty($vb_settings['attachfile']))
 {
 	$fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
@@ -333,11 +333,11 @@ elseif ($vb_settings['attachfile'] == 2)
 		return;
 }
 
-$rows[] = "$ID_ATTACH, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[ID_MSG], $row[downloads]";
-$ID_ATTACH++;
+$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+$id_attach++;
 ---}
 SELECT
-	postid AS ID_MSG, counter AS downloads, filename, filedata, userid,
+	postid AS id_msg, counter AS downloads, filename, filedata, userid,
 	attachmentid
 FROM {$from_prefix}attachment;
 ---*
@@ -349,7 +349,7 @@ FROM {$from_prefix}attachment;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('ID_ATTACH', 'size', 'filename', 'ID_MEMBER');
+$keys = array('id_attach', 'size', 'filename', 'id_member');
 
 if (!isset($vb_settings))
 {
@@ -369,7 +369,7 @@ if (!isset($vb_settings))
 }
 
 
-$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+$newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) > 255)
 	return;
 elseif (empty($vb_settings['usefileavatar']))
@@ -384,10 +384,10 @@ elseif (empty($vb_settings['usefileavatar']))
 elseif (!copy($vb_settings['avatarpath'] . '/avatar' . $row['userid'] . '_' . $row['avatarrevision'] . '.gif', $attachmentUploadDir . '/' . $newfilename))
 	return;
 
-$rows[] = "$ID_ATTACH, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[ID_MEMBER]";
-$ID_ATTACH++;
+$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_member]";
+$id_attach++;
 ---}
-SELECT ca.userid AS ID_MEMBER, ca.avatardata, ca.filename, u.avatarrevision
+SELECT ca.userid AS id_member, ca.avatardata, ca.filename, u.avatarrevision
 FROM ({$from_prefix}customavatar AS ca, {$from_prefix}user AS u)
 WHERE u.userid = ca.userid;
 ---*

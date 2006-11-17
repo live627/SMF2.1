@@ -39,10 +39,10 @@ if (!defined('SMF'))
 	void setPassword2()
 		// !!!
 
-	void secretAnswerInput()
+	void secret_answerInput()
 		// !!!
 
-	void secretAnswer2()
+	void secret_answer2()
 		// !!!
 */
 
@@ -59,8 +59,8 @@ function RemindMe()
 	// Delegation can be useful sometimes.
 	$subActions = array(
 		'mail' => 'RemindMail',
-		'secret' => 'secretAnswerInput',
-		'secret2' => 'secretAnswer2',
+		'secret' => 'secret_answerInput',
+		'secret2' => 'secret_answer2',
 		'setpassword' =>'setPassword',
 		'setpassword2' =>'setPassword2'
 	);
@@ -82,19 +82,19 @@ function RemindMail()
 		fatal_lang_error(40, false);
 
 	// Find the user!
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, realName, memberName, emailAddress, is_activated, validation_code
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
 		FROM {$db_prefix}members
-		WHERE memberName = '$_POST[user]'
+		WHERE member_name = '$_POST[user]'
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER, realName, memberName, emailAddress, is_activated, validation_code
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
 			FROM {$db_prefix}members
-			WHERE emailAddress = '$_POST[user]'
+			WHERE email_address = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(40, false);
@@ -114,24 +114,24 @@ function RemindMail()
 	}
 
 	// You can't get emailed if you have no email address.
-	$row['emailAddress'] = trim($row['emailAddress']);
-	if ($row['emailAddress'] == '')
+	$row['email_address'] = trim($row['email_address']);
+	if ($row['email_address'] == '')
 		fatal_error('<b>' . $txt[394] . '<br />' . $txt[395] . ' <a href="mailto:' . $webmaster_email . '">webmaster</a> ' . $txt[396] . '.');
 
 	// Randomly generate a new password, with only alpha numeric characters that is a max length of 10 chars.
 	$password = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
 	// Set the password in the database.
-	updateMemberData($row['ID_MEMBER'], array('validation_code' => "'" . substr(md5($password), 0, 10) . "'"));
+	updateMemberData($row['id_member'], array('validation_code' => "'" . substr(md5($password), 0, 10) . "'"));
 
 	require_once($sourcedir . '/Subs-Post.php');
 
-	sendmail($row['emailAddress'], $txt['reminder_subject'],
-		sprintf($txt['sendtopic_dear'], $row['realName']) . "\n\n" .
+	sendmail($row['email_address'], $txt['reminder_subject'],
+		sprintf($txt['sendtopic_dear'], $row['real_name']) . "\n\n" .
 		"$txt[reminder_mail]:\n\n" .
-		"$scripturl?action=reminder;sa=setpassword;u=$row[ID_MEMBER];code=$password\n\n" .
+		"$scripturl?action=reminder;sa=setpassword;u=$row[id_member];code=$password\n\n" .
 		"$txt[512]: $user_info[ip]\n\n" .
-		"$txt['username']: $row[memberName]\n\n" .
+		"$txt['username']: $row[member_name]\n\n" .
 		sprintf($txt['regards_team'], $context['forum_name']));
 
 	// Set up the template.
@@ -178,10 +178,10 @@ function setPassword2()
 	loadLanguage('Login');
 
 	// Get the code as it should be from the database.
-	$request = $smfFunc['db_query']("
-		SELECT validation_code, memberName
+	$request = $smfFunc['db_query']('', "
+		SELECT validation_code, member_name
 		FROM {$db_prefix}members
-		WHERE ID_MEMBER = $_POST[u]
+		WHERE id_member = $_POST[u]
 			AND is_activated = 1
 			AND validation_code != ''
 		LIMIT 1", __FILE__, __LINE__);
@@ -215,7 +215,7 @@ function setPassword2()
 }
 
 // Get the secret answer.
-function secretAnswerInput()
+function secret_answerInput()
 {
 	global $txt, $db_prefix, $context, $smfFunc;
 
@@ -226,19 +226,19 @@ function secretAnswerInput()
 		fatal_lang_error(40, false);
 
 	// Get the stuff....
-	$request = $smfFunc['db_query']("
-		SELECT realName, memberName, secretQuestion
+	$request = $smfFunc['db_query']('', "
+		SELECT real_name, member_name, secret_question
 		FROM {$db_prefix}members
-		WHERE memberName = '$_POST[user]'
+		WHERE member_name = '$_POST[user]'
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']("
-			SELECT realName, memberName, secretQuestion
+		$request = $smfFunc['db_query']('', "
+			SELECT real_name, member_name, secret_question
 			FROM {$db_prefix}members
-			WHERE emailAddress = '$_POST[user]'
+			WHERE email_address = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(40, false);
@@ -248,18 +248,18 @@ function secretAnswerInput()
 	$smfFunc['db_free_result']($request);
 
 	// If there is NO secret question - then throw an error.
-	if (trim($row['secretQuestion']) == '')
+	if (trim($row['secret_question']) == '')
 		fatal_lang_error('registration_no_secret_question', false);
 
 	// Ask for the answer...
-	$context['remind_user'] = $row['memberName'];
+	$context['remind_user'] = $row['member_name'];
 	$context['remind_type'] = '';
-	$context['secret_question'] = $row['secretQuestion'];
+	$context['secret_question'] = $row['secret_question'];
 
 	$context['sub_template'] = 'ask';
 }
 
-function secretAnswer2()
+function secret_answer2()
 {
 	global $txt, $db_prefix, $context, $modSettings, $smfFunc;
 
@@ -272,19 +272,19 @@ function secretAnswer2()
 	loadLanguage('Login');
 
 	// Get the information from the database.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, realName, memberName, secretAnswer, secretQuestion
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, real_name, member_name, secret_answer, secret_question
 		FROM {$db_prefix}members
-		WHERE memberName = '$_POST[user]'
+		WHERE member_name = '$_POST[user]'
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER, realName, memberName, secretAnswer, secretQuestion
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member, real_name, member_name, secret_answer, secret_question
 			FROM {$db_prefix}members
-			WHERE emailAddress = '$_POST[user]'
+			WHERE email_address = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(40, false);
@@ -294,9 +294,9 @@ function secretAnswer2()
 	$smfFunc['db_free_result']($request);
 
 	// Check if the secret answer is correct.
-	if ($row['secretQuestion'] == '' || $row['secretAnswer'] == '' || md5(stripslashes($_POST['secretAnswer'])) != $row['secretAnswer'])
+	if ($row['secret_question'] == '' || $row['secret_answer'] == '' || md5(stripslashes($_POST['secret_answer'])) != $row['secret_answer'])
 	{
-		log_error(sprintf($txt['reminder_error'], $row['memberName']));
+		log_error(sprintf($txt['reminder_error'], $row['member_name']));
 		fatal_lang_error('pswd7', false);
 	}
 
@@ -309,17 +309,17 @@ function secretAnswer2()
 		fatal_lang_error(213, false);
 
 	// Alright, so long as 'yer sure.
-	updateMemberData($row['ID_MEMBER'], array('passwd' => '\'' . sha1(strtolower($row['memberName']) . $_POST['passwrd1']) . '\''));
+	updateMemberData($row['id_member'], array('passwd' => '\'' . sha1(strtolower($row['member_name']) . $_POST['passwrd1']) . '\''));
 
 	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
-		call_user_func($modSettings['integrate_reset_pass'], $row['memberName'], $row['memberName'], $_POST['passwrd1']);
+		call_user_func($modSettings['integrate_reset_pass'], $row['member_name'], $row['member_name'], $_POST['passwrd1']);
 
 	// Tell them it went fine.
 	loadTemplate('Login');
 	$context += array(
 		'page_title' => &$txt['reminder_password_set'],
 		'sub_template' => 'login',
-		'default_username' => $row['memberName'],
+		'default_username' => $row['member_name'],
 		'default_password' => $_POST['passwrd1'],
 		'never_expire' => false,
 		'description' => &$txt['reminder_password_set']

@@ -38,7 +38,7 @@ if (!defined('SMF'))
 // Modify a user's karma.
 function ModifyKarma()
 {
-	global $modSettings, $db_prefix, $txt, $ID_MEMBER, $user_info, $topic, $smfFunc;
+	global $modSettings, $db_prefix, $txt, $id_member, $user_info, $topic, $smfFunc;
 
 	// If the mod is disabled, show an error.
 	if (empty($modSettings['karmaMode']))
@@ -56,7 +56,7 @@ function ModifyKarma()
 		fatal_lang_error('smf60', true, array($modSettings['karmaMinPosts']));
 
 	// And you can't modify your own, punk! (use the profile if you need to.)
-	if (empty($_REQUEST['uid']) || (int) $_REQUEST['uid'] == $ID_MEMBER)
+	if (empty($_REQUEST['uid']) || (int) $_REQUEST['uid'] == $id_member)
 		fatal_lang_error('smf61', false);
 
 	// The user ID _must_ be a number, no matter what.
@@ -66,9 +66,9 @@ function ModifyKarma()
 	$dir = $_REQUEST['sa'] != 'applaud' ? -1 : 1;
 
 	// Delete any older items from the log. (karmaWaitTime is by hour.)
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_karma
-		WHERE " . time() . " - logTime > " . (int) ($modSettings['karmaWaitTime'] * 3600), __FILE__, __LINE__);
+		WHERE " . time() . " - log_time > " . (int) ($modSettings['karmaWaitTime'] * 3600), __FILE__, __LINE__);
 
 	// Start off with no change in karma.
 	$action = 0;
@@ -77,11 +77,11 @@ function ModifyKarma()
 	if (!empty($modSettings['karmaTimeRestrictAdmins']) || !allowedTo('moderate_forum'))
 	{
 		// Find out if this user has done this recently...
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT action
 			FROM {$db_prefix}log_karma
 			WHERE ID_TARGET = $_REQUEST[uid]
-				AND ID_EXECUTOR = $ID_MEMBER
+				AND ID_EXECUTOR = $id_member
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			list ($action) = $smfFunc['db_fetch_row']($request);
@@ -92,13 +92,13 @@ function ModifyKarma()
 	if (empty($action) || empty($modSettings['karmaWaitTime']))
 	{
 		// Put it in the log.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			REPLACE INTO {$db_prefix}log_karma
-				(action, ID_TARGET, ID_EXECUTOR, logTime)
-			VALUES ($dir, $_REQUEST[uid], $ID_MEMBER, " . time() . ')', __FILE__, __LINE__);
+				(action, ID_TARGET, ID_EXECUTOR, log_time)
+			VALUES ($dir, $_REQUEST[uid], $id_member, " . time() . ')', __FILE__, __LINE__);
 
 		// Change by one.
-		updateMemberData($_REQUEST['uid'], array($dir == 1 ? 'karmaGood' : 'karmaBad' => '+'));
+		updateMemberData($_REQUEST['uid'], array($dir == 1 ? 'karma_good' : 'karma_bad' => '+'));
 	}
 	else
 	{
@@ -107,18 +107,18 @@ function ModifyKarma()
 			fatal_lang_error('smf62', false, array($modSettings['karmaWaitTime'], $txt[578]));
 
 		// You decided to go back on your previous choice?
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_karma
-			SET action = $dir, logTime = " . time() . "
+			SET action = $dir, log_time = " . time() . "
 			WHERE ID_TARGET = $_REQUEST[uid]
-				AND ID_EXECUTOR = $ID_MEMBER
+				AND ID_EXECUTOR = $id_member
 			LIMIT 1", __FILE__, __LINE__);
 
 		// It was recently changed the OTHER way... so... reverse it!
 		if ($dir == 1)
-			updateMemberData($_REQUEST['uid'], array('karmaGood' => '+', 'karmaBad' => '-'));
+			updateMemberData($_REQUEST['uid'], array('karma_good' => '+', 'karma_bad' => '-'));
 		else
-			updateMemberData($_REQUEST['uid'], array('karmaBad' => '+', 'karmaGood' => '-'));
+			updateMemberData($_REQUEST['uid'], array('karma_bad' => '+', 'karma_good' => '-'));
 	}
 
 	// Figure out where to go back to.... the topic?

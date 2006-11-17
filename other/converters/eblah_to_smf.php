@@ -134,17 +134,17 @@ if (empty($preparsing))
 			elseif (isset($current_group) && preg_match('~^(.+?) = [\'(](.+?)[\'\)]$~', $group, $match) != 0)
 			{
 				if ($match[1] == 'name')
-					$current_group['groupName'] = addslashes($match[2]);
+					$current_group['group_name'] = addslashes($match[2]);
 				elseif ($match[1] == 'members')
 					$current_group['tempMembers'] = addslashes($match[2]);
 				elseif ($match[1] == 'pcount')
 				{
-					$current_group['minPosts'] = max(0, (int) $match[2]);
+					$current_group['min_posts'] = max(0, (int) $match[2]);
 					if ($match[2] < 1)
 						$newbie = true;
 				}
 				elseif ($match[1] == 'color')
-					$current_group['onlineColor'] = addslashes($match[2]);
+					$current_group['online_color'] = addslashes($match[2]);
 			}
 		}
 
@@ -154,20 +154,20 @@ if (empty($preparsing))
 		{
 			convert_query("
 				DELETE FROM {$to_prefix}permissions
-				WHERE ID_GROUP > " . ($newbie ? 3 : 4));
+				WHERE id_group > " . ($newbie ? 3 : 4));
 			convert_query("
 				DELETE FROM {$to_prefix}membergroups
-				WHERE ID_GROUP > " . ($newbie ? 3 : 4));
+				WHERE id_group > " . ($newbie ? 3 : 4));
 		}
 
 		if (!empty($knownGroups))
 		{
 			foreach ($knownGroups as $i => $v)
-				$knownGroups[$i] = "$i, SUBSTRING('$v[groupName]', 1, 80), SUBSTRING('" . @$v['onlineColor'] . "', 1, 20), 0, '', '" . @$v['tempMembers'] . "'";
+				$knownGroups[$i] = "$i, SUBSTRING('$v[group_name]', 1, 80), SUBSTRING('" . @$v['online_color'] . "', 1, 20), 0, '', '" . @$v['tempMembers'] . "'";
 
 			convert_query("
 				REPLACE INTO {$to_prefix}membergroups
-					(ID_GROUP, groupName, onlineColor, minPosts, stars, tempMembers)
+					(id_group, group_name, online_color, min_posts, stars, tempMembers)
 				VALUES (" . implode("),
 					(", $knownGroups) . ")");
 		}
@@ -175,11 +175,11 @@ if (empty($preparsing))
 		if (!empty($extraGroups))
 		{
 			foreach ($extraGroups as $i => $v)
-				$extraGroups[$i] = "$v[tempID], SUBSTRING('$v[groupName]', 1, 80), SUBSTRING('" . @$v['onlineColor'] . "', 1, 20), " . (isset($v['minPosts']) ? $v['minPosts'] : -1) . ", '', '" . @$v['tempMembers'] . "'";
+				$extraGroups[$i] = "$v[tempID], SUBSTRING('$v[group_name]', 1, 80), SUBSTRING('" . @$v['online_color'] . "', 1, 20), " . (isset($v['min_posts']) ? $v['min_posts'] : -1) . ", '', '" . @$v['tempMembers'] . "'";
 
 			convert_query("
 				REPLACE INTO {$to_prefix}membergroups
-					(tempID, groupName, onlineColor, minPosts, stars, tempMembers)
+					(tempID, group_name, online_color, min_posts, stars, tempMembers)
 				VALUES (" . implode("),
 					(", $extraGroups) . ")");
 		}
@@ -202,13 +202,13 @@ if (empty($preparsing))
 			convert_query("
 				ALTER TABLE {$to_prefix}members
 				DROP PRIMARY KEY,
-				CHANGE COLUMN ID_MEMBER ID_MEMBER mediumint(8) unsigned NOT NULL default 0");
+				CHANGE COLUMN id_member id_member mediumint(8) unsigned NOT NULL default 0");
 		}
 
 		pastTime(0);
 
 		$request = convert_query("
-			SELECT ID_GROUP, tempMembers
+			SELECT id_group, tempMembers
 			FROM {$to_prefix}membergroups
 			WHERE tempMembers != ''");
 		$groups = array();
@@ -223,9 +223,9 @@ if (empty($preparsing))
 
 				// Additional group?
 				if (isset($groups[$member]))
-					$addGroups[$member] = empty($addGroups[$member]) ? $row['ID_GROUP'] : $addGroups[$member] . ',' . $row['ID_GROUP'];
+					$addGroups[$member] = empty($addGroups[$member]) ? $row['id_group'] : $addGroups[$member] . ',' . $row['id_group'];
 				else
-					$groups[$member] = $row['ID_GROUP'];
+					$groups[$member] = $row['id_group'];
 			}
 		}
 		mysql_free_result($request);
@@ -234,33 +234,33 @@ if (empty($preparsing))
 		$dir = dir($eblah['members']);
 		$block = array();
 		$text_columns = array(
-			'memberName' => 80,
+			'member_name' => 80,
 			'lngfile' => 255,
-			'realName' => 255,
+			'real_name' => 255,
 			'buddy_list' => 255,
 			'pm_ignore_list' => 255,
-			'messageLabels' => 65534,
+			'message_labels' => 65534,
 			'passwd' => 64,
-			'emailAddress' => 255,
-			'personalText' => 255,
-			'websiteTitle' => 255,
-			'websiteUrl' => 255,
+			'email_address' => 255,
+			'personal_text' => 255,
+			'website_title' => 255,
+			'website_url' => 255,
 			'location' => 255,
-			'ICQ' => 255,
-			'AIM' => 16,
-			'YIM' => 32,
-			'MSN' => 255,
-			'timeFormat' => 80,
+			'icq' => 255,
+			'aim' => 16,
+			'yim' => 32,
+			'msn' => 255,
+			'time_format' => 80,
 			'signature' => 255,
 			'avatar' => 255,
 			'usertitle' => 255,
-			'memberIP' => 255,
-			'secretQuestion' => 255,
-			'secretAnswer' => 64,
+			'member_ip' => 255,
+			'secret_question' => 255,
+			'secret_answer' => 64,
 			'validation_code' => 10,
-			'additionalGroups' => 255,
-			'smileySet' => 48,
-			'passwordSalt' => 5,
+			'additional_groups' => 255,
+			'smiley_set' => 48,
+			'password_salt' => 5,
 		);
 		while ($entry = $dir->read())
 		{
@@ -280,30 +280,30 @@ if (empty($preparsing))
 			$name = substr($entry, 0, -4);
 
 			$row = array(
-				'memberName' => substr(htmlspecialchars($name), 0, 80),
-				'ID_GROUP' => isset($groups[$name]) ? $groups[$name] : 0,
-				'additionalGroups' => isset($addGroups[$name]) ? $addGroups[$name] : '',
+				'member_name' => substr(htmlspecialchars($name), 0, 80),
+				'id_group' => isset($groups[$name]) ? $groups[$name] : 0,
+				'additional_groups' => isset($addGroups[$name]) ? $addGroups[$name] : '',
 				'passwd' => empty($eblah['yabbconver']) && strlen($userData[0]) == 32 ? md5($userData[0]) : substr($userData[0], 0, 64),
-				'realName' => @$userData[1] == 'Guest' || @$userData[1] == '' ? htmlspecialchars($name) : htmlspecialchars($userData[1]),
-				'emailAddress' => htmlspecialchars(@$userData[2]),
+				'real_name' => @$userData[1] == 'Guest' || @$userData[1] == '' ? htmlspecialchars($name) : htmlspecialchars($userData[1]),
+				'email_address' => htmlspecialchars(@$userData[2]),
 				'posts' => (int) @$userData[3],
 				'usertitle' => htmlspecialchars(@$userData[4]),
-				'personalText' => htmlspecialchars(@$userData[6]),
+				'personal_text' => htmlspecialchars(@$userData[6]),
 				'gender' => @$userData[7] <= 2 ? (int) @$userData[7] : 0,
-				'ICQ' => htmlspecialchars(@$userData[8]),
-				'AIM' => substr(htmlspecialchars(@$userData[9]), 0, 16),
-				'MSN' => htmlspecialchars(@$userData[10]),
+				'icq' => htmlspecialchars(@$userData[8]),
+				'aim' => substr(htmlspecialchars(@$userData[9]), 0, 16),
+				'msn' => htmlspecialchars(@$userData[10]),
 				'signature' => str_replace(array('&lt;br&gt;'), array('<br />'), htmlspecialchars(@$userData[11], ENT_QUOTES)),
-				'hideEmail' => (int) @$userData[12],
-				'dateRegistered' => @$userData[14],
-				'timeOffset' => (float) @$userData[15],
+				'hide_email' => (int) @$userData[12],
+				'date_registered' => @$userData[14],
+				'time_offset' => (float) @$userData[15],
 				'birthdate' => @$userData[16] == '' || strtotime(@$userData[16]) == 0 ? '0001-01-01' : strftime('%Y-%m-%d', strtotime($userData[16])),
-				'showOnline' => empty($userData[18]),
-				'websiteTitle' => htmlspecialchars(@$userData[19]),
-				'websiteUrl' => htmlspecialchars(@$userData[20]),
+				'show_online' => empty($userData[18]),
+				'website_title' => htmlspecialchars(@$userData[19]),
+				'website_url' => htmlspecialchars(@$userData[20]),
 				'location' => htmlspecialchars(@$userData[21]),
-				'notifyAnnouncements' => empty($userData[25]),
-				'YIM' => substr(htmlspecialchars(@$userData[27]), 0, 32),
+				'notify_announcements' => empty($userData[25]),
+				'yim' => substr(htmlspecialchars(@$userData[27]), 0, 32),
 			);
 
 			if ($row['birthdate'] === '0001-01-01' && parse_time(@$userData[16], false) != 0)
@@ -344,14 +344,14 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}members
-				ORDER BY ID_MEMBER = 0, dateRegistered");
+				ORDER BY id_member = 0, date_registered");
 			pastTime(-2);
 		}
 		if ($_GET['substep'] >= -2)
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}members
-				CHANGE COLUMN ID_MEMBER ID_MEMBER mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY");
+				CHANGE COLUMN id_member id_member mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY");
 
 			pastTime(-3);
 		}
@@ -359,7 +359,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}members
-				ORDER BY ID_MEMBER");
+				ORDER BY id_member");
 
 			pastTime(-4);
 		}
@@ -449,12 +449,12 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
-				DROP COLUMN temp_toName", true);
+				DROP COLUMN temp_to_name", true);
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
-				CHANGE COLUMN ID_PM ID_PM int(10) unsigned NOT NULL default 0,
+				CHANGE COLUMN id_pm id_pm int(10) unsigned NOT NULL default 0,
 				DROP PRIMARY KEY,
-				ADD temp_toName tinytext");
+				ADD temp_to_name tinytext");
 		}
 
 		echo 'Converting personal messages...';
@@ -483,14 +483,14 @@ if (empty($preparsing))
 				$row = array(
 					'msgtime' => $userData[$i][1],
 					'subject' => substr($userData[$i][2], 0, 255),
-					'fromName' => substr(htmlspecialchars($userData[$i][3]), 0, 255),
+					'from_name' => substr(htmlspecialchars($userData[$i][3]), 0, 255),
 					'body' => substr(strtr($userData[$i][4], array('<br>' => '<br />')), 0, 65534),
-					'ID_MEMBER_FROM' => '0',
-					'deletedBySender' => '1',
-					'temp_toName' => htmlspecialchars(substr($entry, 0, -4)),
+					'id_member_from' => '0',
+					'deleted_by_sender' => '1',
+					'temp_to_name' => htmlspecialchars(substr($entry, 0, -4)),
 				);
 
-				$names[strtolower(addslashes($row['fromName']))][] = &$row['ID_MEMBER_FROM'];
+				$names[strtolower(addslashes($row['from_name']))][] = &$row['id_member_from'];
 
 				$block[] = addslashes_recursive($row);
 			}
@@ -498,14 +498,14 @@ if (empty($preparsing))
 			if (count($block) > 100)
 			{
 				$result = convert_query("
-					SELECT ID_MEMBER, memberName
+					SELECT id_member, member_name
 					FROM {$to_prefix}members
-					WHERE memberName IN ('" . implode("', '", array_keys($names)) . "')
+					WHERE member_name IN ('" . implode("', '", array_keys($names)) . "')
 					LIMIT " . count($names));
 				while ($row = mysql_fetch_assoc($result))
 				{
-					foreach ($names[strtolower(addslashes($row['memberName']))] as $k => $v)
-						$names[strtolower(addslashes($row['memberName']))][$k] = $row['ID_MEMBER'];
+					foreach ($names[strtolower(addslashes($row['member_name']))] as $k => $v)
+						$names[strtolower(addslashes($row['member_name']))][$k] = $row['id_member'];
 				}
 				mysql_free_result($result);
 				$names = array();
@@ -519,14 +519,14 @@ if (empty($preparsing))
 		if (!empty($block))
 		{
 			$result = convert_query("
-				SELECT ID_MEMBER, memberName
+				SELECT id_member, member_name
 				FROM {$to_prefix}members
-				WHERE memberName IN ('" . implode("', '", array_keys($names)) . "')
+				WHERE member_name IN ('" . implode("', '", array_keys($names)) . "')
 				LIMIT " . count($names));
 			while ($row = mysql_fetch_assoc($result))
 			{
-				foreach ($names[strtolower(addslashes($row['memberName']))] as $k => $v)
-					$names[strtolower(addslashes($row['memberName']))][$k] = $row['ID_MEMBER'];
+				foreach ($names[strtolower(addslashes($row['member_name']))] as $k => $v)
+					$names[strtolower(addslashes($row['member_name']))][$k] = $row['id_member'];
 			}
 			mysql_free_result($result);
 			$names = array();
@@ -541,7 +541,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
-				ORDER BY ID_PM = 0, msgtime");
+				ORDER BY id_pm = 0, msgtime");
 
 			pastTime(-2);
 		}
@@ -549,7 +549,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
-				CHANGE COLUMN ID_PM ID_PM int(10) unsigned NOT NULL auto_increment PRIMARY KEY");
+				CHANGE COLUMN id_pm id_pm int(10) unsigned NOT NULL auto_increment PRIMARY KEY");
 
 			pastTime(-3);
 		}
@@ -557,11 +557,11 @@ if (empty($preparsing))
 		{
 			convert_query("
 				INSERT INTO {$to_prefix}pm_recipients
-					(ID_PM, ID_MEMBER, labels)
-				SELECT pm.ID_PM, mem.ID_MEMBER, '' AS labels
+					(id_pm, id_member, labels)
+				SELECT pm.id_pm, mem.id_member, '' AS labels
 				FROM ({$to_prefix}personal_messages AS pm, {$to_prefix}members AS mem)
-				WHERE mem.memberName = pm.temp_toName
-					AND pm.temp_toName != ''");
+				WHERE mem.member_name = pm.temp_to_name
+					AND pm.temp_to_name != ''");
 
 			pastTime(-4);
 		}
@@ -569,7 +569,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
-				DROP temp_toName");
+				DROP temp_to_name");
 
 			pastTime(-5);
 		}
@@ -577,7 +577,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}personal_messages
-				ORDER BY ID_PM");
+				ORDER BY id_pm");
 		}
 	}
 
@@ -617,15 +617,15 @@ if (empty($preparsing))
 		pastTime(0);
 
 		$request = convert_query("
-			SELECT ID_GROUP, groupName, tempID
+			SELECT id_group, group_name, tempID
 			FROM {$to_prefix}membergroups
-			WHERE ID_GROUP NOT IN (2, 3)");
+			WHERE id_group NOT IN (2, 3)");
 		$groups = array('Administrator' => 1, 'member' => 0);
 		while ($row = mysql_fetch_assoc($request))
 		{
-			$groups[$row['groupName']] = $row['ID_GROUP'];
+			$groups[$row['group_name']] = $row['id_group'];
 			if ($row['tempID'] != '')
-				$groups[$row['tempID']] = $row['ID_GROUP'];
+				$groups[$row['tempID']] = $row['id_group'];
 		}
 		mysql_free_result($request);
 
@@ -640,7 +640,7 @@ if (empty($preparsing))
 
 			$row = array(
 				'name' => substr($data[0], 0, 255),
-				'catOrder' => $i + 1,
+				'cat_order' => $i + 1,
 				'tempID' => trim($data[1]),
 			);
 
@@ -663,11 +663,11 @@ if (empty($preparsing))
 			$row = array(
 				'name' => substr($data[3], 0, 255),
 				'description' => substr($data[1], 0, 255),
-				'boardOrder' => $i + 1,
+				'board_order' => $i + 1,
 				'tempCatID' => isset($board_cats[trim($data[0])]) ? $board_cats[trim($data[0])] : 1,
-				'countPosts' => !empty($data[9]),
+				'count_posts' => !empty($data[9]),
 				'tempID' => $data[0],
-				'memberGroups' => '-1,0',
+				'member_groups' => '-1,0',
 			);
 
 			$board_rows[] = addslashes_recursive($row);
@@ -683,14 +683,14 @@ if (empty($preparsing))
 		doBlock('boards', $board_rows);
 
 		$result = convert_query("
-			SELECT ID_CAT, tempID
+			SELECT id_cat, tempID
 			FROM {$to_prefix}categories
 			WHERE tempID != ''");
 		while ($row = mysql_fetch_assoc($result))
 		{
 			convert_query("
 				UPDATE {$to_prefix}boards
-				SET ID_CAT = $row[ID_CAT]
+				SET id_cat = $row[id_cat]
 				WHERE tempCatID = '$row[tempID]'");
 		}
 		mysql_free_result($result);
@@ -698,19 +698,19 @@ if (empty($preparsing))
 		foreach ($moderators as $boardid => $names)
 		{
 			$result = convert_query("
-				SELECT ID_BOARD
+				SELECT id_board
 				FROM {$to_prefix}boards
 				WHERE tempID = '$boardid'
 				LIMIT 1");
-			list ($ID_BOARD) = mysql_fetch_row($result);
+			list ($id_board) = mysql_fetch_row($result);
 			mysql_free_result($result);
 
 			convert_query("
 				INSERT INTO {$to_prefix}moderators
-					(ID_BOARD, ID_MEMBER)
-				SELECT $ID_BOARD, ID_MEMBER
+					(id_board, id_member)
+				SELECT $id_board, id_member
 				FROM {$to_prefix}members
-				WHERE memberName IN ('" . implode("', '", addslashes_recursive($names)) . "')
+				WHERE member_name IN ('" . implode("', '", addslashes_recursive($names)) . "')
 				LIMIT " . count($names));
 		}
 
@@ -754,11 +754,11 @@ if (empty($preparsing))
 		echo 'Converting mark read data...';
 
 		$result = convert_query("
-			SELECT ID_BOARD, tempID
+			SELECT id_board, tempID
 			FROM {$to_prefix}boards");
 		$boards = array();
 		while ($row = mysql_fetch_assoc($result))
-			$boards[$row['tempID']] = $row['ID_BOARD'];
+			$boards[$row['tempID']] = $row['id_board'];
 		mysql_free_result($result);
 
 		$file_n = 0;
@@ -776,11 +776,11 @@ if (empty($preparsing))
 				continue;
 
 			$result = convert_query("
-				SELECT ID_MEMBER
+				SELECT id_member
 				FROM {$to_prefix}members
-				WHERE memberName = '" . substr($entry, 0, -4) . "'
+				WHERE member_name = '" . substr($entry, 0, -4) . "'
 				LIMIT 1");
-			list ($ID_MEMBER) = mysql_fetch_row($result);
+			list ($id_member) = mysql_fetch_row($result);
 			mysql_free_result($result);
 
 			$logData = file($eblah['members'] . '/' . $entry);
@@ -791,8 +791,8 @@ if (empty($preparsing))
 					continue;
 
 				$row = array();
-				$row['logTime'] = (int) trim($parts[1]);
-				$row['ID_MEMBER'] = $ID_MEMBER;
+				$row['log_time'] = (int) trim($parts[1]);
+				$row['id_member'] = $id_member;
 
 				if (is_numeric(trim($parts[0])) && trim($parts[0]) > 10000)
 				{
@@ -806,18 +806,18 @@ if (empty($preparsing))
 					{
 						foreach ($boards as $id)
 						{
-							$row['ID_BOARD'] = $id;
+							$row['id_board'] = $id;
 							$mark_read_block[] = $row;
 						}
 					}
 					else*/if (isset($boards[trim($parts[0])]))
 					{
-						$row['ID_BOARD'] = $boards[trim($parts[0])];
+						$row['id_board'] = $boards[trim($parts[0])];
 						$boards_block[] = $row;
 					}
 					elseif (substr(trim($parts[0]), 0, 8) == 'AllRead_' && isset($boards[substr(trim($parts[0]), 8)]))
 					{
-						$row['ID_BOARD'] = $boards[substr(trim($parts[0]), 8)];
+						$row['id_board'] = $boards[substr(trim($parts[0]), 8)];
 						$mark_read_block[] = $row;
 					}
 				}
@@ -857,7 +857,7 @@ if (empty($preparsing))
 				DROP COLUMN tempSubject", true);
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				CHANGE COLUMN ID_TOPIC ID_TOPIC mediumint(8) unsigned NOT NULL default 0,
+				CHANGE COLUMN id_topic id_topic mediumint(8) unsigned NOT NULL default 0,
 				DROP PRIMARY KEY,
 				ADD tempID int(10) unsigned NOT NULL default 0,
 				ADD tempSubject tinytext NOT NULL default '',
@@ -883,17 +883,17 @@ if (empty($preparsing))
 		}
 
 		$result = convert_query("
-			SELECT ID_BOARD, tempID
+			SELECT id_board, tempID
 			FROM {$to_prefix}boards
 			WHERE tempID != ''");
 		$boards = array();
 		while ($row = mysql_fetch_assoc($result))
-			$boards[$row['tempID']] = $row['ID_BOARD'];
+			$boards[$row['tempID']] = $row['id_board'];
 		mysql_free_result($result);
 
 		$data_n = 0;
 		$block = array();
-		foreach ($boards as $boardname => $ID_BOARD)
+		foreach ($boards as $boardname => $id_board)
 		{
 			if ($_GET['substep'] < 0)
 				break;
@@ -915,10 +915,10 @@ if (empty($preparsing))
 				$block[] = array(
 					'tempID' => $tempID,
 					'tempSubject' => addslashes($topicInfo[1]),
-					'ID_BOARD' => (int) $ID_BOARD,
-					'isSticky' => (int) in_array($tempID, $stickies),
+					'id_board' => (int) $id_board,
+					'is_sticky' => (int) in_array($tempID, $stickies),
 					'locked' => (int) $topicInfo[6],
-					'numViews' => (int) @implode('', @file($eblah['messages'] . '/' . $tempID . '.view')),
+					'num_views' => (int) @implode('', @file($eblah['messages'] . '/' . $tempID . '.view')),
 				);
 
 				if (count($block) > 100)
@@ -937,7 +937,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				UPDATE {$to_prefix}topics
-				SET tempID = ID_TOPIC
+				SET tempID = id_topic
 				WHERE tempID = 0");
 
 			pastTime(-2);
@@ -946,7 +946,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				ORDER BY ID_TOPIC = 0, tempID");
+				ORDER BY id_topic = 0, tempID");
 
 			pastTime(-3);
 		}
@@ -954,7 +954,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				CHANGE COLUMN ID_TOPIC ID_TOPIC mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY");
+				CHANGE COLUMN id_topic id_topic mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY");
 
 			pastTime(-4);
 		}
@@ -962,7 +962,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				ORDER BY ID_TOPIC");
+				ORDER BY id_topic");
 		}
 	}
 
@@ -984,15 +984,15 @@ if (empty($preparsing))
 			pastTime($_GET['substep']);
 
 			$result = convert_query("
-				SELECT ID_TOPIC, tempID
+				SELECT id_topic, tempID
 				FROM {$to_prefix}topics
-				WHERE tempID != ID_TOPIC
+				WHERE tempID != id_topic
 				LIMIT $_GET[substep], 150");
 			while ($row = mysql_fetch_assoc($result))
 			{
 				convert_query("
 					UPDATE {$to_prefix}log_topics
-					SET ID_TOPIC = $row[ID_TOPIC]
+					SET id_topic = $row[id_topic]
 					WHERE tempID = $row[tempID]");
 			}
 
@@ -1005,12 +1005,12 @@ if (empty($preparsing))
 
 		convert_query("
 			DELETE FROM {$to_prefix}log_topics
-			WHERE ID_TOPIC = 0 OR ID_MEMBER = 0");
+			WHERE id_topic = 0 OR id_member = 0");
 
 		convert_query("
 			ALTER IGNORE TABLE {$to_prefix}log_topics
 			DROP COLUMN tempID,
-			ADD PRIMARY KEY (ID_TOPIC, ID_MEMBER)");
+			ADD PRIMARY KEY (id_topic, id_member)");
 	}
 
 	function convertStep9()
@@ -1030,9 +1030,9 @@ if (empty($preparsing))
 			pastTime($_GET['substep']);
 
 			$result = convert_query("
-				SELECT ID_TOPIC, tempID
+				SELECT id_topic, tempID
 				FROM {$to_prefix}topics
-				WHERE tempID != ID_TOPIC
+				WHERE tempID != id_topic
 				LIMIT $_GET[substep], 150");
 			while ($row = mysql_fetch_assoc($result))
 			{
@@ -1045,10 +1045,10 @@ if (empty($preparsing))
 
 				convert_query("
 					INSERT INTO {$to_prefix}log_notify
-						(ID_TOPIC, ID_MEMBER)
-					SELECT $row[ID_TOPIC], ID_MEMBER
+						(id_topic, id_member)
+					SELECT $row[id_topic], id_member
 					FROM {$to_prefix}members
-					WHERE memberName IN ('" . implode("', '", $list) . "')");
+					WHERE member_name IN ('" . implode("', '", $list) . "')");
 			}
 
 			$_GET['substep'] += 150;
@@ -1075,10 +1075,10 @@ if (empty($preparsing))
 			// Remove the auto_incrementing so we know we get the right order.
 			convert_query("
 				ALTER TABLE {$to_prefix}messages
-				CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default 0,
+				CHANGE COLUMN id_msg id_msg int(10) unsigned NOT NULL default 0,
 				DROP PRIMARY KEY,
 				DROP INDEX topic,
-				DROP INDEX ID_BOARD");
+				DROP INDEX id_board");
 
 			if (isset($eblah['uploaddir']))
 			{
@@ -1097,9 +1097,9 @@ if (empty($preparsing))
 		while (true)
 		{
 			$result = convert_query("
-				SELECT ID_TOPIC, tempID, ID_BOARD, tempSubject
+				SELECT id_topic, tempID, id_board, tempSubject
 				FROM {$to_prefix}topics
-				WHERE tempID != ID_TOPIC
+				WHERE tempID != id_topic
 				LIMIT $_GET[substep], 100");
 			while ($topic = mysql_fetch_assoc($result))
 			{
@@ -1108,7 +1108,7 @@ if (empty($preparsing))
 				{
 					convert_query("
 						DELETE FROM {$to_prefix}topics
-						WHERE ID_TOPIC = $topic[ID_TOPIC]
+						WHERE id_topic = $topic[id_topic]
 						LIMIT 1");
 
 					pastTime($_GET['substep']);
@@ -1127,17 +1127,17 @@ if (empty($preparsing))
 					$message[9] = explode('/', $message[9]);
 
 					$row = array(
-						'ID_TOPIC' => $topic['ID_TOPIC'],
-						'ID_BOARD' => $topic['ID_BOARD'],
+						'id_topic' => $topic['id_topic'],
+						'id_board' => $topic['id_board'],
 						'subject' => substr(($msgn == 0 ? '' : 'Re: ') . $topic['tempSubject'], 0, 255),
-						'posterName' => substr($message[0], 0, 255),
+						'poster_name' => substr($message[0], 0, 255),
 						'body' => substr(preg_replace('~\[quote author=.+? link=.+?\]~i', '[quote]', strtr($message[1], array('<br>' => '<br />'))), 0, 65534),
-						'posterIP' => substr($message[2], 0, 255),
-						'posterEmail' => substr(htmlspecialchars($message[3]), 0, 255),
-						'posterTime' => $message[4],
-						'smileysEnabled' => empty($message[5]),
-						'modifiedTime' => $message[9][0],
-						'modifiedName' => isset($message[9][1]) ? substr(htmlspecialchars($message[9][1]), 0, 255) : '',
+						'poster_ip' => substr($message[2], 0, 255),
+						'poster_email' => substr(htmlspecialchars($message[3]), 0, 255),
+						'poster_time' => $message[4],
+						'smileys_enabled' => empty($message[5]),
+						'modified_time' => $message[9][0],
+						'modified_name' => isset($message[9][1]) ? substr(htmlspecialchars($message[9][1]), 0, 255) : '',
 						'icon' => 'xx',
 					);
 
@@ -1172,13 +1172,13 @@ if (empty($preparsing))
 		{
 			mysql_query("
 				ALTER TABLE {$to_prefix}messages
-				ORDER BY posterTime");
+				ORDER BY poster_time");
 		}
 
 		echo 'Converting posts (part 2)...';
 
 		$request = convert_query("
-			SELECT @msg := IFNULL(MAX(ID_MSG), 0)
+			SELECT @msg := IFNULL(MAX(id_msg), 0)
 			FROM {$to_prefix}messages");
 		mysql_free_result($request);
 
@@ -1188,8 +1188,8 @@ if (empty($preparsing))
 
 			mysql_query("
 				UPDATE {$to_prefix}messages
-				SET ID_MSG = (@msg := @msg + 1)
-				WHERE ID_MSG = 0
+				SET id_msg = (@msg := @msg + 1)
+				WHERE id_msg = 0
 				LIMIT 150");
 
 			$_GET['substep'] += 150;
@@ -1199,7 +1199,7 @@ if (empty($preparsing))
 
 		convert_query("
 			ALTER TABLE {$to_prefix}messages
-			CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL auto_increment PRIMARY KEY");
+			CHANGE COLUMN id_msg id_msg int(10) unsigned NOT NULL auto_increment PRIMARY KEY");
 	}
 
 	function convertStep12()
@@ -1213,17 +1213,17 @@ if (empty($preparsing))
 			pastTime($_GET['substep']);
 
 			$result = convert_query("
-				SELECT m.ID_MSG, mem.ID_MEMBER
+				SELECT m.id_msg, mem.id_member
 				FROM ({$to_prefix}messages AS m, {$to_prefix}members AS mem)
-				WHERE m.posterName = mem.memberName
-					AND m.ID_MEMBER = 0
+				WHERE m.poster_name = mem.member_name
+					AND m.id_member = 0
 				LIMIT 150");
 			while ($row = mysql_fetch_assoc($result))
 			{
 				convert_query("
 					UPDATE {$to_prefix}messages
-					SET ID_MEMBER = $row[ID_MEMBER]
-					WHERE ID_MSG = $row[ID_MSG]
+					SET id_member = $row[id_member]
+					WHERE id_msg = $row[id_msg]
 					LIMIT 1");
 			}
 
@@ -1257,12 +1257,12 @@ if (empty($preparsing))
 			return;
 
 		$result = convert_query("
-			SELECT MAX(ID_ATTACH)
+			SELECT MAX(id_attach)
 			FROM {$to_prefix}attachments");
-		list ($ID_ATTACH) = mysql_fetch_row($result);
+		list ($id_attach) = mysql_fetch_row($result);
 		mysql_free_result($result);
 
-		$ID_ATTACH++;
+		$id_attach++;
 
 		while (true)
 		{
@@ -1271,7 +1271,7 @@ if (empty($preparsing))
 			$setString = '';
 
 			$result = convert_query("
-				SELECT ID_MSG, temp_filename
+				SELECT id_msg, temp_filename
 				FROM {$to_prefix}messages
 				WHERE temp_filename != ''
 				LIMIT $_GET[substep], 100");
@@ -1282,14 +1282,14 @@ if (empty($preparsing))
 					if (trim($file) != '' && file_exists($eblah['uploaddir'] . '/' . $file))
 					{
 						$size = filesize($eblah['uploaddir'] . '/' . $file);
-						$filename = getAttachmentFilename($file, $ID_ATTACH);
+						$filename = getAttachmentFilename($file, $id_attach);
 
 						if (strlen($file) <= 255 && copy($eblah['uploaddir'] . '/' . $file, $attachmentUploadDir . '/' . $filename))
 						{
 							$setString .= "
-								($ID_ATTACH, $size, 0, '" . addslashes($file) . "', $row[ID_MSG]),";
+								($id_attach, $size, 0, '" . addslashes($file) . "', $row[id_msg]),";
 
-							$ID_ATTACH++;
+							$id_attach++;
 						}
 					}
 			}
@@ -1297,7 +1297,7 @@ if (empty($preparsing))
 			if ($setString != '')
 				convert_query("
 					INSERT INTO {$to_prefix}attachments
-						(ID_ATTACH, size, downloads, filename, ID_MSG)
+						(id_attach, size, downloads, filename, id_msg)
 					VALUES" . substr($setString, 0, -1));
 
 			$_GET['substep'] += 100;
@@ -1330,7 +1330,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}messages
-				ADD UNIQUE INDEX topic (ID_TOPIC, ID_MSG)");
+				ADD UNIQUE INDEX topic (id_topic, id_msg)");
 
 			pastTime(2);
 		}
@@ -1338,7 +1338,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				ADD UNIQUE INDEX poll (ID_POLL, ID_TOPIC)");
+				ADD UNIQUE INDEX poll (id_poll, id_topic)");
 
 			pastTime(3);
 		}
@@ -1354,7 +1354,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}messages
-				ADD UNIQUE INDEX ID_BOARD (ID_BOARD, ID_MSG)");
+				ADD UNIQUE INDEX id_board (id_board, id_msg)");
 		}
 	}
 
@@ -1369,34 +1369,34 @@ if (empty($preparsing))
 			pastTime($_GET['substep']);
 
 			$result = convert_query("
-				SELECT t.ID_TOPIC, MIN(m.ID_MSG) AS ID_FIRST_MSG, MAX(m.ID_MSG) AS ID_LAST_MSG
+				SELECT t.id_topic, MIN(m.id_msg) AS id_first_msg, MAX(m.id_msg) AS id_last_msg
 				FROM ({$to_prefix}topics AS t, {$to_prefix}messages AS m)
-				WHERE m.ID_TOPIC = t.ID_TOPIC
-				GROUP BY t.ID_TOPIC
+				WHERE m.id_topic = t.id_topic
+				GROUP BY t.id_topic
 				LIMIT $_GET[substep], 150");
 			while ($row = mysql_fetch_assoc($result))
 			{
 				$result2 = convert_query("
-					SELECT ID_MEMBER
+					SELECT id_member
 					FROM {$to_prefix}messages
-					WHERE ID_MSG = $row[ID_LAST_MSG]
+					WHERE id_msg = $row[id_last_msg]
 					LIMIT 1");
-				list ($row['ID_MEMBER_UPDATED']) = mysql_fetch_row($result2);
+				list ($row['id_member_updated']) = mysql_fetch_row($result2);
 				mysql_free_result($result2);
 
 				$result2 = convert_query("
-					SELECT ID_MEMBER
+					SELECT id_member
 					FROM {$to_prefix}messages
-					WHERE ID_MSG = $row[ID_FIRST_MSG]
+					WHERE id_msg = $row[id_first_msg]
 					LIMIT 1");
-				list ($row['ID_MEMBER_STARTED']) = mysql_fetch_row($result2);
+				list ($row['id_member_started']) = mysql_fetch_row($result2);
 				mysql_free_result($result2);
 
 				convert_query("
 					UPDATE {$to_prefix}topics
-					SET ID_FIRST_MSG = '$row[ID_FIRST_MSG]', ID_LAST_MSG = '$row[ID_LAST_MSG]',
-						ID_MEMBER_STARTED = '$row[ID_MEMBER_STARTED]', ID_MEMBER_UPDATED = '$row[ID_MEMBER_UPDATED]'
-					WHERE ID_TOPIC = $row[ID_TOPIC]
+					SET id_first_msg = '$row[id_first_msg]', id_last_msg = '$row[id_last_msg]',
+						id_member_started = '$row[id_member_started]', id_member_updated = '$row[id_member_updated]'
+					WHERE id_topic = $row[id_topic]
 					LIMIT 1");
 			}
 
@@ -1411,7 +1411,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				ADD UNIQUE INDEX lastMessage (ID_LAST_MSG, ID_BOARD)");
+				ADD UNIQUE INDEX lastMessage (id_last_msg, id_board)");
 
 			pastTime(-2);
 		}
@@ -1419,7 +1419,7 @@ if (empty($preparsing))
 		{
 			convert_query("
 				ALTER TABLE {$to_prefix}topics
-				ADD UNIQUE INDEX firstMessage (ID_FIRST_MSG, ID_BOARD)");
+				ADD UNIQUE INDEX firstMessage (id_first_msg, id_board)");
 		}
 	}
 
@@ -1456,15 +1456,15 @@ if (empty($preparsing))
 		{
 			$block_names = array();
 			foreach ($block as $i => $row)
-				$block_names[$row['memberName']] = $i;
+				$block_names[$row['member_name']] = $i;
 
 			$request = convert_query("
-				SELECT memberName
+				SELECT member_name
 				FROM {$to_prefix}members
-				WHERE memberName IN ('" . implode("', '", array_keys($block_names)) . "')
+				WHERE member_name IN ('" . implode("', '", array_keys($block_names)) . "')
 				LIMIT " . count($block_names));
 			while ($row = mysql_fetch_assoc($request))
-				unset($block[$block_names[$row['memberName']]]);
+				unset($block[$block_names[$row['member_name']]]);
 			mysql_free_result($request);
 
 			if (empty($block))

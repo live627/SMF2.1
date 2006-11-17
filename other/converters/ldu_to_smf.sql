@@ -18,26 +18,26 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	user_id AS ID_MEMBER, user_active AS is_activated,
-	SUBSTRING(user_name, 1, 80) AS memberName,
-	SUBSTRING(user_name, 1, 255) AS realName,
+	user_id AS id_member, user_active AS is_activated,
+	SUBSTRING(user_name, 1, 80) AS member_name,
+	SUBSTRING(user_name, 1, 255) AS real_name,
 	SUBSTRING(user_password, 1, 64) AS passwd,
 	SUBSTRING(user_location, 1, 255) AS location,
-	IF(user_level > 94, 1, 0) AS ID_GROUP, SUBSTRING(user_msn, 1, 255) AS MSN,
-	SUBSTRING(user_icq, 1, 255) AS ICQ,
+	IF(user_level > 94, 1, 0) AS id_group, SUBSTRING(user_msn, 1, 255) AS msn,
+	SUBSTRING(user_icq, 1, 255) AS icq,
 	SUBSTRING(REPLACE(user_text, '\n', '<br />'), 1, 65534) AS signature,
-	SUBSTRING(user_lastip, 1, 255) AS memberIP,
+	SUBSTRING(user_lastip, 1, 255) AS member_ip,
 	FROM_UNIXTIME(user_birthdate) AS birthdate,
-	SUBSTRING(user_website, 1, 255) AS websiteTitle,
-	SUBSTRING(user_website, 1, 255) AS websiteUrl, user_hideemail AS hideEmail,
+	SUBSTRING(user_website, 1, 255) AS website_title,
+	SUBSTRING(user_website, 1, 255) AS website_url, user_hideemail AS hide_email,
 	CASE user_gender WHEN 'M' THEN 1 WHEN 'F' THEN 2 ELSE 0 END AS gender,
-	SUBSTRING(user_email, 1, 255) AS emailAddress, 
-	user_pmnotify AS pm_email_notify, user_regdate AS dateRegistered,
-	user_lastlog AS lastLogin, user_postcount AS posts, '' AS lngfile,
-	'' AS buddy_list, '' AS pm_ignore_list, '' AS personalText, '' AS AIM,
-	'' AS YIM, '' AS timeFormat, '' AS avatar, '' AS usertitle,
-	'' AS secretQuestion, '' AS secretAnswer, '' AS validation_code,
-	'' AS additionalGroups, '' AS smileySet, '' AS passwordSalt
+	SUBSTRING(user_email, 1, 255) AS email_address, 
+	user_pmnotify AS pm_email_notify, user_regdate AS date_registered,
+	user_lastlog AS last_login, user_postcount AS posts, '' AS lngfile,
+	'' AS buddy_list, '' AS pm_ignore_list, '' AS personal_text, '' AS aim,
+	'' AS yim, '' AS time_format, '' AS avatar, '' AS usertitle,
+	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
 FROM {$from_prefix}{$db_users};
 ---*
 
@@ -60,15 +60,15 @@ ORDER BY fs_order;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	fs.fs_id AS ID_BOARD, fs.fs_order AS boardOrder,
-	SUBSTRING(fs.fs_title, 1, 255) AS name, c.ID_CAT,
+	fs.fs_id AS id_board, fs.fs_order AS board_order,
+	SUBSTRING(fs.fs_title, 1, 255) AS name, c.id_cat,
 	SUBSTRING(fs.fs_desc, 1, 65534) AS description,
-	fs.fs_postcount AS numPosts, fs_topiccount AS numTopics,
-	fs_countposts = 0 AS countPosts, '-1,0' AS memberGroups
+	fs.fs_postcount AS num_posts, fs_topiccount AS num_topics,
+	fs_countposts = 0 AS count_posts, '-1,0' AS member_groups
 FROM ({$from_prefix}{$db_forum_sections} AS fs, {$to_prefix}categories AS c)
 WHERE BINARY c.name = fs.fs_category;
 ---*
@@ -84,17 +84,17 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.ft_id AS ID_TOPIC, t.ft_state = 1 AS locked, t.ft_sticky AS isSticky,
-	t.ft_sectionid AS ID_BOARD, t.ft_postcount - 1 AS numReplies,
-	t.ft_viewcount AS numViews, t.ft_lastposterid AS ID_MEMBER_UPDATED,
-	t.ft_firstposterid AS ID_MEMBER_STARTED, MIN(p.fp_id) AS ID_FIRST_MSG,
-	MAX(p.fp_id) AS ID_LAST_MSG, t.ft_poll AS ID_POLL
+	t.ft_id AS id_topic, t.ft_state = 1 AS locked, t.ft_sticky AS is_sticky,
+	t.ft_sectionid AS id_board, t.ft_postcount - 1 AS num_replies,
+	t.ft_viewcount AS num_views, t.ft_lastposterid AS id_member_updated,
+	t.ft_firstposterid AS id_member_started, MIN(p.fp_id) AS id_first_msg,
+	MAX(p.fp_id) AS id_last_msg, t.ft_poll AS id_poll
 FROM ({$from_prefix}{$db_forum_topics} AS t, {$from_prefix}{$db_forum_posts} AS p)
 WHERE p.fp_topicid = t.ft_id
 	AND ft_movedto = 0
 GROUP BY t.ft_id
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
 /******************************************************************************/
@@ -106,16 +106,16 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 SELECT
-	p.fp_id AS ID_MSG, p.fp_topicid AS ID_TOPIC, p.fp_sectionid AS ID_BOARD,
-	p.fp_posterid AS ID_MEMBER, 
-	SUBSTRING(p.fp_postername, 1, 255) AS posterName,
-	p.fp_creation AS posterTime,
-	SUBSTRING(p.fp_updater, 1, 255) AS modifiedName,
-	IF(p.fp_updated != p.fp_creation, p.fp_updated, 0) AS modifiedTime,
+	p.fp_id AS id_msg, p.fp_topicid AS id_topic, p.fp_sectionid AS id_board,
+	p.fp_posterid AS id_member, 
+	SUBSTRING(p.fp_postername, 1, 255) AS poster_name,
+	p.fp_creation AS poster_time,
+	SUBSTRING(p.fp_updater, 1, 255) AS modified_name,
+	IF(p.fp_updated != p.fp_creation, p.fp_updated, 0) AS modified_time,
 	SUBSTRING(REPLACE(p.fp_text, '\n', '<br />'), 1, 65534) AS body,
-	SUBSTRING(p.fp_posterip, 1, 255) AS posterIP,
+	SUBSTRING(p.fp_posterip, 1, 255) AS poster_ip,
 	SUBSTRING(t.ft_title, 1, 255) AS subject,
-	SUBSTRING(u.user_email, 1, 255) AS posterEmail, 'xx' AS icon
+	SUBSTRING(u.user_email, 1, 255) AS poster_email, 'xx' AS icon
 FROM ({$from_prefix}{$db_forum_posts} AS p, {$from_prefix}{$db_forum_topics} AS t)
 	LEFT JOIN {$from_prefix}{$db_users} AS u ON (u.user_id = p.fp_posterid)
 WHERE t.ft_id = p.fp_topicid;
@@ -131,10 +131,10 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	p.poll_id AS ID_POLL, IF(p.poll_state != 0, 1, 0) AS votingLocked,
+	p.poll_id AS id_poll, IF(p.poll_state != 0, 1, 0) AS voting_locked,
 	SUBSTRING(p.poll_text, 1, 255) AS question, 
-	t.ft_firstposterid AS ID_MEMBER,
-	SUBSTRING(t.ft_firstpostername, 1, 255) AS posterName
+	t.ft_firstposterid AS id_member,
+	SUBSTRING(t.ft_firstpostername, 1, 255) AS poster_name
 FROM ({$from_prefix}{$db_polls} AS p, {$from_prefix}{$db_forum_topics} AS t)
 WHERE p.poll_type = 1
 	AND t.ft_poll = p.poll_id;
@@ -146,16 +146,16 @@ WHERE p.poll_type = 1
 
 ---* {$to_prefix}poll_choices
 ---{
-if (!isset($_SESSION['convert_last_poll']) || $_SESSION['convert_last_poll'] != $row['ID_POLL'])
+if (!isset($_SESSION['convert_last_poll']) || $_SESSION['convert_last_poll'] != $row['id_poll'])
 {
-	$_SESSION['convert_last_poll'] = $row['ID_POLL'];
+	$_SESSION['convert_last_poll'] = $row['id_poll'];
 	$_SESSION['convert_last_choice'] = 0;
 }
 
-$row['ID_CHOICE'] = ++$_SESSION['convert_last_choice'];
+$row['id_choice'] = ++$_SESSION['convert_last_choice'];
 ---}
 SELECT
-	po_pollid AS ID_POLL, 0 AS ID_CHOICE,
+	po_pollid AS id_poll, 0 AS id_choice,
 	SUBSTRING(po_text, 1, 255) AS label, po_count AS votes
 FROM {$from_prefix}{$db_polls_options}
 ORDER BY po_pollid;
@@ -166,7 +166,7 @@ ORDER BY po_pollid;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT pv_pollid AS ID_POLL, pv_userid AS ID_MEMBER
+SELECT pv_pollid AS id_poll, pv_userid AS id_member
 FROM {$from_prefix}{$db_polls_voters};
 ---*
 
@@ -178,8 +178,8 @@ TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
 SELECT
-	pm_id AS ID_PM, pm_fromuserid AS ID_MEMBER_FROM, pm_date AS msgtime,
-	SUBSTRING(pm_fromuser, 1, 255) AS fromName,
+	pm_id AS id_pm, pm_fromuserid AS id_member_from, pm_date AS msgtime,
+	SUBSTRING(pm_fromuser, 1, 255) AS from_name,
 	SUBSTRING(pm_title, 1, 255) AS subject,
 	SUBSTRING(REPLACE(pm_text, '\n', '<br />'), 1, 65534) AS body
 FROM {$from_prefix}{$db_pm};
@@ -193,7 +193,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT 
-	pm_id AS ID_PM, pm_touserid AS ID_MEMBER, pm_state != 0 AS is_read,
+	pm_id AS id_pm, pm_touserid AS id_member, pm_state != 0 AS is_read,
 	'' AS labels
 FROM {$from_prefix}{$db_pm};
 ---*

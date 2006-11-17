@@ -62,7 +62,7 @@ function Register()
 
 	// All the basic template information...
 	$context['sub_template'] = 'before';
-	$context['allow_hide_email'] = !empty($modSettings['allow_hideEmail']);
+	$context['allow_hide_email'] = !empty($modSettings['allow_hide_email']);
 	$context['require_agreement'] = !empty($modSettings['requireAgreement']);
 
 	// Under age restrictions?
@@ -190,48 +190,48 @@ function Register2()
 
 	// Collect all extra registration fields someone might have filled in.
 	$possible_strings = array(
-		'websiteUrl', 'websiteTitle',
-		'AIM', 'YIM',
+		'website_url', 'website_title',
+		'aim', 'yim',
 		'location', 'birthdate',
-		'timeFormat',
+		'time_format',
 		'buddy_list',
 		'pm_ignore_list',
-		'smileySet',
-		'signature', 'personalText', 'avatar',
+		'smiley_set',
+		'signature', 'personal_text', 'avatar',
 		'lngfile',
-		'secretQuestion', 'secretAnswer',
+		'secret_question', 'secret_answer',
 	);
 	$possible_ints = array(
 		'pm_email_notify',
-		'notifyTypes',
-		'ICQ',
+		'notify_types',
+		'icq',
 		'gender',
-		'ID_THEME',
+		'id_theme',
 	);
 	$possible_floats = array(
-		'timeOffset',
+		'time_offset',
 	);
 	$possible_bools = array(
-		'notifyAnnouncements', 'notifyRegularity', 'notifySendBody',
-		'hideEmail', 'showOnline',
+		'notify_announcements', 'notify_regularity', 'notify_send_body',
+		'hide_email', 'show_online',
 	);
 
-	if (isset($_POST['secretAnswer']) && $_POST['secretAnswer'] != '')
-		$_POST['secretAnswer'] = md5($_POST['secretAnswer']);
+	if (isset($_POST['secret_answer']) && $_POST['secret_answer'] != '')
+		$_POST['secret_answer'] = md5($_POST['secret_answer']);
 
 	// Needed for isReservedName() and registerMember().
 	require_once($sourcedir . '/Subs-Members.php');
 
 	// Validation... even if we're not a mall.
-	if (isset($_POST['realName']) && (!empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum')))
+	if (isset($_POST['real_name']) && (!empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum')))
 	{
-		$_POST['realName'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['realName']));
-		if (trim($_POST['realName']) != '' && !isReservedName($_POST['realName'], $memID))
-			$possible_strings[] = 'realName';
+		$_POST['real_name'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['real_name']));
+		if (trim($_POST['real_name']) != '' && !isReservedName($_POST['real_name'], $memID))
+			$possible_strings[] = 'real_name';
 	}
 
-	if (isset($_POST['MSN']) && preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['MSN']) != 0)
-		$profile_strings[] = 'MSN';
+	if (isset($_POST['msn']) && preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['msn']) != 0)
+		$profile_strings[] = 'msn';
 
 	// Handle a string as a birthdate...
 	if (isset($_POST['birthdate']) && $_POST['birthdate'] != '')
@@ -331,7 +331,7 @@ function Register2()
 	}
 	else
 	{
-		setLoginCookie(60 * $modSettings['cookieTime'], $memberID, sha1(sha1(strtolower($regOptions['username']) . $regOptions['password']) . substr($regOptions['register_vars']['passwordSalt'], 1, -1)));
+		setLoginCookie(60 * $modSettings['cookieTime'], $memberID, sha1(sha1(strtolower($regOptions['username']) . $regOptions['password']) . substr($regOptions['register_vars']['password_salt'], 1, -1)));
 
 		redirectexit('action=login2;sa=check;member=' . $memberID, $context['server']['needs_login_fix']);
 	}
@@ -359,11 +359,11 @@ function Activate()
 	}
 
 	// Get the code from the database...
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, validation_code, memberName, realName, emailAddress, is_activated, passwd
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, validation_code, member_name, real_name, email_address, is_activated, passwd
 		FROM {$db_prefix}members" . (empty($_REQUEST['u']) ? "
-		WHERE memberName = '$_POST[user]' OR emailAddress = '$_POST[user]'" : "
-		WHERE ID_MEMBER = " . (int) $_REQUEST['u']) . "
+		WHERE member_name = '$_POST[user]' OR email_address = '$_POST[user]'" : "
+		WHERE id_member = " . (int) $_REQUEST['u']) . "
 		LIMIT 1", __FILE__, __LINE__);
 
 	// Does this user exist at all?
@@ -380,7 +380,7 @@ function Activate()
 	$smfFunc['db_free_result']($request);
 
 	// Change their email address? (they probably tried a fake one first :P.)
-	if (isset($_POST['new_email'], $_REQUEST['passwd']) && sha1(strtolower($row['memberName']) . $_REQUEST['passwd']) == $row['passwd'])
+	if (isset($_POST['new_email'], $_REQUEST['passwd']) && sha1(strtolower($row['member_name']) . $_REQUEST['passwd']) == $row['passwd'])
 	{
 		if (empty($modSettings['registration_method']) || $modSettings['registration_method'] == 3)
 			fatal_lang_error(1);
@@ -393,18 +393,18 @@ function Activate()
 		isBannedEmail($_POST['new_email'], 'cannot_register', $txt['ban_register_prohibited']);
 
 		// Ummm... don't even dare try to take someone else's email!!
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
 			FROM {$db_prefix}members
-			WHERE emailAddress = '$_POST[new_email]'
+			WHERE email_address = '$_POST[new_email]'
 			LIMIT 1", __FILE__, __LINE__);
 		// !!! Separate the sprintf?
 		if ($smfFunc['db_num_rows']($request) != 0)
 			fatal_lang_error(730, false, array(htmlspecialchars($_POST['new_email'])));
 		$smfFunc['db_free_result']($request);
 
-		updateMemberData($row['ID_MEMBER'], array('emailAddress' => "'$_POST[new_email]'"));
-		$row['emailAddress'] = stripslashes($_POST['new_email']);
+		updateMemberData($row['id_member'], array('email_address' => "'$_POST[new_email]'"));
+		$row['email_address'] = stripslashes($_POST['new_email']);
 
 		$email_change = true;
 	}
@@ -414,7 +414,7 @@ function Activate()
 	{
 		require_once($sourcedir . '/Subs-Post.php');
 
-		sendmail($row['emailAddress'], $txt['register_subject'], sprintf($txt[empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message'], $row['realName'], $row['memberName'], $row['validation_code'], $scripturl . '?action=activate;u=' . $row['ID_MEMBER'] . ';code=' . $row['validation_code']), null, null, false, 3);
+		sendmail($row['email_address'], $txt['register_subject'], sprintf($txt[empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message'], $row['real_name'], $row['member_name'], $row['validation_code'], $scripturl . '?action=activate;u=' . $row['id_member'] . ';code=' . $row['validation_code']), null, null, false, 3);
 
 		$context['page_title'] = $txt['invalid_activation_resend'];
 		fatal_lang_error(!empty($email_change) ? 'change_email_success' : 'resend_email_success', false);
@@ -428,22 +428,22 @@ function Activate()
 		elseif ($row['validation_code'] == '')
 		{
 			loadLanguage('Profile');
-			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $row['memberName'] . '">' . $txt[662] . '</a>.', false);
+			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $row['member_name'] . '">' . $txt[662] . '</a>.', false);
 		}
 
 		$context['sub_template'] = 'retry_activate';
 		$context['page_title'] = $txt['invalid_activation_code'];
-		$context['member_id'] = $row['ID_MEMBER'];
+		$context['member_id'] = $row['id_member'];
 
 		return;
 	}
 
 	// Let the integration know that they've been activated!
 	if (isset($modSettings['integrate_activate']) && function_exists($modSettings['integrate_activate']))
-		call_user_func($modSettings['integrate_activate'], $row['memberName']);
+		call_user_func($modSettings['integrate_activate'], $row['member_name']);
 
 	// Validation complete - update the database!
-	updateMemberData($row['ID_MEMBER'], array('is_activated' => 1, 'validation_code' => '\'\''));
+	updateMemberData($row['id_member'], array('is_activated' => 1, 'validation_code' => '\'\''));
 
 	// Also do a proper member stat re-evaluation.
 	updateStats('member', false);
@@ -452,13 +452,13 @@ function Activate()
 	{
 		require_once($sourcedir . '/Subs-Post.php');
 
-		adminNotify('activation', $row['ID_MEMBER'], $row['memberName']);
+		adminNotify('activation', $row['id_member'], $row['member_name']);
 	}
 
 	$context += array(
 		'page_title' => &$txt[245],
 		'sub_template' => 'login',
-		'default_username' => $row['memberName'],
+		'default_username' => $row['member_name'],
 		'default_password' => '',
 		'never_expire' => false,
 		'description' => &$txt['activate_success']
@@ -478,10 +478,10 @@ function CoppaForm()
 		fatal_lang_error(1);
 
 	// Get the user details...
-	$request = $smfFunc['db_query']("
-		SELECT memberName
+	$request = $smfFunc['db_query']('', "
+		SELECT member_name
 		FROM {$db_prefix}members
-		WHERE ID_MEMBER = " . (int) $_GET['member'] . "
+		WHERE id_member = " . (int) $_GET['member'] . "
 			AND is_activated = 5", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(1);

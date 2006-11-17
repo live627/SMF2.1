@@ -36,7 +36,7 @@ if (!defined('SMF'))
         - first checks for cookie or intergration validation.
         - uses the current session if no integration function or cookie is found.
         - checks password length, if member is activated and the login span isn't over.
-        - if validation fails for the user, $ID_MEMBER is set to 0.
+        - if validation fails for the user, $id_member is set to 0.
         - updates the last visit time when needed.
 
     void loadBoard()
@@ -54,10 +54,10 @@ if (!defined('SMF'))
 	array loadMemberData(array members, bool is_name = false, string set = 'normal')
 		// !!!
 
-	bool loadMemberContext(int ID_MEMBER)
+	bool loadMemberContext(int id_member)
 		// !!!
 
-	void loadTheme(int ID_THEME = auto_detect)
+	void loadTheme(int id_theme = auto_detect)
 		// !!!
 
 	void loadTemplate(string template_name, bool fatal = true)
@@ -77,8 +77,8 @@ if (!defined('SMF'))
 	string loadLanguage(string template_name, string language = default, bool fatal = true, bool force_reload = false)
 		// !!!
 
-	array getBoardParents(int ID_PARENT)
-		- finds all the parents of ID_PARENT, and that board itself.
+	array getBoardParents(int id_parent)
+		- finds all the parents of id_parent, and that board itself.
 		- additionally detects the moderators of said boards.
 		- returns an array of information about the boards found.
 
@@ -142,13 +142,13 @@ function reloadSettings()
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (isset($db_character_set))
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			SET NAMES $db_character_set", __FILE__, __LINE__);
 
 	// Try to load it from the cache first; it'll never get cached if the setting is off.
 	if (($modSettings = cache_get_data('modSettings', 90)) == null)
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT variable, value
 			FROM {$db_prefix}settings", false, false);
 		$modSettings = array();
@@ -293,54 +293,54 @@ function reloadSettings()
 function loadUserSettings()
 {
 	global $modSettings, $user_settings, $sourcedir, $smfFunc;
-	global $ID_MEMBER, $db_prefix, $cookiename, $user_info, $language;
+	global $id_member, $db_prefix, $cookiename, $user_info, $language;
 
 	// Check first the integration, then the cookie, and last the session.
 	if (isset($modSettings['integrate_verify_user']) && function_exists($modSettings['integrate_verify_user']))
 	{
-		$ID_MEMBER = (int) call_user_func($modSettings['integrate_verify_user']);
-		$already_verified = $ID_MEMBER > 0;
+		$id_member = (int) call_user_func($modSettings['integrate_verify_user']);
+		$already_verified = $id_member > 0;
 	}
 	else
-		$ID_MEMBER = 0;
+		$id_member = 0;
 
-	if (empty($ID_MEMBER) && isset($_COOKIE[$cookiename]))
+	if (empty($id_member) && isset($_COOKIE[$cookiename]))
 	{
 		$_COOKIE[$cookiename] = stripslashes($_COOKIE[$cookiename]);
 
 		// Fix a security hole in PHP 4.3.9 and below...
 		if (preg_match('~^a:[34]:\{i:0;(i:\d{1,6}|s:[1-8]:"\d{1,8}");i:1;s:(0|40):"([a-fA-F0-9]{40})?";i:2;[id]:\d{1,14};(i:3;i:\d;)?\}$~', $_COOKIE[$cookiename]) == 1)
 		{
-			list ($ID_MEMBER, $password) = @unserialize($_COOKIE[$cookiename]);
-			$ID_MEMBER = !empty($ID_MEMBER) && strlen($password) > 0 ? (int) $ID_MEMBER : 0;
+			list ($id_member, $password) = @unserialize($_COOKIE[$cookiename]);
+			$id_member = !empty($id_member) && strlen($password) > 0 ? (int) $id_member : 0;
 		}
 		else
-			$ID_MEMBER = 0;
+			$id_member = 0;
 	}
-	elseif (empty($ID_MEMBER) && isset($_SESSION['login_' . $cookiename]) && ($_SESSION['USER_AGENT'] == $_SERVER['HTTP_USER_AGENT'] || !empty($modSettings['disableCheckUA'])))
+	elseif (empty($id_member) && isset($_SESSION['login_' . $cookiename]) && ($_SESSION['USER_AGENT'] == $_SERVER['HTTP_USER_AGENT'] || !empty($modSettings['disableCheckUA'])))
 	{
 		// !!! Perhaps we can do some more checking on this, such as on the first octet of the IP?
-		list ($ID_MEMBER, $password, $login_span) = @unserialize(stripslashes($_SESSION['login_' . $cookiename]));
-		$ID_MEMBER = !empty($ID_MEMBER) && strlen($password) == 40 && $login_span > time() ? (int) $ID_MEMBER : 0;
+		list ($id_member, $password, $login_span) = @unserialize(stripslashes($_SESSION['login_' . $cookiename]));
+		$id_member = !empty($id_member) && strlen($password) == 40 && $login_span > time() ? (int) $id_member : 0;
 	}
 
 	// Only load this stuff if the user isn't a guest.
-	if ($ID_MEMBER != 0)
+	if ($id_member != 0)
 	{
 		// Is the member data cached?
-		if (empty($modSettings['cache_enable']) || $modSettings['cache_enable'] < 2 || ($user_settings = cache_get_data('user_settings-' . $ID_MEMBER, 60)) == null)
+		if (empty($modSettings['cache_enable']) || $modSettings['cache_enable'] < 2 || ($user_settings = cache_get_data('user_settings-' . $id_member, 60)) == null)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT mem.*, IFNULL(a.ID_ATTACH, 0) AS ID_ATTACH, a.filename, a.attachmentType
+			$request = $smfFunc['db_query']('', "
+				SELECT mem.*, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type
 				FROM {$db_prefix}members AS mem
-					LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_MEMBER = $ID_MEMBER)
-				WHERE mem.ID_MEMBER = $ID_MEMBER
+					LEFT JOIN {$db_prefix}attachments AS a ON (a.id_member = $id_member)
+				WHERE mem.id_member = $id_member
 				LIMIT 1", __FILE__, __LINE__);
 			$user_settings = $smfFunc['db_fetch_assoc']($request);
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-				cache_put_data('user_settings-' . $ID_MEMBER, $user_settings, 60);
+				cache_put_data('user_settings-' . $id_member, $user_settings, 60);
 		}
 
 		// Did we find 'im?  If not, junk it.
@@ -351,63 +351,63 @@ function loadUserSettings()
 				$check = true;
 			// SHA-1 passwords should be 40 characters long.
 			elseif (strlen($password) == 40)
-				$check = sha1($user_settings['passwd'] . $user_settings['passwordSalt']) == $password;
+				$check = sha1($user_settings['passwd'] . $user_settings['password_salt']) == $password;
 			else
 				$check = false;
 
 			// Wrong password or not activated - either way, you're going nowhere.
-			$ID_MEMBER = $check && ($user_settings['is_activated'] == 1 || $user_settings['is_activated'] == 11) ? $user_settings['ID_MEMBER'] : 0;
+			$id_member = $check && ($user_settings['is_activated'] == 1 || $user_settings['is_activated'] == 11) ? $user_settings['id_member'] : 0;
 		}
 		else
-			$ID_MEMBER = 0;
+			$id_member = 0;
 	}
 
 	// Found 'im, let's set up the variables.
-	if ($ID_MEMBER != 0)
+	if ($id_member != 0)
 	{
 		// Let's not update the last visit time in these cases...
 		// 1. SSI doesn't count as visiting the forum.
 		// 2. RSS feeds and XMLHTTP requests don't count either.
 		// 3. If it was set within this session, no need to set it again.
 		// 4. New session, yet updated < five hours ago? Maybe cache can help.
-		if (SMF != 'SSI' && !isset($_REQUEST['xml']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != '.xml') && empty($_SESSION['ID_MSG_LAST_VISIT']) && (empty($modSettings['cache_enable']) || ($_SESSION['ID_MSG_LAST_VISIT'] = cache_get_data('user_last_visit-' . $ID_MEMBER, 5 * 3600)) === null))
+		if (SMF != 'SSI' && !isset($_REQUEST['xml']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != '.xml') && empty($_SESSION['id_msg_last_visit']) && (empty($modSettings['cache_enable']) || ($_SESSION['id_msg_last_visit'] = cache_get_data('user_last_visit-' . $id_member, 5 * 3600)) === null))
 		{
 			// Do a quick query to make sure this isn't a mistake.
-			$result = $smfFunc['db_query']("
-				SELECT posterTime
+			$result = $smfFunc['db_query']('', "
+				SELECT poster_time
 				FROM {$db_prefix}messages
-				WHERE ID_MSG = $user_settings[ID_MSG_LAST_VISIT]
+				WHERE id_msg = $user_settings[id_msg_last_visit]
 				LIMIT 1", __FILE__, __LINE__);
 			list ($visitTime) = $smfFunc['db_fetch_row']($result);
 			$smfFunc['db_free_result']($result);
 
-			$_SESSION['ID_MSG_LAST_VISIT'] = $user_settings['ID_MSG_LAST_VISIT'];
+			$_SESSION['id_msg_last_visit'] = $user_settings['id_msg_last_visit'];
 
 			// If it was *at least* five hours ago...
 			if ($visitTime < time() - 5 * 3600)
 			{
-				updateMemberData($ID_MEMBER, array('ID_MSG_LAST_VISIT' => (int) $modSettings['maxMsgID'], 'lastLogin' => time(), 'memberIP' => '\'' . $_SERVER['REMOTE_ADDR'] . '\''));
-				$user_settings['lastLogin'] = time();
+				updateMemberData($id_member, array('id_msg_last_visit' => (int) $modSettings['maxMsgID'], 'last_login' => time(), 'member_ip' => '\'' . $_SERVER['REMOTE_ADDR'] . '\''));
+				$user_settings['last_login'] = time();
 
 				if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-					cache_put_data('user_settings-' . $ID_MEMBER, $user_settings, 60);
+					cache_put_data('user_settings-' . $id_member, $user_settings, 60);
 
 				if (!empty($modSettings['cache_enable']))
-					cache_put_data('user_last_visit-' . $ID_MEMBER, $_SESSION['ID_MSG_LAST_VISIT'], 5 * 3600);
+					cache_put_data('user_last_visit-' . $id_member, $_SESSION['id_msg_last_visit'], 5 * 3600);
 			}
 		}
 
-		$username = $user_settings['memberName'];
+		$username = $user_settings['member_name'];
 
-		if (empty($user_settings['additionalGroups']))
+		if (empty($user_settings['additional_groups']))
 			$user_info = array(
-				'groups' => array($user_settings['ID_GROUP'], $user_settings['ID_POST_GROUP'])
+				'groups' => array($user_settings['id_group'], $user_settings['id_post_group'])
 			);
 		else
 			$user_info = array(
 				'groups' => array_merge(
-					array($user_settings['ID_GROUP'], $user_settings['ID_POST_GROUP']),
-					explode(',', $user_settings['additionalGroups'])
+					array($user_settings['id_group'], $user_settings['id_post_group']),
+					explode(',', $user_settings['additional_groups'])
 				)
 			);
 	}
@@ -425,32 +425,32 @@ function loadUserSettings()
 
 	// Set up the $user_info array.
 	$user_info += array(
-		'id' => $ID_MEMBER,
+		'id' => $id_member,
 		'username' => $username,
-		'name' => isset($user_settings['realName']) ? $user_settings['realName'] : '',
-		'email' => isset($user_settings['emailAddress']) ? $user_settings['emailAddress'] : '',
+		'name' => isset($user_settings['real_name']) ? $user_settings['real_name'] : '',
+		'email' => isset($user_settings['email_address']) ? $user_settings['email_address'] : '',
 		'passwd' => isset($user_settings['passwd']) ? $user_settings['passwd'] : '',
 		'language' => empty($user_settings['lngfile']) || empty($modSettings['userLanguage']) ? $language : $user_settings['lngfile'],
-		'is_guest' => $ID_MEMBER == 0,
+		'is_guest' => $id_member == 0,
 		'is_admin' => in_array(1, $user_info['groups']),
-		'theme' => empty($user_settings['ID_THEME']) ? 0 : $user_settings['ID_THEME'],
-		'last_login' => empty($user_settings['lastLogin']) ? 0 : $user_settings['lastLogin'],
+		'theme' => empty($user_settings['id_theme']) ? 0 : $user_settings['id_theme'],
+		'last_login' => empty($user_settings['last_login']) ? 0 : $user_settings['last_login'],
 		'ip' => $_SERVER['REMOTE_ADDR'],
 		'posts' => empty($user_settings['posts']) ? 0 : $user_settings['posts'],
-		'time_format' => empty($user_settings['timeFormat']) ? $modSettings['time_format'] : $user_settings['timeFormat'],
-		'time_offset' => empty($user_settings['timeOffset']) ? 0 : $user_settings['timeOffset'],
+		'time_format' => empty($user_settings['time_format']) ? $modSettings['time_format'] : $user_settings['time_format'],
+		'time_offset' => empty($user_settings['time_offset']) ? 0 : $user_settings['time_offset'],
 		'avatar' => array(
 			'url' => isset($user_settings['avatar']) ? $user_settings['avatar'] : '',
 			'filename' => empty($user_settings['filename']) ? '' : $user_settings['filename'],
-			'custom_dir' => !empty($user_settings['attachmentType']) && $user_settings['attachmentType'] == 1,
-			'ID_ATTACH' => isset($user_settings['ID_ATTACH']) ? $user_settings['ID_ATTACH'] : 0
+			'custom_dir' => !empty($user_settings['attachment_type']) && $user_settings['attachment_type'] == 1,
+			'id_attach' => isset($user_settings['id_attach']) ? $user_settings['id_attach'] : 0
 		),
-		'smiley_set' => isset($user_settings['smileySet']) ? $user_settings['smileySet'] : '',
-		'messages' => empty($user_settings['instantMessages']) ? 0 : $user_settings['instantMessages'],
-		'unread_messages' => empty($user_settings['unreadMessages']) ? 0 : $user_settings['unreadMessages'],
-		'total_time_logged_in' => empty($user_settings['totalTimeLoggedIn']) ? 0 : $user_settings['totalTimeLoggedIn'],
+		'smiley_set' => isset($user_settings['smiley_set']) ? $user_settings['smiley_set'] : '',
+		'messages' => empty($user_settings['instant_messages']) ? 0 : $user_settings['instant_messages'],
+		'unread_messages' => empty($user_settings['unread_messages']) ? 0 : $user_settings['unread_messages'],
+		'total_time_logged_in' => empty($user_settings['total_time_logged_in']) ? 0 : $user_settings['total_time_logged_in'],
 		'buddies' => !empty($modSettings['enable_buddylist']) && !empty($user_settings['buddy_list']) ? explode(',', $user_settings['buddy_list']) : array(),
-		'ignoreboards' => !empty($user_settings['ignoreBoards']) && !empty($modSettings['allow_ignore_boards']) ? explode(',',$user_settings['ignoreBoards']) : array(),
+		'ignoreboards' => !empty($user_settings['ignore_boards']) && !empty($modSettings['allow_ignore_boards']) ? explode(',',$user_settings['ignore_boards']) : array(),
 		'permissions' => array(),
 	);
 	$user_info['groups'] = array_unique($user_info['groups']);
@@ -472,13 +472,13 @@ function loadUserSettings()
 
 	// Just build this here, it makes it easier to change/use.
 	if ($user_info['is_guest'])
-		$user_info['query_see_board'] = 'FIND_IN_SET(-1, b.memberGroups)';
+		$user_info['query_see_board'] = 'FIND_IN_SET(-1, b.member_groups)';
 	// Administrators can see all boards.
 	elseif ($user_info['is_admin'])
-		$user_info['query_see_board'] = '1';
+		$user_info['query_see_board'] = '1=1';
 	// Registered user.... just the groups in $user_info['groups'].
 	else
-		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.memberGroups) OR FIND_IN_SET(', $user_info['groups']) . ', b.memberGroups) OR ' . $_SESSION['mc']['mq'] . ')';
+		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups) OR ' . $_SESSION['mc']['mq'] . ')';
 
 	// Build the list of boards they WANT to see.  
 	// This will take the place of query_see_boards in certain spots, so it better include the boards they can see also
@@ -488,7 +488,7 @@ function loadUserSettings()
 		$user_info['query_wanna_see_board'] = $user_info['query_see_board'];
 	// Ok I guess they don't want to see all the boards
 	else
-		$user_info['query_wanna_see_board'] = '(' . $user_info['query_see_board'] . ' AND b.ID_BOARD NOT IN (' . implode(',', $user_info['ignoreboards']) . '))';
+		$user_info['query_wanna_see_board'] = '(' . $user_info['query_see_board'] . ' AND b.id_board NOT IN (' . implode(',', $user_info['ignoreboards']) . '))';
 }
 
 // Check for moderators and see if they have access to the board.
@@ -513,10 +513,10 @@ function loadBoard()
 		// Looking through the message table can be slow, so try using the cache first.
 		if (($topic = cache_get_data('msg_topic-' . $_REQUEST['msg'], 120)) === NULL)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT ID_TOPIC
+			$request = $smfFunc['db_query']('', "
+				SELECT id_topic
 				FROM {$db_prefix}messages
-				WHERE ID_MSG = $_REQUEST[msg]
+				WHERE id_msg = $_REQUEST[msg]
 				LIMIT 1", __FILE__, __LINE__);
 
 			// So did it find anything?
@@ -564,61 +564,61 @@ function loadBoard()
 
 	if (empty($temp))
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				c.ID_CAT, b.name AS bname, b.description, b.numTopics, b.memberGroups,
-				b.ID_PARENT, c.name AS cname, IFNULL(mem.ID_MEMBER, 0) AS ID_MODERATOR,
-				mem.realName" . (!empty($topic) ? ", b.ID_BOARD" : '') . ", b.childLevel,
-				b.ID_THEME, b.override_theme, b.countPosts, b.ID_PROFILE,
-				b.unapprovedTopics" . (!empty($topic) ? ', t.approved' : '') . "
-			FROM ({$db_prefix}boards AS b" . (!empty($topic) ? ", {$db_prefix}topics AS t" : '') . ")
-				LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
-				LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = " . (empty($topic) ? $board : 't.ID_BOARD') . ")
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = mods.ID_MEMBER)
-			WHERE b.ID_BOARD = " . (empty($topic) ? $board : "t.ID_BOARD
-				AND t.ID_TOPIC = $topic"), __FILE__, __LINE__);
+				c.id_cat, b.name AS bname, b.description, b.num_topics, b.member_groups,
+				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
+				mem.real_name" . (!empty($topic) ? ", b.id_board" : '') . ", b.child_level,
+				b.id_theme, b.override_theme, b.count_posts, b.id_profile,
+				b.unapproved_topics" . (!empty($topic) ? ', t.approved' : '') . "
+			FROM {$db_prefix}boards AS b
+				" . (!empty($topic) ? "INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)" : '') . "
+				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+				LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = " . (empty($topic) ? $board : 't.id_board') . ")
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+			WHERE b.id_board = " . (empty($topic) ? $board : "t.id_board"), __FILE__, __LINE__);
 		// If there aren't any, skip.
 		if ($smfFunc['db_num_rows']($request) > 0)
 		{
 			$row = $smfFunc['db_fetch_assoc']($request);
 
 			// Set the current board.
-			if (!empty($row['ID_BOARD']))
-				$board = $row['ID_BOARD'];
+			if (!empty($row['id_board']))
+				$board = $row['id_board'];
 
 			// Basic operating information. (globals... :/)
 			$board_info = array(
 				'id' => $board,
 				'moderators' => array(),
 				'cat' => array(
-					'id' => $row['ID_CAT'],
+					'id' => $row['id_cat'],
 					'name' => $row['cname']
 				),
 				'name' => $row['bname'],
 				'description' => $row['description'],
-				'num_topics' => $row['numTopics'],
-				'num_unapproved_topics' => $row['unapprovedTopics'],
-				'parent_boards' => getBoardParents($row['ID_PARENT']),
-				'parent' => $row['ID_PARENT'],
-				'child_level' => $row['childLevel'],
-				'theme' => $row['ID_THEME'],
+				'num_topics' => $row['num_topics'],
+				'num_unapproved_topics' => $row['unapproved_topics'],
+				'parent_boards' => getBoardParents($row['id_parent']),
+				'parent' => $row['id_parent'],
+				'child_level' => $row['child_level'],
+				'theme' => $row['id_theme'],
 				'override_theme' => !empty($row['override_theme']),
-				'profile' => $row['ID_PROFILE'],
-				'posts_count' => empty($row['countPosts']),
+				'profile' => $row['id_profile'],
+				'posts_count' => empty($row['count_posts']),
 				'cur_topic_approved' => empty($topic) || $row['approved'],
 			);
 
 			// Load the membergroups allowed, and check permissions.
-			$board_info['groups'] = $row['memberGroups'] == '' ? array() : explode(',', $row['memberGroups']);
+			$board_info['groups'] = $row['member_groups'] == '' ? array() : explode(',', $row['member_groups']);
 
 			do
 			{
 				if (!empty($row['ID_MODERATOR']))
 					$board_info['moderators'][$row['ID_MODERATOR']] = array(
 						'id' => $row['ID_MODERATOR'],
-						'name' => $row['realName'],
+						'name' => $row['real_name'],
 						'href' => $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['realName'] . '</a>'
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 			}
 			while ($row = $smfFunc['db_fetch_assoc']($request));
@@ -729,14 +729,14 @@ function loadPermissions()
 	if (empty($user_info['permissions']))
 	{
 		// Get the general permissions.
-		$request = $smfFunc['db_query']("
-			SELECT permission, addDeny
+		$request = $smfFunc['db_query']('', "
+			SELECT permission, add_deny
 			FROM {$db_prefix}permissions
-			WHERE ID_GROUP IN (" . implode(', ', $user_info['groups']) . ')', __FILE__, __LINE__);
+			WHERE id_group IN (" . implode(', ', $user_info['groups']) . ')', __FILE__, __LINE__);
 		$removals = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if (empty($row['addDeny']))
+			if (empty($row['add_deny']))
 				$removals[] = $row['permission'];
 			else
 				$user_info['permissions'][] = $row['permission'];
@@ -754,14 +754,14 @@ function loadPermissions()
 		if (!isset($board_info['profile']))
 			fatal_lang_error('smf232');
 
-		$request = $smfFunc['db_query']("
-			SELECT permission, addDeny
+		$request = $smfFunc['db_query']('', "
+			SELECT permission, add_deny
 			FROM {$db_prefix}board_permissions
-			WHERE ID_GROUP IN (" . implode(', ', $user_info['groups']) . ")
-				AND ID_PROFILE = $board_info[profile]", __FILE__, __LINE__);
+			WHERE id_group IN (" . implode(', ', $user_info['groups']) . ")
+				AND id_profile = $board_info[profile]", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if (empty($row['addDeny']))
+			if (empty($row['add_deny']))
 				$removals[] = $row['permission'];
 			else
 				$user_info['permissions'][] = $row['permission'];
@@ -780,7 +780,7 @@ function loadPermissions()
 	banPermissions();
 }
 
-// Loads an array of users' data by ID or memberName.
+// Loads an array of users' data by ID or member_name.
 function loadMemberData($users, $is_name = false, $set = 'normal')
 {
 	global $user_profile, $db_prefix, $modSettings, $board_info, $smfFunc;
@@ -802,8 +802,8 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			if ($data == null)
 				continue;
 
-			$loaded_ids[] = $data['ID_MEMBER'];
-			$user_profile[$data['ID_MEMBER']] = $data;
+			$loaded_ids[] = $data['id_member'];
+			$user_profile[$data['id_member']] = $data;
 			unset($users[$i]);
 		}
 	}
@@ -811,46 +811,46 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	if ($set == 'normal')
 	{
 		$select_columns = "
-			IFNULL(lo.logTime, 0) AS isOnline, IFNULL(a.ID_ATTACH, 0) AS ID_ATTACH, a.filename, a.attachmentType,
-			mem.signature, mem.personalText, mem.location, mem.gender, mem.avatar, mem.ID_MEMBER, mem.memberName,
-			mem.realName, mem.emailAddress, mem.hideEmail, mem.dateRegistered, mem.websiteTitle, mem.websiteUrl,
-			mem.birthdate, mem.memberIP, mem.ICQ, mem.AIM, mem.YIM, mem.MSN, mem.posts, mem.lastLogin,
-			mem.karmaGood, mem.ID_POST_GROUP, mem.karmaBad, mem.lngfile, mem.ID_GROUP, mem.timeOffset, mem.showOnline,
-			mem.buddy_list, mg.onlineColor AS member_group_color, IFNULL(mg.groupName, '') AS member_group,
-			pg.onlineColor AS post_group_color, IFNULL(pg.groupName, '') AS post_group, mem.is_activated,
-			IF(mem.ID_GROUP = 0 OR mg.stars = '', pg.stars, mg.stars) AS stars" . (!empty($modSettings['titlesEnable']) ? ',
+			IFNULL(lo.log_time, 0) AS is_online, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
+			mem.signature, mem.personal_text, mem.location, mem.gender, mem.avatar, mem.id_member, mem.member_name,
+			mem.real_name, mem.email_address, mem.hide_email, mem.date_registered, mem.website_title, mem.website_url,
+			mem.birthdate, mem.member_ip, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login,
+			mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online,
+			mem.buddy_list, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.is_activated,
+			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars" . (!empty($modSettings['titlesEnable']) ? ',
 			mem.usertitle' : '');
 		$select_tables = "
-			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.ID_MEMBER = mem.ID_MEMBER)
-			LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_MEMBER = mem.ID_MEMBER)
-			LEFT JOIN {$db_prefix}membergroups AS pg ON (pg.ID_GROUP = mem.ID_POST_GROUP)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = mem.ID_GROUP)";
+			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+			LEFT JOIN {$db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)";
 	}
 	elseif ($set == 'profile')
 	{
 		$select_columns = "
-			IFNULL(lo.logTime, 0) AS isOnline, IFNULL(a.ID_ATTACH, 0) AS ID_ATTACH, a.filename, a.attachmentType,
-			mem.signature, mem.personalText, mem.location, mem.gender, mem.avatar, mem.ID_MEMBER, mem.memberName,
-			mem.realName, mem.emailAddress, mem.hideEmail, mem.dateRegistered, mem.websiteTitle, mem.websiteUrl,
-			mem.birthdate, mem.ICQ, mem.AIM, mem.YIM, mem.MSN, mem.posts, mem.lastLogin, mem.karmaGood,
-			mem.karmaBad, mem.memberIP, mem.lngfile, mem.ID_GROUP, mem.ID_THEME, mem.buddy_list, mem.pm_ignore_list,
-			mem.pm_email_notify, mem.timeOffset" . (!empty($modSettings['titlesEnable']) ? ', mem.usertitle' : '') . ",
-			mem.timeFormat, mem.secretQuestion, mem.is_activated, mem.additionalGroups, mem.smileySet, mem.showOnline,
-			mem.totalTimeLoggedIn, mem.ID_POST_GROUP, mem.notifyAnnouncements, mem.notifyRegularity, mem.notifySendBody,
-			mem.notifyTypes, lo.url, mg.onlineColor AS member_group_color, IFNULL(mg.groupName, '') AS member_group,
-			pg.onlineColor AS post_group_color, IFNULL(pg.groupName, '') AS post_group, mem.ignoreBoards,
-			IF(mem.ID_GROUP = 0 OR mg.stars = '', pg.stars, mg.stars) AS stars, mem.passwordSalt";
+			IFNULL(lo.log_time, 0) AS is_online, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
+			mem.signature, mem.personal_text, mem.location, mem.gender, mem.avatar, mem.id_member, mem.member_name,
+			mem.real_name, mem.email_address, mem.hide_email, mem.date_registered, mem.website_title, mem.website_url,
+			mem.birthdate, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login, mem.karma_good,
+			mem.karma_bad, mem.member_ip, mem.lngfile, mem.id_group, mem.id_theme, mem.buddy_list, mem.pm_ignore_list,
+			mem.pm_email_notify, mem.time_offset" . (!empty($modSettings['titlesEnable']) ? ', mem.usertitle' : '') . ",
+			mem.time_format, mem.secret_question, mem.is_activated, mem.additional_groups, mem.smiley_set, mem.show_online,
+			mem.total_time_logged_in, mem.id_post_group, mem.notify_announcements, mem.notify_regularity, mem.notify_send_body,
+			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.ignore_boards,
+			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt";
 		$select_tables = "
-			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.ID_MEMBER = mem.ID_MEMBER)
-			LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_MEMBER = mem.ID_MEMBER)
-			LEFT JOIN {$db_prefix}membergroups AS pg ON (pg.ID_GROUP = mem.ID_POST_GROUP)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = mem.ID_GROUP)";
+			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_member = mem.id_member)
+			LEFT JOIN {$db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)";
 	}
 	elseif ($set == 'minimal')
 	{
 		$select_columns = '
-			mem.ID_MEMBER, mem.memberName, mem.realName, mem.emailAddress, mem.hideEmail, mem.dateRegistered,
-			mem.posts, mem.lastLogin, mem.memberIP, mem.lngfile, mem.ID_GROUP';
+			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.hide_email, mem.date_registered,
+			mem.posts, mem.last_login, mem.member_ip, mem.lngfile, mem.id_group';
 		$select_tables = '';
 	}
 	else
@@ -859,29 +859,29 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	if (!empty($users))
 	{
 		// Load the member's data.
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT$select_columns
 			FROM {$db_prefix}members AS mem$select_tables
-			WHERE mem." . ($is_name ? 'memberName' : 'ID_MEMBER') . (count($users) == 1 ? " = '" . current($users) . "'" : " IN ('" . implode("', '", $users) . "')"), __FILE__, __LINE__);
+			WHERE mem." . ($is_name ? 'member_name' : 'id_member') . (count($users) == 1 ? " = '" . current($users) . "'" : " IN ('" . implode("', '", $users) . "')"), __FILE__, __LINE__);
 		$new_loaded_ids = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$new_loaded_ids[] = $row['ID_MEMBER'];
-			$loaded_ids[] = $row['ID_MEMBER'];
+			$new_loaded_ids[] = $row['id_member'];
+			$loaded_ids[] = $row['id_member'];
 			$row['options'] = array();
-			$user_profile[$row['ID_MEMBER']] = $row;
+			$user_profile[$row['id_member']] = $row;
 		}
 		$smfFunc['db_free_result']($request);
 	}
 
 	if (!empty($new_loaded_ids) && $set !== 'minimal')
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT *
 			FROM {$db_prefix}themes
-			WHERE ID_MEMBER" . (count($new_loaded_ids) == 1 ? ' = ' . $new_loaded_ids[0] : ' IN (' . implode(', ', $new_loaded_ids) . ')'), __FILE__, __LINE__);
+			WHERE id_member" . (count($new_loaded_ids) == 1 ? ' = ' . $new_loaded_ids[0] : ' IN (' . implode(', ', $new_loaded_ids) . ')'), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$user_profile[$row['ID_MEMBER']]['options'][$row['variable']] = $row['value'];
+			$user_profile[$row['id_member']]['options'][$row['variable']] = $row['value'];
 		$smfFunc['db_free_result']($request);
 	}
 
@@ -896,10 +896,10 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	{
 		if (($row = cache_get_data('moderator_group_info', 480)) == null)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT groupName AS member_group, onlineColor AS member_group_color, stars
+			$request = $smfFunc['db_query']('', "
+				SELECT group_name AS member_group, online_color AS member_group_color, stars
 				FROM {$db_prefix}membergroups
-				WHERE ID_GROUP = 3
+				WHERE id_group = 3
 				LIMIT 1", __FILE__, __LINE__);
 			$row = $smfFunc['db_fetch_assoc']($request);
 			$smfFunc['db_free_result']($request);
@@ -910,7 +910,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 		foreach ($temp_mods as $id)
 		{
 			// By popular demand, don't show admins or global moderators as moderators.
-			if ($user_profile[$id]['ID_GROUP'] != 1 && $user_profile[$id]['ID_GROUP'] != 2)
+			if ($user_profile[$id]['id_group'] != 1 && $user_profile[$id]['id_group'] != 2)
 				$user_profile[$id]['member_group'] = $row['member_group'];
 
 			// If the Moderator group has no color or stars, but their group does... don't overwrite.
@@ -951,18 +951,18 @@ function loadMemberContext($user)
 
 	// Censor everything.
 	censorText($profile['signature']);
-	censorText($profile['personalText']);
+	censorText($profile['personal_text']);
 	censorText($profile['location']);
 
 	// Set things up to be used before hand.
 	$gendertxt = $profile['gender'] == 2 ? $txt['female'] : ($profile['gender'] == 1 ? $txt['male'] : '');
 	$profile['signature'] = str_replace(array("\n", "\r"), array('<br />', ''), $profile['signature']);
-	$profile['signature'] = parse_bbc($profile['signature'], true, 'sig' . $profile['ID_MEMBER']);
+	$profile['signature'] = parse_bbc($profile['signature'], true, 'sig' . $profile['id_member']);
 
-	$profile['is_online'] = (!empty($profile['showOnline']) || allowedTo('moderate_forum')) && $profile['isOnline'] > 0;
+	$profile['is_online'] = (!empty($profile['show_online']) || allowedTo('moderate_forum')) && $profile['is_online'] > 0;
 	$profile['stars'] = empty($profile['stars']) ? array('', '') : explode('#', $profile['stars']);
 	// Setup the buddy status here (One whole in_array call saved :P)
-	$profile['buddy'] = in_array($profile['ID_MEMBER'], $user_info['buddies']);
+	$profile['buddy'] = in_array($profile['id_member'], $user_info['buddies']);
 	$buddy_list = !empty($profile['buddy_list']) ? explode(',', $profile['buddy_list']) : array();
 
 	// If we're always html resizing, assume it's too large.
@@ -979,78 +979,78 @@ function loadMemberContext($user)
 
 	// What a monstrous array...
 	$memberContext[$user] = array(
-		'username' => &$profile['memberName'],
-		'name' => &$profile['realName'],
-		'id' => &$profile['ID_MEMBER'],
-		'is_guest' => $profile['ID_MEMBER'] == 0,
+		'username' => &$profile['member_name'],
+		'name' => &$profile['real_name'],
+		'id' => &$profile['id_member'],
+		'is_guest' => $profile['id_member'] == 0,
 		'is_buddy' => $profile['buddy'],
 		'is_reverse_buddy' => in_array($user_info['id'], $buddy_list),
 		'buddies' => $buddy_list,
 		'title' => !empty($modSettings['titlesEnable']) ? $profile['usertitle'] : '',
-		'href' => $scripturl . '?action=profile;u=' . $profile['ID_MEMBER'],
-		'link' => '<a href="' . $scripturl . '?action=profile;u=' . $profile['ID_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $profile['realName'] . '">' . $profile['realName'] . '</a>',
-		'email' => &$profile['emailAddress'],
-		'hide_email' => $profile['emailAddress'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($profile['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum') && $user_info['id'] != $profile['ID_MEMBER']),
-		'email_public' => (empty($profile['hideEmail']) || empty($modSettings['allow_hideEmail'])) && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']),
-		'registered' => empty($profile['dateRegistered']) ? $txt[470] : timeformat($profile['dateRegistered']),
-		'registered_timestamp' => empty($profile['dateRegistered']) ? 0 : forum_time(true, $profile['dateRegistered']),
-		'blurb' => &$profile['personalText'],
+		'href' => $scripturl . '?action=profile;u=' . $profile['id_member'],
+		'link' => '<a href="' . $scripturl . '?action=profile;u=' . $profile['id_member'] . '" title="' . $txt['profile_of'] . ' ' . $profile['real_name'] . '">' . $profile['real_name'] . '</a>',
+		'email' => &$profile['email_address'],
+		'hide_email' => $profile['email_address'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($profile['hide_email']) && !empty($modSettings['allow_hide_email']) && !allowedTo('moderate_forum') && $user_info['id'] != $profile['id_member']),
+		'email_public' => (empty($profile['hide_email']) || empty($modSettings['allow_hide_email'])) && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']),
+		'registered' => empty($profile['date_registered']) ? $txt[470] : timeformat($profile['date_registered']),
+		'registered_timestamp' => empty($profile['date_registered']) ? 0 : forum_time(true, $profile['date_registered']),
+		'blurb' => &$profile['personal_text'],
 		'gender' => array(
 			'name' => $gendertxt,
 			'image' => !empty($profile['gender']) ? '<img src="' . $settings['images_url'] . '/' . ($profile['gender'] == 1 ? 'Male' : 'Female') . '.gif" alt="' . $gendertxt . '" border="0" />' : ''
 		),
 		'website' => array(
-			'title' => &$profile['websiteTitle'],
-			'url' => &$profile['websiteUrl'],
+			'title' => &$profile['website_title'],
+			'url' => &$profile['website_url'],
 		),
 		'birth_date' => empty($profile['birthdate']) || $profile['birthdate'] === '0001-01-01' ? '0000-00-00' : (substr($profile['birthdate'], 0, 4) === '0004' ? '0000' . substr($profile['birthdate'], 4) : $profile['birthdate']),
 		'signature' => &$profile['signature'],
 		'location' => &$profile['location'],
-		'icq' => $profile['ICQ'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['ICQ'],
-			'href' => 'http://www.icq.com/whitepages/about_me.php?uin=' . $profile['ICQ'],
-			'link' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['ICQ'] . '" target="_blank"><img src="http://status.icq.com/online.gif?img=5&amp;icq=' . $profile['ICQ'] . '" alt="' . $profile['ICQ'] . '" width="18" height="18" border="0" /></a>',
-			'link_text' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['ICQ'] . '" target="_blank">' . $profile['ICQ'] . '</a>',
+		'icq' => $profile['icq'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
+			'name' => &$profile['icq'],
+			'href' => 'http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'],
+			'link' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" target="_blank"><img src="http://status.icq.com/online.gif?img=5&amp;icq=' . $profile['icq'] . '" alt="' . $profile['icq'] . '" width="18" height="18" border="0" /></a>',
+			'link_text' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" target="_blank">' . $profile['icq'] . '</a>',
 		) : array('name' => '', 'add' => '', 'href' => '', 'link' => '', 'link_text' => ''),
-		'aim' => $profile['AIM'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['AIM'],
-			'href' => 'aim:goim?screenname=' . urlencode(strtr($profile['AIM'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'],
-			'link' => '<a href="aim:goim?screenname=' . urlencode(strtr($profile['AIM'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'] . '"><img src="' . $settings['images_url'] . '/aim.gif" alt="' . $profile['AIM'] . '" border="0" /></a>',
-			'link_text' => '<a href="aim:goim?screenname=' . urlencode(strtr($profile['AIM'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'] . '">' . $profile['AIM'] . '</a>'
+		'aim' => $profile['aim'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
+			'name' => &$profile['aim'],
+			'href' => 'aim:goim?screenname=' . urlencode(strtr($profile['aim'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'],
+			'link' => '<a href="aim:goim?screenname=' . urlencode(strtr($profile['aim'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'] . '"><img src="' . $settings['images_url'] . '/aim.gif" alt="' . $profile['aim'] . '" border="0" /></a>',
+			'link_text' => '<a href="aim:goim?screenname=' . urlencode(strtr($profile['aim'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'] . '">' . $profile['aim'] . '</a>'
 		) : array('name' => '', 'href' => '', 'link' => '', 'link_text' => ''),
-		'yim' => $profile['YIM'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['YIM'],
-			'href' => 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['YIM']),
-			'link' => '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['YIM']) . '"><img src="http://opi.yahoo.com/online?u=' . urlencode($profile['YIM']) . '&amp;m=g&amp;t=0" alt="' . $profile['YIM'] . '" border="0" /></a>',
-			'link_text' => '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['YIM']) . '">' . $profile['YIM'] . '</a>'
+		'yim' => $profile['yim'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
+			'name' => &$profile['yim'],
+			'href' => 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['yim']),
+			'link' => '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['yim']) . '"><img src="http://opi.yahoo.com/online?u=' . urlencode($profile['yim']) . '&amp;m=g&amp;t=0" alt="' . $profile['yim'] . '" border="0" /></a>',
+			'link_text' => '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['yim']) . '">' . $profile['yim'] . '</a>'
 		) : array('name' => '', 'href' => '', 'link' => '', 'link_text' => ''),
-		'msn' => $profile['MSN'] !='' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['MSN'],
-			'href' => 'http://members.msn.com/' . $profile['MSN'],
-			'link' => '<a href="http://members.msn.com/' . $profile['MSN'] . '" target="_blank"><img src="' . $settings['images_url'] . '/msntalk.gif" alt="' . $profile['MSN'] . '" border="0" /></a>',
-			'link_text' => '<a href="http://members.msn.com/' . $profile['MSN'] . '" target="_blank">' . $profile['MSN'] . '</a>'
+		'msn' => $profile['msn'] !='' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
+			'name' => &$profile['msn'],
+			'href' => 'http://members.msn.com/' . $profile['msn'],
+			'link' => '<a href="http://members.msn.com/' . $profile['msn'] . '" target="_blank"><img src="' . $settings['images_url'] . '/msntalk.gif" alt="' . $profile['msn'] . '" border="0" /></a>',
+			'link_text' => '<a href="http://members.msn.com/' . $profile['msn'] . '" target="_blank">' . $profile['msn'] . '</a>'
 		) : array('name' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'real_posts' => $profile['posts'],
 		'posts' => $profile['posts'] > 100000 ? $txt[683] : ($profile['posts'] == 1337 ? 'leet' : comma_format($profile['posts'])),
 		'avatar' => array(
 			'name' => &$profile['avatar'],
-			'image' => $profile['avatar'] == '' ? ($profile['ID_ATTACH'] > 0 ? '<img src="' . (empty($profile['attachmentType']) ? $scripturl . '?action=dlattach;attach=' . $profile['ID_ATTACH'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) . '" alt="" class="avatar" border="0" />' : '') : (stristr($profile['avatar'], 'http://') ? '<img src="' . $profile['avatar'] . '"' . $avatar_width . $avatar_height . ' alt="" class="avatar" border="0" />' : '<img src="' . $modSettings['avatar_url'] . '/' . htmlspecialchars($profile['avatar']) . '" alt="" class="avatar" border="0" />'),
-			'href' => $profile['avatar'] == '' ? ($profile['ID_ATTACH'] > 0 ? (empty($profile['attachmentType']) ? $scripturl . '?action=dlattach;attach=' . $profile['ID_ATTACH'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']),
+			'image' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? '<img src="' . (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) . '" alt="" class="avatar" border="0" />' : '') : (stristr($profile['avatar'], 'http://') ? '<img src="' . $profile['avatar'] . '"' . $avatar_width . $avatar_height . ' alt="" class="avatar" border="0" />' : '<img src="' . $modSettings['avatar_url'] . '/' . htmlspecialchars($profile['avatar']) . '" alt="" class="avatar" border="0" />'),
+			'href' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']),
 			'url' => $profile['avatar'] == '' ? '' : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar'])
 		),
-		'last_login' => empty($profile['lastLogin']) ? $txt['never'] : timeformat($profile['lastLogin']),
-		'last_login_timestamp' => empty($profile['lastLogin']) ? 0 : forum_time(0, $profile['lastLogin']),
+		'last_login' => empty($profile['last_login']) ? $txt['never'] : timeformat($profile['last_login']),
+		'last_login_timestamp' => empty($profile['last_login']) ? 0 : forum_time(0, $profile['last_login']),
 		'karma' => array(
-			'good' => &$profile['karmaGood'],
-			'bad' => &$profile['karmaBad'],
+			'good' => &$profile['karma_good'],
+			'bad' => &$profile['karma_bad'],
 			'allow' => !$user_info['is_guest'] && $user_info['posts'] >= $modSettings['karmaMinPosts'] && allowedTo('karma_edit') && !empty($modSettings['karmaMode']) && $user_info['id'] != $user
 		),
-		'ip' => htmlspecialchars($profile['memberIP']),
+		'ip' => htmlspecialchars($profile['member_ip']),
 		'online' => array(
 			'is_online' => $profile['is_online'],
 			'text' => &$txt[$profile['is_online'] ? 'online2' : 'online3'],
-			'href' => $scripturl . '?action=pm;sa=send;u=' . $profile['ID_MEMBER'],
-			'link' => '<a href="' . $scripturl . '?action=pm;sa=send;u=' . $profile['ID_MEMBER'] . '">' . $txt[$profile['is_online'] ? 'online2' : 'online3'] . '</a>',
+			'href' => $scripturl . '?action=pm;sa=send;u=' . $profile['id_member'],
+			'link' => '<a href="' . $scripturl . '?action=pm;sa=send;u=' . $profile['id_member'] . '">' . $txt[$profile['is_online'] ? 'online2' : 'online3'] . '</a>',
 			'image_href' => $settings['images_url'] . '/' . ($profile['buddy'] ? 'buddy_' : '') . ($profile['is_online'] ? 'useron' : 'useroff') . '.gif',
 			'label' => &$txt[$profile['is_online'] ? 'online4' : 'online5']
 		),
@@ -1061,71 +1061,71 @@ function loadMemberContext($user)
 		'is_guest' => false,
 		'group' => $profile['member_group'],
 		'group_color' => $profile['member_group_color'],
-		'group_id' => $profile['ID_GROUP'],
+		'group_id' => $profile['id_group'],
 		'post_group' => $profile['post_group'],
 		'post_group_color' => $profile['post_group_color'],
 		'group_stars' => str_repeat('<img src="' . str_replace('$language', $context['user']['language'], isset($profile['stars'][1]) ? $settings['images_url'] . '/' . $profile['stars'][1] : '') . '" alt="*" border="0" />', empty($profile['stars'][0]) || empty($profile['stars'][1]) ? 0 : $profile['stars'][0]),
-		'local_time' => timeformat(time() + ($profile['timeOffset'] - $user_info['time_offset']) * 3600, false),
+		'local_time' => timeformat(time() + ($profile['time_offset'] - $user_info['time_offset']) * 3600, false),
 	);
 
 	return true;
 }
 
 // Load a theme, by ID.
-function loadTheme($ID_THEME = 0, $initialize = true)
+function loadTheme($id_theme = 0, $initialize = true)
 {
 	global $user_info, $user_settings, $board_info, $sc;
 	global $db_prefix, $txt, $boardurl, $scripturl, $mbname, $modSettings;
 	global $context, $settings, $options, $sourcedir, $ssi_theme, $smfFunc;
 
 	// The theme was specified by parameter.
-	if (!empty($ID_THEME))
-		$ID_THEME = (int) $ID_THEME;
+	if (!empty($id_theme))
+		$id_theme = (int) $id_theme;
 	// The theme was specified by REQUEST.
 	elseif (!empty($_REQUEST['theme']) && (!empty($modSettings['theme_allow']) || allowedTo('admin_forum')))
 	{
-		$ID_THEME = (int) $_REQUEST['theme'];
-		$_SESSION['ID_THEME'] = $ID_THEME;
+		$id_theme = (int) $_REQUEST['theme'];
+		$_SESSION['id_theme'] = $id_theme;
 	}
 	// The theme was specified by REQUEST... previously.
-	elseif (!empty($_SESSION['ID_THEME']) && (!empty($modSettings['theme_allow']) || allowedTo('admin_forum')))
-		$ID_THEME = (int) $_SESSION['ID_THEME'];
+	elseif (!empty($_SESSION['id_theme']) && (!empty($modSettings['theme_allow']) || allowedTo('admin_forum')))
+		$id_theme = (int) $_SESSION['id_theme'];
 	// The theme is just the user's choice. (might use ?board=1;theme=0 to force board theme.)
 	elseif (!empty($user_info['theme']) && !isset($_REQUEST['theme']) && (!empty($modSettings['theme_allow']) || allowedTo('admin_forum')))
-		$ID_THEME = $user_info['theme'];
+		$id_theme = $user_info['theme'];
 	// The theme was specified by the board.
 	elseif (!empty($board_info['theme']))
-		$ID_THEME = $board_info['theme'];
+		$id_theme = $board_info['theme'];
 	// The theme is the forum's default.
 	else
-		$ID_THEME = $modSettings['theme_guests'];
+		$id_theme = $modSettings['theme_guests'];
 
-	// Verify the ID_THEME... no foul play.
+	// Verify the id_theme... no foul play.
 	// Always allow the board specific theme, if they are overriding.
 	if (!empty($board_info['theme']) && $board_info['override_theme'])
-		$ID_THEME=$board_info['theme'];
+		$id_theme=$board_info['theme'];
 	// If they have specified a particular theme to use with SSI allow it to be used.
-	elseif (!empty($ssi_theme) && $ID_THEME == $ssi_theme)
-		$ID_THEME = (int) $ID_THEME;
+	elseif (!empty($ssi_theme) && $id_theme == $ssi_theme)
+		$id_theme = (int) $id_theme;
 	elseif (!empty($modSettings['knownThemes']) && !allowedTo('admin_forum'))
 	{
 		$themes = explode(',', $modSettings['knownThemes']);
-		if (!in_array($ID_THEME, $themes))
-			$ID_THEME = $modSettings['theme_guests'];
+		if (!in_array($id_theme, $themes))
+			$id_theme = $modSettings['theme_guests'];
 		else
-			$ID_THEME = (int) $ID_THEME;
+			$id_theme = (int) $id_theme;
 	}
 	else
-		$ID_THEME = (int) $ID_THEME;
+		$id_theme = (int) $id_theme;
 
 	$member = empty($user_info['id']) ? -1 : $user_info['id'];
 
-	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2 && ($temp = cache_get_data('theme_settings-' . $ID_THEME . ':' . $member, 60)) != null)
+	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2 && ($temp = cache_get_data('theme_settings-' . $id_theme . ':' . $member, 60)) != null)
 	{
 		$themeData = $temp;
 		$flag = true;
 	}
-	elseif (($temp = cache_get_data('theme_settings-' . $ID_THEME, 90)) != null)
+	elseif (($temp = cache_get_data('theme_settings-' . $id_theme, 90)) != null)
 		$themeData = $temp + array($member => array());
 	else
 		$themeData = array(-1 => array(), 0 => array(), $member => array());
@@ -1133,21 +1133,21 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 	if (empty($flag))
 	{
 			// Load variables from the current or default theme, global or this user's.
-		$result = $smfFunc['db_query']("
-			SELECT variable, value, ID_MEMBER, ID_THEME
+		$result = $smfFunc['db_query']('', "
+			SELECT variable, value, id_member, id_theme
 			FROM {$db_prefix}themes
-			WHERE ID_MEMBER" . (empty($themeData[0]) ? " IN (-1, 0, $member)" : " = $member") . "
-				AND ID_THEME" . ($ID_THEME == 1 ? ' = 1' : " IN ($ID_THEME, 1)"), __FILE__, __LINE__);
+			WHERE id_member" . (empty($themeData[0]) ? " IN (-1, 0, $member)" : " = $member") . "
+				AND id_theme" . ($id_theme == 1 ? ' = 1' : " IN ($id_theme, 1)"), __FILE__, __LINE__);
 		// Pick between $settings and $options depending on whose data it is.
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// If this is the theme_dir of the default theme, store it.
-			if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['ID_THEME'] == '1' && empty($row['ID_MEMBER']))
+			if (in_array($row['variable'], array('theme_dir', 'theme_url', 'images_url')) && $row['id_theme'] == '1' && empty($row['id_member']))
 				$themeData[0]['default_' . $row['variable']] = $row['value'];
 
 			// If this isn't set yet, is a theme option, or is not the default theme..
-			if (!isset($themeData[$row['ID_MEMBER']][$row['variable']]) || $row['ID_THEME'] != '1')
-				$themeData[$row['ID_MEMBER']][$row['variable']] = substr($row['variable'], 0, 5) == 'show_' ? $row['value'] == '1' : $row['value'];
+			if (!isset($themeData[$row['id_member']][$row['variable']]) || $row['id_theme'] != '1')
+				$themeData[$row['id_member']][$row['variable']] = substr($row['variable'], 0, 5) == 'show_' ? $row['value'] == '1' : $row['value'];
 		}
 		$smfFunc['db_free_result']($result);
 
@@ -1159,16 +1159,16 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 			}
 
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-			cache_put_data('theme_settings-' . $ID_THEME . ':' . $member, $themeData, 60);
+			cache_put_data('theme_settings-' . $id_theme . ':' . $member, $themeData, 60);
 		// Only if we didn't already load that part of the cache...
 		elseif (!isset($temp))
-			cache_put_data('theme_settings-' . $ID_THEME, array(-1 => $themeData[-1], 0 => $themeData[0]), 90);
+			cache_put_data('theme_settings-' . $id_theme, array(-1 => $themeData[-1], 0 => $themeData[0]), 90);
 	}
 
 	$settings = $themeData[0];
 	$options = $themeData[$member];
 
-	$settings['theme_id'] = $ID_THEME;
+	$settings['theme_id'] = $id_theme;
 
 	$settings['actual_theme_url'] = $settings['theme_url'];
 	$settings['actual_images_url'] = $settings['images_url'];
@@ -1333,7 +1333,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 		$context['browser']['possibly_robot'] = false;
 
 	// If we think we have mail to send, let's offer up some possibilities... robots get pain (Now with scheduled task support!)
-	if ((!empty($modSettings['mail_next_send']) && $modSettings['mail_next_send'] < time()) || (!empty($modSettings['next_task_time']) && $modSettings['next_task_time'] < time()))
+	if ((!empty($modSettings['mail_next_send']) && $modSettings['mail_next_send'] < time()) || empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
 	{
 		if ($context['browser']['possibly_robot'])
 		{
@@ -1341,14 +1341,14 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 			require_once($sourcedir . '/ScheduledTasks.php');
 
 			// What to do, what to do?!
-			if (!empty($modSettings['next_task_time']) && $modSettings['next_task_time'] < time())
+			if (empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
 				AutoTask();
 			else
 				ReduceMailQueue(5);
 		}
 		else
 		{
-			$type = !empty($modSettings['next_task_time']) && $modSettings['next_task_time'] < time() ? 'task' : 'mailq';
+			$type = empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time() ? 'task' : 'mailq';
 			$ts = $type == 'mailq' ? $modSettings['mail_next_send'] : $modSettings['next_task_time'];
 
 			$context['html_headers'] .= '
@@ -1424,7 +1424,7 @@ function loadTheme($ID_THEME = 0, $initialize = true)
 	loadSubTemplate('init', 'ignore');
 
 	// Allow overriding the board wide time/number formats.
-	if (empty($user_settings['timeFormat']) && !empty($txt['time_format']))
+	if (empty($user_settings['time_format']) && !empty($txt['time_format']))
 		$user_info['time_format'] = $txt['time_format'];
 	$txt['number_format'] = empty($txt['number_format']) ? empty($modSettings['number_format']) ? '' : $modSettings['number_format'] : $txt['number_format'];
 
@@ -1596,26 +1596,26 @@ function getBoardParents($id_parent)
 	// Loop while the parent is non-zero.
 	while ($id_parent != 0)
 	{
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SELECT
-				b.ID_PARENT, b.name, $id_parent AS ID_BOARD, IFNULL(mem.ID_MEMBER, 0) AS ID_MODERATOR,
-				mem.realName, b.childLevel
+				b.id_parent, b.name, $id_parent AS id_board, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
+				mem.real_name, b.child_level
 			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = b.ID_BOARD)
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = mods.ID_MEMBER)
-			WHERE b.ID_BOARD = $id_parent", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+			WHERE b.id_board = $id_parent", __FILE__, __LINE__);
 		// In the EXTREMELY unlikely event this happens, give an error message.
 		if ($smfFunc['db_num_rows']($result) == 0)
 			fatal_lang_error('parent_not_found', 'critical');
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
-			if (!isset($boards[$row['ID_BOARD']]))
+			if (!isset($boards[$row['id_board']]))
 			{
-				$id_parent = $row['ID_PARENT'];
-				$boards[$row['ID_BOARD']] = array(
-					'url' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
+				$id_parent = $row['id_parent'];
+				$boards[$row['id_board']] = array(
+					'url' => $scripturl . '?board=' . $row['id_board'] . '.0',
 					'name' => $row['name'],
-					'level' => $row['childLevel'],
+					'level' => $row['child_level'],
 					'moderators' => array()
 				);
 			}
@@ -1625,9 +1625,9 @@ function getBoardParents($id_parent)
 				{
 					$boards[$id]['moderators'][$row['ID_MODERATOR']] = array(
 						'id' => $row['ID_MODERATOR'],
-						'name' => $row['realName'],
+						'name' => $row['real_name'],
 						'href' => $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'],
-						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['realName'] . '</a>'
+						'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row['real_name'] . '</a>'
 					);
 				}
 		}
@@ -1680,28 +1680,28 @@ function loadJumpTo()
 		return;
 
 	// Find the boards/cateogories they can see.
-	$request = $smfFunc['db_query']("
-		SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.childLevel
+	$request = $smfFunc['db_query']('', "
+		SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$context['jump_to'] = array();
 	$this_cat = array('id' => -1);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if ($this_cat['id'] != $row['ID_CAT'])
+		if ($this_cat['id'] != $row['id_cat'])
 		{
 			$this_cat = &$context['jump_to'][];
-			$this_cat['id'] = $row['ID_CAT'];
-			$this_cat['name'] = $row['catName'];
+			$this_cat['id'] = $row['id_cat'];
+			$this_cat['name'] = $row['cat_name'];
 			$this_cat['boards'] = array();
 		}
 
 		$this_cat['boards'][] = array(
-			'id' => $row['ID_BOARD'],
-			'name' => $row['boardName'],
-			'child_level' => $row['childLevel'],
-			'is_current' => isset($context['current_board']) && $row['ID_BOARD'] == $context['current_board']
+			'id' => $row['id_board'],
+			'name' => $row['board_name'],
+			'child_level' => $row['child_level'],
+			'is_current' => isset($context['current_board']) && $row['id_board'] == $context['current_board']
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -1984,7 +1984,7 @@ function sessionRead($session_id)
 		return false;
 
 	// Look for it in the database.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT data
 		FROM {$db_prefix}sessions
 		WHERE session_id = '" . addslashes($session_id) . "'
@@ -2003,15 +2003,14 @@ function sessionWrite($session_id, $data)
 		return false;
 
 	// First try to update an existing row...
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		UPDATE {$db_prefix}sessions
 		SET data = '" . addslashes($data) . "', last_update = " . time() . "
-		WHERE session_id = '" . addslashes($session_id) . "'
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
 
 	// If that didn't work, try inserting a new one.
 	if (db_affected_rows() == 0)
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			INSERT IGNORE INTO {$db_prefix}sessions
 				(session_id, data, last_update)
 			VALUES ('" . addslashes($session_id) . "', '" . addslashes($data) . "', " . time() . ")", __FILE__, __LINE__);
@@ -2027,7 +2026,7 @@ function sessionDestroy($session_id)
 		return false;
 
 	// Just delete the row...
-	return $smfFunc['db_query']("
+	return $smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}sessions
 		WHERE session_id = '" . addslashes($session_id) . "'
 		LIMIT 1", __FILE__, __LINE__);
@@ -2042,7 +2041,7 @@ function sessionGC($max_lifetime)
 		$max_lifetime = max($modSettings['databaseSession_lifetime'], 60);
 
 	// Clean up ;).
-	return $smfFunc['db_query']("
+	return $smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}sessions
 		WHERE last_update < " . (time() - $max_lifetime), __FILE__, __LINE__);
 }
@@ -2053,7 +2052,7 @@ function loadDatabase()
 	global $db_type, $db_name, $ssi_db_user, $ssi_db_passwd, $db_prefix, $sourcedir;
 
 	// Figure out what type of database we are using.
-	if (empty($db_type) || file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
+	if (empty($db_type) || !file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
 		$db_type = 'mysql';
 
 	// Load the file for the database.

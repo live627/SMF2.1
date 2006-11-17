@@ -381,7 +381,7 @@ $helptxt['max_pm_recipients'] = 'Deze optie stelt je in staat een maximum aantal
 $helptxt['pm_posts_verification'] = 'This setting will force users to enter a code shown on a verification image each time they are sending a personal message. Only users with a post count below the number set will need to enter the code - this should help combat automated spamming scripts.';
 $helptxt['pm_posts_per_hour'] = 'This will limit the number of personal messages which may be sent by a user in a one hour period. This does not affect admins or moderators.';
 
-$helptxt['default_personalText'] = 'Stelt de standaard tekst in die een gebruiker als &quot;persoonlijke tekst&quot; zal hebben.';
+$helptxt['default_personal_text'] = 'Stelt de standaard tekst in die een gebruiker als &quot;persoonlijke tekst&quot; zal hebben.';
 
 $helptxt['modlog_enabled'] = 'Logt alle moderatie acties.';
 
@@ -430,7 +430,7 @@ $helptxt['coppaType'] = 'Indien leeftijdsrestricties zijn ingesteld, bepaalt dez
 $helptxt['coppaPost'] = 'De contactgegevens zijn verplicht, zodat formulieren die toestemming geven voor minderjarige registratie gestuurd kunnen worden naar de forumbeheerder. Deze gegevens zullen getoond worden aan alle nieuwe minderjarigen en zijn vereist voor goedkeuring van ouders of voogden. In ieder geval moet het postadres of het faxnummer ingevuld zijn.';
 
 $helptxt['allow_hideOnline'] = 'Met deze optie geselecteerd kunnen leden hun online status voor andere gebruikers (behalve beheerders) verbergen. Indien uitgeschakeld, kunnen alleen gebruikers die het forum kunnen beheren, hun online status verbergen. Het uitschakleen van deze optie zal niemands status veranderen - het voorkomt alleen dat ze zichzelf kunnen verbergen in de toekomst.';
-$helptxt['allow_hideEmail'] = 'Als deze optie is geactiveerd kunnen leden hun e-mailadres verbergen voor anderen. De beheerder kan echter alle e-mailadressen gewoon zien.';
+$helptxt['allow_hide_email'] = 'Als deze optie is geactiveerd kunnen leden hun e-mailadres verbergen voor anderen. De beheerder kan echter alle e-mailadressen gewoon zien.';
 
 $helptxt['latest_support'] = 'Je ziet hier de meest voorkomende problemen en vragen m.b.t. de server configuratie. Deze informatie wordt niet geregistreerd.<br /><br />Indien je blijft zien &quot;Retrieving support information...&quot;, kan je pc waarschijnlijk geen verbinding maken met <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';
 $helptxt['latest_packages'] = 'Hier kun je enkele populaire of willekeurige packages of mods vinden, met snelle en simpele installaties.<br /><br />Als dit niet verschijnt kan de pc waarschijnlijk geen verbinding maken met <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';

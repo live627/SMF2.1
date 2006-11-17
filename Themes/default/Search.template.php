@@ -123,10 +123,10 @@ function template_main()
 							<td colspan="2">
 								<select name="sort">
 									<option value="relevance|desc">', $txt['search_orderby_relevant_first'], '</option>
-									<option value="numReplies|desc">', $txt['search_orderby_large_first'], '</option>
-									<option value="numReplies|asc">', $txt['search_orderby_small_first'], '</option>
-									<option value="ID_MSG|desc">', $txt['search_orderby_recent_first'], '</option>
-									<option value="ID_MSG|asc">', $txt['search_orderby_old_first'], '</option>
+									<option value="num_replies|desc">', $txt['search_orderby_large_first'], '</option>
+									<option value="num_replies|asc">', $txt['search_orderby_small_first'], '</option>
+									<option value="id_msg|desc">', $txt['search_orderby_recent_first'], '</option>
+									<option value="id_msg|asc">', $txt['search_orderby_old_first'], '</option>
 								</select>
 							</td>
 							<td></td>

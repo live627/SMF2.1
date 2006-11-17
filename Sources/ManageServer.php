@@ -320,7 +320,7 @@ function ModifyCoreSettings2()
 	{
 		include_once($sourcedir . '/Subs-Auth.php');
 		$cookiename = $_POST['cookiename'];
-		setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['ID_MEMBER'], sha1($user_settings['passwd'] . $user_settings['passwordSalt']));
+		setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['id_member'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
 
 		redirectexit('action=admin;area=serversettings;sa=core;sesc=' . $sc, $context['server']['needs_login_fix']);
 	}

@@ -19,20 +19,20 @@ TRUNCATE {$to_prefix}members;
 $row['signature'] = substr(stripslashes($row['signature']), 0, 65534);
 ---}
 SELECT
-	u.ID AS ID_MEMBER, SUBSTRING(u.name, 1, 80) AS memberName,
-	SUBSTRING(u.name, 1, 255) AS realName, SUBSTRING(u.pass, 1, 64) AS passwd,
-	SUBSTRING(u.email, 1, 255) AS emailAddress,
-	SUBSTRING(u.web, 1, 255) AS websiteTitle,
-	SUBSTRING(u.web, 1, 255) AS websiteUrl,
-	UNIX_TIMESTAMP(u.registered) AS dateRegistered,
-	SUBSTRING(u.icq, 1, 255) AS ICQ, SUBSTRING(u.aim, 1, 16) AS AIM,
-	SUBSTRING(u.yahoo, 1, 32) AS YIM, SUBSTRING(u.msn, 1, 255) AS MSN,
-	u.numposts AS posts, SUBSTRING(u.comment, 1, 255) AS personalText,
-	u.signature, UNIX_TIMESTAMP(u.lastlogin) AS lastLogin,
-	SUBSTRING(u.last_IP, 1, 255) AS memberIP,
-	u.show_email != 'yes' AS hideEmail, u.birthday AS birthdate,
+	u.ID AS id_member, SUBSTRING(u.name, 1, 80) AS member_name,
+	SUBSTRING(u.name, 1, 255) AS real_name, SUBSTRING(u.pass, 1, 64) AS passwd,
+	SUBSTRING(u.email, 1, 255) AS email_address,
+	SUBSTRING(u.web, 1, 255) AS website_title,
+	SUBSTRING(u.web, 1, 255) AS website_url,
+	UNIX_TIMESTAMP(u.registered) AS date_registered,
+	SUBSTRING(u.icq, 1, 255) AS icq, SUBSTRING(u.aim, 1, 16) AS aim,
+	SUBSTRING(u.yahoo, 1, 32) AS yim, SUBSTRING(u.msn, 1, 255) AS msn,
+	u.numposts AS posts, SUBSTRING(u.comment, 1, 255) AS personal_text,
+	u.signature, UNIX_TIMESTAMP(u.lastlogin) AS last_login,
+	SUBSTRING(u.last_IP, 1, 255) AS member_ip,
+	u.show_email != 'yes' AS hide_email, u.birthday AS birthdate,
 	CASE u.gender WHEN 'M' THEN 1 WHEN 'F' THEN 2 ELSE 0 END AS gender,
-	IF(ul.level = 5, 1, 0) AS ID_GROUP
+	IF(ul.level = 5, 1, 0) AS id_group
 FROM {$from_prefix}user AS u
 	LEFT JOIN {$from_prefix}userlevel AS ul ON (ul.user_ID = u.ID)
 WHERE pass != 'impossible'
@@ -46,7 +46,7 @@ GROUP BY u.ID;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT ID AS ID_CAT, corder AS catOrder, SUBSTRING(name, 1, 255) AS name
+SELECT ID AS id_cat, corder AS cat_order, SUBSTRING(name, 1, 255) AS name
 FROM {$from_prefix}category;
 ---*
 
@@ -57,15 +57,15 @@ FROM {$from_prefix}category;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
-/* The converter will set ID_CAT for us based on ID_PARENT being wrong. */
+/* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
 SELECT
-	ID AS ID_BOARD, forder AS boardOrder, category_ID AS ID_CAT,
+	ID AS id_board, forder AS board_order, category_ID AS id_cat,
 	SUBSTRING(name, 1, 255) AS name, SUBSTRING(comment, 1, 65534) AS description,
-	numposts AS numPosts, numthreads AS numTopics, parent AS ID_PARENT,
-	'-1,0' AS memberGroups
+	numposts AS num_posts, numthreads AS num_topics, parent AS id_parent,
+	'-1,0' AS member_groups
 FROM {$from_prefix}forum;
 ---*
 
@@ -80,24 +80,24 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.ID AS ID_TOPIC, t.forum_ID AS ID_BOARD, t.closed != 'false' AS locked,
-	t.user_ID AS ID_MEMBER_STARTED, t.numviews AS numViews, pt.ID AS ID_POLL,
-	t.numreplies AS numReplies, t.fixed != 'false' AS isSticky,
-	t.ID AS ID_FIRST_MSG, IFNULL(MAX(r.ID), t.ID) AS ID_LAST_MSG
+	t.ID AS id_topic, t.forum_ID AS id_board, t.closed != 'false' AS locked,
+	t.user_ID AS id_member_started, t.numviews AS num_views, pt.ID AS id_poll,
+	t.numreplies AS num_replies, t.fixed != 'false' AS is_sticky,
+	t.ID AS id_first_msg, IFNULL(MAX(r.ID), t.ID) AS id_last_msg
 FROM {$from_prefix}message AS t
 	LEFT JOIN {$from_prefix}message AS r ON (r.reply = t.ID)
 	LEFT JOIN {$from_prefix}mod_POLL_topic AS pt ON (pt.message_ID = t.ID)
 WHERE t.reply = 0
 	AND t.movelink = 0
 GROUP BY t.ID
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
----* {$to_prefix}topics (update ID_TOPIC)
-SELECT t.ID_TOPIC, m.user_ID AS ID_MEMBER_UPDATED
+---* {$to_prefix}topics (update id_topic)
+SELECT t.id_topic, m.user_ID AS id_member_updated
 FROM ({$to_prefix}topics AS t, {$from_prefix}message AS m)
-WHERE m.ID = t.ID_LAST_MSG;
+WHERE m.ID = t.id_last_msg;
 ---*
 
 /******************************************************************************/
@@ -112,12 +112,12 @@ TRUNCATE {$to_prefix}attachments;
 $row['body'] = substr(stripslashes($row['body']), 0, 65534);
 ---}
 SELECT
-	m.ID AS ID_MSG, IF(m.reply = 0, m.ID, m.reply) AS ID_TOPIC,
-	m.forum_ID AS ID_BOARD, UNIX_TIMESTAMP(m.date) AS posterTime,
-	m.user_ID AS ID_MEMBER, SUBSTRING(m.user_IP, 1, 255) AS posterIP,
+	m.ID AS id_msg, IF(m.reply = 0, m.ID, m.reply) AS id_topic,
+	m.forum_ID AS id_board, UNIX_TIMESTAMP(m.date) AS poster_time,
+	m.user_ID AS id_member, SUBSTRING(m.user_IP, 1, 255) AS poster_ip,
 	SUBSTRING(m.subject, 1, 255) AS subject,
-	SUBSTRING(u.email, 1, 255) AS posterEmail,
-	SUBSTRING(IFNULL(u.name, m.guestname), 1, 255) AS posterName,
+	SUBSTRING(u.email, 1, 255) AS poster_email,
+	SUBSTRING(IFNULL(u.name, m.guestname), 1, 255) AS poster_name,
 	SUBSTRING(REPLACE(m.content, '\r', ''), 1, 65534) AS body
 FROM {$from_prefix}message AS m
 	LEFT JOIN {$from_prefix}user AS u ON (u.ID = m.user_ID);
@@ -133,9 +133,9 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	pt.ID AS ID_POLL, SUBSTRING(pt.name, 1, 255) AS question,
-	pt.creator AS ID_MEMBER, pt.active != 'true' AS votingLocked,
-	SUBSTRING(u.name, 1, 255) AS posterName
+	pt.ID AS id_poll, SUBSTRING(pt.name, 1, 255) AS question,
+	pt.creator AS id_member, pt.active != 'true' AS voting_locked,
+	SUBSTRING(u.name, 1, 255) AS poster_name
 FROM {$from_prefix}mod_POLL_topic AS pt
 	LEFT JOIN {$from_prefix}user AS u ON (u.ID = pt.creator);
 ---*
@@ -149,17 +149,17 @@ ADD COLUMN tempID int(10) unsigned NOT NULL default 0;
 
 ---* {$to_prefix}poll_choices
 ---{
-if (!isset($_SESSION['convert_last_poll']) || $_SESSION['convert_last_poll'] != $row['ID_POLL'])
+if (!isset($_SESSION['convert_last_poll']) || $_SESSION['convert_last_poll'] != $row['id_poll'])
 {
-	$_SESSION['convert_last_poll'] = $row['ID_POLL'];
+	$_SESSION['convert_last_poll'] = $row['id_poll'];
 	$_SESSION['convert_last_choice'] = 0;
 }
 
-$row['ID_CHOICE'] = ++$_SESSION['convert_last_choice'];
+$row['id_choice'] = ++$_SESSION['convert_last_choice'];
 ---}
-/* Its name for the ID_POLL is misleading, but right. */
+/* Its name for the id_poll is misleading, but right. */
 SELECT
-	po.topic_ID AS ID_POLL, 0 AS ID_CHOICE,
+	po.topic_ID AS id_poll, 0 AS id_choice,
 	SUBSTRING(po.option_name, 1, 255) AS label, COUNT(pv.ID) AS votes,
 	po.ID AS tempID
 FROM {$from_prefix}mod_POLL_option AS po
@@ -173,7 +173,7 @@ ORDER BY po.ID;
 /******************************************************************************/
 
 ---* {$to_prefix}log_polls
-SELECT pv.poll_ID AS ID_POLL, pv.user_ID AS ID_MEMBER, pc.ID_CHOICE
+SELECT pv.poll_ID AS id_poll, pv.user_ID AS id_member, pc.id_choice
 FROM ({$from_prefix}mod_POLL_vote AS pv, {$to_prefix}poll_choices AS pc)
 WHERE pv.user_ID != 0
 	AND pc.tempID = pv.xoption;
@@ -193,10 +193,10 @@ TRUNCATE {$to_prefix}personal_messages;
 $row['body'] = stripslashes($row['body']);
 ---}
 SELECT
-	pm.ID AS ID_PM, pm.from_user AS ID_MEMBER_FROM,
+	pm.ID AS id_pm, pm.from_user AS id_member_from,
 	SUBSTRING(pm.subject, 1, 255) AS subject,
 	UNIX_TIMESTAMP(pm.date) AS msgtime,
-	SUBSTRING(u.name, 1, 255) AS fromName,
+	SUBSTRING(u.name, 1, 255) AS from_name,
 	SUBSTRING(REPLACE(pm.body, '\r', ''), 1, 65534) AS body
 FROM {$from_prefix}pm AS pm
 	LEFT JOIN {$from_prefix}user AS u ON (u.ID = pm.from_user);
@@ -210,7 +210,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT
-	ID AS ID_PM, to_user AS ID_MEMBER, b_read != 'no' AS is_read, '' AS labels
+	ID AS id_pm, to_user AS id_member, b_read != 'no' AS is_read, '' AS labels
 FROM {$from_prefix}pm;
 ---*
 
@@ -221,7 +221,7 @@ FROM {$from_prefix}pm;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT user_ID AS ID_MEMBER, forum_ID AS ID_BOARD
+SELECT user_ID AS id_member, forum_ID AS id_board
 FROM {$from_prefix}subs;
 ---*
 
@@ -232,16 +232,16 @@ FROM {$from_prefix}subs;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('ID_ATTACH', 'size', 'filename', 'ID_MSG', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
-$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+$newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($_POST['path_from'] . '/attachments/' . $row['filename'], $attachmentUploadDir . '/' . $newfilename))
 {
-	$rows[] = "$ID_ATTACH, $row[size], '" . addslashes($row['filename']) . "', $row[ID_MSG], $row[downloads]";
+	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
 
-	$ID_ATTACH++;
+	$id_attach++;
 }
 ---}
-SELECT message_ID AS ID_MSG, filename, size, downloads
+SELECT message_ID AS id_msg, filename, size, downloads
 FROM {$from_prefix}attachment;
 ---*

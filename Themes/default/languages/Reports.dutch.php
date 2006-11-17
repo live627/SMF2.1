@@ -76,8 +76,8 @@ $txt['board_perms_group_read_only'] = 'Dit board staat alleen lezen toe';
 
 // Membergroup info!
 $txt['member_group_color'] = 'Kleur';
-$txt['member_group_minPosts'] = 'Minimum berichten';
-$txt['member_group_maxMessages'] = 'Max Persoonlijke Berichten';
+$txt['member_group_min_posts'] = 'Minimum berichten';
+$txt['member_group_max_messages'] = 'Max Persoonlijke Berichten';
 $txt['member_group_stars'] = 'Sterren';
 $txt['member_group_settings'] = 'Instellingen';
 $txt['member_group_access'] = 'Boardtoegang';

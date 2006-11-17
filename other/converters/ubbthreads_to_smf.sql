@@ -17,24 +17,24 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	U_Number AS ID_MEMBER, SUBSTRING(U_LoginName, 1, 80) AS memberName,
-	U_Totalposts AS posts, U_Registered AS dateRegistered,
-	U_Laston AS lastLogin, SUBSTRING(U_Title, 1, 255) AS usertitle,
-	IF(U_Status = 'Administrator', 1, 0) AS ID_GROUP,
+	U_Number AS id_member, SUBSTRING(U_LoginName, 1, 80) AS member_name,
+	U_Totalposts AS posts, U_Registered AS date_registered,
+	U_Laston AS last_login, SUBSTRING(U_Title, 1, 255) AS usertitle,
+	IF(U_Status = 'Administrator', 1, 0) AS id_group,
 	SUBSTRING(U_Password, 1, 64) AS passwd,
-	SUBSTRING(U_Username, 1, 255) AS realName,
-	SUBSTRING(U_Email, 1, 255) AS emailAddress,
-	SUBSTRING(U_Homepage, 1, 255) AS websiteTitle,
-	SUBSTRING(U_Homepage, 1, 255) AS websiteUrl,
+	SUBSTRING(U_Username, 1, 255) AS real_name,
+	SUBSTRING(U_Email, 1, 255) AS email_address,
+	SUBSTRING(U_Homepage, 1, 255) AS website_title,
+	SUBSTRING(U_Homepage, 1, 255) AS website_url,
 	SUBSTRING(U_Location, 1, 255) AS location,
 	SUBSTRING(U_Signature, 1, 65534) AS signature,
-	U_TimeOffset AS timeFormat,
+	U_TimeOffset AS time_format,
 	SUBSTRING(IFNULL(U_Picture, ''), 1, 255) AS avatar, '' AS lngfile,
-	'' AS buddy_list, '' AS pm_ignore_list, '' AS messageLabels,
-	'' AS personalText, '' AS ICQ, '' AS AIM, '' AS YIM, '' AS MSN,
-	'' AS timeFormat, '' AS memberIP, '' AS secretQuestion, '' AS secretAnswer,
-	'' AS validation_code, '' AS additionalGroups, '' AS smileySet,
-	'' AS passwordSalt, '' AS memberIP2
+	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
+	'' AS personal_text, '' AS icq, '' AS aim, '' AS yim, '' AS msn,
+	'' AS time_format, '' AS member_ip, '' AS secret_question, '' AS secret_answer,
+	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
+	'' AS password_salt, '' AS member_ip2
 FROM {$from_prefix}Users
 WHERE U_Number != 0;
 ---*
@@ -46,7 +46,7 @@ WHERE U_Number != 0;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT Cat_Number AS ID_CAT, Cat_Title AS name
+SELECT Cat_Number AS id_cat, Cat_Title AS name
 FROM {$from_prefix}Category
 WHERE Cat_Number != 0
 GROUP BY Cat_Number;
@@ -59,12 +59,12 @@ GROUP BY Cat_Number;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	Bo_Number AS ID_BOARD, Bo_Cat AS ID_CAT, Bo_Title AS name,
-	Bo_Description AS description, Bo_Threads AS numTopics, Bo_Total AS numPosts
+	Bo_Number AS id_board, Bo_Cat AS id_cat, Bo_Title AS name,
+	Bo_Description AS description, Bo_Threads AS num_topics, Bo_Total AS num_posts
 FROM {$from_prefix}Boards;
 ---*
 
@@ -79,23 +79,23 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	p.B_Number AS ID_TOPIC, p.B_Sticky AS isSticky, p.B_Number AS ID_FIRST_MSG,
-	p.B_PosterId AS ID_MEMBER_STARTED, p.B_Replies AS numReplies,
-	p.B_Counter AS numViews, IF(p.B_Status = 'C', 1, 0) AS locked,
-	b.Bo_Number AS ID_BOARD, MAX(p2.B_Number) AS ID_LAST_MSG
+	p.B_Number AS id_topic, p.B_Sticky AS is_sticky, p.B_Number AS id_first_msg,
+	p.B_PosterId AS id_member_started, p.B_Replies AS num_replies,
+	p.B_Counter AS num_views, IF(p.B_Status = 'C', 1, 0) AS locked,
+	b.Bo_Number AS id_board, MAX(p2.B_Number) AS id_last_msg
 FROM ({$from_prefix}Posts AS p, {$from_prefix}Boards AS b, {$from_prefix}Posts AS p2)
 WHERE p.B_Topic = 1
 	AND b.Bo_Keyword = p.B_Board
 	AND p2.B_Main = p.B_Number
 GROUP BY p.B_Number
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
----* {$to_prefix}topics (update ID_TOPIC)
-SELECT t.ID_TOPIC, p.B_PosterId AS ID_MEMBER_UPDATED
+---* {$to_prefix}topics (update id_topic)
+SELECT t.id_topic, p.B_PosterId AS id_member_updated
 FROM ({$to_prefix}topics AS t, {$from_prefix}Posts AS p)
-WHERE p.B_Number = t.ID_LAST_MSG;
+WHERE p.B_Number = t.id_last_msg;
 ---*
 
 /******************************************************************************/
@@ -107,15 +107,15 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 SELECT
-	p.B_Number AS ID_MSG, IF(p.B_Main = 0, p.B_Number, p.B_Main) AS ID_TOPIC,
-	p.B_Posted AS posterTime, p.B_PosterId AS ID_MEMBER,
+	p.B_Number AS id_msg, IF(p.B_Main = 0, p.B_Number, p.B_Main) AS id_topic,
+	p.B_Posted AS poster_time, p.B_PosterId AS id_member,
 	SUBSTRING(p.B_Subject, 1, 255) AS subject,
-	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS posterName,
-	SUBSTRING(p.B_IP, 1, 255) AS posterIP,
-	SUBSTRING(IFNULL(u.U_Email, ''), 1, 255) AS posterEmail,
-	b.Bo_Number AS ID_BOARD,
+	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS poster_name,
+	SUBSTRING(p.B_IP, 1, 255) AS poster_ip,
+	SUBSTRING(IFNULL(u.U_Email, ''), 1, 255) AS poster_email,
+	b.Bo_Number AS id_board,
 	SUBSTRING(REPLACE(p.B_Body, '<br>', '<br />'), 1, 65534) AS body,
-	'' AS modifiedName, 'xx' AS icon
+	'' AS modified_name, 'xx' AS icon
 FROM ({$from_prefix}Posts AS p, {$from_prefix}Boards AS b)
 	LEFT JOIN {$from_prefix}Users AS u ON (u.U_Number = p.B_PosterId)
 WHERE b.Bo_Keyword = p.B_Board;
@@ -133,17 +133,17 @@ TRUNCATE {$to_prefix}log_polls;
 ---{
 convert_query("
 	UPDATE {$to_prefix}topics
-	SET ID_POLL = $row[ID_POLL]
-	WHERE ID_TOPIC = $row[ID_TOPIC]
+	SET id_poll = $row[id_poll]
+	WHERE id_topic = $row[id_topic]
 	LIMIT 1");
-unset($row['ID_TOPIC']);
+unset($row['id_topic']);
 ---}
 SELECT
-	pq.P_QuestionNum AS ID_POLL, SUBSTRING(pq.P_Question, 1, 255) AS question,
-	IF(pq.P_ChoiceType = 'one', 1, 8) AS maxVotes, pm.P_Stop AS expireTime,
-	pt.B_PosterId AS ID_MEMBER, pt.B_Number AS ID_TOPIC,
-	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS posterName,
-	pm.P_NoResults AS hideResults
+	pq.P_QuestionNum AS id_poll, SUBSTRING(pq.P_Question, 1, 255) AS question,
+	IF(pq.P_ChoiceType = 'one', 1, 8) AS max_votes, pm.P_Stop AS expire_time,
+	pt.B_PosterId AS id_member, pt.B_Number AS id_topic,
+	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS poster_name,
+	pm.P_NoResults AS hide_results
 FROM ({$from_prefix}PollQuestions AS pq, {$from_prefix}PollMain AS pm, {$from_prefix}Posts AS pt)
 	LEFT JOIN {$from_prefix}Users AS u ON (u.U_Number = pt.B_PosterId)
 WHERE pm.P_Id = pq.P_PollId
@@ -158,7 +158,7 @@ GROUP BY pq.P_PollId;
 
 ---* {$to_prefix}poll_choices
 SELECT
-	po.P_QuestionNum AS ID_POLL, po.P_OptionNum AS ID_CHOICE,
+	po.P_QuestionNum AS id_poll, po.P_OptionNum AS id_choice,
 	SUBSTRING(po.P_Option, 1, 255) AS label, COUNT(pv.P_QuestionNum) AS votes
 FROM {$from_prefix}PollOptions AS po
 	LEFT JOIN {$from_prefix}PollVotes AS pv ON (po.P_QuestionNum = pv.P_QuestionNum AND po.P_OptionNum = pv.P_OptionNum)
@@ -173,8 +173,8 @@ TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
 SELECT
-	m.M_Number AS ID_PM, m.M_Sender AS ID_MEMBER_FROM, m.M_Sent AS msgtime,
-	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS fromName,
+	m.M_Number AS id_pm, m.M_Sender AS id_member_from, m.M_Sent AS msgtime,
+	SUBSTRING(IFNULL(u.U_Username, 'Guest'), 1, 255) AS from_name,
 	SUBSTRING(m.M_Subject, 1, 255) AS subject,
 	SUBSTRING(m.M_Message, 1, 65534) AS body
 FROM {$from_prefix}Messages AS m
@@ -189,7 +189,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT
-	M_Number AS ID_PM, M_Uid AS ID_MEMBER, M_Status != 'N' AS is_read,
+	M_Number AS id_pm, M_Uid AS id_member, M_Status != 'N' AS is_read,
 	'' AS labels
 FROM {$from_prefix}Messages;
 ---*
@@ -201,7 +201,7 @@ FROM {$from_prefix}Messages;
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT mods.Mod_Uid AS ID_MEMBER, b.Bo_Number AS ID_BOARD
+SELECT mods.Mod_Uid AS id_member, b.Bo_Number AS id_board
 FROM ({$from_prefix}Moderators AS mods, {$from_prefix}Boards AS b)
 WHERE b.Bo_Keyword = mods.Mod_Board;
 ---*
@@ -213,7 +213,7 @@ WHERE b.Bo_Keyword = mods.Mod_Board;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT F_Thread AS ID_TOPIC, F_Owner AS ID_MEMBER
+SELECT F_Thread AS id_topic, F_Owner AS id_member
 FROM {$from_prefix}Favorites;
 ---*
 
@@ -222,7 +222,7 @@ FROM {$from_prefix}Favorites;
 /******************************************************************************/
 
 ---* {$to_prefix}log_notify
-SELECT S_Board AS ID_BOARD, S_Uid AS ID_MEMBER
+SELECT S_Board AS id_board, S_Uid AS id_member
 FROM {$from_prefix}Subscribe;
 ---*
 
@@ -242,7 +242,7 @@ while (true)
 	pastTime($substep);
 
 	$result = convert_query("
-		SELECT Add_Owner AS ID_MEMBER, Add_Member AS ID_BUDDY
+		SELECT Add_Owner AS id_member, Add_Member AS ID_BUDDY
 		FROM {$from_prefix}AddressBook
 		LIMIT $_REQUEST[start], 250");
 	while ($row = mysql_fetch_assoc($result))
@@ -252,7 +252,7 @@ while (true)
 		convert_query("
 			UPDATE {$to_prefix}members
 			SET buddy_list = IF(buddy_list = '', '$row[ID_BUDDY]', CONCAT(buddy_list, ',$row[ID_BUDDY]'))
-			WHERE ID_MEMBER = $row[ID_MEMBER]
+			WHERE id_member = $row[id_member]
 			LIMIT 1");
 	}
 
@@ -274,22 +274,22 @@ $_REQUEST['start'] = 0;
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('ID_ATTACH', 'size', 'filename', 'ID_MSG', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 // Try to get a better filename!
 $oldFilename = $row['ID_MDG'] . '-' .$row['filename'];
 $row['filename'] = strpos($oldFilename, '-') !== false ? substr($oldFilename, strpos($oldFilename, '-') + 1) : $oldFilename;
 $row['size'] = filesize($GLOBALS['config']['files'] . '/' . $row['filename']);
 
-$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+$newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) <= 255 && copy($GLOBALS['config']['files'] . '/' . $oldFilename, $attachmentUploadDir . '/' . $newfilename))
 {
-	$rows[] = "$ID_ATTACH, $row[size], '" . addslashes($row['filename']) . "', $row[ID_MSG], $row[downloads]";
+	$rows[] = "$id_attach, $row[size], '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
 
-	$ID_ATTACH++;
+	$id_attach++;
 }
 ---}
-SELECT B_File AS filename, B_Number AS ID_MSG, B_FileCounter AS downloads
+SELECT B_File AS filename, B_Number AS id_msg, B_FileCounter AS downloads
 FROM {$from_prefix}Posts
 WHERE B_FILE != 'NULL';
 ---*

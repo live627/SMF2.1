@@ -366,7 +366,7 @@ function template_admin_browse()
 				</td>
 				<td class="windowbg"><a href="mailto:', $member['email'], '">', $member['email'], '</a></td>
 				<td class="windowbg2"><a href="', $scripturl, '?action=trackip;searchip=', $member['ip'], '">', $member['ip'], '</a></td>
-				<td class="windowbg">', $member['dateRegistered'], '</td>
+				<td class="windowbg">', $member['date_registered'], '</td>
 				<td class="windowbg" width="5%">
 					<input type="checkbox" value="', $member['id'], '" name="todoAction[]" class="check" />
 				</td>

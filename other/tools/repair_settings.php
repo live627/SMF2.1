@@ -254,9 +254,9 @@ function show_settings()
 
 			// Load all the themes.
 			$request = @mysql_query("
-				SELECT variable, value, ID_THEME
+				SELECT variable, value, id_theme
 				FROM $settings[db_prefix]themes
-				WHERE ID_MEMBER = 0
+				WHERE id_member = 0
 					AND variable IN ('theme_dir', 'theme_url', 'images_url', 'name')");
 			
 			$theme_settings = array();
@@ -618,7 +618,7 @@ function set_settings()
 	if (!empty($setString))
 		@mysql_query("
 			REPLACE INTO {$db_prefix}themes
-				(ID_THEME, ID_MEMBER, variable, value)
+				(id_theme, id_member, variable, value)
 			VALUES" . substr($setString, 0, -1));
 }
 

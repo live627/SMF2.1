@@ -1,6 +1,6 @@
 <?php
 /**
-* @version $Id: smf_registration.html.php,v 1.2 2006-08-22 00:33:07 orstio Exp $
+* @version $Id: smf_registration.html.php,v 1.3 2006-11-17 22:27:07 grudge Exp $
 * @package Mambo_4.5.1
 * @copyright (C) 2000 - 2004 Miro International Pty Ltd
 * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
@@ -143,7 +143,7 @@ class HTML_smf_registration
 			<td>', _REGISTER_EMAIL, ' *</td>
 			<td colspan="2"><input type="text" name="email" size="40" value="" class="inputbox" /></td>
 			<td width="30%" align="left">
-				<input type="checkbox" name="hideEmail" value="checked" class="check" />Hide email address from public?
+				<input type="checkbox" name="hide_email" value="checked" class="check" />Hide email address from public?
 			</td>
 		</tr><tr>
 			<td>', _REGISTER_PASS, ' *</td>
@@ -155,17 +155,17 @@ class HTML_smf_registration
 		if ($im == 'on')
 			echo '
 		<tr>
-			<td>ICQ #</td>
-			<td colspan="3"><input class="inputbox" type="text" name="ICQ" size="40" value="" /></td>
+			<td>icq #</td>
+			<td colspan="3"><input class="inputbox" type="text" name="icq" size="40" value="" /></td>
 		</tr><tr>
-			<td>AIM</td>
-			<td colspan="3"><input class="inputbox" type="text" name="AIM" size="40" value="" /></td>
+			<td>aim</td>
+			<td colspan="3"><input class="inputbox" type="text" name="aim" size="40" value="" /></td>
 		</tr><tr>
-			<td>YIM</td>
-			<td colspan="3"><input class="inputbox" type="text" name="YIM" size="40" value="" /></td>
+			<td>yim</td>
+			<td colspan="3"><input class="inputbox" type="text" name="yim" size="40" value="" /></td>
 		</tr><tr>
-			<td>MSN</td>
-			<td colspan="3"><input class="inputbox" type="text" name="MSN" size="40" value="" /></td>
+			<td>msn</td>
+			<td colspan="3"><input class="inputbox" type="text" name="msn" size="40" value="" /></td>
 		</tr>';
 
 		echo '

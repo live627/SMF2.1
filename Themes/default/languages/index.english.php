@@ -485,7 +485,7 @@ $txt['attach_downloaded'] = 'downloaded';
 $txt['attach_viewed'] = 'viewed';
 $txt['attach_times'] = 'times';
 
-$txt['MSN'] = 'MSN';
+$txt['msn'] = 'MSN';
 
 $txt['settings'] = 'Settings';
 $txt['never'] = 'Never';

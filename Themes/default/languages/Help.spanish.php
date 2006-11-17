@@ -342,7 +342,7 @@ $helptxt['max_pm_recipients'] = 'This option allows you to set the maximum amoun
 $helptxt['pm_posts_verification'] = 'This setting will force users to enter a code shown on a verification image each time they are sending a personal message. Only users with a post count below the number set will need to enter the code - this should help combat automated spamming scripts.';
 $helptxt['pm_posts_per_hour'] = 'This will limit the number of personal messages which may be sent by a user in a one hour period. This does not affect admins or moderators.';
 
-$helptxt['default_personalText'] = 'Establece el texto por defecto que tendr&aacute;n los usuarios, como su &quot;texto personal.&quot;';
+$helptxt['default_personal_text'] = 'Establece el texto por defecto que tendr&aacute;n los usuarios, como su &quot;texto personal.&quot;';
 
 $helptxt['modlog_enabled'] = 'Guardar logs de todas las acciones de los moderadores.';
 
@@ -393,7 +393,7 @@ $helptxt['coppaType'] = 'Si las restricciones de edad est&aacute;n activas, ento
 $helptxt['coppaPost'] = 'Los cuadros de contacto son requeridos para que las formas que otorgan el permiso a los usuarios por debajo de la edad m&iacute;nima pueda ser enviada al administador del foro. Estos detalles ser&aacute;n mostrados a todos los usuarios debajo de la edad m&iacute;nima, y son necesarios para la aprobaci&oacute;n del padre o tutor. Por lo menos se debe proveer una direcci&oacute;n postal o un n&uacute;mero de fax.';
 
 $helptxt['allow_hideOnline'] = 'Cuando esta opci&oacute;n est&aacute; seleccionada todos los usuarios podr&aacuten ocultarle a los dem&aacute;s usuarios si est&aacute;n conectados (excepto a los administradores). Si est&aacute; desactivado, solamente los usuarios que pueden moderar el foro pueden ocultar su presencia. Es importante mencionar que deshabilitando esta opci&oacute;n no cambia el estado de ning&uacute;n usuario existente - simplemente les impide ocultarse en el futuro.';
-$helptxt['allow_hideEmail'] = 'Cuando esta opci&oacute;n est&aacute; seleccionada los usuarios pueden escoger ocultar su direcci&oacute;n email de otros usuarios. Sin embargo, los administradores siempre pueden ver la direcci&oacute;n email de cualquier usuario.';
+$helptxt['allow_hide_email'] = 'Cuando esta opci&oacute;n est&aacute; seleccionada los usuarios pueden escoger ocultar su direcci&oacute;n email de otros usuarios. Sin embargo, los administradores siempre pueden ver la direcci&oacute;n email de cualquier usuario.';
 
 $helptxt['latest_support'] = 'Este panel te muestra algunos de problemas y preguntas m&aacute;s comunes de la configuraci&oacute;n de tu servidor. No te preocupes, esta informaci&oacute;n no se registra en ning&uacute;n momento.<br /><br />Si permanece como &quot;Obteniendo informaci&oacute;n de soporte...&quot;, tu computadora muy probablemente no se puede conectar a <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';
 $helptxt['latest_packages'] = 'Aqu&iacute; puedes ver algunos de los m&aacute;s populares mods, as&iacute; como algunos paquetes o mods aleatorios, con instalaciones r&aacute;pidas y sencillas.<br /><br />Si esta secci&oacute;n no se puede mostrar, probablemente tu computadora no se puede conectar a <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';

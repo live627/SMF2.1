@@ -24,7 +24,33 @@
 $GLOBALS['current_smf_version'] = '2.0 Alpha';
 
 $GLOBALS['required_php_version'] = '4.1.0';
-$GLOBALS['required_mysql_version'] = '3.23.28';
+
+// Database info.
+$databases = array(
+	'mysql' => array(
+		'name' => 'MySQL',
+		'version' => '3.23.28',
+		'version_check' => 'return min(mysql_get_server_info(), mysql_get_client_info());',
+		'supported' => function_exists('mysql_connect'),
+		'default_user' => 'mysql.default_user',
+		'default_password' => 'mysql.default_password',
+		'default_host' => 'mysql.default_host',
+		'default_port' => 'mysql.default_port',
+		'utf8_support' => true,
+		'utf8_version' => '4.1.0',
+		'utf8_version_check' => 'return mysql_get_server_info();',
+		'alter_support' => true,
+	),
+	'postgresql' => array(
+		'name' => 'PostgreSQL',
+		'version' => '8.0.1',
+		'function_check' => 'pg_connect',
+		'version_check' => '$version = pg_version(); return $version[\'client\'];',
+		'supported' => function_exists('pg_connect'),
+		'always_has_db' => true,
+		'install_sql_query_adapt' => 'postg_query_adapt',
+	),
+);
 
 // Initialize everything and load the language files.
 initialize_inputs();
@@ -283,7 +309,7 @@ function load_lang_file()
 // Step zero: Finding out how and where to install.
 function doStep0()
 {
-	global $txt;
+	global $txt, $databases;
 
 	// Just so people using older versions of PHP aren't left in the cold.
 	if (!isset($_SERVER['PHP_SELF']))
@@ -322,9 +348,19 @@ function doStep0()
 		return false;
 	}
 
-	// Is MySQL even compiled in?
-	if (!function_exists('mysql_connect'))
-		$error = 'error_mysql_missing';
+	// Is some database support even compiled in?
+	$foundDBCount = 0;
+	foreach ($databases as $key => $db)
+	{
+		if ($db['supported'])
+		{
+			$db_type = $key;
+			$foundDBCount++;
+		}
+	}
+
+	if (empty($foundDBCount))
+		$error = 'error_db_missing';
 	// How about session support?  Some crazy sysadmin remove it?
 	elseif (!function_exists('session_start'))
 		$error = 'error_session_missing';
@@ -368,10 +404,37 @@ function doStep0()
 
 
 	// Set up the defaults.
-	$db_server = @ini_get('mysql.default_host') or $db_server = 'localhost';
-	$db_user = isset($_POST['ftp_username']) ? $_POST['ftp_username'] : @ini_get('mysql.default_user');
-	$db_name = isset($_POST['ftp_username']) ? $_POST['ftp_username'] : @ini_get('mysql.default_user');
-	$db_passwd = @ini_get('mysql.default_password');
+	$db_server = 'localhost';
+	$db_user = '';
+	$db_name = '';
+	$db_passwd = '';
+	foreach ($databases as $db)
+	{
+		// Override with the defaults for this DB if appropriate.
+		if ($db['supported'])
+		{
+			if (isset($db['default_host']))
+				$db_server = @ini_get($db['default_host']) or $db_server = 'localhost';
+			if (isset($db['default_user']))
+			{
+				$db_user = @ini_get($db['default_user']);
+				$db_name = @ini_get($db['default_user']);
+			}
+			if (isset($db['default_password']))
+				$db_passwd = @ini_get($db['default_password']);
+			if (isset($db['default_port']))
+				$db_port = @ini_get($db['default_port']);
+
+			break;
+		}
+	}
+
+	// Override for repost.
+	if (isset($_POST['ftp_username']))
+	{
+		$db_user = $_POST['ftp_username'];
+		$db_name = $_POST['ftp_username'];
+	}
 
 	// This is just because it makes it easier for people on Lycos/Tripod UK :P.
 	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'members.lycos.co.uk' && defined('LOGIN'))
@@ -381,7 +444,6 @@ function doStep0()
 	}
 
 	// Should we use a non standard port?
-	$db_port = @ini_get('mysql.default_port');
 	if (!empty($db_port))
 		$db_server .= ':' . $db_port;
 
@@ -446,39 +508,67 @@ function doStep0()
 							</tr>
 						</table>
 
-						<h2>', $txt['mysql_settings'], '</h2>
-						<h3>', $txt['mysql_settings_info'], '</h3>
+						<h2>', $txt['db_settings'], '</h2>
+						<h3>', $txt['db_settings_info'], '</h3>
 
-						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">
+						<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 2ex;">';
+
+	// More than one database type?
+	if ($foundDBCount > 1)
+	{
+		echo '
 							<tr>
-								<td width="20%" valign="top" class="textbox"><label for="db_server_input">', $txt['mysql_settings_server'], ':</label></td>
+								<td width="20%" valign="top" class="textbox"><label for="db_type_input">', $txt['db_settings_type'], ':</label></td>
+								<td>
+									<select name="db_type" id="db_type_input">';
+
+	foreach ($databases as $key => $db)
+		if ($db['supported'])
+			echo '
+										<option value="', $key, '">', $db['name'], '</option>';
+
+	echo '
+									</select><br />
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_type_info'], '</div>
+								</td>
+							</tr>';
+	}
+	else
+	{
+		echo '
+							<input type="hidden" name="db_type" value="', $db_type, '" />';
+	}
+
+	echo '
+							<tr>
+								<td width="20%" valign="top" class="textbox"><label for="db_server_input">', $txt['db_settings_server'], ':</label></td>
 								<td>
 									<input type="text" name="db_server" id="db_server_input" value="', $db_server, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['mysql_settings_server_info'], '</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_server_info'], '</div>
 								</td>
 							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_user_input">', $txt['mysql_settings_username'], ':</label></td>
+								<td valign="top" class="textbox"><label for="db_user_input">', $txt['db_settings_username'], ':</label></td>
 								<td>
 									<input type="text" name="db_user" id="db_user_input" value="', $db_user, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['mysql_settings_username_info'], '</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_username_info'], '</div>
 								</td>
 							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_passwd_input">', $txt['mysql_settings_password'], ':</label></td>
+								<td valign="top" class="textbox"><label for="db_passwd_input">', $txt['db_settings_password'], ':</label></td>
 								<td>
 									<input type="password" name="db_passwd" id="db_passwd_input" value="', $db_passwd, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['mysql_settings_password_info'], '</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_password_info'], '</div>
 								</td>
 							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_name_input">', $txt['mysql_settings_database'], ':</label></td>
+								<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database'], ':</label></td>
 								<td>
 									<input type="text" name="db_name" id="db_name_input" value="', empty($db_name) ? 'smf' : $db_name, '" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['mysql_settings_database_info'], '</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_info'], '</div>
 								</td>
 							</tr><tr>
-								<td valign="top" class="textbox"><label for="db_prefix_input">', $txt['mysql_settings_prefix'], ':</label></td>
+								<td valign="top" class="textbox"><label for="db_prefix_input">', $txt['db_settings_prefix'], ':</label></td>
 								<td>
 									<input type="text" name="db_prefix" id="db_prefix_input" value="smf_" size="30" /><br />
-									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['mysql_settings_prefix_info'], '</div>
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_prefix_info'], '</div>
 								</td>
 							</tr>
 						</table>
@@ -493,7 +583,7 @@ function doStep0()
 // Step one: Do the SQL thang.
 function doStep1()
 {
-	global $txt, $db_connection;
+	global $txt, $db_connection, $smfFunc, $databases, $modSettings;
 
 	if (substr($_POST['boardurl'], -10) == '/index.php')
 		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -10);
@@ -508,6 +598,7 @@ function doStep1()
 		'boarddir' => addslashes(dirname(__FILE__)),
 		'sourcedir' => addslashes(dirname(__FILE__)) . '/Sources',
 		'cachedir' => addslashes(dirname(__FILE__)) . '/cache',
+		'db_type' => preg_replace('~[^A-Za-z0-9]~', '', $_POST['db_type']),
 		'db_name' => $_POST['db_name'],
 		'db_user' => $_POST['db_user'],
 		'db_passwd' => isset($_POST['db_passwd']) ? $_POST['db_passwd'] : '',
@@ -536,16 +627,36 @@ function doStep1()
 	// Make sure it works.
 	require(dirname(__FILE__) . '/Settings.php');
 
+	// Better find the database file!
+	if (!file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php'))
+	{
+		echo '
+				<div class="error_message">
+					<div style="color: red;">', sprintf($txt['error_db_file'], 'Subs-Db-' . $db_type . '.php'), '</div>
+
+					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+				</div>';
+		return false;
+	}
+
+	// Now include it for database functions!
+	define('SMF', 1);
+	$modSettings['disableQueryCheck'] = true;
+	if (empty($smfFunc))
+		$smfFunc = array();
+	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
+
 	// Attempt a connection.
-	$db_connection = @mysql_connect($db_server, $db_user, $db_passwd);
+	$needsDB = !empty($databases[$db_type]['always_has_db']);
+	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
 
 	// No dice?  Let's try adding the prefix they specified, just in case they misread the instructions ;).
-	if (!$db_connection)
+	if ($db_connection == null)
 	{
-		$mysql_error = mysql_error();
+		$db_error = $smfFunc['db_error']();
 
-		$db_connection = @mysql_connect($db_server, $_POST['db_prefix'] . $db_user, $db_passwd);
-		if ($db_connection != false)
+		$db_connection = smf_db_initiate($db_server, $db_name, $_POST['db_prefix'] . $db_user, $db_passwd, $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
+		if ($db_connection != null)
 		{
 			$db_user = $_POST['db_prefix'] . $db_user;
 			updateSettingsFile(array('db_user' => $db_user));
@@ -557,9 +668,9 @@ function doStep1()
 	{
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', $txt['error_mysql_connect'], '</div>
+					<div style="color: red;">', $txt['error_db_connect'], '</div>
 
-					<div style="margin: 2.5ex; font-family: monospace;"><b>', $mysql_error, '</b></div>
+					<div style="margin: 2.5ex; font-family: monospace;"><b>', $db_error, '</b></div>
 
 					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 				</div>';
@@ -568,11 +679,11 @@ function doStep1()
 
 	// Do they meet the install requirements?
 	// !!! Old client, new server?
-	if (version_compare($GLOBALS['required_mysql_version'], preg_replace('~\-.+?$~', '', min(mysql_get_server_info(), mysql_get_client_info()))) > 0)
+	if (version_compare($databases[$db_type]['version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['version_check']))) > 0)
 	{
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', $txt['error_mysql_too_low'], '</div>
+					<div style="color: red;">', $txt['error_db_too_low'], '</div>
 					<br />
 					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 				</div>';
@@ -580,47 +691,49 @@ function doStep1()
 		return false;
 	}
 
-	// Let's try that database on for size...
-	if ($db_name != '')
-		mysql_query("
-			CREATE DATABASE IF NOT EXISTS `$db_name`", $db_connection);
-
-	// Okay, let's try the prefix if it didn't work...
-	if (!mysql_select_db($db_name, $db_connection) && $db_name != '')
+	// Let's try that database on for size... assuming we haven't already lost the opportunity.
+	if ($db_name != '' && !$needsDB)
 	{
-		mysql_query("
-			CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`", $db_connection);
+		$smfFunc['db_query']('', "
+			CREATE DATABASE IF NOT EXISTS `$db_name`", false, false, $db_connection);
 
-		if (mysql_select_db($_POST['db_prefix'] . $db_name, $db_connection))
+		// Okay, let's try the prefix if it didn't work...
+		if (!$smfFunc['db_select_db']($db_name, $db_connection) && $db_name != '')
 		{
-			$db_name = $_POST['db_prefix'] . $db_name;
-			updateSettingsFile(array('db_name' => $db_name));
+			$smfFunc['db_query']('', "
+				CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`", false, false, $db_connection);
+	
+			if ($smfFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
+			{
+				$db_name = $_POST['db_prefix'] . $db_name;
+				updateSettingsFile(array('db_name' => $db_name));
+			}
+		}
+
+		// Okay, now let's try to connect...
+		if (!$smfFunc['db_select_db']($db_name, $db_connection))
+		{
+			echo '
+					<div class="error_message">
+						<div style="color: red;">', sprintf($txt['error_db_database'], $db_name), '</div>
+						<br />
+						<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
+					</div>';
+	
+			return false;
 		}
 	}
 
-	// Okay, now let's try to connect...
-	if (!mysql_select_db($db_name, $db_connection))
-	{
-		echo '
-				<div class="error_message">
-					<div style="color: red;">', sprintf($txt['error_mysql_database'], $db_name), '</div>
-					<br />
-					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
-				</div>';
-
-		return false;
-	}
-
 	// Before running any of the queries, let's make sure another version isn't already installed.
-	$result = mysql_query("
+	$result = $smfFunc['db_query']('', "
 		SELECT value
 		FROM {$db_prefix}settings
 		WHERE variable = 'smfVersion'
-		LIMIT 1");
+		LIMIT 1", false, false);
 	if ($result !== false)
 	{
-		list ($database_version) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($database_version) = $smfFunc['db_fetch_row']($result);
+		$smfFunc['db_free_result']($result);
 
 		// Do they match?  If so, this is just a refresh so charge on!
 		if ($database_version != $GLOBALS['current_smf_version'])
@@ -637,13 +750,13 @@ function doStep1()
 	}
 
 	// UTF-8 requires a setting to override the language charset.
-	if (isset($_POST['utf8']))
+	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
 	{
-		if (version_compare('4.1.0', preg_replace('~\-.+?$~', '', mysql_get_server_info())) > 0)
+		if (version_compare($databases[$db_type]['utf8_version'], preg_replace('~\-.+?$~', '', eval($databases[$db_type]['utf8_version_check']))) > 0)
 		{
 			echo '
 					<div class="error_message">
-						<div style="color: red;">', $txt['error_utf8_mysql_version'], '</div>
+						<div style="color: red;">', sprintf($txt['error_utf8_version'], $databases[$db_type]['utf8_version']), '</div>
 						<br />
 						<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 					</div>';
@@ -653,8 +766,8 @@ function doStep1()
 		else
 		{
 			updateSettingsFile(array('db_character_set' => 'utf8'));
-			mysql_query("
-				SET NAMES utf8");
+			$smfFunc['db_query']('', "
+				SET NAMES utf8", false, false);
 		}
 	}
 
@@ -674,7 +787,8 @@ function doStep1()
 	$replaces['{$default_reserved_names}'] = strtr($replaces['{$default_reserved_names}'], array('\\\\n' => '\\n'));
 
 	// If the UTF-8 setting was enabled, add it to the table definitions.
-	if (isset($_POST['utf8']))
+	//!!! Very MySQL specific still
+	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
 		$replaces[') TYPE=MyISAM;'] = ') TYPE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;';
 
 	// Read in the SQL.  Turn this on and that off... internationalize... etc.
@@ -684,11 +798,17 @@ function doStep1()
 	$current_statement = '';
 	$failures = array();
 	$exists = array();
+	$curTypes = array();
+	$queryFunc = !empty($databases[$db_type]['install_sql_query_adapt']) ? $databases[$db_type]['install_sql_query_adapt'] : $smfFunc['db_query'];
 	foreach ($sql_lines as $count => $line)
 	{
 		// No comments allowed!
 		if (substr(trim($line), 0, 1) != '#')
 			$current_statement .= "\n" . rtrim($line);
+		elseif (substr(trim($line), 0, 3) == '# @')
+			$curTypes = explode(',', substr(trim($line), 3));
+		elseif (!empty($curTypes))
+			$curTypes = array();
 
 		// Is this the end of the query string?
 		if (empty($current_statement) || (preg_match('~;[\s]*$~s', $line) == 0 && $count != count($sql_lines)))
@@ -701,24 +821,25 @@ function doStep1()
 			continue;
 		}
 
-		if (mysql_query($current_statement) === false)
+		if ((empty($curTypes) || in_array($db_type, $curTypes)) && $queryFunc('', $current_statement, false, false, $db_connection) === false)
 		{
 			// Error 1050: Table already exists!
-			if (mysql_errno($db_connection) === 1050 && preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) == 1)
+			//!!! Needs to be made better!
+			if (($db_type != 'mysql' || mysql_errno($db_connection) === 1050) && preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) == 1)
 				$exists[] = $match[1];
 			else
-				$failures[$count] = mysql_error();
+				$failures[$count] = $smfFunc['db_error']();
 		}
 
 		$current_statement = '';
 	}
 
 	// Make sure UTF will be used globally.
-	if (isset($_POST['utf8']))
-		mysql_query("
+	if (isset($_POST['utf8']) && !empty($databases[$db_type]['utf8_support']))
+		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}settings
 				(variable, value)
-			VALUES ('global_character_set', 'UTF-8')");
+			VALUES ('global_character_set', 'UTF-8')", false, false);
 
 	// Maybe we can auto-detect better cookie settings?
 	preg_match('~^http[s]?://([^\.]+?)([^/]*?)(/.*)?$~', $_POST['boardurl'], $matches);
@@ -737,16 +858,19 @@ function doStep1()
 
 		$rows = array();
 		if ($globalCookies)
-			$rows[] = "('globalCookies', '1')";
+			$rows[] = array('\'globalCookies\'', 1);
 		if ($localCookies)
-			$rows[] = "('localCookies', '1')";
+			$rows[] = array('\'localCookies\'', 1);
 
 		if (!empty($rows))
-			mysql_query("
-				INSERT INTO {$db_prefix}settings
-					(variable, value)
-				VALUES " . implode(',
-					', $rows));
+		{
+			$smfFunc['db_insert']('replace',
+				"{$db_prefix}settings",
+				array('variable', 'value'),
+				$rows,
+				array('variable')
+			);
+		}
 	}
 
 	// Are we allowing stat collection?
@@ -771,11 +895,11 @@ function doStep1()
 			preg_match('~SITE-ID:\s(\w{10})~', $return_data, $ID);
 
 			if (!empty($ID[1]))
-				mysql_query("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}settings
 						(variable, value)
 					VALUES
-						('allow_sm_stats', '$ID[1]')");
+						('allow_sm_stats', '$ID[1]')", false, false);
 		}
 	}
 
@@ -785,35 +909,38 @@ function doStep1()
 		$server_offset = mktime(0, 0, 0, 1, 1, 1970);
 		$timezone_id = 'Etc/GMT' . ($server_offset > 0 ? '+' : '') . ($server_offset / 3600);
 		if (date_default_timezone_set($timezone_id))
-			mysql_query("
-				REPLACE INTO {$db_prefix}settings
+			$smfFunc['db_query']('', "
+				INSERT INTO {$db_prefix}settings
 					(variable, value)
 				VALUES
-					('default_timezone', '$timezone_id')");
+					('default_timezone', '$timezone_id')", false, false);
 	}
 
 	// Let's optimize those new tables.
-	$tables = mysql_list_tables($db_name);
-	$table_names = array();
-	while ($table = mysql_fetch_row($tables))
-		$table_names[] = $table[0];
-	mysql_free_result($tables);
+	$tables = $smfFunc['db_list_tables']($db_name);
+	while ($table = $smfFunc['db_fetch_row']($tables))
+	{
+		$smfFunc['db_query']('optimize_tables', "
+			OPTIMIZE TABLE `$table[0]`", false, false) or $db_messed = true;
 
-	mysql_query('
-		OPTIMIZE TABLE `' . implode('`, `', $table_names) . '`') or $db_messed = true;
-	if (!empty($db_messed))
-		$failures[-1] = mysql_error($db_connection);
+		if (!empty($db_messed))
+		{
+			$failures[-1] = $smfFunc['db_error']($db_connection);
+			break;
+		}
+	}
+	$smfFunc['db_free_result']($tables);
 
 	if (!empty($failures))
 	{
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', $txt['error_mysql_queries'], '</div>
+					<div style="color: red;">', $txt['error_db_queries'], '</div>
 					<div style="margin: 2.5ex;">';
 
 		foreach ($failures as $line => $fail)
 			echo '
-						<b>', $txt['error_mysql_queries_line'], $line + 1, ':</b> ', nl2br(htmlspecialchars($fail)), '<br />';
+						<b>', $txt['error_db_queries_line'], $line + 1, ':</b> ', nl2br(htmlspecialchars($fail)), '<br />';
 
 		echo '
 					</div>
@@ -824,11 +951,11 @@ function doStep1()
 	}
 
 	// Check for the ALTER privilege.
-	if (mysql_query("ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD") === false)
+	if (!empty($databases[$db_type]['alter_support']) && $smfFunc['db_query']('', "ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD", false, false) === false)
 	{
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', $txt['error_mysql_alter_priv'], '</div>
+					<div style="color: red;">', $txt['error_db_alter_priv'], '</div>
 					<br />
 					<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 				</div>';
@@ -909,29 +1036,34 @@ function doStep2()
 {
 	global $txt, $db_prefix, $db_connection, $HTTP_SESSION_VARS, $cookiename;
 	global $smfFunc, $db_character_set, $mbname, $context, $scripturl, $boardurl;
-	global $current_smf_version;
+	global $current_smf_version, $databases;
 
 	// Load the SQL server login information.
 	require_once(dirname(__FILE__) . '/Settings.php');
+	define('SMF', 1);
+	if (empty($smfFunc))
+		$smfFunc = array();
+	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
 
 	if (!isset($_POST['password3']))
 		return doStep2a();
 
-	$db_connection = @mysql_connect($db_server, $db_user, $_POST['password3']);
+	$needsDB = !empty($databases[$db_type]['always_has_db']);
+	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $_POST['password3'], $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
 	if (!$db_connection)
 	{
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', $txt['error_mysql_connect'], '</div>
+					<div style="color: red;">', $txt['error_db_connect'], '</div>
 				</div>';
 
 		return doStep2a();
 	}
-	if (!mysql_select_db($db_name, $db_connection))
+	if (!$needsDB && !$smfFunc['db_select_db']($db_name, $db_connection))
 	{
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', sprintf($txt['error_mysql_database'], $db_name), '</div>
+					<div style="color: red;">', sprintf($txt['error_db_database'], $db_name), '</div>
 				</div>
 				<br />';
 
@@ -965,32 +1097,28 @@ function doStep2()
 
 	chdir(dirname(__FILE__));
 
-	define('SMF', 1);
 	require_once($sourcedir . '/Subs.php');
 	require_once($sourcedir . '/Load.php');
 	require_once($sourcedir . '/Security.php');
 	require_once($sourcedir . '/Subs-Auth.php');
-
-/*	$smfFunc = array();
-	$db_connection = loadDatabase();*/
 
 	// Define the sha1 function, if it doesn't exist.
 	if (!function_exists('sha1'))
 		require_once($sourcedir . '/Subs-Compat.php');
 
 	if (isset($db_character_set))
-		mysql_query("
-			SET NAMES $db_character_set");
+		$smfFunc['db_query']('', "
+			SET NAMES $db_character_set", false, false);
 
-	$result = mysql_query("
-		SELECT ID_MEMBER, passwordSalt
+	$result = $smfFunc['db_query']('', "
+		SELECT id_member, password_salt
 		FROM {$db_prefix}members
-		WHERE memberName = '$_POST[username]' OR emailAddress = '$_POST[email]'
-		LIMIT 1");
-	if (mysql_num_rows($result) != 0)
+		WHERE member_name = '$_POST[username]' OR email_address = '$_POST[email]'
+		LIMIT 1", false, false);
+	if ($smfFunc['db_num_rows']($result) != 0)
 	{
-		list ($id, $salt) = mysql_fetch_row($result);
-		mysql_free_result($result);
+		list ($id, $salt) = $smfFunc['db_fetch_row']($result);
+		$smfFunc['db_free_result']($result);
 
 		echo '
 				<div class="error_message">
@@ -1054,10 +1182,10 @@ function doStep2()
 		// Format the username properly.
 		$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
 
-		$request = mysql_query("
+		$request = $smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}members
-				(memberName, realName, passwd, emailAddress, ID_GROUP, posts, dateRegistered, hideEmail, passwordSalt, lngfile, personalText, avatar, memberIP, buddy_list, pm_ignore_list, messageLabels, websiteTitle, websiteUrl, location, ICQ, MSN, signature, usertitle, secretQuestion, additionalGroups, ignoreBoards)
-			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '" . (isset($_SERVER['REMOTE_ADDR']) ? addslashes(substr(stripslashes($_SERVER['REMOTE_ADDR']), 0, 255)) : '') . "', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(member_name, real_name, passwd, email_address, id_group, posts, date_registered, hide_email, password_salt, lngfile, personal_text, avatar, member_ip, buddy_list, pm_ignore_list, message_labels, website_title, website_url, location, icq, msn, signature, usertitle, secret_question, additional_groups, ignore_boards)
+			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '" . (isset($_SERVER['REMOTE_ADDR']) ? addslashes(substr(stripslashes($_SERVER['REMOTE_ADDR']), 0, 255)) : '') . "', '', '', '', '', '', '', '', '', '', '', '', '', '')", false, false);
 
 		// Awww, crud!
 		if ($request === false)
@@ -1066,7 +1194,7 @@ function doStep2()
 				<div class="error_message">
 					<div style="color: red;">', $txt['error_user_settings_query'], '</div>
 
-					<div style="margin: 2ex;">', nl2br(htmlspecialchars(mysql_error($db_connection))), '</div>
+					<div style="margin: 2ex;">', nl2br(htmlspecialchars($smfFunc['db_error']($db_connection))), '</div>
 
 					<a href="', $_SERVER['PHP_SELF'], '?step=2">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 				</div>';
@@ -1074,20 +1202,20 @@ function doStep2()
 			return false;
 		}
 
-		$id = mysql_insert_id();
+		$id = db_insert_id("{$db_prefix}members", 'ID_MEMBER');
 	}
 
 	// Automatically log them in ;).
 	if (isset($id) && isset($salt))
 		setLoginCookie(3153600 * 60, $id, sha1(sha1(strtolower($_POST['username']) . $_POST['password1']) . $salt));
 
-	$result = mysql_query("
+	$result = $smfFunc['db_query']('', "
 		SELECT value
 		FROM {$db_prefix}settings
-		WHERE variable = 'databaseSession_enable'");
-	if (mysql_num_rows($result) != 0)
-		list ($db_sessions) = mysql_fetch_row($result);
-	mysql_free_result($result);
+		WHERE variable = 'databaseSession_enable'", false, false);
+	if ($smfFunc['db_num_rows']($result) != 0)
+		list ($db_sessions) = $smfFunc['db_fetch_row']($result);
+	$smfFunc['db_free_result']($result);
 
 	if (empty($db_sessions))
 	{
@@ -1099,11 +1227,11 @@ function doStep2()
 	{
 		$_SERVER['HTTP_USER_AGENT'] = addslashes(substr($_SERVER['HTTP_USER_AGENT'], 0, 211));
 
-		mysql_query("
+		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}sessions
 				(session_id, last_update, data)
 			VALUES ('" . session_id() . "', " . time() . ",
-				'USER_AGENT|s:" . strlen(stripslashes($_SERVER['HTTP_USER_AGENT'])) . ":\"$_SERVER[HTTP_USER_AGENT]\";admin_time|i:" . time() . ";')");
+				'USER_AGENT|s:" . strlen(stripslashes($_SERVER['HTTP_USER_AGENT'])) . ":\"$_SERVER[HTTP_USER_AGENT]\";admin_time|i:" . time() . ";')", false, false);
 	}
 	updateStats('member');
 	updateStats('message');
@@ -1113,15 +1241,15 @@ function doStep2()
 	$smfFunc['strtolower'] = $db_character_set === 'utf8' || $txt['lang_character_set'] === 'UTF-8' ? create_function('$string', '
 		return $string;') : 'strtolower';
 
-	$request = mysql_query("
-		SELECT ID_MSG
+	$request = $smfFunc['db_query']('', "
+		SELECT id_msg
 		FROM {$db_prefix}messages
-		WHERE ID_MSG = 1
-			AND modifiedTime = 0
-		LIMIT 1");
-	if (mysql_num_rows($request) > 0)
+		WHERE id_msg = 1
+			AND modified_time = 0
+		LIMIT 1", false, false);
+	if ($smfFunc['db_num_rows']($request) > 0)
 		updateStats('subject', 1, addslashes(htmlspecialchars($txt['default_topic_subject'])));
-	mysql_free_result($request);
+	$smfFunc['db_free_result']($request);
 
 	echo '
 				<div class="panel">
@@ -1847,6 +1975,143 @@ function fixModSecurity()
 	}
 	else
 		return false;
+}
+
+function postg_query_adapt($id, $query, $file, $line, $connection = false)
+{
+  	global $db_connection, $smfFunc;
+
+	$prequeries = array();
+	$postqueries = array();
+	if ($connection == false)
+		$connection = $db_connection;
+
+	// We need to clean up the query - is it a table creation?
+	if (preg_match('~^\s*CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)*["\'`]*(.+?)["\'`]*[\s\{]~i', $query, $matches) && isset($matches[2]))
+	{
+		$table_name = $matches[2];
+	  	// First replace all the out of date types.
+	  	$types = array(
+	  		'~\s(tinyint|smallint)\s*\(\d\)~i' => ' smallint',
+	  		'~\s(mediumint|int)\s*\(\d+\)~i' => ' int',
+	  		'~\sunsigned~i' => '',
+	  		'~\stinytext~i' => ' varchar(255)',
+	  		'~type=[A-Za-z]+;~i' => ';',
+	  	);
+
+	  	$query = preg_replace(array_keys($types), array_values($types), $query);
+
+		// Now go through each line changing it as needed.
+		$query = explode("\n", $query);
+		foreach ($query as $k => $line)
+		{
+			// Can't actually use "if not exists"
+			if (preg_match('~^\s*create\stable~i', $line))
+			{
+				$line = strtr($line, array('IF NOT EXISTS' => ''));
+			}			
+			// Got an auto incrementing column?
+			if (strpos($line, 'auto_increment') !== false)
+			{
+				// Need to create a sequence...
+				$line = strtr($line, array('unsigned' => '', 'not' => '', 'null' => '', 'auto_increment' => '', ',' => ''));
+				$line .= 'default nextval(\'' . $table_name . '_seq\'),';
+				$prequeries[] = 'create sequence ' . $table_name . '_seq;';
+			}
+			// What's that - it's a key?
+			if (preg_match('~^\s*(key|unique)\s+(.+?)([\s\(]+)([\w\s,]+)[\)\(]~i', $line, $matches) && isset($matches[4]))
+			{
+				$postqueries[] = 'create ' . ($matches[1] == 'unique' ? 'unique' : '') . ' index ' . $table_name . '_' . $matches[2] . ' on ' . $table_name . ' (' . $matches[4] . ');';
+				$line = '';
+   			}
+   			// Primary key can't do partial index...
+   			if (preg_match('~^\s*primary\skey~i', $line))
+			{
+				$line = preg_replace('~\(\d+\)~i', '', $line);
+   			}
+			$query[$k] = $line;
+  		}
+  		// Put the query back together.
+  		$query = implode("\n", $query);
+
+		// Fix any lonely commas at the end due to index removal.
+		$lastComma = strrpos($query, ',');
+		// If there's no characters this must be dodgy.
+		if (preg_match('~\w~', substr($query, $lastComma)) == false)
+			$query = substr($query, 0, $lastComma) . substr($query, $lastComma + 1);
+ 	}
+ 	elseif (preg_match('~^DROP\s+TABLE\s+["\'`]*(.+?)["\'`]*[\s\{]~', $query, $matches) && isset($matches[1]))
+	{
+		$table_name = $matches[1];
+		$prequeries[] = 'drop sequence ' . $matches[2] . '_seq;';
+	}
+	// Alter?
+	elseif (preg_match('~^ALTER\s+TABLE\s+["\'`]*(.+?)["\'`]*[\s\{]~', $query, $matches) && isset($matches[1]))
+	{
+		$table_name = $matches[1];
+		// Cannot order by on postgreSQL - return a dummy!
+		if (preg_match('~order\sby\s\w+~i', $query))
+			return true;
+	}
+	// Postgre vacuums!
+	elseif (preg_match('~^\s*OPTIMIZE\sTABLE~i', $query))
+	{
+		$query = preg_replace('~^\s*OPTIMIZE\sTABLE~i', 'VACUUM', $query);
+		$query = strtr($query, array('`' => ''));
+	}
+	// Inserts etc - need to check not multiple ones!
+	elseif (preg_match('~^\s*INSERT\s+INTO\s+["\'`]*(.+?)["\'`]*[\s\{]~i', $query, $matches) && isset($matches[1]))
+	{
+		$table_name = $matches[1];
+		$insert_start = substr($query, 0, strpos($query, 'VALUES'));
+		$data = substr($query, strpos($query, 'VALUES') + 6);
+		$inserts = array();
+		$inString = false;
+		$inBrackets = 0;
+		$lastOffset = 0;
+		$lastCharacter = '';
+		for ($i = 0; $i < strlen($data); $i++)
+		{
+			// Found the end of a bit!
+			if (!$inString && $data{$i} == ')' && $inBrackets == 1)
+			{
+				$inserts[] = substr($data, $lastOffset, ($i - $lastOffset) + 1);
+				$lastOffset = $i + 2;
+				$inBrackets = 0;
+			}
+			elseif ($data{$i} == "'" && $lastCharacter != '\\')
+			{
+				$inString = !$inString;
+			}
+			elseif (!$inString && $data{$i} == '(')
+				$inBrackets++;
+			elseif (!$inString && $data{$i} == ')')
+				$inBrackets--;
+			$lastCharacter = $data{$i};
+		}
+
+		// Start fresh.
+		$query = '';
+		foreach ($inserts as $in)
+		{
+			$query .= $insert_start . ' VALUES ' . $in . ';';
+		}
+	}
+
+	// Do any starting stuff.
+	foreach ($prequeries as $prequery)
+	{
+		$smfFunc['db_query']('', $prequery, false, false, $connection);
+	}
+
+	$request = $smfFunc['db_query']('', $query, false, false, $connection);
+
+	foreach ($postqueries as $postquery)
+	{
+		$smfFunc['db_query']('', $postquery, false, false, $connection);
+	}
+
+	return $request;
 }
 
 ?>

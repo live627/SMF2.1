@@ -133,10 +133,10 @@ function sendNewPass($option)
 
 		// Check if the email address  and/or username is in use.
 		$request = mysql_query("
-			SELECT ID_MEMBER
+			SELECT id_member
 			FROM {$db_prefix}members
-			WHERE emailAddress = '$confirmEmail'
-				AND memberName = '$checkusername'
+			WHERE email_address = '$confirmEmail'
+				AND member_name = '$checkusername'
 			LIMIT 1");
 		if (mysql_num_rows($request) != 0 && !$userid)
 		{
@@ -228,8 +228,8 @@ function sendNewPass($option)
 	mysql_query("
 		UPDATE {$db_prefix}members 
 		SET passwd = '$smf_newpass' 
-		WHERE memberName = '$checkusername' 
-			AND emailAddress = '$confirmEmail'");
+		WHERE member_name = '$checkusername' 
+			AND email_address = '$confirmEmail'");
 
 	mysql_select_db($mosConfig_db);
 	mosRedirect('index.php?mosmsg=' . _NEWPASS_SENT);
@@ -324,31 +324,31 @@ function saveRegistration($option)
 
 	mysql_select_db($db_name);
 	$possible_strings = array(
-		'websiteUrl', 'websiteTitle',
-		'AIM', 'YIM',
+		'website_url', 'website_title',
+		'aim', 'yim',
 		'location', 'birthdate',
-		'timeFormat',
+		'time_format',
 		'buddy_list',
 		'pm_ignore_list',
-		'smileySet',
-		'signature', 'personalText', 'avatar',
+		'smiley_set',
+		'signature', 'personal_text', 'avatar',
 		'lngfile',
-		'secretQuestion', 'secretAnswer',
-		'realName'
+		'secret_question', 'secret_answer',
+		'real_name'
 	);
 	$possible_ints = array(
 		'pm_email_notify',
-		'notifyTypes',
-		'ICQ',
+		'notify_types',
+		'icq',
 		'gender',
-		'ID_THEME',
+		'id_theme',
 	);
 	$possible_floats = array(
-		'timeOffset',
+		'time_offset',
 	);
 	$possible_bools = array(
-		'notifyAnnouncements', 'notifyOnce', 'notifySendBody',
-		'hideEmail', 'showOnline',
+		'notify_announcements', 'notifyOnce', 'notify_send_body',
+		'hide_email', 'show_online',
 	);
 	
 	// Needed for isReservedName() and registerMember().
@@ -370,7 +370,7 @@ function saveRegistration($option)
 		'theme_vars' => array(),
 	);
 		
-	$_POST['realName'] = $use_realname=='true' ? $_POST['name'] : $_POST['username'];
+	$_POST['real_name'] = $use_realname=='true' ? $_POST['name'] : $_POST['username'];
 	
 	// Include the additional options that might have been filled in.
 	foreach ($possible_strings as $var)
@@ -391,7 +391,7 @@ function saveRegistration($option)
 		$_POST['options'] = isset($_POST['options']) ? $_POST['options'] + $_POST['default_options'] : $_POST['default_options'];
 	$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
-	if(isReservedName($_POST['realName']))
+	if(isReservedName($_POST['real_name']))
 		$regOptions['password'] = 'chocolate cake';
 
 	//Make sure that Mambo/Joomla handles admin notification here
@@ -513,7 +513,7 @@ function activate($option)
 			SET 
 				is_activated = '1',
 				validation_code = '' 
-			WHERE memberName = '$result[1]'
+			WHERE member_name = '$result[1]'
 			LIMIT 1");
 		mysql_select_db($mosConfig_db);
 

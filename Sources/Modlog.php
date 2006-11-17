@@ -58,14 +58,14 @@ function ViewModlog()
 
 	// Handle deletion...
 	if (isset($_POST['removeall']) && $context['can_delete'])
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_actions
 			WHERE logtime < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
 	elseif (!empty($_POST['remove']) && isset($_POST['delete']) && $context['can_delete'])
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_actions
 			WHERE ID_ACTION IN ('" . implode("', '", array_unique($_POST['delete'])) . "')
-				AND logTime < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
+				AND log_time < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
 
 	// Pass order and direction variables to template so they can be used after a remove command.
 	$context['dir'] = isset($_REQUEST['d']) ? ';d' : '';
@@ -74,9 +74,9 @@ function ViewModlog()
 	// Do the column stuff!
 	$context['columns'] = array(
 		'action' => array('sql' => 'lm.action', 'label' => $txt['modlog_action']),
-		'time' => array('sql' => 'lm.logTime', 'label' => $txt['modlog_date']),
-		'member' => array('sql' => 'mem.realName', 'label' => $txt['modlog_member']),
-		'group' => array('sql' => 'mg.groupName', 'label' => $txt['modlog_position']),
+		'time' => array('sql' => 'lm.log_time', 'label' => $txt['modlog_date']),
+		'member' => array('sql' => 'mem.real_name', 'label' => $txt['modlog_member']),
+		'group' => array('sql' => 'mg.group_name', 'label' => $txt['modlog_position']),
 		'ip' => array('sql' => 'lm.ip', 'label' => $txt['modlog_ip'])
 	);
 
@@ -101,15 +101,15 @@ function ViewModlog()
 		// This array houses all the valid search types.
 		$searchTypes = array(
 			'action' => array('sql' => 'lm.action', 'label' => $txt['modlog_action']),
-			'member' => array('sql' => 'mem.realName', 'label' => $txt['modlog_member']),
-			'group' => array('sql' => 'mg.groupName', 'label' => $txt['modlog_position']),
+			'member' => array('sql' => 'mem.real_name', 'label' => $txt['modlog_member']),
+			'group' => array('sql' => 'mg.group_name', 'label' => $txt['modlog_position']),
 			'ip' => array('sql' => 'lm.ip', 'label' => $txt['modlog_ip'])
 		);
 
 		$search_params = array(
 			'string' => empty($_REQUEST['search']) ? '' : $_REQUEST['search'],
 			'type' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $_REQUEST['search_type'] : isset($searchTypes[$context['order']]) ? $context['order'] : 'member',
-			'type_sql' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['sql'] : isset($searchTypes[$context['order']]) ? $context['columns'][$context['order']]['sql'] : 'mem.realName',
+			'type_sql' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['sql'] : isset($searchTypes[$context['order']]) ? $context['columns'][$context['order']]['sql'] : 'mem.real_name',
 			'type_label' => isset($_REQUEST['search_type']) && isset($searchTypes[$_REQUEST['search_type']]) ? $searchTypes[$_REQUEST['search_type']]['label'] : isset($searchTypes[$context['order']]) ? $context['columns'][$context['order']]['label'] : $txt['modlog_member'],
 		);
 	}
@@ -167,11 +167,11 @@ function ViewModlog()
 	}
 
 	// Count the amount of entries in total for pagination.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_actions AS lm
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lm.ID_MEMBER)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
 		WHERE" . (!empty($search_params['string']) ? " INSTR($search_params[type_sql], '$search_params[string]')
 			AND" : '') . " $user_info[modlog_query]", __FILE__, __LINE__);
 	list ($context['entry_count']) = $smfFunc['db_fetch_row']($result);
@@ -205,13 +205,13 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 	$seeIP = allowedTo('moderate_forum');
 	
 	// Here we have the query getting the log details.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT
-			lm.ID_ACTION, lm.ID_MEMBER, lm.ip, lm.logTime, lm.action, lm.ID_BOARD, lm.ID_TOPIC, lm.ID_MSG, lm.extra,
-			mem.realName, mg.groupName
+			lm.ID_ACTION, lm.id_member, lm.ip, lm.log_time, lm.action, lm.id_board, lm.id_topic, lm.id_msg, lm.extra,
+			mem.real_name, mg.group_name
 		FROM {$db_prefix}log_actions AS lm
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lm.ID_MEMBER)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))" . (!empty($search_param) ? '
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))" . (!empty($search_param) ? '
 		WHERE ' . $search_param : '') . (!empty($order) ? '
 		ORDER BY ' . $order : '') . "
 		$limit", __FILE__, __LINE__);
@@ -229,18 +229,18 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 		$row['extra'] = is_array($row['extra']) ? $row['extra'] : array();
 
 		// Add on some of the column stuff info
-		if (!empty($row['ID_BOARD']))
+		if (!empty($row['id_board']))
 		{
 			if ($row['action'] == 'move')
-				$row['extra']['board_to'] = $row['ID_BOARD'];
+				$row['extra']['board_to'] = $row['id_board'];
 			else
-				$row['extra']['board'] = $row['ID_BOARD'];
+				$row['extra']['board'] = $row['id_board'];
 		}
 
-		if (!empty($row['ID_TOPIC']))
-			$row['extra']['topic'] = $row['ID_TOPIC'];
-		if (!empty($row['ID_MSG']))
-			$row['extra']['message'] = $row['ID_MSG'];
+		if (!empty($row['id_topic']))
+			$row['extra']['topic'] = $row['id_topic'];
+		if (!empty($row['id_msg']))
+			$row['extra']['message'] = $row['id_msg'];
 
 		// Is this associated with a topic?
 		if (isset($row['extra']['topic']))
@@ -275,16 +275,16 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 		$context['entries'][$row['ID_ACTION']] = array(
 			'id' => $row['ID_ACTION'],
 			'ip' => $seeIP ? $row['ip'] : $txt[511],
-			'position' => $row['groupName'],
+			'position' => $row['group_name'],
 			'moderator' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['realName'],
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>'
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 			),
-			'time' => timeformat($row['logTime']),
-			'timestamp' => forum_time(true, $row['logTime']),
-			'editable' => time() > $row['logTime'] + $context['hoursdisable'] * 3600,
+			'time' => timeformat($row['log_time']),
+			'timestamp' => forum_time(true, $row['log_time']),
+			'editable' => time() > $row['log_time'] + $context['hoursdisable'] * 3600,
 			'extra' => $row['extra'],
 			'action' => isset($descriptions[$row['action']]) ? $descriptions[$row['action']] : $row['action'],
 		);
@@ -293,22 +293,22 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 
 	if (!empty($boards))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_BOARD, name
+		$request = $smfFunc['db_query']('', "
+			SELECT id_board, name
 			FROM {$db_prefix}boards
-			WHERE ID_BOARD IN (" . implode(', ', array_keys($boards)) . ")
+			WHERE id_board IN (" . implode(', ', array_keys($boards)) . ")
 			LIMIT " . count(array_keys($boards)), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			foreach ($boards[$row['ID_BOARD']] as $action)
+			foreach ($boards[$row['id_board']] as $action)
 			{
 				// Make the board number into a link - dealing with moving too.
-				if (isset($context['entries'][$action]['extra']['board_to']) && $context['entries'][$action]['extra']['board_to'] == $row['ID_BOARD'])
-					$context['entries'][$action]['extra']['board_to'] = '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '">' . $row['name'] . '</a>';
-				elseif (isset($context['entries'][$action]['extra']['board_from']) && $context['entries'][$action]['extra']['board_from'] == $row['ID_BOARD'])
-					$context['entries'][$action]['extra']['board_from'] = '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '">' . $row['name'] . '</a>';
-				elseif (isset($context['entries'][$action]['extra']['board']) && $context['entries'][$action]['extra']['board'] == $row['ID_BOARD'])
-					$context['entries'][$action]['extra']['board'] = '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '">' . $row['name'] . '</a>';
+				if (isset($context['entries'][$action]['extra']['board_to']) && $context['entries'][$action]['extra']['board_to'] == $row['id_board'])
+					$context['entries'][$action]['extra']['board_to'] = '<a href="' . $scripturl . '?board=' . $row['id_board'] . '">' . $row['name'] . '</a>';
+				elseif (isset($context['entries'][$action]['extra']['board_from']) && $context['entries'][$action]['extra']['board_from'] == $row['id_board'])
+					$context['entries'][$action]['extra']['board_from'] = '<a href="' . $scripturl . '?board=' . $row['id_board'] . '">' . $row['name'] . '</a>';
+				elseif (isset($context['entries'][$action]['extra']['board']) && $context['entries'][$action]['extra']['board'] == $row['id_board'])
+					$context['entries'][$action]['extra']['board'] = '<a href="' . $scripturl . '?board=' . $row['id_board'] . '">' . $row['name'] . '</a>';
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -316,31 +316,31 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 
 	if (!empty($topics))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ms.subject, t.ID_TOPIC
+		$request = $smfFunc['db_query']('', "
+			SELECT ms.subject, t.id_topic
 			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ms)
-			WHERE t.ID_TOPIC IN (" . implode(', ', array_keys($topics)) . ")
-				AND ms.ID_MSG = t.ID_FIRST_MSG
+			WHERE t.id_topic IN (" . implode(', ', array_keys($topics)) . ")
+				AND ms.id_msg = t.id_first_msg
 			LIMIT " . count(array_keys($topics)), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			foreach ($topics[$row['ID_TOPIC']] as $action)
+			foreach ($topics[$row['id_topic']] as $action)
 			{
 				$this_action = &$context['entries'][$action];
 
 				// This isn't used in the current theme.
 				$this_action['topic'] = array(
-					'id' => $row['ID_TOPIC'],
+					'id' => $row['id_topic'],
 					'subject' => $row['subject'],
-					'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
-					'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['subject'] . '</a>'
+					'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
+					'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>'
 				);
 
 				// Make the topic number into a link - dealing with splitting too.
-				if (isset($this_action['extra']['topic']) && $this_action['extra']['topic'] == $row['ID_TOPIC'])
-					$this_action['extra']['topic'] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . (isset($this_action['extra']['message']) ? 'msg' . $this_action['extra']['message'] . '#msg' . $this_action['extra']['message'] : '0') . '">' . $row['subject'] . '</a>';
-				elseif (isset($this_action['extra']['new_topic']) && $this_action['extra']['new_topic'] == $row['ID_TOPIC'])
-					$this_action['extra']['new_topic'] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . (isset($this_action['extra']['message']) ? 'msg' . $this_action['extra']['message'] . '#msg' . $this_action['extra']['message'] : '0') . '">' . $row['subject'] . '</a>';
+				if (isset($this_action['extra']['topic']) && $this_action['extra']['topic'] == $row['id_topic'])
+					$this_action['extra']['topic'] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . (isset($this_action['extra']['message']) ? 'msg' . $this_action['extra']['message'] . '#msg' . $this_action['extra']['message'] : '0') . '">' . $row['subject'] . '</a>';
+				elseif (isset($this_action['extra']['new_topic']) && $this_action['extra']['new_topic'] == $row['id_topic'])
+					$this_action['extra']['new_topic'] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . (isset($this_action['extra']['message']) ? 'msg' . $this_action['extra']['message'] . '#msg' . $this_action['extra']['message'] : '0') . '">' . $row['subject'] . '</a>';
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -348,24 +348,24 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 
 	if (!empty($members))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT realName, ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT real_name, id_member
 			FROM {$db_prefix}members
-			WHERE ID_MEMBER IN (" . implode(', ', array_keys($members)) . ")
+			WHERE id_member IN (" . implode(', ', array_keys($members)) . ")
 			LIMIT " . count(array_keys($members)), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			foreach ($members[$row['ID_MEMBER']] as $action)
+			foreach ($members[$row['id_member']] as $action)
 			{
 				// Not used currently.
 				$context['entries'][$action]['member'] = array(
-					'id' => $row['ID_MEMBER'],
-					'name' => $row['realName'],
-					'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>'
+					'id' => $row['id_member'],
+					'name' => $row['real_name'],
+					'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 				);
 				// Make the member number into a name.
-				$context['entries'][$action]['extra']['member'] = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>';
+				$context['entries'][$action]['extra']['member'] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 			}
 		}
 		$smfFunc['db_free_result']($request);

@@ -13,7 +13,7 @@
 	if (!$db_connection || !@mysql_select_db($db_name, $db_connection))
 		die('DB connection error');
 
-	$ID_MEMBER = 5;
+	$id_member = 5;
 
 	$forum_version = "SMF 1.1 Beta 3";
 

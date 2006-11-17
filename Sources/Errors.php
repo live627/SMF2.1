@@ -86,7 +86,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	else
 		$line = (int) $line;
 
-	// Just in case there's no ID_MEMBER or IP set yet.
+	// Just in case there's no id_member or IP set yet.
 	if (empty($user_info['id']))
 		$user_info['id'] = 0;
 	if (empty($user_info['ip']))
@@ -114,9 +114,9 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	
 
 	// Insert the error into the database.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}log_errors
-			(ID_MEMBER, logTime, ip, url, message, session, errorType, file, line)
+			(id_member, log_time, ip, url, message, session, error_type, file, line)
 		VALUES ($user_info[id], " . time() . ", SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$query_string', 1, 65534), SUBSTRING('" . addslashes($error_message) . "', 1, 65534), '$sc', '$error_type', SUBSTRING('$file', 1, 255), $line)", false, false) or die($error_message);
 
 	// Return the message to make things simpler.

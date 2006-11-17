@@ -243,7 +243,7 @@ function ModifyPostSettings()
 		// If we're changing the message length let's check the column is big enough.
 		if (!empty($_POST['max_messageLength']) && $_POST['max_messageLength'] != $modSettings['max_messageLength'])
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SHOW COLUMNS
 				FROM {$db_prefix}messages", false, false);
 			if ($request !== false)
@@ -254,7 +254,7 @@ function ModifyPostSettings()
 				$smfFunc['db_free_result']($request);
 			}
 
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SHOW INDEX
 				FROM {$db_prefix}messages", false, false);
 			if ($request !== false)
@@ -274,7 +274,7 @@ function ModifyPostSettings()
 				else
 				{
 					// Make it longer so we can do their limit.
-					$smfFunc['db_query']("
+					$smfFunc['db_query']('', "
 						ALTER TABLE {$db_prefix}messages
 						CHANGE COLUMN body body mediumtext", __FILE__, __LINE__);
 				}
@@ -282,7 +282,7 @@ function ModifyPostSettings()
 			elseif (isset($body_type) && $_POST['max_messageLength'] <= 65535 && $body_type != 'text')
 			{
 				// Shorten the column so we can have the benefit of fulltext searching again!
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					ALTER TABLE {$db_prefix}messages
 					CHANGE COLUMN body body text", __FILE__, __LINE__);
 			}

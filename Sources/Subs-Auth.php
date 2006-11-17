@@ -26,11 +26,11 @@ if (!defined('SMF'))
 /*	This file has functions in it to do with authentication, user handling,
 	and the like.  It provides these functions:
 
-	void setLoginCookie(int cookie_length, int ID_MEMBER, string password = '')
-		- sets the SMF-style login cookie and session based on the ID_MEMBER
+	void setLoginCookie(int cookie_length, int id_member, string password = '')
+		- sets the SMF-style login cookie and session based on the id_member
 		  and password passed.
 		- password should be already encrypted with the cookie salt.
-		- logs the user out if ID_MEMBER is zero.
+		- logs the user out if id_member is zero.
 		- sets the cookie and session to last the number of seconds specified
 		  by cookie_length.
 		- when logging out, if the globalCookies setting is enabled, attempts
@@ -92,7 +92,7 @@ if (!defined('SMF'))
 		- used by javascript to find members matching the request.
 		- outputs each member name on its own line.
 
-	void resetPassword(int ID_MEMBER, string username = null)
+	void resetPassword(int id_member, string username = null)
 		- called by Profile.php when changing someone's username.
 		- checks the validity of the new username.
 		- generates and sets a new password for the given user.
@@ -412,32 +412,32 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	$results = array();
 
 	// This ensures you can't search someones email address if you can't see it.
-	$email_condition = $user_info['is_admin'] || empty($modSettings['allow_hideEmail']) ? '' : 'hideEmail = 0 AND ';
+	$email_condition = $user_info['is_admin'] || empty($modSettings['allow_hide_email']) ? '' : 'hide_email = 0 AND ';
 
 	if ($use_wildcards || $maybe_email)
 		$email_condition = "
-			OR (" . $email_condition . "emailAddress $comparison '" . implode("') OR ($email_condition emailAddress $comparison '", $names) . "')";
+			OR (" . $email_condition . "email_address $comparison '" . implode("') OR ($email_condition email_address $comparison '", $names) . "')";
 	else
 		$email_condition = '';
 
 	// Search by username, display name, and email address.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, memberName, realName, emailAddress, hideEmail
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, real_name, email_address, hide_email
 		FROM {$db_prefix}members
-		WHERE (memberName $comparison '" . implode("' OR memberName $comparison '", $names) . "'
-			OR realName $comparison '" . implode("' OR realName $comparison '", $names) . "'$email_condition)
-			" . ($buddies_only ? 'AND ID_MEMBER IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
+		WHERE (member_name $comparison '" . implode("' OR member_name $comparison '", $names) . "'
+			OR real_name $comparison '" . implode("' OR real_name $comparison '", $names) . "'$email_condition)
+			" . ($buddies_only ? 'AND id_member IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
 			AND is_activated IN (1, 11)" . ($max == null ? '' : "
 		LIMIT " . (int) $max), __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$results[$row['ID_MEMBER']] = array(
-			'id' => $row['ID_MEMBER'],
-			'name' => $row['realName'],
-			'username' => $row['memberName'],
-			'email' => empty($row['hideEmail']) || empty($modSettings['allow_hideEmail']) || $user_info['is_admin'] ? $row['emailAddress'] : '',
-			'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>'
+		$results[$row['id_member']] = array(
+			'id' => $row['id_member'],
+			'name' => $row['real_name'],
+			'username' => $row['member_name'],
+			'email' => empty($row['hide_email']) || empty($modSettings['allow_hide_email']) || $user_info['is_admin'] ? $row['email_address'] : '',
+			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
+			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -525,25 +525,25 @@ function RequestMembers()
 	if (function_exists('iconv'))
 		header('Content-Type: text/plain; charset=UTF-8');
 
-	$request = $smfFunc['db_query']("
-		SELECT realName
+	$request = $smfFunc['db_query']('', "
+		SELECT real_name
 		FROM {$db_prefix}members
-		WHERE realName LIKE '$_REQUEST[search]'" . (isset($_REQUEST['buddies']) ? '
-			AND ID_MEMBER IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
+		WHERE real_name LIKE '$_REQUEST[search]'" . (isset($_REQUEST['buddies']) ? '
+			AND id_member IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
 			AND is_activated IN (1, 11)
 		LIMIT " . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'), __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (function_exists('iconv'))
 		{
-			$utf8 = iconv($txt['lang_character_set'], 'UTF-8', $row['realName']);
+			$utf8 = iconv($txt['lang_character_set'], 'UTF-8', $row['real_name']);
 			if ($utf8)
-				$row['realName'] = $utf8;
+				$row['real_name'] = $utf8;
 		}
 
-		$row['realName'] = strtr($row['realName'], array('&amp;' => '&#038;', '&lt;' => '&#060;', '&gt;' => '&#062;', '&quot;' => '&#034;'));
+		$row['real_name'] = strtr($row['real_name'], array('&amp;' => '&#038;', '&lt;' => '&#060;', '&gt;' => '&#062;', '&quot;' => '&#034;'));
 
-		if (preg_match('~&#\d+;~', $row['realName']) != 0)
+		if (preg_match('~&#\d+;~', $row['real_name']) != 0)
 		{
 			$fixchar = create_function('$n', '
 				if ($n < 128)
@@ -555,10 +555,10 @@ function RequestMembers()
 				else
 					return chr(240 | $n >> 18) . chr(128 | $n >> 12 & 63) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);');
 
-			$row['realName'] = preg_replace('~&#(\d+);~e', '$fixchar(\'$1\')', $row['realName']);
+			$row['real_name'] = preg_replace('~&#(\d+);~e', '$fixchar(\'$1\')', $row['real_name']);
 		}
 
-		echo $row['realName'], "\n";
+		echo $row['real_name'], "\n";
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -575,10 +575,10 @@ function resetPassword($memID, $username = null)
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Get some important details.
-	$request = $smfFunc['db_query']("
-		SELECT memberName, emailAddress
+	$request = $smfFunc['db_query']('', "
+		SELECT member_name, email_address
 		FROM {$db_prefix}members
-		WHERE ID_MEMBER = $memID", __FILE__, __LINE__);
+		WHERE id_member = $memID", __FILE__, __LINE__);
 	list ($user, $email) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -611,7 +611,7 @@ function resetPassword($memID, $username = null)
 			fatal_error('(' . htmlspecialchars($user) . ') ' . $txt[473], false);
 
 		// Update the database...
-		updateMemberData($memID, array('memberName' => '\'' . $user . '\'', 'passwd' => '\'' . $newPassword_sha1 . '\''));
+		updateMemberData($memID, array('member_name' => '\'' . $user . '\'', 'passwd' => '\'' . $newPassword_sha1 . '\''));
 	}
 	else
 		updateMemberData($memID, array('passwd' => '\'' . $newPassword_sha1 . '\''));
@@ -671,23 +671,23 @@ function rebuildModCache()
 
 	if ($group_query == 0)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_GROUP
+		$request = $smfFunc['db_query']('', "
+			SELECT id_group
 			FROM {$db_prefix}group_moderators
-			WHERE ID_MEMBER = $user_info[id]", __FILE__, __LINE__);
+			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 		$groups = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$groups[] = $row['ID_GROUP'];
+			$groups[] = $row['id_group'];
 		$smfFunc['db_free_result']($request);
 
 		if (empty($groups))
 			$group_query = '0';
 		else
-			$group_query = 'ID_GROUP IN (' . implode(',', $groups) . ')';
+			$group_query = 'id_group IN (' . implode(',', $groups) . ')';
 	}
 
 	// Then, same again, just the boards this time!
-	$board_query = allowedTo('moderate_forum') ? 1 : 0;
+	$board_query = allowedTo('moderate_forum') ? '1=1' : 0;
 
 	if ($board_query == 0)
 	{
@@ -703,23 +703,23 @@ function rebuildModCache()
 		if (empty($boards))
 			$board_query = '0';
 		else
-			$board_query = 'ID_BOARD IN (' . implode(',', $boards) . ')';
+			$board_query = 'id_board IN (' . implode(',', $boards) . ')';
 	}
 
 	// What boards are they the moderator of?
 	$boards_mod = array();
 	if (!$user_info['is_guest'])
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_BOARD
+		$request = $smfFunc['db_query']('', "
+			SELECT id_board
 			FROM {$db_prefix}moderators
-			WHERE ID_MEMBER = $user_info[id]", __FILE__, __LINE__);
+			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$boards_mod[] = $row['ID_BOARD'];
+			$boards_mod[] = $row['id_board'];
 		$smfFunc['db_free_result']($request);
 	}
 
-	$mod_query = empty($boards_mod) ? '0' : 'b.ID_BOARD IN (' . implode(',', $boards_mod) . ')';
+	$mod_query = empty($boards_mod) ? '0' : 'b.id_board IN (' . implode(',', $boards_mod) . ')';
 
 	$_SESSION['mc'] = array(
 		'time' => time(),

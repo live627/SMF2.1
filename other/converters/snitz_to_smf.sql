@@ -16,27 +16,27 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	MEMBER_ID AS ID_MEMBER, SUBSTRING(M_NAME, 1, 255) AS realName,
+	MEMBER_ID AS id_member, SUBSTRING(M_NAME, 1, 255) AS real_name,
 	SUBSTRING(M_PASSWORD, 1, 64) AS passwd,
-	SUBSTRING(M_EMAIL, 1, 255) AS emailAddress,
+	SUBSTRING(M_EMAIL, 1, 255) AS email_address,
 	SUBSTRING(M_COUNTRY, 1, 255) AS location, 
-	SUBSTRING(M_HOMEPAGE, 1, 255) AS websiteTitle,
-	SUBSTRING(M_HOMEPAGE, 1, 255) AS websiteUrl,
+	SUBSTRING(M_HOMEPAGE, 1, 255) AS website_title,
+	SUBSTRING(M_HOMEPAGE, 1, 255) AS website_url,
 	SUBSTRING(REPLACE(M_SIG, '\n', '<br />'), 1, 65534) AS signature,
-	SUBSTRING(M_AIM, 1, 16) AS AIM, SUBSTRING(M_ICQ, 1, 255) AS ICQ,
-	SUBSTRING(M_MSN, 1, 255) AS MSN, SUBSTRING(M_YAHOO, 1, 32) AS YIM,
-	IF(M_LEVEL = 3, 1, 0) AS ID_GROUP, M_POSTS AS posts,
-	UNIX_TIMESTAMP(M_DATE) AS dateRegistered,
+	SUBSTRING(M_aim, 1, 16) AS aim, SUBSTRING(M_icq, 1, 255) AS icq,
+	SUBSTRING(M_msn, 1, 255) AS msn, SUBSTRING(M_YAHOO, 1, 32) AS yim,
+	IF(M_LEVEL = 3, 1, 0) AS id_group, M_POSTS AS posts,
+	UNIX_TIMESTAMP(M_DATE) AS date_registered,
 	SUBSTRING(M_TITLE, 1, 255) AS usertitle,
-	UNIX_TIMESTAMP(M_LASTHEREDATE) AS lastLogin, M_HIDE_EMAIL AS hideEmail,
-	IF(M_RECEIVE_EMAIL, 4, 0) AS notifyTypes, M_DOB AS birthdate,
+	UNIX_TIMESTAMP(M_LASTHEREDATE) AS last_login, M_HIDE_EMAIL AS hide_email,
+	IF(M_RECEIVE_EMAIL, 4, 0) AS notify_types, M_DOB AS birthdate,
 	CASE M_SEX WHEN 'Male' THEN 1 WHEN 'Female' THEN 2 ELSE 0 END AS gender,
-	SUBSTRING(IF(M_USERNAME = '', M_NAME, M_USERNAME), 1, 80) AS memberName,
-	SUBSTRING(M_LAST_IP, 1, 255) AS memberIP, '' AS lngfile, '' AS buddy_list,
-	'' AS pm_ignore_list, '' AS messageLabels, '' AS personalText,
-	'' AS timeFormat, '' AS avatar, '' AS secretQuestion, '' AS secretAnswer,
-	'' AS validation_code, '' AS additionalGroups, '' AS smileySet,
-	'' AS passwordSalt
+	SUBSTRING(IF(M_USERNAME = '', M_NAME, M_USERNAME), 1, 80) AS member_name,
+	SUBSTRING(M_LAST_IP, 1, 255) AS member_ip, '' AS lngfile, '' AS buddy_list,
+	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
+	'' AS time_format, '' AS avatar, '' AS secret_question, '' AS secret_answer,
+	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
+	'' AS password_salt
 FROM {$from_prefix}FORUM_MEMBERS;
 ---*
 
@@ -48,8 +48,8 @@ TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
 SELECT
-	CAT_ID AS ID_CAT, SUBSTRING(CAT_NAME, 1, 255) AS name,
-	CAT_ORDER AS catOrder
+	CAT_ID AS id_cat, SUBSTRING(CAT_NAME, 1, 255) AS name,
+	CAT_ORDER AS cat_order
 FROM {$from_prefix}FORUM_CATEGORY;
 ---*
 
@@ -60,15 +60,15 @@ FROM {$from_prefix}FORUM_CATEGORY;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	FORUM_ID AS ID_BOARD, CAT_ID AS ID_CAT, F_ORDER AS boardOrder,
+	FORUM_ID AS id_board, CAT_ID AS id_cat, F_ORDER AS board_order,
 	SUBSTRING(F_SUBJECT, 1, 255) AS name,
-	SUBSTRING(F_DESCRIPTION, 1, 65534) AS description, F_TOPICS AS numTopics,
-	F_COUNT AS numPosts, F_COUNT_M_POSTS = 0 AS countPosts,
-	'-1,0' AS memberGroups
+	SUBSTRING(F_DESCRIPTION, 1, 65534) AS description, F_TOPICS AS num_topics,
+	F_COUNT AS num_posts, F_COUNT_M_POSTS = 0 AS count_posts,
+	'-1,0' AS member_groups
 FROM {$from_prefix}FORUM_FORUM;
 ---*
 
@@ -86,35 +86,35 @@ $_SESSION['convert_topics'] = array();
 ---* {$to_prefix}messages 100
 ---{
 $no_add = true;
-$keys = array('ID_TOPIC', 'ID_BOARD', 'posterTime', 'ID_MEMBER', 'subject', 'posterName', 'posterEmail', 'posterIP', 'body', 'modifiedName', 'modifiedTime', 'icon');
+$keys = array('id_topic', 'id_board', 'poster_time', 'id_member', 'subject', 'poster_name', 'poster_email', 'poster_ip', 'body', 'modified_name', 'modified_time', 'icon');
 
-if (!in_array($row['ID_TOPIC'], $_SESSION['convert_topics']))
+if (!in_array($row['id_topic'], $_SESSION['convert_topics']))
 {
-	$rows[] = "$row[ID_TOPIC], $row[ID_BOARD], $row[TposterTime], $row[TID_MEMBER], '" . addslashes(substr($row['subject'], 0, 255)) . "', '" . addslashes(substr($row['TposterName'], 0, 255)) . "', '" . addslashes(substr($row['TposterEmail'], 0, 255)) . "', '" . substr($row[TposterIP], 0, 255) . "', '" . addslashes(substr($row['Tbody'], 0, 65534)) . "', " . ($row['TmodifiedName'] == '' ? 'NULL' : "'" . addslashes(substr($row['TmodifiedName'], 0, 255)) . "'") . ", " . (int) $row['TmodifiedTime'] . ", 'xx';
-	$_SESSION['convert_topics'][] = $row['ID_TOPIC'];
+	$rows[] = "$row[id_topic], $row[id_board], $row[Tposter_time], $row[TID_MEMBER], '" . addslashes(substr($row['subject'], 0, 255)) . "', '" . addslashes(substr($row['Tposter_name'], 0, 255)) . "', '" . addslashes(substr($row['Tposter_email'], 0, 255)) . "', '" . substr($row[Tposter_ip], 0, 255) . "', '" . addslashes(substr($row['Tbody'], 0, 65534)) . "', " . ($row['Tmodified_name'] == '' ? 'NULL' : "'" . addslashes(substr($row['Tmodified_name'], 0, 255)) . "'") . ", " . (int) $row['Tmodified_time'] . ", 'xx';
+	$_SESSION['convert_topics'][] = $row['id_topic'];
 }
 
-if (!empty($row['RposterTime']))
-	$rows[] = "$row[ID_TOPIC], $row[ID_BOARD], $row[RposterTime], $row[RID_MEMBER], 'Re: " . addslashes(substr($row['subject'], 0, 255)) . "', '" . addslashes(substr($row['RposterName'], 0, 255)) . "', '" . addslashes(substr($row['RposterEmail'], 0, 255)) . "', '" . substr($row[RposterIP], 0, 255) . "', '" . addslashes(substr($row['Rbody'], 0, 65534) . "', " . ($row['RmodifiedName'] == '' ? 'NULL' : "'" . addslashes(substr($row['RmodifiedName'], 0, 255)) . "'") . ", " . (int) $row['RmodifiedTime'] . ", 'xx';
+if (!empty($row['Rposter_time']))
+	$rows[] = "$row[id_topic], $row[id_board], $row[Rposter_time], $row[RID_MEMBER], 'Re: " . addslashes(substr($row['subject'], 0, 255)) . "', '" . addslashes(substr($row['Rposter_name'], 0, 255)) . "', '" . addslashes(substr($row['Rposter_email'], 0, 255)) . "', '" . substr($row[Rposter_ip], 0, 255) . "', '" . addslashes(substr($row['Rbody'], 0, 65534) . "', " . ($row['Rmodified_name'] == '' ? 'NULL' : "'" . addslashes(substr($row['Rmodified_name'], 0, 255)) . "'") . ", " . (int) $row['Rmodified_time'] . ", 'xx';
 ---}
 SELECT
-	ft.TOPIC_ID AS ID_TOPIC, ft.FORUM_ID AS ID_BOARD, T_SUBJECT AS subject,
-	UNIX_TIMESTAMP(ft.T_DATE) AS TposterTime, T_AUTHOR AS TID_MEMBER,
-	T_IP AS TposterIP, IFNULL(ftm.realName, '') AS TposterName,
+	ft.TOPIC_ID AS id_topic, ft.FORUM_ID AS id_board, T_SUBJECT AS subject,
+	UNIX_TIMESTAMP(ft.T_DATE) AS Tposter_time, T_AUTHOR AS TID_MEMBER,
+	T_IP AS Tposter_ip, IFNULL(ftm.real_name, '') AS Tposter_name,
 	REPLACE(REPLACE(T_MESSAGE, '\n', '<br />'), '\r', '') AS Tbody,
-	IFNULL(ftm.emailAddress, '') AS TposterEmail, fte.realName AS TmodifiedName,
-	UNIX_TIMESTAMP(ft.T_LAST_EDIT) AS TmodifiedTime,
-	UNIX_TIMESTAMP(fr.R_DATE) AS RposterTime, R_AUTHOR AS RID_MEMBER,
-	R_IP AS RposterIP, IFNULL(frm.realName, '') AS RposterName,
+	IFNULL(ftm.email_address, '') AS Tposter_email, fte.real_name AS Tmodified_name,
+	UNIX_TIMESTAMP(ft.T_LAST_EDIT) AS Tmodified_time,
+	UNIX_TIMESTAMP(fr.R_DATE) AS Rposter_time, R_AUTHOR AS RID_MEMBER,
+	R_IP AS Rposter_ip, IFNULL(frm.real_name, '') AS Rposter_name,
 	REPLACE(REPLACE(R_MESSAGE, '\n', '<br />'), '\r', '') AS Rbody,
-	IFNULL(frm.emailAddress, '') AS RposterEmail, fre.realName AS RmodifiedName,
-	UNIX_TIMESTAMP(fr.R_LAST_EDIT) AS RmodifiedTime
+	IFNULL(frm.email_address, '') AS Rposter_email, fre.real_name AS Rmodified_name,
+	UNIX_TIMESTAMP(fr.R_LAST_EDIT) AS Rmodified_time
 FROM {$from_prefix}FORUM_TOPICS AS ft
 	LEFT JOIN {$from_prefix}FORUM_REPLY AS fr ON (fr.TOPIC_ID = ft.TOPIC_ID)
-	LEFT JOIN {$to_prefix}members AS ftm ON (ftm.ID_MEMBER = ft.T_AUTHOR)
-	LEFT JOIN {$to_prefix}members AS fte ON (fte.ID_MEMBER = ft.T_LAST_EDITBY)
-	LEFT JOIN {$to_prefix}members AS frm ON (frm.ID_MEMBER = fr.R_AUTHOR)
-	LEFT JOIN {$to_prefix}members AS fre ON (fre.ID_MEMBER = fr.R_LAST_EDITBY)
+	LEFT JOIN {$to_prefix}members AS ftm ON (ftm.id_member = ft.T_AUTHOR)
+	LEFT JOIN {$to_prefix}members AS fte ON (fte.id_member = ft.T_LAST_EDITBY)
+	LEFT JOIN {$to_prefix}members AS frm ON (frm.id_member = fr.R_AUTHOR)
+	LEFT JOIN {$to_prefix}members AS fre ON (fre.id_member = fr.R_LAST_EDITBY)
 ORDER BY IFNULL(fr.R_DATE, ft.T_DATE);
 ---*
 
@@ -129,16 +129,16 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.TOPIC_ID AS ID_TOPIC, t.T_STICKY AS isSticky, t.FORUM_ID AS ID_BOARD,
-	MIN(m.ID_MSG) AS ID_FIRST_MSG, MAX(m.ID_MSG) AS ID_LAST_MSG,
-	t.T_AUTHOR AS ID_MEMBER_STARTED, t.T_LAST_POST_AUTHOR AS ID_MEMBER_UPDATED,
-	t.T_REPLIES AS numReplies, t.T_VIEW_COUNT AS numViews,
+	t.TOPIC_ID AS id_topic, t.T_STICKY AS is_sticky, t.FORUM_ID AS id_board,
+	MIN(m.id_msg) AS id_first_msg, MAX(m.id_msg) AS id_last_msg,
+	t.T_AUTHOR AS id_member_started, t.T_LAST_POST_AUTHOR AS id_member_updated,
+	t.T_REPLIES AS num_replies, t.T_VIEW_COUNT AS num_views,
 	t.T_STATUS = 0 AS locked
 FROM ({$from_prefix}FORUM_TOPICS AS t, {$to_prefix}messages AS m)
-WHERE m.ID_TOPIC = t.TOPIC_ID
+WHERE m.id_topic = t.TOPIC_ID
 GROUP BY t.TOPIC_ID
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
 /******************************************************************************/
@@ -148,7 +148,7 @@ HAVING ID_FIRST_MSG != 0
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT MEMBER_ID AS ID_MEMBER, TOPIC_ID AS ID_TOPIC
+SELECT MEMBER_ID AS id_member, TOPIC_ID AS id_topic
 FROM {$from_prefix}FORUM_SUBSCRIPTIONS
 WHERE TOPIC_ID != 0;
 ---*
@@ -158,7 +158,7 @@ WHERE TOPIC_ID != 0;
 /******************************************************************************/
 
 ---* {$to_prefix}log_notify
-SELECT MEMBER_ID AS ID_MEMBER, FORUM_ID AS ID_BOARD
+SELECT MEMBER_ID AS id_member, FORUM_ID AS id_board
 FROM {$from_prefix}FORUM_SUBSCRIPTIONS
 WHERE TOPIC_ID = 0
 	AND FORUM_ID != 0;
@@ -203,6 +203,6 @@ convert_query("
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT MEMBER_ID AS ID_MEMBER, FORUM_ID AS ID_BOARD
+SELECT MEMBER_ID AS id_member, FORUM_ID AS id_board
 FROM {$from_prefix}FORUM_MODERATOR;
 ---*

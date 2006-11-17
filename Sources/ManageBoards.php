@@ -261,7 +261,7 @@ function EditCategory()
 	require_once($sourcedir . '/Subs-Boards.php');
 	getBoardTree();
 
-	// ID_CAT must be a number.... if it exists.
+	// id_cat must be a number.... if it exists.
 	$_REQUEST['cat'] = isset($_REQUEST['cat']) ? (int) $_REQUEST['cat'] : 0;
 
 	// Start with one - "In first place".
@@ -295,7 +295,7 @@ function EditCategory()
 			'id' => $_REQUEST['cat'],
 			'name' => $cat_tree[$_REQUEST['cat']]['node']['name'],
 			'editable_name' => htmlspecialchars($cat_tree[$_REQUEST['cat']]['node']['name']),
-			'can_collapse' => !empty($cat_tree[$_REQUEST['cat']]['node']['canCollapse']),
+			'can_collapse' => !empty($cat_tree[$_REQUEST['cat']]['node']['can_collapse']),
 			'children' => array(),
 			'is_empty' => empty($cat_tree[$_REQUEST['cat']]['children'])
 		);
@@ -394,7 +394,7 @@ function EditBoard()
 	require_once($sourcedir . '/Subs-Boards.php');
 	getBoardTree();
 
-	// ID_BOARD must be a number....
+	// id_board must be a number....
 	$_REQUEST['boardid'] = isset($_REQUEST['boardid']) ? (int) $_REQUEST['boardid'] : 0;
 	if (!isset($boards[$_REQUEST['boardid']]))
 	{
@@ -406,7 +406,7 @@ function EditBoard()
 	{
 		// Some things that need to be setup for a new board.
 		$curBoard = array(
-			'memberGroups' => array(0, -1),
+			'member_groups' => array(0, -1),
 			'category' => (int) $_REQUEST['cat']
 		);
 		$context['board_order'] = array();
@@ -437,33 +437,33 @@ function EditBoard()
 		-1 => array(
 			'id' => '-1',
 			'name' => $txt['parent_guests_only'],
-			'checked' => in_array('-1', $curBoard['memberGroups']),
+			'checked' => in_array('-1', $curBoard['member_groups']),
 			'is_post_group' => false,
 		),
 		0 => array(
 			'id' => '0',
 			'name' => $txt['parent_members_only'],
-			'checked' => in_array('0', $curBoard['memberGroups']),
+			'checked' => in_array('0', $curBoard['member_groups']),
 			'is_post_group' => false,
 		)
 	);
 
 	// Load membergroups.
-	$request = $smfFunc['db_query']("
-		SELECT groupName, ID_GROUP, minPosts
+	$request = $smfFunc['db_query']('', "
+		SELECT group_name, id_group, min_posts
 		FROM {$db_prefix}membergroups
-		WHERE ID_GROUP > 3 OR ID_GROUP = 2
-		ORDER BY minPosts, ID_GROUP != 2, groupName", __FILE__, __LINE__);
+		WHERE id_group > 3 OR id_group = 2
+		ORDER BY min_posts, id_group != 2, group_name", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if ($_REQUEST['sa'] == 'newboard' && $row['minPosts'] == -1)
-			$curBoard['memberGroups'][] = $row['ID_GROUP'];
+		if ($_REQUEST['sa'] == 'newboard' && $row['min_posts'] == -1)
+			$curBoard['member_groups'][] = $row['id_group'];
 
-		$context['groups'][(int) $row['ID_GROUP']] = array(
-			'id' => $row['ID_GROUP'],
-			'name' => trim($row['groupName']),
-			'checked' => in_array($row['ID_GROUP'], $curBoard['memberGroups']),
-			'is_post_group' => $row['minPosts'] != -1,
+		$context['groups'][(int) $row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => trim($row['group_name']),
+			'checked' => in_array($row['id_group'], $curBoard['member_groups']),
+			'is_post_group' => $row['min_posts'] != -1,
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -513,21 +513,21 @@ function EditBoard()
 			'selected' => $catID == $curBoard['category']
 		);
 
-	$request = $smfFunc['db_query']("
-		SELECT mem.realName
+	$request = $smfFunc['db_query']('', "
+		SELECT mem.real_name
 		FROM ({$db_prefix}moderators AS mods, {$db_prefix}members AS mem)
-		WHERE mods.ID_BOARD = $_REQUEST[boardid]
-			AND mem.ID_MEMBER = mods.ID_MEMBER", __FILE__, __LINE__);
+		WHERE mods.id_board = $_REQUEST[boardid]
+			AND mem.id_member = mods.id_member", __FILE__, __LINE__);
 	$context['board']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['board']['moderators'][] = $row['realName'];
+		$context['board']['moderators'][] = $row['real_name'];
 	$smfFunc['db_free_result']($request);
 
 	$context['board']['moderator_list'] = empty($context['board']['moderators']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['board']['moderators']) . '&quot;';
 
 	// Get all the themes...
-	$request = $smfFunc['db_query']("
-		SELECT ID_THEME AS id, value AS name
+	$request = $smfFunc['db_query']('', "
+		SELECT id_theme AS id, value AS name
 		FROM {$db_prefix}themes
 		WHERE variable = 'name'", __FILE__, __LINE__);
 	$context['themes'] = array();
@@ -648,7 +648,7 @@ function ModifyCat()
 	$_POST['id'] = substr($_POST['id'][1], 0, 3);
 
 	// Select the stuff we need from the DB.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT CONCAT('$_POST[id]s ar', 'e,o ', '$allowed_sa[2]e, ')
 		FROM {$db_prefix}categories
 		LIMIT 1", __FILE__, __LINE__);
@@ -680,12 +680,12 @@ function EditBoardSettings()
 
 	// Load the boards list - for the recycle bin!
 	$recycle_boards = array('');
-	$request = $smfFunc['db_query']("
-		SELECT b.ID_BOARD, b.name AS bName, c.name AS cName
+	$request = $smfFunc['db_query']('', "
+		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$recycle_boards[$row['ID_BOARD']] = $row['cName'] . ' - ' . $row['bName'];
+		$recycle_boards[$row['id_board']] = $row['cat_name'] . ' - ' . $row['board_name'];
 	$smfFunc['db_free_result']($request);
 
 	// Here and the board settings...

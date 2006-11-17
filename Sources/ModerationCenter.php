@@ -167,12 +167,12 @@ function ModBlockReportedPosts()
 		return 'reported_posts_block';
 
 	// By George, that means we in a position to get the reports, jolly good.
-	$request = $smfFunc['db_query']("
-		SELECT lr.ID_REPORT, lr.ID_MSG, lr.ID_TOPIC, lr.ID_BOARD, lr.ID_MEMBER, lr.subject,
-			lr.num_reports, IFNULL(mem.realName, lr.membername) AS author_name,
-			IFNULL(mem.ID_MEMBER, 0) AS ID_AUTHOR		
+	$request = $smfFunc['db_query']('', "
+		SELECT lr.ID_REPORT, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject,
+			lr.num_reports, IFNULL(mem.real_name, lr.membername) AS author_name,
+			IFNULL(mem.id_member, 0) AS ID_AUTHOR		
 		FROM {$db_prefix}log_reported AS lr
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lr.ID_MEMBER)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']) . "
 			AND lr.closed = 0
 			AND lr.ignore_all = 0
@@ -182,7 +182,7 @@ function ModBlockReportedPosts()
 	{
 		$context['reported_posts'][] = array(
 			'id' => $row['ID_REPORT'],
-			'topic_href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+			'topic_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'report_href' => $scripturl . '?action=moderate;area=reports;report=' . $row['ID_REPORT'],
 			'author' => array(
 				'id' => $row['ID_AUTHOR'],
@@ -211,28 +211,28 @@ function ModBlockGroupRequests()
 		return 'group_requests_block';
 
 	// What requests are outstanding?
-	$request = $smfFunc['db_query']("
-		SELECT lgr.ID_REQUEST, lgr.ID_MEMBER, lgr.ID_GROUP, lgr.time_applied, mem.memberName, mg.groupName
+	$request = $smfFunc['db_query']('', "
+		SELECT lgr.ID_REQUEST, lgr.id_member, lgr.id_group, lgr.time_applied, mem.member_name, mg.group_name
 		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
 		WHERE " . ($user_info['mod_cache']['gq'] == 1 ? '1' : 'lgr.' . $user_info['mod_cache']['gq']) . "
-			AND mem.ID_MEMBER = lgr.ID_MEMBER
-			AND mg.ID_GROUP = lgr.ID_GROUP
+			AND mem.id_member = lgr.id_member
+			AND mg.id_group = lgr.id_group
 		ORDER BY lgr.ID_REQUEST DESC
 		LIMIT 10", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['group_requests'][] = array(
 			'id' => $row['ID_REQUEST'],
-			'request_href' => $scripturl . '?action=groups;sa=requests;gid=' . $row['ID_GROUP'],
+			'request_href' => $scripturl . '?action=groups;sa=requests;gid=' . $row['id_group'],
 			'member' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['memberName'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['memberName'] . '</a>',
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+				'id' => $row['id_member'],
+				'name' => $row['member_name'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			),
 			'group' => array(
-				'id' => $row['ID_GROUP'],
-				'name' => $row['groupName'],
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
 			),
 			'time_submitted' => timeformat($row['time_applied']),
 		);
@@ -293,7 +293,7 @@ function ReportedPosts()
 		$_GET['rid'] = (int) $_GET['rid'];
 
 		// Update the report...
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_reported
 			SET " . (isset($_GET['ignore']) ? 'ignore_all = ' . (int) $_GET['ignore'] : 'closed = ' . (int) $_GET['close']) . "
 			WHERE ID_REPORT = $_GET[rid]
@@ -315,7 +315,7 @@ function ReportedPosts()
 
 		if (!empty($toClose))
 		{
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_reported
 				SET closed = 1
 				WHERE ID_REPORT IN (" . implode(',', $toClose) . ")
@@ -328,7 +328,7 @@ function ReportedPosts()
 	}
 
 	// How many entries are we viewing?
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_reported AS lr
 		WHERE closed = $context[view_closed]
@@ -341,12 +341,12 @@ function ReportedPosts()
 	$context['start'] = $_GET['start'];
 
 	// By George, that means we in a position to get the reports, golly good.
-	$request = $smfFunc['db_query']("
-		SELECT lr.ID_REPORT, lr.ID_MSG, lr.ID_TOPIC, lr.ID_BOARD, lr.ID_MEMBER, lr.subject, lr.body,
+	$request = $smfFunc['db_query']('', "
+		SELECT lr.ID_REPORT, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
-			IFNULL(mem.realName, lr.membername) AS author_name, IFNULL(mem.ID_MEMBER, 0) AS ID_AUTHOR		
+			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR		
 		FROM {$db_prefix}log_reported AS lr
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lr.ID_MEMBER)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.closed = $context[view_closed]
 			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']) . "
 		ORDER BY lr.time_updated DESC
@@ -358,7 +358,7 @@ function ReportedPosts()
 		$report_ids[] = $row['ID_REPORT'];
 		$context['reports'][$row['ID_REPORT']] = array(
 			'id' => $row['ID_REPORT'],
-			'topic_href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+			'topic_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 			'report_href' => $scripturl . '?action=moderate;area=reports;report=' . $row['ID_REPORT'],
 			'author' => array(
 				'id' => $row['ID_AUTHOR'],
@@ -381,24 +381,24 @@ function ReportedPosts()
 	// Now get all the people who reported it.
 	if (!empty($report_ids))
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT lrc.ID_COMMENT, lrc.ID_REPORT, lrc.time_sent, lrc.comment,
-				IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, IFNULL(mem.realName, lrc.membername) AS reporter
+				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 			FROM {$db_prefix}log_reported_comments AS lrc
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lrc.ID_MEMBER)
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
 			WHERE ID_REPORT IN (" . implode(',', $report_ids) . ")", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if ($row['ID_MEMBER'] == 0 || !isset($context['reports'][$row['ID_REPORT']]['comments'][$row['ID_MEMBER']]))
-				$context['reports'][$row['ID_REPORT']]['comments'][$row['ID_MEMBER']] = array(
+			if ($row['id_member'] == 0 || !isset($context['reports'][$row['ID_REPORT']]['comments'][$row['id_member']]))
+				$context['reports'][$row['ID_REPORT']]['comments'][$row['id_member']] = array(
 					'id' => $row['ID_COMMENT'],
 					'message' => $row['comment'],
 					'time' => timeformat($row['time_sent']),
 					'member' => array(
-						'id' => $row['ID_MEMBER'],
+						'id' => $row['id_member'],
 						'name' => $row['reporter'],
-						'link' => $row['ID_MEMBER'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
-						'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+						'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
+						'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 					),
 				);
 		}
@@ -438,7 +438,7 @@ function recountOpenReports()
 {
 	global $user_info, $db_prefix, $context, $smfFunc;
 
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_reported
 		WHERE " . $user_info['mod_cache']['bq'] . "
@@ -468,12 +468,12 @@ function ModReport()
 	$_REQUEST['report'] = (int) $_REQUEST['report'];
 
 	// Get the report details, need this so we can limit access to a particular board
-	$request = $smfFunc['db_query']("
-		SELECT lr.ID_REPORT, lr.ID_MSG, lr.ID_TOPIC, lr.ID_BOARD, lr.ID_MEMBER, lr.subject, lr.body,
+	$request = $smfFunc['db_query']('', "
+		SELECT lr.ID_REPORT, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
-			IFNULL(mem.realName, lr.membername) AS author_name, IFNULL(mem.ID_MEMBER, 0) AS ID_AUTHOR		
+			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR		
 		FROM {$db_prefix}log_reported AS lr
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lr.ID_MEMBER)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.ID_REPORT = $_REQUEST[report]
 			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']) . "
 		LIMIT 1", __FILE__, __LINE__);
@@ -488,11 +488,11 @@ function ModReport()
 	
 	$context['report'] = array(
 		'id' => $row['ID_REPORT'],
-		'topic_id' => $row['ID_TOPIC'],
-		'board_id' => $row['ID_BOARD'],
-		'message_id' => $row['ID_MSG'],
-		'message_href' => $scripturl . '?msg=' . $row['ID_MSG'],
-		'message_link' => '<a href="' . $scripturl . '?msg=' . $row['ID_MSG'] . '">' . $row['subject'] . '</a>',
+		'topic_id' => $row['id_topic'],
+		'board_id' => $row['id_board'],
+		'message_id' => $row['id_msg'],
+		'message_href' => $scripturl . '?msg=' . $row['id_msg'],
+		'message_link' => '<a href="' . $scripturl . '?msg=' . $row['id_msg'] . '">' . $row['subject'] . '</a>',
 		'report_href' => $scripturl . '?action=moderate;area=reports;report=' . $row['ID_REPORT'],
 		'author' => array(
 			'id' => $row['ID_AUTHOR'],
@@ -511,24 +511,24 @@ function ModReport()
 	);
 
 	// So what bad things do the reporters have to say about it?
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT lrc.ID_COMMENT, lrc.ID_REPORT, lrc.time_sent, lrc.comment,
-			IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, IFNULL(mem.realName, lrc.membername) AS reporter
+			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 		FROM {$db_prefix}log_reported_comments AS lrc
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lrc.ID_MEMBER)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
 		WHERE ID_REPORT = " . $context['report']['id'], __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if ($row['ID_MEMBER'] == 0 || !isset($context['report']['comments'][$row['ID_MEMBER']]))
-			$context['report']['comments'][$row['ID_MEMBER']] = array(
+		if ($row['id_member'] == 0 || !isset($context['report']['comments'][$row['id_member']]))
+			$context['report']['comments'][$row['id_member']] = array(
 				'id' => $row['ID_COMMENT'],
 				'message' => $row['comment'],
 				'time' => timeformat($row['time_sent']),
 				'member' => array(
-					'id' => $row['ID_MEMBER'],
+					'id' => $row['id_member'],
 					'name' => $row['reporter'],
-					'link' => $row['ID_MEMBER'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
-					'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+					'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['reporter'] . '</a>' : $row['reporter'],
+					'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 				),
 			);
 	}
@@ -538,7 +538,7 @@ function ModReport()
 	// !!! Should this limit the results to the boards the mod can see or not?
 	
 	require_once($sourcedir . '/Modlog.php');
-	getModLogEntries('lm.ID_MSG = ' . $context['report']['message_id']);
+	getModLogEntries('lm.id_msg = ' . $context['report']['message_id']);
 
 	// Finally we are done :P
 	loadTemplate('ModerationCenter');

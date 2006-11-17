@@ -424,7 +424,7 @@ $txt['support_title'] = 'Ondersteuningsinformatie';
 $txt['support_versions_current'] = 'Huidige SMF-versie';
 $txt['support_versions_forum'] = 'Forumversie';
 $txt['support_versions_php'] = 'PHP-versie';
-$txt['support_versions_mysql'] = 'MySQL-versie';
+$txt['support_versions_db'] = '%s-versie';
 $txt['support_versions_server'] = 'Serverversie';
 $txt['support_versions_gd'] = 'GD-versie';
 $txt['support_versions'] = 'Versie-informatie';
@@ -466,7 +466,7 @@ $txt['attachment_manager_browse'] = 'Bekijk bestanden';
 $txt['attachment_manager_maintenance'] = 'Bestandsonderhoud';
 $txt['attachment_manager_save'] = 'Opslaan';
 
-$txt['attachment_manager_settings'] = 'Bijlagemodus';
+$txt['attachmentEnable'] = 'Bijlagemodus';
 $txt['attachmentEnable_deactivate'] = 'Deactiveer bijlagen';
 $txt['attachmentEnable_enable_all'] = 'Activeer alle bijlagen';
 $txt['attachmentEnable_disable_new'] = 'Deactiveer nieuwe bijlagen';

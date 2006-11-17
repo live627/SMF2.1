@@ -278,7 +278,7 @@ function AdminHome()
 				else
 				{
 					$_SESSION['copy_expire'] = '';
-					$smfFunc['db_query']("
+					$smfFunc['db_query']('', "
 						DELETE FROM {$db_prefix}settings
 						WHERE variable = 'copy_settings'
 							OR variable = 'copyright_key'", __FILE__, __LINE__);
@@ -298,7 +298,7 @@ function AdminHome()
 
 	$context['current_versions'] = array(
 		'php' => array('title' => $txt['support_versions_php'], 'version' => PHP_VERSION),
-		'mysql' => array('title' => $txt['support_versions_mysql'], 'version' => ''),
+		'db' => array('title' => sprintf($txt['support_versions_db'], $smfFunc['db_title']), 'version' => ''),
 		'server' => array('title' => $txt['support_versions_server'], 'version' => $_SERVER['SERVER_SOFTWARE']),
 	);
 	$context['forum_version'] = $forum_version;
@@ -307,7 +307,7 @@ function AdminHome()
 	require_once($sourcedir . '/Subs-Admin.php');
 	$checkFor = array(
 		'gd',
-		'mysql_server',
+		'db_server',
 		'mmcache',
 		'eaccelerator',
 		'phpa',
@@ -484,7 +484,7 @@ function DisplayAdminFile()
 	// Danger Will Robinson.
 	$_REQUEST['filename'] = addslashes($_REQUEST['filename']);
 	
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT data, filetype
 		FROM {$db_prefix}admin_info_files
 		WHERE filename = '$_REQUEST[filename]'

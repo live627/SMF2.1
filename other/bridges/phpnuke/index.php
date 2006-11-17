@@ -222,7 +222,7 @@ function integrate_register ($Options, $theme_vars)
 		INSERT INTO {$prefix}_users 
 			(name, username, user_email,user_password, user_regdate)
 		VALUES 
-			(" . $Options['register_vars']['realName'] . ', ' . $Options['register_vars']['memberName'] . ', ' . $Options['register_vars']['emailAddress'].", '".md5($_POST['passwrd1'])."', '" . $Options['register_vars']['dateRegistered'] . "')");
+			(" . $Options['register_vars']['real_name'] . ', ' . $Options['register_vars']['member_name'] . ', ' . $Options['register_vars']['email_address'].", '".md5($_POST['passwrd1'])."', '" . $Options['register_vars']['date_registered'] . "')");
 
 	mysql_select_db($db_name);
 }

@@ -50,6 +50,8 @@ $txtChanges = array(
 		'avatar_allow_server_stored' => 'avatar_server_stored',
 		'avatar_allow_external_url' => 'avatar_external',
 		'avatar_allow_upload' => 'avatar_upload',
+		'default_personalText' => 'default_personal_text',
+		'allow_hideEmail' => 'allow_hide_email',
 	),
 	'index' => array(
 		2 => 'admin',
@@ -191,6 +193,7 @@ $txtChanges = array(
 		'smf240' => 'quote',
 		'smf251' => 'split',
 		'smf252' => 'merge',
+		'MSN' => 'msn',
 	),
 	'Login' => array(
 		635 => 'login_below',
@@ -205,8 +208,16 @@ $txtChanges = array(
 		'icons_enable_customized' => 'setting_messageIcons_enable',
 		'icons_enable_customized_note' => 'setting_messageIcons_enable_note',
 	),
+	'ModSettings' => array(
+		'default_personalText' => 'default_personal_text',
+		'allow_hideEmail' => 'allow_hide_email',
+	),
 	'Post' => array(
 		130 => 'regards_team',
+	),
+	'Reports' => array(
+		'member_group_minPosts' => 'member_group_min_posts',
+		'member_group_maxMessages' => 'member_group_max_messages',
 	),
 );
 

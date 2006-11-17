@@ -89,7 +89,7 @@ echo '
 	// Are they allowed to hide their email?
 	if ($context['allow_hide_email'])
 		echo '
-							<label for="hideEmail"><input type="checkbox" name="hideEmail" id="hideEmail" class="check" /> ', $txt[721], '</label>';
+							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt[721], '</label>';
 
 	echo '
 						</td>

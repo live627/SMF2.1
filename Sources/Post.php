@@ -92,7 +92,7 @@ if (!defined('SMF'))
 function Post()
 {
 	global $txt, $scripturl, $topic, $db_prefix, $modSettings, $board;
-	global $ID_MEMBER, $user_info, $sc, $board_info, $context, $settings;
+	global $id_member, $user_info, $sc, $board_info, $context, $settings;
 	global $sourcedir, $options, $smfFunc, $language;
 
 	loadLanguage('Post');
@@ -124,17 +124,17 @@ function Post()
 	// Check if it's locked.  It isn't locked if no topic is specified.
 	if (!empty($topic))
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				t.locked, IFNULL(ln.ID_TOPIC, 0) AS notify, t.isSticky, t.ID_POLL, t.numReplies, mf.ID_MEMBER,
-				t.ID_FIRST_MSG, mf.subject, GREATEST(ml.posterTime, ml.modifiedTime) AS lastPostTime
+				t.locked, IFNULL(ln.id_topic, 0) AS notify, t.is_sticky, t.id_poll, t.num_replies, mf.id_member,
+				t.id_first_msg, mf.subject, GREATEST(ml.poster_time, ml.modified_time) AS lastPostTime
 			FROM {$db_prefix}topics AS t
-				LEFT JOIN {$db_prefix}log_notify AS ln ON (ln.ID_TOPIC = t.ID_TOPIC AND ln.ID_MEMBER = $ID_MEMBER)
-				LEFT JOIN {$db_prefix}messages AS mf ON (mf.ID_MSG = t.ID_FIRST_MSG)
-				LEFT JOIN {$db_prefix}messages AS ml ON (ml.ID_MSG = t.ID_LAST_MSG)
-			WHERE t.ID_TOPIC = $topic
+				LEFT JOIN {$db_prefix}log_notify AS ln ON (ln.id_topic = t.id_topic AND ln.id_member = $id_member)
+				LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				LEFT JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
+			WHERE t.id_topic = $topic
 			LIMIT 1", __FILE__, __LINE__);
-		list ($locked, $context['notify'], $sticky, $pollID, $context['num_replies'], $ID_MEMBER_POSTER, $ID_FIRST_MSG, $first_subject, $lastPostTime) = $smfFunc['db_fetch_row']($request);
+		list ($locked, $context['notify'], $sticky, $pollID, $context['num_replies'], $ID_MEMBER_POSTER, $id_first_msg, $first_subject, $lastPostTime) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
 		// If this topic already has a poll, they sure can't add another.
@@ -148,7 +148,7 @@ function Post()
 
 			// By default the reply will be approved...
 			$context['becomes_approved'] = true;
-			if ($ID_MEMBER_POSTER != $ID_MEMBER)
+			if ($ID_MEMBER_POSTER != $id_member)
 			{
 				if (allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
 					$context['becomes_approved'] = false;
@@ -168,7 +168,7 @@ function Post()
 			$context['becomes_approved'] = true;
 		}
 
-		$context['can_lock'] = allowedTo('lock_any') || ($ID_MEMBER == $ID_MEMBER_POSTER && allowedTo('lock_own'));
+		$context['can_lock'] = allowedTo('lock_any') || ($id_member == $ID_MEMBER_POSTER && allowedTo('lock_own'));
 		$context['can_sticky'] = allowedTo('make_sticky') && !empty($modSettings['enableStickyTopics']);
 
 		$context['notify'] = !empty($context['notify']);
@@ -217,7 +217,7 @@ function Post()
 		if (empty($topic))
 			isAllowedTo('poll_post');
 		// This is an old topic - but it is yours!  Can you add to it?
-		elseif ($ID_MEMBER == $ID_MEMBER_POSTER && !allowedTo('poll_add_any'))
+		elseif ($id_member == $ID_MEMBER_POSTER && !allowedTo('poll_add_any'))
 			isAllowedTo('poll_add_own');
 		// If you're not the owner, can you add to any poll?
 		else
@@ -268,18 +268,18 @@ function Post()
 			}
 
 			// Get the current event information.
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT
-					ID_MEMBER, title, MONTH(startDate) AS month, DAYOFMONTH(startDate) AS day,
-					YEAR(startDate) AS year, (TO_DAYS(endDate) - TO_DAYS(startDate)) AS span
+					id_member, title, MONTH(start_date) AS month, DAYOFMONTH(start_date) AS day,
+					YEAR(start_date) AS year, (TO_DAYS(end_date) - TO_DAYS(start_date)) AS span
 				FROM {$db_prefix}calendar
-				WHERE ID_EVENT = " . $context['event']['id'] . "
+				WHERE id_event = " . $context['event']['id'] . "
 				LIMIT 1", __FILE__, __LINE__);
 			$row = $smfFunc['db_fetch_assoc']($request);
 			$smfFunc['db_free_result']($request);
 
 			// Make sure the user is allowed to edit this event.
-			if ($row['ID_MEMBER'] != $ID_MEMBER)
+			if ($row['id_member'] != $id_member)
 				isAllowedTo('calendar_edit_any');
 			elseif (!allowedTo('calendar_edit_any'))
 				isAllowedTo('calendar_edit_own');
@@ -315,22 +315,22 @@ function Post()
 			$boards = boardsAllowedTo('post_new');
 			if (empty($boards))
 				fatal_lang_error('cannot_post_new', 'user');
-			$request = $smfFunc['db_query']("
-				SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.childLevel
+			$request = $smfFunc['db_query']('', "
+				SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
 				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
+					LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 				WHERE $user_info[query_see_board]" . (in_array(0, $boards) ? '' : "
-					AND b.ID_BOARD IN (" . implode(', ', $boards) . ")"), __FILE__, __LINE__);
+					AND b.id_board IN (" . implode(', ', $boards) . ")"), __FILE__, __LINE__);
 			$context['event']['boards'] = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['event']['boards'][] = array(
-					'id' => $row['ID_BOARD'],
-					'name' => $row['boardName'],
-					'childLevel' => $row['childLevel'],
-					'prefix' => str_repeat('&nbsp;', $row['childLevel'] * 3),
+					'id' => $row['id_board'],
+					'name' => $row['board_name'],
+					'child_level' => $row['child_level'],
+					'prefix' => str_repeat('&nbsp;', $row['child_level'] * 3),
 					'cat' => array(
-						'id' => $row['ID_CAT'],
-						'name' => $row['catName']
+						'id' => $row['id_cat'],
+						'name' => $row['cat_name']
 					)
 				);
 			$smfFunc['db_free_result']($request);
@@ -577,18 +577,18 @@ function Post()
 		{
 			if (!empty($modSettings['attachmentEnable']))
 			{
-				$request = $smfFunc['db_query']("
-					SELECT IFNULL(size, -1) AS filesize, filename, ID_ATTACH, approved
+				$request = $smfFunc['db_query']('', "
+					SELECT IFNULL(size, -1) AS filesize, filename, id_attach, approved
 					FROM {$db_prefix}attachments
-					WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
-						 AND attachmentType = 0", __FILE__, __LINE__);
+					WHERE id_msg = " . (int) $_REQUEST['msg'] . "
+						 AND attachment_type = 0", __FILE__, __LINE__);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 				{
 					if ($row['filesize'] <= 0)
 						continue;
 					$context['current_attachments'][] = array(
 						'name' => $row['filename'],
-						'id' => $row['ID_ATTACH'],
+						'id' => $row['id_attach'],
 						'approved' => $row['approved'],
 					);
 				}
@@ -598,19 +598,19 @@ function Post()
 			// Allow moderators to change names....
 			if (allowedTo('moderate_forum'))
 			{
-				$request = $smfFunc['db_query']("
-					SELECT ID_MEMBER, posterName, posterEmail
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member, poster_name, poster_email
 					FROM {$db_prefix}messages
-					WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
-						AND ID_TOPIC = $topic
+					WHERE id_msg = " . (int) $_REQUEST['msg'] . "
+						AND id_topic = $topic
 					LIMIT 1", __FILE__, __LINE__);
 				$row = $smfFunc['db_fetch_assoc']($request);
 				$smfFunc['db_free_result']($request);
 
-				if (empty($row['ID_MEMBER']))
+				if (empty($row['id_member']))
 				{
-					$context['name'] = htmlspecialchars($row['posterName']);
-					$context['email'] = htmlspecialchars($row['posterEmail']);
+					$context['name'] = htmlspecialchars($row['poster_name']);
+					$context['email'] = htmlspecialchars($row['poster_email']);
 				}
 			}
 		}
@@ -625,18 +625,18 @@ function Post()
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
 		// Get the existing message.
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				m.ID_MEMBER, m.modifiedTime, m.smileysEnabled, m.body,
-				m.posterName, m.posterEmail, m.subject, m.icon, m.approved,
-				IFNULL(a.size, -1) AS filesize, a.filename, a.ID_ATTACH,
-				a.approved AS aApproved, t.ID_MEMBER_STARTED AS ID_MEMBER_POSTER,
-				m.posterTime
-			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-				LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_MSG = m.ID_MSG AND a.attachmentType = 0)
-			WHERE m.ID_MSG = $_REQUEST[msg]
-				AND m.ID_TOPIC = $topic
-				AND t.ID_TOPIC = $topic", __FILE__, __LINE__);
+				m.id_member, m.modified_time, m.smileys_enabled, m.body,
+				m.poster_name, m.poster_email, m.subject, m.icon, m.approved,
+				IFNULL(a.size, -1) AS filesize, a.filename, a.id_attach,
+				a.approved AS aApproved, t.id_member_started AS id_member_poster,
+				m.poster_time
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
+				LEFT JOIN {$db_prefix}attachments AS a ON (a.id_msg = m.id_msg AND a.attachment_type = 0)
+			WHERE m.id_msg = $_REQUEST[msg]
+				AND m.id_topic = $topic", __FILE__, __LINE__);
 		// The message they were trying to edit was most likely deleted.
 		// !!! Change this error message?
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -648,24 +648,24 @@ function Post()
 			$attachment_stuff[] = $row2;
 		$smfFunc['db_free_result']($request);
 
-		if ($row['ID_MEMBER'] == $ID_MEMBER && !allowedTo('modify_any'))
+		if ($row['id_member'] == $id_member && !allowedTo('modify_any'))
 		{
 			// Give an extra five minutes over the disable time threshold, so they can type.
-			if (!empty($modSettings['edit_disable_time']) && $row['posterTime'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+			if (!empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
-			elseif ($row['ID_MEMBER_POSTER'] == $ID_MEMBER && !allowedTo('modify_own'))
+			elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_own');
 		}
-		elseif ($row['ID_MEMBER_POSTER'] == $ID_MEMBER && !allowedTo('modify_any'))
+		elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_any'))
 			isAllowedTo('modify_replies');
 		else
 			isAllowedTo('modify_any');
 
 		// When was it last modified?
-		if (!empty($row['modifiedTime']))
-			$context['last_modified'] = timeformat($row['modifiedTime']);
+		if (!empty($row['modified_time']))
+			$context['last_modified'] = timeformat($row['modified_time']);
 
 		// Get the stuff ready for the form.
 		$form_subject = $row['subject'];
@@ -674,7 +674,7 @@ function Post()
 		censorText($form_subject);
 
 		// Check the boxes that should be checked.
-		$context['use_smileys'] = !empty($row['smileysEnabled']);
+		$context['use_smileys'] = !empty($row['smileys_enabled']);
 		$context['icon'] = $row['icon'];
 
 		// Show an "approve" box if the user can approve it, and the message isn't approved.
@@ -687,16 +687,16 @@ function Post()
 			if ($attachment['filesize'] >= 0 && !empty($modSettings['attachmentEnable']))
 				$context['current_attachments'][] = array(
 					'name' => $attachment['filename'],
-					'id' => $attachment['ID_ATTACH'],
+					'id' => $attachment['id_attach'],
 					'approved' => $attachment['aApproved'],
 				);
 		}
 
 		// Allow moderators to change names....
-		if (allowedTo('moderate_forum') && empty($row['ID_MEMBER']))
+		if (allowedTo('moderate_forum') && empty($row['id_member']))
 		{
-			$context['name'] = htmlspecialchars($row['posterName']);
-			$context['email'] = htmlspecialchars($row['posterEmail']);
+			$context['name'] = htmlspecialchars($row['poster_name']);
+			$context['email'] = htmlspecialchars($row['poster_email']);
 		}
 
 		// Set the destinaton.
@@ -725,13 +725,12 @@ function Post()
 			checkSession('get');
 
 			// Make sure they _can_ quote this post, and if so get it.
-			$request = $smfFunc['db_query']("
-				SELECT m.subject, IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime, m.body
-				FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-				WHERE m.ID_MSG = " . (int) $_REQUEST['quote'] . "
-					AND b.ID_BOARD = m.ID_BOARD
-					AND $user_info[query_see_board]
+			$request = $smfFunc['db_query']('', "
+				SELECT m.subject, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body
+				FROM {$db_prefix}messages AS m
+					INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+				WHERE m.id_msg = " . (int) $_REQUEST['quote'] . "
 					" . (allowedTo('approve_posts') ? '' : ' AND m.approved = 1') . "
 				LIMIT 1", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($request) == 0)
@@ -787,11 +786,11 @@ function Post()
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT COUNT(*), SUM(size)
 				FROM {$db_prefix}attachments
-				WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
-					AND attachmentType = 0", __FILE__, __LINE__);
+				WHERE id_msg = " . (int) $_REQUEST['msg'] . "
+					AND attachment_type = 0", __FILE__, __LINE__);
 			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 		}
@@ -808,7 +807,7 @@ function Post()
 			{
 				$temp_start++;
 
-				if (preg_match('~^post_tmp_' . $ID_MEMBER . '_\d+$~', $attachID) == 0)
+				if (preg_match('~^post_tmp_' . $id_member . '_\d+$~', $attachID) == 0)
 				{
 					unset($_SESSION['temp_attachments'][$attachID]);
 					continue;
@@ -903,7 +902,7 @@ function Post()
 				if (!is_writable($modSettings['attachmentUploadDir']))
 					fatal_lang_error('attachments_no_write', 'critical');
 
-				$attachID = 'post_tmp_' . $ID_MEMBER . '_' . $temp_start++;
+				$attachID = 'post_tmp_' . $id_member . '_' . $temp_start++;
 				$_SESSION['temp_attachments'][$attachID] = stripslashes(basename($_FILES['attachment']['name'][$n]));
 				$context['current_attachments'][] = array(
 					'name' => basename(stripslashes($_FILES['attachment']['name'][$n])),
@@ -1008,7 +1007,7 @@ function Post()
 
 	$context['is_new_topic'] = empty($topic);
 	$context['is_new_post'] = !isset($_REQUEST['msg']);
-	$context['is_first_post'] = $context['is_new_topic'] || (isset($_REQUEST['msg']) && $_REQUEST['msg'] == $ID_FIRST_MSG);
+	$context['is_first_post'] = $context['is_new_topic'] || (isset($_REQUEST['msg']) && $_REQUEST['msg'] == $id_first_msg);
 
 	// Register this form in the session variables.
 	checkSubmitOnce('register');
@@ -1023,7 +1022,7 @@ function Post()
 function Post2()
 {
 	global $board, $topic, $txt, $db_prefix, $modSettings, $sourcedir, $context;
-	global $ID_MEMBER, $user_info, $board_info, $options, $smfFunc;
+	global $id_member, $user_info, $board_info, $options, $smfFunc;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
 	if (!empty($_REQUEST['editor_mode']) && isset($_REQUEST['message']))
@@ -1062,13 +1061,13 @@ function Post2()
 	// Replying to a topic?
 	if (!empty($topic) && !isset($_REQUEST['msg']))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT t.locked, t.isSticky, t.ID_POLL, t.numReplies, m.ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT t.locked, t.is_sticky, t.id_poll, t.num_replies, m.id_member
 			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-			WHERE t.ID_TOPIC = $topic
-				AND m.ID_MSG = t.ID_FIRST_MSG
+			WHERE t.id_topic = $topic
+				AND m.id_msg = t.id_first_msg
 			LIMIT 1", __FILE__, __LINE__);
-		list ($tmplocked, $tmpstickied, $pollID, $numReplies, $ID_MEMBER_POSTER) = $smfFunc['db_fetch_row']($request);
+		list ($tmplocked, $tmpstickied, $pollID, $num_replies, $ID_MEMBER_POSTER) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
 		// Don't allow a post if it's locked.
@@ -1081,7 +1080,7 @@ function Post2()
 
 		// Do the permissions and approval stuff...
 		$becomesApproved = true;
-		if ($ID_MEMBER_POSTER != $ID_MEMBER)
+		if ($ID_MEMBER_POSTER != $id_member)
 		{
 			if (allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
 				$becomesApproved = false;
@@ -1102,7 +1101,7 @@ function Post2()
 			if ((empty($tmplocked) && empty($_POST['lock'])) || (!empty($_POST['lock']) && !empty($tmplocked)))
 				unset($_POST['lock']);
 			// You're have no permission to lock this topic.
-			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $ID_MEMBER != $ID_MEMBER_POSTER))
+			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $id_member != $ID_MEMBER_POSTER))
 				unset($_POST['lock']);
 			// You are allowed to (un)lock your own topic only.
 			elseif (!allowedTo('lock_any'))
@@ -1123,7 +1122,7 @@ function Post2()
 			unset($_POST['sticky']);
 
 		// If the number of replies has changed, if the setting is enabled, go back to Post() - which handles the error.
-		$newReplies = isset($_POST['num_replies']) && $numReplies > $_POST['num_replies'] ? $numReplies - $_POST['num_replies'] : 0;
+		$newReplies = isset($_POST['num_replies']) && $num_replies > $_POST['num_replies'] ? $num_replies - $_POST['num_replies'] : 0;
 		if (empty($options['no_new_reply_warning']) && !empty($newReplies))
 		{
 			$_REQUEST['preview'] = true;
@@ -1170,13 +1169,13 @@ function Post2()
 	{
 		$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				m.ID_MEMBER, m.posterName, m.posterEmail, m.posterTime, m.approved,
-				t.ID_FIRST_MSG, t.locked, t.isSticky, t.ID_MEMBER_STARTED AS ID_MEMBER_POSTER
+				m.id_member, m.poster_name, m.poster_email, m.poster_time, m.approved,
+				t.id_first_msg, t.locked, t.is_sticky, t.id_member_started AS id_member_poster
 			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-			WHERE m.ID_MSG = $_REQUEST[msg]
-				AND t.ID_TOPIC = $topic
+			WHERE m.id_msg = $_REQUEST[msg]
+				AND t.id_topic = $topic
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('smf272', false);
@@ -1192,7 +1191,7 @@ function Post2()
 			if ((empty($_POST['lock']) && empty($row['locked'])) || (!empty($_POST['lock']) && !empty($row['locked'])))
 				unset($_POST['lock']);
 			// You're simply not allowed to (un)lock this.
-			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $ID_MEMBER != $row['ID_MEMBER_POSTER']))
+			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $id_member != $row['id_member_poster']))
 				unset($_POST['lock']);
 			// You're only allowed to lock your own topics.
 			elseif (!allowedTo('lock_any'))
@@ -1210,19 +1209,19 @@ function Post2()
 		}
 
 		// Change the sticky status of this topic?
-		if (isset($_POST['sticky']) && (!allowedTo('make_sticky') || $_POST['sticky'] == $row['isSticky']))
+		if (isset($_POST['sticky']) && (!allowedTo('make_sticky') || $_POST['sticky'] == $row['is_sticky']))
 			unset($_POST['sticky']);
 
-		if ($row['ID_MEMBER'] == $ID_MEMBER && !allowedTo('modify_any'))
+		if ($row['id_member'] == $id_member && !allowedTo('modify_any'))
 		{
-			if (!empty($modSettings['edit_disable_time']) && $row['posterTime'] + $modSettings['edit_disable_time'] * 60 < time())
+			if (!empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
-			elseif ($row['ID_MEMBER_POSTER'] == $ID_MEMBER && !allowedTo('modify_own'))
+			elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_own');
 		}
-		elseif ($row['ID_MEMBER_POSTER'] == $ID_MEMBER && !allowedTo('modify_any'))
+		elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_any'))
 		{
 			isAllowedTo('modify_replies');
 
@@ -1234,11 +1233,11 @@ function Post2()
 			isAllowedTo('modify_any');
 
 			// Log it, assuming you're not modifying your own post.
-			if ($row['ID_MEMBER'] != $ID_MEMBER)
+			if ($row['id_member'] != $id_member)
 				$moderationAction = true;
 		}
 
-		$posterIsGuest = empty($row['ID_MEMBER']);
+		$posterIsGuest = empty($row['id_member']);
 
 		// Can they approve it?
 		$can_approve = allowedTo('approve_posts');
@@ -1247,8 +1246,8 @@ function Post2()
 
 		if (!allowedTo('moderate_forum') || !$posterIsGuest)
 		{
-			$_POST['guestname'] = addslashes($row['posterName']);
-			$_POST['email'] = addslashes($row['posterEmail']);
+			$_POST['guestname'] = addslashes($row['poster_name']);
+			$_POST['email'] = addslashes($row['poster_email']);
 		}
 	}
 
@@ -1266,7 +1265,7 @@ function Post2()
 		if (empty($modSettings['guest_post_no_email']))
 		{
 			// Only check if they changed it!
-			if (!isset($row) || $row['posterEmail'] != $_POST['email'])
+			if (!isset($row) || $row['poster_email'] != $_POST['email'])
 			{
 				if (!allowedTo('moderate_forum') && (!isset($_POST['email']) || $_POST['email'] == ''))
 					$post_errors[] = 'no_email';
@@ -1323,7 +1322,7 @@ function Post2()
 		if (empty($topic))
 			isAllowedTo('poll_post');
 		// Can you add to your own topics?
-		elseif ($ID_MEMBER == $row['ID_MEMBER_POSTER'] && !allowedTo('poll_add_any'))
+		elseif ($id_member == $row['id_member_poster'] && !allowedTo('poll_add_any'))
 			isAllowedTo('poll_add_own');
 		// Can you add polls to any topic, then?
 		else
@@ -1348,7 +1347,7 @@ function Post2()
 	{
 		// If user is a guest, make sure the chosen name isn't taken.
 		require_once($sourcedir . '/Subs-Members.php');
-		if (isReservedName($_POST['guestname'], 0, true, false) && (!isset($row['posterName']) || $_POST['guestname'] != $row['posterName']))
+		if (isReservedName($_POST['guestname'], 0, true, false) && (!isset($row['poster_name']) || $_POST['guestname'] != $row['poster_name']))
 			$post_errors[] = 'bad_name';
 	}
 	// If the user isn't a guest, get his or her name and email.
@@ -1434,7 +1433,7 @@ function Post2()
 			$del_temp[$i] = (int) $dummy;
 
 		require_once($sourcedir . '/ManageAttachments.php');
-		removeAttachments('a.attachmentType = 0 AND a.ID_MSG = ' . (int) $_REQUEST['msg'] . ' AND a.ID_ATTACH NOT IN (' . implode(', ', $del_temp) . ')');
+		removeAttachments('a.attachment_type = 0 AND a.id_msg = ' . (int) $_REQUEST['msg'] . ' AND a.id_attach NOT IN (' . implode(', ', $del_temp) . ')');
 	}
 
 	// ...or attach a new file...
@@ -1447,11 +1446,11 @@ function Post2()
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT COUNT(*), SUM(size)
 				FROM {$db_prefix}attachments
-				WHERE ID_MSG = " . (int) $_REQUEST['msg'] . "
-					AND attachmentType = 0", __FILE__, __LINE__);
+				WHERE id_msg = " . (int) $_REQUEST['msg'] . "
+					AND attachment_type = 0", __FILE__, __LINE__);
 			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 		}
@@ -1464,7 +1463,7 @@ function Post2()
 		if (!empty($_SESSION['temp_attachments']))
 			foreach ($_SESSION['temp_attachments'] as $attachID => $name)
 			{
-				if (preg_match('~^post_tmp_' . $ID_MEMBER . '_\d+$~', $attachID) == 0)
+				if (preg_match('~^post_tmp_' . $id_member . '_\d+$~', $attachID) == 0)
 					continue;
 
 				if (!empty($_POST['attach_del']) && !in_array($attachID, $_POST['attach_del']))
@@ -1503,7 +1502,7 @@ function Post2()
 
 			$attachmentOptions = array(
 				'post' => isset($_REQUEST['msg']) ? $_REQUEST['msg'] : 0,
-				'poster' => $ID_MEMBER,
+				'poster' => $id_member,
 				'name' => $_FILES['attachment']['name'][$n],
 				'tmp_name' => $_FILES['attachment']['tmp_name'][$n],
 				'size' => $_FILES['attachment']['size'][$n],
@@ -1538,30 +1537,30 @@ function Post2()
 	if (isset($_REQUEST['poll']))
 	{
 		// Create the poll.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}polls
-				(question, hideResults, maxVotes, expireTime, ID_MEMBER, posterName, changeVote)
+				(question, hide_results, max_votes, expire_time, id_member, poster_name, change_vote)
 			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes],
-				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $ID_MEMBER, SUBSTRING('$_POST[guestname]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
-		$ID_POLL = db_insert_id("{$db_prefix}polls", 'ID_POLL');
+				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $id_member, SUBSTRING('$_POST[guestname]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
+		$id_poll = db_insert_id("{$db_prefix}polls", 'id_poll');
 
 		// Create each answer choice.
 		$i = 0;
-		$setString = '';
+		$pollOptions = array();
 		foreach ($_POST['options'] as $option)
 		{
-			$setString .= "
-					($ID_POLL, $i, SUBSTRING('$option', 1, 255)),";
+			$pollOptions[] = array($id_poll, $i, "SUBSTRING('$option', 1, 255)");
 			$i++;
 		}
 
-		$smfFunc['db_query']("
-			INSERT INTO {$db_prefix}poll_choices
-				(ID_POLL, ID_CHOICE, label)
-			VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
+		$smfFunc['db_insert']('insert',
+			"{$db_prefix}poll_choices",
+			array('id_poll', 'id_choice', 'label'),
+			$pollOptions,
+			array('id_poll', 'id_choice'));
 	}
 	else
-		$ID_POLL = 0;
+		$id_poll = 0;
 
 	// Creating a new topic?
 	$newTopic = empty($_REQUEST['msg']) && empty($topic);
@@ -1579,13 +1578,13 @@ function Post2()
 	$topicOptions = array(
 		'id' => empty($topic) ? 0 : $topic,
 		'board' => $board,
-		'poll' => isset($_REQUEST['poll']) ? $ID_POLL : null,
+		'poll' => isset($_REQUEST['poll']) ? $id_poll : null,
 		'lock_mode' => isset($_POST['lock']) ? (int) $_POST['lock'] : null,
 		'sticky_mode' => isset($_POST['sticky']) && !empty($modSettings['enableStickyTopics']) ? (int) $_POST['sticky'] : null,
 		'mark_as_read' => true,
 	);
 	$posterOptions = array(
-		'id' => $ID_MEMBER,
+		'id' => $id_member,
 		'name' => $_POST['guestname'],
 		'email' => $_POST['email'],
 		'update_post_count' => !$user_info['is_guest'] && !isset($_REQUEST['msg']) && $board_info['posts_count'],
@@ -1595,7 +1594,7 @@ function Post2()
 	if (!empty($_REQUEST['msg']))
 	{
 		// Have admins allowed people to hide their screwups?
-		if (time() - $row['posterTime'] > $modSettings['edit_wait_time'] || $ID_MEMBER != $row['ID_MEMBER'])
+		if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $id_member != $row['id_member'])
 		{
 			$msgOptions['modify_time'] = time();
 			$msgOptions['modify_name'] = addslashes($user_info['name']);
@@ -1621,7 +1620,7 @@ function Post2()
 	{
 		require_once($sourcedir . '/Calendar.php');
 		calendarCanLink();
-		calendarInsertEvent($board, $topic, $_POST['evtitle'], $ID_MEMBER, $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
+		calendarInsertEvent($board, $topic, $_POST['evtitle'], $id_member, $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
 	}
 	elseif (isset($_POST['calendar']))
 	{
@@ -1635,36 +1634,34 @@ function Post2()
 		if (!allowedTo('calendar_edit_any'))
 		{
 			// Get the event's poster.
-			$request = $smfFunc['db_query']("
-				SELECT ID_MEMBER
+			$request = $smfFunc['db_query']('', "
+				SELECT id_member
 				FROM {$db_prefix}calendar
-				WHERE ID_EVENT = $_REQUEST[eventid]", __FILE__, __LINE__);
+				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 			$row2 = $smfFunc['db_fetch_assoc']($request);
 			$smfFunc['db_free_result']($request);
 
 			// Silly hacker, Trix are for kids. ...probably trademarked somewhere, this is FAIR USE! (parody...)
-			isAllowedTo('calendar_edit_' . ($row2['ID_MEMBER'] == $ID_MEMBER ? 'own' : 'any'));
+			isAllowedTo('calendar_edit_' . ($row2['id_member'] == $id_member ? 'own' : 'any'));
 		}
 
 		// Delete it?
 		if (isset($_REQUEST['deleteevent']))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}calendar
-				WHERE ID_EVENT = $_REQUEST[eventid]
-				LIMIT 1", __FILE__, __LINE__);
+				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 		// ... or just update it?
 		else
 		{
 			$span = !empty($modSettings['cal_allowspan']) && !empty($_REQUEST['span']) ? min((int) $modSettings['cal_maxspan'], (int) $_REQUEST['span'] - 1) : 0;
 			$start_time = mktime(0, 0, 0, (int) $_REQUEST['month'], (int) $_REQUEST['day'], (int) $_REQUEST['year']);
 
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}calendar
-				SET endDate = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "',
-					startDate = '" . strftime('%Y-%m-%d', $start_time) . "',
+				SET end_date = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "',
+					start_date = '" . strftime('%Y-%m-%d', $start_time) . "',
 					title = '" . $smfFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES) . "'
-				WHERE ID_EVENT = $_REQUEST[eventid]
-				LIMIT 1", __FILE__, __LINE__);
+				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 		}
 		updateStats('calendar');
 	}
@@ -1675,11 +1672,11 @@ function Post2()
 		// Mark all the parents read.  (since you just posted and they will be unread.)
 		if (!empty($board_info['parent_boards']))
 		{
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_boards
-				SET ID_MSG = $modSettings[maxMsgID]
-				WHERE ID_MEMBER = $ID_MEMBER
-					AND ID_BOARD IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")", __FILE__, __LINE__);
+				SET id_msg = $modSettings[maxMsgID]
+				WHERE id_member = $id_member
+					AND id_board IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")", __FILE__, __LINE__);
 		}
 	}
 
@@ -1687,21 +1684,20 @@ function Post2()
 	if (!empty($_POST['notify']))
 	{
 		if (allowedTo('mark_any_notify'))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				INSERT IGNORE INTO {$db_prefix}log_notify
-					(ID_MEMBER, ID_TOPIC, ID_BOARD)
-				VALUES ($ID_MEMBER, $topic, 0)", __FILE__, __LINE__);
+					(id_member, id_topic, id_board)
+				VALUES ($id_member, $topic, 0)", __FILE__, __LINE__);
 	}
 	elseif (!$newTopic)
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_notify
-			WHERE ID_MEMBER = $ID_MEMBER
-				AND ID_TOPIC = $topic
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_member = $id_member
+				AND id_topic = $topic", __FILE__, __LINE__);
 
 	// Log an act of moderation - modifying.
 	if (!empty($moderationAction))
-		logAction('modify', array('topic' => $topic, 'message' => (int) $_REQUEST['msg'], 'member' => $row['ID_MEMBER'], 'board' => $board));
+		logAction('modify', array('topic' => $topic, 'message' => (int) $_REQUEST['msg'], 'member' => $row['id_member'], 'board' => $board));
 
 	if (isset($_POST['lock']) && $_POST['lock'] != 2)
 		logAction('lock', array('topic' => $topicOptions['id'], 'board' => $topicOptions['board']));
@@ -1734,11 +1730,11 @@ function Post2()
 	if (!empty($_REQUEST['goback']))
 	{
 		// Mark the board as read.... because it might get confusing otherwise.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_boards
-			SET ID_MSG = $modSettings[maxMsgID]
-			WHERE ID_MEMBER = $ID_MEMBER
-				AND ID_BOARD = $board", __FILE__, __LINE__);
+			SET id_msg = $modSettings[maxMsgID]
+			WHERE id_member = $id_member
+				AND id_board = $board", __FILE__, __LINE__);
 	}
 
 	if (!empty($_POST['announce_topic']))
@@ -1800,29 +1796,29 @@ function AnnouncementSelectMembergroup()
 	}
 
 	// Get all membergroups that have access to the board the announcement was made on.
-	$request = $smfFunc['db_query']("
-		SELECT mg.ID_GROUP, mg.groupName, COUNT(mem.ID_MEMBER) AS num_members
+	$request = $smfFunc['db_query']('', "
+		SELECT mg.id_group, mg.group_name, COUNT(mem.id_member) AS num_members
 		FROM {$db_prefix}membergroups AS mg
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_GROUP = mg.ID_GROUP OR FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups) OR mg.ID_GROUP = mem.ID_POST_GROUP)
-		WHERE mg.ID_GROUP IN (" . implode(', ', $groups) . ")
-		GROUP BY mg.ID_GROUP
-		ORDER BY mg.minPosts, IF(mg.ID_GROUP < 4, mg.ID_GROUP, 4), mg.groupName", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_group = mg.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
+		WHERE mg.id_group IN (" . implode(', ', $groups) . ")
+		GROUP BY mg.id_group
+		ORDER BY mg.min_posts, CASE WHEN mg.id_group < 4 THEN mg.id_group ELSE 4 END, mg.group_name", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$context['groups'][$row['ID_GROUP']] = array(
-			'id' => $row['ID_GROUP'],
-			'name' => $row['groupName'],
+		$context['groups'][$row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name'],
 			'member_count' => $row['num_members'],
 		);
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Get the subject of the topic we're about to announce.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT m.subject
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-		WHERE t.ID_TOPIC = $topic
-			AND m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
+		WHERE t.id_topic = $topic
+			AND m.id_msg = t.id_first_msg", __FILE__, __LINE__);
 	list ($context['topic_subject']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1838,7 +1834,7 @@ function AnnouncementSelectMembergroup()
 function AnnouncementSend()
 {
 	global $db_prefix, $topic, $board, $board_info, $context, $modSettings;
-	global $language, $scripturl, $txt, $ID_MEMBER, $sourcedir, $smfFunc;
+	global $language, $scripturl, $txt, $id_member, $sourcedir, $smfFunc;
 
 	checkSession();
 
@@ -1860,32 +1856,32 @@ function AnnouncementSend()
 		$_POST['who'][$id] = in_array((int) $mg, $groups) ? (int) $mg : 0;
 
 	// Get the topic subject and censor it.
-	$request = $smfFunc['db_query']("
-		SELECT m.ID_MSG, m.subject, m.body
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_msg, m.subject, m.body
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-		WHERE t.ID_TOPIC = $topic
-			AND m.ID_MSG = t.ID_FIRST_MSG", __FILE__, __LINE__);
-	list ($ID_MSG, $context['topic_subject'], $message) = $smfFunc['db_fetch_row']($request);
+		WHERE t.id_topic = $topic
+			AND m.id_msg = t.id_first_msg", __FILE__, __LINE__);
+	list ($id_msg, $context['topic_subject'], $message) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	censorText($context['topic_subject']);
 	censorText($message);
 
-	$message = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($message, false, $ID_MSG), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
+	$message = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($message, false, $id_msg), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
 
 	// We need this in order to be able send emails.
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Select the email addresses for this batch.
-	$request = $smfFunc['db_query']("
-		SELECT mem.ID_MEMBER, mem.emailAddress, mem.lngfile
+	$request = $smfFunc['db_query']('', "
+		SELECT mem.id_member, mem.email_address, mem.lngfile
 		FROM {$db_prefix}members AS mem
-		WHERE mem.ID_MEMBER != $ID_MEMBER" . (!empty($modSettings['allow_disableAnnounce']) ? '
-			AND mem.notifyAnnouncements = 1' : '') . "
+		WHERE mem.id_member != $id_member" . (!empty($modSettings['allow_disableAnnounce']) ? '
+			AND mem.notify_announcements = 1' : '') . "
 			AND mem.is_activated = 1
-			AND (mem.ID_GROUP IN (" . implode(', ', $_POST['who']) . ") OR mem.ID_POST_GROUP IN (" . implode(', ', $_POST['who']) . ") OR FIND_IN_SET(" . implode(", mem.additionalGroups) OR FIND_IN_SET(", $_POST['who']) . ", mem.additionalGroups))
-			AND mem.ID_MEMBER > $context[start]
-		ORDER BY mem.ID_MEMBER
+			AND (mem.id_group IN (" . implode(', ', $_POST['who']) . ") OR mem.id_post_group IN (" . implode(', ', $_POST['who']) . ") OR FIND_IN_SET(" . implode(", mem.additional_groups) OR FIND_IN_SET(", $_POST['who']) . ", mem.additional_groups))
+			AND mem.id_member > $context[start]
+		ORDER BY mem.id_member
 		LIMIT $chunkSize", __FILE__, __LINE__);
 
 	// All members have received a mail. Go to the next screen.
@@ -1916,8 +1912,8 @@ function AnnouncementSend()
 			);
 		}
 
-		$announcements[$cur_language]['recipients'][$row['ID_MEMBER']] = $row['emailAddress'];
-		$context['start'] = $row['ID_MEMBER'];
+		$announcements[$cur_language]['recipients'][$row['id_member']] = $row['email_address'];
+		$context['start'] = $row['id_member'];
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -1941,7 +1937,7 @@ function AnnouncementSend()
 function notifyMembersBoard(&$topicData)
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $ID_MEMBER, $modSettings, $sourcedir, $board, $smfFunc;
+	global $id_member, $modSettings, $sourcedir, $board, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -1979,53 +1975,52 @@ function notifyMembersBoard(&$topicData)
 	$digest_insert = array();
 	foreach ($topicData as $id => $data)
 		$digest_insert[] = "($data[topic], $data[msg], 'topic', $user_info[id])";
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}log_digest
-			(ID_TOPIC, ID_MSG, note_type, exclude)
+			(id_topic, id_msg, note_type, exclude)
 		VALUES
 			" . implode(', ', $digest_insert), __FILE__, __LINE__);
 
-	// Find the members with notification on for this board.
-	$members = $smfFunc['db_query']("
+	// Find the members with notification on for these boards.
+	$members = $smfFunc['db_query']('', "
 		SELECT
-			mem.ID_MEMBER, mem.emailAddress, mem.notifyRegularity, mem.notifySendBody, mem.lngfile,
-			ln.sent, ln.ID_BOARD, mem.ID_GROUP, mem.additionalGroups, b.memberGroups,
-			mem.ID_POST_GROUP
+			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
+			ln.sent, ln.id_board, mem.id_group, mem.additional_groups, b.member_groups,
+			mem.id_post_group
 		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}members AS mem, {$db_prefix}boards AS b)
-		WHERE ln.ID_BOARD IN (" . implode(',', $board_index) . ")
-			AND b.ID_BOARD = ln.ID_BOARD
-			AND mem.ID_MEMBER != $user_info[id]
+		WHERE ln.id_board IN (" . implode(',', $board_index) . ")
+			AND b.id_board = ln.id_board
+			AND mem.id_member != $user_info[id]
 			AND mem.is_activated = 1
-			AND mem.notifyTypes != 4
-			AND mem.notifyRegularity < 2
-			AND ln.ID_MEMBER = mem.ID_MEMBER
-		GROUP BY mem.ID_MEMBER
+			AND mem.notify_types != 4
+			AND mem.notify_regularity < 2
+			AND ln.id_member = mem.id_member
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	while ($rowmember = $smfFunc['db_fetch_assoc']($members))
 	{
-		if ($rowmember['ID_GROUP'] != 1)
+		if ($rowmember['id_group'] != 1)
 		{
-			$allowed = explode(',', $rowmember['memberGroups']);
-			$rowmember['additionalGroups'] = explode(',', $rowmember['additionalGroups']);
-			$rowmember['additionalGroups'][] = $rowmember['ID_GROUP'];
-			$rowmember['additionalGroups'][] = $rowmember['ID_POST_GROUP'];
+			$allowed = explode(',', $rowmember['member_groups']);
+			$rowmember['additional_groups'] = explode(',', $rowmember['additional_groups']);
+			$rowmember['additional_groups'][] = $rowmember['id_group'];
+			$rowmember['additional_groups'][] = $rowmember['id_post_group'];
 
-			if (count(array_intersect($allowed, $rowmember['additionalGroups'])) == 0)
+			if (count(array_intersect($allowed, $rowmember['additional_groups'])) == 0)
 				continue;
 		}
 
 		loadLanguage('Post', empty($rowmember['lngfile']) || empty($modSettings['userLanguage']) ? $language : $rowmember['lngfile'], false);
 
 		// Now loop through all the notifications to send for this board.
-		if (empty($boards[$rowmember['ID_BOARD']]))
+		if (empty($boards[$rowmember['id_board']]))
 			continue;
 
 		$sentOnceAlready = 0;
-		foreach ($boards[$rowmember['ID_BOARD']] as $key)
+		foreach ($boards[$rowmember['id_board']] as $key)
 		{
 			// Don't notify the guy who started the topic!
 			//!!! In this case actually send them a "it's approved hooray" email
-			if ($topicData[$key]['poster'] == $rowmember['ID_MEMBER'])
+			if ($topicData[$key]['poster'] == $rowmember['id_member'])
 				continue;
 
 			// Setup the string for adding the body to the message, if a user wants it.
@@ -2034,17 +2029,17 @@ function notifyMembersBoard(&$topicData)
 			$send_subject = sprintf($txt['notify_boards_subject'], $topicData[$key]['subject']);
 	
 			// Send only if once is off or it's on and it hasn't been sent.
-			if (!empty($rowmember['notifyRegularity']) && !$sentOnceAlready && empty($rowmember['sent']))
-				sendmail($rowmember['emailAddress'], $send_subject,
+			if (!empty($rowmember['notify_regularity']) && !$sentOnceAlready && empty($rowmember['sent']))
+				sendmail($rowmember['email_address'], $send_subject,
 					sprintf($txt['notify_boards'], $topicData[$key]['subject'], $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new', un_htmlspecialchars($topicData[$key]['name'])) .
 					$txt['notify_boards_once'] . "\n\n" .
-					(!empty($rowmember['notifySendBody']) ? $body_text : '') .
+					(!empty($rowmember['notify_send_body']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
 					sprintf($txt['regards_team'], $context['forum_name']), null, 't' . $topicData[$key]['topic']);
-			elseif (empty($rowmember['notifyRegularity']))
-				sendmail($rowmember['emailAddress'], $send_subject,
+			elseif (empty($rowmember['notify_regularity']))
+				sendmail($rowmember['email_address'], $send_subject,
 					sprintf($txt['notify_boards'], $topicData[$key]['subject'], $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new', un_htmlspecialchars($topicData[$key]['name'])) .
-					(!empty($rowmember['notifySendBody']) ? $body_text : '') .
+					(!empty($rowmember['notify_send_body']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
 					sprintf($txt['regards_team'], $context['forum_name']), null, 't' . $topicData[$key]['topic']);
 
@@ -2054,11 +2049,11 @@ function notifyMembersBoard(&$topicData)
 	$smfFunc['db_free_result']($members);
 
 	// Sent!
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}log_notify
 		SET sent = 1
-		WHERE ID_BOARD IN (" . implode(',', $board_index) . ")
-			AND ID_MEMBER != $user_info[id]", __FILE__, __LINE__);
+		WHERE id_board IN (" . implode(',', $board_index) . ")
+			AND id_member != $user_info[id]", __FILE__, __LINE__);
 }
 
 // Get the topic for display purposes.
@@ -2077,27 +2072,27 @@ function getTopic()
 		LIMIT ' . (int) $modSettings['topicSummaryPosts'];
 
 	// If you're modifying, get only those posts before the current one. (otherwise get all.)
-	$request = $smfFunc['db_query']("
-		SELECT IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime, m.body, m.smileysEnabled, m.ID_MSG
+	$request = $smfFunc['db_query']('', "
+		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.smileys_enabled, m.id_msg
 		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE m.ID_TOPIC = $topic" . (isset($_REQUEST['msg']) ? "
-			AND m.ID_MSG < " . (int) $_REQUEST['msg'] : '') . "
-		ORDER BY m.ID_MSG DESC$limit", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_topic = $topic" . (isset($_REQUEST['msg']) ? "
+			AND m.id_msg < " . (int) $_REQUEST['msg'] : '') . "
+		ORDER BY m.id_msg DESC$limit", __FILE__, __LINE__);
 	$context['previous_posts'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Censor, BBC, ...
 		censorText($row['body']);
-		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
+		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// ...and store.
 		$context['previous_posts'][] = array(
-			'poster' => $row['posterName'],
+			'poster' => $row['poster_name'],
 			'message' => $row['body'],
-			'time' => timeformat($row['posterTime']),
-			'timestamp' => forum_time(true, $row['posterTime']),
-			'id' => $row['ID_MSG'],
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time']),
+			'id' => $row['id_msg'],
 			'is_new' => !empty($newReplies),
 		);
 
@@ -2123,13 +2118,12 @@ function QuoteFast()
 	// Where we going if we need to?
 	$context['post_box_name'] = isset($_GET['pb']) ? $_GET['pb'] : '';
 
-	$request = $smfFunc['db_query']("
-		SELECT IFNULL(mem.realName, m.posterName) AS posterName, m.posterTime, m.body, m.ID_TOPIC, m.subject
-		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE m.ID_MSG = " . (int) $_REQUEST['quote'] . "
-			AND b.ID_BOARD = m.ID_BOARD
-			AND $user_info[query_see_board]
+	$request = $smfFunc['db_query']('', "
+		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.id_topic, m.subject
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_msg = " . (int) $_REQUEST['quote'] . "
 		LIMIT 1", __FILE__, __LINE__);
 	$context['close_window'] = $smfFunc['db_num_rows']($request) == 0;
 
@@ -2175,7 +2169,7 @@ function QuoteFast()
 			$lb = "\n";
 
 		// Add a quote string on the front and end.
-		$context['quote']['xml'] = '[quote author=' . $row['posterName'] . ' link=topic=' . $row['ID_TOPIC'] . '.msg' . (int) $_REQUEST['quote'] . '#msg' . (int) $_REQUEST['quote'] . ' date=' . $row['posterTime'] . ']' . $lb . $row['body'] . $lb . '[/quote]';
+		$context['quote']['xml'] = '[quote author=' . $row['poster_name'] . ' link=topic=' . $row['id_topic'] . '.msg' . (int) $_REQUEST['quote'] . '#msg' . (int) $_REQUEST['quote'] . ' date=' . $row['poster_time'] . ']' . $lb . $row['body'] . $lb . '[/quote]';
 		$context['quote']['text'] = strtr(un_htmlspecialchars($context['quote']['xml']), array('\'' => '\\\'', '\\' => '\\\\', "\n" => '\\n', '</script>' => '</\' + \'script>'));
 		$context['quote']['xml'] = strtr($context['quote']['xml'], array('&nbsp;' => '&#160;', '<' => '&lt;', '>' => '&gt;'));
 
@@ -2205,7 +2199,7 @@ function QuoteFast()
 function JavaScriptModify()
 {
 	global $db_prefix, $sourcedir, $modSettings, $board, $topic, $txt;
-	global $user_info, $ID_MEMBER, $context, $smfFunc, $language;
+	global $user_info, $id_member, $context, $smfFunc, $language;
 
 	// We have to have a topic!
 	if (empty($topic))
@@ -2215,14 +2209,14 @@ function JavaScriptModify()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Assume the first message if no message ID was given.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 			SELECT 
-				t.locked, t.numReplies, t.ID_MEMBER_STARTED, t.ID_FIRST_MSG,
-				m.ID_MSG, m.ID_MEMBER, m.posterTime, m.subject, m.smileysEnabled, m.body, m.icon
+				t.locked, t.num_replies, t.id_member_started, t.id_first_msg,
+				m.id_msg, m.id_member, m.poster_time, m.subject, m.smileys_enabled, m.body, m.icon
 			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-			WHERE m.ID_MSG = " . (empty($_REQUEST['msg']) ? 't.ID_FIRST_MSG' : (int) $_REQUEST['msg']) . "
-				AND m.ID_TOPIC = $topic
-				AND t.ID_TOPIC = $topic", __FILE__, __LINE__);
+			WHERE m.id_msg = " . (empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg']) . "
+				AND m.id_topic = $topic
+				AND t.id_topic = $topic", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -2231,23 +2225,23 @@ function JavaScriptModify()
 	// Change either body or subject requires permissions to modify messages.
 	if (isset($_POST['message']) || isset($_POST['subject']) || isset($_REQUEST['icon']))
 	{
-		if ($row['ID_MEMBER'] == $ID_MEMBER && !allowedTo('modify_any'))
+		if ($row['id_member'] == $id_member && !allowedTo('modify_any'))
 		{
-			if (!empty($modSettings['edit_disable_time']) && $row['posterTime'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
+			if (!empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
-			elseif ($row['ID_MEMBER_STARTED'] == $ID_MEMBER && !allowedTo('modify_own'))
+			elseif ($row['id_member_started'] == $id_member && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_own');
 		}
 		// Otherwise, they're locked out; someone who can modify the replies is needed.
-		elseif ($row['ID_MEMBER_STARTED'] == $ID_MEMBER && !allowedTo('modify_any'))
+		elseif ($row['id_member_started'] == $id_member && !allowedTo('modify_any'))
 			isAllowedTo('modify_replies');
 		else
 			isAllowedTo('modify_any');
 
 		// Only log this action if it wasn't your message.
-		$moderationAction = $row['ID_MEMBER'] != $ID_MEMBER;
+		$moderationAction = $row['id_member'] != $id_member;
 	}
 
 	$post_errors = array();
@@ -2293,7 +2287,7 @@ function JavaScriptModify()
 
 	if (isset($_POST['lock']))
 	{
-		if (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $ID_MEMBER != $row['ID_MEMBER']))
+		if (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $id_member != $row['id_member']))
 			unset($_POST['lock']);
 		elseif (!allowedTo('lock_any'))
 		{
@@ -2315,7 +2309,7 @@ function JavaScriptModify()
 	if (empty($post_errors))
 	{
 		$msgOptions = array(
-			'id' => $row['ID_MSG'],
+			'id' => $row['id_msg'],
 			'subject' => isset($_POST['subject']) ? $_POST['subject'] : null,
 			'body' => isset($_POST['message']) ? $_POST['message'] : null,
 			'icon' => isset($_REQUEST['icon']) ? preg_replace('~[\./\\\\*\':"<>]~', '', $_REQUEST['icon']) : null,
@@ -2333,7 +2327,7 @@ function JavaScriptModify()
 		if ((isset($_POST['subject']) && $_POST['subject'] != $row['subject']) || (isset($_POST['message']) && $_POST['message'] != $row['body']) || (isset($_REQUEST['icon']) && $_REQUEST['icon'] != $row['icon']))
 		{
 			// And even then only if the time has passed...
-			if (time() - $row['posterTime'] > $modSettings['edit_wait_time'] || $ID_MEMBER != $row['ID_MEMBER'])
+			if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $id_member != $row['id_member'])
 			{
 				$msgOptions['modify_time'] = time();
 				$msgOptions['modify_name'] = addslashes($user_info['name']);
@@ -2343,7 +2337,7 @@ function JavaScriptModify()
 		modifyPost($msgOptions, $topicOptions, $posterOptions);
 
 		// Changing the first subject updates other subjects to 'Re: new_subject'.
-		if (isset($_POST['subject']) && isset($_REQUEST['change_all_subjects']) && $row['ID_FIRST_MSG'] == $row['ID_MSG'] && !empty($row['numReplies']) && (allowedTo('modify_any') || ($row['ID_MEMBER_STARTED'] == $ID_MEMBER && allowedTo('modify_replies'))))
+		if (isset($_POST['subject']) && isset($_REQUEST['change_all_subjects']) && $row['id_first_msg'] == $row['id_msg'] && !empty($row['num_replies']) && (allowedTo('modify_any') || ($row['id_member_started'] == $id_member && allowedTo('modify_replies'))))
 		{
 			// Get the proper (default language) response prefix first.
 			if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
@@ -2359,16 +2353,15 @@ function JavaScriptModify()
 				cache_put_data('response_prefix', $context['response_prefix'], 600);
 			}
 
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}messages
 				SET subject = '$context[response_prefix]$_POST[subject]'
-				WHERE ID_TOPIC = $topic
-					AND ID_MSG != $row[ID_FIRST_MSG]
-				LIMIT $row[numReplies]", __FILE__, __LINE__);
+				WHERE id_topic = $topic
+					AND id_msg != $row[id_first_msg]", __FILE__, __LINE__);
 		}
 
 		if ($moderationAction)
-			logAction('modify', array('topic' => $topic, 'message' => $row['ID_MSG'], 'member' => $row['ID_MEMBER_STARTED'], 'board' => $board));
+			logAction('modify', array('topic' => $topic, 'message' => $row['id_msg'], 'member' => $row['id_member_started'], 'board' => $board));
 	}
 
 	if (isset($_REQUEST['xml']))
@@ -2377,28 +2370,28 @@ function JavaScriptModify()
 		if (empty($post_errors) && isset($msgOptions['subject']) && isset($msgOptions['body']))
 		{
 			$context['message'] = array(
-				'id' => $row['ID_MSG'],
+				'id' => $row['id_msg'],
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
 					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
 					'name' => isset($msgOptions['modify_time']) ? stripslashes($msgOptions['modify_name']) : '',
 				),
 				'subject' => stripslashes($msgOptions['subject']),
-				'first_in_topic' => $row['ID_MSG'] == $row['ID_FIRST_MSG'],
+				'first_in_topic' => $row['id_msg'] == $row['id_first_msg'],
 				'body' => stripslashes($msgOptions['body']),
 			);
 
 			censorText($context['message']['subject']);
 			censorText($context['message']['body']);
 
-			$context['message']['body'] = parse_bbc($context['message']['body'], $row['smileysEnabled'], $row['ID_MSG']);
+			$context['message']['body'] = parse_bbc($context['message']['body'], $row['smileys_enabled'], $row['id_msg']);
 		}
 		// Topic?
 		elseif (empty($post_errors))
 		{
 			$context['sub_template'] = 'modifytopicdone';
 			$context['message'] = array(
-				'id' => $row['ID_MSG'],
+				'id' => $row['id_msg'],
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
 					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
@@ -2412,7 +2405,7 @@ function JavaScriptModify()
 		else
 		{
 			$context['message'] = array(
-				'id' => $row['ID_MSG'],
+				'id' => $row['id_msg'],
 				'errors' => array(),
 				'error_in_subject' => in_array('no_subject', $post_errors),
 				'error_in_body' => in_array('no_message', $post_errors) || in_array('long_message', $post_errors),

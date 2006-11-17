@@ -77,7 +77,7 @@ function template_error_log()
 					</td><td class="windowbg2" width="100%"><table width="100%" class="windowbg2" border="0" cellspacing="7" cellpadding="0">
 						<tr>
 							<td class="windowbg2" width="50%">
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=ID_MEMBER;value=', $error['member']['id'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '" /></a>
+								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=id_member;value=', $error['member']['id'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_member'], '" /></a>
 								<b>', $error['member']['link'], '</b>
 							</td><td class="windowbg2" width="50%" align="left">
 								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? '' : ';desc', $context['has_filter'] ? $context['filter']['href'] : '', '" title="', $txt['reverse_direction'], '"><img src="', $settings['images_url'], '/sort_', $context['sort_direction'], '.gif" alt="" /></a>
@@ -99,7 +99,7 @@ function template_error_log()
 						</tr><tr>
 							<td class="windowbg2" width="50%">&nbsp;</td>
 							<td class="windowbg2" width="50%">
-								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=errorType;value=', $error['error_type']['type'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '" /></a>
+								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=error_type;value=', $error['error_type']['type'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '" /></a>
 								', $txt['error_type'], ': ', $error['error_type']['name'], '
 							</td>
 						</tr></td>	

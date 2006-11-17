@@ -20,39 +20,39 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	mem.ID_MEMBER, SUBSTRING(mem.memberName, 1, 80) AS memberName,
-	mem.dateRegistered, mem.posts, SUBSTRING(mem.passwd, 1, 64) AS passwd,
-	SUBSTRING(mem.websiteTitle, 1, 255) AS websiteTitle,
-	SUBSTRING(mem.websiteUrl, 1, 255) AS websiteUrl, mem.lastLogin,
-	mem.birthdate, SUBSTRING(mem.ICQ, 1, 255) AS ICQ,
-	SUBSTRING(IFNULL(mem.realName, mem.memberName), 1, 255) AS realName,
+	mem.id_member, SUBSTRING(mem.member_name, 1, 80) AS member_name,
+	mem.date_registered, mem.posts, SUBSTRING(mem.passwd, 1, 64) AS passwd,
+	SUBSTRING(mem.website_title, 1, 255) AS website_title,
+	SUBSTRING(mem.website_url, 1, 255) AS website_url, mem.last_login,
+	mem.birthdate, SUBSTRING(mem.icq, 1, 255) AS icq,
+	SUBSTRING(IFNULL(mem.real_name, mem.member_name), 1, 255) AS real_name,
 	mem.notifyOnce, REPLACE(mem.lngfile, '.lng', '') AS lngfile,
-	SUBSTRING(mem.emailAddress, 1, 255) AS emailAddress,
-	SUBSTRING(mem.AIM, 1, 16) AS AIM,
-	SUBSTRING(mem.personalText, 1, 255) AS personalText,
-	SUBSTRING(mem.timeFormat, 1, 80) AS timeFormat,
-	mem.hideEmail, SUBSTRING(mem.memberIP, 1, 255) AS memberIP,
-	SUBSTRING(mem.YIM, 1, 32) AS YIM,
+	SUBSTRING(mem.email_address, 1, 255) AS email_address,
+	SUBSTRING(mem.aim, 1, 16) AS aim,
+	SUBSTRING(mem.personal_text, 1, 255) AS personal_text,
+	SUBSTRING(mem.time_format, 1, 80) AS time_format,
+	mem.hide_email, SUBSTRING(mem.member_ip, 1, 255) AS member_ip,
+	SUBSTRING(mem.yim, 1, 32) AS yim,
 	IF(IFNULL(mem.gender, '') = '', 0, IF(mem.gender = 'Male', 1, 2)) AS gender,
-	SUBSTRING(mem.MSN, 1, 255) AS MSN,
+	SUBSTRING(mem.msn, 1, 255) AS msn,
 	SUBSTRING(REPLACE(mem.signature, '<br>', '<br />'), 1, 65534) AS signature,
-	SUBSTRING(mem.location, 1, 255) AS location, mem.timeOffset,
+	SUBSTRING(mem.location, 1, 255) AS location, mem.time_offset,
 	SUBSTRING(mem.avatar, 1, 255) AS avatar,
 	SUBSTRING(mem.usertitle, 1, 255) AS usertitle,
-	mem.im_email_notify AS pm_email_notify, mem.karmaBad, mem.karmaGood,
-	mem.notifyAnnouncements,
-	SUBSTRING(mem.secretQuestion, 1, 255) AS secretQuestion,
-	IF(mem.secretAnswer = '', '', MD5(mem.secretAnswer)) AS secretAnswer,
+	mem.im_email_notify AS pm_email_notify, mem.karma_bad, mem.karma_good,
+	mem.notify_announcements,
+	SUBSTRING(mem.secret_question, 1, 255) AS secret_question,
+	IF(mem.secret_answer = '', '', MD5(mem.secret_answer)) AS secret_answer,
 	CASE
 		WHEN mem.memberGroup = 'Administrator' THEN 1
 		WHEN mem.memberGroup = 'Global Moderator' THEN 2
-		WHEN mg.ID_GROUP = 8 THEN 2
-		WHEN mg.ID_GROUP = 1 THEN 1
-		WHEN mg.ID_GROUP > 8 THEN mg.ID_GROUP
+		WHEN mg.id_group = 8 THEN 2
+		WHEN mg.id_group = 1 THEN 1
+		WHEN mg.id_group > 8 THEN mg.id_group
 		ELSE 0
-	END AS ID_GROUP, '' AS buddy_list, '' AS pm_ignore_list,
-	'' AS messageLabels, '' AS validation_code, '' AS additionalGroups,
-	'' AS smileySet, '' AS passwordSalt
+	END AS id_group, '' AS buddy_list, '' AS pm_ignore_list,
+	'' AS message_labels, '' AS validation_code, '' AS additional_groups,
+	'' AS smiley_set, '' AS password_salt
 FROM {$from_prefix}members AS mem
 	LEFT JOIN {$from_prefix}membergroups AS mg ON (mg.membergroup = mem.memberGroup);
 ---*
@@ -67,25 +67,25 @@ while (true)
 	pastTime($substep);
 
 	$request = convert_query("
-		SELECT ID_MEMBER, im_ignore_list
+		SELECT id_member, im_ignore_list
 		FROM {$from_prefix}members
 		WHERE im_ignore_list RLIKE '[a-z]'
 		LIMIT 512");
 	while ($row2 = mysql_fetch_assoc($request))
 	{
 		$request2 = convert_query("
-			SELECT ID_MEMBER
+			SELECT id_member
 			FROM {$to_prefix}members
-			WHERE FIND_IN_SET(memberName, '" . addslashes($row2['im_ignore_list']) . "')");
+			WHERE FIND_IN_SET(member_name, '" . addslashes($row2['im_ignore_list']) . "')");
 		$im_ignore_list = '';
 		while ($row3 = mysql_fetch_assoc($request2))
-			$im_ignore_list .= ',' . $row3['ID_MEMBER'];
+			$im_ignore_list .= ',' . $row3['id_member'];
 		mysql_free_result($request2);
 
 		convert_query("
 			UPDATE {$to_prefix}members
 			SET im_ignore_list = '" . substr($im_ignore_list, 1) . "'
-			WHERE ID_MEMBER = $row2[ID_MEMBER]
+			WHERE id_member = $row2[id_member]
 			LIMIT 1");
 	}
 	if (mysql_num_rows($request) < 512)
@@ -101,7 +101,7 @@ while (true)
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT ID_CAT, SUBSTRING(name, 1, 255) AS name, catOrder
+SELECT id_cat, SUBSTRING(name, 1, 255) AS name, cat_order
 FROM {$from_prefix}categories;
 ---*
 
@@ -112,53 +112,53 @@ FROM {$from_prefix}categories;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	ID_BOARD, ID_CAT, SUBSTRING(name, 1, 255) AS name, boardOrder,
-	SUBSTRING(description, 1, 65534) AS description, numTopics, numPosts,
-	`count` AS countPosts, '-1,0' AS memberGroups
+	id_board, id_cat, SUBSTRING(name, 1, 255) AS name, board_order,
+	SUBSTRING(description, 1, 65534) AS description, num_topics, num_posts,
+	`count` AS count_posts, '-1,0' AS member_groups
 FROM {$from_prefix}boards;
 ---*
 
 ---# Updating access permissions...
 ---{
 $request = convert_query("
-	SELECT membergroup, ID_GROUP
+	SELECT membergroup, id_group
 	FROM {$from_prefix}membergroups
-	WHERE ID_GROUP = 1 OR ID_GROUP > 7");
+	WHERE id_group = 1 OR id_group > 7");
 $member_groups = array();
 while ($row2 = mysql_fetch_row($request))
 	$member_groups[trim($row2[0])] = $row2[1];
 mysql_free_result($request);
 
 $result = convert_query("
-	SELECT TRIM(memberGroups) AS memberGroups, ID_CAT
+	SELECT TRIM(member_groups) AS member_groups, id_cat
 	FROM {$from_prefix}categories");
 while ($row2 = mysql_fetch_assoc($result))
 {
-	if (trim($row2['memberGroups']) == '')
+	if (trim($row2['member_groups']) == '')
 		$groups = '-1,0,2';
 	else
 	{
-		$memberGroups = array_unique(explode(',', $row2['memberGroups']));
+		$member_groups = array_unique(explode(',', $row2['member_groups']));
 		$groups = array(2);
-		foreach ($memberGroups as $k => $check)
+		foreach ($member_groups as $k => $check)
 		{
-			$memberGroups[$k] = trim($memberGroups[$k]);
-			if ($memberGroups[$k] == '' || !isset($member_groups[$memberGroups[$k]]) || $member_groups[$memberGroups[$k]] == 8)
+			$member_groups[$k] = trim($member_groups[$k]);
+			if ($member_groups[$k] == '' || !isset($member_groups[$member_groups[$k]]) || $member_groups[$member_groups[$k]] == 8)
 				continue;
 
-			$groups[] = $member_groups[$memberGroups[$k]];
+			$groups[] = $member_groups[$member_groups[$k]];
 		}
 		$groups = implode(',', array_unique($groups));
 	}
 
 	convert_query("
 		UPDATE {$to_prefix}boards
-		SET memberGroups = '$groups', lastUpdated = " . time() . "
-		WHERE ID_CAT = $row2[ID_CAT]");
+		SET member_groups = '$groups', lastUpdated = " . time() . "
+		WHERE id_cat = $row2[id_cat]");
 }
 ---}
 
@@ -173,12 +173,12 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	ID_TOPIC, ID_BOARD, isSticky, IF(ID_POLL = -1, 0, ID_POLL) AS ID_POLL,
-	numViews, ID_MEMBER_STARTED, ID_MEMBER_UPDATED, numReplies, locked,
-	ID_FIRST_MSG, ID_LAST_MSG
+	id_topic, id_board, is_sticky, IF(id_poll = -1, 0, id_poll) AS id_poll,
+	num_views, id_member_started, id_member_updated, num_replies, locked,
+	id_first_msg, id_last_msg
 FROM {$from_prefix}topics
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
 /******************************************************************************/
@@ -190,18 +190,18 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 SELECT
-	m.ID_MSG, m.ID_TOPIC, t.ID_BOARD, m.ID_MEMBER, m.posterTime,
-	SUBSTRING(m.posterName, 1, 255) AS posterName,
-	SUBSTRING(m.posterEmail, 1, 255) AS posterEmail,
-	SUBSTRING(m.posterIP, 1, 255) AS posterIP,
+	m.id_msg, m.id_topic, t.id_board, m.id_member, m.poster_time,
+	SUBSTRING(m.poster_name, 1, 255) AS poster_name,
+	SUBSTRING(m.poster_email, 1, 255) AS poster_email,
+	SUBSTRING(m.poster_ip, 1, 255) AS poster_ip,
 	SUBSTRING(m.subject, 1, 255) AS subject,
-	m.smiliesEnabled AS smileysEnabled,
-	m.modifiedTime, 
-	SUBSTRING(m.modifiedName, 1, 255) AS modifiedName,
+	m.smiliesEnabled AS smileys_enabled,
+	m.modified_time, 
+	SUBSTRING(m.modified_name, 1, 255) AS modified_name,
 	SUBSTRING(REPLACE(m.body, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon
 FROM ({$from_prefix}messages AS m, {$from_prefix}topics AS t)
-WHERE t.ID_TOPIC = m.ID_TOPIC;
+WHERE t.id_topic = m.id_topic;
 ---*
 
 /******************************************************************************/
@@ -214,12 +214,12 @@ TRUNCATE {$to_prefix}log_polls;
 
 ---* {$to_prefix}polls
 SELECT
-	p.ID_POLL, SUBSTRING(p.question, 1, 255) AS question, p.votingLocked,
-	t.ID_MEMBER_STARTED,
-	SUBSTRING(IFNULL(mem.realName, 'Guest'), 1, 255) AS posterName
+	p.id_poll, SUBSTRING(p.question, 1, 255) AS question, p.voting_locked,
+	t.id_member_started,
+	SUBSTRING(IFNULL(mem.real_name, 'Guest'), 1, 255) AS poster_name
 FROM ({$from_prefix}polls AS p, {$from_prefix}topics AS t)
-	LEFT JOIN {$from_prefix}members AS mem ON (mem.ID_MEMBER = t.ID_MEMBER_STARTED)
-WHERE t.ID_POLL = p.ID_POLL;
+	LEFT JOIN {$from_prefix}members AS mem ON (mem.id_member = t.id_member_started)
+WHERE t.id_poll = p.id_poll;
 ---*
 
 /******************************************************************************/
@@ -229,16 +229,16 @@ WHERE t.ID_POLL = p.ID_POLL;
 ---* {$to_prefix}poll_choices
 ---{
 $no_add = true;
-$keys = array('ID_POLL', 'ID_CHOICE', 'label', 'votes');
+$keys = array('id_poll', 'id_choice', 'label', 'votes');
 
 for ($i = 1; $i <= 8; $i++)
 {
 	if (trim($row['option' . $i]) != '')
-		$rows[] = "$row[ID_POLL], $i, '" . addslashes(substr($row['option' . $i], 1, 255)) . "', " . $row['votes' . $i];
+		$rows[] = "$row[id_poll], $i, '" . addslashes(substr($row['option' . $i], 1, 255)) . "', " . $row['votes' . $i];
 }
 ---}
 SELECT
-	ID_POLL, option1, option2, option3, option4, option5, option6, option7,
+	id_poll, option1, option2, option3, option4, option5, option6, option7,
 	option8, votes1, votes2, votes3, votes4, votes5, votes6, votes7, votes8
 FROM {$from_prefix}polls;
 ---*
@@ -251,12 +251,12 @@ FROM {$from_prefix}polls;
 ---{
 $no_add = true;
 
-$members = explode(',', $row['ID_MEMBER']);
+$members = explode(',', $row['id_member']);
 foreach ($members as $member)
 	if (is_numeric($member))
-		$rows[] = "$row[ID_POLL], $member, 0";
+		$rows[] = "$row[id_poll], $member, 0";
 ---}
-SELECT ID_POLL, votedMemberIDs AS ID_MEMBER, 0 AS ID_CHOICE
+SELECT id_poll, votedMemberIDs AS id_member, 0 AS id_choice
 FROM {$from_prefix}polls;
 ---*
 
@@ -268,11 +268,11 @@ TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
 SELECT
-	ID_IM AS ID_PM, ID_MEMBER_FROM, msgtime,
-	SUBSTRING(fromName, 1, 255) AS fromName,
+	ID_IM AS id_pm, id_member_from, msgtime,
+	SUBSTRING(from_name, 1, 255) AS from_name,
 	SUBSTRING(subject, 1, 255) AS subject,
 	SUBSTRING(body, 1, 65534) AS body,
-	IF(deletedBy = 0, 1, 0) AS deletedBySender
+	IF(deletedBy = 0, 1, 0) AS deleted_by_sender
 FROM {$from_prefix}instant_messages;
 ---*
 
@@ -284,7 +284,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT
-	ID_IM AS ID_PM, ID_MEMBER_TO AS ID_MEMBER, IF(readBy = 1, 1, 0) AS is_read,
+	ID_IM AS id_pm, id_member_to AS id_member, IF(readBy = 1, 1, 0) AS is_read,
 	IF(deletedBy = 1, 1, 0) AS deleted, '' AS labels
 FROM {$from_prefix}instant_messages;
 ---*
@@ -296,7 +296,7 @@ FROM {$from_prefix}instant_messages;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT ID_MEMBER, ID_TOPIC, notificationSent AS sent
+SELECT id_member, id_topic, notificationSent AS sent
 FROM {$from_prefix}log_topics
 WHERE notificationSent != 0;
 ---*
@@ -317,10 +317,10 @@ while ($_GET['t'] < $numNotifies)
 
 	convert_query("
 		INSERT IGNORE INTO {$to_prefix}log_notify
-			(ID_MEMBER, ID_TOPIC)
-		SELECT mem.ID_MEMBER, t.ID_TOPIC
+			(id_member, id_topic)
+		SELECT mem.id_member, t.id_topic
 		FROM ({$from_prefix}topics AS t, {$from_prefix}members AS mem)
-		WHERE FIND_IN_SET(mem.ID_MEMBER, t.notifies)
+		WHERE FIND_IN_SET(mem.id_member, t.notifies)
 			AND t.notifies != ''
 		LIMIT $_GET[t], 512");
 
@@ -337,7 +337,7 @@ unset($_GET['t']);
 ---* {$to_prefix}attachments
 ---{
 $no_add = true;
-$keys = array('ID_ATTACH', 'size', 'filename', 'ID_MSG', 'downloads');
+$keys = array('id_attach', 'size', 'filename', 'id_msg', 'downloads');
 
 if (!isset($yAttachmentDir))
 {
@@ -350,7 +350,7 @@ if (!isset($yAttachmentDir))
 	mysql_free_result($result);
 }
 
-$newfilename = getAttachmentFilename($row['filename'], $ID_ATTACH);
+$newfilename = getAttachmentFilename($row['filename'], $id_attach);
 if (strlen($newfilename) > 255)
 	return;
 $fp = @fopen($attachmentUploadDir . '/' . $newfilename, 'wb');
@@ -363,10 +363,10 @@ while (!feof($fp2))
 
 fclose($fp);
 
-$rows[] = "$ID_ATTACH, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[ID_MSG], $row[downloads]";
-$ID_ATTACH++;
+$rows[] = "$id_attach, " . filesize($attachmentUploadDir . '/' . $newfilename) . ", '" . addslashes($row['filename']) . "', $row[id_msg], $row[downloads]";
+$id_attach++;
 ---}
-SELECT ID_MSG, 0 AS downloads, attachmentFilename AS filename
+SELECT id_msg, 0 AS downloads, attachmentFilename AS filename
 FROM {$from_prefix}messages
 WHERE attachmentFilename IS NOT NULL
 	AND attachmentFilename != '';
@@ -392,7 +392,7 @@ FROM {$from_prefix}log_activity;
 TRUNCATE {$to_prefix}log_banned;
 
 ---* {$to_prefix}log_banned
-SELECT SUBSTRING(ip, 1, 16) AS ip, SUBSTRING(email, 1, 255) AS email, logTime
+SELECT SUBSTRING(ip, 1, 16) AS ip, SUBSTRING(email, 1, 255) AS email, log_time
 FROM {$from_prefix}log_banned;
 ---*
 
@@ -404,19 +404,19 @@ TRUNCATE {$to_prefix}log_boards;
 TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}log_boards
-SELECT ID_BOARD, ID_MEMBER, logTime
+SELECT id_board, id_member, log_time
 FROM {$from_prefix}log_boards;
 ---*
 
 REPLACE INTO {$to_prefix}log_boards
-	(ID_BOARD, ID_MEMBER, logTime)
-SELECT lmr.ID_BOARD, lmr.ID_MEMBER, lmr.logTime
+	(id_board, id_member, log_time)
+SELECT lmr.id_board, lmr.id_member, lmr.log_time
 FROM {$from_prefix}log_mark_read AS lmr
-	LEFT JOIN {$from_prefix}log_boards AS lb ON (lb.ID_BOARD = lmr.ID_BOARD AND lb.ID_MEMBER = lmr.ID_MEMBER)
-WHERE lb.logTime < lmr.logTime;
+	LEFT JOIN {$from_prefix}log_boards AS lb ON (lb.id_board = lmr.id_board AND lb.id_member = lmr.id_member)
+WHERE lb.log_time < lmr.log_time;
 
 ---* {$to_prefix}log_mark_read
-SELECT ID_BOARD, ID_MEMBER, logTime
+SELECT id_board, id_member, log_time
 FROM {$from_prefix}log_mark_read;
 ---*
 
@@ -427,7 +427,7 @@ FROM {$from_prefix}log_mark_read;
 TRUNCATE {$to_prefix}log_karma;
 
 ---* {$to_prefix}log_karma
-SELECT ID_TARGET, ID_EXECUTOR, logTime, action
+SELECT ID_TARGET, ID_EXECUTOR, log_time, action
 FROM {$from_prefix}log_karma;
 ---*
 
@@ -438,7 +438,7 @@ FROM {$from_prefix}log_karma;
 TRUNCATE {$to_prefix}log_topics;
 
 ---* {$to_prefix}log_topics
-SELECT ID_TOPIC, ID_MEMBER, logTime
+SELECT id_topic, id_member, log_time
 FROM {$from_prefix}log_topics;
 ---*
 
@@ -452,7 +452,7 @@ TRUNCATE {$to_prefix}moderators;
 ---{
 $no_add = true;
 
-$members = array_unique(explode(',', $row['ID_MEMBER']));
+$members = array_unique(explode(',', $row['id_member']));
 foreach ($members as $k => $check)
 {
 	$members[$k] = trim($members[$k]);
@@ -461,15 +461,15 @@ foreach ($members as $k => $check)
 }
 
 $result_mods = convert_query("
-	SELECT ID_MEMBER
+	SELECT id_member
 	FROM {$to_prefix}members
-	WHERE memberName IN ('" . implode("', '", $members) . "')
+	WHERE member_name IN ('" . implode("', '", $members) . "')
 	LIMIT " . count($members));
 while ($row_mods = mysql_fetch_assoc($result_mods))
-	$rows[] = "$row[ID_BOARD], $row_mods[ID_MEMBER]";
+	$rows[] = "$row[id_board], $row_mods[id_member]";
 mysql_free_result($result_mods);
 ---}
-SELECT ID_BOARD, moderators AS ID_MEMBER
+SELECT id_board, moderators AS id_member
 FROM {$from_prefix}boards;
 ---*
 
@@ -503,9 +503,9 @@ function ip2range($fullip)
 }
 
 $request = convert_query("
-	SELECT ban.type, ban.value, mem.ID_MEMBER
+	SELECT ban.type, ban.value, mem.id_member
 	FROM {$from_prefix}banned AS ban
-		LEFT JOIN {$from_prefix}members AS mem ON (mem.memberName = ban.value)");
+		LEFT JOIN {$from_prefix}members AS mem ON (mem.member_name = ban.value)");
 $rows = array();
 while ($row2 = mysql_fetch_assoc($request))
 {
@@ -516,8 +516,8 @@ while ($row2 = mysql_fetch_assoc($request))
 	}
 	elseif ($row2['type'] == 'email')
 		$rows[] = "0, 0, 0, 0, 0, 0, 0, 0, '', '$row2[value]', 0";
-	elseif ($row2['type'] == 'username' && !empty($row2['ID_MEMBER']))
-		$rows[] = "0, 0, 0, 0, 0, 0, 0, 0, '', '', $row2[ID_MEMBER]";
+	elseif ($row2['type'] == 'username' && !empty($row2['id_member']))
+		$rows[] = "0, 0, 0, 0, 0, 0, 0, 0, '', '', $row2[id_member]";
 }
 mysql_free_result($request);
 
@@ -532,7 +532,7 @@ if (!empty($rows))
 
 	convert_query("
 		INSERT INTO {$to_prefix}ban_items
-			(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, ID_MEMBER)
+			(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, id_member)
 		VALUES ($ID_BAN_GROUP, " . implode("), ($ID_BAN_GROUP, ", $rows) . ')');
 }
 ---}
@@ -545,9 +545,9 @@ TRUNCATE {$to_prefix}calendar;
 
 ---* {$to_prefix}calendar
 SELECT
-	id AS ID_EVENT, CONCAT(year, '-', month + 1, '-', day) AS startDate,
-	CONCAT(year, '-', month + 1, '-', day) AS endDate, id_board AS ID_BOARD,
-	id_topic AS ID_TOPIC, id_member AS ID_MEMBER,
+	id AS id_event, CONCAT(year, '-', month + 1, '-', day) AS start_date,
+	CONCAT(year, '-', month + 1, '-', day) AS end_date, id_board AS id_board,
+	id_topic AS id_topic, id_member AS id_member,
 	SUBSTRING(title, 1, 48) AS title
 FROM {$from_prefix}calendar;
 ---*
@@ -557,41 +557,41 @@ FROM {$from_prefix}calendar;
 /******************************************************************************/
 
 DELETE FROM {$to_prefix}permissions
-WHERE ID_GROUP > 8;
+WHERE id_group > 8;
 
 DELETE FROM {$to_prefix}membergroups
-WHERE ID_GROUP > 8;
+WHERE id_group > 8;
 
 ---{
 $request = convert_query("
-	SELECT ID_GROUP, membergroup
+	SELECT id_group, membergroup
 	FROM {$from_prefix}membergroups");
-$memberGroups = array();
+$member_groups = array();
 $setString = ',';
 while ($row2 = mysql_fetch_assoc($request))
 {
-	$memberGroups[$row2['ID_GROUP']] = addslashes($row2['membergroup']);
-	if ($row2['ID_GROUP'] > 8)
+	$member_groups[$row2['id_group']] = addslashes($row2['membergroup']);
+	if ($row2['id_group'] > 8)
 		$setString .= "
-		($row2[ID_GROUP], '" . $memberGroups[$row2['ID_GROUP']] . "', '', -1, ''),";
+		($row2[id_group], '" . $member_groups[$row2['id_group']] . "', '', -1, ''),";
 }
 mysql_free_result($request);
 
 $grouptitles = array('Administrator', 'Global Moderator', 'Moderator', 'Newbie', 'Junior Member', 'Full Member', 'Senior Member', 'Hero');
 for ($i = 1; $i < 9; $i ++)
-	$memberGroups[$i] = isset($memberGroups[$i]) ? $memberGroups[$i] : $grouptitles[$i - 1];
+	$member_groups[$i] = isset($member_groups[$i]) ? $member_groups[$i] : $grouptitles[$i - 1];
 
 convert_query("
 	REPLACE INTO {$to_prefix}membergroups
-		(ID_GROUP, groupName, onlineColor, minPosts, stars)
-	VALUES (1, '$memberGroups[1]', '#FF0000', -1, '5#staradmin.gif'),
-		(2, '$memberGroups[8]', '#0000FF', -1, '5#stargmod.gif'),
-		(3, '$memberGroups[2]', '', -1, '5#starmod.gif'),
-		(4, '$memberGroups[3]', '', 0, '1#star.gif'),
-		(5, '$memberGroups[4]', '', '$JrPostNum', '2#star.gif'),
-		(6, '$memberGroups[5]', '', '$FullPostNum', '3#star.gif'),
-		(7, '$memberGroups[6]', '', '$SrPostNum', '4#star.gif'),
-		(8, '$memberGroups[7]', '', '$GodPostNum', '5#star.gif')" .
+		(id_group, group_name, online_color, min_posts, stars)
+	VALUES (1, '$member_groups[1]', '#FF0000', -1, '5#staradmin.gif'),
+		(2, '$member_groups[8]', '#0000FF', -1, '5#stargmod.gif'),
+		(3, '$member_groups[2]', '', -1, '5#starmod.gif'),
+		(4, '$member_groups[3]', '', 0, '1#star.gif'),
+		(5, '$member_groups[4]', '', '$JrPostNum', '2#star.gif'),
+		(6, '$member_groups[5]', '', '$FullPostNum', '3#star.gif'),
+		(7, '$member_groups[6]', '', '$SrPostNum', '4#star.gif'),
+		(8, '$member_groups[7]', '', '$GodPostNum', '5#star.gif')" .
 		substr($setString, 0, -1));
 ---}
 
@@ -610,12 +610,12 @@ $board_permissions = array(
 );
 
 $result = convert_query("
-	SELECT ID_GROUP
+	SELECT id_group
 	FROM {$to_prefix}membergroups
-	WHERE ID_GROUP > 8");
+	WHERE id_group > 8");
 $groups = array();
 while ($row2 = mysql_fetch_assoc($result))
-	$groups[] = $row2['ID_GROUP'];
+	$groups[] = $row2['id_group'];
 mysql_free_result($result);
 
 $setString = '';
@@ -629,7 +629,7 @@ foreach ($groups as $group)
 if (!empty($setString))
 	convert_query("
 		INSERT IGNORE INTO {$to_prefix}permissions
-			(ID_GROUP, permission)
+			(id_group, permission)
 		VALUES " . substr($setString, 0, -1));
 
 $setString = '';
@@ -643,7 +643,7 @@ foreach ($groups as $group)
 if (!empty($setString))
 	convert_query("
 		INSERT IGNORE INTO {$to_prefix}board_permissions
-			(ID_GROUP, ID_BOARD, permission)
+			(id_group, id_board, permission)
 		VALUES " . substr($setString, 0, -1));
 ---}
 

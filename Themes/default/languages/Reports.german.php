@@ -76,8 +76,8 @@ $txt['board_perms_group_read_only'] = 'Dieses Board erlaubt das Schreiben nicht'
 
 // Membergroup info!
 $txt['member_group_color'] = 'Farbe';
-$txt['member_group_minPosts'] = 'Mind. Beitr&auml;ge';
-$txt['member_group_maxMessages'] = 'Max. Private Mitteilungen';
+$txt['member_group_min_posts'] = 'Mind. Beitr&auml;ge';
+$txt['member_group_max_messages'] = 'Max. Private Mitteilungen';
 $txt['member_group_stars'] = 'Sterne';
 $txt['member_group_settings'] = 'Einstellungen';
 $txt['member_group_access'] = 'Board-Zugang';

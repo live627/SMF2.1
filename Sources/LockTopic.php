@@ -56,10 +56,10 @@ function LockTopic()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Find out who started the topic - in case User Topic Locking is enabled.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER_STARTED, locked
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member_started, locked
 		FROM {$db_prefix}topics
-		WHERE ID_TOPIC = $topic
+		WHERE id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	list ($starter, $locked) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -85,11 +85,10 @@ function LockTopic()
 		fatal_lang_error('smf31', 'user');
 
 	// Actually lock the topic in the database with the new value.
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}topics
 		SET locked = $locked
-		WHERE ID_TOPIC = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE id_topic = $topic", __FILE__, __LINE__);
 
 	// If they are allowed a "moderator" permission, log it in the moderator log.
 	if (!$user_lock)
@@ -123,25 +122,24 @@ function Sticky()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Is this topic already stickied, or no?
-	$request = $smfFunc['db_query']("
-		SELECT isSticky
+	$request = $smfFunc['db_query']('', "
+		SELECT is_sticky
 		FROM {$db_prefix}topics
-		WHERE ID_TOPIC = $topic
+		WHERE id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	list ($isSticky) = $smfFunc['db_fetch_row']($request);
+	list ($is_sticky) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Toggle the sticky value.... pretty simple ;).
-	$smfFunc['db_query']("
+	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}topics
-		SET isSticky = " . (empty($isSticky) ? 1 : 0) . "
-		WHERE ID_TOPIC = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		SET is_sticky = " . (empty($is_sticky) ? 1 : 0) . "
+		WHERE id_topic = $topic", __FILE__, __LINE__);
 
 	// Log this sticky action - always a moderator thing.
 	logAction('sticky', array('topic' => $topic));
 	// Notify people that this topic has been stickied?
-	if (empty($isSticky))
+	if (empty($is_sticky))
 		sendNotifications($topic, 'sticky');
 
 	// Take them back to the now stickied topic.

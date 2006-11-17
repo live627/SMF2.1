@@ -1,6 +1,6 @@
 <?php
 
-// Minor bug: [quote]'s won't refer to the right ID_MSG anymore, but will refer to the correct topic.
+// Minor bug: [quote]'s won't refer to the right id_msg anymore, but will refer to the correct topic.
 
 require_once(dirname(__FILE__) . '/SSI.php');
 set_time_limit(300);
@@ -23,28 +23,28 @@ if ($_GET['step'] <= 0)
 	// Create a new messages table.
 	db_query("
 		CREATE TABLE {$db_prefix}temp_messages (
-		  ID_MSG int(10) unsigned NOT NULL auto_increment,
-		  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-		  posterTime int(10) unsigned NOT NULL default '0',
-		  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
+		  id_msg int(10) unsigned NOT NULL auto_increment,
+		  id_topic mediumint(8) unsigned NOT NULL default '0',
+		  poster_time int(10) unsigned NOT NULL default '0',
+		  id_member mediumint(8) unsigned NOT NULL default '0',
 		  subject tinytext NOT NULL default '',
-		  posterName tinytext NOT NULL default '',
-		  posterEmail tinytext NOT NULL default '',
-		  posterIP tinytext NOT NULL default '',
-		  smileysEnabled tinyint(4) NOT NULL default '1',
-		  modifiedTime int(10) unsigned NOT NULL default '0',
-		  modifiedName tinytext,
+		  poster_name tinytext NOT NULL default '',
+		  poster_email tinytext NOT NULL default '',
+		  poster_ip tinytext NOT NULL default '',
+		  smileys_enabled tinyint(4) NOT NULL default '1',
+		  modified_time int(10) unsigned NOT NULL default '0',
+		  modified_name tinytext,
 		  body text,
 		  icon varchar(16) NOT NULL default 'xx',
-		  ID_BOARD smallint(5) unsigned NOT NULL default '0',
+		  id_board smallint(5) unsigned NOT NULL default '0',
 		  OLD_ID_MSG int(10) unsigned NOT NULL default '0',
-		  PRIMARY KEY (ID_MSG),
-		  UNIQUE topic (ID_TOPIC, ID_MSG),
-		  KEY ID_TOPIC (ID_TOPIC),
-		  KEY ID_MEMBER (ID_MEMBER),
-		  KEY posterTime (posterTime),
-		  KEY ipIndex (posterIP(15), ID_TOPIC),
-		  KEY participation (ID_TOPIC, ID_MEMBER)
+		  PRIMARY KEY (id_msg),
+		  UNIQUE topic (id_topic, id_msg),
+		  KEY id_topic (id_topic),
+		  KEY id_member (id_member),
+		  KEY poster_time (poster_time),
+		  KEY ipIndex (poster_ip(15), id_topic),
+		  KEY participation (id_topic, id_member)
 		) TYPE=MyISAM", __FILE__, __LINE__);
 
 	// Drop the old table if it's there.
@@ -62,10 +62,10 @@ if ($_GET['step'] <= 1)
 		db_query("
 			INSERT INTO {$db_prefix}temp_messages
 			SELECT
-				NULL, ID_TOPIC, posterTime, ID_MEMBER, subject, posterName, posterEmail, posterIP,
-				smileysEnabled, modifiedTime, modifiedName, body, icon, ID_BOARD, ID_MSG
+				NULL, id_topic, poster_time, id_member, subject, poster_name, poster_email, poster_ip,
+				smileys_enabled, modified_time, modified_name, body, icon, id_board, id_msg
 			FROM {$db_prefix}messages
-			ORDER BY posterTime
+			ORDER BY poster_time
 			LIMIT $start, $maxOnce", __FILE__, __LINE__);
 
 		// If less rows were inserted than selected, we're done!
@@ -84,9 +84,9 @@ if ($_GET['step'] <= 2)
 		protectTimeOut('step=2;start=' . $start);
 
 		$result = db_query("
-			SELECT a.ID_ATTACH, m.ID_MSG
+			SELECT a.id_attach, m.id_msg
 			FROM ({$db_prefix}attachments AS a, {$db_prefix}temp_messages AS m)
-			WHERE a.ID_MSG = m.OLD_ID_MSG
+			WHERE a.id_msg = m.OLD_ID_MSG
 			LIMIT $start, $maxOnce", __FILE__, __LINE__);
 
 		// All done!  No more attachments!
@@ -96,8 +96,8 @@ if ($_GET['step'] <= 2)
 		while ($row = mysql_fetch_assoc($result))
 			db_query("
 				UPDATE {$db_prefix}attachments
-				SET ID_MSG = $row[ID_MSG]
-				WHERE ID_ATTACH = $row[ID_ATTACH]
+				SET id_msg = $row[id_msg]
+				WHERE id_attach = $row[id_attach]
 				LIMIT 1", __FILE__, __LINE__);
 		mysql_free_result($result);
 	}
@@ -131,16 +131,16 @@ if ($_GET['step'] <= 3)
 		protectTimeOut('step=3;start=' . $start);
 
 		$result = db_query("
-			SELECT ID_TOPIC, MAX(ID_MSG) AS ID_LAST_MSG, MIN(ID_MSG) AS ID_FIRST_MSG
+			SELECT id_topic, MAX(id_msg) AS id_last_msg, MIN(id_msg) AS id_first_msg
 			FROM {$db_prefix}messages
-			GROUP BY ID_TOPIC
+			GROUP BY id_topic
 			LIMIT $start, $maxOnce", __FILE__, __LINE__);
 		while ($row = mysql_fetch_assoc($result))
 			db_query("
 				UPDATE {$db_prefix}topics
-				SET ID_FIRST_MSG = $row[ID_FIRST_MSG],
-					ID_LAST_MSG = $row[ID_LAST_MSG]
-				WHERE ID_TOPIC = $row[ID_TOPIC]
+				SET id_first_msg = $row[id_first_msg],
+					id_last_msg = $row[id_last_msg]
+				WHERE id_topic = $row[id_topic]
 				LIMIT 1", __FILE__, __LINE__);
 
 		// No more rows... hurrah.
@@ -155,8 +155,8 @@ if ($_GET['step'] <= 4)
 {
 	mysql_query("
 		ALTER TABLE {$db_prefix}topics
-		ADD UNIQUE firstMessage (ID_FIRST_MSG, ID_BOARD),
-		ADD UNIQUE lastMessage (ID_LAST_MSG, ID_BOARD)");
+		ADD UNIQUE firstMessage (id_first_msg, id_board),
+		ADD UNIQUE lastMessage (id_last_msg, id_board)");
 
 	echo 'Done!';
 }

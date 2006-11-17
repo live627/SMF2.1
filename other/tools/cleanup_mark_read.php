@@ -51,57 +51,57 @@ $time_threshold = time() - $max_unread_days * 24 * 3600;
 
 // First thing's first - get the boards.
 $request = db_query("
-	SELECT ID_BOARD
+	SELECT id_board
 	FROM {$db_prefix}boards", __FILE__, __LINE__);
 $boards = array();
 while ($row = mysql_fetch_assoc($request))
-	$boards[$row['ID_BOARD']] = $row['ID_BOARD'];
+	$boards[$row['id_board']] = $row['id_board'];
 mysql_free_result($request);
 
 $request = db_query("
-	SELECT DISTINCT ID_MEMBER
+	SELECT DISTINCT id_member
 	FROM {$db_prefix}log_topics
-	WHERE ID_TOPIC > 0
-		AND logTime < $time_threshold
+	WHERE id_topic > 0
+		AND log_time < $time_threshold
 	LIMIT 400", __FILE__, __LINE__);
 // Note that this will only do 400 members at a time.
 $members = array();
 $setString = '';
 while ($row = mysql_fetch_assoc($request))
 {
-	$members[] = $row['ID_MEMBER'];
+	$members[] = $row['id_member'];
 	$this_boards = $boards;
 
 	// Don't reset boards that are newer!
 	$request2 = db_query("
-		SELECT ID_BOARD, logTime
+		SELECT id_board, log_time
 		FROM {$db_prefix}log_boards
-		WHERE ID_BOARD > 0
-			AND ID_MEMBER = $row[ID_MEMBER]", __FILE__, __LINE__);
+		WHERE id_board > 0
+			AND id_member = $row[id_member]", __FILE__, __LINE__);
 	while ($row2 = mysql_fetch_assoc($request2))
 	{
-		if ($row2['logTime'] >= $time_threshold)
-			unset($this_boards[$row2['ID_BOARD']]);
+		if ($row2['log_time'] >= $time_threshold)
+			unset($this_boards[$row2['id_board']]);
 	}
 	mysql_free_result($request2);
 
 	foreach ($this_boards as $board)
 		$setString .= "
-			($time_threshold, $row[ID_MEMBER], $board),";
+			($time_threshold, $row[id_member], $board),";
 }
 mysql_free_result($request);
 
 if ($setString != '')
 	db_query("
 		REPLACE INTO {$db_prefix}log_mark_read
-			(logTime, ID_MEMBER, ID_BOARD)
+			(log_time, id_member, id_board)
 		VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
 
 if (!empty($members))
 	db_query("
 		DELETE FROM {$db_prefix}log_topics
-		WHERE ID_TOPIC > 0
-			AND ID_MEMBER IN (" . implode(', ', $members) . ")
-			AND logTime < $time_threshold", __FILE__, __LINE__);
+		WHERE id_topic > 0
+			AND id_member IN (" . implode(', ', $members) . ")
+			AND log_time < $time_threshold", __FILE__, __LINE__);
 
 ?>

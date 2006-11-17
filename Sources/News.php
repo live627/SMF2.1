@@ -91,37 +91,37 @@ function ShowXmlFeed()
 
 		if (count($_REQUEST['c']) == 1)
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT name
 				FROM {$db_prefix}categories
-				WHERE ID_CAT = " . (int) $_REQUEST['c'][0], __FILE__, __LINE__);
+				WHERE id_cat = " . (int) $_REQUEST['c'][0], __FILE__, __LINE__);
 			list ($feed_title) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 
 			$feed_title = ' - ' . strip_tags($feed_title);
 		}
 
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.numPosts
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.num_posts
 			FROM {$db_prefix}boards AS b
-			WHERE b.ID_CAT IN (" . implode(', ', $_REQUEST['c']) . ")
+			WHERE b.id_cat IN (" . implode(', ', $_REQUEST['c']) . ")
 				AND $user_info[query_see_board]", __FILE__, __LINE__);
 		$total_cat_posts = 0;
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$boards[] = $row['ID_BOARD'];
-			$total_cat_posts += $row['numPosts'];
+			$boards[] = $row['id_board'];
+			$total_cat_posts += $row['num_posts'];
 		}
 		$smfFunc['db_free_result']($request);
 
 		if (!empty($boards))
-			$query_this_board = 'b.ID_BOARD IN (' . implode(', ', $boards) . ')';
+			$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
 
 		// Try to limit the number of messages we look through.
 		if ($total_cat_posts > 100 && $total_cat_posts > $modSettings['totalMessages'] / 15)
 			$query_this_board .= '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 400 - $_GET['limit'] * 5);
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 400 - $_GET['limit'] * 5);
 	}
 	elseif (!empty($_REQUEST['boards']))
 	{
@@ -129,10 +129,10 @@ function ShowXmlFeed()
 		foreach ($_REQUEST['boards'] as $i => $b)
 			$_REQUEST['boards'][$i] = (int) $b;
 
-		$request = $smfFunc['db_query']("
-			SELECT b.ID_BOARD, b.numPosts, b.name
+		$request = $smfFunc['db_query']('', "
+			SELECT b.id_board, b.num_posts, b.name
 			FROM {$db_prefix}boards AS b
-			WHERE b.ID_BOARD IN (" . implode(', ', $_REQUEST['boards']) . ")
+			WHERE b.id_board IN (" . implode(', ', $_REQUEST['boards']) . ")
 				AND $user_info[query_see_board]
 			LIMIT " . count($_REQUEST['boards']), __FILE__, __LINE__);
 
@@ -147,43 +147,43 @@ function ShowXmlFeed()
 			if (count($_REQUEST['boards']) == 1)
 				$feed_title = ' - ' . strip_tags($row['name']);
 
-			$boards[] = $row['ID_BOARD'];
-			$total_posts += $row['numPosts'];
+			$boards[] = $row['id_board'];
+			$total_posts += $row['num_posts'];
 		}
 		$smfFunc['db_free_result']($request);
 
 		if (!empty($boards))
-			$query_this_board = 'b.ID_BOARD IN (' . implode(', ', $boards) . ')';
+			$query_this_board = 'b.id_board IN (' . implode(', ', $boards) . ')';
 
 		// The more boards, the more we're going to look through...
 		if ($total_posts > 100 && $total_posts > $modSettings['totalMessages'] / 12)
 			$query_this_board .= '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 500 - $_GET['limit'] * 5);
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 500 - $_GET['limit'] * 5);
 	}
 	elseif (!empty($board))
 	{
-		$request = $smfFunc['db_query']("
-			SELECT numPosts
+		$request = $smfFunc['db_query']('', "
+			SELECT num_posts
 			FROM {$db_prefix}boards
-			WHERE ID_BOARD = $board
+			WHERE id_board = $board
 			LIMIT 1", __FILE__, __LINE__);
 		list ($total_posts) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
 		$feed_title = ' - ' . strip_tags($board_info['name']);
 
-		$query_this_board = 'b.ID_BOARD = ' . $board;
+		$query_this_board = 'b.id_board = ' . $board;
 
 		// Try to look through just a few messages, if at all possible.
 		if ($total_posts > 80 && $total_posts > $modSettings['totalMessages'] / 10)
 			$query_this_board .= '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 600 - $_GET['limit'] * 5);
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 600 - $_GET['limit'] * 5);
 	}
 	else
 	{
 		$query_this_board = $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.ID_BOARD != $modSettings[recycle_board]" : ''). '
-			AND m.ID_MSG >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_GET['limit'] * 5);
+			AND b.id_board != $modSettings[recycle_board]" : ''). '
+			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_GET['limit'] * 5);
 	}
 
 	// Show in rss or proprietary format?
@@ -458,10 +458,10 @@ function getXmlMembers($xml_format)
 	global $db_prefix, $scripturl, $smfFunc;
 
 	// Find the most recent members.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, memberName, realName, dateRegistered, lastLogin
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, real_name, date_registered, last_login
 		FROM {$db_prefix}members
-		ORDER BY ID_MEMBER DESC
+		ORDER BY id_member DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$data = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -469,33 +469,33 @@ function getXmlMembers($xml_format)
 		// Make the data look rss-ish.
 		if ($xml_format == 'rss' || $xml_format == 'rss2')
 			$data[] = array(
-				'title' => cdata_parse($row['realName']),
-				'link' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'comments' => $scripturl . '?action=pm;sa=send;u=' . $row['ID_MEMBER'],
-				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['dateRegistered']),
-				'guid' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+				'title' => cdata_parse($row['real_name']),
+				'link' => $scripturl . '?action=profile;u=' . $row['id_member'],
+				'comments' => $scripturl . '?action=pm;sa=send;u=' . $row['id_member'],
+				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['date_registered']),
+				'guid' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			);
 		elseif ($xml_format == 'rdf')
 			$data[] = array(
-				'title' => cdata_parse($row['realName']),
-				'link' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+				'title' => cdata_parse($row['real_name']),
+				'link' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			);
 		elseif ($xml_format == 'atom')
 			$data[] = array(
-				'title' => cdata_parse($row['realName']),
-				'link' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
-				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['dateRegistered']),
-				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['dateRegistered']),
-				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['lastLogin']),
-				'id' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+				'title' => cdata_parse($row['real_name']),
+				'link' => $scripturl . '?action=profile;u=' . $row['id_member'],
+				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['date_registered']),
+				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['date_registered']),
+				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['last_login']),
+				'id' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			);
 		// More logical format for the data, but harder to apply.
 		else
 			$data[] = array(
-				'name' => cdata_parse($row['realName']),
-				'time' => strip_tags(timeformat($row['dateRegistered'])),
-				'id' => $row['ID_MEMBER'],
-				'link' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER']
+				'name' => cdata_parse($row['real_name']),
+				'time' => strip_tags(timeformat($row['date_registered'])),
+				'id' => $row['id_member'],
+				'link' => $scripturl . '?action=profile;u=' . $row['id_member']
 			);
 	}
 	$smfFunc['db_free_result']($request);
@@ -513,19 +513,19 @@ function getXmlNews($xml_format)
 		- are on an any board OR in a specified board.
 		- can be seen by this user.
 		- are actually the latest posts. */
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, t.ID_TOPIC, t.ID_BOARD,
-			b.name AS bname, t.numReplies, m.ID_MEMBER, IFNULL(mem.realName, m.posterName) AS posterName,
-			mem.hideEmail, IFNULL(mem.emailAddress, m.posterEmail) AS posterEmail, m.modifiedTime
+			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, t.id_topic, t.id_board,
+			b.name AS bname, t.num_replies, m.id_member, IFNULL(mem.real_name, m.poster_name) AS poster_name,
+			mem.hide_email, IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
 		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-		WHERE b.ID_BOARD = " . (empty($board) ? 't.ID_BOARD' : "$board
-			AND t.ID_BOARD = $board") . "
-			AND m.ID_MSG = t.ID_FIRST_MSG
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE b.id_board = " . (empty($board) ? 't.id_board' : "$board
+			AND t.id_board = $board") . "
+			AND m.id_msg = t.id_first_msg
 			AND $query_this_board
 			AND t.approved = 1
-		ORDER BY t.ID_FIRST_MSG DESC
+		ORDER BY t.id_first_msg DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$data = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -534,7 +534,7 @@ function getXmlNews($xml_format)
 		if (!empty($modSettings['xmlnews_maxlen']) && $smfFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
 			$row['body'] = strtr($smfFunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
 
-		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
+		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		censorText($row['body']);
 		censorText($row['subject']);
@@ -543,50 +543,50 @@ function getXmlNews($xml_format)
 		if ($xml_format == 'rss' || $xml_format == 'rss2')
 			$data[] = array(
 				'title' => cdata_parse($row['subject']),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				'description' => cdata_parse($row['body']),
-				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum')) ? null : $row['posterEmail'],
-				'comments' => $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.0',
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !empty($modSettings['allow_hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
+				'comments' => $scripturl . '?action=post;topic=' . $row['id_topic'] . '.0',
 				'category' => '<![CDATA[' . $row['bname'] . ']]>',
-				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['posterTime']),
-				'guid' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['poster_time']),
+				'guid' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
 			);
 		elseif ($xml_format == 'rdf')
 			$data[] = array(
 				'title' => cdata_parse($row['subject']),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				'description' => cdata_parse($row['body']),
 			);
 		elseif ($xml_format == 'atom')
 			$data[] = array(
 				'title' => cdata_parse($row['subject']),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				'summary' => cdata_parse($row['body']),
-				'author' => array('name' => $row['posterName']),
-				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
-				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
-				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modifiedTime']) ? $row['posterTime'] : $row['modifiedTime']),
-				'id' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+				'author' => array('name' => $row['poster_name']),
+				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
+				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
+				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modified_time']) ? $row['poster_time'] : $row['modified_time']),
+				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
 			);
 		// The biggest difference here is more information.
 		else
 			$data[] = array(
-				'time' => strip_tags(timeformat($row['posterTime'])),
-				'id' => $row['ID_MSG'],
+				'time' => strip_tags(timeformat($row['poster_time'])),
+				'id' => $row['id_msg'],
 				'subject' => cdata_parse($row['subject']),
 				'body' => cdata_parse($row['body']),
 				'poster' => array(
-					'name' => cdata_parse($row['posterName']),
-					'id' => $row['ID_MEMBER'],
-					'link' => !empty($row['ID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] : ''
+					'name' => cdata_parse($row['poster_name']),
+					'id' => $row['id_member'],
+					'link' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : ''
 				),
-				'topic' => $row['ID_TOPIC'],
+				'topic' => $row['id_topic'],
 				'board' => array(
 					'name' => cdata_parse($row['bname']),
-					'id' => $row['ID_BOARD'],
-					'link' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0'
+					'id' => $row['id_board'],
+					'link' => $scripturl . '?board=' . $row['id_board'] . '.0'
 				),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0'
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0'
 			);
 	}
 	$smfFunc['db_free_result']($request);
@@ -599,40 +599,40 @@ function getXmlRecent($xml_format)
 	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
 	global $query_this_board, $smfFunc;
 
-	$request = $smfFunc['db_query']("
-		SELECT m.ID_MSG
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_msg
 		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.ID_BOARD = " . (empty($board) ? "b.ID_BOARD" : "$board
-			AND b.ID_BOARD = $board") . "
+		WHERE m.id_board = " . (empty($board) ? "b.id_board" : "$board
+			AND b.id_board = $board") . "
 			AND $query_this_board
 			AND m.approved = 1
-		ORDER BY m.ID_MSG DESC
+		ORDER BY m.id_msg DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$messages = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$messages[] = $row['ID_MSG'];
+		$messages[] = $row['id_msg'];
 	$smfFunc['db_free_result']($request);
 
 	if (empty($messages))
 		return array();
 
 	// Find the most recent posts this user can see.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT
-			m.smileysEnabled, m.posterTime, m.ID_MSG, m.subject, m.body, m.ID_TOPIC, t.ID_BOARD,
-			b.name AS bname, t.numReplies, m.ID_MEMBER, mf.ID_MEMBER AS ID_FIRST_MEMBER,
-			IFNULL(mem.realName, m.posterName) AS posterName, mf.subject AS firstSubject,
-			IFNULL(memf.realName, mf.posterName) AS firstPosterName, mem.hideEmail,
-			IFNULL(mem.emailAddress, m.posterEmail) AS posterEmail, m.modifiedTime
+			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.id_topic, t.id_board,
+			b.name AS bname, t.num_replies, m.id_member, mf.id_member AS ID_FIRST_MEMBER,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name, mf.subject AS first_subject,
+			IFNULL(memf.real_name, mf.poster_name) AS firstPosterName, mem.hide_email,
+			IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
 		FROM ({$db_prefix}messages AS m, {$db_prefix}messages AS mf, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)
-			LEFT JOIN {$db_prefix}members AS memf ON (memf.ID_MEMBER = mf.ID_MEMBER)
-		WHERE t.ID_TOPIC = m.ID_TOPIC
-			AND b.ID_BOARD = " . (empty($board) ? 't.ID_BOARD' : "$board
-			AND t.ID_BOARD = $board") . "
-			AND mf.ID_MSG = t.ID_FIRST_MSG
-			AND m.ID_MSG IN (" . implode(', ', $messages) . ")
-		ORDER BY m.ID_MSG DESC
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)
+		WHERE t.id_topic = m.id_topic
+			AND b.id_board = " . (empty($board) ? 't.id_board' : "$board
+			AND t.id_board = $board") . "
+			AND mf.id_msg = t.id_first_msg
+			AND m.id_msg IN (" . implode(', ', $messages) . ")
+		ORDER BY m.id_msg DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$data = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -641,7 +641,7 @@ function getXmlRecent($xml_format)
 		if (!empty($modSettings['xmlnews_maxlen']) && $smfFunc['strlen'](str_replace('<br />', "\n", $row['body'])) > $modSettings['xmlnews_maxlen'])
 			$row['body'] = strtr($smfFunc['substr'](str_replace('<br />', "\n", $row['body']), 0, $modSettings['xmlnews_maxlen'] - 3), array("\n" => '<br />')) . '...';
 
-		$row['body'] = parse_bbc($row['body'], $row['smileysEnabled'], $row['ID_MSG']);
+		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		censorText($row['body']);
 		censorText($row['subject']);
@@ -650,36 +650,36 @@ function getXmlRecent($xml_format)
 		if ($xml_format == 'rss' || $xml_format == 'rss2')
 			$data[] = array(
 				'title' => cdata_parse($row['subject']),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'description' => cdata_parse($row['body']),
-				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hideEmail']) && !empty($modSettings['allow_hideEmail']) && !allowedTo('moderate_forum')) ? null : $row['posterEmail'],
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !empty($modSettings['allow_hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
 				'category' => cdata_parse($row['bname']),
-				'comments' => $scripturl . '?action=post;topic=' . $row['ID_TOPIC'] . '.0',
-				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['posterTime']),
-				'guid' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+				'comments' => $scripturl . '?action=post;topic=' . $row['id_topic'] . '.0',
+				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['poster_time']),
+				'guid' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
 			);
 		elseif ($xml_format == 'rdf')
 			$data[] = array(
 				'title' => cdata_parse($row['subject']),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'description' => cdata_parse($row['body']),
 			);
 		elseif ($xml_format == 'atom')
 			$data[] = array(
 				'title' => cdata_parse($row['subject']),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG'],
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'summary' => cdata_parse($row['body']),
-				'author' => array('name' => $row['posterName']),
-				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
-				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['posterTime']),
-				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modifiedTime']) ? $row['posterTime'] : $row['modifiedTime']),
-				'id' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+				'author' => array('name' => $row['poster_name']),
+				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
+				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
+				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modified_time']) ? $row['poster_time'] : $row['modified_time']),
+				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
 			);
 		// A lot of information here.  Should be enough to please the rss-ers.
 		else
 			$data[] = array(
-				'time' => strip_tags(timeformat($row['posterTime'])),
-				'id' => $row['ID_MSG'],
+				'time' => strip_tags(timeformat($row['poster_time'])),
+				'id' => $row['id_msg'],
 				'subject' => cdata_parse($row['subject']),
 				'body' => cdata_parse($row['body']),
 				'starter' => array(
@@ -688,21 +688,21 @@ function getXmlRecent($xml_format)
 					'link' => !empty($row['ID_FIRST_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] : ''
 				),
 				'poster' => array(
-					'name' => cdata_parse($row['posterName']),
-					'id' => $row['ID_MEMBER'],
-					'link' => !empty($row['ID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] : ''
+					'name' => cdata_parse($row['poster_name']),
+					'id' => $row['id_member'],
+					'link' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : ''
 				),
 				'topic' => array(
-					'subject' => cdata_parse($row['firstSubject']),
-					'id' => $row['ID_TOPIC'],
-					'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new#new'
+					'subject' => cdata_parse($row['first_subject']),
+					'id' => $row['id_topic'],
+					'link' => $scripturl . '?topic=' . $row['id_topic'] . '.new#new'
 				),
 				'board' => array(
 					'name' => cdata_parse($row['bname']),
-					'id' => $row['ID_BOARD'],
-					'link' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0'
+					'id' => $row['id_board'],
+					'link' => $scripturl . '?board=' . $row['id_board'] . '.0'
 				),
-				'link' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['ID_MSG'] . '#msg' . $row['ID_MSG']
+				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
 			);
 	}
 	$smfFunc['db_free_result']($request);
@@ -734,7 +734,7 @@ function getXmlProfile($xml_format)
 			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
 			'description' => cdata_parse(isset($profile['group']) ? $profile['group'] : $profile['post_group']),
 			'comments' => $scripturl . '?action=pm;sa=send;u=' . $profile['id'],
-			'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $user_profile[$profile['id']]['dateRegistered']),
+			'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $user_profile[$profile['id']]['date_registered']),
 			'guid' => $scripturl  . '?action=profile;u=' . $profile['id'],
 		));
 	elseif ($xml_format == 'rdf')
@@ -748,9 +748,9 @@ function getXmlProfile($xml_format)
 			'title' => cdata_parse($profile['name']),
 			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
 			'summary' => cdata_parse(isset($profile['group']) ? $profile['group'] : $profile['post_group']),
-			'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['dateRegistered']),
-			'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['dateRegistered']),
-			'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['lastLogin']),
+			'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['date_registered']),
+			'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['date_registered']),
+			'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['last_login']),
 			'id' => $scripturl  . '?action=profile;u=' . $profile['id']
 		);
 	else
@@ -762,8 +762,8 @@ function getXmlProfile($xml_format)
 			'posts' => $profile['posts'],
 			'post-group' => cdata_parse($profile['post_group']),
 			'language' => cdata_parse($profile['language']),
-			'last-login' => gmdate('D, d M Y H:i:s \G\M\T', $user_profile[$profile['id']]['lastLogin']),
-			'registered' => gmdate('D, d M Y H:i:s \G\M\T', $user_profile[$profile['id']]['dateRegistered'])
+			'last-login' => gmdate('D, d M Y H:i:s \G\M\T', $user_profile[$profile['id']]['last_login']),
+			'registered' => gmdate('D, d M Y H:i:s \G\M\T', $user_profile[$profile['id']]['date_registered'])
 		);
 
 		// Everything below here might not be set, and thus maybe shouldn't be displayed.
@@ -810,7 +810,7 @@ function getXmlProfile($xml_format)
 				'bad' => $profile['karma']['bad']
 			);
 
-		if ((empty($profile['hide_email']) || empty($modSettings['allow_hideEmail'])) && !(!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']))
+		if ((empty($profile['hide_email']) || empty($modSettings['allow_hide_email'])) && !(!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']))
 			$data['email'] = $profile['email'];
 
 		if (!empty($profile['birth_date']) && substr($profile['birth_date'], 0, 4) != '0000')

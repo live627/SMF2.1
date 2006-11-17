@@ -19,24 +19,24 @@ TRUNCATE {$to_prefix}members;
 $row['signature'] = substr(strtr($row['signature'], array('[mail' => '[email', '[/mail]' => '[/email]')), 0, 65534);
 ---}
 SELECT
-	uid AS ID_MEMBER, SUBSTRING(username, 1, 255) AS memberName,
-	SUBSTRING(username, 1, 255) AS realName,
-	SUBSTRING(password, 1, 64) AS passwd, SUBSTRING(ip, 1, 255) AS memberIP,
-	SUBSTRING(email, 1, 255) AS emailAddress,
-	SUBSTRING(website, 1, 255) AS websiteUrl,
-	SUBSTRING(website, 1, 255) AS websiteTitle,
-	SUBSTRING(aim, 1, 16) AS AIM, SUBSTRING(msn, 1, 255) AS MSN,
+	uid AS id_member, SUBSTRING(username, 1, 255) AS member_name,
+	SUBSTRING(username, 1, 255) AS real_name,
+	SUBSTRING(password, 1, 64) AS passwd, SUBSTRING(ip, 1, 255) AS member_ip,
+	SUBSTRING(email, 1, 255) AS email_address,
+	SUBSTRING(website, 1, 255) AS website_url,
+	SUBSTRING(website, 1, 255) AS website_title,
+	SUBSTRING(aim, 1, 16) AS aim, SUBSTRING(msn, 1, 255) AS msn,
 	SUBSTRING(location, 1, 255) AS location,
 	REPLACE(sig, '\n', '<br />') AS signature,
-	IF(status = 'Administrator', 1, 0) AS ID_GROUP, regdate AS dateRegistered,
-	posts, SUBSTRING(yahoo, 1, 32) AS YIM, private AS hideEmail,
-	SUBSTRING(tag, 1, 255) AS personalText,
+	IF(status = 'Administrator', 1, 0) AS id_group, regdate AS date_registered,
+	posts, SUBSTRING(yahoo, 1, 32) AS yim, private AS hide_email,
+	SUBSTRING(tag, 1, 255) AS personal_text,
 	CONCAT(RIGHT(birthday, 4), '-', LEFT(birthday, 5)) AS birthdate,
 	IF(gender = 'Male', 1, 2) AS gender, '' AS lngfile, '' AS buddy_list,
-	'' AS pm_ignore_list, '' AS messageLabels, '' AS ICQ, '' AS timeFormat,
-	'' AS avatar, '' AS usertitle, '' AS secretQuestion, '' AS secretAnswer,
-	'' AS validation_code, '' AS additionalGroups, '' AS smileySet,
-	'' AS passwordSalt
+	'' AS pm_ignore_list, '' AS message_labels, '' AS icq, '' AS time_format,
+	'' AS avatar, '' AS usertitle, '' AS secret_question, '' AS secret_answer,
+	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
+	'' AS password_salt
 FROM {$from_prefix}member;
 ---*
 
@@ -47,7 +47,7 @@ FROM {$from_prefix}member;
 TRUNCATE {$to_prefix}categories;
 
 INSERT INTO {$to_prefix}categories
-	(ID_CAT, name)
+	(id_cat, name)
 VALUES
 	(1, 'General Category');
 
@@ -58,12 +58,12 @@ VALUES
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT 
-	fid AS ID_BOARD, 1 AS ID_CAT, SUBSTRING(name, 1, 255) AS name,
-	SUBSTRING(description, 1, 65534) AS name, dorder AS boardOrder
+	fid AS id_board, 1 AS id_cat, SUBSTRING(name, 1, 255) AS name,
+	SUBSTRING(description, 1, 65534) AS name, dorder AS board_order
 FROM {$from_prefix}forum;
 ---*
 
@@ -78,22 +78,22 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.tid AS ID_TOPIC, t.fid AS ID_BOARD, t.replies AS numReplies,
-	t.views AS numViews, t.topped = 'yes' AS isSticky, t.status = 2 AS locked,
-	mem.uid AS ID_MEMBER_STARTED, MIN(p.pid) AS ID_FIRST_MSG,
-	MAX(p.pid) AS ID_LAST_MSG
+	t.tid AS id_topic, t.fid AS id_board, t.replies AS num_replies,
+	t.views AS num_views, t.topped = 'yes' AS is_sticky, t.status = 2 AS locked,
+	mem.uid AS id_member_started, MIN(p.pid) AS id_first_msg,
+	MAX(p.pid) AS id_last_msg
 FROM ({$from_prefix}topic AS t, {$from_prefix}post AS p)
 	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = t.author)
 WHERE p.tid = t.tid
 GROUP BY t.tid
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
----* {$to_prefix}topics (update ID_TOPIC)
-SELECT t.ID_TOPIC, mem.uid AS ID_MEMBER_UPDATED
+---* {$to_prefix}topics (update id_topic)
+SELECT t.id_topic, mem.uid AS id_member_updated
 FROM ({$to_prefix}topics AS t, {$from_prefix}post AS p, {$from_prefix}member AS mem)
-WHERE p.pid = t.ID_LAST_MSG
+WHERE p.pid = t.id_last_msg
 	AND BINARY mem.username = p.author;
 ---*
 
@@ -109,13 +109,13 @@ TRUNCATE {$to_prefix}attachments;
 $row['body'] = substr(strtr($row['body'], array('[mail' => '[email', '[/mail]' => '[/email]')), 0, 65534);
 ---}
 SELECT
-	p.pid AS ID_MSG, p.tid AS ID_TOPIC, t.fid AS ID_BOARD,
-	SUBSTRING(mem.ip, 1, 255) AS posterIP, mem.uid AS ID_MEMBER,
-	p.dateline AS posterTime, SUBSTRING(p.author, 1, 255) AS posterName,
-	SUBSTRING(mem.email, 1, 255) AS posterEmail,
+	p.pid AS id_msg, p.tid AS id_topic, t.fid AS id_board,
+	SUBSTRING(mem.ip, 1, 255) AS poster_ip, mem.uid AS id_member,
+	p.dateline AS poster_time, SUBSTRING(p.author, 1, 255) AS poster_name,
+	SUBSTRING(mem.email, 1, 255) AS poster_email,
 	SUBSTRING(REPLACE(p.message, '\n', '<br />'), 1, 65534) AS body,
 	SUBSTRING(IF(p.subject = '', CONCAT('Re:', t.name), p.subject), 1, 255) AS subject,
-	'' AS modifiedName, 'xx' AS icon
+	'' AS modified_name, 'xx' AS icon
 FROM ({$from_prefix}post AS p, {$from_prefix}topic AS t)
 	LEFT JOIN {$from_prefix}member AS mem ON (BINARY mem.username = p.author)
 WHERE t.tid = p.tid;
@@ -140,8 +140,8 @@ TRUNCATE {$to_prefix}personal_messages;
 $row['body'] = strtr($row['body'], array('[mail' => '[email', '[/mail]' => '[/email]'));
 ---}
 SELECT
-	pm.id AS ID_PM, mem.uid AS ID_MEMBER_FROM, pm.time AS msgtime,
-	SUBSTRING(pm.sender, 1, 255) AS fromName,
+	pm.id AS id_pm, mem.uid AS id_member_from, pm.time AS msgtime,
+	SUBSTRING(pm.sender, 1, 255) AS from_name,
 	SUBSTRING(pm.topic, 1, 255) AS subject,
 	SUBSTRING(REPLACE(pm.message, '\n', '<br />'), 1, 65534) AS body
 FROM {$from_prefix}privmsg AS pm
@@ -155,7 +155,7 @@ FROM {$from_prefix}privmsg AS pm
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT pm.id AS ID_PM, mem.uid AS ID_MEMBER, '' AS labels
+SELECT pm.id AS id_pm, mem.uid AS id_member, '' AS labels
 FROM ({$from_prefix}privmsg AS pm, {$from_prefix}member AS mem)
 WHERE BINARY mem.username = pm.receiver;
 ---*

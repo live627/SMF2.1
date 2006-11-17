@@ -84,14 +84,14 @@ function GroupList()
 	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc;
 
 	// Yep, find the groups...
-	$request = $smfFunc['db_query']("
-		SELECT mg.ID_GROUP, mg.groupName, mg.description, mg.groupType, mg.onlineColor, mg.hidden,
-			mg.stars, !ISNULL(gm.ID_MEMBER) AS can_moderate
+	$request = $smfFunc['db_query']('', "
+		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
+			mg.stars, !ISNULL(gm.id_member) AS can_moderate
 		FROM {$db_prefix}membergroups AS mg
-			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.ID_GROUP = mg.ID_GROUP AND gm.ID_MEMBER = $user_info[id])
-		WHERE mg.minPosts = -1
-			AND mg.ID_GROUP != 3
-		ORDER BY groupName", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = $user_info[id])
+		WHERE mg.min_posts = -1
+			AND mg.id_group != 3
+		ORDER BY group_name", __FILE__, __LINE__);
 	// This is where we store our groups.
 	$context['groups'] = array();
 	$group_ids = array();
@@ -104,46 +104,46 @@ function GroupList()
 
 		$row['stars'] = explode('#', $row['stars']);
 
-		$context['groups'][$row['ID_GROUP']] = array(
-			'id' => $row['ID_GROUP'],
-			'name' => $row['groupName'],
+		$context['groups'][$row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name'],
 			'desc' => $row['description'],
-			'color' => $row['onlineColor'],
-			'type' => $row['groupType'],
+			'color' => $row['online_color'],
+			'type' => $row['group_type'],
 			'num_members' => 0,
 			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
 		);
 
 		$context['can_moderate'] |= $row['can_moderate'];
-		$group_ids[] = $row['ID_GROUP'];
+		$group_ids[] = $row['id_group'];
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Count up the members separately...
 	if (!empty($group_ids))
 	{
-		$query = $smfFunc['db_query']("
-			SELECT ID_GROUP, COUNT(*) AS num_members
+		$query = $smfFunc['db_query']('', "
+			SELECT id_group, COUNT(*) AS num_members
 			FROM {$db_prefix}members
-			WHERE ID_GROUP IN (" . implode(', ', $group_ids) . ")
-			GROUP BY ID_GROUP", __FILE__, __LINE__);
+			WHERE id_group IN (" . implode(', ', $group_ids) . ")
+			GROUP BY id_group", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
-			$context['groups'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
+			$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
 		$smfFunc['db_free_result']($query);
 
 		// Only do additional groups if we can moderate...
 		if ($context['can_moderate'])
 		{
-			$query = $smfFunc['db_query']("
-				SELECT mg.ID_GROUP, COUNT(*) AS num_members
+			$query = $smfFunc['db_query']('', "
+				SELECT mg.id_group, COUNT(*) AS num_members
 				FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
-				WHERE mg.ID_GROUP IN (" . implode(', ', $group_ids) . ")
-					AND mem.additionalGroups != ''
-					AND mem.ID_GROUP != mg.ID_GROUP
-					AND FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups)
-				GROUP BY mg.ID_GROUP", __FILE__, __LINE__);
+				WHERE mg.id_group IN (" . implode(', ', $group_ids) . ")
+					AND mem.additional_groups != ''
+					AND mem.id_group != mg.id_group
+					AND FIND_IN_SET(mg.id_group, mem.additional_groups)
+				GROUP BY mg.id_group", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($query))
-				$context['groups'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
+				$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
 			$smfFunc['db_free_result']($query);
 		}
 	}
@@ -164,11 +164,11 @@ function MembergroupMembers()
 		fatal_lang_error('membergroup_does_not_exist', false);
 
 	// Load up the group details.
-	$request = $smfFunc['db_query']("
-		SELECT ID_GROUP AS id, groupName AS name, minPosts = -1 AS assignable, hidden, onlineColor,
-			stars, description, minPosts != -1 AS is_post_group
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group AS id, group_name AS name, min_posts = -1 AS assignable, hidden, online_color,
+			stars, description, min_posts != -1 AS is_post_group
 		FROM {$db_prefix}membergroups
-		WHERE ID_GROUP = $_REQUEST[group]
+		WHERE id_group = $_REQUEST[group]
 		LIMIT 1", __FILE__, __LINE__);
 	// Doesn't exist?
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -187,20 +187,20 @@ function MembergroupMembers()
 	);
 
 	// Load all the group moderators, for fun.
-	$request = $smfFunc['db_query']("
-		SELECT mem.ID_MEMBER, mem.realName
+	$request = $smfFunc['db_query']('', "
+		SELECT mem.id_member, mem.real_name
 		FROM ({$db_prefix}group_moderators AS mods, {$db_prefix}members AS mem)
-		WHERE mods.ID_GROUP = $_REQUEST[group]
-			AND mem.ID_MEMBER = mods.ID_MEMBER", __FILE__, __LINE__);
+		WHERE mods.id_group = $_REQUEST[group]
+			AND mem.id_member = mods.id_member", __FILE__, __LINE__);
 	$context['group']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['group']['moderators'][] = array(
-			'id' => $row['ID_MEMBER'],
-			'name' => $row['realName']
+			'id' => $row['id_member'],
+			'name' => $row['real_name']
 		);
 
-		if ($user_info['id'] == $row['ID_MEMBER'])
+		if ($user_info['id'] == $row['id_member'])
 			$context['group']['can_moderate'] = true;
 	}
 	$smfFunc['db_free_result']($request);
@@ -236,26 +236,26 @@ function MembergroupMembers()
 		// Get all the members to be added... taking into account names can be quoted ;)
 		$_REQUEST['toAdd'] = strtr($smfFunc['htmlspecialchars'](stripslashes($_REQUEST['toAdd']), ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_REQUEST['toAdd'], $matches);
-		$memberNames = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['toAdd']))));
+		$member_names = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['toAdd']))));
 
-		foreach ($memberNames as $index => $memberName)
+		foreach ($member_names as $index => $member_name)
 		{
-			$memberNames[$index] = trim($smfFunc['strtolower']($memberNames[$index]));
+			$member_names[$index] = trim($smfFunc['strtolower']($member_names[$index]));
 
-			if (strlen($memberNames[$index]) == 0)
-				unset($memberNames[$index]);
+			if (strlen($member_names[$index]) == 0)
+				unset($member_names[$index]);
 		}
 
-		$request = $smfFunc['db_query']("
-			SELECT ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
 			FROM {$db_prefix}members
-			WHERE (LOWER(memberName) IN ('" . implode("', '", $memberNames) . "') OR LOWER(realName) IN ('" . implode("', '", $memberNames) . "'))
-				AND ID_GROUP != $_REQUEST[group]
-				AND NOT FIND_IN_SET($_REQUEST[group], additionalGroups)
-			LIMIT " . count($memberNames), __FILE__, __LINE__);
+			WHERE (LOWER(member_name) IN ('" . implode("', '", $member_names) . "') OR LOWER(real_name) IN ('" . implode("', '", $member_names) . "'))
+				AND id_group != $_REQUEST[group]
+				AND NOT FIND_IN_SET($_REQUEST[group], additional_groups)
+			LIMIT " . count($member_names), __FILE__, __LINE__);
 		$members = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$members[] = $row['ID_MEMBER'];
+			$members[] = $row['id_member'];
 		$smfFunc['db_free_result']($request);
 
 		// !!! Add $_POST['additional'] to templates!
@@ -267,10 +267,10 @@ function MembergroupMembers()
 
 	// Sort out the sorting!
 	$sort_methods = array(
-		'name' => 'realName',
-		'email' => 'emailAddress',
-		'active' => 'lastLogin',
-		'registered' => 'dateRegistered',
+		'name' => 'real_name',
+		'email' => 'email_address',
+		'active' => 'last_login',
+		'registered' => 'date_registered',
 		'posts' => 'posts',
 	);
 
@@ -278,7 +278,7 @@ function MembergroupMembers()
 	if (!isset($_REQUEST['sort']) || !isset($sort_methods[$_REQUEST['sort']]))
 	{
 		$context['sort_by'] = 'name';
-		$querySort = 'realName';
+		$querySort = 'real_name';
 	}
 	// Otherwise default to ascending.
 	else
@@ -291,12 +291,12 @@ function MembergroupMembers()
 
 	// The where on the query is interesting. Non-moderators should only see people who are in this group as primary.
 	if ($context['group']['can_moderate'])
-		$where = $context['group']['is_post_group'] ? "ID_POST_GROUP = $_REQUEST[group]" : "ID_GROUP = $_REQUEST[group] OR FIND_IN_SET($_REQUEST[group], additionalGroups)";
+		$where = $context['group']['is_post_group'] ? "id_post_group = $_REQUEST[group]" : "id_group = $_REQUEST[group] OR FIND_IN_SET($_REQUEST[group], additional_groups)";
 	else
-		$where = $context['group']['is_post_group'] ? "ID_POST_GROUP = $_REQUEST[group]" : "ID_GROUP = $_REQUEST[group]";
+		$where = $context['group']['is_post_group'] ? "id_post_group = $_REQUEST[group]" : "id_group = $_REQUEST[group]";
 
 	// Count members of the group.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}members
 		WHERE $where", __FILE__, __LINE__);
@@ -308,8 +308,8 @@ function MembergroupMembers()
 	$context['start'] = $_REQUEST['start'];
 
 	// Load up all members of this group.
-	$request = $smfFunc['db_query']("
-		SELECT ID_MEMBER, memberName, realName, emailAddress, memberIP, dateRegistered, lastLogin, posts, is_activated
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, real_name, email_address, member_ip, date_registered, last_login, posts, is_activated
 		FROM {$db_prefix}members
 		WHERE $where
 		ORDER BY $querySort " . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . "
@@ -317,18 +317,18 @@ function MembergroupMembers()
 	$context['members'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$last_online = empty($row['lastLogin']) ? $txt['never'] : timeformat($row['lastLogin']);
+		$last_online = empty($row['last_login']) ? $txt['never'] : timeformat($row['last_login']);
 
 		// Italicize the online note if they aren't activated.
 		if ($row['is_activated'] % 10 != 1)
 			$last_online = '<i title="' . $txt['not_activated'] . '">' . $last_online . '</i>';
 
 		$context['members'][] = array(
-			'id' => $row['ID_MEMBER'],
-			'name' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>',
-			'email' => '<a href="mailto:' . $row['emailAddress'] . '">' . $row['emailAddress'] . '</a>',
-			'ip' => '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['memberIP'] . '">' . $row['memberIP'] . '</a>',
-			'registered' => timeformat($row['dateRegistered']),
+			'id' => $row['id_member'],
+			'name' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
+			'email' => '<a href="mailto:' . $row['email_address'] . '">' . $row['email_address'] . '</a>',
+			'ip' => '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['member_ip'] . '">' . $row['member_ip'] . '</a>',
+			'registered' => timeformat($row['date_registered']),
 			'last_online' => $last_online,
 			'posts' => $row['posts'],
 			'is_activated' => $row['is_activated'] % 10 == 1,
@@ -378,15 +378,15 @@ function GroupRequests()
 		else
 		{
 			// Get the details of all the members concerned...
-			$request = $smfFunc['db_query']("
-				SELECT lgr.ID_REQUEST, lgr.ID_MEMBER, lgr.ID_GROUP, mem.emailAddress, mem.ID_GROUP AS primary_group,
-					mem.additionalGroups AS additional_groups, mem.lngfile, mem.memberName, mem.notifyTypes,
-					mg.hidden, mg.groupName
+			$request = $smfFunc['db_query']('', "
+				SELECT lgr.ID_REQUEST, lgr.id_member, lgr.id_group, mem.email_address, mem.id_group AS primary_group,
+					mem.additional_groups AS additional_groups, mem.lngfile, mem.member_name, mem.notify_types,
+					mg.hidden, mg.group_name
 				FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
 				WHERE $where
 					AND lgr.ID_REQUEST IN (" . implode(',', $_POST['groupr']) . ")
-					AND mem.ID_MEMBER = lgr.ID_MEMBER
-					AND mg.ID_GROUP = lgr.ID_GROUP
+					AND mem.id_member = lgr.id_member
+					AND mg.id_group = lgr.id_group
 				ORDER BY mem.lngfile", __FILE__, __LINE__);
 			$email_details = array();
 			$group_changes = array();
@@ -396,47 +396,47 @@ function GroupRequests()
 				if ($_POST['req_action'] == 'approve')
 				{
 					// For people with more than one request at once.
-					if (isset($group_changes[$row['ID_MEMBER']]))
+					if (isset($group_changes[$row['id_member']]))
 					{
-						$row['additional_groups'] = $group_changes[$row['ID_MEMBER']]['add'];
-						$row['primary_group'] = $group_changes[$row['ID_MEMBER']]['primary'];
+						$row['additional_groups'] = $group_changes[$row['id_member']]['add'];
+						$row['primary_group'] = $group_changes[$row['id_member']]['primary'];
 					}
 					else
 						$row['additional_groups'] = explode(',', $row['additional_groups']);
 
 					// Don't have it already?
-					if ($row['primary_group'] == $row['ID_GROUP'] || in_array($row['ID_GROUP'], $row['additional_groups']))
+					if ($row['primary_group'] == $row['id_group'] || in_array($row['id_group'], $row['additional_groups']))
 						continue;
 
 					// Should it become their primary?
 					if ($row['primary_group'] == 0 && $row['hidden'] == 0)
-						$row['primary_group'] = $row['ID_GROUP'];
+						$row['primary_group'] = $row['id_group'];
 					else
-						$row['additional_groups'][] = $row['ID_GROUP'];
+						$row['additional_groups'][] = $row['id_group'];
 
 					// Add them to the group master list.
-					$group_changes[$row['ID_MEMBER']] = array(
+					$group_changes[$row['id_member']] = array(
 						'primary' => $row['primary_group'],
 						'add' => $row['additional_groups'],
 					);
 				}
 
 				// Add required information to email them.
-				if ($row['notifyTypes'] != 4)
+				if ($row['notify_types'] != 4)
 					$email_details[] = array(
 						'rid' => $row['ID_REQUEST'],
-						'member_id' => $row['ID_MEMBER'],
-						'member_name' => $row['memberName'],
-						'group_id' => $row['ID_GROUP'],
-						'group_name' => $row['groupName'],
-						'email' => $row['emailAddress'],
+						'member_id' => $row['id_member'],
+						'member_name' => $row['member_name'],
+						'group_id' => $row['id_group'],
+						'group_name' => $row['group_name'],
+						'email' => $row['email_address'],
 						'language' => $row['lngfile'],
 					);					
 			}
 			$smfFunc['db_free_result']($request);
 
 			// Remove the evidence...
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_group_requests
 				WHERE ID_REQUEST IN (" . implode(',', $_POST['groupr']) . ")", __FILE__, __LINE__);
 
@@ -458,10 +458,10 @@ function GroupRequests()
 							if ($value == 0 || trim($value) == '')
 								unset($groups['add'][$key]);
 
-						$smfFunc['db_query']("
+						$smfFunc['db_query']('', "
 							UPDATE {$db_prefix}members
-							SET ID_GROUP = $groups[primary], additionalGroups = '" . implode(',', $groups['add']) . "'
-							WHERE ID_MEMBER = $id", __FILE__, __LINE__);
+							SET id_group = $groups[primary], additional_groups = '" . implode(',', $groups['add']) . "'
+							WHERE id_member = $id", __FILE__, __LINE__);
 					}
 
 					$lastLng = $user_info['language'];
@@ -501,7 +501,7 @@ function GroupRequests()
 	}
 
 	// There *could* be many, so paginate.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_group_requests AS lgr
 		WHERE $where", __FILE__, __LINE__);
@@ -514,13 +514,13 @@ function GroupRequests()
 
 	// Fetch all the group requests...
 	//!!! What can they actually see?
-	$request = $smfFunc['db_query']("
-		SELECT lgr.ID_REQUEST, lgr.ID_MEMBER, lgr.ID_GROUP, lgr.time_applied, lgr.reason,
-			mem.memberName, mg.groupName, mg.onlineColor
+	$request = $smfFunc['db_query']('', "
+		SELECT lgr.ID_REQUEST, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
+			mem.member_name, mg.group_name, mg.online_color
 		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
 		WHERE $where
-			AND mem.ID_MEMBER = lgr.ID_MEMBER
-			AND mg.ID_GROUP = lgr.ID_GROUP
+			AND mem.id_member = lgr.id_member
+			AND mg.id_group = lgr.id_group
 		ORDER BY lgr.ID_REQUEST DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['group_requests'] = array();
@@ -529,16 +529,16 @@ function GroupRequests()
 		$context['group_requests'][] = array(
 			'id' => $row['ID_REQUEST'],
 			'member' => array(
-				'id' => $row['ID_MEMBER'],
-				'name' => $row['memberName'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['memberName'] . '</a>',
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+				'id' => $row['id_member'],
+				'name' => $row['member_name'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			),
 			'group' => array(
-				'id' => $row['ID_GROUP'],
-				'name' => $row['groupName'],
-				'color' => $row['onlineColor'],
-				'link' => '<span style="color: ' . $row['onlineColor'] . '">' . $row['groupName'] . '</span>',
+				'id' => $row['id_group'],
+				'name' => $row['group_name'],
+				'color' => $row['online_color'],
+				'link' => '<span style="color: ' . $row['online_color'] . '">' . $row['group_name'] . '</span>',
 			),
 			'reason' => censorText($row['reason']),
 			'time_submitted' => timeformat($row['time_applied']),

@@ -366,14 +366,14 @@ function step3()
 	}
 
 	$result = mysql_query("
-		SELECT ID_THEME, value
+		SELECT id_theme, value
 		FROM {$db_prefix}themes
 		WHERE variable = 'theme_dir'", $db_connection) or die(mysql_error($db_connection));
 	$updates = array();
 	while ($row = mysql_fetch_assoc($result))
 	{
 		if (strpos($row['value'], '/Themes/') !== false && file_exists($mydir . '/Themes/' . basename($row['value'])))
-			$updates[$row['ID_THEME']] = 'Themes/' . basename($row['value']);
+			$updates[$row['id_theme']] = 'Themes/' . basename($row['value']);
 	}
 	mysql_free_result($result);
 
@@ -388,7 +388,7 @@ function step3()
 
 		mysql_query("
 			REPLACE INTO {$db_prefix}themes
-				(ID_THEME, ID_MEMBER, variable, value)
+				(id_theme, id_member, variable, value)
 			VALUES" . substr($setString, 0, -1), $db_connection);
 	}
 

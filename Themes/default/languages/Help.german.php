@@ -316,7 +316,7 @@ $helptxt['max_pm_recipients'] = 'Diese Option erlaubt die Vergabe einer max. Anz
 $helptxt['pm_posts_verification'] = 'This setting will force users to enter a code shown on a verification image each time they are sending a personal message. Only users with a post count below the number set will need to enter the code - this should help combat automated spamming scripts.';
 $helptxt['pm_posts_per_hour'] = 'This will limit the number of personal messages which may be sent by a user in a one hour period. This does not affect admins or moderators.';
 
-$helptxt['default_personalText'] = 'Gibt den Text an, der als standardm&auml;&szlig;iger &quot;Pers&ouml;nlicher Text&quot; angezeigt wird.';
+$helptxt['default_personal_text'] = 'Gibt den Text an, der als standardm&auml;&szlig;iger &quot;Pers&ouml;nlicher Text&quot; angezeigt wird.';
 
 $helptxt['modlog_enabled'] = '&Uuml;berwacht alle Aktionen der Moderatoren.';
 
@@ -365,7 +365,7 @@ $helptxt['coppaType'] = 'Sollte die Altersbeschr&auml;nkung aktiviert sein, best
 $helptxt['coppaPost'] = 'Die Textfelder mit den Kontaktangaben sind erforderlich, damit das Formular an den Administrator geschickt werden kann. Die Angaben werden allen neuen Mitgliedern angezeigt, die das Mindestalter noch nicht erreicht haben und sind f&uuml;r die Genehmigung durch Eltern/Erziehungsberechtigte unbedingt notwendig. Es sollte mindestens eine Postadresse oder eine Faxnummer angeboten werden.';
 
 $helptxt['allow_hideOnline'] = 'Aktivieren Sie diese Option, k&ouml;nnen alle Mitglieder ihren Online Status verstecken (au&szlig;er vor Administratoren). Wenn Sie diese Option deaktivieren k&ouml;nnen nur Mitglieder den Status verstecken, welche die M&ouml;glichkeit haben das Forum moderieren. Das deaktivieren &auml;ndert keinen Status eines Mitglieds, es verhindert nur das Verstecken des Status in der Zukunft.';
-$helptxt['allow_hideEmail'] = 'Wenn diese Option aktiviert ist, k&ouml;nnen Mitglieder w&auml;hlen, ob sie ihre E-Mail Adresse vor andern Benutzern verstecken d&uuml;rfen. Der Administrator hingegen kann alle E-Mail Adressen betrachten.';
+$helptxt['allow_hide_email'] = 'Wenn diese Option aktiviert ist, k&ouml;nnen Mitglieder w&auml;hlen, ob sie ihre E-Mail Adresse vor andern Benutzern verstecken d&uuml;rfen. Der Administrator hingegen kann alle E-Mail Adressen betrachten.';
 
 $helptxt['latest_support'] = 'Dieser Bereich zeigt die h&auml;ufigsten Probleme und Fragen zur Ihrer Server Konfiguration. Diese Informationen werden nicht gespeichert.<br /><br />Sollte es bei &quot;Lade Support Informationen...&quot; stehen bleiben, kann Ihr Computer wahrscheinlich nicht zu <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a> verbinden.';
 $helptxt['latest_packages'] = 'Hier k&ouml;nnen Sie ein paar der beliebtesten und zuf&auml;llig ausgew&auml;hlten Modifikationen bzw. Pakete sehen, welche leicht und schnell zu installieren sind.<br /><br />Wenn dieser Bereich nicht sichtbar ist, kann Ihr Computer wahrscheinlich nicht zu <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a> verbinden.';

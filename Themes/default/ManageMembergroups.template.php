@@ -392,7 +392,7 @@ function template_group_members()
 				</tr>
 				<tr class="windowbg2">
 					<td align="left">
-						<b>', $txt['name'], ':</b> <span ', $context['group']['onlineColor'] ? 'style="color: ' . $context['group']['onlineColor'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
+						<b>', $txt['name'], ':</b> <span ', $context['group']['online_color'] ? 'style="color: ' . $context['group']['online_color'] . ';"' : '', '>', $context['group']['name'], '</span> ', $context['group']['stars'], '
 						', $context['group']['description'] ? '<br /><b>' . $txt['membergroups_members_description'] . ':</b> ' . $context['group']['description'] : '', '
 						<br /><b>', $txt['members'], ':</b> ', $context['total_members'];
 	// Any group moderators to show?

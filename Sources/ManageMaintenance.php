@@ -78,9 +78,9 @@ if (!defined('SMF'))
 		  without harm.
 		- requires the admin_forum permission.
 		- shows the maintain_forum admin area.
-		- fixes topics with wrong numReplies.
-		- updates the numPosts and numTopics of all boards.
-		- recounts instantMessages but not unreadMessages.
+		- fixes topics with wrong num_replies.
+		- updates the num_posts and num_topics of all boards.
+		- recounts instant_messages but not unread_messages.
 		- repairs messages pointing to boards with topics pointing to
 		  other boards.
 		- updates the last message posted in boards and children.
@@ -155,37 +155,37 @@ function ManageMaintenance()
 // Miscellaneous maintenance..
 function Maintenance()
 {
-	global $context, $txt, $db_prefix, $user_info, $db_character_set;
+	global $context, $txt, $db_prefix, $user_info, $db_character_set, $db_type;
 	global $modSettings, $cachedir, $smfFunc;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'logs')
 	{
 		// No one's online now.... MUHAHAHAHA :P.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_online", __FILE__, __LINE__);
 
 		// Dump the banning logs.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_banned", __FILE__, __LINE__);
 
-		// Start ID_ERROR back at 0 and dump the error log.
-		$smfFunc['db_query']("
+		// Start id_error back at 0 and dump the error log.
+		$smfFunc['db_query']('', "
 			TRUNCATE {$db_prefix}log_errors", __FILE__, __LINE__);
 
 		// Clear out the spam log.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_floodcontrol", __FILE__, __LINE__);
 
 		// Clear out the karma actions.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_karma", __FILE__, __LINE__);
 
 		// Last but not least, the search logs!
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			TRUNCATE {$db_prefix}log_search_topics", __FILE__, __LINE__);
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			TRUNCATE {$db_prefix}log_search_messages", __FILE__, __LINE__);
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			TRUNCATE {$db_prefix}log_search_results", __FILE__, __LINE__);
 
 		updateSettings(array('search_pointer' => 0));
@@ -213,30 +213,30 @@ function Maintenance()
 		$context['maintenance_finished'] = isset($_GET['done']);
 
 	// Grab some boards maintenance can be done on.
-	$result = $smfFunc['db_query']("
-		SELECT b.ID_BOARD, b.name, b.childLevel, c.name AS catName, c.ID_CAT
+	$result = $smfFunc['db_query']('', "
+		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
+			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$context['categories'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		if (!isset($context['categories'][$row['ID_CAT']]))
-			$context['categories'][$row['ID_CAT']] = array(
-				'name' => $row['catName'],
+		if (!isset($context['categories'][$row['id_cat']]))
+			$context['categories'][$row['id_cat']] = array(
+				'name' => $row['cat_name'],
 				'boards' => array()
 			);
 
-		$context['categories'][$row['ID_CAT']]['boards'][] = array(
-			'id' => $row['ID_BOARD'],
+		$context['categories'][$row['id_cat']]['boards'][] = array(
+			'id' => $row['id_board'],
 			'name' => $row['name'],
-			'child_level' => $row['childLevel']
+			'child_level' => $row['child_level']
 		);
 	}
 	$smfFunc['db_free_result']($result);
 
-	$context['convert_utf8'] = (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smfFunc['db_server_info']())) <= 0;
-	$context['convert_entities'] = isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
+	$context['convert_utf8'] = $db_type == 'mysql' && (!isset($db_character_set) || $db_character_set !== 'utf8' || empty($modSettings['global_character_set']) || $modSettings['global_character_set'] !== 'UTF-8') && version_compare('4.1.2', preg_replace('~\-.+?$~', '', $smfFunc['db_server_info']())) <= 0;
+	$context['convert_entities'] = $db_type == 'mysql' && isset($db_character_set, $modSettings['global_character_set']) && $db_character_set === 'utf8' && $modSettings['global_character_set'] === 'UTF-8';
 
 	$context['sub_template'] = 'maintain';
 	$context['page_title'] = $txt['maintain_title'];
@@ -267,9 +267,9 @@ function ScheduledTasks()
 				$enablers[] = (int) $id;
 
 		// Do the update!
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}scheduled_tasks
-			SET disabled = IF (ID_TASK IN (" . implode(', ', $enablers) . "), 0, 1)", __FILE__, __LINE__);
+			SET disabled = CASE WHEN id_task IN (" . implode(', ', $enablers) . ") THEN 0 ELSE 1 END", __FILE__, __LINE__);
 
 		// Pop along...
 		CalculateNextTrigger();
@@ -284,10 +284,10 @@ function ScheduledTasks()
 			$tasks[] = (int) $task;
 
 		// Load up the tasks.
-		$request = $smfFunc['db_query']("
-			SELECT ID_TASK, task
+		$request = $smfFunc['db_query']('', "
+			SELECT id_task, task
 			FROM {$db_prefix}scheduled_tasks
-			WHERE ID_TASK IN (" . implode(', ', $tasks) . ")
+			WHERE id_task IN (" . implode(', ', $tasks) . ")
 			LIMIT " . count($tasks), __FILE__, __LINE__);
 		
 		// Lets get it on!
@@ -312,33 +312,33 @@ function ScheduledTasks()
 			if ($completed)
 			{
 				$total_time = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $start_time)), 3);
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}log_scheduled_tasks
-						(ID_TASK, timeRun, timeTaken)
+						(id_task, time_run, time_taken)
 					VALUES
-						($row[ID_TASK], " . time() . ", $total_time)", __FILE__, __LINE__);
+						($row[id_task], " . time() . ", $total_time)", __FILE__, __LINE__);
 			}
 
 		}
 	}
 
 	// Get the tasks, all of them, now - dammit!
-	$request = $smfFunc['db_query']("
-		SELECT ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit, disabled, task
+	$request = $smfFunc['db_query']('', "
+		SELECT id_task, next_time, time_offset, time_regularity, time_unit, disabled, task
 		FROM {$db_prefix}scheduled_tasks", __FILE__, __LINE__);
 	$context['tasks'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Find the next for regularity - don't offset as it's always server time!
-		$offset = sprintf($txt['scheduled_task_reg_starting'], date("H:i", $row['timeOffset']));
-		$repeating = sprintf($txt['scheduled_task_reg_repeating'], $row['timeRegularity'], $txt['scheduled_task_reg_unit_' . $row['timeUnit']]);
+		$offset = sprintf($txt['scheduled_task_reg_starting'], date("H:i", $row['time_offset']));
+		$repeating = sprintf($txt['scheduled_task_reg_repeating'], $row['time_regularity'], $txt['scheduled_task_reg_unit_' . $row['time_unit']]);
 
 		$context['tasks'][] = array(
-			'id' => $row['ID_TASK'],
+			'id' => $row['id_task'],
 			'function' => $row['task'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
 			'desc' => isset($txt['scheduled_task_desc_' . $row['task']]) ? $txt['scheduled_task_desc_' . $row['task']] : '',
-			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat($row['nextTime'] == 0 ? time() : $row['nextTime']),
+			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat($row['next_time'] == 0 ? time() : $row['next_time']),
 			'disabled' => $row['disabled'],
 			'regularity' => $offset . ', ' . $repeating,
 		);
@@ -396,11 +396,11 @@ function EditTask()
 		$disabled = !isset($_POST['enabled']) ? 1 : 0;
 
 		// Do the update!
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}scheduled_tasks
-			SET disabled = $disabled, timeOffset = $offset, timeUnit = '$unit',
-				timeRegularity = $interval
-			WHERE ID_TASK = $_GET[tid]", __FILE__, __LINE__);
+			SET disabled = $disabled, time_offset = $offset, time_unit = '$unit',
+				time_regularity = $interval
+			WHERE id_task = $_GET[tid]", __FILE__, __LINE__);
 
 		// Check the next event.
 		CalculateNextTrigger($_GET['tid'], true);
@@ -410,10 +410,10 @@ function EditTask()
 	}
 
 	// Load the task, understand? Que? Que?
-	$request = $smfFunc['db_query']("
-		SELECT ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit, disabled, task
+	$request = $smfFunc['db_query']('', "
+		SELECT id_task, next_time, time_offset, time_regularity, time_unit, disabled, task
 		FROM {$db_prefix}scheduled_tasks
-		WHERE ID_TASK = $_GET[tid]", __FILE__, __LINE__);
+		WHERE id_task = $_GET[tid]", __FILE__, __LINE__);
 
 	// Should never, ever, happen!
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -422,16 +422,16 @@ function EditTask()
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['task'] = array(
-			'id' => $row['ID_TASK'],
+			'id' => $row['id_task'],
 			'function' => $row['task'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
 			'desc' => isset($txt['scheduled_task_desc_' . $row['task']]) ? $txt['scheduled_task_desc_' . $row['task']] : '',
-			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat($row['nextTime'] == 0 ? time() : $row['nextTime']),
+			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat($row['next_time'] == 0 ? time() : $row['next_time']),
 			'disabled' => $row['disabled'],
-			'offset' => $row['timeOffset'],
-			'regularity' => $row['timeRegularity'],
-			'offset_formatted' => date("H:i", $row['timeOffset']),
-			'unit' => $row['timeUnit'],			
+			'offset' => $row['time_offset'],
+			'regularity' => $row['time_regularity'],
+			'offset_formatted' => date("H:i", $row['time_offset']),
+			'unit' => $row['time_unit'],			
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -450,12 +450,12 @@ function TaskLog()
 	{
 		checkSession();
 
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			TRUNCATE {$db_prefix}log_scheduled_tasks", __FILE__, __LINE__);
 	}
 
 	// Count the total number of task log entries.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_scheduled_tasks", __FILE__, __LINE__);
 	list ($num_task_log_entries) = $smfFunc['db_fetch_row']($request);
@@ -464,19 +464,19 @@ function TaskLog()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=maintain;sa=tasklog', $_REQUEST['start'], $num_task_log_entries, $entries_per_page);
 	$context['start'] = $_REQUEST['start'];
 
-	$request = $smfFunc['db_query']("
-		SELECT lst.ID_LOG, lst.ID_TASK, lst.timeRun, lst.timeTaken, st.task
+	$request = $smfFunc['db_query']('', "
+		SELECT lst.id_log, lst.id_task, lst.time_run, lst.time_taken, st.task
 		FROM {$db_prefix}log_scheduled_tasks AS lst, {$db_prefix}scheduled_tasks AS st
-		WHERE st.ID_TASK = lst.ID_TASK
-		ORDER BY ID_LOG DESC
+		WHERE st.id_task = lst.id_task
+		ORDER BY id_log DESC
 		LIMIT $_REQUEST[start], $entries_per_page", __FILE__, __LINE__);
 	$context['log_entries'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['log_entries'][] = array(
-			'id' => $row['ID_LOG'],
+			'id' => $row['id_log'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
-			'time_run' => timeformat($row['timeRun']),
-			'time_taken' => $row['timeTaken'],
+			'time_run' => timeformat($row['time_run']),
+			'time_taken' => $row['time_taken'],
 		);
 	$smfFunc['db_free_result']($request);
 
@@ -523,7 +523,7 @@ function ConvertUtf8()
 	);
 
 	// Get a list of character sets supported by your MySQL server.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SHOW CHARACTER SET", __FILE__, __LINE__);
 	$db_charsets = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -540,7 +540,7 @@ function ConvertUtf8()
 			fatal_lang_error('utf8_db_version_too_low');
 
 		// Use the messages.body column as indicator for the database charset.
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SHOW FULL COLUMNS
 			FROM {$db_prefix}messages
 			LIKE 'body'", __FILE__, __LINE__);
@@ -688,12 +688,12 @@ function ConvertUtf8()
 
 	// Grab a list of tables.
 	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) === 1)
-		$queryTables = $smfFunc['db_query']("
+		$queryTables = $smfFunc['db_query']('', "
 			SHOW TABLE STATUS
 			FROM `" . strtr($match[1], array('`' => '')) . "`
 			LIKE '" . str_replace('_', '\_', $match[2]) . "%'", __FILE__, __LINE__);
 	else
-		$queryTables = $smfFunc['db_query']("
+		$queryTables = $smfFunc['db_query']('', "
 			SHOW TABLE STATUS
 			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'", __FILE__, __LINE__);
 
@@ -706,7 +706,7 @@ function ConvertUtf8()
 		$table_charsets = array();
 
 		// Loop through each column.
-		$queryColumns = $smfFunc['db_query']("
+		$queryColumns = $smfFunc['db_query']('', "
 			SHOW FULL COLUMNS 
 			FROM $table_info[Name]", __FILE__, __LINE__);
 		while ($column_info = $smfFunc['db_fetch_assoc']($queryColumns))
@@ -748,7 +748,7 @@ function ConvertUtf8()
 			}
 
 			// Change the columns to binary form.
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				ALTER TABLE $table_info[Name]" . substr($updates_blob, 0, -1), __FILE__, __LINE__);
 
 			// Convert the character set if MySQL has no native support for it.
@@ -760,19 +760,19 @@ function ConvertUtf8()
 						$update .= "
 							$column[Field] = " . strtr($replace, array('%field%' => $column['Field'])) . ',';
 				
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE $table_info[Name]
 					SET " . substr($update, 0, -1), __FILE__, __LINE__);
 			}
 
 			// Change the columns back, but with the proper character set.
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				ALTER TABLE $table_info[Name]" . substr($updates_text, 0, -1), __FILE__, __LINE__);
 		}
 
 		// Now do the actual conversion (if still needed).
 		if ($charsets[$_POST['src_charset']] !== 'utf8')
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				ALTER TABLE $table_info[Name]
 				CONVERT TO CHARACTER SET utf8", __FILE__, __LINE__);
 	}
@@ -862,7 +862,7 @@ function ConvertEntities()
 
 		// Get a list of text columns.
 		$columns = array();
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SHOW FULL COLUMNS 
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
 		while ($column_info = $smfFunc['db_fetch_assoc']($request))
@@ -870,7 +870,7 @@ function ConvertEntities()
 				$columns[] = $column_info['Field'];
 
 		// Get the column with the (first) primary key.
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SHOW KEYS
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -888,7 +888,7 @@ function ConvertEntities()
 			continue;
 
 		// Get the maximum value for the primary key.
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT MAX($primary_key)
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
 		list($max_value) = $smfFunc['db_fetch_row']($request);
@@ -900,7 +900,7 @@ function ConvertEntities()
 		while ($context['start'] <= $max_value)
 		{
 			// Retrieve a list of rows that has at least one entity to convert.
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT $primary_key, " . implode(', ', $columns) . "
 				FROM {$db_prefix}$cur_table
 				WHERE $primary_key BETWEEN $context[start] AND $context[start] + 499
@@ -915,7 +915,7 @@ function ConvertEntities()
 				
 				// Update the row.
 				if (!empty($changes))
-					$smfFunc['db_query']("
+					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}$cur_table
 						SET 
 							" . implode(",
@@ -964,14 +964,14 @@ function OptimizeTables()
 	$context['sub_template'] = 'optimize';
 
 	// Get a list of tables, as well as how many there are.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SHOW TABLE STATUS
 		FROM `$db_name`", false, false);
 	$tables = array();
 
 	if (!$result)
 	{
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SHOW TABLES
 			FROM `$db_name`", __FILE__, __LINE__);
 		while ($table = $smfFunc['db_fetch_row']($result))
@@ -996,7 +996,7 @@ function OptimizeTables()
 	foreach ($tables as $table)
 	{
 		// Optimize the table!  We use backticks here because it might be a custom table.
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			OPTIMIZE TABLE `$table[table_name]`", __FILE__, __LINE__);
 		$row = $smfFunc['db_fetch_assoc']($result);
 		$smfFunc['db_free_result']($result);
@@ -1034,8 +1034,8 @@ function AdminBoardRecount()
 	@set_time_limit(600);
 
 	// Step the number of topics at a time so things don't time out...
-	$request = $smfFunc['db_query']("
-		SELECT MAX(ID_TOPIC)
+	$request = $smfFunc['db_query']('', "
+		SELECT MAX(id_topic)
 		FROM {$db_prefix}topics", __FILE__, __LINE__);
 	list ($max_topics) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -1053,22 +1053,22 @@ function AdminBoardRecount()
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT /*!40001 SQL_NO_CACHE */ t.ID_TOPIC, t.numReplies, t.unapprovedPosts,
-					IF (COUNT(ma.ID_MSG), COUNT(ma.ID_MSG) - 1, 0) AS realNumReplies, COUNT(mu.ID_MSG) AS realUnapprovedPosts
+			$request = $smfFunc['db_query']('', "
+				SELECT /*!40001 SQL_NO_CACHE */ t.id_topic, MAX(t.num_replies) AS num_replies, MAX(t.unapproved_posts) AS unapproved_posts,
+					CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END AS real_num_replies, COUNT(mu.id_msg) AS real_unapproved_posts
 				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.ID_TOPIC = t.ID_TOPIC AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.ID_TOPIC = t.ID_TOPIC AND mu.approved = 0)
-				WHERE t.ID_TOPIC > " . ($_REQUEST['start']) . "
-					AND t.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
-				GROUP BY t.ID_TOPIC
-				HAVING realNumReplies != numReplies OR realUnapprovedPosts != unapprovedPosts", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+				WHERE t.id_topic > " . ($_REQUEST['start']) . "
+					AND t.id_topic <= " . ($_REQUEST['start'] + $increment) . "
+				GROUP BY t.id_topic
+				HAVING CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END != MAX(t.num_replies)
+					OR COUNT(mu.id_msg) != MAX(t.unapproved_posts)", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics
-					SET numReplies = $row[realNumReplies], unapprovedPosts = $row[realUnapprovedPosts]
-					WHERE ID_TOPIC = $row[ID_TOPIC]
-					LIMIT 1", __FILE__, __LINE__);
+					SET num_replies = $row[real_num_replies], unapproved_posts = $row[real_unapproved_posts]
+					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
@@ -1089,25 +1089,24 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 1)
 	{
 		if (empty($_REQUEST['start']))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}boards
-				SET numPosts = 0", __FILE__, __LINE__);
+				SET num_posts = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT /*!40001 SQL_NO_CACHE */ m.ID_BOARD, COUNT(*) AS realNumPosts
+			$request = $smfFunc['db_query']('', "
+				SELECT /*!40001 SQL_NO_CACHE */ m.id_board, COUNT(*) AS real_num_posts
 				FROM {$db_prefix}messages AS m
-				WHERE m.ID_TOPIC > " . ($_REQUEST['start']) . "
-					AND m.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
+				WHERE m.id_topic > " . ($_REQUEST['start']) . "
+					AND m.id_topic <= " . ($_REQUEST['start'] + $increment) . "
 					AND m.approved = 1
-				GROUP BY m.ID_BOARD", __FILE__, __LINE__);
+				GROUP BY m.id_board", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET numPosts = numPosts + $row[realNumPosts]
-					WHERE ID_BOARD = $row[ID_BOARD]
-					LIMIT 1", __FILE__, __LINE__);
+					SET num_posts = num_posts + $row[real_num_posts]
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
@@ -1128,25 +1127,24 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 2)
 	{
 		if (empty($_REQUEST['start']))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}boards
-				SET numTopics = 0", __FILE__, __LINE__);
+				SET num_topics = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, COUNT(*) AS realNumTopics
+			$request = $smfFunc['db_query']('', "
+				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, COUNT(*) AS real_num_topics
 				FROM {$db_prefix}topics AS t
 				WHERE t.approved = 1
-					AND t.ID_TOPIC > " . ($_REQUEST['start']) . "
-					AND t.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
-				GROUP BY t.ID_BOARD", __FILE__, __LINE__);
+					AND t.id_topic > " . ($_REQUEST['start']) . "
+					AND t.id_topic <= " . ($_REQUEST['start'] + $increment) . "
+				GROUP BY t.id_board", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET numTopics = numTopics + $row[realNumTopics]
-					WHERE ID_BOARD = $row[ID_BOARD]
-					LIMIT 1", __FILE__, __LINE__);
+					SET num_topics = num_topics + $row[real_num_topics]
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
@@ -1167,24 +1165,24 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 3)
 	{
 		if (empty($_REQUEST['start']))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}boards
-				SET unapprovedPosts = 0", __FILE__, __LINE__);
+				SET unapproved_posts = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT /*!40001 SQL_NO_CACHE */ m.ID_BOARD, COUNT(*) AS realUnapprovedPosts
+			$request = $smfFunc['db_query']('', "
+				SELECT /*!40001 SQL_NO_CACHE */ m.id_board, COUNT(*) AS real_unapproved_posts
 				FROM {$db_prefix}messages AS m
-				WHERE m.ID_TOPIC > " . ($_REQUEST['start']) . "
-					AND m.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
+				WHERE m.id_topic > " . ($_REQUEST['start']) . "
+					AND m.id_topic <= " . ($_REQUEST['start'] + $increment) . "
 					AND m.approved = 0
-				GROUP BY m.ID_BOARD", __FILE__, __LINE__);
+				GROUP BY m.id_board", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET unapprovedPosts = unapprovedPosts + $row[realUnapprovedPosts]
-					WHERE ID_BOARD = $row[ID_BOARD]
+					SET unapproved_posts = unapproved_posts + $row[real_unapproved_posts]
+					WHERE id_board = $row[id_board]
 					LIMIT 1", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
@@ -1206,24 +1204,24 @@ function AdminBoardRecount()
 	if ($_REQUEST['step'] <= 4)
 	{
 		if (empty($_REQUEST['start']))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}boards
-				SET unapprovedTopics = 0", __FILE__, __LINE__);
+				SET unapproved_topics = 0", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
-			$request = $smfFunc['db_query']("
-				SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, COUNT(*) AS realUnapprovedTopics
+			$request = $smfFunc['db_query']('', "
+				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, COUNT(*) AS realUnapprovedTopics
 				FROM {$db_prefix}topics AS t
 				WHERE t.approved = 0
-					AND t.ID_TOPIC > " . ($_REQUEST['start']) . "
-					AND t.ID_TOPIC <= " . ($_REQUEST['start'] + $increment) . "
-				GROUP BY t.ID_BOARD", __FILE__, __LINE__);
+					AND t.id_topic > " . ($_REQUEST['start']) . "
+					AND t.id_topic <= " . ($_REQUEST['start'] + $increment) . "
+				GROUP BY t.id_board", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET unapprovedTopics = unapprovedTopics + $row[realUnapprovedTopics]
-					WHERE ID_BOARD = $row[ID_BOARD]
+					SET unapproved_topics = unapproved_topics + $row[realUnapprovedTopics]
+					WHERE id_board = $row[id_board]
 					LIMIT 1", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
@@ -1244,24 +1242,26 @@ function AdminBoardRecount()
 	// Get all members with wrong number of personal messages.
 	if ($_REQUEST['step'] <= 5)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT /*!40001 SQL_NO_CACHE */ mem.ID_MEMBER, COUNT(pmr.ID_PM) AS realNum, mem.instantMessages
+		$request = $smfFunc['db_query']('', "
+			SELECT /*!40001 SQL_NO_CACHE */ mem.id_member, COUNT(pmr.id_pm) AS real_num,
+				MAX(mem.instant_messages) AS instant_messages
 			FROM {$db_prefix}members AS mem
-				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (mem.ID_MEMBER = pmr.ID_MEMBER AND pmr.deleted = 0)
-			GROUP BY mem.ID_MEMBER
-			HAVING realNum != instantMessages", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = 0)
+			GROUP BY mem.id_member
+			HAVING COUNT(pmr.id_pm) != MAX(mem.instant_messages)", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			updateMemberData($row['ID_MEMBER'], array('instantMessages' => $row['realNum']));
+			updateMemberData($row['id_member'], array('instant_messages' => $row['real_num']));
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']("
-			SELECT /*!40001 SQL_NO_CACHE */ mem.ID_MEMBER, COUNT(pmr.ID_PM) AS realNum, mem.unreadMessages
+		$request = $smfFunc['db_query']('', "
+			SELECT /*!40001 SQL_NO_CACHE */ mem.id_member, COUNT(pmr.id_pm) AS real_num,
+				MAX(mem.unread_messages) AS unread_messages
 			FROM {$db_prefix}members AS mem
-				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (mem.ID_MEMBER = pmr.ID_MEMBER AND pmr.deleted = 0 AND pmr.is_read = 0)
-			GROUP BY mem.ID_MEMBER
-			HAVING realNum != unreadMessages", __FILE__, __LINE__);
+				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = 0 AND pmr.is_read = 0)
+			GROUP BY mem.id_member
+			HAVING COUNT(pmr.id_pm) != MAX(mem.unread_messages)", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			updateMemberData($row['ID_MEMBER'], array('unreadMessages' => $row['realNum']));
+			updateMemberData($row['id_member'], array('unread_messages' => $row['real_num']));
 		$smfFunc['db_free_result']($request);
 
 		if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
@@ -1278,23 +1278,23 @@ function AdminBoardRecount()
 	{
 		while ($_REQUEST['start'] < $modSettings['maxMsgID'])
 		{
-			$request = $smfFunc['db_query']("
-				SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, m.ID_MSG
+			$request = $smfFunc['db_query']('', "
+				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, m.id_msg
 				FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-				WHERE t.ID_TOPIC = m.ID_TOPIC
-					AND m.ID_MSG > $_REQUEST[start]
-					AND m.ID_MSG <= " . ($_REQUEST['start'] + $increment) . "
-					AND m.ID_BOARD != t.ID_BOARD", __FILE__, __LINE__);
+				WHERE t.id_topic = m.id_topic
+					AND m.id_msg > $_REQUEST[start]
+					AND m.id_msg <= " . ($_REQUEST['start'] + $increment) . "
+					AND m.id_board != t.id_board", __FILE__, __LINE__);
 			$boards = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$boards[$row['ID_BOARD']][] = $row['ID_MSG'];
+				$boards[$row['id_board']][] = $row['id_msg'];
 			$smfFunc['db_free_result']($request);
 
 			foreach ($boards as $board_id => $messages)
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
-					SET ID_BOARD = $board_id
-					WHERE ID_MSG IN (" . implode(', ', $messages) . ")
+					SET id_board = $board_id
+					WHERE id_msg IN (" . implode(', ', $messages) . ")
 					LIMIT " . count($messages), __FILE__, __LINE__);
 
 			$_REQUEST['start'] += $increment;
@@ -1312,15 +1312,25 @@ function AdminBoardRecount()
 	}
 
 	// Update the latest message of each board.
-	$request = $smfFunc['db_query']("
-		SELECT /*!40001 SQL_NO_CACHE */ b.ID_BOARD, b.ID_PARENT, b.ID_LAST_MSG, MAX(m.ID_MSG) AS localLastMsg, b.childLevel
-		FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS m)
-		WHERE b.ID_BOARD = m.ID_BOARD
-			AND m.approved = 1
-		GROUP BY ID_BOARD", __FILE__, __LINE__);
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_board, MAX(m.id_msg) AS local_last_msg
+		FROM {$db_prefix}messages AS m
+		WHERE m.approved = 1
+		GROUP BY m.id_board", __FILE__, __LINE__);
+	$realBoardCounts = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$realBoardCounts[$row['id_board']] = $row['local_last_msg'];
+	$smfFunc['db_free_result']($request);
+
+	$request = $smfFunc['db_query']('', "
+		SELECT /*!40001 SQL_NO_CACHE */ id_board, id_parent, id_last_msg, child_level
+		FROM {$db_prefix}boards", __FILE__, __LINE__);
 	$resort_me = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$resort_me[$row['childLevel']][] = $row;
+	{
+		$row['local_last_msg'] = isset($realBoardCounts[$row['id_board']]) ? $realBoardCounts[$row['id_board']] : 0;
+		$resort_me[$row['child_level']][] = $row;
+	}
 	$smfFunc['db_free_result']($request);
 
 	krsort($resort_me);
@@ -1330,24 +1340,24 @@ function AdminBoardRecount()
 		foreach ($rows as $row)
 		{
 			// The latest message is the latest of the current board and its children.
-			if (isset($lastMsg[$row['ID_BOARD']]))
-				$curLastMsg = max($row['localLastMsg'], $lastMsg[$row['ID_BOARD']]);
+			if (isset($lastMsg[$row['id_board']]))
+				$curLastMsg = max($row['local_last_msg'], $lastMsg[$row['id_board']]);
 			else
-				$curLastMsg = $row['localLastMsg'];
+				$curLastMsg = $row['local_last_msg'];
 
 			// If what is and what should be the latest message differ, an update is necessary.
-			if ($curLastMsg != $row['ID_LAST_MSG'])
-				$smfFunc['db_query']("
+			if ($curLastMsg != $row['id_last_msg'])
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET ID_LAST_MSG = $curLastMsg
-					WHERE ID_BOARD = $row[ID_BOARD]
+					SET id_last_msg = $curLastMsg
+					WHERE id_board = $row[id_board]
 					LIMIT 1", __FILE__, __LINE__);
 
 			// Parent boards inherit the latest message of their children.
-			if (isset($lastMsg[$row['ID_PARENT']]))
-				$lastMsg[$row['ID_PARENT']] = max($row['localLastMsg'], $lastMsg[$row['ID_PARENT']]);
+			if (isset($lastMsg[$row['id_parent']]))
+				$lastMsg[$row['id_parent']] = max($row['local_last_msg'], $lastMsg[$row['id_parent']]);
 			else
-				$lastMsg[$row['ID_PARENT']] = $row['localLastMsg'];
+				$lastMsg[$row['id_parent']] = $row['local_last_msg'];
 		}
 
 	// Update all the basic statistics.
@@ -1450,7 +1460,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		//!!! Remove this for now - we may add it back later.
 		/*if ($template == 'index')
 		{
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT time_format, number_format, charset, locale, dictionary, rtl, image_lang
 				FROM {$db_prefix}languages
 				WHERE codename = '$lang'", __FILE__, __LINE__);

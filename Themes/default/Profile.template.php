@@ -230,7 +230,7 @@ function template_summary()
 					<td><b>', $txt[603], ': </b></td>
 					<td>', $context['member']['aim']['link_text'], '</td>
 				</tr><tr>
-					<td><b>', $txt['MSN'], ': </b></td>
+					<td><b>', $txt['msn'], ': </b></td>
 					<td>', $context['member']['msn']['link_text'], '</td>
 				</tr><tr>
 					<td><b>', $txt[604], ': </b></td>
@@ -484,7 +484,7 @@ function template_editBuddies()
 				<td align="center">', $txt[513], '</td>
 				<td align="center">', $txt[603], '</td>
 				<td align="center">', $txt[604], '</td>
-				<td align="center">', $txt['MSN'], '</td>
+				<td align="center">', $txt['msn'], '</td>
 				<td></td>
 			</tr>';
 
@@ -1115,7 +1115,7 @@ function template_account()
 	// This part checks if they are removing themselves from administrative power on accident.
 	if ($context['allow_edit_membergroups'] && $context['user']['is_owner'] && $context['member']['group'] == 1)
 		echo '
-				if (typeof(document.forms.creator.ID_GROUP) != "undefined" && document.forms.creator.ID_GROUP.value != "1")
+				if (typeof(document.forms.creator.id_group) != "undefined" && document.forms.creator.id_group.value != "1")
 					return confirm("', $txt['deadmin_confirm'], '");';
 
 	echo '
@@ -1158,7 +1158,7 @@ function template_account()
 									<b>', $txt['username'], ': </b>
 								</td>
 								<td>
-									<input type="text" name="memberName" size="30" value="', $context['member']['username'], '" />
+									<input type="text" name="member_name" size="30" value="', $context['member']['username'], '" />
 								</td>
 							</tr>';
 		else
@@ -1179,7 +1179,7 @@ function template_account()
 									<b', (isset($context['modify_error']['no_name']) || isset($context['modify_error']['name_taken']) ? ' style="color: red;"' : ''), '>', $txt['name'], ': </b>
 									<div class="smalltext">', $txt[518], '</div>
 								</td>
-								<td>', ($context['allow_edit_name'] ? '<input type="text" name="realName" size="30" value="' . $context['member']['name'] . '" />' : $context['member']['name']), '</td>
+								<td>', ($context['allow_edit_name'] ? '<input type="text" name="real_name" size="30" value="' . $context['member']['name'] . '" />' : $context['member']['name']), '</td>
 							</tr>';
 
 		// Allow the administrator to change the date they registered on and their post count.
@@ -1187,7 +1187,7 @@ function template_account()
 			echo '
 							<tr>
 								<td><b>', $txt['date_registered'], ':</b></td>
-								<td><input type="text" name="dateRegistered" size="30" value="', $context['member']['registered'], '" /></td>
+								<td><input type="text" name="date_registered" size="30" value="', $context['member']['registered'], '" /></td>
 							</tr>
 							<tr>
 								<td><b>', $txt[86], ': </b></td>
@@ -1226,7 +1226,7 @@ function template_account()
 									<div class="smalltext">(<a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqWin(this.href);">', $txt['moderator_why_missing'], '</a>)</div>
 								</td>
 								<td>
-									<select name="ID_GROUP">';
+									<select name="id_group">';
 		// Fill the select box with all primary member groups that can be assigned to a member.
 		foreach ($context['member_groups'] as $member_group)
 			if (!empty($member_group['can_be_primary']))
@@ -1240,19 +1240,19 @@ function template_account()
 							</tr><tr>
 								<td valign="top"><b>', $txt['additional_membergroups'], ':</b></td>
 								<td>
-									<div id="additionalGroupsList">
-										<input type="hidden" name="additionalGroups[]" value="0" />';
+									<div id="additional_groupsList">
+										<input type="hidden" name="additional_groups[]" value="0" />';
 		// For each membergroup show a checkbox so members can be assigned to more than one group.
 		foreach ($context['member_groups'] as $member_group)
 			if ($member_group['can_be_additional'])
 				echo '
-										<label for="additionalGroups-', $member_group['id'], '"><input type="checkbox" name="additionalGroups[]" value="', $member_group['id'], '" id="additionalGroups-', $member_group['id'], '"', $member_group['is_additional'] ? ' checked="checked"' : '', ' class="check" /> ', $member_group['name'], '</label><br />';
+										<label for="additional_groups-', $member_group['id'], '"><input type="checkbox" name="additional_groups[]" value="', $member_group['id'], '" id="additional_groups-', $member_group['id'], '"', $member_group['is_additional'] ? ' checked="checked"' : '', ' class="check" /> ', $member_group['name'], '</label><br />';
 		echo '
 									</div>
-									<a href="javascript:void(0);" onclick="document.getElementById(\'additionalGroupsList\').style.display = \'block\'; document.getElementById(\'additionalGroupsLink\').style.display = \'none\'; return false;" id="additionalGroupsLink" style="display: none;">', $txt['additional_membergroups_show'], '</a>
+									<a href="javascript:void(0);" onclick="document.getElementById(\'additional_groupsList\').style.display = \'block\'; document.getElementById(\'additional_groupsLink\').style.display = \'none\'; return false;" id="additional_groupsLink" style="display: none;">', $txt['additional_membergroups_show'], '</a>
 									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-										document.getElementById("additionalGroupsList").style.display = "none";
-										document.getElementById("additionalGroupsLink").style.display = "";
+										document.getElementById("additional_groupsList").style.display = "none";
+										document.getElementById("additional_groupsLink").style.display = "";
 									// ]]></script>
 								</td>
 							</tr>';
@@ -1267,7 +1267,7 @@ function template_account()
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 							</tr><tr>
 								<td width="40%"><b', (isset($context['modify_error']['bad_email']) || isset($context['modify_error']['no_email']) || isset($context['modify_error']['email_taken']) ? ' style="color: red;"' : ''), '>', $txt['email'], ': </b><div class="smalltext">', $txt[679], '</div></td>
-								<td><input type="text" name="emailAddress" size="30" value="', $context['member']['email'], '" /></td>
+								<td><input type="text" name="email_address" size="30" value="', $context['member']['email'], '" /></td>
 							</tr>';
 
 		// If the user is allowed to hide their email address from the public give them the option to here.
@@ -1276,7 +1276,7 @@ function template_account()
 			echo '
 							<tr>
 								<td width="40%"><b>', $txt[721], '</b></td>
-								<td><input type="hidden" name="hideEmail" value="0" /><input type="checkbox" name="hideEmail"', $context['member']['hide_email'] ? ' checked="checked"' : '', ' value="1" class="check" /></td>
+								<td><input type="hidden" name="hide_email" value="0" /><input type="checkbox" name="hide_email"', $context['member']['hide_email'] ? ' checked="checked"' : '', ' value="1" class="check" /></td>
 							</tr>';
 	}
 
@@ -1286,7 +1286,7 @@ function template_account()
 			echo '
 							<tr>
 								<td width="40%"><b>', $txt['show_online'], '</b></td>
-								<td><input type="hidden" name="showOnline" value="0" /><input type="checkbox" name="showOnline"', $context['member']['show_online'] ? ' checked="checked"' : '', ' value="1" class="check" /></td>
+								<td><input type="hidden" name="show_online" value="0" /><input type="checkbox" name="show_online"', $context['member']['show_online'] ? ' checked="checked"' : '', ' value="1" class="check" /></td>
 							</tr>';
 		}
 
@@ -1308,10 +1308,10 @@ function template_account()
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 							</tr><tr>
 								<td width="40%"><b>', $txt['pswd1'], ':</b><div class="smalltext">', $txt['secret_desc'], '</div></td>
-								<td><input type="text" name="secretQuestion" size="50" value="', $context['member']['secret_question'], '" /></td>
+								<td><input type="text" name="secret_question" size="50" value="', $context['member']['secret_question'], '" /></td>
 							</tr><tr>
 								<td width="40%"><b>', $txt['pswd2'], ':</b><div class="smalltext">', $txt['secret_desc2'], '</div></td>
-								<td><input type="text" name="secretAnswer" size="20" /><span class="smalltext" style="margin-left: 4ex;"><a href="', $scripturl, '?action=helpadmin;help=secret_why_blank" onclick="return reqWin(this.href);">', $txt['secret_why_blank'], '</a></span></td>
+								<td><input type="text" name="secret_answer" size="20" /><span class="smalltext" style="margin-left: 4ex;"><a href="', $scripturl, '?action=helpadmin;help=secret_why_blank" onclick="return reqWin(this.href);">', $txt['secret_why_blank'], '</a></span></td>
 							</tr>';
 	}
 	// Show the standard "Save Settings" profile button.
@@ -1411,7 +1411,7 @@ function template_forumProfile()
 									</tr></table>
 								</td>
 								<td valign="top">
-									', ($context['member']['avatar']['ID_ATTACH'] > 0 ? '<img src="' . $context['member']['avatar']['href'] . '" /><input type="hidden" name="ID_ATTACH" value="' . $context['member']['avatar']['ID_ATTACH'] . '" /><br /><br />' : ''), '
+									', ($context['member']['avatar']['id_attach'] > 0 ? '<img src="' . $context['member']['avatar']['href'] . '" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" /><br /><br />' : ''), '
 									<input type="file" size="48" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" />
 								</td>
 							</tr>';
@@ -1421,7 +1421,7 @@ function template_forumProfile()
 	echo '
 							<tr>
 								<td width="40%"><b>', $txt[228], ': </b></td>
-								<td><input type="text" name="personalText" size="50" maxlength="50" value="', $context['member']['blurb'], '" /></td>
+								<td><input type="text" name="personal_text" size="50" maxlength="50" value="', $context['member']['blurb'], '" /></td>
 							</tr>
 							<tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
@@ -1460,16 +1460,16 @@ function template_forumProfile()
 	echo '
 							<tr>
 								<td width="40%"><b>', $txt[513], ': </b><div class="smalltext">', $txt[600], '</div></td>
-								<td><input type="text" name="ICQ" size="24" value="', $context['member']['icq']['name'], '" /></td>
+								<td><input type="text" name="icq" size="24" value="', $context['member']['icq']['name'], '" /></td>
 							</tr><tr>
 								<td width="40%"><b>', $txt[603], ': </b><div class="smalltext">', $txt[601], '</div></td>
-								<td><input type="text" name="AIM" maxlength="16" size="24" value="', $context['member']['aim']['name'], '" /></td>
+								<td><input type="text" name="aim" maxlength="16" size="24" value="', $context['member']['aim']['name'], '" /></td>
 							</tr><tr>
-								<td width="40%"><b>', $txt['MSN'], ': </b><div class="smalltext">', $txt['smf237'], '.</div></td>
-								<td><input type="text" name="MSN" size="24" value="', $context['member']['msn']['name'], '" /></td>
+								<td width="40%"><b>', $txt['msn'], ': </b><div class="smalltext">', $txt['smf237'], '.</div></td>
+								<td><input type="text" name="msn" size="24" value="', $context['member']['msn']['name'], '" /></td>
 							</tr><tr>
 								<td width="40%"><b>', $txt[604], ': </b><div class="smalltext">', $txt[602], '</div></td>
-								<td><input type="text" name="YIM" maxlength="32" size="24" value="', $context['member']['yim']['name'], '" /></td>
+								<td><input type="text" name="yim" maxlength="32" size="24" value="', $context['member']['yim']['name'], '" /></td>
 							</tr><tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 							</tr>';
@@ -1561,10 +1561,10 @@ function template_forumProfile()
 							</tr>
 							<tr>
 								<td width="40%"><b>', $txt[83], ': </b><div class="smalltext">', $txt[598], '</div></td>
-								<td><input type="text" name="websiteTitle" size="50" value="', $context['member']['website']['title'], '" /></td>
+								<td><input type="text" name="website_title" size="50" value="', $context['member']['website']['title'], '" /></td>
 							</tr><tr>
 								<td width="40%"><b>', $txt[84], ': </b><div class="smalltext">', $txt[599], '</div></td>
-								<td><input type="text" name="websiteUrl" size="50" value="', $context['member']['website']['url'], '" /></td>
+								<td><input type="text" name="website_url" size="50" value="', $context['member']['website']['url'], '" /></td>
 							</tr>';
 
 	// If karma is enabled let the admin edit it...
@@ -1576,7 +1576,7 @@ function template_forumProfile()
 							</tr><tr>
 								<td valign="top"><b>', $modSettings['karmaLabel'], '</b></td>
 								<td>
-									', $modSettings['karmaApplaudLabel'], ' <input type="text" name="karmaGood" size="4" value="', $context['member']['karma']['good'], '" onchange="setInnerHTML(document.getElementById(\'karmaTotal\'), this.value - this.form.karmaBad.value);" style="margin-right: 2ex;" /> ', $modSettings['karmaSmiteLabel'], ' <input type="text" name="karmaBad" size="4" value="', $context['member']['karma']['bad'], '" onchange="this.form.karmaGood.onchange();" /><br />
+									', $modSettings['karmaApplaudLabel'], ' <input type="text" name="karma_good" size="4" value="', $context['member']['karma']['good'], '" onchange="setInnerHTML(document.getElementById(\'karmaTotal\'), this.value - this.form.karma_bad.value);" style="margin-right: 2ex;" /> ', $modSettings['karmaSmiteLabel'], ' <input type="text" name="karma_bad" size="4" value="', $context['member']['karma']['bad'], '" onchange="this.form.karma_good.onchange();" /><br />
 									(', $txt['total'], ': <span id="karmaTotal">', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</span>)
 								</td>
 							</tr>';
@@ -1722,7 +1722,7 @@ function template_theme()
 			// Make sure we are limiting this to one day\'s difference
 			diff %= 24;
 
-			document.forms.creator.timeOffset.value = diff;
+			document.forms.creator.time_offset.value = diff;
 		}
 	// ]]></script>';
 
@@ -1759,7 +1759,7 @@ function template_theme()
 							<tr>
 								<td colspan="2" width="40%">
 									<b>', $txt['smileys_current'], ':</b>
-									<select name="smileySet" onchange="document.getElementById(\'smileypr\').src = this.selectedIndex == 0 ? \'', $settings['images_url'], '/blank.gif\' : \'', $modSettings['smileys_url'], '/\' + (this.selectedIndex != 1 ? this.options[this.selectedIndex].value : \'', !empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default'], '\') + \'/smiley.gif\';">';
+									<select name="smiley_set" onchange="document.getElementById(\'smileypr\').src = this.selectedIndex == 0 ? \'', $settings['images_url'], '/blank.gif\' : \'', $modSettings['smileys_url'], '/\' + (this.selectedIndex != 1 ? this.options[this.selectedIndex].value : \'', !empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default'], '\') + \'/smiley.gif\';">';
 		foreach ($context['smiley_sets'] as $set)
 			echo '
 										<option value="', $set['id'], '"', $set['selected'] ? ' selected="selected"' : '', '>', $set['name'], '</option>';
@@ -1784,18 +1784,18 @@ function template_theme()
 									<span class="smalltext">', $txt[479], '</span>
 								</td>
 								<td>
-									<select name="easyformat" onchange="document.forms.creator.timeFormat.value = this.options[this.selectedIndex].value;" style="margin-bottom: 4px;">';
+									<select name="easyformat" onchange="document.forms.creator.time_format.value = this.options[this.selectedIndex].value;" style="margin-bottom: 4px;">';
 	// Help the user by showing a list of common time formats.
 	foreach ($context['easy_timeformats'] as $time_format)
 		echo '
 										<option value="', $time_format['format'], '"', $time_format['format'] == $context['member']['time_format'] ? ' selected="selected"' : '', '>', $time_format['title'], '</option>';
 	echo '
 									</select><br />
-									<input type="text" name="timeFormat" value="', $context['member']['time_format'], '" size="30" />
+									<input type="text" name="time_format" value="', $context['member']['time_format'], '" size="30" />
 								</td>
 							</tr><tr>
 								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt[371], ':</b><div class="smalltext">', $txt[519], '</div></td>
-								<td class="smalltext"><input type="text" name="timeOffset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="autoDetectTimeOffset(); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt[741], ': <i>', $context['current_forum_time'], '</i></td>
+								<td class="smalltext"><input type="text" name="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="autoDetectTimeOffset(); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt[741], ': <i>', $context['current_forum_time'], '</i></td>
 							</tr><tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 							</tr>';
@@ -1934,8 +1934,8 @@ function template_notification()
 	// Allow notification on announcements to be disabled?
 	if (!empty($modSettings['allow_disableAnnounce']))
 		echo '
-							<input type="hidden" name="notifyAnnouncements" value="0" />
-							<label for="notifyAnnouncements"><input type="checkbox" id="notifyAnnouncements" name="notifyAnnouncements"', !empty($context['member']['notify_announcements']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['notifyXAnn4'], '</label><br />';
+							<input type="hidden" name="notify_announcements" value="0" />
+							<label for="notify_announcements"><input type="checkbox" id="notify_announcements" name="notify_announcements"', !empty($context['member']['notify_announcements']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['notifyXAnn4'], '</label><br />';
 
 	// More notification options.
 	echo '
@@ -1944,21 +1944,21 @@ function template_notification()
 
 	if (empty($modSettings['disallow_sendBody']))
 		echo '
-							<input type="hidden" name="notifySendBody" value="0" />
-							<label for="notifySendBody"><input type="checkbox" id="notifySendBody" name="notifySendBody"', !empty($context['member']['notify_send_body']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['notify_send_body'], '</label><br />';
+							<input type="hidden" name="notify_send_body" value="0" />
+							<label for="notify_send_body"><input type="checkbox" id="notify_send_body" name="notify_send_body"', !empty($context['member']['notify_send_body']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['notify_send_body'], '</label><br />';
 
 	echo '
 							<br />
-							<label for="notifyRegularity">', $txt['notify_regularity'], ':</label>
-							<select name="notifyRegularity" id="notifyRegularity">
+							<label for="notify_regularity">', $txt['notify_regularity'], ':</label>
+							<select name="notify_regularity" id="notify_regularity">
 								<option value="0"', $context['member']['notify_regularity'] == 0 ? ' selected="selected"' : '', '>', $txt['notify_regularity_instant'], '</option>
 								<option value="1"', $context['member']['notify_regularity'] == 1 ? ' selected="selected"' : '', '>', $txt['notify_regularity_first_only'], '</option>
 								<option value="2"', $context['member']['notify_regularity'] == 2 ? ' selected="selected"' : '', '>', $txt['notify_regularity_daily'], '</option>
 								<option value="3"', $context['member']['notify_regularity'] == 3 ? ' selected="selected"' : '', '>', $txt['notify_regularity_weekly'], '</option>
 							</select>
 							<br /><br />
-							<label for="notifyTypes">', $txt['notify_send_types'], ':</label>
-							<select name="notifyTypes" id="notifyTypes">
+							<label for="notify_types">', $txt['notify_send_types'], ':</label>
+							<select name="notify_types" id="notify_types">
 								<option value="1"', $context['member']['notify_types'] == 1 ? ' selected="selected"' : '', '>', $txt['notify_send_type_everything'], '</option>
 								<option value="2"', $context['member']['notify_types'] == 2 ? ' selected="selected"' : '', '>', $txt['notify_send_type_everything_own'], '</option>
 								<option value="3"', $context['member']['notify_types'] == 3 ? ' selected="selected"' : '', '>', $txt['notify_send_type_only_replies'], '</option>

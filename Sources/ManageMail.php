@@ -99,7 +99,7 @@ function BrowseMailQueue()
 	global $scripturl, $context, $db_prefix, $modSettings, $txt, $smfFunc;
 
 	// How many items do we have?
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*) AS queueSize, MIN(time_sent) AS oldest
 		FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
 	list ($mailQueueSize, $mailOldest) = $smfFunc['db_fetch_row']($request);
@@ -112,16 +112,16 @@ function BrowseMailQueue()
 	$context['start'] = $_REQUEST['start'];
 
 	// Even if it's disabled we should still show the mail queue, incase there's stuff left!
-	$request = $smfFunc['db_query']("
-		SELECT ID_MAIL, time_sent, recipient, priority, subject
+	$request = $smfFunc['db_query']('', "
+		SELECT id_mail, time_sent, recipient, priority, subject
 		FROM {$db_prefix}mail_queue
-		ORDER BY ID_MAIL ASC
+		ORDER BY id_mail ASC
 		LIMIT $context[start], 20", __FILE__, __LINE__);
 	$context['mails'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['mails'][] = array(
-			'id' => $row['ID_MAIL'],
+			'id' => $row['id_mail'],
 			'time' => timeformat($row['time_sent']),
 			'age' => time_since(time() - $row['time_sent']),
 			'recipient' => '<a href="mailto:' . $row['recipient'] . '">' . $row['recipient'] . '</a>',
@@ -185,7 +185,7 @@ function ClearMailQueue()
 	if (!isset($_GET['te']))
 	{
 		// How many items do we have?
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*) AS queueSize
 			FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
 		list ($_GET['te']) = $smfFunc['db_fetch_row']($request);

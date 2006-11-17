@@ -198,7 +198,7 @@ if (isset($modSettings['smfVersion']))
 	$request = mysql_query("
 		SELECT variable, value
 		FROM {$db_prefix}themes
-		WHERE ID_THEME = 1
+		WHERE id_theme = 1
 			AND variable IN ('theme_url', 'images_url')") or die(mysql_error($db_connection));
 	while ($row = mysql_fetch_assoc($request))
 		$modSettings[$row['variable']] = $row['value'];
@@ -429,7 +429,7 @@ function WelcomeLogin()
 	}
 
 	// Do they have ALTER privileges?
-	if (mysql_query("ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD") === false)
+	if (mysql_query("ALTER TABLE {$db_prefix}boards ORDER BY id_board") === false)
 	{
 		throw_error('The MySQL user you have set in Settings.php does not have proper privileges.<br /><br />Please ask your host to give this user the ALTER, CREATE, and DROP privileges.');
 		return false;
@@ -508,15 +508,15 @@ function WelcomeLogin()
 	{
 		// Get what we believe to be their details.
 		$request = upgrade_query("
-			SELECT ID_MEMBER, memberName, passwd, ID_GROUP, additionalGroups
+			SELECT id_member, member_name, passwd, id_group, additional_groups
 			FROM {$db_prefix}members
-			WHERE memberName = '" . addslashes($_POST['user']) . "'");
+			WHERE member_name = '" . addslashes($_POST['user']) . "'");
 		if (mysql_num_rows($request) != 0)
 		{
-			list ($ID_MEMBER, $name, $password, $ID_GROUP, $addGroups) = mysql_fetch_row($request);
+			list ($id_member, $name, $password, $id_group, $addGroups) = mysql_fetch_row($request);
 
 			$groups = explode(',', $addGroups);
-			$groups[] = $ID_GROUP;
+			$groups[] = $id_group;
 
 			// Figure out the password using SMF's encryption - if what they typed is right.
 			if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
@@ -564,14 +564,14 @@ function WelcomeLogin()
 					$request = upgrade_query("
 						SELECT permission
 						FROM {$db_prefix}permissions
-						WHERE ID_GROUP IN (" . implode(',', $groups) . ")
+						WHERE id_group IN (" . implode(',', $groups) . ")
 							AND permission = 'admin_forum'");
 					if (mysql_num_rows($request) == 0)
 						throw_error('You need to be an admin to perform an upgrade!');
 					mysql_free_result($request);
 				}
 
-				$upcontext['user']['id'] = $ID_MEMBER;
+				$upcontext['user']['id'] = $id_member;
 				$upcontext['user']['name'] = $name;
 			}
 			else
@@ -980,17 +980,17 @@ function CleanupMods()
 
 	// Load all theme paths....
 	$request = upgrade_query("
-		SELECT ID_THEME, variable, value
+		SELECT id_theme, variable, value
 		FROM {$db_prefix}themes
-		WHERE ID_MEMBER = 0
+		WHERE id_member = 0
 			AND variable IN ('theme_dir', 'images_url')");
 	$theme_paths = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
-		if ($row['ID_THEME'] == 1)
+		if ($row['id_theme'] == 1)
 			$settings['default_' . $row['variable']] = $row['value'];
 		elseif ($row['variable'] == 'theme_dir')
-			$theme_paths[$row['ID_THEME']][$row['variable']] = $row['value'];
+			$theme_paths[$row['id_theme']][$row['variable']] = $row['value'];
 	}
 	mysql_free_result($request);
 
@@ -1221,17 +1221,17 @@ function UpgradeTemplate()
 
 	// Load up all the theme/lang directories - we'll want these.
 	$request = upgrade_query("
-		SELECT ID_THEME, value
+		SELECT id_theme, value
 		FROM {$db_prefix}themes
-		WHERE ID_MEMBER = 0
+		WHERE id_member = 0
 			AND variable = 'theme_dir'");
 	$theme_dirs = array();
 	$lang_dirs = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
-		$theme_dirs[$row['ID_THEME']] = $row['value'];
+		$theme_dirs[$row['id_theme']] = $row['value'];
 		if (file_exists($row['value'] . '/languages') && is_dir($row['value'] . '/languages'))
-			$lang_dirs[$row['ID_THEME']] = $row['value'] . '/languages';
+			$lang_dirs[$row['id_theme']] = $row['value'] . '/languages';
 	}
 	mysql_free_result($request);
 
@@ -1352,17 +1352,17 @@ function UpgradeTemplate()
 			'base_theme_dir' => strtr($boarddir, array('\\' => '/')) . '/Themes/classic',
 		);
 
-		// Get an available ID_THEME first...
+		// Get an available id_theme first...
 		$request = upgrade_query("
-			SELECT MAX(ID_THEME) + 1
+			SELECT MAX(id_theme) + 1
 			FROM {$db_prefix}themes");
-		list ($ID_THEME) = mysql_fetch_row($request);
+		list ($id_theme) = mysql_fetch_row($request);
 		mysql_free_result($request);
 
 		$setString = '';
 		foreach ($values as $variable => $value)
 			$setString .= "
-					(0, " . $ID_THEME . ", '" . $variable . "', '" . $value . "'),";
+					(0, " . $id_theme . ", '" . $variable . "', '" . $value . "'),";
 
 		if (!empty($setString))
 		{
@@ -1373,14 +1373,14 @@ function UpgradeTemplate()
 
 		upgrade_query("
 			UPDATE {$db_prefix}settings
-			SET value = CONCAT(value, ',$ID_THEME')
+			SET value = CONCAT(value, ',$id_theme')
 			WHERE variable = 'knownThemes'
 			LIMIT 1");
 
 		upgrade_query("
 			REPLACE INTO {$db_prefix}settings
 				(variable, value)
-			VALUES ('theme_guests', $ID_THEME),
+			VALUES ('theme_guests', $id_theme),
 				('smiley_sets_default', 'classic')");
 
 		if ($is_debug && $command_line)
@@ -1511,13 +1511,13 @@ function convertSettingstoOptions()
 
 		upgrade_query("
 			INSERT IGNORE INTO {$db_prefix}themes
-				(ID_MEMBER, ID_THEME, variable, value)
-			SELECT ID_MEMBER, 1, '$variable', '" . $modSettings[$value[0]] . "'
+				(id_member, id_theme, variable, value)
+			SELECT id_member, 1, '$variable', '" . $modSettings[$value[0]] . "'
 			FROM {$db_prefix}members");
 
 		upgrade_query("
 			INSERT IGNORE INTO {$db_prefix}themes
-				(ID_MEMBER, ID_THEME, variable, value)
+				(id_member, id_theme, variable, value)
 			VALUES (-1, 1, '$variable', '" . $modSettings[$value[0]] . "')");
 	}
 }
@@ -1614,15 +1614,15 @@ function getMemberGroups()
 		return $member_groups;
 
 	$request = mysql_query("
-		SELECT groupName, ID_GROUP
+		SELECT group_name, id_group
 		FROM {$db_prefix}membergroups
-		WHERE ID_GROUP = 1 OR ID_GROUP > 7");
+		WHERE id_group = 1 OR id_group > 7");
 	if ($request === false)
 	{
 		$request = upgrade_query("
-			SELECT membergroup, ID_GROUP
+			SELECT membergroup, id_group
 			FROM {$db_prefix}membergroups
-			WHERE ID_GROUP = 1 OR ID_GROUP > 7");
+			WHERE id_group = 1 OR id_group > 7");
 	}
 	while ($row = mysql_fetch_row($request))
 		$member_groups[trim($row[0])] = $row[1];
@@ -2226,7 +2226,7 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 	if (!mysql_version_check())
 		print_error('Error: MySQL ' . min(mysql_get_server_info(), mysql_get_client_info()) . ' does not match minimum requirements.', true);
 
-	if (mysql_query("ALTER TABLE {$db_prefix}boards ORDER BY ID_BOARD") === false)
+	if (mysql_query("ALTER TABLE {$db_prefix}boards ORDER BY id_board") === false)
 		print_error('Error: The MySQL account in Settings.php does not have sufficient privileges.', true);
 
 	$check = @file_exists($boarddir . '/Themes/default/index.template.php')
@@ -3225,6 +3225,7 @@ function template_welcome_message()
 			<span class="smalltext">
 				<b>Note:</b> If necessary the above security check can be bypassed for users who may administrate a server but not have admin rights on the forum. In order the bypass the above check simply open &quot;upgrade.php&quot; in a text editor and replace &quot;$disable_security = 0;&quot; with &quot;$disable_security = 1;&quot; and refresh this page.
 			</span>
+			<input type="hidden" name="login_attempt" id="login_attempt" value="1" />
 			<input type="hidden" name="js_works" id="js_works" value="0" />';				
 
 	// Say we want the continue button!

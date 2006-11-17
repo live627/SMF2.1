@@ -1,6 +1,294 @@
 /* ATTENTION: You don't need to run or use this file!  The upgrade.php script does everything for you! */
 
 /******************************************************************************/
+--- Changing column names.
+/******************************************************************************/
+
+---# Changing all column names.
+ALTER TABLE {$db_prefix}admin_info_files
+CHANGE COLUMN ID_FILE id_file tinyint(4) unsigned NOT NULL auto_increment;
+
+ALTER TABLE {$db_prefix}approval_queue
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_ATTACH id_attach int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_EVENT id_event smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN attachmentType attachment_type tinyint(3) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}attachments
+CHANGE COLUMN ID_ATTACH id_attach int(10) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}ban_items
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}board_permissions
+CHANGE COLUMN ID_GROUP id_group smallint(5) NOT NULL default '0',
+CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
+
+ALTER TABLE {$db_prefix}boards
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL default '0',
+CHANGE COLUMN childLevel child_level tinyint(4) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_PARENT id_parent smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN boardOrder board_order smallint(5) NOT NULL default '0',
+CHANGE COLUMN ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG_UPDATED id_msg_updated int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN memberGroups member_groups varchar(255) NOT NULL default '-1,0',
+CHANGE COLUMN id_profile id_profile smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN numTopics num_topics mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN numPosts num_posts mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN countPosts count_posts tinyint(4) NOT NULL default '0',
+CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '0',
+CHANGE COLUMN unapprovedPosts unapproved_posts smallint(5) NOT NULL default '0',
+CHANGE COLUMN unapprovedTopics unapproved_topics smallint(5) NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}calendar
+CHANGE COLUMN ID_EVENT id_event smallint(5) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN startDate start_date date NOT NULL default '0001-01-01',
+CHANGE COLUMN endDate end_date date NOT NULL default '0001-01-01';
+
+ALTER TABLE {$db_prefix}calendar_holidays
+CHANGE COLUMN ID_HOLIDAY id_holiday smallint(5) unsigned NOT NULL auto_increment,
+CHANGE COLUMN eventDate event_date date NOT NULL default '0001-01-01';
+
+ALTER TABLE {$db_prefix}categories
+CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL auto_increment,
+CHANGE COLUMN catOrder cat_order tinyint(4) NOT NULL default '0',
+CHANGE COLUMN canCollapse can_collapse tinyint(1) NOT NULL default '1';
+
+ALTER TABLE {$db_prefix}collapsed_categories
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL auto_increment;
+
+ALTER TABLE {$db_prefix}group_moderators
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_actions
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_banned
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_boards
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_digest
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_errors
+CHANGE COLUMN ID_ERROR id_error mediumint(8) unsigned NOT NULL auto_increment,
+CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN errorType error_type char(15) NOT NULL default 'general';
+
+ALTER TABLE {$db_prefix}log_flood_control
+CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_group_requests
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_karma
+CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_mark_read
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_notify
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_online
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN logTime log_time timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */;
+
+ALTER TABLE {$db_prefix}log_polls
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_reported
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_reported_comments
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_scheduled_tasks
+CHANGE COLUMN ID_LOG id_log mediumint(8) NOT NULL auto_increment,
+CHANGE COLUMN ID_TASK id_task smallint(5) NOT NULL,
+CHANGE COLUMN timeRun time_run int(10) NOT NULL,
+CHANGE COLUMN timeTaken time_taken float NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_search_results
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_search_messages
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_search_subjects
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_search_topics
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_topics
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}mail_queue
+CHANGE COLUMN ID_MAIL id_mail int(10) unsigned NOT NULL auto_increment;
+
+ALTER TABLE {$db_prefix}members
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL auto_increment,
+CHANGE COLUMN memberName member_name varchar(80) NOT NULL default '',
+CHANGE COLUMN dateRegistered date_registered int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN lastLogin last_login int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN realName real_name tinytext NOT NULL,
+CHANGE COLUMN instantMessages instant_messages smallint(5) NOT NULL default 0,
+CHANGE COLUMN unreadMessages unread_messages smallint(5) NOT NULL default 0,
+CHANGE COLUMN messageLabels message_labels text NOT NULL,
+CHANGE COLUMN emailAddress email_address tinytext NOT NULL,
+CHANGE COLUMN personalText personal_text tinytext NOT NULL,
+CHANGE COLUMN websiteTitle website_title tinytext NOT NULL,
+CHANGE COLUMN websiteUrl website_url tinytext NOT NULL,
+CHANGE COLUMN ICQ icq tinytext NOT NULL,
+CHANGE COLUMN AIM aim varchar(16) NOT NULL default '',
+CHANGE COLUMN YIM yim varchar(32) NOT NULL default '',
+CHANGE COLUMN MSN msn tinytext NOT NULL,
+CHANGE COLUMN hideEmail hide_email tinyint(4) NOT NULL default '0',
+CHANGE COLUMN showOnline show_online tinyint(4) NOT NULL default '1',
+CHANGE COLUMN timeFormat time_format varchar(80) NOT NULL default '',
+CHANGE COLUMN timeOffset time_offset float NOT NULL default '0',
+CHANGE COLUMN karmaBad karma_bad smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN karmaGood karma_good smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN notifyAnnouncements notify_announcements tinyint(4) NOT NULL default '1',
+CHANGE COLUMN notifyRegularity notify_regularity tinyint(4) NOT NULL default '1',
+CHANGE COLUMN notifySendBody notify_send_body tinyint(4) NOT NULL default '0',
+CHANGE COLUMN notifyTypes notify_types tinyint(4) NOT NULL default '2',
+CHANGE COLUMN memberIP member_ip tinytext NOT NULL,
+CHANGE COLUMN secretQuestion secret_question tinytext NOT NULL,
+CHANGE COLUMN secretAnswer secret_answer varchar(64) NOT NULL default '',
+CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG_LAST_VISIT id_msg_last_visit int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN additionalGroups additional_groups tinytext NOT NULL,
+CHANGE COLUMN smileySet smiley_set varchar(48) NOT NULL default '',
+CHANGE COLUMN ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN passwordSalt password_salt varchar(5) NOT NULL default '',
+CHANGE COLUMN ignoreBoards ignore_boards tinytext NOT NULL default '';
+
+ALTER TABLE {$db_prefix}messages
+CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN posterTime poster_time int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG_MODIFIED id_msg_modified int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN posterName poster_name tinytext NOT NULL,
+CHANGE COLUMN posterEmail poster_email tinytext NOT NULL,
+CHANGE COLUMN posterIP poster_ip tinytext NOT NULL,
+CHANGE COLUMN smileysEnabled smileys_enabled tinyint(4) NOT NULL default '1',
+CHANGE COLUMN modifiedTime modified_time int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN modifiedName modified_name tinytext NOT NULL;
+
+ALTER TABLE {$db_prefix}membergroups
+CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_PARENT id_parent smallint(5) NOT NULL default '-2',
+CHANGE COLUMN groupName group_name varchar(80) NOT NULL default '',
+CHANGE COLUMN onlineColor online_color varchar(20) NOT NULL default '',
+CHANGE COLUMN minPosts min_posts mediumint(9) NOT NULL default '-1',
+CHANGE COLUMN maxMessages max_messages smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN groupType group_type tinyint(3) NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}message_icons
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}messages
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}moderators
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}personal_messages
+CHANGE COLUMN ID_PM id_pm int(10) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_MEMBER_FROM id_member_from mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN deletedBySender deleted_by_sender tinyint(3) unsigned NOT NULL default '0',
+CHANGE COLUMN fromName from_name tinytext NOT NULL;
+
+ALTER TABLE {$db_prefix}permission_profiles
+CHANGE COLUMN ID_PROFILE id_profile smallint(5) NOT NULL auto_increment,
+CHANGE COLUMN ID_PARENT id_parent smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}permissions
+CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
+
+ALTER TABLE {$db_prefix}pm_recipients
+CHANGE COLUMN ID_PM id_pm int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}polls
+CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN votingLocked voting_locked tinyint(1) NOT NULL default '0',
+CHANGE COLUMN maxVotes max_votes tinyint(3) unsigned NOT NULL default '1',
+CHANGE COLUMN expireTime expire_time int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN hideResults hide_results tinyint(3) unsigned NOT NULL default '0',
+CHANGE COLUMN changeVote change_vote tinyint(3) unsigned NOT NULL default '0',
+CHANGE COLUMN posterName poster_name tinytext NOT NULL;
+
+ALTER TABLE {$db_prefix}poll_choices
+CHANGE COLUMN ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}scheduled_tasks
+CHANGE COLUMN ID_TASK id_task smallint(5) NOT NULL auto_increment,
+CHANGE COLUMN nextTime next_time int(10) NOT NULL,
+CHANGE COLUMN timeRegularity time_regularity smallint(5) NOT NULL,
+CHANGE COLUMN timeOffset time_offset int(10) NOT NULL,
+CHANGE COLUMN timeUnit time_unit varchar(1) NOT NULL default 'h';
+
+ALTER TABLE {$db_prefix}themes
+CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '1';
+
+ALTER TABLE {$db_prefix}topics
+CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL auto_increment,
+CHANGE COLUMN isSticky is_sticky tinyint(4) NOT NULL default '0',
+CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_FIRST_MSG id_first_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MEMBER_STARTED id_member_started mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MEMBER_UPDATED id_member_updated mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN numReplies num_replies int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN numViews num_views int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN unapprovedPosts unapproved_posts smallint(5) NOT NULL default '0';
+---#
+
+/******************************************************************************/
 --- Adding new forum settings.
 /******************************************************************************/
 
@@ -34,7 +322,7 @@ upgrade_query("
 
 ---# Ensuring stats index setting present...
 INSERT IGNORE INTO {$db_prefix}themes
-	(ID_THEME, variable, value)
+	(id_theme, variable, value)
 VALUES
 	(1, 'show_stats_index', '0');
 ---#
@@ -173,8 +461,8 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 
 ---# Creating "log_digest" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_digest (
-	ID_TOPIC mediumint(8) unsigned NOT NULL,
-	ID_MSG mediumint(8) unsigned NOT NULL,
+	id_topic mediumint(8) unsigned NOT NULL default '0',
+	id_msg int(10) unsigned NOT NULL default '0',
 	note_type varchar(10) NOT NULL default 'post',
 	daily smallint(3) unsigned NOT NULL default '0',
 	exclude mediumint(8) unsigned NOT NULL default '0'
@@ -183,7 +471,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_digest (
 
 ---# Adding digest option to "members" table...
 ALTER TABLE {$db_prefix}members
-CHANGE COLUMN notifyOnce notifyRegularity tinyint(4) unsigned NOT NULL default '1';
+CHANGE COLUMN notifyOnce notify_regularity tinyint(4) unsigned NOT NULL default '1';
 ---#
 /******************************************************************************/
 --- Making changes to the package manager.
@@ -216,7 +504,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_packages (
 
 ---# Creating "mail_queue" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}mail_queue (
-	ID_MAIL int(10) unsigned NOT NULL auto_increment,
+	id_mail int(10) unsigned NOT NULL auto_increment,
 	time_sent int(10) NOT NULL default '0',
 	recipient tinytext NOT NULL,
 	body text NOT NULL,
@@ -224,7 +512,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}mail_queue (
 	headers text NOT NULL,
 	send_html tinyint(3) NOT NULL default '0',
 	priority tinyint(3) NOT NULL default '1',
-	PRIMARY KEY (ID_MAIL),
+	PRIMARY KEY (id_mail),
 	KEY time_sent (time_sent),
 	KEY priority (priority)
 ) TYPE=MyISAM;
@@ -251,10 +539,10 @@ if (!isset($modSettings['mail_next_send']))
 ---# Creating "log_reported" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
 	ID_REPORT mediumint(8) unsigned NOT NULL auto_increment,
-	ID_MSG int(10) NOT NULL,
-	ID_TOPIC mediumint(10) NOT NULL,
-	ID_BOARD int(10) NOT NULL,
-	ID_MEMBER mediumint(8) NOT NULL,
+	id_msg int(10) unsigned NOT NULL default '0',
+	id_topic mediumint(8) unsigned NOT NULL default '0',
+	id_board smallint(5) unsigned NOT NULL default '0',
+	id_member mediumint(8) unsigned NOT NULL default '0',
 	membername tinytext NOT NULL,
 	subject tinytext NOT NULL,
 	body text NOT NULL,
@@ -264,11 +552,11 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
 	closed tinyint(3) NOT NULL default '0',
 	ignore_all tinyint(3) NOT NULL default '0',
 	PRIMARY KEY (ID_REPORT),
-	KEY ID_MEMBER (ID_MEMBER),
-	KEY ID_TOPIC (ID_TOPIC),
+	KEY id_member (id_member),
+	KEY id_topic (id_topic),
 	KEY closed (closed),
 	KEY time_started (time_started),
-	KEY ID_MSG (ID_MSG)
+	KEY id_msg (id_msg)
 ) TYPE=MyISAM;
 ---#
 
@@ -276,13 +564,13 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported_comments (
 	ID_COMMENT mediumint(8) unsigned NOT NULL auto_increment,
 	ID_REPORT mediumint(8) NOT NULL,
-	ID_MEMBER mediumint(8) NOT NULL,
+	id_member mediumint(8) NOT NULL,
 	membername tinytext NOT NULL,
 	comment tinytext NOT NULL,
 	time_sent int(10) NOT NULL,
 	PRIMARY KEY (ID_COMMENT),
 	KEY ID_REPORT (ID_REPORT),
-	KEY ID_MEMBER (ID_MEMBER),
+	KEY id_member (id_member),
 	KEY time_sent (time_sent)
 ) TYPE=MyISAM;
 ---#
@@ -294,20 +582,20 @@ if (@$modSettings['smfVersion'] < '2.0')
 {
 	// Try find people who probably should see the moderation center.
 	$request = upgrade_query("
-		SELECT ID_GROUP, addDeny, permission
+		SELECT id_group, add_deny, permission
 		FROM {$db_prefix}permissions
 		WHERE permission = 'calendar_edit_any'");
 	$inserts = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
-		$inserts[] = "($row[ID_GROUP], 'access_mod_center', $row[addDeny])";
+		$inserts[] = "($row[id_group], 'access_mod_center', $row[add_deny])";
 	}
 	mysql_free_result($request);
 
 	if (!empty($inserts))
 		upgrade_query("
 			INSERT IGNORE INTO {$db_prefix}permissions
-				(ID_GROUP, permission, addDeny)
+				(id_group, permission, add_deny)
 			VALUES
 				" . implode(',', $inserts));
 }
@@ -321,21 +609,21 @@ if (@$modSettings['smfVersion'] < '2.0')
 ---# Creating "log_group_requests" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_group_requests (
 	ID_REQUEST mediumint(8) unsigned NOT NULL auto_increment,
-	ID_MEMBER mediumint(8) NOT NULL,
-	ID_GROUP smallint(5) NOT NULL,
-	time_applied int(10) NOT NULL default '0',
+	id_member mediumint(8) unsigned NOT NULL default '0',
+	id_group smallint(5) unsigned NOT NULL default '0',
+	time_applied int(10) unsigned NOT NULL default '0',
 	reason text NOT NULL,
 	PRIMARY KEY (ID_REQUEST),
-	UNIQUE ID_MEMBER (ID_MEMBER, ID_GROUP) 
+	UNIQUE id_member (id_member, id_group) 
 ) TYPE=MYISAM;
 ---#
 
 ---# Adding new membergroup table columns...
 ALTER TABLE {$db_prefix}membergroups
-ADD description text NOT NULL AFTER groupName;
+ADD description text NOT NULL AFTER group_name;
 
 ALTER TABLE {$db_prefix}membergroups
-ADD groupType tinyint(3) NOT NULL default '0';
+ADD group_type tinyint(3) NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}membergroups
 ADD hidden tinyint(3) NOT NULL default '0';
@@ -343,9 +631,9 @@ ADD hidden tinyint(3) NOT NULL default '0';
 
 ---# Creating "group_moderators" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}group_moderators (
-	ID_GROUP smallint(5) unsigned NOT NULL default '0',
-	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-	PRIMARY KEY (ID_GROUP, ID_MEMBER) 
+	id_group smallint(5) unsigned NOT NULL default '0',
+	id_member mediumint(8) unsigned NOT NULL default '0',
+	PRIMARY KEY (id_group, id_member) 
 ) TYPE=MyISAM;
 ---#
 
@@ -355,9 +643,9 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}group_moderators (
 
 ---# Creating "approval_queue" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}approval_queue (
-	ID_MSG int(10) unsigned NOT NULL default '0',
-	ID_ATTACH int(10) unsigned NOT NULL default '0',
-	ID_EVENT smallint(5) unsigned NOT NULL default '0'
+	id_msg int(10) unsigned NOT NULL default '0',
+	id_attach int(10) unsigned NOT NULL default '0',
+	id_event smallint(5) unsigned NOT NULL default '0'
 ) TYPE=MYISAM;
 ---#
 
@@ -376,7 +664,7 @@ ADD INDEX approved (approved);
 
 ---# Adding unapproved count column to topics table...
 ALTER TABLE {$db_prefix}topics
-ADD unapprovedPosts smallint(5) NOT NULL default '0';
+ADD unapproved_posts smallint(5) NOT NULL default '0';
 ---#
 
 ---# Adding approved column to topics table...
@@ -387,8 +675,8 @@ ADD INDEX approved (approved);
 
 ---# Adding approved columns to boards table...
 ALTER TABLE {$db_prefix}boards
-ADD unapprovedPosts smallint(5) NOT NULL default '0',
-ADD unapprovedTopics smallint(5) NOT NULL default '0';
+ADD unapproved_posts smallint(5) NOT NULL default '0',
+ADD unapproved_topics smallint(5) NOT NULL default '0';
 ---#
 
 ---# Adding post moderation permissions...
@@ -398,20 +686,20 @@ if (@$modSettings['smfVersion'] < '2.0')
 {
 	// Anyone who can currently edit posts we assume can approve them...
 	$request = upgrade_query("
-		SELECT ID_GROUP, ID_BOARD, addDeny, permission
+		SELECT id_group, id_board, add_deny, permission
 		FROM {$db_prefix}board_permissions
 		WHERE permission = 'modify_any'");
 	$inserts = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
-		$inserts[] = "($row[ID_GROUP], $row[ID_BOARD], 'approve_posts', $row[addDeny])";
+		$inserts[] = "($row[id_group], $row[id_board], 'approve_posts', $row[add_deny])";
 	}
 	mysql_free_result($request);
 
 	if (!empty($inserts))
 		upgrade_query("
 			INSERT IGNORE INTO {$db_prefix}board_permissions
-				(ID_GROUP, ID_BOARD, permission, addDeny)
+				(id_group, id_board, permission, add_deny)
 			VALUES
 				" . implode(',', $inserts));
 }
@@ -424,7 +712,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 
 ---# Adding columns to log_errors table...
 ALTER TABLE {$db_prefix}log_errors
-ADD errorType char(15) NOT NULL default 'general';
+ADD error_type char(15) NOT NULL default 'general';
 ALTER TABLE {$db_prefix}log_errors
 ADD file tinytext NOT NULL default '',
 ADD line mediumint(8) unsigned NOT NULL default '0';
@@ -444,7 +732,7 @@ while ($_GET['m'] < $totalActions)
 	nextSubStep($substep);
 
 	$request = upgrade_query("
-		SELECT ID_ERROR, message, file, line
+		SELECT id_error, message, file, line
 		FROM {$db_prefix}log_errors
 		LIMIT $_GET[m], 500");
 	while($row = mysql_fetch_assoc($request))
@@ -464,7 +752,7 @@ while ($_GET['m'] < $totalActions)
 			SET file = SUBSTRING('$row[file]', 1, 255),
 				line = $row[line],
 				message = SUBSTRING('$row[message]', 1, 65535)
-			WHERE ID_ERROR = $row[ID_ERROR]
+			WHERE id_error = $row[id_error]
 			LIMIT 1");
 	}
 
@@ -479,15 +767,15 @@ unset($_GET['m']);
 
 ---# Creating Scheduled Task Table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}scheduled_tasks (
-	ID_TASK smallint(5) NOT NULL auto_increment,
-	nextTime int(10) NOT NULL,
-	timeOffset int(10) NOT NULL,
-	timeRegularity smallint(5) NOT NULL,
-	timeUnit varchar(1) NOT NULL default 'h',
+	id_task smallint(5) NOT NULL auto_increment,
+	next_time int(10) NOT NULL,
+	time_offset int(10) NOT NULL,
+	time_regularity smallint(5) NOT NULL,
+	time_unit varchar(1) NOT NULL default 'h',
 	disabled tinyint(3) NOT NULL default '0',
 	task varchar(24) NOT NULL default '',
-	PRIMARY KEY (ID_TASK),
-	KEY nextTime (nextTime),
+	PRIMARY KEY (id_task),
+	KEY next_time (next_time),
 	KEY disabled (disabled),
 	UNIQUE task (task)
 ) TYPE=MyISAM;
@@ -495,7 +783,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}scheduled_tasks (
 
 ---# Populating Scheduled Task Table...
 INSERT IGNORE INTO {$db_prefix}scheduled_tasks
-	(nextTime, timeOffset, timeRegularity, timeUnit, disabled, task)
+	(next_time, time_offset, time_regularity, time_unit, disabled, task)
 VALUES
 	(0, 0, 2, 'h', 0, 'approval_notification'),
 	(0, 0, 7, 'd', 0, 'auto_optimize'),
@@ -515,12 +803,12 @@ if (!isset($modSettings['next_task_time']) && isset($modSettings['autoOptLastOpt
 	{
 		$disabled = empty($modSettings['autoOptDatabase']) ? 1 : 0;
 		$regularity = $disabled ? 7 : $modSettings['autoOptDatabase'];
-		$nextTime = $modSettings['autoOptLastOpt'] + 3600 * 24 * $modSettings['autoOptDatabase'];
+		$next_time = $modSettings['autoOptLastOpt'] + 3600 * 24 * $modSettings['autoOptDatabase'];
 
 		// Update the task accordingly.
 		upgrade_query("
 			UPDATE {$db_prefix}scheduled_tasks
-			SET disabled = $disabled, timeRegularity = $regularity, nextTime = $nextTime
+			SET disabled = $disabled, time_regularity = $regularity, next_time = $next_time
 			WHERE task = 'auto_optimize'");
 	}
 
@@ -534,11 +822,11 @@ if (!isset($modSettings['next_task_time']) && isset($modSettings['autoOptLastOpt
 
 ---# Creating Scheduled Task Log Table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_scheduled_tasks (
-	ID_LOG mediumint(8) NOT NULL auto_increment,
-	ID_TASK smallint(5) NOT NULL,
-	timeRun int(10) NOT NULL,
-	timeTaken float NOT NULL default '0',
-	PRIMARY KEY (ID_LOG)
+	id_log mediumint(8) NOT NULL auto_increment,
+	id_task smallint(5) NOT NULL,
+	time_run int(10) NOT NULL,
+	time_taken float NOT NULL default '0',
+	PRIMARY KEY (id_log)
 ) TYPE=MyISAM;
 ---#
 
@@ -561,23 +849,23 @@ if (!isset($modSettings['next_task_time']))
 
 ---# Creating "permission_profiles" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}permission_profiles (
-	ID_PROFILE smallint(5) NOT NULL auto_increment,
+	id_profile smallint(5) NOT NULL auto_increment,
 	profile_name tinytext NOT NULL,
-	ID_PARENT smallint(5) unsigned NOT NULL default '0',
-	PRIMARY KEY (ID_PROFILE)
+	id_parent smallint(5) unsigned NOT NULL default '0',
+	PRIMARY KEY (id_profile)
 ) TYPE=MyISAM;
 ---#
 
 ---# Adding profile columns...
 ALTER TABLE {$db_prefix}boards
-ADD ID_PROFILE smallint(5) unsigned NOT NULL default '0' AFTER memberGroups;
+ADD id_profile smallint(5) unsigned NOT NULL default '0' AFTER member_groups;
 
 ALTER TABLE {$db_prefix}board_permissions
-ADD ID_PROFILE smallint(5) unsigned NOT NULL default '0' AFTER ID_GROUP;
+ADD id_profile smallint(5) unsigned NOT NULL default '0' AFTER id_group;
 
 ALTER TABLE {$db_prefix}board_permissions
 DROP PRIMARY KEY,
-ADD PRIMARY KEY (ID_GROUP, ID_PROFILE, permission);
+ADD PRIMARY KEY (id_group, id_profile, permission);
 ---#
 
 ---# Migrating old board profiles to profile sysetem
@@ -595,7 +883,7 @@ if ($profileCount == 0)
 	// Insert a boat load of default profile permissions.
 	upgrade_query("
 		INSERT INTO {$db_prefix}permission_profiles
-			(ID_PROFILE, profile_name)
+			(id_profile, profile_name)
 		VALUES
 			(1, 'default'),
 			(2, 'no_polls'),
@@ -604,13 +892,13 @@ if ($profileCount == 0)
 
 	// Fetch the current "default" permissions.
 	$request = upgrade_query("
-		SELECT ID_GROUP, permission, addDeny
+		SELECT id_group, permission, add_deny
 		FROM {$db_prefix}board_permissions
-		WHERE ID_BOARD = 0");
+		WHERE id_board = 0");
 	$cur_perms = array();
 	while ($row = mysql_fetch_assoc($request))
 	{
-		$cur_perms['default'][$row['ID_GROUP']][$row['permission']] = $row['addDeny'];
+		$cur_perms['default'][$row['id_group']][$row['permission']] = $row['add_deny'];
 	}
 	mysql_free_result($request);
 
@@ -636,7 +924,7 @@ if ($profileCount == 0)
 	foreach ($cur_perms['default'] as $group => $permissions)
 	{
 		// Then permissions...
-		foreach ($permissions as $name => $addDeny)
+		foreach ($permissions as $name => $add_deny)
 		{
 			// Then the other types.
 			foreach ($permission_mode as $type => $restrictions)
@@ -644,9 +932,9 @@ if ($profileCount == 0)
 				// If this isn't restricted or this group can moderate then pass it through.
 				if (!in_array($name, $restrictions) || !empty($cur_perms['default'][$group]['moderate_board']))
 				{
-					$cur_perms[$type][$group][$name] = $addDeny;
+					$cur_perms[$type][$group][$name] = $add_deny;
 					$numtype = $type == 'no_polls' ? 2 : ($type == 'reply_only' ? 3 : 4);
-					$perm_inserts[] = "($numtype, $group, '$name', $addDeny)";
+					$perm_inserts[] = "($numtype, $group, '$name', $add_deny)";
 				}
 			}
 		}
@@ -655,30 +943,30 @@ if ($profileCount == 0)
 	// Update the default permissions, this is easy!
 	upgrade_query("
 		UPDATE {$db_prefix}board_permissions
-		SET ID_PROFILE = 1
-		WHERE ID_BOARD = 0");
+		SET id_profile = 1
+		WHERE id_board = 0");
 
 	// Add the three non-default permissions.
 	if (!empty($perm_inserts))
 		upgrade_query("
 			INSERT INTO {$db_prefix}board_permissions
-				(ID_PROFILE, ID_GROUP, permission, addDeny)
+				(id_profile, id_group, permission, add_deny)
 			VALUES
 				" . implode(',', $perm_inserts));
 
 	// Load all the other permissions
 	$request = upgrade_query("
-		SELECT ID_BOARD, ID_GROUP, permission, addDeny
+		SELECT id_board, id_group, permission, add_deny
 		FROM {$db_prefix}board_permissions
-		WHERE ID_PROFILE = 0");
+		WHERE id_profile = 0");
 	$all_perms = array();
 	while ($row = mysql_fetch_assoc($request))
-		$all_perms[$row['ID_BOARD']][$row['ID_GROUP']][$row['permission']] = $row['addDeny'];
+		$all_perms[$row['id_board']][$row['id_group']][$row['permission']] = $row['add_deny'];
 	mysql_free_result($request);
 
 	// Now we have the profile profiles for this installation. We now need to go through each board and work out what the permission profile should be!
 	$request = upgrade_query("
-		SELECT ID_BOARD, permission_mode
+		SELECT id_board, permission_mode
 		FROM {$db_prefix}boards");
 	$board_updates = array();
 	while ($row = mysql_fetch_assoc($request))
@@ -689,19 +977,19 @@ if ($profileCount == 0)
 			// I know we could cache this, but I think we need to be practical - this is slow but guaranteed to work.
 			upgrade_query("
 				INSERT INTO {$db_prefix}permission_profiles
-					(profile_name, ID_PARENT)
+					(profile_name, id_parent)
 				VALUES
-					('', $row[ID_BOARD])");
-			$board_updates[mysql_insert_id()][] = $row['ID_BOARD'];
+					('', $row[id_board])");
+			$board_updates[mysql_insert_id()][] = $row['id_board'];
 		}
 		// Otherwise, dear god, this is an old school "simple" permission...
 		elseif ($row['permission_mode'] > 1 && $row['permission_mode'] < 5)
 		{
-			$board_updates[$row['permission_mode']][] = $row['ID_BOARD'];
+			$board_updates[$row['permission_mode']][] = $row['id_board'];
 		}
 		// Otherwise this is easy. It becomes default.
 		else
-			$board_updates[1][] = $row['ID_BOARD'];
+			$board_updates[1][] = $row['id_board'];
 	}
 	mysql_free_result($request);
 
@@ -715,16 +1003,16 @@ if ($profileCount == 0)
 
 		upgrade_query("
 			UPDATE {$db_prefix}boards
-			SET ID_PROFILE = $profile
-			WHERE ID_BOARD IN ($boards)");
+			SET id_profile = $profile
+			WHERE id_board IN ($boards)");
 
 		// If it's a custom profile then update this too.
 		if ($profile > 4)
 			upgrade_query("
 				UPDATE {$db_prefix}board_permissions
-				SET ID_PROFILE = $profile
-				WHERE ID_BOARD IN ($boards)
-					AND ID_PROFILE = 0");
+				SET id_profile = $profile
+				WHERE id_board IN ($boards)
+					AND id_profile = 0");
 	}
 }
 ---}
@@ -732,7 +1020,7 @@ if ($profileCount == 0)
 
 ---# Adding inherited permissions...
 ALTER TABLE {$db_prefix}membergroups
-ADD ID_PARENT smallint(5) NOT NULL default '-2';
+ADD id_parent smallint(5) NOT NULL default '-2';
 ---#
 
 ---# Deleting old permission settings...
@@ -747,7 +1035,7 @@ DROP COLUMN permission_mode;
 
 ---# Removing old board permissions column...
 ALTER TABLE {$db_prefix}board_permissions
-DROP COLUMN ID_BOARD;
+DROP COLUMN id_board;
 ---#
 
 /******************************************************************************/
@@ -756,7 +1044,7 @@ DROP COLUMN ID_BOARD;
 
 ---# Adding column to hold the boards being ignored ...
 ALTER TABLE {$db_prefix}members
-ADD ignoreBoards tinytext NOT NULL default '';
+ADD ignore_boards tinytext NOT NULL default '';
 ---#
 
 /******************************************************************************/
@@ -764,11 +1052,11 @@ ADD ignoreBoards tinytext NOT NULL default '';
 /******************************************************************************/
 ---# Add the columns and the keys to log_actions ...
 ALTER TABLE {$db_prefix}log_actions
-ADD ID_BOARD smallint(5) unsigned NOT NULL default '0',
-ADD ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-ADD ID_MSG int(10) unsigned NOT NULL default '0',
-ADD KEY ID_BOARD (ID_BOARD),
-ADD KEY ID_MSG (ID_MSG);
+ADD id_board smallint(5) unsigned NOT NULL default '0',
+ADD id_topic mediumint(8) unsigned NOT NULL default '0',
+ADD id_msg int(10) unsigned NOT NULL default '0',
+ADD KEY id_board (id_board),
+ADD KEY id_msg (id_msg);
 ---#
 
 ---# Update the information already in log_actions
@@ -786,13 +1074,13 @@ while ($_GET['m'] < $totalActions)
 	nextSubStep($substep);
 
 	$mrequest = upgrade_query("
-		SELECT ID_ACTION, extra, ID_BOARD, ID_TOPIC, ID_MSG
+		SELECT ID_ACTION, extra, id_board, id_topic, id_msg
 		FROM {$db_prefix}log_actions
 		LIMIT $_GET[m], 500");
 
 	while ($row = mysql_fetch_assoc($mrequest))
 	{
-		if (!empty($row['ID_BOARD']) || !empty($row['ID_TOPIC']) || !empty($row['ID_MSG']))
+		if (!empty($row['id_board']) || !empty($row['id_topic']) || !empty($row['id_msg']))
 			continue;
 		$row['extra'] = @unserialize($row['extra']);
 		// Corrupt?
@@ -817,9 +1105,9 @@ while ($_GET['m'] < $totalActions)
 			if (empty($board_id))
 			{
 				$trequest = upgrade_query("
-					SELECT ID_BOARD
+					SELECT id_board
 					FROM {$db_prefix}topics
-					WHERE ID_TOPIC=$topic_id
+					WHERE id_topic=$topic_id
 					LIMIT 1");
 				if (mysql_num_rows($trequest))
 					list($board_id) = mysql_fetch_row($trequest);
@@ -836,9 +1124,9 @@ while ($_GET['m'] < $totalActions)
 			if (empty($topic_id) || empty($board_id))
 			{
 				$trequest = upgrade_query("
-					SELECT ID_BOARD, ID_TOPIC
+					SELECT id_board, id_topic
 					FROM {$db_prefix}messages
-					WHERE ID_MSG=$msg_id
+					WHERE id_msg=$msg_id
 					LIMIT 1");
 				if (mysql_num_rows($trequest))
 					list($board_id, $topic_id) = mysql_fetch_row($trequest);
@@ -848,7 +1136,7 @@ while ($_GET['m'] < $totalActions)
 		else
 			$msg_id = '0';
 		$row['extra'] = addslashes(serialize($row['extra']));
-		upgrade_query("UPDATE {$db_prefix}log_actions SET ID_BOARD=$board_id, ID_TOPIC=$topic_id, ID_MSG=$msg_id, extra='$row[extra]' WHERE ID_ACTION=$row[ID_ACTION]");
+		upgrade_query("UPDATE {$db_prefix}log_actions SET id_board=$board_id, id_topic=$topic_id, id_msg=$msg_id, extra='$row[extra]' WHERE ID_ACTION=$row[ID_ACTION]");
 	}
 	$_GET['m'] += 500;
 }
@@ -862,20 +1150,20 @@ unset($_GET['m']);
 
 ---# Creating the table ...
 CREATE TABLE IF NOT EXISTS {$db_prefix}admin_info_files (
-  ID_FILE tinyint(4) unsigned NOT NULL auto_increment,
+  id_file tinyint(4) unsigned NOT NULL auto_increment,
   filename tinytext NOT NULL default '',
   path tinytext NOT NULL default '',
   parameters tinytext NOT NULL default '',
   data text NOT NULL default '',
   filetype tinytext NOT NULL default '',
-  PRIMARY KEY (ID_FILE),
+  PRIMARY KEY (id_file),
   KEY filename (filename(30))
 ) TYPE=MYISAM;
 ---#
 
 ---# Add in the files to get from Simple Machiens...
 INSERT IGNORE INTO {$db_prefix}admin_info_files
-	(ID_FILE, filename, path, parameters)
+	(id_file, filename, path, parameters)
 VALUES
 	(1, 'current-version.js', '/smf/', 'version=%3$s'),
 	(2, 'detailed-version.js', '/smf/', 'language=%1$s'),
@@ -894,13 +1182,13 @@ ADD filetype tinytext NOT NULL default '';
 ---# Set the filetype for the files
 UPDATE {$db_prefix}admin_info_files
 SET filetype='text/javascript'
-WHERE ID_FILE IN (1,2,3,4,5,6,7);
+WHERE id_file IN (1,2,3,4,5,6,7);
 ---#
 
 ---# Ensure that the files from Simple Machines get updated
 UPDATE {$db_prefix}scheduled_tasks
-SET nextTime = UNIX_TIMESTAMP()
-WHERE ID_TASK = 7
+SET next_time = UNIX_TIMESTAMP()
+WHERE id_task = 7
 LIMIT 1;
 ---#
 
@@ -911,8 +1199,8 @@ LIMIT 1;
 
 ---# Sorting the boards...
 ALTER TABLE {$db_prefix}categories
-ORDER BY catOrder;
+ORDER BY cat_order;
 
 ALTER TABLE {$db_prefix}boards
-ORDER BY boardOrder;
+ORDER BY board_order;
 ---#

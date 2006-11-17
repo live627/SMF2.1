@@ -69,10 +69,10 @@ class SMF_Login {
 			
 			mysql_query("			
 				DELETE FROM {$db_prefix}log_online
-				WHERE ID_MEMBER = $ID_MEMBER
+				WHERE id_member = $id_member
 				LIMIT 1");
 					
-			// Empty the cookie! (set it in the past, and for ID_MEMBER = 0)
+			// Empty the cookie! (set it in the past, and for id_member = 0)
 			setLoginCookie(-3600, 0);
 			mysql_select_db($mosConfig_db);
 
@@ -86,13 +86,13 @@ class SMF_Login {
 			mysql_select_db($db_name);
 			//check to make sure this user even exists in SMF
 			$get_password_hash = mysql_query ("
-				SELECT passwd, ID_MEMBER, ID_GROUP, lngfile, is_activated, emailAddress, additionalGroups, memberName, passwordSalt
+				SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
 				FROM {$db_prefix}members
-				WHERE memberName = '$_user'
+				WHERE member_name = '$_user'
 				LIMIT 1");
 			$user_settings = mysql_fetch_assoc($get_password_hash);
 
-			$hash_input_password = sha1(strtolower($user_settings['memberName']) . un_htmlspecialchars(stripslashes($_password)));
+			$hash_input_password = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars(stripslashes($_password)));
 
 			if ($user_settings['passwd']==$hash_input_password)
 			{				
@@ -102,14 +102,14 @@ class SMF_Login {
 					$cookielength = 3600;
 		
 
-				setLoginCookie( $cookielength, $user_settings['ID_MEMBER'], sha1($user_settings['passwd'] . $user_settings['passwordSalt']));
+				setLoginCookie( $cookielength, $user_settings['id_member'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
 
 				mysql_select_db($mosConfig_db);
 				if ($session === null) $session =& mosSession::getCurrent();
 				$database =& mamboDatabase::getInstance();
 				$database->setQuery( "SELECT id, gid, block, usertype"
 					. "\nFROM #__users"
-					. "\nWHERE username='$user_settings[memberName]' AND password='".md5($_password)."'"
+					. "\nWHERE username='$user_settings[member_name]' AND password='".md5($_password)."'"
 				);
 				if ($database->loadObject($row)) {
 					if ($row->block) {
@@ -136,7 +136,7 @@ class SMF_Login {
 					if (!$database->query()) {
 						die($database->stderr(true));
 					}
-					setcookie("usercookie[username]", $user_settings['memberName'], $cookielength, "/");
+					setcookie("usercookie[username]", $user_settings['member_name'], $cookielength, "/");
 					setcookie("usercookie[password]", md5($_password), $cookielength, "/");
 				}
 			}

@@ -35,7 +35,7 @@
 	integrate_change_email($username, $email)
 	- updates Mambo with email changes made in SMF
 	
-	integrate_change_member_data ( array $memberNames, string $var, string $value)
+	integrate_change_member_data ( array $member_names, string $var, string $value)
 	- updates Mambo with member data changes in SMF
 
 	integrate_reset_pass($old_username, $username, $password)
@@ -440,7 +440,7 @@ function integrate_change_email($username, $email)
 	mysql_select_db($mosConfig_db);
 	$request = mysql_query("
 		UPDATE {$mosConfig_dbprefix}users
-		SET emailAddress = '$email'
+		SET email_address = '$email'
 		WHERE username = '" . addslashes($username) . "'
 		LIMIT 1");
 	mysql_select_db($db_name);
@@ -448,24 +448,24 @@ function integrate_change_email($username, $email)
 	return true;
 }
 
-function integrate_change_member_data ($memberNames, $var, $value)
+function integrate_change_member_data ($member_names, $var, $value)
 {
 
 	global $mosConfig_db, $db_name, $mosConfig_dbprefix;
 	
 	$synch_mambo_fields = array(
-   			'memberName' => 'username',
-			'realName' => 'name',
-			'emailAddress' => 'email',
-			'ID_GROUP' => '',
+   			'member_name' => 'username',
+			'real_name' => 'name',
+			'email_address' => 'email',
+			'id_group' => '',
 			'gender'=>'',
 			'birthdate'=>'',
-			'websiteTitle'=>'',
-			'websiteUrl'=>'',
+			'website_title'=>'',
+			'website_url'=>'',
 			'location'=>'',
-			'hideEmail'=>'',
-			'timeFormat'=>'',
-			'timeOffset'=>'',
+			'hide_email'=>'',
+			'time_format'=>'',
+			'time_offset'=>'',
 			'avatar'=>'',
 			'lngfile'=>'',
 			);
@@ -475,14 +475,14 @@ function integrate_change_member_data ($memberNames, $var, $value)
 	if ($field != ''){
 		mysql_select_db($mosConfig_db);
 	
-		foreach ($memberNames as $memberName){
+		foreach ($member_names as $member_name){
 			mysql_query ("UPDATE {$mosConfig_dbprefix}users
 						SET `$field` = $value
-						WHERE username = '$memberName'
+						WHERE username = '$member_name'
 						LIMIT 1");
 						
 			//  If the real name is changed, we need to make sure to update the ACL
-			if ($var == 'realName'){
+			if ($var == 'real_name'){
 				$mos_find_id = mysql_query("
 					SELECT `id`
 					FROM {$mosConfig_dbprefix}users
@@ -499,7 +499,7 @@ function integrate_change_member_data ($memberNames, $var, $value)
 		mysql_select_db($db_name);
 	}
 		
-	if ($var == 'ID_GROUP'){
+	if ($var == 'id_group'){
 		mysql_select_db($mosConfig_db);
 		
 		$query = mysql_query (" SELECT `value2`
@@ -511,16 +511,16 @@ function integrate_change_member_data ($memberNames, $var, $value)
 		if (!isset($group) || $group == '' || $group == 0 )
 			$group = '18';
 		
-		foreach ($memberNames as $memberName){
+		foreach ($member_names as $member_name){
 
 			mysql_query ("UPDATE {$mosConfig_dbprefix}users
 						SET `gid` = '$group'
-						WHERE username = '$memberName'
+						WHERE username = '$member_name'
 						");
 			$mos_find_name = mysql_query("
 						SELECT `name`
 						FROM {$mosConfig_dbprefix}users
-						WHERE username = '$memberName'
+						WHERE username = '$member_name'
 						LIMIT 1");
 			list($mos_name) = mysql_fetch_row($mos_find_name);
 			$mos_map_sql = mysql_query("
@@ -602,7 +602,7 @@ function integrate_login($username, $passwd, $cookielength)
 		$mos_sync_groups = mysql_query("
 				SELECT `value2`
 				FROM {$mosConfig_dbprefix}smf_config
-				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['ID_GROUP'] . "'
+				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['id_group'] . "'
 				");
 		list($group) = mysql_fetch_row($mos_sync_groups);
 
@@ -613,7 +613,7 @@ function integrate_login($username, $passwd, $cookielength)
 		$mos_write = mysql_query("
 			INSERT INTO {$mosConfig_dbprefix}users 
 				(name,username,email,password,gid) 
-			VALUES ('$username', '$username', '$user_settings[emailAddress]', '$passwd', '$group')");
+			VALUES ('$username', '$username', '$user_settings[email_address]', '$passwd', '$group')");
 
 		$mos_find_id = mysql_query("
 			SELECT id
@@ -850,9 +850,9 @@ function integrate_delete_member($user)
 	global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix;
 
 	$query = mysql_query ("
-		SELECT memberName
+		SELECT member_name
 		FROM {$db_prefix}members
-		WHERE ID_MEMBER = '$user'");
+		WHERE id_member = '$user'");
 	list($username) = mysql_fetch_row($query);
 
 	mysql_select_db($mosConfig_db);
@@ -870,9 +870,9 @@ function integrate_validate_login($username, $password, $cookietime)
 	// Check if the user already exists in SMF.
 	mysql_select_db($db_name);
 	$request = mysql_query("
-		SELECT ID_MEMBER
+		SELECT id_member
 		FROM {$db_prefix}members
-		WHERE memberName = '$username'
+		WHERE member_name = '$username'
 		LIMIT 1");
 	if ($request !== false && mysql_num_rows($request) === 1)
 	{
@@ -887,7 +887,7 @@ function integrate_validate_login($username, $password, $cookietime)
 
 		//!!! How about sendEmail and activation?
 		$request = mysql_query("
-			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS dateRegistered, activation
+			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS date_registered, activation
 			FROM {$mosConfig_dbprefix}users
 			WHERE username = '$username'");
 
@@ -915,8 +915,8 @@ function integrate_validate_login($username, $password, $cookietime)
 		//There must be a result, so let's write this one into SMF....
 		mysql_query("
 			INSERT INTO {$db_prefix}members 
-				(memberName, realName, passwd, emailAddress, dateRegistered, ID_POST_GROUP, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups)
-			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[dateRegistered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(member_name, real_name, passwd, email_address, date_registered, id_post_group, lngfile, buddy_list, pm_ignore_list, message_labels, personal_text, website_title, website_url, location, icq, msn, signature, avatar, usertitle, member_ip, member_ip2, secret_question, additional_groups)
+			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[date_registered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 		$memberID = db_insert_id();
 		
 		updateStats('member', $memberID, $name);
@@ -954,31 +954,31 @@ function integrate_register($Options, $theme_vars)
 	if (!isset($group) || $group == '' || $group == 0 )
 		$group = '18';
 		
-	//What if the realName field isn't being used?
-	if (!isset($Options['register_vars']['realName']) || $Options['register_vars']['realName']=='')
-		$Options['register_vars']['realName'] = $Options['register_vars']['memberName'];
+	//What if the real_name field isn't being used?
+	if (!isset($Options['register_vars']['real_name']) || $Options['register_vars']['real_name']=='')
+		$Options['register_vars']['real_name'] = $Options['register_vars']['member_name'];
 				
 	mysql_query("
 		INSERT INTO {$mosConfig_dbprefix}users 
 			(name, username, email, password, gid) 
-		VALUES (" . $Options['register_vars']['realName'] . ", " . $Options['register_vars']['memberName'] . ", " . $Options['register_vars']['emailAddress'] . ", '" . md5($Options['password']) . "', '$group')");
+		VALUES (" . $Options['register_vars']['real_name'] . ", " . $Options['register_vars']['member_name'] . ", " . $Options['register_vars']['email_address'] . ", '" . md5($Options['password']) . "', '$group')");
 	
 	$mos_find_userid = mysql_query("
 		SELECT `id`
 		FROM {$mosConfig_dbprefix}users
-		WHERE username = " . $Options['register_vars']['memberName'] . "
+		WHERE username = " . $Options['register_vars']['member_name'] . "
 		LIMIT 1");
 	list($mos_id) = mysql_fetch_row($mos_find_userid); 
 
 	mysql_query( "
 		INSERT INTO {$mosConfig_dbprefix}core_acl_aro 
 			(aro_id, section_value, value, order_value, name, hidden)
-		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['realName'] . ", '0');");
+		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['real_name'] . ", '0');");
 
 	$mos_map_sql = mysql_query("
 		SELECT aro_id
 		FROM {$mosConfig_dbprefix}core_acl_aro
-		WHERE name = " . $Options['register_vars']['realName'] . "
+		WHERE name = " . $Options['register_vars']['real_name'] . "
 		LIMIT 1");
 	list($aro_id) = mysql_fetch_row($mos_map_sql);
 

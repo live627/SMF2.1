@@ -35,6 +35,7 @@ $webmaster_email = 'noreply@myserver.com';		# Email address to send emails from.
 $cookiename = 'SMFCookie11';		# Name of the cookie to set for authentication.
 
 ########## Database Info ##########
+$db_type = 'mysql';
 $db_server = 'localhost';
 $db_name = 'smf';
 $db_user = 'root';

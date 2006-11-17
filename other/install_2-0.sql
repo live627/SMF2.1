@@ -1,17 +1,108 @@
 #### ATTENTION: You do not need to run or use this file!  The install.php script does everything for you!
 
+# Create PostgreSQL functions.
+# Some taken from http://www.xach.com/aolserver/mysql-functions.sql.
+# @postgresql
+
+CREATE OR REPLACE FUNCTION FROM_UNIXTIME(integer) RETURNS timestamp AS 
+  'SELECT timestamp ''epoch'' + $1 * interval ''1 second'' AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION UNIX_TIMESTAMP(timestamp) RETURNS integer AS 
+  'SELECT DATE_PART(''epoch'', $1)::int4 AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION UNIX_TIMESTAMP() RETURNS integer AS 
+  'SELECT DATE_PART(''epoch'', now())::int4 AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION IF (boolean, text, text) RETURNS text AS
+  'SELECT CASE WHEN $1 THEN $2 ELSE $3 END AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION IF (boolean, integer, integer) RETURNS integer AS
+  'SELECT CASE WHEN $1 THEN $2 ELSE $3 END AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION IFNULL (text, text) RETURNS text AS
+  'SELECT COALESCE($1, $2) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION IFNULL (int4, int4) RETURNS int4 AS
+  'SELECT COALESCE($1, $2) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS int4 AS
+  'SELECT
+    split_part($1, ''.'', 1)::int4 * (256 * 256 * 256) +
+    split_part($1, ''.'', 2)::int4 * (256 * 256) +
+    split_part($1, ''.'', 3)::int4 * 256 +
+    split_part($1, ''.'', 4)::int4 AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION INET_NTOA(bigint) RETURNS text AS
+  'SELECT
+    (($1 >> 24) & 255::int8) || ''.'' ||
+    (($1 >> 16) & 255::int8) || ''.'' ||
+    (($1 >> 8) & 255::int8) || ''.'' ||
+    ($1 & 255::int8) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION FIND_IN_SET(text, text) RETURNS boolean AS
+  'SELECT
+    $1 = ANY(STRING_TO_ARRAY($2, '','')) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION LEFT (text, int4) RETURNS text AS
+  'SELECT SUBSTRING($1 FROM 0 FOR $2) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION add_num_text (text, integer) RETURNS text AS
+  'SELECT CAST ((CAST($1 AS integer) + $2) AS text) AS result'
+LANGUAGE 'sql';
+
+CREATE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
+
+CREATE OR REPLACE FUNCTION YEAR (timestamp) RETURNS integer AS
+  'SELECT CAST (EXTRACT(YEAR FROM $1) AS integer) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION MONTH (timestamp) RETURNS integer AS
+  'SELECT CAST (EXTRACT(MONTH FROM $1) AS integer) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION DAYOFMONTH (timestamp) RETURNS integer AS
+  'SELECT CAST (EXTRACT(DAY FROM $1) AS integer) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION HOUR (timestamp) RETURNS integer AS
+  'SELECT CAST (EXTRACT(HOUR FROM $1) AS integer) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
+  'SELECT 
+   	REPLACE(
+   		REPLACE($2, ''%m'', CAST (EXTRACT(MONTH FROM $1) AS text)),
+   	''%d'', CAST (EXTRACT(DAY FROM $1) AS text)) AS result'
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION TO_DAYS (timestamp) RETURNS integer AS
+  'SELECT DATE_PART(''DAY'', $1 - ''0000-01-01'')::integer AS result'
+LANGUAGE 'sql';
+
+
 #
 # Table structure for table `admin_info_files`
 #
 
 CREATE TABLE {$db_prefix}admin_info_files (
-  ID_FILE tinyint(4) unsigned NOT NULL auto_increment,
+  id_file tinyint(4) unsigned NOT NULL auto_increment,
   filename tinytext NOT NULL,
   path tinytext NOT NULL,
   parameters tinytext NOT NULL,
   data text NOT NULL,
   filetype tinytext NOT NULL,
-  PRIMARY KEY (ID_FILE),
+  PRIMARY KEY (id_file),
   KEY filename (filename(30))
 ) TYPE=MYISAM;
 
@@ -20,7 +111,7 @@ CREATE TABLE {$db_prefix}admin_info_files (
 #
 
 INSERT INTO {$db_prefix}admin_info_files
-	(ID_FILE, filename, path, parameters, data, filetype)
+	(id_file, filename, path, parameters, data, filetype)
 VALUES
 	(1, 'current-version.js', '/smf/', 'version=%3$s', '', 'text/javascript'),
 	(2, 'detailed-version.js', '/smf/', 'language=%1$s', '', 'text/javascript'),
@@ -36,9 +127,9 @@ VALUES
 #
 
 CREATE TABLE {$db_prefix}approval_queue (
-  ID_MSG int(10) unsigned NOT NULL default '0',
-  ID_ATTACH int(10) unsigned NOT NULL default '0',
-  ID_EVENT smallint(5) unsigned NOT NULL default '0'
+  id_msg int(10) unsigned NOT NULL default '0',
+  id_attach int(10) unsigned NOT NULL default '0',
+  id_event smallint(5) unsigned NOT NULL default '0'
 ) TYPE=MYISAM;
 
 #
@@ -46,20 +137,20 @@ CREATE TABLE {$db_prefix}approval_queue (
 #
 
 CREATE TABLE {$db_prefix}attachments (
-  ID_ATTACH int(10) unsigned NOT NULL auto_increment,
+  id_attach int(10) unsigned NOT NULL auto_increment,
   ID_THUMB int(10) unsigned NOT NULL default '0',
-  ID_MSG int(10) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  attachmentType tinyint(3) unsigned NOT NULL default '0',
+  id_msg int(10) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  attachment_type tinyint(3) unsigned NOT NULL default '0',
   filename tinytext NOT NULL,
   size int(10) unsigned NOT NULL default '0',
   downloads mediumint(8) unsigned NOT NULL default '0',
   width mediumint(8) unsigned NOT NULL default '0',
   height mediumint(8) unsigned NOT NULL default '0',
   approved tinyint(3) NOT NULL default '1',
-  PRIMARY KEY (ID_ATTACH),
-  UNIQUE ID_MEMBER (ID_MEMBER, ID_ATTACH),
-  KEY ID_MSG (ID_MSG)
+  PRIMARY KEY (id_attach),
+  UNIQUE id_member (id_member, id_attach),
+  KEY id_msg (id_msg)
 ) TYPE=MyISAM;
 
 #
@@ -97,7 +188,7 @@ CREATE TABLE {$db_prefix}ban_items (
   ip_high4 tinyint(3) unsigned NOT NULL default '0',
   hostname tinytext NOT NULL,
   email_address tinytext NOT NULL,
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
   hits mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY (ID_BAN),
   KEY ID_BAN_GROUP (ID_BAN_GROUP)
@@ -108,11 +199,11 @@ CREATE TABLE {$db_prefix}ban_items (
 #
 
 CREATE TABLE {$db_prefix}board_permissions (
-  ID_GROUP smallint(5) NOT NULL default '0',
-  ID_PROFILE smallint(5) unsigned NOT NULL default '0',
+  id_group smallint(5) NOT NULL default '0',
+  id_profile smallint(5) unsigned NOT NULL default '0',
   permission varchar(30) NOT NULL default '',
-  addDeny tinyint(4) NOT NULL default '1',
-  PRIMARY KEY (ID_GROUP, ID_PROFILE, permission)
+  add_deny tinyint(4) NOT NULL default '1',
+  PRIMARY KEY (id_group, id_profile, permission)
 ) TYPE=MyISAM;
 
 #
@@ -120,7 +211,7 @@ CREATE TABLE {$db_prefix}board_permissions (
 #
 
 INSERT INTO {$db_prefix}board_permissions
-	(ID_GROUP, ID_PROFILE, permission)
+	(id_group, id_profile, permission)
 VALUES (-1, 1, 'poll_view'),
 	(0, 1, 'remove_own'),
 	(0, 1, 'lock_own'),
@@ -395,29 +486,29 @@ VALUES (-1, 1, 'poll_view'),
 #
 
 CREATE TABLE {$db_prefix}boards (
-  ID_BOARD smallint(5) unsigned NOT NULL auto_increment,
-  ID_CAT tinyint(4) unsigned NOT NULL default '0',
-  childLevel tinyint(4) unsigned NOT NULL default '0',
-  ID_PARENT smallint(5) unsigned NOT NULL default '0',
-  boardOrder smallint(5) NOT NULL default '0',
-  ID_LAST_MSG mediumint(8) unsigned NOT NULL default '0',
-  ID_MSG_UPDATED mediumint(8) unsigned NOT NULL default '0',
-  memberGroups varchar(255) NOT NULL default '-1,0',
-  ID_PROFILE smallint(5) unsigned NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL auto_increment,
+  id_cat tinyint(4) unsigned NOT NULL default '0',
+  child_level tinyint(4) unsigned NOT NULL default '0',
+  id_parent smallint(5) unsigned NOT NULL default '0',
+  board_order smallint(5) NOT NULL default '0',
+  id_last_msg int(10) unsigned NOT NULL default '0',
+  id_msg_updated int(10) unsigned NOT NULL default '0',
+  member_groups varchar(255) NOT NULL default '-1,0',
+  id_profile smallint(5) unsigned NOT NULL default '0',
   name tinytext NOT NULL,
   description text NOT NULL,
-  numTopics mediumint(8) unsigned NOT NULL default '0',
-  numPosts mediumint(8) unsigned NOT NULL default '0',
-  countPosts tinyint(4) NOT NULL default '0',
-  ID_THEME tinyint(4) unsigned NOT NULL default '0',
+  num_topics mediumint(8) unsigned NOT NULL default '0',
+  num_posts mediumint(8) unsigned NOT NULL default '0',
+  count_posts tinyint(4) NOT NULL default '0',
+  id_theme tinyint(4) unsigned NOT NULL default '0',
   override_theme tinyint(4) unsigned NOT NULL default '0',
-  unapprovedPosts smallint(5) NOT NULL default '0',
-  unapprovedTopics smallint(5) NOT NULL default '0',
-  PRIMARY KEY (ID_BOARD),
-  UNIQUE categories (ID_CAT, ID_BOARD),
-  KEY ID_PARENT (ID_PARENT),
-  KEY ID_MSG_UPDATED (ID_MSG_UPDATED),
-  KEY memberGroups (memberGroups(48))
+  unapproved_posts smallint(5) NOT NULL default '0',
+  unapproved_topics smallint(5) NOT NULL default '0',
+  PRIMARY KEY (id_board),
+  UNIQUE categories (id_cat, id_board),
+  KEY id_parent (id_parent),
+  KEY id_msg_updated (id_msg_updated),
+  KEY member_groups (member_groups(48))
 ) TYPE=MyISAM;
 
 #
@@ -425,7 +516,7 @@ CREATE TABLE {$db_prefix}boards (
 #
 
 INSERT INTO {$db_prefix}boards
-	(ID_BOARD, ID_CAT, boardOrder, ID_LAST_MSG, ID_MSG_UPDATED, name, description, numTopics, numPosts, memberGroups)
+	(id_board, id_cat, board_order, id_last_msg, id_msg_updated, name, description, num_topics, num_posts, member_groups)
 VALUES (1, 1, 1, 1, 1, '{$default_board_name}', '{$default_board_description}', 1, 1, '-1,0');
 # --------------------------------------------------------
 
@@ -434,17 +525,17 @@ VALUES (1, 1, 1, 1, 1, '{$default_board_name}', '{$default_board_description}', 
 #
 
 CREATE TABLE {$db_prefix}calendar (
-  ID_EVENT smallint(5) unsigned NOT NULL auto_increment,
-  startDate date NOT NULL default '0001-01-01',
-  endDate date NOT NULL default '0001-01-01',
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
-  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
+  id_event smallint(5) unsigned NOT NULL auto_increment,
+  start_date date NOT NULL default '0001-01-01',
+  end_date date NOT NULL default '0001-01-01',
+  id_board smallint(5) unsigned NOT NULL default '0',
+  id_topic mediumint(8) unsigned NOT NULL default '0',
   title varchar(48) NOT NULL default '',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_EVENT),
-  KEY startDate (startDate),
-  KEY endDate (endDate),
-  KEY topic (ID_TOPIC, ID_MEMBER)
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_event),
+  KEY start_date (start_date),
+  KEY end_date (end_date),
+  KEY topic (id_topic, id_member)
 ) TYPE=MyISAM;
 
 #
@@ -452,11 +543,11 @@ CREATE TABLE {$db_prefix}calendar (
 #
 
 CREATE TABLE {$db_prefix}calendar_holidays (
-  ID_HOLIDAY smallint(5) unsigned NOT NULL auto_increment,
-  eventDate date NOT NULL default '0001-01-01',
+  id_holiday smallint(5) unsigned NOT NULL auto_increment,
+  event_date date NOT NULL default '0001-01-01',
   title varchar(30) NOT NULL default '',
-  PRIMARY KEY (ID_HOLIDAY),
-  KEY eventDate (eventDate)
+  PRIMARY KEY (id_holiday),
+  KEY event_date (event_date)
 ) TYPE=MyISAM;
 
 #
@@ -464,7 +555,7 @@ CREATE TABLE {$db_prefix}calendar_holidays (
 #
 
 INSERT INTO {$db_prefix}calendar_holidays
-	(title, eventDate)
+	(title, event_date)
 VALUES ('New Year\'s', '0004-01-01'),
 	('Christmas', '0004-12-25'),
 	('Valentine\'s Day', '0004-02-14'),
@@ -577,7 +668,7 @@ VALUES ('New Year\'s', '0004-01-01'),
 	('Autumnal Equinox', '2020-09-22');
 
 INSERT INTO {$db_prefix}calendar_holidays
-	(title, eventDate)
+	(title, event_date)
 VALUES ('Independence Day', '0000-07-04'),
 	('Cinco de Mayo', '0000-05-05'),
 	('Flag Day', '0000-06-14'),
@@ -642,11 +733,11 @@ VALUES ('Independence Day', '0000-07-04'),
 #
 
 CREATE TABLE {$db_prefix}categories (
-  ID_CAT tinyint(4) unsigned NOT NULL auto_increment,
-  catOrder tinyint(4) NOT NULL default '0',
+  id_cat tinyint(4) unsigned NOT NULL auto_increment,
+  cat_order tinyint(4) NOT NULL default '0',
   name tinytext NOT NULL,
-  canCollapse tinyint(1) NOT NULL default '1',
-  PRIMARY KEY (ID_CAT)
+  can_collapse tinyint(1) NOT NULL default '1',
+  PRIMARY KEY (id_cat)
 ) TYPE=MyISAM;
 
 #
@@ -662,9 +753,9 @@ VALUES (1, 0, '{$default_category_name}', 1);
 #
 
 CREATE TABLE {$db_prefix}collapsed_categories (
-  ID_CAT tinyint(4) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_CAT, ID_MEMBER)
+  id_cat tinyint(4) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_cat, id_member)
 ) TYPE=MyISAM;
 
 #
@@ -696,9 +787,9 @@ CREATE TABLE {$db_prefix}custom_fields (
 #
 
 CREATE TABLE {$db_prefix}group_moderators (
-  ID_GROUP smallint(5) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_GROUP, ID_MEMBER) 
+  id_group smallint(5) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_group, id_member) 
 ) TYPE=MyISAM;
 
 #
@@ -707,19 +798,19 @@ CREATE TABLE {$db_prefix}group_moderators (
 
 CREATE TABLE {$db_prefix}log_actions (
   ID_ACTION int(10) unsigned NOT NULL auto_increment,
-  logTime int(10) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
+  log_time int(10) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
   action varchar(30) NOT NULL default '',
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
-  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-  ID_MSG int(10) unsigned NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL default '0',
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  id_msg int(10) unsigned NOT NULL default '0',
   extra text NOT NULL,
   PRIMARY KEY (ID_ACTION),
-  KEY logTime (logTime),
-  KEY ID_MEMBER (ID_MEMBER),
-  KEY ID_BOARD (ID_BOARD),
-  KEY ID_MSG (ID_MSG)
+  KEY log_time (log_time),
+  KEY id_member (id_member),
+  KEY id_board (id_board),
+  KEY id_msg (id_msg)
 ) TYPE=MyISAM;
 
 #
@@ -744,12 +835,12 @@ CREATE TABLE {$db_prefix}log_activity (
 
 CREATE TABLE {$db_prefix}log_banned (
   ID_BAN_LOG mediumint(8) unsigned NOT NULL auto_increment,
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
   email tinytext NOT NULL,
-  logTime int(10) unsigned NOT NULL default '0',
+  log_time int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (ID_BAN_LOG),
-  KEY logTime (logTime)
+  KEY log_time (log_time)
 ) TYPE=MyISAM;
 
 #
@@ -757,10 +848,10 @@ CREATE TABLE {$db_prefix}log_banned (
 #
 
 CREATE TABLE {$db_prefix}log_boards (
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
-  ID_MSG mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_MEMBER, ID_BOARD)
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL default '0',
+  id_msg int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_member, id_board)
 ) TYPE=MyISAM;
 
 #
@@ -768,8 +859,8 @@ CREATE TABLE {$db_prefix}log_boards (
 #
 
 CREATE TABLE {$db_prefix}log_digest (
-  ID_TOPIC mediumint(8) unsigned NOT NULL,
-  ID_MSG mediumint(8) unsigned NOT NULL,
+  id_topic mediumint(8) unsigned NOT NULL,
+  id_msg int(10) unsigned NOT NULL,
   note_type varchar(10) NOT NULL default 'post',
   daily smallint(3) unsigned NOT NULL default '0',
   exclude mediumint(8) unsigned NOT NULL default '0'
@@ -780,19 +871,19 @@ CREATE TABLE {$db_prefix}log_digest (
 #
 
 CREATE TABLE {$db_prefix}log_errors (
-  ID_ERROR mediumint(8) unsigned NOT NULL auto_increment,
-  logTime int(10) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
+  id_error mediumint(8) unsigned NOT NULL auto_increment,
+  log_time int(10) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
   url text NOT NULL,
   message text NOT NULL,
   session char(32) NOT NULL default '                                ',
-  errorType char(15) NOT NULL default 'general',
+  error_type char(15) NOT NULL default 'general',
   file tinytext NOT NULL,
   line mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_ERROR),
-  KEY logTime (logTime),
-  KEY ID_MEMBER (ID_MEMBER),
+  PRIMARY KEY (id_error),
+  KEY log_time (log_time),
+  KEY id_member (id_member),
   KEY ip (ip(16))
 ) TYPE=MyISAM;
 
@@ -802,7 +893,7 @@ CREATE TABLE {$db_prefix}log_errors (
 
 CREATE TABLE {$db_prefix}log_floodcontrol (
   ip char(16) NOT NULL default '                ',
-  logTime int(10) unsigned NOT NULL default '0',
+  log_time int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (ip(16))
 ) TYPE=MyISAM;
 
@@ -812,12 +903,12 @@ CREATE TABLE {$db_prefix}log_floodcontrol (
 
 CREATE TABLE {$db_prefix}log_group_requests (
   ID_REQUEST mediumint(8) unsigned NOT NULL auto_increment,
-  ID_MEMBER mediumint(8) NOT NULL,
-  ID_GROUP smallint(5) NOT NULL,
-  time_applied int(10) NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  id_group smallint(5) unsigned NOT NULL default '0',
+  time_applied int(10) unsigned NOT NULL default '0',
   reason text NOT NULL,
   PRIMARY KEY (ID_REQUEST),
-  UNIQUE ID_MEMBER (ID_MEMBER, ID_GROUP)
+  UNIQUE id_member (id_member, id_group)
 ) TYPE=MYISAM;
 
 #
@@ -827,10 +918,10 @@ CREATE TABLE {$db_prefix}log_group_requests (
 CREATE TABLE {$db_prefix}log_karma (
   ID_TARGET mediumint(8) unsigned NOT NULL default '0',
   ID_EXECUTOR mediumint(8) unsigned NOT NULL default '0',
-  logTime int(10) unsigned NOT NULL default '0',
+  log_time int(10) unsigned NOT NULL default '0',
   action tinyint(4) NOT NULL default '0',
   PRIMARY KEY (ID_TARGET, ID_EXECUTOR),
-  KEY logTime (logTime)
+  KEY log_time (log_time)
 ) TYPE=MyISAM;
 
 #
@@ -838,10 +929,10 @@ CREATE TABLE {$db_prefix}log_karma (
 #
 
 CREATE TABLE {$db_prefix}log_mark_read (
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
-  ID_MSG mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_MEMBER, ID_BOARD)
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL default '0',
+  id_msg int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_member, id_board)
 ) TYPE=MyISAM;
 
 #
@@ -849,11 +940,11 @@ CREATE TABLE {$db_prefix}log_mark_read (
 #
 
 CREATE TABLE {$db_prefix}log_notify (
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL default '0',
   sent tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_MEMBER, ID_TOPIC, ID_BOARD)
+  PRIMARY KEY (id_member, id_topic, id_board)
 ) TYPE=MyISAM;
 
 #
@@ -862,13 +953,13 @@ CREATE TABLE {$db_prefix}log_notify (
 
 CREATE TABLE {$db_prefix}log_online (
   session varchar(32) NOT NULL default '',
-  logTime timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
+  log_time timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
+  id_member mediumint(8) unsigned NOT NULL default '0',
   ip int(10) unsigned NOT NULL default '0',
   url text NOT NULL,
   PRIMARY KEY (session),
-  KEY logTime (logTime),
-  KEY ID_MEMBER (ID_MEMBER)
+  KEY log_time (log_time),
+  KEY id_member (id_member)
 ) TYPE=MyISAM;
 
 #
@@ -899,10 +990,10 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_packages (
 #
 
 CREATE TABLE {$db_prefix}log_polls (
-  ID_POLL mediumint(8) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  ID_CHOICE tinyint(3) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_POLL, ID_MEMBER, ID_CHOICE)
+  id_poll mediumint(8) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  id_choice tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_poll, id_member, id_choice)
 ) TYPE=MyISAM;
 
 #
@@ -911,10 +1002,10 @@ CREATE TABLE {$db_prefix}log_polls (
 
 CREATE TABLE {$db_prefix}log_reported (
   ID_REPORT mediumint(8) unsigned NOT NULL auto_increment,
-  ID_MSG int(10) NOT NULL,
-  ID_TOPIC mediumint(10) NOT NULL,
-  ID_BOARD int(10) NOT NULL,
-  ID_MEMBER mediumint(8) NOT NULL,
+  id_msg int(10) unsigned NOT NULL default '0',
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
   membername tinytext NOT NULL,
   subject tinytext NOT NULL,
   body text NOT NULL,
@@ -924,11 +1015,11 @@ CREATE TABLE {$db_prefix}log_reported (
   closed tinyint(3) NOT NULL default '0',
   ignore_all tinyint(3) NOT NULL default '0',
   PRIMARY KEY (ID_REPORT),
-  KEY ID_MEMBER (ID_MEMBER),
-  KEY ID_TOPIC (ID_TOPIC),
+  KEY id_member (id_member),
+  KEY id_topic (id_topic),
   KEY closed (closed),
   KEY time_started (time_started),
-  KEY ID_MSG (ID_MSG)
+  KEY id_msg (id_msg)
 ) TYPE=MyISAM;
 
 #
@@ -938,13 +1029,13 @@ CREATE TABLE {$db_prefix}log_reported (
 CREATE TABLE {$db_prefix}log_reported_comments (
   ID_COMMENT mediumint(8) unsigned NOT NULL auto_increment,
   ID_REPORT mediumint(8) NOT NULL,
-  ID_MEMBER mediumint(8) NOT NULL,
+  id_member mediumint(8) NOT NULL,
   membername tinytext NOT NULL,
   comment tinytext NOT NULL,
   time_sent int(10) NOT NULL,
   PRIMARY KEY (ID_COMMENT),
   KEY ID_REPORT (ID_REPORT),
-  KEY ID_MEMBER (ID_MEMBER),
+  KEY id_member (id_member),
   KEY time_sent (time_sent)
 ) TYPE=MyISAM;
 
@@ -953,11 +1044,11 @@ CREATE TABLE {$db_prefix}log_reported_comments (
 #
 
 CREATE TABLE {$db_prefix}log_scheduled_tasks (
-  ID_LOG mediumint(8) NOT NULL auto_increment,
-  ID_TASK smallint(5) NOT NULL,
-  timeRun int(10) NOT NULL,
-  timeTaken float NOT NULL default '0',
-  PRIMARY KEY (ID_LOG)
+  id_log mediumint(8) NOT NULL auto_increment,
+  id_task smallint(5) NOT NULL,
+  time_run int(10) NOT NULL,
+  time_taken float NOT NULL default '0',
+  PRIMARY KEY (id_log)
 ) TYPE=MyISAM;
 
 #
@@ -966,8 +1057,8 @@ CREATE TABLE {$db_prefix}log_scheduled_tasks (
 
 CREATE TABLE {$db_prefix}log_search_messages (
   ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
-  ID_MSG mediumint(9) NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, ID_MSG)
+  id_msg int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (ID_SEARCH, id_msg)
 ) TYPE=MyISAM;
 
 #
@@ -976,11 +1067,11 @@ CREATE TABLE {$db_prefix}log_search_messages (
 
 CREATE TABLE {$db_prefix}log_search_results (
   ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
-  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-  ID_MSG int(10) unsigned NOT NULL default '0',
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  id_msg int(10) unsigned NOT NULL default '0',
   relevance smallint(5) unsigned NOT NULL default '0',
   num_matches smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, ID_TOPIC)
+  PRIMARY KEY (ID_SEARCH, id_topic)
 ) TYPE=MyISAM;
 
 #
@@ -989,9 +1080,9 @@ CREATE TABLE {$db_prefix}log_search_results (
 
 CREATE TABLE {$db_prefix}log_search_subjects (
   word varchar(20) NOT NULL default '',
-  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (word, ID_TOPIC),
-  KEY ID_TOPIC (ID_TOPIC)
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY (word, id_topic),
+  KEY id_topic (id_topic)
 ) TYPE=MyISAM;
 
 #
@@ -1000,8 +1091,8 @@ CREATE TABLE {$db_prefix}log_search_subjects (
 
 CREATE TABLE {$db_prefix}log_search_topics (
   ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
-  ID_TOPIC mediumint(9) NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, ID_TOPIC)
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY (ID_SEARCH, id_topic)
 ) TYPE=MyISAM;
 
 #
@@ -1009,11 +1100,11 @@ CREATE TABLE {$db_prefix}log_search_topics (
 #
 
 CREATE TABLE {$db_prefix}log_topics (
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-  ID_MSG mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_MEMBER, ID_TOPIC),
-  KEY ID_TOPIC (ID_TOPIC)
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  id_msg int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_member, id_topic),
+  KEY id_topic (id_topic)
 ) TYPE=MyISAM;
 
 #
@@ -1021,7 +1112,7 @@ CREATE TABLE {$db_prefix}log_topics (
 #
 
 CREATE TABLE {$db_prefix}mail_queue (
-  ID_MAIL int(10) unsigned NOT NULL auto_increment,
+  id_mail int(10) unsigned NOT NULL auto_increment,
   time_sent int(10) NOT NULL default '0',
   recipient tinytext NOT NULL,
   body text NOT NULL,
@@ -1029,7 +1120,7 @@ CREATE TABLE {$db_prefix}mail_queue (
   headers text NOT NULL,
   send_html tinyint(3) NOT NULL default '0',
   priority tinyint(3) NOT NULL default '1',
-  PRIMARY KEY  (ID_MAIL),
+  PRIMARY KEY  (id_mail),
   KEY time_sent (time_sent),
   KEY priority (priority)
 ) TYPE=MyISAM;
@@ -1039,18 +1130,18 @@ CREATE TABLE {$db_prefix}mail_queue (
 #
 
 CREATE TABLE {$db_prefix}membergroups (
-  ID_GROUP smallint(5) unsigned NOT NULL auto_increment,
-  groupName varchar(80) NOT NULL default '',
+  id_group smallint(5) unsigned NOT NULL auto_increment,
+  group_name varchar(80) NOT NULL default '',
   description text NOT NULL,
-  onlineColor varchar(20) NOT NULL default '',
-  minPosts mediumint(9) NOT NULL default '-1',
-  maxMessages smallint(5) unsigned NOT NULL default '0',
+  online_color varchar(20) NOT NULL default '',
+  min_posts mediumint(9) NOT NULL default '-1',
+  max_messages smallint(5) unsigned NOT NULL default '0',
   stars tinytext NOT NULL,
-  groupType tinyint(3) NOT NULL default '0',
+  group_type tinyint(3) NOT NULL default '0',
   hidden tinyint(3) NOT NULL default '0',
-  ID_PARENT smallint(5) NOT NULL default '-2',
-  PRIMARY KEY (ID_GROUP),
-  KEY minPosts (minPosts)
+  id_parent smallint(5) NOT NULL default '-2',
+  PRIMARY KEY (id_group),
+  KEY min_posts (min_posts)
 ) TYPE=MyISAM;
 
 #
@@ -1058,7 +1149,7 @@ CREATE TABLE {$db_prefix}membergroups (
 #
 
 INSERT INTO {$db_prefix}membergroups
-	(ID_GROUP, groupName, description, onlineColor, minPosts, stars)
+	(id_group, group_name, description, online_color, min_posts, stars)
 VALUES (1, '{$default_administrator_group}', '', '#FF0000', -1, '5#staradmin.gif'),
 	(2, '{$default_global_moderator_group}', '', '#0000FF', -1, '5#stargmod.gif'),
 	(3, '{$default_moderator_group}', '', '', -1, '5#starmod.gif'),
@@ -1074,67 +1165,67 @@ VALUES (1, '{$default_administrator_group}', '', '#FF0000', -1, '5#staradmin.gif
 #
 
 CREATE TABLE {$db_prefix}members (
-  ID_MEMBER mediumint(8) unsigned NOT NULL auto_increment,
-  memberName varchar(80) NOT NULL default '',
-  dateRegistered int(10) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL auto_increment,
+  member_name varchar(80) NOT NULL default '',
+  date_registered int(10) unsigned NOT NULL default '0',
   posts mediumint(8) unsigned NOT NULL default '0',
-  ID_GROUP smallint(5) unsigned NOT NULL default '0',
+  id_group smallint(5) unsigned NOT NULL default '0',
   lngfile tinytext NOT NULL,
-  lastLogin int(10) unsigned NOT NULL default '0',
-  realName tinytext NOT NULL,
-  instantMessages smallint(5) NOT NULL default 0,
-  unreadMessages smallint(5) NOT NULL default 0,
+  last_login int(10) unsigned NOT NULL default '0',
+  real_name tinytext NOT NULL,
+  instant_messages smallint(5) NOT NULL default 0,
+  unread_messages smallint(5) NOT NULL default 0,
   buddy_list text NOT NULL,
   pm_ignore_list tinytext NOT NULL,
-  messageLabels text NOT NULL,
+  message_labels text NOT NULL,
   passwd varchar(64) NOT NULL default '',
-  emailAddress tinytext NOT NULL,
-  personalText tinytext NOT NULL,
+  email_address tinytext NOT NULL,
+  personal_text tinytext NOT NULL,
   gender tinyint(4) unsigned NOT NULL default '0',
   birthdate date NOT NULL default '0001-01-01',
-  websiteTitle tinytext NOT NULL,
-  websiteUrl tinytext NOT NULL,
+  website_title tinytext NOT NULL,
+  website_url tinytext NOT NULL,
   location tinytext NOT NULL,
-  ICQ tinytext NOT NULL,
-  AIM varchar(16) NOT NULL default '',
-  YIM varchar(32) NOT NULL default '',
-  MSN tinytext NOT NULL,
-  hideEmail tinyint(4) NOT NULL default '0',
-  showOnline tinyint(4) NOT NULL default '1',
-  timeFormat varchar(80) NOT NULL default '',
+  icq tinytext NOT NULL,
+  aim varchar(16) NOT NULL default '',
+  yim varchar(32) NOT NULL default '',
+  msn tinytext NOT NULL,
+  hide_email tinyint(4) NOT NULL default '0',
+  show_online tinyint(4) NOT NULL default '1',
+  time_format varchar(80) NOT NULL default '',
   signature text NOT NULL,
-  timeOffset float NOT NULL default '0',
+  time_offset float NOT NULL default '0',
   avatar tinytext NOT NULL,
   pm_email_notify tinyint(4) NOT NULL default '0',
-  karmaBad smallint(5) unsigned NOT NULL default '0',
-  karmaGood smallint(5) unsigned NOT NULL default '0',
+  karma_bad smallint(5) unsigned NOT NULL default '0',
+  karma_good smallint(5) unsigned NOT NULL default '0',
   usertitle tinytext NOT NULL,
-  notifyAnnouncements tinyint(4) NOT NULL default '1',
-  notifyRegularity tinyint(4) NOT NULL default '1',
-  notifySendBody tinyint(4) NOT NULL default '0',
-  notifyTypes tinyint(4) NOT NULL default '2',
-  memberIP tinytext NOT NULL,
-  secretQuestion tinytext NOT NULL,
-  secretAnswer varchar(64) NOT NULL default '',
-  ID_THEME tinyint(4) unsigned NOT NULL default '0',
+  notify_announcements tinyint(4) NOT NULL default '1',
+  notify_regularity tinyint(4) NOT NULL default '1',
+  notify_send_body tinyint(4) NOT NULL default '0',
+  notify_types tinyint(4) NOT NULL default '2',
+  member_ip tinytext NOT NULL,
+  secret_question tinytext NOT NULL,
+  secret_answer varchar(64) NOT NULL default '',
+  id_theme tinyint(4) unsigned NOT NULL default '0',
   is_activated tinyint(3) unsigned NOT NULL default '1',
   validation_code varchar(10) NOT NULL default '',
-  ID_MSG_LAST_VISIT int(10) unsigned NOT NULL default '0',
-  additionalGroups tinytext NOT NULL,
-  smileySet varchar(48) NOT NULL default '',
-  ID_POST_GROUP smallint(5) unsigned NOT NULL default '0',
-  totalTimeLoggedIn int(10) unsigned NOT NULL default '0',
-  passwordSalt varchar(5) NOT NULL default '',
-  ignoreBoards tinytext NOT NULL,
-  PRIMARY KEY (ID_MEMBER),
-  KEY memberName (memberName(30)),
-  KEY dateRegistered (dateRegistered),
-  KEY ID_GROUP (ID_GROUP),
+  id_msg_last_visit int(10) unsigned NOT NULL default '0',
+  additional_groups tinytext NOT NULL,
+  smiley_set varchar(48) NOT NULL default '',
+  id_post_group smallint(5) unsigned NOT NULL default '0',
+  total_time_logged_in int(10) unsigned NOT NULL default '0',
+  password_salt varchar(5) NOT NULL default '',
+  ignore_boards tinytext NOT NULL,
+  PRIMARY KEY (id_member),
+  KEY memberName (member_name(30)),
+  KEY date_registered (date_registered),
+  KEY id_group (id_group),
   KEY birthdate (birthdate),
   KEY posts (posts),
-  KEY lastLogin (lastLogin),
+  KEY last_login (last_login),
   KEY lngfile (lngfile(30)),
-  KEY ID_POST_GROUP (ID_POST_GROUP)
+  KEY id_post_group (id_post_group)
 ) TYPE=MyISAM;
 
 #
@@ -1145,10 +1236,10 @@ CREATE TABLE {$db_prefix}message_icons (
   ID_ICON smallint(5) unsigned NOT NULL auto_increment,
   title varchar(80) NOT NULL default '',
   filename varchar(80) NOT NULL default '',
-  ID_BOARD mediumint(8) unsigned NOT NULL default 0,
-  iconOrder smallint(5) unsigned NOT NULL default 0,
+  id_board smallint(5) unsigned NOT NULL default '0',
+  iconOrder smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY (ID_ICON),
-  KEY ID_BOARD (ID_BOARD)
+  KEY id_board (id_board)
 ) TYPE=MyISAM;
 
 #
@@ -1177,31 +1268,31 @@ VALUES ('xx', 'Standard', '0'),
 #
 
 CREATE TABLE {$db_prefix}messages (
-  ID_MSG int(10) unsigned NOT NULL auto_increment,
-  ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
-  posterTime int(10) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  ID_MSG_MODIFIED mediumint(8) unsigned NOT NULL default '0',
+  id_msg int(10) unsigned NOT NULL auto_increment,
+  id_topic mediumint(8) unsigned NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL default '0',
+  poster_time int(10) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  id_msg_modified int(10) unsigned NOT NULL default '0',
   subject tinytext NOT NULL,
-  posterName tinytext NOT NULL,
-  posterEmail tinytext NOT NULL,
-  posterIP tinytext NOT NULL,
-  smileysEnabled tinyint(4) NOT NULL default '1',
-  modifiedTime int(10) unsigned NOT NULL default '0',
-  modifiedName tinytext NOT NULL,
+  poster_name tinytext NOT NULL,
+  poster_email tinytext NOT NULL,
+  poster_ip tinytext NOT NULL,
+  smileys_enabled tinyint(4) NOT NULL default '1',
+  modified_time int(10) unsigned NOT NULL default '0',
+  modified_name tinytext NOT NULL,
   body text NOT NULL,
   icon varchar(16) NOT NULL default 'xx',
   approved tinyint(3) NOT NULL default '1',
-  PRIMARY KEY (ID_MSG),
-  UNIQUE topic (ID_TOPIC, ID_MSG),
-  UNIQUE ID_BOARD (ID_BOARD, ID_MSG),
-  UNIQUE ID_MEMBER (ID_MEMBER, ID_MSG),
+  PRIMARY KEY (id_msg),
+  UNIQUE topic (id_topic, id_msg),
+  UNIQUE id_board (id_board, id_msg),
+  UNIQUE id_member (id_member, id_msg),
   KEY approved (approved),
-  KEY ipIndex (posterIP(15), ID_TOPIC),
-  KEY participation (ID_MEMBER, ID_TOPIC),
-  KEY showPosts (ID_MEMBER, ID_BOARD),
-  KEY ID_TOPIC (ID_TOPIC)
+  KEY ipIndex (poster_ip(15), id_topic),
+  KEY participation (id_member, id_topic),
+  KEY showPosts (id_member, id_board),
+  KEY id_topic (id_topic)
 ) TYPE=MyISAM;
 
 #
@@ -1209,7 +1300,7 @@ CREATE TABLE {$db_prefix}messages (
 #
 
 INSERT INTO {$db_prefix}messages
-	(ID_MSG, ID_MSG_MODIFIED, ID_TOPIC, ID_BOARD, posterTime, subject, posterName, posterEmail, posterIP, modifiedName, body, icon)
+	(id_msg, id_msg_modified, id_topic, id_board, poster_time, subject, poster_name, poster_email, poster_ip, modified_name, body, icon)
 VALUES (1, 1, 1, 1, UNIX_TIMESTAMP(), '{$default_topic_subject}', 'Simple Machines', 'info@simplemachines.org', '127.0.0.1', '', '{$default_topic_message}', 'xx');
 # --------------------------------------------------------
 
@@ -1218,9 +1309,9 @@ VALUES (1, 1, 1, 1, UNIX_TIMESTAMP(), '{$default_topic_subject}', 'Simple Machin
 #
 
 CREATE TABLE {$db_prefix}moderators (
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_BOARD, ID_MEMBER)
+  id_board smallint(5) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_board, id_member)
 ) TYPE=MyISAM;
 
 #
@@ -1248,10 +1339,10 @@ VALUES ('Simple Machines Third-party Mod Site', 'http://mods.simplemachines.org'
 #
 
 CREATE TABLE {$db_prefix}permission_profiles (
-  ID_PROFILE smallint(5) NOT NULL auto_increment,
+  id_profile smallint(5) NOT NULL auto_increment,
   profile_name tinytext NOT NULL,
-  ID_PARENT smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_PROFILE)
+  id_parent smallint(5) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_profile)
 ) TYPE=MyISAM;
 
 #
@@ -1259,7 +1350,7 @@ CREATE TABLE {$db_prefix}permission_profiles (
 #
 
 INSERT INTO {$db_prefix}permission_profiles
-	(ID_PROFILE, profile_name)
+	(id_profile, profile_name)
 VALUES (1, 'default'), (2, 'no_polls'), (3, 'reply_only'), (4, 'read_only');
 # --------------------------------------------------------
 
@@ -1268,10 +1359,10 @@ VALUES (1, 'default'), (2, 'no_polls'), (3, 'reply_only'), (4, 'read_only');
 #
 
 CREATE TABLE {$db_prefix}permissions (
-  ID_GROUP smallint(5) NOT NULL default '0',
+  id_group smallint(5) NOT NULL default '0',
   permission varchar(30) NOT NULL default '',
-  addDeny tinyint(4) NOT NULL default '1',
-  PRIMARY KEY (ID_GROUP, permission)
+  add_deny tinyint(4) NOT NULL default '1',
+  PRIMARY KEY (id_group, permission)
 ) TYPE=MyISAM;
 
 #
@@ -1279,7 +1370,7 @@ CREATE TABLE {$db_prefix}permissions (
 #
 
 INSERT INTO {$db_prefix}permissions
-	(ID_GROUP, permission)
+	(id_group, permission)
 VALUES (-1, 'search_posts'),
 	(-1, 'calendar_view'),
 	(-1, 'view_stats'),
@@ -1327,15 +1418,15 @@ VALUES (-1, 'search_posts'),
 #
 
 CREATE TABLE {$db_prefix}personal_messages (
-  ID_PM int(10) unsigned NOT NULL auto_increment,
-  ID_MEMBER_FROM mediumint(8) unsigned NOT NULL default '0',
-  deletedBySender tinyint(3) unsigned NOT NULL default '0',
-  fromName tinytext NOT NULL,
+  id_pm int(10) unsigned NOT NULL auto_increment,
+  id_member_from mediumint(8) unsigned NOT NULL default '0',
+  deleted_by_sender tinyint(3) unsigned NOT NULL default '0',
+  from_name tinytext NOT NULL,
   msgtime int(10) unsigned NOT NULL default '0',
   subject tinytext NOT NULL,
   body text NOT NULL,
-  PRIMARY KEY (ID_PM),
-  KEY ID_MEMBER (ID_MEMBER_FROM, deletedBySender),
+  PRIMARY KEY (id_pm),
+  KEY id_member (id_member_from, deleted_by_sender),
   KEY msgtime (msgtime)
 ) TYPE=MyISAM;
 
@@ -1344,14 +1435,14 @@ CREATE TABLE {$db_prefix}personal_messages (
 #
 
 CREATE TABLE {$db_prefix}pm_recipients (
-  ID_PM int(10) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
+  id_pm int(10) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
   labels varchar(60) NOT NULL default '-1',
   bcc tinyint(3) unsigned NOT NULL default '0',
   is_read tinyint(3) unsigned NOT NULL default '0',
   deleted tinyint(3) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_PM, ID_MEMBER),
-  UNIQUE ID_MEMBER (ID_MEMBER, deleted, ID_PM)
+  PRIMARY KEY (id_pm, id_member),
+  UNIQUE id_member (id_member, deleted, id_pm)
 ) TYPE=MyISAM;
 
 #
@@ -1359,16 +1450,16 @@ CREATE TABLE {$db_prefix}pm_recipients (
 #
 
 CREATE TABLE {$db_prefix}polls (
-  ID_POLL mediumint(8) unsigned NOT NULL auto_increment,
+  id_poll mediumint(8) unsigned NOT NULL auto_increment,
   question tinytext NOT NULL,
-  votingLocked tinyint(1) NOT NULL default '0',
-  maxVotes tinyint(3) unsigned NOT NULL default '1',
-  expireTime int(10) unsigned NOT NULL default '0',
-  hideResults tinyint(3) unsigned NOT NULL default '0',
-  changeVote tinyint(3) unsigned NOT NULL default '0',
-  ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
-  posterName tinytext NOT NULL,
-  PRIMARY KEY (ID_POLL)
+  voting_locked tinyint(1) NOT NULL default '0',
+  max_votes tinyint(3) unsigned NOT NULL default '1',
+  expire_time int(10) unsigned NOT NULL default '0',
+  hide_results tinyint(3) unsigned NOT NULL default '0',
+  change_vote tinyint(3) unsigned NOT NULL default '0',
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  poster_name tinytext NOT NULL,
+  PRIMARY KEY (id_poll)
 ) TYPE=MyISAM;
 
 #
@@ -1376,11 +1467,11 @@ CREATE TABLE {$db_prefix}polls (
 #
 
 CREATE TABLE {$db_prefix}poll_choices (
-  ID_POLL mediumint(8) unsigned NOT NULL default '0',
-  ID_CHOICE tinyint(3) unsigned NOT NULL default '0',
+  id_poll mediumint(8) unsigned NOT NULL default '0',
+  id_choice tinyint(3) unsigned NOT NULL default '0',
   label tinytext NOT NULL,
   votes smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_POLL, ID_CHOICE)
+  PRIMARY KEY (id_poll, id_choice)
 ) TYPE=MyISAM;
 
 #
@@ -1388,15 +1479,15 @@ CREATE TABLE {$db_prefix}poll_choices (
 #
 
 CREATE TABLE {$db_prefix}scheduled_tasks (
-  ID_TASK smallint(5) NOT NULL auto_increment,
-  nextTime int(10) NOT NULL,
-  timeOffset int(10) NOT NULL,
-  timeRegularity smallint(5) NOT NULL,
-  timeUnit varchar(1) NOT NULL default 'h',
+  id_task smallint(5) NOT NULL auto_increment,
+  next_time int(10) NOT NULL,
+  time_offset int(10) NOT NULL,
+  time_regularity smallint(5) NOT NULL,
+  time_unit varchar(1) NOT NULL default 'h',
   disabled tinyint(3) NOT NULL default '0',
   task varchar(24) NOT NULL default '',
-  PRIMARY KEY (ID_TASK),
-  KEY nextTime (nextTime),
+  PRIMARY KEY (id_task),
+  KEY next_time (next_time),
   KEY disabled (disabled),
   UNIQUE task (task)
 ) TYPE=MyISAM;
@@ -1405,8 +1496,8 @@ CREATE TABLE {$db_prefix}scheduled_tasks (
 # Dumping data for table `scheduled_tasks`
 #
 
-REPLACE INTO {$db_prefix}scheduled_tasks
-	(ID_TASK, nextTime, timeOffset, timeRegularity, timeUnit, disabled, task)
+INSERT INTO {$db_prefix}scheduled_tasks
+	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task)
 VALUES
 	(1, 0, 0, 2, 'h', 0, 'approval_notification'),
 	(2, 0, 0, 7, 'd', 0, 'auto_optimize'),
@@ -1512,7 +1603,7 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('send_welcomeEmail', '1'),
 	('allow_editDisplayName', '1'),
 	('allow_hideOnline', '1'),
-	('allow_hideEmail', '1'),
+	('allow_hide_email', '1'),
 	('guest_hideContacts', '0'),
 	('spamWaitTime', '5'),
 	('pm_spam_settings', '10,5,20'),
@@ -1566,7 +1657,7 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('cal_days_for_index', '7'),
 	('requireAgreement', '1'),
 	('unapprovedMembers', '0'),
-	('default_personalText', ''),
+	('default_personal_text', ''),
 	('package_make_backups', '1'),
 	('databaseSession_enable', '{$databaseSession_enable}'),
 	('databaseSession_loose', '1'),
@@ -1646,12 +1737,12 @@ VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0),
 #
 
 CREATE TABLE {$db_prefix}themes (
-  ID_MEMBER mediumint(8) NOT NULL default '0',
-  ID_THEME tinyint(4) unsigned NOT NULL default '1',
+  id_member mediumint(8) NOT NULL default '0',
+  id_theme tinyint(4) unsigned NOT NULL default '1',
   variable tinytext NOT NULL,
   value text NOT NULL,
-  PRIMARY KEY (ID_THEME, ID_MEMBER, variable(30)),
-  KEY ID_MEMBER (ID_MEMBER)
+  PRIMARY KEY (id_theme, id_member, variable(30)),
+  KEY id_member (id_member)
 ) TYPE=MyISAM;
 
 #
@@ -1659,7 +1750,7 @@ CREATE TABLE {$db_prefix}themes (
 #
 
 INSERT INTO {$db_prefix}themes
-	(ID_THEME, variable, value)
+	(id_theme, variable, value)
 VALUES (1, 'name', '{$default_theme_name}'),
 	(1, 'theme_url', '{$boardurl}/Themes/default'),
 	(1, 'images_url', '{$boardurl}/Themes/default/images'),
@@ -1699,26 +1790,26 @@ VALUES (1, 'name', '{$default_theme_name}'),
 #
 
 CREATE TABLE {$db_prefix}topics (
-  ID_TOPIC mediumint(8) unsigned NOT NULL auto_increment,
-  isSticky tinyint(4) NOT NULL default '0',
-  ID_BOARD smallint(5) unsigned NOT NULL default '0',
-  ID_FIRST_MSG int(10) unsigned NOT NULL default '0',
-  ID_LAST_MSG int(10) unsigned NOT NULL default '0',
-  ID_MEMBER_STARTED mediumint(8) unsigned NOT NULL default '0',
-  ID_MEMBER_UPDATED mediumint(8) unsigned NOT NULL default '0',
-  ID_POLL mediumint(8) unsigned NOT NULL default '0',
-  numReplies int(10) unsigned NOT NULL default '0',
-  numViews int(10) unsigned NOT NULL default '0',
+  id_topic mediumint(8) unsigned NOT NULL auto_increment,
+  is_sticky tinyint(4) NOT NULL default '0',
+  id_board smallint(5) unsigned NOT NULL default '0',
+  id_first_msg int(10) unsigned NOT NULL default '0',
+  id_last_msg int(10) unsigned NOT NULL default '0',
+  id_member_started mediumint(8) unsigned NOT NULL default '0',
+  id_member_updated mediumint(8) unsigned NOT NULL default '0',
+  id_poll mediumint(8) unsigned NOT NULL default '0',
+  num_replies int(10) unsigned NOT NULL default '0',
+  num_views int(10) unsigned NOT NULL default '0',
   locked tinyint(4) NOT NULL default '0',
-  unapprovedPosts smallint(5) NOT NULL default '0',
+  unapproved_posts smallint(5) NOT NULL default '0',
   approved tinyint(3) NOT NULL default '1',
-  PRIMARY KEY (ID_TOPIC),
-  UNIQUE lastMessage (ID_LAST_MSG, ID_BOARD),
-  UNIQUE firstMessage (ID_FIRST_MSG, ID_BOARD),
-  UNIQUE poll (ID_POLL, ID_TOPIC),
-  KEY isSticky (isSticky),
+  PRIMARY KEY (id_topic),
+  UNIQUE lastMessage (id_last_msg, id_board),
+  UNIQUE firstMessage (id_first_msg, id_board),
+  UNIQUE poll (id_poll, id_topic),
+  KEY is_sticky (is_sticky),
   KEY approved (approved),
-  KEY ID_BOARD (ID_BOARD)
+  KEY id_board (id_board)
 ) TYPE=MyISAM;
 
 #
@@ -1726,6 +1817,6 @@ CREATE TABLE {$db_prefix}topics (
 #
 
 INSERT INTO {$db_prefix}topics
-	(ID_TOPIC, ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, ID_MEMBER_STARTED, ID_MEMBER_UPDATED)
+	(id_topic, id_board, id_first_msg, id_last_msg, id_member_started, id_member_updated)
 VALUES (1, 1, 1, 1, 0, 0);
 # --------------------------------------------------------

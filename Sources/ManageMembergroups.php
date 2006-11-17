@@ -155,23 +155,23 @@ function MembergroupIndex()
 		'post' => array()
 	);
 
-	$query = $smfFunc['db_query']("
-		SELECT ID_GROUP, groupName, minPosts, onlineColor, stars
+	$query = $smfFunc['db_query']('', "
+		SELECT id_group, group_name, min_posts, online_color, stars
 		FROM {$db_prefix}membergroups
-		ORDER BY minPosts, IF(ID_GROUP < 4, ID_GROUP, 4), groupName", __FILE__, __LINE__);
+		ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($query))
 	{
 		$row['stars'] = explode('#', $row['stars']);
-		$context['groups'][$row['minPosts'] == -1 ? 'regular' : 'post'][$row['ID_GROUP']] = array(
-			'id' => $row['ID_GROUP'],
-			'name' => $row['groupName'],
-			'num_members' => $row['ID_GROUP'] != 3 ? 0 : $txt['membergroups_guests_na'],
-			'allow_delete' => $row['ID_GROUP'] > 4,
-			'can_search' => $row['ID_GROUP'] != 3,
-			'href' => $scripturl . '?action=admin;area=membergroups;sa=members;group=' . $row['ID_GROUP'],
-			'is_post_group' => $row['minPosts'] != -1,
-			'min_posts' => $row['minPosts'] == -1 ? '-' : $row['minPosts'],
-			'color' => empty($row['onlineColor']) ? '' : $row['onlineColor'],
+		$context['groups'][$row['min_posts'] == -1 ? 'regular' : 'post'][$row['id_group']] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name'],
+			'num_members' => $row['id_group'] != 3 ? 0 : $txt['membergroups_guests_na'],
+			'allow_delete' => $row['id_group'] > 4,
+			'can_search' => $row['id_group'] != 3,
+			'href' => $scripturl . '?action=admin;area=membergroups;sa=members;group=' . $row['id_group'],
+			'is_post_group' => $row['min_posts'] != -1,
+			'min_posts' => $row['min_posts'] == -1 ? '-' : $row['min_posts'],
+			'color' => empty($row['online_color']) ? '' : $row['online_color'],
 			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
 		);
 	}
@@ -179,37 +179,37 @@ function MembergroupIndex()
 
 	if (!empty($context['groups']['post']))
 	{
-		$query = $smfFunc['db_query']("
-			SELECT ID_POST_GROUP AS ID_GROUP, COUNT(*) AS num_members
+		$query = $smfFunc['db_query']('', "
+			SELECT id_post_group AS id_group, COUNT(*) AS num_members
 			FROM {$db_prefix}members
-			WHERE ID_POST_GROUP IN (" . implode(', ', array_keys($context['groups']['post'])) . ")
-			GROUP BY ID_POST_GROUP", __FILE__, __LINE__);
+			WHERE id_post_group IN (" . implode(', ', array_keys($context['groups']['post'])) . ")
+			GROUP BY id_post_group", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
-			$context['groups']['post'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
+			$context['groups']['post'][$row['id_group']]['num_members'] += $row['num_members'];
 		$smfFunc['db_free_result']($query);
 	}
 
 	if (!empty($context['groups']['regular']))
 	{
-		$query = $smfFunc['db_query']("
-			SELECT ID_GROUP, COUNT(*) AS num_members
+		$query = $smfFunc['db_query']('', "
+			SELECT id_group, COUNT(*) AS num_members
 			FROM {$db_prefix}members
-			WHERE ID_GROUP IN (" . implode(', ', array_keys($context['groups']['regular'])) . ")
-			GROUP BY ID_GROUP", __FILE__, __LINE__);
+			WHERE id_group IN (" . implode(', ', array_keys($context['groups']['regular'])) . ")
+			GROUP BY id_group", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
-			$context['groups']['regular'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
+			$context['groups']['regular'][$row['id_group']]['num_members'] += $row['num_members'];
 		$smfFunc['db_free_result']($query);
 
-		$query = $smfFunc['db_query']("
-			SELECT mg.ID_GROUP, COUNT(*) AS num_members
+		$query = $smfFunc['db_query']('', "
+			SELECT mg.id_group, COUNT(*) AS num_members
 			FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
-			WHERE mg.ID_GROUP IN (" . implode(', ', array_keys($context['groups']['regular'])) . ")
-				AND mem.additionalGroups != ''
-				AND mem.ID_GROUP != mg.ID_GROUP
-				AND FIND_IN_SET(mg.ID_GROUP, mem.additionalGroups)
-			GROUP BY mg.ID_GROUP", __FILE__, __LINE__);
+			WHERE mg.id_group IN (" . implode(', ', array_keys($context['groups']['regular'])) . ")
+				AND mem.additional_groups != ''
+				AND mem.id_group != mg.id_group
+				AND FIND_IN_SET(mg.id_group, mem.additional_groups)
+			GROUP BY mg.id_group", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
-			$context['groups']['regular'][$row['ID_GROUP']]['num_members'] += $row['num_members'];
+			$context['groups']['regular'][$row['id_group']]['num_members'] += $row['num_members'];
 		$smfFunc['db_free_result']($query);
 	}
 
@@ -237,17 +237,17 @@ function AddMembergroup()
 
 		// !!! Check for members with same name too?
 
-		$request = $smfFunc['db_query']("
-			SELECT MAX(ID_GROUP)
+		$request = $smfFunc['db_query']('', "
+			SELECT MAX(id_group)
 			FROM {$db_prefix}membergroups", __FILE__, __LINE__);
-		list ($ID_GROUP) = $smfFunc['db_fetch_row']($request);
+		list ($id_group) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
-		$ID_GROUP++;
+		$id_group++;
 
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}membergroups
-				(ID_GROUP, groupName, minPosts, stars, onlineColor)
-			VALUES ($ID_GROUP, SUBSTRING('$_POST[group_name]', 1, 80), " . ($postCountBasedGroup ? (int) $_POST['min_posts'] : '-1') . ", '1#star.gif', '')", __FILE__, __LINE__);
+				(id_group, group_name, min_posts, stars, online_color)
+			VALUES ($id_group, SUBSTRING('$_POST[group_name]', 1, 80), " . ($postCountBasedGroup ? (int) $_POST['min_posts'] : '-1') . ", '1#star.gif', '')", __FILE__, __LINE__);
 
 		// Update the post groups now, if this is a post group!
 		if (isset($_POST['min_posts']))
@@ -261,73 +261,73 @@ function AddMembergroup()
 		{
 			// Set default permission level.
 			require_once($sourcedir . '/ManagePermissions.php');
-			setPermissionLevel($_POST['level'], $ID_GROUP, 'null');
+			setPermissionLevel($_POST['level'], $id_group, 'null');
 		}
 		// Copy or inherit the permissions!
 		elseif ($_POST['perm_type'] == 'copy' || $_POST['perm_type'] == 'inherit')
 		{
 			$copy_id = $_POST['perm_type'] == 'copy' ? (int) $_POST['copyperm'] : (int) $_POST['inheritperm'];
 
-			$request = $smfFunc['db_query']("
-				SELECT permission, addDeny
+			$request = $smfFunc['db_query']('', "
+				SELECT permission, add_deny
 				FROM {$db_prefix}permissions
-				WHERE ID_GROUP = $copy_id", __FILE__, __LINE__);
+				WHERE id_group = $copy_id", __FILE__, __LINE__);
 			$setString = '';
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$setString .= "
-					($ID_GROUP, '$row[permission]', $row[addDeny]),";
+					($id_group, '$row[permission]', $row[add_deny]),";
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($setString))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}permissions
-						(ID_GROUP, permission, addDeny)
+						(id_group, permission, add_deny)
 					VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
 
-			$request = $smfFunc['db_query']("
-				SELECT ID_PROFILE, permission, addDeny
+			$request = $smfFunc['db_query']('', "
+				SELECT id_profile, permission, add_deny
 				FROM {$db_prefix}board_permissions
-				WHERE ID_GROUP = $copy_id", __FILE__, __LINE__);
+				WHERE id_group = $copy_id", __FILE__, __LINE__);
 			$setString = '';
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$setString .= "
-					($ID_GROUP, $row[ID_PROFILE], '$row[permission]', $row[addDeny]),";
+					($id_group, $row[id_profile], '$row[permission]', $row[add_deny]),";
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($setString))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}board_permissions
-						(ID_GROUP, ID_PROFILE, permission, addDeny)
+						(id_group, id_profile, permission, add_deny)
 					VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
 
 			// Also get some membergroup information if we're copying and not copying from guests...
 			if ($copy_id > 0 && $_POST['perm_type'] == 'copy')
 			{
-				$request = $smfFunc['db_query']("
-					SELECT onlineColor, maxMessages, stars
+				$request = $smfFunc['db_query']('', "
+					SELECT online_color, max_messages, stars
 					FROM {$db_prefix}membergroups
-					WHERE ID_GROUP = $copy_id
+					WHERE id_group = $copy_id
 					LIMIT 1", __FILE__, __LINE__);
 				$group_info = $smfFunc['db_fetch_assoc']($request);
 				$smfFunc['db_free_result']($request);
 
 				// ...and update the new membergroup with it.
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}membergroups
 					SET
-						onlineColor = '$group_info[onlineColor]',
-						maxMessages = $group_info[maxMessages],
+						online_color = '$group_info[online_color]',
+						max_messages = $group_info[max_messages],
 						stars = '$group_info[stars]'
-					WHERE ID_GROUP = $ID_GROUP
+					WHERE id_group = $id_group
 					LIMIT 1", __FILE__, __LINE__);
 			}
 			// If inheriting say so...
 			elseif ($_POST['perm_type'] == 'inherit')
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}membergroups
-					SET ID_PARENT = $copy_id
-					WHERE ID_GROUP = $ID_GROUP
+					SET id_parent = $copy_id
+					WHERE id_group = $id_group
 					LIMIT 1", __FILE__, __LINE__);
 			}
 		}
@@ -339,17 +339,17 @@ function AddMembergroup()
 
 		// Only do this if they have special access requirements.
 		if (!empty($_POST['boardaccess']))
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}boards
-				SET memberGroups = IF(memberGroups = '', '$ID_GROUP', CONCAT(memberGroups, ',$ID_GROUP'))
-				WHERE ID_BOARD IN (" . implode(', ', $_POST['boardaccess']) . ")
+				SET member_groups = CASE WHEN member_groups = '' THEN '$id_group' ELSE CONCAT(member_groups, ',$id_group') END
+				WHERE id_board IN (" . implode(', ', $_POST['boardaccess']) . ")
 				LIMIT " . count($_POST['boardaccess']), __FILE__, __LINE__);
 
 		// Rebuild the group cache.
 		cacheGroups();
 
 		// Go change some more settings.
-		redirectexit('action=admin;area=membergroups;sa=edit;group=' . $ID_GROUP);
+		redirectexit('action=admin;area=membergroups;sa=edit;group=' . $id_group);
 	}
 
 	// Just show the 'add membergroup' screen.
@@ -358,29 +358,29 @@ function AddMembergroup()
 	$context['post_group'] = !empty($_REQUEST['postgroup']);
 	$context['undefined_group'] = empty($_REQUEST['postgroup']) && empty($_REQUEST['generalgroup']);
 
-	$result = $smfFunc['db_query']("
-		SELECT ID_GROUP, groupName
+	$result = $smfFunc['db_query']('', "
+		SELECT id_group, group_name
 		FROM {$db_prefix}membergroups
-		WHERE (ID_GROUP > 3 OR ID_GROUP = 2)" . (empty($modSettings['permission_enable_postgroups']) ? "
-			AND minPosts = -1" : '') . "
-		ORDER BY minPosts, ID_GROUP != 2, groupName", __FILE__, __LINE__);
+		WHERE (id_group > 3 OR id_group = 2)" . (empty($modSettings['permission_enable_postgroups']) ? "
+			AND min_posts = -1" : '') . "
+		ORDER BY min_posts, id_group != 2, group_name", __FILE__, __LINE__);
 	$context['groups'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 		$context['groups'][] = array(
-			'id' => $row['ID_GROUP'],
-			'name' => $row['groupName']
+			'id' => $row['id_group'],
+			'name' => $row['group_name']
 		);
 	$smfFunc['db_free_result']($result);
 
-	$result = $smfFunc['db_query']("
-		SELECT ID_BOARD, name, childLevel
+	$result = $smfFunc['db_query']('', "
+		SELECT id_board, name, child_level
 		FROM {$db_prefix}boards", __FILE__, __LINE__);
 	$context['boards'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 		$context['boards'][] = array(
-			'id' => $row['ID_BOARD'],
+			'id' => $row['id_board'],
 			'name' => $row['name'],
-			'child_level' => $row['childLevel'],
+			'child_level' => $row['child_level'],
 			'selected' => false
 		);
 	$smfFunc['db_free_result']($result);
@@ -435,16 +435,16 @@ function EditMembergroup()
 		$_POST['group_hidden'] = empty($_POST['group_hidden']) && $_POST['min_posts'] == -1 && $_REQUEST['group'] != 3 ? 1 : 0;
 		$_POST['group_inherit'] = $_REQUEST['group'] > 1 ? (int) $_POST['group_inherit'] : -2;
 
-		// !!! Don't set onlineColor for the Moderators group?
+		// !!! Don't set online_color for the Moderators group?
 
 		// Do the update of the membergroup settings.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}membergroups
-			SET groupName = '$_POST[group_name]', onlineColor = '$_POST[online_color]',
-				maxMessages = $_POST[max_messages], minPosts = $_POST[min_posts], stars = '$_POST[stars]',
-				description = '$_POST[group_desc]', groupType = $_POST[group_type], hidden = $_POST[group_hidden],
-				ID_PARENT = $_POST[group_inherit]
-			WHERE ID_GROUP = " . (int) $_REQUEST['group'] . "
+			SET group_name = '$_POST[group_name]', online_color = '$_POST[online_color]',
+				max_messages = $_POST[max_messages], min_posts = $_POST[min_posts], stars = '$_POST[stars]',
+				description = '$_POST[group_desc]', group_type = $_POST[group_type], hidden = $_POST[group_hidden],
+				id_parent = $_POST[group_inherit]
+			WHERE id_group = " . (int) $_REQUEST['group'] . "
 			LIMIT 1", __FILE__, __LINE__);
 
 		// Time to update the boards this membergroup has access to.
@@ -455,77 +455,77 @@ function EditMembergroup()
 				$_POST['boardaccess'][$key] = (int) $value;
 
 			// Find all board this group is in, but shouldn't be in.
-			$request = $smfFunc['db_query']("
-				SELECT ID_BOARD, memberGroups
+			$request = $smfFunc['db_query']('', "
+				SELECT id_board, member_groups
 				FROM {$db_prefix}boards
-				WHERE FIND_IN_SET(" . (int) $_REQUEST['group'] . ", memberGroups)" . (empty($_POST['boardaccess']) ? '' : "
-					AND ID_BOARD NOT IN (" . implode(', ', $_POST['boardaccess']) . ')'), __FILE__, __LINE__);
+				WHERE FIND_IN_SET(" . (int) $_REQUEST['group'] . ", member_groups)" . (empty($_POST['boardaccess']) ? '' : "
+					AND id_board NOT IN (" . implode(', ', $_POST['boardaccess']) . ')'), __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET memberGroups = '" . implode(',', array_diff(explode(',', $row['memberGroups']), array($_REQUEST['group']))) . "'
-					WHERE ID_BOARD = $row[ID_BOARD]
+					SET member_groups = '" . implode(',', array_diff(explode(',', $row['member_groups']), array($_REQUEST['group']))) . "'
+					WHERE id_board = $row[id_board]
 					LIMIT 1", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
 			// Add the membergroup to all boards that hadn't been set yet.
 			if (!empty($_POST['boardaccess']))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
-					SET memberGroups = IF(memberGroups = '', '" . (int) $_REQUEST['group'] . "', CONCAT(memberGroups, '," . (int) $_REQUEST['group'] . "'))
-					WHERE ID_BOARD IN (" . implode(', ', $_POST['boardaccess']) . ")
-						AND NOT FIND_IN_SET(" . (int) $_REQUEST['group'] . ", memberGroups)", __FILE__, __LINE__);
+					SET member_groups = CASE WHEN member_groups = '' THEN '" . (int) $_REQUEST['group'] . "' ELSE CONCAT(member_groups, '," . (int) $_REQUEST['group'] . "') END
+					WHERE id_board IN (" . implode(', ', $_POST['boardaccess']) . ")
+						AND NOT FIND_IN_SET(" . (int) $_REQUEST['group'] . ", member_groups)", __FILE__, __LINE__);
 		}
 
 		// Remove everyone from this group!
 		if ($_POST['min_posts'] != -1)
 		{
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}members
-				SET ID_GROUP = 0
-				WHERE ID_GROUP = " . (int) $_REQUEST['group'], __FILE__, __LINE__);
+				SET id_group = 0
+				WHERE id_group = " . (int) $_REQUEST['group'], __FILE__, __LINE__);
 
-			$request = $smfFunc['db_query']("
-				SELECT ID_MEMBER, additionalGroups
+			$request = $smfFunc['db_query']('', "
+				SELECT id_member, additional_groups
 				FROM {$db_prefix}members
-				WHERE FIND_IN_SET(" . (int) $_REQUEST['group'] . ", additionalGroups)", __FILE__, __LINE__);
+				WHERE FIND_IN_SET(" . (int) $_REQUEST['group'] . ", additional_groups)", __FILE__, __LINE__);
 			$updates = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$updates[$row['additionalGroups']][] = $row['ID_MEMBER'];
+				$updates[$row['additional_groups']][] = $row['id_member'];
 			$smfFunc['db_free_result']($request);
 
-			foreach ($updates as $additionalGroups => $memberArray)
-				updateMemberData($memberArray, array('additionalGroups' => '\'' . implode(',', array_diff(explode(',', $additionalGroups), array((int) $_REQUEST['group']))) . '\''));
+			foreach ($updates as $additional_groups => $memberArray)
+				updateMemberData($memberArray, array('additional_groups' => '\'' . implode(',', array_diff(explode(',', $additional_groups), array((int) $_REQUEST['group']))) . '\''));
 		}
 		elseif ($_REQUEST['group'] != 3)
 		{
 			// Making it a hidden group? If so remove everyone with it as primary group (Actually, just make them additional).
 			if ($_POST['group_hidden'])
 			{
-				$request = $smfFunc['db_query']("
-					SELECT ID_MEMBER, additionalGroups
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member, additional_groups
 					FROM {$db_prefix}members
-					WHERE ID_GROUP = " . (int) $_REQUEST['group'] . "
-						AND NOT FIND_IN_SET(" . (int) $_REQUEST['group'] . ", additionalGroups)", __FILE__, __LINE__);
+					WHERE id_group = " . (int) $_REQUEST['group'] . "
+						AND NOT FIND_IN_SET(" . (int) $_REQUEST['group'] . ", additional_groups)", __FILE__, __LINE__);
 				$updates = array();
 				while ($row = $smfFunc['db_fetch_assoc']($request))
-					$updates[$row['additionalGroups']][] = $row['ID_MEMBER'];
+					$updates[$row['additional_groups']][] = $row['id_member'];
 				$smfFunc['db_free_result']($request);
 
-				foreach ($updates as $additionalGroups => $memberArray)
-					updateMemberData($memberArray, array('additionalGroups' => '\'' . implode(',', array_merge(explode(',', $additionalGroups), array((int) $_REQUEST['group']))) . '\''));
+				foreach ($updates as $additional_groups => $memberArray)
+					updateMemberData($memberArray, array('additional_groups' => '\'' . implode(',', array_merge(explode(',', $additional_groups), array((int) $_REQUEST['group']))) . '\''));
 
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}members
-					SET ID_GROUP = 0
-					WHERE ID_GROUP = " . $_REQUEST['group'], __FILE__, __LINE__);
+					SET id_group = 0
+					WHERE id_group = " . $_REQUEST['group'], __FILE__, __LINE__);
 			}
 
 			// Either way, let's check our "show group membership" setting is correct.
-			$request = $smfFunc['db_query']("
+			$request = $smfFunc['db_query']('', "
 				SELECT COUNT(*)
 				FROM {$db_prefix}membergroups
-				WHERE groupType != 0", __FILE__, __LINE__);
+				WHERE group_type != 0", __FILE__, __LINE__);
 			list ($have_joinable) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 
@@ -543,9 +543,9 @@ function EditMembergroup()
 
 		// Finally, moderators!
 		$moderator_string = isset($_POST['group_moderators']) ? trim($_POST['group_moderators']) : '';
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}group_moderators
-			WHERE ID_GROUP = $_REQUEST[group]", __FILE__, __LINE__);
+			WHERE id_group = $_REQUEST[group]", __FILE__, __LINE__);
 		if (!empty($moderator_string) && $_POST['min_posts'] == -1 && $_REQUEST['group'] != 3)
 		{
 			// Get all the usernames from the string
@@ -560,17 +560,17 @@ function EditMembergroup()
 					unset($moderators[$k]);
 			}
 
-			// Find all the ID_MEMBERs for the memberName's in the list.
+			// Find all the ID_MEMBERs for the member_name's in the list.
 			$group_moderators = array();
 			if (!empty($moderators))
 			{
-				$request = $smfFunc['db_query']("
-					SELECT ID_MEMBER
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member
 					FROM {$db_prefix}members
-					WHERE memberName IN ('" . implode("','", $moderators) . "') OR realName IN ('" . implode("','", $moderators) . "')
+					WHERE member_name IN ('" . implode("','", $moderators) . "') OR real_name IN ('" . implode("','", $moderators) . "')
 					LIMIT " . count($moderators), __FILE__, __LINE__);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
-					$group_moderators[] = $row['ID_MEMBER'];
+					$group_moderators[] = $row['id_member'];
 				$smfFunc['db_free_result']($request);
 			}
 
@@ -581,9 +581,9 @@ function EditMembergroup()
 				foreach ($group_moderators as $moderator)
 					$mod_insert[] = "($_REQUEST[group], $moderator)";
 
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}group_moderators
-						(ID_GROUP, ID_MEMBER)
+						(id_group, id_member)
 					VALUES " . implode(', ', $mod_insert), __FILE__, __LINE__);
 			}
 		}
@@ -600,10 +600,10 @@ function EditMembergroup()
 	}
 
 	// Fetch the current group information.
-	$request = $smfFunc['db_query']("
-		SELECT groupName, description, minPosts, onlineColor, maxMessages, stars, groupType, hidden, ID_PARENT
+	$request = $smfFunc['db_query']('', "
+		SELECT group_name, description, min_posts, online_color, max_messages, stars, group_type, hidden, id_parent
 		FROM {$db_prefix}membergroups
-		WHERE ID_GROUP = " . (int) $_REQUEST['group'] . "
+		WHERE id_group = " . (int) $_REQUEST['group'] . "
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('membergroup_does_not_exist', false);
@@ -614,31 +614,31 @@ function EditMembergroup()
 
 	$context['group'] = array(
 		'id' => $_REQUEST['group'],
-		'name' => $row['groupName'],
+		'name' => $row['group_name'],
 		'description' => htmlspecialchars($row['description']),
-		'editable_name' => htmlspecialchars($row['groupName']),
-		'color' => $row['onlineColor'],
-		'min_posts' => $row['minPosts'],
-		'max_messages' => $row['maxMessages'],
+		'editable_name' => htmlspecialchars($row['group_name']),
+		'color' => $row['online_color'],
+		'min_posts' => $row['min_posts'],
+		'max_messages' => $row['max_messages'],
 		'star_count' => (int) $row['stars'][0],
 		'star_image' => isset($row['stars'][1]) ? $row['stars'][1] : '',
-		'is_post_group' => $row['minPosts'] != -1,
-		'type' => $row['minPosts'] != -1 ? 0 : $row['groupType'],
-		'hidden' => $row['minPosts'] == -1 ? $row['hidden'] : 0,
-		'inherited_from' => $row['ID_PARENT'],
+		'is_post_group' => $row['min_posts'] != -1,
+		'type' => $row['min_posts'] != -1 ? 0 : $row['group_type'],
+		'hidden' => $row['min_posts'] == -1 ? $row['hidden'] : 0,
+		'inherited_from' => $row['id_parent'],
 		'allow_post_group' => $_REQUEST['group'] == 2 || $_REQUEST['group'] > 4,
 		'allow_delete' => $_REQUEST['group'] == 2 || $_REQUEST['group'] > 4,
 	);
 
 	// Get any moderators for this group
-	$request = $smfFunc['db_query']("
-		SELECT mem.realName
+	$request = $smfFunc['db_query']('', "
+		SELECT mem.real_name
 		FROM ({$db_prefix}group_moderators AS mods, {$db_prefix}members AS mem)
-		WHERE mods.ID_GROUP = $_REQUEST[group]
-			AND mem.ID_MEMBER = mods.ID_MEMBER", __FILE__, __LINE__);
+		WHERE mods.id_group = $_REQUEST[group]
+			AND mem.id_member = mods.id_member", __FILE__, __LINE__);
 	$context['group']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['group']['moderators'][] = $row['realName'];
+		$context['group']['moderators'][] = $row['real_name'];
 	$smfFunc['db_free_result']($request);
 
 	$context['group']['moderator_list'] = empty($context['group']['moderators']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['group']['moderators']) . '&quot;';
@@ -647,31 +647,31 @@ function EditMembergroup()
 	$context['boards'] = array();
 	if ($_REQUEST['group'] == 2 || $_REQUEST['group'] > 3)
 	{
-		$result = $smfFunc['db_query']("
-			SELECT ID_BOARD, name, childLevel, FIND_IN_SET(" . (int) $_REQUEST['group'] . ", memberGroups) AS can_access
+		$result = $smfFunc['db_query']('', "
+			SELECT id_board, name, child_level, FIND_IN_SET(" . (int) $_REQUEST['group'] . ", member_groups) AS can_access
 			FROM {$db_prefix}boards", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 			$context['boards'][] = array(
-				'id' => $row['ID_BOARD'],
+				'id' => $row['id_board'],
 				'name' => $row['name'],
-				'child_level' => $row['childLevel'],
+				'child_level' => $row['child_level'],
 				'selected' => !empty($row['can_access']),
 			);
 		$smfFunc['db_free_result']($result);
 	}
 
 	// Finally, get all the groups this could be inherited off.
-	$request = $smfFunc['db_query']("
-		SELECT ID_GROUP, groupName
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group, group_name
 		FROM {$db_prefix}membergroups
-		WHERE ID_GROUP != " . (int) $_REQUEST['group'] .
+		WHERE id_group != " . (int) $_REQUEST['group'] .
 			(empty($modSettings['permission_enable_postgroups']) ? "
-			AND minPosts = -1" : '') . "
-			AND ID_GROUP NOT IN (1, 3)
-			AND ID_PARENT = -2", __FILE__, __LINE__);
+			AND min_posts = -1" : '') . "
+			AND id_group NOT IN (1, 3)
+			AND id_parent = -2", __FILE__, __LINE__);
 	$context['inheritable_groups'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['inheritable_groups'][$row['ID_GROUP']] = $row['groupName'];
+		$context['inheritable_groups'][$row['id_group']] = $row['group_name'];
 	$smfFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'edit_group';
@@ -707,7 +707,7 @@ function cacheGroups()
 	global $db_prefix, $settings, $modSettings, $smfFunc;
 
 	// Check whether we need to cache anything?
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT value
 		FROM {$db_prefix}themes
 		WHERE variable = 'show_group_key'
@@ -718,23 +718,23 @@ function cacheGroups()
 	// If we don't need it delete it.
 	if (!$enabled && isset($modSettings['groupCache']))
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}settings
 			WHERE variable = 'groupCache'", __FILE__, __LINE__);
 	}
 	elseif ($enabled)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT ID_GROUP, groupName, onlineColor
+		$request = $smfFunc['db_query']('', "
+			SELECT id_group, group_name, online_color
 			FROM {$db_prefix}membergroups
-			WHERE minPosts = -1
+			WHERE min_posts = -1
 				AND hidden = 0
-				AND ID_GROUP != 3
-				AND onlineColor != ''", __FILE__, __LINE__);
+				AND id_group != 3
+				AND online_color != ''", __FILE__, __LINE__);
 		$groupCache = array();
 		// This looks weird but it's here for speed!
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$groupCache[] = $row['ID_GROUP'] . '" ' . ($row['onlineColor'] ? 'style="color: ' . $row['onlineColor'] . '"' : '') . '>' . $row['groupName'];
+			$groupCache[] = $row['id_group'] . '" ' . ($row['online_color'] ? 'style="color: ' . $row['online_color'] . '"' : '') . '>' . $row['group_name'];
 		$groupCache = addslashes(serialize($groupCache));
 
 		updateSettings(array('groupCache' => $groupCache));

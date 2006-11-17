@@ -264,7 +264,7 @@ function template_modify_board()
 									<br /><br />
 								</td>
 								<td valign="top" align="right">
-									<select name="new_cat" onchange="if (this.form.order) {this.form.order.disabled = this.options[this.selectedIndex].value != 0; this.form.boardOrder.disabled = this.options[this.selectedIndex].value != 0 || this.form.order.options[this.form.order.selectedIndex].value == \'\';}">';
+									<select name="new_cat" onchange="if (this.form.order) {this.form.order.disabled = this.options[this.selectedIndex].value != 0; this.form.board_order.disabled = this.options[this.selectedIndex].value != 0 || this.form.order.options[this.form.order.selectedIndex].value == \'\';}">';
 		foreach ($context['categories'] as $category)
 			echo '
 										<option', $category['selected'] ? ' selected="selected"' : '', ' value="', $category['id'], '">', $category['name'], '</option>';
@@ -285,7 +285,7 @@ function template_modify_board()
 
 	// The first select box gives the user the option to position it before, after or as a child of another board.
 	echo '
-									<select id="order" name="placement" onchange="this.form.boardOrder.disabled = this.options[this.selectedIndex].value == \'\';">
+									<select id="order" name="placement" onchange="this.form.board_order.disabled = this.options[this.selectedIndex].value == \'\';">
 										', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '', '
 										<option value="before">' . $txt['mboards_order_before'] . '...</option>
 										<option value="child">' . $txt['mboards_order_child_of'] . '...</option>
@@ -294,7 +294,7 @@ function template_modify_board()
 
 	// The second select box lists all the boards in the category.
 	echo '
-									<select id="boardOrder" name="board_order" ', isset($context['board']['is_new']) ? '' : 'disabled="disabled"', '>
+									<select id="board_order" name="board_order" ', isset($context['board']['is_new']) ? '' : 'disabled="disabled"', '>
 										', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '';
 		foreach ($context['board_order'] as $order)
 			echo '

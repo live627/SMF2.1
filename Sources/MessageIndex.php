@@ -38,7 +38,7 @@ if (!defined('SMF'))
 function MessageIndex()
 {
 	global $txt, $scripturl, $board, $db_prefix;
-	global $modSettings, $ID_MEMBER;
+	global $modSettings, $id_member;
 	global $context, $options, $settings, $board_info, $user_info, $smfFunc;
 
 	if (WIRELESS)
@@ -102,17 +102,19 @@ function MessageIndex()
 			die;
 		}
 
-		$smfFunc['db_query']("
-			REPLACE INTO {$db_prefix}log_boards
-				(ID_MSG, ID_MEMBER, ID_BOARD)
-			VALUES ($modSettings[maxMsgID], $ID_MEMBER, $board)", __FILE__, __LINE__);
+		$smfFunc['db_insert']('replace',
+			"{$db_prefix}log_boards",
+			array('id_msg', 'id_member', 'id_board'),
+			array($modSettings['maxMsgID'], $id_member, $board),
+			array('id_member', 'id_board'));
+
 		if (!empty($board_info['parent_boards']))
 		{
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_boards
-				SET ID_MSG = $modSettings[maxMsgID]
-				WHERE ID_MEMBER = $ID_MEMBER
-					AND ID_BOARD IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")
+				SET id_msg = $modSettings[maxMsgID]
+				WHERE id_member = $id_member
+					AND id_board IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")
 				LIMIT " . count($board_info['parent_boards']), __FILE__, __LINE__);
 
 			// We've seen all these boards now!
@@ -124,11 +126,11 @@ function MessageIndex()
 		if (isset($_SESSION['topicseen_cache'][$board]))
 			unset($_SESSION['topicseen_cache'][$board]);
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT sent
 			FROM {$db_prefix}log_notify
-			WHERE ID_BOARD = $board
-				AND ID_MEMBER = $ID_MEMBER
+			WHERE id_board = $board
+				AND id_member = $id_member
 			LIMIT 1", __FILE__, __LINE__);
 		$context['is_marked_notify'] = $smfFunc['db_num_rows']($request) != 0;
 		if ($context['is_marked_notify'])
@@ -136,11 +138,11 @@ function MessageIndex()
 			list ($sent) = $smfFunc['db_fetch_row']($request);
 			if (!empty($sent))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}log_notify
 					SET sent = 0
-					WHERE ID_BOARD = $board
-						AND ID_MEMBER = $ID_MEMBER
+					WHERE id_board = $board
+						AND id_member = $id_member
 					LIMIT 1", __FILE__, __LINE__);
 			}
 		}
@@ -160,57 +162,57 @@ function MessageIndex()
 	$context['can_approve_posts'] = allowedTo('approve_posts');
 
 	// Aren't children wonderful things?
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('messageindex_fetch_boards', "
 		SELECT
-			b.ID_BOARD, b.name, b.description, b.numTopics, b.numPosts, b.unapprovedTopics,
-			b.unapprovedPosts, m.posterName, m.posterTime, m.subject, m.ID_MSG, m.ID_TOPIC,
-			IFNULL(mem.realName, m.posterName) AS realName, " . (!$user_info['is_guest'] ? "
-			(IFNULL(lb.ID_MSG, 0) >= b.ID_MSG_UPDATED) AS isRead," : "1 AS isRead,") . "
-			IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER, IFNULL(mem2.ID_MEMBER, 0) AS ID_MODERATOR,
-			mem2.realName AS modRealName
+			b.id_board, b.name, b.description, b.num_topics, b.num_posts, b.unapproved_topics,
+			b.unapproved_posts, m.poster_name, m.poster_time, m.subject, m.id_msg, m.id_topic,
+			IFNULL(mem.real_name, m.poster_name) AS real_name, " . (!$user_info['is_guest'] ? "
+			(IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isRead," : "1 AS isRead,") . "
+			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem2.id_member, 0) AS ID_MODERATOR,
+			mem2.real_name AS modRealName
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}messages AS m ON (m.ID_MSG = b.ID_LAST_MSG)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = $ID_MEMBER)" : '') . "
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.ID_BOARD = b.ID_BOARD)
-			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.ID_MEMBER = mods.ID_MEMBER)
-		WHERE b.ID_PARENT = $board
+			LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)" : '') . "
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.id_member = mods.id_member)
+		WHERE b.id_parent = $board
 			AND $user_info[query_see_board]", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($result) != 0)
 	{
 		$theboards = array();
 		while ($row_board = $smfFunc['db_fetch_assoc']($result))
 		{
-			$ignoreThisBoard = in_array($row_board['ID_BOARD'], $user_info['ignoreboards']);
+			$ignoreThisBoard = in_array($row_board['id_board'], $user_info['ignoreboards']);
 			$row_board['isRead'] = !empty($row_board['isRead']) || $ignoreThisBoard ? '1' : '0';
-			if (!isset($context['boards'][$row_board['ID_BOARD']]))
+			if (!isset($context['boards'][$row_board['id_board']]))
 			{
-				$theboards[] = $row_board['ID_BOARD'];
+				$theboards[] = $row_board['id_board'];
 
 				// Make sure the subject isn't too long.
 				censorText($row_board['subject']);
 				$short_subject = shorten_subject($row_board['subject'], 24);
 
-				$context['boards'][$row_board['ID_BOARD']] = array(
-					'id' => $row_board['ID_BOARD'],
+				$context['boards'][$row_board['id_board']] = array(
+					'id' => $row_board['id_board'],
 					'last_post' => array(
-						'id' => $row_board['ID_MSG'],
-						'time' => $row_board['posterTime'] > 0 ? timeformat($row_board['posterTime']) : $txt[470],
-						'timestamp' => forum_time(true, $row_board['posterTime']),
+						'id' => $row_board['id_msg'],
+						'time' => $row_board['poster_time'] > 0 ? timeformat($row_board['poster_time']) : $txt[470],
+						'timestamp' => forum_time(true, $row_board['poster_time']),
 						'subject' => $short_subject,
 						'member' => array(
-							'id' => $row_board['ID_MEMBER'],
-							'username' => $row_board['posterName'] != '' ? $row_board['posterName'] : $txt[470],
-							'name' => $row_board['realName'],
-							'href' => !empty($row_board['ID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row_board['ID_MEMBER'] : '',
-							'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : $txt[470],
+							'id' => $row_board['id_member'],
+							'username' => $row_board['poster_name'] != '' ? $row_board['poster_name'] : $txt[470],
+							'name' => $row_board['real_name'],
+							'href' => !empty($row_board['id_member']) ? $scripturl . '?action=profile;u=' . $row_board['id_member'] : '',
+							'link' => $row_board['poster_name'] != '' ? (!empty($row_board['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '">' . $row_board['real_name'] . '</a>' : $row_board['real_name']) : $txt[470],
 						),
 						'start' => 'new',
-						'topic' => $row_board['ID_TOPIC'],
-						'href' => $row_board['subject'] != '' ? $scripturl . '?topic=' . $row_board['ID_TOPIC'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new' : '',
-						'link' => $row_board['subject'] != '' ? '<a href="' . $scripturl . '?topic=' . $row_board['ID_TOPIC'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : $txt[470]
+						'topic' => $row_board['id_topic'],
+						'href' => $row_board['subject'] != '' ? $scripturl . '?topic=' . $row_board['id_topic'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new' : '',
+						'link' => $row_board['subject'] != '' ? '<a href="' . $scripturl . '?topic=' . $row_board['id_topic'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : $txt[470]
 					),
-					'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
+					'new' => empty($row_board['isRead']) && $row_board['poster_name'] != '',
 					'name' => $row_board['name'],
 					'description' => $row_board['description'],
 					'moderators' => array(),
@@ -218,106 +220,106 @@ function MessageIndex()
 					'children' => array(),
 					'link_children' => array(),
 					'children_new' => false,
-					'topics' => $row_board['numTopics'],
-					'posts' => $row_board['numPosts'],
-					'unapproved_topics' => $row_board['unapprovedTopics'],
-					'unapproved_posts' => $row_board['unapprovedPosts'] - $row_board['unapprovedTopics'],
-					'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['ID_BOARD'], $user_info['mod_cache']['ap'])),
-					'href' => $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0',
-					'link' => '<a href="' . $scripturl . '?board=' . $row_board['ID_BOARD'] . '.0">' . $row_board['name'] . '</a>'
+					'topics' => $row_board['num_topics'],
+					'posts' => $row_board['num_posts'],
+					'unapproved_topics' => $row_board['unapproved_topics'],
+					'unapproved_posts' => $row_board['unapproved_posts'] - $row_board['unapproved_topics'],
+					'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['id_board'], $user_info['mod_cache']['ap'])),
+					'href' => $scripturl . '?board=' . $row_board['id_board'] . '.0',
+					'link' => '<a href="' . $scripturl . '?board=' . $row_board['id_board'] . '.0">' . $row_board['name'] . '</a>'
 				);
 			}
 			if (!empty($row_board['ID_MODERATOR']))
 			{
-				$context['boards'][$row_board['ID_BOARD']]['moderators'][$row_board['ID_MODERATOR']] = array(
+				$context['boards'][$row_board['id_board']]['moderators'][$row_board['ID_MODERATOR']] = array(
 					'id' => $row_board['ID_MODERATOR'],
 					'name' => $row_board['modRealName'],
 					'href' => $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'],
 					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>'
 				);
-				$context['boards'][$row_board['ID_BOARD']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
+				$context['boards'][$row_board['id_board']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
 			}
 		}
 		$smfFunc['db_free_result']($result);
 
 		// Load up the child boards.
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SELECT
-				b.ID_BOARD, b.ID_PARENT, b.name, b.description, b.numTopics, b.numPosts,
-				m.posterName, IFNULL(m.posterTime, 0) AS posterTime, m.subject, m.ID_MSG, m.ID_TOPIC,
-				IFNULL(mem.realName, m.posterName) AS realName, ID_PARENT, b.unapprovedPosts, b.unapprovedTopics,
-				" . ($user_info['is_guest'] ? '1' : '(IFNULL(lb.ID_MSG, 0) >= b.ID_MSG_UPDATED)') . " AS isRead,
-				IFNULL(mem.ID_MEMBER, 0) AS ID_MEMBER
+				b.id_board, b.id_parent, b.name, b.description, b.num_topics, b.num_posts,
+				m.poster_name, IFNULL(m.poster_time, 0) AS poster_time, m.subject, m.id_msg, m.id_topic,
+				IFNULL(mem.real_name, m.poster_name) AS real_name, id_parent, b.unapproved_posts, b.unapproved_topics,
+				" . ($user_info['is_guest'] ? '1' : '(IFNULL(lb.id_msg, 0) >= b.id_msg_updated)') . " AS isRead,
+				IFNULL(mem.id_member, 0) AS id_member
 			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}messages AS m ON (m.ID_MSG = b.ID_LAST_MSG)
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = m.ID_MEMBER)" . (!$user_info['is_guest'] ? "
-				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = $ID_MEMBER)" : '') . "
-			WHERE " . (empty($modSettings['countChildPosts']) ? "b.ID_PARENT IN (" . implode(',', $theboards) . ")" : "childLevel > 0") . "
+				LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
+				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)" : '') . "
+			WHERE " . (empty($modSettings['countChildPosts']) ? "b.id_parent IN (" . implode(',', $theboards) . ")" : "child_level > 0") . "
 				AND $user_info[query_see_board]", __FILE__, __LINE__);
 		$parent_map = array();
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// We've got a child of a child, then... possibly.
-			if (!in_array($row['ID_PARENT'], $theboards))
+			if (!in_array($row['id_parent'], $theboards))
 			{
-				if (!isset($parent_map[$row['ID_PARENT']]))
+				if (!isset($parent_map[$row['id_parent']]))
 					continue;
 
-				$parent_map[$row['ID_PARENT']][0]['posts'] += $row['numPosts'];
-				$parent_map[$row['ID_PARENT']][0]['topics'] += $row['numTopics'];
-				$parent_map[$row['ID_PARENT']][1]['posts'] += $row['numPosts'];
-				$parent_map[$row['ID_PARENT']][1]['topics'] += $row['numTopics'];
-				$parent_map[$row['ID_BOARD']] = $parent_map[$row['ID_PARENT']];
+				$parent_map[$row['id_parent']][0]['posts'] += $row['num_posts'];
+				$parent_map[$row['id_parent']][0]['topics'] += $row['num_topics'];
+				$parent_map[$row['id_parent']][1]['posts'] += $row['num_posts'];
+				$parent_map[$row['id_parent']][1]['topics'] += $row['num_topics'];
+				$parent_map[$row['id_board']] = $parent_map[$row['id_parent']];
 
 				continue;
 			}
 
-			if ($context['boards'][$row['ID_PARENT']]['last_post']['timestamp'] < forum_time(true, $row['posterTime']))
+			if ($context['boards'][$row['id_parent']]['last_post']['timestamp'] < forum_time(true, $row['poster_time']))
 			{
 				// Make sure the subject isn't too long.
 				censorText($row['subject']);
 				$short_subject = shorten_subject($row['subject'], 24);
 
-				$context['boards'][$row['ID_PARENT']]['last_post'] = array(
-					'id' => $row['ID_MSG'],
-					'time' => $row['posterTime'] > 0 ? timeformat($row['posterTime']) : $txt[470],
-					'timestamp' => forum_time(true, $row['posterTime']),
+				$context['boards'][$row['id_parent']]['last_post'] = array(
+					'id' => $row['id_msg'],
+					'time' => $row['poster_time'] > 0 ? timeformat($row['poster_time']) : $txt[470],
+					'timestamp' => forum_time(true, $row['poster_time']),
 					'subject' => $short_subject,
 					'member' => array(
-						'username' => $row['posterName'] != '' ? $row['posterName'] : $txt[470],
-						'name' => $row['realName'],
-						'id' => $row['ID_MEMBER'],
-						'href' => !empty($row['ID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] : '',
-						'link' => $row['posterName'] != '' ? (!empty($row['ID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>' : $row['realName']) : $txt[470],
+						'username' => $row['poster_name'] != '' ? $row['poster_name'] : $txt[470],
+						'name' => $row['real_name'],
+						'id' => $row['id_member'],
+						'href' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+						'link' => $row['poster_name'] != '' ? (!empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : $row['real_name']) : $txt[470],
 					),
 					'start' => 'new',
-					'topic' => $row['ID_TOPIC'],
-					'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.new' . (empty($row['isRead']) ? ';boardseen' : '') . '#new'
+					'topic' => $row['id_topic'],
+					'href' => $scripturl . '?topic=' . $row['id_topic'] . '.new' . (empty($row['isRead']) ? ';boardseen' : '') . '#new'
 				);
-				$context['boards'][$row['ID_PARENT']]['last_post']['link'] = $row['subject'] != '' ? '<a href="' . $context['boards'][$row['ID_PARENT']]['last_post']['href'] . '" title="' . $row['subject'] . '">' . $short_subject . '</a>' : $txt[470];
+				$context['boards'][$row['id_parent']]['last_post']['link'] = $row['subject'] != '' ? '<a href="' . $context['boards'][$row['id_parent']]['last_post']['href'] . '" title="' . $row['subject'] . '">' . $short_subject . '</a>' : $txt[470];
 			}
-			$context['boards'][$row['ID_PARENT']]['children'][$row['ID_BOARD']] = array(
-				'id' => $row['ID_BOARD'],
+			$context['boards'][$row['id_parent']]['children'][$row['id_board']] = array(
+				'id' => $row['id_board'],
 				'name' => $row['name'],
 				'description' => $row['description'],
-				'new' => empty($row['isRead']) && $row['posterName'] != '',
-				'topics' => $row['numTopics'],
-				'posts' => $row['numPosts'],
-				'unapproved_topics' => $row['unapprovedTopics'],
-				'unapproved_posts' => $row['unapprovedPosts'] - $row['unapprovedTopics'],
-				'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row['ID_BOARD'], $user_info['mod_cache']['ap'])),
-				'href' => $scripturl . '?board=' . $row['ID_BOARD'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>'
+				'new' => empty($row['isRead']) && $row['poster_name'] != '',
+				'topics' => $row['num_topics'],
+				'posts' => $row['num_posts'],
+				'unapproved_topics' => $row['unapproved_topics'],
+				'unapproved_posts' => $row['unapproved_posts'] - $row['unapproved_topics'],
+				'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row['id_board'], $user_info['mod_cache']['ap'])),
+				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>'
 			);
-			$context['boards'][$row['ID_PARENT']]['link_children'][] = '<a href="' . $scripturl . '?board=' . $row['ID_BOARD'] . '.0">' . $row['name'] . '</a>';
-			$context['boards'][$row['ID_PARENT']]['children_new'] |= empty($row['isRead']) && $row['posterName'] != '';
+			$context['boards'][$row['id_parent']]['link_children'][] = '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>';
+			$context['boards'][$row['id_parent']]['children_new'] |= empty($row['isRead']) && $row['poster_name'] != '';
 
 			if (!empty($modSettings['countChildPosts']))
 			{
-				$context['boards'][$row['ID_PARENT']]['posts'] += $row['numPosts'];
-				$context['boards'][$row['ID_PARENT']]['topics'] += $row['numTopics'];
+				$context['boards'][$row['id_parent']]['posts'] += $row['num_posts'];
+				$context['boards'][$row['id_parent']]['topics'] += $row['num_topics'];
 
-				$parent_map[$row['ID_BOARD']] = array(&$context['boards'][$row['ID_PARENT']], &$context['boards'][$row['ID_PARENT']]['children'][$row['ID_BOARD']]);
+				$parent_map[$row['id_board']] = array(&$context['boards'][$row['id_parent']], &$context['boards'][$row['id_parent']]['children'][$row['id_board']]);
 			}
 		}
 	}
@@ -330,42 +332,42 @@ function MessageIndex()
 		$context['view_members_list'] = array();
 		$context['view_num_hidden'] = 0;
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT
-				lo.ID_MEMBER, lo.logTime, mem.realName, mem.memberName, mem.showOnline,
-				mg.onlineColor, mg.ID_GROUP, mg.groupName
+				lo.id_member, lo.log_time, mem.real_name, mem.member_name, mem.show_online,
+				mg.online_color, mg.id_group, mg.group_name
 			FROM {$db_prefix}log_online AS lo
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.ID_MEMBER = lo.ID_MEMBER)
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
 			WHERE INSTR(lo.url, 's:5:\"board\";i:$board;') OR lo.session = '" . ($user_info['is_guest'] ? 'ip' . $user_info['ip'] : session_id()) . "'", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if (empty($row['ID_MEMBER']))
+			if (empty($row['id_member']))
 				continue;
 
-			if (!empty($row['onlineColor']))
-				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '" style="color: ' . $row['onlineColor'] . ';">' . $row['realName'] . '</a>';
+			if (!empty($row['online_color']))
+				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" style="color: ' . $row['online_color'] . ';">' . $row['real_name'] . '</a>';
 			else
-				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>';
+				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
 
-			$is_buddy = in_array($row['ID_MEMBER'], $user_info['buddies']);
+			$is_buddy = in_array($row['id_member'], $user_info['buddies']);
 			if ($is_buddy)
 				$link = '<b>' . $link . '</b>';
 
-			if (!empty($row['showOnline']) || allowedTo('moderate_forum'))
-				$context['view_members_list'][$row['logTime'] . $row['memberName']] = empty($row['showOnline']) ? '<i>' . $link . '</i>' : $link;
-			$context['view_members'][$row['logTime'] . $row['memberName']] = array(
-				'id' => $row['ID_MEMBER'],
-				'username' => $row['memberName'],
-				'name' => $row['realName'],
-				'group' => $row['ID_GROUP'],
-				'href' => $scripturl . '?action=profile;u=' . $row['ID_MEMBER'],
+			if (!empty($row['show_online']) || allowedTo('moderate_forum'))
+				$context['view_members_list'][$row['log_time'] . $row['member_name']] = empty($row['show_online']) ? '<i>' . $link . '</i>' : $link;
+			$context['view_members'][$row['log_time'] . $row['member_name']] = array(
+				'id' => $row['id_member'],
+				'username' => $row['member_name'],
+				'name' => $row['real_name'],
+				'group' => $row['id_group'],
+				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 				'link' => $link,
 				'is_buddy' => $is_buddy,
-				'hidden' => empty($row['showOnline']),
+				'hidden' => empty($row['show_online']),
 			);
 
-			if (empty($row['showOnline']))
+			if (empty($row['show_online']))
 				$context['view_num_hidden']++;
 		}
 		$context['view_num_guests'] = $smfFunc['db_num_rows']($request) - count($context['view_members']);
@@ -379,19 +381,19 @@ function MessageIndex()
 	// Default sort methods.
 	$sort_methods = array(
 		'subject' => 'mf.subject',
-		'starter' => 'IFNULL(memf.realName, mf.posterName)',
-		'last_poster' => 'IFNULL(meml.realName, ml.posterName)',
-		'replies' => 't.numReplies',
-		'views' => 't.numViews',
-		'first_post' => 't.ID_TOPIC',
-		'last_post' => 't.ID_LAST_MSG'
+		'starter' => 'IFNULL(memf.real_name, mf.poster_name)',
+		'last_poster' => 'IFNULL(meml.real_name, ml.poster_name)',
+		'replies' => 't.num_replies',
+		'views' => 't.num_views',
+		'first_post' => 't.id_topic',
+		'last_post' => 't.id_last_msg'
 	);
 
 	// They didn't pick one, default to by last post descending.
 	if (!isset($_REQUEST['sort']) || !isset($sort_methods[$_REQUEST['sort']]))
 	{
 		$context['sort_by'] = 'last_post';
-		$_REQUEST['sort'] = 'ID_LAST_MSG';
+		$_REQUEST['sort'] = 'id_last_msg';
 		$ascending = isset($_REQUEST['asc']);
 	}
 	// Otherwise default to ascending.
@@ -429,92 +431,92 @@ function MessageIndex()
 	$pre_query = $start > 0;
 	if ($pre_query)
 	{
-		$request = $smfFunc['db_query']("
-			SELECT t.ID_TOPIC
+		$request = $smfFunc['db_query']('', "
+			SELECT t.id_topic
 			FROM ({$db_prefix}topics AS t" . ($context['sort_by'] === 'last_poster' ? ", {$db_prefix}messages AS ml" : (in_array($context['sort_by'], array('starter', 'subject')) ? ", {$db_prefix}messages AS mf" : '')) . ')' . ($context['sort_by'] === 'starter' ? "
-				LEFT JOIN {$db_prefix}members AS memf ON (memf.ID_MEMBER = mf.ID_MEMBER)" : '') . ($context['sort_by'] === 'last_poster' ? "
-				LEFT JOIN {$db_prefix}members AS meml ON (meml.ID_MEMBER = ml.ID_MEMBER)" : '') . "
-			WHERE t.ID_BOARD = $board
+				LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)" : '') . ($context['sort_by'] === 'last_poster' ? "
+				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)" : '') . "
+			WHERE t.id_board = $board
 				" . ($context['can_approve_posts'] ? '' : ' AND t.approved = 1') . "
 				" . ($context['sort_by'] === 'last_poster' ? "
-				AND ml.ID_MSG = t.ID_LAST_MSG" : (in_array($context['sort_by'], array('starter', 'subject')) ? "
-				AND mf.ID_MSG = t.ID_FIRST_MSG" : '')) . "
-			ORDER BY " . (!empty($modSettings['enableStickyTopics']) ? 'isSticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
+				AND ml.id_msg = t.id_last_msg" : (in_array($context['sort_by'], array('starter', 'subject')) ? "
+				AND mf.id_msg = t.id_first_msg" : '')) . "
+			ORDER BY " . (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
 			LIMIT $start, $maxindex", __FILE__, __LINE__);
 		$topic_ids = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$topic_ids[] = $row['ID_TOPIC'];
+			$topic_ids[] = $row['id_topic'];
 	}
 
 	// Grab the appropriate topic information...
 	if (!$pre_query || !empty($topic_ids))
 	{
-		$result = $smfFunc['db_query']("
+		$result = $smfFunc['db_query']('', "
 			SELECT
-				t.ID_TOPIC, t.numReplies, t.locked, t.numViews, t.isSticky, t.ID_POLL,
-				" . ($user_info['is_guest'] ? '0' : 'IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1') . " AS new_from,
-				t.ID_LAST_MSG, t.approved, t.unapprovedPosts, ml.posterTime AS lastPosterTime,
-				ml.ID_MSG_MODIFIED, ml.subject AS lastSubject, ml.icon AS lastIcon,
-				ml.posterName AS lastMemberName, ml.ID_MEMBER AS lastID_MEMBER,
-				IFNULL(meml.realName, ml.posterName) AS lastDisplayName, t.ID_FIRST_MSG,
-				mf.posterTime AS firstPosterTime, mf.subject AS firstSubject, mf.icon AS firstIcon,
-				mf.posterName AS firstMemberName, mf.ID_MEMBER AS firstID_MEMBER,
-				IFNULL(memf.realName, mf.posterName) AS firstDisplayName,LEFT(ml.body, 384) AS lastBody,
-				LEFT(mf.body, 384) AS firstBody, ml.smileysEnabled AS lastSmileys, mf.smileysEnabled AS firstSmileys
-			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ml, {$db_prefix}messages AS mf)
-				LEFT JOIN {$db_prefix}members AS meml ON (meml.ID_MEMBER = ml.ID_MEMBER)
-				LEFT JOIN {$db_prefix}members AS memf ON (memf.ID_MEMBER = mf.ID_MEMBER)" . ($user_info['is_guest'] ? '' : "
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = $ID_MEMBER)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.ID_BOARD = $board AND lmr.ID_MEMBER = $ID_MEMBER)"). "
-			WHERE " . ($pre_query ? 't.ID_TOPIC IN (' . implode(', ', $topic_ids) . ')' : "t.ID_BOARD = $board") . "
+				t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll,
+				" . ($user_info['is_guest'] ? '0' : 'IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1') . " AS new_from,
+				t.id_last_msg, t.approved, t.unapproved_posts, ml.poster_time AS last_poster_time,
+				ml.id_msg_modified, ml.subject AS last_subject, ml.icon AS last_icon,
+				ml.poster_name AS last_member_name, ml.id_member AS last_id_member,
+				IFNULL(meml.real_name, ml.poster_name) AS last_display_name, t.id_first_msg,
+				mf.poster_time AS first_poster_time, mf.subject AS first_subject, mf.icon AS first_icon,
+				mf.poster_name AS first_member_name, mf.id_member AS first_id_member,
+				IFNULL(memf.real_name, mf.poster_name) AS first_display_name, LEFT(ml.body, 384) AS last_body,
+				LEFT(mf.body, 384) AS first_body, ml.smileys_enabled AS last_smileys, mf.smileys_enabled AS first_smileys
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
+				INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)
+				LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)" . ($user_info['is_guest'] ? '' : "
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = $board AND lmr.id_member = $id_member)"). "
+			WHERE " . ($pre_query ? 't.id_topic IN (' . implode(', ', $topic_ids) . ')' : "t.id_board = $board") . "
 				" . ($context['can_approve_posts'] ? '' : ' AND t.approved = 1') . "
-				AND ml.ID_MSG = t.ID_LAST_MSG
-				AND mf.ID_MSG = t.ID_FIRST_MSG
-			ORDER BY " . ($pre_query ? "FIND_IN_SET(t.ID_TOPIC, '" . implode(',', $topic_ids) . "')" : (!empty($modSettings['enableStickyTopics']) ? 'isSticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC')) . "
+			ORDER BY " . ($pre_query ? "FIND_IN_SET(t.id_topic, '" . implode(',', $topic_ids) . "')" : (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC')) . "
 			LIMIT " . ($pre_query ? '' : "$start, ") . "$maxindex", __FILE__, __LINE__);
 
 		// Begin 'printing' the message index for current board.
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
-			if ($row['ID_POLL'] > 0 && $modSettings['pollMode'] == '0')
+			if ($row['id_poll'] > 0 && $modSettings['pollMode'] == '0')
 				continue;
 
 			if (!$pre_query)
-				$topic_ids[] = $row['ID_TOPIC'];
+				$topic_ids[] = $row['id_topic'];
 
 			// Limit them to 128 characters - do this FIRST because it's a lot of wasted censoring otherwise.
-			$row['firstBody'] = strip_tags(strtr(parse_bbc($row['firstBody'], $row['firstSmileys'], $row['ID_FIRST_MSG']), array('<br />' => '&#10;')));
-			if ($smfFunc['strlen']($row['firstBody']) > 128)
-				$row['firstBody'] = $smfFunc['substr']($row['firstBody'], 0, 128) . '...';
-			$row['lastBody'] = strip_tags(strtr(parse_bbc($row['lastBody'], $row['lastSmileys'], $row['ID_LAST_MSG']), array('<br />' => '&#10;')));
-			if ($smfFunc['strlen']($row['lastBody']) > 128)
-				$row['lastBody'] = $smfFunc['substr']($row['lastBody'], 0, 128) . '...';
+			$row['first_body'] = strip_tags(strtr(parse_bbc($row['first_body'], $row['first_smileys'], $row['id_first_msg']), array('<br />' => '&#10;')));
+			if ($smfFunc['strlen']($row['first_body']) > 128)
+				$row['first_body'] = $smfFunc['substr']($row['first_body'], 0, 128) . '...';
+			$row['last_body'] = strip_tags(strtr(parse_bbc($row['last_body'], $row['last_smileys'], $row['id_last_msg']), array('<br />' => '&#10;')));
+			if ($smfFunc['strlen']($row['last_body']) > 128)
+				$row['last_body'] = $smfFunc['substr']($row['last_body'], 0, 128) . '...';
 
 			// Censor the subject and message preview.
-			censorText($row['firstSubject']);
-			censorText($row['firstBody']);
+			censorText($row['first_subject']);
+			censorText($row['first_body']);
 
 			// Don't censor them twice!
-			if ($row['ID_FIRST_MSG'] == $row['ID_LAST_MSG'])
+			if ($row['id_first_msg'] == $row['id_last_msg'])
 			{
-				$row['lastSubject'] = $row['firstSubject'];
-				$row['lastBody'] = $row['firstBody'];
+				$row['last_subject'] = $row['first_subject'];
+				$row['last_body'] = $row['first_body'];
 			}
 			else
 			{
-				censorText($row['lastSubject']);
-				censorText($row['lastBody']);
+				censorText($row['last_subject']);
+				censorText($row['last_body']);
 			}
 
 			// Decide how many pages the topic should have.
-			$topic_length = $row['numReplies'] + 1;
+			$topic_length = $row['num_replies'] + 1;
 			if ($topic_length > $modSettings['defaultMaxMessages'])
 			{
 				$tmppages = array();
 				$tmpa = 1;
 				for ($tmpb = 0; $tmpb < $topic_length; $tmpb += $modSettings['defaultMaxMessages'])
 				{
-					$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.' . $tmpb . '">' . $tmpa . '</a>';
+					$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . $tmpb . '">' . $tmpa . '</a>';
 					$tmpa++;
 				}
 				// Show links to all the pages?
@@ -525,7 +527,7 @@ function MessageIndex()
 					$pages = '&#171; ' . $tmppages[0] . ' ' . $tmppages[1] . ' ... ' . $tmppages[count($tmppages) - 2] . ' ' . $tmppages[count($tmppages) - 1];
 
 				if (!empty($modSettings['enableAllMessages']) && $topic_length < $modSettings['enableAllMessages'])
-					$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0;all">' . $txt['all'] . '</a>';
+					$pages .= ' &nbsp;<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0;all">' . $txt['all'] . '</a>';
 				$pages .= ' &#187;';
 			}
 			else
@@ -534,79 +536,79 @@ function MessageIndex()
 			// We need to check the topic icons exist...
 			if (empty($modSettings['messageIconChecks_disable']))
 			{
-				if (!isset($context['icon_sources'][$row['firstIcon']]))
-					$context['icon_sources'][$row['firstIcon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['firstIcon'] . '.gif') ? 'images_url' : 'default_images_url';
-				if (!isset($context['icon_sources'][$row['lastIcon']]))
-					$context['icon_sources'][$row['lastIcon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['lastIcon'] . '.gif') ? 'images_url' : 'default_images_url';
+				if (!isset($context['icon_sources'][$row['first_icon']]))
+					$context['icon_sources'][$row['first_icon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['first_icon'] . '.gif') ? 'images_url' : 'default_images_url';
+				if (!isset($context['icon_sources'][$row['last_icon']]))
+					$context['icon_sources'][$row['last_icon']] = file_exists($settings['theme_dir'] . '/images/post/' . $row['last_icon'] . '.gif') ? 'images_url' : 'default_images_url';
 			}
 			else
 			{
-				if (!isset($context['icon_sources'][$row['firstIcon']]))
-					$context['icon_sources'][$row['firstIcon']] = 'images_url';
-				if (!isset($context['icon_sources'][$row['lastIcon']]))
-					$context['icon_sources'][$row['lastIcon']] = 'images_url';
+				if (!isset($context['icon_sources'][$row['first_icon']]))
+					$context['icon_sources'][$row['first_icon']] = 'images_url';
+				if (!isset($context['icon_sources'][$row['last_icon']]))
+					$context['icon_sources'][$row['last_icon']] = 'images_url';
 			}
 
 			// 'Print' the topic info.
-			$context['topics'][$row['ID_TOPIC']] = array(
-				'id' => $row['ID_TOPIC'],
+			$context['topics'][$row['id_topic']] = array(
+				'id' => $row['id_topic'],
 				'first_post' => array(
-					'id' => $row['ID_FIRST_MSG'],
+					'id' => $row['id_first_msg'],
 					'member' => array(
-						'username' => $row['firstMemberName'],
-						'name' => $row['firstDisplayName'],
-						'id' => $row['firstID_MEMBER'],
-						'href' => !empty($row['firstID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['firstID_MEMBER'] : '',
-						'link' => !empty($row['firstID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['firstID_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $row['firstDisplayName'] . '">' . $row['firstDisplayName'] . '</a>' : $row['firstDisplayName']
+						'username' => $row['first_member_name'],
+						'name' => $row['first_display_name'],
+						'id' => $row['first_id_member'],
+						'href' => !empty($row['first_id_member']) ? $scripturl . '?action=profile;u=' . $row['first_id_member'] : '',
+						'link' => !empty($row['first_id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['first_id_member'] . '" title="' . $txt['profile_of'] . ' ' . $row['first_display_name'] . '">' . $row['first_display_name'] . '</a>' : $row['first_display_name']
 					),
-					'time' => timeformat($row['firstPosterTime']),
-					'timestamp' => forum_time(true, $row['firstPosterTime']),
-					'subject' => $row['firstSubject'],
-					'preview' => $row['firstBody'],
-					'icon' => $row['firstIcon'],
-					'icon_url' => $settings[$context['icon_sources'][$row['firstIcon']]] . '/post/' . $row['firstIcon'] . '.gif',
-					'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0',
-					'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . '.0">' . $row['firstSubject'] . '</a>'
+					'time' => timeformat($row['first_poster_time']),
+					'timestamp' => forum_time(true, $row['first_poster_time']),
+					'subject' => $row['first_subject'],
+					'preview' => $row['first_body'],
+					'icon' => $row['first_icon'],
+					'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.gif',
+					'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
+					'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['first_subject'] . '</a>'
 				),
 				'last_post' => array(
-					'id' => $row['ID_LAST_MSG'],
+					'id' => $row['id_last_msg'],
 					'member' => array(
-						'username' => $row['lastMemberName'],
-						'name' => $row['lastDisplayName'],
-						'id' => $row['lastID_MEMBER'],
-						'href' => !empty($row['lastID_MEMBER']) ? $scripturl . '?action=profile;u=' . $row['lastID_MEMBER'] : '',
-						'link' => !empty($row['lastID_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['lastID_MEMBER'] . '">' . $row['lastDisplayName'] . '</a>' : $row['lastDisplayName']
+						'username' => $row['last_member_name'],
+						'name' => $row['last_display_name'],
+						'id' => $row['last_id_member'],
+						'href' => !empty($row['last_id_member']) ? $scripturl . '?action=profile;u=' . $row['last_id_member'] : '',
+						'link' => !empty($row['last_id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['last_id_member'] . '">' . $row['last_display_name'] . '</a>' : $row['last_display_name']
 					),
-					'time' => timeformat($row['lastPosterTime']),
-					'timestamp' => forum_time(true, $row['lastPosterTime']),
-					'subject' => $row['lastSubject'],
-					'preview' => $row['lastBody'],
-					'icon' => $row['lastIcon'],
-					'icon_url' => $settings[$context['icon_sources'][$row['lastIcon']]] . '/post/' . $row['lastIcon'] . '.gif',
-					'href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . '#new',
-					'link' => '<a href="' . $scripturl . '?topic=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '.0' : '.msg' . $row['ID_LAST_MSG']) . '#new">' . $row['lastSubject'] . '</a>'
+					'time' => timeformat($row['last_poster_time']),
+					'timestamp' => forum_time(true, $row['last_poster_time']),
+					'subject' => $row['last_subject'],
+					'preview' => $row['last_body'],
+					'icon' => $row['last_icon'],
+					'icon_url' => $settings[$context['icon_sources'][$row['last_icon']]] . '/post/' . $row['last_icon'] . '.gif',
+					'href' => $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . '#new',
+					'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . ($row['num_replies'] == 0 ? '.0' : '.msg' . $row['id_last_msg']) . '#new">' . $row['last_subject'] . '</a>'
 				),
-				'is_sticky' => !empty($modSettings['enableStickyTopics']) && !empty($row['isSticky']),
+				'is_sticky' => !empty($modSettings['enableStickyTopics']) && !empty($row['is_sticky']),
 				'is_locked' => !empty($row['locked']),
-				'is_poll' => $modSettings['pollMode'] == '1' && $row['ID_POLL'] > 0,
-				'is_hot' => $row['numReplies'] >= $modSettings['hotTopicPosts'],
-				'is_very_hot' => $row['numReplies'] >= $modSettings['hotTopicVeryPosts'],
+				'is_poll' => $modSettings['pollMode'] == '1' && $row['id_poll'] > 0,
+				'is_hot' => $row['num_replies'] >= $modSettings['hotTopicPosts'],
+				'is_very_hot' => $row['num_replies'] >= $modSettings['hotTopicVeryPosts'],
 				'is_posted_in' => false,
-				'icon' => $row['firstIcon'],
-				'icon_url' => $settings[$context['icon_sources'][$row['firstIcon']]] . '/post/' . $row['firstIcon'] . '.gif',
-				'subject' => $row['firstSubject'],
-				'new' => $row['new_from'] <= $row['ID_MSG_MODIFIED'],
+				'icon' => $row['first_icon'],
+				'icon_url' => $settings[$context['icon_sources'][$row['first_icon']]] . '/post/' . $row['first_icon'] . '.gif',
+				'subject' => $row['first_subject'],
+				'new' => $row['new_from'] <= $row['id_msg_modified'],
 				'new_from' => $row['new_from'],
 				'newtime' => $row['new_from'],
-				'new_href' => $scripturl . '?topic=' . $row['ID_TOPIC'] . '.msg' . $row['new_from'] . '#new',
+				'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new',
 				'pages' => $pages,
-				'replies' => $row['numReplies'],
-				'views' => $row['numViews'],
+				'replies' => $row['num_replies'],
+				'views' => $row['num_views'],
 				'approved' => $row['approved'],
-				'unapproved_posts' => $row['unapprovedPosts'],
+				'unapproved_posts' => $row['unapproved_posts'],
 			);
 
-			determineTopicClass($context['topics'][$row['ID_TOPIC']]);
+			determineTopicClass($context['topics'][$row['id_topic']]);
 		}
 		$smfFunc['db_free_result']($result);
 
@@ -616,17 +618,17 @@ function MessageIndex()
 
 		if (!empty($modSettings['enableParticipation']) && !$user_info['is_guest'] && !empty($topic_ids))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT ID_TOPIC
+			$result = $smfFunc['db_query']('', "
+				SELECT id_topic
 				FROM {$db_prefix}messages
-				WHERE ID_TOPIC IN (" . implode(', ', $topic_ids) . ")
-					AND ID_MEMBER = $ID_MEMBER
-				GROUP BY ID_TOPIC
+				WHERE id_topic IN (" . implode(', ', $topic_ids) . ")
+					AND id_member = $id_member
+				GROUP BY id_topic
 				LIMIT " . count($topic_ids), __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				$context['topics'][$row['ID_TOPIC']]['is_posted_in'] = true;
-				$context['topics'][$row['ID_TOPIC']]['class'] = 'my_' . $context['topics'][$row['ID_TOPIC']]['class'];
+				$context['topics'][$row['id_topic']]['is_posted_in'] = true;
+				$context['topics'][$row['id_topic']]['class'] = 'my_' . $context['topics'][$row['id_topic']]['class'];
 			}
 			$smfFunc['db_free_result']($result);
 		}
@@ -652,7 +654,7 @@ function MessageIndex()
 		// Set permissions for all the topics.
 		foreach ($context['topics'] as $t => $topic)
 		{
-			$started = $topic['first_post']['member']['id'] == $ID_MEMBER;
+			$started = $topic['first_post']['member']['id'] == $id_member;
 			$context['topics'][$t]['quick_mod'] = array(
 				'lock' => allowedTo('lock_any') || ($started && allowedTo('lock_own')),
 				'sticky' => allowedTo('make_sticky') && !empty($modSettings['enableStickyTopics']),
@@ -669,11 +671,11 @@ function MessageIndex()
 		// Find the boards/cateogories they can move their topic to.
 		if ($options['display_quick_mod'] == 1 && $context['can_move'] && !empty($context['topics']))
 		{
-			$request = $smfFunc['db_query']("
-				SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, b.childLevel
+			$request = $smfFunc['db_query']('', "
+				SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
 				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}categories AS c ON (c.ID_CAT = b.ID_CAT)
-				WHERE b.ID_BOARD != $board
+					LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+				WHERE b.id_board != $board
 					AND $user_info[query_see_board]", __FILE__, __LINE__);
 
 			// You can only see just this one board?
@@ -684,18 +686,18 @@ function MessageIndex()
 				$context['move_to_boards'] = array();
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 				{
-					if (!isset($context['move_to_boards'][$row['ID_CAT']]))
-						$context['move_to_boards'][$row['ID_CAT']] = array(
-							'id' => $row['ID_CAT'],
-							'name' => $row['catName'],
+					if (!isset($context['move_to_boards'][$row['id_cat']]))
+						$context['move_to_boards'][$row['id_cat']] = array(
+							'id' => $row['id_cat'],
+							'name' => $row['cat_name'],
 							'boards' => array(),
 						);
 
-					$context['move_to_boards'][$row['ID_CAT']]['boards'][] = array(
-						'id' => $row['ID_BOARD'],
-						'name' => $row['boardName'],
-						'child_level' => $row['childLevel'],
-						'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['ID_BOARD'],
+					$context['move_to_boards'][$row['id_cat']]['boards'][] = array(
+						'id' => $row['id_board'],
+						'name' => $row['board_name'],
+						'child_level' => $row['child_level'],
+						'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board'],
 					);
 				}
 			}
@@ -710,7 +712,7 @@ function MessageIndex()
 // Allows for moderation from the message index.
 function QuickModeration()
 {
-	global $db_prefix, $sourcedir, $board, $ID_MEMBER, $modSettings, $sourcedir, $smfFunc;
+	global $db_prefix, $sourcedir, $board, $id_member, $modSettings, $sourcedir, $smfFunc;
 
 	// Check the session = get or post.
 	checkSession('request');
@@ -776,7 +778,7 @@ function QuickModeration()
 	if (!empty($boards_can['approve_posts']))
 		$possibleActions[] = 'approve';
 
-	// Two methods: $_REQUEST['actions'] (ID_TOPIC => action), and $_REQUEST['topics'] and $_REQUEST['qaction'].
+	// Two methods: $_REQUEST['actions'] (id_topic => action), and $_REQUEST['topics'] and $_REQUEST['qaction'].
 	// (if action is 'move', $_REQUEST['move_to'] or $_REQUEST['move_tos'][$topic] is used.)
 	if (!empty($_REQUEST['topics']))
 	{
@@ -816,35 +818,35 @@ function QuickModeration()
 	if (!empty($_REQUEST['actions']))
 	{
 		// Find all topics...
-		$request = $smfFunc['db_query']("
-			SELECT ID_TOPIC, ID_MEMBER_STARTED, ID_BOARD, locked, approved, unapprovedPosts
+		$request = $smfFunc['db_query']('', "
+			SELECT id_topic, id_member_started, id_board, locked, approved, unapproved_posts
 			FROM {$db_prefix}topics
-			WHERE ID_TOPIC IN (" . implode(', ', array_keys($_REQUEST['actions'])) . ")
+			WHERE id_topic IN (" . implode(', ', array_keys($_REQUEST['actions'])) . ")
 			LIMIT " . count($_REQUEST['actions']), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (!empty($board))
 			{
-				if ($row['ID_BOARD'] != $board || (!$row['approved'] && !allowedTo('approve_posts')))
-					unset($_REQUEST['actions'][$row['ID_TOPIC']]);
+				if ($row['id_board'] != $board || (!$row['approved'] && !allowedTo('approve_posts')))
+					unset($_REQUEST['actions'][$row['id_topic']]);
 			}
 			else
 			{
 				// Don't allow them to act on unapproved posts they can't see...
-				if (!$row['approved'] && !in_array(0, $boards_can['approve_posts']) && !in_array($row['ID_BOARD'], $boards_can['approve_posts']))
-					unset($_REQUEST['actions'][$row['ID_TOPIC']]);
+				if (!$row['approved'] && !in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))
+					unset($_REQUEST['actions'][$row['id_topic']]);
 				// Goodness, this is fun.  We need to validate the action.
-				elseif ($_REQUEST['actions'][$row['ID_TOPIC']] == 'sticky' && !in_array(0, $boards_can['make_sticky']) && !in_array($row['ID_BOARD'], $boards_can['make_sticky']))
-					unset($_REQUEST['actions'][$row['ID_TOPIC']]);
-				elseif ($_REQUEST['actions'][$row['ID_TOPIC']] == 'move' && !in_array(0, $boards_can['move_any']) && !in_array($row['ID_BOARD'], $boards_can['move_any']) && ($row['ID_MEMBER_STARTED'] != $ID_MEMBER || (!in_array(0, $boards_can['move_own']) && !in_array($row['ID_BOARD'], $boards_can['move_own']))))
-					unset($_REQUEST['actions'][$row['ID_TOPIC']]);
-				elseif ($_REQUEST['actions'][$row['ID_TOPIC']] == 'remove' && !in_array(0, $boards_can['remove_any']) && !in_array($row['ID_BOARD'], $boards_can['remove_any']) && ($row['ID_MEMBER_STARTED'] != $ID_MEMBER || (!in_array(0, $boards_can['remove_own']) && !in_array($row['ID_BOARD'], $boards_can['remove_own']))))
-					unset($_REQUEST['actions'][$row['ID_TOPIC']]);
-				elseif ($_REQUEST['actions'][$row['ID_TOPIC']] == 'lock' && !in_array(0, $boards_can['lock_any']) && !in_array($row['ID_BOARD'], $boards_can['lock_any']) && ($row['ID_MEMBER_STARTED'] != $ID_MEMBER || $locked == 1 || (!in_array(0, $boards_can['lock_own']) && !in_array($row['ID_BOARD'], $boards_can['lock_own']))))
-					unset($_REQUEST['actions'][$row['ID_TOPIC']]);
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'sticky' && !in_array(0, $boards_can['make_sticky']) && !in_array($row['id_board'], $boards_can['make_sticky']))
+					unset($_REQUEST['actions'][$row['id_topic']]);
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'move' && !in_array(0, $boards_can['move_any']) && !in_array($row['id_board'], $boards_can['move_any']) && ($row['id_member_started'] != $id_member || (!in_array(0, $boards_can['move_own']) && !in_array($row['id_board'], $boards_can['move_own']))))
+					unset($_REQUEST['actions'][$row['id_topic']]);
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'remove' && !in_array(0, $boards_can['remove_any']) && !in_array($row['id_board'], $boards_can['remove_any']) && ($row['id_member_started'] != $id_member || (!in_array(0, $boards_can['remove_own']) && !in_array($row['id_board'], $boards_can['remove_own']))))
+					unset($_REQUEST['actions'][$row['id_topic']]);
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'lock' && !in_array(0, $boards_can['lock_any']) && !in_array($row['id_board'], $boards_can['lock_any']) && ($row['id_member_started'] != $id_member || $locked == 1 || (!in_array(0, $boards_can['lock_own']) && !in_array($row['id_board'], $boards_can['lock_own']))))
+					unset($_REQUEST['actions'][$row['id_topic']]);
 				// If the topic is approved then you need permission to approve the posts within.
-				elseif ($_REQUEST['actions'][$row['ID_TOPIC']] == 'approve' && (!$row['unapprovedPosts'] || (!in_array(0, $boards_can['approve_posts']) && !in_array($row['ID_BOARD'], $boards_can['approve_posts']))))
-					unset($_REQUEST['actions'][$row['ID_TOPIC']]);
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'approve' && (!$row['unapproved_posts'] || (!in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))))
+					unset($_REQUEST['actions'][$row['id_topic']]);
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -892,21 +894,21 @@ function QuickModeration()
 	// Do all the stickies...
 	if (!empty($stickyCache))
 	{
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}topics
-			SET isSticky = IF(isSticky = 1, 0, 1)
-			WHERE ID_TOPIC IN (" . implode(', ', $stickyCache) . ")
+			SET is_sticky = IF(is_sticky = 1, 0, 1)
+			WHERE id_topic IN (" . implode(', ', $stickyCache) . ")
 			LIMIT " . count($stickyCache), __FILE__, __LINE__);
 			
 		// Get the board IDs
-		$request = $smfFunc['db_query']("
-			SELECT ID_TOPIC, ID_BOARD
+		$request = $smfFunc['db_query']('', "
+			SELECT id_topic, id_board
 			FROM {$db_prefix}topics
-			WHERE ID_TOPIC IN (" . implode(', ', $stickyCache) . ")
+			WHERE id_topic IN (" . implode(', ', $stickyCache) . ")
 			LIMIT " . count($stickyCache), __FILE__, __LINE__);
 		$stickyCacheBoards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$stickyCacheBoards[$row['ID_TOPIC']] = $row['ID_BOARD'];
+			$stickyCacheBoards[$row['id_topic']] = $row['id_board'];
 		$smfFunc['db_free_result']($request);
 	}
 
@@ -914,17 +916,17 @@ function QuickModeration()
 	if (!empty($moveCache[0]))
 	{
 		// I know - I just KNOW you're trying to beat the system.  Too bad for you... we CHECK :P.
-		$request = $smfFunc['db_query']("
-			SELECT ID_TOPIC, ID_BOARD
+		$request = $smfFunc['db_query']('', "
+			SELECT id_topic, id_board
 			FROM {$db_prefix}topics
-			WHERE ID_TOPIC IN (" . implode(', ', $moveCache[0]) . ")" . (!empty($board) && !allowedTo('move_any') ? "
-				AND ID_MEMBER_STARTED = $ID_MEMBER" : '') . "
+			WHERE id_topic IN (" . implode(', ', $moveCache[0]) . ")" . (!empty($board) && !allowedTo('move_any') ? "
+				AND id_member_started = $id_member" : '') . "
 			LIMIT " . count($moveCache[0]), __FILE__, __LINE__);
 		$moveTos = array();
 		$moveCache2 = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$to = $moveCache[1][$row['ID_TOPIC']];
+			$to = $moveCache[1][$row['id_topic']];
 
 			if (empty($to))
 				continue;
@@ -932,10 +934,10 @@ function QuickModeration()
 			if (!isset($moveTos[$to]))
 				$moveTos[$to] = array();
 
-			$moveTos[$to][] = $row['ID_TOPIC'];
+			$moveTos[$to][] = $row['id_topic'];
 
 			// For reporting...
-			$moveCache2[] = array($row['ID_TOPIC'], $row['ID_BOARD'], $to);
+			$moveCache2[] = array($row['id_topic'], $row['id_board'], $to);
 		}
 		$smfFunc['db_free_result']($request);
 
@@ -954,11 +956,11 @@ function QuickModeration()
 		// They can only delete their own topics. (we wouldn't be here if they couldn't do that..)
 		if (!empty($board) && !allowedTo('remove_any'))
 		{
-			$result = $smfFunc['db_query']("
-				SELECT ID_TOPIC, ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT id_topic, id_board
 				FROM {$db_prefix}topics
-				WHERE ID_TOPIC IN (" . implode(', ', $removeCache) . ")
-					AND ID_MEMBER_STARTED = $ID_MEMBER
+				WHERE id_topic IN (" . implode(', ', $removeCache) . ")
+					AND id_member_started = $id_member
 				LIMIT " . count($removeCache), __FILE__, __LINE__);
 			$removeCache = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -972,7 +974,7 @@ function QuickModeration()
 			// Gotta send the notifications *first*!
 			foreach ($removeCache as $topic)
 			{
-				logAction('remove', array('topic' => $topic['ID_TOPIC'], 'board' => $topic['ID_BOARD']));
+				logAction('remove', array('topic' => $topic['id_topic'], 'board' => $topic['id_board']));
 				sendNotifications($topic, 'remove');
 			}
 
@@ -990,35 +992,35 @@ function QuickModeration()
 		if (!empty($board) && !allowedTo('lock_any'))
 		{
 			// Make sure they started the topic AND it isn't already locked by someone with higher priv's.
-			$result = $smfFunc['db_query']("
-				SELECT ID_TOPIC, locked, ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT id_topic, locked, id_board
 				FROM {$db_prefix}topics
-				WHERE ID_TOPIC IN (" . implode(', ', $lockCache) . ")
-					AND ID_MEMBER_STARTED = $ID_MEMBER
+				WHERE id_topic IN (" . implode(', ', $lockCache) . ")
+					AND id_member_started = $id_member
 					AND locked IN (2, 0)
 				LIMIT " . count($lockCache), __FILE__, __LINE__);
 			$lockCache = array();
 			$lockCacheBoards = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				$lockCache[] = $row['ID_TOPIC'];
-				$lockCacheBoards[$row['ID_TOPIC']] = $row['ID_BOARD'];
-				$lockStatus[$row['ID_TOPIC']] = empty($row['locked']);
+				$lockCache[] = $row['id_topic'];
+				$lockCacheBoards[$row['id_topic']] = $row['id_board'];
+				$lockStatus[$row['id_topic']] = empty($row['locked']);
 			}
 			$smfFunc['db_free_result']($result);
 		}
 		else
 		{
-			$result = $smfFunc['db_query']("
-				SELECT ID_TOPIC, locked, ID_BOARD
+			$result = $smfFunc['db_query']('', "
+				SELECT id_topic, locked, id_board
 				FROM {$db_prefix}topics
-				WHERE ID_TOPIC IN (" . implode(', ', $lockCache) . ")
+				WHERE id_topic IN (" . implode(', ', $lockCache) . ")
 				LIMIT " . count($lockCache), __FILE__, __LINE__);
 			$lockCacheBoards = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
-				$lockStatus[$row['ID_TOPIC']] = empty($row['locked']);
-				$lockCacheBoards[$row['ID_TOPIC']] = $row['ID_BOARD'];
+				$lockStatus[$row['id_topic']] = empty($row['locked']);
+				$lockCacheBoards[$row['id_topic']] = $row['id_board'];
 			}
 			$smfFunc['db_free_result']($result);
 		}
@@ -1027,10 +1029,10 @@ function QuickModeration()
 		if (!empty($lockCache))
 		{
 			// Alternate the locked value.
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}topics
 				SET locked = IF(locked = 0, " . (allowedTo('lock_any') ? '1' : '2') . ", 0)
-				WHERE ID_TOPIC IN (" . implode(', ', $lockCache) . ")
+				WHERE id_topic IN (" . implode(', ', $lockCache) . ")
 				LIMIT " . count($lockCache), __FILE__, __LINE__);
 		}
 	}
@@ -1048,11 +1050,11 @@ function QuickModeration()
 		$setString = '';
 		foreach ($markCache as $topic)
 			$setString .= "
-				($modSettings[maxMsgID], $ID_MEMBER, $topic),";
+				($modSettings[maxMsgID], $id_member, $topic),";
 
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			REPLACE INTO {$db_prefix}log_topics
-				(ID_MSG, ID_MEMBER, ID_TOPIC)
+				(id_msg, id_member, id_topic)
 			VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
 	}
 

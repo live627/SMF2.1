@@ -17,21 +17,21 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	uid AS ID_MEMBER, SUBSTRING(uname, 1, 80) AS memberName,
-	user_regdate AS dateRegistered, SUBSTRING(pass, 1, 64) AS passwd,
-	SUBSTRING(IF(name = '', uname, name), 1, 255) AS realName, posts,
-	SUBSTRING(email, 1, 255) AS emailAddress,
-	SUBSTRING(url, 1, 255) AS websiteTitle,
-	SUBSTRING(url, 1, 255) AS websiteUrl, IF(rank = 7, 1, 0) AS ID_GROUP,
-	SUBSTRING(user_icq, 1, 255) AS ICQ, SUBSTRING(user_aim, 1, 16) AS AIM,
-	SUBSTRING(user_yim, 1, 32) AS YIM, SUBSTRING(user_msnm, 1, 255) AS MSN,
+	uid AS id_member, SUBSTRING(uname, 1, 80) AS member_name,
+	user_regdate AS date_registered, SUBSTRING(pass, 1, 64) AS passwd,
+	SUBSTRING(IF(name = '', uname, name), 1, 255) AS real_name, posts,
+	SUBSTRING(email, 1, 255) AS email_address,
+	SUBSTRING(url, 1, 255) AS website_title,
+	SUBSTRING(url, 1, 255) AS website_url, IF(rank = 7, 1, 0) AS id_group,
+	SUBSTRING(user_icq, 1, 255) AS icq, SUBSTRING(user_aim, 1, 16) AS aim,
+	SUBSTRING(user_yim, 1, 32) AS yim, SUBSTRING(user_msnm, 1, 255) AS msn,
 	SUBSTRING(user_sig, 1, 65534) AS signature,
-	user_viewemail = 0 AS hideEmail, timezone_offset AS timeOffset,
-	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS messageLabels,
-	'' AS personalText, '' AS location, '' AS timeFormat, '' AS avatar,
-	'' AS usertitle, '' AS memberIP, '' AS secretQuestion, '' AS secretAnswer,
-	'' AS validation_code, '' AS additionalGroups, '' AS smileySet,
-	'' AS passwordSalt
+	user_viewemail = 0 AS hide_email, timezone_offset AS time_offset,
+	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
+	'' AS personal_text, '' AS location, '' AS time_format, '' AS avatar,
+	'' AS usertitle, '' AS member_ip, '' AS secret_question, '' AS secret_answer,
+	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
+	'' AS password_salt
 FROM {$from_prefix}users;
 ---*
 
@@ -43,8 +43,8 @@ TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
 SELECT 
-	cat_id AS ID_CAT, SUBSTRING(cat_title, 1, 255) AS name,
-	cat_order AS catOrder
+	cat_id AS id_cat, SUBSTRING(cat_title, 1, 255) AS name,
+	cat_order AS cat_order
 FROM {$from_prefix}bb_categories;
 ---*
 
@@ -55,15 +55,15 @@ FROM {$from_prefix}bb_categories;
 TRUNCATE {$to_prefix}boards;
 
 DELETE FROM {$to_prefix}board_permissions
-WHERE ID_BOARD != 0;
+WHERE id_board != 0;
 
 ---* {$to_prefix}boards
 SELECT
-	forum_id AS ID_BOARD, cat_id AS ID_CAT,
+	forum_id AS id_board, cat_id AS id_cat,
 	SUBSTRING(forum_name, 1, 255) AS name,
-	SUBSTRING(forum_desc, 1, 65534) AS description, forum_topics AS numTopics,
-	IF(forum_access = 1, '0,2', IF(forum_access = 3, '', '0,-1,2')) AS memberGroups,
-	forum_posts AS numPosts
+	SUBSTRING(forum_desc, 1, 65534) AS description, forum_topics AS num_topics,
+	IF(forum_access = 1, '0,2', IF(forum_access = 3, '', '0,-1,2')) AS member_groups,
+	forum_posts AS num_posts
 FROM {$from_prefix}bb_forums;
 ---*
 
@@ -78,21 +78,21 @@ TRUNCATE {$to_prefix}log_mark_read;
 
 ---* {$to_prefix}topics
 SELECT
-	t.topic_id AS ID_TOPIC, t.topic_sticky AS isSticky, t.forum_id AS ID_BOARD,
-	t.topic_last_post_id AS ID_LAST_MSG, t.topic_poster AS ID_MEMBER_STARTED,
-	t.topic_replies AS numReplies, t.topic_views AS numViews,
-	t.topic_status AS locked, MIN(p.post_id) AS ID_FIRST_MSG
+	t.topic_id AS id_topic, t.topic_sticky AS is_sticky, t.forum_id AS id_board,
+	t.topic_last_post_id AS id_last_msg, t.topic_poster AS id_member_started,
+	t.topic_replies AS num_replies, t.topic_views AS num_views,
+	t.topic_status AS locked, MIN(p.post_id) AS id_first_msg
 FROM ({$from_prefix}bb_topics AS t, {$from_prefix}bb_posts AS p)
 WHERE p.topic_id = t.topic_id
 GROUP BY t.topic_id
-HAVING ID_FIRST_MSG != 0
-	AND ID_LAST_MSG != 0;
+HAVING id_first_msg != 0
+	AND id_last_msg != 0;
 ---*
 
----* {$to_prefix}topics (update ID_TOPIC)
-SELECT t.ID_TOPIC, p.uid AS ID_MEMBER_UPDATED
+---* {$to_prefix}topics (update id_topic)
+SELECT t.id_topic, p.uid AS id_member_updated
 FROM ({$to_prefix}topics AS t, {$from_prefix}bb_posts AS p)
-WHERE p.post_id = t.ID_LAST_MSG;
+WHERE p.post_id = t.id_last_msg;
 ---*
 
 /******************************************************************************/
@@ -104,14 +104,14 @@ TRUNCATE {$to_prefix}attachments;
 
 ---* {$to_prefix}messages 200
 SELECT
-	p.post_id AS ID_MSG, p.topic_id AS ID_TOPIC, p.post_time AS posterTime,
-	p.uid AS ID_MEMBER, SUBSTRING(p.subject, 1, 255) AS subject,
-	SUBSTRING(u.email, 1, 255) AS posterEmail,
-	SUBSTRING(IFNULL(u.name, 'Guest'), 1, 255) AS posterName,
-	SUBSTRING(p.poster_ip, 1, 255) AS posterIP,
-	IF(p.nosmiley, 0, 1) AS smileysEnabled, p.forum_id AS ID_BOARD,
+	p.post_id AS id_msg, p.topic_id AS id_topic, p.post_time AS poster_time,
+	p.uid AS id_member, SUBSTRING(p.subject, 1, 255) AS subject,
+	SUBSTRING(u.email, 1, 255) AS poster_email,
+	SUBSTRING(IFNULL(u.name, 'Guest'), 1, 255) AS poster_name,
+	SUBSTRING(p.poster_ip, 1, 255) AS poster_ip,
+	IF(p.nosmiley, 0, 1) AS smileys_enabled, p.forum_id AS id_board,
 	SUBSTRING(REPLACE(pt.post_text, '<br>', '<br />'), 1, 65534) AS body,
-	'' AS modifiedName, 'xx' AS icon
+	'' AS modified_name, 'xx' AS icon
 FROM ({$from_prefix}bb_posts AS p, {$from_prefix}bb_posts_text AS pt)
 	LEFT JOIN {$from_prefix}users AS u ON (u.uid = p.uid)
 WHERE pt.post_id = p.post_id;
@@ -133,8 +133,8 @@ TRUNCATE {$to_prefix}personal_messages;
 
 ---* {$to_prefix}personal_messages
 SELECT
-	p.msg_id AS ID_PM, p.from_userid AS ID_MEMBER_FROM, p.msg_time AS msgtime,
-	SUBSTRING(IFNULL(u.name, 'Guest'), 1, 255) AS fromName,
+	p.msg_id AS id_pm, p.from_userid AS id_member_from, p.msg_time AS msgtime,
+	SUBSTRING(IFNULL(u.name, 'Guest'), 1, 255) AS from_name,
 	SUBSTRING(p.subject, 1, 255) AS subject,
 	SUBSTRING(REPLACE(p.msg_text, '<br>', '<br />'), 1, 65534) AS body
 FROM {$from_prefix}priv_msgs AS p
@@ -149,7 +149,7 @@ TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
 SELECT
-	msg_id AS ID_PM, to_userid AS ID_MEMBER, read_msg AS is_read,
+	msg_id AS id_pm, to_userid AS id_member, read_msg AS is_read,
 	'' AS labels
 FROM {$from_prefix}priv_msgs;
 ---*
@@ -161,6 +161,6 @@ FROM {$from_prefix}priv_msgs;
 TRUNCATE {$to_prefix}moderators;
 
 ---* {$to_prefix}moderators
-SELECT user_id AS ID_MEMBER, forum_id AS ID_BOARD
+SELECT user_id AS id_member, forum_id AS id_board
 FROM {$from_prefix}bb_forum_mods;
 ---*

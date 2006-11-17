@@ -28,14 +28,14 @@ if (!defined('SMF'))
 	void smf_db_initiate()
 		- Sets up the $smfFunc variables and values to use.
 
-	resource db_query(string database_query, string __FILE__, int __LINE__)
+	resource db_query(string identifier, string database_query, string __FILE__, int __LINE__)
 		- should always be used in place of mysql_query.
 		- executes a query string, and implements needed error checking.
 		- always use the magic constants __FILE__ and __LINE__.
 		- returns a MySQL result resource, to be freed with mysql_free_result.
 
 	int db_affected_rows()
-		- should always be used in place of db_insert_id.
+		- should always be used in place of mysql_affected_rows.
 		- returns the number of affected rows by the most recently executed
 		  query.
 		- handles the current connection so the forum with other connections
@@ -83,14 +83,18 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_fetch_assoc' => 'mysql_fetch_assoc',
 			'db_fetch_row' => 'mysql_fetch_row',
 			'db_free_result' => 'mysql_free_result',
+			'db_insert' => 'db_insert',
 			'db_num_rows' => 'mysql_num_rows',
 			'db_data_seek' => 'mysql_data_seek',
 			'db_num_fields' => 'mysql_num_fields',
 			'db_escape_string' => 'mysql_escape_string',
 			'db_server_info' => 'mysql_get_server_info',
 			'db_tablename' => 'mysql_tablename',
-			'db_affected_rows' => 'mysql_affected_rows',
+			'db_affected_rows' => 'db_affected_rows',
 			'db_error' => 'mysql_error',
+			'db_select_db' => 'mysql_select_db',
+			'db_list_tables' => 'mysql_list_tables',
+			'db_title' => 'MySQL',
 		);
 
 	if (!empty($db_options['persist']))
@@ -117,7 +121,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 
 	// This makes it possible to have SMF automatically change the sql_mode and autocommit if needed.
 	if (isset($mysql_set_mode) && $mysql_set_mode === true)
-		db_query("SET sql_mode = '', AUTOCOMMIT = 1", false, false, $connection);
+		db_query('', "SET sql_mode = '', AUTOCOMMIT = 1", false, false, $connection);
 
 	return $connection;
 }
@@ -129,7 +133,7 @@ function db_fix_prefix (&$db_prefix, $db_name)
 }
 
 // Do a query.  Takes care of errors too.
-function db_query($db_string, $file, $line, $connection = null)
+function db_query($identifier, $db_string, $file, $line, $connection = null)
 {
 	global $db_cache, $db_count, $db_connection, $db_show_debug, $modSettings;
 
@@ -141,7 +145,7 @@ function db_query($db_string, $file, $line, $connection = null)
 		'~\s+~s', 
 		'~/\*!40001 SQL_NO_CACHE \*/~', 
 		'~/\*!40000 USE INDEX \([A-Za-z\_]+?\) \*/~',
-		'~/\*!40100 ON DUPLICATE KEY UPDATE ID_MSG = \d+ \*/~',
+		'~/\*!40100 ON DUPLICATE KEY UPDATE id_msg = \d+ \*/~',
 	);
 	static $allowed_comments_to = array(
 		' ', 
@@ -222,14 +226,14 @@ function db_query($db_string, $file, $line, $connection = null)
 		elseif (preg_match('~\([^)]*?select~s', $clean) != 0)
 			$fail = true;
 
-		if (!empty($fail))
+		if (!empty($fail) && function_exists('log_error'))
 		{
 			log_error('Hacking attempt...' . "\n" . $db_string, $file, $line);
 			fatal_error('Hacking attempt...', false);
 		}
 	}
 
-	$ret = mysql_query($db_string, $connection);
+	$ret = @mysql_query($db_string, $connection);
 	if ($ret === false && $file !== false)
 		$ret = db_error($db_string, $file, $line, $connection);
 
@@ -280,11 +284,11 @@ function db_error($db_string, $file, $line, $connection = null)
 	//    2013: Lost connection to server during query.
 
 	// Log the error.
-	if ($query_errno != 1213 && $query_errno != 1205)
+	if ($query_errno != 1213 && $query_errno != 1205 && function_exists('log_error'))
 		log_error($txt[1001] . ': ' . $query_error, 'database', $file, $line);
 
 	// Database error auto fixing ;).
-	if (!isset($modSettings['autoFixDatabase']) || $modSettings['autoFixDatabase'] == '1')
+	if (function_exists('cache_get_data') && (!isset($modSettings['autoFixDatabase']) || $modSettings['autoFixDatabase'] == '1'))
 	{
 		// Force caching on, just for the error checking.
 		$old_cache = @$modSettings['cache_enable'];
@@ -342,7 +346,7 @@ function db_error($db_string, $file, $line, $connection = null)
 
 			// Attempt to find and repair the broken table.
 			foreach ($fix_tables as $table)
-				db_query("
+				db_query('', "
 					REPAIR TABLE $table", false, false);
 
 			// And send off an email!
@@ -351,7 +355,7 @@ function db_error($db_string, $file, $line, $connection = null)
 			$modSettings['cache_enable'] = $old_cache;
 
 			// Try the query again...?
-			$ret = db_query($db_string, false, false);
+			$ret = db_query('', $db_string, false, false);
 			if ($ret !== false)
 				return $ret;
 		}
@@ -389,7 +393,7 @@ function db_error($db_string, $file, $line, $connection = null)
 				// Try a deadlock more than once more.
 				for ($n = 0; $n < 4; $n++)
 				{
-					$ret = db_query($db_string, false, false);
+					$ret = db_query('', $db_string, false, false);
 
 					$new_errno = mysql_errno($db_connection);
 					if ($ret !== false || in_array($new_errno, array(1205, 1213)))
@@ -451,6 +455,26 @@ function db_fatal_error($loadavg = false)
 
 	// Since we use "or db_fatal_error();" this is needed...
 	return false;
+}
+
+// Insert some data...
+function db_insert($method = 'replace', $table, $columns, $data, $keys)
+{
+	if (!is_array($data[0]))
+		$data = array($data);
+
+	$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
+	if (empty($data))
+		return;
+
+	foreach ($data as $key => $entry)
+		$data[$key] = '(' . implode(', ', $entry) . ')';
+
+	db_query('', "
+		$queryTitle INTO $table
+			(" . implode(', ', $columns) . ")
+		VALUES
+			" . implode(', ', $data), __FILE__, __LINE__);
 }
 
 ?>

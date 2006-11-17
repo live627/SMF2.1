@@ -85,38 +85,38 @@ function Memberlist()
 
 	// Set up the columns...
 	$context['columns'] = array(
-		'isOnline' => array(
+		'is_online' => array(
 			'label' => $txt['online8'],
 			'width' => '20'
 		),
-		'realName' => array(
+		'real_name' => array(
 			'label' => $txt['username']
 		),
-		'emailAddress' => array(
+		'email_address' => array(
 			'label' => $txt['email'],
 			'width' => '25'
 		),
-		'websiteUrl' => array(
+		'website_url' => array(
 			'label' => $txt['website'],
 			'width' => '25'
 		),
-		'ICQ' => array(
+		'icq' => array(
 			'label' => $txt[513],
 			'width' => '25'
 		),
-		'AIM' => array(
+		'aim' => array(
 			'label' => $txt[603],
 			'width' => '25'
 		),
-		'YIM' => array(
+		'yim' => array(
 			'label' => $txt[604],
 			'width' => '25'
 		),
-		'MSN' => array(
-			'label' => $txt['MSN'],
+		'msn' => array(
+			'label' => $txt['msn'],
 			'width' => '25'
 		),
-		'ID_GROUP' => array(
+		'id_group' => array(
 			'label' => $txt['position']
 		),
 		'registered' => array(
@@ -154,9 +154,9 @@ function MLAll()
 
 	// Only use caching if:
 	// 1. there are at least 2k members,
-	// 2. the default sorting method (realName) is being used,
+	// 2. the default sorting method (real_name) is being used,
 	// 3. the page shown is high enough to make a DB filesort unprofitable.
-	$use_cache = $modSettings['totalMembers'] > 2000 && (!isset($_REQUEST['sort']) || $_REQUEST['sort'] === 'realName') && isset($_REQUEST['start']) && $_REQUEST['start'] > $cache_step_size;
+	$use_cache = $modSettings['totalMembers'] > 2000 && (!isset($_REQUEST['sort']) || $_REQUEST['sort'] === 'real_name') && isset($_REQUEST['start']) && $_REQUEST['start'] > $cache_step_size;
 
 	if ($use_cache)
 	{
@@ -170,11 +170,11 @@ function MLAll()
 		// Only update the cache if something changed or no cache existed yet.
 		if (empty($memberlist_cache) || empty($modSettings['memberlist_updated']) || $memberlist_cache['last_update'] < $modSettings['memberlist_updated'])
 		{
-			$request = $smfFunc['db_query']("
-				SELECT realName
+			$request = $smfFunc['db_query']('', "
+				SELECT real_name
 				FROM {$db_prefix}members
 				WHERE is_activated = 1
-				ORDER BY realName", __FILE__, __LINE__);
+				ORDER BY real_name", __FILE__, __LINE__);
 
 			$memberlist_cache = array(
 				'last_update' => time(),
@@ -201,7 +201,7 @@ function MLAll()
 	// Without cache we need an extra query to get the amount of members.
 	else
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members
 			WHERE is_activated = 1", __FILE__, __LINE__);
@@ -209,9 +209,9 @@ function MLAll()
 		$smfFunc['db_free_result']($request);
 	}
 
-	// Set defaults for sort (realName) and start. (0)
+	// Set defaults for sort (real_name) and start. (0)
 	if (!isset($_REQUEST['sort']) || !isset($context['columns'][$_REQUEST['sort']]))
-		$_REQUEST['sort'] = 'realName';
+		$_REQUEST['sort'] = 'real_name';
 
 	if (!is_numeric($_REQUEST['start']))
 	{
@@ -220,10 +220,10 @@ function MLAll()
 
 		$_REQUEST['start'] = $match[0];
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members
-			WHERE LOWER(SUBSTRING(realName, 1, 1)) < '$_REQUEST[start]'
+			WHERE LOWER(SUBSTRING(real_name, 1, 1)) < '$_REQUEST[start]'
 				AND is_activated = 1", __FILE__, __LINE__);
 		list ($_REQUEST['start']) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -264,45 +264,45 @@ function MLAll()
 
 	// List out the different sorting methods...
 	$sort_methods = array(
-		'isOnline' => array(
-			'down' => '(ISNULL(lo.logTime)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.showOnline' : '') . ') ASC, realName ASC',
-			'up' => '(ISNULL(lo.logTime)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.showOnline' : '') . ') DESC, realName DESC'
+		'is_online' => array(
+			'down' => '(ISNULL(lo.log_time)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') ASC, real_name ASC',
+			'up' => '(ISNULL(lo.log_time)' . (!allowedTo('moderate_forum') ? ' OR NOT mem.show_online' : '') . ') DESC, real_name DESC'
 		),
-		'realName' => array(
-			'down' => 'mem.realName ASC',
-			'up' => 'mem.realName DESC'
+		'real_name' => array(
+			'down' => 'mem.real_name ASC',
+			'up' => 'mem.real_name DESC'
 		),
-		'emailAddress' => array(
-			'down' => (allowedTo('moderate_forum') || empty($modSettings['allow_hideEmail'])) ? 'mem.emailAddress ASC' : 'mem.hideEmail ASC, mem.emailAddress ASC',
-			'up' => (allowedTo('moderate_forum') || empty($modSettings['allow_hideEmail'])) ? 'mem.emailAddress DESC' : 'mem.hideEmail DESC, mem.emailAddress DESC'
+		'email_address' => array(
+			'down' => (allowedTo('moderate_forum') || empty($modSettings['allow_hide_email'])) ? 'mem.email_address ASC' : 'mem.hide_email ASC, mem.email_address ASC',
+			'up' => (allowedTo('moderate_forum') || empty($modSettings['allow_hide_email'])) ? 'mem.email_address DESC' : 'mem.hide_email DESC, mem.email_address DESC'
 		),
-		'websiteUrl' => array(
+		'website_url' => array(
 			'down' => 'LENGTH(mem.websiteURL) > 0 DESC, ISNULL(mem.websiteURL) ASC, mem.websiteURL ASC',
 			'up' => 'LENGTH(mem.websiteURL) > 0 ASC, ISNULL(mem.websiteURL) DESC, mem.websiteURL DESC'
 		),
-		'ICQ' => array(
-			'down' => 'LENGTH(mem.ICQ) > 0 DESC, ISNULL(mem.ICQ) OR mem.ICQ = 0 ASC, mem.ICQ ASC',
-			'up' => 'LENGTH(mem.ICQ) > 0 ASC, ISNULL(mem.ICQ) OR mem.ICQ = 0 DESC, mem.ICQ DESC'
+		'icq' => array(
+			'down' => 'LENGTH(mem.icq) > 0 DESC, ISNULL(mem.icq) OR mem.icq = 0 ASC, mem.icq ASC',
+			'up' => 'LENGTH(mem.icq) > 0 ASC, ISNULL(mem.icq) OR mem.icq = 0 DESC, mem.icq DESC'
 		),
-		'AIM' => array(
-			'down' => 'LENGTH(mem.AIM) > 0 DESC, ISNULL(mem.AIM) ASC, mem.AIM ASC',
-			'up' => 'LENGTH(mem.AIM) > 0 ASC, ISNULL(mem.AIM) DESC, mem.AIM DESC'
+		'aim' => array(
+			'down' => 'LENGTH(mem.aim) > 0 DESC, ISNULL(mem.aim) ASC, mem.aim ASC',
+			'up' => 'LENGTH(mem.aim) > 0 ASC, ISNULL(mem.aim) DESC, mem.aim DESC'
 		),
-		'YIM' => array(
-			'down' => 'LENGTH(mem.YIM) > 0 DESC, ISNULL(mem.YIM) ASC, mem.YIM ASC',
-			'up' => 'LENGTH(mem.YIM) > 0 ASC, ISNULL(mem.YIM) DESC, mem.YIM DESC'
+		'yim' => array(
+			'down' => 'LENGTH(mem.yim) > 0 DESC, ISNULL(mem.yim) ASC, mem.yim ASC',
+			'up' => 'LENGTH(mem.yim) > 0 ASC, ISNULL(mem.yim) DESC, mem.yim DESC'
 		),
-		'MSN' => array(
-			'down' => 'LENGTH(mem.MSN) > 0 DESC, ISNULL(mem.MSN) ASC, mem.MSN ASC',
-			'up' => 'LENGTH(mem.MSN) > 0 ASC, ISNULL(mem.MSN) DESC, mem.MSN DESC'
+		'msn' => array(
+			'down' => 'LENGTH(mem.msn) > 0 DESC, ISNULL(mem.msn) ASC, mem.msn ASC',
+			'up' => 'LENGTH(mem.msn) > 0 ASC, ISNULL(mem.msn) DESC, mem.msn DESC'
 		),
 		'registered' => array(
-			'down' => 'mem.dateRegistered ASC',
-			'up' => 'mem.dateRegistered DESC'
+			'down' => 'mem.date_registered ASC',
+			'up' => 'mem.date_registered DESC'
 		),
-		'ID_GROUP' => array(
-			'down' => 'ISNULL(mg.groupName) ASC, mg.groupName ASC',
-			'up' => 'ISNULL(mg.groupName) DESC, mg.groupName DESC'
+		'id_group' => array(
+			'down' => 'ISNULL(mg.group_name) ASC, mg.group_name ASC',
+			'up' => 'ISNULL(mg.group_name) DESC, mg.group_name DESC'
 		),
 		'posts' => array(
 			'down' => 'mem.posts DESC',
@@ -313,31 +313,31 @@ function MLAll()
 	$limit = $_REQUEST['start'];
 
 	// Using cache allows to narrow down the list to be retrieved.
-	if ($use_cache && $_REQUEST['sort'] === 'realName' && !isset($_REQUEST['desc']))
+	if ($use_cache && $_REQUEST['sort'] === 'real_name' && !isset($_REQUEST['desc']))
 	{
 		$first_offset = $_REQUEST['start'] - ($_REQUEST['start'] % $cache_step_size);
 		$second_offset = ceil(($_REQUEST['start'] + $modSettings['defaultMaxMembers']) / $cache_step_size) * $cache_step_size;
-		$where = "mem.realName BETWEEN '" . addslashes($memberlist_cache['index'][$first_offset]) . "' AND '" . addslashes($memberlist_cache['index'][$second_offset]) . "'";
+		$where = "mem.real_name BETWEEN '" . addslashes($memberlist_cache['index'][$first_offset]) . "' AND '" . addslashes($memberlist_cache['index'][$second_offset]) . "'";
 		$limit -= $first_offset;
 	}
 
 	// Reverse sorting is a bit more complicated...
-	elseif ($use_cache && $_REQUEST['sort'] === 'realName')
+	elseif ($use_cache && $_REQUEST['sort'] === 'real_name')
 	{
 		$first_offset = floor(($memberlist_cache['num_members'] - $modSettings['defaultMaxMembers'] - $_REQUEST['start']) / $cache_step_size) * $cache_step_size;
 		if ($first_offset < 0)
 			$first_offset = 0;
 		$second_offset = ceil(($memberlist_cache['num_members'] - $_REQUEST['start']) / $cache_step_size) * $cache_step_size;
-		$where = "mem.realName BETWEEN '" . addslashes($memberlist_cache['index'][$first_offset]) . "' AND '" . addslashes($memberlist_cache['index'][$second_offset]) . "'";
+		$where = "mem.real_name BETWEEN '" . addslashes($memberlist_cache['index'][$first_offset]) . "' AND '" . addslashes($memberlist_cache['index'][$second_offset]) . "'";
 		$limit = $second_offset - ($memberlist_cache['num_members'] - $_REQUEST['start']) - ($second_offset > $memberlist_cache['num_members'] ? $cache_step_size - ($memberlist_cache['num_members'] % $cache_step_size) : 0);
 	}
 
 	// Select the members from the database.
-	$request = $smfFunc['db_query']("
-		SELECT mem.ID_MEMBER
-		FROM {$db_prefix}members AS mem" . ($_REQUEST['sort'] === 'isOnline' ? "
-			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.ID_MEMBER = mem.ID_MEMBER)" : '') . ($_REQUEST['sort'] === 'ID_GROUP' ? "
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))" : '') . "
+	$request = $smfFunc['db_query']('', "
+		SELECT mem.id_member
+		FROM {$db_prefix}members AS mem" . ($_REQUEST['sort'] === 'is_online' ? "
+			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)" : '') . ($_REQUEST['sort'] === 'id_group' ? "
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))" : '') . "
 		WHERE mem.is_activated = 1" . (empty($where) ? '' : "
 			AND $where") . "
 		ORDER BY " . $sort_methods[$_REQUEST['sort']][$context['sort_direction']] . "
@@ -346,7 +346,7 @@ function MLAll()
 	$smfFunc['db_free_result']($request);
 
 	// Add anchors at the start of each letter.
-	if ($_REQUEST['sort'] == 'realName')
+	if ($_REQUEST['sort'] == 'real_name')
 	{
 		$last_letter = '';
 		foreach ($context['members'] as $i => $dummy)
@@ -384,22 +384,22 @@ function MLSearch()
 
 		// Search for a name?
 		if (in_array('name', $_POST['fields']))
-			$fields = array('memberName', 'realName');
+			$fields = array('member_name', 'real_name');
 		else
 			$fields = array();
 		// Search for messengers...
 		if (in_array('messenger', $_POST['fields']) && (!$user_info['is_guest'] || empty($modSettings['guest_hideContacts'])))
-			$fields += array(3 => 'MSN', 'AIM', 'ICQ', 'YIM');
+			$fields += array(3 => 'msn', 'aim', 'icq', 'yim');
 		// Search for websites.
 		if (in_array('website', $_POST['fields']))
-			$fields += array(7 => 'websiteTitle', 'websiteUrl');
+			$fields += array(7 => 'website_title', 'website_url');
 		// Search for groups.
 		if (in_array('group', $_POST['fields']))
-			$fields += array(9 => 'IFNULL(groupName, \'\')');
+			$fields += array(9 => 'IFNULL(group_name, \'\')');
 		// Search for an email address?
 		if (in_array('email', $_POST['fields']))
 		{
-			$fields += array(2 => allowedTo('moderate_forum') ? 'emailAddress' : '(hideEmail = 0 AND emailAddress');
+			$fields += array(2 => allowedTo('moderate_forum') ? 'email_address' : '(hide_email = 0 AND email_address');
 			$condition = allowedTo('moderate_forum') ? '' : ')';
 		}
 		else
@@ -407,10 +407,10 @@ function MLSearch()
 
 		$query = $_POST['search'] == '' ? "= ''" : "LIKE '%" . strtr($_POST['search'], array('_' => '\\_', '%' => '\\%', '*' => '%')) . "%'";
 
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members AS mem
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
 				AND is_activated = 1", __FILE__, __LINE__);
 		list ($numResults) = $smfFunc['db_fetch_row']($request);
@@ -420,11 +420,11 @@ function MLSearch()
 
 		// Find the members from the database.
 		// !!!SLOW This query is slow.
-		$request = $smfFunc['db_query']("
-			SELECT mem.ID_MEMBER
+		$request = $smfFunc['db_query']('', "
+			SELECT mem.id_member
 			FROM {$db_prefix}members AS mem
-				LEFT JOIN {$db_prefix}log_online AS lo ON (lo.ID_MEMBER = mem.ID_MEMBER)
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.ID_GROUP = IF(mem.ID_GROUP = 0, mem.ID_POST_GROUP, mem.ID_GROUP))
+				LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
 				AND is_activated = 1
 			LIMIT $_REQUEST[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
@@ -449,7 +449,7 @@ function printMemberListRows($request)
 	global $context, $settings, $memberContext, $smfFunc;
 
 	// Get the most posts.
-	$result = $smfFunc['db_query']("
+	$result = $smfFunc['db_query']('', "
 		SELECT MAX(posts)
 		FROM {$db_prefix}members", __FILE__, __LINE__);
 	list ($MOST_POSTS) = $smfFunc['db_fetch_row']($result);
@@ -461,7 +461,7 @@ function printMemberListRows($request)
 
 	$members = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$members[] = $row['ID_MEMBER'];
+		$members[] = $row['id_member'];
 
 	// Load all the members for display.
 	loadMemberData($members);

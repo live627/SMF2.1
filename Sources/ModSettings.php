@@ -214,11 +214,11 @@ function ModifyBasicSettings()
 			array('check', 'userLanguage'),
 			array('check', 'allow_editDisplayName'),
 			array('check', 'allow_hideOnline'),
-			array('check', 'allow_hideEmail'),
+			array('check', 'allow_hide_email'),
 			array('check', 'guest_hideContacts'),
 			array('check', 'titlesEnable'),
 			array('check', 'enable_buddylist'),
-			array('text', 'default_personalText'),
+			array('text', 'default_personal_text'),
 		'',
 			// Stats, compression, cookies.... server type stuff.
 			array('text', 'time_format'),
@@ -364,8 +364,8 @@ function ModifySignatureSettings()
 		$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
 		$done = false;
 
-		$request = $smfFunc['db_query']("
-			SELECT MAX(ID_MEMBER)
+		$request = $smfFunc['db_query']('', "
+			SELECT MAX(id_member)
 			FROM {$db_prefix}members", __FILE__, __LINE__);
 		list ($context['max_member']) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -374,10 +374,10 @@ function ModifySignatureSettings()
 		{
 			$changes = array();
 
-			$request = $smfFunc['db_query']("
-				SELECT ID_MEMBER, signature
+			$request = $smfFunc['db_query']('', "
+				SELECT id_member, signature
 				FROM {$db_prefix}members
-				WHERE ID_MEMBER BETWEEN $_GET[step] AND $_GET[step] + 49", __FILE__, __LINE__);
+				WHERE id_member BETWEEN $_GET[step] AND $_GET[step] + 49", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// Apply all the rules we can realistically do.
@@ -491,7 +491,7 @@ function ModifySignatureSettings()
 
 				$sig = strtr($sig, array("\n" => '<br />'));
 				if ($sig != $row['signature'])
-					$changes[$row['ID_MEMBER']] = addslashes($sig);
+					$changes[$row['id_member']] = addslashes($sig);
 			}
 			if ($smfFunc['db_num_rows']($request) == 0)
 				$done = true;
@@ -501,10 +501,10 @@ function ModifySignatureSettings()
 			if (!empty($changes))
 			{
 				foreach ($changes as $id => $sig)
-					$smfFunc['db_query']("
+					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}members
 						SET signature = '$sig'
-						WHERE ID_MEMBER = $id
+						WHERE id_member = $id
 						LIMIT 1", __FILE__, __LINE__);
 			}
 
@@ -634,7 +634,7 @@ function ShowCustomProfiles()
 	$context['sub_template'] = 'show_custom_profile';
 
 	// Load all the fields.
-	$request = $smfFunc['db_query']("
+	$request = $smfFunc['db_query']('', "
 		SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, active
 		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
 	$context['profile_fields'] = array();
@@ -668,7 +668,7 @@ function EditCustomProfiles()
 
 	if ($context['fid'])
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
 				showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask
 			FROM {$db_prefix}custom_fields
@@ -799,7 +799,7 @@ function EditCustomProfiles()
 			$unique = false;
 			while ($unique == false)
 			{
-				$request = $smfFunc['db_query']("
+				$request = $smfFunc['db_query']('', "
 					SELECT ID_FIELD
 					FROM {$db_prefix}custom_fields
 					WHERE colName = '$colname'", __FILE__, __LINE__);
@@ -821,10 +821,10 @@ function EditCustomProfiles()
 				|| ($_POST['field_type'] == 'select' && $context['field']['type'] != 'select')
 				|| ($context['field']['type'] == 'check' && $_POST['field_type'] != 'check'))
 			{
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}themes
 					WHERE variable = '" . $context['field']['colname'] . "'
-						AND ID_MEMBER > 0", __FILE__, __LINE__);
+						AND id_member > 0", __FILE__, __LINE__);
 			}
 			// Otherwise - if the select is edited may need to adjust!
 			elseif ($_POST['field_type'] == 'select')
@@ -853,12 +853,12 @@ function EditCustomProfiles()
 				{
 					// Just been renamed?
 					if (!in_array($k, $takenKeys) && !empty($newOptions[$k]))
-						$smfFunc['db_query']("
+						$smfFunc['db_query']('', "
 							UPDATE {$db_prefix}themes
 							SET value = '" . $newOptions[$k] . "'
 							WHERE variable = '" . $context['field']['colname'] . "'
 								AND value = '$option'
-								AND ID_MEMBER > 0", __FILE__, __LINE__);
+								AND id_member > 0", __FILE__, __LINE__);
 				}
 			}
 			//!!! Maybe we should adjust based on new text length limits?
@@ -867,7 +867,7 @@ function EditCustomProfiles()
 		// Do the insertion/updates.
 		if ($context['fid'])
 		{
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}custom_fields
 				SET fieldName = '$_POST[field_name]', fieldDesc = '$_POST[field_desc]',
 					fieldType = '$_POST[field_type]', fieldLength = $fieldLength,
@@ -878,15 +878,15 @@ function EditCustomProfiles()
 
 			// Just clean up any old selects - these are a pain!
 			if ($_POST['field_type'] == 'select' && !empty($newOptions))
-				$smfFunc['db_query']("
+				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}themes
 					WHERE variable = '" . $context['field']['colname'] . "'
 						AND value NOT IN ('" . implode("', '", $newOptions) . "')
-						AND ID_MEMBER > 0", __FILE__, __LINE__);
+						AND id_member > 0", __FILE__, __LINE__);
 		}
 		else
 		{
-			$smfFunc['db_query']("
+			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}custom_fields
 					(colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
 					showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask)
@@ -900,12 +900,12 @@ function EditCustomProfiles()
 	elseif (isset($_POST['delete']) && $context['field']['colname'])
 	{
 		// Delete the user data first.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}themes
 			WHERE variable = '" . $context['field']['colname'] . "'
-				AND ID_MEMBER > 0", __FILE__, __LINE__);
+				AND id_member > 0", __FILE__, __LINE__);
 		// Finally - the field itself is gone!
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}custom_fields
 			WHERE ID_FIELD = $context[fid]
 			LIMIT 1", __FILE__, __LINE__);
@@ -914,7 +914,7 @@ function EditCustomProfiles()
 	// Rebuild display cache etc.
 	if (isset($_POST['delete']) || isset($_POST['save']))
 	{
-		$request = $smfFunc['db_query']("
+		$request = $smfFunc['db_query']('', "
 			SELECT colName, fieldName
 			FROM {$db_prefix}custom_fields
 			WHERE showDisplay = 1

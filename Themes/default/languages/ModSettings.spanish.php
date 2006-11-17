@@ -15,12 +15,12 @@ $txt['allow_guestAccess'] = 'Permitir a los visitantes navegar en el foro';
 $txt['userLanguage'] = 'Activar Idioma seleccionado por el usuario';
 $txt['allow_editDisplayName'] = '&iquest;Permitirle a los usuarios modificar su nombre?';
 $txt['allow_hideOnline'] = '&iquest;Permitirle a los usuarios NO administradores ocultarse?';
-$txt['allow_hideEmail'] = 'Permitirle a los usuarios esconder su email del p&uacute;blico (excepto a administradores)';
+$txt['allow_hide_email'] = 'Permitirle a los usuarios esconder su email del p&uacute;blico (excepto a administradores)';
 $txt['guest_hideContacts'] = 'No revelar detalles de contacto de los usuarios a los visitantes';
 $txt['titlesEnable'] = 'Activar T&iacute;tulos Personalizado';
 // Untranslated!
 $txt['enable_buddylist'] = 'Enable buddy lists';
-$txt['default_personalText'] = 'Texto Personal por defecto';
+$txt['default_personal_text'] = 'Texto Personal por defecto';
 $txt['number_format'] = 'Formato de n&uacute;meros por defecto';
 $txt['time_format'] = 'Formato de Tiempo por defecto';
 $txt['time_offset'] = 'Diferencia horaria global<div class="smalltext">(agregado a las opciones espec&iacute;ficas de los usuarios.)</div>';

@@ -342,7 +342,7 @@ $helptxt['max_pm_recipients'] = 'This option allows you to set the maximum amoun
 $helptxt['pm_posts_verification'] = 'This setting will force users to enter a code shown on a verification image each time they are sending a personal message. Only users with a post count below the number set will need to enter the code - this should help combat automated spamming scripts.';
 $helptxt['pm_posts_per_hour'] = 'This will limit the number of personal messages which may be sent by a user in a one hour period. This does not affect admins or moderators.';
 
-$helptxt['default_personalText'] = 'Sets the default text a user will have as their &quot;personal text.&quot;';
+$helptxt['default_personal_text'] = 'Sets the default text a user will have as their &quot;personal text.&quot;';
 
 $helptxt['modlog_enabled'] = 'Logs all moderation actions.';
 
@@ -392,7 +392,7 @@ $helptxt['coppaType'] = 'If age restrictions are enabled, then this setting will
 $helptxt['coppaPost'] = 'The contact boxes are required so that forms granting permission for underage registration can be sent to the forum administrator. These details will be shown to all new minors, and are required for parent/guardian approval. At the very least a postal address or fax number must be provided.';
 
 $helptxt['allow_hideOnline'] = 'With this option enabled all members will be able to hide their online status from other users (except administrators). If disabled only users who can moderate the forum can hide their presence. Note that disabling this option will not change any existing member\'s status - it just stops them from hiding themselves in the future.';
-$helptxt['allow_hideEmail'] = 'With this option enabled members can choose to hide their email address from other members. However, administrators can always see everyone\'s email addresses.';
+$helptxt['allow_hide_email'] = 'With this option enabled members can choose to hide their email address from other members. However, administrators can always see everyone\'s email addresses.';
 
 $helptxt['latest_support'] = 'This panel shows you some of the most common problems and questions on your server configuration. Don\'t worry, this information isn\'t logged or anything.<br /><br />If this stays as &quot;Retrieving support information...&quot;, your computer probably cannot connect to <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';
 $helptxt['latest_packages'] = 'Here you can see some of the most popular and some random packages or mods, with quick and easy installations.<br /><br />If this section doesn\'t show up, your computer probably cannot connect to <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.';

@@ -89,7 +89,7 @@ function template_ask()
 				<td>', $context['secret_question'], '</td>
 			</tr><tr class="windowbg2">
 				<td width="45%"><b>', $txt['pswd2'], ':</b> </td>
-				<td><input type="text" name="secretAnswer" size="22" /></td>
+				<td><input type="text" name="secret_answer" size="22" /></td>
 			</tr><tr class="windowbg2">
 				<td width="45%">
 					<b>', $txt['choose_pass'], ': </b><br />
