@@ -335,7 +335,7 @@ function template_verification_sound()
 		</style>
 	</head>
 	<body style="margin: 1ex;">
-		<div>';
+		<div class="popuptext" style="text-align: center;">';
 	if ($context['browser']['is_ie'])
 		echo '
 			<object classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95" type="audio/x-wav">
@@ -348,10 +348,11 @@ function template_verification_sound()
 				<a href="', $context['verificiation_sound_href'], ';format=.wav">', $context['verificiation_sound_href'], ';format=.wav</a>
 			</object>';
 	echo '
+			<br />
+			<a href="', $context['verificiation_sound_href'], ';sound">', $txt['visual_verification_sound_again'], '</a><br />
+			<a href="javascript:self.close();">', $txt['visual_verification_sound_close'], '</a><br />
+			<a href="', $context['verificiation_sound_href'], ';format=.wav">', $txt['visual_verification_sound_direct'], '</a>
 		</div>
-		<div align="center"><a href="', $context['verificiation_sound_href'], ';sound">', $txt['visual_verification_sound_again'], '</a></div>
-		<div align="center"><a href="javascript:self.close();">', $txt['visual_verification_sound_close'], '</a></div>
-		<div align="center"><a href="', $context['verificiation_sound_href'], ';format=.wav">', $txt['visual_verification_sound_direct'], '</a></div>
 	</body>
 </html>';
 }

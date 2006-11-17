@@ -24,9 +24,11 @@ function template_popup()
 		</style>
 	</head>
 	<body style="margin: 1ex;">
-		', $context['help_text'], '<br />
-		<br />
-		<div align="center"><a href="javascript:self.close();">', $txt[1006], '</a></div>
+		<div class="popuptext">
+			', $context['help_text'], '<br />
+			<br />
+			<div align="center"><a href="javascript:self.close();">', $txt[1006], '</a></div>
+		</div>
 	</body>
 </html>';
 }
