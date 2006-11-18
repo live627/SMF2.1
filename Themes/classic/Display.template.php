@@ -591,43 +591,41 @@ function template_main()
 	if ($context['can_reply'] && !empty($options['display_quick_reply']))
 	{
 		echo '
-			<a name="quickreply"></a>
-			<table border="0" cellspacing="1" cellpadding="3" class="bordercolor" width="100%" style="clear: both;">
-				<tr>
-					<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" border="0" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply_1'], '</a></td>
-				</tr>
-				<tr id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-					<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_2'], $context['is_locked'] ? '<br /><br /><b>' . $txt['quick_reply_warning'] . '</b>' : '', '</td>
-					<td class="windowbg" width="75%" align="center">
-						', $context['can_reply_approved'] ? '' : '<i>' . $txt['wait_for_approval'] . '</i>', '
-						<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" style="margin:0px;">
-							<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
-							<input type="hidden" name="subject" value="' . $context['response_prefix'] . $context['subject'] . '" />
-							<input type="hidden" name="icon" value="xx" />
-							<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
-							<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
-							<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
-							<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
-							<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
-							<input type="submit" name="post" value="' . $txt['post'] . '" accesskey="s" tabindex="2" />
-							<input type="submit" name="preview" value="' . $txt[507] . '" accesskey="p" tabindex="4" />';
+<a name="quickreply"></a>
+<table border="0" cellspacing="1" cellpadding="3" class="bordercolor" width="100%" style="clear: both;">
+	<tr>
+		<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" border="0" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply_1'], '</a></td>
+	</tr>
+	<tr id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
+		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_2'], $context['is_locked'] ? '<br /><br /><b>' . $txt['quick_reply_warning'] . '</b>' : '', '</td>
+		<td class="windowbg" width="75%" align="center">
+			', $context['can_reply_approved'] ? '' : '<i>' . $txt['wait_for_approval'] . '</i>', '
+			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" style="margin:0px;">
+				<input type="hidden" name="topic" value="' . $context['current_topic'] . '" />
+				<input type="hidden" name="subject" value="' . $context['response_prefix'] . $context['subject'] . '" />
+				<input type="hidden" name="icon" value="xx" />
+				<input type="hidden" name="notify" value="', $context['is_marked_notify'] || !empty($options['auto_notify']) ? '1' : '0', '" />
+				<input type="hidden" name="not_approved" value="', !$context['can_reply_approved'], '" />
+				<input type="hidden" name="goback" value="', empty($options['return_to_post']) ? '0' : '1', '" />
+				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
+				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
+				<input type="submit" name="post" value="' . $txt['post'] . '" accesskey="s" tabindex="2" />
+				<input type="submit" name="preview" value="' . $txt[507] . '" accesskey="p" tabindex="4" />';
 		if ($context['show_spellchecking'])
 			echo '
-							<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" />';
+				<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" />';
 		echo '
-							<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
-							<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
-						</form>
-					</td>
-				</tr>
-			</table>';
-		if ($context['show_spellchecking'])
-			echo '
-			<form action="', $scripturl, '?action=spellcheck" method="post" accept-charset="', $context['character_set'], '" name="spell_form" id="spell_form" target="spellWindow"><input type="hidden" name="spellstring" value="" /></form>';
+				<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
+				<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
+			</form>
+		</td>
+	</tr>
+</table>';
 	}
 
 	if ($context['show_spellchecking'])
 		echo '
+<form action="', $scripturl, '?action=spellcheck" method="post" accept-charset="', $context['character_set'], '" name="spell_form" id="spell_form" target="spellWindow"><input type="hidden" name="spellstring" value="" /></form>
 <script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/spellcheck.js"></script>';
 
 	echo'

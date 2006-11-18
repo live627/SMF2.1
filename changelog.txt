@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2569 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2570 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -24,6 +24,8 @@ November 2006
  * Cleaned up the HTML a little for the audio verification. (Register template)
  + Added initial support for PostgreSQL. (Subs-Db-postgresql.php, install.php, Most other files)
  ! Ensure scheduled tasks can never get into a state where they don't run. (Load.php, ScheduledTasks.php)
+ ! Fixed a bug causing the age weight of a search to be zero. (Search.php)
+ * The spell check function for inline editing didn't work properly in some cases. (Display template)
 
 
 October 2006

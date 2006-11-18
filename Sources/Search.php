@@ -493,7 +493,7 @@ function PlushSearch2()
 	$search_params['sort_dir'] = !empty($search_params['sort_dir']) && $search_params['sort_dir'] == 'asc' ? 'asc' : 'desc';
 
 	// Determine some values needed to calculate the relevance.
-	$minMsg = (int) (1 - $recentPercentage) * $modSettings['maxMsgID'];
+	$minMsg = (int) ((1 - $recentPercentage) * $modSettings['maxMsgID']);
 	$recentMsg = $modSettings['maxMsgID'] - $minMsg;
 
 
