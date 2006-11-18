@@ -82,7 +82,12 @@ if (!defined('SMF'))
 		  link this topic to the calendar.
 
 	void CalendarPost()
-		// !!
+		- processes posting/editing/deleting a calendar event.
+		- calls Post() function if event is linked to a post.
+		- calls calendarInsertEvent() to insert the event if not linked to post.
+		- requires the calendar_post permission to use.
+		- uses the event_post sub template in the Calendar template.
+		- is accessed with ?action=calendar;sa=post.
 */
 
 // Show the calendar.
