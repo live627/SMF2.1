@@ -124,7 +124,7 @@ if (!function_exists('text2words'))
 			if ($word != '')
 				$returned_words[] = addslashes(substr($word, 0, 20));
 		}
-	
+
 		return array_unique($returned_words);
 	}
 }
@@ -359,7 +359,7 @@ function loadEssentialData()
 
 function initialize_inputs()
 {
-	global $sourcedir, $start_time, $upcontext;
+	global $sourcedir, $start_time, $upcontext, $db_type;
 
 	$start_time = time();
 
@@ -385,8 +385,15 @@ function initialize_inputs()
 		// And the extra little files ;).
 		@unlink(dirname(__FILE__) . '/upgrade_1-0.sql');
 		@unlink(dirname(__FILE__) . '/upgrade_1-1.sql');
-		@unlink(dirname(__FILE__) . '/upgrade_2-0.sql');
 		@unlink(dirname(__FILE__) . '/webinstall.php');
+
+		$dh = opendir(dirname(__FILE__));
+		while ($file = readdir($dh))
+		{
+			if (preg_match('~upgrade_\d-\d_([A-Za-z])+\.sql~i', $file, $matches) && isset($matches[1]))
+				@unlink(dirname(__FILE__) . '/' . $file);
+  		}
+  		closedir($dh);
 
 		header('Location: http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']) . dirname($_SERVER['PHP_SELF']) . '/Themes/default/images/blank.gif');
 		exit;
@@ -439,7 +446,7 @@ function WelcomeLogin()
 	$check = @file_exists($boarddir . '/Themes/default/index.template.php')
 		&& @file_exists($sourcedir . '/QueryString.php')
 		&& @file_exists($sourcedir . '/ManageBoards.php')
-		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0.sql')
+		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0_mysql.sql')
 		&& @file_exists(dirname(__FILE__) . '/upgrade_1-1.sql')
 		&& @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
 	if (!$check && !isset($modSettings['smfVersion']))
@@ -603,7 +610,7 @@ function WelcomeLogin()
 function UpgradeOptions()
 {
 	global $db_prefix, $command_line, $modSettings, $is_debug;
-	global $boarddir, $boardurl, $sourcedir, $maintenance, $mmessage, $cachedir, $upcontext;
+	global $boarddir, $boardurl, $sourcedir, $maintenance, $mmessage, $cachedir, $upcontext, $db_type;
 
 	$upcontext['sub_template'] = 'upgrade_options';
 	$upcontext['page_title'] = 'Upgrade Options';
@@ -683,6 +690,10 @@ function UpgradeOptions()
 
 	if (empty($cachedir) || substr($cachedir, 0, 1) == '.')
 		$changes['cachedir'] = '\'' . fixRelativePath($boarddir) . '/cache\'';
+
+	// Not had the database type added before?
+	if (empty($db_type))
+		$changes['db_type'] = 'mysql';
 
 	// !!! Maybe change the cookie name if going to 1.1, too?
 
@@ -880,7 +891,7 @@ function backupTable($table)
 function DatabaseChanges()
 {
 	global $db_prefix, $modSettings, $command_line;
-	global $language, $boardurl, $sourcedir, $boarddir, $upcontext, $support_js;
+	global $language, $boardurl, $sourcedir, $boarddir, $upcontext, $support_js, $db_type;
 
 	// Have we just completed this?
 	if (!empty($_POST['database_done']))
@@ -894,7 +905,7 @@ function DatabaseChanges()
 	$files = array(
 		array('upgrade_1-0.sql', '1.1', '1.1 RC0'),
 		array('upgrade_1-1.sql', '2.0', '2.0 a'),
-		array('upgrade_2-0.sql', '3.0', SMF_VERSION),
+		array('upgrade_2-0_' . $db_type . '.sql', '3.0', SMF_VERSION),
 	);
 
 	// How many files are there in total?

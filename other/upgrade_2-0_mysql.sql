@@ -197,7 +197,7 @@ CHANGE COLUMN smileySet smiley_set varchar(48) NOT NULL default '',
 CHANGE COLUMN ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default '0',
 CHANGE COLUMN totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN passwordSalt password_salt varchar(5) NOT NULL default '',
-CHANGE COLUMN ignoreBoards ignore_boards tinytext NOT NULL default '';
+CHANGE COLUMN ignoreBoards ignore_boards tinytext NOT NULL;
 
 ALTER TABLE {$db_prefix}messages
 CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL auto_increment,
@@ -714,7 +714,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 ALTER TABLE {$db_prefix}log_errors
 ADD error_type char(15) NOT NULL default 'general';
 ALTER TABLE {$db_prefix}log_errors
-ADD file tinytext NOT NULL default '',
+ADD file tinytext NOT NULL,
 ADD line mediumint(8) unsigned NOT NULL default '0';
 ---#
 
@@ -1044,7 +1044,7 @@ DROP COLUMN id_board;
 
 ---# Adding column to hold the boards being ignored ...
 ALTER TABLE {$db_prefix}members
-ADD ignore_boards tinytext NOT NULL default '';
+ADD ignore_boards tinytext NOT NULL;
 ---#
 
 /******************************************************************************/
@@ -1151,17 +1151,17 @@ unset($_GET['m']);
 ---# Creating the table ...
 CREATE TABLE IF NOT EXISTS {$db_prefix}admin_info_files (
   id_file tinyint(4) unsigned NOT NULL auto_increment,
-  filename tinytext NOT NULL default '',
-  path tinytext NOT NULL default '',
-  parameters tinytext NOT NULL default '',
-  data text NOT NULL default '',
-  filetype tinytext NOT NULL default '',
+  filename tinytext NOT NULL,
+  path tinytext NOT NULL,
+  parameters tinytext NOT NULL,
+  data text NOT NULL,
+  filetype tinytext NOT NULL,
   PRIMARY KEY (id_file),
   KEY filename (filename(30))
 ) TYPE=MYISAM;
 ---#
 
----# Add in the files to get from Simple Machiens...
+---# Add in the files to get from Simple Machines...
 INSERT IGNORE INTO {$db_prefix}admin_info_files
 	(id_file, filename, path, parameters)
 VALUES
@@ -1176,7 +1176,7 @@ VALUES
 
 ---# Ensure that the table has the filetype column
 ALTER TABLE {$db_prefix}admin_info_files
-ADD filetype tinytext NOT NULL default '';
+ADD filetype tinytext NOT NULL;
 ---#
 
 ---# Set the filetype for the files

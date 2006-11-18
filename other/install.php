@@ -22,6 +22,7 @@
 ******************************************************************************/
 
 $GLOBALS['current_smf_version'] = '2.0 Alpha';
+$GLOBALS['db_script_version'] = '2-0';
 
 $GLOBALS['required_php_version'] = '4.1.0';
 
@@ -48,7 +49,6 @@ $databases = array(
 		'version_check' => '$version = pg_version(); return $version[\'client\'];',
 		'supported' => function_exists('pg_connect'),
 		'always_has_db' => true,
-		'install_sql_query_adapt' => 'postg_query_adapt',
 	),
 );
 
@@ -156,6 +156,8 @@ echo '
 
 function initialize_inputs()
 {
+	global $databases;
+
 	// Turn off magic quotes runtime and enable error reporting.
 	@set_magic_quotes_runtime(0);
 	error_reporting(E_ALL);
@@ -214,7 +216,9 @@ function initialize_inputs()
 
 			$ftp->unlink('install.php');
 			$ftp->unlink('webinstall.php');
-			$ftp->unlink('install_2-0.sql');
+
+			foreach ($databases as $key => $dummy)
+				$ftp->unlink('install_' . $GLOBALS['db_script_version'] . '_' . $key . '.sql');
 
 			$ftp->close();
 
@@ -224,7 +228,9 @@ function initialize_inputs()
 		{
 			@unlink(__FILE__);
 			@unlink(dirname(__FILE__) . '/webinstall.php');
-			@unlink(dirname(__FILE__) . '/install_2-0.sql');
+
+			foreach ($databases as $key => $dummy)
+				@unlink(dirname(__FILE__) . '/install_' . $GLOBALS['db_script_version'] . '_' . $key . '.sql');
 		}
 
 		// Now just redirect to a blank.gif...
@@ -350,10 +356,14 @@ function doStep0()
 
 	// Is some database support even compiled in?
 	$foundDBCount = 0;
+	$missingDBScript = false;
+
 	foreach ($databases as $key => $db)
 	{
 		if ($db['supported'])
 		{
+			if (!file_exists(dirname(__FILE__) . '/install_' . $GLOBALS['db_script_version'] . '_' . $key . '.sql'))
+				$missingDBScript = true;
 			$db_type = $key;
 			$foundDBCount++;
 		}
@@ -365,7 +375,7 @@ function doStep0()
 	elseif (!function_exists('session_start'))
 		$error = 'error_session_missing';
 	// Make sure they uploaded all the files.
-	elseif (!file_exists(dirname(__FILE__) . '/index.php') || !file_exists(dirname(__FILE__) . '/install_2-0.sql'))
+	elseif (!file_exists(dirname(__FILE__) . '/index.php') || $missingDBScript)
 		$error = 'error_missing_files';
 	// Very simple check on the session.save_path for Windows.
 	// !!! Move this down later if they don't use database-driven sessions?
@@ -792,23 +802,17 @@ function doStep1()
 		$replaces[') TYPE=MyISAM;'] = ') TYPE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;';
 
 	// Read in the SQL.  Turn this on and that off... internationalize... etc.
-	$sql_lines = explode("\n", strtr(implode(' ', file(dirname(__FILE__) . '/install_2-0.sql')), $replaces));
+	$sql_lines = explode("\n", strtr(implode(' ', file(dirname(__FILE__) . '/install_' . $GLOBALS['db_script_version'] . '_' . $db_type . '.sql')), $replaces));
 
 	// Execute the SQL.
 	$current_statement = '';
 	$failures = array();
 	$exists = array();
-	$curTypes = array();
-	$queryFunc = !empty($databases[$db_type]['install_sql_query_adapt']) ? $databases[$db_type]['install_sql_query_adapt'] : $smfFunc['db_query'];
 	foreach ($sql_lines as $count => $line)
 	{
 		// No comments allowed!
 		if (substr(trim($line), 0, 1) != '#')
 			$current_statement .= "\n" . rtrim($line);
-		elseif (substr(trim($line), 0, 3) == '# @')
-			$curTypes = explode(',', substr(trim($line), 3));
-		elseif (!empty($curTypes))
-			$curTypes = array();
 
 		// Is this the end of the query string?
 		if (empty($current_statement) || (preg_match('~;[\s]*$~s', $line) == 0 && $count != count($sql_lines)))
@@ -821,7 +825,7 @@ function doStep1()
 			continue;
 		}
 
-		if ((empty($curTypes) || in_array($db_type, $curTypes)) && $queryFunc('', $current_statement, false, false, $db_connection) === false)
+		if ($smfFunc['db_query']('', $current_statement, false, false, $db_connection) === false)
 		{
 			// Error 1050: Table already exists!
 			//!!! Needs to be made better!
@@ -1975,143 +1979,6 @@ function fixModSecurity()
 	}
 	else
 		return false;
-}
-
-function postg_query_adapt($id, $query, $file, $line, $connection = false)
-{
-  	global $db_connection, $smfFunc;
-
-	$prequeries = array();
-	$postqueries = array();
-	if ($connection == false)
-		$connection = $db_connection;
-
-	// We need to clean up the query - is it a table creation?
-	if (preg_match('~^\s*CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)*["\'`]*(.+?)["\'`]*[\s\{]~i', $query, $matches) && isset($matches[2]))
-	{
-		$table_name = $matches[2];
-	  	// First replace all the out of date types.
-	  	$types = array(
-	  		'~\s(tinyint|smallint)\s*\(\d\)~i' => ' smallint',
-	  		'~\s(mediumint|int)\s*\(\d+\)~i' => ' int',
-	  		'~\sunsigned~i' => '',
-	  		'~\stinytext~i' => ' varchar(255)',
-	  		'~type=[A-Za-z]+;~i' => ';',
-	  	);
-
-	  	$query = preg_replace(array_keys($types), array_values($types), $query);
-
-		// Now go through each line changing it as needed.
-		$query = explode("\n", $query);
-		foreach ($query as $k => $line)
-		{
-			// Can't actually use "if not exists"
-			if (preg_match('~^\s*create\stable~i', $line))
-			{
-				$line = strtr($line, array('IF NOT EXISTS' => ''));
-			}			
-			// Got an auto incrementing column?
-			if (strpos($line, 'auto_increment') !== false)
-			{
-				// Need to create a sequence...
-				$line = strtr($line, array('unsigned' => '', 'not' => '', 'null' => '', 'auto_increment' => '', ',' => ''));
-				$line .= 'default nextval(\'' . $table_name . '_seq\'),';
-				$prequeries[] = 'create sequence ' . $table_name . '_seq;';
-			}
-			// What's that - it's a key?
-			if (preg_match('~^\s*(key|unique)\s+(.+?)([\s\(]+)([\w\s,]+)[\)\(]~i', $line, $matches) && isset($matches[4]))
-			{
-				$postqueries[] = 'create ' . ($matches[1] == 'unique' ? 'unique' : '') . ' index ' . $table_name . '_' . $matches[2] . ' on ' . $table_name . ' (' . $matches[4] . ');';
-				$line = '';
-   			}
-   			// Primary key can't do partial index...
-   			if (preg_match('~^\s*primary\skey~i', $line))
-			{
-				$line = preg_replace('~\(\d+\)~i', '', $line);
-   			}
-			$query[$k] = $line;
-  		}
-  		// Put the query back together.
-  		$query = implode("\n", $query);
-
-		// Fix any lonely commas at the end due to index removal.
-		$lastComma = strrpos($query, ',');
-		// If there's no characters this must be dodgy.
-		if (preg_match('~\w~', substr($query, $lastComma)) == false)
-			$query = substr($query, 0, $lastComma) . substr($query, $lastComma + 1);
- 	}
- 	elseif (preg_match('~^DROP\s+TABLE\s+["\'`]*(.+?)["\'`]*[\s\{]~', $query, $matches) && isset($matches[1]))
-	{
-		$table_name = $matches[1];
-		$prequeries[] = 'drop sequence ' . $matches[2] . '_seq;';
-	}
-	// Alter?
-	elseif (preg_match('~^ALTER\s+TABLE\s+["\'`]*(.+?)["\'`]*[\s\{]~', $query, $matches) && isset($matches[1]))
-	{
-		$table_name = $matches[1];
-		// Cannot order by on postgreSQL - return a dummy!
-		if (preg_match('~order\sby\s\w+~i', $query))
-			return true;
-	}
-	// Postgre vacuums!
-	elseif (preg_match('~^\s*OPTIMIZE\sTABLE~i', $query))
-	{
-		$query = preg_replace('~^\s*OPTIMIZE\sTABLE~i', 'VACUUM', $query);
-		$query = strtr($query, array('`' => ''));
-	}
-	// Inserts etc - need to check not multiple ones!
-	elseif (preg_match('~^\s*INSERT\s+INTO\s+["\'`]*(.+?)["\'`]*[\s\{]~i', $query, $matches) && isset($matches[1]))
-	{
-		$table_name = $matches[1];
-		$insert_start = substr($query, 0, strpos($query, 'VALUES'));
-		$data = substr($query, strpos($query, 'VALUES') + 6);
-		$inserts = array();
-		$inString = false;
-		$inBrackets = 0;
-		$lastOffset = 0;
-		$lastCharacter = '';
-		for ($i = 0; $i < strlen($data); $i++)
-		{
-			// Found the end of a bit!
-			if (!$inString && $data{$i} == ')' && $inBrackets == 1)
-			{
-				$inserts[] = substr($data, $lastOffset, ($i - $lastOffset) + 1);
-				$lastOffset = $i + 2;
-				$inBrackets = 0;
-			}
-			elseif ($data{$i} == "'" && $lastCharacter != '\\')
-			{
-				$inString = !$inString;
-			}
-			elseif (!$inString && $data{$i} == '(')
-				$inBrackets++;
-			elseif (!$inString && $data{$i} == ')')
-				$inBrackets--;
-			$lastCharacter = $data{$i};
-		}
-
-		// Start fresh.
-		$query = '';
-		foreach ($inserts as $in)
-		{
-			$query .= $insert_start . ' VALUES ' . $in . ';';
-		}
-	}
-
-	// Do any starting stuff.
-	foreach ($prequeries as $prequery)
-	{
-		$smfFunc['db_query']('', $prequery, false, false, $connection);
-	}
-
-	$request = $smfFunc['db_query']('', $query, false, false, $connection);
-
-	foreach ($postqueries as $postquery)
-	{
-		$smfFunc['db_query']('', $postquery, false, false, $connection);
-	}
-
-	return $request;
 }
 
 ?>

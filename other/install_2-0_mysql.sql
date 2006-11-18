@@ -1,95 +1,5 @@
 #### ATTENTION: You do not need to run or use this file!  The install.php script does everything for you!
-
-# Create PostgreSQL functions.
-# Some taken from http://www.xach.com/aolserver/mysql-functions.sql.
-# @postgresql
-
-CREATE OR REPLACE FUNCTION FROM_UNIXTIME(integer) RETURNS timestamp AS 
-  'SELECT timestamp ''epoch'' + $1 * interval ''1 second'' AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION UNIX_TIMESTAMP(timestamp) RETURNS integer AS 
-  'SELECT DATE_PART(''epoch'', $1)::int4 AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION UNIX_TIMESTAMP() RETURNS integer AS 
-  'SELECT DATE_PART(''epoch'', now())::int4 AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION IF (boolean, text, text) RETURNS text AS
-  'SELECT CASE WHEN $1 THEN $2 ELSE $3 END AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION IF (boolean, integer, integer) RETURNS integer AS
-  'SELECT CASE WHEN $1 THEN $2 ELSE $3 END AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION IFNULL (text, text) RETURNS text AS
-  'SELECT COALESCE($1, $2) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION IFNULL (int4, int4) RETURNS int4 AS
-  'SELECT COALESCE($1, $2) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS int4 AS
-  'SELECT
-    split_part($1, ''.'', 1)::int4 * (256 * 256 * 256) +
-    split_part($1, ''.'', 2)::int4 * (256 * 256) +
-    split_part($1, ''.'', 3)::int4 * 256 +
-    split_part($1, ''.'', 4)::int4 AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION INET_NTOA(bigint) RETURNS text AS
-  'SELECT
-    (($1 >> 24) & 255::int8) || ''.'' ||
-    (($1 >> 16) & 255::int8) || ''.'' ||
-    (($1 >> 8) & 255::int8) || ''.'' ||
-    ($1 & 255::int8) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION FIND_IN_SET(text, text) RETURNS boolean AS
-  'SELECT
-    $1 = ANY(STRING_TO_ARRAY($2, '','')) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION LEFT (text, int4) RETURNS text AS
-  'SELECT SUBSTRING($1 FROM 0 FOR $2) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION add_num_text (text, integer) RETURNS text AS
-  'SELECT CAST ((CAST($1 AS integer) + $2) AS text) AS result'
-LANGUAGE 'sql';
-
-CREATE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
-
-CREATE OR REPLACE FUNCTION YEAR (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(YEAR FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION MONTH (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(MONTH FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION DAYOFMONTH (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(DAY FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION HOUR (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(HOUR FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
-  'SELECT 
-   	REPLACE(
-   		REPLACE($2, ''%m'', CAST (EXTRACT(MONTH FROM $1) AS text)),
-   	''%d'', CAST (EXTRACT(DAY FROM $1) AS text)) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION TO_DAYS (timestamp) RETURNS integer AS
-  'SELECT DATE_PART(''DAY'', $1 - ''0000-01-01'')::integer AS result'
-LANGUAGE 'sql';
-
+#### Install script for MySQL 3.23.28+
 
 #
 # Table structure for table `admin_info_files`
@@ -669,9 +579,9 @@ VALUES ('New Year\'s', '0004-01-01'),
 
 INSERT INTO {$db_prefix}calendar_holidays
 	(title, event_date)
-VALUES ('Independence Day', '0000-07-04'),
-	('Cinco de Mayo', '0000-05-05'),
-	('Flag Day', '0000-06-14'),
+VALUES ('Independence Day', '0004-07-04'),
+	('Cinco de Mayo', '0004-05-05'),
+	('Flag Day', '0004-06-14'),
 	('Veterans Day', '0004-11-11'),
 	('Groundhog Day', '0004-02-02'),
 	('Thanksgiving', '2004-11-25'),
@@ -966,7 +876,7 @@ CREATE TABLE {$db_prefix}log_online (
 # Table structure for table `log_packages`
 #
 
-CREATE TABLE IF NOT EXISTS {$db_prefix}log_packages (
+CREATE TABLE {$db_prefix}log_packages (
   ID_INSTALL int(10) NOT NULL auto_increment,
   filename tinytext NOT NULL,
   package_id tinytext NOT NULL,
@@ -1289,9 +1199,9 @@ CREATE TABLE {$db_prefix}messages (
   UNIQUE id_board (id_board, id_msg),
   UNIQUE id_member (id_member, id_msg),
   KEY approved (approved),
-  KEY ipIndex (poster_ip(15), id_topic),
+  KEY ip_index (poster_ip(15), id_topic),
   KEY participation (id_member, id_topic),
-  KEY showPosts (id_member, id_board),
+  KEY show_posts (id_member, id_board),
   KEY id_topic (id_topic)
 ) TYPE=MyISAM;
 
@@ -1804,8 +1714,8 @@ CREATE TABLE {$db_prefix}topics (
   unapproved_posts smallint(5) NOT NULL default '0',
   approved tinyint(3) NOT NULL default '1',
   PRIMARY KEY (id_topic),
-  UNIQUE lastMessage (id_last_msg, id_board),
-  UNIQUE firstMessage (id_first_msg, id_board),
+  UNIQUE last_message (id_last_msg, id_board),
+  UNIQUE first_message (id_first_msg, id_board),
   UNIQUE poll (id_poll, id_topic),
   KEY is_sticky (is_sticky),
   KEY approved (approved),
