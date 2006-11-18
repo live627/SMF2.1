@@ -27,7 +27,10 @@ if (!defined('SMF'))
 	help center.  It does this with two simple functions:
 
 	void ShowHelp()
-		// !!
+		- loads information needed for the help section.
+		- accesed by ?action=help.
+		- uses the Help template and Manual language file.
+		- calls the appropriate sub template depending on the page being viewed.
 
 	void ShowAdminHelp()
 		- shows a popup for administrative or user help.
