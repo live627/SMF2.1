@@ -428,8 +428,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 	smf_query("
 		UPDATE $smf_settings[db_prefix]settings
 		SET value = value + 1
-		WHERE variable = 'totalMembers'
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE variable = 'totalMembers'", __FILE__, __LINE__);
 	smf_query("
 		REPLACE INTO $smf_settings[db_prefix]settings
 			(variable, value)
@@ -438,8 +437,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 	smf_query("
 		UPDATE {$db_prefix}log_activity
 		SET registers = registers + 1
-		WHERE date = '" . strftime('%Y-%m-%d') . "'
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE date = '" . strftime('%Y-%m-%d') . "'", __FILE__, __LINE__);
 	if (db_affected_rows() == 0)
 		smf_query("
 			INSERT IGNORE INTO {$db_prefix}log_activity
@@ -795,8 +793,7 @@ function smf_sessionWrite($session_id, $data)
 	$result = smf_query("
 		UPDATE $smf_settings[db_prefix]sessions
 		SET data = '" . addslashes($data) . "', last_update = " . time() . "
-		WHERE session_id = '" . addslashes($session_id) . "'
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
 
 	// If that didn't work, try inserting a new one.
 	if (mysql_affected_rows($smf_connection) == 0)
@@ -818,8 +815,7 @@ function smf_sessionDestroy($session_id)
 	// Just delete the row...
 	return db_query("
 		DELETE FROM $smf_settings[db_prefix]sessions
-		WHERE session_id = '" . addslashes($session_id) . "'
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
 }
 
 function smf_sessionGC($max_lifetime)

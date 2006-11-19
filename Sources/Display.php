@@ -301,8 +301,7 @@ function Display()
 					UPDATE {$db_prefix}log_notify
 					SET sent = 0
 					WHERE (id_topic = $topic OR id_board = $board)
-						AND id_member = $user_info[id]
-					LIMIT 2", __FILE__, __LINE__);
+						AND id_member = $user_info[id]", __FILE__, __LINE__);
 				$do_once = false;
 			}
 		}
@@ -1193,8 +1192,7 @@ function loadAttachmentContext($id_msg)
 							$smfFunc['db_query']('', "
 								UPDATE {$db_prefix}attachments
 								SET id_thumb = $attachment[id_thumb]
-								WHERE id_attach = $attachment[id_attach]
-								LIMIT 1", __FILE__, __LINE__);
+								WHERE id_attach = $attachment[id_attach]", __FILE__, __LINE__);
 
 							$thumb_realname = getAttachmentFilename($thumb_filename, $attachment['id_thumb'], true);
 							rename($filename . '_thumb', $modSettings['attachmentUploadDir'] . '/' . $thumb_realname);

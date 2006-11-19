@@ -740,8 +740,7 @@ function AdminApprove()
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
 			SET validation_code = '', is_activated = 1
-			WHERE is_activated = $current_filter$condition
-			LIMIT $member_count", __FILE__, __LINE__);
+			WHERE is_activated = $current_filter$condition", __FILE__, __LINE__);
 
 		// Do we have to let the integration code know about the activations?
 		if (isset($modSettings['integrate_activate']) && function_exists($modSettings['integrate_activate']))
@@ -785,8 +784,7 @@ function AdminApprove()
 				SET validation_code = '$validation_code', is_activated = 0
 				WHERE is_activated = $current_filter
 					$condition
-					AND id_member = $member[id]
-				LIMIT 1", __FILE__, __LINE__);
+					AND id_member = $member[id]", __FILE__, __LINE__);
 
 			if (empty($current_language) || $current_language != $member['language'])
 			{

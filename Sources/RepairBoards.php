@@ -147,8 +147,7 @@ function RepairBoards()
 					$stupidTopics[] = $topicArray['id_topic'];
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}topics
-					WHERE id_topic IN (" . implode(',', $stupidTopics) . ')
-					LIMIT ' . count($stupidTopics), __FILE__, __LINE__);
+					WHERE id_topic IN (" . implode(',', $stupidTopics) . ')', __FILE__, __LINE__);
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_topics
 					WHERE id_topic IN (" . implode(',', $stupidTopics) . ')', __FILE__, __LINE__);
@@ -226,8 +225,7 @@ function RepairBoards()
 					SET id_first_msg = '$topicArray[myid_first_msg]',
 						id_member_started = '$memberStartedID', id_last_msg = '$topicArray[myid_last_msg]',
 						id_member_updated = '$memberUpdatedID', approved = '$topicArray[myApproved]'
-					WHERE id_topic = $topicArray[id_topic]
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopic);
 		}
@@ -249,8 +247,7 @@ function RepairBoards()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics
 					SET num_replies = '$topicArray[myNumReplies]'
-					WHERE id_topic = $topicArray[id_topic]
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopic);
 		}
@@ -270,8 +267,7 @@ function RepairBoards()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}topics
 					SET unapproved_posts = '$topicArray[myUnapprovedPosts]'
-					WHERE id_topic = $topicArray[id_topic]
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($resultTopic);
 		}
@@ -347,8 +343,7 @@ function RepairBoards()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
 					SET id_member = 0
-					WHERE id_msg IN (" . implode(',', $guestMessages) . ')
-					LIMIT ' . count($guestMessages), __FILE__, __LINE__);
+					WHERE id_msg IN (" . implode(',', $guestMessages) . ')', __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($result);
 		}
@@ -404,8 +399,7 @@ function RepairBoards()
 					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}topics
 						SET id_poll = 0
-						WHERE id_poll IN (" . implode(', ', $polls) . ")
-						LIMIT " . count($polls), __FILE__, __LINE__);
+						WHERE id_poll IN (" . implode(', ', $polls) . ")", __FILE__, __LINE__);
 			}
 		}
 
@@ -438,8 +432,7 @@ function RepairBoards()
 					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}calendar
 						SET id_topic = 0, id_board = 0
-						WHERE id_topic IN (" . implode(', ', $events) . ")
-						LIMIT " . count($events), __FILE__, __LINE__);
+						WHERE id_topic IN (" . implode(', ', $events) . ")", __FILE__, __LINE__);
 			}
 		}
 
@@ -629,8 +622,7 @@ function RepairBoards()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}personal_messages
 					SET id_member_from = 0
-					WHERE id_pm IN (" . implode(',', $guestMessages) . ')
-					LIMIT ' . count($guestMessages), __FILE__, __LINE__);
+					WHERE id_pm IN (" . implode(',', $guestMessages) . ')', __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($result);
 		}

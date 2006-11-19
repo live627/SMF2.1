@@ -190,8 +190,7 @@ function deleteMembers($users)
 	// Delete the member.
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}members
-		WHERE id_member $condition
-		LIMIT " . count($users), __FILE__, __LINE__);
+		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// Delete the logs...
 	$smfFunc['db_query']('', "
@@ -265,8 +264,7 @@ function deleteMembers($users)
 			SET
 				pm_ignore_list = '" . implode(',', array_diff(explode(',', $row['pm_ignore_list']), $users)) . "',
 				buddy_list = '" . implode(',', array_diff(explode(',', $row['buddy_list']), $users)) . "'
-			WHERE id_member = $row[id_member]
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_member = $row[id_member]", __FILE__, __LINE__);
 	$smfFunc['db_free_result']($request);
 
 	// Make sure no member's birthday is still sticking in the calendar...

@@ -297,8 +297,7 @@ function ReportedPosts()
 			UPDATE {$db_prefix}log_reported
 			SET " . (isset($_GET['ignore']) ? 'ignore_all = ' . (int) $_GET['ignore'] : 'closed = ' . (int) $_GET['close']) . "
 			WHERE id_report = $_GET[rid]
-				AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : $user_info['mod_cache']['bq']) . "
-			LIMIT 1", __FILE__, __LINE__);
+				AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : $user_info['mod_cache']['bq']), __FILE__, __LINE__);
 
 		// Time to update.
 		updateSettings(array('last_mod_report_action' => time()));

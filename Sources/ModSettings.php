@@ -504,8 +504,7 @@ function ModifySignatureSettings()
 					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}members
 						SET signature = '$sig'
-						WHERE id_member = $id
-						LIMIT 1", __FILE__, __LINE__);
+						WHERE id_member = $id", __FILE__, __LINE__);
 			}
 
 			$_GET['step'] += 50;
@@ -907,8 +906,7 @@ function EditCustomProfiles()
 		// Finally - the field itself is gone!
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}custom_fields
-			WHERE id_field = $context[fid]
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_field = $context[fid]", __FILE__, __LINE__);
 	}
 
 	// Rebuild display cache etc.

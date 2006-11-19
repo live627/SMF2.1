@@ -511,8 +511,7 @@ function RemoveAttachmentByAge()
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}messages
 				SET body = " . (!empty($_POST['notice']) ? "CONCAT(body, '<br /><br />$_POST[notice]')" : '') . "
-				WHERE id_msg IN (" . implode(', ', $messages) . ")
-				LIMIT " . count($messages), __FILE__, __LINE__);
+				WHERE id_msg IN (" . implode(', ', $messages) . ")", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -536,8 +535,7 @@ function RemoveAttachmentBySize()
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}messages
 			SET body = " . (!empty($_POST['notice']) ? "CONCAT(body, '<br /><br />$_POST[notice]')" : '') . "
-			WHERE id_msg IN (" . implode(',', $messages) . ")
-			LIMIT " . count($messages), __FILE__, __LINE__);
+			WHERE id_msg IN (" . implode(',', $messages) . ")", __FILE__, __LINE__);
 
 	redirectexit('action=admin;area=manageattachments;sa=maintenance');
 }
@@ -566,8 +564,7 @@ function RemoveAttachment()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
 					SET body = CONCAT(body, '<br /><br />" . addslashes($txt['smf216']) . "')
-					WHERE id_msg IN (" . implode(', ', $messages) . ")
-					LIMIT " . count($messages), __FILE__, __LINE__);
+					WHERE id_msg IN (" . implode(', ', $messages) . ")", __FILE__, __LINE__);
 		}
 	}
 
@@ -592,8 +589,7 @@ function RemoveAllAttachments()
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}messages
 			SET body = CONCAT(body, '<br /><br />$_POST[notice]')
-			WHERE id_msg IN (" . implode(',', $messages) . ")
-			LIMIT " . count($messages), __FILE__, __LINE__);
+			WHERE id_msg IN (" . implode(',', $messages) . ")", __FILE__, __LINE__);
 
 	redirectexit('action=admin;area=manageattachments;sa=maintenance');
 }
@@ -655,14 +651,12 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}attachments
 			SET id_thumb = 0
-			WHERE id_attach IN (" . implode(', ', $parents) . ")
-			LIMIT " . count($parents), __FILE__, __LINE__);
+			WHERE id_attach IN (" . implode(', ', $parents) . ")", __FILE__, __LINE__);
 
 	if (!empty($attach))
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}attachments
-			WHERE id_attach IN (" . implode(', ', $attach) . ")
-			LIMIT " . count($attach), __FILE__, __LINE__);
+			WHERE id_attach IN (" . implode(', ', $attach) . ")", __FILE__, __LINE__);
 
 	if ($return_affected_messages)
 		return array_unique($msgs);
@@ -879,8 +873,7 @@ function RepairAttachments()
 						$smfFunc['db_query']('', "
 							UPDATE {$db_prefix}attachments
 							SET size = " . filesize($filename) . "
-							WHERE id_attach = $row[id_attach]
-							LIMIT 1", __FILE__, __LINE__);
+							WHERE id_attach = $row[id_attach]", __FILE__, __LINE__);
 					}
 				}
 			}
@@ -1172,8 +1165,7 @@ function ApproveAttachments($attachments)
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}attachments
 		SET approved = 1
-		WHERE id_attach IN (" . implode(', ', $attachments) . ")
-			LIMIT " . count($attachments), __FILE__, __LINE__);
+		WHERE id_attach IN (" . implode(', ', $attachments) . ")", __FILE__, __LINE__);
 
 	// Remove from the approval queue.
 	$smfFunc['db_query']('', "

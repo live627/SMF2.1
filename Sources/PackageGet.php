@@ -695,8 +695,7 @@ function PackageServerRemove()
 
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}package_servers
-		WHERE id_server = " . (int) $_GET['server'] . "
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE id_server = " . (int) $_GET['server'], __FILE__, __LINE__);
 
 	redirectexit('action=admin;area=packages;get');
 }

@@ -325,8 +325,7 @@ function is_not_banned($forceCheck = false)
 		if (!$user_info['is_guest'])
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_online
-				WHERE id_member = $id_member
-				LIMIT 1", __FILE__, __LINE__);
+				WHERE id_member = $id_member", __FILE__, __LINE__);
 
 		// 'Log' the user out.  Can't have any funny business... (save the name!)
 		$old_name = isset($user_info['name']) && $user_info['name'] != '' ? $user_info['name'] : $txt['guest_title'];

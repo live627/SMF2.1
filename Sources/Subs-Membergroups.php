@@ -85,8 +85,7 @@ function deleteMembergroups($groups)
 	// Remove the membergroups themselves.
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}membergroups
-		WHERE id_group IN (" . implode(', ', $groups) . ")
-		LIMIT " . count($groups), __FILE__, __LINE__);
+		WHERE id_group IN (" . implode(', ', $groups) . ")", __FILE__, __LINE__);
 
 	// Remove the permissions of the membergroups.
 	$smfFunc['db_query']('', "
@@ -143,8 +142,7 @@ function deleteMembergroups($groups)
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}boards
 			SET member_groups = '" . implode(',', array_diff(explode(',', $member_groups), $groups)) . "'
-			WHERE id_board IN (" . implode(', ', $boardArray) . ")
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_board IN (" . implode(', ', $boardArray) . ")", __FILE__, __LINE__);
 
 	// Recalculate the post groups, as they likely changed.
 	updateStats('postgroups');
@@ -196,8 +194,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 				additional_groups = ''
 			WHERE id_member IN (" . implode(', ', $members) . ")" . (allowedTo('admin_forum') ? '' : "
 				AND id_group != 1
-				AND NOT FIND_IN_SET(1, additional_groups)") . "
-			LIMIT " . count($members), __FILE__, __LINE__);
+				AND NOT FIND_IN_SET(1, additional_groups)"), __FILE__, __LINE__);
 
 		updateStats('postgroups', 'id_member IN (' . implode(', ', $members) . ')');
 
@@ -240,8 +237,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 		UPDATE {$db_prefix}members
 		SET id_group = 0
 		WHERE id_group IN (" . implode(', ', $groups) . ")
-			AND id_member IN (" . implode(', ', $members) . ")
-		LIMIT " . count($members), __FILE__, __LINE__);
+			AND id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
 
 	// Those who have it as part of their additional group must be updated the long way... sadly.
 	$request = $smfFunc['db_query']('', "
@@ -259,8 +255,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
 			SET additional_groups = '" . implode(',', array_diff(explode(',', $additional_groups), $groups)) . "'
-			WHERE id_member IN (" . implode(', ', $memberArray) . ")
-			LIMIT " . count($memberArray), __FILE__, __LINE__);
+			WHERE id_member IN (" . implode(', ', $memberArray) . ")", __FILE__, __LINE__);
 
 	// Their post groups may have changed now...
 	updateStats('postgroups', 'id_member IN (' . implode(', ', $members) . ')');
@@ -328,16 +323,14 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 			SET additional_groups = IF(additional_groups = '', '$group', CONCAT(additional_groups, ',$group'))
 			WHERE id_member IN (" . implode(', ', $members) . ")
 				AND id_group != $group
-				AND NOT FIND_IN_SET($group, additional_groups)
-			LIMIT " . count($members), __FILE__, __LINE__);
+				AND NOT FIND_IN_SET($group, additional_groups)", __FILE__, __LINE__);
 	elseif ($type == 'only_primary' || $type == 'force_primary')
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
 			SET id_group = $group
 			WHERE id_member IN (" . implode(', ', $members) . ")" . ($type == 'force_primary' ? '' : "
 				AND id_group = 0
-				AND NOT FIND_IN_SET($group, additional_groups)") . "
-			LIMIT " . count($members), __FILE__, __LINE__);
+				AND NOT FIND_IN_SET($group, additional_groups)"), __FILE__, __LINE__);
 	elseif ($type == 'auto')
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
@@ -346,8 +339,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 				id_group = IF(id_group = 0, $group, id_group)
 			WHERE id_member IN (" . implode(', ', $members) . ")
 				AND id_group != $group
-				AND NOT FIND_IN_SET($group, additional_groups)
-			LIMIT " . count($members), __FILE__, __LINE__);
+				AND NOT FIND_IN_SET($group, additional_groups)", __FILE__, __LINE__);
 	// Ack!!?  What happened?
 	else
 		trigger_error('addMembersToGroup(): Unknown type \'' . $type . '\'', E_USER_WARNING);

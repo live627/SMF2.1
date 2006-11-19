@@ -113,8 +113,7 @@ function ModifyKarma()
 			UPDATE {$db_prefix}log_karma
 			SET action = $dir, log_time = " . time() . "
 			WHERE id_target = $_REQUEST[uid]
-				AND id_executor = $user_info[id]
-			LIMIT 1", __FILE__, __LINE__);
+				AND id_executor = $user_info[id]", __FILE__, __LINE__);
 
 		// It was recently changed the OTHER way... so... reverse it!
 		if ($dir == 1)

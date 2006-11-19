@@ -318,8 +318,7 @@ function AddMembergroup()
 						online_color = '$group_info[online_color]',
 						max_messages = $group_info[max_messages],
 						stars = '$group_info[stars]'
-					WHERE id_group = $id_group
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_group = $id_group", __FILE__, __LINE__);
 			}
 			// If inheriting say so...
 			elseif ($_POST['perm_type'] == 'inherit')
@@ -327,8 +326,7 @@ function AddMembergroup()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}membergroups
 					SET id_parent = $copy_id
-					WHERE id_group = $id_group
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_group = $id_group", __FILE__, __LINE__);
 			}
 		}
 
@@ -342,8 +340,7 @@ function AddMembergroup()
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}boards
 				SET member_groups = CASE WHEN member_groups = '' THEN '$id_group' ELSE CONCAT(member_groups, ',$id_group') END
-				WHERE id_board IN (" . implode(', ', $_POST['boardaccess']) . ")
-				LIMIT " . count($_POST['boardaccess']), __FILE__, __LINE__);
+				WHERE id_board IN (" . implode(', ', $_POST['boardaccess']) . ")", __FILE__, __LINE__);
 
 		// Rebuild the group cache.
 		cacheGroups();
@@ -444,8 +441,7 @@ function EditMembergroup()
 				max_messages = $_POST[max_messages], min_posts = $_POST[min_posts], stars = '$_POST[stars]',
 				description = '$_POST[group_desc]', group_type = $_POST[group_type], hidden = $_POST[group_hidden],
 				id_parent = $_POST[group_inherit]
-			WHERE id_group = " . (int) $_REQUEST['group'] . "
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_group = " . (int) $_REQUEST['group'], __FILE__, __LINE__);
 
 		// Time to update the boards this membergroup has access to.
 		if ($_REQUEST['group'] == 2 || $_REQUEST['group'] > 3)
@@ -464,8 +460,7 @@ function EditMembergroup()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
 					SET member_groups = '" . implode(',', array_diff(explode(',', $row['member_groups']), array($_REQUEST['group']))) . "'
-					WHERE id_board = $row[id_board]
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
 			// Add the membergroup to all boards that hadn't been set yet.

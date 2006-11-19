@@ -91,8 +91,7 @@ function modifyCategory($category_id, $catOptions)
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}categories
 					SET cat_order = $index
-					WHERE id_cat = $cat
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_cat = $cat", __FILE__, __LINE__);
 
 		// If the category order changed, so did the board order.
 		require_once($sourcedir . '/Subs-Boards.php');
@@ -113,8 +112,7 @@ function modifyCategory($category_id, $catOptions)
 			SET 
 				" . implode(',
 				', $catUpdates) . "
-			WHERE id_cat = $category_id
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_cat = $category_id", __FILE__, __LINE__);
 }
 
 // Create a new category.
@@ -190,8 +188,7 @@ function deleteCategories($categories, $moveBoardsTo = null)
 	// Do the deletion of the category itself
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}categories
-		WHERE id_cat IN (" . implode(', ', $categories) . ")
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE id_cat IN (" . implode(', ', $categories) . ")", __FILE__, __LINE__);
 
 	// Get all boards back into the right order.
 	reorderBoards();
@@ -256,8 +253,7 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 		if (!empty($updates['remove']))
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}collapsed_categories
-				WHERE (id_member = " . implode(') OR (id_member = ', $updates['remove']) . ")
-				LIMIT " . count($updates['remove']), __FILE__, __LINE__);
+				WHERE (id_member = " . implode(') OR (id_member = ', $updates['remove']) . ")", __FILE__, __LINE__);
 	}
 }
 

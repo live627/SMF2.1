@@ -1089,8 +1089,7 @@ function ssi_pollVote()
 		UPDATE {$db_prefix}poll_choices
 		SET votes = votes + 1
 		WHERE id_poll = $_POST[poll]
-			AND id_choice IN (" . implode(', ', $options) . ")
-		LIMIT " . count($options), __FILE__, __LINE__);
+			AND id_choice IN (" . implode(', ', $options) . ")", __FILE__, __LINE__);
 
 	redirectexit('topic=' . $row['id_topic'] . '.0');
 }

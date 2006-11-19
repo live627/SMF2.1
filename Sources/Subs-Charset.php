@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /******************************************************************************
 * Subs-Charset.php                                                            *
 *******************************************************************************
@@ -578,8 +578,7 @@ function fix_serialized_columns()
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_actions
 				SET extra = '$matches[1]" . strlen($matches[3]) . ":\"$matches[3]\"$matches[4]'
-				WHERE id_action = $row[id_action]
-				LIMIT 1", __FILE__, __LINE__);
+				WHERE id_action = $row[id_action]", __FILE__, __LINE__);
 	}
 	$smfFunc['db_free_result']($request);
 

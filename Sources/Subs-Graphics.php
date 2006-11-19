@@ -190,8 +190,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}attachments
 				SET size = " . filesize($destName) . ", width = " . (int) $width . ", height = " . (int) $height . "
-				WHERE id_attach = $attachID
-				LIMIT 1", __FILE__, __LINE__);
+				WHERE id_attach = $attachID", __FILE__, __LINE__);
 			return true;
 		}
 		else
@@ -201,8 +200,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	{
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}attachments
-			WHERE id_attach = $attachID
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_attach = $attachID", __FILE__, __LINE__);
 
 		@unlink($destName . '.tmp');
 		return false;

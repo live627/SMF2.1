@@ -97,8 +97,7 @@ function ModifyHolidays()
 		// Now the IDs are "safe" do the delete...
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}calendar_holidays
-			WHERE id_holiday IN (" . implode(', ', $_REQUEST['holiday']) . ")
-			LIMIT " . count($_REQUEST['holiday']), __FILE__, __LINE__);
+			WHERE id_holiday IN (" . implode(', ', $_REQUEST['holiday']) . ")", __FILE__, __LINE__);
 
 		updateStats('calendar');
 	}

@@ -920,8 +920,7 @@ function ConvertEntities()
 						SET 
 							" . implode(",
 							", $changes) . "
-						WHERE $primary_key = " . $row[$primary_key] . "
-						LIMIT 1", __FILE__, __LINE__);
+						WHERE $primary_key = " . $row[$primary_key], __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($request);
 			$context['start'] += 500;
@@ -1163,8 +1162,7 @@ function AdminBoardRecount()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
 					SET unapproved_posts = unapproved_posts + $row[real_unapproved_posts]
-					WHERE id_board = $row[id_board]
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
@@ -1202,8 +1200,7 @@ function AdminBoardRecount()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
 					SET unapproved_topics = unapproved_topics + $row[realUnapprovedTopics]
-					WHERE id_board = $row[id_board]
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
 			$smfFunc['db_free_result']($request);
 
 			$_REQUEST['start'] += $increment;
@@ -1275,8 +1272,7 @@ function AdminBoardRecount()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
 					SET id_board = $board_id
-					WHERE id_msg IN (" . implode(', ', $messages) . ")
-					LIMIT " . count($messages), __FILE__, __LINE__);
+					WHERE id_msg IN (" . implode(', ', $messages) . ")", __FILE__, __LINE__);
 
 			$_REQUEST['start'] += $increment;
 
@@ -1331,8 +1327,7 @@ function AdminBoardRecount()
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}boards
 					SET id_last_msg = $curLastMsg
-					WHERE id_board = $row[id_board]
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
 
 			// Parent boards inherit the latest message of their children.
 			if (isset($lastMsg[$row['id_parent']]))
