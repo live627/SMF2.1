@@ -252,7 +252,7 @@ $specificSmileys = array(
 );
 
 $request = convert_query("
-	SELECT MAX(smileyOrder)
+	SELECT MAX(smiley_order)
 	FROM {$to_prefix}smileys");
 list ($count) = mysql_fetch_row($request);
 mysql_free_result($request);
@@ -278,7 +278,7 @@ foreach ($specificSmileys as $code => $name)
 if (!empty($rows))
 	convert_query("
 		REPLACE INTO {$to_prefix}smileys
-			(code, filename, description, smileyOrder)
+			(code, filename, description, smiley_order)
 		VALUES (" . implode("),
 			(", $rows) . ")");
 ---}

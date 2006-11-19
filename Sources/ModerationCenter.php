@@ -173,7 +173,7 @@ function ModBlockReportedPosts()
 			IFNULL(mem.id_member, 0) AS ID_AUTHOR		
 		FROM {$db_prefix}log_reported AS lr
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
-		WHERE " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']) . "
+		WHERE " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']) . "
 			AND lr.closed = 0
 			AND lr.ignore_all = 0
 		ORDER BY lr.time_updated DESC
@@ -214,7 +214,7 @@ function ModBlockGroupRequests()
 	$request = $smfFunc['db_query']('', "
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, mem.member_name, mg.group_name
 		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
-		WHERE " . ($user_info['mod_cache']['gq'] == 1 ? '1' : 'lgr.' . $user_info['mod_cache']['gq']) . "
+		WHERE " . ($user_info['mod_cache']['gq'] == 1 ? '1=1' : 'lgr.' . $user_info['mod_cache']['gq']) . "
 			AND mem.id_member = lgr.id_member
 			AND mg.id_group = lgr.id_group
 		ORDER BY lgr.id_request DESC
@@ -297,7 +297,7 @@ function ReportedPosts()
 			UPDATE {$db_prefix}log_reported
 			SET " . (isset($_GET['ignore']) ? 'ignore_all = ' . (int) $_GET['ignore'] : 'closed = ' . (int) $_GET['close']) . "
 			WHERE id_report = $_GET[rid]
-				AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : $user_info['mod_cache']['bq']) . "
+				AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : $user_info['mod_cache']['bq']) . "
 			LIMIT 1", __FILE__, __LINE__);
 
 		// Time to update.
@@ -319,7 +319,7 @@ function ReportedPosts()
 				UPDATE {$db_prefix}log_reported
 				SET closed = 1
 				WHERE id_report IN (" . implode(',', $toClose) . ")
-					AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : $user_info['mod_cache']['bq']), __FILE__, __LINE__);
+					AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : $user_info['mod_cache']['bq']), __FILE__, __LINE__);
 
 			// Time to update.
 			updateSettings(array('last_mod_report_action' => time()));
@@ -332,7 +332,7 @@ function ReportedPosts()
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_reported AS lr
 		WHERE closed = $context[view_closed]
-			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']), __FILE__, __LINE__);
+			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']), __FILE__, __LINE__);
 	list ($context['total_reports']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -348,7 +348,7 @@ function ReportedPosts()
 		FROM {$db_prefix}log_reported AS lr
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.closed = $context[view_closed]
-			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']) . "
+			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']) . "
 		ORDER BY lr.time_updated DESC
 		LIMIT $context[start], 10", __FILE__, __LINE__);
 	$context['reports'] = array();
@@ -475,7 +475,7 @@ function ModReport()
 		FROM {$db_prefix}log_reported AS lr
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.id_report = $_REQUEST[report]
-			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1' : 'lr.' . $user_info['mod_cache']['bq']) . "
+			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']) . "
 		LIMIT 1", __FILE__, __LINE__);
 	
 	// So did we find anything?

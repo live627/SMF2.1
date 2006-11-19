@@ -965,27 +965,10 @@ function OptimizeTables()
 	$context['sub_template'] = 'optimize';
 
 	// Get a list of tables, as well as how many there are.
-	$result = $smfFunc['db_query']('', "
-		SHOW TABLE STATUS
-		FROM `$db_name`", false, false);
+	$temp_tables = $smfFunc['db_list_tables']();
 	$tables = array();
-
-	if (!$result)
-	{
-		$result = $smfFunc['db_query']('', "
-			SHOW TABLES
-			FROM `$db_name`", __FILE__, __LINE__);
-		while ($table = $smfFunc['db_fetch_row']($result))
-			$tables[] = array('table_name' => $row[0]);
-		$smfFunc['db_free_result']($result);
-	}
-	else
-	{
-		$i = 0;
-		while ($table = $smfFunc['db_fetch_assoc']($result))
-			$tables[] = $table + array('table_name' => $smfFunc['db_tablename']($result, $i++));
-		$smfFunc['db_free_result']($result);
-	}
+	foreach ($temp_tables as $table)
+		$tables[] = array('table_name' => $table);
 
 	// If there aren't any tables then I believe that would mean the world has exploded...
 	$context['num_tables'] = count($tables);

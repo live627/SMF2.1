@@ -99,7 +99,7 @@ CREATE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer)
 # Sequence for table `admin_info_files`
 #
 
-CREATE SEQUENCE {$db_prefix}admin_info_files_seq;
+CREATE SEQUENCE {$db_prefix}admin_info_files_seq START WITH 8;
 
 #
 # Table structure for table `admin_info_files`
@@ -523,7 +523,7 @@ INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VAL
 # Sequence for table `boards`
 #
 
-CREATE SEQUENCE {$db_prefix}boards_seq;
+CREATE SEQUENCE {$db_prefix}boards_seq START WITH 2;
 
 #
 # Table structure for table `boards`
@@ -798,7 +798,7 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('D-Day', '
 # Sequence for table `categories`
 #
 
-CREATE SEQUENCE {$db_prefix}categories_seq;
+CREATE SEQUENCE {$db_prefix}categories_seq START WITH 2;
 
 #
 # Table structure for table `categories`
@@ -1330,7 +1330,7 @@ CREATE INDEX {$db_prefix}mail_queue_priority ON {$db_prefix}mail_queue (priority
 # Sequence for table `membergroups`
 #
 
-CREATE SEQUENCE {$db_prefix}membergroups_seq;
+CREATE SEQUENCE {$db_prefix}membergroups_seq START WITH 9;
 
 #
 # Table structure for table `membergroups`
@@ -1497,7 +1497,7 @@ INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('win
 # Sequence for table `messages`
 #
 
-CREATE SEQUENCE {$db_prefix}messages_seq;
+CREATE SEQUENCE {$db_prefix}messages_seq START WITH 2;
 
 #
 # Table structure for table `messages`
@@ -1585,7 +1585,7 @@ VALUES ('Simple Machines Third-party Mod Site', 'http://mods.simplemachines.org'
 # Sequence for table `permission_profiles`
 #
 
-CREATE SEQUENCE {$db_prefix}permission_profiles_seq;
+CREATE SEQUENCE {$db_prefix}permission_profiles_seq START WITH 5;
 
 #
 # Table structure for table `permission_profiles`
@@ -1752,7 +1752,7 @@ CREATE TABLE {$db_prefix}poll_choices (
 # Sequence for table `scheduled_tasks`
 #
 
-CREATE SEQUENCE {$db_prefix}scheduled_tasks_seq;
+CREATE SEQUENCE {$db_prefix}scheduled_tasks_seq START WITH 9;
 
 #
 # Table structure for table `scheduled_tasks`
@@ -1981,39 +1981,39 @@ CREATE SEQUENCE {$db_prefix}smileys_seq;
 #
 
 CREATE TABLE {$db_prefix}smileys (
-  ID_SMILEY smallint default nextval('{$db_prefix}smileys_seq'),
+  id_smiley smallint default nextval('{$db_prefix}smileys_seq'),
   code varchar(30) NOT NULL default '',
   filename varchar(48) NOT NULL default '',
   description varchar(80) NOT NULL default '',
-  smileyRow smallint NOT NULL default '0',
-  smileyOrder smallint NOT NULL default '0',
+  smiley_row smallint NOT NULL default '0',
+  smiley_order smallint NOT NULL default '0',
   hidden smallint NOT NULL default '0',
-  PRIMARY KEY (ID_SMILEY)
+  PRIMARY KEY (id_smiley)
 );
 
 #
 # Dumping data for table `smileys`
 #
 
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (';)', 'wink.gif', '{$default_wink_smiley}', 1, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':D', 'cheesy.gif', '{$default_cheesy_smiley}', 2, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (';D', 'grin.gif', '{$default_grin_smiley}', 3, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES ('>:(', 'angry.gif', '{$default_angry_smiley}', 4, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':(', 'sad.gif', '{$default_sad_smiley}', 5, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':o', 'shocked.gif', '{$default_shocked_smiley}', 6, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES ('8)', 'cool.gif', '{$default_cool_smiley}', 7, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES ('???', 'huh.gif', '{$default_huh_smiley}', 8, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES ('::)', 'rolleyes.gif', '{$default_roll_eyes_smiley}', 9, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':P', 'tongue.gif', '{$default_tongue_smiley}', 10, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':-[', 'embarrassed.gif', '{$default_embarrassed_smiley}', 11, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':-X', 'lipsrsealed.gif', '{$default_lips_sealed_smiley}', 12, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':-\\', 'undecided.gif', '{$default_undecided_smiley}', 13, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':-*', 'kiss.gif', '{$default_kiss_smiley}', 14, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES (':\'(', 'cry.gif', '{$default_cry_smiley}', 15, 0);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES ('>:D', 'evil.gif', '{$default_evil_smiley}', 16, 1);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES ('^-^', 'azn.gif', '{$default_azn_smiley}', 17, 1);
-INSERT INTO {$db_prefix}smileys	(code, filename, description, smileyOrder, hidden) VALUES ('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (';)', 'wink.gif', '{$default_wink_smiley}', 1, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':D', 'cheesy.gif', '{$default_cheesy_smiley}', 2, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (';D', 'grin.gif', '{$default_grin_smiley}', 3, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('>:(', 'angry.gif', '{$default_angry_smiley}', 4, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':(', 'sad.gif', '{$default_sad_smiley}', 5, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':o', 'shocked.gif', '{$default_shocked_smiley}', 6, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('8)', 'cool.gif', '{$default_cool_smiley}', 7, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('???', 'huh.gif', '{$default_huh_smiley}', 8, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('::)', 'rolleyes.gif', '{$default_roll_eyes_smiley}', 9, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':P', 'tongue.gif', '{$default_tongue_smiley}', 10, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':-[', 'embarrassed.gif', '{$default_embarrassed_smiley}', 11, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':-X', 'lipsrsealed.gif', '{$default_lips_sealed_smiley}', 12, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':-\\', 'undecided.gif', '{$default_undecided_smiley}', 13, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':-*', 'kiss.gif', '{$default_kiss_smiley}', 14, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':\'(', 'cry.gif', '{$default_cry_smiley}', 15, 0);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('>:D', 'evil.gif', '{$default_evil_smiley}', 16, 1);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('^-^', 'azn.gif', '{$default_azn_smiley}', 17, 1);
+INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1);
 # --------------------------------------------------------
 
 #
@@ -2076,7 +2076,7 @@ INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'theme_dir
 # Sequence for table `topics`
 #
 
-CREATE SEQUENCE {$db_prefix}topics_seq;
+CREATE SEQUENCE {$db_prefix}topics_seq START WITH 2;
 
 #
 # Table structure for table `topics`

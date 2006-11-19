@@ -61,7 +61,6 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_affected_rows' => 'db_affected_rows',
 			'db_error' => 'mysql_error',
 			'db_select_db' => 'mysql_select_db',
-			'db_list_tables' => 'mysql_list_tables',
 			'db_title' => 'MySQL',
 		);
 

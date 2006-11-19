@@ -326,6 +326,11 @@ CHANGE COLUMN timeRegularity time_regularity smallint(5) NOT NULL,
 CHANGE COLUMN timeOffset time_offset int(10) NOT NULL,
 CHANGE COLUMN timeUnit time_unit varchar(1) NOT NULL default 'h';
 
+ALTER TABLE {$db_prefix}smileys
+CHANGE COLUMN ID_SMILEY id_smiley smallint(5) unsigned NOT NULL auto_increment,
+CHANGE COLUMN smileyRow smiley_row tinyint(4) unsigned NOT NULL default '0',
+CHANGE COLUMN smileyOrder smiley_order smallint(5) unsigned NOT NULL default '0';
+
 ALTER TABLE {$db_prefix}themes
 CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '1';
 

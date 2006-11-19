@@ -310,17 +310,17 @@ function RecentPosts()
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			m.id_msg, m.subject, m.smileys_enabled, m.poster_time, m.body, m.id_topic, t.id_board, b.id_cat,
-			b.name AS bname, c.name AS cname, t.num_replies, m.id_member, m2.id_member AS ID_FIRST_MEMBER,
-			IFNULL(mem2.real_name, m2.poster_name) AS firstPosterName, t.id_first_msg,
+			b.name AS bname, c.name AS cname, t.num_replies, m.id_member, m2.id_member AS id_first_member,
+			IFNULL(mem2.real_name, m2.poster_name) AS first_poster_name, t.id_first_msg,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, t.id_last_msg
-		FROM ({$db_prefix}messages AS m, {$db_prefix}messages AS m2, {$db_prefix}topics AS t, {$db_prefix}boards AS b, {$db_prefix}categories AS c)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+			INNER JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+			INNER JOIN {$db_prefix}messages AS m2 ON (m2.id_msg = t.id_first_msg)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.id_member = m2.id_member)
-		WHERE m2.id_msg = t.id_first_msg
-			AND t.id_topic = m.id_topic
-			AND b.id_board = t.id_board
-			AND c.id_cat = b.id_cat
-			AND m.id_msg IN (" . implode(', ', $messages) . ")
+		WHERE m.id_msg IN (" . implode(', ', $messages) . ")
 		ORDER BY m.id_msg DESC
 		LIMIT " . count($messages), __FILE__, __LINE__);
 	$counter = $_REQUEST['start'] + 1;
@@ -359,10 +359,10 @@ function RecentPosts()
 			'time' => timeformat($row['poster_time']),
 			'timestamp' => forum_time(true, $row['poster_time']),
 			'first_poster' => array(
-				'id' => $row['ID_FIRST_MEMBER'],
-				'name' => $row['firstPosterName'],
-				'href' => empty($row['ID_FIRST_MEMBER']) ? '' : $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'],
-				'link' => empty($row['ID_FIRST_MEMBER']) ? $row['firstPosterName'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] . '">' . $row['firstPosterName'] . '</a>'
+				'id' => $row['id_first_member'],
+				'name' => $row['first_poster_name'],
+				'href' => empty($row['id_first_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_first_member'],
+				'link' => empty($row['id_first_member']) ? $row['first_poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_first_member'] . '">' . $row['first_poster_name'] . '</a>'
 			),
 			'poster' => array(
 				'id' => $row['id_member'],
@@ -377,7 +377,7 @@ function RecentPosts()
 			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
 		);
 
-		if ($id_member == $row['ID_FIRST_MEMBER'])
+		if ($id_member == $row['id_first_member'])
 			$board_ids['own'][$row['id_board']][] = $row['id_msg'];
 		$board_ids['any'][$row['id_board']][] = $row['id_msg'];
 	}
@@ -642,8 +642,8 @@ function UnreadTopics()
 	// This part is the same for each query.
 	$select_clause = '
 				ms.subject AS first_subject, ms.poster_time AS first_poster_time, ms.id_topic, t.id_board, b.name AS bname,
-				t.num_replies, t.num_views, ms.id_member AS ID_FIRST_MEMBER, ml.id_member AS ID_LAST_MEMBER,
-				ml.poster_time AS last_poster_time, IFNULL(mems.real_name, ms.poster_name) AS firstPosterName,
+				t.num_replies, t.num_views, ms.id_member AS id_first_member, ml.id_member AS ID_LAST_MEMBER,
+				ml.poster_time AS last_poster_time, IFNULL(mems.real_name, ms.poster_name) AS first_poster_name,
 				IFNULL(meml.real_name, ml.poster_name) AS lastPosterName, ml.subject AS last_subject,
 				ml.icon AS last_icon, ms.icon AS first_icon, t.id_poll, t.is_sticky, t.locked, ml.modified_time AS lastModifiedTime,
 				IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, LEFT(ml.body, 384) AS last_body, LEFT(ms.body, 384) AS first_body,
@@ -1082,10 +1082,10 @@ function UnreadTopics()
 			'first_post' => array(
 				'id' => $row['id_first_msg'],
 				'member' => array(
-					'name' => $row['firstPosterName'],
-					'id' => $row['ID_FIRST_MEMBER'],
-					'href' => $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'],
-					'link' => !empty($row['ID_FIRST_MEMBER']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['ID_FIRST_MEMBER'] . '" title="' . $txt['profile_of'] . ' ' . $row['firstPosterName'] . '">' . $row['firstPosterName'] . '</a>' : $row['firstPosterName']
+					'name' => $row['first_poster_name'],
+					'id' => $row['id_first_member'],
+					'href' => $scripturl . '?action=profile;u=' . $row['id_first_member'],
+					'link' => !empty($row['id_first_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_first_member'] . '" title="' . $txt['profile_of'] . ' ' . $row['first_poster_name'] . '">' . $row['first_poster_name'] . '</a>' : $row['first_poster_name']
 				),
 				'time' => timeformat($row['first_poster_time']),
 				'timestamp' => forum_time(true, $row['first_poster_time']),

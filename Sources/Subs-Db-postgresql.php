@@ -61,7 +61,6 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 			'db_affected_rows' => 'db_affected_rows',
 			'db_error' => 'pg_last_error',
 			'db_select_db' => 'postg_select_db',
-			'db_list_tables' => 'postg_list_tables',
 			'db_title' => 'PostgreSQL',
 		);
 
@@ -552,18 +551,6 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 function postg_select_db($db_name, $db_connection)
 {
 	return true;
-}
-
-function postg_list_tables($db_name)
-{
-	global $db_row_count, $db_prefix;
-
-	return db_query('', "
-		SELECT tablename
-		FROM pg_tables
-		WHERE tablename !~ '^pg_+'
-			AND tablename !~ '^sql_+'
-			AND tablename ~ '^{$db_prefix}'", false, false);
 }
 
 // Get the current version.

@@ -213,7 +213,7 @@ function SelectMailingMembers()
 		SELECT mg.id_group, mg.group_name, mg.min_posts
 		FROM {$db_prefix}membergroups AS mg" . (empty($modSettings['permission_enable_postgroups']) ? "
 		WHERE mg.min_posts = -1" : '') . "
-		GROUP BY mg.id_group
+		GROUP BY mg.id_group, mg.min_posts, mg.group_name
 		ORDER BY mg.min_posts, CASE WHEN mg.id_group < 4 THEN mg.id_group ELSE 4 END, mg.group_name", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

@@ -1605,14 +1605,14 @@ CREATE TABLE {$db_prefix}sessions (
 #
 
 CREATE TABLE {$db_prefix}smileys (
-  ID_SMILEY smallint(5) unsigned NOT NULL auto_increment,
+  id_smiley smallint(5) unsigned NOT NULL auto_increment,
   code varchar(30) NOT NULL default '',
   filename varchar(48) NOT NULL default '',
   description varchar(80) NOT NULL default '',
-  smileyRow tinyint(4) unsigned NOT NULL default '0',
-  smileyOrder smallint(5) unsigned NOT NULL default '0',
+  smiley_row tinyint(4) unsigned NOT NULL default '0',
+  smiley_order smallint(5) unsigned NOT NULL default '0',
   hidden tinyint(4) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_SMILEY)
+  PRIMARY KEY (id_smiley)
 ) TYPE=MyISAM;
 
 #
@@ -1620,7 +1620,7 @@ CREATE TABLE {$db_prefix}smileys (
 #
 
 INSERT INTO {$db_prefix}smileys
-	(code, filename, description, smileyOrder, hidden)
+	(code, filename, description, smiley_order, hidden)
 VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0),
 	(';)', 'wink.gif', '{$default_wink_smiley}', 1, 0),
 	(':D', 'cheesy.gif', '{$default_cheesy_smiley}', 2, 0),

@@ -228,12 +228,12 @@ function UnapprovedPosts()
 		SELECT m.id_msg, m.id_topic, m.id_board, m.subject, m.body, m.id_member,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
 			t.id_member_started, t.id_first_msg, b.name AS board_name, c.id_cat, c.name AS cat_name
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)			
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE m.approved = 0
-			AND t.id_topic = m.id_topic
-			AND b.id_board = m.id_board
 			AND t.id_first_msg " . ($context['current_view'] == 'topics' ? '=' : '!=') . " m.id_msg
 			AND $user_info[query_see_board]
 			$approve_query
@@ -372,14 +372,14 @@ function UnapprovedAttachments()
 		SELECT a.id_attach, a.filename, a.size, m.id_msg, m.id_topic, m.id_board, m.subject, m.body, m.id_member,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time,
 			t.id_member_started, t.id_first_msg, b.name AS board_name, c.id_cat, c.name AS cat_name
-		FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+		FROM {$db_prefix}attachments AS a
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE a.approved = 0
 			AND a.attachment_type = 0
-			AND m.id_msg = a.id_msg
-			AND t.id_topic = m.id_topic
-			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 			$approve_query
 		LIMIT $context[start], 10", __FILE__, __LINE__);

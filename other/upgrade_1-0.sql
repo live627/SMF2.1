@@ -169,21 +169,21 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}poll_choices (
 
 ---# Creating "smileys"...
 CREATE TABLE IF NOT EXISTS {$db_prefix}smileys (
-	ID_SMILEY smallint(5) unsigned NOT NULL auto_increment,
+	id_smiley smallint(5) unsigned NOT NULL auto_increment,
 	code varchar(30) NOT NULL default '',
 	filename varchar(48) NOT NULL default '',
 	description varchar(80) NOT NULL default '',
-	smileyRow tinyint(4) unsigned NOT NULL default '0',
-	smileyOrder tinyint(4) unsigned NOT NULL default '0',
+	smiley_row tinyint(4) unsigned NOT NULL default '0',
+	smiley_order tinyint(4) unsigned NOT NULL default '0',
 	hidden tinyint(4) unsigned NOT NULL default '0',
-	PRIMARY KEY (ID_SMILEY),
-	KEY smileyOrder (smileyOrder)
+	PRIMARY KEY (id_smiley),
+	KEY smiley_order (smiley_order)
 ) TYPE=MyISAM;
 ---#
 
 ---# Loading default smileys...
 INSERT IGNORE INTO {$db_prefix}smileys
-	(ID_SMILEY, code, filename, description, smileyOrder, hidden)
+	(id_smiley, code, filename, description, smiley_order, hidden)
 VALUES (1, ':)', 'smiley.gif', 'Smiley', 0, 0),
 	(2, ';)', 'wink.gif', 'Wink', 1, 0),
 	(3, ':D', 'cheesy.gif', 'Cheesy', 2, 0),

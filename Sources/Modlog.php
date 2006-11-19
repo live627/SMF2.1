@@ -45,7 +45,7 @@ function ViewModlog()
 	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc;
 
 	$context['can_delete'] = allowedTo('admin_forum');
-	$user_info['modlog_query'] = $context['can_delete'] ? '1' : (empty($user_info['mod_cache']['bq']) ? 'lm.id_action=0' : 'lm.' . $user_info['mod_cache']['bq']);
+	$user_info['modlog_query'] = $context['can_delete'] ? '1=1' : (empty($user_info['mod_cache']['bq']) ? 'lm.id_action=0' : 'lm.' . $user_info['mod_cache']['bq']);
 
 	loadTemplate('Modlog');
 
@@ -171,7 +171,7 @@ function ViewModlog()
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_actions AS lm
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
 		WHERE" . (!empty($search_params['string']) ? " INSTR($search_params[type_sql], '$search_params[string]')
 			AND" : '') . " $user_info[modlog_query]", __FILE__, __LINE__);
 	list ($context['entry_count']) = $smfFunc['db_fetch_row']($result);
@@ -211,7 +211,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 			mem.real_name, mg.group_name
 		FROM {$db_prefix}log_actions AS lm
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))" . (!empty($search_param) ? '
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" . (!empty($search_param) ? '
 		WHERE ' . $search_param : '') . (!empty($order) ? '
 		ORDER BY ' . $order : '') . "
 		$limit", __FILE__, __LINE__);

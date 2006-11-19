@@ -387,7 +387,7 @@ function DisplayStats()
 		SELECT id_member, real_name
 		FROM {$db_prefix}members
 		WHERE id_member IN (" . implode(', ', array_keys($members)) . ")
-		GROUP BY id_member
+		GROUP BY id_member, real_name
 		ORDER BY FIND_IN_SET(id_member, '" . implode(',', array_keys($members)) . "')
 		LIMIT 10", __FILE__, __LINE__);
 	$context['top_starters'] = array();
@@ -464,7 +464,7 @@ function DisplayStats()
 	// Activity by month.
 	$months_result = $smfFunc['db_query']('', "
 		SELECT
-			YEAR(date) AS stats_year, MONTH(date) AS stats_month, SUM(hits) AS hits, SUM(registers) AS registers, SUM(topics) AS topics, SUM(posts) AS posts, MAX(most_on) AS most_on, COUNT(*) AS numDays
+			YEAR(date) AS stats_year, MONTH(date) AS stats_month, SUM(hits) AS hits, SUM(registers) AS registers, SUM(topics) AS topics, SUM(posts) AS posts, MAX(most_on) AS most_on, COUNT(*) AS num_days
 		FROM {$db_prefix}log_activity
 		GROUP BY stats_year, stats_month", __FILE__, __LINE__);
 	$context['monthly'] = array();
@@ -488,7 +488,7 @@ function DisplayStats()
 			'new_members' => $row_months['registers'],
 			'most_members_online' => $row_months['most_on'],
 			'hits' => $row_months['hits'],
-			'num_days' => $row_months['numDays'],
+			'num_days' => $row_months['num_days'],
 			'days' => array(),
 			'expanded' => $expanded
 		);

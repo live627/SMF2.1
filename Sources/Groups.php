@@ -86,7 +86,7 @@ function GroupList()
 	// Yep, find the groups...
 	$request = $smfFunc['db_query']('', "
 		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
-			mg.stars, !ISNULL(gm.id_member) AS can_moderate
+			mg.stars, IFNULL(gm.id_member, 0) AS can_moderate
 		FROM {$db_prefix}membergroups AS mg
 			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = $user_info[id])
 		WHERE mg.min_posts = -1
@@ -355,7 +355,7 @@ function GroupRequests()
 		isAllowedTo('manage_membergroups');
 
 	// Normally, we act normally...
-	$where = $user_info['mod_cache']['gq'] == 1 ? '1' : 'lgr.' . $user_info['mod_cache']['gq'];
+	$where = $user_info['mod_cache']['gq'] == 1 ? '1=1' : 'lgr.' . $user_info['mod_cache']['gq'];
 
 	// We've submitted?
 	if (isset($_POST['sc']) && !empty($_POST['groupr']) && !empty($_POST['req_action']))

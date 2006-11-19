@@ -2046,7 +2046,7 @@ function trackUser($memID)
 
 	// Now also get the IP addresses from the error messages.
 	$request = $smfFunc['db_query']('', "
-		SELECT COUNT(*) AS errorCount, ip
+		SELECT COUNT(*) AS error_count, ip
 		FROM {$db_prefix}log_errors
 		WHERE id_member = $memID
 		GROUP BY ip", __FILE__, __LINE__);
@@ -2056,7 +2056,7 @@ function trackUser($memID)
 	{
 		$context['error_ips'][] = '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['ip'] . '">' . $row['ip'] . '</a>';
 		$ips[] = $row['ip'];
-		$totalErrors += $row['errorCount'];
+		$totalErrors += $row['error_count'];
 	}
 	$smfFunc['db_free_result']($request);
 

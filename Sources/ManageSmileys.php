@@ -40,7 +40,7 @@ if (!defined('SMF'))
 	void EditSmileys()
 		// !!!
 
-	void EditSmileyOrder()
+	void Editsmiley_order()
 		// !!!
 
 	void InstallSmileySet()
@@ -68,7 +68,7 @@ function ManageSmileys()
 		'import' => 'EditSmileySets',
 		'modifyset' => 'EditSmileySets',
 		'modifysmiley' => 'EditSmileys',
-		'setorder' => 'EditSmileyOrder',
+		'setorder' => 'Editsmiley_order',
 		'settings' => 'EditSmileySettings',
 		'install' => 'InstallSmileySet'
 	);
@@ -400,7 +400,7 @@ function AddSmiley()
 
 		// Check whether the new code has duplicates. It should be unique.
 		$request = $smfFunc['db_query']('', "
-			SELECT ID_SMILEY
+			SELECT id_smiley
 			FROM {$db_prefix}smileys
 			WHERE code = BINARY '$_POST[smiley_code]'", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) > 0)
@@ -527,24 +527,24 @@ function AddSmiley()
 			fatal_lang_error('smiley_has_no_filename');
 
 		// Find the position on the right.
-		$smileyOrder = '0';
+		$smiley_order = '0';
 		if ($_POST['smiley_location'] != 1)
 		{
 			$request = $smfFunc['db_query']('', "
-				SELECT MAX(smileyOrder) + 1
+				SELECT MAX(smiley_order) + 1
 				FROM {$db_prefix}smileys
 				WHERE hidden = $_POST[smiley_location]
-					AND smileyRow = 0", __FILE__, __LINE__);
-			list ($smileyOrder) = $smfFunc['db_fetch_row']($request);
+					AND smiley_row = 0", __FILE__, __LINE__);
+			list ($smiley_order) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 
-			if (empty($smileyOrder))
-				$smileyOrder = '0';
+			if (empty($smiley_order))
+				$smiley_order = '0';
 		}
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}smileys
-				(code, filename, description, hidden, smileyOrder)
-			VALUES (SUBSTRING('$_POST[smiley_code]', 1, 30), SUBSTRING('$_POST[smiley_filename]', 1, 48), SUBSTRING('$_POST[smiley_description]', 1, 80), $_POST[smiley_location], $smileyOrder)", __FILE__, __LINE__);
+				(code, filename, description, hidden, smiley_order)
+			VALUES (SUBSTRING('$_POST[smiley_code]', 1, 30), SUBSTRING('$_POST[smiley_filename]', 1, 48), SUBSTRING('$_POST[smiley_description]', 1, 80), $_POST[smiley_location], $smiley_order)", __FILE__, __LINE__);
 
 		cache_put_data('parsing_smileys', null, 480);
 		cache_put_data('posting_smileys', null, 480);
@@ -611,7 +611,7 @@ function EditSmileys()
 			if ($_POST['smiley_action'] == 'delete')
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}smileys
-					WHERE ID_SMILEY IN (" . implode(', ', $_POST['checked_smileys']) . ')', __FILE__, __LINE__);
+					WHERE id_smiley IN (" . implode(', ', $_POST['checked_smileys']) . ')', __FILE__, __LINE__);
 			// Changing the status of the smiley?
 			else
 			{
@@ -625,7 +625,7 @@ function EditSmileys()
 					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}smileys
 						SET hidden = " . $displayTypes[$_POST['smiley_action']] . "
-						WHERE ID_SMILEY IN (" . implode(', ', $_POST['checked_smileys']) . ')', __FILE__, __LINE__);
+						WHERE id_smiley IN (" . implode(', ', $_POST['checked_smileys']) . ')', __FILE__, __LINE__);
 			}
 		}
 		// Create/modify a smiley.
@@ -646,10 +646,10 @@ function EditSmileys()
 
 			// Check whether the new code has duplicates. It should be unique.
 			$request = $smfFunc['db_query']('', "
-				SELECT ID_SMILEY
+				SELECT id_smiley
 				FROM {$db_prefix}smileys
 				WHERE code = BINARY '$_POST[smiley_code]'" . (empty($_POST['smiley']) ? '' : "
-					AND ID_SMILEY != $_POST[smiley]"), __FILE__, __LINE__);
+					AND id_smiley != $_POST[smiley]"), __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($request) > 0)
 				fatal_lang_error('smiley_not_unique');
 			$smfFunc['db_free_result']($request);
@@ -661,7 +661,7 @@ function EditSmileys()
 					filename = '$_POST[smiley_filename]',
 					description = '$_POST[smiley_description]',
 					hidden = $_POST[smiley_location]
-				WHERE ID_SMILEY = $_POST[smiley]", __FILE__, __LINE__);
+				WHERE id_smiley = $_POST[smiley]", __FILE__, __LINE__);
 
 			// Sort all smiley codes for more accurate parsing (longest code first).
 			$smfFunc['db_query']('', "
@@ -698,18 +698,18 @@ function EditSmileys()
 		$context['sort'] = empty($_REQUEST['sort']) || !in_array($_REQUEST['sort'], $sortColumns) ? 'filename' : $_REQUEST['sort'];
 
 		$request = $smfFunc['db_query']('', "
-			SELECT ID_SMILEY, code, filename, description, smileyRow, smileyOrder, hidden
+			SELECT id_smiley, code, filename, description, smiley_row, smiley_order, hidden
 			FROM {$db_prefix}smileys
 			ORDER BY $context[sort]", __FILE__, __LINE__);
 		$context['smileys'] = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['smileys'][] = array(
-				'id' => $row['ID_SMILEY'],
+				'id' => $row['id_smiley'],
 				'code' => htmlspecialchars($row['code']),
 				'filename' => htmlspecialchars($row['filename']),
 				'description' => htmlspecialchars($row['description']),
-				'row' => $row['smileyRow'],
-				'order' => $row['smileyOrder'],
+				'row' => $row['smiley_row'],
+				'order' => $row['smiley_order'],
 				'location' => empty($row['hidden']) ? $txt['smileys_location_form'] : ($row['hidden'] == 1 ? $txt['smileys_location_hidden'] : $txt['smileys_location_popup']),
 				'sets_not_found' => array(),
 			);
@@ -769,9 +769,9 @@ function EditSmileys()
 		}
 
 		$request = $smfFunc['db_query']('', "
-			SELECT ID_SMILEY AS id, code, filename, description, hidden AS location, 0 AS is_new
+			SELECT id_smiley AS id, code, filename, description, hidden AS location, 0 AS is_new
 			FROM {$db_prefix}smileys
-			WHERE ID_SMILEY = " . (int) $_REQUEST['smiley'], __FILE__, __LINE__);
+			WHERE id_smiley = " . (int) $_REQUEST['smiley'], __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) != 1)
 			fatal_lang_error('smiley_not_found');
 		$context['current_smiley'] = $smfFunc['db_fetch_assoc']($request);
@@ -786,7 +786,7 @@ function EditSmileys()
 	}
 }
 
-function EditSmileyOrder()
+function Editsmiley_order()
 {
 	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $smfFunc;
 
@@ -806,46 +806,46 @@ function EditSmileyOrder()
 			$_GET['after'] = (int) $_GET['after'];
 
 			$request = $smfFunc['db_query']('', "
-				SELECT smileyRow, smileyOrder, hidden
+				SELECT smiley_row, smiley_order, hidden
 				FROM {$db_prefix}smileys
 				WHERE hidden = $_GET[location]
-					AND ID_SMILEY = $_GET[after]", __FILE__, __LINE__);
+					AND id_smiley = $_GET[after]", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($request) != 1)
 				fatal_lang_error('smiley_not_found');
-			list ($smileyRow, $smileyOrder, $smileyLocation) = $smfFunc['db_fetch_row']($request);
+			list ($smiley_row, $smiley_order, $smileyLocation) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 		}
 		else
 		{
-			$smileyRow = (int) $_GET['row'];
-			$smileyOrder = -1;
+			$smiley_row = (int) $_GET['row'];
+			$smiley_order = -1;
 			$smileyLocation = (int) $_GET['location'];
 		}
 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}smileys
-			SET smileyOrder = smileyOrder + 1
+			SET smiley_order = smiley_order + 1
 			WHERE hidden = $_GET[location]
-				AND smileyRow = $smileyRow
-				AND smileyOrder > $smileyOrder", __FILE__, __LINE__);
+				AND smiley_row = $smiley_row
+				AND smiley_order > $smiley_order", __FILE__, __LINE__);
 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}smileys
 			SET
-				smileyOrder = $smileyOrder + 1,
-				smileyRow = $smileyRow,
+				smiley_order = $smiley_order + 1,
+				smiley_row = $smiley_row,
 				hidden = $smileyLocation
-			WHERE ID_SMILEY = $_GET[source]", __FILE__, __LINE__);
+			WHERE id_smiley = $_GET[source]", __FILE__, __LINE__);
 
 		cache_put_data('parsing_smileys', null, 480);
 		cache_put_data('posting_smileys', null, 480);
 	}
 
 	$request = $smfFunc['db_query']('', "
-		SELECT ID_SMILEY, code, filename, description, smileyRow, smileyOrder, hidden
+		SELECT id_smiley, code, filename, description, smiley_row, smiley_order, hidden
 		FROM {$db_prefix}smileys
 		WHERE hidden != 1
-		ORDER BY smileyOrder, smileyRow", __FILE__, __LINE__);
+		ORDER BY smiley_order, smiley_row", __FILE__, __LINE__);
 	$context['smileys'] = array(
 		'postform' => array(
 			'rows' => array(),
@@ -857,14 +857,14 @@ function EditSmileyOrder()
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$location = empty($row['hidden']) ? 'postform' : 'popup';
-		$context['smileys'][$location]['rows'][$row['smileyRow']][] = array(
-			'id' => $row['ID_SMILEY'],
+		$context['smileys'][$location]['rows'][$row['smiley_row']][] = array(
+			'id' => $row['id_smiley'],
 			'code' => htmlspecialchars($row['code']),
 			'filename' => htmlspecialchars($row['filename']),
 			'description' => htmlspecialchars($row['description']),
-			'row' => $row['smileyRow'],
-			'order' => $row['smileyOrder'],
-			'selected' => !empty($_REQUEST['move']) && $_REQUEST['move'] == $row['ID_SMILEY'],
+			'row' => $row['smiley_row'],
+			'order' => $row['smiley_order'],
+			'selected' => !empty($_REQUEST['move']) && $_REQUEST['move'] == $row['id_smiley'],
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -891,8 +891,8 @@ function EditSmileyOrder()
 			{
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}smileys
-					SET smileyRow = $id
-					WHERE smileyRow = {$smiley_row[0]['row']}
+					SET smiley_row = $id
+					WHERE smiley_row = {$smiley_row[0]['row']}
 						AND hidden = " . ($location == 'postform' ? '0' : '2'), __FILE__, __LINE__);
 				// Only change the first row value of the first smiley (we don't need the others :P).
 				$context['smileys'][$location]['rows'][$id][0]['row'] = $id;
@@ -902,8 +902,8 @@ function EditSmileyOrder()
 				if ($order_id != $smiley['order'])
 					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}smileys
-						SET smileyOrder = $order_id
-						WHERE ID_SMILEY = $smiley[id]", __FILE__, __LINE__);
+						SET smiley_order = $order_id
+						WHERE id_smiley = $smiley[id]", __FILE__, __LINE__);
 		}
 	}
 
@@ -979,23 +979,23 @@ function ImportSmileys($smileyPath)
 	$smfFunc['db_free_result']($request);
 
 	$request = $smfFunc['db_query']('', "
-		SELECT MAX(smileyOrder)
+		SELECT MAX(smiley_order)
 		FROM {$db_prefix}smileys
 		WHERE hidden = 0
-			AND smileyRow = 0", __FILE__, __LINE__);
-	list ($smileyOrder) = $smfFunc['db_fetch_row']($request);
+			AND smiley_row = 0", __FILE__, __LINE__);
+	list ($smiley_order) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	$new_smileys = array();
 	foreach ($smileys as $smiley)
 		if (strlen($smiley) <= 48)
-			$new_smileys[] = "(SUBSTRING(':" . strtok($smiley, '.') . ":', 1, 30), '$smiley', SUBSTRING('" . strtok($smiley, '.') . "', 1, 80), 0, " . ++$smileyOrder . ')';
+			$new_smileys[] = "(SUBSTRING(':" . strtok($smiley, '.') . ":', 1, 30), '$smiley', SUBSTRING('" . strtok($smiley, '.') . "', 1, 80), 0, " . ++$smiley_order . ')';
 
 	if (!empty($new_smileys))
 	{
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}smileys
-				(code, filename, description, smileyRow, smileyOrder)
+				(code, filename, description, smiley_row, smiley_order)
 			VALUES" . implode(',
 				', $new_smileys), __FILE__, __LINE__);
 

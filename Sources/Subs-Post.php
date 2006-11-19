@@ -1297,17 +1297,17 @@ function theme_postbox($msg)
 		if (($temp = cache_get_data('posting_smileys', 480)) == null)
 		{
 			$request = $smfFunc['db_query']('', "
-				SELECT code, filename, description, smileyRow, hidden
+				SELECT code, filename, description, smiley_row, hidden
 				FROM {$db_prefix}smileys
 				WHERE hidden IN (0, 2)
-				ORDER BY smileyRow, smileyOrder", __FILE__, __LINE__);
+				ORDER BY smiley_row, smiley_order", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				$row['code'] = htmlspecialchars($row['code']);
 				$row['filename'] = htmlspecialchars($row['filename']);
 				$row['description'] = htmlspecialchars($row['description']);
 
-				$context['smileys'][empty($row['hidden']) ? 'postform' : 'popup'][$row['smileyRow']]['smileys'][] = $row;
+				$context['smileys'][empty($row['hidden']) ? 'postform' : 'popup'][$row['smiley_row']]['smileys'][] = $row;
 			}
 			$smfFunc['db_free_result']($request);
 
