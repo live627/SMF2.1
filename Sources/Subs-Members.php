@@ -87,7 +87,7 @@ if (!defined('SMF'))
 // Delete a group of/single member.
 function deleteMembers($users)
 {
-	global $db_prefix, $sourcedir, $modSettings, $id_member, $smfFunc;
+	global $db_prefix, $sourcedir, $modSettings, $user_info, $smfFunc;
 
 	// If it's not an array, make it so!
 	if (!is_array($users))
@@ -106,7 +106,7 @@ function deleteMembers($users)
 		list ($user) = $users;
 		$condition = '= ' . $user;
 
-		if ($user == $id_member)
+		if ($user == $user_info['id'])
 			isAllowedTo('profile_remove_own');
 		else
 			isAllowedTo('profile_remove_any');
@@ -122,7 +122,7 @@ function deleteMembers($users)
 	}
 
 	// Make sure they aren't trying to delete administrators if they aren't one.  But don't bother checking if it's just themself.
-	if (!allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $id_member))
+	if (!allowedTo('admin_forum') && (count($users) != 1 || $users[0] != $user_info['id']))
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT id_member
@@ -744,7 +744,7 @@ function reattributePosts($memID, $email = false, $post_count = false)
 // This simple function adds/removes the passed user from the current users buddy list.
 function BuddyListToggle()
 {
-	global $user_info, $id_member;
+	global $user_info;
 
 	checkSession('get');
 
@@ -763,7 +763,7 @@ function BuddyListToggle()
 		$user_info['buddies'][] = (int) $_REQUEST['u'];
 
 	// Update the settings.
-	updateMemberData($id_member, array('buddy_list' => "'" . implode(',', $user_info['buddies']) . "'"));
+	updateMemberData($user_info['id'], array('buddy_list' => "'" . implode(',', $user_info['buddies']) . "'"));
 
 	// Redirect back to the profile
 	redirectexit('action=profile;u=' . $_REQUEST['u']);

@@ -1199,12 +1199,14 @@ function MergeExecute($topics = array())
 		{
 			$replaceEntries = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$replaceEntries[] = "($row[id_member], $id_topic, 0, $row[sent])";
+				$replaceEntries[] = array($row['id_member'], $id_topic, 0, $row['sent']);
 
-			$smfFunc['db_query']('', "
-				REPLACE INTO {$db_prefix}log_notify
-					(id_member, id_topic, id_board, sent)
-				VALUES " . implode(', ', $replaceEntries), __FILE__, __LINE__);
+			$smfFunc['db_insert']('replace',
+					"{$db_prefix}log_notify",
+					array('id_member', 'id_topic', 'id_board', 'sent'),
+					$replaceEntries,
+					array('id_member', 'id_topic', 'id_board')
+				);
 			unset($replaceEntries);
 
 			$smfFunc['db_query']('', "

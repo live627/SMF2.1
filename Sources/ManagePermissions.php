@@ -579,21 +579,30 @@ function SetQuickGroups()
 		else
 		{
 			$add_deny = $_POST['add_remove'] == 'add' ? '1' : '0';
+			$permChange = array();
+			foreach ($_POST['group'] as $groupID)
+			{
+				if ($permissionType == 'membergroup')
+					$permChange[] = array('\'' . $permission . '\'', $groupID, $add_deny);
+				else
+					$permChange[] = array('\'' . $permission . '\'', $groupID, $bid, $add_deny);
+			}
+
 			if ($permissionType == 'membergroup')
-				$smfFunc['db_query']('', "
-					REPLACE INTO {$db_prefix}permissions
-						(permission, id_group, add_deny)
-					VALUES
-						('$permission', " . implode(", $add_deny),
-						('$permission', ", $_POST['group']) . ", $add_deny)", __FILE__, __LINE__);
+				$smfFunc['db_insert']('replace',
+					"{$db_prefix}permissions",
+					array('permission', 'id_group', 'add_deny'),
+					$permChange,
+					array('permission', 'id_group')
+				);
 			// Board permissions go into the other table.
 			else
-				$smfFunc['db_query']('', "
-					REPLACE INTO {$db_prefix}board_permissions
-						(permission, id_group, id_profile, add_deny)
-					VALUES
-						('$permission', " . implode(", $bid, $add_deny),
-						('$permission', ", $_POST['group']) . ", $bid, $add_deny)", __FILE__, __LINE__);
+				$smfFunc['db_insert']('replace',
+					"{$db_prefix}board_permissions",
+					array('permission', 'id_group', 'id_profile', 'add_deny'),
+					$permChange,
+					array('permission', 'id_group', 'id_profile')
+				);
 		}
 
 		// Another child update!

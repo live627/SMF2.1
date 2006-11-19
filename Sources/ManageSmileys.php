@@ -664,7 +664,7 @@ function EditSmileys()
 				WHERE id_smiley = $_POST[smiley]", __FILE__, __LINE__);
 
 			// Sort all smiley codes for more accurate parsing (longest code first).
-			$smfFunc['db_query']('', "
+			$smfFunc['db_query']('alter_table_smileys', "
 				ALTER TABLE {$db_prefix}smileys
 				ORDER BY LENGTH(code) DESC", __FILE__, __LINE__);
 		}
@@ -1000,7 +1000,7 @@ function ImportSmileys($smileyPath)
 				', $new_smileys), __FILE__, __LINE__);
 
 		// Make sure the smiley codes are still in the right order.
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('alter_table_smileys', "
 			ALTER TABLE {$db_prefix}smileys
 			ORDER BY LENGTH(code) DESC", __FILE__, __LINE__);
 
@@ -1055,8 +1055,7 @@ function EditMessageIcons()
 			// Do the actual delete!
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}message_icons
-				WHERE id_icon IN (" . implode(', ', $deleteIcons) . ")
-				LIMIT " . count($deleteIcons), __FILE__, __LINE__);
+				WHERE id_icon IN (" . implode(', ', $deleteIcons) . ")", __FILE__, __LINE__);
 		}
 		// Editing/Adding an icon?
 		elseif ($context['sub_action'] == 'editicon' && isset($_GET['icon']))
@@ -1099,25 +1098,25 @@ function EditMessageIcons()
 			$context['icons'][$_GET['icon']]['board_id'] = (int) $_POST['icon_board'];
 
 			// Do a huge replace ;)
-			$insert = array();
+			$iconInsert = array();
 			foreach ($context['icons'] as $id => $icon)
 			{
 				if ($id != 0)
 					$icon['title'] = addslashes($icon['title']);
 
-				$insert[] = "($id, $icon[board_id], SUBSTRING('$icon[title]', 1, 80), SUBSTRING('$icon[filename]', 1, 80), $icon[true_order])";
+				$iconInsert[] = array($id, $icon['board_id'], "SUBSTRING('$icon[title]', 1, 80)", "SUBSTRING('$icon[filename]', 1, 80)", $icon['true_order']);
 			}
 
-			$smfFunc['db_query']('', "
-				REPLACE INTO {$db_prefix}message_icons
-					(id_icon, id_board, title, filename, icon_order)
-				VALUES
-					" . implode(',
-					', $insert), __FILE__, __LINE__);
+			$smfFunc['db_insert']('replace',
+				"{$db_prefix}message_icons",
+				array('id_icon', 'id_board', 'title', 'filename', 'icon_order'),
+				$iconInsert,
+				array('id_icon')
+			);
 		}
 
 		// Sort by order, so it is quicker :)
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('alter_table_icons', "
 			ALTER TABLE {$db_prefix}message_icons
 			ORDER BY icon_order", __FILE__, __LINE__);
 

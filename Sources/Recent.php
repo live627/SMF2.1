@@ -146,7 +146,7 @@ function getLastPosts($showlatestcount)
 // Find the ten most recent posts.
 function RecentPosts()
 {
-	global $txt, $scripturl, $db_prefix, $user_info, $context, $id_member, $modSettings, $sourcedir, $board, $smfFunc;
+	global $txt, $scripturl, $db_prefix, $user_info, $context, $modSettings, $sourcedir, $board, $smfFunc;
 
 	// They're deleting something... just skip back to it.
 	if (isset($_GET['delete']))
@@ -377,7 +377,7 @@ function RecentPosts()
 			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
 		);
 
-		if ($id_member == $row['id_first_member'])
+		if ($user_info['id'] == $row['id_first_member'])
 			$board_ids['own'][$row['id_board']][] = $row['id_msg'];
 		$board_ids['any'][$row['id_board']][] = $row['id_msg'];
 	}
@@ -417,7 +417,7 @@ function RecentPosts()
 
 				// Okay, looks like they can do it for these posts.
 				foreach ($board_ids[$type][$board_id] as $counter)
-					if ($type == 'any' || $context['posts'][$counter]['poster']['id'] == $id_member)
+					if ($type == 'any' || $context['posts'][$counter]['poster']['id'] == $user_info['id'])
 						$context['posts'][$counter][$allowed] = true;
 			}
 		}
@@ -432,7 +432,7 @@ function RecentPosts()
 function UnreadTopics()
 {
 	global $board, $txt, $scripturl, $db_prefix, $sourcedir;
-	global $id_member, $user_info, $context, $settings, $modSettings, $smfFunc;
+	global $user_info, $context, $settings, $modSettings, $smfFunc;
 
 	// Guests can't have unread things, we don't know anything about them.
 	is_not_guest();
@@ -656,7 +656,7 @@ function UnreadTopics()
 			$request = $smfFunc['db_query']('', "
 				SELECT MIN(id_msg)
 				FROM {$db_prefix}log_mark_read
-				WHERE id_member = $id_member
+				WHERE id_member = $user_info[id]
 					AND id_board = $board", __FILE__, __LINE__);
 			list ($earliest_msg) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -666,7 +666,7 @@ function UnreadTopics()
 			$request = $smfFunc['db_query']('', "
 				SELECT MIN(lmr.id_msg)
 				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $id_member)
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $user_info[id])
 				WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 			list ($earliest_msg) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -686,7 +686,7 @@ function UnreadTopics()
 				$request = $smfFunc['db_query']('', "
 					SELECT MIN(id_msg)
 					FROM {$db_prefix}log_topics
-					WHERE id_member = $id_member", __FILE__, __LINE__);
+					WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 				list ($earliest_msg2) = $smfFunc['db_fetch_row']($request);
 				$smfFunc['db_free_result']($request);
 
@@ -716,7 +716,7 @@ function UnreadTopics()
 			SELECT lt.id_topic, lt.id_msg
 			FROM ({$db_prefix}topics AS t, {$db_prefix}log_topics AS lt)
 			WHERE lt.id_topic = t.id_topic
-				AND lt.id_member = $id_member
+				AND lt.id_member = $user_info[id]
 				AND t.$query_this_board" . (!empty($earliest_msg) ? "
 				AND t.id_last_msg > $earliest_msg" : '') . "
 				AND t.approved = 1", false, false) !== false;
@@ -730,7 +730,7 @@ function UnreadTopics()
 			SELECT COUNT(*), MIN(t.id_last_msg)
 			FROM {$db_prefix}topics AS t
 				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 			WHERE t.$query_this_board" . ($context['showing_all_topics'] && !empty($earliest_msg) ? "
 				AND t.id_last_msg > $earliest_msg" : "
 				AND t.id_last_msg > $_SESSION[id_msg_last_visit]") . "
@@ -773,7 +773,7 @@ function UnreadTopics()
 				LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)
 				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)
 				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 			WHERE t.id_topic = ms.id_topic
 				AND b.id_board = t.id_board
 				AND b.$query_this_board
@@ -791,8 +791,8 @@ function UnreadTopics()
 			SELECT COUNT(*), MIN(t.id_last_msg)
 			FROM {$db_prefix}topics AS t" . ($have_temp_table ? "
 				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)" : "
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)") . "
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])") . "
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 			WHERE t.$query_this_board" . ($context['showing_all_topics'] && !empty($earliest_msg) ? "
 				AND t.id_last_msg > $earliest_msg" : "
 				AND t.id_last_msg > $_SESSION[id_msg_last_visit]") . "
@@ -835,8 +835,8 @@ function UnreadTopics()
 				LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)
 				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)" . ($have_temp_table ? "
 				LEFT JOIN {$db_prefix}log_topics_unread AS lt ON (lt.id_topic = t.id_topic)" : "
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)") . "
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])") . "
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 			WHERE t.id_topic = ms.id_topic
 				AND b.id_board = t.id_board
 				AND b.$query_this_board
@@ -877,8 +877,8 @@ function UnreadTopics()
 				)
 				SELECT t.id_topic, t.id_board, t.id_last_msg, IFNULL(lmr.id_msg, 0) AS id_msg" . (!in_array($_REQUEST['sort'], array('t.id_last_msg', 't.id_topic')) ? ", $_REQUEST[sort] AS sortKey" : '') . "
 				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)" . (isset($sortKey_joins[$_REQUEST['sort']]) ? $sortKey_joins[$_REQUEST['sort']] : '') . "
-				WHERE m.id_member = $id_member
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])" . (isset($sortKey_joins[$_REQUEST['sort']]) ? $sortKey_joins[$_REQUEST['sort']] : '') . "
+				WHERE m.id_member = $user_info[id]
 					AND t.id_topic = m.id_topic" . (!empty($board) ? "
 					AND t.id_board = $board" : '') . "
 					AND t.approved = 1
@@ -892,7 +892,7 @@ function UnreadTopics()
 					)
 					SELECT lt.id_topic, lt.id_msg
 					FROM ({$db_prefix}log_topics AS lt, {$db_prefix}topics_posted_in AS pi)
-					WHERE lt.id_member = $id_member
+					WHERE lt.id_member = $user_info[id]
 						AND lt.id_topic = pi.id_topic", false, false) !== false;
 		}
 
@@ -912,11 +912,11 @@ function UnreadTopics()
 			$request = $smfFunc['db_query']('', "
 				SELECT COUNT(DISTINCT t.id_topic), MIN(t.id_last_msg)
 				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 				WHERE t.$query_this_board
 					AND m.id_topic = t.id_topic
-					AND m.id_member = $id_member
+					AND m.id_member = $user_info[id]
 					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg
 					AND t.approved = 1", __FILE__, __LINE__);
 			list ($num_topics, $min_message) = $smfFunc['db_fetch_row']($request);
@@ -963,10 +963,10 @@ function UnreadTopics()
 				SELECT DISTINCT t.id_topic
 				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m" . (strpos($_REQUEST['sort'], 'ms.') === false ? '' : ", {$db_prefix}messages AS ms") . ')' . (strpos($_REQUEST['sort'], 'mems.') === false ? '' : "
 					LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)") ."
-					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
-					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+					LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
+					LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 				WHERE m.id_topic = t.id_topic
-					AND m.id_member = $id_member
+					AND m.id_member = $user_info[id]
 					AND t.$query_this_board
 					AND t.id_last_msg >= " . (int) $min_message . "
 					AND IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) < t.id_last_msg" . (strpos($_REQUEST['sort'], 'ms.') !== false ? "
@@ -996,8 +996,8 @@ function UnreadTopics()
 			FROM ({$db_prefix}messages AS ms, {$db_prefix}messages AS ml, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
 				LEFT JOIN {$db_prefix}members AS mems ON (mems.id_member = ms.id_member)
 				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 			WHERE t.id_topic IN (" . implode(', ', $topics) . ")
 				AND t.id_topic = ms.id_topic
 				AND b.id_board = t.id_board
@@ -1147,7 +1147,7 @@ function UnreadTopics()
 			SELECT id_topic
 			FROM {$db_prefix}messages
 			WHERE id_topic IN (" . implode(', ', $topic_ids) . ")
-				AND id_member = $id_member", __FILE__, __LINE__);
+				AND id_member = $user_info[id]", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			if (empty($context['topics'][$row['id_topic']]['is_posted_in']))

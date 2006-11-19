@@ -92,10 +92,12 @@ function ModifyKarma()
 	if (empty($action) || empty($modSettings['karmaWaitTime']))
 	{
 		// Put it in the log.
-		$smfFunc['db_query']('', "
-			REPLACE INTO {$db_prefix}log_karma
-				(action, id_target, id_executor, log_time)
-			VALUES ($dir, $_REQUEST[uid], $user_info[id], " . time() . ')', __FILE__, __LINE__);
+		$smfFunc['db_insert']('replace',
+				"{$db_prefix}log_karma",
+				array('action', 'id_target', 'id_executor', 'log_time'),
+				array($dir, $_REQUEST['uid'], $user_info['id'], time()),
+				array('id_target', 'id_executor')
+			);
 
 		// Change by one.
 		updateMemberData($_REQUEST['uid'], array($dir == 1 ? 'karma_good' : 'karma_bad' => '+'));

@@ -114,6 +114,12 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 		'alter_table_boards' => array(
 			'~(.+)~' => '',
 		),
+		'alter_table_icons' => array(
+			'~(.+)~' => '',
+		),
+		'alter_table_smileys' => array(
+			'~(.+)~' => '',
+		),
 		'attach_download_increase' => array(
 			'~LOW_PRIORITY~' => '',
 		),
@@ -125,6 +131,9 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 		),
 		'messageindex_fetch_boards' => array(
 			'~(.)$~' => '$1 ORDER BY b.board_order',
+		),
+		'select_message_icons' => array(
+			'~(.)$~' => '$1 ORDER BY icon_order',
 		),
 	);
 

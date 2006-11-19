@@ -588,17 +588,21 @@ function removeMessage($message, $decreasePostCount = true)
 
 			// Mark recycled topic as read.
 			if (!$user_info['is_guest'])
-				$smfFunc['db_query']('', "
-					REPLACE INTO {$db_prefix}log_topics
-						(id_topic, id_member, id_msg)
-					VALUES ($topicID, $id_member, $modSettings[maxMsgID])", __FILE__, __LINE__);
+				$smfFunc['db_insert']('replace',
+					"{$db_prefix}log_topics",
+					array('id_topic', 'id_member', 'id_msg'),
+					array($topicID, $id_member, $modSettings['maxMsgID']),
+					array('id_topic', 'id_member')
+				);
 
 			// Mark recycle board as seen, if it was marked as seen before.
 			if (!empty($isRead) && !$user_info['is_guest'])
-				$smfFunc['db_query']('', "
-					REPLACE INTO {$db_prefix}log_boards
-						(id_board, id_member, id_msg)
-					VALUES ($modSettings[recycle_board], $id_member, $modSettings[maxMsgID])", __FILE__, __LINE__);
+				$smfFunc['db_insert']('replace',
+					"{$db_prefix}log_boards",
+					array('id_board', 'id_member', 'id_msg'),
+					array($modSettings['recycle_board'], $id_member, $modSettings['maxMsgID']),
+					array('id_board', 'id_member')
+				);
 
 			// Add one topic and post to the recycle bin board.
 			if ($approved)

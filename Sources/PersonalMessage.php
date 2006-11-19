@@ -96,7 +96,7 @@ if (!defined('SMF'))
 // This helps organize things...
 function MessageMain()
 {
-	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $db_prefix, $id_member, $smfFunc;
+	global $txt, $scripturl, $sourcedir, $context, $user_info, $user_settings, $db_prefix, $smfFunc;
 
 	// No guests!
 	is_not_guest();
@@ -157,7 +157,7 @@ function MessageMain()
 	$result = $smfFunc['db_query']('', "
 		SELECT labels, is_read, COUNT(*) AS num
 		FROM {$db_prefix}pm_recipients
-		WHERE id_member = $id_member
+		WHERE id_member = $user_info[id]
 		GROUP BY labels, is_read", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -291,7 +291,7 @@ function messageIndexBar($area)
 // A folder, ie. outbox/inbox.
 function MessageFolder()
 {
-	global $txt, $scripturl, $db_prefix, $id_member, $modSettings, $context;
+	global $txt, $scripturl, $db_prefix, $modSettings, $context;
 	global $messages_request, $user_info, $recipients, $options, $smfFunc;
 
 	// Make sure the starting location is valid.
@@ -370,13 +370,13 @@ function MessageFolder()
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}personal_messages
-			WHERE id_member_from = $id_member
+			WHERE id_member_from = $user_info[id]
 				AND deleted_by_sender = 0", __FILE__, __LINE__);
 	else
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}pm_recipients AS pmr
-			WHERE pmr.id_member = $id_member
+			WHERE pmr.id_member = $user_info[id]
 				AND pmr.deleted = 0$labelQuery", __FILE__, __LINE__);
 	list ($max_messages) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -404,14 +404,14 @@ function MessageFolder()
 				$request = $smfFunc['db_query']('', "
 					SELECT COUNT(*)
 					FROM {$db_prefix}personal_messages
-					WHERE id_member_from = $id_member
+					WHERE id_member_from = $user_info[id]
 						AND deleted_by_sender = 0
 						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
 			else
 				$request = $smfFunc['db_query']('', "
 					SELECT COUNT(*)
 					FROM {$db_prefix}pm_recipients AS pmr
-					WHERE pmr.id_member = $id_member
+					WHERE pmr.id_member = $user_info[id]
 						AND pmr.deleted = 0$labelQuery
 						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
 
@@ -447,9 +447,9 @@ function MessageFolder()
 		FROM ({$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? ')' . ($context['sort_by'] == 'name' ? "
 			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : ", {$db_prefix}pm_recipients AS pmr)") . ($context['sort_by'] == 'name' ? ("
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'outbox' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
-		WHERE " . ($context['folder'] == 'outbox' ? "pm.id_member_from = $id_member
+		WHERE " . ($context['folder'] == 'outbox' ? "pm.id_member_from = $user_info[id]
 			AND pm.deleted_by_sender = 0" : "pmr.id_pm = pm.id_pm
-			AND pmr.id_member = $id_member
+			AND pmr.id_member = $user_info[id]
 			AND pmr.deleted = 0$labelQuery") . (empty($_GET['pmsg']) ? '' : "
 			AND pm.id_pm = " . (int) $_GET['pmsg']) . "
 		ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'outbox' ? 'pmr.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
@@ -457,7 +457,7 @@ function MessageFolder()
 
 	// Load the id_pms and ID_MEMBERs and initialize recipients.
 	$pms = array();
-	$posters = $context['folder'] == 'outbox' ? array($id_member) : array();
+	$posters = $context['folder'] == 'outbox' ? array($user_info['id']) : array();
 	$recipients = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -489,7 +489,7 @@ function MessageFolder()
 			if ($context['folder'] == 'outbox' || empty($row['bcc']))
 				$recipients[$row['id_pm']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['id_member_to']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_to'] . '">' . $row['to_name'] . '</a>';
 
-			if ($row['id_member_to'] == $id_member && $context['folder'] != 'outbox')
+			if ($row['id_member_to'] == $user_info['id'] && $context['folder'] != 'outbox')
 			{
 				$context['message_replied'][$row['id_pm']] = $row['is_read'] & 2;
 
@@ -678,7 +678,7 @@ function MessageSearch()
 function MessageSearch2()
 {
 	global $scripturl, $modSettings, $user_info, $context, $txt, $db_prefix;
-	global $id_member, $memberContext, $smfFunc;
+	global $memberContext, $smfFunc;
 
 	if (!empty($context['load_average']) && !empty($modSettings['loadavg_search']) && $context['load_average'] >= $modSettings['loadavg_search'])
 		fatal_lang_error('loadavg_search_disabled', false);
@@ -915,9 +915,9 @@ function MessageSearch2()
 		SELECT pm.id_pm, pm.id_member_from
 		FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
 		WHERE pm.id_pm = pmr.id_pm" . ($context['folder'] == 'inbox' ? "
-			AND pmr.id_member = $id_member
+			AND pmr.id_member = $user_info[id]
 			AND pmr.deleted = 0" : "
-			AND pm.id_member_from = $id_member
+			AND pm.id_member_from = $user_info[id]
 			AND pm.deleted_by_sender = 0") . "
 			$userQuery$labelQuery
 			AND ($searchQuery)
@@ -959,7 +959,7 @@ function MessageSearch2()
 			if ($context['folder'] == 'outbox' || empty($row['bcc']))
 				$recipients[$row['id_pm']][empty($row['bcc']) ? 'to' : 'bcc'][] = empty($row['id_member_to']) ? $txt['guest_title'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_to'] . '">' . $row['to_name'] . '</a>';
 
-			if ($row['id_member_to'] == $id_member && $context['folder'] != 'outbox')
+			if ($row['id_member_to'] == $user_info['id'] && $context['folder'] != 'outbox')
 			{
 				$context['message_replied'][$row['id_pm']] = $row['is_read'] & 2;
 
@@ -1041,7 +1041,7 @@ function MessageSearch2()
 // Send a new message?
 function MessagePost()
 {
-	global $txt, $sourcedir, $db_prefix, $id_member, $scripturl, $modSettings;
+	global $txt, $sourcedir, $db_prefix, $scripturl, $modSettings;
 	global $context, $options, $smfFunc, $language, $user_info;
 
 	isAllowedTo('pm_send');
@@ -1096,9 +1096,9 @@ function MessagePost()
 			FROM ({$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : ", {$db_prefix}pm_recipients AS pmr") . ")
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
 			WHERE pm.id_pm = $_REQUEST[pmsg]" . ($context['folder'] == 'outbox' ? "
-				AND pm.id_member_from = $id_member" : "
+				AND pm.id_member_from = $user_info[id]" : "
 				AND pmr.id_pm = $_REQUEST[pmsg]
-				AND pmr.id_member = $id_member") . "
+				AND pmr.id_member = $user_info[id]") . "
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('pm_not_yours', false);
@@ -1184,7 +1184,7 @@ function MessagePost()
 				FROM {$db_prefix}pm_recipients AS pmr
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
 				WHERE pmr.id_pm = $_REQUEST[pmsg]
-					AND pmr.id_member != $id_member
+					AND pmr.id_member != $user_info[id]
 					AND bcc = 0", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$membersTo[] = '&quot;' . htmlspecialchars($row['real_name']) . '&quot;';
@@ -1246,7 +1246,7 @@ function MessagePost()
 // An error in the message...
 function messagePostError($error_types, $to, $bcc)
 {
-	global $txt, $context, $scripturl, $modSettings, $db_prefix, $id_member;
+	global $txt, $context, $scripturl, $modSettings, $db_prefix;
 	global $smfFunc, $user_info;
 
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
@@ -1278,9 +1278,9 @@ function messagePostError($error_types, $to, $bcc)
 			FROM ({$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : ", {$db_prefix}pm_recipients AS pmr") . ")
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
 			WHERE pm.id_pm = $_REQUEST[replied_to]" . ($context['folder'] == 'outbox' ? "
-				AND pm.id_member_from = $id_member" : "
+				AND pm.id_member_from = $user_info[id]" : "
 				AND pmr.id_pm = $_REQUEST[replied_to]
-				AND pmr.id_member = $id_member") . "
+				AND pmr.id_member = $user_info[id]") . "
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('pm_not_yours', false);
@@ -1346,7 +1346,7 @@ function messagePostError($error_types, $to, $bcc)
 // Send it!
 function MessagePost2()
 {
-	global $txt, $id_member, $context, $sourcedir;
+	global $txt, $context, $sourcedir;
 	global $db_prefix, $user_info, $modSettings, $scripturl, $smfFunc;
 
 	isAllowedTo('pm_send');
@@ -1566,7 +1566,7 @@ function MessagePost2()
 			UPDATE {$db_prefix}pm_recipients
 			SET is_read = is_read | 2
 			WHERE id_pm = " . (int) $_REQUEST['replied_to'] . "
-				AND id_member = $id_member", __FILE__, __LINE__);
+				AND id_member = $user_info[id]", __FILE__, __LINE__);
 	}
 
 	// If one or more of the recipient were invalid, go back to the post screen with the failed usernames.
@@ -1615,7 +1615,7 @@ function WirelessAddBuddy()
 // This function performs all additional stuff...
 function MessageActionsApply()
 {
-	global $txt, $db_prefix, $id_member, $context, $user_info, $options, $smfFunc;
+	global $txt, $db_prefix, $context, $user_info, $options, $smfFunc;
 
 	checkSession('request');
 
@@ -1674,7 +1674,7 @@ function MessageActionsApply()
 		$request = $smfFunc['db_query']('', "
 			SELECT id_pm, labels
 			FROM {$db_prefix}pm_recipients
-			WHERE id_member = $id_member
+			WHERE id_member = $user_info[id]
 				AND id_pm IN (" . implode(',', array_keys($to_label)) . ")
 			LIMIT " . count($to_label), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1704,7 +1704,7 @@ function MessageActionsApply()
 					UPDATE {$db_prefix}pm_recipients
 					SET labels = '$set'
 					WHERE id_pm = $row[id_pm]
-						AND id_member = $id_member", __FILE__, __LINE__);
+						AND id_member = $user_info[id]", __FILE__, __LINE__);
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -1755,7 +1755,7 @@ function MessageKillAll()
 // This function allows the user to delete all messages older than so many days.
 function MessagePrune()
 {
-	global $txt, $context, $db_prefix, $id_member, $scripturl, $smfFunc;
+	global $txt, $context, $db_prefix, $user_info, $scripturl, $smfFunc;
 
 	// Actually delete the messages.
 	if (isset($_REQUEST['age']))
@@ -1773,7 +1773,7 @@ function MessagePrune()
 			SELECT id_pm
 			FROM {$db_prefix}personal_messages
 			WHERE deleted_by_sender = 0
-				AND id_member_from = $id_member
+				AND id_member_from = $user_info[id]
 				AND msgtime < $deleteTime", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_row']($request))
 			$toDelete[] = $row[0];
@@ -1784,7 +1784,7 @@ function MessagePrune()
 			SELECT pmr.id_pm
 			FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
 			WHERE pmr.deleted = 0
-				AND pmr.id_member = $id_member
+				AND pmr.id_member = $user_info[id]
 				AND pm.id_pm = pmr.id_pm
 				AND pm.msgtime < $deleteTime", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1811,10 +1811,10 @@ function MessagePrune()
 // Delete the specified personal messages.
 function deleteMessages($personal_messages, $folder = null, $owner = null)
 {
-	global $id_member, $db_prefix, $user_info, $smfFunc;
+	global $db_prefix, $user_info, $smfFunc;
 
 	if ($owner === null)
-		$owner = array($id_member);
+		$owner = array($user_info['id']);
 	elseif (empty($owner))
 		return;
 	elseif (!is_array($owner))
@@ -1860,7 +1860,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : "instant_messages - $row[numDeletedMessages]", 'unread_messages' => $where == '' ? 0 : "unread_messages - $row[numDeletedMessages]"));
 
 			// If this is the current member we need to make their message count correct.
-			if ($id_member == $row['id_member'])
+			if ($user_info['id'] == $row['id_member'])
 			{
 				$user_info['messages'] -= $row['numDeletedMessages'];
 				if (!($row['is_read']))
@@ -1905,10 +1905,10 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 // Mark personal messages read.
 function markMessages($personal_messages = null, $label = null, $owner = null)
 {
-	global $id_member, $db_prefix, $context, $smfFunc;
+	global $user_info, $db_prefix, $context, $smfFunc;
 
 	if ($owner === null)
-		$owner = $id_member;
+		$owner = $user_info['id'];
 
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}pm_recipients
@@ -1918,7 +1918,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 			AND FIND_IN_SET($label, labels)") . ($personal_messages !== null ? "
 			AND id_pm IN (" . implode(', ', $personal_messages) . ")" : ''), __FILE__, __LINE__);
 
-	if ($owner == $id_member)
+	if ($owner == $user_info['id'])
 	{
 		foreach ($context['labels'] as $label)
 			$context['labels'][(int) $label['id']]['unread_messages'] = 0;
@@ -1938,7 +1938,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 		{
 			$total_unread += $row['num'];
 
-			if ($owner != $id_member)
+			if ($owner != $user_info['id'])
 				continue;
 
 			$this_labels = explode(',', $row['labels']);
@@ -1950,7 +1950,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 		updateMemberData($owner, array('unread_messages' => $total_unread));
 
 		// If it was for the current member, reflect this in the $user_info array too.
-		if ($owner == $id_member)
+		if ($owner == $user_info['id'])
 			$user_info['unread_messages'] = $total_unread;
 	}
 }
@@ -1958,7 +1958,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 // This function handles adding, deleting and editing labels on messages.
 function ManageLabels()
 {
-	global $txt, $context, $db_prefix, $id_member, $scripturl, $smfFunc;
+	global $txt, $context, $db_prefix, $user_info, $scripturl, $smfFunc;
 
 	// Build the link tree elements...
 	$context['linktree'][] = array(
@@ -2039,7 +2039,7 @@ function ManageLabels()
 		}
 
 		// Save the label status.
-		updateMemberData($id_member, array('message_labels' => "'" . implode(',', $the_labels) . "'"));
+		updateMemberData($user_info['id'], array('message_labels' => "'" . implode(',', $the_labels) . "'"));
 
 		// Update all the messages currently with any label changes in them!
 		if (!empty($message_changes))
@@ -2079,7 +2079,7 @@ function ManageLabels()
 					UPDATE {$db_prefix}pm_recipients
 					SET labels = '" . implode(',', array_unique($toChange)) . "'
 					WHERE id_pm = $row[id_pm]
-						AND id_member = $id_member", __FILE__, __LINE__);
+						AND id_member = $user_info[id]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($request);
 		}
@@ -2092,7 +2092,7 @@ function ManageLabels()
 // Allows a user to report a personal message they receive to the administrator.
 function ReportMessage()
 {
-	global $txt, $context, $scripturl, $sourcedir, $db_prefix, $id_member;
+	global $txt, $context, $scripturl, $sourcedir, $db_prefix;
 	global $user_info, $language, $modSettings, $smfFunc;
 
 	// Check that this feature is even enabled!
@@ -2132,7 +2132,7 @@ function ReportMessage()
 				LEFT JOIN {$db_prefix}members AS m ON (m.id_member = pm.id_member_from)
 			WHERE pm.id_pm = $context[pm_id]
 				AND pmr.id_pm = pm.id_pm
-				AND pmr.id_member = $id_member
+				AND pmr.id_member = $user_info[id]
 				AND pmr.deleted = 0
 			LIMIT 1", __FILE__, __LINE__);
 		// Can only be a hacker here!
@@ -2150,7 +2150,7 @@ function ReportMessage()
 			FROM {$db_prefix}pm_recipients AS pmr
 				LEFT JOIN {$db_prefix}members AS mem_to ON (mem_to.id_member = pmr.id_member)
 			WHERE pmr.id_pm = $context[pm_id]
-				AND pmr.id_member != $id_member", __FILE__, __LINE__);
+				AND pmr.id_member != $user_info[id]", __FILE__, __LINE__);
 		$recipients = array();
 		$hidden_recipients = 0;
 		while ($row = $smfFunc['db_fetch_assoc']($request))

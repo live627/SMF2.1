@@ -54,7 +54,7 @@ if (!defined('SMF'))
 // Move a topic.  Give the moderator a chance to post a reason.
 function MoveTopic()
 {
-	global $txt, $board, $topic, $db_prefix, $user_info, $context, $id_member, $language, $scripturl, $settings, $smfFunc;
+	global $txt, $board, $topic, $db_prefix, $user_info, $context, $language, $scripturl, $settings, $smfFunc;
 
 	if (empty($topic))
 		fatal_lang_error(1);
@@ -76,7 +76,7 @@ function MoveTopic()
 	// !!!
 	if (!allowedTo('move_any'))
 	{
-		if ($id_member_started == $id_member)
+		if ($id_member_started == $user_info['id'])
 		{
 			isAllowedTo('move_own');
 			//$boards = array_merge(boardsAllowedTo('move_own'), boardsAllowedTo('move_any'));
@@ -149,7 +149,7 @@ function MoveTopic()
 function MoveTopic2()
 {
 	global $txt, $board, $topic, $scripturl, $sourcedir, $modSettings, $context;
-	global $db_prefix, $id_member, $board, $language, $user_info, $smfFunc;
+	global $db_prefix, $board, $language, $user_info, $smfFunc;
 
 	// Make sure this form hasn't been submitted before.
 	checkSubmitOnce('check');
@@ -169,7 +169,7 @@ function MoveTopic2()
 	// Can they move topics on this board?
 	if (!allowedTo('move_any'))
 	{
-		if ($id_member_started == $id_member)
+		if ($id_member_started == $user_info['id'])
 		{
 			isAllowedTo('move_own');
 			$boards = array_merge(boardsAllowedTo('move_own'), boardsAllowedTo('move_any'));
@@ -276,7 +276,7 @@ function MoveTopic2()
 			'mark_as_read' => true,
 		);
 		$posterOptions = array(
-			'id' => $id_member,
+			'id' => $user_info['id'],
 			'update_post_count' => !empty($pcounter),
 		);
 		createPost($msgOptions, $topicOptions, $posterOptions);
@@ -313,7 +313,7 @@ function MoveTopic2()
 	moveTopics($topic, $_POST['toboard']);
 
 	// Log that they moved this topic.
-	if (!allowedTo('move_own') || $id_member_started != $id_member)
+	if (!allowedTo('move_own') || $id_member_started != $user_info['id'])
 		logAction('move', array('topic' => $topic, 'board_from' => $board, 'board_to' => $_POST['toboard']));
 	// Notify people that this topic has been moved?
 	sendNotifications($topic, 'move');
@@ -332,7 +332,7 @@ function MoveTopic2()
 // Moves one or more topics to a specific board. (doesn't check permissions.)
 function moveTopics($topics, $toBoard)
 {
-	global $db_prefix, $sourcedir, $id_member, $user_info, $modSettings, $smfFunc;
+	global $db_prefix, $sourcedir, $user_info, $modSettings, $smfFunc;
 
 	// Empty array?
 	if (empty($topics))
@@ -399,16 +399,18 @@ function moveTopics($topics, $toBoard)
 	$log_topics = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$log_topics[] = '(' . $row['id_topic'] . ', ' . $row['id_member'] . ', ' . $row['id_msg'] . ')';
+		$log_topics[] = array($row['id_topic'], $row['id_member'], $row['id_msg']);
 
 		// Prevent queries from getting too big. Taking some steam off.
 		if (count($log_topics) > 500)
 		{
-			$smfFunc['db_query']('', "
-				REPLACE INTO {$db_prefix}log_topics
-					(id_topic, id_member, id_msg)
-				VALUES " . implode(',
-					', $log_topics), __FILE__, __LINE__);
+			$smfFunc['db_insert']('replace',
+				"{$db_prefix}log_topics",
+				array('id_topic', 'id_member', 'id_msg'),
+				$log_topics,
+				array('id_topic', 'id_member')
+			);
+
 			$log_topics = array();
 		}
 	}
@@ -418,11 +420,12 @@ function moveTopics($topics, $toBoard)
 	if (!empty($log_topics))
 	{
 		// Insert that information into the database!
-		$smfFunc['db_query']('', "
-			REPLACE INTO {$db_prefix}log_topics
-				(id_topic, id_member, id_msg)
-			VALUES " . implode(',
-				', $log_topics), __FILE__, __LINE__);
+		$smfFunc['db_insert']('replace',
+			"{$db_prefix}log_topics",
+			array('id_topic', 'id_member', 'id_msg'),
+			$log_topics,
+			array('id_topic', 'id_member')
+		);
 	}
 
 	// Update the number of posts on each board.
@@ -476,7 +479,7 @@ function moveTopics($topics, $toBoard)
 	$request = $smfFunc['db_query']('', "
 		SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen
 		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
 		WHERE b.id_board = $toBoard", __FILE__, __LINE__);
 	list ($isSeen) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -486,7 +489,7 @@ function moveTopics($topics, $toBoard)
 		$smfFunc['db_insert']('replace',
 			"{$db_prefix}log_boards",
 			array('id_board', 'id_member', 'id_msg'),
-			array($toBoard, $id_member, $modSettings['maxMsgID']),
+			array($toBoard, $user_info['id'], $modSettings['maxMsgID']),
 			array('id_board', 'id_member'));
 	}
 

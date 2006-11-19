@@ -89,7 +89,7 @@ if (!defined('SMF'))
 // Mark a board or multiple boards read.
 function markBoardsRead($boards, $unread = false)
 {
-	global $db_prefix, $id_member, $modSettings, $smfFunc;
+	global $db_prefix, $user_info, $modSettings, $smfFunc;
 
 	// Force $boards to be an array.
 	if (!is_array($boards))
@@ -109,18 +109,18 @@ function markBoardsRead($boards, $unread = false)
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_mark_read
 			WHERE id_board IN (" . implode(', ', $boards) . ")
-				AND id_member = $id_member", __FILE__, __LINE__);
+				AND id_member = $user_info[id]", __FILE__, __LINE__);
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_boards
 			WHERE id_board IN (" . implode(', ', $boards) . ")
-				AND id_member = $id_member", __FILE__, __LINE__);
+				AND id_member = $user_info[id]", __FILE__, __LINE__);
 	}
 	// Otherwise mark the board as read.
 	else
 	{
 		$markRead = array();
 		foreach ($boards as $board)
-			$markRead[] = array($modSettings['maxMsgID'], $id_member, $board);
+			$markRead[] = array($modSettings['maxMsgID'], $user_info['id'], $board);
 
 		// Update log_mark_read and log_boards.
 		$smfFunc['db_insert']('replace',
@@ -140,7 +140,7 @@ function markBoardsRead($boards, $unread = false)
 	$result = $smfFunc['db_query']('', "
 		SELECT MIN(id_topic)
 		FROM {$db_prefix}log_topics
-		WHERE id_member = $id_member", __FILE__, __LINE__);
+		WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 	list ($lowest_topic) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -154,7 +154,7 @@ function markBoardsRead($boards, $unread = false)
 		WHERE t.id_topic = lt.id_topic
 			AND t.id_topic >= $lowest_topic
 			AND t.id_board IN (" . implode(', ', $boards) . ")
-			AND lt.id_member = $id_member", __FILE__, __LINE__);
+			AND lt.id_member = $user_info[id]", __FILE__, __LINE__);
 	$topics = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 		$topics[] = $row['id_topic'];
@@ -163,14 +163,14 @@ function markBoardsRead($boards, $unread = false)
 	if (!empty($topics))
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_topics
-			WHERE id_member = $id_member
+			WHERE id_member = $user_info[id]
 				AND id_topic IN (" . implode(', ', $topics) . ")", __FILE__, __LINE__);
 }
 
 // Mark one or more boards as read.
 function MarkRead()
 {
-	global $board, $topic, $user_info, $board_info, $id_member, $db_prefix, $modSettings, $smfFunc;
+	global $board, $topic, $user_info, $board_info, $db_prefix, $modSettings, $smfFunc;
 
 	// No Guests allowed!
 	is_not_guest();
@@ -208,7 +208,7 @@ function MarkRead()
 
 		$markRead = array();
 		foreach ($topics as $id_topic)
-			$markRead[] = array($modSettings['maxMsgID'], $id_member, (int) $id_topic);
+			$markRead[] = array($modSettings['maxMsgID'], $user_info['id'], (int) $id_topic);
 
 		$smfFunc['db_insert']('replace',
 			"{$db_prefix}log_topics",
@@ -254,7 +254,7 @@ function MarkRead()
 		$smfFunc['db_insert']('replace',
 			"{$db_prefix}log_topics",
 			array('id_msg', 'id_member', 'id_topic'),
-			array($earlyMsg, $id_member, $topic),
+			array($earlyMsg, $user_info['id'], $topic),
 			array('id_member', 'id_topic'));
 
 		redirectexit('board=' . $board . '.0');
@@ -339,15 +339,16 @@ function MarkRead()
 					AND $user_info[query_see_board]", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($result) > 0)
 			{
-				$setString = '';
+				$logBoardInserts = '';
 				while ($row = $smfFunc['db_fetch_assoc']($result))
-					$setString .= "
-						($modSettings[maxMsgID], $id_member, $row[id_board]),";
+					$logBoardInserts[] = array($modSettings['maxMsgID'], $user_info['id'], $row['id_board']);
 
-				$smfFunc['db_query']('', "
-					REPLACE INTO {$db_prefix}log_boards
-						(id_msg, id_member, id_board)
-					VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
+				$smfFunc['db_insert']('replace',
+					"{$db_prefix}log_boards",
+					array('id_msg', 'id_member', 'id_board'),
+					$logBoardInserts,
+					array('id_member', 'id_board')
+				);
 			}
 			$smfFunc['db_free_result']($result);
 

@@ -113,7 +113,7 @@ if (!defined('SMF'))
 // Allow the change or view of profiles...
 function ModifyProfile($post_errors = array())
 {
-	global $txt, $scripturl, $user_info, $context, $id_member, $sourcedir, $user_profile, $modSettings;
+	global $txt, $scripturl, $user_info, $context, $sourcedir, $user_profile, $modSettings;
 
 	// Don't reload this as we may have processed error strings.
 	if (empty($post_errors))
@@ -160,7 +160,7 @@ function ModifyProfile($post_errors = array())
 		$memberResult = loadMemberData((int) $_REQUEST['u'], false, 'profile');
 	// If it was just ?action=profile, edit your own profile.
 	else
-		$memberResult = loadMemberData($id_member, false, 'profile');
+		$memberResult = loadMemberData($user_info['id'], false, 'profile');
 
 	// Check if loadMemberData() has returned a valid result.
 	if (!is_array($memberResult))
@@ -170,7 +170,7 @@ function ModifyProfile($post_errors = array())
 	list ($memID) = $memberResult;
 
 	// Is this the profile of the user himself or herself?
-	$context['user']['is_owner'] = $memID == $id_member;
+	$context['user']['is_owner'] = $memID == $user_info['id'];
 
 	// No Subaction?
 	if (!isset($_REQUEST['sa']) || !isset($sa_allowed[$_REQUEST['sa']]))
@@ -349,8 +349,7 @@ function ModifyProfile2()
 {
 	global $txt, $modSettings;
 	global $cookiename, $context;
-	global $sourcedir, $scripturl, $db_prefix;
-	global $id_member, $user_info;
+	global $sourcedir, $scripturl, $db_prefix, $user_info;
 	global $context, $newpassemail, $user_profile, $validationCode, $smfFunc;
 
 	loadLanguage('Profile');
@@ -406,7 +405,7 @@ function ModifyProfile2()
 	list ($memID) = $memberResult;
 
 	// Are you modifying your own, or someone else's?
-	if ($id_member == $memID)
+	if ($user_info['id'] == $memID)
 		$context['user']['is_owner'] = true;
 	else
 	{
@@ -1402,17 +1401,18 @@ function makeCustomFieldChanges($memID, $area)
 		}
 
 		$user_profile[$memID]['options'][$row['col_name']] = $value;
-		$changes[] = "('$row[col_name]', '$value', $memID)";
+		$changes[] = array(1, '\'' . $row['col_name'] . '\'', '\'' . $value . '\'', $memID);
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Make those changes!
 	if (!empty($changes))
-		$smfFunc['db_query']('', "
-			REPLACE INTO {$db_prefix}themes
-				(variable, value, id_member)
-			VALUES
-				" . implode(',', $changes), __FILE__, __LINE__);
+		$smfFunc['db_insert']('replace',
+			"{$db_prefix}themes",
+			array('id_theme', 'variable', 'value', 'id_member'),
+			$changes,
+			array('id_theme', 'variable', 'id_member')
+		);
 }
 
 // View a summary.
@@ -1571,7 +1571,7 @@ function summary($memID)
 function showPosts($memID)
 {
 	global $txt, $user_info, $scripturl, $modSettings, $db_prefix;
-	global $context, $user_profile, $id_member, $sourcedir, $smfFunc;
+	global $context, $user_profile, $sourcedir, $smfFunc;
 
 	// If just deleting a message, do it and then redirect back.
 	if (isset($_GET['delete']))
@@ -1705,7 +1705,7 @@ function showPosts($memID)
 			'delete_possible' => ($row['id_first_msg'] != $row['id_msg'] || $row['id_last_msg'] == $row['id_msg']) && (empty($modSettings['edit_disable_time']) || $row['poster_time'] + $modSettings['edit_disable_time'] * 60 >= time()),
 		);
 
-		if ($id_member == $row['id_member_started'])
+		if ($user_info['id'] == $row['id_member_started'])
 			$board_ids['own'][$row['id_board']][] = $counter;
 		$board_ids['any'][$row['id_board']][] = $counter;
 	}
@@ -2540,8 +2540,7 @@ function account($memID)
 
 function forumProfile($memID)
 {
-	global $context, $user_profile;
-	global $user_info, $txt, $id_member, $modSettings;
+	global $context, $user_profile, $user_info, $txt, $modSettings;
 
 	$context['avatar_url'] = $modSettings['avatar_url'];
 	$context['allow_edit_title'] = allowedTo('profile_title_any') || (allowedTo('profile_title_own') && $context['user']['is_owner']);
@@ -2766,13 +2765,13 @@ function theme($memID)
 // Display the notifications and settings for changes.
 function notification($memID)
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $id_member, $modSettings, $smfFunc;
+	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc;
 
 	// All the boards with notification on..
 	$request = $smfFunc['db_query']('', "
 		SELECT b.id_board, b.name, IFNULL(lb.id_msg, 0) AS board_read, b.id_msg_updated
 		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
 		WHERE ln.id_member = $memID
 			AND b.id_board = ln.id_board
 			AND $user_info[query_see_board]
@@ -2813,8 +2812,8 @@ function notification($memID)
 			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 			INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ms.id_member)
-			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
-			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $id_member)
+			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
+			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $user_info[id])
 		WHERE ln.id_member = $memID
 		ORDER BY ms.id_msg DESC
 		LIMIT $_REQUEST[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
@@ -2911,7 +2910,7 @@ function pmprefs($memID)
 // Function to allow the user to choose group membership etc...
 function groupMembership($memID)
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $id_member, $modSettings, $smfFunc;
+	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc;
 
 	$curMember = $user_profile[$memID];
 	$context['primary_group'] = $curMember['id_group'];
@@ -2992,7 +2991,7 @@ function groupMembership($memID)
 // This function actually makes all the group changes...
 function groupMembership2($profile_vars, $post_errors, $memID)
 {
-	global $id_member, $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $txt, $smfFunc;
+	global $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $txt, $smfFunc;
 
 	// Let's be extra cautious...
 	if (!$context['user']['is_owner'] || empty($modSettings['show_group_membership']))
@@ -3186,7 +3185,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 // Present a screen to make sure the user wants to be deleted
 function deleteAccount($memID)
 {
-	global $txt, $context, $id_member, $modSettings, $user_profile, $smfFunc;
+	global $txt, $context, $user_info, $modSettings, $user_profile, $smfFunc;
 
 	if (!$context['user']['is_owner'])
 		isAllowedTo('profile_remove_any');
@@ -3203,7 +3202,7 @@ function deleteAccount($memID)
 
 function deleteAccount2($profile_vars, $post_errors, $memID)
 {
-	global $id_member, $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $smfFunc;
+	global $user_info, $sourcedir, $context, $db_prefix, $user_profile, $modSettings, $smfFunc;
 
 	// !!! Add a way to delete pms as well?
 
@@ -3239,7 +3238,7 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 	require_once($sourcedir . '/Subs-Members.php');
 
 	// Do you have permission to delete others profiles, or is that your profile you wanna delete?
-	if ($memID != $id_member)
+	if ($memID != $user_info['id'])
 	{
 		isAllowedTo('profile_remove_any');
 
@@ -3301,11 +3300,11 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 // This function 'remembers' the profile changes a user made after erronious input.
 function rememberPostData()
 {
-	global $context, $scripturl, $txt, $modSettings, $id_member, $user_profile, $user_info;
+	global $context, $scripturl, $txt, $modSettings, $user_profile, $user_info;
 
 	// Overwrite member settings with the ones you selected.
 	$context['member'] = array(
-		'is_owner' => $_REQUEST['userID'] == $id_member,
+		'is_owner' => $_REQUEST['userID'] == $user_info['id'],
 		'username' => $user_profile[$_REQUEST['userID']]['member_name'],
 		'name' => !isset($_POST['real_name']) || $_POST['real_name'] == '' ? $user_profile[$_REQUEST['userID']]['member_name'] : stripslashes($_POST['real_name']),
 		'id' => (int) $_REQUEST['userID'],
