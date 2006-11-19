@@ -468,7 +468,7 @@ function PackageInstallTest()
 function PackageInstall()
 {
 	global $boarddir, $txt, $context, $boardurl, $scripturl, $sourcedir, $modSettings;
-	global $db_prefix, $user_info, $id_member, $smfFunc;
+	global $db_prefix, $user_info, $smfFunc;
 
 	// If there's no file, what are we installing?
 	if (!isset($_REQUEST['package']) || $_REQUEST['package'] == '')
@@ -712,7 +712,7 @@ function PackageInstall()
 			{
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}log_packages
-					SET install_state = 0, member_removed = '$user_info[name]', id_member_removed = $id_member,
+					SET install_state = 0, member_removed = '$user_info[name]', id_member_removed = $user_info[id],
 						time_removed = " . time() . "
 					WHERE id_install = $row[id_install]", __FILE__, __LINE__);
 			}
@@ -738,7 +738,7 @@ function PackageInstall()
 				VALUES
 					('" . addslashes($packageInfo['filename']) . "', '" . addslashes($packageInfo['name']) . "',
 					'" . addslashes($packageInfo['id']) . "', '" . addslashes($packageInfo['version']) . "',
-					$id_member, '$user_info[name]', " . time() . ", " . ($is_upgrade ? 2 : 1) . ", '$failed_step_insert',
+					$user_info[id], '$user_info[name]', " . time() . ", " . ($is_upgrade ? 2 : 1) . ", '$failed_step_insert',
 					'$themes_installed')", __FILE__, __LINE__);
 		}
 		$smfFunc['db_free_result']($request);

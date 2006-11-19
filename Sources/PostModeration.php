@@ -425,7 +425,7 @@ function UnapprovedAttachments()
 // Approve a post, just the one.
 function ApproveMessage()
 {
-	global $id_member, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
+	global $user_info, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
 
 	checkSession('get');
 
@@ -450,14 +450,14 @@ function ApproveMessage()
 	{
 		approveTopics($topic, !$approved);
 
-		if ($starter != $id_member)
+		if ($starter != $user_info['id'])
 			logAction('approve_topic', array('topic' => $topic, 'subject' => $subject, 'member' => $starter, 'board' => $board));
 	}
 	else
 	{
 		approvePosts($_REQUEST['msg'], !$approved);
 
-		if ($poster != $id_member)
+		if ($poster != $user_info['id'])
 			logAction('approve', array('topic' => $topic, 'subject' => $subject, 'member' => $poster, 'board' => $board));
 	}
 

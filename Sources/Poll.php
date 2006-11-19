@@ -80,7 +80,7 @@ if (!defined('SMF'))
 // Allow the user to vote.
 function Vote()
 {
-	global $topic, $txt, $db_prefix, $id_member, $user_info, $smfFunc;
+	global $topic, $txt, $db_prefix, $user_info, $smfFunc;
 
 	// Make sure you can vote.
 	isAllowedTo('poll_vote');
@@ -96,7 +96,7 @@ function Vote()
 		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.id_poll, p.expire_time, p.max_votes, p.change_vote
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-			LEFT JOIN {$db_prefix}log_polls AS lp ON (p.id_poll = lp.id_poll AND lp.id_member = $id_member)
+			LEFT JOIN {$db_prefix}log_polls AS lp ON (p.id_poll = lp.id_poll AND lp.id_member = $user_info[id])
 		WHERE t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -120,7 +120,7 @@ function Vote()
 		$request = $smfFunc['db_query']('', "
 			SELECT id_choice
 			FROM {$db_prefix}log_polls
-			WHERE id_member = $id_member
+			WHERE id_member = $user_info[id]
 				AND id_poll = $row[id_poll]", __FILE__, __LINE__);
 		while ($choice = $smfFunc['db_fetch_row']($request))
 			$pollOptions[] = $choice[0];
@@ -140,7 +140,7 @@ function Vote()
 			// Delete off the log.
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_polls
-				WHERE id_member = $id_member
+				WHERE id_member = $user_info[id]
 					AND id_poll = $row[id_poll]", __FILE__, __LINE__);
 		}
 
@@ -165,7 +165,7 @@ function Vote()
 
 		$pollOptions[] = $id;
 		$setString .= "
-				($row[id_poll], $id_member, $id),";
+				($row[id_poll], $user_info[id], $id),";
 	}
 	$setString = substr($setString, 0, -1);
 
@@ -188,7 +188,7 @@ function Vote()
 // Lock the voting for a poll.
 function LockVoting()
 {
-	global $topic, $id_member, $db_prefix, $user_info, $smfFunc;
+	global $topic, $db_prefix, $user_info, $smfFunc;
 
 	checkSession('get');
 
@@ -203,7 +203,7 @@ function LockVoting()
 
 	// If the user _can_ modify the poll....
 	if (!allowedTo('poll_lock_any'))
-		isAllowedTo('poll_lock_' . ($id_member == $memberID ? 'own' : 'any'));
+		isAllowedTo('poll_lock_' . ($user_info['id'] == $memberID ? 'own' : 'any'));
 
 	// It's been locked by a non-moderator.
 	if ($voting_locked == '1')
@@ -233,8 +233,7 @@ function LockVoting()
 // Ask what to change in a poll.
 function EditPoll()
 {
-	global $txt, $id_member, $db_prefix;
-	global $user_info, $context, $topic, $smfFunc;
+	global $txt, $db_prefix, $user_info, $context, $topic, $smfFunc;
 
 	if (empty($topic))
 		fatal_lang_error(1, false);
@@ -272,9 +271,9 @@ function EditPoll()
 
 	// Can you do this?
 	if ($context['is_edit'] && !allowedTo('poll_edit_any'))
-		isAllowedTo('poll_edit_' . ($id_member == $pollinfo['id_member_started'] || ($pollinfo['pollStarter'] != 0 && $id_member == $pollinfo['pollStarter']) ? 'own' : 'any'));
+		isAllowedTo('poll_edit_' . ($user_info['id'] == $pollinfo['id_member_started'] || ($pollinfo['pollStarter'] != 0 && $user_info['id'] == $pollinfo['pollStarter']) ? 'own' : 'any'));
 	elseif (!$context['is_edit'] && !allowedTo('poll_add_any'))
-		isAllowedTo('poll_add_' . ($id_member == $pollinfo['id_member_started'] ? 'own' : 'any'));
+		isAllowedTo('poll_add_' . ($user_info['id'] == $pollinfo['id_member_started'] ? 'own' : 'any'));
 
 	// Want to make sure before you actually submit?  Must be a lot of options, or something.
 	if (isset($_POST['preview']))
@@ -483,7 +482,7 @@ function EditPoll()
 // Change a poll...
 function EditPoll2()
 {
-	global $txt, $topic, $board, $id_member, $db_prefix, $context;
+	global $txt, $topic, $board, $db_prefix, $context;
 	global $modSettings, $user_info, $smfFunc;
 
 	if (checkSession('post', '', false) != '')
@@ -520,9 +519,9 @@ function EditPoll2()
 
 	// Check if they have the power to add or edit the poll.
 	if ($isEdit && !allowedTo('poll_edit_any'))
-		isAllowedTo('poll_edit_' . ($id_member == $bcinfo['id_member_started'] || ($bcinfo['pollStarter'] != 0 && $id_member == $bcinfo['pollStarter']) ? 'own' : 'any'));
+		isAllowedTo('poll_edit_' . ($user_info['id'] == $bcinfo['id_member_started'] || ($bcinfo['pollStarter'] != 0 && $user_info['id'] == $bcinfo['pollStarter']) ? 'own' : 'any'));
 	elseif (!$isEdit && !allowedTo('poll_add_any'))
-		isAllowedTo('poll_add_' . ($id_member == $bcinfo['id_member_started'] ? 'own' : 'any'));
+		isAllowedTo('poll_add_' . ($user_info['id'] == $bcinfo['id_member_started'] ? 'own' : 'any'));
 
 	$optionCount = 0;
 	// Ensure the user is leaving a valid amount of options - there must be at least two.
@@ -595,7 +594,7 @@ function EditPoll2()
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}polls
 				(question, hide_results, max_votes, expire_time, id_member, poster_name, change_vote)
-			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes], $_POST[poll_expire], $id_member, SUBSTRING('$user_info[username]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
+			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes], $_POST[poll_expire], $user_info[id], SUBSTRING('$user_info[username]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
 
 		// Set the poll ID.
 		$bcinfo['id_poll'] = db_insert_id("{$db_prefix}polls", 'id_poll');
@@ -683,7 +682,7 @@ function EditPoll2()
 // Remove a poll from a topic without removing the topic.
 function RemovePoll()
 {
-	global $topic, $db_prefix, $user_info, $id_member, $smfFunc;
+	global $topic, $db_prefix, $user_info, $smfFunc;
 
 	// Make sure the topic is not empty.
 	if (empty($topic))
@@ -703,7 +702,7 @@ function RemovePoll()
 		list ($topicStarter, $pollStarter) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
-		isAllowedTo('poll_remove_' . ($topicStarter == $id_member || ($pollStarter != 0 && $id_member == $pollStarter) ? 'own' : 'any'));
+		isAllowedTo('poll_remove_' . ($topicStarter == $user_info['id'] || ($pollStarter != 0 && $user_info['id'] == $pollStarter) ? 'own' : 'any'));
 	}
 
 	// Retrieve the poll ID.

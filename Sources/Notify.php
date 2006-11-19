@@ -48,7 +48,7 @@ if (!defined('SMF'))
 // Turn on/off notifications...
 function Notify()
 {
-	global $db_prefix, $scripturl, $txt, $topic, $id_member, $context, $smfFunc;
+	global $db_prefix, $scripturl, $txt, $topic, $user_info, $context, $smfFunc;
 
 	// Make sure they aren't a guest or something - guests can't really receive notifications!
 	is_not_guest();
@@ -68,7 +68,7 @@ function Notify()
 		$request = $smfFunc['db_query']('', "
 			SELECT id_member
 			FROM {$db_prefix}log_notify
-			WHERE id_member = $id_member
+			WHERE id_member = $user_info[id]
 				AND id_topic = $topic
 			LIMIT 1", __FILE__, __LINE__);
 		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
@@ -89,7 +89,7 @@ function Notify()
 		$smfFunc['db_query']('', "
 			INSERT IGNORE INTO {$db_prefix}log_notify
 				(id_member, id_topic)
-			VALUES ($id_member, $topic)", __FILE__, __LINE__);
+			VALUES ($user_info[id], $topic)", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -98,9 +98,8 @@ function Notify()
 		// Just turn notifications off.
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_notify
-			WHERE id_member = $id_member
-				AND id_topic = $topic
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_member = $user_info[id]
+				AND id_topic = $topic", __FILE__, __LINE__);
 	}
 
 	// Send them back to the topic.
@@ -109,7 +108,7 @@ function Notify()
 
 function BoardNotify()
 {
-	global $db_prefix, $scripturl, $txt, $board, $id_member, $user_info, $context, $smfFunc;
+	global $db_prefix, $scripturl, $txt, $board, $user_info, $context, $smfFunc;
 
 	// Permissions are an important part of anything ;).
 	is_not_guest();
@@ -129,7 +128,7 @@ function BoardNotify()
 		$request = $smfFunc['db_query']('', "
 			SELECT id_member
 			FROM {$db_prefix}log_notify
-			WHERE id_member = $id_member
+			WHERE id_member = $user_info[id]
 				AND id_board = $board
 			LIMIT 1", __FILE__, __LINE__);
 		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
@@ -152,7 +151,7 @@ function BoardNotify()
 		$smfFunc['db_query']('', "
 			INSERT IGNORE INTO {$db_prefix}log_notify
 				(id_member, id_board)
-			VALUES ($id_member, $board)", __FILE__, __LINE__);
+			VALUES ($user_info[id], $board)", __FILE__, __LINE__);
 	}
 	// ...or off?
 	else
@@ -162,9 +161,8 @@ function BoardNotify()
 		// Turn notification off for this board.
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_notify
-			WHERE id_member = $id_member
-				AND id_board = $board
-			LIMIT 1", __FILE__, __LINE__);
+			WHERE id_member = $user_info[id]
+				AND id_board = $board", __FILE__, __LINE__);
 	}
 
 	// Back to the board!

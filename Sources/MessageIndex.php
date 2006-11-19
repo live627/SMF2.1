@@ -37,8 +37,7 @@ if (!defined('SMF'))
 // Show the list of topics in this board, along with any child boards.
 function MessageIndex()
 {
-	global $txt, $scripturl, $board, $db_prefix;
-	global $modSettings, $id_member;
+	global $txt, $scripturl, $board, $db_prefix, $modSettings;
 	global $context, $options, $settings, $board_info, $user_info, $smfFunc;
 
 	if (WIRELESS)
@@ -105,7 +104,7 @@ function MessageIndex()
 		$smfFunc['db_insert']('replace',
 			"{$db_prefix}log_boards",
 			array('id_msg', 'id_member', 'id_board'),
-			array($modSettings['maxMsgID'], $id_member, $board),
+			array($modSettings['maxMsgID'], $user_info['id'], $board),
 			array('id_member', 'id_board'));
 
 		if (!empty($board_info['parent_boards']))
@@ -113,7 +112,7 @@ function MessageIndex()
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_boards
 				SET id_msg = $modSettings[maxMsgID]
-				WHERE id_member = $id_member
+				WHERE id_member = $user_info[id]
 					AND id_board IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")", __FILE__, __LINE__);
 
 			// We've seen all these boards now!
@@ -129,7 +128,7 @@ function MessageIndex()
 			SELECT sent
 			FROM {$db_prefix}log_notify
 			WHERE id_board = $board
-				AND id_member = $id_member
+				AND id_member = $user_info[id]
 			LIMIT 1", __FILE__, __LINE__);
 		$context['is_marked_notify'] = $smfFunc['db_num_rows']($request) != 0;
 		if ($context['is_marked_notify'])
@@ -141,7 +140,7 @@ function MessageIndex()
 					UPDATE {$db_prefix}log_notify
 					SET sent = 0
 					WHERE id_board = $board
-						AND id_member = $id_member", __FILE__, __LINE__);
+						AND id_member = $user_info[id]", __FILE__, __LINE__);
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -171,7 +170,7 @@ function MessageIndex()
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)" : '') . "
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])" : '') . "
 			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
 			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.id_member = mods.id_member)
 		WHERE b.id_parent = $board
@@ -251,7 +250,7 @@ function MessageIndex()
 			FROM {$db_prefix}boards AS b
 				LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
-				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)" : '') . "
+				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])" : '') . "
 			WHERE " . (empty($modSettings['countChildPosts']) ? "b.id_parent IN (" . implode(',', $theboards) . ")" : "child_level > 0") . "
 				AND $user_info[query_see_board]", __FILE__, __LINE__);
 		$parent_map = array();
@@ -466,8 +465,8 @@ function MessageIndex()
 				INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)
 				LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)" . ($user_info['is_guest'] ? '' : "
-				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $id_member)
-				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = $board AND lmr.id_member = $id_member)"). "
+				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
+				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = $board AND lmr.id_member = $user_info[id])"). "
 			WHERE " . ($pre_query ? 't.id_topic IN (' . implode(', ', $topic_ids) . ')' : "t.id_board = $board") . "
 				" . ($context['can_approve_posts'] ? '' : ' AND t.approved = 1') . "
 			ORDER BY " . ($pre_query ? "FIND_IN_SET(t.id_topic, '" . implode(',', $topic_ids) . "')" : (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC')) . "
@@ -620,7 +619,7 @@ function MessageIndex()
 				SELECT id_topic
 				FROM {$db_prefix}messages
 				WHERE id_topic IN (" . implode(', ', $topic_ids) . ")
-					AND id_member = $id_member
+					AND id_member = $user_info[id]
 				GROUP BY id_topic
 				LIMIT " . count($topic_ids), __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -652,7 +651,7 @@ function MessageIndex()
 		// Set permissions for all the topics.
 		foreach ($context['topics'] as $t => $topic)
 		{
-			$started = $topic['first_post']['member']['id'] == $id_member;
+			$started = $topic['first_post']['member']['id'] == $user_info['id'];
 			$context['topics'][$t]['quick_mod'] = array(
 				'lock' => allowedTo('lock_any') || ($started && allowedTo('lock_own')),
 				'sticky' => allowedTo('make_sticky') && !empty($modSettings['enableStickyTopics']),
@@ -710,7 +709,7 @@ function MessageIndex()
 // Allows for moderation from the message index.
 function QuickModeration()
 {
-	global $db_prefix, $sourcedir, $board, $id_member, $modSettings, $sourcedir, $smfFunc;
+	global $db_prefix, $sourcedir, $board, $user_info, $modSettings, $sourcedir, $smfFunc;
 
 	// Check the session = get or post.
 	checkSession('request');
@@ -836,11 +835,11 @@ function QuickModeration()
 				// Goodness, this is fun.  We need to validate the action.
 				elseif ($_REQUEST['actions'][$row['id_topic']] == 'sticky' && !in_array(0, $boards_can['make_sticky']) && !in_array($row['id_board'], $boards_can['make_sticky']))
 					unset($_REQUEST['actions'][$row['id_topic']]);
-				elseif ($_REQUEST['actions'][$row['id_topic']] == 'move' && !in_array(0, $boards_can['move_any']) && !in_array($row['id_board'], $boards_can['move_any']) && ($row['id_member_started'] != $id_member || (!in_array(0, $boards_can['move_own']) && !in_array($row['id_board'], $boards_can['move_own']))))
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'move' && !in_array(0, $boards_can['move_any']) && !in_array($row['id_board'], $boards_can['move_any']) && ($row['id_member_started'] != $user_info['id'] || (!in_array(0, $boards_can['move_own']) && !in_array($row['id_board'], $boards_can['move_own']))))
 					unset($_REQUEST['actions'][$row['id_topic']]);
-				elseif ($_REQUEST['actions'][$row['id_topic']] == 'remove' && !in_array(0, $boards_can['remove_any']) && !in_array($row['id_board'], $boards_can['remove_any']) && ($row['id_member_started'] != $id_member || (!in_array(0, $boards_can['remove_own']) && !in_array($row['id_board'], $boards_can['remove_own']))))
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'remove' && !in_array(0, $boards_can['remove_any']) && !in_array($row['id_board'], $boards_can['remove_any']) && ($row['id_member_started'] != $user_info['id'] || (!in_array(0, $boards_can['remove_own']) && !in_array($row['id_board'], $boards_can['remove_own']))))
 					unset($_REQUEST['actions'][$row['id_topic']]);
-				elseif ($_REQUEST['actions'][$row['id_topic']] == 'lock' && !in_array(0, $boards_can['lock_any']) && !in_array($row['id_board'], $boards_can['lock_any']) && ($row['id_member_started'] != $id_member || $locked == 1 || (!in_array(0, $boards_can['lock_own']) && !in_array($row['id_board'], $boards_can['lock_own']))))
+				elseif ($_REQUEST['actions'][$row['id_topic']] == 'lock' && !in_array(0, $boards_can['lock_any']) && !in_array($row['id_board'], $boards_can['lock_any']) && ($row['id_member_started'] != $user_info['id'] || $locked == 1 || (!in_array(0, $boards_can['lock_own']) && !in_array($row['id_board'], $boards_can['lock_own']))))
 					unset($_REQUEST['actions'][$row['id_topic']]);
 				// If the topic is approved then you need permission to approve the posts within.
 				elseif ($_REQUEST['actions'][$row['id_topic']] == 'approve' && (!$row['unapproved_posts'] || (!in_array(0, $boards_can['approve_posts']) && !in_array($row['id_board'], $boards_can['approve_posts']))))
@@ -917,7 +916,7 @@ function QuickModeration()
 			SELECT id_topic, id_board
 			FROM {$db_prefix}topics
 			WHERE id_topic IN (" . implode(', ', $moveCache[0]) . ")" . (!empty($board) && !allowedTo('move_any') ? "
-				AND id_member_started = $id_member" : '') . "
+				AND id_member_started = $user_info[id]" : '') . "
 			LIMIT " . count($moveCache[0]), __FILE__, __LINE__);
 		$moveTos = array();
 		$moveCache2 = array();
@@ -957,7 +956,7 @@ function QuickModeration()
 				SELECT id_topic, id_board
 				FROM {$db_prefix}topics
 				WHERE id_topic IN (" . implode(', ', $removeCache) . ")
-					AND id_member_started = $id_member
+					AND id_member_started = $user_info[id]
 				LIMIT " . count($removeCache), __FILE__, __LINE__);
 			$removeCache = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -993,7 +992,7 @@ function QuickModeration()
 				SELECT id_topic, locked, id_board
 				FROM {$db_prefix}topics
 				WHERE id_topic IN (" . implode(', ', $lockCache) . ")
-					AND id_member_started = $id_member
+					AND id_member_started = $user_info[id]
 					AND locked IN (2, 0)
 				LIMIT " . count($lockCache), __FILE__, __LINE__);
 			$lockCache = array();
@@ -1045,7 +1044,7 @@ function QuickModeration()
 	{
 		$markArray = array();
 		foreach ($markCache as $topic)
-			$markArray[] = array($modSettings['maxMsgID'], $id_member, $topic);
+			$markArray[] = array($modSettings['maxMsgID'], $user_info['id'], $topic);
 
 		$smfFunc['db_query']('replace',
 			"{$db_prefix}log_topics",

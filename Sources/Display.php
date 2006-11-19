@@ -1258,7 +1258,7 @@ function approved_attach_sort($a, $b)
 // In-topic quick moderation.
 function QuickInTopicModeration()
 {
-	global $sourcedir, $db_prefix, $topic, $board, $id_member, $smfFunc, $modSettings;
+	global $sourcedir, $db_prefix, $topic, $board, $user_info, $smfFunc, $modSettings;
 
 	// Check the session = get or post.
 	checkSession('request');
@@ -1286,7 +1286,7 @@ function QuickInTopicModeration()
 		list ($starter) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
-		$allowed_all = $starter == $id_member;
+		$allowed_all = $starter == $user_info['id'];
 	}
 	else
 		$allowed_all = false;
@@ -1301,7 +1301,7 @@ function QuickInTopicModeration()
 		FROM {$db_prefix}messages
 		WHERE id_msg IN (" . implode(', ', $messages) . ")
 			AND id_topic = $topic" . (!$allowed_all ? "
-			AND id_member = $id_member" : '') . "
+			AND id_member = $user_info[id]" : '') . "
 		LIMIT " . count($messages), __FILE__, __LINE__);
 	$messages = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1332,7 +1332,7 @@ function QuickInTopicModeration()
 		removeMessage($message);
 
 		// Log this moderation action ;).
-		if (allowedTo('delete_any') && (!allowedTo('delete_own') || $info[1] != $id_member))
+		if (allowedTo('delete_any') && (!allowedTo('delete_own') || $info[1] != $user_info['id']))
 			logAction('delete', array('topic' => $topic, 'subject' => $info[0], 'member' => $info[1], 'board' => $board));
 	}
 

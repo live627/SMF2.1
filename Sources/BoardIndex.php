@@ -563,14 +563,14 @@ function calendarDoIndex()
 // Collapse or expand a category
 function CollapseCategory()
 {
-	global $id_member, $sourcedir;
+	global $user_info, $sourcedir;
 
 	// Check if the input values are correct.
 	if (in_array($_REQUEST['sa'], array('expand', 'collapse', 'toggle')) && isset($_REQUEST['c']))
 	{
 		// And collapse/expand/toggle the category.
 		require_once($sourcedir . '/Subs-Categories.php');
-		collapseCategories(array((int) $_REQUEST['c']), $_REQUEST['sa'],array($id_member));
+		collapseCategories(array((int) $_REQUEST['c']), $_REQUEST['sa'],array($user_info['id']));
 	}
 
 	// And go back to the board index.

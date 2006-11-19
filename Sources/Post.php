@@ -92,7 +92,7 @@ if (!defined('SMF'))
 function Post()
 {
 	global $txt, $scripturl, $topic, $db_prefix, $modSettings, $board;
-	global $id_member, $user_info, $sc, $board_info, $context, $settings;
+	global $user_info, $sc, $board_info, $context, $settings;
 	global $sourcedir, $options, $smfFunc, $language;
 
 	loadLanguage('Post');
@@ -129,7 +129,7 @@ function Post()
 				t.locked, IFNULL(ln.id_topic, 0) AS notify, t.is_sticky, t.id_poll, t.num_replies, mf.id_member,
 				t.id_first_msg, mf.subject, GREATEST(ml.poster_time, ml.modified_time) AS lastPostTime
 			FROM {$db_prefix}topics AS t
-				LEFT JOIN {$db_prefix}log_notify AS ln ON (ln.id_topic = t.id_topic AND ln.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_notify AS ln ON (ln.id_topic = t.id_topic AND ln.id_member = $user_info[id])
 				LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				LEFT JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
 			WHERE t.id_topic = $topic
@@ -148,7 +148,7 @@ function Post()
 
 			// By default the reply will be approved...
 			$context['becomes_approved'] = true;
-			if ($ID_MEMBER_POSTER != $id_member)
+			if ($ID_MEMBER_POSTER != $user_info['id'])
 			{
 				if (allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
 					$context['becomes_approved'] = false;
@@ -168,7 +168,7 @@ function Post()
 			$context['becomes_approved'] = true;
 		}
 
-		$context['can_lock'] = allowedTo('lock_any') || ($id_member == $ID_MEMBER_POSTER && allowedTo('lock_own'));
+		$context['can_lock'] = allowedTo('lock_any') || ($user_info['id'] == $ID_MEMBER_POSTER && allowedTo('lock_own'));
 		$context['can_sticky'] = allowedTo('make_sticky') && !empty($modSettings['enableStickyTopics']);
 
 		$context['notify'] = !empty($context['notify']);
@@ -217,7 +217,7 @@ function Post()
 		if (empty($topic))
 			isAllowedTo('poll_post');
 		// This is an old topic - but it is yours!  Can you add to it?
-		elseif ($id_member == $ID_MEMBER_POSTER && !allowedTo('poll_add_any'))
+		elseif ($user_info['id'] == $ID_MEMBER_POSTER && !allowedTo('poll_add_any'))
 			isAllowedTo('poll_add_own');
 		// If you're not the owner, can you add to any poll?
 		else
@@ -279,7 +279,7 @@ function Post()
 			$smfFunc['db_free_result']($request);
 
 			// Make sure the user is allowed to edit this event.
-			if ($row['id_member'] != $id_member)
+			if ($row['id_member'] != $user_info['id'])
 				isAllowedTo('calendar_edit_any');
 			elseif (!allowedTo('calendar_edit_any'))
 				isAllowedTo('calendar_edit_own');
@@ -648,17 +648,17 @@ function Post()
 			$attachment_stuff[] = $row2;
 		$smfFunc['db_free_result']($request);
 
-		if ($row['id_member'] == $id_member && !allowedTo('modify_any'))
+		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			// Give an extra five minutes over the disable time threshold, so they can type.
 			if (!empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
-			elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_own'))
+			elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_own');
 		}
-		elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_any'))
+		elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_any'))
 			isAllowedTo('modify_replies');
 		else
 			isAllowedTo('modify_any');
@@ -807,7 +807,7 @@ function Post()
 			{
 				$temp_start++;
 
-				if (preg_match('~^post_tmp_' . $id_member . '_\d+$~', $attachID) == 0)
+				if (preg_match('~^post_tmp_' . $user_info['id'] . '_\d+$~', $attachID) == 0)
 				{
 					unset($_SESSION['temp_attachments'][$attachID]);
 					continue;
@@ -902,7 +902,7 @@ function Post()
 				if (!is_writable($modSettings['attachmentUploadDir']))
 					fatal_lang_error('attachments_no_write', 'critical');
 
-				$attachID = 'post_tmp_' . $id_member . '_' . $temp_start++;
+				$attachID = 'post_tmp_' . $user_info['id'] . '_' . $temp_start++;
 				$_SESSION['temp_attachments'][$attachID] = stripslashes(basename($_FILES['attachment']['name'][$n]));
 				$context['current_attachments'][] = array(
 					'name' => basename(stripslashes($_FILES['attachment']['name'][$n])),
@@ -1022,7 +1022,7 @@ function Post()
 function Post2()
 {
 	global $board, $topic, $txt, $db_prefix, $modSettings, $sourcedir, $context;
-	global $id_member, $user_info, $board_info, $options, $smfFunc;
+	global $user_info, $board_info, $options, $smfFunc;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
 	if (!empty($_REQUEST['editor_mode']) && isset($_REQUEST['message']))
@@ -1080,7 +1080,7 @@ function Post2()
 
 		// Do the permissions and approval stuff...
 		$becomesApproved = true;
-		if ($ID_MEMBER_POSTER != $id_member)
+		if ($ID_MEMBER_POSTER != $user_info['id'])
 		{
 			if (allowedTo('post_unapproved_replies_any') && !allowedTo('post_reply_any'))
 				$becomesApproved = false;
@@ -1101,7 +1101,7 @@ function Post2()
 			if ((empty($tmplocked) && empty($_POST['lock'])) || (!empty($_POST['lock']) && !empty($tmplocked)))
 				unset($_POST['lock']);
 			// You're have no permission to lock this topic.
-			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $id_member != $ID_MEMBER_POSTER))
+			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $user_info['id'] != $ID_MEMBER_POSTER))
 				unset($_POST['lock']);
 			// You are allowed to (un)lock your own topic only.
 			elseif (!allowedTo('lock_any'))
@@ -1191,7 +1191,7 @@ function Post2()
 			if ((empty($_POST['lock']) && empty($row['locked'])) || (!empty($_POST['lock']) && !empty($row['locked'])))
 				unset($_POST['lock']);
 			// You're simply not allowed to (un)lock this.
-			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $id_member != $row['id_member_poster']))
+			elseif (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $user_info['id'] != $row['id_member_poster']))
 				unset($_POST['lock']);
 			// You're only allowed to lock your own topics.
 			elseif (!allowedTo('lock_any'))
@@ -1212,16 +1212,16 @@ function Post2()
 		if (isset($_POST['sticky']) && (!allowedTo('make_sticky') || $_POST['sticky'] == $row['is_sticky']))
 			unset($_POST['sticky']);
 
-		if ($row['id_member'] == $id_member && !allowedTo('modify_any'))
+		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			if (!empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
-			elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_own'))
+			elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_own');
 		}
-		elseif ($row['id_member_poster'] == $id_member && !allowedTo('modify_any'))
+		elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			isAllowedTo('modify_replies');
 
@@ -1233,7 +1233,7 @@ function Post2()
 			isAllowedTo('modify_any');
 
 			// Log it, assuming you're not modifying your own post.
-			if ($row['id_member'] != $id_member)
+			if ($row['id_member'] != $user_info['id'])
 				$moderationAction = true;
 		}
 
@@ -1322,7 +1322,7 @@ function Post2()
 		if (empty($topic))
 			isAllowedTo('poll_post');
 		// Can you add to your own topics?
-		elseif ($id_member == $row['id_member_poster'] && !allowedTo('poll_add_any'))
+		elseif ($user_info['id'] == $row['id_member_poster'] && !allowedTo('poll_add_any'))
 			isAllowedTo('poll_add_own');
 		// Can you add polls to any topic, then?
 		else
@@ -1463,7 +1463,7 @@ function Post2()
 		if (!empty($_SESSION['temp_attachments']))
 			foreach ($_SESSION['temp_attachments'] as $attachID => $name)
 			{
-				if (preg_match('~^post_tmp_' . $id_member . '_\d+$~', $attachID) == 0)
+				if (preg_match('~^post_tmp_' . $user_info['id'] . '_\d+$~', $attachID) == 0)
 					continue;
 
 				if (!empty($_POST['attach_del']) && !in_array($attachID, $_POST['attach_del']))
@@ -1502,7 +1502,7 @@ function Post2()
 
 			$attachmentOptions = array(
 				'post' => isset($_REQUEST['msg']) ? $_REQUEST['msg'] : 0,
-				'poster' => $id_member,
+				'poster' => $user_info['id'],
 				'name' => $_FILES['attachment']['name'][$n],
 				'tmp_name' => $_FILES['attachment']['tmp_name'][$n],
 				'size' => $_FILES['attachment']['size'][$n],
@@ -1541,7 +1541,7 @@ function Post2()
 			INSERT INTO {$db_prefix}polls
 				(question, hide_results, max_votes, expire_time, id_member, poster_name, change_vote)
 			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes],
-				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $id_member, SUBSTRING('$_POST[guestname]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
+				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $user_info[id], SUBSTRING('$_POST[guestname]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
 		$id_poll = db_insert_id("{$db_prefix}polls", 'id_poll');
 
 		// Create each answer choice.
@@ -1584,7 +1584,7 @@ function Post2()
 		'mark_as_read' => true,
 	);
 	$posterOptions = array(
-		'id' => $id_member,
+		'id' => $user_info['id'],
 		'name' => $_POST['guestname'],
 		'email' => $_POST['email'],
 		'update_post_count' => !$user_info['is_guest'] && !isset($_REQUEST['msg']) && $board_info['posts_count'],
@@ -1594,7 +1594,7 @@ function Post2()
 	if (!empty($_REQUEST['msg']))
 	{
 		// Have admins allowed people to hide their screwups?
-		if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $id_member != $row['id_member'])
+		if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $user_info['id'] != $row['id_member'])
 		{
 			$msgOptions['modify_time'] = time();
 			$msgOptions['modify_name'] = addslashes($user_info['name']);
@@ -1620,7 +1620,7 @@ function Post2()
 	{
 		require_once($sourcedir . '/Calendar.php');
 		calendarCanLink();
-		calendarInsertEvent($board, $topic, $_POST['evtitle'], $id_member, $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
+		calendarInsertEvent($board, $topic, $_POST['evtitle'], $user_info['id'], $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
 	}
 	elseif (isset($_POST['calendar']))
 	{
@@ -1642,7 +1642,7 @@ function Post2()
 			$smfFunc['db_free_result']($request);
 
 			// Silly hacker, Trix are for kids. ...probably trademarked somewhere, this is FAIR USE! (parody...)
-			isAllowedTo('calendar_edit_' . ($row2['id_member'] == $id_member ? 'own' : 'any'));
+			isAllowedTo('calendar_edit_' . ($row2['id_member'] == $user_info['id'] ? 'own' : 'any'));
 		}
 
 		// Delete it?
@@ -1675,7 +1675,7 @@ function Post2()
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_boards
 				SET id_msg = $modSettings[maxMsgID]
-				WHERE id_member = $id_member
+				WHERE id_member = $user_info[id]
 					AND id_board IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")", __FILE__, __LINE__);
 		}
 	}
@@ -1687,12 +1687,12 @@ function Post2()
 			$smfFunc['db_query']('', "
 				INSERT IGNORE INTO {$db_prefix}log_notify
 					(id_member, id_topic, id_board)
-				VALUES ($id_member, $topic, 0)", __FILE__, __LINE__);
+				VALUES ($user_info[id], $topic, 0)", __FILE__, __LINE__);
 	}
 	elseif (!$newTopic)
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_notify
-			WHERE id_member = $id_member
+			WHERE id_member = $user_info[id]
 				AND id_topic = $topic", __FILE__, __LINE__);
 
 	// Log an act of moderation - modifying.
@@ -1733,7 +1733,7 @@ function Post2()
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_boards
 			SET id_msg = $modSettings[maxMsgID]
-			WHERE id_member = $id_member
+			WHERE id_member = $user_info[id]
 				AND id_board = $board", __FILE__, __LINE__);
 	}
 
@@ -1834,7 +1834,7 @@ function AnnouncementSelectMembergroup()
 function AnnouncementSend()
 {
 	global $db_prefix, $topic, $board, $board_info, $context, $modSettings;
-	global $language, $scripturl, $txt, $id_member, $sourcedir, $smfFunc;
+	global $language, $scripturl, $txt, $user_info, $sourcedir, $smfFunc;
 
 	checkSession();
 
@@ -1876,7 +1876,7 @@ function AnnouncementSend()
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.id_member, mem.email_address, mem.lngfile
 		FROM {$db_prefix}members AS mem
-		WHERE mem.id_member != $id_member" . (!empty($modSettings['allow_disableAnnounce']) ? '
+		WHERE mem.id_member != $user_info[id]" . (!empty($modSettings['allow_disableAnnounce']) ? '
 			AND mem.notify_announcements = 1' : '') . "
 			AND mem.is_activated = 1
 			AND (mem.id_group IN (" . implode(', ', $_POST['who']) . ") OR mem.id_post_group IN (" . implode(', ', $_POST['who']) . ") OR FIND_IN_SET(" . implode(", mem.additional_groups) OR FIND_IN_SET(", $_POST['who']) . ", mem.additional_groups))
@@ -1937,7 +1937,7 @@ function AnnouncementSend()
 function notifyMembersBoard(&$topicData)
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $id_member, $modSettings, $sourcedir, $board, $smfFunc;
+	global $modSettings, $sourcedir, $board, $smfFunc;
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -2199,7 +2199,7 @@ function QuoteFast()
 function JavaScriptModify()
 {
 	global $db_prefix, $sourcedir, $modSettings, $board, $topic, $txt;
-	global $user_info, $id_member, $context, $smfFunc, $language;
+	global $user_info, $context, $smfFunc, $language;
 
 	// We have to have a topic!
 	if (empty($topic))
@@ -2225,23 +2225,23 @@ function JavaScriptModify()
 	// Change either body or subject requires permissions to modify messages.
 	if (isset($_POST['message']) || isset($_POST['subject']) || isset($_REQUEST['icon']))
 	{
-		if ($row['id_member'] == $id_member && !allowedTo('modify_any'))
+		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			if (!empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
-			elseif ($row['id_member_started'] == $id_member && !allowedTo('modify_own'))
+			elseif ($row['id_member_started'] == $user_info['id'] && !allowedTo('modify_own'))
 				isAllowedTo('modify_replies');
 			else
 				isAllowedTo('modify_own');
 		}
 		// Otherwise, they're locked out; someone who can modify the replies is needed.
-		elseif ($row['id_member_started'] == $id_member && !allowedTo('modify_any'))
+		elseif ($row['id_member_started'] == $user_info['id'] && !allowedTo('modify_any'))
 			isAllowedTo('modify_replies');
 		else
 			isAllowedTo('modify_any');
 
 		// Only log this action if it wasn't your message.
-		$moderationAction = $row['id_member'] != $id_member;
+		$moderationAction = $row['id_member'] != $user_info['id'];
 	}
 
 	$post_errors = array();
@@ -2287,7 +2287,7 @@ function JavaScriptModify()
 
 	if (isset($_POST['lock']))
 	{
-		if (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $id_member != $row['id_member']))
+		if (!allowedTo(array('lock_any', 'lock_own')) || (!allowedTo('lock_any') && $user_info['id'] != $row['id_member']))
 			unset($_POST['lock']);
 		elseif (!allowedTo('lock_any'))
 		{
@@ -2327,7 +2327,7 @@ function JavaScriptModify()
 		if ((isset($_POST['subject']) && $_POST['subject'] != $row['subject']) || (isset($_POST['message']) && $_POST['message'] != $row['body']) || (isset($_REQUEST['icon']) && $_REQUEST['icon'] != $row['icon']))
 		{
 			// And even then only if the time has passed...
-			if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $id_member != $row['id_member'])
+			if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $user_info['id'] != $row['id_member'])
 			{
 				$msgOptions['modify_time'] = time();
 				$msgOptions['modify_name'] = addslashes($user_info['name']);
@@ -2337,7 +2337,7 @@ function JavaScriptModify()
 		modifyPost($msgOptions, $topicOptions, $posterOptions);
 
 		// Changing the first subject updates other subjects to 'Re: new_subject'.
-		if (isset($_POST['subject']) && isset($_REQUEST['change_all_subjects']) && $row['id_first_msg'] == $row['id_msg'] && !empty($row['num_replies']) && (allowedTo('modify_any') || ($row['id_member_started'] == $id_member && allowedTo('modify_replies'))))
+		if (isset($_POST['subject']) && isset($_REQUEST['change_all_subjects']) && $row['id_first_msg'] == $row['id_msg'] && !empty($row['num_replies']) && (allowedTo('modify_any') || ($row['id_member_started'] == $user_info['id'] && allowedTo('modify_replies'))))
 		{
 			// Get the proper (default language) response prefix first.
 			if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
