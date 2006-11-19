@@ -50,7 +50,7 @@ if (!defined('SMF'))
 		- never access the context directly, but use the data handling
 		  functions to do so.
 
-	void newTable(string title = '', string defaultValue = '',
+	void newTable(string title = '', string default_value = '',
 			string shading = 'all', string width_normal = 'auto',
 			string align_normal = 'center', string width_shaded = 'auto',
 			string align_shaded = 'auto')
@@ -58,7 +58,7 @@ if (!defined('SMF'))
 		  context, ready for filling using addData().
 		- takes a lot of possible attributes, these have the following effect:
 			+ title = Title to be displayed with this data table.
-			+ defaultValue = Value to be displayed if a key is missing from a
+			+ default_value = Value to be displayed if a key is missing from a
 			  row.
 			+ shading = Should the left, top or both (all) parts of the table
 			  beshaded?
@@ -739,7 +739,7 @@ function StaffReport()
 }
 
 // This function creates a new table of data, most functions will only use it once.
-function newTable($title = '', $defaultValue = '', $shading = 'all', $width_normal = 'auto', $align_normal = 'center', $width_shaded = 'auto', $align_shaded = 'auto')
+function newTable($title = '', $default_value = '', $shading = 'all', $width_normal = 'auto', $align_normal = 'center', $width_shaded = 'auto', $align_shaded = 'auto')
 {
 	global $context;
 
@@ -750,7 +750,7 @@ function newTable($title = '', $defaultValue = '', $shading = 'all', $width_norm
 	// Create the table!
 	$context['tables'][$context['table_count']] = array(
 		'title' => $title,
-		'default_value' => $defaultValue,
+		'default_value' => $default_value,
 		'shading' => array(
 			'left' => $shading == 'all' || $shading == 'left',
 			'top' => $shading == 'all' || $shading == 'top',

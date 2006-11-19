@@ -1017,7 +1017,7 @@ function EditMessageIcons()
 
 	$context['icons'] = array();
 	$request = $smfFunc['db_query']('', "
-		SELECT m.ID_ICON, m.title, m.filename, m.iconOrder, m.id_board, b.name AS board_name
+		SELECT m.id_icon, m.title, m.filename, m.icon_order, m.id_board, b.name AS board_name
 		FROM {$db_prefix}message_icons AS m
 			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
@@ -1025,18 +1025,18 @@ function EditMessageIcons()
 	$trueOrder = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$context['icons'][$row['ID_ICON']] = array(
-			'id' => $row['ID_ICON'],
+		$context['icons'][$row['id_icon']] = array(
+			'id' => $row['id_icon'],
 			'title' => $row['title'],
 			'filename' => $row['filename'],
 			'image_url' => $settings[file_exists($settings['theme_dir'] . '/images/post/' . $row['filename'] . '.gif') ? 'actual_images_url' : 'default_images_url'] . '/post/' . $row['filename'] . '.gif',
 			'board_id' => $row['id_board'],
 			'board' => empty($row['board_name']) ? $txt['icons_edit_icons_all_boards'] : $row['board_name'],
-			'order' => $row['iconOrder'],
+			'order' => $row['icon_order'],
 			'true_order' => $trueOrder++,
 			'after' => $last_icon,
 		);
-		$last_icon = $row['ID_ICON'];
+		$last_icon = $row['id_icon'];
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -1055,7 +1055,7 @@ function EditMessageIcons()
 			// Do the actual delete!
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}message_icons
-				WHERE ID_ICON IN (" . implode(', ', $deleteIcons) . ")
+				WHERE id_icon IN (" . implode(', ', $deleteIcons) . ")
 				LIMIT " . count($deleteIcons), __FILE__, __LINE__);
 		}
 		// Editing/Adding an icon?
@@ -1110,7 +1110,7 @@ function EditMessageIcons()
 
 			$smfFunc['db_query']('', "
 				REPLACE INTO {$db_prefix}message_icons
-					(ID_ICON, id_board, title, filename, iconOrder)
+					(id_icon, id_board, title, filename, icon_order)
 				VALUES
 					" . implode(',
 					', $insert), __FILE__, __LINE__);
@@ -1119,7 +1119,7 @@ function EditMessageIcons()
 		// Sort by order, so it is quicker :)
 		$smfFunc['db_query']('', "
 			ALTER TABLE {$db_prefix}message_icons
-			ORDER BY iconOrder", __FILE__, __LINE__);
+			ORDER BY icon_order", __FILE__, __LINE__);
 
 		// Unless we're adding a new thing, we'll escape
 		if (!isset($_POST['add']))

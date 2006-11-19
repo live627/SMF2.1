@@ -569,12 +569,12 @@ function updateSettings($changeArray, $update = false)
 	if (empty($replaceArray))
 		return;
 
-	$smfFunc['db_insert']('replace', "{$db_prefix}settings", array('variable', 'value'), $replaceArray, array('variable'));
-	/*$smfFunc['db_query']('', "
-		REPLACE INTO {$db_prefix}settings
-			(variable, value)
-		VALUES " . implode(',
-			', $replaceArray), __FILE__, __LINE__);*/
+	$smfFunc['db_insert']('replace',
+		"{$db_prefix}settings",
+		array('variable', 'value'),
+		$replaceArray,
+		array('variable')
+	);
 
 	// Kill the cache - it needs redoing now, but we won't bother ourselves with that here.
 	cache_put_data('modSettings', null, 90);
@@ -2656,7 +2656,7 @@ function logAction($action, $extra = array())
 				$board_id, $topic_id, $msg_id,
 				SUBSTRING('" . addslashes(serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
 
-		return db_insert_id("{$db_prefix}log_actions", 'ID_ACTION');
+		return db_insert_id("{$db_prefix}log_actions", 'id_action');
 	}
 
 	return false;
@@ -2692,10 +2692,12 @@ function trackStats($stats = array())
 		WHERE date = '$date'", __FILE__, __LINE__);
 	if (db_affected_rows() == 0)
 	{
-		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}log_activity
-				(date, " . implode(', ', array_keys($cache_stats)) . ")
-			VALUES ('$date', " . implode(', ', $cache_stats) . ')', __FILE__, __LINE__);
+		$smfFunc['db_insert']('ignore',
+			"{$db_prefix}log_activity",
+			array_keys($cache_stats) + array('date'),
+			$cache_stats + array('\'' . $date . '\''),
+			array('date')
+		);
 	}
 
 	// Don't do this again.

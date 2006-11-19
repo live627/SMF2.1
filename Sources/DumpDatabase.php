@@ -35,15 +35,6 @@ if (!defined('SMF'))
 		- requires an administrator and the session hash by get.
 		- is accessed via ?action=admin;area=dumpdb.
 
-	string getTableContent(string table_name)
-		- gets all the necessary INSERTs for the table named table_name.
-		- goes in 250 row segments.
-		- returns the query to insert the data back in.
-		- returns an empty string if the table was empty.
-
-	string getTableSQLData(string table_name)
-		- dumps the CREATE for the specified table. (by table_name.)
-		- returns the CREATE statement.
 */
 
 // Dumps the database to a file.
@@ -60,6 +51,9 @@ function DumpDatabase2()
 		$_GET['data'] = true;
 
 	checkSession('get');
+
+	// We will need this, badly!
+	db_extend();
 
 	// Attempt to stop from dying...
 	@set_time_limit(600);
@@ -160,7 +154,7 @@ function DumpDatabase2()
 				$crlf,
 				'DROP TABLE IF EXISTS `', $tableName[0], '`;', $crlf,
 				$crlf,
-				getTableSQLData($tableName[0]), ';', $crlf;
+				db_table_sql($tableName[0]), ';', $crlf;
 		}
 
 		// How about the data?
@@ -168,7 +162,7 @@ function DumpDatabase2()
 			continue;
 
 		// Are there any rows in this table?
-		$get_rows = getTableContent($tableName[0]);
+		$get_rows = db_insert_sql($tableName[0]);
 
 		// No rows to get - skip it.
 		if (empty($get_rows))
@@ -190,145 +184,6 @@ function DumpDatabase2()
 		'# Done', $crlf;
 
 	exit;
-}
-
-// Get the content (INSERTs) for a table.
-function getTableContent($tableName)
-{
-	global $crlf, $smfFunc;
-
-	// Get everything from the table.
-	$result = $smfFunc['db_query']('', "
-		SELECT /*!40001 SQL_NO_CACHE */ *
-		FROM `$tableName`", false, false);
-
-	// The number of rows, just for record keeping and breaking INSERTs up.
-	$num_rows = @$smfFunc['db_num_rows']($result);
-	$current_row = 0;
-
-	if ($num_rows == 0)
-		return '';
-
-	$fields = array_keys($smfFunc['db_fetch_assoc']($result));
-	$smfFunc['db_data_seek']($result, 0);
-
-	// Start it off with the basic INSERT INTO.
-	$data = 'INSERT INTO `' . $tableName . '`' . $crlf . "\t(`" . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
-
-	// Loop through each row.
-	while ($row = $smfFunc['db_fetch_row']($result))
-	{
-		$current_row++;
-
-		// Get the fields in this row...
-		$field_list = array();
-		for ($j = 0; $j < $smfFunc['db_num_fields']($result); $j++)
-		{
-			// Try to figure out the type of each field. (NULL, number, or 'string'.)
-			if (!isset($row[$j]))
-				$field_list[] = 'NULL';
-			elseif (is_numeric($row[$j]))
-				$field_list[] = $row[$j];
-			else
-				$field_list[] = "'" . $smfFunc['db_escape_string']($row[$j]) . "'";
-		}
-
-		// 'Insert' the data.
-		$data .= '(' . implode(', ', $field_list) . ')';
-
-		// Start a new INSERT statement after every 250....
-		if ($current_row > 249 && $current_row % 250 == 0)
-			$data .= ';' . $crlf . 'INSERT INTO `' . $tableName . '`' . $crlf . "\t(`" . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
-		// All done!
-		elseif ($current_row == $num_rows)
-			$data .= ';' . $crlf;
-		// Otherwise, go to the next line.
-		else
-			$data .= ',' . $crlf . "\t";
-	}
-	$smfFunc['db_free_result']($result);
-
-	// Return an empty string if there were no rows.
-	return $num_rows == 0 ? '' : $data;
-}
-
-// Get the schema (CREATE) for a table.
-function getTableSQLData($tableName)
-{
-	global $crlf, $smfFunc;
-
-	// Start the create table...
-	$schema_create = 'CREATE TABLE `' . $tableName . '` (' . $crlf;
-
-	// Find all the fields.
-	$result = $smfFunc['db_query']('', "
-		SHOW FIELDS
-		FROM `$tableName`", false, false);
-	while ($row = @$smfFunc['db_fetch_assoc']($result))
-	{
-		// Make the CREATE for this column.
-		$schema_create .= '  ' . $row['Field'] . ' ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
-
-		// Add a default...?
-		if (isset($row['Default']))
-		{
-			// Make a special case of auto-timestamp.
-			if ($row['Default'] == 'CURRENT_TIMESTAMP')
-				$schema_create .= ' /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */';
-			else
-				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . $smfFunc['db_escape_string']($row['Default']) . "'");
-		}
-
-		// And now any extra information. (such as auto_increment.)
-		$schema_create .= ($row['Extra'] != '' ? ' ' . $row['Extra'] : '') . ',' . $crlf;
-	}
-	@$smfFunc['db_free_result']($result);
-
-	// Take off the last comma.
-	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
-
-	// Find the keys.
-	$result = $smfFunc['db_query']('', "
-		SHOW KEYS
-		FROM `$tableName`", false, false);
-	$indexes = array();
-	while ($row = @$smfFunc['db_fetch_assoc']($result))
-	{
-		// IS this a primary key, unique index, or regular index?
-		$row['Key_name'] = $row['Key_name'] == 'PRIMARY' ? 'PRIMARY KEY' : (empty($row['Non_unique']) ? 'UNIQUE ' : ($row['Comment'] == 'FULLTEXT' || (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT') ? 'FULLTEXT ' : 'KEY ')) . $row['Key_name'];
-
-		// Is this the first column in the index?
-		if (empty($indexes[$row['Key_name']]))
-			$indexes[$row['Key_name']] = array();
-
-		// A sub part, like only indexing 15 characters of a varchar.
-		if (!empty($row['Sub_part']))
-			$indexes[$row['Key_name']][$row['Seq_in_index']] = $row['Column_name'] . '(' . $row['Sub_part'] . ')';
-		else
-			$indexes[$row['Key_name']][$row['Seq_in_index']] = $row['Column_name'];
-	}
-	@$smfFunc['db_free_result']($result);
-
-	// Build the CREATEs for the keys.
-	foreach ($indexes as $keyname => $columns)
-	{
-		// Ensure the columns are in proper order.
-		ksort($columns);
-
-		$schema_create .= ',' . $crlf . '  ' . $keyname . ' (' . implode($columns, ', ') . ')';
-	}
-
-	// Now just get the comment and type... (MyISAM, etc.)
-	$result = $smfFunc['db_query']('', "
-		SHOW TABLE STATUS
-		LIKE '" . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . "'", false, false);
-	$row = @$smfFunc['db_fetch_assoc']($result);
-	@$smfFunc['db_free_result']($result);
-
-	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
-
-	return $schema_create;
 }
 
 ?>

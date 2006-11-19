@@ -145,13 +145,13 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_polls (
 
 ---# Creating "log_actions"...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_actions (
-	ID_ACTION int(10) unsigned NOT NULL auto_increment,
+	id_action int(10) unsigned NOT NULL auto_increment,
 	logTime int(10) unsigned NOT NULL default '0',
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	IP tinytext NOT NULL default '',
 	action varchar(30) NOT NULL default '',
 	extra text NOT NULL default '',
-	PRIMARY KEY (ID_ACTION),
+	PRIMARY KEY (id_action),
 	KEY logTime (logTime),
 	KEY ID_MEMBER (ID_MEMBER)
 ) TYPE=MyISAM;
@@ -208,12 +208,12 @@ VALUES (1, ':)', 'smiley.gif', 'Smiley', 0, 0),
 ---# Dropping "log_search" and recreating it...
 DROP TABLE IF EXISTS {$db_prefix}log_search;
 CREATE TABLE {$db_prefix}log_search (
-	ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
+	id_search tinyint(3) unsigned NOT NULL default '0',
 	ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
 	ID_MSG int(10) unsigned NOT NULL default '0',
 	relevance smallint(5) unsigned NOT NULL default '0',
 	num_matches smallint(5) unsigned NOT NULL default '0',
-	PRIMARY KEY (ID_SEARCH, ID_TOPIC)
+	PRIMARY KEY (id_search, ID_TOPIC)
 ) TYPE=MyISAM;
 ---#
 
@@ -264,11 +264,11 @@ CREATE TABLE {$db_prefix}log_floodcontrol (
 ---# Converting "log_karma"...
 DROP TABLE IF EXISTS {$db_prefix}log_karma;
 CREATE TABLE {$db_prefix}log_karma (
-	ID_TARGET mediumint(8) unsigned NOT NULL default '0',
-	ID_EXECUTOR mediumint(8) unsigned NOT NULL default '0',
+	id_target mediumint(8) unsigned NOT NULL default '0',
+	id_executor mediumint(8) unsigned NOT NULL default '0',
 	logTime int(10) unsigned NOT NULL default '0',
 	action tinyint(4) NOT NULL default '0',
-	PRIMARY KEY (ID_TARGET, ID_EXECUTOR),
+	PRIMARY KEY (id_target, id_executor),
 	KEY logTime (logTime)
 ) TYPE=MyISAM;
 ---#
@@ -341,7 +341,7 @@ CHANGE COLUMN hits hits mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN topics topics smallint(5) unsigned NOT NULL default '0',
 CHANGE COLUMN posts posts smallint(5) unsigned NOT NULL default '0',
 CHANGE COLUMN registers registers smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN mostOn mostOn smallint(5) unsigned NOT NULL default '0';
+CHANGE COLUMN most_on most_on smallint(5) unsigned NOT NULL default '0';
 ---#
 
 /******************************************************************************/
@@ -1497,7 +1497,7 @@ if ($request !== false)
 
 	upgrade_query("
 		CREATE TABLE IF NOT EXISTS {$db_prefix}banned2 (
-			ID_BAN mediumint(8) unsigned NOT NULL auto_increment,
+			id_ban mediumint(8) unsigned NOT NULL auto_increment,
 			ban_type varchar(30) NOT NULL default '',
 			ip_low1 tinyint(3) unsigned NOT NULL default '0',
 			ip_high1 tinyint(3) unsigned NOT NULL default '0',
@@ -1515,7 +1515,7 @@ if ($request !== false)
 			restriction_type varchar(30) NOT NULL default '',
 			reason tinytext NOT NULL default '',
 			notes text NOT NULL default '',
-			PRIMARY KEY (ID_BAN)
+			PRIMARY KEY (id_ban)
 		) TYPE=MyISAM");
 
 	upgrade_query("
@@ -1553,8 +1553,8 @@ if ($request !== false)
 ALTER TABLE {$db_prefix}log_banned
 CHANGE COLUMN logTime logTime int(10) unsigned NOT NULL default '0';
 ALTER TABLE {$db_prefix}log_banned
-ADD COLUMN ID_BAN_LOG mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY FIRST,
-ADD COLUMN ID_MEMBER mediumint(8) unsigned NOT NULL default '0' AFTER ID_BAN_LOG,
+ADD COLUMN id_ban_log mediumint(8) unsigned NOT NULL auto_increment PRIMARY KEY FIRST,
+ADD COLUMN ID_MEMBER mediumint(8) unsigned NOT NULL default '0' AFTER id_ban_log,
 ADD INDEX logTime (logTime);
 ---#
 

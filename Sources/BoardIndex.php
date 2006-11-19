@@ -377,7 +377,7 @@ function BoardIndex()
 		if (!isset($modSettings['mostOnlineUpdated']) || $modSettings['mostOnlineUpdated'] != $date)
 		{
 			$request = $smfFunc['db_query']('', "
-				SELECT mostOn
+				SELECT most_on
 				FROM {$db_prefix}log_activity
 				WHERE date = '$date'
 				LIMIT 1", __FILE__, __LINE__);
@@ -385,10 +385,12 @@ function BoardIndex()
 			// The log_activity hasn't got an entry for today?
 			if ($smfFunc['db_num_rows']($request) == 0)
 			{
-				$smfFunc['db_query']('', "
-					INSERT IGNORE INTO {$db_prefix}log_activity
-						(date, mostOn)
-					VALUES ('$date', $total_users)", __FILE__, __LINE__);
+				$smfFunc['db_insert']('ignore',
+					"{$db_prefix}log_activity",
+					array('date', 'most_on'),
+					array('\'' . $date . '\'', $total_users),
+					array('date')
+				);
 			}
 			// There's an entry in log_activity on today...
 			else
@@ -396,7 +398,7 @@ function BoardIndex()
 				list ($modSettings['mostOnlineToday']) = $smfFunc['db_fetch_row']($request);
 
 				if ($total_users > $modSettings['mostOnlineToday'])
-					trackStats(array('mostOn' => $total_users));
+					trackStats(array('most_on' => $total_users));
 
 				$total_users = max($total_users, $modSettings['mostOnlineToday']);
 			}
@@ -407,7 +409,7 @@ function BoardIndex()
 		// Highest number of users online today?
 		elseif ($total_users > $modSettings['mostOnlineToday'])
 		{
-			trackStats(array('mostOn' => $total_users));
+			trackStats(array('most_on' => $total_users));
 			updateSettings(array('mostOnlineUpdated' => $date, 'mostOnlineToday' => $total_users));
 		}
 	}

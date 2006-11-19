@@ -635,17 +635,17 @@ function ShowCustomProfiles()
 
 	// Load all the fields.
 	$request = $smfFunc['db_query']('', "
-		SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, active
+		SELECT id_field, col_name, field_name, field_desc, field_type, active
 		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
 	$context['profile_fields'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['profile_fields'][] = array(
-			'id' => $row['ID_FIELD'],
-			'col' => $row['colName'],
-			'name' => $row['fieldName'],
-			'desc' => $row['fieldDesc'],
-			'type' => $row['fieldType'],
+			'id' => $row['id_field'],
+			'col' => $row['col_name'],
+			'name' => $row['field_name'],
+			'desc' => $row['field_desc'],
+			'type' => $row['field_type'],
 			'active' => $row['active'],
 		);
 	}
@@ -669,15 +669,15 @@ function EditCustomProfiles()
 	if ($context['fid'])
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT ID_FIELD, colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
-				showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask
+			SELECT id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
+				show_reg, show_display, show_profile, private, active, default_value, bbc, mask
 			FROM {$db_prefix}custom_fields
-			WHERE ID_FIELD = $context[fid]", __FILE__, __LINE__);
+			WHERE id_field = $context[fid]", __FILE__, __LINE__);
 		$context['field'] = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if ($row['fieldType'] == 'textarea')
-				@list ($rows, $cols) = @explode(',', $row['defaultValue']);
+			if ($row['field_type'] == 'textarea')
+				@list ($rows, $cols) = @explode(',', $row['default_value']);
 			else
 			{
 				$rows = 3;
@@ -685,20 +685,20 @@ function EditCustomProfiles()
 			}
 
 			$context['field'] = array(
-				'name' => $row['fieldName'],
-				'desc' => $row['fieldDesc'],
-				'colname' => $row['colName'],
-				'profile_area' => $row['showProfile'],
-				'reg' => $row['showReg'],
-				'display' => $row['showDisplay'],
-				'type' => $row['fieldType'],
-				'max_length' => $row['fieldLength'],
+				'name' => $row['field_name'],
+				'desc' => $row['field_desc'],
+				'colname' => $row['col_name'],
+				'profile_area' => $row['show_profile'],
+				'reg' => $row['show_reg'],
+				'display' => $row['show_display'],
+				'type' => $row['field_type'],
+				'max_length' => $row['field_length'],
 				'rows' => $rows,
 				'cols' => $cols,
 				'bbc' => $row['bbc'] ? true : false,
-				'default_check' => $row['fieldType'] == 'check' && $row['defaultValue'] ? true : false,
-				'default_select' => $row['fieldType'] == 'select' ? $row['defaultValue'] : '',
-				'options' => strlen($row['fieldOptions']) > 1 ? explode(',', $row['fieldOptions']) : array('', '', ''),
+				'default_check' => $row['field_type'] == 'check' && $row['default_value'] ? true : false,
+				'default_select' => $row['field_type'] == 'select' ? $row['default_value'] : '',
+				'options' => strlen($row['field_options']) > 1 ? explode(',', $row['field_options']) : array('', '', ''),
 				'active' => $row['active'],
 				'private' => $row['private'],
 				'mask' => $row['mask'],
@@ -740,10 +740,10 @@ function EditCustomProfiles()
 		$_POST['field_desc'] = $smfFunc['htmlspecialchars']($_POST['field_desc']);
 
 		// Checkboxes...
-		$showReg = isset($_POST['reg']) ? 1 : 0;
-		$showDisplay = isset($_POST['display']) ? 1 : 0;
+		$show_reg = isset($_POST['reg']) ? 1 : 0;
+		$show_display = isset($_POST['display']) ? 1 : 0;
 		$bbc = isset($_POST['bbc']) ? 1 : 0;
-		$showProfile = $_POST['profile_area'];
+		$show_profile = $_POST['profile_area'];
 		$active = isset($_POST['active']) ? 1 : 0;
 		$private = isset($_POST['private']) ? 1 : 0;
 
@@ -752,10 +752,10 @@ function EditCustomProfiles()
 		if ($mask == 'regex' && isset($_POST['regex']))
 			$mask .= $_POST['regex'];
 
-		$fieldLength = isset($_POST['max_length']) ? (int) $_POST['max_length'] : 255;
+		$field_length = isset($_POST['max_length']) ? (int) $_POST['max_length'] : 255;
 
 		// Select options?
-		$fieldOptions = '';
+		$field_options = '';
 		$newOptions = array();
 		$default = isset($_POST['default_check']) && $_POST['field_type'] == 'check' ? 1 : '';
 		if (!empty($_POST['select_option']) && $_POST['field_type'] == 'select')
@@ -771,7 +771,7 @@ function EditCustomProfiles()
 					continue;
 
 				// Otherwise, save it boy.
-				$fieldOptions .= $v . ',';
+				$field_options .= $v . ',';
 				// This is just for working out what happened with old options...
 				$newOptions[$k] = $v;
 
@@ -779,7 +779,7 @@ function EditCustomProfiles()
 				if (isset($_POST['default_select']) && $_POST['default_select'] == $k)
 					$default = $v;
 			}
-			$fieldOptions = substr($fieldOptions, 0, -1);
+			$field_options = substr($field_options, 0, -1);
 		}
 
 		// Text area has default has dimensions
@@ -800,9 +800,9 @@ function EditCustomProfiles()
 			while ($unique == false)
 			{
 				$request = $smfFunc['db_query']('', "
-					SELECT ID_FIELD
+					SELECT id_field
 					FROM {$db_prefix}custom_fields
-					WHERE colName = '$colname'", __FILE__, __LINE__);
+					WHERE col_name = '$colname'", __FILE__, __LINE__);
 				if ($smfFunc['db_num_rows']($request) == 0)
 					$unique = true;
 				else
@@ -869,12 +869,12 @@ function EditCustomProfiles()
 		{
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}custom_fields
-				SET fieldName = '$_POST[field_name]', fieldDesc = '$_POST[field_desc]',
-					fieldType = '$_POST[field_type]', fieldLength = $fieldLength,
-					fieldOptions = '$fieldOptions', showReg = $showReg, showDisplay = $showDisplay,
-					showProfile = '$showProfile', private = $private, active = $active, defaultValue = '$default',
+				SET field_name = '$_POST[field_name]', field_desc = '$_POST[field_desc]',
+					field_type = '$_POST[field_type]', field_length = $field_length,
+					field_options = '$field_options', show_reg = $show_reg, show_display = $show_display,
+					show_profile = '$show_profile', private = $private, active = $active, default_value = '$default',
 					bbc = $bbc, mask = '$mask'
-				WHERE ID_FIELD = $context[fid]", __FILE__, __LINE__);
+				WHERE id_field = $context[fid]", __FILE__, __LINE__);
 
 			// Just clean up any old selects - these are a pain!
 			if ($_POST['field_type'] == 'select' && !empty($newOptions))
@@ -888,11 +888,11 @@ function EditCustomProfiles()
 		{
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}custom_fields
-					(colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
-					showReg, showDisplay, showProfile, private, active, defaultValue, bbc, mask)
+					(col_name, field_name, field_desc, field_type, field_length, field_options,
+					show_reg, show_display, show_profile, private, active, default_value, bbc, mask)
 				VALUES
 					('$colname', '$_POST[field_name]', '$_POST[field_desc]', '$_POST[field_type]',
-					$fieldLength, '$fieldOptions', $showReg, $showDisplay, '$showProfile', $private,
+					$field_length, '$field_options', $show_reg, $show_display, '$show_profile', $private,
 					$active, '$default', $bbc, '$mask')", __FILE__, __LINE__);
 		}
 	}
@@ -907,7 +907,7 @@ function EditCustomProfiles()
 		// Finally - the field itself is gone!
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}custom_fields
-			WHERE ID_FIELD = $context[fid]
+			WHERE id_field = $context[fid]
 			LIMIT 1", __FILE__, __LINE__);
 	}
 
@@ -915,15 +915,15 @@ function EditCustomProfiles()
 	if (isset($_POST['delete']) || isset($_POST['save']))
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT colName, fieldName
+			SELECT col_name, field_name
 			FROM {$db_prefix}custom_fields
-			WHERE showDisplay = 1
+			WHERE show_display = 1
 				AND active = 1
 				AND private = 0", __FILE__, __LINE__);
 		$fields = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$fields[] = strtr($row['colName'], array('|' => '', ';' => '')) . ';' . strtr($row['fieldName'], array('|' => '', ';' => ''));
+			$fields[] = strtr($row['col_name'], array('|' => '', ';' => '')) . ';' . strtr($row['field_name'], array('|' => '', ';' => ''));
 		}
 		$smfFunc['db_free_result']($request);
 

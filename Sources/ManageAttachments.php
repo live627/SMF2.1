@@ -612,12 +612,12 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			a.filename, a.attachment_type, a.id_attach, a.id_member" . ($query_type == 'messages' ? ', m.id_msg' : ', a.id_msg') . ",
-			IFNULL(thumb.id_attach, 0) AS ID_THUMB, thumb.filename AS thumb_filename, thumb_parent.id_attach AS id_parent
+			IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb_parent.id_attach AS id_parent
 		FROM {$db_prefix}attachments AS a" .($query_type == 'members' ? "
 			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)" : ($query_type == 'messages' ? "
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)" : '')) . "
-			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.ID_THUMB)
-			LEFT JOIN {$db_prefix}attachments AS thumb_parent ON (a.attachment_type = 3 AND thumb_parent.ID_THUMB = a.id_attach)
+			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)
+			LEFT JOIN {$db_prefix}attachments AS thumb_parent ON (a.attachment_type = 3 AND thumb_parent.id_thumb = a.id_attach)
 		WHERE $condition", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -634,11 +634,11 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 				$parents[] = $row['id_parent'];
 
 			// If this attachments has a thumb, remove it as well.
-			if (!empty($row['ID_THUMB']) && $autoThumbRemoval)
+			if (!empty($row['id_thumb']) && $autoThumbRemoval)
 			{
-				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['ID_THUMB']);
+				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['id_thumb']);
 				@unlink($thumb_filename);
-				$attach[] = $row['ID_THUMB'];
+				$attach[] = $row['id_thumb'];
 			}
 		}
 
@@ -654,7 +654,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	if (!empty($parents))
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}attachments
-			SET ID_THUMB = 0
+			SET id_thumb = 0
 			WHERE id_attach IN (" . implode(', ', $parents) . ")
 			LIMIT " . count($parents), __FILE__, __LINE__);
 
@@ -737,7 +737,7 @@ function RepairAttachments()
 			$result = $smfFunc['db_query']('', "
 				SELECT thumb.id_attach, thumb.filename
 				FROM {$db_prefix}attachments AS thumb
-					LEFT JOIN {$db_prefix}attachments AS tparent ON (tparent.ID_THUMB = thumb.id_attach)
+					LEFT JOIN {$db_prefix}attachments AS tparent ON (tparent.id_thumb = thumb.id_attach)
 				WHERE thumb.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
 					AND thumb.attachment_type = 3
 					AND tparent.id_attach IS NULL
@@ -779,7 +779,7 @@ function RepairAttachments()
 		$result = $smfFunc['db_query']('', "
 			SELECT MAX(id_attach)
 			FROM {$db_prefix}attachments
-			WHERE ID_THUMB != 0", __FILE__, __LINE__);
+			WHERE id_thumb != 0", __FILE__, __LINE__);
 		list ($thumbnails) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
 
@@ -790,9 +790,9 @@ function RepairAttachments()
 			$result = $smfFunc['db_query']('', "
 				SELECT a.id_attach
 				FROM {$db_prefix}attachments AS a
-					LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.ID_THUMB)
+					LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)
 				WHERE a.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND a.ID_THUMB != 0
+					AND a.id_thumb != 0
 					AND thumb.id_attach IS NULL", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 			{
@@ -807,7 +807,7 @@ function RepairAttachments()
 			if ($fix_errors && !empty($to_update) && in_array('parent_missing_thumbnail', $to_fix))
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}attachments
-					SET ID_THUMB = 0
+					SET id_thumb = 0
 					WHERE id_attach IN (" . implode(', ', $to_update) . ")", __FILE__, __LINE__);
 			
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
@@ -901,8 +901,8 @@ function RepairAttachments()
 					WHERE id_attach IN (" . implode(', ', $to_remove) . ")", __FILE__, __LINE__);
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}attachments
-					SET ID_THUMB = 0
-					WHERE ID_THUMB IN (" . implode(', ', $to_remove) . ")", __FILE__, __LINE__);
+					SET id_thumb = 0
+					WHERE id_thumb IN (" . implode(', ', $to_remove) . ")", __FILE__, __LINE__);
 			}
 			
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
@@ -1152,17 +1152,17 @@ function ApproveAttachments($attachments)
 	// For safety, check for thumbnails...
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			a.id_attach, a.id_member, IFNULL(thumb.id_attach, 0) AS ID_THUMB
+			a.id_attach, a.id_member, IFNULL(thumb.id_attach, 0) AS id_thumb
 		FROM {$db_prefix}attachments AS a
-			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.ID_THUMB)
+			LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)
 		WHERE a.id_attach IN (" . implode(', ', $attachments) . ")
 			AND a.attachment_type = 0", __FILE__, __LINE__);
 	$attachments = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Update the thumbnail too...
-		if (!empty($row['ID_THUMB']))
-			$attachments[] = $row['ID_THUMB'];
+		if (!empty($row['id_thumb']))
+			$attachments[] = $row['id_thumb'];
 
 		$attachments[] = $row['id_attach'];
 	}

@@ -754,42 +754,42 @@ function RepairBoards()
 		if (empty($to_fix) || in_array('report_missing_comments', $to_fix))
 		{
 			$result = $smfFunc['db_query']('', "
-				SELECT lr.ID_REPORT
+				SELECT lr.id_report
 				FROM {$db_prefix}log_reported AS lr
-					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.ID_REPORT = lr.ID_REPORT)
-				WHERE lrc.ID_REPORT IS NULL
-				GROUP BY lr.ID_REPORT", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.id_report = lr.id_report)
+				WHERE lrc.id_report IS NULL
+				GROUP BY lr.id_report", __FILE__, __LINE__);
 			$reports = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$reports[] = $row['ID_REPORT'];
+				$reports[] = $row['id_report'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($reports))
 			{
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_reported
-					WHERE ID_REPORT IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
+					WHERE id_report IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
 			}
 		}
 
 		if (empty($to_fix) || in_array('comments_missing_report', $to_fix))
 		{
 			$result = $smfFunc['db_query']('', "
-				SELECT lrc.ID_REPORT
+				SELECT lrc.id_report
 				FROM {$db_prefix}log_reported_comments AS lrc
-					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.ID_REPORT = lrc.ID_REPORT)
-				WHERE lr.ID_REPORT IS NULL
-				GROUP BY lrc.ID_REPORT", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.id_report = lrc.id_report)
+				WHERE lr.id_report IS NULL
+				GROUP BY lrc.id_report", __FILE__, __LINE__);
 			$reports = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$reports[] = $row['ID_REPORT'];
+				$reports[] = $row['id_report'];
 			$smfFunc['db_free_result']($result);
 
 			if (!empty($reports))
 			{
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_reported_comments
-					WHERE ID_REPORT IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
+					WHERE id_report IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
 			}
 		}
 
@@ -1725,7 +1725,7 @@ function findForumErrors()
 	if ($_GET['step'] <= 27)
 	{
 		$result = $smfFunc['db_query']('', "
-			SELECT MAX(ID_REPORT)
+			SELECT MAX(id_report)
 			FROM {$db_prefix}log_reported", __FILE__, __LINE__);
 		list ($polls) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1735,14 +1735,14 @@ function findForumErrors()
 			pauseRepairProcess($to_fix, $polls);
 
 			$result = $smfFunc['db_query']('', "
-				SELECT lr.ID_REPORT, lr.subject
+				SELECT lr.id_report, lr.subject
 				FROM {$db_prefix}log_reported AS lr
-					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.ID_REPORT = lr.ID_REPORT)
-				WHERE lr.ID_REPORT BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND lrc.ID_REPORT IS NULL
-				GROUP BY lr.ID_REPORT", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.id_report = lr.id_report)
+				WHERE lr.id_report BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND lrc.id_report IS NULL
+				GROUP BY lr.id_report", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_report_missing_comments'], $row['ID_REPORT'], $row['subject']);
+				$context['repair_errors'][] = sprintf($txt['repair_report_missing_comments'], $row['id_report'], $row['subject']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'report_missing_comments';
 			$smfFunc['db_free_result']($result);
@@ -1756,7 +1756,7 @@ function findForumErrors()
 	if ($_GET['step'] <= 28)
 	{
 		$result = $smfFunc['db_query']('', "
-			SELECT MAX(ID_REPORT)
+			SELECT MAX(id_report)
 			FROM {$db_prefix}log_reported_comments", __FILE__, __LINE__);
 		list ($polls) = $smfFunc['db_fetch_row']($result);
 		$smfFunc['db_free_result']($result);
@@ -1766,14 +1766,14 @@ function findForumErrors()
 			pauseRepairProcess($to_fix, $polls);
 
 			$result = $smfFunc['db_query']('', "
-				SELECT lrc.ID_REPORT, lrc.membername
+				SELECT lrc.id_report, lrc.membername
 				FROM {$db_prefix}log_reported_comments AS lrc
-					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.ID_REPORT = lrc.ID_REPORT)
-				WHERE lrc.ID_REPORT BETWEEN $_GET[substep] AND $_GET[substep] + 499
-					AND lr.ID_REPORT IS NULL
-				GROUP BY lrc.ID_REPORT", __FILE__, __LINE__);
+					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.id_report = lrc.id_report)
+				WHERE lrc.id_report BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND lr.id_report IS NULL
+				GROUP BY lrc.id_report", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$context['repair_errors'][] = sprintf($txt['repair_comments_missing_report'], $row['ID_REPORT'], $row['membername']);
+				$context['repair_errors'][] = sprintf($txt['repair_comments_missing_report'], $row['id_report'], $row['membername']);
 			if ($smfFunc['db_num_rows']($result) != 0)
 				$to_fix[] = 'comments_missing_report';
 			$smfFunc['db_free_result']($result);

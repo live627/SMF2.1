@@ -234,13 +234,13 @@ function ReportToModerator2()
 	if (empty($modSettings['disable_log_report']))
 	{
 		$request2 = $smfFunc['db_query']('', "
-			SELECT ID_REPORT, ignore_all
+			SELECT id_report, ignore_all
 			FROM {$db_prefix}log_reported
 			WHERE id_msg = $_POST[msg]
 				AND (closed = 0 OR ignore_all = 1)
 			ORDER BY ignore_all DESC", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request2) != 0)
-			list ($ID_REPORT, $ignore) = $smfFunc['db_fetch_row']($request2);
+			list ($id_report, $ignore) = $smfFunc['db_fetch_row']($request2);
 		$smfFunc['db_free_result']($request2);
 
 		// If we're just going to ignore these, then who gives a monkeys...
@@ -248,11 +248,11 @@ function ReportToModerator2()
 			redirectexit('board=' . $board . '.0');
 
 		// Already reported? My god, we could be dealing with a real rogue here...
-		if (!empty($ID_REPORT))
+		if (!empty($id_report))
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_reported
 				SET num_reports = num_reports + 1, time_updated = " . time() . "
-				WHERE ID_REPORT = $ID_REPORT", __FILE__, __LINE__);
+				WHERE id_report = $id_report", __FILE__, __LINE__);
 		// Otherwise, we shall make one!
 		else
 		{
@@ -268,19 +268,19 @@ function ReportToModerator2()
 				VALUES
 					($_POST[msg], $message[id_topic], $message[id_board], $message[ID_POSTER], '$message[real_name]', '$message[subject]', '$message[body]', " . time() . ",
 						" . time() . ", 1, 0)", __FILE__, __LINE__);
-			$ID_REPORT = db_insert_id("{$db_prefix}log_reported", 'ID_REPORT');
+			$id_report = db_insert_id("{$db_prefix}log_reported", 'id_report');
 		}
 
 		// Now just add our report...
-		if ($ID_REPORT)
+		if ($id_report)
 		{
 			$posterComment = strtr(htmlspecialchars($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
 
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_reported_comments
-					(ID_REPORT, id_member, membername, comment, time_sent)
+					(id_report, id_member, membername, comment, time_sent)
 				VALUES
-					($ID_REPORT, $user_info[id], '$user_info[name]', '$posterComment', " . time() . ")", __FILE__, __LINE__);
+					($id_report, $user_info[id], '$user_info[name]', '$posterComment', " . time() . ")", __FILE__, __LINE__);
 		}
 	}
 

@@ -129,7 +129,7 @@ function PackageServers()
 
 	// Load the list of servers.
 	$request = $smfFunc['db_query']('', "
-		SELECT ID_SERVER, name, url
+		SELECT id_server, name, url
 		FROM {$db_prefix}package_servers", __FILE__, __LINE__);
 	$context['servers'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -137,7 +137,7 @@ function PackageServers()
 		$context['servers'][] = array(
 			'name' => $row['name'],
 			'url' => $row['url'],
-			'id' => $row['ID_SERVER'],
+			'id' => $row['id_server'],
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -220,7 +220,7 @@ function PackageGBrowse()
 		$request = $smfFunc['db_query']('', "
 			SELECT name, url
 			FROM {$db_prefix}package_servers
-			WHERE ID_SERVER = $server
+			WHERE id_server = $server
 			LIMIT 1", __FILE__, __LINE__);
 		list ($name, $url) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -529,7 +529,7 @@ function PackageDownload()
 		$request = $smfFunc['db_query']('', "
 			SELECT name, url
 			FROM {$db_prefix}package_servers
-			WHERE ID_SERVER = $server
+			WHERE id_server = $server
 			LIMIT 1", __FILE__, __LINE__);
 		list ($name, $url) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -695,7 +695,7 @@ function PackageServerRemove()
 
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}package_servers
-		WHERE ID_SERVER = " . (int) $_GET['server'] . "
+		WHERE id_server = " . (int) $_GET['server'] . "
 		LIMIT 1", __FILE__, __LINE__);
 
 	redirectexit('action=admin;area=packages;get');

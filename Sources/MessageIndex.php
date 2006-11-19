@@ -114,8 +114,7 @@ function MessageIndex()
 				UPDATE {$db_prefix}log_boards
 				SET id_msg = $modSettings[maxMsgID]
 				WHERE id_member = $id_member
-					AND id_board IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")
-				LIMIT " . count($board_info['parent_boards']), __FILE__, __LINE__);
+					AND id_board IN (" . implode(',', array_keys($board_info['parent_boards'])) . ")", __FILE__, __LINE__);
 
 			// We've seen all these boards now!
 			foreach ($board_info['parent_boards'] as $k => $dummy)
@@ -142,8 +141,7 @@ function MessageIndex()
 					UPDATE {$db_prefix}log_notify
 					SET sent = 0
 					WHERE id_board = $board
-						AND id_member = $id_member
-					LIMIT 1", __FILE__, __LINE__);
+						AND id_member = $id_member", __FILE__, __LINE__);
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -897,8 +895,7 @@ function QuickModeration()
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}topics
 			SET is_sticky = IF(is_sticky = 1, 0, 1)
-			WHERE id_topic IN (" . implode(', ', $stickyCache) . ")
-			LIMIT " . count($stickyCache), __FILE__, __LINE__);
+			WHERE id_topic IN (" . implode(', ', $stickyCache) . ")", __FILE__, __LINE__);
 			
 		// Get the board IDs
 		$request = $smfFunc['db_query']('', "
@@ -1032,8 +1029,7 @@ function QuickModeration()
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}topics
 				SET locked = IF(locked = 0, " . (allowedTo('lock_any') ? '1' : '2') . ", 0)
-				WHERE id_topic IN (" . implode(', ', $lockCache) . ")
-				LIMIT " . count($lockCache), __FILE__, __LINE__);
+				WHERE id_topic IN (" . implode(', ', $lockCache) . ")", __FILE__, __LINE__);
 		}
 	}
 
@@ -1047,15 +1043,16 @@ function QuickModeration()
 
 	if (!empty($markCache))
 	{
-		$setString = '';
+		$markArray = array();
 		foreach ($markCache as $topic)
-			$setString .= "
-				($modSettings[maxMsgID], $id_member, $topic),";
+			$markArray[] = array($modSettings['maxMsgID'], $id_member, $topic);
 
-		$smfFunc['db_query']('', "
-			REPLACE INTO {$db_prefix}log_topics
-				(id_msg, id_member, id_topic)
-			VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
+		$smfFunc['db_query']('replace',
+			"{$db_prefix}log_topics",
+			array('id_msg', 'id_member', 'id_topic'),
+			$markArray,
+			array('id_member', 'id_topic')
+		);
 	}
 
 	foreach ($moveCache as $topic)

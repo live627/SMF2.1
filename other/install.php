@@ -921,11 +921,11 @@ function doStep1()
 	}
 
 	// Let's optimize those new tables.
+	db_extend();
 	$tables = $smfFunc['db_list_tables']($db_name);
 	while ($table = $smfFunc['db_fetch_row']($tables))
 	{
-		$smfFunc['db_query']('optimize_tables', "
-			OPTIMIZE TABLE `$table[0]`", false, false) or $db_messed = true;
+		$smfFunc['db_optimize_table']($table[0]) or $db_messed = true;
 
 		if (!empty($db_messed))
 		{

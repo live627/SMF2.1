@@ -372,19 +372,19 @@ function GroupRequests()
 			// Different sub template...
 			$context['sub_template'] = 'group_request_reason';
 			// And a limitation. We don't care that the page number bit makes no sense, as we don't need it!
-			$where .= ' AND lgr.ID_REQUEST IN (' . implode(',', $_POST['groupr']) . ')';
+			$where .= ' AND lgr.id_request IN (' . implode(',', $_POST['groupr']) . ')';
 		}
 		// Otherwise we do something!
 		else
 		{
 			// Get the details of all the members concerned...
 			$request = $smfFunc['db_query']('', "
-				SELECT lgr.ID_REQUEST, lgr.id_member, lgr.id_group, mem.email_address, mem.id_group AS primary_group,
+				SELECT lgr.id_request, lgr.id_member, lgr.id_group, mem.email_address, mem.id_group AS primary_group,
 					mem.additional_groups AS additional_groups, mem.lngfile, mem.member_name, mem.notify_types,
 					mg.hidden, mg.group_name
 				FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
 				WHERE $where
-					AND lgr.ID_REQUEST IN (" . implode(',', $_POST['groupr']) . ")
+					AND lgr.id_request IN (" . implode(',', $_POST['groupr']) . ")
 					AND mem.id_member = lgr.id_member
 					AND mg.id_group = lgr.id_group
 				ORDER BY mem.lngfile", __FILE__, __LINE__);
@@ -424,7 +424,7 @@ function GroupRequests()
 				// Add required information to email them.
 				if ($row['notify_types'] != 4)
 					$email_details[] = array(
-						'rid' => $row['ID_REQUEST'],
+						'rid' => $row['id_request'],
 						'member_id' => $row['id_member'],
 						'member_name' => $row['member_name'],
 						'group_id' => $row['id_group'],
@@ -438,7 +438,7 @@ function GroupRequests()
 			// Remove the evidence...
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_group_requests
-				WHERE ID_REQUEST IN (" . implode(',', $_POST['groupr']) . ")", __FILE__, __LINE__);
+				WHERE id_request IN (" . implode(',', $_POST['groupr']) . ")", __FILE__, __LINE__);
 
 			// Ensure everyone who is online gets their changes right away.
 			updateSettings(array('settings_updated' => time()));
@@ -515,19 +515,19 @@ function GroupRequests()
 	// Fetch all the group requests...
 	//!!! What can they actually see?
 	$request = $smfFunc['db_query']('', "
-		SELECT lgr.ID_REQUEST, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
+		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
 			mem.member_name, mg.group_name, mg.online_color
 		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
 		WHERE $where
 			AND mem.id_member = lgr.id_member
 			AND mg.id_group = lgr.id_group
-		ORDER BY lgr.ID_REQUEST DESC
+		ORDER BY lgr.id_request DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['group_requests'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['group_requests'][] = array(
-			'id' => $row['ID_REQUEST'],
+			'id' => $row['id_request'],
 			'member' => array(
 				'id' => $row['id_member'],
 				'name' => $row['member_name'],

@@ -956,6 +956,7 @@ function OptimizeTables()
 	isAllowedTo('admin_forum');
 
 	ignore_user_abort(true);
+	db_extend();
 
 	// Start with no tables optimized.
 	$opttab = 0;
@@ -996,15 +997,12 @@ function OptimizeTables()
 	foreach ($tables as $table)
 	{
 		// Optimize the table!  We use backticks here because it might be a custom table.
-		$result = $smfFunc['db_query']('', "
-			OPTIMIZE TABLE `$table[table_name]`", __FILE__, __LINE__);
-		$row = $smfFunc['db_fetch_assoc']($result);
-		$smfFunc['db_free_result']($result);
+		$data_freed = $smfFunc['db_optimize_table']($table['table_name']);
 
-		if (!isset($row['Msg_text']) || strpos($row['Msg_text'], 'already') === false || !isset($table['Data_free']) || $table['Data_free'] != 0)
+		if ($data_freed > 0)
 			$context['optimized_tables'][] = array(
 				'name' => $table['table_name'],
-				'data_freed' => isset($table['Data_free']) ? $table['Data_free'] / 1024 : '<i>??</i>',
+				'data_freed' => $data_freed,
 			);
 	}
 

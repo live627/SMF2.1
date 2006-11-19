@@ -569,7 +569,7 @@ function fix_serialized_columns()
 	global $db_prefix, $smfFunc;
 
 	$request = $smfFunc['db_query']('', "
-		SELECT ID_ACTION, extra
+		SELECT id_action, extra
 		FROM {$db_prefix}log_actions
 		WHERE action IN ('remove', 'delete')", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -578,7 +578,7 @@ function fix_serialized_columns()
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_actions
 				SET extra = '$matches[1]" . strlen($matches[3]) . ":\"$matches[3]\"$matches[4]'
-				WHERE ID_ACTION = $row[ID_ACTION]
+				WHERE id_action = $row[id_action]
 				LIMIT 1", __FILE__, __LINE__);
 	}
 	$smfFunc['db_free_result']($request);

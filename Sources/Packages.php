@@ -697,11 +697,11 @@ function PackageInstall()
 
 		// See if this is already installed, and change it's state as required.
 		$request = $smfFunc['db_query']('', "
-			SELECT ID_INSTALL, install_state
+			SELECT id_install, install_state
 			FROM {$db_prefix}log_packages
 			WHERE install_state != 0
 				AND package_id = '" . addslashes($packageInfo['id']) . "'
-				" . ($context['install_id'] ? " AND ID_INSTALL = $context[install_id] " : '') . "
+				" . ($context['install_id'] ? " AND id_install = $context[install_id] " : '') . "
 			ORDER BY time_installed DESC
 			LIMIT 1", __FILE__, __LINE__);
 		$is_upgrade = false;
@@ -712,9 +712,9 @@ function PackageInstall()
 			{
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}log_packages
-					SET install_state = 0, member_removed = '$user_info[name]', ID_MEMBER_REMOVED = $id_member,
+					SET install_state = 0, member_removed = '$user_info[name]', id_member_removed = $id_member,
 						time_removed = " . time() . "
-					WHERE ID_INSTALL = $row[ID_INSTALL]", __FILE__, __LINE__);
+					WHERE id_install = $row[id_install]", __FILE__, __LINE__);
 			}
 			// Otherwise must be an upgrade.
 			else
@@ -733,7 +733,7 @@ function PackageInstall()
 		
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_packages
-					(filename, name, package_id, version, ID_MEMBER_INSTALLED, member_installed, time_installed,
+					(filename, name, package_id, version, id_member_installed, member_installed, time_installed,
 					install_state, failed_steps, themes_installed)
 				VALUES
 					('" . addslashes($packageInfo['filename']) . "', '" . addslashes($packageInfo['name']) . "',

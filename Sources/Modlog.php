@@ -45,7 +45,7 @@ function ViewModlog()
 	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc;
 
 	$context['can_delete'] = allowedTo('admin_forum');
-	$user_info['modlog_query'] = $context['can_delete'] ? '1' : (empty($user_info['mod_cache']['bq']) ? 'lm.ID_ACTION=0' : 'lm.' . $user_info['mod_cache']['bq']);
+	$user_info['modlog_query'] = $context['can_delete'] ? '1' : (empty($user_info['mod_cache']['bq']) ? 'lm.id_action=0' : 'lm.' . $user_info['mod_cache']['bq']);
 
 	loadTemplate('Modlog');
 
@@ -64,7 +64,7 @@ function ViewModlog()
 	elseif (!empty($_POST['remove']) && isset($_POST['delete']) && $context['can_delete'])
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_actions
-			WHERE ID_ACTION IN ('" . implode("', '", array_unique($_POST['delete'])) . "')
+			WHERE id_action IN ('" . implode("', '", array_unique($_POST['delete'])) . "')
 				AND log_time < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
 
 	// Pass order and direction variables to template so they can be used after a remove command.
@@ -207,7 +207,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 	// Here we have the query getting the log details.
 	$result = $smfFunc['db_query']('', "
 		SELECT
-			lm.ID_ACTION, lm.id_member, lm.ip, lm.log_time, lm.action, lm.id_board, lm.id_topic, lm.id_msg, lm.extra,
+			lm.id_action, lm.id_member, lm.ip, lm.log_time, lm.action, lm.id_board, lm.id_topic, lm.id_msg, lm.extra,
 			mem.real_name, mg.group_name
 		FROM {$db_prefix}log_actions AS lm
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
@@ -244,21 +244,21 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 
 		// Is this associated with a topic?
 		if (isset($row['extra']['topic']))
-			$topics[(int) $row['extra']['topic']][] = $row['ID_ACTION'];
+			$topics[(int) $row['extra']['topic']][] = $row['id_action'];
 		if (isset($row['extra']['new_topic']))
-			$topics[(int) $row['extra']['new_topic']][] = $row['ID_ACTION'];
+			$topics[(int) $row['extra']['new_topic']][] = $row['id_action'];
 
 		// How about a member?
 		if (isset($row['extra']['member']))
-			$members[(int) $row['extra']['member']][] = $row['ID_ACTION'];
+			$members[(int) $row['extra']['member']][] = $row['id_action'];
 
 		// Associated with a board?
 		if (isset($row['extra']['board_to']))
-			$boards[(int) $row['extra']['board_to']][] = $row['ID_ACTION'];
+			$boards[(int) $row['extra']['board_to']][] = $row['id_action'];
 		if (isset($row['extra']['board_from']))
-			$boards[(int) $row['extra']['board_from']][] = $row['ID_ACTION'];
+			$boards[(int) $row['extra']['board_from']][] = $row['id_action'];
 		if (isset($row['extra']['board']))
-			$boards[(int) $row['extra']['board']][] = $row['ID_ACTION'];
+			$boards[(int) $row['extra']['board']][] = $row['id_action'];
 
 		// IP Info?
 		if (isset($row['extra']['ip_range']))
@@ -272,8 +272,8 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 			$row['extra']['email'] = '<a href="mailto:' . $row['extra']['email'] . '">' . $row['extra']['email'] . '</a>';
 
 		// The array to go to the template. Note here that action is set to a "default" value of the action doesn't match anything in the descriptions. Allows easy adding of logging events with basic details.
-		$context['entries'][$row['ID_ACTION']] = array(
-			'id' => $row['ID_ACTION'],
+		$context['entries'][$row['id_action']] = array(
+			'id' => $row['id_action'],
 			'ip' => $seeIP ? $row['ip'] : $txt[511],
 			'position' => $row['group_name'],
 			'moderator' => array(

@@ -2009,7 +2009,7 @@ function createAttachment(&$attachmentOptions)
 			{
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}attachments
-					SET ID_THUMB = $attachmentOptions[thumb]
+					SET id_thumb = $attachmentOptions[thumb]
 					WHERE id_attach = $attachmentOptions[id]", __FILE__, __LINE__);
 
 				rename($attachmentOptions['destination'] . '_thumb', $modSettings['attachmentUploadDir'] . '/' . getAttachmentFilename($thumb_filename, $attachmentOptions['thumb'], true));

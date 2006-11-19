@@ -1038,7 +1038,7 @@ function BanLog()
 
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_banned
-				WHERE id_ban_LOG IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
+				WHERE id_ban_log IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
 		}
 	}
 
@@ -1065,7 +1065,7 @@ function BanLog()
 	$context['start'] = $_REQUEST['start'];
 
 	$request = $smfFunc['db_query']('', "
-		SELECT lb.id_ban_LOG, lb.id_member, IFNULL(lb.ip, '-') AS ip, IFNULL(lb.email, '-') AS email, lb.log_time, IFNULL(mem.real_name, '') AS real_name
+		SELECT lb.id_ban_log, lb.id_member, IFNULL(lb.ip, '-') AS ip, IFNULL(lb.email, '-') AS email, lb.log_time, IFNULL(mem.real_name, '') AS real_name
 		FROM {$db_prefix}log_banned AS lb
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lb.id_member)
 		ORDER BY " . $sort_columns[$context['sort']] . (isset($_REQUEST['desc']) ? ' DESC' : '') . "
@@ -1073,7 +1073,7 @@ function BanLog()
 	$context['log_entries'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['log_entries'][] = array(
-			'id' => $row['id_ban_LOG'],
+			'id' => $row['id_ban_log'],
 			'member' => array(
 				'id' => $row['id_member'],
 				'name' => $row['real_name'],

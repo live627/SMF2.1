@@ -849,7 +849,7 @@ function PlushSearch2()
 		updateSettings(array('search_pointer' => $modSettings['search_pointer'] >= 255 ? 0 : $modSettings['search_pointer'] + 1));
 		// As long as you don't change the parameters, the cache result is yours.
 		$_SESSION['search_cache'] = array(
-			'ID_SEARCH' => $modSettings['search_pointer'],
+			'id_search' => $modSettings['search_pointer'],
 			'num_results' => -1,
 			'params' => $context['params'],
 		);
@@ -857,7 +857,7 @@ function PlushSearch2()
 		// Clear the previous cache of the final results cache.
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_search_results
-			WHERE ID_SEARCH = " . $_SESSION['search_cache']['ID_SEARCH'], __FILE__, __LINE__);
+			WHERE id_search = " . $_SESSION['search_cache']['id_search'], __FILE__, __LINE__);
 
 		if ($search_params['subject_only'])
 		{
@@ -923,9 +923,9 @@ function PlushSearch2()
 
 				$smfFunc['db_query']('', "
 					INSERT IGNORE INTO {$db_prefix}log_search_results
-						(ID_SEARCH, id_topic, relevance, id_msg, num_matches)
+						(id_search, id_topic, relevance, id_msg, num_matches)
 					SELECT 
-						" . $_SESSION['search_cache']['ID_SEARCH'] . ",
+						" . $_SESSION['search_cache']['id_search'] . ",
 						t.id_topic,
 						1000 * (
 							$weight[frequency] / (t.num_replies + 1) +
@@ -955,7 +955,7 @@ function PlushSearch2()
 		{
 			$main_query = array(
 				'select' => array(
-					'ID_SEARCH' => $_SESSION['search_cache']['ID_SEARCH'],
+					'id_search' => $_SESSION['search_cache']['id_search'],
 					'relevance' => '0',
 				),
 				'weights' => array(),
@@ -1021,7 +1021,7 @@ function PlushSearch2()
 				if (!$createTemporary)
 					$smfFunc['db_query']('', "
 						DELETE FROM {$db_prefix}log_search_topics
-						WHERE ID_SEARCH = " . $_SESSION['search_cache']['ID_SEARCH'], __FILE__, __LINE__);
+						WHERE id_search = " . $_SESSION['search_cache']['id_search'], __FILE__, __LINE__);
 
 				foreach ($searchWords as $orIndex => $words)
 				{
@@ -1092,8 +1092,8 @@ function PlushSearch2()
 
 					$smfFunc['db_query']('', "
 						INSERT IGNORE INTO {$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics
-							(" . ($createTemporary ? '' : 'ID_SEARCH, ') . "id_topic)
-						SELECT " . ($createTemporary ? '' : $_SESSION['search_cache']['ID_SEARCH'] . ', ') . "t.id_topic
+							(" . ($createTemporary ? '' : 'id_search, ') . "id_topic)
+						SELECT " . ($createTemporary ? '' : $_SESSION['search_cache']['id_search'] . ', ') . "t.id_topic
 						FROM (" . implode(', ', $subject_query['from']) . ')' . (empty($subject_query['left_join']) ? '' : "
 							LEFT JOIN " . implode("
 							LEFT JOIN ", $subject_query['left_join'])) . "
@@ -1110,7 +1110,7 @@ function PlushSearch2()
 				if ($numSubjectResults !== 0)
 				{
 					$main_query['weights']['subject'] = 'IF(lst.id_topic IS NULL, 0, 1)';
-					$main_query['left_join'][] = "{$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics AS lst ON (" . ($createTemporary ? '' : 'lst.ID_SEARCH = ' . $_SESSION['search_cache']['ID_SEARCH'] . ' AND ') . "lst.id_topic = t.id_topic)";
+					$main_query['left_join'][] = "{$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics AS lst ON (" . ($createTemporary ? '' : 'lst.id_search = ' . $_SESSION['search_cache']['id_search'] . ' AND ') . "lst.id_topic = t.id_topic)";
 				}
 			}
 
@@ -1129,7 +1129,7 @@ function PlushSearch2()
 				if (!$createTemporary)
 					$smfFunc['db_query']('', "
 						DELETE FROM {$db_prefix}log_search_messages
-						WHERE ID_SEARCH = " . $_SESSION['search_cache']['ID_SEARCH'], __FILE__, __LINE__);
+						WHERE id_search = " . $_SESSION['search_cache']['id_search'], __FILE__, __LINE__);
 
 				foreach ($searchWords as $orIndex => $words)
 				{
@@ -1147,7 +1147,7 @@ function PlushSearch2()
 						);
 
 						if (!$createTemporary)
-							$fulltext_query['select']['ID_SEARCH'] = $_SESSION['search_cache']['ID_SEARCH'];
+							$fulltext_query['select']['id_search'] = $_SESSION['search_cache']['id_search'];
 
 						if (empty($modSettings['search_simple_fulltext']))
 							foreach ($words['words'] as $regularWord)
@@ -1216,7 +1216,7 @@ function PlushSearch2()
 						);
 
 						if (!$createTemporary)
-							$custom_query['select']['ID_SEARCH'] = $_SESSION['search_cache']['ID_SEARCH'];
+							$custom_query['select']['id_search'] = $_SESSION['search_cache']['id_search'];
 						
 						foreach ($words['words'] as $regularWord)
 							$custom_query['where'][] = 'm.body' . (in_array($regularWord, $excludedWords) ? ' NOT' : '') . (empty($modSettings['search_match_words']) || $no_regexp ? " LIKE '%" . strtr($regularWord, array('_' => '\\_', '%' => '\\%')) . "%'" : " RLIKE '[[:<:]]" . addcslashes(preg_replace(array('/([\[\]$.+*?|{}()])/'), array('[$1]'), $regularWord), '\\\'') . "[[:>:]]'");
@@ -1285,7 +1285,7 @@ function PlushSearch2()
 					$main_query['from'][] = $db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_messages AS lsm';
 					$main_query['where'][] = 'lsm.id_msg = m.id_msg';
 					if (!$createTemporary)
-						$main_query['where'][] = 'lsm.ID_SEARCH = ' . $_SESSION['search_cache']['ID_SEARCH'];
+						$main_query['where'][] = 'lsm.id_search = ' . $_SESSION['search_cache']['id_search'];
 				}
 			}
 
@@ -1353,9 +1353,9 @@ function PlushSearch2()
 			{
 				$smfFunc['db_query']('', "
 					INSERT IGNORE INTO {$db_prefix}log_search_results
-						(ID_SEARCH, id_topic, relevance, id_msg, num_matches)
+						(id_search, id_topic, relevance, id_msg, num_matches)
 					SELECT
-						" . $_SESSION['search_cache']['ID_SEARCH'] . ",
+						" . $_SESSION['search_cache']['id_search'] . ",
 						t.id_topic,
 						1000 * (
 							$weight[frequency] / (t.num_replies + 1) +
@@ -1382,7 +1382,7 @@ function PlushSearch2()
 	$request = $smfFunc['db_query']('', "
 		SELECT " . (empty($search_params['topic']) ? 'lsr.id_topic' : $search_params['topic'] . ' AS id_topic') . ", lsr.id_msg, lsr.relevance, lsr.num_matches
 		FROM ({$db_prefix}log_search_results AS lsr" . ($search_params['sort'] == 'num_replies' ? ", {$db_prefix}topics AS t" : '') . ")
-		WHERE ID_SEARCH = " . $_SESSION['search_cache']['ID_SEARCH'] . ($search_params['sort'] == 'num_replies' ? "
+		WHERE id_search = " . $_SESSION['search_cache']['id_search'] . ($search_params['sort'] == 'num_replies' ? "
 			AND t.id_topic = lsr.id_topic" : '') . "
 		ORDER BY $search_params[sort] $search_params[sort_dir]
 		LIMIT " . (int) $_REQUEST['start'] . ", $modSettings[search_results_per_page]", __FILE__, __LINE__);

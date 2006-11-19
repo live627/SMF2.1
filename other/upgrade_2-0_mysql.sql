@@ -4,7 +4,7 @@
 --- Changing column names.
 /******************************************************************************/
 
----# Changing all column names.
+---# Changing all column names - part 1.
 ALTER TABLE {$db_prefix}admin_info_files
 CHANGE COLUMN ID_FILE id_file tinyint(4) unsigned NOT NULL auto_increment;
 
@@ -16,16 +16,23 @@ CHANGE COLUMN attachmentType attachment_type tinyint(3) unsigned NOT NULL defaul
 
 ALTER TABLE {$db_prefix}attachments
 CHANGE COLUMN ID_ATTACH id_attach int(10) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_THUMB id_thumb int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
 
+ALTER TABLE {$db_prefix}ban_groups
+CHANGE COLUMN ID_BAN_GROUP id_ban_group mediumint(8) unsigned NOT NULL auto_increment;
+
 ALTER TABLE {$db_prefix}ban_items
+CHANGE COLUMN ID_BAN id_ban mediumint(8) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}board_permissions
 CHANGE COLUMN ID_GROUP id_group smallint(5) NOT NULL default '0',
 CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
+---#
 
+---# Changing all column names - part 2.
 ALTER TABLE {$db_prefix}boards
 CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL default '0',
@@ -64,18 +71,38 @@ ALTER TABLE {$db_prefix}collapsed_categories
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL auto_increment;
 
+ALTER TABLE {$db_prefix}custom_fields
+CHANGE COLUMN ID_FIELD id_field smallint(5) NOT NULL auto_increment,
+CHANGE COLUMN colName col_name varchar(12) NOT NULL default '',
+CHANGE COLUMN fieldName field_name varchar(40) NOT NULL default '',
+CHANGE COLUMN fieldDesc field_desc tinytext NOT NULL,
+CHANGE COLUMN fieldType field_type varchar(8) NOT NULL default 'text',
+CHANGE COLUMN fieldLength field_length smallint(5) NOT NULL default '255',
+CHANGE COLUMN fieldOptions field_options tinytext NOT NULL,
+CHANGE COLUMN showReg show_reg tinyint(3) NOT NULL default '0',
+CHANGE COLUMN showDisplay show_display tinyint(3) NOT NULL default '0',
+CHANGE COLUMN showProfile show_profile varchar(20) NOT NULL default 'forumProfile',
+CHANGE COLUMN defaultValue default_value varchar(8) NOT NULL default '0';
+
 ALTER TABLE {$db_prefix}group_moderators
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0';
+---#
 
+---# Changing all column names - part 3.
 ALTER TABLE {$db_prefix}log_actions
+CHANGE COLUMN ID_ACTION id_action int(10) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
 
+ALTER TABLE {$db_prefix}log_activity
+CHANGE COLUMN mostOn most_on smallint(5) unsigned NOT NULL default '0';
+
 ALTER TABLE {$db_prefix}log_banned
+CHANGE COLUMN ID_BAN_LOG id_ban_log mediumint(8) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
 
@@ -98,10 +125,13 @@ ALTER TABLE {$db_prefix}log_flood_control
 CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_group_requests
+CHANGE COLUMN ID_REQUEST id_request mediumint(8) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_karma
+CHANGE COLUMN ID_TARGET id_target mediumint(8) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_EXECUTOR id_executor mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_mark_read
@@ -118,18 +148,27 @@ ALTER TABLE {$db_prefix}log_online
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN logTime log_time timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */;
 
+ALTER TABLE {$db_prefix}log_packages
+CHANGE COLUMN ID_INSTALL id_install int(10) NOT NULL auto_increment,
+CHANGE COLUMN ID_MEMBER_INSTALLED id_member_installed mediumint(8) NOT NULL,
+CHANGE COLUMN ID_MEMBER_REMOVED id_member_removed mediumint(8) NOT NULL default '0';
+
 ALTER TABLE {$db_prefix}log_polls
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_reported
+CHANGE COLUMN ID_REPORT id_report mediumint(8) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+---#
 
+---# Changing all column names - part 4.
 ALTER TABLE {$db_prefix}log_reported_comments
+CHANGE COLUMN ID_COMMENT id_comment mediumint(8) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_scheduled_tasks
@@ -143,12 +182,17 @@ CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_search_messages
+CHANGE COLUMN ID_SEARCH id_search tinyint(3) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_search_results
+CHANGE COLUMN ID_SEARCH id_search tinyint(3) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_search_subjects
 CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_search_topics
+CHANGE COLUMN ID_SEARCH id_search tinyint(3) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_topics
@@ -158,7 +202,9 @@ CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}mail_queue
 CHANGE COLUMN ID_MAIL id_mail int(10) unsigned NOT NULL auto_increment;
+---#
 
+---# Changing all column names - part 5.
 ALTER TABLE {$db_prefix}members
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL auto_increment,
 CHANGE COLUMN memberName member_name varchar(80) NOT NULL default '',
@@ -212,7 +258,9 @@ CHANGE COLUMN posterIP poster_ip tinytext NOT NULL,
 CHANGE COLUMN smileysEnabled smileys_enabled tinyint(4) NOT NULL default '1',
 CHANGE COLUMN modifiedTime modified_time int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN modifiedName modified_name tinytext NOT NULL;
+---#
 
+---# Changing all column names - part 6.
 ALTER TABLE {$db_prefix}membergroups
 CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_PARENT id_parent smallint(5) NOT NULL default '-2',
@@ -223,6 +271,8 @@ CHANGE COLUMN maxMessages max_messages smallint(5) unsigned NOT NULL default '0'
 CHANGE COLUMN groupType group_type tinyint(3) NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}message_icons
+CHANGE COLUMN ID_ICON id_icon smallint(5) unsigned NOT NULL auto_increment,
+CHANGE COLUMN iconOrder icon_order smallint(5) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}messages
@@ -232,6 +282,9 @@ CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
 ALTER TABLE {$db_prefix}moderators
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}package_servers
+CHANGE COLUMN ID_SERVER id_server smallint(5) unsigned NOT NULL auto_increment;
 
 ALTER TABLE {$db_prefix}personal_messages
 CHANGE COLUMN ID_PM id_pm int(10) unsigned NOT NULL auto_increment,
@@ -249,7 +302,9 @@ CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
 ALTER TABLE {$db_prefix}pm_recipients
 CHANGE COLUMN ID_PM id_pm int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
+---#
 
+---# Changing all column names - part 7.
 ALTER TABLE {$db_prefix}polls
 CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL auto_increment,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
@@ -435,23 +490,23 @@ upgrade_query("
 
 ---# Creating "custom_fields" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
-	ID_FIELD smallint(5) NOT NULL auto_increment,
-	colName varchar(12) NOT NULL default '',
-	fieldName varchar(40) NOT NULL default '',
-	fieldDesc tinytext NOT NULL,
-	fieldType varchar(8) NOT NULL default 'text',
-	fieldLength smallint(5) NOT NULL default '255',
-	fieldOptions tinytext NOT NULL,
+	id_field smallint(5) NOT NULL auto_increment,
+	col_name varchar(12) NOT NULL default '',
+	field_name varchar(40) NOT NULL default '',
+	field_desc tinytext NOT NULL,
+	field_type varchar(8) NOT NULL default 'text',
+	field_length smallint(5) NOT NULL default '255',
+	field_options tinytext NOT NULL,
 	mask tinytext NOT NULL,
-	showReg tinyint(3) NOT NULL default '0',
-	showDisplay tinyint(3) NOT NULL default '0',
-	showProfile varchar(20) NOT NULL default 'forumProfile',
+	show_reg tinyint(3) NOT NULL default '0',
+	show_display tinyint(3) NOT NULL default '0',
+	show_profile varchar(20) NOT NULL default 'forumProfile',
 	private tinyint(3) NOT NULL default '0',
 	active tinyint(3) NOT NULL default '1',
 	bbc tinyint(3) NOT NULL default '0',
-	defaultValue varchar(8) NOT NULL default '0',
-	PRIMARY KEY (ID_FIELD),
-	UNIQUE colName (colName)
+	default_value varchar(8) NOT NULL default '0',
+	PRIMARY KEY (id_field),
+	UNIQUE col_name (col_name)
 ) TYPE=MyISAM;
 ---#
 
@@ -479,21 +534,21 @@ CHANGE COLUMN notifyOnce notify_regularity tinyint(4) unsigned NOT NULL default 
 
 ---# Creating "log_packages" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_packages (
-	ID_INSTALL int(10) NOT NULL auto_increment,
+	id_install int(10) NOT NULL auto_increment,
 	filename tinytext NOT NULL,
 	package_id tinytext NOT NULL,
 	name tinytext NOT NULL,
 	version tinytext NOT NULL,
-	ID_MEMBER_INSTALLED mediumint(8) NOT NULL,
+	id_member_installed mediumint(8) NOT NULL,
 	member_installed tinytext NOT NULL,
 	time_installed int(10) NOT NULL default '0',
-	ID_MEMBER_REMOVED mediumint(8) NOT NULL default '0',
+	id_member_removed mediumint(8) NOT NULL default '0',
 	member_removed tinytext NOT NULL,
 	time_removed int(10) NOT NULL default '0',
 	install_state tinyint(3) NOT NULL default '1',
 	failed_steps text NOT NULL,
 	themes_installed tinytext NOT NULL,
-	PRIMARY KEY (ID_INSTALL),
+	PRIMARY KEY (id_install),
 	KEY filename (filename(15))
 ) TYPE=MyISAM;
 ---#
@@ -538,7 +593,7 @@ if (!isset($modSettings['mail_next_send']))
 
 ---# Creating "log_reported" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
-	ID_REPORT mediumint(8) unsigned NOT NULL auto_increment,
+	id_report mediumint(8) unsigned NOT NULL auto_increment,
 	id_msg int(10) unsigned NOT NULL default '0',
 	id_topic mediumint(8) unsigned NOT NULL default '0',
 	id_board smallint(5) unsigned NOT NULL default '0',
@@ -551,7 +606,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
 	num_reports mediumint(6) NOT NULL default '0',
 	closed tinyint(3) NOT NULL default '0',
 	ignore_all tinyint(3) NOT NULL default '0',
-	PRIMARY KEY (ID_REPORT),
+	PRIMARY KEY (id_report),
 	KEY id_member (id_member),
 	KEY id_topic (id_topic),
 	KEY closed (closed),
@@ -562,14 +617,14 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
 
 ---# Creating "log_reported_comments" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported_comments (
-	ID_COMMENT mediumint(8) unsigned NOT NULL auto_increment,
-	ID_REPORT mediumint(8) NOT NULL,
+	id_comment mediumint(8) unsigned NOT NULL auto_increment,
+	id_report mediumint(8) NOT NULL,
 	id_member mediumint(8) NOT NULL,
 	membername tinytext NOT NULL,
 	comment tinytext NOT NULL,
 	time_sent int(10) NOT NULL,
-	PRIMARY KEY (ID_COMMENT),
-	KEY ID_REPORT (ID_REPORT),
+	PRIMARY KEY (id_comment),
+	KEY id_report (id_report),
 	KEY id_member (id_member),
 	KEY time_sent (time_sent)
 ) TYPE=MyISAM;
@@ -608,12 +663,12 @@ if (@$modSettings['smfVersion'] < '2.0')
 
 ---# Creating "log_group_requests" table...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_group_requests (
-	ID_REQUEST mediumint(8) unsigned NOT NULL auto_increment,
+	id_request mediumint(8) unsigned NOT NULL auto_increment,
 	id_member mediumint(8) unsigned NOT NULL default '0',
 	id_group smallint(5) unsigned NOT NULL default '0',
 	time_applied int(10) unsigned NOT NULL default '0',
 	reason text NOT NULL,
-	PRIMARY KEY (ID_REQUEST),
+	PRIMARY KEY (id_request),
 	UNIQUE id_member (id_member, id_group) 
 ) TYPE=MYISAM;
 ---#
@@ -1074,7 +1129,7 @@ while ($_GET['m'] < $totalActions)
 	nextSubStep($substep);
 
 	$mrequest = upgrade_query("
-		SELECT ID_ACTION, extra, id_board, id_topic, id_msg
+		SELECT id_action, extra, id_board, id_topic, id_msg
 		FROM {$db_prefix}log_actions
 		LIMIT $_GET[m], 500");
 
@@ -1136,7 +1191,7 @@ while ($_GET['m'] < $totalActions)
 		else
 			$msg_id = '0';
 		$row['extra'] = addslashes(serialize($row['extra']));
-		upgrade_query("UPDATE {$db_prefix}log_actions SET id_board=$board_id, id_topic=$topic_id, id_msg=$msg_id, extra='$row[extra]' WHERE ID_ACTION=$row[ID_ACTION]");
+		upgrade_query("UPDATE {$db_prefix}log_actions SET id_board=$board_id, id_topic=$topic_id, id_msg=$msg_id, extra='$row[extra]' WHERE id_action=$row[id_action]");
 	}
 	$_GET['m'] += 500;
 }

@@ -526,7 +526,7 @@ function loadInstalledPackages()
 
 	// Load the packages from the database - note this is ordered by install time to ensure latest package uninstalled first.
 	$request = $smfFunc['db_query']('', "
-		SELECT ID_INSTALL, package_id, filename, name, version
+		SELECT id_install, package_id, filename, name, version
 		FROM {$db_prefix}log_packages
 		WHERE install_state != 0
 		ORDER BY time_installed DESC", __FILE__, __LINE__);
@@ -541,7 +541,7 @@ function loadInstalledPackages()
 		$found[] = $row['package_id'];
 
 		$installed[] = array(
-			'id' => $row['ID_INSTALL'],
+			'id' => $row['id_install'],
 			'name' => $row['name'],
 			'filename' => $row['filename'],
 			'package_id' => $row['package_id'],

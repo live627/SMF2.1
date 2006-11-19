@@ -48,7 +48,7 @@ CREATE TABLE {$db_prefix}approval_queue (
 
 CREATE TABLE {$db_prefix}attachments (
   id_attach int(10) unsigned NOT NULL auto_increment,
-  ID_THUMB int(10) unsigned NOT NULL default '0',
+  id_thumb int(10) unsigned NOT NULL default '0',
   id_msg int(10) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
   attachment_type tinyint(3) unsigned NOT NULL default '0',
@@ -68,7 +68,7 @@ CREATE TABLE {$db_prefix}attachments (
 #
 
 CREATE TABLE {$db_prefix}ban_groups (
-  ID_BAN_GROUP mediumint(8) unsigned NOT NULL auto_increment,
+  id_ban_group mediumint(8) unsigned NOT NULL auto_increment,
   name varchar(20) NOT NULL default '',
   ban_time int(10) unsigned NOT NULL default '0',
   expire_time int(10) unsigned,
@@ -78,7 +78,7 @@ CREATE TABLE {$db_prefix}ban_groups (
   cannot_login tinyint(3) unsigned NOT NULL default '0',
   reason tinytext NOT NULL,
   notes text NOT NULL,
-  PRIMARY KEY (ID_BAN_GROUP)
+  PRIMARY KEY (id_ban_group)
 ) TYPE=MyISAM;
 
 #
@@ -86,8 +86,8 @@ CREATE TABLE {$db_prefix}ban_groups (
 #
 
 CREATE TABLE {$db_prefix}ban_items (
-  ID_BAN mediumint(8) unsigned NOT NULL auto_increment,
-  ID_BAN_GROUP smallint(5) unsigned NOT NULL default '0',
+  id_ban mediumint(8) unsigned NOT NULL auto_increment,
+  id_ban_group smallint(5) unsigned NOT NULL default '0',
   ip_low1 tinyint(3) unsigned NOT NULL default '0',
   ip_high1 tinyint(3) unsigned NOT NULL default '0',
   ip_low2 tinyint(3) unsigned NOT NULL default '0',
@@ -100,8 +100,8 @@ CREATE TABLE {$db_prefix}ban_items (
   email_address tinytext NOT NULL,
   id_member mediumint(8) unsigned NOT NULL default '0',
   hits mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_BAN),
-  KEY ID_BAN_GROUP (ID_BAN_GROUP)
+  PRIMARY KEY (id_ban),
+  KEY id_ban_group (id_ban_group)
 ) TYPE=MyISAM;
 
 #
@@ -673,23 +673,23 @@ CREATE TABLE {$db_prefix}collapsed_categories (
 #
 
 CREATE TABLE {$db_prefix}custom_fields (
-  ID_FIELD smallint(5) NOT NULL auto_increment,
-  colName varchar(12) NOT NULL default '',
-  fieldName varchar(40) NOT NULL default '',
-  fieldDesc tinytext NOT NULL,
-  fieldType varchar(8) NOT NULL default 'text',
-  fieldLength smallint(5) NOT NULL default '255',
-  fieldOptions tinytext NOT NULL,
+  id_field smallint(5) NOT NULL auto_increment,
+  col_name varchar(12) NOT NULL default '',
+  field_name varchar(40) NOT NULL default '',
+  field_desc tinytext NOT NULL,
+  field_type varchar(8) NOT NULL default 'text',
+  field_length smallint(5) NOT NULL default '255',
+  field_options tinytext NOT NULL,
   mask tinytext NOT NULL,
-  showReg tinyint(3) NOT NULL default '0',
-  showDisplay tinyint(3) NOT NULL default '0',
-  showProfile varchar(20) NOT NULL default 'forumProfile',
+  show_reg tinyint(3) NOT NULL default '0',
+  show_display tinyint(3) NOT NULL default '0',
+  show_profile varchar(20) NOT NULL default 'forumProfile',
   private tinyint(3) NOT NULL default '0',
   active tinyint(3) NOT NULL default '1',
   bbc tinyint(3) NOT NULL default '0',
-  defaultValue varchar(8) NOT NULL default '0',
-  PRIMARY KEY (ID_FIELD),
-  UNIQUE colName (colName)
+  default_value varchar(8) NOT NULL default '0',
+  PRIMARY KEY (id_field),
+  UNIQUE col_name (col_name)
 ) TYPE=MyISAM;
 
 #
@@ -707,7 +707,7 @@ CREATE TABLE {$db_prefix}group_moderators (
 #
 
 CREATE TABLE {$db_prefix}log_actions (
-  ID_ACTION int(10) unsigned NOT NULL auto_increment,
+  id_action int(10) unsigned NOT NULL auto_increment,
   log_time int(10) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
@@ -716,7 +716,7 @@ CREATE TABLE {$db_prefix}log_actions (
   id_topic mediumint(8) unsigned NOT NULL default '0',
   id_msg int(10) unsigned NOT NULL default '0',
   extra text NOT NULL,
-  PRIMARY KEY (ID_ACTION),
+  PRIMARY KEY (id_action),
   KEY log_time (log_time),
   KEY id_member (id_member),
   KEY id_board (id_board),
@@ -733,10 +733,10 @@ CREATE TABLE {$db_prefix}log_activity (
   topics smallint(5) unsigned NOT NULL default '0',
   posts smallint(5) unsigned NOT NULL default '0',
   registers smallint(5) unsigned NOT NULL default '0',
-  mostOn smallint(5) unsigned NOT NULL default '0',
+  most_on smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY (date),
   KEY hits (hits),
-  KEY mostOn (mostOn)
+  KEY most_on (most_on)
 ) TYPE=MyISAM;
 
 #
@@ -744,12 +744,12 @@ CREATE TABLE {$db_prefix}log_activity (
 #
 
 CREATE TABLE {$db_prefix}log_banned (
-  ID_BAN_LOG mediumint(8) unsigned NOT NULL auto_increment,
+  id_ban_log mediumint(8) unsigned NOT NULL auto_increment,
   id_member mediumint(8) unsigned NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
   email tinytext NOT NULL,
   log_time int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_BAN_LOG),
+  PRIMARY KEY (id_ban_log),
   KEY log_time (log_time)
 ) TYPE=MyISAM;
 
@@ -812,12 +812,12 @@ CREATE TABLE {$db_prefix}log_floodcontrol (
 #
 
 CREATE TABLE {$db_prefix}log_group_requests (
-  ID_REQUEST mediumint(8) unsigned NOT NULL auto_increment,
+  id_request mediumint(8) unsigned NOT NULL auto_increment,
   id_member mediumint(8) unsigned NOT NULL default '0',
   id_group smallint(5) unsigned NOT NULL default '0',
   time_applied int(10) unsigned NOT NULL default '0',
   reason text NOT NULL,
-  PRIMARY KEY (ID_REQUEST),
+  PRIMARY KEY (id_request),
   UNIQUE id_member (id_member, id_group)
 ) TYPE=MYISAM;
 
@@ -826,11 +826,11 @@ CREATE TABLE {$db_prefix}log_group_requests (
 #
 
 CREATE TABLE {$db_prefix}log_karma (
-  ID_TARGET mediumint(8) unsigned NOT NULL default '0',
-  ID_EXECUTOR mediumint(8) unsigned NOT NULL default '0',
+  id_target mediumint(8) unsigned NOT NULL default '0',
+  id_executor mediumint(8) unsigned NOT NULL default '0',
   log_time int(10) unsigned NOT NULL default '0',
   action tinyint(4) NOT NULL default '0',
-  PRIMARY KEY (ID_TARGET, ID_EXECUTOR),
+  PRIMARY KEY (id_target, id_executor),
   KEY log_time (log_time)
 ) TYPE=MyISAM;
 
@@ -877,21 +877,21 @@ CREATE TABLE {$db_prefix}log_online (
 #
 
 CREATE TABLE {$db_prefix}log_packages (
-  ID_INSTALL int(10) NOT NULL auto_increment,
+  id_install int(10) NOT NULL auto_increment,
   filename tinytext NOT NULL,
   package_id tinytext NOT NULL,
   name tinytext NOT NULL,
   version tinytext NOT NULL,
-  ID_MEMBER_INSTALLED mediumint(8) NOT NULL,
+  id_member_installed mediumint(8) NOT NULL,
   member_installed tinytext NOT NULL,
   time_installed int(10) NOT NULL default '0',
-  ID_MEMBER_REMOVED mediumint(8) NOT NULL default '0',
+  id_member_removed mediumint(8) NOT NULL default '0',
   member_removed tinytext NOT NULL,
   time_removed int(10) NOT NULL default '0',
   install_state tinyint(3) NOT NULL default '1',
   failed_steps text NOT NULL,
   themes_installed tinytext NOT NULL,
-  PRIMARY KEY (ID_INSTALL),
+  PRIMARY KEY (id_install),
   KEY filename (filename(15))
 ) TYPE=MyISAM;
 
@@ -911,7 +911,7 @@ CREATE TABLE {$db_prefix}log_polls (
 #
 
 CREATE TABLE {$db_prefix}log_reported (
-  ID_REPORT mediumint(8) unsigned NOT NULL auto_increment,
+  id_report mediumint(8) unsigned NOT NULL auto_increment,
   id_msg int(10) unsigned NOT NULL default '0',
   id_topic mediumint(8) unsigned NOT NULL default '0',
   id_board smallint(5) unsigned NOT NULL default '0',
@@ -924,7 +924,7 @@ CREATE TABLE {$db_prefix}log_reported (
   num_reports mediumint(6) NOT NULL default '0',
   closed tinyint(3) NOT NULL default '0',
   ignore_all tinyint(3) NOT NULL default '0',
-  PRIMARY KEY (ID_REPORT),
+  PRIMARY KEY (id_report),
   KEY id_member (id_member),
   KEY id_topic (id_topic),
   KEY closed (closed),
@@ -937,14 +937,14 @@ CREATE TABLE {$db_prefix}log_reported (
 #
 
 CREATE TABLE {$db_prefix}log_reported_comments (
-  ID_COMMENT mediumint(8) unsigned NOT NULL auto_increment,
-  ID_REPORT mediumint(8) NOT NULL,
+  id_comment mediumint(8) unsigned NOT NULL auto_increment,
+  id_report mediumint(8) NOT NULL,
   id_member mediumint(8) NOT NULL,
   membername tinytext NOT NULL,
   comment tinytext NOT NULL,
   time_sent int(10) NOT NULL,
-  PRIMARY KEY (ID_COMMENT),
-  KEY ID_REPORT (ID_REPORT),
+  PRIMARY KEY (id_comment),
+  KEY id_report (id_report),
   KEY id_member (id_member),
   KEY time_sent (time_sent)
 ) TYPE=MyISAM;
@@ -966,9 +966,9 @@ CREATE TABLE {$db_prefix}log_scheduled_tasks (
 #
 
 CREATE TABLE {$db_prefix}log_search_messages (
-  ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
+  id_search tinyint(3) unsigned NOT NULL default '0',
   id_msg int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, id_msg)
+  PRIMARY KEY (id_search, id_msg)
 ) TYPE=MyISAM;
 
 #
@@ -976,12 +976,12 @@ CREATE TABLE {$db_prefix}log_search_messages (
 #
 
 CREATE TABLE {$db_prefix}log_search_results (
-  ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
+  id_search tinyint(3) unsigned NOT NULL default '0',
   id_topic mediumint(8) unsigned NOT NULL default '0',
   id_msg int(10) unsigned NOT NULL default '0',
   relevance smallint(5) unsigned NOT NULL default '0',
   num_matches smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, id_topic)
+  PRIMARY KEY (id_search, id_topic)
 ) TYPE=MyISAM;
 
 #
@@ -1000,9 +1000,9 @@ CREATE TABLE {$db_prefix}log_search_subjects (
 #
 
 CREATE TABLE {$db_prefix}log_search_topics (
-  ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
+  id_search tinyint(3) unsigned NOT NULL default '0',
   id_topic mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, id_topic)
+  PRIMARY KEY (id_search, id_topic)
 ) TYPE=MyISAM;
 
 #
@@ -1143,12 +1143,12 @@ CREATE TABLE {$db_prefix}members (
 #
 
 CREATE TABLE {$db_prefix}message_icons (
-  ID_ICON smallint(5) unsigned NOT NULL auto_increment,
+  id_icon smallint(5) unsigned NOT NULL auto_increment,
   title varchar(80) NOT NULL default '',
   filename varchar(80) NOT NULL default '',
   id_board smallint(5) unsigned NOT NULL default '0',
-  iconOrder smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_ICON),
+  icon_order smallint(5) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_icon),
   KEY id_board (id_board)
 ) TYPE=MyISAM;
 
@@ -1158,7 +1158,7 @@ CREATE TABLE {$db_prefix}message_icons (
 
 # // !!! i18n
 INSERT INTO {$db_prefix}message_icons
-	(filename, title, iconOrder)
+	(filename, title, icon_order)
 VALUES ('xx', 'Standard', '0'),
 	('thumbup', 'Thumb Up', '1'),
 	('thumbdown', 'Thumb Down', '2'),
@@ -1229,10 +1229,10 @@ CREATE TABLE {$db_prefix}moderators (
 #
 
 CREATE TABLE {$db_prefix}package_servers (
-  ID_SERVER smallint(5) unsigned NOT NULL auto_increment,
+  id_server smallint(5) unsigned NOT NULL auto_increment,
   name tinytext NOT NULL,
   url tinytext NOT NULL,
-  PRIMARY KEY (ID_SERVER)
+  PRIMARY KEY (id_server)
 ) TYPE=MyISAM;
 
 #

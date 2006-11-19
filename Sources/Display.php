@@ -711,9 +711,9 @@ function Display()
 				SELECT
 					a.id_attach, a.id_msg, a.filename, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
 					a.width, a.height" . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ",
-					IFNULL(thumb.id_attach, 0) AS ID_THUMB, thumb.width AS thumb_width, thumb.height AS thumb_height") . "
+					IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height") . "
 				FROM {$db_prefix}attachments AS a" . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : "
-					LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.ID_THUMB)") . "
+					LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)") . "
 				WHERE a.id_msg IN (" . implode(',', $messages) . ")
 					AND a.attachment_type = 0
 					" . (allowedTo('approve_posts') ? '' : ' AND a.approved = 1'), __FILE__, __LINE__);
@@ -1167,7 +1167,7 @@ function loadAttachmentContext($id_msg)
 			if (!empty($modSettings['attachmentThumbnails']) && !empty($modSettings['attachmentThumbWidth']) && !empty($modSettings['attachmentThumbHeight']) && ($attachment['width'] > $modSettings['attachmentThumbWidth'] || $attachment['height'] > $modSettings['attachmentThumbHeight']) && strlen($attachment['filename']) < 249)
 			{
 				// A proper thumb doesn't exist yet? Create one!
-				if (empty($attachment['ID_THUMB']) || $attachment['thumb_width'] > $modSettings['attachmentThumbWidth'] || $attachment['thumb_height'] > $modSettings['attachmentThumbHeight'] || ($attachment['thumb_width'] < $modSettings['attachmentThumbWidth'] && $attachment['thumb_height'] < $modSettings['attachmentThumbHeight']))
+				if (empty($attachment['id_thumb']) || $attachment['thumb_width'] > $modSettings['attachmentThumbWidth'] || $attachment['thumb_height'] > $modSettings['attachmentThumbHeight'] || ($attachment['thumb_width'] < $modSettings['attachmentThumbWidth'] && $attachment['thumb_height'] < $modSettings['attachmentThumbHeight']))
 				{
 					$filename = getAttachmentFilename($attachment['filename'], $attachment['id_attach']);
 
@@ -1185,16 +1185,16 @@ function loadAttachmentContext($id_msg)
 							INSERT INTO {$db_prefix}attachments
 								(id_msg, attachment_type, filename, size, width, height)
 							VALUES ($id_msg, 3, '$thumb_filename', " . (int) $thumb_size . ", " . (int) $attachment['thumb_width'] . ", " . (int) $attachment['thumb_height'] . ")", __FILE__, __LINE__);
-						$attachment['ID_THUMB'] = db_insert_id("{$db_prefix}attachments", 'id_attach');
-						if (!empty($attachment['ID_THUMB']))
+						$attachment['id_thumb'] = db_insert_id("{$db_prefix}attachments", 'id_attach');
+						if (!empty($attachment['id_thumb']))
 						{
 							$smfFunc['db_query']('', "
 								UPDATE {$db_prefix}attachments
-								SET ID_THUMB = $attachment[ID_THUMB]
+								SET id_thumb = $attachment[id_thumb]
 								WHERE id_attach = $attachment[id_attach]
 								LIMIT 1", __FILE__, __LINE__);
 
-							$thumb_realname = getAttachmentFilename($thumb_filename, $attachment['ID_THUMB'], true);
+							$thumb_realname = getAttachmentFilename($thumb_filename, $attachment['id_thumb'], true);
 							rename($filename . '_thumb', $modSettings['attachmentUploadDir'] . '/' . $thumb_realname);
 						}
 					}
@@ -1204,12 +1204,12 @@ function loadAttachmentContext($id_msg)
 				$attachmentData[$i]['height'] = $attachment['thumb_height'];
 			}
 
-			if (!empty($attachment['ID_THUMB']))
+			if (!empty($attachment['id_thumb']))
 				$attachmentData[$i]['thumbnail'] = array(
-					'id' => $attachment['ID_THUMB'],
-					'href' => $scripturl . '?action=dlattach;topic=' . $topic . '.0;attach=' . $attachment['ID_THUMB'] . ';image',
+					'id' => $attachment['id_thumb'],
+					'href' => $scripturl . '?action=dlattach;topic=' . $topic . '.0;attach=' . $attachment['id_thumb'] . ';image',
 				);
-			$attachmentData[$i]['thumbnail']['has_thumb'] = !empty($attachment['ID_THUMB']);
+			$attachmentData[$i]['thumbnail']['has_thumb'] = !empty($attachment['id_thumb']);
 
 			// If thumbnails are disabled, check the maximum size of the image.
 			if (!$attachmentData[$i]['thumbnail']['has_thumb'] && ((!empty($modSettings['max_image_width']) && $attachment['width'] > $modSettings['max_image_width']) || (!empty($modSettings['max_image_height']) && $attachment['height'] > $modSettings['max_image_height'])))

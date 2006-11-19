@@ -342,8 +342,9 @@ b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n
 		$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$1", $fileContents);
 	}
 
-	foreach ($txtChanges as $langType => $set)
-		foreach ($txtChanges[$langType] as $find => $replace)
+	if (isset($txtChanges[$type]))
+	{
+		foreach ($txtChanges[$type] as $find => $replace)
 		{
 			$find2 = is_integer($find) ? '$txt[' . $find . ']' : '$txt[\'' . $find . '\']';
 
@@ -356,6 +357,7 @@ b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n
 					$replaceArray[] = '$txt[\'' . $replace . '\']';
 			}
 		}
+ 	}
 
 	if (!empty($findArray))
 	{

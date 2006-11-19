@@ -80,8 +80,8 @@ function ModifyKarma()
 		$request = $smfFunc['db_query']('', "
 			SELECT action
 			FROM {$db_prefix}log_karma
-			WHERE ID_TARGET = $_REQUEST[uid]
-				AND ID_EXECUTOR = $id_member
+			WHERE id_target = $_REQUEST[uid]
+				AND id_executor = $id_member
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			list ($action) = $smfFunc['db_fetch_row']($request);
@@ -94,7 +94,7 @@ function ModifyKarma()
 		// Put it in the log.
 		$smfFunc['db_query']('', "
 			REPLACE INTO {$db_prefix}log_karma
-				(action, ID_TARGET, ID_EXECUTOR, log_time)
+				(action, id_target, id_executor, log_time)
 			VALUES ($dir, $_REQUEST[uid], $id_member, " . time() . ')', __FILE__, __LINE__);
 
 		// Change by one.
@@ -110,8 +110,8 @@ function ModifyKarma()
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_karma
 			SET action = $dir, log_time = " . time() . "
-			WHERE ID_TARGET = $_REQUEST[uid]
-				AND ID_EXECUTOR = $id_member
+			WHERE id_target = $_REQUEST[uid]
+				AND id_executor = $id_member
 			LIMIT 1", __FILE__, __LINE__);
 
 		// It was recently changed the OTHER way... so... reverse it!

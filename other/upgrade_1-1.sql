@@ -805,24 +805,24 @@ if ($test)
 	upgrade_query("
 		ALTER TABLE {$db_prefix}message_icons
 		DROP PRIMARY KEY,
-		CHANGE COLUMN ID_ICON ID_ICON smallint(5) unsigned NOT NULL auto_increment PRIMARY KEY,
+		CHANGE COLUMN id_icon id_icon smallint(5) unsigned NOT NULL auto_increment PRIMARY KEY,
 		CHANGE COLUMN Name filename varchar(80) NOT NULL default '',
 		CHANGE COLUMN Description title varchar(80) NOT NULL default '',
 		CHANGE COLUMN ID_BOARD ID_BOARD mediumint(8) unsigned NOT NULL default '0',
-		DROP INDEX ID_ICON,
-		ADD COLUMN iconOrder smallint(5) unsigned NOT NULL default '0'");
+		DROP INDEX id_icon,
+		ADD COLUMN icon_order smallint(5) unsigned NOT NULL default '0'");
 }
 ---}
 ---#
 
 ---# Creating "message_icons"...
 CREATE TABLE IF NOT EXISTS {$db_prefix}message_icons (
-	ID_ICON smallint(5) unsigned NOT NULL auto_increment,
+	id_icon smallint(5) unsigned NOT NULL auto_increment,
 	title varchar(80) NOT NULL default '',
 	filename varchar(80) NOT NULL default '',
 	ID_BOARD mediumint(8) unsigned NOT NULL default 0,
-	iconOrder smallint(5) unsigned NOT NULL default 0,
-	PRIMARY KEY (ID_ICON),
+	icon_order smallint(5) unsigned NOT NULL default 0,
+	PRIMARY KEY (id_icon),
 	KEY ID_BOARD (ID_BOARD)
 ) TYPE=MyISAM;
 ---#
@@ -834,7 +834,7 @@ if (@$modSettings['smfVersion'] < '1.1')
 {
 	upgrade_query("
 		INSERT INTO {$db_prefix}message_icons
-			(filename, title, iconOrder)
+			(filename, title, icon_order)
 		VALUES ('xx', 'Standard', '0'),
 			('thumbup', 'Thumb Up', '1'),
 			('thumbdown', 'Thumb Down', '2'),
@@ -857,16 +857,16 @@ if (@$modSettings['smfVersion'] < '1.1')
 
 ---# Creating "package_servers"...
 CREATE TABLE IF NOT EXISTS {$db_prefix}package_servers (
-	ID_SERVER smallint(5) unsigned NOT NULL auto_increment,
+	id_server smallint(5) unsigned NOT NULL auto_increment,
 	name tinytext NOT NULL default '',
 	url tinytext NOT NULL default '',
-	PRIMARY KEY (ID_SERVER)
+	PRIMARY KEY (id_server)
 ) TYPE=MyISAM;
 ---#
 
 ---# Inserting "package_servers"...
 INSERT IGNORE INTO {$db_prefix}package_servers
-	(ID_SERVER, name, url)
+	(id_server, name, url)
 VALUES
 	(1, 'Simple Machines Third-party Mod Site', 'http://mods.simplemachines.org');
 ---#
@@ -1104,7 +1104,7 @@ if (!$has_attachmentType_column)
 {
 	$request = upgrade_query("
 		ALTER TABLE {$db_prefix}attachments
-		ADD COLUMN ID_THUMB int(10) unsigned NOT NULL default '0' AFTER ID_ATTACH,
+		ADD COLUMN id_thumb int(10) unsigned NOT NULL default '0' AFTER ID_ATTACH,
 		ADD COLUMN width mediumint(8) unsigned NOT NULL default '0',
 		ADD COLUMN height mediumint(8) unsigned NOT NULL default '0'");
 
@@ -1182,7 +1182,7 @@ if (!$has_attachmentType_column)
 				upgrade_query("
 					UPDATE {$db_prefix}attachments
 					SET
-						ID_THUMB = $thumb_attach_id,
+						id_thumb = $thumb_attach_id,
 						width = " . (int) $attach_width . ",
 						height = " . (int) $attach_height . "
 					WHERE ID_ATTACH = $attach_id
@@ -1205,7 +1205,7 @@ if (!$has_attachmentType_column)
 $request = upgrade_query("
 	SELECT ID_ATTACH, filename, attachmentType
 	FROM {$db_prefix}attachments
-	WHERE ID_THUMB = 0
+	WHERE id_thumb = 0
 		AND (RIGHT(filename, 4) IN ('.gif', '.jpg', '.png', '.bmp') OR RIGHT(filename, 5) = '.jpeg')
 		AND width = 0
 		AND height = 0");
@@ -1265,12 +1265,12 @@ if ($upgradeBanTable)
 		TO {$db_prefix}ban_groups");
 	upgrade_query("
 		ALTER TABLE {$db_prefix}ban_groups
-		CHANGE COLUMN ID_BAN ID_BAN_GROUP mediumint(8) unsigned NOT NULL auto_increment");
+		CHANGE COLUMN id_ban id_ban_group mediumint(8) unsigned NOT NULL auto_increment");
 
 	upgrade_query("
 		CREATE TABLE IF NOT EXISTS {$db_prefix}ban_items (
-			ID_BAN mediumint(8) unsigned NOT NULL auto_increment,
-			ID_BAN_GROUP smallint(5) unsigned NOT NULL default '0',
+			id_ban mediumint(8) unsigned NOT NULL auto_increment,
+			id_ban_group smallint(5) unsigned NOT NULL default '0',
 			ip_low1 tinyint(3) unsigned NOT NULL default '0',
 			ip_high1 tinyint(3) unsigned NOT NULL default '0',
 			ip_low2 tinyint(3) unsigned NOT NULL default '0',
@@ -1283,14 +1283,14 @@ if ($upgradeBanTable)
 			email_address tinytext NOT NULL default '',
 			ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 			hits mediumint(8) unsigned NOT NULL default '0',
-			PRIMARY KEY (ID_BAN),
-			KEY ID_BAN_GROUP (ID_BAN_GROUP)
+			PRIMARY KEY (id_ban),
+			KEY id_ban_group (id_ban_group)
 		) TYPE=MyISAM");
 
 	upgrade_query("
 		INSERT INTO {$db_prefix}ban_items
-			(ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, ID_MEMBER)
-		SELECT ID_BAN_GROUP, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, ID_MEMBER
+			(id_ban_group, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, ID_MEMBER)
+		SELECT id_ban_group, ip_low1, ip_high1, ip_low2, ip_high2, ip_low3, ip_high3, ip_low4, ip_high4, hostname, email_address, ID_MEMBER
 		FROM {$db_prefix}ban_groups");
 
 	upgrade_query("
@@ -1315,10 +1315,10 @@ if ($upgradeBanTable)
 	// Generate names for existing bans.
 	upgrade_query("
 		ALTER TABLE {$db_prefix}ban_groups
-		ADD COLUMN name varchar(20) NOT NULL default '' AFTER ID_BAN_GROUP");
+		ADD COLUMN name varchar(20) NOT NULL default '' AFTER id_ban_group");
 
 	$request = mysql_query("
-		SELECT ID_BAN_GROUP, restriction_type
+		SELECT id_ban_group, restriction_type
 		FROM {$db_prefix}ban_groups
 		ORDER BY ban_time ASC");
 	$ban_names = array(
@@ -1332,7 +1332,7 @@ if ($upgradeBanTable)
 			upgrade_query("
 				UPDATE {$db_prefix}ban_groups
 				SET name = '" . $row['restriction_type'] . '_' . str_pad($ban_names[$row['restriction_type']]++, 3, '0', STR_PAD_LEFT) . "'
-				WHERE ID_BAN_GROUP = $row[ID_BAN_GROUP]");
+				WHERE id_ban_group = $row[id_ban_group]");
 		mysql_free_result($request);
 	}
 
@@ -1361,7 +1361,7 @@ if ($upgradeBanTable)
 	$request = upgrade_query("
 		SELECT mem.ID_MEMBER, mem.is_activated + 10 AS new_value
 		FROM ({$db_prefix}ban_groups AS bg, {$db_prefix}ban_items AS bi, {$db_prefix}members AS mem)
-		WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
+		WHERE bg.id_ban_group = bi.id_ban_group
 			AND bg.cannot_access = 1
 			AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
 			AND (mem.ID_MEMBER = bi.ID_MEMBER OR mem.emailAddress LIKE bi.email_address)
@@ -1376,8 +1376,8 @@ if ($upgradeBanTable)
 		SELECT mem.ID_MEMBER, mem.is_activated - 10 AS new_value
 		FROM {$db_prefix}members AS mem
 			LEFT JOIN {$db_prefix}ban_items AS bi ON (bi.ID_MEMBER = mem.ID_MEMBER OR mem.emailAddress LIKE bi.email_address)
-			LEFT JOIN {$db_prefix}ban_groups AS bg ON (bg.ID_BAN_GROUP = bi.ID_BAN_GROUP AND bg.cannot_access = 1 AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . "))
-		WHERE (bi.ID_BAN IS NULL OR bg.ID_BAN_GROUP IS NULL)
+			LEFT JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND bg.cannot_access = 1 AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . "))
+		WHERE (bi.id_ban IS NULL OR bg.id_ban_group IS NULL)
 			AND mem.is_activated >= 10");
 	while ($row = mysql_fetch_assoc($request))
 		$updates[$row['new_value']][] = $row['ID_MEMBER'];
@@ -1551,24 +1551,24 @@ DROP TABLE IF EXISTS {$db_prefix}log_search_topics;
 DROP TABLE IF EXISTS {$db_prefix}log_search;
 
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_messages (
-  ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
+  id_search tinyint(3) unsigned NOT NULL default '0',
   ID_MSG mediumint(9) NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, ID_MSG)
+  PRIMARY KEY (id_search, ID_MSG)
 ) TYPE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_topics (
-  ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
+  id_search tinyint(3) unsigned NOT NULL default '0',
   ID_TOPIC mediumint(9) NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, ID_TOPIC)
+  PRIMARY KEY (id_search, ID_TOPIC)
 ) TYPE=MyISAM;
 
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_results (
-  ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
+  id_search tinyint(3) unsigned NOT NULL default '0',
   ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
   ID_MSG int(10) unsigned NOT NULL default '0',
   relevance smallint(5) unsigned NOT NULL default '0',
   num_matches smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY (ID_SEARCH, ID_TOPIC),
+  PRIMARY KEY (id_search, ID_TOPIC),
   KEY relevance (relevance)
 ) TYPE=MyISAM;
 

@@ -296,7 +296,7 @@ function ComposeMailing()
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.id_member
 		FROM {$db_prefix}ban_groups AS bg
-		LEFT JOIN {$db_prefix}ban_items AS bi ON (bg.ID_BAN_GROUP = bi.ID_BAN_GROUP)
+		LEFT JOIN {$db_prefix}ban_items AS bi ON (bg.id_ban_group = bi.id_ban_group)
 		LEFT JOIN {$db_prefix}members AS mem ON (bi.id_member = mem.id_member OR mem.email_address LIKE bi.email_address)
 		WHERE (bg.cannot_access = 1 OR bg.cannot_login = 1) AND (ISNULL(bg.expire_time) OR bg.expire_time > " . time() . ")
 			AND NOT ISNULL(mem.id_member)

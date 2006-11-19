@@ -27,6 +27,11 @@ if (!defined('SMF'))
 	care of logging, error messages, error handling, database errors, and
 	error log administration.  It does this with:
 
+	bool db_fatal_error(bool loadavg = false)
+ 		- loads Subs-Auth.php and calls show_db_error().
+ 		- this is used for database connection error handling.
+ 		- loadavg means this is a load average problem, not a database error.
+
 	string log_error(string error_message, string error_type = general 
 			string filename = none,	int line = none)
 		- logs an error, if error logging is enabled.
@@ -60,6 +65,20 @@ if (!defined('SMF'))
 		- used by fatal_error() and fatal_lang_error()
 		
 */
+
+// Just wrap it so we don't take up time and space here in Errors.php.
+function db_fatal_error($loadavg = false)
+{
+	global $sourcedir;
+
+	// Just load the other file and run it.
+	require_once($sourcedir . '/Subs-Auth.php');
+	show_db_error($loadavg);
+
+	// Since we use "or db_fatal_error();" this is needed...
+	return false;
+}
+
 // Log an error, if the option is on.
 function log_error($error_message, $error_type = 'general', $file = null, $line = null)
 {

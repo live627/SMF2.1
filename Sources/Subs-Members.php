@@ -202,8 +202,8 @@ function deleteMembers($users)
 		WHERE id_member $condition", __FILE__, __LINE__);
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_karma
-		WHERE ID_TARGET $condition
-			OR ID_EXECUTOR $condition", __FILE__, __LINE__);
+		WHERE id_target $condition
+			OR id_executor $condition", __FILE__, __LINE__);
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_mark_read
 		WHERE id_member $condition", __FILE__, __LINE__);

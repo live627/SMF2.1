@@ -2010,10 +2010,12 @@ function sessionWrite($session_id, $data)
 
 	// If that didn't work, try inserting a new one.
 	if (db_affected_rows() == 0)
-		$result = $smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}sessions
-				(session_id, data, last_update)
-			VALUES ('" . addslashes($session_id) . "', '" . addslashes($data) . "', " . time() . ")", __FILE__, __LINE__);
+		$result = $smfFunc['db_insert']('ignore',
+			"{$db_prefix}sessions",
+			array('session_id', 'data', 'last_update'),
+			array('\'' . addslashes($session_id) . '\'', '\'' . addslashes($data) . '\'', time()),
+			array('session_id')
+		);
 
 	return $result;
 }
@@ -2028,8 +2030,7 @@ function sessionDestroy($session_id)
 	// Just delete the row...
 	return $smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}sessions
-		WHERE session_id = '" . addslashes($session_id) . "'
-		LIMIT 1", __FILE__, __LINE__);
+		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
 }
 
 function sessionGC($max_lifetime)

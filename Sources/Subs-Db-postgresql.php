@@ -25,39 +25,7 @@ if (!defined('SMF'))
 
 /*	This file has all the main functions in it that relate to the database.
 
-	void smf_db_initiate()
-		- Sets up the $smfFunc variables and values to use.
-
-	resource db_query(string identifier, string database_query, string __FILE__, int __LINE__)
-		- should always be used in place of pg_query.
-		- executes a query string, and implements needed error checking.
-		- always use the magic constants __FILE__ and __LINE__.
-		- returns a MySQL result resource, to be freed with mysql_free_result.
-
-	int db_affected_rows()
-		- should always be used in place of db_insert_id.
-		- returns the number of affected rows by the most recently executed
-		  query.
-		- handles the current connection so the forum with other connections
-		  active at the same time.
-
-	int db_insert_id(string table_name, string auto_increment_field, resource database_connection = null)
-		- should always be used in place of mysql_insert_id.
-		- returns the most recently generated auto_increment column.
-		- handles the current connection so the forum with other connections
-		  active at the same time.
-
-	resource db_error(string database_query, string filename, int line)
-		- logs and handles a database error, and tries to fix any broken
-		  tables if it's enabled.
-		- used by db_query() from Subs.php... takes its same parameters.
-		- should not be used except by db_query().
-		- returns a query result if it was able to recover.
-
-	bool db_fatal_error(bool loadavg = false)
-		- loads Subs-Auth.php and calls show_db_error().
-		- this is used for database connection error handling.
-		- loadavg means this is a load average problem, not a database error.
+	// !!!
 
 */
 
@@ -118,6 +86,16 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 	return $connection;
 }
 
+// Extend the database functionality.
+function db_extend ($type = 'extra')
+{
+	global $sourcedir, $db_type;
+
+	require_once($sourcedir . '/Db' . strtoupper($type{0}) . substr($type, 1) . '-' . $db_type . '.php');
+	$initFunc = 'db_' . $type . '_init';
+	$initFunc();
+}
+
 // Do nothing on postgreSQL
 function db_fix_prefix (&$db_prefix, $db_name)
 {
@@ -148,10 +126,6 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 		),
 		'messageindex_fetch_boards' => array(
 			'~(.)$~' => '$1 ORDER BY b.board_order',
-		),
-		'optimize_tables' => array(
-			'~^\s*OPTIMIZE\sTABLE~i' => 'VACUUM',
-			'~`~' => '',
 		),
 	);
 
@@ -257,7 +231,6 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 
 	//!!! Clean this properly.
 	$db_string = preg_replace('~\sFROM\s*\(([A-Za-z0-9`\s,_!/\*\(\)]+)\)~i', ' FROM $1', $db_string);
-	$db_string = preg_replace('~^\s*INSERT\sIGNORE~i', 'INSERT', $db_string);
 	$db_string = preg_replace('~\sLIMIT\s(\d+),\s*(\d+)\s*$~i', 'LIMIT $2 OFFSET $1', $db_string);
 
 	$db_last_result = @pg_query($connection, $db_string);
@@ -482,19 +455,6 @@ function db_error($db_string, $file, $line, $connection = null)
 
 	// It's already been logged... don't log it again.
 	fatal_error($context['error_message'], false);
-}
-
-// Just wrap it so we don't take up time and space here in Errors.php.
-function db_fatal_error($loadavg = false)
-{
-	global $sourcedir;
-
-	// Just load the other file and run it.
-	require_once($sourcedir . '/Subs-Auth.php');
-	show_db_error($loadavg);
-
-	// Since we use "or db_fatal_error();" this is needed...
-	return false;
 }
 
 // A PostgreSQL specific function for tracking the current row...

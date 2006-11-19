@@ -98,7 +98,7 @@ function DisplayStats()
 	$result = $smfFunc['db_query']('', "
 		SELECT
 			SUM(posts) AS posts, SUM(topics) AS topics, SUM(registers) AS registers,
-			SUM(mostOn) AS mostOn, MIN(date) AS date, SUM(hits) AS hits
+			SUM(most_on) AS most_on, MIN(date) AS date, SUM(hits) AS hits
 		FROM {$db_prefix}log_activity", __FILE__, __LINE__);
 	$row = $smfFunc['db_fetch_assoc']($result);
 	$smfFunc['db_free_result']($result);
@@ -109,7 +109,7 @@ function DisplayStats()
 	$context['average_posts'] = round($row['posts'] / $total_days_up, 2);
 	$context['average_topics'] = round($row['topics'] / $total_days_up, 2);
 	$context['average_members'] = round($row['registers'] / $total_days_up, 2);
-	$context['average_online'] = round($row['mostOn'] / $total_days_up, 2);
+	$context['average_online'] = round($row['most_on'] / $total_days_up, 2);
 	$context['average_hits'] = round($row['hits'] / $total_days_up, 2);
 
 	$context['num_hits'] = $row['hits'];
@@ -184,7 +184,7 @@ function DisplayStats()
 
 	// Members online so far today.
 	$result = $smfFunc['db_query']('', "
-		SELECT mostOn
+		SELECT most_on
 		FROM {$db_prefix}log_activity
 		WHERE date = $date
 		LIMIT 1", __FILE__, __LINE__);
@@ -464,7 +464,7 @@ function DisplayStats()
 	// Activity by month.
 	$months_result = $smfFunc['db_query']('', "
 		SELECT
-			YEAR(date) AS stats_year, MONTH(date) AS stats_month, SUM(hits) AS hits, SUM(registers) AS registers, SUM(topics) AS topics, SUM(posts) AS posts, MAX(mostOn) AS mostOn, COUNT(*) AS numDays
+			YEAR(date) AS stats_year, MONTH(date) AS stats_month, SUM(hits) AS hits, SUM(registers) AS registers, SUM(topics) AS topics, SUM(posts) AS posts, MAX(most_on) AS most_on, COUNT(*) AS numDays
 		FROM {$db_prefix}log_activity
 		GROUP BY stats_year, stats_month", __FILE__, __LINE__);
 	$context['monthly'] = array();
@@ -486,7 +486,7 @@ function DisplayStats()
 			'new_topics' => $row_months['topics'],
 			'new_posts' => $row_months['posts'],
 			'new_members' => $row_months['registers'],
-			'most_members_online' => $row_months['mostOn'],
+			'most_members_online' => $row_months['most_on'],
 			'hits' => $row_months['hits'],
 			'num_days' => $row_months['numDays'],
 			'days' => array(),
@@ -518,7 +518,7 @@ function getDailyStats($condition)
 
 	// Activity by day.
 	$days_result = $smfFunc['db_query']('', "
-		SELECT YEAR(date) AS stats_year, MONTH(date) AS stats_month, DAYOFMONTH(date) AS stats_day, topics, posts, registers, mostOn, hits
+		SELECT YEAR(date) AS stats_year, MONTH(date) AS stats_month, DAYOFMONTH(date) AS stats_day, topics, posts, registers, most_on, hits
 		FROM {$db_prefix}log_activity
 		WHERE $condition
 		ORDER BY stats_day ASC", __FILE__, __LINE__);
@@ -530,7 +530,7 @@ function getDailyStats($condition)
 			'new_topics' => $row_days['topics'],
 			'new_posts' => $row_days['posts'],
 			'new_members' => $row_days['registers'],
-			'most_members_online' => $row_days['mostOn'],
+			'most_members_online' => $row_days['most_on'],
 			'hits' => $row_days['hits']
 		);
 	$smfFunc['db_free_result']($days_result);

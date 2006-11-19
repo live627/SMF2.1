@@ -1358,11 +1358,11 @@ function makeCustomFieldChanges($memID, $area)
 {
 	global $db_prefix, $context, $smfFunc, $user_profile;
 
-	$where = $area == 'register' ? "showReg = 1" : "showProfile = '$area'";
+	$where = $area == 'register' ? "show_reg = 1" : "show_profile = '$area'";
 
 	// Load the fields we are saving too - make sure we save valid data (etc).
 	$request = $smfFunc['db_query']('', "
-		SELECT colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions, defaultValue, mask
+		SELECT col_name, field_name, field_desc, field_type, field_length, field_options, default_value, mask
 		FROM {$db_prefix}custom_fields
 		WHERE $where
 			AND active = 1", __FILE__, __LINE__);
@@ -1370,24 +1370,24 @@ function makeCustomFieldChanges($memID, $area)
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Validate the user data.
-		if ($row['fieldType'] == 'check')
-			$value = isset($_POST['customfield'][$row['colName']]) ? 1 : 0;
-		elseif ($row['fieldType'] == 'select')
+		if ($row['field_type'] == 'check')
+			$value = isset($_POST['customfield'][$row['col_name']]) ? 1 : 0;
+		elseif ($row['field_type'] == 'select')
 		{
-			$value = $row['defaultValue'];
-			foreach (explode(',', $row['fieldOptions']) as $k => $v)
-				if (isset($_POST['customfield'][$row['colName']]) && $_POST['customfield'][$row['colName']] == $k)
+			$value = $row['default_value'];
+			foreach (explode(',', $row['field_options']) as $k => $v)
+				if (isset($_POST['customfield'][$row['col_name']]) && $_POST['customfield'][$row['col_name']] == $k)
 					$value = $v;
 		}
 		// Otherwise some form of text!
 		else
 		{
-			$value = isset($_POST['customfield'][$row['colName']]) ? $_POST['customfield'][$row['colName']] : '';
-			if ($row['fieldLength'])
-				$value = $smfFunc['substr']($value, 0, $row['fieldLength']);
+			$value = isset($_POST['customfield'][$row['col_name']]) ? $_POST['customfield'][$row['col_name']] : '';
+			if ($row['field_length'])
+				$value = $smfFunc['substr']($value, 0, $row['field_length']);
 
 			// Any masks?
-			if ($row['fieldType'] == 'text' && !empty($row['mask']) && $row['mask'] != 'none')
+			if ($row['field_type'] == 'text' && !empty($row['mask']) && $row['mask'] != 'none')
 			{
 				//!!! We never error on this - just ignore it at the moment...
 				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($value)) === 0 || strlen(stripslashes($value)) > 255))
@@ -1401,8 +1401,8 @@ function makeCustomFieldChanges($memID, $area)
 			}
 		}
 
-		$user_profile[$memID]['options'][$row['colName']] = $value;
-		$changes[] = "('$row[colName]', '$value', $memID)";
+		$user_profile[$memID]['options'][$row['col_name']] = $value;
+		$changes[] = "('$row[col_name]', '$value', $memID)";
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -1529,10 +1529,10 @@ function summary($memID)
 
 		// So... are they banned?  Dying to know!
 		$request = $smfFunc['db_query']('', "
-			SELECT bg.ID_BAN_GROUP, bg.name, bg.cannot_access, bg.cannot_post, bg.cannot_register,
+			SELECT bg.id_ban_group, bg.name, bg.cannot_access, bg.cannot_post, bg.cannot_register,
 				bg.cannot_login, bg.reason
 			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
-			WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
+			WHERE bg.id_ban_group = bi.id_ban_group
 				AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
 				AND (" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1548,9 +1548,9 @@ function summary($memID)
 				continue;
 
 			// Prepare the link for context.
-			$ban_explanation = sprintf($txt['user_cannot_due_to'], implode(', ', $ban_restrictions), '<a href="' . $scripturl . '?action=admin;area=ban;sa=edit;bg=' . $row['ID_BAN_GROUP'] . '">' . $row['name'] . '</a>');
+			$ban_explanation = sprintf($txt['user_cannot_due_to'], implode(', ', $ban_restrictions), '<a href="' . $scripturl . '?action=admin;area=ban;sa=edit;bg=' . $row['id_ban_group'] . '">' . $row['name'] . '</a>');
 
-			$context['member']['bans'][$row['ID_BAN_GROUP']] = array(
+			$context['member']['bans'][$row['id_ban_group']] = array(
 				'reason' => empty($row['reason']) ? '' : '<br /><br /><b>' . $txt['ban_reason'] . ':</b> ' . $row['reason'],
 				'cannot' => array(
 					'access' => !empty($row['cannot_access']),
@@ -3436,38 +3436,38 @@ function loadCustomFields($memID, $area = 'summary')
 	if ($area == 'summary' && !allowedTo('admin_forum'))
 		$where .= ' AND private = 0';
 	elseif ($area == 'register')
-		$where .= ' AND showReg = 1';
+		$where .= ' AND show_reg = 1';
 	elseif ($area != 'summary' && $area != 'register')
-		$where .= " AND showProfile = '$area'";
+		$where .= " AND show_profile = '$area'";
 
 	// Load all the relevant fields - and data.
 	$request = $smfFunc['db_query']('', "
-		SELECT colName, fieldName, fieldDesc, fieldType, fieldLength, fieldOptions,
-			defaultValue, bbc
+		SELECT col_name, field_name, field_desc, field_type, field_length, field_options,
+			default_value, bbc
 		FROM {$db_prefix}custom_fields
 		WHERE $where", __FILE__, __LINE__);
 	$context['custom_fields'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Shortcut.
-		$exists = $memID && isset($user_profile[$memID]['options'][$row['colName']]);
-		$value = $exists && $user_profile[$memID]['options'][$row['colName']] ? $user_profile[$memID]['options'][$row['colName']] : '';
+		$exists = $memID && isset($user_profile[$memID]['options'][$row['col_name']]);
+		$value = $exists && $user_profile[$memID]['options'][$row['col_name']] ? $user_profile[$memID]['options'][$row['col_name']] : '';
 
 		// HTML for the input form.
 		$output_html = $value;
-		if ($row['fieldType'] == 'check')
+		if ($row['field_type'] == 'check')
 		{
-			$true = (!$exists && $row['defaultValue']) || $value;
-			$input_html = '<input type="checkbox" name="customfield[' . $row['colName'] . ']" ' . ($true ? 'checked="checked"' : '') . ' class="check" />';
+			$true = (!$exists && $row['default_value']) || $value;
+			$input_html = '<input type="checkbox" name="customfield[' . $row['col_name'] . ']" ' . ($true ? 'checked="checked"' : '') . ' class="check" />';
 			$output_html = $true ? $txt['yes'] : $txt['no'];
 		}
-		elseif ($row['fieldType'] == 'select')
+		elseif ($row['field_type'] == 'select')
 		{
-			$input_html = '<select name="customfield[' . $row['colName'] . ']">';
-			$options = explode(',', $row['fieldOptions']);
+			$input_html = '<select name="customfield[' . $row['col_name'] . ']">';
+			$options = explode(',', $row['field_options']);
 			foreach ($options as $k => $v)
 			{
-				$true = (!$exists && $row['defaultValue'] == $v) || $value == $v;
+				$true = (!$exists && $row['default_value'] == $v) || $value == $v;
 				$input_html .= '<option value="' . $k . '" ' . ($true ? 'selected="selected"' : '') . '>' . $v . '</option>';
 				if ($true)
 					$output_html = $v;
@@ -3475,20 +3475,20 @@ function loadCustomFields($memID, $area = 'summary')
 
 			$input_html .= '</select>';
 		}
-		elseif ($row['fieldType'] == 'text')
-			$input_html = '<input type="text" name="customfield[' . $row['colName'] . ']" ' . ($row['fieldLength'] != 0 ? 'maxlength="' . $row['fieldLength'] . '"' : '') . ' value="' . $value . '" />';
+		elseif ($row['field_type'] == 'text')
+			$input_html = '<input type="text" name="customfield[' . $row['col_name'] . ']" ' . ($row['field_length'] != 0 ? 'maxlength="' . $row['field_length'] . '"' : '') . ' value="' . $value . '" />';
 		else
 		{
-			@list ($rows, $cols) = @explode(',', $row['defaultValue']);
-			$input_html = '<textarea name="customfield[' . $row['colName'] . ']" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $value . '</textarea>';
+			@list ($rows, $cols) = @explode(',', $row['default_value']);
+			$input_html = '<textarea name="customfield[' . $row['col_name'] . ']" ' . (!empty($rows) ? 'rows="' . $rows . '"' : '') . ' ' . (!empty($cols) ? 'cols="' . $cols . '"' : '') . '>' . $value . '</textarea>';
 			if ($row['bbc'])
 				$output_html = parse_bbc($output_html);
 		}
 
 		$context['custom_fields'][] = array(
-			'name' => $row['fieldName'],
-			'desc' => $row['fieldDesc'],
-			'type' => $row['fieldType'],
+			'name' => $row['field_name'],
+			'desc' => $row['field_desc'],
+			'type' => $row['field_type'],
 			'input_html' => $input_html,
 			'output_html' => $output_html,
 			'value' => $value,

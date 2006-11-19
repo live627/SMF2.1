@@ -251,10 +251,10 @@ function is_not_banned($forceCheck = false)
 				'cannot_register',
 			);
 			$request = $smfFunc['db_query']('', "
-				SELECT bi.ID_BAN, bi.email_address, bi.id_member, bg.cannot_access, bg.cannot_register,
+				SELECT bi.id_ban, bi.email_address, bi.id_member, bg.cannot_access, bg.cannot_register,
 					bg.cannot_post, bg.cannot_login, bg.reason, IFNULL(bg.expire_time, 0) AS expire_time
 				FROM ({$db_prefix}ban_groups AS bg, {$db_prefix}ban_items AS bi)
-				WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
+				WHERE bg.id_ban_group = bi.id_ban_group
 					AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
 					AND (" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
 			// Store every type of ban that applies to you in your session.
@@ -264,7 +264,7 @@ function is_not_banned($forceCheck = false)
 					if (!empty($row[$restriction]))
 					{
 						$_SESSION['ban'][$restriction]['reason'] = $row['reason'];
-						$_SESSION['ban'][$restriction]['ids'][] = $row['ID_BAN'];
+						$_SESSION['ban'][$restriction]['ids'][] = $row['id_ban'];
 						if (!isset($_SESSION['ban']['expire_time']) || ($_SESSION['ban']['expire_time'] != 0 && ($row['expire_time'] == 0 || $row['expire_time'] > $_SESSION['ban']['expire_time'])))
 							$_SESSION['ban']['expire_time'] = $row['expire_time'];
 
@@ -295,16 +295,16 @@ function is_not_banned($forceCheck = false)
 		foreach ($bans as $key => $value)
 			$bans[$key] = (int) $value;
 		$request = $smfFunc['db_query']('', "
-			SELECT bi.ID_BAN, bg.reason
+			SELECT bi.id_ban, bg.reason
 			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
-			WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
+			WHERE bg.id_ban_group = bi.id_ban_group
 				AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
 				AND bg.cannot_access = 1
-				AND bi.ID_BAN IN (" . implode(', ', $bans) . ")
+				AND bi.id_ban IN (" . implode(', ', $bans) . ")
 			LIMIT " . count($bans), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			$_SESSION['ban']['cannot_access']['ids'][] = $row['ID_BAN'];
+			$_SESSION['ban']['cannot_access']['ids'][] = $row['id_ban'];
 			$_SESSION['ban']['cannot_access']['reason'] = $row['reason'];
 		}
 		$smfFunc['db_free_result']($request);
@@ -371,7 +371,7 @@ function is_not_banned($forceCheck = false)
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}ban_items
 			SET hits = hits + 1
-			WHERE ID_BAN IN (" . implode(', ', $_SESSION['ban']['cannot_login']['ids']) . ')', __FILE__, __LINE__);
+			WHERE id_ban IN (" . implode(', ', $_SESSION['ban']['cannot_login']['ids']) . ')', __FILE__, __LINE__);
 
 		// Log this ban.
 		$smfFunc['db_query']('', "
@@ -471,7 +471,7 @@ function log_ban($ban_ids = array(), $email = null)
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}ban_items
 			SET hits = hits + 1
-			WHERE ID_BAN IN (" . implode(', ', $ban_ids) . ')', __FILE__, __LINE__);
+			WHERE id_ban IN (" . implode(', ', $ban_ids) . ')', __FILE__, __LINE__);
 }
 
 // Checks if a given email address might be banned.
@@ -489,21 +489,21 @@ function isBannedEmail($email, $restriction, $error)
 
 	// ...and add to that the email address you're trying to register.
 	$request = $smfFunc['db_query']('', "
-		SELECT bi.ID_BAN, bg.$restriction, bg.cannot_access, bg.reason
+		SELECT bi.id_ban, bg.$restriction, bg.cannot_access, bg.reason
 		FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
-		WHERE bg.ID_BAN_GROUP = bi.ID_BAN_GROUP
+		WHERE bg.id_ban_group = bi.id_ban_group
 			AND '$email' LIKE bi.email_address
 			AND (bg.$restriction = 1 OR bg.cannot_access = 1)", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (!empty($row['cannot_access']))
 		{
-			$_SESSION['ban']['cannot_access']['ids'][] = $row['ID_BAN'];
+			$_SESSION['ban']['cannot_access']['ids'][] = $row['id_ban'];
 			$_SESSION['ban']['cannot_access']['reason'] = $row['reason'];
 		}
 		if (!empty($row[$restriction]))
 		{
-			$ban_ids[] = $row['ID_BAN'];
+			$ban_ids[] = $row['id_ban'];
 			$ban_reason = $row['reason'];
 		}
 	}
