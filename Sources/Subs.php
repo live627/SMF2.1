@@ -1576,6 +1576,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 	$open_tags = array();
 	$message = strtr($message, array("\n" => '<br />'));
 
+	// The non-breaking-space looks a bit different each time.
+	$non_breaking_space = $context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{C2A0}' : chr(0xC2) . chr(0xA0)) : '\xA0';
+
 	$pos = -1;
 	while ($pos !== false)
 	{
@@ -1683,9 +1686,8 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					// Next, emails...
 					if (!isset($disabled['email']) && strpos($data, '@') !== false)
 					{
-						$data = preg_replace('~(?<=[\?\s' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '\[\]()*\\\;>]|^)([\w\-\.]{1,80}@[\w\-]+\.[\w\-\.]+[\w\-])(?=[?,\s' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '\[\]()*\\\]|$|<br />|&nbsp;|&gt;|&lt;|&quot;|&#039;|\.(?:\.|;|&nbsp;|\s|$|<br />))~i' . ($context['utf8'] ? 'u' : ''), '[email]$1[/email]', $data);
-						$data = preg_replace('~(?<=<br />)([\w\-\.]{1,80}@[\w\-]+\.[\w\-\.]+[\w\-])(?=[?\.,;\s' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '\[\]()*\\\]|$|<br />|&nbsp;|&gt;|&lt;|&quot;|&#039;)~i' . ($context['utf8'] ? 'u' : ''), '[email]$1[/email]', $data);
-				
+						$data = preg_replace('~(?<=[\?\s' . $non_breaking_space . '\[\]()*\\\;>]|^)([\w\-\.]{1,80}@[\w\-]+\.[\w\-\.]+[\w\-])(?=[?,\s' . $non_breaking_space . '\[\]()*\\\]|$|<br />|&nbsp;|&gt;|&lt;|&quot;|&#039;|\.(?:\.|;|&nbsp;|\s|$|<br />))~i' . ($context['utf8'] ? 'u' : ''), '[email]$1[/email]', $data);
+						$data = preg_replace('~(?<=<br />)([\w\-\.]{1,80}@[\w\-]+\.[\w\-\.]+[\w\-])(?=[?\.,;\s' . $non_breaking_space . '\[\]()*\\\]|$|<br />|&nbsp;|&gt;|&lt;|&quot;|&#039;)~i' . ($context['utf8'] ? 'u' : ''), '[email]$1[/email]', $data);
 					}
 				}
 			}
@@ -1713,7 +1715,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					// This is done in a roundabout way because $breaker has "long words" :P.
 					$data = strtr($data, array($breaker => '< >', '&nbsp;' => $context['utf8'] ? "\xC2\xA0" : "\xA0"));
 					$data = preg_replace(
-						'~(?<=[>;:!? ' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '\]()]|^)([\w\.]{' . $modSettings['fixLongWords'] . ',})~e' . ($context['utf8'] ? 'u' : ''),
+						'~(?<=[>;:!? ' . $non_breaking_space . '\]()]|^)([\w\.]{' . $modSettings['fixLongWords'] . ',})~e' . ($context['utf8'] ? 'u' : ''),
 						"preg_replace('/(.{" . ($modSettings['fixLongWords'] - 1) . '})/' . ($context['utf8'] ? 'u' : '') . "', '\\\$1< >', '\$1')",
 						$data);
 					$data = strtr($data, array('< >' => $breaker, $context['utf8'] ? "\xC2\xA0" : "\xA0" => '&nbsp;'));
@@ -2312,10 +2314,13 @@ function parsesmileys(&$message)
 				list ($smileysfrom, $smileysto, $smileysdescs) = $temp;
 		}
 
+		// The non-breaking-space is a complex thing...
+		$non_breaking_space = $context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{C2A0}' : chr(0xC2) . chr(0xA0)) : '\xA0';
+
 		// This smiley regex makes sure it doesn't parse smileys within code tags (so [url=mailto:David@bla.com] doesn't parse the :D smiley)
 		for ($i = 0, $n = count($smileysfrom); $i < $n; $i++)
 		{
-			$smileyfromcache[] = '/(?<=[>:\?\.\s' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '[\]()*\\\;]|^)(' . preg_quote($smileysfrom[$i], '/') . '|' . preg_quote(htmlspecialchars($smileysfrom[$i], ENT_QUOTES), '/') . ')(?=[^[:alpha:]0-9]|$)/' . ($context['utf8'] ? 'u' : '');
+			$smileyfromcache[] = '/(?<=[>:\?\.\s' . $non_breaking_space . '[\]()*\\\;]|^)(' . preg_quote($smileysfrom[$i], '/') . '|' . preg_quote(htmlspecialchars($smileysfrom[$i], ENT_QUOTES), '/') . ')(?=[^[:alpha:]0-9]|$)/' . ($context['utf8'] ? 'u' : '');
 
 			// Escape a bunch of smiley-related characters in the description so it doesn't get a double dose :P.
 			// Note the capital R is on purpose - it allows us to keep XHTML compatible with the WYSIWYG editor.
@@ -3446,7 +3451,7 @@ function text2words($text, $max_chars = 20, $encrypt = false)
 	global $smfFunc, $context;
 
 	// Step 1: Remove entities/things we don't consider words:
-	$words = preg_replace('~([\x0B\0' . ($context['utf8'] ? '\x{C2A0}' : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', strtr($text, array('<br />' => ' ')));
+	$words = preg_replace('~([\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{C2A0}' : chr(0xC2) . chr(0xA0)) : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', strtr($text, array('<br />' => ' ')));
 
 	// Step 2: Entities we left to letters, where applicable, lowercase.
 	$words = un_htmlspecialchars($smfFunc['strtolower']($words));

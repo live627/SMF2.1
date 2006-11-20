@@ -178,6 +178,9 @@ function reloadSettings()
 	$ent_list = empty($modSettings['disableEntityCheck']) ? '&(#\d{1,7}|quot|amp|lt|gt|nbsp);' : '&(#021|quot|amp|lt|gt|nbsp);';
 	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smfFunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
 
+	// Preg_replace can handle complex characters only for higher PHP versions.
+	$space_chars = $utf8 ? ($context['server']['complex_preg_chars'] ? '\x{C2A0}\x{E28080}-\x{E2808F}\x{E280AF}\x{E2809F}\x{E38080}\x{EFBBBF}' : sprintf('%c%c%c%c%c-%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c', 0XC2, 0XA0, 0XE2, 0X80, 0X80, 0XE2, 0X80, 0X8F, 0XE2, 0X80, 0XAF, 0XE2, 0X80, 0X9F, 0XE3, 0X80, 0X80, 0XEF, 0XBB, 0XBF)) : '\XA0';
+	
 	$smfFunc += array(
 		'entity_fix' => create_function('$string', '
 			$num = substr($string, 0, 1) === \'x\' ? hexdec(substr($string, 1)) : (int) $string;
@@ -218,7 +221,7 @@ function reloadSettings()
 			return ' . strtr($ent_check[0], array('&' => '&amp;'))  . 'htmlspecialchars($string, $quote_style, ' . ($utf8 ? '\'UTF-8\'' : '$charset') . ')' . $ent_check[1] . ';'),
 		'htmltrim' => create_function('$string', '
 			global $smfFunc;
-			return preg_replace(\'~^([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}\x{E28080}-\x{E2808F}\x{E280AF}\x{E2809F}\x{E38080}\x{EFBBBF}' : '\xA0') . ']|&nbsp;)+|([ \t\n\r\x0B\x00' . ($utf8 ? '\x{C2A0}\x{E28080}-\x{E2808F}\x{E280AF}\x{E2809F}\x{E38080}\x{EFBBBF}' : '\xA0') . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
+			return preg_replace(\'~^([ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+|([ \t\n\r\x0B\x00' . $space_chars . ']|&nbsp;)+$~' . ($utf8 ? 'u' : '') . '\', \'\', ' . implode('$string', $ent_check) . ');'),
 		'truncate' => create_function('$string, $length', (empty($modSettings['disableEntityCheck']) ? '
 			global $smfFunc;
 			$string = ' . implode('$string', $ent_check) . ';' : '') . '
