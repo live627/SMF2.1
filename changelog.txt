@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2573 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2574 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -29,6 +29,7 @@ November 2006
  ! $ID_MEMBER is no longer a global - it has been replaced with $user_info['id']. (Many files)
  ! Some columns containing message ID's were not formated as unsigned integers. (Search.php, ManageSearch.php, upgrade_1-1.sql)
  ! Old PHP-versions didn't compile some regular expressions properly in UTF-8 mode. (Load.php, Search.php, Subs-Members.php, Subs-Post.php, Subs.php)
+ ! The recent posts on the board index could use a different timezone in rare cases. (BoardIndex.php)
 
 
 October 2006

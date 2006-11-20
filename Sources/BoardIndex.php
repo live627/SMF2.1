@@ -430,14 +430,12 @@ function BoardIndex()
 			$context['latest_posts'] = getLastPosts($settings['number_recent_posts']);
 			cache_put_data('boardindex-latest_posts:' . md5($user_info['query_wanna_see_board'] . $user_info['language']), $context['latest_posts'], 180);
 		}
+
 		// We have to clean up the cached data a bit.
-		else
+		foreach ($context['latest_posts'] as $k => $post)
 		{
-			foreach ($context['latest_posts'] as $k => $post)
-			{
-				$context['latest_posts'][$k]['time'] = timeformat($post['raw_timestamp']);
-				$context['latest_posts'][$k]['timestamp'] = forum_time(true, $post['raw_timestamp']);
-			}
+			$context['latest_posts'][$k]['time'] = timeformat($post['raw_timestamp']);
+			$context['latest_posts'][$k]['timestamp'] = forum_time(true, $post['raw_timestamp']);
 		}
 	}
 
