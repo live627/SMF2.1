@@ -114,31 +114,29 @@ function DumpDatabase2()
 
 	// SQL Dump Header.
 	echo
-		'# ==========================================================', $crlf,
-		'#', $crlf,
-		'# Database dump of tables in `', $db_name, '`', $crlf,
-		'# ', timeformat(time(), false), $crlf,
-		'#', $crlf,
-		'# ==========================================================', $crlf,
+		'-- ==========================================================', $crlf,
+		'--', $crlf,
+		'-- Database dump of tables in `', $db_name, '`', $crlf,
+		'-- ', timeformat(time(), false), $crlf,
+		'--', $crlf,
+		'-- ==========================================================', $crlf,
 		$crlf;
 
 	// Get all tables in the database....
 	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
 	{
-		$queryTables = $smfFunc['db_query']('', "
-			SHOW TABLES
-			FROM `" . strtr($match[1], array('`' => '')) . "`
-			LIKE '" . str_replace('_', '\_', $match[2]) . "%'", false, false);
+		$db = strtr($match[1], array('`' => ''));
+		$dbp = str_replace('_', '\_', $match[2]);
 	}
 	else
 	{
-		$queryTables = $smfFunc['db_query']('', "
-			SHOW TABLES
-			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'", false, false);
+		$db = false;
+		$dbp = $db_prefix;
 	}
 
 	// Dump each table.
-	while ($tableName = $smfFunc['db_fetch_row']($queryTables))
+	$tables = db_list_tables(false, "{$db_prefix}%");
+	foreach ($tables as $tableName)
 	{
 		if (function_exists('apache_reset_timeout'))
 			apache_reset_timeout();
@@ -148,21 +146,19 @@ function DumpDatabase2()
 		{
 			echo
 				$crlf,
-				'#', $crlf,
-				'# Table structure for table `', $tableName[0], '`', $crlf,
-				'#', $crlf,
+				'--', $crlf,
+				'-- Table structure for table `', $tableName, '`', $crlf,
+				'--', $crlf,
 				$crlf,
-				'DROP TABLE IF EXISTS `', $tableName[0], '`;', $crlf,
-				$crlf,
-				db_table_sql($tableName[0]), ';', $crlf;
+				db_table_sql($tableName), ';', $crlf;
 		}
 
 		// How about the data?
-		if (!isset($_GET['data']) || substr($tableName[0], -10) == 'log_errors')
+		if (!isset($_GET['data']) || substr($tableName, -10) == 'log_errors')
 			continue;
 
 		// Are there any rows in this table?
-		$get_rows = db_insert_sql($tableName[0]);
+		$get_rows = db_insert_sql($tableName);
 
 		// No rows to get - skip it.
 		if (empty($get_rows))
@@ -170,18 +166,17 @@ function DumpDatabase2()
 
 		echo
 			$crlf,
-			'#', $crlf,
-			'# Dumping data in `', $tableName[0], '`', $crlf,
-			'#', $crlf,
+			'--', $crlf,
+			'-- Dumping data in `', $tableName, '`', $crlf,
+			'--', $crlf,
 			$crlf,
 			$get_rows,
-			'# --------------------------------------------------------', $crlf;
+			'-- --------------------------------------------------------', $crlf;
 	}
-	$smfFunc['db_free_result']($queryTables);
 
 	echo
 		$crlf,
-		'# Done', $crlf;
+		'-- Done', $crlf;
 
 	exit;
 }
