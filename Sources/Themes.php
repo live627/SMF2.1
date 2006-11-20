@@ -793,7 +793,7 @@ function RemoveTheme()
 // Choose a theme from a list.
 function PickTheme()
 {
-	global $txt, $db_prefix, $sc, $context, $modSettings, $user_info, $id_member, $language, $smfFunc, $settings;
+	global $txt, $db_prefix, $sc, $context, $modSettings, $user_info, $language, $smfFunc, $settings;
 
 	checkSession('get');
 
@@ -811,7 +811,7 @@ function PickTheme()
 		// Save for this user.
 		if (!isset($_REQUEST['u']) || !allowedTo('admin_forum'))
 		{
-			updateMemberData($id_member, array('id_theme' => (int) $_GET['th']));
+			updateMemberData($user_info['id'], array('id_theme' => (int) $_GET['th']));
 
 			redirectexit('action=profile;sa=theme');
 		}
@@ -841,7 +841,7 @@ function PickTheme()
 	// Figure out who the member of the minute is, and what theme they've chosen.
 	if (!isset($_REQUEST['u']) || !allowedTo('admin_forum'))
 	{
-		$context['current_member'] = $id_member;
+		$context['current_member'] = $user_info['id'];
 		$context['current_theme'] = $user_info['theme'];
 	}
 	// Everyone can't chose just one.
@@ -1207,7 +1207,7 @@ function WrapAction()
 // Set an option via javascript.
 function SetJavaScript()
 {
-	global $db_prefix, $id_member, $settings, $user_info, $smfFunc;
+	global $db_prefix, $settings, $user_info, $smfFunc;
 
 	// Sorry, guests can't do this.
 	if ($user_info['is_guest'])
@@ -1228,9 +1228,9 @@ function SetJavaScript()
 	$smfFunc['db_query']('', "
 		REPLACE INTO {$db_prefix}themes
 			(id_theme, id_member, variable, value)
-		VALUES ($settings[theme_id], $id_member, SUBSTRING('$_GET[var]', 1, 255), SUBSTRING('" . (is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']) . "', 1, 65534))", __FILE__, __LINE__);
+		VALUES ($settings[theme_id], $user_info[id], SUBSTRING('$_GET[var]', 1, 255), SUBSTRING('" . (is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']) . "', 1, 65534))", __FILE__, __LINE__);
 
-	cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $id_member, null, 60);
+	cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 60);
 
 	// Don't output anything...
 	redirectexit($settings['images_url'] . '/blank.gif');

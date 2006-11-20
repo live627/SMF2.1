@@ -420,7 +420,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 // Assumes the data has been slashed.
 function updateMemberData($members, $data)
 {
-	global $db_prefix, $modSettings, $id_member, $user_info, $smfFunc;
+	global $db_prefix, $modSettings, $user_info, $smfFunc;
 
 	if (is_array($members))
 		$condition = 'id_member IN (' . implode(', ', $members) . ')';
@@ -454,7 +454,7 @@ function updateMemberData($members, $data)
 		if (count($vars_to_integrate) != 0)
 		{
 			// Fetch a list of member_names if necessary
-			if ((!is_array($members) && $members === $id_member) || (is_array($members) && count($members) == 1 && in_array($id_member, $members)))
+			if ((!is_array($members) && $members === $user_info['id']) || (is_array($members) && count($members) == 1 && in_array($user_info['id'], $members)))
 				$member_names = array($user_info['username']);
 			else
 			{
@@ -2360,7 +2360,7 @@ function highlight_php_code($code)
 // Put this user in the online log.
 function writeLog($force = false)
 {
-	global $db_prefix, $id_member, $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc;
+	global $db_prefix, $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc;
 
 	// If we are showing who is viewing a topic, let's see if we are, and force an update if so - to make it accurate.
 	if (!empty($settings['display_who_viewing']) && ($topic || $board))
@@ -2406,15 +2406,15 @@ function writeLog($force = false)
 					AND session != '$session_id'", __FILE__, __LINE__);
 			cache_put_data('log_online-update', time(), 10);
 		}
-		if (empty($_SESSION['log_time']) && !empty($id_member))
+		if (empty($_SESSION['log_time']) && !empty($user_info['id']))
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_online
-				WHERE id_member = $id_member", __FILE__, __LINE__);
+				WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_online
 			SET log_time = NOW(), ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized',
-				id_member = $id_member
+				id_member = $user_info[id]
 			WHERE session = '$session_id'", __FILE__, __LINE__);
 
 		// Guess it got deleted.
@@ -2423,7 +2423,7 @@ function writeLog($force = false)
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_online
 					(session, id_member, log_time, ip, url)
-				VALUES ('$session_id', $id_member, NOW(), IFNULL(INET_ATON('$user_info[ip]'), 0), '$serialized')", __FILE__, __LINE__);
+				VALUES ('$session_id', $user_info[id], NOW(), IFNULL(INET_ATON('$user_info[ip]'), 0), '$serialized')", __FILE__, __LINE__);
 		}
 	}
 
@@ -2442,10 +2442,10 @@ function writeLog($force = false)
 			$_SESSION['timeOnlineUpdated'] = time();
 
 		$user_settings['total_time_logged_in'] += time() - $_SESSION['timeOnlineUpdated'];
-		updateMemberData($id_member, array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'total_time_logged_in' => $user_settings['total_time_logged_in']));
+		updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'total_time_logged_in' => $user_settings['total_time_logged_in']));
 
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-			cache_put_data('user_settings-' . $id_member, $user_settings, 60);
+			cache_put_data('user_settings-' . $user_info['id'], $user_settings, 60);
 
 		$user_info['total_time_logged_in'] += time() - $_SESSION['timeOnlineUpdated'];
 		$_SESSION['timeOnlineUpdated'] = time();
@@ -2597,7 +2597,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 // Usage: logAction('remove', array('starter' => $id_member_started));
 function logAction($action, $extra = array())
 {
-	global $db_prefix, $id_member, $modSettings, $user_info, $smfFunc;
+	global $db_prefix, $modSettings, $user_info, $smfFunc;
 
 	if (!is_array($extra))
 		trigger_error('logAction(): data is not an array with action \'' . $action . '\'', E_USER_NOTICE);
@@ -2652,7 +2652,7 @@ function logAction($action, $extra = array())
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}log_actions
 				(log_time, id_member, ip, action, id_board, id_topic, id_msg, extra)
-			VALUES (" . time() . ", $id_member, SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$action', 1, 30),
+			VALUES (" . time() . ", $user_info[id], SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$action', 1, 30),
 				$board_id, $topic_id, $msg_id,
 				SUBSTRING('" . addslashes(serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
 

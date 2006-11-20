@@ -214,7 +214,7 @@ function PlushSearch1()
 function PlushSearch2()
 {
 	global $scripturl, $modSettings, $sourcedir, $txt, $db_prefix, $db_connection;
-	global $user_info, $id_member, $context, $options, $messages_request, $boards_can;
+	global $user_info, $context, $options, $messages_request, $boards_can;
 	global $excludedWords, $participants, $smfFunc;
 
 	// !!! Add spam protection.
@@ -832,9 +832,9 @@ function PlushSearch2()
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 	{
 		// !!! Change error message...
-		if (cache_get_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $id_member), 90) == 1)
+		if (cache_get_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $user_info['id']), 90) == 1)
 			fatal_lang_error('loadavg_search_disabled', false);
-		cache_put_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $id_member), 1, 90);
+		cache_put_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $user_info['id']), 1, 90);
 	}*/
 
 	// *** Reserve an ID for caching the search results.
@@ -1477,7 +1477,7 @@ function PlushSearch2()
 				SELECT id_topic
 				FROM {$db_prefix}messages
 				WHERE id_topic IN (" . implode(', ', array_keys($participants)) . ")
-					AND id_member = $id_member
+					AND id_member = $user_info[id]
 				GROUP BY id_topic
 				LIMIT " . count($participants), __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -1488,7 +1488,7 @@ function PlushSearch2()
 
 	// Consider the search complete!
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
-		cache_put_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $id_member), null, 90);
+		cache_put_data('search_start:' . ($user_info['is_guest'] ? $user_info['ip'] : $user_info['id']), null, 90);
 
 	$context['key_words'] = &$searchArray;
 
@@ -1547,7 +1547,7 @@ function PlushSearch2()
 // !!! Fix this, update it, whatever... from Display.php mainly.
 function prepareSearchContext($reset = false)
 {
-	global $txt, $modSettings, $db_prefix, $scripturl, $id_member;
+	global $txt, $modSettings, $db_prefix, $scripturl, $user_info;
 	global $memberContext, $context, $settings, $options, $messages_request;
 	global $boards_can, $participants, $smfFunc;
 
@@ -1733,7 +1733,7 @@ function prepareSearchContext($reset = false)
 
 	if (!empty($options['display_quick_mod']))
 	{
-		$started = $output['first_post']['member']['id'] == $id_member;
+		$started = $output['first_post']['member']['id'] == $user_info['id'];
 
 		$output['quick_mod'] = array(
 			'lock' => in_array(0, $boards_can['lock_any']) || in_array($output['board']['id'], $boards_can['lock_any']) || ($started && (in_array(0, $boards_can['lock_own']) || in_array($output['board']['id'], $boards_can['lock_own']))),

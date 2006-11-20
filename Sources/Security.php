@@ -189,7 +189,7 @@ function is_not_guest($message = '')
 // Do banning related stuff.  (ie. disallow access....)
 function is_not_banned($forceCheck = false)
 {
-	global $txt, $db_prefix, $id_member, $modSettings, $context, $user_info;
+	global $txt, $db_prefix, $modSettings, $context, $user_info;
 	global $sourcedir, $cookiename, $user_settings, $smfFunc;
 
 	// You cannot be banned if you are an admin - doesn't help if you log out.
@@ -197,12 +197,12 @@ function is_not_banned($forceCheck = false)
 		return;
 
 	// Only check the ban every so often. (to reduce load.)
-	if ($forceCheck || !isset($_SESSION['ban']) || empty($modSettings['banLastUpdated']) || ($_SESSION['ban']['last_checked'] < $modSettings['banLastUpdated']) || $_SESSION['ban']['id_member'] != $id_member || $_SESSION['ban']['ip'] != $user_info['ip']  || (isset($user_info['email'], $_SESSION['ban']['email']) && $_SESSION['ban']['email'] != $user_info['email']))
+	if ($forceCheck || !isset($_SESSION['ban']) || empty($modSettings['banLastUpdated']) || ($_SESSION['ban']['last_checked'] < $modSettings['banLastUpdated']) || $_SESSION['ban']['id_member'] != $user_info['id'] || $_SESSION['ban']['ip'] != $user_info['ip']  || (isset($user_info['email'], $_SESSION['ban']['email']) && $_SESSION['ban']['email'] != $user_info['email']))
 	{
 		// Innocent until proven guilty.  (but we know you are! :P)
 		$_SESSION['ban'] = array(
 			'last_checked' => time(),
-			'id_member' => $id_member,
+			'id_member' => $user_info['id'],
 			'ip' => $user_info['ip'],
 			'email' => $user_info['email'],
 		);
@@ -238,8 +238,8 @@ function is_not_banned($forceCheck = false)
 			$ban_query[] = "('" . addslashes($user_info['email']) . "' LIKE bi.email_address)";
 
 		// How about this user?
-		if (!$user_info['is_guest'] && !empty($id_member))
-			$ban_query[] = "bi.id_member = $id_member";
+		if (!$user_info['is_guest'] && !empty($user_info['id']))
+			$ban_query[] = "bi.id_member = $user_info[id]";
 
 		// Check the ban, if there's information.
 		if (!empty($ban_query))
@@ -268,7 +268,7 @@ function is_not_banned($forceCheck = false)
 						if (!isset($_SESSION['ban']['expire_time']) || ($_SESSION['ban']['expire_time'] != 0 && ($row['expire_time'] == 0 || $row['expire_time'] > $_SESSION['ban']['expire_time'])))
 							$_SESSION['ban']['expire_time'] = $row['expire_time'];
 
-						if (!$user_info['is_guest'] && $restriction == 'cannot_access' && ($row['id_member'] == $id_member || $row['email_address'] == $user_info['email']))
+						if (!$user_info['is_guest'] && $restriction == 'cannot_access' && ($row['id_member'] == $user_info['id'] || $row['email_address'] == $user_info['email']))
 							$flag_is_activated = true;
 					}
 			}
@@ -280,7 +280,7 @@ function is_not_banned($forceCheck = false)
 			log_ban(array_merge(isset($_SESSION['ban']['cannot_access']) ? $_SESSION['ban']['cannot_access']['ids'] : array(), isset($_SESSION['ban']['cannot_post']) ? $_SESSION['ban']['cannot_post']['ids'] : array()));
 
 		// If for whatever reason the is_activated flag seems wrong, do a little work to clear it up.
-		if ($id_member && (($user_settings['is_activated'] >= 10 && !$flag_is_activated)
+		if ($user_info['id'] && (($user_settings['is_activated'] >= 10 && !$flag_is_activated)
 			|| ($user_settings['is_activated'] < 10 && $flag_is_activated)))
 		{
 			require_once($sourcedir . '/ManageBans.php');
@@ -325,7 +325,7 @@ function is_not_banned($forceCheck = false)
 		if (!$user_info['is_guest'])
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_online
-				WHERE id_member = $id_member", __FILE__, __LINE__);
+				WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 
 		// 'Log' the user out.  Can't have any funny business... (save the name!)
 		$old_name = isset($user_info['name']) && $user_info['name'] != '' ? $user_info['name'] : $txt['guest_title'];
@@ -334,7 +334,7 @@ function is_not_banned($forceCheck = false)
 		$user_info['is_guest'] = true;
 		$user_info['is_admin'] = false;
 		$user_info['permissions'] = array();
-		$id_member = 0;
+		$user_info['id'] = 0;
 		$context['user'] = array(
 			'id' => 0,
 			'username' => '',
@@ -376,7 +376,7 @@ function is_not_banned($forceCheck = false)
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}log_banned
 				(id_member, ip, email, log_time)
-			VALUES ($id_member, SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$user_info[email]', 1, 255), " . time() . ')', __FILE__, __LINE__);
+			VALUES ($user_info[id], SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$user_info[email]', 1, 255), " . time() . ')', __FILE__, __LINE__);
 
 		// SMF's Wipe 'n Clean(r) erases all traces.
 		$_GET['action'] = '';
@@ -454,7 +454,7 @@ function banPermissions()
 // Log a ban in the database.
 function log_ban($ban_ids = array(), $email = null)
 {
-	global $db_prefix, $user_info, $id_member, $smfFunc;
+	global $db_prefix, $user_info, $smfFunc;
 
 	// Don't log web accelerators, it's very confusing...
 	if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
@@ -463,7 +463,7 @@ function log_ban($ban_ids = array(), $email = null)
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}log_banned
 			(id_member, ip, email, log_time)
-		VALUES ($id_member, SUBSTRING('$user_info[ip]', 1, 16), '" . ($email === null ? ($user_info['is_guest'] ? '' : $user_info['email']) : $email) . "', " . time() . ')', __FILE__, __LINE__);
+		VALUES ($user_info[id], SUBSTRING('$user_info[ip]', 1, 16), '" . ($email === null ? ($user_info['is_guest'] ? '' : $user_info['email']) : $email) . "', " . time() . ')', __FILE__, __LINE__);
 
 	// One extra point for these bans.
 	if (!empty($ban_ids))
@@ -648,7 +648,7 @@ function checkSubmitOnce($action, $is_fatal = true)
 // Check the user's permissions.
 function allowedTo($permission, $boards = null)
 {
-	global $user_info, $db_prefix, $modSettings, $id_member, $smfFunc;
+	global $user_info, $db_prefix, $modSettings, $smfFunc;
 
 	//!!! For testing only... remove this before release. Quick dirty way to test approving/unapproving posts.
 	//!!! For normal use this line should be commented!!!!!!!
@@ -688,7 +688,7 @@ function allowedTo($permission, $boards = null)
 	$request = $smfFunc['db_query']('', "
 		SELECT MIN(bp.add_deny) AS add_deny
 		FROM ({$db_prefix}board_permissions AS bp, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $id_member)
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $user_info[id])
 		WHERE b.id_board IN (" . implode(', ', $boards) . ")
 			AND bp.id_profile = b.id_profile
 			AND bp.id_group IN (" . implode(', ', $user_info['groups']) . ", 3)
@@ -763,7 +763,7 @@ function isAllowedTo($permission, $boards = null)
 // Return the boards a user has a certain (board) permission on. (array(0) if all.)
 function boardsAllowedTo($permission)
 {
-	global $db_prefix, $id_member, $user_info, $modSettings, $smfFunc;
+	global $db_prefix, $user_info, $modSettings, $smfFunc;
 
 	// Administrators are all powerful, sorry.
 	if ($user_info['is_admin'])
@@ -775,7 +775,7 @@ function boardsAllowedTo($permission)
 	$request = $smfFunc['db_query']('', "
 		SELECT b.id_board, bp.add_deny
 		FROM ({$db_prefix}board_permissions AS bp, {$db_prefix}boards AS b)
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $id_member)
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $user_info[id])
 		WHERE bp.id_profile = b.id_profile
 			AND bp.id_group IN (" . implode(', ', $groups) . ", 3)
 			AND bp.permission = '$permission'

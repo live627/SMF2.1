@@ -59,7 +59,7 @@ if (!defined('SMF'))
 // Who's online, and what are they doing?
 function Who()
 {
-	global $db_prefix, $context, $scripturl, $user_info, $txt, $modSettings, $id_member, $memberContext, $smfFunc;
+	global $db_prefix, $context, $scripturl, $user_info, $txt, $modSettings, $memberContext, $smfFunc;
 
 	// Permissions, permissions, permissions.
 	isAllowedTo('who_view');
@@ -216,7 +216,7 @@ function Who()
 
 function determineActions($urls)
 {
-	global $txt, $db_prefix, $user_info, $id_member, $modSettings, $smfFunc;
+	global $txt, $db_prefix, $user_info, $modSettings, $smfFunc;
 
 	if (!allowedTo('who_view'))
 		return array();
@@ -246,7 +246,7 @@ function determineActions($urls)
 	);
 
 	if (!is_array($urls))
-		$url_list = array(array($urls, $id_member));
+		$url_list = array(array($urls, $user_info['id']));
 	else
 		$url_list = $urls;
 
@@ -414,7 +414,7 @@ function determineActions($urls)
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// If they aren't allowed to view this person's profile, skip it.
-			if (!allowedTo('profile_view_any') && $id_member != $row['id_member'])
+			if (!allowedTo('profile_view_any') && $user_info['id'] != $row['id_member'])
 				continue;
 
 			// Set their action on each - session/text to sprintf.

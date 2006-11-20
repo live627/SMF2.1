@@ -134,7 +134,7 @@ function SendTopic()
 // Report a post to the moderator... ask for a comment.
 function ReportToModerator()
 {
-	global $txt, $db_prefix, $topic, $modSettings, $user_info, $id_member, $context, $smfFunc;
+	global $txt, $db_prefix, $topic, $modSettings, $user_info, $context, $smfFunc;
 
 	// You can't use this if it's off or you are not allowed to do it.
 	isAllowedTo('report_any');
@@ -164,7 +164,7 @@ function ReportToModerator()
 	$smfFunc['db_free_result']($result);
 
 	// If they can't modify their post, then they should be able to report it... otherwise it is illogical.
-	if ($member == $id_member && (allowedTo(array('modify_own', 'modify_any')) || ($id_member == $starter && allowedTo('modify_replies'))))
+	if ($member == $user_info['id'] && (allowedTo(array('modify_own', 'modify_any')) || ($user_info['id'] == $starter && allowedTo('modify_replies'))))
 		fatal_lang_error('rtm_not_own', false);
 
 	// Show the inputs for the comment, etc.
@@ -182,7 +182,7 @@ function ReportToModerator()
 // Send the emails.
 function ReportToModerator2()
 {
-	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $id_member, $modSettings, $sourcedir, $language, $context, $smfFunc;
+	global $txt, $scripturl, $db_prefix, $topic, $board, $user_info, $modSettings, $sourcedir, $language, $context, $smfFunc;
 
 	// Check their session... don't want them redirected here without their knowledge.
 	checkSession();
@@ -208,7 +208,7 @@ function ReportToModerator2()
 	$message = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
-	if ($message['ID_POSTER'] == $id_member)
+	if ($message['ID_POSTER'] == $user_info['id'])
 		fatal_lang_error('rtm_not_own', false);
 
 	$poster_name = un_htmlspecialchars($message['real_name']) . ($message['real_name'] != $message['poster_name'] ? ' (' . $message['poster_name'] . ')' : '');
@@ -291,7 +291,7 @@ function ReportToModerator2()
 
 		// Send it to the moderator.
 		sendmail($row['email_address'], $txt['rtm3'] . ': ' . $subject . ' ' . $txt['rtm4'] . ' ' . $poster_name,
-			sprintf($txt['rtm_email1'], $subject) . ' ' . $poster_name . ' ' . $txt['rtm_email2'] . ' ' . (empty($id_member) ? $txt['guest'] . ' (' . $user_info['ip'] . ')' : $reporterName) . ' ' . $txt['rtm_email3'] . ":\n\n" .
+			sprintf($txt['rtm_email1'], $subject) . ' ' . $poster_name . ' ' . $txt['rtm_email2'] . ' ' . (empty($user_info['id']) ? $txt['guest'] . ' (' . $user_info['ip'] . ')' : $reporterName) . ' ' . $txt['rtm_email3'] . ":\n\n" .
 			$scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'] . "\n\n" .
 			$txt['rtm_email_comment'] . ":\n" .
 			$_POST['comment'] . "\n\n" .

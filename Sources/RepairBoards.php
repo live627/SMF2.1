@@ -135,11 +135,11 @@ function RepairBoards()
 		if (empty($to_fix) || in_array('missing_messages', $to_fix))
 		{
 			$resultTopic = $smfFunc['db_query']('', "
-				SELECT t.id_topic, COUNT(m.id_msg) AS numMsg
+				SELECT t.id_topic, COUNT(m.id_msg) AS num_msg
 				FROM {$db_prefix}topics AS t
 					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				GROUP BY t.id_topic
-				HAVING numMsg = 0", __FILE__, __LINE__);
+				HAVING COUNT(m.id_msg) = 0", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($resultTopic) > 0)
 			{
 				$stupidTopics = array();
@@ -984,12 +984,12 @@ function findForumErrors()
 			pauseRepairProcess($to_fix, $topics);
 
 			$result = $smfFunc['db_query']('', "
-				SELECT t.id_topic, COUNT(m.id_msg) AS numMsg
+				SELECT t.id_topic, COUNT(m.id_msg) AS num_msg
 				FROM {$db_prefix}topics AS t
 					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				WHERE t.id_topic BETWEEN $_GET[substep] AND $_GET[substep] + 999
 				GROUP BY t.id_topic
-				HAVING numMsg = 0", __FILE__, __LINE__);
+				HAVING COUNT(m.id_msg) = 0", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
 				$context['repair_errors'][] = sprintf($txt['repair_missing_messages'], $row['id_topic']);
 			if ($smfFunc['db_num_rows']($result) != 0)

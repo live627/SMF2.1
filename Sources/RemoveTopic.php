@@ -45,7 +45,7 @@ if (!defined('SMF'))
 // Completely remove an entire topic.
 function RemoveTopic2()
 {
-	global $id_member, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
+	global $user_info, $db_prefix, $topic, $board, $sourcedir, $smfFunc;
 
 	// Make sure they aren't being lead around by someone. (:@)
 	checkSession('get');
@@ -62,7 +62,7 @@ function RemoveTopic2()
 	list ($starter, $subject, $approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	if ($starter == $id_member && !allowedTo('remove_any'))
+	if ($starter == $user_info['id'] && !allowedTo('remove_any'))
 		isAllowedTo('remove_own');
 	else
 		isAllowedTo('remove_any');
@@ -76,7 +76,7 @@ function RemoveTopic2()
 
 	removeTopics($topic);
 
-	if (allowedTo('remove_any') && (!allowedTo('remove_own') || $starter != $id_member))
+	if (allowedTo('remove_any') && (!allowedTo('remove_own') || $starter != $user_info['id']))
 		logAction('remove', array('topic' => $topic, 'subject' => $subject, 'member' => $starter, 'board' => $board));
 
 	redirectexit('board=' . $board . '.0');
@@ -85,7 +85,7 @@ function RemoveTopic2()
 // Remove just a single post.
 function DeleteMessage()
 {
-	global $id_member, $db_prefix, $topic, $board, $modSettings, $smfFunc;
+	global $user_info, $db_prefix, $topic, $board, $modSettings, $smfFunc;
 
 	checkSession('get');
 
@@ -105,19 +105,19 @@ function DeleteMessage()
 	if (!$approved)
 		isAllowedTo('approve_posts');
 
-	if ($poster == $id_member)
+	if ($poster == $user_info['id'])
 	{
 		if (!allowedTo('delete_own'))
 		{
-			if ($starter == $id_member && !allowedTo('delete_any'))
+			if ($starter == $user_info['id'] && !allowedTo('delete_any'))
 				isAllowedTo('delete_replies');
 			elseif (!allowedTo('delete_any'))
 				isAllowedTo('delete_own');
 		}
-		elseif (!allowedTo('delete_any') && ($starter != $id_member || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && $post_time + $modSettings['edit_disable_time'] * 60 < time())
+		elseif (!allowedTo('delete_any') && ($starter != $user_info['id'] || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && $post_time + $modSettings['edit_disable_time'] * 60 < time())
 			fatal_lang_error('modify_post_time_passed', false);
 	}
-	elseif ($starter == $id_member && !allowedTo('delete_any'))
+	elseif ($starter == $user_info['id'] && !allowedTo('delete_any'))
 		isAllowedTo('delete_replies');
 	else
 		isAllowedTo('delete_any');
@@ -125,7 +125,7 @@ function DeleteMessage()
 	// If the full topic was removed go back to the board.
 	$full_topic = removeMessage($_REQUEST['msg']);
 
-	if (allowedTo('delete_any') && (!allowedTo('delete_own') || $poster != $id_member))
+	if (allowedTo('delete_any') && (!allowedTo('delete_own') || $poster != $user_info['id']))
 		logAction('delete', array('topic' => $topic, 'subject' => $subject, 'member' => $starter, 'board' => $board));
 
 	if ($full_topic)
@@ -413,7 +413,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 // Remove a specific message (including permission checks).
 function removeMessage($message, $decreasePostCount = true)
 {
-	global $db_prefix, $board, $sourcedir, $modSettings, $id_member, $user_info, $smfFunc;
+	global $db_prefix, $board, $sourcedir, $modSettings, $user_info, $smfFunc;
 
 	if (empty($message) || !is_numeric($message))
 		return false;
@@ -445,11 +445,11 @@ function removeMessage($message, $decreasePostCount = true)
 			$delete_replies = boardsAllowedTo('delete_replies');
 			$delete_replies = in_array(0, $delete_replies) || in_array($row['id_board'], $delete_replies);
 
-			if ($row['id_member'] == $id_member)
+			if ($row['id_member'] == $user_info['id'])
 			{
 				if (!$delete_own)
 				{
-					if ($row['ID_MEMBER_POSTER'] == $id_member)
+					if ($row['ID_MEMBER_POSTER'] == $user_info['id'])
 					{
 						if (!$delete_replies)
 							fatal_lang_error('cannot_delete_replies', 'permission');
@@ -457,10 +457,10 @@ function removeMessage($message, $decreasePostCount = true)
 					else
 						fatal_lang_error('cannot_delete_own', 'permission');
 				}
-				elseif (($row['ID_MEMBER_POSTER'] != $id_member || !$delete_replies) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
+				elseif (($row['ID_MEMBER_POSTER'] != $user_info['id'] || !$delete_replies) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
 					fatal_lang_error('modify_post_time_passed', false);
 			}
-			elseif ($row['ID_MEMBER_POSTER'] == $id_member)
+			elseif ($row['ID_MEMBER_POSTER'] == $user_info['id'])
 			{
 				if (!$delete_replies)
 					fatal_lang_error('cannot_delete_replies', 'permission');
@@ -480,19 +480,19 @@ function removeMessage($message, $decreasePostCount = true)
 	else
 	{
 		// Check permissions to delete this message.
-		if ($row['id_member'] == $id_member)
+		if ($row['id_member'] == $user_info['id'])
 		{
 			if (!allowedTo('delete_own'))
 			{
-				if ($row['ID_MEMBER_POSTER'] == $id_member && !allowedTo('delete_any'))
+				if ($row['ID_MEMBER_POSTER'] == $user_info['id'] && !allowedTo('delete_any'))
 					isAllowedTo('delete_replies');
 				elseif (!allowedTo('delete_any'))
 					isAllowedTo('delete_own');
 			}
-			elseif (!allowedTo('delete_any') && ($row['ID_MEMBER_POSTER'] != $id_member || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
+			elseif (!allowedTo('delete_any') && ($row['ID_MEMBER_POSTER'] != $user_info['id'] || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
 		}
-		elseif ($row['ID_MEMBER_POSTER'] == $id_member && !allowedTo('delete_any'))
+		elseif ($row['ID_MEMBER_POSTER'] == $user_info['id'] && !allowedTo('delete_any'))
 			isAllowedTo('delete_replies');
 		else
 			isAllowedTo('delete_any');
@@ -514,7 +514,7 @@ function removeMessage($message, $decreasePostCount = true)
 				$remove_own = in_array(0, $remove_own) || in_array($row['id_board'], $remove_own);
 			}
 
-			if ($row['id_member'] != $id_member && !$remove_any)
+			if ($row['id_member'] != $user_info['id'] && !$remove_any)
 				fatal_lang_error('cannot_remove_any', 'permission');
 			elseif (!$remove_any && !$remove_own)
 				fatal_lang_error('cannot_remove_own', 'permission');
@@ -522,7 +522,7 @@ function removeMessage($message, $decreasePostCount = true)
 		else
 		{
 			// Check permissions to delete a whole topic.
-			if ($row['id_member'] != $id_member)
+			if ($row['id_member'] != $user_info['id'])
 				isAllowedTo('remove_any');
 			elseif (!allowedTo('remove_any'))
 				isAllowedTo('remove_own');
@@ -547,7 +547,7 @@ function removeMessage($message, $decreasePostCount = true)
 		$request = $smfFunc['db_query']('', "
 			SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen
 			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $id_member)
+				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
 			WHERE b.id_board = $modSettings[recycle_board]", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('recycle_no_valid_board');
@@ -591,7 +591,7 @@ function removeMessage($message, $decreasePostCount = true)
 				$smfFunc['db_insert']('replace',
 					"{$db_prefix}log_topics",
 					array('id_topic', 'id_member', 'id_msg'),
-					array($topicID, $id_member, $modSettings['maxMsgID']),
+					array($topicID, $user_info['id'], $modSettings['maxMsgID']),
 					array('id_topic', 'id_member')
 				);
 
@@ -600,7 +600,7 @@ function removeMessage($message, $decreasePostCount = true)
 				$smfFunc['db_insert']('replace',
 					"{$db_prefix}log_boards",
 					array('id_board', 'id_member', 'id_msg'),
-					array($modSettings['recycle_board'], $id_member, $modSettings['maxMsgID']),
+					array($modSettings['recycle_board'], $user_info['id'], $modSettings['maxMsgID']),
 					array('id_board', 'id_member')
 				);
 

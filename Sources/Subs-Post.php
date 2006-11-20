@@ -766,7 +766,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 // Send off a personal message.
 function sendpm($recipients, $subject, $message, $store_outbox = false, $from = null)
 {
-	global $db_prefix, $id_member, $scripturl, $txt, $user_info, $language;
+	global $db_prefix, $scripturl, $txt, $user_info, $language;
 	global $modSettings, $smfFunc;
 
 	// Initialize log array.
@@ -777,7 +777,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 	if ($from === null)
 		$from = array(
-			'id' => $id_member,
+			'id' => $user_info['id'],
 			'name' => $user_info['name'],
 			'username' => $user_info['username']
 		);
@@ -1452,7 +1452,7 @@ function SpellCheck()
 function sendNotifications($topics, $type, $exclude = array())
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $id_member, $modSettings, $sourcedir, $context, $smfFunc;
+	global $modSettings, $sourcedir, $context, $smfFunc;
 
 	$notification_types = array(
 		'reply' => array('subject' => 'notification_reply_subject', 'message' => 'notification_reply'),
@@ -1534,7 +1534,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		WHERE ln.id_topic IN (" . implode(',', $topics) . ")
 			AND t.id_topic = ln.id_topic
 			AND b.id_board = t.id_board
-			AND ln.id_member != $id_member
+			AND ln.id_member != $user_info[id]
 			AND mem.is_activated = 1
 			AND mem.notify_types < " . ($type == 'reply' ? '4' : '3') . "
 			AND mem.notify_regularity < 2
@@ -1597,7 +1597,7 @@ function sendNotifications($topics, $type, $exclude = array())
 			UPDATE {$db_prefix}log_notify
 			SET sent = 1
 			WHERE id_topic IN (" . implode(',', $topics) . ")
-				AND id_member != $id_member", __FILE__, __LINE__);
+				AND id_member != $user_info[id]", __FILE__, __LINE__);
 
 	// For approvals we need to unsend the exclusions (This *is* the quickest way!)
 	if (!empty($sent) && !empty($exclude))
@@ -1619,7 +1619,7 @@ function sendNotifications($topics, $type, $exclude = array())
 // - Mandatory parameters are set.
 function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $id_member, $txt, $modSettings, $smfFunc;
+	global $db_prefix, $user_info, $txt, $modSettings, $smfFunc;
 
 	// Set optional parameters to the default value.
 	$msgOptions['icon'] = empty($msgOptions['icon']) ? 'xx' : $msgOptions['icon'];
@@ -1642,7 +1642,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$posterOptions['name'] = $txt['guest_title'];
 			$posterOptions['email'] = '';
 		}
-		elseif ($posterOptions['id'] != $id_member)
+		elseif ($posterOptions['id'] != $user_info['id'])
 		{
 			$request = $smfFunc['db_query']('', "
 				SELECT member_name, email_address
@@ -1786,7 +1786,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_topics
 				SET id_msg = $msgOptions[id] + 1
-				WHERE id_member = $id_member
+				WHERE id_member = $user_info[id]
 					AND id_topic = $topicOptions[id]", __FILE__, __LINE__);
 
 			$flag = db_affected_rows() != 0;
@@ -1797,7 +1797,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$smfFunc['db_insert']('replace',
 				"{$db_prefix}log_topics",
 				array('id_topic', 'id_member', 'id_msg'),
-				array($topicOptions['id'], $id_member, $msgOptions['id'] + 1),
+				array($topicOptions['id'], $user_info['id'], $msgOptions['id'] + 1),
 				array('id_topic', 'id_member'));
 		}
 	}
@@ -1823,7 +1823,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	if (!empty($posterOptions['update_post_count']) && !empty($posterOptions['id']))
 	{
 		// Are you the one that happened to create this post?
-		if ($id_member == $posterOptions['id'])
+		if ($user_info['id'] == $posterOptions['id'])
 			$user_info['posts']++;
 		updateMemberData($posterOptions['id'], array('posts' => '+'));
 	}
@@ -2023,7 +2023,7 @@ function createAttachment(&$attachmentOptions)
 // !!!
 function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 {
-	global $db_prefix, $user_info, $id_member, $modSettings, $smfFunc;
+	global $db_prefix, $user_info, $modSettings, $smfFunc;
 
 	$topicOptions['poll'] = isset($topicOptions['poll']) ? (int) $topicOptions['poll'] : null;
 	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ? $topicOptions['lock_mode'] : null;
@@ -2085,7 +2085,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		$smfFunc['db_insert']('replace',
 				"{$db_prefix}log_topics",
 				array('id_topic', 'id_member', 'id_msg'),
-				array($topicOptions['id'], $id_member, $modSettings['maxMsgID']),
+				array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
 				array('id_topic', 'id_member'));
 
 	// If there's a custom search index, it needs to be modified...

@@ -293,7 +293,7 @@ function reloadSettings()
 function loadUserSettings()
 {
 	global $modSettings, $user_settings, $sourcedir, $smfFunc;
-	global $id_member, $db_prefix, $cookiename, $user_info, $language;
+	global $db_prefix, $cookiename, $user_info, $language;
 
 	// Check first the integration, then the cookie, and last the session.
 	if (isset($modSettings['integrate_verify_user']) && function_exists($modSettings['integrate_verify_user']))

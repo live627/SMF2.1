@@ -198,7 +198,7 @@ function SplitIndex()
 // Alright, you've decided what you want to do with it.... now to do it.
 function SplitExecute()
 {
-	global $txt, $board, $topic, $db_prefix, $context, $id_member, $user_info, $smfFunc;
+	global $txt, $board, $topic, $db_prefix, $context, $user_info, $smfFunc;
 
 	// They blanked the subject name.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
@@ -458,7 +458,7 @@ function SplitSelectTopics()
 // Actually and selectively split the topics out.
 function SplitSelectionExecute()
 {
-	global $txt, $board, $topic, $db_prefix, $context, $id_member, $user_info;
+	global $txt, $board, $topic, $db_prefix, $context, $user_info;
 
 	// Make sure the session id was passed with post.
 	checkSession();
@@ -482,7 +482,7 @@ function SplitSelectionExecute()
 // Split a topic in two topics.
 function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 {
-	global $db_prefix, $id_member, $user_info, $topic, $board, $modSettings;
+	global $db_prefix, $user_info, $topic, $board, $modSettings;
 	global $smfFunc;
 
 	// Nothing to split?
@@ -671,7 +671,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		$smfFunc['db_insert']('replace',
 			"{$db_prefix}log_topics",
 			array('id_msg', 'id_member', 'id_topic'),
-			array($modSettings['maxMsgID'], $id_member, $split2_ID_TOPIC),
+			array($modSettings['maxMsgID'], $user_info['id'], $split2_ID_TOPIC),
 			array('id_member', 'id_topic'));
 
 	// Housekeeping.
