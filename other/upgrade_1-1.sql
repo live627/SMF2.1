@@ -2550,6 +2550,50 @@ CHANGE COLUMN buddy_list buddy_list text NOT NULL;
 ---#
 
 /******************************************************************************/
+--- Change some column types to accomodate more messages.
+/******************************************************************************/
+
+---# Updating the boards table ...
+ALTER TABLE {$db_prefix}boards
+CHANGE COLUMN ID_LAST_MSG ID_LAST_MSG int(10) unsigned NOT NULL default '0',
+CHANGE COLUMN ID_MSG_UPDATED ID_MSG_UPDATED int(10) unsigned NOT NULL default '0';
+---#
+
+---# Updating the log_boards table ...
+ALTER TABLE {$db_prefix}log_boards
+CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
+---#
+
+---# Updating the log_mark_read table ...
+ALTER TABLE {$db_prefix}log_mark_read
+CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
+---#
+
+---# Updating the log_search_messages table ...
+ALTER TABLE {$db_prefix}log_search_messages
+CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
+---#
+
+---# Updating the log_search_words table ...
+---{
+if (!empty($modSettings['search_custom_index_config']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_search_words
+		CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0'");
+---}
+---#
+
+---# Updating the log_topics table ...
+ALTER TABLE {$db_prefix}log_topics
+CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
+---#
+
+---# Updating the messages table ...
+ALTER TABLE {$db_prefix}messages
+CHANGE COLUMN ID_MSG_MODIFIED ID_MSG_MODIFIED int(10) unsigned NOT NULL default '0';
+---#
+
+/******************************************************************************/
 --- Final clean up...
 /******************************************************************************/
 

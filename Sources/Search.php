@@ -1013,7 +1013,7 @@ function PlushSearch2()
 					DROP TABLE IF EXISTS {$db_prefix}tmp_log_search_topics", __FILE__, __LINE__);
 				$createTemporary = $smfFunc['db_query']('', "
 					CREATE TEMPORARY TABLE {$db_prefix}tmp_log_search_topics (
-						id_topic mediumint(9) NOT NULL default '0',
+						id_topic mediumint(8) unsigned NOT NULL default '0',
 						PRIMARY KEY (id_topic)
 					) TYPE=HEAP", false, false) !== false;
 
@@ -1122,7 +1122,7 @@ function PlushSearch2()
 
 				$createTemporary = $smfFunc['db_query']('', "
 					CREATE TEMPORARY TABLE {$db_prefix}tmp_log_search_messages (
-						id_msg mediumint(9) NOT NULL default '0',
+						id_msg int(10) unsigned NOT NULL default '0',
 						PRIMARY KEY (id_msg)
 					) TYPE=HEAP", false, false) !== false;
 

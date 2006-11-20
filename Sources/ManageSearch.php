@@ -412,7 +412,7 @@ function CreateMessageIndex()
 			$smfFunc['db_query']('', "
 				CREATE TABLE {$db_prefix}log_search_words (
 					ID_WORD " . $index_properties[$context['index_settings']['bytes_per_word']]['column_definition'] . " unsigned NOT NULL default '0',
-					id_msg mediumint(8) unsigned NOT NULL default '0',
+					id_msg int(10) unsigned NOT NULL default '0',
 					PRIMARY KEY (ID_WORD, id_msg)
 				) TYPE=MyISAM", __FILE__, __LINE__);
 			

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2571 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2572 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -27,6 +27,7 @@ November 2006
  ! Fixed a bug causing the age weight of a search to be zero. (Search.php)
  * The spell check function for inline editing didn't work properly in some cases. (Display template)
  ! $ID_MEMBER is no longer a global - it has been replaced with $user_info['id']. (Many files)
+ ! Some columns containing message ID's were not formated as unsigned integers. (Search.php, ManageSearch.php, upgrade_1-1.sql)
 
 
 October 2006
