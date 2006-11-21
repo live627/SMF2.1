@@ -245,6 +245,11 @@ function EditSearchMethod()
 	{
 		checkSession('get');
 
+		// Make sure it's gone before creating it.
+		$smfFunc['db_query']("
+			ALTER TABLE {$db_prefix}messages
+			DROP INDEX body", false, false);
+
 		$smfFunc['db_query']('', "
 			ALTER TABLE {$db_prefix}messages
 			ADD FULLTEXT body (body)", __FILE__, __LINE__);
