@@ -3349,6 +3349,9 @@ function rememberPostData()
 			'choice' => empty($_POST['avatar_choice']) ? 'server_stored' : $_POST['avatar_choice'],
 			'external' => empty($_POST['userpicpersonal']) ? 'http://' : $_POST['userpicpersonal'],
 			'id_attach' => empty($_POST['id_attach']) ? '0' : $_POST['id_attach'],
+			'allow_server_stored' => allowedTo('profile_server_avatar') || !$context['user']['is_owner'],
+			'allow_upload' => allowedTo('profile_upload_avatar') || !$context['user']['is_owner'],
+			'allow_external' => allowedTo('profile_remote_avatar') || !$context['user']['is_owner'],
 		),
 		'karma' => array(
 			'good' => empty($_POST['karma_good']) ? '0' : $_POST['karma_good'],

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2575 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2576 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -31,6 +31,7 @@ November 2006
  ! Old PHP-versions didn't compile some regular expressions properly in UTF-8 mode. (Load.php, Search.php, Subs-Members.php, Subs-Post.php, Subs.php)
  ! The recent posts on the board index could use a different timezone in rare cases. (BoardIndex.php)
  ! Make sure fulltext indexes are dropped before they are created, in case they weren't detected properly. (ManageSearch.php)
+ ! The avatar settings weren't getting reshown if you uploaded an invalid avatar. (Profile.php)
 
 
 October 2006
