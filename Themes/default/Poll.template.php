@@ -73,7 +73,7 @@ function template_main()
 	foreach ($context['choices'] as $choice)
 	{
 		echo '
-									<label for="options[', $choice['id'], ']" ', (isset($context['poll_error']['poll_few']) ? ' style="color: red;"' : ''), '>', $txt['smf22'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options[', $choice['id'], ']" size="25" value="', $choice['label'], '" />';
+									<label for="options_', $choice['id'], '" ', (isset($context['poll_error']['poll_few']) ? ' style="color: red;"' : ''), '>', $txt['smf22'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options_', $choice['id'], '" size="25" value="', $choice['label'], '" />';
 
 		// Does this option have a vote count yet, or is it new?
 		if ($choice['votes'] != -1)

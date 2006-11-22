@@ -70,7 +70,7 @@ function template_main()
 					</tr>';
 		echo '
 					</table><br /><br />
-					<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + document.searchform.search.value;">', $txt['smf298'], '</a>
+					<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.searchform.search.value);">', $txt['smf298'], '</a>
 					<input type="hidden" name="advanced" value="0" />';
 	}
 	else
@@ -88,6 +88,15 @@ function template_main()
 						</tr><tr>
 							<td>
 								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
+								<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									function initSearch()
+									{
+										if (document.forms.searchform.search.value.indexOf("%u") != -1)
+											document.forms.searchform.search.value = unescape(document.forms.searchform.search.value);
+									}
+									createEventListener(window);
+									window.addEventListener("load", initSearch, false);
+								// ]]></script>
 							</td><td style="padding-right: 2ex;">
 								<select name="searchtype">
 									<option value="1"', empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt[343], '</option>

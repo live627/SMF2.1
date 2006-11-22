@@ -78,7 +78,7 @@ function template_folder()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-<form action="', $scripturl, '?action=pm;sa=pmactions;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '" method="post" accept-charset="', $context['character_set'], '">
+<form action="', $scripturl, '?action=pm;sa=pmactions;f=', $context['folder'], ';start=', $context['start'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '" method="post" accept-charset="', $context['character_set'], '" name="pmFolder">
 	<table border="0" width="100%" cellpadding="2" cellspacing="1" class="bordercolor">
 		<tr class="titlebg">
 			<td align="center" width="2%">&nbsp;</td>
@@ -150,8 +150,8 @@ function template_folder()
 					var allLabels = {};
 					function loadLabelChoices()
 					{
-						var listing = document.forms[1].elements;
-						var theSelect = document.forms[1].pm_action;
+						var listing = document.forms.pmFolder.elements;
+						var theSelect = document.forms.pmFolder.pm_action;
 						var add, remove, toAdd = {length: 0}, toRemove = {length: 0};
 
 						if (theSelect.childNodes.length == 0)
@@ -528,7 +528,7 @@ function template_search()
 			document.getElementById("expandLabelsIcon").src = smf_images_url + (current ? "/expand.gif" : "/collapse.gif");
 		}
 	// ]]></script>
-<form action="', $scripturl, '?action=pm;sa=search2" method="post" accept-charset="', $context['character_set'], '">
+<form action="', $scripturl, '?action=pm;sa=search2" method="post" accept-charset="', $context['character_set'], '" name="pmSearchForm">
 	<table border="0" width="75%" align="center" cellpadding="3" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="2">', $txt['pm_search_title'], '</td>
@@ -556,7 +556,7 @@ function template_search()
 					<b>', $txt['pm_search_text'], ':</b><br />
 					<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />&nbsp;
 					<input type="submit" name="submit" value="', $txt['pm_search_go'], '" /><br />
-					<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + document.searchform.search.value;">', $txt['pm_search_advanced'], '</a>
+					<a href="', $scripturl, '?action=pm;sa=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.pmSearchForm.search.value);">', $txt['pm_search_advanced'], '</a>
 					<input type="hidden" name="advanced" value="0" />';
 	}
 	else
@@ -575,6 +575,15 @@ function template_search()
 						</tr><tr>
 							<td>
 								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
+								<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+									function initSearch()
+									{
+										if (document.forms.pmSearchForm.search.value.indexOf("%u") != -1)
+											document.forms.pmSearchForm.search.value = unescape(document.forms.pmSearchForm.search.value);
+									}
+									createEventListener(window);
+									window.addEventListener("load", initSearch, false);
+								// ]]></script>
 							</td><td style="padding-right: 2ex;">
 								<select name="searchtype">
 									<option value="1"', empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['pm_search_match_all'], '</option>
@@ -626,7 +635,7 @@ function template_search()
 						<tr>';
 				echo '
 							<td width="50%">
-								<label for="searchlabel[', $label['id'], ']"><input type="checkbox" id="searchlabel[', $label['id'], ']" name="searchlabel[', $label['id'], ']" value="', $label['id'], '" ', $label['checked'] ? 'checked="checked"' : '', ' class="check" />
+								<label for="searchlabel_', $label['id'], '"><input type="checkbox" id="searchlabel_', $label['id'], '" name="searchlabel[', $label['id'], ']" value="', $label['id'], '" ', $label['checked'] ? 'checked="checked"' : '', ' class="check" />
 								', $label['name'], '</label>
 							</td>';
 				if (!$alternate)

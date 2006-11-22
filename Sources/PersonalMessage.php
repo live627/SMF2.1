@@ -690,7 +690,6 @@ function MessageSearch2()
 	$context['can_send_pm'] = allowedTo('send_pm');
 
 	// Some hardcoded veriables that can be tweaked if required.
-	$recentPercentage = 0.30;
 	$maxMembersToSearch = 500;
 
 	// Extract all the search parameters.
@@ -780,6 +779,35 @@ function MessageSearch2()
 	$search_params['sort'] = !empty($search_params['sort']) && in_array($search_params['sort'], $sort_columns) ? $search_params['sort'] : 'id_pm';
 	$search_params['sort_dir'] = !empty($search_params['sort_dir']) && $search_params['sort_dir'] == 'asc' ? 'asc' : 'desc';
 
+	// Sort out any labels we may be searching by.
+	$labelQuery = '';
+	if ($context['folder'] == 'inbox' && !empty($search_params['advanced']) && $context['currently_using_labels'])
+	{
+		// Came here from pagination?  Put them back into $_REQUEST for sanitization.
+		if (isset($search_params['labels']))
+			$_REQUEST['searchlabel'] = explode(',', $search_params['labels']);
+
+		// Assuming we have some labels - make them all integers.
+		if (!empty($_REQUEST['searchlabel']) && is_array($_REQUEST['searchlabel']))
+		{
+			foreach ($_REQUEST['searchlabel'] as $key => $id)
+				$_REQUEST['searchlabel'][$key] = (int) $id;
+		}
+		else
+			$_REQUEST['searchlabel'] = array();
+
+		// Now that everything is cleaned up a bit, make the labels a param.
+		$search_params['labels'] = implode(',', $_REQUEST['searchlabel']);
+
+		// No labels selected? That must be an error!
+		if (empty($_REQUEST['searchlabel']))
+			$context['search_errors']['no_labels_selected'] = true;
+		// Otherwise prepare the query!
+		elseif (count($_REQUEST['searchlabel']) != count($context['labels']))
+			$labelQuery = "
+			AND (FIND_IN_SET('" . implode("', pmr.labels) OR FIND_IN_SET('", $_REQUEST['searchlabel']) . "', pmr.labels))";
+	}
+
 	// What are we actually searching for?
 	$search_params['search'] = !empty($search_params['search']) ? $search_params['search'] : (isset($_REQUEST['search']) ? stripslashes($_REQUEST['search']) : '');
 	// If we ain't got nothing - we should error!
@@ -852,32 +880,6 @@ function MessageSearch2()
 	if (isset($context['search_params']['userspec']))
 		$context['search_params']['userspec'] = htmlspecialchars($context['search_params']['userspec']);
 
-	// Sort out any labels we may be searching by.
-	$labelQuery = '';
-	if ($context['folder'] == 'inbox' && !empty($search_params['advanced']) && $context['currently_using_labels'])
-	{
-		// Came here from pagination?  Put them back into $_REQUEST for sanitization.
-		if (isset($context['search_params']['labels']))
-			$_REQUEST['searchlabel'] = $context['search_params']['labels'] == '' ? array() : explode(',', $context['search_params']['labels']);
-
-		// Assuming we have some labels - make them all integers.
-		if (!empty($_REQUEST['searchlabel']) && is_array($_REQUEST['searchlabel']))
-		{
-			foreach ($_REQUEST['searchlabel'] as $key => $id)
-				$_REQUEST['searchlabel'][$key] = (int) $id;
-		}
-		else
-			$_REQUEST['searchlabel'] = array();
-
-		// No labels selected? That must be an error!
-		if (empty($_REQUEST['searchlabel']))
-			$context['search_errors']['no_labels_selected'] = true;
-		// Otherwise prepare the query!
-		elseif (count($_REQUEST['searchlabel']) != count($context['labels']))
-			$labelQuery = "
-			AND FIND_IN_SET('" . implode("', pmr.labels) AND FIND_IN_SET('", $_REQUEST['searchlabel']) . "', pmr.labels)";
-	}
-
 	// Now we have all the parameters, combine them together for pagination and the like...
 	$context['params'] = array();
 	foreach ($search_params as $k => $v)
@@ -909,6 +911,20 @@ function MessageSearch2()
 		return MessageSearch();
 	}
 
+	// Get the amount of results.
+	$request = db_query("
+		SELECT COUNT(*)
+		FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
+		WHERE pm.id_pm = pmr.id_pm" . ($context['folder'] == 'inbox' ? "
+			AND pmr.id_member = $user_info[id]
+			AND pmr.deleted = 0" : "
+			AND pm.id_member_from = $user_info[id]
+			AND pm.deleted_by_sender = 0") . "
+			$userQuery$labelQuery
+			AND ($searchQuery)", __FILE__, __LINE__);
+	list ($numResults) = mysql_fetch_row($request);
+	mysql_free_result($request);
+
 	// Get all the matching messages... using standard search only (No caching and the like!)
 	// !!! This doesn't support outbox searching yet.
 	$request = $smfFunc['db_query']('', "
@@ -938,7 +954,7 @@ function MessageSearch2()
 		loadMemberData($posters);
 
 	// Sort out the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=pm;sa=search2;params=' . $context['params'], $_GET['start'], count($foundMessages), $modSettings['search_results_per_page'], false);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=pm;sa=search2;params=' . $context['params'], $_GET['start'], $numResults, $modSettings['search_results_per_page'], false);
 
 	$context['message_labels'] = array();
 	$context['message_replied'] = array();

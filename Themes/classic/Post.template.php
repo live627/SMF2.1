@@ -1104,7 +1104,7 @@ function template_announce()
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="who[', $group['id'], ']"><input type="checkbox" name="who[', $group['id'], ']" id="who[', $group['id'], ']" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
+						<label for="who_', $group['id'], '"><input type="checkbox" name="who_', $group['id'], '" id="who[', $group['id'], ']" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
 
 	echo '
 						<br />

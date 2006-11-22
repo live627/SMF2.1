@@ -1149,7 +1149,7 @@ function template_maintain()
 		// Display a checkbox with every board.
 		foreach ($category['boards'] as $board)
 			echo '
-										<label for="boards[', $board['id'], ']"><input type="checkbox" name="boards[', $board['id'], ']" id="boards[', $board['id'], ']" checked="checked" class="check" /> ', str_repeat('&nbsp; ', $board['child_level']), $board['name'], '</label><br />';
+										<label for="boards_', $board['id'], '"><input type="checkbox" name="boards[', $board['id'], ']" id="boards_', $board['id'], '" checked="checked" class="check" /> ', str_repeat('&nbsp; ', $board['child_level']), $board['name'], '</label><br />';
 		echo '
 										<br />';
 
@@ -1437,11 +1437,11 @@ function template_view_scheduled_tasks()
 				<td>', $task['next_time'], '</td>
 				<td><span class="smalltext">', $task['regularity'], '</span></td>
 				<td align="center">
-					<input type="hidden" name="task[', $task['id'], ']" id="task[', $task['id'], ']" value="0" />
-					<input type="checkbox" name="task[', $task['id'], ']" id="task[', $task['id'], ']" ', !$task['disabled'] ? 'checked="checked"' : '', ' class="check" />
+					<input type="hidden" name="task[', $task['id'], ']" id="task_', $task['id'], '" value="0" />
+					<input type="checkbox" name="task[', $task['id'], ']" id="task_check_', $task['id'], '" ', !$task['disabled'] ? 'checked="checked"' : '', ' class="check" />
 				</td>
 				<td align="center">
-					<input type="checkbox" name="run_task[', $task['id'], ']" id="run_task[', $task['id'], ']" class="check" />
+					<input type="checkbox" name="run_task[', $task['id'], ']" id="run_task_', $task['id'], '" class="check" />
 				</td>
 			</tr>';
 		$alternate = !$alternate;
