@@ -261,8 +261,8 @@ $txt['rtm8'] = 'Poster';
 
 $txt[732] = 'Show board descriptions inside boards.';
 $txt['show_children'] = 'Show child boards on every page inside boards, not just the first.';
-$txt['show_no_avatars'] = 'Don\'t show other users\' avatars.';
-$txt['show_no_signatures'] = 'Don\'t show other users\' signatures.';
+$txt['show_no_avatars'] = 'Don\'t show users\' avatars.';
+$txt['show_no_signatures'] = 'Don\'t show users\' signatures.';
 $txt['show_no_censored'] = 'Leave words uncensored.';
 $txt['calendar_start_day'] = 'First day of the week on the calendar';
 $txt['display_quick_reply'] = 'Use quick reply on topic display: ';
