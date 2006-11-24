@@ -1422,7 +1422,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			}
 	
 			// Doesn't exist - give an error or what?
-			if (!file_exists($working_file) && (!$file->exists('@error') || (trim($file->fetch('@error')) != 'ignore' && trim($file->fetch('@error')) != 'skip')))
+			if (!file_exists($working_file) && (!$file->exists('@error') || !in_array(trim($file->fetch('@error')), array('ignore', 'skip'))))
 			{
 				$actions[] = array(
 					'type' => 'missing',
@@ -1435,7 +1435,13 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			}
 			// Skip the file if it doesn't exist.
 			elseif (!file_exists($working_file) && $file->exists('@error') && trim($file->fetch('@error')) == 'skip')
+			{
+				$actions[] = array(
+					'type' => 'skipping',
+					'filename' => $working_file,
+				);
 				continue;
+			}
 			// Okay, we're creating this file then...?
 			elseif (!file_exists($working_file))
 				$working_data = '';
@@ -1451,207 +1457,185 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			$operations = $file->exists('operation') ? $file->set('operation') : array();
 			foreach ($operations as $operation)
 			{
-				// Special case: find the end of the file!
-				if ($operation->exists('search/@position') && trim($operation->fetch('search/@position')) == 'end')
-				{
-					$replace_with = $operation->fetch('add');
-	
-					if (!$undo)
-					{
-						if (substr(rtrim($working_data), -3) == "\n?" . '>')
-							$working_data = substr(rtrim($working_data), 0, -3) . $replace_with . "\n?" . '>';
-						else
-							$working_data = $working_data . $replace_with;
-					}
-					else
-					{
-						if (substr(rtrim($working_data), -3 - strlen($replace_with)) == $replace_with . "\n?" . '>')
-							$working_data = substr(rtrim($working_data), 0, -3 - strlen($replace_with)) . "\n?" . '>';
-						elseif (substr(rtrim($working_data), -strlen($replace_with)) == $replace_with)
-							$working_data = substr(rtrim($working_data), 0, -strlen($replace_with));
-						elseif (!$operation->exists('@error') || $operation->fetch('@error') == 'fatal')
-						{
-							$actions[] = array(
-								'type' => 'failure',
-								'filename' => $working_file,
-								'search' => $replace_with
-							);
-							continue;
-						}
-					}
-	
-					$actions[] = array(
-						'type' => 'append',
-						'filename' => $working_file,
-						'add' => $replace_with
-					);
-				}
-				// Otherwise we will need to look for the search data.
-				else
-				{
-					// Start with what we have....
-					$working_search = '';
-					$replace_with = $operation->exists('add') ? $operation->fetch('add') : '';
-	
-					// Are we doing a fancy-shmancy regexp search?
-					$regexp = false;
-	
-					$temp_searches = $operation->set('search');
-					if (count($temp_searches) > 1)
-					{
-						// Resort the list so replace comes first - it must.
-						$searches = array();
-						foreach ($temp_searches as $i => $v)
-						{
-							// A quick check on whether it's a regular expression search...
-							if (!$undo && $temp_searches[$i]->exists('@regexp') && trim($temp_searches[$i]->fetch('@regexp')) == 'true')
-								$regexp = true;
-	
-							if (!$v->exists('@position') || ($v->fetch('@position') != 'before' && $v->fetch('@position') != 'after'))
-							{
-								$searches[] = $v;
-								unset($temp_searches[$i]);
-							}
-						}
-	
-						// Add on the rest, in the order they were in.
-						$searches = array_merge($searches, $temp_searches);
-					}
-					else
-					{
-						$searches = $temp_searches;
-						$regexp = !$undo && !empty($searches) && $searches[0]->exists('@regexp') && trim($searches[0]->fetch('@regexp')) == 'true';
-					}
-	
-					// If we're not using regular expression search, replace out any $'s and \'s!
-					if (!$regexp)
-					{
-						// Shuzzup.  This is done so we can safely use a regular expression. ($0 is bad!!)
-						if (!$undo)
-							$replace_with = strtr($replace_with, array('$' => '[$PACK' . 'AGE1$]', '\\' => '[$PACK' . 'AGE2$]'));
-						else
-							$replace_with = preg_quote($replace_with, '~');
-					}
-	
-					// Go through all the search conditions.
-					foreach ($searches as $search)
-					{
-						$this_clean_search = $search->fetch('.');
-	
-						// Are we not using regular expressions explicitly?
-						if (!$regexp)
-						{
-							if (!$undo)
-							{
-								$this_search = preg_quote($this_clean_search, '~');
+				// Convert operation to an array.
+				$actual_operation = array(
+					'searches' => array(),
+					'error' => $operation->exists('@error') && in_array(trim($operation->fetch('@error')), array('ignore', 'fatal', 'required')) ? trim($operation->fetch('@error')) : 'fatal',
+				);
 
-								// Remember, can't have whitespace correction and regexp on at the same time.
-								if ($search->exists('@whitespace') && trim($search->fetch('@whitespace')) != 'loose')
-									$this_search = preg_replace('~[ \t]+~', '[ \t]+', $this_search);
-							}
-							// Shuzzup again.  Read the comment above a few lines where this is done to $replace_with...
-							else
-								$this_search = strtr($this_clean_search, array('$' => '[$PACK' . 'AGE1$]', '\\' => '[$PACK' . 'AGE2$]'));
-						}
-						else
-							$this_search = $this_clean_search;
-	
-						// Get the position to replace on.
-						$position = $search->exists('@position') ? trim($search->fetch('@position')) : 'replace';
-	
-						if ($position == 'before')
-						{
-							if (!$regexp)
-							{
-								if (!$undo)
-								{
-									$working_search = '(' . $this_search . ')' . $working_search;
-									$replace_with = '$1' . $replace_with;
-								}
-								else
-								{
-									$working_search = '$1' . $working_search;
-									$replace_with = '(' . $this_search . ')' . $replace_with;
-								}
-							}
-							else
-							{
-								$working_search = $this_search . $working_search;
-								$replace_with = $this_clean_search . $replace_with;
-							}
-						}
-						elseif ($position == 'after')
-						{
-							if (!$regexp)
-							{
-								if (!$undo)
-								{
-									$working_search = $working_search . '(' . $this_search . ')';
-									$replace_with = $replace_with . '$1';
-								}
-								else
-								{
-									$working_search = $working_search . '$1';
-									$replace_with = $replace_with . '(' . $this_search . ')';
-								}
-							}
-							else
-							{
-								$working_search = $working_search . $this_search;
-								$replace_with = $replace_with . $this_clean_search;
-							}
-						}
-						else
-							$working_search = $this_search;
-					}
-	
-					if ($undo)
+				// The 'add' parameter is used for all searches in this operation.
+				$add = $operation->exists('add') ? $operation->fetch('add') : '';
+
+				// Grab all search items of this operation (in most cases just 1).
+				$searches = $operation->set('search');
+				foreach ($searches as $i => $search)
+					$actual_operation['searches'][] = array(
+						'position' => $search->exists('@position') && in_array(trim($search->fetch('@position')), array('before', 'after', 'replace', 'end')) ? trim($search->fetch('@position')) : 'replace',
+						'is_reg_exp' => $search->exists('@regexp') && trim($search->fetch('@regexp')) === 'true',
+						'loose_whitespace' => $search->exists('@whitespace') && trim($search->fetch('@regexp')) === 'loose',
+						'search' => $search->fetch('.'),
+						'add' => $add,
+						'preg_search' => '',
+						'preg_replace' => '',
+					);
+
+				// At least one search should be defined.
+				if (empty($actual_operation['searches']))
+				{
+					$actions[] = array(
+						'type' => 'failure',
+						'filename' => $working_file,
+						'search' => $search['search'],
+					);
+
+					// Skip to the next operation.
+					continue;
+				}
+
+				// Reverse the operations in case of undoing stuff.
+				if ($undo)
+				{
+					foreach ($actual_operation['searches'] as $i => $search)
 					{
-						$temp = $replace_with;
-						$replace_with = $working_search;
-						$working_search = $temp;
-	
-						// We can't undo this!
-						if (trim($working_search) == '')
-							continue;
+
+						// Reverse modification of regular expressions are not allowed.
+						if ($search['is_reg_exp'])
+						{
+							if ($actual_operation['error'] === 'fatal')
+								$actions[] = array(
+									'type' => 'failure',
+									'filename' => $working_file,
+									'search' => $search['search'],
+								);
+
+							// Continue to the next operation.
+							continue 2;
+						}
+
+						// The replacement is now the search subject...
+						if ($search['position'] === 'replace' || $search['position'] === 'end')
+							$actual_operation['searches'][$i]['search'] = $search['add'];
+						else
+						{
+							// Reversing a before/after modification becomes a replacement.
+							$actual_operation['searches'][$i]['position'] = 'replace';
+
+							if ($search['position'] === 'before')
+								$actual_operation['searches'][$i]['search'] .= $search['add'];
+							elseif ($search['position'] === 'after')
+								$actual_operation['searches'][$i]['search'] = $search['add'] . $search['search'];
+						}
+
+						// ...and the search subject is now the replacement.
+						$actual_operation['searches'][$i]['add'] = $search['search'];
 					}
-					elseif ($working_search == '')
-						continue;
-	
-					$failed = preg_match('~' . $working_search . '~s', $working_data) == 0;
-					if ($failed && (!$operation->exists('@error') || $operation->fetch('@error') == 'fatal'))
+				}
+
+				// Sort the search list so the replaces come before the add before/after's.
+				if (count($actual_operation['searches']) !== 1)
+				{
+					$replacements = array();
+
+					foreach ($actual_operation['searches'] as $i => $search)
+					{
+						if ($search['position'] === 'replace')
+						{
+							$replacements[] = $search;
+							unset($actual_operation['searches'][$i]);
+						}
+					}
+					$actual_operation['searches'] = array_merge($replacements, $actual_operation['searches']);
+				}
+
+				// Create regular expression replacements from each search.
+				foreach ($actual_operation['searches'] as $i => $search)
+				{
+					// Not much needed if the search subject is already a regexp.
+					if ($search['is_reg_exp'])
+						$actual_operation['searches'][$i]['preg_search'] = $search['search'];
+					else
+					{
+						// Make the search subject fit into a regular expression.
+						$actual_operation['searches'][$i]['preg_search'] = preg_quote($search['search'], '~');
+
+						// Using 'loose', a random amount of tabs and spaces may be used.
+						if ($search['loose_whitespace'])
+							$actual_operation['searches'][$i]['preg_search'] = preg_replace('~[ \t]+~', '[ \t]+', $actual_operation['searches'][$i]['preg_search']);
+					}
+
+					// Shuzzup.  This is done so we can safely use a regular expression. ($0 is bad!!)
+					$actual_operation['searches'][$i]['preg_replace'] = strtr($search['add'], array('$' => '[$PACK' . 'AGE1$]', '\\' => '[$PACK' . 'AGE2$]'));
+
+					// Before, so the replacement comes after the search subject :P
+					if ($search['position'] === 'before')
+					{
+						$actual_operation['searches'][$i]['preg_search'] = '(' . $actual_operation['searches'][$i]['preg_search'] . ')';
+						$actual_operation['searches'][$i]['preg_replace'] = '$1' . $actual_operation['searches'][$i]['preg_replace'];
+					}
+
+					// After, after what?
+					elseif ($search['position'] === 'after')
+					{
+						$actual_operation['searches'][$i]['preg_search'] = '(' . $actual_operation['searches'][$i]['preg_search'] . ')';
+						$actual_operation['searches'][$i]['preg_replace'] .= '$1';
+					}
+
+					// Position the replacement at the end of the file (or just before the closing PHP tags).
+					elseif ($search['position'] === 'end')
+					{
+						if ($undo)
+						{
+							$actual_operation['searches'][$i]['preg_search'] .= '(\\n\\?\\>)?$';
+							$actual_operation['searches'][$i]['preg_replace'] = '$1';
+						}
+						else
+						{
+							$actual_operation['searches'][$i]['preg_search'] = '(\\n\\?\\>)?$';
+							$actual_operation['searches'][$i]['preg_replace'] .= '$1';
+						}
+					}
+
+					// Testing 1, 2, 3...
+					$failed = preg_match('~' . $actual_operation['searches'][$i]['preg_search'] . '~s', $working_data) === 0;
+
+					// Nope, search pattern not found.
+					if ($failed && $actual_operation['error'] === 'fatal')
 					{
 						$actions[] = array(
 							'type' => 'failure',
 							'filename' => $working_file,
-							'search' => $working_search
+							'search' => $actual_operation['searches'][$i]['preg_search'],
 						);
-	
+
 						$everything_found = false;
 						continue;
 					}
-					elseif (!$failed && $operation->exists('@error') && $operation->fetch('@error') == 'required')
+
+					// Found, but in this case, that means failure!
+					elseif (!$failed && $actual_operation['error'] === 'required')
 					{
 						$actions[] = array(
 							'type' => 'failure',
 							'filename' => $working_file,
-							'search' => $working_search
+							'search' => $actual_operation['searches'][$i]['preg_search'],
 						);
-	
+
 						$everything_found = false;
 						continue;
 					}
-	
-					if ($replace_with == '')
+
+					// Replace it into nothing? That's not an option...unless
+					if ($search['add'] === '')
 						continue;
-	
-					$working_data = preg_replace('~' . $working_search . '~s', $replace_with, $working_data);
-	
+
+					// Finally, we're doing some replacements.
+					$working_data = preg_replace('~' . $actual_operation['searches'][$i]['preg_search'] . '~s', $actual_operation['searches'][$i]['preg_replace'], $working_data, 1);
+
 					$actions[] = array(
 						'type' => 'replace',
 						'filename' => $working_file,
-						'search' => $working_search,
-						'replace' => $replace_with
+						'search' => $actual_operation['searches'][$i]['preg_search'],
+						'replace' =>  $actual_operation['searches'][$i]['preg_replace'],
 					);
 				}
 			}

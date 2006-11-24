@@ -121,6 +121,7 @@ $txt['package_action_missing'] = '<b style="color: red;">Bestand niet gevonden</
 $txt['package_action_error'] = '<b style="color: red;">Modificatieverwerkingsfout</b>';
 $txt['package_action_failure'] = '<b style="color: red;">Test mislukt</b>';
 $txt['package_action_success'] = '<b>Succes</b>';
+$txt['package_action_skipping'] = '<b>Bestand overgeslagen</b>';
 
 $txt['package_uninstall_actions'] = 'De&iuml;nstallatie-acties';
 $txt['package_uninstall_done'] = 'Het pakket is gede&iuml;nstalleerd, het zou geen effect meer moeten hebben.';

@@ -121,6 +121,7 @@ $txt['package_action_missing'] = '<b style="color: red;">File not found</b>';
 $txt['package_action_error'] = '<b style="color: red;">Modification parse error</b>';
 $txt['package_action_failure'] = '<b style="color: red;">Test failed</b>';
 $txt['package_action_success'] = '<b>Test successful</b>';
+$txt['package_action_skipping'] = '<b>Skipping file</b>';
 
 $txt['package_uninstall_actions'] = 'Uninstall Actions';
 $txt['package_uninstall_done'] = 'The package has been uninstalled, it should no longer take effect.';

@@ -399,6 +399,14 @@ function PackageInstallTest()
 						);
 					}
 				}
+				elseif ($mod_action['type'] == 'skipping')
+				{
+					$context['actions'][] = array(
+						'type' => $txt['package56'],
+						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
+						'description' => $txt['package_action_skipping']
+					);
+				}
 				elseif ($mod_action['type'] == 'missing' && empty($mod_action['is_custom']))
 				{
 					$context['has_failure'] = true;

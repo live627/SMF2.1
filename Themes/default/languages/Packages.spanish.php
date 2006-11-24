@@ -124,6 +124,8 @@ $txt['package_action_missing'] = '<b style="color: red;">Archivo no encontrado</
 $txt['package_action_error'] = '<b style="color: red;">Eror al parsear la modificaci&oacute;n</b>';
 $txt['package_action_failure'] = '<b style="color: red;">Prueba fallida</b>';
 $txt['package_action_success'] = '<b>&Eacute;xito</b>';
+// Untranslated!
+$txt['package_action_skipping'] = '<b>Skipping file</b>';
 
 $txt['package_uninstall_actions'] = 'Desinstalar Acciones';
 $txt['package_uninstall_done'] = 'El paquete ha sido desinstalado, no debe afectar m&aacute;s tu foro.';
