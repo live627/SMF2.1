@@ -81,6 +81,10 @@ if (!defined('SMF'))
 	 * A text input box.  For floating point values.
 	ie.	array('float', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth',
 			&$txt['OptionalDescriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
+			
+	 * A large text input box. Used for textual values spanning multiple lines.
+	ie.	array('large_text', 'nameInModSettingsAndSQL', 'OptionalNumberOfRows',
+			&$txt['OptionalDescriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
 
 	 * A check box.  Either one or zero. (boolean)
 	ie.	array('check', 'nameInModSettingsAndSQL', null, &$txt['descriptionOfTheOption'],
