@@ -26,7 +26,7 @@ if (!$found)
 $_GET['mess_ind'] = isset($_GET['mess_ind']) ? (int) $_GET['mess_ind'] : 0;
 $step_progress['name'] = 'Updating table indexes';
 $step_progress['current'] = $_GET['mess_ind'];
-$custom_warning = 'On a very large board these index\'s may take a few minutes to create.';
+$custom_warning = 'On a very large board these indexes may take a few minutes to create.';
 
 $index_changes = array(
 	array(
@@ -2077,7 +2077,7 @@ if ($upgradeBoardsTable)
 ---}
 ---#
 
----# Cleaning up old log index's...
+---# Cleaning up old log indexes...
 ---{
 $request = upgrade_query("
 	SHOW COLUMNS
@@ -2096,7 +2096,7 @@ if ($upgradeLogTable)
 	$custom_warning = 'This step may take quite some time. During this time it may appear that nothing is happening whilst
 		the databases MySQL tables are cleaned. Please be patient.';
 
-	// Here we remove all the unused index's
+	// Here we remove all the unused indexes
 	$log_deletions = array(
 		array(
 			'table' => 'boards',
