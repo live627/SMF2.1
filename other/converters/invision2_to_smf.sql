@@ -71,7 +71,7 @@ SELECT
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS usertitle, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt, '' AS member_ip2
 FROM {$from_prefix}members AS m
 	LEFT JOIN {$from_prefix}member_extra AS me ON (m.id = me.id)
 	LEFT JOIN {$from_prefix}members_converge AS mc ON (m.id = mc.converge_id)

@@ -129,7 +129,8 @@ SELECT
 	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS location, '' AS time_format, '' AS avatar, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt,
+	'' AS member_ip2
 FROM {$from_prefix}users AS u
 	{$_SESSION['group_id_join']};
 ---*

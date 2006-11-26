@@ -259,6 +259,8 @@ function db_affected_rows($result = null)
 
 	if ($db_replace_result)
 		return $db_replace_result;
+	elseif ($result == null && !$db_last_result)
+		return 0;
 
 	return pg_affected_rows($result == null ? $db_last_result : $result);
 }

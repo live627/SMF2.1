@@ -2447,7 +2447,7 @@ function writeLog($force = false)
 			$_SESSION['timeOnlineUpdated'] = time();
 
 		$user_settings['total_time_logged_in'] += time() - $_SESSION['timeOnlineUpdated'];
-		updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'total_time_logged_in' => $user_settings['total_time_logged_in']));
+		updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'member_ip2' => '\'' . $_SERVER['BAN_CHECK_IP'] . '\'', 'total_time_logged_in' => $user_settings['total_time_logged_in']));
 
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 			cache_put_data('user_settings-' . $user_info['id'], $user_settings, 60);

@@ -30,6 +30,7 @@ SELECT
 	SUBSTRING(IF(p.avatar = 'blank.gif', '', p.avatar), 1, 255) AS avatar,
 	SUBSTRING(p.custom, 1, 255) AS usertitle, p.invisible = 0 AS show_online,
 	SUBSTRING(p.sig, 1, 65534) AS signature, SUBSTRING(ip, 1, 255) AS member_ip,
+	SUBSTRING(ip, 1, 255) AS member_ip2,
 	p.lastactive AS last_login, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
 	'' AS time_format, '' AS secret_question, '' AS secret_answer,

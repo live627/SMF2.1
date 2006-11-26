@@ -944,8 +944,8 @@ function integrate_validate_login($username, $password, $cookietime)
 		//There must be a result, so let's write this one into SMF....
 		mysql_query("
 			INSERT INTO {$db_prefix}members 
-				(member_name, real_name, passwd, email_address, date_registered, id_post_group, lngfile, buddy_list, pm_ignore_list, message_labels, personal_text, website_title, website_url, location, icq, msn, signature, avatar, usertitle, member_ip, member_ip2, secret_question, additional_groups)
-			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[date_registered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(member_name, real_name, passwd, email_address, date_registered, id_post_group, lngfile, buddy_list, pm_ignore_list, message_labels, personal_text, website_title, website_url, location, icq, msn, signature, avatar, usertitle, member_ip, member_ip2, member_ip2, secret_question, additional_groups)
+			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[date_registered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 		$memberID = db_insert_id();
 		
 		updateStats('member', $memberID, $name);

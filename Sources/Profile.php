@@ -2027,7 +2027,12 @@ function trackUser($memID)
 		$min_msg_member = max(0, $max_msg_member - $user_profile[$memID]['posts'] * 3);
 	}
 	
-	$ips = array();
+	// Default to at least the ones we know about.
+	$ips = array(
+		$user_profile[$memID]['member_ip'],
+		$user_profile[$memID]['member_ip2'],
+	);
+
 	// Get all IP addresses this user has used for his messages.
 	$request = $smfFunc['db_query']('', "
 		SELECT poster_ip

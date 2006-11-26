@@ -18,6 +18,7 @@ TRUNCATE {$to_prefix}members;
 SELECT
 	members_id AS id_member, SUBSTRING(members_name, 1, 255) AS member_name,
 	SUBSTRING(members_ip, 1, 255) AS member_ip,
+	SUBSTRING(members_ip, 1, 255) AS member_ip2,
 	SUBSTRING(members_name, 1, 255) AS real_name,
 	SUBSTRING(members_pass, 1, 64) AS passwd, members_posts AS posts,
 	SUBSTRING(members_pass_salt, 1, 5) AS password_salt,

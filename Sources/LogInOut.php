@@ -406,7 +406,7 @@ function Login2()
 	unset($_SESSION['id_theme']);
 
 	// You've logged in, haven't you?
-	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\''));
+	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'member_ip2' => '\'' . $_SERVER['BAN_CHECK_IP'] . '\''));
 
 	// Get rid of the online entry for that old guest....
 	$smfFunc['db_query']('', "

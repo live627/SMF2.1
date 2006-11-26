@@ -31,7 +31,7 @@ SELECT
 	SUBSTRING(signature, 1, 65534) AS signature,
 	emailnotification AS notify_announcements, '' AS lngfile, '' AS buddy_list,
 	'' AS pm_ignore_list, '' AS message_labels, '' AS location, '' AS msn,
-	'' AS time_format, '' AS avatar, '' AS member_ip, '' AS secret_question,
+	'' AS time_format, '' AS avatar, '' AS member_ip, '' AS member_ip2, '' AS secret_question,
 	'' AS secret_answer, '' AS validation_code, '' AS additional_groups,
 	'' AS smiley_set, '' AS password_salt
 FROM {$from_prefix}user

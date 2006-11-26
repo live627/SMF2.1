@@ -27,6 +27,7 @@ SELECT
 	SUBSTRING(user_icq, 1, 255) AS icq,
 	SUBSTRING(REPLACE(user_text, '\n', '<br />'), 1, 65534) AS signature,
 	SUBSTRING(user_lastip, 1, 255) AS member_ip,
+	SUBSTRING(user_lastip, 1, 255) AS member_ip2,
 	FROM_UNIXTIME(user_birthdate) AS birthdate,
 	SUBSTRING(user_website, 1, 255) AS website_title,
 	SUBSTRING(user_website, 1, 255) AS website_url, user_hideemail AS hide_email,

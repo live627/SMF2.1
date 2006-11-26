@@ -28,6 +28,7 @@ SELECT
 	u.lastvisit AS last_login, u.joindate AS date_registered, u.posts,
 	u.reputation AS karma_good, u.birthday_search AS birthdate,
 	SUBSTRING(u.ipaddress, 1, 255) AS member_ip,
+	SUBSTRING(u.ipaddress, 1, 255) AS member_ip2,
 	SUBSTRING(u.msn, 1, 255) AS msn,
 	CASE u.usergroupid WHEN 6 THEN 1 WHEN 5 THEN 2 WHEN 7 THEN 2 ELSE 0 END AS id_group,
 	SUBSTRING(u.salt, 1, 5) AS password_salt,

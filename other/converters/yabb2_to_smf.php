@@ -224,6 +224,7 @@ if (empty($preparsing))
 			'avatar' => 255,
 			'usertitle' => 255,
 			'member_ip' => 255,
+			'member_ip2' => 255,
 			'secret_question' => 255,
 			'secret_answer' => 64,
 			'validation_code' => 10,

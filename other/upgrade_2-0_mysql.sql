@@ -244,6 +244,7 @@ CHANGE COLUMN ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default 
 CHANGE COLUMN totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN passwordSalt password_salt varchar(5) NOT NULL default '',
 CHANGE COLUMN ignoreBoards ignore_boards tinytext NOT NULL;
+CHANGE COLUMN memberIP2 member_ip2 tinytext NOT NULL;
 
 ALTER TABLE {$db_prefix}messages
 CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL auto_increment,

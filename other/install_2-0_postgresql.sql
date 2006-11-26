@@ -51,7 +51,7 @@ LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION FIND_IN_SET(text, text) RETURNS boolean AS
   'SELECT
-    $1 = ANY(STRING_TO_ARRAY($2, '','')) AS result'
+  	COALESCE($1 = ANY(STRING_TO_ARRAY($2, '','')), FALSE) AS result'
 LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION LEFT (text, int4) RETURNS text AS
@@ -1421,6 +1421,7 @@ CREATE TABLE {$db_prefix}members (
   notify_send_body smallint NOT NULL default '0',
   notify_types smallint NOT NULL default '2',
   member_ip varchar(255) NOT NULL,
+  member_ip2 varchar(255) NOT NULL,
   secret_question varchar(255) NOT NULL,
   secret_answer varchar(64) NOT NULL default '',
   id_theme smallint NOT NULL default '0',

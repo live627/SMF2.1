@@ -146,7 +146,7 @@ SELECT
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS usertitle, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt, '' AS member_ip2
 FROM {$from_prefix}users AS u
 	LEFT JOIN {$from_prefix}ranks AS r ON (r.rank_id = u.user_rank AND r.rank_special = 1)
 	LEFT JOIN {$to_prefix}membergroups AS mg ON (BINARY mg.group_name = CONCAT('phpBB ', r.rank_title))

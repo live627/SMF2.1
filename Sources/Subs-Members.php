@@ -387,6 +387,7 @@ function registerMember(&$regOptions)
 		'posts' => 0,
 		'date_registered' => time(),
 		'member_ip' => "'$user_info[ip]'",
+		'member_ip2' => "'$_SERVER[BAN_CHECK_IP]'",
 		'validation_code' => "'$validation_code'",
 		'real_name' => "'$regOptions[username]'",
 		'personal_text' => '\'' . addslashes($modSettings['default_personal_text']) . '\'',

@@ -32,7 +32,7 @@ SELECT
 	SUBSTRING(mem.personal_text, 1, 255) AS personal_text,
 	SUBSTRING(mem.time_format, 1, 80) AS time_format,
 	mem.hide_email, SUBSTRING(mem.member_ip, 1, 255) AS member_ip,
-	SUBSTRING(mem.yim, 1, 32) AS yim,
+	SUBSTRING(mem.member_ip, 1, 255) AS member_ip2, SUBSTRING(mem.yim, 1, 32) AS yim,
 	IF(IFNULL(mem.gender, '') = '', 0, IF(mem.gender = 'Male', 1, 2)) AS gender,
 	SUBSTRING(mem.msn, 1, 255) AS msn,
 	SUBSTRING(REPLACE(mem.signature, '<br>', '<br />'), 1, 65534) AS signature,

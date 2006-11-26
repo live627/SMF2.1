@@ -409,6 +409,7 @@ function smf_registerMember($username, $email, $password, $extra_fields = array(
 		'avatar' => "''",
 		'usertitle' => "''",
 		'member_ip' => "''",
+		'member_ip2' => "''",
 		'secret_question' => "''",
 		'secret_answer' => "''",
 		'validation_code' => "''",

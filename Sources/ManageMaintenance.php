@@ -156,7 +156,7 @@ function ManageMaintenance()
 function Maintenance()
 {
 	global $context, $txt, $db_prefix, $user_info, $db_character_set, $db_type;
-	global $modSettings, $cachedir, $smfFunc;
+	global $modSettings, $sourcedir, $cachedir, $smfFunc;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'logs')
 	{
@@ -202,6 +202,61 @@ function Maintenance()
 			</body></html>';
 		obExit(false);
 	}
+	elseif (isset($_GET['sa']) && $_GET['sa'] == 'members')
+	{
+		$_POST['maxdays'] = (int) $_POST['maxdays'];
+		if (!empty($_POST['groups']) && $_POST['maxdays'])
+		{
+			$groups = array();
+			foreach ($_POST['groups'] as $id => $dummy)
+				$groups[] = (int) $id;
+			$time_limit = (time() - ($_POST['maxdays'] * 24 * 3600));
+			$where = 'mem.last_login < ' . $time_limit;
+			if ($_POST['del_type'] == 'activated')
+					$where .= ' AND mem.is_activated = 0';
+
+			// Need to get *all* groups then work out which (if any) we avoid.
+			$request = $smfFunc['db_query']('', "
+				SELECT id_group, group_name, min_posts
+				FROM {$db_prefix}membergroups", __FILE__, __LINE__);
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+			{
+				// Avoid this one?
+				if (!in_array($row['id_group'], $groups))
+				{
+					// Post group?
+					if ($row['min_posts'] != -1)
+						$where .= ' AND mem.id_post_group != ' . $row['id_group'];
+					else
+						$where .= ' AND mem.id_group != ' . $row['id_group'] . ' AND NOT FIND_IN_SET(' . $row['id_group'] . ', mem.additional_groups)';
+				}
+			}
+			$smfFunc['db_free_result']($request);
+
+			// If we have ungrouped unselected we need to avoid those guys.
+			if (!in_array(0, $groups))
+				$where .= ' AND (mem.id_group != 0 OR mem.additional_groups != \'\')';
+
+			// Select all the members we're about to murder/remove...
+			$request = $smfFunc['db_query']('', "
+				SELECT mem.id_member, IFNULL(mod.id_member, 0) AS is_mod
+				FROM {$db_prefix}members AS mem
+					LEFT JOIN {$db_prefix}moderators AS mod ON (mod.id_member = mem.id_member)
+				WHERE $where", __FILE__, __LINE__);
+			$members = array();
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+			{
+				if (!$row['is_mod'] || !in_array(3, $groups))
+					$members[] = $row['id_member'];
+			}
+			$smfFunc['db_free_result']($request);
+
+			require_once($sourcedir . '/Subs-Members.php');
+			deleteMembers($members);
+		}
+
+		$context['maintenance_finished'] = true;
+	}
 	elseif (isset($_GET['sa']) && $_GET['sa'] == 'cleancache' && is_dir($cachedir))
 	{
 		// Just wipe the whole cache directory!
@@ -231,6 +286,25 @@ function Maintenance()
 			'id' => $row['id_board'],
 			'name' => $row['name'],
 			'child_level' => $row['child_level']
+		);
+	}
+	$smfFunc['db_free_result']($result);
+
+	// Get membergroups - for deleting members.
+	$result = $smfFunc['db_query']('', "
+		SELECT id_group, group_name
+		FROM {$db_prefix}membergroups", __FILE__, __LINE__);
+	$context['membergroups'] = array(
+		array(
+			'id' => 0,
+			'name' => $txt['maintain_members_ungrouped']
+		),
+	);
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+	{
+		$context['membergroups'][] = array(
+			'id' => $row['id_group'],
+			'name' => $row['group_name']
 		);
 	}
 	$smfFunc['db_free_result']($result);

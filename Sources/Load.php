@@ -389,7 +389,7 @@ function loadUserSettings()
 			// If it was *at least* five hours ago...
 			if ($visitTime < time() - 5 * 3600)
 			{
-				updateMemberData($id_member, array('id_msg_last_visit' => (int) $modSettings['maxMsgID'], 'last_login' => time(), 'member_ip' => '\'' . $_SERVER['REMOTE_ADDR'] . '\''));
+				updateMemberData($id_member, array('id_msg_last_visit' => (int) $modSettings['maxMsgID'], 'last_login' => time(), 'member_ip' => '\'' . $_SERVER['REMOTE_ADDR'] . '\'', 'member_ip2' => '\'' . $_SERVER['BAN_CHECK_IP'] . '\''));
 				$user_settings['last_login'] = time();
 
 				if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
@@ -817,7 +817,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			IFNULL(lo.log_time, 0) AS is_online, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
 			mem.signature, mem.personal_text, mem.location, mem.gender, mem.avatar, mem.id_member, mem.member_name,
 			mem.real_name, mem.email_address, mem.hide_email, mem.date_registered, mem.website_title, mem.website_url,
-			mem.birthdate, mem.member_ip, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login,
+			mem.birthdate, mem.member_ip, mem.member_ip2, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login,
 			mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online,
 			mem.buddy_list, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
 			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.is_activated,
@@ -836,8 +836,8 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			mem.signature, mem.personal_text, mem.location, mem.gender, mem.avatar, mem.id_member, mem.member_name,
 			mem.real_name, mem.email_address, mem.hide_email, mem.date_registered, mem.website_title, mem.website_url,
 			mem.birthdate, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login, mem.karma_good,
-			mem.karma_bad, mem.member_ip, mem.lngfile, mem.id_group, mem.id_theme, mem.buddy_list, mem.pm_ignore_list,
-			mem.pm_email_notify, mem.time_offset" . (!empty($modSettings['titlesEnable']) ? ', mem.usertitle' : '') . ",
+			mem.karma_bad, mem.member_ip, mem.member_ip2, mem.lngfile, mem.id_group, mem.id_theme, mem.buddy_list,
+			mem.pm_ignore_list, mem.pm_email_notify, mem.time_offset" . (!empty($modSettings['titlesEnable']) ? ', mem.usertitle' : '') . ",
 			mem.time_format, mem.secret_question, mem.is_activated, mem.additional_groups, mem.smiley_set, mem.show_online,
 			mem.total_time_logged_in, mem.id_post_group, mem.notify_announcements, mem.notify_regularity, mem.notify_send_body,
 			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
@@ -853,7 +853,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	{
 		$select_columns = '
 			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.hide_email, mem.date_registered,
-			mem.posts, mem.last_login, mem.member_ip, mem.lngfile, mem.id_group';
+			mem.posts, mem.last_login, mem.member_ip, mem.member_ip2, mem.lngfile, mem.id_group';
 		$select_tables = '';
 	}
 	else
@@ -1049,6 +1049,7 @@ function loadMemberContext($user)
 			'allow' => !$user_info['is_guest'] && $user_info['posts'] >= $modSettings['karmaMinPosts'] && allowedTo('karma_edit') && !empty($modSettings['karmaMode']) && $user_info['id'] != $user
 		),
 		'ip' => htmlspecialchars($profile['member_ip']),
+		'ip2' => htmlspecialchars($profile['member_ip2']),
 		'online' => array(
 			'is_online' => $profile['is_online'],
 			'text' => &$txt[$profile['is_online'] ? 'online2' : 'online3'],

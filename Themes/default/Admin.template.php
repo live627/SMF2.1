@@ -1084,6 +1084,70 @@ function template_maintain()
 				</td>
 			</tr>';
 
+	// Pruning Members?
+	echo '
+			<tr class="titlebg">
+				<td><a href="', $scripturl, '?action=helpadmin;help=maintenance_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['maintain_members'], '</td>
+			</tr>
+			<tr>
+				<td class="windowbg2">
+					<a name="membersLink"></a>';
+
+	// Simple javascript for showing and hiding membergroups.
+	echo '
+					<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+						var membersSwap = false;
+						function swapMembers()
+						{
+							membersSwap = !membersSwap;
+
+							document.getElementById("membersIcon").src = smf_images_url + (membersSwap ? "/collapse.gif" : "/expand.gif");
+							setInnerHTML(document.getElementById("membersText"), membersSwap ? "', $txt['maintain_members_choose'], '" : "', $txt['maintain_members_all'], '");
+							document.getElementById("membersPanel").style.display = (membersSwap ? "block" : "none");
+
+							for (var i = 0; i < document.forms.membersForm.length; i++)
+							{
+								if (document.forms.membersForm.elements[i].type.toLowerCase() == "checkbox")
+									document.forms.membersForm.elements[i].checked = !membersSwap;
+							}
+						}
+					// ]]></script>';
+
+	// Give them the options.
+	echo '
+					<form action="', $scripturl, '?action=admin;area=maintain;sa=members" method="post" accept-charset="', $context['character_set'], '" name="membersForm" id="membersForm">
+						', $txt['maintain_members_since1'], '
+						<select name="del_type">
+							<option value="activated" selected="selected">', $txt['maintain_members_activated'], '</option>
+							<option value="logged">', $txt['maintain_members_logged_in'], '</option>
+						</select>', $txt['maintain_members_since2'], ' <input type="text" name="maxdays" value="30" size="3" />', $txt['maintain_members_since3'], '<br />';
+
+	echo '
+						<a href="#membersLink" onclick="swapMembers();"><img src="', $settings['images_url'], '/expand.gif" alt="+" id="membersIcon" /></a> <a href="#membersLink" onclick="swapMembers();"><span id="membersText" style="font-weight: bold;">', $txt['maintain_members_all'], '</span></a>
+						<div style="display: none;" id="membersPanel">
+							<table width="100%" cellpadding="3" cellspacing="0" border="0">
+								<tr>
+									<td valign="top">';
+
+	$i = 0;
+	foreach ($context['membergroups'] as $group)
+	{
+		echo '
+										<label for="groups[', $group['id'], ']"><input type="checkbox" name="groups[', $group['id'], ']" id="groups[', $group['id'], ']" checked="checked" class="check" /> ', $group['name'], '</label><br />';
+	}
+
+	echo '
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['maintain_old_remove'], '" onclick="return confirm(\'', $txt['maintain_members_confirm'], '\');" /></div>
+						<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					</form>
+				</td>
+			</tr>';
+
 	// Pruning any older posts.
 	echo '
 			<tr class="titlebg">

@@ -33,7 +33,7 @@ SELECT
 	'' AS personal_text, '' AS aim, '' AS yim, '' AS msn, '' AS time_format,
 	'' AS signature, '' AS avatar, '' AS usertitle, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set, '' AS password_salt
+	'' AS additional_groups, '' AS smiley_set, '' AS password_salt, '' AS member_ip2
 FROM {$from_prefix}{$Tu};
 ---*
 

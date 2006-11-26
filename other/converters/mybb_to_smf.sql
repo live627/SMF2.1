@@ -29,6 +29,7 @@ SELECT
 	SUBSTRING(signature, 1, 65534) AS signature, hideemail AS hide_email, 
 	SUBSTRING(buddylist, 1, 255) AS buddy_list,
 	SUBSTRING(regip, 1, 255) AS member_ip,
+	SUBSTRING(regip, 1, 255) AS member_ip2,
 	SUBSTRING(ignorelist, 1, 255) AS pm_ignore_list,
 	timeonline AS total_time_logged_in,
 	IF(birthday = '', '0001-01-01', CONCAT_WS('-', RIGHT(birthday, 4), SUBSTRING(birthday, LOCATE('-', birthday) + 1, LOCATE('-', birthday, LOCATE('-', birthday) + 1) - LOCATE('-', birthday) - 1), LEFT(birthday, LOCATE('-', birthday) - 1))) AS birthdate

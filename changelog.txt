@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2580 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2581 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -42,6 +42,8 @@ November 2006
  ! Fixed several package manager bugs. (Packages.php, Subs-Package.php)
  & Added a language string for the above change. (Packages language files)
  ! Fixed the htmltrim function trimming too many characters. (Load.php)
+ + Added option for pruning members. (ManageMaintenance.php, Admin template)
+ & Added language entries for above. (Admin, Help language files)
 
 
 October 2006
@@ -199,6 +201,7 @@ August 2006
  ! Optimise the daily/weekly digest. Also fix topic text being incorrect. (ScheduledTasks.php)
  ! The board name was missing a semi colon on the double quote html entity. (ManagePermissions.php)
  * Firefox doesn't play well with the move BBC tag and AJAX previewing, so make it use regular preview if the move tag is present. (Post template)
+ ! Store a different version of the users IP to get around highly unlikely spoofing issues. (upgrade_1-1.sql, install_1-1.sql, install.php, Subs-Members.php, Security.php, QueryString.php, Load.php)
  * Changed several definitons into shorter versions. ( style.css )
  * Help.template changed to better use current theme colors. Updates on PM help section. (Help template, help.css, languages/Manual.english, languages/Manual.dutch, languages/Manual.german, languages/Manual.spanish)
  ! Don't send the newsletter to members who are unable to turn off their notification due to a banning. (ManageNews.php)

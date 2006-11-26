@@ -31,6 +31,7 @@ SELECT
 	SUBSTRING(yahoo, 1, 32) AS yim, SUBSTRING(msn, 1, 255) AS msn,
 	IF(email_setting = 0, 0, 1) AS hide_email,
 	timezone AS time_offset, SUBSTRING(registration_ip, 1, 255) AS member_ip,
+	SUBSTRING(registration_ip, 1, 255) AS member_ip2,
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS avatar, '' AS usertitle,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,

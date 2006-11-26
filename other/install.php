@@ -1185,11 +1185,12 @@ function doStep2()
 
 		// Format the username properly.
 		$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? addslashes(substr(stripslashes($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
 
 		$request = $smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}members
-				(member_name, real_name, passwd, email_address, id_group, posts, date_registered, hide_email, password_salt, lngfile, personal_text, avatar, member_ip, buddy_list, pm_ignore_list, message_labels, website_title, website_url, location, icq, msn, signature, usertitle, secret_question, additional_groups, ignore_boards)
-			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '" . (isset($_SERVER['REMOTE_ADDR']) ? addslashes(substr(stripslashes($_SERVER['REMOTE_ADDR']), 0, 255)) : '') . "', '', '', '', '', '', '', '', '', '', '', '', '', '')", false, false);
+				(member_name, real_name, passwd, email_address, id_group, posts, date_registered, hide_email, password_salt, lngfile, personal_text, avatar, member_ip, member_ip2, buddy_list, pm_ignore_list, message_labels, website_title, website_url, location, icq, msn, signature, usertitle, secret_question, additional_groups, ignore_boards)
+			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '$ip', '$ip', '', '', '', '', '', '', '', '', '', '', '', '', '')", false, false);
 
 		// Awww, crud!
 		if ($request === false)

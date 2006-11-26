@@ -30,6 +30,7 @@ SELECT
 	u.numposts AS posts, SUBSTRING(u.comment, 1, 255) AS personal_text,
 	u.signature, UNIX_TIMESTAMP(u.lastlogin) AS last_login,
 	SUBSTRING(u.last_IP, 1, 255) AS member_ip,
+	SUBSTRING(u.last_IP, 1, 255) AS member_ip2,
 	u.show_email != 'yes' AS hide_email, u.birthday AS birthdate,
 	CASE u.gender WHEN 'M' THEN 1 WHEN 'F' THEN 2 ELSE 0 END AS gender,
 	IF(ul.level = 5, 1, 0) AS id_group

@@ -585,6 +585,9 @@ CHANGE COLUMN im_email_notify pm_email_notify tinyint(4) NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}members
 CHANGE COLUMN secretAnswer secretAnswer varchar(64) NOT NULL default '';
+
+ALTER TABLE {$db_prefix}members
+ADD COLUMN memberIP2 tinytext NOT NULL;
 ---#
 
 ---# Updating member approval...

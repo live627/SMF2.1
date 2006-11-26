@@ -300,6 +300,18 @@ $txt['maintain_old_remove'] = 'Eliminar';
 $txt['maintain_old_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar mensajes viejos?\\n\\n&#161;Esto no se podr&#225; deshacer!';
 
 // Untranslated!
+$txt['maintain_members'] = 'Remove Inactive Members';
+$txt['maintain_members_ungrouped'] = 'Ungrouped Members <span class="smalltext">(Members with no assigned groups)</span>';
+$txt['maintain_members_since1'] = 'Remove all members who have not';
+$txt['maintain_members_since2'] = 'for';
+$txt['maintain_members_since3'] = 'days.';
+$txt['maintain_members_activated'] = 'activated their account';
+$txt['maintain_members_logged_in'] = 'logged in';
+$txt['maintain_members_all'] = 'All Membergroups';
+$txt['maintain_members_choose'] = 'Selected Groups';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
+
+// Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';
 $txt['scheduled_tasks_name'] = 'Task Name';
 $txt['scheduled_tasks_next_time'] = 'Next Due';

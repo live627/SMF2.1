@@ -34,7 +34,7 @@ SELECT
 	'' AS lngfile, '' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS personal_text, '' AS time_format, '' AS avatar, '' AS member_ip,
 	'' AS secret_question, '' AS secret_answer, '' AS validation_code,
-	'' AS additional_groups, '' AS smiley_set
+	'' AS additional_groups, '' AS smiley_set, '' AS member_ip2
 FROM {$from_prefix}user;
 ---*
 

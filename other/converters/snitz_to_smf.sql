@@ -36,7 +36,7 @@ SELECT
 	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text,
 	'' AS time_format, '' AS avatar, '' AS secret_question, '' AS secret_answer,
 	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
-	'' AS password_salt
+	'' AS password_salt, SUBSTRING(M_LAST_IP, 1, 255) AS member_ip2
 FROM {$from_prefix}FORUM_MEMBERS;
 ---*
 

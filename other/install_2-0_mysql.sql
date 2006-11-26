@@ -1115,6 +1115,7 @@ CREATE TABLE {$db_prefix}members (
   notify_send_body tinyint(4) NOT NULL default '0',
   notify_types tinyint(4) NOT NULL default '2',
   member_ip tinytext NOT NULL,
+  member_ip2 tinytext NOT NULL,
   secret_question tinytext NOT NULL,
   secret_answer varchar(64) NOT NULL default '',
   id_theme tinyint(4) unsigned NOT NULL default '0',
