@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2583 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2584 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -46,6 +46,7 @@ November 2006
  & Added language entries for above. (Admin, Help language files)
  ! Prevent prefetching bots to clutter the error log when trying to access non-public boards. (Load.php)
  ! The quick login setting was reversed on the board index. (BoardIndex.php)
+ ! The move-file directive used in package-info.xml was not working properly. (Subs-Package.php)
 
 
 October 2006

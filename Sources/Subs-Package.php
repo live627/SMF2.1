@@ -1049,7 +1049,14 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 
 			$failure |= !copy($action['source'], $action['destination']);
 		}
-		elseif ($action['type'] == 'move-dir' || $action['type'] == 'move-file')
+		elseif ($action['type'] == 'move-file')
+		{
+			if (!mktree(dirname($action['destination']), 0755) || !is_writable(dirname($action['destination'])))
+				$failure |= !mktree(dirname($action['destination']), 0777);
+
+			$failure |= !rename($action['source'], $action['destination']);
+		}
+		elseif ($action['type'] == 'move-dir')
 		{
 			if (!mktree($action['destination'], 0755) || !is_writable($action['destination']))
 				$failure |= !mktree($action['destination'], 0777);
