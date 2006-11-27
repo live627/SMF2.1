@@ -765,7 +765,7 @@ function packageRequireFTP($destination_url, $files = null)
 	}
 	else
 	{
-		if ($_POST['ftp_path'] != '')
+		if (!in_array($_POST['ftp_path'], array('', '/')))
 		{
 			$ftp_root = strtr($boarddir, array($_POST['ftp_path'] => ''));
 			if (substr($ftp_root, -1) == '/' && ($_POST['ftp_path'] == '' || substr($_POST['ftp_path'], 0, 1) == '/'))
@@ -3031,7 +3031,7 @@ class ftp_connection
 			return false;
 
 		// No slash on the end, please...
-		if (substr($ftp_path, -1) == '/')
+		if ($ftp_path !== '/' && substr($ftp_path, -1) === '/')
 			$ftp_path = substr($ftp_path, 0, -1);
 
 		fwrite($this->connection, 'CWD ' . $ftp_path . "\r\n");
