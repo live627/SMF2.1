@@ -690,7 +690,14 @@ function loadBoard()
 		$_GET['board'] = '';
 		$_GET['topic'] = '';
 
-		if ($user_info['is_guest'])
+		// If it's a prefetching agent, just make clear they're not allowed.
+		if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
+		{
+			ob_end_clean();
+			header('HTTP/1.1 403 Forbidden');
+			die;
+		}
+		elseif ($user_info['is_guest'])
 		{
 			loadLanguage('Errors');
 			is_not_guest($txt['topic_gone']);
