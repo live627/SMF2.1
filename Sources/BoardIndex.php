@@ -448,7 +448,7 @@ function BoardIndex()
 	$context['show_who'] = allowedTo('who_view') && !empty($modSettings['who_enabled']);
 
 	// Set some permission related settings.
-	$context['show_login_bar'] = $user_info['is_guest'] && empty($modSettings['enableVBStyleLogin']);
+	$context['show_login_bar'] = $user_info['is_guest'] && !empty($modSettings['enableVBStyleLogin']);
 	$context['show_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);
 
 	// Load the calendar?
