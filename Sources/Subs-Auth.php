@@ -471,10 +471,10 @@ function JSMembers()
 		$_REQUEST['start'] = 0;
 
 	// Allow the user to pass the input to be added to to the box.
-	$context['input_box_name'] = isset($_REQUEST['input']) ? $_REQUEST['input'] : 'to';
+	$context['input_box_name'] = isset($_REQUEST['input']) && preg_match('~^[\w-]+$~', $_REQUEST['input']) === 1 ? $_REQUEST['input'] : 'to';
 
 	// Take the delimiter over GET in case it's \n or something.
-	$context['delimiter'] = isset($_REQUEST['delim']) ? stripslashes($_REQUEST['delim']) : ', ';
+	$context['delimiter'] = isset($_REQUEST['delim']) ? $func['htmlspecialchars'](stripslashes($_REQUEST['delim'])) : ', ';
 	$context['quote_results'] = !empty($_REQUEST['quote']);
 
 	// List all the results.
