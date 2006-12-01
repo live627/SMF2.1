@@ -2038,7 +2038,7 @@ function ManageLabels()
 				{
 					$_POST['label_name'][$id] = trim(strtr($smfFunc['htmlspecialchars']($_POST['label_name'][$id]), array(',' => '&#044;')));
 
-					if ($smfFunc['strlen']($strlen_label) > 30)
+					if ($smfFunc['strlen']($_POST['label_name'][$id]) > 30)
 						$_POST['label_name'][$id] = $smfFunc['substr']($_POST['label_name'][$id], 0, 30);
 					if ($_POST['label_name'][$id] != '')
 					{
