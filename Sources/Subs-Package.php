@@ -1481,7 +1481,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 					$actual_operation['searches'][] = array(
 						'position' => $search->exists('@position') && in_array(trim($search->fetch('@position')), array('before', 'after', 'replace', 'end')) ? trim($search->fetch('@position')) : 'replace',
 						'is_reg_exp' => $search->exists('@regexp') && trim($search->fetch('@regexp')) === 'true',
-						'loose_whitespace' => $search->exists('@whitespace') && trim($search->fetch('@regexp')) === 'loose',
+						'loose_whitespace' => $search->exists('@whitespace') && trim($search->fetch('@whitespace')) === 'loose',
 						'search' => $search->fetch('.'),
 						'add' => $add,
 						'preg_search' => '',
