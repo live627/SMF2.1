@@ -9,12 +9,30 @@ if (empty($_GET['format']))
 
 $latest_news = array(
 	array(
-		'time' => 1111111111,
+		'time' => 1165067596,
 
 		'subject_english' => 'SMF 1.1',
 		'message_english' => 'SMF 1.1 has gone gold!  If you are using an older version, please upgrade as soon as possible - many things have been changed and fixed, and mods and packages will expect you to be using 1.1.  If you need any help upgrading custom modifications to the new version, please feel free to ask us at our forum.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=130740.0',
 		'author_english' => 'Grudge',
+
+		'subject_dutch' => 'SMF 1.1',
+		'message_dutch' => 'SMF 1.1 is uitgebracht!  Als je nog een oudere versie van SMF gebruikt, upgrade dan zo spoedig mogelijk - veel dingen zijn veranderd of verbeterd, en mods en pakketten zullen veelal enkel nog voor 1.1 beschikbaar worden gesteld.  Als je hulp nodig hebt bij het upgraden van zelfgemaakte modificaties naar deze nieuwe versie, aarzel dan niet en vraag ons om hulp op ons forum.',
+
+		'subject_turkish' => 'SMF 1.1',
+		'message_turkish' => 'SMF 1.1 çikti!  Eger eski bir sürüm kullaniyorsaniz, lütfen en kisa zamanda güncelleyin - birçok sey degisti ve düzeltildi, ve birçok mod ve paket artik sizin 1.1 kullandiginizi varsayacak. Eger özel modifikasyonlari yeni versiyona güncellemek için yardima ihtiyaç duyarsaniz, lütfen forumumuzda bize sormaya çekinmeyin.',
+
+	),
+	array(
+		'time' => 1162119434,
+
+		'subject_english' => 'SMF 1.0.9 and patch for SMF 1.1 RC3',
+		'message_english' => 'A security issue has been discovered in both SMF 1.0 and SMF 1.1. Therefore a patch has been released that will upgrade SMF 1.0.8 to 1.0.9 and update SMF 1.1 RC3. You are encouraged to update immediately, using the package manager or otherwise.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=123285.0',
+		'author_english' => 'Compuart',
+
+		'subject_dutch' => 'SMF 1.0.9 en patch voor SMF 1.1 RC3',
+		'message_dutch' => 'Een beveiligingsprobleem is gevonden in zowel SMF 1.0 als SMF 1.1. Daarom is een patch uitgebracht die SMF 1.0.8 opwaardeert naar 1.0.9 en SMF 1.1 RC3 bijwerkt. Het is aan te raden om direct SMF up te daten via het pakket beheer of op andere wijze.',
 	),
 	array(
 		'time' => 1156203139,
