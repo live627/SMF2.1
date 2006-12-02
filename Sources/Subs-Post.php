@@ -740,6 +740,8 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 
 	foreach ($to_array as $to)
 	{
+		$to = $smfFunc['db_escape_string']($to);
+
 		// Will this insert go over MySQL's limit?
 		$this_insert_len = strlen($to) + strlen($message) + strlen($headers) + 700;
 

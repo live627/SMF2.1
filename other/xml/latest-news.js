@@ -9,11 +9,11 @@ if (empty($_GET['format']))
 
 $latest_news = array(
 	array(
-		'time' => 1165067596,
+		'time' => 1165089196,
 
 		'subject_english' => 'SMF 1.1',
 		'message_english' => 'SMF 1.1 has gone gold!  If you are using an older version, please upgrade as soon as possible - many things have been changed and fixed, and mods and packages will expect you to be using 1.1.  If you need any help upgrading custom modifications to the new version, please feel free to ask us at our forum.',
-		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=130740.0',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=131008.0',
 		'author_english' => 'Grudge',
 
 		'subject_dutch' => 'SMF 1.1',
