@@ -27,12 +27,10 @@ if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($modified_since) >= 
 }
 
 // Do as little PHP as poss.
-if (isset($_GET['version']) && strpos($_GET['version'], 'SMF 1.0') !== false)
-	$version = 'SMF 1.0.9';
-elseif (isset($_GET['version']) && strpos($_GET['version'], 'SMF 1.1') !== false)
-	$version = 'SMF 1.1';
-else
+if (isset($_GET['version']) && strpos($_GET['version'], 'SMF Development Edition') !== false)
 	$version = 'SMF Development Edition';
+else
+	$version = 'SMF 1.1';
 
 echo 'window.smfVersion = "' . $version . '";';
 
