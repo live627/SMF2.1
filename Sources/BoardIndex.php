@@ -358,7 +358,7 @@ function BoardIndex()
 	if (!empty($settings['show_group_key']) && !empty($modSettings['groupCache']))
 	{
 		$context['membergroups'] = array();
-		$groupCache = unserialize(stripslashes($modSettings['groupCache']));
+		$groupCache = unserialize($smfFunc['db_unescape_string']($modSettings['groupCache']));
 		foreach ($groupCache as $link)
 			$context['membergroups'][] = '<a href="' . $scripturl . '?action=groups;sa=members;group=' . $link . '</a>';
 	}

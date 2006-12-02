@@ -298,9 +298,11 @@ function adminLogin()
 
 function adminLogin_outputPostVars($k, $v)
 {
+	global $smfFunc;
+
 	if (!is_array($v))
 		return '
-<input type="hidden" name="' . $k . '" value="' . strtr(stripslashes($v), array('"' => '&quot;', '<' => '&lt;', '>' => '&gt;')) . '" />';
+<input type="hidden" name="' . $k . '" value="' . strtr($smfFunc['db_unescape_string']($v), array('"' => '&quot;', '<' => '&lt;', '>' => '&gt;')) . '" />';
 	else
 	{
 		$ret = '';
@@ -395,8 +397,8 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	$maybe_email = false;
 	foreach ($names as $i => $name)
 	{
-		// Add slashes, trim, and fix wildcards for each name.
-		$names[$i] = addslashes(trim($smfFunc['strtolower']($name)));
+		// Escape, trim, and fix wildcards for each name.
+		$names[$i] = $smfFunc['db_escape_string'](trim($smfFunc['strtolower']($name)));
 
 		$maybe_email |= strpos($name, '@') !== false;
 
@@ -466,7 +468,7 @@ function JSMembers()
 	}
 
 	if (isset($_REQUEST['search']))
-		$context['last_search'] = $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['search']), ENT_QUOTES);
+		$context['last_search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search']), ENT_QUOTES);
 	else
 		$_REQUEST['start'] = 0;
 
@@ -474,7 +476,7 @@ function JSMembers()
 	$context['input_box_name'] = isset($_REQUEST['input']) && preg_match('~^[\w-]+$~', $_REQUEST['input']) === 1 ? $_REQUEST['input'] : 'to';
 
 	// Take the delimiter over GET in case it's \n or something.
-	$context['delimiter'] = isset($_REQUEST['delim']) ? $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['delim'])) : ', ';
+	$context['delimiter'] = isset($_REQUEST['delim']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['delim'])) : ', ';
 	$context['quote_results'] = !empty($_REQUEST['quote']);
 
 	// List all the results.
@@ -487,7 +489,7 @@ function JSMembers()
 	// If the user has done a search, well - search.
 	if (isset($_REQUEST['search']))
 	{
-		$_REQUEST['search'] = $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['search']), ENT_QUOTES);
+		$_REQUEST['search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search']), ENT_QUOTES);
 
 		$context['results'] = findMembers(array($_REQUEST['search']), true, $context['buddy_search']);
 		$total_results = count($context['results']);
@@ -520,8 +522,8 @@ function RequestMembers()
 
 	checkSession('get');
 
-	$_REQUEST['search'] = $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['search'])) . '*';
-	$_REQUEST['search'] = addslashes(trim($smfFunc['strtolower']($_REQUEST['search'])));
+	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search'])) . '*';
+	$_REQUEST['search'] = $smfFunc['db_escape_string'](trim($smfFunc['strtolower']($_REQUEST['search'])));
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	if (function_exists('iconv'))
@@ -603,7 +605,7 @@ function resetPassword($memID, $username = null)
 
 		// Only these characters are permitted.
 		if (in_array($user, array('_', '|')) || preg_match('~[<>&"\'=\\\]~', $user) != 0 || strpos($user, '[code') !== false || strpos($user, '[/code') !== false)
-			fatal_lang_error(240, false);
+			fatal_lang_error('error_invalid_characters_username', false);
 
 		if (stristr($user, $txt['guest_title']) !== false)
 			fatal_lang_error(244, true, array($txt['guest_title']));

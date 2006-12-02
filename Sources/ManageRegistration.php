@@ -205,7 +205,7 @@ function EditAgreement()
 
 		// Off it goes to the agreement file.
 		$fp = fopen($boarddir . '/agreement.txt', 'w');
-		fwrite($fp, str_replace("\r", '', stripslashes($_POST['agreement'])));
+		fwrite($fp, str_replace("\r", '', $smfFunc['db_unescape_string']($_POST['agreement'])));
 		fclose($fp);
 
 		updateSettings(array('requireAgreement' => !empty($_POST['requireAgreement'])));

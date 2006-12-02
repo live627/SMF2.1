@@ -82,7 +82,7 @@ function ViewErrorLog()
 		$filter = array(
 			'variable' => $_GET['filter'],
 			'value' => array(
-				'sql' => addslashes(in_array($_GET['filter'], array('message', 'url', 'file')) ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : addcslashes($_GET['value'], '\\_%'))
+				'sql' => $smfFunc['db_escape_string'](in_array($_GET['filter'], array('message', 'url', 'file')) ? base64_decode(strtr($_GET['value'], array(' ' => '+'))) : addcslashes($_GET['value'], '\\_%'))
 			),
 			'href' => ';filter=' . $_GET['filter'] . ';value=' . $_GET['value'],
 			'entity' => $filters[$_GET['filter']]
@@ -218,10 +218,10 @@ function ViewErrorLog()
 			$context['filter']['value']['html'] = '<a href="' . $scripturl . '?action=profile;u=' . $id . '">' . $user_profile[$id]['real_name'] . '</a>';
 		}
 		elseif ($filter['variable'] == 'url')
-			$context['filter']['value']['html'] = "'" . htmlspecialchars($scripturl . stripslashes($filter['value']['sql'])) . "'";
+			$context['filter']['value']['html'] = "'" . htmlspecialchars($scripturl . $smfFunc['db_unescape_string']($filter['value']['sql'])) . "'";
 		elseif ($filter['variable'] == 'message')
 		{
-			$context['filter']['value']['html'] = "'" . strtr(htmlspecialchars(stripslashes($filter['value']['sql'])), array("\n" => '<br />', '&lt;br /&gt;' => '<br />', "\t" => '&nbsp;&nbsp;&nbsp;', '\_' => '_', '\\%' => '%', '\\\\' => '\\')) . "'";
+			$context['filter']['value']['html'] = "'" . strtr(htmlspecialchars($smfFunc['db_unescape_string']($filter['value']['sql'])), array("\n" => '<br />', '&lt;br /&gt;' => '<br />', "\t" => '&nbsp;&nbsp;&nbsp;', '\_' => '_', '\\%' => '%', '\\\\' => '\\')) . "'";
 			$context['filter']['value']['html'] = preg_replace('~&amp;lt;span class=&amp;quot;remove&amp;quot;&amp;gt;(.+?)&amp;lt;/span&amp;gt;~', '$1', $context['filter']['value']['html']);
 		}
 		else
@@ -259,7 +259,7 @@ function ViewErrorLog()
 			'title' => (isset($txt['errortype_' . $row['error_type']]) ? $txt['errortype_' . $row['error_type']] : $row['error_type']) . ' (' . $row['num_errors'] . ')',
 			'description' => isset($txt['errortype_' . $row['error_type'] . '_desc']) ? $txt['errortype_' . $row['error_type'] . '_desc'] : '',
 			'href' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
-			'is_selected' => isset($filter) && $filter['value']['sql'] == addslashes(addcslashes($row['error_type'], '\\_%')),
+			'is_selected' => isset($filter) && $filter['value']['sql'] == $smfFunc['db_escape_string'](addcslashes($row['error_type'], '\\_%')),
 		);
 	}
 	$smfFunc['db_free_result']($request);

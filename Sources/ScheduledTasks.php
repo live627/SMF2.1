@@ -168,10 +168,10 @@ function scheduled_approval_notification()
 	$request = $smfFunc['db_query']('', "
 		SELECT aq.id_msg, aq.id_attach, aq.id_event, m.id_topic, m.id_board, m.subject, t.id_first_msg,
 			b.id_profile
-		FROM ({$db_prefix}approval_queue AS aq, {$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
-		WHERE m.id_msg = aq.id_msg
-			AND t.id_topic = m.id_topic
-			AND b.id_board = m.id_board", __FILE__, __LINE__);
+		FROM {$db_prefix}approval_queue AS aq
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = aq.id_msg)
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)", __FILE__, __LINE__);
 	$notices = array();
 	$profiles = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -422,11 +422,10 @@ function scheduled_daily_digest()
 	$request = $smfFunc['db_query']('', "
 		SELECT ln.id_topic, IFNULL(t.id_board, ln.id_board) AS id_board, mem.email_address, mem.member_name, mem.notify_types,
 			mem.lngfile, mem.id_member
-		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}members AS mem)
-			LEFT JOIN {$db_prefix}topics AS t ON (ln.id_topic != 0 && t.id_topic = ln.id_topic)
-		WHERE mem.id_member = ln.id_member
-			AND mem.notify_regularity = " . ($is_weekly ? '3' : '2') . "
-			", __FILE__, __LINE__);
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member
+				AND mem.notify_regularity = " . ($is_weekly ? '3' : '2') . ")
+			LEFT JOIN {$db_prefix}topics AS t ON (ln.id_topic != 0 && t.id_topic = ln.id_topic)", __FILE__, __LINE__);
 	$members = array();
 	$langs = array();
 	$notify = array();
@@ -473,13 +472,12 @@ function scheduled_daily_digest()
 	$request = $smfFunc['db_query']('', "
 		SELECT ld.note_type, t.id_topic, t.id_board, t.id_member_started, m.id_msg, m.subject,
 			b.name AS board_name
-		FROM ({$db_prefix}log_digest AS ld, {$db_prefix}topics AS t,
-			{$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE " . ($is_weekly ? 'ld.daily != 2' : 'ld.daily IN (0, 2)') . "
-			AND t.id_topic = ld.id_topic
-			AND t.id_board IN (" . implode(',', array_keys($boards)) . ")
-			AND b.id_board = t.id_board
-			AND m.id_msg = t.id_first_msg", __FILE__, __LINE__);
+		FROM {$db_prefix}log_digest AS ld
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ld.id_topic
+				AND t.id_board IN (" . implode(',', array_keys($boards)) . "))
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE " . ($is_weekly ? 'ld.daily != 2' : 'ld.daily IN (0, 2)'), __FILE__, __LINE__);
 	$types = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -995,7 +993,7 @@ function scheduled_fetchSMfiles()
 		// Save the file to the database.
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}admin_info_files
-			SET data = SUBSTRING('" . addslashes($file_data) . "', 1, 65534)
+			SET data = SUBSTRING('" . $smfFunc['db_escape_string']($file_data) . "', 1, 65534)
 			WHERE id_file = $ID_FILE", __FILE__, __LINE__);
 	}
 	return true;

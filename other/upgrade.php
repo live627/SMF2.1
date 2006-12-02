@@ -128,6 +128,8 @@ if (!function_exists('text2words'))
 {
 	function text2words($text)
 	{
+		global $smfFunc;
+
 		// Step 1: Remove entities/things we don't consider words:
 		$words = preg_replace('~([\x0B\0\xA0\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~', ' ', $text);
 	
@@ -142,7 +144,7 @@ if (!function_exists('text2words'))
 			$word = trim($word, '-_\'');
 
 			if ($word != '')
-				$returned_words[] = addslashes(substr($word, 0, 20));
+				$returned_words[] = $smfFunc['db_escape_string'](substr($word, 0, 20));
 		}
 
 		return array_unique($returned_words);
@@ -562,12 +564,12 @@ function WelcomeLogin()
 				SELECT id_member, memberName AS member_name, passwd, id_group,
 				additionalGroups AS additional_groups
 				FROM {$db_prefix}members
-				WHERE member_name = '" . addslashes($_POST['user']) . "'", false, false);
+				WHERE member_name = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
 		else
 			$request = $smfFunc['db_query']('', "
 				SELECT id_member, member_name, passwd, id_group, additional_groups
 				FROM {$db_prefix}members
-				WHERE member_name = '" . addslashes($_POST['user']) . "'", false, false);
+				WHERE member_name = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
 		if ($smfFunc['db_num_rows']($request) != 0)
 		{
 			list ($id_member, $name, $password, $id_group, $addGroups) = $smfFunc['db_fetch_row']($request);
@@ -583,7 +585,7 @@ function WelcomeLogin()
 					$sha_passwd = $password;
 			}
 			else
-				$sha_passwd = sha1(strtolower($name) . un_htmlspecialchars(stripslashes($_REQUEST['passwrd'])));
+				$sha_passwd = sha1(strtolower($name) . un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd'])));
 		}
 		else
 			$upcontext['username_incorrect'] = true;
@@ -2121,13 +2123,13 @@ function textfield_alter($change, $substep)
 		if ($null_fix)
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}$change[table]
-				SET $change[column] = '" . (isset($change['default']) ? addslashes($change['default']) : '') . "'
+				SET $change[column] = '" . (isset($change['default']) ? $smfFunc['db_escape_string']($change['default']) : '') . "'
 				WHERE $change[column] IS NULL", false, false);
 
 		// Do the actual alteration.
 		$smfFunc['db_query']('', "
 			ALTER TABLE {$db_prefix}$change[table]
-			CHANGE COLUMN $change[column] $change[column] $change[type]" . (isset($collation_info['Charset']) ? " CHARACTER SET $collation_info[Charset] COLLATE $collation_info[Collation]" : '') . ($change['null_allowed'] ? '' : ' NOT NULL') . (isset($change['default']) ? " default '" . addslashes($change['default']) . "'" : ''), false, false);
+			CHANGE COLUMN $change[column] $change[column] $change[type]" . (isset($collation_info['Charset']) ? " CHARACTER SET $collation_info[Charset] COLLATE $collation_info[Collation]" : '') . ($change['null_allowed'] ? '' : ' NOT NULL') . (isset($change['default']) ? " default '" . $smfFunc['db_escape_string']($change['default']) . "'" : ''), false, false);
 	}
 	nextSubstep($substep);
 }

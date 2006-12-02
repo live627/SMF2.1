@@ -318,13 +318,13 @@ function registerMember(&$regOptions)
 
 	// Only these characters are permitted.
 	if (preg_match('~[<>&"\'=\\\]~', $regOptions['username']) != 0 || $regOptions['username'] == '_' || $regOptions['username'] == '|' || strpos($regOptions['username'], '[code') !== false || strpos($regOptions['username'], '[/code') !== false)
-		fatal_lang_error(240, false);
+		fatal_lang_error('error_invalid_characters_username', false);
 
 	if (stristr($regOptions['username'], $txt['guest_title']) !== false)
 		fatal_lang_error(244, 'general', array($txt['guest_title']));
 
 	// !!! Separate the sprintf?
-	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($regOptions['email'])) === 0 || strlen(stripslashes($regOptions['email'])) > 255)
+	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($regOptions['email'])) === 0 || strlen($smfFunc['db_unescape_string']($regOptions['email'])) > 255)
 		fatal_error(sprintf($txt[500], $regOptions['username']), false);
 
 	if (!empty($regOptions['check_reserved_name']) && isReservedName($regOptions['username'], 0, false))
@@ -392,7 +392,7 @@ function registerMember(&$regOptions)
 		'member_ip2' => "'$_SERVER[BAN_CHECK_IP]'",
 		'validation_code' => "'$validation_code'",
 		'real_name' => "'$regOptions[username]'",
-		'personal_text' => '\'' . addslashes($modSettings['default_personal_text']) . '\'',
+		'personal_text' => '\'' . $smfFunc['db_escape_string']($modSettings['default_personal_text']) . '\'',
 		'pm_email_notify' => 1,
 		'id_theme' => 0,
 		'id_post_group' => 4,
@@ -721,12 +721,11 @@ function reattributePosts($memID, $email = false, $post_count = false)
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
-			FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND b.count_posts = 1)
 			WHERE m.id_member = 0
 				AND m.poster_email = '$email'
-				AND m.icon != 'recycled'
-				AND b.id_board = m.id_board
-				AND b.count_posts = 1", __FILE__, __LINE__);
+				AND m.icon != 'recycled'", __FILE__, __LINE__);
 		list ($messageCount) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 

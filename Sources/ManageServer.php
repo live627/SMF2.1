@@ -249,9 +249,9 @@ function ModifyCoreSettings2()
 	global $boarddir, $sc, $cookiename, $modSettings, $user_settings;
 	global $sourcedir, $context, $cachedir;
 
-	// Strip the slashes off of the post vars.
+	// Unescape off of the post vars.
 	foreach ($_POST as $key => $val)
-		$_POST[$key] = stripslashes__recursive($val);
+		$_POST[$key] = unescapestring__recursive($val);
 
 	// Fix the darn stupid cookiename! (more may not be allowed, but these for sure!)
 	if (isset($_POST['cookiename']))

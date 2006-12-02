@@ -107,12 +107,13 @@ function Display()
 
 			$request = $smfFunc['db_query']('', "
 				SELECT t2.id_topic
-				FROM ({$db_prefix}topics AS t, {$db_prefix}topics AS t2)
-				WHERE t.id_topic = $topic" . (empty($modSettings['enableStickyTopics']) ? "
+				FROM {$db_prefix}topics AS t
+					INNER JOIN {$db_prefix}topics AS t2 ON (" . (empty($modSettings['enableStickyTopics']) ? "
 					AND t2.id_last_msg $gt_lt t.id_last_msg" : "
 					AND ((t2.id_last_msg $gt_lt t.id_last_msg AND t2.is_sticky $gt_lt= t.is_sticky) OR t2.is_sticky $gt_lt t.is_sticky)") . "
 					AND t2.id_board = $board
-					" . (allowedTo('approve_posts') ? '' : ' AND t2.approved = 1') . "
+					" . (allowedTo('approve_posts') ? '' : ' AND t2.approved = 1') . ")
+				WHERE t.id_topic = $topic
 				ORDER BY" . (empty($modSettings['enableStickyTopics']) ? '' : " t2.is_sticky$order,") . " t2.id_last_msg$order
 				LIMIT 1", __FILE__, __LINE__);
 
@@ -162,10 +163,10 @@ function Display()
 			t.num_replies, t.num_views, t.locked, ms.subject, t.is_sticky, t.id_poll,
 			t.id_member_started, t.id_first_msg, t.id_last_msg, t.approved,
 			" . ($user_info['is_guest'] ? '0' : 'IFNULL(lt.id_msg, -1) + 1') . " AS new_from
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ms)" . ($user_info['is_guest'] ? '' : "
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)" . ($user_info['is_guest'] ? '' : "
 			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = $topic AND lt.id_member = $user_info[id])") ."
 		WHERE t.id_topic = $topic
-			AND ms.id_msg = t.id_first_msg
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(472, false);
@@ -981,11 +982,10 @@ function Download()
 		// Make sure this attachment is on this board.
 		$request = $smfFunc['db_query']('', "
 			SELECT a.filename, a.id_attach, a.attachment_type, a.approved
-			FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS m, {$db_prefix}attachments AS a)
-			WHERE b.id_board = m.id_board
-				AND $user_info[query_see_board]
-				AND m.id_msg = a.id_msg
-				AND a.id_attach = $_REQUEST[attach]
+			FROM {$db_prefix}attachments AS a
+				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
+			WHERE a.id_attach = $_REQUEST[attach]
 			LIMIT 1", __FILE__, __LINE__);
 	}
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -1181,7 +1181,7 @@ function loadAttachmentContext($id_msg)
 						list ($attachment['thumb_width'], $attachment['thumb_height']) = @getimagesize($filename . '_thumb');
 						$thumb_size = filesize($filename . '_thumb');
 
-						$thumb_filename = addslashes($attachment['filename'] . '_thumb');
+						$thumb_filename = $smfFunc['db_escape_string']($attachment['filename'] . '_thumb');
 
 						// Add this beauty to the database.
 						$smfFunc['db_query']('', "

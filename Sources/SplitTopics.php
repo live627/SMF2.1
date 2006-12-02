@@ -165,11 +165,11 @@ function SplitIndex()
 	// Retrieve the subject and stuff of the specific topic/message.
 	$request = $smfFunc['db_query']('', "
 		SELECT m.subject, t.num_replies, t.id_first_msg, t.approved
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
 		WHERE m.id_msg = $_GET[at]
 			$approveQuery
 			AND m.id_topic = $topic
-			AND t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf272');
@@ -274,7 +274,7 @@ function SplitSelectTopics()
 	);
 
 	// Some stuff for our favorite template.
-	$context['new_subject'] = stripslashes($_REQUEST['subname']);
+	$context['new_subject'] = $smfFunc['db_unescape_string']($_REQUEST['subname']);
 
 	// Using the "select" sub template.
 	$context['sub_template'] = isset($_REQUEST['xml']) ? 'split' : 'select';
@@ -494,28 +494,24 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	// No sense in imploding it over and over again.
 	$postList = implode(',', $splitMessages);
 
-	if ($split1_ID_TOPIC == $topic)
-		$id_board = $board;
-	else
-	{
-		$request = $smfFunc['db_query']('', "
-			SELECT id_board
-			FROM {$db_prefix}topics
-			WHERE id_topic = $split1_ID_TOPIC
-			LIMIT 1", __FILE__, __LINE__);
-		list ($id_board) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
-	}
+	// Get some board info.
+	$request = $smfFunc['db_query']('', "
+		SELECT id_board, is_sticky, approved
+		FROM {$db_prefix}topics
+		WHERE id_topic = $split1_ID_TOPIC
+		LIMIT 1", __FILE__, __LINE__);
+	list ($id_board, $is_sticky, $split1_approved) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Find the new first and last not in the list. (old topic)
 	$request = $smfFunc['db_query']('', "
 		SELECT MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count,
-			t.is_sticky, t.approved AS topic_approved, m.approved
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+			m.approved
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $split1_ID_TOPIC)
 		WHERE m.id_msg NOT IN ($postList)
 			AND m.id_topic = $split1_ID_TOPIC
-			AND t.id_topic = $split1_ID_TOPIC
-		GROUP BY m.id_topic, m.approved, t.is_sticky, t.approved, m.approved
+		GROUP BY m.approved
 		ORDER BY m.approved DESC
 		LIMIT 2", __FILE__, __LINE__);
 	// You can't select ALL the messages!
@@ -523,9 +519,6 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		fatal_lang_error('smf271b', false);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$is_sticky = $row['is_sticky'];
-		$split1_approved = $row['topic_approved'];
-
 		// Get the right first and last message dependant on approved state...
 		if (empty($split1_first_msg) || $row['myid_first_msg'] < $split1_first_msg)
 			$split1_first_msg = $row['myid_first_msg'];
@@ -737,9 +730,9 @@ function MergeIndex()
 	// Get the topic's subject.
 	$request = $smfFunc['db_query']('', "
 		SELECT m.subject
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-		WHERE m.id_msg = t.id_first_msg
-			AND t.id_topic = $_GET[from]
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+		WHERE t.id_topic = $_GET[from]
 			AND t.id_board = $board
 			$approveQuery
 		LIMIT 1", __FILE__, __LINE__);
@@ -779,10 +772,10 @@ function MergeIndex()
 	// Get some topics to merge it with.
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_topic, m.subject, m.id_member, IFNULL(mem.real_name, m.poster_name) AS poster_name
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg = t.id_first_msg
-			AND t.id_board = $_REQUEST[targetboard]
+		WHERE t.id_board = $_REQUEST[targetboard]
 			AND t.id_topic != $_GET[from]
 			$approveQuery
 		ORDER BY " . (!empty($modSettings['enableStickyTopics']) ? 't.is_sticky DESC, ' : '') . "t.id_last_msg DESC
@@ -950,10 +943,10 @@ function MergeExecute($topics = array())
 		{
 			$request = $smfFunc['db_query']('', "
 				SELECT t.id_topic, t.id_poll, m.subject, p.question
-				FROM ({$db_prefix}polls AS p, {$db_prefix}topics AS t, {$db_prefix}messages AS m)
+				FROM {$db_prefix}polls AS p
+					INNER JOIN {$db_prefix}topics AS t ON (t.id_poll = p.id_poll)
+					INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 				WHERE p.id_poll IN (" . implode(', ', $polls) . ")
-					AND t.id_poll = p.id_poll
-					AND m.id_msg = t.id_first_msg
 				LIMIT " . count($polls), __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['polls'][] = array(
@@ -1009,10 +1002,10 @@ function MergeExecute($topics = array())
 		$target_subject = $smfFunc['htmlspecialchars']($_POST['custom_subject']);
 	// A subject was selected from the list.
 	elseif (!empty($topic_data[(int) $_POST['subject']]['subject']))
-		$target_subject = addslashes($topic_data[(int) $_POST['subject']]['subject']);
+		$target_subject = $smfFunc['db_escape_string']($topic_data[(int) $_POST['subject']]['subject']);
 	// Nothing worked? Just take the subject of the first message.
 	else
-		$target_subject = addslashes($topic_data[$firstTopic]['subject']);
+		$target_subject = $smfFunc['db_escape_string']($topic_data[$firstTopic]['subject']);
 
 	// Get the first and last message and the number of messages....
 	$request = $smfFunc['db_query']('', "

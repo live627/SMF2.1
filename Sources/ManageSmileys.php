@@ -326,7 +326,7 @@ function EditSmileySets()
 				while ($entry = $dir->read())
 				{
 					if (in_array(strrchr($entry, '.'), array('.jpg', '.gif', '.jpeg', '.png')))
-						$smileys[strtolower($entry)] = addslashes($entry);
+						$smileys[strtolower($entry)] = $smfFunc['db_escape_string']($entry);
 				}
 				$dir->close();
 
@@ -966,7 +966,7 @@ function ImportSmileys($smileyPath)
 	while ($entry = $dir->read())
 	{
 		if (in_array(strrchr($entry, '.'), array('.jpg', '.gif', '.jpeg', '.png')))
-			$smileys[strtolower($entry)] = addslashes($entry);
+			$smileys[strtolower($entry)] = $smfFunc['db_escape_string']($entry);
 	}
 	$dir->close();
 
@@ -1104,7 +1104,7 @@ function EditMessageIcons()
 			foreach ($context['icons'] as $id => $icon)
 			{
 				if ($id != 0)
-					$icon['title'] = addslashes($icon['title']);
+					$icon['title'] = $smfFunc['db_escape_string']($icon['title']);
 
 				$iconInsert[] = array($id, $icon['board_id'], "SUBSTRING('$icon[title]', 1, 80)", "SUBSTRING('$icon[filename]', 1, 80)", $icon['true_order']);
 			}

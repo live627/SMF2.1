@@ -201,8 +201,8 @@ function BoardReport()
 	// Get every moderator.
 	$request = $smfFunc['db_query']('', "
 		SELECT mods.id_board, mods.id_member, mem.real_name
-		FROM ({$db_prefix}moderators AS mods, {$db_prefix}members AS mem)
-		WHERE mem.id_member = mods.id_member", __FILE__, __LINE__);
+		FROM {$db_prefix}moderators AS mods
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)", __FILE__, __LINE__);
 	$moderators = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$moderators[$row['id_board']][] = $row['real_name'];

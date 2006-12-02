@@ -288,24 +288,24 @@ function ThemeList()
 			$themes[$row['id_theme']][$row['variable']] = $row['value'];
 		$smfFunc['db_free_result']($request);
 
-		$_POST['reset_dir'] = stripslashes($_POST['reset_dir']);
-		$_POST['reset_url'] = stripslashes($_POST['reset_url']);
+		$_POST['reset_dir'] = $smfFunc['db_unescape_string']($_POST['reset_dir']);
+		$_POST['reset_url'] = $smfFunc['db_unescape_string']($_POST['reset_url']);
 
 		$setValues = array();
 		foreach ($themes as $id => $theme)
 		{
 			if (file_exists($_POST['reset_dir'] . '/' . basename($theme['theme_dir'])))
 			{
-				$setValues[] = array($id, 0, "'theme_dir'", '\'' . addslashes(realpath($_POST['reset_dir'] . '/' . basename($theme['theme_dir']))) . '\'');
-				$setValues[] = array($id, 0, "'theme_url'", '\'' . addslashes($_POST['reset_url'] . '/' . basename($theme['theme_dir'])) . '\'');
-				$setValues[] = array($id, 0, "'images_url'", '\'' . addslashes($_POST['reset_url'] . '/' . basename($theme['theme_dir'])) . "/" . basename($theme['images_url']) . '\'');
+				$setValues[] = array($id, 0, "'theme_dir'", '\'' . $smfFunc['db_escape_string'](realpath($_POST['reset_dir'] . '/' . basename($theme['theme_dir']))) . '\'');
+				$setValues[] = array($id, 0, "'theme_url'", '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['theme_dir'])) . '\'');
+				$setValues[] = array($id, 0, "'images_url'", '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['theme_dir'])) . "/" . basename($theme['images_url']) . '\'');
 			}
 
 			if (isset($theme['base_theme_dir']) && file_exists($_POST['reset_dir'] . '/' . basename($theme['base_theme_dir'])))
 			{
-				$setValues[] = array($id, 0, "'base_theme_dir'", '\'' . addslashes(realpath($_POST['reset_dir'] . '/' . basename($theme['base_theme_dir']))) . '\'');
-				$setValues[] = array($id, 0, "'base_theme_url'", '\'' . addslashes($_POST['reset_url'] . '/' . basename($theme['base_theme_dir'])) . '\'');
-				$setValues[] = array($id, 0, "'base_images_url'", '\'' . addslashes($_POST['reset_url'] . '/' . basename($theme['base_theme_dir'])) . "/" . basename($theme['base_images_url']) . '\'');
+				$setValues[] = array($id, 0, "'base_theme_dir'", '\'' . $smfFunc['db_escape_string'](realpath($_POST['reset_dir'] . '/' . basename($theme['base_theme_dir']))) . '\'');
+				$setValues[] = array($id, 0, "'base_theme_url'", '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['base_theme_dir'])) . '\'');
+				$setValues[] = array($id, 0, "'base_images_url'", '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['base_theme_dir'])) . "/" . basename($theme['base_images_url']) . '\'');
 			}
 
 			cache_put_data('theme_settings-' . $id, null, 90);
@@ -1006,7 +1006,7 @@ function ThemeInstall()
 
 	if ((!empty($_FILES['theme_gz']) && (!isset($_FILES['theme_gz']['error']) || $_FILES['theme_gz']['error'] != 4)) || !empty($_REQUEST['theme_gz']))
 		$method = 'upload';
-	elseif (isset($_REQUEST['theme_dir']) && realpath(stripslashes($_REQUEST['theme_dir'])) != realpath($boarddir . '/Themes') && file_exists(stripslashes($_REQUEST['theme_dir'])))
+	elseif (isset($_REQUEST['theme_dir']) && realpath($smfFunc['db_unescape_string']($_REQUEST['theme_dir'])) != realpath($boarddir . '/Themes') && file_exists($smfFunc['db_unescape_string']($_REQUEST['theme_dir'])))
 		$method = 'path';
 	else
 		$method = 'copy';
@@ -1040,11 +1040,11 @@ function ThemeInstall()
 	}
 	elseif (isset($_REQUEST['theme_dir']) && $method == 'path')
 	{
-		if (!is_dir(stripslashes($_REQUEST['theme_dir'])) || !file_exists(stripslashes($_REQUEST['theme_dir']) . '/theme_info.xml'))
+		if (!is_dir($smfFunc['db_unescape_string']($_REQUEST['theme_dir'])) || !file_exists($smfFunc['db_unescape_string']($_REQUEST['theme_dir']) . '/theme_info.xml'))
 			fatal_lang_error('theme_install_error', false);
 
 		$theme_name = basename($_REQUEST['theme_dir']);
-		$theme_dir = stripslashes($_REQUEST['theme_dir']);
+		$theme_dir = $smfFunc['db_unescape_string']($_REQUEST['theme_dir']);
 	}
 	elseif ($method = 'upload')
 	{
@@ -1122,16 +1122,16 @@ function ThemeInstall()
 
 				$request = $smfFunc['db_query']('', "
 					SELECT th.value AS base_theme_dir, th2.value AS base_theme_url" . (!empty($explicit_images) ? '' : ", th3.value AS images_url") . "
-					FROM ({$db_prefix}themes AS th, {$db_prefix}themes AS th2" . (!empty($explicit_images) ? '' : ", {$db_prefix}themes AS th3") . ")
+					FROM {$db_prefix}themes AS th
+						INNER JOIN {$db_prefix}themes AS th2 ON (th2.id_theme = th.id_theme
+							AND th2.id_member = 0
+							AND th2.variable = 'theme_url')" . (!empty($explicit_images) ? '' : "
+						INNER JOIN {$db_prefix}themes AS th3 ON (th3.id_theme = th.id_theme
+							AND th3.id_member = 0
+							AND th3.variable = 'images_url')") . "
 					WHERE th.id_member = 0
 						AND (th.value LIKE '%/$install_info[based_on]' OR th.value LIKE '%\\$install_info[based_on]')
 						AND th.variable = 'theme_dir'
-						AND th.id_theme = th2.id_theme
-						AND th2.id_member = 0
-						AND th2.variable = 'theme_url'" . (!empty($explicit_images) ? '' : "
-						AND th.id_theme = th3.id_theme
-						AND th3.id_member = 0
-						AND th3.variable = 'images_url'") . "
 					LIMIT 1", __FILE__, __LINE__);
 				$temp = $smfFunc['db_fetch_assoc']($request);
 				$smfFunc['db_free_result']($request);
@@ -1162,7 +1162,7 @@ function ThemeInstall()
 		$setString = '';
 		foreach ($install_info as $var => $val)
 			$setString .= "
-				($id_theme, SUBSTRING('" . addslashes($var) . "', 1, 255), SUBSTRING('" . addslashes($val) . "', 1, 65534)),";
+				($id_theme, SUBSTRING('" . $smfFunc['db_escape_string']($var) . "', 1, 255), SUBSTRING('" . $smfFunc['db_escape_string']($val) . "', 1, 65534)),";
 		$setString = substr($setString, 0, -1);
 
 		$smfFunc['db_query']('', "
@@ -1390,7 +1390,7 @@ function EditTheme()
 		{
 			if (is_array($_POST['entire_file']))
 				$_POST['entire_file'] = implode("\n", $_POST['entire_file']);
-			$_POST['entire_file'] = rtrim(strtr(stripslashes($_POST['entire_file']), array("\r" => '', '   ' => "\t")));
+			$_POST['entire_file'] = rtrim(strtr($smfFunc['db_unescape_string']($_POST['entire_file']), array("\r" => '', '   ' => "\t")));
 
 			// Check for a parse error!
 			if (substr($_REQUEST['filename'], -13) == '.template.php' && is_writable($theme_dir) && @ini_get('display_errors'))
@@ -1434,7 +1434,7 @@ function EditTheme()
 			$context['sub_template'] = 'edit_file';
 
 			// Recycle the submitted data.
-			$context['entire_file'] = htmlspecialchars(stripslashes($_POST['entire_file']));
+			$context['entire_file'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['entire_file']));
 
 			// You were able to submit it, so it's reasonable to assume you are allowed to save.
 			$context['allow_save'] = true;
@@ -1955,8 +1955,10 @@ function template_main_below()
 // This is here because it's sorta complex.
 function phpcodefix($string)
 {
+	global $smfFunc;
+
 	// First remove the slashes from the single quotes.
-	$string = strtr(stripslashes($string), array('\\\'' => '\''));
+	$string = strtr($smfFunc['db_unescape_string']($string), array('\\\'' => '\''));
 
 	// Now add on an end echo and begin echo ;).
 	$string = "';

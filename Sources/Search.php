@@ -84,18 +84,18 @@ function PlushSearch1()
 		foreach ($temp_params as $i => $data)
 		{
 			@list ($k, $v) = explode('|\'|', $data);
-			$context['search_params'][$k] = stripslashes($v);
+			$context['search_params'][$k] = $smfFunc['db_unescape_string']($v);
 		}
 		if (isset($context['search_params']['brd']))
 			$context['search_params']['brd'] = $context['search_params']['brd'] == '' ? array() : explode(',', $context['search_params']['brd']);
 	}
 	if (isset($_REQUEST['search']))
-		$context['search_params']['search'] = stripslashes(un_htmlspecialchars($_REQUEST['search']));
+		$context['search_params']['search'] = $smfFunc['db_unescape_string'](un_htmlspecialchars($_REQUEST['search']));
 
 	if (isset($context['search_params']['search']))
 		$context['search_params']['search'] = htmlspecialchars($context['search_params']['search']);
 	if (isset($context['search_params']['userspec']))
-		$context['search_params']['userspec'] = htmlspecialchars(stripslashes($context['search_params']['userspec']));
+		$context['search_params']['userspec'] = htmlspecialchars($smfFunc['db_unescape_string']($context['search_params']['userspec']));
 	if (!empty($context['search_params']['searchtype']))
 		$context['search_params']['searchtype'] = 2;
 	if (!empty($context['search_params']['minage']))
@@ -296,14 +296,14 @@ function PlushSearch2()
 		$canDoBooleanSearch = version_compare($smfFunc['db_server_info']($db_connection), '4.0.1', '>=') == 1;
 
 		// Get a list of banned fulltext words.
-		$banned_words = empty($modSettings['search_banned_words']) ? array() : explode(',', addslashes($modSettings['search_banned_words']));
+		$banned_words = empty($modSettings['search_banned_words']) ? array() : explode(',', $smfFunc['db_escape_string']($modSettings['search_banned_words']));
 	}
 	elseif (!empty($modSettings['search_index']) && $modSettings['search_index'] == 'custom' && !empty($modSettings['search_custom_index_config']))
 	{
 		$customIndexSettings = unserialize($modSettings['search_custom_index_config']);
 
 		$min_word_length = $customIndexSettings['bytes_per_word'];
-		$banned_words = empty($modSettings['search_stopwords']) ? array() : explode(',', addslashes($modSettings['search_stopwords']));
+		$banned_words = empty($modSettings['search_stopwords']) ? array() : explode(',', $smfFunc['db_escape_string']($modSettings['search_stopwords']));
 	}
 	else
 		$modSettings['search_index'] = '';
@@ -318,7 +318,7 @@ function PlushSearch2()
 		foreach ($temp_params as $i => $data)
 		{
 			@list ($k, $v) = explode('|\'|', $data);
-			$search_params[$k] = stripslashes($v);
+			$search_params[$k] = $smfFunc['db_unescape_string']($v);
 		}
 		if (isset($search_params['brd']))
 			$search_params['brd'] = empty($search_params['brd']) ? array() : explode(',', $search_params['brd']);
@@ -372,7 +372,7 @@ function PlushSearch2()
 		$userQuery = '';
 	else
 	{
-		$userString = strtr($smfFunc['htmlspecialchars'](stripslashes($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
+		$userString = strtr($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
@@ -515,7 +515,7 @@ function PlushSearch2()
 		if (isset($_GET['search']))
 			$search_params['search'] = un_htmlspecialchars($_GET['search']);
 		elseif (isset($_POST['search']))
-			$search_params['search'] = stripslashes($_POST['search']);
+			$search_params['search'] = $smfFunc['db_unescape_string']($_POST['search']);
 		else
 			$search_params['search'] = '';
 	}
@@ -554,7 +554,7 @@ function PlushSearch2()
 		if ($word === '-')
 		{
 			if (($word = trim($phraseArray[$index], '-_\' ')) !== '' && !in_array($word, $blacklisted_words))
-				$excludedWords[] = addslashes($word);
+				$excludedWords[] = $smfFunc['db_escape_string']($word);
 			unset($phraseArray[$index]);
 		}
 
@@ -563,7 +563,7 @@ function PlushSearch2()
 		if (strpos(trim($word), '-') === 0)
 		{
 			if (($word = trim($word, '-_\' ')) !== '' && !in_array($word, $blacklisted_words))
-				$excludedWords[] = addslashes($word);
+				$excludedWords[] = $smfFunc['db_escape_string']($word);
 			unset($wordArray[$index]);
 		}
 
@@ -576,7 +576,7 @@ function PlushSearch2()
 		if (($searchArray[$index] = trim($value, '-_\' ')) === '' || in_array($searchArray[$index], $blacklisted_words))
 			unset($searchArray[$index]);
 		else
-			$searchArray[$index] = addslashes($searchArray[$index]);
+			$searchArray[$index] = $smfFunc['db_escape_string']($searchArray[$index]);
 	}
 	$searchArray = array_slice(array_unique($searchArray), 0, 10);
 
@@ -625,7 +625,7 @@ function PlushSearch2()
 
 			$searchWords[$orIndex]['all_words'][] = $word;
 
-			$subjectWords = text2words(stripslashes($word));
+			$subjectWords = text2words($smfFunc['db_unescape_string']($word));
 			if (!$is_excluded || count($subjectWords) === 1)
 			{
 				$searchWords[$orIndex]['subject_words'] = array_merge($searchWords[$orIndex]['subject_words'], $subjectWords);
@@ -637,7 +637,7 @@ function PlushSearch2()
 
 			if (!empty($modSettings['search_index']))
 			{
-				$subwords = text2words(stripslashes($word), $modSettings['search_index'] === 'fulltext' ? null : $min_word_length, $modSettings['search_index'] === 'custom');
+				$subwords = text2words($smfFunc['db_unescape_string']($word), $modSettings['search_index'] === 'fulltext' ? null : $min_word_length, $modSettings['search_index'] === 'custom');
 
 				if (($modSettings['search_index'] === 'custom' || ($modSettings['search_index'] === 'fulltext' && !$canDoBooleanSearch && count($subwords) > 1)) && empty($modSettings['search_force_index']))
 					$searchWords[$orIndex]['words'][] = $word;
@@ -659,7 +659,7 @@ function PlushSearch2()
 					$relyOnIndex = true;
 					foreach ($subwords as $subword)
 					{
-						if (($modSettings['search_index'] === 'custom' || strlen(stripslashes($subword)) >= $min_word_length) && !in_array($subword, $banned_words))
+						if (($modSettings['search_index'] === 'custom' || strlen($smfFunc['db_unescape_string']($subword)) >= $min_word_length) && !in_array($subword, $banned_words))
 						{
 							$searchWords[$orIndex]['indexed_words'][] = $subword;
 							if ($is_excluded)
@@ -713,7 +713,7 @@ function PlushSearch2()
 			if (empty($pspell_link))
 				continue;
 
-			$word = stripslashes($word);
+			$word = $smfFunc['db_unescape_string']($word);
 			// Don't check phrases.
 			if (preg_match('~^\w+$~', $word) === 0)
 			{
@@ -764,7 +764,7 @@ function PlushSearch2()
 			$temp_excluded = array('search' => array(), 'display' => array());
 			foreach ($excludedWords as $word)
 			{
-				$word = stripslashes($word);
+				$word = $smfFunc['db_unescape_string']($word);
 
 				if (preg_match('~^\w+$~', $word) == 0)
 				{
@@ -787,7 +787,7 @@ function PlushSearch2()
 				$temp_params['brd'] = implode(',', $temp_params['brd']);
 			$context['params'] = array();
 			foreach ($temp_params as $k => $v)
-				$context['did_you_mean_params'][] = $k . '|\'|' . addslashes($v);
+				$context['did_you_mean_params'][] = $k . '|\'|' . $smfFunc['db_escape_string']($v);
 			$context['did_you_mean_params'] = base64_encode(implode('|"|', $context['did_you_mean_params']));
 			$context['did_you_mean'] = implode(' ', $did_you_mean['display']);
 		}
@@ -809,7 +809,7 @@ function PlushSearch2()
 		$temp_params['brd'] = implode(',', $temp_params['brd']);
 	$context['params'] = array();
 	foreach ($temp_params as $k => $v)
-		$context['params'][] = $k . '|\'|' . addslashes($v);
+		$context['params'][] = $k . '|\'|' . $smfFunc['db_escape_string']($v);
 	$context['params'] = base64_encode(implode('|"|', $context['params']));
 
 	// ... and add the links to the link tree.
@@ -1633,7 +1633,7 @@ function prepareSearchContext($reset = false)
 				$message['body'] = '';
 				foreach ($matches[0] as $index => $match)
 				{
-					$match = strtr(htmlspecialchars($match, ENT_QUOTES), array("\n" => '<br />'));
+					$match = strtr($smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string']($match), ENT_QUOTES)), array("\n" => '<br />'));
 					$message['body'] .= '<b>...</b>&nbsp;' . $match . '&nbsp;<b>...</b><br />';
 				}
 			}
@@ -1755,7 +1755,7 @@ function prepareSearchContext($reset = false)
 		// Fix the international characters in the keyword too.
 		$query = strtr($smfFunc['htmlspecialchars']($query), array('\\\'' => '\''));
 
-		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? stripslashes('\$1') : '<b class=\"highlight\">\$1</b>'", $body_highlighted);
+		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? $smfFunc[\'db_unescape_string\']('\$1') : '<b class=\"highlight\">\$1</b>'", $body_highlighted);
 		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<b class="highlight">$1</b>', $subject_highlighted);
 	}
 

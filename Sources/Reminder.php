@@ -296,7 +296,7 @@ function secret_answer2()
 	$smfFunc['db_free_result']($request);
 
 	// Check if the secret answer is correct.
-	if ($row['secret_question'] == '' || $row['secret_answer'] == '' || md5(stripslashes($_POST['secret_answer'])) != $row['secret_answer'])
+	if ($row['secret_question'] == '' || $row['secret_answer'] == '' || md5($smfFunc['db_unescape_string']($_POST['secret_answer'])) != $row['secret_answer'])
 	{
 		log_error(sprintf($txt['reminder_error'], $row['member_name']));
 		fatal_lang_error('pswd7', false);

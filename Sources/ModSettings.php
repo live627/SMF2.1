@@ -497,7 +497,7 @@ function ModifySignatureSettings()
 
 				$sig = strtr($sig, array("\n" => '<br />'));
 				if ($sig != $row['signature'])
-					$changes[$row['id_member']] = addslashes($sig);
+					$changes[$row['id_member']] = $smfFunc['db_escape_string']($sig);
 			}
 			if ($smfFunc['db_num_rows']($request) == 0)
 				$done = true;

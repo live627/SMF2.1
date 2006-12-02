@@ -68,9 +68,9 @@ function SendTopic()
 	// Get the topic's subject.
 	$request = $smfFunc['db_query']('', "
 		SELECT m.subject
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 		WHERE t.id_topic = $topic
-			AND t.id_first_msg = m.id_msg
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error(472, false);
@@ -106,7 +106,7 @@ function SendTopic()
 		fatal_lang_error(75, false);
 	if (!isset($_POST['y_email']) || $_POST['y_email'] == '')
 		fatal_lang_error(76, false);
-	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['y_email'])) == 0)
+	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['y_email'])) == 0)
 		fatal_lang_error(243, false);
 
 	// The receiver should be valid to.
@@ -114,7 +114,7 @@ function SendTopic()
 		fatal_lang_error(75, false);
 	if (!isset($_POST['r_email']) || $_POST['r_email'] == '')
 		fatal_lang_error(76, false);
-	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['r_email'])) == 0)
+	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['r_email'])) == 0)
 		fatal_lang_error(243, false);
 
 	// Emails don't like entities...
@@ -155,10 +155,10 @@ function ReportToModerator()
 	// Check the message's ID - don't want anyone reporting a post they can't even see!
 	$result = $smfFunc['db_query']('', "
 		SELECT m.id_msg, m.id_member, t.id_member_started
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
 		WHERE m.id_msg = $_GET[msg]
 			AND m.id_topic = $topic
-			AND t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($result) == 0)
 		fatal_lang_error('smf232');
@@ -259,7 +259,7 @@ function ReportToModerator2()
 		else
 		{
 			// Serve, Protect!
-			$message = addslashes__recursive($message);
+			$message = escapestring__recursive($message);
 			if (empty($message['real_name']))
 				$message['real_name'] = $message['poster_name'];
 

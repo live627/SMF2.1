@@ -52,6 +52,14 @@ $databases = array(
 		'supported' => function_exists('pg_connect'),
 		'always_has_db' => true,
 	),
+	'sqlite' => array(
+		'name' => 'SQLite',
+		'version' => '1',
+		'function_check' => 'sqlite_open',
+		'version_check' => 'return 1;',
+		'supported' => function_exists('sqlite_open'),
+		'always_has_db' => true,
+	),
 );
 
 // Initialize everything and load the language files.
@@ -595,7 +603,7 @@ function doStep0()
 // Step one: Do the SQL thang.
 function doStep1()
 {
-	global $txt, $db_connection, $smfFunc, $databases, $modSettings;
+	global $txt, $db_connection, $smfFunc, $databases, $modSettings, $db_type, $sourcedir;
 
 	if (substr($_POST['boardurl'], -10) == '/index.php')
 		$_POST['boardurl'] = substr($_POST['boardurl'], 0, -10);
@@ -790,6 +798,7 @@ function doStep1()
 		'{$enableCompressedOutput}' => isset($_POST['compress']) ? '1' : '0',
 		'{$databaseSession_enable}' => isset($_POST['dbsession']) ? '1' : '0',
 		'{$smf_version}' => $GLOBALS['current_smf_version'],
+		'{$current_time}' => time(),
 	);
 	foreach ($txt as $key => $value)
 	{
@@ -834,7 +843,9 @@ function doStep1()
 			if (($db_type != 'mysql' || mysql_errno($db_connection) === 1050) && preg_match('~^\s*CREATE TABLE ([^\s\n\r]+?)~', $current_statement, $match) == 1)
 				$exists[] = $match[1];
 			else
+			{
 				$failures[$count] = $smfFunc['db_error']();
+			}
 		}
 
 		$current_statement = '';
@@ -925,9 +936,9 @@ function doStep1()
 	// Let's optimize those new tables.
 	db_extend();
 	$tables = $smfFunc['db_list_tables']($db_name);
-	while ($table = $smfFunc['db_fetch_row']($tables))
+	foreach ($tables as $table)
 	{
-		$smfFunc['db_optimize_table']($table[0]) or $db_messed = true;
+		$smfFunc['db_optimize_table']($table) or $db_messed = true;
 
 		if (!empty($db_messed))
 		{
@@ -935,7 +946,6 @@ function doStep1()
 			break;
 		}
 	}
-	$smfFunc['db_free_result']($tables);
 
 	if (!empty($failures))
 	{

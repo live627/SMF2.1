@@ -1,102 +1,17 @@
 #### ATTENTION: You do not need to run or use this file!  The install.php script does everything for you!
-#### Install script for PostgreSQL 8.0.1
-
-#
-# Create PostgreSQL functions.
-# Some taken from http://www.xach.com/aolserver/mysql-functions.sql.
-
-CREATE OR REPLACE FUNCTION FROM_UNIXTIME(integer) RETURNS timestamp AS 
-  'SELECT timestamp ''epoch'' + $1 * interval ''1 second'' AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION IFNULL (text, text) RETURNS text AS
-  'SELECT COALESCE($1, $2) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION IFNULL (int4, int4) RETURNS int4 AS
-  'SELECT COALESCE($1, $2) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION INET_ATON(text) RETURNS int4 AS
-  'SELECT
-    split_part($1, ''.'', 1)::int4 * (256 * 256 * 256) +
-    split_part($1, ''.'', 2)::int4 * (256 * 256) +
-    split_part($1, ''.'', 3)::int4 * 256 +
-    split_part($1, ''.'', 4)::int4 AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION INET_NTOA(bigint) RETURNS text AS
-  'SELECT
-    (($1 >> 24) & 255::int8) || ''.'' ||
-    (($1 >> 16) & 255::int8) || ''.'' ||
-    (($1 >> 8) & 255::int8) || ''.'' ||
-    ($1 & 255::int8) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION FIND_IN_SET(text, text) RETURNS boolean AS
-  'SELECT
-  	COALESCE($1 = ANY(STRING_TO_ARRAY($2, '','')), FALSE) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION LEFT (text, int4) RETURNS text AS
-  'SELECT SUBSTRING($1 FROM 0 FOR $2) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION add_num_text (text, integer) RETURNS text AS
-  'SELECT CAST ((CAST($1 AS integer) + $2) AS text) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION YEAR (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(YEAR FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION MONTH (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(MONTH FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION DAYOFMONTH (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(DAY FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION HOUR (timestamp) RETURNS integer AS
-  'SELECT CAST (EXTRACT(HOUR FROM $1) AS integer) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION DATE_FORMAT (timestamp, text) RETURNS text AS
-  'SELECT
-   	REPLACE(
-   		REPLACE($2, ''%m'', CAST (EXTRACT(MONTH FROM $1) AS text)),
-   	''%d'', CAST (EXTRACT(DAY FROM $1) AS text)) AS result'
-LANGUAGE 'sql';
-
-CREATE OR REPLACE FUNCTION TO_DAYS (timestamp) RETURNS integer AS
-  'SELECT DATE_PART(''DAY'', $1 - ''0000-01-01'')::integer AS result'
-LANGUAGE 'sql';
-
-#
-# Create PostgreSQL operators.
-#
-
-CREATE OPERATOR + (PROCEDURE = add_num_text, LEFTARG = text, RIGHTARG = integer);
-
-#
-# Sequence for table `admin_info_files`
-#
-
-CREATE SEQUENCE {$db_prefix}admin_info_files_seq START WITH 8;
+#### Install script for SQLite
 
 #
 # Table structure for table `admin_info_files`
 #
 
 CREATE TABLE {$db_prefix}admin_info_files (
-  id_file smallint default nextval('{$db_prefix}admin_info_files_seq'),
+  id_file integer primary key,
   filename varchar(255) NOT NULL,
   path varchar(255) NOT NULL,
   parameters varchar(255) NOT NULL,
   data text NOT NULL,
-  filetype varchar(255) NOT NULL,
-  PRIMARY KEY (id_file)
+  filetype varchar(255) NOT NULL
 );
 
 #
@@ -109,6 +24,7 @@ CREATE INDEX {$db_prefix}admin_info_files_filename ON {$db_prefix}admin_info_fil
 # Dumping data for table `admin_info_files`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}admin_info_files (id_file, filename, path, parameters, data, filetype) VALUES (1, 'current-version.js', '/smf/', 'version=%3$s', '', 'text/javascript');
 INSERT INTO {$db_prefix}admin_info_files (id_file, filename, path, parameters, data, filetype) VALUES (2, 'detailed-version.js', '/smf/', 'language=%1$s', '', 'text/javascript');
 INSERT INTO {$db_prefix}admin_info_files (id_file, filename, path, parameters, data, filetype) VALUES (3, 'latest-news.js', '/smf/', 'language=%1$s&format=%2$s', '', 'text/javascript');
@@ -116,6 +32,8 @@ INSERT INTO {$db_prefix}admin_info_files (id_file, filename, path, parameters, d
 INSERT INTO {$db_prefix}admin_info_files (id_file, filename, path, parameters, data, filetype) VALUES (5, 'latest-smileys.js', '/smf/', 'language=%1$s', '', 'text/javascript');
 INSERT INTO {$db_prefix}admin_info_files (id_file, filename, path, parameters, data, filetype) VALUES (6, 'latest-support.js', '/smf/', 'language=%1$s', '', 'text/javascript');
 INSERT INTO {$db_prefix}admin_info_files (id_file, filename, path, parameters, data, filetype) VALUES (7, 'latest-themes.js', '/smf/', 'language=%1$s', '', 'text/javascript');
+COMMIT;
+
 # --------------------------------------------------------
 
 #
@@ -129,17 +47,11 @@ CREATE TABLE {$db_prefix}approval_queue (
 );
 
 #
-# Sequence for table `attachments`
-#
-
-CREATE SEQUENCE {$db_prefix}attachments_seq;
-
-#
 # Table structure for table `attachments`
 #
 
 CREATE TABLE {$db_prefix}attachments (
-  id_attach int default nextval('{$db_prefix}attachments_seq'),
+  id_attach integer primary key,
   id_thumb int NOT NULL default '0',
   id_msg int NOT NULL default '0',
   id_member int NOT NULL default '0',
@@ -149,8 +61,7 @@ CREATE TABLE {$db_prefix}attachments (
   downloads int NOT NULL default '0',
   width int NOT NULL default '0',
   height int NOT NULL default '0',
-  approved smallint NOT NULL default '1',
-  PRIMARY KEY (id_attach)
+  approved smallint NOT NULL default '1'
 );
 
 #
@@ -161,17 +72,11 @@ CREATE UNIQUE INDEX {$db_prefix}attachments_id_member ON {$db_prefix}attachments
 CREATE INDEX {$db_prefix}attachments_id_msg ON {$db_prefix}attachments (id_msg);
 
 #
-# Sequence for table `ban_groups`
-#
-
-CREATE SEQUENCE {$db_prefix}ban_groups_seq;
-
-#
 # Table structure for table `ban_groups`
 #
 
 CREATE TABLE {$db_prefix}ban_groups (
-  id_ban_group int default nextval('{$db_prefix}ban_groups_seq'),
+  id_ban_group integer primary key,
   name varchar(20) NOT NULL default '',
   ban_time int NOT NULL default '0',
   expire_time int,
@@ -180,22 +85,15 @@ CREATE TABLE {$db_prefix}ban_groups (
   cannot_post smallint NOT NULL default '0',
   cannot_login smallint NOT NULL default '0',
   reason varchar(255) NOT NULL,
-  notes text NOT NULL,
-  PRIMARY KEY (id_ban_group)
+  notes text NOT NULL
 );
-
-#
-# Sequence for table `ban_items`
-#
-
-CREATE SEQUENCE {$db_prefix}ban_items_seq;
 
 #
 # Table structure for table `ban_items`
 #
 
 CREATE TABLE {$db_prefix}ban_items (
-  id_ban int default nextval('{$db_prefix}ban_items_seq'),
+  id_ban integer primary key,
   id_ban_group smallint NOT NULL default '0',
   ip_low1 smallint NOT NULL default '0',
   ip_high1 smallint NOT NULL default '0',
@@ -208,8 +106,7 @@ CREATE TABLE {$db_prefix}ban_items (
   hostname varchar(255) NOT NULL,
   email_address varchar(255) NOT NULL,
   id_member int NOT NULL default '0',
-  hits int NOT NULL default '0',
-  PRIMARY KEY (id_ban)
+  hits int NOT NULL default '0'
 );
 
 #
@@ -234,6 +131,7 @@ CREATE TABLE {$db_prefix}board_permissions (
 # Dumping data for table `board_permissions`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VALUES (-1, 1, 'poll_view');
 INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VALUES (0, 1, 'remove_own');
 INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VALUES (0, 1, 'lock_own');
@@ -501,20 +399,16 @@ INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VAL
 INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VALUES (3, 4, 'delete_any');
 INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VALUES (3, 4, 'modify_any');
 INSERT INTO {$db_prefix}board_permissions (id_group, id_profile, permission) VALUES (3, 4, 'approve_posts');
+COMMIT;
+
 # --------------------------------------------------------
-
-#
-# Sequence for table `boards`
-#
-
-CREATE SEQUENCE {$db_prefix}boards_seq START WITH 2;
 
 #
 # Table structure for table `boards`
 #
 
 CREATE TABLE {$db_prefix}boards (
-  id_board smallint default nextval('{$db_prefix}boards_seq'),
+  id_board integer primary key,
   id_cat smallint NOT NULL default '0',
   child_level smallint NOT NULL default '0',
   id_parent smallint NOT NULL default '0',
@@ -531,8 +425,7 @@ CREATE TABLE {$db_prefix}boards (
   id_theme smallint NOT NULL default '0',
   override_theme smallint NOT NULL default '0',
   unapproved_posts smallint NOT NULL default '0',
-  unapproved_topics smallint NOT NULL default '0',
-  PRIMARY KEY (id_board)
+  unapproved_topics smallint NOT NULL default '0'
 );
 
 #
@@ -554,24 +447,17 @@ VALUES (1, 1, 1, 1, 1, '{$default_board_name}', '{$default_board_description}', 
 # --------------------------------------------------------
 
 #
-# Sequence for table `calendar`
-#
-
-CREATE SEQUENCE {$db_prefix}calendar_seq;
-
-#
 # Table structure for table `calendar`
 #
 
 CREATE TABLE {$db_prefix}calendar (
-  id_event smallint default nextval('{$db_prefix}calendar_seq'),
+  id_event integer primary key,
   start_date date NOT NULL default '0001-01-01',
   end_date date NOT NULL default '0001-01-01',
   id_board smallint NOT NULL default '0',
   id_topic int NOT NULL default '0',
   title varchar(48) NOT NULL default '',
-  id_member int NOT NULL default '0',
-  PRIMARY KEY (id_event)
+  id_member int NOT NULL default '0'
 );
 
 #
@@ -583,20 +469,13 @@ CREATE INDEX {$db_prefix}calendar_end_date ON {$db_prefix}calendar (end_date);
 CREATE INDEX {$db_prefix}calendar_topic ON {$db_prefix}calendar (id_topic, id_member);
 
 #
-# Sequence for table `calendar_holidays`
-#
-
-CREATE SEQUENCE {$db_prefix}calendar_holidays_seq;
-
-#
 # Table structure for table `calendar_holidays`
 #
 
 CREATE TABLE {$db_prefix}calendar_holidays (
-  id_holiday smallint default nextval('{$db_prefix}calendar_holidays_seq'),
+  id_holiday integer primary key,
   event_date date NOT NULL default '0001-01-01',
-  title varchar(30) NOT NULL default '',
-  PRIMARY KEY (id_holiday)
+  title varchar(30) NOT NULL default ''
 );
 
 #
@@ -609,6 +488,7 @@ CREATE INDEX {$db_prefix}calendar_holidays_event_date ON {$db_prefix}calendar_ho
 # Dumping data for table `calendar_holidays`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('New Year\'s', '0004-01-01');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Christmas', '0004-12-25');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Valentine\'s Day', '0004-02-14');
@@ -776,24 +656,19 @@ INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day', '2019-09-09');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('Labor Day', '2020-09-07');
 INSERT INTO {$db_prefix}calendar_holidays (title, event_date) VALUES ('D-Day', '0004-06-06');
+COMMIT;
+
 # --------------------------------------------------------
-
-#
-# Sequence for table `categories`
-#
-
-CREATE SEQUENCE {$db_prefix}categories_seq START WITH 2;
 
 #
 # Table structure for table `categories`
 #
 
 CREATE TABLE {$db_prefix}categories (
-  id_cat smallint default nextval('{$db_prefix}categories_seq'),
+  id_cat integer primary key,
   cat_order smallint NOT NULL default '0',
   name varchar(255) NOT NULL,
-  can_collapse smallint NOT NULL default '1',
-  PRIMARY KEY (id_cat)
+  can_collapse smallint NOT NULL default '1'
 );
 
 #
@@ -815,17 +690,11 @@ CREATE TABLE {$db_prefix}collapsed_categories (
 );
 
 #
-# Sequence for table `custom_fields`
-#
-
-CREATE SEQUENCE {$db_prefix}custom_fields_seq;
-
-#
 # Table structure for table `custom_fields`
 #
 
 CREATE TABLE {$db_prefix}custom_fields (
-  id_field smallint default nextval('{$db_prefix}custom_fields_seq'),
+  id_field integer primary key,
   col_name varchar(12) NOT NULL default '',
   field_name varchar(40) NOT NULL default '',
   field_desc varchar(255) NOT NULL,
@@ -839,8 +708,7 @@ CREATE TABLE {$db_prefix}custom_fields (
   private smallint NOT NULL default '0',
   active smallint NOT NULL default '1',
   bbc smallint NOT NULL default '0',
-  default_value varchar(8) NOT NULL default '0',
-  PRIMARY KEY (id_field)
+  default_value varchar(8) NOT NULL default '0'
 );
 
 #
@@ -860,17 +728,11 @@ CREATE TABLE {$db_prefix}group_moderators (
 );
 
 #
-# Sequence for table `log_actions`
-#
-
-CREATE SEQUENCE {$db_prefix}log_actions_seq;
-
-#
 # Table structure for table `log_actions`
 #
 
 CREATE TABLE {$db_prefix}log_actions (
-  id_action int default nextval('{$db_prefix}log_actions_seq'),
+  id_action integer primary key,
   log_time int NOT NULL default '0',
   id_member int NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
@@ -878,8 +740,7 @@ CREATE TABLE {$db_prefix}log_actions (
   id_board smallint NOT NULL default '0',
   id_topic int NOT NULL default '0',
   id_msg int NOT NULL default '0',
-  extra text NOT NULL,
-  PRIMARY KEY (id_action)
+  extra text NOT NULL
 );
 
 #
@@ -912,22 +773,15 @@ CREATE INDEX {$db_prefix}log_activity_hits ON {$db_prefix}log_activity (hits);
 CREATE INDEX {$db_prefix}log_activity_most_on ON {$db_prefix}log_activity (most_on);
 
 #
-# Sequence for table `log_banned`
-#
-
-CREATE SEQUENCE {$db_prefix}log_banned_seq;
-
-#
 # Table structure for table `log_banned`
 #
 
 CREATE TABLE {$db_prefix}log_banned (
-  id_ban_log int default nextval('{$db_prefix}log_banned_seq'),
+  id_ban_log integer primary key,
   id_member int NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
   email varchar(255) NOT NULL,
-  log_time int NOT NULL default '0',
-  PRIMARY KEY (id_ban_log)
+  log_time int NOT NULL default '0'
 );
 
 #
@@ -960,17 +814,11 @@ CREATE TABLE {$db_prefix}log_digest (
 );
 
 #
-# Sequence for table `log_errors`
-#
-
-CREATE SEQUENCE {$db_prefix}log_errors_seq;
-
-#
 # Table structure for table `log_errors`
 #
 
 CREATE TABLE {$db_prefix}log_errors (
-  id_error int default nextval('{$db_prefix}log_errors_seq'),
+  id_error integer primary key,
   log_time int NOT NULL default '0',
   id_member int NOT NULL default '0',
   ip char(16) NOT NULL default '                ',
@@ -979,8 +827,7 @@ CREATE TABLE {$db_prefix}log_errors (
   session char(32) NOT NULL default '                                ',
   error_type char(15) NOT NULL default 'general',
   file varchar(255) NOT NULL,
-  line int NOT NULL default '0',
-  PRIMARY KEY (id_error)
+  line int NOT NULL default '0'
 );
 
 #
@@ -1002,22 +849,15 @@ CREATE TABLE {$db_prefix}log_floodcontrol (
 );
 
 #
-# Sequence for table `log_group_requests`
-#
-
-CREATE SEQUENCE {$db_prefix}log_group_requests_seq;
-
-#
 # Table structure for table `log_group_requests`
 #
 
 CREATE TABLE {$db_prefix}log_group_requests (
-  id_request int default nextval('{$db_prefix}log_group_requests_seq'),
+  id_request integer primary key,
   id_member int NOT NULL default '0',
   id_group smallint NOT NULL default '0',
   time_applied int NOT NULL default '0',
-  reason text NOT NULL,
-  PRIMARY KEY (id_request)
+  reason text NOT NULL
 );
 
 #
@@ -1088,17 +928,11 @@ CREATE INDEX {$db_prefix}log_online_log_time ON {$db_prefix}log_online (log_time
 CREATE INDEX {$db_prefix}log_online_id_member ON {$db_prefix}log_online (id_member);
 
 #
-# Sequence for table `log_packages`
-#
-
-CREATE SEQUENCE {$db_prefix}log_packages_seq;
-
-#
 # Table structure for table `log_packages`
 #
 
 CREATE TABLE {$db_prefix}log_packages (
-  id_install int default nextval('{$db_prefix}log_packages_seq'),
+  id_install integer primary key,
   filename varchar(255) NOT NULL,
   package_id varchar(255) NOT NULL,
   name varchar(255) NOT NULL,
@@ -1111,8 +945,7 @@ CREATE TABLE {$db_prefix}log_packages (
   time_removed int NOT NULL default '0',
   install_state smallint NOT NULL default '1',
   failed_steps text NOT NULL,
-  themes_installed varchar(255) NOT NULL,
-  PRIMARY KEY (id_install)
+  themes_installed varchar(255) NOT NULL
 );
 
 #
@@ -1133,17 +966,11 @@ CREATE TABLE {$db_prefix}log_polls (
 );
 
 #
-# Sequence for table `log_reported`
-#
-
-CREATE SEQUENCE {$db_prefix}log_reported_seq;
-
-#
 # Table structure for table `log_reported`
 #
 
 CREATE TABLE {$db_prefix}log_reported (
-  id_report int default nextval('{$db_prefix}log_reported_seq'),
+  id_report integer primary key,
   id_msg int NOT NULL default '0',
   id_topic int NOT NULL default '0',
   id_board smallint NOT NULL default '0',
@@ -1155,8 +982,7 @@ CREATE TABLE {$db_prefix}log_reported (
   time_updated int NOT NULL default '0',
   num_reports int NOT NULL default '0',
   closed smallint NOT NULL default '0',
-  ignore_all smallint NOT NULL default '0',
-  PRIMARY KEY (id_report)
+  ignore_all smallint NOT NULL default '0'
 );
 
 #
@@ -1170,23 +996,16 @@ CREATE INDEX {$db_prefix}log_reported_time_started ON {$db_prefix}log_reported (
 CREATE INDEX {$db_prefix}log_reported_id_msg ON {$db_prefix}log_reported (id_msg);
 
 #
-# Sequence for table `log_reported_comments`
-#
-
-CREATE SEQUENCE {$db_prefix}log_reported_comments_seq;
-
-#
 # Table structure for table `log_reported_comments`
 #
 
 CREATE TABLE {$db_prefix}log_reported_comments (
-  id_comment int default nextval('{$db_prefix}log_reported_comments_seq'),
+  id_comment integer primary key,
   id_report int NOT NULL,
   id_member int NOT NULL,
   membername varchar(255) NOT NULL,
   comment varchar(255) NOT NULL,
-  time_sent int NOT NULL,
-  PRIMARY KEY (id_comment)
+  time_sent int NOT NULL
 );
 
 #
@@ -1198,21 +1017,14 @@ CREATE INDEX {$db_prefix}log_reported_comments_id_member ON {$db_prefix}log_repo
 CREATE INDEX {$db_prefix}log_reported_comments_time_sent ON {$db_prefix}log_reported_comments (time_sent);
 
 #
-# Sequence for table `log_scheduled_tasks`
-#
-
-CREATE SEQUENCE {$db_prefix}log_scheduled_tasks_seq;
-
-#
 # Table structure for table `log_scheduled_tasks`
 #
 
 CREATE TABLE {$db_prefix}log_scheduled_tasks (
-  id_log int default nextval('{$db_prefix}log_scheduled_tasks_seq'),
+  id_log integer primary key,
   id_task smallint NOT NULL,
   time_run int NOT NULL,
-  time_taken float NOT NULL default '0',
-  PRIMARY KEY (id_log)
+  time_taken float NOT NULL default '0'
 );
 
 #
@@ -1282,25 +1094,18 @@ CREATE TABLE {$db_prefix}log_topics (
 CREATE INDEX {$db_prefix}log_topics_id_topic ON {$db_prefix}log_topics (id_topic);
 
 #
-# Sequence for table `mail_queue`
-#
-
-CREATE SEQUENCE {$db_prefix}mail_queue_seq;
-
-#
 # Table structure for table `mail_queue`
 #
 
 CREATE TABLE {$db_prefix}mail_queue (
-  id_mail int default nextval('{$db_prefix}mail_queue_seq'),
+  id_mail integer primary key,
   time_sent int NOT NULL default '0',
   recipient varchar(255) NOT NULL,
   body text NOT NULL,
   subject varchar(255) NOT NULL,
   headers text NOT NULL,
   send_html smallint NOT NULL default '0',
-  priority smallint NOT NULL default '1',
-  PRIMARY KEY (id_mail)
+  priority smallint NOT NULL default '1'
 );
 
 #
@@ -1311,17 +1116,11 @@ CREATE INDEX {$db_prefix}mail_queue_time_sent ON {$db_prefix}mail_queue (time_se
 CREATE INDEX {$db_prefix}mail_queue_priority ON {$db_prefix}mail_queue (priority);
 
 #
-# Sequence for table `membergroups`
-#
-
-CREATE SEQUENCE {$db_prefix}membergroups_seq START WITH 9;
-
-#
 # Table structure for table `membergroups`
 #
 
 CREATE TABLE {$db_prefix}membergroups (
-  id_group smallint default nextval('{$db_prefix}membergroups_seq'),
+  id_group integer primary key,
   group_name varchar(80) NOT NULL default '',
   description text NOT NULL,
   online_color varchar(20) NOT NULL default '',
@@ -1330,8 +1129,7 @@ CREATE TABLE {$db_prefix}membergroups (
   stars varchar(255) NOT NULL,
   group_type smallint NOT NULL default '0',
   hidden smallint NOT NULL default '0',
-  id_parent smallint NOT NULL default '-2',
-  PRIMARY KEY (id_group)
+  id_parent smallint NOT NULL default '-2'
 );
 
 #
@@ -1344,6 +1142,7 @@ CREATE INDEX {$db_prefix}membergroups_min_posts ON {$db_prefix}membergroups (min
 # Dumping data for table `membergroups`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}membergroups (id_group, group_name, description, online_color, min_posts, stars) VALUES (1, '{$default_administrator_group}', '', '#FF0000', -1, '5#staradmin.gif');
 INSERT INTO {$db_prefix}membergroups (id_group, group_name, description, online_color, min_posts, stars) VALUES (2, '{$default_global_moderator_group}', '', '#0000FF', -1, '5#stargmod.gif');
 INSERT INTO {$db_prefix}membergroups (id_group, group_name, description, online_color, min_posts, stars) VALUES (3, '{$default_moderator_group}', '', '', -1, '5#starmod.gif');
@@ -1352,20 +1151,16 @@ INSERT INTO {$db_prefix}membergroups (id_group, group_name, description, online_
 INSERT INTO {$db_prefix}membergroups (id_group, group_name, description, online_color, min_posts, stars) VALUES (6, '{$default_full_group}', '', '', 100, '3#star.gif');
 INSERT INTO {$db_prefix}membergroups (id_group, group_name, description, online_color, min_posts, stars) VALUES (7, '{$default_senior_group}', '', '', 250, '4#star.gif');
 INSERT INTO {$db_prefix}membergroups (id_group, group_name, description, online_color, min_posts, stars) VALUES (8, '{$default_hero_group}', '', '', 500, '5#star.gif');
+COMMIT;
+
 # --------------------------------------------------------
-
-#
-# Sequence for table `members`
-#
-
-CREATE SEQUENCE {$db_prefix}members_seq;
 
 #
 # Table structure for table `members`
 #
 
 CREATE TABLE {$db_prefix}members (
-  id_member int default nextval('{$db_prefix}members_seq'),
+  id_member integer primary key,
   member_name varchar(80) NOT NULL default '',
   date_registered int NOT NULL default '0',
   posts int NOT NULL default '0',
@@ -1417,8 +1212,7 @@ CREATE TABLE {$db_prefix}members (
   id_post_group smallint NOT NULL default '0',
   total_time_logged_in int NOT NULL default '0',
   password_salt varchar(5) NOT NULL default '',
-  ignore_boards varchar(255) NOT NULL,
-  PRIMARY KEY (id_member)
+  ignore_boards varchar(255) NOT NULL
 );
 
 #
@@ -1435,22 +1229,15 @@ CREATE INDEX {$db_prefix}members_lngfile ON {$db_prefix}members (lngfile);
 CREATE INDEX {$db_prefix}members_id_post_group ON {$db_prefix}members (id_post_group);
 
 #
-# Sequence for table `message_icons`
-#
-
-CREATE SEQUENCE {$db_prefix}message_icons_seq;
-
-#
 # Table structure for table `message_icons`
 #
 
 CREATE TABLE {$db_prefix}message_icons (
-  id_icon smallint default nextval('{$db_prefix}message_icons_seq'),
+  id_icon integer primary key,
   title varchar(80) NOT NULL default '',
   filename varchar(80) NOT NULL default '',
   id_board smallint NOT NULL default '0',
-  icon_order smallint NOT NULL default '0',
-  PRIMARY KEY (id_icon)
+  icon_order smallint NOT NULL default '0'
 );
 
 #
@@ -1464,6 +1251,7 @@ CREATE INDEX {$db_prefix}message_icons_id_board ON {$db_prefix}message_icons (id
 #
 
 # // !!! i18n
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('xx', 'Standard', '0');
 INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('thumbup', 'Thumb Up', '1');
 INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('thumbdown', 'Thumb Down', '2');
@@ -1476,20 +1264,16 @@ INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('che
 INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('grin', 'Grin', '9');
 INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('sad', 'Sad', '10');
 INSERT INTO {$db_prefix}message_icons (filename, title, icon_order) VALUES ('wink', 'Wink', '11');
+COMMIT;
+
 # --------------------------------------------------------
-
-#
-# Sequence for table `messages`
-#
-
-CREATE SEQUENCE {$db_prefix}messages_seq START WITH 2;
 
 #
 # Table structure for table `messages`
 #
 
 CREATE TABLE {$db_prefix}messages (
-  id_msg int default nextval('{$db_prefix}messages_seq'),
+  id_msg integer primary key,
   id_topic int NOT NULL default '0',
   id_board smallint NOT NULL default '0',
   poster_time int NOT NULL default '0',
@@ -1504,8 +1288,7 @@ CREATE TABLE {$db_prefix}messages (
   modified_name varchar(255) NOT NULL,
   body text NOT NULL,
   icon varchar(16) NOT NULL default 'xx',
-  approved smallint NOT NULL default '1',
-  PRIMARY KEY (id_msg)
+  approved smallint NOT NULL default '1'
 );
 
 #
@@ -1541,20 +1324,13 @@ CREATE TABLE {$db_prefix}moderators (
 );
 
 #
-# Sequence for table `package_servers`
-#
-
-CREATE SEQUENCE {$db_prefix}package_servers_seq;
-
-#
 # Table structure for table `package_servers`
 #
 
 CREATE TABLE {$db_prefix}package_servers (
-  id_server smallint default nextval('{$db_prefix}package_servers_seq'),
+  id_server integer primary key,
   name varchar(255) NOT NULL,
-  url varchar(255) NOT NULL,
-  PRIMARY KEY (id_server)
+  url varchar(255) NOT NULL
 );
 
 #
@@ -1567,30 +1343,26 @@ VALUES ('Simple Machines Third-party Mod Site', 'http://mods.simplemachines.org'
 # --------------------------------------------------------
 
 #
-# Sequence for table `permission_profiles`
-#
-
-CREATE SEQUENCE {$db_prefix}permission_profiles_seq START WITH 5;
-
-#
 # Table structure for table `permission_profiles`
 #
 
 CREATE TABLE {$db_prefix}permission_profiles (
-  id_profile smallint default nextval('{$db_prefix}permission_profiles_seq'),
+  id_profile integer primary key,
   profile_name varchar(255) NOT NULL,
-  id_parent smallint NOT NULL default '0',
-  PRIMARY KEY (id_profile)
+  id_parent smallint NOT NULL default '0'
 );
 
 #
 # Dumping data for table `permission_profiles`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}permission_profiles (id_profile, profile_name) VALUES (1, 'default');
 INSERT INTO {$db_prefix}permission_profiles (id_profile, profile_name) VALUES (2, 'no_polls');
 INSERT INTO {$db_prefix}permission_profiles (id_profile, profile_name) VALUES (3, 'reply_only');
 INSERT INTO {$db_prefix}permission_profiles (id_profile, profile_name) VALUES (4, 'read_only');
+COMMIT;
+
 # --------------------------------------------------------
 
 #
@@ -1608,6 +1380,7 @@ CREATE TABLE {$db_prefix}permissions (
 # Dumping data for table `permissions`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}permissions (id_group, permission) VALUES (-1, 'search_posts');
 INSERT INTO {$db_prefix}permissions (id_group, permission) VALUES (-1, 'calendar_view');
 INSERT INTO {$db_prefix}permissions (id_group, permission) VALUES (-1, 'view_stats');
@@ -1648,27 +1421,22 @@ INSERT INTO {$db_prefix}permissions (id_group, permission) VALUES (2, 'calendar_
 INSERT INTO {$db_prefix}permissions (id_group, permission) VALUES (2, 'calendar_edit_any');
 INSERT INTO {$db_prefix}permissions (id_group, permission) VALUES (2, 'karma_edit');
 INSERT INTO {$db_prefix}permissions (id_group, permission) VALUES (2, 'access_mod_center');
+COMMIT;
+
 # --------------------------------------------------------
-
-#
-# Sequence for table `personal_messages`
-#
-
-CREATE SEQUENCE {$db_prefix}personal_messages_seq;
 
 #
 # Table structure for table `personal_messages`
 #
 
 CREATE TABLE {$db_prefix}personal_messages (
-  id_pm int default nextval('{$db_prefix}personal_messages_seq'),
+  id_pm integer primary key,
   id_member_from int NOT NULL default '0',
   deleted_by_sender smallint NOT NULL default '0',
   from_name varchar(255) NOT NULL,
   msgtime int NOT NULL default '0',
   subject varchar(255) NOT NULL,
-  body text NOT NULL,
-  PRIMARY KEY (id_pm)
+  body text NOT NULL
 );
 
 #
@@ -1699,17 +1467,11 @@ CREATE TABLE {$db_prefix}pm_recipients (
 CREATE UNIQUE INDEX {$db_prefix}pm_recipients_id_member ON {$db_prefix}pm_recipients (id_member, deleted, id_pm);
 
 #
-# Sequence for table `polls`
-#
-
-CREATE SEQUENCE {$db_prefix}polls_seq;
-
-#
 # Table structure for table `polls`
 #
 
 CREATE TABLE {$db_prefix}polls (
-  id_poll int default nextval('{$db_prefix}polls_seq'),
+  id_poll integer primary key,
   question varchar(255) NOT NULL,
   voting_locked smallint NOT NULL default '0',
   max_votes smallint NOT NULL default '1',
@@ -1717,8 +1479,7 @@ CREATE TABLE {$db_prefix}polls (
   hide_results smallint NOT NULL default '0',
   change_vote smallint NOT NULL default '0',
   id_member int NOT NULL default '0',
-  poster_name varchar(255) NOT NULL,
-  PRIMARY KEY (id_poll)
+  poster_name varchar(255) NOT NULL
 );
 
 #
@@ -1734,24 +1495,17 @@ CREATE TABLE {$db_prefix}poll_choices (
 );
 
 #
-# Sequence for table `scheduled_tasks`
-#
-
-CREATE SEQUENCE {$db_prefix}scheduled_tasks_seq START WITH 9;
-
-#
 # Table structure for table `scheduled_tasks`
 #
 
 CREATE TABLE {$db_prefix}scheduled_tasks (
-  id_task smallint default nextval('{$db_prefix}scheduled_tasks_seq'),
+  id_task integer primary key,
   next_time int NOT NULL,
   time_offset int NOT NULL,
   time_regularity smallint NOT NULL,
   time_unit varchar(1) NOT NULL default 'h',
   disabled smallint NOT NULL default '0',
-  task varchar(24) NOT NULL default '',
-  PRIMARY KEY (id_task)
+  task varchar(24) NOT NULL default ''
 );
 
 #
@@ -1766,6 +1520,7 @@ CREATE UNIQUE INDEX {$db_prefix}scheduled_tasks_task ON {$db_prefix}scheduled_ta
 # Dumping data for table `scheduled_tasks`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (1, 0, 0, 2, 'h', 0, 'approval_notification');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (2, 0, 0, 7, 'd', 0, 'auto_optimize');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (3, 0, 0, 12, 'h', 0, 'clean_cache');
@@ -1773,6 +1528,7 @@ INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_r
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (6, 0, 0, 1, 'w', 0, 'weekly_digest');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (7, 0, 0, 1, 'd', 0, 'fetchSMfiles');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (8, 0, -55800, 1, 'd', 1, 'birthdayemails');
+COMMIT;
 
 # --------------------------------------------------------
 
@@ -1790,6 +1546,7 @@ CREATE TABLE {$db_prefix}settings (
 # Dumping data for table `settings`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('smfVersion', '{$smf_version}');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('news', '{$default_news}');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('compactTopicPagesContiguous', '5');
@@ -1942,6 +1699,8 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('mail_recent', '00000
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('settings_updated', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('next_task_time', '1');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('last_mod_report_action', '0');
+COMMIT;
+
 # --------------------------------------------------------
 
 #
@@ -1956,30 +1715,24 @@ CREATE TABLE {$db_prefix}sessions (
 );
 
 #
-# Sequence for table `smileys`
-#
-
-CREATE SEQUENCE {$db_prefix}smileys_seq;
-
-#
 # Table structure for table `smileys`
 #
 
 CREATE TABLE {$db_prefix}smileys (
-  id_smiley smallint default nextval('{$db_prefix}smileys_seq'),
+  id_smiley integer primary key,
   code varchar(30) NOT NULL default '',
   filename varchar(48) NOT NULL default '',
   description varchar(80) NOT NULL default '',
   smiley_row smallint NOT NULL default '0',
   smiley_order smallint NOT NULL default '0',
-  hidden smallint NOT NULL default '0',
-  PRIMARY KEY (id_smiley)
+  hidden smallint NOT NULL default '0'
 );
 
 #
 # Dumping data for table `smileys`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0);
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (';)', 'wink.gif', '{$default_wink_smiley}', 1, 0);
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES (':D', 'cheesy.gif', '{$default_cheesy_smiley}', 2, 0);
@@ -1999,6 +1752,8 @@ INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidd
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('>:D', 'evil.gif', '{$default_evil_smiley}', 16, 1);
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('^-^', 'azn.gif', '{$default_azn_smiley}', 17, 1);
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1);
+COMMIT;
+
 # --------------------------------------------------------
 
 #
@@ -2023,6 +1778,7 @@ CREATE INDEX {$db_prefix}themes_id_member ON {$db_prefix}themes (id_member);
 # Dumping data for table `themes`
 #
 
+BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (1, 'name', '{$default_theme_name}');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (1, 'theme_url', '{$boardurl}/Themes/default');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (1, 'images_url', '{$boardurl}/Themes/default/images');
@@ -2055,20 +1811,16 @@ INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'name', '{
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'theme_url', '{$boardurl}/Themes/babylon');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'images_url', '{$boardurl}/Themes/babylon/images');
 INSERT INTO {$db_prefix}themes (id_theme, variable, value) VALUES (3, 'theme_dir', '{$boarddir}/Themes/babylon');
+COMMIT;
+
 # --------------------------------------------------------
-
-#
-# Sequence for table `topics`
-#
-
-CREATE SEQUENCE {$db_prefix}topics_seq START WITH 2;
 
 #
 # Table structure for table `topics`
 #
 
 CREATE TABLE {$db_prefix}topics (
-  id_topic int default nextval('{$db_prefix}topics_seq'),
+  id_topic integer primary key,
   is_sticky smallint NOT NULL default '0',
   id_board smallint NOT NULL default '0',
   id_first_msg int NOT NULL default '0',
@@ -2080,8 +1832,7 @@ CREATE TABLE {$db_prefix}topics (
   num_views int NOT NULL default '0',
   locked smallint NOT NULL default '0',
   unapproved_posts smallint NOT NULL default '0',
-  approved smallint NOT NULL default '1',
-  PRIMARY KEY (id_topic)
+  approved smallint NOT NULL default '1'
 );
 
 #

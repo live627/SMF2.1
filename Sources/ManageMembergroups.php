@@ -204,11 +204,11 @@ function MembergroupIndex()
 
 		$query = $smfFunc['db_query']('', "
 			SELECT mg.id_group, COUNT(*) AS num_members
-			FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
+			FROM {$db_prefix}membergroups AS mg
+				INNER JOIN {$db_prefix}members AS mem ON (mem.additional_groups != ''
+					AND mem.id_group != mg.id_group
+					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
 			WHERE mg.id_group IN (" . implode(', ', array_keys($context['groups']['regular'])) . ")
-				AND mem.additional_groups != ''
-				AND mem.id_group != mg.id_group
-				AND FIND_IN_SET(mg.id_group, mem.additional_groups)
 			GROUP BY mg.id_group", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups']['regular'][$row['id_group']]['num_members'] += $row['num_members'];
@@ -546,12 +546,12 @@ function EditMembergroup()
 		if (!empty($moderator_string) && $_POST['min_posts'] == -1 && $_REQUEST['group'] != 3)
 		{
 			// Get all the usernames from the string
-			$moderator_string = strtr(preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars(stripslashes($moderator_string), ENT_QUOTES)), array('&quot;' => '"'));
+			$moderator_string = strtr(preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars($smfFunc['db_unescape_string']($moderator_string), ENT_QUOTES)), array('&quot;' => '"'));
 			preg_match_all('~"([^"]+)"~', $moderator_string, $matches);
 			$moderators = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $moderator_string)));
 			for ($k = 0, $n = count($moderators); $k < $n; $k++)
 			{
-				$moderators[$k] = trim($moderators[$k]);
+				$moderators[$k] = trim($smfFunc['db_escape_string']($moderators[$k]));
 
 				if (strlen($moderators[$k]) == 0)
 					unset($moderators[$k]);
@@ -630,9 +630,9 @@ function EditMembergroup()
 	// Get any moderators for this group
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.real_name
-		FROM ({$db_prefix}group_moderators AS mods, {$db_prefix}members AS mem)
-		WHERE mods.id_group = $_REQUEST[group]
-			AND mem.id_member = mods.id_member", __FILE__, __LINE__);
+		FROM {$db_prefix}group_moderators AS mods
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+		WHERE mods.id_group = $_REQUEST[group]", __FILE__, __LINE__);
 	$context['group']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['group']['moderators'][] = $row['real_name'];
@@ -732,7 +732,7 @@ function cacheGroups()
 		// This looks weird but it's here for speed!
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$groupCache[] = $row['id_group'] . '" ' . ($row['online_color'] ? 'style="color: ' . $row['online_color'] . '"' : '') . '>' . $row['group_name'];
-		$groupCache = addslashes(serialize($groupCache));
+		$groupCache = $smfFunc['db_escape_string'](serialize($groupCache));
 
 		updateSettings(array('groupCache' => $groupCache));
 	}

@@ -151,7 +151,7 @@ function EditNews()
 				unset($temp_news[$i]);
 
 		// Update the database.
-		updateSettings(array('news' => addslashes(implode("\n", $temp_news))));
+		updateSettings(array('news' => $smfFunc['db_escape_string'](implode("\n", $temp_news))));
 
 		logAction('news');
 	}
@@ -260,11 +260,11 @@ function SelectMailingMembers()
 		// Also do those who have it as an additional membergroup - this ones more yucky...
 		$query = $smfFunc['db_query']('', "
 			SELECT mg.id_group, COUNT(*) AS member_count
-			FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
+			FROM {$db_prefix}membergroups AS mg
+				INNER JOIN {$db_prefix}members AS mem ON (mem.additional_groups != ''
+					AND mem.id_group != mg.id_group
+					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
 			WHERE mg.id_group IN (" . implode(',', $normalGroups) . ")
-				AND mem.additional_groups != ''
-				AND mem.id_group != mg.id_group
-				AND FIND_IN_SET(mg.id_group, mem.additional_groups)
 			GROUP BY mg.id_group", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['id_group']]['member_count'] += $row['member_count'];
@@ -317,9 +317,9 @@ function ComposeMailing()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT DISTINCT " . ($do_pm ? 'mem.member_name' : 'mem.email_address') . " AS identifier
-			FROM ({$db_prefix}members AS mem, {$db_prefix}moderators AS mods)
-			WHERE mem.id_member = mods.id_member
-				AND mem.is_activated = 1$condition", __FILE__, __LINE__);
+			FROM {$db_prefix}members AS mem
+				INNER JOIN {$db_prefix}moderators AS mods ON (mods.id_member = mem.id_member)
+			WHERE mem.is_activated = 1$condition", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$list[] = $row['identifier'];
 		$smfFunc['db_free_result']($request);
@@ -350,10 +350,10 @@ function ComposeMailing()
 
 		$request = $smfFunc['db_query']('', "
 			SELECT " . ($do_pm ? 'mem.member_name' : 'mem.email_address') . " AS identifier
-			FROM ({$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
-			WHERE (mg.id_group = mem.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
-				AND mg.id_group IN (" . implode(',', $_POST['who']) . ")
-				AND mem.is_activated = 1$condition", __FILE__, __LINE__);
+			FROM {$db_prefix}members AS mem
+				INNER JOIN {$db_prefix}membergroups AS mg ON ((mg.id_group = mem.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
+					AND mg.id_group IN (" . implode(',', $_POST['who']) . "))
+			WHERE mem.is_activated = 1$condition", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$list[] = $row['identifier'];
 		$smfFunc['db_free_result']($request);
@@ -396,7 +396,7 @@ function SendMailing()
 	$num_at_once = empty($modSettings['mail_queue']) ? 60 : 1000;
 
 	// Get all the receivers.
-	$addressed = array_unique(explode(';', stripslashes($_POST['emails'])));
+	$addressed = array_unique(explode(';', $smfFunc['db_unescape_string']($_POST['emails'])));
 	$cleanlist = array();
 	foreach ($addressed as $curmem)
 	{
@@ -406,8 +406,8 @@ function SendMailing()
 	}
 
 	$context['emails'] = implode(';', $cleanlist);
-	$context['subject'] = htmlspecialchars(stripslashes($_POST['subject']));
-	$context['message'] = htmlspecialchars(stripslashes($_POST['message']));
+	$context['subject'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['subject']));
+	$context['message'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['message']));
 	$context['send_html'] = !empty($_POST['send_html']) ? '1' : '0';
 	$context['parse_html'] = !empty($_POST['parse_html']) ? '1' : '0';
 	$context['start'] = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
@@ -429,9 +429,9 @@ function SendMailing()
 
 	// Prepare the message for HTML.
 	if (!empty($_POST['send_html']) && !empty($_POST['parse_html']))
-		$_POST['message'] = str_replace(array("\n", '  '), array("<br />\n", '&nbsp; '), stripslashes($_POST['message']));
+		$_POST['message'] = str_replace(array("\n", '  '), array("<br />\n", '&nbsp; '), $smfFunc['db_unescape_string']($_POST['message']));
 	else
-		$_POST['message'] = stripslashes($_POST['message']);
+		$_POST['message'] = $smfFunc['db_unescape_string']($_POST['message']);
 
 	// Use the default time format.
 	$user_info['time_format'] = $modSettings['time_format'];
@@ -460,7 +460,7 @@ function SendMailing()
 			$modSettings['latestRealName'],
 			$modSettings['latestMember'],
 			$modSettings['latestRealName']
-		), stripslashes($_POST['subject']));
+		), $smfFunc['db_unescape_string']($_POST['subject']));
 
 	$from_member = array(
 		'{$member.email}',
@@ -494,7 +494,7 @@ function SendMailing()
 		);
 
 		// Send the actual email off, replacing the member dependent variables.
-		sendmail($row['email_address'], str_replace($from_member, $to_member, addslashes($_POST['subject'])), str_replace($from_member, $to_member, addslashes($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
+		sendmail($row['email_address'], str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
 	}
 	$smfFunc['db_free_result']($result);
 
@@ -509,7 +509,7 @@ function SendMailing()
 				$email
 			);
 
-			sendmail($email, str_replace($from_member, $to_member, addslashes($_POST['subject'])), str_replace($from_member, $to_member, addslashes($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
+			sendmail($email, str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
 		}
 
 	// Still more to do?

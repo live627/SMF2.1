@@ -404,7 +404,7 @@ CREATE TABLE {$db_prefix}boards (
   id_last_msg int(10) unsigned NOT NULL default '0',
   id_msg_updated int(10) unsigned NOT NULL default '0',
   member_groups varchar(255) NOT NULL default '-1,0',
-  id_profile smallint(5) unsigned NOT NULL default '0',
+  id_profile smallint(5) unsigned NOT NULL default '1',
   name tinytext NOT NULL,
   description text NOT NULL,
   num_topics mediumint(8) unsigned NOT NULL default '0',
@@ -863,7 +863,7 @@ CREATE TABLE {$db_prefix}log_notify (
 
 CREATE TABLE {$db_prefix}log_online (
   session varchar(32) NOT NULL default '',
-  log_time timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
+  log_time int(10) NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
   ip int(10) unsigned NOT NULL default '0',
   url text NOT NULL,

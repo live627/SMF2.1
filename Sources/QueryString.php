@@ -37,9 +37,9 @@ if (!defined('SMF'))
 		- sets up $board, $topic, and $scripturl and $_REQUEST['start'].
 		- determines, or rather tries to determine, the client's IP.
 
-	array addslashes__recursive(array var)
-		- returns the var, as an array or string, with slashes.
-		- importantly adds slashes to keys and values!
+	array escapestring__recursive(array var)
+		- returns the var, as an array or string, with escapes as required.
+		- importantly escapes all keys and values!
 		- calls itself recursively if necessary.
 
 	array htmlspecialchars__recursive(array var)
@@ -51,6 +51,11 @@ if (!defined('SMF'))
 		- takes off url encoding (%20, etc.) from the array or string var.
 		- importantly, does it to keys too!
 		- calls itself recursively if there are any sub arrays.
+
+	array unescapestring__recursive(array var)
+		- unescapes, recursively, from the array or string var.
+		- effects both keys and values of arrays.
+		- calls itself recursively to handle arrays of arrays.
 
 	array stripslashes__recursive(array var)
 		- removes slashes, recursively, from the array or string var.
@@ -83,10 +88,11 @@ if (!defined('SMF'))
 // Clean the request variables - add html entities to GET and slashes if magic_quotes_gpc is Off.
 function cleanRequest()
 {
-	global $board, $topic, $boardurl, $scripturl, $modSettings;
+	global $board, $topic, $boardurl, $scripturl, $modSettings, $smfFunc;
 
 	// Makes it easier to refer to things this way.
 	$scripturl = $boardurl . '/index.php';
+	$magicSybase = @ini_get('magic_quotes_sybase') || strtolower(@ini_get('magic_quotes_sybase')) == 'on';
 
 	// Save some memory.. (since we don't use these anyway.)
 	unset($GLOBALS['HTTP_POST_VARS'], $GLOBALS['HTTP_POST_VARS']);
@@ -128,7 +134,12 @@ function cleanRequest()
 		$_GET = urldecode__recursive($_GET);
 
 		if (get_magic_quotes_gpc() != 0 && empty($modSettings['integrate_magic_quotes']))
-			$_GET = stripslashes__recursive($_GET);
+		{
+			if ($smfFunc['db_sybase'] && $magicSybase)
+				$_GET = unescape__recursive($_GET);
+			else
+				$_GET = stripslashes__recursive($_GET);
+		}
 
 		// Search engines will send action=profile%3Bu=1, which confuses PHP.
 		foreach ($_GET as $k => $v)
@@ -173,21 +184,30 @@ function cleanRequest()
 	// Add entities to GET.  This is kinda like the slashes on everything else.
 	$_GET = htmlspecialchars__recursive($_GET);
 
-	// Clean up after annoying ini settings.  (magic_quotes_gpc might be off...)
-	if (get_magic_quotes_gpc() == 0 && empty($modSettings['integrate_magic_quotes']))
+	// If we're using a database with quote escaped quotes and magic quotes is on we have some work...
+	if (get_magic_quotes_gpc() != 0 && $smfFunc['db_sybase'] && !$magicSybase)
+	{
+		$_ENV = stripslashes__recursive($_ENV);
+		$_POST = stripslashes__recursive($_POST);
+		$_COOKIE = stripslashes__recursive($_COOKIE);
+		foreach ($_FILES as $k => $dummy)
+			$_FILES[$k]['name'] = stripslashes__recursive($_FILES[$k]['name']);
+	}
+	// Emulate magic quotes!
+	if ((get_magic_quotes_gpc() == 0 && empty($modSettings['integrate_magic_quotes'])) || ($smfFunc['db_sybase'] && !$magicSybase))
 	{
 		// E(G)PCS: ENV, (GET was already done), POST, COOKIE, SERVER.
-		$_ENV = addslashes__recursive($_ENV);
-		$_POST = addslashes__recursive($_POST);
-		$_COOKIE = addslashes__recursive($_COOKIE);
+		$_ENV = escapestring__recursive($_ENV);
+		$_POST = escapestring__recursive($_POST);
+		$_COOKIE = escapestring__recursive($_COOKIE);
 
 		// FILES work like this: k -> name -> array.  So be careful.
 		foreach ($_FILES as $k => $dummy)
-			$_FILES[$k]['name'] = addslashes__recursive($_FILES[$k]['name']);
+			$_FILES[$k]['name'] = escapestring__recursive($_FILES[$k]['name']);
 	}
 
 	// Take care of the server variables.
-	$_SERVER = addslashes__recursive($_SERVER);
+	$_SERVER = escapestring__recursive($_SERVER);
 
 	// Let's not depend on the ini settings... why even have COOKIE in there, anyway?
 	$_REQUEST = $_POST + $_GET;
@@ -306,7 +326,7 @@ function cleanRequest()
 		$_SERVER['REQUEST_URL'] = $_SERVER['REQUEST_URI'];
 
 	// And make sure HTTP_USER_AGENT is set.
-	$_SERVER['HTTP_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars(stripslashes($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES) : '';
+	$_SERVER['HTTP_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($smfFunc['db_unescape_string']($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES) : '';
 
 	// Some final checking.
 	if (preg_match('~^((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|25[0-5])$~', $_SERVER['REMOTE_ADDR']) === 0)
@@ -314,17 +334,19 @@ function cleanRequest()
 }
 
 // Adds slashes to the array/variable.  Uses two underscores to guard against overloading.
-function addslashes__recursive($var)
+function escapestring__recursive($var)
 {
+	global $smfFunc;
+
 	if (!is_array($var))
-		return addslashes($var);
+		return $smfFunc['db_escape_string']($var);
 
 	// Reindex the array with slashes.
 	$new_var = array();
 
 	// Add slashes to every element, even the indexes!
 	foreach ($var as $k => $v)
-		$new_var[addslashes($k)] = addslashes__recursive($v);
+		$new_var[$smfFunc['db_escape_string']($k)] = escapestring__recursive($v);
 
 	return $new_var;
 }
@@ -356,7 +378,25 @@ function urldecode__recursive($var)
 
 	return $new_var;
 }
-// Strips the slashes off any array or variable.  Two underscores for the normal reason.
+// Unescapes any array or variable.  Two underscores for the normal reason.
+function unescapestring__recursive($var)
+{
+	global $smfFunc;
+
+	if (!is_array($var))
+		return $smfFunc['db_unescape_string']($var);
+
+	// Reindex the array without slashes, this time.
+	$new_var = array();
+
+	// Strip the slashes from every element.
+	foreach ($var as $k => $v)
+		$new_var[$smfFunc['db_unescape_string']($k)] = unescapestring__recursive($v);
+
+	return $new_var;
+}
+
+// Remove slashes recursively...
 function stripslashes__recursive($var)
 {
 	if (!is_array($var))

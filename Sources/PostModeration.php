@@ -115,11 +115,11 @@ function UnapprovedPosts()
 		// Now for each message work out whether it's actually a topic, and what board it's on.
 		$request = $smfFunc['db_query']('', "
 			SELECT m.id_msg, m.id_member, m.id_board, t.id_topic, t.id_first_msg, t.id_member_started
-			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			LEFT JOIN {$db_prefix}boards AS b ON (t.id_board = b.id_board)
 			WHERE m.id_msg IN (" . implode(',', $toAction) . ")
 				AND m.approved = 0
-				AND t.id_topic = m.id_topic
 				AND $user_info[query_see_board]", __FILE__, __LINE__);
 		$toAction = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -181,11 +181,10 @@ function UnapprovedPosts()
 	// How many unapproved posts are there?
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.id_first_msg != m.id_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE m.approved = 0
-			AND t.id_topic = m.id_topic
-			AND b.id_board = t.id_board
-			AND t.id_first_msg != m.id_msg
 			AND $user_info[query_see_board]
 			$approve_query", __FILE__, __LINE__);
 	list ($context['total_unapproved_posts']) = $smfFunc['db_fetch_row']($request);
@@ -194,9 +193,9 @@ function UnapprovedPosts()
 	// What about topics?  Normally we'd use the table alias t for topics but lets use m so we don't have to redo our approve query.
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(m.id_topic)
-		FROM ({$db_prefix}topics AS m, {$db_prefix}boards AS b)
+		FROM {$db_prefix}topics AS m
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.approved = 0
-			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 			$approve_query", __FILE__, __LINE__);
 	list ($context['total_unapproved_topics']) = $smfFunc['db_fetch_row']($request);
@@ -330,12 +329,12 @@ function UnapprovedAttachments()
 		// Confirm the attachments are eligible for changing!
 		$request = $smfFunc['db_query']('', "
 			SELECT a.id_attach
-			FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m)
-			LEFT JOIN {$db_prefix}boards AS board ON (m.id_board = b.id_board)
+			FROM {$db_prefix}attachments AS a
+				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+				LEFT JOIN {$db_prefix}boards AS board ON (m.id_board = b.id_board)
 			WHERE a.id_attach IN (" . implode(',', $attachments) . ")
 				AND a.approved = 0
 				AND a.attachment_type = 0
-				AND m.id_msg = a.id_msg
 				AND $user_info[query_see_board]
 				$approve_query", __FILE__, __LINE__);
 		$attachments = array();
@@ -356,11 +355,11 @@ function UnapprovedAttachments()
 	// How many unapproved attachments in total?
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
-		FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m, {$db_prefix}boards AS b)
+		FROM {$db_prefix}attachments AS a
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE a.approved = 0
 			AND a.attachment_type = 0
-			AND m.id_msg = a.id_msg
-			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 			$approve_query", __FILE__, __LINE__);
 	list ($context['total_unapproved_attachments']) = $smfFunc['db_fetch_row']($request);
@@ -439,10 +438,10 @@ function ApproveMessage()
 
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_member_started, t.id_first_msg, m.id_member, m.subject, m.approved
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-		WHERE t.id_topic = $topic
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
+		WHERE m.id_msg = $_REQUEST[msg]
 			AND m.id_topic = $topic
-			AND m.id_msg = $_REQUEST[msg]
 		LIMIT 1", __FILE__, __LINE__);
 	list ($starter, $first_msg, $poster, $subject, $approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);

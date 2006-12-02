@@ -394,9 +394,9 @@ function ModifyProfile2()
 
 	// Clean up the POST variables.
 	$_POST = htmltrim__recursive($_POST);
-	$_POST = stripslashes__recursive($_POST);
+	$_POST = unescapestring__recursive($_POST);
 	$_POST = htmlspecialchars__recursive($_POST);
-	$_POST = addslashes__recursive($_POST);
+	$_POST = escapestring__recursive($_POST);
 
 	// Search for the member being edited and put the information in $user_profile.
 	$memberResult = loadMemberData((int) $_REQUEST['userID'], false, 'profile');
@@ -426,7 +426,7 @@ function ModifyProfile2()
 			$post_errors[] = 'no_password';
 
 		// Since the password got modified due to all the $_POST cleaning, lets undo it so we can get the correct password
-		$_POST['oldpasswrd'] = addslashes(un_htmlspecialchars(stripslashes($_POST['oldpasswrd'])));
+		$_POST['oldpasswrd'] = $smfFunc['db_escape_string'](un_htmlspecialchars($smfFunc['db_unescape_string']($_POST['oldpasswrd'])));
 
 		// Does the integration want to check passwords?
 		$good_password = false;
@@ -550,7 +550,7 @@ function ModifyProfile2()
 		if (isset($_POST['passwrd1']) && $_POST['passwrd1'] != '')
 		{
 			require_once($sourcedir . '/Subs-Auth.php');
-			setLoginCookie(60 * $modSettings['cookieTime'], $memID, sha1(sha1(strtolower($user_profile[$memID]['member_name']) . un_htmlspecialchars(stripslashes($_POST['passwrd1']))) . $user_profile[$memID]['password_salt']));
+			setLoginCookie(60 * $modSettings['cookieTime'], $memID, sha1(sha1(strtolower($user_profile[$memID]['member_name']) . un_htmlspecialchars($smfFunc['db_unescape_string']($_POST['passwrd1']))) . $user_profile[$memID]['password_salt']));
 		}
 
 		loadUserSettings();
@@ -754,7 +754,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			// Too long?
 			if (!empty($sig_limits[1]) && strlen($unparsed_signature) > $sig_limits[1])
 			{
-				$_POST['signature'] = trim(htmlspecialchars(substr($unparsed_signature, 0, $sig_limits[1]), ENT_QUOTES));
+				$_POST['signature'] = trim($smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string'](substr($unparsed_signature, 0, $sig_limits[1])), ENT_QUOTES)));
 				$txt['profile_error_signature_max_length'] = sprintf($txt['profile_error_signature_max_length'], $sig_limits[1]);
 				$post_errors[] = 'signature_max_length';
 			}
@@ -920,7 +920,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			// Check the name and email for validity.
 			if (trim($_POST['email_address']) == '')
 				$post_errors[] = 'no_email';
-			if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['email_address'])) == 0)
+			if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['email_address'])) == 0)
 				$post_errors[] = 'bad_email';
 
 			// Email addresses should be and stay unique.
@@ -961,7 +961,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 				$post_errors[] = 'password_' . $passwordErrors;
 
 			// Set up the new password variable... ready for storage.
-			$profile_vars['passwd'] = '\'' . sha1(strtolower($old_profile['member_name']) . un_htmlspecialchars(stripslashes($_POST['passwrd1']))) . '\'';
+			$profile_vars['passwd'] = '\'' . sha1(strtolower($old_profile['member_name']) . un_htmlspecialchars($smfFunc['db_unescape_string']($_POST['passwrd1']))) . '\'';
 		}
 
 		if (isset($_POST['secret_question']))
@@ -1129,17 +1129,15 @@ function makeThemeChanges($memID, $id_theme)
 	if (isset($_POST['options']) && is_array($_POST['options']))
 	{
 		foreach ($_POST['options'] as $opt => $val)
-			$themeSetArray[] = array($memID, $id_theme, "SUBSTRING('" . addslashes($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
-			//!!! $themeSetArray[] = '(' . $memID . ', ' . $id_theme . ", SUBSTRING('" . addslashes($opt) . "', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534))";
+			$themeSetArray[] = array($memID, $id_theme, "SUBSTRING('" . $smfFunc['db_escape_string']($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
 	}
 
 	$erase_options = array();
 	if (isset($_POST['default_options']) && is_array($_POST['default_options']))
 		foreach ($_POST['default_options'] as $opt => $val)
 		{
-			$themeSetArray[] = array($memID, 1, "SUBSTRING('" . addslashes($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
-			//!!! $themeSetArray[] = "($memID, 1, SUBSTRING('" . addslashes($opt) . "', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534))";
-			$erase_options[] = addslashes($opt);
+			$themeSetArray[] = array($memID, 1, "SUBSTRING('" . $smfFunc['db_escape_string']($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
+			$erase_options[] = $smfFunc['db_escape_string']($opt);
 		}
 
 	// If themeSetArray isn't still empty, send it to the database.
@@ -1391,13 +1389,13 @@ function makeCustomFieldChanges($memID, $area)
 			if ($row['field_type'] == 'text' && !empty($row['mask']) && $row['mask'] != 'none')
 			{
 				//!!! We never error on this - just ignore it at the moment...
-				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($value)) === 0 || strlen(stripslashes($value)) > 255))
+				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($value)) === 0 || strlen($smfFunc['db_unescape_string']($value)) > 255))
 					$value = '';
 				elseif ($row['mask'] == 'number')
 				{
 					$value = (int) $value;
 				}
-				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), stripslashes($value)) === 0)
+				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), $smfFunc['db_unescape_string']($value)) === 0)
 					$value = '';
 			}
 		}
@@ -1516,7 +1514,7 @@ function summary($memID)
 
 			// Do we have a hostname already?
 			if (!empty($context['member']['hostname']))
-				$ban_query[] = "('" . addslashes($context['member']['hostname']) . "' LIKE hostname)";
+				$ban_query[] = "('" . $smfFunc['db_escape_string']($context['member']['hostname']) . "' LIKE hostname)";
 		}
 		// Use '255.255.255.255' for 'unknown' - it's not valid anyway.
 		elseif ($memberContext[$memID]['ip'] == 'unknown')
@@ -1527,16 +1525,15 @@ function summary($memID)
 
 		// Check their email as well...
 		if (strlen($context['member']['email']) != 0)
-			$ban_query[] = "('" . addslashes($context['member']['email']) . "' LIKE bi.email_address)";
+			$ban_query[] = "('" . $smfFunc['db_escape_string']($context['member']['email']) . "' LIKE bi.email_address)";
 
 		// So... are they banned?  Dying to know!
 		$request = $smfFunc['db_query']('', "
 			SELECT bg.id_ban_group, bg.name, bg.cannot_access, bg.cannot_post, bg.cannot_register,
 				bg.cannot_login, bg.reason
-			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
-			WHERE bg.id_ban_group = bi.id_ban_group
-				AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
-				AND (" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
+			FROM {$db_prefix}ban_items AS bi
+				INNER JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . "))
+			WHERE (" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			// Work out what restrictions we actually have.
@@ -1598,11 +1595,10 @@ function showPosts($memID)
 
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
-		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
 		WHERE m.id_member = $memID
-			AND m.approved = 1
-			AND b.id_board = m.id_board
-			AND $user_info[query_see_board]", __FILE__, __LINE__);
+			AND m.approved = 1", __FILE__, __LINE__);
 	list ($msgCount) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1651,15 +1647,14 @@ function showPosts($memID)
 				b.id_board, b.name AS bname, c.id_cat, c.name AS cname, m.id_topic, m.id_msg,
 				t.id_member_started, t.id_first_msg, t.id_last_msg, m.body, m.smileys_enabled,
 				m.subject, m.poster_time
-			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = 1)
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board AND $user_info[query_see_board])
 				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 			WHERE m.id_member = $memID
-				AND m.id_topic = t.id_topic
-				AND t.id_board = b.id_board" . (empty($range_limit) ? '' : "
+				" . (empty($range_limit) ? '' : "
 				AND $range_limit") . "
 				AND m.approved = 1
-				AND t.approved = 1
-				AND $user_info[query_see_board]
 			ORDER BY m.id_msg " . ($reverse ? 'ASC' : 'DESC') . "
 			LIMIT $start, $maxIndex", __FILE__, __LINE__);
 
@@ -1797,7 +1792,7 @@ function editBuddies($memID)
 	elseif (isset($_POST['new_buddy']))
 	{
 		// Prepare the string for extraction...
-		$_POST['new_buddy'] = strtr($smfFunc['htmlspecialchars'](stripslashes($_POST['new_buddy']), ENT_QUOTES), array('&quot;' => '"'));
+		$_POST['new_buddy'] = strtr($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['new_buddy']), ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_POST['new_buddy'], $matches);
 		$new_buddies = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_POST['new_buddy']))));
 
@@ -1895,7 +1890,7 @@ function statPanel($memID)
 	$smfFunc['db_free_result']($result);
 
 	// Number polls voted in.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('distinct_poll_votes', "
 		SELECT COUNT(DISTINCT id_poll)
 		FROM {$db_prefix}log_polls
 		WHERE id_member = $memID", __FILE__, __LINE__);
@@ -1911,9 +1906,9 @@ function statPanel($memID)
 	$result = $smfFunc['db_query']('', "
 		SELECT
 			b.id_board, MAX(b.name) AS name, MAX(b.num_posts) AS num_posts, COUNT(*) AS message_count
-		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.id_member = $memID
-			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 		GROUP BY b.id_board
 		ORDER BY message_count DESC
@@ -1944,9 +1939,9 @@ function statPanel($memID)
 	$result = $smfFunc['db_query']('', "
 		SELECT
 			b.id_board, MAX(b.name) AS name, CASE WHEN COUNT(*) > MAX(b.num_posts) THEN 1 ELSE COUNT(*) / MAX(b.num_posts) END * 100 AS percentage
-		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 		WHERE m.id_member = $memID
-			AND b.id_board = m.id_board
 			AND $user_info[query_see_board]
 		GROUP BY b.id_board
 		ORDER BY percentage DESC
@@ -1964,7 +1959,7 @@ function statPanel($memID)
 	$smfFunc['db_free_result']($result);
 
 	// Posting activity by time.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('user_activity_by_time', "
 		SELECT
 			HOUR(FROM_UNIXTIME(poster_time + " . (($user_info['time_offset'] + $modSettings['time_offset']) * 3600) . ")) AS hour,
 			COUNT(*) AS post_count
@@ -2109,10 +2104,9 @@ function trackUser($memID)
 
 		$request = $smfFunc['db_query']('', "
 			SELECT mem.id_member, mem.real_name
-			FROM ({$db_prefix}messages AS m, {$db_prefix}members AS mem)
-			WHERE mem.id_member = m.id_member
-				AND mem.id_member != $memID
-				AND m.poster_ip IN ('" . implode("', '", $ips) . "')", __FILE__, __LINE__);
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member AND mem.id_member != $memID)
+			WHERE m.poster_ip IN ('" . implode("', '", $ips) . "')", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['members_in_range'][$row['id_member']] = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
@@ -2401,12 +2395,12 @@ function showPermissions($memID)
 		SELECT
 			bp.add_deny, bp.permission, bp.id_group, mg.group_name" . (empty($board) ? '' : ',
 			b.id_profile, CASE WHEN mods.id_member IS NULL THEN 0 ELSE 1 END AS is_moderator') . "
-		FROM ({$db_prefix}board_permissions AS bp" . (empty($board) ? ')' : ", {$db_prefix}boards AS b)
+		FROM {$db_prefix}board_permissions AS bp" . (empty($board) ? '' : "
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = $board)
 			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $memID)") . "
 			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = bp.id_group)
 		WHERE bp.id_profile = " . (empty($board) ? '1' : 'b.id_profile') . "
 			AND bp.id_group IN (" . implode(', ', $curGroups) . "" . (empty($board) ? ')' : ", 3)
-			AND b.id_board = $board
 			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)"), __FILE__, __LINE__);
 
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2777,10 +2771,10 @@ function notification($memID)
 	// All the boards with notification on..
 	$request = $smfFunc['db_query']('', "
 		SELECT b.id_board, b.name, IFNULL(lb.id_msg, 0) AS board_read, b.id_msg_updated
-		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}boards AS b)
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = ln.id_board)
 			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
 		WHERE ln.id_member = $memID
-			AND b.id_board = ln.id_board
 			AND $user_info[query_see_board]
 		ORDER BY b.board_order", __FILE__, __LINE__);
 	$context['board_notifications'] = array();
@@ -2796,10 +2790,10 @@ function notification($memID)
 
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
-		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}boards AS b, {$db_prefix}topics AS t)
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE ln.id_member = $memID
-			AND t.id_topic = ln.id_topic
-			AND b.id_board = t.id_board
 			AND $user_info[query_see_board]
 			AND t.approved = 1", __FILE__, __LINE__);
 	list ($num_topics) = $smfFunc['db_fetch_row']($request);
@@ -3277,10 +3271,10 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 			// Now delete the remaining messages.
 			$request = $smfFunc['db_query']('', "
 				SELECT m.id_msg
-				FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-				WHERE m.id_member = $memID
-					AND m.id_topic = t.id_topic
-					AND t.id_first_msg != m.id_msg", __FILE__, __LINE__);
+				FROM {$db_prefix}messages AS m
+					INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic
+						AND t.id_first_msg != m.id_msg)
+				WHERE m.id_member = $memID", __FILE__, __LINE__);
 			// This could take a while... but ya know it's gonna be worth it in the end.
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				removeMessage($row['id_msg']);
@@ -3307,26 +3301,26 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 // This function 'remembers' the profile changes a user made after erronious input.
 function rememberPostData()
 {
-	global $context, $scripturl, $txt, $modSettings, $user_profile, $user_info;
+	global $context, $scripturl, $txt, $modSettings, $user_profile, $user_info, $smfFunc;
 
 	// Overwrite member settings with the ones you selected.
 	$context['member'] = array(
 		'is_owner' => $_REQUEST['userID'] == $user_info['id'],
 		'username' => $user_profile[$_REQUEST['userID']]['member_name'],
-		'name' => !isset($_POST['real_name']) || $_POST['real_name'] == '' ? $user_profile[$_REQUEST['userID']]['member_name'] : stripslashes($_POST['real_name']),
+		'name' => !isset($_POST['real_name']) || $_POST['real_name'] == '' ? $user_profile[$_REQUEST['userID']]['member_name'] : $smfFunc['db_unescape_string']($_POST['real_name']),
 		'id' => (int) $_REQUEST['userID'],
-		'title' => !isset($_POST['usertitle']) || $_POST['usertitle'] == '' ? '' : stripslashes($_POST['usertitle']),
+		'title' => !isset($_POST['usertitle']) || $_POST['usertitle'] == '' ? '' : $smfFunc['db_unescape_string']($_POST['usertitle']),
 		'email' => isset($_POST['email_address']) ? $_POST['email_address'] : '',
 		'hide_email' => empty($_POST['hide_email']) ? 0 : 1,
 		'show_online' => empty($_POST['show_online']) ? 0 : 1,
 		'registered' => empty($_POST['date_registered']) || $_POST['date_registered'] == '0001-01-01' ? $txt[470] : strftime('%Y-%m-%d', $_POST['date_registered']),
-		'blurb' => !isset($_POST['personal_text']) ? '' : str_replace(array('<', '>', '&amp;#039;'), array('&lt;', '&gt;', '&#039;'), stripslashes($_POST['personal_text'])),
+		'blurb' => !isset($_POST['personal_text']) ? '' : str_replace(array('<', '>', '&amp;#039;'), array('&lt;', '&gt;', '&#039;'), $smfFunc['db_unescape_string']($_POST['personal_text'])),
 		'gender' => array(
 			'name' => empty($_POST['gender']) ? '' : ($_POST['gender'] == 2 ? 'f' : 'm')
 		),
 		'website' => array(
-			'title' => !isset($_POST['website_title']) ? '' : stripslashes($_POST['website_title']),
-			'url' => !isset($_POST['website_url']) ? '' : stripslashes($_POST['website_url']),
+			'title' => !isset($_POST['website_title']) ? '' : $smfFunc['db_unescape_string']($_POST['website_title']),
+			'url' => !isset($_POST['website_url']) ? '' : $smfFunc['db_unescape_string']($_POST['website_url']),
 		),
 		'birth_date' => array(
 			'month' => empty($_POST['bday1']) ? '00' : (int) $_POST['bday1'],
@@ -3334,18 +3328,18 @@ function rememberPostData()
 			'year' => empty($_POST['bday3']) ? '0000' : (int) $_POST['bday3']
 		),
 		'signature' => !isset($_POST['signature']) ? '' : str_replace(array('<', '>'), array('&lt;', '&gt;'), $_POST['signature']),
-		'location' => !isset($_POST['location']) ? '' : stripslashes($_POST['location']),
+		'location' => !isset($_POST['location']) ? '' : $smfFunc['db_unescape_string']($_POST['location']),
 		'icq' => array(
-			'name' => !isset($_POST['icq']) ? '' : stripslashes($_POST['icq'])
+			'name' => !isset($_POST['icq']) ? '' : $smfFunc['db_unescape_string']($_POST['icq'])
 		),
 		'aim' => array(
 			'name' => empty($_POST['aim']) ? '' : str_replace('+', ' ', $_POST['aim'])
 		),
 		'yim' => array(
-			'name' => empty($_POST['yim']) ? '' : stripslashes($_POST['yim'])
+			'name' => empty($_POST['yim']) ? '' : $smfFunc['db_unescape_string']($_POST['yim'])
 		),
 		'msn' => array(
-			'name' => empty($_POST['msn']) ? '' : stripslashes($_POST['msn'])
+			'name' => empty($_POST['msn']) ? '' : $smfFunc['db_unescape_string']($_POST['msn'])
 		),
 		'posts' => empty($_POST['posts']) ? 0 : (int) $_POST['posts'],
 		'avatar' => array(
@@ -3364,9 +3358,9 @@ function rememberPostData()
 			'good' => empty($_POST['karma_good']) ? '0' : $_POST['karma_good'],
 			'bad' => empty($_POST['karma_bad']) ? '0' : $_POST['karma_bad'],
 		),
-		'time_format' => !isset($_POST['time_format']) ? '' : stripslashes($_POST['time_format']),
+		'time_format' => !isset($_POST['time_format']) ? '' : $smfFunc['db_unescape_string']($_POST['time_format']),
 		'time_offset' => empty($_POST['time_offset']) ? '0' : $_POST['time_offset'],
-		'secret_question' => !isset($_POST['secret_question']) ? '' : stripslashes($_POST['secret_question']),
+		'secret_question' => !isset($_POST['secret_question']) ? '' : $smfFunc['db_unescape_string']($_POST['secret_question']),
 		'theme' => array(
 			'id' => isset($context['member']['theme']['id']) ? $context['member']['theme']['id'] : 0,
 			'name' => isset($context['member']['theme']['name']) ? $context['member']['theme']['name'] : '',

@@ -100,7 +100,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 		$file = '';
 	else
 		// Window style slashes don't play well, lets convert them to the unix style.
-		$file = addslashes(str_replace('\\', '/', $file));
+		$file = $smfFunc['db_escape_string'](str_replace('\\', '/', $file));
 
 	if ($line == null)
 		$line = 0;
@@ -114,7 +114,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 		$user_info['ip'] = '';
 
 	// Don't log the session hash in the url twice, it's a waste.
-	$query_string = empty($_SERVER['QUERY_STRING']) ? '' : addslashes(htmlspecialchars('?' . preg_replace(array('~;sesc=[^&;]+~', '~' . session_name() . '=' . session_id() . '[&;]~'), array(';sesc', ''), $_SERVER['QUERY_STRING'])));
+	$query_string = empty($_SERVER['QUERY_STRING']) ? '' : $smfFunc['db_escape_string'](htmlspecialchars('?' . preg_replace(array('~;sesc=[^&;]+~', '~' . session_name() . '=' . session_id() . '[&;]~'), array(';sesc', ''), $_SERVER['QUERY_STRING'])));
 
 	// Just so we know what board error messages are from.
 	if (isset($_POST['board']) && !isset($_GET['board']))
@@ -138,7 +138,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}log_errors
 			(id_member, log_time, ip, url, message, session, error_type, file, line)
-		VALUES ($user_info[id], " . time() . ", SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$query_string', 1, 65534), SUBSTRING('" . addslashes($error_message) . "', 1, 65534), '$sc', '$error_type', SUBSTRING('$file', 1, 255), $line)", false, false) or die($error_message);
+		VALUES ($user_info[id], " . time() . ", SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$query_string', 1, 65534), SUBSTRING('" . $smfFunc['db_escape_string']($error_message) . "', 1, 65534), '$sc', '$error_type', SUBSTRING('$file', 1, 255), $line)", false, false) or die($error_message);
 
 	// Return the message to make things simpler.
 	return $error_message;

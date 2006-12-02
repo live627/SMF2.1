@@ -484,7 +484,7 @@ function DisplayAdminFile()
 	global $db_prefix, $context, $modSettings, $smfFunc;
 
 	// Danger Will Robinson.
-	$_REQUEST['filename'] = addslashes($_REQUEST['filename']);
+	$_REQUEST['filename'] = $smfFunc['db_escape_string']($_REQUEST['filename']);
 	
 	$request = $smfFunc['db_query']('', "
 		SELECT data, filetype

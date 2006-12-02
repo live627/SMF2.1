@@ -94,7 +94,7 @@ function ViewModlog()
 
 		// To be sure, let's slash all the elements.
 		foreach ($search_params as $key => $value)
-			$search_params[$key] = addslashes($value);
+			$search_params[$key] = $smfFunc['db_escape_string']($value);
 	}
 
 	// If we have no search, a broken search, or a new search - then create a new array.
@@ -119,7 +119,7 @@ function ViewModlog()
 	// Setup the search context.
 	$context['search_params'] = empty($search_params['string']) ? '' : base64_encode(serialize($search_params));
 	$context['search'] = array(
-		'string' => stripslashes($search_params['string']),
+		'string' => $smfFunc['db_unescape_string']($search_params['string']),
 		'type' => $search_params['type'],
 		'label' => $search_params['type_label']
 	);
@@ -320,9 +320,9 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT ms.subject, t.id_topic
-			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ms)
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 			WHERE t.id_topic IN (" . implode(', ', array_keys($topics)) . ")
-				AND ms.id_msg = t.id_first_msg
 			LIMIT " . count(array_keys($topics)), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{

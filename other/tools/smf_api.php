@@ -496,8 +496,8 @@ function smf_logOnline($action = null)
 			WHERE log_time < " . (time() - $lastActive) . " OR session = 'ip$_SERVER[REMOTE_ADDR]'", __FILE__, __LINE__);
 		smf_query("
 			INSERT IGNORE INTO $smf_settings[db_prefix]log_online
-				(session, id_member, ip, url)
-			VALUES ('ip$_SERVER[REMOTE_ADDR]', 0, IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized')", __FILE__, __LINE__);
+				(session, id_member, ip, url, log_time)
+			VALUES ('ip$_SERVER[REMOTE_ADDR]', 0, IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized', " . time() . ")", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -506,8 +506,8 @@ function smf_logOnline($action = null)
 			WHERE log_time < " . (time() - $lastActive) . " OR id_member = $smf_user_info[id] OR session = '" . @session_id() . "'", __FILE__, __LINE__);
 		smf_query("
 			INSERT IGNORE INTO $smf_settings[db_prefix]log_online
-				(session, id_member, ip, url)
-			VALUES ('" . @session_id() . "', $smf_user_info[id], IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized')", __FILE__, __LINE__);
+				(session, id_member, ip, url, log_time)
+			VALUES ('" . @session_id() . "', $smf_user_info[id], IFNULL(INET_ATON('$_SERVER[REMOTE_ADDR]'), 0), '$serialized', " . time() . ")", __FILE__, __LINE__);
 	}
 }
 

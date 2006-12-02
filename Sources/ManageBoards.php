@@ -517,9 +517,9 @@ function EditBoard()
 
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.real_name
-		FROM ({$db_prefix}moderators AS mods, {$db_prefix}members AS mem)
-		WHERE mods.id_board = $_REQUEST[boardid]
-			AND mem.id_member = mods.id_member", __FILE__, __LINE__);
+		FROM {$db_prefix}moderators AS mods
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+		WHERE mods.id_board = $_REQUEST[boardid]", __FILE__, __LINE__);
 	$context['board']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['board']['moderators'][] = $row['real_name'];

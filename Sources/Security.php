@@ -225,7 +225,7 @@ function is_not_banned($forceCheck = false)
 			{
 				$hostname = host_from_ip($user_info['ip']);
 				if (strlen($hostname) > 0)
-					$ban_query[] = "('" . addslashes($hostname) . "' LIKE bi.hostname)";
+					$ban_query[] = "('" . $smfFunc['db_escape_string']($hostname) . "' LIKE bi.hostname)";
 			}
 		}
 		// We use '255.255.255.255' for 'unknown' since it's not valid anyway.
@@ -237,7 +237,7 @@ function is_not_banned($forceCheck = false)
 
 		// Is their email address banned?
 		if (strlen($user_info['email']) != 0)
-			$ban_query[] = "('" . addslashes($user_info['email']) . "' LIKE bi.email_address)";
+			$ban_query[] = "('" . $smfFunc['db_escape_string']($user_info['email']) . "' LIKE bi.email_address)";
 
 		// How about this user?
 		if (!$user_info['is_guest'] && !empty($user_info['id']))
@@ -255,10 +255,10 @@ function is_not_banned($forceCheck = false)
 			$request = $smfFunc['db_query']('', "
 				SELECT bi.id_ban, bi.email_address, bi.id_member, bg.cannot_access, bg.cannot_register,
 					bg.cannot_post, bg.cannot_login, bg.reason, IFNULL(bg.expire_time, 0) AS expire_time
-				FROM ({$db_prefix}ban_groups AS bg, {$db_prefix}ban_items AS bi)
-				WHERE bg.id_ban_group = bi.id_ban_group
-					AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
-					AND (" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
+				FROM {$db_prefix}ban_items AS bi
+					INNER JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . "))
+				WHERE 
+					(" . implode(' OR ', $ban_query) . ')', __FILE__, __LINE__);
 			// Store every type of ban that applies to you in your session.
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
@@ -298,11 +298,11 @@ function is_not_banned($forceCheck = false)
 			$bans[$key] = (int) $value;
 		$request = $smfFunc['db_query']('', "
 			SELECT bi.id_ban, bg.reason
-			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
-			WHERE bg.id_ban_group = bi.id_ban_group
+			FROM {$db_prefix}ban_items AS bi
+				INNER JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
+			WHERE bi.id_ban IN (" . implode(', ', $bans) . ")
 				AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
 				AND bg.cannot_access = 1
-				AND bi.id_ban IN (" . implode(', ', $bans) . ")
 			LIMIT " . count($bans), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -491,9 +491,9 @@ function isBannedEmail($email, $restriction, $error)
 	// ...and add to that the email address you're trying to register.
 	$request = $smfFunc['db_query']('', "
 		SELECT bi.id_ban, bg.$restriction, bg.cannot_access, bg.reason
-		FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg)
-		WHERE bg.id_ban_group = bi.id_ban_group
-			AND '$email' LIKE bi.email_address
+		FROM {$db_prefix}ban_items AS bi
+			INNER JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
+		WHERE '$email' LIKE bi.email_address
 			AND (bg.$restriction = 1 OR bg.cannot_access = 1)", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -689,10 +689,10 @@ function allowedTo($permission, $boards = null)
 
 	$request = $smfFunc['db_query']('', "
 		SELECT MIN(bp.add_deny) AS add_deny
-		FROM ({$db_prefix}board_permissions AS bp, {$db_prefix}boards AS b)
+		FROM {$db_prefix}boards AS b
+			INNER JOIN {$db_prefix}board_permissions AS bp ON (bp.id_profile = b.id_profile)
 			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $user_info[id])
 		WHERE b.id_board IN (" . implode(', ', $boards) . ")
-			AND bp.id_profile = b.id_profile
 			AND bp.id_group IN (" . implode(', ', $user_info['groups']) . ", 3)
 			AND bp.permission " . (is_array($permission) ? "IN ('" . implode("', '", $permission) . "')" : " = '$permission'") . "
 			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)
@@ -776,10 +776,10 @@ function boardsAllowedTo($permission)
 
 	$request = $smfFunc['db_query']('', "
 		SELECT b.id_board, bp.add_deny
-		FROM ({$db_prefix}board_permissions AS bp, {$db_prefix}boards AS b)
+		FROM {$db_prefix}board_permissions AS bp
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_profile = bp.id_profile)
 			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = $user_info[id])
-		WHERE bp.id_profile = b.id_profile
-			AND bp.id_group IN (" . implode(', ', $groups) . ", 3)
+		WHERE bp.id_group IN (" . implode(', ', $groups) . ", 3)
 			AND bp.permission = '$permission'
 			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)", __FILE__, __LINE__);
 	$boards = array();

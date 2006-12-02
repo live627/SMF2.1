@@ -83,6 +83,7 @@ function createWaveFile($word)
 
 	// Output the wav.
 	header('Content-type: audio/x-wav');
+	header('Content-Length: ' . $file_size);
 	echo 'RIFF', chr($file_size & 0xFF), chr(($file_size & 0xFF00) >> 8), chr(($file_size & 0xFF0000) >> 16), chr(($file_size & 0xFF000000) >> 24), 'WAVEfmt ';
 	foreach ($sound_header as $char)
 		echo chr($char);

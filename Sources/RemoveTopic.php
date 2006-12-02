@@ -57,9 +57,9 @@ function RemoveTopic2()
 
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_member_started, ms.subject, t.approved
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ms)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 		WHERE t.id_topic = $topic
-			AND ms.id_msg = t.id_first_msg
 		LIMIT 1", __FILE__, __LINE__);
 	list ($starter, $subject, $approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -95,10 +95,9 @@ function DeleteMessage()
 
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_member_started, m.id_member, m.subject, m.poster_time, m.approved
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = $_REQUEST[msg] AND m.id_topic = $topic)
 		WHERE t.id_topic = $topic
-			AND m.id_topic = $topic
-			AND m.id_msg = $_REQUEST[msg]
 		LIMIT 1", __FILE__, __LINE__);
 	list ($starter, $poster, $subject, $post_time, $approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -172,9 +171,10 @@ function RemoveOldTopics2()
 	// All we're gonna do here is grab the ID_TOPICs and send them to removeTopics().
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_topic
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
-		WHERE m.id_msg = t.id_last_msg
-			AND m.poster_time < " . (time() - 3600 * 24 * $_POST['maxdays']) . "$condition
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
+		WHERE 
+			m.poster_time < " . (time() - 3600 * 24 * $_POST['maxdays']) . "$condition
 			AND t.id_board IN (" . implode(', ', array_keys($_POST['boards'])) . ')', __FILE__, __LINE__);
 	$topics = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -214,9 +214,9 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	{
 		$requestMembers = $smfFunc['db_query']('', "
 			SELECT m.id_member, COUNT(*) AS posts
-			FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 			WHERE m.id_topic $condition
-				AND b.id_board = m.id_board
 				AND m.icon != 'recycled'
 				AND b.count_posts = 0
 			GROUP BY m.id_member", __FILE__, __LINE__);
@@ -426,10 +426,10 @@ function removeMessage($message, $decreasePostCount = true)
 			m.approved, t.id_topic, t.id_first_msg, t.id_last_msg, t.num_replies, t.id_board,
 			t.id_member_started AS ID_MEMBER_POSTER,
 			b.count_posts
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE m.id_msg = $message
-			AND t.id_topic = m.id_topic
-			AND b.id_board = t.id_board
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		return false;

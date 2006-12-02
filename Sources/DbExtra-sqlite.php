@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************
-* DbExtra-mysql.php                                                               *
+* DbExtra-sqlite.php                                                              *
 ***********************************************************************************
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
@@ -21,7 +21,6 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
-
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -139,32 +138,22 @@ function db_optimize_table($table)
 {
 	global $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
-			OPTIMIZE TABLE `' . $table[0] . '`", false, false);
-	if (!$request)
-		return -1;
-
-	$row = $smfFunc['db_fetch_assoc']($request);
-	$smfFunc['db_free_result']($request);
-
-	if (isset($table['Data_free']))
-			return $table['Data_free'] / 1024;
-	else
-		return 0;
+	return -1;
 }
 
 // List all the tables in the database.
 function db_list_tables($db = false, $filter = false)
 {
-	global $db_name, $smfFunc;
+	global $db_prefix, $smfFunc;
 
-	$db = $db == false ? $db_name : $db;
-	$filter = $filter == false ? '' : " LIKE $filter";
+	$filter = $filter == false ? '' : " AND name LIKE '$filter'";
 
-	$smfFunc['db_query']('', "
-		SHOW TABLES
-		FROM $db
-		$filter", false, false);
+	$request = $smfFunc['db_query']('', "
+		SELECT name
+		FROM sqlite_master
+		WHERE type = 'table'
+		$filter
+		ORDER BY name", false, false);
 	$tables = array();
 	while ($row = $smfFunc['db_fetch_row']($request))
 		$tables[] = $row[0];
@@ -184,7 +173,7 @@ function db_insert_sql($tableName)
 	// Get everything from the table.
 	$result = $smfFunc['db_query']('', "
 		SELECT /*!40001 SQL_NO_CACHE */ *
-		FROM `$tableName`", false, false);
+		FROM $tableName", false, false);
 
 	// The number of rows, just for record keeping and breaking INSERTs up.
 	$num_rows = $smfFunc['db_num_rows']($result);
@@ -197,7 +186,8 @@ function db_insert_sql($tableName)
 	$smfFunc['db_data_seek']($result, 0);
 
 	// Start it off with the basic INSERT INTO.
-	$data = 'INSERT INTO `' . $tableName . '`' . $crlf . "\t(`" . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
+	$data = '';
+	$insert_msg = $crlf . 'INSERT INTO ' . $tableName . $crlf . "\t(" . implode(', ', $fields) . ')' . $crlf . 'VALUES ' . $crlf . "\t";
 
 	// Loop through each row.
 	while ($row = $smfFunc['db_fetch_row']($result))
@@ -218,17 +208,7 @@ function db_insert_sql($tableName)
 		}
 
 		// 'Insert' the data.
-		$data .= '(' . implode(', ', $field_list) . ')';
-
-		// Start a new INSERT statement after every 250....
-		if ($current_row > 249 && $current_row % 250 == 0)
-			$data .= ';' . $crlf . 'INSERT INTO `' . $tableName . '`' . $crlf . "\t(`" . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
-		// All done!
-		elseif ($current_row == $num_rows)
-			$data .= ';' . $crlf;
-		// Otherwise, go to the next line.
-		else
-			$data .= ',' . $crlf . "\t";
+		$data .= $insert_msg . '(' . implode(', ', $field_list) . ');';
 	}
 	$smfFunc['db_free_result']($result);
 
@@ -244,94 +224,86 @@ function db_table_sql($tableName)
 	// This will be needed...
 	$crlf = "\r\n";
 
-	// Drop it if it exists.
-	$schema_create = 'DROP TABLE IF EXISTS `' . $tableName . '`;' . $crlf . $crlf;
-
 	// Start the create table...
-	$schema_create .= 'CREATE TABLE `' . $tableName . '` (' . $crlf;
+	$schema_create = 'CREATE TABLE ' . $tableName . ' (' . $crlf;
+	$index_create = '';
+	$seq_create = '';
 
 	// Find all the fields.
 	$result = $smfFunc['db_query']('', "
-		SHOW FIELDS
-		FROM `$tableName`", false, false);
+		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
+		FROM information_schema.columns
+		WHERE table_name = '$tableName'
+		ORDER BY ordinal_position", false, false);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
+		if ($row['data_type'] == 'character varying')
+			$row['data_type'] = 'varchar';
+		elseif ($row['data_type'] == 'character')
+			$row['data_type'] = 'char';
+		if ($row['character_maximum_length'])
+			$row['data_type'] .= '(' . $row['character_maximum_length'] . ')';
+
 		// Make the CREATE for this column.
-		$schema_create .= '  ' . $row['Field'] . ' ' . $row['Type'] . ($row['Null'] != 'YES' ? ' NOT NULL' : '');
+		$schema_create .= '  ' . $row['column_name'] . ' ' . $row['data_type'] . ($row['is_nullable'] != 'YES' ? ' NOT NULL' : '');
 
 		// Add a default...?
-		if (isset($row['Default']))
+		if (trim($row['column_default']) != '')
 		{
-			// Make a special case of auto-timestamp.
-			if ($row['Default'] == 'CURRENT_TIMESTAMP')
-				$schema_create .= ' /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */';
-			else
-				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . $smfFunc['db_escape_string']($row['Default']) . "'");
+			$schema_create .= ' default ' . $row['column_default'] . '';
+
+			// Auto increment?
+			if (preg_match('~nextval\(\'(.+?)\'(.+?)*\)~i', $row['column_default'], $matches) != 0)
+			{
+				// Get to find the next variable first!
+				$count_req = $smfFunc['db_query']('', "
+					SELECT MAX($row[column_name])
+					FROM $tableName", false, false);
+				list ($max_ind) = $smfFunc['db_fetch_row']($count_req);
+				$smfFunc['db_free_result']($count_req);
+				//!!! Get the right bloody start!
+				$seq_create .= 'CREATE SEQUENCE ' . $matches[1] . ' START WITH ' . ($max_ind+ 1) . ';' . $crlf . $crlf;
+			}
 		}
 
-		// And now any extra information. (such as auto_increment.)
-		$schema_create .= ($row['Extra'] != '' ? ' ' . $row['Extra'] : '') . ',' . $crlf;
+		$schema_create .= ',' . $crlf;
 	}
 	$smfFunc['db_free_result']($result);
 
 	// Take off the last comma.
 	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
 
-	// Find the keys.
 	$result = $smfFunc['db_query']('', "
-		SHOW KEYS
-		FROM `$tableName`", false, false);
+		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary, pg_get_indexdef(i.indexrelid) AS inddef
+		FROM pg_class AS c, pg_class AS c2, pg_index AS i
+		WHERE c.relname = '{$tableName}'
+			AND c.oid = i.indrelid
+			AND i.indexrelid = c2.oid", false, false);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		// IS this a primary key, unique index, or regular index?
-		$row['Key_name'] = $row['Key_name'] == 'PRIMARY' ? 'PRIMARY KEY' : (empty($row['Non_unique']) ? 'UNIQUE ' : ($row['Comment'] == 'FULLTEXT' || (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT') ? 'FULLTEXT ' : 'KEY ')) . $row['Key_name'];
+		if ($row['is_primary'])
+		{
+			if (preg_match('~\(([^\)]+?)\)~i', $row['inddef'], $matches) == 0)
+				continue;
 
-		// Is this the first column in the index?
-		if (empty($indexes[$row['Key_name']]))
-			$indexes[$row['Key_name']] = array();
-
-		// A sub part, like only indexing 15 characters of a varchar.
-		if (!empty($row['Sub_part']))
-			$indexes[$row['Key_name']][$row['Seq_in_index']] = $row['Column_name'] . '(' . $row['Sub_part'] . ')';
+			$index_create .= $crlf . 'ALTER TABLE ' . $tableName . ' ADD PRIMARY KEY (' . $matches[1] . ');';
+		}
 		else
-			$indexes[$row['Key_name']][$row['Seq_in_index']] = $row['Column_name'];
+			$index_create .= $crlf . $row['inddef'] . ';';
 	}
 	$smfFunc['db_free_result']($result);
 
-	// Build the CREATEs for the keys.
-	foreach ($indexes as $keyname => $columns)
-	{
-		// Ensure the columns are in proper order.
-		ksort($columns);
+	// Finish it off!
+	$schema_create .= $crlf . ');';
 
-		$schema_create .= ',' . $crlf . '  ' . $keyname . ' (' . implode($columns, ', ') . ')';
-	}
-
-	// Now just get the comment and type... (MyISAM, etc.)
-	$result = $smfFunc['db_query']('', "
-		SHOW TABLE STATUS
-		LIKE '" . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . "'", false, false);
-	$row = $smfFunc['db_fetch_assoc']($result);
-	$smfFunc['db_free_result']($result);
-
-	// Probably MyISAM.... and it might have a comment.
-	$schema_create .= $crlf . ') TYPE=' . (isset($row['Type']) ? $row['Type'] : $row['Engine']) . ($row['Comment'] != '' ? ' COMMENT="' . $row['Comment'] . '"' : '');
-
-	return $schema_create;
+	return $seq_create . $schema_create . $index_create;
 }
 
 // Get the version number.
 function smf_db_get_version()
 {
-	global $smfFunc;
-
-	$request = $smfFunc['db_query']('', "
-		SELECT VERSION()", false, false);
-	list ($ver) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
-
-	return $ver;
+	return sqlite_libversion();
 }
 
 ?>

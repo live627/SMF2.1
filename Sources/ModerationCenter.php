@@ -215,10 +215,10 @@ function ModBlockGroupRequests()
 	// What requests are outstanding?
 	$request = $smfFunc['db_query']('', "
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, mem.member_name, mg.group_name
-		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
+		FROM {$db_prefix}log_group_requests AS lgr
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
+			INNER JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
 		WHERE " . ($user_info['mod_cache']['gq'] == 1 ? '1=1' : 'lgr.' . $user_info['mod_cache']['gq']) . "
-			AND mem.id_member = lgr.id_member
-			AND mg.id_group = lgr.id_group
 		ORDER BY lgr.id_request DESC
 		LIMIT 10", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))

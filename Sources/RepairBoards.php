@@ -1862,7 +1862,7 @@ function createSalvageArea()
 	$result = $smfFunc['db_query']('', "
 		SELECT id_cat
 		FROM {$db_prefix}categories
-		WHERE name = '" . addslashes($txt['salvaged_category_name']) . "'
+		WHERE name = '" . $smfFunc['db_escape_string']($txt['salvaged_category_name']) . "'
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($result) != 0)
 		list ($salvageCatID) = $smfFunc['db_fetch_row']($result);
@@ -1873,7 +1873,7 @@ function createSalvageArea()
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}categories
 				(name, cat_order)
-			VALUES (SUBSTRING('" . addslashes($txt['salvaged_category_name']) . "', 1, 255), -1)", __FILE__, __LINE__);
+			VALUES (SUBSTRING('" . $smfFunc['db_escape_string']($txt['salvaged_category_name']) . "', 1, 255), -1)", __FILE__, __LINE__);
 		if (db_affected_rows() <= 0)
 		{
 			loadLanguage('Admin');
@@ -1888,7 +1888,7 @@ function createSalvageArea()
 		SELECT id_board
 		FROM {$db_prefix}boards
 		WHERE id_cat = $salvageCatID
-			AND name = '" . addslashes($txt['salvaged_board_name']) . "'
+			AND name = '" . $smfFunc['db_escape_string']($txt['salvaged_board_name']) . "'
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($result) != 0)
 		list ($salvageBoardID) = $smfFunc['db_fetch_row']($result);
@@ -1899,7 +1899,7 @@ function createSalvageArea()
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}boards
 				(name, description, id_cat, member_groups, board_order)
-			VALUES (SUBSTRING('" . addslashes($txt['salvaged_board_name']) . "', 1, 255), SUBSTRING('" . addslashes($txt['salvaged_board_description']) . "', 1, 255), $salvageCatID, '1', -1)", __FILE__, __LINE__);
+			VALUES (SUBSTRING('" . $smfFunc['db_escape_string']($txt['salvaged_board_name']) . "', 1, 255), SUBSTRING('" . addslashes($txt['salvaged_board_description']) . "', 1, 255), $salvageCatID, '1', -1)", __FILE__, __LINE__);
 		if (db_affected_rows() <= 0)
 		{
 			loadLanguage('Admin');

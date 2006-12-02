@@ -129,7 +129,8 @@ function Post()
 		$request = $smfFunc['db_query']('', "
 			SELECT
 				t.locked, IFNULL(ln.id_topic, 0) AS notify, t.is_sticky, t.id_poll, t.num_replies, mf.id_member,
-				t.id_first_msg, mf.subject, GREATEST(ml.poster_time, ml.modified_time) AS lastPostTime
+				t.id_first_msg, mf.subject,
+				CASE WHEN ml.poster_time > ml.modified_time THEN ml.poster_time ELSE ml.modified_time END AS lastPostTime
 			FROM {$db_prefix}topics AS t
 				LEFT JOIN {$db_prefix}log_notify AS ln ON (ln.id_topic = t.id_topic AND ln.id_member = $user_info[id])
 				LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
@@ -424,7 +425,7 @@ function Post()
 				{
 					if (!isset($_REQUEST['email']) || $_REQUEST['email'] == '')
 						$context['post_error']['no_email'] = true;
-					elseif (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_REQUEST['email'])) == 0)
+					elseif (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_REQUEST['email'])) == 0)
 						$context['post_error']['bad_email'] = true;
 				}
 			}
@@ -454,8 +455,8 @@ function Post()
 		$context['can_announce'] &= $context['becomes_approved'];
 
 		// Set up the inputs for the form.
-		$form_subject = strtr($smfFunc['htmlspecialchars'](stripslashes($_REQUEST['subject'])), array("\r" => '', "\n" => '', "\t" => ''));
-		$form_message = $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['message']), ENT_QUOTES);
+		$form_subject = strtr($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['subject'])), array("\r" => '', "\n" => '', "\t" => ''));
+		$form_message = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['message']), ENT_QUOTES);
 
 		// Make sure the subject isn't too long - taking into account special characters.
 		if ($smfFunc['strlen']($form_subject) > 100)
@@ -491,12 +492,12 @@ function Post()
 
 		if (isset($_REQUEST['poll']))
 		{
-			$context['question'] = isset($_REQUEST['question']) ? $smfFunc['htmlspecialchars'](stripslashes(trim($_REQUEST['question']))) : '';
+			$context['question'] = isset($_REQUEST['question']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string'](trim($_REQUEST['question']))) : '';
 
 			$context['choices'] = array();
 			$choice_id = 0;
 
-			$_POST['options'] = empty($_POST['options']) ? array() : htmlspecialchars__recursive(stripslashes__recursive($_POST['options']));
+			$_POST['options'] = empty($_POST['options']) ? array() : htmlspecialchars__recursive(unescapestring__recursive($_POST['options']));
 			foreach ($_POST['options'] as $option)
 			{
 				if (trim($option) == '')
@@ -905,9 +906,9 @@ function Post()
 					fatal_lang_error('attachments_no_write', 'critical');
 
 				$attachID = 'post_tmp_' . $user_info['id'] . '_' . $temp_start++;
-				$_SESSION['temp_attachments'][$attachID] = stripslashes(basename($_FILES['attachment']['name'][$n]));
+				$_SESSION['temp_attachments'][$attachID] = $smfFunc['db_unescape_string'](basename($_FILES['attachment']['name'][$n]));
 				$context['current_attachments'][] = array(
-					'name' => basename(stripslashes($_FILES['attachment']['name'][$n])),
+					'name' => basename($smfFunc['db_unescape_string']($_FILES['attachment']['name'][$n])),
 					'id' => $attachID,
 					'approved' => 1,
 				);
@@ -1032,9 +1033,9 @@ function Post2()
 		require_once($sourcedir . '/Subs-Editor.php');
 
 		// We strip and add slashes back here - so we don't forget!
-		$_REQUEST['message'] = stripslashes($_REQUEST['message']);
+		$_REQUEST['message'] = $smfFunc['db_unescape_string']($_REQUEST['message']);
 		$_REQUEST['message'] = html_to_bbc($_REQUEST['message']);
-		$_REQUEST['message'] = addslashes($_REQUEST['message']);
+		$_REQUEST['message'] = $smfFunc['db_escape_string']($_REQUEST['message']);
 
 		// We need to unhtml it now as it gets done shortly.
 		$_REQUEST['message'] = un_htmlspecialchars($_REQUEST['message']);
@@ -1065,9 +1066,9 @@ function Post2()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT t.locked, t.is_sticky, t.id_poll, t.num_replies, m.id_member
-			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			WHERE t.id_topic = $topic
-				AND m.id_msg = t.id_first_msg
 			LIMIT 1", __FILE__, __LINE__);
 		list ($tmplocked, $tmpstickied, $pollID, $num_replies, $ID_MEMBER_POSTER) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -1175,9 +1176,9 @@ function Post2()
 			SELECT
 				m.id_member, m.poster_name, m.poster_email, m.poster_time, m.approved,
 				t.id_first_msg, t.locked, t.is_sticky, t.id_member_started AS id_member_poster
-			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
 			WHERE m.id_msg = $_REQUEST[msg]
-				AND t.id_topic = $topic
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('smf272', false);
@@ -1248,8 +1249,8 @@ function Post2()
 
 		if (!allowedTo('moderate_forum') || !$posterIsGuest)
 		{
-			$_POST['guestname'] = addslashes($row['poster_name']);
-			$_POST['email'] = addslashes($row['poster_email']);
+			$_POST['guestname'] = $smfFunc['db_escape_string']($row['poster_name']);
+			$_POST['email'] = $smfFunc['db_escape_string']($row['poster_email']);
 		}
 	}
 
@@ -1271,7 +1272,7 @@ function Post2()
 			{
 				if (!allowedTo('moderate_forum') && (!isset($_POST['email']) || $_POST['email'] == ''))
 					$post_errors[] = 'no_email';
-				if (!allowedTo('moderate_forum') && preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['email'])) == 0)
+				if (!allowedTo('moderate_forum') && preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['email'])) == 0)
 					$post_errors[] = 'bad_email';
 			}
 
@@ -1297,7 +1298,7 @@ function Post2()
 	else
 	{
 		// Prepare the message a bit for some additional testing.
-		$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
+		$_POST['message'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['message']), ENT_QUOTES));
 
 		// Preparse code. (Zef)
 		if ($user_info['is_guest'])
@@ -1355,8 +1356,8 @@ function Post2()
 	// If the user isn't a guest, get his or her name and email.
 	elseif (!isset($_REQUEST['msg']))
 	{
-		$_POST['guestname'] = addslashes($user_info['username']);
-		$_POST['email'] = addslashes($user_info['email']);
+		$_POST['guestname'] = $smfFunc['db_escape_string']($user_info['username']);
+		$_POST['email'] = $smfFunc['db_escape_string']($user_info['email']);
 	}
 
 	// Any mistakes?
@@ -1394,7 +1395,7 @@ function Post2()
 
 	// At this point, we want to make sure the subject isn't too long.
 	if ($smfFunc['strlen']($_POST['subject']) > 100)
-		$_POST['subject'] = addslashes($smfFunc['substr'](stripslashes($_POST['subject']), 0, 100));
+		$_POST['subject'] = $smfFunc['db_escape_string']($smfFunc['substr']($smfFunc['db_unescape_string']($_POST['subject']), 0, 100));
 
 	// Make the poll...
 	if (isset($_REQUEST['poll']))
@@ -1476,7 +1477,7 @@ function Post2()
 				}
 
 				$_FILES['attachment']['tmp_name'][] = $attachID;
-				$_FILES['attachment']['name'][] = addslashes($name);
+				$_FILES['attachment']['name'][] = $smfFunc['db_escape_string']($name);
 				$_FILES['attachment']['size'][] = filesize($modSettings['attachmentUploadDir'] . '/' . $attachID);
 				list ($_FILES['attachment']['width'][], $_FILES['attachment']['height'][]) = @getimagesize($modSettings['attachmentUploadDir'] . '/' . $attachID);
 
@@ -1599,7 +1600,7 @@ function Post2()
 		if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $user_info['id'] != $row['id_member'])
 		{
 			$msgOptions['modify_time'] = time();
-			$msgOptions['modify_name'] = addslashes($user_info['name']);
+			$msgOptions['modify_name'] = $smfFunc['db_escape_string']($user_info['name']);
 		}
 
 		// This will save some time...
@@ -1662,7 +1663,7 @@ function Post2()
 				UPDATE {$db_prefix}calendar
 				SET end_date = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "',
 					start_date = '" . strftime('%Y-%m-%d', $start_time) . "',
-					title = '" . $smfFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES) . "'
+					title = '" . $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['evtitle']), ENT_QUOTES)) . "'
 				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 		}
 		updateStats('calendar');
@@ -1686,10 +1687,12 @@ function Post2()
 	if (!empty($_POST['notify']))
 	{
 		if (allowedTo('mark_any_notify'))
-			$smfFunc['db_query']('', "
-				INSERT IGNORE INTO {$db_prefix}log_notify
-					(id_member, id_topic, id_board)
-				VALUES ($user_info[id], $topic, 0)", __FILE__, __LINE__);
+			$smfFunc['db_insert']('ignore',
+				"{$db_prefix}log_notify",
+				array('id_member', 'id_topic', 'id_board'),
+				array($user_info['id'], $topic, 0),
+				array('id_member', 'id_topic', 'id_board')
+			);
 	}
 	elseif (!$newTopic)
 		$smfFunc['db_query']('', "
@@ -1714,7 +1717,7 @@ function Post2()
 		if ($newTopic)
 		{
 			$notifyData = array(
-				'body' => stripslashes($_POST['message']),
+				'body' => $smfFunc['db_unescape_string']($_POST['message']),
 				'subject' => $_POST['subject'],
 				'name' => $user_info['name'],
 				'poster' => $user_info['id'],
@@ -1818,9 +1821,9 @@ function AnnouncementSelectMembergroup()
 	// Get the subject of the topic we're about to announce.
 	$request = $smfFunc['db_query']('', "
 		SELECT m.subject
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-		WHERE t.id_topic = $topic
-			AND m.id_msg = t.id_first_msg", __FILE__, __LINE__);
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+		WHERE t.id_topic = $topic", __FILE__, __LINE__);
 	list ($context['topic_subject']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1860,9 +1863,9 @@ function AnnouncementSend()
 	// Get the topic subject and censor it.
 	$request = $smfFunc['db_query']('', "
 		SELECT m.id_msg, m.subject, m.body
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-		WHERE t.id_topic = $topic
-			AND m.id_msg = t.id_first_msg", __FILE__, __LINE__);
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+		WHERE t.id_topic = $topic", __FILE__, __LINE__);
 	list ($id_msg, $context['topic_subject'], $message) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1989,14 +1992,14 @@ function notifyMembersBoard(&$topicData)
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_send_body, mem.lngfile,
 			ln.sent, ln.id_board, mem.id_group, mem.additional_groups, b.member_groups,
 			mem.id_post_group
-		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}members AS mem, {$db_prefix}boards AS b)
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = ln.id_board)
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
 		WHERE ln.id_board IN (" . implode(',', $board_index) . ")
-			AND b.id_board = ln.id_board
 			AND mem.id_member != $user_info[id]
 			AND mem.is_activated = 1
 			AND mem.notify_types != 4
 			AND mem.notify_regularity < 2
-			AND ln.id_member = mem.id_member
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	while ($rowmember = $smfFunc['db_fetch_assoc']($members))
 	{
@@ -2215,10 +2218,10 @@ function JavaScriptModify()
 			SELECT 
 				t.locked, t.num_replies, t.id_member_started, t.id_first_msg,
 				m.id_msg, m.id_member, m.poster_time, m.subject, m.smileys_enabled, m.body, m.icon
-			FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
 			WHERE m.id_msg = " . (empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg']) . "
-				AND m.id_topic = $topic
-				AND t.id_topic = $topic", __FILE__, __LINE__);
+				AND m.id_topic = $topic", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -2253,7 +2256,7 @@ function JavaScriptModify()
 
 		// Maximum number of characters.
 		if ($smfFunc['strlen']($_POST['subject']) > 100)
-			$_POST['subject'] = addslashes($smfFunc['substr'](stripslashes($_POST['subject']), 0, 100));
+			$_POST['subject'] = $smfFunc['db_escape_string']($smfFunc['substr']($smfFunc['db_unescape_string']($_POST['subject']), 0, 100));
 	}
 	elseif (isset($_POST['subject']))
 	{
@@ -2275,7 +2278,7 @@ function JavaScriptModify()
 		}
 		else
 		{
-			$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
+			$_POST['message'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['message']), ENT_QUOTES));
 
 			preparsecode($_POST['message']);
 
@@ -2332,7 +2335,7 @@ function JavaScriptModify()
 			if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $user_info['id'] != $row['id_member'])
 			{
 				$msgOptions['modify_time'] = time();
-				$msgOptions['modify_name'] = addslashes($user_info['name']);
+				$msgOptions['modify_name'] = $smfFunc['db_escape_string']($user_info['name']);
 			}
 		}
 
@@ -2376,11 +2379,11 @@ function JavaScriptModify()
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
 					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
-					'name' => isset($msgOptions['modify_time']) ? stripslashes($msgOptions['modify_name']) : '',
+					'name' => isset($msgOptions['modify_time']) ? $smfFunc['db_unescape_string']($msgOptions['modify_name']) : '',
 				),
-				'subject' => stripslashes($msgOptions['subject']),
+				'subject' => $smfFunc['db_unescape_string']($msgOptions['subject']),
 				'first_in_topic' => $row['id_msg'] == $row['id_first_msg'],
-				'body' => stripslashes($msgOptions['body']),
+				'body' => $smfFunc['db_unescape_string']($msgOptions['body']),
 			);
 
 			censorText($context['message']['subject']);
@@ -2397,9 +2400,9 @@ function JavaScriptModify()
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
 					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
-					'name' => isset($msgOptions['modify_time']) ? stripslashes($msgOptions['modify_name']) : '',
+					'name' => isset($msgOptions['modify_time']) ? $smfFunc['db_unescape_string']($msgOptions['modify_name']) : '',
 				),
-				'subject' => isset($msgOptions['subject']) ? stripslashes($msgOptions['subject']) : '',
+				'subject' => isset($msgOptions['subject']) ? $smfFunc['db_unescape_string']($msgOptions['subject']) : '',
 			);
 
 			censorText($context['message']['subject']);

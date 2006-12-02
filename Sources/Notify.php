@@ -88,10 +88,11 @@ function Notify()
 		checkSession('get');
 
 		// Attempt to turn notifications on.
-		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}log_notify
-				(id_member, id_topic)
-			VALUES ($user_info[id], $topic)", __FILE__, __LINE__);
+		$smfFunc['db_insert']('ignore',
+				"{$db_prefix}log_notify",
+				array('id_member', 'id_topic'),
+				array($user_info['id'], $topic),
+				array('id_member', 'id_topic'));
 	}
 	else
 	{
@@ -150,10 +151,11 @@ function BoardNotify()
 		checkSession('get');
 
 		// Turn notification on.  (note this just blows smoke if it's already on.)
-		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}log_notify
-				(id_member, id_board)
-			VALUES ($user_info[id], $board)", __FILE__, __LINE__);
+		$smfFunc['db_insert']('ignore',
+				"{$db_prefix}log_notify",
+				array('id_member', 'id_board'),
+				array($user_info['id'], $board),
+				array('id_member', 'id_board'));
 	}
 	// ...or off?
 	else

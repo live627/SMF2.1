@@ -311,7 +311,7 @@ function loadUserSettings()
 
 	if (empty($id_member) && isset($_COOKIE[$cookiename]))
 	{
-		$_COOKIE[$cookiename] = stripslashes($_COOKIE[$cookiename]);
+		$_COOKIE[$cookiename] = $smfFunc['db_unescape_string']($_COOKIE[$cookiename]);
 
 		// Fix a security hole in PHP 4.3.9 and below...
 		if (preg_match('~^a:[34]:\{i:0;(i:\d{1,6}|s:[1-8]:"\d{1,8}");i:1;s:(0|40):"([a-fA-F0-9]{40})?";i:2;[id]:\d{1,14};(i:3;i:\d;)?\}$~', $_COOKIE[$cookiename]) == 1)
@@ -325,7 +325,7 @@ function loadUserSettings()
 	elseif (empty($id_member) && isset($_SESSION['login_' . $cookiename]) && ($_SESSION['USER_AGENT'] == $_SERVER['HTTP_USER_AGENT'] || !empty($modSettings['disableCheckUA'])))
 	{
 		// !!! Perhaps we can do some more checking on this, such as on the first octet of the IP?
-		list ($id_member, $password, $login_span) = @unserialize(stripslashes($_SESSION['login_' . $cookiename]));
+		list ($id_member, $password, $login_span) = @unserialize($smfFunc['db_unescape_string']($_SESSION['login_' . $cookiename]));
 		$id_member = !empty($id_member) && strlen($password) == 40 && $login_span > time() ? (int) $id_member : 0;
 	}
 
@@ -727,7 +727,7 @@ function loadPermissions()
 		asort($cache_groups);
 		$cache_groups = implode(',', $cache_groups);
 
-		if ($modSettings['cache_enable'] >= 2 && ($temp = cache_get_data('permissions:' . $cache_groups . (empty($board) ? '' : ':' . $board), 240)) != null)
+		if ($modSettings['cache_enable'] >= 2 && !empty($board) && ($temp = cache_get_data('permissions:' . $cache_groups . ':' . $board, 240)) != null)
 		{
 			list ($user_info['permissions']) = $temp;
 			banPermissions();
@@ -2000,7 +2000,7 @@ function sessionRead($session_id)
 	$result = $smfFunc['db_query']('', "
 		SELECT data
 		FROM {$db_prefix}sessions
-		WHERE session_id = '" . addslashes($session_id) . "'
+		WHERE session_id = '" . $smfFunc['db_escape_string']($session_id) . "'
 		LIMIT 1", __FILE__, __LINE__);
 	list ($sess_data) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
@@ -2018,15 +2018,15 @@ function sessionWrite($session_id, $data)
 	// First try to update an existing row...
 	$result = $smfFunc['db_query']('', "
 		UPDATE {$db_prefix}sessions
-		SET data = '" . addslashes($data) . "', last_update = " . time() . "
-		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
+		SET data = '" . $smfFunc['db_escape_string']($data) . "', last_update = " . time() . "
+		WHERE session_id = '" . $smfFunc['db_escape_string']($session_id) . "'", __FILE__, __LINE__);
 
 	// If that didn't work, try inserting a new one.
 	if (db_affected_rows() == 0)
 		$result = $smfFunc['db_insert']('ignore',
 			"{$db_prefix}sessions",
 			array('session_id', 'data', 'last_update'),
-			array('\'' . addslashes($session_id) . '\'', '\'' . addslashes($data) . '\'', time()),
+			array('\'' . $smfFunc['db_escape_string']($session_id) . '\'', '\'' . $smfFunc['db_escape_string']($data) . '\'', time()),
 			array('session_id')
 		);
 
@@ -2043,7 +2043,7 @@ function sessionDestroy($session_id)
 	// Just delete the row...
 	return $smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}sessions
-		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
+		WHERE session_id = '" . $smfFunc['db_escape_string']($session_id) . "'", __FILE__, __LINE__);
 }
 
 function sessionGC($max_lifetime)

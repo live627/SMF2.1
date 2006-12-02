@@ -79,15 +79,23 @@ function modify_topic_done(XMLDoc)
 	}
 
 	var message = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("message")[0];
-	var subject = message.getElementsByTagName("subject")[0].childNodes[0].nodeValue;
+	var subject = message.getElementsByTagName("subject")[0];
+	var error = message.getElementsByTagName("error")[0];
 
-	modify_topic_hide_edit(subject);
+	if (typeof window.ajax_indicator == "function")
+		ajax_indicator(false);
+
+	if (!subject || error)
+		return false;
+
+	subjectText = subject.childNodes[0].nodeValue;
+
+	modify_topic_hide_edit(subjectText);
 
 	set_hidden_topic_areas('');
 
 	in_edit_mode = 0;
-	if (typeof window.ajax_indicator == "function")
-		ajax_indicator(false);
+
 	return false;
 }
 

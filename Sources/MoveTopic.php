@@ -63,9 +63,9 @@ function MoveTopic()
 
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_member_started, ms.subject, t.approved
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS ms)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 		WHERE t.id_topic = $topic
-			AND ms.id_msg = t.id_first_msg
 		LIMIT 1", __FILE__, __LINE__);
 	list ($id_member_started, $context['subject'], $approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -199,11 +199,11 @@ function MoveTopic2()
 	// Make sure they can see the board they are trying to move to (and get whether posts count in the target board).
 	$request = $smfFunc['db_query']('', "
 		SELECT b.count_posts, b.name, m.subject
-		FROM ({$db_prefix}boards AS b, {$db_prefix}topics AS t, {$db_prefix}messages AS m)
+		FROM {$db_prefix}boards AS b
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 		WHERE $user_info[query_see_board]
 			AND b.id_board = $_POST[toboard]
-			AND t.id_topic = $topic
-			AND m.id_msg = t.id_first_msg
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('smf232');
@@ -257,17 +257,17 @@ function MoveTopic2()
 		if ($user_info['language'] != $language)
 			loadLanguage('index', $language);
 
-		$_POST['reason'] = $smfFunc['htmlspecialchars']($_POST['reason'], ENT_QUOTES);
+		$_POST['reason'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['reason']), ENT_QUOTES));
 		preparsecode($_POST['reason']);
 
 		// Add a URL onto the message.
 		$_POST['reason'] = strtr($_POST['reason'], array(
-			$txt['movetopic_auto_board'] => '[url=' . $scripturl . '?board=' . $_POST['toboard'] . ']' . addslashes($board_name) . '[/url]',
+			$txt['movetopic_auto_board'] => '[url=' . $scripturl . '?board=' . $_POST['toboard'] . ']' . $smfFunc['db_escape_string']($board_name) . '[/url]',
 			$txt['movetopic_auto_topic'] => '[iurl]' . $scripturl . '?topic=' . $topic . '.0[/iurl]'
 		));
 
 		$msgOptions = array(
-			'subject' => addslashes($txt['smf56'] . ': ' . $subject),
+			'subject' => $smfFunc['db_escape_string']($txt['smf56'] . ': ' . $subject),
 			'body' => $_POST['reason'],
 			'icon' => 'moved',
 			'smileys_enabled' => 1,

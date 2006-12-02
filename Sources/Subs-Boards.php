@@ -1,27 +1,25 @@
 <?php
-/**********************************************************************************
-* Subs-Boards.php                                                                 *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
-
+/******************************************************************************
+* Subs-Boards.php                                                             *
+*******************************************************************************
+* SMF: Simple Machines Forum                                                  *
+* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
+* =========================================================================== *
+* Software Version:           SMF 2.0 Alpha                                   *
+* Software by:                Simple Machines (http://www.simplemachines.org) *
+* Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
+* Support, News, Updates at:  http://www.simplemachines.org                   *
+*******************************************************************************
+* This program is free software; you may redistribute it and/or modify it     *
+* under the terms of the provided license as published by Lewis Media.        *
+*                                                                             *
+* This program is distributed in the hope that it is and will be useful,      *
+* but WITHOUT ANY WARRANTIES; without even any implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
+*                                                                             *
+* See the "license.txt" file for details of the Simple Machines license.      *
+* The latest version can always be found at http://www.simplemachines.org.    *
+******************************************************************************/
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -152,11 +150,11 @@ function markBoardsRead($boards, $unread = false)
 	// !!!SLOW This query seems to eat it sometimes.
 	$result = $smfFunc['db_query']('', "
 		SELECT lt.id_topic
-		FROM ({$db_prefix}log_topics AS lt, {$db_prefix}topics AS t /*!40000 USE INDEX (PRIMARY) */)
-		WHERE t.id_topic = lt.id_topic
-			AND t.id_topic >= $lowest_topic
-			AND t.id_board IN (" . implode(', ', $boards) . ")
-			AND lt.id_member = $user_info[id]", __FILE__, __LINE__);
+		FROM {$db_prefix}log_topics AS lt
+			INNER JOIN {$db_prefix}topics AS t /*!40000 USE INDEX (PRIMARY) */ ON (t.id_topic = lt.id_topic
+				AND t.id_board IN (" . implode(', ', $boards) . "))
+		WHERE lt.id_member = $user_info[id]
+			AND lt.id_topic >= $lowest_topic", __FILE__, __LINE__);
 	$topics = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 		$topics[] = $row['id_topic'];
@@ -540,7 +538,7 @@ function modifyBoard($board_id, &$boardOptions)
 		if (isset($boardOptions['moderator_string']) && trim($boardOptions['moderator_string']) != '')
 		{
 			// Divvy out the usernames, remove extra space.
-			$moderator_string = strtr($smfFunc['htmlspecialchars'](stripslashes($boardOptions['moderator_string']), ENT_QUOTES), array('&quot;' => '"'));
+			$moderator_string = strtr($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($boardOptions['moderator_string']), ENT_QUOTES), array('&quot;' => '"'));
 			preg_match_all('~"([^"]+)"~', $moderator_string, $matches);
 			$moderators = array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $moderator_string)));
 			for ($k = 0, $n = count($moderators); $k < $n; $k++)

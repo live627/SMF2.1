@@ -138,11 +138,11 @@ function GroupList()
 		{
 			$query = $smfFunc['db_query']('', "
 				SELECT mg.id_group, COUNT(*) AS num_members
-				FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
+				FROM {$db_prefix}membergroups AS mg
+					INNER JOIN {$db_prefix}members AS mem ON (mem.additional_groups != ''
+						AND mem.id_group != mg.id_group
+						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
 				WHERE mg.id_group IN (" . implode(', ', $group_ids) . ")
-					AND mem.additional_groups != ''
-					AND mem.id_group != mg.id_group
-					AND FIND_IN_SET(mg.id_group, mem.additional_groups)
 				GROUP BY mg.id_group", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($query))
 				$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
@@ -191,9 +191,9 @@ function MembergroupMembers()
 	// Load all the group moderators, for fun.
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.id_member, mem.real_name
-		FROM ({$db_prefix}group_moderators AS mods, {$db_prefix}members AS mem)
-		WHERE mods.id_group = $_REQUEST[group]
-			AND mem.id_member = mods.id_member", __FILE__, __LINE__);
+		FROM {$db_prefix}group_moderators AS mods
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+		WHERE mods.id_group = $_REQUEST[group]", __FILE__, __LINE__);
 	$context['group']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -236,13 +236,13 @@ function MembergroupMembers()
 		checkSession();
 
 		// Get all the members to be added... taking into account names can be quoted ;)
-		$_REQUEST['toAdd'] = strtr($smfFunc['htmlspecialchars'](stripslashes($_REQUEST['toAdd']), ENT_QUOTES), array('&quot;' => '"'));
+		$_REQUEST['toAdd'] = strtr($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['toAdd']), ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_REQUEST['toAdd'], $matches);
 		$member_names = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['toAdd']))));
 
 		foreach ($member_names as $index => $member_name)
 		{
-			$member_names[$index] = trim($smfFunc['strtolower']($member_names[$index]));
+			$member_names[$index] = trim($smfFunc['db_escape_string']($smfFunc['strtolower']($member_names[$index])));
 
 			if (strlen($member_names[$index]) == 0)
 				unset($member_names[$index]);
@@ -384,11 +384,11 @@ function GroupRequests()
 				SELECT lgr.id_request, lgr.id_member, lgr.id_group, mem.email_address, mem.id_group AS primary_group,
 					mem.additional_groups AS additional_groups, mem.lngfile, mem.member_name, mem.notify_types,
 					mg.hidden, mg.group_name
-				FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
+				FROM {$db_prefix}log_group_requests AS lgr
+					INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
+					INNER JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
 				WHERE $where
 					AND lgr.id_request IN (" . implode(',', $_POST['groupr']) . ")
-					AND mem.id_member = lgr.id_member
-					AND mg.id_group = lgr.id_group
 				ORDER BY mem.lngfile", __FILE__, __LINE__);
 			$email_details = array();
 			$group_changes = array();
@@ -519,10 +519,10 @@ function GroupRequests()
 	$request = $smfFunc['db_query']('', "
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
 			mem.member_name, mg.group_name, mg.online_color
-		FROM ({$db_prefix}log_group_requests AS lgr, {$db_prefix}members AS mem, {$db_prefix}membergroups AS mg)
+		FROM {$db_prefix}log_group_requests AS lgr
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
+			INNER JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
 		WHERE $where
-			AND mem.id_member = lgr.id_member
-			AND mg.id_group = lgr.id_group
 		ORDER BY lgr.id_request DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['group_requests'] = array();

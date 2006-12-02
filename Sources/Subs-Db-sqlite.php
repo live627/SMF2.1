@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************
-* Subs-Db-postgresql.php                                                          *
+* Subs-Db-sqlite.php                                                              *
 ***********************************************************************************
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
@@ -21,7 +21,6 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
-
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -32,7 +31,7 @@ if (!defined('SMF'))
 */
 
 // Initialize the database settings
-function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix, $db_options = array())
+function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
 	global $smfFunc, $mysql_set_mode;
 
@@ -47,44 +46,59 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 	//echo '<pre>'; print_r($parameters); echo '</pre>';
 
 	// Map some database specific functions, only do this once.
-	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'postg_fetch_assoc')
+	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'mysql_fetch_assoc')
 		$smfFunc += array(
 			'db_query' => 'db_query',
+			'db_fetch_assoc' => 'sqlite_fetch_array',
+			'db_fetch_row' => 'sqlite_fetch_array',
+			'db_free_result' => 'smf_sqlite_free_result',
 			'db_insert' => 'db_insert',
-			'db_fetch_assoc' => 'postg_fetch_assoc',
-			'db_fetch_row' => 'postg_fetch_row',
-			'db_free_result' => 'pg_free_result',
-			'db_num_rows' => 'pg_num_rows',
-			'db_data_seek' => 'db_data_seek',
-			'db_num_fields' => 'pg_num_fields',
-			'db_escape_string' => 'addslashes',
-			'db_unescape_string' => 'stripslashes',
-			'db_server_info' => 'postg_version',
-			'db_tablename' => 'mysql_tablename',
+			'db_num_rows' => 'sqlite_num_rows',
+			'db_data_seek' => 'sqlite_seek',
+			'db_num_fields' => 'sqlite_num_fields',
+			'db_escape_string' => 'sqlite_escape_string',
+			'db_unescape_string' => 'smf_sqlite_unescape_string',
+			'db_server_info' => 'sqlite_libversion',
+   			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'db_affected_rows',
-			'db_error' => 'pg_last_error',
-			'db_select_db' => 'postg_select_db',
-			'db_title' => 'PostgreSQL',
-			'db_sybase' => false,
+			'db_error' => 'smf_sqlite_last_error',
+			'db_select_db' => '',
+			'db_title' => 'SQLite',
+			'db_sybase' => true,
 		);
 
+	if (substr($db_name, -3) != 'db')
+		$db_name .= '.db';
+
 	if (!empty($db_options['persist']))
-		$connection = @pg_pconnect("host=$db_server dbname=$db_name user=$db_user password=$db_passwd");
+		$connection = @sqlite_popen($db_name, 0666, $sqlite_error);
 	else
-		$connection = @pg_connect("host=$db_server dbname=$db_name user=$db_user password=$db_passwd");
+		$connection = @sqlite_open($db_name, 0666, $sqlite_error);
 
 	// Something's wrong, show an error if its fatal (which we assume it is)
 	if (!$connection)
 	{
 		if (!empty($db_options['non_fatal']))
 		{
-			return null;
+			return $sqlite_error;
 		}
 		else
 		{
 			db_fatal_error();
 		}
 	}
+
+	// This is frankly stupid - stop SQLite returning alias names!
+	@sqlite_query('PRAGMA short_column_names = 1', $connection);
+
+	// Make some user defined functions!
+	sqlite_create_function($connection, 'unix_timestamp', 'smf_udf_unix_timestamp', 0);
+	sqlite_create_function($connection, 'inet_aton', 'smf_udf_inet_aton', 1);
+	sqlite_create_function($connection, 'inet_ntoa', 'smf_udf_inet_ntoa', 1);
+	sqlite_create_function($connection, 'find_in_set', 'smf_udf_find_in_set', 2);
+	sqlite_create_function($connection, 'year', 'smf_udf_year', 1);
+	sqlite_create_function($connection, 'month', 'smf_udf_month', 1);
+	sqlite_create_function($connection, 'dayofmonth', 'smf_udf_dayofmonth', 1);
 
 	return $connection;
 }
@@ -99,68 +113,37 @@ function db_extend ($type = 'extra')
 	$initFunc();
 }
 
-// Do nothing on postgreSQL
+// Fix up the prefix so it doesn't require the database to be selected.
 function db_fix_prefix (&$db_prefix, $db_name)
 {
-	return;
+	$db_prefix = is_numeric(substr($db_prefix, 0, 1)) ? $db_name . '.' . $db_prefix : '`' . $db_name . '`.' . $db_prefix;
 }
 
 // Do a query.  Takes care of errors too.
 function db_query($identifier, $db_string, $file, $line, $connection = null)
 {
-	global $db_cache, $db_count, $db_connection, $db_show_debug, $modSettings, $db_last_result, $db_replace_result;
+	global $db_cache, $db_count, $db_connection, $db_show_debug, $modSettings;
 
 	// Decide which connection to use.
 	$connection = $connection == null ? $db_connection : $connection;
 
 	// Special queries that need processing.
 	$replacements = array(
-		'alter_table_boards' => array(
-			'~(.+)~' => '',
-		),
-		'alter_table_icons' => array(
-			'~(.+)~' => '',
-		),
-		'alter_table_smileys' => array(
-			'~(.+)~' => '',
-		),
-		'attach_download_increase' => array(
-			'~LOW_PRIORITY~' => '',
-		),
-		'boardindex_fetch_boards' => array(
-			'~(.)$~' => '$1 ORDER BY b.board_order',
-		),
-		'messageindex_fetch_boards' => array(
-			'~(.)$~' => '$1 ORDER BY b.board_order',
-		),
-		'select_message_icons' => array(
-			'~(.)$~' => '$1 ORDER BY icon_order',
+		'user_activity_by_time' => array(
+			'~HOUR\(FROM_UNIXTIME\((poster_time\s+\+\s+\d+)\)\)~' => 'strftime(\'%H\', datetime($1, \'unixepoch\'))',
 		),
 	);
 
 	if (isset($replacements[$identifier]))
 		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
 
-	if (trim($db_string) == '')
-		return false;
-
-	// Comments that are allowed in a query are preg_removed.
-	static $allowed_comments_from = array(
-		'~\s+~s', 
-		'~/\*!40001 SQL_NO_CACHE \*/~', 
-		'~/\*!40000 USE INDEX \([A-Za-z\_]+?\) \*/~',
-		'~/\*!40100 ON DUPLICATE KEY UPDATE id_msg = \d+ \*/~',
-	);
-	static $allowed_comments_to = array(
-		' ', 
-		'', 
-		'',
-		'',
-	);
+	// SQLite doesn't support distinct.
+	$db_string = trim($db_string);
+	if (substr($db_string, 0, 21) == 'SELECT COUNT(DISTINCT')
+		$db_string = preg_replace('~SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(.+)~is', 'SELECT COUNT($1) FROM (SELECT DISTINCT $1 $2)', $db_string);
 
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
-	$db_replace_result = 0;
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -182,105 +165,42 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 		$st = microtime();
 	}
 
-	// First, we clean strings out of the query, reduce whitespace, lowercase, and trim - so we can check it over.
-	if (empty($modSettings['disableQueryCheck']))
-	{
-		$clean = '';
-		$old_pos = 0;
-		$pos = -1;
-		while (true)
-		{
-			$pos = strpos($db_string, '\'', $pos + 1);
-			if ($pos === false)
-				break;
-			$clean .= substr($db_string, $old_pos, $pos - $old_pos);
+	// Clean this properly!
+	$db_string = preg_replace('~SUBSTRING~i', 'SUBSTR', $db_string);
 
-			while (true)
-			{
-				$pos1 = strpos($db_string, '\'', $pos + 1);
-				$pos2 = strpos($db_string, '\\', $pos + 1);
-				if ($pos1 === false)
-					break;
-				elseif ($pos2 == false || $pos2 > $pos1)
-				{
-					$pos = $pos1;
-					break;
-				}
-
-				$pos = $pos2 + 1;
-			}
-			$clean .= '%s';
-
-			$old_pos = $pos + 1;
-		}
-		$clean .= substr($db_string, $old_pos);
-		$clean = trim(strtolower(preg_replace($allowed_comments_from, $allowed_comments_to, $clean)));
-
-		// We don't use UNION in SMF, at least so far.  But it's useful for injections.
-		if (strpos($clean, 'union') !== false && preg_match('~(^|[^a-z])union($|[^[a-z])~s', $clean) != 0)
-			$fail = true;
-		// Comments?  We don't use comments in our queries, we leave 'em outside!
-		elseif (strpos($clean, '/*') > 2 || strpos($clean, '--') !== false || strpos($clean, ';') !== false)
-			$fail = true;
-		// Trying to change passwords, slow us down, or something?
-		elseif (strpos($clean, 'set password') !== false && preg_match('~(^|[^a-z])set password($|[^[a-z])~s', $clean) != 0)
-			$fail = true;
-		elseif (strpos($clean, 'benchmark') !== false && preg_match('~(^|[^a-z])benchmark($|[^[a-z])~s', $clean) != 0)
-			$fail = true;
-		// Sub selects?  We don't use those either.
-		elseif (preg_match('~\([^)]*?select~s', $clean) != 0)
-			$fail = true;
-
-		if (!empty($fail) && function_exists('log_error'))
-		{
-			log_error('Hacking attempt...' . "\n" . $db_string, $file, $line);
-			fatal_error('Hacking attempt...', false);
-		}
-	}
-
-	//!!! Clean this properly.
-	$db_string = preg_replace('~\sFROM\s*\(([A-Za-z0-9`\s,_!/\*\(\)]+)\)~i', ' FROM $1', $db_string);
-	$db_string = preg_replace('~\sLIMIT\s(\d+),\s*(\d+)\s*$~i', 'LIMIT $2 OFFSET $1', $db_string);
-
-	$db_last_result = @pg_query($connection, $db_string);
-
-	if ($db_last_result === false && $file !== false)
-		$db_last_result = db_error($db_string, $file, $line, $connection);
+	$ret = @sqlite_query($db_string, $connection);
+	if ($ret === false && $file !== false)
+		$ret = db_error($db_string, $file, $line, $connection);
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
 		$db_cache[$db_count]['t'] = array_sum(explode(' ', microtime())) - array_sum(explode(' ', $st));
 
-	return $db_last_result;
+	return $ret;
 }
 
-function db_affected_rows($result = null)
+function db_affected_rows($connection = null)
 {
-	global $db_last_result, $db_replace_result;
+	global $db_connection;
 
-	if ($db_replace_result)
-		return $db_replace_result;
-	elseif ($result == null && !$db_last_result)
-		return 0;
-
-	return pg_affected_rows($result == null ? $db_last_result : $result);
+	return sqlite_changes($connection == null ? $db_connection : $connection);
 }
 
 function db_insert_id($table, $field, $connection = null)
 {
-	global $db_connection, $smfFunc;
+	global $db_connection;
 
-	if ($connection === false)
-		$connection = $db_connection;
+	// SQLite doesn't need the table or field information.
+	return sqlite_last_insert_rowid($connection == null ? $db_connection : $connection);
+}
 
-	// Try get the last ID for the auto increment field.
-	$request = db_query('', "SELECT CURRVAL('{$table}_seq') AS insertID", __FILE__, __LINE__);
-	if (!$request)
-		return false;
-	list ($lastID) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+// Keeps the connection handle.
+function smf_sqlite_last_error()
+{
+	global $db_connection;
 
-	return $lastID;
+	$query_errno = sqlite_last_error($db_connection);
+	return sqlite_error_string($query_errno);
 }
 
 // Database error!
@@ -294,8 +214,8 @@ function db_error($db_string, $file, $line, $connection = null)
 	$connection = $connection == null ? $db_connection : $connection;
 
 	// This is the error message...
-	$query_error = @pg_last_error($connection);
-	$query_errno = 0;
+	$query_errno = sqlite_last_error($connection);
+	$query_error = sqlite_error_string($query_errno);
 
 	// Error numbers:
 	//    1016: Can't open file '....MYI'
@@ -468,49 +388,7 @@ function db_error($db_string, $file, $line, $connection = null)
 	fatal_error($context['error_message'], false);
 }
 
-// A PostgreSQL specific function for tracking the current row...
-function postg_fetch_row($request, $counter = false)
-{
-	global $db_row_count;
-
-	if ($counter !== false)
-		return pg_fetch_row($request, $counter);
-
-	// Reset the row counter...
-	if (!isset($db_row_count[$request]))
-		$db_row_count[$request] = 0;
-
-	// Return the right row.
-	return @pg_fetch_row($request, $db_row_count[$request]++);
-}
-
-// Get an associative array
-function postg_fetch_assoc($request, $counter = false)
-{
-	global $db_row_count;
-
-	if ($counter !== false)
-		return pg_fetch_assoc($request, $counter);
-
-	// Reset the row counter...
-	if (!isset($db_row_count[$request]))
-		$db_row_count[$request] = 0;
-
-	// Return the right row.
-	return @pg_fetch_assoc($request, $db_row_count[$request]++);
-}
-
-// Reset the pointer...
-function db_data_seek($request, $counter)
-{
-	global $db_row_count;
-
-	$db_row_count[$request] = $counter;
-
-	return true;
-}
-
-// For inserting data in a special way...
+// Insert some data...
 function db_insert($method = 'replace', $table, $columns, $data, $keys)
 {
 	global $db_replace_result;
@@ -559,18 +437,80 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 				(" . implode(', ', $entry) . ")", __FILE__, __LINE__);
 }
 
-// Dummy function really.
-function postg_select_db($db_name, $db_connection)
+// Doesn't do anything on sqlite!
+function smf_sqlite_free_result($handle = false)
 {
 	return true;
 }
 
-// Get the current version.
-function postg_version()
+// Unescape an escaped string!
+function smf_sqlite_unescape_string($string)
 {
-	$version = pg_version();
+	return strtr($string, array("''" => "'"));
+}
 
-	return $version['client'];
+// Emulate UNIX_TIMESTAMP.
+function smf_udf_unix_timestamp()
+{
+	return strftime('%s', 'now');
+}
+
+// Emulate INET_ATON.
+function smf_udf_inet_aton($ip)
+{
+	$chunks = explode('.', $ip);
+	return @$chunks[0] * pow(256, 3) + @$chunks[1] * pow(256, 2) + @$chunks[2] * 256 + @$chunks[3];
+}
+
+// Emulate INET_NTOA.
+function smf_udf_inet_ntoa($n)
+{
+	$t = array(0, 0, 0, 0);
+	$msk = 16777216.0;
+	$n += 0.0;
+		if ($n < 1)
+			return('0.0.0.0');
+
+	for ($i = 0; $i < 4; $i++)
+	{
+		$k = (int) ($n / $msk);
+		$n -= $msk * $k;
+		$t[$i]= $k;
+		$msk /= 256.0;
+	};
+
+	$a = join('.', $t);
+	return($a);
+} 
+
+// Emulate FIND_IN_SET.
+function smf_udf_find_in_set($find, $groups)
+{
+	foreach (explode(',', $groups) as $group)
+	{  
+		if ($group == $find)
+			return true;
+	}
+
+	return false;
+}
+
+// Emulate YEAR.
+function smf_udf_year($date)
+{
+	return substr($date, 0, 4);
+}
+
+// Emulate MONTH.
+function smf_udf_month($date)
+{
+	return substr($date, 5, 2);
+}
+
+// Emulate DAYOFMONTH.
+function smf_udf_dayofmonth($date)
+{
+	return substr($date, 8, 2);
 }
 
 ?>

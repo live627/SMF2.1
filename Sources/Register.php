@@ -388,7 +388,7 @@ function Activate()
 			fatal_lang_error(1);
 
 		// !!! Separate the sprintf?
-		if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['new_email'])) == 0)
+		if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['new_email'])) == 0)
 			fatal_error(sprintf($txt[500], htmlspecialchars($_POST['new_email'])), false);
 
 		// Make sure their email isn't banned.
@@ -406,7 +406,7 @@ function Activate()
 		$smfFunc['db_free_result']($request);
 
 		updateMemberData($row['id_member'], array('email_address' => "'$_POST[new_email]'"));
-		$row['email_address'] = stripslashes($_POST['new_email']);
+		$row['email_address'] = $smfFunc['db_unescape_string']($_POST['new_email']);
 
 		$email_change = true;
 	}

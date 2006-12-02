@@ -363,8 +363,15 @@ function calendarEventArray($low_date, $high_date, $use_permissions = true)
 		$end_date = sscanf($row['end_date'], '%04d-%02d-%02d');
 		$end_date = min(mktime(0, 0, 0, $end_date[1], $end_date[2], $end_date[0]), $high_date_time);
 
+		$lastDate = '';
 		for ($date = $start_date; $date <= $end_date; $date += 86400)
 		{
+			// Attempt to avoid DST problems.
+			//!!! Resolve this properly at some point.
+			if (strftime('%Y-%m-%d', $date) == $lastDate)
+				$date += 3601;
+			$lastDate = strftime('%Y-%m-%d', $date);
+
 			// If we're using permissions (calendar pages?) then just ouput normal contextual style information.
 			if ($use_permissions)
 				$events[strftime('%Y-%m-%d', $date)][] = array(
@@ -446,7 +453,7 @@ function calendarInsertEvent($id_board, $id_topic, $title, $id_member, $month, $
 	global $db_prefix, $modSettings, $smfFunc;
 
 	// Add special chars to the title.
-	$title = $smfFunc['htmlspecialchars']($title, ENT_QUOTES);
+	$title = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($title), ENT_QUOTES));
 
 	// Add some sanity checking to the span.
 	$span = empty($span) || trim($span) == '' ? 0 : min((int) $modSettings['cal_maxspan'], (int) $span - 1);
@@ -567,7 +574,7 @@ function CalendarPost()
 				SET 
 					start_date = '" . strftime('%Y-%m-%d', $start_time) . "',
 					end_date = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "', 
-					title = '" . $smfFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES) . "'
+					title = '" . $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['evtitle']), ENT_QUOTES)) . "'
 				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 		}
 

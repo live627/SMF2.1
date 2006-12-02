@@ -271,11 +271,13 @@ function DisplayStats()
 	// Topic replies top 10.
 	$topic_reply_result = $smfFunc['db_query']('', "
 		SELECT m.subject, t.num_replies, t.id_board, t.id_topic, b.name
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.id_msg = t.id_first_msg
-			AND $user_info[query_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . "
-			AND t.id_board = b.id_board" . (!empty($topic_ids) ? "
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
+			AND b.id_board != $modSettings[recycle_board]" : '') . ")
+		WHERE 
+			$user_info[query_see_board]
+			" . (!empty($topic_ids) ? "
 			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : ' AND t.approved = 1') . "
 		ORDER BY t.num_replies DESC
 		LIMIT 10", __FILE__, __LINE__);
@@ -327,11 +329,13 @@ function DisplayStats()
 	// Topic views top 10.
 	$topic_view_result = $smfFunc['db_query']('', "
 		SELECT m.subject, t.num_views, t.id_board, t.id_topic, b.name
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.id_msg = t.id_first_msg
-			AND $user_info[query_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . "
-			AND t.id_board = b.id_board" . (!empty($topic_ids) ? "
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
+			AND b.id_board != $modSettings[recycle_board]" : '') . ")
+		WHERE 
+			$user_info[query_see_board]
+			" . (!empty($topic_ids) ? "
 			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : ' AND t.approved = 1') . "
 		ORDER BY t.num_views DESC
 		LIMIT 10", __FILE__, __LINE__);

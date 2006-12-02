@@ -42,7 +42,7 @@ CHANGE COLUMN boardOrder board_order smallint(5) NOT NULL default '0',
 CHANGE COLUMN ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MSG_UPDATED id_msg_updated int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN memberGroups member_groups varchar(255) NOT NULL default '-1,0',
-CHANGE COLUMN id_profile id_profile smallint(5) unsigned NOT NULL default '0',
+CHANGE COLUMN id_profile id_profile smallint(5) unsigned NOT NULL default '1',
 CHANGE COLUMN numTopics num_topics mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN numPosts num_posts mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN countPosts count_posts tinyint(4) NOT NULL default '0',
@@ -143,10 +143,6 @@ ALTER TABLE {$db_prefix}log_notify
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_online
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN logTime log_time timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */;
 
 ALTER TABLE {$db_prefix}log_packages
 CHANGE COLUMN ID_INSTALL id_install int(10) NOT NULL auto_increment,
@@ -347,6 +343,20 @@ CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0',
 CHANGE COLUMN numReplies num_replies int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN numViews num_views int(10) unsigned NOT NULL default '0',
 CHANGE COLUMN unapprovedPosts unapproved_posts smallint(5) NOT NULL default '0';
+---#
+
+---# Converting "log_online"...
+DROP TABLE IF EXISTS {$db_prefix}log_online;
+CREATE TABLE {$db_prefix}log_online (
+	session varchar(32) NOT NULL default '',
+	log_time int(10) NOT NULL default '0',
+	id_member mediumint(8) unsigned NOT NULL default '0',
+	ip int(10) unsigned NOT NULL default '0',
+	url text NOT NULL,
+	PRIMARY KEY (session),
+	KEY log_time (log_time),
+	KEY id_member (id_member)
+) TYPE=MyISAM;
 ---#
 
 /******************************************************************************/
@@ -919,10 +929,10 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}permission_profiles (
 
 ---# Adding profile columns...
 ALTER TABLE {$db_prefix}boards
-ADD id_profile smallint(5) unsigned NOT NULL default '0' AFTER member_groups;
+ADD id_profile smallint(5) unsigned NOT NULL default '1' AFTER member_groups;
 
 ALTER TABLE {$db_prefix}board_permissions
-ADD id_profile smallint(5) unsigned NOT NULL default '0' AFTER id_group;
+ADD id_profile smallint(5) unsigned NOT NULL default '1' AFTER id_group;
 
 ALTER TABLE {$db_prefix}board_permissions
 DROP PRIMARY KEY,

@@ -197,9 +197,9 @@ function LockVoting()
 	// Get the poll starter, ID, and whether or not it is locked.
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_member_started, t.id_poll, p.voting_locked
-		FROM ({$db_prefix}topics AS t, {$db_prefix}polls AS p)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 		WHERE t.id_topic = $topic
-			AND p.id_poll = t.id_poll
 		LIMIT 1", __FILE__, __LINE__);
 	list ($memberID, $pollID, $voting_locked) = $smfFunc['db_fetch_row']($request);
 
@@ -280,7 +280,7 @@ function EditPoll()
 	// Want to make sure before you actually submit?  Must be a lot of options, or something.
 	if (isset($_POST['preview']))
 	{
-		$question = $smfFunc['htmlspecialchars'](stripslashes($_POST['question']));
+		$question = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['question']));
 
 		// Basic theme info...
 		$context['poll'] = array(
@@ -337,7 +337,7 @@ function EditPoll()
 		// If an option exists, update it.  If it is new, add it - but don't reuse ids!
 		foreach ($_POST['options'] as $id => $label)
 		{
-			$label = stripslashes($smfFunc['htmlspecialchars']($label));
+			$label = $smfFunc['db_unescape_string']($smfFunc['htmlspecialchars']($label));
 			censorText($label);
 
 			if (isset($context['choices'][$id]))
@@ -695,9 +695,9 @@ function RemovePoll()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT t.id_member_started, p.id_member AS pollStarter
-			FROM ({$db_prefix}topics AS t, {$db_prefix}polls AS p)
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 			WHERE t.id_topic = $topic
-				AND p.id_poll = t.id_poll
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(1);

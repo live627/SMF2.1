@@ -363,9 +363,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		// Cache the results in the settings.
 		updateSettings(array(
 			'cal_today_updated' => strftime('%Y%m%d', forum_time(false)),
-			'cal_today_holiday' => addslashes(serialize($holidays)),
-			'cal_today_birthday' => addslashes(serialize($bday)),
-			'cal_today_event' => addslashes(serialize($events))
+			'cal_today_holiday' => $smfFunc['db_escape_string'](serialize($holidays)),
+			'cal_today_birthday' => $smfFunc['db_escape_string'](serialize($bday)),
+			'cal_today_event' => $smfFunc['db_escape_string'](serialize($events))
 		));
 		break;
 
@@ -472,7 +472,7 @@ function updateMemberData($members, $data)
 
 			if (!empty($member_names))
 				foreach ($vars_to_integrate as $var)
-					call_user_func($modSettings['integrate_change_member_data'], $member_names, $var, stripslashes($data[$var]));
+					call_user_func($modSettings['integrate_change_member_data'], $member_names, $var, $smfFunc['db_unescape_string']($data[$var]));
 		}
 	}
 
@@ -543,7 +543,7 @@ function updateSettings($changeArray, $update = false)
 				UPDATE {$db_prefix}settings
 				SET value = " . ($value === true ? 'value + 1' : ($value === false ? 'value - 1' : "'$value'")) . "
 				WHERE variable = '$variable'", __FILE__, __LINE__);
-			$modSettings[$variable] = $value === true ? $modSettings[$variable] + 1 : ($value === false ? $modSettings[$variable] - 1 : stripslashes($value));
+			$modSettings[$variable] = $value === true ? $modSettings[$variable] + 1 : ($value === false ? $modSettings[$variable] - 1 : $smfFunc['db_unescape_string']($value));
 		}
 
 		// Clean out the cache and make sure the cobwebs are gone too.
@@ -556,16 +556,15 @@ function updateSettings($changeArray, $update = false)
 	foreach ($changeArray as $variable => $value)
 	{
 		// Don't bother if it's already like that ;).
-		if (isset($modSettings[$variable]) && $modSettings[$variable] == stripslashes($value))
+		if (isset($modSettings[$variable]) && $modSettings[$variable] == $smfFunc['db_unescape_string']($value))
 			continue;
 		// If the variable isn't set, but would only be set to nothing'ness, then don't bother setting it.
 		elseif (!isset($modSettings[$variable]) && empty($value))
 			continue;
 
-		//$replaceArray[] = "(SUBSTRING('$variable', 1, 255), SUBSTRING('$value', 1, 65534))";
 		$replaceArray[] = array("SUBSTRING('$variable', 1, 255)", "SUBSTRING('$value', 1, 65534)");
-		//$replaceArray[] = array('hi');
-		$modSettings[$variable] = stripslashes($value);
+
+		$modSettings[$variable] = $smfFunc['db_unescape_string']($value);
 	}
 
 	if (empty($replaceArray))
@@ -2391,7 +2390,7 @@ function writeLog($force = false)
 	{
 		$serialized = $_GET + array('USER_AGENT' => $_SERVER['HTTP_USER_AGENT']);
 		unset($serialized['sesc']);
-		$serialized = addslashes(serialize($serialized));
+		$serialized = $smfFunc['db_escape_string'](serialize($serialized));
 	}
 	else
 		$serialized = '';
@@ -2409,7 +2408,7 @@ function writeLog($force = false)
 		{
 			$smfFunc['db_query']('delete_log_online_interval', "
 				DELETE FROM {$db_prefix}log_online
-				WHERE log_time < NOW() - INTERVAL " . ($modSettings['lastActive'] * 60) . " SECOND
+				WHERE log_time < " . (time() - $modSettings['lastActive'] * 60) . "
 					AND session != '$session_id'", __FILE__, __LINE__);
 			cache_put_data('log_online-update', time(), 10);
 		}
@@ -2420,7 +2419,7 @@ function writeLog($force = false)
 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_online
-			SET log_time = NOW(), ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized',
+			SET log_time = " . time() . ", ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized',
 				id_member = $user_info[id]
 			WHERE session = '$session_id'", __FILE__, __LINE__);
 
@@ -2430,7 +2429,7 @@ function writeLog($force = false)
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_online
 					(session, id_member, log_time, ip, url)
-				VALUES ('$session_id', $user_info[id], NOW(), IFNULL(INET_ATON('$user_info[ip]'), 0), '$serialized')", __FILE__, __LINE__);
+				VALUES ('$session_id', $user_info[id], " . time() . ", IFNULL(INET_ATON('$user_info[ip]'), 0), '$serialized')", __FILE__, __LINE__);
 		}
 	}
 
@@ -2661,7 +2660,7 @@ function logAction($action, $extra = array())
 				(log_time, id_member, ip, action, id_board, id_topic, id_msg, extra)
 			VALUES (" . time() . ", $user_info[id], SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$action', 1, 30),
 				$board_id, $topic_id, $msg_id,
-				SUBSTRING('" . addslashes(serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
+				SUBSTRING('" . $smfFunc['db_escape_string'](serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
 
 		return db_insert_id("{$db_prefix}log_actions", 'id_action');
 	}
@@ -2841,7 +2840,7 @@ function determineTopicClass(&$topic_context)
 // Sets up the basic theme context stuff.
 function setupThemeContext()
 {
-	global $modSettings, $user_info, $scripturl, $context, $settings, $options, $txt, $maintenance;
+	global $modSettings, $user_info, $scripturl, $context, $settings, $options, $txt, $maintenance, $smfFunc;
 
 	// Get some news...
 	$context['news_lines'] = explode("\n", str_replace("\r", '', trim(addslashes($modSettings['news']))));
@@ -3484,7 +3483,7 @@ function text2words($text, $max_chars = 20, $encrypt = false)
 		$returned_words = array();
 		foreach ($words as $word)
 			if (($word = trim($word, '-_\'')) !== '')
-				$returned_words[] = addslashes($max_chars === null ? $word : substr($word, 0, $max_chars));
+				$returned_words[] = $smfFunc['db_escape_string']($max_chars === null ? $word : substr($word, 0, $max_chars));
 
 		// Filter out all words that occur more than once.
 		return array_unique($returned_words);

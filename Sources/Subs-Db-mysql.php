@@ -57,13 +57,15 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_num_rows' => 'mysql_num_rows',
 			'db_data_seek' => 'mysql_data_seek',
 			'db_num_fields' => 'mysql_num_fields',
-			'db_escape_string' => 'mysql_escape_string',
+			'db_escape_string' => 'addslashes',
+			'db_unescape_string' => 'stripslashes',
 			'db_server_info' => 'mysql_get_server_info',
    			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'db_affected_rows',
 			'db_error' => 'mysql_error',
 			'db_select_db' => 'mysql_select_db',
 			'db_title' => 'MySQL',
+			'db_sybase' => false,
 		);
 
 	if (!empty($db_options['persist']))

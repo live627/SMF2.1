@@ -300,6 +300,8 @@ function preparsecode(&$message, $previewing = false)
 // This is very simple, and just removes things done by preparsecode.
 function un_preparsecode($message)
 {
+	global $smfFunc;
+
 	$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $message, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 	// We're going to unparse only the stuff outside [code]...
@@ -308,7 +310,7 @@ function un_preparsecode($message)
 		// If $i is a multiple of four (0, 4, 8, ...) then it's not a code section...
 		if ($i % 4 == 0)
 		{
-			$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ie', '\'[html]\' . strtr(htmlspecialchars(stripslashes(\'$1\'), ENT_QUOTES), array(\'&amp;#13;\' => \'<br />\', \'&amp;#32;\' => \' \')) . \'[/html]\'', $parts[$i]);
+			$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ie', '\'[html]\' . strtr(htmlspecialchars($smfFunc[\'db_unescape_string\'](\'$1\'), ENT_QUOTES), array(\'&amp;#13;\' => \'<br />\', \'&amp;#32;\' => \' \')) . \'[/html]\'', $parts[$i]);
 
 			// Attempt to un-parse the time to something less awful.
 			$parts[$i] = preg_replace('~\[time\](\d{0,10})\[/time\]~ie', '\'[time]\' . strftime(\'%c\', \'$1\') . \'[/time]\'', $parts[$i]);
@@ -534,7 +536,7 @@ function fixTag(&$message, $myTag, $protocols, $embeddedUrl = false, $hasEqualSi
 function sendmail($to, $subject, $message, $from = null, $message_id = null, $send_html = false, $priority = 1, $hotmail_fix = null)
 {
 	global $webmaster_email, $context, $modSettings, $txt, $scripturl;
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// Use sendmail if it's set or if no SMTP server is set.
 	$use_sendmail = empty($modSettings['mail_type']) || $modSettings['smtp_host'] == '';
@@ -574,9 +576,9 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	}
 
 	// Get rid of slashes and entities.
-	$subject = un_htmlspecialchars(stripslashes($subject));
+	$subject = un_htmlspecialchars($smfFunc['db_unescape_string']($subject));
 	// Make the message use the proper line breaks.
-	$message = str_replace(array("\r", "\n"), array('', $line_break), stripslashes($message));
+	$message = str_replace(array("\r", "\n"), array('', $line_break), $smfFunc['db_unescape_string']($message));
 
 	// Make sure hotmail mails are sent as HTML so that HTML entities work.
 	if ($hotmail_fix && !$send_html)
@@ -729,9 +731,9 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	}
 
 	// Now prepare the data for inserting.
-	$subject = addslashes($subject);
-	$message = addslashes($message);
-	$headers = addslashes($headers);
+	$subject = $smfFunc['db_escape_string']($subject);
+	$message = $smfFunc['db_escape_string']($message);
+	$headers = $smfFunc['db_escape_string']($headers);
 
 	// Ensure we tell obExit to flush.
 	$context['flush_mail'] = true;
@@ -791,7 +793,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		$user_info['name'] = $from['name'];
 
 	// This is the one that will go in their inbox.
-	$htmlmessage = $smfFunc['htmlspecialchars']($message, ENT_QUOTES);
+	$htmlmessage = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($message), ENT_QUOTES));
 	$htmlsubject = $smfFunc['htmlspecialchars']($subject);
 	preparsecode($htmlmessage);
 
@@ -917,7 +919,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 				', $insertRows), __FILE__, __LINE__);
 	}
 
-	$message = stripslashes($message);
+	$message = $smfFunc['db_unescape_string']($message);
 	censorText($message);
 	censorText($subject);
 	$message = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc(htmlspecialchars($message), false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
@@ -1414,7 +1416,7 @@ function SpellCheck()
 		var misps = Array(';
 
 	// Get all the words (Javascript already seperated them).
-	$alphas = explode("\n", stripslashes(strtr($_POST['spellstring'], array("\r" => ''))));
+	$alphas = explode("\n", $smfFunc['db_unescape_string'](strtr($_POST['spellstring'], array("\r" => ''))));
 
 	$found_words = false;
 	for ($i = 0, $n = count($alphas); $i < $n; $i++)
@@ -1482,11 +1484,11 @@ function sendNotifications($topics, $type, $exclude = array())
 	$result = $smfFunc['db_query']('', "
 		SELECT mf.subject, ml.body, ml.id_member, t.id_last_msg, t.id_topic,
 			IFNULL(mem.real_name, ml.poster_name) AS poster_name
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS mf, {$db_prefix}messages AS ml)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+			INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ml.id_member)
 		WHERE t.id_topic IN (" . implode(',', $topics) . ")
-			AND mf.id_msg = t.id_first_msg
-			AND ml.id_msg = t.id_last_msg
 		LIMIT 1", __FILE__, __LINE__);
 	$topicData = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -1535,15 +1537,15 @@ function sendNotifications($topics, $type, $exclude = array())
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_types, mem.notify_send_body, mem.lngfile,
 			ln.sent, mem.id_group, mem.additional_groups, b.member_groups, mem.id_post_group, t.id_member_started,
 			ln.id_topic
-		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}members AS mem, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member
+				AND mem.notify_types < " . ($type == 'reply' ? '4' : '3') . "
+				AND mem.notify_regularity < 2
+				AND mem.is_activated = 1)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE ln.id_topic IN (" . implode(',', $topics) . ")
-			AND t.id_topic = ln.id_topic
-			AND b.id_board = t.id_board
 			AND ln.id_member != $user_info[id]
-			AND mem.is_activated = 1
-			AND mem.notify_types < " . ($type == 'reply' ? '4' : '3') . "
-			AND mem.notify_regularity < 2
-			AND ln.id_member = mem.id_member
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	$sent = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($members))
@@ -1672,7 +1674,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$posterOptions['email'] = $user_info['email'];
 		}
 
-		$posterOptions['email'] = addslashes($posterOptions['email']);
+		$posterOptions['email'] = $smfFunc['db_escape_string']($posterOptions['email']);
 	}
 
 	// It's do or die time: forget any user aborts!
@@ -1813,7 +1815,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		//$index_settings = unserialize($modSettings['search_custom_index_config']);
 
 		$inserts = '';
-		foreach (text2words(stripslashes($msgOptions['body']), 4, true) as $word)
+		foreach (text2words($smfFunc['db_unescape_string']($msgOptions['body']), 4, true) as $word)
 			$inserts .= "($word, $msgOptions[id]),\n";
 
 		if (!empty($inserts))
@@ -2000,7 +2002,7 @@ function createAttachment(&$attachmentOptions)
 		{
 			// Figure out how big we actually made it.
 			list ($thumb_width, $thumb_height) = @getimagesize($attachmentOptions['destination'] . '_thumb');
-			$thumb_filename = addslashes($attachmentOptions['name'] . '_thumb');
+			$thumb_filename = $smfFunc['db_escape_string']($attachmentOptions['name'] . '_thumb');
 			$thumb_size = filesize($attachmentOptions['destination'] . '_thumb');
 
 			// To the database we go!
@@ -2096,9 +2098,9 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// If there's a custom search index, it needs to be modified...
 	if (isset($msgOptions['body']) && !empty($modSettings['search_custom_index_config']))
 	{
-		$stopwords = empty($modSettings['search_stopwords']) ?  array() : explode(',', addslashes($modSettings['search_stopwords']));
+		$stopwords = empty($modSettings['search_stopwords']) ?  array() : explode(',', $smfFunc['db_escape_string']($modSettings['search_stopwords']));
 		$old_index = text2words($old_body, 4, true);
-		$new_index = text2words(stripslashes($msgOptions['body']), 4, true);
+		$new_index = text2words($smfFunc['db_unescape_string']($msgOptions['body']), 4, true);
 
 		// Calculate the words to remove from the index.
 		$removed_words = array_diff(array_diff($old_index, $new_index), $stopwords);
@@ -2155,11 +2157,11 @@ function approvePosts($msgs, $approve = true)
 		SELECT m.id_msg, m.approved, m.id_topic, m.id_board, t.id_first_msg, t.id_last_msg,
 			m.body, m.subject, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.id_member,
 			t.approved AS topic_approved
-		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_msg IN (" . implode(',', $msgs) . ")
-			AND m.approved = " . ($approve ? 0 : 1) . "
-			AND t.id_topic = m.id_topic", __FILE__, __LINE__);
+			AND m.approved = " . ($approve ? 0 : 1), __FILE__, __LINE__);
 	$msgs = array();
 	$topics = array();
 	$topic_changes = array();
@@ -2371,15 +2373,14 @@ function sendApprovalNotifications(&$topicData)
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_types, mem.notify_send_body, mem.lngfile,
 			ln.sent, mem.id_group, mem.additional_groups, b.member_groups, mem.id_post_group, t.id_member_started,
 			ln.id_topic
-		FROM ({$db_prefix}log_notify AS ln, {$db_prefix}members AS mem, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member
+				AND mem.is_activated = 1
+				AND mem.notify_types < 4
+				AND mem.notify_regularity < 2)
 		WHERE ln.id_topic IN (" . implode(',', $topics) . ")
-			AND t.id_topic = ln.id_topic
-			AND b.id_board = t.id_board
-			AND mem.id_member != $user_info[id]
-			AND mem.is_activated = 1
-			AND mem.notify_types < 4
-			AND mem.notify_regularity < 2
-			AND ln.id_member = mem.id_member
 		GROUP BY mem.id_member, ln.id_topic
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	$sent = 0;

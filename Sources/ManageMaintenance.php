@@ -987,7 +987,7 @@ function ConvertEntities()
 				$changes = array();
 				foreach ($row as $column_name => $column_value)
 					if ($column_name !== $primary_key && strpos($column_value, '&#') !== false)
-						$changes[] = "$column_name = '" . addslashes(preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$entity_replace(\'\\2\')', $column_value)) . "'";
+						$changes[] = "$column_name = '" . $smfFunc['db_escape_string'](preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$entity_replace(\'\\2\')', $column_value)) . "'";
 				
 				// Update the row.
 				if (!empty($changes))
@@ -1334,11 +1334,10 @@ function AdminBoardRecount()
 		{
 			$request = $smfFunc['db_query']('', "
 				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, m.id_msg
-				FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
-				WHERE t.id_topic = m.id_topic
-					AND m.id_msg > $_REQUEST[start]
-					AND m.id_msg <= " . ($_REQUEST['start'] + $increment) . "
-					AND m.id_board != t.id_board", __FILE__, __LINE__);
+				FROM {$db_prefix}messages AS m
+					INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.id_board != m.id_board)
+				WHERE m.id_msg > $_REQUEST[start]
+					AND m.id_msg <= " . ($_REQUEST['start'] + $increment), __FILE__, __LINE__);
 			$boards = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$boards[$row['id_board']][] = $row['id_msg'];

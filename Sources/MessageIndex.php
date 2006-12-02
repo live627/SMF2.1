@@ -432,14 +432,13 @@ function MessageIndex()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT t.id_topic
-			FROM ({$db_prefix}topics AS t" . ($context['sort_by'] === 'last_poster' ? ", {$db_prefix}messages AS ml" : (in_array($context['sort_by'], array('starter', 'subject')) ? ", {$db_prefix}messages AS mf" : '')) . ')' . ($context['sort_by'] === 'starter' ? "
+			FROM {$db_prefix}topics AS t" . ($context['sort_by'] === 'last_poster' ? "
+				INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)" : (in_array($context['sort_by'], array('starter', 'subject')) ? "
+				INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)" : '')) . ($context['sort_by'] === 'starter' ? "
 				LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)" : '') . ($context['sort_by'] === 'last_poster' ? "
 				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)" : '') . "
 			WHERE t.id_board = $board
 				" . ($context['can_approve_posts'] ? '' : ' AND t.approved = 1') . "
-				" . ($context['sort_by'] === 'last_poster' ? "
-				AND ml.id_msg = t.id_last_msg" : (in_array($context['sort_by'], array('starter', 'subject')) ? "
-				AND mf.id_msg = t.id_first_msg" : '')) . "
 			ORDER BY " . (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
 			LIMIT $start, $maxindex", __FILE__, __LINE__);
 		$topic_ids = array();
@@ -460,8 +459,8 @@ function MessageIndex()
 				IFNULL(meml.real_name, ml.poster_name) AS last_display_name, t.id_first_msg,
 				mf.poster_time AS first_poster_time, mf.subject AS first_subject, mf.icon AS first_icon,
 				mf.poster_name AS first_member_name, mf.id_member AS first_id_member,
-				IFNULL(memf.real_name, mf.poster_name) AS first_display_name, LEFT(ml.body, 384) AS last_body,
-				LEFT(mf.body, 384) AS first_body, ml.smileys_enabled AS last_smileys, mf.smileys_enabled AS first_smileys
+				IFNULL(memf.real_name, mf.poster_name) AS first_display_name, SUBSTRING(ml.body, 0, 384) AS last_body,
+				SUBSTRING(mf.body, 0, 384) AS first_body, ml.smileys_enabled AS last_smileys, mf.smileys_enabled AS first_smileys
 			FROM {$db_prefix}topics AS t
 				INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
 				INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)

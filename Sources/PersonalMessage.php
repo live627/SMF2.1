@@ -446,13 +446,15 @@ function MessageFolder()
 	// !!!SLOW This query uses a filesort. (inbox only.)
 	$request = $smfFunc['db_query']('', "
 		SELECT pm.id_pm, pm.id_member_from
-		FROM ({$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? ')' . ($context['sort_by'] == 'name' ? "
-			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : ", {$db_prefix}pm_recipients AS pmr)") . ($context['sort_by'] == 'name' ? ("
+		FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' . ($context['sort_by'] == 'name' ? "
+			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
+			INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+				AND pmr.id_member = $user_info[id]
+				AND pmr.deleted = 0
+				$labelQuery)") . ($context['sort_by'] == 'name' ? ("
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'outbox' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
 		WHERE " . ($context['folder'] == 'outbox' ? "pm.id_member_from = $user_info[id]
-			AND pm.deleted_by_sender = 0" : "pmr.id_pm = pm.id_pm
-			AND pmr.id_member = $user_info[id]
-			AND pmr.deleted = 0$labelQuery") . (empty($_GET['pmsg']) ? '' : "
+			AND pm.deleted_by_sender = 0" : "1=1") . (empty($_GET['pmsg']) ? '' : "
 			AND pm.id_pm = " . (int) $_GET['pmsg']) . "
 		ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'outbox' ? 'pmr.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
 		LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
@@ -616,16 +618,16 @@ function MessageSearch()
 		foreach ($temp_params as $i => $data)
 		{
 			@list ($k, $v) = explode('|\'|', $data);
-			$context['search_params'][$k] = stripslashes($v);
+			$context['search_params'][$k] = $smfFunc['db_unescape_string']($v);
 		}
 	}
 	if (isset($_REQUEST['search']))
-		$context['search_params']['search'] = stripslashes(un_htmlspecialchars($_REQUEST['search']));
+		$context['search_params']['search'] = $smfFunc['db_unescape_string'](un_htmlspecialchars($_REQUEST['search']));
 
 	if (isset($context['search_params']['search']))
 		$context['search_params']['search'] = htmlspecialchars($context['search_params']['search']);
 	if (isset($context['search_params']['userspec']))
-		$context['search_params']['userspec'] = htmlspecialchars(stripslashes($context['search_params']['userspec']));
+		$context['search_params']['userspec'] = htmlspecialchars($smfFunc['db_unescape_string']($context['search_params']['userspec']));
 
 	if (!empty($context['search_params']['searchtype']))
 		$context['search_params']['searchtype'] = 2;
@@ -702,7 +704,7 @@ function MessageSearch2()
 		foreach ($temp_params as $i => $data)
 		{
 			@list ($k, $v) = explode('|\'|', $data);
-			$search_params[$k] = stripslashes($v);
+			$search_params[$k] = $smfFunc['db_unescape_string']($v);
 		}
 	}
 
@@ -736,7 +738,7 @@ function MessageSearch2()
 		$userQuery = '';
 	else
 	{
-		$userString = strtr($smfFunc['htmlspecialchars'](stripslashes($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
+		$userString = strtr($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($search_params['userspec']), ENT_QUOTES), array('&quot;' => '"'));
 		$userString = strtr($userString, array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'));
 
 		preg_match_all('~"([^"]+)"~', $userString, $matches);
@@ -811,7 +813,7 @@ function MessageSearch2()
 	}
 
 	// What are we actually searching for?
-	$search_params['search'] = !empty($search_params['search']) ? $search_params['search'] : (isset($_REQUEST['search']) ? stripslashes($_REQUEST['search']) : '');
+	$search_params['search'] = !empty($search_params['search']) ? $search_params['search'] : (isset($_REQUEST['search']) ? $smfFunc['db_unescape_string']($_REQUEST['search']) : '');
 	// If we ain't got nothing - we should error!
 	if (!isset($search_params['search']) || $search_params['search'] == '')
 		$context['search_errors']['invalid_search_string'] = true;
@@ -832,7 +834,7 @@ function MessageSearch2()
 		{
 			$word = $smfFunc['strtolower'](trim($searchArray[$index]));
 			if (strlen($word) > 0)
-				$excludedWords[] = addslashes($word);
+				$excludedWords[] = $smfFunc['db_escape_string']($word);
 			unset($searchArray[$index]);
 		}
 
@@ -842,7 +844,7 @@ function MessageSearch2()
 		{
 			$word = substr($smfFunc['strtolower'](trim($word)), 1);
 			if (strlen($word) > 0)
-				$excludedWords[] = addslashes($word);
+				$excludedWords[] = $smfFunc['db_escape_string']($word);
 			unset($tempSearch[$index]);
 		}
 
@@ -858,7 +860,7 @@ function MessageSearch2()
 		{
 			// Sort out entities first.
 			$searchArray[$index] = $smfFunc['htmlspecialchars']($searchArray[$index]);
-			$searchArray[$index] = addslashes($searchArray[$index]);
+			$searchArray[$index] = $smfFunc['db_escape_string']($searchArray[$index]);
 		}
 	}
 	$searchArray = array_unique($searchArray);
@@ -885,7 +887,7 @@ function MessageSearch2()
 	// Now we have all the parameters, combine them together for pagination and the like...
 	$context['params'] = array();
 	foreach ($search_params as $k => $v)
-		$context['params'][] = $k . '|\'|' . addslashes($v);
+		$context['params'][] = $k . '|\'|' . $smfFunc['db_escape_string']($v);
 	$context['params'] = base64_encode(implode('|"|', $context['params']));
 
 	// Compile the subject query part.
@@ -916,11 +918,12 @@ function MessageSearch2()
 	// Get the amount of results.
 	$request = db_query("
 		SELECT COUNT(*)
-		FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
-		WHERE pm.id_pm = pmr.id_pm" . ($context['folder'] == 'inbox' ? "
-			AND pmr.id_member = $user_info[id]
+		FROM {$db_prefix}pm_recipients AS pmr
+			INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+		WHERE " . ($context['folder'] == 'inbox' ? "
+			pmr.id_member = $user_info[id]
 			AND pmr.deleted = 0" : "
-			AND pm.id_member_from = $user_info[id]
+			pm.id_member_from = $user_info[id]
 			AND pm.deleted_by_sender = 0") . "
 			$userQuery$labelQuery
 			AND ($searchQuery)", __FILE__, __LINE__);
@@ -931,11 +934,12 @@ function MessageSearch2()
 	// !!! This doesn't support outbox searching yet.
 	$request = $smfFunc['db_query']('', "
 		SELECT pm.id_pm, pm.id_member_from
-		FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
-		WHERE pm.id_pm = pmr.id_pm" . ($context['folder'] == 'inbox' ? "
-			AND pmr.id_member = $user_info[id]
+		FROM {$db_prefix}pm_recipients AS pmr
+			INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+		WHERE " . ($context['folder'] == 'inbox' ? "
+			pmr.id_member = $user_info[id]
 			AND pmr.deleted = 0" : "
-			AND pm.id_member_from = $user_info[id]
+			pm.id_member_from = $user_info[id]
 			AND pm.deleted_by_sender = 0") . "
 			$userQuery$labelQuery
 			AND ($searchQuery)
@@ -1090,10 +1094,10 @@ function MessagePost()
 		// How many messages have they sent this last hour?
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(pr.id_pm) AS postCount
-			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pr)
+			FROM {$db_prefix}personal_messages AS pm
+				INNER JOIN {$db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
 			WHERE pm.id_member_from = $user_info[id]
-				AND pm.msgtime > " . (time() - 3600) . "
-				AND pr.id_pm = pm.id_pm", __FILE__, __LINE__);
+				AND pm.msgtime > " . (time() - 3600), __FILE__, __LINE__);
 		list ($postCount) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -1111,11 +1115,11 @@ function MessagePost()
 			SELECT
 				pm.id_pm, pm.body, pm.subject, pm.msgtime, mem.member_name,
 				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, pm.from_name) AS real_name
-			FROM ({$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : ", {$db_prefix}pm_recipients AS pmr") . ")
+			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : "
+				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[pmsg])") . "
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
 			WHERE pm.id_pm = $_REQUEST[pmsg]" . ($context['folder'] == 'outbox' ? "
 				AND pm.id_member_from = $user_info[id]" : "
-				AND pmr.id_pm = $_REQUEST[pmsg]
 				AND pmr.id_member = $user_info[id]") . "
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -1231,8 +1235,8 @@ function MessagePost()
 	// Set the defaults...
 	$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];
 	$context['message'] = str_replace(array('"', '<', '>'), array('&quot;', '&lt;', '&gt;'), $form_message);
-	$context['to'] = isset($_REQUEST['to']) ? stripslashes($_REQUEST['to']) : '';
-	$context['bcc'] = isset($_REQUEST['bcc']) ? stripslashes($_REQUEST['bcc']) : '';
+	$context['to'] = isset($_REQUEST['to']) ? $smfFunc['db_unescape_string']($_REQUEST['to']) : '';
+	$context['bcc'] = isset($_REQUEST['bcc']) ? $smfFunc['db_unescape_string']($_REQUEST['bcc']) : '';
 	$context['post_error'] = array();
 	$context['copy_to_outbox'] = !empty($options['copy_to_outbox']);
 
@@ -1278,10 +1282,10 @@ function messagePostError($error_types, $to, $bcc)
 	$context['page_title'] = $txt[148];
 
 	// Set everything up like before....
-	$context['to'] = stripslashes($to);
-	$context['bcc'] = stripslashes($bcc);
-	$context['subject'] = isset($_REQUEST['subject']) ? $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['subject'])) : '';
-	$context['message'] = isset($_REQUEST['message']) ? str_replace(array('  '), array('&nbsp; '), $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['message']))) : '';
+	$context['to'] = $smfFunc['db_unescape_string']($to);
+	$context['bcc'] = $smfFunc['db_unescape_string']($bcc);
+	$context['subject'] = isset($_REQUEST['subject']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['subject'])) : '';
+	$context['message'] = isset($_REQUEST['message']) ? str_replace(array('  '), array('&nbsp; '), $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['message']))) : '';
 	$context['copy_to_outbox'] = !empty($_REQUEST['outbox']);
 	$context['reply'] = !empty($_REQUEST['replied_to']);
 
@@ -1293,11 +1297,11 @@ function messagePostError($error_types, $to, $bcc)
 			SELECT
 				pm.id_pm, pm.body, pm.subject, pm.msgtime, mem.member_name,
 				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, pm.from_name) AS real_name
-			FROM ({$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : ", {$db_prefix}pm_recipients AS pmr") . ")
+			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : "
+				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[replied_to])") . ")
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
 			WHERE pm.id_pm = $_REQUEST[replied_to]" . ($context['folder'] == 'outbox' ? "
 				AND pm.id_member_from = $user_info[id]" : "
-				AND pmr.id_pm = $_REQUEST[replied_to]
 				AND pmr.id_member = $user_info[id]") . "
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -1382,10 +1386,10 @@ function MessagePost2()
 		// How many have they sent this last hour?
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(pr.id_pm) AS postCount
-			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pr)
+			FROM {$db_prefix}personal_messages AS pm
+				INNER JOIN {$db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
 			WHERE pm.id_member_from = $user_info[id]
-				AND pm.msgtime > " . (time() - 3600) . "
-				AND pr.id_pm = pm.id_pm", __FILE__, __LINE__);
+				AND pm.msgtime > " . (time() - 3600), __FILE__, __LINE__);
 		list ($postCount) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -1398,9 +1402,9 @@ function MessagePost2()
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 		// We strip and add slashes back here - so we don't forget!
-		$_POST['message'] = stripslashes($_POST['message']);
+		$_POST['message'] = $smfFunc['db_unescape_string']($_POST['message']);
 		$_POST['message'] = html_to_bbc($_POST['message']);
-		$_POST['message'] = addslashes($_POST['message']);
+		$_POST['message'] = $smfFunc['db_escape_string']($_POST['message']);
 
 		// We need to unhtml it now as it gets done shortly.
 		$_POST['message'] = un_htmlspecialchars($_POST['message']);
@@ -1417,8 +1421,8 @@ function MessagePost2()
 		$post_errors[] = 'session_timeout';
 
 	$_REQUEST['subject'] = isset($_REQUEST['subject']) ? trim($_REQUEST['subject']) : '';
-	$_REQUEST['to'] = empty($_POST['to']) ? (empty($_GET['to']) ? '' : $_GET['to']) : stripslashes($_POST['to']);
-	$_REQUEST['bcc'] = empty($_POST['bcc']) ? (empty($_GET['bcc']) ? '' : $_GET['bcc']) : stripslashes($_POST['bcc']);
+	$_REQUEST['to'] = empty($_POST['to']) ? (empty($_GET['to']) ? '' : $_GET['to']) : $smfFunc['db_unescape_string']($_POST['to']);
+	$_REQUEST['bcc'] = empty($_POST['bcc']) ? (empty($_GET['bcc']) ? '' : $_GET['bcc']) : $smfFunc['db_unescape_string']($_POST['bcc']);
 
 	// Did they make any mistakes?
 	if ($_REQUEST['subject'] == '')
@@ -1442,8 +1446,8 @@ function MessagePost2()
 	if (isset($_REQUEST['preview']))
 	{
 		// Set everything up to be displayed.
-		$context['preview_subject'] = $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['subject']));
-		$context['preview_message'] = $smfFunc['htmlspecialchars'](stripslashes($_REQUEST['message']), ENT_QUOTES);
+		$context['preview_subject'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['subject']));
+		$context['preview_message'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['message']), ENT_QUOTES);
 		preparsecode($context['preview_message'], true);
 
 		// Parse out the BBC if it is enabled.
@@ -1504,7 +1508,7 @@ function MessagePost2()
 		{
 			foreach ($rec as $index => $member)
 				if (strlen(trim($member)) > 0)
-					$input[$rec_type][$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower'](stripslashes(trim($member))));
+					$input[$rec_type][$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower']($smfFunc['db_unescape_string'](trim($member))));
 				else
 					unset($input[$rec_type][$index]);
 		}
@@ -1800,10 +1804,10 @@ function MessagePrune()
 		// Select all messages in their inbox older than $deleteTime.
 		$request = $smfFunc['db_query']('', "
 			SELECT pmr.id_pm
-			FROM ({$db_prefix}pm_recipients AS pmr, {$db_prefix}personal_messages AS pm)
+			FROM {$db_prefix}pm_recipients AS pmr
+				INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
 			WHERE pmr.deleted = 0
 				AND pmr.id_member = $user_info[id]
-				AND pm.id_pm = pmr.id_pm
 				AND pm.msgtime < $deleteTime", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$toDelete[] = $row['id_pm'];
@@ -1992,7 +1996,7 @@ function ManageLabels()
 	foreach ($context['labels'] as $label)
 	{
 		if ($label['id'] != -1)
-			$the_labels[$label['id']] = addslashes($label['name']);
+			$the_labels[$label['id']] = $smfFunc['db_escape_string']($label['name']);
 	}
 
 	if (isset($_GET['sesc']))
@@ -2146,10 +2150,10 @@ function ReportMessage()
 		// First, pull out the message contents, and verify it actually went to them!
 		$request = $smfFunc['db_query']('', "
 			SELECT pm.subject, pm.body, pm.msgtime, pm.id_member_from, IFNULL(m.real_name, pm.from_name) AS senderName
-			FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pmr)
+			FROM {$db_prefix}personal_messages AS pm
+				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
 				LEFT JOIN {$db_prefix}members AS m ON (m.id_member = pm.id_member_from)
 			WHERE pm.id_pm = $context[pm_id]
-				AND pmr.id_pm = pm.id_pm
 				AND pmr.id_member = $user_info[id]
 				AND pmr.deleted = 0
 			LIMIT 1", __FILE__, __LINE__);

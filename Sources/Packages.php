@@ -252,7 +252,7 @@ function PackageInstallTest()
 	$request = $smfFunc['db_query']('', "
 		SELECT version, themes_installed
 		FROM {$db_prefix}log_packages
-		WHERE package_id = '" . addslashes($packageInfo['id']) . "'
+		WHERE package_id = '" . $smfFunc['db_escape_string']($packageInfo['id']) . "'
 			AND install_state = 1", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -586,7 +586,7 @@ function PackageInstall()
 	$request = $smfFunc['db_query']('', "
 		SELECT version, themes_installed
 		FROM {$db_prefix}log_packages
-		WHERE package_id = '" . addslashes($packageInfo['id']) . "'
+		WHERE package_id = '" . $smfFunc['db_escape_string']($packageInfo['id']) . "'
 			AND install_state = 1", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -710,7 +710,7 @@ function PackageInstall()
 			SELECT id_install, install_state
 			FROM {$db_prefix}log_packages
 			WHERE install_state != 0
-				AND package_id = '" . addslashes($packageInfo['id']) . "'
+				AND package_id = '" . $smfFunc['db_escape_string']($packageInfo['id']) . "'
 				" . ($context['install_id'] ? " AND id_install = $context[install_id] " : '') . "
 			ORDER BY time_installed DESC
 			LIMIT 1", __FILE__, __LINE__);
@@ -739,15 +739,15 @@ function PackageInstall()
 			$themes_installed = implode(',', $themes_installed);
 
 			// What failed steps?
-			$failed_step_insert = addslashes(serialize($failed_steps));
+			$failed_step_insert = $smfFunc['db_escape_string'](serialize($failed_steps));
 		
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_packages
 					(filename, name, package_id, version, id_member_installed, member_installed, time_installed,
 					install_state, failed_steps, themes_installed)
 				VALUES
-					('" . addslashes($packageInfo['filename']) . "', '" . addslashes($packageInfo['name']) . "',
-					'" . addslashes($packageInfo['id']) . "', '" . addslashes($packageInfo['version']) . "',
+					('" . $smfFunc['db_escape_string']($packageInfo['filename']) . "', '" . $smfFunc['db_escape_string']($packageInfo['name']) . "',
+					'" . $smfFunc['db_escape_string']($packageInfo['id']) . "', '" . $smfFunc['db_escape_string']($packageInfo['version']) . "',
 					$user_info[id], '$user_info[name]', " . time() . ", " . ($is_upgrade ? 2 : 1) . ", '$failed_step_insert',
 					'$themes_installed')", __FILE__, __LINE__);
 		}

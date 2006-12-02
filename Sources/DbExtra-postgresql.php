@@ -53,6 +53,7 @@ function db_extra_init()
 			'db_insert_sql' => 'db_insert_sql',
 			'db_table_sql' => 'db_table_sql',
 			'db_list_tables' => 'db_list_tables',
+			'db_get_version' => 'smf_db_get_version',
 		);
 }
 
@@ -308,6 +309,19 @@ function db_table_sql($tableName)
 	$schema_create .= $crlf . ');';
 
 	return $seq_create . $schema_create . $index_create;
+}
+
+// Get the version number.
+function smf_db_get_version()
+{
+	global $smfFunc;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT VERSION()", false, false);
+	list ($ver) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $ver;
 }
 
 ?>

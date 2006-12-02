@@ -62,7 +62,7 @@ function EditorMain()
 	$context['view'] = (int) $_REQUEST['view'];
 
 	$_REQUEST['message'] = un_htmlspecialchars($_REQUEST['message']);
-	$_REQUEST['message'] = stripslashes($_REQUEST['message']);
+	$_REQUEST['message'] = $smfFunc['db_unescape_string']($_REQUEST['message']);
 
 	// Put back in special characters.
 	$_REQUEST['message'] = strtr($_REQUEST['message'], array('#smcol#' => ';', '#smlt#' => '&lt;', '#smgt#' => '&gt;', '#smamp#' => '&amp;'));
@@ -83,7 +83,7 @@ function EditorMain()
 // Convert only the BBC that can be edited in HTML mode for the editor.
 function bbc_to_html($text)
 {
-	global $modSettings;
+	global $modSettings, $smfFunc;
 
 	// What tags do we allow?
 	$allowed_tags = array('b', 'u', 'i', 's', 'hr', 'list', 'li', 'font', 'size', 'color', 'img', 'pre', 'left', 'center', 'right', 'url', 'email', 'ftp', 'sub', 'sup', 'tt');
@@ -104,7 +104,7 @@ function bbc_to_html($text)
 
 	// Parse unique ID's into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)".*?)bordeR="0" />~e', "'<' . stripslashes('$2') . 'border=\"0\" id=\"smiley_' . \$i++ . '_$3\" />'", $text);
+	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)".*?)bordeR="0" />~e', "'<' . \$smfFunc['db_unescape_string']('$2') . 'border=\"0\" id=\"smiley_' . \$i++ . '_$3\" />'", $text);
 
 	return $text;
 }
@@ -141,7 +141,7 @@ function html_to_bbc($text)
 			// Load all the smileys.
 			$names = array();
 			foreach ($matches[1] as $file)
-				$names[] = '\'' . addslashes($file) . '\'';
+				$names[] = '\'' . $smfFunc['db_escape_string']($file) . '\'';
 			$names = array_unique($names);
 
 			if (!empty($names))

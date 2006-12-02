@@ -287,11 +287,11 @@ function PermissionIndex()
 		// This one is slower, but it's okay... careful not to count twice!
 		$query = $smfFunc['db_query']('', "
 			SELECT mg.id_group, COUNT(*) AS num_members
-			FROM ({$db_prefix}membergroups AS mg, {$db_prefix}members AS mem)
+			FROM {$db_prefix}membergroups AS mg
+				INNER JOIN {$db_prefix}members AS mem ON (mem.additional_groups != ''
+					AND mem.id_group != mg.id_group
+					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
 			WHERE mg.id_group IN (" . implode(', ', $normalGroups) . ")
-				AND mem.additional_groups != ''
-				AND mem.id_group != mg.id_group
-				AND FIND_IN_SET(mg.id_group, mem.additional_groups)
 			GROUP BY mg.id_group", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
@@ -1613,15 +1613,15 @@ function loadPermissionProfiles()
 	global $context, $db_prefix, $txt, $smfFunc;
 
 	$request = $smfFunc['db_query']('', "
-		SELECT pp.id_profile, pp.profile_name, IFNULL(b.id_board, 0) AS id_parent, IFNULL(b.name, '') AS board_name
+		SELECT pp.id_profile, pp.profile_name, IFNULL(b.id_board, 0) AS id_real_parent, IFNULL(b.name, '') AS board_name
 		FROM {$db_prefix}permission_profiles AS pp
 			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = pp.id_parent)
-		ORDER BY id_parent", __FILE__, __LINE__);
+		ORDER BY id_real_parent", __FILE__, __LINE__);
 	$context['profiles'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Format the label nicely.
-		if (!empty($row['id_parent']))
+		if (!empty($row['id_real_parent']))
 			$name = $row['board_name'];
 		elseif (isset($txt['permissions_profile_' . $row['profile_name']]))
 			$name = $txt['permissions_profile_' . $row['profile_name']];
@@ -1632,7 +1632,7 @@ function loadPermissionProfiles()
 			'id' => $row['id_profile'],
 			'name' => $name,
 			'unformatted_name' => $row['profile_name'],
-			'parent' => $row['id_parent'],
+			'parent' => $row['id_real_parent'],
 		);
 	}
 	$smfFunc['db_free_result']($request);

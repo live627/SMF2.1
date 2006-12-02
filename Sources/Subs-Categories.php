@@ -201,23 +201,25 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 {
 	global $db_prefix, $smfFunc;
 
-	// Collapse the categories so they won't be shown on the Board Index.
-	if ($new_status === 'collapse')
-		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}collapsed_categories
-				(id_cat, id_member)
-			SELECT c.id_cat, mem.id_member
-			FROM ({$db_prefix}members AS mem, {$db_prefix}categories AS c)
-			WHERE c.id_cat IN (" . implode(', ', $categories) . ')' . ($members === null ? '' : "
-				AND mem.id_member IN (" . implode(', ', $members) . ')') . ($check_collapsable ? "
-				AND c.can_collapse = 1" : ''), __FILE__, __LINE__);
-
-	// Get the categories back to how they were.
-	elseif ($new_status === 'expand')
+	// Collapse or expand the categories.
+	if ($new_status === 'collapse' || $new_status === 'expand')
+	{
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}collapsed_categories
 			WHERE id_cat IN (" . implode(', ', $categories) . ')' . ($members === null ? '' : "
 				AND id_member IN (" . implode(', ', $members) . ')'), __FILE__, __LINE__);
+
+		if ($new_status === 'collapse')
+			$smfFunc['db_query']('', "
+				INSERT INTO {$db_prefix}collapsed_categories
+					(id_cat, id_member)
+				SELECT c.id_cat, mem.id_member
+				FROM {$db_prefix}categories AS c
+					INNER JOIN {$db_prefix}members AS mem ON (" . ($members === null ? '1=1' : "
+						mem.id_member IN (" . implode(', ', $members) . ')') . ")
+				WHERE c.id_cat IN (" . implode(', ', $categories) . ')' . ($check_collapsable ? "
+					AND c.can_collapse = 1" : ''), __FILE__, __LINE__);
+	}
 
 	// Toggle the categories: collapsed get expanded and expanded get collapsed.
 	elseif ($new_status === 'toggle')
@@ -245,7 +247,7 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 		// Collapse the ones that were originally expanded...
 		if (!empty($updates['insert']))
 			$smfFunc['db_query']('', "
-				INSERT IGNORE INTO {$db_prefix}collapsed_categories
+				INSERT INTO {$db_prefix}collapsed_categories
 					(id_cat, id_member)
 				VALUES
 					(" . implode("),

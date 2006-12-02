@@ -412,7 +412,7 @@ function BanEdit()
 					ip_low4 = 0, ip_high4 = 0,
 					hostname = '$_POST[hostname]', email_address = '', id_member = 0";
 
-			$modlogInfo['hostname'] = stripslashes($_POST['hostname']);
+			$modlogInfo['hostname'] = $smfFunc['db_unescape_string']($_POST['hostname']);
 		}
 		elseif ($_POST['bantype'] == 'email_ban')
 		{
@@ -441,11 +441,11 @@ function BanEdit()
 					ip_low4 = 0, ip_high4 = 0,
 					hostname = '', email_address = '$_POST[email]', id_member = 0";
 
-			$modlogInfo['email'] = stripslashes($_POST['email']);
+			$modlogInfo['email'] = $smfFunc['db_unescape_string']($_POST['email']);
 		}
 		elseif ($_POST['bantype'] == 'user_ban')
 		{
-			$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars($_POST['user'], ENT_QUOTES));
+			$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string']($_POST['user']), ENT_QUOTES)));
 
 			$request = $smfFunc['db_query']('', "
 				SELECT id_member, (id_group = 1 OR FIND_IN_SET(1, additional_groups)) AS isAdmin
@@ -539,8 +539,8 @@ function BanEdit()
 			fatal_lang_error('ban_name_exists', false, array($_POST['ban_name']));
 		$smfFunc['db_free_result']($request);
 
-		$_POST['reason'] = htmlspecialchars($_POST['reason'], ENT_QUOTES);
-		$_POST['notes'] = htmlspecialchars($_POST['notes'], ENT_QUOTES);
+		$_POST['reason'] = $smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string']($_POST['reason']), ENT_QUOTES));
+		$_POST['notes'] = $smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string']($_POST['notes']), ENT_QUOTES));
 		$_POST['notes'] = str_replace(array("\r", "\n", '  '), array('', '<br />', '&nbsp; '), $_POST['notes']);
 		$_POST['expiration'] = $_POST['expiration'] == 'never' ? 'NULL' : ($_POST['expiration'] == 'expired' ? '0' : ($_POST['expire_date'] != $_POST['old_expire'] ? time() + 24 * 60 * 60 * (int) $_POST['expire_date'] : 'expire_time'));
 		$_POST['full_ban'] = empty($_POST['full_ban']) ? '0' : '1';
@@ -585,7 +585,7 @@ function BanEdit()
 					// We got a username, let's find its ID.
 					if (empty($_POST['bannedUser']))
 					{
-						$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', htmlspecialchars($_POST['user'], ENT_QUOTES));
+						$_POST['user'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string']($_POST['user']), ENT_QUOTES)));
 
 						$request = $smfFunc['db_query']('', "
 							SELECT id_member, (id_group = 1 OR FIND_IN_SET(1, additional_groups)) AS isAdmin
@@ -955,8 +955,9 @@ function BanBrowseTriggers()
 
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
-		FROM ({$db_prefix}ban_items AS bi" . ($context['selected_entity'] == 'member' ? ", {$db_prefix}members AS mem" : '') . ")
-		WHERE " . $query[$context['selected_entity']]['where'], __FILE__, __LINE__);
+		FROM {$db_prefix}ban_items AS bi" . ($context['selected_entity'] == 'member' ? "
+			INNER JOIN {$db_prefix}members AS mem ON (" . $query[$context['selected_entity']]['where'] . ")" : "
+		WHERE " . $query[$context['selected_entity']]['where']), __FILE__, __LINE__);
 	list ($num_items) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -968,9 +969,10 @@ function BanBrowseTriggers()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT bi.id_ban, " . $query[$context['selected_entity']]['select'] . ", bi.hits, bg.id_ban_group, bg.name
-			FROM ({$db_prefix}ban_items AS bi, {$db_prefix}ban_groups AS bg" . ($context['selected_entity'] == 'member' ? ", {$db_prefix}members AS mem" : '') . ")
-			WHERE " . $query[$context['selected_entity']]['where'] . "
-				AND bg.id_ban_group = bi.id_ban_group
+			FROM {$db_prefix}ban_items AS bi
+				INNER JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)" . ($context['selected_entity'] == 'member' ? "
+				INNER JOIN {$db_prefix}members AS mem ON (" . $query[$context['selected_entity']]['where'] . ")" : "
+			WHERE " . $query[$context['selected_entity']]['where']) . "
 			ORDER BY " . $query[$context['selected_entity']]['orderby'] . "
 			LIMIT $context[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1150,12 +1152,12 @@ function updateBanMembers()
 	// Find members that haven't been marked as 'banned'...yet.
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.id_member, mem.is_activated + 10 AS new_value
-		FROM ({$db_prefix}ban_groups AS bg, {$db_prefix}ban_items AS bi, {$db_prefix}members AS mem)
-		WHERE bg.id_ban_group = bi.id_ban_group
-			AND bg.cannot_access = 1
-			AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")
-			AND (mem.id_member = bi.id_member OR mem.email_address LIKE bi.email_address)
-			AND mem.is_activated < 10", __FILE__, __LINE__);
+		FROM {$db_prefix}ban_groups AS bg
+			INNER JOIN {$db_prefix}ban_items AS bi ON (bi.id_ban_group = bg.id_ban_group)
+			INNER JOIN {$db_prefix}members AS mem ON ((mem.id_member = bi.id_member OR mem.email_address LIKE bi.email_address)
+				AND mem.is_activated < 10)
+		WHERE bg.cannot_access = 1
+			AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$updates[$row['new_value']][] = $row['id_member'];

@@ -141,9 +141,8 @@ function Who()
 	// Look for people online, provided they don't mind if you see they are.
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			(UNIX_TIMESTAMP(lo.log_time) - UNIX_TIMESTAMP() + " . time() . ") AS log_time,
-			lo.id_member, lo.url, INET_NTOA(lo.ip) AS ip, mem.real_name, lo.session,
-			mg.online_color, IFNULL(mem.show_online, 1) AS show_online
+			lo.log_time, lo.id_member, lo.url, INET_NTOA(lo.ip) AS ip, mem.real_name,
+			lo.session, mg.online_color, IFNULL(mem.show_online, 1) AS show_online
 		FROM {$db_prefix}log_online AS lo
 			LEFT JOIN {$db_prefix}members AS mem ON (lo.id_member = mem.id_member)
 			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" . (!empty($conditions) ? "
@@ -334,12 +333,11 @@ function determineActions($urls)
 
 				$result = $smfFunc['db_query']('', "
 					SELECT m.id_topic, m.subject
-					FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS m, {$db_prefix}topics AS t)
-					WHERE $user_info[query_see_board]
-						AND m.id_msg = $msgid
-						AND m.id_board = b.id_board
-						AND t.id_topic = m.id_topic
-						AND t.approved = 1
+					FROM {$db_prefix}messages AS m
+						INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
+						INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = 1)
+					WHERE m.id_msg = $msgid
+						AND $user_info[query_see_board]
 						AND m.approved = 1
 					LIMIT 1", __FILE__, __LINE__);
 				list ($id_topic, $subject) = $smfFunc['db_fetch_row']($result);
@@ -371,11 +369,11 @@ function determineActions($urls)
 	{
 		$result = $smfFunc['db_query']('', "
 			SELECT t.id_topic, m.subject
-			FROM ({$db_prefix}boards AS b, {$db_prefix}topics AS t, {$db_prefix}messages AS m)
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			WHERE $user_info[query_see_board]
 				AND t.id_topic IN (" . implode(', ', array_keys($topic_ids)) . ")
-				AND t.id_board = b.id_board
-				AND m.id_msg = t.id_first_msg
 				AND t.approved = 1
 			LIMIT " . count($topic_ids), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($result))

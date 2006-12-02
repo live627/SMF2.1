@@ -102,7 +102,7 @@ function Login2()
 		if (isset($_COOKIE[$cookiename]))
 			list (, , $timeout) = @unserialize($_COOKIE[$cookiename]);
 		elseif (isset($_SESSION['login_' . $cookiename]))
-			list (, , $timeout) = @unserialize(stripslashes($_SESSION['login_' . $cookiename]));
+			list (, , $timeout) = @unserialize($smfFunc['db_unescape_string']($_SESSION['login_' . $cookiename]));
 		else
 			trigger_error('Login2(): Cannot be logged in without a session or cookie', E_USER_ERROR);
 
@@ -169,7 +169,7 @@ function Login2()
 	}
 
 	// Set up the default/fallback stuff.
-	$context['default_username'] = isset($_REQUEST['user']) ? htmlspecialchars(stripslashes($_REQUEST['user'])) : '';
+	$context['default_username'] = isset($_REQUEST['user']) ? htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['user'])) : '';
 	$context['default_password'] = '';
 	$context['never_expire'] = $modSettings['cookieTime'] == 525600 || $modSettings['cookieTime'] == 3153600;
 	$context['login_error'] = &$txt['error_occured'];
@@ -300,7 +300,7 @@ function Login2()
 		}
 	}
 	else
-		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars(stripslashes($_REQUEST['passwrd'])));
+		$sha_passwd = sha1(strtolower($user_settings['member_name']) . un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd'])));
 
 	// Bad password!  Thought you could fool the database?!
 	if ($user_settings['passwd'] != $sha_passwd)
@@ -337,7 +337,7 @@ function Login2()
 		}
 
 		// Maybe they are using a hash from before the password fix.
-		$other_passwords[] = sha1(strtolower($user_settings['member_name']) . addslashes(un_htmlspecialchars(stripslashes($_REQUEST['passwrd']))));
+		$other_passwords[] = sha1(strtolower($user_settings['member_name']) . $smfFunc['db_escape_string'](un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd']))));
 
 		// Whichever encryption it was using, let's make it use SMF's now ;).
 		if (in_array($user_settings['passwd'], $other_passwords))

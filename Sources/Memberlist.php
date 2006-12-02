@@ -194,7 +194,7 @@ function MLAll()
 			$smfFunc['db_free_result']($request);
 
 			// Now we've got the cache...store it.
-			updateSettings(array('memberlist_cache' => addslashes(serialize($memberlist_cache))));
+			updateSettings(array('memberlist_cache' => $smfFunc['db_escape_string'](serialize($memberlist_cache))));
 		}
 
 		$context['num_members'] = $memberlist_cache['num_members'];
@@ -319,7 +319,7 @@ function MLAll()
 	{
 		$first_offset = $_REQUEST['start'] - ($_REQUEST['start'] % $cache_step_size);
 		$second_offset = ceil(($_REQUEST['start'] + $modSettings['defaultMaxMembers']) / $cache_step_size) * $cache_step_size;
-		$where = "mem.real_name BETWEEN '" . addslashes($memberlist_cache['index'][$first_offset]) . "' AND '" . addslashes($memberlist_cache['index'][$second_offset]) . "'";
+		$where = "mem.real_name BETWEEN '" . $smfFunc['db_escape_string']($memberlist_cache['index'][$first_offset]) . "' AND '" . $smfFunc['db_escape_string']($memberlist_cache['index'][$second_offset]) . "'";
 		$limit -= $first_offset;
 	}
 
@@ -330,7 +330,7 @@ function MLAll()
 		if ($first_offset < 0)
 			$first_offset = 0;
 		$second_offset = ceil(($memberlist_cache['num_members'] - $_REQUEST['start']) / $cache_step_size) * $cache_step_size;
-		$where = "mem.real_name BETWEEN '" . addslashes($memberlist_cache['index'][$first_offset]) . "' AND '" . addslashes($memberlist_cache['index'][$second_offset]) . "'";
+		$where = "mem.real_name BETWEEN '" . $smfFunc['db_escape_string']($memberlist_cache['index'][$first_offset]) . "' AND '" . $smfFunc['db_escape_string']($memberlist_cache['index'][$second_offset]) . "'";
 		$limit = $second_offset - ($memberlist_cache['num_members'] - $_REQUEST['start']) - ($second_offset > $memberlist_cache['num_members'] ? $cache_step_size - ($memberlist_cache['num_members'] % $cache_step_size) : 0);
 	}
 

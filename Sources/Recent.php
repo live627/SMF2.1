@@ -48,7 +48,8 @@ function getLastPost()
 
 	// Find it by the board - better to order by board than sort the entire messages table.
 	$request = $smfFunc['db_query']('', "
-		SELECT ml.poster_time, ml.subject, ml.id_topic, ml.poster_name, LEFT(ml.body, 384) AS body, ml.smileys_enabled
+		SELECT ml.poster_time, ml.subject, ml.id_topic, ml.poster_name, SUBSTRING(ml.body, 0, 384) AS body,
+			ml.smileys_enabled
 		FROM ({$db_prefix}boards AS b, {$db_prefix}messages AS ml)
 		WHERE ml.id_msg = b.id_last_msg" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 			AND b.id_board != $modSettings[recycle_board]" : '') . "
@@ -92,7 +93,7 @@ function getLastPosts($showlatestcount)
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, t.id_board, b.name AS board_name,
-			LEFT(m.body, 384) AS body, m.smileys_enabled
+			SUBSTRING(m.body, 0, 384) AS body, m.smileys_enabled
 		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_msg >= " . max(0, $modSettings['maxMsgID'] - 20 * $showlatestcount) . "
@@ -648,8 +649,8 @@ function UnreadTopics()
 				ml.poster_time AS last_poster_time, IFNULL(mems.real_name, ms.poster_name) AS first_poster_name,
 				IFNULL(meml.real_name, ml.poster_name) AS lastPosterName, ml.subject AS last_subject,
 				ml.icon AS last_icon, ms.icon AS first_icon, t.id_poll, t.is_sticky, t.locked, ml.modified_time AS lastModifiedTime,
-				IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, LEFT(ml.body, 384) AS last_body, LEFT(ms.body, 384) AS first_body,
-				ml.smileys_enabled AS last_smileys, ms.smileys_enabled AS first_smileys, t.id_first_msg, t.id_last_msg';
+				IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, SUBSTRING(ml.body, 0, 384) AS last_body,
+				SUBSTRING(ms.body, 0, 384) AS first_body, ml.smileys_enabled AS last_smileys, ms.smileys_enabled AS first_smileys, t.id_first_msg, t.id_last_msg';
 
 	if ($context['showing_all_topics'])
 	{
@@ -778,7 +779,7 @@ function UnreadTopics()
 				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 			WHERE t.id_topic = ms.id_topic
 				AND b.id_board = t.id_board
-				AND b.$query_this_board
+				AND t.$query_this_board
 				AND ms.id_msg = t.id_first_msg
 				AND ml.id_msg = t.id_last_msg
 				AND t.id_last_msg >= $min_message
@@ -841,7 +842,7 @@ function UnreadTopics()
 				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board AND lmr.id_member = $user_info[id])
 			WHERE t.id_topic = ms.id_topic
 				AND b.id_board = t.id_board
-				AND b.$query_this_board
+				AND t.$query_this_board
 				AND ms.id_msg = t.id_first_msg
 				AND ml.id_msg = t.id_last_msg
 				AND t.id_last_msg >= $min_message

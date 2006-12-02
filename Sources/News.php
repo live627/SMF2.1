@@ -520,12 +520,12 @@ function getXmlNews($xml_format)
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, t.id_topic, t.id_board,
 			b.name AS bname, t.num_replies, m.id_member, IFNULL(mem.real_name, m.poster_name) AS poster_name,
 			mem.hide_email, IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
-		FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m, {$db_prefix}boards AS b)
+		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE b.id_board = " . (empty($board) ? 't.id_board' : "$board
-			AND t.id_board = $board") . "
-			AND m.id_msg = t.id_first_msg
-			AND $query_this_board
+		WHERE $query_this_board
+			" . (empty($board) ? '' : "AND t.id_board = $board") . "
 			AND t.approved = 1
 		ORDER BY t.id_first_msg DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
@@ -603,10 +603,10 @@ function getXmlRecent($xml_format)
 
 	$request = $smfFunc['db_query']('', "
 		SELECT m.id_msg
-		FROM ({$db_prefix}messages AS m, {$db_prefix}boards AS b)
-		WHERE m.id_board = " . (empty($board) ? "b.id_board" : "$board
-			AND b.id_board = $board") . "
-			AND $query_this_board
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE $query_this_board
+			" . (empty($board) ? '' : "AND m.id_board = $board") . "
 			AND m.approved = 1
 		ORDER BY m.id_msg DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
@@ -626,14 +626,14 @@ function getXmlRecent($xml_format)
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, mf.subject AS first_subject,
 			IFNULL(memf.real_name, mf.poster_name) AS firstPosterName, mem.hide_email,
 			IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
-		FROM ({$db_prefix}messages AS m, {$db_prefix}messages AS mf, {$db_prefix}topics AS t, {$db_prefix}boards AS b)
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)
-		WHERE t.id_topic = m.id_topic
-			AND b.id_board = " . (empty($board) ? 't.id_board' : "$board
-			AND t.id_board = $board") . "
-			AND mf.id_msg = t.id_first_msg
-			AND m.id_msg IN (" . implode(', ', $messages) . ")
+		WHERE m.id_msg IN (" . implode(', ', $messages) . ")
+			" . (empty($board) ? '' : "AND t.id_board = $board") . "
 		ORDER BY m.id_msg DESC
 		LIMIT $_GET[limit]", __FILE__, __LINE__);
 	$data = array();

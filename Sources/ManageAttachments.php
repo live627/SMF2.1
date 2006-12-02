@@ -565,7 +565,7 @@ function RemoveAttachment()
 			if (!empty($messages))
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
-					SET body = CONCAT(body, '<br /><br />" . addslashes($txt['smf216']) . "')
+					SET body = CONCAT(body, '<br /><br />" . $smfFunc['db_escape_string']($txt['smf216']) . "')
 					WHERE id_msg IN (" . implode(', ', $messages) . ")", __FILE__, __LINE__);
 		}
 	}
@@ -1104,9 +1104,9 @@ function ApproveAttach()
 	// Validate the attachments exist and are the right approval state.
 	$request = $smfFunc['db_query']('', "
 		SELECT a.id_attach, m.id_board, m.id_msg, m.id_topic
-		FROM ({$db_prefix}attachments AS a, {$db_prefix}messages AS m)
+		FROM {$db_prefix}attachments AS a
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 		WHERE a.id_attach IN (" . implode(',', $attachments) . ")
-			AND m.id_msg = a.id_msg
 			AND a.attachment_type = 0
 			AND a.approved = 0", __FILE__, __LINE__);
 	$attachments = array();
