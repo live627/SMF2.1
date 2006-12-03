@@ -282,9 +282,9 @@ function AddMembergroup()
 			if (!empty($inserts))
 				$smfFunc['db_insert']('insert',
 					"{$db_prefix}permissions",
-					('id_group', 'permission', 'add_deny'),
+					array('id_group', 'permission', 'add_deny'),
 					$inserts,
-					('id_group', 'permission')
+					array('id_group', 'permission')
 				);
 
 			$request = $smfFunc['db_query']('', "
@@ -299,9 +299,9 @@ function AddMembergroup()
 			if (!empty($inserts))
 				$smfFunc['db_insert']('insert',
 					"{$db_prefix}board_permissions",
-					('id_group', 'id_profile', 'permission', 'add_deny'),
-					$inserts
-					('id_group', 'id_profile', 'permission')
+					array('id_group', 'id_profile', 'permission', 'add_deny'),
+					$inserts,
+					array('id_group', 'id_profile', 'permission')
 				);
 
 			// Also get some membergroup information if we're copying and not copying from guests...
