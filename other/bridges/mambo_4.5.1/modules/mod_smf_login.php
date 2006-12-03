@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1                                             *
+* Software Version:           SMF 2.0                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -21,6 +21,7 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
+
 
 if (!defined('_VALID_MOS'))
 	die('Direct Access to this location is not allowed.');
@@ -39,13 +40,113 @@ if (!defined('_VALID_MOS'))
 		$$variable_name = $variable['value1'];
 	}
 	
+//This entire structure only needs to be executed on non-SMF pages.
+if (!defined('SMF_INTEGRATION_SETTINGS')){	
+	define('SMF_INTEGRATION_SETTINGS', serialize(array(
+		'integrate_pre_load' => 'integrate_pre_load',
+	)));
+	
+	function integrate_pre_load () {
+
+	global $lang, $language, $mosConfig_lang, $synch_lang, $smf_lang;
+
+	$language_conversion = array(
+							'aa' => 'afar',
+							'ab' => 'abkhaz',
+							'ae' => 'avestan',
+							'af' => 'afrikaans',
+							'ak' => 'akan',
+							'ar' => 'arabic',
+							'am' => 'amharic',
+							'an' => 'aragonese',
+							'as' => 'assamese',
+							'av' => 'avaric',
+							'ay' => 'aymara',
+							'az' => 'azerbaijani',
+							'ba' => 'bashkir',
+							'be' => 'belarusian',
+							'bg' => 'bulgarian',
+							'bh' => 'bihari',
+							'bi' => 'bislama',
+							'bm' => 'bambara',
+							'bn' => 'bangla',
+							'br' => 'breton',
+							'bs' => 'bosnian',
+							'cr' => 'cree',
+							'da' => 'danish',
+							'de' => 'german',
+							'dv' => 'divehi',
+							'dz' => 'dzongkha',
+							'en' => 'english',
+							'fa' => 'farsi',
+							'es' => 'spanish',
+							'fr' => 'french',
+							'gn' => 'guarani',
+							'hr' => 'croatian',
+							'hu' => 'hungarian',
+							'hy' => 'armenian',
+							'kr' => 'kanuri',
+							'ml' => 'malayalam',
+							'mo' => 'moldovan',
+							'nb' => 'bokm&#229;l',
+							'nl' => 'dutch',
+							'nn' => 'nynorsk',
+							'no' => 'norsk',
+							'pl' => 'polish',
+							'pt' => 'portuguese',
+							'sh' => 'serbo-croatian',
+							'sr' => 'serbian',
+							'sq' => 'albanian',
+							'tg' => 'tajik',
+							'th' => 'thai',
+							'tr' => 'turkish',
+							'iu' => 'inuktitut',
+							'za' => 'zhuang',
+							'zh' => 'chinese',
+							'zu' => 'zulu',
+							);
+		if(isset($mosConfig_lang) && $synch_lang == 'true'){
+
+			if (isset($_COOKIE['mbfcookie']) || isset($_REQUEST['lang'])){
+          
+				if (isset($_COOKIE['mbfcookie']['lang'])){ 
+					if (isset($language_conversion[$_COOKIE['mbfcookie']['lang']]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[$_COOKIE['mbfcookie']['lang']] . '.php'))
+						$GLOBALS['language'] = $language_conversion[$_COOKIE['mbfcookie']['lang']];
+					else if (isset($language_conversion[$_COOKIE['mbfcookie']['lang']]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[$_COOKIE['mbfcookie']['lang']] . '-utf8.php'))
+						$GLOBALS['language'] = $language_conversion[$_COOKIE['mbfcookie']['lang']] . '-utf8';
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_COOKIE['mbfcookie']['lang'] . '.php'))
+						$GLOBALS['language'] = $_COOKIE['mbfcookie']['lang'];
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_COOKIE['mbfcookie']['lang'] . '-utf8.php'))
+						$GLOBALS['language'] = $_COOKIE['mbfcookie']['lang'] . '-utf8';
+				}
+
+				if (isset($_REQUEST['lang'])){
+					if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '.php'))
+						$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)];
+					else if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8.php'))
+						$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8';					
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '.php'))
+						$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '-utf8.php'))
+						$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+				}
+			
+			} else if ($synch_lang == 'true')
+				$GLOBALS['language'] = $mosConfig_lang;
+		}
+		
+		$smf_lang = $GLOBALS['language'];
+	}
+}	
+
 if (!defined('SMF'))
 {	
 	require_once($smf_path . '/SSI.php');	
 }
 
-global $context, $txt, $scripturl, $boardurl, $settings, $mosConfig_dbprefix, $db_prefix, $db_name, $smf_date, $mosConfig_db, $mosConfig_sef;
+global $boarddir, $context, $txt, $scripturl, $boardurl, $settings, $mosConfig_dbprefix, $db_prefix, $db_name, $smf_date, $mosConfig_db, $mosConfig_sef;
 
+include_once ( $boarddir . '/Themes/default/languages/index.' . (isset($smf_lang) ? $smf_lang : $language) . 'php');
 mysql_select_db($mosConfig_db);
 
 $result = mysql_query("
