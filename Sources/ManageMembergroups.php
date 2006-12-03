@@ -283,7 +283,7 @@ function AddMembergroup()
 				$smfFunc['db_insert']('insert',
 					"{$db_prefix}permissions",
 					('id_group', 'permission', 'add_deny'),
-					$inserts
+					$inserts,
 					('id_group', 'permission')
 				);
 
