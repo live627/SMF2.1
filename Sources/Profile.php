@@ -3082,14 +3082,21 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	{
 		$reason = htmlspecialchars($_POST['reason']);
 
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
+			FROM {$db_prefix}log_group_requests
+			WHERE id_member = $memID
+				AND id_group = $group_id", __FILE__, __LINE__);
+		if ($smfFunc['db_num_rows']($request) != 0)
+			fatal_lang_error('profile_error_already_requested_group');
+		$smfFunc['db_free_result']($request);
+
 		// Log the request.
 		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}log_group_requests
+			INSERT INTO {$db_prefix}log_group_requests
 				(id_member, id_group, time_applied, reason)
 			VALUES
 				($memID, $group_id, " . time() . ", '$reason')", __FILE__, __LINE__);
-		if ($smfFunc['db_affected_rows']() == 0)
-			fatal_lang_error('profile_error_already_requested_group');
 
 		// Send an email to all group moderators etc.
 		require_once($sourcedir . '/Subs-Post.php');

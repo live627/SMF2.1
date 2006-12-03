@@ -1362,7 +1362,7 @@ function UpgradeTemplate()
 		foreach ($values as $variable => $value)
 			$themeData[] = array(0, $id_theme, '\'' . $variable . '\'', '\'' . $value . '\'');
 
-		if (!empty($setString))
+		if (!empty($themeData))
 		{
 			$smfFunc['db_insert']('ignore',
 				"{$db_prefix}themes",
@@ -1485,7 +1485,7 @@ function convertSettingsToTheme()
 
 		$themeData[] = array(0, 1, '\'' . $variable . '\'', '\'' . $value . '\'');
 	}
-	if (!empty($setString))
+	if (!empty($themeData))
 	{
 		$smfFunc['db_insert']('ignore',
 			"{$db_prefix}themes",

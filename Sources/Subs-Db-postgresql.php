@@ -560,9 +560,6 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 			}
 		}
 	}
-	elseif ($method == 'ignore')
-	{
-	}
 
 	if (empty($data))
 		return;
@@ -572,7 +569,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 			INSERT INTO $table
 				(" . implode(', ', $columns) . ")
 			VALUES
-				(" . implode(', ', $entry) . ")", __FILE__, __LINE__);
+				(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : __FILE__, __LINE__);
 }
 
 // Dummy function really.

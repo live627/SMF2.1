@@ -494,26 +494,25 @@ function SetQuickGroups()
 				$target_perm[$row['permission']] = $row['add_deny'];
 			$smfFunc['db_free_result']($request);
 
-			$insert_string = '';
+			$inserts = array();
 			foreach ($_POST['group'] as $group_id)
 				foreach ($target_perm as $perm => $add_deny)
-					$insert_string .= "('$perm', $group_id, $add_deny),";
+					$inserts[] = array("'$perm'", $group_id, $add_deny);
 
 			// Delete the previous permissions...
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}permissions
 				WHERE id_group IN (" . implode(', ', $_POST['group']) . ")", __FILE__, __LINE__);
 
-			if (!empty($insert_string))
+			if (!empty($inserts))
 			{
-				// Cut off the last comma.
-				$insert_string = substr($insert_string, 0, -1);
-
 				// ..and insert the new ones.
-				$smfFunc['db_query']('', "
-					INSERT IGNORE INTO {$db_prefix}permissions
-						(permission, id_group, add_deny)
-					VALUES $insert_string", __FILE__, __LINE__);
+				$smfFunc['db_insert']('',
+					"{$db_prefix}permissions",
+					array('permission', 'id_group', 'add_deny'),
+					$inserts,
+					array('permission', 'id_group')
+				);
 			}
 		}
 
@@ -528,10 +527,10 @@ function SetQuickGroups()
 			$target_perm[$row['permission']] = $row['add_deny'];
 		$smfFunc['db_free_result']($request);
 
-		$insert_string = '';
+		$inserts = array();
 		foreach ($_POST['group'] as $group_id)
 			foreach ($target_perm as $perm => $add_deny)
-				$insert_string .= "('$perm', $group_id, $bid, $add_deny),";
+				$inserts[] = array("'$perm'", $group_id, $bid, $add_deny);
 
 		// Delete the previous global board permissions...
 		$smfFunc['db_query']('', "
@@ -540,14 +539,15 @@ function SetQuickGroups()
 				AND id_profile = $bid", __FILE__, __LINE__);
 
 		// And insert the copied permissions.
-		if (!empty($insert_string))
+		if (!empty($inserts))
 		{
-			$insert_string = substr($insert_string, 0, -1);
-
-			$smfFunc['db_query']('', "
-				INSERT IGNORE INTO {$db_prefix}board_permissions
-					(permission, id_group, id_profile, add_deny)
-				VALUES $insert_string", __FILE__, __LINE__);
+			// ..and insert the new ones.
+			$smfFunc['db_insert']('',
+				"{$db_prefix}board_permissions",
+				array('permission', 'id_group', 'id_profile', 'add_deny'),
+				$inserts,
+				array('permission', 'id_group', 'id_profile')
+			);
 		}
 
 		// Update any children out there!

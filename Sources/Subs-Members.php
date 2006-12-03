@@ -485,14 +485,15 @@ function registerMember(&$regOptions)
 	// Theme variables too?
 	if (!empty($theme_vars))
 	{
-		$setString = '';
+		$inserts = array();
 		foreach ($theme_vars as $var => $val)
-			$setString .= "
-				($memberID, SUBSTRING('$var', 1, 255), SUBSTRING('$val', 1, 65534)),";
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}themes
-				(id_member, variable, value)
-			VALUES " . substr($setString, 0, -1), __FILE__, __LINE__);
+			$inserts[] = array($memberID, "SUBSTRING('$var', 1, 255)", "SUBSTRING('$val', 1, 65534)");
+		$smfFunc['db_insert']('insert',
+			"{$db_prefix}themes",
+			array('id_member', 'variable', 'value'),
+			$inserts,
+			array('id_member', 'variable')
+		);
 	}
 
 	// If it's enabled, increase the registrations for today.

@@ -567,15 +567,16 @@ function modifyBoard($board_id, &$boardOptions)
 		// Add the moderators to the board.
 		if (!empty($boardOptions['moderators']))
 		{
-			$setString = '';
+			$inserts = array();
 			foreach ($boardOptions['moderators'] as $moderator)
-				$setString .= "
-						($board_id, $moderator),";
+				$inserts[] = array($board_id, $moderator);
 
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}moderators
-					(id_board, id_member)
-				VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}moderators",
+				array('id_board', 'id_member'),
+				$inserts,
+				array('id_board', 'id_member')
+			);
 		}
 
 		// Note that caches can now be wrong!

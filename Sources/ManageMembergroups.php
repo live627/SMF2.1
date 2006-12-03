@@ -274,33 +274,35 @@ function AddMembergroup()
 				SELECT permission, add_deny
 				FROM {$db_prefix}permissions
 				WHERE id_group = $copy_id", __FILE__, __LINE__);
-			$setString = '';
+			$inserts = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$setString .= "
-					($id_group, '$row[permission]', $row[add_deny]),";
+				$inserts[] = array($id_group, "'$row[permission]'", $row['add_deny']);
 			$smfFunc['db_free_result']($request);
 
-			if (!empty($setString))
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}permissions
-						(id_group, permission, add_deny)
-					VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
+			if (!empty($inserts))
+				$smfFunc['db_insert']('insert',
+					"{$db_prefix}permissions",
+					('id_group', 'permission', 'add_deny'),
+					$inserts
+					('id_group', 'permission')
+				);
 
 			$request = $smfFunc['db_query']('', "
 				SELECT id_profile, permission, add_deny
 				FROM {$db_prefix}board_permissions
 				WHERE id_group = $copy_id", __FILE__, __LINE__);
-			$setString = '';
+			$inserts = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$setString .= "
-					($id_group, $row[id_profile], '$row[permission]', $row[add_deny]),";
+				$inserts[] = array($id_group, $row['id_profile'], "'$row[permission]'", $row['add_deny']);
 			$smfFunc['db_free_result']($request);
 
-			if (!empty($setString))
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}board_permissions
-						(id_group, id_profile, permission, add_deny)
-					VALUES" . substr($setString, 0, -1), __FILE__, __LINE__);
+			if (!empty($inserts))
+				$smfFunc['db_insert']('insert',
+					"{$db_prefix}board_permissions",
+					('id_group', 'id_profile', 'permission', 'add_deny'),
+					$inserts
+					('id_group', 'id_profile', 'permission')
+				);
 
 			// Also get some membergroup information if we're copying and not copying from guests...
 			if ($copy_id > 0 && $_POST['perm_type'] == 'copy')

@@ -1780,7 +1780,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		// Add to the approval queue too.
 		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}approval_queue
+			INSERT INTO {$db_prefix}approval_queue
 				(id_msg)
 			VALUES
 				($msgOptions[id])", __FILE__, __LINE__);
@@ -1816,16 +1816,17 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	{
 		//$index_settings = unserialize($modSettings['search_custom_index_config']);
 
-		$inserts = '';
+		$inserts = array();
 		foreach (text2words($smfFunc['db_unescape_string']($msgOptions['body']), 4, true) as $word)
-			$inserts .= "($word, $msgOptions[id]),\n";
+			$inserts[] = array($word, $msgOptions['id']);
 
 		if (!empty($inserts))
-			$smfFunc['db_query']('', "
-				INSERT IGNORE INTO {$db_prefix}log_search_words
-					(id_word, id_msg)
-				VALUES
-					" . substr($inserts, 0, -2), __FILE__, __LINE__);
+			$smfFunc['db_query']('insert',
+				"{$db_prefix}log_search_words",
+				array('id_word', 'id_msg'),
+				$inserts,
+				array('id_word', 'id_msg')
+			);
 	}
 
 	// Increase the post counter for the user that created the post.
@@ -1965,7 +1966,7 @@ function createAttachment(&$attachmentOptions)
 	// If it's not approved add to the approval queue.
 	if (!$attachmentOptions['approved'])
 		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}approval_queue
+			INSERT INTO {$db_prefix}approval_queue
 				(id_attach, id_msg)
 			VALUES
 				($attachmentOptions[id], " . (int) $attachmentOptions['post'] . ")", __FILE__, __LINE__);
@@ -2298,11 +2299,16 @@ function approvePosts($msgs, $approve = true)
 	// If unapproving add to the approval queue!
 	else
 	{
-		$smfFunc['db_query']('', "
-			INSERT IGNORE INTO {$db_prefix}approval_queue
-				(id_msg)
-			VALUES
-				(" . implode('), (', $msgs) . ")", __FILE__, __LINE__);
+		$msgInserts = array();
+		foreach ($msgs as $msg)
+			$msgInserts[] = array($msg);
+
+		$smfFunc['db_insert']('ignore',
+			"{$db_prefix}approval_queue",
+			array('id_msg'),
+			$msgInserts,
+			array('id_msg')
+		);
 	}
 
 	// Update the last messages on the boards...

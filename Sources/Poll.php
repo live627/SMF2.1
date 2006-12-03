@@ -160,28 +160,28 @@ function Vote()
 		fatal_lang_error('poll_error1', false, array($row['max_votes']));
 
 	$pollOptions = array();
-	$setString = '';
+	$inserts = array();
 	foreach ($_REQUEST['options'] as $id)
 	{
 		$id = (int) $id;
 
 		$pollOptions[] = $id;
-		$setString .= "
-				($row[id_poll], $user_info[id], $id),";
+		$inserts[] = array($row['id_poll'], $user_info['id'], $id);
 	}
-	$setString = substr($setString, 0, -1);
 
 	// Add their vote to the tally.
+	$smfFunc['db_insert']('insert',
+		"{$db_prefix}log_polls"
+		array('id_poll', 'id_member', 'id_choice'),
+		$inserts,
+		array('id_poll', 'id_member', 'id_choice')
+	);
+
 	$smfFunc['db_query']('', "
-		INSERT IGNORE INTO {$db_prefix}log_polls
-			(id_poll, id_member, id_choice)
-		VALUES $setString", __FILE__, __LINE__);
-	if (db_affected_rows() != 0)
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}poll_choices
-			SET votes = votes + 1
-			WHERE id_poll = $row[id_poll]
-				AND id_choice IN (" . implode(', ', $pollOptions) . ")", __FILE__, __LINE__);
+		UPDATE {$db_prefix}poll_choices
+		SET votes = votes + 1
+		WHERE id_poll = $row[id_poll]
+			AND id_choice IN (" . implode(', ', $pollOptions) . ")", __FILE__, __LINE__);
 
 	// Return to the post...
 	redirectexit('topic=' . $topic . '.' . $_REQUEST['start']);

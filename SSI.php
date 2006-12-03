@@ -1070,22 +1070,22 @@ function ssi_pollVote()
 		redirectexit('topic=' . $row['id_topic'] . '.0');
 
 	$options = array();
-	$setString = '';
+	$inserts = array();
 	foreach ($_REQUEST['options'] as $id)
 	{
 		$id = (int) $id;
 
 		$options[] = $id;
-		$setString .= "
-				($_POST[poll], $user_info[id], $id),";
+		$inserts[] = array($_POST['poll'], $user_info['id'], $id);
 	}
-	$setString = substr($setString, 0, -1);
 
 	// Add their vote in to the tally.
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}log_polls
-			(id_poll, id_member, id_choice)
-		VALUES $setString", __FILE__, __LINE__);
+	$smfFunc['db_insert']('insert',
+		"{$db_prefix}log_polls"
+		array('id_poll', 'id_member', 'id_choice'),
+		$inserts,
+		array('id_poll', 'id_member', 'id_choice')
+	);
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}poll_choices
 		SET votes = votes + 1
