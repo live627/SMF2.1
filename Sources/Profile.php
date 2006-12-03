@@ -2008,6 +2008,8 @@ function trackUser($memID)
 	$context['page_title'] = $txt['trackUser'] . ' - ' . $user_profile[$memID]['real_name'];
 
 	$context['last_ip'] = $user_profile[$memID]['member_ip'];
+	if ($context['last_ip'] != $user_profile[$memID]['member_ip2'])
+		$context['last_ip2'] = $user_profile[$memID]['member_ip2'];
 	$context['member']['name'] = $user_profile[$memID]['real_name'];
 
 	// If this is a big forum, or a large posting user, let's limit the search.

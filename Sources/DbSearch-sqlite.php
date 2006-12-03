@@ -39,6 +39,8 @@ function db_search_init()
 		$smfFunc += array(
 			'db_search_query' => 'smf_db_search_query',
 			'db_search_support' => 'smf_db_search_support',
+			'db_create_word_search' => 'smf_db_create_word_search',
+			'db_support_ignore' => false,
 		);
 }
 
@@ -70,10 +72,22 @@ function smf_db_search_query($identifier, $db_string, $file, $line, $connection 
 			'~mediumint\(\d\)~i' => 'int',
 			'~TYPE=HEAP~i' => '',
 		),
+		'drop_words_table' => array(
+			'~IF EXISTS~' => '',
+			'on_fail' => false,
+		),
 	);
 
 	if (isset($replacements[$identifier]))
+	{
+		// Don't fail on this query?
+		if (isset($replacements[$identifier]['on_fail']))
+		{
+			$file = false;
+			unset($replacements[$identifier]['on_fail']);
+		}
 		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
+	}
 	elseif (preg_match('~^\s*INSERT\sIGNORE~i', $db_string) != 0)
 	{
 		$db_string = preg_replace('~^\s*INSERT\sIGNORE~i', 'INSERT', $db_string);
@@ -86,6 +100,21 @@ function smf_db_search_query($identifier, $db_string, $file, $line, $connection 
 		$file = false;
 
 	return $smfFunc['db_query']('', $db_string, $file, $line);
+}
+
+// Highly specific - create the custom word index table!
+function smf_db_create_word_search($size)
+{
+	global $smfFunc, $db_prefix;
+
+	$size = 'int';
+
+	$smfFunc['db_query']('', "
+		CREATE TABLE {$db_prefix}log_search_words (
+			id_word $size NOT NULL default '0',
+			id_msg int(10) NOT NULL default '0',
+			PRIMARY KEY (id_word, id_msg)
+		)", false, false);
 }
 
 ?>

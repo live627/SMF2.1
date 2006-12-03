@@ -40,6 +40,8 @@ function db_search_init()
 		$smfFunc += array(
 			'db_search_query' => 'db_query',
 			'db_search_support' => 'smf_db_search_support',
+			'db_create_word_search' => 'smf_db_create_word_search',
+			'db_support_ignore' => true,
 		);
 }
 
@@ -49,6 +51,26 @@ function smf_db_search_support($search_type)
 	$supported_types = array('fulltext');
 
 	return in_array($search_type, $supported_types);
+}
+
+// Highly specific - create the custom word index table!
+function smf_db_create_word_search($size)
+{
+	global $smfFunc, $db_prefix;
+
+	if ($size == 'small')
+		$size = 'smallint(5)';
+	elseif ($size == 'medium')
+		$size = 'mediumint(8)';
+	else
+		$size = 'int(10)';
+
+	$smfFunc['db_query']('', "
+		CREATE TABLE {$db_prefix}log_search_words (
+			id_word $size unsigned NOT NULL default '0',
+			id_msg int(10) unsigned NOT NULL default '0',
+			PRIMARY KEY (id_word, id_msg)
+		) TYPE=MyISAM", false, false);
 }
 
 ?>

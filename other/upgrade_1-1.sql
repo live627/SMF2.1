@@ -576,11 +576,11 @@ WHERE labels NOT RLIKE '[0-9,\-]' OR labels = '';
 
 ---# Updating columns on "members"...
 ALTER TABLE {$db_prefix}members
-ADD COLUMN messageLabels text NOT NULL default '',
-ADD COLUMN buddy_list tinytext NOT NULL default '',
+ADD COLUMN messageLabels text NOT NULL,
+ADD COLUMN buddy_list tinytext NOT NULL,
 ADD COLUMN notifySendBody tinyint(4) NOT NULL default '0',
 ADD COLUMN notifyTypes tinyint(4) NOT NULL default '2',
-CHANGE COLUMN im_ignore_list pm_ignore_list tinytext NOT NULL default '',
+CHANGE COLUMN im_ignore_list pm_ignore_list tinytext NOT NULL,
 CHANGE COLUMN im_email_notify pm_email_notify tinyint(4) NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}members
@@ -861,8 +861,8 @@ if (@$modSettings['smfVersion'] < '1.1')
 ---# Creating "package_servers"...
 CREATE TABLE IF NOT EXISTS {$db_prefix}package_servers (
 	id_server smallint(5) unsigned NOT NULL auto_increment,
-	name tinytext NOT NULL default '',
-	url tinytext NOT NULL default '',
+	name tinytext NOT NULL,
+	url tinytext NOT NULL,
 	PRIMARY KEY (id_server)
 ) TYPE=MyISAM;
 ---#
@@ -909,7 +909,7 @@ CREATE TABLE {$db_prefix}log_online (
 	logTime timestamp(14) /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */,
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	ip int(10) unsigned NOT NULL default '0',
-	url text NOT NULL default '',
+	url text NOT NULL,
 	PRIMARY KEY (session),
 	KEY online (logTime, ID_MEMBER),
 	KEY ID_MEMBER (ID_MEMBER)
@@ -1282,8 +1282,8 @@ if ($upgradeBanTable)
 			ip_high3 tinyint(3) unsigned NOT NULL default '0',
 			ip_low4 tinyint(3) unsigned NOT NULL default '0',
 			ip_high4 tinyint(3) unsigned NOT NULL default '0',
-			hostname tinytext NOT NULL default '',
-			email_address tinytext NOT NULL default '',
+			hostname tinytext NOT NULL,
+			email_address tinytext NOT NULL,
 			ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 			hits mediumint(8) unsigned NOT NULL default '0',
 			PRIMARY KEY (id_ban),

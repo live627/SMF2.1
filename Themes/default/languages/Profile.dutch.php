@@ -187,6 +187,8 @@ $txt['members_in_range'] = 'Leden mogelijk in zelfde IP gebied';
 $txt['messages_from_ip'] = 'Berichten verstuurd vanaf IP (gebied)';
 $txt['messages_from_ip_desc'] = 'Hieronder is een lijst van alle berichten geplaatst vanaf dit IP (gebied).';
 $txt['most_recent_ip'] = 'Meest recent IP-adres';
+// Untranslated!
+$txt['why_two_ip_address'] = 'Why are there two IP addresses listed?';
 $txt['no_errors_from_ip'] = 'Geen foutmelding van opgegeven IP (gebied) gevonden';
 $txt['no_errors_from_user'] = 'Geen foutmelding van opgegeven gebruiker gevonden';
 $txt['no_members_from_ip'] = 'Geen leden van opgegeven IP (gebied) gevonden';

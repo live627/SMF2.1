@@ -187,6 +187,8 @@ $txt['members_in_range'] = 'M&ouml;gliche Mitglieder im gleichen Bereich';
 $txt['messages_from_ip'] = 'Nachricht gesendet von IP (Bereich)';
 $txt['messages_from_ip_desc'] = 'Eine Auflistung aller Beitr&auml;ge, die von dieser IP-Adresse (bzw. diesem IP-Bereich) geschrieben worden sind.';
 $txt['most_recent_ip'] = 'Meistgenutzte IP-Adresse';
+// Untranslated!
+$txt['why_two_ip_address'] = 'Why are there two IP addresses listed?';
 $txt['no_errors_from_ip'] = 'Keine Fehlermeldung von dieser IP (Bereich) gefunden';
 $txt['no_errors_from_user'] = 'Keine Fehlermeldung von diesem Benutzer gefunden';
 $txt['no_members_from_ip'] = 'Kein Mitglied von dieser IP (Bereich) gefunden';

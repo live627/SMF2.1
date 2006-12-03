@@ -559,10 +559,19 @@ function template_trackUser()
 
 	// The last IP the user used.
 	echo '
-				<tr>
-					<td class="windowbg2" align="left" width="200">', $txt['most_recent_ip'], ':</td>
+				<tr valign="top">
+					<td class="windowbg2" align="left" width="300">', $txt['most_recent_ip'], ':
+						', (empty($context['last_ip2']) ? '' : '<br /><span class="smalltext">(<a href="' . $scripturl . '?action=helpadmin;help=whytwoip" onclick="return reqWin(this.href);">' . $txt['why_two_ip_address'] . '</a>)</span>'), '
+					</td>
 					<td class="windowbg2" align="left">
-						<a href="', $scripturl, '?action=trackip;searchip=', $context['last_ip'], ';">', $context['last_ip'], '</a>
+						<a href="', $scripturl, '?action=trackip;searchip=', $context['last_ip'], ';">', $context['last_ip'], '</a>';
+
+	// Second address detected?
+	if (!empty($context['last_ip2']))
+		echo '
+						, <a href="', $scripturl, '?action=trackip;searchip=', $context['last_ip2'], ';">', $context['last_ip2'], '</a>';
+
+	echo '
 					</td>
 				</tr>';
 

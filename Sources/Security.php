@@ -199,41 +199,46 @@ function is_not_banned($forceCheck = false)
 		return;
 
 	// Only check the ban every so often. (to reduce load.)
-	if ($forceCheck || !isset($_SESSION['ban']) || empty($modSettings['banLastUpdated']) || ($_SESSION['ban']['last_checked'] < $modSettings['banLastUpdated']) || $_SESSION['ban']['id_member'] != $user_info['id'] || $_SESSION['ban']['ip'] != $user_info['ip']  || (isset($user_info['email'], $_SESSION['ban']['email']) && $_SESSION['ban']['email'] != $user_info['email']))
+	if ($forceCheck || !isset($_SESSION['ban']) || empty($modSettings['banLastUpdated']) || ($_SESSION['ban']['last_checked'] < $modSettings['banLastUpdated']) || $_SESSION['ban']['id_member'] != $user_info['id'] || $_SESSION['ban']['ip'] != $user_info['ip']  || $_SESSION['ban']['ip2'] != $user_info['ip2'] || (isset($user_info['email'], $_SESSION['ban']['email']) && $_SESSION['ban']['email'] != $user_info['email']))
 	{
 		// Innocent until proven guilty.  (but we know you are! :P)
 		$_SESSION['ban'] = array(
 			'last_checked' => time(),
 			'id_member' => $user_info['id'],
 			'ip' => $user_info['ip'],
+			'ip2' => $user_info['ip2'],
 			'email' => $user_info['email'],
 		);
 
 		$ban_query = array();
 		$flag_is_activated = false;
 
-		// Check if we have a valid IP address.
-		if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $user_info['ip'], $ip_parts) == 1)
+		// Check both IP addresses.
+		foreach (array('ip', 'ip2') as $ip_number)
 		{
-			$ban_query[] = "(($ip_parts[1] BETWEEN bi.ip_low1 AND bi.ip_high1)
-						AND ($ip_parts[2] BETWEEN bi.ip_low2 AND bi.ip_high2)
-						AND ($ip_parts[3] BETWEEN bi.ip_low3 AND bi.ip_high3)
-						AND ($ip_parts[4] BETWEEN bi.ip_low4 AND bi.ip_high4))";
-
-			// IP was valid, maybe there's also a hostname...
-			if (empty($modSettings['disableHostnameLookup']))
+			// Check if we have a valid IP address.
+			if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $user_info[$ip_number], $ip_parts) == 1)
 			{
-				$hostname = host_from_ip($user_info['ip']);
-				if (strlen($hostname) > 0)
-					$ban_query[] = "('" . $smfFunc['db_escape_string']($hostname) . "' LIKE bi.hostname)";
+				$ban_query[] = "(($ip_parts[1] BETWEEN bi.ip_low1 AND bi.ip_high1)
+							AND ($ip_parts[2] BETWEEN bi.ip_low2 AND bi.ip_high2)
+							AND ($ip_parts[3] BETWEEN bi.ip_low3 AND bi.ip_high3)
+							AND ($ip_parts[4] BETWEEN bi.ip_low4 AND bi.ip_high4))";
+	
+				// IP was valid, maybe there's also a hostname...
+				if (empty($modSettings['disableHostnameLookup']))
+				{
+					$hostname = host_from_ip($user_info[$ip_number]);
+					if (strlen($hostname) > 0)
+						$ban_query[] = "('" . $smfFunc['db_escape_string']($hostname) . "' LIKE bi.hostname)";
+				}
 			}
+			// We use '255.255.255.255' for 'unknown' since it's not valid anyway.
+			elseif ($user_info['ip'] == 'unknown')
+				$ban_query[] = "(bi.ip_low1 = 255 AND bi.ip_high1 = 255
+							AND bi.ip_low2 = 255 AND bi.ip_high2 = 255
+							AND bi.ip_low3 = 255 AND bi.ip_high3 = 255
+							AND bi.ip_low4 = 255 AND bi.ip_high4 = 255)";
 		}
-		// We use '255.255.255.255' for 'unknown' since it's not valid anyway.
-		elseif ($user_info['ip'] == 'unknown')
-			$ban_query[] = "(bi.ip_low1 = 255 AND bi.ip_high1 = 255
-						AND bi.ip_low2 = 255 AND bi.ip_high2 = 255
-						AND bi.ip_low3 = 255 AND bi.ip_high3 = 255
-						AND bi.ip_low4 = 255 AND bi.ip_high4 = 255)";
 
 		// Is their email address banned?
 		if (strlen($user_info['email']) != 0)

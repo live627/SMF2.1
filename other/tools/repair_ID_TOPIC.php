@@ -80,8 +80,8 @@ if ($_GET['step'] <= 2)
 
 		$result = db_query("
 			SELECT m.id_msg, t.id_topic
-			FROM ({$db_prefix}messages AS m, {$db_prefix}temp_topics AS t)
-			WHERE m.id_topic = t.OLD_ID_TOPIC
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}temp_topics AS t ON (t.OLD_ID_TOPIC = m.id_topic)
 			LIMIT $start, $maxOnce", __FILE__, __LINE__);
 
 		// All done!  No more attachments!

@@ -62,9 +62,9 @@ if ($_GET['step'] <= 2)
 	// First check for deleted messages by all of the recipients.
 	$result = db_query("
 		SELECT pm.id_pm, MIN(pmr.deleted) AS allDeleted
-		FROM ({$db_prefix}personal_messages AS pm, {$db_prefix}pm_recipients AS pmr)
+		FROM {$db_prefix}personal_messages AS pm
+			INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
 		WHERE pm.deleted_by_sender = 1
-			AND pm.id_pm = pmr.id_pm
 		GROUP BY pm.id_pm
 		HAVING allDeleted = 1", __FILE__, __LINE__);
 	$array = array();
@@ -130,9 +130,9 @@ if ($_GET['step'] <= 4)
 
 	$result = db_query("
 		SELECT mem.id_member, mem.instant_messages, COUNT(*) AS count
-		FROM ({$db_prefix}pm_recipients AS pm, {$db_prefix}members AS mem)
+		FROM {$db_prefix}members AS mem
+			INNER JOIN {$db_prefix}pm_recipients AS pm ON (pm.id_member = mem.id_member)
 		WHERE pm.deleted != 1
-			AND pm.id_member = mem.id_member
 		GROUP BY mem.id_member
 		HAVING count != instant_messages", __FILE__, __LINE__);
 	$array = array();

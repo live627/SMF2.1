@@ -337,7 +337,7 @@ function MessageIndex()
 				mg.online_color, mg.id_group, mg.group_name
 			FROM {$db_prefix}log_online AS lo
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
 			WHERE INSTR(lo.url, 's:5:\"board\";i:$board;') OR lo.session = '" . ($user_info['is_guest'] ? 'ip' . $user_info['ip'] : session_id()) . "'", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -894,7 +894,7 @@ function QuickModeration()
 	{
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}topics
-			SET is_sticky = IF(is_sticky = 1, 0, 1)
+			SET is_sticky = CASE WHEN is_sticky = 1 THEN 0 ELSE 1 END
 			WHERE id_topic IN (" . implode(', ', $stickyCache) . ")", __FILE__, __LINE__);
 			
 		// Get the board IDs
@@ -1028,7 +1028,7 @@ function QuickModeration()
 			// Alternate the locked value.
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}topics
-				SET locked = IF(locked = 0, " . (allowedTo('lock_any') ? '1' : '2') . ", 0)
+				SET locked = CASE WHEN locked = 0 THEN " . (allowedTo('lock_any') ? '1' : '2') . " ELSE 0 END
 				WHERE id_topic IN (" . implode(', ', $lockCache) . ")", __FILE__, __LINE__);
 		}
 	}

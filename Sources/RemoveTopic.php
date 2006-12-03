@@ -376,7 +376,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		if (!empty($words) && !empty($messages))
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_search_words
-				WHERE ID_WORD IN (" . implode(', ', $words) . ")
+				WHERE id_word IN (" . implode(', ', $words) . ")
 					AND id_msg IN (" . implode(', ', $messages) . ')', __FILE__, __LINE__);
 	}
 
@@ -693,7 +693,7 @@ function removeMessage($message, $decreasePostCount = true)
 			if (!empty($words))
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}log_search_words
-					WHERE ID_WORD IN (" . implode(', ', $words) . ")
+					WHERE id_word IN (" . implode(', ', $words) . ")
 						AND id_msg = $message", __FILE__, __LINE__);
 		}
 

@@ -654,10 +654,10 @@ function RepairBoards()
 		{
 			$request = $smfFunc['db_query']('', "
 				SELECT t.id_topic, m.subject
-				FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS m)
+				FROM {$db_prefix}topics AS t
+					INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 					LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
-				WHERE m.id_msg = t.id_first_msg
-					AND lss.id_topic IS NULL", __FILE__, __LINE__);
+				WHERE lss.id_topic IS NULL", __FILE__, __LINE__);
 			$insertRows = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
@@ -1615,10 +1615,10 @@ function findForumErrors()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT t.id_topic, fm.subject
-			FROM ({$db_prefix}topics AS t, {$db_prefix}messages AS fm)
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}messages AS fm ON (fm.id_msg = t.id_first_msg)
 				LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
-			WHERE fm.id_msg = t.id_first_msg
-				AND lss.id_topic IS NULL", __FILE__, __LINE__);
+			WHERE lss.id_topic IS NULL", __FILE__, __LINE__);
 		$found_error = false;
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (count(text2words($row['subject'])) != 0)

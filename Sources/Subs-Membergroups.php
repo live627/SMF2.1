@@ -322,7 +322,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 	if ($type == 'only_additional')
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
-			SET additional_groups = IF(additional_groups = '', '$group', CONCAT(additional_groups, ',$group'))
+			SET additional_groups = CASE WHEN additional_groups = '' THEN '$group' ELSE CONCAT(additional_groups, ',$group') END
 			WHERE id_member IN (" . implode(', ', $members) . ")
 				AND id_group != $group
 				AND NOT FIND_IN_SET($group, additional_groups)", __FILE__, __LINE__);
@@ -337,8 +337,10 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}members
 			SET
-				additional_groups = IF(id_group = 0, additional_groups, IF(additional_groups = '', '$group', CONCAT(additional_groups, ',$group'))),
-				id_group = IF(id_group = 0, $group, id_group)
+				additional_groups = CASE WHEN id_group = 0 THEN additional_groups
+					WHEN additional_groups = '' THEN '$group'
+					ELSE CONCAT(additional_groups, ',$group') END,
+				id_group = CASE WHEN id_group = 0 THEN $group ELSE id_group END
 			WHERE id_member IN (" . implode(', ', $members) . ")
 				AND id_group != $group
 				AND NOT FIND_IN_SET($group, additional_groups)", __FILE__, __LINE__);

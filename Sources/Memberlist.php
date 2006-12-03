@@ -339,7 +339,7 @@ function MLAll()
 		SELECT mem.id_member
 		FROM {$db_prefix}members AS mem" . ($_REQUEST['sort'] === 'is_online' ? "
 			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)" : '') . ($_REQUEST['sort'] === 'id_group' ? "
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))" : '') . "
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" : '') . "
 		WHERE mem.is_activated = 1" . (empty($where) ? '' : "
 			AND $where") . "
 		ORDER BY " . $sort_methods[$_REQUEST['sort']][$context['sort_direction']] . "
@@ -412,7 +412,7 @@ function MLSearch()
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members AS mem
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
 				AND is_activated = 1", __FILE__, __LINE__);
 		list ($numResults) = $smfFunc['db_fetch_row']($request);
@@ -426,7 +426,7 @@ function MLSearch()
 			SELECT mem.id_member
 			FROM {$db_prefix}members AS mem
 				LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = IF(mem.id_group = 0, mem.id_post_group, mem.id_group))
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
 				AND is_activated = 1
 			LIMIT $_REQUEST[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);

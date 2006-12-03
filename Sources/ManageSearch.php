@@ -21,27 +21,6 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
-*******
-* ManageSearch.php                                                            *
-*******************************************************************************
-* SMF: Simple Machines Forum                                                  *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
-* =========================================================================== *
-* Software Version:           SMF 2.0 Alpha                                   *
-* Software by:                Simple Machines (http://www.simplemachines.org) *
-* Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
-* Support, News, Updates at:  http://www.simplemachines.org                   *
-*******************************************************************************
-* This program is free software; you may redistribute it and/or modify it     *
-* under the terms of the provided license as published by Lewis Media.        *
-*                                                                             *
-* This program is distributed in the hope that it is and will be useful,      *
-* but WITHOUT ANY WARRANTIES; without even any implied warranty of            *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
-*                                                                             *
-* See the "license.txt" file for details of the Simple Machines license.      *
-* The latest version can always be found at http://www.simplemachines.org.    *
-*****************************************************************************/
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
@@ -97,6 +76,8 @@ function ManageSearch()
 
 	loadLanguage('Search');
 	loadTemplate('ManageSearch');
+
+	db_extend('search');
 
 	$subActions = array(
 		'settings' => 'EditSearchSettings',
@@ -217,50 +198,54 @@ function EditSearchMethod()
 	$context['admin_tabs']['tabs']['method']['is_selected'] = true;
 	$context['page_title'] = $txt['search_method_title'];
 	$context['sub_template'] = 'select_search_method';
+	$context['supports_fulltext'] = $smfFunc['db_search_support']('fulltext');
 
 	// Detect whether a fulltext index is set.
-	$request = $smfFunc['db_query']('', "
-		SHOW INDEX
-		FROM {$db_prefix}messages", false, false);
-	$context['fulltext_index'] = '';
-	if ($request !== false || $smfFunc['db_num_rows']($request) != 0)
+	if ($context['supports_fulltext'])
 	{
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			if ($row['Column_name'] == 'body' && (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT' || isset($row['Comment']) && $row['Comment'] == 'FULLTEXT'))
-				$context['fulltext_index'][] = $row['Key_name'];
-		$smfFunc['db_free_result']($request);
-
-		if (is_array($context['fulltext_index']))
-			$context['fulltext_index'] = array_unique($context['fulltext_index']);
-	}
-
-	$request = $smfFunc['db_query']('', "
-		SHOW COLUMNS
-		FROM {$db_prefix}messages", false, false);
-	if ($request !== false)
-	{
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			if ($row['Field'] == 'body' && $row['Type'] == 'mediumtext')
-				$context['cannot_create_fulltext'] = true;
-		$smfFunc['db_free_result']($request);
-	}
-
-	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
 		$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS
-			FROM `" . strtr($match[1], array('`' => '')) . "`
-			LIKE '" . str_replace('_', '\_', $match[2]) . "messages'", false, false);
-	else
-		$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS
-			LIKE '" . str_replace('_', '\_', $db_prefix) . "messages'", false, false);
+			SHOW INDEX
+			FROM {$db_prefix}messages", false, false);
+		$context['fulltext_index'] = '';
+		if ($request !== false || $smfFunc['db_num_rows']($request) != 0)
+		{
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				if ($row['Column_name'] == 'body' && (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT' || isset($row['Comment']) && $row['Comment'] == 'FULLTEXT'))
+					$context['fulltext_index'][] = $row['Key_name'];
+			$smfFunc['db_free_result']($request);
+	
+			if (is_array($context['fulltext_index']))
+				$context['fulltext_index'] = array_unique($context['fulltext_index']);
+		}
 
-	if ($request !== false)
-	{
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			if ((isset($row['Type']) && strtolower($row['Type']) != 'myisam') || (isset($row['Engine']) && strtolower($row['Engine']) != 'myisam'))
-				$context['cannot_create_fulltext'] = true;
-		$smfFunc['db_free_result']($request);
+		$request = $smfFunc['db_query']('', "
+			SHOW COLUMNS
+			FROM {$db_prefix}messages", false, false);
+		if ($request !== false)
+		{
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				if ($row['Field'] == 'body' && $row['Type'] == 'mediumtext')
+					$context['cannot_create_fulltext'] = true;
+			$smfFunc['db_free_result']($request);
+		}
+	
+		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
+			$request = $smfFunc['db_query']('', "
+				SHOW TABLE STATUS
+				FROM `" . strtr($match[1], array('`' => '')) . "`
+				LIKE '" . str_replace('_', '\_', $match[2]) . "messages'", false, false);
+		else
+			$request = $smfFunc['db_query']('', "
+				SHOW TABLE STATUS
+				LIKE '" . str_replace('_', '\_', $db_prefix) . "messages'", false, false);
+	
+		if ($request !== false)
+		{
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				if ((isset($row['Type']) && strtolower($row['Type']) != 'myisam') || (isset($row['Engine']) && strtolower($row['Engine']) != 'myisam'))
+					$context['cannot_create_fulltext'] = true;
+			$smfFunc['db_free_result']($request);
+		}
 	}
 
 	if (!empty($_REQUEST['sa']) && $_REQUEST['sa'] == 'createfulltext')
@@ -299,7 +284,7 @@ function EditSearchMethod()
 	{
 		checkSession('get');
 
-		$smfFunc['db_query']('', "
+		$smfFunc['db_search_query']('drop_words_table', "
 			DROP TABLE IF EXISTS {$db_prefix}log_search_words", __FILE__, __LINE__);
 
 		updateSettings(array(
@@ -387,15 +372,15 @@ function CreateMessageIndex()
 
 	$index_properties = array(
 		2 => array(
-			'column_definition' => 'smallint(5)',
+			'column_definition' => 'small',
 		),
 		4 => array(
-			'column_definition' => 'mediumint(8)',
+			'column_definition' => 'medium',
 			'step_size' => 1000000,
 			'max_size' => 16777215,
 		),
 		5 => array(
-			'column_definition' => 'int(10)',
+			'column_definition' => 'large',
 			'step_size' => 100000000,
 			'max_size' => 4294967295,
 		),
@@ -433,15 +418,10 @@ function CreateMessageIndex()
 
 		if ($context['start'] === 0)
 		{
-			$smfFunc['db_query']('', "
+			$smfFunc['db_search_query']('drop_words_table', "
 				DROP TABLE IF EXISTS {$db_prefix}log_search_words", __FILE__, __LINE__);
 
-			$smfFunc['db_query']('', "
-				CREATE TABLE {$db_prefix}log_search_words (
-					ID_WORD " . $index_properties[$context['index_settings']['bytes_per_word']]['column_definition'] . " unsigned NOT NULL default '0',
-					id_msg int(10) unsigned NOT NULL default '0',
-					PRIMARY KEY (ID_WORD, id_msg)
-				) TYPE=MyISAM", __FILE__, __LINE__);
+			$smfFunc['db_create_word_search']($index_properties[$context['index_settings']['bytes_per_word']]['column_definition']);
 			
 			// Temporarily switch back to not using a search index.
 			if (!empty($modSettings['search_index']) && $modSettings['search_index'] == 'custom')
@@ -476,15 +456,17 @@ function CreateMessageIndex()
 			$stop = time() + 3;
 			while (time() < $stop)
 			{
-				$inserts = '';
+				$inserts = array();
 				$request = $smfFunc['db_query']('', "
 					SELECT id_msg, body
 					FROM {$db_prefix}messages
 					WHERE id_msg BETWEEN $context[start] AND " . ($context['start'] + $messages_per_batch - 1) . "
 					LIMIT $messages_per_batch", __FILE__, __LINE__);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
-					foreach (text2words($row['body'], $context['index_settings']['bytes_per_word'], true) as $ID_WORD)
-						$inserts .= "($ID_WORD, $row[id_msg]),\n";
+					foreach (text2words($row['body'], $context['index_settings']['bytes_per_word'], true) as $id_word)
+					{
+						$inserts[] = array($id_word, $row['id_msg']);
+					}
 				$num_messages['done'] += $smfFunc['db_num_rows']($request);
 				$num_messages['todo'] -= $smfFunc['db_num_rows']($request);
 				$smfFunc['db_free_result']($request);
@@ -492,11 +474,12 @@ function CreateMessageIndex()
 				$context['start'] += $messages_per_batch;
 
 				if (!empty($inserts))
-					$smfFunc['db_query']('', "
-						INSERT IGNORE INTO {$db_prefix}log_search_words
-							(ID_WORD, id_msg)
-						VALUES
-							" . substr($inserts, 0, -2), __FILE__, __LINE__);
+					$smfFunc['db_insert']('ignore',
+						"{$db_prefix}log_search_words",
+						array('id_word', 'id_msg'),
+						$inserts,
+						array('id_word', 'id_msg')
+					);
 				if ($num_messages['todo'] === 0)
 				{
 					$context['step'] = 2;
@@ -527,13 +510,13 @@ function CreateMessageIndex()
 			while (time() < $stop)
 			{
 				$request = $smfFunc['db_query']('', "
-					SELECT ID_WORD, count(ID_WORD) AS numWords
+					SELECT id_word, count(id_word) AS numWords
 					FROM {$db_prefix}log_search_words
-					WHERE ID_WORD BETWEEN $context[start] AND " . ($context['start'] + $index_properties[$context['index_settings']['bytes_per_word']]['step_size'] - 1) . "
-					GROUP BY ID_WORD
+					WHERE id_word BETWEEN $context[start] AND " . ($context['start'] + $index_properties[$context['index_settings']['bytes_per_word']]['step_size'] - 1) . "
+					GROUP BY id_word
 					HAVING numWords > $max_messages", __FILE__, __LINE__);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
-					$stop_words[] = $row['ID_WORD'];
+					$stop_words[] = $row['id_word'];
 				$smfFunc['db_free_result']($request);
 
 				updateSettings(array('search_stopwords' => implode(',', $stop_words)));
@@ -541,7 +524,7 @@ function CreateMessageIndex()
 				if (!empty($stop_words))
 					$smfFunc['db_query']('', "
 						DELETE FROM {$db_prefix}log_search_words
-						WHERE ID_WORD in (" . implode(', ', $stop_words) . ')', __FILE__, __LINE__);
+						WHERE id_word in (" . implode(', ', $stop_words) . ')', __FILE__, __LINE__);
 
 				$context['start'] += $index_properties[$context['index_settings']['bytes_per_word']]['step_size'];
 				if ($context['start'] > $index_properties[$context['index_settings']['bytes_per_word']]['max_size'])

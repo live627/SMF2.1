@@ -481,6 +481,8 @@ $helptxt['search_why_use_index'] = 'Een zoekindex kan de zoekprestaties van je f
 
 $helptxt['see_admin_ip'] = 'IP-adressen worden getoond aan beheerders en moderators om het modereren te vergemakkelijken en het eenvoudiger te maken om mensen met slechte bedoelingen te traceren. Bedenk wel dat IP-adressen niet altijd identificerend zijn en dat IP-adressen van mensen van tijd tot tijd kan veranderen. <br /><br />Leden mogen ook hun eigen IP-adres zien.';
 $helptxt['see_member_ip'] = 'Je IP-adres is zichtbaar voor jou en de moderators. Bedenk dat deze informatie je niet identificeert en dat de meeste IP-adressen af en toe veranderen.<br /><br />Je kunt het IP-adres van andere leden niet zien en zij kunnen het jouwe niet zien.';
+// Untranslated!
+$helptxt['whytwoip'] = 'SMF uses various methods to detect user IP addresses. Usually these two methods result in the same address but in some cases more than one address may be detected. In this case SMF logs both addresses, and uses them both for ban checks (etc). You can click on either address to track that IP and ban if necessary.';
 
 $helptxt['ban_cannot_post'] = 'De \'kan niet posten\' restrictie zet het forum in een alleen-lezen-stand voor de gebande gebruiker. De gebruiker kan niet nieuwe topics maken, reageren op bestaande topics, persoonlijke berichten versturen of stemmen in polls. Wel kan de gebande gebruiker nog steeds persoonlijke berichten en topics lezen.<br /><br />Een waarschuwingsbericht wordt aan de gebruikers getoond die op deze manier zijn geband.';
 

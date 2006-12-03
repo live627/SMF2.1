@@ -33,7 +33,7 @@ if (!defined('SMF'))
 // Initialize the database settings
 function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, $db_options = array())
 {
-	global $smfFunc, $mysql_set_mode;
+	global $smfFunc, $mysql_set_mode, $db_in_transact;
 
 	// Just some debugging code, make sure to remove it before release.
 	$parameters = array(
@@ -50,7 +50,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 		$smfFunc += array(
 			'db_query' => 'db_query',
 			'db_fetch_assoc' => 'sqlite_fetch_array',
-			'db_fetch_row' => 'sqlite_fetch_array',
+			'db_fetch_row' => 'smf_sqlite_fetch_row',
 			'db_free_result' => 'smf_sqlite_free_result',
 			'db_insert' => 'db_insert',
 			'db_num_rows' => 'sqlite_num_rows',
@@ -61,6 +61,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_server_info' => 'sqlite_libversion',
    			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'db_affected_rows',
+			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'smf_sqlite_last_error',
 			'db_select_db' => '',
 			'db_title' => 'SQLite',
@@ -87,6 +88,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			db_fatal_error();
 		}
 	}
+	$db_in_transact = false;
 
 	// This is frankly stupid - stop SQLite returning alias names!
 	@sqlite_query('PRAGMA short_column_names = 1', $connection);
@@ -168,9 +170,11 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 	// Clean this properly!
 	$db_string = preg_replace('~SUBSTRING~i', 'SUBSTR', $db_string);
 
-	$ret = @sqlite_query($db_string, $connection);
+	$ret = @sqlite_query($db_string, $connection, SQLITE_BOTH, $err_msg);
 	if ($ret === false && $file !== false)
-		$ret = db_error($db_string, $file, $line, $connection);
+	{
+		$ret = db_error($db_string . '#!#' . $err_msg, $file, $line, $connection);
+	}
 
 	// Debugging.
 	if (isset($db_show_debug) && $db_show_debug === true)
@@ -203,6 +207,30 @@ function smf_sqlite_last_error()
 	return sqlite_error_string($query_errno);
 }
 
+// Do a transaction.
+function smf_db_transaction($type = 'commit')
+{
+	global $db_connection, $db_in_transact;
+
+	if ($type == 'begin')
+	{
+		$db_in_transact = true;
+		return @sqlite_query('BEGIN', $db_connection);
+	}
+	elseif ($type == 'rollback')
+	{
+		$db_in_transact = false;
+		return @sqlite_query('ROLLBACK', $db_connection);
+	}
+	elseif ($type == 'commit')
+	{
+		$db_in_transact = false;
+		return @sqlite_query('COMMIT', $db_connection);
+	}
+
+	return false; 
+}
+
 // Database error!
 function db_error($db_string, $file, $line, $connection = null)
 {
@@ -216,6 +244,11 @@ function db_error($db_string, $file, $line, $connection = null)
 	// This is the error message...
 	$query_errno = sqlite_last_error($connection);
 	$query_error = sqlite_error_string($query_errno);
+
+	// Get the extra error message.
+	$errStart = strrpos($db_string, '#!#');
+	$query_error .= '<br />' . substr($db_string, $errStart + 3);
+	$db_string = substr($db_string, 0, $errStart);
 
 	// Error numbers:
 	//    1016: Can't open file '....MYI'
@@ -391,10 +424,17 @@ function db_error($db_string, $file, $line, $connection = null)
 // Insert some data...
 function db_insert($method = 'replace', $table, $columns, $data, $keys)
 {
-	global $db_replace_result;
+	global $db_replace_result, $db_in_transact, $smfFunc;
 
-	if (!is_array($data[0]))
+	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
+
+	$priv_trans = false;
+	if (count($data) > 0 && !$db_in_transact)
+	{
+		$smfFunc['db_transaction']('begin');
+		$priv_trans = true;
+	}
 
 	// PostgreSQL doesn't support replace or insert ignore so we need to work around it.
 	if ($method == 'replace')
@@ -426,21 +466,30 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 	{
 	}
 
-	if (empty($data))
-		return;
+	if (!empty($data))
+	{
+		foreach ($data as $entry)
+			db_query('', "
+				INSERT INTO $table
+					(" . implode(', ', $columns) . ")
+				VALUES
+					(" . implode(', ', $entry) . ")", __FILE__, __LINE__);
+	}
 
-	foreach ($data as $entry)
-		db_query('', "
-			INSERT INTO $table
-				(" . implode(', ', $columns) . ")
-			VALUES
-				(" . implode(', ', $entry) . ")", __FILE__, __LINE__);
+	if ($priv_trans)
+		$smfFunc['db_transaction']('commit');
 }
 
 // Doesn't do anything on sqlite!
 function smf_sqlite_free_result($handle = false)
 {
 	return true;
+}
+
+// Make sure we return no string indexes!
+function smf_sqlite_fetch_row($handle)
+{
+	return sqlite_fetch_array($handle, SQLITE_NUM);
 }
 
 // Unescape an escaped string!

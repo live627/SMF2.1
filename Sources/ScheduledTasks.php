@@ -698,7 +698,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	// By default move the next sending on by 10 seconds, and require an affected row.
 	if (!$override_limit)
 	{
-		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 20 : 10;
+		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 10 : 2;
 		
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}settings
@@ -707,7 +707,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 				AND value = '$modSettings[mail_next_send]'", __FILE__, __LINE__);
 		if ($smfFunc['db_affected_rows']() == 0)
 			return false;
-		$modSettings['mail_next_send'] = $delay;
+		$modSettings['mail_next_send'] = time() + $delay;
 	}
 
 	// If we're not overriding how many are we allow to send?

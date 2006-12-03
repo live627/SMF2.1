@@ -447,6 +447,8 @@ $helptxt['search_why_use_index'] = 'A search index can greatly improve the perfo
 
 $helptxt['see_admin_ip'] = 'A los administradores y moderadores se les muestran las IPs para facilitar la moderaci&oacute;n y para hacer m&aacute;s f&aacute;cil el rastreo de personas indeseables. Recuerda que las direcciones IP no siempre son identificatorias, y que las IPs cambian peri&oacute;dicamente.<br /><br />Tambi&eacute;n se les permite a los usuarios ver su propia IP.';
 $helptxt['see_member_ip'] = 'Tu direcci&oacute;n IP es mostrada solamente a t&iacute; y a los moderadores. Recuerda que esta informaci&oacute;n no es identificatoria y muchas IPs cambian peri&oacute;dicamente.<br /><br />No puedes ver las IPs de otros usuarios y ellos no pueden ver la tuya.';
+// Untranslated!
+$helptxt['whytwoip'] = 'SMF uses various methods to detect user IP addresses. Usually these two methods result in the same address but in some cases more than one address may be detected. In this case SMF logs both addresses, and uses them both for ban checks (etc). You can click on either address to track that IP and ban if necessary.';
 
 // Untranslated!
 $helptxt['ban_cannot_post'] = 'The \'cannot post\' restriction turns the forum into read-only mode for the banned user. The user cannot create new topics, or reply to existing ones, send personal messages or vote in polls. The banned user can however still read personal messages and topics.<br /><br />A warning message is shown to the users that are banned this way.';

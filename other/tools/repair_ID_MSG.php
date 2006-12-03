@@ -37,7 +37,7 @@ if ($_GET['step'] <= 0)
 		  body text,
 		  icon varchar(16) NOT NULL default 'xx',
 		  id_board smallint(5) unsigned NOT NULL default '0',
-		  OLD_ID_MSG int(10) unsigned NOT NULL default '0',
+		  old_id_msg int(10) unsigned NOT NULL default '0',
 		  PRIMARY KEY (id_msg),
 		  UNIQUE topic (id_topic, id_msg),
 		  KEY id_topic (id_topic),
@@ -85,8 +85,8 @@ if ($_GET['step'] <= 2)
 
 		$result = db_query("
 			SELECT a.id_attach, m.id_msg
-			FROM ({$db_prefix}attachments AS a, {$db_prefix}temp_messages AS m)
-			WHERE a.id_msg = m.OLD_ID_MSG
+			FROM {$db_prefix}attachments AS a
+				INNER JOIN {$db_prefix}temp_messages AS m ON (m.old_id_msg = a.id_msg)
 			LIMIT $start, $maxOnce", __FILE__, __LINE__);
 
 		// All done!  No more attachments!
@@ -117,7 +117,7 @@ if ($_GET['step'] <= 3)
 				{$db_prefix}temp_messages TO {$db_prefix}messages", __FILE__, __LINE__);
 		db_query("
 			ALTER TABLE {$db_prefix}messages
-			DROP COLUMN OLD_ID_MSG", __FILE__, __LINE__);
+			DROP COLUMN old_id_msg", __FILE__, __LINE__);
 		$_GET['start'] = 0;
 
 		mysql_query("

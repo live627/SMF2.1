@@ -527,9 +527,9 @@ if (empty($preparsing))
 				INSERT INTO {$to_prefix}pm_recipients
 					(id_pm, id_member, labels)
 				SELECT pm.id_pm, mem.id_member, '' AS labels
-				FROM ({$to_prefix}personal_messages AS pm, {$to_prefix}members AS mem)
-				WHERE mem.member_name = pm.temp_to_name
-					AND pm.temp_to_name != ''");
+				FROM {$to_prefix}personal_messages AS pm
+					INNER JOIN {$to_prefix}members AS mem ON (mem.member_name = pm.temp_to_name)
+				WHERE pm.temp_to_name != ''");
 
 			pastTime(-4);
 		}
@@ -1161,9 +1161,9 @@ if (empty($preparsing))
 
 			$result = convert_query("
 				SELECT m.id_msg, mem.id_member
-				FROM ({$to_prefix}messages AS m, {$to_prefix}members AS mem)
-				WHERE m.poster_name = mem.member_name
-					AND m.id_member = 0
+				FROM {$to_prefix}messages AS m
+					INNER JOIN {$to_prefix}members AS mem ON (mem.member_name = m.poster_name)
+				WHERE m.id_member = 0
 				LIMIT 150");
 			while ($row = mysql_fetch_assoc($result))
 			{
@@ -1304,8 +1304,8 @@ if (empty($preparsing))
 
 			$result = convert_query("
 				SELECT t.id_topic, MIN(m.id_msg) AS id_first_msg, MAX(m.id_msg) AS id_last_msg
-				FROM ({$to_prefix}topics AS t, {$to_prefix}messages AS m)
-				WHERE m.id_topic = t.id_topic
+				FROM {$to_prefix}topics AS t
+					INNER JOIN {$to_prefix}messages AS m ON (m.id_topic = t.id_topic)
 				GROUP BY t.id_topic
 				LIMIT $_GET[substep], 150");
 			while ($row = mysql_fetch_assoc($result))

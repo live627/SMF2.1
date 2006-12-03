@@ -135,7 +135,11 @@ function template_select_search_method()
 				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value=""', empty($modSettings['search_index']) ? ' checked="checked"' : '', ' /></td>
 				<td>
 					', $txt['search_index_none'], '
-				</td>
+				</td>';
+				
+	if ($context['supports_fulltext'])
+	{
+		echo '
 			</tr><tr class="windowbg2">
 				<td></td>
 				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="fulltext"', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'fulltext' ? ' checked="checked"' : '', empty($context['fulltext_index']) ? ' onclick="alert(\'' . $txt['search_method_fulltext_warning'] . '\'); selectRadioByName(this.form.search_index, \'fulltext\');"': '', ' /></td>
@@ -154,7 +158,10 @@ function template_select_search_method()
 						<b>', $txt['search_index_size'], ':</b> ', $context['table_info']['fulltext_length'], ' ', $txt['search_method_kilobytes'];
 	echo '
 					</span>
-				</td>
+				</td>';
+	}
+
+	echo '
 			</tr><tr class="windowbg2">
 				<td align="right"></td>
 				<td width="3%" align="center" valign="top" class="windowbg"><input type="radio" name="search_index" value="custom"', !empty($modSettings['search_index']) && $modSettings['search_index'] == 'custom' ? ' checked="checked"' : '', $context['custom_index'] ? '' : ' onclick="alert(\'' . $txt['search_index_custom_warning'] . '\'); selectRadioByName(this.form.search_method, \'1\');"', ' /></td>

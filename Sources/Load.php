@@ -441,6 +441,7 @@ function loadUserSettings()
 		'theme' => empty($user_settings['id_theme']) ? 0 : $user_settings['id_theme'],
 		'last_login' => empty($user_settings['last_login']) ? 0 : $user_settings['last_login'],
 		'ip' => $_SERVER['REMOTE_ADDR'],
+		'ip2' => $_SERVER['BAN_CHECK_IP'],
 		'posts' => empty($user_settings['posts']) ? 0 : $user_settings['posts'],
 		'time_format' => empty($user_settings['time_format']) ? $modSettings['time_format'] : $user_settings['time_format'],
 		'time_offset' => empty($user_settings['time_offset']) ? 0 : $user_settings['time_offset'],
@@ -1371,7 +1372,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 						var tempImage = new Image();
 						tempImage.src = "' . $scripturl . '?scheduled=' . $type . ';ts=' . $ts . '";
 					}
-					window.setTimeout("smfAutoTask();", 5);
+					window.setTimeout("smfAutoTask();", 1);
 				</script>';
 		}
 	}

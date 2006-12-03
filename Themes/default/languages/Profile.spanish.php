@@ -188,6 +188,8 @@ $txt['members_in_range'] = 'Usuarios probablemente en el mismo rango';
 $txt['messages_from_ip'] = 'Mensajes enviados desde el IP (rango)';
 $txt['messages_from_ip_desc'] = 'Debajo est&aacute; la lista de todos los mensajes publicados desde esta IP (rango).';
 $txt['most_recent_ip'] = 'Direcciones IP m&aacute;s recientes';
+// Untranslated!
+$txt['why_two_ip_address'] = 'Why are there two IP addresses listed?';
 $txt['no_errors_from_ip'] = 'No se encontraron mensajes de error desde el IP especificado (rango)';
 $txt['no_errors_from_user'] = 'No se encontraron mensajes de error del usuario especificado';
 $txt['no_members_from_ip'] = 'No se encontraron usuarios desde el IP especificado (rango)';

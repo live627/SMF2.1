@@ -1823,7 +1823,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		if (!empty($inserts))
 			$smfFunc['db_query']('', "
 				INSERT IGNORE INTO {$db_prefix}log_search_words
-					(ID_WORD, id_msg)
+					(id_word, id_msg)
 				VALUES
 					" . substr($inserts, 0, -2), __FILE__, __LINE__);
 	}
@@ -2110,14 +2110,14 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_search_words
 				WHERE id_msg = $msgOptions[id]
-					AND ID_WORD IN (" . implode(", ", $removed_words) . ")", __FILE__, __LINE__);
+					AND id_word IN (" . implode(", ", $removed_words) . ")", __FILE__, __LINE__);
 
 		// Calculate the new words to be indexed.
 		$inserted_words = array_diff(array_diff($new_index, $old_index), $stopwords);
 		if (!empty($inserted_words))
 			$smfFunc['db_query']('', "
 				INSERT IGNORE INTO {$db_prefix}log_search_words
-					(ID_WORD, id_msg)
+					(id_word, id_msg)
 				VALUES
 					('" . implode("', $msgOptions[id]),
 					('", $inserted_words) . "', $msgOptions[id])", __FILE__, __LINE__);

@@ -185,6 +185,7 @@ $txt['members_in_range'] = 'Members possibly in the same range';
 $txt['messages_from_ip'] = 'Messages posted from IP (range)';
 $txt['messages_from_ip_desc'] = 'Below is a list of all messages posted from this IP (range).';
 $txt['most_recent_ip'] = 'Most recent IP address';
+$txt['why_two_ip_address'] = 'Why are there two IP addresses listed?';
 $txt['no_errors_from_ip'] = 'No error messages from the specified IP (range) found';
 $txt['no_errors_from_user'] = 'No error messages from the specified user found';
 $txt['no_members_from_ip'] = 'No members from the specified IP (range) found';

@@ -62,6 +62,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_server_info' => 'mysql_get_server_info',
    			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'db_affected_rows',
+			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'mysql_error',
 			'db_select_db' => 'mysql_select_db',
 			'db_title' => 'MySQL',
@@ -238,6 +239,21 @@ function db_insert_id($table, $field, $connection = null)
 
 	// MySQL doesn't need the table or field information.
 	return mysql_insert_id($connection == null ? $db_connection : $connection);
+}
+
+// Do a transaction.
+function smf_db_transaction($type = 'commit')
+{
+	global $db_connection;
+
+	if ($type == 'begin')
+		return @mysql_query('BEGIN', $db_connection);
+	elseif ($type == 'rollback')
+		return @mysql_query('ROLLBACK', $db_connection);
+	elseif ($type == 'commit')
+		return @mysql_query('COMMIT', $db_connection);
+
+	return false; 
 }
 
 // Database error!
@@ -428,7 +444,7 @@ function db_error($db_string, $file, $line, $connection = null)
 // Insert some data...
 function db_insert($method = 'replace', $table, $columns, $data, $keys)
 {
-	if (!is_array($data[0]))
+	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
 
 	$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');

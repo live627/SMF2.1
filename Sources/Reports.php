@@ -509,7 +509,7 @@ function MemberGroupsReport()
 			CASE WHEN bp.permission IS NOT NULL OR mg.id_group = 1 THEN 1 ELSE 0 END AS can_moderate
 		FROM {$db_prefix}membergroups AS mg
 			LEFT JOIN {$db_prefix}board_permissions AS bp ON (bp.id_group = mg.id_group AND bp.id_profile = 1 AND bp.permission = 'moderate_board')
-		ORDER BY mg.min_posts, IF(mg.id_group < 4, mg.id_group, 4), mg.group_name", __FILE__, __LINE__);
+		ORDER BY mg.min_posts, CASE WHEN mg.id_group < 4 THEN mg.id_group ELSE 4 END, mg.group_name", __FILE__, __LINE__);
 
 	// Cache them so we get regular members too.
 	$rows = array(

@@ -62,6 +62,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 			'db_server_info' => 'postg_version',
 			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'db_affected_rows',
+			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'pg_last_error',
 			'db_select_db' => 'postg_select_db',
 			'db_title' => 'PostgreSQL',
@@ -281,6 +282,21 @@ function db_insert_id($table, $field, $connection = null)
 	$smfFunc['db_free_result']($request);
 
 	return $lastID;
+}
+
+// Do a transaction.
+function smf_db_transaction($type = 'commit')
+{
+	global $db_connection;
+
+	if ($type == 'begin')
+		return @pg_query($db_connection, 'BEGIN');
+	elseif ($type == 'rollback')
+		return @pg_query($db_connection, 'ROLLBACK');
+	elseif ($type == 'commit')
+		return @pg_query($db_connection, 'COMMIT');
+
+	return false; 
 }
 
 // Database error!
@@ -515,7 +531,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 {
 	global $db_replace_result;
 
-	if (!is_array($data[0]))
+	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
 
 	// PostgreSQL doesn't support replace or insert ignore so we need to work around it.

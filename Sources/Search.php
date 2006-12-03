@@ -190,10 +190,10 @@ function PlushSearch1()
 
 		$request = $smfFunc['db_query']('', "
 			SELECT ms.subject
-			FROM ({$db_prefix}topics AS t, {$db_prefix}boards AS b, {$db_prefix}messages AS ms)
-			WHERE b.id_board = t.id_board
-				AND t.id_topic = " . $context['search_params']['topic'] . "
-				AND ms.id_msg = t.id_first_msg
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+				INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
+			WHERE t.id_topic = " . $context['search_params']['topic'] . "
 				AND $user_info[query_see_board]
 				AND t.approved = 1
 			LIMIT 1", __FILE__, __LINE__);
@@ -420,9 +420,9 @@ function PlushSearch2()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT b.id_board
-			FROM ({$db_prefix}topics AS t, {$db_prefix}boards AS b)
-			WHERE b.id_board = t.id_board
-				AND t.id_topic = " . $search_params['topic'] . "
+			FROM {$db_prefix}topics AS t
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+			WHERE t.id_topic = " . $search_params['topic'] . "
 				AND $user_info[query_see_board]
 				AND t.approved = 1
 			LIMIT 1", __FILE__, __LINE__);
@@ -866,12 +866,13 @@ function PlushSearch2()
 
 		if ($search_params['subject_only'])
 		{
+			// We do this to try and avoid duplicate keys on databases not supporting INSERT IGNORE.
+			$inserts = array();
 			foreach ($searchWords as $orIndex => $words)
 			{
 				$subject_query = array(
-					'from' => array(
-						"{$db_prefix}topics AS t",
-					),
+					'from' => "{$db_prefix}topics AS t",
+					'inner_join' => array(),
 					'left_join' => array(),
 					'where' => array(
 						't.approved = 1',
@@ -891,9 +892,8 @@ function PlushSearch2()
 					}
 					else
 					{
-						$subject_query['from'][] = "{$db_prefix}log_search_subjects AS subj$numTables";
+						$subject_query['inner_join'][] = "{$db_prefix}log_search_subjects AS subj$numTables ON (subj$numTables.id_topic = " . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic)';
 						$subject_query['where'][] = "subj$numTables.word " . (empty($modSettings['search_match_words']) ? "LIKE '%$subjectWord%'" : "= '$subjectWord'");
-						$subject_query['where'][] = "subj$numTables.id_topic = " . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic';
 						$prev_join = $numTables;
 					}
 				}
@@ -902,8 +902,7 @@ function PlushSearch2()
 				{
 					if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
 					{
-						$subject_query['from'][] = "{$db_prefix}messages AS m";
-						$subject_query['where'][] = 'm.id_topic = t.id_topic';
+						$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_topic = t.id_topic)";
 					}
 					$subject_query['where'][] = $userQuery;
 				}
@@ -919,41 +918,69 @@ function PlushSearch2()
 				{
 					if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
 					{
-						$subject_query['from'][] = "{$db_prefix}messages AS m";
-						$subject_query['where'][] = 'm.id_msg = t.id_first_msg';
+						$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 					}
 					foreach ($excludedPhrases as $phrase)
 						$subject_query['where'][] = 'm.subject NOT ' . (empty($modSettings['search_match_words']) || $no_regexp ? " LIKE '%" . strtr($phrase, array('_' => '\\_', '%' => '\\%')) . "%'" : " RLIKE '[[:<:]]" . addcslashes(preg_replace(array('/([\[\]$.+*?|{}()])/'), array('[$1]'), $phrase), '\\\'') . "[[:>:]]'");
 				}
 
-				$smfFunc['db_search_query']('insert_log_search_results_subject', "
+				$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_results_subject', 
+					($smfFunc['db_support_ignore'] ? "
 					INSERT IGNORE INTO {$db_prefix}log_search_results
-						(id_search, id_topic, relevance, id_msg, num_matches)
+						(id_search, id_topic, relevance, id_msg, num_matches)" : '') . "
 					SELECT 
 						" . $_SESSION['search_cache']['id_search'] . ",
 						t.id_topic,
 						1000 * (
 							$weight[frequency] / (t.num_replies + 1) +
-							$weight[age] * IF(t.id_first_msg < $minMsg, 0, (t.id_first_msg - $minMsg) / $recentMsg) +
-							$weight[length] * IF(t.num_replies < $humungousTopicPosts, t.num_replies / $humungousTopicPosts, 1) +
+							$weight[age] * CASE WHEN t.id_first_msg < $minMsg THEN 0 ELSE (t.id_first_msg - $minMsg) / $recentMsg END +
+							$weight[length] * CASE WHEN t.num_replies < $humungousTopicPosts THEN t.num_replies / $humungousTopicPosts ELSE 1 END +
 							$weight[subject] +
 							$weight[sticky] * t.is_sticky
 						) / $weight_total AS relevance,
 						" . (empty($userQuery) ? 't.id_first_msg' : 'm.id_msg') . ",
 						1
-					FROM (" . implode(', ', $subject_query['from']) . ')' . (empty($subject_query['left_join']) ? '' : "
+					FROM $subject_query[from]" . (empty($subject_query['inner_join']) ? '' : "
+						INNER JOIN " . implode("
+						INNER JOIN ", $subject_query['inner_join'])) . (empty($subject_query['left_join']) ? '' : "
 						LEFT JOIN " . implode("
 						LEFT JOIN ", $subject_query['left_join'])) . "
 					WHERE " . implode("
 						AND ", $subject_query['where']) . (empty($modSettings['search_max_results']) ? '' : "
 					LIMIT " . ($modSettings['search_max_results'] - $numSubjectResults)), __FILE__, __LINE__);
 
-				$numSubjectResults += db_affected_rows();
+				// If the database doesn't support IGNORE to make this fast we need to do some tracking.
+				if (!$smfFunc['db_support_ignore'])
+				{
+					while ($row = $smfFunc['db_fetch_row']($ignoreRequest))
+					{
+						// No duplicates!
+						if (isset($inserts[$row[1]]))
+							continue;
+
+						$inserts[$row[1]] = $row;
+					}
+					$smfFunc['db_free_result']($ignoreRequest);
+					$numSubjectResults = count($inserts);
+				}
+				else
+					$numSubjectResults += db_affected_rows();
 				
 				if (!empty($modSettings['search_max_results']) && $numSubjectResults >= $modSettings['search_max_results'])
 					break;
 			}
 
+			// If there's data to be inserted for non-IGNORE databases do it here!
+			if (!empty($inserts))
+			{
+				$smfFunc['db_insert']('',
+					"{$db_prefix}log_search_results",
+					array('id_search', 'id_topic', 'relevance', 'id_msg', 'num_matches'),
+					$inserts,
+					array('id_search', 'id_topic')
+				);
+			}
+	
 			$_SESSION['search_cache']['num_results'] = $numSubjectResults;
 		}
 		else
@@ -964,14 +991,12 @@ function PlushSearch2()
 					'relevance' => '0',
 				),
 				'weights' => array(),
-				'from' => array(
-					"{$db_prefix}topics AS t",
-					"{$db_prefix}messages AS m",
+				'from' => "{$db_prefix}topics AS t",
+				'inner_join' => array(
+					"{$db_prefix}messages AS m ON (m.id_topic = t.id_topic)"
 				),
 				'left_join' => array(),
-				'where' => array(
-					't.id_topic = m.id_topic',
-				),
+				'where' => array(),
 				'group_by' => array(),
 			);
 
@@ -983,10 +1008,10 @@ function PlushSearch2()
 
 				$main_query['weights'] = array(
 					'frequency' => 'COUNT(*) / (MAX(t.num_replies) + 1)',
-					'age' => "IF(MAX(m.id_msg) < $minMsg, 0, (MAX(m.id_msg) - $minMsg) / $recentMsg)",
-					'length' => "IF(MAX(t.num_replies) < $humungousTopicPosts, MAX(t.num_replies) / $humungousTopicPosts, 1)",
+					'age' => "CASE WHEN MAX(m.id_msg) < $minMsg THEN 0 ELSE (MAX(m.id_msg) - $minMsg) / $recentMsg END",
+					'length' => "CASE WHEN MAX(t.num_replies) < $humungousTopicPosts THEN MAX(t.num_replies) / $humungousTopicPosts ELSE 1 END",
 					'subject' => '0',
-					'first_message' => "IF(MIN(m.id_msg) = MAX(t.id_first_msg), 1, 0)",
+					'first_message' => "CASE WHEN MIN(m.id_msg) = MAX(t.id_first_msg) THEN 1 ELSE 0 END",
 					'sticky' => 'MAX(t.is_sticky)',
 				);
 
@@ -1000,8 +1025,8 @@ function PlushSearch2()
 				$main_query['select']['num_matches'] = '1 AS num_matches';
 
 				$main_query['weights'] = array(
-					'age' => "((m.id_msg - t.id_first_msg) / IF(t.id_last_msg = t.id_first_msg, 1, t.id_last_msg - t.id_first_msg))",
-					'first_message' => "IF(m.id_msg = t.id_first_msg, 1, 0)",
+					'age' => "((m.id_msg - t.id_first_msg) / CASE WHEN t.id_last_msg = t.id_first_msg THEN 1 ELSE t.id_last_msg - t.id_first_msg)",
+					'first_message' => "CASE WHEN m.id_msg = t.id_first_msg THEN 1 ELSE 0 END",
 				);
 
 				$main_query['where'][] = 't.id_topic = ' . $search_params['topic'];
@@ -1013,6 +1038,7 @@ function PlushSearch2()
 			$numSubjectResults = 0;
 			if (empty($search_params['topic']))
 			{
+				$inserts = array();
 				// Create a temporary table to store some preliminary results in.
 				$smfFunc['db_search_query']('drop_tmp_log_search_topics', "
 					DROP TABLE IF EXISTS {$db_prefix}tmp_log_search_topics", __FILE__, __LINE__);
@@ -1031,9 +1057,8 @@ function PlushSearch2()
 				foreach ($searchWords as $orIndex => $words)
 				{
 					$subject_query = array(
-						'from' => array(
-							"{$db_prefix}topics AS t",
-						),
+						'from' => "{$db_prefix}topics AS t",
+						'inner_join' => array(),
 						'left_join' => array(),
 						'where' => array(),
 					);
@@ -1047,8 +1072,7 @@ function PlushSearch2()
 						{
 							if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
 							{
-								$subject_query['from'][] = "{$db_prefix}messages AS m";
-								$subject_query['where'][] = 'm.id_msg = t.id_first_msg';
+								$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 							}
 							$subject_query['left_join'][] = "{$db_prefix}log_search_subjects AS subj$numTables ON (subj$numTables.word " . (empty($modSettings['search_match_words']) ? "LIKE '%$subjectWord%'" : "= '$subjectWord'") . " AND subj$numTables.id_topic = t.id_topic)";
 							$subject_query['where'][] = "(subj$numTables.word IS NULL)";
@@ -1056,9 +1080,8 @@ function PlushSearch2()
 						}
 						else
 						{
-							$subject_query['from'][] = "{$db_prefix}log_search_subjects AS subj$numTables";
+							$subject_query['inner_join'][] = "{$db_prefix}log_search_subjects AS subj$numTables ON (subj$numTables.id_topic = " . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic)';
 							$subject_query['where'][] = "subj$numTables.word " . (empty($modSettings['search_match_words']) ? "LIKE '%$subjectWord%'" : "= '$subjectWord'");
-							$subject_query['where'][] = "subj$numTables.id_topic = " . ($prev_join === 0 ? 't' : 'subj' . $prev_join) . '.id_topic';
 							$prev_join = $numTables;
 						}
 					}
@@ -1067,8 +1090,7 @@ function PlushSearch2()
 					{
 						if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
 						{
-							$subject_query['from'][] = "{$db_prefix}messages AS m";
-							$subject_query['where'][] = 'm.id_msg = t.id_first_msg';
+							$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 						}
 						$subject_query['where'][] = $userQuery;
 					}
@@ -1084,8 +1106,7 @@ function PlushSearch2()
 					{
 						if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
 						{
-							$subject_query['from'][] = "{$db_prefix}messages AS m";
-							$subject_query['where'][] = 'm.id_msg = t.id_first_msg';
+							$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 						}
 						foreach ($excludedPhrases as $phrase)
 						{
@@ -1095,26 +1116,54 @@ function PlushSearch2()
 					}
 
 
-					$smfFunc['db_search_query']('insert_log_search_topics', "
+					$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_topics', ($smfFunc['db_support_ignore'] ? ("
 						INSERT IGNORE INTO {$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics
-							(" . ($createTemporary ? '' : 'id_search, ') . "id_topic)
+							(" . ($createTemporary ? '' : 'id_search, ') . "id_topic)") : '') . "
 						SELECT " . ($createTemporary ? '' : $_SESSION['search_cache']['id_search'] . ', ') . "t.id_topic
-						FROM (" . implode(', ', $subject_query['from']) . ')' . (empty($subject_query['left_join']) ? '' : "
+						FROM $subject_query[from]" . (empty($subject_query['inner_join']) ? '' : "
+							INNER JOIN " . implode("
+							INNER JOIN ", $subject_query['inner_join'])) . (empty($subject_query['left_join']) ? '' : "
 							LEFT JOIN " . implode("
 							LEFT JOIN ", $subject_query['left_join'])) . "
 						WHERE " . implode("
 							AND ", $subject_query['where']) . (empty($modSettings['search_max_results']) ? '' : "
 						LIMIT " . ($modSettings['search_max_results'] - $numSubjectResults)), __FILE__, __LINE__);
-
-					$numSubjectResults += db_affected_rows();
+					// Don't do INSERT IGNORE? Manually fix this up!
+					if (!$smfFunc['db_support_ignore'])
+					{
+						while ($row = $smfFunc['db_fetch_row']($ignoreRequest))
+						{
+							$ind = $createTemporary ? 0 : 1;
+							// No duplicates!
+							if (isset($inserts[$row[$ind]]))
+								continue;
+	
+							$inserts[$row[$ind]] = $row;
+						}
+						$smfFunc['db_free_result']($ignoreRequest);
+						$numSubjectResults = count($inserts);
+					}
+					else
+						$numSubjectResults += db_affected_rows();
 					
 					if (!empty($modSettings['search_max_results']) && $numSubjectResults >= $modSettings['search_max_results'])
 						break;
 				}
 
+				// Got some non-MySQL data to plonk in?
+				if (!empty($inserts))
+				{
+					$smfFunc['db_insert']('',
+						($db_prefix . ($createTemporary ? 'tmp_' : '') . "log_search_topics"),
+						$createTemporary ? array('id_topic') : array('id_search', 'id_topic'),
+						$inserts,
+						$createTemporary ? array('id_topic') : array('id_search', 'id_topic')
+					);
+				}
+
 				if ($numSubjectResults !== 0)
 				{
-					$main_query['weights']['subject'] = 'IF(lst.id_topic IS NULL, 0, 1)';
+					$main_query['weights']['subject'] = 'CASE WHEN lst.id_topic IS NULL THEN 0 ELSE 1 END';
 					$main_query['left_join'][] = "{$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics AS lst ON (" . ($createTemporary ? '' : 'lst.id_search = ' . $_SESSION['search_cache']['id_search'] . ' AND ') . "lst.id_topic = t.id_topic)";
 				}
 			}
@@ -1122,6 +1171,7 @@ function PlushSearch2()
 			$indexedResults = 0;
 			if (!empty($modSettings['search_index']))
 			{
+				$inserts = array();
 				$smfFunc['db_search_query']('drop_tmp_log_search_messages', "
 					DROP TABLE IF EXISTS {$db_prefix}tmp_log_search_messages", __FILE__, __LINE__);
 
@@ -1140,7 +1190,7 @@ function PlushSearch2()
 				{
 
 					// *** Do the fulltext search.
-					if (!empty($words['indexed_words']) && $modSettings['search_index'] == 'fulltext')
+					if (!empty($words['indexed_words']) && $modSettings['search_index'] == 'fulltext' && $smfFunc['db_search_support']('fulltext'))
 					{
 						$fulltext_query = array(
 							'insert_into' => $db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_messages',
@@ -1187,16 +1237,29 @@ function PlushSearch2()
 							foreach ($words['indexed_words'] as $fulltextWord)
 								$fulltext_query['where'][] = (in_array($fulltextWord, $excludedIndexWords) ? 'NOT ' : '') . "MATCH (body) AGAINST ('$fulltextWord')";
 
-						$smfFunc['db_search_query']('insert_into_log_messages_fulltext', "
+						$ignoreRequest = $smfFunc['db_search_query']('insert_into_log_messages_fulltext', ($smfFunc['db_support_ignore'] ? ("
 							INSERT IGNORE INTO $fulltext_query[insert_into]
-								(" . implode(', ', array_keys($fulltext_query['select'])) . ")
+								(" . implode(', ', array_keys($fulltext_query['select'])) . ")") : '') . "
 							SELECT " . implode(', ', $fulltext_query['select']) . "
 							FROM {$db_prefix}messages
 							WHERE " . implode("
 								AND ", $fulltext_query['where']) . (empty($maxMessageResults) ? '' : "
 							LIMIT " . ($maxMessageResults - $indexedResults)), __FILE__, __LINE__);
-
-						$indexedResults += db_affected_rows();
+						if (!$smfFunc['db_support_ignore'])
+						{
+							while ($row = $smfFunc['db_fetch_row']($ignoreRequest))
+							{
+								// No duplicates - again!
+								if (isset($inserts[$row[0]]))
+									continue;
+		
+								$inserts[$row[0]] = $row;
+							}
+							$smfFunc['db_free_result']($ignoreRequest);
+							$indexedResults = count($inserts);
+						}
+						else
+							$indexedResults += db_affected_rows();
 
 						if (!empty($maxMessageResults) && $indexedResults >= $maxMessageResults)
 							break;
@@ -1209,9 +1272,8 @@ function PlushSearch2()
 							'select' => array(
 								'id_msg' => 'm.id_msg',
 							),
-							'from' => array(
-								"{$db_prefix}messages AS m",
-							),
+							'from' => "{$db_prefix}messages AS m",
+							'inner_join' => array(),
 							'left_join' => array(),
 							'where' => array(),
 						);
@@ -1246,33 +1308,58 @@ function PlushSearch2()
 							$numTables++;
 							if (in_array($indexedWord, $excludedIndexWords))
 							{
-								$custom_query['left_join'][] = "{$db_prefix}log_search_words AS lsw$numTables ON (lsw$numTables.ID_WORD = $indexedWord AND lsw$numTables.id_msg = m.id_msg)";
-								$custom_query['where'][] = "(lsw$numTables.ID_WORD IS NULL)";
+								$custom_query['left_join'][] = "{$db_prefix}log_search_words AS lsw$numTables ON (lsw$numTables.id_word = $indexedWord AND lsw$numTables.id_msg = m.id_msg)";
+								$custom_query['where'][] = "(lsw$numTables.id_word IS NULL)";
 							}
 							else
 							{
-								$custom_query['from'][] = "{$db_prefix}log_search_words AS lsw$numTables";
-								$custom_query['where'][] = "lsw$numTables.ID_WORD = $indexedWord";
-								$custom_query['where'][] = "lsw$numTables.id_msg = " . ($prev_join === 0 ? 'm' : 'lsw' . $prev_join) . '.id_msg';
+								$custom_query['inner_join'][] = "{$db_prefix}log_search_words AS lsw$numTables ON (lsw$numTables.id_msg = " . ($prev_join === 0 ? 'm' : 'lsw' . $prev_join) . '.id_msg)';
+								$custom_query['where'][] = "lsw$numTables.id_word = $indexedWord";
 								$prev_join = $numTables;
 							}
 						}
-						$smfFunc['db_search_query']('insert_into_log_messages_custom', "
+						$ignoreRequest = $smfFunc['db_search_query']('insert_into_log_messages_custom', ($smfFunc['db_support_ignore'] ? ("
 							INSERT IGNORE INTO $custom_query[insert_into]
-								(" . implode(', ', array_keys($custom_query['select'])) . ")
+								(" . implode(', ', array_keys($custom_query['select'])) . ")") : '') . "
 							SELECT " . implode(', ', $custom_query['select']) . "
-							FROM (" . implode(', ', $custom_query['from']) . ')' . (empty($custom_query['left_join']) ? '' : "
+							FROM $custom_query[from]" . (empty($custom_query['inner_join']) ? '' : "
+								INNER JOIN " . implode("
+								INNER JOIN ", $custom_query['inner_join'])) . (empty($custom_query['left_join']) ? '' : "
 								LEFT JOIN " . implode("
 								LEFT JOIN ", $custom_query['left_join'])) . "
 							WHERE " . implode("
 								AND ", $custom_query['where']) . (empty($maxMessageResults) ? '' : "
 							LIMIT " . ($maxMessageResults - $indexedResults)), __FILE__, __LINE__);
-
-						$indexedResults += db_affected_rows();
+						if (!$smfFunc['db_support_ignore'])
+						{
+							while ($row = $smfFunc['db_fetch_row']($ignoreRequest))
+							{
+								// No duplicates!
+								if (isset($inserts[$row[0]]))
+									continue;
+		
+								$inserts[$row[0]] = $row;
+							}
+							$smfFunc['db_free_result']($ignoreRequest);
+							$indexedResults = count($inserts);
+						}
+						else
+							$indexedResults += db_affected_rows();
 
 						if (!empty($maxMessageResults) && $indexedResults >= $maxMessageResults)
 							break;
 					}
+				}
+
+				// More non-MySQL stuff needed?
+				if (!empty($inserts))
+				{
+					$smfFunc['db_insert']('',
+						isset($custom_query['insert_into']) ? $custom_query['insert_into'] : $fulltext_query['insert_into'],
+						$createTemporary ? array('id_msg') : array('id_msg', 'id_search'),
+						$inserts,
+						$createTemporary ? array('id_msg') : array('id_msg', 'id_search')
+					);
 				}
 
 				if (empty($indexedResults) && empty($numSubjectResults) && !empty($modSettings['search_force_index']))
@@ -1283,8 +1370,7 @@ function PlushSearch2()
 				}
 				elseif (!empty($indexedResults))
 				{
-					$main_query['from'][] = $db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_messages AS lsm';
-					$main_query['where'][] = 'lsm.id_msg = m.id_msg';
+					$main_query['inner_join'][] = $db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_messages AS lsm ON (lsm.id_msg = m.id_msg)';
 					if (!$createTemporary)
 						$main_query['where'][] = 'lsm.id_search = ' . $_SESSION['search_cache']['id_search'];
 				}
@@ -1332,46 +1418,103 @@ function PlushSearch2()
 				}
 				$main_query['select']['relevance'] = substr($relevance, 0, -3) . ") / $new_weight_total AS relevance";
 
-				$smfFunc['db_search_query']('insert_log_search_results_no_index', "
+				$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_results_no_index', ($smfFunc['db_support_ignore'] ? ("
 					INSERT IGNORE INTO {$db_prefix}log_search_results
-						(" . implode(', ', array_keys($main_query['select'])) . ")
+						(" . implode(', ', array_keys($main_query['select'])) . ")") : '') . "
 					SELECT
 						" . implode(',
 						', $main_query['select']) . "
-					FROM (" . implode(', ', $main_query['from']) . ')' . (empty($main_query['left_join']) ? '' : "
+					FROM $main_query[from]" . (empty($main_query['inner_join']) ? '' : "
+						INNER JOIN " . implode("
+						INNER JOIN ", $main_query['inner_join'])) . (empty($main_query['left_join']) ? '' : "
 						LEFT JOIN " . implode("
-						LEFT JOIN ", $main_query['left_join'])) . "
-					WHERE " . implode("
+						LEFT JOIN ", $main_query['left_join'])) . (!empty($main_query['where']) ? "
+					WHERE " : '') . implode("
 						AND ", $main_query['where']) . (empty($main_query['group_by']) ? '' : "
 					GROUP BY " . implode(', ', $main_query['group_by'])) . (empty($modSettings['search_max_results']) ? '' : "
 					LIMIT $modSettings[search_max_results]"), __FILE__, __LINE__);
+				// We love to handle non-good databases that don't support our ignore!
+				if (!$smfFunc['db_support_ignore'])
+				{
+					$inserts = array();
+					while ($row = $smfFunc['db_fetch_row']($ignoreRequest))
+					{
+						// No duplicates!
+						if (isset($inserts[$row[2]]))
+							continue;
 
-				$_SESSION['search_cache']['num_results'] = db_affected_rows();
+						$inserts[$row[2]] = $row;
+					}
+					$smfFunc['db_free_result']($ignoreRequest);
+
+					// Now put them in!
+					if (!empty($inserts))
+					{
+						$smfFunc['db_insert']('',
+							"{$db_prefix}log_search_results",
+							array_keys($main_query['select']),
+							$inserts,
+							array('id_search', 'id_topic')
+						);
+					}
+					$_SESSION['search_cache']['num_results'] += count($inserts);
+				}
+				else
+					$_SESSION['search_cache']['num_results'] = db_affected_rows();
 			}
 
 			// Insert subject-only matches.
 			if ($_SESSION['search_cache']['num_results'] < $modSettings['search_max_results'] && $numSubjectResults !== 0)
 			{
-				$smfFunc['db_search_query']('insert_log_search_results_sub_only', "
+				$usedIDs = array_flip(empty($inserts) ? array() : array_keys($inserts));
+				$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_results_sub_only', ($smfFunc['db_support_ignore'] ? ("
 					INSERT IGNORE INTO {$db_prefix}log_search_results
-						(id_search, id_topic, relevance, id_msg, num_matches)
+						(id_search, id_topic, relevance, id_msg, num_matches)") : '') . "
 					SELECT
 						" . $_SESSION['search_cache']['id_search'] . ",
 						t.id_topic,
 						1000 * (
 							$weight[frequency] / (t.num_replies + 1) +
-							$weight[age] * IF(t.id_first_msg < $minMsg, 0, (t.id_first_msg - $minMsg) / $recentMsg) +
-							$weight[length] * IF(t.num_replies < $humungousTopicPosts, t.num_replies / $humungousTopicPosts, 1) +
+							$weight[age] * CASE WHEN t.id_first_msg < $minMsg THEN 0 ELSE (t.id_first_msg - $minMsg) / $recentMsg END +
+							$weight[length] * CASE WHEN t.num_replies < $humungousTopicPosts THEN t.num_replies / $humungousTopicPosts ELSE 1 END +
 							$weight[subject] +
 							$weight[sticky] * t.is_sticky
 						) / $weight_total AS relevance,
 						t.id_first_msg,
 						1
-					FROM ({$db_prefix}topics AS t, {$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics AS lst)
-					WHERE lst.id_topic = t.id_topic" . (empty($modSettings['search_max_results']) ? '' : "
+					FROM {$db_prefix}topics AS t
+						INNER JOIN {$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics AS lst ON (lst.id_topic = t.id_topic)
+					" . (empty($modSettings['search_max_results']) ? '' : "
 					LIMIT " . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])), __FILE__, __LINE__);
+				// Once again need to do the inserts if the database don't support ignore!
+				if (!$smfFunc['db_support_ignore'])
+				{
+					$inserts = array();
+					while ($row = $smfFunc['db_fetch_row']($ignoreRequest))
+					{
+						// No duplicates!
+						if (isset($usedIDs[$row[1]]))
+							continue;
 
-				$_SESSION['search_cache']['num_results'] += db_affected_rows();
+						$usedIDs[$row[1]] = true;
+						$inserts[] = $row;
+					}
+					$smfFunc['db_free_result']($ignoreRequest);
+
+					// Now put them in!
+					if (!empty($inserts))
+					{
+						$smfFunc['db_insert']('',
+							"{$db_prefix}log_search_results",
+							array('id_search', 'id_topic', 'relevance', 'id_msg', 'num_matches'),
+							$inserts,
+							array('id_search', 'id_topic')
+						);
+					}
+					$_SESSION['search_cache']['num_results'] += count($inserts);
+				}
+				else
+					$_SESSION['search_cache']['num_results'] += db_affected_rows();
 			}
 			else
 				$_SESSION['search_cache']['num_results'] = 0;
@@ -1382,9 +1525,9 @@ function PlushSearch2()
 	$participants = array();
 	$request = $smfFunc['db_search_query']('', "
 		SELECT " . (empty($search_params['topic']) ? 'lsr.id_topic' : $search_params['topic'] . ' AS id_topic') . ", lsr.id_msg, lsr.relevance, lsr.num_matches
-		FROM ({$db_prefix}log_search_results AS lsr" . ($search_params['sort'] == 'num_replies' ? ", {$db_prefix}topics AS t" : '') . ")
-		WHERE id_search = " . $_SESSION['search_cache']['id_search'] . ($search_params['sort'] == 'num_replies' ? "
-			AND t.id_topic = lsr.id_topic" : '') . "
+		FROM {$db_prefix}log_search_results AS lsr" . ($search_params['sort'] == 'num_replies' ? "
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = lsr.id_topic)" : '') . "
+		WHERE lsr.id_search = " . $_SESSION['search_cache']['id_search'] . "
 		ORDER BY $search_params[sort] $search_params[sort_dir]
 		LIMIT " . (int) $_REQUEST['start'] . ", $modSettings[search_results_per_page]", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1755,7 +1898,7 @@ function prepareSearchContext($reset = false)
 		// Fix the international characters in the keyword too.
 		$query = strtr($smfFunc['htmlspecialchars']($query), array('\\\'' => '\''));
 
-		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? $smfFunc[\'db_unescape_string\']('\$1') : '<b class=\"highlight\">\$1</b>'", $body_highlighted);
+		$body_highlighted = preg_replace('/((<[^>]*)|' . preg_quote(strtr($query, array('\'' => '&#039;')), '/') . ')/ie' . ($context['utf8'] ? 'u' : ''), "'\$2' == '\$1' ? \$smfFunc['db_unescape_string']('\$1') : '<b class=\"highlight\">\$1</b>'", $body_highlighted);
 		$subject_highlighted = preg_replace('/(' . preg_quote($query, '/') . ')/i' . ($context['utf8'] ? 'u' : ''), '<b class="highlight">$1</b>', $subject_highlighted);
 	}
 

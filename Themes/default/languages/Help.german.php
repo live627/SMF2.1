@@ -416,6 +416,8 @@ $helptxt['search_why_use_index'] = 'Ein Such-Index kann die Geschwindigkeit der 
 
 $helptxt['see_admin_ip'] = 'IP-Adressen werden Administratoren und Moderatoren zur besseren Moderation bzw. Verfolgung angezeigt. Beachten Sie, dass IP-Adressen einen Benutzer nicht eindeutig identifizieren und bei den meisten Leuten nach einiger Zeit wechseln.<br /><br />Mitglieder k&ouml;nnen Ihre eigenen IP-Adressen sehen.';
 $helptxt['see_member_ip'] = 'Ihre IP-Adresse wird nur Ihnen und Moderatoren angezeigt. Beachten Sie, dass diese Daten nicht die Person identifizieren, da IP-Adressen h&auml;ufig nach einer gewissen Zeit wechseln.<br /><br />Sie k&ouml;nnen keine IP-Adressen anderer Benutzer sehen und diese k&ouml;nnen Ihre nicht sehen.';
+// Untranslated!
+$helptxt['whytwoip'] = 'SMF uses various methods to detect user IP addresses. Usually these two methods result in the same address but in some cases more than one address may be detected. In this case SMF logs both addresses, and uses them both for ban checks (etc). You can click on either address to track that IP and ban if necessary.';
 
 $helptxt['ban_cannot_post'] = 'Die \'Kann nicht schreiben\' Einschr&auml;nkung erlaubt dem gebannten Benutzer nur noch das Lesen des Forums. Er kann keine neuen Themen erstellen oder auf existierende antworten, Pers&ouml;nliche Mitteilungen versenden oder bei Umfragen abstimmen. Der Benutzer kann aber weiterhin die Themen und Pers&ouml;nlichen Mitteilungen lesen.<br /><br />Dem gebannten Benutzer wird eine Warnmeldung angezeigt.';
 
