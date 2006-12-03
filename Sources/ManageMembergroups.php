@@ -578,12 +578,14 @@ function EditMembergroup()
 			{
 				$mod_insert = array();
 				foreach ($group_moderators as $moderator)
-					$mod_insert[] = "($_REQUEST[group], $moderator)";
+					$mod_insert[] = array($_REQUEST['group'], $moderator);
 
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}group_moderators
-						(id_group, id_member)
-					VALUES " . implode(', ', $mod_insert), __FILE__, __LINE__);
+				$smfFunc['db_insert']('insert',
+					"{$db_prefix}group_moderators",
+					array('id_group', 'id_member'),
+					$mod_insert,
+					array('id_group', 'id_member')
+				);
 			}
 		}
 

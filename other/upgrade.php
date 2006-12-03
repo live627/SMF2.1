@@ -1496,9 +1496,10 @@ function convertSettingsToTheme()
 	}
 }
 
+// This function only works with MySQL but that's fine as it is only used for v1.0.
 function convertSettingstoOptions()
 {
-	global $db_prefix, $modSettings;
+	global $db_prefix, $modSettings, $smfFunc;
 
 	// Format: new_setting -> old_setting_name.
 	$values = array(
@@ -1512,16 +1513,16 @@ function convertSettingstoOptions()
 		if (empty($modSettings[$value[0]]))
 			continue;
 
-		upgrade_query("
+		$smfFunc['db_query']('', "
 			INSERT IGNORE INTO {$db_prefix}themes
 				(id_member, id_theme, variable, value)
 			SELECT id_member, 1, '$variable', '" . $modSettings[$value[0]] . "'
-			FROM {$db_prefix}members");
+			FROM {$db_prefix}members", __FILE__, __LINE__);
 
-		upgrade_query("
+		$smfFunc['db_query']('', "
 			INSERT IGNORE INTO {$db_prefix}themes
 				(id_member, id_theme, variable, value)
-			VALUES (-1, 1, '$variable', '" . $modSettings[$value[0]] . "')");
+			VALUES (-1, 1, '$variable', '" . $modSettings[$value[0]] . "')", __FILE__, __LINE__);
 	}
 }
 

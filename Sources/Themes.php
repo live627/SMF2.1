@@ -495,8 +495,14 @@ function SetThemeOptions()
 				continue;
 			elseif ($_POST['default_options_master'][$opt] == 1)
 			{
+				// Delete then insert for ease of database compatibility!
 				$smfFunc['db_query']('', "
-					REPLACE INTO {$db_prefix}themes
+					DELETE FROM {$db_prefix}themes
+					WHERE id_theme = 1
+						AND id_member != 0
+						AND variable = SUBSTRING('$opt', 1, 255)", __FILE__, __LINE__);
+				$smfFunc['db_query']('', "
+					INSERT INTO {$db_prefix}themes
 						(id_member, id_theme, variable, value)
 					SELECT id_member, 1, SUBSTRING('$opt', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)
 					FROM {$db_prefix}members", __FILE__, __LINE__);
@@ -526,8 +532,14 @@ function SetThemeOptions()
 				continue;
 			elseif ($_POST['options_master'][$opt] == 1)
 			{
+				// Delete then insert for ease of database compatibility - again!
 				$smfFunc['db_query']('', "
-					REPLACE INTO {$db_prefix}themes
+					DELETE FROM {$db_prefix}themes
+					WHERE id_theme = $_GET[th]
+						AND id_member != 0
+						AND variable = SUBSTRING('$opt', 1, 255)", __FILE__, __LINE__);
+				$smfFunc['db_query']('', "
+					INSERT INTO {$db_prefix}themes
 						(id_member, id_theme, variable, value)
 					SELECT id_member, $_GET[th], SUBSTRING('$opt', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)
 					FROM {$db_prefix}members", __FILE__, __LINE__);
@@ -657,23 +669,20 @@ function SetThemeSettings()
 			$_POST['default_options'] = array();
 
 		// Set up the sql query.
-		$setString = '';
+		$inserts = array();
 		foreach ($_POST['options'] as $opt => $val)
-			$setString .= "
-				(0, $_GET[th], SUBSTRING('$opt', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)),";
+			$inserts[] = array(0, $_GET['th'], "SUBSTRING('$opt', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
 		foreach ($_POST['default_options'] as $opt => $val)
-			$setString .= "
-				(0, 1, SUBSTRING('$opt', 1, 255), SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)),";
+			$inserts[] = array(0, 1, "SUBSTRING('$opt', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
 		// If we're actually inserting something..
-		if ($setString != '')
+		if (!empty($inserts))
 		{
-			// Get rid of the last comma.
-			$setString = substr($setString, 0, strlen($setString) - 1);
-
-			$smfFunc['db_query']('', "
-				REPLACE INTO {$db_prefix}themes
-					(id_member, id_theme, variable, value)
-				VALUES $setString", __FILE__, __LINE__);
+			$smfFunc['db_insert']('replace',
+				"{$db_prefix}themes",
+				array('id_member', 'id_theme', 'variable', 'value'),
+				$inserts,
+				array('id_member', 'id_theme', 'variable')
+			);
 		}
 
 		cache_put_data('theme_settings-' . $_GET['th'], null, 90);
@@ -1159,16 +1168,17 @@ function ThemeInstall()
 		// This will be theme number...
 		$id_theme++;
 
-		$setString = '';
+		$inserts = array();
 		foreach ($install_info as $var => $val)
-			$setString .= "
-				($id_theme, SUBSTRING('" . $smfFunc['db_escape_string']($var) . "', 1, 255), SUBSTRING('" . $smfFunc['db_escape_string']($val) . "', 1, 65534)),";
-		$setString = substr($setString, 0, -1);
+			$inserts[] = array($id_theme, "SUBSTRING('" . $smfFunc['db_escape_string']($var) . "', 1, 255)", "SUBSTRING('" . $smfFunc['db_escape_string']($val) . "', 1, 65534)");
 
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}themes
-				(id_theme, variable, value)
-			VALUES$setString", __FILE__, __LINE__);
+		if (!empty($inserts))
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}themes",
+				array('id_theme', 'variable', 'value'),
+				$inserts,
+				array('id_theme', 'variable')
+			);
 
 		updateSettings(array('knownThemes' => strtr($modSettings['knownThemes'] . ',' . $id_theme, array(',,' => ','))));
 	}
@@ -1227,10 +1237,12 @@ function SetJavaScript()
 		$settings['theme_id'] = isset($_GET['th']) ? (int) $_GET['th'] : (int) $_GET['id'];
 
 	// Update the option.
-	$smfFunc['db_query']('', "
-		REPLACE INTO {$db_prefix}themes
-			(id_theme, id_member, variable, value)
-		VALUES ($settings[theme_id], $user_info[id], SUBSTRING('$_GET[var]', 1, 255), SUBSTRING('" . (is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']) . "', 1, 65534))", __FILE__, __LINE__);
+	$smfFunc['db_insert']('replace',
+		"{$db_prefix}themes",
+		array('id_theme', 'id_member', 'variable', 'value'),
+		array($settings['theme_id'], $user_info['id'], "SUBSTRING('$_GET[var]', 1, 255)", "SUBSTRING('" . (is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']) . "', 1, 65534)"),
+		array('id_theme', 'id_member', 'variable')
+	);
 
 	cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 60);
 

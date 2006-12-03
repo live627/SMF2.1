@@ -912,13 +912,14 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 		$insertRows = array();
 		foreach ($all_to as $to)
-			$insertRows[] = "($id_pm, $to, " . (in_array($to, $recipients['bcc']) ? '1' : '0') . ')';
+			$insertRows[] = array($id_pm, $to, in_array($to, $recipients['bcc']) ? 1 : 0);
 
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}pm_recipients
-				(id_pm, id_member, bcc)
-			VALUES " . implode(',
-				', $insertRows), __FILE__, __LINE__);
+		$smfFunc['db_insert']('insert',
+			"{$db_prefix}pm_recipients",
+			array('id_pm', 'id_member', 'bcc'),
+			$insertRows,
+			array('id_pm', 'id_member')
+		);
 	}
 
 	$message = $smfFunc['db_unescape_string']($message);
