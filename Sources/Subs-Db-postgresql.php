@@ -527,12 +527,19 @@ function db_data_seek($request, $counter)
 }
 
 // For inserting data in a special way...
-function db_insert($method = 'replace', $table, $columns, $data, $keys)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false)
 {
-	global $db_replace_result;
+	global $db_replace_result, $db_in_transact, $smfFunc;
 
 	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
+
+	$priv_trans = false;
+	if (count($data) > 1 && !$db_in_transact && !$disable_trans)
+	{
+		$smfFunc['db_transaction']('begin');
+		$priv_trans = true;
+	}
 
 	// PostgreSQL doesn't support replace or insert ignore so we need to work around it.
 	if ($method == 'replace')
@@ -561,15 +568,18 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 		}
 	}
 
-	if (empty($data))
-		return;
+	if (!empty($data))
+	{
+		foreach ($data as $entry)
+			db_query('', "
+				INSERT INTO $table
+					(" . implode(', ', $columns) . ")
+				VALUES
+					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : __FILE__, __LINE__);
+	}
 
-	foreach ($data as $entry)
-		db_query('', "
-			INSERT INTO $table
-				(" . implode(', ', $columns) . ")
-			VALUES
-				(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : __FILE__, __LINE__);
+	if ($priv_trans)
+		$smfFunc['db_transaction']('commit');
 }
 
 // Dummy function really.

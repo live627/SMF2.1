@@ -422,15 +422,15 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false)
 {
-	global $db_replace_result, $db_in_transact, $smfFunc;
+	global $db_in_transact, $smfFunc;
 
 	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
 
 	$priv_trans = false;
-	if (count($data) > 0 && !$db_in_transact)
+	if (count($data) > 1 && !$db_in_transact && !$disable_trans)
 	{
 		$smfFunc['db_transaction']('begin');
 		$priv_trans = true;
@@ -454,12 +454,8 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys)
 			$sql = substr($sql, 0, -2) . " WHERE $where";
 
 			db_query('', $sql, __FILE__, __LINE__);
-			// Make a note that the replace actually overwrote.
 			if (db_affected_rows() != 0)
-			{
 				unset($data[$k]);
-				$db_replace_result = 2;
-			}
 		}
 	}
 

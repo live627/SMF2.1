@@ -2106,23 +2106,32 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		$old_index = text2words($old_body, 4, true);
 		$new_index = text2words($smfFunc['db_unescape_string']($msgOptions['body']), 4, true);
 
-		// Calculate the words to remove from the index.
+		// Calculate the words to be added and removed from the index.
 		$removed_words = array_diff(array_diff($old_index, $new_index), $stopwords);
+		$inserted_words = array_diff(array_diff($new_index, $old_index), $stopwords);
+		// Delete the removed words AND the added ones to avoid key constraints.
 		if (!empty($removed_words))
+		{
+			$removed_words = array_merge($removed_words, $inserted_words);
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_search_words
 				WHERE id_msg = $msgOptions[id]
 					AND id_word IN (" . implode(", ", $removed_words) . ")", __FILE__, __LINE__);
+		}
 
-		// Calculate the new words to be indexed.
-		$inserted_words = array_diff(array_diff($new_index, $old_index), $stopwords);
+		// Add the new words to be indexed.
 		if (!empty($inserted_words))
-			$smfFunc['db_query']('', "
-				INSERT IGNORE INTO {$db_prefix}log_search_words
-					(id_word, id_msg)
-				VALUES
-					('" . implode("', $msgOptions[id]),
-					('", $inserted_words) . "', $msgOptions[id])", __FILE__, __LINE__);
+		{
+			$inserts = array();
+			foreach ($inserted_words as $word)
+				$inserts[] = array("'$word'", $msgOptions['id']);
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}log_search_words",
+				array('id_word', 'id_msg'),
+				$inserts,
+				array('id_word', 'id_msg')
+			);
+		}
 	}
 
 	if (isset($msgOptions['subject']))

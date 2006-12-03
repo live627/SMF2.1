@@ -442,7 +442,7 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false)
 {
 	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
