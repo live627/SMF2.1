@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<mosinstall version="1.1.0" type="mambot" group="authenticator">
+	<name>SMF_register</name>
+	<author>Simple Machines</author>
+	<creationDate>December 2006</creationDate>
+	<copyright>(C) 2006 Simple Machines. All rights reserved.</copyright>
+	<license>http://www.simplemachines.org/license</license>
+	<authorUrl>http://www.simplemachines.org</authorUrl>
+	<version>1.1</version>
+	<description>Registers user into SMF when using Mambo registration</description>
+	<files>
+		<filename mambot="SMF_register">SMF_register.php</filename>
+	</files>
+	<params/>
+</mosinstall>

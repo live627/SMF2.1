@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2590 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2591 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -17,6 +17,8 @@ December 2006
  ! Rewrote many queries to use INNER JOIN instead of cross joins. (Many files)
  ! Replace all instances of addslashes/stripslashes where used for database data with the database escaping functions. (Many files)
  ! Fixed multi-language support for Mambo/Joomla bridge login module on non-forum pages (Mambo/Joomla bridge/mod_smf_login.php)
+ + Added register mambot to Mambo 4.6 bridge so that users who register in Mambo are auto-created in SMF. (Mambo 4.6 bridge/SMF_register.php, SMF_register.xml)
+ ! Fixed bridge registration so that it uses Mambo 4.6's new language method (Mambo 4.6 bridge/smf_registration.html.php)
 
 November 2006
 --------------------------------------------------------------------------------
