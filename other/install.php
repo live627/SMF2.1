@@ -1,27 +1,25 @@
 <?php
-/**********************************************************************************
-* install.php                                                                     *
-***********************************************************************************
-* SMF: Simple Machines Forum                                                      *
-* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
-* =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
-* Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
-*           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
-* Support, News, Updates at:  http://www.simplemachines.org                       *
-***********************************************************************************
-* This program is free software; you may redistribute it and/or modify it under   *
-* the terms of the provided license as published by Simple Machines LLC.          *
-*                                                                                 *
-* This program is distributed in the hope that it is and will be useful, but      *
-* WITHOUT ANY WARRANTIES; without even any implied warranty of MERCHANTABILITY    *
-* or FITNESS FOR A PARTICULAR PURPOSE.                                            *
-*                                                                                 *
-* See the "license.txt" file for details of the Simple Machines license.          *
-* The latest version can always be found at http://www.simplemachines.org.        *
-**********************************************************************************/
-
+/******************************************************************************
+* install.php                                                                 *
+*******************************************************************************
+* SMF: Simple Machines Forum                                                  *
+* Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                *
+* =========================================================================== *
+* Software Version:           SMF 2.0 Alpha                                   *
+* Software by:                Simple Machines (http://www.simplemachines.org) *
+* Copyright 2001-2006 by:     Lewis Media (http://www.lewismedia.com)         *
+* Support, News, Updates at:  http://www.simplemachines.org                   *
+*******************************************************************************
+* This program is free software; you may redistribute it and/or modify it     *
+* under the terms of the provided license as published by Lewis Media.        *
+*                                                                             *
+* This program is distributed in the hope that it is and will be useful,      *
+* but WITHOUT ANY WARRANTIES; without even any implied warranty of            *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
+*                                                                             *
+* See the "license.txt" file for details of the Simple Machines license.      *
+* The latest version can always be found at http://www.simplemachines.org.    *
+******************************************************************************/
 
 $GLOBALS['current_smf_version'] = '2.0 Alpha';
 $GLOBALS['db_script_version'] = '2-0';
@@ -793,7 +791,7 @@ function doStep1()
 
 	$replaces = array(
 		'{$db_prefix}' => $db_prefix,
-		'{$boarddir}' => addslashes(dirname(__FILE__)),
+		'{$boarddir}' => $smfFunc['db_escape_string'](dirname(__FILE__)),
 		'{$boardurl}' => $_POST['boardurl'],
 		'{$enableCompressedOutput}' => isset($_POST['compress']) ? '1' : '0',
 		'{$databaseSession_enable}' => isset($_POST['dbsession']) ? '1' : '0',
@@ -803,7 +801,7 @@ function doStep1()
 	foreach ($txt as $key => $value)
 	{
 		if (substr($key, 0, 8) == 'default_')
-			$replaces['{$' . $key . '}'] = addslashes($value);
+			$replaces['{$' . $key . '}'] = $smfFunc['db_escape_string']($value);
 	}
 	$replaces['{$default_reserved_names}'] = strtr($replaces['{$default_reserved_names}'], array('\\\\n' => '\\n'));
 
@@ -1159,14 +1157,14 @@ function doStep2()
 		require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'index')));
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', $txt[240], '</div>
+					<div style="color: red;">', $txt['error_invalid_characters_username'], '</div>
 				</div>
 				<br />';
 
 		// Try the previous step again.
 		return doStep2a();
 	}
-	elseif (empty($_POST['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', stripslashes($_POST['email'])) === 0 || strlen(stripslashes($_POST['email'])) > 255)
+	elseif (empty($_POST['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['email'])) === 0 || strlen($smfFunc['db_unescape_string']($_POST['email'])) > 255)
 	{
 		// Artificially fill some of the globals needed for the language files.
 		$context = array(
@@ -1197,7 +1195,7 @@ function doStep2()
 
 		// Format the username properly.
 		$_POST['username'] = preg_replace('~[\t\n\r\x0B\0\xA0]+~', ' ', $_POST['username']);
-		$ip = isset($_SERVER['REMOTE_ADDR']) ? addslashes(substr(stripslashes($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? $smfFunc['db_escape_string'](substr($smfFunc['db_unescape_string']($_SERVER['REMOTE_ADDR']), 0, 255)) : '';
 
 		$request = $smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}members
@@ -1242,13 +1240,13 @@ function doStep2()
 	}
 	else
 	{
-		$_SERVER['HTTP_USER_AGENT'] = addslashes(substr($_SERVER['HTTP_USER_AGENT'], 0, 211));
+		$_SERVER['HTTP_USER_AGENT'] = $smfFunc['db_escape_string'](substr($_SERVER['HTTP_USER_AGENT'], 0, 211));
 
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}sessions
 				(session_id, last_update, data)
 			VALUES ('" . session_id() . "', " . time() . ",
-				'USER_AGENT|s:" . strlen(stripslashes($_SERVER['HTTP_USER_AGENT'])) . ":\"$_SERVER[HTTP_USER_AGENT]\";admin_time|i:" . time() . ";')", false, false);
+				'USER_AGENT|s:" . strlen($smfFunc['db_unescape_string']($_SERVER['HTTP_USER_AGENT'])) . ":\"$_SERVER[HTTP_USER_AGENT]\";admin_time|i:" . time() . ";')", false, false);
 	}
 	updateStats('member');
 	updateStats('message');
@@ -1265,7 +1263,7 @@ function doStep2()
 			AND modified_time = 0
 		LIMIT 1", false, false);
 	if ($smfFunc['db_num_rows']($request) > 0)
-		updateStats('subject', 1, addslashes(htmlspecialchars($txt['default_topic_subject'])));
+		updateStats('subject', 1, $smfFunc['db_escape_string'](htmlspecialchars($txt['default_topic_subject'])));
 	$smfFunc['db_free_result']($request);
 
 	echo '
