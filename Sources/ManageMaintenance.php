@@ -171,7 +171,7 @@ function Maintenance()
 			DELETE FROM {$db_prefix}log_banned", __FILE__, __LINE__);
 
 		// Start id_error back at 0 and dump the error log.
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('truncate_table', "
 			TRUNCATE {$db_prefix}log_errors", __FILE__, __LINE__);
 
 		// Clear out the spam log.
@@ -183,11 +183,11 @@ function Maintenance()
 			DELETE FROM {$db_prefix}log_karma", __FILE__, __LINE__);
 
 		// Last but not least, the search logs!
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('truncate_table', "
 			TRUNCATE {$db_prefix}log_search_topics", __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('truncate_table', "
 			TRUNCATE {$db_prefix}log_search_messages", __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('truncate_table', "
 			TRUNCATE {$db_prefix}log_search_results", __FILE__, __LINE__);
 
 		updateSettings(array('search_pointer' => 0));
@@ -526,7 +526,7 @@ function TaskLog()
 	{
 		checkSession();
 
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('truncate_table', "
 			TRUNCATE {$db_prefix}log_scheduled_tasks", __FILE__, __LINE__);
 	}
 

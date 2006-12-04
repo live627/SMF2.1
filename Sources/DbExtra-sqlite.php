@@ -52,6 +52,7 @@ function db_extra_init()
 			'db_insert_sql' => 'db_insert_sql',
 			'db_table_sql' => 'db_table_sql',
 			'db_list_tables' => 'db_list_tables',
+			'db_get_backup' => 'smf_db_get_backup',
 			'db_get_version' => 'smf_db_get_version',
 		);
 }
@@ -304,6 +305,28 @@ function db_table_sql($tableName)
 function smf_db_get_version()
 {
 	return sqlite_libversion();
+}
+
+// Simple return the database - and die!
+function smf_db_get_backup()
+{
+	global $db_name;
+
+	if (substr($db_name, -3) != 'db')
+		$db_name .= '.db';
+
+	// Add more info if zipped...
+	$ext = '';
+	if (isset($_REQUEST['compress']) && function_exists('gzencode'))
+		$ext = '.gz';
+
+	// Do the remaining headers.
+	header('Content-Disposition: filename="' . $db_name . $ext . '"');
+	header('Cache-Control: private');
+	header('Connection: close');
+
+	// Literally dump the contents.
+	echo file_get_contents($db_name);
 }
 
 ?>

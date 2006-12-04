@@ -2171,7 +2171,9 @@ function cache_put_data($key, $value, $ttl = 120)
 			if ($fp)
 			{
 				// Write the header.
+				@flock($fp, LOCK_EX);
 				fwrite($fp, '<?php if(!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, "'") . '\';}?>');
+				@flock($fp, LOCK_UN);
 				fclose($fp);
 			}
 		}
@@ -2243,9 +2245,9 @@ function cache_get_data($key, $ttl = 120)
 	elseif (function_exists('output_cache_get'))
 		$value = output_cache_get($key, $ttl);
 	// Otherwise it's SMF data!
-	elseif (file_exists($cachedir . '/data_' . $key . '.php'))
+	elseif (file_exists($cachedir . '/data_' . $key . '.php') && filesize($cachedir . '/data_' . $key . '.php') > 10)
 	{
-		@require_once($cachedir . '/data_' . $key . '.php');
+		require($cachedir . '/data_' . $key . '.php');
 		if (!empty($expired) && isset($value))
 		{
 			@unlink($cachedir . '/data_' . $key . '.php');

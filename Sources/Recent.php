@@ -912,7 +912,7 @@ function UnreadTopics()
 		}
 		else
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('unread_fetch_topic_count', "
 				SELECT COUNT(DISTINCT t.id_topic), MIN(t.id_last_msg)
 				FROM {$db_prefix}topics AS t
 					INNER JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)

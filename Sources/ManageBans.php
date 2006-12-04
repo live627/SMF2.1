@@ -1030,7 +1030,7 @@ function BanLog()
 
 		// 'Delete all entries' button was pressed.
 		if (!empty($_POST['removeAll']))
-			$smfFunc['db_query']('', "
+			$smfFunc['db_query']('truncate_table', "
 				TRUNCATE {$db_prefix}log_banned", __FILE__, __LINE__);
 
 		// 'Delte selection' button was pressed.

@@ -131,18 +131,23 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 
 	// Special queries that need processing.
 	$replacements = array(
+		'truncate_table' => array(
+			'~TRUNCATE~i' => 'DELETE FROM',
+		),
 		'user_activity_by_time' => array(
 			'~HOUR\(FROM_UNIXTIME\((poster_time\s+\+\s+\d+)\)\)~' => 'strftime(\'%H\', datetime($1, \'unixepoch\'))',
+		),
+		'unread_fetch_topic_count' => array(
+			'~\s*SELECT\sCOUNT\(DISTINCT\st\.id_topic\),\sMIN\(t\.id_last_msg\)(.+)$~is' => 'SELECT COUNT(id_topic), MIN(id_last_msg) FROM (SELECT DISTINCT t.id_topic, t.id_last_msg $1)',
 		),
 	);
 
 	if (isset($replacements[$identifier]))
 		$db_string = preg_replace(array_keys($replacements[$identifier]), array_values($replacements[$identifier]), $db_string);
 
-	// SQLite doesn't support distinct.
+	// SQLite doesn't support count(distinct).
 	$db_string = trim($db_string);
-	if (substr($db_string, 0, 21) == 'SELECT COUNT(DISTINCT')
-		$db_string = preg_replace('~SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(.+)~is', 'SELECT COUNT($1) FROM (SELECT DISTINCT $1 $2)', $db_string);
+	$db_string = preg_replace('~^\s*SELECT\s+?COUNT\(DISTINCT\s+?(.+?)\)(\s*AS\s*(.+?))*\s*(FROM.+)~is', 'SELECT COUNT($1) $2 FROM (SELECT DISTINCT $1 $4)', $db_string);
 
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;

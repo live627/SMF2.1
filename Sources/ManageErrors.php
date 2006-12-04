@@ -289,7 +289,7 @@ function deleteErrors()
 
 	// Delete all or just some?
 	if (isset($_POST['delall']) && !isset($filter))
-		$smfFunc['db_query']('', "
+		$smfFunc['db_query']('truncate_table', "
 			TRUNCATE {$db_prefix}log_errors", __FILE__, __LINE__);
 	// Deleting all with a filter?
 	elseif (isset($_POST['delall']) && isset($filter))
