@@ -776,11 +776,11 @@ function MessageSearch2()
 	// Setup the sorting variables...
 	// !!! Add more in here!
 	$sort_columns = array(
-		'id_pm',
+		'pm.id_pm',
 	);
 	if (empty($search_params['sort']) && !empty($_REQUEST['sort']))
 		list ($search_params['sort'], $search_params['sort_dir']) = array_pad(explode('|', $_REQUEST['sort']), 2, '');
-	$search_params['sort'] = !empty($search_params['sort']) && in_array($search_params['sort'], $sort_columns) ? $search_params['sort'] : 'id_pm';
+	$search_params['sort'] = !empty($search_params['sort']) && in_array($search_params['sort'], $sort_columns) ? $search_params['sort'] : 'pm.id_pm';
 	$search_params['sort_dir'] = !empty($search_params['sort_dir']) && $search_params['sort_dir'] == 'asc' ? 'asc' : 'desc';
 
 	// Sort out any labels we may be searching by.
@@ -916,7 +916,7 @@ function MessageSearch2()
 	}
 
 	// Get the amount of results.
-	$request = db_query("
+	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}pm_recipients AS pmr
 			INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
@@ -927,8 +927,8 @@ function MessageSearch2()
 			AND pm.deleted_by_sender = 0") . "
 			$userQuery$labelQuery
 			AND ($searchQuery)", __FILE__, __LINE__);
-	list ($numResults) = mysql_fetch_row($request);
-	mysql_free_result($request);
+	list ($numResults) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
 	// Get all the matching messages... using standard search only (No caching and the like!)
 	// !!! This doesn't support outbox searching yet.
