@@ -2243,9 +2243,9 @@ function cache_get_data($key, $ttl = 120)
 	elseif (function_exists('output_cache_get'))
 		$value = output_cache_get($key, $ttl);
 	// Otherwise it's SMF data!
-	elseif (file_exists($cachedir . '/data_' . $key . '.php') && filesize($cachedir . '/data_' . $key . '.php') > 10)
+	elseif (file_exists($cachedir . '/data_' . $key . '.php'))
 	{
-		require_once($cachedir . '/data_' . $key . '.php');
+		@require_once($cachedir . '/data_' . $key . '.php');
 		if (!empty($expired) && isset($value))
 		{
 			@unlink($cachedir . '/data_' . $key . '.php');
