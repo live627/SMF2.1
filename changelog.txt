@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2592 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2593 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -21,6 +21,7 @@ December 2006
  ! Fixed bridge registration so that it uses Mambo 4.6's new language method (Mambo 4.6 bridge/smf_registration.html.php)
  ! Updated search to work with databases which don't support insert ignore. (Search.php)
  ! Added transaction support to the database abstraction layer. (Database source files)
+ ! The regular expression used for parsing '/me'-lines didn't work properly in older PHP versions. (Subs-Post.php)
 
 
 November 2006
