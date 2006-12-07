@@ -936,11 +936,11 @@ function doStep1()
 	$tables = $smfFunc['db_list_tables']($db_name);
 	foreach ($tables as $table)
 	{
-		$smfFunc['db_optimize_table']($table) or $db_messed = true;
+		$smfFunc['db_optimize_table']($table) != -1 or $db_messed = true;
 
 		if (!empty($db_messed))
 		{
-			$failures[-1] = $smfFunc['db_error']($db_connection);
+			$failures[-1] = $smfFunc['db_error']();
 			break;
 		}
 	}

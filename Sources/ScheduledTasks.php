@@ -378,30 +378,14 @@ function scheduled_auto_optimize()
 	if ($delay)
 		return false;
 
-	// Handle if things are prefixed with a database name.
-	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
-	{
-		$request = $smfFunc['db_query']('', "
-			SHOW TABLES
-			FROM `" . strtr($match[1], array('`' => '')) . "`
-			LIKE '" . str_replace('_', '\_', $match[2]) . "%'", __FILE__, __LINE__);
-	}
-	else
-	{
-		$request = $smfFunc['db_query']('', "
-			SHOW TABLES
-			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'", __FILE__, __LINE__);
-	}
+	db_extend();
 
-	$tables = array();
-	while ($row = $smfFunc['db_fetch_row']($request))
-		$tables[] = $row[0];
-	$smfFunc['db_free_result']($request);
+	// Get all the tables.
+	$tables = $smfFunc['db_list_tables']();
 
 	// Actually do the optimisation.
 	foreach ($tables as $table)
-		$smfFunc['db_query']('', "
-			OPTIMIZE TABLE `$table`", __FILE__, __LINE__);
+		$smfFunc['db_optimize_table']($table);
 
 	// Return for the log...
 	return true;
@@ -420,12 +404,12 @@ function scheduled_daily_digest()
 
 	// Right - get all the notification data FIRST.
 	$request = $smfFunc['db_query']('', "
-		SELECT ln.id_topic, IFNULL(t.id_board, ln.id_board) AS id_board, mem.email_address, mem.member_name, mem.notify_types,
+		SELECT ln.id_topic, COALESCE(t.id_board, ln.id_board) AS id_board, mem.email_address, mem.member_name, mem.notify_types,
 			mem.lngfile, mem.id_member
 		FROM {$db_prefix}log_notify AS ln
 			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member
 				AND mem.notify_regularity = " . ($is_weekly ? '3' : '2') . ")
-			LEFT JOIN {$db_prefix}topics AS t ON (ln.id_topic != 0 && t.id_topic = ln.id_topic)", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}topics AS t ON (ln.id_topic != 0 AND t.id_topic = ln.id_topic)", __FILE__, __LINE__);
 	$members = array();
 	$langs = array();
 	$notify = array();
@@ -1018,7 +1002,7 @@ function scheduled_birthdayemails()
 		SELECT id_member, real_name, lngfile, email_address
 		FROM {$db_prefix}members
 		WHERE MONTH(birthdate) = $month
-			AND DAY(birthdate) = $day
+			AND DAYOFMONTH(birthdate) = $day
 			AND notify_announcements = 1", __FILE__, __LINE__);
 
 	// Group them by languages.

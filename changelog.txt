@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2593 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2594 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -22,6 +22,7 @@ December 2006
  ! Updated search to work with databases which don't support insert ignore. (Search.php)
  ! Added transaction support to the database abstraction layer. (Database source files)
  ! The regular expression used for parsing '/me'-lines didn't work properly in older PHP versions. (Subs-Post.php)
+ ! Updated database queries a bit to re-fix PostgreSQL support. (Various files)
 
 
 November 2006

@@ -1163,7 +1163,7 @@ function PlushSearch2()
 
 				if ($numSubjectResults !== 0)
 				{
-					$main_query['weights']['subject'] = 'CASE WHEN lst.id_topic IS NULL THEN 0 ELSE 1 END';
+					$main_query['weights']['subject'] = 'CASE WHEN MAX(lst.id_topic) IS NULL THEN 0 ELSE 1 END';
 					$main_query['left_join'][] = "{$db_prefix}" . ($createTemporary ? 'tmp_' : '') . "log_search_topics AS lst ON (" . ($createTemporary ? '' : 'lst.id_search = ' . $_SESSION['search_cache']['id_search'] . ' AND ') . "lst.id_topic = t.id_topic)";
 				}
 			}
