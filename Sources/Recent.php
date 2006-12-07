@@ -47,7 +47,7 @@ function getLastPost()
 	global $db_prefix, $user_info, $scripturl, $modSettings, $smfFunc;
 
 	// Find it by the board - better to order by board than sort the entire messages table.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('get_last_post', "
 		SELECT ml.poster_time, ml.subject, ml.id_topic, ml.poster_name, SUBSTRING(ml.body, 0, 384) AS body,
 			ml.smileys_enabled
 		FROM {$db_prefix}boards AS b
@@ -90,7 +90,7 @@ function getLastPosts($showlatestcount)
 
 	// Find all the posts.  Newer ones will have higher IDs.  (assuming the last 20 * number are accessable...)
 	// !!!SLOW This query is now slow, NEEDS to be fixed.  Maybe break into two?
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('get_last_posts', "
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, t.id_board, b.name AS board_name,
@@ -772,7 +772,7 @@ function UnreadTopics()
 		else
 			$min_message = (int) $min_message;
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('recent_show_all_temp', "
 			SELECT $select_clause
 			FROM {$db_prefix}messages AS ms
 				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ms.id_topic AND t.id_first_msg = ms.id_msg)
@@ -833,7 +833,7 @@ function UnreadTopics()
 		else
 			$min_message = (int) $min_message;
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('recent_is_topics_only', "
 			SELECT $select_clause
 			FROM {$db_prefix}messages AS ms
 				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ms.id_topic AND t.id_first_msg = ms.id_msg)
@@ -993,7 +993,7 @@ function UnreadTopics()
 			return;
 		}
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('recent_get_everything', "
 			SELECT $select_clause
 			FROM {$db_prefix}topics AS t
 				INNER JOIN {$db_prefix}messages AS ms ON (ms.id_topic = t.id_topic AND ms.id_msg = t.id_first_msg)

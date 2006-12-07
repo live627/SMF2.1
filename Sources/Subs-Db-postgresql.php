@@ -239,8 +239,7 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 		}
 	}
 
-	//!!! Clean this properly.
-	$db_string = preg_replace('~\sFROM\s*\(([A-Za-z0-9`\s,_!/\*\(\)]+)\)~i', ' FROM $1', $db_string);
+	// Limits need to be a little different.
 	$db_string = preg_replace('~\sLIMIT\s(\d+),\s*(\d+)\s*$~i', 'LIMIT $2 OFFSET $1', $db_string);
 
 	$db_last_result = @pg_query($connection, $db_string);

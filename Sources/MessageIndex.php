@@ -449,7 +449,7 @@ function MessageIndex()
 	// Grab the appropriate topic information...
 	if (!$pre_query || !empty($topic_ids))
 	{
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('main_topics_query', "
 			SELECT
 				t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll,
 				" . ($user_info['is_guest'] ? '0' : 'IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1') . " AS new_from,

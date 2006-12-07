@@ -131,6 +131,27 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 
 	// Special queries that need processing.
 	$replacements = array(
+		'main_topics_query' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
+		'memberlist_find_page' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
+		'recent_show_all_temp' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
+		'recent_is_topics_only' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
+		'recent_get_everything' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
+		'get_last_post' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
+		'get_last_posts' => array(
+			'~SUBSTRING~' => 'SUBSTR',
+		),
 		'truncate_table' => array(
 			'~TRUNCATE~i' => 'DELETE FROM',
 		),
@@ -172,8 +193,8 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 		$st = microtime();
 	}
 
-	// Clean this properly!
-	$db_string = preg_replace('~SUBSTRING~i', 'SUBSTR', $db_string);
+	// Do most of the substrings!
+	$db_string = preg_replace('~SUBSTRING\(\s*\'~i', 'SUBSTR(\'', $db_string);
 
 	$ret = @sqlite_query($db_string, $connection, SQLITE_BOTH, $err_msg);
 	if ($ret === false && $file !== false)

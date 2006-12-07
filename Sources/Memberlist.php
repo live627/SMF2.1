@@ -222,7 +222,7 @@ function MLAll()
 
 		$_REQUEST['start'] = $match[0];
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('memberlist_find_page', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members
 			WHERE LOWER(SUBSTRING(real_name, 1, 1)) < '$_REQUEST[start]'
