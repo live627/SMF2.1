@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0                                             *
+* Software Version:           SMF 1.1                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -37,7 +37,7 @@
 	integrate_change_email($username, $email)
 	- updates Mambo with email changes made in SMF
 	
-	integrate_change_member_data ( array $member_names, string $var, string $value)
+	integrate_change_member_data ( array $memberNames, string $var, string $value)
 	- updates Mambo with member data changes in SMF
 
 	integrate_reset_pass($old_username, $username, $password)
@@ -227,13 +227,10 @@ function ob_mambofix($buffer)
 		preg_match_all('~([\(=]")' . preg_quote($mosConfig_live_site . '/index.php?option=com_smf') . '([^"]*)"{1}~', $buffer, $nonsefurls);
 		foreach($nonsefurls[0] as $nonsefurl)
 		{
-			$sefurl = sefReltoAbs(substr($nonsefurl, strlen($mosConfig_live_site) + 3, strlen($nonsefurl) - strlen($mosConfig_live_site) - 4));
+			$nqsefurl = substr($nonsefurl, 0, strpos($nonsefurl, 'option')) . preg_replace('/(\;)([^=#]*)([#"])/', '$1$2=$2$3', substr($nonsefurl, strpos($nonsefurl, 'option'), strlen($nonsefurl)));
+			$sefurl = sefReltoAbs(substr($nqsefurl, strlen($mosConfig_live_site) + 3, strlen($nqsefurl) - strlen($mosConfig_live_site) - 4));
 			$sefurl = str_replace(";", "/", $sefurl);
 			$sefurl = str_replace("=", ",", $sefurl);
-			//Fix for anything previous to Joomla! 1.0.10
-			if ($_VERSION->PRODUCT != 'Joomla!' || ($_VERSION->PRODUCT == 'Joomla!' && $_VERSION->DEV_LEVEL <= '9'))
-				$sefurl = substr($sefurl, 0, strpos($sefurl, 'option')) . preg_replace('/(\/)([^,]*)(#)/', '$1$2,$2$3', substr($sefurl, strpos($sefurl, 'option'), strlen($sefurl)));
-			$sefurl = substr($sefurl, 0, strpos($sefurl, 'option')) . preg_replace('/(\/)([^,]*)(\/)/', '$1$2,$2$3', substr($sefurl, strpos($sefurl, 'option'), strlen($sefurl)));
 			if (substr($sefurl, strlen($sefurl) - 1, 1) == '/')
 				$sefurl = substr($sefurl, 0, strlen($sefurl) - 1);
 			$buffer = str_replace(substr($nonsefurl,1,strlen($nonsefurl)), '"' . $sefurl . '"', $buffer);
@@ -447,7 +444,7 @@ function integrate_change_email($username, $email)
 	mysql_select_db($mosConfig_db);
 	$request = mysql_query("
 		UPDATE {$mosConfig_dbprefix}users
-		SET email_address = '$email'
+		SET emailAddress = '$email'
 		WHERE username = '" . addslashes($username) . "'
 		LIMIT 1");
 	mysql_select_db($db_name);
@@ -455,24 +452,24 @@ function integrate_change_email($username, $email)
 	return true;
 }
 
-function integrate_change_member_data ($member_names, $var, $value)
+function integrate_change_member_data ($memberNames, $var, $value)
 {
 
 	global $mosConfig_db, $db_name, $mosConfig_dbprefix;
 	
 	$synch_mambo_fields = array(
-   			'member_name' => 'username',
-			'real_name' => 'name',
-			'email_address' => 'email',
-			'id_group' => '',
+   			'memberName' => 'username',
+			'realName' => 'name',
+			'emailAddress' => 'email',
+			'ID_GROUP' => '',
 			'gender'=>'',
 			'birthdate'=>'',
-			'website_title'=>'',
-			'website_url'=>'',
+			'websiteTitle'=>'',
+			'websiteUrl'=>'',
 			'location'=>'',
-			'hide_email'=>'',
-			'time_format'=>'',
-			'time_offset'=>'',
+			'hideEmail'=>'',
+			'timeFormat'=>'',
+			'timeOffset'=>'',
 			'avatar'=>'',
 			'lngfile'=>'',
 			);
@@ -482,14 +479,14 @@ function integrate_change_member_data ($member_names, $var, $value)
 	if ($field != ''){
 		mysql_select_db($mosConfig_db);
 	
-		foreach ($member_names as $member_name){
+		foreach ($memberNames as $memberName){
 			mysql_query ("UPDATE {$mosConfig_dbprefix}users
 						SET `$field` = $value
-						WHERE username = '$member_name'
+						WHERE username = '$memberName'
 						LIMIT 1");
 						
 			//  If the real name is changed, we need to make sure to update the ACL
-			if ($var == 'real_name'){
+			if ($var == 'realName'){
 				$mos_find_id = mysql_query("
 					SELECT `id`
 					FROM {$mosConfig_dbprefix}users
@@ -506,7 +503,7 @@ function integrate_change_member_data ($member_names, $var, $value)
 		mysql_select_db($db_name);
 	}
 		
-	if ($var == 'id_group'){
+	if ($var == 'ID_GROUP'){
 		mysql_select_db($mosConfig_db);
 		
 		$query = mysql_query (" SELECT `value2`
@@ -518,16 +515,16 @@ function integrate_change_member_data ($member_names, $var, $value)
 		if (!isset($group) || $group == '' || $group == 0 )
 			$group = '18';
 		
-		foreach ($member_names as $member_name){
+		foreach ($memberNames as $memberName){
 
 			mysql_query ("UPDATE {$mosConfig_dbprefix}users
 						SET `gid` = '$group'
-						WHERE username = '$member_name'
+						WHERE username = '$memberName'
 						");
 			$mos_find_name = mysql_query("
 						SELECT `name`
 						FROM {$mosConfig_dbprefix}users
-						WHERE username = '$member_name'
+						WHERE username = '$memberName'
 						LIMIT 1");
 			list($mos_name) = mysql_fetch_row($mos_find_name);
 			$mos_map_sql = mysql_query("
@@ -610,7 +607,7 @@ function integrate_login($username, $passwd, $cookielength)
 		$mos_sync_groups = mysql_query("
 				SELECT `value2`
 				FROM {$mosConfig_dbprefix}smf_config
-				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['id_group'] . "'
+				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['ID_GROUP'] . "'
 				");
 		list($group) = mysql_fetch_row($mos_sync_groups);
 
@@ -621,7 +618,7 @@ function integrate_login($username, $passwd, $cookielength)
 		$mos_write = mysql_query("
 			INSERT INTO {$mosConfig_dbprefix}users 
 				(name,username,email,password,gid) 
-			VALUES ('$username', '$username', '$user_settings[email_address]', '$passwd', '$group')");
+			VALUES ('$username', '$username', '$user_settings[emailAddress]', '$passwd', '$group')");
 
 		$mos_find_id = mysql_query("
 			SELECT id
@@ -881,9 +878,9 @@ function integrate_delete_member($user)
 	global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix;
 
 	$query = mysql_query ("
-		SELECT member_name
+		SELECT memberName
 		FROM {$db_prefix}members
-		WHERE id_member = '$user'");
+		WHERE ID_MEMBER = '$user'");
 	list($username) = mysql_fetch_row($query);
 
 	mysql_select_db($mosConfig_db);
@@ -901,9 +898,9 @@ function integrate_validate_login($username, $password, $cookietime)
 	// Check if the user already exists in SMF.
 	mysql_select_db($db_name);
 	$request = mysql_query("
-		SELECT id_member
+		SELECT ID_MEMBER
 		FROM {$db_prefix}members
-		WHERE member_name = '$username'
+		WHERE memberName = '$username'
 		LIMIT 1");
 	if ($request !== false && mysql_num_rows($request) === 1)
 	{
@@ -918,7 +915,7 @@ function integrate_validate_login($username, $password, $cookietime)
 
 		//!!! How about sendEmail and activation?
 		$request = mysql_query("
-			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS date_registered, activation
+			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS dateRegistered, activation
 			FROM {$mosConfig_dbprefix}users
 			WHERE username = '$username'");
 
@@ -946,8 +943,8 @@ function integrate_validate_login($username, $password, $cookietime)
 		//There must be a result, so let's write this one into SMF....
 		mysql_query("
 			INSERT INTO {$db_prefix}members 
-				(member_name, real_name, passwd, email_address, date_registered, id_post_group, lngfile, buddy_list, pm_ignore_list, message_labels, personal_text, website_title, website_url, location, icq, msn, signature, avatar, usertitle, member_ip, member_ip2, member_ip2, secret_question, additional_groups)
-			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[date_registered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(memberName, realName, passwd, emailAddress, dateRegistered, ID_POST_GROUP, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups)
+			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[dateRegistered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 		$memberID = db_insert_id();
 		
 		updateStats('member', $memberID, $name);
@@ -985,31 +982,31 @@ function integrate_register($Options, $theme_vars)
 	if (!isset($group) || $group == '' || $group == 0 )
 		$group = '18';
 		
-	//What if the real_name field isn't being used?
-	if (!isset($Options['register_vars']['real_name']) || $Options['register_vars']['real_name']=='')
-		$Options['register_vars']['real_name'] = $Options['register_vars']['member_name'];
+	//What if the realName field isn't being used?
+	if (!isset($Options['register_vars']['realName']) || $Options['register_vars']['realName']=='')
+		$Options['register_vars']['realName'] = $Options['register_vars']['memberName'];
 				
 	mysql_query("
 		INSERT INTO {$mosConfig_dbprefix}users 
 			(name, username, email, password, gid) 
-		VALUES (" . $Options['register_vars']['real_name'] . ", " . $Options['register_vars']['member_name'] . ", " . $Options['register_vars']['email_address'] . ", '" . md5($Options['password']) . "', '$group')");
+		VALUES (" . $Options['register_vars']['realName'] . ", " . $Options['register_vars']['memberName'] . ", " . $Options['register_vars']['emailAddress'] . ", '" . md5($Options['password']) . "', '$group')");
 	
 	$mos_find_userid = mysql_query("
 		SELECT `id`
 		FROM {$mosConfig_dbprefix}users
-		WHERE username = " . $Options['register_vars']['member_name'] . "
+		WHERE username = " . $Options['register_vars']['memberName'] . "
 		LIMIT 1");
 	list($mos_id) = mysql_fetch_row($mos_find_userid); 
 
 	mysql_query( "
 		INSERT INTO {$mosConfig_dbprefix}core_acl_aro 
 			(aro_id, section_value, value, order_value, name, hidden)
-		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['real_name'] . ", '0');");
+		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['realName'] . ", '0');");
 
 	$mos_map_sql = mysql_query("
 		SELECT aro_id
 		FROM {$mosConfig_dbprefix}core_acl_aro
-		WHERE name = " . $Options['register_vars']['real_name'] . "
+		WHERE name = " . $Options['register_vars']['realName'] . "
 		LIMIT 1");
 	list($aro_id) = mysql_fetch_row($mos_map_sql);
 
@@ -1093,10 +1090,10 @@ function integrate_whos_online ($actions) {
 		if ($actions['option']=='com_frontpage')
 			return $txt['who_home'];
 		//It's the forum ;)
-		if ($actions['option']=='com_smf')
+		else if ($actions['option']=='com_smf')
 			return $txt['who_index'];
 		//let's try the content
-		if ($actions['option']=='com_content'){
+		else if ($actions['option']=='com_content'){
 			if (isset($actions['task'])){
 				if($actions['task']=='view'){
 					mysql_select_db($mosConfig_db);
@@ -1150,28 +1147,80 @@ function integrate_whos_online ($actions) {
 				}
 			}
 		}
-		if ($actions['option']=='com_newsfeeds'){
+		else if ($actions['option']=='com_newsfeeds'){
 			if (isset($actions['task'])){
 				if ($actions['task']=='view')
 					return sprintf($txt['who_newsfeeds'], $actions['Itemid']);
 			}
 		}
 		//Site search
-		if ($actions['option']=='com_search')
+		else if ($actions['option']=='com_search')
 			return sprintf($txt['who_sitesearch'], $actions['Itemid']);
 		
 		//Hmm...attention shoppers in aisle Itemid
-		if ($actions['option']=='com_virtuemart'){
+		else if ($actions['option']=='com_virtuemart'){
 			return sprintf($txt['who_virtuemart'], $actions['Itemid']);
 		}
 		//How about the Wiki?
-		if ($actions['option']=='com_wikidoc'){
-			return sprintf($txt['who_wiki'], $actions['Itemid']);
+		else if (($actions['option']=='com_wikidoc') || ($actions['option']=='com_jd-wiki'))  {
+			return sprintf($txt['who_wiki'], $actions['option'], $actions['Itemid']);
 		}
-		
+		//How about the Games?
+		else if ($actions['option']=='com_dcs_flashgames')  {
+			return sprintf($txt['who_games'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Links?
+		else if (($actions['option']=='com_bookmarks') || ($actions['option']=='com_links'))  {
+			return sprintf($txt['who_links'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Link exchange?
+		else if ($actions['option']=='com_linkexchange')  {
+			return sprintf($txt['who_linkexchange'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Guestbook?
+		else if (($actions['option']=='com_easygb') || ($actions['option']=='com_guestbook'))  {
+			return sprintf($txt['who_guestbook'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Contact page?
+		else if (($actions['option']=='com_staff') || ($actions['option']=='com_contact'))  {
+			return sprintf($txt['who_contact'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the gallery?
+		else if (($actions['option']=='com_gallery2') || ($actions['option']=='com_zoom') || ($actions['option']=='com_rsgallery2') || ($actions['option']=='com_coppermine'))  {
+			return sprintf($txt['who_gallery'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Polls?
+		else if (($actions['option']=='com_exitpoll') || ($actions['option']=='com_poll'))  {
+			return sprintf($txt['who_polls'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Credits?
+		else if ($actions['option']=='com_jm-credits')  {
+			return sprintf($txt['who_credits'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Glossary?
+		else if ($actions['option']=='com_glossary')  {
+			return sprintf($txt['who_glossary'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Review Pages?
+		else if ($actions['option']=='com_simple_review')  {
+			return sprintf($txt['who_review'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Classifieds?
+		else if (($actions['option']=='com_classifieds') || ($actions['option']=='com_noah'))  {
+			return sprintf($txt['who_classifieds'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Recipes?
+		else if (($actions['option']=='com_ricettario') || ($actions['option']=='com_pccookbook'))  {
+			return sprintf($txt['who_recipes'], $actions['option'], $actions['Itemid']);
+		}
+		//How about the Writing Section?
+		else if ($actions['option']=='com_ewriting')  {
+			return sprintf($txt['who_writing'], $actions['option'], $actions['Itemid']);
+		}
+		else {
+			return sprintf($txt['who_other'], $actions['option'], $actions['Itemid']);
+		}
 	}	
-
-
-
 }
+
 ?>

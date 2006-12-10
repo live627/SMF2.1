@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0                                             *
+* Software Version:           SMF 1.1                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -73,7 +73,7 @@ switch ($task)
 			//if we can't get the SMF groups, we can't write the membergroup sync
 			if ($saved == true){
 				mysql_select_db($db_name);
-				$database->setQuery("SELECT id_group, group_name
+				$database->setQuery("SELECT ID_GROUP, groupName
 						FROM {$db_prefix}membergroups
 						");
 				$smf_groups = $database->loadAssocList();
@@ -83,9 +83,9 @@ switch ($task)
 				$sync_group = array();
 	
 				foreach ($smf_groups as $smf_group=>$group_info){
-					$sync_group_name = strtr($group_info['group_name'], array(' ' => '_', '.'=>'_', '\''=>''));
+					$sync_group_name = strtr($group_info['groupName'], array(' ' => '_', '.'=>'_', '\''=>''));
 					$sync_group_value = $$sync_group_name;
-					$sync_group[$group_info['id_group']] = $sync_group_value;
+					$sync_group[$group_info['ID_GROUP']] = $sync_group_value;
 				}
 			}
 
@@ -104,9 +104,13 @@ switch ($task)
 		synch_groups($option);
 	break;
 
-	case 'cancel':
+	case "cancel":
+		mosRedirect( 'index2.php?option='. $option );
+	break;
+	
 	default:
-		mosRedirect( 'index2.php' );	
+		showConfig($option, $cb_reg);
+	break;		
 }
 
 function showConfig($option, $cb_reg)
@@ -146,7 +150,7 @@ function showConfig($option, $cb_reg)
 		$not_saved = true;
 	}
 	mysql_select_db($db_name);
-	$database->setQuery("SELECT id_group, group_name
+	$database->setQuery("SELECT ID_GROUP, groupName
 				FROM {$db_prefix}membergroups
 				");
 	$smf_groups = $database->loadAssocList();
@@ -272,7 +276,7 @@ function showConfig($option, $cb_reg)
 				</td>
 			</tr>
 			<tr>
-				<td width="25%" align="left" valign="top">Ask for icq, aim, yim, msn?</td>
+				<td width="25%" align="left" valign="top">Ask for ICQ, AIM, YIM, MSN?</td>
 				<td align="left" valign="top">
 					<input type="checkbox" name="im"', $im == 'on' ? ' checked="checked"' : '', ' />&nbsp;&nbsp;
 				</td>
@@ -320,13 +324,13 @@ function showConfig($option, $cb_reg)
 			foreach ($smf_groups as $smf_group){
 				echo '<tr>
 						<td width="25%" align="left" valign="top"></td>
-						<td align="left" valign="top">',$smf_group['group_name'],'</td>
+						<td align="left" valign="top">',$smf_group['groupName'],'</td>
 						<td align="left" valign="top">
-						<select name="', $smf_group['group_name'],'">';
+						<select name="', $smf_group['groupName'],'">';
 						//Has this group already been sync'd?
 						$sync_selected = '';
 						foreach ($sync_groups as $sync_group) {							
-							if ($sync_group['value1'] == $smf_group['id_group']){
+							if ($sync_group['value1'] == $smf_group['ID_GROUP']){
 								$sync_selected = $sync_group['value2'];
 							}
 						}
@@ -565,7 +569,7 @@ function mos2smf ($option){
 				
 	//get usernames already existing in Mambo, one by one
 	mysql_select_db($mosConfig_db);
-	$mos_sql = "SELECT username, password, email, UNIX_TIMESTAMP(registerDate) AS date_registered, name
+	$mos_sql = "SELECT username, password, email, UNIX_TIMESTAMP(registerDate) AS dateRegistered, name
 		FROM {$mosConfig_dbprefix}users";
 
 	$mos_result = mysql_query($mos_sql);
@@ -574,7 +578,7 @@ function mos2smf ($option){
 		$mos_user = $mos_row[0];
 		// try to find a match in the SMF users
 		mysql_select_db($db_name);
-		$smf_sql = "SELECT member_name FROM {$db_prefix}members WHERE (member_name ='".$mos_user."')";
+		$smf_sql = "SELECT memberName FROM {$db_prefix}members WHERE (memberName ='".$mos_user."')";
 		$smf_result = mysql_query ($smf_sql);
 
 		$smf_row = mysql_fetch_array($smf_result);
@@ -585,7 +589,7 @@ function mos2smf ($option){
 		else {
 			// if the username doesn't exist in SMF, create it
 			$write_user = "INSERT INTO {$db_prefix}members 
-							(member_name, real_name, passwd, email_address, date_registered) 
+							(memberName, realName, passwd, emailAddress, dateRegistered) 
 							VALUES ('$mos_row[0]','".($use_realname=='true' ? $mos_row[4] : $mos_row[0])."','$mos_row[1]','$mos_row[2]', '$mos_row[3]')";
 			$write_result = mysql_query ($write_user);
 			echo "<font color=green>" . $mos_row[0] . " added to SMF <br /></font>";	  
@@ -654,7 +658,7 @@ function smf2mos ($option){
 				
 	//get usernames already existing in SMF, one by one
 	mysql_select_db($db_name);
-	$smf_sql = "SELECT member_name, real_name, passwd, email_address FROM {$db_prefix}members";
+	$smf_sql = "SELECT memberName, realName, passwd, emailAddress FROM {$db_prefix}members";
 
 	$smf_result = mysql_query($smf_sql);
 // Redirect users who try to access /forum directly
@@ -761,9 +765,9 @@ function synch_groups ($option){
 	mysql_select_db($db_name);
 	
 	$database->setQuery("
-				SELECT `id_member`, `real_name`, `member_name`, `id_group`
+				SELECT `ID_MEMBER`, `realName`, `memberName`, `ID_GROUP`
 				FROM {$db_prefix}members
-				ORDER BY `id_member` ASC
+				ORDER BY `ID_MEMBER` ASC
 				");
 				
 	$members = $database->loadRowList();

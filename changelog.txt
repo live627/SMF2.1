@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2595 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2596 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -27,6 +27,11 @@ December 2006
  + When uninstalling a modification users will be asked whether they wish to reverse database changes. (Packages.php, install_2-0 and upgrade_2-0 scripts)
  ! You may now choose to have radio buttons as a custom profile field. (ModSettings.php, Profile.php, Admin template)
  ! If the detected IP address for a user is different than the REMOTE_ADDR variable make it more obvious in TrackUser/TrackIP. (Profile.php, Profile template)
+ ! Mambo/Joomla bridge config should go to main admin page if "Cancel" is clicked. (Mambo/Joomla bridge/admin.smf.php)
+ ! Fixed a missing global. (Mambo 4.6 bridge/smf.php)
+ + Changed the SEF handling in the bridge for use with third party Joomla SEF components. (Mambo/Joomla bridge/smf.php)
+ + Added Kindred's enhancements to the bridged whos online. (Mambo/Joomla bridge/smf.php, smf_integration_arrays.php)
+
 
 
 November 2006

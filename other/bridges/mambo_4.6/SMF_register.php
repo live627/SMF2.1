@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0                                         *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -32,7 +32,7 @@ global $db_name, $database;
 	$database =& mamboDatabase::getInstance();
 	$mainframe =& mosMainFrame::getInstance();
 
-class SMF_Register {
+class SMF_register {
 
 	function register () {
 		return 'userRegister';
@@ -40,7 +40,7 @@ class SMF_Register {
 
 	function perform( $loginfo ) {
 
-		global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $mosConfig_live_site;
+		global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $mosConfig_live_site, $sourcedir;
 
 
 		//Start up the integration

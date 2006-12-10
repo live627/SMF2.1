@@ -120,6 +120,20 @@ function add_to_txt(){
 	$txt['who_newsfeeds'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_newsfeeds&amp;task=view&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_newsfeeds&amp;task=view&amp;Itemid=%d')) . '">News Feeds</a>.';
 	$txt['who_virtuemart'] = 'Shopping in the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_virtuemart&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_virtuemart&amp;Itemid=%d')) . '">store</a>.';
 	$txt['who_sitesearch'] = 'Using the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_search&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_search&amp;Itemid=%d')) . '">Site Search</a>.';
-	$txt['who_wiki'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_wikidoc&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_wikidoc&amp;Itemid=%d')) . '">Wiki</a>.';
+	$txt['who_wiki'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Wiki</a>.';
+	$txt['who_games'] = 'Playing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Games</a>.';
+	$txt['who_links'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Links</a>.';
+	$txt['who_linkexchange'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Link Exchange</a>.';
+	$txt['who_guestbook'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Guestbook</a>.';
+	$txt['who_contact'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Contact</a> Page.';
+	$txt['who_gallery'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Gallery</a>.';
+	$txt['who_polls'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Polls</a>.';
+	$txt['who_credits'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Credits</a> Page.';
+	$txt['who_glossary'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Glossary</a>.';
+	$txt['who_review'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Reviews</a>.';
+	$txt['who_classifieds'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Classifieds</a>.';
+	$txt['who_recipes'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Recipe</a> Book.';
+	$txt['who_ewriting'] = 'Viewing <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Writing</a> Section.';
+	$txt['who_other'] = 'Viewing <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=%s&amp;Itemid=%d' : sefReltoAbs ('index.php?option=%s&amp;Itemid=%d')) . '">Something Else</a>.';
 }
 ?>
