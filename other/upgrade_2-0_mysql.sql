@@ -1269,6 +1269,15 @@ WHERE id_task = 7
 LIMIT 1;
 ---#
 
+/******************************************************************************/
+--- Adding new personal messaging functionality.
+/******************************************************************************/
+
+---# Adding personal message tracking column...
+ALTER TABLE {$db_prefix}personal_messages
+ADD id_pm_head int(10) unsigned NOT NULL AFTER id_pm,
+ADD INDEX id_pm_head (id_pm_head);
+---#
 
 /******************************************************************************/
 --- Final clean up...

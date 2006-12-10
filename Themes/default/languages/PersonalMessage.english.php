@@ -74,6 +74,7 @@ $txt['pm_sel_label_title'] = 'Label Selected';
 // Sidebar Headings.
 $txt['pm_labels'] = 'Labels';
 $txt['pm_messages'] = 'Messages';
+$txt['pm_actions'] = 'Actions';
 $txt['pm_preferences'] = 'Preferences';
 
 $txt['pm_is_replied_to'] = 'You have forwarded or responded to this message.';
@@ -136,4 +137,20 @@ $txt['birthday_email'] = 'Dear %2$s,
 Regards,
 The %1$s Team.';
 $txt['birthday_email_subject'] = 'Happy birthday from %1$s.';
+
+$txt['pm_settings'] = 'Change Settings';
+$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
+$txt['pm_settings_save'] = 'Save Changes';
+
+$txt[325] = 'Ignorelist';
+$txt[326] = 'Add one Username on each line.<br />Or enter * to ignore all messages.';
+$txt[327] = 'Notify by email every time you receive a personal message:';
+$txt['email_notify_never'] = 'Never';
+$txt['email_notify_buddies'] = 'From Buddies Only';
+$txt['email_notify_always'] = 'Always';
+
+$txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by default.';
+$txt['popup_messages'] = 'Show a popup when you receive new messages?';
+$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
+
 ?>

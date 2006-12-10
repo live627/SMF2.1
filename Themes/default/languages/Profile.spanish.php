@@ -108,13 +108,6 @@ $txt['notifications_boards_none'] = 'Tu no est&aacute;s recibiendo por el moment
 $txt['notifications_boards_howto'] = 'Para recibir notificaciones de un foro espec&iacute;fico, haz click en el bot&oacute;n &quot;notificar&quot; en el &iacute;ndice del foro.';
 $txt['notifications_update'] = 'Desinscribirse';
 
-$txt[325] = 'Lista de ignorados';
-$txt[326] = 'Agrega un nombre de usuario en cada l&iacute;nea.<br />O escribe * para ignorar todos los mensajes.';
-$txt[327] = 'Notificar por email cada que recibas un mensaje personal:';
-$txt['email_notify_never'] = 'Nunca';
-$txt['email_notify_buddies'] = 'Solamente de los amigos';
-$txt['email_notify_always'] = 'Siempre';
-
 $txt['statPanel_showStats'] = 'Estad&iacute;sticas de usuario para: ';
 $txt['statPanel_users_votes'] = 'N&uacute;mero de Votos emitidos';
 $txt['statPanel_users_polls'] = 'N&uacute;mero de Encuestas creadas';
@@ -161,8 +154,6 @@ $txt['theme'] = 'Configuraci&oacute;n de Apariencia y Dise&ntilde;o';
 $txt['theme_info'] = 'Esta secci&oacute;n te permite personalizar la apariencia y el dise&ntilde;o del foro.';
 $txt['notification'] = 'Notificaciones y email';
 $txt['notification_info'] = 'SMF permite que se te env&iacute;en notificaciones cuando haya respuestas a los mensajes, nuevos temas, y anuncios del foro. Puedes cambiar estos valores aqu&iacute;, o revisar los temas y foros de los que actualmente est&aacute;s recibiendo notificaciones.';
-$txt['pmprefs'] = 'Configuraci&oacute;n de Mensajes Personales';
-$txt['pmprefs_info'] = 'Otros usuarios de  ' . $context['forum_name'] . ' pueden contactarte directamente, pero a veces puede que desees ignorar los mensajes de alguien.  Esta p&aacute;gina te permite hacerlo, adem&aacute;s de otras cosas.';
 // Untranslated!
 $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
@@ -250,8 +241,6 @@ $txt['show_online'] = '&iquest;Mostrar a otros usuarios que est&aacute;s conecta
 
 $txt['return_to_post'] = 'Regresar, por defecto, a los temas despues de publicar un mensaje.';
 $txt['no_new_reply_warning'] = 'No advertir de nuevas respuestas mientras se est&aacute; publicando un mensaje.';
-$txt['copy_to_outbox'] = 'Guardar, por defecto, una copia de cada Mensaje Personal en mi buz&oacute;n de salida.';
-$txt['popup_messages'] = '&iquest;Mostrar un popup cuando recibas un nuevo mensaje?';
 $txt['recent_posts_at_top'] = 'Mostrar los mensajes m&aacute;s recientes en la parte superior';
 $txt['recent_pms_at_top'] = 'Mostrar los mensajes personales m&aacute;s recientes en la parte superior.';
 // Untranslated!
@@ -338,7 +327,6 @@ $txt['request_membership_email_subject'] = 'New Group Application';
 $txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt['regards_team'];
 
 //!!! Untranslated
-$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
 $txt['profile_updated_own'] = 'Your profile has successfully been updated';
 $txt['profile_updated_else'] = 'The profile for %1$s has been successfully updated';
 

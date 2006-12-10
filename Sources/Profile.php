@@ -86,9 +86,6 @@ if (!defined('SMF'))
 	void groupMembership(int id_member)
 		// !!!
 
-	void pmprefs(int id_member)
-		// !!!
-
 	void deleteAccount(int id_member)
 		// !!!
 
@@ -145,7 +142,6 @@ function ModifyProfile($post_errors = array())
 		'forumProfile' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
 		'theme' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
 		'notification' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
-		'pmprefs' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
 		'groupMembership' => array(array('profile_view_own'), array('manage_membergroups')),
 		'deleteAccount' => array(array('profile_remove_any', 'profile_remove_own'), array('profile_remove_any')),
 		'ignoreboards' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
@@ -247,7 +243,6 @@ function ModifyProfile($post_errors = array())
 			$context['profile_areas']['edit_profile']['areas']['forumProfile'] = '<a href="' . $scripturl . '?action=profile;u=' . $memID . ';sa=forumProfile">' . $txt['forumProfile'] . '</a>';
 			$context['profile_areas']['edit_profile']['areas']['theme'] = '<a href="' . $scripturl . '?action=profile;u=' . $memID . ';sa=theme">' . $txt['theme'] . '</a>';
 			$context['profile_areas']['edit_profile']['areas']['notification'] = '<a href="' . $scripturl . '?action=profile;u=' . $memID . ';sa=notification">' . $txt['notification'] . '</a>';
-			$context['profile_areas']['edit_profile']['areas']['pmprefs'] = '<a href="' . $scripturl . '?action=profile;u=' . $memID . ';sa=pmprefs">' . $txt['pmprefs'] . '</a>';
 			if (!empty($modSettings['allow_ignore_boards']))
 				$context['profile_areas']['edit_profile']['areas']['ignoreboards'] = '<a href="' . $scripturl . '?action=profile;u=' . $memID . ';sa=ignoreboards">' . $txt['ignoreboards'] . '</a>';
 		}
@@ -372,7 +367,6 @@ function ModifyProfile2()
 		'forumProfile' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any'), 'post'),
 		'theme' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any'), 'post'),
 		'notification' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any'), 'post'),
-		'pmprefs' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any'), 'post'),
 		'groupMembership' => array(array('profile_view_own'), array('manage_membergroups'), ''),
 		'deleteAccount' => array(array('profile_remove_any', 'profile_remove_own'), array('profile_remove_any'), 'post', true),
 		'activateAccount' => array(array(), array('moderate_forum'), 'get'),
@@ -588,7 +582,6 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		'notify_announcements', 'notify_send_body',
 	);
 	$profile_ints = array(
-		'pm_email_notify',
 		'notify_regularity',
 		'notify_types',
 		'icq',
@@ -604,7 +597,6 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		'location', 'birthdate',
 		'time_format',
 		'buddy_list',
-		'pm_ignore_list',
 		'smiley_set',
 		'signature', 'personal_text', 'avatar',
 		'ignore_boards',
@@ -657,60 +649,6 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		$_POST['birthdate'] = checkdate($_POST['bday1'], $_POST['bday2'], $_POST['bday3'] < 4 ? 4 : $_POST['bday3']) ? sprintf('%04d-%02d-%02d', $_POST['bday3'] < 4 ? 4 : $_POST['bday3'], $_POST['bday1'], $_POST['bday2']) : '0001-01-01';
 	elseif (isset($_POST['bday1']) || isset($_POST['bday2']) || isset($_POST['bday3']))
 		$_POST['birthdate'] = '0001-01-01';
-
-	if (isset($_POST['im_email_notify']))
-		$_POST['pm_email_notify'] = $_POST['im_email_notify'];
-
-	// Validate and set the ignorelist...
-	if (isset($_POST['pm_ignore_list']) || isset($_POST['im_ignore_list']))
-	{
-		if (!isset($_POST['pm_ignore_list']))
-			$_POST['pm_ignore_list'] = $_POST['im_ignore_list'];
-		$_POST['pm_ignore_list'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $_POST['pm_ignore_list']);
-		$_POST['pm_ignore_list'] = strtr(trim($_POST['pm_ignore_list']), array('\\\'' => '&#039;', "\n" => "', '", "\r" => '', '&quot;' => ''));
-
-		if (preg_match('~(\A|,)\*(\Z|,)~s', $_POST['pm_ignore_list']) == 0)
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT id_member
-				FROM {$db_prefix}members
-				WHERE member_name IN ('$_POST[pm_ignore_list]') OR real_name IN ('$_POST[pm_ignore_list]')
-				LIMIT " . (substr_count($_POST['pm_ignore_list'], '\', \'') + 1), __FILE__, __LINE__);
-			$_POST['pm_ignore_list'] = '';
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$_POST['pm_ignore_list'] .= $row['id_member'] . ',';
-			$smfFunc['db_free_result']($result);
-
-			// !!! Did we find all the members?
-
-			$_POST['pm_ignore_list'] = substr($_POST['pm_ignore_list'], 0, -1);
-		}
-		else
-			$_POST['pm_ignore_list'] = '*';
-	}
-
-	// Similarly, do the same for the buddy list
-	if (isset($_POST['buddy_list']))
-	{
-		$_POST['buddy_list'] = strtr(trim($_POST['buddy_list']), array('\\\'' => '&#039;', "\n" => "', '", "\r" => '', '&quot;' => ''));
-
-		if (trim($_POST['buddy_list']) != '')
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT id_member
-				FROM {$db_prefix}members
-				WHERE member_name IN ('$_POST[buddy_list]') OR real_name IN ('$_POST[buddy_list]')
-				LIMIT " . (substr_count($_POST['buddy_list'], '\', \'') + 1), __FILE__, __LINE__);
-			$_POST['buddy_list'] = '';
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$_POST['buddy_list'] .= $row['id_member'] . ',';
-			$smfFunc['db_free_result']($result);
-
-			// !!! Did we find all the members?
-
-			$_POST['buddy_list'] = substr($_POST['buddy_list'], 0, -1);
-		}
-	}
 
 	if (isset($_POST['ignore_brd']))
 	{
@@ -2865,49 +2803,6 @@ function notification($memID)
 	);
 
 	loadThemeOptions($memID);
-}
-
-function pmprefs($memID)
-{
-	global $txt, $user_profile, $db_prefix, $context, $db_prefix, $smfFunc;
-
-	// Tell the template what they are....
-	$context['send_email'] = $user_profile[$memID]['pm_email_notify'];
-
-	if ($user_profile[$memID]['pm_ignore_list'] != '*')
-	{
-		$result = $smfFunc['db_query']('', "
-			SELECT real_name
-			FROM {$db_prefix}members
-			WHERE FIND_IN_SET(id_member, '" . $user_profile[$memID]['pm_ignore_list'] . "')
-			LIMIT " . (substr_count($user_profile[$memID]['pm_ignore_list'], ',') + 1), __FILE__, __LINE__);
-		$pm_ignore_list = '';
-		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$pm_ignore_list .= "\n" . $row['real_name'];
-		$smfFunc['db_free_result']($result);
-
-		$pm_ignore_list = substr($pm_ignore_list, 1);
-	}
-	else
-		$pm_ignore_list = '*';
-
-	// Get all their "buddies"...
-	$result = $smfFunc['db_query']('', "
-		SELECT real_name
-		FROM {$db_prefix}members
-		WHERE FIND_IN_SET(id_member, '" . $user_profile[$memID]['buddy_list'] . "')
-		LIMIT " . (substr_count($user_profile[$memID]['buddy_list'], ',') + 1), __FILE__, __LINE__);
-	$buddy_list = '';
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-		$buddy_list .= "\n" . $row['real_name'];
-	$smfFunc['db_free_result']($result);
-
-	$context['buddy_list'] = substr($buddy_list, 1);
-	$context['ignore_list'] = $pm_ignore_list;
-	$context['page_title'] = $txt['pmprefs'] . ': ' . $txt['personal_messages'];
-
-	loadThemeOptions($memID);
-	loadCustomFields($memID, 'pmprefs');
 }
 
 // Function to allow the user to choose group membership etc...

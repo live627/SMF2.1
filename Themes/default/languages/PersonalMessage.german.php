@@ -69,6 +69,8 @@ $txt['pm_sel_label_title'] = 'Ausgew&auml;hlte kennzeichnen';
 
 $txt['pm_labels'] = 'Labels';
 $txt['pm_messages'] = 'Mitteilungen';
+// Untranslated!
+$txt['pm_actions'] = 'Actions';
 $txt['pm_preferences'] = 'Einstellungen';
 
 $txt['pm_is_replied_to'] = 'Sie haben diese Mitteilung weitergeleitet oder schon darauf geantwortet.';
@@ -133,4 +135,22 @@ $txt['birthday_email'] = 'Dear %1$s,
 Regards,
 The %2$s Team.';
 $txt['birthday_email_subject'] = 'Happy birthday from %1$s.';
+
+// Untranslated!
+$txt['pm_settings'] = 'Change Settings';
+$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
+$txt['pm_settings_save'] = 'Save Changes';
+
+$txt[325] = 'Liste der ignorierten Benutzer';
+$txt[326] = 'F&uuml;gen Sie einen Benutzername pro Zeile hinzu oder geben Sie * ein, um alle Mitteilungen zu ignorieren.';
+$txt[327] = 'Eine E-Mail senden, wenn Sie Private Mitteilungen erhalten?';
+$txt['email_notify_never'] = 'Nie';
+$txt['email_notify_buddies'] = 'Nur von Buddies';
+$txt['email_notify_always'] = 'Immer';
+
+$txt['copy_to_outbox'] = 'Eine Kopie jeder Privaten Mitteilung im Ausgang ablegen?';
+$txt['popup_messages'] = 'PopUp Fenster anzeigen, wenn Sie neue Private Mitteilungen erhalten?';
+//!!! Untranslated
+$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
+
 ?>

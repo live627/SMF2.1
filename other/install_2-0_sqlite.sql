@@ -1432,6 +1432,7 @@ COMMIT;
 
 CREATE TABLE {$db_prefix}personal_messages (
   id_pm integer primary key,
+  id_pm_head int NOT NULL default '0',
   id_member_from int NOT NULL default '0',
   deleted_by_sender smallint NOT NULL default '0',
   from_name varchar(255) NOT NULL,
@@ -1446,6 +1447,7 @@ CREATE TABLE {$db_prefix}personal_messages (
 
 CREATE INDEX {$db_prefix}personal_messages_id_member ON {$db_prefix}personal_messages (id_member_from, deleted_by_sender);
 CREATE INDEX {$db_prefix}personal_messages_msgtime ON {$db_prefix}personal_messages (msgtime);
+CREATE INDEX {$db_prefix}personal_messages_id_pm_head ON {$db_prefix}personal_messages (id_pm_head);
 
 #
 # Table structure for table `pm_recipients`

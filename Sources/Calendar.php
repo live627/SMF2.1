@@ -350,13 +350,13 @@ function calendarEventArray($low_date, $high_date, $use_permissions = true)
 	$events = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		// If the attached topic is not approved then for the moment pretend it's unlinked.
+		// If the attached topic is not approved then for the moment pretend it doesn't exist
 		//!!! This should be fixed to show them all and then sort by approval state later?
 		if (!empty($row['id_first_msg']) && !$row['approved'])
-			$row['id_board'] = $row['id_topic'] = $row['id_first_msg'] = 0;
+			continue;
 
-		// Censor the title.
-		censorText($row['title']);
+		// Force a censor of the title - as often these are used by others.
+		censorText($row['title'], $use_permissions ? false : true);
 
 		$start_date = sscanf($row['start_date'], '%04d-%02d-%02d');
 		$start_date = max(mktime(0, 0, 0, $start_date[1], $start_date[2], $start_date[0]), $low_date_time);

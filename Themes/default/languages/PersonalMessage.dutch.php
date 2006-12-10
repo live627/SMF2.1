@@ -69,6 +69,8 @@ $txt['pm_sel_label_title'] = 'Geselecteerde label';
 
 $txt['pm_labels'] = 'Labels';
 $txt['pm_messages'] = 'Berichten';
+// Untranslated!
+$txt['pm_actions'] = 'Actions';
 $txt['pm_preferences'] = 'Voorkeuren';
 
 $txt['pm_is_replied_to'] = 'Je hebt dit bericht doorgestuurd of beantwoord.';
@@ -133,4 +135,22 @@ $txt['birthday_email'] = 'Dear %1$s,
 Regards,
 The %2$s Team.';
 $txt['birthday_email_subject'] = 'Happy birthday from %1$s.';
+
+// Untranslated!
+$txt['pm_settings'] = 'Change Settings';
+$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
+$txt['pm_settings_save'] = 'Save Changes';
+
+$txt[325] = 'Negeerlijstje';
+$txt[326] = 'Iedere regel slechts 1 gebruikersnaam !';
+$txt[327] = 'Stuur een e-mail zodra je een persoonlijk bericht krijgt:';
+$txt['email_notify_never'] = 'Nooit';
+$txt['email_notify_buddies'] = 'Alleen van vrienden';
+$txt['email_notify_always'] = 'Altijd';
+
+$txt['copy_to_outbox'] = 'Sla standaard een Persoonlijk Bericht op in m\'n postvak uit.';
+$txt['popup_messages'] = 'Een pop-up scherm tonen indien je een nieuwe persoonlijk bericht hebt?';
+//!!! Untranslated
+$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
+
 ?>

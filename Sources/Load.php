@@ -84,10 +84,10 @@ if (!defined('SMF'))
 		- additionally detects the moderators of said boards.
 		- returns an array of information about the boards found.
 
-	string &censorText(string &text)
+	string &censorText(string &text, bool force = false)
 		- censors the passed string.
 		- if the theme setting allow_no_censored is on, and the theme option
-		  show_no_censored is enabled, does not censor.
+		  show_no_censored is enabled, does not censor - unless force is set.
 		- caches the list of censored words to reduce parsing.
 
 	void loadJumpTo()
@@ -1652,12 +1652,12 @@ function getBoardParents($id_parent)
 }
 
 // Replace all vulgar words with respective proper words. (substring or whole words..)
-function &censorText(&$text)
+function &censorText(&$text, $force = false)
 {
 	global $modSettings, $options, $settings, $txt;
 	static $censor_vulgar = null, $censor_proper;
 
-	if ((!empty($options['show_no_censored']) && $settings['allow_no_censored']) || empty($modSettings['censor_vulgar']))
+	if ((!empty($options['show_no_censored']) && $settings['allow_no_censored'] && !$force) || empty($modSettings['censor_vulgar']))
 		return $text;
 
 	// If they haven't yet been loaded, load them.

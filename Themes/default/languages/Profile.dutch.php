@@ -108,13 +108,6 @@ $txt['notifications_boards_none'] = 'Je wordt momenteel niet op de hoogte gehoud
 $txt['notifications_boards_howto'] = 'Om op de hoogte gehouden te worden van reacties in een board, klik je op de &quot;notify&quot; knop in de index van dat board.';
 $txt['notifications_update'] = 'Afmelden';
 
-$txt[325] = 'Negeerlijstje';
-$txt[326] = 'Iedere regel slechts 1 gebruikersnaam !';
-$txt[327] = 'Stuur een e-mail zodra je een persoonlijk bericht krijgt:';
-$txt['email_notify_never'] = 'Nooit';
-$txt['email_notify_buddies'] = 'Alleen van vrienden';
-$txt['email_notify_always'] = 'Altijd';
-
 $txt['statPanel_showStats'] = 'Gebruikers statistieken voor: ';
 $txt['statPanel_users_votes'] = 'Aantal stemmen uitgebracht';
 $txt['statPanel_users_polls'] = 'Aantal polls geopend';
@@ -160,8 +153,6 @@ $txt['theme'] = 'Lay-out voorkeuren';
 $txt['theme_info'] = 'Deze sectie laat je de lay-out van het forum zelf aanpassen.';
 $txt['notification'] = 'Notificaties en e-mail';
 $txt['notification_info'] = 'Je kunt met SMF berichten ontvangen als er reacties zijn op berichten, bij nieuwe topics, en nieuwsberichten. Je kunt deze instellingen hier aanpassen of bekijken van welke topics en boards je momenteel notificaties ontvangt.';
-$txt['pmprefs'] = 'Persoonlijke berichten opties';
-$txt['pmprefs_info'] = 'Andere leden van ' . $context['forum_name'] . ' kunnen persoonlijk contact met je opnemen, maar soms wil je iemands persoonlijke berichten juist negeren. Je kunt dat hier instellen.';
 // Untranslated!
 $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
@@ -248,8 +239,6 @@ $txt['show_online'] = 'Toon andere gebruikers je online status?';
 
 $txt['return_to_post'] = 'Altijd terug naar het topic na posten';
 $txt['no_new_reply_warning'] = 'Geef geen waarschuwing als er een nieuwe reactie is';
-$txt['copy_to_outbox'] = 'Sla standaard een Persoonlijk Bericht op in m\'n postvak uit.';
-$txt['popup_messages'] = 'Een pop-up scherm tonen indien je een nieuwe persoonlijk bericht hebt?';
 $txt['recent_posts_at_top'] = 'Toon meest recente berichten bovenaan.';
 $txt['recent_pms_at_top'] = 'Toon meest recente Persoonlijke Berichten bovenaan.';
 // Untranslated!
@@ -334,7 +323,6 @@ $txt['request_membership_email_subject'] = 'New Group Application';
 $txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt['regards_team'];
 
 //!!! Untranslated
-$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
 $txt['profile_updated_own'] = 'Your profile has successfully been updated';
 $txt['profile_updated_else'] = 'The profile for %1$s has been successfully updated';
 

@@ -107,13 +107,6 @@ $txt['notifications_boards_none'] = 'You aren\'t receiving notifications on any 
 $txt['notifications_boards_howto'] = 'To request notifications from a specific board, click the &quot;notify&quot; button in the index of that board.';
 $txt['notifications_update'] = 'Unsubscribe';
 
-$txt[325] = 'Ignorelist';
-$txt[326] = 'Add one Username on each line.<br />Or enter * to ignore all messages.';
-$txt[327] = 'Notify by email every time you receive a personal message:';
-$txt['email_notify_never'] = 'Never';
-$txt['email_notify_buddies'] = 'From Buddies Only';
-$txt['email_notify_always'] = 'Always';
-
 $txt['statPanel_showStats'] = 'User statistics for: ';
 $txt['statPanel_users_votes'] = 'Number of Votes Cast';
 $txt['statPanel_users_polls'] = 'Number of Polls Created';
@@ -159,8 +152,6 @@ $txt['theme'] = 'Look and Layout';
 $txt['theme_info'] = 'This section allows you to customize the look and layout of the forum.';
 $txt['notification'] = 'Notifications';
 $txt['notification_info'] = 'SMF allows you to be notified of replies to posts, newly posted topics, and forum announcements. You can change those settings here, or oversee the topics and boards you are currently receiving notifications for.';
-$txt['pmprefs'] = 'Personal Message Options';
-$txt['pmprefs_info'] = 'Other members of ' . $context['forum_name'] . ' can contact you personally, but sometimes you may want to ignore someone\'s messages.  This page allows you to set that, among other things.';
 $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
 $txt['ignoreboards'] = 'Ignore Boards Options';
@@ -245,8 +236,6 @@ $txt['show_online'] = 'Show others your online status?';
 
 $txt['return_to_post'] = 'Return to topics after posting by default.';
 $txt['no_new_reply_warning'] = 'Don\'t warn on new replies made while posting.';
-$txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by default.';
-$txt['popup_messages'] = 'Show a popup when you receive new messages?';
 $txt['recent_posts_at_top'] = 'Show most recent posts at the top.';
 $txt['recent_pms_at_top'] = 'Show most recent personal messages at top.';
 $txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
@@ -326,8 +315,6 @@ $txt['submit_request'] = 'Submit Request';
 $txt['request_membership_email_subject'] = 'New Group Application';
 // In the following email, %1$s is the recipients name, %2$s the requesting member, %3$s the group and %4$s the reason.
 $txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt['regards_team'];
-
-$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
 
 $txt['profile_updated_own'] = 'Your profile has successfully been updated';
 $txt['profile_updated_else'] = 'The profile for %1$s has been successfully updated';

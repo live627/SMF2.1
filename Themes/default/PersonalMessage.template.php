@@ -962,6 +962,7 @@ function template_send()
 						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 						<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 						<input type="hidden" name="replied_to" value="', !empty($context['quoted_message']['id']) ? $context['quoted_message']['id'] : 0, '" />
+						<input type="hidden" name="pm_head" value="', !empty($context['quoted_message']['pm_head']) ? $context['quoted_message']['pm_head'] : 0, '" />
 						<input type="hidden" name="f" value="', isset($context['folder']) ? $context['folder'] : '', '" />
 						<input type="hidden" name="l" value="', isset($context['current_label_id']) ? $context['current_label_id'] : -1, '" />
 					</form>
@@ -1280,6 +1281,79 @@ function template_labels()
 			</tr>
 		</table>
 	</form>';
+}
+
+// Template for options related to personal messages.
+function template_message_settings()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	// The main containing header.
+	echo '
+		<form action="', $scripturl, '?action=pm;sa=settings;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+			<table border="0" width="85%" cellspacing="0" cellpadding="4" align="center" class="tborder">
+				<tr class="titlebg">
+					<td>
+						', $txt['pm_settings'], '
+					</td>
+				</tr><tr class="windowbg">
+					<td class="smalltext" style="padding: 2ex;">
+						', $txt['pm_settings_desc'], '
+					</td>
+				</tr><tr>
+					<td class="windowbg2" style="padding-bottom: 2ex;">
+						<table border="0" width="100%" cellpadding="3">';
+
+	// A text box for the user to input usernames of everyone they want to ignore personal messages from.
+	echo '
+							<tr>
+								<td valign="top">
+									<b>', $txt[325], ':</b>
+									<div class="smalltext">
+										', $txt[326], '<br />
+										<br />
+										<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=\\\\n;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="middle" /> ', $txt['find_members'], '</a>
+									</div>
+								</td>
+								<td>
+									<textarea name="pm_ignore_list" id="pm_ignore_list" rows="10" cols="50">', $context['ignore_list'], '</textarea>
+								</td>
+							</tr>';
+
+	// Extra options available to the user for personal messages.
+	echo '
+							<tr>
+								<td colspan="2">
+									<input type="hidden" name="default_options[copy_to_outbox]" value="0" />
+									<label for="copy_to_outbox"><input type="checkbox" name="default_options[copy_to_outbox]" id="copy_to_outbox" value="1"', !empty($options['copy_to_outbox']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['copy_to_outbox'], '</label><br />
+									<input type="hidden" name="default_options[popup_messages]" value="0" />
+									<label for="popup_messages"><input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($options['popup_messages']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['popup_messages'], '</label><br />
+									<label for="pm_email_notify">', $txt[327], '</label>
+									<select name="pm_email_notify" id="pm_email_notify">
+										<option value="0"', empty($context['send_email']) ? ' selected="selected"' : '', '>', $txt['email_notify_never'], '</option>
+										<option value="1"', !empty($context['send_email']) && ($context['send_email'] == 1 || (empty($modSettings['enable_buddylist']) && $context['send_email'] > 1)) ? ' selected="selected"' : '', '>', $txt['email_notify_always'], '</option>';
+
+	if (!empty($modSettings['enable_buddylist']))
+		echo '
+										<option value="2"', !empty($context['send_email']) && $context['send_email'] > 1 ? ' selected="selected"' : '', '>', $txt['email_notify_buddies'], '</option>';
+
+	echo '
+									</select><br />
+									<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
+									<label for="pm_remove_inbox_label"><input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($options['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['pm_remove_inbox_label'], '</label><br />
+								</td>
+							</tr>';
+
+	echo '
+						</table>
+					</td>
+				</tr><tr class="catbg">
+					<td align="right">
+						<input type="submit" name="save" value="', $txt['pm_settings_save'], '" />
+					</td>
+				</tr>
+			</table>
+		</form>';
 }
 
 // Template for reporting a personal message.

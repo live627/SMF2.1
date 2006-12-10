@@ -84,6 +84,9 @@ if (!defined('SMF'))
 	void ManageLabels()
 		// !!!
 
+	void MessageSettings()
+		// !!!
+
 	void ReportMessage()
 		- allows the user to report a personal message to an administrator.
 		- in the first instance requires that the ID of the message to report
@@ -203,6 +206,7 @@ function MessageMain()
 		'search2' => 'MessageSearch2',
 		'send' => 'MessagePost',
 		'send2' => 'MessagePost2',
+		'settings' => 'MessageSettings',
 	);
 
 	if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
@@ -233,12 +237,18 @@ function messageIndexBar($area)
 			'title' => $txt['pm_labels'],
 			'areas' => array(),
 		),
+		'actions' => array(
+			'title' => $txt['pm_actions'],
+			'areas' => array(
+				'search' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=search">' . $txt['pm_search_bar_title'] . '</a>', 'href' => $scripturl . '?action=pm;sa=search'),
+				'prune' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=prune">' . $txt['pm_prune'] . '</a>', 'href' => $scripturl . '?action=pm;sa=prune'),
+			),
+		),
 		'pref' => array(
 			'title' => $txt['pm_preferences'],
 			'areas' => array(
-				'search' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=search">' . $txt['pm_search_bar_title'] . '</a>', 'href' => $scripturl . '?action=pm;sa=search'),
 				'manlabels' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=manlabels">' . $txt['pm_manage_labels'] . '</a>', 'href' => $scripturl . '?action=pm;sa=manlabels'),
-				'prune' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=prune">' . $txt['pm_prune'] . '</a>', 'href' => $scripturl . '?action=pm;sa=prune'),
+				'settings' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=settings">' . $txt['pm_settings'] . '</a>', 'href' => $scripturl . '?action=pm;sa=settings'),
 			),
 		),
 	);
@@ -1113,8 +1123,9 @@ function MessagePost()
 		// Get the quoted message (and make sure you're allowed to see this quote!).
 		$request = $smfFunc['db_query']('', "
 			SELECT
-				pm.id_pm, pm.body, pm.subject, pm.msgtime, mem.member_name,
-				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, pm.from_name) AS real_name
+				pm.id_pm, CASE WHEN pm.id_pm_head = 0 THEN pm.id_pm ELSE pm.id_pm_head END AS pm_head,
+				pm.body, pm.subject, pm.msgtime, mem.member_name, IFNULL(mem.id_member, 0) AS id_member,
+				IFNULL(mem.real_name, pm.from_name) AS real_name
 			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : "
 				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[pmsg])") . "
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
@@ -1168,6 +1179,7 @@ function MessagePost()
 		// Set up the quoted message array.
 		$context['quoted_message'] = array(
 			'id' => $row_quoted['id_pm'],
+			'pm_head' => $row_quoted['pm_head'],
 			'member' => array(
 				'name' => $row_quoted['real_name'],
 				'username' => $row_quoted['member_name'],
@@ -1295,8 +1307,9 @@ function messagePostError($error_types, $to, $bcc)
 
 		$request = $smfFunc['db_query']('', "
 			SELECT
-				pm.id_pm, pm.body, pm.subject, pm.msgtime, mem.member_name,
-				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, pm.from_name) AS real_name
+				pm.id_pm, CASE WHEN pm.id_pm_head = 0 THEN pm.id_pm ELSE pm.id_pm_head END AS pm_head,
+				pm.body, pm.subject, pm.msgtime, mem.member_name, IFNULL(mem.id_member, 0) AS id_member,
+				IFNULL(mem.real_name, pm.from_name) AS real_name
 			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'outbox' ? '' : "
 				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[replied_to])") . ")
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
@@ -1314,6 +1327,7 @@ function messagePostError($error_types, $to, $bcc)
 
 		$context['quoted_message'] = array(
 			'id' => $row_quoted['id_pm'],
+			'pm_head' => $row_quoted['pm_head'],
 			'member' => array(
 				'name' => $row_quoted['real_name'],
 				'username' => $row_quoted['member_name'],
@@ -1560,7 +1574,7 @@ function MessagePost2()
 	else
 	{
 		if (!empty($recipients['to']) || !empty($recipients['bcc']))
-			$context['send_log'] = sendpm($recipients, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']));
+			$context['send_log'] = sendpm($recipients, $_REQUEST['subject'], $_REQUEST['message'], !empty($_REQUEST['outbox']), null, !empty($_REQUEST['pm_head']) ? (int) $_REQUEST['pm_head'] : 0);
 		else
 			$context['send_log'] = array(
 				'sent' => array(),
@@ -2109,6 +2123,91 @@ function ManageLabels()
 		// To make the changes appear right away, redirect.
 		redirectExit('action=pm;sa=manlabels');
 	}
+}
+
+// Edit Personal Message Settings
+function MessageSettings()
+{
+	global $txt, $user_settings, $user_info, $db_prefix, $context, $db_prefix, $sourcedir, $smfFunc;
+
+	// Need this for custom fields!
+	require_once($sourcedir . '/Profile.php');
+
+	// Are we saving?
+	if (isset($_REQUEST['save']))
+	{
+		// Validate and set the ignorelist...
+		$_POST['pm_ignore_list'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $_POST['pm_ignore_list']);
+		$_POST['pm_ignore_list'] = strtr(trim($_POST['pm_ignore_list']), array('\\\'' => '&#039;', "\n" => "', '", "\r" => '', '&quot;' => ''));
+	
+		if (preg_match('~(\A|,)\*(\Z|,)~s', $_POST['pm_ignore_list']) == 0)
+		{
+			$result = $smfFunc['db_query']('', "
+				SELECT id_member
+				FROM {$db_prefix}members
+				WHERE member_name IN ('$_POST[pm_ignore_list]') OR real_name IN ('$_POST[pm_ignore_list]')
+				LIMIT " . (substr_count($_POST['pm_ignore_list'], '\', \'') + 1), __FILE__, __LINE__);
+			$_POST['pm_ignore_list'] = '';
+			while ($row = $smfFunc['db_fetch_assoc']($result))
+				$_POST['pm_ignore_list'] .= $row['id_member'] . ',';
+			$smfFunc['db_free_result']($result);
+
+			// !!! Did we find all the members?
+			$_POST['pm_ignore_list'] = substr($_POST['pm_ignore_list'], 0, -1);
+		}
+		else
+			$_POST['pm_ignore_list'] = '*';
+
+		// Save the member settings!
+		updateMemberData($user_info['id'], array(
+			'pm_ignore_list' => '\'' . $smfFunc['db_escape_string']($_POST['pm_ignore_list']) . '\'',
+			'pm_email_notify' => (int) $_POST['pm_email_notify'],
+		));
+
+		// We'll save the theme settings too!
+		makeThemeChanges($user_info['id'], $user_info['theme']);
+
+		// Redirect to reload.
+		redirectexit('action=pm;sa=settings');
+	}
+
+	// Tell the template what they are....
+	$context['sub_template'] = 'message_settings';
+	$context['page_title'] = $txt['pm_settings'];
+	$context['send_email'] = $user_settings['pm_email_notify'];
+
+	if ($user_settings['pm_ignore_list'] != '*')
+	{
+		$result = $smfFunc['db_query']('', "
+			SELECT real_name
+			FROM {$db_prefix}members
+			WHERE FIND_IN_SET(id_member, '" . $user_settings['pm_ignore_list'] . "')
+			LIMIT " . (substr_count($user_settings['pm_ignore_list'], ',') + 1), __FILE__, __LINE__);
+		$pm_ignore_list = '';
+		while ($row = $smfFunc['db_fetch_assoc']($result))
+			$pm_ignore_list .= "\n" . $row['real_name'];
+		$smfFunc['db_free_result']($result);
+
+		$pm_ignore_list = substr($pm_ignore_list, 1);
+	}
+	else
+		$pm_ignore_list = '*';
+
+	// Get all their "buddies"...
+	$result = $smfFunc['db_query']('', "
+		SELECT real_name
+		FROM {$db_prefix}members
+		WHERE FIND_IN_SET(id_member, '" . $user_settings['buddy_list'] . "')
+		LIMIT " . (substr_count($user_settings['buddy_list'], ',') + 1), __FILE__, __LINE__);
+	$buddy_list = '';
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+		$buddy_list .= "\n" . $row['real_name'];
+	$smfFunc['db_free_result']($result);
+
+	$context['buddy_list'] = substr($buddy_list, 1);
+	$context['ignore_list'] = $pm_ignore_list;
+
+	loadCustomFields($user_info['id'], 'pmprefs');
 }
 
 // Allows a user to report a personal message they receive to the administrator.

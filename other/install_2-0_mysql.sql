@@ -1331,6 +1331,7 @@ VALUES (-1, 'search_posts'),
 
 CREATE TABLE {$db_prefix}personal_messages (
   id_pm int(10) unsigned NOT NULL auto_increment,
+  id_pm_head int(10) unsigned NOT NULL default '0',
   id_member_from mediumint(8) unsigned NOT NULL default '0',
   deleted_by_sender tinyint(3) unsigned NOT NULL default '0',
   from_name tinytext NOT NULL,
@@ -1339,7 +1340,8 @@ CREATE TABLE {$db_prefix}personal_messages (
   body text NOT NULL,
   PRIMARY KEY (id_pm),
   KEY id_member (id_member_from, deleted_by_sender),
-  KEY msgtime (msgtime)
+  KEY msgtime (msgtime),
+  KEY id_pm_head (id_pm_head)
 ) TYPE=MyISAM;
 
 #

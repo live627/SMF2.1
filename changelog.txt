@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2597 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2598 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -32,7 +32,10 @@ December 2006
  + Changed the SEF handling in the bridge for use with third party Joomla SEF components. (Mambo/Joomla bridge/smf.php)
  + Added Kindred's enhancements to the bridged whos online. (Mambo/Joomla bridge/smf.php, smf_integration_arrays.php)
  ! Deleting a member in SMF deleted in Joomla, but not in Joomla's ACL (Mambo/Joomla bridge/smf.php)
-
+ ! censorText can now be forced to censor the text - and this is now used for the cached Calendar data. (Load.php, Calendar.php)
+ ! Moved Personal Message options from profile to personal messaging. (Profile.php, PersonalMessage.php, Profile template, PersonalMessage template)
+ & Moved language entries associated with above to PersonalMessage language files. Added a couple of new strings. (Profile, PersonalMessage language files)
+ ! When a user replies to a personal message keep track of what is linked to what - to allow threaded views in the future. (upgrade, install scripts. Subs-Post.php, PersonalMessage.php)
 
 
 November 2006

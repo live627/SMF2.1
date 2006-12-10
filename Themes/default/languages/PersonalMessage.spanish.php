@@ -70,6 +70,8 @@ $txt['pm_sel_label_title'] = 'Etiquetar seleccionados';
 
 $txt['pm_labels'] = 'Etiquetas';
 $txt['pm_messages'] = 'Mensajes';
+// Untranslated!
+$txt['pm_actions'] = 'Actions';
 $txt['pm_preferences'] = 'Configuraci&oacute;n';
 
 $txt['pm_is_replied_to'] = 'Haz reenviado o respondido a este mensaje.';
@@ -141,4 +143,22 @@ $txt['birthday_email'] = 'Dear %1$s,
 Regards,
 The %2$s Team.';
 $txt['birthday_email_subject'] = 'Happy birthday from %1$s.';
+
+// Untranslated!
+$txt['pm_settings'] = 'Change Settings';
+$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
+$txt['pm_settings_save'] = 'Save Changes';
+
+$txt[325] = 'Lista de ignorados';
+$txt[326] = 'Agrega un nombre de usuario en cada l&iacute;nea.<br />O escribe * para ignorar todos los mensajes.';
+$txt[327] = 'Notificar por email cada que recibas un mensaje personal:';
+$txt['email_notify_never'] = 'Nunca';
+$txt['email_notify_buddies'] = 'Solamente de los amigos';
+$txt['email_notify_always'] = 'Siempre';
+
+$txt['copy_to_outbox'] = 'Guardar, por defecto, una copia de cada Mensaje Personal en mi buz&oacute;n de salida.';
+$txt['popup_messages'] = '&iquest;Mostrar un popup cuando recibas un nuevo mensaje?';
+//!!! Untranslated
+$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
+
 ?>

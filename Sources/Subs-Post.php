@@ -70,12 +70,13 @@ if (!defined('SMF'))
 		//!!
 
 	array sendpm(array recipients, string subject, string message,
-			bool store_outbox = false, array from = current_member)
+			bool store_outbox = false, array from = current_member, int pm_head = 0)
 		- sends an personal message from the specified person to the
 		  specified people. (from defaults to the user.)
 		- recipients should be an array containing the arrays 'to' and 'bcc',
 		  both containing ID_MEMBERs.
 		- subject and message should have no slashes and no html entities.
+		- pm_head is the ID of the chain being replied to - if any.
 		- from is an array, with the id, name, and username of the member.
 		- returns an array with log entries telling how many recipients were
 		  successful and which recipients it failed to send to.
@@ -773,7 +774,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 }
 
 // Send off a personal message.
-function sendpm($recipients, $subject, $message, $store_outbox = false, $from = null)
+function sendpm($recipients, $subject, $message, $store_outbox = false, $from = null, $pm_head = 0)
 {
 	global $db_prefix, $scripturl, $txt, $user_info, $language;
 	global $modSettings, $smfFunc;
@@ -898,8 +899,8 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	// Insert the message itself and then grab the last insert id.
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}personal_messages
-			(id_member_from, deleted_by_sender, from_name, msgtime, subject, body)
-		VALUES ($from[id], " . ($store_outbox ? '0' : '1') . ", SUBSTRING('$from[username]', 1, 255), " . time() . ", SUBSTRING('$htmlsubject', 1, 255), SUBSTRING('$htmlmessage', 1, 65534))", __FILE__, __LINE__);
+			(id_pm_head, id_member_from, deleted_by_sender, from_name, msgtime, subject, body)
+		VALUES ($pm_head, $from[id], " . ($store_outbox ? '0' : '1') . ", SUBSTRING('$from[username]', 1, 255), " . time() . ", SUBSTRING('$htmlsubject', 1, 255), SUBSTRING('$htmlmessage', 1, 65534))", __FILE__, __LINE__);
 	$id_pm = db_insert_id("{$db_prefix}personal_messages", 'id_pm');
 
 	// Add the recipients.
