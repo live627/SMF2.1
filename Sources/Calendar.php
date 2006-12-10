@@ -294,7 +294,7 @@ function calendarBirthdayArray($low_date, $high_date)
 	$year_high = (int) substr($high_date, 0, 4);
 
 	// Collect all of the birthdays for this month.  I know, it's a painful query.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('birthday_array', "
 		SELECT id_member, real_name, YEAR(birthdate) AS birthYear, birthdate
 		FROM {$db_prefix}members
 		WHERE YEAR(birthdate) != '0001'

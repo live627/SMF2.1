@@ -1371,7 +1371,7 @@ function makeCustomFieldChanges($memID, $area)
 		// Validate the user data.
 		if ($row['field_type'] == 'check')
 			$value = isset($_POST['customfield'][$row['col_name']]) ? 1 : 0;
-		elseif ($row['field_type'] == 'select')
+		elseif ($row['field_type'] == 'select' || $row['field_type'] == 'radio')
 		{
 			$value = $row['default_value'];
 			foreach (explode(',', $row['field_options']) as $k => $v)
@@ -3486,6 +3486,19 @@ function loadCustomFields($memID, $area = 'summary')
 			}
 
 			$input_html .= '</select>';
+		}
+		elseif ($row['field_type'] == 'radio')
+		{
+			$input_html = '<fieldset>';
+			$options = explode(',', $row['field_options']);
+			foreach ($options as $k => $v)
+			{
+				$true = (!$exists && $row['default_value'] == $v) || $value == $v;
+				$input_html .= '<label for="customfield_' . $row['col_name'] . '_' . $k . '"><input type="radio" name="customfield[' . $row['col_name'] . ']" id="customfield_' . $row['col_name'] . '_' . $k . '" value="' . $k . '" ' . ($true ? 'checked="checked"' : '') . '>' . $v . '</label><br />';
+				if ($true)
+					$output_html = $v;
+			}
+			$input_html .= '</fieldset>';
 		}
 		elseif ($row['field_type'] == 'text')
 			$input_html = '<input type="text" name="customfield[' . $row['col_name'] . ']" ' . ($row['field_length'] != 0 ? 'maxlength="' . $row['field_length'] . '"' : '') . ' value="' . $value . '" />';

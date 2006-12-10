@@ -33,22 +33,22 @@ if (!defined('SMF'))
 		- loads any integration settings, SMF_INTEGRATION_SETTINGS, etc.
 
 	void loadUserSettings()
-        - sets up the $user_info array
-        - assigns $user_info['query_wanna_see_board'] for what boards the user can see.
-        - first checks for cookie or intergration validation.
-        - uses the current session if no integration function or cookie is found.
-        - checks password length, if member is activated and the login span isn't over.
-        - if validation fails for the user, $id_member is set to 0.
-        - updates the last visit time when needed.
+		- sets up the $user_info array
+		- assigns $user_info['query_wanna_see_board'] for what boards the user can see.
+		- first checks for cookie or intergration validation.
+		- uses the current session if no integration function or cookie is found.
+		- checks password length, if member is activated and the login span isn't over.
+		- if validation fails for the user, $id_member is set to 0.
+		- updates the last visit time when needed.
 
-    void loadBoard()
-        - sets up the $board_info array for current board information.
-        - if cache is enabled, the $board_info array is stored in cache.
-        - redirects to appropriate post if only message id is requested.
-        - is only used when inside a topic or board.
-        - determines the local moderators for the board.
-        - adds group id 3 if the user is a local moderator for the board they are in.
-        - prevents access if user is not in proper group nor a local moderator of the board.
+	void loadBoard()
+		- sets up the $board_info array for current board information.
+		- if cache is enabled, the $board_info array is stored in cache.
+		- redirects to appropriate post if only message id is requested.
+		- is only used when inside a topic or board.
+		- determines the local moderators for the board.
+		- adds group id 3 if the user is a local moderator for the board they are in.
+		- prevents access if user is not in proper group nor a local moderator of the board.
 
 	void loadPermissions()
 		// !!!

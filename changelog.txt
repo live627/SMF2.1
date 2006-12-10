@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2594 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2595 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -23,6 +23,10 @@ December 2006
  ! Added transaction support to the database abstraction layer. (Database source files)
  ! The regular expression used for parsing '/me'-lines didn't work properly in older PHP versions. (Subs-Post.php)
  ! Updated database queries a bit to re-fix PostgreSQL support. (Various files)
+ + Added set of database functions to allow mod writers to write abstracted schema changes. (DbPackages-schema.php)
+ + When uninstalling a modification users will be asked whether they wish to reverse database changes. (Packages.php, install_2-0 and upgrade_2-0 scripts)
+ ! You may now choose to have radio buttons as a custom profile field. (ModSettings.php, Profile.php, Admin template)
+ ! If the detected IP address for a user is different than the REMOTE_ADDR variable make it more obvious in TrackUser/TrackIP. (Profile.php, Profile template)
 
 
 November 2006

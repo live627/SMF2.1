@@ -364,16 +364,18 @@ function doStep0()
 
 	// Is some database support even compiled in?
 	$foundDBCount = 0;
-	$missingDBScript = false;
 
 	foreach ($databases as $key => $db)
 	{
 		if ($db['supported'])
 		{
 			if (!file_exists(dirname(__FILE__) . '/install_' . $GLOBALS['db_script_version'] . '_' . $key . '.sql'))
-				$missingDBScript = true;
-			$db_type = $key;
-			$foundDBCount++;
+				$databases[$key]['suppoted'] = false;
+			else
+			{
+				$db_type = $key;
+				$foundDBCount++;
+			}
 		}
 	}
 
@@ -383,7 +385,7 @@ function doStep0()
 	elseif (!function_exists('session_start'))
 		$error = 'error_session_missing';
 	// Make sure they uploaded all the files.
-	elseif (!file_exists(dirname(__FILE__) . '/index.php') || $missingDBScript)
+	elseif (!file_exists(dirname(__FILE__) . '/index.php'))
 		$error = 'error_missing_files';
 	// Very simple check on the session.save_path for Windows.
 	// !!! Move this down later if they don't use database-driven sessions?

@@ -100,6 +100,8 @@ $txt['package54'] = 'Datei';
 $txt['package55'] = 'Baum';
 $txt['package56'] = 'Modifikation ausf&uuml;hren';
 $txt['package57'] = 'Code ausf&uuml;hren';
+// Untranslated!
+$txt['execute_database_changes'] = 'Adapt Database';
 
 $txt['package_install_actions'] = 'Installationsanweisungen f&uuml;r';
 $txt['package_will_fail_title'] = 'Fehler bei Paketinstallation';

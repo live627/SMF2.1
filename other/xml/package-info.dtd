@@ -15,16 +15,16 @@
 	<!ELEMENT version (#PCDATA)>
 
 	<!-- Installation, uninstallation..  Note that more than one mod file can be used. -->
-	<!ELEMENT install (readme?, redirect?, error?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
+	<!ELEMENT install (readme?, redirect?, error?, code*, database*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST install for CDATA #IMPLIED>
 
-	<!ELEMENT uninstall (readme?, redirect?, error?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
+	<!ELEMENT uninstall (readme?, redirect?, error?, code*, database*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST uninstall for CDATA #IMPLIED>
 
 	<!-- Upgrade from another version. -->
-	<!ELEMENT upgrade (readme?, redirect?, error?, code*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
+	<!ELEMENT upgrade (readme?, redirect?, error?, code*, database*, modification*, create-dir*, create-file*, require-dir*, require-file*, move-dir*, move-file*, remove-dir*, remove-file*)>
 		<!ATTLIST upgrade from CDATA #IMPLIED>
 		<!-- Optional "for" attribute specifies for which version of SMF. -->
 		<!ATTLIST upgrade for CDATA #IMPLIED>
@@ -51,6 +51,11 @@
 		<!ELEMENT code (#PCDATA)>
 			<!-- Inline or in a file? -->
 			<!ATTLIST code type (inline|file) "file">
+
+		<!-- Executable PHP code - specifically doing database work... -->
+		<!ELEMENT database (#PCDATA)>
+			<!-- Inline or in a file? -->
+			<!ATTLIST database type (inline|file) "file">
 
 		<!-- An actual mod file itself. -->
 		<!ELEMENT modification (#PCDATA)>

@@ -146,7 +146,8 @@ $txt['custom_profile_none'] = 'You have not created any custom profile fields ye
 // Untranslated!
 $txt['custom_profile_type_text'] = 'Text';
 $txt['custom_profile_type_textarea'] = 'Large Text';
-$txt['custom_profile_type_select'] = 'Selection';
+$txt['custom_profile_type_select'] = 'Select Box';
+$txt['custom_profile_type_radio'] = 'Radio Button';
 $txt['custom_profile_type_check'] = 'Checkbox';
 
 // Untranslated!

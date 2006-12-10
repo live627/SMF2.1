@@ -945,6 +945,7 @@ CREATE TABLE {$db_prefix}log_packages (
   time_removed int NOT NULL default '0',
   install_state smallint NOT NULL default '1',
   failed_steps text NOT NULL,
+  db_changes text NOT NULL,
   themes_installed varchar(255) NOT NULL
 );
 

@@ -131,6 +131,9 @@ function db_query($identifier, $db_string, $file, $line, $connection = null)
 
 	// Special queries that need processing.
 	$replacements = array(
+		'birthday_array' => array(
+			'~DATE_FORMAT\(([^,]+),\s*([^\)]+)\s*\)~' => 'strftime($2, $1)'
+		),
 		'main_topics_query' => array(
 			'~SUBSTRING~' => 'SUBSTR',
 		),

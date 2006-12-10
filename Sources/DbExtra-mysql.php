@@ -140,7 +140,7 @@ function db_optimize_table($table)
 	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', "
-			OPTIMIZE TABLE `' . $table[0] . '`", false, false);
+			OPTIMIZE TABLE `$table`", false, false);
 	if (!$request)
 		return -1;
 
@@ -161,7 +161,7 @@ function db_list_tables($db = false, $filter = false)
 	$db = $db == false ? $db_name : $db;
 	$filter = $filter == false ? '' : " LIKE $filter";
 
-	$smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', "
 		SHOW TABLES
 		FROM $db
 		$filter", false, false);

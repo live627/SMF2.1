@@ -702,7 +702,7 @@ function EditCustomProfiles()
 				'cols' => $cols,
 				'bbc' => $row['bbc'] ? true : false,
 				'default_check' => $row['field_type'] == 'check' && $row['default_value'] ? true : false,
-				'default_select' => $row['field_type'] == 'select' ? $row['default_value'] : '',
+				'default_select' => $row['field_type'] == 'select' || $row['field_type'] == 'radio' ? $row['default_value'] : '',
 				'options' => strlen($row['field_options']) > 1 ? explode(',', $row['field_options']) : array('', '', ''),
 				'active' => $row['active'],
 				'private' => $row['private'],
@@ -763,7 +763,7 @@ function EditCustomProfiles()
 		$field_options = '';
 		$newOptions = array();
 		$default = isset($_POST['default_check']) && $_POST['field_type'] == 'check' ? 1 : '';
-		if (!empty($_POST['select_option']) && $_POST['field_type'] == 'select')
+		if (!empty($_POST['select_option']) && ($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio'))
 		{
 			foreach ($_POST['select_option'] as $k => $v)
 			{
@@ -823,7 +823,7 @@ function EditCustomProfiles()
 		{
 			// Anything going to check or select is pointless keeping - as is anything coming from check!
 			if (($_POST['field_type'] == 'check' && $context['field']['type'] != 'check')
-				|| ($_POST['field_type'] == 'select' && $context['field']['type'] != 'select')
+				|| (($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio') && $context['field']['type'] != 'select' && $context['field']['type'] != 'radio')
 				|| ($context['field']['type'] == 'check' && $_POST['field_type'] != 'check'))
 			{
 				$smfFunc['db_query']('', "
@@ -832,7 +832,7 @@ function EditCustomProfiles()
 						AND id_member > 0", __FILE__, __LINE__);
 			}
 			// Otherwise - if the select is edited may need to adjust!
-			elseif ($_POST['field_type'] == 'select')
+			elseif ($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio')
 			{
 				$optionChanges = array();
 				$takenKeys = array();
@@ -882,7 +882,7 @@ function EditCustomProfiles()
 				WHERE id_field = $context[fid]", __FILE__, __LINE__);
 
 			// Just clean up any old selects - these are a pain!
-			if ($_POST['field_type'] == 'select' && !empty($newOptions))
+			if (($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio') && !empty($newOptions))
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}themes
 					WHERE variable = '" . $context['field']['colname'] . "'

@@ -157,7 +157,7 @@ function smf_main()
 
 	// Check if the user should be disallowed access.
 	is_not_banned();
-
+	
 	// If we are in a topic and don't have permission to approve it then duck out now.
 	if (!empty($topic) && empty($board_info['cur_topic_approved']) && !allowedTo('approve_posts'))
 		fatal_lang_error(472, false);

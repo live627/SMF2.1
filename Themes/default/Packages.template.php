@@ -61,13 +61,38 @@ function template_view_package()
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['package42'], '</td>
+			</tr>';
+
+	// Are there data changes to be removed?
+	if ($context['uninstalling'] && !empty($context['database_changes']))
+	{
+		echo '
+			<tr class="windowbg2">
+				<td>
+					<label for="do_db_changes"><input type="checkbox" name="do_db_changes" id="do_db_changes" class="check" />', $txt['package_db_uninstall'], '</label> [<a href="#" onclick="return swap_database_changes();">', $txt['package_db_uninstall_details'], '</a>]
+				</td>
 			</tr>
+			<tr class="windowbg2" id="db_changes_div">
+				<td>
+					', $txt['package_db_uninstall_actions'], ':
+					<ul>';
+
+		foreach ($context['database_changes'] as $change)
+			echo '
+						<li>', $change, '</li>';
+		echo '
+					</ul>
+				</td>
+			</tr>';
+	}
+
+	echo '
 			<tr>
 				<td class="catbg">', $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['package_install_actions'], ' &quot;', $context['package_name'], '&quot;:</td>
 			</tr><tr>
 				<td class="windowbg2">';
 
-	if (empty($context['actions']))
+	if (empty($context['actions']) && empty($context['database_changes']))
 		echo '
 					<b>', $txt['package45'], '</b>';
 	else
@@ -156,7 +181,7 @@ function template_view_package()
 	}
 
 	// Are we effectively ready to install?
-	if (!$context['ftp_needed'] && !empty($context['actions']))
+	if (!$context['ftp_needed'] && (!empty($context['actions']) || !empty($context['database_changes'])))
 	{
 		echo '
 		<tr class="titlebg">
@@ -227,6 +252,21 @@ function template_view_package()
 			vis = !vis;
 			theme_action_area.style.display = vis ? "" : "none";
 			swap_theme_image.src = "', $settings['images_url'], '/" + (vis ? "collapse" : "expand") + ".gif";
+			return false;
+		}
+	// ]]></script>';
+
+	// And a bit more for database changes.
+	if (!empty($context['database_changes']))
+		echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var database_changes_area = document.getElementById(\'db_changes_div\');
+		var db_vis = false;
+		database_changes_area.style.display = "none";
+		function swap_database_changes()
+		{
+			db_vis = !db_vis;
+			database_changes_area.style.display = db_vis ? "" : "none";
 			return false;
 		}
 	// ]]></script>';

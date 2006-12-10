@@ -848,12 +848,12 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 	{
 		$actionType = $action->name();
 
-		if ($actionType == 'readme' || $actionType == 'code' || $actionType == 'modification' || $actionType == 'redirect')
+		if ($actionType == 'readme' || $actionType == 'code' || $actionType == 'database' || $actionType == 'modification' || $actionType == 'redirect')
 		{
 			// !!! TODO: Make sure the file actually exists?  Might not work when testing?
 			if ($action->exists('@type') && $action->fetch('@type') == 'inline')
 			{
-				$filename = $temp_path . '/$auto_' . $temp_auto++ . ($actionType == 'readme' || $actionType == 'redirect' ? '.txt' : ($actionType == 'code' ? '.php' : '.mod'));
+				$filename = $temp_path . '/$auto_' . $temp_auto++ . ($actionType == 'readme' || $actionType == 'redirect' ? '.txt' : ($actionType == 'code' || $actionType == 'database' ? '.php' : '.mod'));
 				package_put_contents($filename, $action->fetch('.'));
 				$filename = strtr($filename, array($temp_path . '/' => ''));
 			}
@@ -1019,7 +1019,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 	$not_done = array(array('type' => '!'));
 	foreach ($return as $action)
 	{
-		if ($action['type'] == 'modification' || $action['type'] == 'code' || $action['type'] == 'redirect')
+		if ($action['type'] == 'modification' || $action['type'] == 'code' || $action['type'] == 'database' || $action['type'] == 'redirect')
 			$not_done[] = $action;
 
 		if ($action['type'] == 'create-dir')

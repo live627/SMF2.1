@@ -1816,7 +1816,7 @@ function template_edit_profile_field()
 			document.getElementById("max_length_div").style.display = curType == "text" || curType == "textarea" ? "" : "none";
 			document.getElementById("dimension_div").style.display = curType == "textarea" ? "" : "none";
 			document.getElementById("bbc_div").style.display = curType == "textarea" ? "" : "none";
-			document.getElementById("options_div").style.display = curType == "select" ? "" : "none";
+			document.getElementById("options_div").style.display = curType == "select" || curType == "radio" ? "" : "none";
 			document.getElementById("default_div").style.display = curType == "check" ? "" : "none";
 			document.getElementById("mask_div").style.display = curType == "text" ? "" : "none";
 			document.getElementById("regex_div").style.display = curType == "text" && document.getElementById("mask").value == "regex" ? "" : "none";
@@ -1889,6 +1889,7 @@ function template_edit_profile_field()
 						<option value="text" ', $context['field']['type'] == 'text' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_text'], '</option>
 						<option value="textarea" ', $context['field']['type'] == 'textarea' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_textarea'], '</option>
 						<option value="select" ', $context['field']['type'] == 'select' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_select'], '</option>
+						<option value="radio" ', $context['field']['type'] == 'radio' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_radio'], '</option>
 						<option value="check" ', $context['field']['type'] == 'check' ? 'selected="selected"' : '', '>', $txt['custom_profile_type_check'], '</option>
 					</select>
 				</td>

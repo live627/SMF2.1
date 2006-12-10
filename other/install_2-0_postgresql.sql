@@ -1112,6 +1112,7 @@ CREATE TABLE {$db_prefix}log_packages (
   install_state smallint NOT NULL default '1',
   failed_steps text NOT NULL,
   themes_installed varchar(255) NOT NULL,
+  db_changes text NOT NULL,
   PRIMARY KEY (id_install)
 );
 

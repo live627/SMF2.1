@@ -100,6 +100,8 @@ $txt['package54'] = 'Bestand';
 $txt['package55'] = 'Boom';
 $txt['package56'] = 'Voer aanpassing uit';
 $txt['package57'] = 'Voer code uit';
+// Untranslated!
+$txt['execute_database_changes'] = 'Adapt Database';
 
 $txt['package_install_actions'] = 'Installatieacties voor';
 $txt['package_will_fail_title'] = 'Fout bij pakketinstallatie';

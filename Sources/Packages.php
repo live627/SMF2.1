@@ -250,7 +250,7 @@ function PackageInstallTest()
 
 	// See if it is installed?
 	$request = $smfFunc['db_query']('', "
-		SELECT version, themes_installed
+		SELECT version, themes_installed, db_changes
 		FROM {$db_prefix}log_packages
 		WHERE package_id = '" . $smfFunc['db_escape_string']($packageInfo['id']) . "'
 			AND install_state = 1", __FILE__, __LINE__);
@@ -258,8 +258,23 @@ function PackageInstallTest()
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
+		$db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
 	}
 	$smfFunc['db_free_result']($request);
+
+	$context['database_changes'] = array();
+	if (!empty($db_changes))
+	{
+		foreach ($db_changes as $change)
+		{
+			if (isset($change[2]) && isset($txt['package_db_' . $change[0]]))
+				$context['database_changes'][] = sprintf($txt['package_db_' . $change[0]], $change[1], $change[2]);
+			elseif (isset($txt['package_db_' . $change[0]]))
+				$context['database_changes'][] = sprintf($txt['package_db_' . $change[0]], $change[1]);
+			else
+				$context['database_changes'][] = $change[0] . '-' . $change[1] . (isset($change[2]) ? '-' . $change[2] : '');
+		}
+	}
 
 	// Wait, it's not installed yet!
 	if (!isset($old_version) && $context['uninstalling'])
@@ -434,6 +449,13 @@ function PackageInstallTest()
 				'type' => $txt['package57'],
 				'action' => $action['filename']
 			);
+		elseif ($action['type'] == 'database')
+		{
+			$thisAction = array(
+				'type' => $txt['execute_database_changes'],
+				'action' => $action['filename']
+			);
+		}
 		elseif (in_array($action['type'], array('create-dir', 'create-file')))
 			$thisAction = array(
 				'type' => $txt['package50'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package55'] : $txt['package54']),
@@ -584,7 +606,7 @@ function PackageInstall()
 
 	// Is it actually installed?
 	$request = $smfFunc['db_query']('', "
-		SELECT version, themes_installed
+		SELECT version, themes_installed, db_changes
 		FROM {$db_prefix}log_packages
 		WHERE package_id = '" . $smfFunc['db_escape_string']($packageInfo['id']) . "'
 			AND install_state = 1", __FILE__, __LINE__);
@@ -592,6 +614,7 @@ function PackageInstall()
 	{
 		$old_themes = explode(',', $row['themes_installed']);
 		$old_version = $row['version'];
+		$db_changes = empty($row['db_changes']) ? array() : unserialize($row['db_changes']);
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -677,9 +700,21 @@ function PackageInstall()
 			elseif ($action['type'] == 'code' && !empty($action['filename']))
 			{
 				// This is just here as reference for what is available.
-				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $db_prefix, $forum_version;
+				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $db_prefix, $forum_version, $smfFunc;
 
 				// Now include the file and be done with it ;).
+				require($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']);
+			}
+			elseif ($action['type'] == 'database' && !empty($action['filename']))
+			{
+				// These can also be there for database changes.
+				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $db_prefix, $forum_version, $smfFunc;
+				global $db_package_log;
+
+				// We'll likely want the package specific database functionality!
+				db_extend('packages');
+
+				// Let the file work its magic ;)
 				require($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']);
 			}
 			// Handle a redirect...
@@ -734,6 +769,30 @@ function PackageInstall()
 		// Assuming we're not uninstalling, add the entry.
 		if (!$context['uninstalling'])
 		{
+			// If there are some database changes we might want to remove then filter them out.
+			if (!empty($db_package_log))
+			{
+				// We're really just checking for entries which are create table AND add columns (etc).
+				$tables = array();
+				function sort_table_first($a, $b)
+				{
+					if ($a[0] == $b[0])
+						return 0;
+					return $a[0] == 'remove_table' ? -1 : 1;
+				}
+				usort($db_package_log, 'sort_table_first');
+				foreach ($db_package_log as $k => $log)
+				{
+					if ($log[0] == 'remove_table')
+						$tables[] = $log[1];
+					elseif (in_array($log[1], $tables))
+						unset($db_package_log[$k]);
+				}
+				$db_changes = $smfFunc['db_escape_string'](serialize($db_package_log));
+			}
+			else
+				$db_changes = '';
+
 			// What themes did we actually install?
 			$themes_installed = array_unique($themes_installed);
 			$themes_installed = implode(',', $themes_installed);
@@ -744,16 +803,33 @@ function PackageInstall()
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}log_packages
 					(filename, name, package_id, version, id_member_installed, member_installed, time_installed,
-					install_state, failed_steps, themes_installed)
+					install_state, failed_steps, themes_installed, member_removed, db_changes)
 				VALUES
 					('" . $smfFunc['db_escape_string']($packageInfo['filename']) . "', '" . $smfFunc['db_escape_string']($packageInfo['name']) . "',
 					'" . $smfFunc['db_escape_string']($packageInfo['id']) . "', '" . $smfFunc['db_escape_string']($packageInfo['version']) . "',
 					$user_info[id], '$user_info[name]', " . time() . ", " . ($is_upgrade ? 2 : 1) . ", '$failed_step_insert',
-					'$themes_installed')", __FILE__, __LINE__);
+					'$themes_installed', 0, '$db_changes')", __FILE__, __LINE__);
 		}
 		$smfFunc['db_free_result']($request);
 
 		$context['install_finished'] = true;
+	}
+
+	// If there's database changes - and they want them removed - let's do it last!
+	if (!empty($db_changes) && !empty($_POST['do_db_changes']))
+	{
+		// We're gonna be needing the package db functions!
+		db_extend('packages');
+
+		foreach ($db_changes as $change)
+		{
+			if ($change[0] == 'remove_table' && isset($change[1]))
+				$smfFunc['db_drop_table']($change[1]);
+			elseif ($change[0] == 'remove_column' && isset($change[2]))
+				$smfFunc['db_remove_column']($change[1], $change[2]);
+			elseif ($change[0] == 'remove_index' && isset($change[2]))
+				$smfFunc['db_remove_index']($change[1], $change[2]);
+		}
 	}
 
 	// Clean house... get rid of the evidence ;).

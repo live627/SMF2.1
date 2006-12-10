@@ -101,6 +101,8 @@ $txt['package54'] = 'Archivo';
 $txt['package55'] = '&Aacute;rbol';
 $txt['package56'] = 'Executar Modificaci&oacute;n';
 $txt['package57'] = 'Executar C&oacute;digo';
+// Untranslated!
+$txt['execute_database_changes'] = 'Adapt Database';
 
 // Untranslated!
 $txt['package_install_actions'] = 'Installations actions for';

@@ -139,7 +139,7 @@ function db_optimize_table($table)
 {
 	global $smfFunc;
 
-	return -1;
+	return 0;
 }
 
 // List all the tables in the database.

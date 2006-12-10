@@ -100,6 +100,7 @@ $txt['package54'] = 'File';
 $txt['package55'] = 'Tree';
 $txt['package56'] = 'Execute Modification';
 $txt['package57'] = 'Execute Code';
+$txt['execute_database_changes'] = 'Adapt Database';
 
 $txt['package_install_actions'] = 'Installations actions for';
 $txt['package_will_fail_title'] = 'Error in Package Installation';
@@ -171,5 +172,12 @@ $txt['package_cleanperms_go'] = 'Change file permissions';
 $txt['package_download_by_url'] = 'Download a package by url';
 $txt['package_download_filename'] = 'Name of the file';
 $txt['package_download_filename_info'] = 'Optional value.  Should be used when the url does not end in the filename.  For example: index.php?mod=5';
+
+$txt['package_db_uninstall'] = 'Remove all data associated with this modification.';
+$txt['package_db_uninstall_details'] = 'Details';
+$txt['package_db_uninstall_actions'] = 'Checking this option will result in the following database changes';
+$txt['package_db_remove_table'] = 'Drop table &quot;%1$s&quot;';
+$txt['package_db_remove_column'] = 'Remove column &quot;%1$s&quot; from &quot;%2$s&quot;';
+$txt['package_db_remove_index'] = 'Remove index &quot;%1$s&quot; from &quot;%2$s&quot;';
 
 ?>

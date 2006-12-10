@@ -564,9 +564,15 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_packages (
 	install_state tinyint(3) NOT NULL default '1',
 	failed_steps text NOT NULL,
 	themes_installed tinytext NOT NULL,
+	db_changes text NOT NULL,
 	PRIMARY KEY (id_install),
 	KEY filename (filename(15))
 ) TYPE=MyISAM;
+---#
+
+---# Adding extra "log_packages" columns...
+ALTER TABLE {$db_prefix}log_packages
+ADD db_changes text NOT NULL AFTER themes_installed;
 ---#
 
 /******************************************************************************/
