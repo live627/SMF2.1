@@ -877,16 +877,28 @@ function integrate_delete_member($user)
 {
 	global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix;
 
-	$query = mysql_query ("
-		SELECT memberName
+	$query1 = mysql_query ("
+		SELECT memberName, realName
 		FROM {$db_prefix}members
 		WHERE ID_MEMBER = '$user'");
-	list($username) = mysql_fetch_row($query);
+	list($username, $name) = mysql_fetch_row($query1);
 
 	mysql_select_db($mosConfig_db);
-	$query = mysql_query ("
+
+	$query2 = mysql_query ("
 		DELETE FROM {$mosConfig_dbprefix}users
 		WHERE username = '$username'");
+	$query3 = mysql_query ("
+		SELECT aro_id
+		FROM {$mosConfig_dbprefix}core_acl_aro
+		WHERE name = '$name'");
+	list($aro_id) = mysql_fetch_row($query3);
+	$query4 = mysql_query ("
+		DELETE FROM {$mosConfig_dbprefix}core_acl_aro
+		WHERE name = '$name'");
+	$query5 = mysql_query ("
+		DELETE FROM {$mosConfig_dbprefix}core_acl_groups_aro_map
+		WHERE aro_id = '$aro_id'");
 
 	mysql_select_db($db_name);
 }
