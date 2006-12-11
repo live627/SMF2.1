@@ -1081,7 +1081,7 @@ function ssi_pollVote()
 
 	// Add their vote in to the tally.
 	$smfFunc['db_insert']('insert',
-		"{$db_prefix}log_polls"
+		"{$db_prefix}log_polls",
 		array('id_poll', 'id_member', 'id_choice'),
 		$inserts,
 		array('id_poll', 'id_member', 'id_choice')
