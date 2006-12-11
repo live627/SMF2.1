@@ -357,7 +357,7 @@ function htmlspecialchars__recursive($var)
 	global $smfFunc;
 
 	if (!is_array($var))
-		return isset($smfFunc) ? $smfFunc['htmlspecialchars']($var, ENT_QUOTES) : htmlspecialchars($var, ENT_QUOTES);
+		return isset($smfFunc['htmlspecialchars']) ? $smfFunc['htmlspecialchars']($var, ENT_QUOTES) : htmlspecialchars($var, ENT_QUOTES);
 
 	// Add the htmlspecialchars to every element.
 	return array_map('htmlspecialchars__recursive', $var);

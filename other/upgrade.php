@@ -351,12 +351,8 @@ function loadEssentialData()
 		@ini_set('session.save_handler', 'files');
 	@session_start();
 
-	// If they don't have the file, they're going to get a warning anyway so we won't need to clean request vars.
-	if (file_exists($sourcedir . '/QueryString.php'))
-	{
-		require_once($sourcedir . '/QueryString.php');
-		cleanRequest();
-	}
+	if (empty($smfFunc))
+		$smfFunc = array();
 
 	// Initialize everything...
 	initialize_inputs();
@@ -369,8 +365,6 @@ function loadEssentialData()
 		require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
 
 		// Make the connection...
-		if (empty($smfFunc))
-			$smfFunc = array();
 		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix);
 
 		if ($db_type == 'mysql' && isset($db_character_set) && preg_match('~^\w+$~', $db_character_set) === 1)
@@ -385,6 +379,13 @@ function loadEssentialData()
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$modSettings[$row['variable']] = $row['value'];
 		$smfFunc['db_free_result']($request);
+	}
+
+	// If they don't have the file, they're going to get a warning anyway so we won't need to clean request vars.
+	if (file_exists($sourcedir . '/QueryString.php'))
+	{
+		require_once($sourcedir . '/QueryString.php');
+		cleanRequest();
 	}
 }
 

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2598 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2599 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -36,6 +36,8 @@ December 2006
  ! Moved Personal Message options from profile to personal messaging. (Profile.php, PersonalMessage.php, Profile template, PersonalMessage template)
  & Moved language entries associated with above to PersonalMessage language files. Added a couple of new strings. (Profile, PersonalMessage language files)
  ! When a user replies to a personal message keep track of what is linked to what - to allow threaded views in the future. (upgrade, install scripts. Subs-Post.php, PersonalMessage.php)
+ ! The upgrade script was doing some things in the wrong order, causing some errors. (upgrade.php)
+ ! Look for the specific function when doing htmlspecialchars__recursive. (QueryString.php)
 
 
 November 2006
