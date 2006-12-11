@@ -144,9 +144,9 @@ if (!defined('SMF'))
 	require_once($smf_path . '/SSI.php');	
 }
 
-global $boarddir, $context, $txt, $scripturl, $boardurl, $settings, $mosConfig_dbprefix, $db_prefix, $db_name, $smf_date, $mosConfig_db, $mosConfig_sef;
+global $boarddir, $context, $txt, $scripturl, $boardurl, $settings, $mosConfig_dbprefix, $db_prefix, $db_name, $smf_date, $mosConfig_db, $mosConfig_sef, $smf_lang, $language;
 
-include_once ( $boarddir . '/Themes/default/languages/index.' . (isset($smf_lang) ? $smf_lang : $language) . 'php');
+include_once ( $boarddir . '/Themes/default/languages/index.' . (isset($smf_lang) ? $smf_lang : $language) . '.php');
 mysql_select_db($mosConfig_db);
 
 $result = mysql_query("

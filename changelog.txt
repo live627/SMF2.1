@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2599 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2600 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -38,6 +38,7 @@ December 2006
  ! When a user replies to a personal message keep track of what is linked to what - to allow threaded views in the future. (upgrade, install scripts. Subs-Post.php, PersonalMessage.php)
  ! The upgrade script was doing some things in the wrong order, causing some errors. (upgrade.php)
  ! Look for the specific function when doing htmlspecialchars__recursive. (QueryString.php)
+ ! Bridge login module didn't handle language variables correctly. (Mambo/Joomla bridge/mod_smf_login.php)
 
 
 November 2006
