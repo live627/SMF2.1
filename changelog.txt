@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2600 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2601 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -39,7 +39,7 @@ December 2006
  ! The upgrade script was doing some things in the wrong order, causing some errors. (upgrade.php)
  ! Look for the specific function when doing htmlspecialchars__recursive. (QueryString.php)
  ! Bridge login module didn't handle language variables correctly. (Mambo/Joomla bridge/mod_smf_login.php)
-
+ ! When displaying lists of packages in the Package manager, alternate the background color so it'll be easier to read. (Packages template)
 
 November 2006
 --------------------------------------------------------------------------------
@@ -88,6 +88,7 @@ November 2006
  ! Using the root path as FTP path for executing modifications in some cases returned a 'Path could not be found' error. (Subs-Package.php)
  ! Selecting members for banning from a popup wasn't working properly. (Subs-Auth.php, ManageBans template)
  ! An error could be triggered in rare cases on installing modifications. (Subs-Package.php)
+ ! When display lists of mods in the Package Manager, alternate the background color so it'll be easier to read. (Packages template)
 
 
 October 2006

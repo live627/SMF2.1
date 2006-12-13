@@ -426,14 +426,18 @@ function template_view_installed()
 							<td width="49%"></td>
 						</tr>';
 
+		$alt = false;
 		foreach ($context['installed_mods'] as $i => $file)
+		{
 			echo '
-						<tr>
+						<tr class="', $alt ? 'windowbg' : 'windowbg2', '>
 							<td>', ++$i, '.</td>
 							<td>', $file['name'], '</td>
 							<td>', $file['version'], '</td>
 							<td align="right"><a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $file['filename'], ';pid=', $file['id'], '">[ ', $txt['smf198b'], ' ]</a></td>
 						</tr>';
+			$alt = !$alt;
+		}
 
 		echo '
 					</table>
@@ -524,10 +528,11 @@ function template_browse()
 							<td width="49%"></td>
 						</tr>';
 
+		$alt = false;
 		foreach ($context['available_mods'] as $i => $package)
 		{
 			echo '
-						<tr>
+						<tr class=', $alt ? 'windowbg2' : 'windowbg', '>
 							<td>', ++$i, '.</td>
 							<td>', $package['name'], '</td>
 							<td>
@@ -541,21 +546,22 @@ function template_browse()
 							</td>
 							<td align="right">';
 
-		if ($package['can_uninstall'])
-			echo '
+			if ($package['can_uninstall'])
+				echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['smf198b'], ' ]</a>';
-		elseif ($package['can_upgrade'])
-			echo '
+			elseif ($package['can_upgrade'])
+				echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package_upgrade'], ' ]</a>';
-		elseif ($package['can_install'])
-			echo '
+			elseif ($package['can_install'])
+				echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package11'], ' ]</a>';
 
-		echo '
+			echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['package14'], ' ]</a>
 								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '"', $package['is_installed'] && $package['is_current'] ? ' onclick="return confirm(\'' . $txt['package_delete_bad'] . '\');"' : '', '>[ ', $txt['package52'], ' ]</a>
 							</td>
 						</tr>';
+			$alt = !$alt;
 		}
 
 		echo '
