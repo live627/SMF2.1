@@ -1306,6 +1306,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_cgi' => isset($_SERVER['SERVER_SOFTWARE']) && strpos(php_sapi_name(), 'cgi') !== false,
 		'is_windows' => stristr(PHP_OS, 'WIN') !== false,
 		'iso_case_folding' => ord(strtolower(chr(138))) === 154,
+		'complex_preg_chars' => @version_compare(PHP_VERSION, '4.3.3') != -1,
 	);
 	// A bug in some versions of IIS under CGI (older ones) makes cookie setting not work with Location: headers.
 	$context['server']['needs_login_fix'] = $context['server']['is_cgi'];
