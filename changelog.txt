@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2601 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2602 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -40,6 +40,15 @@ December 2006
  ! Look for the specific function when doing htmlspecialchars__recursive. (QueryString.php)
  ! Bridge login module didn't handle language variables correctly. (Mambo/Joomla bridge/mod_smf_login.php)
  ! When displaying lists of packages in the Package manager, alternate the background color so it'll be easier to read. (Packages template)
+ ! It was possible for files to be sent with the wrong mime type - reported by Jessica Hope and rotwang. (Display.php)
+ * Search template looked a little odd on IE. (Search template)
+ * In prune boards the checkbox for stickies would toggle with the board selection. (Admin template)
+ ! Make it impossible to make guests too much like administrators. (ManagePermissions.php)
+ ! Aposthophes in smiley directories would cause a SQL error. (ManageSmileys.php)
+ ! Fixed labelling personal messages not being restricted to the current member. (PersonalMessage.php)
+ + Added ability to setup rules for sorting personal messages. (upgrade, install scripts. PersonalMessage.php, Subs-Post.php)
+ & Added a fair few language strings for above change. (PersonalMessage language files)
+
 
 November 2006
 --------------------------------------------------------------------------------

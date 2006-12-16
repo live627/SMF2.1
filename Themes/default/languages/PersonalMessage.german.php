@@ -153,4 +153,55 @@ $txt['popup_messages'] = 'PopUp Fenster anzeigen, wenn Sie neue Private Mitteilu
 //!!! Untranslated
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
 
+//!!! Untranslated
+$txt['pm_manage_rules'] = 'Manage Rules';
+$txt['pm_manage_rules_desc'] = 'Message rules allow you to automatically sort incoming messages dependant on a set of criteria you define. Below are all the rules you currently have setup. To edit a rule simply click the rule name.';
+$txt['pm_rules_none'] = 'You have not yet setup any message rules.';
+$txt['pm_rule_title'] = 'Rule';
+$txt['pm_add_rule'] = 'Add New Rule';
+$txt['pm_edit_rule'] = 'Edit Rule';
+$txt['pm_rule_save'] = 'Save Rule';
+$txt['pm_delete_selected_rule'] = 'Delete Selected Rules';
+// Use entities in the below string.
+$txt['pm_js_delete_rule_confirm'] = 'Are you sure you wish to delete the selected rules?';
+$txt['pm_rule_name'] = 'Name';
+$txt['pm_rule_name_desc'] = 'Name to remember this rule by';
+$txt['pm_rule_description'] = 'Description';
+$txt['pm_rule_not_defined'] = 'Add some criteria to begin building this rule description.';
+$txt['pm_rule_criteria'] = 'Criteria';
+$txt['pm_rule_criteria_add'] = 'Add Criteria';
+$txt['pm_rule_criteria_pick'] = 'Choose Criteria';
+$txt['pm_rule_mid'] = 'Sender Name';
+$txt['pm_rule_gid'] = 'Sender\'s Group';
+$txt['pm_rule_sub'] = 'Message Subject Contains';
+$txt['pm_rule_msg'] = 'Message Body Contains';
+$txt['pm_rule_bud'] = 'Sender is Buddy';
+$txt['pm_rule_sel_group'] = 'Select Group';
+$txt['pm_rule_logic'] = 'When Checking Criteria';
+$txt['pm_rule_logic_and'] = 'All criteria must be met';
+$txt['pm_rule_logic_or'] = 'Any criteria can be met';
+$txt['pm_rule_actions'] = 'Actions';
+$txt['pm_rule_sel_action'] = 'Select an Action';
+$txt['pm_rule_add_action'] = 'Add Action';
+$txt['pm_rule_label'] = 'Label message with';
+$txt['pm_rule_sel_label'] = 'Select Label';
+$txt['pm_rule_delete'] = 'Delete Message';
+$txt['pm_rule_no_name'] = 'You forgot to enter a name for the rule.';
+$txt['pm_rule_no_criteria'] = 'A rule must have at least one criteria and one action set.';
+$txt['pm_rule_too_complex'] = 'The rule you are creating is too long for SMF to store. Try breaking it up into smaller rules.';
+
+//!!! Untranslated
+$txt['pm_readable_and'] = '<i>and</i>';
+$txt['pm_readable_or'] = '<i>or</i>';
+$txt['pm_readable_start'] = 'If ';
+$txt['pm_readable_end'] = '.';
+$txt['pm_readable_member'] = 'message is from &quot;{MEMBER}&quot;';
+$txt['pm_readable_group'] = 'sender is from the &quot;{GROUP}&quot; group';
+$txt['pm_readable_subject'] = 'message subject contains &quot;{SUBJECT}&quot;';
+$txt['pm_readable_body'] = 'message body contains &quot;{BODY}&quot;';
+$txt['pm_readable_buddy'] = 'sender is a buddy';
+$txt['pm_readable_label'] = 'apply label &quot;{LABEL}&quot;';
+$txt['pm_readable_delete'] = 'delete the message';
+$txt['pm_readable_then'] = '<b>then</b>';
+
 ?>

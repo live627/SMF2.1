@@ -908,7 +908,7 @@ function WelcomeLogin()
 				SELECT id_member, memberName AS member_name, passwd, id_group,
 				additionalGroups AS additional_groups
 				FROM {$db_prefix}members
-				WHERE member_name = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
+				WHERE memberName = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
 		else
 			$request = $smfFunc['db_query']('', "
 				SELECT id_member, member_name, passwd, id_group, additional_groups
@@ -2918,8 +2918,8 @@ function template_chmod()
 			</tr><tr>
 				<td width="26%" valign="top" class="textbox"><label for="ftp_path">', $txt['ftp_path'], ':</label></td>
 				<td style="padding-bottom: 1ex;">
-					<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $upcontext['chmod']['found_path'], '" style="width: 99%;" />
-					<div style="font-size: smaller; margin-bottom: 2ex;">', !empty($upcontext['chmod']['found_path']) ? $txt['ftp_path_found_info'] : $txt['ftp_path_info'], '</div>
+					<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $upcontext['chmod']['path'], '" style="width: 99%;" />
+					<div style="font-size: smaller; margin-bottom: 2ex;">', !empty($upcontext['chmod']['path']) ? $txt['ftp_path_found_info'] : $txt['ftp_path_info'], '</div>
 				</td>
 			</tr>
 		</table>

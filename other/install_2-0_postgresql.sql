@@ -1376,6 +1376,7 @@ CREATE TABLE {$db_prefix}members (
   real_name varchar(255) NOT NULL,
   instant_messages smallint NOT NULL default 0,
   unread_messages smallint NOT NULL default 0,
+  new_pm smallint NOT NULL default '0',
   buddy_list text NOT NULL,
   pm_ignore_list varchar(255) NOT NULL,
   message_labels text NOT NULL,
@@ -1691,6 +1692,7 @@ CREATE TABLE {$db_prefix}pm_recipients (
   labels varchar(60) NOT NULL default '-1',
   bcc smallint NOT NULL default '0',
   is_read smallint NOT NULL default '0',
+  is_new smallint NOT NULL default '0',
   deleted smallint NOT NULL default '0',
   PRIMARY KEY (id_pm, id_member)
 );
@@ -1700,6 +1702,34 @@ CREATE TABLE {$db_prefix}pm_recipients (
 #
 
 CREATE UNIQUE INDEX {$db_prefix}pm_recipients_id_member ON {$db_prefix}pm_recipients (id_member, deleted, id_pm);
+
+#
+# Sequence for table `pm_rules`
+#
+
+CREATE SEQUENCE {$db_prefix}pm_rules_seq;
+
+#
+# Table structure for table `pm_rules`
+#
+
+CREATE TABLE {$db_prefix}pm_rules (
+  id_rule int default nextval('{$db_prefix}pm_rules_seq'),
+  id_member int NOT NULL default '0',
+  rule_name varchar(60) NOT NULL,
+  criteria text NOT NULL,
+  actions text NOT NULL,
+  delete_pm smallint NOT NULL default '0',
+  is_or smallint NOT NULL default '0',
+  PRIMARY KEY (id_rule)
+);
+
+#
+# Indexes for table `pm_rules`
+#
+
+CREATE INDEX {$db_prefix}pm_rules_id_member ON {$db_prefix}pm_rules (id_member);
+CREATE INDEX {$db_prefix}pm_rules_delete_pm ON {$db_prefix}pm_rules (delete_pm);
 
 #
 # Sequence for table `polls`

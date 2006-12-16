@@ -115,11 +115,11 @@ function template_main()
 		echo '
 						<tr>
 							<td colspan="3"><br />
-								<div style="text-align: left; width: 50%; float: right; margin-right: 2ex;">
+								<div style="text-align: left; width: 45%; float: right; margin-right: 2ex;">
 									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_post_age'], ': </b></div><br />
 									', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt[579], '.
 								</div>
-								<div style="width: 50%;">
+								<div style="width: 45%;">
 									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_options'], ':</b></div>
 									<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_show_complete_messages'], '</label><br />
 									<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_subject_only'], '</label>

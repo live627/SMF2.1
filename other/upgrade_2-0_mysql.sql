@@ -1273,12 +1273,54 @@ LIMIT 1;
 --- Adding new personal messaging functionality.
 /******************************************************************************/
 
+---# Adding personal message rules table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}pm_rules (
+	id_rule int(10) unsigned NOT NULL auto_increment,
+	id_member int(10) unsigned NOT NULL default '0',
+	rule_name varchar(60) NOT NULL,
+	criteria text NOT NULL,
+	actions text NOT NULL,
+	delete_pm tinyint(3) unsigned NOT NULL default '0',
+	is_or tinyint(3) unsigned NOT NULL default '0'
+	PRIMARY KEY (id_rule),
+	KEY id_member (id_member),
+	KEY delete_pm (delete_pm)
+) TYPE=MyISAM;
+---#
+
+---# Adding new message status columns...
+ALTER TABLE {$db_prefix}members
+ADD COLUMN new_pm tinyint(3) NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}pm_recipients
+ADD COLUMN is_new tinyint(3) NOT NULL default '0';
+---#
+
+---# Set the new status to be correct....
+---{
+// Don't do this twice!
+if (@$modSettings['smfVersion'] < '2.0')
+{
+	// Set all unread messages as new.
+	upgrade_query("
+		UPDATE {$db_prefix}pm_recipients
+		SET is_new = 1
+		WHERE is_read = 0");
+
+	// Also set members to have a new pm if they have any unread.
+	upgrade_query("
+		UPDATE {$db_prefix}members
+		SET new_pm = 1
+		WHERE unread_messages > 0");
+}
+---}
+---#
+
 ---# Adding personal message tracking column...
 ALTER TABLE {$db_prefix}personal_messages
 ADD id_pm_head int(10) unsigned NOT NULL AFTER id_pm,
 ADD INDEX id_pm_head (id_pm_head);
 ---#
-
 /******************************************************************************/
 --- Final clean up...
 /******************************************************************************/

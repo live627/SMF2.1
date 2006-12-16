@@ -779,6 +779,8 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	global $db_prefix, $scripturl, $txt, $user_info, $language;
 	global $modSettings, $smfFunc;
 
+	$onBehalf = $from !== null;
+
 	// Initialize log array.
 	$log = array(
 		'failed' => array(),
@@ -854,6 +856,37 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	// Combine 'to' and 'bcc' recipients.
 	$all_to = array_merge($recipients['to'], $recipients['bcc']);
 
+	// Check no-one will want it deleted right away!
+	$request = $smfFunc['db_query']('', "
+		SELECT
+			id_member, criteria, is_or
+		FROM {$db_prefix}pm_rules
+		WHERE id_member IN (" . implode(", ", $all_to) . ")
+			AND delete_pm = 1", __FILE__, __LINE__);
+	$deletes = array();
+	// Check whether we have to apply anything...
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		$criteria = unserialize($row['criteria']);
+		// Note we don't check the buddy status cause deletion from buddy = madness!
+		$delete = false;
+		foreach ($criteria as $c)
+		{
+			$match = false;
+			if (($c['t'] == 'mid' && $c['v'] == $from['id']) || ($c['t'] == 'gid' && in_array($c['v'], $user_info['groups'])) || ($c['t'] == 'sub' && strpos($subject, $c['v']) !== false) || ($c['t'] == 'msg' && strpos($message, $c['v']) !== false))
+				$delete = true;
+			// If we're adding and one criteria don't match then we stop!
+			elseif (!$row['is_or'])
+			{
+				$delete = false;
+				break;
+			}
+		}
+		if ($delete)
+			$deletes[$row['id_member']] = 1;
+ 	}
+ 	$smfFunc['db_free_result']($request);
+
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			mem.member_name, mem.real_name, mem.id_member, mem.email_address, mem.lngfile, mg.max_messages,
@@ -869,6 +902,10 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	$notifications = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
+		// Don't do anything for members to be deleted!
+		if (isset($deletes[$row['id_member']]))
+			continue;
+
 		// Has the receiver gone over their message limit, assuming that neither they nor the sender are important?!
 		if (!empty($row['max_messages']) && $row['max_messages'] <= $row['instant_messages'] && !allowedTo('moderate_forum') && !$row['is_admin'])
 		{
@@ -913,11 +950,13 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 		$insertRows = array();
 		foreach ($all_to as $to)
-			$insertRows[] = array($id_pm, $to, in_array($to, $recipients['bcc']) ? 1 : 0);
+		{
+			$insertRows[] = array($id_pm, $to, in_array($to, $recipients['bcc']) ? 1 : 0, isset($deletes[$to]) ? 1 : 0, 1);
+		}
 
 		$smfFunc['db_insert']('insert',
 			"{$db_prefix}pm_recipients",
-			array('id_pm', 'id_member', 'bcc'),
+			array('id_pm', 'id_member', 'bcc', 'deleted', 'is_new'),
 			$insertRows,
 			array('id_pm', 'id_member')
 		);
@@ -948,7 +987,11 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		loadLanguage('InstantMessage');
 
 	// Add one to their unread and read message counts.
-	updateMemberData($all_to, array('instant_messages' => '+', 'unread_messages' => '+'));
+	foreach ($all_to as $k => $id)
+		if (isset($deletes[$id]))
+			unset($all_to[$k]);
+	if (!empty($all_to))
+		updateMemberData($all_to, array('instant_messages' => '+', 'unread_messages' => '+', 'new_pm' => '1'));
 
 	return $log;
 }
@@ -1642,7 +1685,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ?  $topicOptions['lock_mode'] : null;
 	$topicOptions['sticky_mode'] = isset($topicOptions['sticky_mode']) ? $topicOptions['sticky_mode'] : null;
 	$posterOptions['id'] = empty($posterOptions['id']) ? 0 : (int) $posterOptions['id'];
-	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip'] : $posterOptions['ip'];
+	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip2'] : $posterOptions['ip'];
 
 	// If nothing was filled in as name/e-mail address, try the member table.
 	if (!isset($posterOptions['name']) || $posterOptions['name'] == '' || (empty($posterOptions['email']) && !empty($posterOptions['id'])))

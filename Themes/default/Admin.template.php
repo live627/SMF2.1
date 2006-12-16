@@ -1171,7 +1171,7 @@ function template_maintain()
 
 							for (var i = 0; i < document.forms.rotForm.length; i++)
 							{
-								if (document.forms.rotForm.elements[i].type.toLowerCase() == "checkbox")
+								if (document.forms.rotForm.elements[i].type.toLowerCase() == "checkbox" && document.forms.rotForm.elements[i].id != "delete_old_not_sticky")
 									document.forms.rotForm.elements[i].checked = !rotSwap;
 							}
 						}

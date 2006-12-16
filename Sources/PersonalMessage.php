@@ -96,6 +96,15 @@ if (!defined('SMF'))
 		- will forward on a copy of the original message without allowing the
 		  reporter to make changes.
 		- uses the report_message sub-template.
+
+	void ManageRules()
+		// !!!
+
+	void LoadRules()
+		// !!!
+
+	void ApplyRules()
+		// !!!
 */
 
 // This helps organize things...
@@ -158,6 +167,17 @@ function MessageMain()
 		$context['labels'][(int) $k] = array('id' => $k, 'name' => trim($v), 'messages' => 0, 'unread_messages' => 0);
 	$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
 
+	// Now we have the labels, and assuming we have unsorted mail, apply our rules!
+	if ($user_settings['new_pm'])
+	{
+		ApplyRules();
+		updateMemberData($user_info['id'], array('new_pm' => 0));
+		$smfFunc['db_query']('', "
+			UPDATE {$db_prefix}pm_recipients
+			SET is_new = 0
+			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
+	}
+
 	// !!! The idea would be to cache this information in the members table, and invalidate it when they are sent messages.
 	$result = $smfFunc['db_query']('', "
 		SELECT labels, is_read, COUNT(*) AS num
@@ -196,6 +216,7 @@ function MessageMain()
 	$subActions = array(
 		'addbuddy' => 'WirelessAddBuddy',
 		'manlabels' => 'ManageLabels',
+		'manrules' => 'ManageRules',
 		'outbox' => 'MessageFolder',
 		'pmactions' => 'MessageActionsApply',
 		'prune' => 'MessagePrune',
@@ -248,6 +269,7 @@ function messageIndexBar($area)
 			'title' => $txt['pm_preferences'],
 			'areas' => array(
 				'manlabels' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=manlabels">' . $txt['pm_manage_labels'] . '</a>', 'href' => $scripturl . '?action=pm;sa=manlabels'),
+				'manrules' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=manrules">' . $txt['pm_manage_rules'] . '</a>', 'href' => $scripturl . '?action=pm;sa=manrules'),
 				'settings' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=settings">' . $txt['pm_settings'] . '</a>', 'href' => $scripturl . '?action=pm;sa=settings'),
 			),
 		),
@@ -2018,6 +2040,10 @@ function ManageLabels()
 		// This will be for updating messages.
 		$message_changes = array();
 		$new_labels = array();
+		$rule_changes = array();
+
+		// Will most likely need this.
+		LoadRules();
 
 		// Adding a new label?
 		if (isset($_POST['add']))
@@ -2092,7 +2118,8 @@ function ManageLabels()
 			$request = $smfFunc['db_query']('', "
 				SELECT id_pm, labels
 				FROM {$db_prefix}pm_recipients
-				WHERE FIND_IN_SET('" . implode("', labels) OR FIND_IN_SET('", $searchArray) . "', labels)", __FILE__, __LINE__);
+				WHERE FIND_IN_SET('" . implode("', labels) OR FIND_IN_SET('", $searchArray) . "', labels)
+					AND id_member = $user_info[id]", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// Do the long task of updating them...
@@ -2118,10 +2145,52 @@ function ManageLabels()
 						AND id_member = $user_info[id]", __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($request);
+
+			// Now do the same the rules - check through each rule.
+			foreach ($context['rules'] as $k => $rule)
+			{
+				// Each action...
+				foreach ($rule['actions'] as $k2 => $action)
+				{
+					if ($action['t'] != 'lab' || !in_array($action['v'], $searchArray))
+						continue;
+
+					$rule_changes[] = $rule['id'];
+					// If we're here we have a label which is either changed or gone...
+					if (isset($new_labels[$action['v']]))
+						$context['rules'][$k]['actions'][$k2]['v'] = $new_labels[$action['v']];
+					else
+						unset($context['rules'][$k]['actions'][$k2]);
+				}
+			}
+		}
+
+		// If we have rules to change do so now.
+		if (!empty($rule_changes))
+		{
+			$rule_changes = array_unique($rule_changes);
+			// Update/delete as appropriate.
+			foreach ($rule_changes as $k => $id)
+				if (!empty($context['rules'][$id]['actions']))
+				{
+					$smfFunc['db_query']('', "
+						UPDATE {$db_prefix}pm_rules
+						SET actions = '" . $smfFunc['db_escape_string'](serialize($context['rules'][$id]['actions'])) . "'
+						WHERE id_rule = $id
+							AND id_member = $user_info[id]", __FILE__, __LINE__);
+					unset($rule_changes[$k]);
+				}
+
+			// Anything left here means it's lost all actions...
+			if (!empty($rule_changes))
+				$smfFunc['db_query']('', "
+					DELETE FROM {$db_prefix}pm_rules
+					WHERE id_rule IN (" . implode(', ', $rule_changes) . ")
+							AND id_member = $user_info[id]", __FILE__, __LINE__);
 		}
 
 		// To make the changes appear right away, redirect.
-		redirectExit('action=pm;sa=manlabels');
+		redirectexit('action=pm;sa=manlabels');
 	}
 }
 
@@ -2352,6 +2421,313 @@ function ReportMessage()
 		// Leave them with a template.
 		$context['sub_template'] = 'report_message_complete';
 	}
+}
+
+// List all rules, and allow adding/entering etc....
+function ManageRules()
+{
+	global $txt, $context, $db_prefix, $user_info, $scripturl, $smfFunc;
+
+	// The link tree - gotta have this :o
+	$context['linktree'][] = array(
+		'url' => $scripturl . '?action=pm;sa=manrules',
+		'name' => $txt['pm_manage_rules']
+	);
+
+	$context['page_title'] = $txt['pm_manage_rules'];
+	$context['sub_template'] = 'rules';
+
+	// Load them... load them!!
+	LoadRules();
+
+	// Likely to need all the groups!
+	$request = $smfFunc['db_query']('', "
+		SELECT mg.id_group, mg.group_name, IFNULL(gm.id_member, 0) AS can_moderate, mg.hidden
+		FROM {$db_prefix}membergroups AS mg
+			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = $user_info[id])
+		WHERE mg.min_posts = -1
+			AND mg.id_group != 3
+		ORDER BY mg.group_name", __FILE__, __LINE__);
+	$context['groups'] = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// Hide hidden groups!
+		if ($row['hidden'] && !$row['can_moderate'] && !allowedTo('manage_membergroups'))
+			continue;
+
+		$context['groups'][$row['id_group']] = $row['group_name'];
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Editing a specific one?
+	if (isset($_GET['add']))
+	{
+		$context['rid'] = isset($_GET['rid']) && isset($context['rules'][$_GET['rid']])? (int) $_GET['rid'] : 0;
+		$context['sub_template'] = 'add_rule';
+
+		// Current rule information...
+		if ($context['rid'])
+		{
+			$context['rule'] = $context['rules'][$context['rid']];
+			$members = array();
+			// Need to get member names!
+			foreach ($context['rule']['criteria'] as $k => $criteria)
+				if ($criteria['t'] == 'mid' && !empty($criteria['v']))
+					$members[(int) $criteria['v']] = $k;
+
+			if (!empty($members))
+			{
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member, member_name
+					FROM {$db_prefix}members
+					WHERE id_member IN (" . implode(', ', array_keys($members)) . ")", __FILE__, __LINE__);
+				while ($row = $smfFunc['db_fetch_assoc']($request))
+					$context['rule']['criteria'][$members[$row['id_member']]]['v'] = $row['member_name'];
+				$smfFunc['db_free_result']($request);
+			}
+		}
+		else
+			$context['rule'] = array(
+				'id' => '',
+				'name' => '',
+				'criteria' => array(),
+				'actions' => array(),
+				'logic' => 'and',
+			);
+	}
+	// Saving?
+	elseif (isset($_GET['save']))
+	{
+		$context['rid'] = isset($_GET['rid']) && isset($context['rules'][$_GET['rid']])? (int) $_GET['rid'] : 0;
+
+		// Name is easy!
+		$ruleName = trim($_POST['rule_name']);
+		if (empty($ruleName))
+			fatal_lang_error('pm_rule_no_name', false);
+
+		// Sanity check...
+		if (empty($_POST['ruletype']) || empty($_POST['acttype']))
+			fatal_lang_error('pm_rule_no_criteria', false);
+
+		// Let's do the criteria first - it's also hardest!
+		$criteria = array();
+		foreach ($_POST['ruletype'] as $ind => $type)
+		{
+			// Check everything is here...
+			if ($type == 'gid' && (!isset($_POST['ruledefgroup'][$ind]) || !isset($context['groups'][$_POST['ruledefgroup'][$ind]])))
+				continue;
+			elseif ($type != 'bud' && !isset($_POST['ruledef'][$ind]))
+				continue;
+
+			// Members need to be found.
+			if ($type == 'mid')
+			{
+				$name = trim($_POST['ruledef'][$ind]);
+				$name = $smfFunc['db_escape_string'](stripslashes($name));
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member
+					FROM {$db_prefix}members
+					WHERE real_name = '$name'
+						OR member_name = '$name'", __FILE__, __LINE__);
+				if ($smfFunc['db_num_rows']($request) == 0)
+					continue;
+				list ($memID) = $smfFunc['db_fetch_row']($request);
+				$smfFunc['db_free_result']($request);
+
+				$criteria[] = array('t' => 'mid', 'v' => $memID);
+			}
+			elseif ($type == 'bud')
+				$criteria[] = array('t' => 'bud', 'v' => 1);
+			elseif ($type == 'gid')
+				$criteria[] = array('t' => 'gid', 'v' => (int) $_POST['ruledefgroup'][$ind]);
+			elseif (in_array($type, array('sub', 'msg')) && trim($smfFunc['db_unescape_string']($_POST['ruledef'][$ind])) != '')
+				$criteria[] = array('t' => $type, 'v' => trim($smfFunc['db_unescape_string']($_POST['ruledef'][$ind])));
+				
+		}
+
+		// Also do the actions!
+		$actions = array();
+		$doDelete = 0;
+		$isOr = $_POST['rule_logic'] == 'or' ? 1 : 0;
+		foreach ($_POST['acttype'] as $ind => $type)
+		{
+			// Picking a valid label?
+			if ($type == 'lab' && (!isset($_POST['labdef'][$ind]) || !isset($context['labels'][$_POST['labdef'][$ind] - 1])))
+				continue;
+
+			// Record what we're doing.
+			if ($type == 'del')
+				$doDelete = 1;
+			elseif ($type == 'lab')
+				$actions[] = array('t' => 'lab', 'v' => (int) $_POST['labdef'][$ind] - 1);
+		}
+
+		if (empty($criteria) || (empty($actions) && !$doDelete))
+			fatal_lang_error('pm_rule_no_criteria', false);
+
+		// What are we storing?
+		$criteria = $smfFunc['db_escape_string'](serialize($criteria));
+		$actions = $smfFunc['db_escape_string'](serialize($actions));
+
+		// Create the rule?
+		if (empty($context['rid']))
+			$smfFunc['db_query']('', "
+				INSERT INTO {$db_prefix}pm_rules
+					(id_member, rule_name, criteria, actions, delete_pm, is_or)
+				VALUES
+					($user_info[id], '$ruleName', '$criteria', '$actions', $doDelete, $isOr)", __FILE__, __LINE__);
+		else
+			$smfFunc['db_query']('', "
+				UPDATE {$db_prefix}pm_rules
+				SET rule_name = '$ruleName', criteria = '$criteria', actions = '$actions',
+					delete_pm = $doDelete, is_or = $isOr
+				WHERE id_rule = $context[rid]
+					AND id_member = $user_info[id]", __FILE__, __LINE__);
+
+		redirectexit('action=pm;sa=manrules');
+	}
+	// Deleting?
+	elseif (isset($_POST['delselected']) && !empty($_POST['delrule']))
+	{
+		$toDelete = array();
+		foreach ($_POST['delrule'] as $k => $v)
+			$toDelete[] = (int) $k;
+
+		if (!empty($toDelete))
+			$smfFunc['db_query']('', "
+				DELETE FROM {$db_prefix}pm_rules
+				WHERE id_rule IN (" . implode(', ', $toDelete) . ")
+					AND id_member = $user_info[id]", __FILE__, __LINE__);
+
+		redirectexit('action=pm;sa=manrules');
+	}	
+}
+
+// This will apply rules to all unread messages. If all_messages is set will, clearly, do it to all!
+function ApplyRules($all_messages = false)
+{
+	global $user_info, $smfFunc, $db_prefix, $context, $options;
+
+	// Want this - duh!
+	loadRules();
+
+	// No rules?
+	if (empty($context['rules']))
+		return;
+
+	// Build up the message query we want to use.
+	$ruleQuery = "pmr.id_member = $user_info[id]";
+
+	// Just unread ones?
+	if (!$all_messages)
+		$ruleQuery.= " AND pmr.is_new = 1";
+
+	//!!! Apply all should have timeout protection!
+	// Get all the messages that match this.
+	$request = $smfFunc['db_query']('', "
+		SELECT
+			pmr.id_pm, pm.id_member_from, pm.subject, pm.body, mem.id_group, pmr.labels
+		FROM {$db_prefix}pm_recipients AS pmr
+			INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+		WHERE $ruleQuery", __FILE__, __LINE__);
+	$actions = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		foreach ($context['rules'] as $rule)
+		{
+			$match = false;
+			// Loop through all the criteria hoping to make a match.
+			foreach ($rule['criteria'] as $c)
+			{
+				$match = false;
+				if (($c['t'] == 'mid' && $c['v'] == $row['id_member_from']) || ($c['t'] == 'gid' && $c['v'] == $row['id_group']) || ($c['t'] == 'sub' && strpos($row['subject'], $c['v']) !== false) || ($c['t'] == 'msg' && strpos($row['body'], $c['v']) !== false))
+					$match = true;
+				// If we're adding and one criteria don't match then we stop!
+				elseif ($rule['logic'] == 'and')
+				{
+					$match = false;
+					break;
+				}
+			}
+
+			// If we have a match the rule must be true - act!
+			if ($match)
+			{
+				if ($rule['delete'])
+					$actions['deletes'][] = $row['id_pm'];
+				else
+				{
+					foreach ($rule['actions'] as $a)
+					{
+						if ($a['t'] == 'lab')
+						{
+							// Get a basic pot started!
+							if (!isset($actions['labels'][$row['id_pm']]))
+								$actions['labels'][$row['id_pm']] = explode(',', $row['labels']);
+							$actions['labels'][$row['id_pm']][] = $a['v'];
+						}
+					}
+    			}
+			}
+  		}
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Deletes are easy!
+	if (!empty($actions['deletes']))
+		deleteMessages($actions['deletes']);
+
+	// Relabel?
+	if (!empty($actions['labels']))
+	{
+		foreach ($actions['labels'] as $pm => $labels)
+		{
+			// Quickly check each label is valid!
+			$realLabels = array();
+			foreach ($context['labels'] as $label)
+				if (in_array($label['id'], $labels) && ($label['id'] != -1 || empty($options['pm_remove_inbox_label'])))
+					$realLabels[] = $label['id'];
+
+			$smfFunc['db_query']('', "
+				UPDATE {$db_prefix}pm_recipients
+				SET labels = '" . (empty($realLabels) ? '' : implode(',', $realLabels)) . "'
+				WHERE id_pm = $pm
+					AND id_member = $user_info[id]", __FILE__, __LINE__);
+		}
+	}
+}
+
+// Load up all the rules for the current user.
+function LoadRules($reload = false)
+{
+	global $user_info, $context, $smfFunc, $db_prefix;
+
+	if (isset($context['rules']) && !$reload)
+		return;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT
+			id_rule, rule_name, criteria, actions, delete_pm, is_or
+		FROM {$db_prefix}pm_rules
+		WHERE id_member = $user_info[id]", __FILE__, __LINE__);
+	$context['rules'] = array();
+	// Simply fill in the data!
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		$context['rules'][$row['id_rule']] = array(
+			'id' => $row['id_rule'],
+			'name' => $row['rule_name'],
+			'criteria' => unserialize($row['criteria']),
+			'actions' => unserialize($row['actions']),
+			'delete' => $row['delete_pm'],
+			'logic' => $row['is_or'] ? 'or' : 'and',
+		);
+
+		if ($row['delete_pm'])
+			$context['rules'][$row['id_rule']]['actions'][] = array('t' => 'del', 'v' => 1);
+ 	}
+ 	$smfFunc['db_free_result']($request);
 }
 
 ?>

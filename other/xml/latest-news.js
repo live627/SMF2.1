@@ -9,6 +9,14 @@ if (empty($_GET['format']))
 
 $latest_news = array(
 	array(
+		'time' => 1166366021,
+
+		'subject_english' => 'SMF 1.1.1',
+		'message_english' => 'A number of small bugs and a potential security issue have been discovered in SMF 1.1. We urge all forum administrators to upgrade to SMF 1.1.1 - simply visit the package manager to install the patch.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=134971.0',
+		'author_english' => 'Grudge',
+	),
+	array(
 		'time' => 1165089196,
 
 		'subject_english' => 'SMF 1.1',
@@ -496,6 +504,14 @@ if (document.getElementById("yourVersion"))
 	else if (yourVersion == "SMF 1.0.7")
 	{
 		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-0-8_package.tar.gz";
+	}
+	else if (yourVersion == "SMF 1.0.9")
+	{
+		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-0-10_patch.tar.gz";
+	}
+	else if (yourVersion == "SMF 1.1")
+	{
+		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-1-1_patch.tar.gz";
 	}
 }
 

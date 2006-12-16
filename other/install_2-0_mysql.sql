@@ -1086,6 +1086,7 @@ CREATE TABLE {$db_prefix}members (
   real_name tinytext NOT NULL,
   instant_messages smallint(5) NOT NULL default 0,
   unread_messages smallint(5) NOT NULL default 0,
+  new_pm tinyint(3) unsigned NOT NULL default '0',
   buddy_list text NOT NULL,
   pm_ignore_list tinytext NOT NULL,
   message_labels text NOT NULL,
@@ -1354,9 +1355,27 @@ CREATE TABLE {$db_prefix}pm_recipients (
   labels varchar(60) NOT NULL default '-1',
   bcc tinyint(3) unsigned NOT NULL default '0',
   is_read tinyint(3) unsigned NOT NULL default '0',
+  is_new tinyint(3) unsigned NOT NULL default '0',
   deleted tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY (id_pm, id_member),
   UNIQUE id_member (id_member, deleted, id_pm)
+) TYPE=MyISAM;
+
+#
+# Table structure for table `pm_rules`
+#
+
+CREATE TABLE {$db_prefix}pm_rules (
+  id_rule int(10) unsigned NOT NULL auto_increment,
+  id_member int(10) unsigned NOT NULL default '0',
+  rule_name varchar(60) NOT NULL,
+  criteria text NOT NULL,
+  actions text NOT NULL,
+  delete_pm tinyint(3) unsigned NOT NULL default '0',
+  is_or tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY (id_rule),
+  KEY id_member (id_member),
+  KEY delete_pm (delete_pm)
 ) TYPE=MyISAM;
 
 #

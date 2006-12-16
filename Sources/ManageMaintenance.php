@@ -865,7 +865,7 @@ function ConvertUtf8()
 	require_once($sourcedir . '/Subs-Charset.php');
 	fix_serialized_columns();
 
-	redirectExit('action=admin;area=maintain');
+	redirectexit('action=admin;area=maintain');
 }
 
 // Convert HTML-entities to their UTF-8 character equivalents.
