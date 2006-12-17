@@ -161,6 +161,12 @@ function ModifyMailSettings()
 	// Saving?
 	if (isset($_GET['save']))
 	{
+		// Make the SMTP password a little harder to see in a backup etc.
+		if (!empty($_POST['smtp_password'][1]))
+		{
+			$_POST['smtp_password'][0] = base64_encode($_POST['smtp_password'][0]);
+			$_POST['smtp_password'][1] = base64_encode($_POST['smtp_password'][1]);
+		}
 		checkSession();
 
 		saveDBSettings($config_vars);
