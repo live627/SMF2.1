@@ -1696,7 +1696,7 @@ function template_add_rule()
 					<div class="smalltext">', $txt['pm_rule_name_desc'], '</div>
 				</td>
 				<td width="50%">
-					<input type="text" name="rule_name" value="', $context['rule']['name'], '" />
+					<input type="text" name="rule_name" value="', empty($context['rule']['name']) ? $txt['pm_rule_name_default'] : $context['rule']['name'], '" />
 				</td>
 			</tr>
 		</table><br />
@@ -1708,7 +1708,7 @@ function template_add_rule()
 			</tr>
 			<tr class="windowbg">
 				<td colspan="2">
-					<div id="ruletext" class="smalltext">', $txt['pm_rule_not_defined'], '</div>
+					<div id="ruletext" class="smalltext">', $txt['pm_rule_js_disabed'], '</div>
 				</td>
 			</tr>
 		</table><br />
@@ -1721,9 +1721,8 @@ function template_add_rule()
 			<tr class="windowbg">
 				<td colspan="2">';
 
-	// Add a dummy criteria to give an empty box.
-	if (empty($context['rule']['criteria']))
-		$context['rule']['criteria'][] = array('t' => '', 'v' => '');
+	// Add a dummy criteria to allow expansion for none js users.
+	$context['rule']['criteria'][] = array('t' => '', 'v' => '');
 
 	// For each criteria print it out.
 	$isFirst = true;
@@ -1731,6 +1730,8 @@ function template_add_rule()
 	{
 		if ($isFirst)
 			$isFirst = false;
+		elseif ($criteria['t'] == '')
+			echo '<div id="removeonjs1">';
 		else
 			echo '<br />';
 
@@ -1743,10 +1744,10 @@ function template_add_rule()
 						<option value="msg" ', $criteria['t'] == 'msg' ? 'selected="selected"' : '', '>', $txt['pm_rule_msg'], '</option>
 						<option value="bud" ', $criteria['t'] == 'bud' ? 'selected="selected"' : '', '>', $txt['pm_rule_bud'], '</option>
 					</select>
-					<span id="defdiv', $k, '" style="display: none;">
+					<span id="defdiv', $k, '" ', !in_array($criteria['t'], array('gid', 'bud')) ? '' : 'style="display: none;"', '>
 						<input type="text" name="ruledef[', $k, ']" id="ruledef', $k, '" onkeyup="rebuildRuleDesc();" value="', in_array($criteria['t'], array('mid', 'sub', 'msg')) ? $criteria['v'] : '', '" />
 					</span>
-					<span id="defseldiv', $k, '" style="display: none;">
+					<span id="defseldiv', $k, '" ', $criteria['t'] == 'gid' ? '' : 'style="display: none;"', '>
 						<select name="ruledefgroup[', $k, ']" id="ruledefgroup', $k, '" onchange="rebuildRuleDesc();">	
 							<option value="">', $txt['pm_rule_sel_group'], '</option>';
 
@@ -1756,10 +1757,14 @@ function template_add_rule()
 		echo '
 						</select>
 					</span>';
+
+		// If this is the dummy we add a means to hide for non js users.
+		if ($criteria['t'] == '')
+			echo '</div>';
 	}
 
 	echo '
-					<span id="criteriaAddHere"></span> <a href="javascript:addCriteriaOption(); void(0);">(', $txt['pm_rule_criteria_add'], ')</a>
+					<span id="criteriaAddHere"></span> <a href="javascript:addCriteriaOption(); void(0);" id="addonjs1" style="display: none;">(', $txt['pm_rule_criteria_add'], ')</a>
 				</td>
 			</tr>
 			<tr class="windowbg">
@@ -1782,8 +1787,7 @@ function template_add_rule()
 				<td colspan="2">';
 
 	// As with criteria - add a dummy action for "expansion".
-	if (empty($context['rule']['actions']))
-		$context['rule']['actions'][] = array('t' => '', 'v' => '');
+	$context['rule']['actions'][] = array('t' => '', 'v' => '');
 
 	// Print each action.
 	$isFirst = true;
@@ -1791,6 +1795,8 @@ function template_add_rule()
 	{
 		if ($isFirst)
 			$isFirst = false;
+		elseif ($action['t'] == '')
+			echo '<div id="removeonjs2">';
 		else
 			echo '<br />';
 
@@ -1800,7 +1806,7 @@ function template_add_rule()
 						<option value="lab" ', $action['t'] == 'lab' ? 'selected="selected"' : '', '>', $txt['pm_rule_label'] , '</option>
 						<option value="del" ', $action['t'] == 'del' ? 'selected="selected"' : '', '>', $txt['pm_rule_delete'] , '</option>
 					</select>
-					<span id="labdiv', $k, '" style="display: none;">
+					<span id="labdiv', $k, '">
 						<select name="labdef[', $k, ']" id="labdef', $k, '" onchange="rebuildRuleDesc();">
 							<option value="">', $txt['pm_rule_sel_label'], '</option>';
 		foreach ($context['labels'] as $label)
@@ -1811,10 +1817,14 @@ function template_add_rule()
 		echo '
 						</select>
 					</span>';
+
+		if ($action['t'] == '')
+			echo '
+				</div>';
 	}
 
 	echo '
-					<span id="actionAddHere"></span> <a href="javascript:addActionOption(); void(0);">(', $txt['pm_rule_add_action'], ')</a>
+					<span id="actionAddHere"></span> <a href="javascript:addActionOption(); void(0);" id="addonjs2" style="display: none;">(', $txt['pm_rule_add_action'], ')</a>
 				</td>
 			</tr>
 		</table>
@@ -1840,7 +1850,19 @@ function template_add_rule()
 			updateActionDef(', $k, ');';
 
 	echo '
-			rebuildRuleDesc();
+			rebuildRuleDesc();';
+
+	// If this isn't a new rule and we have JS enabled remove the JS compatibility stuff.
+	if ($context['rid'])
+		echo '
+			document.getElementById("removeonjs1").style.display = "none";
+			document.getElementById("removeonjs2").style.display = "none";';
+
+	echo '
+			document.getElementById("addonjs1").style.display = "";
+			document.getElementById("addonjs2").style.display = "";';
+
+	echo '
 		// ]]></script>';
 }
 
