@@ -669,7 +669,7 @@ function scheduled_weekly_digest()
 // Send a bunch of emails from the mail queue.
 function ReduceMailQueue($number = false, $override_limit = false)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $db_prefix, $modSettings, $smfFunc, $sourcedir;
 
 	// By default send 20 at once.
 	if (!$number)
@@ -761,6 +761,9 @@ function ReduceMailQueue($number = false, $override_limit = false)
 
 	if (empty($ids))
 		return false;
+
+	if (!empty($modSettings['mail_type']) && $modSettings['smtp_host'] != '')
+		require_once($sourcedir . '/Subs-Post.php');
 
 	// Send each email, yea!
 	foreach ($emails as $email)
