@@ -1321,6 +1321,13 @@ ALTER TABLE {$db_prefix}personal_messages
 ADD id_pm_head int(10) unsigned NOT NULL AFTER id_pm,
 ADD INDEX id_pm_head (id_pm_head);
 ---#
+
+---# Adding personal message tracking column...
+UPDATE {$db_prefix}personal_messages
+SET id_pm_head = id_pm
+WHERE id_pm_head = 0;
+---#
+
 /******************************************************************************/
 --- Final clean up...
 /******************************************************************************/

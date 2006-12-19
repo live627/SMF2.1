@@ -8,7 +8,8 @@ $txt[148] = 'Senden';
 $txt[150] = 'An';
 $txt[1502] = 'Bcc';
 $txt[316] = 'Posteingang';
-$txt[320] = 'Postausgang';
+// Untranslated!
+$txt['sent_items'] = 'Sent Items';
 $txt[321] = 'Neue Mitteilung';
 $txt[411] = 'L&ouml;sche Mitteilung';
 // Don't translate "PMBOX" in this string.
@@ -159,6 +160,9 @@ $txt['pm_manage_rules_desc'] = 'Message rules allow you to automatically sort in
 $txt['pm_rules_none'] = 'You have not yet setup any message rules.';
 $txt['pm_rule_title'] = 'Rule';
 $txt['pm_add_rule'] = 'Add New Rule';
+$txt['pm_apply_rules'] = 'Apply Rules Now';
+// Use entities in the below string.
+$txt['pm_js_apply_rules_confirm'] = 'Are you sure you wish to apply the current rules to all personal messages?';
 $txt['pm_edit_rule'] = 'Edit Rule';
 $txt['pm_rule_save'] = 'Save Rule';
 $txt['pm_delete_selected_rule'] = 'Delete Selected Rules';

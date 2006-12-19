@@ -943,6 +943,13 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	// Add the recipients.
 	if (!empty($id_pm))
 	{
+		// If this is new we need to set it part of it's own conversation.
+		if (empty($pm_head))
+			$smfFunc['db_query']('', "
+				UPDATE {$db_prefix}personal_messages
+				SET id_pm_head = $id_pm
+				WHERE id_pm = $id_pm", __FILE__, __LINE__);
+
 		// Some people think manually deleting personal_messages is fun... it's not. We protect against it though :)
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}pm_recipients

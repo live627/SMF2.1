@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2602 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2603 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -48,6 +48,9 @@ December 2006
  ! Fixed labelling personal messages not being restricted to the current member. (PersonalMessage.php)
  + Added ability to setup rules for sorting personal messages. (upgrade, install scripts. PersonalMessage.php, Subs-Post.php)
  & Added a fair few language strings for above change. (PersonalMessage language files)
+ ! Added a currently unimplemented option for changing how personal messages as displayed. (PersonalMessage.php, PersonalMessage template)
+ ! Stopped PersonalMessages showing a folder as read just for entering it. (PersonalMessage.php)
+ & Renamed "Outbox" to "Sent Items" which makes more sense. (PersonalMessage language files)
 
 
 November 2006

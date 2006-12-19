@@ -92,18 +92,18 @@ function template_folder()
 		<tr>
 			<td class="windowbg" colspan="5">', $txt['msg_alert_none'], '</td>
 		</tr>';
-	$next_alternate = false;
+	$next_alternate = 0;
 	while ($message = $context['get_pmessage']())
 	{
 		echo '
-		<tr class="', $message['alternate'] == 0 ? 'windowbg' : 'windowbg2', '">
+		<tr class="', $next_alternate ? 'windowbg' : 'windowbg2', '">
 			<td align="center" width="2%">', $message['is_replied_to'] ? '<img src="' . $settings['images_url'] . '/icons/pm_replied.gif" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />' : '<img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" />', '</td>
 			<td>', $message['time'], '</td>
-			<td><a href="#msg', $message['id'], '">', $message['subject'], '</a></td>
+			<td><a href="', ($context['display_mode'] == 0 || $context['current_pm'] == $message['id'] ? '' : ($scripturl . '?action=pm;pmid=' . $message['id'] . ';kstart;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''))), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>
 			<td>', ($context['from_or_to'] == 'from' ? $message['member']['link'] : (empty($message['recipients']['to']) ? '' : implode(', ', $message['recipients']['to']))), '</td>
 			<td align="center"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="check" /></td>
 		</tr>';
-		$next_alternate = $message['alternate'];
+		$next_alternate = !$next_alternate;
 	}
 
 	echo '
@@ -116,7 +116,7 @@ function template_folder()
 
 	if ($context['show_delete'])
 	{
-		if (!empty($context['currently_using_labels']) && $context['folder'] != 'outbox')
+		if (!empty($context['currently_using_labels']) && $context['folder'] != 'sent')
 		{
 			echo '
 				<select name="pm_action" onchange="if (this.options[this.selectedIndex].value) this.form.submit();" onfocus="loadLabelChoices();">
@@ -364,12 +364,12 @@ function template_folder()
 			if (!empty($message['recipients']['to']))
 				echo implode(', ', $message['recipients']['to']);
 			// Otherwise, we're just going to say "some people"...
-			elseif ($context['folder'] != 'outbox')
+			elseif ($context['folder'] != 'sent')
 				echo '(', $txt['pm_undisclosed_recipients'], ')';
 
 			echo ' <b> ', $txt['on'], ':</b> ', $message['time'], ' &#187;</div>';
 
-			// If we're in the outbox, show who it was sent to besides the "To:" people.
+			// If we're in the sent items, show who it was sent to besides the "To:" people.
 			if (!empty($message['recipients']['bcc']))
 				echo '
 										<div class="smalltext">&#171; <b> ', $txt[1502], ':</b> ', implode(', ', $message['recipients']['bcc']), ' &#187;</div>';
@@ -393,7 +393,7 @@ function template_folder()
 						echo '
 										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=all">', $reply_all_button, '</a>', $context['menu_separator'];
 					echo '
-										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=', $context['folder'] == 'outbox' ? '' : $message['member']['id'], '">', $quote_button, '</a>', $context['menu_separator'], '
+										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=', $context['folder'] == 'sent' ? '' : $message['member']['id'], '">', $quote_button, '</a>', $context['menu_separator'], '
 										<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button, '</a> ', $context['menu_separator'];
 				}
 				// This is for "forwarding" - even if the member is gone.
@@ -412,7 +412,7 @@ function template_folder()
 						</tr>
 						<tr class="', $windowcss, '">
 							<td valign="bottom" class="smalltext" width="85%">
-								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'outbox' ? '<div align="right"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '" class="smalltext">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
+								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div align="right"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '" class="smalltext">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
 
 			// Show the member's signature?
 			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']))
@@ -425,7 +425,7 @@ function template_folder()
 						</tr>';
 
 		// Add an extra line at the bottom if we have labels enabled.
-		if ($context['folder'] != 'outbox' && !empty($context['currently_using_labels']))
+		if ($context['folder'] != 'sent' && !empty($context['currently_using_labels']))
 		{
 			echo '
 						<tr class="', $windowcss, '">
@@ -732,11 +732,11 @@ function template_search_results()
 				<td>', $txt[318], ': ', $message['member']['link'], ', ', $txt[324], ': ';
 
 			// Show the recipients.
-			// !!! This doesn't deal with the outbox searching quite right for bcc.
+			// !!! This doesn't deal with the sent item searching quite right for bcc.
 			if (!empty($message['recipients']['to']))
 				echo implode(', ', $message['recipients']['to']);
 			// Otherwise, we're just going to say "some people"...
-			elseif ($context['folder'] != 'outbox')
+			elseif ($context['folder'] != 'sent')
 				echo '(', $txt['pm_undisclosed_recipients'], ')';
 
 			echo '
@@ -755,7 +755,7 @@ function template_search_results()
 				// You can only reply if they are not a guest...
 				if (!$message['member']['is_guest'])
 					echo '
-							<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=', $context['folder'] == 'outbox' ? '' : $message['member']['id'], '">', $quote_button , '</a>', $context['menu_separator'], '
+							<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';quote;u=', $context['folder'] == 'sent' ? '' : $message['member']['id'], '">', $quote_button , '</a>', $context['menu_separator'], '
 							<a href="', $scripturl, '?action=pm;sa=send;f=', $context['folder'], $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';pmsg=', $message['id'], ';u=', $message['member']['id'], '">', $reply_button , '</a> ', $context['menu_separator'];
 				// This is for "forwarding" - even if the member is gone.
 				else
@@ -1493,10 +1493,16 @@ function template_rules()
 	}
 
 	echo '
-			<tr class="titlebg">
+			<tr class="catbg">
 				<td colspan="2">
 					<div style="float: left;">
-						[<a href="', $scripturl, '?action=pm;sa=manrules;add;rid=0">', $txt['pm_add_rule'], '</a>]
+						[<a href="', $scripturl, '?action=pm;sa=manrules;add;rid=0">', $txt['pm_add_rule'], '</a>]';
+
+	if (!empty($context['rules']))
+		echo '
+						[<a href="', $scripturl, '?action=pm;sa=manrules;apply" onclick="return confirm(\'', $txt['pm_js_apply_rules_confirm'], '\');">', $txt['pm_apply_rules'], '</a>]';
+
+	echo '
 					</div>';
 
 	if (!empty($context['rules']))
