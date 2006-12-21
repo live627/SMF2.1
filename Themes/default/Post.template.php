@@ -872,7 +872,7 @@ function template_postbox(&$message)
 							<option value="orange">', $txt[267], '</option>
 							<option value="purple">', $txt[268], '</option>
 							<option value="blue">', $txt[269], '</option>
-							<option value="beige">', $txt['posted_by'], '</option>
+							<option value="beige">', $txt[270], '</option>
 							<option value="brown">', $txt[271], '</option>
 							<option value="teal">', $txt[272], '</option>
 							<option value="navy">', $txt[273], '</option>
