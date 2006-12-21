@@ -38,7 +38,7 @@ if (!defined('SMF'))
 	void MessageFolder()
 		// !!! ?action=pm;sa=folder
 
-	void prepareMessageContext(bool reset = false)
+	void prepareMessageContext(type reset = 'subject', bool reset = false)
 		// !!!
 
 	void MessageSearch()
@@ -132,8 +132,9 @@ function MessageMain()
 	}
 
 	// Load up the members maximum message capacity.
-	if (!$user_info['is_admin'])
+	if (!$user_info['is_admin'] && ($context['message_limit'] = cache_get_data('msgLimit:' . $user_info['id'], 360)) === null)
 	{
+		echo 'ahhshshs';
 		// !!! Why do we do this?  It seems like if they have any limit we should use it.
 		$request = $smfFunc['db_query']('', "
 			SELECT MAX(max_messages) AS topLimit, MIN(max_messages) AS bottomLimit
@@ -143,6 +144,9 @@ function MessageMain()
 		$smfFunc['db_free_result']($request);
 
 		$context['message_limit'] = $minMessage == 0 ? 0 : $maxMessage;
+
+		// Save us doing it again!
+		cache_put_data('msgLimit:' . $user_info['id'], $context['message_limit'], 360);
 	}
 	else
 		$context['message_limit'] = 0;
@@ -161,15 +165,14 @@ function MessageMain()
 		);
 	}
 
-	// We should probably cache this information for speed.
-	$context['labels'] = $user_settings['message_labels'] == '' ? array() : explode(',', $user_settings['message_labels']);
-	foreach ($context['labels'] as $k => $v)
-		$context['labels'][(int) $k] = array('id' => $k, 'name' => trim($v), 'messages' => 0, 'unread_messages' => 0);
-	$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
-
 	// Now we have the labels, and assuming we have unsorted mail, apply our rules!
 	if ($user_settings['new_pm'])
 	{
+		$context['labels'] = $user_settings['message_labels'] == '' ? array() : explode(',', $user_settings['message_labels']);
+		foreach ($context['labels'] as $k => $v)
+			$context['labels'][(int) $k] = array('id' => $k, 'name' => trim($v), 'messages' => 0, 'unread_messages' => 0);
+		$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
+
 		ApplyRules();
 		updateMemberData($user_info['id'], array('new_pm' => 0));
 		$smfFunc['db_query']('', "
@@ -178,23 +181,35 @@ function MessageMain()
 			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 	}
 
-	// !!! The idea would be to cache this information in the members table, and invalidate it when they are sent messages.
-	$result = $smfFunc['db_query']('', "
-		SELECT labels, is_read, COUNT(*) AS num
-		FROM {$db_prefix}pm_recipients
-		WHERE id_member = $user_info[id]
-		GROUP BY labels, is_read", __FILE__, __LINE__);
-	while ($row = $smfFunc['db_fetch_assoc']($result))
+	// Load the label data.
+	if ($user_settings['new_pm'] || ($context['labels'] = cache_get_data('labelCounts:' . $user_info['id'], 720)) === null)
 	{
-		$this_labels = explode(',', $row['labels']);
-		foreach ($this_labels as $this_label)
+		$context['labels'] = $user_settings['message_labels'] == '' ? array() : explode(',', $user_settings['message_labels']);
+		foreach ($context['labels'] as $k => $v)
+			$context['labels'][(int) $k] = array('id' => $k, 'name' => trim($v), 'messages' => 0, 'unread_messages' => 0);
+		$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
+
+		// Looks like we need to reseek!
+		$result = $smfFunc['db_query']('', "
+			SELECT labels, is_read, COUNT(*) AS num
+			FROM {$db_prefix}pm_recipients
+			WHERE id_member = $user_info[id]
+			GROUP BY labels, is_read", __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
-			$context['labels'][(int) $this_label]['messages'] += $row['num'];
-			if (!($row['is_read'] & 1))
-				$context['labels'][(int) $this_label]['unread_messages'] += $row['num'];
+			$this_labels = explode(',', $row['labels']);
+			foreach ($this_labels as $this_label)
+			{
+				$context['labels'][(int) $this_label]['messages'] += $row['num'];
+				if (!($row['is_read'] & 1))
+					$context['labels'][(int) $this_label]['unread_messages'] += $row['num'];
+			}
 		}
+		$smfFunc['db_free_result']($result);
+
+		// Store it please!
+		cache_put_data('labelCounts:' . $user_info['id'], $context['labels'], 720);
 	}
-	$smfFunc['db_free_result']($result);
 
 	// This determines if we have more labels than just the standard inbox.
 	$context['currently_using_labels'] = count($context['labels']) > 1 ? 1 : 0;
@@ -213,8 +228,8 @@ function MessageMain()
 		'name' => $txt['personal_messages']
 	);
 
-	//!!! TEMP!!
-	$user_info['pm_view'] = 0;
+	// Preferences...
+	$context['display_mode'] = $user_settings['pm_prefs'] & 3;
 
 	$subActions = array(
 		'addbuddy' => 'WirelessAddBuddy',
@@ -328,7 +343,14 @@ function messageIndexBar($area)
 function MessageFolder()
 {
 	global $txt, $scripturl, $db_prefix, $modSettings, $context, $subjects_request;
-	global $messages_request, $user_info, $recipients, $options, $smfFunc, $memberContext;
+	global $messages_request, $user_info, $recipients, $options, $smfFunc, $memberContext, $user_settings;
+
+	// Changing view?
+	if (isset($_GET['view']))
+	{
+		$context['display_mode'] = $context['display_mode'] > 1 ? 0 : $context['display_mode'] + 1;
+		updateMemberData($user_info['id'], array('pm_prefs' => ($user_settings['pm_prefs'] & 252) | $context['display_mode']));
+	}
 
 	// Make sure the starting location is valid.
 	if (isset($_GET['start']) && $_GET['start'] != 'new')
@@ -342,7 +364,6 @@ function MessageFolder()
 	$context['allow_hide_email'] = !empty($modSettings['allow_hide_email']);
 	$context['from_or_to'] = $context['folder'] != 'sent' ? 'from' : 'to';
 	$context['get_pmessage'] = 'prepareMessageContext';
-	$context['display_mode'] = $user_info['pm_view'];
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
 
 	$labelQuery = $context['folder'] != 'sent' ? "
@@ -674,18 +695,15 @@ function MessageFolder()
 }
 
 // Get a personal message for the theme.  (used to save memory.)
-function prepareMessageContext($reset = false)
+function prepareMessageContext($type = 'subject', $reset = false)
 {
 	global $txt, $scripturl, $modSettings, $context, $messages_request, $memberContext, $recipients, $smfFunc;
 	global $user_info, $subjects_request;
 
 	// Count the current message number....
 	static $counter = null;
-	static $looped_once = false;
 	if ($counter === null || $reset)
 		$counter = $context['start'];
-	if ($reset)
-		$looped_once = true;
 
 	static $temp_pm_selected = null;
 	if ($temp_pm_selected === null)
@@ -695,7 +713,7 @@ function prepareMessageContext($reset = false)
 	}
 
 	// If we're in non-boring view do something exciting!
-	if ($context['display_mode'] != 0 && $subjects_request && empty($looped_once))
+	if ($context['display_mode'] != 0 && $subjects_request && $type == 'subject')
 	{
 		$subject = $smfFunc['db_fetch_assoc']($subjects_request);
 		if (!$subject)
@@ -2353,7 +2371,7 @@ function MessageSettings()
 		// Validate and set the ignorelist...
 		$_POST['pm_ignore_list'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $_POST['pm_ignore_list']);
 		$_POST['pm_ignore_list'] = strtr(trim($_POST['pm_ignore_list']), array('\\\'' => '&#039;', "\n" => "', '", "\r" => '', '&quot;' => ''));
-	
+
 		if (preg_match('~(\A|,)\*(\Z|,)~s', $_POST['pm_ignore_list']) == 0)
 		{
 			$result = $smfFunc['db_query']('', "
@@ -2376,6 +2394,7 @@ function MessageSettings()
 		updateMemberData($user_info['id'], array(
 			'pm_ignore_list' => '\'' . $smfFunc['db_escape_string']($_POST['pm_ignore_list']) . '\'',
 			'pm_email_notify' => (int) $_POST['pm_email_notify'],
+			'pm_prefs' => (int) $_POST['pm_display_mode'],
 		));
 
 		// We'll save the theme settings too!

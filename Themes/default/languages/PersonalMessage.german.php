@@ -153,6 +153,11 @@ $txt['copy_to_outbox'] = 'Eine Kopie jeder Privaten Mitteilung im Ausgang ablege
 $txt['popup_messages'] = 'PopUp Fenster anzeigen, wenn Sie neue Private Mitteilungen erhalten?';
 //!!! Untranslated
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
+$txt['pm_display_mode'] = 'Display personal messages';
+$txt['pm_display_mode_all'] = 'All at once';
+$txt['pm_display_mode_one'] = 'One at a time';
+$txt['pm_display_mode_linked'] = 'As a conversation';
+$txt['pm_change_view'] = 'Change View';
 
 //!!! Untranslated
 $txt['pm_manage_rules'] = 'Manage Rules';

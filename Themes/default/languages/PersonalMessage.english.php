@@ -152,6 +152,11 @@ $txt['email_notify_always'] = 'Always';
 $txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by default.';
 $txt['popup_messages'] = 'Show a popup when you receive new messages?';
 $txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
+$txt['pm_display_mode'] = 'Display personal messages';
+$txt['pm_display_mode_all'] = 'All at once';
+$txt['pm_display_mode_one'] = 'One at a time';
+$txt['pm_display_mode_linked'] = 'As a conversation';
+$txt['pm_change_view'] = 'Change View';
 
 $txt['pm_manage_rules'] = 'Manage Rules';
 $txt['pm_manage_rules_desc'] = 'Message rules allow you to automatically sort incoming messages dependant on a set of criteria you define. Below are all the rules you currently have setup. To edit a rule simply click the rule name.';

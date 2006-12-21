@@ -1089,6 +1089,7 @@ CREATE TABLE {$db_prefix}members (
   new_pm tinyint(3) unsigned NOT NULL default '0',
   buddy_list text NOT NULL,
   pm_ignore_list tinytext NOT NULL,
+  pm_prefs mediumint(8) NOT NULL default '0',
   message_labels text NOT NULL,
   passwd varchar(64) NOT NULL default '',
   email_address tinytext NOT NULL,

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2605 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2606 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -55,6 +55,9 @@ December 2006
  ! Signature settings were case sensitive. (Profile.php, ModSettings.php)
  ! Personal messages were showing signatures regardless of whether they were enabled. (PersonalMessage.php, PersonalMessage template)
  ! Make sure showing members of a group respects hidden email status. (Groups.php)
+ ! Attempt to cache more information for personal messages. (PersonalMessage.php)
+ ! Added column to members table for storing personal messages preferences - currently only doing display mode. (install and upgrade scripts, PersonalMessage.php)
+ * Added icon and settings information to toggling the current message view. (PersonalMessage.php, PersonalMessage template)
 
 
 November 2006

@@ -1292,6 +1292,9 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}pm_rules (
 ALTER TABLE {$db_prefix}members
 ADD COLUMN new_pm tinyint(3) NOT NULL default '0';
 
+ALTER TABLE {$db_prefix}members
+ADD COLUMN pm_prefs mediumint(8) NOT NULL default '0';
+
 ALTER TABLE {$db_prefix}pm_recipients
 ADD COLUMN is_new tinyint(3) NOT NULL default '0';
 ---#

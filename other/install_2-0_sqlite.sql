@@ -1174,6 +1174,7 @@ CREATE TABLE {$db_prefix}members (
   new_pm smallint NOT NULL default '0',
   buddy_list text NOT NULL,
   pm_ignore_list varchar(255) NOT NULL,
+  pm_prefs int NOT NULL default '0',
   message_labels text NOT NULL,
   passwd varchar(64) NOT NULL default '',
   email_address varchar(255) NOT NULL,
