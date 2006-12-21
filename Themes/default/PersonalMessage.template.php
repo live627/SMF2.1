@@ -163,96 +163,8 @@ function template_folder()
 	// If we are not in single display mode show the subjects on the top!
 	if ($context['display_mode'] != 1)
 	{
-		echo '
-	<table border="0" width="100%" cellpadding="2" cellspacing="1" class="bordercolor">
-		<tr class="titlebg">
-			<td align="center" width="2%"><a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"><img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['pm_change_view'], '" width="16" height="16" /></a></td>
-			<td style="width: 32ex;"><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=date', $context['sort_by'] == 'date' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt[317], $context['sort_by'] == 'date' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td width="46%"><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt[319], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', ($context['from_or_to'] == 'from' ? $txt[318] : $txt[324]), $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
-		</tr>';
-		if (!$context['show_delete'])
-			echo '
-		<tr>
-			<td class="windowbg" colspan="5">', $txt['msg_alert_none'], '</td>
-		</tr>';
-		$next_alternate = 0;
-		while ($message = $context['get_pmessage']('subject'))
-		{
-			echo '
-		<tr class="', $next_alternate ? 'windowbg' : 'windowbg2', '">
-			<td align="center" width="2%">
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-				currentLabels[', $message['id'], '] = {';
-
-			if (!empty($message['labels']))
-			{
-				$first = true;
-				foreach ($message['labels'] as $label)
-				{
-					echo $first ? '' : ',', '
-					"', $label['id'], '": "', $label['name'], '"';
-					$first = false;
-				}
-			}
-
-		echo '
-				};
-			// ]]></script>
-				', $message['is_replied_to'] ? '<img src="' . $settings['images_url'] . '/icons/pm_replied.gif" style="margin-right: 4px;" alt="' . $txt['pm_replied'] . '" />' : '<img src="' . $settings['images_url'] . '/icons/pm_read.gif" style="margin-right: 4px;" alt="' . $txt['pm_read'] . '" />', '</td>
-			<td>', $message['time'], '</td>
-			<td><a href="', ($context['display_mode'] == 0 || $context['current_pm'] == $message['id'] ? '' : ($scripturl . '?action=pm;pmid=' . $message['id'] . ';kstart;f=' . $context['folder'] . ';start=' . $context['start'] . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'up' ? ';' : ';desc') . ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''))), '#msg', $message['id'], '">', $message['subject'], '</a>', $message['is_unread'] ? '&nbsp;<img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" />' : '', '</td>
-			<td>', ($context['from_or_to'] == 'from' ? $message['member']['link'] : (empty($message['recipients']['to']) ? '' : implode(', ', $message['recipients']['to']))), '</td>
-			<td align="center"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="check" /></td>
-		</tr>';
-			$next_alternate = !$next_alternate;
-		}
-	
-		echo '
-	</table>
-	<div class="bordercolor" style="padding: 1px; ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'width: 100%;' : '', '">
-		<table width="100%" cellpadding="2" cellspacing="0" border="0"><tr class="catbg" valign="middle">
-			<td>
-				<div style="float: left;">', $txt['pages'], ': ', $context['page_index'], '</div>
-				<div style="float: right;">&nbsp;';
-
-		if ($context['show_delete'])
-		{
-			if (!empty($context['currently_using_labels']) && $context['folder'] != 'sent')
-			{
-				echo '
-				<select name="pm_action" onchange="if (this.options[this.selectedIndex].value) this.form.submit();" onfocus="loadLabelChoices();">
-					<option value="">', $txt['pm_sel_label_title'], ':</option>
-					<option value="" disabled="disabled">---------------</option>';
-
-				echo '
-									<option value="" disabled="disabled">', $txt['pm_msg_label_apply'], ':</option>';
-				foreach ($context['labels'] as $label)
-					if ($label['id'] != $context['current_label_id'])
-						echo '
-					<option value="add_', $label['id'], '">&nbsp;', $label['name'], '</option>';
-				echo '
-					<option value="" disabled="disabled">', $txt['pm_msg_label_remove'], ':</option>';
-				foreach ($context['labels'] as $label)
-					echo '
-					<option value="rem_', $label['id'], '">&nbsp;', $label['name'], '</option>';
-				echo '
-				</select>
-				<noscript>
-					<input type="submit" value="', $txt['pm_apply'], '" />
-				</noscript>';
-			}
-
-			echo '
-				<input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['smf249'], '\')) return false;" />';
-		}
-
-		echo '
-				</div>
-			</td>
-		</tr></table>
-	</div><br />';
+		template_subject_list();
+		echo '<br />';
 	}
 
 	// Got some messages to display?
@@ -532,7 +444,21 @@ function template_folder()
 	// Individual messages = buttom list!
 	if ($context['display_mode'] == 1)
 	{
-		echo '
+		template_subject_list();
+		echo '<br />';
+	}
+
+	echo '
+	<input type="hidden" name="sc" value="', $context['session_id'], '" />
+</form>';
+}
+
+// Just list all the personal message subjects - to make templates easier.
+function template_subject_list()
+{
+	global $context, $options, $settings, $modSettings, $txt, $scripturl;
+
+	echo '
 		<table border="0" width="100%" cellpadding="2" cellspacing="1" class="bordercolor">
 		<tr class="titlebg">
 			<td align="center" width="2%"><a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"><img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['pm_change_view'], '" width="16" height="16" /></a></td>
@@ -541,30 +467,30 @@ function template_folder()
 			<td><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', ($context['from_or_to'] == 'from' ? $txt[318] : $txt[324]), $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 			<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
 		</tr>';
-		if (!$context['show_delete'])
-			echo '
+	if (!$context['show_delete'])
+		echo '
 		<tr>
 			<td class="windowbg" colspan="5">', $txt['msg_alert_none'], '</td>
 		</tr>';
-		$next_alternate = 0;
-		while ($message = $context['get_pmessage']('subject'))
-		{
-			echo '
+	$next_alternate = 0;
+	while ($message = $context['get_pmessage']('subject'))
+	{
+		echo '
 		<tr class="', $next_alternate ? 'windowbg' : 'windowbg2', '">
 			<td align="center" width="2%">
 			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 				currentLabels[', $message['id'], '] = {';
 
-			if (!empty($message['labels']))
+		if (!empty($message['labels']))
+		{
+			$first = true;
+			foreach ($message['labels'] as $label)
 			{
-				$first = true;
-				foreach ($message['labels'] as $label)
-				{
-					echo $first ? '' : ',', '
-					"', $label['id'], '": "', $label['name'], '"';
-					$first = false;
-				}
+				echo $first ? '' : ',', '
+				"', $label['id'], '": "', $label['name'], '"';
+				$first = false;
 			}
+		}
 
 		echo '
 				};
@@ -576,9 +502,9 @@ function template_folder()
 			<td align="center"><input type="checkbox" name="pms[]" id="deletelisting', $message['id'], '" value="', $message['id'], '"', $message['is_selected'] ? ' checked="checked"' : '', ' onclick="if (document.getElementById(\'deletedisplay', $message['id'], '\')) document.getElementById(\'deletedisplay', $message['id'], '\').checked = this.checked;" class="check" /></td>
 		</tr>';
 			$next_alternate = !$next_alternate;
-		}
+	}
 
-		echo '
+	echo '
 	</table>
 	<div class="bordercolor" style="padding: 1px; ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'width: 100%;' : '', '">
 		<table width="100%" cellpadding="2" cellspacing="0" border="0"><tr class="catbg" valign="middle">
@@ -586,47 +512,42 @@ function template_folder()
 				<div style="float: left;">', $txt['pages'], ': ', $context['page_index'], '</div>
 				<div style="float: right;">&nbsp;';
 
-		if ($context['show_delete'])
+	if ($context['show_delete'])
+	{
+		if (!empty($context['currently_using_labels']) && $context['folder'] != 'sent')
 		{
-			if (!empty($context['currently_using_labels']) && $context['folder'] != 'sent')
-			{
-				echo '
+			echo '
 				<select name="pm_action" onchange="if (this.options[this.selectedIndex].value) this.form.submit();" onfocus="loadLabelChoices();">
 					<option value="">', $txt['pm_sel_label_title'], ':</option>
 					<option value="" disabled="disabled">---------------</option>';
 
-				echo '
+			echo '
 									<option value="" disabled="disabled">', $txt['pm_msg_label_apply'], ':</option>';
-				foreach ($context['labels'] as $label)
-					if ($label['id'] != $context['current_label_id'])
-						echo '
-					<option value="add_', $label['id'], '">&nbsp;', $label['name'], '</option>';
-				echo '
-					<option value="" disabled="disabled">', $txt['pm_msg_label_remove'], ':</option>';
-				foreach ($context['labels'] as $label)
+			foreach ($context['labels'] as $label)
+				if ($label['id'] != $context['current_label_id'])
 					echo '
-					<option value="rem_', $label['id'], '">&nbsp;', $label['name'], '</option>';
+					<option value="add_', $label['id'], '">&nbsp;', $label['name'], '</option>';
+			echo '
+					<option value="" disabled="disabled">', $txt['pm_msg_label_remove'], ':</option>';
+			foreach ($context['labels'] as $label)
 				echo '
+					<option value="rem_', $label['id'], '">&nbsp;', $label['name'], '</option>';
+			echo '
 				</select>
 				<noscript>
 					<input type="submit" value="', $txt['pm_apply'], '" />
 				</noscript>';
-			}
-
-			echo '
-				<input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['smf249'], '\')) return false;" />';
 		}
 
 		echo '
-				</div>
-			</td>
-		</tr></table>
-	</div><br />';
+				<input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['smf249'], '\')) return false;" />';
 	}
 
 	echo '
-	<input type="hidden" name="sc" value="', $context['session_id'], '" />
-</form>';
+				</div>
+			</td>
+		</tr></table>
+	</div>';
 }
 
 function template_search()
