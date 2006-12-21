@@ -2330,7 +2330,7 @@ function upgrade_query($string, $unbuffered = false)
 // This performs a table alter, but does it unbuffered so the script can time out professionally.
 function protected_alter($change, $substep)
 {
-	global $db_prefix;
+	global $db_prefix, $smfFunc;
 
 	// Firstly, check whether the current index/column exists.
 	$found = false;

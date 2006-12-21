@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2604 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2605 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -52,6 +52,9 @@ December 2006
  ! Stopped PersonalMessages showing a folder as read just for entering it. (PersonalMessage.php)
  & Renamed "Outbox" to "Sent Items" which makes more sense. (PersonalMessage language files)
  ! Renamed the db_query function to smf_db_query to avoid potential integration conflicts. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php)
+ ! Signature settings were case sensitive. (Profile.php, ModSettings.php)
+ ! Personal messages were showing signatures regardless of whether they were enabled. (PersonalMessage.php, PersonalMessage template)
+ ! Make sure showing members of a group respects hidden email status. (Groups.php)
 
 
 November 2006

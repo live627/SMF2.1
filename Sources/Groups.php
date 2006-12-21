@@ -270,7 +270,7 @@ function MembergroupMembers()
 	// Sort out the sorting!
 	$sort_methods = array(
 		'name' => 'real_name',
-		'email' => 'email_address',
+		'email' => (allowedTo('moderate_forum') || empty($modSettings['allow_hide_email'])) ? 'email_address' : 'hide_email ' . (isset($_REQUEST['desc']) ? 'DESC' : 'ASC') . ', email_address',
 		'active' => 'last_login',
 		'registered' => 'date_registered',
 		'posts' => 'posts',
@@ -311,7 +311,8 @@ function MembergroupMembers()
 
 	// Load up all members of this group.
 	$request = $smfFunc['db_query']('', "
-		SELECT id_member, member_name, real_name, email_address, member_ip, date_registered, last_login, posts, is_activated
+		SELECT id_member, member_name, real_name, email_address, member_ip, date_registered, last_login,
+			hide_email, posts, is_activated
 		FROM {$db_prefix}members
 		WHERE $where
 		ORDER BY $querySort " . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . "
@@ -328,7 +329,7 @@ function MembergroupMembers()
 		$context['members'][] = array(
 			'id' => $row['id_member'],
 			'name' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
-			'email' => '<a href="mailto:' . $row['email_address'] . '">' . $row['email_address'] . '</a>',
+			'email' => allowedTo('moderate_forum') || empty($modSettings['allow_hide_email']) || empty($row['hide_email']) ? ('<a href="mailto:' . $row['email_address'] . '" ' . (empty($row['hide_email']) ? '' : 'style="font-style: italic;"') . '>' . $row['email_address'] . '</a>') : ('<i>' . $txt['hidden'] . '</i>'),
 			'ip' => '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['member_ip'] . '">' . $row['member_ip'] . '</a>',
 			'registered' => timeformat($row['date_registered']),
 			'last_online' => $last_online,

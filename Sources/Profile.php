@@ -690,9 +690,9 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 	
 			$unparsed_signature = strtr(un_htmlspecialchars($_POST['signature']), array("\r" => '', '&#039' => '\''));
 			// Too long?
-			if (!empty($sig_limits[1]) && strlen($unparsed_signature) > $sig_limits[1])
+			if (!empty($sig_limits[1]) && $smfFunc['strlen']($unparsed_signature) > $sig_limits[1])
 			{
-				$_POST['signature'] = trim($smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string'](substr($unparsed_signature, 0, $sig_limits[1])), ENT_QUOTES)));
+				$_POST['signature'] = trim($smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string']($smfFunc['substr']($unparsed_signature, 0, $sig_limits[1])), ENT_QUOTES)));
 				$txt['profile_error_signature_max_length'] = sprintf($txt['profile_error_signature_max_length'], $sig_limits[1]);
 				$post_errors[] = 'signature_max_length';
 			}
@@ -703,7 +703,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 				$post_errors[] = 'signature_max_lines';
 			}
 			// Too many images?!
-			if (!empty($sig_limits[3]) && substr_count($unparsed_signature, '[img') > $sig_limits[3])
+			if (!empty($sig_limits[3]) && substr_count(strtolower($unparsed_signature), '[img') > $sig_limits[3])
 			{
 				$txt['profile_error_signature_max_image_count'] = sprintf($txt['profile_error_signature_max_image_count'], $sig_limits[3]);
 				$post_errors[] = 'signature_max_image_count';
@@ -711,13 +711,13 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			// What about too many smileys!
 			$smiley_parsed = $unparsed_signature;
 			parsesmileys($smiley_parsed);
-			if (!empty($sig_limits[4]) && (substr_count($smiley_parsed, "<img") - substr_count($unparsed_signature, "<img")) > $sig_limits[4])
+			if (!empty($sig_limits[4]) && (substr_count(strtolower($smiley_parsed), "<img") - substr_count(strtolower($unparsed_signature), "<img")) > $sig_limits[4])
 			{
 				$txt['profile_error_signature_max_smileys'] = sprintf($txt['profile_error_signature_max_smileys'], $sig_limits[4]);
 				$post_errors[] = 'signature_max_smileys';
 			}
 			// Maybe we are abusing font sizes?
-			if (!empty($sig_limits[7]) && preg_match_all('~\[size=(\d+)~', $unparsed_signature, $matches) !== false && isset($matches[1]))
+			if (!empty($sig_limits[7]) && preg_match_all('~\[size=(\d+)~i', $unparsed_signature, $matches) !== false && isset($matches[1]))
 			{
 				foreach ($matches[1] as $size)
 					if ($size > $sig_limits[7])
@@ -732,7 +732,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			{
 				$replaces = array();
 				// Try to find all the images!
-				if (preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~', $unparsed_signature, $matches) !== false)
+				if (preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~i', $unparsed_signature, $matches) !== false)
 				{
 					foreach ($matches[0] as $key => $image)
 					{

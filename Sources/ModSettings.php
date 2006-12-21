@@ -391,7 +391,7 @@ function ModifySignatureSettings()
 
 				// Max characters...
 				if (!empty($sig_limits[1]))
-					$sig = substr($sig, 0, $sig_limits[1]);
+					$sig = $smfFunc['substr']($sig, 0, $sig_limits[1]);
 				// Max lines...
 				if (!empty($sig_limits[2]))
 				{
@@ -422,7 +422,7 @@ function ModifySignatureSettings()
 					$replaces = array();
 					$img_count = 0;
 					// Try to find all the images!
-					if (preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~', $sig, $matches) !== false)
+					if (preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~i', $sig, $matches) !== false)
 					{
 						foreach ($matches[0] as $key => $image)
 						{
@@ -491,8 +491,8 @@ function ModifySignatureSettings()
 				// Try to fix disabled tags.
 				if (!empty($disabledTags))
 				{
-					$sig = preg_replace('~\[(' . implode('|', $disabledTags) . ').+?\]~', '', $sig);
-					$sig = preg_replace('~\[/(' . implode('|', $disabledTags) . ')\]~', '', $sig);
+					$sig = preg_replace('~\[(' . implode('|', $disabledTags) . ').+?\]~i', '', $sig);
+					$sig = preg_replace('~\[/(' . implode('|', $disabledTags) . ')\]~i', '', $sig);
 				}
 
 				$sig = strtr($sig, array("\n" => '<br />'));

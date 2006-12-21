@@ -415,7 +415,7 @@ function template_folder()
 								', (!empty($modSettings['enableReportPM']) && $context['folder'] != 'sent' ? '<div align="right"><a href="' . $scripturl . '?action=pm;sa=report;l=' . $context['current_label_id'] . ';pmsg=' . $message['id'] . '" class="smalltext">' . $txt['pm_report_to_admin'] . '</a></div>' : '');
 
 			// Show the member's signature?
-			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']))
+			if (!empty($message['member']['signature']) && empty($options['show_no_signatures']) && $context['signature_enabled'])
 				echo '
 								<hr width="100%" size="1" class="hrcolor" />
 								<div class="signature">', $message['member']['signature'], '</div>';
