@@ -49,7 +49,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 	// Map some database specific functions, only do this once.
 	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'postg_fetch_assoc')
 		$smfFunc += array(
-			'db_query' => 'db_query',
+			'db_query' => 'smf_db_query',
 			'db_insert' => 'db_insert',
 			'db_fetch_assoc' => 'postg_fetch_assoc',
 			'db_fetch_row' => 'postg_fetch_row',
@@ -107,7 +107,7 @@ function db_fix_prefix (&$db_prefix, $db_name)
 }
 
 // Do a query.  Takes care of errors too.
-function db_query($identifier, $db_string, $file, $line, $connection = null)
+function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 {
 	global $db_cache, $db_count, $db_connection, $db_show_debug, $modSettings, $db_last_result, $db_replace_result;
 
@@ -274,7 +274,7 @@ function db_insert_id($table, $field, $connection = null)
 		$connection = $db_connection;
 
 	// Try get the last ID for the auto increment field.
-	$request = db_query('', "SELECT CURRVAL('{$table}_seq') AS insertID", __FILE__, __LINE__);
+	$request = $smfFunc['db_query']('', "SELECT CURRVAL('{$table}_seq') AS insertID", __FILE__, __LINE__);
 	if (!$request)
 		return false;
 	list ($lastID) = $smfFunc['db_fetch_row']($request);
@@ -304,6 +304,7 @@ function db_error($db_string, $file, $line, $connection = null)
 	global $txt, $context, $sourcedir, $webmaster_email, $modSettings;
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
 	global $db_server, $db_user, $db_passwd, $db_name, $db_show_debug, $ssi_db_user, $ssi_db_passwd;
+	global $smfFunc;
 
 	// Decide which connection to use
 	$connection = $connection == null ? $db_connection : $connection;
@@ -385,7 +386,7 @@ function db_error($db_string, $file, $line, $connection = null)
 
 			// Attempt to find and repair the broken table.
 			foreach ($fix_tables as $table)
-				db_query('', "
+				$smfFunc['db_query']('', "
 					REPAIR TABLE $table", false, false);
 
 			// And send off an email!
@@ -394,7 +395,7 @@ function db_error($db_string, $file, $line, $connection = null)
 			$modSettings['cache_enable'] = $old_cache;
 
 			// Try the query again...?
-			$ret = db_query('', $db_string, false, false);
+			$ret = $smfFunc['db_query']('', $db_string, false, false);
 			if ($ret !== false)
 				return $ret;
 		}
@@ -432,7 +433,7 @@ function db_error($db_string, $file, $line, $connection = null)
 				// Try a deadlock more than once more.
 				for ($n = 0; $n < 4; $n++)
 				{
-					$ret = db_query('', $db_string, false, false);
+					$ret = $smfFunc['db_query']('', $db_string, false, false);
 
 					$new_errno = mysql_errno($db_connection);
 					if ($ret !== false || in_array($new_errno, array(1205, 1213)))
@@ -557,7 +558,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable
 			}
 			$sql = substr($sql, 0, -2) . " WHERE $where";
 
-			db_query('', $sql, __FILE__, __LINE__);
+			$smfFunc['db_query']('', $sql, __FILE__, __LINE__);
 			// Make a note that the replace actually overwrote.
 			if (db_affected_rows() != 0)
 			{
@@ -570,7 +571,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable
 	if (!empty($data))
 	{
 		foreach ($data as $entry)
-			db_query('', "
+			$smfFunc['db_query']('', "
 				INSERT INTO $table
 					(" . implode(', ', $columns) . ")
 				VALUES

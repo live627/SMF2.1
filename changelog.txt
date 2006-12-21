@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2603 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2604 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -51,6 +51,7 @@ December 2006
  ! Added a currently unimplemented option for changing how personal messages as displayed. (PersonalMessage.php, PersonalMessage template)
  ! Stopped PersonalMessages showing a folder as read just for entering it. (PersonalMessage.php)
  & Renamed "Outbox" to "Sent Items" which makes more sense. (PersonalMessage language files)
+ ! Renamed the db_query function to smf_db_query to avoid potential integration conflicts. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php)
 
 
 November 2006
