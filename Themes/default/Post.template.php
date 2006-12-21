@@ -841,7 +841,7 @@ function template_postbox(&$message)
 		// Show the font drop down...
 		if (!isset($context['disabled_tags']['face']))
 			echo ' 
-						<select name="sel_face" id="sel_face" style="margin-bottom: 1ex;">
+						<select name="sel_face" id="sel_face" style="margin-bottom: 1ex; font-size: x-small;">
 							<option value="" selected="selected">', $txt[533], '</option>
 							<option value="courier">Courier</option>
 						</select>';
@@ -849,7 +849,7 @@ function template_postbox(&$message)
 		// Font sizes anyone?
 		if (!isset($context['disabled_tags']['size']))
 			echo ' 
-						<select name="sel_size" id="sel_size" style="margin-bottom: 1ex;">
+						<select name="sel_size" id="sel_size" style="margin-bottom: 1ex; font-size: x-small;">
 							<option value="" selected="selected">', $txt[532], '</option>
 							<option value="1">8pt</option>
 							<option value="2">10pt</option>
@@ -862,7 +862,7 @@ function template_postbox(&$message)
 
 		// Print a drop down list for all the colors we allow!
 		if (!isset($context['disabled_tags']['color']))
-			echo ' <select name="sel_color" id="sel_color" style="margin-bottom: 1ex;">
+			echo ' <select name="sel_color" id="sel_color" style="margin-bottom: 1ex; font-size: x-small;">
 							<option value="" selected="selected">', $txt['change_color'], '</option>
 							<option value="black">', $txt[262], '</option>
 							<option value="red">', $txt[263], '</option>
