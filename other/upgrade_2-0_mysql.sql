@@ -25,10 +25,12 @@ CHANGE COLUMN ID_BAN_GROUP id_ban_group mediumint(8) unsigned NOT NULL auto_incr
 
 ALTER TABLE {$db_prefix}ban_items
 CHANGE COLUMN ID_BAN id_ban mediumint(8) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_BAN_GROUP id_ban_group smallint(5) unsigned NOT NULL default '0',
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}board_permissions
 CHANGE COLUMN ID_GROUP id_group smallint(5) NOT NULL default '0',
+CHANGE COLUMN ID_PROFILE id_profile smallint(5) NOT NULL default '0',
 CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
 ---#
 
@@ -165,6 +167,7 @@ CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
 ---# Changing all column names - part 4.
 ALTER TABLE {$db_prefix}log_reported_comments
 CHANGE COLUMN ID_COMMENT id_comment mediumint(8) unsigned NOT NULL auto_increment,
+CHANGE COLUMN ID_REPORT id_report mediumint(8) NOT NULL,
 CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}log_scheduled_tasks
@@ -294,6 +297,7 @@ CHANGE COLUMN ID_PROFILE id_profile smallint(5) NOT NULL auto_increment,
 CHANGE COLUMN ID_PARENT id_parent smallint(5) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}permissions
+CHANGE COLUMN ID_GROUP id_group smallint(5) NOT NULL default '0',
 CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
 
 ALTER TABLE {$db_prefix}pm_recipients
@@ -329,6 +333,7 @@ CHANGE COLUMN smileyRow smiley_row tinyint(4) unsigned NOT NULL default '0',
 CHANGE COLUMN smileyOrder smiley_order smallint(5) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}themes
+CHANGE COLUMN ID_MEMBER id_member mediumint(8) NOT NULL default '0',
 CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '1';
 
 ALTER TABLE {$db_prefix}topics
