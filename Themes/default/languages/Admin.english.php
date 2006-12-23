@@ -131,7 +131,7 @@ $txt['ip_address'] = 'IP address';
 $txt['member_id'] = 'ID';
 
 $txt['unknown'] = 'unknown';
-$txt['security_wrong'] = 'Administration login attempt!\\nReferer: %1$s\\nUser agent: %2$s\\nIP: %3$s';
+$txt['security_wrong'] = 'Administration login attempt!' . "\n" . 'Referer: %1$s' . "\n" . 'User agent: %2$s' . "\n" . 'IP: %3$s';
 
 $txt['email_as_html'] = 'Send in HTML format.  (with this you can put normal HTML in the email.)';
 $txt['email_parsed_html'] = 'Add &lt;br /&gt;s and &amp;nbsp;s to this message.';
@@ -279,7 +279,7 @@ $txt['maintain_old_are_not_stickied'] = 'But don\'t count stickied topics.';
 $txt['maintain_old_all'] = 'All Boards';
 $txt['maintain_old_choose'] = 'Choose Specific Boards';
 $txt['maintain_old_remove'] = 'Remove now';
-$txt['maintain_old_confirm'] = 'Are you really sure you want to delete old posts now?\\n\\nThis cannot be undone!';
+$txt['maintain_old_confirm'] = 'Are you really sure you want to delete old posts now?' . "\n\n" . 'This cannot be undone!';
 
 $txt['maintain_members'] = 'Remove Inactive Members';
 $txt['maintain_members_ungrouped'] = 'Ungrouped Members <span class="smalltext">(Members with no assigned groups)</span>';
@@ -290,7 +290,7 @@ $txt['maintain_members_activated'] = 'activated their account';
 $txt['maintain_members_logged_in'] = 'logged in';
 $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?' . "\n\n" . 'This cannot be undone!';
 
 // Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';

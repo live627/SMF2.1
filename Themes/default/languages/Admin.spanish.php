@@ -138,7 +138,7 @@ $txt['ip_address'] = 'Direcci&oacute;n IP';
 $txt['member_id'] = 'ID';
 
 $txt['unknown'] = 'desconocido';
-$txt['security_wrong'] = '&iexcl;Intento de ingreso a administraci&oacute;n!\\nReferer: %1$s\\nUser agent: %2$s\\nIP: %3$s';
+$txt['security_wrong'] = '&iexcl;Intento de ingreso a administraci&oacute;n!' . "\n" . 'Referer: %1$s' . "\n" . 'User agent: %2$s' . "\n" . 'IP: %3$s';
 
 $txt['email_as_html'] = 'Enviar en formato HTML.  (con esto, puedes poner HTML en el email.)';
 $txt['email_parsed_html'] = 'Agregar &lt;br /&gt;s y &amp;nbsp;s a este mensaje.';
@@ -297,7 +297,7 @@ $txt['maintain_old_are_not_stickied'] = 'Pero no se pudieron contar los temas fi
 $txt['maintain_old_all'] = 'Todos los foros';
 $txt['maintain_old_choose'] = 'Selecciona foros espec&iacute;ficos';
 $txt['maintain_old_remove'] = 'Eliminar';
-$txt['maintain_old_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar mensajes viejos?\\n\\n&#161;Esto no se podr&#225; deshacer!';
+$txt['maintain_old_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar mensajes viejos?' . "\n\n" . '&#161;Esto no se podr&#225; deshacer!';
 
 // Untranslated!
 $txt['maintain_members'] = 'Remove Inactive Members';
@@ -309,7 +309,7 @@ $txt['maintain_members_activated'] = 'activated their account';
 $txt['maintain_members_logged_in'] = 'logged in';
 $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?' . "\n\n" . 'This cannot be undone!';
 
 // Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';

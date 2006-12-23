@@ -116,7 +116,7 @@ $txt['themeadmin_reset_members'] = 'Reinicializar las opciones actuales de todos
 $txt['themeadmin_reset_remove'] = 'Eliminar todas las opciones de los usuarios y utilizar los valores por defecto';
 $txt['themeadmin_reset_remove_current'] = 'usuarios usando sus propias opciones actualmente.';
 // Don't use entities in the below string.
-$txt['themeadmin_reset_remove_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar todas las opciones del tema?\\nEsto puede que reinicialice algunos campos de los perfiles.';
+$txt['themeadmin_reset_remove_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar todas las opciones del tema?' . "\n" . 'Esto puede que reinicialice algunos campos de los perfiles.';
 $txt['themeadmin_reset_options_info'] = 'Las opciones siguients reinicializar&aacute;n las opciones para <em>todos</em>.  Para cambiar una opci&oacute;n, selecciona &quot;cambiar&quot; en el cuadro a su lado, y entonces selecciona un valor para &eacute;ste.  Para usar el valor por defecto, selecciona &quot;eliminar&quot;.  De lo contrario, usa &quot;no cambiar&quot; para dejarlo tal como est&eacute;.';
 $txt['themeadmin_reset_options_change'] = 'Cambiar';
 $txt['themeadmin_reset_options_none'] = 'No cambiar';

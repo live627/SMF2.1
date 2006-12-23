@@ -116,7 +116,7 @@ $txt['themeadmin_reset_members'] = 'Stellen Sie alle aktuellen Mitgliederoptione
 $txt['themeadmin_reset_remove'] = 'Entfernen Sie alle Mitgliederoptionen und benutzen Sie die Standardwerte';
 $txt['themeadmin_reset_remove_current'] = 'Mitglieder benutzen eigene Optionen.';
 // Don't use entities in the below string.
-$txt['themeadmin_reset_remove_confirm'] = 'Sind Sie sicher, dass Sie alle Theme Optionen entfernen wollen?\\nDies kann manche Profilfelder ebenfalls zurückstellen.';
+$txt['themeadmin_reset_remove_confirm'] = 'Sind Sie sicher, dass Sie alle Theme Optionen entfernen wollen?' . "\n" . 'Dies kann manche Profilfelder ebenfalls zurückstellen.';
 $txt['themeadmin_reset_options_info'] = 'Die folgenden Einstellungen stellen die Optionen f&uuml;r <em>jeden</em> zur&uuml;ck. Um eine Option zu ver&auml;ndern, w&auml;hlen Sie &quot;&Auml;ndern&quot; im Drop-Down Feld und stellen Sie die Option entsprechend Ihrer Vorstellungen ein. Um den Standardwert zu benutzen, w&auml;hlen Sie &quot;Entfernen&quot; oder &quot;Nicht &auml;ndern&quot;, um die betreffende Option zu belassen.';
 $txt['themeadmin_reset_options_change'] = '&Auml;ndern';
 $txt['themeadmin_reset_options_none'] = 'Nicht &auml;ndern';

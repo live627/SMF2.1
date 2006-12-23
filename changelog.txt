@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2606 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2607 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -58,6 +58,7 @@ December 2006
  ! Attempt to cache more information for personal messages. (PersonalMessage.php)
  ! Added column to members table for storing personal messages preferences - currently only doing display mode. (install and upgrade scripts, PersonalMessage.php)
  * Added icon and settings information to toggling the current message view. (PersonalMessage.php, PersonalMessage template)
+ & Renaming some language entries had broken line breaks causing badly formatted emails. (Several langauge files)
 
 
 November 2006

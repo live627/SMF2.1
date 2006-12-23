@@ -6,10 +6,8 @@
 	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 	   the cache go to Admin => Maintenance => Clean Cache.
 
-	2) Please also follow the following rules:
-
-		a) All strings should use single quotes, not double quotes for enclosing the string.
-		b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
+	2) Please also note that strings should use single quotes, not double quotes for enclosing the string
+	   except for line breaks.
 
 */
 
@@ -107,7 +105,7 @@ $txt['help'] = 'Hilfe';
 $txt['remove_message'] = 'Beitrag l&ouml;schen';
 $txt['notify'] = 'Benachrichtigen';
 $txt['notify_request'] = 'M&ouml;chten Sie eine Benachrichtigung per E-Mail, wenn eine Antwort zu diesem Thema geschrieben wird?';
-$txt['regards_team'] = 'Lieben Gru&#223;,\\ndas %1$s Team.';
+$txt['regards_team'] = 'Lieben Gru&#223;,' . "\n" . 'das %1$s Team.';
 // Use numeric entities in the below string.
 $txt['notify_replies'] = '&#220;ber Antworten benachrichtigen';
 $txt['move_topic'] = 'Thema verschieben';
@@ -621,7 +619,7 @@ $txt['change_color'] = 'Farbe &auml;ndern';
 $txt['quickmod_delete_selected'] = 'Ausgew&auml;hlte l&ouml;schen';
 
 // In this string, don't use entities. (&amp;, etc.)
-$txt['show_personal_messages'] = 'Sie haben eine oder mehrere neue Private Mitteilungen erhalten.\\nMöchten Sie diese lesen?';
+$txt['show_personal_messages'] = 'Sie haben eine oder mehrere neue Private Mitteilungen erhalten.' . "\n" . 'Möchten Sie diese lesen?';
 
 $txt['previous_next_back'] = '&laquo; vorheriges';
 $txt['previous_next_forward'] = 'n&auml;chstes &raquo;';

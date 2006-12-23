@@ -19,7 +19,7 @@ $txt[535] = 'Ontvanger';
 // Don't translate the word "SUBJECT" here, as it is used to format the message - use numeric entities as well.
 $txt[561] = 'Nieuw persoonlijk bericht: SUBJECT';
 // Don't translate SENDER or MESSAGE in this language string; they are replaced with the corresponding text - use numeric entities too.
-$txt[562] = 'Je hebt zojuist een persoonlijk bericht ontvangen van SENDER op ' . $context['forum_name'] . '.\\n\\nBELANGRIJK: Onthoud dat dit alleen maar een notificatie is. Reageer niet op deze e-mail.\\n\\nHet bericht wat je werd gestuurd was:\\n\\nMESSAGE';
+$txt[562] = 'Je hebt zojuist een persoonlijk bericht ontvangen van SENDER op ' . $context['forum_name'] . '.' . "\n\n" . 'BELANGRIJK: Onthoud dat dit alleen maar een notificatie is. Reageer niet op deze e-mail.' . "\n\n" . 'Het bericht wat je werd gestuurd was:' . "\n\n" . 'MESSAGE';
 $txt[748] = '(meerdere geadresseerden als \'naam1, naam2\')';
 // Use numeric entities in the below string.
 $txt['instant_reply'] = 'Beantwoord dit persoonlijk bericht hier:';

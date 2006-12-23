@@ -132,7 +132,7 @@ $txt['ip_address'] = 'IP-Adresse';
 $txt['member_id'] = 'ID';
 
 $txt['unknown'] = 'unbekannt';
-$txt['security_wrong'] = 'Administrator Login Versuch!\\nReferer: %1$s\\nUser agent: %2$s\\nIP: %3$s';
+$txt['security_wrong'] = 'Administrator Login Versuch!' . "\n" . 'Referer: %1$s' . "\n" . 'User agent: %2$s' . "\n" . 'IP: %3$s';
 
 $txt['email_as_html'] = 'Sendet E-Mail im HTML Format (HTML Code in der E-Mail m&ouml;glich)';
 $txt['email_parsed_html'] = 'F&uuml;gt &lt;br /&gt; und &amp;nbsp; in die Nachricht ein';
@@ -284,7 +284,7 @@ $txt['maintain_old_are_not_stickied'] = 'fixierte Themen ausschlie&szlig;en';
 $txt['maintain_old_all'] = 'Alle Boards';
 $txt['maintain_old_choose'] = 'W&auml;hlen Sie die Boards';
 $txt['maintain_old_remove'] = 'Entfernen';
-$txt['maintain_old_confirm'] = 'Sind Sie sicher, dass Sie alle alten Beiträge löschen m&ouml;chten?\\n\\nDies kann nicht r&uuml;ckg&auml;ngig gemacht werden!';
+$txt['maintain_old_confirm'] = 'Sind Sie sicher, dass Sie alle alten Beiträge löschen m&ouml;chten?' . "\n\n" . 'Dies kann nicht r&uuml;ckg&auml;ngig gemacht werden!';
 
 // Untranslated!
 $txt['maintain_members'] = 'Remove Inactive Members';
@@ -296,7 +296,7 @@ $txt['maintain_members_activated'] = 'activated their account';
 $txt['maintain_members_logged_in'] = 'logged in';
 $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?' . "\n\n" . 'This cannot be undone!';
 
 // Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';

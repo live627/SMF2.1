@@ -144,8 +144,8 @@ $txt['package_ftp_username'] = 'Username';
 $txt['package_ftp_password'] = 'Password';
 $txt['package_ftp_path'] = 'Local path to SMF';
 
-// For a break, use \\n instead of <br />... and don't use entities.
-$txt['package_delete_bad'] = 'The package you are about to delete is currently installed!  If you delete it, you may not be able to uninstall it later.\\n\\nAre you sure?';
+// For a break, use ' . "\n" . ' instead of <br />... and don't use entities.
+$txt['package_delete_bad'] = 'The package you are about to delete is currently installed!  If you delete it, you may not be able to uninstall it later.' . "\n\n" . 'Are you sure?';
 
 $txt['package_examine_file'] = 'View file in package';
 $txt['package_file_contents'] = 'Contents of file';

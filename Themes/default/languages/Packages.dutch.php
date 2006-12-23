@@ -145,8 +145,8 @@ $txt['package_ftp_username'] = 'Gebruikersnaam';
 $txt['package_ftp_password'] = 'Wachtwoord';
 $txt['package_ftp_path'] = 'Lokale pad naar SMF';
 
-// For a break, use \\n instead of <br />... and don't use entities.
-$txt['package_delete_bad'] = 'Het pakket dat je wilt verwijderen is momenteel geïnstalleerd! Als je het verwijdert, zou het kunnen zijn dat je het later niet meer kunt deïnstalleren.\\n\\nWeet je het zeker?';
+// For a break, use ' . "\n" . ' instead of <br />... and don't use entities.
+$txt['package_delete_bad'] = 'Het pakket dat je wilt verwijderen is momenteel geïnstalleerd! Als je het verwijdert, zou het kunnen zijn dat je het later niet meer kunt deïnstalleren.' . "\n\n" . 'Weet je het zeker?';
 
 $txt['package_examine_file'] = 'Bekijk bestand in het pakket';
 $txt['package_file_contents'] = 'Inhoud van het bestand';

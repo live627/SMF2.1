@@ -266,10 +266,8 @@ function fixLanguageFile($filename, $type, $lang, $test = false)
 edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 the cache go to Admin => Maintenance => Clean Cache.
 
-2) Please also follow the following rules:
-
-a) All strings should use single quotes, not double quotes for enclosing the string.
-b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
+2) Please also note that strings should use single quotes, not double quotes for enclosing the string
+   except for line breaks.
 
 */';
 		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$1$long_warning\n\n", $fileContents);

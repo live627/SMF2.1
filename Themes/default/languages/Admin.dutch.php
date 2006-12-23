@@ -132,7 +132,7 @@ $txt['ip_address'] = 'IP-adres';
 $txt['member_id'] = 'ID';
 
 $txt['unknown'] = 'onbekend';
-$txt['security_wrong'] = 'Beheer-inlogpoging!\\nReferentie: %1$s\\nBrowser: %2$s\\nIP: %3$s';
+$txt['security_wrong'] = 'Beheer-inlogpoging!' . "\n" . 'Referentie: %1$s' . "\n" . 'Browser: %2$s' . "\n" . 'IP: %3$s';
 
 $txt['email_as_html'] = 'Stuur in HTML-formaat (hiermee kun je HTML in de e-mail gebruiken).';
 $txt['email_parsed_html'] = 'Voeg &lt;br /&gt;s en &amp;nbsp;s toe aan dit bericht.';
@@ -286,7 +286,7 @@ $txt['maintain_old_are_not_stickied'] = 'Sluit sticky topics uit';
 $txt['maintain_old_all'] = 'Alle boards';
 $txt['maintain_old_choose'] = 'Kies specifieke boards';
 $txt['maintain_old_remove'] = 'Verwijder';
-$txt['maintain_old_confirm'] = 'Weet je zeker dat je de oude berichten wilt verwijderen?\\n\\nDit kan niet ongedaan gemaakt worden!';
+$txt['maintain_old_confirm'] = 'Weet je zeker dat je de oude berichten wilt verwijderen?' . "\n\n" . 'Dit kan niet ongedaan gemaakt worden!';
 
 // Untranslated!
 $txt['maintain_members'] = 'Remove Inactive Members';
@@ -298,7 +298,7 @@ $txt['maintain_members_activated'] = 'activated their account';
 $txt['maintain_members_logged_in'] = 'logged in';
 $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?' . "\n\n" . 'This cannot be undone!';
 
 // Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';

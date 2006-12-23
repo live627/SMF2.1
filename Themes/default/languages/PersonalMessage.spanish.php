@@ -19,7 +19,7 @@ $txt[535] = 'Destinatario';
 // Don't translate the word "SUBJECT" here, as it is used to format the message - use numeric entities as well.
 $txt[561] = 'Nuevo Mensaje Personal: SUBJECT';
 // Don't translate SENDER or MESSAGE in this language string; they are replaced with the corresponding text - use numeric entities too.
-$txt[562] = 'Acaban de enviarte un mensaje personal de parte de SENDER en ' . $context['forum_name'] . '.\\n\\nIMPORTANTE: Recuerda, esto es solamente una notificaci&oacute;n. Por favor, no respondas a este email.\\n\\nEl mensaje que te enviaron fue:\\n\\nMESSAGE';
+$txt[562] = 'Acaban de enviarte un mensaje personal de parte de SENDER en ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANTE: Recuerda, esto es solamente una notificaci&oacute;n. Por favor, no respondas a este email.' . "\n\n" . 'El mensaje que te enviaron fue:' . "\n\n" . 'MESSAGE';
 $txt[748] = '(m&uacute;ltiples destinatarios como \'nombreusuario1, nombreusuario2\')';
 // Use numeric entities in the below string.
 $txt['instant_reply'] = 'Responder a este mensaje personal aqu&iacute;:';

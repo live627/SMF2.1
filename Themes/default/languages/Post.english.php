@@ -70,7 +70,7 @@ $txt[532] = 'Font Size';
 $txt[533] = 'Font Face';
 
 // Use numeric entities in the below five strings.
-$txt['notify_boards'] = 'A new topic, \'%s\', has been made on a board you are watching.\\n\\nYou can see it at\\n%s\\n\\n';
+$txt['notify_boards'] = 'A new topic, \'%s\', has been made on a board you are watching.' . "\n\n" . 'You can see it at' . "\n" . '%s' . "\n\n" . '';
 $txt['notify_boards_subject'] = 'New Topic: %s';
 $txt['notify_boards_once'] = 'More topics may be posted, but you won\'t receive more email notifications until you return to the board and read some of them.';
 $txt['notifyUnsubscribe'] = 'Unsubscribe to this topic by clicking here';
@@ -98,7 +98,7 @@ $txt['attachment_requires_approval'] = 'Note that any files attached will not be
 
 // Use numeric entities in the below three strings.
 $txt['notifyXAnn2'] = 'New announcement';
-$txt['notifyXAnn3'] = 'To unsubscribe from these announcements, login to the forum and uncheck "Receive forum announcements and important notifications by email." in your profile.\\n\\nYou can view the full announcement by following this link:';
+$txt['notifyXAnn3'] = 'To unsubscribe from these announcements, login to the forum and uncheck "Receive forum announcements and important notifications by email." in your profile.' . "\n\n" . 'You can view the full announcement by following this link:';
 $txt['notifyXOnce2'] = 'More replies may be posted, but you won\'t receive any more notifications until you read the topic.';
 
 $txt['rtm2'] = 'Enter comment';
@@ -158,21 +158,21 @@ $txt['error_old_topic'] = 'Warning: this topic has not been posted in for at lea
 
 // Use numeric entities in the below sixteen strings.
 $txt['notification_reply_subject'] = 'Topic reply: %s';
-$txt['notification_reply'] = 'A reply has been posted to a topic you are watching by %s.\\n\\nView the reply at: ';
+$txt['notification_reply'] = 'A reply has been posted to a topic you are watching by %s.' . "\n\n" . 'View the reply at: ';
 $txt['notification_sticky_subject'] = 'Topic stickied: %s';
-$txt['notification_sticky'] = 'A topic you are watching has been marked as a sticky topic by %s.\\n\\nView the topic at: ';
+$txt['notification_sticky'] = 'A topic you are watching has been marked as a sticky topic by %s.' . "\n\n" . 'View the topic at: ';
 $txt['notification_lock_subject'] = 'Topic locked: %s';
-$txt['notification_lock'] = 'A topic you are watching has been locked by %s.\\n\\nView the topic at: ';
+$txt['notification_lock'] = 'A topic you are watching has been locked by %s.' . "\n\n" . 'View the topic at: ';
 $txt['notification_unlock_subject'] = 'Topic unlocked: %s';
-$txt['notification_unlock'] = 'A topic you are watching has been unlocked by %s.\\n\\nView the topic at: ';
+$txt['notification_unlock'] = 'A topic you are watching has been unlocked by %s.' . "\n\n" . 'View the topic at: ';
 $txt['notification_remove_subject'] = 'Topic removed: %s';
 $txt['notification_remove'] = 'A topic you are watching has been removed by %s.';
 $txt['notification_move_subject'] = 'Topic moved: %s';
-$txt['notification_move'] = 'A topic you are watching has been moved to another board by %s.\\n\\nView the topic at: ';
+$txt['notification_move'] = 'A topic you are watching has been moved to another board by %s.' . "\n\n" . 'View the topic at: ';
 $txt['notification_merge_subject'] = 'Topic merged: %s';
-$txt['notification_merge'] = 'A topic you are watching has been merged with another topic by %s.\\n\\nView the new merged topic at: ';
+$txt['notification_merge'] = 'A topic you are watching has been merged with another topic by %s.' . "\n\n" . 'View the new merged topic at: ';
 $txt['notification_split_subject'] = 'Topic split: %s';
-$txt['notification_split'] = 'A topic you are watching has been split into two or more topics by %s.\\n\\nView what remains of this topic at: ';
+$txt['notification_split'] = 'A topic you are watching has been split into two or more topics by %s.' . "\n\n" . 'View what remains of this topic at: ';
 
 // Use numeric entities in the below two strings.
 $txt['notification_reply_body'] = 'The text of the reply is shown below:';

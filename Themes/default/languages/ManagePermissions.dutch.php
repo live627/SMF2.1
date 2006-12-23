@@ -61,7 +61,7 @@ $txt['permissions_select_permission'] = 'Kies een permissie';
 // All of the following block of strings should not use entities, instead use \\" for &quot; etc.
 $txt['permissions_only_one_option'] = 'Je kunt slechts &eacute;&eacute;n actie kiezen om de permissies aan te passen';
 $txt['permissions_no_action'] = 'Geen actie gekozen';
-$txt['permissions_deny_dangerous'] = 'Je staat op het punt &eacute;&eacute;n of meerdere permissies te ontzeggen.\\nDit kan gevaarlijk zijn en ongewenste resultaten tot gevolg hebben als je je er niet van hebt verzekerd dat iemand \\\'per ongeluk\\\' in de groep terecht is gekomen welke de permissies ontzegd zijn.\\n\\nWeet je zeker dat je door wilt gaan?';
+$txt['permissions_deny_dangerous'] = 'Je staat op het punt &eacute;&eacute;n of meerdere permissies te ontzeggen.' . "\n" . 'Dit kan gevaarlijk zijn en ongewenste resultaten tot gevolg hebben als je je er niet van hebt verzekerd dat iemand \\\'per ongeluk\\\' in de groep terecht is gekomen welke de permissies ontzegd zijn.' . "\n\n" . 'Weet je zeker dat je door wilt gaan?';
 
 $txt['permissions_boards'] = 'Permissies per board';
 

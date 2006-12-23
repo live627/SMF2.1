@@ -70,7 +70,7 @@ $txt[532] = 'Letter formaat';
 $txt[533] = 'Lettertype';
 
 // Use numeric entities in the below five strings.
-$txt['notify_boards'] = 'Een nieuw bericht, \'%s\', is geplaatst op een board waarvan de berichtnotificatie aan staat.\\n\\nJe kunt het hier bekijken:\\n%s\\n\\n';
+$txt['notify_boards'] = 'Een nieuw bericht, \'%s\', is geplaatst op een board waarvan de berichtnotificatie aan staat.' . "\n\n" . 'Je kunt het hier bekijken:' . "\n" . '%s' . "\n\n" . '';
 $txt['notify_boards_subject'] = 'Nieuwe berichten: %s';
 $txt['notify_boards_once'] = 'Van verdere berichten die geplaatst worden zul je geen e-mailnotificatie ontvangen, totdat je terug komt op het board en een van de berichten leest.';
 $txt['notifyUnsubscribe'] = 'Notificatie voor dit topic uitzetten door hier te klikken';
@@ -99,7 +99,7 @@ $txt['attachment_requires_approval'] = 'Note that any files attached will not be
 
 // Use numeric entities in the below three strings.
 $txt['notifyXAnn2'] = 'Nieuwe aankondiging';
-$txt['notifyXAnn3'] = 'Om deze aankondigingen niet langer per e-mail te ontvangen, log in op het forum en vink "Ontvang e-mailnotificatie bij nieuwe aankondigingen" uit in je profiel.\\n\\nJe kunt de volledige aankondiging bekijken door op deze link te klikken:';
+$txt['notifyXAnn3'] = 'Om deze aankondigingen niet langer per e-mail te ontvangen, log in op het forum en vink "Ontvang e-mailnotificatie bij nieuwe aankondigingen" uit in je profiel.' . "\n\n" . 'Je kunt de volledige aankondiging bekijken door op deze link te klikken:';
 $txt['notifyXOnce2'] = 'Er kunnen meerdere reacties zijn geplaatst, maar je zult niet meer berichten ontvangen alvorens de reacties te hebben gelezen';
 
 $txt['rtm2'] = 'Geef je commentaar';
@@ -160,21 +160,21 @@ $txt['error_old_topic'] = 'Waarschuwing: er zijn al zo\'n %d dagen geen berichte
 
 // Use numeric entities in the below sixteen strings.
 $txt['notification_reply_subject'] = 'Er is een reactie op het forum: %s';
-$txt['notification_reply'] = 'Er is een reactie geplaatst op het forum door %s.\\n\\nJe kunt deze bekijken via onderstaande link:\\n\\n';
+$txt['notification_reply'] = 'Er is een reactie geplaatst op het forum door %s.' . "\n\n" . 'Je kunt deze bekijken via onderstaande link:' . "\n\n" . '';
 $txt['notification_sticky_subject'] = 'Topic sticky gemaakt: %s';
-$txt['notification_sticky'] = 'Een topic dat je in de gaten hield is gemarkeerd als een sticky topic door %s.\\n\\nBekijk het topic op: ';
+$txt['notification_sticky'] = 'Een topic dat je in de gaten hield is gemarkeerd als een sticky topic door %s.' . "\n\n" . 'Bekijk het topic op: ';
 $txt['notification_lock_subject'] = 'Topic gesloten: %s';
-$txt['notification_lock'] = 'Een topic dat je in de gaten hield is gesloten door %s.\\n\\nBekijk het topic op: ';
+$txt['notification_lock'] = 'Een topic dat je in de gaten hield is gesloten door %s.' . "\n\n" . 'Bekijk het topic op: ';
 $txt['notification_unlock_subject'] = 'Topic van het slot gehaald: %s';
-$txt['notification_unlock'] = 'Een topic dat je in de gaten hield is van het slot afgehaald door %s.\\n\\nBekijk het topic op: ';
+$txt['notification_unlock'] = 'Een topic dat je in de gaten hield is van het slot afgehaald door %s.' . "\n\n" . 'Bekijk het topic op: ';
 $txt['notification_remove_subject'] = 'Topic verwijderd: %s';
 $txt['notification_remove'] = 'Een topic dat je in de gaten hield is verwijderd door %s.';
 $txt['notification_move_subject'] = 'Topic verplaatst: %s';
-$txt['notification_move'] = 'Een topic dat je in de gaten hield is verplaatst naar een ander board door %s.\\n\\nBekijk het topic op: ';
+$txt['notification_move'] = 'Een topic dat je in de gaten hield is verplaatst naar een ander board door %s.' . "\n\n" . 'Bekijk het topic op: ';
 $txt['notification_merge_subject'] = 'Topic samengevoegd: %s';
-$txt['notification_merge'] = 'Een topic dat je in de gaten hield is samengevoegd met een ander topic door %s.\\n\\nBekijk het nieuw samengevoegde topic op: ';
+$txt['notification_merge'] = 'Een topic dat je in de gaten hield is samengevoegd met een ander topic door %s.' . "\n\n" . 'Bekijk het nieuw samengevoegde topic op: ';
 $txt['notification_split_subject'] = 'Topic splitsing: %s';
-$txt['notification_split'] = 'Een deel van het topic dat je in de gaten hield is afgesplitst door %s.\\n\\nBekijk het restant van het topic op: ';
+$txt['notification_split'] = 'Een deel van het topic dat je in de gaten hield is afgesplitst door %s.' . "\n\n" . 'Bekijk het restant van het topic op: ';
 
 // Use numeric entities in the below two strings.
 $txt['notification_reply_body'] = 'De tekst van de reactie staan hieronder:';

@@ -70,7 +70,7 @@ $txt[532] = 'Tama&ntilde;o de Fuente';
 $txt[533] = 'Tipo de Fuente';
 
 // Use numeric entities in the below five strings.
-$txt['notify_boards'] = 'Un nuevo mensaje, \'%s\', ha sido publicado en un foro que est&#225;s monitoreando.\\n\\nLo puedes ver en\\n%s\\n\\n';
+$txt['notify_boards'] = 'Un nuevo mensaje, \'%s\', ha sido publicado en un foro que est&#225;s monitoreando.' . "\n\n" . 'Lo puedes ver en' . "\n" . '%s' . "\n\n" . '';
 $txt['notify_boards_subject'] = 'Nuevo tema: %s';
 $txt['notify_boards_once'] = 'Pueden haber sido publicados mas temas, pero no recibiras mas notificaciones por email hasta que visites el foro.';
 $txt['notifyUnsubscribe'] = 'Desinscribirse a este tema haciendo click aqu&#237;';
@@ -99,7 +99,7 @@ $txt['attachment_requires_approval'] = 'Note that any files attached will not be
 
 // Use numeric entities in the below three strings.
 $txt['notifyXAnn2'] = 'Hay un nuevo anuncio';
-$txt['notifyXAnn3'] = 'Para desinscribirte de esos anuncios, ingresa al foro y deselecciona "Recibir anuncios de foro y notificaciones importantes por email." en tu perfil.\\n\\nPuedes ver todos los anuncios siguiendo este enlace:';
+$txt['notifyXAnn3'] = 'Para desinscribirte de esos anuncios, ingresa al foro y deselecciona "Recibir anuncios de foro y notificaciones importantes por email." en tu perfil.' . "\n\n" . 'Puedes ver todos los anuncios siguiendo este enlace:';
 $txt['notifyXOnce2'] = 'M&#225;s respuestas pueden estar publicadas, pero no recibir&#225;s m&#225;s emails hasta que leas las respuestas en el foro';
 
 $txt['rtm2'] = 'Introduce comentario';
@@ -160,21 +160,21 @@ $txt['error_old_topic'] = 'Advertencia: no se han publicado mensajes en este tem
 
 // Use numeric entities in the below sixteen strings.
 $txt['notification_reply_subject'] = 'Respuesta al tema: %s';
-$txt['notification_reply'] = 'Una respuesta por %s ha sido publicada en un tema que est&#225;s monitoreando.\\n\\nPuedes verla en ';
+$txt['notification_reply'] = 'Una respuesta por %s ha sido publicada en un tema que est&#225;s monitoreando.' . "\n\n" . 'Puedes verla en ';
 $txt['notification_sticky_subject'] = 'Tema fijado: %s';
-$txt['notification_sticky'] = 'Un tema que estabas monitoreando ha sido marcado como tema fijado por %s.\\n\\nVer el tema en: ';
+$txt['notification_sticky'] = 'Un tema que estabas monitoreando ha sido marcado como tema fijado por %s.' . "\n\n" . 'Ver el tema en: ';
 $txt['notification_lock_subject'] = 'Tema bloqueado: %s';
-$txt['notification_lock'] = 'Un tema que estabas monitoreando ha sido bloqueado por %s.\\n\\nVer el tema en: ';
+$txt['notification_lock'] = 'Un tema que estabas monitoreando ha sido bloqueado por %s.' . "\n\n" . 'Ver el tema en: ';
 $txt['notification_unlock_subject'] = 'Tema desbloqueado: %s';
-$txt['notification_unlock'] = 'Un tema que estabas monitoreando ha sido desbloqueado por %s.\\n\\nVer el tema en: ';
+$txt['notification_unlock'] = 'Un tema que estabas monitoreando ha sido desbloqueado por %s.' . "\n\n" . 'Ver el tema en: ';
 $txt['notification_remove_subject'] = 'Tema eliminado: %s';
 $txt['notification_remove'] = 'Un tema que estabas monitoreando ha sido eliminado por %s.';
 $txt['notification_move_subject'] = 'Tema movido: %s';
-$txt['notification_move'] = 'Un tema que estabas monitoreando ha sido movido a otro foro por %s.\\n\\nVer el tema en: ';
+$txt['notification_move'] = 'Un tema que estabas monitoreando ha sido movido a otro foro por %s.' . "\n\n" . 'Ver el tema en: ';
 $txt['notification_merge_subject'] = 'Tema combinado: %s';
-$txt['notification_merge'] = 'Un tema que estabas monitoreando ha sido combinado con otro tema por %s.\\n\\nVer el nuevo tema combinado en: ';
+$txt['notification_merge'] = 'Un tema que estabas monitoreando ha sido combinado con otro tema por %s.' . "\n\n" . 'Ver el nuevo tema combinado en: ';
 $txt['notification_split_subject'] = 'Tema dividido: %s';
-$txt['notification_split'] = 'Un tema que estabas monitoreando ha sido dividido en dos o m&aacute;s temas por %s.\\n\\nVer lo que queda de este tema en: ';
+$txt['notification_split'] = 'Un tema que estabas monitoreando ha sido dividido en dos o m&aacute;s temas por %s.' . "\n\n" . 'Ver lo que queda de este tema en: ';
 
 // Use numeric entities in the below two strings.
 $txt['notification_reply_body'] = 'The text of the reply is shown below:';

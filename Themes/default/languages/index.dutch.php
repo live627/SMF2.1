@@ -6,10 +6,8 @@
 	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 	   the cache go to Admin => Maintenance => Clean Cache.
 
-	2) Please also follow the following rules:
-
-		a) All strings should use single quotes, not double quotes for enclosing the string.
-		b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
+	2) Please also note that strings should use single quotes, not double quotes for enclosing the string
+	   except for line breaks.
 
 */
 
@@ -108,7 +106,7 @@ $txt['remove_message'] = 'Verwijder berichten';
 $txt['notify'] = 'Bericht';
 $txt['notify_request'] = 'Wil je een e-mail ontvangen als iemand antwoord geeft op dit topic?';
 // Use numeric entities in the below string.
-$txt['regards_team'] = 'Met vriendelijke groet,\\n\\nHet %1$s team.';
+$txt['regards_team'] = 'Met vriendelijke groet,' . "\n\n" . 'Het %1$s team.';
 $txt['notify_replies'] = 'Bericht bij reacties';
 $txt['move_topic'] = 'Verplaats topic';
 $txt['move_to'] = 'Verplaats naar';
@@ -622,7 +620,7 @@ $txt['change_color'] = 'Pas de kleur aan';
 $txt['quickmod_delete_selected'] = 'Verwijder selectie';
 
 // In this string, don't use entities. (&amp;, etc.)
-$txt['show_personal_messages'] = 'Je hebt één of meerdere nieuwe berichten.\\nWil je ze nu bekijken (in een nieuw venster)?';
+$txt['show_personal_messages'] = 'Je hebt één of meerdere nieuwe berichten.' . "\n" . 'Wil je ze nu bekijken (in een nieuw venster)?';
 
 $txt['previous_next_back'] = '&laquo; vorige';
 $txt['previous_next_forward'] = 'volgende &raquo;';

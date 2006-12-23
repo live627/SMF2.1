@@ -320,7 +320,7 @@ $txt['request_group_membership_desc'] = 'Before you can join this group your mem
 $txt['submit_request'] = 'Submit Request';
 $txt['request_membership_email_subject'] = 'New Group Application';
 // In the following email, %1$s is the recipients name, %2$s the requesting member, %3$s the group and %4$s the reason.
-$txt['request_membership_email_message'] = '%1$s,\\n\\n%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:\\n\\n%4$s\\n\\nYou can approve or reject this application by clicking the link below:\\n\\n' . $scripturl . "?action=groups;sa=requests\n\n" . $txt['regards_team'];
+$txt['request_membership_email_message'] = '%1$s,' . "\n\n" . '%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:' . "\n\n" . '%4$s' . "\n\n" . 'You can approve or reject this application by clicking the link below:' . "\n\n" .$scripturl . "?action=groups;sa=requests\n\n" . $txt['regards_team'];
 
 //!!! Untranslated
 $txt['profile_updated_own'] = 'Your profile has successfully been updated';

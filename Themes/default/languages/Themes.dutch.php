@@ -116,7 +116,7 @@ $txt['themeadmin_reset_members'] = 'Herstel de opties van alle leden voor dit th
 $txt['themeadmin_reset_remove'] = 'Verwijder de opties van alle leden en gebruik de standaardopties';
 $txt['themeadmin_reset_remove_current'] = 'leden die momenteel hun eigen opties gebruiken.';
 // Don't use entities in the below string.
-$txt['themeadmin_reset_remove_confirm'] = 'Weet je zeker dat je alle themaopties wilt verwijderen?\\nDit zou ook sommige aangepaste profielvelden kunnen wissen.';
+$txt['themeadmin_reset_remove_confirm'] = 'Weet je zeker dat je alle themaopties wilt verwijderen?' . "\n" . 'Dit zou ook sommige aangepaste profielvelden kunnen wissen.';
 $txt['themeadmin_reset_options_info'] = 'De opties hieronder herstellen opties voor <em>iedereen</em>. Om een optie te wijzigen, selecteer &quot;wijzig&quot; in het vak naast de optie en selecteer vervolgens er een waarde voor. Om de standaardwaarde te gebruiken, selecteer &quot;verwijder&quot;. Gebruik &quot;niet wijzigen&quot; om het te houden zoals het was.';
 $txt['themeadmin_reset_options_change'] = 'wijzig';
 $txt['themeadmin_reset_options_none'] = 'niet wijzigen';

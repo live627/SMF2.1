@@ -6,10 +6,8 @@
 	   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 	   the cache go to Admin => Maintenance => Clean Cache.
 
-	2) Please also follow the following rules:
-
-		a) All strings should use single quotes, not double quotes for enclosing the string.
-		b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
+	2) Please also note that strings should use single quotes, not double quotes for enclosing the string
+	   except for line breaks.
 
 */
 
@@ -107,7 +105,7 @@ $txt['remove_message'] = 'Remove message';
 $txt['notify'] = 'Notify';
 $txt['notify_request'] = 'Do you want a notification email if someone replies to this topic?';
 // Use numeric entities in the below string.
-$txt['regards_team'] = 'Regards,\\nThe %1$s Team.';
+$txt['regards_team'] = 'Regards,' . "\n" . 'The %1$s Team.';
 $txt['notify_replies'] = 'Notify of replies';
 $txt['move_topic'] = 'Move Topic';
 $txt['move_to'] = 'Move to';
@@ -613,7 +611,7 @@ $txt['change_color'] = 'Change Color';
 $txt['quickmod_delete_selected'] = 'Delete Selected';
 
 // In this string, don't use entities. (&amp;, etc.)
-$txt['show_personal_messages'] = 'You have received one or more new personal messages.\\nView them now (in a new window)?';
+$txt['show_personal_messages'] = 'You have received one or more new personal messages.' . "\n" . 'View them now (in a new window)?';
 
 $txt['previous_next_back'] = '&laquo; previous';
 $txt['previous_next_forward'] = 'next &raquo;';

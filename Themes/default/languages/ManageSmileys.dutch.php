@@ -7,7 +7,7 @@ $txt['smiley_sets'] = 'Smileysets';
 $txt['smiley_sets_save'] = 'Opslaan';
 $txt['smiley_sets_add'] = 'Nieuwe smiley set';
 $txt['smiley_sets_delete'] = 'Verwijder selectie';
-$txt['smiley_sets_confirm'] = 'Weet je zeker dat je deze smiley sets wilt verwijderen?\\n\\nLet op: dit zal niet de plaatjes zelf verwijderen alleen de keuzes.';
+$txt['smiley_sets_confirm'] = 'Weet je zeker dat je deze smiley sets wilt verwijderen?' . "\n\n" . 'Let op: dit zal niet de plaatjes zelf verwijderen alleen de keuzes.';
 
 // Untranslated!
 $txt['setting_smiley_sets_default'] = 'Default Smiley Set';
@@ -77,7 +77,7 @@ $txt['smiley_new'] = 'Voeg nieuwe smiley toe';
 $txt['smiley_modify_existing'] = 'Bewerk smiley';
 $txt['smiley_preview'] = 'Bekijken';
 $txt['smiley_preview_using'] = 'gebruik smileyset';
-$txt['smileys_confirm'] = 'Weet je zeker dat je deze smileys wilt verwijderen?\\n\\nLet op: dit verwijdert niet de plaatjes zelf, alleen de keuzes.';
+$txt['smileys_confirm'] = 'Weet je zeker dat je deze smileys wilt verwijderen?' . "\n\n" . 'Let op: dit verwijdert niet de plaatjes zelf, alleen de keuzes.';
 $txt['smileys_location_form_description'] = 'Deze smileys zullen verschijnen boven het invoervak, bij het plaatsen van een nieuw forumbericht of Persoonlijk Bericht.';
 $txt['smileys_location_popup_description'] = 'Deze smileys zullen getoond worden in een popup scherm, die getoond wordt nadat een gebruiker op \'[meer]\' geklik heeft';
 $txt['smileys_move_select_destination'] = 'Selecteer de bestemming van de smiley';
@@ -89,7 +89,7 @@ $txt['icons_edit_message_icons'] = 'Bewerk berichticonen';
 $txt['icons_edit_icons_explain'] = 'Hier kun je veranderen welke berichticonen beschikbaar zijn binnen je forum. Je kunt iconen toevoegen, bewerken en verwijderen, alsmede hun gebruik beperken tot bepaalde boards.';
 $txt['icons_edit_icons_all_boards'] = 'Beschikbaar in alle boards';
 $txt['icons_board'] = 'Board';
-$txt['icons_confirm'] = 'Weet je zeker dat je deze iconen wilt verwijderen? \\n\\nBedenk dat dit alleen zal voorkomen dat plaatsers van nieuwe berichten deze iconen zullen gebruiken, de plaatjes blijven staan.';
+$txt['icons_confirm'] = 'Weet je zeker dat je deze iconen wilt verwijderen? ' . "\n\n" . 'Bedenk dat dit alleen zal voorkomen dat plaatsers van nieuwe berichten deze iconen zullen gebruiken, de plaatjes blijven staan.';
 $txt['icons_add_new'] = 'Voeg nieuw icoon toe';
 
 $txt['icons_edit_icon'] = 'Bewerk berichticoon';
