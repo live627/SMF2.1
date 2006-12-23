@@ -181,7 +181,7 @@ function reloadSettings()
 	$ent_check = empty($modSettings['disableEntityCheck']) ? array('preg_replace(\'~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e\', \'$smfFunc[\\\'entity_fix\\\'](\\\'\\2\\\')\', ', ')') : array('', '');
 
 	// Preg_replace can handle complex characters only for higher PHP versions.
-	$space_chars = $utf8 ? ($context['server']['complex_preg_chars'] ? '\x{C2A0}\x{E28080}-\x{E2808F}\x{E280AF}\x{E2809F}\x{E38080}\x{EFBBBF}' : sprintf('%c%c%c%c%c-%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c', 0xC2, 0xA0, 0xE2, 0x80, 0x80, 0xE2, 0x80, 0x8F, 0xE2, 0x80, 0xAF, 0xE2, 0x80, 0x9F, 0xE3, 0x80, 0x80, 0xEF, 0xBB, 0xBF)) : '\xA0';
+	$space_chars = $utf8 ? (@version_compare(PHP_VERSION, '4.3.3') != -1 ? '\x{C2A0}\x{E28080}-\x{E2808F}\x{E280AF}\x{E2809F}\x{E38080}\x{EFBBBF}' : sprintf('%c%c%c%c%c-%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c', 0xC2, 0xA0, 0xE2, 0x80, 0x80, 0xE2, 0x80, 0x8F, 0xE2, 0x80, 0xAF, 0xE2, 0x80, 0x9F, 0xE3, 0x80, 0x80, 0xEF, 0xBB, 0xBF)) : '\xA0';
 	
 	$smfFunc += array(
 		'entity_fix' => create_function('$string', '
