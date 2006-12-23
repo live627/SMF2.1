@@ -280,22 +280,6 @@ the cache go to Admin => Maintenance => Clean Cache.
 		$fileContents = preg_replace('~\\t\{\$~', "\t{" . '\\\\' . "$", $fileContents);
 		$edit_count = 0;
 	}
-	// Remove double quotes where easy.
-	if ($type != 'Install' && preg_match('~"\\\\n"~', $fileContents, $matches))
-	{
-		$fileContents = preg_replace('~"\\\\n"~', '\'\\\\\\\\n\'', $fileContents);
-		// Fix for the comment.
-		$fileContents = strtr($fileContents, array('i.e. \'\\\\n\'' => 'i.e. "\\n"'));
-		$edit_count = 0;
-	}
-	// More double quotes
-	if ($type != 'Install' && preg_match('~"\\\\n\\\\n"~', $fileContents, $matches))
-	{
-		$fileContents = preg_replace('~"\\\\n\\\\n"~', '\'\\\\\\\\n\\\\\\\\n\'', $fileContents);
-		// Fix for the comment.
-		$fileContents = strtr($fileContents, array('i.e. \'\\\\n\\\\n\'' => 'i.e. "\\n\\n"'));
-		$edit_count = 0;
-	}
 	// More silly amounts of joins.
 	if ($type != 'Install' && preg_match('~\' \. \'~', $fileContents, $matches))
 	{
@@ -398,6 +382,22 @@ function fixTemplateFile($filename, $test = false)
 	$findArray = array();
 	$replaceArray = array();
 
+	// Get all the buttons in the file.
+	$buttons = array();
+	preg_match_all('~create_button\([^,]+,\s*([^,)]+)(,\s*([^,)]+))*[,)]~i', $fileContents, $matches);
+	if (!empty($matches))
+	{
+		foreach ($matches[0] as $k => $match)
+		{
+			$buttons[] = array(
+				'full' => $match,
+				'replace' => $match,
+				'lab1' => strtr($matches[1][$k], array('"' => '', "'" => '')),
+				'lab2' => strtr($matches[3][$k], array('"' => '', "'" => '')),
+			);
+		}
+	}
+
 	foreach ($txtChanges as $type => $section)
 	{
 		foreach ($txtChanges[$type] as $find => $replace)
@@ -420,7 +420,29 @@ function fixTemplateFile($filename, $test = false)
 				$findArray[] = $find2;
 				$replaceArray[] = '\'$txt[' . $replace . ']\'';
 			}
+
+			// A quick create_button check!
+			foreach ($buttons as $k => $button)
+			{
+				if (isset($button['lab1']) && $button['lab1'] == $find)
+				{
+					unset($buttons[$k]['lab1']);
+					$buttons[$k]['replace'] = strtr($buttons[$k]['replace'], array($find => is_numeric($find) ? "'$replace"' : $replace));
+				}
+
+				if (isset($button['lab2']) && $button['lab2'] == $find)
+				{
+					unset($buttons[$k]['lab2']);
+					$buttons[$k]['replace'] = strtr($buttons[$k]['replace'], array($find => is_numeric($find) ? "'$replace"' : $replace));
+				}
+			}
 		}
+	}
+
+	foreach ($buttons as $button)
+	{
+		if ($button['full'] != $button['replace'])
+			$changes['~' . preg_quote($button['full'], '~') . '~'] = $button['replace'];
 	}
 
 	// Finally, some potential sprintf changes....
