@@ -1286,7 +1286,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}pm_rules (
 	criteria text NOT NULL,
 	actions text NOT NULL,
 	delete_pm tinyint(3) unsigned NOT NULL default '0',
-	is_or tinyint(3) unsigned NOT NULL default '0'
+	is_or tinyint(3) unsigned NOT NULL default '0',
 	PRIMARY KEY (id_rule),
 	KEY id_member (id_member),
 	KEY delete_pm (delete_pm)
