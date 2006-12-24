@@ -665,6 +665,11 @@ function upgradeExit()
 	{
 		$upcontext['upgrade_status']['curstep'] = $upcontext['current_step'];
 		$upcontext['form_url'] = $upgradeurl . '?step=' . $upcontext['current_step'] . '&amp;substep=' . $_GET['substep'] . '&amp;data=' . base64_encode(serialize($upcontext['upgrade_status']));
+
+		// Custom stuff to pass back?
+		if (!empty($upcontext['query_string']))
+			$upcontext['form_url'] .= $upcontext['query_string'];
+
 		call_user_func('template_' . $upcontext['sub_template']);
 	}
 
@@ -2370,7 +2375,7 @@ function protected_alter($change, $substep)
 	if ($found && in_array($change['method'], array('add', 'change')))
 		return true;
 	// Otherwise if we're removing and it wasn't found we're also done.
-	elseif (!$found && $change['method'] == 'remove')
+	elseif (!$found && in_array($change['method'], array('remove', 'change_remove')))
 		return true;
 
 	// Not found it yet? Bummer! How about we see if we're currently doing it?
@@ -2525,14 +2530,12 @@ function nextSubstep($substep)
 	// We're going to pause after this!
 	$upcontext['pause'] = true;
 
-	$query_string = '';
+	$upcontext['query_string'] = '';
 	foreach ($_GET as $k => $v)
 	{
 		if ($k != 'data' && $k != 'substep' && $k != 'step')
-			$query_string .= ';' . $k . '=' . $v;
+			$upcontext['query_string'] .= ';' . $k . '=' . $v;
 	}
-	if (strlen($query_string) != 0)
-		$query_string = '?' . substr($query_string, 1);
 
 	// Custom warning?
 	if (!empty($custom_warning))
@@ -2918,7 +2921,7 @@ function template_chmod()
 			</tr><tr>
 				<td width="26%" valign="top" class="textbox"><label for="ftp_path">', $txt['ftp_path'], ':</label></td>
 				<td style="padding-bottom: 1ex;">
-					<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $upcontext['chmod']['path'], '" style="width: 99%;" />
+					<input type="text" size="50" name="ftp_path" id="ftp_path" value="', isset($upcontext['chmod']['path']) ? $upcontext['chmod']['path'] : '', '" style="width: 99%;" />
 					<div style="font-size: smaller; margin-bottom: 2ex;">', !empty($upcontext['chmod']['path']) ? $txt['ftp_path_found_info'] : $txt['ftp_path_info'], '</div>
 				</td>
 			</tr>
@@ -3481,7 +3484,7 @@ function template_database_changes()
 				// We want to track this...
 				if (timeOutID)
 					clearTimeout(timeOutID);
-				timeOutID = window.setTimeout("retTimeout()", ', (3 * $timeLimitThreshold), '000);
+				timeOutID = window.setTimeout("retTimeout()", ', (10 * $timeLimitThreshold), '000);
 
 				getXMLDocument(\'', $upcontext['form_url'], '&amp;xml&amp;filecount=', $upcontext['file_count'], '&amp;substep=\' + lastItem + getData, onItemUpdate);
 			}
@@ -3508,7 +3511,7 @@ function template_database_changes()
 				if (!oXMLDoc.getElementsByTagName("item")[0])
 				{
 					// Too many errors?
-					if (retryCount > 10)
+					if (retryCount > 15)
 					{
 						document.getElementById("error_block").style.display = "";
 						setInnerHTML(document.getElementById("error_message"), "Error retrieving information on step: " + sDebugName);';
@@ -3697,9 +3700,14 @@ function template_database_changes()
 					document.getElementById("error_block").style.display = "none";
 					getNextItem();
 				}
-			}
+			}';
 
-			getNextItem();
+		// Start things off assuming we've not errored.
+		if (empty($upcontext['error_message']))
+			echo '
+			getNextItem();';
+
+		echo '
 		// ]]></script>';
 	}
 	return;

@@ -4,350 +4,393 @@
 --- Changing column names.
 /******************************************************************************/
 
----# Changing all column names - part 1.
-ALTER TABLE {$db_prefix}admin_info_files
-CHANGE COLUMN ID_FILE id_file tinyint(4) unsigned NOT NULL auto_increment;
+---# Renaming table columns.
+---{
+// The array holding all the changes.
+$nameChanges = array(
+	'admin_info_files' => array(
+		'ID_FILE' => 'ID_FILE id_file tinyint(4) unsigned NOT NULL auto_increment',
+	),
+	'approval_queue' => array(
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_ATTACH' => 'ID_ATTACH id_attach int(10) unsigned NOT NULL default \'0\'',
+		'ID_EVENT' => 'ID_EVENT id_event smallint(5) unsigned NOT NULL default \'0\'',
+		'attachmentType' => 'attachmentType attachment_type tinyint(3) unsigned NOT NULL default \'0\'',
+	),
+	'attachments' => array(
+		'ID_ATTACH' => 'ID_ATTACH id_attach int(10) unsigned NOT NULL auto_increment',
+		'ID_THUMB' => 'ID_THUMB id_thumb int(10) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'ban_groups' => array(
+		'ID_BAN_GROUP' => 'ID_BAN_GROUP id_ban_group mediumint(8) unsigned NOT NULL auto_increment',
+	),
+	'ban_items' => array(
+		'ID_BAN' => 'ID_BAN id_ban mediumint(8) unsigned NOT NULL auto_increment',
+		'ID_BAN_GROUP' => 'ID_BAN_GROUP id_ban_group smallint(5) unsigned NOT NULL default \'0\'',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'board_permissions' => array(
+		'ID_GROUP' => 'ID_GROUP id_group smallint(5) NOT NULL default \'0\'',
+		'ID_PROFILE' => 'ID_PROFILE id_profile smallint(5) NOT NULL default \'0\'',
+		'addDeny' => 'addDeny add_deny tinyint(4) NOT NULL default \'1\'',
+	),
+	'boards' => array(
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL auto_increment',
+		'ID_CAT' => 'ID_CAT id_cat tinyint(4) unsigned NOT NULL default \'0\'',
+		'childLevel' => 'childLevel child_level tinyint(4) unsigned NOT NULL default \'0\'',
+		'ID_PARENT' => 'ID_PARENT id_parent smallint(5) unsigned NOT NULL default \'0\'',
+		'boardOrder' => 'boardOrder board_order smallint(5) NOT NULL default \'0\'',
+		'ID_LAST_MSG' => 'ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_MSG_UPDATED' => 'ID_MSG_UPDATED id_msg_updated int(10) unsigned NOT NULL default \'0\'',
+		'memberGroups' => 'memberGroups member_groups varchar(255) NOT NULL default \'-1,0\'',
+		'ID_PROFILE' => 'id_profile smallint(5) unsigned NOT NULL default \'1\'',
+		'numTopics' => 'numTopics num_topics mediumint(8) unsigned NOT NULL default \'0\'',
+		'numPosts' => 'numPosts num_posts mediumint(8) unsigned NOT NULL default \'0\'',
+		'countPosts' => 'countPosts count_posts tinyint(4) NOT NULL default \'0\'',
+		'ID_THEME' => 'ID_THEME id_theme tinyint(4) unsigned NOT NULL default \'0\'',
+		'unapprovedPosts' => 'unapprovedPosts unapproved_posts smallint(5) NOT NULL default \'0\'',
+		'unapprovedTopics' => 'unapprovedTopics unapproved_topics smallint(5) NOT NULL default \'0\'',
+	),
+	'calendar' => array(
+		'ID_EVENT' => 'ID_EVENT id_event smallint(5) unsigned NOT NULL auto_increment',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'startDate' => 'startDate start_date date NOT NULL default \'0001-01-01\'',
+		'endDate' => 'endDate end_date date NOT NULL default \'0001-01-01\'',
+	),
+	'calendar_holidays' => array(
+		'ID_HOLIDAY' => 'ID_HOLIDAY id_holiday smallint(5) unsigned NOT NULL auto_increment',
+		'eventDate' => 'eventDate event_date date NOT NULL default \'0001-01-01\'',
+	),
+	'categories' => array(
+		'ID_CAT' => 'ID_CAT id_cat tinyint(4) unsigned NOT NULL auto_increment',
+		'catOrder' => 'catOrder cat_order tinyint(4) NOT NULL default \'0\'',
+		'canCollapse' => 'canCollapse can_collapse tinyint(1) NOT NULL default \'1\'',
+	),
+	'collapsed_categories' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_CAT' => 'ID_CAT id_cat tinyint(4) unsigned NOT NULL auto_increment',
+	),
+	'custom_fields' => array(
+		'ID_FIELD' => 'ID_FIELD id_field smallint(5) NOT NULL auto_increment',
+		'colName' => 'colName col_name varchar(12) NOT NULL default \'\'',
+		'fieldName' => 'fieldName field_name varchar(40) NOT NULL default \'\'',
+		'fieldDesc' => 'fieldDesc field_desc tinytext NOT NULL',
+		'fieldType' => 'fieldType field_type varchar(8) NOT NULL default \'text\'',
+		'fieldLength' => 'fieldLength field_length smallint(5) NOT NULL default \'255\'',
+		'fieldOptions' => 'fieldOptions field_options tinytext NOT NULL',
+		'showReg' => 'showReg show_reg tinyint(3) NOT NULL default \'0\'',
+		'showDisplay' => 'showDisplay show_display tinyint(3) NOT NULL default \'0\'',
+		'showProfile' => 'showProfile show_profile varchar(20) NOT NULL default \'forumProfile\'',
+		'defaultValue' => 'defaultValue default_value varchar(8) NOT NULL default \'0\'',
+	),
+	'group_moderators' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_GROUP' => 'ID_GROUP id_group smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_actions' => array(
+		'ID_ACTION' => 'ID_ACTION id_action int(10) unsigned NOT NULL auto_increment',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'logTime' => 'logTime log_time int(10) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_activity' => array(
+		'mostOn' => 'mostOn most_on smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_banned' => array(
+		'ID_BAN_LOG' => 'ID_BAN_LOG id_ban_log mediumint(8) unsigned NOT NULL auto_increment',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'logTime' => 'logTime log_time int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_boards' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_digest' => array(
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_errors' => array(
+		'ID_ERROR' => 'ID_ERROR id_error mediumint(8) unsigned NOT NULL auto_increment',
+		'logTime' => 'logTime log_time int(10) unsigned NOT NULL default \'0\'',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'errorType' => 'errorType error_type char(15) NOT NULL default \'general\'',
+	),
+	'log_floodcontrol' => array(
+		'logTime' => 'logTime log_time int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_group_requests' => array(
+		'ID_REQUEST' => 'ID_REQUEST id_request mediumint(8) unsigned NOT NULL auto_increment',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_GROUP' => 'ID_GROUP id_group smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_karma' => array(
+		'ID_TARGET' => 'ID_TARGET id_target mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_EXECUTOR' => 'ID_EXECUTOR id_executor mediumint(8) unsigned NOT NULL default \'0\'',
+		'logTime' => 'logTime log_time int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_mark_read' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_notify' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_packages' => array(
+		'ID_INSTALL' => 'ID_INSTALL id_install int(10) NOT NULL auto_increment',
+		'ID_MEMBER_INSTALLED' => 'ID_MEMBER_INSTALLED id_member_installed mediumint(8) NOT NULL',
+		'ID_MEMBER_REMOVED' => 'ID_MEMBER_REMOVED id_member_removed mediumint(8) NOT NULL default \'0\'',
+	),
+	'log_polls' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_CHOICE' => 'ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default \'0\'',
+		'ID_POLL' => 'ID_POLL id_poll mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'log_reported' => array(
+		'ID_REPORT' => 'ID_REPORT id_report mediumint(8) unsigned NOT NULL auto_increment',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'log_reported_comments' => array(
+		'ID_COMMENT' => 'ID_COMMENT id_comment mediumint(8) unsigned NOT NULL auto_increment',
+		'ID_REPORT' => 'ID_REPORT id_report mediumint(8) NOT NULL',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'log_scheduled_tasks' => array(
+		'ID_LOG' => 'ID_LOG id_log mediumint(8) NOT NULL auto_increment',
+		'ID_TASK' => 'ID_TASK id_task smallint(5) NOT NULL',
+		'timeRun' => 'timeRun time_run int(10) NOT NULL',
+		'timeTaken' => 'timeTaken time_taken float NOT NULL default \'0\'',
+	),
+	'log_search_results' => array(
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_search_messages' => array(
+		'ID_SEARCH' => 'ID_SEARCH id_search tinyint(3) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_search_results' => array(
+		'ID_SEARCH' => 'ID_SEARCH id_search tinyint(3) unsigned NOT NULL default \'0\'',
+	),
+	'log_search_subjects' => array(
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'log_search_topics' => array(
+		'ID_SEARCH' => 'ID_SEARCH id_search tinyint(3) unsigned NOT NULL default \'0\'',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'log_topics' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'mail_queue' => array(
+		'ID_MAIL' => 'ID_MAIL id_mail int(10) unsigned NOT NULL auto_increment',
+	),
+	'members' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL auto_increment',
+		'memberName' => 'memberName member_name varchar(80) NOT NULL default \'\'',
+		'dateRegistered' => 'dateRegistered date_registered int(10) unsigned NOT NULL default \'0\'',
+		'ID_GROUP' => 'ID_GROUP id_group smallint(5) unsigned NOT NULL default \'0\'',
+		'lastLogin' => 'lastLogin last_login int(10) unsigned NOT NULL default \'0\'',
+		'realName' => 'realName real_name tinytext NOT NULL',
+		'instantMessages' => 'instantMessages instant_messages smallint(5) NOT NULL default \'0\'',
+		'unreadMessages' => 'unreadMessages unread_messages smallint(5) NOT NULL default \'0\'',
+		'messageLabels' => 'messageLabels message_labels text NOT NULL',
+		'emailAddress' => 'emailAddress email_address tinytext NOT NULL',
+		'personalText' => 'personalText personal_text tinytext NOT NULL',
+		'websiteTitle' => 'websiteTitle website_title tinytext NOT NULL',
+		'websiteUrl' => 'websiteUrl website_url tinytext NOT NULL',
+		'ICQ' => 'ICQ icq tinytext NOT NULL',
+		'AIM' => 'AIM aim varchar(16) NOT NULL default \'\'',
+		'YIM' => 'YIM yim varchar(32) NOT NULL default \'\'',
+		'MSN' => 'MSN msn tinytext NOT NULL',
+		'hideEmail' => 'hideEmail hide_email tinyint(4) NOT NULL default \'0\'',
+		'showOnline' => 'showOnline show_online tinyint(4) NOT NULL default \'1\'',
+		'timeFormat' => 'timeFormat time_format varchar(80) NOT NULL default \'\'',
+		'timeOffset' => 'timeOffset time_offset float NOT NULL default \'0\'',
+		'karmaBad' => 'karmaBad karma_bad smallint(5) unsigned NOT NULL default \'0\'',
+		'karmaGood' => 'karmaGood karma_good smallint(5) unsigned NOT NULL default \'0\'',
+		'notifyAnnouncements' => 'notifyAnnouncements notify_announcements tinyint(4) NOT NULL default \'1\'',
+		'notifyRegularity' => 'notifyRegularity notify_regularity tinyint(4) NOT NULL default \'1\'',
+		'notifySendBody' => 'notifySendBody notify_send_body tinyint(4) NOT NULL default \'0\'',
+		'notifyTypes' => 'notifyTypes notify_types tinyint(4) NOT NULL default \'2\'',
+		'memberIP' => 'memberIP member_ip tinytext NOT NULL',
+		'secretQuestion' => 'secretQuestion secret_question tinytext NOT NULL',
+		'secretAnswer' => 'secretAnswer secret_answer varchar(64) NOT NULL default \'\'',
+		'ID_THEME' => 'ID_THEME id_theme tinyint(4) unsigned NOT NULL default \'0\'',
+		'ID_MSG_LAST_VISIT' => 'ID_MSG_LAST_VISIT id_msg_last_visit int(10) unsigned NOT NULL default \'0\'',
+		'additionalGroups' => 'additionalGroups additional_groups tinytext NOT NULL',
+		'smileySet' => 'smileySet smiley_set varchar(48) NOT NULL default \'\'',
+		'ID_POST_GROUP' => 'ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default \'0\'',
+		'totalTimeLoggedIn' => 'totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default \'0\'',
+		'passwordSalt' => 'passwordSalt password_salt varchar(5) NOT NULL default \'\'',
+		'ignoreBoards' => 'ignoreBoards ignore_boards tinytext NOT NULL',
+		'memberIP2' => 'memberIP2 member_ip2 tinytext NOT NULL',
+	),
+	'messages' => array(
+		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL auto_increment',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+		'posterTime' => 'posterTime poster_time int(10) unsigned NOT NULL default \'0\'',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MSG_MODIFIED' => 'ID_MSG_MODIFIED id_msg_modified int(10) unsigned NOT NULL default \'0\'',
+		'posterName' => 'posterName poster_name tinytext NOT NULL',
+		'posterEmail' => 'posterEmail poster_email tinytext NOT NULL',
+		'posterIP' => 'posterIP poster_ip tinytext NOT NULL',
+		'smileysEnabled' => 'smileysEnabled smileys_enabled tinyint(4) NOT NULL default \'1\'',
+		'modifiedTime' => 'modifiedTime modified_time int(10) unsigned NOT NULL default \'0\'',
+		'modifiedName' => 'modifiedName modified_name tinytext NOT NULL',
+	),
+	'membergroups' => array(
+		'ID_GROUP' => 'ID_GROUP id_group smallint(5) unsigned NOT NULL auto_increment',
+		'ID_PARENT' => 'ID_PARENT id_parent smallint(5) NOT NULL default \'-2\'',
+		'groupName' => 'groupName group_name varchar(80) NOT NULL default \'\'',
+		'onlineColor' => 'onlineColor online_color varchar(20) NOT NULL default \'\'',
+		'minPosts' => 'minPosts min_posts mediumint(9) NOT NULL default \'-1\'',
+		'maxMessages' => 'maxMessages max_messages smallint(5) unsigned NOT NULL default \'0\'',
+		'groupType' => 'groupType group_type tinyint(3) NOT NULL default \'0\'',
+	),
+	'message_icons' => array(
+		'ID_ICON' => 'ID_ICON id_icon smallint(5) unsigned NOT NULL auto_increment',
+		'iconOrder' => 'iconOrder icon_order smallint(5) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'messages' => array(
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'moderators' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'package_servers' => array(
+		'ID_SERVER' => 'ID_SERVER id_server smallint(5) unsigned NOT NULL auto_increment',
+	),
+	'personal_messages' => array(
+		'ID_PM' => 'ID_PM id_pm int(10) unsigned NOT NULL auto_increment',
+		'ID_MEMBER_FROM' => 'ID_MEMBER_FROM id_member_from mediumint(8) unsigned NOT NULL default \'0\'',
+		'deletedBySender' => 'deletedBySender deleted_by_sender tinyint(3) unsigned NOT NULL default \'0\'',
+		'fromName' => 'fromName from_name tinytext NOT NULL',
+	),
+	'permission_profiles' => array(
+		'ID_PROFILE' => 'ID_PROFILE id_profile smallint(5) NOT NULL auto_increment',
+		'ID_PARENT' => 'ID_PARENT id_parent smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'permissions' => array(
+		'ID_GROUP' => 'ID_GROUP id_group smallint(5) NOT NULL default \'0\'',
+		'addDeny' => 'addDeny add_deny tinyint(4) NOT NULL default \'1\'',
+	),
+	'pm_recipients' => array(
+		'ID_PM' => 'ID_PM id_pm int(10) unsigned NOT NULL default \'0\'',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'polls' => array(
+		'ID_POLL' => 'ID_POLL id_poll mediumint(8) unsigned NOT NULL auto_increment',
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'votingLocked' => 'votingLocked voting_locked tinyint(1) NOT NULL default \'0\'',
+		'maxVotes' => 'maxVotes max_votes tinyint(3) unsigned NOT NULL default \'1\'',
+		'expireTime' => 'expireTime expire_time int(10) unsigned NOT NULL default \'0\'',
+		'hideResults' => 'hideResults hide_results tinyint(3) unsigned NOT NULL default \'0\'',
+		'changeVote' => 'changeVote change_vote tinyint(3) unsigned NOT NULL default \'0\'',
+		'posterName' => 'posterName poster_name tinytext NOT NULL',
+	),
+	'poll_choices' => array(
+		'ID_CHOICE' => 'ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default \'0\'',
+		'ID_POLL' => 'ID_POLL id_poll mediumint(8) unsigned NOT NULL default \'0\'',
+	),
+	'scheduled_tasks' => array(
+		'ID_TASK' => 'ID_TASK id_task smallint(5) NOT NULL auto_increment',
+		'nextTime' => 'nextTime next_time int(10) NOT NULL',
+		'timeRegularity' => 'timeRegularity time_regularity smallint(5) NOT NULL',
+		'timeOffset' => 'timeOffset time_offset int(10) NOT NULL',
+		'timeUnit' => 'timeUnit time_unit varchar(1) NOT NULL default \'h\'',
+	),
+	'smileys' => array(
+		'ID_SMILEY' => 'ID_SMILEY id_smiley smallint(5) unsigned NOT NULL auto_increment',
+		'smileyRow' => 'smileyRow smiley_row tinyint(4) unsigned NOT NULL default \'0\'',
+		'smileyOrder' => 'smileyOrder smiley_order smallint(5) unsigned NOT NULL default \'0\'',
+	),
+	'themes' => array(
+		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) NOT NULL default \'0\'',
+		'ID_THEME' => 'ID_THEME id_theme tinyint(4) unsigned NOT NULL default \'1\'',
+	),
+	'topics' => array(
+		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL auto_increment',
+		'isSticky' => 'isSticky is_sticky tinyint(4) NOT NULL default \'0\'',
+		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
+		'ID_FIRST_MSG' => 'ID_FIRST_MSG id_first_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_LAST_MSG' => 'ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default \'0\'',
+		'ID_MEMBER_STARTED' => 'ID_MEMBER_STARTED id_member_started mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_MEMBER_UPDATED' => 'ID_MEMBER_UPDATED id_member_updated mediumint(8) unsigned NOT NULL default \'0\'',
+		'ID_POLL' => 'ID_POLL id_poll mediumint(8) unsigned NOT NULL default \'0\'',
+		'numReplies' => 'numReplies num_replies int(10) unsigned NOT NULL default \'0\'',
+		'numViews' => 'numViews num_views int(10) unsigned NOT NULL default \'0\'',
+		'unapprovedPosts' => 'unapprovedPosts unapproved_posts smallint(5) NOT NULL default \'0\'',
+	),
+);
 
-ALTER TABLE {$db_prefix}approval_queue
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_ATTACH id_attach int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_EVENT id_event smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN attachmentType attachment_type tinyint(3) unsigned NOT NULL default '0';
+$_GET['ren_col'] = isset($_GET['ren_col']) ? (int) $_GET['ren_col'] : 0;
+$step_progress['name'] = 'Renaming columns';
+$step_progress['current'] = $_GET['ren_col'];
+$step_progress['total'] = 0;
 
-ALTER TABLE {$db_prefix}attachments
-CHANGE COLUMN ID_ATTACH id_attach int(10) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_THUMB id_thumb int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
+// Get the progress bar right.
+foreach ($nameChanges as $table_name => $table)
+	$step_progress['total'] += count($table);
 
-ALTER TABLE {$db_prefix}ban_groups
-CHANGE COLUMN ID_BAN_GROUP id_ban_group mediumint(8) unsigned NOT NULL auto_increment;
+$count = 0;
 
-ALTER TABLE {$db_prefix}ban_items
-CHANGE COLUMN ID_BAN id_ban mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_BAN_GROUP id_ban_group smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
+// Now do every table...
+foreach ($nameChanges as $table_name => $table)
+{
+	// Already done this?
+	if ($_GET['ren_col'] > ($count + count($table)))
+	{
+		$count += count($table);
+		continue;
+	}
 
-ALTER TABLE {$db_prefix}board_permissions
-CHANGE COLUMN ID_GROUP id_group smallint(5) NOT NULL default '0',
-CHANGE COLUMN ID_PROFILE id_profile smallint(5) NOT NULL default '0',
-CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
----#
+	// Try do each column!
+	foreach ($table as $colname => $coldef)
+	{
+		$count++;
 
----# Changing all column names - part 2.
-ALTER TABLE {$db_prefix}boards
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL default '0',
-CHANGE COLUMN childLevel child_level tinyint(4) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_PARENT id_parent smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN boardOrder board_order smallint(5) NOT NULL default '0',
-CHANGE COLUMN ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG_UPDATED id_msg_updated int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN memberGroups member_groups varchar(255) NOT NULL default '-1,0',
-CHANGE COLUMN id_profile id_profile smallint(5) unsigned NOT NULL default '1',
-CHANGE COLUMN numTopics num_topics mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN numPosts num_posts mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN countPosts count_posts tinyint(4) NOT NULL default '0',
-CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '0',
-CHANGE COLUMN unapprovedPosts unapproved_posts smallint(5) NOT NULL default '0',
-CHANGE COLUMN unapprovedTopics unapproved_topics smallint(5) NOT NULL default '0';
+		// Already done this?
+		if ($_GET['ren_col'] >= $count)
+			continue;
 
-ALTER TABLE {$db_prefix}calendar
-CHANGE COLUMN ID_EVENT id_event smallint(5) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN startDate start_date date NOT NULL default '0001-01-01',
-CHANGE COLUMN endDate end_date date NOT NULL default '0001-01-01';
+		$change = array(
+			'table' => $table_name,
+			'name' => $colname,
+			'type' => 'column',
+			'method' => 'change_remove',
+			'text' => 'CHANGE ' . $coldef,
+		);
 
-ALTER TABLE {$db_prefix}calendar_holidays
-CHANGE COLUMN ID_HOLIDAY id_holiday smallint(5) unsigned NOT NULL auto_increment,
-CHANGE COLUMN eventDate event_date date NOT NULL default '0001-01-01';
+		// Update where we are!
+		$_GET['ren_col'] = $count;
+		$step_progress['current'] = $_GET['ren_col'];
 
-ALTER TABLE {$db_prefix}categories
-CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL auto_increment,
-CHANGE COLUMN catOrder cat_order tinyint(4) NOT NULL default '0',
-CHANGE COLUMN canCollapse can_collapse tinyint(1) NOT NULL default '1';
+		protected_alter($change, $substep);
+	}
+}
 
-ALTER TABLE {$db_prefix}collapsed_categories
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_CAT id_cat tinyint(4) unsigned NOT NULL auto_increment;
-
-ALTER TABLE {$db_prefix}custom_fields
-CHANGE COLUMN ID_FIELD id_field smallint(5) NOT NULL auto_increment,
-CHANGE COLUMN colName col_name varchar(12) NOT NULL default '',
-CHANGE COLUMN fieldName field_name varchar(40) NOT NULL default '',
-CHANGE COLUMN fieldDesc field_desc tinytext NOT NULL,
-CHANGE COLUMN fieldType field_type varchar(8) NOT NULL default 'text',
-CHANGE COLUMN fieldLength field_length smallint(5) NOT NULL default '255',
-CHANGE COLUMN fieldOptions field_options tinytext NOT NULL,
-CHANGE COLUMN showReg show_reg tinyint(3) NOT NULL default '0',
-CHANGE COLUMN showDisplay show_display tinyint(3) NOT NULL default '0',
-CHANGE COLUMN showProfile show_profile varchar(20) NOT NULL default 'forumProfile',
-CHANGE COLUMN defaultValue default_value varchar(8) NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}group_moderators
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0';
----#
-
----# Changing all column names - part 3.
-ALTER TABLE {$db_prefix}log_actions
-CHANGE COLUMN ID_ACTION id_action int(10) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_activity
-CHANGE COLUMN mostOn most_on smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_banned
-CHANGE COLUMN ID_BAN_LOG id_ban_log mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_boards
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_digest
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_errors
-CHANGE COLUMN ID_ERROR id_error mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN errorType error_type char(15) NOT NULL default 'general';
-
-ALTER TABLE {$db_prefix}log_flood_control
-CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_group_requests
-CHANGE COLUMN ID_REQUEST id_request mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_karma
-CHANGE COLUMN ID_TARGET id_target mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_EXECUTOR id_executor mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN logTime log_time int(10) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_mark_read
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_notify
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_packages
-CHANGE COLUMN ID_INSTALL id_install int(10) NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER_INSTALLED id_member_installed mediumint(8) NOT NULL,
-CHANGE COLUMN ID_MEMBER_REMOVED id_member_removed mediumint(8) NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_polls
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_reported
-CHANGE COLUMN ID_REPORT id_report mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
----#
-
----# Changing all column names - part 4.
-ALTER TABLE {$db_prefix}log_reported_comments
-CHANGE COLUMN ID_COMMENT id_comment mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_REPORT id_report mediumint(8) NOT NULL,
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_scheduled_tasks
-CHANGE COLUMN ID_LOG id_log mediumint(8) NOT NULL auto_increment,
-CHANGE COLUMN ID_TASK id_task smallint(5) NOT NULL,
-CHANGE COLUMN timeRun time_run int(10) NOT NULL,
-CHANGE COLUMN timeTaken time_taken float NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_search_results
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_search_messages
-CHANGE COLUMN ID_SEARCH id_search tinyint(3) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_search_results
-CHANGE COLUMN ID_SEARCH id_search tinyint(3) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_search_subjects
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_search_topics
-CHANGE COLUMN ID_SEARCH id_search tinyint(3) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}log_topics
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}mail_queue
-CHANGE COLUMN ID_MAIL id_mail int(10) unsigned NOT NULL auto_increment;
----#
-
----# Changing all column names - part 5.
-ALTER TABLE {$db_prefix}members
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN memberName member_name varchar(80) NOT NULL default '',
-CHANGE COLUMN dateRegistered date_registered int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN lastLogin last_login int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN realName real_name tinytext NOT NULL,
-CHANGE COLUMN instantMessages instant_messages smallint(5) NOT NULL default 0,
-CHANGE COLUMN unreadMessages unread_messages smallint(5) NOT NULL default 0,
-CHANGE COLUMN messageLabels message_labels text NOT NULL,
-CHANGE COLUMN emailAddress email_address tinytext NOT NULL,
-CHANGE COLUMN personalText personal_text tinytext NOT NULL,
-CHANGE COLUMN websiteTitle website_title tinytext NOT NULL,
-CHANGE COLUMN websiteUrl website_url tinytext NOT NULL,
-CHANGE COLUMN ICQ icq tinytext NOT NULL,
-CHANGE COLUMN AIM aim varchar(16) NOT NULL default '',
-CHANGE COLUMN YIM yim varchar(32) NOT NULL default '',
-CHANGE COLUMN MSN msn tinytext NOT NULL,
-CHANGE COLUMN hideEmail hide_email tinyint(4) NOT NULL default '0',
-CHANGE COLUMN showOnline show_online tinyint(4) NOT NULL default '1',
-CHANGE COLUMN timeFormat time_format varchar(80) NOT NULL default '',
-CHANGE COLUMN timeOffset time_offset float NOT NULL default '0',
-CHANGE COLUMN karmaBad karma_bad smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN karmaGood karma_good smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN notifyAnnouncements notify_announcements tinyint(4) NOT NULL default '1',
-CHANGE COLUMN notifyRegularity notify_regularity tinyint(4) NOT NULL default '1',
-CHANGE COLUMN notifySendBody notify_send_body tinyint(4) NOT NULL default '0',
-CHANGE COLUMN notifyTypes notify_types tinyint(4) NOT NULL default '2',
-CHANGE COLUMN memberIP member_ip tinytext NOT NULL,
-CHANGE COLUMN secretQuestion secret_question tinytext NOT NULL,
-CHANGE COLUMN secretAnswer secret_answer varchar(64) NOT NULL default '',
-CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG_LAST_VISIT id_msg_last_visit int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN additionalGroups additional_groups tinytext NOT NULL,
-CHANGE COLUMN smileySet smiley_set varchar(48) NOT NULL default '',
-CHANGE COLUMN ID_POST_GROUP id_post_group smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN totalTimeLoggedIn total_time_logged_in int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN passwordSalt password_salt varchar(5) NOT NULL default '',
-CHANGE COLUMN ignoreBoards ignore_boards tinytext NOT NULL,
-CHANGE COLUMN memberIP2 member_ip2 tinytext NOT NULL;
-
-ALTER TABLE {$db_prefix}messages
-CHANGE COLUMN ID_MSG id_msg int(10) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN posterTime poster_time int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG_MODIFIED id_msg_modified int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN posterName poster_name tinytext NOT NULL,
-CHANGE COLUMN posterEmail poster_email tinytext NOT NULL,
-CHANGE COLUMN posterIP poster_ip tinytext NOT NULL,
-CHANGE COLUMN smileysEnabled smileys_enabled tinyint(4) NOT NULL default '1',
-CHANGE COLUMN modifiedTime modified_time int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN modifiedName modified_name tinytext NOT NULL;
----#
-
----# Changing all column names - part 6.
-ALTER TABLE {$db_prefix}membergroups
-CHANGE COLUMN ID_GROUP id_group smallint(5) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_PARENT id_parent smallint(5) NOT NULL default '-2',
-CHANGE COLUMN groupName group_name varchar(80) NOT NULL default '',
-CHANGE COLUMN onlineColor online_color varchar(20) NOT NULL default '',
-CHANGE COLUMN minPosts min_posts mediumint(9) NOT NULL default '-1',
-CHANGE COLUMN maxMessages max_messages smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN groupType group_type tinyint(3) NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}message_icons
-CHANGE COLUMN ID_ICON id_icon smallint(5) unsigned NOT NULL auto_increment,
-CHANGE COLUMN iconOrder icon_order smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}messages
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}moderators
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}package_servers
-CHANGE COLUMN ID_SERVER id_server smallint(5) unsigned NOT NULL auto_increment;
-
-ALTER TABLE {$db_prefix}personal_messages
-CHANGE COLUMN ID_PM id_pm int(10) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER_FROM id_member_from mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN deletedBySender deleted_by_sender tinyint(3) unsigned NOT NULL default '0',
-CHANGE COLUMN fromName from_name tinytext NOT NULL;
-
-ALTER TABLE {$db_prefix}permission_profiles
-CHANGE COLUMN ID_PROFILE id_profile smallint(5) NOT NULL auto_increment,
-CHANGE COLUMN ID_PARENT id_parent smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}permissions
-CHANGE COLUMN ID_GROUP id_group smallint(5) NOT NULL default '0',
-CHANGE COLUMN addDeny add_deny tinyint(4) NOT NULL default '1';
-
-ALTER TABLE {$db_prefix}pm_recipients
-CHANGE COLUMN ID_PM id_pm int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0';
----#
-
----# Changing all column names - part 7.
-ALTER TABLE {$db_prefix}polls
-CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN votingLocked voting_locked tinyint(1) NOT NULL default '0',
-CHANGE COLUMN maxVotes max_votes tinyint(3) unsigned NOT NULL default '1',
-CHANGE COLUMN expireTime expire_time int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN hideResults hide_results tinyint(3) unsigned NOT NULL default '0',
-CHANGE COLUMN changeVote change_vote tinyint(3) unsigned NOT NULL default '0',
-CHANGE COLUMN posterName poster_name tinytext NOT NULL;
-
-ALTER TABLE {$db_prefix}poll_choices
-CHANGE COLUMN ID_CHOICE id_choice tinyint(3) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}scheduled_tasks
-CHANGE COLUMN ID_TASK id_task smallint(5) NOT NULL auto_increment,
-CHANGE COLUMN nextTime next_time int(10) NOT NULL,
-CHANGE COLUMN timeRegularity time_regularity smallint(5) NOT NULL,
-CHANGE COLUMN timeOffset time_offset int(10) NOT NULL,
-CHANGE COLUMN timeUnit time_unit varchar(1) NOT NULL default 'h';
-
-ALTER TABLE {$db_prefix}smileys
-CHANGE COLUMN ID_SMILEY id_smiley smallint(5) unsigned NOT NULL auto_increment,
-CHANGE COLUMN smileyRow smiley_row tinyint(4) unsigned NOT NULL default '0',
-CHANGE COLUMN smileyOrder smiley_order smallint(5) unsigned NOT NULL default '0';
-
-ALTER TABLE {$db_prefix}themes
-CHANGE COLUMN ID_MEMBER id_member mediumint(8) NOT NULL default '0',
-CHANGE COLUMN ID_THEME id_theme tinyint(4) unsigned NOT NULL default '1';
-
-ALTER TABLE {$db_prefix}topics
-CHANGE COLUMN ID_TOPIC id_topic mediumint(8) unsigned NOT NULL auto_increment,
-CHANGE COLUMN isSticky is_sticky tinyint(4) NOT NULL default '0',
-CHANGE COLUMN ID_BOARD id_board smallint(5) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_FIRST_MSG id_first_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MEMBER_STARTED id_member_started mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MEMBER_UPDATED id_member_updated mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_POLL id_poll mediumint(8) unsigned NOT NULL default '0',
-CHANGE COLUMN numReplies num_replies int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN numViews num_views int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN unapprovedPosts unapproved_posts smallint(5) NOT NULL default '0';
+// All done!
+unset($_GET['ren_col']);
+---}
 ---#
 
 ---# Converting "log_online"...
