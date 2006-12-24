@@ -1747,7 +1747,7 @@ function MessagePost2()
 	}
 
 	// Before we send the PM, let's make sure we don't have an abuse of numbers.
-	if (!empty($modSettings['max_pm_recipients']) && count($recipients['to']) + count($recipients['bcc']) > $modSettings['max_pm_recipients'] && !AllowedTo(array('moderate_forum', 'send_mail', 'admin_forum')))
+	if (!empty($modSettings['max_pm_recipients']) && count($recipients['to']) + count($recipients['bcc']) > $modSettings['max_pm_recipients'] && !allowedTo(array('moderate_forum', 'send_mail', 'admin_forum')))
 	{
 		$context['send_log'] = array(
 			'sent' => array(),

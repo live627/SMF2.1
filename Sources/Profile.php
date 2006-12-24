@@ -1437,7 +1437,7 @@ function summary($memID)
 	if (allowedTo('moderate_forum'))
 	{
 		// Can they edit the ban?
-		$context['can_edit_ban'] = AllowedTo('manage_bans');
+		$context['can_edit_ban'] = allowedTo('manage_bans');
 
 		$ban_query = array();
 		$ban_query[] = "id_member = " . $context['member']['id'];
