@@ -13,7 +13,7 @@ function template_view_package()
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['smf159b'], '</td>
+				<td>', $txt['apply_mod'], '</td>
 			</tr><tr>
 				<td class="windowbg2">';
 
@@ -60,7 +60,7 @@ function template_view_package()
 	<form action="', $scripturl, '?action=admin;area=packages;sa=', $context['uninstalling'] ? 'uninstall' : 'install', $context['ftp_needed'] ? '' : '2', ';package=', $context['filename'], ';pid=', $context['install_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['package42'], '</td>
+				<td>', $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['install_actions'], '</td>
 			</tr>';
 
 	// Are there data changes to be removed?
@@ -94,11 +94,11 @@ function template_view_package()
 
 	if (empty($context['actions']) && empty($context['database_changes']))
 		echo '
-					<b>', $txt['package45'], '</b>';
+					<b>', $txt['corrupt_compatable'], '</b>';
 	else
 	{
 		echo '
-					', $txt['package44'], '
+					', $txt['perform_actions'], '
 					<table border="0" cellpadding="3" cellspacing="0" width="100%" style="margin-top: 1ex;">
 						<tr>
 							<td width="30"></td>
@@ -231,7 +231,7 @@ function template_view_package()
 								</td>
 							</tr>
 						</table>
-						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['smf154'], '" /></div>
+						<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>
 					</td>
 				</tr>';
 	}
@@ -296,7 +296,7 @@ function template_extract_package()
 	{
 		echo '
 			<tr class="titlebg">
-				<td>', $context['uninstalling'] ? $txt['smf198b'] : $txt['package37'], '</td>
+				<td>', $context['uninstalling'] ? $txt['uninstall'] : $txt['extracting'], '</td>
 			</tr>
 			<tr>
 				<td class="catbg">', $txt['package_installed_extract'], '</td>
@@ -329,17 +329,17 @@ function template_extract_package()
 	{
 		if ($context['extract_type'] == 'avatar')
 			echo '
-					', $txt['package39'];
+					', $txt['avatars_extracted'];
 		elseif ($context['extract_type'] == 'language')
 			echo '
-					', $txt['package41'];
+					', $txt['language_extracted'];
 		else
 			echo '
 					', $txt['package_installed_done'];
 	}
 	else
 		echo '
-					', $txt['package45'];
+					', $txt['corrupt_compatable'];
 
 	echo '
 				</td>
@@ -354,10 +354,10 @@ function template_list()
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['smf180'], '</td>
+				<td>', $txt['list_file'], '</td>
 			</tr>
 			<tr>
-				<td class="catbg">', $txt['smf181'], ' ', $context['filename'], ':</td>
+				<td class="catbg">', $txt['files_archive'], ' ', $context['filename'], ':</td>
 			</tr><tr>
 				<td class="windowbg2" width="100%">
 					<ol>';
@@ -389,7 +389,7 @@ function template_examine()
 				<td class="windowbg2" style="width: 100%;">
 					<pre style="overflow: auto; width: 100%; padding-bottom: 1ex;">', $context['filedata'], '</pre>
 
-					<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $context['package'], '">[ ', $txt['package14'], ' ]</a>
+					<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $context['package'], '">[ ', $txt['list_files'], ' ]</a>
 				</td>
 			</tr>
 		</table>';
@@ -402,7 +402,7 @@ function template_view_installed()
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>' . $txt['package6'] . '</td>
+				<td>' . $txt['view_and_remove'] . '</td>
 			</tr><tr>
 				<td class="windowbg2">';
 
@@ -411,7 +411,7 @@ function template_view_installed()
 		echo '
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
-							<td style="padding-bottom: 1ex;">', $txt['smf189b'], '</td>
+							<td style="padding-bottom: 1ex;">', $txt['no_mods_installed'], '</td>
 						</tr>
 					</table>';
 	}
@@ -421,8 +421,8 @@ function template_view_installed()
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
 							<td width="32"></td>
-							<td width="25%">', $txt['pacman2'], '</td>
-							<td width="25%">', $txt['pacman3'], '</td>
+							<td width="25%">', $txt['mod_name'], '</td>
+							<td width="25%">', $txt['mod_version'], '</td>
 							<td width="49%"></td>
 						</tr>';
 
@@ -434,7 +434,7 @@ function template_view_installed()
 							<td>', ++$i, '.</td>
 							<td>', $file['name'], '</td>
 							<td>', $file['version'], '</td>
-							<td align="right"><a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $file['filename'], ';pid=', $file['id'], '">[ ', $txt['smf198b'], ' ]</a></td>
+							<td align="right"><a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $file['filename'], ';pid=', $file['id'], '">[ ', $txt['uninstall'], ' ]</a></td>
 						</tr>';
 			$alt = !$alt;
 		}
@@ -442,7 +442,7 @@ function template_view_installed()
 		echo '
 					</table>
 					<br />
-					<a href="', $scripturl, '?action=admin;area=packages;sa=flush">[ ', $txt['smf198d'], ' ]</a>';
+					<a href="', $scripturl, '?action=admin;area=packages;sa=flush">[ ', $txt['delete_list'], ' ]</a>';
 	}
 
 	echo '
@@ -510,21 +510,21 @@ function template_browse()
 
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['package3'], '</td>
+				<td>', $txt['browse_packages'], '</td>
 			</tr>';
 
 	if (!empty($context['available_mods']))
 	{
 		echo '
 			<tr>
-				<td class="catbg">', $txt['package7'], '</td>
+				<td class="catbg">', $txt['modification_package'], '</td>
 			</tr><tr>
 				<td class="windowbg2">
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
 							<td width="32"></td>
-							<td width="25%">', $txt['pacman2'], '</td>
-							<td width="25%">', $txt['pacman3'], '</td>
+							<td width="25%">', $txt['mod_name'], '</td>
+							<td width="25%">', $txt['mod_version'], '</td>
 							<td width="49%"></td>
 						</tr>';
 
@@ -548,7 +548,7 @@ function template_browse()
 
 			if ($package['can_uninstall'])
 				echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['smf198b'], ' ]</a>';
+								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['uninstall'], ' ]</a>';
 			elseif ($package['can_upgrade'])
 				echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package_upgrade'], ' ]</a>';
@@ -557,8 +557,8 @@ function template_browse()
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package11'], ' ]</a>';
 
 			echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['package14'], ' ]</a>
-								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '"', $package['is_installed'] && $package['is_current'] ? ' onclick="return confirm(\'' . $txt['package_delete_bad'] . '\');"' : '', '>[ ', $txt['package52'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['list_files'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '"', $package['is_installed'] && $package['is_current'] ? ' onclick="return confirm(\'' . $txt['package_delete_bad'] . '\');"' : '', '>[ ', $txt['package_delete'], ' ]</a>
 							</td>
 						</tr>';
 			$alt = !$alt;
@@ -574,14 +574,14 @@ function template_browse()
 	{
 		echo '
 			<tr>
-				<td class="catbg">', $txt['package8'], '</td>
+				<td class="catbg">', $txt['avatar_package'], '</td>
 			</tr><tr>
 				<td class="windowbg2">
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
 							<td width="32"></td>
-							<td width="25%">', $txt['pacman2'], '</td>
-							<td width="25%">', $txt['pacman3'], '</td>
+							<td width="25%">', $txt['mod_name'], '</td>
+							<td width="25%">', $txt['mod_version'], '</td>
 							<td width="49%"></td>
 						</tr>';
 
@@ -603,7 +603,7 @@ function template_browse()
 
 		if ($package['can_uninstall'])
 			echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['smf198b'], ' ]</a>';
+								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['uninstall'], ' ]</a>';
 		elseif ($package['can_upgrade'])
 			echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package_upgrade'], ' ]</a>';
@@ -612,8 +612,8 @@ function template_browse()
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package11'], ' ]</a>';
 
 		echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['package14'], ' ]</a>
-								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '">[ ', $txt['package52'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['list_files'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '">[ ', $txt['package_delete'], ' ]</a>
 							</td>
 						</tr>';
 		}
@@ -628,14 +628,14 @@ function template_browse()
 	{
 		echo '
 			<tr>
-				<td class="catbg">' . $txt['package9'] . '</td>
+				<td class="catbg">' . $txt['language_package'] . '</td>
 			</tr><tr>
 				<td class="windowbg2">
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
 							<td width="32"></td>
-							<td width="25%">' . $txt['pacman2'] . '</td>
-							<td width="25%">' . $txt['pacman3'] . '</td>
+							<td width="25%">' . $txt['mod_name'] . '</td>
+							<td width="25%">' . $txt['mod_version'] . '</td>
 							<td width="49%"></td>
 						</tr>';
 
@@ -657,7 +657,7 @@ function template_browse()
 
 		if ($package['can_uninstall'])
 			echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['smf198b'], ' ]</a>';
+								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['uninstall'], ' ]</a>';
 		elseif ($package['can_upgrade'])
 			echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package_upgrade'], ' ]</a>';
@@ -666,8 +666,8 @@ function template_browse()
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package11'], ' ]</a>';
 
 		echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['package14'], ' ]</a>
-								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '">[ ', $txt['package52'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['list_files'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '">[ ', $txt['package_delete'], ' ]</a>
 							</td>
 						</tr>';
 		}
@@ -682,14 +682,14 @@ function template_browse()
 	{
 		echo '
 			<tr>
-				<td class="catbg">' . $txt['package10'] . '</td>
+				<td class="catbg">' . $txt['unknown_package'] . '</td>
 			</tr><tr>
 				<td class="windowbg2">
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
 							<td width="32"></td>
-							<td width="25%">' . $txt['pacman2'] . '</td>
-							<td width="25%">' . $txt['pacman3'] . '</td>
+							<td width="25%">' . $txt['mod_name'] . '</td>
+							<td width="25%">' . $txt['mod_version'] . '</td>
 							<td width="49%"></td>
 						</tr>';
 
@@ -711,7 +711,7 @@ function template_browse()
 
 		if ($package['can_uninstall'])
 			echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['smf198b'], ' ]</a>';
+								<a href="', $scripturl, '?action=admin;area=packages;sa=uninstall;package=', $package['filename'], ';pid=', $package['installed_id'], '">[ ', $txt['uninstall'], ' ]</a>';
 		elseif ($package['can_upgrade'])
 			echo '
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package_upgrade'], ' ]</a>';
@@ -720,8 +720,8 @@ function template_browse()
 								<a href="', $scripturl, '?action=admin;area=packages;sa=install;package=', $package['filename'], '">[ ', $txt['package11'], ' ]</a>';
 
 		echo '
-								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['package14'], ' ]</a>
-								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '"', $package['is_installed'] ? ' onclick="return confirm(\'' . $txt['package_delete_bad'] . '\');"' : '', '>[ ', $txt['package52'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=list;package=', $package['filename'], '">[ ', $txt['list_files'], ' ]</a>
+								<a href="', $scripturl, '?action=admin;area=packages;sa=remove;package=', $package['filename'], '"', $package['is_installed'] ? ' onclick="return confirm(\'' . $txt['package_delete_bad'] . '\');"' : '', '>[ ', $txt['package_delete'], ' ]</a>
 							</td>
 						</tr>';
 		}
@@ -735,7 +735,7 @@ function template_browse()
 	if (empty($context['available_mods']) && empty($context['available_avatars']) && empty($context['available_languages']) && empty($context['available_other']))
 		echo '
 			<tr>
-				<td class="windowbg2">', $txt['smf189'], '</td>
+				<td class="windowbg2">', $txt['no_packages'], '</td>
 			</tr>';
 
 	echo '
@@ -758,7 +758,7 @@ function template_servers()
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['package5'], '</td>
+				<td>', $txt['download_new_package'], '</td>
 			</tr>';
 
 	if ($context['package_download_broken'])
@@ -802,7 +802,7 @@ function template_servers()
 								</td>
 							</tr>
 						</table>
-						<div align="right" style="margin-right: 1ex;"><input type="submit" value="', $txt['smf154'], '" /></div>
+						<div align="right" style="margin-right: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>
 					</form>
 				</td>
 			</tr>';
@@ -810,7 +810,7 @@ function template_servers()
 
 	echo '
 			<tr>
-				<td class="catbg">' . $txt['smf183'] . '</td>
+				<td class="catbg">' . $txt['package_servers'] . '</td>
 			</tr><tr>
 				<td class="windowbg2">
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">';
@@ -821,10 +821,10 @@ function template_servers()
 								' . $server['name'] . '
 							</td>
 							<td>
-								<a href="' . $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $server['id'] . '">[ ' . $txt['smf184'] . ' ]</a>
+								<a href="' . $scripturl . '?action=admin;area=packages;get;sa=browse;server=' . $server['id'] . '">[ ' . $txt['package_browse'] . ' ]</a>
 							</td>
 							<td>
-								<a href="' . $scripturl . '?action=admin;area=packages;get;sa=remove;server=' . $server['id'] . '">[ ' . $txt['smf138'] . ' ]</a>
+								<a href="' . $scripturl . '?action=admin;area=packages;get;sa=remove;server=' . $server['id'] . '">[ ' . $txt['delete'] . ' ]</a>
 							</td>
 						</tr>';
 	echo '
@@ -832,19 +832,19 @@ function template_servers()
 					<br />
 				</td>
 			</tr><tr>
-				<td class="catbg">' . $txt['smf185'] . '</td>
+				<td class="catbg">' . $txt['add_server'] . '</td>
 			</tr><tr>
 				<td class="windowbg2">
 					<form action="' . $scripturl . '?action=admin;area=packages;get;sa=add" method="post" accept-charset="', $context['character_set'], '">
 						<table border="0" cellspacing="0" cellpadding="4">
 							<tr>
-								<td valign="top"><b>' . $txt['smf186'] . ':</b></td>
+								<td valign="top"><b>' . $txt['server_name'] . ':</b></td>
 								<td valign="top"><input type="text" name="servername" size="40" value="SMF" /></td>
 							</tr><tr>
-								<td valign="top"><b>' . $txt['smf187'] . ':</b></td>
+								<td valign="top"><b>' . $txt['serverurl'] . ':</b></td>
 								<td valign="top"><input type="text" name="serverurl" size="50" value="http://" /></td>
 							</tr><tr>
-								<td colspan="2"><input type="submit" value="' . $txt['smf185'] . '" /></td>
+								<td colspan="2"><input type="submit" value="' . $txt['add_server'] . '" /></td>
 							</tr>
 						</table>
 						<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
@@ -857,7 +857,7 @@ function template_servers()
 					<form action="', $scripturl, '?action=admin;area=packages;get;sa=download;byurl;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 						<table border="0" cellspacing="0" cellpadding="4">
 							<tr>
-								<td valign="top"><b>' . $txt['smf187'] . ':</b></td>
+								<td valign="top"><b>' . $txt['serverurl'] . ':</b></td>
 								<td valign="top"><input type="text" name="package" size="50" value="http://" /></td>
 							</tr><tr>
 								<td valign="top"><b>', $txt['package_download_filename'], ':</b></td>
@@ -866,7 +866,7 @@ function template_servers()
 									<span class="smalltext">', $txt['package_download_filename_info'], '</span>
 								</td>
 							</tr><tr>
-								<td colspan="2"><input type="submit" value="', $txt['smf190'], '" /></td>
+								<td colspan="2"><input type="submit" value="', $txt['download'], '" /></td>
 							</tr>
 						</table>
 					</form>
@@ -905,7 +905,7 @@ function template_package_list()
 	if (empty($context['package_list']))
 		echo '
 					<ul>
-						<li>', $txt['smf189'], '</li>
+						<li>', $txt['no_packages'], '</li>
 					</ul>';
 	// List out the packages...
 	else
@@ -946,7 +946,7 @@ function template_package_list()
 					// 1. Some mod [ Download ].
 					echo '
 						<span style="font-size: larger;">
-						<a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['count'], '. ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['smf190'] . ' ]</a>': $package['name'];
+						<a href="#" onclick="ps_', $i, '_pkg_', $id, '.toggle(); return false;"><img id="ps_img_', $i, '_pkg_', $id, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $package['count'], '. ', $package['can_install'] ? '<b>' . $package['name'] . '</b> <a href="' . $package['download']['href'] . '">[ ' . $txt['download'] . ' ]</a>': $package['name'];
 
 					// Mark as installed and current?
 					if ($package['is_installed'] && !$package['is_newer'])
@@ -958,25 +958,25 @@ function template_package_list()
 					// Show the mod type?
 					if ($package['type'] != '')
 						echo '
-						', $txt['package24'], ':&nbsp; ', $smfFunc['ucwords']($smfFunc['strtolower']($package['type'])), '<br />';
+						', $txt['package_type'], ':&nbsp; ', $smfFunc['ucwords']($smfFunc['strtolower']($package['type'])), '<br />';
 					// Show the version number?
 					if ($package['version'] != '')
 						echo '
-						', $txt['pacman3'], ':&nbsp; ', $package['version'], '<br />';
+						', $txt['mod_version'], ':&nbsp; ', $package['version'], '<br />';
 					// How 'bout the author?
 					if (!empty($package['author']) && $package['author']['name'] != '' && isset($package['author']['link']))
 						echo '
-						', $txt['pacman4'], ':&nbsp; ', $package['author']['link'], '<br />';
+						', $txt['mod_author'], ':&nbsp; ', $package['author']['link'], '<br />';
 					// The homepage....
 					if ($package['author']['website']['link'] != '')
 						echo '
-						', $txt['pacman6'], ':&nbsp; ', $package['author']['website']['link'], '<br />';
+						', $txt['author_website'], ':&nbsp; ', $package['author']['website']['link'], '<br />';
 
 					// Desciption: bleh bleh!
 					// Location of file: http://someplace/.
 					echo '
-						', $txt['pacman10'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a>
-							<div style="max-height: 15em; overflow: auto;">', $txt['pacman9'], ':&nbsp; ', $package['description'], '</div>
+						', $txt['file_location'], ':&nbsp; <a href="', $package['href'], '">', $package['href'], '</a>
+							<div style="max-height: 15em; overflow: auto;">', $txt['package_description'], ':&nbsp; ', $package['description'], '</div>
 						</div>
 						<br />
 					</div>';
@@ -1154,7 +1154,7 @@ function template_ftp_required()
 						</tr>
 					</table>
 
-					<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['smf154'], '" /></div>
+					<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['package_proceed'], '" /></div>
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 				</form>
 			</div></div>';

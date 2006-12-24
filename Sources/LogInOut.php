@@ -178,14 +178,14 @@ function Login2()
 	// You forgot to type your username, dummy!
 	if (!isset($_REQUEST['user']) || $_REQUEST['user'] == '')
 	{
-		$context['login_error'] = &$txt[37];
+		$context['login_error'] = &$txt['need_username'];
 		return;
 	}
 
 	// Hmm... maybe 'admin' will login with no password. Uhh... NO!
 	if ((!isset($_REQUEST['passwrd']) || $_REQUEST['passwrd'] == '') && (!isset($_REQUEST['hash_passwrd']) || strlen($_REQUEST['hash_passwrd']) != 40))
 	{
-		$context['login_error'] = &$txt[38];
+		$context['login_error'] = &$txt['no_password'];
 		return;
 	}
 
@@ -238,7 +238,7 @@ function Login2()
 	// Check if the account is activated - COPPA first...
 	if ($activation_status == 5)
 	{
-		$context['login_error'] = $txt['coppa_not_completed1'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_not_completed2'] . '</a>';
+		$context['login_error'] = $txt['coppa_no_concent'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_need_more_details'] . '</a>';
 		return;
 	}
 	// Awaiting approval still?
@@ -291,10 +291,10 @@ function Login2()
 				redirectexit('action=reminder');
 			else
 			{
-				log_error($txt[39] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
+				log_error($txt['incorrect_password'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
 				$context['disable_login_hashing'] = true;
-				$context['login_error'] = $txt[39];
+				$context['login_error'] = $txt['incorrect_password'];
 				return;
 			}
 		}
@@ -361,9 +361,9 @@ function Login2()
 			else
 			{
 				// Log an error so we know that it didn't go well in the error log.
-				log_error($txt[39] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
+				log_error($txt['incorrect_password'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
-				$context['login_error'] = $txt[39];
+				$context['login_error'] = $txt['incorrect_password'];
 				return;
 			}
 		}

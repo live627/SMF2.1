@@ -325,13 +325,13 @@ function registerMember(&$regOptions)
 
 	// !!! Separate the sprintf?
 	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($regOptions['email'])) === 0 || strlen($smfFunc['db_unescape_string']($regOptions['email'])) > 255)
-		fatal_error(sprintf($txt[500], $regOptions['username']), false);
+		fatal_error(sprintf($txt['valid_email_needed'], $regOptions['username']), false);
 
 	if (!empty($regOptions['check_reserved_name']) && isReservedName($regOptions['username'], 0, false))
 	{
 		if ($regOptions['password'] == 'chocolate cake')
 			fatal_error('Sorry, I don\'t take bribes... you\'ll need to come up with a different name.', false);
-		fatal_error('(' . htmlspecialchars($regOptions['username']) . ') ' . $txt[473], false);
+		fatal_error('(' . htmlspecialchars($regOptions['username']) . ') ' . $txt['name_in_use'], false);
 	}
 
 	// Generate a validation code if it's supposed to be emailed.

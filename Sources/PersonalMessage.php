@@ -265,9 +265,9 @@ function messageIndexBar($area)
 		'folders' => array(
 			'title' => $txt['pm_messages'],
 			'areas' => array(
-				'send' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=send">' . $txt[321] . '</a>', 'href' => $scripturl . '?action=pm;sa=send'),
+				'send' => array('link' => '<a href="' . $scripturl . '?action=pm;sa=send">' . $txt['new_message'] . '</a>', 'href' => $scripturl . '?action=pm;sa=send'),
 				'' => array(),
-				'inbox' => array('link' => '<a href="' . $scripturl . '?action=pm">' . $txt[316] . '</a>', 'href' => $scripturl . '?action=pm'),
+				'inbox' => array('link' => '<a href="' . $scripturl . '?action=pm">' . $txt['inbox'] . '</a>', 'href' => $scripturl . '?action=pm'),
 				'sent' => array('link' => '<a href="' . $scripturl . '?action=pm;f=sent">' . $txt['sent_items'] . '</a>', 'href' => $scripturl . '?action=pm;f=sent'),
 			),
 		),
@@ -404,8 +404,8 @@ function MessageFolder()
 		isAllowedTo('pm_send');
 
 	// Set the text to resemble the current folder.
-	$pmbox = $context['folder'] != 'sent' ? $txt[316] : $txt['sent_items'];
-	$txt[412] = str_replace('PMBOX', $pmbox, $txt[412]);
+	$pmbox = $context['folder'] != 'sent' ? $txt['inbox'] : $txt['sent_items'];
+	$txt['delete_all'] = str_replace('PMBOX', $pmbox, $txt['delete_all']);
 
 	// Now, build the link tree!
 	$context['linktree'][] = array(
@@ -680,7 +680,7 @@ function MessageFolder()
 	$context['can_send_pm'] = allowedTo('pm_send');
 	if (!WIRELESS)
 		$context['sub_template'] = 'folder';
-	$context['page_title'] = $txt[143];
+	$context['page_title'] = $txt['pm_inbox'];
 
 	// Finally mark the relevant messages as read.
 	if ($context['folder'] != 'sent' && !empty($context['labels'][(int) $context['current_label_id']]['unread_messages']))
@@ -1278,7 +1278,7 @@ function MessagePost()
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 
 	// Set the title...
-	$context['page_title'] = $txt[148];
+	$context['page_title'] = $txt['send_message'];
 
 	$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);
 
@@ -1439,7 +1439,7 @@ function MessagePost()
 	// And build the link tree.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=pm;sa=send',
-		'name' => $txt[321]
+		'name' => $txt['new_message']
 	);
 
 	$context['visual_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
@@ -1475,7 +1475,7 @@ function messagePostError($error_types, $to, $bcc)
 	if (isset($_REQUEST['u']))
 		$_REQUEST['u'] = is_array($_REQUEST['u']) ? $_REQUEST['u'] : explode(',', $_REQUEST['u']);
 
-	$context['page_title'] = $txt[148];
+	$context['page_title'] = $txt['send_message'];
 
 	// Set everything up like before....
 	$context['to'] = $smfFunc['db_unescape_string']($to);
@@ -1529,7 +1529,7 @@ function messagePostError($error_types, $to, $bcc)
 	// Build the link tree....
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=pm;sa=send',
-		'name' => $txt[321]
+		'name' => $txt['new_message']
 	);
 
 	// Set each of the errors for the template.
@@ -1656,7 +1656,7 @@ function MessagePost2()
 		censorText($context['preview_message']);
 
 		// Set a descriptive title.
-		$context['page_title'] = $txt[507] . ' - ' . $context['preview_subject'];
+		$context['page_title'] = $txt['preview'] . ' - ' . $context['preview_subject'];
 
 		// Pretend they messed up :P.
 		return messagePostError(array(), htmlspecialchars($_REQUEST['to']), htmlspecialchars($_REQUEST['bcc']));
@@ -1947,11 +1947,11 @@ function MessageKillAllQuery()
 
 	// Only have to set up the template....
 	$context['sub_template'] = 'ask_delete';
-	$context['page_title'] = $txt[412];
+	$context['page_title'] = $txt['delete_all'];
 	$context['delete_all'] = $_REQUEST['f'] == 'all';
 
 	// And set the folder name...
-	$txt[412] = str_replace('PMBOX', $context['folder'] != 'sent' ? $txt[316] : $txt['sent_items'], $txt[412]);
+	$txt['delete_all'] = str_replace('PMBOX', $context['folder'] != 'sent' ? $txt['inbox'] : $txt['sent_items'], $txt['delete_all']);
 }
 
 // Delete ALL the messages!

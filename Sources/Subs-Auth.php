@@ -612,7 +612,7 @@ function resetPassword($memID, $username = null)
 
 		require_once($sourcedir . '/Subs-Members.php');
 		if (isReservedName($user, $memID, false))
-			fatal_error('(' . htmlspecialchars($user) . ') ' . $txt[473], false);
+			fatal_error('(' . htmlspecialchars($user) . ') ' . $txt['name_in_use'], false);
 
 		// Update the database...
 		updateMemberData($memID, array('member_name' => '\'' . $user . '\'', 'passwd' => '\'' . $newPassword_sha1 . '\''));
@@ -627,8 +627,8 @@ function resetPassword($memID, $username = null)
 	sendmail($email, $txt['change_password'],
 		"$txt[hello_member] $user!\n\n" .
 		"$txt[change_password_1] $context[forum_name] $txt[change_password_2]\n\n" .
-		"$txt[719]$user, $txt[492] $newPassword\n\n" .
-		"$txt[701]\n" .
+		"$txt[your_username_is]$user, $txt[your_password] $newPassword\n\n" .
+		"$txt[may_change_in_profile]\n" .
 		"$scripturl?action=profile\n\n" .
 		sprintf($txt['regards_team'], $context['forum_name']));
 }

@@ -3,28 +3,28 @@
 
 // Important! Before editing these language files please read the text at the topic of index.spanish.php.
 
-$txt[37] = 'Debes escribir un nombre de usuario.';
-$txt[38] = 'No proporcionaste tu contrase&ntilde;a.';
-$txt[39] = 'Contrase&ntilde;a incorrecta';
-$txt[98] = 'Escoge un nombre de usuario';
+$txt['need_username'] = 'Debes escribir un nombre de usuario.';
+$txt['no_password'] = 'No proporcionaste tu contrase&ntilde;a.';
+$txt['incorrect_password'] = 'Contrase&ntilde;a incorrecta';
+$txt['choose_username'] = 'Escoge un nombre de usuario';
 $txt[155] = 'Modo de Mantenimiento';
-$txt[245] = 'Registro con &eacute;xito';
-$txt[431] = '&iexcl;Felicidades! Ahora eres miembro del foro.';
+$txt['registration_successful'] = 'Registro con &eacute;xito';
+$txt['now_a_member'] = '&iexcl;Felicidades! Ahora eres miembro del foro.';
 // Use numeric entities in the below string.
-$txt[492] = 'y tu contrase&#241;a es';
-$txt[500] = 'Por favor introduce una direcci&oacute;n de email v&aacute;lida. (%s)';
-$txt[517] = 'Informaci&oacute;n Requerida';
-$txt[520] = 'Usado s&oacute;lo para identificaci&oacute;n por SMF. Puedes usar caracteres especiales despu&eacute;s de haber ingresado, cambiando tu nombre a mostrar en tu perfil.';
-$txt[585] = 'Acepto';
-$txt[586] = 'No acepto';
-$txt[633] = '&iexcl;Advertencia!';
-$txt[634] = 'Solamente usuarios registrados tienen acceso a esta secci&oacute;n.';
+$txt['your_password'] = 'y tu contrase&#241;a es';
+$txt['valid_email_needed'] = 'Por favor introduce una direcci&oacute;n de email v&aacute;lida. (%s)';
+$txt['required_info'] = 'Informaci&oacute;n Requerida';
+$txt['identification_by_smf'] = 'Usado s&oacute;lo para identificaci&oacute;n por SMF. Puedes usar caracteres especiales despu&eacute;s de haber ingresado, cambiando tu nombre a mostrar en tu perfil.';
+$txt['agree'] = 'Acepto';
+$txt['decline'] = 'No acepto';
+$txt['warning'] = '&iexcl;Advertencia!';
+$txt['only_members_can_access'] = 'Solamente usuarios registrados tienen acceso a esta secci&oacute;n.';
 $txt['login_below'] = 'Por favor ingresa abajo o haz click';
 $txt['login_or_register'] = '-aqu&iacute;-';
 $txt['login_with_forum'] = 'para registrar una cuenta en %s.';
 // Use numeric entities in the below two strings.
-$txt[701] = 'Lo puedes cambiar despu&#233;s de ingresar en la p&#225;gina de perfil, o visitando esta p&#225;gina despu&#233;s de que ingreses:';
-$txt[719] = 'Tu nombre de usuario es: ';
+$txt['may_change_in_profile'] = 'Lo puedes cambiar despu&#233;s de ingresar en la p&#225;gina de perfil, o visitando esta p&#225;gina despu&#233;s de que ingreses:';
+$txt['your_username_is'] = 'Tu nombre de usuario es: ';
 
 $txt['login_hash_error'] = 'El esquema para la seguridad de las contrase&ntilde;as ha sido actualizado recientemente.  Por favor, introduce tu contrase&ntilde;a nuevamente.';
 
@@ -62,16 +62,16 @@ $txt['invalid_activation_known'] = 'Si ya conoces tu c&oacutedigo de activaci&oa
 $txt['invalid_activation_retry'] = 'C&oacute;digo de activaci&oacute;n';
 $txt['invalid_activation_submit'] = 'Activar';
 
-$txt['coppa_not_completed1'] = 'El administrador no ha recibido a&uacute;n el consentimiento de tus padres/tutor para tu cuenta.';
-$txt['coppa_not_completed2'] = '&iquest;Necesitas m&aacute;s detalles?';
+$txt['coppa_no_concent'] = 'El administrador no ha recibido a&uacute;n el consentimiento de tus padres/tutor para tu cuenta.';
+$txt['coppa_need_more_details'] = '&iquest;Necesitas m&aacute;s detalles?';
 
 $txt['awaiting_delete_account'] = '&iexcl;Tu cuenta ha sido marcada para borrarse!<br />Si deseas restaurar tu cuenta, For favor selecciona la casilla &quot;Reactivar mi cuenta&quot;, e ingresa nuevamente.';
 $txt['undelete_account'] = 'Reactivar mi cuenta';
 
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'Detalles de la nueva contrase&#241;a';
-$txt['change_password_1'] = 'Tus datos para ingresar en';
-$txt['change_password_2'] = 'han sido cambiados y tu contrase&#241;a ha sido reseteada. Debajo est&#225;n tus nuevos datos para ingresar.';
+$txt['change_password_login'] = 'Tus datos para ingresar en';
+$txt['change_password_new'] = 'han sido cambiados y tu contrase&#241;a ha sido reseteada. Debajo est&#225;n tus nuevos datos para ingresar.';
 
 $txt['maintenance3'] = 'Este foro est&aacute; en modo de mantenimiento.';
 

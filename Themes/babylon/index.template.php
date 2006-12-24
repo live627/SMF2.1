@@ -198,7 +198,7 @@ function template_main_above()
 		// Is the forum in maintenance mode?
 		if ($context['in_maintenance'] && $context['user']['is_admin'])
 			echo '
-							<b>', $txt[616], '</b><br />';
+							<b>', $txt['maintain_mode_on'], '</b><br />';
 
 		// Are there any members waiting for approval?
 		if (!empty($context['unapproved_members']))
@@ -244,14 +244,14 @@ function template_main_above()
 								<div style="text-align: right;">
 									<input type="text" name="user" size="10" /> <input type="password" name="passwrd" size="10" />
 									<select name="cookielength">
-										<option value="60">', $txt['smf53'], '</option>
-										<option value="1440">', $txt['smf47'], '</option>
-										<option value="10080">', $txt['smf48'], '</option>
-										<option value="43200">', $txt['smf49'], '</option>
-										<option value="-1" selected="selected">', $txt['smf50'], '</option>
+										<option value="60">', $txt['one_hour'], '</option>
+										<option value="1440">', $txt['one_day'], '</option>
+										<option value="10080">', $txt['one_week'], '</option>
+										<option value="43200">', $txt['one_month'], '</option>
+										<option value="-1" selected="selected">', $txt['forever'], '</option>
 									</select>
 									<input type="submit" value="', $txt['login'], '" /><br />
-									', $txt['smf52'], '
+									', $txt['quick_login_dec'], '
 									<input type="hidden" name="hash_passwrd" value="" />
 								</div>
 							</form>';
@@ -265,7 +265,7 @@ function template_main_above()
 						<div style="margin-top: 7px;">
 							<b>', $txt['search'], ': </b><input type="text" name="search" value="" style="width: 190px;" />&nbsp;
 							<input type="submit" name="submit" value="', $txt['search'], '" style="width: 8ex;" />&nbsp;
-							<a href="', $scripturl, '?action=search;advanced">', $txt['smf298'], '</a>
+							<a href="', $scripturl, '?action=search;advanced">', $txt['search_advanced'], '</a>
 							<input type="hidden" name="advanced" value="0" />';
 
 	// Search within current topic?
@@ -300,8 +300,8 @@ function template_main_above()
 					<div class="headerbodies" style="width: 260px; position: relative; background-image: url(', $settings['images_url'], '/box_bg.gif);">
 						<img src="', $settings['lang_images_url'], '/keystats.gif" style="position: absolute; left: -1px; top: -16px;" alt="" />
 						<div style="', !$context['browser']['is_ie'] ? 'min-height: 35px;' : 'height: 4em;', ' padding: 5px;" class="smalltext">
-							<b>', $context['common_stats']['total_posts'], '</b> ', $txt['posts_made'], ' ', $txt['smf88'], ' <b>', $context['common_stats']['total_topics'], '</b> ', $txt['topics'], ' ', $txt[525], ' <span style="white-space: nowrap;"><b>', $context['common_stats']['total_members'], '</b> ', $txt['members'], '</span><br />
-							', $txt[656], ': <b> ', $context['common_stats']['latest_member']['link'], '</b>
+							<b>', $context['common_stats']['total_posts'], '</b> ', $txt['posts_made'], ' ', $txt['in'], ' <b>', $context['common_stats']['total_topics'], '</b> ', $txt['topics'], ' ', $txt['by'], ' <span style="white-space: nowrap;"><b>', $context['common_stats']['total_members'], '</b> ', $txt['members'], '</span><br />
+							', $txt['latest_member'], ': <b> ', $context['common_stats']['latest_member']['link'], '</b>
 						</div>
 					</div>';
 
@@ -360,7 +360,7 @@ function template_main_below()
 	// Show the load time?
 	if ($context['show_load_time'])
 		echo '
-		<span class="smalltext">', $txt['smf301'], $context['load_time'], $txt['smf302'], $context['load_queries'], $txt['smf302b'], '</span>';
+		<span class="smalltext">', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</span>';
 
 	echo '
 		</div>';

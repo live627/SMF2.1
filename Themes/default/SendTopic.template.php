@@ -84,11 +84,11 @@ function template_report()
 		<input type="hidden" name="msg" value="' . $context['message_id'] . '" />
 		<table border="0" width="80%" cellspacing="0" class="tborder" align="center" cellpadding="4">
 			<tr class="titlebg">
-				<td>', $txt['rtm1'], '</td>
+				<td>', $txt['report_to_mod'], '</td>
 			</tr><tr class="windowbg">
 				<td style="padding-bottom: 3ex;" align="center">
-					<div style="margin-top: 1ex; margin-bottom: 3ex;" align="left">', $txt['smf315'], '</div>
-					', $txt['rtm2'], ': <input type="text" name="comment" size="50" />
+					<div style="margin-top: 1ex; margin-bottom: 3ex;" align="left">', $txt['report_to_mod_func'], '</div>
+					', $txt['enter_comment'], ': <input type="text" name="comment" size="50" />
 					<input type="submit" name="submit" value="', $txt['rtm10'], '" style="margin-left: 1ex;" />
 				</td>
 			</tr>

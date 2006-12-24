@@ -209,7 +209,7 @@ function PlushSearch1()
 
 	// Simple or not?
 	$context['simple_search'] = isset($context['search_params']['advanced']) ? empty($context['search_params']['advanced']) : !empty($modSettings['simpleSearch']) && !isset($_REQUEST['advanced']);
-	$context['page_title'] = $txt[183];
+	$context['page_title'] = $txt['set_perameters'];
 }
 
 // Gather the results and show them.

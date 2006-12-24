@@ -267,7 +267,7 @@ function MoveTopic2()
 		));
 
 		$msgOptions = array(
-			'subject' => $smfFunc['db_escape_string']($txt['smf56'] . ': ' . $subject),
+			'subject' => $smfFunc['db_escape_string']($txt['moved'] . ': ' . $subject),
 			'body' => $_POST['reason'],
 			'icon' => 'moved',
 			'smileys_enabled' => 1,

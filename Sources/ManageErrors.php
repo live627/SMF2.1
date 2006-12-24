@@ -73,8 +73,8 @@ function ViewErrorLog()
 		'url' => &$txt['error_url'],
 		'message' => &$txt['error_message'],
 		'error_type' => &$txt['error_type'],
-		'file' => $txt[1003],
-		'line' => $txt[1004],
+		'file' => $txt['file'],
+		'line' => $txt['line'],
 	);
 
 	// Set up the filtering...
@@ -230,9 +230,9 @@ function ViewErrorLog()
 
 	// Setup the admin tabs!
 	$context['admin_tabs'] = array(
-		'title' => $txt['errlog1'],
+		'title' => $txt['errlog'],
 		'help' => 'error_log',
-		'description' => sprintf($txt['errlog2'], $txt['remove']),
+		'description' => sprintf($txt['errlog_desc'], $txt['remove']),
 		'tabs' => array(
 			'all' => array(
 				'title' => $txt['errortype_all'],
@@ -274,7 +274,7 @@ function ViewErrorLog()
 		$context['admin_tabs']['tabs']['all']['is_last'] = true;
 
 	// And this is pretty basic ;).
-	$context['page_title'] = $txt['errlog1'];
+	$context['page_title'] = $txt['errlog'];
 	$context['has_filter'] = isset($filter);
 	$context['sub_template'] = 'error_log';
 }

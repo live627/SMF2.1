@@ -3,11 +3,11 @@
 
 // Important! Before editing these language files please read the text at the topic of index.spanish.php.
 
-$txt[41] = 'Manejar Foros y Categor&iacute;as';
-$txt[43] = 'Orden';
-$txt[44] = 'Nombre completo';
-$txt[672] = 'Este es el nombre que ser&aacute; mostrado.';
-$txt[677] = 'Edita tus categor&iacute;as y foros aqu&iacute;. Lista m&uacute;ltiples moderadores como <i>&quot;nombredeusuario&quot;, &quot;nombredeusuario&quot;</i>. (&eacute;stos deben ser nombres de usuarios, no los nombres que se muestran)<br />Para crear un nuevo foro, haz <i>click</i> en el boton Nuevo Foro. Para hacer al nuevo foro un subforo del foro actual, selecciona "Subforo de..." en el menu del combo de Orden cuando est&eacute;s creando el foro.';
+$txt['boards_and_cats'] = 'Manejar Foros y Categor&iacute;as';
+$txt['order'] = 'Orden';
+$txt['full_name'] = 'Nombre completo';
+$txt['name_on_display'] = 'Este es el nombre que ser&aacute; mostrado.';
+$txt['boards_and_cats_desc'] = 'Edita tus categor&iacute;as y foros aqu&iacute;. Lista m&uacute;ltiples moderadores como <i>&quot;nombredeusuario&quot;, &quot;nombredeusuario&quot;</i>. (&eacute;stos deben ser nombres de usuarios, no los nombres que se muestran)<br />Para crear un nuevo foro, haz <i>click</i> en el boton Nuevo Foro. Para hacer al nuevo foro un subforo del foro actual, selecciona "Subforo de..." en el menu del combo de Orden cuando est&eacute;s creando el foro.';
 $txt['parent_members_only'] = 'Usuarios no agrupados';
 $txt['parent_guests_only'] = 'Visitantes';
 $txt['catConfirm'] = '&#191;Realmente deseas borrar esta categor&iacute;a?';

@@ -3,11 +3,11 @@
 
 // Important! Before editing these language files please read the text at the topic of index.german.php.
 
-$txt[41] = 'Boards verwalten';
-$txt[43] = 'Reihenfolge';
-$txt[44] = 'Vollst&auml;ndiger Name';
-$txt[672] = 'Dieser Name wird angezeigt.';
-$txt[677] = 'Hier k&ouml;nnen Sie Ihre Boards und Kategorien verwalten. Um ein neues Board zu erstellen, klicken Sie auf &quot;Board hinzuf&uuml;gen&quot;. Um ein neues untergeordnetes Board zu erstellen, w&auml;hlen Sie &quot;Untergeordnetes von...&quot; aus dem Drop-Down Menu. Geben Sie mehrere Moderatoren in folgender Weise ein: <i>&quot;username&quot;, &quot;username&quot;</i>. Es d&uuml;rfen nur Benutzernamen und keine Anzeigenamen verwendet werden!.';
+$txt['boards_and_cats'] = 'Boards verwalten';
+$txt['order'] = 'Reihenfolge';
+$txt['full_name'] = 'Vollst&auml;ndiger Name';
+$txt['name_on_display'] = 'Dieser Name wird angezeigt.';
+$txt['boards_and_cats_desc'] = 'Hier k&ouml;nnen Sie Ihre Boards und Kategorien verwalten. Um ein neues Board zu erstellen, klicken Sie auf &quot;Board hinzuf&uuml;gen&quot;. Um ein neues untergeordnetes Board zu erstellen, w&auml;hlen Sie &quot;Untergeordnetes von...&quot; aus dem Drop-Down Menu. Geben Sie mehrere Moderatoren in folgender Weise ein: <i>&quot;username&quot;, &quot;username&quot;</i>. Es d&uuml;rfen nur Benutzernamen und keine Anzeigenamen verwendet werden!.';
 $txt['parent_members_only'] = 'Normale Mitglieder';
 $txt['parent_guests_only'] = 'G&auml;ste';
 $txt['catConfirm'] = 'Sind Sie sicher, dass Sie diese Kategorie löschen wollen ?';

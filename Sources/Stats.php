@@ -90,9 +90,9 @@ function DisplayStats()
 	// Build the link tree......
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=stats',
-		'name' => $txt['smf_stats_1']
+		'name' => $txt['stats_center']
 	);
-	$context['page_title'] = $context['forum_name'] . ' - ' . $txt['smf_stats_1'];
+	$context['page_title'] = $context['forum_name'] . ' - ' . $txt['stats_center'];
 
 	$context['show_member_list'] = allowedTo('view_mlist');
 

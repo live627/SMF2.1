@@ -354,7 +354,7 @@ function template_set_settings()
 		<form action="', $scripturl, '?action=admin;area=theme;sa=settings;th=', $context['theme_settings']['theme_id'], '" method="post" accept-charset="', $context['character_set'], '">
 			<table border="0" width="80%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
-					<td colspan="2"><a href="', $scripturl, '?action=helpadmin;help=theme_settings" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['theme4'], ' - ', $context['theme_settings']['name'], '</td>
+					<td colspan="2"><a href="', $scripturl, '?action=helpadmin;help=theme_settings" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['theme_settings'], ' - ', $context['theme_settings']['name'], '</td>
 				</tr>';
 
 	// !!! Why can't I edit the default theme popup.
@@ -372,7 +372,7 @@ function template_set_settings()
 
 	echo '
 				<tr class="catbg">
-					<td colspan="2"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme5'], '</td>
+					<td colspan="2"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme_url_config'], '</td>
 				</tr>
 				<tr class="windowbg2">
 					<td>', $txt['actual_theme_name'], '</td>
@@ -391,7 +391,7 @@ function template_set_settings()
 					<td style="padding-bottom: 2ex;"><input type="text" name="options[theme_dir]" value="', $context['theme_settings']['actual_theme_dir'], '" size="50" style="max-width: 100%; width: 50ex;" /></td>
 				</tr>
 				<tr class="catbg">
-					<td colspan="2"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme6'], '</td>
+					<td colspan="2"><img src="', $settings['images_url'], '/icons/config_sm.gif" alt="" align="top" /> ', $txt['theme_options'], '</td>
 				</tr>';
 
 	foreach ($context['settings'] as $setting)

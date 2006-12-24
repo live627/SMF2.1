@@ -81,7 +81,7 @@ function AdminMain()
 	// Note - format for section is 'key' => array(label, source_file, function_name, additional_url).
 	// Create the admin side bar... start with 'Main'.
 	$context['admin_areas']['forum'] = array(
-		'title' => $txt[427],
+		'title' => $txt['admin_main'],
 		'areas' => array(
 			'index' => array($txt['admin_center'], 'Admin.php', 'AdminHome'),
 			'credits' => array($txt['support_credits_title'], 'Admin.php', 'AdminHome'),
@@ -95,7 +95,7 @@ function AdminMain()
 
 	if (allowedTo('admin_forum'))
 	{
-		$context['admin_areas']['forum']['areas']['packages'] =  array($txt['package1'], 'Packages.php', 'Packages');
+		$context['admin_areas']['forum']['areas']['packages'] =  array($txt['package'], 'Packages.php', 'Packages');
 		$context['admin_areas']['forum']['areas']['cleanperms'] =  array('', 'Admin.php', 'CleanupPermissions', 'select' => 'packages');
 	}
 
@@ -103,10 +103,10 @@ function AdminMain()
 	if (allowedTo('admin_forum'))
 	{
 		$context['admin_areas']['config'] = array(
-			'title' => $txt[428],
+			'title' => $txt['admin_config'],
 			'areas' => array(
 				'featuresettings' => array($txt['modSettings_title'], 'ModSettings.php', 'ModifyFeatureSettings'),
-				'serversettings' => array($txt[222], 'ManageServer.php', 'ModifySettings'),
+				'serversettings' => array($txt['admin_server_settings'], 'ManageServer.php', 'ModifySettings'),
 				'current_theme' => array($txt['theme_current_settings'], 'Themes.php', 'ThemesMain', $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id']),
 				'theme' => array($txt['theme_admin'], 'Themes.php', 'ThemesMain', $scripturl . '?action=admin;area=theme;sa=admin'),
 			),
@@ -135,7 +135,7 @@ function AdminMain()
 			$context['admin_areas']['layout']['areas']['smileys'] = array($txt['smileys_manage'], 'ManageSmileys.php', 'ManageSmileys');
 
 		if (allowedTo('manage_attachments'))
-			$context['admin_areas']['layout']['areas']['manageattachments'] = array($txt['smf201'], 'ManageAttachments.php', 'ManageAttachments');
+			$context['admin_areas']['layout']['areas']['manageattachments'] = array($txt['attachments_avatars'], 'ManageAttachments.php', 'ManageAttachments');
 	}
 
 	// Admin area 'Members'.
@@ -147,7 +147,7 @@ function AdminMain()
 		);
 
 		if (allowedTo('moderate_forum'))
-			$context['admin_areas']['members']['areas']['viewmembers'] = array($txt[5], 'ManageMembers.php', 'ViewMembers');
+			$context['admin_areas']['members']['areas']['viewmembers'] = array($txt['admin_users'], 'ManageMembers.php', 'ViewMembers');
 
 		if (allowedTo('manage_membergroups'))
 			$context['admin_areas']['members']['areas']['membergroups'] = array($txt['admin_groups'], 'ManageMembergroups.php', 'ModifyMembergroups');
@@ -166,12 +166,12 @@ function AdminMain()
 	if (allowedTo('admin_forum'))
 	{
 		$context['admin_areas']['maintenance'] = array(
-			'title' => $txt[501],
+			'title' => $txt['admin_maintenace'],
 			'areas' => array(
 				'mailqueue' => array($txt['mailqueue_title'], 'ManageMail.php', 'ManageMail'),
 				'maintain' => array($txt['maintain_title'], 'ManageMaintenance.php', 'ManageMaintenance'),
 				'reports' => array($txt['generate_reports'], 'Reports.php', 'ReportsMain'),
-				'errorlog' => array($txt['errlog1'], 'ManageErrors.php', 'ViewErrorLog', $scripturl . '?action=admin;area=errorlog;desc'),
+				'errorlog' => array($txt['errlog'], 'ManageErrors.php', 'ViewErrorLog', $scripturl . '?action=admin;area=errorlog;desc'),
 				'dumpdb' => array('', 'DumpDatabase.php', 'DumpDatabase2', 'select' => 'maintain'),
 				'repairboards' => array('', 'RepairBoards.php', 'RepairBoards', 'select' => 'maintain'),
 			),
@@ -331,9 +331,9 @@ function AdminHome()
 		array('admin_forum', 'maintain', 'maintain_title', 'maintain_info'),
 		array('manage_permissions', 'permissions', 'edit_permissions', 'edit_permissions_info'),
 		array('admin_forum', 'theme;sa=admin;sesc=' . $context['session_id'], 'theme_admin', 'theme_admin_info'),
-		array('admin_forum', 'packages', 'package1', 'package_info'),
+		array('admin_forum', 'packages', 'package', 'package_info'),
 		array('manage_smileys', 'smileys', 'smileys_manage', 'smileys_manage_info'),
-		array('moderate_forum', 'viewmembers', '5', 'member_center_info'),
+		array('moderate_forum', 'viewmembers', 'admin_users', 'member_center_info'),
 	);
 
 	$context['quick_admin_tasks'] = array();
@@ -397,7 +397,7 @@ function VersionDetail()
 	$context['forum_version'] = $forum_version;
 
 	$context['sub_template'] = 'view_versions';
-	$context['page_title'] = $txt[429];
+	$context['page_title'] = $txt['admin_version_check'];
 }
 
 // Allow users to remove their copyright.

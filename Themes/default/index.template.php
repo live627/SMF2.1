@@ -217,7 +217,7 @@ function template_main_above()
 		// Is the forum in maintenance mode?
 		if ($context['in_maintenance'] && $context['user']['is_admin'])
 			echo '
-								<b>', $txt[616], '</b><br />';
+								<b>', $txt['maintain_mode_on'], '</b><br />';
 
 		// Are there any members waiting for approval?
 		if (!empty($context['unapproved_members']))
@@ -256,14 +256,14 @@ function template_main_above()
 								<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" class="middletext" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 									<input type="text" name="user" size="10" /> <input type="password" name="passwrd" size="10" />
 									<select name="cookielength">
-										<option value="60">', $txt['smf53'], '</option>
-										<option value="1440">', $txt['smf47'], '</option>
-										<option value="10080">', $txt['smf48'], '</option>
-										<option value="43200">', $txt['smf49'], '</option>
-										<option value="-1" selected="selected">', $txt['smf50'], '</option>
+										<option value="60">', $txt['one_hour'], '</option>
+										<option value="1440">', $txt['one_day'], '</option>
+										<option value="10080">', $txt['one_week'], '</option>
+										<option value="43200">', $txt['one_month'], '</option>
+										<option value="-1" selected="selected">', $txt['forever'], '</option>
 									</select>
 									<input type="submit" value="', $txt['login'], '" /><br />
-									<span class="middletext">', $txt['smf52'], '</span>
+									<span class="middletext">', $txt['quick_login_dec'], '</span>
 									<input type="hidden" name="hash_passwrd" value="" />
 								</form>';
 	}
@@ -357,7 +357,7 @@ function template_main_below()
 		// Show the load time?
 	if ($context['show_load_time'])
 		echo '
-		<span class="smalltext">', $txt['smf301'], $context['load_time'], $txt['smf302'], $context['load_queries'], $txt['smf302b'], '</span>';
+		<span class="smalltext">', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</span>';
 
 	// This is an interesting bug in Internet Explorer AND Safari. Rather annoying, it makes overflows just not tall enough.
 	if (($context['browser']['is_ie'] && !$context['browser']['is_ie4']) || $context['browser']['is_mac_ie'] || $context['browser']['is_safari'] || $context['browser']['is_firefox'])

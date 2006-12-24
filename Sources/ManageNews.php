@@ -99,13 +99,13 @@ function ManageNews()
 	$context['admin_tabs'] = array(
 		'title' => $txt['news_title'],
 		'help' => 'edit_news',
-		'description' => $txt[670],
+		'description' => $txt['admin_news_desc'],
 		'tabs' => array(),
 	);
 	if (allowedTo('edit_news'))
 		$context['admin_tabs']['tabs'][] = array(
 			'title' => $txt['admin_news'],
-			'description' => $txt[670],
+			'description' => $txt['admin_news_desc'],
 			'href' => $scripturl . '?action=admin;area=news',
 			'is_selected' => $_REQUEST['sa'] == 'editnews',
 		);

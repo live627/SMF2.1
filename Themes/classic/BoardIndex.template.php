@@ -14,7 +14,7 @@ function template_main()
 	if (!$settings['show_stats_index'])
 		echo '
 			', $txt['members'], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', $context['common_stats']['total_topics'], '
-			', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <b>' . $context['common_stats']['latest_member']['link'] . '</b>' . $txt[581] : '');
+			', ($settings['show_latest_member'] ? '<br />' . $txt['welcome_member'] . ' <b>' . $context['common_stats']['latest_member']['link'] . '</b>' . $txt['newest_member'] : '');
 	echo '
 		</td>
 	</tr>
@@ -129,7 +129,7 @@ function template_main()
 			{
 				echo '
 	<tr>
-		<td class="windowbg" width="6%" align="center" valign="top"><img src="', $settings['images_url'], $board['new'] ? '/on.gif" alt="' . $txt[333] . '" title="' . $txt[333] : '/off.gif" alt="' . $txt[334] . '" title="' . $txt[334], '" border="0" /></td>
+		<td class="windowbg" width="6%" align="center" valign="top"><img src="', $settings['images_url'], $board['new'] ? '/on.gif" alt="' . $txt['new_posts'] . '" title="' . $txt['new_posts'] : '/off.gif" alt="' . $txt['old_posts'] . '" title="' . $txt['old_posts'], '" border="0" /></td>
 		<td class="windowbg2" align="left" width="60%">
 			<a name="b', $board['id'], '"></a>
 			<b>', $board['link'], '</b><br />
@@ -168,8 +168,8 @@ function template_main()
 		<td class="windowbg2" valign="middle" width="22%">
 			<span class="smalltext">
 				', $board['last_post']['time'], '<br />
-				', $txt['smf88'], ' ', $board['last_post']['link'], '<br />
-				', $txt[525], ' ', $board['last_post']['member']['link'], '
+				', $txt['in'], ' ', $board['last_post']['link'], '<br />
+				', $txt['by'], ' ', $board['last_post']['member']['link'], '
 			</span>
 		</td>
 	</tr>';
@@ -183,13 +183,13 @@ function template_main()
 		echo '
 	<tr class="titlebg">
 		<td colspan="2" align="left">
-			<img src="' . $settings['lang_images_url'] . '/new_some.gif" alt="' . $txt[333] . '" border="0" />&nbsp;&nbsp;<img src="' . $settings['lang_images_url'] . '/new_none.gif" alt="' . $txt[334] . '" border="0" />
+			<img src="' . $settings['lang_images_url'] . '/new_some.gif" alt="' . $txt['new_posts'] . '" border="0" />&nbsp;&nbsp;<img src="' . $settings['lang_images_url'] . '/new_none.gif" alt="' . $txt['old_posts'] . '" border="0" />
 		</td>
 		<td colspan="3" align="right" class="smalltext">';
 		// Show the mark all as read button?
 		if ($settings['show_mark_read'])
 			echo '
-			<a href="', $scripturl, '?action=markasread;sa=all;sesc=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]), '</a>';
+			<a href="', $scripturl, '?action=markasread;sa=all;sesc=' . $context['session_id'] . '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']), '</a>';
 		echo '
 		</td>
 	</tr>';
@@ -243,7 +243,7 @@ function template_main()
 				echo '
 				<tr>
 					<td align="right" valign="top" nowrap="nowrap">[', $post['board']['link'], ']</td>
-					<td valign="top">', $post['link'], ' ', $txt[525], ' ', $post['poster']['link'], '</td>
+					<td valign="top">', $post['link'], ' ', $txt['by'], ' ', $post['poster']['link'], '</td>
 					<td align="right" valign="top" nowrap="nowrap">', $post['time'], '</td>
 				</tr>';
 			echo '
@@ -259,11 +259,11 @@ function template_main()
 	{
 		echo '
 	<tr>
-		<td class="catbg" colspan="2">', $context['calendar_only_today'] ? $txt['calendar47b'] : $txt['calendar47'], '</td>
+		<td class="catbg" colspan="2">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar47'], '</td>
 	</tr><tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
 			<a href="', $scripturl, '?action=calendar">
-				<img src="', $settings['images_url'], '/icons/calendar.gif" border="0" width="20" alt="', $txt['calendar24'], '" /></a>
+				<img src="', $settings['images_url'], '/icons/calendar.gif" border="0" width="20" alt="', $txt['calendar'], '" /></a>
 		</td>
 		<td class="windowbg2" width="100%">
 			<span class="smalltext">';
@@ -277,7 +277,7 @@ function template_main()
 		if (!empty($context['calendar_birthdays']))
 		{
 			echo '
-				<span class="birthday">', $context['calendar_only_today'] ? $txt['calendar3'] : $txt['calendar3b'], '</span> ';
+				<span class="birthday">', $context['calendar_only_today'] ? $txt['birthdays'] : $txt['birthdays_upcoming'], '</span> ';
 			/* Each member in calendar_birthdays has:
 				id, name (person), age (if they have one set?), is_last. (last in list?), and is_today (birthday is today?) */
 			foreach ($context['calendar_birthdays'] as $member)
@@ -288,7 +288,7 @@ function template_main()
 		if (!empty($context['calendar_events']))
 		{
 			echo '
-				<span class="event">', $context['calendar_only_today'] ? $txt['calendar4'] : $txt['calendar4b'], '</span> ';
+				<span class="event">', $context['calendar_only_today'] ? $txt['events'] : $txt['events_upcoming'], '</span> ';
 			/* Each event in calendar_events should have:
 				title, href, is_last, can_edit (are they allowed?), modify_href, and is_today. */
 			foreach ($context['calendar_events'] as $event)
@@ -311,14 +311,14 @@ function template_main()
 	{
 		echo '
 	<tr>
-		<td class="catbg" colspan="2">', $txt[331], '</td>
+		<td class="catbg" colspan="2">', $txt['members'], '</td>
 	</tr>
 	<tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
-			', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' : '', '<img src="', $settings['images_url'], '/icons/members.gif" border="0" width="20" alt="', $txt[332], '" />', $context['show_member_list'] ? '</a>' : '', '
+			', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' : '', '<img src="', $settings['images_url'], '/icons/members.gif" border="0" width="20" alt="', $txt['members_list'], '" />', $context['show_member_list'] ? '</a>' : '', '
 		</td>
 		<td class="windowbg2" width="100%">
-			<b>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $txt[332] . '</a>' : $txt[332], '</b><br />
+			<b>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $txt['members_list'] . '</a>' : $txt['members_list'], '</b><br />
 			<span class="smalltext">', $txt['memberlist_searchable'], '</span>
 		</td>
 	</tr>';
@@ -329,29 +329,29 @@ function template_main()
 	{
 		echo '
 	<tr>
-		<td class="catbg" colspan="2">', $txt[645], '</td>
+		<td class="catbg" colspan="2">', $txt['forum_stats'], '</td>
 	</tr>
 	<tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
 			<a href="', $scripturl, '?action=stats">
-				<img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt[645], '" border="0" /></a>
+				<img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" border="0" /></a>
 		</td>
 		<td class="windowbg2" width="100%">
 			<table border="0" width="90%"><tr>
 				<td class="smalltext">
-					', $txt[490], ': <b>', $context['common_stats']['total_topics'], '</b> &nbsp;&nbsp;&nbsp;&nbsp; ', $txt[489], ': <b>', $context['common_stats']['total_posts'], '</b><br />
-					', !empty($context['latest_post']) ? $txt[659] . ':
+					', $txt['total_topics'], ': <b>', $context['common_stats']['total_topics'], '</b> &nbsp;&nbsp;&nbsp;&nbsp; ', $txt['total_posts'], ': <b>', $context['common_stats']['total_posts'], '</b><br />
+					', !empty($context['latest_post']) ? $txt['latest_post'] . ':
 					&quot;' . $context['latest_post']['link'] . '&quot;  (' . $context['latest_post']['time'] . ')<br />' : '', '
 					<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
-					<a href="' . $scripturl . '?action=stats">' . $txt['smf223'] . '</a>' : '', '
+					<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '
 				</td>
 				<td class="smalltext">
-					', $txt[488], ': <b>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['common_stats']['total_members'] . '</a>' : $context['common_stats']['total_members'], '</b><br />
-					', $txt[656], ': <b>', $context['common_stats']['latest_member']['link'], '</b><br />';
+					', $txt['total_members'], ': <b>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['common_stats']['total_members'] . '</a>' : $context['common_stats']['total_members'], '</b><br />
+					', $txt['latest_member'], ': <b>', $context['common_stats']['latest_member']['link'], '</b><br />';
 		// If they are logged in, show their unread message count, etc..
 		if ($context['user']['is_logged'] && $context['allow_pm'])
 			echo '
-					', $txt['smf199'], ': <b><a href="', $scripturl, '?action=pm">', $context['user']['messages'], '</a></b> ', $txt['newmessages3'], ': <b><a href="', $scripturl, '?action=pm">', $context['user']['unread_messages'], '</a></b>';
+					', $txt['your_pms'], ': <b><a href="', $scripturl, '?action=pm">', $context['user']['messages'], '</a></b> ', $txt['newmessages3'], ': <b><a href="', $scripturl, '?action=pm">', $context['user']['unread_messages'], '</a></b>';
 		echo '
 				</td>
 			</tr></table>
@@ -420,7 +420,7 @@ function template_main()
 		<td class="windowbg2" valign="top">
 			<b><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></b><br />
 			<span class="smalltext">
-				', $txt[660], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt[471] : $txt['msg_alert_messages'], '.... ', $txt[661], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt[662] . '</a>' : '', ' ', $txt[663], '
+				', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt[471] : $txt['msg_alert_messages'], '.... ', $txt['click'], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt['here'] . '</a>' : '', ' ', $txt['to_view'], '
 			</span>
 		</td>
 	</tr>';
@@ -450,10 +450,10 @@ function template_main()
 						<label for="passwrd"><b>', $txt['password'], ':</b><br /><input type="password" name="passwrd" id="passwrd" size="15" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="cookielength"><b>', $txt[497], ':</b><br /><input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></label>
+						<label for="cookielength"><b>', $txt['mins_logged_in'], ':</b><br /><input type="text" name="cookielength" id="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></label>
 					</td>
 					<td valign="middle" align="left">
-						<label for="cookieneverexp"><b>', $txt[508], ':</b><br /><input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="check" /></label>
+						<label for="cookieneverexp"><b>', $txt['always_logged_in'], ':</b><br /><input type="checkbox" name="cookieneverexp" id="cookieneverexp" checked="checked" class="check" /></label>
 					</td>
 					<td valign="middle" align="left">
 						<input type="submit" value="', $txt['login'], '" />

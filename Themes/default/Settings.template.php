@@ -8,7 +8,7 @@ function template_options()
 	$context['theme_options'] = array(
 		array(
 			'id' => 'show_board_desc',
-			'label' => $txt[732],
+			'label' => $txt['board_desc_inside'],
 			'default' => true,
 		),
 		array(
@@ -137,28 +137,28 @@ function template_settings()
 		),
 		array(
 			'id' => 'show_modify',
-			'label' => $txt[383],
+			'label' => $txt['last_modification'],
 		),
 		array(
 			'id' => 'show_member_bar',
-			'label' => $txt[510],
+			'label' => $txt['member_list_bar'],
 		),
 		array(
 			'id' => 'linktree_link',
-			'label' => $txt[522],
+			'label' => $txt['current_pos_text_img'],
 		),
 		array(
 			'id' => 'show_profile_buttons',
-			'label' => $txt[523],
+			'label' => $txt['show_view_profile_button'],
 		),
 		array(
 			'id' => 'show_mark_read',
-			'label' => $txt[618],
+			'label' => $txt['enable_mark_as_read'],
 		),
 		array(
 			'id' => 'linktree_inline',
-			'label' => $txt['smf105'],
-			'description' => $txt['smf106'],
+			'label' => $txt['enable_inline_links'],
+			'description' => $txt['inline_desc'],
 		),
 		array(
 			'id' => 'show_stats_index',
@@ -170,7 +170,7 @@ function template_settings()
 		),
 		array(
 			'id' => 'show_bbc',
-			'label' => $txt[740],
+			'label' => $txt['admin_bbc'],
 		),
 		array(
 			'id' => 'additional_options_collapsable',
@@ -178,36 +178,36 @@ function template_settings()
 		),
 		array(
 			'id' => 'enable_news',
-			'label' => $txt[379],
+			'label' => $txt['admin_news'],
 		),
 		array(
 			'id' => 'show_newsfader',
-			'label' => $txt[387],
+			'label' => $txt['news_fader'],
 		),
 		array(
 			'id' => 'newsfader_time',
-			'label' => $txt[739],
+			'label' => $txt['admin_fader_delay'],
 			'type' => 'number',
 		),
 		array(
 			'id' => 'show_user_images',
-			'label' => $txt[384],
+			'label' => $txt['user_avatars'],
 		),
 		array(
 			'id' => 'show_blurb',
-			'label' => $txt[385],
+			'label' => $txt['user_text'],
 		),
 		array(
 			'id' => 'show_latest_member',
-			'label' => $txt[382],
+			'label' => $txt['latest_members'],
 		),
 		array(
 			'id' => 'use_image_buttons',
-			'label' => $txt[521],
+			'label' => $txt['admin_image_text'],
 		),
 		array(
 			'id' => 'show_gender',
-			'label' => $txt[386],
+			'label' => $txt['gender_images'],
 		),
 		array(
 			'id' => 'show_group_key',

@@ -3,87 +3,87 @@
 
 // Important! Before editing these language files please read the text at the topic of index.german.php.
 
-$txt[80] = 'Sie haben keine Berechtigung, dieses Profil zu &auml;ndern.';
-$txt[83] = 'Titel der Webseite';
-$txt[84] = 'URL der Webseite';
-$txt[85] = 'Signatur';
-$txt[86] = 'Beitr&auml;ge';
-$txt[88] = 'Profil &auml;ndern';
-$txt[89] = 'Benutzer l&ouml;schen';
-$txt[113] = 'Dieses Mitglied ist:';
-$txt[228] = 'Pers&ouml;nlicher Text';
-$txt[229] = 'Benutzerbild';
-$txt[232] = 'Bild/Text';
-$txt[329] = 'Eingabe l&ouml;schen';
-$txt[349] = 'Verwendete Sprachdatei';
-$txt[420] = 'Alter';
-$txt[422] = '(kein Bild)';
-$txt[458] = 'Letzter Beitrag: ';
-$txt[459] = 'Zus&auml;tzliche Informationen';
-$txt[460] = 'Zeige die letzten';
-$txt[461] = 'Beitr&auml;ge des Benutzers';
-$txt[474] = 'Geben Sie die URL zu Ihrem Benutzerbild an<br />(Bsp.: <b>http://www.meineseite.de/bild.gif</b>)';
-$txt[475] = 'Ich habe mein eigenes Bild';
-$txt[479] = 'Diese Auswahl bestimmt das Datum/Zeit Anzeigeformat im Forum.';
-$txt[486] = 'Zeitformat';
-$txt[487] = 'Die Zeitverschiebung muss zwischen -23.5 und 23.5 sein.';
-$txt[518] = 'Der im Forum angezeigte Name.';
-$txt[519] = 'Zeitdifferenz in +/- Stunden zwischen Serverzeit und Ihrer lokalen Zeit.';
-$txt[563] = 'Geburtsdatum';
-$txt[564] = 'Monat (MM)';
-$txt[565] = 'Tag (TT)';
-$txt[566] = 'Jahr (JJJJ)';
-$txt[596] = 'Wir empfehlen mindestens 6 Zeichen zu verwenden und Buchstaben mit Ziffern zu kombinieren.';
-$txt[597] = 'Zus&auml;tzliche Information';
-$txt[598] = 'Bitte ausf&uuml;llen, wenn Sie unten eine URL eingeben!';
-$txt[599] = 'Bitte eine komplette URL (inkl. http://) eingeben - (http://www.meineseite.de).';
-$txt[600] = 'Ihre ICQ-Nummer';
-$txt[601] = 'Ihr AOL Name';
-$txt[602] = 'Ihr Yahoo! Name';
-$txt[606] = 'Signaturen werden unter jedem Beitrag oder Privater Mitteilung angezeigt. In der Signatur darf BBC Code verwendet werden.';
-$txt[664] = 'Max. %d Zeichen - &uuml;brig: ';
+$txt['no_profile_edit'] = 'Sie haben keine Berechtigung, dieses Profil zu &auml;ndern.';
+$txt['website_title'] = 'Titel der Webseite';
+$txt['website_url'] = 'URL der Webseite';
+$txt['signature'] = 'Signatur';
+$txt['posts'] = 'Beitr&auml;ge';
+$txt['change_profile'] = 'Profil &auml;ndern';
+$txt['delete_user'] = 'Benutzer l&ouml;schen';
+$txt['current_status'] = 'Dieses Mitglied ist:';
+$txt['personal_text'] = 'Pers&ouml;nlicher Text';
+$txt['personal_picture'] = 'Benutzerbild';
+$txt['picture_text'] = 'Bild/Text';
+$txt['reset_form'] = 'Eingabe l&ouml;schen';
+$txt['prefered_language'] = 'Verwendete Sprachdatei';
+$txt['age'] = 'Alter';
+$txt['no_pic'] = '(kein Bild)';
+$txt['latest_posts'] = 'Letzter Beitrag: ';
+$txt['additional_info'] = 'Zus&auml;tzliche Informationen';
+$txt['show_latest'] = 'Zeige die letzten';
+$txt['posts_member'] = 'Beitr&auml;ge des Benutzers';
+$txt['avatar_by_url'] = 'Geben Sie die URL zu Ihrem Benutzerbild an<br />(Bsp.: <b>http://www.meineseite.de/bild.gif</b>)';
+$txt['my_own_pic'] = 'Ich habe mein eigenes Bild';
+$txt['date_format'] = 'Diese Auswahl bestimmt das Datum/Zeit Anzeigeformat im Forum.';
+$txt['time_format'] = 'Zeitformat';
+$txt['time_offset'] = 'Die Zeitverschiebung muss zwischen -23.5 und 23.5 sein.';
+$txt['display_name'] = 'Der im Forum angezeigte Name.';
+$txt['personal_time_offset'] = 'Zeitdifferenz in +/- Stunden zwischen Serverzeit und Ihrer lokalen Zeit.';
+$txt['dob'] = 'Geburtsdatum';
+$txt['dob_month'] = 'Monat (MM)';
+$txt['dob_day'] = 'Tag (TT)';
+$txt['dob_year'] = 'Jahr (JJJJ)';
+$txt['password_stregth'] = 'Wir empfehlen mindestens 6 Zeichen zu verwenden und Buchstaben mit Ziffern zu kombinieren.';
+$txt['additional_info'] = 'Zus&auml;tzliche Information';
+$txt['include_website_url'] = 'Bitte ausf&uuml;llen, wenn Sie unten eine URL eingeben!';
+$txt['complete_url'] = 'Bitte eine komplette URL (inkl. http://) eingeben - (http://www.meineseite.de).';
+$txt['your_icq'] = 'Ihre ICQ-Nummer';
+$txt['your_aim'] = 'Ihr AOL Name';
+$txt['your_yim'] = 'Ihr Yahoo! Name';
+$txt['sig_info'] = 'Signaturen werden unter jedem Beitrag oder Privater Mitteilung angezeigt. In der Signatur darf BBC Code verwendet werden.';
+$txt['max_sig_characters'] = 'Max. %d Zeichen - &uuml;brig: ';
 $txt[688] = 'Diesem Mitglied eine Private Mitteilung senden';
-$txt[722] = 'versteckt';
-$txt[741] = 'Aktuelle Zeit des Forums';
-$txt[749] = 'Die \'Beitr&auml;ge\' Box kann nur Zahlen enthalten.';
+$txt['hidden'] = 'versteckt';
+$txt['current_time'] = 'Aktuelle Zeit des Forums';
+$txt['digits_only'] = 'Die \'Beitr&auml;ge\' Box kann nur Zahlen enthalten.';
 
-$txt['smf225'] = 'Sprache';
-$txt['smf227'] = 'Das Benutzerbild ist zu gro&szlig;. Bitte verkleinern Sie es und versuchen Sie es erneut (max';
-$txt['smf233'] = 'Ung&uuml;ltiges Registrierungsdatum, g&uuml;ltiges Beispiel:';
+$txt['language'] = 'Sprache';
+$txt['avatar_too_big'] = 'Das Benutzerbild ist zu gro&szlig;. Bitte verkleinern Sie es und versuchen Sie es erneut (max';
+$txt['invalid_registration'] = 'Ung&uuml;ltiges Registrierungsdatum, g&uuml;ltiges Beispiel:';
 $txt['smf237'] = 'Ihre MSN E-Mail Adresse';
-$txt['smf241'] = 'Aktuelles Passwort';
+$txt['current_password'] = 'Aktuelles Passwort';
 $txt['smf243'] = 'Sie haben das Passwort nicht eingegeben. Um &Auml;nderungen an Ihrem Profil vorzunehmen, m&uuml;ssen Sie das aktuelle Passwort unbedingt eingeben.';
 // Don't use entities in the below string, except the main ones. (lt, gt, quot.)
-$txt['smf244'] = 'Aus Sicherheitsgründen muss bei jeder Änderung der Zugangseinstellungen das aktuelle Passwort eingegeben werden.';
+$txt['required_security_reasons'] = 'Aus Sicherheitsgründen muss bei jeder Änderung der Zugangseinstellungen das aktuelle Passwort eingegeben werden.';
 
 $txt['timeoffset_autodetect'] = '(automatisch ermittelt)';
 
-$txt['pswd1'] = 'Geheime Frage';
+$txt['secret_question'] = 'Geheime Frage';
 $txt['secret_desc'] = 'Die eingegebene Frage kann Ihnen helfen, Ihr Passwort wieder zu bekommen. Die Antwort sollten <b>nur</b> Sie kennen!';
 $txt['secret_desc2'] = 'W&auml;hlen Sie die Antwort vorsichtig aus. Es sollte kein anderer die Antwort erraten k&ouml;nnen!';
-$txt['pswd2'] = 'Antwort';
-$txt['pswd3'] = 'Stellen Sie mir meine geheime Frage';
-$txt['pswd4'] = 'Sie k&ouml;nnen Ihr Passwort nicht abfragen aber Sie k&ouml;nnen ein neues festlegen, wenn Sie dem Link folgen, welcher Ihnen per E-Mail zugesendet werden kann. Sie haben auch die M&ouml;glichkeit, Ihre geheime Frage zu beantworten und somit ein neues Passwort festzulegen.';
-$txt['pswd5'] = 'Sie haben keine g&uuml;ltige Kombination von Geheimfrage und -antwort im Benutzerprofil angegeben. Bitte klicken Sie auf den [Zur&uuml;ck] Button und benutzen Sie die Standardmethode, um Ihr Passwort zu erlangen.';
-$txt['pswd6'] = 'Bitte geben Sie die Antwort auf Ihre geheime Frage und das Passwort das Sie ben&uuml;tzen m&ouml;chten ein. Ihr Passwort wird auf die neue Eingabe ge&auml;ndert - vorausgesetzt, Sie beantworten die Frage richtig.';
-$txt['pswd8'] = 'Ihr Passwort wurde erfolgreich ge&auml;ndert.<br />Klicken Sie <a href="' . $scripturl . '?action=login">hier</a> zum Login.';
+$txt['secret_answer'] = 'Antwort';
+$txt['secret_ask'] = 'Stellen Sie mir meine geheime Frage';
+$txt['cant_retrieve'] = 'Sie k&ouml;nnen Ihr Passwort nicht abfragen aber Sie k&ouml;nnen ein neues festlegen, wenn Sie dem Link folgen, welcher Ihnen per E-Mail zugesendet werden kann. Sie haben auch die M&ouml;glichkeit, Ihre geheime Frage zu beantworten und somit ein neues Passwort festzulegen.';
+$txt['incorrect_answer'] = 'Sie haben keine g&uuml;ltige Kombination von Geheimfrage und -antwort im Benutzerprofil angegeben. Bitte klicken Sie auf den [Zur&uuml;ck] Button und benutzen Sie die Standardmethode, um Ihr Passwort zu erlangen.';
+$txt['enter_new_password'] = 'Bitte geben Sie die Antwort auf Ihre geheime Frage und das Passwort das Sie ben&uuml;tzen m&ouml;chten ein. Ihr Passwort wird auf die neue Eingabe ge&auml;ndert - vorausgesetzt, Sie beantworten die Frage richtig.';
+$txt['password_success'] = 'Ihr Passwort wurde erfolgreich ge&auml;ndert.<br />Klicken Sie <a href="' . $scripturl . '?action=login">hier</a> zum Login.';
 $txt['secret_why_blank'] = 'Warum ist dieses Feld leer?';
 
-$txt['theme1a'] = 'Aktuelles Theme';
-$txt['theme1b'] = '(&auml;ndern)';
-$txt['theme2'] = 'Theme Voreinstellungen';
+$txt['current_theme'] = 'Aktuelles Theme';
+$txt['change'] = '(&auml;ndern)';
+$txt['theme_preferences'] = 'Theme Voreinstellungen';
 $txt['theme_forum_default'] = 'Forum oder Board Standard';
 $txt['theme_forum_default_desc'] = 'Das ist das Standard-Theme, d.h. Ihr Theme wechselt mit den Einstellungen des Administrators und dem Board, welches Sie anschauen.';
 
 $txt['profileConfirm'] = 'Sind Sie sicher, dass Sie diesen Benutzer l&ouml;schen m&ouml;chten?';
 
-$txt['title1'] = 'Individueller Titel';
+$txt['custom_title'] = 'Individueller Titel';
 
 $txt['lastLoggedIn'] = 'Letzter Besuch';
 
-$txt['notifyX'] = 'Benachrichtigungs Einstellungen:';
-$txt['notifyX1'] = 'Einstellungen speichern';
-$txt['notifyXAnn4'] = 'E-Mail Benachrichtigung bei neuen Ank&uuml;ndigungen schicken';
+$txt['notify_settings'] = 'Benachrichtigungs Einstellungen:';
+$txt['notify_save'] = 'Einstellungen speichern';
+$txt['notify_important_email'] = 'E-Mail Benachrichtigung bei neuen Ank&uuml;ndigungen schicken';
 // Untranslated!
 $txt['notify_regularity'] = 'For topics and boards I\'ve requested notification on, notify me';
 $txt['notify_regularity_instant'] = 'Instantly';
@@ -195,12 +195,12 @@ $txt['activate_reactivate_title'] = 'Willkommen zur&#252;ck bei';
 $txt['activate_reactivate_mail'] = 'Im Zuge der &#220;berpr&#252;fung Ihrer E-Mail Adresse wurde Ihr Benutzerkonto vor&#252;bergehend deaktiviert. Klicken Sie auf den folgenden Link, um es wieder zu aktivieren.';
 $txt['activate_changed_email'] = 'Sie haben Ihre E-Mail Adresse ge&#228;ndert. Um sie zu best&#228;tigen, erhalten Sie eine E-Mail mit einem Link auf den Sie klicken sollten, damit der Zugang wieder aktiviert wird.';
 
-$txt[394] = 'Senden der Erinnerungs E-Mail nicht m&ouml;glich.';
-$txt[395] = 'E-Mail senden an';
-$txt[396] = 'um nach dem Passwort zu fragen';
-$txt[669] = 'Passwort vergessen?';
+$txt['no_reminder_email'] = 'Senden der Erinnerungs E-Mail nicht m&ouml;glich.';
+$txt['send_email'] = 'E-Mail senden an';
+$txt['to_ask_password'] = 'um nach dem Passwort zu fragen';
+$txt['password_reminder'] = 'Passwort vergessen?';
 
-$txt['smf100'] = 'Benutzername/E-Mail';
+$txt['user_email'] = 'Benutzername/E-Mail';
 
 // Use numeric entities in the below two strings.
 $txt['reminder_subject'] = 'Neues Passwort f&#252;r ' . $context['forum_name'];
@@ -245,16 +245,16 @@ $txt['recent_pms_at_top'] = 'Zeige die neuesten Privaten Mitteilungen am Anfang'
 // Untranslated!
 $txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
-$txt['timeformat_easy0'] = '(Forum Standard)';
+$txt['timeformat_default'] = '(Forum Standard)';
 $txt['timeformat_easy1'] = 'Monat Tag, Jahr, HH:MM:SS a/pm';
 $txt['timeformat_easy2'] = 'Monat Tag, Jahr, HH:MM:SS (Milit&auml;rzeit.)';
 $txt['timeformat_easy3'] = 'JJJJ-MM-TT, HH:MM:SS';
 $txt['timeformat_easy4'] = 'TT Monat JJJJ, HH:MM:SS';
 $txt['timeformat_easy5'] = 'TT-MM-JJJJ, HH:MM:SS';
 
-$txt['rtm8'] = 'Autor';
+$txt['poster'] = 'Autor';
 
-$txt[732] = 'Zeige Boardbeschreibung innerhalb der Boards';
+$txt['board_desc_inside'] = 'Zeige Boardbeschreibung innerhalb der Boards';
 $txt['show_children'] = 'Zeige untergeordnete Boards auf jeder Seite im Themen-Index';
 $txt['show_no_avatars'] = 'Benutzerbilder von anderen Benutzern nicht anzeigen';
 $txt['show_no_signatures'] = 'Signaturen von anderen Benutzern nicht anzeigen';

@@ -82,7 +82,7 @@ function template_view_members()
 		echo '
 			<tr>
 				<td class="windowbg2" align="right" colspan="8">', $context['can_delete_members'] ? '
-					<input type="submit" name="delete_members" value="' . $txt[608] . '" onclick="return confirm(\'' . $txt['confirm_delete_members'] . '\');" />' : '', '
+					<input type="submit" name="delete_members" value="' . $txt['admin_delete_members'] . '" onclick="return confirm(\'' . $txt['confirm_delete_members'] . '\');" />' : '', '
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					<input type="hidden" name="sort" value="', $context['sort_by'], '" />
 					<input type="hidden" name="start" value="', $context['start'], '" />', $context['sort_direction'] == 'up' ? '
@@ -223,7 +223,7 @@ function template_search_members()
 
 			echo '
 						<tr class="windowbg2">
-							<td><em>', $txt[737], '</em></td>
+							<td><em>', $txt['check_all'], '</em></td>
 							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[1]\');" checked="checked" class="check" /></td>
 							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'membergroups[2]\');" checked="checked" class="check" /></td>
 						</tr>
@@ -247,7 +247,7 @@ function template_search_members()
 
 			echo '
 						<tr class="windowbg2">
-							<td><em>', $txt[737], '</em></td>
+							<td><em>', $txt['check_all'], '</em></td>
 							<td align="center"><input type="checkbox" onclick="invertAll(this, this.form, \'postgroups[]\');" checked="checked" class="check" /></td>
 						</tr>
 					</table>

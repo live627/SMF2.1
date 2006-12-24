@@ -108,7 +108,7 @@ function ManagePostSettings()
 	if (allowedTo('moderate_forum'))
 		$context['admin_tabs']['tabs'][] = array(
 			'title' => $txt['admin_censored_words'],
-			'description' => $txt[141],
+			'description' => $txt['admin_censored_desc'],
 			'href' => $scripturl . '?action=admin;area=postsettings;sa=censor',
 			'is_selected' => $_REQUEST['sa'] == 'censor',
 			'is_last' => !allowedTo('admin_forum'),

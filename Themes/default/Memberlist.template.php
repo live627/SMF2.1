@@ -146,7 +146,7 @@ function template_main()
 	if (isset($context['old_search']))
 		echo '
 			<br />
-				<a href="', $scripturl, '?action=mlist;sa=search;search=', $context['old_search_value'], '">', $txt['mlist_search2'], '</a>';
+				<a href="', $scripturl, '?action=mlist;sa=search;search=', $context['old_search_value'], '">', $txt['mlist_search_again'], '</a>';
 }
 
 // A page allowing people to search the member list.
@@ -216,7 +216,7 @@ function template_search()
 				<tr>
 					<td colspan="2" align="left">
 						<br />
-						<b>', $txt[582], ':</b> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt['search'] . '" style="margin-left: 20px;" /><br />
+						<b>', $txt['search_for'], ':</b> <input type="text" name="search" value="', $context['old_search'], '" size="35" /> <input type="submit" name="submit" value="' . $txt['search'] . '" style="margin-left: 20px;" /><br />
 						<br />
 					</td>
 				</tr>

@@ -196,20 +196,20 @@ function MessageIndex()
 					'id' => $row_board['id_board'],
 					'last_post' => array(
 						'id' => $row_board['id_msg'],
-						'time' => $row_board['poster_time'] > 0 ? timeformat($row_board['poster_time']) : $txt[470],
+						'time' => $row_board['poster_time'] > 0 ? timeformat($row_board['poster_time']) : $txt['not_applicable'],
 						'timestamp' => forum_time(true, $row_board['poster_time']),
 						'subject' => $short_subject,
 						'member' => array(
 							'id' => $row_board['id_member'],
-							'username' => $row_board['poster_name'] != '' ? $row_board['poster_name'] : $txt[470],
+							'username' => $row_board['poster_name'] != '' ? $row_board['poster_name'] : $txt['not_applicable'],
 							'name' => $row_board['real_name'],
 							'href' => !empty($row_board['id_member']) ? $scripturl . '?action=profile;u=' . $row_board['id_member'] : '',
-							'link' => $row_board['poster_name'] != '' ? (!empty($row_board['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '">' . $row_board['real_name'] . '</a>' : $row_board['real_name']) : $txt[470],
+							'link' => $row_board['poster_name'] != '' ? (!empty($row_board['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '">' . $row_board['real_name'] . '</a>' : $row_board['real_name']) : $txt['not_applicable'],
 						),
 						'start' => 'new',
 						'topic' => $row_board['id_topic'],
 						'href' => $row_board['subject'] != '' ? $scripturl . '?topic=' . $row_board['id_topic'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new' : '',
-						'link' => $row_board['subject'] != '' ? '<a href="' . $scripturl . '?topic=' . $row_board['id_topic'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : $txt[470]
+						'link' => $row_board['subject'] != '' ? '<a href="' . $scripturl . '?topic=' . $row_board['id_topic'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : $txt['not_applicable']
 					),
 					'new' => empty($row_board['isRead']) && $row_board['poster_name'] != '',
 					'name' => $row_board['name'],
@@ -281,21 +281,21 @@ function MessageIndex()
 
 				$context['boards'][$row['id_parent']]['last_post'] = array(
 					'id' => $row['id_msg'],
-					'time' => $row['poster_time'] > 0 ? timeformat($row['poster_time']) : $txt[470],
+					'time' => $row['poster_time'] > 0 ? timeformat($row['poster_time']) : $txt['not_applicable'],
 					'timestamp' => forum_time(true, $row['poster_time']),
 					'subject' => $short_subject,
 					'member' => array(
-						'username' => $row['poster_name'] != '' ? $row['poster_name'] : $txt[470],
+						'username' => $row['poster_name'] != '' ? $row['poster_name'] : $txt['not_applicable'],
 						'name' => $row['real_name'],
 						'id' => $row['id_member'],
 						'href' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-						'link' => $row['poster_name'] != '' ? (!empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : $row['real_name']) : $txt[470],
+						'link' => $row['poster_name'] != '' ? (!empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : $row['real_name']) : $txt['not_applicable'],
 					),
 					'start' => 'new',
 					'topic' => $row['id_topic'],
 					'href' => $scripturl . '?topic=' . $row['id_topic'] . '.new' . (empty($row['isRead']) ? ';boardseen' : '') . '#new'
 				);
-				$context['boards'][$row['id_parent']]['last_post']['link'] = $row['subject'] != '' ? '<a href="' . $context['boards'][$row['id_parent']]['last_post']['href'] . '" title="' . $row['subject'] . '">' . $short_subject . '</a>' : $txt[470];
+				$context['boards'][$row['id_parent']]['last_post']['link'] = $row['subject'] != '' ? '<a href="' . $context['boards'][$row['id_parent']]['last_post']['href'] . '" title="' . $row['subject'] . '">' . $short_subject . '</a>' : $txt['not_applicable'];
 			}
 			$context['boards'][$row['id_parent']]['children'][$row['id_board']] = array(
 				'id' => $row['id_board'],

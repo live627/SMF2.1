@@ -389,7 +389,7 @@ function Activate()
 
 		// !!! Separate the sprintf?
 		if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['new_email'])) == 0)
-			fatal_error(sprintf($txt[500], htmlspecialchars($_POST['new_email'])), false);
+			fatal_error(sprintf($txt['valid_email_needed'], htmlspecialchars($_POST['new_email'])), false);
 
 		// Make sure their email isn't banned.
 		isBannedEmail($_POST['new_email'], 'cannot_register', $txt['ban_register_prohibited']);
@@ -430,7 +430,7 @@ function Activate()
 		elseif ($row['validation_code'] == '')
 		{
 			loadLanguage('Profile');
-			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $row['member_name'] . '">' . $txt[662] . '</a>.', false);
+			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $row['member_name'] . '">' . $txt['here'] . '</a>.', false);
 		}
 
 		$context['sub_template'] = 'retry_activate';
@@ -458,7 +458,7 @@ function Activate()
 	}
 
 	$context += array(
-		'page_title' => &$txt[245],
+		'page_title' => &$txt['registration_successful'],
 		'sub_template' => 'login',
 		'default_username' => $row['member_name'],
 		'default_password' => '',

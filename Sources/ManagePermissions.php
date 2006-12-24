@@ -1744,7 +1744,7 @@ function EditPermissionProfiles()
 		// If it's a board highlight it.
 		else
 		{
-			$context['profiles'][$id]['name'] = $txt['smf82'] . ': &quot;' . $context['profiles'][$id]['name'] . '&quot;';
+			$context['profiles'][$id]['name'] = $txt['board'] . ': &quot;' . $context['profiles'][$id]['name'] . '&quot;';
 		}
 	}
 }

@@ -3,28 +3,28 @@
 
 // Important! Before editing these language files please read the text at the topic of index.dutch.php.
 
-$txt[37] = 'Je moet wel een gebruikersnaam invullen.';
-$txt[38] = 'Wachtwoord was leeg';
-$txt[39] = 'Wachtwoord niet correct';
-$txt[98] = 'Kies gebruikersnaam';
+$txt['need_username'] = 'Je moet wel een gebruikersnaam invullen.';
+$txt['no_password'] = 'Wachtwoord was leeg';
+$txt['incorrect_password'] = 'Wachtwoord niet correct';
+$txt['choose_username'] = 'Kies gebruikersnaam';
 $txt[155] = 'Even geduld';
-$txt[245] = 'Je registratie is gelukt!';
-$txt[431] = 'Succes! Je bent een lid van dit forum.';
+$txt['registration_successful'] = 'Je registratie is gelukt!';
+$txt['now_a_member'] = 'Succes! Je bent een lid van dit forum.';
 // Use numeric entities in the below string.
-$txt[492] = 'en je wachtwoord is';
-$txt[500] = 'Vul een geldig e-mailadres in. (%s)';
-$txt[517] = 'Verplichte velden';
-$txt[520] = 'Wordt alleen gebruikt voor indentificatie door SMF. Je kunt speciale karakters gebruiken nadat je bent ingelogd, door je naam aan te passen in je profiel.';
-$txt[585] = 'Ik ga akkoord';
-$txt[586] = 'Ik ga niet akkoord';
-$txt[633] = 'Waarschuwing!';
-$txt[634] = 'Alleen geregistreerde leden mogen in dit gedeelte komen.';
+$txt['your_password'] = 'en je wachtwoord is';
+$txt['valid_email_needed'] = 'Vul een geldig e-mailadres in. (%s)';
+$txt['required_info'] = 'Verplichte velden';
+$txt['identification_by_smf'] = 'Wordt alleen gebruikt voor indentificatie door SMF. Je kunt speciale karakters gebruiken nadat je bent ingelogd, door je naam aan te passen in je profiel.';
+$txt['agree'] = 'Ik ga akkoord';
+$txt['decline'] = 'Ik ga niet akkoord';
+$txt['warning'] = 'Waarschuwing!';
+$txt['only_members_can_access'] = 'Alleen geregistreerde leden mogen in dit gedeelte komen.';
 $txt['login_below'] = 'Log hieronder in of klik op';
 $txt['login_or_register'] = 'deze link';
 $txt['login_with_forum'] = 'om jezelf vrijblijvend te registreren op het %s forum.';
 // Use numeric entities in the below two strings.
-$txt[701] = 'je kunt het nog veranderen nadat je bent ingelogd door naar je profiel te gaan:';
-$txt[719] = 'Je gebruikersnaam is: ';
+$txt['may_change_in_profile'] = 'je kunt het nog veranderen nadat je bent ingelogd door naar je profiel te gaan:';
+$txt['your_username_is'] = 'Je gebruikersnaam is: ';
 
 $txt['login_hash_error'] = 'De wachtwoordbeveiliging is recentelijk opgewaardeerd. Voer je wachtwoord opnieuw in.';
 
@@ -61,16 +61,16 @@ $txt['invalid_activation_known'] = 'Als je de activeringscode al kent, kun je di
 $txt['invalid_activation_retry'] = 'Activeringscode';
 $txt['invalid_activation_submit'] = 'Activeren';
 
-$txt['coppa_not_completed1'] = 'De forumbeheerder heeft nog geen toestemming van je ouders/voogden ontvangen voor je account.';
-$txt['coppa_not_completed2'] = 'Meer details nodig?';
+$txt['coppa_no_concent'] = 'De forumbeheerder heeft nog geen toestemming van je ouders/voogden ontvangen voor je account.';
+$txt['coppa_need_more_details'] = 'Meer details nodig?';
 
 $txt['awaiting_delete_account'] = 'Je hebt je account verwijderd! Als je je account wilt herstellen, vink &quot;Herstel mijn account&quot; aan en probeer opnieuw.';
 $txt['undelete_account'] = 'Herstel mijn account';
 
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'Nieuwe wachtwoord gegevens';
-$txt['change_password_1'] = 'Je inloggegevens voor';
-$txt['change_password_2'] = 'zijn veranderd en je wachtwoord is opnieuw ingesteld. Hieronder zijn je nieuwe inlogdetails.';
+$txt['change_password_login'] = 'Je inloggegevens voor';
+$txt['change_password_new'] = 'zijn veranderd en je wachtwoord is opnieuw ingesteld. Hieronder zijn je nieuwe inlogdetails.';
 
 $txt['maintenance3'] = 'Het forum bevindt zich in de onderhoudsmodus.';
 

@@ -3,87 +3,87 @@
 
 // Important! Before editing these language files please read the text at the topic of index.spanish.php.
 
-$txt[80] = 'No est&aacute;s autorizado para cambiar este perfil.';
-$txt[83] = 'T&iacute;tulo de tu sitio Web';
-$txt[84] = 'URL de tu sitio Web';
-$txt[85] = 'Firma';
-$txt[86] = 'Mensajes';
-$txt[88] = 'Cambiar perfil';
-$txt[89] = 'Borrar usuario';
-$txt[113] = 'Estado actual:';
-$txt[228] = 'Texto personal';
-$txt[229] = 'Imagen personalizada';
-$txt[232] = 'Imagen/Texto';
-$txt[329] = 'Reinicializar formulario';
-$txt[349] = 'Idioma que deseas usar';
-$txt[420] = 'Edad';
-$txt[422] = '(sin imagen)';
-$txt[458] = '&uacute;ltimos mensajes de: ';
-$txt[459] = 'Informaci&oacute;n Adicional';
-$txt[460] = 'Mostrar los &uacute;ltimos';
-$txt[461] = 'mensajes de este usuario';
-$txt[474] = 'Especifica tu propio avatar por URL. (ej: <b>http://www.HablaJapones.org/SSJ4.gif</b>)';
-$txt[475] = 'Tengo mi propia imagen';
-$txt[479] = 'Esta selecci&oacute;n har&aacute; que las fechas en el foro se muestren en este formato.';
-$txt[486] = 'Formato de Hora';
-$txt[487] = 'La diferencia horaria debe estar entre -23.5 y 23.5.';
-$txt[518] = 'Este es el nombre a mostrar que la gente ver&aacute;.';
-$txt[519] = 'N&uacute;mero de horas +/- para ajustarlo a tu hora local.';
-$txt[563] = 'Fecha de nacimiento';
-$txt[564] = 'Mes (MM)';
-$txt[565] = 'D&iacute;a (DD)';
-$txt[566] = 'A&ntilde;o (AAAA)';
-$txt[596] = 'Te sugerimos que utilices 6 o m&aacute;s caracteres combinando n&uacute;meros y letras.';
-$txt[597] = 'Informaci&oacute;n Adicional';
-$txt[598] = 'Esto debe incluirse si abajo especificas un URL.';
-$txt[599] = 'Esto debe ser un URL completo.';
-$txt[600] = 'Este es tu n&uacute;mero de ICQ.';
-$txt[601] = 'Este es tu nickname de AOL Instant Messenger.';
-$txt[602] = 'Este es tu nickname de Yahoo! Instant Messenger.';
-$txt[606] = 'Las firmas se muestran en la parte inferior de cada mensaje o mensaje personal. En tu firma puedes utilizar c&oacute;digos BBC.';
-$txt[664] = 'Max %d; caracteres restantes: ';
+$txt['no_profile_edit'] = 'No est&aacute;s autorizado para cambiar este perfil.';
+$txt['website_title'] = 'T&iacute;tulo de tu sitio Web';
+$txt['website_url'] = 'URL de tu sitio Web';
+$txt['signature'] = 'Firma';
+$txt['posts'] = 'Mensajes';
+$txt['change_profile'] = 'Cambiar perfil';
+$txt['delete_user'] = 'Borrar usuario';
+$txt['current_status'] = 'Estado actual:';
+$txt['personal_text'] = 'Texto personal';
+$txt['personal_picture'] = 'Imagen personalizada';
+$txt['picture_text'] = 'Imagen/Texto';
+$txt['reset_form'] = 'Reinicializar formulario';
+$txt['prefered_language'] = 'Idioma que deseas usar';
+$txt['age'] = 'Edad';
+$txt['no_pic'] = '(sin imagen)';
+$txt['latest_posts'] = '&uacute;ltimos mensajes de: ';
+$txt['additional_info'] = 'Informaci&oacute;n Adicional';
+$txt['show_latest'] = 'Mostrar los &uacute;ltimos';
+$txt['posts_member'] = 'mensajes de este usuario';
+$txt['avatar_by_url'] = 'Especifica tu propio avatar por URL. (ej: <b>http://www.HablaJapones.org/SSJ4.gif</b>)';
+$txt['my_own_pic'] = 'Tengo mi propia imagen';
+$txt['date_format'] = 'Esta selecci&oacute;n har&aacute; que las fechas en el foro se muestren en este formato.';
+$txt['time_format'] = 'Formato de Hora';
+$txt['time_offset'] = 'La diferencia horaria debe estar entre -23.5 y 23.5.';
+$txt['display_name'] = 'Este es el nombre a mostrar que la gente ver&aacute;.';
+$txt['personal_time_offset'] = 'N&uacute;mero de horas +/- para ajustarlo a tu hora local.';
+$txt['dob'] = 'Fecha de nacimiento';
+$txt['dob_month'] = 'Mes (MM)';
+$txt['dob_day'] = 'D&iacute;a (DD)';
+$txt['dob_year'] = 'A&ntilde;o (AAAA)';
+$txt['password_stregth'] = 'Te sugerimos que utilices 6 o m&aacute;s caracteres combinando n&uacute;meros y letras.';
+$txt['additional_info'] = 'Informaci&oacute;n Adicional';
+$txt['include_website_url'] = 'Esto debe incluirse si abajo especificas un URL.';
+$txt['complete_url'] = 'Esto debe ser un URL completo.';
+$txt['your_icq'] = 'Este es tu n&uacute;mero de ICQ.';
+$txt['your_aim'] = 'Este es tu nickname de AOL Instant Messenger.';
+$txt['your_yim'] = 'Este es tu nickname de Yahoo! Instant Messenger.';
+$txt['sig_info'] = 'Las firmas se muestran en la parte inferior de cada mensaje o mensaje personal. En tu firma puedes utilizar c&oacute;digos BBC.';
+$txt['max_sig_characters'] = 'Max %d; caracteres restantes: ';
 $txt[688] = 'Enviar a este usuario un mensaje personal';
-$txt[722] = 'oculto';
-$txt[741] = 'Hora actual en el foro';
-$txt[749] = 'El cuadro \'n&uacute;mero de mensajes\' debe contener s&oacute;lo d&iacute;gitos.';
+$txt['hidden'] = 'oculto';
+$txt['current_time'] = 'Hora actual en el foro';
+$txt['digits_only'] = 'El cuadro \'n&uacute;mero de mensajes\' debe contener s&oacute;lo d&iacute;gitos.';
 
-$txt['smf225'] = 'Idioma';
-$txt['smf227'] = 'La imagen de tu avatar es demasiado grande, por favor c&aacute;mbiale el tama&ntilde;o e intenta nuevamente (m&aacute;x';
-$txt['smf233'] = 'El valor de la Fecha de Registro es inv&aacute;lida, ejemplo v&aacute;lido:';
+$txt['language'] = 'Idioma';
+$txt['avatar_too_big'] = 'La imagen de tu avatar es demasiado grande, por favor c&aacute;mbiale el tama&ntilde;o e intenta nuevamente (m&aacute;x';
+$txt['invalid_registration'] = 'El valor de la Fecha de Registro es inv&aacute;lida, ejemplo v&aacute;lido:';
 $txt['smf237'] = 'Tu direcci&oacute;n de email utilizada en MSN messenger';
-$txt['smf241'] = 'Contrase&ntilde;a actual';
+$txt['current_password'] = 'Contrase&ntilde;a actual';
 $txt['smf243'] = 'No has introducido tu contrase&ntilde;a actual.';
 // Don't use entities in the below string, except the main ones. (lt, gt, quot.)
-$txt['smf244'] = 'Por razones de seguridad, debes introducir tu contrase&#241;a actual para hacer cualquier cambio a tu perfil.';
+$txt['required_security_reasons'] = 'Por razones de seguridad, debes introducir tu contrase&#241;a actual para hacer cualquier cambio a tu perfil.';
 
 $txt['timeoffset_autodetect'] = '(detectar autom&aacute;ticamente)';
 
-$txt['pswd1'] = 'Pregunta secreta';
+$txt['secret_question'] = 'Pregunta secreta';
 $txt['secret_desc'] = 'Puedes introducir aqu&iacute; una pregunta y una respuesta que nadie conozca, para hacer m&aacute;s f&aacute;cil la recuperaci&oacute;n de tu contrase&ntilde;a.';
 $txt['secret_desc2'] = '&iexcl;El&iacute;gela cuidadosamente, no desear&iacute;as que alguien adivine tu respuesta!';
-$txt['pswd2'] = 'Respuesta';
-$txt['pswd3'] = 'Preg&uacute;ntame mi Pregunta secreta';
-$txt['pswd4'] = 'No puedes obtener tu contrase&ntilde;a, pero puedes especificar una nueva visitando la liga que se te envi&oacute; por email.  Tienes tambi&eacute;n la opci&oacute;n de especificar una nueva contrase&ntilde;a contestando tu pregunta secreta.';
-$txt['pswd5'] = 'Lo sentimos, pero t&uacute; no especificaste una combinaci&oacute;n v&aacute;lida de Pregunta secreta y Respuesta en tu perfil.  Por favor haz click en el bot&oacute;n Atr&aacute;s, y usa el m&eacute;todo por defecto para obtener tu contrase&ntilde;a.';
-$txt['pswd6'] = 'Por favor introduce la respuesta a tu pregunta secreta, as&iacute; como la nueva contrase&ntilde;a que deseas usar.  Tu contrase&ntilde;a ser&aacute; cambiada al nuevo valor especificado en caso que contestes correctamente la pregunta secreta.';
-$txt['pswd8'] = 'Tu contrase&ntilde;a ha sido cambiada exitosamente. Haz <br />click <a href="' . $scripturl . '?action=login">aqu&iacute;</a> para ingresar.';
+$txt['secret_answer'] = 'Respuesta';
+$txt['secret_ask'] = 'Preg&uacute;ntame mi Pregunta secreta';
+$txt['cant_retrieve'] = 'No puedes obtener tu contrase&ntilde;a, pero puedes especificar una nueva visitando la liga que se te envi&oacute; por email.  Tienes tambi&eacute;n la opci&oacute;n de especificar una nueva contrase&ntilde;a contestando tu pregunta secreta.';
+$txt['incorrect_answer'] = 'Lo sentimos, pero t&uacute; no especificaste una combinaci&oacute;n v&aacute;lida de Pregunta secreta y Respuesta en tu perfil.  Por favor haz click en el bot&oacute;n Atr&aacute;s, y usa el m&eacute;todo por defecto para obtener tu contrase&ntilde;a.';
+$txt['enter_new_password'] = 'Por favor introduce la respuesta a tu pregunta secreta, as&iacute; como la nueva contrase&ntilde;a que deseas usar.  Tu contrase&ntilde;a ser&aacute; cambiada al nuevo valor especificado en caso que contestes correctamente la pregunta secreta.';
+$txt['password_success'] = 'Tu contrase&ntilde;a ha sido cambiada exitosamente. Haz <br />click <a href="' . $scripturl . '?action=login">aqu&iacute;</a> para ingresar.';
 $txt['secret_why_blank'] = '&iquest;porqu&eacute; esto est&aacute; en blanco?';
 
-$txt['theme1a'] = 'Tema actual';
-$txt['theme1b'] = '(cambiar)';
-$txt['theme2'] = 'Configuraci&oacute;n del Tema';
+$txt['current_theme'] = 'Tema actual';
+$txt['change'] = '(cambiar)';
+$txt['theme_preferences'] = 'Configuraci&oacute;n del Tema';
 $txt['theme_forum_default'] = 'Default de la comunidad, o del foro local';
 $txt['theme_forum_default_desc'] = 'Este es el tema default, lo que significa que tu tema cambiar&aacute; de acuerdo a la configuraci&oacute;n establecida por el administrador, y del foro que est&eacute;s viendo.';
 
 $txt['profileConfirm'] = '&#191;Realmente deseas borrar este usuario?';
 
-$txt['title1'] = 'T&iacute;tulo Personalizado';
+$txt['custom_title'] = 'T&iacute;tulo Personalizado';
 
 $txt['lastLoggedIn'] = '&Uacute;ltima vez activo';
 
-$txt['notifyX'] = 'Preferencias:';
-$txt['notifyX1'] = 'Guardar preferencias';
-$txt['notifyXAnn4'] = 'Recibir notificaciones por email cuando haya nuevos Anuncios';
+$txt['notify_settings'] = 'Preferencias:';
+$txt['notify_save'] = 'Guardar preferencias';
+$txt['notify_important_email'] = 'Recibir notificaciones por email cuando haya nuevos Anuncios';
 // Untranslated!
 $txt['notify_regularity'] = 'For topics and boards I\'ve requested notification on, notify me';
 $txt['notify_regularity_instant'] = 'Instantly';
@@ -196,12 +196,12 @@ $txt['activate_reactivate_title'] = 'Bienvenido de vuelta a';
 $txt['activate_reactivate_mail'] = 'Para revalidar tu direcci&#243;n de email, tu cuenta ha sido deshabilitada . Haz click en la siguiente liga para activarla nuevamente:';
 $txt['activate_changed_email'] = 'Haz cambiado tu direcci&#243;n de email. Para validar esta direcci&#243;n recibir&#225;s un email. Haz click en la liga proporcionada en ese email para reactivar tu cuenta.';
 
-$txt[394] = 'No se pudo enviar el email de recordatorio.';
-$txt[395] = 'Enviar email a';
-$txt[396] = 'para preguntar por la contrase&ntilde;a';
-$txt[669] = 'Recordatorio de Contrase&ntilde;a';
+$txt['no_reminder_email'] = 'No se pudo enviar el email de recordatorio.';
+$txt['send_email'] = 'Enviar email a';
+$txt['to_ask_password'] = 'para preguntar por la contrase&ntilde;a';
+$txt['password_reminder'] = 'Recordatorio de Contrase&ntilde;a';
 
-$txt['smf100'] = 'Nombre de Usuario/Email';
+$txt['user_email'] = 'Nombre de Usuario/Email';
 
 // Use numeric entities in the below two strings.
 $txt['reminder_subject'] = 'New password for ' . $context['forum_name'];
@@ -246,16 +246,16 @@ $txt['recent_pms_at_top'] = 'Mostrar los mensajes personales m&aacute;s reciente
 // Untranslated!
 $txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
-$txt['timeformat_easy0'] = '(Default del Foro)';
+$txt['timeformat_default'] = '(Default del Foro)';
 $txt['timeformat_easy1'] = 'Mes D&iacute;a, A&ntilde;o, HH:MM:SS a/pm';
 $txt['timeformat_easy2'] = 'Mes D&iacute;a, A&ntilde;o, HH:MM:SS (24 hrs.)';
 $txt['timeformat_easy3'] = 'YYYY-MM-DD, HH:MM:SS';
 $txt['timeformat_easy4'] = 'DD Month YYYY, HH:MM:SS';
 $txt['timeformat_easy5'] = 'DD-MM-YYYY, HH:MM:SS';
 
-$txt['rtm8'] = 'Usuario que publica';
+$txt['poster'] = 'Usuario que publica';
 
-$txt[732] = 'Mostrar las descripciones de los foros al estar dentro de ellos.';
+$txt['board_desc_inside'] = 'Mostrar las descripciones de los foros al estar dentro de ellos.';
 $txt['show_children'] = 'Mostrar los subforos en cada p&aacute;gina dentro del foro, no solamente en la primera.';
 $txt['show_no_avatars'] = 'No mostrar los avatares de otros usuarios.';
 $txt['show_no_signatures'] = 'No mostrar las firmas de otros usuarios.';

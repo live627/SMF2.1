@@ -11,7 +11,7 @@ function template_edit_news()
 			<table width="85%" cellpadding="3" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
 					<th width="50%"></th>
-					<th align="left" width="45%">', $txt[507], '</th>
+					<th align="left" width="45%">', $txt['preview'], '</th>
 					<th align="center" width="5%"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></th>
 				</tr>';
 
@@ -64,7 +64,7 @@ function template_email_members()
 				<tr class="titlebg">
 					<td>', $txt['admin_newsletters'], '</td>
 				</tr><tr class="windowbg">
-					<td class="smalltext" style="padding: 2ex;">', $txt['smf250'], '</td>
+					<td class="smalltext" style="padding: 2ex;">', $txt['select_membergroup'], '</td>
 				</tr><tr>
 					<td class="windowbg2">';
 
@@ -74,7 +74,7 @@ function template_email_members()
 
 	echo '
 						<br />
-						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'who\');" class="check" /> <i>', $txt[737], '</i></label><br />
+						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'who\');" class="check" /> <i>', $txt['check_all'], '</i></label><br />
 
 						<hr />
 					</td>
@@ -90,7 +90,7 @@ function template_email_members()
 					</td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
-						<input type="submit" value="', $txt[65], '" />
+						<input type="submit" value="', $txt['admin_next'], '" />
 					</td>
 				</tr>
 			</table>
@@ -110,7 +110,7 @@ function template_email_members_compose()
 						<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
 					</td>
 				</tr><tr class="windowbg">
-					<td class="smalltext" style="padding: 2ex;">', $txt[735], '</td>
+					<td class="smalltext" style="padding: 2ex;">', $txt['admin_newsletter_send'], '</td>
 				</tr><tr>
 					<td class="windowbg2" align="center">
 						<textarea cols="70" rows="7" name="emails" class="editor">', $context['addresses'], '</textarea>
@@ -120,7 +120,7 @@ function template_email_members_compose()
 			<br />
 			<table width="600" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
-					<td>', $txt[338], '</td>
+					<td>', $txt['admin_mail'], '</td>
 				</tr><tr class="windowbg">
 					<td class="smalltext" style="padding: 2ex;">', $txt['email_variables'], '</td>
 				</tr><tr>

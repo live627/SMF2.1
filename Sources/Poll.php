@@ -470,7 +470,7 @@ function EditPoll()
 			);
 		}
 	}
-	$context['page_title'] = $context['is_edit'] ? $txt['smf39'] : $txt['add_poll'];
+	$context['page_title'] = $context['is_edit'] ? $txt['poll_edit'] : $txt['add_poll'];
 
 	// Build the link tree.
 	$context['linktree'][] = array(

@@ -41,7 +41,7 @@ function template_main()
 	echo '
 					<label for="postRedirect"><input type="checkbox" name="postRedirect" id="postRedirect" checked="checked" onclick="document.getElementById(\'reasonArea\').style.display = this.checked ? \'block\' : \'none\';" class="check" /> ', $txt['moveTopic1'], '.</label><br />
 					<div id="reasonArea" style="margin-top: 1ex;">
-						', $txt['smf57'], '<br />
+						', $txt['moved_why'], '<br />
 						<textarea name="reason" rows="3" cols="40">', $txt['movetopic_default'], '</textarea><br />
 					</div>
 					<br />

@@ -35,7 +35,7 @@ function template_main()
 
 		<table border="0" cellspacing="0" cellpadding="6" align="center" class="tborder">
 			<tr class="titlebg">
-				<td>', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" align="right" style="margin-right: 4px;" alt="" />' : '', $txt[183], '</td>
+				<td>', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" align="right" style="margin-right: 4px;" alt="" />' : '', $txt['set_perameters'], '</td>
 			</tr>';
 
 	if (!empty($context['search_errors']))
@@ -57,7 +57,7 @@ function template_main()
 	if ($context['simple_search'])
 	{
 		echo '
-					<b>', $txt[582], ':</b><br />
+					<b>', $txt['search_for'], ':</b><br />
 					<table border="0" cellpadding="5" cellspacing="0"><tr>
 						<td><input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" /></td>
 						<td>&nbsp;<input type="submit" name="submit" value="', $txt['search'], '" /></td>
@@ -70,7 +70,7 @@ function template_main()
 					</tr>';
 		echo '
 					</table><br /><br />
-					<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.searchform.search.value);">', $txt['smf298'], '</a>
+					<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.searchform.search.value);">', $txt['search_advanced'], '</a>
 					<input type="hidden" name="advanced" value="0" />';
 	}
 	else
@@ -80,10 +80,10 @@ function template_main()
 					<table cellpadding="1" cellspacing="3" border="0">
 						<tr>
 							<td>
-								<b>', $txt[582], ':</b>
+								<b>', $txt['search_for'], ':</b>
 							</td><td>
 							</td><td>
-									<b>', $txt[583], ':</b>
+									<b>', $txt['by_user'], ':</b>
 							</td>
 						</tr><tr>
 							<td>
@@ -99,8 +99,8 @@ function template_main()
 								// ]]></script>
 							</td><td style="padding-right: 2ex;">
 								<select name="searchtype">
-									<option value="1"', empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt[343], '</option>
-									<option value="2"', !empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt[344], '</option>
+									<option value="1"', empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['all_words'], '</option>
+									<option value="2"', !empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['any_words'], '</option>
 								</select>
 							</td><td>
 								<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" />
@@ -117,7 +117,7 @@ function template_main()
 							<td colspan="3"><br />
 								<div style="text-align: left; width: 45%; float: right; margin-right: 2ex;">
 									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_post_age'], ': </b></div><br />
-									', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt[579], '.
+									', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days'], '.
 								</div>
 								<div style="width: 45%;">
 									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_options'], ':</b></div>
@@ -151,7 +151,7 @@ function template_main()
 		{
 			echo '	
 					<fieldset class="windowbg2" style="padding: 10px; margin-left: 5px; margin-right: 5px;">
-						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="exandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt[189], '</b></a><br />
+						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="exandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a><br />
 
 						<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex; display: none;">';
 
@@ -182,7 +182,7 @@ function template_main()
 
 			echo '
 						</table><br />
-						<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="check" /><i> <label for="check_all">', $txt[737], '</label></i><br />
+						<input type="checkbox" name="all" id="check_all" value="" checked="checked" onclick="invertAll(this, this.form, \'brd\');" class="check" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
 					</fieldset> ';
 		}
 
@@ -220,7 +220,7 @@ function template_results()
 
 		echo '
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-						<b>', $txt[582], ':</b><br />
+						<b>', $txt['search_for'], ':</b><br />
 						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
 						<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
 
@@ -301,12 +301,12 @@ function template_results()
 				<td class="windowbg' , $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '3' : '' , '" valign="middle">
 					' , $topic['is_locked'] && !empty($settings['seperate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
 					' , $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" /><b>' : '' , $topic['first_post']['link'] , $topic['is_sticky'] ? '</b>' : '' , '
-				<div class="smalltext"><i>', $txt['smf88'], ' ', $topic['board']['link'], '</i></div>';
+				<div class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></div>';
 
 			foreach ($topic['matches'] as $message)
 			{
 				echo '<br />
-					<div class="quoteheader" style="margin-left: 20px;"><a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a> ', $txt[525], ' ', $message['member']['link'], '</div>';
+					<div class="quoteheader" style="margin-left: 20px;"><a href="', $scripturl, '?topic=', $topic['id'], '.msg', $message['id'], '#msg', $message['id'], '">', $message['subject_highlighted'], '</a> ', $txt['by'], ' ', $message['member']['link'], '</div>';
 
 				if ($message['body_highlighted'] != '')
 					echo '
@@ -337,12 +337,12 @@ function template_results()
 					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=remove;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt['remove_topic'], '" title="', $txt['remove_topic'], '" /></a>';
 					if ($topic['quick_mod']['lock'])
 						echo '
-					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['smf279'], '" title="', $txt['smf279'], '" /></a>';
+					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=lock;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['set_lock'], '" title="', $txt['set_lock'], '" /></a>';
 					if ($topic['quick_mod']['lock'] || $topic['quick_mod']['remove'])
 						echo '<br />';
 					if ($topic['quick_mod']['sticky'])
 						echo '
-					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['smf277'], '" title="', $txt['smf277'], '" /></a>';
+					<a href="', $scripturl, '?action=quickmod;actions[', $topic['id'], ']=sticky;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" /></a>';
 					if ($topic['quick_mod']['move'])
 						echo '
 					<a href="', $scripturl, '?action=movetopic;topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
@@ -477,7 +477,7 @@ function template_results()
 									</td>
 								</tr><tr class="catbg">
 									<td>
-										<div style="float: left;">', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt[525], ' ', $message['member']['link'], '</div>
+										<div style="float: left;">', $txt['started_by'], ' ', $topic['first_post']['member']['link'], ', ', $txt['message'], ' ', $txt['by'], ' ', $message['member']['link'], '</div>
 										<div align="right">', $txt['search_relevance'], ': ', $topic['relevance'], '</div>
 									</td>
 								</tr><tr>

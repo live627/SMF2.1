@@ -88,7 +88,7 @@ function Memberlist()
 	// Set up the columns...
 	$context['columns'] = array(
 		'is_online' => array(
-			'label' => $txt['online8'],
+			'label' => $txt['status'],
 			'width' => '20'
 		),
 		'real_name' => array(
@@ -103,15 +103,15 @@ function Memberlist()
 			'width' => '25'
 		),
 		'icq' => array(
-			'label' => $txt[513],
+			'label' => $txt['icq'],
 			'width' => '25'
 		),
 		'aim' => array(
-			'label' => $txt[603],
+			'label' => $txt['aim'],
 			'width' => '25'
 		),
 		'yim' => array(
-			'label' => $txt[604],
+			'label' => $txt['yim'],
 			'width' => '25'
 		),
 		'msn' => array(
@@ -133,7 +133,7 @@ function Memberlist()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=mlist',
-		'name' => &$txt[332]
+		'name' => &$txt['members_list']
 	);
 
 	$context['can_send_pm'] = allowedTo('pm_send');

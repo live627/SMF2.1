@@ -3,87 +3,87 @@
 
 // Important! Before editing these language files please read the text at the topic of index.dutch.php.
 
-$txt[80] = 'Je mag het profiel van dit lid niet veranderen...';
-$txt[83] = 'Websitetitel (optioneel)';
-$txt[84] = 'Websiteadres (optioneel)';
-$txt[85] = 'Handtekening (Signature)';
-$txt[86] = 'Berichten';
-$txt[88] = 'Verander profiel';
-$txt[89] = 'Verwijder lid';
-$txt[113] = 'Dit lid is:';
-$txt[228] = 'Persoonlijke tekst';
-$txt[229] = 'je eigen foto/image';
-$txt[232] = 'Foto/image/tekst';
-$txt[329] = 'Wis formulier';
-$txt[349] = 'Het taalpakket wat je hebt';
-$txt[420] = 'Leeftijd';
-$txt[422] = '(geen afbeelding)';
-$txt[458] = 'Laatste bericht van: ';
-$txt[459] = 'Extra informatie';
-$txt[460] = 'laat de laatste berichten';
-$txt[461] = 'zien van dit lid';
-$txt[474] = 'Kies je eigen avatar via een URL. (bijv: <b>http://www.mijnsite.com/mijnplaatje.gif</b>)';
-$txt[475] = 'Ik heb mijn eigen foto/afbeelding';
-$txt[479] = 'Maak een keus voor de tijdsinstelling';
-$txt[486] = 'Tijdsinstelling';
-$txt[487] = 'De tijd instelling moet tussen -23.5 en 23.5 liggen!';
-$txt[518] = 'Dit is de naam die getoond wordt in het forum !';
-$txt[519] = 'Het aantal uren +/- om je eigen lokale tijd weer te geven.';
-$txt[563] = 'Geboortedatum';
-$txt[564] = 'Maand (MM)';
-$txt[565] = 'Dag (DD)';
-$txt[566] = 'Jaar (JJJJ)';
-$txt[596] = 'We raden aan om minimaal 6 karakters te gebruiken met een combinatie met letters en cijfers.';
-$txt[597] = 'Extra informatie';
-$txt[598] = 'Deze moet ingevuld worden als je een URL hier beneden invult.';
-$txt[599] = 'Het moet een complete URL zijn.';
-$txt[600] = 'Dit is je ICQ-nummer.';
-$txt[601] = 'Dit is je AOL Instant Messenger-schermnaam.';
-$txt[602] = 'Dit is je Yahoo! Instant Messenger-schermnaam.';
-$txt[606] = 'Handtekeningen worden getoond in ieder bericht of persoonlijk bericht.';
-$txt[664] = 'Max %d; overblijvende karakters: ';
+$txt['no_profile_edit'] = 'Je mag het profiel van dit lid niet veranderen...';
+$txt['website_title'] = 'Websitetitel (optioneel)';
+$txt['website_url'] = 'Websiteadres (optioneel)';
+$txt['signature'] = 'Handtekening (Signature)';
+$txt['posts'] = 'Berichten';
+$txt['change_profile'] = 'Verander profiel';
+$txt['delete_user'] = 'Verwijder lid';
+$txt['current_status'] = 'Dit lid is:';
+$txt['personal_text'] = 'Persoonlijke tekst';
+$txt['personal_picture'] = 'je eigen foto/image';
+$txt['picture_text'] = 'Foto/image/tekst';
+$txt['reset_form'] = 'Wis formulier';
+$txt['prefered_language'] = 'Het taalpakket wat je hebt';
+$txt['age'] = 'Leeftijd';
+$txt['no_pic'] = '(geen afbeelding)';
+$txt['latest_posts'] = 'Laatste bericht van: ';
+$txt['additional_info'] = 'Extra informatie';
+$txt['show_latest'] = 'laat de laatste berichten';
+$txt['posts_member'] = 'zien van dit lid';
+$txt['avatar_by_url'] = 'Kies je eigen avatar via een URL. (bijv: <b>http://www.mijnsite.com/mijnplaatje.gif</b>)';
+$txt['my_own_pic'] = 'Ik heb mijn eigen foto/afbeelding';
+$txt['date_format'] = 'Maak een keus voor de tijdsinstelling';
+$txt['time_format'] = 'Tijdsinstelling';
+$txt['time_offset'] = 'De tijd instelling moet tussen -23.5 en 23.5 liggen!';
+$txt['display_name'] = 'Dit is de naam die getoond wordt in het forum !';
+$txt['personal_time_offset'] = 'Het aantal uren +/- om je eigen lokale tijd weer te geven.';
+$txt['dob'] = 'Geboortedatum';
+$txt['dob_month'] = 'Maand (MM)';
+$txt['dob_day'] = 'Dag (DD)';
+$txt['dob_year'] = 'Jaar (JJJJ)';
+$txt['password_stregth'] = 'We raden aan om minimaal 6 karakters te gebruiken met een combinatie met letters en cijfers.';
+$txt['additional_info'] = 'Extra informatie';
+$txt['include_website_url'] = 'Deze moet ingevuld worden als je een URL hier beneden invult.';
+$txt['complete_url'] = 'Het moet een complete URL zijn.';
+$txt['your_icq'] = 'Dit is je ICQ-nummer.';
+$txt['your_aim'] = 'Dit is je AOL Instant Messenger-schermnaam.';
+$txt['your_yim'] = 'Dit is je Yahoo! Instant Messenger-schermnaam.';
+$txt['sig_info'] = 'Handtekeningen worden getoond in ieder bericht of persoonlijk bericht.';
+$txt['max_sig_characters'] = 'Max %d; overblijvende karakters: ';
 $txt[688] = 'Stuur dit lid een priv&eacute; boodschap';
-$txt[722] = 'Onzichtbaar';
-$txt[741] = 'Huidige forum tijd';
-$txt[749] = 'het \'aantal posts\' kan enkel cijfers bevatten.';
+$txt['hidden'] = 'Onzichtbaar';
+$txt['current_time'] = 'Huidige forum tijd';
+$txt['digits_only'] = 'het \'aantal posts\' kan enkel cijfers bevatten.';
 
-$txt['smf225'] = 'Taalpakket';
-$txt['smf227'] = 'Avatar is te groot, verklein hem a.u.b.';
-$txt['smf233'] = 'Ongeldige registratiedatum, een geldig voorbeeld:';
+$txt['language'] = 'Taalpakket';
+$txt['avatar_too_big'] = 'Avatar is te groot, verklein hem a.u.b.';
+$txt['invalid_registration'] = 'Ongeldige registratiedatum, een geldig voorbeeld:';
 $txt['smf237'] = 'Je MSN-e-mailadres';
-$txt['smf241'] = 'Huidige wachtwoord';
+$txt['current_password'] = 'Huidige wachtwoord';
 $txt['smf243'] = 'Het huidige wachtwoord is niet ingevuld.';
 // Don't use entities in the below string, except the main ones. (lt, gt, quot.)
-$txt['smf244'] = 'Het is nodig om je huidge wachtwoord in te vullen om veranderingen te maken in je profiel.';
+$txt['required_security_reasons'] = 'Het is nodig om je huidge wachtwoord in te vullen om veranderingen te maken in je profiel.';
 
 $txt['timeoffset_autodetect'] = '(automatisch detecteren)';
 
-$txt['pswd1'] = 'Geheime vraag';
+$txt['secret_question'] = 'Geheime vraag';
 $txt['secret_desc'] = 'Om je wachtwoord weer terug te krijgen, plaats hier een vraag waarop alleen <b>jij</b> het antwoord weet.';
 $txt['secret_desc2'] = 'Kies zorgvuldig, je zou niet willen dat iemand anders het kan raden!';
-$txt['pswd2'] = 'Antwoord';
-$txt['pswd3'] = 'Stel me mijn vraag';
-$txt['pswd4'] = 'Je kunt niet je wachtwoord opvragen, maar wel een nieuwe instellen door op een link te klikken die je wordt toegestuurd per mail. Je kunt ook een nieuw wachtwoord instellen door het beantwoorden van je geheime vraag.';
-$txt['pswd5'] = 'Sorry, maar de combinatie van geheime vraag en antwoord in je profiel klopt niet.  Klik op de terug knop, en probeer het nog eens op de juiste wijze.';
-$txt['pswd6'] = 'Geef het antwoord op je vraag, en het wachtwoord dat je zou willen gebruiken.  Het wachtwoord zal worden aangepast indien het antwoord juist is.';
-$txt['pswd8'] = 'Je wachtwoord is aangepast.<br />Klik <a href="' . $scripturl . '?action=login">hier</a> om in te loggen.';
+$txt['secret_answer'] = 'Antwoord';
+$txt['secret_ask'] = 'Stel me mijn vraag';
+$txt['cant_retrieve'] = 'Je kunt niet je wachtwoord opvragen, maar wel een nieuwe instellen door op een link te klikken die je wordt toegestuurd per mail. Je kunt ook een nieuw wachtwoord instellen door het beantwoorden van je geheime vraag.';
+$txt['incorrect_answer'] = 'Sorry, maar de combinatie van geheime vraag en antwoord in je profiel klopt niet.  Klik op de terug knop, en probeer het nog eens op de juiste wijze.';
+$txt['enter_new_password'] = 'Geef het antwoord op je vraag, en het wachtwoord dat je zou willen gebruiken.  Het wachtwoord zal worden aangepast indien het antwoord juist is.';
+$txt['password_success'] = 'Je wachtwoord is aangepast.<br />Klik <a href="' . $scripturl . '?action=login">hier</a> om in te loggen.';
 $txt['secret_why_blank'] = 'Waarom is dit leeg?';
 
-$txt['theme1a'] = 'Huidig thema';
-$txt['theme1b'] = '(wijzig)';
-$txt['theme2'] = 'Thema-instellingen';
+$txt['current_theme'] = 'Huidig thema';
+$txt['change'] = '(wijzig)';
+$txt['theme_preferences'] = 'Thema-instellingen';
 $txt['theme_forum_default'] = 'Forum- of boardstandaard';
 $txt['theme_forum_default_desc'] = 'Dit is het standaardthema, wat betekent dat je thema veranderd zal worden afhnakelijk van de instellingen van de beheerder en het board dat je bekijkt.';
 
 $txt['profileConfirm'] = 'Weet je zeker dat je jezelf definitief van dit forum wilt verwijderen ?';
 
-$txt['title1'] = 'Extra titel';
+$txt['custom_title'] = 'Extra titel';
 
 $txt['lastLoggedIn'] = 'Laatst actief';
 
-$txt['notifyX'] = 'Notificatie-instellingen:';
-$txt['notifyX1'] = 'Instellingen opslaan';
-$txt['notifyXAnn4'] = 'Ontvang e-mailnotificatie bij nieuwe aankondigingen';
+$txt['notify_settings'] = 'Notificatie-instellingen:';
+$txt['notify_save'] = 'Instellingen opslaan';
+$txt['notify_important_email'] = 'Ontvang e-mailnotificatie bij nieuwe aankondigingen';
 // Untranslated!
 $txt['notify_regularity'] = 'For topics and boards I\'ve requested notification on, notify me';
 $txt['notify_regularity_instant'] = 'Instantly';
@@ -195,12 +195,12 @@ $txt['activate_reactivate_title'] = 'Welkom terug op';
 $txt['activate_reactivate_mail'] = 'Om je e-mailadres opnieuw te valideren, is je account tijdelijk uitgeschakeld. Klik de volgende link om je account weer te activeren';
 $txt['activate_changed_email'] = 'Je hebt je e-mailadres gewijzigd. Om dit adres te valideren, ontvang je een e-mail. Klik de link in die email om je account opnieuw te activeren.';
 
-$txt[394] = 'Mailprogrammafout.';
-$txt[395] = 'Stuur e-mail naar';
-$txt[396] = 'Vraag om wachtwoord';
-$txt[669] = 'Wachtwoord herinnering';
+$txt['no_reminder_email'] = 'Mailprogrammafout.';
+$txt['send_email'] = 'Stuur e-mail naar';
+$txt['to_ask_password'] = 'Vraag om wachtwoord';
+$txt['password_reminder'] = 'Wachtwoord herinnering';
 
-$txt['smf100'] = 'Gebruikersnaam/e-mail';
+$txt['user_email'] = 'Gebruikersnaam/e-mail';
 
 // Use numeric entities in the below two strings.
 $txt['reminder_subject'] = 'Nieuw wachtwoord voor ' . $context['forum_name'];
@@ -244,16 +244,16 @@ $txt['recent_pms_at_top'] = 'Toon meest recente Persoonlijke Berichten bovenaan.
 // Untranslated!
 $txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
-$txt['timeformat_easy0'] = '(Forumstandaard)';
+$txt['timeformat_default'] = '(Forumstandaard)';
 $txt['timeformat_easy1'] = 'Maand Dag, Jaar, HH:MM:SS a/pm';
 $txt['timeformat_easy2'] = 'Maand Dag, Jaar, HH:MM:SS (legertijd)';
 $txt['timeformat_easy3'] = 'JJJ-MM-DD, HH:MM:SS';
 $txt['timeformat_easy4'] = 'DD Maand JJJJ, HH:MM:SS';
 $txt['timeformat_easy5'] = 'DD-MM-JJJJ, HH:MM:SS';
 
-$txt['rtm8'] = 'Bericht gestart door';
+$txt['poster'] = 'Bericht gestart door';
 
-$txt[732] = 'Toon de boardomschrijving in de berichtenindex?';
+$txt['board_desc_inside'] = 'Toon de boardomschrijving in de berichtenindex?';
 $txt['show_children'] = 'Toon subboards op elke pagina in de forums.';
 $txt['show_no_avatars'] = 'Toon geen avatars van anderen.';
 $txt['show_no_signatures'] = 'Toon geen handtekeningen (signatures) van anderen.';

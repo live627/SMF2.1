@@ -56,7 +56,7 @@ function RemindMe()
 	loadLanguage('Profile');
 	loadTemplate('Reminder');
 
-	$context['page_title'] = $context['forum_name'] . ' ' . $txt[669];
+	$context['page_title'] = $context['forum_name'] . ' ' . $txt['password_reminder'];
 
 	// Delegation can be useful sometimes.
 	$subActions = array(
@@ -110,15 +110,15 @@ function RemindMail()
 	{
 		// Awaiting approval...
 		if (trim($row['validation_code']) == '')
-			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt[662] . '</a>.', false);
+			fatal_error($txt['registration_not_approved'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt['here'] . '</a>.', false);
 		else
-			fatal_error($txt['registration_not_activated'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt[662] . '</a>.', false);
+			fatal_error($txt['registration_not_activated'] . ' <a href="' . $scripturl . '?action=activate;user=' . $_POST['user'] . '">' . $txt['here'] . '</a>.', false);
 	}
 
 	// You can't get emailed if you have no email address.
 	$row['email_address'] = trim($row['email_address']);
 	if ($row['email_address'] == '')
-		fatal_error('<b>' . $txt[394] . '<br />' . $txt[395] . ' <a href="mailto:' . $webmaster_email . '">webmaster</a> ' . $txt[396] . '.');
+		fatal_error('<b>' . $txt['no_reminder_email'] . '<br />' . $txt['send_email'] . ' <a href="mailto:' . $webmaster_email . '">webmaster</a> ' . $txt['to_ask_password'] . '.');
 
 	// Randomly generate a new password, with only alpha numeric characters that is a max length of 10 chars.
 	$password = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
@@ -132,7 +132,7 @@ function RemindMail()
 		sprintf($txt['sendtopic_dear'], $row['real_name']) . "\n\n" .
 		"$txt[reminder_mail]:\n\n" .
 		"$scripturl?action=reminder;sa=setpassword;u=$row[id_member];code=$password\n\n" .
-		"$txt[512]: $user_info[ip]\n\n" .
+		"$txt['ip']: $user_info[ip]\n\n" .
 		"$txt[username]: $row[member_name]\n\n" .
 		sprintf($txt['regards_team'], $context['forum_name']));
 

@@ -3,71 +3,71 @@
 
 // Important! Before editing these language files please read the text at the topic of index.german.php.
 
-$txt[25] = 'Antworten';
-$txt[71] = 'Symbol';
-$txt[77] = 'Betreff wurde nicht angegeben (erforderlich).';
-$txt[78] = 'Textfeld wurde nicht ausgef&uuml;llt (erforderlich).';
+$txt['post_reply'] = 'Antworten';
+$txt['message_icon'] = 'Symbol';
+$txt['subject_not_filled'] = 'Betreff wurde nicht angegeben (erforderlich).';
+$txt['message_body_not_filled'] = 'Textfeld wurde nicht ausgef&uuml;llt (erforderlich).';
 // Use numeric entities in the below string.
 $txt['regards_team'] = "Mit freundlichen Gr&#252;&#223;en,\ndas " . $context['forum_name'] . ' Team.';
-$txt[252] = 'BBC Tags hinzuf&uuml;gen';
-$txt[253] = 'Fett';
-$txt[254] = 'Kursiv';
-$txt[255] = 'Unterstrichen';
-$txt[256] = 'Zentriert';
-$txt[257] = 'Link einf&uuml;gen';
-$txt[258] = 'E-Mail Adresse einf&uuml;gen';
-$txt[259] = 'Code einf&uuml;gen';
+$txt['add_bbc'] = 'BBC Tags hinzuf&uuml;gen';
+$txt['bold'] = 'Fett';
+$txt['italic'] = 'Kursiv';
+$txt['underline'] = 'Unterstrichen';
+$txt['center'] = 'Zentriert';
+$txt['hyperlink'] = 'Link einf&uuml;gen';
+$txt['insert_email'] = 'E-Mail Adresse einf&uuml;gen';
+$txt['code'] = 'Code einf&uuml;gen';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt[260] = 'Zitat einf&uuml;gen';
-$txt[261] = 'Liste einf&uuml;gen';
+$txt['quote'] = 'Zitat einf&uuml;gen';
+$txt['list'] = 'Liste einf&uuml;gen';
 
 $txt['change_color'] = 'Farbe &auml;ndern';
-$txt[262] = 'Schwarz';
-$txt[263] = 'Rot';
-$txt[264] = 'Gelb';
-$txt[265] = 'Pink';
-$txt[266] = 'Gr&uuml;n';
-$txt[267] = 'Orange';
-$txt[268] = 'Violett';
-$txt[269] = 'Blau';
-$txt[270] = 'Beige';
-$txt[271] = 'Braun';
-$txt[272] = 'Blaugr&uuml;n';
-$txt[273] = 'Dunkelblau';
-$txt[274] = 'Kastanienbraun';
-$txt[275] = 'Hellgr&uuml;n';
-$txt[276] = 'Smileys deaktivieren';
-$txt[277] = 'Keine Smileys benutzen.';
+$txt['black'] = 'Schwarz';
+$txt['red'] = 'Rot';
+$txt['yellow'] = 'Gelb';
+$txt['pink'] = 'Pink';
+$txt['green'] = 'Gr&uuml;n';
+$txt['orange'] = 'Orange';
+$txt['purple'] = 'Violett';
+$txt['blue'] = 'Blau';
+$txt['beige'] = 'Beige';
+$txt['brown'] = 'Braun';
+$txt['teal'] = 'Blaugr&uuml;n';
+$txt['navy'] = 'Dunkelblau';
+$txt['maroon'] = 'Kastanienbraun';
+$txt['lime_green'] = 'Hellgr&uuml;n';
+$txt['disable_smileys'] = 'Smileys deaktivieren';
+$txt['dont_use_smileys'] = 'Keine Smileys benutzen.';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt[280] = 'Datum/Zeit';
-$txt[281] = 'Standard';
-$txt[282] = 'Daumen hoch';
-$txt[283] = 'Daumen runter';
-$txt[284] = 'Ausrufezeichen';
-$txt[285] = 'Fragezeichen';
-$txt[286] = 'Lampe';
-$txt[297] = 'Smileys hinzuf&uuml;gen';
-$txt[433] = 'Flash einf&uuml;gen';
-$txt[434] = 'FTP-Link einf&uuml;gen';
-$txt[435] = 'Bild einf&uuml;gen';
-$txt[436] = 'Tabelle einf&uuml;gen';
-$txt[437] = 'Tabellenspalte einf&uuml;gen';
-$txt[438] = 'Es sind keine Themen mit Benachrichtigung vorhanden.';
-$txt[439] = 'Marquee';
-$txt[440] = 'Schreibmaschine';
-$txt[441] = 'Durchgestrichen';
-$txt[442] = 'Gl&uuml;hen';
-$txt[443] = 'Schatten';
-$txt[444] = 'Vorformatierter Text';
-$txt[445] = 'Linksb&uuml;ndig';
-$txt[446] = 'Rechtsb&uuml;ndig';
-$txt[447] = 'Superscript';
-$txt[448] = 'Subscript';
-$txt[449] = 'Tabellenzeile einf&uuml;gen';
-$txt[499] = 'Ihr Beitrag ist zu lang. Bitte gehen Sie zur&uuml;ck, k&uuml;rzen ihn und senden ihn erneut ab.';
-$txt[531] = 'Horizontale Linie';
-$txt[532] = 'Schriftgr&ouml;sse';
-$txt[533] = 'Schriftart';
+$txt['posted_on'] = 'Datum/Zeit';
+$txt['standard'] = 'Standard';
+$txt['thumbs_up'] = 'Daumen hoch';
+$txt['thumbs_down'] = 'Daumen runter';
+$txt['excamation_point'] = 'Ausrufezeichen';
+$txt['question_mark'] = 'Fragezeichen';
+$txt['lamp'] = 'Lampe';
+$txt['add_smileys'] = 'Smileys hinzuf&uuml;gen';
+$txt['flash'] = 'Flash einf&uuml;gen';
+$txt['ftp'] = 'FTP-Link einf&uuml;gen';
+$txt['image'] = 'Bild einf&uuml;gen';
+$txt['table'] = 'Tabelle einf&uuml;gen';
+$txt['table_td'] = 'Tabellenspalte einf&uuml;gen';
+$txt['topic_notify_no'] = 'Es sind keine Themen mit Benachrichtigung vorhanden.';
+$txt['marquee'] = 'Marquee';
+$txt['teletype'] = 'Schreibmaschine';
+$txt['strike'] = 'Durchgestrichen';
+$txt['glow'] = 'Gl&uuml;hen';
+$txt['shadow'] = 'Schatten';
+$txt['preformatted'] = 'Vorformatierter Text';
+$txt['left_align'] = 'Linksb&uuml;ndig';
+$txt['right_align'] = 'Rechtsb&uuml;ndig';
+$txt['superscript'] = 'Superscript';
+$txt['subscript'] = 'Subscript';
+$txt['table_tr'] = 'Tabellenzeile einf&uuml;gen';
+$txt['post_too_long'] = 'Ihr Beitrag ist zu lang. Bitte gehen Sie zur&uuml;ck, k&uuml;rzen ihn und senden ihn erneut ab.';
+$txt['horizontal_rule'] = 'Horizontale Linie';
+$txt['font_size'] = 'Schriftgr&ouml;sse';
+$txt['font_face'] = 'Schriftart';
 
 // Use numeric entities in the below five strings.
 $txt['notify_boards'] = '\'%s\', ein neuer Beitrag wurde in einem Board geschrieben, welches Sie beobachten.' . "\n\n" . 'Sie k&#246;nnen ihn nachlesen unter' . "\n" . '%s' . "\n\n" . '';
@@ -76,47 +76,47 @@ $txt['notify_boards_once'] = 'Es k&#246;nnten mehrere Themen geschrieben worden 
 $txt['notifyUnsubscribe'] = 'Klicken Sie hier, um das Thema abzubestellen';
 $txt['notify_boardsUnsubscribe'] = 'Klicken Sie hier, um neue Benachrichtigungen von diesem Board abzubestellen';
 
-$txt['smf13'] = 'Thema sofort schlie&szlig;en';
-$txt['smf14'] = 'Benachrichtige mich bei neuen Antworten';
-$txt['smf15'] = 'Thema schlie&szlig;en';
-$txt['smf16'] = 'Shortcuts: mit Alt+S Beitrag senden oder Alt+P f&uuml;r Vorschau';
-$txt['smf22'] = 'Option';
-$txt['smf40'] = 'Stimmenzahl zur&uuml;cksetzen';
-$txt['smf41'] = 'Checkbox ausw&auml;hlen, um s&auml;mtliche Stimmen auf 0 zur&uuml;ckzusetzen.';
-$txt['smf42'] = 'Stimmen';
-$txt['smf119'] = 'Datei anh&auml;ngen';
-$txt['smf119b'] = 'Datei angeh&auml;ngt';
-$txt['smf120'] = 'Erlaubte Dateitypen';
-$txt['smf121'] = 'Max. Dateigr&ouml;sse';
-$txt['smf123'] = 'Dieser Dateityp kann nicht hochgeladen werden. Die zul&auml;ssigen Endungen sind';
-$txt['smf129'] = 'Dieses Feld leer lassen um den Anhang zu l&ouml;schen.';
-$txt['smf130'] = 'Deaktiviere die Dateianh&auml;nge die gel&ouml;scht werden sollen';
-$txt['smf130b'] = 'Dieser Dateiname ist gesperrt. Bitte benutzen Sie einen anderen.';
-$txt['smf287'] = 'Warnung: Thema ist momentan geschlossen!<br />Nur Administratoren und Moderatoren k&ouml;nnen antworten.';
+$txt['lock_after_post'] = 'Thema sofort schlie&szlig;en';
+$txt['notify_replies'] = 'Benachrichtige mich bei neuen Antworten';
+$txt['lock_topic'] = 'Thema schlie&szlig;en';
+$txt['shortcuts'] = 'Shortcuts: mit Alt+S Beitrag senden oder Alt+P f&uuml;r Vorschau';
+$txt['option'] = 'Option';
+$txt['reset_votes'] = 'Stimmenzahl zur&uuml;cksetzen';
+$txt['reset_votes_check'] = 'Checkbox ausw&auml;hlen, um s&auml;mtliche Stimmen auf 0 zur&uuml;ckzusetzen.';
+$txt['votes'] = 'Stimmen';
+$txt['attach'] = 'Datei anh&auml;ngen';
+$txt['attached'] = 'Datei angeh&auml;ngt';
+$txt['allowed_types'] = 'Erlaubte Dateitypen';
+$txt['max_size'] = 'Max. Dateigr&ouml;sse';
+$txt['cant_upload_type'] = 'Dieser Dateityp kann nicht hochgeladen werden. Die zul&auml;ssigen Endungen sind';
+$txt['to delete_blank'] = 'Dieses Feld leer lassen um den Anhang zu l&ouml;schen.';
+$txt['uncheck_unwatchd_attach'] = 'Deaktiviere die Dateianh&auml;nge die gel&ouml;scht werden sollen';
+$txt['restricted_filename'] = 'Dieser Dateiname ist gesperrt. Bitte benutzen Sie einen anderen.';
+$txt['topic_locked_no_reply'] = 'Warnung: Thema ist momentan geschlossen!<br />Nur Administratoren und Moderatoren k&ouml;nnen antworten.';
 // Untranslated!
 $txt['awaiting_approval'] = 'Awaiting approval';
 $txt['attachment_requires_approval'] = 'Note that any files attached will not be displayed until approved by a moderator.';
 
 // Use numeric entities in the below three strings.
-$txt['notifyXAnn2'] = 'Neue Ank&#252;ndigung';
-$txt['notifyXAnn3'] = 'Um diese Ank&#252;ndigung abzubestellen, loggen Sie sich in das Forum ein und entfernen im Profil den Haken von "E-Mail Benachrichtigung bei neuen Ank&#252;ndigungen schicken".' . "\n\n" . 'Sie k&#246;nnen die ganze Ank&#252;ndigung unter folgendem Link lesen:';
-$txt['notifyXOnce2'] = 'Es k&#246;nnten mehrere Antworten geschrieben worden sein, Sie erhalten aber keine weiteren Benachrichtigungen, bis Sie diese gelesen haben.';
+$txt['new_announcement'] = 'Neue Ank&#252;ndigung';
+$txt['announce_unsubscribe'] = 'Um diese Ank&#252;ndigung abzubestellen, loggen Sie sich in das Forum ein und entfernen im Profil den Haken von "E-Mail Benachrichtigung bei neuen Ank&#252;ndigungen schicken".' . "\n\n" . 'Sie k&#246;nnen die ganze Ank&#252;ndigung unter folgendem Link lesen:';
+$txt['more_but_no_reply'] = 'Es k&#246;nnten mehrere Antworten geschrieben worden sein, Sie erhalten aber keine weiteren Benachrichtigungen, bis Sie diese gelesen haben.';
 
-$txt['rtm2'] = 'Kommentar eingeben';
+$txt['enter_comment'] = 'Kommentar eingeben';
 // Use numeric entities in the below two strings.
-$txt['rtm3'] = 'Gemeldeter Beitrag';
-$txt['rtm4'] = 'von';
+$txt['reported_post'] = 'Gemeldeter Beitrag';
+$txt['reported_to_mod_by'] = 'von';
 $txt['rtm10'] = 'Senden';
 // Use numeric entities in the below four strings.
-$txt['rtm_email1'] = 'Der folgende Beitrag, "%s" von';
-$txt['rtm_email2'] = 'wurde gemeldet von';
-$txt['rtm_email3'] = 'in einem Board wo Sie moderieren';
-$txt['rtm_email_comment'] = 'Der Einsender hat folgenden Kommentar geschrieben';
+$txt['report_following_post'] = 'Der folgende Beitrag, "%s" von';
+$txt['reported_by'] = 'wurde gemeldet von';
+$txt['board_moderate'] = 'in einem Board wo Sie moderieren';
+$txt['report_comment'] = 'Der Einsender hat folgenden Kommentar geschrieben';
 
 $txt['maxAttachPerPost'] = 'pro Beitrag';
 
 $txt['post_additionalopt'] = 'Erweiterte Optionen...';
-$txt['sticky_after2'] = 'Top Thema erstellen';
+$txt['sticky_after'] = 'Top Thema erstellen';
 $txt['move_after2'] = 'Thema verschieben';
 $txt['back_to_topic'] = 'Zum Thema zur&uuml;ckkehren';
 // Untranslated!
@@ -125,14 +125,14 @@ $txt['approve_this_post'] = 'Approve this Post';
 $txt['retrieving_quote'] = 'Erhalte Zitat...';
 
 $txt['poll_options'] = 'Umfrage Optionen';
-$txt['poll_options1a'] = 'Umfrage &ouml;ffnen f&uuml;r';
-$txt['poll_options1b'] = 'Tage. (leer lassen = kein Limit)';
-$txt['poll_options2'] = 'Ergebnisse jedem anzeigen';
-$txt['poll_options3'] = 'Ergebnisse nur nach Abstimmung anzeigen';
-$txt['poll_options4'] = 'Ergebnisse nur nach Ablauf der Umfrage anzeigen';
-$txt['poll_options5'] = 'Max. Stimmen pro Benutzer';
-$txt['poll_options7'] = 'Benutzern erlauben, die Abstimmung zu &auml;ndern';
-$txt['poll_error1'] = 'Sie haben zu viele Stimmen angegeben - max. sind %s erlaubt';
+$txt['poll_run'] = 'Umfrage &ouml;ffnen f&uuml;r';
+$txt['poll_run_days'] = 'Tage. (leer lassen = kein Limit)';
+$txt['poll_results_anyone'] = 'Ergebnisse jedem anzeigen';
+$txt['poll_results_voted'] = 'Ergebnisse nur nach Abstimmung anzeigen';
+$txt['poll_results_expire'] = 'Ergebnisse nur nach Ablauf der Umfrage anzeigen';
+$txt['poll_max_votes'] = 'Max. Stimmen pro Benutzer';
+$txt['poll_change_vote'] = 'Benutzern erlauben, die Abstimmung zu &auml;ndern';
+$txt['poll_too_many_votes'] = 'Sie haben zu viele Stimmen angegeben - max. sind %s erlaubt';
 $txt['poll_add_option'] = 'Antwort hinzuf&uuml;gen';
 
 $txt['spellcheck_done'] = 'Rechtschreibeprüfung fertig.';

@@ -214,105 +214,105 @@ $txt['of_total_members'] = 'of %1$s total members';
 
 $txt['forgot_your_password'] = 'Wachtwoord vergeten?';
 
-$txt[317] = 'Datum';
+$txt['date'] = 'Datum';
 // Use numeric entities in the below string.
-$txt[318] = 'Van';
-$txt[319] = 'Onderwerp';
-$txt[322] = 'Controleer op nieuwe berichten';
-$txt[324] = 'Naar';
+$txt['from'] = 'Van';
+$txt['subject'] = 'Onderwerp';
+$txt['check_new_messages'] = 'Controleer op nieuwe berichten';
+$txt['to'] = 'Naar';
 
 $txt[330] = 'Topics';
-$txt[331] = 'Leden';
-$txt[332] = 'Ledenlijst';
-$txt[333] = 'Nieuw bericht';
-$txt[334] = 'Geen nieuw bericht';
+$txt['members'] = 'Leden';
+$txt['members_list'] = 'Ledenlijst';
+$txt['new_posts'] = 'Nieuw bericht';
+$txt['old_posts'] = 'Geen nieuw bericht';
 
 $txt['sendtopic_send'] = 'Zenden';
 
-$txt[371] = 'Tijdafwijking';
-$txt[377] = 'of';
+$txt['time_offset'] = 'Tijdafwijking';
+$txt['or'] = 'of';
 
-$txt[398] = 'Sorry, niets relevants is gevonden';
+$txt['no_matches'] = 'Sorry, niets relevants is gevonden';
 
-$txt[418] = 'Bericht';
+$txt['notification'] = 'Bericht';
 
-$txt[430] = 'Sorry %s, je bent gebanned voor het gebruik van dit forum!';
+$txt['your_ban'] = 'Sorry %s, je bent gebanned voor het gebruik van dit forum!';
 // !!! Untranslated
 $txt['your_ban_expires'] = 'Your ban is set to expire %s';
 $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
-$txt[452] = 'Markeer alle berichten als gelezen';
+$txt['mark_as_read'] = 'Markeer alle berichten als gelezen';
 
 $txt['hot_topics'] = 'Populair topic (meer dan %1$d reacties)';
 $txt['very_hot_topics'] = 'Zeer populair topic (meer dan %1$d reacties)';
-$txt[456] = 'Gesloten topic';
-$txt[457] = 'Normaal topic';
+$txt['locked_topic'] = 'Gesloten topic';
+$txt['normal_topic'] = 'Normaal topic';
 $txt['participation_caption'] = 'Topic waaraan je hebt deelgenomen';
 
-$txt[462] = 'GA!';
+$txt['go_caps'] = 'GA!';
 
-$txt[465] = 'Print';
-$txt[467] = 'Profiel';
-$txt[468] = 'Samenvatting van topic';
-$txt[470] = 'Niet aanwezig';
+$txt['print'] = 'Print';
+$txt['profile'] = 'Profiel';
+$txt['topic_summary'] = 'Samenvatting van topic';
+$txt['not_applicable'] = 'Niet aanwezig';
 $txt[471] = 'persoonlijk bericht';
-$txt[473] = 'Deze naam is al in gebruik bij een ander lid.';
+$txt['name_in_use'] = 'Deze naam is al in gebruik bij een ander lid.';
 
-$txt[488] = 'Totaal aantal leden';
-$txt[489] = 'Totaal aantal berichten';
-$txt[490] = 'Totaal aantal topics';
+$txt['total_members'] = 'Totaal aantal leden';
+$txt['total_posts'] = 'Totaal aantal berichten';
+$txt['total_topics'] = 'Totaal aantal topics';
 
-$txt[497] = 'Aantal minuten dat je blijft<br />ingelogd.';
+$txt['mins_logged_in'] = 'Aantal minuten dat je blijft<br />ingelogd.';
 
-$txt[507] = 'Bekijken';
-$txt[508] = 'Blijf ingelogd';
+$txt['preview'] = 'Bekijken';
+$txt['always_logged_in'] = 'Blijf ingelogd';
 
-$txt[511] = 'Gelogd';
+$txt['logged'] = 'Gelogd';
 // Use numeric entities in the below string.
-$txt[512] = 'IP';
+$txt['ip'] = 'IP';
 
-$txt[513] = 'ICQ';
-$txt[515] = 'WWW';
+$txt['icq'] = 'ICQ';
+$txt['www'] = 'WWW';
 
-$txt[525] = 'door';
+$txt['by'] = 'door';
 
-$txt[578] = 'uren';
-$txt[579] = 'dagen';
+$txt['hours'] = 'uren';
+$txt['days'] = 'dagen';
 
-$txt[581] = ', ons nieuwste lid.';
+$txt['newest_member'] = ', ons nieuwste lid.';
 
-$txt[582] = 'zoek naar';
+$txt['search_for'] = 'zoek naar';
 
-$txt[603] = 'AIM';
+$txt['aim'] = 'AIM';
 // In this string, please use +'s for spaces.
 $txt['aim_default_message'] = 'Hi.+Are+you+there?';
-$txt[604] = 'YIM';
+$txt['yim'] = 'YIM';
 
-$txt[616] = 'Onthoud dat dit forum in de onderhoudsmodus staat!';
+$txt['maintain_mode_on'] = 'Onthoud dat dit forum in de onderhoudsmodus staat!';
 
-$txt[641] = 'gelezen';
-$txt[642] = 'keer';
+$txt['read'] = 'gelezen';
+$txt['times'] = 'keer';
 
-$txt[645] = 'Statistieken';
-$txt[656] = 'Laatste lid';
-$txt[658] = 'Totaal categorie&euml;n';
-$txt[659] = 'Laatste bericht';
+$txt['forum_stats'] = 'Statistieken';
+$txt['latest_member'] = 'Laatste lid';
+$txt['total_cats'] = 'Totaal categorie&euml;n';
+$txt['latest_post'] = 'Laatste bericht';
 
-$txt[660] = 'Je hebt';
-$txt[661] = 'klik';
-$txt[662] = 'hier';
-$txt[663] = 'om ze te bekijken.';
+$txt['you_have'] = 'Je hebt';
+$txt['click'] = 'klik';
+$txt['here'] = 'hier';
+$txt['to_view'] = 'om ze te bekijken.';
 
-$txt[665] = 'Totaal aantal boards';
+$txt['total_boards'] = 'Totaal aantal boards';
 
-$txt[668] = 'Print pagina';
+$txt['print_page'] = 'Print pagina';
 
-$txt[679] = 'Dit moet een geldig e-mailadres zijn.';
+$txt['valid_email'] = 'Dit moet een geldig e-mailadres zijn.';
 
-$txt[683] = 'een heleboel';
+$txt['geek'] = 'een heleboel';
 $txt['info_center_title'] = '%s - Info Center';
 
-$txt[707] = 'Stuur dit topic';
+$txt['send_topic'] = 'Stuur dit topic';
 
 $txt['sendtopic_title'] = 'Stuur dit onderwerp &#171; %s &#187; naar een vriend!';
 // Use numeric entities in the below three strings.
@@ -327,134 +327,134 @@ $txt['sendtopic_comment'] = 'Voeg een opmerking toe';
 // Use numeric entities in the below string.
 $txt['sendtopic2'] = 'Er is een opmerking over dit topic toegevoegd';
 
-$txt[721] = 'E-mail verbergen voor anderen?';
+$txt['hide_email'] = 'E-mail verbergen voor anderen?';
 
-$txt[737] = 'Vink alles aan';
+$txt['check_all'] = 'Vink alles aan';
 
 // Use numeric entities in the below string.
-$txt[1001] = 'Databasefout';
-$txt[1002] = 'Probeer het opnieuw, gaat het weer fout, meld het dan aan de admin.';
-$txt[1003] = 'Bestand';
-$txt[1004] = 'Regel';
+$txt['database_error'] = 'Databasefout';
+$txt['try_again'] = 'Probeer het opnieuw, gaat het weer fout, meld het dan aan de admin.';
+$txt['file'] = 'Bestand';
+$txt['line'] = 'Regel';
 // Use numeric entities in the below string.
-$txt[1005] = 'SMF heeft een fout in je database gedetecteerd en automatisch geprobeerd deze te repareren. Als de problemen blijven bestaan of als je voortdurend deze e-mails krijgt, neem contact op met je provider.';
+$txt['tried_to_repair'] = 'SMF heeft een fout in je database gedetecteerd en automatisch geprobeerd deze te repareren. Als de problemen blijven bestaan of als je voortdurend deze e-mails krijgt, neem contact op met je provider.';
 $txt['database_error_versions'] = '<b>Let op:</b> Het ziet er naar uit dat je database geupgrade zou moeten worden. De versie van je forumbestanden is momenteel %s, terwijl je database op dit moment nog staat op versie SMF %s. Het is aan te bevelen om de laatste versie van upgrade.php uit te voeren.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'Het lijkt erop dat er iets verkeerd gegaan is op het forum met het template systeem. Dit probleeem zou alleen tijdelijk moeten zijn, kom later terug en probeer het opnieuw. Als je dit probleem blijft krijgen, neem dan contact op met de administrator.<br /><br />Je kunt ook proberen om <a href="javascript:location.reload();">deze pagina te verversen</a>.';
 $txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
 
-$txt['smf10'] = '<b>Vandaag</b> om ';
-$txt['smf10b'] = '<b>Gisteren</b> om ';
-$txt['smf20'] = 'Plaats een nieuwe poll';
-$txt['smf21'] = 'Vraag';
-$txt['smf23'] = 'Stem';
-$txt['smf24'] = 'Totaal aantal stemmen';
-$txt['smf25'] = 'sneltoetsen: gebruik alt+s om te verzenden/posten, of alt+p om te bekijken';
-$txt['smf29'] = 'Bekijk de resultaten';
-$txt['smf30'] = 'Vergrendel de poll';
-$txt['smf30b'] = 'Ontgrendel de poll';
-$txt['smf39'] = 'Bewerk de poll';
-$txt['smf43'] = 'Poll';
-$txt['smf47'] = '1 dag';
-$txt['smf48'] = '1 week';
-$txt['smf49'] = '1 maand';
-$txt['smf50'] = 'blijvend';
-$txt['smf52'] = 'Login met gebruikersnaam, wachtwoord en sessielengte';
-$txt['smf53'] = '1 uur';
-$txt['smf56'] = 'VERPLAATST';
-$txt['smf57'] = 'Geef even een korte beschrijving waarom<br />dit topic wordt verplaatst.';
-$txt['smf82'] = 'Board';
-$txt['smf88'] = 'in';
+$txt['today'] = '<b>Vandaag</b> om ';
+$txt['yesterday'] = '<b>Gisteren</b> om ';
+$txt['new_poll'] = 'Plaats een nieuwe poll';
+$txt['poll_question'] = 'Vraag';
+$txt['poll_vote'] = 'Stem';
+$txt['poll_total_voters'] = 'Totaal aantal stemmen';
+$txt['shortcuts'] = 'sneltoetsen: gebruik alt+s om te verzenden/posten, of alt+p om te bekijken';
+$txt['poll_results'] = 'Bekijk de resultaten';
+$txt['poll_lock'] = 'Vergrendel de poll';
+$txt['poll_unlock'] = 'Ontgrendel de poll';
+$txt['poll_edit'] = 'Bewerk de poll';
+$txt['poll'] = 'Poll';
+$txt['one_day'] = '1 dag';
+$txt['one_week'] = '1 week';
+$txt['one_month'] = '1 maand';
+$txt['forever'] = 'blijvend';
+$txt['quick_login_dec'] = 'Login met gebruikersnaam, wachtwoord en sessielengte';
+$txt['one_hour'] = '1 uur';
+$txt['moved'] = 'VERPLAATST';
+$txt['moved_why'] = 'Geef even een korte beschrijving waarom<br />dit topic wordt verplaatst.';
+$txt['board'] = 'Board';
+$txt['in'] = 'in';
 $txt['smf96'] = 'Sticky Topic';
 
-$txt['smf138'] = 'Verwijder';
+$txt['delete'] = 'Verwijder';
 
-$txt['smf199'] = 'Je persoonlijke berichten';
+$txt['your_pms'] = 'Je persoonlijke berichten';
 
-$txt['smf211'] = 'KB';
+$txt['kilobyte'] = 'KB';
 
-$txt['smf223'] = '[Meer statistieken]';
+$txt['more_stats'] = '[Meer statistieken]';
 
 // Use numeric entities in the below three strings.
-$txt['smf238'] = 'Code';
-$txt['smf239'] = 'Citaat van';
+$txt['code'] = 'Code';
+$txt['quote_from'] = 'Citaat van';
 $txt['quote'] = 'Citaat';
 
 // Untranslated
 $txt['merge_to_topic_id'] = 'ID of target topic';
 $txt['split'] = 'Splits topic';
 $txt['merge'] = 'Voeg topic samen';
-$txt['smf254'] = 'Titel van het nieuwe topic';
-$txt['smf255'] = 'Splits alleen dit bericht';
-$txt['smf256'] = 'Splits topic vanaf dit bericht.';
-$txt['smf257'] = 'Selecteer berichten om te splitsen.';
-$txt['smf258'] = 'Nieuw topic';
-$txt['smf259'] = 'Onderwerp succesvol gesplitst in twee topics.';
-$txt['smf260'] = 'Oorspronkelijke topic';
-$txt['smf261'] = 'Selecteer welke berichten je wilt afsplitsen.';
-$txt['smf264'] = 'Topics succesvol samengevoegd.';
-$txt['smf265'] = 'Nieuw samengevoegd topic';
-$txt['smf266'] = 'Topic dat moet worden samengevoegd';
-$txt['smf267'] = 'Doelboard';
-$txt['smf269'] = 'Doeltopic ';
-$txt['smf274'] = 'Weet je zeker dat je de twee topics wilt samenvoegen?';
-$txt['smf275'] = 'met';
-$txt['smf276'] = 'Deze optie zal de twee topics samenvoegen. De berichten zullen worden gesorteerd op datum, dus het eerst geplaatste bericht zal bovenaan komen te staan.';
+$txt['subject_new_topic'] = 'Titel van het nieuwe topic';
+$txt['split_this_post'] = 'Splits alleen dit bericht';
+$txt['split_after_and_this_post'] = 'Splits topic vanaf dit bericht.';
+$txt['select_split_posts'] = 'Selecteer berichten om te splitsen.';
+$txt['new_topic'] = 'Nieuw topic';
+$txt['split_successful'] = 'Onderwerp succesvol gesplitst in twee topics.';
+$txt['origin_topic'] = 'Oorspronkelijke topic';
+$txt['please_select_split'] = 'Selecteer welke berichten je wilt afsplitsen.';
+$txt['merge_successful'] = 'Topics succesvol samengevoegd.';
+$txt['new_merged_topic'] = 'Nieuw samengevoegd topic';
+$txt['topic_to_merge'] = 'Topic dat moet worden samengevoegd';
+$txt['target_board'] = 'Doelboard';
+$txt['target_topic'] = 'Doeltopic ';
+$txt['merge_confirm'] = 'Weet je zeker dat je de twee topics wilt samenvoegen?';
+$txt['with'] = 'met';
+$txt['merge_desc'] = 'Deze optie zal de twee topics samenvoegen. De berichten zullen worden gesorteerd op datum, dus het eerst geplaatste bericht zal bovenaan komen te staan.';
 
-$txt['smf277'] = 'Maak topic sticky';
-$txt['smf278'] = 'Maak topic niet-sticky';
-$txt['smf279'] = 'Sluit topic';
-$txt['smf280'] = 'Slot verwijderen';
+$txt['set_sticky'] = 'Maak topic sticky';
+$txt['set_nonsticky'] = 'Maak topic niet-sticky';
+$txt['set_lock'] = 'Sluit topic';
+$txt['set_unlock'] = 'Slot verwijderen';
 
-$txt['smf298'] = 'Geavanceerd zoeken';
+$txt['search_advanced'] = 'Geavanceerd zoeken';
 
-$txt['smf299'] = 'GROOT BEVEILIGINGSRISICO:';
-$txt['smf300'] = 'Je hebt het volgende bestand niet verwijderd: ';
+$txt['security_risk'] = 'GROOT BEVEILIGINGSRISICO:';
+$txt['not_removed'] = 'Je hebt het volgende bestand niet verwijderd: ';
 
 // Untranslated!
 $txt['cache_writable_head'] = 'Performance Warning';
 $txt['cache_writable'] = 'The cache directory is not writable - this will adversely affect the performance of your forum.';
 
-$txt['smf301'] = 'Pagina opgebouwd in ';
-$txt['smf302'] = ' seconden met ';
-$txt['smf302b'] = ' queries.';
+$txt['page_created'] = 'Pagina opgebouwd in ';
+$txt['seconds_with'] = ' seconden met ';
+$txt['queries'] = ' queries.';
 
-$txt['smf315'] = 'Gebruik deze functie om de moderators en administrators op de hoogte te stellen van berichten die verkeerd geplaatst zijn of in overtreding zijn met de regels van het forum.<br /><i>Houd er rekening mee dat je e-mailadres zal worden getoond aan de moderators bij het gebruik van deze functie.</i>';
+$txt['report_to_mod_func'] = 'Gebruik deze functie om de moderators en administrators op de hoogte te stellen van berichten die verkeerd geplaatst zijn of in overtreding zijn met de regels van het forum.<br /><i>Houd er rekening mee dat je e-mailadres zal worden getoond aan de moderators bij het gebruik van deze functie.</i>';
 
-$txt['online2'] = 'Online';
-$txt['online3'] = 'Offline';
-$txt['online4'] = 'Persoonlijk bericht (Online)';
-$txt['online5'] = 'Persoonlijk bericht (Offline)';
-$txt['online8'] = 'Status';
+$txt['online'] = 'Online';
+$txt['offline'] = 'Offline';
+$txt['pm_online'] = 'Persoonlijk bericht (Online)';
+$txt['pm_offline'] = 'Persoonlijk bericht (Offline)';
+$txt['status'] = 'Status';
 
-$txt['topbottom4'] = 'Omhoog';
-$txt['topbottom5'] = 'Omlaag';
+$txt['go_up'] = 'Omhoog';
+$txt['go_down'] = 'Omlaag';
 
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
-$txt['calendar3'] = 'Verjaardagen:';
-$txt['calendar4'] = 'Gebeurtenissen:';
-$txt['calendar3b'] = 'Aankomende verjaardagen:';
-$txt['calendar4b'] = 'Aankomende evenementen:';
+$txt['birthdays'] = 'Verjaardagen:';
+$txt['events'] = 'Gebeurtenissen:';
+$txt['birthdays_upcoming'] = 'Aankomende verjaardagen:';
+$txt['events_upcoming'] = 'Aankomende evenementen:';
 // Prompt for holidays in the calendar, leave blank to just display the holiday's name.
 $txt['calendar5'] = '';
-$txt['calendar9'] = 'Maand:';
-$txt['calendar10'] = 'Jaar:';
-$txt['calendar11'] = 'Dag:';
-$txt['calendar12'] = 'Titel:';
-$txt['calendar13'] = 'Post in:';
-$txt['calendar20'] = 'Bewerk deze gebeurtenis';
+$txt['calendar_month'] = 'Maand:';
+$txt['calendar_year'] = 'Jaar:';
+$txt['calendar_day'] = 'Dag:';
+$txt['calendar_event_title'] = 'Titel:';
+$txt['calendar_post_in'] = 'Post in:';
+$txt['calendar_edit'] = 'Bewerk deze gebeurtenis';
 $txt['calendar21'] = 'Deze gebeurtenis verwijderen?';
 $txt['calendar22'] = 'Verwijder deze gebeurtenis';
 $txt['calendar_post_event'] = 'Post gebeurtenis';
-$txt['calendar24'] = 'Kalender';
-$txt['calendar37'] = 'Link naar de kalender';
-$txt['calendar43'] = 'Link gebeurtenis';
+$txt['calendar'] = 'Kalender';
+$txt['calendar_link'] = 'Link naar de kalender';
+$txt['calendar_upcoming'] = 'Link gebeurtenis';
 $txt['calendar47'] = 'Aankomende kalender';
-$txt['calendar47b'] = 'Kalender van vandaag';
-$txt['calendar51'] = 'Week';
-$txt['calendar54'] = 'Aantal dagen:';
+$txt['calendar_today'] = 'Kalender van vandaag';
+$txt['calendar_week'] = 'Week';
+$txt['calendar_numb_days'] = 'Aantal dagen:';
 $txt['calendar_how_edit'] = 'Hoe bewerk je deze gebeurtenissen?';
 $txt['calendar_link_event'] = 'Koppel gebeurtenis aan bericht:';
 $txt['calendar_confirm_delete'] = 'Weet je zeker dat je deze gebeurtenis wilt verwijderen?';
@@ -477,7 +477,7 @@ $txt['smtp_error'] = 'Problemen opgetreden gedurende het verzenden van mail. Fou
 $txt['mail_send_unable'] = 'Kon mail niet verzenden naar e-mailadres \'%s\'';
 
 $txt['mlist_search'] = 'Zoek op gebruikersnaam';
-$txt['mlist_search2'] = 'Herhaal zoekopdracht';
+$txt['mlist_search_again'] = 'Herhaal zoekopdracht';
 $txt['mlist_search_email'] = 'Zoek op e-mailadres';
 $txt['mlist_search_messenger'] = 'Zoek op MSN-Messengeradres';
 $txt['mlist_search_group'] = 'Zoek op ledengroep';
@@ -524,8 +524,8 @@ $txt['quickmod_confirm'] = 'Weet je zeker dat je dit wilt doen?';
 
 $txt['spell_check'] = 'Spellingscontrole';
 
-$txt['quick_reply_1'] = 'Snel beantwoorden';
-$txt['quick_reply_2'] = 'Met <i>Snel beantwoorden</i> kun je bulletin board code en smileys gebruiken zoals je dat zou doen in een normaal bericht, maar dan eenvoudiger.';
+$txt['quick_reply'] = 'Snel beantwoorden';
+$txt['quick_reply_desc'] = 'Met <i>Snel beantwoorden</i> kun je bulletin board code en smileys gebruiken zoals je dat zou doen in een normaal bericht, maar dan eenvoudiger.';
 $txt['quick_reply_warning'] = '<b>Waarschuwing</b>: topic is op dit moment gesloten! Alleen moderators en administrators kunnen reageren.';
 // Untranslated!
 $txt['wait_for_approval'] = 'Note: this post will not display until it\'s been approved by a moderator.';
@@ -535,7 +535,7 @@ $txt['notification_disable_board'] = 'Weet je zeker dat je notificatie van nieuw
 $txt['notification_enable_topic'] = 'Weet je zeker dat je notificatie van nieuwe berichten voor dit topic wilt activeren?';
 $txt['notification_disable_topic'] = 'Weet je zeker dat je notificatie van nieuwe berichten voor dit topic wilt deactiveren?';
 
-$txt['rtm1'] = 'Meld dit bericht aan de moderator';
+$txt['report_to_mod'] = 'Meld dit bericht aan de moderator';
 
 $txt['unread_topics_visit'] = 'Recente ongelezen topics';
 $txt['unread_topics_visit_none'] = 'Geen ongelezen topics gevonden sinds je laatste bezoek <a href="' . $scripturl . '?action=unread;all">Klik hier om alle ongelezen berichten te tonen</a>.';

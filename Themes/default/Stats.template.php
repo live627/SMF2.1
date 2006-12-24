@@ -16,28 +16,28 @@ function template_main()
 				<td align="center" colspan="4">', $context['page_title'], '</td>
 			</tr>
 			<tr>
-				<td class="catbg" colspan="4"><b>', $txt['smf_stats_2'], '</b></td>
+				<td class="catbg" colspan="4"><b>', $txt['general_stats'], '</b></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_info.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" valign="top">
 					<table border="0" cellpadding="1" cellspacing="0" width="100%">
 						<tr>
-							<td nowrap="nowrap">', $txt[488], ':</td>
+							<td nowrap="nowrap">', $txt['total_members'], ':</td>
 							<td align="right">', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['num_members'] . '</a>' : $context['num_members'], '</td>
 						</tr><tr>
-							<td nowrap="nowrap">', $txt[489], ':</td>
+							<td nowrap="nowrap">', $txt['total_posts'], ':</td>
 							<td align="right">', $context['num_posts'], '</td>
 						</tr><tr>
-							<td nowrap="nowrap">', $txt[490], ':</td>
+							<td nowrap="nowrap">', $txt['total_topics'], ':</td>
 							<td align="right">', $context['num_topics'], '</td>
 						</tr><tr>
-							<td nowrap="nowrap">', $txt[658], ':</td>
+							<td nowrap="nowrap">', $txt['total_cats'], ':</td>
 							<td align="right">', $context['num_categories'], '</td>
 						</tr><tr>
 							<td nowrap="nowrap">', $txt['users_online'], ':</td>
 							<td align="right">', $context['users_online'], '</td>
 						</tr><tr>
-							<td nowrap="nowrap" valign="top">', $txt[888], ':</td>
+							<td nowrap="nowrap" valign="top">', $txt['most_online'], ':</td>
 							<td align="right">', $context['most_members_online']['number'], ' - ', $context['most_members_online']['date'], '</td>
 						</tr><tr>
 							<td nowrap="nowrap">', $txt['users_online_today'], ':</td>
@@ -64,10 +64,10 @@ function template_main()
 							<td nowrap="nowrap">', $txt['average_topics'], ':</td>
 							<td align="right">', $context['average_topics'], '</td>
 						</tr><tr>
-							<td nowrap="nowrap">', $txt[665], ':</td>
+							<td nowrap="nowrap">', $txt['total_boards'], ':</td>
 							<td align="right">', $context['num_boards'], '</td>
 						</tr><tr>
-							<td nowrap="nowrap">', $txt[656], ':</td>
+							<td nowrap="nowrap">', $txt['latest_member'], ':</td>
 							<td align="right">', $context['common_stats']['latest_member']['link'], '</td>
 						</tr><tr>
 							<td nowrap="nowrap">', $txt['average_online'], ':</td>
@@ -85,8 +85,8 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['smf_stats_3'], '</b></td>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['smf_stats_4'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_posters'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_boards'], '</b></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_posters.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" width="50%" valign="top">
@@ -115,8 +115,8 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['smf_stats_11'], '</b></td>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['smf_stats_12'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_topics_replies'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_topics_views'], '</b></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_replies.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" width="50%" valign="top">
@@ -145,8 +145,8 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['smf_stats_15'], '</b></td>
-				<td class="catbg" colspan="2" width="50%"><b>', $txt['smf_stats_16'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><b>', $txt['top_starters'], '</b></td>
+				<td class="catbg" colspan="2" width="50%"><b>', $txt['most_time_online'], '</b></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_replies.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" width="50%" valign="top">
@@ -175,7 +175,7 @@ function template_main()
 					</table>
 				</td>
 			</tr><tr>
-				<td class="catbg" colspan="4"><b>', $txt['smf_stats_5'], '</b></td>
+				<td class="catbg" colspan="4"><b>', $txt['forum_history'], '</b></td>
 			</tr><tr>
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_history.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" colspan="4">';
@@ -185,14 +185,14 @@ function template_main()
 		echo '
 					<table border="0" width="100%" cellspacing="1" cellpadding="4" class="tborder" style="margin-bottom: 1ex;" id="stats">
 						<tr class="titlebg" valign="middle" align="center">
-							<td width="25%">', $txt['smf_stats_13'], '</td>
-							<td width="15%">', $txt['smf_stats_7'], '</td>
-							<td width="15%">', $txt['smf_stats_8'], '</td>
-							<td width="15%">', $txt['smf_stats_9'], '</td>
+							<td width="25%">', $txt['monthly_summary'], '</td>
+							<td width="15%">', $txt['stats_new_topics'], '</td>
+							<td width="15%">', $txt['stats_new_posts'], '</td>
+							<td width="15%">', $txt['stats_new_members'], '</td>
 							<td width="15%">', $txt['smf_stats_14'], '</td>';
 		if (!empty($modSettings['hitStats']))
 			echo '
-							<td>', $txt['smf_stats_10'], '</td>';
+							<td>', $txt['page_views'], '</td>';
 		echo '
 						</tr>';
 

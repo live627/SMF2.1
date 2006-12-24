@@ -76,7 +76,7 @@ function ModifySettings()
 	isAllowedTo('admin_forum');
 	checkSession('get');
 
-	$context['page_title'] = $txt[222];
+	$context['page_title'] = $txt['admin_server_settings'];
 	$context['sub_template'] = 'show_settings';
 
 	$subActions = array(
@@ -91,9 +91,9 @@ function ModifySettings()
 
 	// Load up all the tabs...
 	$context['admin_tabs'] = array(
-		'title' => &$txt[222],
+		'title' => &$txt['admin_server_settings'],
 		'help' => 'serversettings',
-		'description' => $txt[347],
+		'description' => $txt['admin_basic_settings'],
 		'tabs' => array(
 			'core' => array(
 				'title' => $txt['core_configuration'],
@@ -157,28 +157,28 @@ function ModifyCoreSettings()
 	OR	an empty string for a horizontal rule.
 	OR	a string for a titled section. */
 	$config_vars = array(
-		array('db_server', &$txt['smf5'], 'text'),
-		array('db_user', &$txt['smf6'], 'text'),
-		array('db_passwd', &$txt['smf7'], 'password'),
-		array('db_name', &$txt['smf8'], 'text'),
-		array('db_prefix', &$txt['smf54'], 'text'),
+		array('db_server', &$txt['database_server'], 'text'),
+		array('db_user', &$txt['database_user'], 'text'),
+		array('db_passwd', &$txt['database_password'], 'password'),
+		array('db_name', &$txt['database_name'], 'text'),
+		array('db_prefix', &$txt['database_prexfix'], 'text'),
 		array('db_persist', &$txt['db_persist'], 'check', null, 'db_persist'),
 		array('db_error_send', &$txt['db_error_send'], 'check'),
 		array('ssi_db_user', &$txt['ssi_db_user'], 'text', null, 'ssi_db_user'),
 		array('ssi_db_passwd', &$txt['ssi_db_passwd'], 'password'),
 		'',
-		array('maintenance', &$txt[348], 'check'),
-		array('mtitle', &$txt['maintenance1'], 'text', 36),
-		array('mmessage', &$txt['maintenance2'], 'text', 36),
+		array('maintenance', &$txt['admin_maintain'], 'check'),
+		array('mtitle', &$txt['maintenance_subject'], 'text', 36),
+		array('mmessage', &$txt['maintenance_message'], 'text', 36),
 		'',
-		array('mbname', &$txt[350], 'text', 30),
-		array('webmaster_email', &$txt[355], 'text', 30),
+		array('mbname', &$txt['admin_title'], 'text', 30),
+		array('webmaster_email', &$txt['admin_webmaster_email'], 'text', 30),
 		array('cookiename', &$txt[352], 'text', 20),
 		'language' => array('language', &$txt['default_language'], 'select', array()),
 		'',
-		array('boardurl', &$txt[351], 'text', 36),
-		array('boarddir', &$txt[356], 'text', 36),
-		array('sourcedir', &$txt[360], 'text', 36),
+		array('boardurl', &$txt['admin_url'], 'text', 36),
+		array('boarddir', &$txt['boarddir'], 'text', 36),
+		array('sourcedir', &$txt['sourcesdir'], 'text', 36),
 		array('cachedir', &$txt['cachedir'], 'text', 36),
 		'',
 	);
@@ -212,7 +212,7 @@ function ModifyCoreSettings()
 	if ($settings_not_writable)
 		$context['settings_message'] = '<div align="center"><b>' . $txt['settings_not_writable'] . '</b></div><br />';
 	elseif ($settings_backup_fail)
-		$context['settings_message'] = '<div align="center"><b>' . $txt['smf1'] . '</b></div><br />';
+		$context['settings_message'] = '<div align="center"><b>' . $txt['admin_backup_fail'] . '</b></div><br />';
 
 	// Fill the config array.
 	$context['config_vars'] = array();

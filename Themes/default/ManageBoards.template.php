@@ -114,7 +114,7 @@ function template_modify_category()
 	{
 		echo '
 								<td>
-									<b>', $txt[43], '</b><br />
+									<b>', $txt['order'], '</b><br />
 									<br /><br />
 								</td>
 								<td valign="top" align="right">
@@ -131,8 +131,8 @@ function template_modify_category()
 	// Allow the user to edit the category name and/or choose whether you can collapse the category.
 	echo '
 								<td>
-									<b>', $txt[44], ':</b><br />
-									', $txt[672], '<br /><br />
+									<b>', $txt['full_name'], ':</b><br />
+									', $txt['name_on_display'], '<br /><br />
 								</td>
 								<td valign="top" align="right">
 									<input type="text" name="cat_name" value="', $context['category']['editable_name'], '" size="30" tabindex="1" />
@@ -278,7 +278,7 @@ function template_modify_board()
 	{
 		echo '
 								<td>
-									<b>', $txt[43], '</b><br />
+									<b>', $txt['order'], '</b><br />
 									<br /><br />
 								</td>
 								<td valign="top" align="right">';
@@ -308,8 +308,8 @@ function template_modify_board()
 	// Options for board name and description.
 	echo '
 								<td>
-									<b>', $txt[44], ':</b><br />
-									', $txt[672], '<br /><br />
+									<b>', $txt['full_name'], ':</b><br />
+									', $txt['name_on_display'], '<br /><br />
 								</td>
 								<td valign="top" align="right">
 									<input type="text" name="board_name" value="', $context['board']['name'], '" size="30" />
@@ -334,7 +334,7 @@ function template_modify_board()
 		echo '
 									<label for="groups_', $group['id'], '"><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['mboards_groups_post_group'] . '"' : '', '>', $group['name'], '</span> <input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /></label><br />';
 	echo '
-									<i>', $txt[737], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+									<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
 									<br />
 								</td>
 							</tr>';

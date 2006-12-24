@@ -79,7 +79,7 @@ function Notify()
 		// Set the template variables...
 		$context['topic_href'] = $scripturl . '?topic=' . $topic . '.' . $_REQUEST['start'];
 		$context['start'] = $_REQUEST['start'];
-		$context['page_title'] = $txt[418];
+		$context['page_title'] = $txt['notification'];
 
 		return;
 	}
@@ -140,7 +140,7 @@ function BoardNotify()
 		// Set the template variables...
 		$context['board_href'] = $scripturl . '?board=' . $board . '.' . $_REQUEST['start'];
 		$context['start'] = $_REQUEST['start'];
-		$context['page_title'] = $txt[418];
+		$context['page_title'] = $txt['notification'];
 		$context['sub_template'] = 'notify_board';
 
 		return;

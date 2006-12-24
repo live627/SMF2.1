@@ -3,11 +3,11 @@
 
 // Important! Before editing these language files please read the text at the topic of index.dutch.php.
 
-$txt[183] = 'Stel zoekparameters in';
-$txt[189] = 'Kies een board waar je in wilt zoeken, of selecteer alle boards';
-$txt[343] = 'Alle zoektermen moeten overeenkomen';
-$txt[344] = 'E&eacute;n of meer zoektermen moeten overeenkomen';
-$txt[583] = 'door gebruiker';
+$txt['set_perameters'] = 'Stel zoekparameters in';
+$txt['choose_board'] = 'Kies een board waar je in wilt zoeken, of selecteer alle boards';
+$txt['all_words'] = 'Alle zoektermen moeten overeenkomen';
+$txt['any_words'] = 'E&eacute;n of meer zoektermen moeten overeenkomen';
+$txt['by_user'] = 'door gebruiker';
 
 $txt['search_post_age'] = 'Berichtouderdom';
 $txt['search_between'] = 'Tussen';

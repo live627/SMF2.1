@@ -42,10 +42,10 @@ function template_login()
 					<td align="right"><b>', $txt['password'], ':</b></td>
 					<td><input type="password" name="passwrd" value="', $context['default_password'], '" size="20" /></td>
 				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt[497], ':</b></td>
+					<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
 					<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '"', $context['never_expire'] ? ' disabled="disabled"' : '', ' /></td>
 				</tr><tr class="windowbg">
-					<td align="right"><b>', $txt[508], ':</b></td>
+					<td align="right"><b>', $txt['always_logged_in'], ':</b></td>
 					<td><input type="checkbox" name="cookieneverexp"', $context['never_expire'] ? ' checked="checked"' : '', ' class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
 				</tr><tr class="windowbg">';
 	// If they have deleted their account, give them a chance to change their mind.
@@ -83,13 +83,13 @@ function template_kick_guest()
 		<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 			<table border="0" cellspacing="0" cellpadding="3" class="tborder" align="center">
 				<tr class="catbg">
-					<td>', $txt[633], '</td>
+					<td>', $txt['warning'], '</td>
 				</tr><tr>';
 
 	// Show the message or default message.
 	echo '
 					<td class="windowbg" style="padding-top: 2ex; padding-bottom: 2ex;">
-						', empty($context['kick_message']) ? $txt[634] : $context['kick_message'], '<br />
+						', empty($context['kick_message']) ? $txt['only_members_can_access'] : $context['kick_message'], '<br />
 						', $txt['login_below'], ' <a href="', $scripturl, '?action=register">', $txt['login_or_register'], '</a> ', sprintf($txt['login_with_forum'], $context['forum_name']), '
 					</td>';
 
@@ -107,10 +107,10 @@ function template_kick_guest()
 								<td align="right"><b>', $txt['password'], ':</b></td>
 								<td><input type="password" name="passwrd" size="20" /></td>
 							</tr><tr>
-								<td align="right"><b>', $txt[497], ':</b></td>
+								<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
 								<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></td>
 							</tr><tr>
-								<td align="right"><b>', $txt[508], ':</b></td>
+								<td align="right"><b>', $txt['always_logged_in'], ':</b></td>
 								<td><input type="checkbox" name="cookieneverexp" class="check" onclick="this.form.cookielength.disabled = this.checked;" /></td>
 							</tr><tr>
 								<td align="center" colspan="2"><input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" /></td>
@@ -162,9 +162,9 @@ function template_maintenance()
 						<td><b>', $txt['password'], ':</b></td>
 						<td><input type="password" name="passwrd" size="10" /> &nbsp;</td>
 					</tr><tr>
-						<td><b>', $txt[497], ':</b></td>
+						<td><b>', $txt['mins_logged_in'], ':</b></td>
 						<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /> &nbsp;</td>
-						<td><b>', $txt[508], ':</b></td>
+						<td><b>', $txt['always_logged_in'], ':</b></td>
 						<td><input type="checkbox" name="cookieneverexp" class="check" /></td>
 					</tr><tr>
 						<td align="center" colspan="4"><input type="submit" value="', $txt['login'], '" style="margin-top: 1ex; margin-bottom: 1ex;" /></td>

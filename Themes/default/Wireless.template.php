@@ -144,7 +144,7 @@ function template_wap_recent()
 
 	if (empty($context['topics']))
 		echo '
-		<p>', $txt[334], '</p>';
+		<p>', $txt['old_posts'], '</p>';
 	else
 	{
 		echo '
@@ -326,7 +326,7 @@ function template_imode_post()
 	echo '
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;imode" method="post">
 			<table border="0" cellspacing="0" cellpadding="0">', $context['locked'] ? '
-				<tr><td>' . $txt['smf287'] . '</td></tr>' : '', isset($context['name']) ? '
+				<tr><td>' . $txt['topic_locked_no_reply'] . '</td></tr>' : '', isset($context['name']) ? '
 				<tr><td>' . (isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) ? '<font color="#cc0000">' . $txt['username'] . '</font>' : $txt['username']) . ':</td></tr>
 				<tr><td><input type="text" name="guestname" value="' . $context['name'] . '" /></td></tr>' : '', isset($context['email']) ? '
 				<tr><td>' . (isset($context['post_error']['no_email']) || isset($context['post_error']['bad_email']) ? '<font color="#cc0000">' . $txt['email'] . '</font>' : $txt['email']) . ':</td></tr>
@@ -456,10 +456,10 @@ function template_imode_pm()
 			echo '
 				<form action="', $scripturl, '?action=pm;sa=send2;imode" method="post">
 					<table border="0" cellspacing="0" cellpadding="0">
-						<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt[321], '</tr></td>', empty($context['post_error']['messages']) ? '' : '
+						<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['new_message'], '</tr></td>', empty($context['post_error']['messages']) ? '' : '
 						<tr><td><font color="#ff0000">' . implode('<br />', $context['post_error']['messages']) . '</font></tr></td>', '
 						<tr><td>
-							<b>', $txt[150], ':</b> ', empty($context['to']) ? $txt['wireless_pm_no_recipients'] : $context['to'], empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
+							<b>', $txt['pm_to'], ':</b> ', empty($context['to']) ? $txt['wireless_pm_no_recipients'] : $context['to'], empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
 							<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';sesc=', $context['session_id'], ';imode">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
 							<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';imode">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 						</tr></td>
@@ -471,7 +471,7 @@ function template_imode_pm()
 							<textarea name="message" rows="3" cols="20">', $context['message'], '</textarea>
 						</tr></td>
 						<tr><td>
-							<input type="submit" value="', $txt[148], '" />
+							<input type="submit" value="', $txt['send_message'], '" />
 							<input type="hidden" name="outbox" value="', $context['copy_to_outbox'] ? '1' : '0', '" />
 							<input type="hidden" name="sc" value="', $context['session_id'], '" />
 							<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
@@ -510,7 +510,7 @@ function template_imode_pm()
 			<tr><td>[0] <a href="', $scripturl, '?imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></tr></td>', empty($context['links']['next']) ? '' : '
 			<tr><td>[#] <a href="' . $context['links']['next'] . ';imode" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></tr></td>', empty($context['links']['prev']) ? '' : '
 			<tr><td>[*] <a href="' . $context['links']['prev'] . ';imode" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></tr></td>', $context['can_send_pm'] ? '
-			<tr><td><a href="' . $scripturl . '?action=pm;sa=send;imode">' . $txt[321] . '</a></tr></td>' : '', '
+			<tr><td><a href="' . $scripturl . '?action=pm;sa=send;imode">' . $txt['new_message'] . '</a></tr></td>' : '', '
 		</table>';
 	}
 	else
@@ -547,7 +547,7 @@ function template_imode_recent()
 	$count = 0;
 	if (empty($context['topics']))
 		echo '
-			<tr><td>', $txt[334], '</td></tr>';
+			<tr><td>', $txt['old_posts'], '</td></tr>';
 	else
 	{
 		echo '
@@ -752,7 +752,7 @@ function template_wap2_post()
 		<form action="', $scripturl, '?action=', $context['destination'], ';board=', $context['current_board'], '.0;wap2" method="post">
 			<p class="titlebg">', $context['page_title'], '</p>', $context['locked'] ? '
 			<p class="windowbg">
-				' . $txt['smf287'] . '
+				' . $txt['topic_locked_no_reply'] . '
 			</p>' : '', isset($context['name']) ? '
 			<p class="windowbg"' . (isset($context['post_error']['long_name']) || isset($context['post_error']['no_name']) ? ' style="color: #ff0000"' : '') . '>
 				' . $txt['username'] . ': <input type="text" name="guestname" value="' . $context['name'] . '" />
@@ -855,10 +855,10 @@ function template_wap2_pm()
 		{
 			echo '
 				<form action="', $scripturl, '?action=pm;sa=send2;wap2" method="post">
-					<p class="catbg">', $txt[321], '</p>', empty($context['post_error']['messages']) ? '' : '
+					<p class="catbg">', $txt['new_message'], '</p>', empty($context['post_error']['messages']) ? '' : '
 					<p class="windowbg" style="color: red;">' . implode('<br />', $context['post_error']['messages']) . '</p>', '
 					<p class="windowbg">
-						<b>', $txt[150], ':</b> ', empty($context['to']) ? $txt['wireless_pm_no_recipients'] : $context['to'], empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
+						<b>', $txt['pm_to'], ':</b> ', empty($context['to']) ? $txt['wireless_pm_no_recipients'] : $context['to'], empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
 						<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';sesc=', $context['session_id'], ';wap2">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
 						<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';wap2">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 					</p>
@@ -870,7 +870,7 @@ function template_wap2_pm()
 						<textarea name="message" rows="3" cols="20">', $context['message'], '</textarea>
 					</p>
 					<p class="windowbg">
-						<input type="submit" value="', $txt[148], '" />
+						<input type="submit" value="', $txt['send_message'], '" />
 						<input type="hidden" name="outbox" value="', $context['copy_to_outbox'] ? '1' : '0', '" />
 						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 						<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
@@ -907,7 +907,7 @@ function template_wap2_pm()
 			<p class="windowbg">[0] <a href="', $scripturl, '?wap2" accesskey="0">', $txt['wireless_navigation_up'], '</a></p>', empty($context['links']['next']) ? '' : '
 			<p class="windowbg">[#] <a href="' . $context['links']['next'] . ';wap2" accesskey="#">' . $txt['wireless_navigation_next'] . '</a></p>', empty($context['links']['prev']) ? '' : '
 			<p class="windowbg">[*] <a href="' . $context['links']['prev'] . ';wap2" accesskey="*">' . $txt['wireless_navigation_prev'] . '</a></p>', $context['can_send_pm'] ? '
-			<p class="windowbg"><a href="' . $scripturl . '?action=pm;sa=send;wap2">' . $txt[321] . '</a></p>' : '';
+			<p class="windowbg"><a href="' . $scripturl . '?action=pm;sa=send;wap2">' . $txt['new_message'] . '</a></p>' : '';
 	}
 	else
 	{
@@ -940,7 +940,7 @@ function template_wap2_recent()
 	$count = 0;
 	if (empty($context['topics']))
 		echo '
-			<p class="windowbg">', $txt[334], '</p>';
+			<p class="windowbg">', $txt['old_posts'], '</p>';
 	else
 	{
 		echo '

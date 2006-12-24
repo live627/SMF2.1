@@ -3,11 +3,11 @@
 
 // Important! Before editing these language files please read the text at the topic of index.spanish.php.
 
-$txt[183] = 'Establecer par&aacute;metros de b&uacute;squeda';
-$txt[189] = 'Escoge un foro en el que se buscar&aacute;, o buscar en todos';
-$txt[343] = 'Coincidir todas las palabras';
-$txt[344] = 'Coincidir con cualquier palabra';
-$txt[583] = 'por usuario';
+$txt['set_perameters'] = 'Establecer par&aacute;metros de b&uacute;squeda';
+$txt['choose_board'] = 'Escoge un foro en el que se buscar&aacute;, o buscar en todos';
+$txt['all_words'] = 'Coincidir todas las palabras';
+$txt['any_words'] = 'Coincidir con cualquier palabra';
+$txt['by_user'] = 'por usuario';
 
 $txt['search_post_age'] = 'Antiguedad del mensaje';
 $txt['search_between'] = 'Entre';

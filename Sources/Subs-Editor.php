@@ -498,12 +498,12 @@ function getMessageIcons($board_id)
 		loadLanguage('Post');
 
 		$icons = array(
-			array('value' => 'xx', 'name' => $txt[281]),
-			array('value' => 'thumbup', 'name' => $txt[282]),
-			array('value' => 'thumbdown', 'name' => $txt[283]),
-			array('value' => 'exclamation', 'name' => $txt[284]),
-			array('value' => 'question', 'name' => $txt[285]),
-			array('value' => 'lamp', 'name' => $txt[286]),
+			array('value' => 'xx', 'name' => $txt['standard']),
+			array('value' => 'thumbup', 'name' => $txt['thumbs_up']),
+			array('value' => 'thumbdown', 'name' => $txt['thumbs_down']),
+			array('value' => 'exclamation', 'name' => $txt['excamation_point']),
+			array('value' => 'question', 'name' => $txt['question_mark']),
+			array('value' => 'lamp', 'name' => $txt['lamp']),
 			array('value' => 'smiley', 'name' => $txt['icon_smiley']),
 			array('value' => 'angry', 'name' => $txt['icon_angry']),
 			array('value' => 'cheesy', 'name' => $txt['icon_cheesy']),

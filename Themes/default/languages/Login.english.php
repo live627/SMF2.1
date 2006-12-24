@@ -3,28 +3,28 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-$txt[37] = 'You should fill in a username.';
-$txt[38] = 'You didn\'t enter your password.';
-$txt[39] = 'Password incorrect';
-$txt[98] = 'Choose username';
+$txt['need_username'] = 'You should fill in a username.';
+$txt['no_password'] = 'You didn\'t enter your password.';
+$txt['incorrect_password'] = 'Password incorrect';
+$txt['choose_username'] = 'Choose username';
 $txt[155] = 'Maintenance Mode';
-$txt[245] = 'Registration successful';
-$txt[431] = 'Success! You are now a member of the Forum.';
+$txt['registration_successful'] = 'Registration successful';
+$txt['now_a_member'] = 'Success! You are now a member of the Forum.';
 // Use numeric entities in the below string.
-$txt[492] = 'and your password is';
-$txt[500] = 'Please enter a valid email address, %s.';
-$txt[517] = 'Required Information';
-$txt[520] = 'Used only for identification by SMF.';
-$txt[585] = 'I Agree';
-$txt[586] = 'I Do Not Agree';
-$txt[633] = 'Warning!';
-$txt[634] = 'Only registered members are allowed to access this section.';
+$txt['your_password'] = 'and your password is';
+$txt['valid_email_needed'] = 'Please enter a valid email address, %s.';
+$txt['required_info'] = 'Required Information';
+$txt['identification_by_smf'] = 'Used only for identification by SMF.';
+$txt['agree'] = 'I Agree';
+$txt['decline'] = 'I Do Not Agree';
+$txt['warning'] = 'Warning!';
+$txt['only_members_can_access'] = 'Only registered members are allowed to access this section.';
 $txt['login_below'] = 'Please login below or';
 $txt['login_or_register'] = 'register an account';
 $txt['login_with_forum'] = 'with %s.';
 // Use numeric entities in the below two strings.
-$txt[701] = 'You may change it after you login by going to the profile page, or by visiting this page after you login:';
-$txt[719] = 'Your username is: ';
+$txt['may_change_in_profile'] = 'You may change it after you login by going to the profile page, or by visiting this page after you login:';
+$txt['your_username_is'] = 'Your username is: ';
 
 $txt['login_hash_error'] = 'Password security has recently been upgraded.  Please enter your password again.';
 
@@ -61,16 +61,16 @@ $txt['invalid_activation_known'] = 'If you already know your activation code, pl
 $txt['invalid_activation_retry'] = 'Activation code';
 $txt['invalid_activation_submit'] = 'Activate';
 
-$txt['coppa_not_completed1'] = 'The administrator has still not received parent/guardian consent for your account.';
-$txt['coppa_not_completed2'] = 'Need more details?';
+$txt['coppa_no_concent'] = 'The administrator has still not received parent/guardian consent for your account.';
+$txt['coppa_need_more_details'] = 'Need more details?';
 
 $txt['awaiting_delete_account'] = 'Your account has been marked for deletion!<br />If you wish to restore your account, please check the &quot;Reactivate my account&quot; box, and login again.';
 $txt['undelete_account'] = 'Reactivate my account';
 
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'New Password Details';
-$txt['change_password_1'] = 'Your login details at';
-$txt['change_password_2'] = 'have been changed and your password reset. Below are your new login details.';
+$txt['change_password_login'] = 'Your login details at';
+$txt['change_password_new'] = 'have been changed and your password reset. Below are your new login details.';
 
 $txt['maintenance3'] = 'This board is in Maintenance Mode.';
 

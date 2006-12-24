@@ -15,7 +15,7 @@ function template_manage_holidays()
 			<td colspan="3">', $txt['pages'], ': ', $context['page_index'], '</td>
 		</tr><tr class="titlebg">
 			<td align="left">', $txt['holidays_title'], '</td>
-			<td align="left">', $txt[317], '</td>
+			<td align="left">', $txt['date'], '</td>
 			<td align="center" width="4%"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
 		</tr>';
 
@@ -87,7 +87,7 @@ function template_edit_holiday()
 			<td width="25%" align="right">', $txt['holidays_title_label'], ':</td>
 			<td><input type="text" name="title" value="', $context['holiday']['title'], '" size="60" /></td>
 		</tr><tr class="windowbg2">
-			<td align="right">', $txt['calendar10'], '</td>
+			<td align="right">', $txt['calendar_year'], '</td>
 			<td>
 				<select name="year" id="year" onchange="generateDays();">
 					<option value="0000"', $context['holiday']['year'] == '0000' ? ' selected="selected"' : '', '>', $txt['every_year'], '</option>';
@@ -98,7 +98,7 @@ function template_edit_holiday()
 
 		echo '
 				</select>&nbsp;
-				', $txt['calendar9'], '&nbsp;
+				', $txt['calendar_month'], '&nbsp;
 				<select name="month" id="month" onchange="generateDays();">';
 
 		// There are 12 months per year - ensure that they all get listed.
@@ -108,7 +108,7 @@ function template_edit_holiday()
 
 		echo '
 				</select>&nbsp;
-				', $txt['calendar11'], '&nbsp;
+				', $txt['calendar_day'], '&nbsp;
 				<select name="day" id="day" onchange="generateDays();">';
 
 		// This prints out all the days in the current month - this changes dynamically as we switch months.

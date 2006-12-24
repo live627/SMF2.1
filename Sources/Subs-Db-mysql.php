@@ -283,7 +283,7 @@ function db_error($db_string, $file, $line, $connection = null)
 
 	// Log the error.
 	if ($query_errno != 1213 && $query_errno != 1205 && function_exists('log_error'))
-		log_error($txt[1001] . ': ' . $query_error, 'database', $file, $line);
+		log_error($txt['database_error'] . ': ' . $query_error, 'database', $file, $line);
 
 	// Database error auto fixing ;).
 	if (function_exists('cache_get_data') && (!isset($modSettings['autoFixDatabase']) || $modSettings['autoFixDatabase'] == '1'))
@@ -348,7 +348,7 @@ function db_error($db_string, $file, $line, $connection = null)
 					REPAIR TABLE $table", false, false);
 
 			// And send off an email!
-			sendmail($webmaster_email, $txt[1001], $txt[1005]);
+			sendmail($webmaster_email, $txt['database_error'], $txt['tried_to_repair']);
 
 			$modSettings['cache_enable'] = $old_cache;
 
@@ -423,11 +423,11 @@ function db_error($db_string, $file, $line, $connection = null)
 		die($query_error);
 
 	// Show an error message, if possible.
-	$context['error_title'] = $txt[1001];
+	$context['error_title'] = $txt['database_error'];
 	if (allowedTo('admin_forum'))
-		$context['error_message'] = nl2br($query_error) . '<br />' . $txt[1003] . ': ' . $file . '<br />' . $txt[1004] . ': ' . $line;
+		$context['error_message'] = nl2br($query_error) . '<br />' . $txt['file'] . ': ' . $file . '<br />' . $txt['line'] . ': ' . $line;
 	else
-		$context['error_message'] = $txt[1002];
+		$context['error_message'] = $txt['try_again'];
 
 	// A database error is often the sign of a database in need of updgrade.  Check forum versions, and if not identical suggest an upgrade... (not for Demo/CVS versions!)
 	if (allowedTo('admin_forum') && !empty($forum_version) && $forum_version != 'SMF ' . @$modSettings['smfVersion'] && strpos($forum_version, 'Demo') === false && strpos($forum_version, 'CVS') === false)

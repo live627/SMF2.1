@@ -60,7 +60,7 @@ function RepairBoards()
 	isAllowedTo('admin_forum');
 
 	// Print out the top of the webpage.
-	$context['page_title'] = $txt[610];
+	$context['page_title'] = $txt['admin_repair'];
 	$context['sub_template'] = 'rawdata';
 
 	// Start displaying errors without fixing them.
@@ -85,18 +85,18 @@ function RepairBoards()
 		$context['raw_data'] = '
 			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
 				<tr class="titlebg">
-					<td>' . $txt['smf73'] . '</td>
+					<td>' . $txt['errors_list'] . '</td>
 				</tr><tr>
 					<td class="windowbg">';
 
 		if (!empty($to_fix))
 		{
 			$context['raw_data'] .= '
-						' . $txt['smf74'] . ':<br />
+						' . $txt['errors_found'] . ':<br />
 						' . implode('
 						<br />', $context['repair_errors']) . '<br />
 						<br />
-						' . $txt['smf85'] . '<br />
+						' . $txt['errors_fix'] . '<br />
 						<b><a href="' . $scripturl . '?action=admin;area=repairboards;fixErrors;sesc=' . $sc . '">' . $txt['yes'] . '</a> - <a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['no'] . '</a></b>';
 		}
 		else
@@ -841,10 +841,10 @@ function RepairBoards()
 		$context['raw_data'] = '
 			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
 				<tr class="titlebg">
-					<td>' . $txt['smf86'] . '</td>
+					<td>' . $txt['errors_fixing'] . '</td>
 				</tr><tr>
 					<td class="windowbg">
-						' . $txt['smf92'] . '<br />
+						' . $txt['errors_fixed'] . '<br />
 						<br />
 						<a href="' . $scripturl . '?action=admin;area=maintain">' . $txt['maintain_return'] . '</a>
 					</td>

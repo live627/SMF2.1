@@ -112,7 +112,7 @@ function CalendarMain()
 		fatal_lang_error('calendar_off', false);
 
 	// Set the page title to mention the calendar ;).
-	$context['page_title'] = $context['forum_name'] . ': ' . $txt['calendar24'];
+	$context['page_title'] = $context['forum_name'] . ': ' . $txt['calendar'];
 
 	// Get the current day of month...
 	$today = array(
@@ -683,7 +683,7 @@ function CalendarPost()
 	loadTemplate('Calendar');
 	$context['sub_template'] = 'event_post';
 
-	$context['page_title'] = isset($_REQUEST['eventid']) ? $txt['calendar20'] : $txt['calendar_post_event'];
+	$context['page_title'] = isset($_REQUEST['eventid']) ? $txt['calendar_edit'] : $txt['calendar_post_event'];
 	$context['linktree'][] = array(
 		'name' => $context['page_title'],
 	);

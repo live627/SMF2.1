@@ -10,7 +10,7 @@ function template_print_above()
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<meta name="robots" content="noindex" />
-		<title>', $txt[668], ' - ', $context['topic_subject'], '</title>
+		<title>', $txt['print_page'], ' - ', $context['topic_subject'], '</title>
 		<style type="text/css">
 			body
 			{

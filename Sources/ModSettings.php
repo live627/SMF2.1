@@ -155,7 +155,7 @@ function ModifyFeatureSettings()
 				'href' => $scripturl . '?action=admin;area=featuresettings;sa=layout;sesc=' . $context['session_id'],
 			),
 			'karma' => array(
-				'title' => $txt['smf293'],
+				'title' => $txt['karma'],
 				'href' => $scripturl . '?action=admin;area=featuresettings;sa=karma;sesc=' . $context['session_id'],
 			),
 			'sig' => array(
@@ -213,7 +213,7 @@ function ModifyBasicSettings()
 
 	$config_vars = array(
 			// Big Options... polls, sticky, bbc....
-			array('select', 'pollMode', array(&$txt['smf34'], &$txt['smf32'], &$txt['smf33'])),
+			array('select', 'pollMode', array(&$txt['disable_polls'], &$txt['enable_polls'], &$txt['polls_as_topics'])),
 		'',
 			// Basic stuff, user languages, titles, flash, permissions...
 			array('check', 'allow_guestAccess'),
@@ -288,10 +288,10 @@ function ModifyLayoutSettings()
 	$config_vars = array(
 			// Compact pages?
 			array('check', 'compactTopicPagesEnable'),
-			array('int', 'compactTopicPagesContiguous', null, $txt['smf235'] . '<div class="smalltext">' . str_replace(' ', '&nbsp;', '"3" ' . $txt['smf236'] . ': <b>1 ... 4 [5] 6 ... 9</b>') . '<br />' . str_replace(' ', '&nbsp;', '"5" ' . $txt['smf236'] . ': <b>1 ... 3 4 [5] 6 7 ... 9</b>') . '</div>'),
+			array('int', 'compactTopicPagesContiguous', null, $txt['contiguous_page_display'] . '<div class="smalltext">' . str_replace(' ', '&nbsp;', '"3" ' . $txt['to_display'] . ': <b>1 ... 4 [5] 6 ... 9</b>') . '<br />' . str_replace(' ', '&nbsp;', '"5" ' . $txt['to_display'] . ': <b>1 ... 3 4 [5] 6 7 ... 9</b>') . '</div>'),
 		'',
 			// Stuff that just is everywhere - today, search, online, etc.
-			array('select', 'todayMod', array(&$txt['smf290'], &$txt['smf291'], &$txt['smf292'])),
+			array('select', 'todayMod', array(&$txt['today_disabled'], &$txt['today_only'], &$txt['yesterday_today'])),
 			array('check', 'topbottomEnable'),
 			array('check', 'onlineEnable'),
 			array('check', 'enableVBStyleLogin'),
@@ -328,7 +328,7 @@ function ModifyKarmaSettings()
 
 	$config_vars = array(
 			// Karma - On or off?
-			array('select', 'karmaMode', explode('|', $txt['smf64'])),
+			array('select', 'karmaMode', explode('|', $txt['karma_options'])),
 		'',
 			// Who can do it.... and who is restricted by time limits?
 			array('int', 'karmaMinPosts'),
@@ -349,7 +349,7 @@ function ModifyKarmaSettings()
 	}
 
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=karma';
-	$context['settings_title'] = $txt['smf293'];
+	$context['settings_title'] = $txt['karma'];
 
 	prepareDBSettingContext($config_vars);
 }

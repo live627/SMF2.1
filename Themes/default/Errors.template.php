@@ -63,8 +63,8 @@ function template_error_log()
 		echo '
 				<tr>
 					<td colspan="2" align="left" class="windowbg2">
-						<div style="float: right;"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['smf219'], '" onclick="lastClicked = \'remove_all\';" /></div>
-						<label for="check_all1"><input type="checkbox" id="check_all1" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all2.checked = this.checked;" class="check" /> <b>', $txt[737], '</b></label>
+						<div style="float: right;"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" /></div>
+						<label for="check_all1"><input type="checkbox" id="check_all1" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all2.checked = this.checked;" class="check" /> <b>', $txt['check_all'], '</b></label>
 					</td>
 				</tr>';
 
@@ -118,8 +118,8 @@ function template_error_log()
 							<td class="windowbg2" colspan="2">
 								<div style="float: left;"><a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=file;value=', $error['file']['search'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_file'], '" /></a></div>
 								<div style="float: left; margin-left: 1ex;">
-									', $txt[1003], ': ', $error['file']['link'], '<br />
-									', $txt[1004], ': ', $error['file']['line'], '
+									', $txt['file'], ': ', $error['file']['link'], '<br />
+									', $txt['line'], ': ', $error['file']['line'], '
 								</div>
 							</td>
 						</tr>';
@@ -132,8 +132,8 @@ function template_error_log()
 		echo '
 				<tr>
 					<td colspan="2" class="windowbg2">
-						<div style="float: right;"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['smf219'], '" onclick="lastClicked = \'remove_all\';" /></div>
-						<label for="check_all2"><input type="checkbox" id="check_all2" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all1.checked = this.checked;" class="check" /> <b>', $txt[737], '</b></label>
+						<div style="float: right;"><input type="submit" value="', $txt['remove_selection'], '" onclick="lastClicked = \'remove_selection\';" /> <input type="submit" name="delall" value="', $context['has_filter'] ? $txt['remove_filtered_results'] : $txt['remove_all'], '" onclick="lastClicked = \'remove_all\';" /></div>
+						<label for="check_all2"><input type="checkbox" id="check_all2" onclick="invertAll(this, this.form, \'delete[]\'); this.form.check_all1.checked = this.checked;" class="check" /> <b>', $txt['check_all'], '</b></label>
 					</td>
 				</tr>';
 	else

@@ -3,11 +3,11 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-$txt[41] = 'Manage Boards and Categories';
-$txt[43] = 'Order';
-$txt[44] = 'Full name';
-$txt[672] = 'This is the name that will be displayed.';
-$txt[677] = 'Edit your categories and boards here. List multiple moderators as <i>&quot;username&quot;, &quot;username&quot;</i>. (these must be usernames not display names!)<br />To create a new board, click the Add Board button. To make the new board a child of a current board, select "Child of..." from the Order drop down menu when creating the board.';
+$txt['boards_and_cats'] = 'Manage Boards and Categories';
+$txt['order'] = 'Order';
+$txt['full_name'] = 'Full name';
+$txt['name_on_display'] = 'This is the name that will be displayed.';
+$txt['boards_and_cats_desc'] = 'Edit your categories and boards here. List multiple moderators as <i>&quot;username&quot;, &quot;username&quot;</i>. (these must be usernames not display names!)<br />To create a new board, click the Add Board button. To make the new board a child of a current board, select "Child of..." from the Order drop down menu when creating the board.';
 $txt['parent_members_only'] = 'Regular Members';
 $txt['parent_guests_only'] = 'Guests';
 $txt['catConfirm'] = 'Do you really want to delete this category?';

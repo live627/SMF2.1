@@ -105,22 +105,22 @@ function ManageBoards()
 
 	// Create the tabs for the template.
 	$context['admin_tabs'] = array(
-		'title' => $txt[41],
+		'title' => $txt['boards_and_cats'],
 		'help' => 'manage_boards',
-		'description' => $txt[677],
+		'description' => $txt['boards_and_cats_desc'],
 		'tabs' => array(),
 	);
 	if (allowedTo('manage_boards'))
 	{
 		$context['admin_tabs']['tabs']['modify_boards'] = array(
 			'title' => $txt['boardsEdit'],
-			'description' => $txt[677],
+			'description' => $txt['boards_and_cats_desc'],
 			'href' => $scripturl . '?action=admin;area=manageboards',
 			'is_selected' => $_REQUEST['sa'] != 'newcat' && $_REQUEST['sa'] != 'settings',
 		);
 		$context['admin_tabs']['tabs']['add_cat'] = array(
 			'title' => $txt['mboards_new_cat'],
-			'description' => $txt[677],
+			'description' => $txt['boards_and_cats_desc'],
 			'href' => $scripturl . '?action=admin;area=manageboards;sa=newcat',
 			'is_selected' => $_REQUEST['sa'] == 'newcat',
 			'is_last' => !allowedTo('admin_forum'),
@@ -250,7 +250,7 @@ function ManageBoardsMain()
 		}
 	}
 
-	$context['page_title'] = $txt[41];
+	$context['page_title'] = $txt['boards_and_cats'];
 	$context['can_manage_permissions'] = allowedTo('manage_permissions');
 }
 
@@ -670,7 +670,7 @@ function EditBoardSettings()
 {
 	global $context, $txt, $db_prefix, $sourcedir, $modSettings, $scripturl, $smfFunc;
 
-	$context['page_title'] = $txt[41] . ' - ' . $txt['settings'];
+	$context['page_title'] = $txt['boards_and_cats'] . ' - ' . $txt['settings'];
 
 	loadTemplate('ManageBoards');
 	$context['sub_template'] = 'modify_general_settings';

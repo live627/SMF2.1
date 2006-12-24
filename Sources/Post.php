@@ -872,7 +872,7 @@ function Post()
 				if (!empty($modSettings['attachmentCheckExtensions']))
 				{
 					if (!in_array(strtolower(substr(strrchr($_FILES['attachment']['name'][$n], '.'), 1)), explode(',', strtolower($modSettings['attachmentExtensions']))))
-						fatal_error($_FILES['attachment']['name'][$n] . '.<br />' . $txt['smf123'] . ' ' . $modSettings['attachmentExtensions'] . '.', false);
+						fatal_error($_FILES['attachment']['name'][$n] . '.<br />' . $txt['cant_upload_type'] . ' ' . $modSettings['attachmentExtensions'] . '.', false);
 				}
 
 				if (!empty($modSettings['attachmentDirSizeLimit']))
@@ -936,17 +936,17 @@ function Post()
 
 	// What are you doing?  Posting a poll, modifying, previewing, new post, or reply...
 	if (isset($_REQUEST['poll']))
-		$context['page_title'] = $txt['smf20'];
+		$context['page_title'] = $txt['new_poll'];
 	elseif ($context['make_event'])
-		$context['page_title'] = $context['event']['id'] == -1 ? $txt['calendar_post_event'] : $txt['calendar20'];
+		$context['page_title'] = $context['event']['id'] == -1 ? $txt['calendar_post_event'] : $txt['calendar_edit'];
 	elseif (isset($_REQUEST['msg']))
 		$context['page_title'] = $txt['modify_msg'];
 	elseif (isset($_REQUEST['subject'], $context['preview_subject']))
-		$context['page_title'] = $txt[507] . ' - ' . strip_tags($context['preview_subject']);
+		$context['page_title'] = $txt['preview'] . ' - ' . strip_tags($context['preview_subject']);
 	elseif (empty($topic))
 		$context['page_title'] = $txt['start_new_topic'];
 	else
-		$context['page_title'] = $txt[25];
+		$context['page_title'] = $txt['post_reply'];
 
 	// Build the link tree.
 	if (empty($topic))
@@ -1525,11 +1525,11 @@ function Post2()
 				if (in_array('too_large', $attachmentOptions['errors']))
 					fatal_lang_error('smf122', false, array($modSettings['attachmentSizeLimit']));
 				if (in_array('bad_extension', $attachmentOptions['errors']))
-					fatal_error($attachmentOptions['name'] . '.<br />' . $txt['smf123'] . ' ' . $modSettings['attachmentExtensions'] . '.', false);
+					fatal_error($attachmentOptions['name'] . '.<br />' . $txt['cant_upload_type'] . ' ' . $modSettings['attachmentExtensions'] . '.', false);
 				if (in_array('directory_full', $attachmentOptions['errors']))
 					fatal_lang_error('smf126', 'critical');
 				if (in_array('bad_filename', $attachmentOptions['errors']))
-					fatal_error(basename($attachmentOptions['name']) . '.<br />' . $txt['smf130b'] . '.', 'critical');
+					fatal_error(basename($attachmentOptions['name']) . '.<br />' . $txt['restricted_filename'] . '.', 'critical');
 				if (in_array('taken_filename', $attachmentOptions['errors']))
 					fatal_lang_error('smf125');
 			}
@@ -1911,8 +1911,8 @@ function AnnouncementSend()
 			loadLanguage('Post', $cur_language, false);
 
 			$announcements[$cur_language] = array(
-				'subject' => $txt['notifyXAnn2'] . ': ' . $context['topic_subject'],
-				'body' => $message . "\n\n" . $txt['notifyXAnn3'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . sprintf($txt['regards_team'], $context['forum_name']),
+				'subject' => $txt['new_announcement'] . ': ' . $context['topic_subject'],
+				'body' => $message . "\n\n" . $txt['announce_unsubscribe'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . sprintf($txt['regards_team'], $context['forum_name']),
 				'recipients' => array(),
 			);
 		}

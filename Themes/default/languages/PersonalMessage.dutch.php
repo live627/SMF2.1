@@ -3,28 +3,28 @@
 
 // Important! Before editing these language files please read the text at the topic of index.dutch.php.
 
-$txt[143] = 'Persoonlijke berichten index';
-$txt[148] = 'Verzend bericht';
-$txt[150] = 'Aan';
-$txt[1502] = 'Bcc';
-$txt[316] = 'Inbox';
+$txt['pm_inbox'] = 'Persoonlijke berichten index';
+$txt['send_message'] = 'Verzend bericht';
+$txt['pm_to'] = 'Aan';
+$txt['pm_bcc'] = 'Bcc';
+$txt['inbox'] = 'Inbox';
 // Untranslated!
 $txt['sent_items'] = 'Sent Items';
-$txt[321] = 'Nieuw bericht';
-$txt[411] = 'Verwijder berichten';
+$txt['new_message'] = 'Nieuw bericht';
+$txt['delete_message'] = 'Verwijder berichten';
 // Don't translate "PMBOX" in this string.
-$txt[412] = 'Verwijder alle berichten in je inbox of uitbox';
-$txt[413] = 'Weet je zeker dat je alle berichten wil verwijderen?';
-$txt[535] = 'Ontvanger';
+$txt['delete_all'] = 'Verwijder alle berichten in je inbox of uitbox';
+$txt['delete_all_confirm'] = 'Weet je zeker dat je alle berichten wil verwijderen?';
+$txt['recipient'] = 'Ontvanger';
 // Don't translate the word "SUBJECT" here, as it is used to format the message - use numeric entities as well.
-$txt[561] = 'Nieuw persoonlijk bericht: SUBJECT';
+$txt['new_pm_subject'] = 'Nieuw persoonlijk bericht: SUBJECT';
 // Don't translate SENDER or MESSAGE in this language string; they are replaced with the corresponding text - use numeric entities too.
-$txt[562] = 'Je hebt zojuist een persoonlijk bericht ontvangen van SENDER op ' . $context['forum_name'] . '.' . "\n\n" . 'BELANGRIJK: Onthoud dat dit alleen maar een notificatie is. Reageer niet op deze e-mail.' . "\n\n" . 'Het bericht wat je werd gestuurd was:' . "\n\n" . 'MESSAGE';
-$txt[748] = '(meerdere geadresseerden als \'naam1, naam2\')';
+$txt['pm_email'] = 'Je hebt zojuist een persoonlijk bericht ontvangen van SENDER op ' . $context['forum_name'] . '.' . "\n\n" . 'BELANGRIJK: Onthoud dat dit alleen maar een notificatie is. Reageer niet op deze e-mail.' . "\n\n" . 'Het bericht wat je werd gestuurd was:' . "\n\n" . 'MESSAGE';
+$txt['pm_multiple'] = '(meerdere geadresseerden als \'naam1, naam2\')';
 // Use numeric entities in the below string.
 $txt['instant_reply'] = 'Beantwoord dit persoonlijk bericht hier:';
 
-$txt['smf249'] = 'Weet je zeker dat je alle geselecteerde berichten wilt verwijderen?';
+$txt['delete_selected_confirm'] = 'Weet je zeker dat je alle geselecteerde berichten wilt verwijderen?';
 
 $txt['sent_to'] = 'Verzonden aan';
 $txt['reply_to_all'] = 'Reageer op allen';
@@ -142,9 +142,9 @@ $txt['pm_settings'] = 'Change Settings';
 $txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
 $txt['pm_settings_save'] = 'Save Changes';
 
-$txt[325] = 'Negeerlijstje';
-$txt[326] = 'Iedere regel slechts 1 gebruikersnaam !';
-$txt[327] = 'Stuur een e-mail zodra je een persoonlijk bericht krijgt:';
+$txt['ignorelist'] = 'Negeerlijstje';
+$txt['username_line'] = 'Iedere regel slechts 1 gebruikersnaam !';
+$txt['email_notify'] = 'Stuur een e-mail zodra je een persoonlijk bericht krijgt:';
 $txt['email_notify_never'] = 'Nooit';
 $txt['email_notify_buddies'] = 'Alleen van vrienden';
 $txt['email_notify_always'] = 'Altijd';

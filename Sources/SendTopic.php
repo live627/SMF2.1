@@ -121,7 +121,7 @@ function SendTopic()
 	$row['subject'] = un_htmlspecialchars($row['subject']);
 
 	// And off we go!
-	sendmail($_POST['r_email'], $txt['topic'] . ': ' . $row['subject'] . ' (' . $txt[318] . ' ' . $_POST['y_name'] . ')',
+	sendmail($_POST['r_email'], $txt['topic'] . ': ' . $row['subject'] . ' (' . $txt['from'] . ' ' . $_POST['y_name'] . ')',
 		sprintf($txt['sendtopic_dear'], $_POST['r_name']) . "\n\n" .
 		sprintf($txt['sendtopic_this_topic'], $row['subject'], $context['forum_name']) . ":\n\n" .
 		$scripturl . '?topic=' . $topic . ".0\n\n" .
@@ -177,7 +177,7 @@ function ReportToModerator()
 	$context['start'] = $_REQUEST['start'];
 	$context['message_id'] = $_GET['msg'];
 
-	$context['page_title'] = $txt['rtm1'];
+	$context['page_title'] = $txt['report_to_mod'];
 	$context['sub_template'] = 'report';
 }
 
@@ -292,10 +292,10 @@ function ReportToModerator2()
 		loadLanguage('Post', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
 
 		// Send it to the moderator.
-		sendmail($row['email_address'], $txt['rtm3'] . ': ' . $subject . ' ' . $txt['rtm4'] . ' ' . $poster_name,
-			sprintf($txt['rtm_email1'], $subject) . ' ' . $poster_name . ' ' . $txt['rtm_email2'] . ' ' . (empty($user_info['id']) ? $txt['guest'] . ' (' . $user_info['ip'] . ')' : $reporterName) . ' ' . $txt['rtm_email3'] . ":\n\n" .
+		sendmail($row['email_address'], $txt['reported_post'] . ': ' . $subject . ' ' . $txt['reported_to_mod_by'] . ' ' . $poster_name,
+			sprintf($txt['report_following_post'], $subject) . ' ' . $poster_name . ' ' . $txt['reported_by'] . ' ' . (empty($user_info['id']) ? $txt['guest'] . ' (' . $user_info['ip'] . ')' : $reporterName) . ' ' . $txt['board_moderate'] . ":\n\n" .
 			$scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'] . "\n\n" .
-			$txt['rtm_email_comment'] . ":\n" .
+			$txt['report_comment'] . ":\n" .
 			$_POST['comment'] . "\n\n" .
 			sprintf($txt['regards_team'], $context['forum_name']), $user_info['email']);
 	}

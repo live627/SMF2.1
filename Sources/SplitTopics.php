@@ -204,7 +204,7 @@ function SplitExecute()
 
 	// They blanked the subject name.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
-		$_POST['subname'] = $txt['smf258'];
+		$_POST['subname'] = $txt['new_topic'];
 
 	// Redirect to the selector if they chose selective.
 	if ($_POST['step2'] == 'selective')
@@ -251,7 +251,7 @@ function SplitSelectTopics()
 	// For determining what they can see...
 	$approveQuery = allowedTo('approve_posts') ? '1=1' : 'approved = 1';
 
-	$context['page_title'] = $txt['split'] . ' - ' . $txt['smf257'];
+	$context['page_title'] = $txt['split'] . ' - ' . $txt['select_split_posts'];
 
 	// Haven't selected anything have we?
 	$_SESSION['split_selection'][$topic] = empty($_SESSION['split_selection'][$topic]) ? array() : $_SESSION['split_selection'][$topic];
@@ -467,7 +467,7 @@ function SplitSelectionExecute()
 
 	// Default the subject in case it's blank.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
-		$_POST['subname'] = $txt['smf258'];
+		$_POST['subname'] = $txt['new_topic'];
 
 	// The old topic's ID is the current one.
 	$split1_ID_TOPIC = $topic;

@@ -211,104 +211,104 @@ $txt['of_total_members'] = 'of %1$s total members';
 
 $txt['forgot_your_password'] = 'Forgot your password?';
 
-$txt[317] = 'Date';
+$txt['date'] = 'Date';
 // Use numeric entities in the below string.
-$txt[318] = 'From';
-$txt[319] = 'Subject';
-$txt[322] = 'Check for new messages';
-$txt[324] = 'To';
+$txt['from'] = 'From';
+$txt['subject'] = 'Subject';
+$txt['check_new_messages'] = 'Check for new messages';
+$txt['to'] = 'To';
 
 $txt[330] = 'Topics';
-$txt[331] = 'Members';
-$txt[332] = 'Members List';
-$txt[333] = 'New Posts';
-$txt[334] = 'No New Posts';
+$txt['members'] = 'Members';
+$txt['members_list'] = 'Members List';
+$txt['new_posts'] = 'New Posts';
+$txt['old_posts'] = 'No New Posts';
 
 $txt['sendtopic_send'] = 'Send';
 
-$txt[371] = 'Time Offset';
-$txt[377] = 'or';
+$txt['time_offset'] = 'Time Offset';
+$txt['or'] = 'or';
 
-$txt[398] = 'Sorry, no matches were found';
+$txt['no_matches'] = 'Sorry, no matches were found';
 
-$txt[418] = 'Notification';
+$txt['notification'] = 'Notification';
 
-$txt[430] = 'Sorry %s, you are banned from using this forum!';
+$txt['your_ban'] = 'Sorry %s, you are banned from using this forum!';
 $txt['your_ban_expires'] = 'Your ban is set to expire %s';
 $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
-$txt[452] = 'Mark ALL messages as read';
+$txt['mark_as_read'] = 'Mark ALL messages as read';
 
 $txt['hot_topics'] = 'Hot Topic (More than %1$d replies)';
 $txt['very_hot_topics'] = 'Very Hot Topic (More than %1$d replies)';
-$txt[456] = 'Locked Topic';
-$txt[457] = 'Normal Topic';
+$txt['locked_topic'] = 'Locked Topic';
+$txt['normal_topic'] = 'Normal Topic';
 $txt['participation_caption'] = 'Topic you have posted in';
 
-$txt[462] = 'GO';
+$txt['go_caps'] = 'GO';
 
-$txt[465] = 'Print';
-$txt[467] = 'Profile';
-$txt[468] = 'Topic Summary';
-$txt[470] = 'N/A';
+$txt['print'] = 'Print';
+$txt['profile'] = 'Profile';
+$txt['topic_summary'] = 'Topic Summary';
+$txt['not_applicable'] = 'N/A';
 $txt[471] = 'message';
-$txt[473] = 'This name is already in use by another member.';
+$txt['name_in_use'] = 'This name is already in use by another member.';
 
-$txt[488] = 'Total Members';
-$txt[489] = 'Total Posts';
-$txt[490] = 'Total Topics';
+$txt['total_members'] = 'Total Members';
+$txt['total_posts'] = 'Total Posts';
+$txt['total_topics'] = 'Total Topics';
 
-$txt[497] = 'Minutes to stay logged in';
+$txt['mins_logged_in'] = 'Minutes to stay logged in';
 
-$txt[507] = 'Preview';
-$txt[508] = 'Always stay logged in';
+$txt['preview'] = 'Preview';
+$txt['always_logged_in'] = 'Always stay logged in';
 
-$txt[511] = 'Logged';
+$txt['logged'] = 'Logged';
 // Use numeric entities in the below string.
-$txt[512] = 'IP';
+$txt['ip'] = 'IP';
 
-$txt[513] = 'ICQ';
-$txt[515] = 'WWW';
+$txt['icq'] = 'ICQ';
+$txt['www'] = 'WWW';
 
-$txt[525] = 'by';
+$txt['by'] = 'by';
 
-$txt[578] = 'hours';
-$txt[579] = 'days';
+$txt['hours'] = 'hours';
+$txt['days'] = 'days';
 
-$txt[581] = ', our newest member.';
+$txt['newest_member'] = ', our newest member.';
 
-$txt[582] = 'Search for';
+$txt['search_for'] = 'Search for';
 
-$txt[603] = 'AIM';
+$txt['aim'] = 'AIM';
 // In this string, please use +'s for spaces.
 $txt['aim_default_message'] = 'Hi.+Are+you+there?';
-$txt[604] = 'YIM';
+$txt['yim'] = 'YIM';
 
-$txt[616] = 'Remember, this forum is in \'Maintenance Mode\'.';
+$txt['maintain_mode_on'] = 'Remember, this forum is in \'Maintenance Mode\'.';
 
-$txt[641] = 'Read';
-$txt[642] = 'times';
+$txt['read'] = 'Read';
+$txt['times'] = 'times';
 
-$txt[645] = 'Forum Stats';
-$txt[656] = 'Latest Member';
-$txt[658] = 'Total Categories';
-$txt[659] = 'Latest Post';
+$txt['forum_stats'] = 'Forum Stats';
+$txt['latest_member'] = 'Latest Member';
+$txt['total_cats'] = 'Total Categories';
+$txt['latest_post'] = 'Latest Post';
 
-$txt[660] = 'You\'ve got';
-$txt[661] = 'Click';
-$txt[662] = 'here';
-$txt[663] = 'to view them.';
+$txt['you_have'] = 'You\'ve got';
+$txt['click'] = 'Click';
+$txt['here'] = 'here';
+$txt['to_view'] = 'to view them.';
 
-$txt[665] = 'Total Boards';
+$txt['total_boards'] = 'Total Boards';
 
-$txt[668] = 'Print Page';
+$txt['print_page'] = 'Print Page';
 
-$txt[679] = 'This must be a valid email address.';
+$txt['valid_email'] = 'This must be a valid email address.';
 
-$txt[683] = 'I am a geek!!';
+$txt['geek'] = 'I am a geek!!';
 $txt['info_center_title'] = '%s - Info Center';
 
-$txt[707] = 'Send this topic';
+$txt['send_topic'] = 'Send this topic';
 
 $txt['sendtopic_title'] = 'Send the topic &quot;%s&quot; to a friend.';
 // Use numeric entities in the below three strings.
@@ -323,132 +323,132 @@ $txt['sendtopic_comment'] = 'Add a comment';
 // Use numeric entities in the below string.
 $txt['sendtopic2'] = 'A comment has also been added regarding this topic';
 
-$txt[721] = 'Hide email address from public?';
+$txt['hide_email'] = 'Hide email address from public?';
 
-$txt[737] = 'Check all';
+$txt['check_all'] = 'Check all';
 
 // Use numeric entities in the below string.
-$txt[1001] = 'Database Error';
-$txt[1002] = 'Please try again.  If you come back to this error screen, report the error to an administrator.';
-$txt[1003] = 'File';
-$txt[1004] = 'Line';
+$txt['database_error'] = 'Database Error';
+$txt['try_again'] = 'Please try again.  If you come back to this error screen, report the error to an administrator.';
+$txt['file'] = 'File';
+$txt['line'] = 'Line';
 // Use numeric entities in the below string.
-$txt[1005] = 'SMF has detected and automatically tried to repair an error in your database.  If you continue to have problems, or continue to receive these emails, please contact your host.';
+$txt['tried_to_repair'] = 'SMF has detected and automatically tried to repair an error in your database.  If you continue to have problems, or continue to receive these emails, please contact your host.';
 $txt['database_error_versions'] = '<b>Note:</b> It appears that your database <em>may</em> require an upgrade. Your forum\'s files are currently at version %s, while your database is at version %s. The above error might possibly go away if you execute the latest version of upgrade.php.';
 $txt['template_parse_error'] = 'Template Parse Error!';
 $txt['template_parse_error_message'] = 'It seems something has gone sour on the forum with the template system.  This problem should only be temporary, so please come back later and try again.  If you continue to see this message, please contact the administrator.<br /><br />You can also try <a href="javascript:location.reload();">refreshing this page</a>.';
 $txt['template_parse_error_details'] = 'There was a problem loading the <tt><b>%1$s</b></tt> template or language file.  Please check the syntax and try again - remember, single quotes (<tt>\'</tt>) often have to be escaped with a slash (<tt>\\</tt>).  To see more specific error information from PHP, try <a href="' . $boardurl . '%1$s">accessing the file directly</a>.<br /><br />You may want to try to <a href="javascript:location.reload();">refresh this page</a> or <a href="' . $scripturl . '?theme=1">use the default theme</a>.';
 
-$txt['smf10'] = '<b>Today</b> at ';
-$txt['smf10b'] = '<b>Yesterday</b> at ';
-$txt['smf20'] = 'Post new poll';
-$txt['smf21'] = 'Question';
-$txt['smf23'] = 'Submit Vote';
-$txt['smf24'] = 'Total Voters';
-$txt['smf25'] = 'shortcuts: hit alt+s to submit/post or alt+p to preview';
-$txt['smf29'] = 'View results';
-$txt['smf30'] = 'Lock Voting';
-$txt['smf30b'] = 'Unlock Voting';
-$txt['smf39'] = 'Edit Poll';
-$txt['smf43'] = 'Poll';
-$txt['smf47'] = '1 Day';
-$txt['smf48'] = '1 Week';
-$txt['smf49'] = '1 Month';
-$txt['smf50'] = 'Forever';
-$txt['smf52'] = 'Login with username, password and session length';
-$txt['smf53'] = '1 Hour';
-$txt['smf56'] = 'MOVED';
-$txt['smf57'] = 'Please enter a brief description as to<br />why this topic is being moved.';
-$txt['smf82'] = 'Board';
-$txt['smf88'] = 'in';
+$txt['today'] = '<b>Today</b> at ';
+$txt['yesterday'] = '<b>Yesterday</b> at ';
+$txt['new_poll'] = 'Post new poll';
+$txt['poll_question'] = 'Question';
+$txt['poll_vote'] = 'Submit Vote';
+$txt['poll_total_voters'] = 'Total Voters';
+$txt['shortcuts'] = 'shortcuts: hit alt+s to submit/post or alt+p to preview';
+$txt['poll_results'] = 'View results';
+$txt['poll_lock'] = 'Lock Voting';
+$txt['poll_unlock'] = 'Unlock Voting';
+$txt['poll_edit'] = 'Edit Poll';
+$txt['poll'] = 'Poll';
+$txt['one_day'] = '1 Day';
+$txt['one_week'] = '1 Week';
+$txt['one_month'] = '1 Month';
+$txt['forever'] = 'Forever';
+$txt['quick_login_dec'] = 'Login with username, password and session length';
+$txt['one_hour'] = '1 Hour';
+$txt['moved'] = 'MOVED';
+$txt['moved_why'] = 'Please enter a brief description as to<br />why this topic is being moved.';
+$txt['board'] = 'Board';
+$txt['in'] = 'in';
 $txt['smf96'] = 'Sticky Topic';
 
-$txt['smf138'] = 'Delete';
+$txt['delete'] = 'Delete';
 
-$txt['smf199'] = 'Your Personal Messages';
+$txt['your_pms'] = 'Your Personal Messages';
 
-$txt['smf211'] = 'KB';
+$txt['kilobyte'] = 'KB';
 
-$txt['smf223'] = '[More Stats]';
+$txt['more_stats'] = '[More Stats]';
 
 // Use numeric entities in the below three strings.
-$txt['smf238'] = 'Code';
-$txt['smf239'] = 'Quote from';
+$txt['code'] = 'Code';
+$txt['quote_from'] = 'Quote from';
 $txt['quote'] = 'Quote';
 
 $txt['merge_to_topic_id'] = 'ID of target topic';
 $txt['split'] = 'Split Topic';
 $txt['merge'] = 'Merge Topics';
-$txt['smf254'] = 'Subject For New Topic';
-$txt['smf255'] = 'Only split this post.';
-$txt['smf256'] = 'Split topic after and including this post.';
-$txt['smf257'] = 'Select posts to split.';
-$txt['smf258'] = 'New Topic';
-$txt['smf259'] = 'Topic successfully split into two topics.';
-$txt['smf260'] = 'Origin Topic';
-$txt['smf261'] = 'Please select which posts you wish to split.';
-$txt['smf264'] = 'Topics successfully merged.';
-$txt['smf265'] = 'Newly Merged Topic';
-$txt['smf266'] = 'Topic to be merged';
-$txt['smf267'] = 'Target board';
-$txt['smf269'] = 'Target topic';
-$txt['smf274'] = 'Are you sure you want to merge';
-$txt['smf275'] = 'with';
-$txt['smf276'] = 'This function will merge the messages of two topics into one topic. The messages will be sorted according to the time of posting. Therefore the earliest posted message will be the first message of the merged topic.';
+$txt['subject_new_topic'] = 'Subject For New Topic';
+$txt['split_this_post'] = 'Only split this post.';
+$txt['split_after_and_this_post'] = 'Split topic after and including this post.';
+$txt['select_split_posts'] = 'Select posts to split.';
+$txt['new_topic'] = 'New Topic';
+$txt['split_successful'] = 'Topic successfully split into two topics.';
+$txt['origin_topic'] = 'Origin Topic';
+$txt['please_select_split'] = 'Please select which posts you wish to split.';
+$txt['merge_successful'] = 'Topics successfully merged.';
+$txt['new_merged_topic'] = 'Newly Merged Topic';
+$txt['topic_to_merge'] = 'Topic to be merged';
+$txt['target_board'] = 'Target board';
+$txt['target_topic'] = 'Target topic';
+$txt['merge_confirm'] = 'Are you sure you want to merge';
+$txt['with'] = 'with';
+$txt['merge_desc'] = 'This function will merge the messages of two topics into one topic. The messages will be sorted according to the time of posting. Therefore the earliest posted message will be the first message of the merged topic.';
 
-$txt['smf277'] = 'Set topic sticky';
-$txt['smf278'] = 'Set topic non-sticky';
-$txt['smf279'] = 'Lock topic';
-$txt['smf280'] = 'Unlock topic';
+$txt['set_sticky'] = 'Set topic sticky';
+$txt['set_nonsticky'] = 'Set topic non-sticky';
+$txt['set_lock'] = 'Lock topic';
+$txt['set_unlock'] = 'Unlock topic';
 
-$txt['smf298'] = 'Advanced search';
+$txt['search_advanced'] = 'Advanced search';
 
-$txt['smf299'] = 'MAJOR SECURITY RISK:';
-$txt['smf300'] = 'You have not removed ';
+$txt['security_risk'] = 'MAJOR SECURITY RISK:';
+$txt['not_removed'] = 'You have not removed ';
 
 $txt['cache_writable_head'] = 'Performance Warning';
 $txt['cache_writable'] = 'The cache directory is not writable - this will adversely affect the performance of your forum.';
 
-$txt['smf301'] = 'Page created in ';
-$txt['smf302'] = ' seconds with ';
-$txt['smf302b'] = ' queries.';
+$txt['page_created'] = 'Page created in ';
+$txt['seconds_with'] = ' seconds with ';
+$txt['queries'] = ' queries.';
 
-$txt['smf315'] = 'Use this function to inform the moderators and administrators of an abusive or wrongly posted message.<br /><i>Please note that your email address will be revealed to the moderators if you use this.</i>';
+$txt['report_to_mod_func'] = 'Use this function to inform the moderators and administrators of an abusive or wrongly posted message.<br /><i>Please note that your email address will be revealed to the moderators if you use this.</i>';
 
-$txt['online2'] = 'Online';
-$txt['online3'] = 'Offline';
-$txt['online4'] = 'Personal Message (Online)';
-$txt['online5'] = 'Personal Message (Offline)';
-$txt['online8'] = 'Status';
+$txt['online'] = 'Online';
+$txt['offline'] = 'Offline';
+$txt['pm_online'] = 'Personal Message (Online)';
+$txt['pm_offline'] = 'Personal Message (Offline)';
+$txt['status'] = 'Status';
 
-$txt['topbottom4'] = 'Go Up';
-$txt['topbottom5'] = 'Go Down';
+$txt['go_up'] = 'Go Up';
+$txt['go_down'] = 'Go Down';
 
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
-$txt['calendar3'] = 'Birthdays:';
-$txt['calendar4'] = 'Events:';
-$txt['calendar3b'] = 'Upcoming Birthdays:';
-$txt['calendar4b'] = 'Upcoming Events:';
+$txt['birthdays'] = 'Birthdays:';
+$txt['events'] = 'Events:';
+$txt['birthdays_upcoming'] = 'Upcoming Birthdays:';
+$txt['events_upcoming'] = 'Upcoming Events:';
 // Prompt for holidays in the calendar, leave blank to just display the holiday's name.
 $txt['calendar5'] = '';
-$txt['calendar9'] = 'Month:';
-$txt['calendar10'] = 'Year:';
-$txt['calendar11'] = 'Day:';
-$txt['calendar12'] = 'Event Title:';
-$txt['calendar13'] = 'Post In:';
-$txt['calendar20'] = 'Edit Event';
+$txt['calendar_month'] = 'Month:';
+$txt['calendar_year'] = 'Year:';
+$txt['calendar_day'] = 'Day:';
+$txt['calendar_event_title'] = 'Event Title:';
+$txt['calendar_post_in'] = 'Post In:';
+$txt['calendar_edit'] = 'Edit Event';
 $txt['calendar21'] = 'Delete this event?';
 $txt['calendar22'] = 'Delete Event';
 $txt['calendar_post_event'] = 'Post Event';
-$txt['calendar24'] = 'Calendar';
-$txt['calendar37'] = 'Link to Calendar';
-$txt['calendar43'] = 'Link Event';
+$txt['calendar'] = 'Calendar';
+$txt['calendar_link'] = 'Link to Calendar';
+$txt['calendar_upcoming'] = 'Link Event';
 $txt['calendar47'] = 'Upcoming Calendar';
-$txt['calendar47b'] = 'Today\'s Calendar';
-$txt['calendar51'] = 'Week';
-$txt['calendar54'] = 'Number of Days:';
+$txt['calendar_today'] = 'Today\'s Calendar';
+$txt['calendar_week'] = 'Week';
+$txt['calendar_numb_days'] = 'Number of Days:';
 $txt['calendar_how_edit'] = 'how do you edit these events?';
 $txt['calendar_link_event'] = 'Link Event To Post:';
 $txt['calendar_confirm_delete'] = 'Are you sure you want to delete this event?';
@@ -471,7 +471,7 @@ $txt['smtp_error'] = 'Ran into problems sending Mail. Error: ';
 $txt['mail_send_unable'] = 'Unable to send mail to the email address \'%s\'';
 
 $txt['mlist_search'] = 'Search for members';
-$txt['mlist_search2'] = 'Search again';
+$txt['mlist_search_again'] = 'Search again';
 $txt['mlist_search_email'] = 'Search by email address';
 $txt['mlist_search_messenger'] = 'Search by messenger nickname';
 $txt['mlist_search_group'] = 'Search by position';
@@ -517,8 +517,8 @@ $txt['quickmod_confirm'] = 'Are you sure you want to do this?';
 
 $txt['spell_check'] = 'Spell Check';
 
-$txt['quick_reply_1'] = 'Quick Reply';
-$txt['quick_reply_2'] = 'With a <i>Quick-Reply</i> you can use bulletin board code and smileys as you would in a normal post, but much more conveniently.';
+$txt['quick_reply'] = 'Quick Reply';
+$txt['quick_reply_desc'] = 'With a <i>Quick-Reply</i> you can use bulletin board code and smileys as you would in a normal post, but much more conveniently.';
 $txt['quick_reply_warning'] = 'Warning: this topic is currently locked!<br />Only admins and moderators can reply.';
 $txt['wait_for_approval'] = 'Note: this post will not display until it\'s been approved by a moderator.';
 
@@ -527,7 +527,7 @@ $txt['notification_disable_board'] = 'Are you sure you wish to disable notificat
 $txt['notification_enable_topic'] = 'Are you sure you wish to enable notification of new replies for this topic?';
 $txt['notification_disable_topic'] = 'Are you sure you wish to disable notification of new replies for this topic?';
 
-$txt['rtm1'] = 'Report to moderator';
+$txt['report_to_mod'] = 'Report to moderator';
 
 $txt['unread_topics_visit'] = 'Recent Unread Topics';
 $txt['unread_topics_visit_none'] = 'No unread topics found since your last visit.  <a href="' . $scripturl . '?action=unread;all">Click here to try all unread topics</a>.';

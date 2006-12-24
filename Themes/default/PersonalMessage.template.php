@@ -273,7 +273,7 @@ function template_folder()
 									<a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" />' : $txt['view_profile']), '</a>';
 					if ($message['member']['website']['url'] != '')
 						echo '
-									<a href="', $message['member']['website']['url'], '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt[515] . '" title="' . $message['member']['website']['title'] . '" />' : $txt[515]), '</a>';
+									<a href="', $message['member']['website']['url'], '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" title="' . $message['member']['website']['title'] . '" />' : $txt['www']), '</a>';
 					if (empty($message['member']['hide_email']))
 						echo '
 									<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
@@ -311,7 +311,7 @@ function template_folder()
 			// If we're in the sent items, show who it was sent to besides the "To:" people.
 			if (!empty($message['recipients']['bcc']))
 				echo '
-										<div class="smalltext">&#171; <b> ', $txt[1502], ':</b> ', implode(', ', $message['recipients']['bcc']), ' &#187;</div>';
+										<div class="smalltext">&#171; <b> ', $txt['pm_bcc'], ':</b> ', implode(', ', $message['recipients']['bcc']), ' &#187;</div>';
 
 			if (!empty($message['is_replied_to']))
 				echo '
@@ -431,7 +431,7 @@ function template_folder()
 			<tr class="catbg" valign="middle">
 				<td height="25">
 					<div style="float: left;">', $txt['pages'], ': ', $context['page_index'], '</div>
-					<div style="float: right;"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['smf249'], '\')) return false;" /></div>
+					<div style="float: right;"><input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" /></div>
 				</td>
 			</tr>
 		</table>
@@ -462,9 +462,9 @@ function template_subject_list()
 		<table border="0" width="100%" cellpadding="2" cellspacing="1" class="bordercolor">
 		<tr class="titlebg">
 			<td align="center" width="2%"><a href="', $scripturl, '?action=pm;view;f=', $context['folder'], ';start=', $context['start'], ';sort=', $context['sort_by'], ($context['sort_direction'] == 'up' ? ';' : ';desc'), ($context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : ''), '"><img src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['pm_change_view'], '" width="16" height="16" /></a></td>
-			<td style="width: 32ex;"><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=date', $context['sort_by'] == 'date' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt[317], $context['sort_by'] == 'date' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td width="46%"><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt[319], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', ($context['from_or_to'] == 'from' ? $txt[318] : $txt[324]), $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td style="width: 32ex;"><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=date', $context['sort_by'] == 'date' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt['date'], $context['sort_by'] == 'date' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td width="46%"><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=subject', $context['sort_by'] == 'subject' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', $txt['subject'], $context['sort_by'] == 'subject' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td><a href="', $scripturl, '?action=pm;f=', $context['folder'], ';start=', $context['start'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', '">', ($context['from_or_to'] == 'from' ? $txt['from'] : $txt['to']), $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 			<td align="center" width="24"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
 		</tr>';
 	if (!$context['show_delete'])
@@ -540,7 +540,7 @@ function template_subject_list()
 		}
 
 		echo '
-				<input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['smf249'], '\')) return false;" />';
+				<input type="submit" name="del_selected" value="', $txt['quickmod_delete_selected'], '" style="font-weight: normal;" onclick="if (!confirm(\'', $txt['delete_selected_confirm'], '\')) return false;" />';
 	}
 
 	echo '
@@ -691,7 +691,7 @@ function template_search()
 					</table>
 
 					<br />
-					<input type="checkbox" name="all" id="check_all" value="" ', $context['check_all'] ? 'checked="checked"' : '', ' onclick="invertAll(this, this.form, \'searchlabel\');" class="check" /><i> <label for="check_all">', $txt[737], '</label></i><br />
+					<input type="checkbox" name="all" id="check_all" value="" ', $context['check_all'] ? 'checked="checked"' : '', ' onclick="invertAll(this, this.form, \'searchlabel\');" class="check" /><i> <label for="check_all">', $txt['check_all'], '</label></i><br />
 							</td>
 						</tr>';
 		}
@@ -738,9 +738,9 @@ function template_search_results()
 				<td colspan="3"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 			</tr>
 			<tr class="titlebg">
-				<td width="30%">', $txt[317], '</td>
-				<td width="50%">', $txt[319], '</td>
-				<td width="20%">', $txt[318], '</td>
+				<td width="30%">', $txt['date'], '</td>
+				<td width="50%">', $txt['subject'], '</td>
+				<td width="20%">', $txt['from'], '</td>
 			</tr>';
 	}
 
@@ -765,7 +765,7 @@ function template_search_results()
 				</td>
 			</tr>
 			<tr class="catbg">
-				<td>', $txt[318], ': ', $message['member']['link'], ', ', $txt[324], ': ';
+				<td>', $txt['from'], ': ', $message['member']['link'], ', ', $txt['to'], ': ';
 
 			// Show the recipients.
 			// !!! This doesn't deal with the sent item searching quite right for bcc.
@@ -902,7 +902,7 @@ function template_send()
 	echo '
 		<table border="0" width="80%" align="center" cellpadding="3" cellspacing="1" class="bordercolor">
 			<tr class="titlebg">
-				<td><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt[321], '" title="', $txt[321], '" />&nbsp;', $txt[321], '</td>
+				<td><img src="', $settings['images_url'], '/icons/im_newmsg.gif" alt="', $txt['new_message'], '" title="', $txt['new_message'], '" />&nbsp;', $txt['new_message'], '</td>
 			</tr><tr>
 				<td class="windowbg">
 					<form action="', $scripturl, '?action=pm;sa=send2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);saveEntities();">
@@ -926,16 +926,16 @@ function template_send()
 	// To and bcc. Include a button to search for members.
 	echo '
 							<tr>
-								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' style="color: red;"' : ''), '>', $txt[150], ':</b></td>
+								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' style="color: red;"' : ''), '>', $txt['pm_to'], ':</b></td>
 								<td class="smalltext">
 									<input type="text" name="to" id="to" value="', $context['to'], '" tabindex="', $context['tabindex']++, '" size="40" />&nbsp;
 									<a href="', $scripturl, '?action=findmember;input=to;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a> <a href="', $scripturl, '?action=findmember;input=to;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);">', $txt['find_members'], '</a>
 								</td>
 							</tr><tr>
-								<td align="right"><b', (isset($context['post_error']['bad_bcc']) ? ' style="color: red;"' : ''), '>', $txt[1502], ':</b></td>
+								<td align="right"><b', (isset($context['post_error']['bad_bcc']) ? ' style="color: red;"' : ''), '>', $txt['pm_bcc'], ':</b></td>
 								<td class="smalltext">
 									<input type="text" name="bcc" id="bcc" value="', $context['bcc'], '" tabindex="', $context['tabindex']++, '" size="40" />&nbsp;
-									<a href="', $scripturl, '?action=findmember;input=bcc;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a> ', $txt[748], '
+									<a href="', $scripturl, '?action=findmember;input=bcc;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a> ', $txt['pm_multiple'], '
 								</td>
 							</tr>';
 	// Subject of personal message.
@@ -980,8 +980,8 @@ function template_send()
 	echo '
 							<tr>
 								<td align="right" colspan="2">
-									<input type="submit" value="', $txt[148], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" />
-									<input type="submit" name="preview" value="', $txt[507], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="p" />';
+									<input type="submit" value="', $txt['send_message'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" />
+									<input type="submit" name="preview" value="', $txt['preview'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="p" />';
 	if ($context['show_spellchecking'])
 		echo '
 									<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="spellCheck(\'postmodify\', \'message\');" />';
@@ -1018,13 +1018,13 @@ function template_send()
 		<br />
 		<table width="100%" border="0" cellspacing="1" cellpadding="4" class="bordercolor">
 			<tr>
-				<td colspan="2" class="windowbg"><b>', $txt[319], ': ', $context['quoted_message']['subject'], '</b></td>
+				<td colspan="2" class="windowbg"><b>', $txt['subject'], ': ', $context['quoted_message']['subject'], '</b></td>
 			</tr>
 			<tr>
 				<td class="windowbg2">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td class="windowbg2">', $txt[318], ': ', $context['quoted_message']['member']['name'], '</td>
+							<td class="windowbg2">', $txt['from'], ': ', $context['quoted_message']['member']['name'], '</td>
 							<td class="windowbg2" align="right">', $txt['on'], ': ', $context['quoted_message']['time'], '</td>
 						</tr>
 					</table>
@@ -1206,11 +1206,11 @@ function template_ask_delete()
 	echo '
 		<table border="0" width="80%" cellpadding="4" cellspacing="1" class="bordercolor" align="center">
 			<tr class="titlebg">
-				<td>', ($context['delete_all'] ? $txt[411] : $txt[412]), '</td>
+				<td>', ($context['delete_all'] ? $txt['delete_message'] : $txt['delete_all']), '</td>
 			</tr>
 			<tr>
 				<td class="windowbg">
-					', $txt[413], '<br />
+					', $txt['delete_all_confirm'], '<br />
 					<br />
 					<b><a href="', $scripturl, '?action=pm;sa=removeall2;f=', $context['folder'], ';', $context['current_label_id'] != -1 ? ';l=' . $context['current_label_id'] : '', ';sesc=', $context['session_id'], '">', $txt['yes'], '</a> - <a href="javascript:history.go(-1);">', $txt['no'], '</a></b>
 				</td>
@@ -1233,7 +1233,7 @@ function template_prune()
 				<td>', $txt['pm_prune_desc1'], ' <input type="text" name="age" size="3" value="14" /> ', $txt['pm_prune_desc2'], '</td>
 			</tr>
 			<tr class="windowbg">
-				<td align="right"><input type="submit" value="', $txt['smf138'], '" /></td>
+				<td align="right"><input type="submit" value="', $txt['delete'], '" /></td>
 			</tr>
 		</table>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -1344,9 +1344,9 @@ function template_message_settings()
 	echo '
 							<tr>
 								<td valign="top">
-									<b>', $txt[325], ':</b>
+									<b>', $txt['ignorelist'], ':</b>
 									<div class="smalltext">
-										', $txt[326], '<br />
+										', $txt['username_line'], '<br />
 										<br />
 										<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=\\\\n;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="middle" /> ', $txt['find_members'], '</a>
 									</div>
@@ -1371,7 +1371,7 @@ function template_message_settings()
 										<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
 										<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>
 									</select><br />
-									<label for="pm_email_notify">', $txt[327], '</label>
+									<label for="pm_email_notify">', $txt['email_notify'], '</label>
 									<select name="pm_email_notify" id="pm_email_notify">
 										<option value="0"', empty($context['send_email']) ? ' selected="selected"' : '', '>', $txt['email_notify_never'], '</option>
 										<option value="1"', !empty($context['send_email']) && ($context['send_email'] == 1 || (empty($modSettings['enable_buddylist']) && $context['send_email'] > 1)) ? ' selected="selected"' : '', '>', $txt['email_notify_always'], '</option>';

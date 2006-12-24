@@ -13,11 +13,11 @@ function template_ask()
 				<td>', $txt['split'], '</td>
 			</tr><tr class="windowbg">
 				<td align="center" style="padding-top: 2ex; padding-bottom: 1ex;">
-					<b><label for="subname">', $txt['smf254'], '</label>:</b> <input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" /><br />
+					<b><label for="subname">', $txt['subject_new_topic'], '</label>:</b> <input type="text" name="subname" id="subname" value="', $context['message']['subject'], '" size="25" /><br />
 					<br />
-					<input type="radio" name="step2" value="onlythis" checked="checked" class="check" /> ', $txt['smf255'], '<br />
-					<input type="radio" name="step2" value="afterthis" class="check" /> ', $txt['smf256'], '<br />
-					<input type="radio" name="step2" value="selective" class="check" /> ', $txt['smf257'], '<br />
+					<input type="radio" name="step2" value="onlythis" checked="checked" class="check" /> ', $txt['split_this_post'], '<br />
+					<input type="radio" name="step2" value="afterthis" class="check" /> ', $txt['split_after_and_this_post'], '<br />
+					<input type="radio" name="step2" value="selective" class="check" /> ', $txt['select_split_posts'], '<br />
 					<br />
 					<input type="submit" value="', $txt['split'], '" />
 				</td>
@@ -37,10 +37,10 @@ function template_main()
 				<td>', $txt['split'], '</td>
 			</tr><tr>
 				<td class="windowbg" valign="middle" align="center">
-					', $txt['smf259'], '<br /><br />
+					', $txt['split_successful'], '<br /><br />
 					<a href="', $scripturl, '?board=', $context['current_board'], '.0">', $txt['message_index'], '</a><br />
-					<a href="', $scripturl, '?topic=', $context['old_topic'], '.0">', $txt['smf260'], '</a><br />
-					<a href="', $scripturl, '?topic=', $context['new_topic'], '.0">', $txt['smf258'], '</a>
+					<a href="', $scripturl, '?topic=', $context['old_topic'], '.0">', $txt['origin_topic'], '</a><br />
+					<a href="', $scripturl, '?topic=', $context['new_topic'], '.0">', $txt['new_topic'], '</a>
 				</td>
 			</tr>
 		</table>';
@@ -60,12 +60,12 @@ function template_select()
 			<table id="table_not_selected" border="0" width="98%" cellspacing="1" class="bordercolor" cellpadding="4" align="center">
 				<tr class="titlebg">
 					<td colspan="2">
-						', $txt['split'], ' - ', $txt['smf257'], '
+						', $txt['split'], ' - ', $txt['select_split_posts'], '
 					</td>
 				</tr>
 				<tr class="windowbg">
 					<td colspan="2" valign="middle">
-						', $txt['smf261'], '
+						', $txt['please_select_split'], '
 					</td>
 				</tr>
 				<tr class="catbg">
@@ -204,10 +204,10 @@ function template_merge_done()
 			</tr><tr>
 				<td class="windowbg" valign="middle" align="center">
 					<br />
-					' . $txt['smf264'] . '<br />
+					' . $txt['merge_successful'] . '<br />
 					<br />
 					<a href="' . $scripturl . '?board=' . $context['target_board'] . '.0">' . $txt['message_index'] . '</a><br />
-					<a href="' . $scripturl . '?topic=' . $context['target_topic'] . '.0">' . $txt['smf265'] . '</a>
+					<a href="' . $scripturl . '?topic=' . $context['target_topic'] . '.0">' . $txt['new_merged_topic'] . '</a>
 				</td>
 			</tr>
 		</table>';
@@ -223,7 +223,7 @@ function template_merge()
 				<td>' . $txt['merge'] . '</td>
 			</tr>
 			<tr>
-				<td class="windowbg">' . $txt['smf276'] . '</td>
+				<td class="windowbg">' . $txt['merge_desc'] . '</td>
 			</tr>
 			<tr>
 				<td colspan="2" class="titlebg">
@@ -236,7 +236,7 @@ function template_merge()
 				<td class="windowbg" valign="middle" align="center">
 					<table border="0">
 						<tr>
-							<td align="right"><b>' . $txt['smf266'] . ':</b> <br /></td>
+							<td align="right"><b>' . $txt['topic_to_merge'] . ':</b> <br /></td>
 							<td align="left">' . $context['origin_subject'] . '</td>
 						</tr><tr>
 							<td align="right"><br /><b>', $txt['merge_to_topic_id'], ': </b></td>
@@ -253,7 +253,7 @@ function template_merge()
 	if (!empty($context['boards']) && count($context['boards']) > 1)
 	{
 		echo '
-							<td align="right"><br /><b>' . $txt['smf267'] . ':</b></td>
+							<td align="right"><br /><b>' . $txt['target_board'] . ':</b></td>
 							<td align="left"><br />
 								<form action="' . $scripturl . '?action=mergetopics;from=' . $context['origin_topic'] . ';targetboard=' . $context['target_board'] . ';board=' . $context['current_board'] . '.0" method="post" accept-charset="', $context['character_set'], '">
 									<input type="hidden" name="from" value="' . $context['origin_topic'] . '" />
@@ -262,14 +262,14 @@ function template_merge()
 			echo '
 										<option value="', $board['id'], '"', $board['id'] == $context['target_board'] ? ' selected="selected"' : '', '>', $board['category'], ' - ', $board['name'], '</option>';
 		echo '
-									</select> <noscript><input type="submit" value="', $txt[462], '" /></noscript>
+									</select> <noscript><input type="submit" value="', $txt['go_caps'], '" /></noscript>
 								</form>
 							</td>';
 	}
 
 	echo '
 						</tr><tr>
-							<td align="right" valign="top"><b>' . $txt['smf269'] . ':</b></td>
+							<td align="right" valign="top"><b>' . $txt['target_topic'] . ':</b></td>
 							<td align="left" style="white-space: nowrap;">
 								<table>';
 

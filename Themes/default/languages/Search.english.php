@@ -3,11 +3,11 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-$txt[183] = 'Set Search Parameters';
-$txt[189] = 'Choose a board to search in, or search all';
-$txt[343] = 'Match all words';
-$txt[344] = 'Match any words';
-$txt[583] = 'by user';
+$txt['set_perameters'] = 'Set Search Parameters';
+$txt['choose_board'] = 'Choose a board to search in, or search all';
+$txt['all_words'] = 'Match all words';
+$txt['any_words'] = 'Match any words';
+$txt['by_user'] = 'by user';
 
 $txt['search_post_age'] = 'Message age';
 $txt['search_between'] = 'Between';

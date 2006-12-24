@@ -3,28 +3,28 @@
 
 // Important! Before editing these language files please read the text at the topic of index.german.php.
 
-$txt[37] = 'Bitte einen Benutzernamen eingeben.';
-$txt[38] = 'Das Passwortfeld ist leer.';
-$txt[39] = 'Das Passwort ist falsch.';
-$txt[98] = 'W&auml;hle Sie einen Benutzernamen';
+$txt['need_username'] = 'Bitte einen Benutzernamen eingeben.';
+$txt['no_password'] = 'Das Passwortfeld ist leer.';
+$txt['incorrect_password'] = 'Das Passwort ist falsch.';
+$txt['choose_username'] = 'W&auml;hle Sie einen Benutzernamen';
 $txt[155] = 'Wartungsmodus';
-$txt[245] = 'Die Registrierung war erfolgreich!';
-$txt[431] = 'Erfolgreich! Sie sind nun ein Mitglied des Forums';
+$txt['registration_successful'] = 'Die Registrierung war erfolgreich!';
+$txt['now_a_member'] = 'Erfolgreich! Sie sind nun ein Mitglied des Forums';
 // Use numeric entities in the below string.
-$txt[492] = 'und Ihr Passwort ist';
-$txt[500] = 'Bitte geben Sie eine g&uuml;ltige E-Mail Adresse ein, (%s)';
-$txt[517] = 'Notwendige Angaben';
-$txt[520] = 'Wird nur zur Identifizierung von SMF verwendet. Spezialzeichen k&ouml;nnen Sie nach dem Login verwenden, indem Sie den Anzeigenamen im Profil &auml;ndern.';
-$txt[585] = 'Ich bin einverstanden';
-$txt[586] = 'Ich bin nicht einverstanden';
-$txt[633] = 'Warnung!';
-$txt[634] = 'Nur registrierte Mitglieder haben Zugriff auf diesen Bereich.';
+$txt['your_password'] = 'und Ihr Passwort ist';
+$txt['valid_email_needed'] = 'Bitte geben Sie eine g&uuml;ltige E-Mail Adresse ein, (%s)';
+$txt['required_info'] = 'Notwendige Angaben';
+$txt['identification_by_smf'] = 'Wird nur zur Identifizierung von SMF verwendet. Spezialzeichen k&ouml;nnen Sie nach dem Login verwenden, indem Sie den Anzeigenamen im Profil &auml;ndern.';
+$txt['agree'] = 'Ich bin einverstanden';
+$txt['decline'] = 'Ich bin nicht einverstanden';
+$txt['warning'] = 'Warnung!';
+$txt['only_members_can_access'] = 'Nur registrierte Mitglieder haben Zugriff auf diesen Bereich.';
 $txt['login_below'] = 'Bitte einloggen oder';
 $txt['login_or_register'] = 'ein neues Benutzerkonto registrieren';
 $txt['login_with_forum'] = 'im %s.';
 // Use numeric entities in the below two strings.
-$txt[701] = 'Nach dem Einloggen k&#246;nnen Sie es in Ihrem Profil &#228;ndern oder folgende Seite benutzen:';
-$txt[719] = 'Ihr Benutzername ist: ';
+$txt['may_change_in_profile'] = 'Nach dem Einloggen k&#246;nnen Sie es in Ihrem Profil &#228;ndern oder folgende Seite benutzen:';
+$txt['your_username_is'] = 'Ihr Benutzername ist: ';
 
 $txt['login_hash_error'] = 'Die Passwortsicherheit wurde aktualisiert. Bitte geben Sie Ihr Passwort erneut ein.';
 
@@ -60,16 +60,16 @@ $txt['invalid_activation_known'] = 'Wenn Sie Ihren Aktivierungscode wissen, trag
 $txt['invalid_activation_retry'] = 'Aktivierungscode';
 $txt['invalid_activation_submit'] = 'Aktivieren';
 
-$txt['coppa_not_completed1'] = 'Der Administrator hat noch keine Einwilligung der Eltern/Erziehungsberechtigten f&uuml;r Ihr Benutzerkonto erhalten.';
-$txt['coppa_not_completed2'] = 'Weitere Details?';
+$txt['coppa_no_concent'] = 'Der Administrator hat noch keine Einwilligung der Eltern/Erziehungsberechtigten f&uuml;r Ihr Benutzerkonto erhalten.';
+$txt['coppa_need_more_details'] = 'Weitere Details?';
 
 $txt['awaiting_delete_account'] = 'Sie haben Ihr Benutzerkonto gel&ouml;scht! M&ouml;chten Sie es wiederherstellen, aktivieren Sie die &quot;Wiederherstellen meines Benutzerkontos&quot; Option und versuchen Sie es erneut.';
 $txt['undelete_account'] = 'Wiederherstellen meines Benutzerkontos';
 
 // Use numeric entities in the below three strings.
 $txt['change_password'] = 'Neue Login-Daten';
-$txt['change_password_1'] = 'Ihre Login-Daten von';
-$txt['change_password_2'] = 'haben sich ge&#228;ndert und Ihr Passwort wurde annulliert. Es folgen Ihre neuen Daten.';
+$txt['change_password_login'] = 'Ihre Login-Daten von';
+$txt['change_password_new'] = 'haben sich ge&#228;ndert und Ihr Passwort wurde annulliert. Es folgen Ihre neuen Daten.';
 
 $txt['maintenance3'] = 'Dieses Forum ist im Wartungsmodus.';
 

@@ -3,28 +3,28 @@
 
 // Important! Before editing these language files please read the text at the topic of index.spanish.php.
 
-$txt[143] = '&Iacute;ndice de mensajes personales';
-$txt[148] = 'Enviar mensaje';
-$txt[150] = 'Para';
-$txt[1502] = 'Bcc';
-$txt[316] = 'Bandeja de Entrada';
+$txt['pm_inbox'] = '&Iacute;ndice de mensajes personales';
+$txt['send_message'] = 'Enviar mensaje';
+$txt['pm_to'] = 'Para';
+$txt['pm_bcc'] = 'Bcc';
+$txt['inbox'] = 'Bandeja de Entrada';
 // Untranslated!
 $txt['sent_items'] = 'Sent Items';
-$txt[321] = 'Nuevo Mensaje';
-$txt[411] = 'Borrar Mensajes';
+$txt['new_message'] = 'Nuevo Mensaje';
+$txt['delete_message'] = 'Borrar Mensajes';
 // Don't translate "PMBOX" in this string.
-$txt[412] = 'Borrar todos los mensajes de tu PMBOX';
-$txt[413] = '¿Estás seguro que deseas borrar todos los mensajes?';
-$txt[535] = 'Destinatario';
+$txt['delete_all'] = 'Borrar todos los mensajes de tu PMBOX';
+$txt['delete_all_confirm'] = '¿Estás seguro que deseas borrar todos los mensajes?';
+$txt['recipient'] = 'Destinatario';
 // Don't translate the word "SUBJECT" here, as it is used to format the message - use numeric entities as well.
-$txt[561] = 'Nuevo Mensaje Personal: SUBJECT';
+$txt['new_pm_subject'] = 'Nuevo Mensaje Personal: SUBJECT';
 // Don't translate SENDER or MESSAGE in this language string; they are replaced with the corresponding text - use numeric entities too.
-$txt[562] = 'Acaban de enviarte un mensaje personal de parte de SENDER en ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANTE: Recuerda, esto es solamente una notificaci&oacute;n. Por favor, no respondas a este email.' . "\n\n" . 'El mensaje que te enviaron fue:' . "\n\n" . 'MESSAGE';
-$txt[748] = '(m&uacute;ltiples destinatarios como \'nombreusuario1, nombreusuario2\')';
+$txt['pm_email'] = 'Acaban de enviarte un mensaje personal de parte de SENDER en ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANTE: Recuerda, esto es solamente una notificaci&oacute;n. Por favor, no respondas a este email.' . "\n\n" . 'El mensaje que te enviaron fue:' . "\n\n" . 'MESSAGE';
+$txt['pm_multiple'] = '(m&uacute;ltiples destinatarios como \'nombreusuario1, nombreusuario2\')';
 // Use numeric entities in the below string.
 $txt['instant_reply'] = 'Responder a este mensaje personal aqu&iacute;:';
 
-$txt['smf249'] = '¿Deseas borrar todos los Mensajes Instant&aacute;neos seleccionados?';
+$txt['delete_selected_confirm'] = '¿Deseas borrar todos los Mensajes Instant&aacute;neos seleccionados?';
 
 $txt['sent_to'] = 'Enviado a';
 $txt['reply_to_all'] = 'Responder a Todos';
@@ -150,9 +150,9 @@ $txt['pm_settings'] = 'Change Settings';
 $txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
 $txt['pm_settings_save'] = 'Save Changes';
 
-$txt[325] = 'Lista de ignorados';
-$txt[326] = 'Agrega un nombre de usuario en cada l&iacute;nea.<br />O escribe * para ignorar todos los mensajes.';
-$txt[327] = 'Notificar por email cada que recibas un mensaje personal:';
+$txt['ignorelist'] = 'Lista de ignorados';
+$txt['username_line'] = 'Agrega un nombre de usuario en cada l&iacute;nea.<br />O escribe * para ignorar todos los mensajes.';
+$txt['email_notify'] = 'Notificar por email cada que recibas un mensaje personal:';
 $txt['email_notify_never'] = 'Nunca';
 $txt['email_notify_buddies'] = 'Solamente de los amigos';
 $txt['email_notify_always'] = 'Siempre';

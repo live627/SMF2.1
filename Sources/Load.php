@@ -1005,7 +1005,7 @@ function loadMemberContext($user)
 		'email' => &$profile['email_address'],
 		'hide_email' => $profile['email_address'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($profile['hide_email']) && !empty($modSettings['allow_hide_email']) && !allowedTo('moderate_forum') && $user_info['id'] != $profile['id_member']),
 		'email_public' => (empty($profile['hide_email']) || empty($modSettings['allow_hide_email'])) && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']),
-		'registered' => empty($profile['date_registered']) ? $txt[470] : timeformat($profile['date_registered']),
+		'registered' => empty($profile['date_registered']) ? $txt['not_applicable'] : timeformat($profile['date_registered']),
 		'registered_timestamp' => empty($profile['date_registered']) ? 0 : forum_time(true, $profile['date_registered']),
 		'blurb' => &$profile['personal_text'],
 		'gender' => array(
@@ -1044,7 +1044,7 @@ function loadMemberContext($user)
 			'link_text' => '<a href="http://members.msn.com/' . $profile['msn'] . '" target="_blank">' . $profile['msn'] . '</a>'
 		) : array('name' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'real_posts' => $profile['posts'],
-		'posts' => $profile['posts'] > 100000 ? $txt[683] : ($profile['posts'] == 1337 ? 'leet' : comma_format($profile['posts'])),
+		'posts' => $profile['posts'] > 100000 ? $txt['geek'] : ($profile['posts'] == 1337 ? 'leet' : comma_format($profile['posts'])),
 		'avatar' => array(
 			'name' => &$profile['avatar'],
 			'image' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? '<img src="' . (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) . '" alt="" class="avatar" border="0" />' : '') : (stristr($profile['avatar'], 'http://') ? '<img src="' . $profile['avatar'] . '"' . $avatar_width . $avatar_height . ' alt="" class="avatar" border="0" />' : '<img src="' . $modSettings['avatar_url'] . '/' . htmlspecialchars($profile['avatar']) . '" alt="" class="avatar" border="0" />'),

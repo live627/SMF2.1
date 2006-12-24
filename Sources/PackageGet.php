@@ -61,13 +61,13 @@ function PackageGet()
 	// Add the appropriate items to the link tree.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => &$txt['package1']
+		'name' => &$txt['package']
 	);
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;get',
-		'name' => &$txt['smf182']
+		'name' => &$txt['package_get']
 	);
-	$context['page_title'] = $txt['package1'];
+	$context['page_title'] = $txt['package'];
 
 	// Here is a list of all the potentially valid actions.
 	$subActions = array(
@@ -90,12 +90,12 @@ function PackageGet()
 
 	// Now create the tabs for the template.
 	$context['admin_tabs'] = array(
-		'title' => &$txt['package1'],
+		'title' => &$txt['package'],
 		//'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(
 			'browse' => array(
-				'title' => $txt['package3'],
+				'title' => $txt['browse_packages'],
 				'href' => $scripturl . '?action=admin;area=packages;sa=browse',
 			),
 			'packageget' => array(
@@ -284,7 +284,7 @@ function PackageGBrowse()
 	// Pick the correct template.
 	$context['sub_template'] = 'package_list';
 
-	$context['page_title'] = $txt['smf183'] . ($name != '' ? ' - ' . $name : '');
+	$context['page_title'] = $txt['package_servers'] . ($name != '' ? ' - ' . $name : '');
 	$context['package_server'] = $server;
 
 	$instmods = loadInstalledPackages();
@@ -386,7 +386,7 @@ function PackageGBrowse()
 				$package['author'] = array();
 
 				if ($package['description'] == '')
-					$package['description'] = $txt['pacman8'];
+					$package['description'] = $txt['package_no_description'];
 
 				$package['is_installed'] = isset($installed_mods[$package['id']]);
 				$package['is_current'] = $package['is_installed'] && ($installed_mods[$package['id']] == $package['version']);
@@ -596,18 +596,18 @@ function PackageDownload()
 	if ($context['package']['type'] == 'modification')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package11'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'avatar')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package12'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['use_avatars'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'language')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package13'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['add_laguages'] . ' ]</a>';
 	else
 		$context['package']['install']['link'] = '';
 
-	$context['package']['list_files']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=list;package=' . $context['package']['filename'] . '">[ ' . $txt['package14'] . ' ]</a>';
+	$context['package']['list_files']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=list;package=' . $context['package']['filename'] . '">[ ' . $txt['list_files'] . ' ]</a>';
 
 	// Free a little bit of memory...
 	unset($context['package']['xml']);
 
-	$context['page_title'] = $txt['smf192'];
+	$context['page_title'] = $txt['download_success'];
 }
 
 // Upload a new package to the directory.
@@ -657,13 +657,13 @@ function PackageUpload()
 	if ($context['package']['type'] == 'modification')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package11'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'avatar')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package12'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['use_avatars'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'language')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package13'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['add_laguages'] . ' ]</a>';
 	else
 		$context['package']['install']['link'] = '';
 
-	$context['package']['list_files']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=list;package=' . $context['package']['filename'] . '">[ ' . $txt['package14'] . ' ]</a>';
+	$context['package']['list_files']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=list;package=' . $context['package']['filename'] . '">[ ' . $txt['list_files'] . ' ]</a>';
 
 	unset($context['package']['xml']);
 

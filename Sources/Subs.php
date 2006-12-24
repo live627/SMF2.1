@@ -728,11 +728,11 @@ function timeformat($log_time, $show_today = true)
 
 		// Same day of the year, same year.... Today!
 		if ($then['yday'] == $now['yday'] && $then['year'] == $now['year'])
-			return $txt['smf10'] . timeformat($log_time, $today_fmt);
+			return $txt['today'] . timeformat($log_time, $today_fmt);
 
 		// Day-of-year is one less and same year, or it's the first of the year and that's the last of the year...
 		if ($modSettings['todayMod'] == '2' && (($then['yday'] == $now['yday'] - 1 && $then['year'] == $now['year']) || ($now['yday'] == 0 && $then['year'] == $now['year'] - 1) && $then['mon'] == 12 && $then['mday'] == 31))
-			return $txt['smf10b'] . timeformat($log_time, $today_fmt);
+			return $txt['yesterday'] . timeformat($log_time, $today_fmt);
 	}
 
 	$str = !is_bool($show_today) ? $show_today : $user_info['time_format'];
@@ -1006,7 +1006,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'code',
 				'type' => 'unparsed_content',
-				'content' => '<div class="codeheader">' . $txt['smf238'] . ':</div><div class="code">' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</div>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ':</div><div class="code">' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</div>',
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -1044,7 +1044,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'code',
 				'type' => 'unparsed_equals_content',
-				'content' => '<div class="codeheader">' . $txt['smf238'] . ': ($2)</div><div class="code">' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</div>',
+				'content' => '<div class="codeheader">' . $txt['code'] . ': ($2)</div><div class="code">' . ($context['browser']['is_gecko'] ? '<pre style="margin-top: 0; display: inline;">$1</pre>' : '$1') . '</div>',
 				// !!! Maybe this can be simplified?
 				'validate' => isset($disabled['code']) ? null : create_function('&$tag, &$data, $disabled', '
 					global $context;
@@ -1298,14 +1298,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'parameters' => array(
 					'author' => array('match' => '(.{1,192}?)', 'quoted' => true, 'validate' => 'parse_bbc'),
 				),
-				'before' => '<div class="quoteheader">' . $txt['smf239'] . ': {author}</div><div class="quote">',
+				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><div class="quote">',
 				'after' => '</div>',
 				'block_level' => true,
 			),
 			array(
 				'tag' => 'quote',
 				'type' => 'parsed_equals',
-				'before' => '<div class="quoteheader">' . $txt['smf239'] . ': $1</div><div class="quote">',
+				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': $1</div><div class="quote">',
 				'after' => '</div>',
 				'quoted' => 'optional',
 				'block_level' => true,
@@ -1317,7 +1317,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'link' => array('match' => '(?:board=\d+;)?((?:topic|threadid)=[\dmsg#\./]{1,40}(?:;start=[\dmsg#\./]{1,40})?|action=profile;u=\d+)'),
 					'date' => array('match' => '(\d+)', 'validate' => 'timeformat'),
 				),
-				'before' => '<div class="quoteheader"><a href="' . $scripturl . '?{link}">' . $txt['smf239'] . ': {author} ' . $txt['search_on'] . ' {date}</a></div><div class="quote">',
+				'before' => '<div class="quoteheader"><a href="' . $scripturl . '?{link}">' . $txt['quote_from'] . ': {author} ' . $txt['search_on'] . ' {date}</a></div><div class="quote">',
 				'after' => '</div>',
 				'block_level' => true,
 			),
@@ -1326,7 +1326,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'parameters' => array(
 					'author' => array('match' => '(.{1,192}?)', 'validate' => 'parse_bbc'),
 				),
-				'before' => '<div class="quoteheader">' . $txt['smf239'] . ': {author}</div><div class="quote">',
+				'before' => '<div class="quoteheader">' . $txt['quote_from'] . ': {author}</div><div class="quote">',
 				'after' => '</div>',
 				'block_level' => true,
 			),
@@ -2976,12 +2976,12 @@ function setupThemeContext()
 			'show' => $context['allow_pm'],
 		),
 		'calendar' => array(
-			'title' => $txt['calendar24'],
+			'title' => $txt['calendar'],
 			'href' => $scripturl . '?action=calendar',
 			'show' => $context['allow_calendar'],
 		),
 		'mlist' => array(
-			'title' => $txt[331],
+			'title' => $txt['members'],
 			'href' => $scripturl . '?action=mlist',
 			'show' => $context['allow_memberlist'],
 		),
@@ -3142,12 +3142,12 @@ function template_header()
 				echo '
 		<div style="margin: 2ex; padding: 2ex; border: 2px dashed #cc3344; color: black; background-color: #ffe4e9;">
 			<div style="float: left; width: 2ex; font-size: 2em; color: red;">!!</div>
-			<b style="text-decoration: underline;">', empty($securityFiles) ? $txt['cache_writable_head'] : $txt['smf299'], '</b><br />
+			<b style="text-decoration: underline;">', empty($securityFiles) ? $txt['cache_writable_head'] : $txt['security_risk'], '</b><br />
 			<div style="padding-left: 6ex;">';
 
 				foreach ($securityFiles as $securityFile)
 					echo '
-				', $txt['smf300'], '<b>', $securityFile, '</b>!<br />';
+				', $txt['not_removed'], '<b>', $securityFile, '</b>!<br />';
 
 				if (!is_writable($cachedir))
 					echo '

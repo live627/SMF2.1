@@ -3,27 +3,27 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-$txt[143] = 'Personal Messages Index';
-$txt[148] = 'Send message';
-$txt[150] = 'To';
-$txt[1502] = 'Bcc';
-$txt[316] = 'Inbox';
+$txt['pm_inbox'] = 'Personal Messages Index';
+$txt['send_message'] = 'Send message';
+$txt['pm_to'] = 'To';
+$txt['pm_bcc'] = 'Bcc';
+$txt['inbox'] = 'Inbox';
 $txt['sent_items'] = 'Sent Items';
-$txt[321] = 'New Message';
-$txt[411] = 'Delete Messages';
+$txt['new_message'] = 'New Message';
+$txt['delete_message'] = 'Delete Messages';
 // Don't translate "PMBOX" in this string.
-$txt[412] = 'Delete all messages in your PMBOX';
-$txt[413] = 'Are you sure you want to delete all messages?';
-$txt[535] = 'Recipient';
+$txt['delete_all'] = 'Delete all messages in your PMBOX';
+$txt['delete_all_confirm'] = 'Are you sure you want to delete all messages?';
+$txt['recipient'] = 'Recipient';
 // Don't translate the word "SUBJECT" here, as it is used to format the message - use numeric entities as well.
-$txt[561] = 'New Personal Message: SUBJECT';
+$txt['new_pm_subject'] = 'New Personal Message: SUBJECT';
 // Don't translate SENDER or MESSAGE in this language string; they are replaced with the corresponding text - use numeric entities too.
-$txt[562] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.' . "\n\n" . 'The message they sent you was:' . "\n\n" . 'MESSAGE';
-$txt[748] = '(multiple recipients: \'name1, name2\')';
+$txt['pm_email'] = 'You have just been sent a personal message by SENDER on ' . $context['forum_name'] . '.' . "\n\n" . 'IMPORTANT: Remember, this is just a notification. Please do not reply to this email.' . "\n\n" . 'The message they sent you was:' . "\n\n" . 'MESSAGE';
+$txt['pm_multiple'] = '(multiple recipients: \'name1, name2\')';
 // Use numeric entities in the below string.
 $txt['instant_reply'] = 'Reply to this Personal Message here:';
 
-$txt['smf249'] = 'Are you sure you want to delete all selected personal messages?';
+$txt['delete_selected_confirm'] = 'Are you sure you want to delete all selected personal messages?';
 
 $txt['sent_to'] = 'Sent to';
 $txt['reply_to_all'] = 'Reply to All';
@@ -142,9 +142,9 @@ $txt['pm_settings'] = 'Change Settings';
 $txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
 $txt['pm_settings_save'] = 'Save Changes';
 
-$txt[325] = 'Ignorelist';
-$txt[326] = 'Add one Username on each line.<br />Or enter * to ignore all messages.';
-$txt[327] = 'Notify by email every time you receive a personal message:';
+$txt['ignorelist'] = 'Ignorelist';
+$txt['username_line'] = 'Add one Username on each line.<br />Or enter * to ignore all messages.';
+$txt['email_notify'] = 'Notify by email every time you receive a personal message:';
 $txt['email_notify_never'] = 'Never';
 $txt['email_notify_buddies'] = 'From Buddies Only';
 $txt['email_notify_always'] = 'Always';

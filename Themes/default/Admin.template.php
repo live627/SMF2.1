@@ -169,7 +169,7 @@ function template_admin()
 			</tr><tr>
 				<td class="windowbg" valign="top" style="padding: 7px;">
 					<b>', $txt['hello_guest'], ' ', $context['user']['name'], '!</b>
-					<div style="font-size: 0.85em; padding-top: 1ex;">', sprintf($txt[644], $txt['admin_center'], $txt['help'], $txt['help']), '</div>
+					<div style="font-size: 0.85em; padding-top: 1ex;">', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '</div>
 				</td>
 			</tr>
 		</table>';
@@ -197,7 +197,7 @@ function template_admin()
 				<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 					<tr>
 						<td class="catbg">
-							<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['smf217'], '
+							<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['live'], '
 						</td>
 					</tr><tr>
 						<td class="windowbg2" valign="top" style="height: 18ex; padding: 0;">
@@ -221,7 +221,7 @@ function template_admin()
 							<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i><br />
 							', $txt['support_versions_current'], ':
 							<i id="smfVersion" style="white-space: nowrap;">??</i><br />
-							', $context['can_admin'] ? '<a href="' . $scripturl . '?action=admin;area=version">' . $txt['dvc_more'] . '</a>' : '', '<br />';
+							', $context['can_admin'] ? '<a href="' . $scripturl . '?action=admin;area=version">' . $txt['version_check_more'] . '</a>' : '', '<br />';
 
 	// Have they paid to remove copyright?
 	if (!empty($context['copyright_expires']))
@@ -239,7 +239,7 @@ function template_admin()
 	// Display all the members who can administrate the forum.
 	echo '
 							<br />
-							<b>', $txt[684], ':</b>
+							<b>', $txt['administrators'], ':</b>
 							', implode(', ', $context['administrators']);
 	// If we have lots of admins... don't show them all.
 	if (!empty($context['more_admins_link']))
@@ -442,7 +442,7 @@ function template_credits()
 				<td class="windowbg2">
 					<b>', $txt['support_versions'], ':</b><br />
 					', $txt['support_versions_forum'], ':
-					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=version">' . $txt['dvc_more'] . '</a>' : '', '<br />
+					<i id="yourVersion" style="white-space: nowrap;">', $context['forum_version'], '</i>', $context['can_admin'] ? ' <a href="' . $scripturl . '?action=admin;area=version">' . $txt['version_check_more'] . '</a>' : '', '<br />
 					', $txt['support_versions_current'], ':
 					<i id="smfVersion" style="white-space: nowrap;">??</i><br />';
 
@@ -474,7 +474,7 @@ function template_credits()
 	echo '
 		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder" style="margin-top: 2ex;">
 			<tr class="titlebg">
-				<td>', $txt[571], '</td>
+				<td>', $txt['admin_credits'], '</td>
 			</tr><tr>
 				<td class="windowbg2"><span style="font-size: 0.85em;" id="credits">', $context['credits'], '</span></td>
 			</tr>
@@ -551,20 +551,20 @@ function template_view_versions()
 	echo '
 		<table width="94%" cellpadding="3" cellspacing="1" border="0" align="center" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt[429], '</td>
+				<td>', $txt['admin_version_check'], '</td>
 			</tr><tr class="windowbg">
-				<td class="smalltext" style="padding: 2ex;">', $txt['dvc1'], '</td>
+				<td class="smalltext" style="padding: 2ex;">', $txt['version_check_desc'], '</td>
 			</tr><tr>
 				<td class="windowbg2" style="padding: 1ex 0 1ex 0;">
 					<table width="88%" cellpadding="2" cellspacing="0" border="0" align="center">
 						<tr>
-							<td width="50%"><b>', $txt[495], '</b></td><td width="25%"><b>', $txt['dvc_your'], '</b></td><td width="25%"><b>', $txt['dvc_current'], '</b></td>
+							<td width="50%"><b>', $txt['admin_smffile'], '</b></td><td width="25%"><b>', $txt['dvc_your'], '</b></td><td width="25%"><b>', $txt['dvc_current'], '</b></td>
 						</tr>';
 
 	// The current version of the core SMF package.
 	echo '
 						<tr>
-							<td>', $txt[496], '</td><td><i id="yourSMF">', $context['forum_version'], '</i></td><td><i id="currentSMF">??</i></td>
+							<td>', $txt['admin_smfpackage'], '</td><td><i id="yourSMF">', $context['forum_version'], '</i></td><td><i id="currentSMF">??</i></td>
 						</tr>';
 
 	// Now list all the source file versions, starting with the overall version (if all match!).
@@ -800,7 +800,7 @@ function template_edit_censored()
 						<table width="100%">
 							<tr>
 								<td colspan="2" align="center">
-									', $txt[136], '<br />';
+									', $txt['admin_censored_where'], '<br />';
 
 	// Show text boxes for censoring [bad   ] => [good  ].
 	foreach ($context['censored_words'] as $vulgar => $proper)
@@ -825,7 +825,7 @@ function template_edit_censored()
 							</tr><tr>
 								<td colspan="2"><hr /></td>
 							</tr><tr>
-								<th width="50%" align="right"><label for="censorWholeWord_check">', $txt['smf231'], ':</label></th>
+								<th width="50%" align="right"><label for="censorWholeWord_check">', $txt['censor_whole_words'], ':</label></th>
 								<td align="left"><input type="checkbox" name="censorWholeWord" value="1" id="censorWholeWord_check"', empty($modSettings['censorWholeWord']) ? '' : ' checked="checked"', ' class="check" /></td>
 							</tr><tr>
 								<th align="right"><label for="censorIgnoreCase_check">', $txt['censor_case'], ':</label></th>
@@ -1254,17 +1254,17 @@ function template_optimize()
 	<div class="tborder">
 		<div class="titlebg" style="padding: 4px;">', $txt['maintain_optimize'], '</div>
 		<div class="windowbg" style="padding: 4px;">
-			', $txt['smf282'], '<br />
-			', $txt['smf283'], '<br />';
+			', $txt['database_numb_tables'], '<br />
+			', $txt['database_optimize_attempt'], '<br />';
 
 	// List each table being optimized...
 	foreach ($context['optimized_tables'] as $table)
 		echo '
-			', sprintf($txt['smf284'], $table['name'], $table['data_freed']), '<br />';
+			', sprintf($txt['database_optimizing'], $table['name'], $table['data_freed']), '<br />';
 
 	// How did we go?
 	echo '
-			<br />', $context['num_tables_optimized'] == 0 ? $txt['smf285'] : $context['num_tables_optimized'] . ' ' . $txt['smf286'];
+			<br />', $context['num_tables_optimized'] == 0 ? $txt['database_already_optimized'] : $context['num_tables_optimized'] . ' ' . $txt['database_optimized'];
 
 	echo '
 			<br /><br />
@@ -1976,7 +1976,7 @@ function template_edit_profile_field()
 
 	if ($context['fid'])
 		echo '
-					<input type="submit" name="delete" value="', $txt['smf138'], '" onclick="return confirm(\'', $txt['custom_edit_delete_sure'], '\');" />';
+					<input type="submit" name="delete" value="', $txt['delete'], '" onclick="return confirm(\'', $txt['custom_edit_delete_sure'], '\');" />';
 
 	echo '
 				</td>

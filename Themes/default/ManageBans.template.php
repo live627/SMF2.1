@@ -216,7 +216,7 @@ function template_ban_edit()
 						<tr class="windowbg2" align="left">
 							<td>';
 				if ($ban_item['type'] == 'ip')
-					echo '<b>', $txt[512], ':</b>&nbsp;', $ban_item['ip'];
+					echo '<b>', $txt['ip'], ':</b>&nbsp;', $ban_item['ip'];
 				elseif ($ban_item['type'] == 'hostname')
 					echo '<b>', $txt['hostname'], ':</b>&nbsp;', $ban_item['hostname'];
 				elseif ($ban_item['type'] == 'email')
@@ -334,7 +334,7 @@ function template_browse_triggers()
 			<td colspan="4">', $txt['ban_trigger_browse'], '</td>
 		</tr><tr class="catbg3">
 			<td colspan="4">
-				<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=ip">', $context['selected_entity'] == 'ip' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt[512], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=hostname">', $context['selected_entity'] == 'hostname' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['hostname'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=email">', $context['selected_entity'] == 'email' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['email'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=member">', $context['selected_entity'] == 'member' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['username'], '</a>
+				<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=ip">', $context['selected_entity'] == 'ip' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['ip'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=hostname">', $context['selected_entity'] == 'hostname' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['hostname'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=email">', $context['selected_entity'] == 'email' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['email'], '</a>&nbsp;|&nbsp;<a href="', $scripturl, '?action=admin;area=ban;sa=browse;entity=member">', $context['selected_entity'] == 'member' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" /> ' : '', $txt['username'], '</a>
 			</td>
 		</tr><tr class="titlebg">
 			<th align="left">', $txt['ban_banned_entity'], '</th>
@@ -409,7 +409,7 @@ function template_ban_log()
 			<tr>
 				<td class="windowbg"><a href="', $scripturl, '?action=trackip;searchip=', $log['ip'], '">', $log['ip'], '</a></td>
 				<td class="windowbg2">', $log['email'], '</td>
-				<td class="windowbg">', empty($log['member']['id']) ? '<i>' . $txt[470] . '</i>' : $log['member']['link'], '</td>
+				<td class="windowbg">', empty($log['member']['id']) ? '<i>' . $txt['not_applicable'] . '</i>' : $log['member']['link'], '</td>
 				<td class="windowbg2">', $log['date'], '</td>
 				<td class="windowbg" align="center"><input type="checkbox" name="remove[]" value="', $log['id'], '" class="check" /></td>
 			</tr>';

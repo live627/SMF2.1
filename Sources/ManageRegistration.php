@@ -108,14 +108,14 @@ function RegCenter()
 	if (allowedTo('admin_forum'))
 	{
 		$context['admin_tabs']['tabs']['agreement'] = array(
-			'title' => $txt['smf11'],
-			'description' => $txt['smf12'],
+			'title' => $txt['registration_agreement'],
+			'description' => $txt['registration_agreement_desc'],
 			'href' => $scripturl . '?action=admin;area=regcenter;sa=agreement',
 			'is_selected' => $context['sub_action'] == 'agreement',
 		);
 		$context['admin_tabs']['tabs']['reservednames'] = array(
-			'title' => $txt[341],
-			'description' => $txt[699],
+			'title' => $txt['admin_reserved_set'],
+			'description' => $txt['admin_reserved_desc'],
 			'href' => $scripturl . '?action=admin;area=regcenter;sa=reservednames',
 			'is_selected' => $context['sub_action'] == 'reservednames',
 		);
@@ -215,11 +215,11 @@ function EditAgreement()
 
 	// Get the current agreement.
 	$context['agreement'] = file_exists($boarddir . '/agreement.txt') ? htmlspecialchars(file_get_contents($boarddir . '/agreement.txt')) : '';
-	$context['warning'] = is_writable($boarddir . '/agreement.txt') ? '' : $txt['smf320'];
+	$context['warning'] = is_writable($boarddir . '/agreement.txt') ? '' : $txt['agreement_not_writable'];
 	$context['require_agreement'] = !empty($modSettings['requireAgreement']);
 
 	$context['sub_template'] = 'edit_agreement';
-	$context['page_title'] = $txt['smf11'];
+	$context['page_title'] = $txt['registration_agreement'];
 }
 
 // Set reserved names/words....
@@ -252,7 +252,7 @@ function SetReserve()
 
 	// Ready the template......
 	$context['sub_template'] = 'edit_reserved_words';
-	$context['page_title'] = $txt[341];
+	$context['page_title'] = $txt['admin_reserved_set'];
 }
 
 // This function handles registration settings, and provides a few pretty stats too while it's at it.

@@ -84,10 +84,10 @@ function template_browse()
 	}
 	
 	echo '
-			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['smf213'], $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=size', $context['sort_by'] == 'size' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['smf214'], $context['sort_by'] == 'size' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['attachment_name'], $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=size', $context['sort_by'] == 'size' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['attachment_file_size'], $context['sort_by'] == 'size' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=member', $context['sort_by'] == 'member' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? $txt['attachment_manager_member'] : $txt['posted_by'], $context['sort_by'] == 'member' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
-			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=date', $context['sort_by'] == 'date' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? $txt['attachment_manager_last_active'] : $txt[317], $context['sort_by'] == 'date' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
+			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=date', $context['sort_by'] == 'date' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? $txt['attachment_manager_last_active'] : $txt['date'], $context['sort_by'] == 'date' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 			<td nowrap="nowrap" align="center"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
 		</tr>';
 	$alternate = false;
@@ -96,9 +96,9 @@ function template_browse()
 		echo '
 		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 			<td>', $post['attachment']['link'], empty($post['attachment']['width']) || empty($post['attachment']['height']) ? '' : ' <span class="smalltext">' . $post['attachment']['width'] . 'x' . $post['attachment']['height'] . '</span>', '</td>
-			<td align="right">', $post['attachment']['size'], $txt['smf211'], '</td>
+			<td align="right">', $post['attachment']['size'], $txt['kilobyte'], '</td>
 			<td>', $post['poster']['link'], '</td>
-			<td class="smalltext">', $post['time'], $context['browse_type'] != 'avatars' ? '<br />' . $txt['smf88'] . ' ' . $post['link'] : '', '</td>
+			<td class="smalltext">', $post['time'], $context['browse_type'] != 'avatars' ? '<br />' . $txt['in'] . ' ' . $post['link'] : '', '</td>
 			<td align="center"><input type="checkbox" name="remove[', $post['attachment']['id'], ']" class="check" /></td>
 		</tr>';
 		$alternate = !$alternate;
@@ -106,7 +106,7 @@ function template_browse()
 	echo '
 		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 			<td align="right" colspan="5">
-				<input type="submit" name="remove_submit" value="', $txt['smf138'], '" />
+				<input type="submit" name="remove_submit" value="', $txt['delete'], '" />
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
 				<input type="hidden" name="type" value="', $context['browse_type'], '" />
 				<input type="hidden" name="start" value="', $context['start'], '" />
@@ -126,18 +126,18 @@ function template_maintenance()
 	echo '
 	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
 		<tr>
-			<td class="titlebg">', $txt['smf203'], '</td>
+			<td class="titlebg">', $txt['attachment_stats'], '</td>
 		</tr><tr>
 			<td class="windowbg2" width="100%" valign="top" style="padding-bottom: 2ex;">
 				<table border="0" cellspacing="0" cellpadding="3">
 					<tr>
-						<td>', $txt['smf204'], ':</td><td>', $context['num_attachments'], '</td>
+						<td>', $txt['attachment_total'], ':</td><td>', $context['num_attachments'], '</td>
 					</tr><tr>
 						<td>', $txt['attachment_manager_total_avatars'], ':</td><td>', $context['num_avatars'], '</td>
 					</tr><tr>
-						<td>', $txt['smf205'], ':</td><td>', $context['attachment_total_size'], ' ', $txt['smf211'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;sesc=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></td>
+						<td>', $txt['attachmentdir_size'], ':</td><td>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;sesc=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></td>
 					</tr><tr>
-						<td>', $txt['smf206'], ':</td><td>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['smf211'] : $txt['smf215'], '</td>
+						<td>', $txt['attachment_space'], ':</td><td>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</td>
 					</tr>
 				</table>
 			</td>
@@ -146,25 +146,25 @@ function template_maintenance()
 	<br />
 	<table width="100%" cellpadding="4" cellspacing="0" align="center" border="0" class="tborder">
 		<tr>
-			<td class="titlebg">', $txt['smf207'], '</td>
+			<td class="titlebg">', $txt['attachment_options'], '</td>
 		</tr><tr>
 			<td class="windowbg2" width="100%" valign="top">
 				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-					', $txt['message'], ': <input type="text" name="notice" value="', $txt['smf216'], '" size="40" /><br />
-					', $txt['smf209'], ' <input type="text" name="age" value="25" size="4" /> ', $txt[579], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+					', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" /><br />
+					', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" /> ', $txt['days'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="attachments" />
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="byAge" />
 				</form>
 				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-					', $txt['message'], ': <input type="text" name="notice" value="', $txt['smf216'], '" size="40" /><br />
-					', $txt['smf210'], ' <input type="text" name="size" id="size" value="100" size="4" /> ', $txt['smf211'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+					', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" /><br />
+					', $txt['attachment_remove_size'], ' <input type="text" name="size" id="size" value="100" size="4" /> ', $txt['kilobyte'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="attachments" />
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="bySize" />
 				</form>
 				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-					', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" /> ', $txt[579], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+					', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" /> ', $txt['days'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="avatars" />
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="byAge" />

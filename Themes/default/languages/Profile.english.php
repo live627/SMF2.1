@@ -3,87 +3,87 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-$txt[80] = 'You are not allowed to change this person\'s profile.';
-$txt[83] = 'Website title';
-$txt[84] = 'Website URL';
-$txt[85] = 'Signature';
-$txt[86] = 'Posts';
-$txt[88] = 'Change profile';
-$txt[89] = 'Delete user';
-$txt[113] = 'Current Status:';
-$txt[228] = 'Personal Text';
-$txt[229] = 'Personalized Picture';
-$txt[232] = 'Picture/Text';
-$txt[329] = 'Reset Form';
-$txt[349] = 'Preferred Language';
-$txt[420] = 'Age';
-$txt[422] = '(no pic)';
-$txt[458] = 'Latest posts of: ';
-$txt[459] = 'Additional Information';
-$txt[460] = 'Show the last';
-$txt[461] = 'posts of this person';
-$txt[474] = 'Specify your own avatar by URL. (ex: <b>http://www.mypage.com/mypic.gif</b>)';
-$txt[475] = 'I have my own pic';
-$txt[479] = 'The format here will be used to show dates throughout this forum.';
-$txt[486] = 'Time Format';
-$txt[487] = 'Time Offset must be between -23.5 and 23.5.';
-$txt[518] = 'This is the displayed name that people will see.';
-$txt[519] = 'Number of hours to +/- to make displayed time equal to your local time.';
-$txt[563] = 'Birthdate';
-$txt[564] = 'Month (MM)';
-$txt[565] = 'Day (DD)';
-$txt[566] = 'Year (YYYY)';
-$txt[596] = 'For best security, you should use six or more characters with a combination of letters, numbers, and symbols.';
-$txt[597] = 'Additional Information';
-$txt[598] = 'This must be included if you specify a URL below.';
-$txt[599] = 'This must be a complete URL.';
-$txt[600] = 'This is your ICQ number.';
-$txt[601] = 'This is your AOL Instant Messenger nickname.';
-$txt[602] = 'This is your Yahoo! Instant Messenger nickname.';
-$txt[606] = 'Signatures are displayed at the bottom of each post or personal message. BBC code and smileys may be used in your signature.';
-$txt[664] = 'Max characters: %d; characters remaining: ';
+$txt['no_profile_edit'] = 'You are not allowed to change this person\'s profile.';
+$txt['website_title'] = 'Website title';
+$txt['website_url'] = 'Website URL';
+$txt['signature'] = 'Signature';
+$txt['posts'] = 'Posts';
+$txt['change_profile'] = 'Change profile';
+$txt['delete_user'] = 'Delete user';
+$txt['current_status'] = 'Current Status:';
+$txt['personal_text'] = 'Personal Text';
+$txt['personal_picture'] = 'Personalized Picture';
+$txt['picture_text'] = 'Picture/Text';
+$txt['reset_form'] = 'Reset Form';
+$txt['prefered_language'] = 'Preferred Language';
+$txt['age'] = 'Age';
+$txt['no_pic'] = '(no pic)';
+$txt['latest_posts'] = 'Latest posts of: ';
+$txt['additional_info'] = 'Additional Information';
+$txt['show_latest'] = 'Show the last';
+$txt['posts_member'] = 'posts of this person';
+$txt['avatar_by_url'] = 'Specify your own avatar by URL. (ex: <b>http://www.mypage.com/mypic.gif</b>)';
+$txt['my_own_pic'] = 'I have my own pic';
+$txt['date_format'] = 'The format here will be used to show dates throughout this forum.';
+$txt['time_format'] = 'Time Format';
+$txt['time_offset'] = 'Time Offset must be between -23.5 and 23.5.';
+$txt['display_name'] = 'This is the displayed name that people will see.';
+$txt['personal_time_offset'] = 'Number of hours to +/- to make displayed time equal to your local time.';
+$txt['dob'] = 'Birthdate';
+$txt['dob_month'] = 'Month (MM)';
+$txt['dob_day'] = 'Day (DD)';
+$txt['dob_year'] = 'Year (YYYY)';
+$txt['password_stregth'] = 'For best security, you should use six or more characters with a combination of letters, numbers, and symbols.';
+$txt['additional_info'] = 'Additional Information';
+$txt['include_website_url'] = 'This must be included if you specify a URL below.';
+$txt['complete_url'] = 'This must be a complete URL.';
+$txt['your_icq'] = 'This is your ICQ number.';
+$txt['your_aim'] = 'This is your AOL Instant Messenger nickname.';
+$txt['your_yim'] = 'This is your Yahoo! Instant Messenger nickname.';
+$txt['sig_info'] = 'Signatures are displayed at the bottom of each post or personal message. BBC code and smileys may be used in your signature.';
+$txt['max_sig_characters'] = 'Max characters: %d; characters remaining: ';
 $txt[688] = 'Send this member a personal message';
-$txt[722] = 'hidden';
-$txt[741] = 'Current forum time';
-$txt[749] = 'The \'number of posts\' box can only contain digits.';
+$txt['hidden'] = 'hidden';
+$txt['current_time'] = 'Current forum time';
+$txt['digits_only'] = 'The \'number of posts\' box can only contain digits.';
 
-$txt['smf225'] = 'Language';
-$txt['smf227'] = 'Avatar image is too big, please resize it and try again (max';
-$txt['smf233'] = 'Invalid Date Registered value, valid example:';
+$txt['language'] = 'Language';
+$txt['avatar_too_big'] = 'Avatar image is too big, please resize it and try again (max';
+$txt['invalid_registration'] = 'Invalid Date Registered value, valid example:';
 $txt['smf237'] = 'Your MSN messenger email address';
-$txt['smf241'] = 'Current Password';
+$txt['current_password'] = 'Current Password';
 $txt['smf243'] = 'You haven\'t entered your current password.';
 // Don't use entities in the below string, except the main ones. (lt, gt, quot.)
-$txt['smf244'] = 'For security reasons, your current password is required to make changes to your account.';
+$txt['required_security_reasons'] = 'For security reasons, your current password is required to make changes to your account.';
 
 $txt['timeoffset_autodetect'] = '(auto detect)';
 
-$txt['pswd1'] = 'Secret Question';
+$txt['secret_question'] = 'Secret Question';
 $txt['secret_desc'] = 'To help retrieve your password, enter a question here with an answer that <b>only</b> you know.';
 $txt['secret_desc2'] = 'Choose carefully, you wouldn\'t want someone guessing your answer!';
-$txt['pswd2'] = 'Answer';
-$txt['pswd3'] = 'Ask me my question';
-$txt['pswd4'] = 'You can\'t retrieve your password, but you can set a new one by following a link sent to you by email.  You also have the option of setting a new password by answering your secret question.';
-$txt['pswd5'] = 'Sorry, but you did not specify a valid combination of Secret Question and Answer in your profile.  Please click on the back button, and use the default method of obtaining your password.';
-$txt['pswd6'] = 'Please enter the answer to your question, and the password you would like to use.  Your password will be changed to the one you select provided you answer the question correctly.';
-$txt['pswd8'] = 'Your password was changed successfully.<br />Click <a href="' . $scripturl . '?action=login">here</a> to login.';
+$txt['secret_answer'] = 'Answer';
+$txt['secret_ask'] = 'Ask me my question';
+$txt['cant_retrieve'] = 'You can\'t retrieve your password, but you can set a new one by following a link sent to you by email.  You also have the option of setting a new password by answering your secret question.';
+$txt['incorrect_answer'] = 'Sorry, but you did not specify a valid combination of Secret Question and Answer in your profile.  Please click on the back button, and use the default method of obtaining your password.';
+$txt['enter_new_password'] = 'Please enter the answer to your question, and the password you would like to use.  Your password will be changed to the one you select provided you answer the question correctly.';
+$txt['password_success'] = 'Your password was changed successfully.<br />Click <a href="' . $scripturl . '?action=login">here</a> to login.';
 $txt['secret_why_blank'] = 'why is this blank?';
 
-$txt['theme1a'] = 'Current Theme';
-$txt['theme1b'] = '(change)';
-$txt['theme2'] = 'Theme preferences';
+$txt['current_theme'] = 'Current Theme';
+$txt['change'] = '(change)';
+$txt['theme_preferences'] = 'Theme preferences';
 $txt['theme_forum_default'] = 'Forum or Board Default';
 $txt['theme_forum_default_desc'] = 'This is the default theme, which means your theme will change along with the administrator\'s settings and the board you are viewing.';
 
 $txt['profileConfirm'] = 'Do you really want to delete this member?';
 
-$txt['title1'] = 'Custom Title';
+$txt['custom_title'] = 'Custom Title';
 
 $txt['lastLoggedIn'] = 'Last Active';
 
-$txt['notifyX'] = 'Notification Settings:';
-$txt['notifyX1'] = 'Save settings';
-$txt['notifyXAnn4'] = 'Receive forum announcements and important notifications by email.';
+$txt['notify_settings'] = 'Notification Settings:';
+$txt['notify_save'] = 'Save settings';
+$txt['notify_important_email'] = 'Receive forum announcements and important notifications by email.';
 $txt['notify_regularity'] = 'For topics and boards I\'ve requested notification on, notify me';
 $txt['notify_regularity_instant'] = 'Instantly';
 $txt['notify_regularity_first_only'] = 'Instantly - but only for the first unread reply';
@@ -192,12 +192,12 @@ $txt['activate_reactivate_title'] = 'Welcome back to';
 $txt['activate_reactivate_mail'] = 'In order to re-validate your email address, your account has been deactivated.  Click the following link to activate it again:';
 $txt['activate_changed_email'] = 'You\'ve changed your email address. In order to validate this address you will receive an email. Click the link in that email to reactivate your account.';
 
-$txt[394] = 'Unable to send reminder email.';
-$txt[395] = 'Send an email to';
-$txt[396] = 'to ask for password';
-$txt[669] = 'Password Reminder';
+$txt['no_reminder_email'] = 'Unable to send reminder email.';
+$txt['send_email'] = 'Send an email to';
+$txt['to_ask_password'] = 'to ask for password';
+$txt['password_reminder'] = 'Password Reminder';
 
-$txt['smf100'] = 'Username/Email';
+$txt['user_email'] = 'Username/Email';
 
 // Use numeric entities in the below two strings.
 $txt['reminder_subject'] = 'New password for ' . $context['forum_name'];
@@ -240,16 +240,16 @@ $txt['recent_posts_at_top'] = 'Show most recent posts at the top.';
 $txt['recent_pms_at_top'] = 'Show most recent personal messages at top.';
 $txt['wysiwyg_default'] = 'Show WYSIWYG editor on post page by default?';
 
-$txt['timeformat_easy0'] = '(Forum Default)';
+$txt['timeformat_default'] = '(Forum Default)';
 $txt['timeformat_easy1'] = 'Month Day, Year, HH:MM:SS a/pm';
 $txt['timeformat_easy2'] = 'Month Day, Year, HH:MM:SS (army time.)';
 $txt['timeformat_easy3'] = 'YYYY-MM-DD, HH:MM:SS';
 $txt['timeformat_easy4'] = 'DD Month YYYY, HH:MM:SS';
 $txt['timeformat_easy5'] = 'DD-MM-YYYY, HH:MM:SS';
 
-$txt['rtm8'] = 'Poster';
+$txt['poster'] = 'Poster';
 
-$txt[732] = 'Show board descriptions inside boards.';
+$txt['board_desc_inside'] = 'Show board descriptions inside boards.';
 $txt['show_children'] = 'Show child boards on every page inside boards, not just the first.';
 $txt['show_no_avatars'] = 'Don\'t show users\' avatars.';
 $txt['show_no_signatures'] = 'Don\'t show users\' signatures.';

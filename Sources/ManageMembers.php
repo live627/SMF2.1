@@ -127,7 +127,7 @@ function ViewMembers()
 	$context['admin_tabs'] = array(
 		'title' => $txt['admin_members'],
 		'help' => 'view_members',
-		'description' => $txt[11],
+		'description' => $txt['admin_members_list'],
 		'tabs' => array(),
 	);
 	if (allowedTo('moderate_forum'))
@@ -135,13 +135,13 @@ function ViewMembers()
 		$context['admin_tabs']['tabs'] = array(
 			'viewmembers' => array(
 				'title' => $txt['view_all_members'],
-				'description' => $txt[11],
+				'description' => $txt['admin_members_list'],
 				'href' => $scripturl . '?action=admin;area=viewmembers;sa=all',
 				'is_selected' => $_REQUEST['sa'] == 'all',
 			),
 			'search' => array(
 				'title' => $txt['mlist_search'],
-				'description' => $txt[11],
+				'description' => $txt['admin_members_list'],
 				'href' => $scripturl . '?action=admin;area=viewmembers;sa=search',
 				'is_selected' => $_REQUEST['sa'] == 'search' || $_REQUEST['sa'] == 'query',
 			),
@@ -764,8 +764,8 @@ function AdminApprove()
 
 				sendmail($member['email'], $txt['register_subject'],
 					"$txt[hello_guest] $member[name]!\n\n" .
-					"$txt[admin_approve_accept_desc] $txt[719] $member[name]\n\n" .
-					"$txt[701]\n" .
+					"$txt[admin_approve_accept_desc] $txt['your_username_is'] $member[name]\n\n" .
+					"$txt['may_change_in_profile']\n" .
 					"$scripturl?action=profile\n\n" .
 					sprintf($txt['regards_team'], $context['forum_name']));
 			}

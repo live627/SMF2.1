@@ -1036,7 +1036,7 @@ function OptimizeTables()
 	// Start with no tables optimized.
 	$opttab = 0;
 
-	$context['page_title'] = $txt['smf281'];
+	$context['page_title'] = $txt['database_optimize'];
 	$context['sub_template'] = 'optimize';
 
 	// Get a list of tables, as well as how many there are.
@@ -1065,7 +1065,7 @@ function OptimizeTables()
 	}
 
 	// Number of tables, etc....
-	$txt['smf282'] = sprintf($txt['smf282'], $context['num_tables']);
+	$txt['database_numb_tables'] = sprintf($txt['database_numb_tables'], $context['num_tables']);
 	$context['num_tables_optimized'] = count($context['optimized_tables']);
 
 	// Check that we don't auto optimise again too soon!

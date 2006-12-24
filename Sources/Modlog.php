@@ -267,7 +267,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 			if ($seeIP)
 				$row['extra']['ip_range'] = '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['extra']['ip_range'] . '">' . $row['extra']['ip_range'] . '</a>';
 			else
-				$row['extra']['ip_range'] = $txt[511];
+				$row['extra']['ip_range'] = $txt['logged'];
 
 		// Email?
 		if (isset($row['extra']['email']))
@@ -276,7 +276,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 		// The array to go to the template. Note here that action is set to a "default" value of the action doesn't match anything in the descriptions. Allows easy adding of logging events with basic details.
 		$context['entries'][$row['id_action']] = array(
 			'id' => $row['id_action'],
-			'ip' => $seeIP ? $row['ip'] : $txt[511],
+			'ip' => $seeIP ? $row['ip'] : $txt['logged'],
 			'position' => $row['group_name'],
 			'moderator' => array(
 				'id' => $row['id_member'],

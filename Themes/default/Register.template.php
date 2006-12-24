@@ -66,14 +66,14 @@ echo '
 <form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
 	<table border="0" width="100%" cellpadding="3" cellspacing="0" class="tborder">
 		<tr class="titlebg">
-			<td>', $txt['register'], ' - ', $txt[517], '</td>
+			<td>', $txt['register'], ' - ', $txt['required_info'], '</td>
 		</tr><tr class="windowbg">
 			<td width="100%">
 				<table cellpadding="3" cellspacing="0" border="0" width="100%">
 					<tr>
 						<td width="40%">
-							<b>', $txt[98], ':</b>
-							<div class="smalltext">', $txt[520], '</div>
+							<b>', $txt['choose_username'], ':</b>
+							<div class="smalltext">', $txt['identification_by_smf'], '</div>
 						</td>
 						<td>
 							<input type="text" name="user" size="20" tabindex="', $context['tabindex']++, '" maxlength="25" />
@@ -81,7 +81,7 @@ echo '
 					</tr><tr>
 						<td width="40%">
 							<b>', $txt['email'], ':</b>
-							<div class="smalltext">', $txt[679], '</div>
+							<div class="smalltext">', $txt['valid_email'], '</div>
 						</td>
 						<td>
 							<input type="text" name="email" size="30" tabindex="', $context['tabindex']++, '" />';
@@ -89,7 +89,7 @@ echo '
 	// Are they allowed to hide their email?
 	if ($context['allow_hide_email'])
 		echo '
-							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt[721], '</label>';
+							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt['hide_email'], '</label>';
 
 	echo '
 						</td>
@@ -178,7 +178,7 @@ echo '
 			</td>
 		</tr><tr>
 			<td align="center" class="windowbg2">
-				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" class="check" /> <b>', $txt[585], '</b></label>
+				<label for="regagree"><input type="checkbox" name="regagree" onclick="checkAgree();" id="regagree" class="check" /> <b>', $txt['agree'], '</b></label>
 			</td>
 		</tr>
 	</table>';
@@ -463,7 +463,7 @@ function template_edit_agreement()
 	<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" cellspacing="0" cellpadding="4" align="center" width="80%" class="tborder">
 			<tr class="titlebg">
-				<td align="center">', $txt['smf11'], '</td>
+				<td align="center">', $txt['registration_agreement'], '</td>
 			</tr>';
 
 	// Warning for if the file isn't writable.
@@ -481,7 +481,7 @@ function template_edit_agreement()
 	// Show the actual agreement in an oversized text box.
 	echo '
 					<textarea cols="70" rows="20" name="agreement" style="width: 94%; margin-bottom: 1ex;">', $context['agreement'], '</textarea><br />
-					<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt[584], '.</label><br />
+					<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt['admin_agreement'], '.</label><br />
 					<br />
 					<input type="submit" value="', $txt['save'], '" />
 					<input type="hidden" name="sa" value="agreement" />
@@ -501,19 +501,19 @@ function template_edit_reserved_words()
 			<table border="0" cellspacing="1" class="bordercolor" align="center" cellpadding="4" width="80%">
 				<tr class="titlebg">
 					<td align="center">
-						', $txt[341], '
+						', $txt['admin_reserved_set'], '
 					</td>
 				</tr><tr>
 					<td class="windowbg2" align="center">
 						<div style="width: 80%;">
-							<div style="margin-bottom: 2ex;">', $txt[342], '</div>
+							<div style="margin-bottom: 2ex;">', $txt['admin_reserved_line'], '</div>
 							<textarea cols="30" rows="6" name="reserved" style="width: 98%;">', implode("\n", $context['reserved_words']), '</textarea><br />
 
 							<div align="left" style="margin-top: 2ex;">
-								<label for="matchword"><input type="checkbox" name="matchword" id="matchword" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="check" /> ', $txt[726], '</label><br />
-								<label for="matchcase"><input type="checkbox" name="matchcase" id="matchcase" ', $context['reserved_word_options']['match_case'] ? 'checked="checked"' : '', ' class="check" /> ', $txt[727], '</label><br />
-								<label for="matchuser"><input type="checkbox" name="matchuser" id="matchuser" ', $context['reserved_word_options']['match_user'] ? 'checked="checked"' : '', ' class="check" /> ', $txt[728], '</label><br />
-								<label for="matchname"><input type="checkbox" name="matchname" id="matchname" ', $context['reserved_word_options']['match_name'] ? 'checked="checked"' : '', ' class="check" /> ', $txt[729], '</label><br />
+								<label for="matchword"><input type="checkbox" name="matchword" id="matchword" ', $context['reserved_word_options']['match_word'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_whole'], '</label><br />
+								<label for="matchcase"><input type="checkbox" name="matchcase" id="matchcase" ', $context['reserved_word_options']['match_case'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_match_case'], '</label><br />
+								<label for="matchuser"><input type="checkbox" name="matchuser" id="matchuser" ', $context['reserved_word_options']['match_user'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_user'], '</label><br />
+								<label for="matchname"><input type="checkbox" name="matchname" id="matchname" ', $context['reserved_word_options']['match_name'] ? 'checked="checked"' : '', ' class="check" /> ', $txt['admin_check_display'], '</label><br />
 							</div>
 
 							<input type="submit" value="', $txt['save'], '" name="save_reserved_names" style="margin: 1ex;" />

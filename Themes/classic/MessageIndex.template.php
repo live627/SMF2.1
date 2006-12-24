@@ -37,7 +37,7 @@ function template_main()
 		{
 			echo '
 	<tr>
-		<td class="windowbg" width="6%" align="center" valign="top">', $board['new'] ? '<img src="' . $settings['images_url'] . '/on.gif" alt="' . $txt[333] . '" title="' . $txt[333] . '" border="0" />' : '<img src="' . $settings['images_url'] . '/off.gif" alt="' . $txt[334] . '" title="' . $txt[334] . '" border="0" />', '</td>
+		<td class="windowbg" width="6%" align="center" valign="top">', $board['new'] ? '<img src="' . $settings['images_url'] . '/on.gif" alt="' . $txt['new_posts'] . '" title="' . $txt['new_posts'] . '" border="0" />' : '<img src="' . $settings['images_url'] . '/off.gif" alt="' . $txt['old_posts'] . '" title="' . $txt['old_posts'] . '" border="0" />', '</td>
 		<td class="windowbg2" align="left" width="60%">
 			<a name="b' . $board['id'] . '"></a>
 			<b>' . $board['link'] . '</b><br />
@@ -74,8 +74,8 @@ function template_main()
 		<td class="windowbg2" valign="middle" width="22%">
 			<span class="smalltext">
 				', $board['last_post']['time'], '<br />
-				', $txt['smf88'], ' ', $board['last_post']['link'], '<br />
-				', $txt[525], ' ', $board['last_post']['member']['link'], '
+				', $txt['in'], ' ', $board['last_post']['link'], '<br />
+				', $txt['by'], ' ', $board['last_post']['member']['link'], '
 			</span>
 		</td>
 	</tr>';
@@ -105,7 +105,7 @@ function template_main()
 		<td align="left" class="catbg" width="100%" height="30">
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
-					<td><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['topbottom5'] . '" border="0" align="top" />' : $txt['topbottom5']) . '</a>' : '', '</td>
+					<td><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#bot">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['go_down'] . '" border="0" align="top" />' : $txt['go_down']) . '</a>' : '', '</td>
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 				</tr>
 			</table>
@@ -165,7 +165,7 @@ function template_main()
 		<td class="windowbg" valign="middle" width="4%" align="center">
 			', $topic['views'], '</td>
 		<td class="windowbg2" valign="middle" width="22%">
-			<span class="smalltext">', $topic['last_post']['time'], '<br />', $txt[525], ' ', $topic['last_post']['member']['link'], '</span></td>';
+			<span class="smalltext">', $topic['last_post']['time'], '<br />', $txt['by'], ' ', $topic['last_post']['member']['link'], '</span></td>';
 
 			// Show the quick moderation options?
 			if (!empty($options['display_quick_mod']))
@@ -180,11 +180,11 @@ function template_main()
 					if ($topic['quick_mod']['remove'])
 						echo '<a href="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], ';actions[', $topic['id'], ']=remove;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_remove.gif" width="16" alt="', $txt['remove_topic'], '" title="', $txt['remove_topic'], '" border="0" /></a>';
 					if ($topic['quick_mod']['lock'])
-						echo '<a href="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], ';actions[', $topic['id'], ']=lock;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['smf279'], '" title="', $txt['smf279'], '" border="0" /></a>';
+						echo '<a href="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], ';actions[', $topic['id'], ']=lock;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_lock.gif" width="16" alt="', $txt['set_lock'], '" title="', $txt['set_lock'], '" border="0" /></a>';
 					if ($topic['quick_mod']['lock'] || $topic['quick_mod']['remove'])
 						echo '<br />';
 					if ($topic['quick_mod']['sticky'])
-						echo '<a href="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], ';actions[', $topic['id'], ']=sticky;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['smf277'], '" title="', $txt['smf277'], '" border="0" /></a>';
+						echo '<a href="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], ';actions[', $topic['id'], ']=sticky;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" border="0" /></a>';
 					if ($topic['quick_mod']['move'])
 						echo '<a href="', $scripturl, '?action=movetopic;board=', $context['current_board'], '.', $context['start'], ';topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" border="0" /></a>';
 				}
@@ -251,7 +251,7 @@ function template_main()
 		<td align="left" class="catbg" width="100%" height="30">
 			<table cellpadding="3" cellspacing="0" width="100%">
 				<tr>
-					<td><a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['topbottom4'] . '" border="0" align="top" />' : $txt['topbottom4']) . '</a>' : '', '</td>
+					<td><a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : '', '</td>
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">', theme_show_buttons(), '</td>
 				</tr>
 			</table>
@@ -276,14 +276,14 @@ function template_main()
 		echo '
 		<td class="smalltext" align="left" style="padding-top: 1ex;">', !empty($modSettings['enableParticipation']) ? '
 			<img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '<br />' : '', '
-			<img src="' . $settings['images_url'] . '/topic/normal_post.gif" alt="" align="middle" /> ' . $txt[457] . '<br />
+			<img src="' . $settings['images_url'] . '/topic/normal_post.gif" alt="" align="middle" /> ' . $txt['normal_topic'] . '<br />
 			<img src="' . $settings['images_url'] . '/topic/hot_post.gif" alt="" align="middle" /> ' . sprintf($txt['hot_topics'], $modSettings['hotTopicPosts']) . '<br />
 			<img src="' . $settings['images_url'] . '/topic/veryhot_post.gif" alt="" align="middle" /> ' . sprintf($txt['very_hot_topics'], $modSettings['hotTopicVeryPosts']) . '
 		</td>
 		<td class="smalltext" align="left" valign="top" style="padding-top: 1ex;">
-			<img src="' . $settings['images_url'] . '/topic/normal_post_locked.gif" alt="" align="middle" /> ' . $txt[456] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
+			<img src="' . $settings['images_url'] . '/topic/normal_post_locked.gif" alt="" align="middle" /> ' . $txt['locked_topic'] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
 			<img src="' . $settings['images_url'] . '/topic/normal_post_sticky.gif" alt="" align="middle" /> ' . $txt['smf96'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
-			<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['smf43'] : '') . '
+			<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : '') . '
 		</td>';
 	}
 
@@ -328,7 +328,7 @@ function theme_show_buttons()
 
 	// How about new polls, can the user post those?
 	if ($context['can_post_poll'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;poll">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/new_poll.gif" alt="' . $txt['smf20'] . '" border="0" />' : $txt['smf20']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=post;board=' . $context['current_board'] . '.0;poll">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/new_poll.gif" alt="' . $txt['new_poll'] . '" border="0" />' : $txt['new_poll']) . '</a>';
 
 	return implode($context['menu_separator'], $buttonArray);
 }

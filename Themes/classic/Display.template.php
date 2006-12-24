@@ -51,7 +51,7 @@ function template_main()
 
 	// Show a "go down" link?
 	if (!empty($modSettings['topbottomEnable']))
-		echo $context['menu_separator'], '<a href="#bot">', $settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['topbottom5'] . '" border="0" align="top" />' : $txt['topbottom5'], '</a>';
+		echo $context['menu_separator'], '<a href="#bot">', $settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_down.gif" alt="' . $txt['go_down'] . '" border="0" align="top" />' : $txt['go_down'], '</a>';
 
 	echo '
 					</td>
@@ -69,11 +69,11 @@ function template_main()
 <table cellpadding="3" cellspacing="0" border="0" width="100%" class="tborder" style="border-bottom: 0;">
 	<tr class="titlebg">
 		<td colspan="2" valign="middle" align="left" style="padding-left: 6px;">
-			<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="top" /> ', $txt['smf43'], '
+			<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="top" /> ', $txt['poll'], '
 		</td>
 	</tr>
 	<tr class="windowbg">
-		<td width="5%" valign="top"><b>', $txt['smf21'], ':</b></td>
+		<td width="5%" valign="top"><b>', $txt['poll_question'], ':</b></td>
 		<td>
 			', $context['poll']['question'];
 
@@ -113,18 +113,18 @@ function template_main()
 			// If they're allowed to lock the poll, show a link!
 			if ($context['poll']['lock'])
 				echo '
-						<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['smf30'] : $txt['smf30b'], '</a><br />';
+						<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', !$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock'], '</a><br />';
 
 			// If they're allowed to edit the poll... guess what... show a link!
 			if ($context['poll']['edit'])
 				echo '
-						<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['smf39'], '</a>';
+						<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
 
 			echo '
 					</td>
 				</tr>', $context['allow_poll_view'] ? '
 				<tr>
-					<td colspan="2"><b>' . $txt['smf24'] . ': ' . $context['poll']['total_votes'] . '</b></td>
+					<td colspan="2"><b>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</b></td>
 				</tr>' : '', '
 			</table><br />';
 		}
@@ -157,22 +157,22 @@ function template_main()
 			// Allowed to view the results? (without voting!)
 			if ($context['allow_poll_view'])
 				echo '
-							<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';viewResults">', $txt['smf29'], '</a><br />';
+							<a href="', $scripturl, '?topic=', $context['current_topic'], '.', $context['start'], ';viewResults">', $txt['poll_results'], '</a><br />';
 
 			// Show a link for locking the poll as well...
 			if ($context['poll']['lock'])
 				echo '
-							<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', (!$context['poll']['is_locked'] ? $txt['smf30'] : $txt['smf30b']), '</a><br />';
+							<a href="', $scripturl, '?action=lockVoting;topic=', $context['current_topic'], '.', $context['start'], ';sesc=', $context['session_id'], '">', (!$context['poll']['is_locked'] ? $txt['poll_lock'] : $txt['poll_unlock']), '</a><br />';
 
 			// Want to edit it?  Click right here......
 			if ($context['poll']['edit'])
 				echo '
-							<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['smf39'], '</a>';
+							<a href="', $scripturl, '?action=editpoll;topic=', $context['current_topic'], '.', $context['start'], '">', $txt['poll_edit'], '</a>';
 
 			echo '
 						</td>
 					</tr><tr>
-						<td colspan="2"><input type="submit" value="', $txt['smf23'], '" /></td>
+						<td colspan="2"><input type="submit" value="', $txt['poll_vote'], '" /></td>
 					</tr>
 				</table>
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -222,7 +222,7 @@ function template_main()
 			', $txt['author'], '
 		</td>
 		<td valign="middle" align="left" width="85%" style="padding-left: 6px;" id="top_subject">
-			', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt[641], ' ', $context['num_views'], ' ', $txt[642], ')
+			', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')
 		</td>
 	</tr>
 </table>';
@@ -350,7 +350,7 @@ function template_main()
 				// Don't show an icon if they haven't specified a website.
 				if ($message['member']['website']['url'] != '')
 					echo '
-								<a href="', $message['member']['website']['url'], '" title="' . $message['member']['website']['title'] . '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt[515] . '" border="0" />' : $txt[515]), '</a>';
+								<a href="', $message['member']['website']['url'], '" title="' . $message['member']['website']['title'] . '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a>';
 
 				// Don't show the email address if they want it hidden.
 				if (empty($message['member']['hide_email']))
@@ -470,7 +470,7 @@ function template_main()
 
 				if (!$attachment['is_approved'])
 					echo '
-										[<a href="', $scripturl, '?action=attachapprove;sa=approve;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['approve'], '</a>]&nbsp;|&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=reject;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['smf138'], '</a>] ';
+										[<a href="', $scripturl, '?action=attachapprove;sa=approve;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['approve'], '</a>]&nbsp;|&nbsp;[<a href="', $scripturl, '?action=attachapprove;sa=reject;aid=', $attachment['id'], ';sesc=', $context['session_id'], '">', $txt['delete'], '</a>] ';
 				echo '
 										(', $attachment['size'], ($attachment['is_image'] ? ', ' . $attachment['real_width'] . 'x' . $attachment['real_height'] . ' - ' . $txt['attach_viewed'] : ' - ' . $txt['attach_downloaded']) . ' ' . $attachment['downloads'] . ' ' . $txt['attach_times'] . '.)<br />';
 			}
@@ -489,7 +489,7 @@ function template_main()
 		// Show "« Last Edit: Time by Person »" if this post was edited.
 		if ($settings['show_modify'] && !empty($message['modified']['name']))
 			echo '
-									&#171; <i>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt[525], ' ', $message['modified']['name'], '</i> &#187;';
+									&#171; <i>', $txt['last_edit'], ': ', $message['modified']['time'], ' ', $txt['by'], ' ', $message['modified']['name'], '</i> &#187;';
 
 		echo '
 								</td>
@@ -498,7 +498,7 @@ function template_main()
 		// Maybe they want to report this post to the moderator(s)?
 		if ($context['can_report_moderator'])
 			echo '
-									<a href="', $scripturl, '?action=reporttm;topic=', $context['current_topic'], '.', $message['counter'], ';msg=', $message['id'], '">', $txt['rtm1'], '</a> &nbsp;';
+									<a href="', $scripturl, '?action=reporttm;topic=', $context['current_topic'], '.', $message['counter'], ';msg=', $message['id'], '">', $txt['report_to_mod'], '</a> &nbsp;';
 		echo '
 									<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 
@@ -513,11 +513,11 @@ function template_main()
 		// Okay, are you at least logged in?  Then we can show something about why IPs are logged...
 		elseif (!$context['user']['is_guest'])
 			echo '
-									<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt[511], '</a>';
+									<a href="', $scripturl, '?action=helpadmin;help=see_member_ip" onclick="return reqWin(this.href);" class="help">', $txt['logged'], '</a>';
 		// Otherwise, you see NOTHING!
 		else
 			echo '
-									', $txt[511];
+									', $txt['logged'];
 
 		echo '
 								</td>
@@ -547,7 +547,7 @@ function template_main()
 				<table cellpadding="3" cellspacing="0" width="100%">
 					<tr>
 						<td>
-							<a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['topbottom4'] . '" border="0" align="top" />' : $txt['topbottom4']) . '</a>' : ''), '
+							<a name="bot"></a><b>', $txt['pages'], ':</b> ', $context['page_index'], (!empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '<a href="#top">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/go_up.gif" alt="' . $txt['go_up'] . '" border="0" align="top" />' : $txt['go_up']) . '</a>' : ''), '
 						</td>
 						<td align="right" style="font-size: smaller;">
 							', theme_show_main_buttons(), '&nbsp;
@@ -594,10 +594,10 @@ function template_main()
 <a name="quickreply"></a>
 <table border="0" cellspacing="1" cellpadding="3" class="bordercolor" width="100%" style="clear: both;">
 	<tr>
-		<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" border="0" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply_1'], '</a></td>
+		<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" border="0" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a></td>
 	</tr>
 	<tr id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_2'], $context['is_locked'] ? '<br /><br /><b>' . $txt['quick_reply_warning'] . '</b>' : '', '</td>
+		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_desc'], $context['is_locked'] ? '<br /><br /><b>' . $txt['quick_reply_warning'] . '</b>' : '', '</td>
 		<td class="windowbg" width="75%" align="center">
 			', $context['can_reply_approved'] ? '' : '<i>' . $txt['wait_for_approval'] . '</i>', '
 			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" style="margin:0px;">
@@ -610,7 +610,7 @@ function template_main()
 				<input type="hidden" name="num_replies" value="', $context['num_replies'], '" />
 				<textarea cols="75" rows="7" style="width: 95%; height: 100px;" name="message" tabindex="1"></textarea><br />
 				<input type="submit" name="post" value="' . $txt['post'] . '" accesskey="s" tabindex="2" />
-				<input type="submit" name="preview" value="' . $txt[507] . '" accesskey="p" tabindex="4" />';
+				<input type="submit" name="preview" value="' . $txt['preview'] . '" accesskey="p" tabindex="4" />';
 		if ($context['show_spellchecking'])
 			echo '
 				<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" />';
@@ -658,7 +658,7 @@ function template_main()
 			sTemplateSubjectEdit: \'<input type="text" name="subject" value="%subject%" size="60" style="width: 99%;"  maxlength="80" />\',
 			sTemplateBodyNormal: \'%body%\',
 			sTemplateSubjectNormal: \'<a href="', $scripturl, '?topic=', $context['current_topic'], '.msg%msg_id%#msg%msg_id%">%subject%</a>\',
-			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt[641], ' ', $context['num_views'], ' ', $txt[642], ')",
+			sTemplateTopSubject: "', $txt['topic'], ': %subject% &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')",
 			sErrorBorderStyle: "1px solid red"
 		});
 
@@ -712,8 +712,8 @@ function theme_show_main_buttons()
 	if ($context['can_mark_notify'])
 		$buttonArray[] = '<a href="' . $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
 	if ($context['can_send_topic'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt[707] . '" border="0" />' : $txt[707]) . '</a>';
-	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt[465] . '" border="0" />' : $txt[465]) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt['send_topic'] . '" border="0" />' : $txt['send_topic']) . '</a>';
+	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt['print'] . '" border="0" />' : $txt['print']) . '</a>';
 
 	return implode($context['menu_separator'], $buttonArray);
 }
@@ -729,16 +729,16 @@ function theme_show_mod_buttons()
 	if ($context['can_delete'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['are_sure_remove_topic'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_rem.gif" alt="' . $txt['remove_topic'] . '" border="0" />' : $txt['remove_topic']) . '</a>';
 	if ($context['can_lock'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=lock;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_lock.gif" alt="' . (empty($context['is_locked']) ? $txt['smf279'] : $txt['smf280']) . '" border="0" />' : (empty($context['is_locked']) ? $txt['smf279'] : $txt['smf280'])) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=lock;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_lock.gif" alt="' . (empty($context['is_locked']) ? $txt['set_lock'] : $txt['set_unlock']) . '" border="0" />' : (empty($context['is_locked']) ? $txt['set_lock'] : $txt['set_unlock'])) . '</a>';
 	if ($context['can_sticky'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_sticky.gif" alt="' . (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278']) . '" border="0" />' : (empty($context['is_sticky']) ? $txt['smf277'] : $txt['smf278'])) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_sticky.gif" alt="' . (empty($context['is_sticky']) ? $txt['set_sticky'] : $txt['set_nonsticky']) . '" border="0" />' : (empty($context['is_sticky']) ? $txt['set_sticky'] : $txt['set_nonsticky'])) . '</a>';
 	if ($context['can_merge'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/merge.gif" alt="' . $txt['merge'] . '" border="0" />' : $txt['merge']) . '</a>';
 	if ($context['can_remove_poll'])
 		$moderationButtons[] = '<a href="' . $scripturl . '?action=removepoll;topic=' . $context['current_topic'] . '.' . $context['start'] . '" onclick="return confirm(\'' . $txt['poll_remove_warn'] . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/admin_remove_poll.gif" alt="' . $txt['poll_remove'] . '" border="0" />' : $txt['poll_remove']) . '</a>';
 
 	if ($context['calendar_post'])
-		$moderationButtons[] = '<a href="' . $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/linktocal.gif" alt="' . $txt['calendar37'] . '" border="0" />' : $txt['calendar37']) . '</a>';
+		$moderationButtons[] = '<a href="' . $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0;sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/linktocal.gif" alt="' . $txt['calendar_link'] . '" border="0" />' : $txt['calendar_link']) . '</a>';
 
 	if ($context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 		$moderationButtons[] = $settings['use_image_buttons'] ? '<input type="image" name="submit" src="' . $settings['lang_images_url'] . '/delete_selected.gif" alt="' . $txt['quickmod_delete_selected'] . '" style="background-color: transparent;" />' : '<a href="javascript:document.forms.quickModForm.submit();">' . $txt['quickmod_delete_selected'] . '</a>';

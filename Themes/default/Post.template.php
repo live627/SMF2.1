@@ -151,7 +151,7 @@ function template_main()
 				{
 					var newTable = \'<span id="new_replies"></span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
 					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt[280], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt[260], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
+						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['quote'], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
 					newTable += \'</table>\';
 					setOuterHTML(document.getElementById("new_replies"), newTable);
 				}
@@ -226,7 +226,7 @@ function template_main()
 				}
 				pollOptionNum++
 
-				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'">', $txt['smf22'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" /><span id="pollMoreOptions"></span>\');
+				setOuterHTML(document.getElementById("pollMoreOptions"), \'<br /><label for="options-\' + pollOptionNum + \'">', $txt['option'], ' \' + pollOptionNum + \'</label>: <input type="text" name="options[\' + pollOptionNum + \']" id="options-\' + pollOptionNum + \'" value="" size="25" tabindex="\' + pollTabIndex + \'" /><span id="pollMoreOptions"></span>\');
 			}';
 
 	// If we are making a calendar event we want to ensure we show the current days in a month etc... this is done here.
@@ -327,7 +327,7 @@ function template_main()
 							<tr', $context['locked'] ? '' : ' style="display: none"', ' id="lock_warning">
 								<td></td>
 								<td align="left">
-									', $txt['smf287'], '
+									', $txt['topic_locked_no_reply'], '
 								</td>
 							</tr>';
 
@@ -362,7 +362,7 @@ function template_main()
 		echo '
 							<tr>
 								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_event']) ? 'color: red;' : '', '" id="caption_evtitle">
-									', $txt['calendar12'], '
+									', $txt['calendar_event_title'], '
 								</td>
 								<td class="smalltext">
 									<input type="text" name="evtitle" maxlength="30" size="30" value="', $context['event']['title'], '" tabindex="', $context['tabindex']++, '" />
@@ -370,7 +370,7 @@ function template_main()
 							</tr><tr>
 								<td></td>
 								<td class="smalltext">
-									<input type="hidden" name="calendar" value="1" />', $txt['calendar10'], '&nbsp;
+									<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '&nbsp;
 									<select name="year" id="year" tabindex="', $context['tabindex']++, '" onchange="generateDays();">';
 
 		// Show a list of all the years we allow...
@@ -380,7 +380,7 @@ function template_main()
 
 		echo '
 									</select>&nbsp;
-									', $txt['calendar9'], '&nbsp;
+									', $txt['calendar_month'], '&nbsp;
 									<select name="month" id="month" onchange="generateDays();">';
 
 		// There are 12 months per year - ensure that they all get listed.
@@ -390,7 +390,7 @@ function template_main()
 
 		echo '
 									</select>&nbsp;
-									', $txt['calendar11'], '&nbsp;
+									', $txt['calendar_day'], '&nbsp;
 									<select name="day" id="day">';
 
 		// This prints out all the days in the current month - this changes dynamically as we switch months.
@@ -408,7 +408,7 @@ function template_main()
 		{
 			echo '
 							<tr>
-								<td align="right"><b>', $txt['calendar54'], '</b></td>
+								<td align="right"><b>', $txt['calendar_numb_days'], '</b></td>
 								<td class="smalltext">
 									<select name="span">';
 
@@ -427,7 +427,7 @@ function template_main()
 		{
 			echo '
 							<tr>
-								<td align="right"><b>', $txt['calendar13'], '</b></td>
+								<td align="right"><b>', $txt['calendar_post_in'], '</b></td>
 								<td class="smalltext">
 									<select name="board">';
 
@@ -454,7 +454,7 @@ function template_main()
 							</tr>
 							<tr>
 								<td align="right">
-									<b>', $txt[71], ':</b>
+									<b>', $txt['message_icon'], ':</b>
 								</td>
 								<td>
 									<select name="icon" id="icon" onchange="showimage()">';
@@ -476,7 +476,7 @@ function template_main()
 		echo '
 							<tr>
 								<td align="right" style="font-weight: bold;', isset($context['post_error']['no_question']) ? 'color: red;' : '', '" id="caption_question">
-									', $txt['smf21'], ':
+									', $txt['poll_question'], ':
 								</td>
 								<td align="left">
 									<input type="text" name="question" value="', isset($context['question']) ? $context['question'] : '', '" tabindex="', $context['tabindex']++, '" size="80" />
@@ -490,7 +490,7 @@ function template_main()
 		foreach ($context['choices'] as $choice)
 		{
 			echo '
-									<label for="options-', $choice['id'], '">', $txt['smf22'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="25" />';
+									<label for="options-', $choice['id'], '">', $txt['option'], ' ', $choice['number'], '</label>: <input type="text" name="options[', $choice['id'], ']" id="options-', $choice['id'], '" value="', $choice['label'], '" tabindex="', $context['tabindex']++, '" size="25" />';
 
 			if (!$choice['is_last'])
 				echo '<br />';
@@ -502,22 +502,22 @@ function template_main()
 							</tr>
 							<tr>
 								<td align="right"><b>', $txt['poll_options'], ':</b></td>
-								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" /> ', $txt['poll_options5'], '</td>
+								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll_options']['max_votes'], '" /> ', $txt['poll_max_votes'], '</td>
 							</tr>
 							<tr>
 								<td align="right"></td>
-								<td class="smalltext">', $txt['poll_options1a'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" /> ', $txt['poll_options1b'], '</td>
+								<td class="smalltext">', $txt['poll_run'], ' <input type="text" id="poll_expire" name="poll_expire" size="2" value="', $context['poll_options']['expire'], '" onchange="pollOptions();" /> ', $txt['poll_run_days'], '</td>
 							</tr>
 							<tr>
 								<td align="right"></td>
-								<td class="smalltext"><label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_options7'], '</label></td>
+								<td class="smalltext"><label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_change_vote'], '</label></td>
 							</tr>
 							<tr>
 								<td align="right"></td>
 								<td class="smalltext">
-									<input type="radio" id="poll_hide" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_options2'], '<br />
-									<input type="radio" id="poll_hide" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_options3'], '<br />
-									<input type="radio" id="poll_hide" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="check" /> ', $txt['poll_options4'], '<br />
+									<input type="radio" id="poll_hide" name="poll_hide" value="0"', $context['poll_options']['hide'] == 0 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_anyone'], '<br />
+									<input type="radio" id="poll_hide" name="poll_hide" value="1"', $context['poll_options']['hide'] == 1 ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_results_voted'], '<br />
+									<input type="radio" id="poll_hide" name="poll_hide" value="2"', $context['poll_options']['hide'] == 2 ? ' checked="checked"' : '', empty($context['poll_options']['expire']) ? ' disabled="disabled"' : '', ' class="check" /> ', $txt['poll_results_expire'], '<br />
 									<br />
 								</td>
 							</tr>';
@@ -555,15 +555,15 @@ function template_main()
 											<div id="postMoreOptions">
 												<table width="80%" cellpadding="0" cellspacing="0" border="0">
 													<tr>
-														<td class="smalltext">', $context['can_notify'] ? '<input type="hidden" name="notify" value="0" /><label for="check_notify"><input type="checkbox" name="notify" id="check_notify"' . ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['smf14'] . '</label>' : '', '</td>
-														<td class="smalltext">', $context['can_lock'] ? '<input type="hidden" name="lock" value="0" /><label for="check_lock"><input type="checkbox" name="lock" id="check_lock"' . ($context['locked'] ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['smf15'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_notify'] ? '<input type="hidden" name="notify" value="0" /><label for="check_notify"><input type="checkbox" name="notify" id="check_notify"' . ($context['notify'] || !empty($options['auto_notify']) ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['notify_replies'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_lock'] ? '<input type="hidden" name="lock" value="0" /><label for="check_lock"><input type="checkbox" name="lock" id="check_lock"' . ($context['locked'] ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['lock_topic'] . '</label>' : '', '</td>
 													</tr>
 													<tr>
 														<td class="smalltext"><label for="check_back"><input type="checkbox" name="goback" id="check_back"' . ($context['back_to_topic'] || !empty($options['return_to_post']) ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['back_to_topic'] . '</label></td>
-														<td class="smalltext">', $context['can_sticky'] ? '<input type="hidden" name="sticky" value="0" /><label for="check_sticky"><input type="checkbox" name="sticky" id="check_sticky"' . ($context['sticky'] ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['sticky_after2'] . '</label>' : '', '</td>
+														<td class="smalltext">', $context['can_sticky'] ? '<input type="hidden" name="sticky" value="0" /><label for="check_sticky"><input type="checkbox" name="sticky" id="check_sticky"' . ($context['sticky'] ? ' checked="checked"' : '') . ' value="1" class="check" /> ' . $txt['sticky_after'] . '</label>' : '', '</td>
 													</tr>
 													<tr>
-														<td class="smalltext"><label for="check_smileys"><input type="checkbox" name="ns" id="check_smileys"', $context['use_smileys'] ? '' : ' checked="checked"', ' value="NS" class="check" /> ', $txt[277], '</label></td>', '
+														<td class="smalltext"><label for="check_smileys"><input type="checkbox" name="ns" id="check_smileys"', $context['use_smileys'] ? '' : ' checked="checked"', ' value="NS" class="check" /> ', $txt['dont_use_smileys'], '</label></td>', '
 														<td class="smalltext">', $context['can_move'] ? '<input type="hidden" name="move" value="0" /><label for="check_move"><input type="checkbox" name="move" id="check_move" value="1" class="check" /> ' . $txt['move_after2'] . '</label>' : '', '</td>
 													</tr>
 													<tr>
@@ -581,11 +581,11 @@ function template_main()
 		echo '
 							<tr id="postAttachment">
 								<td align="right" valign="top">
-									<b>', $txt['smf119b'], ':</b>
+									<b>', $txt['attached'], ':</b>
 								</td>
 								<td class="smalltext">
 									<input type="hidden" name="attach_del[]" value="0" />
-									', $txt['smf130'], ':<br />';
+									', $txt['uncheck_unwatchd_attach'], ':<br />';
 		foreach ($context['current_attachments'] as $attachment)
 			echo '
 									<input type="checkbox" name="attach_del[]" value="', $attachment['id'], '"', empty($attachment['unchecked']) ? ' checked="checked"' : '', ' class="check" /> ', $attachment['name'], (empty($attachment['approved']) ? ' (' . $txt['awaiting_approval'] . ')' : ''), '<br />';
@@ -601,7 +601,7 @@ function template_main()
 		echo '
 							<tr id="postAttachment2">
 								<td align="right" valign="top">
-									<b>', $txt['smf119'], ':</b>
+									<b>', $txt['attach'], ':</b>
 								</td>
 								<td class="smalltext">
 									<input type="file" size="48" name="attachment[]" />';
@@ -632,9 +632,9 @@ function template_main()
 		// Show some useful information such as allowed extensions, maximum size and amount of attachments allowed.
 		if (!empty($modSettings['attachmentCheckExtensions']))
 			echo '
-									', $txt['smf120'], ': ', $context['allowed_extensions'], '<br />';
+									', $txt['allowed_types'], ': ', $context['allowed_extensions'], '<br />';
 		echo '
-									', $txt['smf121'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['smf211'], !empty($modSettings['attachmentNumPerPostLimit']) ? ', ' . $txt['maxAttachPerPost'] . ': ' . $modSettings['attachmentNumPerPostLimit'] : '', '<br />';
+									', $txt['max_size'], ': ', $modSettings['attachmentSizeLimit'], ' ' . $txt['kilobyte'], !empty($modSettings['attachmentNumPerPostLimit']) ? ', ' . $txt['maxAttachPerPost'] . ': ' . $modSettings['attachmentNumPerPostLimit'] : '', '<br />';
 
 		if (!$context['can_post_attachment_unapproved'])
 			echo '
@@ -649,9 +649,9 @@ function template_main()
 	echo '
 							<tr>
 								<td align="center" colspan="2">
-									<span class="smalltext"><br />', $txt['smf16'], '</span><br />
+									<span class="smalltext"><br />', $txt['shortcuts'], '</span><br />
 									<input type="submit" name="post" value="', $context['submit_label'], '" tabindex="', $context['tabindex']++, '" onclick="return submitThisOnce(this);" accesskey="s" />
-									<input type="submit" name="preview" value="', $txt[507], '" tabindex="', $context['tabindex']++, '" onclick="return event.ctrlKey || previewPost();" accesskey="p" />';
+									<input type="submit" name="preview" value="', $txt['preview'], '" tabindex="', $context['tabindex']++, '" onclick="return event.ctrlKey || previewPost();" accesskey="p" />';
 
 	// Option to delete an event if user is editing one.
 	if ($context['make_event'] && !$context['event']['new'])
@@ -731,7 +731,7 @@ function template_main()
 					<td>
 						<table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center">
 							<tr class="titlebg">
-								<td colspan="2">', $txt[468], '</td>
+								<td colspan="2">', $txt['topic_summary'], '</td>
 							</tr>
 						</table>
 						<span id="new_replies"></span>
@@ -740,12 +740,12 @@ function template_main()
 			echo '
 							<tr class="catbg">
 								<td colspan="2" align="left" class="smalltext">
-									<div style="float: right;">', $txt[280], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
+									<div style="float: right;">', $txt['posted_on'], ': ', $post['time'], $post['is_new'] ? ' <img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['preview_new'] . '" />' : '', '</div>
 									', $txt['posted_by'], ': ', $post['poster'], '
 								</td>
 							</tr><tr class="windowbg2">
 								<td colspan="2" class="smalltext" id="msg', $post['id'], '" width="100%">
-									<div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt[260], '</a></div>
+									<div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['quote'], '</a></div>
 									<div class="post">', $post['message'], '</div>
 								</td>
 							</tr>';
@@ -781,37 +781,37 @@ function template_postbox(&$message)
 		// The below array makes it dead easy to add images to this page. Add it to the array and everything else is done for you!
 		$context['bbc_tags'] = array();
 		$context['bbc_tags'][] = array(
-			'bold' => array('code' => 'b', 'before' => '[b]', 'after' => '[/b]', 'description' => $txt[253]),
-			'italicize' => array('code' => 'i', 'before' => '[i]', 'after' => '[/i]', 'description' => $txt[254]),
-			'underline' => array('code' => 'u', 'before' => '[u]', 'after' => '[/u]', 'description' => $txt[255]),
-			'strike' => array('code' => 's', 'before' => '[s]', 'after' => '[/s]', 'description' => $txt[441]),
+			'bold' => array('code' => 'b', 'before' => '[b]', 'after' => '[/b]', 'description' => $txt['bold']),
+			'italicize' => array('code' => 'i', 'before' => '[i]', 'after' => '[/i]', 'description' => $txt['italic']),
+			'underline' => array('code' => 'u', 'before' => '[u]', 'after' => '[/u]', 'description' => $txt['underline']),
+			'strike' => array('code' => 's', 'before' => '[s]', 'after' => '[/s]', 'description' => $txt['strike']),
 			array(),
-			'pre' => array('code' => 'pre', 'before' => '[pre]', 'after' => '[/pre]', 'description' => $txt[444]),
-			'left' => array('code' => 'left', 'before' => '[left]', 'after' => '[/left]', 'description' => $txt[445]),
-			'center' => array('code' => 'center', 'before' => '[center]', 'after' => '[/center]', 'description' => $txt[256]),
-			'right' => array('code' => 'right', 'before' => '[right]', 'after' => '[/right]', 'description' => $txt[446]),
+			'pre' => array('code' => 'pre', 'before' => '[pre]', 'after' => '[/pre]', 'description' => $txt['preformatted']),
+			'left' => array('code' => 'left', 'before' => '[left]', 'after' => '[/left]', 'description' => $txt['left_align']),
+			'center' => array('code' => 'center', 'before' => '[center]', 'after' => '[/center]', 'description' => $txt['center']),
+			'right' => array('code' => 'right', 'before' => '[right]', 'after' => '[/right]', 'description' => $txt['right_align']),
 		);
 		$context['bbc_tags'][] = array(
-			'flash' => array('code' => 'flash', 'before' => '[flash=200,200]', 'after' => '[/flash]', 'description' => $txt[433]),
-			'img' => array('code' => 'img', 'before' => '[img]', 'after' => '[/img]', 'description' => $txt[435]),
-			'url' => array('code' => 'url', 'before' => '[url]', 'after' => '[/url]', 'description' => $txt[257]),
-			'email' => array('code' => 'email', 'before' => '[email]', 'after' => '[/email]', 'description' => $txt[258]),
-			'ftp' => array('code' => 'ftp', 'before' => '[ftp]', 'after' => '[/ftp]', 'description' => $txt[434]),
+			'flash' => array('code' => 'flash', 'before' => '[flash=200,200]', 'after' => '[/flash]', 'description' => $txt['flash']),
+			'img' => array('code' => 'img', 'before' => '[img]', 'after' => '[/img]', 'description' => $txt['image']),
+			'url' => array('code' => 'url', 'before' => '[url]', 'after' => '[/url]', 'description' => $txt['hyperlink']),
+			'email' => array('code' => 'email', 'before' => '[email]', 'after' => '[/email]', 'description' => $txt['insert_email']),
+			'ftp' => array('code' => 'ftp', 'before' => '[ftp]', 'after' => '[/ftp]', 'description' => $txt['ftp']),
 			array(),
-			'glow' => array('code' => 'glow', 'before' => '[glow=red,2,300]', 'after' => '[/glow]', 'description' => $txt[442]),
-			'shadow' => array('code' => 'shadow', 'before' => '[shadow=red,left]', 'after' => '[/shadow]', 'description' => $txt[443]),
-			'move' => array('code' => 'move', 'before' => '[move]', 'after' => '[/move]', 'description' => $txt[439]),
+			'glow' => array('code' => 'glow', 'before' => '[glow=red,2,300]', 'after' => '[/glow]', 'description' => $txt['glow']),
+			'shadow' => array('code' => 'shadow', 'before' => '[shadow=red,left]', 'after' => '[/shadow]', 'description' => $txt['shadow']),
+			'move' => array('code' => 'move', 'before' => '[move]', 'after' => '[/move]', 'description' => $txt['marquee']),
 			array(),
-			'sup' => array('code' => 'sup', 'before' => '[sup]', 'after' => '[/sup]', 'description' => $txt[447]),
-			'sub' => array('code' => 'sub', 'before' => '[sub]', 'after' => '[/sub]', 'description' => $txt[448]),
-			'tele' => array('code' => 'tt', 'before' => '[tt]', 'after' => '[/tt]', 'description' => $txt[440]),
+			'sup' => array('code' => 'sup', 'before' => '[sup]', 'after' => '[/sup]', 'description' => $txt['superscript']),
+			'sub' => array('code' => 'sub', 'before' => '[sub]', 'after' => '[/sub]', 'description' => $txt['subscript']),
+			'tele' => array('code' => 'tt', 'before' => '[tt]', 'after' => '[/tt]', 'description' => $txt['teletype']),
 			array(),
-			'table' => array('code' => 'table', 'before' => '[table]\n[tr]\n[td]', 'after' => '[/td]\n[/tr]\n[/table]', 'description' => $txt[436]),
-			'code' => array('code' => 'code', 'before' => '[code]', 'after' => '[/code]', 'description' => $txt[259]),
-			'quote' => array('code' => 'quote', 'before' => '[quote]', 'after' => '[/quote]', 'description' => $txt[260]),
+			'table' => array('code' => 'table', 'before' => '[table]\n[tr]\n[td]', 'after' => '[/td]\n[/tr]\n[/table]', 'description' => $txt['table']),
+			'code' => array('code' => 'code', 'before' => '[code]', 'after' => '[/code]', 'description' => $txt['code']),
+			'quote' => array('code' => 'quote', 'before' => '[quote]', 'after' => '[/quote]', 'description' => $txt['quote']),
 			array(),
-			'list' => array('code' => 'list', 'before' => '[list]\n[li]', 'after' => '[/li]\n[li][/li]\n[/list]', 'description' => $txt[261]),
-			'hr' => array('code' => 'hr', 'before' => '[hr]', 'description' => $txt[531]),
+			'list' => array('code' => 'list', 'before' => '[list]\n[li]', 'after' => '[/li]\n[li][/li]\n[/list]', 'description' => $txt['list']),
+			'hr' => array('code' => 'hr', 'before' => '[hr]', 'description' => $txt['horizontal_rule']),
 		);
 
 		$found_button = false;
@@ -842,7 +842,7 @@ function template_postbox(&$message)
 		if (!isset($context['disabled_tags']['face']))
 			echo ' 
 						<select name="sel_face" id="sel_face" style="margin-bottom: 1ex; font-size: x-small;">
-							<option value="" selected="selected">', $txt[533], '</option>
+							<option value="" selected="selected">', $txt['font_face'], '</option>
 							<option value="courier">Courier</option>
 						</select>';
 
@@ -850,7 +850,7 @@ function template_postbox(&$message)
 		if (!isset($context['disabled_tags']['size']))
 			echo ' 
 						<select name="sel_size" id="sel_size" style="margin-bottom: 1ex; font-size: x-small;">
-							<option value="" selected="selected">', $txt[532], '</option>
+							<option value="" selected="selected">', $txt['font_size'], '</option>
 							<option value="1">8pt</option>
 							<option value="2">10pt</option>
 							<option value="3">12pt</option>
@@ -864,20 +864,20 @@ function template_postbox(&$message)
 		if (!isset($context['disabled_tags']['color']))
 			echo ' <select name="sel_color" id="sel_color" style="margin-bottom: 1ex; font-size: x-small;">
 							<option value="" selected="selected">', $txt['change_color'], '</option>
-							<option value="black">', $txt[262], '</option>
-							<option value="red">', $txt[263], '</option>
-							<option value="yellow">', $txt[264], '</option>
-							<option value="pink">', $txt[265], '</option>
-							<option value="green">', $txt[266], '</option>
-							<option value="orange">', $txt[267], '</option>
-							<option value="purple">', $txt[268], '</option>
-							<option value="blue">', $txt[269], '</option>
-							<option value="beige">', $txt[270], '</option>
-							<option value="brown">', $txt[271], '</option>
-							<option value="teal">', $txt[272], '</option>
-							<option value="navy">', $txt[273], '</option>
-							<option value="maroon">', $txt[274], '</option>
-							<option value="limeGreen">', $txt[275], '</option>
+							<option value="black">', $txt['black'], '</option>
+							<option value="red">', $txt['red'], '</option>
+							<option value="yellow">', $txt['yellow'], '</option>
+							<option value="pink">', $txt['pink'], '</option>
+							<option value="green">', $txt['green'], '</option>
+							<option value="orange">', $txt['orange'], '</option>
+							<option value="purple">', $txt['purple'], '</option>
+							<option value="blue">', $txt['blue'], '</option>
+							<option value="beige">', $txt['beige'], '</option>
+							<option value="brown">', $txt['brown'], '</option>
+							<option value="teal">', $txt['teal'], '</option>
+							<option value="navy">', $txt['navy'], '</option>
+							<option value="maroon">', $txt['maroon'], '</option>
+							<option value="limeGreen">', $txt['lime_green'], '</option>
 						</select>';
 		echo '<br />';
 
@@ -1164,7 +1164,7 @@ function template_announce()
 
 	echo '
 						<br />
-						<label for="checkall"><input type="checkbox" id="checkall" class="check" onclick="invertAll(this, this.form);" checked="checked" /> <i>', $txt[737], '</i></label>
+						<label for="checkall"><input type="checkbox" id="checkall" class="check" onclick="invertAll(this, this.form);" checked="checked" /> <i>', $txt['check_all'], '</i></label>
 					</td>
 				</tr><tr>
 					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">

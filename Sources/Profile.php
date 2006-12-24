@@ -294,7 +294,7 @@ function ModifyProfile($post_errors = array())
 		'posts' => empty($user_profile[$memID]['posts']) ? 0: (int) $user_profile[$memID]['posts'],
 		'hide_email' => empty($user_profile[$memID]['hide_email']) ? 0 : $user_profile[$memID]['hide_email'],
 		'show_online' => empty($user_profile[$memID]['show_online']) ? 0 : $user_profile[$memID]['show_online'],
-		'registered' => empty($user_profile[$memID]['date_registered']) ? $txt[470] : strftime('%Y-%m-%d', $user_profile[$memID]['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600),
+		'registered' => empty($user_profile[$memID]['date_registered']) ? $txt['not_applicable'] : strftime('%Y-%m-%d', $user_profile[$memID]['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600),
 		'group' => $user_profile[$memID]['id_group'],
 		'gender' => array('name' => empty($user_profile[$memID]['gender']) ? '' : ($user_profile[$memID]['gender'] == 2 ? 'f' : 'm')),
 		'karma' => array(
@@ -831,9 +831,9 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		{
 			// Bad date!  Go try again - please?
 			if (($_POST['date_registered'] = strtotime($_POST['date_registered'])) === -1)
-				fatal_error($txt['smf233'] . ' ' . strftime('%d %b %Y ' . (strpos($user_info['time_format'], '%H') !== false ? '%I:%M:%S %p' : '%H:%M:%S'), forum_time(false)), false);
+				fatal_error($txt['invalid_registration'] . ' ' . strftime('%d %b %Y ' . (strpos($user_info['time_format'], '%H') !== false ? '%I:%M:%S %p' : '%H:%M:%S'), forum_time(false)), false);
 			// As long as it doesn't equal 'N/A'...
-			elseif ($_POST['date_registered'] != $txt[470] && $_POST['date_registered'] != strtotime(strftime('%Y-%m-%d', $user_profile[$memID]['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600)))
+			elseif ($_POST['date_registered'] != $txt['not_applicable'] && $_POST['date_registered'] != strtotime(strftime('%Y-%m-%d', $user_profile[$memID]['date_registered'] + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600)))
 				$profile_vars['date_registered'] = $_POST['date_registered'] - ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
 		}
 
@@ -1374,7 +1374,7 @@ function summary($memID)
 	// They haven't even been registered for a full day!?
 	$days_registered = (int) ((time() - $user_profile[$memID]['date_registered']) / (3600 * 24));
 	if (empty($user_profile[$memID]['date_registered']) || $days_registered < 1)
-		$context['member']['posts_per_day'] = $txt[470];
+		$context['member']['posts_per_day'] = $txt['not_applicable'];
 	else
 		$context['member']['posts_per_day'] = comma_format($context['member']['real_posts'] / $days_registered, 3);
 
@@ -1382,7 +1382,7 @@ function summary($memID)
 	if (empty($context['member']['birth_date']))
 	{
 		$context['member'] +=  array(
-			'age' => &$txt[470],
+			'age' => &$txt['not_applicable'],
 			'today_is_birthday' => false
 		);
 	}
@@ -1391,7 +1391,7 @@ function summary($memID)
 		list ($birth_year, $birth_month, $birth_day) = sscanf($context['member']['birth_date'], '%d-%d-%d');
 		$datearray = getdate(forum_time());
 		$context['member'] += array(
-			'age' => $birth_year <= 4 ? $txt[470] : $datearray['year'] - $birth_year - (($datearray['mon'] > $birth_month || ($datearray['mon'] == $birth_month && $datearray['mday'] >= $birth_day)) ? 0 : 1),
+			'age' => $birth_year <= 4 ? $txt['not_applicable'] : $datearray['year'] - $birth_year - (($datearray['mon'] > $birth_month || ($datearray['mon'] == $birth_month && $datearray['mday'] >= $birth_day)) ? 0 : 1),
 			'today_is_birthday' => $datearray['mon'] == $birth_month && $datearray['mday'] == $birth_day
 		);
 	}
@@ -1574,7 +1574,7 @@ function showPosts($memID)
 		$range_limit = $reverse ? 'id_msg < ' . ($min_msg_member + $margin) : 'id_msg > ' . ($max_msg_member - $margin);
 	}
 
-	$context['page_title'] = $txt[458] . ' ' . $user_profile[$memID]['real_name'];
+	$context['page_title'] = $txt['latest_posts'] . ' ' . $user_profile[$memID]['real_name'];
 
 	// Find this user's posts.  The left join on categories somehow makes this faster, weird as it looks.
 	$looped = false;
@@ -2605,7 +2605,7 @@ function getAvatars($directory, $level)
 		$result[] = array(
 			'filename' => 'blank.gif',
 			'checked' => in_array($context['member']['avatar']['server_pic'], array('', 'blank.gif')),
-			'name' => &$txt[422],
+			'name' => &$txt['no_pic'],
 			'is_dir' => false
 		);
 	}
@@ -2672,7 +2672,7 @@ function theme($memID)
 	);
 
 	$context['easy_timeformats'] = array(
-		array('format' => '', 'title' => $txt['timeformat_easy0']),
+		array('format' => '', 'title' => $txt['timeformat_default']),
 		array('format' => '%B %d, %Y, %I:%M:%S %p', 'title' => $txt['timeformat_easy1']),
 		array('format' => '%B %d, %Y, %H:%M:%S', 'title' => $txt['timeformat_easy2']),
 		array('format' => '%Y-%m-%d, %H:%M:%S', 'title' => $txt['timeformat_easy3']),
@@ -3217,7 +3217,7 @@ function rememberPostData()
 		'email' => isset($_POST['email_address']) ? $_POST['email_address'] : '',
 		'hide_email' => empty($_POST['hide_email']) ? 0 : 1,
 		'show_online' => empty($_POST['show_online']) ? 0 : 1,
-		'registered' => empty($_POST['date_registered']) || $_POST['date_registered'] == '0001-01-01' ? $txt[470] : strftime('%Y-%m-%d', $_POST['date_registered']),
+		'registered' => empty($_POST['date_registered']) || $_POST['date_registered'] == '0001-01-01' ? $txt['not_applicable'] : strftime('%Y-%m-%d', $_POST['date_registered']),
 		'blurb' => !isset($_POST['personal_text']) ? '' : str_replace(array('<', '>', '&amp;#039;'), array('&lt;', '&gt;', '&#039;'), $smfFunc['db_unescape_string']($_POST['personal_text'])),
 		'gender' => array(
 			'name' => empty($_POST['gender']) ? '' : ($_POST['gender'] == 2 ? 'f' : 'm')

@@ -29,7 +29,7 @@ function template_main()
 				</tr>
 				<tr>
 					<td class="catbg" colspan="3">
-						', $txt['started_by'], ' ', $post['first_poster']['link'], ' - ', $txt['last_post'], ' ', $txt[525], ' ', $post['poster']['link'], '
+						', $txt['started_by'], ' ', $post['first_poster']['link'], ' - ', $txt['last_post'], ' ', $txt['by'], ' ', $post['poster']['link'], '
 					</td>
 				</tr>
 				<tr>
@@ -93,7 +93,7 @@ function template_unread()
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="catbg">
 				<tr>
 					<td valign="middle"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>', $settings['show_mark_read'] ? '
-					<td align="right" nowrap="nowrap" style="font-size: smaller;"><a href="' . $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]) . '</a></td>' : '', '
+					<td align="right" nowrap="nowrap" style="font-size: smaller;"><a href="' . $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']) . '</a></td>' : '', '
 				</tr>
 			</table>
 		</div>
@@ -124,7 +124,7 @@ function template_unread()
 					<img src="', $settings[$context['icon_sources'][$topic['first_post']['icon']]], '/post/', $topic['first_post']['icon'], '.gif" alt="" border="0" align="middle" /></td>
 				<td class="windowbg" valign="middle" width="48%">
 					', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" border="0" /></a> <span class="smalltext">', $topic['pages'], '</span>
-					<div class="smalltext"><i>', $txt['smf88'], ' ', $topic['board']['link'], '</i></div></td>
+					<div class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></div></td>
 				<td class="windowbg2" valign="middle" width="14%">
 					', $topic['first_post']['member']['link'], '</td>
 				<td class="windowbg" valign="middle" width="4%" align="center">
@@ -134,7 +134,7 @@ function template_unread()
 				<td class="windowbg2" valign="middle" width="27%">
 					<span class="smalltext">
 						', $topic['last_post']['time'], '<br />
-						', $txt[525], ' ', $topic['last_post']['member']['link'], '
+						', $txt['by'], ' ', $topic['last_post']['member']['link'], '
 					</span></td>
 			</tr>';
 	}
@@ -152,7 +152,7 @@ function template_unread()
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="catbg">
 				<tr>
 					<td valign="middle"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>', $settings['show_mark_read'] ? '
-					<td align="right" nowrap="nowrap" style="font-size: smaller;"><a href="' . $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]) . '</a></td>' : '', '
+					<td align="right" nowrap="nowrap" style="font-size: smaller;"><a href="' . $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']) . '</a></td>' : '', '
 				</tr>
 			</table>
 		</div>
@@ -162,14 +162,14 @@ function template_unread()
 	<tr>
 		<td class="smalltext" align="left" style="padding-top: 1ex;">', !empty($modSettings['enableParticipation']) ? '
 			<img src="' . $settings['images_url'] . '/topic/my_normal_post.gif" alt="" align="middle" /> ' . $txt['participation_caption'] . '<br />' : '', '
-			<img src="' . $settings['images_url'] . '/topic/normal_post.gif" alt="" align="middle" /> ' . $txt[457] . '<br />
+			<img src="' . $settings['images_url'] . '/topic/normal_post.gif" alt="" align="middle" /> ' . $txt['normal_topic'] . '<br />
 			<img src="' . $settings['images_url'] . '/topic/hot_post.gif" alt="" align="middle" /> ' . sprintf($txt['hot_topics'], $modSettings['hotTopicPosts']) . '<br />
 			<img src="' . $settings['images_url'] . '/topic/veryhot_post.gif" alt="" align="middle" /> ' . sprintf($txt['very_hot_topics'], $modSettings['hotTopicVeryPosts']) . '
 		</td>
 		<td class="smalltext" align="left" valign="top" style="padding-top: 1ex;">
-			<img src="' . $settings['images_url'] . '/topic/normal_post_locked.gif" alt="" align="middle" /> ' . $txt[456] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
+			<img src="' . $settings['images_url'] . '/topic/normal_post_locked.gif" alt="" align="middle" /> ' . $txt['locked_topic'] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
 			<img src="' . $settings['images_url'] . '/topic/normal_post_sticky.gif" alt="" align="middle" /> ' . $txt['smf96'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
-			<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['smf43'] : '') . '
+			<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : '') . '
 		</td>
 	</tr>
 </table>';
@@ -194,7 +194,7 @@ function template_replies()
 					<td align="right" nowrap="nowrap" style="font-size: smaller;">';
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
 		echo '
-						<a href="' . $scripturl . '?action=markasread;sa=unreadreplies;topics=' . $context['topics_to_mark'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452]) . '</a>';
+						<a href="' . $scripturl . '?action=markasread;sa=unreadreplies;topics=' . $context['topics_to_mark'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read']) . '</a>';
 	echo '
 					</td>
 				</tr>
@@ -227,7 +227,7 @@ function template_replies()
 					<img src="', $settings[$context['icon_sources'][$topic['first_post']['icon']]], '/post/', $topic['first_post']['icon'], '.gif" alt="" border="0" align="middle" /></td>
 				<td class="windowbg" valign="middle" width="48%">
 					', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" border="0" /></a> <span class="smalltext">', $topic['pages'], '</span>
-					<div class="smalltext"><i>', $txt['smf88'], ' ', $topic['board']['link'], '</i></div></td>
+					<div class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></div></td>
 				<td class="windowbg2" valign="middle" width="14%">
 					', $topic['first_post']['member']['link'], '</td>
 				<td class="windowbg" valign="middle" width="4%" align="center">
@@ -235,7 +235,7 @@ function template_replies()
 				<td class="windowbg" valign="middle" width="4%" align="center">
 					', $topic['views'], '</td>
 				<td class="windowbg2" valign="middle" width="27%">
-					<span class="smalltext">', $topic['last_post']['time'], '<br />', $txt[525], ' ', $topic['last_post']['member']['link'], '</span></td>
+					<span class="smalltext">', $topic['last_post']['time'], '<br />', $txt['by'], ' ', $topic['last_post']['member']['link'], '</span></td>
 			</tr>';
 	}
 
@@ -250,7 +250,7 @@ function template_replies()
 
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
 		echo '
-						<a href="', $scripturl, '?action=markasread;sa=unreadreplies;topics=', $context['topics_to_mark'], ';sesc=', $context['session_id'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt[452] . '" border="0" />' : $txt[452], '</a>';
+						<a href="', $scripturl, '?action=markasread;sa=unreadreplies;topics=', $context['topics_to_mark'], ';sesc=', $context['session_id'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markread.gif" alt="' . $txt['mark_as_read'] . '" border="0" />' : $txt['mark_as_read'], '</a>';
 
 	echo '
 					</td>
@@ -263,14 +263,14 @@ function template_replies()
 <table cellpadding="0" cellspacing="0" width="55%">
 	<tr>
 		<td class="smalltext" align="left" style="padding-top: 1ex;">
-			<img src="', $settings['images_url'], '/topic/my_normal_post.gif" alt="" align="middle" /> ', $txt[457], '<br />
+			<img src="', $settings['images_url'], '/topic/my_normal_post.gif" alt="" align="middle" /> ', $txt['normal_topic'], '<br />
 			<img src="', $settings['images_url'], '/topic/my_hot_post.gif" alt="" align="middle" /> ', sprintf($txt['hot_topics'], $modSettings['hotTopicPosts']), '<br />
 			<img src="', $settings['images_url'], '/topic/my_veryhot_post.gif" alt="" align="middle" /> ', sprintf($txt['very_hot_topics'], $modSettings['hotTopicVeryPosts']), '
 		</td>
 		<td class="smalltext" align="left" valign="top" style="padding-top: 1ex;">
-			<img src="', $settings['images_url'], '/topic/my_normal_post_locked.gif" alt="" align="middle" /> ', $txt[456], '<br />', $modSettings['enableStickyTopics'] == '1' ? '
+			<img src="', $settings['images_url'], '/topic/my_normal_post_locked.gif" alt="" align="middle" /> ', $txt['locked_topic'], '<br />', $modSettings['enableStickyTopics'] == '1' ? '
 			<img src="' . $settings['images_url'] . '/topic/my_normal_post_sticky.gif" alt="" align="middle" /> ' . $txt['smf96'] . '<br />' : '', $modSettings['pollMode'] == '1' ? '
-			<img src="' . $settings['images_url'] . '/topic/my_normal_poll.gif" alt="" align="middle" /> ' . $txt['smf43'] : '', '
+			<img src="' . $settings['images_url'] . '/topic/my_normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : '', '
 		</td>
 	</tr>
 </table>';

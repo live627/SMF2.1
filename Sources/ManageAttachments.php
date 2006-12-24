@@ -146,9 +146,9 @@ function ManageAttachments()
 
 	// This uses admin tabs - as it should!
 	$context['admin_tabs'] = array(
-		'title' => &$txt['smf201'],
+		'title' => &$txt['attachments_avatars'],
 		'help' => 'manage_files',
-		'description' => $txt['smf202'],
+		'description' => $txt['attachments_desc'],
 		'tabs' => array(
 			'browse' => array(
 				'title' => $txt['attachment_manager_browse'],
@@ -203,9 +203,9 @@ function ManageAttachmentSettings()
 		'',
 			// Directory and size limits.
 			array('text', 'attachmentUploadDir', 40, 'invalid' => !$context['valid_upload_dir']),
-			array('text', 'attachmentDirSizeLimit', 6, 'postinput' => $txt['smf211']),
-			array('text', 'attachmentPostLimit', 6, 'postinput' => $txt['smf211']),
-			array('text', 'attachmentSizeLimit', 6, 'postinput' => $txt['smf211']),
+			array('text', 'attachmentDirSizeLimit', 6, 'postinput' => $txt['kilobyte']),
+			array('text', 'attachmentPostLimit', 6, 'postinput' => $txt['kilobyte']),
+			array('text', 'attachmentSizeLimit', 6, 'postinput' => $txt['kilobyte']),
 			array('text', 'attachmentNumPerPostLimit', 6),
 		'',
 			// Thumbnail settings.
@@ -225,7 +225,7 @@ function ManageAttachmentSettings()
 	$context['post_url'] = $scripturl . '?action=admin;area=manageattachments;save;sa=attachments';
 	prepareDBSettingContext($config_vars);
 
-	$context['page_title'] = $txt['smf201'];
+	$context['page_title'] = $txt['attachments_avatars'];
 	$context['sub_template'] = 'show_settings';
 }
 
@@ -296,7 +296,7 @@ function BrowseFiles()
 {
 	global $context, $db_prefix, $txt, $scripturl, $options, $modSettings, $smfFunc;
 
-	$context['page_title'] = $txt['smf201'];
+	$context['page_title'] = $txt['attachments_avatars'];
 	$context['sub_template'] = 'browse';
 
 	// Attachments or avatars?
@@ -353,7 +353,7 @@ function BrowseFiles()
 	if ($context['browse_type'] == 'avatars')
 		$request = $smfFunc['db_query']('', "
 			SELECT
-				'' AS id_msg, IFNULL(mem.real_name, '$txt[470]') AS poster_name, mem.last_login AS poster_time, 0 AS id_topic, a.id_member,
+				'' AS id_msg, IFNULL(mem.real_name, '$txt['not_applicable']') AS poster_name, mem.last_login AS poster_time, 0 AS id_topic, a.id_member,
 				a.id_attach, a.filename, a.attachment_type, a.size, a.width, a.height, a.downloads, '' AS subject, 0 AS id_board
 			FROM {$db_prefix}attachments AS a
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)
@@ -406,7 +406,7 @@ function MaintainFiles()
 {
 	global $db_prefix, $context, $modSettings, $txt, $smfFunc;
 
-	$context['page_title'] = $txt['smf201'];
+	$context['page_title'] = $txt['attachments_avatars'];
 	$context['sub_template'] = 'maintenance';
 
 	// Get the number of attachments....
@@ -565,7 +565,7 @@ function RemoveAttachment()
 			if (!empty($messages))
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}messages
-					SET body = CONCAT(body, '<br /><br />" . $smfFunc['db_escape_string']($txt['smf216']) . "')
+					SET body = CONCAT(body, '<br /><br />" . $smfFunc['db_escape_string']($txt['attachment_delete_admin']) . "')
 					WHERE id_msg IN (" . implode(', ', $messages) . ")", __FILE__, __LINE__);
 		}
 	}
@@ -584,7 +584,7 @@ function RemoveAllAttachments()
 	$messages = removeAttachments('a.attachment_type = 0', '', true);
 
 	if (!isset($_POST['notice']))
-		$_POST['notice'] = $txt['smf216'];
+		$_POST['notice'] = $txt['attachment_delete_admin'];
 
 	// Add the notice on the end of the changed messages.
 	if (!empty($messages))

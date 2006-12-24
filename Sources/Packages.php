@@ -80,9 +80,9 @@ function Packages()
 	// Set up the linktree and title so it's already done.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => &$txt['package1']
+		'name' => &$txt['package']
 	);
-	$context['page_title'] = $txt['package1'];
+	$context['page_title'] = $txt['package'];
 
 	// Delegation makes the world... that is, the package manager go 'round.
 	$subActions = array(
@@ -107,12 +107,12 @@ function Packages()
 
 	// Set up some tabs...
 	$context['admin_tabs'] = array(
-		'title' => &$txt['package1'],
+		'title' => &$txt['package'],
 		// !!! 'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(
 			'browse' => array(
-				'title' => $txt['package3'],
+				'title' => $txt['browse_packages'],
 				'href' => $scripturl . '?action=admin;area=packages;sa=browse',
 			),
 			'packageget' => array(
@@ -187,9 +187,9 @@ function PackageInstallTest()
 	// Set up the linktree...
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=browse',
-		'name' => $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['package42']
+		'name' => $context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['install_actions']
 	);
-	$context['page_title'] .= ' - ' . ($context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['package42']);
+	$context['page_title'] .= ' - ' . ($context['uninstalling'] ? $txt['package_uninstall_actions'] : $txt['install_actions']);
 
 	$context['sub_template'] = 'view_package';
 
@@ -363,7 +363,7 @@ function PackageInstallTest()
 				$context['has_failure'] = true;
 
 				$context['actions'][] = array(
-					'type' => $txt['package56'],
+					'type' => $txt['execute_modification'],
 					'action' => strtr($action['filename'], array($boarddir => '.')),
 					'description' => $txt['package_action_error']
 				);
@@ -402,7 +402,7 @@ function PackageInstallTest()
 							$context['theme_actions'][$mod_action['is_custom']]['has_failure'] |= $failed;
 
 						$context['theme_actions'][$mod_action['is_custom']]['actions'][] = array(
-							'type' => $txt['package56'],
+							'type' => $txt['execute_modification'],
 							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
 							'description' => $failed ? $txt['package_action_failure'] : $txt['package_action_success']
 						);
@@ -410,7 +410,7 @@ function PackageInstallTest()
 					else
 					{
 						$context['actions'][] = array(
-							'type' => $txt['package56'],
+							'type' => $txt['execute_modification'],
 							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
 							'description' => $failed ? $txt['package_action_failure'] : $txt['package_action_success']
 						);
@@ -419,7 +419,7 @@ function PackageInstallTest()
 				elseif ($mod_action['type'] == 'skipping')
 				{
 					$context['actions'][] = array(
-						'type' => $txt['package56'],
+						'type' => $txt['execute_modification'],
 						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
 						'description' => $txt['package_action_skipping']
 					);
@@ -428,14 +428,14 @@ function PackageInstallTest()
 				{
 					$context['has_failure'] = true;
 					$context['actions'][] = array(
-						'type' => $txt['package56'],
+						'type' => $txt['execute_modification'],
 						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
 						'description' => $txt['package_action_missing']
 					);
 				}
 				elseif ($mod_action['type'] == 'error')
 					$context['actions'][] = array(
-						'type' => $txt['package56'],
+						'type' => $txt['execute_modification'],
 						'action' => strtr($mod_action['filename'], array($boarddir => '.')),
 						'description' => $txt['package_action_error']
 					);
@@ -446,7 +446,7 @@ function PackageInstallTest()
 		}
 		elseif ($action['type'] == 'code')
 			$thisAction = array(
-				'type' => $txt['package57'],
+				'type' => $txt['execute_code'],
 				'action' => $action['filename']
 			);
 		elseif ($action['type'] == 'database')
@@ -458,22 +458,22 @@ function PackageInstallTest()
 		}
 		elseif (in_array($action['type'], array('create-dir', 'create-file')))
 			$thisAction = array(
-				'type' => $txt['package50'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package55'] : $txt['package54']),
+				'type' => $txt['package_create'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package55'] : $txt['package_tree']),
 				'action' => strtr($action['destination'], array($boarddir => '.'))
 			);
 		elseif (in_array($action['type'], array('require-dir', 'require-file')))
 			$thisAction = array(
-				'type' => $txt['package53'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package55'] : $txt['package54']),
+				'type' => $txt['package_file'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package55'] : $txt['package_tree']),
 				'action' => strtr($action['destination'], array($boarddir => '.'))
 			);
 		elseif (in_array($action['type'], array('move-dir', 'move-file')))
 			$thisAction = array(
-				'type' => $txt['package51'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package55'] : $txt['package54']),
+				'type' => $txt['package_move'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package55'] : $txt['package_tree']),
 				'action' => strtr($action['source'], array($boarddir => '.')) . ' => ' . strtr($action['destination'], array($boarddir => '.'))
 			);
 		elseif (in_array($action['type'], array('remove-dir', 'remove-file')))
 			$thisAction = array(
-				'type' => $txt['package52'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package55'] : $txt['package54']),
+				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package55'] : $txt['package_tree']),
 				'action' => strtr($action['filename'], array($boarddir => '.'))
 			);
 
@@ -519,9 +519,9 @@ function PackageInstall()
 	// Set up the linktree for other.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=browse',
-		'name' => $context['uninstalling'] ? $txt['smf198b'] : $txt['package37']
+		'name' => $context['uninstalling'] ? $txt['uninstall'] : $txt['extracting']
 	);
-	$context['page_title'] .= ' - ' . ($context['uninstalling'] ? $txt['smf198b'] : $txt['package37']);
+	$context['page_title'] .= ' - ' . ($context['uninstalling'] ? $txt['uninstall'] : $txt['extracting']);
 
 	$context['sub_template'] = 'extract_package';
 
@@ -853,9 +853,9 @@ function PackageList()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=list;package=' . $_REQUEST['package'],
-		'name' => &$txt['smf180']
+		'name' => &$txt['list_file']
 	);
-	$context['page_title'] .= ' - ' . $txt['smf180'];
+	$context['page_title'] .= ' - ' . $txt['list_file'];
 	$context['sub_template'] = 'list';
 
 	// The filename...
@@ -930,7 +930,7 @@ function InstalledList()
 	// Set up the linktree so things are purdy.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=installed',
-		'name' => &$txt['package6']
+		'name' => &$txt['view_and_remove']
 	);
 	$context['page_title'] .= ' - ' . $txt['installed_packages'];
 	$context['sub_template'] = 'view_installed';
@@ -991,9 +991,9 @@ function PackageBrowse()
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;sa=browse',
-		'name' => &$txt['package3']
+		'name' => &$txt['browse_packages']
 	);
-	$context['page_title'] .= ' - ' . $txt['package3'];
+	$context['page_title'] .= ' - ' . $txt['browse_packages'];
 	$context['sub_template'] = 'browse';
 
 	$context['forum_version'] = $forum_version;

@@ -3,28 +3,28 @@
 
 // Important! Before editing these language files please read the text at the topic of index.german.php.
 
-$txt[143] = 'Private Mitteilungen';
-$txt[148] = 'Senden';
-$txt[150] = 'An';
-$txt[1502] = 'Bcc';
-$txt[316] = 'Posteingang';
+$txt['pm_inbox'] = 'Private Mitteilungen';
+$txt['send_message'] = 'Senden';
+$txt['pm_to'] = 'An';
+$txt['pm_bcc'] = 'Bcc';
+$txt['inbox'] = 'Posteingang';
 // Untranslated!
 $txt['sent_items'] = 'Sent Items';
-$txt[321] = 'Neue Mitteilung';
-$txt[411] = 'L&ouml;sche Mitteilung';
+$txt['new_message'] = 'Neue Mitteilung';
+$txt['delete_message'] = 'L&ouml;sche Mitteilung';
 // Don't translate "PMBOX" in this string.
-$txt[412] = 'Alle Mitteilungen in Ihrer PMBOX l&ouml;schen';
-$txt[413] = 'Sind Sie sicher, dass Sie alle Mitteilungen l&ouml;schen wollen?';
-$txt[535] = 'Empf&auml;nger';
+$txt['delete_all'] = 'Alle Mitteilungen in Ihrer PMBOX l&ouml;schen';
+$txt['delete_all_confirm'] = 'Sind Sie sicher, dass Sie alle Mitteilungen l&ouml;schen wollen?';
+$txt['recipient'] = 'Empf&auml;nger';
 // Don't translate the word "SUBJECT" here, as it is used to format the message - use numeric entities as well.
-$txt[561] = 'Neue Private Mitteilung: SUBJECT';
+$txt['new_pm_subject'] = 'Neue Private Mitteilung: SUBJECT';
 // Don't translate SENDER or MESSAGE in this language string; they are replaced with the corresponding text - use numeric entities too.
-$txt[562] = 'Sie haben eine Private Mitteilung von SENDER im Forum ' . $context['forum_name'] . ' erhalten.' . "\n\n" . 'WICHTIG: Das ist nur eine Benachrichtigung - bitte antworten Sie nicht auf diese E-Mail!' . "\n\n" . 'Die Nachricht, die an Sie gesendet wurde:' . "\n\n" . 'MESSAGE';
-$txt[748] = '(mehrere Empf&auml;nger als \'username1, username2\')';
+$txt['pm_email'] = 'Sie haben eine Private Mitteilung von SENDER im Forum ' . $context['forum_name'] . ' erhalten.' . "\n\n" . 'WICHTIG: Das ist nur eine Benachrichtigung - bitte antworten Sie nicht auf diese E-Mail!' . "\n\n" . 'Die Nachricht, die an Sie gesendet wurde:' . "\n\n" . 'MESSAGE';
+$txt['pm_multiple'] = '(mehrere Empf&auml;nger als \'username1, username2\')';
 // Use numeric entities in the below string.
 $txt['instant_reply'] = 'Auf diese Mitteilung antworten:';
 
-$txt['smf249'] = 'Sind Sie sicher, dass Sie die ausgew&auml;hlten Privaten Mitteilungen l&ouml;schen m&ouml;chten?';
+$txt['delete_selected_confirm'] = 'Sind Sie sicher, dass Sie die ausgew&auml;hlten Privaten Mitteilungen l&ouml;schen m&ouml;chten?';
 
 $txt['sent_to'] = 'Senden an';
 $txt['reply_to_all'] = 'Allen antworten';
@@ -142,9 +142,9 @@ $txt['pm_settings'] = 'Change Settings';
 $txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
 $txt['pm_settings_save'] = 'Save Changes';
 
-$txt[325] = 'Liste der ignorierten Benutzer';
-$txt[326] = 'F&uuml;gen Sie einen Benutzername pro Zeile hinzu oder geben Sie * ein, um alle Mitteilungen zu ignorieren.';
-$txt[327] = 'Eine E-Mail senden, wenn Sie Private Mitteilungen erhalten?';
+$txt['ignorelist'] = 'Liste der ignorierten Benutzer';
+$txt['username_line'] = 'F&uuml;gen Sie einen Benutzername pro Zeile hinzu oder geben Sie * ein, um alle Mitteilungen zu ignorieren.';
+$txt['email_notify'] = 'Eine E-Mail senden, wenn Sie Private Mitteilungen erhalten?';
 $txt['email_notify_never'] = 'Nie';
 $txt['email_notify_buddies'] = 'Nur von Buddies';
 $txt['email_notify_always'] = 'Immer';

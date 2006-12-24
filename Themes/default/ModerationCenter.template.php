@@ -378,7 +378,7 @@ function template_unapproved_posts()
 						<option value="0">', $txt['with_selected'], ':</option>
 						<option value="0">-------------------</option>
 						<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
-						<option value="delete">&nbsp;--&nbsp;', $txt['smf138'], '</option>
+						<option value="delete">&nbsp;--&nbsp;', $txt['delete'], '</option>
 					</select>
 					<noscript><input type="submit" name="submit" value="', $txt['go'], '" /></noscript>
 				</td>
@@ -420,7 +420,7 @@ function template_unapproved_attachments()
 				<td>', $txt['mc_unapproved_attach_name'], '</td>
 				<td>', $txt['mc_unapproved_attach_size'], '</td>
 				<td>', $txt['mc_unapproved_attach_poster'], '</td>
-				<td>', $txt[317], '</td>
+				<td>', $txt['date'], '</td>
 				<td nowrap="nowrap" align="center"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" checked="checked" /></td>
 			</tr>';
 
@@ -439,7 +439,7 @@ function template_unapproved_attachments()
 					', $item['poster']['link'], '
 				</td>
 				<td class="smalltext">
-					', $item['time'], '<br />', $txt['smf88'], ' <a href="', $item['message']['href'], '">', $item['message']['subject'], '</a>
+					', $item['time'], '<br />', $txt['in'], ' <a href="', $item['message']['href'], '">', $item['message']['subject'], '</a>
 				</td>
 				<td width="4%" align="center">
 					<input type="checkbox" name="item[]" value="', $item['id'], '" checked="checked" class="check" />
@@ -456,7 +456,7 @@ function template_unapproved_attachments()
 						<option value="0">', $txt['with_selected'], ':</option>
 						<option value="0">-------------------</option>
 						<option value="approve">&nbsp;--&nbsp;', $txt['approve'], '</option>
-						<option value="delete">&nbsp;--&nbsp;', $txt['smf138'], '</option>
+						<option value="delete">&nbsp;--&nbsp;', $txt['delete'], '</option>
 					</select>
 					<noscript><input type="submit" name="submit" value="', $txt['go'], '" /></noscript>
 				</td>

@@ -1146,7 +1146,7 @@ function loadAttachmentContext($id_msg)
 				'id' => $attachment['id_attach'],
 				'name' => $attachment['filename'],
 				'downloads' => $attachment['downloads'],
-				'size' => round($attachment['filesize'] / 1024, 2) . ' ' . $txt['smf211'],
+				'size' => round($attachment['filesize'] / 1024, 2) . ' ' . $txt['kilobyte'],
 				'byte_size' => $attachment['filesize'],
 				'href' => $scripturl . '?action=dlattach;topic=' . $topic . '.0;attach=' . $attachment['id_attach'],
 				'link' => '<a href="' . $scripturl . '?action=dlattach;topic=' . $topic . '.0;attach=' . $attachment['id_attach'] . '">' . $attachment['filename'] . '</a>',

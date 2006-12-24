@@ -3,11 +3,11 @@
 
 // Important! Before editing these language files please read the text at the topic of index.dutch.php.
 
-$txt[41] = 'Beheer Boards en Categorie&euml;n';
-$txt[43] = 'Positie';
-$txt[44] = 'Volledige naam';
-$txt[672] = 'Dit is de naam die bij je berichten verschijnt.';
-$txt[677] = 'Bewerk je categorie&euml;n en boards hier. Meerdere moderators voer je als volgt in : <i>&quot;gebruikersnaam,gebruikersnaam&quot;</i>. (gebruikersnamen en niet de getoonde namen!)<br />Om een nieuw board aan te maken, klik de \'Voeg board toe\' knop. Om het nieuwe board een sub-board van een huidig board te maken, selecteer \'Kind van...\' bij de \'Positie\' dropdown lijst bij het aanmaken van een nieuw board.';
+$txt['boards_and_cats'] = 'Beheer Boards en Categorie&euml;n';
+$txt['order'] = 'Positie';
+$txt['full_name'] = 'Volledige naam';
+$txt['name_on_display'] = 'Dit is de naam die bij je berichten verschijnt.';
+$txt['boards_and_cats_desc'] = 'Bewerk je categorie&euml;n en boards hier. Meerdere moderators voer je als volgt in : <i>&quot;gebruikersnaam,gebruikersnaam&quot;</i>. (gebruikersnamen en niet de getoonde namen!)<br />Om een nieuw board aan te maken, klik de \'Voeg board toe\' knop. Om het nieuwe board een sub-board van een huidig board te maken, selecteer \'Kind van...\' bij de \'Positie\' dropdown lijst bij het aanmaken van een nieuw board.';
 $txt['parent_members_only'] = 'Niet-gegroepeerde leden';
 $txt['parent_guests_only'] = 'Gasten';
 $txt['catConfirm'] = 'Weet je zeker dat je deze categorie wilt verwijderen ?';

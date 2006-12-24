@@ -981,8 +981,8 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			loadLanguage('InstantMessage', $lang, false);
 
 		// Replace the right things in the message strings.
-		$mailsubject = str_replace(array('SUBJECT', 'SENDER'), array($subject, un_htmlspecialchars($from['name'])), $txt[561]);
-		$mailmessage = str_replace(array('SUBJECT', 'MESSAGE', 'SENDER'), array($subject, $message, un_htmlspecialchars($from['name'])), $txt[562]);
+		$mailsubject = str_replace(array('SUBJECT', 'SENDER'), array($subject, un_htmlspecialchars($from['name'])), $txt['new_pm_subject']);
+		$mailmessage = str_replace(array('SUBJECT', 'MESSAGE', 'SENDER'), array($subject, $message, un_htmlspecialchars($from['name'])), $txt['pm_email']);
 		$mailmessage .= "\n\n" . $txt['instant_reply'] . ' ' . $scripturl . '?action=pm;sa=send;f=inbox;pmsg=' . $id_pm . ';quote;u=' . $from['id'];
 
 		// Off the notification email goes!
@@ -1636,7 +1636,7 @@ function sendNotifications($topics, $type, $exclude = array())
 		if (!empty($row['notify_send_body']) && $type == 'reply' && empty($modSettings['disallow_sendBody']))
 			$message .= "\n\n" . $txt['notification_reply_body'] . "\n\n" . $topicData[$row['id_topic']]['body'];
 		if (!empty($row['notify_regularity']) && $type == 'reply')
-			$message .= "\n\n" . $txt['notifyXOnce2'];
+			$message .= "\n\n" . $txt['more_but_no_reply'];
 
 		// Send only if once is off or it's on and it hasn't been sent.
 		if ($type != 'reply' || empty($row['notify_regularity']) || empty($row['sent']))
@@ -2483,7 +2483,7 @@ function sendApprovalNotifications(&$topicData)
 			if (!empty($row['notify_send_body']) && empty($modSettings['disallow_sendBody']))
 				$message .= "\n\n" . $txt['notification_reply_body'] . "\n\n" . $msg['body'];
 			if (!empty($row['notify_regularity']))
-				$message .= "\n\n" . $txt['notifyXOnce2'];
+				$message .= "\n\n" . $txt['more_but_no_reply'];
 	
 			// Send only if once is off or it's on and it hasn't been sent.
 			if (empty($row['notify_regularity']) || (empty($row['sent']) && !$sent_this_time))

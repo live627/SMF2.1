@@ -49,7 +49,7 @@ function template_main()
 
 				// Is this the first day of the week? (and are we showing week numbers?)
 				if ($day['is_first_day'])
-					echo '<span class="smalltext"> - ', $txt['calendar51'], ' ', $week['number'], '</span>';
+					echo '<span class="smalltext"> - ', $txt['calendar_week'], ' ', $week['number'], '</span>';
 
 				// Are there any holidays?
 				if (!empty($day['holidays']))
@@ -61,7 +61,7 @@ function template_main()
 				{
 					echo '
 					<div class="smalltext">
-						<span class="birthday">', $txt['calendar3'], '</span> ';
+						<span class="birthday">', $txt['birthdays'], '</span> ';
 
 					/* Each of the birthdays has:
 						id, name (person), age (if they have one set?), and is_last. (last in list?) */
@@ -77,7 +77,7 @@ function template_main()
 				{
 					echo '
 					<div class="smalltext">
-						<span class="event">', $txt['calendar4'], '</span>';
+						<span class="event">', $txt['events'], '</span>';
 					/* The events are made up of:
 						title, href, is_last, can_edit (are they allowed to?), and modify_href. */
 					foreach ($day['events'] as $event)
@@ -243,7 +243,7 @@ function template_event_post()
 	echo '
 							<tr>
 								<td align="right">
-									<b', isset($context['post_error']['no_event']) ? ' style="color: red;"' : '', '>', $txt['calendar12'], '</b>
+									<b', isset($context['post_error']['no_event']) ? ' style="color: red;"' : '', '>', $txt['calendar_event_title'], '</b>
 								</td>
 								<td class="smalltext">
 									<input type="text" name="evtitle" maxlength="30" size="30" value="', $context['event']['title'], '" style="width: 90%;" />
@@ -251,7 +251,7 @@ function template_event_post()
 							</tr><tr>
 								<td></td>
 								<td class="smalltext">
-									<input type="hidden" name="calendar" value="1" />', $txt['calendar10'], '&nbsp;
+									<input type="hidden" name="calendar" value="1" />', $txt['calendar_year'], '&nbsp;
 									<select name="year" id="year" onchange="generateDays();">';
 
 	// Show a list of all the years we allow...
@@ -261,7 +261,7 @@ function template_event_post()
 
 	echo '
 									</select>&nbsp;
-									', $txt['calendar9'], '&nbsp;
+									', $txt['calendar_month'], '&nbsp;
 									<select name="month" id="month" onchange="generateDays();">';
 
 	// There are 12 months per year - ensure that they all get listed.
@@ -271,7 +271,7 @@ function template_event_post()
 
 	echo '
 									</select>&nbsp;
-									', $txt['calendar11'], '&nbsp;
+									', $txt['calendar_day'], '&nbsp;
 									<select name="day" id="day">';
 
 	// This prints out all the days in the current month - this changes dynamically as we switch months.
@@ -289,7 +289,7 @@ function template_event_post()
 	{
 		echo '
 							<tr>
-								<td align="right"><b>', $txt['calendar54'], '</b></td>
+								<td align="right"><b>', $txt['calendar_numb_days'], '</b></td>
 								<td class="smalltext">
 									<select name="span">';
 
@@ -314,7 +314,7 @@ function template_event_post()
 								</td>
 							</tr>
 							<tr>
-								<td align="right"><b>', $txt['calendar13'], '</b></td>
+								<td align="right"><b>', $txt['calendar_post_in'], '</b></td>
 								<td class="smalltext">
 									<select id="board" onchange="this.form.submit();">';
 

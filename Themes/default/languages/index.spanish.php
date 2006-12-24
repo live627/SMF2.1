@@ -214,105 +214,105 @@ $txt['of_total_members'] = 'of %1$s total members';
 
 $txt['forgot_your_password'] = '&iquest;Olvidaste tu contrase&ntilde;a?';
 
-$txt[317] = 'Fecha';
+$txt['date'] = 'Fecha';
 // Use numeric entities in the below string.
-$txt[318] = 'De';
-$txt[319] = 'Asunto';
-$txt[322] = 'Recibir Nuevos Mensajes';
-$txt[324] = 'Para';
+$txt['from'] = 'De';
+$txt['subject'] = 'Asunto';
+$txt['check_new_messages'] = 'Recibir Nuevos Mensajes';
+$txt['to'] = 'Para';
 
 $txt[330] = 'Temas';
-$txt[331] = 'Usuarios';
-$txt[332] = 'Lista de usuarios';
-$txt[333] = 'Nuevos Mensajes';
-$txt[334] = 'No hay nuevos Mensajes';
+$txt['members'] = 'Usuarios';
+$txt['members_list'] = 'Lista de usuarios';
+$txt['new_posts'] = 'Nuevos Mensajes';
+$txt['old_posts'] = 'No hay nuevos Mensajes';
 
 $txt['sendtopic_send'] = 'Enviar';
 
-$txt[371] = 'Diferencia Horaria';
-$txt[377] = 'o';
+$txt['time_offset'] = 'Diferencia Horaria';
+$txt['or'] = 'o';
 
-$txt[398] = 'Lo siento, no se encontraron mensajes';
+$txt['no_matches'] = 'Lo siento, no se encontraron mensajes';
 
-$txt[418] = 'Notificaci&oacute;n';
+$txt['notification'] = 'Notificaci&oacute;n';
 
-$txt[430] = 'Lo siento %s, tienes el acceso denegado a este foro!';
+$txt['your_ban'] = 'Lo siento %s, tienes el acceso denegado a este foro!';
 // !!! Untranslated
 $txt['your_ban_expires'] = 'Your ban is set to expire %s';
 $txt['your_ban_expires_never'] = 'Your ban is not set to expire.';
 
-$txt[452] = 'Marcar TODOS los mensajes como le&iacute;dos';
+$txt['mark_as_read'] = 'Marcar TODOS los mensajes como le&iacute;dos';
 
 $txt['hot_topics'] = 'Tema candente (M&aacute;s de %1$d respuestas)';
 $txt['very_hot_topics'] = 'Tema muy candente (M&aacute;s de %1$d respuestas)';
-$txt[456] = 'Tema bloqueado';
-$txt[457] = 'Tema normal';
+$txt['locked_topic'] = 'Tema bloqueado';
+$txt['normal_topic'] = 'Tema normal';
 $txt['participation_caption'] = 'Temas en los que has publicado';
 
-$txt[462] = 'IR';
+$txt['go_caps'] = 'IR';
 
-$txt[465] = 'Imprimir';
-$txt[467] = 'Perfil';
-$txt[468] = 'Sumario de Temas';
-$txt[470] = 'N/A';
+$txt['print'] = 'Imprimir';
+$txt['profile'] = 'Perfil';
+$txt['topic_summary'] = 'Sumario de Temas';
+$txt['not_applicable'] = 'N/A';
 $txt[471] = 'mensaje';
-$txt[473] = 'Este nombre est&aacute; en uso por otro usuario.';
+$txt['name_in_use'] = 'Este nombre est&aacute; en uso por otro usuario.';
 
-$txt[488] = 'Total de Usuarios';
-$txt[489] = 'Total de Mensajes';
-$txt[490] = 'Total de Temas';
+$txt['total_members'] = 'Total de Usuarios';
+$txt['total_posts'] = 'Total de Mensajes';
+$txt['total_topics'] = 'Total de Temas';
 
-$txt[497] = 'Duraci&oacute;n de la sesi&oacute;n en minutos';
+$txt['mins_logged_in'] = 'Duraci&oacute;n de la sesi&oacute;n en minutos';
 
-$txt[507] = 'Previsualizar';
-$txt[508] = 'Recordar siempre Usuario/Contrase&ntilde;a';
+$txt['preview'] = 'Previsualizar';
+$txt['always_logged_in'] = 'Recordar siempre Usuario/Contrase&ntilde;a';
 
-$txt[511] = 'En l&iacute;nea';
+$txt['logged'] = 'En l&iacute;nea';
 // Use numeric entities in the below string.
-$txt[512] = 'IP';
+$txt['ip'] = 'IP';
 
-$txt[513] = 'ICQ';
-$txt[515] = 'WWW';
+$txt['icq'] = 'ICQ';
+$txt['www'] = 'WWW';
 
-$txt[525] = 'por';
+$txt['by'] = 'por';
 
-$txt[578] = 'horas';
-$txt[579] = 'd&iacute;as';
+$txt['hours'] = 'horas';
+$txt['days'] = 'd&iacute;as';
 
-$txt[581] = ', nuestro usuario m&aacute;s reciente.';
+$txt['newest_member'] = ', nuestro usuario m&aacute;s reciente.';
 
-$txt[582] = 'Buscar por';
+$txt['search_for'] = 'Buscar por';
 
-$txt[603] = 'AIM';
+$txt['aim'] = 'AIM';
 // In this string, please use +'s for spaces.
 $txt['aim_default_message'] = '&iquest;Est&aacute;s.+ahi?';
-$txt[604] = 'YIM';
+$txt['yim'] = 'YIM';
 
-$txt[616] = 'Recuerda, este foro est&aacute; en \'Modo de Mantenimiento\'.';
+$txt['maintain_mode_on'] = 'Recuerda, este foro est&aacute; en \'Modo de Mantenimiento\'.';
 
-$txt[641] = 'Le&iacute;do';
-$txt[642] = 'veces';
+$txt['read'] = 'Le&iacute;do';
+$txt['times'] = 'veces';
 
-$txt[645] = 'Estad&iacute;sticas SMF';
-$txt[656] = '&Uacute;ltimo usuario';
-$txt[658] = 'Total de Categor&iacute;as';
-$txt[659] = '&Uacute;ltimo mensaje';
+$txt['forum_stats'] = 'Estad&iacute;sticas SMF';
+$txt['latest_member'] = '&Uacute;ltimo usuario';
+$txt['total_cats'] = 'Total de Categor&iacute;as';
+$txt['latest_post'] = '&Uacute;ltimo mensaje';
 
-$txt[660] = 'Tienes';
-$txt[661] = 'Haz click';
-$txt[662] = 'aqu&iacute;';
-$txt[663] = 'para verlos.';
+$txt['you_have'] = 'Tienes';
+$txt['click'] = 'Haz click';
+$txt['here'] = 'aqu&iacute;';
+$txt['to_view'] = 'para verlos.';
 
-$txt[665] = 'Total de Foros';
+$txt['total_boards'] = 'Total de Foros';
 
-$txt[668] = 'Imprimir P&aacute;gina';
+$txt['print_page'] = 'Imprimir P&aacute;gina';
 
-$txt[679] = 'Debe ser una direcci&oacute;n v&aacute;lida de email.';
+$txt['valid_email'] = 'Debe ser una direcci&oacute;n v&aacute;lida de email.';
 
-$txt[683] = 'un mont&oacute;n';
+$txt['geek'] = 'un mont&oacute;n';
 $txt['info_center_title'] = '%s - Centro de Informaci&oacute;n';
 
-$txt[707] = 'Enviar tema';
+$txt['send_topic'] = 'Enviar tema';
 
 $txt['sendtopic_title'] = 'Enviar tema &#171; %s &#187; a un amigo.';
 // Use numeric entities in the below three strings.
@@ -327,133 +327,133 @@ $txt['sendtopic_comment'] = 'Agregar un comentario';
 // Use numeric entities in the below string.
 $txt['sendtopic2'] = 'Un comentario acerca de este tema ha sido agregado';
 
-$txt[721] = 'Esconder email del p&uacute;blico';
+$txt['hide_email'] = 'Esconder email del p&uacute;blico';
 
-$txt[737] = 'Seleccionar todo';
+$txt['check_all'] = 'Seleccionar todo';
 
 // Use numeric entities in the below string.
-$txt[1001] = 'Error en la Base de Datos';
-$txt[1002] = 'Por favor intenta nuevamente.  Si esta pantalla aparece nuevamente, notifica del error a un administrador.';
-$txt[1003] = 'Archivo';
-$txt[1004] = 'L&iacute;nea';
+$txt['database_error'] = 'Error en la Base de Datos';
+$txt['try_again'] = 'Por favor intenta nuevamente.  Si esta pantalla aparece nuevamente, notifica del error a un administrador.';
+$txt['file'] = 'Archivo';
+$txt['line'] = 'L&iacute;nea';
 // Use numeric entities in the below string.
-$txt[1005] = 'SMF ha detectado errores en la base de datos, y los ha tratado de corregir autom&#225;ticamente.  Si los problemas persisten, o sigues obteniendo estos correos, favor de contactar a tu proveedor de webhosting.';
+$txt['tried_to_repair'] = 'SMF ha detectado errores en la base de datos, y los ha tratado de corregir autom&#225;ticamente.  Si los problemas persisten, o sigues obteniendo estos correos, favor de contactar a tu proveedor de webhosting.';
 $txt['database_error_versions'] = '<b>Nota:</b> Parece que tu base de datos puede necesitar una actualizaci&oacute;n. La versi&oacute;n de los archivos de tu foro est&aacute;n en la versi&oacute;n %s, mientras que tu base de datos est&aacute; en la versi&oacute;n de SMF %s. Te recomendamos que ejecutes la &uacute;ltima versi&oacuten de upgrade.php.';
 $txt['template_parse_error'] = '&iexcl;Error al parsear el Template!';
 $txt['template_parse_error_message'] = 'Parece que algo se ha estropeado en el foro con el sistema de temas.  Este problema puede que solamente sea temporal, por favor, regresa en unos momentos e intentalo nuevamente.  Si continuas viendo este mensaje, por favor contacta al administrador.<br /><br />Puedes intentar <a href="javascript:location.reload();">actualizar esta p&aacute;gina</a>.';
 $txt['template_parse_error_details'] = 'Hubo un problema cargando el tema o archivo de idioma <tt><b>%1$s</b></tt>.  Por favor revisa la sintaxis e intenta nuevamente - recuerda, los ap&oacute;strofes (<tt>\'</tt>) por lo general deben tener una secuencia de escape con la diagonal invertida (<tt>\\</tt>).  Para ver informaci&#243;n especifica del error del sitio de PHP intenta <a href="' . $boardurl . '%1$s">acceder al archivo directamente</a>.<br /><br />Puedes intentar <a href="javascript:location.reload();">actualizar esta p&aacute;gina</a> o <a href="' . $scripturl . '?theme=1">usar el tema de default</a>.';
 
-$txt['smf10'] = '<b>Hoy a las</b> ';
-$txt['smf10b'] = '<b>Ayer</b> a las ';
-$txt['smf20'] = 'Publicar Nueva Encuesta';
-$txt['smf21'] = 'Pregunta';
-$txt['smf23'] = 'Enviar voto';
-$txt['smf24'] = 'Total de votos';
-$txt['smf25'] = 'acceso r&aacute;pido: presiona alt+s para publicar o alt+p para previsualizar';
-$txt['smf29'] = 'Ver resultados';
-$txt['smf30'] = 'Bloquear Encuesta';
-$txt['smf30b'] = 'Desbloquear Encuesta';
-$txt['smf39'] = 'Editar Encuesta';
-$txt['smf43'] = 'Encuesta';
-$txt['smf47'] = '1 D&iacute;a';
-$txt['smf48'] = '1 Semana';
-$txt['smf49'] = '1 Mes';
-$txt['smf50'] = 'Siempre';
-$txt['smf52'] = 'Ingresar con nombre de usuario, contrase&ntilde;a y duraci&oacute;n de la sesi&oacute;n';
-$txt['smf53'] = '1 Hora';
-$txt['smf56'] = 'MOVIDO';
-$txt['smf57'] = 'Por favor introduce una breve descripci&oacute;n de<br />por qu&eacute; este tema se est&aacute; moviendo.';
-$txt['smf82'] = 'Foro';
-$txt['smf88'] = 'en';
+$txt['today'] = '<b>Hoy a las</b> ';
+$txt['yesterday'] = '<b>Ayer</b> a las ';
+$txt['new_poll'] = 'Publicar Nueva Encuesta';
+$txt['poll_question'] = 'Pregunta';
+$txt['poll_vote'] = 'Enviar voto';
+$txt['poll_total_voters'] = 'Total de votos';
+$txt['shortcuts'] = 'acceso r&aacute;pido: presiona alt+s para publicar o alt+p para previsualizar';
+$txt['poll_results'] = 'Ver resultados';
+$txt['poll_lock'] = 'Bloquear Encuesta';
+$txt['poll_unlock'] = 'Desbloquear Encuesta';
+$txt['poll_edit'] = 'Editar Encuesta';
+$txt['poll'] = 'Encuesta';
+$txt['one_day'] = '1 D&iacute;a';
+$txt['one_week'] = '1 Semana';
+$txt['one_month'] = '1 Mes';
+$txt['forever'] = 'Siempre';
+$txt['quick_login_dec'] = 'Ingresar con nombre de usuario, contrase&ntilde;a y duraci&oacute;n de la sesi&oacute;n';
+$txt['one_hour'] = '1 Hora';
+$txt['moved'] = 'MOVIDO';
+$txt['moved_why'] = 'Por favor introduce una breve descripci&oacute;n de<br />por qu&eacute; este tema se est&aacute; moviendo.';
+$txt['board'] = 'Foro';
+$txt['in'] = 'en';
 $txt['smf96'] = 'Tema Fijado';
 
-$txt['smf138'] = 'Borrar';
+$txt['delete'] = 'Borrar';
 
-$txt['smf199'] = 'Tus Mensajes personales';
+$txt['your_pms'] = 'Tus Mensajes personales';
 
-$txt['smf211'] = 'KB';
+$txt['kilobyte'] = 'KB';
 
-$txt['smf223'] = '[M&aacute;s Estad&iacute;sticas]';
+$txt['more_stats'] = '[M&aacute;s Estad&iacute;sticas]';
 
 // Use numeric entities in the below three strings.
-$txt['smf238'] = 'C&#243;digo';
-$txt['smf239'] = 'Cita de';
+$txt['code'] = 'C&#243;digo';
+$txt['quote_from'] = 'Cita de';
 $txt['quote'] = 'Citar';
 
 // Untranslated
 $txt['merge_to_topic_id'] = 'ID of target topic';
 $txt['split'] = 'Dividir Tema';
 $txt['merge'] = 'Combinar Temas';
-$txt['smf254'] = 'Asunto para el nuevo tema';
-$txt['smf255'] = 'S&oacute;lo dividir este mensaje.';
-$txt['smf256'] = 'Dividir tema a partir de este mensaje (incluy&eacute;ndolo).';
-$txt['smf257'] = 'Selecciona los mensajes a dividir.';
-$txt['smf258'] = 'Nuevo Mensaje';
-$txt['smf259'] = 'El tema se ha dividido satisfactoriamente en dos temas.';
-$txt['smf260'] = 'Tema de Origen';
-$txt['smf261'] = 'Por favor selecciona qu&eacute; mensajes deseas dividir.';
-$txt['smf264'] = 'Los temas han sido satisfactoriamente combinados.';
-$txt['smf265'] = 'Nuevo Tema Combinado';
-$txt['smf266'] = 'Tema a ser combinado';
-$txt['smf267'] = 'Foro destino';
-$txt['smf269'] = 'Tema destino';
-$txt['smf274'] = '&iquest;Est&aacute;s seguro que deseas combinar?';
-$txt['smf275'] = 'con';
-$txt['smf276'] = 'Esta funci&oacute;n combinar&aacute; los mensajes de dos temas en un tema. Los mensajes ser&aacute;n ordenados de acuerdo con la fecha en que se publicaron. Por lo tanto, el mensaje publicado m&aacute;s recientemente ser&aacute; el primer mensaje del tema combinado.';
+$txt['subject_new_topic'] = 'Asunto para el nuevo tema';
+$txt['split_this_post'] = 'S&oacute;lo dividir este mensaje.';
+$txt['split_after_and_this_post'] = 'Dividir tema a partir de este mensaje (incluy&eacute;ndolo).';
+$txt['select_split_posts'] = 'Selecciona los mensajes a dividir.';
+$txt['new_topic'] = 'Nuevo Mensaje';
+$txt['split_successful'] = 'El tema se ha dividido satisfactoriamente en dos temas.';
+$txt['origin_topic'] = 'Tema de Origen';
+$txt['please_select_split'] = 'Por favor selecciona qu&eacute; mensajes deseas dividir.';
+$txt['merge_successful'] = 'Los temas han sido satisfactoriamente combinados.';
+$txt['new_merged_topic'] = 'Nuevo Tema Combinado';
+$txt['topic_to_merge'] = 'Tema a ser combinado';
+$txt['target_board'] = 'Foro destino';
+$txt['target_topic'] = 'Tema destino';
+$txt['merge_confirm'] = '&iquest;Est&aacute;s seguro que deseas combinar?';
+$txt['with'] = 'con';
+$txt['merge_desc'] = 'Esta funci&oacute;n combinar&aacute; los mensajes de dos temas en un tema. Los mensajes ser&aacute;n ordenados de acuerdo con la fecha en que se publicaron. Por lo tanto, el mensaje publicado m&aacute;s recientemente ser&aacute; el primer mensaje del tema combinado.';
 
-$txt['smf277'] = 'Fijar tema';
-$txt['smf278'] = 'Desfijar tema';
-$txt['smf279'] = 'Bloquear tema';
-$txt['smf280'] = 'Desbloquear tema';
+$txt['set_sticky'] = 'Fijar tema';
+$txt['set_nonsticky'] = 'Desfijar tema';
+$txt['set_lock'] = 'Bloquear tema';
+$txt['set_unlock'] = 'Desbloquear tema';
 
-$txt['smf298'] = 'B&uacute;squeda Avanzada';
+$txt['search_advanced'] = 'B&uacute;squeda Avanzada';
 
-$txt['smf299'] = 'RIESGO MAYOR DE SEGURIDAD:';
-$txt['smf300'] = 'No has borrado ';
+$txt['security_risk'] = 'RIESGO MAYOR DE SEGURIDAD:';
+$txt['not_removed'] = 'No has borrado ';
 
 // Untranslated!
 $txt['cache_writable_head'] = 'Performance Warning';
 $txt['cache_writable'] = 'The cache directory is not writable - this will adversely affect the performance of your forum.';
 
-$txt['smf301'] = 'P&aacute;gina creada en ';
-$txt['smf302'] = ' segundos con ';
-$txt['smf302b'] = ' queries.';
+$txt['page_created'] = 'P&aacute;gina creada en ';
+$txt['seconds_with'] = ' segundos con ';
+$txt['queries'] = ' queries.';
 
-$txt['smf315'] = 'Usa esta funci&oacute;n para informar a los moderadores y administradores de un mensaje abusivo, o publicado incorrectamente.<br /><i>Es importante mencionar que tu direcci&oacute;n de email ser&aacute; revelada al moderador si usas esta funci&oacute;n.</i>';
+$txt['report_to_mod_func'] = 'Usa esta funci&oacute;n para informar a los moderadores y administradores de un mensaje abusivo, o publicado incorrectamente.<br /><i>Es importante mencionar que tu direcci&oacute;n de email ser&aacute; revelada al moderador si usas esta funci&oacute;n.</i>';
 
-$txt['online2'] = 'Conectado';
-$txt['online3'] = 'Desconectado';
-$txt['online4'] = 'Mensaje Personal (Conectado)';
-$txt['online5'] = 'Mensaje Personal (Desconectado)';
-$txt['online8'] = 'Status';
+$txt['online'] = 'Conectado';
+$txt['offline'] = 'Desconectado';
+$txt['pm_online'] = 'Mensaje Personal (Conectado)';
+$txt['pm_offline'] = 'Mensaje Personal (Desconectado)';
+$txt['status'] = 'Status';
 
-$txt['topbottom4'] = 'Ir Arriba';
-$txt['topbottom5'] = 'Ir Abajo';
+$txt['go_up'] = 'Ir Arriba';
+$txt['go_down'] = 'Ir Abajo';
 
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> | 
 <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2001-2006, Lewis Media</a>';
 
-$txt['calendar3'] = 'Cumplea&ntilde;os:';
-$txt['calendar4'] = 'Eventos:';
-$txt['calendar3b'] = 'Cumplea&ntilde;os pr&oacute;ximos:';
-$txt['calendar4b'] = 'Eventos pr&oacute;ximos:';
+$txt['birthdays'] = 'Cumplea&ntilde;os:';
+$txt['events'] = 'Eventos:';
+$txt['birthdays_upcoming'] = 'Cumplea&ntilde;os pr&oacute;ximos:';
+$txt['events_upcoming'] = 'Eventos pr&oacute;ximos:';
 $txt['calendar5'] = ''; // Prompt for holidays in the calendar, leave blank to just display the holiday's name.
-$txt['calendar9'] = 'Mes:';
-$txt['calendar10'] = 'A&ntilde;o:';
-$txt['calendar11'] = 'D&iacute;a:';
-$txt['calendar12'] = 'T&iacute;tulo del Evento:';
-$txt['calendar13'] = 'Publicar en:';
-$txt['calendar20'] = 'Editar evento';
+$txt['calendar_month'] = 'Mes:';
+$txt['calendar_year'] = 'A&ntilde;o:';
+$txt['calendar_day'] = 'D&iacute;a:';
+$txt['calendar_event_title'] = 'T&iacute;tulo del Evento:';
+$txt['calendar_post_in'] = 'Publicar en:';
+$txt['calendar_edit'] = 'Editar evento';
 $txt['calendar21'] = '&iquest;Borrar este evento?';
 $txt['calendar22'] = 'Borrar evento';
 $txt['calendar_post_event'] = 'Publicar evento';
-$txt['calendar24'] = 'Calendario';
-$txt['calendar37'] = 'Ligar al calendario';
-$txt['calendar43'] = 'Enlazar evento';
+$txt['calendar'] = 'Calendario';
+$txt['calendar_link'] = 'Ligar al calendario';
+$txt['calendar_upcoming'] = 'Enlazar evento';
 $txt['calendar47'] = 'Calendario de eventos pr&oacute;ximos';
-$txt['calendar47b'] = 'Calendario de Hoy';
-$txt['calendar51'] = 'Semana';
-$txt['calendar54'] = 'N&uacute;mero de D&iacute;as:';
+$txt['calendar_today'] = 'Calendario de Hoy';
+$txt['calendar_week'] = 'Semana';
+$txt['calendar_numb_days'] = 'N&uacute;mero de D&iacute;as:';
 $txt['calendar_how_edit'] = '&iquest;c&oacute;mo editas esos eventos?';
 $txt['calendar_link_event'] = 'Enlazar Evento al Mensaje:';
 $txt['calendar_confirm_delete'] = '&#191;Est&#225;s seguro que deseas borrar este evento?';
@@ -477,7 +477,7 @@ $txt['smtp_error'] = 'Hubo problemas al enviar el mail. Error: ';
 $txt['mail_send_unable'] = 'No se le pudo enviar el email a la direcci&oacute;n \'%s\'';
 
 $txt['mlist_search'] = 'Buscar por usuarios';
-$txt['mlist_search2'] = 'Buscar nuevamente';
+$txt['mlist_search_again'] = 'Buscar nuevamente';
 $txt['mlist_search_email'] = 'Buscar por direcci&oacute;n de email';
 $txt['mlist_search_messenger'] = 'Buscar por nick de messenger';
 $txt['mlist_search_group'] = 'Buscar por grupo';
@@ -524,8 +524,8 @@ $txt['quickmod_confirm'] = '&#191;Est&#225;s seguro que deseas hacer esto?';
 
 $txt['spell_check'] = 'Revisar Ortograf&iacute;a';
 
-$txt['quick_reply_1'] = 'Respuesta r&aacute;pida';
-$txt['quick_reply_2'] = 'En la <i>Respuesta r&aacute;pida</i> puedes usar BBC y smileys como lo har&iacute;as en un mensaje normal, pero de una manera m&aacute;s conveniente.';
+$txt['quick_reply'] = 'Respuesta r&aacute;pida';
+$txt['quick_reply_desc'] = 'En la <i>Respuesta r&aacute;pida</i> puedes usar BBC y smileys como lo har&iacute;as en un mensaje normal, pero de una manera m&aacute;s conveniente.';
 $txt['quick_reply_warning'] = '&iexcl;Advertencia: el tema est&aacute; bloqueado!<br />Solamente admins y moderadores pueden responder.';
 // Untranslated!
 $txt['wait_for_approval'] = 'Note: this post will not display until it\'s been approved by a moderator.';
@@ -535,7 +535,7 @@ $txt['notification_disable_board'] = '&iquest;Est&aacute;s seguro que deseas des
 $txt['notification_enable_topic'] = '&iquest;Est&aacute;s seguro que deseas activar la notificaci&oacute;n de nuevas respuestas para este tema?';
 $txt['notification_disable_topic'] = '&iquest;Est&aacute;s seguro que deseas desactivar la notificaci&oacute;n de nuevas respuestas para este tema?';
 
-$txt['rtm1'] = 'Reportar al moderador';
+$txt['report_to_mod'] = 'Reportar al moderador';
 
 $txt['unread_topics_visit'] = 'Nuevos temas no le&iacute;dos';
 $txt['unread_topics_visit_none'] = 'No se han encontrado temas no le&iacute;dos desde tu &uacute;ltima visita.  <a href="' . $scripturl . '?action=unread;all">Haz <i>click</i> aqu&iacute; para intentar todos los temas no le&iacute;dos</a>.';

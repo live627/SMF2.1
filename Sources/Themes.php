@@ -587,7 +587,7 @@ function SetThemeOptions()
 	loadSubTemplate('options');
 
 	$context['sub_template'] = 'set_options';
-	$context['page_title'] = $txt['theme4'];
+	$context['page_title'] = $txt['theme_settings'];
 
 	$context['options'] = $context['theme_options'];
 	$context['theme_settings'] = $settings;
@@ -721,7 +721,7 @@ function SetThemeSettings()
 	loadSubTemplate('settings');
 
 	$context['sub_template'] = 'set_settings';
-	$context['page_title'] = $txt['theme4'];
+	$context['page_title'] = $txt['theme_settings'];
 
 	foreach ($settings as $setting => $dummy)
 	{
@@ -1809,7 +1809,7 @@ function template_menu()
 	// Edit Profile... [profile]
 	if ($context[\'allow_edit_profile\'])
 		echo \'
-				<a href="\', $scripturl, \'?action=profile">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/profile.gif" alt="\' . $txt[\'profile\'] . \'" border="0" />\' : $txt[467]), \'</a>\', $context[\'menu_separator\'];
+				<a href="\', $scripturl, \'?action=profile">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/profile.gif" alt="\' . $txt[\'profile\'] . \'" border="0" />\' : $txt[\'profile\']), \'</a>\', $context[\'menu_separator\'];
 
 	// The [calendar]!
 	if ($context[\'allow_calendar\'])
@@ -1869,7 +1869,7 @@ function template_menu()
 		// Is the forum in maintenance mode?
 		if ($context[\'in_maintenance\'] && $context[\'user\'][\'is_admin\'])
 			echo \'<br />
-				<b>\', $txt[616], \'</b>\';
+				<b>\', $txt[\'maintain_mode_on\'], \'</b>\';
 	}
 	// Otherwise they\'re a guest - so politely ask them to register or login.
 	else

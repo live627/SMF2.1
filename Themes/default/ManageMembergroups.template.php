@@ -169,7 +169,7 @@ function template_new_group()
 							<div style="margin-left: ', $board['child_level'], 'em;"><input type="checkbox" name="boardaccess[]" id="boardaccess_', $board['id'], '" value="', $board['id'], '" ', $board['selected'] ? ' checked="checked" disabled="disabled"' : '', ' class="check" /> <label for="boardaccess_', $board['id'], '">', $board['name'], '</label></div>';
 
 	echo '<br />
-							<input type="checkbox" id="checkall_check" class="check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><i>', $txt[737], '</i></label>
+							<input type="checkbox" id="checkall_check" class="check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><i>', $txt['check_all'], '</i></label>
 						</fieldset>
 					</td>
 				</tr><tr class="windowbg2">
@@ -331,7 +331,7 @@ function template_edit_group()
 							<div style="margin-left: ', $board['child_level'], 'em;"><input type="checkbox" name="boardaccess[]" id="boardaccess_', $board['id'], '" value="', $board['id'], '" ', $board['selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="boardaccess_', $board['id'], '">', $board['name'], '</label></div>';
 
 		echo '<br />
-							<input type="checkbox" id="checkall_check" class="check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><i>', $txt[737], '</i></label>
+							<input type="checkbox" id="checkall_check" class="check" onclick="invertAll(this, this.form, \'boardaccess\');" /> <label for="checkall_check"><i>', $txt['check_all'], '</i></label>
 						</fieldset>
 						<a href="javascript:void(0);" onclick="document.getElementById(\'visible_boards\').style.display = \'block\'; document.getElementById(\'visible_boards_link\').style.display = \'none\'; return false;" id="visible_boards_link" style="display: none;">[ ', $txt['membergroups_select_visible_boards'], ' ]</a>
 						<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
