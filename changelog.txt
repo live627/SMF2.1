@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2609 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2610 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -61,6 +61,7 @@ December 2006
  & Renaming some language entries had broken line breaks causing badly formatted emails. (Several langauge files)
  ! The context variable was being used before it was being defined. (Load.php)
  ! Wrong capalization on a couple of function calls. (PersonalMessage.php, Profile.php)
+ ! Returned the online color to the membergroup list. (ManageMembergroups.php)
 
 
 

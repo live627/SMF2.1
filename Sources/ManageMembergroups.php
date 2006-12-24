@@ -171,6 +171,7 @@ function MembergroupIndex()
 			'allow_delete' => $row['id_group'] > 4,
 			'can_search' => $row['id_group'] != 3,
 			'href' => $scripturl . '?action=admin;area=membergroups;sa=members;group=' . $row['id_group'],
+			'link' => '<a href="' . $scripturl . '?action=admin;area=membergroups;sa=members;group=' . $row['id_group'] . '"' . (!empty($row['online_color']) ? ' style="color: ' . $row['online_color'] . ';"' : '') . '>' . $row['group_name'] . '</a>',
 			'is_post_group' => $row['min_posts'] != -1,
 			'min_posts' => $row['min_posts'] == -1 ? '-' : $row['min_posts'],
 			'color' => empty($row['online_color']) ? '' : $row['online_color'],
@@ -214,15 +215,6 @@ function MembergroupIndex()
 			$context['groups']['regular'][$row['id_group']]['num_members'] += $row['num_members'];
 		$smfFunc['db_free_result']($query);
 	}
-
-	foreach ($context['groups'] as $temp => $dummy)
-		foreach ($dummy as $id => $data)
-		{
-			if ($data['href'] != '')
-				$context['groups'][$temp][$id]['link'] = '<a href="' . $data['href'] . '">' . $data['name'] . '</a>';
-			else
-				$context['groups'][$temp][$id]['link'] = '';
-		}
 }
 
 // Add a membergroup.
