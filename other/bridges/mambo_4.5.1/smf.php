@@ -760,22 +760,25 @@ function integrate_login($username, $passwd, $cookielength)
 	switch ($returncheck)
 	{
 		//Redirect to Mambo
-		case '0';
+		case '0':
 		$_SESSION['login_url'] = $mosConfig_live_site;
 		break;
 
 		//Redirect to SMF
-		case '1';
+		case '1':
 		$_SESSION['login_url'] = $myurl;
 		break;
 
 		//Redirect back to login page
-		case '2';
-		$_SESSION['login_url'] = sefReltoAbs($_SESSION['return']);
+		case '2':
+		if (strpos($_SESSION['return'],'register')===false || strpos($_SESSION['return'],'activate')===false)
+			$_SESSION['login_url'] = sefReltoAbs($_SESSION['return']);
+		else 
+			$_SESSION['login_url'] = $myurl;
 		break;
 
 		//There still might be nothing....
-		case '';
+		case '':
 		$_SESSION['login_url'] = $mosConfig_live_site;
 		break;
 	}

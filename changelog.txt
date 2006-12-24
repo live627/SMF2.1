@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2610 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2611 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -62,6 +62,8 @@ December 2006
  ! The context variable was being used before it was being defined. (Load.php)
  ! Wrong capalization on a couple of function calls. (PersonalMessage.php, Profile.php)
  ! Returned the online color to the membergroup list. (ManageMembergroups.php)
+ ! Some bridge registration functions were still using deprecated constants. (Mambo 4.6 bridge/smf_registration.php)
+ ! Users should never be redirected by to registration and activation pages on login (Mambo/Joomla bridge/smf.php)
 
 
 
