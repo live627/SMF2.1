@@ -1,4 +1,4 @@
-<?php
+3<?php
 /**********************************************************************************
 * Subs.php                                                                        *
 ***********************************************************************************
@@ -1363,7 +1363,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
-				'test' => '[\d]\]',
+				'test' => '[1-9]\]',
 				// !!! line-height
 				'before' => '<font size="$1" style="line-height: 1.3em;">',
 				'after' => '</font>',

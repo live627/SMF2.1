@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2613 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2614 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -65,7 +65,7 @@ December 2006
  ! Some bridge registration functions were still using deprecated constants. (Mambo 4.6 bridge/smf_registration.php)
  ! Users should never be redirected by to registration and activation pages on login (Mambo/Joomla bridge/smf.php)
  & Renamed bulk of the remaining strings. (Various files)
- ! Do not allow 0px or 0pt to be used in size tags. (Subs.php)
+ ! Do not allow 0, 0px, or 0pt to be used in size tags. (Subs.php)
 
 
 November 2006
