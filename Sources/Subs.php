@@ -1355,7 +1355,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
-				'test' => '([\d]{1,2}p[xt]|(?:x-)?small(?:er)?|(?:x-)?large[r]?)\]',
+				'test' => '([1-9][\d]?p[xt]|(?:x-)?small(?:er)?|(?:x-)?large[r]?)\]',
 				// !!! line-height
 				'before' => '<span style="font-size: $1; line-height: 1.3em;">',
 				'after' => '</span>',
