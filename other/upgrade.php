@@ -72,7 +72,7 @@ $upcontext['steps'] = array(
 );
 // Just to remember which one has files in it.
 $upcontext['database_step'] = 3;
-
+set_time_limit(5000);
 // Clean the upgrade path if this is from the client.
 if (!empty($_SERVER['argv']) && php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
 	for ($i = 1; $i < $_SERVER['argc']; $i++)
@@ -592,6 +592,10 @@ if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
 else
 	$command_line = false;
 
+// Don't error if we're using xml.
+if (isset($_GET['xml']))
+	$upcontext['return_error'] = true;
+
 // Loop through all the steps doing each one as required.
 $upcontext['overall_percent'] = 0;
 foreach ($upcontext['steps'] as $num => $step)
@@ -678,7 +682,9 @@ function upgradeExit()
 		template_upgrade_below();
 	else
 		template_xml_below();
-
+$fp = fopen('temp.txt', 'a');
+fwrite($fp, "\n" . ob_get_contents());
+fclose($fp);
 	// Bang - gone!
 	die();
 }
@@ -687,7 +693,7 @@ function upgradeExit()
 function loadEssentialData()
 {
 	global $db_server, $db_user, $db_passwd, $db_name, $db_connection, $db_prefix, $db_character_set, $db_type;
-	global $modSettings, $sourcedir, $smfFunc;
+	global $modSettings, $sourcedir, $smfFunc, $upcontext;
 
 	// Do the non-SSI stuff...
 	@set_magic_quotes_runtime(0);
@@ -791,9 +797,6 @@ function initialize_inputs()
 	// Force a step, defaulting to 0.
 	$_GET['step'] = (int) @$_GET['step'];
 	$_GET['substep'] = (int) @$_GET['substep'];
-
-	if (isset($_GET['xml']))
-		$upcontext['return_error'] = true;
 }
 
 // Step 0 - Let's welcome them in and ask them to login!
@@ -2044,6 +2047,20 @@ function parse_sql($filename)
 		- {$db_prefix}
 */
 
+	// Our custom error handler - does nothing but does stop public errors from XML!
+	function sql_error_handler($errno, $errstr, $errfile, $errline)
+	{
+		global $support_js;
+
+		if ($support_js)
+			return true;
+		else
+			echo 'Error: ' . $errstr . ' File: ' . $errfile . ' Line: ' . $errline;
+	}
+
+	// Make our own error handler.
+	set_error_handler('sql_error_handler');
+
 	$endl = $command_line ? "\n" : '<br />' . "\n";
 
 	$lines = file($filename);
@@ -2219,6 +2236,9 @@ function parse_sql($filename)
 		$step_progress = array();
 		$custom_warning = '';
 	}
+
+	// Put back the error handler.
+	restore_error_handler();
 
 	if ($command_line)
 	{
@@ -3685,7 +3705,26 @@ function template_database_changes()
 
 				getNextItem();
 			}
-
+function print_r(theObj){
+var t="";
+  if(theObj.constructor == Array ||
+     theObj.constructor == Object){
+    t +="<ul>";
+    for(var p in theObj){
+      if(theObj[p].constructor == Array||
+         theObj[p].constructor == Object){
+t += "<li>["+p+"] => "+typeof(theObj)+"</li>";
+        t += "<ul>";
+        t += print_r(theObj[p]);
+        t += "</ul>";
+      } else {
+t += "<li>["+p+"] => "+theObj[p]+"</li>";
+      }
+    }
+    t += "</ul>";
+  }
+  return t;
+}
 			// What if we timeout?!
 			function retTimeout(attemptAgain)
 			{

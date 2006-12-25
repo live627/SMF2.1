@@ -363,6 +363,19 @@ foreach ($nameChanges as $table_name => $table)
 		continue;
 	}
 
+	// Check the table exists!
+	$request = upgrade_query("
+		SHOW TABLES
+		LIKE '{$db_prefix}$table_name'");
+	if (mysql_num_rows($request) == 0)
+	{
+		$count += count($table);
+		continue;
+
+		mysql_free_result($request);
+	}
+	mysql_free_result($request);
+
 	// Try do each column!
 	foreach ($table as $colname => $coldef)
 	{
