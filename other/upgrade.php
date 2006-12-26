@@ -109,6 +109,7 @@ if (isset($_GET['ssi']))
 {
 	$ssi_maintenance_off = true;
 	require_once($upgrade_path . '/SSI.php');
+	require_once($sourcedir . '/Subs-Package.php');
 	initialize_inputs();
 }
 // If not we need to do some setup ourselves as SMF is out of the picture.
@@ -682,9 +683,7 @@ function upgradeExit()
 		template_upgrade_below();
 	else
 		template_xml_below();
-$fp = fopen('temp.txt', 'a');
-fwrite($fp, "\n" . ob_get_contents());
-fclose($fp);
+
 	// Bang - gone!
 	die();
 }
@@ -1392,7 +1391,6 @@ function CleanupMods()
 	// Setup some basics.
 	if (!empty($upcontext['user']['version']))
 		$_SESSION['version_emulate'] = $upcontext['user']['version'];
-	require_once($sourcedir . '/Subs-Package.php');
 
 	if (!mktree($boarddir . '/Packages/temp', 0755))
 	{
@@ -1568,7 +1566,46 @@ function UpgradeTemplate()
 
 	// We'll want this.
 	require_once($sourcedir . '/FixLanguage.php');
-	$is_test = !isset($_POST['uptempdone']);
+
+	// First work out where on earth we are...
+	if (isset($_GET['forreal']))
+	{
+		$upcontext['is_test'] = false;
+		$upcontext['temp_progress'] = (int) $_GET['substep'];
+	}
+	else
+	{
+		$upcontext['is_test'] = true;
+		$upcontext['temp_progress'] = isset($_GET['substep']) ? (int) $_GET['substep'] : 0;
+	}
+
+	// If we're not testing before we start making changes let's work out what needs changing and make it writable!
+	$template_list = array();
+	$lang_list = array();
+	if (!$upcontext['is_test'] && isset($_POST['writable_files']))
+	{
+		$old_writable_files = unserialize(base64_decode($_POST['writable_files']));
+		if (!makeFilesWritable($old_writable_files))
+			return false;
+	}
+
+	// Remembering where we are?
+	if (isset($_POST['languages']))
+		$upcontext['languages'] = unserialize(base64_decode($_POST['languages']));
+	else
+		$upcontext['languages'] = array();
+
+	if (isset($_POST['themes']))
+		$upcontext['themes'] = unserialize(base64_decode($_POST['themes']));
+	else
+		$upcontext['themes'] = array();
+
+	// Starting off?
+	if ($upcontext['temp_progress'] == 0)
+	{
+		$upcontext['languages'] = array();
+		$upcontext['themes'] = array();
+	}
 
 	// Load up all the theme/lang directories - we'll want these.
 	$request = $smfFunc['db_query']('', "
@@ -1586,18 +1623,49 @@ function UpgradeTemplate()
 	}
 	$smfFunc['db_free_result']($request);
 
-	// Attempt to check all the language files.
-	$upcontext['languages'] = array();
+	// Calculate how many steps in total.
+	$upcontext['file_count'] = 0;
+	$upcontext['current_message'] = '';
+	foreach ($lang_dirs as $id => $langdir)
+	{
+		$dir = dir($langdir);
+		while ($entry = $dir->read())
+			$upcontext['file_count']++;
+		$dir->close();
+	}
+	foreach ($theme_dirs as $id => $themedir)
+	{
+		if (!file_exists($themedir))
+			continue;
+
+		$dir = dir($themedir);
+		while ($entry = $dir->read())
+			$upcontext['file_count']++;
+		$dir->close();
+	}
+	$upcontext['step_progress'] = ($upcontext['is_test'] ? 0 : 50) + (int) (($upcontext['temp_progress'] / $upcontext['file_count']) * 50);
+
+	// Remember what we're up to.
 	$writable_files = array();
+
+	// Attempt to check all the language files.
+	$current_pos = 0;
 	foreach ($lang_dirs as $id => $langdir)
 	{
 		$dir = dir($langdir);
 		while ($entry = $dir->read())
 		{
+			// Done this already?
+			$current_pos++;
+			if ($upcontext['temp_progress'] >= $current_pos)
+				continue;
+			$upcontext['temp_progress'] = $current_pos;
+
 			// Found a language? If so add it.
 			if (preg_match('~(.+?)\.(.+?)\.php~', $entry, $matches) && isset($matches[2]))
 			{
-				$edit_count = fixLanguageFile($langdir . '/' . $matches[0], $matches[1], $matches[2], $is_test);
+				$upcontext['current_message'] = ($upcontext['is_test'] ? 'Testing' : 'Updating') . ' language file &quot;' . (strlen($matches[0]) > 40 ? '...' . substr(($matches[0]), -40): ($matches[0])) . '&quot...';
+				$edit_count = fixLanguageFile($langdir . '/' . $matches[0], $matches[1], $matches[2], $upcontext['is_test']);
 				// Are there actually any edits to be made?
 				if ($edit_count != -1)
 				{
@@ -1624,17 +1692,21 @@ function UpgradeTemplate()
 					$writable_files[] = $langdir . '/' . $matches[0];
 				}
 			}
+			nextSubstep($current_pos);
 		}
 		$dir->close();
 	}
 
 	// Now do any templates.
-	$upcontext['themes'] = array();
 	foreach ($theme_dirs as $id => $themedir)
 	{
 		// Just get the main directory name...
 		preg_match('~/Themes/(\w*)~', $themedir, $matches);
 		$theme_name = isset($matches[1]) ? $matches[1] : $themedir;
+
+		//!!! Uncomment before release!
+		//if (in_array($theme_name, array('default', 'classic', 'babylon')))
+			//continue;
 
 		if (!file_exists($themedir))
 			continue;
@@ -1642,11 +1714,17 @@ function UpgradeTemplate()
 		$dir = dir($themedir);
 		while ($entry = $dir->read())
 		{
+			// What about this one - done before?
+			$current_pos++;
+			if ($upcontext['temp_progress'] >= $current_pos)
+				continue;
+			$upcontext['temp_progress'] = $current_pos;
+
 			// Got a template file... good
 			if (substr($entry, -4) == '.php' && strpos($entry, 'template') !== false)
 			{
-				$edit_count = fixTemplateFile($themedir . '/' . $entry, $is_test);
-
+				$upcontext['current_message'] = ($upcontext['is_test'] ? 'Testing' : 'Updating') . ' template file &quot;' . (strlen($themedir . '/' . $entry) > 40 ? '...' . substr(($themedir . '/' . $entry), -40): ($themedir . '/' . $entry)) . '&quot...';
+				$edit_count = fixTemplateFile($themedir . '/' . $entry, $upcontext['is_test']);
 				if ($edit_count != -1)
 				{
 					if (!isset($upcontext['themes'][$theme_name]))
@@ -1670,12 +1748,14 @@ function UpgradeTemplate()
 					$writable_files[] = $themedir . '/' . $entry;
 				}
 			}
+			nextSubstep($current_pos);
 		}
 		$dir->close();
 	}
 
 	// Check we can write to it all... yea!
 	makeFilesWritable($writable_files);
+	$upcontext['writable_files'] = $writable_files;
 
 	// Converting an old YaBBSE template?
 	$upcontext['can_upgrade_yabbse'] = file_exists($boarddir . '/template.php') || file_exists($boarddir . '/template.html') && !file_exists($boarddir . '/Themes/converted');
@@ -1740,13 +1820,16 @@ function UpgradeTemplate()
 			echo ' done.', $endl;
 	}
 
+	// If we're here we can get ready to do it for real.
+	$upcontext['is_test'] = false;
+	$upcontext['temp_progress'] = 0;
 	$_GET['substep'] = 0;
 
 	// If there is nothing it's true anyway!
 	if (!$upcontext['can_upgrade_yabbse'] && empty($upcontext['languages']) && empty($upcontext['themes']))
 		return true;
 
-	return isset($_POST['uptempdone']) ? true : false;
+	return isset($_GET['forreal']) ? true : false;
 }
 
 // Delete the damn thing!
@@ -1897,7 +1980,7 @@ function changeSettings($config_vars)
 
 		foreach ($config_vars as $var => $val)
 		{
-			if (strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
+			if (isset($settingsArray[$i]) && strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
 			{
 				if ($val == '#remove#')
 					unset($settingsArray[$i]);
@@ -2833,17 +2916,23 @@ function makeFilesWritable($files)
 				'path' => $upcontext['chmod']['path']
 			);
 
-			foreach ($files as $file)
+			foreach ($files as $k => $file)
 			{
-				if (!is_writable(dirname(__FILE__) . '/' . $file))
+				if (!is_writable($file))
 					$ftp->chmod($file, 0755);
-				if (!is_writable(dirname(__FILE__) . '/' . $file))
+				if (!is_writable($file))
 					$ftp->chmod($file, 0777);
+
+				if (is_writable($file))
+					unset($files[$k]);
 			}
 
 			$ftp->close();
 		}
 	}
+
+	// What remains?
+	$upcontext['chmod']['files'] = $files;
 
 	return true;
 }
@@ -2953,7 +3042,7 @@ function template_chmod()
 
 function template_upgrade_above()
 {
-	global $modSettings, $smfsite, $settings, $upcontext, $upgradeurl;
+	global $modSettings, $txt, $smfsite, $settings, $upcontext, $upgradeurl;
 
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -2962,7 +3051,8 @@ function template_upgrade_above()
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			smf_scripturl = \'', $upgradeurl, '\';
+			var smf_scripturl = \'', $upgradeurl, '\';
+			var smf_charset = \'', (empty($modSettings['global_character_set']) ? (empty($txt['lang_character_set']) ? 'ISO-8859-1' : $txt['lang_character_set']) : $modSettings['global_character_set']), '\';
 			startPercent = ', $upcontext['overall_percent'], ';
 
 			// This function dynamically updates the step progress bar - and overall one as required.
@@ -3836,13 +3926,13 @@ function template_upgrade_templates()
 
 	echo '
 	<h3>There have been numerous language and template changes since the previous version of SMF. On this step the upgrader can attempt to automatically make these changes in your templates to save you from doing so manually.</h3>
-	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1" name="upform"  id="upform" method="post">';
+	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1', $upcontext['is_test'] ? '' : ';forreal=1', '" name="upform"  id="upform" method="post">';
 
 	// Any files need to be writable?
 	template_chmod();
 
 	// Language/Template files need an update?
-	if (!empty($upcontext['languages']) || !empty($upcontext['themes']))
+	if ($upcontext['temp_progress'] == 0 && !$upcontext['is_test'] && (!empty($upcontext['languages']) || !empty($upcontext['themes'])))
 	{
 		echo '
 		The following template files will be updated to ensure they are compatible with this version of SMF. Note that this can only fix a limited number of compatibilty issues and in general you should seek out the latest version of these themes/language files.
@@ -3891,12 +3981,39 @@ function template_upgrade_templates()
 		echo '
 		</table>';
 	}
+	else
+	{
+		$langFiles = 0;
+		$themeFiles = 0;
+		if (!empty($upcontext['languages']))
+			foreach ($upcontext['languages'] as $lang)
+				$langFiles += count($lang['files']);
+		if (!empty($upcontext['themes']))
+			foreach ($upcontext['themes'] as $theme)
+				$themeFiles += count($theme['files']);
+		echo sprintf('Found <b>%d</b> language files and <b>%d</b> templates requiring an update so far.', $langFiles, $themeFiles) . '<br />';
+	
+		// What we're currently doing?
+		if (!empty($upcontext['current_message']))
+			echo '
+				', $upcontext['current_message'];
+	}
 
 	echo '
 		<input type="hidden" name="uptempdone" value="1" />';
 
+	if (!empty($upcontext['languages']))
+		echo '
+		<input type="hidden" name="languages" value="', base64_encode(serialize($upcontext['languages'])), '" />';
+	if (!empty($upcontext['themes']))
+		echo '
+		<input type="hidden" name="themes" value="', base64_encode(serialize($upcontext['themes'])), '" />';
+	if (!empty($upcontext['writable_files']))
+		echo '
+		<input type="hidden" name="writable_files" value="', base64_encode(serialize($upcontext['writable_files'])), '" />';
+
 	// Offer them the option to upgrade from YaBB SE?
-	if ($upcontext['can_upgrade_yabbse'])
+	if (!empty($upcontext['can_upgrade_yabbse']))
 		echo '
 		<br /><label for="conv"><input type="checkbox" name="conv" id="conv" value="1" /> Convert the existing YaBB SE template and set it as default.</label><br />';
 
