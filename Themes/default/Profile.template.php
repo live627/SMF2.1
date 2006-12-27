@@ -375,7 +375,9 @@ function template_showPosts()
 			<tr class="windowbg" valign="middle">
 				<td colspan="3">
 					<span>
-						', (isset($context['attachments']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts">', $txt['show_member_posts'], '</a> | ', (!isset($context['attachments']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach">', $txt['show_member_attachments'], '</a>
+						', (isset($context['attachments']) || !empty($context['is_topics']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts">', $txt['show_member_posts'], '</a> |
+						', (empty($context['is_topics']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;topics">', $txt['show_member_topics'], '</a> |
+						', (!isset($context['attachments']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach">', $txt['show_member_attachments'], '</a>
 					</span>
 				</td>
 			</tr>

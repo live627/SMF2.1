@@ -1525,8 +1525,11 @@ function showPosts($memID)
 	if (isset($_GET['attach']))
 		return showAttachments($memID);
 
+	// Are we just viewing topics?
+	$context['is_topics'] = isset($_GET['topics']) ? true : false;
+
 	// If just deleting a message, do it and then redirect back.
-	if (isset($_GET['delete']))
+	if (isset($_GET['delete']) && !$context['is_topics'])
 	{
 		checkSession('get');
 
@@ -1544,7 +1547,8 @@ function showPosts($memID)
 
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
-		FROM {$db_prefix}messages AS m
+		FROM {$db_prefix}messages AS m" . ($context['is_topics'] ? "
+			INNER JOIN {$db_prefix}topics AS t ON (t.id_first_msg = m.id_msg)" : '') . "
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
 		WHERE m.id_member = $memID
 			AND m.approved = 1", __FILE__, __LINE__);
@@ -1564,7 +1568,7 @@ function showPosts($memID)
 	$maxIndex = (int) $modSettings['defaultMaxMessages'];
 
 	// Make sure the starting place makes sense and construct our friend the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts', $context['start'], $msgCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts' . ($context['is_topics'] ? ';topics' : ''), $context['start'], $msgCount, $maxIndex);
 	$context['current_page'] = $context['start'] / $maxIndex;
 
 	// Reverse the query if we're past 50% of the pages for better performance.
@@ -1580,6 +1584,10 @@ function showPosts($memID)
 	if ($msgCount > 1000)
 	{
 		$margin = floor(($max_msg_member - $min_msg_member) * (($start + $modSettings['defaultMaxMessages']) / $msgCount) + .1 * ($max_msg_member - $min_msg_member));
+		// Make a bigger margin for topics only.
+		if ($context['is_topics'])
+			$margin *= 5;
+
 		$range_limit = $reverse ? 'id_msg < ' . ($min_msg_member + $margin) : 'id_msg > ' . ($max_msg_member - $margin);
 	}
 
@@ -1595,12 +1603,14 @@ function showPosts($memID)
 				t.id_member_started, t.id_first_msg, t.id_last_msg, m.body, m.smileys_enabled,
 				m.subject, m.poster_time
 			FROM {$db_prefix}messages AS m
-				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = 1)
-				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board AND $user_info[query_see_board])
+				INNER JOIN {$db_prefix}topics AS t ON (" . ($context['is_topics'] ? 't.id_first_msg = m.id_msg' : 't.id_topic = m.id_topic') . ")
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 			WHERE m.id_member = $memID
 				" . (empty($range_limit) ? '' : "
 				AND $range_limit") . "
+				AND $user_info[query_see_board]
+				AND t.approved = 1
 				AND m.approved = 1
 			ORDER BY m.id_msg " . ($reverse ? 'ASC' : 'DESC') . "
 			LIMIT $start, $maxIndex", __FILE__, __LINE__);
@@ -1660,17 +1670,28 @@ function showPosts($memID)
 		$context['posts'] = array_reverse($context['posts'], true);
 
 	// These are all the permissions that are different from board to board..
-	$permissions = array(
-		'own' => array(
-			'post_reply_own' => 'can_reply',
-			'delete_own' => 'can_delete',
-		),
-		'any' => array(
-			'post_reply_any' => 'can_reply',
-			'mark_any_notify' => 'can_mark_notify',
-			'delete_any' => 'can_delete',
-		)
-	);
+	if ($context['is_topics'])
+		$permissions = array(
+			'own' => array(
+				'post_reply_own' => 'can_reply',
+			),
+			'any' => array(
+				'post_reply_any' => 'can_reply',
+				'mark_any_notify' => 'can_mark_notify',
+			)
+		);
+	else
+		$permissions = array(
+			'own' => array(
+				'post_reply_own' => 'can_reply',
+				'delete_own' => 'can_delete',
+			),
+			'any' => array(
+				'post_reply_any' => 'can_reply',
+				'mark_any_notify' => 'can_mark_notify',
+				'delete_any' => 'can_delete',
+			)
+		);
 
 	// For every permission in the own/any lists...
 	foreach ($permissions as $type => $list)

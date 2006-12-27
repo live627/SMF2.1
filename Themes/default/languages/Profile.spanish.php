@@ -283,6 +283,7 @@ $txt['username_warning'] = 'Para cambiar el nombre de usuario de este usuario, e
 
 // Untranslated!
 $txt['show_member_posts'] = 'View Member Posts';
+$txt['show_member_topics'] = 'View Member Topics';
 $txt['show_member_attachments'] = 'View Member Attachments';
 $txt['show_posts_none'] = 'User has not yet made any posts.';
 $txt['show_attachments_none'] = 'User has not yet posted any attachments.';

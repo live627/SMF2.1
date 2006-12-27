@@ -276,6 +276,7 @@ $txt['username_change'] = 'change';
 $txt['username_warning'] = 'To change this member\'s username, the forum must also reset their password, which will be emailed to the member with their new username.';
 
 $txt['show_member_posts'] = 'View Member Posts';
+$txt['show_member_topics'] = 'View Member Topics';
 $txt['show_member_attachments'] = 'View Member Attachments';
 $txt['show_posts_none'] = 'User has not yet made any posts.';
 $txt['show_attachments_none'] = 'User has not yet posted any attachments.';
