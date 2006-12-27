@@ -487,7 +487,7 @@ function template_showPosts()
 			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 				<td><a href="', $scripturl, '?action=dlattach;topic=', $attachment['topic'], '.0;attach=', $attachment['id'], '">', $attachment['filename'], '</a></td>
 				<td align="center">', $attachment['downloads'], '</td>
-				<td><a href="', $scripturl, '?topic=', $attachment['topic'], '.msg', $attachment['msg'], '#msg', $attachment['msg'], '">', $attachment['subject'], '</a></td>
+				<td><a href="', $scripturl, '?topic=', $attachment['topic'], '.msg', $attachment['msg'], '#msg', $attachment['msg'], '" rel="nofollow">', $attachment['subject'], '</a></td>
 				<td>', $attachment['posted'], '</td>
 			</tr>';
 			$alternate = !$alternate;
@@ -818,7 +818,7 @@ function template_trackIP()
 						', $message['member']['link'], '
 					</td>
 					<td class="windowbg2">
-						<a href="', $scripturl, '?topic=', $message['topic'], '.msg', $message['id'], '#msg', $message['id'], '">
+						<a href="', $scripturl, '?topic=', $message['topic'], '.msg', $message['id'], '#msg', $message['id'], '" rel="nofollow">
 							', $message['subject'], '
 						</a>
 					</td>
