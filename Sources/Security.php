@@ -539,17 +539,17 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 
 	// Is it in as $_POST['sc']?
 	if ($type == 'post' && (!isset($_POST['sc']) || $_POST['sc'] != $sc))
-		$error = 'smf304';
+		$error = 'session_timeout';
 	// How about $_GET['sesc']?
 	elseif ($type == 'get' && (!isset($_GET['sesc']) || $_GET['sesc'] != $sc))
-		$error = 'smf305';
+		$error = 'session_varify_fail';
 	// Or can it be in either?
 	elseif ($type == 'request' && (!isset($_GET['sesc']) || $_GET['sesc'] != $sc) && (!isset($_POST['sc']) || $_POST['sc'] != $sc))
-		$error = 'smf305';
+		$error = 'session_varify_fail';
 
 	// Verify that they aren't changing user agents on us - that could be bad.
 	if ((!isset($_SESSION['USER_AGENT']) || $_SESSION['USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) && empty($modSettings['disableCheckUA']))
-		$error = 'smf305';
+		$error = 'session_varify_fail';
 
 	// Make sure a page with session check requirement is not being prefetched.
 	if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
@@ -586,7 +586,7 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 		// Okay: referrer must either match parsed_url or real_host.
 		if (isset($parsed_url['host']) && strtolower($referrer['host']) != strtolower($parsed_url['host']) && strtolower($referrer['host']) != strtolower($real_host))
 		{
-			$error = 'smf306';
+			$error = 'verify_url_fail';
 			$log_error = true;
 		}
 	}
@@ -594,7 +594,7 @@ function checkSession($type = 'post', $from_action = '', $is_fatal = true)
 	// Well, first of all, if a from_action is specified you'd better have an old_url.
 	if (!empty($from_action) && (!isset($_SESSION['old_url']) || preg_match('~[?;&]action=' . $from_action . '([;&]|$)~', $_SESSION['old_url']) == 0))
 	{
-		$error = 'smf306';
+		$error = 'verify_url_fail';
 		$log_error = true;
 	}
 

@@ -1225,7 +1225,7 @@ function makeAvatarChanges($memID, &$post_errors)
 					fatal_lang_error('attachments_no_write', 'critical');
 
 				if (!move_uploaded_file($_FILES['attachment']['tmp_name'], $uploadDir . '/avatar_tmp_' . $memID))
-					fatal_lang_error('smf124', 'critical');
+					fatal_lang_error('attach_timeout', 'critical');
 
 				$_FILES['attachment']['tmp_name'] = $uploadDir . '/avatar_tmp_' . $memID;
 			}
@@ -1266,7 +1266,7 @@ function makeAvatarChanges($memID, &$post_errors)
 				removeAttachments('a.id_member = ' . $memID);
 
 				if (!rename($_FILES['attachment']['tmp_name'], $uploadDir . '/' . $destName))
-					fatal_lang_error('smf124', 'critical');
+					fatal_lang_error('attach_timeout', 'critical');
 
 				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}attachments
@@ -2736,23 +2736,25 @@ function notification($memID)
 		WHERE ln.id_member = $memID
 			AND $user_info[query_see_board]
 			AND t.approved = 1", __FILE__, __LINE__);
-	list ($num_topics) = $smfFunc['db_fetch_row']($request);
+	list ($context['num_topic_notifications']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=notification', $_REQUEST['start'], $num_topics, $modSettings['defaultMaxMessages']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=notification', $_REQUEST['start'], $context['num_topic_notifications'], $modSettings['defaultMaxMessages']);
 
 	// All the topics with notification on...
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from, b.id_board, b.name,
 			t.id_topic, ms.subject, ms.id_member, IFNULL(mem.real_name, ms.poster_name) AS real_name,
-			ml.id_msg_modified
+			ml.id_msg_modified, ml.poster_time, ml.id_member AS id_member_updated,
+			IFNULL(mem2.real_name, ml.poster_name) AS last_real_name
 		FROM {$db_prefix}log_notify AS ln
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic AND t.approved = 1)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board AND $user_info[query_see_board])
 			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 			INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ms.id_member)
+			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.id_member = ml.id_member)
 			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
 			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $user_info[id])
 		WHERE ln.id_member = $memID
@@ -2771,11 +2773,18 @@ function notification($memID)
 				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
 				'link' => empty($row['id_member']) ? $row['real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 			),
+			'poster_updated' => array(
+				'id' => $row['id_member_updated'],
+				'name' => $row['last_real_name'],
+				'href' => empty($row['id_member_updated']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member_updated'],
+				'link' => empty($row['id_member_updated']) ? $row['last_real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_updated'] . '">' . $row['last_real_name'] . '</a>'
+			),
 			'subject' => $row['subject'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>',
 			'new' => $row['new_from'] <= $row['id_msg_modified'],
 			'new_from' => $row['new_from'],
+			'updated' => timeformat($row['poster_time']),
 			'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new',
 			'new_link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new">' . $row['subject'] . '</a>',
 			'board' => array(

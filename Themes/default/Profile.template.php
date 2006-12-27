@@ -1985,125 +1985,130 @@ function template_notification()
 				</tr>
 			</table>
 			<br />
-			<table border="0" width="85%" cellspacing="0" cellpadding="0" align="center" class="bordercolor"><tr><td>
-				<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-					<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-						<tr><td class="catbg" width="100%">', $txt['notifications_topics'], '</td></tr>
-					</table>
-					<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-						<tr>
-							<td class="windowbg" width="20" valign="middle" align="center" rowspan="', $context['num_rows']['topic'], '">
-								<img src="', $settings['images_url'], '/icons/notify_sm.gif" width="20" height="20" alt="" />
-							</td>';
+			<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
+			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+				<tr class="titlebg">
+					<td height="26" colspan="4">
+						&nbsp;<img src="', $settings['images_url'], '/icons/notify_sm.gif" alt="" align="top" />&nbsp;
+						', $txt['notifications_topics'], '
+					</td>
+				</tr>';
 	if (!empty($context['topic_notifications']))
 	{
 		echo '
-							<td class="titlebg" width="71%">' . $txt['subject'] . '</td>
-							<td class="titlebg" width="24%">' . $txt['started_by'] . '</td>
-							<td class="titlebg" width="5%"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></td>
-						</tr>';
+				
+				<tr class="catbg">
+					<td>' . $txt['subject'] . '</td>
+					<td width="18%">' . $txt['started_by'] . '</td>
+					<td width="32%">' . $txt['last_post'] . '</td>
+					<td width="3%" align="center"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></td>
+				</tr>';
 		foreach ($context['topic_notifications'] as $topic)
 		{
 			echo '
-						<tr>
-							<td class="windowbg" valign="middle" width="48%">
-								', $topic['link'];
+				<tr>
+					<td class="windowbg" valign="middle">
+						', $topic['link'];
 
 			if ($topic['new'])
 				echo ' <a href="', $topic['new_href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt['new'], '" /></a>';
 
 			echo '<br />
-								<span class="smalltext"><i>' . $txt['in'] . ' ' . $topic['board']['link'] . '</i></span>
-							</td>
-							<td class="windowbg2" valign="middle" width="14%">' . $topic['poster']['link'] . '</td>
-							<td class="windowbg2" valign="middle" width="5%">
-								<input type="checkbox" name="notify_topics[]" value="', $topic['id'], '" class="check" />
-							</td>
-						</tr>';
+						<span class="smalltext"><i>' . $txt['in'] . ' ' . $topic['board']['link'] . '</i></span>
+					</td>
+					<td class="windowbg2" valign="middle">' . $topic['poster']['link'] . '</td>
+					<td class="windowbg2" valign="middle">
+						<span class="smalltext">
+							' . $topic['updated'] . '<br />' . $txt['by'] . ' ' . $topic['poster_updated']['link'] . '</span>
+					</td>
+					<td class="windowbg2" valign="middle" align="center">
+						<input type="checkbox" name="notify_topics[]" value="', $topic['id'], '" class="check" />
+					</td>
+				</tr>';
 		}
 
 		echo '
-						<tr class="catbg">
-							<td colspan="3">
-								<b>', $txt['pages'], ':</b> ', $context['page_index'], '
-							</td>
-						</tr>
-						<tr>
-							<td colspan="3" class="windowbg2" align="right">
-								<input type="submit" name="edit_notify_topics" value="', $txt['notifications_update'], '" />
-							</td>
-						</tr>';
+				<tr class="titlebg">
+					<td colspan="4">
+						<b>', $txt['pages'], ':</b> ', $context['page_index'], '
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" class="windowbg2" align="right">
+						<input type="submit" name="edit_notify_topics" value="', $txt['notifications_update'], '" />
+					</td>
+				</tr>';
 	}
 	else
 		echo '
-							<td width="100%" colspan="3" class="windowbg2">
-								', $txt['notifications_topics_none'], '<br />
-								<br />', $txt['notifications_topics_howto'], '<br />
-								<br />
-							</td>
-						</tr>';
+				<tr class="windowbg2">
+					<td width="100%" colspan="4" class="windowbg2">
+						', $txt['notifications_topics_none'], '<br />
+						<br />', $txt['notifications_topics_howto'], '<br />
+						<br />
+					</td>
+				</tr>';
 	echo '
-					</table>
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-					<input type="hidden" name="userID" value="', $context['member']['id'], '" />
-					<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
-				</form>
-			</td></tr></table><br />
-			<table border="0" width="85%" cellspacing="0" cellpadding="0" align="center" class="bordercolor"><tr><td>
-				<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-					<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-						<tr><td class="catbg" width="100%">', $txt['notifications_boards'], '</td></tr>
-					</table>
-					<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-						<tr>
-							<td class="windowbg" width="20" valign="middle" align="center" rowspan="', $context['num_rows']['board'], '">
-								<img src="', $settings['images_url'], '/icons/notify_sm.gif" width="20" height="20" alt="" />
-							</td>';
+			</table>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+			<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
+		</form>
+		<br />
+		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
+			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+				<tr class="titlebg">
+					<td height="26" colspan="2">
+						&nbsp;<img src="', $settings['images_url'], '/icons/notify_sm.gif" alt="" align="top" />&nbsp;
+						', $txt['notifications_boards'], '
+					</td>
+				</tr>';
 
 	if (!empty($context['board_notifications']))
 	{
 		echo '
-							<td class="titlebg" width="95%">' . $txt['board'] . '</td>
-							<td class="titlebg" width="5%"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></td>
-						</tr>';
+				<tr class="catbg">
+					<td width="95%">' . $txt['board'] . '</td>
+					<td width="3%" align="center"><input type="checkbox" class="check" onclick="invertAll(this, this.form);" /></td>
+				</tr>';
 		foreach ($context['board_notifications'] as $board)
 		{
 			echo '
-						<tr>
-							<td class="windowbg" valign="middle" width="48%">', $board['link'];
+				<tr>
+					<td class="windowbg" valign="middle" width="48%">', $board['link'];
 
 		if ($board['new'])
 			echo ' <a href="', $board['href'], '"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="', $txt['new'], '" /></a>';
 
 		echo '</td>
-							<td class="windowbg2" valign="middle" width="5%">
-								<input type="checkbox" name="notify_boards[]" value="', $board['id'], '" />
-							</td>
-						</tr>';
+					<td class="windowbg2" valign="middle" width="3%" align="center">
+						<input type="checkbox" name="notify_boards[]" value="', $board['id'], '" />
+					</td>
+				</tr>';
 		}
 
 		echo '
-						<tr>
-							<td colspan="2" class="windowbg2" align="right">
-								<input type="submit" name="edit_notify_boards" value="', $txt['notifications_update'], '" />
-							</td>
-						</tr>';
+				<tr>
+					<td colspan="2" class="windowbg2" align="right">
+						<input type="submit" name="edit_notify_boards" value="', $txt['notifications_update'], '" />
+					</td>
+				</tr>';
 	}
 	else
 		echo '
-							<td width="100%" colspan="2" class="windowbg2">
-								', $txt['notifications_boards_none'], '<br />
-								<br />', $txt['notifications_boards_howto'], '<br />
-								<br />
-							</td>
-						</tr>';
+				<tr class="windowbg2">
+					<td width="100%" colspan="2" class="windowbg2">
+						', $txt['notifications_boards_none'], '<br />
+						<br />', $txt['notifications_boards_howto'], '<br />
+						<br />
+					</td>
+				</tr>';
 	echo '
-					</table>
-					<input type="hidden" name="sc" value="', $context['session_id'], '" />
-					<input type="hidden" name="userID" value="', $context['member']['id'], '" />
-					<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
-				</form>
-			</td></tr></table><br />';
+			</table>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+			<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
+		</form>';
 }
 
 // Template for choosing group membership.

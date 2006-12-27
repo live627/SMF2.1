@@ -53,7 +53,7 @@ function PrintTopic()
 		ORDER BY id_msg
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 

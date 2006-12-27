@@ -1958,7 +1958,7 @@ function createAttachment(&$attachmentOptions)
 	{
 		// Make sure the directory isn't full.
 		$dirSize = 0;
-		$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('smf115b', 'critical');
+		$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('cant_access_upload_path', 'critical');
 		while ($file = readdir($dir))
 		{
 			if (substr($file, 0, -1) == '.')
@@ -2028,7 +2028,7 @@ function createAttachment(&$attachmentOptions)
 	if ($already_uploaded)
 		rename($attachmentOptions['tmp_name'], $attachmentOptions['destination']);
 	elseif (!move_uploaded_file($attachmentOptions['tmp_name'], $attachmentOptions['destination']))
-		fatal_lang_error('smf124', 'critical');
+		fatal_lang_error('attach_timeout', 'critical');
 	// We couldn't access the file before...
 	elseif ($file_restricted)
 	{

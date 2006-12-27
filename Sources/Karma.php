@@ -44,7 +44,7 @@ function ModifyKarma()
 
 	// If the mod is disabled, show an error.
 	if (empty($modSettings['karmaMode']))
-		fatal_lang_error('smf63', true);
+		fatal_lang_error('feature_disabled', true);
 
 	// If you're a guest or can't do this, blow you off...
 	is_not_guest();
@@ -55,11 +55,11 @@ function ModifyKarma()
 	// If you don't have enough posts, tough luck.
 	// !!! Should this be dropped in favor of post group permissions?  Should this apply to the member you are smiting/applauding?
 	if ($user_info['posts'] < $modSettings['karmaMinPosts'])
-		fatal_lang_error('smf60', true, array($modSettings['karmaMinPosts']));
+		fatal_lang_error('not_enough_posts_karma', true, array($modSettings['karmaMinPosts']));
 
 	// And you can't modify your own, punk! (use the profile if you need to.)
 	if (empty($_REQUEST['uid']) || (int) $_REQUEST['uid'] == $user_info['id'])
-		fatal_lang_error('smf61', false);
+		fatal_lang_error('cant_change_own_karma', false);
 
 	// The user ID _must_ be a number, no matter what.
 	$_REQUEST['uid'] = (int) $_REQUEST['uid'];
@@ -108,7 +108,7 @@ function ModifyKarma()
 	{
 		// If you are gonna try to repeat.... don't allow it.
 		if ($action == $dir)
-			fatal_lang_error('smf62', false, array($modSettings['karmaWaitTime'], $txt['hours']));
+			fatal_lang_error('karma_wait_time', false, array($modSettings['karmaWaitTime'], $txt['hours']));
 
 		// You decided to go back on your previous choice?
 		$smfFunc['db_query']('', "

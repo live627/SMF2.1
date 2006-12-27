@@ -102,17 +102,17 @@ function Vote()
 		WHERE t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf27', false);
+		fatal_lang_error('poll_error', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Is voting locked or has it expired?
 	if (!empty($row['voting_locked']) || (!empty($row['expire_time']) && time() > $row['expire_time']))
-		fatal_lang_error('smf27', false);
+		fatal_lang_error('poll_error', false);
 
 	// If they have already voted and aren't allowed to change their vote - hence they are outta here!
 	if ($row['selected'] != -1 && empty($row['change_vote']))
-		fatal_lang_error('smf27', false);
+		fatal_lang_error('poll_error', false);
 	// Otherwise if they can change their vote yet they haven't sent any options... remove their vote and redirect.
 	elseif (!empty($row['change_vote']))
 	{
@@ -153,7 +153,7 @@ function Vote()
 
 	// Make sure the option(s) are valid.
 	if (empty($_POST['options']))
-		fatal_lang_error('smf26', false);
+		fatal_lang_error('didnt_select_vote', false);
 
 	// Too many options checked!
 	if (count($_REQUEST['options']) > $row['max_votes'])
@@ -215,7 +215,7 @@ function LockVoting()
 		$voting_locked = '0';
 	// Sorry, a moderator locked it.
 	elseif ($voting_locked == '2' && !allowedTo('moderate_board'))
-		fatal_lang_error('smf31', 'user');
+		fatal_lang_error('locked_by_admin', 'user');
 	// A moderator *is* locking it.
 	elseif ($voting_locked == '0' && allowedTo('moderate_board'))
 		$voting_locked = '2';
@@ -259,7 +259,7 @@ function EditPoll()
 
 	// Assume the the topic exists, right?
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	// Get the poll information.
 	$pollinfo = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
@@ -508,7 +508,7 @@ function EditPoll2()
 		WHERE t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	$bcinfo = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 

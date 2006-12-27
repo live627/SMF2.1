@@ -459,7 +459,7 @@ function template_main()
 			$last_approved_state = 1;
 			foreach ($message['attachment'] as $attachment)
 			{
-				// Show a special box for unpproved attachments...
+				// Show a special box for unapproved attachments...
 				if ($attachment['is_approved'] != $last_approved_state)
 				{
 					$last_approved_state = 0;

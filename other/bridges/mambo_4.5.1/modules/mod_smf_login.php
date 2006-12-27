@@ -309,14 +309,14 @@ echo '
 				',$txt[35],': <input type="text" name="user" size="10" /> 
 				',$txt[36],': <input type="password" name="passwrd" size="10" />
 				<select name="cookielength">
-					<option value="60">', $txt['smf53'], '</option>
-					<option value="1440">', $txt['smf47'], '</option>
-					<option value="10080">', $txt['smf48'], '</option>
-					<option value="302400">', $txt['smf49'], '</option>
-					<option value="-1" selected="selected">', $txt['smf50'], '</option>
+					<option value="60">', $txt['one_hour'], '</option>
+					<option value="1440">', $txt['one_day'], '</option>
+					<option value="10080">', $txt['one_week'], '</option>
+					<option value="302400">', $txt['one_month'], '</option>
+					<option value="-1" selected="selected">', $txt['forever'], '</option>
 				</select>
 				<input type="submit" value="', $txt[34], '" /><br />
-				<span class="middletext">', $txt['smf52'], '</span>
+				<span class="middletext">', $txt['quick_login_dec'], '</span>
 				<input type="hidden" name="hash_passwrd" value="" />
 				<input type="hidden" name="op2" value="login" />
 				<input type="hidden" name="option" value="com_smf" />

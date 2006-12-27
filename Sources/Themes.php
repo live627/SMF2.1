@@ -1922,14 +1922,14 @@ function template_main_below()
 				<input type="text" name="user" size="7" />
 				<input type="password" name="passwrd" size="7" />
 				<select name="cookielength">
-					<option value="60">\', $txt[\'smf53\'], \'</option>
-					<option value="1440">\', $txt[\'smf47\'], \'</option>
-					<option value="10080">\', $txt[\'smf48\'], \'</option>
-					<option value="43200">\', $txt[\'smf49\'], \'</option>
-					<option value="-1" selected="selected">\', $txt[\'smf50\'], \'</option>
+					<option value="60">\', $txt[\'one_hour\'], \'</option>
+					<option value="1440">\', $txt[\'one_day\'], \'</option>
+					<option value="10080">\', $txt[\'one_week\'], \'</option>
+					<option value="43200">\', $txt[\'one_month\'], \'</option>
+					<option value="-1" selected="selected">\', $txt[\'forever\'], \'</option>
 				</select>
 				<input type="submit" value="\', $txt[\'login\'], \'" /><br />
-				\', $txt[\'smf52\'], \'
+				\', $txt[\'quick_login_dec\'], \'
 			</form>
 		</td></tr>
 	</table>\';
@@ -1951,7 +1951,7 @@ function template_main_below()
 	if ($context[\'show_load_time\'])
 		echo \'
 	<div align="center" class="smalltext">
-		\', $txt[\'smf301\'], $context[\'load_time\'], $txt[\'smf302\'], $context[\'load_queries\'], $txt[\'smf302b\'], \'
+		\', $txt[\'page_created\'], $context[\'load_time\'], $txt[\'seconds_with\'], $context[\'load_queries\'], $txt[\'queries\'], \'
 	</div>\';
 
 	echo \'</body>', $old_template);

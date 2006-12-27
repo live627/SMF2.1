@@ -172,7 +172,7 @@ function SplitIndex()
 			AND m.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf272');
+		fatal_lang_error('cant_find_messages');
 	list ($_REQUEST['subname'], $num_replies, $id_first_msg, $approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -182,7 +182,7 @@ function SplitIndex()
 
 	// Check if there is more than one message in the topic.  (there should be.)
 	if ($num_replies < 1)
-		fatal_lang_error('smf270', false);
+		fatal_lang_error('topic_one_post', false);
 
 	// Check if this is the first message in the topic (if so, the first and second option won't be available)
 	if ($id_first_msg == $_GET['at'])
@@ -474,7 +474,7 @@ function SplitSelectionExecute()
 
 	// You must've selected some messages!  Can't split out none!
 	if (empty($_SESSION['split_selection'][$topic]))
-		fatal_lang_error('smf271', false);
+		fatal_lang_error('no_posts_selected', false);
 
 	$context['old_topic'] = $topic;
 	$context['new_topic'] = splitTopic($topic, $_SESSION['split_selection'][$topic], $_POST['subname']);
@@ -489,7 +489,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// Nothing to split?
 	if (empty($splitMessages))
-		fatal_lang_error('smf271', false);
+		fatal_lang_error('no_posts_selected', false);
 
 	// No sense in imploding it over and over again.
 	$postList = implode(',', $splitMessages);
@@ -516,7 +516,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		LIMIT 2", __FILE__, __LINE__);
 	// You can't select ALL the messages!
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf271b', false);
+		fatal_lang_error('slected_all_posts', false);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Get the right first and last message dependant on approved state...
@@ -592,7 +592,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// No database changes yet, so let's double check to see if everything makes at least a little sense.
 	if ($split1_first_msg <= 0 || $split1_last_msg <= 0 || $split2_first_msg <= 0 || $split2_last_msg <= 0 || $split1_replies < 0 || $split2_replies < 0 || $split1_unapprovedposts < 0 || $split2_unapprovedposts < 0 || !isset($split1_approved) || !isset($split2_approved))
-		fatal_lang_error('smf272');
+		fatal_lang_error('cant_find_messages');
 
 	// You cannot split off the first message of a topic.
 	if ($split1_first_msg > $split2_first_msg)
@@ -605,7 +605,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		VALUES ($id_board, $split2_firstMem, $split2_lastMem, 0, 0, $split2_replies, $split2_unapprovedposts, $split2_approved, $is_sticky)", __FILE__, __LINE__);
 	$split2_ID_TOPIC = db_insert_id("{$db_prefix}topics", 'id_topic');
 	if ($split2_ID_TOPIC <= 0)
-		fatal_lang_error('smf273');
+		fatal_lang_error('cant_insert_topic');
 
 	// Move the messages over to the other topic.
 	 $new_subject = $smfFunc['htmlspecialchars']($new_subject);
@@ -737,7 +737,7 @@ function MergeIndex()
 			$approveQuery
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	list ($subject) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -852,7 +852,7 @@ function MergeExecute($topics = array())
 		ORDER BY t.id_first_msg
 		LIMIT " . count($topics), __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) < 2)
-		fatal_lang_error('smf263');
+		fatal_lang_error('no_topic_id');
 	$num_views = 0;
 	$is_sticky = 0;
 	$boardTotals = array();
@@ -915,7 +915,7 @@ function MergeExecute($topics = array())
 
 	// If we didn't get any topics then they've been messing with unapproved stuff.
 	if (empty($topic_data))
-		fatal_lang_error('smf263');
+		fatal_lang_error('no_topic_id');
 
 	$boards = array_values(array_unique($boards));
 
@@ -934,7 +934,7 @@ function MergeExecute($topics = array())
 		LIMIT " . count($boards), __FILE__, __LINE__);
 	// If the number of boards that's in the output isn't exactly the same as we've put in there, you're in trouble.
 	if ($smfFunc['db_num_rows']($request) != count($boards))
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	$smfFunc['db_free_result']($request);
 
 	if (empty($_REQUEST['sa']) || $_REQUEST['sa'] == 'options')
@@ -989,7 +989,7 @@ function MergeExecute($topics = array())
 	// Determine target board.
 	$target_board = count($boards) > 1 ? (int) $_POST['board'] : $boards[0];
 	if (!in_array($target_board, $boards))
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 
 	// Determine which poll will survive and which polls won't.
 	$target_poll = count($polls) > 1 ? (int) $_POST['poll'] : (count($polls) == 1 ? $polls[0] : 0);
@@ -1184,7 +1184,7 @@ function MergeExecute($topics = array())
 	{
 		// Check if the notification array contains valid topics.
 		if (count(array_diff($_POST['notifications'], $topics)) > 0)
-			fatal_lang_error('smf232');
+			fatal_lang_error('no_board');
 		$request = $smfFunc['db_query']('', "
 			SELECT id_member, MAX(sent) AS sent
 			FROM {$db_prefix}log_notify

@@ -353,7 +353,7 @@ function BrowseFiles()
 	if ($context['browse_type'] == 'avatars')
 		$request = $smfFunc['db_query']('', "
 			SELECT
-				'' AS id_msg, IFNULL(mem.real_name, '$txt['not_applicable']') AS poster_name, mem.last_login AS poster_time, 0 AS id_topic, a.id_member,
+				'' AS id_msg, IFNULL(mem.real_name, '$txt[not_applicable]') AS poster_name, mem.last_login AS poster_time, 0 AS id_topic, a.id_member,
 				a.id_attach, a.filename, a.attachment_type, a.size, a.width, a.height, a.downloads, '' AS subject, 0 AS id_board
 			FROM {$db_prefix}attachments AS a
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)
@@ -428,7 +428,7 @@ function MaintainFiles()
 
 	// Find out how big the directory is.
 	$attachmentDirSize = 0;
-	$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('smf115b', 'critical');
+	$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('cant_access_upload_path', 'critical');
 	while ($file = readdir($dir))
 	{
 		if (substr($file, 0, -1) == '.')

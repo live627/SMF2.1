@@ -79,7 +79,7 @@ function Display()
 
 	// What are you gonna display if these are empty?!
 	if (empty($topic))
-		fatal_lang_error('smf232', false);
+		fatal_lang_error('no_board', false);
 
 	// Load the proper template and/or sub template.
 	if (WIRELESS)

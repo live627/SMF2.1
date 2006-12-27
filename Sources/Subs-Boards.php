@@ -399,7 +399,7 @@ function modifyBoard($board_id, &$boardOptions)
 
 	// Make sure given boards and categories exist.
 	if (!isset($boards[$board_id]) || (isset($boardOptions['target_board']) && !isset($boards[$boardOptions['target_board']])) || (isset($boardOptions['target_category']) && !isset($cat_tree[$boardOptions['target_category']])))
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 
 	// All things that will be updated in the database will be in $boardUpdates.
 	$boardUpdates = array();

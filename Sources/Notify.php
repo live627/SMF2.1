@@ -119,7 +119,7 @@ function BoardNotify()
 
 	// You have to specify a board to turn notifications on!
 	if (empty($board))
-		fatal_lang_error('smf232', false);
+		fatal_lang_error('no_board', false);
 
 	// No subaction: find out what to do.
 	if (empty($_GET['sa']))

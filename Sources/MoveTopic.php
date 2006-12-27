@@ -206,7 +206,7 @@ function MoveTopic2()
 			AND b.id_board = $_POST[toboard]
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	list ($pcounter, $board_name, $subject) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 

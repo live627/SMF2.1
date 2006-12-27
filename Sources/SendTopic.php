@@ -161,7 +161,7 @@ function ReportToModerator()
 			AND m.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($result) == 0)
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	list ($_GET['msg'], $member, $starter) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -206,7 +206,7 @@ function ReportToModerator2()
 			AND m.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf232');
+		fatal_lang_error('no_board');
 	$message = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 

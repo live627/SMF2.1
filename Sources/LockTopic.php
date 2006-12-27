@@ -84,7 +84,7 @@ function LockTopic()
 		$locked = '0';
 	// You cannot unlock this!
 	else
-		fatal_lang_error('smf31', 'user');
+		fatal_lang_error('locked_by_admin', 'user');
 
 	// Actually lock the topic in the database with the new value.
 	$smfFunc['db_query']('', "

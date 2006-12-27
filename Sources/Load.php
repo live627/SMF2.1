@@ -765,7 +765,7 @@ function loadPermissions()
 	{
 		// Make sure the board (if any) has been loaded by loadBoard().
 		if (!isset($board_info['profile']))
-			fatal_lang_error('smf232');
+			fatal_lang_error('no_board');
 
 		$request = $smfFunc['db_query']('', "
 			SELECT permission, add_deny

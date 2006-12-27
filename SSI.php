@@ -190,7 +190,7 @@ function ssi_welcome($output_method = 'echo')
 		if ($context['user']['is_guest'])
 			echo sprintf($txt['welcome_guest'], $txt['guest_title']);
 		else
-			echo $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', allowedTo('pm_read') ? ', ' . $txt[152] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] == '1' ? $txt[471] : $txt[153]) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == '1' ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
+			echo $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', allowedTo('pm_read') ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] == '1' ? $txt[471] : $txt['msg_alert_messages']) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == '1' ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
 	}
 	// Don't echo... then do what?!
 	else
@@ -307,7 +307,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 				</td>
 				<td valign="top">
 					<a href="', $post['href'], '">', $post['subject'], '</a>
-					', $txt[525], ' ', $post['poster']['link'], '
+					', $txt['by'], ' ', $post['poster']['link'], '
 					', $post['new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>', '
 				</td>
 				<td align="right" nowrap="nowrap">
@@ -415,7 +415,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_metho
 				</td>
 				<td valign="top">
 					<a href="', $post['href'], '">', $post['subject'], '</a>
-					', $txt[525], ' ', $post['poster']['link'], '
+					', $txt['by'], ' ', $post['poster']['link'], '
 					', $post['new'] ? '' : '<a href="' . $scripturl . '?topic=' . $post['topic'] . '.msg' . $post['new_from'] . ';topicseen#new"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>', '
 				</td>
 				<td align="right" nowrap="nowrap">
@@ -496,7 +496,7 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 	echo '
 		<table class="ssi_table">
 			<tr>
-				<th align="left">', $txt['smf82'], '</th>
+				<th align="left">', $txt['board'], '</th>
 				<th align="left">', $txt[330], '</th>
 				<th align="left">', $txt['posts'], '</th>
 			</tr>';
@@ -603,7 +603,7 @@ function ssi_latestMember($output_method = 'echo')
 
 	if ($output_method == 'echo')
 		echo '
-	', $txt['welcome_member'], ' ', $context['common_stats']['latest_member']['link'], '', $txt[581], '<br />';
+	', $txt['welcome_member'], ' ', $context['common_stats']['latest_member']['link'], '', $txt['newest_member'], '<br />';
 	else
 		return $context['common_stats']['latest_member'];
 }
@@ -635,11 +635,11 @@ function ssi_boardStats($output_method = 'echo')
 		return $totals;
 
 	echo '
-		', $txt[488], ': <a href="', $scripturl . '?action=mlist">', $totals['members'], '</a><br />
-		', $txt[489], ': ', $totals['posts'], '<br />
-		', $txt[490], ': ', $totals['topics'], ' <br />
-		', $txt[658], ': ', $totals['categories'], '<br />
-		', $txt[665], ': ', $totals['boards'];
+		', $txt['total_members'], ': <a href="', $scripturl . '?action=mlist">', $totals['members'], '</a><br />
+		', $txt['total_posts'], ': ', $totals['posts'], '<br />
+		', $txt['total_topics'], ': ', $totals['topics'], ' <br />
+		', $txt['total_cats'], ': ', $totals['categories'], '<br />
+		', $txt['total_boards'], ': ', $totals['boards'];
 }
 
 // Shows a list of online users:  YY Guests, ZZ Users and then a list...
@@ -866,7 +866,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 				</tr>';
 	echo '
 				<tr>
-					<td><input type="submit" value="', $txt['smf23'], '" /></td>
+					<td><input type="submit" value="', $txt['poll_vote'], '" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $sc, '" />
@@ -995,7 +995,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 					</tr>';
 		echo '
 					<tr>
-						<td><input type="submit" value="', $txt['smf23'], '" /></td>
+						<td><input type="submit" value="', $txt['poll_vote'], '" /></td>
 					</tr>
 				</table>
 				<input type="hidden" name="sc" value="', $sc, '" />
@@ -1016,7 +1016,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 					</tr>';
 		echo '
 					<tr>
-						<td colspan="2"><b>', $txt['smf24'], ': ', $return['total_votes'], '</b></td>
+						<td colspan="2"><b>', $txt['poll_total_voters'], ': ', $return['total_votes'], '</b></td>
 					</tr>
 				</table>';
 	}
@@ -1361,7 +1361,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 		echo '
 			<div>
 				<a href="', $news['href'], '">', $news['icon'], '</a> <b>', $news['subject'], '</b>
-				<div class="smaller">', $news['time'], ' ', $txt[525], ' ', $news['poster']['link'], '</div>
+				<div class="smaller">', $news['time'], ' ', $txt['by'], ' ', $news['poster']['link'], '</div>
 
 				<div class="post" style="padding: 2ex 0;">', $news['body'], '</div>
 

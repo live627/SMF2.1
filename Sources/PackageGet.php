@@ -229,7 +229,7 @@ function PackageGBrowse()
 
 		// If the server does not exist, dump out.
 		if (empty($url))
-			fatal_lang_error('smf191', false);
+			fatal_lang_error('couldnt_connect', false);
 
 		// If there is a relative link, append to the stored server url.
 		if (isset($_GET['relative']))
@@ -251,7 +251,7 @@ function PackageGBrowse()
 	}
 	// Minimum required parameter did not exist so dump out.
 	else
-		fatal_lang_error('smf191', false);
+		fatal_lang_error('couldnt_connect', false);
 
 	// In safe mode or on lycos?  Try this URL. (includes package-list for informational purposes ;).)
 	//if (@ini_get('safe_mode'))
@@ -538,7 +538,7 @@ function PackageDownload()
 
 		// If server does not exist then dump out.
 		if (empty($url))
-			fatal_lang_error('smf191', false);
+			fatal_lang_error('couldnt_connect', false);
 
 		$url = $url . '/';
 	}

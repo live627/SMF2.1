@@ -140,7 +140,7 @@ function ShowXmlFeed()
 
 		// Either the board specified doesn't exist or you have no access.
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('smf232');
+			fatal_lang_error('no_board');
 
 		$total_posts = 0;
 		$boards = array();

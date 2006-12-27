@@ -648,7 +648,7 @@ function groupsAllowedTo($permission, $board_id = null)
 				WHERE id_board = $board_id
 				LIMIT 1", __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($request) == 0)
-				fatal_lang_error('smf232');
+				fatal_lang_error('no_board');
 			list ($profile_id) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 		}

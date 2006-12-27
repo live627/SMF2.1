@@ -110,7 +110,7 @@ function Post()
 
 	// You must be posting to *some* board.
 	if (empty($board) && !$context['make_event'])
-		fatal_lang_error('smf232', false);
+		fatal_lang_error('no_board', false);
 
 	require_once($sourcedir . '/Subs-Post.php');
 	
@@ -643,7 +643,7 @@ function Post()
 		// The message they were trying to edit was most likely deleted.
 		// !!! Change this error message?
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('smf232', false);
+			fatal_lang_error('no_board', false);
 		$row = $smfFunc['db_fetch_assoc']($request);
 
 		$attachment_stuff = array($row);
@@ -856,10 +856,10 @@ function Post()
 					continue;
 
 				if (!is_uploaded_file($_FILES['attachment']['tmp_name'][$n]) || (@ini_get('open_basedir') == '' && !file_exists($_FILES['attachment']['tmp_name'][$n])))
-					fatal_lang_error('smf124', 'critical');
+					fatal_lang_error('attach_timeout', 'critical');
 
 				if (!empty($modSettings['attachmentSizeLimit']) && $_FILES['attachment']['size'][$n] > $modSettings['attachmentSizeLimit'] * 1024)
-					fatal_lang_error('smf122', false, array($modSettings['attachmentSizeLimit']));
+					fatal_lang_error('file_too_big', false, array($modSettings['attachmentSizeLimit']));
 
 				$quantity++;
 				if (!empty($modSettings['attachmentNumPerPostLimit']) && $quantity > $modSettings['attachmentNumPerPostLimit'])
@@ -867,7 +867,7 @@ function Post()
 
 				$total_size += $_FILES['attachment']['size'][$n];
 				if (!empty($modSettings['attachmentPostLimit']) && $total_size > $modSettings['attachmentPostLimit'] * 1024)
-					fatal_lang_error('smf122', false, array($modSettings['attachmentPostLimit']));
+					fatal_lang_error('file_too_big', false, array($modSettings['attachmentPostLimit']));
 
 				if (!empty($modSettings['attachmentCheckExtensions']))
 				{
@@ -879,7 +879,7 @@ function Post()
 				{
 					// Make sure the directory isn't full.
 					$dirSize = 0;
-					$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('smf115b', 'critical');
+					$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('cant_access_upload_path', 'critical');
 					while ($file = readdir($dir))
 					{
 						if (substr($file, 0, -1) == '.')
@@ -899,7 +899,7 @@ function Post()
 
 					// Too big!  Maybe you could zip it or something...
 					if ($_FILES['attachment']['size'][$n] + $dirSize > $modSettings['attachmentDirSizeLimit'] * 1024)
-						fatal_lang_error('smf126');
+						fatal_lang_error('ran_out_of_space');
 				}
 
 				if (!is_writable($modSettings['attachmentUploadDir']))
@@ -916,7 +916,7 @@ function Post()
 				$destName = $modSettings['attachmentUploadDir'] . '/' . $attachID;
 
 				if (!move_uploaded_file($_FILES['attachment']['tmp_name'][$n], $destName))
-					fatal_lang_error('smf124', 'critical');
+					fatal_lang_error('attach_timeout', 'critical');
 				@chmod($destName, 0644);
 			}
 	}
@@ -1181,7 +1181,7 @@ function Post2()
 			WHERE m.id_msg = $_REQUEST[msg]
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error('smf272', false);
+			fatal_lang_error('cant_find_messages', false);
 		$row = $smfFunc['db_fetch_assoc']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -1501,7 +1501,7 @@ function Post2()
 			// Check the total upload size for this post...
 			$total_size += $_FILES['attachment']['size'][$n];
 			if (!empty($modSettings['attachmentPostLimit']) && $total_size > $modSettings['attachmentPostLimit'] * 1024)
-				fatal_lang_error('smf122', false, array($modSettings['attachmentPostLimit']));
+				fatal_lang_error('file_too_big', false, array($modSettings['attachmentPostLimit']));
 
 			$attachmentOptions = array(
 				'post' => isset($_REQUEST['msg']) ? $_REQUEST['msg'] : 0,
@@ -1521,17 +1521,17 @@ function Post2()
 			else
 			{
 				if (in_array('could_not_upload', $attachmentOptions['errors']))
-					fatal_lang_error('smf124', 'critical');
+					fatal_lang_error('attach_timeout', 'critical');
 				if (in_array('too_large', $attachmentOptions['errors']))
-					fatal_lang_error('smf122', false, array($modSettings['attachmentSizeLimit']));
+					fatal_lang_error('file_too_big', false, array($modSettings['attachmentSizeLimit']));
 				if (in_array('bad_extension', $attachmentOptions['errors']))
 					fatal_error($attachmentOptions['name'] . '.<br />' . $txt['cant_upload_type'] . ' ' . $modSettings['attachmentExtensions'] . '.', false);
 				if (in_array('directory_full', $attachmentOptions['errors']))
-					fatal_lang_error('smf126', 'critical');
+					fatal_lang_error('ran_out_of_space', 'critical');
 				if (in_array('bad_filename', $attachmentOptions['errors']))
 					fatal_error(basename($attachmentOptions['name']) . '.<br />' . $txt['restricted_filename'] . '.', 'critical');
 				if (in_array('taken_filename', $attachmentOptions['errors']))
-					fatal_lang_error('smf125');
+					fatal_lang_error('filename_exisits');
 			}
 		}
 	}
@@ -2223,7 +2223,7 @@ function JavaScriptModify()
 			WHERE m.id_msg = " . (empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg']) . "
 				AND m.id_topic = $topic", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('smf232', false);
+		fatal_lang_error('no_board', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
