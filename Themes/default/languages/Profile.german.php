@@ -280,6 +280,15 @@ $txt['moderator_why_missing'] = 'Warum fehlt hier \'Moderator\'?';
 $txt['username_change'] = '&auml;ndern';
 $txt['username_warning'] = 'Um den Benutzernamen dieses Mitgliedes zu &auml;ndern, muss das Forum auch das Passwort annullieren. Das neue Passwort wird dem Mitglied mit dem neuen Benutzernamen per E-Mail zugeschickt.';
 
+// Untranslated!
+$txt['show_member_posts'] = 'View Member Posts';
+$txt['show_member_attachments'] = 'View Member Attachments';
+$txt['show_posts_none'] = 'User has not yet made any posts.';
+$txt['show_attachments_none'] = 'User has not yet posted any attachments.';
+$txt['show_attach_filename'] = 'Filename';
+$txt['show_attach_downloads'] = 'Downloads';
+$txt['show_attach_posted'] = 'Posted';
+
 $txt['showPermissions'] = 'Zeige Berechtigungen';
 $txt['showPermissions_given'] = 'Erhalten von';
 $txt['showPermissions_denied'] = 'Verboten von';

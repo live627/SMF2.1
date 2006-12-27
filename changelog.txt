@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2616 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2617 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -68,6 +68,8 @@ December 2006
  ! Do not allow 0, 0px, or 0pt to be used in size tags. (Subs.php)
  ! Upgrade now does template changes in steps. (upgrade.php)
  * Added a discreet interface for emulating version numbers in the package manager. (Package template, Package language files)
+ + Make it possible to view a members attachments from their profile. (Profile.php, Profile template)
+ & Added some language entries for the above change. (Profile language files)
 
 
 November 2006

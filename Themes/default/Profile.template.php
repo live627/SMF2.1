@@ -371,13 +371,14 @@ function template_showPosts()
 				<td colspan="3" height="26">
 					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['showPosts'], '
 				</td>
-			</tr>';
-
-	// Only show posts if they have made some!
-	if (!empty($context['posts']))
-	{
-		// Page numbers.
-		echo '
+			</tr>
+			<tr class="windowbg" valign="middle">
+				<td colspan="3">
+					<span>
+						', (isset($context['attachments']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts">', $txt['show_member_posts'], '</a> | ', (!isset($context['attachments']) ? '' : '<img src="' . $settings['images_url'] . '/selected.gif" width="12" height="12" alt="*" /> '), '<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach">', $txt['show_member_attachments'], '</a>
+					</span>
+				</td>
+			</tr>
 			<tr class="catbg3">
 				<td colspan="3">
 					', $txt['pages'], ': ', $context['page_index'], '
@@ -385,12 +386,15 @@ function template_showPosts()
 			</tr>
 		</table>';
 
-		// Button shortcuts
-		$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
-		$reply_button = create_button('reply_sm.gif', 'reply', 'reply', 'align="middle"');
-		$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
-		$notify_button = create_button('notify_sm.gif', 'notify_replies', 'notify', 'align="middle"');
+	// Button shortcuts
+	$quote_button = create_button('quote.gif', 'reply_quote', 'quote', 'align="middle"');
+	$reply_button = create_button('reply_sm.gif', 'reply', 'reply', 'align="middle"');
+	$remove_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
+	$notify_button = create_button('notify_sm.gif', 'notify_replies', 'notify', 'align="middle"');
 
+	// Are we displaying posts or attachments?
+	if (!isset($context['attachments']))
+	{
 		// For every post to be displayed, give it its own subtable, and show the important details of the post.
 		foreach ($context['posts'] as $post)
 		{
@@ -443,23 +447,74 @@ function template_showPosts()
 			</tr>
 		</table>';
 		}
-
-		// Show more page numbers.
+	}
+	else
+	{
 		echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
-			<tr>
-				<td colspan="3" class="catbg3">
-					', $txt['pages'], ': ', $context['page_index'], '
+		<table border="0" width="85%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
+			<tr class="titlebg">
+				<td width="25%">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=filename', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'filename' ? ';desc' : ''), '">
+						', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'up' : 'down') . '.gif" alt="" />' : ''), '
+						', $txt['show_attach_filename'], '
+					</a>
 				</td>
-			</tr>
+				<td width="18%" align="center">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=downloads', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'downloads' ? ';desc' : ''), '">
+						', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'up' : 'down') . '.gif" alt="" />' : ''), '
+						', $txt['show_attach_downloads'], '
+					</a>
+				</td>
+				<td width="30%">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=subject', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'subject' ? ';desc' : ''), '">
+						', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'up' : 'down') . '.gif" alt="" />' : ''), '
+						', $txt['message'], '
+					</a>
+				</td>
+				<td>
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=posted', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'posted' ? ';desc' : ''), '">
+					', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'up' : 'down') . '.gif" alt="" />' : ''), '
+					', $txt['show_attach_posted'], '
+					</a>
+				</td>
+			</tr>';
+
+		// Looks like we need to do all the attachments instead!
+		$alternate = false;
+		foreach ($context['attachments'] as $attachment)
+		{
+			echo '
+			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+				<td><a href="', $scripturl, '?action=dlattach;topic=', $attachment['topic'], '.0;attach=', $attachment['id'], '">', $attachment['filename'], '</a></td>
+				<td align="center">', $attachment['downloads'], '</td>
+				<td><a href="', $scripturl, '?topic=', $attachment['topic'], '.msg', $attachment['msg'], '#msg', $attachment['msg'], '">', $attachment['subject'], '</a></td>
+				<td>', $attachment['posted'], '</td>
+			</tr>';
+			$alternate = !$alternate;
+		}
+
+		echo '
 		</table>';
 	}
+
+	// Start the bottom bit.
+	echo '
+		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">';
+
 	// No posts? Just end the table with a informative message.
-	else
+	if ((isset($context['attachments']) && empty($context['attachments'])) || (!isset($context['attachments']) && empty($context['posts'])))
 		echo '
 			<tr class="windowbg2">
-				<td>
-					', $txt['search_no_results'], '
+				<td align="center">
+					', isset($context['attachments']) ? $txt['show_attachments_none'] : $txt['show_posts_none'], '
+				</td>
+			</tr>';
+
+	// Show more page numbers.
+	echo '
+				<tr>
+				<td colspan="3" class="catbg3">
+					', $txt['pages'], ': ', $context['page_index'], '
 				</td>
 			</tr>
 		</table>';

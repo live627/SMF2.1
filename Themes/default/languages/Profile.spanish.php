@@ -281,6 +281,15 @@ $txt['moderator_why_missing'] = '&iquest;porqu&eacute; no est&aacute; moderador 
 $txt['username_change'] = 'cambiar';
 $txt['username_warning'] = 'Para cambiar el nombre de usuario de este usuario, el foro debe tambi&eacute;n resetear su contrase&ntilde;a, la cual se le enviar&aacute; por email al usuario con su nuevo nombre de usuario.';
 
+// Untranslated!
+$txt['show_member_posts'] = 'View Member Posts';
+$txt['show_member_attachments'] = 'View Member Attachments';
+$txt['show_posts_none'] = 'User has not yet made any posts.';
+$txt['show_attachments_none'] = 'User has not yet posted any attachments.';
+$txt['show_attach_filename'] = 'Filename';
+$txt['show_attach_downloads'] = 'Downloads';
+$txt['show_attach_posted'] = 'Posted';
+
 $txt['showPermissions'] = 'Mostrar Permisos';
 $txt['showPermissions_given'] = 'Otorgados por';
 $txt['showPermissions_denied'] = 'Denegados por';

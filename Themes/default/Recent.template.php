@@ -100,7 +100,7 @@ function template_unread()
 	{
 		// Generate the button strip.
 		$mark_read = array(
-			'markread' => array('text' => !empty($context['no_board_limits']) ? 452 : 'mark_read_short', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id']),
+			'markread' => array('text' => !empty($context['no_board_limits']) ? 'mark_as_read' : 'mark_read_short', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=' . (!empty($context['no_board_limits']) ? 'all' : 'board' . $context['querystring_board_limits']) . ';sesc=' . $context['session_id']),
 		);
 
 		echo '
@@ -236,7 +236,7 @@ function template_replies()
 	if (isset($context['topics_to_mark']) && !empty($settings['show_mark_read']))
 	{
 		$mark_read = array(
-			'markread' => array('text' => 452, 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=unreadreplies;topics=' . $context['topics_to_mark'] . ';sesc=' . $context['session_id']),
+			'markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=unreadreplies;topics=' . $context['topics_to_mark'] . ';sesc=' . $context['session_id']),
 		);
 		echo '
 			<td align="right" style="padding-right: 1ex;">

@@ -56,6 +56,9 @@ if (!defined('SMF'))
 	void showPosts(int id_member)
 		// !!!
 
+	void showAttachments(int id_member)
+		// !!!
+
 	void statPanel(int id_member)
 		// !!!
 
@@ -1510,6 +1513,18 @@ function showPosts($memID)
 	global $txt, $user_info, $scripturl, $modSettings, $db_prefix;
 	global $context, $user_profile, $sourcedir, $smfFunc;
 
+	// Some initial context.
+	$context['start'] = (int) $_REQUEST['start'];
+	$context['current_member'] = $memID;
+
+	// Is the load average too high to allow searching just now?
+	if (!empty($context['load_average']) && !empty($modSettings['loadavg_show_posts']) && $context['load_average'] >= $modSettings['loadavg_show_posts'])
+		fatal_lang_error('loadavg_show_posts_disabled', false);
+
+	// If we're specifically dealing with attachments use that function!
+	if (isset($_GET['attach']))
+		return showAttachments($memID);
+
 	// If just deleting a message, do it and then redirect back.
 	if (isset($_GET['delete']))
 	{
@@ -1522,10 +1537,6 @@ function showPosts($memID)
 		// Back to... where we are now ;).
 		redirectexit('action=profile;u=' . $memID . ';sa=showPosts;start=' . $_GET['start']);
 	}
-
-	// Is the load average too high to allow searching just now?
-	if (!empty($context['load_average']) && !empty($modSettings['loadavg_show_posts']) && $context['load_average'] >= $modSettings['loadavg_show_posts'])
-		fatal_lang_error('loadavg_show_posts_disabled', false);
 
 	// Default to 10.
 	if (empty($_REQUEST['viewscount']) || !is_numeric($_REQUEST['viewscount']))
@@ -1553,10 +1564,8 @@ function showPosts($memID)
 	$maxIndex = (int) $modSettings['defaultMaxMessages'];
 
 	// Make sure the starting place makes sense and construct our friend the page index.
-	$context['start'] = (int) $_REQUEST['start'];
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts', $context['start'], $msgCount, $maxIndex);
 	$context['current_page'] = $context['start'] / $maxIndex;
-	$context['current_member'] = $memID;
 
 	// Reverse the query if we're past 50% of the pages for better performance.
 	$start = $context['start'];
@@ -1692,6 +1701,85 @@ function showPosts($memID)
 	// Clean up after posts that cannot be deleted.
 	foreach ($context['posts'] as $counter => $dummy)
 		$context['posts'][$counter]['can_delete'] &= $context['posts'][$counter]['delete_possible'];
+}
+
+// Show all the attachments of a user.
+function showAttachments($memID)
+{
+	global $txt, $user_info, $scripturl, $modSettings, $db_prefix;
+	global $context, $user_profile, $sourcedir, $smfFunc;
+
+	// OBEY permissions!
+	$boardsAllowed = boardsAllowedTo('view_attachment');
+	// Make sure we can't actually see anything...
+	if (empty($boardsAllowed))
+		$boardsAllowed = array(-1);
+
+	// Get the total number of attachments they have posted.
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
+		FROM {$db_prefix}attachments AS a
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE a.attachment_type = 0
+			AND a.id_msg != 0
+			AND m.id_member = $memID
+			AND $user_info[query_see_board]" . (!in_array(0, $boardsAllowed) ? "
+			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
+			AND m.approved = 1", __FILE__, __LINE__);
+	list ($attachCount) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	$maxIndex = (int) $modSettings['defaultMaxMessages'];
+
+	// What about ordering?
+	$sortTypes = array(
+		'filename' => 'a.filename',
+		'downloads' => 'a.downloads',
+		'subject' => 'm.subject',
+		'posted' => 'm.poster_time',
+	);
+	$context['sort_order'] = isset($_GET['sort']) && isset($sortTypes[$_GET['sort']]) ? $_GET['sort'] : 'posted';
+	$context['sort_direction'] = isset($_GET['desc']) ? 'down' : 'up';
+
+	$sort =	$sortTypes[$context['sort_order']];
+
+	// Let's get ourselves a lovely page index.
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts;attach;sort=' . $sort . ($context['sort_direction'] == 'down' ? ';desc' : ''), $context['start'], $attachCount, $maxIndex);
+
+	// Retrieve a some attachments.
+	$request = $smfFunc['db_query']('', "
+		SELECT a.id_attach, a.id_msg, a.filename, a.downloads, m.id_msg, m.id_topic, m.id_board,
+			m.poster_time, m.subject, b.name
+		FROM {$db_prefix}attachments AS a
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE a.attachment_type = 0
+			AND a.id_msg != 0
+			AND m.id_member = $memID
+			AND $user_info[query_see_board]" . (!in_array(0, $boardsAllowed) ? "
+			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
+			AND m.approved = 1
+		ORDER BY $sort " . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . "
+		LIMIT $context[start], $maxIndex", __FILE__, __LINE__);
+	$context['attachments'] = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		$row['subject'] = censorText($row['subject']);
+
+		$context['attachments'][] = array(
+			'id' => $row['id_attach'],
+			'filename' => $row['filename'],
+			'downloads' => $row['downloads'],
+			'subject' => $row['subject'],
+			'posted' => timeformat($row['poster_time']),
+			'msg' => $row['id_msg'],
+			'topic' => $row['id_topic'],
+			'board' => $row['id_board'],
+			'board_name' => $row['name'],
+		);
+	}
+	$smfFunc['db_free_result']($request);
 }
 
 // Show all the users buddies, as well as a add/delete interface.
