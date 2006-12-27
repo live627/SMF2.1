@@ -1013,10 +1013,10 @@ function PackageBrowse()
 	// Here we have a little code to help those who class themselves as something of gods, version emulation ;)
 	if (isset($_GET['version_emulate']))
 	{
-		if ($_GET['version_emulate'] == 0 && isset($_SESSION['version_emulate']))
+		if ($_GET['version_emulate'] === 0 && isset($_SESSION['version_emulate']))
 			unset($_SESSION['version_emulate']);
-		elseif ($_GET['version_emulate'] != 0)
-			$_SESSION['version_emulate'] = strtr($_GET['version_emulate'], '-', ' ');
+		elseif ($_GET['version_emulate'] !== 0)
+			$_SESSION['version_emulate'] = strtr($_GET['version_emulate'], array('-' => ' ', '+' => ' ', 'SMF ' => ''));
 	}
 	if (!empty($_SESSION['version_emulate']))
 	{

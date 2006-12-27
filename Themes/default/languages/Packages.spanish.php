@@ -183,4 +183,12 @@ $txt['package_download_by_url'] = 'Download a package by url';
 $txt['package_download_filename'] = 'Name of the file';
 $txt['package_download_filename_info'] = 'Optional value.  Should be used when the url does not end in the filename.  For example: index.php?mod=5';
 
+// Untranslated!
+$txt['package_advanced_button'] = 'Advanced';
+$txt['package_advanced_options'] = 'Advanced Options';
+$txt['package_apply'] = 'Apply';
+$txt['package_emulate'] = 'Emulate Version';
+$txt['package_emulate_revert'] = 'Revert';
+$txt['package_emulate_desc'] = 'Sometimes packages are locked to early versions of SMF but remain compatible with a newer version. Here you can choose to &quot;emulate&quot; a different SMF version within the package manager.';
+
 ?>

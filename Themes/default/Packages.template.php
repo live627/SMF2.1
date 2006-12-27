@@ -453,7 +453,7 @@ function template_view_installed()
 
 function template_browse()
 {
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+	global $context, $settings, $options, $txt, $scripturl, $modSettings, $forum_version;
 
 	echo '
 		<table width="100%" cellspacing="0" cellpadding="4" border="0" class="tborder">
@@ -747,8 +747,47 @@ function template_browse()
 					<img src="', $settings['images_url'], '/icons/package_installed.gif" alt="" width="12" height="11" align="middle" style="margin-left: 1ex;" /> ', $txt['package_installed_current'], '
 					<img src="', $settings['images_url'], '/icons/package_old.gif" alt="" width="12" height="11" align="middle" style="margin-left: 2ex;" /> ', $txt['package_installed_old'], '
 				</td>
+				<td class="smalltext" align="right">
+					<a href="#" onclick="document.getElementById(\'advanced_box\').style.display = document.getElementById(\'advanced_box\').style.display == \'\' ? \'none\' : \'\'; return false;">', $txt['package_advanced_button'], '</a>
+				</td>
 			</tr>
-		</table>';
+		</table>
+		<form action="', $scripturl, '?action=admin;area=packages;sa=browse" method="get">
+		<table id="advanced_box" name="advanced_box" width="400" align="right" cellspacing="0" cellpadding="2" class="tborder">
+			<tr class="titlebg">
+				<td colspan="2">
+					', $txt['package_advanced_options'], '
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td colspan="2" class="smalltext">
+					', $txt['package_emulate_desc'], '
+				</td>
+			</tr>
+			<tr class="windowbg2">
+				<td width="50%">
+					<b>', $txt['package_emulate'], ':</b>
+					<div class="smalltext">
+						<a href="#" onclick="document.getElementById(\'ve\').value = \'', $forum_version, '\'; return false">', $txt['package_emulate_revert'], '</a>
+					</div>
+				</td>
+				<td width="50%">
+					<input type="text" name="version_emulate" id="ve" value="', $context['forum_version'], '" size="25" />
+				</td>
+			</tr>
+			<tr class="titlebg">
+				<td colspan="2" align="right">
+					<input type="submit" value="', $txt['package_apply'], '" />
+				</td>
+			</tr>
+		</table>
+			<input type="hidden" name="action" value="admin" />
+			<input type="hidden" name="area" value="packages" />
+			<input type="hidden" name="sa" value="browse" />
+		</form>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			document.getElementById(\'advanced_box\').style.display = "none";
+			// ]]></script>';
 }
 
 function template_servers()
