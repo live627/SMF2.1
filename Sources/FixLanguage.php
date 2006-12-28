@@ -1118,6 +1118,9 @@ function fixTemplateFile($filename, $test = false)
 		$fileContents = str_replace($findArray, $replaceArray, $fileContents);
 	}
 
+	if ($edit_count == -1)
+		return -1;
+
 	// Making those changes?
 	if (!$test)
 	{

@@ -22,6 +22,7 @@ $nameChanges = array(
 		'ID_THUMB' => 'ID_THUMB id_thumb int(10) unsigned NOT NULL default \'0\'',
 		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
 		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
+		'attachmentType' => 'attachmentType attachment_type tinyint(3) unsigned NOT NULL default \'0\'',
 	),
 	'ban_groups' => array(
 		'ID_BAN_GROUP' => 'ID_BAN_GROUP id_ban_group mediumint(8) unsigned NOT NULL auto_increment',
@@ -45,7 +46,7 @@ $nameChanges = array(
 		'ID_LAST_MSG' => 'ID_LAST_MSG id_last_msg int(10) unsigned NOT NULL default \'0\'',
 		'ID_MSG_UPDATED' => 'ID_MSG_UPDATED id_msg_updated int(10) unsigned NOT NULL default \'0\'',
 		'memberGroups' => 'memberGroups member_groups varchar(255) NOT NULL default \'-1,0\'',
-		'ID_PROFILE' => 'id_profile smallint(5) unsigned NOT NULL default \'1\'',
+		'ID_PROFILE' => 'ID_PROFILE id_profile smallint(5) unsigned NOT NULL default \'1\'',
 		'numTopics' => 'numTopics num_topics mediumint(8) unsigned NOT NULL default \'0\'',
 		'numPosts' => 'numPosts num_posts mediumint(8) unsigned NOT NULL default \'0\'',
 		'countPosts' => 'countPosts count_posts tinyint(4) NOT NULL default \'0\'',
@@ -267,10 +268,6 @@ $nameChanges = array(
 		'ID_ICON' => 'ID_ICON id_icon smallint(5) unsigned NOT NULL auto_increment',
 		'iconOrder' => 'iconOrder icon_order smallint(5) unsigned NOT NULL default \'0\'',
 		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
-	),
-	'messages' => array(
-		'ID_BOARD' => 'ID_BOARD id_board smallint(5) unsigned NOT NULL default \'0\'',
-		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
 	),
 	'moderators' => array(
 		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',

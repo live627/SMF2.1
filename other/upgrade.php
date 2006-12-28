@@ -688,6 +688,23 @@ function upgradeExit()
 	die();
 }
 
+// Used to direct the user to another location.
+function redirectLocation($location, $addForm = true)
+{
+	global $upgradeurl, $upcontext;
+
+	// Are we providing the core info?
+	if ($addForm)
+	{
+		$upcontext['upgrade_status']['curstep'] = $upcontext['current_step'];
+		$location = $upgradeurl . '?step=' . $upcontext['current_step'] . '&amp;substep=' . $_GET['substep'] . '&amp;data=' . base64_encode(serialize($upcontext['upgrade_status'])) . $location;
+	}
+
+	while (@ob_end_clean());
+	header('Location: ' . $location);
+	die();
+}
+
 // Load all essential data and connect to the DB as this is pre SSI.php
 function loadEssentialData()
 {
@@ -1321,6 +1338,10 @@ function CleanupMods()
 {
 	global $db_prefix, $modSettings, $upcontext, $boarddir, $sourcedir, $settings, $smfFunc;
 
+	// If we get here withOUT SSI we need to redirect to ensure we get it!
+	if (!isset($_GET['ssi']))
+		redirectLocation(';ssi=1');
+
 	$upcontext['sub_template'] = 'clean_mods';
 	$upcontext['page_title'] = 'Cleanup Modifications';
 
@@ -1579,16 +1600,6 @@ function UpgradeTemplate()
 		$upcontext['temp_progress'] = isset($_GET['substep']) ? (int) $_GET['substep'] : 0;
 	}
 
-	// If we're not testing before we start making changes let's work out what needs changing and make it writable!
-	$template_list = array();
-	$lang_list = array();
-	if (!$upcontext['is_test'] && isset($_POST['writable_files']))
-	{
-		$old_writable_files = unserialize(base64_decode($_POST['writable_files']));
-		if (!makeFilesWritable($old_writable_files))
-			return false;
-	}
-
 	// Remembering where we are?
 	if (isset($_POST['languages']))
 		$upcontext['languages'] = unserialize(base64_decode($_POST['languages']));
@@ -1599,6 +1610,22 @@ function UpgradeTemplate()
 		$upcontext['themes'] = unserialize(base64_decode($_POST['themes']));
 	else
 		$upcontext['themes'] = array();
+
+	// If we're not testing before we start making changes let's work out what needs changing and make it writable!
+	if (!$upcontext['is_test'] && isset($_POST['writable_files']))
+	{
+		$writable_files = unserialize(base64_decode($_POST['writable_files']));
+		if (!makeFilesWritable($writable_files))
+		{
+			// Make sure we don't forget what we have to do!
+			$upcontext['writable_files'] = $writable_files;
+			return false;
+		}
+	}
+	elseif (isset($_POST['writable_files']))
+		$writable_files = unserialize(base64_decode($_POST['writable_files']));
+	else
+		$writable_files = array();
 
 	// Starting off?
 	if ($upcontext['temp_progress'] == 0)
@@ -1645,9 +1672,6 @@ function UpgradeTemplate()
 	}
 	$upcontext['step_progress'] = ($upcontext['is_test'] ? 0 : 50) + (int) (($upcontext['temp_progress'] / $upcontext['file_count']) * 50);
 
-	// Remember what we're up to.
-	$writable_files = array();
-
 	// Attempt to check all the language files.
 	$current_pos = 0;
 	foreach ($lang_dirs as $id => $langdir)
@@ -1692,6 +1716,7 @@ function UpgradeTemplate()
 					$writable_files[] = $langdir . '/' . $matches[0];
 				}
 			}
+			$upcontext['writable_files'] = $writable_files;
 			nextSubstep($current_pos);
 		}
 		$dir->close();
@@ -1748,6 +1773,7 @@ function UpgradeTemplate()
 					$writable_files[] = $themedir . '/' . $entry;
 				}
 			}
+			$upcontext['writable_files'] = $writable_files;
 			nextSubstep($current_pos);
 		}
 		$dir->close();
@@ -2786,7 +2812,7 @@ function throw_error($message)
 }
 
 // Check files are writable - make them writable if necessary...
-function makeFilesWritable($files)
+function makeFilesWritable(&$files)
 {
 	global $upcontext, $boarddir;
 
@@ -2810,6 +2836,8 @@ function makeFilesWritable($files)
 				else
 					unset($files[$k]);
 			}
+			else
+				unset($files[$k]);
 		}
 	}
 	// Windows is trickier.  Let's try opening for r+...
@@ -2836,7 +2864,10 @@ function makeFilesWritable($files)
 			@fclose($fp);
 		}
 	}
-	
+
+	if (empty($files))
+		return true;
+
 	if (!isset($_SERVER))
 		return !$failure;
 
@@ -2907,13 +2938,24 @@ function makeFilesWritable($files)
 		}
 		else
 		{
+			// We want to do a relative path for FTP.
+			if (!in_array($upcontext['chmod']['path'], array('', '/')))
+			{
+				$ftp_root = strtr($boarddir, array($upcontext['chmod']['path'] => ''));
+				if (substr($ftp_root, -1) == '/' && ($upcontext['chmod']['path'] == '' || substr($upcontext['chmod']['path'], 0, 1) == '/'))
+				$ftp_root = substr($ftp_root, 0, -1);
+			}
+			else
+				$ftp_root = $boarddir;
+
 			// Save the info for next time!
 			$_SESSION['installer_temp_ftp'] = array(
 				'server' => $upcontext['chmod']['server'],
 				'port' => $upcontext['chmod']['port'],
 				'username' => $upcontext['chmod']['username'],
 				'password' => $upcontext['chmod']['password'],
-				'path' => $upcontext['chmod']['path']
+				'path' => $upcontext['chmod']['path'],
+				'root' => $ftp_root,
 			);
 
 			foreach ($files as $k => $file)
@@ -2923,6 +2965,24 @@ function makeFilesWritable($files)
 				if (!is_writable($file))
 					$ftp->chmod($file, 0777);
 
+				// Assuming that didn't work calculate the path without the boarddir.
+				if (!is_writable($file))
+				{
+					if (strpos($file, $boarddir) === 0)
+					{
+						$ftp_file = strtr($file, array($_SESSION['installer_temp_ftp']['root'] => ''));
+						$ftp->chmod($ftp_file, 0755);
+						if (!is_writable($file))
+							$ftp->chmod($ftp_file, 0777);
+						// Sometimes an extra slash can help...
+						$ftp_file = '/' . $ftp_file;
+						if (!is_writable($file))
+							$ftp->chmod($ftp_file, 0755);
+						if (!is_writable($file))
+							$ftp->chmod($ftp_file, 0777);
+					}
+				}
+
 				if (is_writable($file))
 					unset($files[$k]);
 			}
@@ -2931,10 +2991,13 @@ function makeFilesWritable($files)
 		}
 	}
 
+	if (empty($files))
+		return true;
+
 	// What remains?
 	$upcontext['chmod']['files'] = $files;
 
-	return true;
+	return false;
 }
 
 /******************************************************************************
@@ -3173,9 +3236,6 @@ function template_upgrade_below()
 	echo '
 		</div>
 			</form>';
-
-	// This looks ugly here but is a catch all!
-	template_chmod();
 
 	echo '
 					</div>
@@ -3795,26 +3855,7 @@ function template_database_changes()
 
 				getNextItem();
 			}
-function print_r(theObj){
-var t="";
-  if(theObj.constructor == Array ||
-     theObj.constructor == Object){
-    t +="<ul>";
-    for(var p in theObj){
-      if(theObj[p].constructor == Array||
-         theObj[p].constructor == Object){
-t += "<li>["+p+"] => "+typeof(theObj)+"</li>";
-        t += "<ul>";
-        t += print_r(theObj[p]);
-        t += "</ul>";
-      } else {
-t += "<li>["+p+"] => "+theObj[p]+"</li>";
-      }
-    }
-    t += "</ul>";
-  }
-  return t;
-}
+
 			// What if we timeout?!
 			function retTimeout(attemptAgain)
 			{
