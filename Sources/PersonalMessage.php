@@ -134,7 +134,6 @@ function MessageMain()
 	// Load up the members maximum message capacity.
 	if (!$user_info['is_admin'] && ($context['message_limit'] = cache_get_data('msgLimit:' . $user_info['id'], 360)) === null)
 	{
-		echo 'ahhshshs';
 		// !!! Why do we do this?  It seems like if they have any limit we should use it.
 		$request = $smfFunc['db_query']('', "
 			SELECT MAX(max_messages) AS topLimit, MIN(max_messages) AS bottomLimit
