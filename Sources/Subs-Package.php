@@ -793,7 +793,7 @@ function packageRequireFTP($destination_url, $files = null)
 // Parses a package-info.xml file - method can be 'install', 'upgrade', or 'uninstall'.
 function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install', $previous_version = '')
 {
-	global $boarddir, $forum_version, $context;
+	global $boarddir, $forum_version, $context, $temp_path;
 
 	// Mayday!  That action doesn't exist!!
 	if (empty($packageXML) || !$packageXML->exists($method))
@@ -1113,7 +1113,7 @@ function matchPackageVersion($version, $versions)
 
 function parse_path($path)
 {
-	global $modSettings, $boarddir, $sourcedir, $settings;
+	global $modSettings, $boarddir, $sourcedir, $settings, $temp_path;
 
 	$dirs = array(
 		'\\' => '/',
@@ -1129,6 +1129,10 @@ function parse_path($path)
 		'$smileysdir' => $modSettings['smileys_dir'],
 		'$smileys_dir' => $modSettings['smileys_dir'],
 	);
+
+	// do we parse in a package directory?
+	if (!empty($temp_path))
+		$dirs['$package'] = $temp_path;
 
 	if (strlen($path) == 0)
 		trigger_error('parse_path(): There should never be an empty filename', E_USER_ERROR);
