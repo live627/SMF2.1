@@ -57,7 +57,11 @@ function MessageIndex()
 
 	// Make sure the starting place makes sense and construct the page index.
 	if (isset($_REQUEST['sort']))
+	{
+		// No need to reindex just because we've resorted!
+		$context['robot_no_index'] = true;
 		$context['page_index'] = constructPageIndex($scripturl . '?board=' . $board . '.%d;sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $board_info['total_topics'], $maxindex, true);
+	}
 	else
 		$context['page_index'] = constructPageIndex($scripturl . '?board=' . $board . '.%d', $_REQUEST['start'], $board_info['total_topics'], $maxindex, true);
 	$context['start'] = &$_REQUEST['start'];

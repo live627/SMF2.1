@@ -105,7 +105,7 @@ function template_main()
 		// If this category even can collapse, show a link to collapse it.
 		if ($category['can_collapse'])
 			echo '
-			<a href="', $category['collapse_href'], '">', $category['collapse_image'], '</a>';
+			<a href="', $category['collapse_href'], '" rel="nofollow">', $category['collapse_image'], '</a>';
 
 		echo '
 			', $category['link'], '
