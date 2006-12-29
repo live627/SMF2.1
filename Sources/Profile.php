@@ -165,7 +165,7 @@ function ModifyProfile($post_errors = array())
 
 	// Check if loadMemberData() has returned a valid result.
 	if (!is_array($memberResult))
-		fatal_lang_error(453, false);
+		fatal_lang_error('not_a_user', false);
 
 	// If all went well, we have a valid member ID!
 	list ($memID) = $memberResult;
@@ -378,7 +378,7 @@ function ModifyProfile2()
 
 	// Is the current sub-action allowed?
 	if (empty($_REQUEST['sa']) || !isset($sa_allowed[$_REQUEST['sa']]))
-		fatal_lang_error(453, false);
+		fatal_lang_error('not_a_user', false);
 
 	checkSession($sa_allowed[$_REQUEST['sa']][2]);
 
@@ -399,7 +399,7 @@ function ModifyProfile2()
 	$memberResult = loadMemberData((int) $_REQUEST['userID'], false, 'profile');
 
 	if (!is_array($memberResult))
-		fatal_lang_error(453, false);
+		fatal_lang_error('not_a_user', false);
 
 	list ($memID) = $memberResult;
 
@@ -1363,7 +1363,7 @@ function summary($memID)
 
 	// Attempt to load the member's profile data.
 	if (!loadMemberContext($memID) || !isset($memberContext[$memID]))
-		fatal_lang_error(453, false, array($memID));
+		fatal_lang_error('not_a_user', false, array($memID));
 
 	// Set up the stuff and load the user.
 	$context += array(
