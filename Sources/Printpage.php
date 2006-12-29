@@ -44,6 +44,9 @@ function PrintTopic()
 	if (empty($topic))
 		fatal_lang_error(472, false);
 
+	// Whatever happens don't index this.
+	$context['robot_no_index'] = true;
+
 	// Get the topic starter information.
 	$request = $smfFunc['db_query']('', "
 		SELECT m.poster_time, IFNULL(mem.real_name, m.poster_name) AS poster_name
