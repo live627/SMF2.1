@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2619 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2620 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -72,6 +72,7 @@ December 2006
  & Added some language entries for the above change. (Profile language files)
  ! Added rel="nofollow" to many duplicate URL's. (Various files)
  * You can now view members topics from their profile. (Profile related files)
+ + Added e107 bridge (Several files)
 
 
 November 2006
