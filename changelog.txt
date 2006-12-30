@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2621 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2622 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -74,6 +74,7 @@ December 2006
  * You can now view members topics from their profile. (Profile related files)
  + Added e107 bridge. (Several files)
  ! Fixed a bug with the to and bcc fields for PMs that could cause some problems when displaying an invalid name. (PersonalMessage.php)
+ + Added delete member and change member data integration hooks to e107 bridge. (e107 bridge/smf.php)
 
 
 

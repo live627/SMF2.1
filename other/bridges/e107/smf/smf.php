@@ -260,7 +260,7 @@ function integrate_validate_login($username, $password, $cookietime){
 
 function integrate_reset_pass($old_username, $username, $password){
 
-	global $db_name, $mySQLdefaultdb;
+	global $db_name, $mySQLdefaultdb, $sql;
 	
 	$newpass = md5($password);
 
@@ -271,5 +271,56 @@ function integrate_reset_pass($old_username, $username, $password){
 	mysql_select_db($db_name);
 
 	return true;
+}
+
+function integrate_delete_member($user){
+
+	global $db_name, $db_prefix, $mySQLdefaultdb, $sql;
+	
+	$query1 = mysql_query ("
+		SELECT memberName, realName
+		FROM {$db_prefix}members
+		WHERE ID_MEMBER = '$user'");
+	list($username, $name) = mysql_fetch_row($query1);
+
+	mysql_select_db($mySQLdefaultdb);
+
+	$sql->db_Delete("user", "user_loginname='$username' AND user_name='$name' ");
+	
+	mysql_select_db($db_name);
+
+}
+
+function integrate_change_member_data($memberNames, $var, $value){
+
+	global $db_name, $db_prefix, $mySQLdefaultdb, $sql;
+
+	$synch_e107_fields = array(
+   			'memberName' => 'user_loginname',
+			'realName' => 'user_name',
+			'emailAddress' => 'user_email',
+			'ID_GROUP' => '',
+			'gender'=>'',
+			'birthdate'=>'',
+			'websiteTitle'=>'',
+			'websiteUrl'=>'',
+			'location'=>'',
+			'hideEmail'=>'',
+			'timeFormat'=>'',
+			'timeOffset'=>'',
+			'avatar'=>'',
+			'lngfile'=>'',
+			);
+			
+	$field = $synch_e107_fields[$var];
+	
+	if ($field != ''){
+		mysql_select_db($mosConfig_db);
+	
+		foreach ($memberNames as $memberName){
+			$sql->db_Update("user", "$field = $value WHERE user_loginname = '$memberName' LIMIT 1");
+		}
+		mysql_select_db($db_name);
+	}
 }
 ?>
