@@ -1494,7 +1494,7 @@ function messagePostError($error_types, $to, $bcc)
 				pm.body, pm.subject, pm.msgtime, mem.member_name, IFNULL(mem.id_member, 0) AS id_member,
 				IFNULL(mem.real_name, pm.from_name) AS real_name
 			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? '' : "
-				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[replied_to])") . ")
+				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[replied_to])") . "
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
 			WHERE pm.id_pm = $_REQUEST[replied_to]" . ($context['folder'] == 'sent' ? "
 				AND pm.id_member_from = $user_info[id]" : "
