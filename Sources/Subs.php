@@ -2401,8 +2401,8 @@ function writeLog($force = false)
 	// Grab the last all-of-SMF-specific log_online deletion time.
 	$do_delete = cache_get_data('log_online-update', 10) < time() - 10;
 
-	// If the last click wasn't a long time ago, and there was a last click... or if we aren't logged yet.
-	if (empty($_SESSION['log_time']) || (!empty($_SESSION['log_time']) && $_SESSION['log_time'] >= time() - $modSettings['lastActive'] * 20))
+	// If the last click wasn't a long time ago, and there was a last click...
+	if (!empty($_SESSION['log_time']) && $_SESSION['log_time'] >= time() - $modSettings['lastActive'] * 20)
 	{
 		if ($do_delete)
 		{
@@ -2410,29 +2410,33 @@ function writeLog($force = false)
 				DELETE FROM {$db_prefix}log_online
 				WHERE log_time < " . (time() - $modSettings['lastActive'] * 60) . "
 					AND session != '$session_id'", __FILE__, __LINE__);
-			cache_put_data('log_online-update', time(), 10);
 		}
-		if (empty($_SESSION['log_time']) && !empty($user_info['id']))
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_online
-				WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_online
-			SET log_time = " . time() . ", ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized',
-				id_member = $user_info[id]
-			WHERE session = '$session_id'", __FILE__, __LINE__);
+			SET log_time = " . time() . ", ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized'			WHERE session = '$session_id'", __FILE__, __LINE__);
 
 		// Guess it got deleted.
 		if (db_affected_rows() == 0)
-		{
-			$smfFunc['db_insert']('ignore',
+			$_SESSION['log_time'] = 0;
+	}
+	else
+		$_SESSION['log_time'] = 0;
+
+	// Otherwise, we have to delete and insert.
+	if (empty($_SESSION['log_time']))
+	{
+		if ($do_delete || !empty($user_info['id']))
+			$smfFunc['db_query']('', "
+				DELETE FROM {$db_prefix}log_online
+				WHERE " . ($do_delete ? "log_time < " . (time() - $modSettings['lastActive'] * 60) : '') . ($do_delete && !empty($user_info['id']) ? ' OR ' : '') . (empty($user_info['id']) ? '' : "id_member = $user_info[id]"), __FILE__, __LINE__);
+
+		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
 				"{$db_prefix}log_online",
 				array('session', 'id_member', 'log_time', 'ip', 'url'),
 				array("'$session_id'", $user_info['id'], time(), "IFNULL(INET_ATON('$user_info[ip]'), 0)", "'$serialized'"),
 				array('session')
 			);
-		}
 	}
 
 	// Mark your session as being logged.
