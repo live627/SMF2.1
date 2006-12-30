@@ -1773,7 +1773,6 @@ function MessagePost2()
 			$post_errors[] = 'bad_' . $rec_type;
 		foreach ($rec as $i => $member)
 		{
-			$input[$rec_type][$i] = un_htmlspecialchars($member);
 			$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $input[$rec_type][$i]);
 		}
 	}
