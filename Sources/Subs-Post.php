@@ -1873,7 +1873,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			$inserts[] = array($word, $msgOptions['id']);
 
 		if (!empty($inserts))
-			$smfFunc['db_query']('insert',
+			$smfFunc['db_insert']('insert',
 				"{$db_prefix}log_search_words",
 				array('id_word', 'id_msg'),
 				$inserts,

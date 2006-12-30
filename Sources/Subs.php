@@ -2426,10 +2426,12 @@ function writeLog($force = false)
 		// Guess it got deleted.
 		if (db_affected_rows() == 0)
 		{
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}log_online
-					(session, id_member, log_time, ip, url)
-				VALUES ('$session_id', $user_info[id], " . time() . ", IFNULL(INET_ATON('$user_info[ip]'), 0), '$serialized')", __FILE__, __LINE__);
+			$smfFunc['db_insert']('ignore',
+				"{$db_prefix}log_online",
+				array('session', 'id_member', 'log_time', 'ip', 'url'),
+				array("'$session_id'", $user_info['id'], time(), "IFNULL(INET_ATON('$user_info[ip]'), 0)", "'$serialized'"),
+				array('session')
+			);
 		}
 	}
 

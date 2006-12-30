@@ -275,7 +275,7 @@ function template_manual_intro()
 			</div>';
 
 	// This changes dependant on theme really...
-	$mark_read_button = array('markread' => array('text' => 452, 'image' => 'markread.gif', 'lang' => true, 'url' => 'javascript:markBoardRead();'));
+	$mark_read_button = array('markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => 'javascript:markBoardRead();'));
 	if (!empty($settings['use_tabs']))
 	{
 		echo '

@@ -277,7 +277,7 @@ $txt['www'] = 'WWW';
 $txt['by'] = 'door';
 
 $txt['hours'] = 'uren';
-$txt['days'] = 'dagen';
+$txt['days_word'] = 'dagen';
 
 $txt['newest_member'] = ', ons nieuwste lid.';
 

@@ -2609,6 +2609,7 @@ function ManageRules()
 			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = $user_info[id])
 		WHERE mg.min_posts = -1
 			AND mg.id_group != 3
+			AND hidden = 0
 		ORDER BY mg.group_name", __FILE__, __LINE__);
 	$context['groups'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))

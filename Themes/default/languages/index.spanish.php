@@ -277,7 +277,7 @@ $txt['www'] = 'WWW';
 $txt['by'] = 'por';
 
 $txt['hours'] = 'horas';
-$txt['days'] = 'd&iacute;as';
+$txt['days_word'] = 'd&iacute;as';
 
 $txt['newest_member'] = ', nuestro usuario m&aacute;s reciente.';
 

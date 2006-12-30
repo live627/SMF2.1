@@ -109,11 +109,11 @@ function Display()
 				SELECT t2.id_topic
 				FROM {$db_prefix}topics AS t
 					INNER JOIN {$db_prefix}topics AS t2 ON (" . (empty($modSettings['enableStickyTopics']) ? "
-					AND t2.id_last_msg $gt_lt t.id_last_msg" : "
-					AND ((t2.id_last_msg $gt_lt t.id_last_msg AND t2.is_sticky $gt_lt= t.is_sticky) OR t2.is_sticky $gt_lt t.is_sticky)") . "
-					AND t2.id_board = $board
-					" . (allowedTo('approve_posts') ? '' : ' AND t2.approved = 1') . ")
+					t2.id_last_msg $gt_lt t.id_last_msg" : "
+					(t2.id_last_msg $gt_lt t.id_last_msg AND t2.is_sticky $gt_lt= t.is_sticky) OR t2.is_sticky $gt_lt t.is_sticky") . ")
 				WHERE t.id_topic = $topic
+					AND t2.id_board = $board
+					" . (allowedTo('approve_posts') ? '' : ' AND t2.approved = 1') . "
 				ORDER BY" . (empty($modSettings['enableStickyTopics']) ? '' : " t2.is_sticky$order,") . " t2.id_last_msg$order
 				LIMIT 1", __FILE__, __LINE__);
 
@@ -169,7 +169,7 @@ function Display()
 		WHERE t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 	$topicinfo = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 

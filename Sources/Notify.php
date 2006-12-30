@@ -58,7 +58,7 @@ function Notify()
 
 	// Make sure the topic has been specified.
 	if (empty($topic))
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 
 	// What do we do?  Better ask if they didn't say..
 	if (empty($_GET['sa']))

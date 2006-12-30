@@ -117,7 +117,7 @@ function template_main()
 							<td colspan="3"><br />
 								<div style="text-align: left; width: 45%; float: right; margin-right: 2ex;">
 									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_post_age'], ': </b></div><br />
-									', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days'], '.
+									', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.
 								</div>
 								<div style="width: 45%;">
 									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_options'], ':</b></div>

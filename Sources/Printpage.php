@@ -42,7 +42,7 @@ function PrintTopic()
 	global $board_info, $smfFunc;
 
 	if (empty($topic))
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 
 	// Whatever happens don't index this.
 	$context['robot_no_index'] = true;

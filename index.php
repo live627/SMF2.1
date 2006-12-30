@@ -160,7 +160,7 @@ function smf_main()
 	
 	// If we are in a topic and don't have permission to approve it then duck out now.
 	if (!empty($topic) && empty($board_info['cur_topic_approved']) && !allowedTo('approve_posts'))
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 
 	// Do some logging, unless this is an attachment, avatar, theme option or XML feed.
 	if (empty($_REQUEST['action']) || !in_array($_REQUEST['action'], array('dlattach', 'jsoption', '.xml', 'xmlhttp')))

@@ -63,7 +63,7 @@ function SendTopic()
 
 	// We need at least a topic... go away if you don't have one.
 	if (empty($topic))
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 
 	// Get the topic's subject.
 	$request = $smfFunc['db_query']('', "
@@ -73,7 +73,7 @@ function SendTopic()
 		WHERE t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 

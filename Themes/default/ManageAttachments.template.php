@@ -151,7 +151,7 @@ function template_maintenance()
 			<td class="windowbg2" width="100%" valign="top">
 				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
 					', $txt['message'], ': <input type="text" name="notice" value="', $txt['attachment_delete_admin'], '" size="40" /><br />
-					', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" /> ', $txt['days'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+					', $txt['attachment_remove_old'], ' <input type="text" name="age" value="25" size="4" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="attachments" />
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="byAge" />
@@ -164,7 +164,7 @@ function template_maintenance()
 					<input type="hidden" name="sa" value="bySize" />
 				</form>
 				<form action="', $scripturl, '?action=admin;area=manageattachments" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');" style="margin: 0 0 2ex 0;">
-					', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" /> ', $txt['days'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
+					', $txt['attachment_manager_avatars_older'], ' <input type="text" name="age" value="45" size="4" /> ', $txt['days_word'], ' <input type="submit" name="submit" value="', $txt['remove'], '" />
 					<input type="hidden" name="type" value="avatars" />
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					<input type="hidden" name="sa" value="byAge" />

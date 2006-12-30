@@ -104,7 +104,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	global $reservedTables, $smfFunc, $db_package_log;
 
 	// First - no way do we touch SMF tables.
-	if (in_array($table_name, $reservedTables))
+	if (in_array(strtolower($table_name), $reservedTables))
 		return false;
 
 	// Log that we'll want to remove this on uninstall.
@@ -127,12 +127,14 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			else
 			{
 				$old_columns = $smfFunc['db_list_columns']($table_name);
+				foreach ($old_columns as $k => $v)
+					$old_columns[$k] = strtolower($v);
 				foreach ($columns as $column)
 				{
 					// Already exists?
-					if (in_array($column['name'], $old_columns))
+					if (in_array(strtolower($column['name']), $old_columns))
 					{
-						$k = array_search($column['name'], $old_columns);
+						$k = array_search(strtolower($column['name']), $old_columns);
 						unset($old_columns[$k]);
 					}
 					// Doesn't - add it!
@@ -206,7 +208,7 @@ function smf_db_drop_table($table_name, $error = 'fatal')
 	global $reservedTables, $smfFunc;
 
 	// God no - dropping one of these = bad.
-	if (in_array($table_name, $reservedTables))
+	if (in_array(strtolower($table_name), $reservedTables))
 		return false;
 
 	// Does it exist?

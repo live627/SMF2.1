@@ -50,7 +50,7 @@ function LockTopic()
 
 	// Just quit if there's no topic to lock.
 	if (empty($topic))
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 
 	checkSession('get');
 
@@ -116,7 +116,7 @@ function Sticky()
 
 	// You can't sticky a board or something!
 	if (empty($topic))
-		fatal_lang_error(472, false);
+		fatal_lang_error('not_a_topic', false);
 
 	checkSession('get');
 

@@ -1570,6 +1570,8 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 
 	// What theme are we in?
 	$theme_name = basename($settings['theme_url']);
+	if (empty($theme_name))
+		$theme_name = 'unknown';
 
 	// Is this cached? If not recache!
 	$do_include = true;

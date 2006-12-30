@@ -3863,7 +3863,7 @@ function template_database_changes()
 				if (!attemptAgain)
 				{
 					document.getElementById("error_block").style.display = "";
-					setInnerHTML(document.getElementById("error_message"), "Server has not responded for ', ($timeLimitThreshold * 3), ' seconds. Please click <a href=\"#\" onclick=\"retTimeout(true); return false;\">here</a> to try this step again");
+					setInnerHTML(document.getElementById("error_message"), "Server has not responded for ', ($timeLimitThreshold * 10), ' seconds. Please click <a href=\"#\" onclick=\"retTimeout(true); return false;\">here</a> to try this step again");
 				}
 				else
 				{
