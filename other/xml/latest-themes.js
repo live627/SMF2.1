@@ -17,111 +17,112 @@ window.smfForum_scripturl + '?action=theme=sa=install;theme_gz=' + url_to_packag
 
 // Some required files to make everything work
 require_once('/home/simple/public_html/community/SSI.php');
-require_once('/home/simple/public_html/themes/ThemeSiteSettings.php');
+require_once('/home/simple/public_html/custom/themes/ThemeSiteSettings.php');
 unset($_SESSION['language']);
 
 //eaccelerator_cache_page('smf/latest_themes.js', 20);
 
 // Get a featured theme
 $themes = array();
-$request = my_db_query("
-	SELECT th.ID_THEME, th.themeName, th.modifiedTime, th.downloads, th.ID_PACKAGE, th.ID_PREVIEW,
-		th.submitTime, th.ID_TYPE, a.filename, th.description, th.authorName
+$request = $smfFunc['db_query']('', "
+	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
+		th.submit_time, th.id_type, a.filename, th.description, th.author_name
 	FROM {$theme_prefix}featured AS fe
-	LEFT JOIN {$theme_prefix}themes AS th ON (th.ID_THEME=fe.ID_THEME)
-	LEFT JOIN {$theme_prefix}files AS f ON (f.ID_FILE=th.ID_PACKAGE)
-	LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_ATTACH=f.ID_ATTACH)
+		LEFT JOIN {$theme_prefix}themes AS th ON (th.id_theme=fe.id_theme)
+		LEFT JOIN {$theme_prefix}files AS f ON (f.id_file=th.id_package)
+		LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
 	WHERE th.status=1
 	ORDER BY RAND()
 	LIMIT 1", __FILE__, __LINE__);
-if (mysql_num_rows($request))
+if ( $smfFunc['db_num_rows']($request) )
 {
-	$row = mysql_fetch_assoc($request);
-	censorText($row['themeName']);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	censorText($row['theme_name']);
 	censorText($row['description']);
-	$themes[$row['ID_THEME']] = array(
-		'id' => $row['ID_THEME'],
+	$themes[$row['id_theme']] = array(
+		'id' => $row['id_theme'],
 		'package' => array(
-			'id' => $row['ID_PACKAGE'],
+			'id' => $row['id_package'],
 			'name' => $row['filename'],
 		),
-		'short_name' => strlen($row['themeName']) <= 20 ? $row['themeName'] : substr($row['themeName'], 0, 20) . '...',
-		'name' => $row['themeName'],
-		'submit_time' => timeformat($row['submitTime']),
-		'modify_time' => timeformat($row['modifiedTime']),
+		'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
+		'name' => $row['theme_name'],
+		'submit_time' => timeformat($row['submit_time']),
+		'modify_time' => timeformat($row['modified_time']),
 		'description' => parse_bbc($row['description']),
 		'downloads' => $row['downloads'],
-		'authorName' => $row['authorName'],
+		'author_name' => $row['author_name'],
 	);
-	$featured = $row['ID_THEME'];
+	$featured = $row['id_theme'];
 }
 else
 	$featured = 0;
 
 // Load the theme data
-$request = my_db_query("
-	SELECT th.ID_THEME, th.themeName, th.modifiedTime, th.downloads, th.ID_PACKAGE, th.ID_PREVIEW,
-		th.submitTime, th.ID_TYPE, a.filename, th.description, th.authorName
+$request = $smfFunc['db_query']('', "
+	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
+		th.submit_time, th.id_type, a.filename, th.description, th.author_name
 	FROM {$theme_prefix}themes AS th
-	LEFT JOIN {$theme_prefix}files AS f ON (f.ID_FILE=th.ID_PACKAGE)
-	LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_ATTACH=f.ID_ATTACH)
-	WHERE th.status=1 AND th.ID_THEME != $featured
-	ORDER BY submitTime DESC
+	LEFT JOIN {$theme_prefix}files AS f ON (f.id_file=th.id_package)
+	LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
+	WHERE th.status=1 
+		AND th.id_theme != $featured
+	ORDER BY submit_time DESC
 	LIMIT 3", __FILE__, __LINE__);
 $latest_ids = array();
-while ($row = mysql_fetch_assoc($request))
+while ( $row = $smfFunc['db_fetch_assoc']($request) )
 {
-	censorText($row['themeName']);
+	censorText($row['theme_name']);
 	censorText($row['description']);
-	$themes[$row['ID_THEME']] = array(
-		'id' => $row['ID_THEME'],
+	$themes[$row['id_theme']] = array(
+		'id' => $row['id_theme'],
 		'package' => array(
-			'id' => $row['ID_PACKAGE'],
+			'id' => $row['id_package'],
 			'name' => $row['filename'],
 		),
-		'short_name' => strlen($row['themeName']) <= 20 ? $row['themeName'] : substr($row['themeName'], 0, 20) . '...',
-		'name' => $row['themeName'],
-		'submit_time' => timeformat($row['submitTime']),
-		'modify_time' => timeformat($row['modifiedTime']),
+		'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
+		'name' => $row['theme_name'],
+		'submit_time' => timeformat($row['submit_time']),
+		'modify_time' => timeformat($row['modified_time']),
 		'description' => parse_bbc($row['description']),
 		'downloads' => $row['downloads'],
-		'authorName' => $row['authorName'],
+		'author_name' => $row['author_name'],
 	);
-	$latest_ids[] = $row['ID_THEME'];
+	$latest_ids[] = $row['id_theme'];
 }
 
 // Grab a random theme
-$request = my_db_query("
-	SELECT th.ID_THEME, th.themeName, th.modifiedTime, th.downloads, th.ID_PACKAGE, th.ID_PREVIEW,
-		th.submitTime, th.ID_TYPE, a.filename, th.description, th.authorName
+$request = $smfFunc['db_query']('', "
+	SELECT th.id_theme, th.theme_name, th.modified_time, th.downloads, th.id_package, th.id_preview,
+		th.submit_time, th.id_type, a.filename, th.description, th.author_name
 	FROM {$theme_prefix}themes AS th
-	LEFT JOIN {$theme_prefix}files AS f ON (f.ID_FILE=th.ID_PACKAGE)
-	LEFT JOIN {$db_prefix}attachments AS a ON (a.ID_ATTACH=f.ID_ATTACH)
-	WHERE th.status=1 AND th.ID_THEME NOT IN ($featured" . (empty($latest_ids) ? '' : ',' . implode(',',$latest_ids)) . ")
+		LEFT JOIN {$theme_prefix}files AS f ON (f.id_file=th.id_package)
+		LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach=f.id_attach)
+	WHERE th.status=1 AND th.id_theme NOT IN ($featured" . (empty($latest_ids) ? '' : ',' . implode(',',$latest_ids)) . ")
 	ORDER BY RAND()
 	LIMIT 1", __FILE__, __LINE__);
-while ($row = mysql_fetch_assoc($request))
+while ( $row = $smfFunc['db_fetch_assoc']($request) )
 {
-	censorText($row['themeName']);
+	censorText($row['theme_name']);
 	censorText($row['description']);
-	$themes[$row['ID_THEME']] = array(
-		'id' => $row['ID_THEME'],
+	$themes[$row['id_theme']] = array(
+		'id' => $row['id_theme'],
 		'package' => array(
-			'id' => $row['ID_PACKAGE'],
+			'id' => $row['id_package'],
 			'name' => $row['filename'],
 		),
-		'short_name' => strlen($row['themeName']) <= 20 ? $row['themeName'] : substr($row['themeName'], 0, 20) . '...',
-		'name' => $row['themeName'],
-		'submit_time' => timeformat($row['submitTime']),
-		'modify_time' => timeformat($row['modifiedTime']),
+		'short_name' => strlen($row['theme_name']) <= 20 ? $row['theme_name'] : substr($row['theme_name'], 0, 20) . '...',
+		'name' => $row['theme_name'],
+		'submit_time' => timeformat($row['submit_time']),
+		'modify_time' => timeformat($row['modified_time']),
 		'description' => parse_bbc($row['description']),
 		'downloads' => $row['downloads'],
-		'authorName' => $row['authorName'],
+		'author_name' => $row['author_name'],
 	);
-	$random_id = $row['ID_THEME'];
+	$random_id = $row['id_theme'];
 }
 
-mysql_free_result($request);
+$smfFunc['db_free_result']($request);
 
 
 header('Content-Type: text/javascript');
@@ -136,7 +137,7 @@ foreach($themes AS $theme)
 		name: \''. addcslashes($theme['name'], "'"). '\',
 		desc: \''. addcslashes($theme['description'], "'"). '\',
 		file: \''. addcslashes($theme['package']['name'], "'"). '\',
-		author: \''.addcslashes($theme['authorName'], "'"). '\'
+		author: \''.addcslashes($theme['author_name'], "'"). '\'
 	}';
 }
 echo implode(',', $temp_output), '
@@ -174,26 +175,26 @@ window.smfLatestThemes = '\
 			<ul>';
 for(var i=0; i < smf_latestThemes.length; i++)
 {
-	var ID_THEME = smf_latestThemes[i];
+	var id_theme = smf_latestThemes[i];
 	window.smfLatestThemes += '\
-				<li><a style="color: black;" href="javascript:smf_themesMoreInfo(' + ID_THEME + ');void(0);">' + smf_themeInfo[ID_THEME].name + ' by ' + smf_themeInfo[ID_THEME].author + '</a></li>';
+				<li><a style="color: black;" href="javascript:smf_themesMoreInfo(' + id_theme + ');void(0);">' + smf_themeInfo[id_theme].name + ' by ' + smf_themeInfo[id_theme].author + '</a></li>';
 }
 
 window.smfLatestThemes += '\
 			</ul>\
 		</td>';
-if (smf_featured !=0 || smf_random != 0)
+if ( smf_featured !=0 || smf_random != 0 )
 {
 	window.smfLatestThemes += '\
 		<td valign="top">';
 		
-	if (smf_featured != 0)
+	if ( smf_featured != 0 )
 		window.smfLatestThemes += '\
 			<center><strong>Featured Theme</center></strong>\
 			<ul>\
 				<li><a style="color: black;" href="javascript:smf_themesMoreInfo('+smf_featured+');void(0);">'+smf_themeInfo[smf_featured].name + ' by ' + smf_themeInfo[smf_featured].author+'</a></li>\
 			</ul>';
-	if (smf_random != 0)
+	if ( smf_random != 0 )
 		window.smfLatestThemes += '\
 			<center><strong>Theme of the Moment</center></strong>\
 			<ul>\
@@ -229,16 +230,3 @@ function in_array(item, array)
 
 	return false;
 }
-
-<?php
-function my_db_query($query, $file, $line)
-{
-	$res = mysql_query($query);
-	if (!$res)
-	{
-		ob_clean();
-		die("<pre>$query</pre>" . mysql_error() . "<br/>$file : $line");
-	}
-	return $res;
-}
-?>

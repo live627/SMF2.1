@@ -17,24 +17,24 @@ window.smfForum_scripturl . '?action=pgdownload;auto;package=' + url_to_package 
 */
 
 include_once('/home/simple/public_html/community/SSI.php');
-include_once('/home/simple/public_html/mods/ModSiteSettings.php');
+include_once('/home/simple/public_html/custom/mods/ModSiteSettings.php');
 
 unset($_SESSION['language']);
 
 eaccelerator_cache_page('smf/latest-packages.js', 20);
 
 // Pull the smf versions out of the table.
-$result = db_query("
-	SELECT ID_VER, verName
+$result = $smfFunc['db_query']('', "
+	SELECT id_ver, ver_name
 	FROM {$customize_prefix}smfVersions
 	WHERE public = 1", __FILE__, __LINE__);
 
 $mod_site['smf_versions'] = array();
-while ($row = mysql_fetch_assoc($result))
+while ($row = $smfFunc['db_fetch_assoc']($result))
 {
-	$mod_site['smf_versions'][$row['ID_VER']] = $row['vername'];
+	$mod_site['smf_versions'][$row['id_ver']] = $row['vername'];
 }
-mysql_free_result($result);
+$smfFunc['db_free_result']($result);
 
 header('Content-Type: text/javascript');
 
@@ -71,53 +71,53 @@ else
 var smf_modificationInfo = {
 <?php
 
-$request = db_query('
+$request = $smfFunc['db_query']('', "
 	(
 		SELECT
-			ms.ID_MOD, ms.modName, ms.modifiedTime, ms.downloads, ms.submitTime, 1 AS type,
-			ms.smfVersions, ms.ID_ATTACH_PACKAGE, a.filename, ms.description, ms.latestVersion
-		FROM ' . $db_prefix . 'mods AS ms
-			LEFT JOIN ' . $db_prefix . 'attachments AS a ON (a.ID_ATTACH = ms.ID_ATTACH_PACKAGE)
+			ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 1 AS type,
+			ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
+		FROM {$mod_prefix}mods AS ms
+			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
 		WHERE ms.approved = 1
-			AND ms.ID_ATTACH_PACKAGE != 0
-		ORDER BY ms.ID_MOD DESC
+			AND ms.id_attach_package != 0
+		ORDER BY ms.id_mod DESC
 		LIMIT 3
 	)
 	UNION ALL
 	(
 		SELECT
-			ms.ID_MOD, ms.modName, ms.modifiedTime, ms.downloads, ms.submitTime, 2 AS type,
-			ms.smfVersions, ms.ID_ATTACH_PACKAGE, a.filename, ms.description, ms.latestVersion
-		FROM ' . $db_prefix . 'mods AS ms
-			LEFT JOIN ' . $db_prefix . 'attachments AS a ON (a.ID_ATTACH = ms.ID_ATTACH_PACKAGE)
+			ms.id_mod, ms.mod_name, ms.modified_time, ms.downloads, ms.submit_time, 2 AS type,
+			ms.smf_versions, ms.id_attach_package, a.filename, ms.description, ms.latest_version
+		FROM {$mod_prefix}mods AS ms
+			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_attach = ms.id_attach_package)
 		WHERE ms.approved = 1
-			AND ms.ID_ATTACH_PACKAGE != 0
+			AND ms.id_attach_package != 0
 		ORDER BY RAND()
 		LIMIT 1
-	)', __FILE__, __LINE__);
+	)", __FILE__, __LINE__);
 $mods = array();
-while ($row = mysql_fetch_assoc($request))
+while ($row = $smfFunc['db_fetch_assoc']($request))
 {
-	censorText($row['modName']);
+	censorText($row['mod_name']);
 	censorText($row['description']);
 
-	$mods[$row['ID_MOD']] = array(
-		'id' => $row['ID_MOD'],
-		'attach_id' => $row['ID_ATTACH_PACKAGE'],
+	$mods[$row['id_mod']] = array(
+		'id' => $row['id_mod'],
+		'attach_id' => $row['id_attach_package'],
 		'attach_filename' => $row['filename'],
-		'short_name' => strlen($row['modName']) <= 20 ? $row['modName'] : substr($row['modName'], 0, 20) . '...',
-		'name' => $row['modName'],
-		'version' => $row['latestVersion'],
-		'submit_time' => timeformat($row['submitTime']),
-		'modify_time' => timeformat($row['modifiedTime']),
+		'short_name' => strlen($row['mod_name']) <= 20 ? $row['mod_name'] : substr($row['mod_name'], 0, 20) . '...',
+		'name' => $row['mod_name'],
+		'version' => $row['latest_version'],
+		'submit_time' => timeformat($row['submit_time']),
+		'modify_time' => timeformat($row['modified_time']),
 		'description' => doUBBC($row['description']),
 		'downloads' => $row['downloads'],
-		'smf_versions' => explode(',', $row['smfVersions']),
+		'smf_versions' => explode(',', $row['smf_versions']),
 		'is_latest' => $row['type'] == 1,
 		'is_last' => $row['type'] == 2,
 	);
 }
-mysql_free_result($request);
+$smfFunc['db_free_result']($request);
 
 foreach ($mod_site['smf_versions'] as $i => $ver)
 {
@@ -179,9 +179,9 @@ window.smfLatestPackages = '\
 
 for (var i = 0; i < smf_latestModifications.length; i++)
 {
-	var ID_MOD = smf_latestModifications[i];
+	var id_mod = smf_latestModifications[i];
 
-	window.smfLatestPackages += '<li><a style="color: black;" href="javascript:smf_packagesMoreInfo(' + ID_MOD + ');void(0);">' + smf_modificationInfo[ID_MOD].name + '</a></li>';
+	window.smfLatestPackages += '<li><a style="color: black;" href="javascript:smf_packagesMoreInfo(' + id_mod + ');void(0);">' + smf_modificationInfo[id_mod].name + '</a></li>';
 }
 
 window.smfLatestPackages += '\
