@@ -1096,7 +1096,7 @@ function ApproveAttach()
 		$attachments[] = (int) $_GET['aid'];
 
 	if (empty($attachments))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	// Now we have some ID's cleaned and ready to approve, but first - let's check we have permission!
 	$allowed_boards = boardsAllowedTo('approve_posts');
@@ -1124,7 +1124,7 @@ function ApproveAttach()
 	$smfFunc['db_free_result']($request);
 
 	if (empty($attachments))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	// Finally, we are there. Follow through!
 	if ($is_approve)

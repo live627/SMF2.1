@@ -103,19 +103,19 @@ function SendTopic()
 
 	// Make sure they aren't playing "let's use a fake email".
 	if ($_POST['y_name'] == '_' || !isset($_POST['y_name']) || $_POST['y_name'] == '')
-		fatal_lang_error(75, false);
+		fatal_lang_error('no_name', false);
 	if (!isset($_POST['y_email']) || $_POST['y_email'] == '')
-		fatal_lang_error(76, false);
+		fatal_lang_error('no_email', false);
 	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['y_email'])) == 0)
-		fatal_lang_error(243, false);
+		fatal_lang_error('email_invalid_character', false);
 
 	// The receiver should be valid to.
 	if ($_POST['r_name'] == '_' || !isset($_POST['r_name']) || $_POST['r_name'] == '')
-		fatal_lang_error(75, false);
+		fatal_lang_error('no_name', false);
 	if (!isset($_POST['r_email']) || $_POST['r_email'] == '')
-		fatal_lang_error(76, false);
+		fatal_lang_error('no_email', false);
 	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['r_email'])) == 0)
-		fatal_lang_error(243, false);
+		fatal_lang_error('email_invalid_character', false);
 
 	// Emails don't like entities...
 	$row['subject'] = un_htmlspecialchars($row['subject']);
@@ -147,7 +147,7 @@ function ReportToModerator()
 
 	// We need a message ID to check!
 	if (empty($_GET['msg']) && empty($_GET['mid']))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	// For compatibility, accept mid, but we should be using msg. (not the flavor kind!)
 	$_GET['msg'] = empty($_GET['msg']) ? (int) $_GET['mid'] : (int) $_GET['msg'];

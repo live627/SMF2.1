@@ -222,7 +222,7 @@ function PackageInstallTest()
 		$context['base_path'] = '';
 	}
 	else
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	// Load up any custom themes we may want to install into...
 	$request = $smfFunc['db_query']('', "
@@ -561,7 +561,7 @@ function PackageInstall()
 		$context['base_path'] = '';
 	}
 	else
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	// Are we installing this into any custom themes?
 	$custom_themes = array(1);

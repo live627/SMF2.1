@@ -960,7 +960,7 @@ function Download()
 
 	// Make sure some attachment was requested!
 	if (!isset($_REQUEST['attach']) && !isset($_REQUEST['id']))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	$_REQUEST['attach'] = isset($_REQUEST['attach']) ? (int) $_REQUEST['attach'] : (int) $_REQUEST['id'];
 
@@ -989,7 +989,7 @@ function Download()
 			LIMIT 1", __FILE__, __LINE__);
 	}
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 	list ($real_filename, $id_attach, $attachment_type, $is_approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 

@@ -646,7 +646,7 @@ function CalendarPost()
 			WHERE c.id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 		// If nothing returned, we are in poo, poo.
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 		$row = $smfFunc['db_fetch_assoc']($request);
 		$smfFunc['db_free_result']($request);
 

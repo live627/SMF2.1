@@ -59,7 +59,7 @@ function MoveTopic()
 	global $txt, $board, $topic, $db_prefix, $user_info, $context, $language, $scripturl, $settings, $smfFunc;
 
 	if (empty($topic))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_member_started, ms.subject, t.approved

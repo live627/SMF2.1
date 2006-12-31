@@ -769,7 +769,7 @@ function RemoveTheme()
 
 	// You can't delete the default theme!
 	if ($_GET['th'] == 1)
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	$known = explode(',', $modSettings['knownThemes']);
 	for ($i = 0, $n = count($known); $i < $n; $i++)
@@ -1594,7 +1594,7 @@ function CopyTemplate()
 		elseif (file_exists($settings['default_theme_dir'] . '/' . $_REQUEST['template'] . '.template.php'))
 			$filename = $settings['default_theme_dir'] . '/' . $_REQUEST['template'] . '.template.php';
 		else
-			fatal_lang_error(1, false);
+			fatal_lang_error('no_access', false);
 
 		$fp = fopen($theme_dir . '/' . $_REQUEST['template'] . '.template.php', 'w');
 		fwrite($fp, file_get_contents($filename));
@@ -1609,7 +1609,7 @@ function CopyTemplate()
 		elseif (file_exists($settings['default_theme_dir'] . '/languages/' . $_REQUEST['template'] . '.php'))
 			$filename = $settings['default_theme_dir'] . '/languages/' . $_REQUEST['template'] . '.php';
 		else
-			fatal_lang_error(1, false);
+			fatal_lang_error('no_access', false);
 
 		$fp = fopen($theme_dir . '/languages/' . $_REQUEST['lang_file'] . '.php', 'w');
 		fwrite($fp, file_get_contents($filename));

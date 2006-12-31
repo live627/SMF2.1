@@ -2449,7 +2449,7 @@ function ReportMessage()
 
 	// Check that this feature is even enabled!
 	if (empty($modSettings['enableReportPM']) || empty($_REQUEST['pmsg']))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	$context['pm_id'] = (int) $_REQUEST['pmsg'];
 	$context['page_title'] = $txt['pm_report_title'];
@@ -2489,7 +2489,7 @@ function ReportMessage()
 			LIMIT 1", __FILE__, __LINE__);
 		// Can only be a hacker here!
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(1, false);
+			fatal_lang_error('no_access', false);
 		list ($subject, $body, $time, $memberFromID, $memberFromName) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -2528,7 +2528,7 @@ function ReportMessage()
 
 		// Maybe we shouldn't advertise this?
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(1, false);
+			fatal_lang_error('no_access', false);
 
 		$memberFromName = un_htmlspecialchars($memberFromName);
 

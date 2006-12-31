@@ -238,7 +238,7 @@ function EditPoll()
 	global $txt, $db_prefix, $user_info, $context, $topic, $smfFunc;
 
 	if (empty($topic))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	loadLanguage('Post');
 	loadTemplate('Poll');
@@ -495,7 +495,7 @@ function EditPoll2()
 
 	// HACKERS (!!) can't edit :P.
 	if (empty($topic))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	// Is this a new poll, or editing an existing?
 	$isEdit = isset($_REQUEST['add']) ? 0 : 1;
@@ -688,7 +688,7 @@ function RemovePoll()
 
 	// Make sure the topic is not empty.
 	if (empty($topic))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	// Check permissions.
 	if (!allowedTo('poll_remove_any'))
@@ -700,7 +700,7 @@ function RemovePoll()
 			WHERE t.id_topic = $topic
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 		list ($topicStarter, $pollStarter) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 

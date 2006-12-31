@@ -211,7 +211,7 @@ function Post()
 
 	// Don't allow a post if it's locked and you aren't all powerful.
 	if ($locked && !allowedTo('moderate_board'))
-		fatal_lang_error(90, false);
+		fatal_lang_error('topic_locked', false);
 
 	// Check the users permissions - is the user allowed to add or post a poll?
 	if (isset($_REQUEST['poll']) && $modSettings['pollMode'] == '1')
@@ -1075,7 +1075,7 @@ function Post2()
 
 		// Don't allow a post if it's locked.
 		if ($tmplocked != 0 && !allowedTo('moderate_board'))
-			fatal_lang_error(90, false);
+			fatal_lang_error('topic_locked', false);
 
 		// Sorry, multiple polls aren't allowed... yet.  You should stop giving me ideas :P.
 		if (isset($_REQUEST['poll']) && $pollID > 0)
@@ -1186,7 +1186,7 @@ function Post2()
 		$smfFunc['db_free_result']($request);
 
 		if (!empty($row['locked']) && !allowedTo('moderate_board'))
-			fatal_lang_error(90, false);
+			fatal_lang_error('topic_locked', false);
 
 		if (isset($_POST['lock']))
 		{
@@ -1319,7 +1319,7 @@ function Post2()
 	if (isset($_REQUEST['poll']) && $modSettings['pollMode'] == '1')
 	{
 		if (isset($topic) && !isset($_REQUEST['msg']))
-			fatal_lang_error(1, false);
+			fatal_lang_error('no_access', false);
 
 		// This is a new topic... so it's a new poll.
 		if (empty($topic))

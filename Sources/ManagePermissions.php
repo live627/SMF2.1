@@ -736,7 +736,7 @@ function SwitchBoard()
 
 		// Just for sanity!
 		if (!$profile_id || !isset($context['profiles'][$profile_id]))
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 
 		// Only bother with bits if it's changing!
 		if ($profile_id != $context['board']['profile'])
@@ -1280,7 +1280,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 	}
 	// $profile and $group are both null!
 	else
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 }
 
 function loadAllPermissions()
@@ -1704,7 +1704,7 @@ function EditPermissionProfiles()
 			WHERE id_profile = $_GET[pid]
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) != 0 || $_GET['pid'] == 1)
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 		$smfFunc['db_free_result']($request);
 
 		// Oh well, delete.

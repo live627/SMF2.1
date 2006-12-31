@@ -188,7 +188,7 @@ function RecentPosts()
 			$smfFunc['db_free_result']($request);
 
 			if (empty($name))
-				fatal_lang_error(1, false);
+				fatal_lang_error('no_access', false);
 
 			$context['linktree'][] = array(
 				'url' => $scripturl . '#' . (int) $_REQUEST['c'],

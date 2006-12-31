@@ -307,7 +307,7 @@ function registerMember(&$regOptions)
 
 	// No name?!  How can you register with no name?
 	if (empty($regOptions['username']))
-		fatal_lang_error(37, false);
+		fatal_lang_error('need_username', false);
 
 	// Spaces and other odd characters are evil...
 	$regOptions['username'] = preg_replace('~[\t\n\r\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{C2A0}' : chr(0xC2) . chr(0xA0)) : '\xA0') . ']+~' . ($context['utf8'] ? 'u' : ''), ' ', $regOptions['username']);
@@ -321,7 +321,7 @@ function registerMember(&$regOptions)
 		fatal_lang_error('error_invalid_characters_username', false);
 
 	if (stristr($regOptions['username'], $txt['guest_title']) !== false)
-		fatal_lang_error(244, 'general', array($txt['guest_title']));
+		fatal_lang_error('username_reserved', 'general', array($txt['guest_title']));
 
 	// !!! Separate the sprintf?
 	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($regOptions['email'])) === 0 || strlen($smfFunc['db_unescape_string']($regOptions['email'])) > 255)
@@ -348,11 +348,11 @@ function registerMember(&$regOptions)
 	}
 	// Does the first password match the second?
 	elseif ($regOptions['password'] != $regOptions['password_check'])
-		fatal_lang_error(213, false);
+		fatal_lang_error('passwords_dont_match', false);
 
 	// That's kind of easy to guess...
 	if ($regOptions['password'] == '')
-		fatal_lang_error(91, false);
+		fatal_lang_error('no_password', false);
 
 	// Now perform hard password validation as required.
 	if (!empty($regOptions['check_password_strength']))
@@ -377,7 +377,7 @@ function registerMember(&$regOptions)
 		LIMIT 1", __FILE__, __LINE__);
 	// !!! Separate the sprintf?
 	if ($smfFunc['db_num_rows']($request) != 0)
-		fatal_lang_error(730, false, array(htmlspecialchars($regOptions['email'])));
+		fatal_lang_error('email_in_use', false, array(htmlspecialchars($regOptions['email'])));
 	$smfFunc['db_free_result']($request);
 
 	// Some of these might be overwritten. (the lower ones that are in the arrays below.)
@@ -566,7 +566,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 			// If it's not just entire word, check for it in there somewhere...
 			if ($checkMe == $reservedCheck || ($smfFunc['strpos']($checkMe, $reservedCheck) !== false && empty($modSettings['reserveWord'])))
 				if ($fatal)
-					fatal_lang_error(244, 'password', array($reserved));
+					fatal_lang_error('username_reserved', 'password', array($reserved));
 				else
 					return true;
 		}
@@ -753,7 +753,7 @@ function BuddyListToggle()
 	is_not_guest();
 
 	if (empty($_REQUEST['u']))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 	$_REQUEST['u'] = (int) $_REQUEST['u'];
 
 	// Remove if it's already there...

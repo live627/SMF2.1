@@ -81,7 +81,7 @@ function RemindMail()
 
 	// You must enter a username/email address.
 	if (!isset($_POST['user']) || $_POST['user'] == '')
-		fatal_lang_error(40, false);
+		fatal_lang_error('username_no_exist', false);
 
 	// Find the user!
 	$request = $smfFunc['db_query']('', "
@@ -99,7 +99,7 @@ function RemindMail()
 			WHERE email_address = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(40, false);
+			fatal_lang_error('username_no_exist', false);
 	}
 
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -151,7 +151,7 @@ function setPassword()
 
 	// You need a code!
 	if (!isset($_REQUEST['code']))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	// Fill the context array.
 	$context += array(
@@ -167,15 +167,15 @@ function setPassword2()
 	global $db_prefix, $context, $txt, $modSettings, $smfFunc;
 
 	if (empty($_POST['u']) || !isset($_POST['passwrd1']) || !isset($_POST['passwrd2']))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	$_POST['u'] = (int) $_POST['u'];
 
 	if ($_POST['passwrd1'] !=  $_POST['passwrd2'])
-		fatal_lang_error(213, false);
+		fatal_lang_error('passwords_dont_match', false);
 
 	if ($_POST['passwrd1'] == '')
-		fatal_lang_error(91, false);
+		fatal_lang_error('no_password', false);
 
 	loadLanguage('Login');
 
@@ -225,7 +225,7 @@ function secret_answerInput()
 
 	// Please provide an email or user....
 	if (!isset($_POST['user']) || $_POST['user'] == '')
-		fatal_lang_error(40, false);
+		fatal_lang_error('username_no_exist', false);
 
 	// Get the stuff....
 	$request = $smfFunc['db_query']('', "
@@ -243,7 +243,7 @@ function secret_answerInput()
 			WHERE email_address = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(40, false);
+			fatal_lang_error('username_no_exist', false);
 	}
 
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -269,7 +269,7 @@ function secret_answer2()
 
 	// Hacker?  How did you get this far without an email or username?
 	if (!isset($_POST['user']) || $_POST['user'] == '')
-		fatal_lang_error(40, false);
+		fatal_lang_error('username_no_exist', false);
 
 	loadLanguage('Login');
 
@@ -289,7 +289,7 @@ function secret_answer2()
 			WHERE email_address = '$_POST[user]'
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
-			fatal_lang_error(40, false);
+			fatal_lang_error('username_no_exist', false);
 	}
 
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -304,11 +304,11 @@ function secret_answer2()
 
 	// You can't use a blank one!
 	if (strlen(trim($_POST['passwrd1'])) === 0)
-		fatal_lang_error(38, false);
+		fatal_lang_error('no_password', false);
 
 	// They have to be the same too.
 	if ($_POST['passwrd1'] != $_POST['passwrd2'])
-		fatal_lang_error(213, false);
+		fatal_lang_error('passwords_dont_match', false);
 
 	// Alright, so long as 'yer sure.
 	updateMemberData($row['id_member'], array('passwd' => '\'' . sha1(strtolower($row['member_name']) . $_POST['passwrd1']) . '\''));

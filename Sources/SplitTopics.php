@@ -124,7 +124,7 @@ function SplitTopics()
 
 	// And... which topic were you splitting, again?
 	if (empty($topic))
-		fatal_lang_error(337, false);
+		fatal_lang_error('numbers_one_to_nine', false);
 
 	// Are you allowed to split topics?
 	isAllowedTo('split_any');
@@ -156,7 +156,7 @@ function SplitIndex()
 
 	// Validate "at".
 	if (empty($_GET['at']))
-		fatal_lang_error(337, false);
+		fatal_lang_error('numbers_one_to_nine', false);
 	$_GET['at'] = (int) $_GET['at'];
 
 	// Can they view unapproved?
@@ -236,7 +236,7 @@ function SplitExecute()
 		$messagesToBeSplit[] = $_POST['at'];
 	// There's another action?!
 	else
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	$context['old_topic'] = $topic;
 	$context['new_topic'] = splitTopic($topic, $messagesToBeSplit, $_POST['subname']);
@@ -994,7 +994,7 @@ function MergeExecute($topics = array())
 	// Determine which poll will survive and which polls won't.
 	$target_poll = count($polls) > 1 ? (int) $_POST['poll'] : (count($polls) == 1 ? $polls[0] : 0);
 	if ($target_poll > 0 && !in_array($target_poll, $polls))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 	$deleted_polls = empty($target_poll) ? $polls : array_diff($polls, array($target_poll));
 
 	// Determine the subject of the newly merged topic - was a custom subject specified?

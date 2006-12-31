@@ -601,14 +601,14 @@ function resetPassword($memID, $username = null)
 	{
 		// No name?!  How can you register with no name?
 		if ($user == '')
-			fatal_lang_error(37, false);
+			fatal_lang_error('need_username', false);
 
 		// Only these characters are permitted.
 		if (in_array($user, array('_', '|')) || preg_match('~[<>&"\'=\\\]~', $user) != 0 || strpos($user, '[code') !== false || strpos($user, '[/code') !== false)
 			fatal_lang_error('error_invalid_characters_username', false);
 
 		if (stristr($user, $txt['guest_title']) !== false)
-			fatal_lang_error(244, true, array($txt['guest_title']));
+			fatal_lang_error('username_reserved', true, array($txt['guest_title']));
 
 		require_once($sourcedir . '/Subs-Members.php');
 		if (isReservedName($user, $memID, false))

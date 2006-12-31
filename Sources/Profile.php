@@ -1811,7 +1811,7 @@ function editBuddies($memID)
 
 	// Do a quick check to ensure people aren't getting here illegally!
 	if (!$context['user']['is_owner'] || empty($modSettings['enable_buddylist']))
-		fatal_lang_error(1, false);
+		fatal_lang_error('no_access', false);
 
 	// !!! No page_title.
 
@@ -3013,7 +3013,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	if (!$context['user']['is_owner'] || empty($modSettings['show_group_membership']))
 		isAllowedTo('manage_membergroups');
 	if (!isset($_REQUEST['gid']) && !isset($_POST['primary']))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	checkSession(isset($_GET['gid']) ? 'get' : 'post');
 
@@ -3049,7 +3049,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 
 			// Does the group type match what we're doing?
 			if (($changeType == 'request' && $row['group_type'] != 1) || ($changeType == 'free' && $row['group_type'] != 2))
-				fatal_lang_error(1);
+				fatal_lang_error('no_access');
 
 			// We can't change the primary group if this is hidden!
 			if ($row['hidden'])
@@ -3066,13 +3066,13 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 
 		// If this is the one we are acting on, can we even act?
 		if (!$context['can_manage_membergroups'] && $row['group_type'] == 0)
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Didn't find the target?
 	if (!$foundTarget)
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	// Final security check, don't allow users to promote themselves to admin.
 	if ($context['can_manage_membergroups'] && !allowedTo('admin_forum'))

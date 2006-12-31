@@ -349,7 +349,7 @@ function Activate()
 	if (empty($_REQUEST['u']) && empty($_POST['user']))
 	{
 		if (empty($modSettings['registration_method']) || $modSettings['registration_method'] == 3)
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 
 		$context['member_id'] = 0;
 		$context['sub_template'] = 'resend';
@@ -385,7 +385,7 @@ function Activate()
 	if (isset($_POST['new_email'], $_REQUEST['passwd']) && sha1(strtolower($row['member_name']) . $_REQUEST['passwd']) == $row['passwd'])
 	{
 		if (empty($modSettings['registration_method']) || $modSettings['registration_method'] == 3)
-			fatal_lang_error(1);
+			fatal_lang_error('no_access');
 
 		// !!! Separate the sprintf?
 		if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['new_email'])) == 0)
@@ -402,7 +402,7 @@ function Activate()
 			LIMIT 1", __FILE__, __LINE__);
 		// !!! Separate the sprintf?
 		if ($smfFunc['db_num_rows']($request) != 0)
-			fatal_lang_error(730, false, array(htmlspecialchars($_POST['new_email'])));
+			fatal_lang_error('email_in_use', false, array(htmlspecialchars($_POST['new_email'])));
 		$smfFunc['db_free_result']($request);
 
 		updateMemberData($row['id_member'], array('email_address' => "'$_POST[new_email]'"));
@@ -477,7 +477,7 @@ function CoppaForm()
 
 	// No User ID??
 	if (!isset($_GET['member']))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	// Get the user details...
 	$request = $smfFunc['db_query']('', "
@@ -486,7 +486,7 @@ function CoppaForm()
 		WHERE id_member = " . (int) $_GET['member'] . "
 			AND is_activated = 5", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 	list ($username) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 

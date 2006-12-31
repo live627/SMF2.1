@@ -437,7 +437,7 @@ function EditTask()
 
 	// Cleaning...
 	if (!isset($_GET['tid']))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 	$_GET['tid'] = (int) $_GET['tid'];
 
 	// Saving?
@@ -493,7 +493,7 @@ function EditTask()
 
 	// Should never, ever, happen!
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

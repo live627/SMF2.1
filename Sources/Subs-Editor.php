@@ -55,7 +55,7 @@ function EditorMain()
 	checkSession('get');
 
 	if (!isset($_REQUEST['view']) || !isset($_REQUEST['message']))
-		fatal_lang_error(1);
+		fatal_lang_error('no_access');
 
 	$context['sub_template'] = 'sendbody';
 
