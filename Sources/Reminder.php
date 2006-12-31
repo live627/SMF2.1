@@ -132,7 +132,7 @@ function RemindMail()
 		sprintf($txt['sendtopic_dear'], $row['real_name']) . "\n\n" .
 		"$txt[reminder_mail]:\n\n" .
 		"$scripturl?action=reminder;sa=setpassword;u=$row[id_member];code=$password\n\n" .
-		"$txt['ip']: $user_info[ip]\n\n" .
+		"$txt[ip]: $user_info[ip]\n\n" .
 		"$txt[username]: $row[member_name]\n\n" .
 		sprintf($txt['regards_team'], $context['forum_name']));
 

@@ -419,25 +419,20 @@ function MessageFolder()
 			'name' => $txt['pm_current_label'] . ': ' . $context['current_label']
 		);
 
-	// If we're in group mode then... group!
-	$groupQuery = $context['display_mode'] == 2 ? 'GROUP BY pm.id_pm_head' : '';
-
 	// Figure out how many messages there are.
 	if ($context['folder'] == 'sent')
 		$request = $smfFunc['db_query']('', "
-			SELECT COUNT(*)
+			SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
 			FROM {$db_prefix}personal_messages AS pm
 			WHERE pm.id_member_from = $user_info[id]
-				AND pm.deleted_by_sender = 0
-			$groupQuery", __FILE__, __LINE__);
+				AND pm.deleted_by_sender = 0", __FILE__, __LINE__);
 	else
 		$request = $smfFunc['db_query']('', "
-			SELECT COUNT(*)
+			SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
 			FROM {$db_prefix}pm_recipients AS pmr" . ($context['display_mode'] == 2 ? "
 				INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)" : '') . "
 			WHERE pmr.id_member = $user_info[id]
-				AND pmr.deleted = 0$labelQuery
-				$groupQuery", __FILE__, __LINE__);
+				AND pmr.deleted = 0$labelQuery", __FILE__, __LINE__);
 	list ($max_messages) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -464,21 +459,19 @@ function MessageFolder()
 		{
 			if ($context['folder'] == 'sent')
 				$request = $smfFunc['db_query']('', "
-					SELECT COUNT(*)
+					SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
 					FROM {$db_prefix}personal_messages
 					WHERE id_member_from = $user_info[id]
 						AND deleted_by_sender = 0
-						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]
-						$groupQuery", __FILE__, __LINE__);
+						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
 			else
 				$request = $smfFunc['db_query']('', "
-					SELECT COUNT(*)
+					SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
 					FROM {$db_prefix}pm_recipients AS pmr" . ($context['display_mode'] == 2 ? "
 						INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)" : '') . "
 					WHERE pmr.id_member = $user_info[id]
 						AND pmr.deleted = 0$labelQuery
-						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]
-						$groupQuery", __FILE__, __LINE__);
+						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
 
 			list ($_GET['start']) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -2136,16 +2129,15 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 			AND FIND_IN_SET($label, labels)") . ($personal_messages !== null ? "
 			AND id_pm IN (" . implode(', ', $personal_messages) . ")" : ''), __FILE__, __LINE__);
 
-	//!!! Decide if we actually want to do this - I think it fasely shows no unread messages when at point of loading page they are not read.
-	/*if ($owner == $user_info['id'])
-	{
-		foreach ($context['labels'] as $label)
-			$context['labels'][(int) $label['id']]['unread_messages'] = 0;
-	}*/
-
 	// If something wasn't marked as read, get the number of unread messages remaining.
 	if (db_affected_rows() > 0)
 	{
+		if ($owner == $user_info['id'])
+		{
+			foreach ($context['labels'] as $label)
+				$context['labels'][(int) $label['id']]['unread_messages'] = 0;
+		}
+
 		$result = $smfFunc['db_query']('', "
 			SELECT labels, COUNT(*) AS num
 			FROM {$db_prefix}pm_recipients
@@ -2166,6 +2158,8 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 		}
 		$smfFunc['db_free_result']($result);
 
+		// Need to store all this.
+		cache_put_data('labelCounts:' . $user_info['id'], $context['labels'], 720);
 		updateMemberData($owner, array('unread_messages' => $total_unread));
 
 		// If it was for the current member, reflect this in the $user_info array too.
