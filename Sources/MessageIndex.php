@@ -1051,7 +1051,7 @@ function QuickModeration()
 		foreach ($markCache as $topic)
 			$markArray[] = array($modSettings['maxMsgID'], $user_info['id'], $topic);
 
-		$smfFunc['db_query']('replace',
+		$smfFunc['db_insert']('replace',
 			"{$db_prefix}log_topics",
 			array('id_msg', 'id_member', 'id_topic'),
 			$markArray,
