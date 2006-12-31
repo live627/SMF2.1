@@ -547,7 +547,7 @@ function MessageFolder()
 		if (!isset($recipients[$row['id_pm']]))
 		{
 			if (isset($row['id_member_from']))
-				$posters[] = $row['id_member_from'];
+				$posters[$row['id_pm']] = $row['id_member_from'];
 			$pms[$row['id_pm']] = $row['id_pm'];
 			$recipients[$row['id_pm']] = array(
 				'to' => array(),
@@ -594,7 +594,7 @@ function MessageFolder()
 						'bcc' => array()
 					);
 				$display_pms[] = $row['id_pm'];
-				$posters[] = $row['id_member_from'];
+				$posters[$row['id_pm']] = $row['id_member_from'];
 			}
 			$smfFunc['db_free_result']($request);
 		}
@@ -632,6 +632,14 @@ function MessageFolder()
 		}
 		$smfFunc['db_free_result']($request);
 
+		// Make sure we don't load unnecessary data.
+		if ($context['display_mode'] == 1)
+		{
+			foreach ($posters as $k => $v)
+				if (!in_array($k, $display_pms))
+					unset($posters[$k]);
+		}
+
 		// Load any users....
 		$posters = array_unique($posters);
 		if (!empty($posters))
@@ -647,8 +655,10 @@ function MessageFolder()
 
 			// Seperate query for these bits!
 			$subjects_request = $smfFunc['db_query']('', "
-				SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.msgtime, pm.from_name
+				SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.msgtime, IFNULL(mem.real_name, pm.from_name) AS from_name,
+					IFNULL(mem.id_member, 0) AS not_guest
 				FROM {$db_prefix}personal_messages AS pm
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
 				WHERE pm.id_pm IN (" . implode(',', $pms) . ")
 				ORDER BY " . implode(', ', $orderBy) . "
 				LIMIT " . count($pms), __FILE__, __LINE__);
@@ -717,7 +727,7 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		$output = array(
 			'id' => $subject['id_pm'],
 			'member' => array(
-				'link' => '<a href="' . $scripturl . '?action=profile">' . $user_info['name'] . '</a>',
+				'link' => $subject['not_guest'] ? '<a href="' . $scripturl . '?action=profile;u=' . $subject['id_member_from'] . '">' . $subject['from_name'] . '</a>' : $subject['from_name'],
 			),
 			'recipients' => &$recipients[$subject['id_pm']],
 			'subject' => $subject['subject'],
