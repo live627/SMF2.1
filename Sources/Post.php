@@ -1942,7 +1942,7 @@ function AnnouncementSend()
 function notifyMembersBoard(&$topicData)
 {
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
-	global $modSettings, $sourcedir, $board, $smfFunc;
+	global $modSettings, $sourcedir, $board, $smfFunc, $context;
 
 	require_once($sourcedir . '/Subs-Post.php');
 

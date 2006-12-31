@@ -449,6 +449,15 @@ upgrade_query("
 ---}
 ---#
 
+---# Changing default personal text setting.
+UPDATE {$db_prefix}settings
+SET variable = 'default_personal_text'
+WHERE variable = 'default_personalText';
+
+DELETE FROM {$db_prefix}settings
+WHERE variable = 'default_personalText';
+---#
+
 ---# Ensuring stats index setting present...
 INSERT IGNORE INTO {$db_prefix}themes
 	(id_theme, variable, value)
