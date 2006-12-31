@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2622 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2623 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -75,7 +75,7 @@ December 2006
  + Added e107 bridge. (Several files)
  ! Fixed a bug with the to and bcc fields for PMs that could cause some problems when displaying an invalid name. (PersonalMessage.php)
  + Added delete member and change member data integration hooks to e107 bridge. (e107 bridge/smf.php)
-
+ ! Do not allow 0, 0px, or 0pt to be used in size tags. (Subs.php)
 
 
 November 2006
