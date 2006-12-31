@@ -556,7 +556,7 @@ function MessageFolder()
 		}
 
 		// Keep track of the last message so we know what the head is without another query!
-		if (empty($context['current_pm']) || $context['current_pm'] == $row['id_pm'])
+		if (empty($context['current_pm']) || empty($lastData) || $context['current_pm'] == $row['id_pm'])
 			$lastData = array(
 				'id' => $row['id_pm'],
 				'head' => $row['id_pm_head'],
