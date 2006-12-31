@@ -2706,8 +2706,8 @@ function trackStats($stats = array())
 	{
 		$smfFunc['db_insert']('ignore',
 			"{$db_prefix}log_activity",
-			array_keys($cache_stats) + array('date'),
-			$cache_stats + array('\'' . $date . '\''),
+			array_merge(array_keys($cache_stats), array('date')),
+			array_merge($cache_stats, array('\'' . $date . '\'')),
 			array('date')
 		);
 	}
