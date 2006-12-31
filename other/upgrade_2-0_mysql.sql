@@ -349,16 +349,13 @@ foreach ($nameChanges as $table_name => $table)
 	$step_progress['total'] += count($table);
 
 $count = 0;
-
 // Now do every table...
 foreach ($nameChanges as $table_name => $table)
 {
 	// Already done this?
-	if ($_GET['ren_col'] > ($count + count($table)))
-	{
-		$count += count($table);
+	$count++;
+	if ($_GET['ren_col'] > $count)
 		continue;
-	}
 
 	// Check the table exists!
 	$request = upgrade_query("
@@ -373,15 +370,10 @@ foreach ($nameChanges as $table_name => $table)
 	}
 	mysql_free_result($request);
 
-	// Try do each column!
+	// Check each column!
+	$actualChanges = array();
 	foreach ($table as $colname => $coldef)
 	{
-		$count++;
-
-		// Already done this?
-		if ($_GET['ren_col'] >= $count)
-			continue;
-
 		$change = array(
 			'table' => $table_name,
 			'name' => $colname,
@@ -389,13 +381,28 @@ foreach ($nameChanges as $table_name => $table)
 			'method' => 'change_remove',
 			'text' => 'CHANGE ' . $coldef,
 		);
+		if (protected_alter($change, $substep, true) == false)
+			$actualChanges[] = ' CHANGE COLUMN ' . $coldef;
+	}
 
-		// Update where we are!
-		$_GET['ren_col'] = $count;
-		$step_progress['current'] = $_GET['ren_col'];
+	// Do the query - if it needs doing.
+	if (!empty($actualChanges))
+	{
+		$change = array(
+			'table' => $table_name,
+			'name' => 'na',
+			'type' => 'table',
+			'method' => 'full_change',
+			'text' => implode(', ', $actualChanges),
+		);
 
+		// Here we go - hold on!
 		protected_alter($change, $substep);
 	}
+	
+	// Update where we are!
+	$_GET['ren_col'] = $count;
+	$step_progress['current'] = $_GET['ren_col'];
 }
 
 // All done!

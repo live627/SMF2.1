@@ -2462,7 +2462,7 @@ function upgrade_query($string, $unbuffered = false)
 }
 
 // This performs a table alter, but does it unbuffered so the script can time out professionally.
-function protected_alter($change, $substep)
+function protected_alter($change, $substep, $is_test = false)
 {
 	global $db_prefix, $smfFunc;
 
@@ -2506,6 +2506,9 @@ function protected_alter($change, $substep)
 	// Otherwise if we're removing and it wasn't found we're also done.
 	elseif (!$found && in_array($change['method'], array('remove', 'change_remove')))
 		return true;
+	// Otherwise is it just a test?
+	elseif ($is_test)
+		return false;
 
 	// Not found it yet? Bummer! How about we see if we're currently doing it?
 	$running = false;

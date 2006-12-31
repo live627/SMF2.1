@@ -1033,7 +1033,7 @@ function fixTemplateFile($filename, $test = false)
 
 	// Get all the buttons in the file.
 	$buttons = array();
-	preg_match_all('~create_button\([^,]+,\s*([^,)]+)(,\s*([^,)]+))*[,)]~i', $fileContents, $matches);
+	preg_match_all('~create_button\([^,]+,\s*([^,)]+)(,\s*([^,)]+))?[,)]~i', $fileContents, $matches);
 	if (!empty($matches))
 	{
 		foreach ($matches[0] as $k => $match)
@@ -1105,17 +1105,20 @@ function fixTemplateFile($filename, $test = false)
 	);
 	$before = strlen($fileContents);
 	$fileContents = preg_replace(array_keys($changes), array_values($changes), $fileContents);
-	// Make sure we note we've changed something...
-	if (strlen($fileContents) != $before)
-		$findArray[] = 1;
 
-	if (!empty($findArray))
+	if (!empty($findArray) || strlen($fileContents) != $before)
 	{
 		if ($edit_count == -1)
 			$edit_count = 0;
-		$edit_count += count($findArray);
 
-		$fileContents = str_replace($findArray, $replaceArray, $fileContents);
+		if (!empty($findArray))
+		{
+			$edit_count += count($findArray);
+	
+			$fileContents = str_replace($findArray, $replaceArray, $fileContents);
+		}
+		else
+			$edit_count = 1;
 	}
 
 	if ($edit_count == -1)
