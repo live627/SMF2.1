@@ -415,6 +415,7 @@ function registerMember(&$regOptions)
 		'secret_question' => "''",
 		'secret_answer' => "''",
 		'additional_groups' => "''",
+		'ignore_boards' => "''",
 		'smiley_set' => "''",
 	);
 
