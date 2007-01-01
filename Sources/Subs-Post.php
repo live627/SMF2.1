@@ -82,13 +82,14 @@ if (!defined('SMF'))
 		  successful and which recipients it failed to send to.
 
 	string mimespecialchars(string text, bool with_charset = true,
-			hotmail_fix = false)
+			hotmail_fix = false, string custom_charset = null)
 		- prepare text strings for sending as email.
 		- in case there are higher ASCII characters in the given string, this
 		  function will attempt the transport method 'quoted-printable'. 
 		  Otherwise the transport method '7bit' is used.
 		- with hotmail_fix set all higher ASCII characters are converted to
 		  HTML entities to assure proper display of the mail.
+		- uses character set custom_charset if set.
 		- returns an array containing the character set, the converted string
 		  and the transport method.
 
@@ -609,9 +610,9 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 			return false;
 	}
 
-	$charset = isset($context['character_set']) ? $context['character_set'] : $txt['lang_character_set'];
+	$charset = isset($context['character_set']) ? $context['character_set'] : (isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1');
 
-	list ($charset, $message, $encoding) = mimespecialchars($message, false, $hotmail_fix, $line_break);
+	list ($charset, $message, $encoding) = mimespecialchars($message, false, $hotmail_fix, $line_break, $charset);
 
 	// Sending HTML?  Let's plop in some basic stuff, then.
 	if ($send_html)
@@ -1004,11 +1005,11 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 }
 
 // Prepare text strings for sending as email body or header.
-function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $line_break = "\r\n")
+function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $line_break = "\r\n", $custom_charset = null)
 {
 	global $context;
 
-	$charset = $context['character_set'];
+	$charset = $custom_charset !== null ? $custom_charset : $context['character_set'];
 
 	// This is the fun part....
 	if (preg_match_all('~&#(\d{3,8});~', $string, $matches) !== 0 && !$hotmail_fix)

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2625 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2626 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -7,6 +7,7 @@ January 2007
 --------------------------------------------------------------------------------
  ! Ensure that spell check can't cause an offset error. (Subs-Post.php)
  ! Improved the upgrade script and made it look much nicer in debug mode. (upgrade.php)
+ ! Added parameter to mimespecialchars to allow sending a custom character set. (Subs-Post.php)
 
 
 December 2006
