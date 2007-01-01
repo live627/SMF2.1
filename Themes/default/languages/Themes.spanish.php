@@ -93,7 +93,8 @@ $txt['themeadmin_admin_title'] = 'Administrar e Instalar';
 $txt['themeadmin_admin_desc'] = 'Esta p&aacute;gina te permite cambiar el tema predeterminado, reinicializar a los usuarios a que usen cierto tema, y escoger otras configuraciones relacionadas a la selecci&oacute;n del tema.  Aqu&iacute; puedes tambi&eacute;n instalar temas.<br /><br />No olvides revisar las configuraciones de tus temas, para accesar a las opciones de visualizaci&oacute;n.';
 $txt['themeadmin_list_title'] = 'Temas y Configuraciones';
 $txt['themeadmin_list_desc'] = 'Aqu&iacute; puedes ver la lista de tema que tienes instalados, cambiar sus rutas de acceso y configuraciones, y desinstalarlas.';
-$txt['themeadmin_reset_title'] = 'Reinicializar Opciones';
+// Untranslated!
+$txt['themeadmin_reset_title'] = 'Member Options';
 $txt['themeadmin_reset_desc'] = 'A continuaci&oacute;n ver&aacute;s la interface para cambiar las opciones especificas del tema actual para todos tus usuarios.  Ver&aacute;s solamente aquellos temas que tengan su propio conjunto de opciones.';
 $txt['themeadmin_edit_title'] = 'Modificar temas';
 $txt['themeadmin_edit_desc'] = 'Modifica la hoja de est&iacute;los y el c&oacute;digo fuente de tus temas instalados.  Por favor, consulta la documentaci&oPlease consult the documentation for more information.';
@@ -110,13 +111,15 @@ $txt['themeadmin_list_reset_url'] = 'URL base al mismo directorio';
 $txt['themeadmin_list_reset_go'] = 'Intentar reiniciar todos los temas';
 
 $txt['themeadmin_reset_tip'] = 'Cada tema puede tener su propias opciones para ser seleccionadas por tus usuarios.  Pueden incluir cosas como &quot;respuesta r&aacute;pida&quot;, avatares y firmas, opciones de visualizaci&oacute;n, y otras opciones similares.  Aqu&iacute; puedes cambiar los valores predeterminados, o reinicializar las opciones de todos.<br /><br />Es importante mencionar que algunos temas pueden utilizar las opciones por defecto, en cuyo caso no tendr&aacute;n sus propias opciones.';
-$txt['themeadmin_reset_defaults'] = 'Reiniciar los valores por defecto (visitante) para este tema';
+// Untranslated!
+$txt['themeadmin_reset_defaults'] = 'Configure guest and new user options for this theme';
 $txt['themeadmin_reset_defaults_current'] = 'opciones con valores personalizados.';
-$txt['themeadmin_reset_members'] = 'Reinicializar las opciones actuales de todos los usuarios para este tema';
+// Untranslated!
+$txt['themeadmin_reset_members'] = 'Change current options for all members using this theme';
 $txt['themeadmin_reset_remove'] = 'Eliminar todas las opciones de los usuarios y utilizar los valores por defecto';
 $txt['themeadmin_reset_remove_current'] = 'usuarios usando sus propias opciones actualmente.';
 // Don't use entities in the below string.
-$txt['themeadmin_reset_remove_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar todas las opciones del tema?' . "\n" . 'Esto puede que reinicialice algunos campos de los perfiles.';
+$txt['themeadmin_reset_remove_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar todas las opciones del tema?\\nEsto puede que reinicialice algunos campos de los perfiles.';
 $txt['themeadmin_reset_options_info'] = 'Las opciones siguients reinicializar&aacute;n las opciones para <em>todos</em>.  Para cambiar una opci&oacute;n, selecciona &quot;cambiar&quot; en el cuadro a su lado, y entonces selecciona un valor para &eacute;ste.  Para usar el valor por defecto, selecciona &quot;eliminar&quot;.  De lo contrario, usa &quot;no cambiar&quot; para dejarlo tal como est&eacute;.';
 $txt['themeadmin_reset_options_change'] = 'Cambiar';
 $txt['themeadmin_reset_options_none'] = 'No cambiar';

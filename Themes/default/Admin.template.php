@@ -1865,7 +1865,6 @@ function template_edit_profile_field()
 						<option value="account" ', $context['field']['profile_area'] == 'account' ? 'selected="selected"' : '', '>', $txt['account'], '</option>
 						<option value="forumProfile" ', $context['field']['profile_area'] == 'forumProfile' ? 'selected="selected"' : '', '>', $txt['forumProfile'], '</option>
 						<option value="theme" ', $context['field']['profile_area'] == 'theme' ? 'selected="selected"' : '', '>', $txt['theme'], '</option>
-						<option value="pmprefs" ', $context['field']['profile_area'] == 'pmprefs' ? 'selected="selected"' : '', '>', $txt['pmprefs'], '</option>
 					</select>
 				</td>
 			</tr><tr class="windowbg2">

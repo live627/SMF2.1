@@ -61,7 +61,7 @@ $txt['permissions_select_permission'] = 'W&auml;hle Berechtigung';
 // All of the following block of strings should not use entities, instead use \\" for &quot; etc.
 $txt['permissions_only_one_option'] = 'Sie können nur eine Aktion zum modifizieren der Berechtigung wählen';
 $txt['permissions_no_action'] = 'Keine Aktion ausgewählt';
-$txt['permissions_deny_dangerous'] = 'Sie verbieten eine oder mehrere Berechtigungen.' . "\n" . 'Dies kann unter Umst&auml;nden unvorhergesehene Folgen nach sich ziehen, wenn Sie nicht kontrolliert haben, ob ein Mitglied \\"f&auml;lschlicherweise\\" in der betreffenden Gruppe ist.' . "\n\n" . 'Sind Sie sicher, dass Sie fortfahren möchten?';
+$txt['permissions_deny_dangerous'] = 'Sie verbieten eine oder mehrere Berechtigungen.\\nDies kann unter Umst&auml;nden unvorhergesehene Folgen nach sich ziehen, wenn Sie nicht kontrolliert haben, ob ein Mitglied \\"f&auml;lschlicherweise\\" in der betreffenden Gruppe ist.\\n\\nSind Sie sicher, dass Sie fortfahren möchten?';
 
 $txt['permissions_boards'] = 'Berechtigungen je Board';
 

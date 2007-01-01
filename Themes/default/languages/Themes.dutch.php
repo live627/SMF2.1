@@ -93,7 +93,8 @@ $txt['themeadmin_admin_title'] = 'Beheer en installeer';
 $txt['themeadmin_admin_desc'] = 'Deze pagina geeft de mogelijkheid om het standaard thema te wijzigen, om alle leden op een bepaald thema in te stellen en andere instellingen met betrekking tot thema selectie. Vanaf hier kun je ook thema\'s installeren.<br /><br />Vergeet niet om te kijken naar de thema- en lay-outinstellingen voor je thema\'s.';
 $txt['themeadmin_list_title'] = 'Thema\'s en instellingen';
 $txt['themeadmin_list_desc'] = 'Vanaf hier kun je de lijst van thema\'s bekijken die je momenteel ge&iuml;nstalleerd hebt, hun paden en instellingen wijzigen en hen de&iuml;nstalleren.';
-$txt['themeadmin_reset_title'] = 'Herstel opties';
+// Untranslated!
+$txt['themeadmin_reset_title'] = 'Member Options';
 $txt['themeadmin_reset_desc'] = 'Hieronder zie je een interface om de huidige thema-specifieke opties voor al je leden te wijzigen. Je ziet alleen de thema\'s die hun eigen instellingen hebben.';
 $txt['themeadmin_edit_title'] = 'Wijzig thema\'s';
 $txt['themeadmin_edit_desc'] = 'Verander de stylesheet en broncode van je ge&iuml;nstalleerde thema\'s. Raadpleeg de documentatie voor meer informatie.';
@@ -110,13 +111,15 @@ $txt['themeadmin_list_reset_url'] = 'Basis-URL naar de zelfde directory';
 $txt['themeadmin_list_reset_go'] = 'Probeer alle thema\'s te herstellen';
 
 $txt['themeadmin_reset_tip'] = 'Elk thema kan z\'n eigen opties hebben die door je leden geselecteerd kunnen worden. Hieronder vallen onder andere &quot;Snel reageren&quot;, avatars en handtekeningen, lay-out opties en andere soortgelijke opties. Hier kun je de standaardinstellingen veranderen of iedereens opties herstellen.<br /><br />Denk erom dat sommige thema\'s de standaard opties gebruiken, in welk geval ze niet over eigen opties beschikken.';
-$txt['themeadmin_reset_defaults'] = 'Herstel standaard (gast)opties voor dit thema';
+// Untranslated!
+$txt['themeadmin_reset_defaults'] = 'Configure guest and new user options for this theme';
 $txt['themeadmin_reset_defaults_current'] = 'opties momenteel ingesteld.';
-$txt['themeadmin_reset_members'] = 'Herstel de opties van alle leden voor dit thema';
+// Untranslated!
+$txt['themeadmin_reset_members'] = 'Change current options for all members using this theme';
 $txt['themeadmin_reset_remove'] = 'Verwijder de opties van alle leden en gebruik de standaardopties';
 $txt['themeadmin_reset_remove_current'] = 'leden die momenteel hun eigen opties gebruiken.';
 // Don't use entities in the below string.
-$txt['themeadmin_reset_remove_confirm'] = 'Weet je zeker dat je alle themaopties wilt verwijderen?' . "\n" . 'Dit zou ook sommige aangepaste profielvelden kunnen wissen.';
+$txt['themeadmin_reset_remove_confirm'] = 'Weet je zeker dat je alle themaopties wilt verwijderen?\\nDit zou ook sommige aangepaste profielvelden kunnen wissen.';
 $txt['themeadmin_reset_options_info'] = 'De opties hieronder herstellen opties voor <em>iedereen</em>. Om een optie te wijzigen, selecteer &quot;wijzig&quot; in het vak naast de optie en selecteer vervolgens er een waarde voor. Om de standaardwaarde te gebruiken, selecteer &quot;verwijder&quot;. Gebruik &quot;niet wijzigen&quot; om het te houden zoals het was.';
 $txt['themeadmin_reset_options_change'] = 'wijzig';
 $txt['themeadmin_reset_options_none'] = 'niet wijzigen';

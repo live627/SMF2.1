@@ -59,6 +59,9 @@ if (!defined('SMF'))
 
 	void scheduled_fetchSMfiles()
 		// !!!
+
+	void scheduled_birthdayemails()
+		// !!!
 */
 
 // This function works out what to do!
@@ -1006,7 +1009,8 @@ function scheduled_birthdayemails()
 		FROM {$db_prefix}members
 		WHERE MONTH(birthdate) = $month
 			AND DAYOFMONTH(birthdate) = $day
-			AND notify_announcements = 1", __FILE__, __LINE__);
+			AND notify_announcements = 1
+			AND YEAR(birthdate) > 1", __FILE__, __LINE__);
 
 	// Group them by languages.
 	$birthdays = array();

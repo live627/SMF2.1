@@ -409,10 +409,21 @@ function SetThemeOptions()
 			$context['themes'][$row['id_theme']]['num_default_options'] = $row['value'];
 		$smfFunc['db_free_result']($request);
 
+		// Need to make sure we don't do custom fields.
+		$request = $smfFunc['db_query']('', "
+			SELECT col_name
+			FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
+		$customFields = array();
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$customFields[] = $row['col_name'];
+		$smfFunc['db_free_result']($request);
+		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN (\'' . implode("', '", $customFields) . '\')');
+
 		$request = $smfFunc['db_query']('', "
 			SELECT id_theme, COUNT(DISTINCT id_member) AS value
 			FROM {$db_prefix}themes
 			WHERE id_member > 0
+				$customFieldsQuery
 			GROUP BY id_theme", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['themes'][$row['id_theme']]['num_members'] = $row['value'];
@@ -560,10 +571,24 @@ function SetThemeOptions()
 	{
 		checkSession('get');
 
+		// Don't delete custom fields!!
+		if ($_GET['th'] == 1)
+		{
+			$request = $smfFunc['db_query']('', "
+				SELECT col_name
+				FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
+			$customFields = array();
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$customFields[] = $row['col_name'];
+			$smfFunc['db_free_result']($request);
+		}
+		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN (\'' . implode("', '", $customFields) . '\')');
+
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}themes
 			WHERE id_member > 0
-				AND id_theme = $_GET[th]", __FILE__, __LINE__);
+				AND id_theme = $_GET[th]
+				$customFieldsQuery", __FILE__, __LINE__);
 
 		redirectexit('action=admin;area=theme;sesc=' . $sc . ';sa=reset');
 	}
@@ -581,6 +606,8 @@ function SetThemeOptions()
 	loadTheme($_GET['th'], false);
 
 	loadLanguage('Profile');
+	//!!! Should we just move these options so they are no longer theme dependant?
+	loadLanguage('PersonalMessage');
 
 	// Let the theme take care of the settings.
 	loadTemplate('Settings');

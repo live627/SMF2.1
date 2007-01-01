@@ -93,7 +93,8 @@ $txt['themeadmin_admin_title'] = 'Verwalten und Installieren';
 $txt['themeadmin_admin_desc'] = 'Hier k&ouml;nnen Sie das Standard-Theme &auml;ndern, ein Theme f&uuml;r alle Mitglieder festlegen oder neue Themes installieren.';
 $txt['themeadmin_list_title'] = 'Themes und Einstellungen';
 $txt['themeadmin_list_desc'] = 'Hier k&ouml;nnen Sie eine Liste der installierten Themes anschauen, die Pfade und Einstellungen &auml;ndern oder sie deinstallieren.';
-$txt['themeadmin_reset_title'] = 'Optionen zur&uuml;ckstellen';
+// Untranslated!
+$txt['themeadmin_reset_title'] = 'Member Options';
 $txt['themeadmin_reset_desc'] = 'Hier k&ouml;nnen Sie spezifische Theme-Einstellungen f&uuml;r alle Mitglieder &auml;ndern. Sie k&ouml;nnen auch nur die Themes sehen, welche seperate Einstellungen haben.';
 $txt['themeadmin_edit_title'] = 'Themes modifizieren';
 $txt['themeadmin_edit_desc'] = 'Hier k&ouml;nnen Sie das Stylesheet und den Quellcode der installierten Themes editieren. Bitte lesen Sie die Dokumentation f&uuml;r weitere Informationen.';
@@ -110,13 +111,15 @@ $txt['themeadmin_list_reset_url'] = 'Basis URL zum Theme Verzeichnis';
 $txt['themeadmin_list_reset_go'] = 'Versuche alle Themes zur&uuml;ckzustellen';
 
 $txt['themeadmin_reset_tip'] = 'Jedes Theme kann seine eigenen Optionen f&uuml;r die Mitglieder haben. Das kann unter anderem die &quot;Schnellantwort&quot;, Benutzerbilder und Signaturen, Layout Optionen und viele mehr sein. Hier k&ouml;nnen Sie die Standardoptionen &auml;ndern bzw. f&uuml;r alle Mitglieder zur&uuml;ckstellen.<br /><br />Bitte beachten Sie, dass manche Themes die Standardoptionen benutzen und somit keine eigenen Optionen haben.';
-$txt['themeadmin_reset_defaults'] = 'Standard (G&auml;ste) Optionen f&uuml;r dieses Theme zur&uuml;ckstellen';
+// Untranslated!
+$txt['themeadmin_reset_defaults'] = 'Configure guest and new user options for this theme';
 $txt['themeadmin_reset_defaults_current'] = 'Option(en) zur&uuml;ckgesetzt.';
-$txt['themeadmin_reset_members'] = 'Stellen Sie alle aktuellen Mitgliederoptionen f&uuml;r dieses Theme zur&uuml;ck';
+// Untranslated!
+$txt['themeadmin_reset_members'] = 'Change current options for all members using this theme';
 $txt['themeadmin_reset_remove'] = 'Entfernen Sie alle Mitgliederoptionen und benutzen Sie die Standardwerte';
 $txt['themeadmin_reset_remove_current'] = 'Mitglieder benutzen eigene Optionen.';
 // Don't use entities in the below string.
-$txt['themeadmin_reset_remove_confirm'] = 'Sind Sie sicher, dass Sie alle Theme Optionen entfernen wollen?' . "\n" . 'Dies kann manche Profilfelder ebenfalls zurückstellen.';
+$txt['themeadmin_reset_remove_confirm'] = 'Sind Sie sicher, dass Sie alle Theme Optionen entfernen wollen?\\nDies kann manche Profilfelder ebenfalls zurückstellen.';
 $txt['themeadmin_reset_options_info'] = 'Die folgenden Einstellungen stellen die Optionen f&uuml;r <em>jeden</em> zur&uuml;ck. Um eine Option zu ver&auml;ndern, w&auml;hlen Sie &quot;&Auml;ndern&quot; im Drop-Down Feld und stellen Sie die Option entsprechend Ihrer Vorstellungen ein. Um den Standardwert zu benutzen, w&auml;hlen Sie &quot;Entfernen&quot; oder &quot;Nicht &auml;ndern&quot;, um die betreffende Option zu belassen.';
 $txt['themeadmin_reset_options_change'] = '&Auml;ndern';
 $txt['themeadmin_reset_options_none'] = 'Nicht &auml;ndern';
