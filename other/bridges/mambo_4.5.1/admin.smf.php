@@ -92,6 +92,10 @@ switch ($task)
 			saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridge_reg, $agreement_required, $im, $pmOnReg, $use_realname, $cb_reg, $sync_group);
 	break;
 		
+	case "upgrade":
+		UpgradeBridge($option);
+	break;
+	
 	case "mos2smf":
 		mos2smf($option);
 	break;
@@ -402,6 +406,26 @@ function showConfig($option, $cb_reg)
 				</tr>
 			</table>';
 		}
+		echo $tabs->endTab(),
+			$tabs->startTab("Upgrade","Upgrade-page"),
+			'<table width="100%" border="0" cellpadding="4" cellspacing="2" class="adminForm">
+				<tr>
+					<td colspan="3" align="left">
+						The following button will upgrade any necessary database information if you have upgraded your bridge.  This is not needed for new installations, nor for re-installations. 
+					</td>
+				</tr>
+				<tr>
+					<td width="25%" align="left" valign="top">
+						<script language = "Javascript">
+							function upgrade(){
+									document.location.href = "index2.php?option=com_smf&task=upgrade";
+							}
+						</script>
+						<input type="button" value = "Upgrade Now" onclick="upgrade()" />
+					</td>
+				</tr>
+			</table>',
+		$tabs->endTab();		
 		$database->setQuery("
 				SELECT `value1`
 				FROM #__smf_config
@@ -822,4 +846,29 @@ function synch_groups ($option){
 	</td></tr></table>', $tabs->endPane();
 }
 
+function UpgradeBridge($option){
+
+	global $mosConfig_absolute_path, $mosConfig_live_site;
+
+	$tabs = new mosTabs(0);
+	
+	echo '
+		<div id="overDiv" style="position:absolute; visibility:hidden; z-index:10000;"></div>
+		<script language="JavaScript" type="text/javascript" src="', $mosConfig_live_site, '/includes/js/overlib_mini.js"></script>
+	';
+	
+	$tabs->startPane('configPane');
+	$tabs->startTab($smfbLanguage->SMBF_A_CONF_TAB1, 'general-page');
+
+	echo '
+		<table width="100%" border="0" cellpadding="4" cellspacing="2" class="adminForm">
+			<tr>
+				<td width="100%" align="left" valign="top">';	
+	include ($mosConfig_absolute_path . '/administrator/components/com_smf/upgrade_bridge.php');
+	
+	echo '<a href="index2.php?option=com_smf&task=config">Return to Bridge configuration</a>
+	
+	</td></tr></table>', $tabs->endPane();
+	
+}
 ?>

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1 RC3                                         *
+* Software Version:           SMF 1.1                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -133,16 +133,17 @@ function com_install()
 	//Populate the config table
 	
 	$default_variables = array (
-								'smf_path' => '..\/forum',
+								'smf_path' => addslashes($mosConfig_absolute_path . '/forum'),
 								'bridge_reg' => 'bridge',
 								'wrapped' => 'true',
 								'smf_css' => 'true',
-								'synch_lang' => 'true',
+								'synch_lang' => 'false',
 								'agreement_required' => 'on',
 								'im' => 'on',
 								'pmOnReg' =>'on',
 								'use_realname' => false,
 								'cb_reg' => 'off',
+								'bridge_version' => '1.1.7',
 								);
 	
 	foreach ($default_variables as $variable=>$default){

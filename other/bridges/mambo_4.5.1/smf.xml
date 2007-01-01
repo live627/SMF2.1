@@ -64,6 +64,7 @@
 			<filename>toolbar.smf.php</filename>
 			<filename>toolbar.smf.html.php</filename>
 			<filename>uninstall.smf.php</filename>
+			<filename>upgrade_bridge.php</filename>
 			<filename>install.smf_registration.php</filename>
 			<filename>admin.smf_registration.php</filename>
 			<filename>toolbar.smf_registration.php</filename>
