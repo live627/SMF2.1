@@ -7,7 +7,7 @@ $txt['smiley_sets'] = 'Smiley-Sets';
 $txt['smiley_sets_save'] = '&Auml;nderungen speichern';
 $txt['smiley_sets_add'] = 'Neues Smiley-Set';
 $txt['smiley_sets_delete'] = 'Ausgew&auml;hltes l&ouml;schen';
-$txt['smiley_sets_confirm'] = 'Sind Sie sicher, dass Sie die Smiley-Sets entfernen m&ouml;chten?' . "\n\n" . 'Achtung: Dieser Vorgang entfernt nur die Auswahlm&ouml;glichkeit, nicht die Bilder.';
+$txt['smiley_sets_confirm'] = 'Sind Sie sicher, dass Sie die Smiley-Sets entfernen m&ouml;chten?\\n\\nAchtung: Dieser Vorgang entfernt nur die Auswahlm&ouml;glichkeit, nicht die Bilder.';
 
 // Untranslated!
 $txt['setting_smiley_sets_default'] = 'Default Smiley Set';
@@ -78,7 +78,7 @@ $txt['smiley_new'] = 'Neuen Smiley hinzuf&uuml;gen';
 $txt['smiley_modify_existing'] = 'Smiley &auml;ndern';
 $txt['smiley_preview'] = 'Vorschau';
 $txt['smiley_preview_using'] = 'im folgenden Set';
-$txt['smileys_confirm'] = 'Sind Sie sicher, dass Sie diese Smileys l&ouml;schen m&ouml;chten?' . "\n\n" . 'Achtung: Dieser Vorgang entfernt nur die Auswahlm&ouml;glichkeit, nicht die Bilder.';
+$txt['smileys_confirm'] = 'Sind Sie sicher, dass Sie diese Smileys l&ouml;schen m&ouml;chten?\\n\\nAchtung: Dieser Vorgang entfernt nur die Auswahlm&ouml;glichkeit, nicht die Bilder.';
 $txt['smileys_location_form_description'] = 'Diese Smileys werden oberhalb des Textfeldes erscheinen, wenn Sie einen Beitrag oder eine Private Mitteilung schreiben.';
 $txt['smileys_location_popup_description'] = 'Diese Smileys werden in einem Popup Fenster erscheinen, wenn ein Benutzer auf \'Mehr Smileys\' klickt';
 $txt['smileys_move_select_destination'] = 'Zielposition w&auml;hlen';
@@ -90,7 +90,7 @@ $txt['icons_edit_message_icons'] = 'Beitragssymbole verwalten';
 $txt['icons_edit_icons_explain'] = 'Hier k&ouml;nnen Sie die Beitragssymbole verwalten. Sie k&ouml;nnen neue Symbole hinzuf&uuml;gen, vorhandene Smybole editieren oder l&ouml;schen bzw. die Verf&uuml;gbarkeit in den einzelnen Boards einstellen.';
 $txt['icons_edit_icons_all_boards'] = 'In allen Boards verf&uuml;gbar';
 $txt['icons_board'] = 'Board';
-$txt['icons_confirm'] = 'Sind Sie sicher, dass Sie diese Symbole entfernen m&ouml;chten?' . "\n\n" . 'Beachten Sie, dass nur neue Beitr&auml;ge davon betroffen sind, da die Bilder auf dem Server bleiben.';
+$txt['icons_confirm'] = 'Sind Sie sicher, dass Sie diese Symbole entfernen m&ouml;chten?\\n\\nBeachten Sie, dass nur neue Beitr&auml;ge davon betroffen sind, da die Bilder auf dem Server bleiben.';
 $txt['icons_add_new'] = 'Neues Symbol hinzuf&uuml;gen';
 
 $txt['icons_edit_icon'] = 'Beitragssymbol editieren';

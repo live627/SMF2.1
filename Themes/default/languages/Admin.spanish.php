@@ -297,7 +297,7 @@ $txt['maintain_old_are_not_stickied'] = 'Pero no se pudieron contar los temas fi
 $txt['maintain_old_all'] = 'Todos los foros';
 $txt['maintain_old_choose'] = 'Selecciona foros espec&iacute;ficos';
 $txt['maintain_old_remove'] = 'Eliminar';
-$txt['maintain_old_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar mensajes viejos?' . "\n\n" . '&#161;Esto no se podr&#225; deshacer!';
+$txt['maintain_old_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar mensajes viejos?\\n\\n&#161;Esto no se podr&#225; deshacer!';
 
 // Untranslated!
 $txt['maintain_members'] = 'Remove Inactive Members';
@@ -309,7 +309,7 @@ $txt['maintain_members_activated'] = 'activated their account';
 $txt['maintain_members_logged_in'] = 'logged in';
 $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?' . "\n\n" . 'This cannot be undone!';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
 
 // Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';

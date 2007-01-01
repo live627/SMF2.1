@@ -286,7 +286,7 @@ $txt['maintain_old_are_not_stickied'] = 'Sluit sticky topics uit';
 $txt['maintain_old_all'] = 'Alle boards';
 $txt['maintain_old_choose'] = 'Kies specifieke boards';
 $txt['maintain_old_remove'] = 'Verwijder';
-$txt['maintain_old_confirm'] = 'Weet je zeker dat je de oude berichten wilt verwijderen?' . "\n\n" . 'Dit kan niet ongedaan gemaakt worden!';
+$txt['maintain_old_confirm'] = 'Weet je zeker dat je de oude berichten wilt verwijderen?\\n\\nDit kan niet ongedaan gemaakt worden!';
 
 // Untranslated!
 $txt['maintain_members'] = 'Remove Inactive Members';
@@ -298,7 +298,7 @@ $txt['maintain_members_activated'] = 'activated their account';
 $txt['maintain_members_logged_in'] = 'logged in';
 $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?' . "\n\n" . 'This cannot be undone!';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
 
 // Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';

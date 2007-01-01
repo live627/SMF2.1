@@ -279,7 +279,7 @@ $txt['maintain_old_are_not_stickied'] = 'But don\'t count stickied topics.';
 $txt['maintain_old_all'] = 'All Boards';
 $txt['maintain_old_choose'] = 'Choose Specific Boards';
 $txt['maintain_old_remove'] = 'Remove now';
-$txt['maintain_old_confirm'] = 'Are you really sure you want to delete old posts now?' . "\n\n" . 'This cannot be undone!';
+$txt['maintain_old_confirm'] = 'Are you really sure you want to delete old posts now?\\n\\nThis cannot be undone!';
 
 $txt['maintain_members'] = 'Remove Inactive Members';
 $txt['maintain_members_ungrouped'] = 'Ungrouped Members <span class="smalltext">(Members with no assigned groups)</span>';
@@ -290,7 +290,7 @@ $txt['maintain_members_activated'] = 'activated their account';
 $txt['maintain_members_logged_in'] = 'logged in';
 $txt['maintain_members_all'] = 'All Membergroups';
 $txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?' . "\n\n" . 'This cannot be undone!';
+$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
 
 // Untranslated!
 $txt['scheduled_tasks_header'] = 'All Scheduled Tasks';

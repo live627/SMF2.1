@@ -7,7 +7,7 @@ $txt['smiley_sets'] = 'Conjuntos de Smileys';
 $txt['smiley_sets_save'] = 'Guardar Cambios';
 $txt['smiley_sets_add'] = 'Nueva colecci&oacute;n de smileys';
 $txt['smiley_sets_delete'] = 'Borrar seleccionados';
-$txt['smiley_sets_confirm'] = '&#191;Est&aacute;s seguro que deseas eliminar esta colecci&oacute;n de smileys?' . "\n\n" . 'Nota: Esto no eliminar&aacute; las im&aacute;genes, solo la opci&oacute;n de seleccionarlos.';
+$txt['smiley_sets_confirm'] = '&#191;Est&aacute;s seguro que deseas eliminar esta colecci&oacute;n de smileys?\\n\\nNota: Esto no eliminar&aacute; las im&aacute;genes, solo la opci&oacute;n de seleccionarlos.';
 
 // Untranslated!
 $txt['setting_smiley_sets_default'] = 'Default Smiley Set';
@@ -77,7 +77,7 @@ $txt['smiley_new'] = 'Agregar nuevo smiley';
 $txt['smiley_modify_existing'] = 'Modificar smiley';
 $txt['smiley_preview'] = 'Previsualizar';
 $txt['smiley_preview_using'] = 'usando la colecci&oacute;n de smileys';
-$txt['smileys_confirm'] = '&#191;Est&#225;s seguro que quieres eliminar estos smileys?' . "\n\n" . 'Nota: Esto no borrar&aacute; las im&#225;genes, solamente las opciones.';
+$txt['smileys_confirm'] = '&#191;Est&#225;s seguro que quieres eliminar estos smileys?\\n\\nNota: Esto no borrar&aacute; las im&#225;genes, solamente las opciones.';
 $txt['smileys_location_form_description'] = 'Estos smileys aparecer&aacute;n sobre el &aacute;rea de texto, al publicar un nuevo mensaje en el foro o un nuevo mensaje personal.';
 $txt['smileys_location_popup_description'] = 'Estos smileys apareceran en un popup, que es mostrado despu&eacute;s de que un usuario ha hecho <i>click</i> en \'[m&aacute;s]\'';
 $txt['smileys_move_select_destination'] = 'Seleciona el destino para el smiley';
@@ -89,7 +89,7 @@ $txt['icons_edit_message_icons'] = 'Editar Iconos de los Mensajes';
 $txt['icons_edit_icons_explain'] = 'Aqu&iacute; puedes cambiar los iconos de los mensajes que estar&aacute;n disponibles en tu foro. Puedes agregar, editar, y eliminar iconos, asi como limitar su uso a algunos foros.';
 $txt['icons_edit_icons_all_boards'] = 'Disponible en todos los foros';
 $txt['icons_board'] = 'Foro';
-$txt['icons_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar esos iconos?' . "\n\n" . 'Esto solo impedir&#225; que se puedan utilizar en nuevos mensajes, las im&#225;genes permanecer&#225;n en los ya existentes.';
+$txt['icons_confirm'] = '&#191;Est&#225;s seguro que deseas eliminar esos iconos?\\n\\nEsto solo impedir&#225; que se puedan utilizar en nuevos mensajes, las im&#225;genes permanecer&#225;n en los ya existentes.';
 $txt['icons_add_new'] = 'Agregar nuevo icono';
 
 $txt['icons_edit_icon'] = 'Editar el mensaje del icono';
