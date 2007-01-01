@@ -66,5 +66,7 @@ if (!file_exists($boarddir) && file_exists(dirname(__FILE__) . '/agreement.txt')
 	$boarddir = dirname(__FILE__);
 if (!file_exists($sourcedir) && file_exists($boarddir . '/Sources'))
 	$sourcedir = $boarddir . '/Sources';
+if (!file_exists($cachedir) && file_exists($cachedir . '/cache'))
+	$cachedir = $cachedir . '/cache';
 
 ?>

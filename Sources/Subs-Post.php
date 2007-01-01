@@ -1592,13 +1592,13 @@ function sendNotifications($topics, $type, $exclude = array())
 			ln.sent, mem.id_group, mem.additional_groups, b.member_groups, mem.id_post_group, t.id_member_started,
 			ln.id_topic
 		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member
-				AND mem.notify_types < " . ($type == 'reply' ? '4' : '3') . "
-				AND mem.notify_regularity < 2
-				AND mem.is_activated = 1)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 		WHERE ln.id_topic IN (" . implode(',', $topics) . ")
+			AND mem.notify_types < " . ($type == 'reply' ? '4' : '3') . "
+			AND mem.notify_regularity < 2
+			AND mem.is_activated = 1
 			AND ln.id_member != $user_info[id]
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	$sent = 0;
@@ -2443,13 +2443,13 @@ function sendApprovalNotifications(&$topicData)
 			ln.sent, mem.id_group, mem.additional_groups, b.member_groups, mem.id_post_group, t.id_member_started,
 			ln.id_topic
 		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member
-				AND mem.is_activated = 1
-				AND mem.notify_types < 4
-				AND mem.notify_regularity < 2)
 		WHERE ln.id_topic IN (" . implode(',', $topics) . ")
+			AND mem.is_activated = 1
+			AND mem.notify_types < 4
+			AND mem.notify_regularity < 2
 		GROUP BY mem.id_member, ln.id_topic
 		ORDER BY mem.lngfile", __FILE__, __LINE__);
 	$sent = 0;

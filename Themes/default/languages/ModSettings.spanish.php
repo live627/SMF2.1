@@ -23,7 +23,7 @@ $txt['enable_buddylist'] = 'Enable buddy lists';
 $txt['default_personal_text'] = 'Texto Personal por defecto';
 $txt['number_format'] = 'Formato de n&uacute;meros por defecto';
 $txt['time_format'] = 'Formato de Tiempo por defecto';
-$txt['time_offset'] = 'Diferencia horaria global<div class="smalltext">(agregado a las opciones espec&iacute;ficas de los usuarios.)</div>';
+$txt['setting_time_offset'] = 'Diferencia horaria global<div class="smalltext">(agregado a las opciones espec&iacute;ficas de los usuarios.)</div>';
 $txt['failed_login_threshold'] = 'Tiempo de espera al fallar un ingreso';
 $txt['lastActive'] = 'Tiempo despu&eacute;s de su &uacute;ltima acci&oacute;n durante el cual los usuarios aparecer&aacute;n en l&iacute;nea';
 $txt['trackStats'] = 'Rastrear Estad&iacute;sticas';

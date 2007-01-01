@@ -2987,7 +2987,7 @@ function setupThemeContext()
 			'show' => $context['allow_calendar'],
 		),
 		'mlist' => array(
-			'title' => $txt['members'],
+			'title' => $txt['members_title'],
 			'href' => $scripturl . '?action=mlist',
 			'show' => $context['allow_memberlist'],
 		),

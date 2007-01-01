@@ -1860,7 +1860,7 @@ function template_theme()
 									<input type="text" name="time_format" value="', $context['member']['time_format'], '" size="30" />
 								</td>
 							</tr><tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset'], ':</b><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
+								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset_between'], ':</b><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
 								<td class="smalltext"><input type="text" name="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="autoDetectTimeOffset(); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
 							</tr><tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>

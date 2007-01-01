@@ -21,7 +21,7 @@ $txt['enable_buddylist'] = 'Aktiviere Buddy-Liste';
 $txt['default_personal_text'] = 'Pers&ouml;nlicher Standard-Text';
 $txt['number_format'] = 'Standard-Zahlenformat';
 $txt['time_format'] = 'Voreingestelltes Zeitformat';
-$txt['time_offset'] = 'Globale Zeitverschiebung <div class="smalltext">(&Auml;nderung deaktiviert die indiv. Zeitverschiebung aller Benutzer)</div>';
+$txt['setting_time_offset'] = 'Globale Zeitverschiebung <div class="smalltext">(&Auml;nderung deaktiviert die indiv. Zeitverschiebung aller Benutzer)</div>';
 $txt['failed_login_threshold'] = 'Fehlerhafte Loginversuche';
 $txt['lastActive'] = 'Zeit der Benutzeranzeige unter \'Wer ist online\' (in Minuten)';
 $txt['trackStats'] = 'Statistiken aktivieren';

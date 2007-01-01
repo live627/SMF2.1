@@ -21,7 +21,7 @@ $txt['enable_buddylist'] = 'Vriendenlijsten activeren';
 $txt['default_personal_text'] = 'Standaard persoonlijke tekst';
 $txt['number_format'] = 'Standaard nummerformaat';
 $txt['time_format'] = 'Standaard tijdsinstelling';
-$txt['time_offset'] = 'Algemene tijdsafwijking <div class="smalltext">(toegevoegd aan ledenspecifieke tijdsafwijking)</div>';
+$txt['setting_time_offset'] = 'Algemene tijdsafwijking <div class="smalltext">(toegevoegd aan ledenspecifieke tijdsafwijking)</div>';
 $txt['failed_login_threshold'] = 'Mislukte inlogdrempel';
 $txt['lastActive'] = 'Gebruikers online-tijdsdrempel';
 $txt['trackStats'] = 'Statistieken activeren';

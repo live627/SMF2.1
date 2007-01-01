@@ -219,7 +219,7 @@ $txt['check_new_messages'] = 'Check for new messages';
 $txt['to'] = 'To';
 
 $txt[330] = 'Topics';
-$txt['members'] = 'Members';
+$txt['members_title'] = 'Members';
 $txt['members_list'] = 'Members List';
 $txt['new_posts'] = 'New Posts';
 $txt['old_posts'] = 'No New Posts';
@@ -611,7 +611,7 @@ $txt['change_color'] = 'Change Color';
 $txt['quickmod_delete_selected'] = 'Delete Selected';
 
 // In this string, don't use entities. (&amp;, etc.)
-$txt['show_personal_messages'] = 'You have received one or more new personal messages.' . "\n" . 'View them now (in a new window)?';
+$txt['show_personal_messages'] = 'You have received one or more new personal messages.\\nView them now (in a new window)?';
 
 $txt['previous_next_back'] = '&laquo; previous';
 $txt['previous_next_forward'] = 'next &raquo;';

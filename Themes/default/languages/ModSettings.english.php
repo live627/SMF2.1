@@ -21,7 +21,7 @@ $txt['enable_buddylist'] = 'Enable buddy lists';
 $txt['default_personal_text'] = 'Default personal text';
 $txt['number_format'] = 'Default number format';
 $txt['time_format'] = 'Default time format';
-$txt['time_offset'] = 'Overall time offset<div class="smalltext">(added to the member specific option.)</div>';
+$txt['setting_time_offset'] = 'Overall time offset<div class="smalltext">(added to the member specific option.)</div>';
 $txt['failed_login_threshold'] = 'Failed login threshold';
 $txt['lastActive'] = 'User online time threshold';
 $txt['trackStats'] = 'Track daily statistics';

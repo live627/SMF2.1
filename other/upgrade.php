@@ -871,9 +871,15 @@ function WelcomeLogin()
 		$boarddir . '/Settings_bak.php',
 	);
 
+	// Check the cache directory.
 	$cachedir_temp = empty($cachedir) ? $boarddir . '/cache' : $cachedir;
 	if (!file_exists($cachedir_temp))
 		@mkdir($cachedir_temp);
+	if (!file_exists($cachedir_temp))
+	{
+		throw_error('The cache directory could not be found.<br /><br />Please make sure you have a directory called &quot;cache&quot; in your forum directory before continuing.');
+		return false;
+	}
 	$writable_files[] = $cachedir_temp;
 
 	if (!makeFilesWritable($writable_files))
@@ -3070,9 +3076,12 @@ function template_chmod()
 				</div>
 			</div>
 			<br />';
-	
+
+	if (empty($upcontext['chmod_in_form']))
+		echo '
+	<form action="', $upcontext['form_url'], '" method="post">';
+
 	echo '
-	<form action="', $upcontext['form_url'], '" method="post">
 		<table width="520" cellspacing="0" cellpadding="0" border="0" align="center" style="margin-bottom: 1ex;">
 			<tr>
 				<td width="26%" valign="top" class="textbox"><label for="ftp_server">', $txt['ftp_server'], ':</label></td>
@@ -3104,6 +3113,10 @@ function template_chmod()
 
 		<div align="right" style="margin: 1ex;"><input type="submit" value="', $txt['ftp_connect'], '" /></div>
 	</div>';
+
+	if (empty($upcontext['chmod_in_form']))
+		echo '
+	</form>';
 }
 
 function template_upgrade_above()
@@ -3316,8 +3329,10 @@ function template_welcome_message()
 
 	echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
-			<h3>Thank you for choosing to upgrade to SMF ', SMF_VERSION, '. All files appear to be in place, and we\'re ready to proceed.</h3>';
+			<h3>Thank you for choosing to upgrade to SMF ', SMF_VERSION, '. All files appear to be in place, and we\'re ready to proceed.</h3>
+	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>';
 
+	$upcontext['chmod_in_form'] = true;
 	template_chmod();
 
 	// For large, pre 1.1 RC2 forums give them a warning about the possible impact of this upgrade!
@@ -3376,7 +3391,6 @@ function template_welcome_message()
 	}
 
 	echo '
-			<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>
 			<b>Admin Login: ', $disable_security ? '(DISABLED)' : '', '</b>
 			<h3>For security purposes please login with your admin account to proceed with the upgrade.<h3>
 			<table>
@@ -3979,6 +3993,7 @@ function template_upgrade_templates()
 	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1', $upcontext['is_test'] ? '' : ';forreal=1', '" name="upform"  id="upform" method="post">';
 
 	// Any files need to be writable?
+	$upcontext['chmod_in_form'] = true;
 	template_chmod();
 
 	// Language/Template files need an update?
@@ -4067,8 +4082,9 @@ function template_upgrade_templates()
 		echo '
 		<br /><label for="conv"><input type="checkbox" name="conv" id="conv" value="1" /> Convert the existing YaBB SE template and set it as default.</label><br />';
 
-	// We'll want a continue button...
-	$upcontext['continue'] = 1;
+	// We'll want a continue button... assuming chmod is OK (Otherwise let them use connect!)
+	if (empty($upcontext['chmod']['files']) || $upcontext['is_test'])
+		$upcontext['continue'] = 1;
 }
 
 function template_upgrade_complete()

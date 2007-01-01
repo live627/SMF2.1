@@ -222,7 +222,7 @@ $txt['check_new_messages'] = 'Controleer op nieuwe berichten';
 $txt['to'] = 'Naar';
 
 $txt[330] = 'Topics';
-$txt['members'] = 'Leden';
+$txt['members_title'] = 'Leden';
 $txt['members_list'] = 'Ledenlijst';
 $txt['new_posts'] = 'Nieuw bericht';
 $txt['old_posts'] = 'Geen nieuw bericht';
@@ -620,7 +620,7 @@ $txt['change_color'] = 'Pas de kleur aan';
 $txt['quickmod_delete_selected'] = 'Verwijder selectie';
 
 // In this string, don't use entities. (&amp;, etc.)
-$txt['show_personal_messages'] = 'Je hebt één of meerdere nieuwe berichten.' . "\n" . 'Wil je ze nu bekijken (in een nieuw venster)?';
+$txt['show_personal_messages'] = 'Je hebt één of meerdere nieuwe berichten.\\nWil je ze nu bekijken (in een nieuw venster)?';
 
 $txt['previous_next_back'] = '&laquo; vorige';
 $txt['previous_next_forward'] = 'volgende &raquo;';
