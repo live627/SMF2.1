@@ -248,7 +248,13 @@ function template_edit_group()
 				</tr>
 				<tr class="windowbg2">
 					<th align="right" id="group_hidden_text"><label for="group_hidden_input">', $txt['membergroups_edit_hidden'], ':</label></th>
-					<td><input type="checkbox" name="group_hidden" id="group_hidden_input" ', $context['group']['hidden'] ? '' : 'checked="checked"', ' class="check" onclick="if (!this.checked) return confirm(\'', $txt['membergroups_edit_hidden_warning'], '\');" /></td>
+					<td>
+						<select name="group_hidden" id="group_hidden_input" onchange="if (this.value == 2 && !confirm(\'', $txt['membergroups_edit_hidden_warning'], '\')) this.value = 0;">
+							<option value="0" ', $context['group']['hidden'] ? '' : 'selected="selected"', '>', $txt['membergroups_edit_hidden_no'], '</option>
+							<option value="1" ', $context['group']['hidden'] == 1 ? 'selected="selected"' : '', '>', $txt['membergroups_edit_hidden_boardindex'], '</option>
+							<option value="2" ', $context['group']['hidden'] == 2 ? 'selected="selected"' : '', '>', $txt['membergroups_edit_hidden_all'], '</option>
+						</select>
+					</td>
 				</tr>';
 	}
 

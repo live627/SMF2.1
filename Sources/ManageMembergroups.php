@@ -425,7 +425,7 @@ function EditMembergroup()
 		$_POST['stars'] = (empty($_POST['star_count']) || $_POST['star_count'] < 0) ? '' : min((int) $_POST['star_count'], 99) . '#' . $_POST['star_image'];
 		$_POST['group_desc'] = isset($_POST['group_desc']) && ($_REQUEST['group'] == 1 || (isset($_POST['group_type']) && $_POST['group_type'] != -1)) ? trim($_POST['group_desc']) : '';
 		$_POST['group_type'] = isset($_POST['group_type']) && $_POST['group_type'] >= 0 && $_POST['group_type'] <= 2 ? (int) $_POST['group_type'] : 0;
-		$_POST['group_hidden'] = empty($_POST['group_hidden']) && $_POST['min_posts'] == -1 && $_REQUEST['group'] != 3 ? 1 : 0;
+		$_POST['group_hidden'] = empty($_POST['group_hidden']) || $_POST['min_posts'] != -1 || $_REQUEST['group'] == 3 ? 0 : (int) $_POST['group_hidden'];
 		$_POST['group_inherit'] = $_REQUEST['group'] > 1 ? (int) $_POST['group_inherit'] : -2;
 
 		// !!! Don't set online_color for the Moderators group?
@@ -491,7 +491,7 @@ function EditMembergroup()
 		elseif ($_REQUEST['group'] != 3)
 		{
 			// Making it a hidden group? If so remove everyone with it as primary group (Actually, just make them additional).
-			if ($_POST['group_hidden'])
+			if ($_POST['group_hidden'] == 2)
 			{
 				$request = $smfFunc['db_query']('', "
 					SELECT id_member, additional_groups

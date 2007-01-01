@@ -2541,7 +2541,7 @@ function account($memID)
 				'is_primary' => $user_profile[$memID]['id_group'] == $row['id_group'],
 				'is_additional' => in_array($row['id_group'], $curGroups),
 				'can_be_additional' => true,
-				'can_be_primary' => !$row['hidden'],
+				'can_be_primary' => $row['hidden'] != 2,
 			);
 		}
 		$smfFunc['db_free_result']($request);
@@ -2981,7 +2981,7 @@ function groupMembership($memID)
 			'type' => $row['group_type'],
 			'pending' => $row['pending'],
 			'is_primary' => $row['id_group'] == $context['primary_group'],
-			'can_be_primary' => !$row['hidden'],
+			'can_be_primary' => $row['hidden'] != 2,
 			// Anything more than this needs to be done through account settings for security.
 			'can_leave' => $row['id_group'] != 1 && $row['group_type'] != 0 ? true : false,
 		);
@@ -3052,7 +3052,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 				fatal_lang_error('no_access');
 
 			// We can't change the primary group if this is hidden!
-			if ($row['hidden'])
+			if ($row['hidden'] == 2)
 				$canChangePrimary = false;
 		}
 

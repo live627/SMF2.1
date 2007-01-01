@@ -34,7 +34,10 @@ $txt['membergroups_edit_inherit_permissions_desc'] = 'Select &quot;No&quot; to e
 $txt['membergroups_edit_inherit_permissions_no'] = 'No - Use Unique Permissions';
 $txt['membergroups_edit_inherit_permissions_from'] = 'Inherit From';
 $txt['membergroups_edit_desc'] = 'Group description';
-$txt['membergroups_edit_hidden'] = 'Can be primary group';
+$txt['membergroups_edit_hidden'] = 'Visibility';
+$txt['membergroups_edit_hidden_no'] = 'Visible';
+$txt['membergroups_edit_hidden_boardindex'] = 'Visible - Except in Group Key';
+$txt['membergroups_edit_hidden_all'] = 'Invisible';
 // Do not use numeric entities in the below string.
 $txt['membergroups_edit_hidden_warning'] = 'Are you sure you want to disallow assignment of this group as a users primary group?\\n\\nDoing so will restrict assignment to additional groups only, and will update all current &quot;primary&quot; members to have it as an additional group only.';
 $txt['membergroups_edit_group_type'] = 'Group Type';
