@@ -1427,12 +1427,19 @@ function AdminBoardRecount()
 function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 {
 	global $language, $settings, $txt, $db_prefix;
-	global $cachedir, $smfFunc;
+	global $sourcedir, $cachedir, $smfFunc;
 
 	// Is the file writable?
 	$can_write = is_writable($cachedir) ? 1 : 0;
 	// By default include it afterwards.
 	$do_include = true;
+
+	// Make sure we have $settings - if not we're in trouble and need to find it!
+	if (empty($settings['default_theme_dir']))
+	{
+		require_once($sourcedir . '/ScheduledTasks.php');
+		loadEssentialThemeData();
+	}
 
 	// Open the file to write to.
 	if ($can_write)
@@ -1502,7 +1509,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		{
 			if ($fatal)
 				log_error(sprintf($txt['theme_language_error'], $template_name . '.' . $lang, 'template'));
-			return false;
+			break;
 		}
 		else
 			unset($language_url);
