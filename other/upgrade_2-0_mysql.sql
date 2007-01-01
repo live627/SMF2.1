@@ -342,11 +342,7 @@ $nameChanges = array(
 $_GET['ren_col'] = isset($_GET['ren_col']) ? (int) $_GET['ren_col'] : 0;
 $step_progress['name'] = 'Renaming columns';
 $step_progress['current'] = $_GET['ren_col'];
-$step_progress['total'] = 0;
-
-// Get the progress bar right.
-foreach ($nameChanges as $table_name => $table)
-	$step_progress['total'] += count($table);
+$step_progress['total'] = count($nameChanges);
 
 $count = 0;
 // Now do every table...

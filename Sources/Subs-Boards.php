@@ -127,13 +127,15 @@ function markBoardsRead($boards, $unread = false)
 			"{$db_prefix}log_mark_read",
 			array('id_msg', 'id_member', 'id_board'),
 			$markRead,
-			array('id_board', 'id_member'));
+			array('id_board', 'id_member'), __FILE__, __LINE__
+		);
 
 		$smfFunc['db_insert']('replace',
 			"{$db_prefix}log_boards",
 			array('id_msg', 'id_member', 'id_board'),
 			$markRead,
-			array('id_board', 'id_member'));
+			array('id_board', 'id_member'), __FILE__, __LINE__
+		);
 	}
 
 	// Get rid of useless log_topics data, because log_mark_read is better for it - even if marking unread - I think so...
@@ -214,7 +216,8 @@ function MarkRead()
 			"{$db_prefix}log_topics",
 			array('id_msg', 'id_member', 'id_topic'),
 			$markRead,
-			array('id_member', 'id_topic'));
+			array('id_member', 'id_topic'), __FILE__, __LINE__
+		);
 
 		if (isset($_SESSION['topicseen_cache']))
 			$_SESSION['topicseen_cache'] = array();
@@ -255,7 +258,8 @@ function MarkRead()
 			"{$db_prefix}log_topics",
 			array('id_msg', 'id_member', 'id_topic'),
 			array($earlyMsg, $user_info['id'], $topic),
-			array('id_member', 'id_topic'));
+			array('id_member', 'id_topic'), __FILE__, __LINE__
+		);
 
 		redirectexit('board=' . $board . '.0');
 	}
@@ -347,7 +351,7 @@ function MarkRead()
 					"{$db_prefix}log_boards",
 					array('id_msg', 'id_member', 'id_board'),
 					$logBoardInserts,
-					array('id_member', 'id_board')
+					array('id_member', 'id_board'), __FILE__, __LINE__
 				);
 			}
 			$smfFunc['db_free_result']($result);
@@ -575,7 +579,7 @@ function modifyBoard($board_id, &$boardOptions)
 				"{$db_prefix}moderators",
 				array('id_board', 'id_member'),
 				$inserts,
-				array('id_board', 'id_member')
+				array('id_board', 'id_member'), __FILE__, __LINE__
 			);
 		}
 

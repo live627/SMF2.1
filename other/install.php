@@ -885,7 +885,7 @@ function doStep1()
 				"{$db_prefix}settings",
 				array('variable', 'value'),
 				$rows,
-				array('variable')
+				array('variable'), __FILE__, __LINE__
 			);
 		}
 	}

@@ -317,7 +317,7 @@ function ThemeList()
 				"{$db_prefix}themes",
 				array('id_theme', 'id_member', 'variable', 'value'),
 				$setValues,
-				array('id_theme', 'variable', 'id_member')
+				array('id_theme', 'variable', 'id_member'), __FILE__, __LINE__
 			);
 		}
 
@@ -481,7 +481,7 @@ function SetThemeOptions()
 				"{$db_prefix}themes",
 				array('id_member', 'id_theme', 'variable', 'value'),
 				$setValues,
-				array('id_theme', 'variable', 'id_member')
+				array('id_theme', 'variable', 'id_member'), __FILE__, __LINE__
 			);
 		}
 
@@ -708,7 +708,7 @@ function SetThemeSettings()
 				"{$db_prefix}themes",
 				array('id_member', 'id_theme', 'variable', 'value'),
 				$inserts,
-				array('id_member', 'id_theme', 'variable')
+				array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
 			);
 		}
 
@@ -1204,7 +1204,7 @@ function ThemeInstall()
 				"{$db_prefix}themes",
 				array('id_theme', 'variable', 'value'),
 				$inserts,
-				array('id_theme', 'variable')
+				array('id_theme', 'variable'), __FILE__, __LINE__
 			);
 
 		updateSettings(array('knownThemes' => strtr($modSettings['knownThemes'] . ',' . $id_theme, array(',,' => ','))));
@@ -1268,7 +1268,7 @@ function SetJavaScript()
 		"{$db_prefix}themes",
 		array('id_theme', 'id_member', 'variable', 'value'),
 		array($settings['theme_id'], $user_info['id'], "SUBSTRING('$_GET[var]', 1, 255)", "SUBSTRING('" . (is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']) . "', 1, 65534)"),
-		array('id_theme', 'id_member', 'variable')
+		array('id_theme', 'id_member', 'variable'), __FILE__, __LINE__
 	);
 
 	cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 60);

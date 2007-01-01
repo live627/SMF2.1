@@ -511,7 +511,7 @@ function SetQuickGroups()
 					"{$db_prefix}permissions",
 					array('permission', 'id_group', 'add_deny'),
 					$inserts,
-					array('permission', 'id_group')
+					array('permission', 'id_group'), __FILE__, __LINE__
 				);
 			}
 		}
@@ -546,7 +546,7 @@ function SetQuickGroups()
 				"{$db_prefix}board_permissions",
 				array('permission', 'id_group', 'id_profile', 'add_deny'),
 				$inserts,
-				array('permission', 'id_group', 'id_profile')
+				array('permission', 'id_group', 'id_profile'), __FILE__, __LINE__
 			);
 		}
 
@@ -595,7 +595,7 @@ function SetQuickGroups()
 					"{$db_prefix}permissions",
 					array('permission', 'id_group', 'add_deny'),
 					$permChange,
-					array('permission', 'id_group')
+					array('permission', 'id_group'), __FILE__, __LINE__
 				);
 			// Board permissions go into the other table.
 			else
@@ -603,7 +603,7 @@ function SetQuickGroups()
 					"{$db_prefix}board_permissions",
 					array('permission', 'id_group', 'id_profile', 'add_deny'),
 					$permChange,
-					array('permission', 'id_group', 'id_profile')
+					array('permission', 'id_group', 'id_profile'), __FILE__, __LINE__
 				);
 		}
 
@@ -934,7 +934,8 @@ function ModifyMembergroup2()
 				"{$db_prefix}permissions",
 				array('id_group', 'permission', 'add_deny'),
 				$givePerms['membergroup'],
-				array('id_group', 'permission'));
+				array('id_group', 'permission'), __FILE__, __LINE__
+			);
 		}
 	}
 
@@ -949,10 +950,11 @@ function ModifyMembergroup2()
 		foreach ($givePerms['board'] as $k => $v)
 			$givePerms['board'][$k][] = $profileid;
 		$smfFunc['db_insert']('insert',
-				"{$db_prefix}board_permissions",
-				array('id_group', 'permission', 'add_deny', 'id_profile'),
-				$givePerms['board'],
-				array('id_group', 'permission', 'id_profile'));
+			"{$db_prefix}board_permissions",
+			array('id_group', 'permission', 'add_deny', 'id_profile'),
+			$givePerms['board'],
+			array('id_group', 'permission', 'id_profile'), __FILE__, __LINE__
+		);
 	}
 
 	// Update any inherited permissions as required.
@@ -1599,7 +1601,8 @@ function save_inline_permissions($permissions)
 			"{$db_prefix}permissions",
 			array('id_group', 'permission', 'add_deny'),
 			$insertRows,
-			array('id_group', 'permission'));
+			array('id_group', 'permission'), __FILE__, __LINE__
+		);
 
 	// Do a full child update.
 	updateChildPermissions(array(), -1);

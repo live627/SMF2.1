@@ -281,7 +281,8 @@ function Display()
 			"{$db_prefix}log_topics",
 			array('id_member', 'id_topic', 'id_msg'),
 			array($user_info['id'], $topic, $modSettings['maxMsgID']),
-			array('id_member', 'id_topic'));
+			array('id_member', 'id_topic'), __FILE__, __LINE__
+		);
 
 		// Check for notifications on this topic OR board.
 		$request = $smfFunc['db_query']('', "
@@ -345,7 +346,7 @@ function Display()
 				"{$db_prefix}log_boards",
 				array('id_msg', 'id_member', 'id_board'),
 				array($modSettings['maxMsgID'], $user_info['id'], $board),
-				array('id_member', 'id_board')
+				array('id_member', 'id_board'), __FILE__, __LINE__
 			);
 		}
 	}

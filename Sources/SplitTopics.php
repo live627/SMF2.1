@@ -667,7 +667,8 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 			"{$db_prefix}log_topics",
 			array('id_msg', 'id_member', 'id_topic'),
 			array($modSettings['maxMsgID'], $user_info['id'], $split2_ID_TOPIC),
-			array('id_member', 'id_topic'));
+			array('id_member', 'id_topic'), __FILE__, __LINE__
+		);
 
 	// Housekeeping.
 	updateStats('topic');
@@ -1169,7 +1170,8 @@ function MergeExecute($topics = array())
 			"{$db_prefix}log_topics",
 			array('id_member', 'id_topic', 'id_msg'),
 			$replaceEntries,
-			array('id_member', 'id_topic'));
+			array('id_member', 'id_topic'), __FILE__, __LINE__
+		);
 		unset($replaceEntries);
 
 		// Get rid of the old log entries.
@@ -1200,7 +1202,7 @@ function MergeExecute($topics = array())
 					"{$db_prefix}log_notify",
 					array('id_member', 'id_topic', 'id_board', 'sent'),
 					$replaceEntries,
-					array('id_member', 'id_topic', 'id_board')
+					array('id_member', 'id_topic', 'id_board'), __FILE__, __LINE__
 				);
 			unset($replaceEntries);
 

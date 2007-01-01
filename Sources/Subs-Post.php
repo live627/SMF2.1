@@ -966,7 +966,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			"{$db_prefix}pm_recipients",
 			array('id_pm', 'id_member', 'bcc', 'deleted', 'is_new'),
 			$insertRows,
-			array('id_pm', 'id_member')
+			array('id_pm', 'id_member'), __FILE__, __LINE__
 		);
 	}
 
@@ -1860,7 +1860,8 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				"{$db_prefix}log_topics",
 				array('id_topic', 'id_member', 'id_msg'),
 				array($topicOptions['id'], $user_info['id'], $msgOptions['id'] + 1),
-				array('id_topic', 'id_member'));
+				array('id_topic', 'id_member'), __FILE__, __LINE__
+			);
 		}
 	}
 
@@ -1878,7 +1879,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				"{$db_prefix}log_search_words",
 				array('id_word', 'id_msg'),
 				$inserts,
-				array('id_word', 'id_msg')
+				array('id_word', 'id_msg'), __FILE__, __LINE__
 			);
 	}
 
@@ -2146,10 +2147,11 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// Mark inserted topic as read.
 	if (!empty($topicOptions['mark_as_read']) && !$user_info['is_guest'])
 		$smfFunc['db_insert']('replace',
-				"{$db_prefix}log_topics",
-				array('id_topic', 'id_member', 'id_msg'),
-				array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
-				array('id_topic', 'id_member'));
+			"{$db_prefix}log_topics",
+			array('id_topic', 'id_member', 'id_msg'),
+			array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
+			array('id_topic', 'id_member'), __FILE__, __LINE__
+		);
 
 	// If there's a custom search index, it needs to be modified...
 	if (isset($msgOptions['body']) && !empty($modSettings['search_custom_index_config']))
@@ -2181,7 +2183,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				"{$db_prefix}log_search_words",
 				array('id_word', 'id_msg'),
 				$inserts,
-				array('id_word', 'id_msg')
+				array('id_word', 'id_msg'), __FILE__, __LINE__
 			);
 		}
 	}
@@ -2369,7 +2371,7 @@ function approvePosts($msgs, $approve = true)
 			"{$db_prefix}approval_queue",
 			array('id_msg'),
 			$msgInserts,
-			array('id_msg')
+			array('id_msg'), __FILE__, __LINE__
 		);
 	}
 

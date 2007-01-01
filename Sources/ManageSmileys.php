@@ -1113,7 +1113,7 @@ function EditMessageIcons()
 				"{$db_prefix}message_icons",
 				array('id_icon', 'id_board', 'title', 'filename', 'icon_order'),
 				$iconInsert,
-				array('id_icon')
+				array('id_icon'), __FILE__, __LINE__
 			);
 		}
 

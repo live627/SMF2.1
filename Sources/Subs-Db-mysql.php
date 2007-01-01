@@ -443,7 +443,7 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false)
 {
 	global $smfFunc;
 
@@ -461,7 +461,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable
 		$queryTitle INTO $table
 			(" . implode(', ', $columns) . ")
 		VALUES
-			" . implode(', ', $data), __FILE__, __LINE__);
+			" . implode(', ', $data), $file, $line);
 }
 
 ?>

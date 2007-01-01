@@ -174,7 +174,7 @@ function Vote()
 		"{$db_prefix}log_polls",
 		array('id_poll', 'id_member', 'id_choice'),
 		$inserts,
-		array('id_poll', 'id_member', 'id_choice')
+		array('id_poll', 'id_member', 'id_choice'), __FILE__, __LINE__
 	);
 
 	$smfFunc['db_query']('', "

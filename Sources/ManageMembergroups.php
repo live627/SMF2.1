@@ -276,7 +276,7 @@ function AddMembergroup()
 					"{$db_prefix}permissions",
 					array('id_group', 'permission', 'add_deny'),
 					$inserts,
-					array('id_group', 'permission')
+					array('id_group', 'permission'), __FILE__, __LINE__
 				);
 
 			$request = $smfFunc['db_query']('', "
@@ -293,7 +293,7 @@ function AddMembergroup()
 					"{$db_prefix}board_permissions",
 					array('id_group', 'id_profile', 'permission', 'add_deny'),
 					$inserts,
-					array('id_group', 'id_profile', 'permission')
+					array('id_group', 'id_profile', 'permission'), __FILE__, __LINE__
 				);
 
 			// Also get some membergroup information if we're copying and not copying from guests...
@@ -576,7 +576,7 @@ function EditMembergroup()
 					"{$db_prefix}group_moderators",
 					array('id_group', 'id_member'),
 					$mod_insert,
-					array('id_group', 'id_member')
+					array('id_group', 'id_member'), __FILE__, __LINE__
 				);
 			}
 		}

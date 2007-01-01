@@ -977,7 +977,7 @@ function PlushSearch2()
 					"{$db_prefix}log_search_results",
 					array('id_search', 'id_topic', 'relevance', 'id_msg', 'num_matches'),
 					$inserts,
-					array('id_search', 'id_topic')
+					array('id_search', 'id_topic'), __FILE__, __LINE__
 				);
 			}
 	
@@ -1157,7 +1157,7 @@ function PlushSearch2()
 						($db_prefix . ($createTemporary ? 'tmp_' : '') . "log_search_topics"),
 						$createTemporary ? array('id_topic') : array('id_search', 'id_topic'),
 						$inserts,
-						$createTemporary ? array('id_topic') : array('id_search', 'id_topic')
+						$createTemporary ? array('id_topic') : array('id_search', 'id_topic'), __FILE__, __LINE__
 					);
 				}
 
@@ -1358,7 +1358,7 @@ function PlushSearch2()
 						isset($custom_query['insert_into']) ? $custom_query['insert_into'] : $fulltext_query['insert_into'],
 						$createTemporary ? array('id_msg') : array('id_msg', 'id_search'),
 						$inserts,
-						$createTemporary ? array('id_msg') : array('id_msg', 'id_search')
+						$createTemporary ? array('id_msg') : array('id_msg', 'id_search'), __FILE__, __LINE__
 					);
 				}
 
@@ -1454,7 +1454,7 @@ function PlushSearch2()
 							"{$db_prefix}log_search_results",
 							array_keys($main_query['select']),
 							$inserts,
-							array('id_search', 'id_topic')
+							array('id_search', 'id_topic'), __FILE__, __LINE__
 						);
 					}
 					$_SESSION['search_cache']['num_results'] += count($inserts);
@@ -1508,7 +1508,7 @@ function PlushSearch2()
 							"{$db_prefix}log_search_results",
 							array('id_search', 'id_topic', 'relevance', 'id_msg', 'num_matches'),
 							$inserts,
-							array('id_search', 'id_topic')
+							array('id_search', 'id_topic'), __FILE__, __LINE__
 						);
 					}
 					$_SESSION['search_cache']['num_results'] += count($inserts);

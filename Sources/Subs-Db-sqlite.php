@@ -452,7 +452,7 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false)
 {
 	global $db_in_transact, $smfFunc;
 
@@ -483,7 +483,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable
 			}
 			$sql = substr($sql, 0, -2) . " WHERE $where";
 
-			$smfFunc['db_query']('', $sql, __FILE__, __LINE__);
+			$smfFunc['db_query']('', $sql, $file, $line);
 			if (db_affected_rows() != 0)
 				unset($data[$k]);
 		}
@@ -496,7 +496,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $disable
 				INSERT INTO $table
 					(" . implode(', ', $columns) . ")
 				VALUES
-					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : __FILE__, __LINE__);
+					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : $file, $line);
 	}
 
 	if ($priv_trans)

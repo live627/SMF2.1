@@ -327,7 +327,8 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 					"{$db_prefix}log_search_subjects",
 					array('word', 'id_topic'),
 					$inserts,
-					array('word', 'id_topic'));
+					array('word', 'id_topic'), __FILE__, __LINE__
+				);
 		}
 		break;
 
@@ -574,7 +575,7 @@ function updateSettings($changeArray, $update = false)
 		"{$db_prefix}settings",
 		array('variable', 'value'),
 		$replaceArray,
-		array('variable')
+		array('variable'), __FILE__, __LINE__
 	);
 
 	// Kill the cache - it needs redoing now, but we won't bother ourselves with that here.
@@ -2435,7 +2436,7 @@ function writeLog($force = false)
 				"{$db_prefix}log_online",
 				array('session', 'id_member', 'log_time', 'ip', 'url'),
 				array("'$session_id'", $user_info['id'], time(), "IFNULL(INET_ATON('$user_info[ip]'), 0)", "'$serialized'"),
-				array('session')
+				array('session'), __FILE__, __LINE__
 			);
 	}
 
@@ -2708,7 +2709,7 @@ function trackStats($stats = array())
 			"{$db_prefix}log_activity",
 			array_merge(array_keys($cache_stats), array('date')),
 			array_merge($cache_stats, array('\'' . $date . '\'')),
-			array('date')
+			array('date'), __FILE__, __LINE__
 		);
 	}
 
@@ -2739,7 +2740,8 @@ function spamProtection($error_type)
 		"{$db_prefix}log_floodcontrol",
 		array('ip', 'log_time'),
 		array("SUBSTRING('$user_info[ip]', 1, 16)", time()),
-		array('ip'));
+		array('ip'), __FILE__, __LINE__
+	);
 
 	// If affected is 0 or 2, it was there already.
 	if (db_affected_rows() != 1)

@@ -391,7 +391,7 @@ function BoardIndex()
 					"{$db_prefix}log_activity",
 					array('date', 'most_on'),
 					array('\'' . $date . '\'', $total_users),
-					array('date')
+					array('date'), __FILE__, __LINE__
 				);
 			}
 			// There's an entry in log_activity on today...

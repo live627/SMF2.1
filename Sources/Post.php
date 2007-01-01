@@ -1560,7 +1560,8 @@ function Post2()
 			"{$db_prefix}poll_choices",
 			array('id_poll', 'id_choice', 'label'),
 			$pollOptions,
-			array('id_poll', 'id_choice'));
+			array('id_poll', 'id_choice'), __FILE__, __LINE__
+		);
 	}
 	else
 		$id_poll = 0;
@@ -1691,7 +1692,7 @@ function Post2()
 				"{$db_prefix}log_notify",
 				array('id_member', 'id_topic', 'id_board'),
 				array($user_info['id'], $topic, 0),
-				array('id_member', 'id_topic', 'id_board')
+				array('id_member', 'id_topic', 'id_board'), __FILE__, __LINE__
 			);
 	}
 	elseif (!$newTopic)

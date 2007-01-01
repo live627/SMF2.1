@@ -594,7 +594,7 @@ function removeMessage($message, $decreasePostCount = true)
 					"{$db_prefix}log_topics",
 					array('id_topic', 'id_member', 'id_msg'),
 					array($topicID, $user_info['id'], $modSettings['maxMsgID']),
-					array('id_topic', 'id_member')
+					array('id_topic', 'id_member'), __FILE__, __LINE__
 				);
 
 			// Mark recycle board as seen, if it was marked as seen before.
@@ -603,7 +603,7 @@ function removeMessage($message, $decreasePostCount = true)
 					"{$db_prefix}log_boards",
 					array('id_board', 'id_member', 'id_msg'),
 					array($modSettings['recycle_board'], $user_info['id'], $modSettings['maxMsgID']),
-					array('id_board', 'id_member')
+					array('id_board', 'id_member'), __FILE__, __LINE__
 				);
 
 			// Add one topic and post to the recycle bin board.

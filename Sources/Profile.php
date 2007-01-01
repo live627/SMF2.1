@@ -1088,7 +1088,8 @@ function makeThemeChanges($memID, $id_theme)
 			"{$db_prefix}themes",
 			array('id_member', 'id_theme', 'variable', 'value'),
 			$themeSetArray,
-			array('id_member', 'id_theme', 'variable'));
+			array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
+		);
 	}
 
 	if (!empty($erase_options))
@@ -1352,7 +1353,7 @@ function makeCustomFieldChanges($memID, $area)
 			"{$db_prefix}themes",
 			array('id_theme', 'variable', 'value', 'id_member'),
 			$changes,
-			array('id_theme', 'variable', 'id_member')
+			array('id_theme', 'variable', 'id_member'), __FILE__, __LINE__
 		);
 }
 

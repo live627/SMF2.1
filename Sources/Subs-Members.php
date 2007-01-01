@@ -493,7 +493,7 @@ function registerMember(&$regOptions)
 			"{$db_prefix}themes",
 			array('id_member', 'variable', 'value'),
 			$inserts,
-			array('id_member', 'variable')
+			array('id_member', 'variable'), __FILE__, __LINE__
 		);
 	}
 

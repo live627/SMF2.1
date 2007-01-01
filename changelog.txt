@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2629 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2630 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -12,6 +12,7 @@ January 2007
  & Changed the wording in the reset member options section of themes. (Themes language files)
  ! Expanded group hidden flag to allow admininstrators to determine what should be visible on the Board Index. (ManageMembergroups.php, ManageMembergroups template)
  * The unread posts link on the babylon theme caused poor tiling in the category header. (babylon BoardIndex template)
+ ! The database function, db_insert, now takes the file name and line number as a parameter for better debugging. (Several files)
 
 
 December 2006

@@ -410,7 +410,7 @@ function moveTopics($topics, $toBoard)
 				"{$db_prefix}log_topics",
 				array('id_topic', 'id_member', 'id_msg'),
 				$log_topics,
-				array('id_topic', 'id_member')
+				array('id_topic', 'id_member'), __FILE__, __LINE__
 			);
 
 			$log_topics = array();
@@ -426,7 +426,7 @@ function moveTopics($topics, $toBoard)
 			"{$db_prefix}log_topics",
 			array('id_topic', 'id_member', 'id_msg'),
 			$log_topics,
-			array('id_topic', 'id_member')
+			array('id_topic', 'id_member'), __FILE__, __LINE__
 		);
 	}
 
@@ -492,7 +492,8 @@ function moveTopics($topics, $toBoard)
 			"{$db_prefix}log_boards",
 			array('id_board', 'id_member', 'id_msg'),
 			array($toBoard, $user_info['id'], $modSettings['maxMsgID']),
-			array('id_board', 'id_member'));
+			array('id_board', 'id_member'), __FILE__, __LINE__
+		);
 	}
 
 	// Update 'em pesky stats.

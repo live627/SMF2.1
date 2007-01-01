@@ -111,7 +111,8 @@ function MessageIndex()
 			"{$db_prefix}log_boards",
 			array('id_msg', 'id_member', 'id_board'),
 			array($modSettings['maxMsgID'], $user_info['id'], $board),
-			array('id_member', 'id_board'));
+			array('id_member', 'id_board'), __FILE__, __LINE__
+		);
 
 		if (!empty($board_info['parent_boards']))
 		{
@@ -1055,7 +1056,7 @@ function QuickModeration()
 			"{$db_prefix}log_topics",
 			array('id_msg', 'id_member', 'id_topic'),
 			$markArray,
-			array('id_member', 'id_topic')
+			array('id_member', 'id_topic'), __FILE__, __LINE__
 		);
 	}
 

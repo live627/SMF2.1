@@ -478,7 +478,7 @@ function CreateMessageIndex()
 						"{$db_prefix}log_search_words",
 						array('id_word', 'id_msg'),
 						$inserts,
-						array('id_word', 'id_msg')
+						array('id_word', 'id_msg'), __FILE__, __LINE__
 					);
 				if ($num_messages['todo'] === 0)
 				{

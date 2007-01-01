@@ -2031,7 +2031,7 @@ function sessionWrite($session_id, $data)
 			"{$db_prefix}sessions",
 			array('session_id', 'data', 'last_update'),
 			array('\'' . $smfFunc['db_escape_string']($session_id) . '\'', '\'' . $smfFunc['db_escape_string']($data) . '\'', time()),
-			array('session_id')
+			array('session_id'), __FILE__, __LINE__
 		);
 
 	return $result;

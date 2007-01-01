@@ -1071,7 +1071,7 @@ function UpgradeOptions()
 					"{$db_prefix}settings",
 					array('variable', 'value'),
 					array('\'allow_sm_stats\'', '\'' . $ID[1] . '\''),
-					array('variable')
+					array('variable'), __FILE__, __LINE__
 				);
 		}
 	}
@@ -1305,7 +1305,7 @@ function DatabaseChanges()
 						"{$db_prefix}settings",
 						array('variable', 'value'),
 						array('\'smfVersion\'', '\'' . $file[2] . '\''),
-						array('variable')
+						array('variable'), __FILE__, __LINE__
 					);
 			
 					$modSettings['smfVersion'] = $file[2];
@@ -1832,7 +1832,7 @@ function UpgradeTemplate()
 				"{$db_prefix}themes",
 				array('id_member', 'id_theme', 'variable', 'value'),
 				$themeData,
-				array('id_theme', 'id_member', 'variable')
+				array('id_theme', 'id_member', 'variable'), __FILE__, __LINE__
 			);
 		}
 
@@ -1845,7 +1845,7 @@ function UpgradeTemplate()
 				"{$db_prefix}settings",
 				array('variable', 'value'),
 				array(array('\'theme_guests\'', $id_theme), array('\'smiley_sets_default\'', '\'classic\'')),
-				array('variable')
+				array('variable'), __FILE__, __LINE__
 			);
 
 		if ($is_debug && $command_line)
@@ -1958,7 +1958,7 @@ function convertSettingsToTheme()
 			"{$db_prefix}themes",
 			array('id_member', 'id_theme', 'variable', 'value'),
 			$themeData,
-			array('id_member', 'id_theme', 'variable')
+			array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
 		);
 	}
 }
