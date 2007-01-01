@@ -3613,16 +3613,19 @@ function template_database_changes()
 
 		echo '
 		<h3 id="info2"><b>Executing:</b> &quot;<span id="cur_item_name">', $upcontext['current_item_name'], '</span>&quot; (<span id="item_num">', $upcontext['current_item_num'], '</span> of <span id="total_items"><span id="item_count">', $upcontext['total_items'], '</span>', $upcontext['file_count'] > 1 ? ' - of this script' : '', ').</span></h3>
-		<br /><span id="commess" style="font-weight: bold; display: ', !empty($upcontext['changes_complete']) || $upcontext['current_debug_item_num'] == $upcontext['debug_items'] ? 'inline' : 'none', ';">Database Updates Complete! Click Continue to Proceed.</span><br />';
+		<br /><span id="commess" style="font-weight: bold; display: ', !empty($upcontext['changes_complete']) || $upcontext['current_debug_item_num'] == $upcontext['debug_items'] ? 'inline' : 'none', ';">Database Updates Complete! Click Continue to Proceed.</span>';
 
 		if ($is_debug)
 		{
+			echo '
+			<div id="debug_section" style="height: 200px; overflow: auto;">';
 			echo $upcontext['current_debug_item_name'];
 			for ($i = substr_count($upcontext['current_debug_item_name'], '.'); $i < 3; $i++)
 				echo '.';
+			echo '
+			<span id="debuginfo"></span>
+			</div>';
 		}
-		echo '
-			<span id="debuginfo"></span>';
 	}
 
 	// Place for the XML error message.
@@ -3781,7 +3784,8 @@ function template_database_changes()
 
 		if ($is_debug)
 			echo '
-					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<span id="debuginfo"></span>\');';
+					setOuterHTML(document.getElementById(\'debuginfo\'), \'done<span id="debuginfo"></span>\');
+					document.getElementById(\'debug_section\').style.display = "none"';
 
 		echo '
 		
@@ -3827,7 +3831,9 @@ function template_database_changes()
 				}
 				else
 					setOuterHTML(document.getElementById(\'debuginfo\'), \'...<span id="debuginfo"></span>\');
-				window.scroll(0,99999);';
+				window.scroll(0,99999);
+				if (document.getElementById(\'debug_section\').scrollHeight)
+					document.getElementById(\'debug_section\').scrollTop = document.getElementById(\'debug_section\').scrollHeight';
 
 		echo '
 				// Update the page.

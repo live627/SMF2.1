@@ -465,6 +465,15 @@ DELETE FROM {$db_prefix}settings
 WHERE variable = 'default_personalText';
 ---#
 
+---# Changing allow hide email setting.
+UPDATE {$db_prefix}settings
+SET variable = 'allow_hide_email'
+WHERE variable = 'allow_hideEmail';
+
+DELETE FROM {$db_prefix}settings
+WHERE variable = 'allow_hideEmail';
+---#
+
 ---# Ensuring stats index setting present...
 INSERT IGNORE INTO {$db_prefix}themes
 	(id_theme, variable, value)
