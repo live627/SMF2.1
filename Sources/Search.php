@@ -900,7 +900,7 @@ function PlushSearch2()
 
 				if (!empty($userQuery))
 				{
-					if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
+					if ($subject_query['from'] != "{$db_prefix}messages AS m")
 					{
 						$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_topic = t.id_topic)";
 					}
@@ -916,7 +916,7 @@ function PlushSearch2()
 					$subject_query['where'][] = 't.id_board ' . $boardQuery;
 				if (!empty($excludedPhrases))
 				{
-					if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
+					if ($subject_query['from'] != "{$db_prefix}messages AS m")
 					{
 						$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 					}
@@ -1070,7 +1070,7 @@ function PlushSearch2()
 						$numTables++;
 						if (in_array($subjectWord, $excludedSubjectWords))
 						{
-							if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
+							if ($subject_query['from'] != "{$db_prefix}messages AS m")
 							{
 								$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 							}
@@ -1088,7 +1088,7 @@ function PlushSearch2()
 
 					if (!empty($userQuery))
 					{
-						if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
+						if ($subject_query['from'] != "{$db_prefix}messages AS m")
 						{
 							$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 						}
@@ -1104,7 +1104,7 @@ function PlushSearch2()
 						$subject_query['where'][] = 't.id_board ' . $boardQuery;
 					if (!empty($excludedPhrases))
 					{
-						if (!in_array("{$db_prefix}messages AS m", $subject_query['from']))
+						if ($subject_query['from'] != "{$db_prefix}messages AS m")
 						{
 							$subject_query['inner_join'][] = "{$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)";
 						}
