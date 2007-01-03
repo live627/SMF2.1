@@ -1684,6 +1684,7 @@ function template_add_rule()
 						else if (curVal != "bud")
 							curDef = document.getElementById("ruledef" + curNum).value;
 
+						curDef = smf_htmlspecialchars(curDef);
 						// What type of test is this?
 						if (curVal == "mid" && curDef)
 							text += joinText + "', $txt['pm_readable_member'], '".replace("{MEMBER}", curDef);
@@ -1712,6 +1713,7 @@ function template_add_rule()
 						if (curVal == "lab")
 							curDef = document.getElementById("labdef" + curNum).value;
 
+						curDef = smf_htmlspecialchars(curDef);
 						// Now pick the actions.
 						if (curVal == "lab" && curDef && labels[curDef])
 							actionText += joinText + "', $txt['pm_readable_label'], '".replace("{LABEL}", labels[curDef]);

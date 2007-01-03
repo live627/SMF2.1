@@ -2674,7 +2674,7 @@ function ManageRules()
 		$context['rid'] = isset($_GET['rid']) && isset($context['rules'][$_GET['rid']])? (int) $_GET['rid'] : 0;
 
 		// Name is easy!
-		$ruleName = trim($_POST['rule_name']);
+		$ruleName = $smfFunc['htmlspecialchars'](trim($_POST['rule_name']));
 		if (empty($ruleName))
 			fatal_lang_error('pm_rule_no_name', false);
 
@@ -2714,8 +2714,7 @@ function ManageRules()
 			elseif ($type == 'gid')
 				$criteria[] = array('t' => 'gid', 'v' => (int) $_POST['ruledefgroup'][$ind]);
 			elseif (in_array($type, array('sub', 'msg')) && trim($smfFunc['db_unescape_string']($_POST['ruledef'][$ind])) != '')
-				$criteria[] = array('t' => $type, 'v' => trim($smfFunc['db_unescape_string']($_POST['ruledef'][$ind])));
-				
+				$criteria[] = array('t' => $type, 'v' => $smfFunc['htmlspecialchars'](trim($smfFunc['db_unescape_string']($_POST['ruledef'][$ind]))));
 		}
 
 		// Also do the actions!
