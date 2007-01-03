@@ -227,7 +227,7 @@ function preparsecode(&$message, $previewing = false)
 			if (!$previewing)
 			{
 				if (allowedTo('admin_forum'))
-					$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ise', '\'[html]\' . strtr(un_htmlspecialchars(\'$1\'), array("\n" => \'&#13;\', \'  \' => \' &#32;\')) . \'[/html]\'', $parts[$i]);
+					$parts[$i] = preg_replace('~\[html\](.+?)\[/html\]~ise', '\'[html]\' . $smfFunc[\'db_escape_string\'](strtr(un_htmlspecialchars(\'$1\'), array("\n" => \'&#13;\', \'  \' => \' &#32;\'))) . \'[/html]\'', $parts[$i]);
 				// We should edit them out, or else if an admin edits the message they will get shown...
 				else
 					$parts[$i] = preg_replace('~\[[/]?html\]~i', '', $parts[$i]);
