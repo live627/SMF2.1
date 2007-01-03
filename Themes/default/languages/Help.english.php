@@ -161,6 +161,32 @@ $helptxt['modlog'] = '<b>Moderation Log</b><br />
 	This section allows members of the admin team to track all the moderation actions that the forum moderators have performed. To ensure that
 	moderators cannot remove references to the actions they have performed, entries may not be deleted until 24 hours after the action was taken.
 	The \'objects\' column lists any variables associated with the action.';
+$helptxt['warning_enable'] = '<b>User Warning System</b><br />
+	This feature enables members of the admin and moderation team to issue warnings to users - and to use a users warning level to determine the
+	actions available to them on the forum. Upon enabling this feature a permission will be available within the permissions section to define
+	which groups may assign warnings to users. Warning levels can be adjusted from a users profile. The following additional options are available:
+	<ul>
+		<li>
+			<b>Warning Level for User Watch</b><br />
+			This setting defines the percentage warning level a user must reach to automatically assign a &quot;watch&quot; to the user.
+			Any user who is being &quot;watched&quot; will appear in the relevant area of the moderation center.
+		</li>
+		<li>
+			<b>Warning Level for Post Moderation</b><br />
+			Any user passing the value of this setting will find all their posts require moderator approval before they appear to the forum
+			community. This will override any local board permissions which may exist related to post moderation.
+		</li>
+		<li>
+			<b>Warning Level for User Muting</b><br />
+			If this warning level is passed by a user they will find themselves under a post ban. The user will lose all posting rights.
+		</li>
+		<li>
+			<b>Maximum User Warning Point per Day</b><br />
+			This setting limits the amount of points a moderator may add/remove to any particular user in a twenty four hour period. This will
+			can be used to limit what a moderator can do in a small period of time. This setting can be disabled by setting to a value of zero. Note that
+			any users with administrator permissions are not affected by this value.
+		</li>
+	</ul>';
 $helptxt['error_log'] = '<b>Error Log</b><br />
 	The error log tracks logs every serious error encountered by users using your forum. It lists all of these errors by date which can be sorted
 	by clicking the black arrow next to each date. Additionally you can filter the errors by clicking the picture next to each error statistic. This

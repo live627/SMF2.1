@@ -131,6 +131,9 @@ $txt['permissionname_manage_bans'] = 'Beheer banlijst';
 $txt['permissionhelp_manage_bans'] = 'Met deze permissie kan een gebruiker namen, IP-adressen, hostnamen en e-mailadressen toevoegen of verwijderen aan de lijst van gebande gebruikers. Het geeft ook toegang tot het bekijken en verwijderen van logbestanden van gebande gebruikers die probeerden in te loggen.';
 $txt['permissionname_send_mail'] = 'Stuur een forum e-mail naar leden';
 $txt['permissionhelp_send_mail'] = 'Groepsmail naar alle forum leden of slechts enkele ledengroepen via e-mail of persoonlijk bericht (voor de laatste heb je \'Stuur Persoonlijk Bericht\' permissie nodig).';
+// Untranslated!
+$txt['permissionname_issue_warning'] = 'Issue warnings to members';
+$txt['permissionhelp_issue_warning'] = 'Issue a warning to members of the forum and change that members\' warning level. Requires the warning system to be enabled.';
 
 $txt['permissiongroup_profile'] = 'Leden profielen';
 $txt['permissionname_profile_view'] = 'Bekijk profiel samenvatting en statistieken';

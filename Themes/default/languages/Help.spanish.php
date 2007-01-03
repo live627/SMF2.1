@@ -162,6 +162,33 @@ $helptxt['modlog'] = '<b>Log de Moderaci&oacute;n</b><br />
 	Esta secci&oacute;n le permite a los administradores mantenerse al tanto de todas las acciones de moderaci&oacute;n que los moderadores del foro han realizado. Para asegurarse que
 	los moderadores no puedan eliminar las referencias a las acciones que ellos han realizado, las entradas no pueden eliminarse hasta 24 horas despu&eacute;s de que la acci&oacute;n se haya realizado.
 	La columna \'objetos\' lista cualquier variable asociada con la acci&oacute;n.';
+// Untranslated!
+$helptxt['warning_enable'] = '<b>User Warning System</b><br />
+	This feature enables members of the admin and moderation team to issue warnings to users - and to use a users warning level to determine the
+	actions available to them on the forum. Upon enabling this feature a permission will be available within the permissions section to define
+	which groups may assign warnings to users. Warning levels can be adjusted from a users profile. The following additional options are available:
+	<ul>
+		<li>
+			<b>Warning Level for User Watch</b><br />
+			This setting defines the percentage warning level a user must reach to automatically assign a &quot;watch&quot; to the user.
+			Any user who is being &quot;watched&quot; will appear in the relevant area of the moderation center.
+		</li>
+		<li>
+			<b>Warning Level for Post Moderation</b><br />
+			Any user passing the value of this setting will find all their posts require moderator approval before they appear to the forum
+			community. This will override any local board permissions which may exist related to post moderation.
+		</li>
+		<li>
+			<b>Warning Level for User Muting</b><br />
+			If this warning level is passed by a user they will find themselves under a post ban. The user will lose all posting rights.
+		</li>
+		<li>
+			<b>Maximum User Warning Point per Day</b><br />
+			This setting limits the amount of points a moderator may add/remove to any particular user in a twenty four hour period. This will
+			can be used to limit what a moderator can do in a small period of time. This setting can be disabled by setting to a value of zero. Note that
+			any users with administrator permissions are not affected by this value.
+		</li>
+	</ul>';
 $helptxt['error_log'] = '<b>Log de Errores</b><br />
 	El log de errores rastrea cualquier error grave encontrado por usuarios al usar tu foro. Lista todos esos errores por fecha, que puede ser usada para ordenar
 	al hacer click en la flecha negra al lado de cada fecha. Asimismo, puedes filtrar los errores al hacer click en la imagen al lado de cada estad&iacute;stica de error. Esto

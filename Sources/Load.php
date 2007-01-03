@@ -457,6 +457,7 @@ function loadUserSettings()
 		'total_time_logged_in' => empty($user_settings['total_time_logged_in']) ? 0 : $user_settings['total_time_logged_in'],
 		'buddies' => !empty($modSettings['enable_buddylist']) && !empty($user_settings['buddy_list']) ? explode(',', $user_settings['buddy_list']) : array(),
 		'ignoreboards' => !empty($user_settings['ignore_boards']) && !empty($modSettings['allow_ignore_boards']) ? explode(',',$user_settings['ignore_boards']) : array(),
+		'warning' => isset($user_settings['warning']) ? $user_settings['warning'] : 0,
 		'permissions' => array(),
 	);
 	$user_info['groups'] = array_unique($user_info['groups']);
@@ -830,7 +831,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			mem.birthdate, mem.member_ip, mem.member_ip2, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login,
 			mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online,
 			mem.buddy_list, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
-			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.is_activated,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.is_activated, mem.warning,
 			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars" . (!empty($modSettings['titlesEnable']) ? ',
 			mem.usertitle' : '');
 		$select_tables = "
@@ -851,7 +852,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			mem.time_format, mem.secret_question, mem.is_activated, mem.additional_groups, mem.smiley_set, mem.show_online,
 			mem.total_time_logged_in, mem.id_post_group, mem.notify_announcements, mem.notify_regularity, mem.notify_send_body,
 			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
-			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.ignore_boards,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.ignore_boards, mem.warning,
 			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt";
 		$select_tables = "
 			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
@@ -1079,6 +1080,7 @@ function loadMemberContext($user)
 		'post_group' => $profile['post_group'],
 		'post_group_color' => $profile['post_group_color'],
 		'group_stars' => str_repeat('<img src="' . str_replace('$language', $context['user']['language'], isset($profile['stars'][1]) ? $settings['images_url'] . '/' . $profile['stars'][1] : '') . '" alt="*" border="0" />', empty($profile['stars'][0]) || empty($profile['stars'][1]) ? 0 : $profile['stars'][0]),
+		'warning' => &$profile['warning'],
 		'local_time' => timeformat(time() + ($profile['time_offset'] - $user_info['time_offset']) * 3600, false),
 	);
 

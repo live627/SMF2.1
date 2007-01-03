@@ -16,18 +16,20 @@ $txt['mc_description'] = 'This is your &quot;Moderation Center&quot;. From here 
 $txt['mc_group_requests'] = 'Group Requests';
 $txt['mc_unapproved_posts'] = 'Unapproved Posts';
 $txt['mc_unapproved_attachments'] = 'Unapproved Attachments';
-$txt['mc_watched_users'] = 'Watched Users';
+$txt['mc_watched_users'] = 'Recent Watched Users';
 $txt['mc_watched_topics'] = 'Watched Topics';
 $txt['mc_scratch_board'] = 'Moderator Scratch Board';
 $txt['mc_latest_news'] = 'Simple Machines Latest News';
 $txt['mc_recent_reports'] = 'Recent Topic Reports';
+$txt['mc_warning_log'] = 'Warning Log';
 
 $txt['mc_cannot_connect_sm'] = 'You are unable to connect to simplemachines.org\'s latest news file.';
 
 $txt['mc_recent_reports_none'] = 'There are no outstanding reports';
-$txt['mc_watched_users_none'] = 'You do not currently have any watches in place.';
+$txt['mc_watched_users_none'] = 'There are not currently any watches in place.';
 $txt['mc_group_requests_none'] = 'There are no open requests for group membership.';
 
+$txt['mc_seen'] = 'last seen';
 $txt['mc_groupr_by'] = 'by';
 
 $txt['mc_reported_posts_desc'] = 'Here you can review all the post reports raised by members of the community.';
@@ -152,5 +154,28 @@ $txt['modlog_go'] = 'Los';
 $txt['modlog_add'] = 'Hinzuf&uuml;gen';
 $txt['modlog_search'] = 'Schnelle Suche';
 $txt['modlog_by'] = 'von';
+
+// Untranslated!
+$txt['show_notice'] = 'Notice Text';
+$txt['show_notice_subject'] = 'Subject';
+$txt['show_notice_text'] = 'Text';
+
+// Untranslated!
+$txt['mc_watched_users_title'] = 'Watched Users';
+$txt['mc_watched_users_desc'] = 'Here you can keep a track of all users who have been assigned a &quot;watch&quot; by the moderation team.';
+$txt['mc_watched_users_member'] = 'View by Member';
+$txt['mc_watched_users_post'] = 'View by Post';
+$txt['mc_watched_users_warning'] = 'Warning Level';
+$txt['mc_watched_users_last_login'] = 'Last Login';
+$txt['mc_watched_users_last_post'] = 'Last Post';
+$txt['mc_watched_users_no_posts'] = 'There are no posts from watched users.';
+// Don't use entities in the two strings below.
+$txt['mc_watched_users_delete_post'] = 'Are you sure you want to delete this post?';
+$txt['mc_watched_users_delete_posts'] = 'Are you sure you want to delete these posts?';
+$txt['mc_watched_users_posted'] = 'Posted';
+
+// Untranslated!
+$txt['mc_warnings_none'] = 'No warnings have been issued yet!';
+$txt['mc_warnings_recipient'] = 'Recipient';
 
 ?>

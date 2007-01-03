@@ -1025,7 +1025,7 @@ function PlushSearch2()
 				$main_query['select']['num_matches'] = '1 AS num_matches';
 
 				$main_query['weights'] = array(
-					'age' => "((m.id_msg - t.id_first_msg) / CASE WHEN t.id_last_msg = t.id_first_msg THEN 1 ELSE t.id_last_msg - t.id_first_msg)",
+					'age' => "((m.id_msg - t.id_first_msg) / CASE WHEN t.id_last_msg = t.id_first_msg THEN 1 ELSE t.id_last_msg - t.id_first_msg END)",
 					'first_message' => "CASE WHEN m.id_msg = t.id_first_msg THEN 1 ELSE 0 END",
 				);
 

@@ -802,6 +802,31 @@ CREATE TABLE {$db_prefix}log_boards (
 );
 
 #
+# Table structure for table `log_comments`
+#
+
+CREATE TABLE {$db_prefix}log_comments (
+  id_comment integer primary key,
+  id_member int NOT NULL default '0',
+  member_name varchar(80) NOT NULL default '',
+  comment_type varchar(8) NOT NULL default 'warning',
+  id_recipient int NOT NULL default '0',
+  recipient_name varchar(255) NOT NULL,
+  log_time int NOT NULL default '0',
+  id_notice int NOT NULL default '0',
+  counter smallint NOT NULL default '0',
+  body text NOT NULL
+);
+
+#
+# Indexes for table `log_comments`
+#
+
+CREATE INDEX {$db_prefix}log_comments_id_recipient ON {$db_prefix}log_comments (id_recipient);
+CREATE INDEX {$db_prefix}log_comments_log_time ON {$db_prefix}log_comments (log_time);
+CREATE INDEX {$db_prefix}log_comments_comment_type ON {$db_prefix}log_comments (comment_type);
+
+#
 # Table structure for table `log_digest`
 #
 
@@ -896,6 +921,16 @@ CREATE TABLE {$db_prefix}log_mark_read (
 );
 
 #
+# Table structure for table `log_member_notices`
+#
+
+CREATE TABLE {$db_prefix}log_member_notices (
+  id_notice int primary key,
+  subject varchar(255) NOT NULL,
+  body text NOT NULL
+);
+
+#
 # Table structure for table `log_notify`
 #
 
@@ -906,6 +941,12 @@ CREATE TABLE {$db_prefix}log_notify (
   sent smallint NOT NULL default '0',
   PRIMARY KEY (id_member, id_topic, id_board)
 );
+
+#
+# Indexes for table `log_notify`
+#
+
+CREATE INDEX {$db_prefix}log_notify_id_topic ON {$db_prefix}log_notify (id_topic, id_member);
 
 #
 # Table structure for table `log_online`
@@ -1215,7 +1256,8 @@ CREATE TABLE {$db_prefix}members (
   id_post_group smallint NOT NULL default '0',
   total_time_logged_in int NOT NULL default '0',
   password_salt varchar(5) NOT NULL default '',
-  ignore_boards varchar(255) NOT NULL
+  ignore_boards varchar(255) NOT NULL,
+  warning smallint NOT NULL default '0'
 );
 
 #
@@ -1230,6 +1272,7 @@ CREATE INDEX {$db_prefix}members_posts ON {$db_prefix}members (posts);
 CREATE INDEX {$db_prefix}members_last_login ON {$db_prefix}members (last_login);
 CREATE INDEX {$db_prefix}members_lngfile ON {$db_prefix}members (lngfile);
 CREATE INDEX {$db_prefix}members_id_post_group ON {$db_prefix}members (id_post_group);
+CREATE INDEX {$db_prefix}members_warning ON {$db_prefix}members (warning);
 
 #
 # Table structure for table `message_icons`
@@ -1726,6 +1769,9 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('mail_next_send', '0'
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('mail_recent', '0000000000|0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('settings_updated', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('next_task_time', '1');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_settings', '1,10,20');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_moderate', '35');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_mute', '60');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('last_mod_report_action', '0');
 COMMIT;
 

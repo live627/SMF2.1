@@ -579,6 +579,11 @@ upgrade_query("
 ---}
 ---#
 
+---# Adding index to log_notify table...
+ALTER TABLE {$db_prefix}log_notify
+ADD INDEX id_topic (id_topic, id_member);
+---#
+
 /******************************************************************************/
 --- Adding custom profile fields.
 /******************************************************************************/
@@ -756,6 +761,55 @@ if (@$modSettings['smfVersion'] < '2.0')
 				" . implode(',', $inserts));
 }
 ---}
+---#
+
+/******************************************************************************/
+--- Adding user warnings.
+/******************************************************************************/
+
+---# Creating member notices table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}log_member_notices (
+	id_notice mediumint(8) unsigned NOT NULL auto_increment,
+	subject tinytext NOT NULL,
+	body text NOT NULL,
+	PRIMARY KEY (id_notice)
+) TYPE=MyISAM;
+---#
+
+---# Creating comments table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}log_comments (
+	id_comment mediumint(8) unsigned NOT NULL auto_increment,
+	id_member mediumint(8) unsigned NOT NULL default '0',
+	member_name varchar(80) NOT NULL default '',
+	comment_type varchar(8) NOT NULL default 'warning',
+	id_recipient mediumint(8) unsigned NOT NULL default '0',
+	recipient_name tinytext NOT NULL,
+	log_time int(10) NOT NULL default '0',
+	id_notice mediumint(8) unsigned NOT NULL default '0',
+	counter tinyint(3) NOT NULL default '0',
+	body text NOT NULL,
+	PRIMARY KEY (id_comment),
+	KEY id_recipient (id_recipient),
+	KEY log_time (log_time),
+	KEY comment_type (comment_type(8))
+) TYPE=MyISAM;
+---#
+
+---# Adding user warning column...
+ALTER TABLE {$db_prefix}members
+ADD warning tinyint(4) NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}members
+ADD INDEX warning (warning);
+---#
+
+---# Ensuring warning settings are present...
+INSERT IGNORE INTO {$db_prefix}settings
+	(variable, value)
+VALUES
+	('warning_settings', '1,10,20'),
+	('warning_moderate', '35'),
+	('warning_mute', '60');
 ---#
 
 /******************************************************************************/

@@ -22,7 +22,7 @@ $txt['name_invalid_character'] = 'Car&aacute;cter inv&aacute;lido en el nombre.'
 $txt['email_invalid_character'] = 'Car&aacute;cter inv&aacute;lido en el Email.';
 $txt['username_reserved'] = 'El nombre de usuario que trataste de registrar contiene el nombre reservado\'%s\'. Por favor intenta otro nombre de usuario.';
 $txt['numbers_one_to_nine'] = 'Este campo s&oacute;lo acepta n&uacute;meros del 0-9';
-$txt['not_a_user'] = 'El usuario del cual tratas de ver su perfil no existe. - %1$s';
+$txt['not_a_user'] = 'El usuario del cual tratas de ver su perfil no existe.';
 $txt['not_a_topic'] = 'Este tema no existe en el foro.';
 $txt['email_in_use'] = 'Esa direcci&oacute;n de email (%s) est&aacute; siendo usada por un usuario registrado. Si crees que es un error, ve a la p&aacute;gina de ingreso y usa la funci&oacute;n recordar contrase&ntilde;a con esa direcci&oacute;n.';
 
@@ -131,6 +131,8 @@ $txt['cannot_delete_any'] = 'No est&aacute; permitido borrar mensajes en este fo
 $txt['cannot_report_any'] = 'No est&aacute;s autorizado para reportar mensajes en este foro.';
 $txt['cannot_search_posts'] = 'No est&aacute;s autorizado a buscar mensajes en este foro.';
 $txt['cannot_send_mail'] = 'No tienes el privilegio de enviar mails.';
+// Untranslated!
+$txt['cannot_issue_warning'] = 'Sorry, you do not have permission to issue warnings to members.';
 $txt['cannot_send_topic'] = 'Lo sentimos, pero el administrador ha desactivado la opci&oacute;n de enviar temas en este foro.';
 $txt['cannot_split_any'] = 'No est&aacute; permitido dividir temas en este foro.';
 $txt['cannot_view_attachments'] = 'Parece que no est&aacute;s autorizado para descargar o ver archivos adjuntos en este foro.';
@@ -350,5 +352,9 @@ $txt['resend_email_success'] = 'Un nuevo email de activaci&oacute;n ha sido envi
 // Untranslated!
 $txt['custom_option_need_name'] = 'The profile option must have a name!';
 $txt['custom_option_not_unique'] = 'Field name is not unique!';
+
+// Untranslated!
+$txt['warning_no_reason'] = 'You must enter a reason for altering the warning state of a member.';
+$txt['warning_notify_blank'] = 'You selected to notify the user but did not fill in the subject/message fields.';
 
 ?>

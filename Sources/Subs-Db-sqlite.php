@@ -197,6 +197,7 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 	}
 
 	// Do most of the substrings!
+	//!!! This is no good - must not act on strings!
 	$db_string = preg_replace('~SUBSTRING\(\s*\'~i', 'SUBSTR(\'', $db_string);
 
 	$ret = @sqlite_query($db_string, $connection, SQLITE_BOTH, $err_msg);

@@ -22,7 +22,7 @@ $txt['name_invalid_character'] = 'Invalid character used in Name.';
 $txt['email_invalid_character'] = 'Invalid character used in email.';
 $txt['username_reserved'] = 'The username you tried to use contains the reserved name \'%s\'. Please try another username.';
 $txt['numbers_one_to_nine'] = 'This field only accepts numbers from 0-9';
-$txt['not_a_user'] = 'The user whose profile you are trying to view does not exist. - %1$s';
+$txt['not_a_user'] = 'The user whose profile you are trying to view does not exist.';
 $txt['not_a_topic'] = 'This topic doesn\'t exist on this board.';
 $txt['email_in_use'] = 'That email address (%s) is being used by a registered member already. If you feel this is a mistake, go to the login page and use the password reminder with that address.';
 
@@ -128,6 +128,7 @@ $txt['cannot_delete_any'] = 'Deleting just any posts in this board is not allowe
 $txt['cannot_report_any'] = 'You are not allowed to report posts in this board.';
 $txt['cannot_search_posts'] = 'You are not allowed to search for posts in this forum.';
 $txt['cannot_send_mail'] = 'You don\'t have the privilege of sending out emails to everyone.';
+$txt['cannot_issue_warning'] = 'Sorry, you do not have permission to issue warnings to members.';
 $txt['cannot_send_topic'] = 'Sorry, but the administrator has disallowed sending topics on this board.';
 $txt['cannot_split_any'] = 'Splitting just any topic is not allowed in this board.';
 $txt['cannot_view_attachments'] = 'It seems that you are not allowed to download or view attachments on this board.';
@@ -337,5 +338,8 @@ $txt['resend_email_success'] = 'A new activation email has successfully been sen
 
 $txt['custom_option_need_name'] = 'The profile option must have a name!';
 $txt['custom_option_not_unique'] = 'Field name is not unique!';
+
+$txt['warning_no_reason'] = 'You must enter a reason for altering the warning state of a member.';
+$txt['warning_notify_blank'] = 'You selected to notify the user but did not fill in the subject/message fields.';
 
 ?>

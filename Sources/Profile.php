@@ -89,6 +89,9 @@ if (!defined('SMF'))
 	void groupMembership(int id_member)
 		// !!!
 
+	void issueWarning(int id_member)
+		// !!!
+
 	void deleteAccount(int id_member)
 		// !!!
 
@@ -146,6 +149,7 @@ function ModifyProfile($post_errors = array())
 		'theme' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
 		'notification' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
 		'groupMembership' => array(array('profile_view_own'), array('manage_membergroups')),
+		'issueWarning' => array(array(), array('issue_warnings')),
 		'deleteAccount' => array(array('profile_remove_any', 'profile_remove_own'), array('profile_remove_any')),
 		'ignoreboards' => array(array('profile_extra_any', 'profile_extra_own'), array('profile_extra_any')),
 	);
@@ -258,7 +262,7 @@ function ModifyProfile($post_errors = array())
 	}
 
 	// If you have permission to do something with this profile, you'll see one or more actions.
-	if (($context['user']['is_owner'] && allowedTo('profile_remove_own')) || allowedTo('profile_remove_any') || (!$context['user']['is_owner'] && allowedTo('pm_send')))
+	if (($context['user']['is_owner'] && allowedTo('profile_remove_own')) || allowedTo('profile_remove_any') || (!$context['user']['is_owner'] && (allowedTo('issue_warnings') || allowedTo('pm_send'))))
 	{
 		// Initialize the action menu group...
 		$context['profile_areas']['profile_action'] = array(
@@ -269,6 +273,9 @@ function ModifyProfile($post_errors = array())
 		// You shouldn't PM (or ban really..) yourself!! (only administrators see this because it's not in the menu.)
 		if (!$context['user']['is_owner'] && allowedTo('pm_send'))
 			$context['profile_areas']['profile_action']['areas']['send_pm'] = '<a href="' . $scripturl . '?action=pm;sa=send;u=' . $memID . '">' . $txt['profileSendIm'] . '</a>';
+		// Are they able to issue a warning?
+		if ($modSettings['warning_settings']{0} == 1 && !$context['user']['is_owner'] && allowedTo('issue_warnings'))
+			$context['profile_areas']['profile_action']['areas']['issueWarning'] = '<a href="' . $scripturl . '?action=profile;u=' . $memID . ';sa=issueWarning">' . $txt['profile_issue_warning'] . '</a>';
 		// We don't wanna ban admins, do we?
 		if (allowedTo('manage_bans') && $user_profile[$memID]['id_group'] != 1 && !in_array(1, explode(',', $user_profile[$memID]['additional_groups'])))
 			$context['profile_areas']['profile_action']['areas']['banUser'] = '<a href="' . $scripturl . '?action=admin;area=ban;sa=add;u=' . $memID . '">' . $txt['profileBanUser'] . '</a>';
@@ -319,6 +326,7 @@ function ModifyProfile($post_errors = array())
 		'aim' => array('name' => empty($user_profile[$memID]['aim']) ? '' : str_replace('+', ' ', $user_profile[$memID]['aim'])),
 		'yim' => array('name' => empty($user_profile[$memID]['yim']) ? '' : $user_profile[$memID]['yim']),
 		'msn' => array('name' => empty($user_profile[$memID]['msn']) ? '' : $user_profile[$memID]['msn']),
+		'warning' => empty($user_profile[$memID]['warning']) ? 0 : $user_profile[$memID]['warning'],
 		'website' => array(
 			'title' => !isset($user_profile[$memID]['website_title']) ? '' : $user_profile[$memID]['website_title'],
 			'url' => !isset($user_profile[$memID]['website_url']) ? '' : $user_profile[$memID]['website_url'],
@@ -1364,7 +1372,7 @@ function summary($memID)
 
 	// Attempt to load the member's profile data.
 	if (!loadMemberContext($memID) || !isset($memberContext[$memID]))
-		fatal_lang_error('not_a_user', false, array($memID));
+		fatal_lang_error('not_a_user', false);
 
 	// Set up the stuff and load the user.
 	$context += array(
@@ -1372,8 +1380,18 @@ function summary($memID)
 		'page_title' => $txt['profile_of'] . ' ' . $memberContext[$memID]['name'],
 		'can_send_pm' => allowedTo('pm_send'),
 		'can_have_buddy' => allowedTo('profile_identity_own') && !empty($modSettings['enable_buddylist']),
+		'can_issue_warning' => allowedTo('issue_warning') && $modSettings['warning_settings']{0} == 1,
 	);
 	$context['member'] = &$memberContext[$memID];
+
+	// See if they have broken any warning levels...
+	list ($modSettings['warning_enable'], $modSettings['warn_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+	if (!empty($modSettings['warn_mute']) && $modSettings['warn_mute'] <= $context['member']['warning'])
+		$context['warning_status'] = $txt['profile_warning_is_muted'];
+	elseif (!empty($modSettings['warn_moderate']) && $modSettings['warn_moderate'] <= $context['member']['warning'])
+		$context['warning_status'] = $txt['profile_warning_is_moderation'];
+	elseif (!empty($modSettings['warn_watch']) && $modSettings['warn_watch'] <= $context['member']['warning'])
+		$context['warning_status'] = $txt['profile_warning_is_watch'];
 
 	// They haven't even been registered for a full day!?
 	$days_registered = (int) ((time() - $user_profile[$memID]['date_registered']) / (3600 * 24));
@@ -3206,6 +3224,151 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	return $changeType;
 }
 
+// Issue/manage a users warning status.
+function issueWarning($memID)
+{
+	global $txt, $scripturl, $modSettings, $db_prefix, $user_info;
+	global $context, $user_profile, $memberContext, $smfFunc, $sourcedir;
+
+	// Get all the actual settings.
+	list ($modSettings['warning_enable'], $modSettings['warn_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+
+	// Doesn't hurt to be overly cautious.
+	if (empty($modSettings['warning_enable']) || $context['user']['is_owner'] || !allowedTo('issue_warnings'))
+		fatal_lang_error('no_access', false);
+
+	$context['warning_limit'] = allowedTo('admin_forum') ? 0 : $modSettings['user_limit'];
+
+	// Are we saving?
+	if (isset($_POST['save']))
+	{
+		// Security is good here.
+		checkSession('post');
+
+		// This cannot be empty!
+		$_POST['warn_reason'] = trim($_POST['warn_reason']);
+		if ($_POST['warn_reason'] == '')
+			fatal_lang_error('warning_no_reason');
+		$_POST['warn_reason'] = $smfFunc['htmlspecialchars']($_POST['warn_reason']);
+
+		// If the value hasn't changed it's either no JS or a real no change (Which this will pass)
+		if ($_POST['warning_level'] == 'SAME')
+			$_POST['warning_level'] = $_POST['warning_level_nojs'];
+
+		$_POST['warning_level'] = (int) $_POST['warning_level'];
+		$_POST['warning_level'] = max(0, min(100, $_POST['warning_level']));
+		if ($context['warning_limit'])
+		{
+			if ($_POST['warning_level'] < $context['member']['warning'] - $context['warning_limit'])
+				$_POST['warning_level'] = $context['member']['warning'] - $context['warning_limit'];
+			elseif ($_POST['warning_level'] > $context['member']['warning'] + $context['warning_limit'])
+				$_POST['warning_level'] = $context['member']['warning'] + $context['warning_limit'];
+		}
+
+		// Do we actually have to issue them with a PM?
+		$id_notice = 0;
+		if (!empty($_POST['warn_notify']))
+		{
+			$_POST['warn_sub'] = trim($_POST['warn_sub']);
+			$_POST['warn_body'] = trim($_POST['warn_body']);
+			if (empty($_POST['warn_sub']) || empty($_POST['warn_body']))
+				fatal_lang_error('warning_notify_blank');
+
+			// Send the PM!
+			require_once($sourcedir . '/Subs-Post.php');
+			$from = array(
+				'id' => 0,
+				'name' => $context['forum_name'],
+				'username' => $context['forum_name'],
+			);
+			sendpm(array('to' => array($memID), 'bcc' => array()), $_POST['warn_sub'], $_POST['warn_body'], false, $from);
+
+			// Log the notice!
+			$smfFunc['db_query']('', "
+				INSERT INTO {$db_prefix}log_member_notices
+					(subject, body)
+				VALUES
+					(SUBSTRING('$_POST[warn_sub]', 1, 255), SUBSTRING('$_POST[warn_body]', 1, 65534))", __FILE__, __LINE__);
+			$id_notice = db_insert_id("{$db_prefix}log_member_notices", 'id_notice');
+		}
+
+		// Just incase - make sure notice is valid!
+		$id_notice = (int) $id_notice;
+
+		// What have we changed?
+		$level_change = $_POST['warning_level'] - $context['member']['warning'];
+
+		// Log what we've done!
+		$smfFunc['db_query']('', "
+			INSERT INTO {$db_prefix}log_comments
+				(id_member, member_name, comment_type, id_recipient, recipient_name, log_time, id_notice,
+					counter, body)
+			VALUES
+				($user_info[id], '" . $smfFunc['db_escape_string']($user_info['name']) . "', 'warning',
+				$memID, '" . $smfFunc['db_escape_string']($context['member']['name']) . "', " . time() . ",
+				$id_notice, $level_change, SUBSTRING('$_POST[warn_reason]', 1, 65534))", __FILE__, __LINE__);
+
+		// Make the change.
+		updateMemberData($memID, array('warning' => $_POST['warning_level']));
+
+		redirectexit('action=profile;u=' . $memID);
+	}
+
+	$context['page_title'] = $txt['profile_issue_warning'];
+
+	// Work our the various levels.
+	$context['level_effects'] = array(
+		0 => $txt['profile_warning_effect_none'],
+		$modSettings['warn_watch'] => $txt['profile_warning_effect_watch'],
+		$modSettings['warn_moderate'] => $txt['profile_warning_effect_moderation'],
+		$modSettings['warn_mute'] => $txt['profile_warning_effect_mute'],
+	);
+	$context['current_level'] = 0;
+	foreach ($context['level_effects'] as $limit => $dummy)
+		if ($context['member']['warning'] >= $limit)
+			$context['current_level'] = $limit;
+
+	// Load up all the old warnings - count first!
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
+		FROM {$db_prefix}log_comments
+		WHERE id_recipient = $memID
+			AND comment_type = 'warning'", __FILE__, __LINE__);
+	list ($context['total_warnings']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	// Make the page index.
+	$context['start'] = (int) $_REQUEST['start'];
+	$perPage = (int) $modSettings['defaultMaxMessages'];
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=issueWarning', $context['start'], $context['total_warnings'], $perPage);
+
+	// Now do the data itself.
+	$request = $smfFunc['db_query']('', "
+		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
+			lc.log_time, lc.body, lc.counter, lc.id_notice
+		FROM {$db_prefix}log_comments AS lc
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+		WHERE lc.id_recipient = $memID
+			AND lc.comment_type = 'warning'
+		ORDER BY log_time DESC
+		LIMIT $context[start], $perPage", __FILE__, __LINE__);
+	$context['previous_warnings'] = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		$context['previous_warnings'][] = array(
+			'issuer' => array(
+				'id' => $row['id_member'],
+				'link' => $row['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>') : $row['member_name'],
+			),
+			'time' => timeformat($row['log_time']),
+			'reason' => $row['body'],
+			'counter' => $row['counter'] > 0 ? '+' . $row['counter'] : $row['counter'],
+			'id_notice' => $row['id_notice'],
+		);
+	}
+	$smfFunc['db_free_result']($request);
+}
+
 // Present a screen to make sure the user wants to be deleted
 function deleteAccount($memID)
 {
@@ -3365,6 +3528,7 @@ function rememberPostData()
 			'name' => empty($_POST['msn']) ? '' : $smfFunc['db_unescape_string']($_POST['msn'])
 		),
 		'posts' => empty($_POST['posts']) ? 0 : (int) $_POST['posts'],
+		'warning' => empty($_POST['warning']) ? 0 : min((int) $_POST['warning'], 100),
 		'avatar' => array(
 			'name' => &$_POST['avatar'],
 			'href' => empty($user_profile[$_REQUEST['userID']]['id_attach']) ? '' : (empty($user_profile[$_REQUEST['userID']]['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $user_profile[$_REQUEST['userID']]['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $user_profile[$_REQUEST['userID']]['filename']),

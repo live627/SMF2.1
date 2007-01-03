@@ -83,6 +83,7 @@ $txt['karmaLabel'] = 'Karma-label';
 $txt['karmaApplaudLabel'] = 'Karma-positief Label';
 $txt['karmaSmiteLabel'] = 'Karma-negatief Label';
 
+// Translation changed!!
 $txt['caching_information'] = '<div align="center"><b><u>Belangrijk! Lees dit eerst alvorens je de optie inschakeld.</b></u></div><br />
 	SMF ondersteunt caching door middel van acceleratorsoftware. De accelerators die op dit moment ondersteund worden zijn:<br />
 	<ul>
@@ -117,6 +118,15 @@ $txt['cache_level1'] = 'Niveau 1 caching';
 $txt['cache_level2'] = 'Niveau 2 caching (niet aanbevolen)';
 $txt['cache_level3'] = 'Niveau 2 caching (niet aanbevolen)';
 $txt['cache_memcached'] = 'Memcache-instellingen';
+
+// Untranslated!
+$txt['moderation_settings_short'] = 'Moderation';
+$txt['moderation_settings'] = 'Moderation Settings';
+$txt['setting_warning_enable'] = 'Enable User Warning System';
+$txt['setting_warn_watch'] = 'Warning level for user watch<div class="smalltext">The user warning level after which a user watch is put in place - 0 to disable.</div>';
+$txt['setting_warn_moderate'] = 'Warning level for post moderation<div class="smalltext">The user warning level after which a user has all posts moderated - 0 to disable.</div>';
+$txt['setting_warn_mute'] = 'Warning level for user muting<div class="smalltext">The user warning level after which a user cannot post any further - 0 to disable.</div>';
+$txt['setting_user_limit'] = 'Maximum user warning points per day<div class="smalltext">This value is the maximum amount of warning points a single moderator can assign to a user in a 24 hour period - 0 for no limit.</div>';
 
 // Untranslated!
 $txt['signature_settings'] = 'Signatures';

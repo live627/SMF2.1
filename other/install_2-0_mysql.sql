@@ -765,6 +765,27 @@ CREATE TABLE {$db_prefix}log_boards (
 ) TYPE=MyISAM;
 
 #
+# Table structure for table `log_comments`
+#
+
+CREATE TABLE {$db_prefix}log_comments (
+  id_comment mediumint(8) unsigned NOT NULL auto_increment,
+  id_member mediumint(8) unsigned NOT NULL default '0',
+  member_name varchar(80) NOT NULL default '',
+  comment_type varchar(8) NOT NULL default 'warning',
+  id_recipient mediumint(8) unsigned NOT NULL default '0',
+  recipient_name tinytext NOT NULL,
+  log_time int(10) NOT NULL default '0',
+  id_notice mediumint(8) unsigned NOT NULL default '0',
+  counter tinyint(3) NOT NULL default '0',
+  body text NOT NULL,
+  PRIMARY KEY (id_comment),
+  KEY id_recipient (id_recipient),
+  KEY log_time (log_time),
+  KEY comment_type (comment_type(8))
+) TYPE=MyISAM;
+
+#
 # Table structure for table `log_digest`
 #
 
@@ -846,6 +867,17 @@ CREATE TABLE {$db_prefix}log_mark_read (
 ) TYPE=MyISAM;
 
 #
+# Table structure for table `log_member_notices`
+#
+
+CREATE TABLE {$db_prefix}log_member_notices (
+  id_notice mediumint(8) unsigned NOT NULL auto_increment,
+  subject tinytext NOT NULL,
+  body text NOT NULL,
+  PRIMARY KEY (id_notice)
+) TYPE=MyISAM;
+
+#
 # Table structure for table `log_notify`
 #
 
@@ -854,7 +886,8 @@ CREATE TABLE {$db_prefix}log_notify (
   id_topic mediumint(8) unsigned NOT NULL default '0',
   id_board smallint(5) unsigned NOT NULL default '0',
   sent tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY (id_member, id_topic, id_board)
+  PRIMARY KEY (id_member, id_topic, id_board),
+  KEY id_topic (id_topic, id_member)
 ) TYPE=MyISAM;
 
 #
@@ -1131,6 +1164,7 @@ CREATE TABLE {$db_prefix}members (
   total_time_logged_in int(10) unsigned NOT NULL default '0',
   password_salt varchar(5) NOT NULL default '',
   ignore_boards tinytext NOT NULL,
+  warning tinyint(4) NOT NULL default '0',
   PRIMARY KEY (id_member),
   KEY memberName (member_name(30)),
   KEY date_registered (date_registered),
@@ -1139,7 +1173,8 @@ CREATE TABLE {$db_prefix}members (
   KEY posts (posts),
   KEY last_login (last_login),
   KEY lngfile (lngfile(30)),
-  KEY id_post_group (id_post_group)
+  KEY id_post_group (id_post_group),
+  KEY warning (warning)
 ) TYPE=MyISAM;
 
 #
@@ -1610,6 +1645,9 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('mail_recent', '0000000000|0'),
 	('settings_updated', '0'),
 	('next_task_time', '1'),
+	('warning_settings', '1,10,20'),
+	('warning_moderate', '35'),
+	('warning_mute', '60'),
 	('last_mod_report_action', '0');
 # --------------------------------------------------------
 

@@ -85,8 +85,8 @@ $txt['caching_information'] = '<div align="center"><b><u>Important! Read this fi
 		<li>Memcached</li>
 		<li>Zend Platform/Performance Suite (Not Zend Optimizer)</li>
 	</ul>
-	Caching will only work on your server if you have PHP compiled with one of the above optimizers, or have memcache
-	available. <br /><br />
+	Caching will work best of you have PHP compiled with one of the above optimizers, or have memcache
+	available. If you do not have any optimizer installed SMF will do file based caching.<br /><br />
 	SMF performs caching at a variety of levels. The higher the level of caching enabled the more CPU time will be spent
 	retrieving cached information. If caching is available on your machine it is recommended that you try caching at level 1 first.
 	<br /><br />
@@ -111,6 +111,15 @@ $txt['cache_level2'] = 'Level 2 Caching (Not Recommended)';
 $txt['cache_level3'] = 'Level 3 Caching (Not Recommended)';
 $txt['cache_memcached'] = 'Memcache settings';
 
+$txt['moderation_settings_short'] = 'Moderation';
+$txt['moderation_settings'] = 'Moderation Settings';
+$txt['setting_warning_enable'] = 'Enable User Warning System';
+$txt['setting_warn_watch'] = 'Warning level for user watch<div class="smalltext">The user warning level after which a user watch is put in place - 0 to disable.</div>';
+$txt['setting_warn_moderate'] = 'Warning level for post moderation<div class="smalltext">The user warning level after which a user has all posts moderated - 0 to disable.</div>';
+$txt['setting_warn_mute'] = 'Warning level for user muting<div class="smalltext">The user warning level after which a user cannot post any further - 0 to disable.</div>';
+$txt['setting_user_limit'] = 'Maximum user warning points per day<div class="smalltext">This value is the maximum amount of warning points a single moderator can assign to a user in a 24 hour period - 0 for no limit.</div>';
+
+$txt['signature_settings_short'] = 'Signatures';
 $txt['signature_settings'] = 'Signature Settings';
 $txt['signature_settings_desc'] = 'Use the settings on this page to decide how member signatures should be treated in SMF.';
 $txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="' . $scripturl . '?action=admin;area=featuresettings;sa=sig;apply">here</a> to apply rules to all existing signatures.';

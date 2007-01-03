@@ -1105,6 +1105,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		'calendar_post',
 		'calendar_edit_own',
 		'access_mod_center',
+		'issue_warning',
 	));
 	$groupLevels['board']['moderator'] = array_merge($groupLevels['board']['standard'], array(
 		'make_sticky',
@@ -1334,6 +1335,7 @@ function loadAllPermissions()
 				'manage_permissions' => false,
 				'manage_bans' => false,
 				'send_mail' => false,
+				'issue_warning' => false,
 			),
 			'profile' => array(
 				'profile_view' => true,

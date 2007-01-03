@@ -22,7 +22,7 @@ $txt['name_invalid_character'] = 'Ung&uuml;ltiges Zeichen im Namen.';
 $txt['email_invalid_character'] = 'Ung&uuml;ltiges Zeichen in der E-Mail Adresse.';
 $txt['username_reserved'] = 'Der Benutzername, den Sie registrieren m&ouml;chten, enth&auml;lt einen reservierten Namen. Bitte versuchen Sie einen anderen Namen. Reservierte Namen: %s';
 $txt['numbers_one_to_nine'] = 'Dieses Feld akzeptiert nur Zahlen von 0-9';
-$txt['not_a_user'] = 'Dieses Mitglied ist nicht vorhanden. Das Profil kann nicht editiert werden. - %1$s';
+$txt['not_a_user'] = 'Dieses Mitglied ist nicht vorhanden. Das Profil kann nicht editiert werden.';
 $txt['not_a_topic'] = 'Dieses Thema ist im Forum nicht vorhanden.';
 $txt['email_in_use'] = 'Diese E-Mail Adresse (%s) wird bereits von einem anderen Mitglied verwendet! Wenn Sie Ihr Passwort vergessen haben, k&ouml;nnen Sie es sich &uuml;ber die Passwort-Erinnerung auf der Login-Seite zusenden lassen.';
 
@@ -129,6 +129,8 @@ $txt['cannot_delete_any'] = 'Sie haben nicht die Berechtigung Beitr&auml;ge zu l
 $txt['cannot_report_any'] = 'Sie haben nicht die Berechtigung Beitr&auml;ge zu melden.';
 $txt['cannot_search_posts'] = 'Sie haben nicht die Berechtigung in diesem Forum Beitr&auml;ge zu suchen.';
 $txt['cannot_send_mail'] = 'Sie haben nicht die Berechtigung E-Mails an alle zu senden.';
+// Untranslated!
+$txt['cannot_issue_warning'] = 'Sorry, you do not have permission to issue warnings to members.';
 $txt['cannot_send_topic'] = 'Sie haben nicht die Berechtigung Themen zu senden.';
 $txt['cannot_split_any'] = 'Sie haben nicht die Berechtigung Themen zu teilen.';
 $txt['cannot_view_attachments'] = 'Sie haben nicht die Berechtigung Dateianh&auml;nge herunterzuladen oder anzusehen.';
@@ -339,5 +341,9 @@ $txt['resend_email_success'] = 'Eine neue Aktivierungs E-Mail wurde erfolgreich 
 // Untranslated!
 $txt['custom_option_need_name'] = 'The profile option must have a name!';
 $txt['custom_option_not_unique'] = 'Field name is not unique!';
+
+// Untranslated!
+$txt['warning_no_reason'] = 'You must enter a reason for altering the warning state of a member.';
+$txt['warning_notify_blank'] = 'You selected to notify the user but did not fill in the subject/message fields.';
 
 ?>

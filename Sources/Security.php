@@ -410,7 +410,7 @@ function banPermissions()
 	if (isset($_SESSION['ban']['cannot_access']))
 		$user_info['permissions'] = array();
 	// Okay, well, you can watch, but don't touch a thing.
-	elseif (isset($_SESSION['ban']['cannot_post']))
+	elseif (isset($_SESSION['ban']['cannot_post']) || (!empty($modSettings['warn_mute']) && $modSettings['warn_mute'] <= $user_info['warning']))
 	{
 		$denied_permissions = array(
 			'pm_send',
@@ -434,6 +434,25 @@ function banPermissions()
 			'remove_own', 'remove_any',
 		);
 		$user_info['permissions'] = array_diff($user_info['permissions'], $denied_permissions);
+	}
+	// Are they absolutely under moderation?
+	elseif (!empty($modSettings['warn_moderate']) && $modSettings['warn_moderate'] <= $user_info['warning'])
+	{
+		// Work out what permissions should change...
+		$permission_change = array(
+			'post_new' => 'post_unapproved_topics',
+			'post_reply_own' => 'post_unapproved_replies_own',
+			'post_reply_any' => 'post_unapproved_replies_any',
+			'post_attachment' => 'post_unapproved_attachments',
+		);
+		foreach ($permission_change as $old => $new)
+		{
+			if (!in_array($old, $user_info['permissions']))
+				unset($permission_change[$old]);
+			else
+				$user_info['permissions'][] = $new;
+		}
+		$user_info['permissions'] = array_diff($user_info['permissions'], array_keys($permission_change));
 	}
 
 	//!!! Find a better place to call this? Needs to be after permissions loaded!

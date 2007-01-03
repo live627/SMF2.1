@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2630 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2631 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -13,6 +13,8 @@ January 2007
  ! Expanded group hidden flag to allow admininstrators to determine what should be visible on the Board Index. (ManageMembergroups.php, ManageMembergroups template)
  * The unread posts link on the babylon theme caused poor tiling in the category header. (babylon BoardIndex template)
  ! The database function, db_insert, now takes the file name and line number as a parameter for better debugging. (Several files)
+ + Added functionality to warn a user, link a users warning level to certain moderation tags, use it as a watch, and review all warnings. (ModerationCenter.php, Profile.php, ModSettings.php, Security.php, ManagePermissions.php, upgrade_2-0.sql, install_2-0.sql)
+ & Template and language entries for the above. (ModerationCenter template, ModerationCenter language files, Profile template, Profile language files, Help language files, ModSettings language files)
 
 
 December 2006

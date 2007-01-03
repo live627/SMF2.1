@@ -132,6 +132,24 @@ function template_summary()
 					<td>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</td>
 				</tr>';
 
+	// Can they issue a warning?
+	if ($context['can_issue_warning'] && !$context['user']['is_owner'] && $context['member']['warning'])
+	{
+		echo '
+				<tr>
+					<td><b>', $txt['profile_warning_level'], ': </b></td>
+					<td><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=issueWarning">', $context['member']['warning'], '%</a>';
+
+		// Can we provide information on what this means?
+		if (!empty($context['warning_status']))
+			echo '
+					<span class="smalltext">(', $context['warning_status'], ')</span>';
+
+		echo '
+					</td>
+				</tr>';
+	}
+
 	// If the person looking is allowed, they can check the members IP address and hostname.
 	if ($context['can_see_ip'])
 	{
@@ -599,6 +617,7 @@ function template_editBuddies()
 		</table>
 	</form>';
 }
+
 // This template shows an admin information on a users IP addresses used and errors attributed to them.
 function template_trackUser()
 {
@@ -2403,6 +2422,328 @@ function template_ignoreboards()
 		</form>';
 }
 
+// Show a lovely interface for issuing warnings.
+function template_issueWarning()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	$warningBarWidth = 200;
+	// Setup the colors - this is a little messy for theming.
+	$context['colors'] = array(
+		0 => 'green',
+		$modSettings['warn_watch'] => 'darkgreen',
+		$modSettings['warn_moderate'] => 'orange',
+		$modSettings['warn_mute'] => 'red',
+	);
+
+	// Setup known notification types.
+	$context['notify_types'] = array('spamming', 'offence', 'insulting');
+
+	// Work out the starting color.
+	$context['current_color'] = $context['colors'][0];
+	foreach ($context['colors'] as $limit => $color)
+		if ($context['member']['warning'] >= $limit)
+			$context['current_color'] = $color;
+
+	// Format notification types.
+	foreach ($context['notify_types'] as $k => $type)
+		$context['notify_types'][$k] = array(
+			'title' => $txt['profile_warning_notify_title_' . $type],
+			'body' => sprintf($txt['profile_warning_notify_template_outline'], $context['member']['name'], $txt['profile_warning_notify_for_' . $type]),
+		);
+
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function setWarningBarPos(curEvent, isMove)
+		{
+			if (!curEvent)
+				var curEvent = window.event;
+
+			// If it\'s a movement check the button state first!
+			if (isMove)
+			{
+				if (!curEvent.button || curEvent.button != 1)
+					return false
+			}
+
+			// Get the position of the container.
+			contain = document.getElementById(\'warning_contain\');
+			position = 0;
+			while (contain != null)
+			{
+				position += contain.offsetLeft;
+				contain = contain.offsetParent;
+			}
+
+			// Where is the mouse?
+			if (curEvent.pageX)
+			{
+				mouse = curEvent.pageX;
+			}
+			else
+			{
+				mouse = curEvent.clientX;
+				mouse += document.documentElement.scrollLeft != "undefined" ? document.documentElement.scrollLeft : document.body.scrollLeft;
+			}
+
+			barWidth = ', $warningBarWidth, ';
+
+			// Is this within bounds?
+			if (mouse < position || mouse > position + barWidth)
+				return;
+
+			percent = Math.round(((mouse - position) / barWidth) * 100);
+
+			// Round percent to the nearest 5 - by kinda cheating!
+			percent = Math.round(percent / 5) * 5;
+
+			// What are the limits?
+			minLimit = ', ($context['warning_limit'] == 0 || $context['member']['warning'] - $context['warning_limit'] < 0 ? 0 : $context['member']['warning'] - $context['warning_limit']), ';
+			maxLimit = ', ($context['warning_limit'] == 0 || $context['member']['warning'] + $context['warning_limit'] > 100 ? 100 : $context['member']['warning'] + $context['warning_limit']), ';
+
+			percent = Math.max(percent, minLimit);
+			percent = Math.min(percent, maxLimit);
+
+			size = barWidth * (percent/100);
+
+			setInnerHTML(document.getElementById(\'warning_text\'), percent + "%");
+			document.getElementById(\'warning_level\').value = percent;
+			document.getElementById(\'warning_progress\').style.width = size + "px";
+
+			// Get the right color.
+			color = "black"';
+
+	foreach ($context['colors'] as $limit => $color)
+		echo '
+			if (percent >= ', $limit, ')
+				color = "', $color, '";';
+
+	echo '
+			document.getElementById(\'warning_progress\').style.backgroundColor = color;
+
+			// Also set the right effect.
+			effectText = "";';
+
+	foreach ($context['level_effects'] as $limit => $text)
+		echo '
+			if (percent >= ', $limit, ')
+				effectText = "', $text, '";';
+
+	echo '
+			setInnerHTML(document.getElementById(\'cur_level_div\'), effectText);
+		}
+
+		// Disable notification boxes as required.
+		function modifyWarnNotify()
+		{
+			disable = !document.getElementById(\'warn_notify\').checked;
+			document.getElementById(\'warn_sub\').disabled = disable;
+			document.getElementById(\'warn_body\').disabled = disable;
+			document.getElementById(\'warn_temp\').disabled = disable;
+		}
+
+		// Warn template.
+		function populateNotifyTemplate()
+		{
+			index = document.getElementById(\'warn_temp\').value;
+			if (index == -1)
+				return false;
+
+			// Otherwise see what we can do...';
+
+	foreach ($context['notify_types'] as $k => $type)
+		echo '
+			if (index == ', $k, ')
+				document.getElementById(\'warn_body\').value = "', strtr($type['body'], array('"' => "'", "\n" => '\\n')), '";';
+
+	echo '
+		}
+
+	// ]]></script>';
+
+	echo '
+	<form action="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=issueWarning" method="post" accept-charset="', $context['character_set'], '">
+		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+			<tr class="titlebg">
+				<td colspan="2" height="26">
+					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['profile_issue_warning'], '
+				</td>
+			</tr>
+			<tr class="windowbg2">
+				<td colspan="2">
+					<span class="smalltext">', $txt['profile_warning_desc'], '</span>
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td width="100%">
+					<table border="0" width="100%" cellspacing="0" cellpadding="2" align="center">
+						<tr class="windowbg">
+				<td width="40%">
+					<b>', $txt['profile_warning_name'], ':</b>
+				</td>
+				<td>
+					<b>', $context['member']['name'], '</b>
+				</td>
+			</tr>
+			<tr class="windowbg" valign="top">
+				<td width="30%">
+					<b>', $txt['profile_warning_level'], ':</b>';
+
+	// Is there only so much they can apply?
+	if ($context['warning_limit'])
+		echo '
+					<div class="smalltext">', sprintf($txt['profile_warning_limit_attribute'], $context['warning_limit']), '</div>';
+
+	echo '
+				</td>
+				<td>
+					<div id="warndiv1" style="display: none;">
+						<div id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $warningBarWidth, 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
+							<div id="warning_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['member']['warning'], '%</div>
+							<div id="warning_progress" style="width: ', $context['member']['warning'], '%; height: 12pt; z-index: 1; background-color: ', $context['current_color'], ';">&nbsp;</div>
+						</div>
+						<div class="smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div" class="smalltext">', $context['level_effects'][$context['current_level']], '</span></div>
+						<input type="hidden" name="warning_level" id="warning_level" value="SAME" />
+					</div>
+					<div id="warndiv2">
+						<input type="text" name="warning_level_nojs" size="6" maxlength="4" value="', $context['member']['warning'], '" />&nbsp;', $txt['profile_warning_max'], '
+						<div class="smalltext">', $txt['profile_warning_impact'], ':<br />';
+	// For non-javascript give a better list.
+	foreach ($context['level_effects'] as $limit => $effect)
+		echo '
+						', sprintf($txt['profile_warning_effect_text'], $limit, $effect), '<br />';
+
+	echo '
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr class="windowbg" valign="top">
+				<td width="30%">
+					<b>', $txt['profile_warning_reason'], ':</b>
+					<div class="smalltext">', $txt['profile_warning_reason_desc'], '</div>
+				</td>
+				<td>
+					<input type="text" name="warn_reason" id="warn_reason" value="" size="50" style="width: 80%;" />
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td colspan="2">
+					<hr />
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td width="30%">
+					<b>', $txt['profile_warning_notify'], ':</b>
+				</td>
+				<td>
+					<input type="checkbox" name="warn_notify" id="warn_notify" onclick="modifyWarnNotify();" />
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td width="30%">
+					<b>', $txt['profile_warning_notify_subject'], ':</b>
+				</td>
+				<td>
+					<input type="text" name="warn_sub" id="warn_sub" value="', $txt['profile_warning_notify_template_subject'], '" size="50" style="width: 80%;" />
+				</td>
+			</tr>
+			<tr class="windowbg" valign="top">
+				<td width="30%">
+					<b>', $txt['profile_warning_notify_body'], ':</b>
+				</td>
+				<td>
+					<select name="warn_temp" id="warn_temp" disabled="disabled" onchange="populateNotifyTemplate();" style="font-size: x-small;">
+						<option value="-1">', $txt['profile_warning_notify_template'], '</option>
+						<option value="-1">------------------------------</option>';
+
+	foreach ($context['notify_types'] as $k => $v)
+		echo '
+						<option value="', $k, '">', $v['title'], '</option>';
+
+	echo '
+					</select><br />
+					<textarea name="warn_body" id="warn_body" cols="40" rows="8" style="width: 80%; font-size: x-small;" ></textarea>
+				</td>
+			</tr>
+			</table>
+			</td>
+			</tr>
+			<tr class="catbg">
+				<td colspan="2" align="right">
+					<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					<input type="submit" name="save" value="', $txt['profile_warning_issue'], '" />
+				</td>
+			</tr>
+		</table>
+	</form>';
+
+	// Previous warnings?
+	echo '
+		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+			<tr class="titlebg">
+				<td colspan="4">
+					', $txt['profile_warning_previous'], '
+				</td>
+			</tr>
+			<tr class="catbg">
+				<td width="20%">', $txt['profile_warning_previous_issued'], '</td>
+				<td width="30%">', $txt['profile_warning_previous_time'], '</td>
+				<td>', $txt['profile_warning_previous_reason'], '</td>
+				<td width="6%">', $txt['profile_warning_previous_level'], '</td>
+			</tr>';
+
+	// Print the warnings.
+	$alternate = 0;
+	foreach ($context['previous_warnings'] as $warning)
+	{
+		$alternate = !$alternate;
+		echo '
+			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+				<td class="smalltext">', $warning['issuer']['link'], '</td>
+				<td class="smalltext">', $warning['time'], '</td>
+				<td class="smalltext">
+					<div style="float: left;">
+						', $warning['reason'], '
+					</div>';
+
+		if (!empty($warning['id_notice']))
+			echo '
+					<div style="float: right;">
+						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" title="', $txt['profile_warning_previous_notice'], '">!</a>
+					</div>';
+		echo '
+				</td>
+				<td class="smalltext">', $warning['counter'], '</td>
+			</tr>';
+	}
+
+	if (empty($context['previous_warnings']))
+		echo '
+			<tr class="windowbg2">
+				<td align="center" colspan="4">
+					', $txt['profile_warning_previous_none'], '
+				</td>
+			</tr>';
+
+	echo '
+			<tr class="catbg">
+				<td colspan="4">
+					', $txt['pages'], ': ', $context['page_index'], '
+				</td>
+			</tr>
+		</table>';
+
+	// Do our best to get pretty javascript enabled.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		document.getElementById(\'warndiv1\').style.display = "";
+		document.getElementById(\'warndiv2\').style.display = "none";
+		document.getElementById(\'warn_temp\').disabled = "disabled";
+		document.getElementById(\'warn_sub\').disabled = "disabled";
+		document.getElementById(\'warn_body\').disabled = "disabled";
+	// ]]></script>';
+}
 
 // Template to show for deleting a users account - now with added delete post capability!
 function template_deleteAccount()

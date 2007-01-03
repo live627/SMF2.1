@@ -22,7 +22,7 @@ $txt['name_invalid_character'] = 'Onjuiste letters/cijfers gebruikt in je naam.'
 $txt['email_invalid_character'] = 'Onjuiste letters/cijfers gebruikt in je e-mail.';
 $txt['username_reserved'] = 'De gebruikersnaam die je hebt geprobeert te registreren is al gereserveerd! Probeer een andere gebruikersnaam. Gereserveerde naam: %s';
 $txt['numbers_one_to_nine'] = 'Dit gedeelte accepteert alleen nummers tussen de 0-9';
-$txt['not_a_user'] = 'Het lid waar je het profiel van wilt bekijken bestaat niet! - %1$s';
+$txt['not_a_user'] = 'Het lid waar je het profiel van wilt bekijken bestaat niet!';
 $txt['not_a_topic'] = 'Dit bericht bestaat niet op dit board.';
 $txt['email_in_use'] = 'Dit e-mailadres (%s) is al in gebruik door een geregistreerd lid! Als je denkt dat dit een vergissing is, ga dan naar de login pagina en gebruik de wachtwoord vergeten optie met dit e-mailadres.';
 
@@ -129,6 +129,8 @@ $txt['cannot_delete_any'] = 'Berichten verwijderen in dit board is niet toegesta
 $txt['cannot_report_any'] = 'Je mag geen berichten melden in dit board.';
 $txt['cannot_search_posts'] = 'Je mag geen berichten opzoeken op dit forum.';
 $txt['cannot_send_mail'] = 'Je hebt geen rechten om naar iedereen e-mails te sturen.';
+// Untranslated!
+$txt['cannot_issue_warning'] = 'Sorry, you do not have permission to issue warnings to members.';
 $txt['cannot_send_topic'] = 'Sorry, maar de administrator heeft doorsturen van posts uitgeschakeld op dit board.';
 $txt['cannot_split_any'] = 'Topics splitten op dit board is niet toegestaan.';
 $txt['cannot_view_attachments'] = 'Het lijkt erop dat je geen toestemming hebt om bijlagen te bekijken of te downloaden in dit board.';
@@ -339,5 +341,9 @@ $txt['resend_email_success'] = 'Een nieuwe activeringsmail is succesvol verstuur
 // Untranslated!
 $txt['custom_option_need_name'] = 'The profile option must have a name!';
 $txt['custom_option_not_unique'] = 'Field name is not unique!';
+
+// Untranslated!
+$txt['warning_no_reason'] = 'You must enter a reason for altering the warning state of a member.';
+$txt['warning_notify_blank'] = 'You selected to notify the user but did not fill in the subject/message fields.';
 
 ?>

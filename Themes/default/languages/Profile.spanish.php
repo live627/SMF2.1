@@ -351,4 +351,46 @@ $txt['profile_error_signature_max_font_size'] = 'Text in your signature cannot b
 $txt['profile_error_signature_max_smileys'] = 'You are not allowed to use more than %d smiley\'s within your signature';
 $txt['profile_error_signature_disabled_bbc'] = 'The following BBC is not allowed within your signature: %s';
 
+// Untranslated!
+$txt['profile_issue_warning'] = 'Issue a warning';
+$txt['profile_warning_level'] = 'Warning Level';
+$txt['profile_warning_desc'] = 'From this section you can adjust the users warning level and issue them with a written warning if necesary. You can also track their warning history and view the effects of their current warning level as determined by the administrator.';
+$txt['profile_warning_name'] = 'Member Name';
+$txt['profile_warning_impact'] = 'Result';
+$txt['profile_warning_reason'] = 'Reason for Warning';
+$txt['profile_warning_reason_desc'] = 'This is required and will be logged.';
+$txt['profile_warning_effect_none'] = 'None.';
+$txt['profile_warning_effect_watch'] = 'User will be added to moderator watch list.';
+$txt['profile_warning_is_watch'] = 'User is being watched';
+$txt['profile_warning_effect_moderation'] = 'All users posts will be moderated.';
+$txt['profile_warning_is_moderation'] = 'User has posts moderated';
+$txt['profile_warning_effect_mute'] = 'User will not be able to post.';
+$txt['profile_warning_is_muted'] = 'User cannot post';
+$txt['profile_warning_effect_text'] = 'Level >= %1$d: %2$s';
+$txt['profile_warning_notify'] = 'Send a Notification';
+$txt['profile_warning_notify_template'] = 'Select template:';
+$txt['profile_warning_notify_subject'] = 'Notification Subject';
+$txt['profile_warning_notify_body'] = 'Notification Message';
+$txt['profile_warning_notify_template_subject'] = 'You have received a warning';
+// Use numeric entities in below string.
+$txt['profile_warning_notify_template_outline'] = '%1$s,' . "\n\n" . 'You have received a warning for %2$s. Please cease these activities and abide by the forum rules otherwise we will take further action.' . "\n\n" . $txt['regards_team'];
+$txt['profile_warning_notify_for_spamming'] = 'spamming';
+$txt['profile_warning_notify_title_spamming'] = 'Spamming';
+$txt['profile_warning_notify_for_offence'] = 'posting offensive material';
+$txt['profile_warning_notify_title_offence'] = 'Posting Offensive Material';
+$txt['profile_warning_notify_for_insulting'] = 'insulting other users and/or staff members';
+$txt['profile_warning_notify_title_insulting'] = 'Insulting Users/Staff';
+$txt['profile_warning_issue'] = 'Issue Warning';
+$txt['profile_warning_max'] = '(Max 100)';
+$txt['profile_warning_limit_attribute'] = 'Note you can not adjust this users level by more than %1$d%% in a 24 hour period.';
+
+// Untranslated!
+$txt['profile_warning_previous'] = 'Previous Warnings';
+$txt['profile_warning_previous_none'] = 'This user has not received any previous warnings.';
+$txt['profile_warning_previous_issued'] = 'Issued By';
+$txt['profile_warning_previous_time'] = 'Time';
+$txt['profile_warning_previous_level'] = 'Points';
+$txt['profile_warning_previous_reason'] = 'Reason';
+$txt['profile_warning_previous_notice'] = 'View Notice Sent to Member';
+
 ?>

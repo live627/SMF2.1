@@ -131,6 +131,9 @@ $txt['permissionname_manage_bans'] = 'Administrar la lista de accesos prohibidos
 $txt['permissionhelp_manage_bans'] = 'Este permiso le permite a un usuario agregar o eliminar usuarios, direcciones IP, nombres de servidores y direcciones de email de la lista de usuarios con acceso prohibido. Tambi&eacute;n les permite ver y eliminar las entradas del log de los usuarios con acceso prohibido que intentaron entrar.';
 $txt['permissionname_send_mail'] = 'Enviar un email del foro a los usuarios';
 $txt['permissionhelp_send_mail'] = 'Env&iacute;o masivo de emails a todos los usuarios del foro, o solamente a algunos grupos de usuarios v&iacute;a email o mensaje personal (este &uacute;ltimo necesita el permiso \'Enviar Mensaje Personal\').';
+// Untranslated!
+$txt['permissionname_issue_warning'] = 'Issue warnings to members';
+$txt['permissionhelp_issue_warning'] = 'Issue a warning to members of the forum and change that members\' warning level. Requires the warning system to be enabled.';
 
 $txt['permissiongroup_profile'] = 'Perfiles de Usuarios';
 $txt['permissionname_profile_view'] = 'Ver resumen del perfil y estad&iacute;sticas';

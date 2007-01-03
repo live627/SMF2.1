@@ -43,6 +43,9 @@ if (!defined('SMF'))
 	void ModifyKarmaSettings()
 		// !!!
 
+	void ModifyModerationSettings()
+		// !!!
+
 	void ModifySignatureSettings()
 		// !!!
 
@@ -131,6 +134,7 @@ function ModifyFeatureSettings()
 		'basic' => 'ModifyBasicSettings',
 		'layout' => 'ModifyLayoutSettings',
 		'karma' => 'ModifyKarmaSettings',
+		'moderation' => 'ModifyModerationSettings',
 		'sig' => 'ModifySignatureSettings',
 		'profile' => 'ShowCustomProfiles',
 		'profileedit' => 'EditCustomProfiles',
@@ -158,8 +162,12 @@ function ModifyFeatureSettings()
 				'title' => $txt['karma'],
 				'href' => $scripturl . '?action=admin;area=featuresettings;sa=karma;sesc=' . $context['session_id'],
 			),
+			'moderation' => array(
+				'title' => $txt['moderation_settings_short'],
+				'href' => $scripturl . '?action=admin;area=featuresettings;sa=moderation;sesc=' . $context['session_id'],
+			),
 			'sig' => array(
-				'title' => $txt['signature_settings'],
+				'title' => $txt['signature_settings_short'],
 				'description' => $txt['signature_settings_desc'],
 				'href' => $scripturl . '?action=admin;area=featuresettings;sa=sig;sesc=' . $context['session_id'],
 			),
@@ -197,6 +205,7 @@ function ModifyFeatureSettings2()
 		'basic' => 'ModifyBasicSettings',
 		'layout' => 'ModifyLayoutSettings',
 		'karma' => 'ModifyKarmaSettings',
+		'moderation' => 'ModifyModerationSettings',
 		'sig' => 'ModifySignatureSettings',
 	);
 
@@ -244,7 +253,6 @@ function ModifyBasicSettings()
 			// Option-ish things... miscellaneous sorta.
 			array('check', 'allow_disableAnnounce'),
 			array('check', 'disallow_sendBody'),
-			array('check', 'modlog_enabled'),
 			array('check', 'queryless_urls'),
 		'',
 			// Width/Height image reduction.
@@ -350,6 +358,57 @@ function ModifyKarmaSettings()
 
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=karma';
 	$context['settings_title'] = $txt['karma'];
+
+	prepareDBSettingContext($config_vars);
+}
+
+// Moderation type settings - although there are fewer than we have you believe ;)
+function ModifyModerationSettings()
+{
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	$config_vars = array(
+			// Is the moderation log enabled?
+			array('check', 'modlog_enabled'),
+		'',
+			// Warning system?
+			'rem1' => array('check', 'warning_enable'),
+			'rem2' => array('int', 'warn_watch'),
+			array('int', 'warn_moderate'),
+			array('int', 'warn_mute'),
+			'rem3' => array('int', 'user_limit'),
+	);
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		// Make sure these don't have an effect.
+		if (!$_POST['warning_enable'])
+		{
+			$_POST['warn_moderate'] = 0;
+			$_POST['warn_mute'] = 0;
+		}
+		else
+		{
+			$_POST['warn_moderate'] = max($_POST['warn_moderate'], 100);
+			$_POST['warn_mute'] = max($_POST['warn_mute'], 100);
+		}
+
+		// Fix the warning setting array!
+		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['warn_watch']) . ',' . min(100, (int) $_POST['user_limit']);
+		$save_vars = $config_vars;
+		$save_vars[] = array('text', 'warning_settings');
+		unset($save_vars['rem1'], $save_vars['rem2'], $save_vars['rem3']);
+
+		saveDBSettings($save_vars);
+		redirectexit('action=admin;area=featuresettings;sa=moderation');
+	}
+
+	// We actually store lots of these together - for efficiency.
+	list ($modSettings['warning_enable'], $modSettings['warn_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=moderation';
+	$context['settings_title'] = $txt['moderation_settings'];
 
 	prepareDBSettingContext($config_vars);
 }

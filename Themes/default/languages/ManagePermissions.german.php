@@ -132,6 +132,9 @@ $txt['permissionname_manage_bans'] = 'Bann-Liste verwalten';
 $txt['permissionhelp_manage_bans'] = 'Diese Berechtigung erlaubt das Hinzuf&uuml;gen oder L&ouml;schen von Benutzernamen, IP-Adressen, Hostnamen und E-Mail Adressen zu einer Liste von gebannten Benutzern. Sie erlaubt weiterhin das Anschauen bzw. L&ouml;schen von Protokolleintr&auml;gen der gebannten Benutzer, die probieren sich wieder einzuloggen.';
 $txt['permissionname_send_mail'] = 'Forum E-Mail an Mitglieder senden';
 $txt['permissionhelp_send_mail'] = 'Sendet eine E-Mail oder wahlweise eine Private Mitteilung an alle Mitglieder oder an eine bestimmte Gruppe. Ben&ouml;tigt die Berechtigung \'Private Mitteilungen senden\'.';
+// Untranslated!
+$txt['permissionname_issue_warning'] = 'Issue warnings to members';
+$txt['permissionhelp_issue_warning'] = 'Issue a warning to members of the forum and change that members\' warning level. Requires the warning system to be enabled.';
 
 $txt['permissiongroup_profile'] = 'Benutzerprofile';
 $txt['permissionname_profile_view'] = 'Profil und Statistiken anschauen';
