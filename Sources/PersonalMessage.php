@@ -245,7 +245,8 @@ function MessageMain()
 		'send2' => 'MessagePost2',
 		'settings' => 'MessageSettings',
 	);
-
+	//!!!! TEMP
+$GLOBALS['modSettings']['defaultMaxMessages'] = 4;
 	if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 		MessageFolder();
 	else
@@ -384,6 +385,10 @@ function MessageFolder()
 		$context['sort_by'] = 'date';
 		$_GET['sort'] = 'pm.id_pm';
 		$descending = false;
+
+		// An overriding setting?
+		if (!empty($options['view_newest_pm_first']))
+			$descending = !$descending;
 	}
 	// Otherwise use the defaults: ascending, by date.
 	else
@@ -392,9 +397,6 @@ function MessageFolder()
 		$_GET['sort'] = $sort_methods[$_GET['sort']];
 		$descending = isset($_GET['desc']);
 	}
-
-	if (!empty($options['view_newest_pm_first']))
-		$descending = !$descending;
 
 	$context['sort_direction'] = $descending ? 'down' : 'up';
 
@@ -556,7 +558,7 @@ function MessageFolder()
 		}
 
 		// Keep track of the last message so we know what the head is without another query!
-		if (empty($context['current_pm']) || empty($lastData) || $context['current_pm'] == $row['id_pm'])
+		if ((empty($context['current_pm']) && (empty($options['view_newest_pm_first']) || !isset($lastData))) || empty($lastData) || (!empty($context['current_pm']) && $context['current_pm'] == $row['id_pm']))
 			$lastData = array(
 				'id' => $row['id_pm'],
 				'head' => $row['id_pm_head'],
