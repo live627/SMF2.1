@@ -134,7 +134,7 @@ function RemindMail()
 		"$scripturl?action=reminder;sa=setpassword;u=$row[id_member];code=$password\n\n" .
 		"$txt[ip]: $user_info[ip]\n\n" .
 		"$txt[username]: $row[member_name]\n\n" .
-		sprintf($txt['regards_team'], $context['forum_name']));
+		$txt['regards_team']);
 
 	// Set up the template.
 	$context += array(

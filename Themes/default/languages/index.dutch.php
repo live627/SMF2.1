@@ -106,7 +106,7 @@ $txt['remove_message'] = 'Verwijder berichten';
 $txt['notify'] = 'Bericht';
 $txt['notify_request'] = 'Wil je een e-mail ontvangen als iemand antwoord geeft op dit topic?';
 // Use numeric entities in the below string.
-$txt['regards_team'] = 'Met vriendelijke groet,' . "\n\n" . 'Het %1$s team.';
+$txt['regards_team'] = 'Met vriendelijke groet,' . "\n\n" . 'Het ' . $context['forum_name'] . ' team.';
 $txt['notify_replies'] = 'Bericht bij reacties';
 $txt['move_topic'] = 'Verplaats topic';
 $txt['move_to'] = 'Verplaats naar';

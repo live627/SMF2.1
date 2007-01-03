@@ -297,7 +297,7 @@ function ReportToModerator2()
 			$scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'] . "\n\n" .
 			$txt['report_comment'] . ":\n" .
 			$_POST['comment'] . "\n\n" .
-			sprintf($txt['regards_team'], $context['forum_name']), $user_info['email']);
+			$txt['regards_team'], $user_info['email']);
 	}
 	$smfFunc['db_free_result']($request);
 

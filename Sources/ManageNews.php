@@ -377,7 +377,7 @@ function ComposeMailing()
 		// Just send the to list to the template.
 		$context['addresses'] = implode('; ', $list);
 		$context['default_subject'] = $context['forum_name'] . ': ' . $txt['subject'];
-		$context['default_message'] = $txt['message'] . "\n\n" . sprintf($txt['regards_team'], $context['forum_name']) . "\n\n{\$board_url}";
+		$context['default_message'] = $txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n{\$board_url}";
 
 		$context['sub_template'] = 'email_members_compose';
 	}

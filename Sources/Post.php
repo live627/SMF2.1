@@ -1913,7 +1913,7 @@ function AnnouncementSend()
 
 			$announcements[$cur_language] = array(
 				'subject' => $txt['new_announcement'] . ': ' . $context['topic_subject'],
-				'body' => $message . "\n\n" . $txt['announce_unsubscribe'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . sprintf($txt['regards_team'], $context['forum_name']),
+				'body' => $message . "\n\n" . $txt['announce_unsubscribe'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . $txt['regards_team'],
 				'recipients' => array(),
 			);
 		}
@@ -2041,13 +2041,13 @@ function notifyMembersBoard(&$topicData)
 					$txt['notify_boards_once'] . "\n\n" .
 					(!empty($rowmember['notify_send_body']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					sprintf($txt['regards_team'], $context['forum_name']), null, 't' . $topicData[$key]['topic']);
+					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
 			elseif (empty($rowmember['notify_regularity']))
 				sendmail($rowmember['email_address'], $send_subject,
 					sprintf($txt['notify_boards'], $topicData[$key]['subject'], $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new', un_htmlspecialchars($topicData[$key]['name'])) .
 					(!empty($rowmember['notify_send_body']) ? $body_text : '') .
 					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					sprintf($txt['regards_team'], $context['forum_name']), null, 't' . $topicData[$key]['topic']);
+					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
 
 			$sentOnceAlready = 1;
 		}

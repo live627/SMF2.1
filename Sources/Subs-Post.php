@@ -2493,7 +2493,7 @@ function sendApprovalNotifications(&$topicData)
 			{
 				sendmail($row['email_address'], sprintf($txt['notification_reply_subject'], $msg['subject']),
 					$message . "\n\n" .
-					sprintf($txt['regards_team'], $context['forum_name']), null, 'm' . $msg['id']);
+					$txt['regards_team'], null, 'm' . $msg['id']);
 				$sent++;
 			}
 			$sent_this_time = true;
@@ -2672,7 +2672,7 @@ function adminNotify($type, $memberID, $member_name = null)
 				"$scripturl?action=admin;area=viewmembers;sa=browse;type=approve\n\n";
 
 		// And do the actual sending...
-		sendmail($row['email_address'], $txt['admin_notify_subject'], $message . sprintf($txt['regards_team'], $context['forum_name']), null, null, false, 0);
+		sendmail($row['email_address'], $txt['admin_notify_subject'], $message . $txt['regards_team'], null, null, false, 0);
 	}
 	$smfFunc['db_free_result']($request);
 

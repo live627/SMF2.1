@@ -106,7 +106,7 @@ $txt['remove_message'] = 'Eliminar mensaje';
 $txt['notify'] = 'Notificar';
 $txt['notify_request'] = '&#191;Deseas una notificaci&oacute;n por email si alguien responde a este tema?';
 // Use numeric entities in the below string.
-$txt['regards_team'] = 'Saludos,' . "\n" . 'El equipo %1$s.';
+$txt['regards_team'] = 'Saludos,' . "\n" . 'El equipo ' . $context['forum_name'] . '.';
 $txt['notify_replies'] = 'Notificar respuestas';
 $txt['move_topic'] = 'Mover tema';
 $txt['move_to'] = 'Mover a';
