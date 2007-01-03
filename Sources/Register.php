@@ -180,7 +180,7 @@ function Register2()
 		if ($_SESSION['visual_errors'] > 3)
 			unset($_SESSION['visual_verification_code']);
 
-		if (in_array(md5(strtolower($_REQUEST['visual_verification_code'])), array('7921903964212cc383bf910a8bf2d7f4', '9726255eec083aa56dc0449a21b33190')))
+		if (!empty($_REQUEST['visual_verification_code']) && in_array(md5(strtolower($_REQUEST['visual_verification_code'])), array('7921903964212cc383bf910a8bf2d7f4', '9726255eec083aa56dc0449a21b33190')))
 		{
 			loadLanguage('Errors');
 			fatal_error($txt['error_wrong_verification_code'] . '<br />And we don\'t take bribes', false);
