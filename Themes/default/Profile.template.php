@@ -2498,8 +2498,8 @@ function template_issueWarning()
 			percent = Math.round(percent / 5) * 5;
 
 			// What are the limits?
-			minLimit = ', ($context['warning_limit'] == 0 || $context['member']['warning'] - $context['warning_limit'] < 0 ? 0 : $context['member']['warning'] - $context['warning_limit']), ';
-			maxLimit = ', ($context['warning_limit'] == 0 || $context['member']['warning'] + $context['warning_limit'] > 100 ? 100 : $context['member']['warning'] + $context['warning_limit']), ';
+			minLimit = ', $context['min_allowed'], ';
+			maxLimit = ', $context['max_allowed'], ';
 
 			percent = Math.max(percent, minLimit);
 			percent = Math.min(percent, maxLimit);

@@ -3239,6 +3239,26 @@ function issueWarning($memID)
 
 	$context['warning_limit'] = allowedTo('admin_forum') ? 0 : $modSettings['user_limit'];
 
+	// What are the limits we can apply?
+	$context['min_allowed'] = 0;
+	$context['max_allowed'] = 100;
+	if ($context['warning_limit'] > 0)
+	{
+		// Make sure we cannot go outside of our limit for the day.
+		$request = $smfFunc['db_query']('', "
+			SELECT SUM(counter)
+			FROM {$db_prefix}log_comments
+			WHERE id_recipient = $memID
+				AND id_member = $user_info[id]
+				AND comment_type = 'warning'
+				AND log_time > " . (time() - 86400), __FILE__, __LINE__);
+		list ($current_applied) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
+
+		$context['min_allowed'] = max(0, $context['member']['warning'] - $current_applied - $context['warning_limit']);
+		$context['max_allowed'] = min(100, $context['member']['warning'] - $current_applied + $context['warning_limit']);
+	}
+
 	// Are we saving?
 	if (isset($_POST['save']))
 	{
@@ -3257,13 +3277,10 @@ function issueWarning($memID)
 
 		$_POST['warning_level'] = (int) $_POST['warning_level'];
 		$_POST['warning_level'] = max(0, min(100, $_POST['warning_level']));
-		if ($context['warning_limit'])
-		{
-			if ($_POST['warning_level'] < $context['member']['warning'] - $context['warning_limit'])
-				$_POST['warning_level'] = $context['member']['warning'] - $context['warning_limit'];
-			elseif ($_POST['warning_level'] > $context['member']['warning'] + $context['warning_limit'])
-				$_POST['warning_level'] = $context['member']['warning'] + $context['warning_limit'];
-		}
+		if ($_POST['warning_level'] < $context['min_allowed'])
+			$_POST['warning_level'] = $context['min_allowed'];
+		elseif ($_POST['warning_level'] > $context['max_allowed'])
+			$_POST['warning_level'] = $context['max_allowed'];
 
 		// Do we actually have to issue them with a PM?
 		$id_notice = 0;
