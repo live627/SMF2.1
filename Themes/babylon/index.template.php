@@ -57,7 +57,7 @@ function template_init()
 }
 
 // The main sub template above the content.
-function template_main_above()
+function template_mainhead_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
@@ -73,7 +73,9 @@ function template_main_above()
 		var smf_images_url = "', $settings['images_url'], '";
 		var smf_scripturl = "', $scripturl, '";
 		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
-		var smf_charset = "', $context['character_set'], '";
+		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
+		if (confirm("' . $txt['show_personal_messages'] . '"))
+			window.open("' . $scripturl . '?action=pm");' : '', '
 	// ]]></script>
 	<title>', $context['page_title'], '</title>';
 
@@ -148,6 +150,11 @@ function template_main_above()
 	// ]]></script>
 </head>
 <body>';
+}
+
+function template_main_above()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// Because of the way width/padding are calculated, we have to tell Internet Explorer 4 and 5 that the content should be 100% wide. (or else it will assume about 108%!)
 	echo '
@@ -427,6 +434,10 @@ function template_main_below()
 		echo '
 		// ]]></script>';
 	}
+}
+function template_mainhead_below()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// The following will be used to let the user know that some AJAX process is running
 	echo '

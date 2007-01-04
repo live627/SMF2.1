@@ -3047,15 +3047,8 @@ function setupThemeContext()
 	// This is here because old index templates might still use it.
 	$context['show_news'] = !empty($settings['enable_news']);
 
-	// This is done to make it easier to add to all themes...
-	if ($context['user']['popup_messages'] && !empty($options['popup_messages']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != 'pm'))
-	{
-		$context['html_headers'] .= '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		if (confirm("' . $txt['show_personal_messages'] . '"))
-			window.open("' . $scripturl . '?action=pm");
-	// ]]></script>';
-	}
+	// This is done to allow theme authors to customize it as they want.
+	$context['show_pm_popup'] = $context['user']['popup_messages'] && !empty($options['popup_messages']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != 'pm');
 
 	// Resize avatars the fancy, but non-GD requiring way.
 	if ($modSettings['avatar_action_too_large'] == 'option_js_resize' && (!empty($modSettings['avatar_max_width_external']) || !empty($modSettings['avatar_max_height_external'])))

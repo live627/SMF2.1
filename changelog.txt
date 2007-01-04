@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2631 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2632 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -15,6 +15,8 @@ January 2007
  ! The database function, db_insert, now takes the file name and line number as a parameter for better debugging. (Several files)
  + Added functionality to warn a user, link a users warning level to certain moderation tags, use it as a watch, and review all warnings. (ModerationCenter.php, Profile.php, ModSettings.php, Security.php, ManagePermissions.php, upgrade_2-0.sql, install_2-0.sql)
  & Template and language entries for the above. (ModerationCenter template, ModerationCenter language files, Profile template, Profile language files, Help language files, ModSettings language files)
+ ! Split the main layer into two layers, mainhead and main. (Load.php, index template files)
+ ! Moved the PM alert code from the source to the theme. (Subs.php, index template files)
 
 
 December 2006

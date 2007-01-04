@@ -57,7 +57,7 @@ function template_init()
 }
 
 // The main sub template above the content.
-function template_main_above()
+function template_mainhead_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
@@ -73,7 +73,9 @@ function template_main_above()
 		var smf_images_url = "', $settings['images_url'], '";
 		var smf_scripturl = "', $scripturl, '";
 		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
-		var smf_charset = "', $context['character_set'], '";
+		var smf_charset = "', $context['character_set'], '";', $context['show_pm_popup'] ? '
+		if (confirm("' . $txt['show_personal_messages'] . '"))
+			window.open("' . $scripturl . '?action=pm");' : '', '
 	// ]]></script>
 	<title>', $context['page_title'], '</title>
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
@@ -118,6 +120,11 @@ function template_main_above()
 	echo $context['html_headers'], '
 </head>
 <body>';
+}
+
+function template_main_above()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// The logo, user information, news, and menu.
 	echo '
@@ -247,6 +254,11 @@ function template_main_below()
 	<div align="center" class="smalltext">
 		', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '
 	</div>';
+}
+
+function template_mainhead_below()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// The following will be used to let the user know that some AJAX process is running
 	echo '
