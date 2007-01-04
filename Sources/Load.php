@@ -1386,7 +1386,8 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'name' => &$context['forum_name']
 	));
 
-	$txt = array();
+	if (!isset($txt))
+		$txt = array();
 	$simpleActions = array(
 		'findmember',
 		'helpadmin',

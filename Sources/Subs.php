@@ -861,7 +861,10 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 	// If we are not doing every tag then we don't cache this run.
 	if (!empty($parse_tags) && !empty($bbc_codes))
+	{
 		$temp_bbc = $bbc_codes;
+		$bbc_codes = array();
+	}
 
 	// Sift out the bbc for a performance improvement.
 	if (empty($bbc_codes) || $message === false || !empty($parse_tags))
@@ -1479,7 +1482,11 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 		// This is mainly for the bbc manager, so it's easy to add tags above.  Custom BBC should be added above this line.
 		if ($message === false)
+		{
+			if (isset($temp_bbc))
+				$bbc_codes = $temp_bbc;
 			return $codes;
+		}
 
 		// So the parser won't skip them.
 		$itemcodes = array(
