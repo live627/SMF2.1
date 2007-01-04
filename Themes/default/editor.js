@@ -37,6 +37,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	this.getText = getText;
 	this.showMoreSmileys = showMoreSmileys;
 	this.doSubmit = DoSubmit;
+	this.fetchDefaultFont = fetchDefaultFont;
 	var buttonControls = new Array();
 	var selectControls = new Array();
 	var smfSmileys = new Array();
@@ -222,16 +223,21 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		frameDocument.write("<html><head></head><body></body></html>");
 		frameDocument.close();
 
-		if (!is_ie)
+		// Work out what font it should have!
+		defFontFamily = fetchDefaultFont(textHandle, 'font-family');
+		defFontSize = fetchDefaultFont(textHandle, 'font-size');
+
+		if (frameDocument.body.contentEditable)
+		{
+			frameDocument.body.contentEditable = true;
+		}
+		else
 		{
 			frameDocument.designMode = 'off';
 			frameDocument.designMode = 'on';
 		}
-		else
-		{
-			frameDocument.body.contentEditable = true;
-		}
-
+		frameDocument.body.style.fontFamily = defFontFamily;
+		frameDocument.body.style.fontSize = defFontSize;
 		frameHandle.style.display = mode ? '' : 'none';
 
 		// Attach our events.
@@ -970,5 +976,39 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			textHandle.focus();
 		else
 			frameWindow.focus();
+	}
+
+	// Get the font type from an element!
+	function fetchDefaultFont(elm, attr)
+	{
+		// Function that actually does the recursive work.
+		function fetchDefaultFontRec(elmR, attrR)
+		{
+			var retValueR = '';
+	
+			if (document.defaultView && document.defaultView.getComputedStyle)
+			{
+				var cStyle = document.defaultView.getComputedStyle(elm, null);
+				if (cStyle && cStyle.getPropertyValue)
+					retValueR = cStyle.getPropertyValue(attr);
+			}
+			if (!retValueR && elm.currentStyle)
+			{
+				retValueR = elm.currentStyle[attr == 'font-family' ? 'fontFamily' : 'fontSize'];
+			}
+	
+			return retValueR;
+		}
+
+		retValue = fetchDefaultFontRec(elm, attr);
+		while (!retValue || retValue == 'transparent')
+		{
+			if (elm == document.body)
+				return '';
+			elm = elm.parentNode;
+			retValue = fetchDefaultFontRec(elm, attr);
+		}
+
+		return retValue;
 	}
 }
