@@ -233,7 +233,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 	if ($exclude_boards === null && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0)
 		$exclude_boards = array($modSettings['recycle_board']);
 	else
-		$exclude_boards = empty($exclude_boards) ? array() : $exclude_boards;
+		$exclude_boards = empty($exclude_boards) ? array() : (is_array($exclude_boards) ? $exclude_boards : array($exclude_boards));
 
 	// Find all the posts.  Newer ones will have higher IDs.
 	$request = $smfFunc['db_query']('', "
@@ -327,7 +327,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_metho
 	if ($exclude_boards === null && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0)
 		$exclude_boards = array($modSettings['recycle_board']);
 	else
-		$exclude_boards = empty($exclude_boards) ? array() : $exclude_boards;
+		$exclude_boards = empty($exclude_boards) ? array() : (is_array($exclude_boards) ? $exclude_boards : array($exclude_boards));
 
 	$stable_icons = array('xx', 'thumbup', 'thumbdown', 'exclamation', 'question', 'lamp', 'smiley', 'angry', 'cheesy', 'grin', 'sad', 'wink', 'moved', 'recycled', 'wireless');
 	$icon_sources = array();
