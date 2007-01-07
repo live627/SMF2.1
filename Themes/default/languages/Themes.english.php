@@ -80,7 +80,7 @@ $txt['header_logo_url_desc'] = '(leave blank to show forum name or default logo.
 $txt['number_recent_posts'] = 'Number of recent posts to display on board index:';
 $txt['number_recent_posts_desc'] = 'To disable the recent posts bar set this value to zero.';
 $txt['hide_post_group'] = 'Hide post group titles for grouped members?';
-$txt['hide_post_group_desc'] = 'Enabling this will not display a members post group title on the message view if they are assigned to a non-post based group.';
+$txt['hide_post_group_desc'] = 'Enabling this will not display a member\'s post group title on the message view if they are assigned to a non-post based group.';
 
 $txt['theme_options_defaults'] = 'These are the default values for some member specific settings.  Changing these will only affect new members and guests.';
 $txt['theme_options_title'] = 'Change or reset default options';
