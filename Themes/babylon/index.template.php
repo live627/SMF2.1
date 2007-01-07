@@ -53,7 +53,7 @@ function template_init()
 	$settings['use_buttons'] = false;
 
 	/* Show sticky and lock status separate from topic icons? */
-	$settings['separate_sticky_lock'] = false;
+	$settings['seperate_sticky_lock'] = false;
 }
 
 // The main sub template above the content.
