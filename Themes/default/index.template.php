@@ -52,8 +52,8 @@ function template_init()
 	/* Use plain buttons - as oppossed to text buttons? */
 	$settings['use_buttons'] = true;
 
-	/* Show sticky and lock status seperate from topic icons? */
-	$settings['seperate_sticky_lock'] = true;
+	/* Show sticky and lock status separate from topic icons? */
+	$settings['separate_sticky_lock'] = true;
 }
 
 // The main sub template above the content.

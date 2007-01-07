@@ -24,9 +24,9 @@ function template_main()
 			<img src="', $settings['images_url'], '/topic/', $context['poll']['is_locked'] ? 'normal_poll_locked' : 'normal_poll', '.gif" alt="" align="bottom" /> ', $txt['poll'], '
 		</td>
 	</tr>
-	<tr>
-		<td width="5%" valign="top" class="windowbg"><b>', $txt['poll_question'], ':</b></td>
-		<td class="windowbg">
+	<tr class="windowbg">
+		<td width="5%" valign="top" class="poll_question"><b>', $txt['poll_question'], ':</b></td>
+		<td class="poll_question2">
 			', $context['poll']['question'];
 		if (!empty($context['poll']['expire_time']))
 			echo '
@@ -45,8 +45,8 @@ function template_main()
 			foreach ($context['poll']['options'] as $option)
 				echo '
 							<tr>
-								<td style="padding-right: 2ex;', $option['voted_this'] ? 'font-weight: bold;' : '', '">', $option['option'], '</td>', $context['allow_poll_view'] ? '
-								<td nowrap="nowrap">' . $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)</td>' : '', '
+								<td class="poll_who_voted" style="padding-right: 2ex;', $option['voted_this'] ? 'font-weight: bold;' : '', '">', $option['option'], '</td>', $context['allow_poll_view'] ? '
+								<td class="poll_percent_bar" nowrap="nowrap">' . $option['bar'] . ' ' . $option['votes'] . ' (' . $option['percent'] . '%)</td>' : '', '
 							</tr>';
 
 			echo '
@@ -78,7 +78,7 @@ function template_main()
 					</td>
 				</tr>', $context['allow_poll_view'] ? '
 				<tr>
-					<td colspan="2"><b>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</b></td>
+					<td class="poll_total_votes" colspan="2"><b>' . $txt['poll_total_voters'] . ': ' . $context['poll']['total_votes'] . '</b></td>
 				</tr>' : '', '
 			</table><br />';
 		}
@@ -89,7 +89,7 @@ function template_main()
 			<form action="', $scripturl, '?action=vote;topic=', $context['current_topic'], '.', $context['start'], ';poll=', $context['poll']['id'], '" method="post" accept-charset="', $context['character_set'], '" style="margin: 0px;">
 				<table>
 					<tr>
-						<td colspan="2">';
+						<td class="poll_more" colspan="2">';
 
 			// Show a warning if they are allowed more than one option.
 			if ($context['poll']['allowed_warning'])
@@ -97,7 +97,7 @@ function template_main()
 							', $context['poll']['allowed_warning'], '
 						</td>
 					</tr><tr>
-						<td>';
+						<td class="poll_vote_button">';
 
 			// Show each option with its button - a radio likely.
 			foreach ($context['poll']['options'] as $option)
@@ -106,7 +106,7 @@ function template_main()
 
 			echo '
 						</td>
-						<td valign="bottom" style="padding-left: 15px;">';
+						<td class="poll_links" valign="bottom" style="padding-left: 15px;">';
 
 			// Allowed to view the results? (without voting!)
 			if ($context['allow_poll_view'])
@@ -126,7 +126,7 @@ function template_main()
 				echo '
 						</td>
 					</tr><tr>
-						<td colspan="2"><input type="submit" value="', $txt['poll_vote'], '" /></td>
+						<td class="poll_submit" colspan="2"><input type="submit" value="', $txt['poll_vote'], '" /></td>
 					</tr>
 				</table>
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
@@ -150,7 +150,7 @@ function template_main()
 				</td>
 		</tr>
 		<tr>
-				<td width="5%" valign="top" class="windowbg">
+				<td class="cal_linked_events" width="5%" valign="top" class="windowbg">
 						<ul>';
 		foreach ($context['linked_calendar_events'] as $event)
 			echo '
@@ -186,7 +186,7 @@ function template_main()
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr>
 		<td class="middletext" valign="bottom" style="padding-bottom: 4px;">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><b>' . $txt['go_down'] . '</b></a>' : '', '</td>
-		<td align="right" style="padding-right: 1ex;">
+		<td class="template_button_strip" align="right" style="padding-right: 1ex;">
 			<div class="nav" style="margin-bottom: 2px;"> ', $context['previous_next'], '</div>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
@@ -201,11 +201,11 @@ function template_main()
 	echo '
 <table width="100%" cellpadding="3" cellspacing="0" border="0" class="tborder" style="border-bottom: 0;">
 		<tr class="catbg3">
-				<td valign="middle" width="2%" style="padding-left: 6px;">
+				<td class="icon" valign="middle" width="2%" style="padding-left: 6px;">
 						<img src="', $settings['images_url'], '/topic/', $context['class'], '.gif" align="bottom" alt="" />
 				</td>
-				<td width="13%"> ', $txt['author'], '</td>
-				<td valign="middle" width="85%" style="padding-left: 6px;" id="top_subject">
+				<td class="author" width="13%"> ', $txt['author'], '</td>
+				<td class="subject" valign="middle" width="85%" style="padding-left: 6px;" id="top_subject">
 						', $txt['topic'], ': ', $context['subject'], ' &nbsp;(', $txt['read'], ' ', $context['num_views'], ' ', $txt['times'], ')
 				</td>
 		</tr>';
