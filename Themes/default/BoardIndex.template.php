@@ -1,4 +1,4 @@
-seperate_sticky_lock<?php
+<?php
 // Version: 2.0 Alpha; BoardIndex
 
 function template_main()
