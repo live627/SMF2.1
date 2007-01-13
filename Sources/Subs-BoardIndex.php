@@ -25,10 +25,17 @@
 
 if (!defined('SMF'))
 	die('Hacking attempt...');
-/*
-	
+/*	This file currently only contains one function to collect the data needed to
+	show a list of boards for the board index and the message index.
 
-
+	array getBoardIndex(array boardIndexOptions)
+		- Fetches a list of boards and (optional) categories including
+		  statistical information, child boards and moderators.
+		- Used by both the board index (main data) and the message index (child
+		  boards).
+		- Depending on the include_categories setting returns an associative 
+		  array with categories->boards->child_boards or an associative array
+		  with boards->child_boards.
 */
 
 function getBoardIndex($boardIndexOptions)
@@ -36,12 +43,12 @@ function getBoardIndex($boardIndexOptions)
 	global $smfFunc, $scripturl, $user_info, $modSettings, $txt, $db_prefix;
 	global $settings, $context;
 
+	// For performance, track the latest post while going through the boards.
 	if (!empty($boardIndexOptions['set_latest_post']))
 		$latest_post = array(
 			'timestamp' => 0,
 			'ref' => 0,
 		);
-
 
 	// Find all boards and categories, as well as related information.  This will be sorted by the natural order of boards and categories, which we control.
 	$result_boards = $smfFunc['db_query']('boardindex_fetch_boards', "
@@ -51,7 +58,7 @@ function getBoardIndex($boardIndexOptions)
 			b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent,
 			IFNULL(m.poster_time, 0) AS poster_time, IFNULL(mem.member_name, m.poster_name) AS poster_name,
 			m.subject, m.id_topic, IFNULL(mem.real_name, m.poster_name) AS real_name,
-			" . ($user_info['is_guest'] ? "	1 AS is_read, 0 AS new_from" : "
+			" . ($user_info['is_guest'] ? "	1 AS is_read, 0 AS new_from," : "
 			(IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS is_read, IFNULL(lb.id_msg, -1) + 1 AS new_from," . ($boardIndexOptions['include_categories'] ? "
 			c.can_collapse, IFNULL(cc.id_member, 0) AS is_collapsed," : '')) . "
 			IFNULL(mem.id_member, 0) AS id_member, m.id_msg,
