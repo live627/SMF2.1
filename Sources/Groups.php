@@ -34,7 +34,7 @@ if (!defined('SMF'))
 	void MembergroupMembers()
 		- can be called from ManageMembergroups if it needs templating within the admin environment.
 		- show a list of members that are part of a given membergroup.
-		- called by ?action=admin;area=membergroups;sa=members;group=x
+		- called by ?action=moderate;area=viewgroups;sa=members;group=x
 		- requires the manage_membergroups permission.
 		- uses the group_members sub template of ManageMembergroups.
 		- allows to add and remove members from the selected membergroup.
@@ -306,7 +306,7 @@ function MembergroupMembers()
 	$smfFunc['db_free_result']($request);
 
 	// Create the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=membergroups;sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
 	$context['start'] = $_REQUEST['start'];
 
 	// Load up all members of this group.

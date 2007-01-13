@@ -157,14 +157,14 @@ function ViewErrorLog()
 		);
 		if (!empty($row['file']) && !empty($row['line']))
 		{
-			// Sometimes we get eval errors that add on text to the file.  Try to get rid of that.
-			$row['file_clean'] = preg_replace('~ *\(.*eval\?\)~', '', $row['file']);
+			// Eval'd files rarely point to the right location and cause havoc for linking, so don't link them.
+			$linkfile = strpos($row['file'], 'eval') === false || strpos($row['file'], '?') === false;
 
 			$context['errors'][$row['id_error']]['file'] = array(
 				'file' => $row['file'],
 				'line' => $row['line'],
-				'href' => $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file_clean']) . ';line=' . $row['line'],
-				'link' => '<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file_clean']) . ';line=' . $row['line'] . '" onclick="return reqWin(this.href, 600, 400, false);">' . $row['file'] . '</a>',
+				'href' => $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'],
+				'link' => $linkfile ? '<a href="' . $scripturl . '?action=admin;area=errorlog;file=' . base64_encode($row['file']) . ';line=' . $row['line'] . '" onclick="return reqWin(this.href, 600, 400, false);">' . $row['file'] . '</a>' : $row['file'],
 				'search' => base64_encode($row['file']),
 			);
 		}

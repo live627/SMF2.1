@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2634 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2635 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -18,6 +18,9 @@ January 2007
  ! Split the main layer into two layers, html and body. (Load.php, index template files)
  ! Moved the PM alert code from the source to the theme. (Subs.php, index template files)
  ! If someone forgets to send an array to the recentPosts or recentTopics SSI functions don't complain. (SSI.php)
+ ! From the permission index link to the manage membergroups page instead of the manage members page. (ManagePermissions.php, ManagePermissions template)
+ ! Don't link files that have been eval'd in the error log. (ManageErrors.php)
+ ! Replaced links to the admin center membergroup member list to the moderation center membergroup member list. (Admin.php, Groups.php, ManageMembergroups.php, ManagePermissions.php)
 
 
 December 2006

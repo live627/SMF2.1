@@ -225,7 +225,7 @@ function AdminHome()
 	if (listMembergroupMembers_Href($context['administrators'], 1, 32) && allowedTo('manage_membergroups'))
 	{
 		// Add a 'more'-link if there are more than 32.
-		$context['more_admins_link'] = '<a href="' . $scripturl . '?action=admin;area=membergroups;sa=members;group=1">' . $txt['more'] . '</a>';
+		$context['more_admins_link'] = '<a href="' . $scripturl . '?action=moderate;area=viewgroups;sa=members;group=1">' . $txt['more'] . '</a>';
 	}
 
 	// Some stuff.... :P.
