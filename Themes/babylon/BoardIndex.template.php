@@ -405,7 +405,7 @@ function template_main()
 	echo $context['num_guests'], ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . $context['num_users_online'], ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
 	// Handle hidden users and buddies.
-	if (!empty($context['num_users_hidden']) || ($context['show_buddies'] && !empty($context['show_buddies'])))
+	if (!empty($context['num_users_hidden']) || ($context['show_buddies'] && !empty($context['num_buddies'])))
 	{
 		echo ' (';
 
