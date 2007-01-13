@@ -39,8 +39,8 @@ if (!defined('SMF'))
 // Show the list of topics in this board, along with any child boards.
 function MessageIndex()
 {
-	global $txt, $scripturl, $board, $db_prefix, $modSettings;
-	global $context, $options, $settings, $board_info, $user_info, $smfFunc;
+	global $txt, $scripturl, $board, $db_prefix, $modSettings, $context;
+	global $options, $settings, $board_info, $user_info, $smfFunc, $sourcedir;
 
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_messageindex';
@@ -165,169 +165,15 @@ function MessageIndex()
 	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 	$context['can_approve_posts'] = allowedTo('approve_posts');
 
-	// Aren't children wonderful things?
-	$result = $smfFunc['db_query']('messageindex_fetch_boards', "
-		SELECT
-			b.id_board, b.name, b.description, b.num_topics, b.num_posts, b.unapproved_topics,
-			b.unapproved_posts, m.poster_name, m.poster_time, m.subject, m.id_msg, m.id_topic,
-			IFNULL(mem.real_name, m.poster_name) AS real_name, " . (!$user_info['is_guest'] ? "
-			(IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isRead," : "1 AS isRead,") . "
-			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem2.id_member, 0) AS ID_MODERATOR,
-			mem2.real_name AS modRealName
-		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])" : '') . "
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
-			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.id_member = mods.id_member)
-		WHERE b.id_parent = $board
-			AND $user_info[query_see_board]", __FILE__, __LINE__);
-	if ($smfFunc['db_num_rows']($result) != 0)
-	{
-		$theboards = array();
-		while ($row_board = $smfFunc['db_fetch_assoc']($result))
-		{
-			$ignoreThisBoard = in_array($row_board['id_board'], $user_info['ignoreboards']);
-			$row_board['isRead'] = !empty($row_board['isRead']) || $ignoreThisBoard ? '1' : '0';
-			if (!isset($context['boards'][$row_board['id_board']]))
-			{
-				$theboards[] = $row_board['id_board'];
-
-				// Make sure the subject isn't too long.
-				censorText($row_board['subject']);
-				$short_subject = shorten_subject($row_board['subject'], 24);
-
-				$context['boards'][$row_board['id_board']] = array(
-					'id' => $row_board['id_board'],
-					'last_post' => array(
-						'id' => $row_board['id_msg'],
-						'time' => $row_board['poster_time'] > 0 ? timeformat($row_board['poster_time']) : $txt['not_applicable'],
-						'timestamp' => forum_time(true, $row_board['poster_time']),
-						'subject' => $short_subject,
-						'member' => array(
-							'id' => $row_board['id_member'],
-							'username' => $row_board['poster_name'] != '' ? $row_board['poster_name'] : $txt['not_applicable'],
-							'name' => $row_board['real_name'],
-							'href' => !empty($row_board['id_member']) ? $scripturl . '?action=profile;u=' . $row_board['id_member'] : '',
-							'link' => $row_board['poster_name'] != '' ? (!empty($row_board['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_member'] . '">' . $row_board['real_name'] . '</a>' : $row_board['real_name']) : $txt['not_applicable'],
-						),
-						'start' => 'new',
-						'topic' => $row_board['id_topic'],
-						'href' => $row_board['subject'] != '' ? $scripturl . '?topic=' . $row_board['id_topic'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new' : '',
-						'link' => $row_board['subject'] != '' ? '<a href="' . $scripturl . '?topic=' . $row_board['id_topic'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : $txt['not_applicable']
-					),
-					'new' => empty($row_board['isRead']) && $row_board['poster_name'] != '',
-					'name' => $row_board['name'],
-					'description' => $row_board['description'],
-					'moderators' => array(),
-					'link_moderators' => array(),
-					'children' => array(),
-					'link_children' => array(),
-					'children_new' => false,
-					'topics' => $row_board['num_topics'],
-					'posts' => $row_board['num_posts'],
-					'unapproved_topics' => $row_board['unapproved_topics'],
-					'unapproved_posts' => $row_board['unapproved_posts'] - $row_board['unapproved_topics'],
-					'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['id_board'], $user_info['mod_cache']['ap'])),
-					'href' => $scripturl . '?board=' . $row_board['id_board'] . '.0',
-					'link' => '<a href="' . $scripturl . '?board=' . $row_board['id_board'] . '.0">' . $row_board['name'] . '</a>'
-				);
-			}
-			if (!empty($row_board['ID_MODERATOR']))
-			{
-				$context['boards'][$row_board['id_board']]['moderators'][$row_board['ID_MODERATOR']] = array(
-					'id' => $row_board['ID_MODERATOR'],
-					'name' => $row_board['modRealName'],
-					'href' => $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>'
-				);
-				$context['boards'][$row_board['id_board']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
-			}
-		}
-		$smfFunc['db_free_result']($result);
-
-		// Load up the child boards.
-		$result = $smfFunc['db_query']('', "
-			SELECT
-				b.id_board, b.id_parent, b.name, b.description, b.num_topics, b.num_posts,
-				m.poster_name, IFNULL(m.poster_time, 0) AS poster_time, m.subject, m.id_msg, m.id_topic,
-				IFNULL(mem.real_name, m.poster_name) AS real_name, id_parent, b.unapproved_posts, b.unapproved_topics,
-				" . ($user_info['is_guest'] ? '1' : '(IFNULL(lb.id_msg, 0) >= b.id_msg_updated)') . " AS isRead,
-				IFNULL(mem.id_member, 0) AS id_member
-			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
-				LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])" : '') . "
-			WHERE " . (empty($modSettings['countChildPosts']) ? "b.id_parent IN (" . implode(',', $theboards) . ")" : "child_level > 0") . "
-				AND $user_info[query_see_board]", __FILE__, __LINE__);
-		$parent_map = array();
-		while ($row = $smfFunc['db_fetch_assoc']($result))
-		{
-			// We've got a child of a child, then... possibly.
-			if (!in_array($row['id_parent'], $theboards))
-			{
-				if (!isset($parent_map[$row['id_parent']]))
-					continue;
-
-				$parent_map[$row['id_parent']][0]['posts'] += $row['num_posts'];
-				$parent_map[$row['id_parent']][0]['topics'] += $row['num_topics'];
-				$parent_map[$row['id_parent']][1]['posts'] += $row['num_posts'];
-				$parent_map[$row['id_parent']][1]['topics'] += $row['num_topics'];
-				$parent_map[$row['id_board']] = $parent_map[$row['id_parent']];
-
-				continue;
-			}
-
-			if ($context['boards'][$row['id_parent']]['last_post']['timestamp'] < forum_time(true, $row['poster_time']))
-			{
-				// Make sure the subject isn't too long.
-				censorText($row['subject']);
-				$short_subject = shorten_subject($row['subject'], 24);
-
-				$context['boards'][$row['id_parent']]['last_post'] = array(
-					'id' => $row['id_msg'],
-					'time' => $row['poster_time'] > 0 ? timeformat($row['poster_time']) : $txt['not_applicable'],
-					'timestamp' => forum_time(true, $row['poster_time']),
-					'subject' => $short_subject,
-					'member' => array(
-						'username' => $row['poster_name'] != '' ? $row['poster_name'] : $txt['not_applicable'],
-						'name' => $row['real_name'],
-						'id' => $row['id_member'],
-						'href' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-						'link' => $row['poster_name'] != '' ? (!empty($row['id_member']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : $row['real_name']) : $txt['not_applicable'],
-					),
-					'start' => 'new',
-					'topic' => $row['id_topic'],
-					'href' => $scripturl . '?topic=' . $row['id_topic'] . '.new' . (empty($row['isRead']) ? ';boardseen' : '') . '#new'
-				);
-				$context['boards'][$row['id_parent']]['last_post']['link'] = $row['subject'] != '' ? '<a href="' . $context['boards'][$row['id_parent']]['last_post']['href'] . '" title="' . $row['subject'] . '">' . $short_subject . '</a>' : $txt['not_applicable'];
-			}
-			$context['boards'][$row['id_parent']]['children'][$row['id_board']] = array(
-				'id' => $row['id_board'],
-				'name' => $row['name'],
-				'description' => $row['description'],
-				'new' => empty($row['isRead']) && $row['poster_name'] != '',
-				'topics' => $row['num_topics'],
-				'posts' => $row['num_posts'],
-				'unapproved_topics' => $row['unapproved_topics'],
-				'unapproved_posts' => $row['unapproved_posts'] - $row['unapproved_topics'],
-				'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row['id_board'], $user_info['mod_cache']['ap'])),
-				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>'
-			);
-			$context['boards'][$row['id_parent']]['link_children'][] = '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>';
-			$context['boards'][$row['id_parent']]['children_new'] |= empty($row['isRead']) && $row['poster_name'] != '';
-
-			if (!empty($modSettings['countChildPosts']))
-			{
-				$context['boards'][$row['id_parent']]['posts'] += $row['num_posts'];
-				$context['boards'][$row['id_parent']]['topics'] += $row['num_topics'];
-
-				$parent_map[$row['id_board']] = array(&$context['boards'][$row['id_parent']], &$context['boards'][$row['id_parent']]['children'][$row['id_board']]);
-			}
-		}
-	}
-	$smfFunc['db_free_result']($result);
+	require_once($sourcedir . '/Subs-BoardIndex.php');
+	$boardIndexOptions = array(
+		'include_categories' => false,
+		'base_level' => $board_info['child_level'] + 1,
+		'parent_id' => $board_info['id'],
+		'set_latest_post' => false,
+		'countChildPosts' => !empty($modSettings['countChildPosts']),
+	);
+	$context['boards'] = getBoardIndex($boardIndexOptions);
 
 	// Nosey, nosey - who's viewing this topic?
 	if (!empty($settings['display_who_viewing']))
