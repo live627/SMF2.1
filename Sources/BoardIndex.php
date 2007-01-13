@@ -64,6 +64,7 @@ function BoardIndex()
 		'ref' => null
 	);
 
+	// Retrieve the categories and boards.
 	require_once($sourcedir . '/Subs-BoardIndex.php');
 	$boardIndexOptions = array(
 		'include_categories' => true,
@@ -74,77 +75,17 @@ function BoardIndex()
 	);
 	$context['categories'] = getBoardIndex($boardIndexOptions);
 
-	// Load the users online right now.
-	$result = $smfFunc['db_query']('', "
-		SELECT
-			lo.id_member, lo.log_time, mem.real_name, mem.member_name, mem.show_online,
-			mg.online_color, mg.id_group, mg.group_name
-		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)", __FILE__, __LINE__);
-
-	$context['users_online'] = array();
-	$context['list_users_online'] = array();
-	$context['online_groups'] = array();
-	$context['num_guests'] = 0;
-	$context['num_buddies'] = 0;
-	$context['num_users_hidden'] = 0;
+	// Get the user online list.
+	require_once($sourcedir . '/Subs-MembersOnline.php');
+	$membersOnlineOptions = array(
+		'show_hidden' => allowedTo('moderate_forum'),
+		'sort' => 'log_time',
+		'reverse_sort' => true,
+	);
+	$membersOnlineStats = getMembersOnlineStats($membersOnlineOptions);
+	$context += $membersOnlineStats;
 
 	$context['show_buddies'] = !empty($user_info['buddies']);
-
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-	{
-		if (empty($row['real_name']))
-		{
-			$context['num_guests']++;
-			continue;
-		}
-		elseif (empty($row['show_online']) && !allowedTo('moderate_forum'))
-		{
-			$context['num_users_hidden']++;
-			continue;
-		}
-
-		// Some basic color coding...
-		if (!empty($row['online_color']))
-			$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" style="color: ' . $row['online_color'] . ';">' . $row['real_name'] . '</a>';
-		else
-			$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
-
-		$is_buddy = in_array($row['id_member'], $user_info['buddies']);
-		if ($is_buddy)
-		{
-			$context['num_buddies']++;
-			$link = '<b>' . $link . '</b>';
-		}
-
-		$context['users_online'][$row['log_time'] . $row['member_name']] = array(
-			'id' => $row['id_member'],
-			'username' => $row['member_name'],
-			'name' => $row['real_name'],
-			'group' => $row['id_group'],
-			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-			'link' => $link,
-			'is_buddy' => $is_buddy,
-			'hidden' => empty($row['show_online']),
-		);
-
-		$context['list_users_online'][$row['log_time'] . $row['member_name']] = empty($row['show_online']) ? '<i>' . $link . '</i>' : $link;
-
-		if (!isset($context['online_groups'][$row['id_group']]))
-			$context['online_groups'][$row['id_group']] = array(
-				'id' => $row['id_group'],
-				'name' => $row['group_name'],
-				'color' => $row['online_color']
-			);
-	}
-	$smfFunc['db_free_result']($result);
-
-	krsort($context['users_online']);
-	krsort($context['list_users_online']);
-	ksort($context['online_groups']);
-
-	$context['num_users_online'] = count($context['users_online']) + $context['num_users_hidden'];
 
 	// Are we showing all membergroups on the board index?
 	if (!empty($settings['show_group_key']) && !empty($modSettings['groupCache']))

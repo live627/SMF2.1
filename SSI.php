@@ -645,81 +645,42 @@ function ssi_boardStats($output_method = 'echo')
 // Shows a list of online users:  YY Guests, ZZ Users and then a list...
 function ssi_whosOnline($output_method = 'echo')
 {
-	global $scripturl, $db_prefix, $user_info, $txt, $smfFunc;
+	global $user_info, $txt, $sourcedir, $settings, $modSettings;
 
-	// Load the users online right now.
-	$result = $smfFunc['db_query']('', "
-		SELECT
-			lo.id_member, lo.log_time, mem.real_name, mem.member_name, mem.show_online,
-			mg.online_color, mg.id_group
-		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)", __FILE__, __LINE__);
+	require_once($sourcedir . '/Subs-MembersOnline.php');
+	$membersOnlineOptions = array(
+		'show_hidden' => allowedTo('moderate_forum'),
+		'sort' => 'log_time',
+		'reverse_sort' => true,
+	);
+	$return = getMembersOnlineStats($membersOnlineOptions);
 
-	$return['users'] = array();
-	$return['guests'] = 0;
-	$return['hidden'] = 0;
-	$return['buddies'] = 0;
-	$show_buddies = !empty($user_info['buddies']);
-
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-	{
-		if (!isset($row['real_name']))
-			$return['guests']++;
-		elseif (!empty($row['show_online']) || allowedTo('moderate_forum'))
-		{
-			// Some basic color coding...
-			if (!empty($row['online_color']))
-				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" style="color: ' . $row['online_color'] . ';">' . $row['real_name'] . '</a>';
-			else
-				$link = '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>';
-
-			// Bold any buddies.
-			if ($show_buddies && in_array($row['id_member'], $user_info['buddies']))
-			{
-				$return['buddies']++;
-				$link = '<b>' . $link . '</b>';
-			}
-
-			$return['users'][$row['log_time'] . $row['member_name']] = array(
-				'id' => $row['id_member'],
-				'username' => $row['member_name'],
-				'name' => $row['real_name'],
-				'group' => $row['id_group'],
-				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-				'link' => $link,
-				'hidden' => empty($row['show_online']),
-				'is_last' => false,
-			);
-		}
-		else
-			$return['hidden']++;
-	}
-	$smfFunc['db_free_result']($result);
-
-	if (!empty($return['users']))
-	{
-		krsort($return['users']);
-		$userlist = array_keys($return['users']);
-		$return['users'][$userlist[count($userlist) - 1]]['is_last'] = true;
-	}
-	$return['num_users'] = count($return['users']) + $return['hidden'];
-	$return['total_users'] = $return['num_users'] + $return['guests'];
-
+	// Add some redundancy for backwards compatibility reasons.
 	if ($output_method != 'echo')
-		return $return;
+		return $return + array(
+			'users' => $return['users_online'],
+			'guests' => $return['num_guests'],
+			'hidden' => $return['num_users_hidden'],
+			'buddies' => $return['num_buddies'],
+			'num_users' => $return['num_users_online'],
+			'total_users' => $return['num_users_online'] + $return['num_guests'],
+		);
 
 	echo '
-		', $return['guests'], ' ', $return['guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ', $return['num_users'], ' ', $return['num_users'] == 1 ? $txt['user'] : $txt['users'];
+		', $return['num_guests'], ' ', $return['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ', $return['num_users_online'], ' ', $return['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
 	// Hidden users, or buddies?
-	if ($return['hidden'] > 0 || $show_buddies)
+	if ($return['num_users_hidden'] > 0 || !empty($user_info['num_buddies']))
 		echo '
-			(' . ($show_buddies ? ($return['buddies'] . ' ' . ($return['buddies'] == 1 ? $txt['buddy'] : $txt['buddies'])) : '') . ($show_buddies && $return['hidden'] ? ', ' : '') . (!$return['hidden'] ? '' : $return['hidden'] . ' ' . $txt['hidden']) . ')';
+			(' . ($show_buddies ? ($return['num_buddies'] . ' ' . ($return['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies'])) : '') . (!empty($user_info['buddies']) && $return['num_users_hidden'] ? ', ' : '') . (!$return['num_users_hidden'] ? '' : $return['num_users_hidden'] . ' ' . $txt['hidden']) . ')';
 
-	echo '<br />';
-	foreach ($return['users'] as $user)
-		echo $user['hidden'] ? '<i>' . $user['link'] . '</i>' : $user['link'], $user['is_last'] ? '' : ', ';
+	echo '<br />
+			', implode(', ', $return['list_users_online']);
+
+	// Showing membergroups?
+	if (!empty($settings['show_group_key']) && !empty($return['membergroups']))
+		echo '<br />
+			[' . implode(']&nbsp;&nbsp;[', $return['membergroups']) . ']';
 }
 
 // Just like whosOnline except it also logs the online presence.
