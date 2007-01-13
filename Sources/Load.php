@@ -1428,7 +1428,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		if (isset($settings['theme_layers']))
 			$context['template_layers'] = explode(',', $settings['theme_layers']);
 		else
-			$context['template_layers'] = array('mainhead', 'main');
+			$context['template_layers'] = array('html', 'body');
 
 		// Load each template.... and attempt to load its associated language file.
 		foreach ($templates as $template)

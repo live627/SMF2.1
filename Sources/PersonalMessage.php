@@ -384,11 +384,8 @@ function MessageFolder()
 	{
 		$context['sort_by'] = 'date';
 		$_GET['sort'] = 'pm.id_pm';
-		$descending = false;
-
 		// An overriding setting?
-		if (!empty($options['view_newest_pm_first']))
-			$descending = !$descending;
+		$descending = !empty($options['view_newest_pm_first']);
 	}
 	// Otherwise use the defaults: ascending, by date.
 	else

@@ -57,7 +57,7 @@ function template_init()
 }
 
 // The main sub template above the content.
-function template_mainhead_above()
+function template_html_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
@@ -122,7 +122,7 @@ function template_mainhead_above()
 <body>';
 }
 
-function template_main_above()
+function template_body_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
@@ -189,7 +189,7 @@ function template_main_above()
 		<tr><td valign="top" style="background-color: #ffffff;">';
 }
 
-function template_main_below()
+function template_body_below()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
@@ -256,7 +256,7 @@ function template_main_below()
 	</div>';
 }
 
-function template_mainhead_below()
+function template_html_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 

@@ -129,7 +129,7 @@ function ManagePostSettings()
 // Set the censored words.
 function SetCensor()
 {
-	global $txt, $modSettings, $context;
+	global $txt, $modSettings, $context, $smfFunc;
 
 	if (!empty($_POST['save_censor']))
 	{

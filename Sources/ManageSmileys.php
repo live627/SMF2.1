@@ -915,7 +915,7 @@ function Editsmiley_order()
 
 function InstallSmileySet()
 {
-	global $sourcedir, $boarddir, $modSettings;
+	global $sourcedir, $boarddir, $modSettings, $smfFunc;
 
 	isAllowedTo('manage_smileys');
 	checkSession('request');

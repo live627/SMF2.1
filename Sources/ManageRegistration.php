@@ -197,7 +197,7 @@ function AdminRegister()
 // I hereby agree not to be a lazy bum.
 function EditAgreement()
 {
-	global $txt, $boarddir, $context, $modSettings;
+	global $txt, $boarddir, $context, $modSettings, $smfFunc;
 
 	if (isset($_POST['agreement']))
 	{
