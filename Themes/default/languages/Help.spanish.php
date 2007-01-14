@@ -6,7 +6,7 @@
 global $helptxt;
 $helptxt = array();
 
-$txt[1006] = 'Cerrar ventana';
+$txt['close_window'] = 'Cerrar ventana';
 
 $helptxt['manage_boards'] = '
 	<b>Editar foros</b><br />

@@ -7,7 +7,7 @@ $txt['need_username'] = 'Debes escribir un nombre de usuario.';
 $txt['no_password'] = 'No proporcionaste tu contrase&ntilde;a.';
 $txt['incorrect_password'] = 'Contrase&ntilde;a incorrecta';
 $txt['choose_username'] = 'Escoge un nombre de usuario';
-$txt[155] = 'Modo de Mantenimiento';
+$txt['maintain_mode'] = 'Modo de Mantenimiento';
 $txt['registration_successful'] = 'Registro con &eacute;xito';
 $txt['now_a_member'] = '&iexcl;Felicidades! Ahora eres miembro del foro.';
 // Use numeric entities in the below string.
@@ -73,7 +73,7 @@ $txt['change_password'] = 'Detalles de la nueva contrase&#241;a';
 $txt['change_password_login'] = 'Tus datos para ingresar en';
 $txt['change_password_new'] = 'han sido cambiados y tu contrase&#241;a ha sido reseteada. Debajo est&#225;n tus nuevos datos para ingresar.';
 
-$txt['maintenance3'] = 'Este foro est&aacute; en modo de mantenimiento.';
+$txt['in_maintain_mode'] = 'Este foro est&aacute; en modo de mantenimiento.';
 
 // These two are used as a javascript alert; please use international characters directly, not as entities.
 $txt['register_agree'] = 'Favor de leer/aceptar los t&#233;rminos para poder enviar la forma.';

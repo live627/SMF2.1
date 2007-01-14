@@ -167,7 +167,7 @@ function template_main()
 						id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
 					foreach ($board['children'] as $child)
 					{
-						$child['link'] = '<a href="' . $child['href'] . '" title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt[330] . ': ' . $child['topics'] . ', ' . $txt['posts'] . ': ' . $child['posts'] . ')">' . $child['name'] . '</a>';
+						$child['link'] = '<a href="' . $child['href'] . '" title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . $child['topics'] . ', ' . $txt['posts'] . ': ' . $child['posts'] . ')">' . $child['name'] . '</a>';
 
 						// Does the child have any posts awaiting approval?!
 						if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
@@ -185,7 +185,7 @@ function template_main()
 		</td>
 		<td class="windowbg" valign="middle" align="center" style="width: 12ex;"><span class="smalltext">
 			', $board['posts'], ' ', $txt['posts'], ' ', $txt['in'], '<br />
-			', $board['topics'], ' ', $txt[330], '
+			', $board['topics'], ' ', $txt['board_topics'], '
 		</span></td>
 		<td class="smalltext" valign="middle" width="22%">';
 
@@ -289,7 +289,7 @@ function template_main()
 	{
 		echo '
 	<tr>
-		<td class="catbg" colspan="2">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar47'], '</td>
+		<td class="catbg" colspan="2">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</td>
 	</tr><tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
 			<a href="', $scripturl, '?action=calendar">
@@ -301,7 +301,7 @@ function template_main()
 		// Holidays like "Christmas", "Chanukah", and "We Love [Unknown] Day" :P.
 		if (!empty($context['calendar_holidays']))
 			echo '
-				<span class="holiday">', $txt['calendar5'], ' ', implode(', ', $context['calendar_holidays']), '</span><br />';
+				<span class="holiday">', $txt['calendar_prompt'], ' ', implode(', ', $context['calendar_holidays']), '</span><br />';
 
 		// People's birthdays.  Like mine.  And yours, I guess.  Kidding.
 		if (!empty($context['calendar_birthdays']))
@@ -456,7 +456,7 @@ function template_main()
 		<td class="windowbg2" valign="top">
 			<b><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></b>
 			<div class="smalltext">
-				', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt[471] : $txt['msg_alert_messages'], '.... ', $txt['click'], ' <a href="', $scripturl, '?action=pm">', $txt['here'], '</a> ', $txt['to_view'], '
+				', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], ' <a href="', $scripturl, '?action=pm">', $txt['here'], '</a> ', $txt['to_view'], '
 			</div>
 		</td>
 	</tr>';

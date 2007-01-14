@@ -27,7 +27,7 @@ function template_popup()
 		<div class="popuptext">
 			', $context['help_text'], '<br />
 			<br />
-			<div align="center"><a href="javascript:self.close();">', $txt[1006], '</a></div>
+			<div align="center"><a href="javascript:self.close();">', $txt['close_window'], '</a></div>
 		</div>
 	</body>
 </html>';

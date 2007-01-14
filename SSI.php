@@ -190,7 +190,7 @@ function ssi_welcome($output_method = 'echo')
 		if ($context['user']['is_guest'])
 			echo sprintf($txt['welcome_guest'], $txt['guest_title']);
 		else
-			echo $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', allowedTo('pm_read') ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] == '1' ? $txt[471] : $txt['msg_alert_messages']) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == '1' ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
+			echo $txt['hello_member'], ' <b>', $context['user']['name'], '</b>', allowedTo('pm_read') ? ', ' . $txt['msg_alert_you_have'] . ' <a href="' . $scripturl . '?action=pm">' . $context['user']['messages'] . ' ' . ($context['user']['messages'] == '1' ? $txt['message_lowercase'] : $txt['msg_alert_messages']) . '</a>' . $txt['newmessages4'] . ' ' . $context['user']['unread_messages'] . ' ' . ($context['user']['unread_messages'] == '1' ? $txt['newmessages0'] : $txt['newmessages1']) : '', '.';
 	}
 	// Don't echo... then do what?!
 	else
@@ -497,7 +497,7 @@ function ssi_topBoards($num_top = 10, $output_method = 'echo')
 		<table class="ssi_table">
 			<tr>
 				<th align="left">', $txt['board'], '</th>
-				<th align="left">', $txt[330], '</th>
+				<th align="left">', $txt['board_topics'], '</th>
 				<th align="left">', $txt['posts'], '</th>
 			</tr>';
 	foreach ($boards as $board)
@@ -1150,11 +1150,11 @@ function ssi_todaysCalendar($output_method = 'echo')
 
 	if (!empty($context['calendar_holidays']))
 		echo '
-			<span class="holiday">' . $txt['calendar5'] . ' ' . implode(', ', $context['calendar_holidays']) . '<br /></span>';
+			<span class="holiday">' . $txt['calendar_prompt'] . ' ' . implode(', ', $context['calendar_holidays']) . '<br /></span>';
 	if (!empty($context['calendar_birthdays']))
 	{
 		echo '
-			<span class="birthday">' . $txt['calendar3b'] . '</span> ';
+			<span class="birthday">' . $txt['birthdays_upcoming'] . '</span> ';
 		foreach ($context['calendar_birthdays'] as $member)
 			echo '
 			<a href="', $scripturl, '?action=profile;u=', $member['id'], '">', $member['name'], isset($member['age']) ? ' (' . $member['age'] . ')' : '', '</a>', !$member['is_last'] ? ', ' : '';
@@ -1164,7 +1164,7 @@ function ssi_todaysCalendar($output_method = 'echo')
 	if (!empty($context['calendar_events']))
 	{
 		echo '
-			<span class="event">' . $txt['calendar4b'] . '</span> ';
+			<span class="event">' . $txt['events_upcoming'] . '</span> ';
 		foreach ($context['calendar_events'] as $event)
 		{
 			if ($event['can_edit'])
@@ -1398,7 +1398,7 @@ function ssi_recentEvents($max_events = 7, $output_method = 'echo')
 
 	// Well the output method is echo.
 	echo '
-			<span class="event">' . $txt['calendar4'] . '</span> ';
+			<span class="event">' . $txt['events'] . '</span> ';
 	foreach ($return as $mday => $array)
 		foreach ($array as $event)
 		{

@@ -16,9 +16,9 @@ $txt['underline'] = 'Subrayado';
 $txt['center'] = 'Centrado';
 $txt['hyperlink'] = 'Insertar Hiperv&iacute;nculo';
 $txt['insert_email'] = 'Insertar Email';
-$txt['code'] = 'Insertar C&oacute;digo';
+$txt['bbc_code'] = 'Insertar C&oacute;digo';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt['quote'] = 'Insertar Cita';
+$txt['bbc_quote'] = 'Insertar Cita';
 $txt['list'] = 'Insertar Lista';
 
 $txt['change_color'] = 'Cambiar Color';

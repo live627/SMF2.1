@@ -16,9 +16,9 @@ $txt['underline'] = 'Onderstrepen';
 $txt['center'] = 'Centreren';
 $txt['hyperlink'] = 'Voeg hyperlink toe';
 $txt['insert_email'] = 'Voeg e-mail toe';
-$txt['code'] = 'Voeg code toe';
+$txt['bbc_code'] = 'Voeg code toe';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt['quote'] = 'Voeg citaat toe';
+$txt['bbc_quote'] = 'Voeg citaat toe';
 $txt['list'] = 'Voeg lijst toe';
 
 $txt['change_color'] = 'Wijzig kleur';

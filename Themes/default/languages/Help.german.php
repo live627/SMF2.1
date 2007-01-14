@@ -7,7 +7,7 @@ global $helptxt;
 
 $helptxt = array();
 
-$txt[1006] = 'Fenster schlie&szlig;en';
+$txt['close_window'] = 'Fenster schlie&szlig;en';
 
 $helptxt['manage_boards'] = '
 	<b>Kategorien bearbeiten</b><br />

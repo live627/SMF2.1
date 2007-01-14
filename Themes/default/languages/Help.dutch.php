@@ -7,7 +7,7 @@ global $helptxt;
 
 $helptxt = array();
 
-$txt[1006] = 'Sluit dit scherm';
+$txt['close_window'] = 'Sluit dit scherm';
 
 $helptxt['manage_boards'] = '
 	<b>Boards bewerken</b><br />

@@ -145,7 +145,7 @@ function template_maintenance()
 			<td colspan="2">', $context['title'], '</td>
 		</tr><tr>
 			<td class="windowbg" width="44" align="center" style="padding: 1ex;">
-				<img src="', $settings['images_url'], '/construction.gif" width="40" height="40" alt="', $txt['maintenance3'], '" />
+				<img src="', $settings['images_url'], '/construction.gif" width="40" height="40" alt="', $txt['in_maintain_mode'], '" />
 			</td>
 			<td class="windowbg">', $context['description'], '</td>
 		</tr><tr class="titlebg">

@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.dutch.php.
 
-$txt['smf3'] = 'Met deze pagina kun je alle features, mods, en basis opties van het forum aan te passen.  Lees de <a href="' . $scripturl . '?action=theme;sa=settings;th=%s;sesc=%s">thema instellingen</a> voor meer opties.  klik op de help icoontjes voor meer informatie over een instelling.';
+$txt['modSettings_desc'] = 'Met deze pagina kun je alle features, mods, en basis opties van het forum aan te passen.  Lees de <a href="' . $scripturl . '?action=theme;sa=settings;th=%s;sesc=%s">thema instellingen</a> voor meer opties.  klik op de help icoontjes voor meer informatie over een instelling.';
 
 $txt['mods_cat_features'] = 'Basisinstellingen';
 $txt['pollMode'] = 'Pollmodus';

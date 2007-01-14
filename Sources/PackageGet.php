@@ -61,7 +61,7 @@ function PackageGet()
 	// Add the appropriate items to the link tree.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => &$txt['package']
+		'name' => &$txt['package_manager']
 	);
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages;get',
@@ -90,7 +90,7 @@ function PackageGet()
 
 	// Now create the tabs for the template.
 	$context['admin_tabs'] = array(
-		'title' => &$txt['package'],
+		'title' => &$txt['package_manager'],
 		//'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(
@@ -575,7 +575,7 @@ function PackageDownload()
 
 	// First make sure it's a package.
 	if (getPackageInfo($url . $_REQUEST['package']) == false)
-		fatal_lang_error('package45', false);
+		fatal_lang_error('corrupt_compatable', false);
 
 	// Use FTP if necessary.
 	packageRequireFTP($scripturl . '?action=admin;area=packages;get;sa=download' . (isset($_GET['server']) ? ';server=' . $_GET['server'] : '') . (isset($_REQUEST['auto']) ? ';auto' : '') . ';package=' . $_REQUEST['package'] . (isset($_REQUEST['conflict']) ? ';conflict' : '') . ';sesc=' . $context['session_id'], array($boarddir . '/Packages/' . $package_name));
@@ -594,7 +594,7 @@ function PackageDownload()
 		fatal_lang_error('package_cant_download', false);
 
 	if ($context['package']['type'] == 'modification')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package11'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['mod_apply'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'avatar')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['use_avatars'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'language')
@@ -655,7 +655,7 @@ function PackageUpload()
 	}
 
 	if ($context['package']['type'] == 'modification')
-		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['package11'] . ' ]</a>';
+		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['mod_apply'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'avatar')
 		$context['package']['install']['link'] = '<a href="' . $scripturl . '?action=admin;area=packages;sa=install;package=' . $context['package']['filename'] . '">[ ' . $txt['use_avatars'] . ' ]</a>';
 	elseif ($context['package']['type'] == 'language')

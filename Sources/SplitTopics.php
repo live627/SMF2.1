@@ -596,7 +596,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// You cannot split off the first message of a topic.
 	if ($split1_first_msg > $split2_first_msg)
-		fatal_lang_error('smf268', false);
+		fatal_lang_error('split_first_post', false);
 
 	// We're off to insert the new topic!  Use 0 for now to avoid UNIQUE errors.
 	$smfFunc['db_query']('', "

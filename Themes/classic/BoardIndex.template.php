@@ -92,7 +92,7 @@ function template_main()
 <table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
 	<tr class="titlebg">
 		<td colspan="2">', $txt['board_name'], '</td>
-		<td width="6%" align="center">', $txt[330], '</td>
+		<td width="6%" align="center">', $txt['board_topics'], '</td>
 		<td width="6%" align="center">', $txt['posts'], '</td>
 		<td width="22%" align="center">', $txt['last_post'], '</td>
 	</tr>';
@@ -259,7 +259,7 @@ function template_main()
 	{
 		echo '
 	<tr>
-		<td class="catbg" colspan="2">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar47'], '</td>
+		<td class="catbg" colspan="2">', $context['calendar_only_today'] ? $txt['calendar_today'] : $txt['calendar_upcoming'], '</td>
 	</tr><tr>
 		<td class="windowbg" width="20" valign="middle" align="center">
 			<a href="', $scripturl, '?action=calendar">
@@ -271,7 +271,7 @@ function template_main()
 		// Holidays like "Christmas", "Chanukah", and "We Love [Unknown] Day" :P.
 		if (!empty($context['calendar_holidays']))
 			echo '
-				<span class="holiday">', $txt['calendar5'], ' ', implode(', ', $context['calendar_holidays']), '</span><br />';
+				<span class="holiday">', $txt['calendar_prompt'], ' ', implode(', ', $context['calendar_holidays']), '</span><br />';
 
 		// People's birthdays.  Like mine.  And yours, I guess.  Kidding.
 		if (!empty($context['calendar_birthdays']))
@@ -420,7 +420,7 @@ function template_main()
 		<td class="windowbg2" valign="top">
 			<b><a href="', $scripturl, '?action=pm">', $txt['personal_message'], '</a></b><br />
 			<span class="smalltext">
-				', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt[471] : $txt['msg_alert_messages'], '.... ', $txt['click'], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt['here'] . '</a>' : '', ' ', $txt['to_view'], '
+				', $txt['you_have'], ' ', $context['user']['messages'], ' ', $context['user']['messages'] == 1 ? $txt['message_lowercase'] : $txt['msg_alert_messages'], '.... ', $txt['click'], $context['allow_pm'] ? ' <a href="' . $scripturl . '?action=pm">' . $txt['here'] . '</a>' : '', ' ', $txt['to_view'], '
 			</span>
 		</td>
 	</tr>';

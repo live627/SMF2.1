@@ -1248,15 +1248,15 @@ function calendarValidatePost()
 	{
 		// No month?  No year?
 		if (!isset($_POST['month']))
-			fatal_lang_error('calendar7', false);
+			fatal_lang_error('event_month_missing', false);
 		if (!isset($_POST['year']))
-			fatal_lang_error('calendar8', false);
+			fatal_lang_error('event_year_missing', false);
 
 		// Check the month and year...
 		if ($_POST['month'] < 1 || $_POST['month'] > 12)
-			fatal_lang_error('calendar1', false);
+			fatal_lang_error('invalid_month', false);
 		if ($_POST['year'] < $modSettings['cal_minyear'] || $_POST['year'] > $modSettings['cal_maxyear'])
-			fatal_lang_error('calendar2', false);
+			fatal_lang_error('invalid_year', false);
 	}
 
 	// Make sure they're allowed to post...
@@ -1266,9 +1266,9 @@ function calendarValidatePost()
 	{
 		// Make sure it's turned on and not some fool trying to trick it.
 		if (empty($modSettings['cal_allowspan']))
-			fatal_lang_error('calendar55', false);
+			fatal_lang_error('no_span', false);
 		if ($_POST['span'] < 1 || $_POST['span'] > $modSettings['cal_maxspan'])
-			fatal_lang_error('calendar56', false);
+			fatal_lang_error('invalid_days_numb', false);
 	}
 
 	// There is no need to validate the following values if we are just deleting the event.
@@ -1276,19 +1276,19 @@ function calendarValidatePost()
 	{
 		// No day?
 		if (!isset($_POST['day']))
-			fatal_lang_error('calendar14', false);
+			fatal_lang_error('event_day_missing', false);
 		if (!isset($_POST['evtitle']) && !isset($_POST['subject']))
-			fatal_lang_error('calendar15', false);
+			fatal_lang_error('event_title_missing', false);
 		elseif (!isset($_POST['evtitle']))
 			$_POST['evtitle'] = $_POST['subject'];
 
 		// Bad day?
 		if (!checkdate($_POST['month'], $_POST['day'], $_POST['year']))
-			fatal_lang_error('calendar16', false);
+			fatal_lang_error('invalid_date', false);
 
 		// No title?
 		if ($smfFunc['htmltrim']($_POST['evtitle']) === '')
-			fatal_lang_error('calendar17', false);
+			fatal_lang_error('no_event_title', false);
 		if ($smfFunc['strlen']($_POST['evtitle']) > 30)
 			$_POST['evtitle'] = $smfFunc['substr']($_POST['evtitle'], 0, 30);
 		$_POST['evtitle'] = str_replace(';', '', $_POST['evtitle']);

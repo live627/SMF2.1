@@ -7,7 +7,7 @@ $txt['need_username'] = 'Je moet wel een gebruikersnaam invullen.';
 $txt['no_password'] = 'Wachtwoord was leeg';
 $txt['incorrect_password'] = 'Wachtwoord niet correct';
 $txt['choose_username'] = 'Kies gebruikersnaam';
-$txt[155] = 'Even geduld';
+$txt['maintain_mode'] = 'Even geduld';
 $txt['registration_successful'] = 'Je registratie is gelukt!';
 $txt['now_a_member'] = 'Succes! Je bent een lid van dit forum.';
 // Use numeric entities in the below string.
@@ -72,7 +72,7 @@ $txt['change_password'] = 'Nieuwe wachtwoord gegevens';
 $txt['change_password_login'] = 'Je inloggegevens voor';
 $txt['change_password_new'] = 'zijn veranderd en je wachtwoord is opnieuw ingesteld. Hieronder zijn je nieuwe inlogdetails.';
 
-$txt['maintenance3'] = 'Het forum bevindt zich in de onderhoudsmodus.';
+$txt['in_maintain_mode'] = 'Het forum bevindt zich in de onderhoudsmodus.';
 
 // These two are used as a javascript alert; please use international characters directly, not as entities.
 $txt['register_agree'] = 'Lees/accepteer de regels om dit formulier in te sturen.';

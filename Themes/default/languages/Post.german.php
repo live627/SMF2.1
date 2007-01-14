@@ -16,9 +16,9 @@ $txt['underline'] = 'Unterstrichen';
 $txt['center'] = 'Zentriert';
 $txt['hyperlink'] = 'Link einf&uuml;gen';
 $txt['insert_email'] = 'E-Mail Adresse einf&uuml;gen';
-$txt['code'] = 'Code einf&uuml;gen';
+$txt['bbc_code'] = 'Code einf&uuml;gen';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
-$txt['quote'] = 'Zitat einf&uuml;gen';
+$txt['bbc_quote'] = 'Zitat einf&uuml;gen';
 $txt['list'] = 'Liste einf&uuml;gen';
 
 $txt['change_color'] = 'Farbe &auml;ndern';

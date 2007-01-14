@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.spanish.php.
 
-$txt['smf3'] = 'Esta p&aacute;gina te permite cambiar la configuraci&oacute;n de  las caracter&iacute;sticas, mods, y opciones b&aacute;sicas de tu foro.  Por favor revisa la <a href="' . $scripturl . '?action=theme;sa=settings;th=%s;sesc=%s">configuraci&oacute;n del tema</a> para m&aacute;s opciones.  Haz <i>click</i> en los iconos de ayuda para m&aacute;s informaci&oacute;n acerca de alguna opci&oacute;n.';
+$txt['modSettings_desc'] = 'Esta p&aacute;gina te permite cambiar la configuraci&oacute;n de  las caracter&iacute;sticas, mods, y opciones b&aacute;sicas de tu foro.  Por favor revisa la <a href="' . $scripturl . '?action=theme;sa=settings;th=%s;sesc=%s">configuraci&oacute;n del tema</a> para m&aacute;s opciones.  Haz <i>click</i> en los iconos de ayuda para m&aacute;s informaci&oacute;n acerca de alguna opci&oacute;n.';
 
 // Untranslated!
 $txt['mods_cat_features'] = 'Basic Features';

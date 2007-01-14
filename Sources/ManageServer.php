@@ -173,7 +173,7 @@ function ModifyCoreSettings()
 		'',
 		array('mbname', &$txt['admin_title'], 'text', 30),
 		array('webmaster_email', &$txt['admin_webmaster_email'], 'text', 30),
-		array('cookiename', &$txt[352], 'text', 20),
+		array('cookiename', &$txt['cookie_name'], 'text', 20),
 		'language' => array('language', &$txt['default_language'], 'select', array()),
 		'',
 		array('boardurl', &$txt['admin_url'], 'text', 36),

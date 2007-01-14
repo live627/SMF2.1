@@ -151,7 +151,7 @@ function template_main()
 				{
 					var newTable = \'<span id="new_replies"></span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
 					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['quote'], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
+						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
 					newTable += \'</table>\';
 					setOuterHTML(document.getElementById("new_replies"), newTable);
 				}
@@ -656,7 +656,7 @@ function template_main()
 	// Option to delete an event if user is editing one.
 	if ($context['make_event'] && !$context['event']['new'])
 		echo '
-									<input type="submit" name="deleteevent" value="', $txt['calendar22'], '" onclick="return confirm(\'', $txt['calendar21'], '\');" />';
+									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['event_delete_confirm'], '\');" />';
 
 	// Spell check button if the option is enabled.
 	if ($context['show_spellchecking'])
@@ -745,7 +745,7 @@ function template_main()
 								</td>
 							</tr><tr class="windowbg2">
 								<td colspan="2" class="smalltext" id="msg', $post['id'], '" width="100%">
-									<div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['quote'], '</a></div>
+									<div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(', $post['id'], ');">', $txt['bbc_quote'], '</a></div>
 									<div class="post">', $post['message'], '</div>
 								</td>
 							</tr>';
@@ -807,8 +807,8 @@ function template_postbox(&$message)
 			'tele' => array('code' => 'tt', 'before' => '[tt]', 'after' => '[/tt]', 'description' => $txt['teletype']),
 			array(),
 			'table' => array('code' => 'table', 'before' => '[table]\n[tr]\n[td]', 'after' => '[/td]\n[/tr]\n[/table]', 'description' => $txt['table']),
-			'code' => array('code' => 'code', 'before' => '[code]', 'after' => '[/code]', 'description' => $txt['code']),
-			'quote' => array('code' => 'quote', 'before' => '[quote]', 'after' => '[/quote]', 'description' => $txt['quote']),
+			'code' => array('code' => 'code', 'before' => '[code]', 'after' => '[/code]', 'description' => $txt['bbc_code']),
+			'quote' => array('code' => 'quote', 'before' => '[quote]', 'after' => '[/quote]', 'description' => $txt['bbc_quote']),
 			array(),
 			'list' => array('code' => 'list', 'before' => '[list]\n[li]', 'after' => '[/li]\n[li][/li]\n[/list]', 'description' => $txt['list']),
 			'hr' => array('code' => 'hr', 'before' => '[hr]', 'description' => $txt['horizontal_rule']),

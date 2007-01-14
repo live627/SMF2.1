@@ -130,9 +130,9 @@ function CalendarMain()
 
 	// Make sure the year and month are in valid ranges.
 	if ($curPage['month'] < 1 || $curPage['month'] > 12)
-		fatal_lang_error('calendar1', false);
+		fatal_lang_error('invalid_month', false);
 	if ($curPage['year'] < $modSettings['cal_minyear'] || $curPage['year'] > $modSettings['cal_maxyear'])
-		fatal_lang_error('calendar2', false);
+		fatal_lang_error('invalid_year', false);
 
 	// Get information about the first day of this month.
 	$firstDayOfMonth = array(
@@ -477,9 +477,9 @@ function calendarCanLink()
 
 	// No board?  No topic?!?
 	if (!isset($board))
-		fatal_lang_error('calendar38', false);
+		fatal_lang_error('missing_board_id', false);
 	if (!isset($topic))
-		fatal_lang_error('calendar39', false);
+		fatal_lang_error('missing_topic_id', false);
 
 	// Administrator, Moderator, or owner.  Period.
 	if (!allowedTo('admin_forum') && !allowedTo('moderate_board'))
@@ -494,11 +494,11 @@ function calendarCanLink()
 		{
 			// Not the owner of the topic.
 			if ($row['id_member_started'] != $user_info['id'])
-				fatal_lang_error('calendar41', 'user');
+				fatal_lang_error('not_your_topic', 'user');
 		}
 		// Topic/Board doesn't exist.....
 		else
-			fatal_lang_error('calendar40', 'general');
+			fatal_lang_error('calendar_no_topic', 'general');
 		$smfFunc['db_free_result']($result);
 	}
 

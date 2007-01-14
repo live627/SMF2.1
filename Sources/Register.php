@@ -177,7 +177,7 @@ function Register2()
 	{
 		// Don't allow lots of errors!
 		$_SESSION['visual_errors'] = isset($_SESSION['visual_errors']) ? $_SESSION['visual_errors'] + 1 : 1;
-		if ($_SESSION['visual_errors'] > 3)
+		if ($_SESSION['visual_errors'] > 3 && isset($_SESSION['visual_verification_code']))
 			unset($_SESSION['visual_verification_code']);
 
 		if (!empty($_REQUEST['visual_verification_code']) && in_array(md5(strtolower($_REQUEST['visual_verification_code'])), array('7921903964212cc383bf910a8bf2d7f4', '9726255eec083aa56dc0449a21b33190')))

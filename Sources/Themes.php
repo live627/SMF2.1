@@ -1841,7 +1841,7 @@ function template_menu()
 	// The [calendar]!
 	if ($context[\'allow_calendar\'])
 		echo \'
-				<a href="\', $scripturl, \'?action=calendar">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/calendar.gif" alt="\' . $txt[\'calendar24\'] . \'" border="0" />\' : $txt[\'calendar24\']), \'</a>\', $context[\'menu_separator\'];
+				<a href="\', $scripturl, \'?action=calendar">\', ($settings[\'use_image_buttons\'] ? \'<img src="\' . $settings[\'images_url\'] . \'/\' . $context[\'user\'][\'language\'] . \'/calendar.gif" alt="\' . $txt[\'calendar\'] . \'" border="0" />\' : $txt[\'calendar\']), \'</a>\', $context[\'menu_separator\'];
 
 	// If the user is a guest, show [login] and [register] buttons.
 	if ($context[\'user\'][\'is_guest\'])
@@ -1907,7 +1907,7 @@ function template_menu()
 		// <yabb im>
 		'im' => '\';
 	if ($context[\'user\'][\'is_logged\'] && $context[\'allow_pm\'])
-		echo $txt[\'msg_alert_you_have\'], \' <a href="\', $scripturl, \'?action=pm">\', $context[\'user\'][\'messages\'], \' \', ($context[\'user\'][\'messages\'] != 1 ? $txt[\'msg_alert_messages\'] : $txt[471]), \'</a>\', $txt[\'newmessages4\'], \'  \', $context[\'user\'][\'unread_messages\'], \' \', ($context[\'user\'][\'unread_messages\'] == 1 ? $txt[\'newmessages0\'] : $txt[\'newmessages1\']), \'.\';
+		echo $txt[\'msg_alert_you_have\'], \' <a href="\', $scripturl, \'?action=pm">\', $context[\'user\'][\'messages\'], \' \', ($context[\'user\'][\'messages\'] != 1 ? $txt[\'msg_alert_messages\'] : $txt[\'message_lowercase\']), \'</a>\', $txt[\'newmessages4\'], \'  \', $context[\'user\'][\'unread_messages\'], \' \', ($context[\'user\'][\'unread_messages\'] == 1 ? $txt[\'newmessages0\'] : $txt[\'newmessages1\']), \'.\';
 	echo ' . "'",
 		// <yabb time>
 		'time' => '\' . $context[\'current_time\'] . \'',

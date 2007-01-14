@@ -29,7 +29,7 @@ function template_main()
 <table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
 	<tr class="titlebg">
 		<td colspan="2">', $txt['board_name'], '</td>
-		<td width="6%" align="center">', $txt[330], '</td>
+		<td width="6%" align="center">', $txt['board_topics'], '</td>
 		<td width="6%" align="center">', $txt['posts'], '</td>
 		<td width="22%" align="center">', $txt['last_post'], '</td>
 	</tr>';

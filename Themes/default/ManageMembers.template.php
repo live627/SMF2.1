@@ -137,7 +137,7 @@ function template_search_members()
 							<th align="right">', $txt['email_address'], ':</th>
 							<td align="left"><input type="text" name="email" value="" /></td>
 						</tr><tr>
-							<th align="right">', $txt['posts'], ':</th>
+							<th align="right">', $txt['member_postcount'], ':</th>
 							<td align="center">
 								<select name="types[posts]">
 									<option value="--">&lt;</option>

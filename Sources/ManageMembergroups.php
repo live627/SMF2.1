@@ -240,8 +240,8 @@ function AddMembergroup()
 
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}membergroups
-				(id_group, group_name, min_posts, stars, online_color)
-			VALUES ($id_group, SUBSTRING('$_POST[group_name]', 1, 80), " . ($postCountBasedGroup ? (int) $_POST['min_posts'] : '-1') . ", '1#star.gif', '')", __FILE__, __LINE__);
+				(id_group, description, group_name, min_posts, stars, online_color)
+			VALUES ($id_group, '', SUBSTRING('$_POST[group_name]', 1, 80), " . ($postCountBasedGroup ? (int) $_POST['min_posts'] : '-1') . ", '1#star.gif', '')", __FILE__, __LINE__);
 
 		// Update the post groups now, if this is a post group!
 		if (isset($_POST['min_posts']))

@@ -80,7 +80,7 @@ function Packages()
 	// Set up the linktree and title so it's already done.
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=admin;area=packages',
-		'name' => &$txt['package']
+		'name' => &$txt['package_manager']
 	);
 	$context['page_title'] = $txt['package'];
 
@@ -107,7 +107,7 @@ function Packages()
 
 	// Set up some tabs...
 	$context['admin_tabs'] = array(
-		'title' => &$txt['package'],
+		'title' => &$txt['package_manager'],
 		// !!! 'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(
@@ -458,22 +458,22 @@ function PackageInstallTest()
 		}
 		elseif (in_array($action['type'], array('create-dir', 'create-file')))
 			$thisAction = array(
-				'type' => $txt['package_create'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package55'] : $txt['package_tree']),
+				'type' => $txt['package_create'] . ' ' . ($action['type'] == 'create-dir' ? $txt['package_tree'] : $txt['package_file']),
 				'action' => strtr($action['destination'], array($boarddir => '.'))
 			);
 		elseif (in_array($action['type'], array('require-dir', 'require-file')))
 			$thisAction = array(
-				'type' => $txt['package_file'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package55'] : $txt['package_tree']),
+				'type' => $txt['package_extract'] . ' ' . ($action['type'] == 'require-dir' ? $txt['package_tree'] : $txt['package_file']),
 				'action' => strtr($action['destination'], array($boarddir => '.'))
 			);
 		elseif (in_array($action['type'], array('move-dir', 'move-file')))
 			$thisAction = array(
-				'type' => $txt['package_move'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package55'] : $txt['package_tree']),
+				'type' => $txt['package_move'] . ' ' . ($action['type'] == 'move-dir' ? $txt['package_tree'] : $txt['package_file']),
 				'action' => strtr($action['source'], array($boarddir => '.')) . ' => ' . strtr($action['destination'], array($boarddir => '.'))
 			);
 		elseif (in_array($action['type'], array('remove-dir', 'remove-file')))
 			$thisAction = array(
-				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package55'] : $txt['package_tree']),
+				'type' => $txt['package_delete'] . ' ' . ($action['type'] == 'remove-dir' ? $txt['package_tree'] : $txt['package_file']),
 				'action' => strtr($action['filename'], array($boarddir => '.'))
 			);
 

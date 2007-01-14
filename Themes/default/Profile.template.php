@@ -125,7 +125,7 @@ function template_summary()
 	}
 	echo '
 				<tr>
-					<td><b>', $txt['posts'], ': </b></td>
+					<td><b>', $txt['profile_posts'], ': </b></td>
 					<td>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</td>
 				</tr><tr>
 					<td><b>', $txt['position'], ': </b></td>
@@ -1275,7 +1275,7 @@ function template_account()
 								<td><input type="text" name="date_registered" size="30" value="', $context['member']['registered'], '" /></td>
 							</tr>
 							<tr>
-								<td><b>', $txt['posts'], ': </b></td>
+								<td><b>', $txt['profile_posts'], ': </b></td>
 								<td><input type="text" name="posts" size="4" value="', $context['member']['posts'], '" /></td>
 							</tr>';
 

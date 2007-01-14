@@ -58,7 +58,7 @@ function template_main()
 				</td>
 				<td class="windowbg" valign="middle" align="center" style="width: 12ex;"><small>
 					', $board['posts'], ' ', $txt['posts'], ' <br />
-					', $board['topics'],' ', $txt[330], '</small>
+					', $board['topics'],' ', $txt['board_topics'], '</small>
 				</td>
 				<td class="windowbg2" valign="middle" width="22%"><small>';
 
@@ -85,7 +85,7 @@ function template_main()
 					id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
 				foreach ($board['children'] as $child)
 				{
-					$child['link'] = '<a href="' . $child['href'] . '" title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt[330] . ': ' . $child['topics'] . ', ' . $txt['posts'] . ': ' . $child['posts'] . ')">' . $child['name'] . '</a>';
+					$child['link'] = '<a href="' . $child['href'] . '" title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . $child['topics'] . ', ' . $txt['posts'] . ': ' . $child['posts'] . ')">' . $child['name'] . '</a>';
 
 					// Has it posts awaiting approval?
 					if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))

@@ -7,7 +7,7 @@ $txt['need_username'] = 'Bitte einen Benutzernamen eingeben.';
 $txt['no_password'] = 'Das Passwortfeld ist leer.';
 $txt['incorrect_password'] = 'Das Passwort ist falsch.';
 $txt['choose_username'] = 'W&auml;hle Sie einen Benutzernamen';
-$txt[155] = 'Wartungsmodus';
+$txt['maintain_mode'] = 'Wartungsmodus';
 $txt['registration_successful'] = 'Die Registrierung war erfolgreich!';
 $txt['now_a_member'] = 'Erfolgreich! Sie sind nun ein Mitglied des Forums';
 // Use numeric entities in the below string.
@@ -71,7 +71,7 @@ $txt['change_password'] = 'Neue Login-Daten';
 $txt['change_password_login'] = 'Ihre Login-Daten von';
 $txt['change_password_new'] = 'haben sich ge&#228;ndert und Ihr Passwort wurde annulliert. Es folgen Ihre neuen Daten.';
 
-$txt['maintenance3'] = 'Dieses Forum ist im Wartungsmodus.';
+$txt['in_maintain_mode'] = 'Dieses Forum ist im Wartungsmodus.';
 
 // These two are used as a javascript alert; please use international characters directly, not as entities.
 $txt['register_agree'] = 'Bitte lesen und akzeptieren Sie die Regeln.';

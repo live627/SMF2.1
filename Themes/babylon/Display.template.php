@@ -322,7 +322,7 @@ function template_main()
 
 			// Show how many posts they have made.
 			echo '
-								', $txt['posts'], ': ', $message['member']['posts'], '<br />';
+								', $txt['member_postcount'], ': ', $message['member']['posts'], '<br />';
 
 			// Any custom fields?
 			if (!empty($modSettings['displayFields']))

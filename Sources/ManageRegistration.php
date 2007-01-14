@@ -187,6 +187,7 @@ function AdminRegister()
 		WHERE id_group != 3
 			AND min_posts = -1" . (allowedTo('admin_forum') ? '' : "
 			AND id_group != 1") . "
+			AND hidden != 2
 		ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
 	$context['member_groups'] = array(0 => &$txt['admin_register_group_none']);
 	while ($row = $smfFunc['db_fetch_assoc']($request))

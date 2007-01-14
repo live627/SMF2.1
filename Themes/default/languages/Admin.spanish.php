@@ -25,7 +25,7 @@ $txt['admin_basic_settings'] = 'Esta p&aacute;gina te permite cambiar la configu
 $txt['admin_maintain'] = '&iquest;Modo de Mantenimiento?';
 $txt['admin_title'] = 'T&iacute;tulo del Foro';
 $txt['admin_url'] = 'URL del Foro';
-$txt[352] = 'Nombre del Cookie';
+$txt['cookie_name'] = 'Nombre del Cookie';
 $txt['admin_webmaster_email'] = 'Direcci&oacute;n email del Webmaster';
 $txt['boarddir'] = 'Directorio SMF';
 $txt['sourcesdir'] = 'Directorio de Fuentes';
@@ -33,11 +33,8 @@ $txt['sourcesdir'] = 'Directorio de Fuentes';
 $txt['cachedir'] = 'Cache Directory';
 $txt['admin_news'] = '&iquest;Activar Noticias?';
 $txt['admin_guest_post'] = '&iquest;Permitir publicar mensajes a los visitantes?';
-$txt['admin_fader_title_color'] = 'Color del t&iacute;tulo del Cuadro de Noticias';
-$txt['admin_options'] = 'Color de la Noticia en el Cuadro de Noticias';
-$txt[424] = 'Opciones de Administraci&oacute;n SMF';
 // Untranslated! - Members
-$txt[426] = 'Controles de los Usuarios';
+$txt['admin_manage_members'] = 'Controles de los Usuarios';
 // Untranslated! - Main
 $txt['admin_main'] = 'Controles del Foro';
 // Untranslated! - Configuration

@@ -247,7 +247,7 @@ function template_folder()
 
 				// Show how many posts they have made.
 				echo '
-									', $txt['posts'], ': ', $message['member']['posts'], '<br />
+									', $txt['member_postcount'], ': ', $message['member']['posts'], '<br />
 									<br />';
 
 				// Show avatars, images, etc.?

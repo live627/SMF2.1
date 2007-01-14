@@ -205,7 +205,7 @@ echo '
 		// Only tell them about their messages if they can read their messages!
 		if($smf_new_pms && $context['allow_pm'])
 			echo 
-			' ', $txt[152], ' <a href="', sefReltoAbs($scripturl. 'action=pm'), '">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt[153] : $txt[471], '</a>';
+			' ', $txt['msg_alert_you_have'], ' <a href="', sefReltoAbs($scripturl. 'action=pm'), '">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase'], '</a>';
 
 		// if defined user can read their new messages
 		if($smf_unread)

@@ -310,9 +310,9 @@ function Post()
 
 			// Make sure the year and month are in the valid range.
 			if ($context['event']['month'] < 1 || $context['event']['month'] > 12)
-				fatal_lang_error('calendar1', false);
+				fatal_lang_error('invalid_month', false);
 			if ($context['event']['year'] < $modSettings['cal_minyear'] || $context['event']['year'] > $modSettings['cal_maxyear'])
-				fatal_lang_error('calendar2', false);
+				fatal_lang_error('invalid_year', false);
 
 			// Get a list of boards they can post in.
 			$boards = boardsAllowedTo('post_new');

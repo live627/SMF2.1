@@ -421,7 +421,7 @@ function ViewMemberlist()
 		'email_address' => array('label' => $txt['email_address']),
 		'member_ip' => array('label' => $txt['ip_address']),
 		'last_login' => array('label' => $txt['viewmembers_online']),
-		'posts' => array('label' => $txt['posts'])
+		'posts' => array('label' => $txt['member_postcount'])
 	);
 
 	// Default sort column to 'member_name' if the current one is unknown or not set.

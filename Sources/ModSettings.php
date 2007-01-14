@@ -148,7 +148,7 @@ function ModifyFeatureSettings()
 	$context['admin_tabs'] = array(
 		'title' => &$txt['modSettings_title'],
 		'help' => 'modsettings',
-		'description' => sprintf($txt['smf3'], $settings['theme_id'], $context['session_id']),
+		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id']),
 		'tabs' => array(
 			'basic' => array(
 				'title' => $txt['mods_cat_features'],

@@ -142,7 +142,7 @@ function AdminMain()
 	if (allowedTo(array('moderate_forum', 'manage_membergroups', 'manage_bans', 'manage_permissions', 'admin_forum')))
 	{
 		$context['admin_areas']['members'] = array(
-			'title' => $txt[426],
+			'title' => $txt['admin_manage_members'],
 			'areas' => array()
 		);
 

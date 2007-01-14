@@ -54,7 +54,7 @@ function template_main()
 				// Are there any holidays?
 				if (!empty($day['holidays']))
 					echo '
-					<div class="smalltext holiday">', $txt['calendar5'], ' ', implode(', ', $day['holidays']), '</div>';
+					<div class="smalltext holiday">', $txt['calendar_prompt'], ' ', implode(', ', $day['holidays']), '</div>';
 
 				// Show any birthdays...
 				if (!empty($day['birthdays']))
@@ -335,7 +335,7 @@ function template_event_post()
 	// Delete button?
 	if (empty($context['event']['new']))
 		echo '
-									<input type="submit" name="deleteevent" value="', $txt['calendar22'], '" onclick="return confirm(\'', $txt['calendar_confirm_delete'], '\');" />';
+									<input type="submit" name="deleteevent" value="', $txt['event_delete'], '" onclick="return confirm(\'', $txt['calendar_confirm_delete'], '\');" />';
 
 	echo '
 									<input type="hidden" name="sc" value="', $context['session_id'], '" />
