@@ -241,9 +241,9 @@ function Maintenance()
 
 			// Select all the members we're about to murder/remove...
 			$request = $smfFunc['db_query']('', "
-				SELECT mem.id_member, IFNULL(mod.id_member, 0) AS is_mod
+				SELECT mem.id_member, IFNULL(m.id_member, 0) AS is_mod
 				FROM {$db_prefix}members AS mem
-					LEFT JOIN {$db_prefix}moderators AS mod ON (mod.id_member = mem.id_member)
+					LEFT JOIN {$db_prefix}moderators AS m ON (m.id_member = mem.id_member)
 				WHERE $where", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))

@@ -253,7 +253,7 @@ function EditSearchMethod()
 		checkSession('get');
 
 		// Make sure it's gone before creating it.
-		$smfFunc['db_query']("
+		$smfFunc['db_query']('', "
 			ALTER TABLE {$db_prefix}messages
 			DROP INDEX body", false, false);
 
