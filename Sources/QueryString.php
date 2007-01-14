@@ -267,25 +267,35 @@ function cleanRequest()
 	if (isset($_GET['action']))
 		$_GET['action'] = (string) $_GET['action'];
 
-	// Store the REMOTE_ADDR for later - even though we HOPE to never use it...
-	$_SERVER['BAN_CHECK_IP'] = isset($_SERVER['REMOTE_ADDR']) && preg_match('~^((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|25[0-5])$~', $_SERVER['REMOTE_ADDR']) === 1 ? $_SERVER['REMOTE_ADDR'] : 'unknown';
+	// Make sure we have a valid REMOTE_ADDR.
+	if (!isset($_SERVER['REMOTE_ADDR']))
+	{
+		$_SERVER['REMOTE_ADDR'] = '';
+		// A new magic variable to indicate we think this is command line.
+		$_SERVER['is_cli'] = true;
+	}
+	elseif (preg_match('~^((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|25[0-5])$~', $_SERVER['REMOTE_ADDR']) === 0)
+		$_SERVER['REMOTE_ADDR'] = 'unknown';
+
+	// Try to calculate their most likely IP for those people behind proxies (And the like).
+	$_SERVER['BAN_CHECK_IP'] = $_SERVER['REMOTE_ADDR'];
 
 	// Find the user's IP address. (but don't let it give you 'unknown'!)
 	if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_CLIENT_IP']) && (preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['HTTP_CLIENT_IP']) == 0 || preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['REMOTE_ADDR']) != 0))
 	{
 		// We have both forwarded for AND client IP... check the first forwarded for as the block - only switch if it's better that way.
 		if (strtok($_SERVER['HTTP_X_FORWARDED_FOR'], '.') != strtok($_SERVER['HTTP_CLIENT_IP'], '.') && '.' . strtok($_SERVER['HTTP_X_FORWARDED_FOR'], '.') == strrchr($_SERVER['HTTP_CLIENT_IP'], '.') && (preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['HTTP_X_FORWARDED_FOR']) == 0 || preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['REMOTE_ADDR']) != 0))
-			$_SERVER['REMOTE_ADDR'] = implode('.', array_reverse(explode('.', $_SERVER['HTTP_CLIENT_IP'])));
+			$_SERVER['BAN_CHECK_IP'] = implode('.', array_reverse(explode('.', $_SERVER['HTTP_CLIENT_IP'])));
 		else
-			$_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CLIENT_IP'];
+			$_SERVER['BAN_CHECK_IP'] = $_SERVER['HTTP_CLIENT_IP'];
 	}
 	if (!empty($_SERVER['HTTP_CLIENT_IP']) && (preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['HTTP_CLIENT_IP']) == 0 || preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['REMOTE_ADDR']) != 0))
 	{
 		// Since they are in different blocks, it's probably reversed.
 		if (strtok($_SERVER['REMOTE_ADDR'], '.') != strtok($_SERVER['HTTP_CLIENT_IP'], '.'))
-			$_SERVER['REMOTE_ADDR'] = implode('.', array_reverse(explode('.', $_SERVER['HTTP_CLIENT_IP'])));
+			$_SERVER['BAN_CHECK_IP'] = implode('.', array_reverse(explode('.', $_SERVER['HTTP_CLIENT_IP'])));
 		else
-			$_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_CLIENT_IP'];
+			$_SERVER['BAN_CHECK_IP'] = $_SERVER['HTTP_CLIENT_IP'];
 	}
 	elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
 	{
@@ -302,19 +312,13 @@ function cleanRequest()
 					continue;
 
 				// Otherwise, we've got an IP!
-				$_SERVER['REMOTE_ADDR'] = trim($ip);
+				$_SERVER['BAN_CHECK_IP'] = trim($ip);
 				break;
 			}
 		}
 		// Otherwise just use the only one.
 		elseif (preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['HTTP_X_FORWARDED_FOR']) == 0 || preg_match('~^((0|10|172\.16|192\.168|255|127\.0)\.|unknown)~', $_SERVER['REMOTE_ADDR']) != 0)
-			$_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	}
-	elseif (!isset($_SERVER['REMOTE_ADDR']))
-	{
-		$_SERVER['REMOTE_ADDR'] = '';
-		// A new magic variable to indicate we think this is command line.
-		$_SERVER['is_cli'] = true;
+			$_SERVER['BAN_CHECK_IP'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	}
 
 	// Make sure we know the URL of the current request.
@@ -329,7 +333,9 @@ function cleanRequest()
 	$_SERVER['HTTP_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? htmlspecialchars($smfFunc['db_unescape_string']($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES) : '';
 
 	// Some final checking.
-	if (preg_match('~^((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|25[0-5])$~', $_SERVER['REMOTE_ADDR']) === 0)
+	if (preg_match('~^((([1]?\d)?\d|2[0-4]\d|25[0-5])\.){3}(([1]?\d)?\d|2[0-4]\d|25[0-5])$~', $_SERVER['BAN_CHECK_IP']) === 0)
+		$_SERVER['BAN_CHECK_IP'] = '';
+	if ($_SERVER['REMOTE_ADDR'] == 'unknown')
 		$_SERVER['REMOTE_ADDR'] = '';
 }
 

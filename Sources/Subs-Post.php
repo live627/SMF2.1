@@ -1693,7 +1693,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$topicOptions['lock_mode'] = isset($topicOptions['lock_mode']) ?  $topicOptions['lock_mode'] : null;
 	$topicOptions['sticky_mode'] = isset($topicOptions['sticky_mode']) ? $topicOptions['sticky_mode'] : null;
 	$posterOptions['id'] = empty($posterOptions['id']) ? 0 : (int) $posterOptions['id'];
-	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip2'] : $posterOptions['ip'];
+	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip'] : $posterOptions['ip'];
 
 	// If nothing was filled in as name/e-mail address, try the member table.
 	if (!isset($posterOptions['name']) || $posterOptions['name'] == '' || (empty($posterOptions['email']) && !empty($posterOptions['id'])))
