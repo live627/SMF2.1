@@ -161,4 +161,66 @@ function getMembersOnlineStats($membersOnlineOptions)
 	return $memberOnlineStats;
 }
 
+// Check if the number of users online is a record and store it.
+function trackStatsUsersOnline($total_users_online)
+{
+	global $modSettings, $db_prefix, $smfFunc;
+
+	$settingsToUpdate = array();
+
+	// More members on now than ever were?  Update it!
+	if (!isset($modSettings['mostOnline']) || $total_users_online >= $modSettings['mostOnline'])
+		$settingsToUpdate = array(
+			'mostOnline' => $total_users_online,
+			'mostDate' => time()
+		);
+
+	$date = strftime('%Y-%m-%d', forum_time(false));
+
+	// No entry exists for today yet?
+	if (!isset($modSettings['mostOnlineUpdated']) || $modSettings['mostOnlineUpdated'] != $date)
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT most_on
+			FROM {$db_prefix}log_activity
+			WHERE date = '$date'
+			LIMIT 1", __FILE__, __LINE__);
+
+		// The log_activity hasn't got an entry for today?
+		if ($smfFunc['db_num_rows']($request) === 0)
+		{
+			$smfFunc['db_insert']('ignore',
+				"{$db_prefix}log_activity",
+				array('date', 'most_on'),
+				array('\'' . $date . '\'', $total_users_online),
+				array('date'), __FILE__, __LINE__
+			);
+		}
+		// There's an entry in log_activity on today...
+		else
+		{
+			list ($modSettings['mostOnlineToday']) = $smfFunc['db_fetch_row']($request);
+
+			if ($total_users_online > $modSettings['mostOnlineToday'])
+				trackStats(array('most_on' => $total_users_online));
+
+			$total_users_online = max($total_users_online, $modSettings['mostOnlineToday']);
+		}
+		$smfFunc['db_free_result']($request);
+
+		$settingsToUpdate['mostOnlineUpdated'] = $date;
+		$settingsToUpdate['mostOnlineToday'] = $total_users_online;
+	}
+
+	// Highest number of users online today?
+	elseif ($total_users_online > $modSettings['mostOnlineToday'])
+	{
+		trackStats(array('most_on' => $total_users_online));
+		$settingsToUpdate['mostOnlineToday'] = $total_users_online;
+	}
+
+	if (!empty($settingsToUpdate))
+		update_settings($settingsToUpdate);
+}
+
 ?>

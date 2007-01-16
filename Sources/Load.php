@@ -2096,6 +2096,33 @@ function loadDatabase()
 		db_fix_prefix($db_prefix, $db_name);
 }
 
+// Try to retrieve a cache entry. On failure, call the appropriate function.
+function cache_quick_get($key, $file, $function, $params, $level = 1)
+{
+	global $modSettings, $sourcedir;
+
+	// Refresh the cache if either:
+	// 1. Caching is disabled.
+	// 2. The cache level isn't high enough.
+	// 3. The item has not been cached or the cached item expired.
+	// 4. The cached item has a custom expiration condition evaluating to true.
+	// 5. The expire time set in the cache item has passed (needed for Zend).
+	if (empty($modSettings['cache_enable']) || $modSettings['cache_enable'] < $level || !is_array($cache_block = cache_get_data($key, 3600)) || (!empty($cache_block['refresh_eval']) && eval($cache_block['refresh_eval'])) || (!empty($cache_block['expires']) && $cache_block['expires'] < time()))
+	{
+		require_once($sourcedir . '/' . $file);
+		$cache_block = call_user_func_array($function, $params);
+
+		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= $level)
+			cache_put_data($key, $cache_block, $cache_block['expires'] - time());
+	}
+
+	// Some cached data may need a freshening up after retrieval.
+	if (!empty($cache_block['post_retri_eval']))
+		eval($cache_block['post_retri_eval']);
+
+	return $cache_block['data'];
+}
+
 function cache_put_data($key, $value, $ttl = 120)
 {
 	global $boardurl, $sourcedir, $modSettings, $memcached;

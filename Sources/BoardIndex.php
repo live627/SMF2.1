@@ -82,92 +82,25 @@ function BoardIndex()
 		'sort' => 'log_time',
 		'reverse_sort' => true,
 	);
-	$membersOnlineStats = getMembersOnlineStats($membersOnlineOptions);
-	$context += $membersOnlineStats;
+	$context += getMembersOnlineStats($membersOnlineOptions);
 
 	$context['show_buddies'] = !empty($user_info['buddies']);
 
 	// Are we showing all membergroups on the board index?
-	if (!empty($settings['show_group_key']) && !empty($modSettings['groupCache']))
-	{
-		$context['membergroups'] = array();
-		$groupCache = unserialize($smfFunc['db_unescape_string']($modSettings['groupCache']));
-		foreach ($groupCache as $link)
-			$context['membergroups'][] = '<a href="' . $scripturl . '?action=groups;sa=members;group=' . $link . '</a>';
-	}
+	if (!empty($settings['show_group_key']))
+		$context['membergroups'] = cache_quick_get('membergroup_list', 'Subs-Membergroups.php', 'cache_getMembergroupList', array());
 
-	// Track most online statistics?
+	// Track most online statistics? (Subs-MembersOnline.php)
 	if (!empty($modSettings['trackStats']))
+		trackUserOnlineStats($context['num_guests'] + $context['num_users_online']);
+
+	// Retrieve the latests posts if the theme settings require it.
+	if (isset($settings['number_recent_posts']) && $settings['number_recent_posts'] > 1)
 	{
-		// Determine the most users online - both all time and per day.
-		$total_users = $context['num_guests'] + $context['num_users_online'];
-
-		// More members on now than ever were?  Update it!
-		if (!isset($modSettings['mostOnline']) || $total_users >= $modSettings['mostOnline'])
-			updateSettings(array('mostOnline' => $total_users, 'mostDate' => time()));
-
-		$date = strftime('%Y-%m-%d', forum_time(false));
-
-		// One or more stats are not up-to-date?
-		if (!isset($modSettings['mostOnlineUpdated']) || $modSettings['mostOnlineUpdated'] != $date)
-		{
-			$request = $smfFunc['db_query']('', "
-				SELECT most_on
-				FROM {$db_prefix}log_activity
-				WHERE date = '$date'
-				LIMIT 1", __FILE__, __LINE__);
-
-			// The log_activity hasn't got an entry for today?
-			if ($smfFunc['db_num_rows']($request) == 0)
-			{
-				$smfFunc['db_insert']('ignore',
-					"{$db_prefix}log_activity",
-					array('date', 'most_on'),
-					array('\'' . $date . '\'', $total_users),
-					array('date'), __FILE__, __LINE__
-				);
-			}
-			// There's an entry in log_activity on today...
-			else
-			{
-				list ($modSettings['mostOnlineToday']) = $smfFunc['db_fetch_row']($request);
-
-				if ($total_users > $modSettings['mostOnlineToday'])
-					trackStats(array('most_on' => $total_users));
-
-				$total_users = max($total_users, $modSettings['mostOnlineToday']);
-			}
-			$smfFunc['db_free_result']($request);
-
-			updateSettings(array('mostOnlineUpdated' => $date, 'mostOnlineToday' => $total_users));
-		}
-		// Highest number of users online today?
-		elseif ($total_users > $modSettings['mostOnlineToday'])
-		{
-			trackStats(array('most_on' => $total_users));
-			updateSettings(array('mostOnlineUpdated' => $date, 'mostOnlineToday' => $total_users));
-		}
-	}
-
-	// Set the latest member.
-	$context['latest_member'] = &$context['common_stats']['latest_member'];
-
-	if (!empty($settings['number_recent_posts']) && $settings['number_recent_posts'] > 1)
-	{
-		require_once($sourcedir . '/Recent.php');
-
-		if (($context['latest_posts'] = cache_get_data('boardindex-latest_posts:' . md5($user_info['query_wanna_see_board'] . $user_info['language']), 180)) == null)
-		{
-			$context['latest_posts'] = getLastPosts($settings['number_recent_posts']);
-			cache_put_data('boardindex-latest_posts:' . md5($user_info['query_wanna_see_board'] . $user_info['language']), $context['latest_posts'], 180);
-		}
-
-		// We have to clean up the cached data a bit.
-		foreach ($context['latest_posts'] as $k => $post)
-		{
-			$context['latest_posts'][$k]['time'] = timeformat($post['raw_timestamp']);
-			$context['latest_posts'][$k]['timestamp'] = forum_time(true, $post['raw_timestamp']);
-		}
+		$latestPostOptions = array(
+			'number_posts' => $settings['number_recent_posts'],
+		);
+		$context['latest_posts'] = cache_quick_get('boardindex-latest_posts:' . md5($user_info['query_wanna_see_board'] . $user_info['language']), 'Subs-Recent.php', 'cache_getLastPosts', array($latestPostOptions));
 	}
 
 	$settings['display_recent_bar'] = !empty($settings['number_recent_posts']) ? $settings['number_recent_posts'] : 0;

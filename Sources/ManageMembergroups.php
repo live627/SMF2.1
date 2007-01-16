@@ -75,10 +75,6 @@ if (!defined('SMF'))
 		  changing permissions)
 		- uses membergroup_settings sub template of ManageMembergroups.
 		- redirects to itself.
-
-	void cacheGroups()
-		- gets a list of all the public membergroups.
-		- saves this list serialised into the settings table.
 */
 
 // The entrance point for all 'Manage Membergroup' actions.
@@ -339,7 +335,9 @@ function AddMembergroup()
 				WHERE id_board IN (" . implode(', ', $_POST['boardaccess']) . ")", __FILE__, __LINE__);
 
 		// Rebuild the group cache.
-		cacheGroups();
+		updateSettings(array(
+			'membergroups_updated' => time(),
+		));
 
 		// Go change some more settings.
 		redirectexit('action=admin;area=membergroups;sa=edit;group=' . $id_group);
@@ -584,10 +582,10 @@ function EditMembergroup()
 		// There might have been some post group changes.
 		updateStats('postgroups');
 		// We've definetely changed some group stuff.
-		updateSettings(array('settings_updated' => time()));
-
-		// Finally, recache the groups.
-		cacheGroups();
+		updateSettings(array(
+			'settings_updated' => time(),
+			'membergroups_updated' => time(),
+		));
 
 		redirectexit('action=admin;area=membergroups');
 	}
@@ -692,46 +690,6 @@ function ModifyMembergroupsettings()
 
 	// Initialize permissions.
 	init_inline_permissions(array('manage_membergroups'), array(-1));
-}
-
-// Cache the public membergroups.
-function cacheGroups()
-{
-	global $db_prefix, $settings, $modSettings, $smfFunc;
-
-	// Check whether we need to cache anything?
-	$request = $smfFunc['db_query']('', "
-		SELECT value
-		FROM {$db_prefix}themes
-		WHERE variable = 'show_group_key'
-		LIMIT 1", __FILE__, __LINE__);
-	$enabled = $smfFunc['db_num_rows']($request) != 0;
-	$smfFunc['db_free_result']($request);
-
-	// If we don't need it delete it.
-	if (!$enabled && isset($modSettings['groupCache']))
-	{
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}settings
-			WHERE variable = 'groupCache'", __FILE__, __LINE__);
-	}
-	elseif ($enabled)
-	{
-		$request = $smfFunc['db_query']('', "
-			SELECT id_group, group_name, online_color
-			FROM {$db_prefix}membergroups
-			WHERE min_posts = -1
-				AND hidden = 0
-				AND id_group != 3
-				AND online_color != ''", __FILE__, __LINE__);
-		$groupCache = array();
-		// This looks weird but it's here for speed!
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$groupCache[] = $row['id_group'] . '" ' . ($row['online_color'] ? 'style="color: ' . $row['online_color'] . '"' : '') . '>' . $row['group_name'];
-		$groupCache = $smfFunc['db_escape_string'](serialize($groupCache));
-
-		updateSettings(array('groupCache' => $groupCache));
-	}
 }
 
 ?>

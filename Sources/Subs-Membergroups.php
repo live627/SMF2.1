@@ -149,11 +149,10 @@ function deleteMembergroups($groups)
 	// Recalculate the post groups, as they likely changed.
 	updateStats('postgroups');
 	// Make a note of the fact that the cache may be wrong.
-	updateSettings(array('settings_updated' => time()));
-
-	// Update the group cache.
-	require_once($sourcedir . '/ManageMembergroups.php');
-	cacheGroups();
+	updateSettings(array(
+		'settings_updated' => time(),
+		'membergroups_updated' => time(),
+	));
 
 	// It was a success.
 	return true;
@@ -376,6 +375,30 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 	}
 	else
 		return false;
+}
+
+// Retrieve a list of (visible) membergroups used by the cache.
+function cache_getMembergroupList()
+{
+	global $db_prefix, $scripturl, $smfFunc;
+	
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group, group_name, online_color
+		FROM {$db_prefix}membergroups
+		WHERE min_posts = -1
+			AND hidden = 0
+			AND id_group != 3
+			AND online_color != ''", __FILE__, __LINE__);
+	$groupCache = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$groupCache[] = '<a href="' . $scripturl . '?action=groups;sa=members;group=' . $row['id_group'] . '" ' . ($row['online_color'] ? 'style="color: ' . $row['online_color'] . '"' : '') . '>' . $row['group_name'] . '</a>';
+	$smfFunc['db_free_result']($request);
+
+	return array(
+		'data' => $groupCache,
+		'expires' => time() + 3600,
+		'refresh_eval' => 'return $GLOBALS[\'modSettings\'][\'membergroups_updated\'] > ' . time() . ';',
+	);
 }
 
 ?>

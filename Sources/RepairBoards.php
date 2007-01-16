@@ -829,7 +829,10 @@ function RepairBoards()
 			}
 		}
 
-		updateSettings(array('settings_updated' => 0));
+		updateSettings(array(
+			'settings_updated' => 0
+			'membergroups_updated' => time(),
+		));
 		updateStats('message');
 		updateStats('topic');
 		updateStats('calendar');

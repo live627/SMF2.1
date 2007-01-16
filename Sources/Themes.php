@@ -715,10 +715,6 @@ function SetThemeSettings()
 		cache_put_data('theme_settings-' . $_GET['th'], null, 90);
 		cache_put_data('theme_settings-1', null, 90);
 
-		// We may need to build the group cache if that setting changed, let's be sure...
-		require_once($sourcedir . '/ManageMembergroups.php');
-		cacheGroups();
-
 		redirectexit('action=admin;area=theme;sa=settings;th=' . $_GET['th'] . ';sesc=' . $sc);
 	}
 

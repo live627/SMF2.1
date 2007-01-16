@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2638 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2639 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -24,6 +24,10 @@ January 2007
  ! Merged the function retrieving the board list for the board index and the child boards for the message index into a single function in Subs-BoardIndex.php. (BoardIndex.php, MessageIndex.php, Subs-BoardIndex.php)
  ! Created a user online function used by both the board index and SSI. (BoardIndex.php, SSI.php, Subs-MembersOnline.php)
  ! No longer overwrite the contents of REMOTE_ADDR if it appears valid. (QueryString.php)
+ ! Added a cache handler that'll call the appropriate function in case the cached item cannot be found. (Load.php)
+ ! Cache membergroups for the board index in the memory cache instead of the database. (ManageMembergroups.php, Subs-Membergroup.php, BoardIndex.php, RepairBoards.php, Themes.php)
+ ! Moved getLastPosts from Recent.php to Subs-Recent.php and added a cache retrieval function for it. (Recent.php, Subs-Recent.php, BoardIndex.php)
+ ! Created a TrackStatsUsersOnline function previously embedded in the main BoardIndex function. (BoardIndex.php, Subs-MembersOnline.php)
 
 
 December 2006
