@@ -136,8 +136,21 @@ $txt['mc_watched_users_delete_post'] = 'Are you sure you want to delete this pos
 $txt['mc_watched_users_delete_posts'] = 'Are you sure you want to delete these posts?';
 $txt['mc_watched_users_posted'] = 'Posted';
 
-// Untranslated!
 $txt['mc_warnings_none'] = 'No warnings have been issued yet!';
 $txt['mc_warnings_recipient'] = 'Recipient';
+
+$txt['mc_prefs'] = 'Preferences';
+$txt['mc_settings'] = 'Change Settings';
+$txt['mc_prefs_title'] = 'Moderation Preferences';
+$txt['mc_prefs_desc'] = 'This section allows you to set some personal preferences for moderation related activities such as email notifications.';
+$txt['mc_prefs_homepage'] = 'Items to show on moderation homepage';
+$txt['mc_prefs_homepage_desc'] = 'Use shift and ctrl to select more than one item.';
+$txt['mc_prefs_latest_news'] = 'SM News';
+$txt['mc_prefs_show_reports'] = 'Show open report count in forum header';
+$txt['mc_prefs_notify_report'] = 'Notify of topic reports';
+$txt['mc_prefs_notify_report_never'] = 'Never';
+$txt['mc_prefs_notify_report_moderator'] = 'Only if it\'s a board I moderate';
+$txt['mc_prefs_notify_report_always'] = 'Always';
+$txt['mc_prefs_notify_approval'] = 'Notify of items awaiting approval';
 
 ?>

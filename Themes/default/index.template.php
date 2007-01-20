@@ -249,7 +249,7 @@ function template_body_above()
 			echo $context['user']['total_time_logged_in']['minutes'], $txt['totalTimeLogged4'], '<br />';
 		}
 
-		if (!empty($context['open_mod_reports']))
+		if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
 			echo '
 								<a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a><br />';
 		echo '				</span>';

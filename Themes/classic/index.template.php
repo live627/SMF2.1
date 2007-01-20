@@ -149,7 +149,7 @@ function template_body_above()
 			echo '<br />
 				<b>', $txt['maintain_mode_on'], '</b>';
 				
-		if (!empty($context['open_mod_reports']))
+		if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
 			echo '<br />
 				<a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a>';
 	}

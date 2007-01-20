@@ -234,7 +234,7 @@ function template_body_above()
 							<a href="', $scripturl, '?action=unread">', $txt['unread_since_visit'], '</a><br />
 							<a href="', $scripturl, '?action=unreadreplies">', $txt['show_unread_replies'], '</a><br />
 							', $context['current_time'], '<br />';
-		if (!empty($context['open_mod_reports']))
+		if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
 			echo '
 								<a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a>';
 	}

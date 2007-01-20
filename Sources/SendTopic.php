@@ -222,7 +222,7 @@ function ReportToModerator2()
 	$moderators = membersAllowedTo('moderate_board', $board);
 
 	$request = $smfFunc['db_query']('', "
-		SELECT id_member, email_address, lngfile
+		SELECT id_member, email_address, lngfile, mod_prefs
 		FROM {$db_prefix}members
 		WHERE id_member IN (" . implode(', ', $moderators) . ")
 			AND notify_types != 4
@@ -230,7 +230,7 @@ function ReportToModerator2()
 
 	// Check that moderators do exist!
 	if ($smfFunc['db_num_rows']($request) == 0)
-		fatal_lang_error('rtm11', false);
+		fatal_lang_error('no_mods', false);
 
 	// If we get here, I believe we should make a record of this, for historical significance, yabber.
 	if (empty($modSettings['disable_log_report']))
@@ -286,9 +286,27 @@ function ReportToModerator2()
 		}
 	}
 
+	// Find out who the real moderators are - for mod preferences.
+	$request2 = $smfFunc['db_query']('', "
+		SELECT id_member
+		FROM {$db_prefix}moderators
+		WHERE id_board = $board", __FILE__, __LINE__);
+	$real_mods = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request2))
+		$real_mods[] = $row['id_member'];
+	$smfFunc['db_free_result']($request2);
+
 	// Send every moderator an email.
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
+		// Maybe they don't want to know?!
+		if (!empty($row['mod_prefs']))
+		{
+			list(,, $pref_binary) = explode('|', $row['mod_prefs']);
+			if (!($pref_binary & 1) && (!($pref_binary & 2) || !in_array($row['id_member'], $real_mods)))
+				continue;
+		}
+
 		loadLanguage('Post', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
 
 		// Send it to the moderator.

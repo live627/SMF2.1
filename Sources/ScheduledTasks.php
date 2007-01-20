@@ -167,7 +167,7 @@ function scheduled_approval_notification()
 {
 	global $db_prefix, $scripturl, $modSettings, $mbname, $txt, $sourcedir, $smfFunc;
 
-	// Grab all the items awaiting approval and sort type then board - clear up any things that are no longer relvant.
+	// Grab all the items awaiting approval and sort type then board - clear up any things that are no longer relevant.
 	$request = $smfFunc['db_query']('', "
 		SELECT aq.id_msg, aq.id_attach, aq.id_event, m.id_topic, m.id_board, m.subject, t.id_first_msg,
 			b.id_profile
@@ -253,7 +253,7 @@ function scheduled_approval_notification()
 
 	// Come along one and all... until we reject you ;)
 	$request = $smfFunc['db_query']('', "
-		SELECT id_member, real_name, email_address, lngfile, id_group, additional_groups
+		SELECT id_member, real_name, email_address, lngfile, id_group, additional_groups, mod_prefs
 		FROM {$db_prefix}members
 		WHERE id_group IN (" . implode(', ', $addGroups) . ")
 			OR FIND_IN_SET(" . implode(', additional_groups) OR FIND_IN_SET(', $addGroups) . ", additional_groups)
@@ -261,6 +261,15 @@ function scheduled_approval_notification()
 		ORDER BY lngfile", __FILE__, __LINE__);
 	$members = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// Check they are interested.
+		if (!empty($row['mod_prefs']))
+		{
+			list(,, $pref_binary) = explode('|', $row['mod_prefs']);
+			if (!($pref_binary & 4))
+				continue;
+		}
+
 		$members[$row['id_member']] = array(
 			'id' => $row['id_member'],
 			'groups' => array_merge(explode(',', $row['additional_groups']), array($row['id_group'])),
@@ -268,6 +277,7 @@ function scheduled_approval_notification()
 			'email' => $row['email_address'],
 			'name' => $row['real_name'],		
 		);
+	}
 	$smfFunc['db_free_result']($request);
 
 	// Get the mailing stuff.

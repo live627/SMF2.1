@@ -683,7 +683,7 @@ function SetThemeSettings()
 
 	// Validate inputs/user.
 	if (empty($_GET['th']))
-		fatal_lang_error('theme3', false);
+		fatal_lang_error('no_theme', false);
 
 	// Submitting!
 	if (isset($_POST['submit']))

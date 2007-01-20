@@ -88,6 +88,13 @@ function ModerationMain($dont_call = false)
 		);
 	}
 
+	$context['admin_areas']['prefs'] = array(
+		'title' => $txt['mc_prefs'],
+		'areas' => array(
+			'settings' => array($txt['mc_settings'], 'ModerationCenter.php', 'ModerationSettings'),
+		),
+	);
+
 	// I don't know where we're going - I don't know where we've been...
 	$area = isset($_GET['area']) ? $_GET['area'] : 'index';
 	foreach ($context['admin_areas'] as $id => $section)
@@ -125,22 +132,37 @@ function ModerationMain($dont_call = false)
 // This function basically is the home page of the moderation center.
 function ModerationHome()
 {
-	global $txt, $context, $scripturl, $modSettings, $user_info;
+	global $txt, $context, $scripturl, $modSettings, $user_info, $user_settings;
 
 	loadTemplate('ModerationCenter');
 
 	$context['page_title'] = $txt['moderation_center'];
 	$context['sub_template'] = 'moderation_center';
 
-	//!!! Load what blocks the user actually wants...
-	$mod_blocks = array('LatestNews', 'WatchedUsers', 'ReportedPosts', 'GroupRequests');
+	// Load what blocks the user actually wants...
+	$valid_blocks = array(
+		'n' => 'LatestNews',
+		'w' => 'WatchedUsers',
+		'r' => 'ReportedPosts',
+		'g' => 'GroupRequests'
+	);
+
+	if (empty($user_settings['mod_prefs']))
+		$user_blocks = 'nwrg';
+	else
+		list (, $user_blocks) = explode('|', $user_settings['mod_prefs']);
+
+	$user_blocks = str_split($user_blocks);
 
 	$context['mod_blocks'] = array();
-	foreach ($mod_blocks as $block)
+	foreach ($valid_blocks as $k => $block)
 	{
-		$block = 'ModBlock' . $block;
-		if (function_exists($block))
-			$context['mod_blocks'][] = $block();
+		if (in_array($k, $user_blocks))
+		{
+			$block = 'ModBlock' . $block;
+			if (function_exists($block))
+				$context['mod_blocks'][] = $block();
+		}
 	}
 }
 
@@ -854,6 +876,95 @@ function ViewWarningLog()
 		);
 	}
 	$smfFunc['db_free_result']($request);
+}
+
+// Change moderation preferences.
+function ModerationSettings()
+{
+	global $context, $db_prefix, $smfFunc, $txt, $sourcedir, $scripturl, $user_settings, $user_info;
+
+	// Some useful context stuff.
+	loadTemplate('ModerationCenter');
+	$context['page_title'] = $txt['mc_settings'];
+	$context['sub_template'] = 'moderation_settings';
+
+	// They can only change some settings if they can moderate boards/groups.
+	$context['can_moderate_boards'] = !empty($user_info['mod_cache']['bq']);
+	$context['can_moderate_groups'] = !empty($user_info['mod_cache']['gq']);
+
+	// What blocks can this user see?
+	$context['homepage_blocks'] = array(
+		'n' => $txt['mc_prefs_latest_news'],
+		'w' => $txt['mc_watched_users'],
+	);
+	if ($context['can_moderate_groups'])
+		$context['homepage_blocks']['g'] = $txt['mc_group_requests'];
+	if ($context['can_moderate_boards'])
+		$context['homepage_blocks']['r'] = $txt['mc_reported_posts'];
+
+	// Does the user have any settings yet?
+	if (empty($user_settings['mod_prefs']))
+	{
+		$mod_blocks = 'nwrg';
+		$pref_binary = 5;
+		$show_reports = 1;
+	}
+	else
+	{
+		list ($show_reports, $mod_blocks, $pref_binary) = explode('|', $user_settings['mod_prefs']);
+	}
+
+	// Are we saving?
+	if (isset($_POST['save']))
+	{
+		/* Current format of mod_prefs is:
+			x|ABCD|yyy
+	
+			WHERE:
+				x = Show report count on forum header.
+				ABCD = Block indexes to show on moderation main page.
+				yyy = Integer with the following bit status:
+					- yyy & 1 = Always notify on reports.
+					- yyy & 2 = Notify on reports for moderators only.
+					- yyy & 4 = Notify about posts awaiting approval.
+		*/
+
+		// Do blocks first!
+		$mod_blocks = '';
+		if (!empty($_POST['mod_homepage']))
+			foreach ($_POST['mod_homepage'] as $v)
+			{
+				// Sanitise my friend!
+				if (preg_match('~([a-zA-Z])~', $v, $matches))
+					$mod_blocks .= $matches[0];
+			}
+
+		// Do we have the option of changing other settings?
+		if ($context['can_moderate_boards'])
+		{
+			$pref_binary = 0;
+			if (!empty($_POST['mod_notify_approval']))
+				$pref_binary |= 4;
+			if (!empty($_POST['mod_notify_report']))
+			{
+				$pref_binary |= ($_POST['mod_notify_report'] == 2 ? 1 : 2);
+			}
+
+			$show_reports = !empty($_POST['mod_show_reports']) ? 1 : 0;
+		}
+
+		// Put it all together.
+		$mod_prefs = $show_reports . '|' . $mod_blocks . '|' . $pref_binary;
+		updateMemberData($user_info['id'], array('mod_prefs' => "'$mod_prefs'"));
+	}
+
+	// What blocks does the user currently have selected?
+	$context['mod_settings'] = array(
+		'show_reports' => $show_reports,
+		'notify_report' => $pref_binary & 2 ? 1 : ($pref_binary & 1 ? 2 : 0),
+		'notify_approval' => $pref_binary & 4,
+		'user_blocks' => str_split($mod_blocks),
+	);
 }
 
 ?>

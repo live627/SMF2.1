@@ -2855,7 +2855,8 @@ function determineTopicClass(&$topic_context)
 // Sets up the basic theme context stuff.
 function setupThemeContext()
 {
-	global $modSettings, $user_info, $scripturl, $context, $settings, $options, $txt, $maintenance, $smfFunc;
+	global $modSettings, $user_info, $scripturl, $context, $settings, $options, $txt, $maintenance;
+	global $user_settings, $smfFunc;
 
 	// Get some news...
 	$context['news_lines'] = explode("\n", str_replace("\r", '', trim(addslashes($modSettings['news']))));
@@ -2887,6 +2888,7 @@ function setupThemeContext()
 
 		if (allowedTo('moderate_forum'))
 			$context['unapproved_members'] = !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2 ? $modSettings['unapprovedMembers'] : 0;
+		$context['show_open_reports'] = empty($user_settings['mod_prefs']) || $user_settings['mod_prefs']{0} == 1;
 
 		$context['user']['avatar'] = array();
 

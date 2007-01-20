@@ -763,6 +763,11 @@ if (@$modSettings['smfVersion'] < '2.0')
 ---}
 ---#
 
+---# Adding moderation center preferences...
+ALTER TABLE {$db_prefix}members
+ADD mod_prefs varchar(20) NOT NULL default '';
+---#
+
 /******************************************************************************/
 --- Adding user warnings.
 /******************************************************************************/

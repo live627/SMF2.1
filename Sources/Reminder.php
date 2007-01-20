@@ -299,7 +299,7 @@ function secret_answer2()
 	if ($row['secret_question'] == '' || $row['secret_answer'] == '' || md5($smfFunc['db_unescape_string']($_POST['secret_answer'])) != $row['secret_answer'])
 	{
 		log_error(sprintf($txt['reminder_error'], $row['member_name']));
-		fatal_lang_error('pswd7', false);
+		fatal_lang_error('incorrect_answer', false);
 	}
 
 	// You can't use a blank one!

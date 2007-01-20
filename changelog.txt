@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2639 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2640 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -28,6 +28,8 @@ January 2007
  ! Cache membergroups for the board index in the memory cache instead of the database. (ManageMembergroups.php, Subs-Membergroup.php, BoardIndex.php, RepairBoards.php, Themes.php)
  ! Moved getLastPosts from Recent.php to Subs-Recent.php and added a cache retrieval function for it. (Recent.php, Subs-Recent.php, BoardIndex.php)
  ! Created a TrackStatsUsersOnline function previously embedded in the main BoardIndex function. (BoardIndex.php, Subs-MembersOnline.php)
+ + Added a number of user configurable moderation preferences to the moderation center. (ModerationCenter.php, Subs.php, SendTopic.php, upgrade and install scripts).
+ & Language entries for above change. (ModerationCenter language file)
 
 
 December 2006

@@ -750,4 +750,82 @@ function template_warning_log()
 		</table>';
 }
 
+// Moderation settings
+function template_moderation_settings()
+{
+	global $settings, $options, $context, $txt, $scripturl;
+
+	echo '
+	<form action="', $scripturl, '?action=moderate;area=settings" method="post" accept-charset="', $context['character_set'], '">
+		<table width="80%" align="center" cellpadding="3" cellspacing="0" border="0" class="tborder">
+			<tr class="titlebg">
+				<td colspan="2">', $txt['mc_prefs_title'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td colspan="2">
+					<span class="smalltext">
+						', $txt['mc_prefs_desc'], '
+					</span>
+				</td>
+			</tr>
+			<tr class="windowbg2" valign="top">
+				<td width="50%">
+					<b>', $txt['mc_prefs_homepage'], ':</b>
+					<div class="smalltext">', $txt['mc_prefs_homepage_desc'], '</div>
+				</td>
+				<td width="50%">
+					<select name="mod_homepage[]" multiple="multiple">';
+
+	foreach ($context['homepage_blocks'] as $k => $v)
+		echo '
+						<option value="', $k, '" ', in_array($k, $context['mod_settings']['user_blocks']) ? 'selected="selected"' : '', '>', $v, '</option>';
+
+	echo '
+					</select>
+				</td>
+			</tr>';
+
+	// If they can moderate boards they have more options!
+	if ($context['can_moderate_boards'])
+	{
+		echo '
+			<tr class="windowbg2" valign="top">
+				<td width="50%">
+					<b>', $txt['mc_prefs_show_reports'], ':</b>
+				</td>
+				<td width="50%">
+					<input type="checkbox" name="mod_show_reports" ', $context['mod_settings']['show_reports'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr>
+			<tr class="windowbg2" valign="top">
+				<td width="50%">
+					<b>', $txt['mc_prefs_notify_report'], ':</b>
+				</td>
+				<td width="50%">
+					<select name="mod_notify_report">
+						<option value="0" ', $context['mod_settings']['notify_report'] == 0 ? 'selected="selected"' : '', '>', $txt['mc_prefs_notify_report_never'], '</option>
+						<option value="1" ', $context['mod_settings']['notify_report'] == 1 ? 'selected="selected"' : '', '>', $txt['mc_prefs_notify_report_moderator'], '</option>
+						<option value="2" ', $context['mod_settings']['notify_report'] == 2 ? 'selected="selected"' : '', '>', $txt['mc_prefs_notify_report_always'], '</option>
+					</select>
+				</td>
+			</tr>
+			<tr class="windowbg2" valign="top">
+				<td width="50%">
+					<b>', $txt['mc_prefs_notify_approval'], ':</b>
+				</td>
+				<td width="50%">
+					<input type="checkbox" name="mod_notify_approval" ', $context['mod_settings']['notify_approval'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr>';
+	}
+	echo '
+			<tr class="windowbg">
+				<td colspan="2" align="right">
+					<input type="submit" name="save" value="', $txt['save'], '" />
+				</td>
+			</tr>
+		</table>
+	</form>';
+}
+
 ?>
