@@ -1845,7 +1845,7 @@ function AnnouncementSend()
 	checkSession();
 
 	// !!! Might need an interface?
-	$chunkSize = empty($modSettings['mail_queue']) ? 75 : 500;
+	$chunkSize = empty($modSettings['mail_queue']) ? 50 : 500;
 
 	$context['start'] = empty($_REQUEST['start']) ? 0 : (int) $_REQUEST['start'];
 	$groups = array_merge($board_info['groups'], array(1));

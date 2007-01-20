@@ -92,7 +92,7 @@ function BoardIndex()
 
 	// Track most online statistics? (Subs-MembersOnline.php)
 	if (!empty($modSettings['trackStats']))
-		trackUserOnlineStats($context['num_guests'] + $context['num_users_online']);
+		trackStatsUsersOnline($context['num_guests'] + $context['num_users_online']);
 
 	// Retrieve the latests posts if the theme settings require it.
 	if (isset($settings['number_recent_posts']) && $settings['number_recent_posts'] > 1)

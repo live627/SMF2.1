@@ -151,7 +151,6 @@ function deleteMembergroups($groups)
 	// Make a note of the fact that the cache may be wrong.
 	updateSettings(array(
 		'settings_updated' => time(),
-		'membergroups_updated' => time(),
 	));
 
 	// It was a success.
@@ -381,7 +380,7 @@ function listMembergroupMembers_Href(&$members, $membergroup, $limit = null)
 function cache_getMembergroupList()
 {
 	global $db_prefix, $scripturl, $smfFunc;
-	
+
 	$request = $smfFunc['db_query']('', "
 		SELECT id_group, group_name, online_color
 		FROM {$db_prefix}membergroups
@@ -397,7 +396,7 @@ function cache_getMembergroupList()
 	return array(
 		'data' => $groupCache,
 		'expires' => time() + 3600,
-		'refresh_eval' => 'return $GLOBALS[\'modSettings\'][\'membergroups_updated\'] > ' . time() . ';',
+		'refresh_eval' => 'return $GLOBALS[\'modSettings\'][\'settings_updated\'] > ' . time() . ';',
 	);
 }
 

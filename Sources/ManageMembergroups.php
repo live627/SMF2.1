@@ -336,7 +336,7 @@ function AddMembergroup()
 
 		// Rebuild the group cache.
 		updateSettings(array(
-			'membergroups_updated' => time(),
+			'settings_updated' => time(),
 		));
 
 		// Go change some more settings.
@@ -584,7 +584,6 @@ function EditMembergroup()
 		// We've definetely changed some group stuff.
 		updateSettings(array(
 			'settings_updated' => time(),
-			'membergroups_updated' => time(),
 		));
 
 		redirectexit('action=admin;area=membergroups');

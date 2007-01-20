@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2640 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2641 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -30,6 +30,7 @@ January 2007
  ! Created a TrackStatsUsersOnline function previously embedded in the main BoardIndex function. (BoardIndex.php, Subs-MembersOnline.php)
  + Added a number of user configurable moderation preferences to the moderation center. (ModerationCenter.php, Subs.php, SendTopic.php, upgrade and install scripts).
  & Language entries for above change. (ModerationCenter language file)
+ ! Removed membergroups_updated from the settings table as it is rarely used and takes up space - use settings_updated instead. (Various files)
 
 
 December 2006

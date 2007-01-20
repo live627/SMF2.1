@@ -1817,7 +1817,7 @@ function prepareSearchContext($reset = false)
 		'is_poll' => $modSettings['pollMode'] == '1' && $message['id_poll'] > 0,
 		'is_hot' => $message['num_replies'] >= $modSettings['hotTopicPosts'],
 		'is_very_hot' => $message['num_replies'] >= $modSettings['hotTopicVeryPosts'],
-		'posted_in' => $participants[$message['id_topic']],
+		'posted_in' => !empty($participants[$message['id_topic']]),
 		'views' => $message['num_views'],
 		'replies' => $message['num_replies'],
 		'can_reply' => in_array($message['id_board'], $boards_can['post_reply_any']) || in_array(0, $boards_can['post_reply_any']),

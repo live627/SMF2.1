@@ -830,8 +830,7 @@ function RepairBoards()
 		}
 
 		updateSettings(array(
-			'settings_updated' => 0
-			'membergroups_updated' => time(),
+			'settings_updated' => time(),
 		));
 		updateStats('message');
 		updateStats('topic');

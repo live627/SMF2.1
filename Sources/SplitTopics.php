@@ -988,7 +988,7 @@ function MergeExecute($topics = array())
 	}
 
 	// Determine target board.
-	$target_board = count($boards) > 1 ? (int) $_POST['board'] : $boards[0];
+	$target_board = count($boards) > 1 ? (int) $_REQUEST['board'] : $boards[0];
 	if (!in_array($target_board, $boards))
 		fatal_lang_error('no_board');
 
