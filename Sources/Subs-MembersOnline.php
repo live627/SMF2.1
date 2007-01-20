@@ -149,7 +149,8 @@ function getMembersOnlineStats($membersOnlineOptions)
 		$sortFunction($memberOnlineStats['list_users_online']);
 
 		// Mark the last list item as 'is_last'.
-		$memberOnlineStats['users_online'][end(array_keys($memberOnlineStats['users_online']))]['is_last'] = true;
+		$userKeys = array_keys($memberOnlineStats['users_online']);
+		$memberOnlineStats['users_online'][end($userKeys)]['is_last'] = true;
 	}
 
 	// Also sort the membergroups.

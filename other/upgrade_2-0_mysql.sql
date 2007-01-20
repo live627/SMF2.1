@@ -1071,10 +1071,12 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}permission_profiles (
 ) TYPE=MyISAM;
 ---#
 
----# Adding profile columns...
+---# Adding profile columns to boards table...
 ALTER TABLE {$db_prefix}boards
 ADD id_profile smallint(5) unsigned NOT NULL default '1' AFTER member_groups;
+---#
 
+---# Adding profile columns to board permission table...
 ALTER TABLE {$db_prefix}board_permissions
 ADD id_profile smallint(5) unsigned NOT NULL default '1' AFTER id_group;
 

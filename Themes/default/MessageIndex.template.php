@@ -8,7 +8,7 @@ function template_main()
 	echo '
 	<div style="margin-bottom: 2px;"><a name="top"></a>', theme_linktree(), '</div>';
 
-	if (isset($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
+	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
 	<div class="tborder" style="margin-bottom: 3ex; ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? ' width: 100%;' : '', '">

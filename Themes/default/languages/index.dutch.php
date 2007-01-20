@@ -432,7 +432,7 @@ $txt['go_up'] = 'Omhoog';
 $txt['go_down'] = 'Omlaag';
 
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> |
- <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006, Simple Machines LLC</a>';
+ <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2007, Simple Machines LLC</a>';
 
 $txt['birthdays'] = 'Verjaardagen:';
 $txt['events'] = 'Gebeurtenissen:';

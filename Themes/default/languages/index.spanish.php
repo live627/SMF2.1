@@ -432,7 +432,7 @@ $txt['go_up'] = 'Ir Arriba';
 $txt['go_down'] = 'Ir Abajo';
 
 $forum_copyright = '<a href="http://www.simplemachines.org/" title="Simple Machines Forum" target="_blank">Powered by %s</a> |
- <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006, Simple Machines LLC</a>';
+ <a href="http://www.simplemachines.org/about/copyright.php" title="Free Forum Software" target="_blank">SMF &copy; 2006-2007, Simple Machines LLC</a>';
 
 $txt['birthdays'] = 'Cumplea&ntilde;os:';
 $txt['events'] = 'Eventos:';
