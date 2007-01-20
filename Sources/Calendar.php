@@ -399,6 +399,7 @@ function calendarEventArray($low_date, $high_date, $use_permissions = true)
 					'is_last' => false,
 					'allowed_groups' => explode(',', $row['member_groups']),
 					'id_board' => $row['id_board'],
+					'href' => $row['id_topic'] == 0 ? '' : $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				);
 		}
 	}
@@ -464,7 +465,9 @@ function calendarInsertEvent($id_board, $id_topic, $title, $id_member, $month, $
 			(id_board, id_topic, title, id_member, start_date, end_date)
 		VALUES ($id_board, $id_topic, SUBSTRING('$title', 1, 48), $id_member, '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year)) . "', '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year) + $span * 86400) . "')", __FILE__, __LINE__);
 
-	updateStats('calendar');
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
 }
 
 // Returns true if this user is allowed to link the topic in question.
@@ -578,7 +581,9 @@ function CalendarPost()
 				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 		}
 
-		updateStats('calendar');
+		updateSettings(array(
+			'calendar_updated' => time(),
+		));
 
 		// No point hanging around here now...
 		redirectexit($scripturl . '?action=calendar;month=' . $_POST['month'] . ';year=' . $_POST['year']);

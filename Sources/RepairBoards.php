@@ -834,7 +834,9 @@ function RepairBoards()
 		));
 		updateStats('message');
 		updateStats('topic');
-		updateStats('calendar');
+		updateSettings(array(
+			'calendar_updated' => time(),
+		));
 
 		// Force a group cache refresh.
 		require_once($sourcedir . '/ManageMembergroups.php');

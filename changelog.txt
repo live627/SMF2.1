@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2641 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2642 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -31,6 +31,8 @@ January 2007
  + Added a number of user configurable moderation preferences to the moderation center. (ModerationCenter.php, Subs.php, SendTopic.php, upgrade and install scripts).
  & Language entries for above change. (ModerationCenter language file)
  ! Removed membergroups_updated from the settings table as it is rarely used and takes up space - use settings_updated instead. (Various files)
+ ! Moved the boardindex and SSI calendar cache from the settings table to the cache. (BoardIndex.php, SSI.php, Subs-Calendar.php)
+ ! Changed the updateStats('calendar') calls into an updateSettings call, as the cache handler does the updating of cache. (Subs.php, Calendar.php, ManageCalendar.php, MessageIndex.php, MoveTopic.php, Post.php, Profile.php, RemoveTopic.php, RepairBoards.php, Subs-Boards.php, Subs-Charset.php)
 
 
 December 2006

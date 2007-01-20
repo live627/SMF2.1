@@ -101,7 +101,9 @@ function ModifyHolidays()
 			DELETE FROM {$db_prefix}calendar_holidays
 			WHERE id_holiday IN (" . implode(', ', $_REQUEST['holiday']) . ")", __FILE__, __LINE__);
 
-		updateStats('calendar');
+		updateSettings(array(
+			'calendar_updated' => time(),
+		));
 	}
 
 	// Total amount of holidays... for pagination.
@@ -166,7 +168,9 @@ function EditHoliday()
 						('$date', SUBSTRING('$_REQUEST[title]', 1, 48))", __FILE__, __LINE__);
 		}
 
-		updateStats('calendar');
+		updateSettings(array(
+			'calendar_updated' => time(),
+		));
 
 		redirectexit('action=admin;area=managecalendar;sa=holidays');
 	}
@@ -268,7 +272,9 @@ function ModifyCalendarSettings()
 		saveDBSettings($config_vars);
 
 		// Update the stats incase.
-		updateStats('calendar');
+		updateSettings(array(
+			'calendar_updated' => time(),
+		));
 
 		redirectexit('action=admin;area=managecalendar;sa=settings');
 	}

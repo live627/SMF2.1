@@ -350,26 +350,6 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		}
 		break;
 
-	case 'calendar':
-		require_once($sourcedir . '/Calendar.php');
-
-		// Calculate the YYYY-MM-DD of the lowest and highest days.
-		$low_date = strftime('%Y-%m-%d', forum_time(false) - 24 * 3600);
-		$high_date = strftime('%Y-%m-%d', forum_time(false) + $modSettings['cal_days_for_index'] * 24 * 3600);
-
-		$holidays = calendarHolidayArray($low_date, $high_date);
-		$bday = calendarBirthdayArray($low_date, $high_date);
-		$events = calendarEventArray($low_date, $high_date, false);
-
-		// Cache the results in the settings.
-		updateSettings(array(
-			'cal_today_updated' => strftime('%Y%m%d', forum_time(false)),
-			'cal_today_holiday' => $smfFunc['db_escape_string'](serialize($holidays)),
-			'cal_today_birthday' => $smfFunc['db_escape_string'](serialize($bday)),
-			'cal_today_event' => $smfFunc['db_escape_string'](serialize($events))
-		));
-		break;
-
 	case 'postgroups':
 		// Parameter two is the updated columns: we should check to see if we base groups off any of these.
 		if ($parameter2 !== null && !in_array('posts', $parameter2))

@@ -1667,7 +1667,9 @@ function Post2()
 					title = '" . $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['evtitle']), ENT_QUOTES)) . "'
 				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
 		}
-		updateStats('calendar');
+		updateSettings(array(
+			'calendar_updated' => time(),
+		));
 	}
 
 	// Marking read should be done even for editing messages....

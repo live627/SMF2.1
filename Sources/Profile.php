@@ -511,7 +511,9 @@ function ModifyProfile2()
 
 	// If the member changed his/her birthdate, update calendar statistics.
 	if (isset($profile_vars['birthdate']) || isset($profile_vars['real_name']))
-		updateStats('calendar');
+		updateSettings(array(
+			'calendar_updated' => time(),
+		));
 
 	// Send an email?
 	if ($newpassemail)

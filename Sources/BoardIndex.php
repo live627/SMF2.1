@@ -49,20 +49,13 @@ if (!defined('SMF'))
 // Show the board index!
 function BoardIndex()
 {
-	global $txt, $scripturl, $db_prefix, $user_info, $sourcedir;
-	global $modSettings, $context, $settings, $smfFunc;
+	global $txt, $user_info, $sourcedir, $modSettings, $context, $settings;
 
 	// For wireless, we use the Wireless template...
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_boardindex';
 	else
 		loadTemplate('BoardIndex');
-
-	// Remember the most recent topic for optimizing the recent posts feature.
-	$most_recent_topic = array(
-		'timestamp' => 0,
-		'ref' => null
-	);
 
 	// Retrieve the categories and boards.
 	require_once($sourcedir . '/Subs-BoardIndex.php');
@@ -111,115 +104,29 @@ function BoardIndex()
 
 	// Set some permission related settings.
 	$context['show_login_bar'] = $user_info['is_guest'] && !empty($modSettings['enableVBStyleLogin']);
-	$context['show_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);
 
 	// Load the calendar?
-	if ($context['show_calendar'])
-		$context['show_calendar'] = calendarDoIndex();
+	if (!empty($modSettings['cal_enabled']) && allowedTo('calendar_view'))
+	{
+		// Retrieve the calendar data (events, birthdays, holidays).
+		$eventOptions = array(
+			'include_holidays' => $modSettings['cal_showholidays'] > 1,
+			'include_birthdays' => $modSettings['cal_showbdays'] > 1,
+			'include_events' => $modSettings['cal_showevents'] > 1,
+			'num_days_shown' => empty($modSettings['cal_days_for_index']) || $modSettings['cal_days_for_index'] < 1 ? 1 : $modSettings['cal_days_for_index'],
+		);
+		$context += cache_quick_get('calendar_index_offset_' . ($user_info['time_offset'] + $modSettings['time_offset']), 'Subs-Calendar.php', 'cache_getRecentEvents', array($eventOptions));
+
+		// Whether one or multiple days are shown on the board index.
+		$context['calendar_only_today'] = $modSettings['cal_days_for_index'] == 1;
+
+		// This is used to show the "how-do-I-edit" help.
+		$context['calendar_can_edit'] = allowedTo('calendar_edit_any');
+	}
+	else
+		$context['show_calendar'] = false;
 
 	$context['page_title'] = sprintf($txt['forum_index'], $context['forum_name']);
-}
-
-// Called from the BoardIndex to display the current day's events on the board index.
-function calendarDoIndex()
-{
-	global $modSettings, $context, $user_info, $scripturl, $sc;
-
-	// Make sure at least one of the options is enabled.
-	if ($modSettings['cal_showevents'] < 2 && $modSettings['cal_showbdays'] < 2 && $modSettings['cal_showholidays'] < 2)
-		return false;
-
-	// Get the current forum time and check whether the statistics are up to date.
-	if (empty($modSettings['cal_today_updated']) || $modSettings['cal_today_updated'] != strftime('%Y%m%d', forum_time(false)))
-		updateStats('calendar');
-
-	// Load the holidays for today, ...
-	if ($modSettings['cal_showholidays'] > 1 && isset($modSettings['cal_today_holiday']))
-		$holidays = unserialize($modSettings['cal_today_holiday']);
-	// ... the birthdays for today, ...
-	if ($modSettings['cal_showbdays'] > 1 && isset($modSettings['cal_today_birthday']))
-		$bday = unserialize($modSettings['cal_today_birthday']);
-	// ... and the events for today.
-	if ($modSettings['cal_showevents'] > 1 && isset($modSettings['cal_today_event']))
-		$events = unserialize($modSettings['cal_today_event']);
-
-	// No events, birthdays, or holidays... don't show anything.  Simple.
-	if (empty($holidays) && empty($bday) && empty($events))
-		return false;
-
-	// This shouldn't be less than one!
-	if (empty($modSettings['cal_days_for_index']) || $modSettings['cal_days_for_index'] < 1)
-		$days_for_index = 86400;
-	else
-		$days_for_index = $modSettings['cal_days_for_index'] * 86400;
-
-	$context['calendar_only_today'] = $modSettings['cal_days_for_index'] == 1;
-
-	// Get the current member time/date.
-	$now = forum_time();
-
-	// This is used to show the "how-do-I-edit" help.
-	$context['calendar_can_edit'] = allowedTo('calendar_edit_any');
-
-	// Holidays between now and now + days.
-	$context['calendar_holidays'] = array();
-	for ($i = $now; $i < $now + $days_for_index; $i += 86400)
-	{
-		if (isset($holidays[strftime('%Y-%m-%d', $i)]))
-			$context['calendar_holidays'] = array_merge($context['calendar_holidays'], $holidays[strftime('%Y-%m-%d', $i)]);
-	}
-
-	// Happy Birthday, guys and gals!
-	$context['calendar_birthdays'] = array();
-	for ($i = $now; $i < $now + $days_for_index; $i += 86400)
-		if (isset($bday[strftime('%Y-%m-%d', $i)]))
-		{
-			foreach ($bday[strftime('%Y-%m-%d', $i)] as $index => $dummy)
-				$bday[strftime('%Y-%m-%d', $i)][$index]['is_today'] = strftime('%Y-%m-%d', $i) == strftime('%Y-%m-%d', forum_time());
-			$context['calendar_birthdays'] = array_merge($context['calendar_birthdays'], $bday[strftime('%Y-%m-%d', $i)]);
-		}
-
-	$context['calendar_events'] = array();
-	$duplicates = array();
-	for ($i = $now; $i < $now + $days_for_index; $i += 86400)
-	{
-		if (empty($events[strftime('%Y-%m-%d', $i)]))
-			continue;
-
-		foreach ($events[strftime('%Y-%m-%d', $i)] as $ev => $event)
-		{
-			if (empty($event['topic']) || ((count(array_intersect($user_info['groups'], $event['allowed_groups'])) != 0 || allowedTo('admin_forum'))) && !in_array($event['id_board'], $user_info['ignoreboards']))
-			{
-				if (isset($duplicates[$events[strftime('%Y-%m-%d', $i)][$ev]['topic'] . $events[strftime('%Y-%m-%d', $i)][$ev]['title']]))
-				{
-					unset($events[strftime('%Y-%m-%d', $i)][$ev]);
-					continue;
-				}
-
-				$this_event = &$events[strftime('%Y-%m-%d', $i)][$ev];
-				$this_event['href'] = $this_event['topic'] == 0 ? '' : $scripturl . '?topic=' . $this_event['topic'] . '.0';
-				$this_event['modify_href'] = $scripturl . '?action=' . ($this_event['topic'] == 0 ? 'calendar;sa=post;' : 'post;msg=' . $this_event['msg'] . ';topic=' . $this_event['topic'] . '.0;calendar;') . 'eventid=' . $this_event['id'] . ';sesc=' . $sc;
-				$this_event['can_edit'] = allowedTo('calendar_edit_any') || ($this_event['poster'] == $user_info['id'] && allowedTo('calendar_edit_own'));
-				$this_event['is_today'] = (strftime('%Y-%m-%d', $i)) == strftime('%Y-%m-%d', forum_time());
-				$this_event['date'] = strftime('%Y-%m-%d', $i);
-
-				$duplicates[$this_event['topic'] . $this_event['title']] = true;
-			}
-			else
-				unset($events[strftime('%Y-%m-%d', $i)][$ev]);
-		}
-
-		if (!empty($events[strftime('%Y-%m-%d', $i)]))
-			$context['calendar_events'] = array_merge($context['calendar_events'], $events[strftime('%Y-%m-%d', $i)]);
-	}
-
-	for ($i = 0, $n = count($context['calendar_birthdays']); $i < $n; $i++)
-		$context['calendar_birthdays'][$i]['is_last'] = !isset($context['calendar_birthdays'][$i + 1]);
-	for ($i = 0, $n = count($context['calendar_events']); $i < $n; $i++)
-		$context['calendar_events'][$i]['is_last'] = !isset($context['calendar_events'][$i + 1]);
-
-	// This is used to make sure the header should be displayed.
-	return !empty($context['calendar_holidays']) || !empty($context['calendar_birthdays']) || !empty($context['calendar_events']);
 }
 
 // Collapse or expand a category
@@ -232,7 +139,7 @@ function CollapseCategory()
 	{
 		// And collapse/expand/toggle the category.
 		require_once($sourcedir . '/Subs-Categories.php');
-		collapseCategories(array((int) $_REQUEST['c']), $_REQUEST['sa'],array($user_info['id']));
+		collapseCategories(array((int) $_REQUEST['c']), $_REQUEST['sa'], array($user_info['id']));
 	}
 
 	// And go back to the board index.

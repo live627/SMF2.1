@@ -788,7 +788,9 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	// Latest message/topic might not be there anymore.
 	updateStats('message');
 	updateStats('topic');
-	updateStats('calendar');
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
 
 	// Plus reset the cache to stop people getting odd results.
 	updateSettings(array('settings_updated' => time()));

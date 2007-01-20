@@ -499,7 +499,9 @@ function moveTopics($topics, $toBoard)
 	// Update 'em pesky stats.
 	updateStats('topic');
 	updateStats('message');
-	updateStats('calendar');
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
 
 	require_once($sourcedir . '/Subs-Post.php');
 

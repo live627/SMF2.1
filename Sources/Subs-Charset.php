@@ -584,11 +584,11 @@ function fix_serialized_columns()
 	}
 	$smfFunc['db_free_result']($request);
 
-	// Refresh some serialized strings stored in the settings table.
-	updateStats('calendar');
+	// Refresh some cached data.
+	updateSettings(array(
+		'memberlist_updated' => time(),
+	));
 
-	// The memberlist cache needs to be recalculated too.
-	updateSettings(array('memberlist_updated' => time()));
 }
 
 ?>
