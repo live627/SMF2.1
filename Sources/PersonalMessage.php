@@ -804,7 +804,7 @@ function prepareMessageContext($type = 'subject', $reset = false)
 
 function MessageSearch()
 {
-	global $context, $txt, $scripturl, $modSettings;
+	global $context, $txt, $scripturl, $modSettings, $smfFunc;
 
 	if (isset($_REQUEST['params']))
 	{
