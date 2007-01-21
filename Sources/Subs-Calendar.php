@@ -25,9 +25,455 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	!!!	
+/*	This file contains several functions for retrieving and manipulating
+	calendar events, birthdays and holidays.
 
+	array getBirthdayRange(string earliest_date, string latest_date)
+		- finds all the birthdays in the specified range of days.
+		- earliest_date and latest_date are inclusive, and should both be in
+		  the YYYY-MM-DD format.
+		- works with birthdays set for no year, or any other year, and
+		  respects month and year boundaries.
+		- returns an array of days, each of which an array of birthday
+		  information for the context.
+
+	array getEventRange(string earliest_date, string latest_date,
+			bool use_permissions = true)
+		- finds all the posted calendar events within a date range.
+		- both the earliest_date and latest_date should be in the standard
+		  YYYY-MM-DD format.
+		- censors the posted event titles.
+		- uses the current user's permissions if use_permissions is true,
+		  otherwise it does nothing "permission specific".
+		- returns an array of contextual information if use_permissions is
+		  true, and an array of the data needed to build that otherwise.
+
+	array getHolidayRange(string earliest_date, string latest_date)
+		- finds all the applicable holidays for the specified date range.
+		- earliest_date and latest_date should be YYYY-MM-DD.
+		- returns an array of days, which are all arrays of holiday names.
+
+	void insertEvent(int id_board, int id_topic, string title,
+			int id_member, int month, int day, int year, int span)
+		- inserts the passed event information into the calendar table.
+		- recaches the calendar information after doing so.
+		- expects the passed title not to have html characters.
+		- handles spanned events by inserting them multiple times.
+		- does not check any permissions of any sort.
+
+	void canLinkEvent()
+		- checks if the current user can link the current topic to the
+		  calendar, permissions et al.
+		- this requires the calendar_post permission, a forum moderator, or a
+		  topic starter.
+		- expects the $topic and $board variables to be set.
+		- if the user doesn't have proper permissions, an error will be shown.
+
+	array getTodayInfo()
+		- returns an array with the current date, day, month, and year.
+		- takes the users time offset into account.
+	
+	array getCalendarGrid(int month, int year, array calendarOptions)
+		- returns an array containing all the information needed to show a
+		  calendar grid for the given month.
+		- also provides information (link, month, year) about the previous and
+		  next month.
+
+	array cache_getOffsetIndependentEvents(int days_to_index)
+		- cache callback function used to retrieve the birthdays, holidays, and
+		  events between now and now + days_to_index.
+		- widens the search range by an extra 24 hours to support time offset
+		  shifts.
+		- used by the cache_getRecentEvents function to get the information
+		  needed to calculate the events taking the users time offset into
+		  account.
+
+	array cache_getRecentEvents(array eventOptions)
+		- cache callback function used to retrieve the upcoming birthdays,
+		  holidays, and events within the given period, taking into account
+		  the users time offset.
+		- used by the board index and SSI to show the upcoming events.
 */
+
+// Get all birthdays within the given time range.
+function getBirthdayRange($low_date, $high_date)
+{
+	global $db_prefix, $scripturl, $modSettings, $smfFunc;
+
+	// Birthdays people set without specifying a year (no age, see?) are the easiest ;).
+	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
+		$allyear_part = "birthdate BETWEEN '0004" . substr($low_date, 4) . "' AND '0004-12-31'
+			OR birthdate BETWEEN '0004-01-01' AND '0004" . substr($high_date, 4) . "'";
+	else
+		$allyear_part = "birthdate BETWEEN '0004" . substr($low_date, 4) . "' AND '0004" . substr($high_date, 4) . "'";
+
+	// We need to search for any birthday in this range, and whatever year that birthday is on.
+	$year_low = (int) substr($low_date, 0, 4);
+	$year_high = (int) substr($high_date, 0, 4);
+
+	// Collect all of the birthdays for this month.  I know, it's a painful query.
+	$result = $smfFunc['db_query']('birthday_array', "
+		SELECT id_member, real_name, YEAR(birthdate) AS birthYear, birthdate
+		FROM {$db_prefix}members
+		WHERE YEAR(birthdate) != '0001'
+			AND	($allyear_part
+				OR DATE_FORMAT(birthdate, '{$year_low}-%m-%d') BETWEEN '$low_date' AND '$high_date'" . ($year_low == $year_high ? '' : "
+				OR DATE_FORMAT(birthdate, '{$year_high}-%m-%d') BETWEEN '$low_date' AND '$high_date'") . ")
+			AND is_activated = 1", __FILE__, __LINE__);
+	$bday = array();
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+	{
+		if ($year_low != $year_high)
+			$age_year = substr($row['birthdate'], 5) < substr($high_date, 5) ? $year_high : $year_low;
+		else
+			$age_year = $year_low;
+
+		$bday[$age_year . substr($row['birthdate'], 4)][] = array(
+			'id' => $row['id_member'],
+			'name' => $row['real_name'],
+			'age' => $row['birthYear'] > 4 && $row['birthYear'] <= $age_year ? $age_year - $row['birthYear'] : null,
+			'is_last' => false
+		);
+	}
+	$smfFunc['db_free_result']($result);
+
+	// Set is_last, so the themes know when to stop placing separators.
+	foreach ($bday as $mday => $array)
+		$bday[$mday][count($array) - 1]['is_last'] = true;
+
+	return $bday;
+}
+
+// Get all events within the given time range.
+function getEventRange($low_date, $high_date, $use_permissions = true)
+{
+	global $db_prefix, $scripturl, $modSettings, $user_info, $sc, $smfFunc;
+
+	$low_date_time = sscanf($low_date, '%04d-%02d-%02d');
+	$low_date_time = mktime(0, 0, 0, $low_date_time[1], $low_date_time[2], $low_date_time[0]);
+	$high_date_time = sscanf($high_date, '%04d-%02d-%02d');
+	$high_date_time = mktime(0, 0, 0, $high_date_time[1], $high_date_time[2], $high_date_time[0]);
+
+	// Find all the calendar info...
+	$result = $smfFunc['db_query']('', "
+		SELECT
+			cal.id_event, cal.start_date, cal.end_date, cal.title, cal.id_member, cal.id_topic,
+			cal.id_board, b.member_groups, t.id_first_msg, t.approved, b.id_board
+		FROM {$db_prefix}calendar AS cal
+			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = cal.id_board)
+			LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
+		WHERE cal.start_date <= '$high_date'
+			AND cal.end_date >= '$low_date'" . ($use_permissions ? "
+			AND (cal.id_board = 0 OR $user_info[query_wanna_see_board])" : ''), __FILE__, __LINE__);
+	$events = array();
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+	{
+		// If the attached topic is not approved then for the moment pretend it doesn't exist
+		//!!! This should be fixed to show them all and then sort by approval state later?
+		if (!empty($row['id_first_msg']) && !$row['approved'])
+			continue;
+
+		// Force a censor of the title - as often these are used by others.
+		censorText($row['title'], $use_permissions ? false : true);
+
+		$start_date = sscanf($row['start_date'], '%04d-%02d-%02d');
+		$start_date = max(mktime(0, 0, 0, $start_date[1], $start_date[2], $start_date[0]), $low_date_time);
+		$end_date = sscanf($row['end_date'], '%04d-%02d-%02d');
+		$end_date = min(mktime(0, 0, 0, $end_date[1], $end_date[2], $end_date[0]), $high_date_time);
+
+		$lastDate = '';
+		for ($date = $start_date; $date <= $end_date; $date += 86400)
+		{
+			// Attempt to avoid DST problems.
+			//!!! Resolve this properly at some point.
+			if (strftime('%Y-%m-%d', $date) == $lastDate)
+				$date += 3601;
+			$lastDate = strftime('%Y-%m-%d', $date);
+
+			// If we're using permissions (calendar pages?) then just ouput normal contextual style information.
+			if ($use_permissions)
+				$events[strftime('%Y-%m-%d', $date)][] = array(
+					'id' => $row['id_event'],
+					'title' => $row['title'],
+					'can_edit' => allowedTo('calendar_edit_any') || ($row['id_member'] == $user_info['id'] && allowedTo('calendar_edit_own')),
+					'modify_href' => $scripturl . '?action=' . ($row['id_board'] == 0 ? 'calendar;sa=post;' : 'post;msg=' . $row['id_first_msg'] . ';topic=' . $row['id_topic'] . '.0;calendar;') . 'eventid=' . $row['id_event'] . ';sesc=' . $sc,
+					'href' => $row['id_board'] == 0 ? '' : $scripturl . '?topic=' . $row['id_topic'] . '.0',
+					'link' => $row['id_board'] == 0 ? $row['title'] : '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['title'] . '</a>',
+					'start_date' => $row['start_date'],
+					'end_date' => $row['end_date'],
+					'is_last' => false,
+					'id_board' => $row['id_board'],
+				);
+			// Otherwise, this is going to be cached and the VIEWER'S permissions should apply... just put together some info.
+			else
+				$events[strftime('%Y-%m-%d', $date)][] = array(
+					'id' => $row['id_event'],
+					'title' => $row['title'],
+					'topic' => $row['id_topic'],
+					'msg' => $row['id_first_msg'],
+					'poster' => $row['id_member'],
+					'start_date' => $row['start_date'],
+					'end_date' => $row['end_date'],
+					'is_last' => false,
+					'allowed_groups' => explode(',', $row['member_groups']),
+					'id_board' => $row['id_board'],
+					'href' => $row['id_topic'] == 0 ? '' : $scripturl . '?topic=' . $row['id_topic'] . '.0',
+				);
+		}
+	}
+	$smfFunc['db_free_result']($result);
+
+	// If we're doing normal contextual data, go through and make things clear to the templates ;).
+	if ($use_permissions)
+	{
+		foreach ($events as $mday => $array)
+			$events[$mday][count($array) - 1]['is_last'] = true;
+	}
+
+	return $events;
+}
+
+// Get all holidays within the given time range.
+function getHolidayRange($low_date, $high_date)
+{
+	global $db_prefix, $smfFunc;
+
+	// Get the lowest and highest dates for "all years".
+	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
+		$allyear_part = "event_date BETWEEN '0004" . substr($low_date, 4) . "' AND '0004-12-31'
+			OR event_date BETWEEN '0004-01-01' AND '0004" . substr($high_date, 4) . "'";
+	else
+		$allyear_part = "event_date BETWEEN '0004" . substr($low_date, 4) . "' AND '0004" . substr($high_date, 4) . "'";
+
+	// Find some holidays... ;).
+	$result = $smfFunc['db_query']('', "
+		SELECT event_date, YEAR(event_date) AS year, title
+		FROM {$db_prefix}calendar_holidays
+		WHERE event_date BETWEEN '$low_date' AND '$high_date'
+			OR $allyear_part", __FILE__, __LINE__);
+	$holidays = array();
+	while ($row = $smfFunc['db_fetch_assoc']($result))
+	{
+		if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
+			$event_year = substr($row['event_date'], 5) < substr($high_date, 5) ? substr($high_date, 0, 4) : substr($low_date, 0, 4);
+		else
+			$event_year = substr($low_date, 0, 4);
+
+		$holidays[$event_year . substr($row['event_date'], 4)][] = $row['title'];
+	}
+	$smfFunc['db_free_result']($result);
+
+	return $holidays;
+}
+
+// Consolidating the various INSERT statements into this function.
+function insertEvent($id_board, $id_topic, $title, $id_member, $month, $day, $year, $span)
+{
+	global $db_prefix, $modSettings, $smfFunc;
+
+	// Add special chars to the title.
+	$title = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($title), ENT_QUOTES));
+
+	// Add some sanity checking to the span.
+	$span = empty($span) || trim($span) == '' ? 0 : min((int) $modSettings['cal_maxspan'], (int) $span - 1);
+
+	// Insert the event!
+	$smfFunc['db_query']('', "
+		INSERT INTO {$db_prefix}calendar
+			(id_board, id_topic, title, id_member, start_date, end_date)
+		VALUES ($id_board, $id_topic, SUBSTRING('$title', 1, 48), $id_member, '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year)) . "', '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year) + $span * 86400) . "')", __FILE__, __LINE__);
+
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
+}
+
+// Does permission checks to see if an event can be linked to a board/topic.
+function canLinkEvent()
+{
+	global $db_prefix, $user_info, $topic, $board, $smfFunc;
+
+	// If you can't post, you can't link.
+	isAllowedTo('calendar_post');
+
+	// No board?  No topic?!?
+	if (!isset($board))
+		fatal_lang_error('missing_board_id', false);
+	if (!isset($topic))
+		fatal_lang_error('missing_topic_id', false);
+
+	// Administrator, Moderator, or owner.  Period.
+	if (!allowedTo('admin_forum') && !allowedTo('moderate_board'))
+	{
+		// Not admin or a moderator of this board. You better be the owner - or else.
+		$result = $smfFunc['db_query']('', "
+			SELECT id_member_started
+			FROM {$db_prefix}topics
+			WHERE id_topic = $topic
+			LIMIT 1", __FILE__, __LINE__);
+		if ($row = $smfFunc['db_fetch_assoc']($result))
+		{
+			// Not the owner of the topic.
+			if ($row['id_member_started'] != $user_info['id'])
+				fatal_lang_error('not_your_topic', 'user');
+		}
+		// Topic/Board doesn't exist.....
+		else
+			fatal_lang_error('calendar_no_topic', 'general');
+		$smfFunc['db_free_result']($result);
+	}
+}
+
+// Returns date information about 'today' relative to the users time offset.
+function getTodayInfo()
+{
+	return array(
+		'day' => (int) strftime('%d', forum_time()),
+		'month' => (int) strftime('%m', forum_time()),
+		'year' => (int) strftime('%Y', forum_time()),
+		'date' => strftime('%Y-%m-%d', forum_time()),
+	);
+}
+
+// Returns the information needed to show a calendar grid for the given month.
+function getCalendarGrid($month, $year, $calendarOptions)
+{
+	global $scripturl;
+
+	// Eventually this is what we'll be returning.
+	$calendarGrid = array(
+		'week_days' => array(),
+		'weeks' => array(),
+		'previous_calendar' => array(
+			'year' => $month == 1 ? $year - 1 : $year,
+			'month' => $month == 1 ? 12 : $month - 1,
+		),
+		'next_calendar' => array(
+			'year' => $month == 12 ? $year + 1 : $year,
+			'month' => $month == 12 ? 1 : $month + 1
+		),
+	);
+
+	// Get todays date.
+	$today = getTodayInfo();
+
+	// Get information about this month.
+	$month_info = array(
+		'first_day' => array(
+			'day_of_week' => (int) strftime('%w', mktime(0, 0, 0, $month, 1, $year)),
+			'week_num' => (int) strftime('%U', mktime(0, 0, 0, $month, 1, $year)),
+			'date' => strftime('%Y-%m-%d', mktime(0, 0, 0, $month, 1, $year)),
+		),
+		'last_day' => array(
+			'day_of_month' => (int) strftime('%d', mktime(0, 0, 0, $month == 12 ? 1 : $month + 1, 0, $month == 12 ? $year + 1 : $year)),
+			'date' => strftime('%Y-%m-%d', mktime(0, 0, 0, $month == 12 ? 1 : $month + 1, 0, $month == 12 ? $year + 1 : $year)),
+		),
+		'first_day_of_year' => (int) strftime('%w', mktime(0, 0, 0, 1, 1, $year)),
+	);
+
+	// The number of days the first row is shifted to the right for the starting day.
+	$nShift = $month_info['first_day']['day_of_week'];
+
+	$calendarOptions['start_day'] = empty($calendarOptions['start_day']) ? 0 : (int) $calendarOptions['start_day'];
+
+	// Starting any day other than Sunday means a shift...
+	if (!empty($calendarOptions['start_day']))
+	{
+		$nShift -= $calendarOptions['start_day'];
+		if ($nShift < 0)
+			$nShift = 7 + $nShift;
+	}
+
+	// Number of rows required to fit the month.
+	$nRows = floor(($month_info['last_day']['day_of_month'] + $nShift) / 7);
+	if (($month_info['last_day']['day_of_month'] + $nShift) % 7)
+		$nRows++;
+
+	// Fetch the arrays for birthdays, posted events, and holidays.
+	$bday = $calendarOptions['show_birthdays'] ? getBirthdayRange($month_info['first_day']['date'], $month_info['last_day']['date']) : array();
+	$events = $calendarOptions['show_events'] ? getEventRange($month_info['first_day']['date'], $month_info['last_day']['date']) : array();
+	$holidays = $calendarOptions['show_holidays'] ? getHolidayRange($month_info['first_day']['date'], $month_info['last_day']['date']) : array();
+
+	// Days of the week taking into consideration that they may want it to start on any day.
+	$count = $calendarOptions['start_day'];
+	for ($i = 0; $i < 7; $i++)
+	{
+		$calendarGrid['week_days'][] = $count;
+		$count++;
+		if ($count == 7)
+			$count = 0;
+	}
+
+	// An adjustment value to apply to all calculated week numbers.
+	if (!empty($calendarOptions['show_week_num']))
+	{
+		// If the first day of the year is a Sunday, then there is no
+		// adjustment to be made. However, if the first day of the year is not
+		// a Sunday, then there is a partial week at the start of the year
+		// that needs to be accounted for.
+		if ($calendarOptions['start_day'] === 0)
+			$nWeekAdjust = $month_info['first_day_of_year'] === 0 ? 0 : 1;
+		// If we are viewing the weeks, with a starting date other than Sunday,
+		// then things get complicated! Basically, as PHP is calculating the
+		// weeks with a Sunday starting date, we need to take this into account
+		// and offset the whole year dependant on whether the first day in the
+		// year is above or below our starting date. Note that we offset by
+		// two, as some of this will get undone quite quickly by the statement
+		// below.
+		else
+			$nWeekAdjust = $calendarOptions['start_day'] > $month_info['first_day_of_year'] && $month_info['first_day_of_year'] !== 0 ? 2 : 1;
+
+		// If our week starts on a day greater than the day the month starts
+		// on, then our week numbers will be one too high. So we need to
+		// reduce it by one - all these thoughts of offsets makes my head
+		// hurt...
+		if ($month_info['first_day']['day_of_week'] < $calendarOptions['start_day'])
+			$nWeekAdjust--;
+	}
+	else
+		$nWeekAdjust = 0;
+
+	// Iterate through each week.
+	$calendarGrid['weeks'] = array();
+	for ($nRow = 0; $nRow < $nRows; $nRow++)
+	{
+		// Start off the week - and don't let it go above 52, since that's the number of weeks in a year.
+		$calendarGrid['weeks'][$nRow] = array(
+			'days' => array(),
+			'number' => $month_info['first_day']['week_num'] + $nRow + $nWeekAdjust
+		);
+		// Handle the dreaded "week 53", it can happen, but only once in a blue moon ;)
+		if ($calendarGrid['weeks'][$nRow]['number'] == 53 && $nShift != 4)
+			$calendarGrid['weeks'][$nRow]['number'] = 1;
+
+		// And figure out all the days.
+		for ($nCol = 0; $nCol < 7; $nCol++)
+		{
+			$nDay = ($nRow * 7) + $nCol - $nShift + 1;
+
+			if ($nDay < 1 || $nDay > $month_info['last_day']['day_of_month'])
+				$nDay = 0;
+
+			$date = sprintf('%04d-%02d-%02d', $year, $month, $nDay);
+
+			$calendarGrid['weeks'][$nRow]['days'][$nCol] = array(
+				'day' => $nDay,
+				'date' => $date,
+				'is_today' => $date == $today['date'],
+				'is_first_day' => !empty($calendarOptions['show_week_num']) && (($month_info['first_day']['day_of_week'] + $nDay - 1) % 7 == $calendarOptions['start_day']),
+				'holidays' => !empty($holidays[$date]) ? $holidays[$date] : array(),
+				'events' => !empty($events[$date]) ? $events[$date] : array(),
+				'birthdays' => !empty($bday[$date]) ? $bday[$date] : array()
+			);
+		}
+	}
+
+	// Set the previous and the next month's links.
+	$calendarGrid['previous_calendar']['href'] = $scripturl . '?action=calendar;year=' . $calendarGrid['previous_calendar']['year'] . ';month=' . $calendarGrid['previous_calendar']['month'];
+	$calendarGrid['next_calendar']['href'] = $scripturl . '?action=calendar;year=' . $calendarGrid['next_calendar']['year'] . ';month=' . $calendarGrid['next_calendar']['month'];
+
+	return $calendarGrid;
+}
 
 // Retrieve all events for the given days, independently of the users offset.
 function cache_getOffsetIndependentEvents($days_to_index)
@@ -41,9 +487,9 @@ function cache_getOffsetIndependentEvents($days_to_index)
 
 	return array(
 		'data' => array(
-			'holidays' => calendarHolidayArray($low_date, $high_date),
-			'birthdays' => calendarBirthdayArray($low_date, $high_date),
-			'events' => calendarEventArray($low_date, $high_date, false),
+			'holidays' => getHolidayRange($low_date, $high_date),
+			'birthdays' => getBirthdayRange($low_date, $high_date),
+			'events' => getEventRange($low_date, $high_date, false),
 		),
 		'refresh_eval' => 'return \'' . strftime('%Y%m%d', forum_time(false)) . '\' != strftime(\'%Y%m%d\', forum_time(false)) || (!empty($modSettings[\'calendar_updated\']) && ' . time() . ' < $modSettings[\'calendar_updated\']);',
 		'expires' => time() + 3600,
@@ -53,18 +499,13 @@ function cache_getOffsetIndependentEvents($days_to_index)
 // Called from the BoardIndex to display the current day's events on the board index.
 function cache_getRecentEvents($eventOptions)
 {
-	global $modSettings, $context, $user_info, $scripturl;
-
-	// Make sure at least one of the options is enabled.
-//	if (empty($eventOptions['include_holidays']) && empty($eventOptions['include_birthdays']) && empty($eventOptions['include_events']))
-//		return false;
+	global $modSettings, $user_info, $scripturl;
 
 	// With the 'static' cached data we can calculate the user-specific data.
 	$cached_data = cache_quick_get('calendar_index', 'Subs-Calendar.php', 'cache_getOffsetIndependentEvents', array($eventOptions['num_days_shown']));
 
-	// No events, birthdays, or holidays... don't show anything.  Simple.
-//	if (empty($cached_data['holidays']) && empty($cached_data['birthdays']) && empty($cached_data['events']))
-//		return false;
+	// Get the information about today (from user perspective).
+	$today = getTodayInfo();
 
 	$return_data = array(
 		'calendar_holidays' => array(),
@@ -87,12 +528,15 @@ function cache_getRecentEvents($eventOptions)
 
 	// Happy Birthday, guys and gals!
 	for ($i = $now; $i < $now + $days_for_index; $i += 86400)
-		if (isset($cached_data['birthdays'][strftime('%Y-%m-%d', $i)]))
+	{
+		$loop_date = strftime('%Y-%m-%d', $i);
+		if (isset($cached_data['birthdays'][$loop_date]))
 		{
-			foreach ($cached_data['birthdays'][strftime('%Y-%m-%d', $i)] as $index => $dummy)
-				$cached_data['birthdays'][strftime('%Y-%m-%d', $i)][$index]['is_today'] = strftime('%Y-%m-%d', $i) == strftime('%Y-%m-%d', forum_time());
-			$return_data['calendar_birthdays'] = array_merge($return_data['calendar_birthdays'], $cached_data['birthdays'][strftime('%Y-%m-%d', $i)]);
+			foreach ($cached_data['birthdays'][$loop_date] as $index => $dummy)
+				$cached_data['birthdays'][strftime('%Y-%m-%d', $i)][$index]['is_today'] = $loop_date === $today['date'];
+			$return_data['calendar_birthdays'] = array_merge($return_data['calendar_birthdays'], $cached_data['birthdays'][$loop_date]);
 		}
+	}
 
 	$duplicates = array();
 	for ($i = $now; $i < $now + $days_for_index; $i += 86400)
@@ -121,7 +565,7 @@ function cache_getRecentEvents($eventOptions)
 
 			// Might be set to true afterwards, depending on the permissions.
 			$this_event['can_edit'] = false;
-			$this_event['is_today'] = strftime('%Y-%m-%d', forum_time()) === $loop_date;
+			$this_event['is_today'] = $loop_date === $today['date'];
 			$this_event['date'] = $loop_date;
 		}
 
@@ -129,6 +573,7 @@ function cache_getRecentEvents($eventOptions)
 			$return_data['calendar_events'] = array_merge($return_data['calendar_events'], $cached_data['events'][$loop_date]);
 	}
 
+	// Mark the last item so that a list seperator can be used in the template.
 	for ($i = 0, $n = count($return_data['calendar_birthdays']); $i < $n; $i++)
 		$return_data['calendar_birthdays'][$i]['is_last'] = !isset($return_data['calendar_birthdays'][$i + 1]);
 	for ($i = 0, $n = count($return_data['calendar_events']); $i < $n; $i++)
@@ -142,15 +587,15 @@ function cache_getRecentEvents($eventOptions)
 			foreach ($cache_block[\'data\'][\'calendar_events\'] as $k => $event)
 			{
 				// Remove events that the user may not see or wants to ignore.
-				if ((array_intersect($user_info[\'groups\'], $event[\'allowed_groups\']) === 0 && !allowedTo(\'admin_forum\')) || in_array($event[\'id_board\'], $user_info[\'ignoreboards\']))
+				if ((array_intersect($GLOBALS[\'user_info\'][\'groups\'], $event[\'allowed_groups\']) === 0 && !allowedTo(\'admin_forum\')) || in_array($event[\'id_board\'], $GLOBALS[\'user_info\'][\'ignoreboards\']))
 					unset($cache_block[\'data\'][\'calendar_events\'][$k]);
 				else
 				{
 					// Whether the event can be edited depends on the permissions.
-					$cache_block[\'data\'][\'calendar_events\'][$k][\'can_edit\'] = allowedTo(\'calendar_edit_any\') || ($event[\'poster\'] == $user_info[\'id\'] && allowedTo(\'calendar_edit_own\'));
+					$cache_block[\'data\'][\'calendar_events\'][$k][\'can_edit\'] = allowedTo(\'calendar_edit_any\') || ($event[\'poster\'] == $GLOBALS[\'user_info\'][\'id\'] && allowedTo(\'calendar_edit_own\'));
 
 					// The added session code makes this URL not cachable.
-					$cache_block[\'data\'][\'calendar_events\'][$k][\'modify_href\'] = $scripturl . \'?action=\' . ($this_event[\'topic\'] == 0 ? \'calendar;sa=post;\' : \'post;msg=\' . $this_event[\'msg\'] . \';topic=\' . $this_event[\'topic\'] . \'.0;calendar;\') . \'eventid=\' . $this_event[\'id\'] . \';sesc=\' . $GLOBALS[\'sc\'];
+					$cache_block[\'data\'][\'calendar_events\'][$k][\'modify_href\'] = $GLOBALS[\'scripturl\'] . \'?action=\' . ($event[\'topic\'] == 0 ? \'calendar;sa=post;\' : \'post;msg=\' . $event[\'msg\'] . \';topic=\' . $event[\'topic\'] . \'.0;calendar;\') . \'eventid=\' . $event[\'id\'] . \';sesc=\' . $GLOBALS[\'sc\'];
 				}
 			}
 			
@@ -164,5 +609,5 @@ function cache_getRecentEvents($eventOptions)
 			$cache_block[\'data\'][\'show_calendar\'] = !empty($cache_block[\'data\'][\'calendar_holidays\']) || !empty($cache_block[\'data\'][\'calendar_birthdays\']) || !empty($cache_block[\'data\'][\'calendar_events\']);',
 	);
 }
-				
+
 ?>

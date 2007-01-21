@@ -1622,8 +1622,8 @@ function Post2()
 	// Editing or posting an event?
 	if (isset($_POST['calendar']) && (!isset($_REQUEST['eventid']) || $_REQUEST['eventid'] == -1))
 	{
-		require_once($sourcedir . '/Calendar.php');
-		calendarCanLink();
+		require_once($sourcedir . '/Subs-Calendar.php');
+		canLinkEvent();
 		calendarInsertEvent($board, $topic, $_POST['evtitle'], $user_info['id'], $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
 	}
 	elseif (isset($_POST['calendar']))
