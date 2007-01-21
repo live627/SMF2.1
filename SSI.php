@@ -44,7 +44,7 @@ $time_start = microtime();
 // Get the forum's settings for database and file paths.
 require_once(dirname(__FILE__) . '/Settings.php');
 
-$ssi_error_reporting = error_reporting(E_ALL);
+$ssi_error_reporting = error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
 
 // Don't do john didley if the forum's been shut down competely.
 if ($maintenance == 2 && (!isset($ssi_maintenance_off) || $ssi_maintenance_off !== true))

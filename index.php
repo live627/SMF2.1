@@ -39,7 +39,7 @@ $forum_version = 'SMF Development Edition';
 // Get everything started up...
 define('SMF', 1);
 @set_magic_quotes_runtime(0);
-error_reporting(E_ALL);
+error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
 $time_start = microtime();
 
 // Load the settings...
