@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2643 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2644 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -34,6 +34,8 @@ January 2007
  ! Moved the boardindex and SSI calendar cache from the settings table to the cache. (BoardIndex.php, SSI.php, Subs-Calendar.php)
  ! Changed the updateStats('calendar') calls into an updateSettings call, as the cache handler does the updating of cache. (Subs.php, Calendar.php, ManageCalendar.php, MessageIndex.php, MoveTopic.php, Post.php, Profile.php, RemoveTopic.php, RepairBoards.php, Subs-Boards.php, Subs-Charset.php)
  ! Moved several core calendar functions to Subs-Calendar.php. (Calendar.php, Post.php, Subs-Calendar.php)
+ + Added a setting for toggling the complexity of the visual verification image used on registration (etc). (ManageRegistration.php, Register.php, Subs-Graphics.php, Register template)
+ & Added language entries for above. (Login language files)
 
 
 December 2006

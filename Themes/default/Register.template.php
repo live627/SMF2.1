@@ -46,17 +46,18 @@ function template_before()
 	{
 		echo '
 		function refreshImages()
-		{';
+		{
+			var randVar = Math.floor(Math.random() * 100000);';
 		if ($context['use_graphic_library'])
 			echo '
-			document.getElementById(\'verificiation_image\').src = \'', $context['verificiation_image_href'], '\';';
+			document.getElementById(\'verificiation_image\').src = \'', $context['verificiation_image_href'], ';grudge=\' + randVar;';
 		else
 			echo '
-			document.getElementById(\'verificiation_image_1\').src = \'', $context['verificiation_image_href'], ';letter=1\';
-			document.getElementById(\'verificiation_image_2\').src = \'', $context['verificiation_image_href'], ';letter=2\';
-			document.getElementById(\'verificiation_image_3\').src = \'', $context['verificiation_image_href'], ';letter=3\';
-			document.getElementById(\'verificiation_image_4\').src = \'', $context['verificiation_image_href'], ';letter=4\';
-			document.getElementById(\'verificiation_image_5\').src = \'', $context['verificiation_image_href'], ';letter=5\';';
+			document.getElementById(\'verificiation_image_1\').src = \'', $context['verificiation_image_href'], ';letter=1;grudge=\' + randVar;
+			document.getElementById(\'verificiation_image_2\').src = \'', $context['verificiation_image_href'], ';letter=2;grudge=\' + randVar;
+			document.getElementById(\'verificiation_image_3\').src = \'', $context['verificiation_image_href'], ';letter=3;grudge=\' + randVar;
+			document.getElementById(\'verificiation_image_4\').src = \'', $context['verificiation_image_href'], ';letter=4;grudge=\' + randVar;
+			document.getElementById(\'verificiation_image_5\').src = \'', $context['verificiation_image_href'], ';letter=5;grudge=\' + randVar;';
 		echo '
 		}';
 	}
@@ -530,6 +531,19 @@ function template_admin_settings()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	// Javascript for the verification image.
+	if ($context['use_graphic_library'])
+	{
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function refreshImages()
+		{
+			var imageType = document.getElementById(\'visual_verification_type_select\').value;
+			document.getElementById(\'verificiation_image\').src = \'', $context['verificiation_image_href'], ';type=\' + imageType;
+		}
+	// ]]></script>';
+	}
+
 	echo '
 	<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="tborder">
@@ -593,12 +607,32 @@ function template_admin_settings()
 									<option value="2"', !empty($modSettings['password_strength']) && $modSettings['password_strength'] == 2 ? ' selected="selected"' : '', '>', $txt['admin_setting_password_strength_high'], '</option>
 								</select>
 							</td>
-						</tr><tr class="windowbg2">
+						</tr><tr class="windowbg2" valign="top">
 							<th width="50%" align="right">
-								<label for="disable_visual_verification_check">', $txt['admin_setting_disable_visual_verification'], '</label>:
+								<label for="visual_verification_type_select">
+									', $txt['admin_setting_image_verification_type'], ':<br />
+									<span class="smalltext" style="font-weight: normal;">
+										', $txt['admin_setting_image_verification_type_desc'], '
+									</span>
+								</label>
 							</th>
 							<td width="50%" align="left">
-								<input type="checkbox" name="disable_visual_verification" id="disable_visual_verification_check" ', !empty($modSettings['disable_visual_verification']) ? 'checked="checked"' : '', ' class="check" />
+								<select name="visual_verification_type" id="visual_verification_type_select" ', $context['use_graphic_library'] ? 'onchange="refreshImages();"' : '', '>
+									<option value="1" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 1 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_off'], '</option>
+									<option value="2" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 2 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_vsimple'], '</option>
+									<option value="3" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 3 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_simple'], '</option>
+									<option value="0" ', empty($modSettings['disable_visual_verification']) ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_medium'], '</option>
+									<option value="4" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 4 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_high'], '</option>
+								</select><br />';
+	if ($context['use_graphic_library'])
+		echo '
+								<img src="', $context['verificiation_image_href'], ';type=', empty($modSettings['disable_visual_verification']) ? 0 : $modSettings['disable_visual_verification'], '" alt="', $txt['admin_setting_image_verification_sample'], '" id="verificiation_image" /><br />';
+	else
+	{
+		echo '
+								<span class="smalltext">', $txt['admin_setting_image_verification_nogd'], '</span>';
+	}
+	echo '
 							</td>
 						</tr><tr class="windowbg2">
 							<td width="100%" colspan="2" align="center">

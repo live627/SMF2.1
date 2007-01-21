@@ -283,7 +283,7 @@ function AdminSettings()
 			'notify_new_registration' => isset($_POST['notify_new_registration']) ? 1 : 0,
 			'send_welcomeEmail' => isset($_POST['send_welcomeEmail']) ? 1 : 0,
 			'password_strength' => (int) $_POST['password_strength'],
-			'disable_visual_verification' => isset($_POST['disable_visual_verification']) ? 1 : 0,
+			'disable_visual_verification' => isset($_POST['visual_verification_type']) ? (int) $_POST['visual_verification_type'] : 0,
 			'coppaAge' => (int) $_POST['coppaAge'],
 			'coppaType' => empty($_POST['coppaType']) ? 0 : (int) $_POST['coppaType'],
 			'coppaPost' => $_POST['coppaPost'],
@@ -297,6 +297,11 @@ function AdminSettings()
 
 	// Turn the postal address into something suitable for a textbox.
 	$context['coppaPost'] = !empty($modSettings['coppaPost']) ? preg_replace('~<br(?: /)?' . '>~', "\n", $modSettings['coppaPost']) : '';
+
+	// Generate a sample registration image.
+	$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
+	$context['verificiation_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+	$_SESSION['visual_verification_code'] = 'SAMPLE';
 }
 
 ?>
