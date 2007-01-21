@@ -354,6 +354,9 @@ function PackageInstallTest()
 
 			continue;
 		}
+		// Don't show redirects.
+		elseif ($action['type'] == 'redirect')
+			continue;
 		elseif ($action['type'] == 'error')
 			$context['has_failure'] = true;
 		elseif ($action['type'] == 'modification')
