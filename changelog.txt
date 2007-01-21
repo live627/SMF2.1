@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2644 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2645 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -36,6 +36,8 @@ January 2007
  ! Moved several core calendar functions to Subs-Calendar.php. (Calendar.php, Post.php, Subs-Calendar.php)
  + Added a setting for toggling the complexity of the visual verification image used on registration (etc). (ManageRegistration.php, Register.php, Subs-Graphics.php, Register template)
  & Added language entries for above. (Login language files)
+ ! Quick modifying HTML posts would mess up linebreaks. (Post.php)
+ ! The package manager wasn't uninstalling "end" searches correctly. (Subs-Package.php)
 
 
 December 2006

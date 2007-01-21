@@ -1598,8 +1598,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 					{
 						if ($undo)
 						{
-							$actual_operation['searches'][$i]['preg_search'] .= '(\\n\\?\\>)?$';
-							$actual_operation['searches'][$i]['preg_replace'] = '$1';
+							$actual_operation['searches'][$i]['preg_replace'] = '';
 						}
 						else
 						{
@@ -1637,8 +1636,8 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 						continue;
 					}
 
-					// Replace it into nothing? That's not an option...unless
-					if ($search['add'] === '')
+					// Replace it into nothing? That's not an option...unless it's an undoing end.
+					if ($search['add'] === '' && ($search['position'] !== 'end' || !$undo))
 						continue;
 
 					// Finally, we're doing some replacements.

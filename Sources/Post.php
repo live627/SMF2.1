@@ -2140,11 +2140,12 @@ function QuoteFast()
 		$row = $smfFunc['db_fetch_assoc']($request);
 		$smfFunc['db_free_result']($request);
 
+		// Remove special formatting we don't want anymore.
+		$row['body'] = un_preparsecode($row['body']);
+
 		// Censor the message!
 		censorText($row['body']);
 
-		// Remove special formatting we don't want anymore.
-		un_preparsecode($row['body']);
 		$row['body'] = preg_replace('~<br(?: /)?' . '>~i', "\n", $row['body']);
 
 		// Want to modify a single message by double clicking it?
