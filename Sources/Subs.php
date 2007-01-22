@@ -2237,7 +2237,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 		$message = '&nbsp;' . substr($message, 1);
 
 	// Cleanup whitespace.
-	$message = strtr($message, array('  ' => ' &nbsp;', "\r" => '', "\n" => '<br />', '<br /> ' => '<br />&nbsp;'));
+	$message = strtr($message, array('  ' => ' &nbsp;', "\r" => '', "\n" => '<br />', '<br /> ' => '<br />&nbsp;', '&#13;' => "\n"));
 
 	// Cache the output if it took some time...
 	if (isset($cache_key, $cache_t) && array_sum(explode(' ', microtime())) - array_sum(explode(' ', $cache_t)) > 0.05)
