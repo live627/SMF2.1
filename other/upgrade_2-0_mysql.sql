@@ -452,6 +452,34 @@ upgrade_query("
 ---}
 ---#
 
+---# Changing visual verification setting.
+---{
+$request = upgrade_query("
+	SELECT value
+	FROM {$db_prefix}settings
+	WHERE variable = 'disable_visual_verification'");
+if (mysql_num_rows($request) != 0)
+{
+	list ($oldValue) = mysql_fetch_row($request);
+	if ($oldValue != 0)
+	{
+		// We have changed the medium setting from SMF 1.1.2.
+		if ($oldValue == 4)
+			$oldValue = 5;
+
+		upgrade_query("
+			UPDATE {$db_prefix}settings
+			SET variable = 'visual_verification_type'
+				AND value = $oldValue
+			WHERE variable = 'disable_visual_verification'");
+	}
+}
+upgrade_query("
+	DELETE FROM {$db_prefix}settings
+	WHERE variable = 'disable_visual_verification'");
+---}
+===#
+
 ---# Changing default personal text setting.
 UPDATE {$db_prefix}settings
 SET variable = 'default_personal_text'

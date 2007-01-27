@@ -1275,40 +1275,45 @@ function showCodeImage($code)
 {
 	global $settings, $user_info, $modSettings;
 
+	/*
+		Note: The higher the value of visual_verification_type the harder the verification is - from 1 as disabled through to max as "Very hard".
+		If visual_verification_type is not set the difficulty will be set to the value of 4 automatically.
+	*/
+
 	// What type are we going to be doing?
-	$imageType = empty($modSettings['disable_visual_verification']) ? 0 : $modSettings['disable_visual_verification'];
+	$imageType = empty($modSettings['visual_verification_type']) ? 4 : $modSettings['visual_verification_type'];
 	// Special case to allow the admin center to show samples.
 	if ($user_info['is_admin'] && isset($_GET['type']))
 		$imageType = (int) $_GET['type'];
 	// Just incase PM is on, reg is off.
 	elseif ($imageType == 1)
-		$imageType = 0;
+		$imageType = 4;
 
 	// Some quick references for what we do.
 	// Do we show no, low or high noise?
-	$noiseType = $imageType == 0 ? 'low' : ($imageType == 4 ? 'high' : 'none');
+	$noiseType = $imageType == 4 ? 'low' : ($imageType == 5 ? 'high' : 'none');
 	// Can we have more than one font in use?
-	$varyFonts = $imageType == 4 ? true : false;
+	$varyFonts = $imageType == 5 ? true : false;
 	// Just a plain white background?
-	$simpleBGColor = $imageType != 4 ? true : false;
+	$simpleBGColor = $imageType != 5 ? true : false;
 	// Plain black foreground?
 	$simpleFGColor = $imageType == 1 ? true : false;
 	// High much to rotate each character.
-	$rotationType = $imageType == 2 ? 'none' : ($imageType != 4 ? 'high' : 'low');
+	$rotationType = $imageType == 2 ? 'none' : ($imageType != 5 ? 'high' : 'low');
 	// Do we show some characters inversed?
-	$showReverseChars = $imageType == 4 ? true : false;
+	$showReverseChars = $imageType == 5 ? true : false;
 	// Special case for not showing any characters.
 	$disableChars = $imageType == 1 ? true : false;
 	// What do we do with the font colours. Are they one color, close to one color or random?
-	$fontColorType = $imageType == 2 ? 'plain' : ($imageType == 4 ? 'random' : 'cyclic');
+	$fontColorType = $imageType == 2 ? 'plain' : ($imageType == 5 ? 'random' : 'cyclic');
 	// Are the fonts random sizes?
-	$fontSizeRandom = $imageType == 4 ? true : false;
+	$fontSizeRandom = $imageType == 5 ? true : false;
 	// How much space between characters?
-	$fontHorSpace = $imageType == 4 ? 'high' : ($imageType == 2 ? 'medium' : 'minus');
+	$fontHorSpace = $imageType == 5 ? 'high' : ($imageType == 2 ? 'medium' : 'minus');
 	// Where do characters sit on the image? (Fixed position or random/very random)
-	$fontVerPos = $imageType == 2 ? 'fixed' : ($imageType == 4 ? 'vrandom' : 'random');
+	$fontVerPos = $imageType == 2 ? 'fixed' : ($imageType == 5 ? 'vrandom' : 'random');
 	// Make font semi-transparent?
-	$fontTrans = $imageType == 3 || $imageType == 0 ? true : false;
+	$fontTrans = $imageType == 3 || $imageType == 4 ? true : false;
 	// Give the image a border?
 	$hasBorder = $simpleBGColor;
 

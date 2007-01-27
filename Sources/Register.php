@@ -120,7 +120,7 @@ function Register()
 	loadCustomFields(0, 'register');
 
 	// Generate a visual verification code to make sure the user is no bot.
-	$context['visual_verification'] = empty($modSettings['disable_visual_verification']) || $modSettings['disable_visual_verification'] != 1;
+	$context['visual_verification'] = empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1;
 	if ($context['visual_verification'])
 	{
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
@@ -173,7 +173,7 @@ function Register2()
 	}
 
 	// Check whether the visual verification code was entered correctly.
-	if ((empty($modSettings['disable_visual_verification']) || $modSettings['disable_visual_verification'] != 1) && (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
+	if ((empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1) && (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
 	{
 		// Don't allow lots of errors!
 		$_SESSION['visual_errors'] = isset($_SESSION['visual_errors']) ? $_SESSION['visual_errors'] + 1 : 1;

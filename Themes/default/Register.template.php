@@ -626,15 +626,15 @@ function template_admin_settings()
 							</th>
 							<td width="50%" align="left">
 								<select name="visual_verification_type" id="visual_verification_type_select" ', $context['use_graphic_library'] ? 'onchange="refreshImages();"' : '', '>
-									<option value="1" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 1 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_off'], '</option>
-									<option value="2" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 2 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_vsimple'], '</option>
-									<option value="3" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 3 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_simple'], '</option>
-									<option value="0" ', empty($modSettings['disable_visual_verification']) ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_medium'], '</option>
-									<option value="4" ', !empty($modSettings['disable_visual_verification']) && $modSettings['disable_visual_verification'] == 4 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_high'], '</option>
+									<option value="1" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 1 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_off'], '</option>
+									<option value="2" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 2 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_vsimple'], '</option>
+									<option value="3" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 3 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_simple'], '</option>
+									<option value="4" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 4 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_medium'], '</option>
+									<option value="5" ', !empty($modSettings['visual_verification_type']) && $modSettings['visual_verification_type'] == 5 ? 'selected="selected"' : '', '>', $txt['admin_setting_image_verification_high'], '</option>
 								</select><br />';
 	if ($context['use_graphic_library'])
 		echo '
-								<img src="', $context['verificiation_image_href'], ';type=', empty($modSettings['disable_visual_verification']) ? 0 : $modSettings['disable_visual_verification'], '" alt="', $txt['admin_setting_image_verification_sample'], '" id="verificiation_image" /><br />';
+								<img src="', $context['verificiation_image_href'], ';type=', empty($modSettings['visual_verification_type']) ? 0 : $modSettings['visual_verification_type'], '" alt="', $txt['admin_setting_image_verification_sample'], '" id="verificiation_image" /><br />';
 	else
 	{
 		echo '
