@@ -352,6 +352,7 @@ foreach ($nameChanges as $table_name => $table)
 	$count++;
 	if ($_GET['ren_col'] > $count)
 		continue;
+	$_GET['ren_col'] = $count;
 
 	// Check the table exists!
 	$request = upgrade_query("
@@ -359,10 +360,8 @@ foreach ($nameChanges as $table_name => $table)
 		LIKE '{$db_prefix}$table_name'");
 	if (mysql_num_rows($request) == 0)
 	{
-		$count += count($table);
-		continue;
-
 		mysql_free_result($request);
+		continue;
 	}
 	mysql_free_result($request);
 
@@ -397,7 +396,6 @@ foreach ($nameChanges as $table_name => $table)
 	}
 	
 	// Update where we are!
-	$_GET['ren_col'] = $count;
 	$step_progress['current'] = $_GET['ren_col'];
 }
 
