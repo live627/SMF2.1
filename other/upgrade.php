@@ -2141,8 +2141,8 @@ function fixRelativePath($path)
 
 function parse_sql($filename)
 {
-	global $db_prefix, $boarddir, $boardurl, $command_line, $file_steps, $step_progress, $custom_warning;
-	global $upcontext, $support_js, $is_debug, $smfFunc, $db_connection;
+	global $db_prefix, $db_collation, $boarddir, $boardurl, $command_line, $file_steps, $step_progress, $custom_warning;
+	global $upcontext, $support_js, $is_debug, $smfFunc, $db_connection, $databases, $db_type;
 
 /*
 	Failure allowed on:
@@ -2164,6 +2164,7 @@ function parse_sql($filename)
 		- {$boarddir}
 		- {$boardurl}
 		- {$db_prefix}
+		- {$db_collation}
 */
 
 	// Our custom error handler - does nothing but does stop public errors from XML!
@@ -2179,6 +2180,35 @@ function parse_sql($filename)
 
 	// Make our own error handler.
 	set_error_handler('sql_error_handler');
+
+	// If we're on MySQL supporting collations then let's find out what the members table uses and put it in a global var - to allow upgrade script to match collations!
+	if (!empty($databases[$db_type]['utf8_support']) && version_compare($databases[$db_type]['utf8_version'], eval($databases[$db_type]['utf8_version_check'])) != 1)
+	{
+		$request = $smfFunc['db_query']('', "
+			SHOW TABLE STATUS
+			LIKE '{$db_prefix}members'", false, false);
+		if ($smfFunc['db_num_rows']($request) === 0)
+			die('Unable to find members table!');
+		$table_status = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
+
+		if (!empty($table_status['Collation']))
+		{
+			$request = $smfFunc['db_query']('', "
+				SHOW COLLATION
+				LIKE '$table_status[Collation]'", false, false);
+			// Got something?
+			if ($smfFunc['db_num_rows']($request) !== 0)
+				$collation_info = $smfFunc['db_fetch_assoc']($request);
+			$smfFunc['db_free_result']($request);
+
+			// Excellent!
+			if (!empty($collation_info['Collation']) && !empty($collation_info['Charset']))
+				$db_collation = ' CHARACTER SET ' . $collation_info['Charset'] . ' COLLATE ' . $collation_info['Collation'];
+		}
+	}
+	if (empty($db_collation))
+		$db_collation = '';
 
 	$endl = $command_line ? "\n" : '<br />' . "\n";
 
@@ -2327,7 +2357,7 @@ function parse_sql($filename)
 				continue;
 			}
 
-			$current_data = strtr(substr(rtrim($current_data), 0, -1), array('{$db_prefix}' => $db_prefix, '{$boarddir}' => $boarddir, '{$sboarddir}' => addslashes($boarddir), '{$boardurl}' => $boardurl));
+			$current_data = strtr(substr(rtrim($current_data), 0, -1), array('{$db_prefix}' => $db_prefix, '{$boarddir}' => $boarddir, '{$sboarddir}' => addslashes($boarddir), '{$boardurl}' => $boardurl, '{$db_collation}' => $db_collation));
 
 			upgrade_query($current_data);
 			// !!! This will be how it kinda does it once mysql all stripped out - needed for postgre (etc).

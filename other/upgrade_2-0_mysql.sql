@@ -415,7 +415,7 @@ CREATE TABLE {$db_prefix}log_online (
 	PRIMARY KEY (session),
 	KEY log_time (log_time),
 	KEY id_member (id_member)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 /******************************************************************************/
@@ -633,7 +633,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 	default_value varchar(8) NOT NULL default '0',
 	PRIMARY KEY (id_field),
 	UNIQUE col_name (col_name)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 /******************************************************************************/
@@ -647,7 +647,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_digest (
 	note_type varchar(10) NOT NULL default 'post',
 	daily smallint(3) unsigned NOT NULL default '0',
 	exclude mediumint(8) unsigned NOT NULL default '0'
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding digest option to "members" table...
@@ -677,7 +677,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_packages (
 	db_changes text NOT NULL,
 	PRIMARY KEY (id_install),
 	KEY filename (filename(15))
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding extra "log_packages" columns...
@@ -702,7 +702,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}mail_queue (
 	PRIMARY KEY (id_mail),
 	KEY time_sent (time_sent),
 	KEY priority (priority)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding new mail queue settings...
@@ -744,7 +744,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported (
 	KEY closed (closed),
 	KEY time_started (time_started),
 	KEY id_msg (id_msg)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Creating "log_reported_comments" table...
@@ -759,7 +759,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_reported_comments (
 	KEY id_report (id_report),
 	KEY id_member (id_member),
 	KEY time_sent (time_sent)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding moderator center permissions...
@@ -804,7 +804,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_member_notices (
 	subject tinytext NOT NULL,
 	body text NOT NULL,
 	PRIMARY KEY (id_notice)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Creating comments table...
@@ -823,7 +823,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_comments (
 	KEY id_recipient (id_recipient),
 	KEY log_time (log_time),
 	KEY comment_type (comment_type(8))
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding user warning column...
@@ -856,7 +856,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_group_requests (
 	reason text NOT NULL,
 	PRIMARY KEY (id_request),
 	UNIQUE id_member (id_member, id_group) 
-) TYPE=MYISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding new membergroup table columns...
@@ -875,7 +875,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}group_moderators (
 	id_group smallint(5) unsigned NOT NULL default '0',
 	id_member mediumint(8) unsigned NOT NULL default '0',
 	PRIMARY KEY (id_group, id_member) 
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 /******************************************************************************/
@@ -887,7 +887,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}approval_queue (
 	id_msg int(10) unsigned NOT NULL default '0',
 	id_attach int(10) unsigned NOT NULL default '0',
 	id_event smallint(5) unsigned NOT NULL default '0'
-) TYPE=MYISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding approved column to attachments table...
@@ -1019,7 +1019,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}scheduled_tasks (
 	KEY next_time (next_time),
 	KEY disabled (disabled),
 	UNIQUE task (task)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Populating Scheduled Task Table...
@@ -1068,7 +1068,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_scheduled_tasks (
 	time_run int(10) NOT NULL,
 	time_taken float NOT NULL default '0',
 	PRIMARY KEY (id_log)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding new scheduled task setting...
@@ -1094,7 +1094,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}permission_profiles (
 	profile_name tinytext NOT NULL,
 	id_parent smallint(5) unsigned NOT NULL default '0',
 	PRIMARY KEY (id_profile)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding profile columns to boards table...
@@ -1401,7 +1401,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}admin_info_files (
   filetype tinytext NOT NULL,
   PRIMARY KEY (id_file),
   KEY filename (filename(30))
-) TYPE=MYISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Add in the files to get from Simple Machines...
@@ -1451,7 +1451,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}pm_rules (
 	PRIMARY KEY (id_rule),
 	KEY id_member (id_member),
 	KEY delete_pm (delete_pm)
-) TYPE=MyISAM;
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding new message status columns...
