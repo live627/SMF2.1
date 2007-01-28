@@ -2987,7 +2987,7 @@ function groupMembership($memID)
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Can they edit their primary group?
-		if ($row['id_group'] == $context['primary_group'] && $row['group_type'] != 0)
+		if (($row['id_group'] == $context['primary_group'] && $row['group_type'] != 0) || ($row['hidden'] != 2 && $context['primary_group'] == 0 && in_array($row['id_group'], $groups)))
 			$context['can_edit_primary'] = true;
 
 		// If they can't manage groups, and it's not publically joinable or already assigned, they can't see it.
@@ -3213,6 +3213,9 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	}
 
 	// Finally, we can make the changes!
+	foreach ($addGroups as $id => $dummy)
+		if (empty($id))
+			unset($addGroups[$id]);
 	$addGroups = implode(',', array_flip($addGroups));
 
 	// Ensure that we don't cache permissions if the group is changing.

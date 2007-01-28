@@ -2287,8 +2287,8 @@ function template_groupMembership()
 		if ($context['can_edit_primary'])
 			echo '
 				<tr class="catbg">
-					<td colspan="2">
-						<input type="submit" value="', $txt['make_primary'], '" />
+					<td colspan="2" align="right">
+						<input type="submit" value="', $txt['make_primary'], '" style="font-weight: normal;" />
 					</td>
 				</tr>';
 
