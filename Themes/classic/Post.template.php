@@ -647,7 +647,7 @@ function template_main()
 	// Spell check button if the option is enabled.
 	if ($context['show_spellchecking'])
 		echo '
-									<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'postmodify\', \'message\');" />';
+									<input type="button" value="', $txt['spell_check'], '" tabindex="', $context['tabindex']++, '" onclick="editorHandle', $context['post_box_name'], '.spellCheckStart();" />';
 
 	echo '
 								</td>
@@ -699,6 +699,10 @@ function template_main()
 						text += XMLDoc.getElementsByTagName("quote")[0].childNodes[i].nodeValue;
 
 					editorHandle', $context['post_box_name'], '.InsertText(text);
+				}
+				function spellCheckDone()
+				{
+					editorHandle', $context['post_box_name'], '.spellCheckEnd();
 				}
 			// ]]></script>
 

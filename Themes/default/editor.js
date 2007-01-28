@@ -37,6 +37,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	this.getText = getText;
 	this.showMoreSmileys = showMoreSmileys;
 	this.doSubmit = DoSubmit;
+
+	// Spellcheck functionaliy.
+	this.spellCheckStart = spellCheckStart;
+	this.spellCheckEnd = spellCheckEnd;
+
 	this.fetchDefaultFont = fetchDefaultFont;
 	var buttonControls = new Array();
 	var selectControls = new Array();
@@ -1010,5 +1015,67 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		}
 
 		return retValue;
+	}
+
+	// Start up the spellchecker!
+	function spellCheckStart()
+	{
+		if (!spellCheck)
+			return false;
+
+		// If we're in HTML mode we need to get the non-HTML text.
+		if (mode)
+		{
+			text = getText(true, 1);
+			text = escape(text);
+
+			getXMLDocument(smf_scripturl + '?action=jseditor;spell;view=0;sesc=' + cur_session_id + ';xml;message=' + text, onSpellCheckDataReceived);
+		}
+		// Otherwise start spellchecking right away.
+		else
+		{
+			spellCheck('postmodify', 'message');
+		}
+	}
+
+	// This contains the spellcheckable text.
+	function onSpellCheckDataReceived(XMLDoc)
+	{
+		var text = "";
+		for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
+			text += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
+
+		text = text.replace(/&lt;/g, '<');
+		text = text.replace(/&gt;/g, '>');
+		text = text.replace(/&amp;/g, '&');
+
+		textHandle.value = text;
+		spellCheck('postmodify', 'message', 'spellCheckEnd');
+	}
+
+	// Function called when the Spellchecker is finished and ready to pass back.
+	function spellCheckEnd()
+	{
+		// If HTML edit put the text back!
+		if (mode)
+		{
+			text = getText(true, 0);
+			text = escape(text);
+
+			getXMLDocument(smf_scripturl + '?action=jseditor;spelldone;view=1;sesc=' + cur_session_id + ';xml;message=' + text, onSpellCheckCompleteDataReceived);
+		}
+		else
+			setFocus();
+	}
+
+	// The corrected text.
+	function onSpellCheckCompleteDataReceived(XMLDoc)
+	{
+		var text = "";
+		for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
+			text += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
+
+		InsertText(text, true);
+		setFocus();
 	}
 }
