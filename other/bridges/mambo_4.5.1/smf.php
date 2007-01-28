@@ -192,25 +192,25 @@ function ob_mambofix($buffer)
 	switch ($bridge_reg){  
 		case "bridge":
 			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=register', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=activate"', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode"', $buffer);
 			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 		
 		case "default":
 			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_registration&amp;task=register', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=activate"', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode"', $buffer);
 			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 		
 		case "CB":
 			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_comprofiler&amp;task=registers', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=activate"', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode"', $buffer);
 			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 		
 		case "jw":
 			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_jw_registration&amp;task=register', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=activate"', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode"', $buffer);
 			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 	}
@@ -258,7 +258,7 @@ function mambo_smf_url($url)
 
 function mambo_smf_exit($with_output)
 {
-	global $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css, $mosConfig_sef, $mosConfig_debug, $db_name;
+	global $wrapped, $mosConfig_db, $mosConfig_dbprefix, $database, $cur_template, $mainframe, $boardurl, $smf_css, $mosConfig_sef, $mosConfig_debug, $db_name;
 
 	$buffer = ob_get_contents();
 	ob_end_clean();
@@ -547,7 +547,7 @@ function integrate_outgoing_email($subject, &$message, $headers)
 {
 	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid, $hotmail_fix;
 
-	//First, we need to set up the email so that ob_mambofdix knows what to do with it
+	//First, we need to set up the email so that ob_mambofix knows what to do with it
 	$message = str_replace ($scripturl, '"="' . $scripturl, $message);
 	//Next, let's make sure that URLs with # and . characters don't get mashed up
 	$message = str_replace ('#new', '"#new', $message);
@@ -558,13 +558,14 @@ function integrate_outgoing_email($subject, &$message, $headers)
 	$message = str_replace ('"="', ' ', $message);
 	$message = str_replace ('"#new', '#new', $message);
 	$message = str_replace ('".', '.', $message);
-	//THis is an email, after all, so let's make sure entities and specail characters are text, not HTML
+	//This is an email, after all, so let's make sure entities and special characters are text, not HTML
 	$message = trim($message);
     $message = html_entity_decode($message);
 	$message = un_htmlspecialchars($message);
 	//No idea why sefReltoAbs does this, but....
 	$message = str_replace ('____', '
 ', $message ); //yes, it looks ridiculous, but it works :P
+	$message = substr($message, 0, -1);
 	$hotmail_fix = false;
 	return true;
 	

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0                                             *
+* Software Version:           SMF 1.1                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -22,11 +22,10 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
-
 if (!defined('_VALID_MOS'))
 	die('Direct Access to this location is not allowed.');
 
-	global $smf_path, $bridge_reg, $maintenance, $sourcedir, $context, $user, $mosConfig_live_site, $mosConfig_db, $mosConfig_dbprefix;
+	global $smf_path, $bridge_reg, $maintenance, $sourcedir, $context, $user, $mosConfig_live_site, $mosConfig_db, $mosConfig_dbprefix, $synch_lang;
 
 // Get the configuration.  This will tell Mambo where SMF is, and some integration settings
 	$database->setQuery("
@@ -48,7 +47,7 @@ if (!defined('SMF_INTEGRATION_SETTINGS')){
 	
 	function integrate_pre_load () {
 
-	global $lang, $language, $mosConfig_lang, $synch_lang, $smf_lang;
+	global $lang, $language, $mosConfig_lang, $synch_lang, $smf_lang, $smf_path;
 
 	$language_conversion = array(
 							'aa' => 'afar',
@@ -85,6 +84,7 @@ if (!defined('SMF_INTEGRATION_SETTINGS')){
 							'hr' => 'croatian',
 							'hu' => 'hungarian',
 							'hy' => 'armenian',
+							'it' => 'italian',
 							'kr' => 'kanuri',
 							'ml' => 'malayalam',
 							'mo' => 'moldovan',
@@ -126,24 +126,25 @@ if (!defined('SMF_INTEGRATION_SETTINGS')){
 					else if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8.php'))
 						$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8';					
 					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '.php'))
-						$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+						$GLOBALS['language'] = $_REQUEST['lang'];					
 					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '-utf8.php'))
-						$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+						$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';
 				}
 			
 			} else if ($synch_lang == 'true')
 				$GLOBALS['language'] = $mosConfig_lang;
-		}
-		
+		}	
 		$smf_lang = $GLOBALS['language'];
 	}
 }	
 
 if (!defined('SMF'))
 {	
-	require_once($smf_path . '/SSI.php');	
-}
+	require_once($smf_path . '/SSI.php');
+}	
 
+	reloadSettings();
+	
 global $boarddir, $context, $txt, $scripturl, $boardurl, $settings, $mosConfig_dbprefix, $db_prefix, $db_name, $smf_date, $mosConfig_db, $mosConfig_sef, $smf_lang, $language;
 
 include_once ( $boarddir . '/Themes/default/languages/index.' . (isset($smf_lang) ? $smf_lang : $language) . '.php');
@@ -205,7 +206,7 @@ echo '
 		// Only tell them about their messages if they can read their messages!
 		if($smf_new_pms && $context['allow_pm'])
 			echo 
-			' ', $txt['msg_alert_you_have'], ' <a href="', sefReltoAbs($scripturl. 'action=pm'), '">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase'], '</a>';
+			' ', $txt[152], ' <a href="', sefReltoAbs($scripturl. 'action=pm'), '">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt[153] : $txt[471], '</a>';
 
 		// if defined user can read their new messages
 		if($smf_unread)
@@ -309,14 +310,14 @@ echo '
 				',$txt[35],': <input type="text" name="user" size="10" /> 
 				',$txt[36],': <input type="password" name="passwrd" size="10" />
 				<select name="cookielength">
-					<option value="60">', $txt['one_hour'], '</option>
-					<option value="1440">', $txt['one_day'], '</option>
-					<option value="10080">', $txt['one_week'], '</option>
-					<option value="302400">', $txt['one_month'], '</option>
-					<option value="-1" selected="selected">', $txt['forever'], '</option>
+					<option value="60">', $txt['smf53'], '</option>
+					<option value="1440">', $txt['smf47'], '</option>
+					<option value="10080">', $txt['smf48'], '</option>
+					<option value="302400">', $txt['smf49'], '</option>
+					<option value="-1" selected="selected">', $txt['smf50'], '</option>
 				</select>
 				<input type="submit" value="', $txt[34], '" /><br />
-				<span class="middletext">', $txt['quick_login_dec'], '</span>
+				<span class="middletext">', $txt['smf52'], '</span>
 				<input type="hidden" name="hash_passwrd" value="" />
 				<input type="hidden" name="op2" value="login" />
 				<input type="hidden" name="option" value="com_smf" />
