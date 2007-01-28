@@ -61,7 +61,8 @@ require_once($sourcedir . '/Errors.php');
 require_once($sourcedir . '/Load.php');
 require_once($sourcedir . '/Security.php');
 
-if (@version_compare(PHP_VERSION, '4.2.3') != 1)
+// Using an pre-PHP5 version?
+if (@version_compare(PHP_VERSION, '5') == -1)
 	require_once($sourcedir . '/Subs-Compat.php');
 
 // Create a variable to store some SMF specific functions in.

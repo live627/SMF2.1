@@ -410,7 +410,7 @@ function banPermissions()
 	if (isset($_SESSION['ban']['cannot_access']))
 		$user_info['permissions'] = array();
 	// Okay, well, you can watch, but don't touch a thing.
-	elseif (isset($_SESSION['ban']['cannot_post']) || (!empty($modSettings['warn_mute']) && $modSettings['warn_mute'] <= $user_info['warning']))
+	elseif (isset($_SESSION['ban']['cannot_post']) || (!empty($modSettings['warning_mute']) && $modSettings['warning_mute'] <= $user_info['warning']))
 	{
 		$denied_permissions = array(
 			'pm_send',
@@ -436,7 +436,7 @@ function banPermissions()
 		$user_info['permissions'] = array_diff($user_info['permissions'], $denied_permissions);
 	}
 	// Are they absolutely under moderation?
-	elseif (!empty($modSettings['warn_moderate']) && $modSettings['warn_moderate'] <= $user_info['warning'])
+	elseif (!empty($modSettings['warning_moderate']) && $modSettings['warning_moderate'] <= $user_info['warning'])
 	{
 		// Work out what permissions should change...
 		$permission_change = array(

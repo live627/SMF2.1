@@ -65,9 +65,9 @@ $index_changes = array(
 		'table' => 'smileys',
 		'type' => 'index',
 		'method' => 'remove',
-		'name' => 'smiley_order',
-		'target_columns' => array('smiley_order'),
-		'text' => 'DROP INDEX smiley_order',
+		'name' => 'smileyOrder',
+		'target_columns' => array('smileyOrder'),
+		'text' => 'DROP INDEX smileyOrder',
 	),
 	array(
 		'table' => 'boards',
@@ -175,7 +175,7 @@ ORDER BY boardOrder;
 
 ---# Updating indexes and data on "smileys"...
 ALTER TABLE {$db_prefix}smileys
-CHANGE COLUMN smiley_order smiley_order smallint(5) unsigned NOT NULL default '0';
+CHANGE COLUMN smileyOrder smileyOrder smallint(5) unsigned NOT NULL default '0';
 
 ALTER TABLE {$db_prefix}smileys
 ORDER BY LENGTH(code) DESC;

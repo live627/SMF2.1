@@ -2290,7 +2290,9 @@ function template_groupMembership()
 					<td colspan="2">
 						<input type="submit" value="', $txt['make_primary'], '" />
 					</td>
-				</tr>
+				</tr>';
+
+		echo '
 			</table>';
 
 		// Any groups they can join?
@@ -2431,9 +2433,9 @@ function template_issueWarning()
 	// Setup the colors - this is a little messy for theming.
 	$context['colors'] = array(
 		0 => 'green',
-		$modSettings['warn_watch'] => 'darkgreen',
-		$modSettings['warn_moderate'] => 'orange',
-		$modSettings['warn_mute'] => 'red',
+		$modSettings['warning_watch'] => 'darkgreen',
+		$modSettings['warning_moderate'] => 'orange',
+		$modSettings['warning_mute'] => 'red',
 	);
 
 	// Setup known notification types.

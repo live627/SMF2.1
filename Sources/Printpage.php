@@ -67,6 +67,9 @@ function PrintTopic()
 	$context['category_name'] = $board_info['cat']['name'];
 	$context['poster_name'] = $row['poster_name'];
 	$context['post_time'] = timeformat($row['poster_time'], false);
+	$context['parent_boards'] = array();
+	foreach ($board_info['parent_boards'] as $parent)
+		$context['parent_boards'][] = $parent['name'];
 
 	// Split the topics up so we can print them.
 	$request = $smfFunc['db_query']('', "

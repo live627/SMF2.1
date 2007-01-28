@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2648 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2649 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -41,6 +41,8 @@ January 2007
  ! Package manager was wrongly labelling redirects. (Packages.php)
  ! Inside of html tags convert &#13; to a real newline. (Subs.php)
  ! Renamed disable_visual_verification to visual_verification_type and changed it's values accordingly. (upgrade_2-0.sql, Register.php, ManageRegistration.php, Register template)
+ ! PrintPage now shows the full board tree. (Printpage.php, Printpage template)
+ ! Subs-Compat.php is now included for all people using PHP < Version 5. (index.php, SSI.php, upgrade.php)
 
 
 December 2006

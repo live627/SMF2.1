@@ -476,7 +476,7 @@ upgrade_query("
 	DELETE FROM {$db_prefix}settings
 	WHERE variable = 'disable_visual_verification'");
 ---}
-===#
+---#
 
 ---# Changing default personal text setting.
 UPDATE {$db_prefix}settings

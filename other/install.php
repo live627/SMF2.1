@@ -1119,7 +1119,7 @@ function doStep2()
 	require_once($sourcedir . '/Subs-Auth.php');
 
 	// Define the sha1 function, if it doesn't exist.
-	if (!function_exists('sha1'))
+	if (!function_exists('sha1') || @version_compare(PHP_VERSION, '5') == -1)
 		require_once($sourcedir . '/Subs-Compat.php');
 
 	if (isset($db_character_set))

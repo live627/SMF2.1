@@ -184,12 +184,12 @@ function ModBlockWatchedUsers()
 
 	if (($watched_users = cache_get_data('recent_user_watches', 240)) === null)
 	{
-		list (, $modSettings['warn_watch']) = explode(',', $modSettings['warning_settings']);
-		$modSettings['warn_watch'] = empty($modSettings['warn_watch']) ? 1 : $modSettings['warn_watch'];
+		list (, $modSettings['warning_watch']) = explode(',', $modSettings['warning_settings']);
+		$modSettings['warning_watch'] = empty($modSettings['warning_watch']) ? 1 : $modSettings['warning_watch'];
 		$request = $smfFunc['db_query']('', "
 			SELECT id_member, real_name, last_login
 			FROM {$db_prefix}members
-			WHERE warning >= $modSettings[warn_watch]
+			WHERE warning >= $modSettings[warning_watch]
 			ORDER BY last_login DESC
 			LIMIT 10", __FILE__, __LINE__);
 		$watched_users = array();
@@ -653,8 +653,8 @@ function ViewWatchedUsers()
 	loadTemplate('ModerationCenter');
 
 	// Get some key settings!
-	list ($modSettings['warn_enabled'], $modSettings['warn_watch']) = explode(',', $modSettings['warning_settings']);
-	$modSettings['warn_watch'] = empty($modSettings['warn_watch']) ? 1 : $modSettings['warn_watch'];
+	list ($modSettings['warn_enabled'], $modSettings['warning_watch']) = explode(',', $modSettings['warning_settings']);
+	$modSettings['warning_watch'] = empty($modSettings['warning_watch']) ? 1 : $modSettings['warning_watch'];
 
 	// Put some pretty tabs on cause we're gonna be doing hot stuff here...
 	$context['admin_tabs'] = array(
@@ -702,7 +702,7 @@ function ViewWatchedUsers()
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members
-			WHERE warning >= $modSettings[warn_watch]", __FILE__, __LINE__);
+			WHERE warning >= $modSettings[warning_watch]", __FILE__, __LINE__);
 	else
 	{
 		// Still obey permissions!
@@ -722,7 +722,7 @@ function ViewWatchedUsers()
 			FROM {$db_prefix}messages AS m
 				INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE warning >= $modSettings[warn_watch]
+			WHERE warning >= $modSettings[warning_watch]
 				AND $user_info[query_see_board]
 				$approve_query", __FILE__, __LINE__);
 	}
@@ -742,7 +742,7 @@ function ViewWatchedUsers()
 		$request = $smfFunc['db_query']('', "
 			SELECT id_member, member_name, last_login, posts, warning
 			FROM {$db_prefix}members
-			WHERE warning >= $modSettings[warn_watch]
+			WHERE warning >= $modSettings[warning_watch]
 			ORDER BY last_login DESC
 			LIMIT $context[start], $perPage", __FILE__, __LINE__);
 		$context['member_watches'] = array();
@@ -789,7 +789,7 @@ function ViewWatchedUsers()
 			FROM {$db_prefix}messages AS m
 				INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE mem.warning >= $modSettings[warn_watch]
+			WHERE mem.warning >= $modSettings[warning_watch]
 				AND $user_info[query_see_board]
 				$approve_query
 			ORDER BY m.id_msg DESC

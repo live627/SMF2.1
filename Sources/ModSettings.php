@@ -373,9 +373,9 @@ function ModifyModerationSettings()
 		'',
 			// Warning system?
 			'rem1' => array('check', 'warning_enable'),
-			'rem2' => array('int', 'warn_watch'),
-			array('int', 'warn_moderate'),
-			array('int', 'warn_mute'),
+			'rem2' => array('int', 'warning_watch'),
+			array('int', 'warning_moderate'),
+			array('int', 'warning_mute'),
 			'rem3' => array('int', 'user_limit'),
 	);
 
@@ -385,17 +385,17 @@ function ModifyModerationSettings()
 		// Make sure these don't have an effect.
 		if (!$_POST['warning_enable'])
 		{
-			$_POST['warn_moderate'] = 0;
-			$_POST['warn_mute'] = 0;
+			$_POST['warning_moderate'] = 0;
+			$_POST['warning_mute'] = 0;
 		}
 		else
 		{
-			$_POST['warn_moderate'] = max($_POST['warn_moderate'], 100);
-			$_POST['warn_mute'] = max($_POST['warn_mute'], 100);
+			$_POST['warning_moderate'] = max($_POST['warning_moderate'], 100);
+			$_POST['warning_mute'] = max($_POST['warning_mute'], 100);
 		}
 
 		// Fix the warning setting array!
-		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['warn_watch']) . ',' . min(100, (int) $_POST['user_limit']);
+		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['warning_watch']) . ',' . min(100, (int) $_POST['user_limit']);
 		$save_vars = $config_vars;
 		$save_vars[] = array('text', 'warning_settings');
 		unset($save_vars['rem1'], $save_vars['rem2'], $save_vars['rem3']);
@@ -405,7 +405,7 @@ function ModifyModerationSettings()
 	}
 
 	// We actually store lots of these together - for efficiency.
-	list ($modSettings['warning_enable'], $modSettings['warn_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+	list ($modSettings['warning_enable'], $modSettings['warning_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
 
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=moderation';
 	$context['settings_title'] = $txt['moderation_settings'];

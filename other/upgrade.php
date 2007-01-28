@@ -735,7 +735,11 @@ function loadEssentialData()
 		require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
 
 		// Make the connection...
-		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix);
+		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('non_fatal' => true));
+
+		// Oh dear god!!
+		if ($db_connection === null)
+			die('Unable to connect to database - please check username and password are correct in Settings.php');
 
 		if ($db_type == 'mysql' && isset($db_character_set) && preg_match('~^\w+$~', $db_character_set) === 1)
 			$smfFunc['db_query']('', "
@@ -3457,7 +3461,7 @@ function template_upgrade_options()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $boarddir, $db_prefix, $mmessage, $mtitle;
 
 	echo '
-			<h3>Before the upgrade get\'s underway please review the options below - and hit continue when you\'re ready to begin.
+			<h3>Before the upgrade gets underway please review the options below - and hit continue when you\'re ready to begin.
 			<form action="', $upcontext['form_url'], '" method="post" name="upform" id="upform">
 				<table cellpadding="1" cellspacing="0">
 					<tr valign="top">

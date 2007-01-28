@@ -1387,12 +1387,12 @@ function summary($memID)
 	$context['member'] = &$memberContext[$memID];
 
 	// See if they have broken any warning levels...
-	list ($modSettings['warning_enable'], $modSettings['warn_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
-	if (!empty($modSettings['warn_mute']) && $modSettings['warn_mute'] <= $context['member']['warning'])
+	list ($modSettings['warning_enable'], $modSettings['warning_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+	if (!empty($modSettings['warning_mute']) && $modSettings['warning_mute'] <= $context['member']['warning'])
 		$context['warning_status'] = $txt['profile_warning_is_muted'];
-	elseif (!empty($modSettings['warn_moderate']) && $modSettings['warn_moderate'] <= $context['member']['warning'])
+	elseif (!empty($modSettings['warning_moderate']) && $modSettings['warning_moderate'] <= $context['member']['warning'])
 		$context['warning_status'] = $txt['profile_warning_is_moderation'];
-	elseif (!empty($modSettings['warn_watch']) && $modSettings['warn_watch'] <= $context['member']['warning'])
+	elseif (!empty($modSettings['warning_watch']) && $modSettings['warning_watch'] <= $context['member']['warning'])
 		$context['warning_status'] = $txt['profile_warning_is_watch'];
 
 	// They haven't even been registered for a full day!?
@@ -3233,7 +3233,7 @@ function issueWarning($memID)
 	global $context, $user_profile, $memberContext, $smfFunc, $sourcedir;
 
 	// Get all the actual settings.
-	list ($modSettings['warning_enable'], $modSettings['warn_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+	list ($modSettings['warning_enable'], $modSettings['warning_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
 
 	// Doesn't hurt to be overly cautious.
 	if (empty($modSettings['warning_enable']) || $context['user']['is_owner'] || !allowedTo('issue_warnings'))
@@ -3338,9 +3338,9 @@ function issueWarning($memID)
 	// Work our the various levels.
 	$context['level_effects'] = array(
 		0 => $txt['profile_warning_effect_none'],
-		$modSettings['warn_watch'] => $txt['profile_warning_effect_watch'],
-		$modSettings['warn_moderate'] => $txt['profile_warning_effect_moderation'],
-		$modSettings['warn_mute'] => $txt['profile_warning_effect_mute'],
+		$modSettings['warning_watch'] => $txt['profile_warning_effect_watch'],
+		$modSettings['warning_moderate'] => $txt['profile_warning_effect_moderation'],
+		$modSettings['warning_mute'] => $txt['profile_warning_effect_mute'],
 	);
 	$context['current_level'] = 0;
 	foreach ($context['level_effects'] as $limit => $dummy)

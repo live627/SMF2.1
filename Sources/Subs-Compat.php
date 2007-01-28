@@ -42,6 +42,31 @@ if (!function_exists('md5_file'))
 	}
 }
 
+// Split a string into an array.
+if (!function_exists('strt_split'))
+{
+	function strt_split($str, $str_length = 1)
+	{
+		if ($str_length < 1)
+			return false;
+
+		// This could be shorter but isn't because short solutions can fail!
+		$str_array = array();
+		$count = 0;
+
+		while (1 == 1)
+		{
+			if ($count >= strlen($str))
+				break;
+
+			$str_array[] = substr($str, $count, $str_length);
+			$count += $str_length;
+		}
+
+		return $str_array;
+	}
+}
+
 if (!function_exists('file_get_contents'))
 {
 	function file_get_contents($filename, $include_path = false)
