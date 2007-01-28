@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2651 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2652 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -46,6 +46,7 @@ January 2007
  ! Upgrade will now attempt to create tables with same collation as the members table to avoid collation problems. (upgrade.php, upgrade_2-0.sql)
  ! Resend activation after email change did not work with Joomla bridge. (Joomla bridge/smf.php)
  ! Fixed language synch for login module on non-forum pages. (Joomla bridge/mod_smf_login.php)
+ ! Fixed a bug in PCRE causing regular expression compilation failures in UTF-8 mode. (Load.php, Search.php, Subs.php, Subs-Members.php, Subs-Post.php)
 
 
 December 2006

@@ -208,7 +208,7 @@ function preparsecode(&$message, $previewing = false)
 	$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $message, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 	// The regular expression non breaking space has many versions.
-	$non_breaking_space = $context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{C2A0}' : chr(0xC2) . chr(0xA0)) : '\xA0';
+	$non_breaking_space = $context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0';
 
 	// Only mess with stuff outside [code] tags.
 	for ($i = 0, $n = count($parts); $i < $n; $i++)
@@ -243,44 +243,47 @@ function preparsecode(&$message, $previewing = false)
 			if ($list_open - $list_close > 0)
 				$parts[$i] = $parts[$i] . str_repeat('[/list]', $list_open - $list_close);
 
+			// Make sure all tags are lowercase.
+			$parts[$i] = preg_replace('~\[([/]?)(list|li|table|tr|td)([^\]]*)\]~e', '"[$1" . strtolower("$2") . "$3]"', $parts[$i]);
+
 			$mistake_fixes = array(
 				// Find [table]s not followed by [tr].
-				'~\[table\](?![\s' . $non_breaking_space . ']*\[tr\])~is' . ($context['utf8'] ? 'u' : '') => '[table][tr]',
+				'~\[table\](?![\s' . $non_breaking_space . ']*\[tr\])~s' . ($context['utf8'] ? 'u' : '') => '[table][tr]',
 				// Find [tr]s not followed by [td].
-				'~\[tr\](?![\s' . $non_breaking_space . ']*\[td\])~is' . ($context['utf8'] ? 'u' : '') => '[tr][td]',
+				'~\[tr\](?![\s' . $non_breaking_space . ']*\[td\])~s' . ($context['utf8'] ? 'u' : '') => '[tr][td]',
 				// Find [/td]s not followed by something valid.
-				'~\[/td\](?![\s' . $non_breaking_space . ']*(?:\[td\]|\[/tr\]|\[/table\]))~is' . ($context['utf8'] ? 'u' : '') => '[/td][/tr]',
+				'~\[/td\](?![\s' . $non_breaking_space . ']*(?:\[td\]|\[/tr\]|\[/table\]))~s' . ($context['utf8'] ? 'u' : '') => '[/td][/tr]',
 				// Find [/tr]s not followed by something valid.
-				'~\[/tr\](?![\s' . $non_breaking_space . ']*(?:\[tr\]|\[/table\]))~is' . ($context['utf8'] ? 'u' : '') => '[/tr][/table]',
+				'~\[/tr\](?![\s' . $non_breaking_space . ']*(?:\[tr\]|\[/table\]))~s' . ($context['utf8'] ? 'u' : '') => '[/tr][/table]',
 				// Find [/td]s incorrectly followed by [/table].
-				'~\[/td\][\s' . $non_breaking_space . ']*\[/table\]~is' . ($context['utf8'] ? 'u' : '') => '[/td][/tr][/table]',
+				'~\[/td\][\s' . $non_breaking_space . ']*\[/table\]~s' . ($context['utf8'] ? 'u' : '') => '[/td][/tr][/table]',
 				// Find [table]s, [tr]s, and [/td]s (possibly correctly) followed by [td].
-				'~\[(table|tr|/td)\]([\s' . $non_breaking_space . ']*)\[td\]~is' . ($context['utf8'] ? 'u' : '') => '[$1]$2[_td_]',
+				'~\[(table|tr|/td)\]([\s' . $non_breaking_space . ']*)\[td\]~s' . ($context['utf8'] ? 'u' : '') => '[$1]$2[_td_]',
 				// Now, any [td]s left should have a [tr] before them.
-				'~\[td\]~is' => '[tr][td]',
+				'~\[td\]~s' => '[tr][td]',
 				// Look for [tr]s which are correctly placed.
-				'~\[(table|/tr)\]([\s' . $non_breaking_space . ']*)\[tr\]~is' . ($context['utf8'] ? 'u' : '') => '[$1]$2[_tr_]',
+				'~\[(table|/tr)\]([\s' . $non_breaking_space . ']*)\[tr\]~s' . ($context['utf8'] ? 'u' : '') => '[$1]$2[_tr_]',
 				// Any remaining [tr]s should have a [table] before them.
-				'~\[tr\]~is' => '[table][tr]',
+				'~\[tr\]~s' => '[table][tr]',
 				// Look for [/td]s followed by [/tr].
-				'~\[/td\]([\s' . $non_breaking_space . ']*)\[/tr\]~is' . ($context['utf8'] ? 'u' : '') => '[/td]$1[_/tr_]',
+				'~\[/td\]([\s' . $non_breaking_space . ']*)\[/tr\]~s' . ($context['utf8'] ? 'u' : '') => '[/td]$1[_/tr_]',
 				// Any remaining [/tr]s should have a [/td].
-				'~\[/tr\]~is' => '[/td][/tr]',
+				'~\[/tr\]~s' => '[/td][/tr]',
 				// Look for properly opened [li]s which aren't closed.
-				'~\[li\]([^\[\]]+?)\[li\]~is' => '[li]$1[_/li_][_li_]',
-				'~\[li\]([^\[\]]+?)$~is' => '[li]$1[/li]',
+				'~\[li\]([^\[\]]+?)\[li\]~s' => '[li]$1[_/li_][_li_]',
+				'~\[li\]([^\[\]]+?)$~s' => '[li]$1[/li]',
 				// Lists - find correctly closed items/lists.
-				'~\[/li\]([\s' . $non_breaking_space . ']*)\[/list\]~is' . ($context['utf8'] ? 'u' : '') => '[_/li_]$1[/list]',
+				'~\[/li\]([\s' . $non_breaking_space . ']*)\[/list\]~s' . ($context['utf8'] ? 'u' : '') => '[_/li_]$1[/list]',
 				// Find list items closed and then opened.
-				'~\[/li\]([\s' . $non_breaking_space . ']*)\[li\]~is' . ($context['utf8'] ? 'u' : '') => '[_/li_]$1[_li_]',
+				'~\[/li\]([\s' . $non_breaking_space . ']*)\[li\]~s' . ($context['utf8'] ? 'u' : '') => '[_/li_]$1[_li_]',
 				// Now, find any [list]s or [/li]s followed by [li].
-				'~\[(list(?: [^\]]*?)?|/li)\]([\s' . $non_breaking_space . ']*)\[li\]~is' . ($context['utf8'] ? 'u' : '') => '[$1]$2[_li_]',
+				'~\[(list(?: [^\]]*?)?|/li)\]([\s' . $non_breaking_space . ']*)\[li\]~s' . ($context['utf8'] ? 'u' : '') => '[$1]$2[_li_]',
 				// Any remaining [li]s weren't inside a [list].
-				'~\[li\]~i' => '[list][li]',
+				'~\[li\]~' => '[list][li]',
 				// Any remaining [/li]s weren't before a [/list].
-				'~\[/li\]~i' => '[/li][/list]',
+				'~\[/li\]~' => '[/li][/list]',
 				// Put the correct ones back how we found them.
-				'~\[_(li|/li|td|tr|/tr)_\]~i' => '[$1]',
+				'~\[_(li|/li|td|tr|/tr)_\]~' => '[$1]',
 			);
 
 			// Fix up some use of tables without [tr]s, etc. (it has to be done more than once to catch it all.)
@@ -1066,7 +1069,7 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 				return "";');
 
 		// Convert all 'special' characters to HTML entities.
-		return array($charset, preg_replace('~([\x80-' . ($context['server']['complex_preg_chars'] ? '\x{10FFFF}' : sprintf('%c%c%c', 0x10, 0xFF, 0xFF)) . '])~eu', '$entityConvert("\1")', $string), '7bit');
+		return array($charset, preg_replace('~([\x80-' . ($context['server']['complex_preg_chars'] ? '\x{10FFFF}' : pack('C*', 0xF7, 0xBF, 0xBF, 0xBF)) . '])~eu', '$entityConvert("\1")', $string), '7bit');
 	}
 
 	// We don't need to mess with the subject line if no special characters were in it..
