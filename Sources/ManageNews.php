@@ -481,7 +481,7 @@ function SendMailing()
 	$result = $smfFunc['db_query']('', "
 		SELECT real_name, member_name, id_member, email_address
 		FROM {$db_prefix}members
-		WHERE email_address IN ('" . implode("', '", $send_list) . "')", __FILE__, __LINE__);
+		WHERE email_address IN ('" . implode("', '", escapestring__recursive($send_list)) . "')", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		unset($send_list[$row['email_address']]);

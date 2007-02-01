@@ -1098,7 +1098,7 @@ CREATE SEQUENCE {$db_prefix}log_member_notices_seq;
 #
 
 CREATE TABLE {$db_prefix}log_member_notices (
-  id_notice int default nextval('{$db_prefix}log_packages_seq'),
+  id_notice int default nextval('{$db_prefix}log_member_notices_seq'),
   subject varchar(255) NOT NULL,
   body text NOT NULL,
   PRIMARY KEY (id_notice)

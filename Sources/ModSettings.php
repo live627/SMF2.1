@@ -416,7 +416,7 @@ function ModifyModerationSettings()
 // You'll never guess what this function does...
 function ModifySignatureSettings()
 {
-	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc, $helptxt;
+	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc, $helptxt, $scripturl;
 
 	// Applying to ALL signatures?!!
 	if (isset($_GET['apply']))
@@ -655,6 +655,73 @@ function ModifySignatureSettings()
 	}
 
 	$context['bbc_all_selected'] = empty($disabledTags);
+
+	// Load all the signature settings.
+	list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
+	$sig_limits = explode(',', $sig_limits);
+	$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
+
+	$modSettings += array(
+		'signature_enable' => isset($sig_limits[0]) ? $sig_limits[0] : 0,
+		'signature_max_length' => isset($sig_limits[1]) ? $sig_limits[1] : 0,
+		'signature_max_lines' => isset($sig_limits[2]) ? $sig_limits[2] : 0,
+		'signature_max_images' => isset($sig_limits[3]) ? $sig_limits[3] : 0,
+		'signature_max_smileys' => isset($sig_limits[4]) ? $sig_limits[4] : 0,
+		'signature_max_image_width' => isset($sig_limits[5]) ? $sig_limits[5] : 0,
+		'signature_max_image_height' => isset($sig_limits[6]) ? $sig_limits[6] : 0,
+		'signature_max_font_size' => isset($sig_limits[7]) ? $sig_limits[7] : 0,
+	);
+
+	$config_vars = array(
+			// Are signatures even enabled?
+			array('check', 'signature_enable'),
+		'',
+			// Tweaking settings!
+			array('int', 'signature_max_length'),
+			array('int', 'signature_max_lines'),
+			array('int', 'signature_max_font_size'),
+			array('int', 'signature_max_smileys'),
+		'',
+			// Image settings.
+			array('int', 'signature_max_images'),
+			array('int', 'signature_max_image_width'),
+			array('int', 'signature_max_image_height'),
+		'',
+			array('bbc', 'signature_bbc'),
+	);
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		// Make sure these don't have an effect.
+		/*if (!$_POST['warning_enable'])
+		{
+			$_POST['warning_moderate'] = 0;
+			$_POST['warning_mute'] = 0;
+		}
+		else
+		{
+			$_POST['warning_moderate'] = max($_POST['warning_moderate'], 100);
+			$_POST['warning_mute'] = max($_POST['warning_mute'], 100);
+		}
+
+		// Fix the warning setting array!
+		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['warning_watch']) . ',' . min(100, (int) $_POST['user_limit']);
+		$save_vars = $config_vars;
+		$save_vars[] = array('text', 'warning_settings');
+		unset($save_vars['rem1'], $save_vars['rem2'], $save_vars['rem3']);
+
+		saveDBSettings($save_vars);
+		redirectexit('action=admin;area=featuresettings;sa=moderation');*/
+	}
+
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=sig';
+	$context['settings_title'] = $txt['signature_settings'];
+	$context['sub_template'] = 'show_settings';
+
+	$context['settings_message'] = '<div align="center" class="smalltext" style="color: red;">' . $txt['signature_settings_warning'] . '</div>';
+
+	prepareDBSettingContext($config_vars);
 }
 
 // Just pause the signature applying thing.

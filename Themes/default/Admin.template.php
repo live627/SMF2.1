@@ -1325,6 +1325,28 @@ function template_show_settings()
 {
 	global $context, $txt, $settings, $scripturl;
 
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+
+	// If we have BBC selection we have a bit of JS.
+	if (!empty($context['bbc_sections']))
+	{
+		echo '
+		function toggleBBCDisabled(section, disable)
+		{
+			for (var i = 0; i < document.forms.bbcForm.length; i++)
+			{
+				if (typeof(document.forms.bbcForm[i].name) == "undefined" || (document.forms.bbcForm[i].name.substr(0, 11) != "enabledTags") || (document.forms.bbcForm[i].name.indexOf(section) != 11))
+					continue;
+
+				document.forms.bbcForm[i].disabled = disable;
+			}
+			document.getElementById("bbc_" + section + "_select_all").disabled = disable;
+		}';
+	}
+	echo '
+	// ]]></script>';
+
 	if (!empty($context['settings_insert_above']))
 		echo $context['settings_insert_above'];
 
@@ -1428,6 +1450,28 @@ function template_show_settings()
 				elseif ($config_var['type'] == 'permissions')
 				{
 					theme_inline_permissions($config_var['name']);
+				}
+				// BBC selection?
+				elseif ($config_var['type'] == 'bbc')
+				{
+					echo '
+					<fieldset id="enabledBBCTags">
+						<legend>', $txt['bbcTagsToUse_select'], '</legend>
+						<table width="100%"><tr>';
+	foreach ($context['bbc_columns'] as $bbcColumn)
+	{
+		echo '
+							<td valign="top">';
+		foreach ($bbcColumn as $bbcTag)
+			echo '
+								<input type="checkbox" name="enabledTags[]" id="tag_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
+		echo '
+							</td>';
+	}
+	echo '
+						</tr></table><br />
+						<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
+					</fieldset>';
 				}
 				// Assume it must be a text box.
 				else

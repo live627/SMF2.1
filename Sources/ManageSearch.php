@@ -280,7 +280,7 @@ function EditSearchMethod()
 				'search_index' => '',
 			));
 	}
-	elseif (!empty($_REQUEST['sa']) && $_REQUEST['sa'] == 'removecustom' && !empty($modSettings['search_custom_index_config']))
+	elseif (!empty($_REQUEST['sa']) && $_REQUEST['sa'] == 'removecustom')
 	{
 		checkSession('get');
 

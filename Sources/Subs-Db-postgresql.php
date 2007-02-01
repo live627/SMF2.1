@@ -57,8 +57,8 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 			'db_num_rows' => 'pg_num_rows',
 			'db_data_seek' => 'db_data_seek',
 			'db_num_fields' => 'pg_num_fields',
-			'db_escape_string' => 'addslashes',
-			'db_unescape_string' => 'stripslashes',
+			'db_escape_string' => 'pg_escape_string',
+			'db_unescape_string' => 'smf_postg_unescape_string',
 			'db_server_info' => 'postg_version',
 			'db_tablename' => 'mysql_tablename',
 			'db_affected_rows' => 'db_affected_rows',
@@ -524,6 +524,12 @@ function db_data_seek($request, $counter)
 	$db_row_count[$request] = $counter;
 
 	return true;
+}
+
+// Unescape an escaped string!
+function smf_postg_unescape_string($string)
+{
+	return strtr($string, array("''" => "'"));
 }
 
 // For inserting data in a special way...
