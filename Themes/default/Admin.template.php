@@ -861,185 +861,6 @@ function template_edit_censored()
 		</form>';
 }
 
-// Template for editing bulletin board code settings.
-function template_edit_bbc_settings()
-{
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function toggleBBCDisabled(disable)
-		{
-			for (var i = 0; i < document.forms.bbcForm.length; i++)
-			{
-				if (typeof(document.forms.bbcForm[i].name) == "undefined" || (document.forms.bbcForm[i].name.substr(0, 11) != "enabledTags"))
-					continue;
-
-				document.forms.bbcForm[i].disabled = disable;
-			}
-			document.getElementById("select_all").disabled = disable;
-		}
-	// ]]></script>
-
-	<form action="', $scripturl, '?action=admin;area=postsettings;sa=bbc" method="post" accept-charset="', $context['character_set'], '" name="bbcForm" id="bbcForm" onsubmit="toggleBBCDisabled(false);">
-		<table border="0" cellspacing="0" cellpadding="4" align="center" width="80%" class="tborder">
-			<tr class="titlebg">
-				<td colspan="2">', $txt['manageposts_bbc_settings_title'], '</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="enableBBC_check">', $txt['enableBBC'], '</label> <span style="font-weight: normal;">(<a href="', $scripturl, '?action=helpadmin;help=enableBBC" onclick="return reqWin(this.href);">?</a>)</span>:</th>
-				<td>
-					<input type="checkbox" name="enableBBC" id="enableBBC_check"', empty($modSettings['enableBBC']) ? '' : ' checked="checked"', ' onchange="toggleBBCDisabled(!this.checked);" class="check" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="enablePostHTML_check">', $txt['enablePostHTML'], '</label> <span style="font-weight: normal;">(<a href="', $scripturl, '?action=helpadmin;help=enablePostHTML" onclick="return reqWin(this.href);">?</a>)</span>:</th>
-				<td>
-					<input type="checkbox" name="enablePostHTML" id="enablePostHTML_check"', empty($modSettings['enablePostHTML']) ? '' : ' checked="checked"', ' class="check" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="autoLinkUrls_check">', $txt['autoLinkUrls'], '</label>:</th>
-				<td>
-					<input type="checkbox" name="autoLinkUrls" id="autoLinkUrls_check"', empty($modSettings['autoLinkUrls']) ? '' : ' checked="checked"', ' class="check" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right" valign="top"><label for="enabledBBCTags">', $txt['bbcTagsToUse'], '</label>:</th>
-				<td>
-					<fieldset id="enabledBBCTags">
-						<legend>', $txt['bbcTagsToUse_select'], '</legend>
-						<table width="100%"><tr>';
-	foreach ($context['bbc_columns'] as $bbcColumn)
-	{
-		echo '
-							<td valign="top">';
-		foreach ($bbcColumn as $bbcTag)
-			echo '
-								<input type="checkbox" name="enabledTags[]" id="tag_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', $bbcTag['is_enabled'] ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
-		echo '
-							</td>';
-	}
-	echo '
-						</tr></table><br />
-						<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'enabledTags\');"', $context['bbc_all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
-					</fieldset>
-				</td>
-			</tr><tr class="windowbg2">
-				<td align="right" colspan="2">
-					<input type="submit" name="save_settings" value="', $txt['manageposts_settings_submit'], '" />
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
-
-	if (empty($modSettings['enableBBC']))
-		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		toggleBBCDisabled(true);
-	// ]]></script>';
-}
-
-// A not dissimilar template to the above for editing signature settings.
-function template_edit_signature_settings()
-{
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function toggleBBCDisabled(disable)
-		{
-			for (var i = 0; i < document.forms.bbcForm.length; i++)
-			{
-				if (typeof(document.forms.bbcForm[i].name) == "undefined" || (document.forms.bbcForm[i].name.substr(0, 11) != "enabledTags"))
-					continue;
-
-				document.forms.bbcForm[i].disabled = disable;
-			}
-			document.getElementById("select_all").disabled = disable;
-		}
-	// ]]></script>
-
-	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=sig" method="post" accept-charset="', $context['character_set'], '" name="bbcForm" id="bbcForm" onsubmit="toggleBBCDisabled(false);">
-		<table border="0" cellspacing="0" cellpadding="4" align="center" width="80%" class="tborder">
-			<tr class="titlebg">
-				<td colspan="2">', $txt['signature_settings'], '</td>
-			</tr><tr class="windowbg2">
-				<td colspan="2" align="center" class="smalltext" style="color: red;">', $txt['signature_settings_warning'], '</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="enabled">', $txt['signature_enable'], ':</label></th>
-				<td>
-					<input type="checkbox" name="enabled" id="enabled" ', $context['signature_settings']['enabled'] ? ' checked="checked"' : '', ' class="check" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="max_length">', $txt['signature_max_length'], '</label></th>
-				<td>
-					<input type="text" name="max_length" id="max_length" value="', $context['signature_settings']['max_length'], '" size="6" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="max_lines">', $txt['signature_max_lines'], '</label></th>
-				<td>
-					<input type="text" name="max_lines" id="max_lines" value="', $context['signature_settings']['max_lines'], '" size="6" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="max_images">', $txt['signature_max_images'], '</label></th>
-				<td>
-					<input type="text" name="max_images" id="max_images" value="', $context['signature_settings']['max_images'], '" size="6" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="max_smileys">', $txt['signature_max_smileys'], '</label></th>
-				<td>
-					<input type="text" name="max_smileys" id="max_smileys" value="', $context['signature_settings']['max_smileys'], '" size="6" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="max_image_width">', $txt['signature_max_image_width'], '</label></th>
-				<td>
-					<input type="text" name="max_image_width" id="max_image_width" value="', $context['signature_settings']['max_image_width'], '" size="6" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="max_image_height">', $txt['signature_max_image_height'], '</label></th>
-				<td>
-					<input type="text" name="max_image_height" id="max_image_height" value="', $context['signature_settings']['max_image_height'], '" size="6" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right"><label for="max_font_size">', $txt['signature_max_font_size'], '</label></th>
-				<td>
-					<input type="text" name="max_font_size" id="max_font_size" value="', $context['signature_settings']['max_font_size'], '" size="6" />
-				</td>
-			</tr><tr class="windowbg2">
-				<th width="50%" align="right" valign="top"><label for="enabledBBCTags">', $txt['bbcTagsToUse'], '</label>:</th>
-				<td>
-					<fieldset id="enabledBBCTags">
-						<legend>', $txt['bbcTagsToUse_select'], '</legend>
-						<table width="100%"><tr>';
-	foreach ($context['bbc_columns'] as $bbcColumn)
-	{
-		echo '
-							<td valign="top">';
-		foreach ($bbcColumn as $bbcTag)
-			echo '
-								<input type="checkbox" name="enabledTags[]" id="tag_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', $bbcTag['is_enabled'] ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
-		echo '
-							</td>';
-	}
-	echo '
-						</tr></table><br />
-						<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'enabledTags\');"', $context['bbc_all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
-					</fieldset>
-				</td>
-			</tr><tr class="windowbg2">
-				<td align="right" colspan="2">
-					<input type="submit" name="save_settings" value="', $txt['save'], '" />
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
-
-	if (empty($modSettings['enableBBC']))
-		echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		toggleBBCDisabled(true);
-	// ]]></script>';
-}
-
 // Template for forum maintenance page.
 function template_maintain()
 {
@@ -1464,13 +1285,13 @@ function template_show_settings()
 							<td valign="top">';
 		foreach ($bbcColumn as $bbcTag)
 			echo '
-								<input type="checkbox" name="enabledTags[]" id="tag_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
+								<input type="checkbox" name="', $config_var['name'], '_enabledTags[]" id="tag_', $config_var['name'], '_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $config_var['name'], '_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
 		echo '
 							</td>';
 	}
 	echo '
 						</tr></table><br />
-						<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
+						<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
 					</fieldset>';
 				}
 				// Assume it must be a text box.

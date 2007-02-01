@@ -609,6 +609,7 @@ $txt['edit_disable_time_zero'] = '0 zum deaktivieren';
 $txt['enableBBC'] = 'Bulletin Board Code aktivieren';
 $txt['enablePostHTML'] = 'Verwenden von h&auml;ufigen HTML Tags aktivieren';
 $txt['autoLinkUrls'] = 'Automatischen Link f&uuml;r URLs erzeugen';
+$txt['disabledBBC'] = 'Aktivierte BBC Tags';
 $txt['bbcTagsToUse'] = 'Aktivierte BBC Tags';
 $txt['bbcTagsToUse_select'] = 'W&auml;hlen Sie die benutzbaren Tags aus';
 $txt['bbcTagsToUse_select_all'] = 'W&auml;hle alle Tags';

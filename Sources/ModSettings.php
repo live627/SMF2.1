@@ -579,8 +579,8 @@ function ModifySignatureSettings()
 	}
 
 	// Setup the template.
-	$context['sub_template'] = 'edit_signature_settings';
 	$context['page_title'] = $txt['signature_settings'];
+	$context['sub_template'] = 'show_settings';
 
 	// Load all the signature settings.
 	list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
@@ -588,7 +588,7 @@ function ModifySignatureSettings()
 	$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
 
 	$context['signature_settings'] = array(
-		'enabled' => isset($sig_limits[0]) ? $sig_limits[0] : 0,
+		'enable' => isset($sig_limits[0]) ? $sig_limits[0] : 0,
 		'max_length' => isset($sig_limits[1]) ? $sig_limits[1] : 0,
 		'max_lines' => isset($sig_limits[2]) ? $sig_limits[2] : 0,
 		'max_images' => isset($sig_limits[3]) ? $sig_limits[3] : 0,
@@ -598,79 +598,9 @@ function ModifySignatureSettings()
 		'max_font_size' => isset($sig_limits[7]) ? $sig_limits[7] : 0,
 	);
 
-	// Ask parse_bbc() for its bbc code list.
-	$temp = parse_bbc(false);
-	$bbcTags = array();
-	foreach ($temp as $tag)
-		$bbcTags[] = $tag['tag'];
-
-	$bbcTags = array_unique($bbcTags);
-	$totalTags = count($bbcTags);
-
-	// The number of columns we want to show the BBC tags in.
-	$numColumns = 3;
-
-	// In case we're saving.
-	if (isset($_POST['save_settings']))
-	{
-		checkSession();
-
-		if ( !isset($_POST['enabledTags']) )
-			$_POST['enabledTags'] = array();
-		elseif ( !is_array($_POST['enabledTags']) )
-			$_POST['enabledTags'] = array($_POST['enabledTags']);
-
-		$sig_limits = array();
-		foreach ($context['signature_settings'] as $key => $value)
-			$sig_limits[] = !empty($_POST[$key]) ? max(1, (int) $_POST[$key]) : 0;
-
-		$sig_settings = implode(',', $sig_limits) . ':' . implode(',', array_diff($bbcTags, $_POST['enabledTags']));
-
-		// Update the actual setting.
-		updateSettings(array(
-			'signature_settings' => $sig_settings,
-		));
-
-		redirectexit('action=admin;area=featuresettings;sa=sig');
-	}
-
-	$context['bbc_columns'] = array();
-	$tagsPerColumn = ceil($totalTags / $numColumns);
-
-	$col = 0;
-	$i = 0;
-	foreach ($bbcTags as $tag)
-	{
-		if ($i % $tagsPerColumn == 0 && $i != 0)
-			$col++;
-
-		$context['bbc_columns'][$col][] = array(
-			'tag' => $tag,
-			'is_enabled' => !in_array($tag, $disabledTags),
-			// !!! 'tag_' . ?
-			'show_help' => isset($helptxt[$tag]),
-		);
-
-		$i++;
-	}
-
-	$context['bbc_all_selected'] = empty($disabledTags);
-
-	// Load all the signature settings.
-	list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
-	$sig_limits = explode(',', $sig_limits);
-	$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
-
-	$modSettings += array(
-		'signature_enable' => isset($sig_limits[0]) ? $sig_limits[0] : 0,
-		'signature_max_length' => isset($sig_limits[1]) ? $sig_limits[1] : 0,
-		'signature_max_lines' => isset($sig_limits[2]) ? $sig_limits[2] : 0,
-		'signature_max_images' => isset($sig_limits[3]) ? $sig_limits[3] : 0,
-		'signature_max_smileys' => isset($sig_limits[4]) ? $sig_limits[4] : 0,
-		'signature_max_image_width' => isset($sig_limits[5]) ? $sig_limits[5] : 0,
-		'signature_max_image_height' => isset($sig_limits[6]) ? $sig_limits[6] : 0,
-		'signature_max_font_size' => isset($sig_limits[7]) ? $sig_limits[7] : 0,
-	);
+	// Temporarily make each setting a modSetting!
+	foreach ($context['signature_settings'] as $key => $value)
+		$modSettings['signature_' . $key] = $value;
 
 	$config_vars = array(
 			// Are signatures even enabled?
@@ -690,34 +620,38 @@ function ModifySignatureSettings()
 			array('bbc', 'signature_bbc'),
 	);
 
+	// Make sure we check the right tags!
+	$modSettings['bbc_disabled_signature_bbc'] = $disabledTags;
+
 	// Saving?
 	if (isset($_GET['save']))
 	{
-		// Make sure these don't have an effect.
-		/*if (!$_POST['warning_enable'])
-		{
-			$_POST['warning_moderate'] = 0;
-			$_POST['warning_mute'] = 0;
-		}
-		else
-		{
-			$_POST['warning_moderate'] = max($_POST['warning_moderate'], 100);
-			$_POST['warning_mute'] = max($_POST['warning_mute'], 100);
-		}
+		// Clean up the tag stuff!
+		$bbcTags = array();
+		foreach (parse_bbc(false) as $tag)
+			$bbcTags[] = $tag['tag'];
 
-		// Fix the warning setting array!
-		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['warning_watch']) . ',' . min(100, (int) $_POST['user_limit']);
-		$save_vars = $config_vars;
-		$save_vars[] = array('text', 'warning_settings');
-		unset($save_vars['rem1'], $save_vars['rem2'], $save_vars['rem3']);
+		if (!isset($_POST['signature_bbc_enabledTags']))
+			$_POST['signature_bbc_enabledTags'] = array();
+		elseif (!is_array($_POST['signature_bbc_enabledTags']))
+			$_POST['signature_bbc_enabledTags'] = array($_POST['signature_bbc_enabledTags']);
+
+		$sig_limits = array();
+		foreach ($context['signature_settings'] as $key => $value)
+			$sig_limits[] = !empty($_POST['signature_' . $key]) ? max(1, (int) $_POST['signature_' . $key]) : 0;
+
+		$_POST['signature_settings'] = implode(',', $sig_limits) . ':' . implode(',', array_diff($bbcTags, $_POST['signature_bbc_enabledTags']));
+
+		// Even though we have practically no settings let's keep the convention going!
+		$save_vars = array();
+		$save_vars[] = array('text', 'signature_settings');
 
 		saveDBSettings($save_vars);
-		redirectexit('action=admin;area=featuresettings;sa=moderation');*/
+		redirectexit('action=admin;area=featuresettings;sa=sig');
 	}
 
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=sig';
 	$context['settings_title'] = $txt['signature_settings'];
-	$context['sub_template'] = 'show_settings';
 
 	$context['settings_message'] = '<div align="center" class="smalltext" style="color: red;">' . $txt['signature_settings_warning'] . '</div>';
 

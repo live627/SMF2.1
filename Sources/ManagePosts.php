@@ -305,65 +305,50 @@ function ModifyPostSettings()
 // Bulletin Board Code...a lot of Bulletin Board Code.
 function ModifyBBCSettings()
 {
-	global $context, $txt, $modSettings, $helptxt;
+	global $context, $txt, $modSettings, $helptxt, $scripturl, $sourcedir;
 
 	// Setup the template.
-	$context['sub_template'] = 'edit_bbc_settings';
+	require_once($sourcedir . '/ManageServer.php');
+	$context['sub_template'] = 'show_settings';
 	$context['page_title'] = $txt['manageposts_bbc_settings_title'];
 
-	// Ask parse_bbc() for its bbc code list.
-	$temp = parse_bbc(false);
-	$bbcTags = array();
-	foreach ($temp as $tag)
-		$bbcTags[] = $tag['tag'];
+	$config_vars = array(
+			// Main tweaks
+			array('check', 'enableBBC'),
+			array('check', 'enablePostHTML'),
+			array('check', 'autoLinkUrls'),
+		'',
+			array('bbc', 'disabledBBC'),
+	);
 
-	$bbcTags = array_unique($bbcTags);
-	$totalTags = count($bbcTags);
+	// Make sure we check the right tags!
+	$modSettings['bbc_disabled_disabledBBC'] = empty($modSettings['disabledBBC']) ? array() : explode(',', $modSettings['disabledBBC']);
 
-	// The number of columns we want to show the BBC tags in.
-	$numColumns = 3;
-
-	// In case we're saving.
-	if (isset($_POST['save_settings']))
+	// Saving?
+	if (isset($_GET['save']))
 	{
 		checkSession();
-		
-		if (!isset($_POST['enabledTags']))
-			$_POST['enabledTags'] = array();
-		elseif (!is_array($_POST['enabledTags']))
-			$_POST['enabledTags'] = array($_POST['enabledTags']);
 
-		// Update the actual settings.
-		updateSettings(array(
-			'enableBBC' => empty($_POST['enableBBC']) ? '0' : '1',
-			'enablePostHTML' => empty($_POST['enablePostHTML']) ? '0' : '1',
-			'autoLinkUrls'  => empty($_POST['autoLinkUrls']) ? '0' : '1',
-			'disabledBBC' => implode(',', array_diff($bbcTags, $_POST['enabledTags'])),
-		));
+		// Clean up the tags.
+		$bbcTags = array();
+		foreach (parse_bbc(false) as $tag)
+			$bbcTags[] = $tag['tag'];
+
+		if (!isset($_POST['disabledBBC_enabledTags']))
+			$_POST['disabledBBC_enabledTags'] = array();
+		elseif (!is_array($_POST['disabledBBC_enabledTags']))
+			$_POST['disabledBBC_enabledTags'] = array($_POST['disabledBBC_enabledTags']);
+		// Work out what is actually disabled!
+		$_POST['disabledBBC'] = implode(',', array_diff($bbcTags, $_POST['disabledBBC_enabledTags']));
+
+		saveDBSettings($config_vars);
+		redirectexit('action=admin;area=postsettings;sa=bbc');
 	}
 
-	$context['bbc_columns'] = array();
-	$tagsPerColumn = ceil($totalTags / $numColumns);
-	$disabledTags = empty($modSettings['disabledBBC']) ? array() : explode(',', $modSettings['disabledBBC']);
+	$context['post_url'] = $scripturl . '?action=admin;area=postsettings;save;sa=bbc';
+	$context['settings_title'] = $txt['manageposts_bbc_settings_title'];
 
-	$col = 0;
-	$i = 0;
-	foreach ($bbcTags as $tag)
-	{
-		if ($i % $tagsPerColumn == 0 && $i != 0)
-			$col++;
-
-		$context['bbc_columns'][$col][] = array(
-			'tag' => $tag,
-			'is_enabled' => !in_array($tag, $disabledTags),
-			// !!! 'tag_' . ?
-			'show_help' => isset($helptxt[$tag]),
-		);
-
-		$i++;
-	}
-
-	$context['bbc_all_selected'] = empty($disabledTags);
+	prepareDBSettingContext($config_vars);
 }
 
 // Function for modifying topic settings. Not very exciting.

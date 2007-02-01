@@ -610,6 +610,7 @@ $txt['edit_disable_time_zero'] = '0 om uit te schakelen';
 $txt['enableBBC'] = 'Gebruik bulletin board code';
 $txt['enablePostHTML'] = 'Aanzetten plaatsen standaard HTML-tags';
 $txt['autoLinkUrls'] = 'URLs auto-linken';
+$txt['disabledBBC'] = 'Ingeschakelde BBC tags';
 $txt['bbcTagsToUse'] = 'Ingeschakelde BBC tags';
 $txt['bbcTagsToUse_select'] = 'Selecteer de tags die gebruikt mogen worden';
 $txt['bbcTagsToUse_select_all'] = 'Selecteer alle tags';

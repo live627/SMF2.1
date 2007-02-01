@@ -545,8 +545,8 @@ function prepareDBSettingContext(&$config_vars)
 		{
 			$context['bbc_sections'][$bbc] = array(
 				'title' => isset($txt['bbc_title_' . $bbc]) ? $txt['bbc_title_' . $bbc] : $txt['bbcTagsToUse_select'],
-				'disabled' => empty($modSettings['bbc_temp_' . $bbc]) ? array() : $modSettings['bbc_temp_' . $bbc],
-				'all_selected' => empty($modSettings['bbc_temp_' . $bbc]),
+				'disabled' => empty($modSettings['bbc_disabled_' . $bbc]) ? array() : $modSettings['bbc_disabled_' . $bbc],
+				'all_selected' => empty($modSettings['bbc_disabled_' . $bbc]),
 			);
 		}
 	}
@@ -560,7 +560,7 @@ function saveDBSettings(&$config_vars)
 	$inlinePermissions = array();
 	foreach ($config_vars as $var)
 	{
-		if (!isset($var[1]) || (!isset($_POST[$var[1]]) && $var[0] != 'check'))
+		if (!isset($var[1]) || (!isset($_POST[$var[1]]) && $var[0] != 'check' && ($var[0] != 'bbc' || !isset($_POST[$var[1] . '_enabledTags']))))
 			continue;
 
 		// Checkboxes!
@@ -583,6 +583,21 @@ function saveDBSettings(&$config_vars)
 		{
 			if (isset($_POST[$var[1]][1]) && $_POST[$var[1]][0] == $_POST[$var[1]][1])
 				$setArray[$var[1]] = $_POST[$var[1]][0];
+		}
+		// BBC.
+		elseif ($var[0] == 'bbc')
+		{
+
+			$bbcTags = array();
+			foreach (parse_bbc(false) as $tag)
+				$bbcTags[] = $tag['tag'];
+
+			if (!isset($_POST[$var[1] . '_enabledTags']))
+				$_POST[$var[1] . '_enabledTags'] = array();
+			elseif (!is_array($_POST[$var[1] . '_enabledTags']))
+				$_POST[$var[1] . '_enabledTags'] = array($_POST[$var[1] . '_enabledTags']);
+
+			$setArray[$var[1]] = implode(',', array_diff($bbcTags, $_POST[$var[1] . '_enabledTags']));
 		}
 		// Permissions?
 		elseif ($var[0] == 'permissions')

@@ -641,6 +641,7 @@ $txt['enableBBC'] = 'Activar Bulletin Board Code';
 $txt['enablePostHTML'] = 'Activar la publicaci&oacute;n de Tags b&aacute;sicos de HTML';
 $txt['autoLinkUrls'] = 'Crear autom&aacute;ticamente las ligas cuando se escriben URLs';
 // Untranslated!
+$txt['disabledBBC'] = 'Enabled BBC tags';
 $txt['bbcTagsToUse'] = 'Enabled BBC tags';
 $txt['bbcTagsToUse_select'] = 'Select the tags allowed to be used';
 $txt['bbcTagsToUse_select_all'] = 'Select all tags';

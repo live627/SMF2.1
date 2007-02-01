@@ -140,6 +140,7 @@ $txt['signature_max_smileys'] = 'Maximum smiley count<div class="smalltext">(0 f
 $txt['signature_max_image_width'] = 'Maximum width of signature images (pixels)<div class="smalltext">(0 for no max)</div>';
 $txt['signature_max_image_height'] = 'Maximum height of signature images (pixels)<div class="smalltext">(0 for no max)</div>';
 $txt['signature_max_font_size'] = 'Maximum font size allowed in signatures<div class="smalltext">(0 for no max)</div>';
+$txt['signature_bbc'] = 'Enabled BBC tags';
 
 // Untranslated!
 $txt['custom_profile_shorttitle'] = 'Profile Fields';
