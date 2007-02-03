@@ -40,6 +40,9 @@ if (!defined('SMF'))
 
 	void CoppaForm()
 		// !!!
+
+	void RegisterCheckUsername()
+		// !!!
 */
 
 // Begin the registration process.
@@ -47,6 +50,9 @@ function Register()
 {
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
 	global $db_prefix, $language, $scripturl, $smfFunc, $sourcedir, $smfFunc;
+
+	if (isset($_GET['sa']) && $_GET['sa'] == 'usernamecheck')
+		return RegisterCheckUsername();
 
 	// Check if the administrator has it disabled.
 	if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 3)
@@ -595,6 +601,26 @@ function VerificationCode()
 
 	// We all die one day...
 	die();
+}
+
+// See if a username already exists.
+function RegisterCheckUsername()
+{
+	global $sourcedir, $smfFunc, $context;
+
+	// This is XML!
+	loadTemplate('Xml');
+	$context['sub_template'] = 'check_username';
+	$context['checked_username'] = isset($_GET['username']) ? $_GET['username'] : '';
+
+	if (empty($_GET['username']))
+		$context['valid_username'] = false;
+	else
+	{
+		require_once($sourcedir . '/Subs-Members.php');
+		$context['valid_username'] = $smfFunc['strlen']($_GET['username']) <= 60;
+		$context['valid_username'] &= isReservedName($_GET['username'], 0, false, false) ? 0 : 1;
+	}
 }
 
 ?>

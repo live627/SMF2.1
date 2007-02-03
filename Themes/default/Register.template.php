@@ -8,6 +8,7 @@ function template_before()
 
 	// Make sure they've agreed to the terms and conditions.
 	echo '
+<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/register.js"></script>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	function verifyAgree()
 	{
@@ -85,7 +86,12 @@ echo '
 							<div class="smalltext">', $txt['identification_by_smf'], '</div>
 						</td>
 						<td>
-							<input type="text" name="user" size="20" tabindex="', $context['tabindex']++, '" maxlength="25" />
+							<input type="text" name="user" id="smf_autov_username" size="20" tabindex="', $context['tabindex']++, '" maxlength="25" />
+							<span id="smf_autov_username_div" style="display: none;">
+								<a id="smf_autov_username_link" href="#">
+									<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
+								</a>
+							</span>
 						</td>
 					</tr><tr>
 						<td width="40%">
@@ -93,7 +99,7 @@ echo '
 							<div class="smalltext">', $txt['valid_email'], '</div>
 						</td>
 						<td>
-							<input type="text" name="email" size="30" tabindex="', $context['tabindex']++, '" />';
+							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" />';
 
 	// Are they allowed to hide their email?
 	if ($context['allow_hide_email'])
@@ -123,14 +129,20 @@ echo '
 							<b>', $txt['choose_pass'], ':</b>
 						</td>
 						<td>
-							<input type="password" name="passwrd1" size="30" tabindex="', $context['tabindex']++, '" />
+							<input type="password" name="passwrd1" id="smf_autov_pwmain" size="30" tabindex="', $context['tabindex']++, '" />
+							<span id="smf_autov_pwmain_div" style="display: none;">
+								<img id="smf_autov_pwmain_img" src="', $settings['images_url'], '/icons/field_invalid.gif" alt="*" />
+							</span>
 						</td>
 					</tr><tr>
 						<td width="40%">
 							<b>', $txt['verify_pass'], ':</b>
 						</td>
 						<td>
-							<input type="password" name="passwrd2" size="30" tabindex="', $context['tabindex']++, '" />
+							<input type="password" name="passwrd2" id="smf_autov_pwverify" size="30" tabindex="', $context['tabindex']++, '" />
+							<span id="smf_autov_pwverify_div" style="display: none;">
+								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
+							</span>
 						</td>
 					</tr>';
 
@@ -205,6 +217,18 @@ echo '
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	document.forms.creator.regagree.checked = false;
 	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;
+
+	var regTextStrings = {
+		"username_valid": "', $txt['registration_username_available'], '",
+		"username_invalid": "', $txt['registration_username_unavailable'], '",
+		"username_check": "', $txt['registration_username_check'], '",
+		"password_short": "', $txt['registration_password_short'], '",
+		"password_reserved": "', $txt['registration_password_reserved'], '",
+		"password_numbercase": "', $txt['registration_password_numbercase'], '",
+		"password_no_match": "', $txt['registration_password_no_match'], '",
+		"password_valid": "', $txt['registration_password_valid'], '"
+	};
+	verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);
 // ]]></script>';
 }
 

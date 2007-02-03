@@ -818,6 +818,13 @@ function template_postbox(&$message)
 			'hr' => array('code' => 'hr', 'before' => '[hr]', 'description' => $txt['horizontal_rule']),
 		);
 
+		// Show the toggle?
+		if (empty($modSettings['disable_wysiwyg']))
+		{
+			$context['bbc_tags'][1][] = array();
+			$context['bbc_tags'][1]['toggle'] = array('code' => 'toggle', 'before' => '', 'description' => $txt['toggle_view']);
+		}
+		
 		$found_button = false;
 		// Here loop through the array, printing the images/rows/separators!
 		foreach ($context['bbc_tags'][0] as $image => $tag)
@@ -907,12 +914,6 @@ function template_postbox(&$message)
 				$found_button = false;
 			}
 		}
-
-		// Allow them to toggle if wyswiyg is on...
-		if (empty($modSettings['disable_wysiwyg']))
-			echo '
-			<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />
-			<a href="javascript:void(0);" onclick="editorHandle', $context['post_box_name'], '.ToggleView();"><img src="', $settings['images_url'], '/bbc/face.gif" alt="Toggle" title="Toggle" align="bottom" width="23" height="22" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
 
 		echo '
 				</td>

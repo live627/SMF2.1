@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2657 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2658 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -15,6 +15,10 @@ February 2007
  ! Password reminder was not respecting password strength. (Reminder.php)
  ! Retain all current theme settings when editing a different theme. (Themes.php)
  ! Try to ensure ID_MSG_LAST_VISIT is always set. (Load.php)
+ * Removed the classic specific Post template. (Post template)
+ + Added functionality for checking if a username is available and password suitability to the registration screen. (Register.php, Register template)
+ * Added a new register javascript class, and some place holder images. (register.js)
+ & Added some language entries for the above changes. (Login language file)
 
 
 January 2007

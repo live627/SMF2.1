@@ -68,6 +68,8 @@ $txt['post_too_long'] = 'Ihr Beitrag ist zu lang. Bitte gehen Sie zur&uuml;ck, k
 $txt['horizontal_rule'] = 'Horizontale Linie';
 $txt['font_size'] = 'Schriftgr&ouml;sse';
 $txt['font_face'] = 'Schriftart';
+// Untranslated!
+$txt['toggle_view'] = 'Toggle View';
 
 // Use numeric entities in the below five strings.
 $txt['notify_boards'] = '\'%s\', ein neuer Beitrag wurde in einem Board geschrieben, welches Sie beobachten.' . "\n\n" . 'Sie k&#246;nnen ihn nachlesen unter' . "\n" . '%s' . "\n\n" . '';

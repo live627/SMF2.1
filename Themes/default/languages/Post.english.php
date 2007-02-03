@@ -68,6 +68,7 @@ $txt['post_too_long'] = 'Your message is too long. Please go back and shorten it
 $txt['horizontal_rule'] = 'Horizontal Rule';
 $txt['font_size'] = 'Font Size';
 $txt['font_face'] = 'Font Face';
+$txt['toggle_view'] = 'Toggle View';
 
 // Use numeric entities in the below five strings.
 $txt['notify_boards'] = 'A new topic, \'%s\', has been made on a board you are watching.' . "\n\n" . 'You can see it at' . "\n" . '%s' . "\n\n" . '';

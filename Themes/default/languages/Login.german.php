@@ -162,4 +162,15 @@ $txt['visual_verification_sound_close'] = 'Close window';
 $txt['visual_verification_request_new'] = 'Request another image';
 $txt['visual_verification_sound_direct'] = 'Having problems hearing this?  Try a direct link to it.';
 
+// Use numeric entities in the below.
+// Untranslated!
+$txt['registration_username_available'] = 'Username is available';
+$txt['registration_username_unavailable'] = 'Username is not available';
+$txt['registration_username_check'] = 'Check if username is available';
+$txt['registration_password_short'] = 'Password is too short';
+$txt['registration_password_reserved'] = 'Password contains your username/email';
+$txt['registration_password_numbercase'] = 'Password must contain both upper and lower case, and numbers';
+$txt['registration_password_no_match'] = 'Passwords do not match';
+$txt['registration_password_valid'] = 'Password is valid';
+
 ?>

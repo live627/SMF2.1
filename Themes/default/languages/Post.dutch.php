@@ -68,6 +68,8 @@ $txt['post_too_long'] = 'Je bericht is te lang. Maak het bericht wat korter en p
 $txt['horizontal_rule'] = 'Horizontale lijn';
 $txt['font_size'] = 'Letter formaat';
 $txt['font_face'] = 'Lettertype';
+// Untranslated!
+$txt['toggle_view'] = 'Toggle View';
 
 // Use numeric entities in the below five strings.
 $txt['notify_boards'] = 'Een nieuw bericht, \'%s\', is geplaatst op een board waarvan de berichtnotificatie aan staat.' . "\n\n" . 'Je kunt het hier bekijken:' . "\n" . '%s' . "\n\n" . '';

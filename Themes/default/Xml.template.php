@@ -273,4 +273,14 @@ function template_message_icons()
 </smf>';
 }
 
+function template_check_username()
+{
+	global $context, $settings, $options, $txt;
+
+	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
+<smf>
+	<username valid="', $context['valid_username'] ? 1 : 0, '">', $context['checked_username'], '</username>
+</smf>';
+}
+
 ?>

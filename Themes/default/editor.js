@@ -36,6 +36,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	this.getMode = getMode;
 	this.getText = getText;
 	this.showMoreSmileys = showMoreSmileys;
+	this.resizeTextArea = resizeTextArea;
 	this.doSubmit = DoSubmit;
 
 	// Spellcheck functionaliy.
@@ -59,6 +60,12 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	simpleExec['right'] = 'justifyright';
 	simpleExec['hr'] = 'inserthorizontalrule';
 	simpleExec['list'] = 'insertunorderedlist';
+
+	// Codes to call a private function
+	var smfExec = new Array();
+	smfExec['toggle'] = ToggleView;
+	//smfExec['increase_height'] = makeEditorTaller;
+	//smfExec['decrease_height'] = makeEditorShorter;
 
 	// Things which have direct HTML equivalents. [ => <
 	var htmlEquiv = new Array();
@@ -605,44 +612,52 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 		setFocus();
 
-		// In text this is easy...
-		if (!mode)
+		// An special SMF function?
+		if (smfExec[this.code])
 		{
-			if (buttonControls[this.code])
-			{
-				// Replace?
-				if (buttonControls[this.code][3] == '')
-				{
-					replaceText(buttonControls[this.code][2], textHandle)
-				}
-				// Surround!
-				else
-				{
-					surroundText(buttonControls[this.code][2], buttonControls[this.code][3], textHandle)
-				}
-			}
+			smfExec[this.code]();
 		}
 		else
 		{
-			// Is it easy?
-			if (simpleExec[this.code])
+			// In text this is easy...
+			if (!mode)
 			{
-				smf_execCommand(simpleExec[this.code], false, null);
+				if (buttonControls[this.code])
+				{
+					// Replace?
+					if (buttonControls[this.code][3] == '')
+					{
+						replaceText(buttonControls[this.code][2], textHandle)
+					}
+					// Surround!
+					else
+					{
+						surroundText(buttonControls[this.code][2], buttonControls[this.code][3], textHandle)
+					}
+				}
 			}
-			// A link?
-			else if (this.code == 'url' || this.code == 'email' || this.code == 'ftp')
+			else
 			{
-				insertLink(this.code);
-			}
-			// Maybe an image?
-			else if (this.code == 'img')
-			{
-				insertImage();
-			}
-			// Everything else means doing something ourselves.
-			else if (buttonControls[this.code][2])
-			{
-				InsertCustomHTML(this.code);
+				// Is it easy?
+				if (simpleExec[this.code])
+				{
+					smf_execCommand(simpleExec[this.code], false, null);
+				}
+				// A link?
+				else if (this.code == 'url' || this.code == 'email' || this.code == 'ftp')
+				{
+					insertLink(this.code);
+				}
+				// Maybe an image?
+				else if (this.code == 'img')
+				{
+					insertImage();
+				}
+				// Everything else means doing something ourselves.
+				else if (buttonControls[this.code][2])
+				{
+					InsertCustomHTML(this.code);
+				}
 			}
 		}
 
@@ -1077,5 +1092,49 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 		InsertText(text, true);
 		setFocus();
+	}
+
+	function resizeTextArea(newHeight, newWidth, is_change)
+	{
+		// Work out what the new height is.
+		if (is_change)
+		{
+			// We'll assume pixels but may not be.
+			newHeight = _calculateNewDimension(textHandle.style.height, newHeight);
+			newWidth = _calculateNewDimension(textHandle.style.width, newWidth);
+		}
+
+		// Do the HTML editor - but only if it's enabled!
+		if (richTextPossible)
+		{
+			frameHandle.style.height = newHeight;
+			frameHandle.style.width = newWidth;
+		}
+		// Do the text box regardless!
+		textHandle.style.height = newHeight;
+		textHandle.style.width = newWidth;
+	}
+
+	// A utility instruction to save repetition when trying to work out what to change on a height/width.
+	function _calculateNewDimension(old_size, change_size)
+	{
+		// We'll assume pixels but may not be.
+		changeReg = change_size.toString().match(/(\d+)(\D*)/);
+		curReg = old_size.toString().match(/(\d+)(\D*)/);
+
+		if (!changeReg[2])
+			changeReg[2] = 'px';
+
+		// Both the same type?
+		if (changeReg[2] == curReg[2])
+			new_size = (parseInt(changeReg[1]) + parseInt(curReg[1])).toString() + changeReg[2];
+		// Is the change a percentage?
+		else if (changeReg[2] == '%')
+			new_size = (parseInt(curReg[1]) + parseInt((parseInt(changeReg[1]) * parseInt(curReg[1])) / 100)).toString() + 'px';
+		// Otherwise just guess!
+		else
+			new_size = (parseInt(curReg[1]) + (parseInt(changeReg[1]) / 10)).toString() + '%';
+
+		return new_size;
 	}
 }

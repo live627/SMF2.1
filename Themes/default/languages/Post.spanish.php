@@ -68,6 +68,8 @@ $txt['post_too_long'] = 'Tu mensaje es muy largo. Por favor regresa y ac&oacute;
 $txt['horizontal_rule'] = 'L&iacute;nea Horizontal';
 $txt['font_size'] = 'Tama&ntilde;o de Fuente';
 $txt['font_face'] = 'Tipo de Fuente';
+// Untranslated!
+$txt['toggle_view'] = 'Toggle View';
 
 // Use numeric entities in the below five strings.
 $txt['notify_boards'] = 'Un nuevo mensaje, \'%s\', ha sido publicado en un foro que est&#225;s monitoreando.' . "\n\n" . 'Lo puedes ver en' . "\n" . '%s' . "\n\n" . '';

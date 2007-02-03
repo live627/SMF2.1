@@ -547,7 +547,7 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 {
 	global $user_info, $modSettings, $db_prefix, $smfFunc;
 
-	 $checkName = $smfFunc['strtolower']($name);
+	$checkName = $smfFunc['strtolower']($name);
 
 	// Administrators are never restricted ;).
 	if (!allowedTo('moderate_forum') && ((!empty($modSettings['reserveName']) && $is_name) || !empty($modSettings['reserveUser']) && !$is_name))
