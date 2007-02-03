@@ -1055,7 +1055,6 @@ function Download()
 
 	// Send the attachment headers.
 	header('Pragma: ');
-	header('Cache-Control: max-age=' . (525600 * 60) . ', private');
 	if (!$context['browser']['is_gecko'])
 		header('Content-Transfer-Encoding: binary');
 	header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 525600 * 60) . ' GMT');
@@ -1065,21 +1064,49 @@ function Download()
 	header('Connection: close');
 	header('ETag: ' . $file_md5);
 
+	if (filesize($filename) != 0)
+	{
+		$size = @getimagesize($filename);
+		if (!empty($size))
+		{
+			// What headers are valid?
+			$validTypes = array(
+				1 => 'gif',
+				2 => 'jpeg',
+				3 => 'png',
+				5 => 'psd',
+				6 => 'bmp',
+				7 => 'tiff',
+				8 => 'tiff',
+				9 => 'jpeg',
+				14 => 'iff',
+			);
+
+			// Do we have a mime type we can simpy use?
+			if (!empty($size['mime']))
+				header('Content-Type: ' . $size['mime']);
+			elseif (isset($validTypes[$size[2]]))
+				header('Content-Type: image/' . $validTypes[$size[2]]);
+			// Otherwise - let's think safety first... it might not be an image...
+			elseif (isset($_REQUEST['image']))
+				unset($_REQUEST['image']);
+		}
+		// Once again - safe!
+		elseif (isset($_REQUEST['image']))
+			unset($_REQUEST['image']);
+	}
+
 	if (!isset($_REQUEST['image']))
 	{
 		header('Content-Disposition: attachment; filename="' . $real_filename . '"');
 		header('Content-Type: application/octet-stream');
 	}
 
-	if (filesize($filename) != 0)
-	{
-		$size = @getimagesize($filename);
-		if (!empty($size) && $size[2] > 0 && $size[2] < 4)
-			header('Content-Type: image/' . ($size[2] != 1 ? ($size[2] != 2 ? 'png' : 'jpeg') : 'gif'));
-		// Errr, it's an image.... what kind?  A... gif?  Yeah that's it, gif!  Like JIF, the peanut butter.
-		elseif (isset($_REQUEST['image']))
-			header('Content-Type: image/gif');
-	}
+	// If this has an "image extension" - but isn't actually an image - then ensure it isn't cached cause of silly IE.
+	if (!isset($_REQUEST['image']) && in_array(substr($real_filename, -4), array('.gif', '.jpg', '.bmp', '.png', 'jpeg', 'tiff')))
+    		header('Cache-Control: no-cache'); 
+    	else
+		header('Cache-Control: max-age=' . (525600 * 60) . ', private');
 
 	if (empty($modSettings['enableCompressedOutput']) || filesize($filename) > 4194304)
 		header('Content-Length: ' . filesize($filename));

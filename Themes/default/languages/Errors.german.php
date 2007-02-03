@@ -284,6 +284,8 @@ $txt['profile_errors_occurred'] = 'Die folgenden Fehler sind w&auml;hrend des Sp
 $txt['profile_error_bad_offset'] = 'Die Zeitverschiebung ist au&szlig;erhalb des erlaubten Bereichs';
 $txt['profile_error_no_name'] = 'Das Namensfeld wurde nicht ausgef&uuml;llt';
 $txt['profile_error_name_taken'] = 'Der ausgew&auml;hlte Benutzername existiert schon';
+// Untranslated!
+$txt['profile_error_name_too_long'] = 'The selected name is too long. It should be no greater than 60 characters long';
 $txt['profile_error_no_email'] = 'Das E-Mail Feld wurde nicht ausgef&uuml;llt';
 $txt['profile_error_bad_email'] = 'Sie haben keine g&uuml;ltige E-Mail Adresse angegeben';
 $txt['profile_error_email_taken'] = 'Ein anderer Benutzer hat sich schon mit dieser E-Mail Adresse angemeldet';

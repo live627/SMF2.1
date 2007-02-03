@@ -1264,7 +1264,7 @@ function template_account()
 									<b', (isset($context['modify_error']['no_name']) || isset($context['modify_error']['name_taken']) ? ' style="color: red;"' : ''), '>', $txt['name'], ': </b>
 									<div class="smalltext">', $txt['display_name'], '</div>
 								</td>
-								<td>', ($context['allow_edit_name'] ? '<input type="text" name="real_name" size="30" value="' . $context['member']['name'] . '" />' : $context['member']['name']), '</td>
+								<td>', ($context['allow_edit_name'] ? '<input type="text" name="real_name" size="30" value="' . $context['member']['name'] . '" maxlength="60" />' : $context['member']['name']), '</td>
 							</tr>';
 
 		// Allow the administrator to change the date they registered on and their post count.

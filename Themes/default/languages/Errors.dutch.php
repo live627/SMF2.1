@@ -284,6 +284,8 @@ $txt['profile_errors_occurred'] = 'De volgende fouten zijn opgetreden bij het op
 $txt['profile_error_bad_offset'] = 'De tijdafwijking is buiten bereik';
 $txt['profile_error_no_name'] = 'Het naamveld was leeggelaten';
 $txt['profile_error_name_taken'] = 'De geselecteerde gebruikersnaam is al in gebruik';
+// Untranslated!
+$txt['profile_error_name_too_long'] = 'The selected name is too long. It should be no greater than 60 characters long';
 $txt['profile_error_no_email'] = 'Het e-mailveld is leeggelaten';
 $txt['profile_error_bad_email'] = 'Je hebt geen geldig e-mailadres ingevuld';
 $txt['profile_error_email_taken'] = 'Een andere gebruiker heeft reeds dat e-mailadres geregistreerd';

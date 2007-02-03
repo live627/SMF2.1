@@ -281,6 +281,8 @@ $txt['profile_errors_occurred'] = 'The following errors occurred when trying to 
 $txt['profile_error_bad_offset'] = 'The time offset is out of range';
 $txt['profile_error_no_name'] = 'The name field was left blank';
 $txt['profile_error_name_taken'] = 'The selected username has already been taken';
+// Untranslated!
+$txt['profile_error_name_too_long'] = 'The selected name is too long. It should be no greater than 60 characters long';
 $txt['profile_error_no_email'] = 'The email field was left blank';
 $txt['profile_error_bad_email'] = 'You have not entered a valid email address';
 $txt['profile_error_email_taken'] = 'Another user is already registered with that email address';

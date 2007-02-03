@@ -228,7 +228,7 @@ function Register2()
 	if (isset($_POST['real_name']) && (!empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum')))
 	{
 		$_POST['real_name'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['real_name']));
-		if (trim($_POST['real_name']) != '' && !isReservedName($_POST['real_name'], $memID))
+		if (trim($_POST['real_name']) != '' && !isReservedName($_POST['real_name'], $memID) && $smfFunc['strlen']($_POST['real_name']) > 60)
 			$possible_strings[] = 'real_name';
 	}
 

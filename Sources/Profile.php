@@ -828,6 +828,8 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 			$_POST['real_name'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['real_name']));
 			if (trim($_POST['real_name']) == '')
 				$post_errors[] = 'no_name';
+			elseif ($smfFunc['strlen']($_POST['real_name']) > 60)
+ 				$post_errors[] = 'name_too_long';
 			else
 			{
 				require_once($sourcedir . '/Subs-Members.php');

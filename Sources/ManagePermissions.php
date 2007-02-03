@@ -89,6 +89,9 @@ if (!defined('SMF'))
 
 	void updateChildPermissions(array parent, int profile = null)
 		// !!!
+
+	void loadIllegalPermissions()
+		// !!!
 */
 
 function ModifyPermissions()
@@ -422,9 +425,11 @@ function PermissionByBoard()
 
 function SetQuickGroups()
 {
-	global $db_prefix, $smfFunc;
+	global $db_prefix, $context, $smfFunc;
 
 	checkSession();
+
+	loadIllegalPermissions();
 
 	// Make sure only one of the quick options was selected.
 	if ((!empty($_POST['predefined']) && ((isset($_POST['copy_from']) && $_POST['copy_from'] != 'empty') || !empty($_POST['permissions']))) || (!empty($_POST['copy_from']) && $_POST['copy_from'] != 'empty' && !empty($_POST['permissions'])))
@@ -497,12 +502,19 @@ function SetQuickGroups()
 			$inserts = array();
 			foreach ($_POST['group'] as $group_id)
 				foreach ($target_perm as $perm => $add_deny)
+				{
+					// No dodgy permissions please!
+					if (!empty($context['illegal_permissions']) && in_array($perm, $context['illegal_permissions']))
+						continue;
+
 					$inserts[] = array("'$perm'", $group_id, $add_deny);
+				}
 
 			// Delete the previous permissions...
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}permissions
-				WHERE id_group IN (" . implode(', ', $_POST['group']) . ")", __FILE__, __LINE__);
+				WHERE id_group IN (" . implode(', ', $_POST['group']) . ")
+ 					" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 
 			if (!empty($inserts))
 			{
@@ -569,7 +581,8 @@ function SetQuickGroups()
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}permissions
 					WHERE id_group IN (" . implode(', ', $_POST['group']) . ")
-						AND permission = '$permission'", __FILE__, __LINE__);
+ 						AND permission = '$permission'
+ 						" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 			else
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}board_permissions
@@ -584,27 +597,30 @@ function SetQuickGroups()
 			$permChange = array();
 			foreach ($_POST['group'] as $groupID)
 			{
-				if ($permissionType == 'membergroup')
+				if ($permissionType == 'membergroup' && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
 					$permChange[] = array('\'' . $permission . '\'', $groupID, $add_deny);
-				else
+				elseif ($permissionType != 'membergroup')
 					$permChange[] = array('\'' . $permission . '\'', $groupID, $bid, $add_deny);
 			}
 
-			if ($permissionType == 'membergroup')
-				$smfFunc['db_insert']('replace',
-					"{$db_prefix}permissions",
-					array('permission', 'id_group', 'add_deny'),
-					$permChange,
-					array('permission', 'id_group'), __FILE__, __LINE__
-				);
-			// Board permissions go into the other table.
-			else
-				$smfFunc['db_insert']('replace',
-					"{$db_prefix}board_permissions",
-					array('permission', 'id_group', 'id_profile', 'add_deny'),
-					$permChange,
-					array('permission', 'id_group', 'id_profile'), __FILE__, __LINE__
-				);
+			if (!empty($permChange))
+			{
+				if ($permissionType == 'membergroup')
+					$smfFunc['db_insert']('replace',
+						"{$db_prefix}permissions",
+						array('permission', 'id_group', 'add_deny'),
+						$permChange,
+						array('permission', 'id_group'), __FILE__, __LINE__
+					);
+				// Board permissions go into the other table.
+				else
+					$smfFunc['db_insert']('replace',
+						"{$db_prefix}board_permissions",
+						array('permission', 'id_group', 'id_profile', 'add_deny'),
+						$permChange,
+						array('permission', 'id_group', 'id_profile'), __FILE__, __LINE__
+					);
+			}
 		}
 
 		// Another child update!
@@ -881,9 +897,11 @@ function ModifyMembergroup()
 
 function ModifyMembergroup2()
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $db_prefix, $modSettings, $smfFunc, $context;
 
 	checkSession();
+
+	loadIllegalPermissions();
 
 	$_GET['group'] = (int) $_GET['group'];
 	$_GET['pid'] = (int) $_GET['pid'];
@@ -916,7 +934,13 @@ function ModifyMembergroup2()
 			{
 				foreach ($perm_array as $permission => $value)
 					if ($value == 'on' || $value == 'deny')
-						$givePerms[$perm_type][] = array($_GET['group'], "'$permission'", $value == 'deny' ? 0 : 1);
+					{
+						// Don't allow people to escalate themselves!
+						if (!empty($context['illegal_permissions']) && in_array($permission, $context['illegal_permissions']))
+							continue;
+
+ 						$givePerms[$perm_type][] = array($_GET['group'], "'$permission'", $value == 'deny' ? 0 : 1);
+ 					}
 			}
 		}
 	}
@@ -926,7 +950,8 @@ function ModifyMembergroup2()
 	{
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}permissions
-			WHERE id_group = $_GET[group]", __FILE__, __LINE__);
+			WHERE id_group = $_GET[group]
+ 			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 
 		if (!empty($givePerms['membergroup']))
 		{
@@ -1044,7 +1069,9 @@ function GeneralPermissionSettings()
 // Set the permission level for a specific profile, group, or group for a profile.
 function setPermissionLevel($level, $group, $profile = 'null')
 {
-	global $db_prefix, $smfFunc;
+	global $db_prefix, $smfFunc, $context;
+
+	loadIllegalPermissions();
 
 	// Levels by group... restrict, standard, moderator, maintenance.
 	$groupLevels = array(
@@ -1191,6 +1218,11 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		'approve_posts',
 	));
 
+	// Make sure we're not granting someone too many permissions!
+ 	foreach ($groupLevels['global'][$level] as $k => $permission)
+ 		if (!empty($context['illegal_permissions']) && in_array($permission, $context['illegal_permissions']))
+ 			unset($groupLevels['global'][$level][$k]);
+
 	// Reset all cached permissions.
 	updateSettings(array('settings_updated' => time()));
 
@@ -1204,7 +1236,8 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}permissions
-			WHERE id_group = $group", __FILE__, __LINE__);
+			WHERE id_group = $group
+ 			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}board_permissions
 			WHERE id_group = $group
@@ -1579,6 +1612,9 @@ function save_inline_permissions($permissions)
 	if (!allowedTo('manage_permissions'))
 		return;
 
+	// Check they can't do certain things.
+ 	loadIllegalPermissions();
+
 	$insertRows = array();
 	foreach ($permissions as $permission)
 	{
@@ -1587,7 +1623,7 @@ function save_inline_permissions($permissions)
 
 		foreach ($_POST[$permission] as $id_group => $value)
 		{
-			if (in_array($value, array('on', 'deny')))
+			if (in_array($value, array('on', 'deny')) && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
 				$insertRows[] = array((int) $id_group, "'$permission'", $value == 'on' ? 1 : 0);
 		}
 	}
@@ -1595,7 +1631,8 @@ function save_inline_permissions($permissions)
 	// Remove the old permissions...
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}permissions
-		WHERE permission IN ('" . implode("', '", $permissions) . "')", __FILE__, __LINE__);
+		WHERE permission IN ('" . implode("', '", $permissions) . "')
+ 		" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 
 	// ...and replace them with new ones.
 	if (!empty($insertRows))
@@ -1847,6 +1884,20 @@ function updateChildPermissions($parents, $profile = null)
 					" . implode(',', $permissions), __FILE__, __LINE__);
 		}
 	}
+}
+
+// Load permissions someone cannot grant.
+function loadIllegalPermissions()
+{
+	global $context;
+
+	$context['illegal_permissions'] = array();
+	if (!allowedTo('admin_forum'))
+		$context['illegal_permissions'][] = 'admin_forum';
+	if (!allowedTo('manage_membergroups'))
+		$context['illegal_permissions'][] = 'manage_membergroups';
+	if (!allowedTo('manage_permissions'))
+		$context['illegal_permissions'][] = 'manage_permissions';
 }
 
 ?>

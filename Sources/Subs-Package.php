@@ -841,7 +841,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 	$return = array();
 
 	$temp_auto = 0;
-	$temp_path = $boarddir . '/Packages/temp' . (isset($context['base_path']) ? $context['base_path'] : '');
+	$temp_path = $boarddir . '/Packages/temp/' . (isset($context['base_path']) ? $context['base_path'] : '');
 
 	// This is the testing phase... nothing shall be done yet.
 	foreach ($actions as $action)
@@ -853,9 +853,9 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 			// !!! TODO: Make sure the file actually exists?  Might not work when testing?
 			if ($action->exists('@type') && $action->fetch('@type') == 'inline')
 			{
-				$filename = $temp_path . '/$auto_' . $temp_auto++ . ($actionType == 'readme' || $actionType == 'redirect' ? '.txt' : ($actionType == 'code' || $actionType == 'database' ? '.php' : '.mod'));
+				$filename = $temp_path . '$auto_' . $temp_auto++ . ($actionType == 'readme' || $actionType == 'redirect' ? '.txt' : ($actionType == 'code' || $actionType == 'database' ? '.php' : '.mod'));
 				package_put_contents($filename, $action->fetch('.'));
-				$filename = strtr($filename, array($temp_path . '/' => ''));
+				$filename = strtr($filename, array($temp_path => ''));
 			}
 			else
 				$filename = $action->fetch('.');
@@ -899,7 +899,7 @@ function parsePackageInfo(&$packageXML, $testing_only = true, $method = 'install
 			if ($action->exists('@from'))
 				$this_action['source'] = parse_path($action->fetch('@from'));
 			else
-				$this_action['source'] = $temp_path . '/' . $this_action['filename'];
+				$this_action['source'] = $temp_path . $this_action['filename'];
 		}
 
 		// Check if these things can be done. (chmod's etc.)

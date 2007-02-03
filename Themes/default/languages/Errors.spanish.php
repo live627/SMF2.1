@@ -291,6 +291,8 @@ $txt['profile_errors_occurred'] = 'Ocurrieron los siguientes errores mientras se
 $txt['profile_error_bad_offset'] = 'La diferencia horaria est&aacute; fuera de rango';
 $txt['profile_error_no_name'] = 'El campo del nombre se dej&oacute; en blanco';
 $txt['profile_error_name_taken'] = 'El nombre de usuario especificado ya est&aacute; siendo utilizado por alguien m&aacute;s';
+// Untranslated!
+$txt['profile_error_name_too_long'] = 'The selected name is too long. It should be no greater than 60 characters long';
 $txt['profile_error_no_email'] = 'El campo de email se dej&oacute; en blanco';
 $txt['profile_error_bad_email'] = 'No has proporcionado una direcci&oacute;n de email v&aacute;lida';
 $txt['profile_error_email_taken'] = 'Otro usuario ya se encuentra registrado con esa direcci&oacute;n de email';
