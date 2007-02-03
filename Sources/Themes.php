@@ -596,12 +596,7 @@ function SetThemeOptions()
 	checkSession('get');
 
 	$old_id = $settings['theme_id'];
-	// Once again, these are settings which need to be retained as they are template settings.
-	$template_settings = array('use_default_images', 'doctype', 'theme_version', 'use_tabs', 'use_buttons', 'seperate_sticky_lock');
-	$old_settings = array();
-	foreach ($template_settings as $setting)
-		if (isset($settings[$setting]))
-			$old_settings[$setting] = $settings[$setting];
+	$old_settings = $settings;
 
 	loadTheme($_GET['th'], false);
 
@@ -656,8 +651,7 @@ function SetThemeOptions()
 
 	// Restore the existing theme.
 	loadTheme($old_id, false);
-	foreach ($old_settings as $setting => $value)
-		$settings[$setting] = $value;
+	$settings = $old_settings;
 
 	loadTemplate('Themes');
 }
@@ -730,12 +724,7 @@ function SetThemeSettings()
 		$context['smiley_sets'][$set] = $set_names[$i];
 
 	$old_id = $settings['theme_id'];
-	// Settings that need to be retained as they are template settings.
-	$template_settings = array('use_default_images', 'doctype', 'theme_version', 'use_tabs', 'use_buttons', 'seperate_sticky_lock', 'lang_images_url');
-	$old_settings = array();
-	foreach ($template_settings as $setting)
-		if (isset($settings[$setting]))
-			$old_settings[$setting] = $settings[$setting];
+	$old_settings = $settings;
 
 	loadTheme($_GET['th'], false);
 
@@ -772,8 +761,7 @@ function SetThemeSettings()
 
 	// Restore the current theme.
 	loadTheme($old_id, false);
-	foreach ($old_settings as $setting => $value)
-		$settings[$setting] = $value;
+	$settings = $old_settings;
 
 	loadTemplate('Themes');
 }

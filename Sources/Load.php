@@ -401,6 +401,8 @@ function loadUserSettings()
 					cache_put_data('user_last_visit-' . $id_member, $_SESSION['id_msg_last_visit'], 5 * 3600);
 			}
 		}
+		elseif (empty($_SESSION['ID_MSG_LAST_VISIT']))
+			$_SESSION['ID_MSG_LAST_VISIT'] = $user_settings['ID_MSG_LAST_VISIT'];
 
 		$username = $user_settings['member_name'];
 
