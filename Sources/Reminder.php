@@ -164,7 +164,7 @@ function setPassword()
 
 function setPassword2()
 {
-	global $db_prefix, $context, $txt, $modSettings, $smfFunc;
+	global $db_prefix, $context, $txt, $modSettings, $smfFunc, $sourcedir;
 
 	if (empty($_POST['u']) || !isset($_POST['passwrd1']) || !isset($_POST['passwrd2']))
 		fatal_lang_error('no_access', false);
@@ -181,7 +181,7 @@ function setPassword2()
 
 	// Get the code as it should be from the database.
 	$request = $smfFunc['db_query']('', "
-		SELECT validation_code, member_name
+		SELECT validation_code, member_name, email_address
 		FROM {$db_prefix}members
 		WHERE id_member = $_POST[u]
 			AND is_activated = 1
@@ -192,8 +192,16 @@ function setPassword2()
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('invalid_userid', false);
 
-	list ($realCode, $username) = $smfFunc['db_fetch_row']($request);
+	list ($realCode, $username, $email) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
+
+	// Is the password actually valid?
+	require_once($sourcedir . '/Subs-Auth.php');
+	$passwordError = validatePassword($_POST['passwrd1'], $username, array($email));
+
+	// What - it's not?
+	if ($passwordError != null)
+		fatal_lang_error('profile_error_password_' . $passwordError, false);
 
 	// Quit if this code is not right.
 	if (empty($_POST['code']) || substr($realCode, 0, 10) != substr(md5($_POST['code']), 0, 10))
