@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2654 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2655 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -11,6 +11,7 @@ February 2007
  ! The path was sometimes wrong when installing a package. (Subs-Package.php)
  ! Display name can now be no longer than 60 characters as people were taking it too far! (Profile.php, Profile template)
  & New error string for the above. (Errors language files)
+ ! Quick edit would lose the old modified time if you made no changes. (Post.php)
 
 
 January 2007

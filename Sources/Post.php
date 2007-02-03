@@ -2221,7 +2221,8 @@ function JavaScriptModify()
 	$request = $smfFunc['db_query']('', "
 			SELECT 
 				t.locked, t.num_replies, t.id_member_started, t.id_first_msg,
-				m.id_msg, m.id_member, m.poster_time, m.subject, m.smileys_enabled, m.body, m.icon
+				m.id_msg, m.id_member, m.poster_time, m.subject, m.smileys_enabled, m.body, m.icon,
+				m.modified_time, m.modified_name
 			FROM {$db_prefix}messages AS m
 				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
 			WHERE m.id_msg = " . (empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg']) . "
@@ -2344,6 +2345,13 @@ function JavaScriptModify()
 		}
 
 		modifyPost($msgOptions, $topicOptions, $posterOptions);
+
+		// If we didn't change anything this time but had before put back the old info.
+		if (!isset($msgOptions['modify_time']) && !empty($row['modified_time']))
+		{
+			$msgOptions['modify_time'] = $row['modified_time'];
+			$msgOptions['modify_name'] = $row['modified_name'];
+		}
 
 		// Changing the first subject updates other subjects to 'Re: new_subject'.
 		if (isset($_POST['subject']) && isset($_REQUEST['change_all_subjects']) && $row['id_first_msg'] == $row['id_msg'] && !empty($row['num_replies']) && (allowedTo('modify_any') || ($row['id_member_started'] == $user_info['id'] && allowedTo('modify_replies'))))
