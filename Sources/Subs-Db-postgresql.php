@@ -493,11 +493,11 @@ function postg_fetch_row($request, $counter = false)
 		return pg_fetch_row($request, $counter);
 
 	// Reset the row counter...
-	if (!isset($db_row_count[$request]))
-		$db_row_count[$request] = 0;
+	if (!isset($db_row_count[(int) $request]))
+		$db_row_count[(int) $request] = 0;
 
 	// Return the right row.
-	return @pg_fetch_row($request, $db_row_count[$request]++);
+	return @pg_fetch_row($request, $db_row_count[(int) $request]++);
 }
 
 // Get an associative array
