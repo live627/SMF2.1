@@ -33,7 +33,7 @@ function template_main()
 			</tr>
 		</table>
 
-		<table border="0" cellspacing="0" cellpadding="6" align="center" class="tborder">
+		<table border="0" cellspacing="0" cellpadding="8" align="center" class="tborder">
 			<tr class="titlebg">
 				<td>', !empty($settings['use_buttons']) ? '<img src="' . $settings['images_url'] . '/buttons/search.gif" align="right" style="margin-right: 4px;" alt="" />' : '', $txt['set_perameters'], '</td>
 			</tr>';
@@ -52,7 +52,7 @@ function template_main()
 
 	echo '
 			<tr>
-				<td class="windowbg">';
+				<td class="windowbg" style="padding: 1em 2em 1em 2em;">';
 
 	if ($context['simple_search'])
 	{
@@ -77,80 +77,89 @@ function template_main()
 	{
 		echo '
 					<input type="hidden" name="advanced" value="1" />
-					<table cellpadding="1" cellspacing="3" border="0">
-						<tr>
-							<td>
-								<b>', $txt['search_for'], ':</b>
-							</td><td>
-							</td><td>
-									<b>', $txt['by_user'], ':</b>
-							</td>
-						</tr><tr>
-							<td>
-								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
-								<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-									function initSearch()
-									{
-										if (document.forms.searchform.search.value.indexOf("%u") != -1)
-											document.forms.searchform.search.value = unescape(document.forms.searchform.search.value);
-									}
-									createEventListener(window);
-									window.addEventListener("load", initSearch, false);
-								// ]]></script>
-							</td><td style="padding-right: 2ex;">
-								<select name="searchtype">
-									<option value="1"', empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['all_words'], '</option>
-									<option value="2"', !empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['any_words'], '</option>
-								</select>
-							</td><td>
-								<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" />
-							</td>
-						</tr>';
+					<div style="padding: 1em;">
+						<table cellpadding="1" cellspacing="3" border="0">
+							<tr>
+								<td width="20%" align="right" valign="top">
+									<b>', $txt['search_for'], ':</b>
+								</td>
+								<td>
+									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
+									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+										function initSearch()
+										{
+											if (document.forms.searchform.search.value.indexOf("%u") != -1)
+												document.forms.searchform.search.value = unescape(document.forms.searchform.search.value);
+										}
+										createEventListener(window);
+										window.addEventListener("load", initSearch, false);
+									// ]]></script>
+								</td>
+								<td>
+									<select name="searchtype">
+										<option value="1"', empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['all_words'], '</option>
+										<option value="2"', !empty($context['search_params']['searchtype']) ? ' selected="selected"' : '', '>', $txt['any_words'], '</option>
+									</select>
+								</td>';
+
 		if (empty($modSettings['search_simple_fulltext']))
 			echo '
-						<tr>
-							<td align="right" class="smalltext" style="padding: 0px;">', $txt['search_example'], '</td>
-							<td colspan="2"></td>
-						</tr>';
+							</tr><tr>
+								<td colspan="3" align="center" class="smalltext" style="padding: 0px;">', $txt['search_example'], '
+								</td>';
+
 		echo '
-						<tr>
-							<td colspan="3"><br />
-								<div style="text-align: left; width: 45%; float: right; margin-right: 2ex;">
-									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_post_age'], ': </b></div><br />
-									', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.
-								</div>
-								<div style="width: 45%;">
-									<div class="small_header" style="margin-bottom: 2px;"><b>', $txt['search_options'], ':</b></div>
+							</tr>
+						</table>
+					</div>
+					<div class="tborder windowbg2" style="padding: 1em;">
+						<table cellpadding="1" cellspacing="3" border="0">
+							<tr>
+								<td width="20%" align="right">
+									<b>', $txt['by_user'], ':</b>
+								</td>
+								<td>
+									<input type="text" name="userspec" value="', empty($context['search_params']['userspec']) ? '*' : $context['search_params']['userspec'], '" size="40" />
+								</td>
+							</tr>
+							<tr>
+								<td width="20%" align="right">
+									<b>', $txt['search_order'], ':</b>
+								</td>
+								<td>
+									<select name="sort">
+										<option value="relevance|desc">', $txt['search_orderby_relevant_first'], '</option>
+										<option value="num_replies|desc">', $txt['search_orderby_large_first'], '</option>
+										<option value="num_replies|asc">', $txt['search_orderby_small_first'], '</option>
+										<option value="id_msg|desc">', $txt['search_orderby_recent_first'], '</option>
+										<option value="id_msg|asc">', $txt['search_orderby_old_first'], '</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td width="20%" align="right" valign="top">
+									<b>', $txt['search_options'], ':</b>
+								</td>
+								<td>
 									<label for="show_complete"><input type="checkbox" name="show_complete" id="show_complete" value="1"', !empty($context['search_params']['show_complete']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_show_complete_messages'], '</label><br />
 									<label for="subject_only"><input type="checkbox" name="subject_only" id="subject_only" value="1"', !empty($context['search_params']['subject_only']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['search_subject_only'], '</label>
-								</div>
-							</td>
-						</tr><tr>
-							<td style="padding-top: 2ex;" colspan="2"><b>', $txt['search_order'], ':</b></td>
-							<td></td>
-						</tr><tr>
-							<td colspan="2">
-								<select name="sort">
-									<option value="relevance|desc">', $txt['search_orderby_relevant_first'], '</option>
-									<option value="num_replies|desc">', $txt['search_orderby_large_first'], '</option>
-									<option value="num_replies|asc">', $txt['search_orderby_small_first'], '</option>
-									<option value="id_msg|desc">', $txt['search_orderby_recent_first'], '</option>
-									<option value="id_msg|asc">', $txt['search_orderby_old_first'], '</option>
-								</select>
-							</td>
-							<td></td>
-						</tr>
-					</table><br />';
-
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div style="text-align: center; padding: 1em;">
+						<b>', $txt['search_post_age'], ': </b> 	', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.
+					</div>';
+						
 		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
 		if (!empty($context['search_params']['topic']))
 			echo '
-					', $txt['search_specific_topic'], ' &quot;', $context['search_topic']['link'], '&quot;.<br />
-					<input type="hidden" name="topic" value="', $context['search_topic']['id'], '" />';
+						', $txt['search_specific_topic'], ' &quot;', $context['search_topic']['link'], '&quot;.<br />
+						<input type="hidden" name="topic" value="', $context['search_topic']['id'], '" />';
 		else
 		{
 			echo '	
-					<fieldset class="windowbg2" style="padding: 10px; margin-left: 5px; margin-right: 5px;">
+					<fieldset class="windowbg2" style="padding: 10px;">
 						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="exandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a><br />
 
 						<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex; display: none;">';
@@ -205,8 +214,8 @@ function template_results()
 	if (isset($context['did_you_mean']) || empty($context['topics']))
 	{
 		echo '
-	<div class="tborder">
-		<table width="100%" cellpadding="4" cellspacing="0" border="0" class="bordercolor" style="margin-bottom: 2ex;">
+	<div class="tborder" style="margin-bottom: 2ex;">
+		<table width="100%" cellpadding="8" cellspacing="0" border="0">
 			<tr class="titlebg">
 				<td>', $txt['search_adjust_query'], '</td>
 			</tr>
@@ -220,7 +229,7 @@ function template_results()
 
 		echo '
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-						<b>', $txt['search_for'], ':</b><br />
+						<b>', $txt['search_for'], ':</b>
 						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
 						<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
 
