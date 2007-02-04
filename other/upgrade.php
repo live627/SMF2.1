@@ -55,7 +55,7 @@ $upgradeurl = $_SERVER['PHP_SELF'];
 // Where the SMF images etc are kept.
 $smfsite = 'http://www.simplemachines.org/smf';
 // Disable the need for admins to login?
-$disable_security = 0;
+$disable_security = 1;
 // How long, in seconds, must admin be inactive to allow someone else to run?
 $upcontext['inactive_timeout'] = 10;
 
@@ -606,7 +606,7 @@ foreach ($upcontext['steps'] as $num => $step)
 		// The current weight of this step in terms of overall progress.
 		$upcontext['step_weight'] = $step[3];
 
-		// We cannot procede if we're not logged in.
+		// We cannot proceed if we're not logged in.
 		if ($num != 0 && !$disable_security && $upcontext['user']['pass'] != $upcontext['upgrade_status']['pass'])
 		{
 			$upcontext['steps'][0][2]();
@@ -921,8 +921,12 @@ function WelcomeLogin()
 	}
 
 	// Are we trying to login?
-	if (isset($_POST['user']))
+	if (isset($_POST['contbutt']) && (!empty($_POST['user']) || $disable_security))
 	{
+		// If we've disabled security pick a suitable name!
+		if (empty($_POST['user']))
+			$_POST['user'] = 'Administrator';
+
 		// Before 2.0 these column names were different!
 		$oldDB = false;
 		if (empty($db_type) || $db_type == 'mysql')
@@ -948,7 +952,7 @@ function WelcomeLogin()
 				SELECT id_member, member_name, passwd, id_group, additional_groups
 				FROM {$db_prefix}members
 				WHERE member_name = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
-		if ($smfFunc['db_num_rows']($request) != 0)
+		if ($smfFunc['db_num_rows']($request) != 0 && !$disable_security)
 		{
 			list ($id_member, $name, $password, $id_group, $addGroups) = $smfFunc['db_fetch_row']($request);
 
@@ -1014,7 +1018,7 @@ function WelcomeLogin()
 			else
 			{
 				$upcontext['user']['id'] = 1;
-				$upcontext['user']['name'] = 'Guest';
+				$upcontext['user']['name'] = 'Administrator';
 			}
 			$upcontext['user']['pass'] = rand(0,60000);
 			// This basically is used to match the GET variables to Settings.php.
