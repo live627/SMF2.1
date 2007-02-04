@@ -60,6 +60,10 @@ if (@version_compare(PHP_VERSION, '5') == -1)
 if (!empty($maintenance) && $maintenance == 2)
 	db_fatal_error();
 
+// Make absolutely sure the cache directory is defined.
+if ((empty($cachedir) || !file_exists($cachedir)) && file_exists($boarddir . '/cache'))
+	$cachedir = $boarddir . '/cache';
+
 // Create a variable to store some SMF specific functions in.
 $smfFunc = array();
 
