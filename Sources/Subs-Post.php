@@ -555,13 +555,13 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	// If the recipient list isn't an array, make it one.
 	$to_array = is_array($to) ? $to : array($to);
 
-	// Sadly Hotmail doesn't support character sets properly.
+	// Sadly Hotmail & Yahoo mail don't support character sets properly.
 	if ($hotmail_fix === null)
 	{
 		$hotmail_to = array();
 		foreach ($to_array as $i => $to_address)
 		{
-			if (preg_match('~@hotmail.[a-zA-Z\.]{2,6}$~i', $to_address) === 1)
+			if (preg_match('~@(yahoo|hotmail)\.[a-zA-Z\.]{2,6}$~i', $to_address) === 1)
 			{
 				$hotmail_to[] = $to_address;
 				$to_array = array_diff($to_array, array($to_address));
@@ -613,41 +613,55 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 			return false;
 	}
 
-	$charset = isset($context['character_set']) ? $context['character_set'] : (isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1');
+	// Save the original message...
+	$orig_message = $message;
 
-	list ($charset, $message, $encoding) = mimespecialchars($message, false, $hotmail_fix, $line_break, $charset);
+	// The mime boundary separates the different alternative versions.
+	$mime_boundary = 'SMF-' . md5($message . time());
 
 	// Sending HTML?  Let's plop in some basic stuff, then.
 	if ($send_html)
 	{
 		// This should send a text message with MIME multipart/alternative stuff.
-		$mime_boundary = 'SMF-' . md5($message . time());
 		$headers .= 'Mime-Version: 1.0' . $line_break;
 		$headers .= 'Content-Type: multipart/alternative; boundary="' . $mime_boundary . '"' . $line_break;
-		$headers .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding);
+		$headers .= 'Content-Transfer-Encoding: 7bit' . $line_break;
 
-		// Save the original message...
-		$orig_message = $message;
+		$no_html_message = un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => $line_break))));
 
 		// But, then, dump it and use a plain one for dinosaur clients.
-		$message = un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => $line_break)))) . $line_break . '--' . $mime_boundary . $line_break;
+		list(, $plain_message) = mimespecialchars($no_html_message, false, true, $line_break);
+		$message = $plain_message . $line_break . '--' . $mime_boundary . $line_break;
 
 		// This is the plain text version.  Even if no one sees it, we need it for spam checkers.
+		list($charset, $plain_charset_message, $encoding) = mimespecialchars($no_html_message, false, false, $line_break);
 		$message .= 'Content-Type: text/plain; charset=' . $charset . $line_break;
-		$message .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding) . $line_break . $line_break;
-		$message .= un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => $line_break)))) . $line_break . '--' . $mime_boundary . $line_break;
+		$message .= 'Content-Transfer-Encoding: ' . $encoding . $line_break . $line_break;
+		$message .= $plain_charset_message . $line_break . '--' . $mime_boundary . $line_break;
 
 		// This is the actual HTML message, prim and proper.  If we wanted images, they could be inlined here (with multipart/related, etc.)
+		list($charset, $html_message, $encoding) = mimespecialchars($orig_message, false, $hotmail_fix, $line_break);
 		$message .= 'Content-Type: text/html; charset=' . $charset . $line_break;
 		$message .= 'Content-Transfer-Encoding: ' . ($encoding == '' ? '7bit' : $encoding) . $line_break . $line_break;
-		$message .= $orig_message . $line_break . '--' . $mime_boundary . '--';
+		$message .= $html_message . $line_break . '--' . $mime_boundary . '--';
 	}
 	// Text is good too.
 	else
 	{
-		$headers .= 'Content-Type: text/plain; charset=' . $charset . $line_break;
-		if ($encoding != '')
-			$headers .= 'Content-Transfer-Encoding: ' . $encoding;
+		// Using mime, as it allows to send a plain unencoded alternative.
+		$headers .= 'Mime-Version: 1.0' . $line_break;
+		$headers .= 'Content-Type: multipart/alternative; boundary="' . $mime_boundary . '"' . $line_break;
+		$headers .= 'Content-Transfer-Encoding: 7bit' . $line_break;
+
+		// Send a plain message first, for the older web clients.
+		list(, $plain_message) = mimespecialchars($orig_message, false, true, $line_break);
+		$message = $plain_message . $line_break . '--' . $mime_boundary . $line_break;
+
+		// Now add an encoded message using the forum's character set.
+		list ($charset, $encoded_message, $encoding) = mimespecialchars($orig_message, false, false, $line_break);
+		$message .= 'Content-Type: text/plain; charset=' . $charset . $line_break;
+		$message .= 'Content-Transfer-Encoding: ' . $encoding . $line_break . $line_break;
+		$message .= $encoded_message . $line_break . '--' . $mime_boundary . '--';
 	}
 
 	// Are we using the mail queue, if so this is where we butt in...

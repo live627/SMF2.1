@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2658 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2659 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -19,6 +19,8 @@ February 2007
  + Added functionality for checking if a username is available and password suitability to the registration screen. (Register.php, Register template)
  * Added a new register javascript class, and some place holder images. (register.js)
  & Added some language entries for the above changes. (Login language file)
+ ! Always send an alternative plain us-ascii text version of the body along with each mail for basic support of older mail clients. (Subs-Post.php)
+ ! Convert non-ascii characters to entities for mails sent to yahoo addresses to assure characters are being displayed properly in yahoo's client. (Subs-Post.php)
 
 
 January 2007
