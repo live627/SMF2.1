@@ -2,7 +2,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 {
 	// Create some links to the editor object.
 	this.uid = uniqueId;
-	this.textHandle = 'NULL';
+	this.textHandle = false;
 	this.currentText = '';
 	var showDebug = false;
 	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
@@ -24,26 +24,23 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 	// This will be used for loading the wysiwyg stuff.
 	this.init = init;
-	this.ButtonClickHandler = ButtonClickHandler;
-	this.SmileyClickHandler = SmileyClickHandler;
-	this.ButtonHoverHandler = ButtonHoverHandler;
 	this.addButton = addButton;
 	this.initSelect = initSelect;
 	this.addSmiley = addSmiley;
-	this.ToggleView = ToggleView;
-	this.InsertText = InsertText;
-	this.InsertSmiley = InsertSmiley;
+	this.toggleView = toggleView;
+	this.insertText = insertText;
+	this.insertSmiley = insertSmiley;
 	this.getMode = getMode;
 	this.getText = getText;
 	this.showMoreSmileys = showMoreSmileys;
 	this.resizeTextArea = resizeTextArea;
-	this.doSubmit = DoSubmit;
+	this.doSubmit = doSubmit;
 
 	// Spellcheck functionaliy.
 	this.spellCheckStart = spellCheckStart;
 	this.spellCheckEnd = spellCheckEnd;
 
-	this.fetchDefaultFont = fetchDefaultFont;
+	// Kinda holds all the useful stuff.
 	var buttonControls = new Array();
 	var selectControls = new Array();
 	var smfSmileys = new Array();
@@ -63,7 +60,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 	// Codes to call a private function
 	var smfExec = new Array();
-	smfExec['toggle'] = ToggleView;
+	smfExec['toggle'] = toggleView;
 	//smfExec['increase_height'] = makeEditorTaller;
 	//smfExec['decrease_height'] = makeEditorShorter;
 
@@ -273,7 +270,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	function initClose()
 	{
 		// Set the text.
-		InsertText(currentText, true);
+		insertText(currentText, true);
 
 		// Better make us the focus!
 		setFocus();
@@ -424,7 +421,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	}
 
 	// Set the HTML content to be that of the text box - if we are in wysiwyg mode.
-	function DoSubmit()
+	function doSubmit()
 	{
 		// Record what we were doing!
 		document.getElementById('editor_mode').value = (mode ? 1 : 0);
@@ -434,7 +431,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	}
 
 	// Populate the box with text.
-	function InsertText(text, clear)
+	function insertText(text, clear)
 	{
 		// Erase it all?
 		if (clear)
@@ -523,7 +520,10 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 		if (smileyHandle)
 		{
-			smileyHandle.onclick = this.SmileyClickHandler;
+			// Setup the event callback.
+			createEventListener(smileyHandle);
+			smileyHandle.addEventListener('click', smileyEventHandler, false);
+
 			smileyHandle.code = code;
 			smileyHandle.smileyname = smileyname;
 			smileyHandle.desc = desc;
@@ -541,8 +541,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		buttonControls[code][3] = after;
 
 		// Tie all the relevant actions to the event handler.
-		codeHandle.onclick = this.ButtonClickHandler;
-		codeHandle.onmouseover = codeHandle.onmouseout = this.ButtonHoverHandler;
+		createEventListener(codeHandle);
+		codeHandle.addEventListener('click', buttonEventHandler, false);
+		codeHandle.addEventListener('mouseover', buttonEventHandler, false);
+		codeHandle.addEventListener('mouseout', buttonEventHandler, false);
+
 		codeHandle.code = code;		
 	}
 
@@ -571,7 +574,27 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				selectHandle.options[selectHandle.options.length] = new Option(fontFaces[i], fontFaces[i].toLowerCase());
 		}
 
-		selectHandle.onchange = SelectChangeHandler;
+		createEventListener(selectHandle);
+		selectHandle.addEventListener('change', selectEventHandler, false);
+	}
+
+	function smileyEventHandler(ev)
+	{
+		// Just for IE...
+		if (!ev)
+			ev = window.event;
+
+		// Select the current smiley element.
+		if (this.code)
+			curElement = this;
+		else if (ev.srcElement)
+			curElement = ev.srcElement;
+
+		// Assume it does exist?!
+		if (!curElement || !curElement.code)
+			return false;
+
+		insertSmiley(curElement.smileyname, curElement.code, curElement.desc);
 	}
 
 	// Special handler for WYSIWYG.
@@ -580,102 +603,122 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		return frameDocument.execCommand(command, ui, value);
 	}
 
-	function SmileyClickHandler(ev)
-	{
-		// Just for IE...
-		if (!ev)
-			ev = window.event;
-
-		InsertSmiley(this.smileyname, this.code, this.desc);
-	}
-
-	function InsertSmiley(name, code, desc)
+	function insertSmiley(name, code, desc)
 	{
 		// In text mode we just add it in as we always did.
 		if (!mode)
 		{
-			InsertText(' ' + code);
+			insertText(' ' + code);
 		}
 		// Otherwise we need to do a whole image...
 		else
 		{
 			uniqueid = 1000 + Math.floor(Math.random() * 100000);
-			InsertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + uniqueid + '_' + name + '" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
+			insertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + uniqueid + '_' + name + '" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
 		}
 	}
 
-	function ButtonClickHandler(ev)
+	function buttonEventHandler(ev)
 	{
 		// IE etc...
 		if (!ev)
 			ev = window.event;
 
+		// What is the current element?
+		if (this.code)
+			curElement = this;
+		else if (ev.srcElement)
+			curElement = ev.srcElement;
+
+		if (!curElement || !buttonControls[curElement.code])
+			return false;
+
 		setFocus();
 
-		// An special SMF function?
-		if (smfExec[this.code])
+		// Are handling a hover?
+		if (ev.type == 'mouseover' || ev.type == 'mouseout')
 		{
-			smfExec[this.code]();
+			if (buttonControls[curElement.code])
+				curElement.style.backgroundImage = "url(" + smf_images_url + (ev.type == 'mouseover' ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
 		}
-		else
+		else if (ev.type == 'click')
 		{
-			// In text this is easy...
-			if (!mode)
+			// An special SMF function?
+			if (smfExec[curElement.code])
 			{
-				if (buttonControls[this.code])
-				{
-					// Replace?
-					if (buttonControls[this.code][3] == '')
-					{
-						replaceText(buttonControls[this.code][2], textHandle)
-					}
-					// Surround!
-					else
-					{
-						surroundText(buttonControls[this.code][2], buttonControls[this.code][3], textHandle)
-					}
-				}
+				smfExec[curElement.code]();
 			}
 			else
 			{
-				// Is it easy?
-				if (simpleExec[this.code])
+				// In text this is easy...
+				if (!mode)
 				{
-					smf_execCommand(simpleExec[this.code], false, null);
+					if (buttonControls[curElement.code])
+					{
+						// Replace?
+						if (buttonControls[curElement.code][3] == '')
+						{
+							replaceText(buttonControls[curElement.code][2], textHandle)
+						}
+						// Surround!
+						else
+						{
+							surroundText(buttonControls[curElement.code][2], buttonControls[curElement.code][3], textHandle)
+						}
+					}
 				}
-				// A link?
-				else if (this.code == 'url' || this.code == 'email' || this.code == 'ftp')
+				else
 				{
-					insertLink(this.code);
-				}
-				// Maybe an image?
-				else if (this.code == 'img')
-				{
-					insertImage();
-				}
-				// Everything else means doing something ourselves.
-				else if (buttonControls[this.code][2])
-				{
-					InsertCustomHTML(this.code);
+					// Is it easy?
+					if (simpleExec[curElement.code])
+					{
+						smf_execCommand(simpleExec[curElement.code], false, null);
+					}
+					// A link?
+					else if (curElement.code == 'url' || curElement.code == 'email' || curElement.code == 'ftp')
+					{
+						insertLink(curElement.code);
+					}
+					// Maybe an image?
+					else if (curElement.code == 'img')
+					{
+						insertImage();
+					}
+					// Everything else means doing something ourselves.
+					else if (buttonControls[curElement.code][2])
+					{
+						InsertCustomHTML(curElement.code);
+					}
 				}
 			}
-		}
 
-		updateEditorControls();
+			updateEditorControls();
+		}
 	}
 
 	// Changing a select box?
-	function SelectChangeHandler(ev)
+	function selectEventHandler(ev)
 	{
+		// For IE as always!
 		if (!ev)
 			ev = window.event;
 
+		// Work out what the current element is.
+		if (this.code)
+			curElement = this;
+		else if (ev.srcElement)
+			curElement = ev.srcElement;
+
+		// Make sure it exists.
+		if (!curElement || !selectControls[curElement.code])
+			return false;
+
 		setFocus();
 
-		value = document.getElementById('sel_' + this.code).value;
+		value = document.getElementById('sel_' + curElement.code).value;
 
 		// Changing font face?
-		if (this.code == 'face')
+		if (curElement.code == 'face')
 		{
 			// Not in HTML mode?
 			if (!mode)
@@ -689,7 +732,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			}
 		}
 		// Font size?
-		else if (this.code == 'size')
+		else if (curElement.code == 'size')
 		{
 			// Are we in boring mode?
 			if (!mode)
@@ -702,7 +745,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			}
 		}
 		// Or color even?
-		else if (this.code == 'color')
+		else if (curElement.code == 'color')
 		{
 			// Are we in boring mode?
 			if (!mode)
@@ -748,20 +791,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 		// Are we overwriting?
 		if (rightTag == '')
-			InsertText(leftTag);
+			insertText(leftTag);
 		else
-			InsertText(leftTag + selection + rightTag);
-	}
-
-	// Do mouse over/under.
-	function ButtonHoverHandler(ev)
-	{
-		// IE etc...
-		if (!ev)
-			ev = window.event;
-
-		if (buttonControls[this.code])
-			this.style.backgroundImage = "url(" + smf_images_url + (ev.type == 'mouseover' ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
+			insertText(leftTag + selection + rightTag);
 	}
 
 	// Insert a URL link.
@@ -797,7 +829,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			}
 			else
 			{
-				InsertText('<a href="' + text + '">' + text + '</a>');
+				insertText('<a href="' + text + '">' + text + '</a>');
 			}
 		}
 	}
@@ -883,7 +915,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 	}
 
 	// Toggle wysiwyg/normal mode.
-	function ToggleView(view)
+	function toggleView(view)
 	{
 		if (!richTextPossible)
 			alert('Your browser does not support Rich Text editing.');
@@ -931,7 +963,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			frameHandle.style.display = '';
 			breadHandle.style.display = '';
 			textHandle.style.display = 'none';
-			InsertText(text, true);
+			insertText(text, true);
 		}
 		else
 		{
@@ -941,7 +973,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			frameHandle.style.display = 'none';
 			breadHandle.style.display = 'none';
 			textHandle.style.display = '';
-			InsertText(text, true);
+			insertText(text, true);
 		}
 
 		// Focus, focus, focus.
@@ -969,7 +1001,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 			for (i = 0; i < smileys[row].length; i++)
 			{
 				smileys[row][i][2] = smileys[row][i][2].replace(/"/g, '&quot;');
-				smileyPopupWindow.document.write('<a href="javascript:void(0);" onclick="window.opener.editorHandle' + postbox + '.InsertSmiley(\'' + smileys[row][i][1] + '\', \'' + smileys[row][i][0] + '\', \'' + smileys[row][i][2] + '\'); window.focus(); return false;"><img src="' + smf_smileys_url + '/' + smileys[row][i][1] + '" id="sml_' + smileys[row][i][1] + '" alt="' + smileys[row][i][2] + '" title="' + smileys[row][i][2] + '" style="padding: 4px;" border="0" /></a> ');
+				smileyPopupWindow.document.write('<a href="javascript:void(0);" onclick="window.opener.editorHandle' + postbox + '.insertSmiley(\'' + smileys[row][i][1] + '\', \'' + smileys[row][i][0] + '\', \'' + smileys[row][i][2] + '\'); window.focus(); return false;"><img src="' + smf_smileys_url + '/' + smileys[row][i][1] + '" id="sml_' + smileys[row][i][1] + '" alt="' + smileys[row][i][2] + '" title="' + smileys[row][i][2] + '" style="padding: 4px;" border="0" /></a> ');
 			}
 			smileyPopupWindow.document.write("<br />");
 		}
@@ -1090,7 +1122,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
 			text += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
 
-		InsertText(text, true);
+		insertText(text, true);
 		setFocus();
 	}
 

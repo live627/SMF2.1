@@ -112,7 +112,7 @@ function bbc_to_html($text)
 // The harder one - wysiwyg to BBC!
 function html_to_bbc($text)
 {
-	global $db_prefix, $modSettings, $smfFunc;
+	global $db_prefix, $modSettings, $smfFunc, $sourcedir;
 
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => ''));
@@ -222,7 +222,7 @@ function html_to_bbc($text)
    			elseif ($s == 'font-style')
 			{
 				if ($v == 'italic')
-					$tags[] = array('[u]', '[/u]');
+					$tags[] = array('[i]', '[/i]');
    			}
    			// Font colors?
    			elseif ($s == 'color')
@@ -270,7 +270,7 @@ function html_to_bbc($text)
 		$tag = str_replace($matches[2], $extra_attr, $tag);
 
 		// Put the tags back into the body.
-		$text = substr($text, 0, $start_pos) . $before . $tag . $content . $after . substr($text, $end_pos);
+		$text = substr($text, 0, $start_pos) . $tag . $before . $content . $after . substr($text, $end_pos);
  	}
 
 	// Let's pull out any legacy alignments.
@@ -295,7 +295,7 @@ function html_to_bbc($text)
 		// Put the tags back into the body.
 		$text = substr($text, 0, $start_pos) . '[' . $matches[3] . ']' . $tag . $content . '[/' . $matches[3] . ']' . substr($text, $end_pos + strlen('</' . $matches[1] . '>'));
  	}
- 
+
 	// Let's do some special stuff for fonts - cause we all love fonts.
 	while (preg_match('~<font\s+([A-Za-z]+="*[#\w\s]+"*)\s*([A-Za-z]+="*[#\w\s]+"*)*\s*([A-Za-z]+="*[#\w\s]+"*)*[^<>]*?>~i', $text, $matches) != false)
 	{
@@ -396,7 +396,7 @@ function html_to_bbc($text)
 		// Replace the tag
 		$text = substr($text, 0, $start_pos) . $tag . substr($text, $end_pos);
  	}
- 
+
  	// I love my own image...
  	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) != false)
 	{
@@ -483,8 +483,10 @@ function html_to_bbc($text)
 	);
 	$text = preg_replace(array_keys($tags), array_values($tags), $text);
 
-	// But really - at the end of the day - we remove every other bit of html crap!
 	$text = strip_tags($text);
+
+	// Some tags often end up as just dummy tags - remove those.
+	$text = preg_replace('~\[[bisu]\]\s*\[/[bisu]\]~', '', $text);
 
 	return $text;
 }
