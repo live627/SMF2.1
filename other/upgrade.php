@@ -3199,13 +3199,13 @@ function template_upgrade_above()
 		<div id="content">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" style="padding-top: 1ex;">
 			<tr>
-				<td width="180" valign="top" style="padding-right: 10px;">
-					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="170">
+				<td width="250" valign="top" style="padding-right: 10px;">
+					<table border="0" cellpadding="8" cellspacing="0" class="tborder" width="240">
 						<tr>
 							<td class="titlebg">Steps</td>
 						</tr>
 						<tr>
-							<td class="windowbg">';
+							<td class="windowbg2">';
 
 	foreach ($upcontext['steps'] as $num => $step)
 		echo '
@@ -3218,9 +3218,9 @@ function template_upgrade_above()
 							<td class="titlebg">Progress</td>
 						</tr>
 						<tr>
-							<td class="windowbg">
+							<td class="windowbg2">
 								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">Overall Progress:</div>
-								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
 									<div id="overall_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $upcontext['overall_percent'], '%</div>
 									<div id="overall_progress" style="width: ', $upcontext['overall_percent'], '%; height: 12pt; z-index: 1; background-color: lime;">&nbsp;</div>
 								</div>';
@@ -3228,14 +3228,14 @@ function template_upgrade_above()
 	if (isset($upcontext['step_progress']))
 		echo '
 								<div class="smalltext" style="text-align: center; padding: 3px 3px 6px 3px;">Step Progress:</div>
-								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative;">
+								<div style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative;">
 									<div id="step_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $upcontext['step_progress'], '%</div>
 									<div id="step_progress" style="width: ', $upcontext['step_progress'], '%; height: 12pt; z-index: 1; background-color: #FFD000;">&nbsp;</div>
 								</div>';
 
 	echo '
 								<div id="substep_bar_div" class="smalltext" style="display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">', isset($upcontext['substep_progress_name']) ? trim(strtr($upcontext['substep_progress_name'], array('.' => ''))) : '', ':</div>
-								<div id="substep_bar_div2" style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; padding: 1px; position: relative; display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">
+								<div id="substep_bar_div2" style="font-size: 8pt; height: 12pt; border: 1px solid black; background-color: white; position: relative; display: ', isset($upcontext['substep_progress']) ? '' : 'none', ';">
 									<div id="substep_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : '', '%</div>
 									<div id="substep_progress" style="width: ', isset($upcontext['substep_progress']) ? $upcontext['substep_progress'] : 0, '%; height: 12pt; z-index: 1; background-color: #EEBAF4;">&nbsp;</div>
 								</div>';
