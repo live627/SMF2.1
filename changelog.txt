@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2661 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2662 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -23,6 +23,7 @@ February 2007
  ! Convert non-ascii characters to entities for mails sent to yahoo addresses to assure characters are being displayed properly in yahoo's client. (Subs-Post.php)
  * Updated the search template with new layout. (Search template)
  * Wider sidebox and color tweaks for upgrade.php ( Upgrade.php )
+ * Changed icons and slight layout changes in Register.template (register.js, Register template, field_check.gif, field_valid.gif, field_unvalid.gif )
 
 
 January 2007

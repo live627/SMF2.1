@@ -8,8 +8,8 @@ function smfRegister(formID, passwordDifficultyLevel, regTextStrings)
 	var textStrings = regTextStrings ? regTextStrings : new Array();
 	var passwordLevel = passwordDifficultyLevel ? passwordDifficultyLevel : 1;
 
-	var validColor = '#B8F4B8';
-	var invalidColor = '#FCB8A6';
+	var validColor = '#F5FFF0';
+	var invalidColor = '#FFF0F0';
 	// Setup all the fields!
 	autoSetup(formID);
 

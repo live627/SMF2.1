@@ -86,7 +86,7 @@ echo '
 							<div class="smalltext">', $txt['identification_by_smf'], '</div>
 						</td>
 						<td>
-							<input type="text" name="user" id="smf_autov_username" size="20" tabindex="', $context['tabindex']++, '" maxlength="25" />
+							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" />
 							<span id="smf_autov_username_div" style="display: none;">
 								<a id="smf_autov_username_link" href="#">
 									<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
@@ -154,7 +154,11 @@ echo '
 							<b>', $txt['visual_verification_label'], ':</b>
 							<div class="smalltext">', $txt['visual_verification_description'], '</div>
 						</td>
-						<td>';
+						<td>
+							<div class="smalltext" style="margin: 4px 0 8px 0;">
+								<input type="text" name="visual_verification_code" size="30" tabindex="', $context['tabindex']++, '" />
+								<a href="', $context['verificiation_image_href'], ';sound" onclick="return reqWin(this.href, 400, 120);">', $txt['visual_verification_sound'], '</a> / <a href="', $scripturl, '?action=register" onclick="refreshImages(); return false;">', $txt['visual_verification_request_new'], '</a>
+							</div>';
 		if ($context['use_graphic_library'])
 			echo '
 							<img src="', $context['verificiation_image_href'], '" alt="', $txt['visual_verification_description'], '" id="verificiation_image" /><br />';
@@ -166,10 +170,6 @@ echo '
 							<img src="', $context['verificiation_image_href'], ';letter=4" alt="', $txt['visual_verification_description'], '" id="verificiation_image_4" />
 							<img src="', $context['verificiation_image_href'], ';letter=5" alt="', $txt['visual_verification_description'], '" id="verificiation_image_5" />';
 		echo '
-							<input type="text" name="visual_verification_code" size="30" tabindex="', $context['tabindex']++, '" />
-							<div class="smalltext">
-								<a href="', $context['verificiation_image_href'], ';sound" onclick="return reqWin(this.href, 400, 120);">', $txt['visual_verification_sound'], '</a> | <a href="', $scripturl, '?action=register" onclick="refreshImages(); return false;">', $txt['visual_verification_request_new'], '</a>
-							</div>
 						</td>
 					</tr>';
 	}
