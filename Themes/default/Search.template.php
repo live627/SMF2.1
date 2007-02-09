@@ -3,7 +3,7 @@
 
 function template_main()
 {
-	global $context, $settings, $options, $txt, $scripturl;
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[

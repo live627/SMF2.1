@@ -570,8 +570,7 @@ function Display()
 		$smfFunc['db_free_result']($request);
 
 		$request = $smfFunc['db_query']('', "
-			SELECT
-				COUNT(DISTINCT id_member) AS total
+			SELECT COUNT(DISTINCT id_member) AS total
 			FROM {$db_prefix}log_polls
 			WHERE id_poll = $topicinfo[id_poll]", __FILE__, __LINE__);
 		list ($pollinfo['total']) = $smfFunc['db_fetch_row']($request);

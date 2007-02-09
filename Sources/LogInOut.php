@@ -339,6 +339,10 @@ function Login2()
 		// Maybe they are using a hash from before the password fix.
 		$other_passwords[] = sha1(strtolower($user_settings['member_name']) . $smfFunc['db_escape_string'](un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd']))));
 
+		// SMF's sha1 function can give a funny result on Linux (Not our fault!). If we've now got the real one let the old one be valid!
+		require_once($sourcedir . '/Subs-Compat.php');
+		$other_passwords[] = sha1_smf(strtolower($user_settings['member_name']) . un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd'])));
+
 		// Whichever encryption it was using, let's make it use SMF's now ;).
 		if (in_array($user_settings['passwd'], $other_passwords))
 		{

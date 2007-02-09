@@ -407,7 +407,7 @@ function scheduled_auto_optimize()
 // Send out a daily email of all subscribed topics.
 function scheduled_daily_digest()
 {
-	global $db_prefix, $weekly, $txt, $mbname, $scripturl, $sourcedir, $smfFunc, $context, $modSettings;
+	global $db_prefix, $is_weekly, $txt, $mbname, $scripturl, $sourcedir, $smfFunc, $context, $modSettings;
 
 	// We'll want this...
 	require_once($sourcedir . '/Subs-Post.php');

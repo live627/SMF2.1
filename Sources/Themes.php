@@ -420,7 +420,7 @@ function SetThemeOptions()
 		$customFieldsQuery = empty($customFields) ? '' : ('AND variable NOT IN (\'' . implode("', '", $customFields) . '\')');
 
 		$request = $smfFunc['db_query']('', "
-			SELECT id_theme, COUNT(DISTINCT id_member) AS value
+			SELECT COUNT(DISTINCT id_member) AS value, id_theme
 			FROM {$db_prefix}themes
 			WHERE id_member > 0
 				$customFieldsQuery
