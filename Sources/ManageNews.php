@@ -55,13 +55,14 @@ if (!defined('SMF'))
 		- requires the send_mail permission.
 		- form is submitted to ?action=admin;area=news;sa=mailingsend.
 
-	void SendMailing()
+	void SendMailing(bool clean_only = false)
 		- handles the sending of the forum mailing in batches.
 		- uses the ManageNews template and email_members_send sub template.
 		- called by ?action=admin;area=news;sa=mailingsend
 		- requires the send_mail permission.
 		- redirects to itself when more batches need to be sent.
 		- redirects to ?action=admin after everything has been sent.
+		- if clean_only is set will only clean the variables, put them in context, then return.
 
 	void NewsSettings()
 		- set general news and newsletter settings and permissions.
@@ -287,13 +288,37 @@ function ComposeMailing()
 {
 	global $txt, $db_prefix, $sourcedir, $context, $smfFunc;
 
-	$list = array();
-	$do_pm = !empty($_POST['sendPM']);
+	// Start by finding any members!
+	$toClean = array();
+	if (!empty($_POST['members']))
+		$toClean[] = 'members';
+	if (!empty($_POST['exclude_members']))
+		$toClean[] = 'exclude_members';
+	if (!empty($toClean))
+	{
+		require_once($sourcedir . '/Subs-Auth.php');
+		foreach ($toClean as $type)
+		{
+			// Remove the quotes.
+			$_POST[$type] = strtr($_POST[$type], array('\\"' => '"'));
 
-	// Opt-out?
-	$condition = isset($_POST['email_force']) ? '' : '
-				AND mem.notify_announcements = 1';
-				
+			preg_match_all('~"([^"]+)"~', $_POST[$type], $matches);
+			$_POST[$type] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_POST[$type]))));
+
+			foreach ($_POST[$type] as $index => $member)
+				if (strlen(trim($member)) > 0)
+					$_POST[$type][$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower']($smfFunc['db_unescape_string'](trim($member))));
+				else
+					unset($_POST[$type][$index]);
+
+			// Find the members
+			$_POST[$type] = implode(',', array_keys(findMembers($_POST[$type])));
+		}
+	}
+
+	// Clean the other vars.
+	SendMailing(true);
+
 	// Get a list of all full banned users.  Use their Username and email to find them.  Only get the ones that can't login to turn off notification.
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.id_member
@@ -303,135 +328,169 @@ function ComposeMailing()
 		WHERE (bg.cannot_access = 1 OR bg.cannot_login = 1) AND (ISNULL(bg.expire_time) OR bg.expire_time > " . time() . ")
 			AND NOT ISNULL(mem.id_member)
 		GROUP BY mem.id_member", __FILE__, __LINE__);
-
-	$banMembers = array();
+	// For each of these add them to the excluded list.
 	while ($row = $smfFunc['db_fetch_row']($request))
-		list ($banMembers[]) = $row;
+		$context['recipients']['exclude_members'][] = $row['id_member'];
 	$smfFunc['db_free_result']($request);
 
-	$condition .= empty($banMembers) ? '' : '
-				AND mem.id_member NOT IN (' . implode(', ', $banMembers) . ')';
-
-	// Did they select moderators too?
-	if (!empty($_POST['who']) && in_array(3, $_POST['who']))
+	// Did they select moderators - if so add them as specific members...
+	if ((!empty($context['recipients']['groups']) && in_array(3, $context['recipients']['groups'])) || (!empty($context['recipients']['exclude_groups']) && in_array(3, $context['recipients']['exclude_groups'])))
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT DISTINCT " . ($do_pm ? 'mem.member_name' : 'mem.email_address') . " AS identifier
+			SELECT DISTINCT mem.id_member AS identifier
 			FROM {$db_prefix}members AS mem
 				INNER JOIN {$db_prefix}moderators AS mods ON (mods.id_member = mem.id_member)
-			WHERE mem.is_activated = 1$condition", __FILE__, __LINE__);
+			WHERE mem.is_activated = 1", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$list[] = $row['identifier'];
-		$smfFunc['db_free_result']($request);
-
-		unset($_POST['who'][3], $_POST['who'][3]);
-	}
-
-	// How about regular members?
-	if (!empty($_POST['who']) && in_array(0, $_POST['who']))
-	{
-		$request = $smfFunc['db_query']('', "
-			SELECT " . ($do_pm ? 'mem.member_name' : 'mem.email_address') . " AS identifier
-			FROM {$db_prefix}members AS mem
-			WHERE mem.id_group = 0
-				AND mem.is_activated = 1$condition", __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$list[] = $row['identifier'];
-		$smfFunc['db_free_result']($request);
-
-		unset($_POST['who'][0], $_POST['who'][0]);
-	}
-
-	// Load all the other groups.
-	if (!empty($_POST['who']))
-	{
-		foreach ($_POST['who'] as $k => $v)
-			$_POST['who'][$k] = (int) $v;
-
-		$request = $smfFunc['db_query']('', "
-			SELECT " . ($do_pm ? 'mem.member_name' : 'mem.email_address') . " AS identifier
-			FROM {$db_prefix}members AS mem
-				INNER JOIN {$db_prefix}membergroups AS mg ON ((mg.id_group = mem.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
-					AND mg.id_group IN (" . implode(',', $_POST['who']) . "))
-			WHERE mem.is_activated = 1$condition", __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$list[] = $row['identifier'];
+		{
+			if (in_array(3, $context['recipients']))
+				$context['recipients']['exclude_members'][] = $row['identifier'];
+			else
+				$context['recipients']['members'][] = $row['identifier'];
+		}
 		$smfFunc['db_free_result']($request);
 	}
 
-	// Tear out duplicates....
-	$list = array_unique($list);
+	// For progress bar!
+	$context['total_emails'] = count($context['recipients']['emails']);
+	$request = $smfFunc['db_query']('', "
+		SELECT MAX(id_member)
+		FROM {$db_prefix}members", __FILE__, __LINE__);
+	list ($context['max_id_member']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
 
-	// Sending as a personal message?
-	if ($do_pm)
-	{
-		require_once($sourcedir . '/PersonalMessage.php');
-		require_once($sourcedir . '/Subs-Post.php');
-		$_REQUEST['bcc'] = implode(',', $list);
-		MessagePost();
-	}
-	else
-	{
-		$context['page_title'] = $txt['admin_newsletters'];
+	// Clean up the arrays.
+	$context['recipients']['members'] = array_unique($context['recipients']['members']);
+	$context['recipients']['exclude_members'] = array_unique($context['recipients']['exclude_members']);
 
-		// Just send the to list to the template.
-		$context['addresses'] = implode('; ', $list);
-		$context['default_subject'] = $context['forum_name'] . ': ' . $txt['subject'];
-		$context['default_message'] = $txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n{\$board_url}";
+	// Setup the template!
+	$context['page_title'] = $txt['admin_newsletters'];
+	$context['sub_template'] = 'email_members_compose';
 
-		$context['sub_template'] = 'email_members_compose';
-	}
+	$context['default_subject'] = $context['forum_name'] . ': ' . $txt['subject'];
+	$context['default_message'] = $txt['message'] . "\n\n" . $txt['regards_team'] . "\n\n{\$board_url}";
 }
 
-function SendMailing()
+// Send out the mailing!
+function SendMailing($clean_only = false)
 {
 	global $txt, $db_prefix, $sourcedir, $context, $smfFunc;
 	global $scripturl, $modSettings, $user_info;
 
-	checkSession();
-
-	require_once($sourcedir . '/Subs-Post.php');
-
 	// How many to send at once? Quantity depends on whether we are queueing or not.
 	$num_at_once = empty($modSettings['mail_queue']) ? 60 : 1000;
 
-	// Get all the receivers.
-	$addressed = array_unique(explode(';', $smfFunc['db_unescape_string']($_POST['emails'])));
-	$cleanlist = array();
-	foreach ($addressed as $curmem)
-	{
-		$curmem = trim($curmem);
-		if ($curmem != '')
-			$cleanlist[$curmem] = $curmem;
-	}
+	// If by PM's I suggest we half the above number.
+	if (!empty($_POST['send_pm']))
+		$num_at_once /= 2;
 
-	$context['emails'] = implode(';', $cleanlist);
-	$context['subject'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['subject']));
-	$context['message'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['message']));
-	$context['send_html'] = !empty($_POST['send_html']) ? '1' : '0';
-	$context['parse_html'] = !empty($_POST['parse_html']) ? '1' : '0';
+	checkSession();
+
+	// Where are we actually to?
 	$context['start'] = isset($_REQUEST['start']) ? $_REQUEST['start'] : 0;
+	$context['email_force'] = !empty($_POST['email_force']) ? 1 : 0;
+	$context['send_pm'] = !empty($_POST['send_pm']) ? 1 : 0;
+	$context['total_emails'] = !empty($_POST['total_emails']) ? (int) $_POST['total_emails'] : 0;
+	$context['max_id_member'] = !empty($_POST['max_id_member']) ? (int) $_POST['max_id_member'] : 0;
 
-	$send_list = array();
-	$i = 0;
-	foreach ($cleanlist as $email)
+	// Create our main context.
+	$context['recipients'] = array(
+		'groups' => array(),
+		'exclude_groups' => array(),
+		'members' => array(),
+		'exclude_members' => array(),
+		'emails' => array(),
+	);
+
+	// Have we any excluded members?
+	if (!empty($_POST['exclude_members']))
 	{
-		if (++$i <= $context['start'])
-			continue;
-		if ($i > $context['start'] + $num_at_once)
-			break;
-
-		$send_list[$email] = $email;
+		$members = explode(',', $_POST['exclude_members']);
+		foreach ($members as $member)
+			if ($member >= $context['start'])
+				$context['recipients']['exclude_members'][] = (int) $member;
 	}
 
-	$context['start'] += $num_at_once;
-	$context['percentage_done'] = round(($context['start'] * 100) / count($cleanlist), 2);
+	// What about members we *must* do?
+	if (!empty($_POST['members']))
+	{
+		$members = explode(',', $_POST['members']);
+		foreach ($members as $member)
+			if ($member >= $context['start'])
+				$context['recipients']['members'][] = (int) $member;
+	}
+	// Cleaning groups is simple - although deal with both checkbox and commas.
+	if (!empty($_POST['groups']))
+	{
+		if (is_array($_POST['groups']))
+		{
+			foreach ($_POST['groups'] as $group => $dummy)
+				$context['recipients']['groups'][] = (int) $group;
+		}
+		else
+		{
+			$groups = explode(',', $_POST['groups']);
+			foreach ($groups as $group)
+				$context['recipients']['groups'][] = (int) $group;
+		}
+	}
+	// Same for excluded groups
+	if (!empty($_POST['exclude_groups']))
+	{
+		if (is_array($_POST['exclude_groups']))
+		{
+			foreach ($_POST['exclude_groups'] as $group => $dummy)
+				$context['recipients']['exclude_groups'][] = (int) $group;
+		}
+		else
+		{
+			$groups = explode(',', $_POST['exclude_groups']);
+			foreach ($groups as $group)
+				$context['recipients']['exclude_groups'][] = (int) $group;
+		}
+	}
+	// Finally - emails!
+	if (!empty($_POST['emails']))
+	{
+		$addressed = array_unique(explode(';', $smfFunc['db_unescape_string']($_POST['emails'])));
+		foreach ($addressed as $curmem)
+		{
+			$curmem = trim($curmem);
+			if ($curmem != '')
+				$context['recipients']['emails'][$curmem] = $curmem;
+		}
+	}
 
-	// Prepare the message for HTML.
-	if (!empty($_POST['send_html']) && !empty($_POST['parse_html']))
-		$_POST['message'] = str_replace(array("\n", '  '), array("<br />\n", '&nbsp; '), $smfFunc['db_unescape_string']($_POST['message']));
-	else
-		$_POST['message'] = $smfFunc['db_unescape_string']($_POST['message']);
+	// If we're only cleaning drop out here.
+	if ($clean_only)
+		return;
+
+	require_once($sourcedir . '/Subs-Post.php');
+
+	// Prepare the message (etc).
+	if (!$context['send_pm'])
+	{
+		$context['subject'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['subject']));
+		$context['message'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['message']));
+		$context['send_html'] = !empty($_POST['send_html']) ? '1' : '0';
+		$context['parse_html'] = !empty($_POST['parse_html']) ? '1' : '0';
+	
+		// Prepare the message for HTML.
+		if (!empty($_POST['send_html']) && !empty($_POST['parse_html']))
+			$_POST['message'] = str_replace(array("\n", '  '), array("<br />\n", '&nbsp; '), $smfFunc['db_unescape_string']($_POST['message']));
+		else
+			$_POST['message'] = $smfFunc['db_unescape_string']($_POST['message']);
+		$_POST['subject'] = $smfFunc['db_unescape_string']($_POST['subject']);
+
+		// This is here to prevent spam filters from tagging this as spam.
+		if (!empty($_POST['send_html']) && preg_match('~\<html~i', $_POST['message']) == 0)
+		{
+			if (preg_match('~\<body~i', $_POST['message']) == 0)
+				$_POST['message'] = '<html><head><title>' . $_POST['subject'] . '</title></head>' . "\n" . '<body>' . $_POST['message'] . '</body></html>';
+			else
+				$_POST['message'] = '<html>' . $_POST['message'] . '</html>';
+		}
+	}
 
 	// Use the default time format.
 	$user_info['time_format'] = $modSettings['time_format'];
@@ -460,7 +519,7 @@ function SendMailing()
 			$modSettings['latestRealName'],
 			$modSettings['latestMember'],
 			$modSettings['latestRealName']
-		), $smfFunc['db_unescape_string']($_POST['subject']));
+		), $_POST['subject']);
 
 	$from_member = array(
 		'{$member.email}',
@@ -469,59 +528,128 @@ function SendMailing()
 		'{$member.name}'
 	);
 
-	// This is here to prevent spam filters from tagging this as spam.
-	if (!empty($_POST['send_html']) && preg_match('~\<html~i', $_POST['message']) == 0)
+	// If we still have emails do these first!
+	$i = 0;
+	foreach ($context['recipients']['emails'] as $k => $email)
 	{
-		if (preg_match('~\<body~i', $_POST['message']) == 0)
-			$_POST['message'] = '<html><head><title>' . $_POST['subject'] . '</title></head>' . "\n" . '<body>' . $_POST['message'] . '</body></html>';
-		else
-			$_POST['message'] = '<html>' . $_POST['message'] . '</html>';
-	}
+		// Done as many as we can?
+		if ($i >= $num_at_once)
+			break;
 
-	$result = $smfFunc['db_query']('', "
-		SELECT real_name, member_name, id_member, email_address
-		FROM {$db_prefix}members
-		WHERE email_address IN ('" . implode("', '", escapestring__recursive($send_list)) . "')", __FILE__, __LINE__);
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-	{
-		unset($send_list[$row['email_address']]);
+		// Done another...
+		$i++;
+
+		// Don't sent it twice!
+		unset($context['recipients']['emails'][$k]);
+
+		// Dammit - can't PM emails!
+		if ($context['send_pm'])
+			continue;
 
 		$to_member = array(
-			$row['email_address'],
-			!empty($_POST['send_html']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : $scripturl . '?action=profile;u=' . $row['id_member'],
-			$row['id_member'],
-			$row['real_name']
+			$email,
+			!empty($_POST['send_html']) ? '<a href="mailto:' . $email . '">' . $email . '</a>' : $email,
+			'??',
+			$email
 		);
 
-		// Send the actual email off, replacing the member dependent variables.
-		sendmail($row['email_address'], str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
+		sendmail($email, str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
 	}
-	$smfFunc['db_free_result']($result);
 
-	// Send the emails to people who weren't members....
-	if (!empty($send_list))
-		foreach ($send_list as $email)
+	// Got some more to send this batch?
+	if ($i < $num_at_once)
+	{
+		// Need to build quite a query!
+		$sendQuery = '(';
+		if (!empty($context['recipients']['groups']))
 		{
+			// Take the long route...
+			$queryBuild = array();
+			foreach ($context['recipients']['groups'] as $group)
+			{
+				$queryBuild[] = 'mem.id_group = ' . $group;
+				if (!empty($group))
+				{
+					$queryBuild[] = 'FIND_IN_SET(' . $group . ', mem.additional_groups)';
+					$queryBuild[] = 'mem.id_post_group = ' . $group;
+				}
+			}
+			if (!empty($queryBuild))
+			$sendQuery .= implode(' OR ', $queryBuild);
+		}
+		if (!empty($context['recipients']['members']))
+			$sendQuery .= ($sendQuery == '(' ? '' : ' OR ') . 'mem.id_member IN (' . implode(',', $context['recipients']['members']) . ')';
+
+		$sendQuery .= ')';
+
+		// If we've not got a query then we must be done!
+		if ($sendQuery == '()')
+			redirectexit('action=admin');
+
+		// Anything to exclude?
+		if (!empty($context['recipients']['exclude_groups']) && in_array(0, $context['recipients']['exclude_groups']))
+			$sendQuery .= ' AND mem.id_group != 0';
+		if (!empty($context['recipients']['exclude_members']))
+			$sendQuery .= ' AND mem.id_member NOT IN (' . implode(',', $context['recipients']['exclude_members']) . ')';
+
+		// Force them to have it?
+		if (empty($context['email_force']))
+			$sendQuery .= ' AND mem.notify_announcements = 1';
+
+		// Get the smelly people - note we respect the id_member range as it gives us a quicker query.
+		$result = $smfFunc['db_query']('', "
+			SELECT mem.id_member, mem.email_address, mem.real_name, mem.id_group, mem.additional_groups, mem.id_post_group
+			FROM {$db_prefix}members AS mem
+			WHERE mem.id_member > $context[start]
+				AND mem.id_member < " . ($context['start'] + $num_at_once - $i) . "
+				AND $sendQuery
+			ORDER BY mem.id_member ASC
+			LIMIT " . ($num_at_once - $i), __FILE__, __LINE__);
+
+		while ($row = $smfFunc['db_fetch_assoc']($result))
+		{
+			// What groups are we looking at here?
+			if (empty($row['additional_groups']))
+				$groups = array($row['id_group'], $row['id_post_group']);
+			else
+				$groups = array_merge(
+						array($row['id_group'], $row['id_post_group']),
+						explode(',', $row['additional_groups'])
+					);
+
+			// Excluded groups?
+			if (array_intersect($groups, $context['recipients']['exclude_groups']))
+				continue;
+
 			$to_member = array(
-				$email,
-				!empty($_POST['send_html']) ? '<a href="mailto:' . $email . '">' . $email . '</a>' : $email,
-				'??',
-				$email
+				$row['email_address'],
+				!empty($_POST['send_html']) ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				$row['id_member'],
+				$row['real_name']
 			);
 
-			sendmail($email, str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
+			// Send the actual email off, replacing the member dependent variables - or a PM!
+			if (!$context['send_pm'])
+				sendmail($row['email_address'], str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['subject'])), str_replace($from_member, $to_member, $smfFunc['db_escape_string']($_POST['message'])), null, null, !empty($_POST['send_html']), 0);
+			else
+				sendpm(array('to' => array($row['id_member']), 'bcc' => array()), $_POST['subject'], $_POST['message']);
 		}
-
-	// Still more to do?
-	if (count($cleanlist) > $context['start'])
-	{
-		$context['page_title'] = $txt['admin_newsletters'];
-
-		$context['sub_template'] = 'email_members_send';
-		return;
+		$smfFunc['db_free_result']($result);
 	}
 
-	redirectexit('action=admin');
+	// If we have no id_member then we're done.
+	if (empty($row['id_member']))
+		redirectexit('action=admin');
+	else
+		$context['start'] = $row['id_member'];
+
+	// Working out progress is a black art of sorts.
+	$percentEmails = (count($context['recipients']['emails']) / $context['total_emails']) * ($context['total_emails'] / ($context['total_emails'] + $context['max_id_member']));
+	$percentMembers = ($context['start'] / $context['max_id_member']) * ($context['max_id_member'] / ($context['total_emails'] + $context['max_id_member']));
+	$context['percentage_done'] = round(($percentEmails + $percentMembers) * 100, 2);
+
+	$context['page_title'] = $txt['admin_newsletters'];
+	$context['sub_template'] = 'email_members_send';
 }
 
 function ModifyNewsSettings()

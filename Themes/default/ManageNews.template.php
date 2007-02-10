@@ -58,44 +58,135 @@ function template_email_members()
 {
 	global $context, $settings, $options, $txt, $scripturl;
 
+	// This is some javascript for the simple/advanced toggling stuff.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function toggleAdvanced(mode)
+		{
+			// What styles are we doing?
+			divStyle = mode ? "" : "none";
+	
+			for (var i = 0; i < 20; i++)
+				if (document.getElementById("advanced_div_" + i))
+					document.getElementById("advanced_div_" + i).style.display = divStyle;
+
+			document.getElementById("gosimple").style.display = divStyle;
+			document.getElementById("goadvanced").style.display = mode ? "none" : "";
+		}
+	// ]]></script>';
+
 	echo '
 		<form action="', $scripturl, '?action=admin;area=news;sa=mailingcompose" method="post" accept-charset="', $context['character_set'], '">
 			<table width="600" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
-					<td>', $txt['admin_newsletters'], '</td>
-				</tr><tr class="windowbg">
-					<td class="smalltext" style="padding: 2ex;">', $txt['select_membergroup'], '</td>
-				</tr><tr>
-					<td class="windowbg2">';
+					<td colspan="2">', $txt['admin_newsletters'], '</td>
+				</tr>
+				<tr class="windowbg">
+					<td colspan="2" class="smalltext" style="padding: 2ex;">', $txt['admin_news_select_recipients'], '</td>
+				</tr>
+				<tr class="windowbg2" valign="top">
+					<td width="50%">
+						<b>', $txt['admin_news_select_group'], ':</b>
+						<div class="smalltext">', $txt['admin_news_select_group_desc'], '</div>
+					</td>
+					<td width="50%">';
 
 	foreach ($context['groups'] as $group)
 				echo '
-						<label for="who_', $group['id'], '"><input type="checkbox" name="who[', $group['id'], ']" id="who_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
+						<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[', $group['id'], ']" id="groups_', $group['id'], '" value="', $group['id'], '" checked="checked" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
 
 	echo '
 						<br />
-						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'who\');" class="check" /> <i>', $txt['check_all'], '</i></label><br />
-
+						<label for="checkAllGroups"><input type="checkbox" id="checkAllGroups" checked="checked" onclick="invertAll(this, this.form, \'groups\');" class="check" /> <i>', $txt['check_all'], '</i></label><br />
+					</td>
+				</tr>
+				<tr class="windowbg2" valign="middle" id="advanced_select_div" style="display: none;">
+					<td colspan="2">
+						<a href="#" onclick="toggleAdvanced(1); return false;" id="goadvanced"><img src="', $settings['images_url'], '/selected.gif" alt="', $txt['advanced'], '" />&nbsp;<b>', $txt['advanced'], '</b></a>
+						<a href="#" onclick="toggleAdvanced(0); return false;" id="gosimple" style="display: none;"><img src="', $settings['images_url'], '/sort_down.gif" alt="', $txt['simple'], '" />&nbsp;<b>', $txt['simple'], '</b></a>
+					</td>
+				</tr>
+				<tr class="windowbg2" valign="top" id="advanced_div_1">
+					<td width="50%">
+						<b>', $txt['admin_news_select_email'], ':</b>
+						<div class="smalltext">', $txt['admin_news_select_email_desc'], '</div>
+					</td>
+					<td width="50%">
+						<textarea name="emails" rows="5" cols="30" style="width: 98%;"></textarea>
+					</td>
+				</tr>
+				<tr class="windowbg2" valign="top" id="advanced_div_2">
+					<td width="50%">
+						<b>', $txt['admin_news_select_members'], ':</b>
+						<div class="smalltext">', $txt['admin_news_select_members_desc'], '</div>
+					</td>
+					<td width="50%">
+						<input type="text" name="members" id="members" value="" size="30" />
+						<a href="', $scripturl, '?action=findmember;input=members;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="top" /></a>
+					</td>
+				</tr>
+				<tr class="windowbg2" valign="top" id="advanced_div_3">
+					<td colspan="2">
 						<hr />
 					</td>
-				</tr><tr>
-					<td class="windowbg2">';
+				</tr>
+				<tr class="windowbg2" valign="top" id="advanced_div_4">
+					<td width="50%">
+						<b>', $txt['admin_news_select_excluded_groups'], ':</b>
+						<div class="smalltext">', $txt['admin_news_select_excluded_groups_desc'], '</div>
+					</td>
+					<td width="50%">';
 
-	if ($context['can_send_pm'])
-		echo '
-					<label for="sendPM"><input type="checkbox" name="sendPM" id="sendPM" value="1" class="check" /> ', $txt['email_as_pms'], '</label><br />';
+	foreach ($context['groups'] as $group)
+				echo '
+						<label for="exclude_groups_', $group['id'], '"><input type="checkbox" name="exclude_groups[', $group['id'], ']" id="exclude_groups_', $group['id'], '" value="', $group['id'], '" class="check" /> ', $group['name'], '</label> <i>(', $group['member_count'], ')</i><br />';
 
 	echo '
-						<label for="email_force"><input type="checkbox" name="email_force" id="email_force" value="1" class="check" /> ', $txt['email_force'], '</label>
+						<br />
+						<label for="checkAllGroupsExclude"><input type="checkbox" id="checkAllGroupsExclude" onclick="invertAll(this, this.form, \'exclude_groups\');" class="check" /> <i>', $txt['check_all'], '</i></label><br />
 					</td>
-				</tr><tr>
-					<td class="windowbg2" style="padding-bottom: 1ex;" align="center">
+				</tr>
+				<tr class="windowbg2" valign="top" id="advanced_div_5">
+					<td width="50%">
+						<b>', $txt['admin_news_select_excluded_members'], ':</b>
+						<div class="smalltext">', $txt['admin_news_select_excluded_members_desc'], '</div>
+					</td>
+					<td width="50%">
+						<input type="text" name="exclude_members" id="exclude_members" value="" size="30" />
+						<a href="', $scripturl, '?action=findmember;input=exclude_members;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="top" /></a>
+					</td>
+				</tr>
+				<tr class="windowbg2" valign="top" id="advanced_div_6">
+					<td colspan="2">
+						<hr />
+					</td>
+				</tr>
+				<tr class="windowbg2" valign="top" id="advanced_div_7">
+					<td width="50%">
+						<label for="email_force">
+							<b>', $txt['admin_news_select_override_notify'], ':</b>
+							<div class="smalltext">', $txt['email_force'], '</div>
+						</label>
+					</td>
+					<td width="50%">
+						<input type="checkbox" name="email_force" id="email_force" value="1" class="check" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="windowbg2" style="padding-bottom: 1ex;" align="center">
 						<input type="submit" value="', $txt['admin_next'], '" />
 					</td>
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		</form>';
+
+	// Make the javascript stuff visible.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		document.getElementById("advanced_select_div").style.display = "";
+		toggleAdvanced(0);
+	// ]]></script>';
 }
 
 function template_email_members_compose()
@@ -110,18 +201,6 @@ function template_email_members_compose()
 						<a href="', $scripturl, '?action=helpadmin;help=email_members" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['admin_newsletters'], '
 					</td>
 				</tr><tr class="windowbg">
-					<td class="smalltext" style="padding: 2ex;">', $txt['admin_newsletter_send'], '</td>
-				</tr><tr>
-					<td class="windowbg2" align="center">
-						<textarea cols="70" rows="7" name="emails" class="editor">', $context['addresses'], '</textarea>
-					</td>
-				</tr>
-			</table>
-			<br />
-			<table width="600" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
-				<tr class="titlebg">
-					<td>', $txt['admin_mail'], '</td>
-				</tr><tr class="windowbg">
 					<td class="smalltext" style="padding: 2ex;">', $txt['email_variables'], '</td>
 				</tr><tr>
 					<td class="windowbg2">
@@ -129,6 +208,7 @@ function template_email_members_compose()
 						<br />
 						<textarea cols="70" rows="9" name="message" class="editor">', $context['default_message'], '</textarea><br />
 						<br />
+						<label for="send_pm"><input type="checkbox" name="send_pm" id="send_pm" class="check" onclick="if (this.checked && ', $context['total_emails'], ' != 0 && !confirm(\'', $txt['admin_news_cannot_pm_emails_js'], '\')) return false; this.form.parse_html.disabled = this.checked; this.form.send_html.disabled = this.checked; " /> ', $txt['email_as_pms'], '</label><br />
 						<label for="send_html"><input type="checkbox" name="send_html" id="send_html" class="check" onclick="this.form.parse_html.disabled = !this.checked;" /> ', $txt['email_as_html'], '</label><br />
 						<label for="parse_html"><input type="checkbox" name="parse_html" id="parse_html" checked="checked" disabled="disabled" class="check" /> ', $txt['email_parsed_html'], '</label><br />
 						<br />
@@ -137,6 +217,15 @@ function template_email_members_compose()
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+			<input type="hidden" name="email_force" value="', $context['email_force'], '" />
+			<input type="hidden" name="total_emails" value="', $context['total_emails'], '" />
+			<input type="hidden" name="max_id_member" value="', $context['max_id_member'], '" />';
+
+	foreach ($context['recipients'] as $key => $values)
+		echo '
+			<input type="hidden" name="', $key, '" value="', implode(($key == 'emails' ? ';' : ','), $values), '" />';
+
+	echo '
 		</form>';
 }
 
@@ -160,12 +249,20 @@ function template_email_members_send()
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
-			<input type="hidden" name="emails" value="', $context['emails'], '" />
 			<input type="hidden" name="subject" value="', $context['subject'], '" />
 			<input type="hidden" name="message" value="', $context['message'], '" />
 			<input type="hidden" name="start" value="', $context['start'], '" />
+			<input type="hidden" name="total_emails" value="', $context['total_emails'], '" />
+			<input type="hidden" name="max_id_member" value="', $context['max_id_member'], '" />
 			<input type="hidden" name="send_html" value="', $context['send_html'], '" />
-			<input type="hidden" name="parse_html" value="', $context['parse_html'], '" />
+			<input type="hidden" name="parse_html" value="', $context['parse_html'], '" />';
+
+	// All the things we must remember!
+	foreach ($context['recipients'] as $key => $values)
+		echo '
+			<input type="hidden" name="', $key, '" value="', implode(($key == 'emails' ? ';' : ','), $values), '" />';
+
+	echo '
 		</form>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var countdown = 2;

@@ -17,7 +17,6 @@ $txt['admin_censored_desc'] = 'Aufgrund der &Ouml;ffentlichkeit eines Forums hab
 $txt['admin_reserved_names'] = 'Reservierte Namen';
 $txt['admin_template_edit'] = 'Forum-Template editieren';
 $txt['admin_server_settings'] = 'Server-Einstellungen';
-$txt['admin_mail'] = 'Nachricht f&uuml;r obenstehende Liste';
 $txt['admin_reserved_set'] = 'Reservierte Namen';
 $txt['admin_reserved_line'] = 'Ein Wort pro Zeile.';
 $txt['admin_basic_settings'] = 'Hier k&ouml;nnen Sie die Angaben zu Ihrem Server ver&auml;ndern. Seien Sie sehr vorsichtig mit diesen Angaben, da sie das Forum unter Umst&auml;nden funktionsunt&uuml;chtig machen k&ouml;nnen.';
@@ -88,7 +87,6 @@ $txt['attachmentdir_size_not_set'] = 'Momentan keine max. Verzeichnisgr&ouml;sse
 $txt['attachment_delete_admin'] = '[gel&ouml;scht durch Administrator]';
 $txt['live'] = 'Aktuelles von Simple Machines...';
 $txt['remove_all'] = 'Alle entfernen';
-$txt['select_membergroup'] = 'Bitte w&auml;hlen Sie die Mitgliedergruppen, welchen Sie eine E-Mail senden m&ouml;chten.';
 $txt['database_optimize'] = 'Datenbank optimieren';
 $txt['database_numb_tables'] = 'Ihre Datenbank enth&auml;lt %d Tabellen.';
 $txt['database_optimize_attempt'] = 'Versuche die Datenbank zu optimieren ...';
@@ -683,5 +681,25 @@ $txt['copyright_removal_desc'] = 'In order to remove the copyright from your SMF
 $txt['copyright_code'] = 'Copyright Code';
 $txt['copyright_failed'] = 'Sorry - but the code you entered is incorrect. Please ensure that your forum URL matches that entered when purchasing the subscription.';
 $txt['copyright_proceed'] = 'Proceed';
+
+// Untranslated!
+$txt['advanced'] = 'Advanced';
+$txt['simple'] = 'Simple';
+
+// Untranslated!
+$txt['admin_news_select_recipients'] = 'Please select who should receive a copy of the newsletter';
+$txt['admin_news_select_group'] = 'Membergroups';
+$txt['admin_news_select_group_desc'] = 'Select the groups to receive this newsletter.';
+$txt['admin_news_select_members'] = 'Members';
+$txt['admin_news_select_members_desc'] = 'Additional members to receive newsletter.';
+$txt['admin_news_select_excluded_members'] = 'Excluded Members';
+$txt['admin_news_select_excluded_members_desc'] = 'Members who should not receive newsletter.';
+$txt['admin_news_select_excluded_groups'] = 'Excluded Groups';
+$txt['admin_news_select_excluded_groups_desc'] = 'Select groups who should definetely not receive the newsletter.';
+$txt['admin_news_select_email'] = 'Email Addresses';
+$txt['admin_news_select_email_desc'] = 'A semi-colon separated list of email addresses which should be sent newsletter. (i.e. address1; address2)';
+$txt['admin_news_select_override_notify'] = 'Override Notification Settings';
+// Use entities in below.
+$txt['admin_news_cannot_pm_emails_js'] = 'You cannot send a personal message to an email address. If you continue all entered email addresses will be ignored.\\n\\nAre you sure you wish to do this?';
 
 ?>

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2663 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2664 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -25,6 +25,8 @@ February 2007
  * Wider sidebox and color tweaks for upgrade.php ( Upgrade.php )
  * Changed icons and slight layout changes in Register.template (register.js, Register template, field_check.gif, field_valid.gif, field_unvalid.gif )
  ! People upgrading from non-sha1 supporting PHP to new sha1 supporting PHP were having problems. (Subs-Compat.php, LogInOut.php)
+ ! Added more options for when sending a news letter, and changed the way it functions to stop it being a bandwidth hog. (ManageNews.php, ManageNews template)
+ & Language strings for the above change. (Admin language file)
 
 
 January 2007
