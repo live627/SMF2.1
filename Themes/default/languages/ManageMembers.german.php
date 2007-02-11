@@ -76,7 +76,6 @@ $txt['membergroups_postgroups'] = 'Beitragsgruppen';
 $txt['membergroups_edit_groups'] = 'Mitgliedergruppen editieren';
 $txt['membergroups_settings'] = 'Einstellungen';
 $txt['groups_manage_membergroups'] = 'Gruppen, die Mitgliedergruppen ver&auml;ndern d&uuml;rfen';
-$txt['membergroups_settings_submit'] = 'Speichern';
 $txt['membergroups_select_permission_type'] = 'W&auml;hlen Sie das Berechtigungsprofil';
 $txt['membergroups_images_url'] = '{Theme URL}/images/';
 $txt['membergroups_select_visible_boards'] = 'Zeige Boards';

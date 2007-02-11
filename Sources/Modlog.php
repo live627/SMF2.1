@@ -62,7 +62,7 @@ function ViewModlog()
 	if (isset($_POST['removeall']) && $context['can_delete'])
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_actions
-			WHERE logtime < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
+			WHERE log_time < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
 	elseif (!empty($_POST['remove']) && isset($_POST['delete']) && $context['can_delete'])
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_actions

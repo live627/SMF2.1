@@ -39,7 +39,6 @@ $txt['search_weight_sticky'] = 'Relatieve zoekgewicht van een sticky topic';
 
 $txt['search_settings_desc'] = 'Hier kun je alle basisinstellingen voor de zoekfunctie instellen.';
 $txt['search_settings_title'] = 'Zoekfunctie - Instellingen';
-$txt['search_settings_save'] = 'Opslaan';
 
 $txt['search_weights'] = 'Gewichten';
 $txt['search_weights_desc'] = 'Hier kun je instellen hoe de relevantie van zoekresultaten wordt opgebouwd. ';

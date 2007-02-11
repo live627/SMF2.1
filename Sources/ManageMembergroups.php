@@ -678,24 +678,36 @@ function EditMembergroup()
 // Set general membergroup settings.
 function ModifyMembergroupsettings()
 {
-	global $context, $db_prefix, $sourcedir, $modSettings, $txt;
+	global $context, $db_prefix, $sourcedir, $scripturl, $modSettings, $txt;
 
-	$context['sub_template'] = 'membergroup_settings';
+	$context['sub_template'] = 'show_settings';
 	$context['page_title'] = $txt['membergroups_settings'];
 
-	// Needed for the inline permission functions.
-	require_once($sourcedir . '/ManagePermissions.php');
+	// Needed for the settings functions.
+	require_once($sourcedir . '/ManageServer.php');
 
-	if (!empty($_POST['save_settings']))
+	// Don't allow assignment of guests.
+	$context['permissions_excluded'] = array(-1);
+
+	// Only one thing here!
+	$config_vars = array(
+			array('permissions', 'manage_membergroups'),
+	);
+
+	if (isset($_REQUEST['save']))
 	{
 		checkSession();
 
-		// Save the permissions.
-		save_inline_permissions(array('manage_membergroups'));
+		// Yeppers, saving this...
+		saveDBSettings($config_vars);
+		redirectexit('action=admin;area=membergroups;sa=settings');
 	}
 
-	// Initialize permissions.
-	init_inline_permissions(array('manage_membergroups'), array(-1));
+	// Some simple context.
+	$context['post_url'] = $scripturl . '?action=admin;area=membergroups;save;sa=settings';
+	$context['settings_title'] = $txt['membergroups_settings'];
+
+	prepareDBSettingContext($config_vars);
 }
 
 ?>

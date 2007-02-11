@@ -39,7 +39,6 @@ $txt['search_weight_sticky'] = 'Relative search weight for a sticky topic';
 
 $txt['search_settings_desc'] = 'Here you can changes the basic settings of the search function.';
 $txt['search_settings_title'] = 'Search function - settings';
-$txt['search_settings_save'] = 'Save';
 
 $txt['search_weights'] = 'Weights';
 $txt['search_weights_desc'] = 'Here you can change the individual components of the relevance rating. ';

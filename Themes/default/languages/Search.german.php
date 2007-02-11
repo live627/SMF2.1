@@ -39,7 +39,6 @@ $txt['search_weight_sticky'] = 'Relative Gewichtung f&uuml;r fixierte Themen';
 
 $txt['search_settings_desc'] = 'Hier k&ouml;nnen Sie die Einstellungen der Suchfunktion ver&auml;ndern.';
 $txt['search_settings_title'] = 'Einstellungen der Suchfunktion';
-$txt['search_settings_save'] = 'Speichern';
 
 $txt['search_weights'] = 'Gewichtung';
 $txt['search_weights_desc'] = 'Hier k&ouml;nnen Sie die Relevanz der Suchergebnisse individuell einstellen. ';

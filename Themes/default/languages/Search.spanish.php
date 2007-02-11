@@ -42,7 +42,6 @@ $txt['search_weight_sticky'] = 'Relative search weight for a sticky topic';
 $txt['search_settings'] = 'Configuraci&oacute;n';
 $txt['search_settings_desc'] = 'Aqu&iacute; puedes cambiar la configuraci&oacute;n b&aacute;sica de la funci&oacute;n de b&uacute;squeda.';
 $txt['search_settings_title'] = 'Funci&oacute;n de b&uacute;squeda - configuraci&oacute;n';
-$txt['search_settings_save'] = 'Guardar';
 
 $txt['search_weights'] = 'Pesos';
 $txt['search_weights_desc'] = 'Aqu&iacute; puedes cambiar los componentes individuales de la puntuaci&oacute;n relevante. ';

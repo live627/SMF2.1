@@ -129,31 +129,38 @@ function ManageSearch()
 
 function EditSearchSettings()
 {
-	global $txt, $context, $sourcedir;
+	global $txt, $context, $sc, $scripturl, $sourcedir;
 
 	$context['page_title'] = $txt['search_settings_title'];
-	$context['sub_template'] = 'modify_settings';
+	$context['sub_template'] = 'show_settings';
 
-	// Including a file needed for inline permissions.
-	require_once($sourcedir . '/ManagePermissions.php');
+	// We'll need this for the settings.
+	require_once($sourcedir . '/ManageServer.php');
+
+	// What are we editing anyway?
+	$config_vars = array(
+			// Permission...
+			array('permissions', 'search_posts'),
+			// Some simple settings.
+			array('check', 'simpleSearch'),
+			array('int', 'search_results_per_page'),
+			array('int', 'search_max_results', 'subtext' => $txt['search_max_results_disable']),
+	);
 
 	// A form was submitted.
-	if (isset($_POST['save']))
+	if (isset($_REQUEST['save']))
 	{
 		checkSession();
 
-		updateSettings(array(
-			'simpleSearch' => isset($_POST['simpleSearch']) ? '1' : '0',
-			'search_results_per_page' => (int) $_POST['search_results_per_page'],
-			'search_max_results' => (int) $_POST['search_max_results'],
-		));
-
-		// Save the permissions.
-		save_inline_permissions(array('search_posts'));
+		saveDBSettings($config_vars);
+		redirectexit('action=admin;area=managesearch;sa=settings;sesc=' . $sc);
 	}
 
-	// Initialize permissions.
-	init_inline_permissions(array('search_posts'));
+	// Prep the template!
+	$context['post_url'] = $scripturl . '?action=admin;area=managesearch;save;sa=settings';
+	$context['settings_title'] = $txt['search_settings_title'];
+
+	prepareDBSettingContext($config_vars);
 }
 
 function EditWeights()

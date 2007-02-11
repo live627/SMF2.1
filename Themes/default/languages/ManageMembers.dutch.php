@@ -76,7 +76,6 @@ $txt['membergroups_postgroups'] = 'Bericht-gerelateerde groepen';
 $txt['membergroups_edit_groups'] = 'Bewerk ledengroep';
 $txt['membergroups_settings'] = 'Ledengroepinstellingen';
 $txt['groups_manage_membergroups'] = 'Ledengroepen die ledengroepen mogen aanpassen';
-$txt['membergroups_settings_submit'] = 'Opslaan';
 $txt['membergroups_select_permission_type'] = 'Selecteer permissieprofiel';
 $txt['membergroups_images_url'] = '{thema URL}/images/';
 $txt['membergroups_select_visible_boards'] = 'Toon boards';

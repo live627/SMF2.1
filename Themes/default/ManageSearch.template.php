@@ -1,52 +1,6 @@
 <?php
 // Version: 2.0 Alpha; ManageSearch
 
-function template_modify_settings()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-
-	echo '
-	<form action="', $scripturl, '?action=admin;area=managesearch;sa=settings" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" cellspacing="0" cellpadding="4" align="center" width="80%" class="tborder">
-			<tr class="titlebg">
-				<td colspan="2">', $txt['settings'], '</td>
-			</tr>';
-
-	if ($context['can_change_permissions'])
-	{
-		echo '
-			<tr class="windowbg2">
-				<th width="50%" align="right" valign="top"><label for="search_posts_groups">', $txt['groups_search_posts'], ':</label></th>
-				<td>';
-		theme_inline_permissions('search_posts');
-		echo '
-				</td>
-			</tr>';
-	}
-
-	echo '
-			<tr class="windowbg2">
-				<th width="50%" align="right"><label for="simpleSearch_check">', $txt['simpleSearch'], '</label> (<a href="', $scripturl, '?action=helpadmin;help=simpleSearch" onclick="return reqWin(this.href);">?</a>):</th>
-				<td><input type="checkbox" name="simpleSearch" id="simpleSearch_check"', empty($modSettings['simpleSearch']) ? '' : ' checked="checked"', ' class="check" /></td>
-			</tr><tr class="windowbg2">
-				<th align="right"><label for="search_results_per_page_input">', $txt['search_results_per_page'], ':</label></th>
-				<td><input type="text" name="search_results_per_page" id="search_results_per_page_input" value="', $modSettings['search_results_per_page'], '" size="10" /></td>
-			</tr><tr class="windowbg2">
-				<th align="right">
-					<label for="search_max_results_input">', $txt['search_max_results'], ':</label>
-					<div class="smalltext" style="font-weight: normal;">', $txt['search_max_results_disable'], '</div>
-				</th>
-				<td valign="top"><input type="text" name="search_max_results" id="search_max_results_input" value="', empty($modSettings['search_max_results']) ? '0' : $modSettings['search_max_results'], '" size="10" /></td>
-			</tr><tr class="windowbg2">
-				<td align="right" colspan="2">
-					<input type="submit" name="save" value="', $txt['search_settings_save'], '" />
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
-}
-
 function template_modify_weights()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;

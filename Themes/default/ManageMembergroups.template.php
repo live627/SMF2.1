@@ -536,38 +536,6 @@ function template_group_index()
 		</table>';
 }
 
-function template_membergroup_settings()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-
-	echo '
-	<form action="', $scripturl, '?action=admin;area=membergroups;sa=settings" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" cellspacing="0" cellpadding="4" align="center" width="80%" class="tborder">
-			<tr class="titlebg">
-				<td colspan="2">', $txt['membergroups_settings'], '</td>
-			</tr>';
-	if ($context['can_change_permissions'])
-	{
-		echo '
-			<tr class="windowbg2">
-				<td width="50%" align="right" valign="top">', $txt['groups_manage_membergroups'], ':</td>
-				<td width="50%">';
-		theme_inline_permissions('manage_membergroups');
-		echo '
-				</td>
-			</tr>';
-	}
-	echo '
-			<tr class="windowbg2">
-				<td align="right" colspan="2">
-					<input type="submit" name="save_settings" value="', $txt['membergroups_settings_submit'], '" />
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
-}
-
 // Template for showing outstanding group requests.
 function template_group_requests()
 {

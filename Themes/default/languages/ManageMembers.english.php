@@ -72,7 +72,6 @@ $txt['membergroups_postgroups'] = 'Post groups';
 $txt['membergroups_edit_groups'] = 'Edit Membergroups';
 $txt['membergroups_settings'] = 'Membergroup Settings';
 $txt['groups_manage_membergroups'] = 'Groups allowed to change membergroups';
-$txt['membergroups_settings_submit'] = 'Save';
 $txt['membergroups_select_permission_type'] = 'Select permission profile';
 $txt['membergroups_images_url'] = '{theme URL}/images/';
 $txt['membergroups_select_visible_boards'] = 'Show boards';
