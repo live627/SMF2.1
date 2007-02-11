@@ -158,6 +158,7 @@ function PackageServers()
 	{
 		if (isset($_POST['ftp_username']))
 		{
+			loadClassFile('Class-Package.php');
 			$ftp = new ftp_connection($_POST['ftp_server'], $_POST['ftp_port'], $_POST['ftp_username'], $_POST['ftp_password']);
 
 			if ($ftp->error === false)
@@ -174,7 +175,10 @@ function PackageServers()
 		if (!isset($ftp) || $ftp->error !== false)
 		{
 			if (!isset($ftp))
+			{
+				loadClassFile('Class-Package.php');
 				$ftp = new ftp_connection(null);
+			}
 			elseif ($ftp->error !== false && !isset($ftp_error))
 				$ftp_error = $ftp->last_message === null ? '' : $ftp->last_message;
 
@@ -266,6 +270,7 @@ function PackageGBrowse()
 		fatal_lang_error('packageget_unable', false, array($url . '/index.php'));
 
 	// Read packages.xml and parse into xmlArray. (the true tells it to trim things ;).)
+	loadClassFile('Class-Package.php');
 	$listing = new xmlArray(fetch_web_data($_GET['package']), true);
 
 	// Errm.... empty file?  Try the URL....
