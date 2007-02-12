@@ -430,11 +430,16 @@ function template_main()
 								<td align="right"><b>', $txt['calendar_post_in'], '</b></td>
 								<td class="smalltext">
 									<select name="board">';
-
-			foreach ($context['event']['boards'] as $board)
+			foreach ($context['event']['categories'] as $category)
+			{
 				echo '
-										<option value="', $board['id'], '"', $board['id'] == $context['event']['board'] ? ' selected="selected"' : '', '>', $board['cat']['name'], ' - ', $board['prefix'], $board['name'], '</option>';
-
+										<optgroup label="', $category['name'], '">';
+				foreach($category['boards'] as $board)
+					echo '
+											<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+				echo '
+										</optgroup>';
+			}
 			echo '
 									</select>
 								</td>

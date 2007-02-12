@@ -316,12 +316,17 @@ function template_event_post()
 							<tr>
 								<td align="right"><b>', $txt['calendar_post_in'], '</b></td>
 								<td class="smalltext">
-									<select id="board" onchange="this.form.submit();">';
-
-		foreach ($context['event']['boards'] as $board)
+									<select id="board" name="board" onchange="this.form.submit();">';
+		foreach ($context['event']['categories'] as $category)
+		{
 			echo '
-										<option value="', $board['id'], '"', $board['id'] == $context['event']['board'] ? ' selected="selected"' : '', '>', $board['cat']['name'], ' - ', $board['prefix'], $board['name'], '</option>';
-
+										<optgroup label="', $category['name'], '">';
+			foreach($category['boards'] as $board)
+				echo '
+											<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+			echo '
+										</optgroup>';
+		}
 		echo '
 									</select>
 								</td>

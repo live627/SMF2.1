@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2665 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2666 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -29,6 +29,10 @@ February 2007
  & Language strings for the above change. (Admin language file)
  ! Moved classes into separate source files and converted them to PHP 5 styled classes. (PackageGet.php, Subs-Graphics.php, Subs-Packages.php)
  ! Created a class loading function for maintaining PHP 4 compatibility. (Subs.php)
+ ! Moved calendarValidatePost() to Subs-Calendar.php and renamed to validateEventPost. (Subs-Post.php, Subs-Calendar.php, Post.php, Calendar.php)
+ ! Seperated several event modifying functions and moved them to Subs-Calendar.php. (Calendar.php, Subs-Calendar.php)
+ ! Created a function for getting a list of boards. (Subs-MessageIndex.php, Calendar.php, Calendar template, MessageIndex.php, Post.php, Post template, Search.php, Xml.php)
+ ! Removed the old loadJumpTo function that was no longer being used. (Load.php)
 
 
 January 2007

@@ -90,9 +90,6 @@ if (!defined('SMF'))
 		  show_no_censored is enabled, does not censor - unless force is set.
 		- caches the list of censored words to reduce parsing.
 
-	void loadJumpTo()
-		// !!!
-
 	void template_include(string filename, bool only_once = false)
 		- loads the template or language file specified by filename.
 		- if once is true, only includes the file once (like include_once.)
@@ -1691,42 +1688,6 @@ function &censorText(&$text, $force = false)
 	// Censoring isn't so very complicated :P.
 	$text = preg_replace($censor_vulgar, $censor_proper, $text);
 	return $text;
-}
-
-// Create a little jumpto box.
-function loadJumpTo()
-{
-	global $db_prefix, $context, $user_info, $smfFunc;
-
-	if (isset($context['jump_to']))
-		return;
-
-	// Find the boards/cateogories they can see.
-	$request = $smfFunc['db_query']('', "
-		SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
-		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
-	$context['jump_to'] = array();
-	$this_cat = array('id' => -1);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-	{
-		if ($this_cat['id'] != $row['id_cat'])
-		{
-			$this_cat = &$context['jump_to'][];
-			$this_cat['id'] = $row['id_cat'];
-			$this_cat['name'] = $row['cat_name'];
-			$this_cat['boards'] = array();
-		}
-
-		$this_cat['boards'][] = array(
-			'id' => $row['id_board'],
-			'name' => $row['board_name'],
-			'child_level' => $row['child_level'],
-			'is_current' => isset($context['current_board']) && $row['id_board'] == $context['current_board']
-		);
-	}
-	$smfFunc['db_free_result']($request);
 }
 
 // Load the template/language file using eval or require? (with eval we can show an error message!)

@@ -53,35 +53,16 @@ function XMLhttpMain()
 // Get a list of boards and categories used for the jumpto dropdown.
 function GetJumpTo()
 {
-	global $db_prefix, $user_info, $context, $smfFunc;
+	global $db_prefix, $user_info, $context, $smfFunc, $sourcedir;
 
 	// Find the boards/cateogories they can see.
-	$request = $smfFunc['db_query']('', "
-		SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
-		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
-	$context['jump_to'] = array();
-	$this_cat = array('id' => -1);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-	{
-		if ($this_cat['id'] != $row['id_cat'])
-		{
-			$this_cat = &$context['jump_to'][];
-			$this_cat['id'] = $row['id_cat'];
-			$this_cat['name'] = un_htmlspecialchars($row['cat_name']);
-			$this_cat['boards'] = array();
-		}
-
-		$this_cat['boards'][] = array(
-			'id' => $row['id_board'],
-			'name' => un_htmlspecialchars($row['board_name']),
-			'child_level' => $row['child_level'],
-			'is_current' => isset($context['current_board']) && $row['id_board'] == $context['current_board']
-		);
-	}
-	$smfFunc['db_free_result']($request);
-
+	require_once($sourcedir . '/Subs-MessageIndex.php');
+	$boardListOptions = array(
+		'use_permissions' => true,
+		'selected_board' => isset($context['current_board']) && $row['id_board'] == $context['current_board'],
+	);
+	$context['jump_to'] = getBoardList($boardListOptions);
+	
 	$context['sub_template'] = 'jump_to';
 }
 

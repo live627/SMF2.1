@@ -53,14 +53,6 @@ if (!defined('SMF'))
 		- earliest_date and latest_date should be YYYY-MM-DD.
 		- returns an array of days, which are all arrays of holiday names.
 
-	void insertEvent(int id_board, int id_topic, string title,
-			int id_member, int month, int day, int year, int span)
-		- inserts the passed event information into the calendar table.
-		- recaches the calendar information after doing so.
-		- expects the passed title not to have html characters.
-		- handles spanned events by inserting them multiple times.
-		- does not check any permissions of any sort.
-
 	void canLinkEvent()
 		- checks if the current user can link the current topic to the
 		  calendar, permissions et al.
@@ -93,6 +85,27 @@ if (!defined('SMF'))
 		  holidays, and events within the given period, taking into account
 		  the users time offset.
 		- used by the board index and SSI to show the upcoming events.
+
+	void validateEventPost()
+		- checks if the calendar post was valid.
+
+	int getEventPoster(int event_id)
+		- gets the member_id of an event identified by event_id.
+		- returns false if the event was not found.
+
+	void insertEvent(array eventOptions)
+		- inserts the passed event information into the calendar table.
+		- allows to either set a time span (in days) or an end_date.
+		- does not check any permissions of any sort.
+
+	void modifyEvent(int event_id, array eventOptions)
+		- modifies an event.
+		- allows to either set a time span (in days) or an end_date.
+		- does not check any permissions of any sort.
+
+	void removeEvent(int event_id)
+		- removes an event.
+		- does no permission checks.
 */
 
 // Get all birthdays within the given time range.
@@ -264,28 +277,6 @@ function getHolidayRange($low_date, $high_date)
 	$smfFunc['db_free_result']($result);
 
 	return $holidays;
-}
-
-// Consolidating the various INSERT statements into this function.
-function insertEvent($id_board, $id_topic, $title, $id_member, $month, $day, $year, $span)
-{
-	global $db_prefix, $modSettings, $smfFunc;
-
-	// Add special chars to the title.
-	$title = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($title), ENT_QUOTES));
-
-	// Add some sanity checking to the span.
-	$span = empty($span) || trim($span) == '' ? 0 : min((int) $modSettings['cal_maxspan'], (int) $span - 1);
-
-	// Insert the event!
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}calendar
-			(id_board, id_topic, title, id_member, start_date, end_date)
-		VALUES ($id_board, $id_topic, SUBSTRING('$title', 1, 48), $id_member, '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year)) . "', '" . strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year) + $span * 86400) . "')", __FILE__, __LINE__);
-
-	updateSettings(array(
-		'calendar_updated' => time(),
-	));
 }
 
 // Does permission checks to see if an event can be linked to a board/topic.
@@ -608,6 +599,212 @@ function cache_getRecentEvents($eventOptions)
 				
 			$cache_block[\'data\'][\'show_calendar\'] = !empty($cache_block[\'data\'][\'calendar_holidays\']) || !empty($cache_block[\'data\'][\'calendar_birthdays\']) || !empty($cache_block[\'data\'][\'calendar_events\']);',
 	);
+}
+
+// Makes sure the calendar post is valid.
+function validateEventPost()
+{
+	global $modSettings, $txt, $sourcedir, $smfFunc;
+
+	if (!isset($_POST['deleteevent']))
+	{
+		// No month?  No year?
+		if (!isset($_POST['month']))
+			fatal_lang_error('event_month_missing', false);
+		if (!isset($_POST['year']))
+			fatal_lang_error('event_year_missing', false);
+
+		// Check the month and year...
+		if ($_POST['month'] < 1 || $_POST['month'] > 12)
+			fatal_lang_error('invalid_month', false);
+		if ($_POST['year'] < $modSettings['cal_minyear'] || $_POST['year'] > $modSettings['cal_maxyear'])
+			fatal_lang_error('invalid_year', false);
+	}
+
+	// Make sure they're allowed to post...
+	isAllowedTo('calendar_post');
+
+	if (isset($_POST['span']))
+	{
+		// Make sure it's turned on and not some fool trying to trick it.
+		if (empty($modSettings['cal_allowspan']))
+			fatal_lang_error('no_span', false);
+		if ($_POST['span'] < 1 || $_POST['span'] > $modSettings['cal_maxspan'])
+			fatal_lang_error('invalid_days_numb', false);
+	}
+
+	// There is no need to validate the following values if we are just deleting the event.
+	if (!isset($_POST['deleteevent']))
+	{
+		// No day?
+		if (!isset($_POST['day']))
+			fatal_lang_error('event_day_missing', false);
+		if (!isset($_POST['evtitle']) && !isset($_POST['subject']))
+			fatal_lang_error('event_title_missing', false);
+		elseif (!isset($_POST['evtitle']))
+			$_POST['evtitle'] = $_POST['subject'];
+
+		// Bad day?
+		if (!checkdate($_POST['month'], $_POST['day'], $_POST['year']))
+			fatal_lang_error('invalid_date', false);
+
+		// No title?
+		if ($smfFunc['htmltrim']($_POST['evtitle']) === '')
+			fatal_lang_error('no_event_title', false);
+		if ($smfFunc['strlen']($_POST['evtitle']) > 30)
+			$_POST['evtitle'] = $smfFunc['substr']($_POST['evtitle'], 0, 30);
+		$_POST['evtitle'] = str_replace(';', '', $_POST['evtitle']);
+	}
+}
+
+// Get the event's poster.
+function getEventPoster($event_id)
+{
+	global $smfFunc, $db_prefix;
+
+	// A simple database query, how hard can that be?
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member
+		FROM {$db_prefix}calendar
+		WHERE id_event = $event_id
+		LIMIT 1", __FILE__, __LINE__);
+	
+	// No results, return false.
+	if ($smfFunc['db_num_results'] === 0)
+		return false;
+
+	// Grab the results and return.
+	list ($poster) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+	return $poster;
+}
+
+// Consolidating the various INSERT statements into this function.
+function insertEvent(&$eventOptions)
+{
+	global $db_prefix, $modSettings, $smfFunc;
+
+	// Add special chars to the title.
+	$eventOptions['title'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($eventOptions['title']), ENT_QUOTES));
+
+	// Add some sanity checking to the span.
+	$eventOptions['span'] = isset($eventOptions['span']) && $eventOptions['span'] > 0 ? (int) $eventOptions['span'] : 0;
+
+	// Make sure the start date is in ISO order.
+	if (($num_results = sscanf($eventOptions['start_date'], '%d-%d-%d', $year, $month, $day)) !== 3)
+		trigger_error('modifyEvent(): invalid start date format given', E_USER_ERROR);
+
+	// Set the end date (if not yet given)
+	if (!isset($eventOptions['end_date']))
+		$eventOptions['end_date'] = strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year) + $eventOptions['span'] * 86400);
+
+	// If no topic and board are given, they are not linked to a topic.
+	$eventOptions['board'] = isset($eventOptions['board']) ? (int) $eventOptions['board'] : 0;
+	$eventOptions['topic'] = isset($eventOptions['topic']) ? (int) $eventOptions['topic'] : 0;
+
+	// Insert the event!
+	$smfFunc['db_query']('', "
+		INSERT INTO {$db_prefix}calendar
+			(id_board, id_topic, title, id_member, start_date, end_date)
+		VALUES ($eventOptions[board], $eventOptions[topic], SUBSTRING('$eventOptions[title]', 1, 48), $eventOptions[member], '$eventOptions[start_date]', '$eventOptions[end_date]')", __FILE__, __LINE__);
+
+	// Store the just inserted id_event for future reference.
+	$eventOptions['id'] = $smfFunc['db_insert_id'];
+
+	// Update the settings to show something calendarish was updated.
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
+}
+
+function modifyEvent($event_id, &$eventOptions)
+{
+	global $smfFunc, $db_prefix;
+
+	// Properly sanitize the title.
+	$eventOptions['title'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($eventOptions['title']), ENT_QUOTES));
+
+	// Scan the start date for validity and get its components.
+	if (($num_results = sscanf($eventOptions['start_date'], '%d-%d-%d', $year, $month, $day)) !== 3)
+		trigger_error('modifyEvent(): invalid start date format given', E_USER_ERROR);
+
+	// Default span to 0 days.
+	$eventOptions['span'] = isset($eventOptions['span']) ? (int) $eventOptions['span'] : 0;
+
+	// Set the end date to the start date + span (if the end date wasn't already given).
+	if (!isset($eventOptions['end_date']))
+		$eventOptions['end_date'] = strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year) + $eventOptions['span'] * 86400);
+
+	$smfFunc['db_query']('', "
+		UPDATE {$db_prefix}calendar
+		SET 
+			start_date = '$eventOptions[start_date]',
+			end_date = '$eventOptions[end_date]', 
+			title = SUBSTRING('$eventOptions[title]', 1, 48),
+			id_board = " . (isset($eventOptions['board']) ? (int) $eventOptions['board'] : 'id_board') . ",
+			id_topic = " . (isset($eventOptions['topic']) ? (int) $eventOptions['topic'] : 'id_board') . "
+		WHERE id_event = $event_id", __FILE__, __LINE__);
+
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
+}
+
+function removeEvent($event_id)
+{
+	global $smfFunc, $db_prefix;
+
+	$smfFunc['db_query']('', "
+		DELETE FROM {$db_prefix}calendar
+		WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
+
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
+}
+
+function getEventProperties($event_id)
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT
+			c.id_event, c.id_board, c.id_topic, MONTH(c.start_date) AS month,
+			DAYOFMONTH(c.start_date) AS day, YEAR(c.start_date) AS year,
+			(TO_DAYS(c.end_date) - TO_DAYS(c.start_date)) AS span, c.id_member, c.title,
+			t.id_first_msg, t.id_member_started
+		FROM {$db_prefix}calendar AS c
+			LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = c.id_topic)
+		WHERE c.id_event = $event_id", __FILE__, __LINE__);
+
+	// If nothing returned, we are in poo, poo.
+	if ($smfFunc['db_num_rows']($request) === 0)
+		return false;
+
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
+
+	$return_value = array(
+		'boards' => array(),
+		'board' => $row['id_board'],
+		'new' => 0,
+		'eventid' => $_REQUEST['eventid'],
+		'year' => $row['year'],
+		'month' => $row['month'],
+		'day' => $row['day'],
+		'title' => $row['title'],
+		'span' => 1 + $row['span'],
+		'member' => $row['id_member'],
+		'topic' => array(
+			'id' => $row['id_topic'],
+			'member_started' => $row['id_member_started'],
+			'first_msg' => $row['id_first_msg'],
+		),
+	);
+
+	$return_value['last_day'] = (int) strftime('%d', mktime(0, 0, 0, $return_value['month'] == 12 ? 1 : $return_value['month'] + 1, 0, $return_value['month'] == 12 ? $return_value['year'] + 1 : $return_value['year']));
+
+	return $return_value;
 }
 
 ?>

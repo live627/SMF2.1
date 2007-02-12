@@ -520,37 +520,17 @@ function MessageIndex()
 		// Find the boards/cateogories they can move their topic to.
 		if ($options['display_quick_mod'] == 1 && $context['can_move'] && !empty($context['topics']))
 		{
-			$request = $smfFunc['db_query']('', "
-				SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
-				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-				WHERE b.id_board != $board
-					AND $user_info[query_see_board]", __FILE__, __LINE__);
+			require_once($sourcedir . '/Subs-MessageIndex.php');
+			$boardListOptions = array(
+				'excluded_boards' => array($board),
+				'use_permissions' => true,
+				'selected_board' => empty($_SESSION['move_to_topic']) ? null : $_SESSION['move_to_topic'],
+			);
+			$context['move_to_boards'] = getBoardList($boardListOptions);
 
-			// You can only see just this one board?
-			if ($smfFunc['db_num_rows']($request) === 0)
+			// With no other boards to see, it's useless to move.
+			if (empty($context['move_to_boards']))
 				$context['can_move'] = false;
-			else
-			{
-				$context['move_to_boards'] = array();
-				while ($row = $smfFunc['db_fetch_assoc']($request))
-				{
-					if (!isset($context['move_to_boards'][$row['id_cat']]))
-						$context['move_to_boards'][$row['id_cat']] = array(
-							'id' => $row['id_cat'],
-							'name' => $row['cat_name'],
-							'boards' => array(),
-						);
-
-					$context['move_to_boards'][$row['id_cat']]['boards'][] = array(
-						'id' => $row['id_board'],
-						'name' => $row['board_name'],
-						'child_level' => $row['child_level'],
-						'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board'],
-					);
-				}
-			}
-			$smfFunc['db_free_result']($request);
 		}
 	}
 

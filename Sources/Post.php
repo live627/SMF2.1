@@ -318,25 +318,15 @@ function Post()
 			$boards = boardsAllowedTo('post_new');
 			if (empty($boards))
 				fatal_lang_error('cannot_post_new', 'user');
-			$request = $smfFunc['db_query']('', "
-				SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
-				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-				WHERE $user_info[query_see_board]" . (in_array(0, $boards) ? '' : "
-					AND b.id_board IN (" . implode(', ', $boards) . ")"), __FILE__, __LINE__);
-			$context['event']['boards'] = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$context['event']['boards'][] = array(
-					'id' => $row['id_board'],
-					'name' => $row['board_name'],
-					'child_level' => $row['child_level'],
-					'prefix' => str_repeat('&nbsp;', $row['child_level'] * 3),
-					'cat' => array(
-						'id' => $row['id_cat'],
-						'name' => $row['cat_name']
-					)
-				);
-			$smfFunc['db_free_result']($request);
+
+			// Load a list of boards for this event in the context.
+			require_once($sourcedir . '/Subs-MessageIndex.php');
+			$boardListOptions = array(
+				'included_boards' => in_array(0, $boards) ? null : $boards,
+				'use_permissions' => true,
+				'selected_board' => empty($context['current_board']) ? $modSettings['cal_defaultboard'] : $context['current_board'],
+			);
+			$context['event']['categories'] = getBoardList($boardListOptions);
 		}
 
 		// Find the last day of the month.
@@ -1623,16 +1613,28 @@ function Post2()
 	if (isset($_POST['calendar']) && (!isset($_REQUEST['eventid']) || $_REQUEST['eventid'] == -1))
 	{
 		require_once($sourcedir . '/Subs-Calendar.php');
+
+		// Make sure they can link an event to this post.
 		canLinkEvent();
-		calendarInsertEvent($board, $topic, $_POST['evtitle'], $user_info['id'], $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
+
+		// Insert the event.
+		$eventOptions = array(
+			'board' => $board,
+			'topic' => $topic,
+			'title' => $_POST['evtitle'],
+			'member' => $user_info['id'],
+			'start_date' => sprintf('%04d-%02d-%02d', $_POST['year'], $_POST['month'], $_POST['day']),
+			'span' => isset($_POST['span']) && $_POST['span'] > 0 ? min((int) $modSettings['cal_maxspan'], (int) $_POST['span'] - 1) : 0,
+		);
+		insertEvent($eventOptions);
 	}
 	elseif (isset($_POST['calendar']))
 	{
 		$_REQUEST['eventid'] = (int) $_REQUEST['eventid'];
 
 		// Validate the post...
-		require_once($sourcedir . '/Subs-Post.php');
-		calendarValidatePost();
+		require_once($sourcedir . '/Subs-Calendar.php');
+		validateEventPost();
 
 		// If you're not allowed to edit any events, you have to be the poster.
 		if (!allowedTo('calendar_edit_any'))

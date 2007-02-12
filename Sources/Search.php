@@ -1658,32 +1658,12 @@ function PlushSearch2()
 	// Get a list of boards to move these messages to.
 	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']) && $context['can_move'])
 	{
-		$request = $smfFunc['db_query']('', "
-			SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
-			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-			WHERE $user_info[query_see_board]", __FILE__, __LINE__);
-
-		$board_count = $smfFunc['db_num_rows']($request);
-		
-		$context['move_to_boards'] = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-		{
-			if (!isset($context['move_to_boards'][$row['id_cat']]))
-				$context['move_to_boards'][$row['id_cat']] = array(
-					'id' => $row['id_cat'],
-					'name' => $row['cat_name'],
-					'boards' => array(),
-				);
-
-			$context['move_to_boards'][$row['id_cat']]['boards'][] = array(
-				'id' => $row['id_board'],
-				'name' => $row['board_name'],
-				'child_level' => $row['child_level'],
-				'selected' => !empty($_SESSION['move_to_topic']) && $_SESSION['move_to_topic'] == $row['id_board'],
-			);
-		}
-		$smfFunc['db_free_result']($request);
+		require_once($sourcedir . '/Subs-MessageIndex.php');
+		$boardListOptions = array(
+			'use_permissions' => true,
+			'selected_board' => empty($_SESSION['move_to_topic']) ? null : $_SESSION['move_to_topic'],
+		);
+		$context['move_to_boards'] = getBoardList($boardListOptions);
 	}
 }
 

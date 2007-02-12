@@ -44,7 +44,7 @@ if (!defined('SMF'))
 	void CalendarPost()
 		- processes posting/editing/deleting a calendar event.
 		- calls Post() function if event is linked to a post.
-		- calls calendarInsertEvent() to insert the event if not linked to post.
+		- calls insertEvent() to insert the event if not linked to post.
 		- requires the calendar_post permission to use.
 		- uses the event_post sub template in the Calendar template.
 		- is accessed with ?action=calendar;sa=post.
@@ -118,6 +118,9 @@ function CalendarPost()
 	// Well - can they?
 	isAllowedTo('calendar_post');
 
+	// We need this for all kinds of useful functions.
+	require_once($sourcedir . '/Subs-Calendar.php');
+
 	// Cast this for safety...
 	if (isset($_REQUEST['eventid']))
 		$_REQUEST['eventid'] = (int) $_REQUEST['eventid'];
@@ -129,27 +132,11 @@ function CalendarPost()
 
 		// Validate the post...
 		if (!isset($_POST['link_to_board']))
-		{
-			require_once($sourcedir . '/Subs-Post.php');
-			calendarValidatePost();
-		}
+			validateEventPost();
 
 		// If you're not allowed to edit any events, you have to be the poster.
 		if ($_REQUEST['eventid'] > 0 && !allowedTo('calendar_edit_any'))
-		{
-			// Get the event's poster.
-			$request = $smfFunc['db_query']('', "
-				SELECT id_member
-				FROM {$db_prefix}calendar
-				WHERE id_event = $_REQUEST[eventid]
-				LIMIT 1", __FILE__, __LINE__);
-			list ($poster) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
-
-			// Finally, test if they can either edit ANY, or just their own...
-			if (!allowedTo('calendar_edit_any'))
-				isAllowedTo('calendar_edit_' . ($poster == $user_info['id'] ? 'own' : 'any'));
-		}
+			isAllowedTo('calendar_edit_' . (!empty($user_info['id']) && getEventPoster($_REQUEST['eventid']) == $user_info['id'] ? 'own' : 'any'));
 
 		// New - and directing?
 		if ($_REQUEST['eventid'] == -1 && isset($_POST['link_to_board']))
@@ -161,28 +148,31 @@ function CalendarPost()
 		// New...
 		elseif ($_REQUEST['eventid'] == -1)
 		{
-			require_once($sourcedir . '/Subs-Calendar.php');
-			insertEvent(0, 0, $_POST['evtitle'], $user_info['id'], $_POST['month'], $_POST['day'], $_POST['year'], isset($_POST['span']) ? $_POST['span'] : null);
+			$eventOptions = array(
+				'board' => 0,
+				'topic' => 0,
+				'title' => $_POST['evtitle'],
+				'member' => $user_info['id'],
+				'start_date' => sprintf('%04d-%02d-%02d', $_POST['year'], $_POST['month'], $_POST['day']),
+				'span' => isset($_POST['span']) && $_POST['span'] > 0 ? min((int) $modSettings['cal_maxspan'], (int) $_POST['span'] - 1) : 0,
+			);
+			insertEvent($eventOptions);
 		}
+
 		// Deleting...
 		elseif (isset($_REQUEST['deleteevent']))
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}calendar
-				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
+			removeEvent($_REQUEST['eventid']);
+
 		// ... or just update it?
 		else
 		{
-			// Calculate the event_date depending on span.
-			$span = empty($modSettings['cal_allowspan']) || empty($_POST['span']) || $_POST['span'] == 1 || empty($modSettings['cal_maxspan']) || $_POST['span'] > $modSettings['cal_maxspan'] ? 0 : min((int) $modSettings['cal_maxspan'], (int) $_POST['span'] - 1);
-			$start_time = mktime(0, 0, 0, (int) $_REQUEST['month'], (int) $_REQUEST['day'], (int) $_REQUEST['year']);
+			$eventOptions = array(
+				'title' => $_REQUEST['evtitle'],
+				'span' => empty($modSettings['cal_allowspan']) || empty($_POST['span']) || $_POST['span'] == 1 || empty($modSettings['cal_maxspan']) || $_POST['span'] > $modSettings['cal_maxspan'] ? 0 : min((int) $modSettings['cal_maxspan'], (int) $_POST['span'] - 1),
+				'start_date' => strftime('%Y-%m-%d', mktime(0, 0, 0, (int) $_REQUEST['month'], (int) $_REQUEST['day'], (int) $_REQUEST['year'])),
+			);
 
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}calendar
-				SET 
-					start_date = '" . strftime('%Y-%m-%d', $start_time) . "',
-					end_date = '" . strftime('%Y-%m-%d', $start_time + $span * 86400) . "', 
-					title = '" . $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['evtitle']), ENT_QUOTES)) . "'
-				WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
+			modifyEvent($_REQUEST['eventid'], $eventOptions);
 		}
 
 		updateSettings(array(
@@ -217,76 +207,43 @@ function CalendarPost()
 			'title' => '',
 			'span' => 1,
 		);
+		$context['event']['last_day'] = (int) strftime('%d', mktime(0, 0, 0, $context['event']['month'] == 12 ? 1 : $context['event']['month'] + 1, 0, $context['event']['month'] == 12 ? $context['event']['year'] + 1 : $context['event']['year']));
 
 		// Get list of boards that can be posted in.
 		$boards = boardsAllowedTo('post_new');
 		if (empty($boards))
 			fatal_lang_error('cannot_post_new', 'permission');
 
-		$request = $smfFunc['db_query']('', "
-			SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level
-			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-			WHERE $user_info[query_see_board]" . (in_array(0, $boards) ? '' : "
-				AND b.id_board IN (" . implode(', ', $boards) . ")"), __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$context['event']['boards'][] = array(
-				'id' => $row['id_board'],
-				'name' => $row['board_name'],
-				'child_level' => $row['child_level'],
-				'prefix' => str_repeat('&nbsp;', $row['child_level'] * 3),
-				'cat' => array(
-					'id' => $row['id_cat'],
-					'name' => $row['cat_name']
-				)
-			);
-		$smfFunc['db_free_result']($request);
+		// Load the list of boards and categories in the context.
+		require_once($sourcedir . '/Subs-MessageIndex.php');
+		$boardListOptions = array(
+			'included_boards' => in_array(0, $boards) ? null : $boards,
+			'use_permissions' => true,
+			'selected_board' => $modSettings['cal_defaultboard'],
+		);
+		$context['event']['categories'] = getBoardList($boardListOptions);
 	}
 	else
 	{
-		$request = $smfFunc['db_query']('', "
-			SELECT
-				c.id_event, c.id_board, c.id_topic, MONTH(c.start_date) AS month,
-				DAYOFMONTH(c.start_date) AS day, YEAR(c.start_date) AS year,
-				(TO_DAYS(c.end_date) - TO_DAYS(c.start_date)) AS span, c.id_member, c.title,
-				t.id_first_msg, t.id_member_started
-			FROM {$db_prefix}calendar AS c
-				LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = c.id_topic)
-			WHERE c.id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
-		// If nothing returned, we are in poo, poo.
-		if ($smfFunc['db_num_rows']($request) == 0)
+		$context['event'] = getEventProperties($_REQUEST['eventid']);
+
+		if ($context['event'] === false)
 			fatal_lang_error('no_access');
-		$row = $smfFunc['db_fetch_assoc']($request);
-		$smfFunc['db_free_result']($request);
 
 		// If it has a board, then they should be editing it within the topic.
-		if ($row['id_topic'] && $row['id_first_msg'])
+		if (!empty($context['event']['topic']['id']) && !empty($context['event']['topic']['first_msg']))
 		{
 			// We load the board up, for a check on the board access rights...
-			$topic = $row['id_topic'];
+			$topic = $context['event']['topic']['id'];
 			loadBoard();
 		}
 
 		// Make sure the user is allowed to edit this event.
-		if ($row['id_member'] != $user_info['id'])
+		if ($context['event']['member'] != $user_info['id'])
 			isAllowedTo('calendar_edit_any');
 		elseif (!allowedTo('calendar_edit_any'))
 			isAllowedTo('calendar_edit_own');
-
-		$context['event'] = array(
-			'boards' => array(),
-			'board' => $row['id_board'],
-			'new' => 0,
-			'eventid' => $_REQUEST['eventid'],
-			'year' => $row['year'],
-			'month' => $row['month'],
-			'day' => $row['day'],
-			'title' => $row['title'],
-			'span' => 1 + $row['span'],
-		);
 	}
-
-	$context['event']['last_day'] = (int) strftime('%d', mktime(0, 0, 0, $context['event']['month'] == 12 ? 1 : $context['event']['month'] + 1, 0, $context['event']['month'] == 12 ? $context['event']['year'] + 1 : $context['event']['year']));
 
 	// Template, sub template, etc.
 	loadTemplate('Calendar');
