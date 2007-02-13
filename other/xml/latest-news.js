@@ -12,7 +12,7 @@ $latest_news = array(
 		'time' => 1171200945,
 
 		'subject_english' => 'SMF 1.1.2',
-		'message_english' => 'A pach has been released to address a number of outstanding bugs in SMF 1.1.1, including several around UTF-8 langauge support. In addition this patch offers improved image verification support and fixes a couple of low risk security related bugs. If you need any help upgrading please visit our forum.',
+		'message_english' => 'A patch has been released to address a number of outstanding bugs in SMF 1.1.1, including several around UTF-8 language support. In addition this patch offers improved image verification support and fixes a couple of low risk security related bugs. If you need any help upgrading please visit our forum.',
 		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=149553.0',
 		'author_english' => 'Grudge',
 	),
@@ -503,27 +503,27 @@ if (document.getElementById("yourVersion"))
 {
 	var yourVersion = getInnerHTML(document.getElementById("yourVersion"));
 	if (yourVersion == "SMF 1.0.4")
-		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-0-5_package.tar.gz";
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-0-5_package.tar.gz";
 	else if (yourVersion == "SMF 1.0.5" || yourVersion == "SMF 1.0.6")
 	{
-		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz";
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz";
 		window.smfUpdateCritical = false;
 	}
 	else if (yourVersion == "SMF 1.0.7")
 	{
-		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-0-8_package.tar.gz";
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-0-8_package.tar.gz";
 	}
 	else if (yourVersion == "SMF 1.0.9")
 	{
-		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-0-10_patch.tar.gz";
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-0-10_patch.tar.gz";
 	}
 	else if (yourVersion == "SMF 1.1")
 	{
-		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-1-1_patch.tar.gz";
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-1-1_patch.tar.gz";
 	}
 	else if (yourVersion == "SMF 1.1.1")
 	{
-		window.smfUpdatePackage = "http://mods.simplemachines.org/downloads/smf_1-1-2_patch.tar.gz";
+		window.smfUpdatePackage = "http://custom.simplemachines.org/mods/downloads/smf_1-1-2_patch.tar.gz";
 	}
 }
 
