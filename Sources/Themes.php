@@ -970,16 +970,13 @@ function PickTheme()
 		if ($id_theme == 0)
 			continue;
 
-		$settings = $theme_data;
-		$settings['theme_id'] = $id_theme;
-
-		if (file_exists($settings['theme_dir'] . '/languages/Settings.' . $user_info['language'] . '.php'))
-			include($settings['theme_dir'] . '/languages/Settings.' . $user_info['language'] . '.php');
-		elseif (file_exists($settings['theme_dir'] . '/languages/Settings.' . $language . '.php'))
-			include($settings['theme_dir'] . '/languages/Settings.' . $language . '.php');
+		if (file_exists($theme_data['theme_dir'] . '/languages/Settings.' . $user_info['language'] . '.php'))
+			include($theme_data['theme_dir'] . '/languages/Settings.' . $user_info['language'] . '.php');
+		elseif (file_exists($theme_data['theme_dir'] . '/languages/Settings.' . $language . '.php'))
+			include($theme_data['theme_dir'] . '/languages/Settings.' . $language . '.php');
 		else
 		{
-			$txt['theme_thumbnail_href'] = $settings['images_url'] . '/thumbnail.gif';
+			$txt['theme_thumbnail_href'] = $theme_data['images_url'] . '/thumbnail.gif';
 			$txt['theme_description'] = '';
 		}
 
