@@ -874,11 +874,11 @@ function template_maintain()
 			</tr>
 			<tr>
 				<td class="windowbg2" style="line-height: 1.3; padding-bottom: 2ex;">
-					<a href="', $scripturl, '?action=admin;area=maintain;sa=optimize">', $txt['maintain_optimize'], '</a><br />
+					<a href="', $scripturl, '?action=admin;area=maintain;sa=optimize;sesc=', $context['session_id'], '">', $txt['maintain_optimize'], '</a><br />
 					<a href="', $scripturl, '?action=admin;area=version">', $txt['maintain_version'], '</a><br />
 					<a href="', $scripturl, '?action=admin;area=repairboards">', $txt['maintain_errors'], '</a><br />
-					<a href="', $scripturl, '?action=admin;area=maintain;sa=recount">', $txt['maintain_recount'], '</a><br />
-					<a href="', $scripturl, '?action=admin;area=maintain;sa=logs">', $txt['maintain_logs'], '</a><br />', $context['convert_utf8'] ? '
+					<a href="', $scripturl, '?action=admin;area=maintain;sa=recount;sesc=', $context['session_id'], '">', $txt['maintain_recount'], '</a><br />
+					<a href="', $scripturl, '?action=admin;area=maintain;sa=logs;sesc=', $context['session_id'], '">', $txt['maintain_logs'], '</a><br />', $context['convert_utf8'] ? '
 					<a href="' . $scripturl . '?action=admin;area=maintain;sa=convertutf8">' . $txt['utf8_title'] . '</a><br />' : '', $context['convert_entities'] ? '
 					<a href="' . $scripturl . '?action=admin;area=maintain;sa=convertentities">' . $txt['entity_convert_title'] . '</a><br />' : '', '
 					<a href="', $scripturl, '?action=admin;area=maintain;sa=cleancache">', $txt['maintain_cache'], '</a><br />
@@ -1664,6 +1664,7 @@ function template_show_custom_profile()
 				</td>
 			</tr>
 		</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 }
 
@@ -1846,6 +1847,7 @@ function template_edit_profile_field()
 				</td>
 			</tr>
 		</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 
 	// Get the java bits right!
