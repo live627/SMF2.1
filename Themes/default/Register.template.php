@@ -209,15 +209,16 @@ echo '
 	<div align="center">
 		<input type="submit" name="regSubmit" value="', $txt['register'], '" />
 	</div>
-</form>';
+</form>
+<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
 	// Uncheck the agreement thing....
 	if ($context['require_agreement'])
 		echo '
-<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	document.forms.creator.regagree.checked = false;
-	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;
+	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;';
 
+echo '
 	var regTextStrings = {
 		"username_valid": "', $txt['registration_username_available'], '",
 		"username_invalid": "', $txt['registration_username_unavailable'], '",

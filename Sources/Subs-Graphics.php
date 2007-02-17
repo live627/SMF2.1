@@ -660,7 +660,12 @@ function showCodeImage($code)
 	if (!$varyFonts)
 	{
 		$font_list = array($font_list[0]);
-		$ttfont_list = empty($ttfont_list) ? array() : array($ttfont_list[0]);
+		// Try use Screenge if we can - it looks good!
+		if (in_array('Screenge.ttf', $ttfont_list))
+			$ttfont_list = array('Screenge.ttf');
+		else
+			$ttfont_list = empty($ttfont_list) ? array() : array($ttfont_list[0]);
+
 	}
 
 	// Create a list of characters to be shown.
@@ -681,14 +686,14 @@ function showCodeImage($code)
 		$loaded_fonts[$font_index] = imageloadfont($settings['default_theme_dir'] . '/fonts/' . $font_list[$font_index]);
 
 	// Determine the dimensions of each character.
-	$total_width = $character_spacing * strlen($code) + 10;
+	$total_width = $character_spacing * strlen($code) + 20;
 	$max_height = 0;
 	foreach ($characters as $char_index => $character)
 	{
 		$characters[$char_index]['width'] = imagefontwidth($loaded_fonts[$character['font']]);
 		$characters[$char_index]['height'] = imagefontheight($loaded_fonts[$character['font']]);
 
-		$max_height = max($characters[$char_index]['height'], $max_height);
+		$max_height = max($characters[$char_index]['height'] + 5, $max_height);
 		$total_width += $characters[$char_index]['width'];
 	}
 
@@ -755,10 +760,10 @@ function showCodeImage($code)
 				if ($fontSizeRandom)
 					$font_size = $gd2 ? rand(17, 19) : rand(18, 25);
 				else
-					$font_size = $gd2 ? 24 : 25;
+					$font_size = $gd2 ? 18 : 24;
 	
 				// Work out the sizes - also fix the character width cause TTF not quite so wide!
-				$font_x = $fontHorSpace == 'minus' && $cur_x > 0 ? $cur_x - 5 : $cur_x + 5;
+				$font_x = $fontHorSpace == 'minus' && $cur_x > 0 ? $cur_x - 3 : $cur_x + 5;
 				$font_y = $max_height - ($fontVerPos == 'vrandom' ? rand(2, 8) : ($fontVerPos == 'random' ? rand(3, 5) : 5));
 	
 				// What font face?

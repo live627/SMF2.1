@@ -149,6 +149,8 @@ function setPassword()
 {
 	global $txt, $context;
 
+	loadLanguage('Login');
+
 	// You need a code!
 	if (!isset($_REQUEST['code']))
 		fatal_lang_error('no_access');

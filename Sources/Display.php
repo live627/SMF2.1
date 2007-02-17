@@ -1081,6 +1081,15 @@ function Download()
 				14 => 'iff',
 			);
 
+			// Stupid damn IE - work around it and it's exploits.
+			$fp = fopen($filename, 'rb');
+			if ($fp)
+			{
+				if (preg_match('~<script|<embed|<object|<html|<head|<body~si', fread($fp, 250)))
+					$size = array(2 => 'invalid');
+				fclose($fp);
+			}
+
 			// Do we have a mime type we can simpy use?
 			if (!empty($size['mime']))
 				header('Content-Type: ' . $size['mime']);

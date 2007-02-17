@@ -6,6 +6,9 @@ function template_profile_above()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
+	echo '
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/profile.js"></script>';
+
 	// Assuming there are actually some areas the user can visit...
 	if (!empty($context['profile_areas']))
 	{
@@ -1176,12 +1179,187 @@ function template_statPanel()
 		</table>';
 }
 
-// Template for changing user account information.
-function template_account()
+// Template for editing profile options.
+function template_edit_options()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
-	// Javascript for checking if password has been entered / taking admin powers away from themselves.
+	// The main header!
+	echo '
+		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return checkProfileSubmit();">
+			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
+				<tr class="titlebg">
+					<td height="26">
+						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
+						', $txt['profile'], '
+					</td>
+				</tr>';
+
+	// Have we some description?
+	if ($context['page_desc'])
+		echo '
+				<tr class="windowbg">
+					<td class="smalltext" height="25" style="padding: 2ex;">
+						', $context['page_desc'], '
+					</td>
+				</tr>';
+
+	echo '
+				<tr>
+					<td class="windowbg2" style="padding-bottom: 2ex;">
+						<table width="100%" cellpadding="3" cellspacing="0" border="0">';
+
+	// Any bits at the start?
+	if (!empty($context['profile_prehtml']))
+		echo '
+							<tr>
+								<td colspan="2">', $context['profile_prehtml'], '</td>
+							</tr>';
+
+	// Start the big old loop 'of love.
+	foreach ($context['profile_fields'] as $key => $field)
+	{
+		if ($field['type'] == 'hr')
+		{
+			echo '
+							<tr>
+								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
+							</tr>';
+		}
+		elseif ($field['type'] == 'callback')
+		{
+			if (isset($field['callback_func']) && function_exists('template_profile_' . $field['callback_func']))
+			{
+				$callback_func = 'template_profile_' . $field['callback_func'];
+				$callback_func();
+			}
+		}
+		else
+		{
+			echo '
+							<tr valign="top">
+								<td width="40%">
+									<b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
+
+			// Does it have any subtext to show?
+			if (!empty($field['subtext']))
+				echo '
+									<div class="smalltext">', $field['subtext'], '</div>';
+
+			echo '
+								</td>
+								<td>';
+
+			// Want to put something infront of the box?
+			if (!empty($field['preinput']))
+				echo '
+									', $field['preinput'];
+
+			// What type of data are we showing?
+			if ($field['type'] == 'label')
+				echo '
+									', $field['value'];
+
+			// Maybe it's a text box - very likely!
+			elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
+				echo '
+									<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' />';
+
+			// You "checking" me out? ;)
+			elseif ($field['type'] == 'check')
+				echo '
+									<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" class="check" ', $field['input_attr'], ' />';
+
+			// Always fun - select boxes!
+			elseif ($field['type'] == 'select')
+			{
+				echo '
+									<select name="', $key, '" id="', $key, '">';
+
+				if (isset($field['options']))
+				{
+					// Is this some code to generate the options?
+					if (!is_array($field['options']))
+						$field['options'] = eval($field['options']);
+					// Assuming we now have some!
+					if (is_array($field['options']))
+						foreach ($field['options'] as $value => $name)
+							echo '
+										<option value="', $value, '" ', $value == $field['value'] ? 'selected="selected"' : '', '>', $name, '</option>';
+				}
+
+				echo '
+									</select>';
+			}
+
+			// Something to end with?
+			if (!empty($field['postinput']))
+				echo '
+									', $field['postinput'];
+
+			echo '
+								</td>
+							</tr>';
+		}
+	}
+
+	// Are there any custom profile fields - if so print them!
+	if (!empty($context['custom_fields']))
+	{
+		echo '
+							<tr>
+								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
+							</tr>';
+
+		foreach ($context['custom_fields'] as $field)
+		{
+			echo '
+							<tr valign="top">
+								<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
+								<td>', $field['input_html'], '</td>
+							</tr>';
+		}
+	}
+
+	// Any closing HTML?
+	if (!empty($context['profile_posthtml']))
+		echo '
+							<tr>
+								<td colspan="2">', $context['profile_posthtml'], '</td>
+							</tr>';
+
+	echo '
+							<tr>
+								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
+							</tr><tr>';
+
+	// Only show the password box if it's actually needed.
+	if ($context['user']['is_owner'] && $context['require_password'])
+		echo '
+								<td width="40%">
+									<b', isset($context['modify_error']['bad_password']) || isset($context['modify_error']['no_password']) ? ' style="color: red;"' : '', '>', $txt['current_password'], ': </b>
+									<div class="smalltext">', $txt['required_security_reasons'], '</div>
+								</td>
+								<td>
+									<input type="password" name="oldpasswrd" size="20" style="margin-right: 4ex;" />';
+	else
+		echo '
+								<td align="right" colspan="2">';
+
+	echo '
+									<input type="submit" value="', $txt['change_profile'], '" />
+									<input type="hidden" name="sc" value="', $context['session_id'], '" />
+									<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+									<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>';
+
+	// Some javascript!
 	echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			function checkProfileSubmit()
@@ -1197,217 +1375,26 @@ function template_account()
 					return false;
 				}';
 
-	// This part checks if they are removing themselves from administrative power on accident.
-	if ($context['allow_edit_membergroups'] && $context['user']['is_owner'] && $context['member']['group'] == 1)
+	// Any onsubmit javascript?
+	if (!empty($context['profile_onsubmit_javascript']))
 		echo '
-				if (typeof(document.forms.creator.id_group) != "undefined" && document.forms.creator.id_group.value != "1")
-					return confirm("', $txt['deadmin_confirm'], '");';
+				', $context['profile_javascript'];
 
 	echo '
-				return true;
-			}
+			}';
+
+	// Any totally custom stuff?
+	if (!empty($context['profile_javascript']))
+		echo '
+			', $context['profile_javascript'];
+
+	echo '
 		// ]]></script>';
 
-	// The main containing header.
-	echo '
-		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return checkProfileSubmit();">
-			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
-				<tr class="titlebg">
-					<td height="26">
-						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt['profile'], '
-					</td>
-				</tr>';
-
-	// Display Name, language and date user registered.
-	echo '
-				<tr class="windowbg">
-					<td class="smalltext" height="25" style="padding: 2ex;">
-						', $txt['account_info'], '
-					</td>
-				</tr>
-				<tr>
-					<td class="windowbg2" style="padding-bottom: 2ex;">
-						<table width="100%" cellpadding="3" cellspacing="0" border="0">';
-
-	// Only show these settings if you're allowed to edit the account itself (not just the membergroups).
-	if ($context['allow_edit_account'])
-	{
-		if ($context['user']['is_admin'] && !empty($context['allow_edit_username']))
-			echo '
-							<tr>
-								<td colspan="2" align="center" style="color: red">', $txt['username_warning'], '</td>
-							</tr>
-							<tr>
-								<td width="40%">
-									<b>', $txt['username'], ': </b>
-								</td>
-								<td>
-									<input type="text" name="member_name" size="30" value="', $context['member']['username'], '" />
-								</td>
-							</tr>';
-		else
-			echo '
-							<tr>
-								<td width="40%">
-									<b>', $txt['username'], ': </b>', $context['user']['is_admin'] ? '
-									<div class="smalltext">(<a href="' . $scripturl . '?action=profile;u=' . $context['member']['id'] . ';sa=account;changeusername" style="font-style: italic;">' . $txt['username_change'] . '</a>)</div>' : '', '
-								</td>
-								<td>
-									', $context['member']['username'], '
-								</td>
-							</tr>';
-
+	// Any final spellchecking stuff?
+	if (!empty($context['show_spellchecking']))
 		echo '
-							<tr>
-								<td>
-									<b', (isset($context['modify_error']['no_name']) || isset($context['modify_error']['name_taken']) ? ' style="color: red;"' : ''), '>', $txt['name'], ': </b>
-									<div class="smalltext">', $txt['display_name'], '</div>
-								</td>
-								<td>', ($context['allow_edit_name'] ? '<input type="text" name="real_name" size="30" value="' . $context['member']['name'] . '" maxlength="60" />' : $context['member']['name']), '</td>
-							</tr>';
-
-		// Allow the administrator to change the date they registered on and their post count.
-		if ($context['user']['is_admin'])
-			echo '
-							<tr>
-								<td><b>', $txt['date_registered'], ':</b></td>
-								<td><input type="text" name="date_registered" size="30" value="', $context['member']['registered'], '" /></td>
-							</tr>
-							<tr>
-								<td><b>', $txt['profile_posts'], ': </b></td>
-								<td><input type="text" name="posts" size="4" value="', $context['member']['posts'], '" /></td>
-							</tr>';
-
-		// Only display if admin has enabled "user selectable language".
-		if (!empty($modSettings['userLanguage']) && count($context['languages']) > 1)
-		{
-			echo '
-							<tr>
-								<td width="40%"><b>', $txt['prefered_language'], ':</b></td>
-								<td>
-									<select name="lngfile">';
-
-			// Fill a select box with all the languages installed.
-			foreach ($context['languages'] as $language)
-				echo '
-										<option value="', $language['filename'], '"', $language['selected'] ? ' selected="selected"' : '', '>', $language['name'], '</option>';
-			echo '
-									</select>
-								</td>
-							</tr>';
-		}
-	}
-
-	// Only display member group information/editing with the proper permissions.
-	if ($context['allow_edit_membergroups'])
-	{
-		echo '
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr><tr>
-								<td valign="top">
-									<b>', $txt['primary_membergroup'], ': </b>
-									<div class="smalltext">(<a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqWin(this.href);">', $txt['moderator_why_missing'], '</a>)</div>
-								</td>
-								<td>
-									<select name="id_group">';
-		// Fill the select box with all primary member groups that can be assigned to a member.
-		foreach ($context['member_groups'] as $member_group)
-			if (!empty($member_group['can_be_primary']))
-				echo '
-										<option value="', $member_group['id'], '"', $member_group['is_primary'] ? ' selected="selected"' : '', '>
-											', $member_group['name'], '
-										</option>';
-		echo '
-									</select>
-								</td>
-							</tr><tr>
-								<td valign="top"><b>', $txt['additional_membergroups'], ':</b></td>
-								<td>
-									<div id="additional_groupsList">
-										<input type="hidden" name="additional_groups[]" value="0" />';
-		// For each membergroup show a checkbox so members can be assigned to more than one group.
-		foreach ($context['member_groups'] as $member_group)
-			if ($member_group['can_be_additional'])
-				echo '
-										<label for="additional_groups-', $member_group['id'], '"><input type="checkbox" name="additional_groups[]" value="', $member_group['id'], '" id="additional_groups-', $member_group['id'], '"', $member_group['is_additional'] ? ' checked="checked"' : '', ' class="check" /> ', $member_group['name'], '</label><br />';
-		echo '
-									</div>
-									<a href="javascript:void(0);" onclick="document.getElementById(\'additional_groupsList\').style.display = \'block\'; document.getElementById(\'additional_groupsLink\').style.display = \'none\'; return false;" id="additional_groupsLink" style="display: none;">', $txt['additional_membergroups_show'], '</a>
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-										document.getElementById("additional_groupsList").style.display = "none";
-										document.getElementById("additional_groupsLink").style.display = "";
-									// ]]></script>
-								</td>
-							</tr>';
-	}
-
-	// Show this part if you're not only here for assigning membergroups.
-	if ($context['allow_edit_account'])
-	{
-		// Show email address box.
-		echo '
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr><tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_email']) || isset($context['modify_error']['no_email']) || isset($context['modify_error']['email_taken']) ? ' style="color: red;"' : ''), '>', $txt['email'], ': </b><div class="smalltext">', $txt['valid_email'], '</div></td>
-								<td><input type="text" name="email_address" size="30" value="', $context['member']['email'], '" /></td>
-							</tr>';
-
-		// If the user is allowed to hide their email address from the public give them the option to here.
-		if ($context['allow_hide_email'])
-		{
-			echo '
-							<tr>
-								<td width="40%"><b>', $txt['hide_email'], '</b></td>
-								<td><input type="hidden" name="hide_email" value="0" /><input type="checkbox" name="hide_email"', $context['member']['hide_email'] ? ' checked="checked"' : '', ' value="1" class="check" /></td>
-							</tr>';
-	}
-
-		// Option to show online status - if they are allowed to.
-		if ($context['allow_hide_online'])
-		{
-			echo '
-							<tr>
-								<td width="40%"><b>', $txt['show_online'], '</b></td>
-								<td><input type="hidden" name="show_online" value="0" /><input type="checkbox" name="show_online"', $context['member']['show_online'] ? ' checked="checked"' : '', ' value="1" class="check" /></td>
-							</tr>';
-		}
-
-		// Show boxes so that the user may change his or her password.
-		echo '
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr><tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_new_password']) ? ' style="color: red;"' : ''), '>', $txt['choose_pass'], ': </b><div class="smalltext">', $txt['password_stregth'], '</div></td>
-								<td><input type="password" name="passwrd1" size="20" /></td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['verify_pass'], ': </b></td>
-								<td><input type="password" name="passwrd2" size="20" /></td>
-							</tr>';
-
-		// This section allows the user to enter secret question/answer so they can reset a forgotten password.
-		echo '
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['secret_question'], ':</b><div class="smalltext">', $txt['secret_desc'], '</div></td>
-								<td><input type="text" name="secret_question" size="50" value="', $context['member']['secret_question'], '" /></td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['secret_answer'], ':</b><div class="smalltext">', $txt['secret_desc2'], '</div></td>
-								<td><input type="text" name="secret_answer" size="20" /><span class="smalltext" style="margin-left: 4ex;"><a href="', $scripturl, '?action=helpadmin;help=secret_why_blank" onclick="return reqWin(this.href);">', $txt['secret_why_blank'], '</a></span></td>
-							</tr>';
-	}
-	// Show the standard "Save Settings" profile button.
-	template_profile_save();
-
-	echo '
-						</table>
-					</td>
-				</tr>
-			</table>
-		</form>';
+		<form name="spell_form" id="spell_form" method="post" accept-charset="', $context['character_set'], '" target="spellWindow" action="', $scripturl, '?action=spellcheck"><input type="hidden" name="spellstring" value="" /></form>';
 }
 
 // Template for forum specific options - avatar, signature etc.
@@ -1432,240 +1419,8 @@ function template_forumProfile()
 					<td class="windowbg2" style="padding-bottom: 2ex;">
 						<table border="0" width="100%" cellpadding="5" cellspacing="0">';
 
-	// This is the avatar selection table that is only displayed if avatars are enabled!
-	if (!empty($context['member']['avatar']['allow_server_stored']) || !empty($context['member']['avatar']['allow_upload']) || !empty($context['member']['avatar']['allow_external']))
-	{
-		// If users are allowed to choose avatars stored on the server show selection boxes to choice them from.
-		if (!empty($context['member']['avatar']['allow_server_stored']))
-		{
-			echo '
-							<tr>
-								<td width="40%" valign="top" style="padding: 0 2px;">
-									<table width="100%" cellpadding="5" cellspacing="0" border="0" style="height: 25ex;"><tr>
-										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"', ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : ''), ' class="check" /></td>
-										<td valign="top" style="padding-left: 1ex;">
-											<b', (isset($context['modify_error']['bad_avatar']) ? ' style="color: red;"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></b>
-											<div style="margin: 2ex;"><img name="avatar" id="avatar" src="', !empty($context['member']['avatar']['allow_external']) && $context['member']['avatar']['choice'] == 'external' ? $context['member']['avatar']['external'] : $modSettings['avatar_url'] . '/blank.gif', '" alt="Do Nothing" /></div>
-										</td>
-									</tr></table>
-								</td>
-								<td>
-									<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-										<td style="width: 20ex;">
-											<select name="cat" id="cat" size="10" onchange="changeSel(\'\');" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');">';
-			// This lists all the file catergories.
-			foreach ($context['avatars'] as $avatar)
-				echo '
-												<option value="', $avatar['filename'] . ($avatar['is_dir'] ? '/' : ''), '"', ($avatar['checked'] ? ' selected="selected"' : ''), '>', $avatar['name'], '</option>';
-			echo '
-											</select>
-										</td>
-										<td>
-											<select name="file" id="file" size="10" style="display: none;" onchange="showAvatar()" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');" disabled="disabled"><option></option></select>
-										</td>
-									</tr></table>
-								</td>
-							</tr>';
-		}
 
-		// If the user can link to an off server avatar, show them a box to input the address.
-		if (!empty($context['member']['avatar']['allow_external']))
-		{
-			echo '
-							<tr>
-								<td valign="top" style="padding: 0 2px;">
-									<table width="100%" cellpadding="5" cellspacing="0" border="0"><tr>
-										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_external" value="external"', ($context['member']['avatar']['choice'] == 'external' ? ' checked="checked"' : ''), ' class="check" /></td>
-										<td valign="top" style="padding-left: 1ex;"><b><label for="avatar_choice_external">', $txt['my_own_pic'], ':</label></b><div class="smalltext">', $txt['avatar_by_url'], '</div></td>
-									</tr></table>
-								</td>
-								<td valign="top">
-									<input type="text" name="userpicpersonal" size="45" value="', $context['member']['avatar']['external'], '" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'external\');" onchange="if (typeof(previewExternalAvatar) != \'undefined\') previewExternalAvatar(this.value);" />
-								</td>
-							</tr>';
-		}
 
-		// If the user is able to upload avatars to the server show them an upload box.
-		if (!empty($context['member']['avatar']['allow_upload']))
-			echo '
-							<tr>
-								<td valign="top" style="padding: 0 2px;">
-									<table width="100%" cellpadding="5" cellspacing="0" border="0"><tr>
-										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_upload" value="upload"', ($context['member']['avatar']['choice'] == 'upload' ? ' checked="checked"' : ''), ' class="check" /></td>
-										<td valign="top" style="padding-left: 1ex;"><b><label for="avatar_choice_upload">', $txt['avatar_will_upload'], ':</label></b></td>
-									</tr></table>
-								</td>
-								<td valign="top">
-									', ($context['member']['avatar']['id_attach'] > 0 ? '<img src="' . $context['member']['avatar']['href'] . '" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" /><br /><br />' : ''), '
-									<input type="file" size="48" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" />
-								</td>
-							</tr>';
-	}
-
-	// Personal text...
-	echo '
-							<tr>
-								<td width="40%"><b>', $txt['personal_text'], ': </b></td>
-								<td><input type="text" name="personal_text" size="50" maxlength="50" value="', $context['member']['blurb'], '" /></td>
-							</tr>
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr>';
-
-	// Gender, birthdate and location.
-	echo '
-							<tr>
-								<td width="40%">
-									<b>', $txt['dob'], ':</b>
-									<div class="smalltext">', $txt['dob_year'], ' - ', $txt['dob_month'], ' - ', $txt['dob_day'], '</div>
-								</td>
-								<td class="smalltext">
-									<input type="text" name="bday3" size="4" maxlength="4" value="', $context['member']['birth_date']['year'], '" /> -
-									<input type="text" name="bday1" size="2" maxlength="2" value="', $context['member']['birth_date']['month'], '" /> -
-									<input type="text" name="bday2" size="2" maxlength="2" value="', $context['member']['birth_date']['day'], '" />
-								</td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['location'], ': </b></td>
-								<td><input type="text" name="location" size="50" value="', $context['member']['location'], '" /></td>
-							</tr>
-							<tr>
-								<td width="40%"><b>', $txt['gender'], ': </b></td>
-								<td>
-									<select name="gender" size="1">
-										<option value="0"></option>
-										<option value="1"', ($context['member']['gender']['name'] == 'm' ? ' selected="selected"' : ''), '>', $txt['male'], '</option>
-										<option value="2"', ($context['member']['gender']['name'] == 'f' ? ' selected="selected"' : ''), '>', $txt['female'], '</option>
-									</select>
-								</td>
-							</tr><tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr>';
-
-	// All the messenger type contact info.
-	echo '
-							<tr>
-								<td width="40%"><b>', $txt['icq'], ': </b><div class="smalltext">', $txt['your_icq'], '</div></td>
-								<td><input type="text" name="icq" size="24" value="', $context['member']['icq']['name'], '" /></td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['aim'], ': </b><div class="smalltext">', $txt['your_aim'], '</div></td>
-								<td><input type="text" name="aim" maxlength="16" size="24" value="', $context['member']['aim']['name'], '" /></td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['msn'], ': </b><div class="smalltext">', $txt['smf237'], '.</div></td>
-								<td><input type="text" name="msn" size="24" value="', $context['member']['msn']['name'], '" /></td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['yim'], ': </b><div class="smalltext">', $txt['your_yim'], '</div></td>
-								<td><input type="text" name="yim" maxlength="32" size="24" value="', $context['member']['yim']['name'], '" /></td>
-							</tr><tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr>';
-
-	// Input box for custom titles, if they can edit it...
-	if (!empty($modSettings['titlesEnable']) && $context['allow_edit_title'])
-		echo '
-							<tr>
-								<td width="40%"><b>' . $txt['custom_title'] . ': </b></td>
-								<td><input type="text" name="usertitle" size="50" value="' . $context['member']['title'] . '" /></td>
-							</tr>';
-
-	// Show the signature box.
-	if ($context['signature_enabled'])
-	{
-		echo '
-							<tr>
-								<td width="40%" valign="top">
-									<b>', $txt['signature'], ':</b>
-									<div class="smalltext">', $txt['sig_info'], '</div><br />
-									<br />';
-
-		if ($context['show_spellchecking'])
-			echo '
-									<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'creator\', \'signature\');" />';
-
-		echo '
-								</td>
-								<td>
-									<textarea class="editor" onkeyup="calcCharLeft();" name="signature" rows="5" cols="50">', $context['member']['signature'], '</textarea><br />';
-
-		// If there is a limit at all!
-		if (!empty($context['signature_limits']['max_length']))
-			echo '
-									<span class="smalltext">', sprintf($txt['max_sig_characters'], $context['signature_limits']['max_length']), ' <span id="signatureLeft">', $context['signature_limits']['max_length'], '</span></span><br />';
-
-		if ($context['signature_warning'])
-			echo '
-									<span class="smalltext">', $context['signature_warning'], '</span>';
-
-		// Load the spell checker?
-		if ($context['show_spellchecking'])
-			echo '
-									<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/spellcheck.js"></script>';
-
-		// Some javascript used to count how many characters have been used so far in the signature.
-		echo '
-									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-										function tick()
-										{
-											if (typeof(document.forms.creator) != "undefined")
-											{
-												calcCharLeft();
-												setTimeout("tick()", 1000);
-											}
-											else
-												setTimeout("tick()", 800);
-										}
-
-										function calcCharLeft()
-										{
-											var maxLength = ', $context['signature_limits']['max_length'], ';
-											var oldSignature = "", currentSignature = document.forms.creator.signature.value;
-
-											if (!document.getElementById("signatureLeft"))
-												return;
-
-											if (oldSignature != currentSignature)
-											{
-												oldSignature = currentSignature;
-
-												if (currentSignature.replace(/\r/, "").length > maxLength)
-													document.forms.creator.signature.value = currentSignature.replace(/\r/, "").substring(0, maxLength);
-												currentSignature = document.forms.creator.signature.value.replace(/\r/, "");
-											}
-
-											setInnerHTML(document.getElementById("signatureLeft"), maxLength - currentSignature.length);
-										}
-
-										setTimeout("tick()", 800);
-									// ]]></script>
-								</td>
-							</tr>';
-	}
-	// Website details.
-	echo '
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr>
-							<tr>
-								<td width="40%"><b>', $txt['website_title'], ': </b><div class="smalltext">', $txt['include_website_url'], '</div></td>
-								<td><input type="text" name="website_title" size="50" value="', $context['member']['website']['title'], '" /></td>
-							</tr><tr>
-								<td width="40%"><b>', $txt['website_url'], ': </b><div class="smalltext">', $txt['complete_url'], '</div></td>
-								<td><input type="text" name="website_url" size="50" value="', $context['member']['website']['url'], '" /></td>
-							</tr>';
-
-	// If karma is enabled let the admin edit it...
-	if ($context['user']['is_admin'] && !empty($modSettings['karmaMode']))
-	{
-		echo '
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr><tr>
-								<td valign="top"><b>', $modSettings['karmaLabel'], '</b></td>
-								<td>
-									', $modSettings['karmaApplaudLabel'], ' <input type="text" name="karma_good" size="4" value="', $context['member']['karma']['good'], '" onchange="setInnerHTML(document.getElementById(\'karmaTotal\'), this.value - this.form.karma_bad.value);" style="margin-right: 2ex;" /> ', $modSettings['karmaSmiteLabel'], ' <input type="text" name="karma_bad" size="4" value="', $context['member']['karma']['bad'], '" onchange="this.form.karma_good.onchange();" /><br />
-									(', $txt['total'], ': <span id="karmaTotal">', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</span>)
-								</td>
-							</tr>';
-	}
 
 	// Show the standard "Save Settings" profile button.
 	template_profile_save();
@@ -1676,111 +1431,7 @@ function template_forumProfile()
 				</tr>
 			</table>';
 
-	/* If the user is allowed to choose avatars stored on the server, the below javascript is used to update the
-		file listing of avatars as the user changes catergory. It also updates the preview image as they choose
-		different files on the select box. */
-	if (!empty($context['member']['avatar']['allow_server_stored']))
-		echo '
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-				var files = ["' . implode('", "', $context['avatar_list']) . '"];
-				var avatar = document.getElementById("avatar");
-				var cat = document.getElementById("cat");
-				var selavatar = "' . $context['avatar_selected'] . '";
-				var avatardir = "' . $modSettings['avatar_url'] . '/";
-				var size = avatar.alt.substr(3, 2) + " " + avatar.alt.substr(0, 2) + String.fromCharCode(117, 98, 116);
-				var file = document.getElementById("file");
 
-				if (avatar.src.indexOf("blank.gif") > -1)
-					changeSel(selavatar);
-				else
-					previewExternalAvatar(avatar.src)
-
-				function changeSel(selected)
-				{
-					if (cat.selectedIndex == -1)
-						return;
-
-					if (cat.options[cat.selectedIndex].value.indexOf("/") > 0)
-					{
-						var i;
-						var count = 0;
-
-						file.style.display = "inline";
-						file.disabled = false;
-
-						for (i = file.length; i >= 0; i = i - 1)
-							file.options[i] = null;
-
-						for (i = 0; i < files.length; i++)
-							if (files[i].indexOf(cat.options[cat.selectedIndex].value) == 0)
-							{
-								var filename = files[i].substr(files[i].indexOf("/") + 1);
-								var showFilename = filename.substr(0, filename.lastIndexOf("."));
-								showFilename = showFilename.replace(/[_]/g, " ");
-
-								file.options[count] = new Option(showFilename, files[i]);
-
-								if (filename == selected)
-								{
-									if (file.options.defaultSelected)
-										file.options[count].defaultSelected = true;
-									else
-										file.options[count].selected = true;
-								}
-
-								count++;
-							}
-
-						if (file.selectedIndex == -1 && file.options[0])
-							file.options[0].selected = true;
-
-						showAvatar();
-					}
-					else
-					{
-						file.style.display = "none";
-						file.disabled = true;
-						document.getElementById("avatar").src = avatardir + cat.options[cat.selectedIndex].value;
-						document.getElementById("avatar").style.width = "";
-						document.getElementById("avatar").style.height = "";
-					}
-				}
-
-				function showAvatar()
-				{
-					if (file.selectedIndex == -1)
-						return;
-
-					document.getElementById("avatar").src = avatardir + file.options[file.selectedIndex].value;
-					document.getElementById("avatar").alt = file.options[file.selectedIndex].text;
-					document.getElementById("avatar").alt += file.options[file.selectedIndex].text == size ? "!" : "";
-					document.getElementById("avatar").style.width = "";
-					document.getElementById("avatar").style.height = "";
-				}
-
-				function previewExternalAvatar(src)
-				{
-					if (!document.getElementById("avatar"))
-						return;
-
-					var maxHeight = ', !empty($modSettings['avatar_max_height_external']) ? $modSettings['avatar_max_height_external'] : 0, ';
-					var maxWidth = ', !empty($modSettings['avatar_max_width_external']) ? $modSettings['avatar_max_width_external'] : 0, ';
-					var tempImage = new Image();
-
-					tempImage.src = src;
-					if (maxWidth != 0 && tempImage.width > maxWidth)
-					{
-						document.getElementById("avatar").style.height = parseInt((maxWidth * tempImage.height) / tempImage.width) + "px";
-						document.getElementById("avatar").style.width = maxWidth + "px";
-					}
-					else if (maxHeight != 0 && tempImage.height > maxHeight)
-					{
-						document.getElementById("avatar").style.width = parseInt((maxHeight * tempImage.width) / tempImage.height) + "px";
-						document.getElementById("avatar").style.height = maxHeight + "px";
-					}
-					document.getElementById("avatar").src = src;
-				}
-			// ]]></script>';
 	echo '
 		</form>';
 
@@ -1790,100 +1441,9 @@ function template_forumProfile()
 }
 
 // Template for showing theme settings. Note: template_options() actually adds the theme specific options.
-function template_theme()
+function template_profile_theme_settings()
 {
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
-
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var localTime = new Date();
-		var serverTime = new Date("', $context['current_forum_time'], '");
-
-		function autoDetectTimeOffset()
-		{
-			// Get the difference between the two, set it up so that the sign will tell us who is ahead of who
-			var diff = Math.round((localTime.getTime() - serverTime.getTime())/3600000);
-
-			// Make sure we are limiting this to one day\'s difference
-			diff %= 24;
-
-			document.forms.creator.time_offset.value = diff;
-		}
-	// ]]></script>';
-
-	// The main containing header.
-	echo '
-		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
-			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
-				<tr class="titlebg">
-					<td height="26">
-						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" border="0" align="top" />&nbsp;
-						', $txt['profile'], '
-					</td>
-				</tr><tr class="windowbg">
-					<td class="smalltext" height="25" style="padding: 2ex;">
-						', $txt['theme_info'], '
-					</td>
-				</tr><tr>
-					<td class="windowbg2" style="padding-bottom: 2ex;">
-						<table border="0" width="100%" cellpadding="3">';
-
-	// Are they allowed to change their theme? // !!! Change to permission?
-	if ($modSettings['theme_allow'] || $context['user']['is_admin'])
-	{
-		echo '
-							<tr>
-								<td colspan="2" width="40%"><b>', $txt['current_theme'], ':</b> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['member']['id'], ';sesc=', $context['session_id'], '">', $txt['change'], '</a></td>
-							</tr>';
-	}
-
-	// Are multiple smiley sets enabled?
-	if (!empty($modSettings['smiley_sets_enable']))
-	{
-		echo '
-							<tr>
-								<td colspan="2" width="40%">
-									<b>', $txt['smileys_current'], ':</b>
-									<select name="smiley_set" onchange="document.getElementById(\'smileypr\').src = this.selectedIndex == 0 ? \'', $settings['images_url'], '/blank.gif\' : \'', $modSettings['smileys_url'], '/\' + (this.selectedIndex != 1 ? this.options[this.selectedIndex].value : \'', !empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default'], '\') + \'/smiley.gif\';">';
-		foreach ($context['smiley_sets'] as $set)
-			echo '
-										<option value="', $set['id'], '"', $set['selected'] ? ' selected="selected"' : '', '>', $set['name'], '</option>';
-		echo '
-									</select> <img id="smileypr" src="', $context['member']['smiley_set']['id'] != 'none' ? $modSettings['smileys_url'] . '/' . ($context['member']['smiley_set']['id'] != '' ? $context['member']['smiley_set']['id'] : (!empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default'])) . '/smiley.gif' : $settings['images_url'] . '/blank.gif', '" alt=":)" align="top" style="padding-left: 20px;" />
-								</td>
-							</tr>';
-	}
-
-	if ($modSettings['theme_allow'] || $context['user']['is_admin'] || !empty($modSettings['smiley_sets_enable']))
-		echo '
-							<tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr>';
-
-	// Allow the user to change the way the time is displayed.
-	echo '
-							<tr>
-								<td width="40%">
-									<b>', $txt['time_format'], ':</b><br />
-									<a href="', $scripturl, '?action=helpadmin;help=time_format" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="', !$context['right_to_left'] ? 'left' : 'right', '" style="', !$context['right_to_left'] ? 'padding-right' : 'padding-left', ': 1ex;" /></a>
-									<span class="smalltext">', $txt['date_format'], '</span>
-								</td>
-								<td>
-									<select name="easyformat" onchange="document.forms.creator.time_format.value = this.options[this.selectedIndex].value;" style="margin-bottom: 4px;">';
-	// Help the user by showing a list of common time formats.
-	foreach ($context['easy_timeformats'] as $time_format)
-		echo '
-										<option value="', $time_format['format'], '"', $time_format['format'] == $context['member']['time_format'] ? ' selected="selected"' : '', '>', $time_format['title'], '</option>';
-	echo '
-									</select><br />
-									<input type="text" name="time_format" value="', $context['member']['time_format'], '" size="30" />
-								</td>
-							</tr><tr>
-								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset_between'], ':</b><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
-								<td class="smalltext"><input type="text" name="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="autoDetectTimeOffset(); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
-							</tr><tr>
-								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr>';
 
 	echo '
 							<tr>
@@ -1980,20 +1540,7 @@ function template_theme()
 													<option value="2"', !empty($context['member']['options']['display_quick_mod']) && $context['member']['options']['display_quick_mod'] != 1 ? ' selected="selected"' : '', '>', $txt['display_quick_mod_image'], '</option>
 												</select>
 											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>';
-
-	// Show the standard "Save Settings" profile button.
-	template_profile_save();
-
-	echo '
-						</table>
-					</td>
-				</tr>
-			</table>
-		</form>';
+										</tr>';
 }
 
 function template_notification()
@@ -2914,6 +2461,408 @@ function template_error_message()
 		echo '
 			</ul>
 		</div>';
+}
+
+// Display a load of drop down selectors for allowing the user to change group.
+function template_profile_group_manage()
+{
+	global $context, $txt, $scripturl;
+
+	echo '
+							<tr>
+								<td valign="top">
+									<b>', $txt['primary_membergroup'], ': </b>
+									<div class="smalltext">(<a href="', $scripturl, '?action=helpadmin;help=moderator_why_missing" onclick="return reqWin(this.href);">', $txt['moderator_why_missing'], '</a>)</div>
+								</td>
+								<td>
+									<select name="id_group" ', ($context['user']['is_owner'] && $context['member']['group'] == 1 ? 'onchange="if (this.value != 1 && !confirm(\'' . $txt['deadmin_confirm'] . '\')) this.value = 1;"' : ''), '>';
+		// Fill the select box with all primary member groups that can be assigned to a member.
+		foreach ($context['member_groups'] as $member_group)
+			if (!empty($member_group['can_be_primary']))
+				echo '
+										<option value="', $member_group['id'], '"', $member_group['is_primary'] ? ' selected="selected"' : '', '>
+											', $member_group['name'], '
+										</option>';
+		echo '
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top"><b>', $txt['additional_membergroups'], ':</b></td>
+								<td>
+									<div id="additional_groupsList">
+										<input type="hidden" name="additional_groups[]" value="0" />';
+		// For each membergroup show a checkbox so members can be assigned to more than one group.
+		foreach ($context['member_groups'] as $member_group)
+			if ($member_group['can_be_additional'])
+				echo '
+										<label for="additional_groups-', $member_group['id'], '"><input type="checkbox" name="additional_groups[]" value="', $member_group['id'], '" id="additional_groups-', $member_group['id'], '"', $member_group['is_additional'] ? ' checked="checked"' : '', ' class="check" /> ', $member_group['name'], '</label><br />';
+		echo '
+									</div>
+									<a href="javascript:void(0);" onclick="document.getElementById(\'additional_groupsList\').style.display = \'block\'; document.getElementById(\'additional_groupsLink\').style.display = \'none\'; return false;" id="additional_groupsLink" style="display: none;">', $txt['additional_membergroups_show'], '</a>
+									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+										document.getElementById("additional_groupsList").style.display = "none";
+										document.getElementById("additional_groupsLink").style.display = "";
+									// ]]></script>
+								</td>
+							</tr>';
+
+}
+
+// Callback function for entering a birthdate!
+function template_profile_birthdate()
+{
+	global $txt, $context;
+
+	// Just show the pretty box!
+	echo '
+							<tr>
+								<td width="40%">
+									<b>', $txt['dob'], ':</b>
+									<div class="smalltext">', $txt['dob_year'], ' - ', $txt['dob_month'], ' - ', $txt['dob_day'], '</div>
+								</td>
+								<td class="smalltext">
+									<input type="text" name="bday3" size="4" maxlength="4" value="', $context['member']['birth_date']['year'], '" /> -
+									<input type="text" name="bday1" size="2" maxlength="2" value="', $context['member']['birth_date']['month'], '" /> -
+									<input type="text" name="bday2" size="2" maxlength="2" value="', $context['member']['birth_date']['day'], '" />
+								</td>
+							</tr>';
+}
+
+// Show the signature editing box?
+function template_profile_signature_modify()
+{
+	global $txt, $context, $settings;
+
+	echo '
+							<tr>
+								<td width="40%" valign="top">
+									<b>', $txt['signature'], ':</b>
+									<div class="smalltext">', $txt['sig_info'], '</div><br />
+									<br />';
+
+	if ($context['show_spellchecking'])
+		echo '
+									<input type="button" value="', $txt['spell_check'], '" onclick="spellCheck(\'creator\', \'signature\');" />';
+
+		echo '
+								</td>
+								<td>
+									<textarea class="editor" onkeyup="calcCharLeft();" name="signature" rows="5" cols="50">', $context['member']['signature'], '</textarea><br />';
+
+	// If there is a limit at all!
+	if (!empty($context['signature_limits']['max_length']))
+		echo '
+									<span class="smalltext">', sprintf($txt['max_sig_characters'], $context['signature_limits']['max_length']), ' <span id="signatureLeft">', $context['signature_limits']['max_length'], '</span></span><br />';
+
+	if ($context['signature_warning'])
+		echo '
+									<span class="smalltext">', $context['signature_warning'], '</span>';
+
+	// Load the spell checker?
+	if ($context['show_spellchecking'])
+		echo '
+									<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/spellcheck.js"></script>';
+
+	// Some javascript used to count how many characters have been used so far in the signature.
+	echo '
+									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+										function tick()
+										{
+											if (typeof(document.forms.creator) != "undefined")
+											{
+												calcCharLeft();
+												setTimeout("tick()", 1000);
+											}
+											else
+												setTimeout("tick()", 800);
+										}
+
+										function calcCharLeft()
+										{
+											var maxLength = ', $context['signature_limits']['max_length'], ';
+											var oldSignature = "", currentSignature = document.forms.creator.signature.value;
+
+											if (!document.getElementById("signatureLeft"))
+												return;
+
+											if (oldSignature != currentSignature)
+											{
+												oldSignature = currentSignature;
+
+												if (currentSignature.replace(/\r/, "").length > maxLength)
+													document.forms.creator.signature.value = currentSignature.replace(/\r/, "").substring(0, maxLength);
+												currentSignature = document.forms.creator.signature.value.replace(/\r/, "");
+											}
+
+											setInnerHTML(document.getElementById("signatureLeft"), maxLength - currentSignature.length);
+										}
+
+										setTimeout("tick()", 800);
+									// ]]></script>
+								</td>
+							</tr>';
+}
+
+function template_profile_avatar_select()
+{
+	global $context, $txt, $modSettings;
+
+	// If users are allowed to choose avatars stored on the server show selection boxes to choice them from.
+	if (!empty($context['member']['avatar']['allow_server_stored']))
+	{
+		echo '
+							<tr>
+								<td width="40%" valign="top" style="padding: 0 2px;">
+									<table width="100%" cellpadding="5" cellspacing="0" border="0" style="height: 25ex;"><tr>
+										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_server_stored" value="server_stored"', ($context['member']['avatar']['choice'] == 'server_stored' ? ' checked="checked"' : ''), ' class="check" /></td>
+										<td valign="top" style="padding-left: 1ex;">
+											<b', (isset($context['modify_error']['bad_avatar']) ? ' style="color: red;"' : ''), '><label for="avatar_choice_server_stored">', $txt['personal_picture'], ':</label></b>
+											<div style="margin: 2ex;"><img name="avatar" id="avatar" src="', !empty($context['member']['avatar']['allow_external']) && $context['member']['avatar']['choice'] == 'external' ? $context['member']['avatar']['external'] : $modSettings['avatar_url'] . '/blank.gif', '" alt="Do Nothing" /></div>
+										</td>
+									</tr></table>
+								</td>
+								<td>
+									<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+										<td style="width: 20ex;">
+											<select name="cat" id="cat" size="10" onchange="changeSel(\'\');" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');">';
+		// This lists all the file catergories.
+		foreach ($context['avatars'] as $avatar)
+			echo '
+												<option value="', $avatar['filename'] . ($avatar['is_dir'] ? '/' : ''), '"', ($avatar['checked'] ? ' selected="selected"' : ''), '>', $avatar['name'], '</option>';
+		echo '
+											</select>
+										</td>
+										<td>
+											<select name="file" id="file" size="10" style="display: none;" onchange="showAvatar()" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'server_stored\');" disabled="disabled"><option></option></select>
+										</td>
+									</tr></table>
+								</td>
+							</tr>';
+	}
+
+	// If the user can link to an off server avatar, show them a box to input the address.
+	if (!empty($context['member']['avatar']['allow_external']))
+	{
+		echo '
+							<tr>
+								<td valign="top" style="padding: 0 2px;">
+									<table width="100%" cellpadding="5" cellspacing="0" border="0"><tr>
+										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_external" value="external"', ($context['member']['avatar']['choice'] == 'external' ? ' checked="checked"' : ''), ' class="check" /></td>
+										<td valign="top" style="padding-left: 1ex;"><b><label for="avatar_choice_external">', $txt['my_own_pic'], ':</label></b><div class="smalltext">', $txt['avatar_by_url'], '</div></td>
+									</tr></table>
+								</td>
+								<td valign="top">
+									<input type="text" name="userpicpersonal" size="45" value="', $context['member']['avatar']['external'], '" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'external\');" onchange="if (typeof(previewExternalAvatar) != \'undefined\') previewExternalAvatar(this.value);" />
+								</td>
+							</tr>';
+	}
+
+	// If the user is able to upload avatars to the server show them an upload box.
+	if (!empty($context['member']['avatar']['allow_upload']))
+	{
+		echo '
+							<tr>
+								<td valign="top" style="padding: 0 2px;">
+									<table width="100%" cellpadding="5" cellspacing="0" border="0"><tr>
+										<td valign="top" width="20" class="windowbg"><input type="radio" name="avatar_choice" id="avatar_choice_upload" value="upload"', ($context['member']['avatar']['choice'] == 'upload' ? ' checked="checked"' : ''), ' class="check" /></td>
+										<td valign="top" style="padding-left: 1ex;"><b><label for="avatar_choice_upload">', $txt['avatar_will_upload'], ':</label></b></td>
+									</tr></table>
+								</td>
+								<td valign="top">
+									', ($context['member']['avatar']['id_attach'] > 0 ? '<img src="' . $context['member']['avatar']['href'] . '" /><input type="hidden" name="id_attach" value="' . $context['member']['avatar']['id_attach'] . '" /><br /><br />' : ''), '
+									<input type="file" size="48" name="attachment" value="" onfocus="selectRadioByName(document.forms.creator.avatar_choice, \'upload\');" />
+								</td>
+							</tr>';
+	}
+
+	/* If the user is allowed to choose avatars stored on the server, the below javascript is used to update the
+	file listing of avatars as the user changes catergory. It also updates the preview image as they choose
+	different files on the select box. */
+	if (!empty($context['member']['avatar']['allow_server_stored']))
+		echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var files = ["' . implode('", "', $context['avatar_list']) . '"];
+		var avatar = document.getElementById("avatar");
+		var cat = document.getElementById("cat");
+		var selavatar = "' . $context['avatar_selected'] . '";
+		var avatardir = "' . $modSettings['avatar_url'] . '/";
+		var size = avatar.alt.substr(3, 2) + " " + avatar.alt.substr(0, 2) + String.fromCharCode(117, 98, 116);
+		var file = document.getElementById("file");
+
+		if (avatar.src.indexOf("blank.gif") > -1)
+			changeSel(selavatar);
+		else
+			previewExternalAvatar(avatar.src)
+
+		function changeSel(selected)
+		{
+			if (cat.selectedIndex == -1)
+				return;
+
+			if (cat.options[cat.selectedIndex].value.indexOf("/") > 0)
+			{
+				var i;
+				var count = 0;
+
+				file.style.display = "inline";
+				file.disabled = false;
+
+				for (i = file.length; i >= 0; i = i - 1)
+					file.options[i] = null;
+
+				for (i = 0; i < files.length; i++)
+					if (files[i].indexOf(cat.options[cat.selectedIndex].value) == 0)
+					{
+						var filename = files[i].substr(files[i].indexOf("/") + 1);
+						var showFilename = filename.substr(0, filename.lastIndexOf("."));
+						showFilename = showFilename.replace(/[_]/g, " ");
+
+						file.options[count] = new Option(showFilename, files[i]);
+
+						if (filename == selected)
+						{
+							if (file.options.defaultSelected)
+								file.options[count].defaultSelected = true;
+							else
+								file.options[count].selected = true;
+						}
+
+						count++;
+					}
+
+				if (file.selectedIndex == -1 && file.options[0])
+					file.options[0].selected = true;
+
+				showAvatar();
+			}
+			else
+			{
+				file.style.display = "none";
+				file.disabled = true;
+				document.getElementById("avatar").src = avatardir + cat.options[cat.selectedIndex].value;
+				document.getElementById("avatar").style.width = "";
+				document.getElementById("avatar").style.height = "";
+			}
+		}
+
+		function showAvatar()
+		{
+			if (file.selectedIndex == -1)
+				return;
+
+			document.getElementById("avatar").src = avatardir + file.options[file.selectedIndex].value;
+			document.getElementById("avatar").alt = file.options[file.selectedIndex].text;
+			document.getElementById("avatar").alt += file.options[file.selectedIndex].text == size ? "!" : "";
+			document.getElementById("avatar").style.width = "";
+			document.getElementById("avatar").style.height = "";
+		}
+
+		function previewExternalAvatar(src)
+		{
+			if (!document.getElementById("avatar"))
+				return;
+
+			var maxHeight = ', !empty($modSettings['avatar_max_height_external']) ? $modSettings['avatar_max_height_external'] : 0, ';
+			var maxWidth = ', !empty($modSettings['avatar_max_width_external']) ? $modSettings['avatar_max_width_external'] : 0, ';
+			var tempImage = new Image();
+
+			tempImage.src = src;
+			if (maxWidth != 0 && tempImage.width > maxWidth)
+			{
+				document.getElementById("avatar").style.height = parseInt((maxWidth * tempImage.height) / tempImage.width) + "px";
+				document.getElementById("avatar").style.width = maxWidth + "px";
+			}
+			else if (maxHeight != 0 && tempImage.height > maxHeight)
+			{
+				document.getElementById("avatar").style.width = parseInt((maxHeight * tempImage.width) / tempImage.height) + "px";
+				document.getElementById("avatar").style.height = maxHeight + "px";
+			}
+			document.getElementById("avatar").src = src;
+		}
+	// ]]></script>';
+}
+
+// Callback for modifying karam.
+function template_profile_karma_modify()
+{
+	global $context, $modSettings, $txt;
+
+		echo '
+							<tr>
+								<td valign="top"><b>', $modSettings['karmaLabel'], '</b></td>
+								<td>
+									', $modSettings['karmaApplaudLabel'], ' <input type="text" name="karma_good" size="4" value="', $context['member']['karma']['good'], '" onchange="setInnerHTML(document.getElementById(\'karmaTotal\'), this.value - this.form.karma_bad.value);" style="margin-right: 2ex;" /> ', $modSettings['karmaSmiteLabel'], ' <input type="text" name="karma_bad" size="4" value="', $context['member']['karma']['bad'], '" onchange="this.form.karma_good.onchange();" /><br />
+									(', $txt['total'], ': <span id="karmaTotal">', ($context['member']['karma']['good'] - $context['member']['karma']['bad']), '</span>)
+								</td>
+							</tr>';
+}
+
+// Select the time format!
+function template_profile_timeformat_modify()
+{
+	global $context, $modSettings, $txt, $scripturl, $settings;
+
+	echo '
+							<tr>
+								<td width="40%">
+									<b>', $txt['time_format'], ':</b><br />
+									<a href="', $scripturl, '?action=helpadmin;help=time_format" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="', !$context['right_to_left'] ? 'left' : 'right', '" style="', !$context['right_to_left'] ? 'padding-right' : 'padding-left', ': 1ex;" /></a>
+									<span class="smalltext">', $txt['date_format'], '</span>
+								</td>
+								<td>
+									<select name="easyformat" onchange="document.forms.creator.time_format.value = this.options[this.selectedIndex].value;" style="margin-bottom: 4px;">';
+	// Help the user by showing a list of common time formats.
+	foreach ($context['easy_timeformats'] as $time_format)
+		echo '
+										<option value="', $time_format['format'], '"', $time_format['format'] == $context['member']['time_format'] ? ' selected="selected"' : '', '>', $time_format['title'], '</option>';
+	echo '
+									</select><br />
+									<input type="text" name="time_format" value="', $context['member']['time_format'], '" size="30" />
+								</td>
+							</tr>';
+}
+
+// Time offset?
+function template_profile_timeoffset_modify()
+{
+	global $txt, $context;
+
+	echo '
+							<tr>
+								<td width="40%"><b', (isset($context['modify_error']['bad_offset']) ? ' style="color: red;"' : ''), '>', $txt['time_offset_between'], ':</b><div class="smalltext">', $txt['personal_time_offset'], '</div></td>
+								<td class="smalltext"><input type="text" name="time_offset" id="time_offset" size="5" maxlength="5" value="', $context['member']['time_offset'], '" /> <a href="javascript:void(0);" onclick="document.getElementById(\'time_offset\').value = autoDetectTimeOffset(\'', $context['current_forum_time'], '\'); return false;">', $txt['timeoffset_autodetect'], '</a><br />', $txt['current_time'], ': <i>', $context['current_forum_time'], '</i></td>
+							</tr>';
+}
+
+// Theme?
+function template_profile_theme_pick()
+{
+	global $txt, $context, $scripturl;
+
+	echo '
+							<tr>
+								<td colspan="2" width="40%"><b>', $txt['current_theme'], ':</b> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['member']['id'], ';sesc=', $context['session_id'], '">', $txt['change'], '</a></td>
+							</tr>';
+}
+
+// Smiley set picker.
+function template_profile_smiley_pick()
+{
+	global $txt, $context, $modSettings, $settings;
+
+	echo '
+							<tr>
+								<td colspan="2" width="40%">
+									<b>', $txt['smileys_current'], ':</b>
+									<select name="smiley_set" onchange="document.getElementById(\'smileypr\').src = this.selectedIndex == 0 ? \'', $settings['images_url'], '/blank.gif\' : \'', $modSettings['smileys_url'], '/\' + (this.selectedIndex != 1 ? this.options[this.selectedIndex].value : \'', !empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default'], '\') + \'/smiley.gif\';">';
+	foreach ($context['smiley_sets'] as $set)
+		echo '
+										<option value="', $set['id'], '"', $set['selected'] ? ' selected="selected"' : '', '>', $set['name'], '</option>';
+	echo '
+									</select> <img id="smileypr" src="', $context['member']['smiley_set']['id'] != 'none' ? $modSettings['smileys_url'] . '/' . ($context['member']['smiley_set']['id'] != '' ? $context['member']['smiley_set']['id'] : (!empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default'])) . '/smiley.gif' : $settings['images_url'] . '/blank.gif', '" alt=":)" align="top" style="padding-left: 20px;" />
+								</td>
+							</tr>';
 }
 
 ?>

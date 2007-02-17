@@ -1450,7 +1450,7 @@ function MessagePost()
 		$context['verificiation_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
 		// Skip I, J, L, O, Q, S and Z.
-		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', '3', '4', '5', '6', '7', '9'), range('R', 'Z'));
+		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
 
 		// Generate a new code.
 		$_SESSION['visual_verification_code'] = '';
