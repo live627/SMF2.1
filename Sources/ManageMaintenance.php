@@ -162,6 +162,8 @@ function Maintenance()
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'logs')
 	{
+		checkSession('get');
+
 		// No one's online now.... MUHAHAHAHA :P.
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_online", __FILE__, __LINE__);
@@ -206,6 +208,8 @@ function Maintenance()
 	}
 	elseif (isset($_GET['sa']) && $_GET['sa'] == 'members')
 	{
+		checkSession();
+
 		$_POST['maxdays'] = (int) $_POST['maxdays'];
 		if (!empty($_POST['groups']) && $_POST['maxdays'])
 		{
@@ -1030,6 +1034,8 @@ function OptimizeTables()
 
 	isAllowedTo('admin_forum');
 
+	checkSession('get');
+
 	ignore_user_abort(true);
 	db_extend();
 
@@ -1080,6 +1086,8 @@ function AdminBoardRecount()
 	global $time_start, $smfFunc;
 
 	isAllowedTo('admin_forum');
+
+	checkSession('get');
 
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';

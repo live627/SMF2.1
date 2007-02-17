@@ -108,13 +108,13 @@ function DisplayStats()
 	// This would be the amount of time the forum has been up... in days...
 	$total_days_up = ceil((time() - strtotime($row['date'])) / (60 * 60 * 24));
 
-	$context['average_posts'] = round($row['posts'] / $total_days_up, 2);
-	$context['average_topics'] = round($row['topics'] / $total_days_up, 2);
-	$context['average_members'] = round($row['registers'] / $total_days_up, 2);
-	$context['average_online'] = round($row['most_on'] / $total_days_up, 2);
-	$context['average_hits'] = round($row['hits'] / $total_days_up, 2);
+	$context['average_posts'] = comma_format(round($row['posts'] / $total_days_up, 2));
+	$context['average_topics'] = comma_format(round($row['topics'] / $total_days_up, 2));
+	$context['average_members'] = comma_format(round($row['registers'] / $total_days_up, 2));
+	$context['average_online'] = comma_format(round($row['most_on'] / $total_days_up, 2));
+	$context['average_hits'] = comma_format(round($row['hits'] / $total_days_up, 2));
 
-	$context['num_hits'] = $row['hits'];
+	$context['num_hits'] = comma_format($row['hits'], 0);
 
 	// How many users are online now.
 	$result = $smfFunc['db_query']('', "
@@ -136,11 +136,16 @@ function DisplayStats()
 	list ($context['num_categories']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
-	$context['num_members'] = &$modSettings['totalMembers'];
-	$context['num_posts'] = &$modSettings['totalMessages'];
-	$context['num_topics'] = &$modSettings['totalTopics'];
+	// Format the numbers nicely.
+	$context['users_online'] = comma_format($context['users_online']);
+	$context['num_boards'] = comma_format($context['num_boards']);
+	$context['num_categories'] = comma_format($context['num_categories']);
+
+	$context['num_members'] = comma_format($modSettings['totalMembers']);
+	$context['num_posts'] = comma_format($modSettings['totalMessages']);
+	$context['num_topics'] = comma_format($modSettings['totalTopics']);
 	$context['most_members_online'] = array(
-		'number' => &$modSettings['mostOnline'],
+		'number' => comma_format($modSettings['mostOnline']),
 		'date' => timeformat($modSettings['mostDate'])
 	);
 	$context['latest_member'] = &$context['common_stats']['latest_member'];
@@ -193,7 +198,7 @@ function DisplayStats()
 	list ($context['online_today']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
-	$context['online_today'] = (int) $context['online_today'];
+	$context['online_today'] = comma_format((int) $context['online_today']);
 
 	// Poster top 10.
 	$members_result = $smfFunc['db_query']('', "
@@ -220,7 +225,10 @@ function DisplayStats()
 	$smfFunc['db_free_result']($members_result);
 
 	foreach ($context['top_posters'] as $i => $poster)
+	{
 		$context['top_posters'][$i]['post_percent'] = round(($poster['num_posts'] * 100) / $max_num_posts);
+		$context['top_posters'][$i]['num_posts'] = comma_format($context['top_posters'][$i]['num_posts']);
+	}
 
 	// Board top 10.
 	$boards_result = $smfFunc['db_query']('', "
@@ -248,7 +256,10 @@ function DisplayStats()
 	$smfFunc['db_free_result']($boards_result);
 
 	foreach ($context['top_boards'] as $i => $board)
+	{
 		$context['top_boards'][$i]['post_percent'] = round(($board['num_posts'] * 100) / $max_num_posts);
+		$context['top_boards'][$i]['num_posts'] = comma_format($context['top_boards'][$i]['num_posts']);
+	}
 
 	// Are you on a larger forum?  If so, let's try to limit the number of topics we search through.
 	if ($modSettings['totalMessages'] > 100000)
@@ -307,7 +318,10 @@ function DisplayStats()
 	$smfFunc['db_free_result']($topic_reply_result);
 
 	foreach ($context['top_topics_replies'] as $i => $topic)
+	{
 		$context['top_topics_replies'][$i]['post_percent'] = round(($topic['num_replies'] * 100) / $max_num_replies);
+		$context['top_topics_replies'][$i]['num_replies'] = comma_format($context['top_topics_replies'][$i]['num_replies']);
+	}
 
 	// Large forums may need a bit more prodding...
 	if ($modSettings['totalMessages'] > 100000)
@@ -365,7 +379,10 @@ function DisplayStats()
 	$smfFunc['db_free_result']($topic_view_result);
 
 	foreach ($context['top_topics_views'] as $i => $topic)
+	{
 		$context['top_topics_views'][$i]['post_percent'] = round(($topic['num_views'] * 100) / $max_num_views);
+		$context['top_topics_views'][$i]['num_views'] = comma_format($context['top_topics_views'][$i]['num_views']);
+	}
 
 	// Try to cache this when possible, because it's a little unavoidably slow.
 	if (($members = cache_get_data('stats_top_starters', 360)) == null)
@@ -414,7 +431,10 @@ function DisplayStats()
 	$smfFunc['db_free_result']($members_result);
 
 	foreach ($context['top_starters'] as $i => $topic)
+	{
 		$context['top_starters'][$i]['post_percent'] = round(($topic['num_topics'] * 100) / $max_num_topics);
+		$context['top_starters'][$i]['num_topics'] = comma_format($context['top_starters'][$i]['num_topics']);
+	}
 
 	// Time online top 10.
 	// !!!SLOW This query is sorta slow.  Should we just add a key? (or would that be bad in the long run?)
@@ -489,11 +509,11 @@ function DisplayStats()
 			'link' => '<a href="' . $scripturl . '?action=stats;' . ($expanded ? 'collapse' : 'expand') . '=' . $ID_MONTH . '#' . $ID_MONTH . '">' . $txt['months'][$row_months['stats_month']] . ' ' . $row_months['stats_year'] . '</a>',
 			'month' => $txt['months'][$row_months['stats_month']],
 			'year' => $row_months['stats_year'],
-			'new_topics' => $row_months['topics'],
-			'new_posts' => $row_months['posts'],
-			'new_members' => $row_months['registers'],
-			'most_members_online' => $row_months['most_on'],
-			'hits' => $row_months['hits'],
+			'new_topics' => comma_format($row_months['topics']),
+			'new_posts' => comma_format($row_months['posts']),
+			'new_members' => comma_format($row_months['registers']),
+			'most_members_online' => comma_format($row_months['most_on']),
+			'hits' => comma_format($row_months['hits']),
 			'num_days' => $row_months['num_days'],
 			'days' => array(),
 			'expanded' => $expanded
@@ -533,11 +553,11 @@ function getDailyStats($condition)
 			'day' => sprintf('%02d', $row_days['stats_day']),
 			'month' => sprintf('%02d', $row_days['stats_month']),
 			'year' => $row_days['stats_year'],
-			'new_topics' => $row_days['topics'],
-			'new_posts' => $row_days['posts'],
-			'new_members' => $row_days['registers'],
-			'most_members_online' => $row_days['most_on'],
-			'hits' => $row_days['hits']
+			'new_topics' => comma_format($row_days['topics']),
+			'new_posts' => comma_format($row_days['posts']),
+			'new_members' => comma_format($row_days['registers']),
+			'most_members_online' => comma_format($row_days['most_on']),
+			'hits' => comma_format($row_days['hits'])
 		);
 	$smfFunc['db_free_result']($days_result);
 }

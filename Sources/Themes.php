@@ -679,6 +679,24 @@ function SetThemeSettings()
 	if (empty($_GET['th']))
 		fatal_lang_error('no_theme', false);
 
+	// Fetch the smiley sets...
+	$sets = explode(',', 'none,' . $modSettings['smiley_sets_known']);
+	$set_names = explode("\n", $txt['smileys_none'] . "\n" . $modSettings['smiley_sets_names']);
+	$context['smiley_sets'] = array(
+		'' => $txt['smileys_no_default']
+	);
+	foreach ($sets as $i => $set)
+		$context['smiley_sets'][$set] = $set_names[$i];
+
+	$old_id = $settings['theme_id'];
+	$old_settings = $settings;
+
+	loadTheme($_GET['th'], false);
+
+	// Let the theme take care of the settings.
+	loadTemplate('Settings');
+	loadSubTemplate('settings');
+
 	// Submitting!
 	if (isset($_POST['submit']))
 	{
@@ -688,6 +706,22 @@ function SetThemeSettings()
 			$_POST['options'] = array();
 		if (empty($_POST['default_options']))
 			$_POST['default_options'] = array();
+
+		// Make sure items are cast correctly.
+		foreach ($context['theme_settings'] as $item)
+		{
+			foreach (array('options', 'default_options') as $option)
+			{
+				if (!isset($_POST[$option][$item['id']]))
+					continue;
+				// Checkbox.
+				elseif (empty($item['type']))
+					$_POST[$option][$item['id']] = $_POST[$option][$item['id']] ? 1 : 0;
+				// Number
+				elseif ($item['type'] == 'number')
+					$_POST[$option][$item['id']] = (int) $_POST[$option][$item['id']];
+			}
+		}
 
 		// Set up the sql query.
 		$inserts = array();
@@ -713,24 +747,6 @@ function SetThemeSettings()
 	}
 
 	checkSession('get');
-
-	// Fetch the smiley sets...
-	$sets = explode(',', 'none,' . $modSettings['smiley_sets_known']);
-	$set_names = explode("\n", $txt['smileys_none'] . "\n" . $modSettings['smiley_sets_names']);
-	$context['smiley_sets'] = array(
-		'' => $txt['smileys_no_default']
-	);
-	foreach ($sets as $i => $set)
-		$context['smiley_sets'][$set] = $set_names[$i];
-
-	$old_id = $settings['theme_id'];
-	$old_settings = $settings;
-
-	loadTheme($_GET['th'], false);
-
-	// Let the theme take care of the settings.
-	loadTemplate('Settings');
-	loadSubTemplate('settings');
 
 	$context['sub_template'] = 'set_settings';
 	$context['page_title'] = $txt['theme_settings'];

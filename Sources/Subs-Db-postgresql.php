@@ -509,11 +509,11 @@ function postg_fetch_assoc($request, $counter = false)
 		return pg_fetch_assoc($request, $counter);
 
 	// Reset the row counter...
-	if (!isset($db_row_count[$request]))
-		$db_row_count[$request] = 0;
+	if (!isset($db_row_count[(int) $request]))
+		$db_row_count[(int) $request] = 0;
 
 	// Return the right row.
-	return @pg_fetch_assoc($request, $db_row_count[$request]++);
+	return @pg_fetch_assoc($request, $db_row_count[(int) $request]++);
 }
 
 // Reset the pointer...
@@ -521,7 +521,7 @@ function db_data_seek($request, $counter)
 {
 	global $db_row_count;
 
-	$db_row_count[$request] = $counter;
+	$db_row_count[(int) $request] = $counter;
 
 	return true;
 }

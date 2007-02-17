@@ -114,10 +114,6 @@ function ModifyFeatureSettings()
 {
 	global $context, $txt, $scripturl, $modSettings, $sourcedir, $settings;
 
-	//!!! Temp
-	if (isset($_GET['save']))
-		return ModifyFeatureSettings2();
-
 	// You need to be an admin to edit settings!
 	isAllowedTo('admin_forum');
 
@@ -188,34 +184,6 @@ function ModifyFeatureSettings()
 	$subActions[$_REQUEST['sa']]();
 }
 
-// This function basically just redirects to the right save function.
-function ModifyFeatureSettings2()
-{
-	global $context, $txt, $scripturl, $modSettings, $sourcedir;
-
-	isAllowedTo('admin_forum');
-	loadLanguage('ModSettings');
-
-	// Quick session check...
-	checkSession();
-
-	require_once($sourcedir . '/ManageServer.php');
-
-	$subActions = array(
-		'basic' => 'ModifyBasicSettings',
-		'layout' => 'ModifyLayoutSettings',
-		'karma' => 'ModifyKarmaSettings',
-		'moderation' => 'ModifyModerationSettings',
-		'sig' => 'ModifySignatureSettings',
-	);
-
-	// Default to core (I assume)
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'basic';
-
-	// Actually call the saving function.
-	$subActions[$_REQUEST['sa']]();
-}
-
 function ModifyBasicSettings()
 {
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
@@ -266,6 +234,8 @@ function ModifyBasicSettings()
 	// Saving?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		// Fix PM settings.
 		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
 		$save_vars = $config_vars;
@@ -318,6 +288,8 @@ function ModifyLayoutSettings()
 	// Saving?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		saveDBSettings($config_vars);
 		writeLog();
 
@@ -352,6 +324,8 @@ function ModifyKarmaSettings()
 	// Saving?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=featuresettings;sa=karma');
 	}
@@ -382,6 +356,8 @@ function ModifyModerationSettings()
 	// Saving?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		// Make sure these don't have an effect.
 		if (!$_POST['warning_enable'])
 		{
@@ -390,8 +366,8 @@ function ModifyModerationSettings()
 		}
 		else
 		{
-			$_POST['warning_moderate'] = max($_POST['warning_moderate'], 100);
-			$_POST['warning_mute'] = max($_POST['warning_mute'], 100);
+			$_POST['warning_moderate'] = min($_POST['warning_moderate'], 100);
+			$_POST['warning_mute'] = min($_POST['warning_mute'], 100);
 		}
 
 		// Fix the warning setting array!
@@ -416,11 +392,14 @@ function ModifyModerationSettings()
 // You'll never guess what this function does...
 function ModifySignatureSettings()
 {
-	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc, $helptxt, $scripturl;
+	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc, $helptxt, $scripturl, $sc;
 
 	// Applying to ALL signatures?!!
 	if (isset($_GET['apply']))
 	{
+		// Security!
+		checkSession('get');
+
 		$sig_start = time();
 		// This is horrid - but I suppose some people will want the option to do it.
 		$_GET['step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
@@ -626,6 +605,8 @@ function ModifySignatureSettings()
 	// Saving?
 	if (isset($_GET['save']))
 	{
+		checkSession();
+
 		// Clean up the tag stuff!
 		$bbcTags = array();
 		foreach (parse_bbc(false) as $tag)
@@ -653,7 +634,7 @@ function ModifySignatureSettings()
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=sig';
 	$context['settings_title'] = $txt['signature_settings'];
 
-	$context['settings_message'] = '<div align="center" class="smalltext" style="color: red;">' . $txt['signature_settings_warning'] . '</div>';
+	$context['settings_message'] = '<div align="center" class="smalltext" style="color: red;">' . sprintf($txt['signature_settings_warning'], $sc) . '</div>';
 
 	prepareDBSettingContext($config_vars);
 }
@@ -661,7 +642,7 @@ function ModifySignatureSettings()
 // Just pause the signature applying thing.
 function pauseSignatureApplySettings()
 {
-	global $context, $txt, $sig_start;
+	global $context, $txt, $sig_start, $sc;
 
 	// Try get more time...
 	@set_time_limit(600);
@@ -672,7 +653,7 @@ function pauseSignatureApplySettings()
 	if (time() - array_sum(explode(' ', $sig_start)) < 3)
 		return;
 
-	$context['continue_get_data'] = '?action=admin;area=featuresettings;sa=sig;apply;step=' . $_GET['step'];
+	$context['continue_get_data'] = '?action=admin;area=featuresettings;sa=sig;apply;step=' . $_GET['step'] . ';sesc=' . $sc;
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';
 	$context['continue_countdown'] = '2';
@@ -798,6 +779,8 @@ function EditCustomProfiles()
 	// Are we saving?
 	if (isset($_POST['save']))
 	{
+		checkSession();
+
 		// Everyone needs a name - even the (bracket) unknown...
 		if (trim($_POST['field_name']) == '')
 			fatal_lang_error('custom_option_need_name');
@@ -964,6 +947,8 @@ function EditCustomProfiles()
 	// Deleting?
 	elseif (isset($_POST['delete']) && $context['field']['colname'])
 	{
+		checkSession();
+
 		// Delete the user data first.
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}themes
@@ -978,6 +963,8 @@ function EditCustomProfiles()
 	// Rebuild display cache etc.
 	if (isset($_POST['delete']) || isset($_POST['save']))
 	{
+		checkSession();
+
 		$request = $smfFunc['db_query']('', "
 			SELECT col_name, field_name
 			FROM {$db_prefix}custom_fields
