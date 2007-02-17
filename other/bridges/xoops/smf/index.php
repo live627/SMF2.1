@@ -175,7 +175,7 @@ function xoops_smf_exit($with_output)
 	ob_end_clean();
 
 
-	$smf_header = '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>
+	$smf_header = '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/script.js?fin11"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "' . $settings['theme_url'] . '";
 		var smf_images_url = "' . $settings['images_url'] . '";

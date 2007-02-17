@@ -292,7 +292,7 @@ function mambo_smf_exit($with_output)
 
 	$myurl = basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $menu_item['id'] . '&amp;';
 
-	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>' );
+	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/script.js?fin11"></script>' );
 	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "'. $settings['theme_url']. '";
 		var smf_images_url = "'. $settings['images_url']. '";');

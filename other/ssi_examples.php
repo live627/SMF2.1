@@ -10,7 +10,7 @@ require(dirname(__FILE__) . '/SSI.php');
 	echo '
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">
 			body
 			{

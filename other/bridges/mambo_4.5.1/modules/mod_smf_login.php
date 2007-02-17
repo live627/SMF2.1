@@ -304,7 +304,7 @@ echo '
 		', $txt['welcome_guest'], '<br />
 		', $context['current_time'], '<br />
 
-			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
+			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
 			<form action="', sefReltoAbs($scripturl . 'action=login2'), '" method="post" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 				',$txt[35],': <input type="text" name="user" size="10" /> 

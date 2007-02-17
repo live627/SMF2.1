@@ -89,7 +89,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 <html>
 	<head>
 		<title>', $txt['smf_repair_settings'], '</title>
-		<script language="JavaScript" type="text/javascript" src="Themes/default/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<style type="text/css">
 			body
 			{

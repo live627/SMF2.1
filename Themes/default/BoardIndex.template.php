@@ -83,7 +83,7 @@ function template_main()
 						"', $context['fader_news_lines']), '"
 					);
 				// ]]></script>
-				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/fader.js"></script>
+				<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
 			</td>
 		</tr>
 	</table>';

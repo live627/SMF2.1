@@ -3165,7 +3165,7 @@ function template_upgrade_above()
 <html>
 	<head>
 		<title>SMF Upgrade Utility</title>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<link rel="stylesheet" type="text/css" href="', $smfsite, '/style.css" />
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_scripturl = \'', $upgradeurl, '\';
@@ -3366,7 +3366,7 @@ function template_welcome_message()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings;
 
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 			<h3>Thank you for choosing to upgrade to SMF ', SMF_VERSION, '. All files appear to be in place, and we\'re ready to proceed.</h3>
 	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" method="post" name="upform" id="upform" ', empty($upcontext['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $upcontext['rid'] . '\');"' : '', '>';
 

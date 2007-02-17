@@ -2562,7 +2562,7 @@ function template_profile_signature_modify()
 	// Load the spell checker?
 	if ($context['show_spellchecking'])
 		echo '
-									<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/spellcheck.js"></script>';
+									<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
 
 	// Some javascript used to count how many characters have been used so far in the signature.
 	echo '

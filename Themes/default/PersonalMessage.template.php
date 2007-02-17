@@ -860,7 +860,7 @@ function template_send()
 
 	if ($context['show_spellchecking'])
 		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/spellcheck.js"></script>';
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
 
 	// Show which messages were sent successfully and which failed.
 	if (!empty($context['send_log']))

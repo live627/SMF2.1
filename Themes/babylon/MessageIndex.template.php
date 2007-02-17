@@ -356,7 +356,7 @@ function template_main()
 
 	// Javascript for inline editing.
 	echo '
-<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/xml_board.js"></script>
+<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/xml_board.js"></script>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 
 	// Hide certain bits during topic edit.

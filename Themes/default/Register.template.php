@@ -8,7 +8,7 @@ function template_before()
 
 	// Make sure they've agreed to the terms and conditions.
 	echo '
-<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/register.js"></script>
+<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	function verifyAgree()
 	{

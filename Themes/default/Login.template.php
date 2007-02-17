@@ -7,7 +7,7 @@ function template_login()
 	global $context, $settings, $options, $scripturl, $modSettings, $txt;
 
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
 		<form action="', $scripturl, '?action=login2" name="frmLogin" id="frmLogin" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 4ex;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 			<table border="0" width="400" cellspacing="0" cellpadding="4" class="tborder" align="center">
@@ -78,7 +78,7 @@ function template_kick_guest()
 
 	// This isn't that much... just like normal login but with a message at the top.
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
 		<form action="', $scripturl, '?action=login2" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 			<table border="0" cellspacing="0" cellpadding="3" class="tborder" align="center">
@@ -183,7 +183,7 @@ function template_admin_login()
 
 	// Since this should redirect to whatever they were doing, send all the get data.
 	echo '
-<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
+<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
 
 <form action="', $scripturl, $context['get_data'], '" method="post" accept-charset="', $context['character_set'], '" name="frmLogin" id="frmLogin" onsubmit="hashAdminPassword(this, \'', $context['user']['username'], '\', \'', $context['session_id'], '\');">
 	<table border="0" width="400" cellspacing="0" cellpadding="3" class="tborder" align="center">

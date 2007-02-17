@@ -8,7 +8,7 @@ function template_main()
 
 	if ($context['show_spellchecking'])
 		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/spellcheck.js"></script>';
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
 
 	// Start the javascript... and boy is there a lot.
 	echo '
@@ -773,7 +773,7 @@ function template_postbox(&$message)
 
 	// We'll need some java!
 	echo '
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/editor.js"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/editor.js"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_smileys_url = \'', $settings['smileys_url'], '\';
 		var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 'true' : 'false', ');
@@ -1068,8 +1068,8 @@ function template_spellcheck()
 			var spell_formname = window.opener.spell_formname;
 			var spell_fieldname = window.opener.spell_fieldname;
 		// ]]></script>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/spellcheck.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			', $context['spell_js'], '
 		// ]]></script>
@@ -1108,7 +1108,7 @@ function template_quotefast()
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<title>', $txt['retrieving_quote'], '</title>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 	</head>
 	<body>
 		', $txt['retrieving_quote'], '

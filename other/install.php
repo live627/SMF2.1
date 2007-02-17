@@ -74,7 +74,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=', isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1', '" />
 		<title>', $txt['smf_installer'], '</title>
-		<script language="JavaScript" type="text/javascript" src="Themes/default/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="Themes/default/scripts/script.js"></script>
 		<style type="text/css">
 			body
 			{

@@ -43,7 +43,7 @@ function template_find_members()
 		<title>', $txt['find_members'], '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var membersAdded = [];
 			function addMember(name)

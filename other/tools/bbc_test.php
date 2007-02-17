@@ -297,7 +297,7 @@ function show_header()
 <html>
 	<head>
 		<title>BBC Testcases</title>
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/script.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">
 			body
 			{
