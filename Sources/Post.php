@@ -2087,7 +2087,8 @@ function getTopic()
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_topic = $topic" . (isset($_REQUEST['msg']) ? "
-			AND m.id_msg < " . (int) $_REQUEST['msg'] : '') . "
+			AND m.id_msg < " . (int) $_REQUEST['msg'] : '') .
+			(allowedTo('approve_posts') ? '' : ' AND m.approved = 1') . "
 		ORDER BY m.id_msg DESC$limit", __FILE__, __LINE__);
 	$context['previous_posts'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2133,7 +2134,8 @@ function QuoteFast()
 		FROM {$db_prefix}messages AS m
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg = " . (int) $_REQUEST['quote'] . "
+		WHERE m.id_msg = " . (int) $_REQUEST['quote'] .
+			(allowedTo('approve_posts') ? '' : ' AND m.approved = 1') . "
 		LIMIT 1", __FILE__, __LINE__);
 	$context['close_window'] = $smfFunc['db_num_rows']($request) == 0;
 
@@ -2228,7 +2230,8 @@ function JavaScriptModify()
 			FROM {$db_prefix}messages AS m
 				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
 			WHERE m.id_msg = " . (empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg']) . "
-				AND m.id_topic = $topic", __FILE__, __LINE__);
+				AND m.id_topic = $topic" .
+				(allowedTo('approve_posts') ? '' : ' AND m.approved = 1'), __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
