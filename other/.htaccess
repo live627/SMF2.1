@@ -17,6 +17,12 @@
 	Allow from localhost
 </FilesMatch>
 
+# Try not to allow access to any SQLite databases that may be created here.
+<FilesMatch "\.db$">
+	Order Deny,Allow
+	Deny from all
+</FilesMatch>
+
 # Apache 2 uses php_value, Apache 1 uses php_flag.
 <IfDefine APACHE2>
 	# PHP has to be running for SMF to work, of course.

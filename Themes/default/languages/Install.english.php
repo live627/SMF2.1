@@ -95,7 +95,7 @@ $txt['install_settings_proceed'] = 'Proceed';
 // Untranslated!
 $txt['db_settings'] = 'Database Server Settings';
 $txt['db_settings_info'] = 'These are the settings to use for your database server.  If you don\'t know the values, you should ask your host what they are.';
-$txt['db_settings_type'] = 'Database Type';
+$txt['db_settings_type'] = 'Database type';
 $txt['db_settings_type_info'] = 'Multiple supported database types were detected - which do you wish to use.';
 $txt['db_settings_server'] = 'Server name';
 $txt['db_settings_server_info'] = 'This is nearly always localhost - so if you don\'t know, try localhost.';
@@ -105,6 +105,8 @@ $txt['db_settings_password'] = 'Password';
 $txt['db_settings_password_info'] = 'Here, put the password you need to connect to your database.<br />If you don\'t know this, you should try the password to your ftp account.';
 $txt['db_settings_database'] = 'Database name';
 $txt['db_settings_database_info'] = 'Fill in the name of the database you want to use for SMF to store its data in.<br />If this database does not exist, this installer will try to create it.';
+$txt['db_settings_database_file'] = 'Database filename';
+$txt['db_settings_database_file_info'] = 'This is the name of the file in which to store the SMF data. We recommend you use the randomly generated name for this and set the path of this file to be outside of the public area of your webserver.';
 $txt['db_settings_prefix'] = 'Table prefix';
 $txt['db_settings_prefix_info'] = 'The prefix for every table in the database.  <b>Do not install two forums with the same prefix!</b><br />This value allows for multiple installations in one database.';
 

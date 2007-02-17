@@ -540,7 +540,7 @@ function doStep0()
 							<tr>
 								<td width="20%" valign="top" class="textbox"><label for="db_type_input">', $txt['db_settings_type'], ':</label></td>
 								<td>
-									<select name="db_type" id="db_type_input">';
+									<select name="db_type" id="db_type_input" onchange="toggleDBInput();">';
 
 	foreach ($databases as $key => $db)
 		if ($db['supported'])
@@ -560,29 +560,35 @@ function doStep0()
 	}
 
 	echo '
-							<tr>
+							<tr id="db_server_contain">
 								<td width="20%" valign="top" class="textbox"><label for="db_server_input">', $txt['db_settings_server'], ':</label></td>
 								<td>
 									<input type="text" name="db_server" id="db_server_input" value="', $db_server, '" size="30" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_server_info'], '</div>
 								</td>
-							</tr><tr>
+							</tr><tr id="db_user_contain">
 								<td valign="top" class="textbox"><label for="db_user_input">', $txt['db_settings_username'], ':</label></td>
 								<td>
 									<input type="text" name="db_user" id="db_user_input" value="', $db_user, '" size="30" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_username_info'], '</div>
 								</td>
-							</tr><tr>
+							</tr><tr id="db_passwd_contain">
 								<td valign="top" class="textbox"><label for="db_passwd_input">', $txt['db_settings_password'], ':</label></td>
 								<td>
 									<input type="password" name="db_passwd" id="db_passwd_input" value="', $db_passwd, '" size="30" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_password_info'], '</div>
 								</td>
-							</tr><tr>
+							</tr><tr id="db_name_contain">
 								<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database'], ':</label></td>
 								<td>
 									<input type="text" name="db_name" id="db_name_input" value="', empty($db_name) ? 'smf' : $db_name, '" size="30" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_info'], '</div>
+								</td>
+							</tr><tr id="db_filename_contain" style="display: none;">
+								<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database_file'], ':</label></td>
+								<td>
+									<input type="text" name="db_name" id="db_name_input" value="', empty($db_name) ? 'smf_' . substr(md5(microtime()), 0, 10) . '.db' : $db_name, '" size="30" /><br />
+									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_file_info'], '</div>
 								</td>
 							</tr><tr>
 								<td valign="top" class="textbox"><label for="db_prefix_input">', $txt['db_settings_prefix'], ':</label></td>
@@ -596,6 +602,36 @@ function doStep0()
 						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';"><input type="submit" value="', $txt['install_settings_proceed'], '" /></div>
 					</form>
 				</div>';
+
+	// Allow the toggling of input boxes for SQLite etc.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function toggleDBInput()
+		{
+			// What state is it?';
+
+	if (!isset($databases['sqlite']) || empty($databases['sqlite']['supported']))
+		echo '
+			var showAll = true;';
+	elseif ($foundDBCount < 2)
+		echo '
+			var showAll = false;';
+	// If we have more than one DB including SQLite what should we be doing?
+	else
+	{
+		echo '
+			var showAll = document.getElementById(\'db_type_input\').value == \'sqlite\' ? false : true;';
+	}
+
+	echo '
+			document.getElementById(\'db_passwd_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_server_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_user_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_name_contain\').style.display = showAll ? \'\' : \'none\';
+			document.getElementById(\'db_filename_contain\').style.display = !showAll ? \'\' : \'none\';
+		}
+		toggleDBInput();
+	// ]]></script>';
 
 	return true;
 }
