@@ -329,7 +329,7 @@ $txt['scheduled_task_edit_interval'] = 'Interval';
 $txt['scheduled_task_edit_start_time'] = 'Start Time';
 $txt['scheduled_task_edit_start_time_desc'] = 'Time the first instance of the day should start (hours:minutes)';
 
-$txt['mailqueue_title'] = 'Mail Queue';
+$txt['mailqueue_title'] = 'Mail';
 
 $txt['db_error_send'] = 'Send emails on MySQL connection error';
 $txt['db_persist'] = 'Use a persistent connection';
@@ -341,7 +341,7 @@ $txt['default_language'] = 'Default Forum Language';
 $txt['maintenance_subject'] = 'Subject for display:';
 $txt['maintenance_message'] = 'Message for display:';
 
-$txt['errlog'] = 'Forum Error Log';
+$txt['errlog'] = 'Error Log';
 $txt['errlog_desc'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the %1$s button at the bottom of the page.';
 
 $txt['theme_settings'] = 'Theme Settings';
@@ -540,7 +540,7 @@ $txt['censor_clickadd'] = 'Click here to add another word.';
 
 $txt['layout_controls'] = 'Forum';
 
-$txt['generate_reports'] = 'Generate Reports';
+$txt['generate_reports'] = 'Reports';
 
 $txt['update_available'] = 'Update Available!';
 $txt['update_message'] = 'You\'re using an outdated version of SMF, which contains some bugs which have since been fixed.

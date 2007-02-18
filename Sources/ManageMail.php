@@ -90,6 +90,8 @@ function ManageMail()
 	// Select the right tab based on the sub action.
 	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
 		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
+	else
+		$context['admin_tabs']['tabs']['browse']['is_selected'] = true;
 
 	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']]();

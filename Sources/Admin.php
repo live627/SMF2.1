@@ -168,8 +168,8 @@ function AdminMain()
 		$context['admin_areas']['maintenance'] = array(
 			'title' => $txt['admin_maintenace'],
 			'areas' => array(
-				'mailqueue' => array($txt['mailqueue_title'], 'ManageMail.php', 'ManageMail'),
 				'maintain' => array($txt['maintain_title'], 'ManageMaintenance.php', 'ManageMaintenance'),
+				'mailqueue' => array($txt['mailqueue_title'], 'ManageMail.php', 'ManageMail'),
 				'reports' => array($txt['generate_reports'], 'Reports.php', 'ReportsMain'),
 				'errorlog' => array($txt['errlog'], 'ManageErrors.php', 'ViewErrorLog', $scripturl . '?action=admin;area=errorlog;desc'),
 				'dumpdb' => array('', 'DumpDatabase.php', 'DumpDatabase2', 'select' => 'maintain'),
