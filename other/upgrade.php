@@ -2515,12 +2515,25 @@ function protected_alter($change, $substep, $is_test = false)
 	if ($change['type'] === 'column')
 	{
 		$request = upgrade_query("
-			SHOW COLUMNS
+			SHOW FULL COLUMNS
 			FROM {$db_prefix}$change[table]");
 		if ($request !== false)
 		{
-			while ($row = $smfFunc['db_fetch_row']($request))
-				$found |= $row[0] === $change['name'];
+			while ($table_row = $smfFunc['db_fetch_assoc']($request))
+			{
+				// Found it?
+				if ($table_row['Field'] === $change['name'])
+				{
+					$found |= 1;
+					// Do some checks on the data if we have it set.
+					if (isset($change['col_type']))
+						$found &= $change['col_type'] === $table_row['Type'];
+					if (isset($change['null_allowed']))
+						$found &= (strtolower($table_row['Null']) === 'yes') === $change['null_allowed'];
+					if (isset($change['default']))
+						$found &= $change['default'] === $table_row['Default'];
+				}
+			}
 			$smfFunc['db_free_result']($request);
 		}
 	}
@@ -3637,7 +3650,8 @@ function template_database_changes()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $support_js, $is_debug, $timeLimitThreshold;
 
 	echo '
-		<h3>Executing database changes - this step may take quite some time for larger forums.</h3>';
+		<h3>Executing database changes</h3>
+		<h4 style="font-style: italic;">Please be patient - this may take some time on large forums. The time elapsed increments from the server to show progress is being made!</h4>';
 
 	echo '
 		<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;filecount=', $upcontext['file_count'], '" name="upform"  id="upform" method="post">
@@ -3699,6 +3713,7 @@ function template_database_changes()
 		echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var lastItem = ', $upcontext['current_debug_item_num'], ';
+			var sLastString = "";
 			var curFile = ', $upcontext['cur_file_num'], ';
 			var totalItems = 0;
 			var prevFile = 0;
@@ -3742,7 +3757,7 @@ function template_database_changes()
 					if (retryCount > 15)
 					{
 						document.getElementById("error_block").style.display = "";
-						setInnerHTML(document.getElementById("error_message"), "Error retrieving information on step: " + sDebugName);';
+						setInnerHTML(document.getElementById("error_message"), "Error retrieving information on step: " + (sDebugName == "" ? sLastString : sDebugName));';
 
 	if ($is_debug)
 		echo '
@@ -3804,6 +3819,7 @@ function template_database_changes()
 				iDebugNum = parseInt(oXMLDoc.getElementsByTagName("debug")[0].getAttribute("num"));
 				bIsComplete = parseInt(oXMLDoc.getElementsByTagName("debug")[0].getAttribute("complete"));
 				iSubStepProgress = parseFloat(oXMLDoc.getElementsByTagName("debug")[0].getAttribute("percent"));
+				sLastString = sDebugName + " (Item: " + iDebugNum + ")";
 
 				curFile = parseInt(oXMLDoc.getElementsByTagName("file")[0].getAttribute("num"));
 				debugItems = parseInt(oXMLDoc.getElementsByTagName("file")[0].getAttribute("debug_items"));

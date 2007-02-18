@@ -1555,7 +1555,7 @@ DROP TABLE IF EXISTS {$db_prefix}log_search;
 
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_search_messages (
   id_search tinyint(3) unsigned NOT NULL default '0',
-  ID_MSG mediumint(9) NOT NULL default '0',
+  ID_MSG int(10) NOT NULL default '0',
   PRIMARY KEY (id_search, ID_MSG)
 ) TYPE=MyISAM;
 
@@ -2556,44 +2556,97 @@ CHANGE COLUMN buddy_list buddy_list text NOT NULL;
 --- Change some column types to accomodate more messages.
 /******************************************************************************/
 
----# Updating the boards table ...
-ALTER TABLE {$db_prefix}boards
-CHANGE COLUMN ID_LAST_MSG ID_LAST_MSG int(10) unsigned NOT NULL default '0',
-CHANGE COLUMN ID_MSG_UPDATED ID_MSG_UPDATED int(10) unsigned NOT NULL default '0';
----#
-
----# Updating the log_boards table ...
-ALTER TABLE {$db_prefix}log_boards
-CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
----#
-
----# Updating the log_mark_read table ...
-ALTER TABLE {$db_prefix}log_mark_read
-CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
----#
-
----# Updating the log_search_messages table ...
-ALTER TABLE {$db_prefix}log_search_messages
-CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
----#
-
----# Updating the log_search_words table ...
+---# Expanding message column size.
 ---{
+// The array holding all the changes.
+$columnChanges = array(
+	'boards' => array(
+		'ID_LAST_MSG' => 'ID_LAST_MSG ID_LAST_MSG int(10) unsigned NOT NULL default \'0\'',
+		'ID_MSG_UPDATED' => 'ID_MSG_UPDATED ID_MSG_UPDATED int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_boards' => array(
+		'ID_MSG' => 'ID_MSG ID_MSG int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_mark_read' => array(
+		'ID_MSG' => 'ID_MSG ID_MSG int(10) unsigned NOT NULL default \'0\'',
+	),
+	'log_topics' => array(
+		'ID_MSG' => 'ID_MSG ID_MSG int(10) unsigned NOT NULL default \'0\'',
+	),
+	'messages' => array(
+		'ID_MSG_MODIFIED' => 'ID_MSG_MODIFIED ID_MSG_MODIFIED int(10) unsigned NOT NULL default \'0\'',
+	)
+);
+
 if (!empty($modSettings['search_custom_index_config']))
-	upgrade_query("
-		ALTER TABLE {$db_prefix}log_search_words
-		CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0'");
+	$columnChanges['log_search_words'] = array(
+		'ID_MSG' => 'ID_MSG ID_MSG int(10) unsigned NOT NULL default \'0\'',
+	);
+
+$_GET['msg_change'] = isset($_GET['msg_change']) ? (int) $_GET['msg_change'] : 0;
+$step_progress['name'] = 'Expanding Message Capacity';
+$step_progress['current'] = $_GET['msg_change'];
+$step_progress['total'] = count($columnChanges);
+
+$count = 0;
+// Now do every table...
+foreach ($columnChanges as $table_name => $table)
+{
+	// Already done this?
+	$count++;
+	if ($_GET['msg_change'] > $count)
+		continue;
+	$_GET['msg_change'] = $count;
+
+	// Check the table exists!
+	$request = upgrade_query("
+		SHOW TABLES
+		LIKE '{$db_prefix}$table_name'");
+	if (mysql_num_rows($request) == 0)
+	{
+		mysql_free_result($request);
+		continue;
+	}
+	mysql_free_result($request);
+
+	// Check each column!
+	$actualChanges = array();
+	foreach ($table as $colname => $coldef)
+	{
+		$change = array(
+			'table' => $table_name,
+			'name' => $colname,
+			'type' => 'column',
+			'method' => 'change',
+			'text' => 'CHANGE ' . $coldef,
+			'col_type' => 'int(10) unsigned',
+		);
+		if (protected_alter($change, $substep, true) == false)
+			$actualChanges[] = ' CHANGE COLUMN ' . $coldef;
+	}
+
+	// Do the query - if it needs doing.
+	if (!empty($actualChanges))
+	{
+		$change = array(
+			'table' => $table_name,
+			'name' => 'na',
+			'type' => 'table',
+			'method' => 'full_change',
+			'text' => implode(', ', $actualChanges),
+		);
+
+		// Here we go - hold on!
+		protected_alter($change, $substep);
+	}
+	
+	// Update where we are!
+	$step_progress['current'] = $_GET['msg_change'];
+}
+
+// All done!
+unset($_GET['msg_change']);
 ---}
----#
-
----# Updating the log_topics table ...
-ALTER TABLE {$db_prefix}log_topics
-CHANGE COLUMN ID_MSG ID_MSG int(10) unsigned NOT NULL default '0';
----#
-
----# Updating the messages table ...
-ALTER TABLE {$db_prefix}messages
-CHANGE COLUMN ID_MSG_MODIFIED ID_MSG_MODIFIED int(10) unsigned NOT NULL default '0';
 ---#
 
 /******************************************************************************/
