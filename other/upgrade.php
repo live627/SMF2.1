@@ -1354,7 +1354,7 @@ function CleanupMods()
 
 	// If we get here withOUT SSI we need to redirect to ensure we get it!
 	if (!isset($_GET['ssi']))
-		redirectLocation(';ssi=1');
+		redirectLocation('&amp;ssi=1');
 
 	$upcontext['sub_template'] = 'clean_mods';
 	$upcontext['page_title'] = 'Cleanup Modifications';

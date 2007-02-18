@@ -587,7 +587,7 @@ function doStep0()
 							</tr><tr id="db_filename_contain" style="display: none;">
 								<td valign="top" class="textbox"><label for="db_name_input">', $txt['db_settings_database_file'], ':</label></td>
 								<td>
-									<input type="text" name="db_name" id="db_name_input" value="', empty($db_name) ? 'smf_' . substr(md5(microtime()), 0, 10) . '.db' : $db_name, '" size="30" /><br />
+									<input type="text" name="db_name" id="db_name_input" value="', empty($db_name) ? 'smf_' . substr(md5(microtime()), 0, 10) : $db_name, '" size="30" /><br />
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['db_settings_database_file_info'], '</div>
 								</td>
 							</tr><tr>
