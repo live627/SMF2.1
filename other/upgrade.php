@@ -3269,7 +3269,7 @@ function template_upgrade_above()
 				<td width="100%" valign="top">
 					<div class="panel">
 						<h2>', $upcontext['page_title'], '</h2>
-						<div style="max-height: 250px; overflow: auto;">';
+						<div style="max-height: 360px; overflow: auto;">';
 }
 
 function template_upgrade_below()

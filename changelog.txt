@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2667 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2668 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -35,7 +35,7 @@ February 2007
  ! Removed the old loadJumpTo function that was no longer being used. (Load.php)
  ! Changed the way fields are setup in Profile. (Profile.php)
  * Added a scripts directory for all javascript files to the default theme - and added one specific to profile. (profile.js)
-
+ * Expanded the right box height for upgrade.php. ( upgrade.php )
 
 January 2007
 --------------------------------------------------------------------------------
