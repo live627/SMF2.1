@@ -488,3 +488,96 @@ a img
 	left: 0;
 }
 
+/* the new admin menu */
+ul#admin_menu, #admin_menu li ul
+{
+	padding: 0;
+	list-style: none;
+}
+ul#admin_menu
+{
+	position: relative;
+	margin: 0 0 0 0.5em;
+	top: 1px;
+}
+ul#admin_menu li ul
+{
+	background: none;
+	margin: 0 0 0 1px;
+}
+ul#admin_menu li
+{
+	margin-right: 2px;
+	position: relative;
+	float: left;
+	padding-right: 10px; 
+	text-transform: uppercase;
+	background: url(images/admintab_right.gif) no-repeat top right;
+}
+
+ul#admin_menu li h4
+{
+	margin: 0;
+	padding: 10px 0px 5px 10px;
+	background: url(images/admintab_left.gif) no-repeat;
+	cursor: pointer;
+	font-weight: normal;
+	font-size: x-small;
+	color: white;
+}
+ul#admin_menu li.chosen
+{
+	background: url(images/admintab_active_right.gif) no-repeat top right;
+}
+ul#admin_menu li.chosen h4
+{
+	background: url(images/admintab_active_left.gif) no-repeat;
+	color: black;
+	font-weight: bold;
+}
+ul#admin_menu li ul li
+{
+	background: none;
+	width: 15em;
+	float: none;
+	margin: 0;
+	padding: 0;
+}
+ul#admin_menu li ul 
+{
+	display: none;
+	position: absolute; 
+	top: 100%;
+	left: 0;
+	border: solid 1px #A0A0A0;
+	border-top: none;
+	background: #FFF;
+}
+ul#admin_menu li ul li a
+{
+	display: block;
+	padding: 5px;
+	font-size: x-small;
+	text-decoration: none;
+	background: none;
+	text-transform: none;
+	color: black;
+}
+ul#admin_menu li ul li a.chosen
+{
+	font-weight: bold;
+}
+ul#admin_menu li ul li a:hover, ul#admin_menu li ul li:hover 
+{
+	background: #4F7395; 
+	color: white;
+}
+ul#admin_menu li > ul
+{
+	top: auto;
+	left: auto;
+}
+ul#admin_menu li:hover ul, ul#admin_menu li.over ul
+{
+	display: block; 
+}

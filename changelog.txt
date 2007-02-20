@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2668 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2669 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -36,6 +36,7 @@ February 2007
  ! Changed the way fields are setup in Profile. (Profile.php)
  * Added a scripts directory for all javascript files to the default theme - and added one specific to profile. (profile.js)
  * Expanded the right box height for upgrade.php. ( upgrade.php )
+ * Added dropdown menu + setting to toggle menu/sidebar for admin section (Admin.php, Admin.template.php, ModSettings.php, ModSettings.english.php, Help.english.php, style.css, admintab_active_left.gif, admintab_active_right.gif, admintab_left.gif, admintab_right.gif)
 
 January 2007
 --------------------------------------------------------------------------------

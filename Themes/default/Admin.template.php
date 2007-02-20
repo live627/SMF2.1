@@ -4,42 +4,88 @@
 // This contains the html for the side bar of the admin center, which is used for all admin pages.
 function template_admin_above()
 {
-	global $context, $settings, $options, $scripturl, $txt;
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	// try out a menu here :)
+	if(empty($modSettings['showsidebarAdmin']))
+	{
+		echo '
+	<ul id="admin_menu">';
+
+		// main areas first
+		foreach ($context['admin_areas'] as $section)
+		{
+			if(isset($section['chosen']))
+				echo '
+		<li class="chosen"><h4>', $section['title'] , '</h4>
+			<ul>';
+			else
+				echo '
+		<li><h4>', $section['title'] , '</h4>
+			<ul>';
+
+			// For every area of this section show a link to that area (bold if it's currently selected.)
+			foreach ($section['areas'] as $i => $area)
+			{
+				// Not supposed to be printed?
+				if (empty($area[0]))
+					continue;
+
+				// Is this the current area, or just some area?
+				if ($i == $context['admin_area'])
+					echo '
+				<li><a class="chosen" href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a></li>';
+				else
+					echo '
+				<li><a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a></li>';
+			}
+			echo '
+			</ul>
+		</li>';
+		}
+	
+		echo '
+	</ul>';
+	}
+	
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
-		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding-top: 1ex;"><tr>
+		<table width="100%" cellspacing="0"' , empty($modSettings['showsidebarAdmin']) ? ' cellpadding="10" class="tborder"' : ' cellpadding="0"' , ' border="0" style="margin-top: 0; clear: left;"><tr>';
+
+	if(!empty($modSettings['showsidebarAdmin']))
+	{
+		echo '
 			<td width="150" valign="top" style="width: 23ex; padding-right: 10px; padding-bottom: 10px;">
 				<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">';
 
-	// For every section that appears on the sidebar...
-	foreach ($context['admin_areas'] as $section)
-	{
-		// Show the section header - and pump up the line spacing for readability.
-		echo '
+		// For every section that appears on the sidebar...
+		foreach ($context['admin_areas'] as $section)
+		{
+			// Show the section header - and pump up the line spacing for readability.
+			echo '
 					<tr>
 						<td class="catbg">', $section['title'], '</td>
 					</tr>
 					<tr class="windowbg2">
 						<td class="smalltext" style="line-height: 1.3; padding-bottom: 3ex;">';
 
-		// For every area of this section show a link to that area (bold if it's currently selected.)
-		foreach ($section['areas'] as $i => $area)
-		{
-			// Not supposed to be printed?
-			if (empty($area[0]))
-				continue;
+			// For every area of this section show a link to that area (bold if it's currently selected.)
+			foreach ($section['areas'] as $i => $area)
+			{
+				// Not supposed to be printed?
+				if (empty($area[0]))
+					continue;
 
-			// Is this the current area, or just some area?
-			if ($i == $context['admin_area'])
-				echo '
+				// Is this the current area, or just some area?
+				if ($i == $context['admin_area'])
+					echo '
 							<b><a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a></b><br />';
-			else
-								echo '
+				else
+					echo '
 							<a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a><br />';
-				}
+			}
 
-				echo '
+			echo '
 						</td>
 					</tr>';
 		}
@@ -47,7 +93,10 @@ function template_admin_above()
 		// This is where the actual "main content" area for the admin section starts.
 		echo '
 				</table>
-			</td>
+			</td>';
+	}
+
+	echo '
 			<td valign="top">';
 
 	// If there are any "tabs" setup, this is the place to shown them.

@@ -213,6 +213,7 @@ function ModifyBasicSettings()
 			array('check', 'hitStats'),
 			array('check', 'enableErrorLogging'),
 			array('check', 'securityDisable'),
+			array('check', 'showsidebarAdmin'),
 		'',
 			// Reactive on email, and approve on delete
 			array('check', 'send_validation_onChange'),

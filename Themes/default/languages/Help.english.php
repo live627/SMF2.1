@@ -488,5 +488,5 @@ $helptxt['posts_and_topics'] = '
 			Modify the settings related to topics. The number of topics per page, whether stickey topics are enabled or not, the number of messages needed for a topic to be hot, etc.
 		</li>
 	</ul>';
-
+$helptxt['showsidebarAdmin'] = 'This setting will switch back to the the old display of admin section, where a sidebar was used for the menu.';
 ?>
