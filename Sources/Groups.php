@@ -470,13 +470,17 @@ function GroupRequests()
 					$lastLng = $user_info['language'];
 					foreach ($email_details as $email)
 					{
-						// Need to change the language?
-						if ($lastLng != $email['language'])
-						{
-							$lastLng = $email['language'];
-							loadLanguage('ModerationCenter', $email['language'], false);
-						}
-						sendmail($email['email'], $txt['mc_group_email_sub_approve'], sprintf($txt['mc_group_email_request_approve'], $email['member_name'], $email['group_name'], ''));
+						$replacements = array(
+							'USERNAME' => $email['member_name'],
+							'GROUPNAME' => $email['group_name'],
+						);
+
+						$emaildata = loadEmailTemplate('mc_group_approve', $replacements, $email['language']);
+
+						sendmail($email['email'], $emaildata['subject'], $emaildata['body']);
+
+						//!!! DELETE ME DELETE ME
+						//sendmail($email['email'], $txt['mc_group_email_sub_approve'], sprintf($txt['mc_group_email_request_approve'], $email['member_name'], $email['group_name'], ''));
 					}
 				}
 				// Otherwise, they are getting rejected (With or without a reason).
@@ -486,14 +490,22 @@ function GroupRequests()
 					$lastLng = $user_info['language'];
 					foreach ($email_details as $email)
 					{
-						// Need to change the language?
-						if ($lastLng != $email['language'])
-						{
-							$lastLng = $email['language'];
-							loadLanguage('ModerationCenter', $email['language'], false);
-						}
 						$custom_reason = isset($_POST['groupreason']) && isset($_POST['groupreason'][$email['rid']]) ? $_POST['groupreason'][$email['rid']] : '';
-						sendmail($email['email'], $txt['mc_group_email_sub_reject'], sprintf($txt['mc_group_email_request_' . ($custom_reason == '' ? 'reject' : 'reject_reason')], $email['member_name'], $email['group_name'], $custom_reason));
+
+						$replacements = array(
+							'USERNAME' => $email['member_name'],
+							'GROUPNAME' => $email['group_name'],
+						);
+
+						if (!empty($custom_reason))
+							$replacements['REASON'] = $custom_reason;
+
+						$emaildata = loadEmailTemplate(empty($custom_reason) ? 'mc_group_reject' : 'mc_group_reject_reason', $replacements, $email['language']);
+
+						sendmail($email['email'], $emaildata['subject'], $emaildata['body']);
+
+						//!!! DELETE ME DELETE ME
+						//sendmail($email['email'], $txt['mc_group_email_sub_reject'], sprintf($txt['mc_group_email_request_' . ($custom_reason == '' ? 'reject' : 'reject_reason')], $email['member_name'], $email['group_name'], $custom_reason));
 					}
 				}
 			}

@@ -623,14 +623,15 @@ function resetPassword($memID, $username = null)
 	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
 		call_user_func($modSettings['integrate_reset_pass'], $old_user, $user, $newPassword);
 
+	$replacements = array(
+		'USERNAME' => $user,
+		'PASSWORD' => $newPassword,
+	);
+
+	$emaildata = loadEmailTemplate('change_password', $replacements);
+
 	// Send them the email informing them of the change - then we're done!
-	sendmail($email, $txt['change_password'],
-		"$txt[hello_member] $user!\n\n" .
-		"$txt[change_password_1] $context[forum_name] $txt[change_password_2]\n\n" .
-		"$txt[your_username_is]$user, $txt[your_password] $newPassword\n\n" .
-		"$txt[may_change_in_profile]\n" .
-		"$scripturl?action=profile\n\n" .
-		$txt['regards_team']);
+	sendmail($email, $emaildata['subject'], $emaildata['body']);
 }
 
 // This function simply checks whether a password meets the current forum rules.

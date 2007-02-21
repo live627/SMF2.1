@@ -128,13 +128,16 @@ function RemindMail()
 
 	require_once($sourcedir . '/Subs-Post.php');
 
-	sendmail($row['email_address'], $txt['reminder_subject'],
-		sprintf($txt['sendtopic_dear'], $row['real_name']) . "\n\n" .
-		"$txt[reminder_mail]:\n\n" .
-		"$scripturl?action=reminder;sa=setpassword;u=$row[id_member];code=$password\n\n" .
-		"$txt[ip]: $user_info[ip]\n\n" .
-		"$txt[username]: $row[member_name]\n\n" .
-		$txt['regards_team']);
+	$replacements = array(
+		'REALNAME' => $row['real_name'],
+		'REMINDLINK' => $scripturl . '?action=reminder;sa=setpassword;u=' . $row['id_member'] . ';code=' . $password,
+		'IP' => $user_info['ip'],
+		'MEMBERNAME' => $row['member_name'],
+	);
+
+	$emaildata = loadEmailTemplate('forgot_password', $replacements);
+
+	sendmail($row['email_address'], $emaildata['subject'], $emaildata['body']);
 
 	// Set up the template.
 	$context += array(

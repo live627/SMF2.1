@@ -422,7 +422,16 @@ function Activate()
 	{
 		require_once($sourcedir . '/Subs-Post.php');
 
-		sendmail($row['email_address'], $txt['register_subject'], sprintf($txt[empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message'], $row['real_name'], $row['member_name'], $row['validation_code'], $scripturl . '?action=activate;u=' . $row['id_member'] . ';code=' . $row['validation_code']), null, null, false, 3);
+		$replacements = array(
+			'REALNAME' => $row['real_name'],
+			'USERNAME' => $row['member_name'],
+			'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $row['id_member'] . ';code=' . $row['validation_code'],
+			'ACTIVATIONCODE' => $row['validation_code'],
+		);
+
+		$emaildata = loadEmailTemplate(empty($modSettings['registration_method']) || $modSettings['registration_method'] == 1 ? 'resend_activate_message' : 'resend_pending_message', $replacements);
+
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 3);
 
 		$context['page_title'] = $txt['invalid_activation_resend'];
 		fatal_lang_error(!empty($email_change) ? 'change_email_success' : 'resend_email_success', false);

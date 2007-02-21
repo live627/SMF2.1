@@ -340,14 +340,15 @@ function scheduled_approval_notification()
 		if ($emailbody == '')
 			continue;
 
+		$replacements = array(
+			'REALNAME' => $member['name'],
+			'BODY' => $emailbody,
+		);
+
+		$emaildata = loadEmailTemplate('scheduled_approval', $replacements);
+
 		// Send the actual email.
-		sendmail($member['email'], sprintf($txt['scheduled_approval_email_subject'], $mbname),
-			"$member[name],\n\n" .
-			sprintf($txt['scheduled_approval_email'], $mbname) . "\n\n" .
-			$emailbody .
-			$txt['scheduled_approval_email_review'] . "\n" .
-			"$scripturl\n\n" .
-			$mbname);
+		sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 	}
 
 	// All went well!
@@ -531,6 +532,7 @@ function scheduled_daily_digest()
 	{
 		loadLanguage('Post', $lang);
 		loadLanguage('index', $lang);
+		loadLanguage('EmailTemplates', $lang);
 		$langtxt[$lang] = array(
 			'subject' => $txt['digest_subject_' . ($is_weekly ? 'weekly' : 'daily')],
 			'char_set' => $txt['lang_character_set'],
@@ -1036,14 +1038,17 @@ function scheduled_birthdayemails()
 	$smfFunc['db_free_result']($result);
 
 	// Send out the greetings!
-	foreach($birthdays AS $lang)
+	foreach($birthdays AS $lang => $recps)
 	{
-		// Why the PM language file?  Um because the birthday message is personal?
-		loadLanguage('PersonalMessage', $lang);
-
-		foreach($lang AS $recp)
+		foreach($recps AS $recp)
 		{
-			sendmail($recp['email'], sprintf($txt['birthday_email_subject'], $mbname, $recp['name']), sprintf($txt['birthday_email'], $mbname, $recp['name']));
+			$replacements = array(
+				'REALNAME' => $recp['name'],
+			);
+			
+			$emaildata = loadEmailTemplate('happy_birthday', $replacements, $lang);
+			
+			sendmail($recp['email'], $emaildata['subject'], $emaildata['body']);
 
 			// Try to stop a timeout, this would be bad...
 			@set_time_limit(300);

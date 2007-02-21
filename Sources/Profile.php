@@ -3078,16 +3078,18 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 				WHERE id_member IN (" . implode(', ', $moderators) . ")
 					AND notify_types != 4
 				ORDER BY lngfile", __FILE__, __LINE__);
-			$lastLng = $user_info['language'];
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
-				// Do we need to change the language we're sending in?
-				if ($lastLng != $row['lngfile'])
-				{
-					$lastLng = $row['lngfile'];
-					loadLanguage('Profile', $row['lngfile'], false);
-				}
-				sendmail($row['email_address'], $txt['request_membership_email_subject'], sprintf($txt['request_membership_email_subject'], $row['member_name'], $old_profile['member_name'], $group_name, $reason));
+				$replacements = array(
+					'RECPNAME' => $row['member_name'],
+					'APPYNAME' => $old_profile['member_name'],
+					'GROUPNAME' => $group_name,
+					'REASON' => $reason,
+					'MODLINK' => $scripturl . '?action=groups;sa=requests',
+				);
+
+				$emaildata = loadEmailTemplate('request_membership', $replacements, $row['lngfile']);
+				sendmail($row['email_address'], $emaildata['subject'], $emaildata['body']);
 			}
 			$smfFunc['db_free_result']($request);
 		}
@@ -4284,12 +4286,14 @@ function profileSendActivation()
 	if (empty($profile_vars['email_address']))
 		return;
 
+	$replacements = array(
+		'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $context['id_member'] . ';code=' . $profile_vars['validation_code'],
+		'ACTIVATIONCODE' => $profile_vars['validation_code'],
+	);
+
 	// Send off the email.
-	sendmail($profile_vars['email_address'], $txt['activate_reactivate_title'] . ' ' . $context['forum_name'],
-		"$txt[activate_reactivate_mail]\n\n" .
-		"$scripturl?action=activate;u=" . $context['id_member'] . ";code=$profile_vars[validation_code]\n\n" .
-		"$txt[activate_code]: $profile_vars[validation_code]\n\n" .
-		$txt['regards_team']);
+	$emaildata = loadEmailTemplate('activate_reactivate', $replacements);
+	sendmail($profile_vars['email_address'], $emaildata['subject'], $emaildata['body']);
 
 	// Log the user out.
 	$smfFunc['db_query']('', "

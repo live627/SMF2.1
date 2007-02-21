@@ -620,14 +620,6 @@ $txt['core_configuration'] = 'Core Configuration';
 $txt['other_configuration'] = 'Feature Configuration';
 $txt['caching_settings'] = 'Caching';
 
-$txt['scheduled_approval_email'] = 'This email contains a summary of all items awaiting approval at %s.';
-$txt['scheduled_approval_email_topic'] = 'The following topics are awaiting approval:';
-$txt['scheduled_approval_email_msg'] = 'The following posts are awaiting approval:';
-$txt['scheduled_approval_email_attach'] = 'The following attachments are awaiting approval:';
-$txt['scheduled_approval_email_event'] = 'The following events are awaiting approval:';
-$txt['scheduled_approval_email_review'] = 'Please log in to the forum to review these items.';
-$txt['scheduled_approval_email_subject'] = 'Summary of posts awaiting approval at %s';
-
 $txt['scheduled_view_log'] = 'View Log';
 $txt['scheduled_log_empty'] = 'There are currently no items in the log.';
 $txt['scheduled_log'] = 'Task Log';

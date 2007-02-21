@@ -1474,18 +1474,6 @@ function sendNotifications($topics, $type, $exclude = array())
 	global $txt, $scripturl, $db_prefix, $language, $user_info;
 	global $modSettings, $sourcedir, $context, $smfFunc;
 
-	$notification_types = array(
-		'reply' => array('subject' => 'notification_reply_subject', 'message' => 'notification_reply'),
-		'sticky' => array('subject' => 'notification_sticky_subject', 'message' => 'notification_sticky'),
-		'lock' => array('subject' => 'notification_lock_subject', 'message' => 'notification_lock'),
-		'unlock' => array('subject' => 'notification_unlock_subject', 'message' => 'notification_unlock'),
-		'remove' => array('subject' => 'notification_remove_subject', 'message' => 'notification_remove'),
-		'move' => array('subject' => 'notification_move_subject', 'message' => 'notification_move'),
-		'merge' => array('subject' => 'notification_merge_subject', 'message' => 'notification_merge'),
-		'split' => array('subject' => 'notification_split_subject', 'message' => 'notification_split'),
-	);
-	$current_type = $notification_types[$type];
-
 	// Can't do it if there's no topics.
 	if (empty($topics))
 		return;
@@ -1586,23 +1574,33 @@ function sendNotifications($topics, $type, $exclude = array())
 		if (empty($current_language) || $current_language != $needed_language)
 			$current_language = loadLanguage('Post', $needed_language, false);
 
-		$message = sprintf($txt[$current_type['message']], un_htmlspecialchars($topicData[$row['id_topic']]['name']));
-		if ($type != 'remove')
-			$message .=
-				$scripturl . '?topic=' . $row['id_topic'] . '.new;topicseen#new' . "\n\n" .
-				$txt['notifyUnsubscribe'] . ': ' . $scripturl . '?action=notify;topic=' . $row['id_topic'] . '.0';
+		$message_type = 'notification_' . $type;
+		$replacements = array(
+			'TOPICSUBJECT' => $topicData[$row['id_topic']]['subject'],
+			'POSTERNAME' => un_htmlspecialchars($topicData[$row['id_topic']]['name']),
+			'TOPICLINK' => $scripturl . '?topic=' . $row['id_topic'] . '.new;topicseen#new',
+			'UNSUBSCRIBELINK' => $scripturl . '?action=notify;topic=' . $row['id_topic'] . '.0',
+		);
+
+		if ($type == 'remove')
+		{
+			unset($replacements['TOPICLINK']);
+			unset($replacements['UNSUBSCRIBELINK']);
+		}
 		// Do they want the body of the message sent too?
 		if (!empty($row['notify_send_body']) && $type == 'reply' && empty($modSettings['disallow_sendBody']))
-			$message .= "\n\n" . $txt['notification_reply_body'] . "\n\n" . $topicData[$row['id_topic']]['body'];
+		{
+			$message_type .= '_body';
+			$replacements['MESSAGE'] = $topicData[$row['id_topic']]['body'];
+		}
 		if (!empty($row['notify_regularity']) && $type == 'reply')
-			$message .= "\n\n" . $txt['more_but_no_reply'];
+			$message_type .= '_once';
 
 		// Send only if once is off or it's on and it hasn't been sent.
 		if ($type != 'reply' || empty($row['notify_regularity']) || empty($row['sent']))
 		{
-			sendmail($row['email_address'], sprintf($txt[$current_type['subject']], $topicData[$row['id_topic']]['subject']),
-				$message . "\n\n" .
-				$txt['regards_team'], null, 'm' . $topicData[$row['id_topic']]['last_id']);
+			$emaildata = loadEmailTemplate($message_type, $replacements);
+			sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, 'm' . $topicData[$row['id_topic']]['last_id']);
 			$sent++;
 		}
 	}
@@ -2435,25 +2433,31 @@ function sendApprovalNotifications(&$topicData)
 		// Now loop through all the messages to send.
 		foreach ($topicData[$row['id_topic']] as $msg)
 		{
-			$message = sprintf($txt['notification_reply'], un_htmlspecialchars($msg['name']));
-			$message .=
-				$scripturl . '?topic=' . $row['id_topic'] . '.new;topicseen#new' . "\n\n" .
-				$txt['notifyUnsubscribe'] . ': ' . $scripturl . '?action=notify;topic=' . $row['id_topic'] . '.0';
-
+			$replacements = array(
+				'TOPICSUBJECT' => $topicData[$row['id_topic']]['subject'],
+				'POSTERNAME' => un_htmlspecialchars($topicData[$row['id_topic']]['name']),
+				'TOPICLINK' => $scripturl . '?topic=' . $row['id_topic'] . '.new;topicseen#new',
+				'UNSUBSCRIBELINK' => $scripturl . '?action=notify;topic=' . $row['id_topic'] . '.0',
+			);
+			
+			$message_type = 'notification_reply';
 			// Do they want the body of the message sent too?
 			if (!empty($row['notify_send_body']) && empty($modSettings['disallow_sendBody']))
-				$message .= "\n\n" . $txt['notification_reply_body'] . "\n\n" . $msg['body'];
+			{
+				$message_type .= '_body';
+				$replacements['BODY'] = $topicData[$row['id_topic']]['body'];
+			}
 			if (!empty($row['notify_regularity']))
-				$message .= "\n\n" . $txt['more_but_no_reply'];
-	
+				$message_type .= '_once';
+
 			// Send only if once is off or it's on and it hasn't been sent.
 			if (empty($row['notify_regularity']) || (empty($row['sent']) && !$sent_this_time))
 			{
-				sendmail($row['email_address'], sprintf($txt['notification_reply_subject'], $msg['subject']),
-					$message . "\n\n" .
-					$txt['regards_team'], null, 'm' . $msg['id']);
+				$emaildata = loadEmailTemplate($message_type, $replacements);
+				sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, 'm' . $topicData[$row['id_topic']]['last_id']);
 				$sent++;
 			}
+
 			$sent_this_time = true;
 		}
 	}
@@ -2615,22 +2619,23 @@ function adminNotify($type, $memberID, $member_name = null)
 		ORDER BY lngfile", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		// Post it in this members language.
-		$needed_language = empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'];
-		if (empty($current_language) || $current_language != $needed_language)
-			$current_language = loadLanguage('Login', $needed_language, false);
-
-		// Construct the message based on what they are being told.
-		$message = sprintf($txt['admin_notify_profile'], $member_name) . "\n\n" .
-			"$scripturl?action=profile;u=$memberID\n\n";
+		$replacements = array(
+			'USERNAME' => $member_name,
+			'PROFILELINK' => $scripturl . '?action=profile;u=' . $memberID
+		);
+		$emailtype = 'admin_notify';
 
 		// If they need to be approved add more info...
 		if ($type == 'approval')
-			$message .= $txt['admin_notify_approval'] . "\n\n" .
-				"$scripturl?action=admin;area=viewmembers;sa=browse;type=approve\n\n";
+		{
+			$replacements['APPROVALLINK'] = $scripturl . '?action=admin;area=viewmembers;sa=browse;type=approve';
+			$emailtype .= '_approval';
+		}
+
+		$emaildata = loadEmailTemplate($emailtype, $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);	
 
 		// And do the actual sending...
-		sendmail($row['email_address'], $txt['admin_notify_subject'], $message . $txt['regards_team'], null, null, false, 0);
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -2638,4 +2643,74 @@ function adminNotify($type, $memberID, $member_name = null)
 		loadLanguage('Login');
 }
 
+function loadEmailTemplate($template, $replacements = array(), $lang = '')
+{
+	global $txt, $mbname, $scripturl, $settings, $user_info;
+
+	// First things first, load up the email templates language file.
+	loadLanguage('EmailTemplates', $lang);
+
+	if (!isset($txt['emails'][$template]))
+		fatal_lang_error('email_no_template', 'template', array($template));
+
+	$ret = array(
+		'subject' => $txt['emails'][$template]['subject'],
+		'body' => $txt['emails'][$template]['body'],
+	);
+
+
+	// Add in the default replacements.
+	$replacements += array(
+		'FORUMNAME' => $mbname,
+		'SCRIPTURL' => $scripturl,
+		'THEMEURL' => $settings['theme_url'],
+		'IMAGESURL' => $settings['images_url'],
+		'DEFAULT_THEMEURL' => $settings['default_theme_url'],
+		'REGARDS' => $txt['regards_team'],
+	);
+
+	// Split the replacements up into two arrays, for use with str_replace
+	$find = array();
+	$replace = array();
+
+	foreach($replacements AS $f => $r)
+	{
+		$find[] = '{' . $f . '}';
+		$replace[] = $r;
+	}
+
+	// Do the variable replacements.
+	$ret['subject'] = str_replace($find, $replace, $ret['subject']);
+	$ret['body'] = str_replace($find, $replace, $ret['body']);
+
+	// Now deal with the {USER.variable} items.
+	$ret['subject'] = preg_replace_callback('~{USER.([^}]+)}~', 'user_info_callback', $ret['subject']);
+	$ret['body'] = preg_replace_callback('~{USER.([^}]+)}~', 'user_info_callback', $ret['body']);
+
+	// Finally return the email to the caller so they can send it out.
+	return $ret;
+}
+
+function user_info_callback($matches)
+{
+	global $user_info;
+	if (empty($matches[1]))
+		return '';
+
+	$use_ref = true;
+	$ref = &$user_info;
+	
+	foreach(explode('.', $matches[1]) AS $index)
+	{
+		if ($use_ref && isset($ref[$index]))
+			$ref = &$ref[$index];
+		else
+		{
+			$use_ref = false;
+			break;
+		}
+	}
+
+	return $use_ref ? $ref : $matches[0];
+}
 ?>

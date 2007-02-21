@@ -120,14 +120,24 @@ function SendTopic()
 	// Emails don't like entities...
 	$row['subject'] = un_htmlspecialchars($row['subject']);
 
+	$replacements = array(
+		'TOPICSUBJECT' => $row['subject'],
+		'SENDERNAME' => $_POST['y_name'],
+		'RECPNAME' => $_POST['r_name'],
+		'TOPICLINK' => $scripturl . '?topic=' . $topic . '.0',
+	);
+
+	$emailtemplate = 'send_topic';
+
+	if (!empty($_POST['comment']))
+	{
+		$emailtemplate .= '_comment';
+		$replacements['COMMENT'] = $_POST['comment'];
+	}
+
+	$emaildata = loadEmailTemplate($emailtemplate, $replacements);
 	// And off we go!
-	sendmail($_POST['r_email'], $txt['topic'] . ': ' . $row['subject'] . ' (' . $txt['from'] . ' ' . $_POST['y_name'] . ')',
-		sprintf($txt['sendtopic_dear'], $_POST['r_name']) . "\n\n" .
-		sprintf($txt['sendtopic_this_topic'], $row['subject'], $context['forum_name']) . ":\n\n" .
-		$scripturl . '?topic=' . $topic . ".0\n\n" .
-		(!empty($_POST['comment']) ? $txt['sendtopic2'] . ":\n" . $_POST['comment'] . "\n\n" : '') .
-		$txt['sendtopic_thanks'] . ",\n" .
-		$_POST['y_name'], $_POST['y_email']);
+	sendmail($_POST['r_email'], $emaildata['subject'], $emaildata['body'], $_POST['y_email']);
 
 	// Back to the topic!
 	redirectexit('topic=' . $topic . '.0');
@@ -307,15 +317,19 @@ function ReportToModerator2()
 				continue;
 		}
 
-		loadLanguage('Post', empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile'], false);
+		$replacements = array(
+			'TOPICSUBJECT' => $subject,
+			'POSTERNAME' => $poster_name,
+			'REPORTERNAME' => $reporterName,
+			'TOPICLINK' => $scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'],
+			'REPORTLINK' => !empty($id_report) ? $scripturl . '?action=moderate;area=reports;report=' . $id_report : '',
+			'COMMENT' => $_POST['comment'],
+		);
+
+		$emaildata = loadEmailTemplate('report_to_moderator', $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 		// Send it to the moderator.
-		sendmail($row['email_address'], $txt['reported_post'] . ': ' . $subject . ' ' . $txt['reported_to_mod_by'] . ' ' . $poster_name,
-			sprintf($txt['report_following_post'], $subject) . ' ' . $poster_name . ' ' . $txt['reported_by'] . ' ' . (empty($user_info['id']) ? $txt['guest'] . ' (' . $user_info['ip'] . ')' : $reporterName) . ' ' . $txt['board_moderate'] . ":\n\n" .
-			$scripturl . '?topic=' . $topic . '.msg' . $_POST['msg'] . '#msg' . $_POST['msg'] . "\n\n" .
-			$txt['report_comment'] . ":\n" .
-			$_POST['comment'] . "\n\n" .
-			$txt['regards_team'], $user_info['email']);
+		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], $user_info['email']);
 	}
 	$smfFunc['db_free_result']($request);
 

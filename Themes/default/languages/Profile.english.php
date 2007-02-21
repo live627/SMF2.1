@@ -188,8 +188,6 @@ $txt['view_ips_by'] = 'View IPs used by';
 $txt['avatar_will_upload'] = 'I will upload my own picture';
 
 // Use numeric entities in the below three strings.
-$txt['activate_reactivate_title'] = 'Welcome back to';
-$txt['activate_reactivate_mail'] = 'In order to re-validate your email address, your account has been deactivated.  Click the following link to activate it again:';
 $txt['activate_changed_email'] = 'You\'ve changed your email address. In order to validate this address you will receive an email. Click the link in that email to reactivate your account.';
 
 $txt['no_reminder_email'] = 'Unable to send reminder email.';
@@ -321,9 +319,6 @@ $txt['make_primary'] = 'Make Primary Group';
 $txt['request_group_membership'] = 'Request Group Membership';
 $txt['request_group_membership_desc'] = 'Before you can join this group your membership must be approved by the moderator. Please give a reason for joining this group';
 $txt['submit_request'] = 'Submit Request';
-$txt['request_membership_email_subject'] = 'New Group Application';
-// In the following email, %1$s is the recipients name, %2$s the requesting member, %3$s the group and %4$s the reason.
-$txt['request_membership_email_message'] = '%1$s,' . "\n\n" . '%2$s has requested membership to the &quot;%3$s&quot; group. The user has given the following reason:' . "\n\n" . '%4$s' . "\n\n" . 'You can approve or reject this application by clicking the link below:' . "\n\n" .$scripturl . "?action=groups;sa=requests\n\n" . $txt['regards_team'];
 
 $txt['profile_updated_own'] = 'Your profile has successfully been updated';
 $txt['profile_updated_else'] = 'The profile for %1$s has been successfully updated';

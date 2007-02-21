@@ -1913,11 +1913,17 @@ function AnnouncementSend()
 		// If the language wasn't defined yet, load it and compose a notification message.
 		if (!isset($announcements[$cur_language]))
 		{
-			loadLanguage('Post', $cur_language, false);
+			$replacements = array(
+				'TOPICSUBJECT' => $context['topic_subject'],
+				'MESSAGE' => $message,
+				'TOPICLINK' => $scripturl . '?topic=' . $topic . '.0',
+			);
+
+			$emaildata = loadEmailTemplate('new_announcement', $replacements, $cur_language);
 
 			$announcements[$cur_language] = array(
-				'subject' => $txt['new_announcement'] . ': ' . $context['topic_subject'],
-				'body' => $message . "\n\n" . $txt['announce_unsubscribe'] . "\n\n" . $scripturl . '?topic=' . $topic . ".0\n\n" . $txt['regards_team'],
+				'subject' => $emaildata['subject'],
+				'body' => $emaildata['body'],
 				'recipients' => array(),
 			);
 		}
@@ -2019,7 +2025,7 @@ function notifyMembersBoard(&$topicData)
 				continue;
 		}
 
-		loadLanguage('Post', empty($rowmember['lngfile']) || empty($modSettings['userLanguage']) ? $language : $rowmember['lngfile'], false);
+		$langloaded = loadLanguage('EmailTemplates', empty($rowmember['lngfile']) || empty($modSettings['userLanguage']) ? $language : $rowmember['lngfile'], false);
 
 		// Now loop through all the notifications to send for this board.
 		if (empty($boards[$rowmember['id_board']]))
@@ -2034,24 +2040,33 @@ function notifyMembersBoard(&$topicData)
 				continue;
 
 			// Setup the string for adding the body to the message, if a user wants it.
-			$body_text = empty($modSettings['disallow_sendBody']) ? $txt['notification_new_topic_body'] . "\n\n" . $topicData[$key]['body'] . "\n\n" : '';
+			$send_body = empty($modSettings['disallow_sendBody']) && !empty($rowmember['notify_send_body']);
 
-			$send_subject = sprintf($txt['notify_boards_subject'], $topicData[$key]['subject']);
+			$replacements = array(
+				'TOPICSUBJECT' => $topicData[$key]['subject'],
+				'TOPICLINK' => $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new',
+				'MESSAGE' => $topicData[$key]['body'],
+				'UNSUBSCRIBELINK' => $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . '.0',
+			);
+
+			if (!$send_body)
+				unset($replacements['MESSAGE']);
+
+			// Figure out which email to send off
+			$emailtype = '';
 	
 			// Send only if once is off or it's on and it hasn't been sent.
 			if (!empty($rowmember['notify_regularity']) && !$sentOnceAlready && empty($rowmember['sent']))
-				sendmail($rowmember['email_address'], $send_subject,
-					sprintf($txt['notify_boards'], $topicData[$key]['subject'], $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new', un_htmlspecialchars($topicData[$key]['name'])) .
-					$txt['notify_boards_once'] . "\n\n" .
-					(!empty($rowmember['notify_send_body']) ? $body_text : '') .
-					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
+				$emailtype = 'notify_boards_once';
 			elseif (empty($rowmember['notify_regularity']))
-				sendmail($rowmember['email_address'], $send_subject,
-					sprintf($txt['notify_boards'], $topicData[$key]['subject'], $scripturl . '?topic=' . $topicData[$key]['topic'] . '.new#new', un_htmlspecialchars($topicData[$key]['name'])) .
-					(!empty($rowmember['notify_send_body']) ? $body_text : '') .
-					$txt['notify_boardsUnsubscribe'] . ': ' . $scripturl . '?action=notifyboard;board=' . $topicData[$key]['board'] . ".0\n\n" .
-					$txt['regards_team'], null, 't' . $topicData[$key]['topic']);
+				$emailtype = 'notify_boards';
+
+			if (!empty($emailtype))
+			{
+				$emailtype .= $send_body ? '_body' : '';
+				$emaildata = loadEmailTemplate($emailtype, $replacements, $langloaded);
+				sendmail($rowmember['email_address'], $emaildata['subject'], $emaildata['body']);
+			}
 
 			$sentOnceAlready = 1;
 		}

@@ -504,12 +504,24 @@ function registerMember(&$regOptions)
 	if ($regOptions['interface'] == 'admin')
 	{
 		if ($regOptions['require'] == 'activation')
-			$email_message = 'register_activate_message';
+			$email_message = 'register_activate';
 		elseif (!empty($regOptions['send_welcome_email']))
-			$email_message = 'register_immediate_message';
+			$email_message = 'register_immediate';
 
 		if (isset($email_message))
-			sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt[$email_message], $real_name, $regOptions['username'], $regOptions['password'], $validation_code, $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code), null, null, false, 3);
+		{
+			$replacements = array(
+				'REALNAME' => $real_name,
+				'USERNAME' => $regOptions['username'],
+				'PASSWORD' => $regOptions['password'],
+				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code,
+				'ACTIVATIONCODE' => $validation_code,
+			);
+
+			$emaildata = loadEmailTemplate($email_message, $replacements);
+
+			sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 3);
+		}
 
 		// All admins are finished here.
 		return $memberID;
@@ -519,18 +531,46 @@ function registerMember(&$regOptions)
 	if ($regOptions['require'] == 'nothing')
 	{
 		if (!empty($regOptions['send_welcome_email']))
-			sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_immediate_message'], $real_name, $regOptions['username'], $regOptions['password']), null, null, false, 4);
+		{
+			$replacements = array(
+				'REALNAME' => $real_name,
+				'USERNAME' => $regOptions['username'],
+				'PASSWORD' => $regOptions['password'],
+			);
+			$emaildata = loadEmailTemplate('register_immediate', $replacements);
+			sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
+		}
 
 		// Send admin their notification.
 		adminNotify('standard', $memberID, $regOptions['username']);
 	}
 	// Need to activate their account - or fall under COPPA.
 	elseif ($regOptions['require'] == 'activation' || $regOptions['require'] == 'coppa')
-		sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_activate_message'], $real_name, $regOptions['username'], $regOptions['password'], $validation_code, $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code), null, null, false, 4);
+	{
+		$replacements = array(
+			'REALNAME' => $real_name,
+			'USERNAME' => $regOptions['username'],
+			'PASSWORD' => $regOptions['password'],
+			'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code,
+			'ACTIVATIONCODE' => $validation_code,
+		);
+
+		$emaildata = loadEmailTemplate('register_activate', $replacements);
+
+		sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
+	}
 	// Must be awaiting approval.
 	else
 	{
-		sendmail($regOptions['email'], $txt['register_subject'], sprintf($txt['register_pending_message'], $real_name, $regOptions['username'], $regOptions['password']), null, null, false, 3);
+		$replacements = array(
+			'REALNAME' => $real_name,
+			'USERNAME' => $regOptions['username'],
+			'PASSWORD' => $regOptions['password'],
+		);
+
+		$emaildata = loadEmailTemplate('register_pending', $replacements);
+
+		sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 3);
 
 		// Admin gets informed here...
 		adminNotify('approval', $memberID, $regOptions['username']);

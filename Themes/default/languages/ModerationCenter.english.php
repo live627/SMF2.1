@@ -61,13 +61,6 @@ $txt['mc_groupr_reject_w_reason'] = 'Reject Request with Reason';
 // Do not use numeric entries in the below string.
 $txt['mc_groupr_warning'] = 'Are you sure you wish to do this?';
 
-$txt['mc_group_email_sub_approve'] = 'Group Membership Approval';
-$txt['mc_group_email_sub_reject'] = 'Group Membership Rejection';
-// The below emails are sent for group request outcomes. %1$s is membername, %2$s is group name, %3$s is the reason for rejection in the case of rejection with a manual reason.
-$txt['mc_group_email_request_reject'] = '%1$s,' . "\n\n" . 'We\'re sorry to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been rejected.\n\n" . $txt['regards_team'];
-$txt['mc_group_email_request_reject_reason'] = '%1$s,' . "\n\n" . 'We\'re sorry to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been rejected.\n\nThis is due to the following reason:\n\n" . '%3$s' . "\n\n" . $txt['regards_team'];
-$txt['mc_group_email_request_approve'] = '%1$s,' . "\n\n" . 'We\'re pleased to notify you that your application to join the &quot;%2$s&quot; group at ' . $context['forum_name'] . " has been accepted, and your account has been updated to include this new membergroup.\n\n" . $txt['regards_team'];
-
 $txt['mc_unapproved_attachments_none_found'] = 'No unapproved attachments found!';
 $txt['mc_unapproved_replies_none_found'] = 'No unapproved posts found!';
 $txt['mc_unapproved_topics_none_found'] = 'No unapproved topics found!';

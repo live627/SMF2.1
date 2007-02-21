@@ -756,18 +756,13 @@ function AdminApprove()
 		{
 			foreach ($member_info as $member)
 			{
-				if (empty($current_language) || $current_language != $member['language'])
-				{
-					$current_language = loadLanguage('index', $member['language'], false);
-					loadLanguage('ManageMembers', $member['language'], false);
-				}
+				$replacements = array(
+					'USERNAME' => $member['name'],
+					'PROFILELINK' => $scripturl . '?action=profile',
+				);
 
-				sendmail($member['email'], $txt['register_subject'],
-					"$txt[hello_guest] $member[name]!\n\n" .
-					"$txt[admin_approve_accept_desc] $txt[your_username_is] $member[name]\n\n" .
-					"$txt[may_change_in_profile]\n" .
-					"$scripturl?action=profile\n\n" .
-					$txt['regards_team']);
+				$emaildata = loadEmailTemplate('admin_approve_accept', $replacements, $member['language']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 			}
 		}
 	}
@@ -788,18 +783,13 @@ function AdminApprove()
 					$condition
 					AND id_member = $member[id]", __FILE__, __LINE__);
 
-			if (empty($current_language) || $current_language != $member['language'])
-			{
-				$current_language = loadLanguage('index', $member['language'], false);
-				loadLanguage('ManageMembers', $member['language'], false);
-			}
+				$replacements = array(
+					'USERNAME' => $member['name'],
+					'ACTIVATIONLINK' => $scripturl . "?action=activate;u=$member[id];code=$validation_code",
+				);
 
-			// Send out the activation email.
-			sendmail($member['email'], $txt['register_subject'],
-				"$txt[hello_guest] $member[name]!\n\n" .
-				"$txt[admin_approve_require_activation] $txt[admin_approve_remind_desc2]\n" .
-				"$scripturl?action=activate;u=$member[id];code=$validation_code\n\n" .
-				$txt['regards_team']);
+				$emaildata = loadEmailTemplate('admin_approve_activation', $replacements, $member['language']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 		}
 	}
 	// Are we rejecting them?
@@ -813,13 +803,12 @@ function AdminApprove()
 		{
 			foreach ($member_info as $member)
 			{
-				if (empty($current_language) || $current_language != $member['language'])
-					$current_language = loadLanguage('ManageMembers', $member['language'], false);
+				$replacements = array(
+					'USERNAME' => $member['name'],
+				);
 
-				sendmail($member['email'], $txt['admin_approve_reject'],
-					"$member[name],\n\n" .
-					"$txt[admin_approve_reject_desc]\n\n" .
-					$txt['regards_team']);
+				$emaildata = loadEmailTemplate('admin_approve_reject', $replacements, $member['language']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 			}
 		}
 	}
@@ -834,13 +823,12 @@ function AdminApprove()
 		{
 			foreach ($member_info as $member)
 			{
-				if (empty($current_language) || $current_language != $member['language'])
-					$current_language = loadLanguage('ManageMembers', $member['language'], false);
+				$replacements = array(
+					'USERNAME' => $member['name'],
+				);
 
-				sendmail($member['email'], $txt['admin_approve_delete'],
-					"$member[name],\n\n" .
-					"$txt[admin_approve_delete_desc]\n\n" .
-					$txt['regards_team']);
+				$emaildata = loadEmailTemplate('admin_approve_delete', $replacements, $member['language']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 			}
 		}
 	}
@@ -849,14 +837,14 @@ function AdminApprove()
 	{
 		foreach ($member_info as $member)
 		{
-			if (empty($current_language) || $current_language != $member['language'])
-				$current_language = loadLanguage('ManageMembers', $member['language'], false);
+				$replacements = array(
+					'USERNAME' => $member['name'],
+					'ACTIVATIONLINK' => $scripturl . "?action=activate;u=$member[id];code=$member[code]",
+				);
 
-			sendmail($member['email'], $txt['admin_approve_remind'],
-				"$member[name],\n\n" .
-				"$txt[admin_approve_remind_desc] $context[forum_name].\n\n$txt[admin_approve_remind_desc2]\n\n" .
-				"$scripturl?action=activate;u=$member[id];code=$member[code]\n\n" .
-				$txt['regards_team']);
+				$emaildata = loadEmailTemplate('admin_approve_delete', $replacements, $member['language']);
+				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
+
 		}
 	}
 
