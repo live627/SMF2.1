@@ -81,12 +81,7 @@ function ManageCalendar()
 // The function that handles adding, and deleting holiday data
 function ModifyHolidays()
 {
-	global $txt, $context, $db_prefix, $scripturl, $smfFunc;
-
-	loadTemplate('ManageCalendar');
-
-	$context['page_title'] = $txt['manage_holidays'];
-	$context['sub_template'] = 'manage_holidays';
+	global $sourcedir, $scripturl, $txt, $context;
 
 	// Submitting something...
 	if (isset($_REQUEST['delete']) && !empty($_REQUEST['holiday']))
@@ -97,38 +92,93 @@ function ModifyHolidays()
 			$_REQUEST['holiday'][$id] = (int) $id;
 
 		// Now the IDs are "safe" do the delete...
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}calendar_holidays
-			WHERE id_holiday IN (" . implode(', ', $_REQUEST['holiday']) . ")", __FILE__, __LINE__);
-
-		updateSettings(array(
-			'calendar_updated' => time(),
-		));
+		require_once($sourcedir . '/Subs-Calendar.php');
+		removeHolidays($_REQUEST['holiday']);
 	}
 
-	// Total amount of holidays... for pagination.
-	$request = $smfFunc['db_query']('', "
-		SELECT COUNT(*)
-		FROM {$db_prefix}calendar_holidays", __FILE__, __LINE__);
-	list ($context['holidayCount']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
+	$listOptions = array(
+		'id' => 'holiday_list',
+		'title' => $txt['current_holidays'],
+		'items_per_page' => 20,
+		'base_href' => $scripturl . '?action=admin;area=managecalendar;sa=holidays',
+		'default_sort_col' => 'name',
+		'get_items' => array(
+			'file' => $sourcedir . '/Subs-Calendar.php',
+			'function' => 'list_getHolidays',
+		),
+		'get_count' => array(
+			'file' => $sourcedir . '/Subs-Calendar.php',
+			'function' => 'list_getNumHolidays',
+		),
+		'columns' => array(
+			'name' => array(
+				'header' => array(
+					'value' => $txt['holidays_title'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=admin;area=managecalendar;sa=editholiday;holiday=%1$d">%2$s</a>',
+						'params' => array(
+							'id_holiday' => false,
+							'title' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'title',
+					'reverse' => 'title DESC',
+				)
+			),
+			'date' => array(
+				'header' => array(
+					'value' => $txt['date'],
+				),
+				'data' => array(
+					'eval' => 'return %day% . \' \' . $txt[\'months\'][%month%] . \' \' . (%year% == \'0004\' ? \'(\' . $txt[\'every_year\'] . \')\' : %year%);',
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'event_date',
+					'reverse' => 'event_date DESC',
+				),
+			),
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="holiday[%1$d]" class="check" />',
+						'params' => array(
+							'id_holiday' => false,
+						),
+					),
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=managecalendar;sa=holidays',
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="delete" value="' . $txt['quickmod_delete_selected'] . '" />',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+		),
+	);
 
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=managecalendar;sa=holidays', $_REQUEST['start'], $context['holidayCount'], 20);
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
 
-	// Now load up all the holidays into a lovely large array.
-	$request = $smfFunc['db_query']('', "
-		SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
-		FROM {$db_prefix}calendar_holidays
-		ORDER BY title
-		LIMIT $_REQUEST[start], 20", __FILE__, __LINE__);
-	$context['holidays'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['holidays'][] = array(
-			'id' => $row['id_holiday'],
-			'date' => $row['day'] . ' ' . $txt['months'][$row['month']] . ' ' . ($row['year'] == '0004' ? '(' . $txt['every_year'] . ')' : $row['year']),
-			'title' => $row['title']
-		);
-	$smfFunc['db_free_result']($request);
+	//loadTemplate('ManageCalendar');
+	$context['page_title'] = $txt['manage_holidays'];
+
+	// Since the list is the only thing to show, use the default list template.
+	$context['default_list'] = 'holiday_list';
+	$context['sub_template'] = 'show_list';
 }
 
 // This function is used for adding/editing a specific holiday

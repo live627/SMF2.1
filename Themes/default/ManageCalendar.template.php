@@ -5,6 +5,9 @@ function template_manage_holidays()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	template_show_list('holiday_list');
+
+/*
 	// Listing of all holidays...
 	echo '
 <form action="', $scripturl, '?action=admin;area=managecalendar;sa=holidays" method="post" accept-charset="', $context['character_set'], '">
@@ -42,6 +45,8 @@ function template_manage_holidays()
 		</tr>
 	</table>
 </form>';
+
+*/
 }
 
 // Editing or adding holidays.

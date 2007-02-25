@@ -144,73 +144,196 @@ function ModifyMembergroups()
 // An overview of the current membergroups.
 function MembergroupIndex()
 {
-	global $db_prefix, $txt, $scripturl, $context, $settings, $smfFunc;
+	global $db_prefix, $txt, $scripturl, $context, $settings, $smfFunc, $sourcedir;
 
 	$context['page_title'] = $txt['membergroups_title'];
 
-	$context['groups'] = array(
-		'regular' => array(),
-		'post' => array()
+	// The first list shows the regular membergroups.
+	$listOptions = array(
+		'id' => 'regular_membergroups_list',
+		'title' => $txt['membergroups_regular'],
+		'base_href' => $scripturl . '?action=admin;area=membergroups' . (isset($_REQUEST['sort2']) ? ';sort2=' . urlencode($_REQUEST['sort2']) : ''),
+		'default_sort_col' => 'name',
+		'get_items' => array(
+			'file' => 'Subs-Membergroups.php',
+			'function' => 'list_getMembergroups',
+			'params' => array(
+				'regular',
+			),
+		),
+		'columns' => array(
+			'name' => array(
+				'header' => array(
+					'value' => $txt['membergroups_name'],
+				),
+				'data' => array(
+					'eval' => '
+						$return_string = %id_group% == 3 ? %group_name% : \'<a href="\' . $scripturl . \'?action=moderate;area=viewgroups;sa=members;group=\' . %id_group% . \'"\' . (empty(%online_color%) ? \'\' : \' style="color: \' . %online_color% . \';"\') . \'>\' . %group_name% . \'</a>\';
+
+						// Add a help options for moderator and administrator.
+						if (%id_group% == 1 || %id_group% == 3)
+							$return_string .= \' (<a href="\' . $scripturl . \'?action=helpadmin;help=membergroup_\' . (%id_group% == 1 ? \'administrator\' : \'moderator\') . \'" onclick="return reqWin(this.href);">?</a>)\';
+
+						return $return_string;',
+				),
+				'sort' => array(
+					'default' => 'CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name',
+					'reverse' => 'CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name DESC',
+				),
+			),
+			'stars' => array(
+				'header' => array(
+					'value' => $txt['membergroups_stars'],
+				),
+				'data' => array(
+					'eval' => '
+						$stars = explode(\'#\', %stars%);
+						return empty($stars[0]) || empty($stars[1]) ? \'\' : str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/\' . $stars[1] . \'" alt="*" border="0" />\', $stars[0]);'
+				),
+				'sort' => array(
+					'default' => "CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE('#', stars) - 1) DESC, SUBSTRING(stars, LOCATE('#', stars) + 1)",
+					'reverse' => "CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE('#', stars) - 1), SUBSTRING(stars, LOCATE('#', stars) + 1) DESC",
+				)
+			),
+			'members' => array(
+				'header' => array(
+					'value' => $txt['membergroups_members_top'],
+				),
+				'data' => array(
+					'eval' => 'return %id_group% == 3 ? $txt[\'membergroups_guests_na\'] : %num_members%;',
+					'class' => 'windowbg',
+					'style' => 'text-align: center',
+				),
+				'sort' => array(
+					'default' => 'CASE WHEN id_group < 4 THEN id_group ELSE 4 END, -1 DESC',
+					'reverse' => 'CASE WHEN id_group < 4 THEN id_group ELSE 4 END, -1',
+				),
+			),
+			'modify' => array(
+				'header' => array(
+					'value' => $txt['modify'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=admin;area=membergroups;sa=edit;group=%1$d">' . $txt['membergroups_modify'] . '</a>',
+						'params' => array(
+							'id_group' => false,
+						),
+					),
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '[<a href="http://localhost/smf/index.php?action=admin;area=membergroups;sa=add;generalgroup">' . $txt['membergroups_add_group'] . '</a>]',
+				'class' => 'catbg',
+			),
+		),
 	);
 
-	$query = $smfFunc['db_query']('', "
-		SELECT id_group, group_name, min_posts, online_color, stars
-		FROM {$db_prefix}membergroups
-		ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
-	while ($row = $smfFunc['db_fetch_assoc']($query))
-	{
-		$row['stars'] = explode('#', $row['stars']);
-		$context['groups'][$row['min_posts'] == -1 ? 'regular' : 'post'][$row['id_group']] = array(
-			'id' => $row['id_group'],
-			'name' => $row['group_name'],
-			'num_members' => $row['id_group'] != 3 ? 0 : $txt['membergroups_guests_na'],
-			'allow_delete' => $row['id_group'] > 4,
-			'can_search' => $row['id_group'] != 3,
-			'href' => $scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $row['id_group'],
-			'link' => '<a href="' . $scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $row['id_group'] . '"' . (!empty($row['online_color']) ? ' style="color: ' . $row['online_color'] . ';"' : '') . '>' . $row['group_name'] . '</a>',
-			'is_post_group' => $row['min_posts'] != -1,
-			'min_posts' => $row['min_posts'] == -1 ? '-' : $row['min_posts'],
-			'color' => empty($row['online_color']) ? '' : $row['online_color'],
-			'stars' => !empty($row['stars'][0]) && !empty($row['stars'][1]) ? str_repeat('<img src="' . $settings['images_url'] . '/' . $row['stars'][1] . '" alt="*" border="0" />', $row['stars'][0]) : '',
-		);
-	}
-	$smfFunc['db_free_result']($query);
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
 
-	if (!empty($context['groups']['post']))
-	{
-		$query = $smfFunc['db_query']('', "
-			SELECT id_post_group AS id_group, COUNT(*) AS num_members
-			FROM {$db_prefix}members
-			WHERE id_post_group IN (" . implode(', ', array_keys($context['groups']['post'])) . ")
-			GROUP BY id_post_group", __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
-			$context['groups']['post'][$row['id_group']]['num_members'] += $row['num_members'];
-		$smfFunc['db_free_result']($query);
-	}
+	// The second list shows the post count based groups.
+	$listOptions = array(
+		'id' => 'post_count_membergroups_list',
+		'title' => $txt['membergroups_post'],
+		'base_href' => $scripturl . '?action=admin;area=membergroups' . (isset($_REQUEST['sort']) ? ';sort=' . urlencode($_REQUEST['sort']) : ''),
+		'default_sort_col' => 'required_posts',
+		'request_vars' => array(
+			'sort' => 'sort2',
+			'desc' => 'desc2',
+		),
+		'get_items' => array(
+			'file' => 'Subs-Membergroups.php',
+			'function' => 'list_getMembergroups',
+			'params' => array(
+				'post_count',
+			),
+		),
+		'columns' => array(
+			'name' => array(
+				'header' => array(
+					'value' => $txt['membergroups_name'],
+				),
+				'data' => array(
+					'eval' => '
+						return  \'<a href="\' . $scripturl . \'?action=moderate;area=viewgroups;sa=members;group=\' . %id_group% . \'"\' . (empty(%online_color%) ? \'\' : \' style="color: \' . %online_color% . \';"\') . \'>\' . %group_name% . \'</a>\';',
+				),
+				'sort' => array(
+					'default' => 'group_name',
+					'reverse' => 'group_name DESC',
+				),
+			),
+			'stars' => array(
+				'header' => array(
+					'value' => $txt['membergroups_stars'],
+				),
+				'data' => array(
+					'eval' => '
+						$stars = explode(\'#\', %stars%);
+						return empty($stars[0]) || empty($stars[1]) ? \'\' : str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/\' . $stars[1] . \'" alt="*" border="0" />\', $stars[0]);'
+				),
+				'sort' => array(
+					'default' => "CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE('#', stars) - 1) DESC, SUBSTRING(stars, LOCATE('#', stars) + 1)",
+					'reverse' => "CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE('#', stars) - 1), SUBSTRING(stars, LOCATE('#', stars) + 1) DESC",
+				)
+			),
+			'members' => array(
+				'header' => array(
+					'value' => $txt['membergroups_members_top'],
+				),
+				'data' => array(
+					'db' => 'num_members',
+					'class' => 'windowbg',
+					'style' => 'text-align: center',
+				),
+				'sort' => array(
+					'default' => '-1 DESC',
+					'reverse' => '-1',
+				),
+			),
+			'required_posts' => array(
+				'header' => array(
+					'value' => $txt['membergroups_min_posts'],
+				),
+				'data' => array(
+					'db' => 'min_posts',
+					'class' => 'windowbg',
+					'style' => 'text-align: center',
+				),
+				'sort' => array(
+					'default' => 'min_posts',
+					'reverse' => 'min_posts DESC',
+				),
+			),
+			'modify' => array(
+				'header' => array(
+					'value' => $txt['modify'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=admin;area=membergroups;sa=edit;group=%1$d">' . $txt['membergroups_modify'] . '</a>',
+						'params' => array(
+							'id_group' => false,
+						),
+					),
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '[<a href="' . $scripturl . '?action=admin;area=membergroups;sa=add;postgroup">' . $txt['membergroups_add_group'] . '</a>]',
+				'class' => 'catbg',
+			),
+		),
+	);
 
-	if (!empty($context['groups']['regular']))
-	{
-		$query = $smfFunc['db_query']('', "
-			SELECT id_group, COUNT(*) AS num_members
-			FROM {$db_prefix}members
-			WHERE id_group IN (" . implode(', ', array_keys($context['groups']['regular'])) . ")
-			GROUP BY id_group", __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
-			$context['groups']['regular'][$row['id_group']]['num_members'] += $row['num_members'];
-		$smfFunc['db_free_result']($query);
-
-		$query = $smfFunc['db_query']('', "
-			SELECT mg.id_group, COUNT(*) AS num_members
-			FROM {$db_prefix}membergroups AS mg
-				INNER JOIN {$db_prefix}members AS mem ON (mem.additional_groups != ''
-					AND mem.id_group != mg.id_group
-					AND FIND_IN_SET(mg.id_group, mem.additional_groups))
-			WHERE mg.id_group IN (" . implode(', ', array_keys($context['groups']['regular'])) . ")
-			GROUP BY mg.id_group", __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($query))
-			$context['groups']['regular'][$row['id_group']]['num_members'] += $row['num_members'];
-		$smfFunc['db_free_result']($query);
-	}
+	createList($listOptions);
 }
 
 // Add a membergroup.
@@ -353,8 +476,8 @@ function AddMembergroup()
 	// Just show the 'add membergroup' screen.
 	$context['page_title'] = $txt['membergroups_new_group'];
 	$context['sub_template'] = 'new_group';
-	$context['post_group'] = !empty($_REQUEST['postgroup']);
-	$context['undefined_group'] = empty($_REQUEST['postgroup']) && empty($_REQUEST['generalgroup']);
+	$context['post_group'] = isset($_REQUEST['postgroup']);
+	$context['undefined_group'] = !isset($_REQUEST['postgroup']) && !isset($_REQUEST['generalgroup']);
 
 	$result = $smfFunc['db_query']('', "
 		SELECT id_group, group_name

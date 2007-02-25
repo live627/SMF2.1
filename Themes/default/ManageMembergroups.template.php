@@ -5,74 +5,9 @@ function template_main()
 {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	echo '
-		<div class="tborder">
-			<form action="' . $scripturl . '?action=admin;area=membergroups;sa=add;generalgroup" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-				<table width="100%" cellpadding="2" cellspacing="1" border="0">
-					<tr class="titlebg"><td colspan="4" style="padding: 4px;">', $txt['membergroups_regular'], '</td></tr>
-					<tr class="catbg3">
-						<td width="42%">', $txt['membergroups_name'], '</td>
-						<td width="12%" align="center">', $txt['membergroups_stars'], '</td>
-						<td width="10%" align="center">', $txt['membergroups_members_top'], '</td>
-						<td width="10%" align="center">', $txt['modify'], '</td>
-					</tr>';
-	foreach ($context['groups']['regular'] as $group)
-	{
-		echo '
-					<tr>
-						<td class="windowbg2">', $group['can_search'] ? $group['link'] : $group['name'], $group['id'] == 1 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_administrator" onclick="return reqWin(this.href);">?</a>)' : ($group['id'] == 3 ? ' (<a href="' . $scripturl . '?action=helpadmin;help=membergroup_moderator" onclick="return reqWin(this.href);">?</a>)' : ''), '</td>
-						<td class="windowbg2" align="left">', $group['stars'], '</td>
-						<td class="windowbg" align="center">', $group['num_members'] , '</td>
-						<td class="windowbg2" align="center"><a href="' . $scripturl . '?action=admin;area=membergroups;sa=edit;group=' . $group['id'] . '">' . $txt['membergroups_modify'] . '</a></td>
-					</tr>';
-	}
-
-	echo '
-					<tr class="windowbg">
-						<td colspan="4" align="right" style="padding-top: 1ex; padding-bottom: 2ex;">
-							<input type="submit" value="', $txt['membergroups_add_group'], '" style="margin: 4px;" />
-						</td>
-					</tr>
-				</table>
-				<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
-				<input type="hidden" name="postgroup" value="0" />
-				<input type="hidden" name="generalgroup" value="1" />
-			</form>
-		</div><br />
-		<div class="tborder">
-			<form action="' . $scripturl . '?action=admin;area=membergroups;sa=add" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
-				<table width="100%" border="0" cellpadding="2" cellspacing="1">
-					<tr class="titlebg"><td colspan="5" style="padding: 4px;">', $txt['membergroups_post'], '</td></tr>
-					<tr class="catbg3">
-						<td width="42%">', $txt['membergroups_name'], '</td>
-						<td width="12%" align="center">', $txt['membergroups_stars'], '</td>
-						<td width="10%" align="center">', $txt['membergroups_members_top'], '</td>
-						<td width="12%" align="center">', $txt['membergroups_min_posts'], '</td>
-						<td width="10%" align="center">', $txt['modify'], '</td>
-					</tr>';
-	foreach ($context['groups']['post'] as $group)
-	{
-		echo '
-					<tr>
-						<td class="windowbg2">', $group['can_search'] ? $group['link'] : $group['name'], '</td>
-						<td class="windowbg2" align="left">', $group['stars'], '</td>
-						<td class="windowbg" align="center">', $group['num_members'], '</td>
-						<td class="windowbg" align="center">', $group['min_posts'], '</td>
-						<td class="windowbg2" align="center"><a href="' . $scripturl . '?action=admin;area=membergroups;sa=edit;group=' . $group['id'] . '">' . $txt['membergroups_modify'] . '</a></td>
-					</tr>';
-	}
-
-	echo '
-					<tr class="windowbg">
-						<td colspan="5" align="right" style="padding-top: 1ex; padding-bottom: 2ex;">
-							<input type="submit" value="', $txt['membergroups_add_group'], '" style="margin: 4px;" />
-						</td>
-					</tr>
-				</table>
-				<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
-				<input type="hidden" name="postgroup" value="1" />
-			</form>
-		</div>';
+	template_show_list('regular_membergroups_list');
+	echo '<br /><br />';
+	template_show_list('post_count_membergroups_list');
 }
 
 function template_new_group()

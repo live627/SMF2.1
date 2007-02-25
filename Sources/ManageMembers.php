@@ -410,96 +410,195 @@ function ViewMemberlist()
 	$context['page_title'] = $txt['admin_members'];
 	$context['sub_template'] = 'view_members';
 
-	// Determine whether to show the 'delete members' checkboxes.
-	$context['can_delete_members'] = allowedTo('profile_remove_any');
+	$listOptions = array(
+		'id' => 'member_list',
+		'items_per_page' => $modSettings['defaultMaxMembers'],
+		'base_href' => $scripturl . '?action=admin;area=viewmembers' . $context['params_url'],
+		'default_sort_col' => 'user_name',
+		'get_items' => array(
+			'file' => $sourcedir . '/Subs-Members.php',
+			'function' => 'list_getMembers',
+			'params' => array(
+				isset($where) ? $where : '1',
+			),
+		),
+		'get_count' => array(
+			'file' => $sourcedir . '/Subs-Members.php',
+			'function' => 'list_getNumMembers',
+			'params' => array(
+				isset($where) ? $where : '1',
+			),
+		),
+		'columns' => array(
+			'id_member' => array(
+				'header' => array(
+					'value' => $txt['member_id'],
+				),
+				'data' => array(
+					'db' => 'id_member',
+					'class' => 'windowbg',
+					'style' => 'text-align: center;',
+				),
+				'sort' => array(
+					'default' => 'id_member',
+					'reverse' => 'id_member DESC',
+				),
+			),
+			'user_name' => array(
+				'header' => array(
+					'value' => $txt['username'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . strtr($scripturl, array('%' => '%%')) . '?action=profile;u=%1$d">%2$s</a>',
+						'params' => array(
+							'id_member' => false,
+							'member_name' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'member_name',
+					'reverse' => 'member_name DESC',
+				),
+			),
+			'display_name' => array(
+				'header' => array(
+					'value' => $txt['display_name'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . strtr($scripturl, array('%' => '%%')) . '?action=profile;u=%1$d">%2$s</a>',
+						'params' => array(
+							'id_member' => false,
+							'real_name' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'real_name',
+					'reverse' => 'real_name DESC',
+				),
+			),
+			'email' => array(
+				'header' => array(
+					'value' => $txt['email_address'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="mailto:%1$s">%1$s</a>',
+						'params' => array(
+							'email_address' => true,
+						),
+					),
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'email_address',
+					'reverse' => 'email_address DESC',
+				),
+			),
+			'ip' => array(
+				'header' => array(
+					'value' => $txt['ip_address'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . strtr($scripturl, array('%' => '%%')) . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'params' => array(
+							'member_ip' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'member_ip',
+					'reverse' => 'member_ip DESC',
+				),
+			),
+			'last_active' => array(
+				'header' => array(
+					'value' => $txt['viewmembers_online'],
+				),
+				'data' => array(
+					'eval' => '
+						// Calculate number of days since last online.
+						if (empty(%last_login%))
+							$difference = $txt[\'never\'];
+						else
+						{
+							// Today or some time ago?
+							$difference = jeffsdatediff(%last_login%);
+							if (empty($difference))
+								$difference = $txt[\'viewmembers_today\'];
+							elseif ($difference == 1)
+								$difference .= \' \' . $txt[\'viewmembers_day_ago\'];
+							else
+								$difference .= \' \' . $txt[\'viewmembers_days_ago\'];
+						}
 
-	// All the columns they have to pick from...
-	$context['columns'] = array(
-		'id_member' => array('label' => $txt['member_id']),
-		'member_name' => array('label' => $txt['username']),
-		'real_name' => array('label' => $txt['display_name']),
-		'email_address' => array('label' => $txt['email_address']),
-		'member_ip' => array('label' => $txt['ip_address']),
-		'last_login' => array('label' => $txt['viewmembers_online']),
-		'posts' => array('label' => $txt['member_postcount'])
+						// Show it in italics if they\'re not activated...
+						if (%is_activated% % 10 != 1)
+							$difference = \'<i title="\' . $txt[\'not_activated\'] . \'">\' . $difference . \'</i>\';
+
+						return $difference;',
+				),
+				'sort' =>  array(
+					'default' => 'last_login DESC',
+					'reverse' => 'last_login',
+				),
+			),
+			'posts' => array(
+				'header' => array(
+					'value' => $txt['member_postcount'],
+				),
+				'data' => array(
+					'db' => 'posts',
+				),
+				'sort' =>  array(
+					'default' => 'posts',
+					'reverse' => 'posts DESC',
+				),
+			),
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="delete[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id_member' => false,
+						),
+					),
+					'class' => 'windowbg',
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=viewmembers' . $context['params_url'],
+			'include_start' => true,
+			'include_sort' => true,
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="delete_members" value="' . $txt['admin_delete_members'] . '" onclick="return confirm(\'' . $txt['confirm_delete_members'] . '\');" />',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+		),
 	);
 
-	// Default sort column to 'member_name' if the current one is unknown or not set.
-	if (!isset($_REQUEST['sort']) || !isset($context['columns'][$_REQUEST['sort']]))
-		$_REQUEST['sort'] = 'member_name';
+	// Without not enough permissions, don't show 'delete members' checkboxes.
+	if (!allowedTo('profile_remove_any'))
+		unset($listOptions['cols']['check'], $listOptions['form'], $listOptions['additional_rows']);
 
-	// Provide extra information about each column - the link, whether it's selected, etc.
-	foreach ($context['columns'] as $col => $dummy)
-	{
-		$context['columns'][$col]['href'] = $scripturl . '?action=admin;area=viewmembers' . $context['params_url'] . ';sort=' . $col . ';start=0';
-		if (!isset($_REQUEST['desc']) && $col == $_REQUEST['sort'])
-			$context['columns'][$col]['href'] .= ';desc';
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
 
-		$context['columns'][$col]['link'] = '<a href="' . $context['columns'][$col]['href'] . '">' . $context['columns'][$col]['label'] . '</a>';
-		$context['columns'][$col]['selected'] = $_REQUEST['sort'] == $col;
-	}
-
-	$context['sort_by'] = $_REQUEST['sort'];
-	$context['sort_direction'] = !isset($_REQUEST['desc']) ? 'down' : 'up';
-
-	// Calculate the number of results.
-	if (empty($where) or $where == '1')
-		$num_members = $modSettings['totalMembers'];
-	else
-	{
-		$request = $smfFunc['db_query']('', "
-			SELECT COUNT(*)
-			FROM {$db_prefix}members
-			WHERE $where", __FILE__, __LINE__);
-		list ($num_members) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
-	}
-
-	// Construct the page links.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=viewmembers' . $context['params_url'] . ';sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $num_members, $modSettings['defaultMaxMembers']);
-	$context['start'] = (int) $_REQUEST['start'];
-
-	$request = $smfFunc['db_query']('', "
-		SELECT id_member, member_name, real_name, email_address, member_ip, last_login, posts, is_activated
-		FROM {$db_prefix}members" . ($context['sub_action'] == 'query' && !empty($where) ? "
-		WHERE $where" : '') . "
-		ORDER BY $_REQUEST[sort]" . (!isset($_REQUEST['desc']) ? '' : ' DESC') . "
-		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-	{
-		// Calculate number of days since last online.
-		if (empty($row['last_login']))
-			$difference = $txt['never'];
-		else
-		{
-			// Today or some time ago?
-			$difference = jeffsdatediff($row['last_login']);
-			if (empty($difference))
-				$difference = $txt['viewmembers_today'];
-			elseif ($difference == 1)
-				$difference .= ' ' . $txt['viewmembers_day_ago'];
-			else
-				$difference .= ' ' . $txt['viewmembers_days_ago'];
-		}
-
-		// Show it in italics if they're not activated...
-		if ($row['is_activated'] % 10 != 1)
-			$difference = '<i title="' . $txt['not_activated'] . '">' . $difference . '</i>';
-
-		$context['members'][] = array(
-			'id' => $row['id_member'],
-			'username' => $row['member_name'],
-			'name' => $row['real_name'],
-			'email' => $row['email_address'],
-			'ip' => $row['member_ip'],
-			'last_active' => $difference,
-			'is_activated' => $row['is_activated'] % 10 == 1,
-			'posts' => $row['posts'],
-			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
-		);
-	}
-	$smfFunc['db_free_result']($request);
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'member_list';
 }
 
 // Search the member list, using one or more criteria.
@@ -546,6 +645,7 @@ function SearchMembers()
 function MembersAwaitingActivation()
 {
 	global $txt, $context, $db_prefix, $scripturl, $modSettings, $smfFunc;
+	global $sourcedir;
 
 	// Not a lot here!
 	$context['page_title'] = $txt['admin_members'];
@@ -589,36 +689,6 @@ function MembersAwaitingActivation()
 		'date_registered' => array('label' => $txt['admin_browse_registered']),
 	);
 
-	// Default sort column to 'date_registered' if the current one is unknown or not set.
-	if (!isset($_REQUEST['sort']) || !isset($context['columns'][$_REQUEST['sort']]))
-		$_REQUEST['sort'] = 'date_registered';
-
-	// Provide extra information about each column - the link, whether it's selected, etc.
-	foreach ($context['columns'] as $col => $dummy)
-	{
-		$context['columns'][$col]['href'] = $scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'] . ';sort=' . $col . ';start=0';
-		if (!isset($_REQUEST['desc']) && $col == $_REQUEST['sort'])
-			$context['columns'][$col]['href'] .= ';desc';
-
-		$context['columns'][$col]['link'] = '<a href="' . $context['columns'][$col]['href'] . '">' . $context['columns'][$col]['label'] . '</a>';
-		$context['columns'][$col]['selected'] = $_REQUEST['sort'] == $col;
-	}
-
-	$context['sort_by'] = $_REQUEST['sort'];
-	$context['sort_direction'] = !isset($_REQUEST['desc']) ? 'down' : 'up';
-
-	// Calculate the number of results.
-	$request = $smfFunc['db_query']('', "
-		SELECT COUNT(*)
-		FROM {$db_prefix}members
-		WHERE is_activated = $context[current_filter]", __FILE__, __LINE__);
-	list ($context['num_members']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
-
-	// Construct the page links.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'] . ';sort=' . $_REQUEST['sort'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['num_members'], $modSettings['defaultMaxMembers']);
-	$context['start'] = (int) $_REQUEST['start'];
-
 	// Determine which actions we should allow on this page.
 	if ($context['browse_type'] == 'approve')
 	{
@@ -646,24 +716,218 @@ function MembersAwaitingActivation()
 			'remind' => $txt['admin_browse_w_remind'] . ' ' . $txt['admin_browse_w_email'],
 		);
 
-	$request = $smfFunc['db_query']('', "
-		SELECT id_member, member_name, email_address, member_ip, date_registered
-		FROM {$db_prefix}members
-		WHERE is_activated = $context[current_filter]
-		ORDER BY $_REQUEST[sort]" . (!isset($_REQUEST['desc']) ? '' : ' DESC') . "
-		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
 
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['members'][] = array(
-			'id' => $row['id_member'],
-			'username' => $row['member_name'],
-			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
-			'email' => $row['email_address'],
-			'ip' => $row['member_ip'],
-			'date_registered' => timeformat($row['date_registered']),
+	// Create an option list for actions allowed to be done with selected members.
+	$allowed_actions = '
+			<option selected="selected" value="">' . $txt['admin_browse_with_selected'] . ':</option>
+			<option value="" disabled="disabled">-----------------------------</option>';
+	foreach ($context['allowed_actions'] as $key => $desc)
+		$allowed_actions .= '
+			<option value="' . $key . '">' . $desc . '</option>';
+
+
+	// Setup the Javascript function for selecting an action for the list.
+	$javascript = '
+		function onSelectChange()
+		{
+			if (document.forms.postForm.todo.value == "")
+				return;
+
+			var message = "";';
+
+	// We have special messages for approving deletion of accounts - it's surprisingly logical - honest.
+	if ($context['current_filter'] == 4)
+		$javascript .= '
+			if (document.forms.postForm.todo.value.indexOf("reject") != -1)
+				message = "' . $txt['admin_browse_w_delete'] . '";
+			else
+				message = "' . $txt['admin_browse_w_reject'] . '";';
+	// Otherwise a nice standard message.
+	else
+		$javascript .= '
+			if (document.forms.postForm.todo.value.indexOf("delete") != -1)
+				message = "' . $txt['admin_browse_w_delete'] . '";
+			else if (document.forms.postForm.todo.value.indexOf("reject") != -1)
+				message = "' . $txt['admin_browse_w_reject'] . '";
+			else if (document.forms.postForm.todo.value == "remind")
+				message = "' . $txt['admin_browse_w_remind'] . '";
+			else
+				message = "' . ($context['browse_type'] == 'approve' ? $txt['admin_browse_w_approve'] : $txt['admin_browse_w_activate']) . '";';
+	$javascript .= '
+			if (confirm(message + " ' . $txt['admin_browse_warn'] . '"))
+				document.forms.postForm.submit();
+		}';
+
+	$listOptions = array(
+		'id' => 'approve_list',
+		'items_per_page' => $modSettings['defaultMaxMembers'],
+		'base_href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'],
+		'default_sort_col' => 'date_registered',
+		'get_items' => array(
+			'file' => $sourcedir . '/Subs-Members.php',
+			'function' => 'list_getMembers',
+			'params' => array(
+				"is_activated = $context[current_filter]",
+			),
+		),
+		'get_count' => array(
+			'file' => $sourcedir . '/Subs-Members.php',
+			'function' => 'list_getNumMembers',
+			'params' => array(
+				"is_activated = $context[current_filter]",
+			),
+		),
+		'columns' => array(
+			'id_member' => array(
+				'header' => array(
+					'value' => $txt['member_id'],
+				),
+				'data' => array(
+					'db' => 'id_member',
+					'class' => 'windowbg',
+					'style' => 'text-align: center;',
+				),
+				'sort' => array(
+					'default' => 'id_member',
+					'reverse' => 'id_member DESC',
+				),
+			),
+			'user_name' => array(
+				'header' => array(
+					'value' => $txt['username'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . strtr($scripturl, array('%' => '%%')) . '?action=profile;u=%1$d">%2$s</a>',
+						'params' => array(
+							'id_member' => false,
+							'member_name' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'member_name',
+					'reverse' => 'member_name DESC',
+				),
+			),
+			'email' => array(
+				'header' => array(
+					'value' => $txt['email_address'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="mailto:%1$s">%1$s</a>',
+						'params' => array(
+							'email_address' => true,
+						),
+					),
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'email_address',
+					'reverse' => 'email_address DESC',
+				),
+			),
+			'ip' => array(
+				'header' => array(
+					'value' => $txt['ip_address'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . strtr($scripturl, array('%' => '%%')) . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'params' => array(
+							'member_ip' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'member_ip',
+					'reverse' => 'member_ip DESC',
+				),
+			),
+			'date_registered' => array(
+				'header' => array(
+					'value' => $txt['viewmembers_online'],
+				),
+				'data' => array(
+					'eval' => 'return timeformat(%date_registered%);',
+				),
+				'sort' =>  array(
+					'default' => 'date_registered DESC',
+					'reverse' => 'date_registered',
+				),
+			),
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="todoAction[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id_member' => false,
+						),
+					),
+					'class' => 'windowbg',
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'javascript' => $javascript,
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'],
+			'include_start' => true,
+			'include_sort' => true,
+			'hidden_fields' => array(
+				'orig_filter' => $context['current_filter'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '
+					<select name="todo" onchange="onSelectChange();">
+						' . $allowed_actions . '
+					</select>
+					<noscript><input type="submit" value="' . $txt['go'] . '" /></noscript>',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+		),
+	);
+
+	// Is there any need to show filters?
+	if (isset($context['available_filters']) && count($context['available_filters']) > 1)
+	{
+		$filterOptions = '
+			<b>' . $txt['admin_browse_filter_by'] . ':</b>
+			<select name="filter" onchange="this.form.submit();">';
+		foreach ($context['available_filters'] as $filter)
+			$filterOptions .= '
+				<option value="' . $filter['type'] . '"' . ($filter['selected'] ? ' selected="selected"' : '') . '>' . $filter['desc'] . ' - ' . $filter['amount'] . ' ' . ($filter['amount'] == 1 ? $txt['user'] : $txt['users']) . '</option>';
+		$filterOptions .= '
+			</select>
+			<noscript><input type="submit" value="' . $txt['go'] . '" name="filter" /></noscript>';
+		$listOptions['additional_rows'][] = array(
+			'position' => 'above_column_headers',
+			'value' => $filterOptions,
+			'style' => 'text-align: center;',
+			'class' => 'titlebg',
 		);
-	$smfFunc['db_free_result']($request);
+	}
+
+	// What about if we only have one filter, but it's not the "standard" filter - show them what they are looking at.
+	if (!empty($context['show_filter']) && !empty($context['available_filters']))
+		$listOptions['additional_rows'][] = array(
+			'position' => 'above_column_headers',
+			'value' => '<span class="smalltext"><b>' . $txt['admin_browse_filter_show'] . ':</b> ' . $context['available_filters'][0]['desc'] . '</span>',
+			'style' => 'text-align: center;',
+			'class' => 'titlebg',
+		);
+
+	// Now that we have all the options, create the list.
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
 }
 
 // Do the approve/activate/delete stuff

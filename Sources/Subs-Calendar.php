@@ -807,4 +807,47 @@ function getEventProperties($event_id)
 	return $return_value;
 }
 
+function list_getHolidays($start, $items_per_page, $sort)
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
+		FROM {$db_prefix}calendar_holidays
+		ORDER BY $sort
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$holidays = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$holidays[] = $row;
+	$smfFunc['db_free_result']($request);
+
+	return $holidays;
+}
+
+function list_getNumHolidays()
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
+		FROM {$db_prefix}calendar_holidays", __FILE__, __LINE__);
+	list($num_items) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $num_items;
+}
+
+function removeHolidays($holiday_ids)
+{
+	global $smfFunc, $db_prefix;
+
+	$smfFunc['db_query']('', "
+		DELETE FROM {$db_prefix}calendar_holidays
+		WHERE id_holiday IN (" . implode(', ', $_REQUEST['holiday']) . ")", __FILE__, __LINE__);
+
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
+}
+
 ?>

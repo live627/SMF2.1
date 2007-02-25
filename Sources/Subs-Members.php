@@ -811,4 +811,45 @@ function BuddyListToggle()
 	redirectexit('action=profile;u=' . $_REQUEST['u']);
 }
 
+function list_getMembers($start, $items_per_page, $sort, $where)
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, real_name, email_address, member_ip, last_login, posts, is_activated, date_registered
+		FROM {$db_prefix}members
+		WHERE $where
+		ORDER BY $sort
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+
+	$members = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$members[] = $row;
+	$smfFunc['db_free_result']($request);
+
+	return $members;
+}
+
+function list_getNumMembers($where)
+{
+	global $smfFunc, $db_prefix, $modSettings;
+
+	// We know how many members there are in total.
+	if (empty($where) or $where == '1')
+		$num_members = $modSettings['totalMembers'];
+
+	// The database knows the amount when there are extra conditions.
+	else
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT COUNT(*)
+			FROM {$db_prefix}members
+			WHERE $where", __FILE__, __LINE__);
+		list ($num_members) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
+	}
+
+	return $num_members;
+}
+
 ?>

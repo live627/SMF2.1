@@ -400,4 +400,86 @@ function cache_getMembergroupList()
 	);
 }
 
+function list_getMembergroups($start, $items_per_page, $sort, $membergroup_type)
+{
+	global $db_prefix, $txt, $scripturl, $context, $settings, $smfFunc;
+
+	$groups = array();
+
+	// Get the basic group data.
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group, group_name, min_posts, online_color, stars, 0 as num_members
+		FROM {$db_prefix}membergroups
+		WHERE min_posts " . ($membergroup_type === 'post_count' ? '!=' : '=') . " -1
+		ORDER BY $sort", __FILE__, __LINE__);
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$groups[$row['id_group']] = $row;
+	$smfFunc['db_free_result']($request);
+
+	// If we found any membergroups, get the amount of members in them.
+	if (!empty($groups))
+	{
+		if ($membergroup_type === 'post_count')
+		{
+			$query = $smfFunc['db_query']('', "
+				SELECT id_post_group AS id_group, COUNT(*) AS num_members
+				FROM {$db_prefix}members
+				WHERE id_post_group IN (" . implode(', ', array_keys($groups)) . ")
+				GROUP BY id_post_group", __FILE__, __LINE__);
+			while ($row = $smfFunc['db_fetch_assoc']($query))
+				$groups[$row['id_group']]['num_members'] += $row['num_members'];
+			$smfFunc['db_free_result']($query);
+		}
+
+		else
+		{
+			$query = $smfFunc['db_query']('', "
+				SELECT id_group, COUNT(*) AS num_members
+				FROM {$db_prefix}members
+				WHERE id_group IN (" . implode(', ', array_keys($groups)) . ")
+				GROUP BY id_group", __FILE__, __LINE__);
+			while ($row = $smfFunc['db_fetch_assoc']($query))
+				$groups[$row['id_group']]['num_members'] += $row['num_members'];
+			$smfFunc['db_free_result']($query);
+
+			$query = $smfFunc['db_query']('', "
+				SELECT mg.id_group, COUNT(*) AS num_members
+				FROM {$db_prefix}membergroups AS mg
+					INNER JOIN {$db_prefix}members AS mem ON (mem.additional_groups != ''
+						AND mem.id_group != mg.id_group
+						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
+				WHERE mg.id_group IN (" . implode(', ', array_keys($groups)) . ")
+				GROUP BY mg.id_group", __FILE__, __LINE__);
+			while ($row = $smfFunc['db_fetch_assoc']($query))
+				$groups[$row['id_group']]['num_members'] += $row['num_members'];
+			$smfFunc['db_free_result']($query);
+		}
+	}
+
+	// Apply manual sorting if the 'number of members' column is selected.
+	if (strpos($sort, ', -1') !== FALSE)
+	{
+		$sort_ascending = strpos($sort, 'DESC') === false;
+
+		// Post count based groups can be sorted normally.
+		if ($membergroup_type === 'post_count')
+		{
+			foreach ($groups as $group)
+				$sort_array[] = (int) $group['num_members'];
+		}
+
+		// For regular membergroups keep the first three membergroups at top.
+		else
+		{
+			$sort_array = $sort_ascending ? array(-3, -2, -1) : array(999999999, 999999998, 999999997);
+			foreach (array_slice($groups, 3) as $group)
+				$sort_array[] = (int) $group['num_members'];
+		}
+
+		array_multisort($sort_array, $sort_ascending ? SORT_ASC : SORT_DESC, SORT_REGULAR, $groups);
+	}
+
+	return $groups;
+}
+
 ?>

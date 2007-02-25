@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2671 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2672 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -40,6 +40,9 @@ February 2007
  & Moved all emails into a single file that uses a template format. (Many language files)
  + Use email templates for sending out emails. (Many source files)
  & Fixed minor typos (Manual language files, Login language files) 
+ + Implemented a generic form of displaying lists, so that lists used in SMF can all be based on the same template. (Subs-List.php, GenericList template)
+ ! Converted the lists in the admin areas 'Calendar', 'Smileys and Message Icons', 'Attachements and Avatars', 'Members' and 'Membergroups' to the standardized form. (ManageAttachments.php, ManageCalendar.php, ManageMembergroups.php, ManageMembers.php, ManageSmileys.php, Subs-Calendar.php, Subs-Membergroups.php, Subs-Members.php, ManageAttachments template, ManageCalendar template, ManageMembergroups template, ManageMembers template, ManageSmileys template)
+
 
 January 2007
 --------------------------------------------------------------------------------

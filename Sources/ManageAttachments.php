@@ -294,7 +294,8 @@ function ManageAvatarSettings()
 
 function BrowseFiles()
 {
-	global $context, $db_prefix, $txt, $scripturl, $options, $modSettings, $smfFunc;
+	global $context, $db_prefix, $txt, $scripturl, $options, $modSettings;
+	global $smfFunc, $sourcedir;
 
 	$context['page_title'] = $txt['attachments_avatars'];
 	$context['sub_template'] = 'browse';
@@ -302,55 +303,139 @@ function BrowseFiles()
 	// Attachments or avatars?
 	$context['browse_type'] = isset($_REQUEST['avatars']) ? 'avatars' : (isset($_REQUEST['thumbs']) ? 'thumbs' : 'attachments');
 
-	// Get the number of attachments.
-	$context['num_attachments'] = 0;
-	$context['num_thumbs'] = 0;
-	$request = $smfFunc['db_query']('', "
-		SELECT attachment_type, COUNT(*) AS num_attach
-		FROM {$db_prefix}attachments
-		WHERE attachment_type IN (0, 3)
-			AND id_member = 0
-		GROUP BY attachment_type", __FILE__, __LINE__);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context[empty($row['attachment_type']) ? 'num_attachments' : 'num_thumbs'] = $row['num_attach'];
-	$smfFunc['db_free_result']($request);
-
-	// Also get the avatar amount.
-	$request = $smfFunc['db_query']('', "
-		SELECT COUNT(*)
-		FROM {$db_prefix}attachments
-		WHERE id_member != 0", __FILE__, __LINE__);
-	list ($context['num_avatars']) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
-
-	// Allow for sorting of each column...
-	$sort_methods = array(
-		'name' => 'a.filename',
-		'date' => $context['browse_type'] == 'avatars' ? 'mem.last_login' : 'm.id_msg',
-		'size' => 'a.size',
-		'member' => 'mem.real_name'
+	// Set the options for the list component.
+	$listOptions = array(
+		'id' => 'file_list',
+		'title' => $context['browse_type'] === 'avatars' ? $txt['attachment_manager_avatars'] : ($context['browse_type'] === 'thumbs' ? $txt['attachment_manager_thumbs'] : $txt['attachment_manager_attachments']),
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'base_href' => $scripturl . '?action=admin;area=manageattachments;sa=browse' . ($context['browse_type'] === 'avatars' ? ';avatars' : ($context['browse_type'] === 'thumbs' ? ';thumbs' : '')),
+		'default_sort_col' => 'name',
+		'get_items' => array(
+			'function' => 'list_getFiles',
+			'params' => array(
+				$context['browse_type'],
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getNumFiles',
+			'params' => array(
+				$context['browse_type'],
+			),
+		),
+		'columns' => array(
+			'name' => array(
+				'header' => array(
+					'value' => $txt['attachment_name'],
+				),
+				'data' => array(
+					'eval' => 'return \'<a href="\' .
+						(
+							%attachment_type% == 1 ? 
+							$modSettings[\'custom_avatar_url\'] . \'/\' . $row[\'filename\'] : ' . 
+							(
+								$context['browse_type'] == 'avatars' ?
+								'$scripturl . \'?action=dlattach;type=avatar;id=\' . %id_attach%' :
+								'$scripturl . \'?action=dlattach;topic=\' . %id_topic% . \'.0;id=\' . %id_attach%'
+							) . '
+						) . \'"\' . 
+						(
+							empty(%width%) || empty(%height%) ? 
+							\'\' : 
+							\' onclick="return reqWin(this.href + \\\';image\\\', \' . (%width% + 20) . \', \' . (%height% + 20) . \', true);"\'
+						) . \'>\' . %filename% . \'</a>\' .
+						(
+							empty(%width%) || empty(%height%) ? 
+							\'\' :
+							\' <span class="smalltext">\' . %width% . \'x\' . %height% . \'</span>\'
+						);'
+				),
+				'sort' => array(
+					'default' => 'a.filename',
+					'reverse' => 'a.filename DESC',
+				),
+			),
+			'filesize' => array(
+				'header' => array(
+					'value' => $txt['attachment_file_size'],
+				),
+				'data' => array(
+					'eval' => 'return round(%size% / 1024, 2) . $txt[\'kilobyte\'];',
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'a.size',
+					'reverse' => 'a.size DESC',
+				),
+			),
+			'member' => array(
+				'header' => array(
+					'value' => $context['browse_type'] == 'avatars' ? $txt['attachment_manager_member'] : $txt['posted_by'],
+				),
+				'data' => array(
+					'eval' => 'return empty(%id_member%) ? %poster_name% : \'<a href="\' . $scripturl . \'?action=profile;u=\' . %id_member% . \'">\' . %poster_name% . \'</a>\';',
+				),
+				'sort' => array(
+					'default' => 'mem.real_name',
+					'reverse' => 'mem.real_name DESC',
+				),
+			),
+			'date' => array(
+				'header' => array(
+					'value' => $context['browse_type'] == 'avatars' ? $txt['attachment_manager_last_active'] : $txt['date'],
+				),
+				'data' => array(
+					'eval' => 'return (empty(%poster_time%) ? $txt[\'never\'] : timeformat(%poster_time%))' . ($context['browse_type'] === 'avatars' ? ';' : '. \'<br />\' . $txt[\'in\'] . \' <a href="\' . $scripturl . \'?topic=\' . %id_topic% . \'.0">\' . %subject% . \'</a>\';'),
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => $context['browse_type'] === 'avatars' ? 'mem.last_login' : 'm.id_msg',
+					'reverse' => $context['browse_type'] === 'avatars' ? 'mem.last_login DESC' : 'm.id_msg DESC',
+				),
+			),
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="remove[%1$d]" class="check" />',
+						'params' => array(
+							'id_attach' => false,
+						),
+					),
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=manageattachments;sa=remove' . ($context['browse_type'] === 'avatars' ? ';avatars' : ($context['browse_type'] === 'thumbs' ? ';thumbs' : '')),
+			'include_sort' => true,
+			'include_start' => true,
+			'hidden_fields' => array(
+				'type' => $context['browse_type'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="remove_submit" value="' . $txt['quickmod_delete_selected'] . '" onclick="return confirm(\'' . $txt['confirm_delete_attachments'] . '\');" />',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+		),
 	);
 
-	// Set up the importantant sorting variables... if they picked one...
-	if (!isset($_GET['sort']) || !isset($sort_methods[$_GET['sort']]))
-	{
-		$_GET['sort'] = 'date';
-		$descending = !empty($options['view_newest_first']);
-	}
-	// ... and if they didn't...
-	else
-		$descending = isset($_GET['desc']);
+	// Create the list.
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+}
 
-	$context['sort_by'] = $_GET['sort'];
-	$_GET['sort'] = $sort_methods[$_GET['sort']];
-	$context['sort_direction'] = $descending ? 'down' : 'up';
-
-	// Get the page index ready......
-	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=manageattachments;sa=' . $context['sub_action'] . ($context['browse_type'] == 'attachments' ? '' : ';' . $context['browse_type']) . ';sort=' . $context['sort_by'] . ($context['sort_direction'] == 'down' ? ';desc' : ''), $_REQUEST['start'], $context['num_' . $context['browse_type']], $modSettings['defaultMaxMessages']);
-	$context['start'] = $_REQUEST['start'];
+function list_getFiles($start, $items_per_page, $sort, $browse_type)
+{
+	global $db_prefix, $smfFunc, $txt;
 
 	// Choose a query depending on what we are viewing.
-	if ($context['browse_type'] == 'avatars')
+	if ($browse_type === 'avatars')
 		$request = $smfFunc['db_query']('', "
 			SELECT
 				'' AS id_msg, IFNULL(mem.real_name, '$txt[not_applicable]') AS poster_name, mem.last_login AS poster_time, 0 AS id_topic, a.id_member,
@@ -358,8 +443,8 @@ function BrowseFiles()
 			FROM {$db_prefix}attachments AS a
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)
 			WHERE a.id_member != 0
-			ORDER BY $_GET[sort] " . ($descending ? 'DESC' : 'ASC') . "
-			LIMIT $context[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
+			ORDER BY $sort
+			LIMIT $start, $items_per_page", __FILE__, __LINE__);
 	else
 		$request = $smfFunc['db_query']('', "
 			SELECT
@@ -370,36 +455,38 @@ function BrowseFiles()
 				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 				INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-			WHERE a.attachment_type = " . ($context['browse_type'] == 'attachments' ? '0' : '3') . "
-			ORDER BY $_GET[sort] " . ($descending ? 'DESC' : 'ASC') . "
-			LIMIT $context[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
-	$context['posts'] = array();
+			WHERE a.attachment_type = " . ($browse_type == 'thumbs' ? '3' : '0') . "
+			ORDER BY $sort
+			LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$files = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['posts'][] = array(
-			'id' => $row['id_msg'],
-			'poster' => array(
-				'id' => $row['id_member'],
-				'name' => $row['poster_name'],
-				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
-				'link' => empty($row['id_member']) ? $row['poster_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['poster_name'] . '</a>'
-			),
-			'time' => empty($row['poster_time']) ? $txt['never'] : timeformat($row['poster_time']),
-			'timestamp' => forum_time(true, $row['poster_time']),
-			'attachment' => array(
-				'id' => $row['id_attach'],
-				'size' => round($row['size'] / 1024, 2),
-				'width' => $row['width'],
-				'height' => $row['height'],
-				'name' => $row['filename'],
-				'downloads' => $row['downloads'],
-				'href' => $row['attachment_type'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['id_topic'] . '.0;') . 'id=' . $row['id_attach']),
-				'link' => '<a href="' . ($row['attachment_type'] == 1 ? $modSettings['custom_avatar_url'] . '/' . $row['filename'] : ($scripturl . '?action=dlattach;' . ($context['browse_type'] == 'avatars' ? 'type=avatar;' : 'topic=' . $row['id_topic'] . '.0;') . 'id=' . $row['id_attach'])) . '"' . (empty($row['width']) || empty($row['height']) ? '' : ' onclick="return reqWin(this.href + \';image\', ' . ($row['width'] + 20) . ', ' . ($row['height'] + 20) . ', true);"') . '>' . $row['filename'] . '</a>'
-			),
-			'topic' => $row['id_topic'],
-			'subject' => $row['subject'],
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>'
-		);
+		$files[] = $row;
 	$smfFunc['db_free_result']($request);
+
+	return $files;
+}
+
+function list_getNumFiles($browse_type)
+{
+	global $smfFunc, $db_prefix;
+
+	// Depending on the type of file, different queries are used.
+	if ($browse_type === 'avatars')
+		$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
+		FROM {$db_prefix}attachments
+		WHERE id_member != 0", __FILE__, __LINE__);
+	else
+		$request = $smfFunc['db_query']('', "
+			SELECT COUNT(*) AS num_attach
+			FROM {$db_prefix}attachments
+			WHERE attachment_type = " . ($browse_type === 'thumbs' ? '3' : '0') . "
+				AND id_member = 0", __FILE__, __LINE__);
+
+	list ($num_files) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $num_files;
 }
 
 function MaintainFiles()

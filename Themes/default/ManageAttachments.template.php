@@ -29,7 +29,6 @@ function template_browse()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-<form action="', $scripturl, '?action=admin;area=manageattachments;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', ';sa=remove" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');">
 	<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
 		<tr class="titlebg">
 			<td colspan="5">', $txt['attachment_manager_browse_files'], '</td>
@@ -48,27 +47,23 @@ function template_browse()
 
 		echo $context['browse_type'] == 'attachments' ? '
 			<td class="maintab_active_first">&nbsp;</td>' : '' , '
-			<td class="maintab_' , $context['browse_type'] == 'attachments' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['attachment_manager_attachments'], '</a></td>' , $context['browse_type'] == 'attachments' ? '
+			<td class="maintab_' , $context['browse_type'] == 'attachments' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse">', $txt['attachment_manager_attachments'], '</a></td>' , $context['browse_type'] == 'attachments' ? '
 			<td class="maintab_active_last">&nbsp;</td>' : '';
 
 		echo $context['browse_type'] == 'avatars' ? '
 			<td class="maintab_active_first">&nbsp;</td>' : '' , '
-			<td class="maintab_' , $context['browse_type'] == 'avatars' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['attachment_manager_avatars'], '</a></td>' , $context['browse_type'] == 'avatars' ? '
+			<td class="maintab_' , $context['browse_type'] == 'avatars' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars">', $txt['attachment_manager_avatars'], '</a></td>' , $context['browse_type'] == 'avatars' ? '
 			<td class="maintab_active_last">&nbsp;</td>' : '';
 
 		echo $context['browse_type'] == 'thumbs' ? '
 			<td class="maintab_active_first">&nbsp;</td>' : '' , '
-			<td class="maintab_' , $context['browse_type'] == 'thumbs' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $txt['attachment_manager_thumbs'], '</a></td>' , $context['browse_type'] == 'thumbs' ? '
+			<td class="maintab_' , $context['browse_type'] == 'thumbs' ? 'active_' : '' , 'back"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs">', $txt['attachment_manager_thumbs'], '</a></td>' , $context['browse_type'] == 'thumbs' ? '
 			<td class="maintab_active_last">&nbsp;</td>' : '';
 
 		echo '
 			<td class="maintab_last">&nbsp;</td>
 		</tr>
 	</table>';
-
-		echo '
-	<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
-		<tr class="titlebg">';
 	}
 	// if not, use the old style
 	else
@@ -80,10 +75,17 @@ function template_browse()
 				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;avatars;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_avatars'], '</a>&nbsp;|&nbsp;
 				<a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;thumbs;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', '">', $context['browse_type'] == 'thumbs' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="&gt;" border="0" /> ' : '', $txt['attachment_manager_thumbs'], '</a>
 			</td>
-		</tr><tr class="titlebg">';
+		</tr>
+	</table>';
 	}
-	
+
+	template_show_list('file_list');
+/*
 	echo '
+<form action="', $scripturl, '?action=admin;area=manageattachments;sort=', $context['sort_by'], $context['sort_direction'] == 'down' ? ';desc' : '', ';sa=remove" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['confirm_delete_attachments'], '\');">
+	<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
+		<tr class="titlebg">';
+
 			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=name', $context['sort_by'] == 'name' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['attachment_name'], $context['sort_by'] == 'name' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=size', $context['sort_by'] == 'size' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $txt['attachment_file_size'], $context['sort_by'] == 'size' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
 			<td nowrap="nowrap"><a href="', $scripturl, '?action=admin;area=manageattachments;sa=browse;', $context['browse_type'], ';sort=member', $context['sort_by'] == 'member' && $context['sort_direction'] == 'up' ? ';desc' : '', '">', $context['browse_type'] == 'avatars' ? $txt['attachment_manager_member'] : $txt['posted_by'], $context['sort_by'] == 'member' ? ' <img src="' . $settings['images_url'] . '/sort_' . $context['sort_direction'] . '.gif" alt="" />' : '', '</a></td>
@@ -117,6 +119,7 @@ function template_browse()
 		</tr>
 	</table>
 </form>';
+*/
 }
 
 function template_maintenance()

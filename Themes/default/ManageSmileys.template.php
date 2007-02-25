@@ -6,37 +6,9 @@ function template_editsets()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '
-	<form action="', $scripturl, '?action=admin;area=smileys;sa=editsets" method="post" accept-charset="', $context['character_set'], '">
-		<div class="tborder" style="padding: 1px;"><table border="0" cellspacing="1" cellpadding="4" align="center" width="100%">
-			<tr class="titlebg">
-				<td width="20">', $txt['smiley_sets_default'], '</td>
-				<td width="15%">', $txt['smiley_sets_name'], '</td>
-				<td>', $txt['smiley_sets_url'], '</td>
-				<td>', $txt['smiley_set_modify'], '</td>
-				<td width="20"></td>
-			</tr>';
+	template_show_list('smiley_set_list');
 
-		foreach ($context['smiley_sets'] as $smiley_set)
-			echo '
-			<tr class="windowbg2">
-				<td align="center">', $smiley_set['selected'] ? '<b>*</b>' : '', '</td>
-				<td class="windowbg">', $smiley_set['name'], '</td>
-				<td class="windowbg">', $modSettings['smileys_url'], '/<b>', $smiley_set['path'], '</b>/...</td>
-				<td><a href="', $scripturl, '?action=admin;area=smileys;sa=modifyset;set=', $smiley_set['id'], '">', $txt['smiley_set_modify'], '</a></td>
-				<td>', $smiley_set['id'] != 0 ? '<input type="checkbox" name="smiley_set[' . $smiley_set['id'] . ']" value="1" class="check" />' : '', '</td>
-			</tr>';
-
-		echo '
-			<tr class="catbg3">
-			<td colspan="5" align="right">
-					<input type="submit" name="delete" value="', $txt['smiley_sets_delete'], '" onclick="return confirm(\'', $txt['smiley_sets_confirm'], '\');" />
-					<input type="submit" name="add" value="', $txt['smiley_sets_add'], '" />
-				</td>
-			</tr>
-		</table></div>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form><br />
+	echo '<br />
 	<table width="100%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 		<tr class="titlebg">
 			<td>', $txt['smiley_sets_latest'], '</td>
@@ -165,112 +137,6 @@ function template_modifyset()
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		<input type="hidden" name="set" value="', $context['current_set']['id'], '" />
 	</form>';
-}
-
-// Editing smileys themselves.
-function template_editsmileys()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-
-	// Some javascript for making changes to the smileys.
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function makeChanges(action)
-		{
-			if (action == \'-1\')
-				return false;
-			else if (action == \'delete\')
-			{
-				if (confirm(\'', $txt['smileys_confirm'], '\'))
-					document.forms.smileyForm.submit();
-			}
-			else
-				document.forms.smileyForm.submit();
-		}
-	// ]]></script>
-	<form action="', $scripturl, '?action=admin;area=smileys;sa=editsmileys" method="post" accept-charset="', $context['character_set'], '" name="smileyForm" id="smileyForm">
-		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="tborder">
-			<tr>
-				<td colspan="7" align="right" class="titlebg">
-					<select name="set" onchange="changeSet(this.options[this.selectedIndex].value);">';
-
-		foreach ($context['smiley_sets'] as $smiley_set)
-			echo '
-						<option value="', $smiley_set['path'], '"', $context['selected_set'] == $smiley_set['path'] ? ' selected="selected"' : '', '>', $smiley_set['name'], '</option>';
-
-		echo '
-					</select>
-				</td>
-			</tr><tr class="catbg3">
-				<td></td>
-				<td>
-					', $context['sort'] == 'code' ? '<b>' . $txt['smileys_code'] . '</b>' : '<a href="' . $scripturl . '?action=admin;area=smileys;sa=editsmileys;sort=code">' . $txt['smileys_code'] . '</a>', '
-				</td><td>
-					', $context['sort'] == 'filename' ? '<b>' . $txt['smileys_filename'] . '</b>' : '<a href="' . $scripturl . '?action=admin;area=smileys;sa=editsmileys;sort=filename">' . $txt['smileys_filename'] . '</a>', '
-				</td><td>
-					', $context['sort'] == 'hidden' ? '<b>' . $txt['smileys_location'] . '</b>' : '<a href="' . $scripturl . '?action=admin;area=smileys;sa=editsmileys;sort=hidden">' . $txt['smileys_location'] . '</a>', '
-				</td><td>
-					', $context['sort'] == 'description' ? '<b>' . $txt['smileys_description'] . '</b>' : '<a href="' . $scripturl . '?action=admin;area=smileys;sa=editsmileys;sort=description">' . $txt['smileys_description'] . '</a>', '
-				</td><td>
-					', $txt['smileys_modify'], '
-				</td>
-				<td width="4%"></td>
-			</tr>';
-		foreach ($context['smileys'] as $smiley)
-			echo '
-			<tr class="windowbg2">
-				<td valign="top">
-					<a href="', $scripturl, '?action=admin;area=smileys;sa=modifysmiley;smiley=', $smiley['id'], '"><img src="', $modSettings['smileys_url'], '/', $context['selected_set'], '/', $smiley['filename'], '" alt="', $smiley['description'], '" style="padding: 2px;" id="smiley', $smiley['id'], '" /><input type="hidden" name="smileys[', $smiley['id'], '][filename]" value="', $smiley['filename'], '" /></a>
-				</td><td valign="top" style="font-family: monospace;">
-					', $smiley['code'], '
-				</td><td valign="top" class="windowbg">
-					', $smiley['filename'], '
-				</td><td valign="top">
-					', $smiley['location'], '
-				</td><td valign="top" class="windowbg">
-					', $smiley['description'], empty($smiley['sets_not_found']) ? '' : '<br />
-					<span class="smalltext"><b>' . $txt['smileys_not_found_in_set'] . ':</b> ' . implode(', ', $smiley['sets_not_found']) . '</span>', '
-				</td><td valign="top">
-					<a href="', $scripturl, '?action=admin;area=smileys;sa=modifysmiley;smiley=', $smiley['id'], '">', $txt['smileys_modify'], '</a>
-				</td><td valign="top" align="center" width="4%">
-					<input type="checkbox" name="checked_smileys[]" value="', $smiley['id'], '" class="check" />
-				</td>
-			</tr>';
-		echo '
-			<tr class="windowbg">
-				<td colspan="7" align="right">
-					<select name="smiley_action" onchange="makeChanges(this.value);">
-						<option value="-1">', $txt['smileys_with_selected'], ':</option>
-						<option value="-1">--------------</option>
-						<option value="hidden">', $txt['smileys_make_hidden'], '</option>
-						<option value="post">', $txt['smileys_show_on_post'], '</option>
-						<option value="popup">', $txt['smileys_show_on_popup'], '</option>
-						<option value="delete">', $txt['smileys_remove'], '</option>
-					</select>
-					<noscript><input type="submit" name="perform_action" value="', $txt['go'], '" /></noscript>
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function changeSet(newSet)
-		{
-			var currentImage, i, knownSmileys = [';
-
-		$knownSmileys = array();
-		foreach ($context['smileys'] as $smiley)
-			$knownSmileys[] = $smiley['id'];
-
-		echo implode(', ', $knownSmileys), '];
-
-			for (i = 0; i < knownSmileys.length; i++)
-			{
-				currentImage = document.getElementById("smiley" + knownSmileys[i]);
-				currentImage.src = "', $modSettings['smileys_url'], '/" + newSet + "/" + document.forms.smileyForm["smileys[" + knownSmileys[i] + "][filename]"].value;
-			}
-		}
-	// ]]></script>';
 }
 
 // Editing an individual smiley
@@ -541,6 +407,9 @@ function template_editicons()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	template_show_list('message_icon_list');
+	return;
+
 	echo '
 	<form action="', $scripturl, '?action=admin;area=smileys;sa=editicons" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%" class="tborder">
@@ -609,15 +478,21 @@ function template_editicon()
 				<td><input type="text" name="icon_description" value="', !empty($context['icon']['title']) ? $context['icon']['title'] : '', '" /></td>
 			</tr>
 			<tr class="windowbg2">
-				<td align="right"><b><label for="icon_board">', $txt['icons_board'], '</label>: </b></td>
+				<td align="right"><b><label for="icon_board_select">', $txt['icons_board'], '</label>: </b></td>
 				<td>
-					<select name="icon_board">
+					<select id="icon_board_select" name="icon_board">
 						<option value="0"', empty($context['icon']['board_id']) ? ' selected="selected"' : '', '>', $txt['icons_edit_icons_all_boards'], '</option>';
 
-	foreach ($context['boards'] as $id => $name)
+	foreach($context['categories'] as $category)
+	{
 		echo '
-						<option value="', $id, '"', !empty($context['icon']['board_id']) && $context['icon']['board_id'] == $id ? ' selected="selected"' : '', '>', $name, '</option>';
-
+						<optgroup label="', $category['name'], '">';
+		foreach($category['boards'] as $board)
+			echo '
+							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
+		echo '
+						</optgroup>';
+	}
 	echo '
 					</select>
 				</td>
@@ -626,7 +501,7 @@ function template_editicon()
 				<td align="right"><b><label for="icon_location">', $txt['smileys_location'], '</label>: </b></td>
 				<td>
 					<select name="icon_location">
-						<option value="0"', empty($context['icon']['location']) ? ' selected="selected"' : '', '>', $txt['icons_location_first_icon'], '</option>';
+						<option value="0"', empty($context['icon']['after']) ? ' selected="selected"' : '', '>', $txt['icons_location_first_icon'], '</option>';
 
 	// Print the list of all the icons it can be put after...
 	foreach ($context['icons'] as $id => $data)

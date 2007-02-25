@@ -80,7 +80,7 @@ function ManageSmileys()
 
 	$context['page_title'] = &$txt['smileys_manage'];
 	$context['sub_action'] = $_REQUEST['sa'];
-	$context['sub_template'] = &$context['sub_action'];
+	$context['sub_template'] = $context['sub_action'];
 
 	// Load up all the tabs...
 	$context['admin_tabs'] = array(
@@ -199,7 +199,8 @@ function EditSmileySettings()
 
 function EditSmileySets()
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $smfFunc;
+	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir;
+	global $smfFunc, $scripturl, $sourcedir;
 
 	// Set the right tab to be selected.
 	$context['admin_tabs']['tabs']['editsets']['is_selected'] = true;
@@ -364,6 +365,147 @@ function EditSmileySets()
 			$dir->close();
 		}
 	}
+
+	$listOptions = array(
+		'id' => 'smiley_set_list',
+		'base_href' => $scripturl . '?action=admin;area=smileys;sa=editsets',
+		'default_sort_col' => 'default',
+		'get_items' => array(
+			'function' => 'list_getSmileySets',
+		),
+		'get_count' => array(
+			'function' => 'list_getNumSmileySets',
+		),
+		'columns' => array(
+			'default' => array(
+				'header' => array(
+					'value' => $txt['smiley_sets_default'],
+				),
+				'data' => array(
+					'eval' => 'return %selected% ? \'<b>*</b>\' : \'\';',
+					'style' => 'text-align: center;',
+				),
+				'sort' => array(
+					'default' => 'selected DESC',
+				),
+			),
+			'name' => array(
+				'header' => array(
+					'value' => $txt['smiley_sets_name'],
+				),
+				'data' => array(
+					'db_htmlsafe' => 'name',
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'name',
+					'reverse' => 'name DESC',
+				),
+			),
+			'url' => array(
+				'header' => array(
+					'value' => $txt['smiley_sets_url'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => $modSettings['smileys_url'] . '/<b>%1$s</b>/...',
+						'params' => array(
+							'path' => true,
+						),
+					),
+					'class' => 'windowbg',
+				),
+				'sort' => array(
+					'default' => 'path',
+					'reverse' => 'path DESC',
+				),
+			),
+			'modify' => array(
+				'header' => array(
+					'value' => $txt['smiley_set_modify'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifyset;set=%1$d">' . $txt['smiley_set_modify'] . '</a>',
+						'params' => array(
+							'id' => true,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+				),
+				'data' => array(
+					'eval' => 'return %id% == 0 ? \'\' : \'<input type="checkbox" name="smiley_set[\' . %id% . \']" class="check" />\';',
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=smileys;sa=editsets',
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="delete" value="' . $txt['smiley_sets_delete'] . '" onclick="return confirm(\'' . $txt['smiley_sets_confirm'] . '\');" style="float: right;" /> [<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifyset' . '">' . $txt['smiley_sets_add'] . '</a>]',
+				'class' => 'titlebg',
+			),
+		),
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+}
+
+// !!! to be moved to Subs-Smileys.
+function list_getSmileySets($start, $items_per_page, $sort)
+{
+	global $modSettings;
+
+	$known_sets = explode(',', $modSettings['smiley_sets_known']);
+	$set_names = explode("\n", $modSettings['smiley_sets_names']);
+	$cols = array(
+		'id' => array(),
+		'selected' => array(),
+		'path' => array(),
+		'name' => array(),
+	);
+	foreach ($known_sets as $i => $set)
+	{
+		$cols['id'][] = $i;
+		$cols['selected'][] = $i;
+		$cols['path'][] = $set;
+		$cols['name'][] = $set_names[$i];
+	}
+	$sort_flag = strpos($sort, 'DESC') === false ? SORT_ASC : SORT_DESC;
+	if (substr($sort, 0, 4) === 'name')
+		array_multisort($cols['name'], $sort_flag, SORT_REGULAR, $cols['path'], $cols['selected'], $cols['id']);
+	elseif (substr($sort, 0, 4) === 'path')
+		array_multisort($cols['path'], $sort_flag, SORT_REGULAR, $cols['name'], $cols['selected'], $cols['id']);
+	else
+		array_multisort($cols['selected'], $sort_flag, SORT_REGULAR, $cols['path'], $cols['name'], $cols['id']);
+
+	$smiley_sets = array();
+	foreach ($cols['id'] as $i => $id)
+		$smiley_sets[] = array(
+			'id' => $id,
+			'path' => $cols['path'][$i],
+			'name' => $cols['name'][$i],
+			'selected' => $cols['path'][$i] == $modSettings['smiley_sets_default']
+		);
+
+	return $smiley_sets;
+}
+
+// !!! to be moved to Subs-Smileys.
+function list_getNumSmileySets()
+{
+	global $modSettings;
+
+	return count(explode(',', $modSettings['smiley_sets_known']));
 }
 
 function AddSmiley()
@@ -594,7 +736,8 @@ function AddSmiley()
 
 function EditSmileys()
 {
-	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $smfFunc;
+	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir;
+	global $smfFunc, $scripturl, $sourcedir;
 
 	// Force the correct tab to be displayed.
 	$context['admin_tabs']['tabs']['editsmileys']['is_selected'] = true;
@@ -689,45 +832,201 @@ function EditSmileys()
 	// Prepare overview of all (custom) smileys.
 	if ($context['sub_action'] == 'editsmileys')
 	{
-		$sortColumns = array(
-			'code',
-			'filename',
-			'description',
-			'hidden',
+		// Determine the language specific sort order of smiley locations.
+		$smiley_locations = array(
+			$txt['smileys_location_form'],
+			$txt['smileys_location_hidden'],
+			$txt['smileys_location_popup'],
+		);
+		asort($smiley_locations);
+
+		// Create a list of options for selecting smiley sets.
+		$smileyset_option_list = '
+			<select name="set" onchange="changeSet(this.options[this.selectedIndex].value);">';
+		foreach ($context['smiley_sets'] as $smiley_set)
+			$smileyset_option_list .= '
+				<option value="' . $smiley_set['path'] . '"' . ($modSettings['smiley_sets_default'] == $smiley_set['path'] ? ' selected="selected"' : '') . '>' . $smiley_set['name'] . '</option>';
+		$smileyset_option_list .= '
+			</select>';
+
+		$listOptions = array(
+			'id' => 'smiley_list',
+			'items_per_page' => 40,
+			'base_href' => $scripturl . '?action=admin;area=smileys;sa=editsmileys',
+			'default_sort_col' => 'filename',
+			'get_items' => array(
+				'function' => 'list_getSmileys',
+			),
+			'get_count' => array(
+				'function' => 'list_getNumSmileys',
+			),
+			'columns' => array(
+				'picture' => array(
+					
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifysmiley;smiley=%1$d"><img src="' . $modSettings['smileys_url'] . '/' . $modSettings['smiley_sets_default'] . '/%2$s" alt="%3$s" style="padding: 2px;" id="smiley%1$d" /><input type="hidden" name="smileys[%1$d][filename]" value="%2$s" /></a>',
+							'params' => array(
+								'id_smiley' => false,
+								'filename' => true,
+								'description' => true,
+							),
+						),
+						'style' => 'text-align: center;',
+					),
+				),
+				'code' => array(
+					'header' => array(
+						'value' => $txt['smileys_code'],
+					),
+					'data' => array(
+						'db_htmlsafe' => 'code',
+					),
+					'sort' => array(
+						'default' => 'name',
+						'reverse' => 'name DESC',
+					),
+				),
+				'filename' => array(
+					'header' => array(
+						'value' => $txt['smileys_filename'],
+					),
+					'data' => array(
+						'db_htmlsafe' => 'filename',
+						'class' => 'windowbg',
+					),
+					'sort' => array(
+						'default' => 'filename',
+						'reverse' => 'filename DESC',
+					),
+				),
+				'location' => array(
+					'header' => array(
+						'value' => $txt['smileys_location'],
+					),
+					'data' => array(
+						'eval' => 'return empty(%hidden%) ? $txt[\'smileys_location_form\'] : (%hidden% == 1 ? $txt[\'smileys_location_hidden\'] : $txt[\'smileys_location_popup\']);',
+						'class' => 'windowbg',
+					),
+					'sort' => array(
+						'default' => "FIND_IN_SET(hidden, '" . implode(',', array_keys($smiley_locations)) . "')",
+						'reverse' => "FIND_IN_SET(hidden, '" . implode(',', array_keys($smiley_locations)) . "') DESC",
+					),
+				),
+				'tooltip' => array(
+					'header' => array(
+						'value' => $txt['smileys_description'],
+					),
+					'data' => array(
+						'eval' => empty($modSettings['smileys_dir']) || !is_dir($modSettings['smileys_dir']) ? 'return %description%;' : '
+							$missing_sets = array();
+							foreach ($context[\'smiley_sets\'] as $smiley_set)
+								if (!file_exists($modSettings[\'smileys_dir\'] . \'/\' . $smiley_set[\'path\'] . \'/\' . %filename%))
+									$missing_sets[] = $smiley_set[\'path\'];
+							return %description% . (empty($missing_sets) ? \'\' : \'<br />
+								<span class="smalltext"><b>\' . $txt[\'smileys_not_found_in_set\'] . \':</b> \' . implode(\', \', $missing_sets) . \'</span>\');',
+						'class' => 'windowbg',
+					),
+					'sort' => array(
+						'default' => 'description',
+						'reverse' => 'description DESC',
+					),
+				),
+				'modify' => array(
+					'header' => array(
+						'value' => $txt['smileys_modify'],
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifysmiley;smiley=%1$d">' . $txt['smileys_modify'] . '</a>',
+							'params' => array(
+								'id_smiley' => false,
+							),
+						),
+						'style' => 'text-align: center;',
+					),
+				),
+				'check' => array(
+					'header' => array(
+						'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<input type="checkbox" name="checked_smileys[]" value="%1$d" class="check" />',
+							'params' => array(
+								'id_smiley' => false,
+							),
+						),
+						'style' => 'text-align: center',
+					),
+				),
+			),
+			'form' => array(
+				'href' => $scripturl . '?action=admin;area=smileys;sa=editsmileys',
+				'name' => 'smileyForm',
+			),
+			'additional_rows' => array(
+				array(
+					'position' => 'above_column_headers',
+					'value' => $smileyset_option_list,
+					'style' => 'text-align: right;',
+					'class' => 'titlebg',
+				),
+				array(
+					'position' => 'below_table_data',
+					'value' => '
+						<select name="smiley_action" onchange="makeChanges(this.value);">
+							<option value="-1">' . $txt['smileys_with_selected'] . ':</option>
+							<option value="-1">--------------</option>
+							<option value="hidden">' . $txt['smileys_make_hidden'] . '</option>
+							<option value="post">' . $txt['smileys_show_on_post'] . '</option>
+							<option value="popup">' . $txt['smileys_show_on_popup'] . '</option>
+							<option value="delete">' . $txt['smileys_remove'] . '</option>
+						</select>
+						<noscript><input type="submit" name="perform_action" value="'. $txt['go'] . '" /></noscript>',
+					'style' => 'text-align: right;',
+					'class' => 'titlebg',
+				),
+			),
+			'javascript' => '
+				function makeChanges(action)
+				{
+					if (action == \'-1\')
+						return false;
+					else if (action == \'delete\')
+					{
+						if (confirm(\'' . $txt['smileys_confirm'] . '\'))
+							document.forms.smileyForm.submit();
+					}
+					else
+						document.forms.smileyForm.submit();
+					return true;
+				}
+				function changeSet(newSet)
+				{
+					var currentImage, i, knownSmileys = [];
+
+					if (knownSmileys.length == 0)
+					{
+						for (var i = 0, n = document.images.length; i < n; i++)
+							if (document.images[i].id.substr(0, 6) == \'smiley\')
+								knownSmileys[knownSmileys.length] = document.images[i].id.substr(6);
+					}
+
+					for (i = 0; i < knownSmileys.length; i++)
+					{
+						currentImage = document.getElementById("smiley" + knownSmileys[i]);
+						currentImage.src = "' . $modSettings['smileys_url'] . '/" + newSet + "/" + document.forms.smileyForm["smileys[" + knownSmileys[i] + "][filename]"].value;
+					}
+				}',
 		);
 
-		// Default to 'order by filename'.
-		$context['sort'] = empty($_REQUEST['sort']) || !in_array($_REQUEST['sort'], $sortColumns) ? 'filename' : $_REQUEST['sort'];
+		require_once($sourcedir . '/Subs-List.php');
+		createList($listOptions);
 
-		$request = $smfFunc['db_query']('', "
-			SELECT id_smiley, code, filename, description, smiley_row, smiley_order, hidden
-			FROM {$db_prefix}smileys
-			ORDER BY $context[sort]", __FILE__, __LINE__);
-		$context['smileys'] = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$context['smileys'][] = array(
-				'id' => $row['id_smiley'],
-				'code' => htmlspecialchars($row['code']),
-				'filename' => htmlspecialchars($row['filename']),
-				'description' => htmlspecialchars($row['description']),
-				'row' => $row['smiley_row'],
-				'order' => $row['smiley_order'],
-				'location' => empty($row['hidden']) ? $txt['smileys_location_form'] : ($row['hidden'] == 1 ? $txt['smileys_location_hidden'] : $txt['smileys_location_popup']),
-				'sets_not_found' => array(),
-			);
-		$smfFunc['db_free_result']($request);
-
-		if (!empty($modSettings['smileys_dir']) && is_dir($modSettings['smileys_dir']))
-		{
-			foreach ($context['smiley_sets'] as $smiley_set)
-			{
-				foreach ($context['smileys'] as $smiley_id => $smiley)
-					if (!file_exists($modSettings['smileys_dir'] . '/' . $smiley_set['path'] . '/' . $smiley['filename']))
-						$context['smileys'][$smiley_id]['sets_not_found'][] = $smiley_set['path'];
-			}
-		}
-
-		$context['selected_set'] = $modSettings['smiley_sets_default'];
+		// The list is the only thing to show, so make it the main template.
+		$context['default_list'] = 'smiley_list';
+		$context['sub_template'] = 'show_list';
 	}
 	// Modifying smileys.
 	elseif ($context['sub_action'] == 'modifysmiley')
@@ -786,6 +1085,35 @@ function EditSmileys()
 		if (isset($context['filenames'][strtolower($context['current_smiley']['filename'])]))
 			$context['filenames'][strtolower($context['current_smiley']['filename'])]['selected'] = true;
 	}
+}
+
+function list_getSmileys($start, $items_per_page, $sort)
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_smiley, code, filename, description, smiley_row, smiley_order, hidden
+		FROM {$db_prefix}smileys
+		ORDER BY $sort", __FILE__, __LINE__);
+	$smileys = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$smileys[] = $row;
+	$smfFunc['db_free_result']($request);
+
+	return $smileys;
+}
+
+function list_getNumSmileys()
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
+		FROM {$db_prefix}smileys", __FILE__, __LINE__);
+	list($numSmileys) = $smfFunc['db_fetch_row'];
+	$smfFunc['db_free_result']($request);
+
+	return $numSmileys;
 }
 
 function Editsmiley_order()
@@ -1013,10 +1341,10 @@ function ImportSmileys($smileyPath)
 
 function EditMessageIcons()
 {
-	global $user_info, $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $smfFunc;
+	global $user_info, $modSettings, $context, $settings, $db_prefix, $txt;
+	global $boarddir, $smfFunc, $scripturl, $sourcedir;
 
-	$context['admin_tabs']['tabs']['editicons']['is_selected'] = true;
-
+	// Get a list of icons.
 	$context['icons'] = array();
 	$request = $smfFunc['db_query']('', "
 		SELECT m.id_icon, m.title, m.filename, m.icon_order, m.id_board, b.name AS board_name
@@ -1025,7 +1353,7 @@ function EditMessageIcons()
 		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
 	$last_icon = 0;
 	$trueOrder = 0;
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	while ($row = $smfFunc['db_fetch_assoc']($request)) 
 	{
 		$context['icons'][$row['id_icon']] = array(
 			'id' => $row['id_icon'],
@@ -1041,6 +1369,7 @@ function EditMessageIcons()
 		$last_icon = $row['id_icon'];
 	}
 	$smfFunc['db_free_result']($request);
+
 
 	// Submitting a form?
 	if (isset($_POST['sc']))
@@ -1127,25 +1456,133 @@ function EditMessageIcons()
 			redirectexit('action=admin;area=smileys;sa=editicons');
 	}
 
+	$context['admin_tabs']['tabs']['editicons']['is_selected'] = true;
+
+	$listOptions = array(
+		'id' => 'message_icon_list',
+		'base_href' => $scripturl . '?action=admin;area=smileys;sa=editicons',
+		'get_items' => array(
+			'function' => 'list_getMessageIcons',
+		),
+		'columns' => array(
+			'icon' => array(
+				'data' => array(
+					'eval' => 'return \'<img src="\' . $settings[file_exists($settings[\'theme_dir\'] . \'/images/post/\' . %filename% . \'.gif\') ? \'actual_images_url\' : \'default_images_url\'] . \'/post/\' . %filename% . \'.gif" alt="\' . htmlspecialchars(%title%) . \'" />\';',
+				),
+				'style' => 'text-align: center;',
+			),
+			'filename' => array(
+				'header' => array(
+					'value' => $txt['smileys_filename'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '%1$s.gif',
+						'params' => array(
+							'filename' => true,
+						),
+					),
+				),
+			),
+			'tooltip' => array(
+				'header' => array(
+					'value' => $txt['smileys_description'],
+				),
+				'data' => array(
+					'db_htmlsafe' => 'title',
+					'class' => 'windowbg',
+				),
+			),
+			'board' => array(
+				'header' => array(
+					'value' => $txt['icons_board'],
+				),
+				'data' => array(
+					'eval' => 'return empty(%board_name%) ? $txt[\'icons_edit_icons_all_boards\'] : %board_name%;',
+				),
+			),
+			'modify' => array(
+				'header' => array(
+					'value' => $txt['smileys_modify'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=admin;area=smileys;sa=editicon;icon=%1$s">' . $txt['smileys_modify'] . '</a>',
+						'params' => array(
+							'id_icon' => false,
+						),
+					),
+					'style' => 'text-align: center',
+				),
+			),
+			'check' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="checked_icons[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id_icon' => false,
+						),
+					),
+					'style' => 'text-align: center',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=smileys;sa=editicons',
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="delete" value="' . $txt['quickmod_delete_selected'] . '" style="float: right" />[<a href="'. $scripturl . '?action=admin;area=smileys;sa=editicon">' . $txt['icons_add_new'] . '</a>]',
+				'class' => 'titlebg',
+			),
+		),
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
 	// If we're adding/editing an icon we'll need a list of boards
 	if ($context['sub_action'] == 'editicon' || isset($_POST['add']))
 	{
-		$context['new_icon'] = !isset($_GET['icon']) || !isset($context['icons'][$_GET['icon']]);
 		// Force the sub_template just incase.
 		$context['sub_template'] = 'editicon';
 
-		if (!$context['new_icon'])
-			$context['icon'] = &$context['icons'][$_GET['icon']];
+		$context['new_icon'] = !isset($_GET['icon']);
 
-		$request = $smfFunc['db_query']('', "
-			SELECT id_board, name
-			FROM {$db_prefix}boards
-			WHERE $user_info[query_see_board]", __FILE__, __LINE__);
-		$context['boards'] = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$context['boards'][$row['id_board']] = $row['name'];
-		$smfFunc['db_free_result']($request);
+		// Get the properties of the current icon from the icon list.
+		if (!$context['new_icon'])
+			$context['icon'] = $context['icons'][$_GET['icon']];
+
+		// Get a list of boards needed for assigning this icon to a specific board.
+		$boardListOptions = array(
+			'use_permissions' => true,
+			'selected_board' => isset($context['icon']['board_id']) ? $context['icon']['board_id'] : 0,
+		);
+		require_once($sourcedir . '/Subs-MessageIndex.php');
+		$context['categories'] = getBoardList($boardListOptions);
 	}
+}
+
+function list_getMessageIcons($start, $items_per_page, $sort)
+{
+	global $smfFunc, $db_prefix, $user_info;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_icon, m.title, m.filename, m.icon_order, m.id_board, b.name AS board_name
+		FROM {$db_prefix}message_icons AS m
+			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
+
+	$message_icons = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$message_icons[] = $row;
+	$smfFunc['db_free_result']($request);
+
+	return $message_icons;
 }
 
 ?>
