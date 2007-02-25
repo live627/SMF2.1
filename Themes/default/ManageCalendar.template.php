@@ -1,54 +1,6 @@
 <?php
 // Version: 2.0 Alpha; ManageCalendar
 
-function template_manage_holidays()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-
-	template_show_list('holiday_list');
-
-/*
-	// Listing of all holidays...
-	echo '
-<form action="', $scripturl, '?action=admin;area=managecalendar;sa=holidays" method="post" accept-charset="', $context['character_set'], '">
-	<table width="100%" cellspacing="0" cellpadding="4" border="0" class="tborder">
-		<tr class="titlebg">
-			<td colspan="3">', $txt['current_holidays'], '</td>
-		</tr><tr class="catbg">
-			<td colspan="3">', $txt['pages'], ': ', $context['page_index'], '</td>
-		</tr><tr class="titlebg">
-			<td align="left">', $txt['holidays_title'], '</td>
-			<td align="left">', $txt['date'], '</td>
-			<td align="center" width="4%"><input type="checkbox" onclick="invertAll(this, this.form);" class="check" /></td>
-		</tr>';
-
-	// Now print out all the holidays.
-	$alternate = false;
-	foreach ($context['holidays'] as $holiday)
-	{
-		echo '
-		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-			<td align="left"><a href="', $scripturl, '?action=admin;area=managecalendar;sa=editholiday;holiday=', $holiday['id'], '">', $holiday['title'], '</a></td>
-			<td align="left">', $holiday['date'], '</td>
-			<td align="center" width="4%"><input type="checkbox" name="holiday[', $holiday['id'], ']" class="check" /></td>
-		</tr>';
-		$alternate = !$alternate;
-	}
-
-	echo '
-		<tr class="titlebg">
-			<td align="left"><a href="', $scripturl, '?action=admin;area=managecalendar;sa=editholiday">', $txt['holidays_add'], '</a></td>
-			<td colspan="2" align="right">
-				<input type="submit" name="delete" style="font-weight: normal;" value="', $txt['quickmod_delete_selected'], '" onclick="if (!confirm(\'', $txt['holidays_delete_confirm'], '\')) return false;" />
-				<input type="hidden" name="sc" value="', $context['session_id'], '" />
-			</td>
-		</tr>
-	</table>
-</form>';
-
-*/
-}
-
 // Editing or adding holidays.
 function template_edit_holiday()
 {
