@@ -51,6 +51,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 		$smfFunc += array(
 			'db_query' => 'smf_db_query',
 			'db_insert' => 'db_insert',
+			'db_insert_id' => 'db_insert_id',
 			'db_fetch_assoc' => 'postg_fetch_assoc',
 			'db_fetch_row' => 'postg_fetch_row',
 			'db_free_result' => 'pg_free_result',

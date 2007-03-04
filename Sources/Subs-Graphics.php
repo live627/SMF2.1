@@ -128,7 +128,13 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		INSERT INTO {$db_prefix}attachments
 			(id_member, attachment_type, filename, size)
 		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', 1)", __FILE__, __LINE__);
-	$attachID = db_insert_id("{$db_prefix}attachments", 'id_attach');
+	$attachID = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
+	// Retain this globally incase the script wants it.
+	$modSettings['new_avatar_data'] = array(
+		'id' => $attachID,
+		'filename' => $destName,
+		'type' => empty($modSettings['custom_avatar_enabled']) ? 0 : 1,
+	);
 
 	$destName = (empty($modSettings['custom_avatar_enabled']) ? $modSettings['attachmentUploadDir'] : $modSettings['custom_avatar_dir']) . '/' . $destName . '.tmp';
 

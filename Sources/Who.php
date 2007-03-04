@@ -297,7 +297,7 @@ function determineActions($urls)
 		else
 		{
 			// Viewing/editing a profile.
-			if ($actions['action'] == 'profile' || $actions['action'] == 'profile2')
+			if ($actions['action'] == 'profile')
 			{
 				// Whose?  Their own?
 				if (empty($actions['u']))

@@ -141,7 +141,7 @@ function template_summary()
 		echo '
 				<tr>
 					<td><b>', $txt['profile_warning_level'], ': </b></td>
-					<td><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=issueWarning">', $context['member']['warning'], '%</a>';
+					<td><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=issueWarning">', $context['member']['warning'], '%</a>';
 
 		// Can we provide information on what this means?
 		if (!empty($context['warning_status']))
@@ -213,7 +213,7 @@ function template_summary()
 			echo '
 				<tr>
 					<td colspan="2">
-						<span style="color: red;">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile2;sa=activateAccount;userID=' . $context['member']['id'] . ';sesc=' . $context['session_id'] . '" ', ($context['activate_type'] == 4 ? 'onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)
+						<span style="color: red;">', $context['activate_message'], '</span>&nbsp;(<a href="' . $scripturl . '?action=profile;save;sa=activateAccount;u=' . $context['id_member'] . ';sesc=' . $context['session_id'] . '" ', ($context['activate_type'] == 4 ? 'onclick="return confirm(\'' . $txt['profileConfirm'] . '\');"' : ''), '>', $context['activate_link_text'], '</a>)
 					</td>
 				</tr>';
 
@@ -286,7 +286,7 @@ function template_summary()
 	// Can they add this member as a buddy?
 	if (!empty($context['can_have_buddy']) && !$context['user']['is_owner'])
 		echo '
-						&nbsp;&nbsp;<a href="', $scripturl, '?action=buddy;u=', $context['member']['id'], ';sesc=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
+						&nbsp;&nbsp;<a href="', $scripturl, '?action=buddy;u=', $context['id_member'], ';sesc=', $context['session_id'], '">[', $txt['buddy_' . ($context['member']['is_buddy'] ? 'remove' : 'add')], ']</a>';
 
 	echo '
 					</td>
@@ -370,11 +370,11 @@ function template_summary()
 		<td class="windowbg2" colspan="2">';
 	if (!$context['user']['is_owner'] && $context['can_send_pm'])
 		echo '
-			<a href="', $scripturl, '?action=pm;sa=send;u=', $context['member']['id'], '">', $txt[688], '.</a><br />
+			<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt[688], '.</a><br />
 			<br />';
 	echo '
-			<a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=showPosts">', $txt['show_latest'], ' ', $txt['posts_member'], '.</a><br />
-			<a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=statPanel">', $txt['statPanel_show'], '.</a><br />
+			<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=showPosts">', $txt['show_latest'], ' ', $txt['posts_member'], '.</a><br />
+			<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=statPanel">', $txt['statPanel_show'], '.</a><br />
 			<br />
 		</td>
 	</tr>
@@ -586,7 +586,7 @@ function template_editBuddies()
 				<td align="center">', $buddy['aim']['link'], '</td>
 				<td align="center">', $buddy['yim']['link'], '</td>
 				<td align="center">', $buddy['msn']['link'], '</td>
-				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=editBuddies;remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
+				<td align="center"><a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=editBuddies;remove=', $buddy['id'], '"><img src="', $settings['images_url'], '/icons/delete.gif" alt="', $txt['buddy_remove'], '" title="', $txt['buddy_remove'], '" /></a></td>
 			</tr>';
 
 		$alternate = !$alternate;
@@ -598,7 +598,7 @@ function template_editBuddies()
 	// Add a new buddy?
 	echo '
 	<br />
-	<form action="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=editBuddies" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=editBuddies" method="post" accept-charset="', $context['character_set'], '">
 		<table width="65%" cellpadding="4" cellspacing="0" class="tborder" align="center">
 			<tr class="titlebg">
 				<td colspan="2">', $txt['buddy_add'], '</td>
@@ -980,7 +980,7 @@ function template_showPermissions()
 			<tr class="catbg">
 				<td align="left" colspan="2">
 					<a name="board_permissions"></a>
-					<form action="' . $scripturl . '?action=profile;u=', $context['member']['id'], ';sa=showPermissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
+					<form action="' . $scripturl . '?action=profile;u=', $context['id_member'], ';sa=showPermissions#board_permissions" method="post" accept-charset="', $context['character_set'], '">
 						', $txt['showPermissions_select'], ':
 						<select name="board" onchange="if (this.options[this.selectedIndex].value) this.form.submit();">
 							<option value="0"', $context['board'] == 0 ? ' selected="selected"' : '', '>', $txt['showPermissions_global'], '</option>';
@@ -1186,7 +1186,7 @@ function template_edit_options()
 
 	// The main header!
 	echo '
-		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return checkProfileSubmit();">
+		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
 			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26">
@@ -1349,7 +1349,7 @@ function template_edit_options()
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
 									<input type="hidden" name="sc" value="', $context['session_id'], '" />
-									<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+									<input type="hidden" name="u" value="', $context['id_member'], '" />
 									<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 								</td>
 							</tr>
@@ -1393,49 +1393,6 @@ function template_edit_options()
 
 	// Any final spellchecking stuff?
 	if (!empty($context['show_spellchecking']))
-		echo '
-		<form name="spell_form" id="spell_form" method="post" accept-charset="', $context['character_set'], '" target="spellWindow" action="', $scripturl, '?action=spellcheck"><input type="hidden" name="spellstring" value="" /></form>';
-}
-
-// Template for forum specific options - avatar, signature etc.
-function template_forumProfile()
-{
-	global $context, $settings, $options, $scripturl, $modSettings, $txt;
-
-	// The main containing header.
-	echo '
-		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data">
-			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
-				<tr class="titlebg">
-					<td height="26">
-						&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;
-						', $txt['profile'], '
-					</td>
-				</tr><tr class="windowbg">
-					<td class="smalltext" height="25" style="padding: 2ex;">
-						', $txt['forumProfile_info'], '
-					</td>
-				</tr><tr>
-					<td class="windowbg2" style="padding-bottom: 2ex;">
-						<table border="0" width="100%" cellpadding="5" cellspacing="0">';
-
-
-
-
-	// Show the standard "Save Settings" profile button.
-	template_profile_save();
-
-	echo '
-						</table>
-					</td>
-				</tr>
-			</table>';
-
-
-	echo '
-		</form>';
-
-	if ($context['show_spellchecking'])
 		echo '
 		<form name="spell_form" id="spell_form" method="post" accept-charset="', $context['character_set'], '" target="spellWindow" action="', $scripturl, '?action=spellcheck"><input type="hidden" name="spellstring" value="" /></form>';
 }
@@ -1561,7 +1518,7 @@ function template_notification()
 					</td>
 				</tr><tr>
 					<td class="windowbg2" width="100%">
-						<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">';
+						<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">';
 
 	// Allow notification on announcements to be disabled?
 	if (!empty($modSettings['allow_disableAnnounce']))
@@ -1600,7 +1557,7 @@ function template_notification()
 							<div align="', !$context['right_to_left'] ? 'right' : 'left', '">
 								<input type="submit" style="margin: 0 1ex 1ex 1ex;" value="', $txt['notify_save'], '" />
 								<input type="hidden" name="sc" value="', $context['session_id'], '" />
-								<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+								<input type="hidden" name="u" value="', $context['id_member'], '" />
 								<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 							</div>
 						</form>
@@ -1608,7 +1565,7 @@ function template_notification()
 				</tr>
 			</table>
 			<br />
-			<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
+			<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26" colspan="4">
@@ -1674,11 +1631,11 @@ function template_notification()
 	echo '
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
-			<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+			<input type="hidden" name="u" value="', $context['id_member'], '" />
 			<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 		</form>
 		<br />
-		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
+		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26" colspan="2">
@@ -1729,7 +1686,7 @@ function template_notification()
 	echo '
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
-			<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+			<input type="hidden" name="u" value="', $context['id_member'], '" />
 			<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 		</form>';
 }
@@ -1741,7 +1698,7 @@ function template_groupMembership()
 
 	// The main containing header.
 	echo '
-		<form action="', $scripturl, '?action=profile2;sa=groupMembership" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+		<form action="', $scripturl, '?action=profile;save;sa=groupMembership" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<table border="0" width="85%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
 					<td height="26">
@@ -1823,7 +1780,7 @@ function template_groupMembership()
 			// Can they leave their group?
 			if ($group['can_leave'])
 				echo '
-							<a href="' . $scripturl . '?action=profile2;userID=' . $context['member']['id'] . ';sa=groupMembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
+							<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';sa=groupMembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['leave_group'] . '</a>';
 			echo '
 						</div>
 					</td>
@@ -1864,12 +1821,14 @@ function template_groupMembership()
 							<b>', (empty($group['color']) ? $group['name'] : '<span style="color: ' . $group['color'] . '">' . $group['name'] . '</span>'), '</b>', (!empty($group['desc']) ? '<br /><span class="smalltext">' . $group['desc'] . '</span>' : ''), '
 						</div>
 						<div style="float: right">
-							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile2;userID=' . $context['member']['id'] . ';sa=groupMembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['member']['id'] . ';sa=groupMembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
+							', $group['type'] == 2 ? '<a href="' . $scripturl . '?action=profile;save;u=' . $context['id_member'] . ';sa=groupMembership;sesc=' . $context['session_id'] . ';gid=' . $group['id'] . '">' . $txt['join_group'] . '</a>' : ($group['pending'] ? $txt['approval_pending'] : '<a href="' . $scripturl . '?action=profile;u=' . $context['id_member'] . ';sa=groupMembership;request=' . $group['id'] . '">' . $txt['request_group'] . '</a>'), '
 						</div>
 					</td>
 				</tr>';
 				$alternate = !$alternate;
 			}
+			echo '
+			</table>';
 		}
 
 		// Javascript for the selector stuff.
@@ -1897,7 +1856,7 @@ function template_groupMembership()
 
 	echo '
 				<input type="hidden" name="sc" value="', $context['session_id'], '" />
-				<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+				<input type="hidden" name="u" value="', $context['id_member'], '" />
 			</form>';
 }
 
@@ -1919,7 +1878,7 @@ function template_ignoreboards()
 		}
 	// ]]></script>
 
-	<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+	<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<table border="0" width="85%" cellspacing="0" cellpadding="4" align="center" class="tborder">
 				<tr class="titlebg">
 					<td height="26">
@@ -2111,7 +2070,7 @@ function template_issueWarning()
 	// ]]></script>';
 
 	echo '
-	<form action="', $scripturl, '?action=profile;u=', $context['member']['id'], ';sa=issueWarning" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=issueWarning" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="2" height="26">
@@ -2301,7 +2260,7 @@ function template_deleteAccount()
 
 	// The main containing header.
 	echo '
-		<form action="', $scripturl, '?action=profile2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
+		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator">
 			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26">
@@ -2345,7 +2304,7 @@ function template_deleteAccount()
 								<input type="password" name="oldpasswrd" size="20" />&nbsp;&nbsp;&nbsp;&nbsp;
 								<input type="submit" value="', $txt['yes'], '" />
 								<input type="hidden" name="sc" value="', $context['session_id'], '" />
-								<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+								<input type="hidden" name="u" value="', $context['id_member'], '" />
 								<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 							</td>';
 	}
@@ -2380,7 +2339,7 @@ function template_deleteAccount()
 							<td colspan="2" class="windowbg2" align="center" style="padding-top: 2ex;">
 								<input type="submit" value="', $txt['delete'], '" />
 								<input type="hidden" name="sc" value="', $context['session_id'], '" />
-								<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+								<input type="hidden" name="u" value="', $context['id_member'], '" />
 								<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 							</td>';
 	}
@@ -2436,7 +2395,7 @@ function template_profile_save()
 	echo '
 									<input type="submit" value="', $txt['change_profile'], '" />
 									<input type="hidden" name="sc" value="', $context['session_id'], '" />
-									<input type="hidden" name="userID" value="', $context['member']['id'], '" />
+									<input type="hidden" name="u" value="', $context['id_member'], '" />
 									<input type="hidden" name="sa" value="', $context['menu_item_selected'], '" />
 								</td>
 							</tr>';
@@ -2842,7 +2801,7 @@ function template_profile_theme_pick()
 
 	echo '
 							<tr>
-								<td colspan="2" width="40%"><b>', $txt['current_theme'], ':</b> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['member']['id'], ';sesc=', $context['session_id'], '">', $txt['change'], '</a></td>
+								<td colspan="2" width="40%"><b>', $txt['current_theme'], ':</b> ', $context['member']['theme']['name'], ' <a href="', $scripturl, '?action=theme;sa=pick;u=', $context['id_member'], ';sesc=', $context['session_id'], '">', $txt['change'], '</a></td>
 							</tr>';
 }
 

@@ -264,7 +264,6 @@ function smf_main()
 		'post2' => array('Post.php', 'Post2'),
 		'printpage' => array('Printpage.php', 'PrintTopic'),
 		'profile' => array('Profile.php', 'ModifyProfile'),
-		'profile2' => array('Profile.php', 'ModifyProfile2'),
 		'quotefast' => array('Post.php', 'QuoteFast'),
 		'quickmod' => array('MessageIndex.php', 'QuickModeration'),
 		'quickmod2' => array('Display.php', 'QuickInTopicModeration'),
