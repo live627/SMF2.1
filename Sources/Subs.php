@@ -3547,7 +3547,7 @@ function loadClassFile($filename)
 			'$1function ',
 			'$1function ',
 			'$1function ',
-		), rtrim(file_get_contents($filename))));
+		), rtrim(file_get_contents($sourcedir . '/' . $filename))));
 	}
 	else
 		require_once($sourcedir . '/' . $filename);
