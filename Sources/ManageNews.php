@@ -557,6 +557,7 @@ function SendMailing($clean_only = false)
 	}
 
 	// Got some more to send this batch?
+	$last_id_member = 0;
 	if ($i < $num_at_once)
 	{
 		// Need to build quite a query!
@@ -608,6 +609,8 @@ function SendMailing($clean_only = false)
 
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
+			$last_id_member = $row['id_member'];
+
 			// What groups are we looking at here?
 			if (empty($row['additional_groups']))
 				$groups = array($row['id_group'], $row['id_post_group']);
@@ -638,10 +641,10 @@ function SendMailing($clean_only = false)
 	}
 
 	// If we have no id_member then we're done.
-	if (empty($row['id_member']))
+	if (empty($last_id_member) && empty($context['recipients']['emails']))
 		redirectexit('action=admin');
 	else
-		$context['start'] = $row['id_member'];
+		$context['start'] = $last_id_member;
 
 	// Working out progress is a black art of sorts.
 	$percentEmails = (count($context['recipients']['emails']) / $context['total_emails']) * ($context['total_emails'] / ($context['total_emails'] + $context['max_id_member']));
