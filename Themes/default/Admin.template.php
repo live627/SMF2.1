@@ -7,22 +7,25 @@ function template_admin_above()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// try out a menu here :)
-	if(empty($modSettings['showsidebarAdmin']))
+	if (empty($modSettings['showsidebarAdmin']))
 	{
 		echo '
-	<ul id="admin_menu">';
+		<script language="JavaScript" type="text/javascript" src="', $settings['theme_url'], '/scripts/menu.js"></script>
+		<ul id="admin_menu">';
 
 		// main areas first
 		foreach ($context['admin_areas'] as $section)
 		{
-			if(isset($section['chosen']))
+			if (isset($section['chosen']))
+			{
 				echo '
-		<li class="chosen"><h4>', $section['title'] , '</h4>
-			<ul>';
+			<li class="chosen"><h4>', $section['title'] , '</h4>
+				<ul>';
+			}
 			else
 				echo '
-		<li><h4>', $section['title'] , '</h4>
-			<ul>';
+			<li><h4>', $section['title'] , '</h4>
+				<ul>';
 
 			// For every area of this section show a link to that area (bold if it's currently selected.)
 			foreach ($section['areas'] as $i => $area)
@@ -33,19 +36,30 @@ function template_admin_above()
 
 				// Is this the current area, or just some area?
 				if ($i == $context['admin_area'])
+				{
 					echo '
-				<li><a class="chosen" href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a></li>';
+					<li>
+						<a class="chosen" href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a>
+					</li>';
+				}
 				else
+				{
 					echo '
-				<li><a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a></li>';
+					<li>
+						<a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a>
+					</li>';
+				}
 			}
 			echo '
-			</ul>
-		</li>';
+				</ul>
+			</li>';
 		}
 	
 		echo '
-	</ul>';
+		</ul>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			menuHandle = new smfMenu("admin_menu");
+		// ]]></script>';
 	}
 	
 	// This is the main table - we need it so we can keep the content to the right of it.

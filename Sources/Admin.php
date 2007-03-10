@@ -205,29 +205,6 @@ function AdminMain()
 		$context['admin_section'] = 'forum';
 	}
 
-	// add the javascript for IE - admin menu
-	$context['html_headers'] .= '
-	<script type="text/javascript"><!--//--><![CDATA[//><!--
-startList = function() {
-	if (document.all&&document.getElementById) {
-		navRoot = document.getElementById("admin_menu");
-		for (i=0; i<navRoot.childNodes.length; i++) {
-			node = navRoot.childNodes[i];
-			if (node.nodeName=="LI") {
-				node.onmouseover=function() {
-					this.className+=" over";
-				}
-				node.onmouseout=function() {
-					this.className=this.className.replace(" over", "");
-				}
-			}
-		}
-	}
-}
-window.onload=startList;
-
-//--><!]]></script>';
-
 	// obExit will know what to do!
 	$context['template_layers'][] = 'admin';
 
