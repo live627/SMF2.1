@@ -105,7 +105,7 @@ function ManageNews()
 	);
 	if (allowedTo('edit_news'))
 		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['admin_news'],
+			'title' => $txt['admin_edit_news'],
 			'description' => $txt['admin_news_desc'],
 			'href' => $scripturl . '?action=admin;area=news',
 			'is_selected' => $_REQUEST['sa'] == 'editnews',
@@ -185,7 +185,7 @@ function EditNews()
 		);
 
 	$context['sub_template'] = 'edit_news';
-	$context['page_title'] = $txt['admin_news'];
+	$context['page_title'] = $txt['admin_edit_news'];
 }
 
 function SelectMailingMembers()
@@ -659,7 +659,7 @@ function ModifyNewsSettings()
 {
 	global $context, $db_prefix, $sourcedir, $modSettings, $txt, $scripturl;
 
-	$context['page_title'] = $txt['admin_news'] . ' - ' . $txt['settings'];
+	$context['page_title'] = $txt['admin_edit_news'] . ' - ' . $txt['settings'];
 	$context['sub_template'] = 'show_settings';
 
 	// Needed for the inline permission functions, and the settings template.

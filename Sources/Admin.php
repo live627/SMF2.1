@@ -78,129 +78,288 @@ function AdminMain()
 	// Ensure we are admin'ing.
 	$context['bar_area'] = 'admin';
 
-	// Note - format for section is 'key' => array(label, source_file, function_name, additional_url).
-	// Create the admin side bar... start with 'Main'.
-	$context['admin_areas']['forum'] = array(
-		'title' => $txt['admin_main'],
-		'areas' => array(
-			'index' => array($txt['admin_center'], 'Admin.php', 'AdminHome'),
-			'credits' => array($txt['support_credits_title'], 'Admin.php', 'AdminHome'),
-			'version' => array('', 'Admin.php', 'VersionDetail', 'select' => 'index'),
-			'copyright' => array('', 'Admin.php', 'ManageCopyright', 'select' => 'index'),
+	/* Define all the sections on the admin area - these are then properly converted into context!
+
+		Possible fields:
+			For Section:
+				string $title:		Section title.
+				bool $enabled:		Should section be shown?
+				array $areas:		Array of areas within this section.
+				array $permission:	Permission required to access the whole section.
+
+			For Areas:
+				array $permission:	Array of permissions to determine who can access this area.
+				string $label:		Optional text string for link (Otherwise $txt[$index] will be used)
+				string $file:		Name of source file required for this area.
+				string $function:	Function to call when area is selected.
+				string $custom_url:	URL to use for this menu item.
+				bool $enabled:		Should this area even be shown?
+				string $select:		If set this item will not be displayed - instead the item indexed here shall be.
+				array $subsections:	Array of subsections from this area.
+
+			For Subsections:
+				string 0:		Text label for this subsection.
+				array 0:		Array of permissions to check for this subsection.
+	*/
+
+	$context['admin_areas'] = array(
+		'forum' => array(
+			'title' => $txt['admin_main'],
+			'areas' => array(
+				'index' => array(
+					'label' => $txt['admin_center'],
+					'function' => 'AdminHome',
+				),
+				'credits' => array(
+					'label' => $txt['support_credits_title'],
+					'function' => 'AdminHome',
+				),
+				'news' => array(
+					'label' => $txt['news_title'],
+					'file' => 'ManageNews.php',
+					'function' => 'ManageNews',
+					'permission' => array('edit_news', 'send_mail', 'admin_forum'),
+					'subsections' => array(
+						'edit_news' => array($txt['admin_edit_news'], 'edit_news'),
+						'mailingmembers' => array($txt['admin_newsletters'], 'send_mail'),
+						'settings' => array($txt['settings'], 'admin_forum'),
+					),
+				),
+				'packages' => array(
+					'label' => $txt['package'],
+					'file' => 'Packages.php',
+					'function' => 'Packages',
+					'permission' => array('edit_news', 'send_mail', 'admin_forum'),
+				),
+				'cleanperms' => array(
+					'function' => 'CleanupPermissions',
+					'permission' => array('admin_forum'),
+					'select' => 'packages'
+				),
+				'version' => array(
+					'function' => 'VersionDetail',
+					'permission' => array('admin_forum'),
+					'select' => 'index'
+				),
+				'copyright' => array(
+					'function' => 'ManageCopyright',
+					'permission' => array('admin_forum'),
+					'select' => 'index'
+				),
+			),
+		),
+		'config' => array(
+			'title' => $txt['admin_config'],
+			'permission' => array('admin_forum'),
+			'areas' => array(
+				'featuresettings' => array(
+					'label' => $txt['modSettings_title'],
+					'file' => 'ModSettings.php',
+					'function' => 'ModifyFeatureSettings',
+				),
+				'serversettings' => array(
+					'label' => $txt['admin_server_settings'],
+					'file' => 'ManageServer.php',
+					'function' => 'ModifySettings',
+				),
+				'current_theme' => array(
+					'label' => $txt['theme_current_settings'],
+					'file' => 'Themes.php',
+					'function' => 'ThemesMain',
+					'custom_url' => $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id'],
+				),
+				'theme' => array(
+					'label' => $txt['theme_admin'],
+					'file' => 'Themes.php',
+					'function' => 'ThemesMain',
+					'custom_url' => $scripturl . '?action=admin;area=theme;sa=admin',
+				),
+			),
+		),
+		'layout' => array(
+			'title' => $txt['layout_controls'],
+			'permission' => array('manage_boards', 'admin_forum', 'manage_smileys', 'manage_attachments', 'moderate_forum'),
+			'areas' => array(
+				'manageboards' => array(
+					'label' => $txt['admin_boards'],
+					'file' => 'ManageBoards.php',
+					'function' => 'ManageBoards',
+					'permission' => array('manage_boards'),
+				),
+				'postsettings' => array(
+					'label' => $txt['manageposts'],
+					'file' => 'ManagePosts.php',
+					'function' => 'ManagePostSettings',
+					'permission' => array('admin_forum', 'moderate_forum'),
+				),
+				'managecalendar' => array(
+					'label' => $txt['manage_calendar'],
+					'file' => 'ManageCalendar.php',
+					'function' => 'ManageCalendar',
+					'permission' => array('admin_forum'),
+				),
+				'managesearch' => array(
+					'label' => $txt['manage_search'],
+					'file' => 'ManageSearch.php',
+					'function' => 'ManageSearch',
+					'permission' => array('admin_forum'),
+				),
+				'smileys' => array(
+					'label' => $txt['smileys_manage'],
+					'file' => 'ManageSmileys.php',
+					'function' => 'ManageSmileys',
+					'permission' => array('manage_smileys'),
+				),
+				'manageattachments' => array(
+					'label' => $txt['attachments_avatars'],
+					'file' => 'ManageAttachments.php',
+					'function' => 'ManageAttachments',
+					'permission' => array('manage_attachments'),
+				),
+			),
+		),
+		'members' => array(
+			'title' => $txt['admin_manage_members'],
+			'permission' => array('moderate_forum', 'manage_membergroups', 'manage_bans', 'manage_permissions', 'admin_forum'),
+			'areas' => array(
+				'viewmembers' => array(
+					'label' => $txt['admin_users'],
+					'file' => 'ManageMembers.php',
+					'function' => 'ViewMembers',
+					'permission' => array('moderate_forum'),
+				),
+				'membergroups' => array(
+					'label' => $txt['admin_groups'],
+					'file' => 'ManageMembergroups.php',
+					'function' => 'ModifyMembergroups',
+					'permission' => array('moderate_forum'),
+				),
+				'permissions' => array(
+					'label' => $txt['edit_permissions'],
+					'file' => 'ManagePermissions.php',
+					'function' => 'ModifyPermissions',
+					'permission' => array('moderate_forum'),
+				),
+				'regcenter' => array(
+					'label' => $txt['registration_center'],
+					'file' => 'ManageRegistration.php',
+					'function' => 'RegCenter',
+					'permission' => array('admin_forum', 'moderate_forum'),
+				),
+				'ban' => array(
+					'label' => $txt['ban_title'],
+					'file' => 'ManageBans.php',
+					'function' => 'Ban',
+					'permission' => array('manage_bans'),
+				),
+			),
+		),
+		'maintenance' => array(
+			'title' => $txt['admin_maintenace'],
+			'permission' => array('admin_forum'),
+			'areas' => array(
+				'maintain' => array(
+					'label' => $txt['maintain_title'],
+					'file' => 'ManageMaintenance.php',
+					'function' => 'ManageMaintenance',
+				),
+				'mailqueue' => array(
+					'label' => $txt['mailqueue_title'],
+					'file' => 'ManageMail.php',
+					'function' => 'ManageMail',
+				),
+				'reports' => array(
+					'label' => $txt['generate_reports'],
+					'file' => 'Reports.php',
+					'function' => 'ReportsMain',
+				),
+				'errorlog' => array(
+					'label' => $txt['errlog'],
+					'file' => 'ManageErrors.php',
+					'function' => 'ViewErrorLog',
+					'custom_url' => $scripturl . '?action=admin;area=errorlog;desc',
+				),
+				'dumpdb' => array(
+					'file' => 'DumpDatabase.php',
+					'function' => 'DumpDatabase2',
+					'select' => 'maintain',
+				),
+				'repairboards' => array(
+					'file' => 'RepairBoards.php',
+					'function' => 'RepairBoards',
+					'select' => 'maintain',
+				),
+			),
 		),
 	);
 
-	if (allowedTo(array('edit_news', 'send_mail', 'admin_forum')))
-		$context['admin_areas']['forum']['areas']['news'] = array($txt['news_title'], 'ManageNews.php', 'ManageNews');
+	// Figure out which one we're in now... making some defaults if required.
+	$admin_area = isset($_GET['area']) ? $_GET['area'] : 'index';
+	$admin_include_data = $context['admin_areas']['forum']['areas']['index'];
 
-	if (allowedTo('admin_forum'))
+	// Add a work around for editing current theme.
+	if ($admin_area == 'theme' && isset($_GET['th']) && $_GET['th'] == $settings['theme_id'])
+		$admin_area = 'current_theme';
+
+	foreach ($context['admin_areas'] as $section_id => $section)
 	{
-		$context['admin_areas']['forum']['areas']['packages'] =  array($txt['package'], 'Packages.php', 'Packages');
-		$context['admin_areas']['forum']['areas']['cleanperms'] =  array('', 'Admin.php', 'CleanupPermissions', 'select' => 'packages');
-	}
+		// Is this enabled - or has as permission check!
+		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($area['permission']) && !allowedTo($area['permission'])))
+			unset($context['admin_areas'][$section_id]);
 
-	// Admin area 'Configuration'.
-	if (allowedTo('admin_forum'))
-	{
-		$context['admin_areas']['config'] = array(
-			'title' => $txt['admin_config'],
-			'areas' => array(
-				'featuresettings' => array($txt['modSettings_title'], 'ModSettings.php', 'ModifyFeatureSettings'),
-				'serversettings' => array($txt['admin_server_settings'], 'ManageServer.php', 'ModifySettings'),
-				'current_theme' => array($txt['theme_current_settings'], 'Themes.php', 'ThemesMain', $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id']),
-				'theme' => array($txt['theme_admin'], 'Themes.php', 'ThemesMain', $scripturl . '?action=admin;area=theme;sa=admin'),
-			),
-		);
-	}
-
-	// Admin area 'Forum'.
-	if (allowedTo(array('manage_boards', 'admin_forum', 'manage_smileys', 'manage_attachments', 'moderate_forum')))
-	{
-		$context['admin_areas']['layout'] = array(
-			'title' => $txt['layout_controls'],
-			'areas' => array()
-		);
-
-		if (allowedTo('manage_boards'))
-			$context['admin_areas']['layout']['areas']['manageboards'] =  array($txt['admin_boards'], 'ManageBoards.php', 'ManageBoards');
-
-		if (allowedTo(array('admin_forum', 'moderate_forum')))
-			$context['admin_areas']['layout']['areas']['postsettings'] = array($txt['manageposts'], 'ManagePosts.php', 'ManagePostSettings');
-		if (allowedTo('admin_forum'))
+		foreach ($section['areas'] as $area_id => $area)
 		{
-			$context['admin_areas']['layout']['areas']['managecalendar'] = array($txt['manage_calendar'], 'ManageCalendar.php', 'ManageCalendar');
-			$context['admin_areas']['layout']['areas']['managesearch'] = array($txt['manage_search'], 'ManageSearch.php', 'ManageSearch');
+			// Is this what we are looking for?
+			if ($admin_area == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
+			{
+				// Found and validated where we want to be!
+				$context['admin_section'] = $section_id;
+				$context['admin_area'] = isset($area['select']) ? $area['select'] : $area_id;
+				$admin_include_data = $area;
+
+				// Flag to the section that this is active.
+				$context['admin_areas'][$section_id]['selected'] = true;
+			}
+
+			// Can we do this?
+			if ((!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
+			{
+				// Replace the contents with some ickle data - assuming it has a label.
+				if (isset($area['label']) || isset($txt[$area_id]))
+				{
+					$context['admin_areas'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
+					// Does it have a custom URL?
+					if (isset($area['custom_url']))
+						$context['admin_areas'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
+
+					// Did it have subsections?
+					if (isset($area['subsections']))
+					{
+						$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'] = array();
+						foreach ($area['subsections'] as $sa => $sub)
+							if (empty($sub[1]) || allowedTo($sub[1]))
+								$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
+					}
+				}
+				else
+					unset($context['admin_areas'][$section_id]['areas'][$area_id]);
+			}
+			// Otherwise unset it!
+			else
+				unset($context['admin_areas'][$section_id]['areas'][$area_id]);
 		}
-		if (allowedTo('manage_smileys'))
-			$context['admin_areas']['layout']['areas']['smileys'] = array($txt['smileys_manage'], 'ManageSmileys.php', 'ManageSmileys');
 
-		if (allowedTo('manage_attachments'))
-			$context['admin_areas']['layout']['areas']['manageattachments'] = array($txt['attachments_avatars'], 'ManageAttachments.php', 'ManageAttachments');
-	}
-
-	// Admin area 'Members'.
-	if (allowedTo(array('moderate_forum', 'manage_membergroups', 'manage_bans', 'manage_permissions', 'admin_forum')))
-	{
-		$context['admin_areas']['members'] = array(
-			'title' => $txt['admin_manage_members'],
-			'areas' => array()
-		);
-
-		if (allowedTo('moderate_forum'))
-			$context['admin_areas']['members']['areas']['viewmembers'] = array($txt['admin_users'], 'ManageMembers.php', 'ViewMembers');
-
-		if (allowedTo('manage_membergroups'))
-			$context['admin_areas']['members']['areas']['membergroups'] = array($txt['admin_groups'], 'ManageMembergroups.php', 'ModifyMembergroups');
-
-		if (allowedTo('manage_permissions'))
-			$context['admin_areas']['members']['areas']['permissions'] = array($txt['edit_permissions'], 'ManagePermissions.php', 'ModifyPermissions');
-
-		if (allowedTo(array('admin_forum', 'moderate_forum')))
-			$context['admin_areas']['members']['areas']['regcenter'] = array($txt['registration_center'], 'ManageRegistration.php', 'RegCenter');
-
-		if (allowedTo('manage_bans'))
-			$context['admin_areas']['members']['areas']['ban'] = array($txt['ban_title'], 'ManageBans.php', 'Ban');
-	}
-
-	// Admin area 'Maintenance Controls'.
-	if (allowedTo('admin_forum'))
-	{
-		$context['admin_areas']['maintenance'] = array(
-			'title' => $txt['admin_maintenace'],
-			'areas' => array(
-				'maintain' => array($txt['maintain_title'], 'ManageMaintenance.php', 'ManageMaintenance'),
-				'mailqueue' => array($txt['mailqueue_title'], 'ManageMail.php', 'ManageMail'),
-				'reports' => array($txt['generate_reports'], 'Reports.php', 'ReportsMain'),
-				'errorlog' => array($txt['errlog'], 'ManageErrors.php', 'ViewErrorLog', $scripturl . '?action=admin;area=errorlog;desc'),
-				'dumpdb' => array('', 'DumpDatabase.php', 'DumpDatabase2', 'select' => 'maintain'),
-				'repairboards' => array('', 'RepairBoards.php', 'RepairBoards', 'select' => 'maintain'),
-			),
-		);
+		// Did we remove every possible area?
+		if (empty($context['admin_areas'][$section_id]['areas']))
+			unset($context['admin_areas'][$section_id]);
 	}
 
 	// Make sure the administrator has a valid session...
 	validateSession();
 
-	// Figure out which one we're in now...
-	$area = isset($_GET['area']) ? $_GET['area'] : 'index';
-	foreach ($context['admin_areas'] as $id => $section)
-	{
-		if (isset($section['areas'][$area]))
-		{
-			$context['admin_section'] = $id;
-			$context['admin_areas'][$id]['chosen']=true;
-			foreach ($section['areas'] as $id => $elements)
-				if ($id == $area)
-				{
-					$actual_area = $area;
-					$context['admin_area'] = isset($elements['select']) ? $elements['select'] : $area;
-				}
-		}
-	}
-
+	// If we didn't find it make sure the context is right!
 	if (empty($context['admin_area']))
 	{
-		$actual_area = 'index';
 		$context['admin_area'] = 'index';
 		$context['admin_section'] = 'forum';
 	}
@@ -209,8 +368,10 @@ function AdminMain()
 	$context['template_layers'][] = 'admin';
 
 	// Now - finally - call the right place!
-	require_once($sourcedir . '/' . $context['admin_areas'][$context['admin_section']]['areas'][$actual_area][1]);
-	$context['admin_areas'][$context['admin_section']]['areas'][$actual_area][2]();
+	if (isset($admin_include_data['file']))
+		require_once($sourcedir . '/' . $admin_include_data['file']);
+
+	$admin_include_data['function']();
 }
 
 // The main administration section.

@@ -31,24 +31,44 @@ function template_admin_above()
 			foreach ($section['areas'] as $i => $area)
 			{
 				// Not supposed to be printed?
-				if (empty($area[0]))
+				if (empty($area['label']))
 					continue;
+
+				echo '
+					<li>';
 
 				// Is this the current area, or just some area?
 				if ($i == $context['admin_area'])
 				{
 					echo '
-					<li>
-						<a class="chosen" href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a>
-					</li>';
+						<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a>';
 				}
 				else
 				{
 					echo '
-					<li>
-						<a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a>
-					</li>';
+						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a>';
 				}
+
+				// Is there any subsections?
+				if (!empty($area['subsections']))
+				{
+					echo '
+						<ul>';
+
+					foreach ($area['subsections'] as $sa => $sub)
+					{
+						echo '
+							<li>
+								<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sa=', $sa, ';sesc=', $context['session_id'], '">', $sub['label'], '</a>
+							</li>';
+					}
+
+					echo '
+						</ul>';
+				}
+
+				echo '
+					</li>';
 			}
 			echo '
 				</ul>
@@ -87,16 +107,16 @@ function template_admin_above()
 			foreach ($section['areas'] as $i => $area)
 			{
 				// Not supposed to be printed?
-				if (empty($area[0]))
+				if (empty($area['label']))
 					continue;
 
 				// Is this the current area, or just some area?
 				if ($i == $context['admin_area'])
 					echo '
-							<b><a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a></b><br />';
+							<b><a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a></b><br />';
 				else
 					echo '
-							<a href="', (isset($area[3]) ? $area[3] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area[0], '</a><br />';
+							<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a><br />';
 			}
 
 			echo '

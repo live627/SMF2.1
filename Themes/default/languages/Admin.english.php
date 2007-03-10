@@ -6,7 +6,7 @@
 $txt['admin_boards'] = 'Boards';
 $txt['admin_users'] = 'Members';
 $txt['admin_newsletters'] = 'Newsletters';
-$txt['admin_news'] = 'News';
+$txt['admin_edit_news'] = 'News';
 $txt['admin_groups'] = 'Membergroups';
 $txt['admin_members'] = 'Manage members';
 $txt['admin_members_list'] = 'Below is a listing of all the members currently registered with your forum.';
