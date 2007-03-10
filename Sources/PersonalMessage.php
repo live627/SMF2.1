@@ -245,8 +245,7 @@ function MessageMain()
 		'send2' => 'MessagePost2',
 		'settings' => 'MessageSettings',
 	);
-	//!!!! TEMP
-$GLOBALS['modSettings']['defaultMaxMessages'] = 4;
+
 	if (!isset($_REQUEST['sa']) || !isset($subActions[$_REQUEST['sa']]))
 		MessageFolder();
 	else

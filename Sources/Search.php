@@ -1654,24 +1654,13 @@ function PlushSearch2()
 		'label' => addslashes(un_htmlspecialchars($txt['jump_to'])),
 		'board_name' => addslashes(un_htmlspecialchars($txt['select_destination'])),
 	);
-
-	// Get a list of boards to move these messages to.
-	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && !empty($context['topics']) && $context['can_move'])
-	{
-		require_once($sourcedir . '/Subs-MessageIndex.php');
-		$boardListOptions = array(
-			'use_permissions' => true,
-			'selected_board' => empty($_SESSION['move_to_topic']) ? null : $_SESSION['move_to_topic'],
-		);
-		$context['move_to_boards'] = getBoardList($boardListOptions);
-	}
 }
 
 // Callback to return messages - saves memory.
 // !!! Fix this, update it, whatever... from Display.php mainly.
 function prepareSearchContext($reset = false)
 {
-	global $txt, $modSettings, $db_prefix, $scripturl, $user_info;
+	global $txt, $modSettings, $db_prefix, $scripturl, $user_info, $sourcedir;
 	global $memberContext, $context, $settings, $options, $messages_request;
 	global $boards_can, $participants, $smfFunc;
 
@@ -1871,6 +1860,17 @@ function prepareSearchContext($reset = false)
 		$context['can_move'] |= $output['quick_mod']['move'];
 		$context['can_remove'] |= $output['quick_mod']['remove'];
 		$context['can_merge'] |= in_array($output['board']['id'], $boards_can['merge_any']);
+
+		// If we've found a message we can move, and we don't already have it, load the destinations.
+		if ($options['display_quick_mod'] == 1 && !isset($context['move_to_boards']) && $context['can_move'])
+		{
+			require_once($sourcedir . '/Subs-MessageIndex.php');
+			$boardListOptions = array(
+				'use_permissions' => true,
+				'selected_board' => empty($_SESSION['move_to_topic']) ? null : $_SESSION['move_to_topic'],
+			);
+			$context['move_to_boards'] = getBoardList($boardListOptions);
+		}
 	}
 
 	foreach ($context['key_words'] as $query)

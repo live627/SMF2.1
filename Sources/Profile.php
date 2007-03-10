@@ -145,27 +145,24 @@ function ModifyProfile($post_errors = array())
 	// Is this the profile of the user himself or herself?
 	$context['user']['is_owner'] = $memID == $user_info['id'];
 
-	// Load this users data.
-	//loadMemberContext($memID);
-	//$context['member'] = $memberContext[$memID];
-
 	/* Define all the sections within the profile area!
 		We start by defining the permission required - then SMF takes this and turns it into the relevant context ;)
 		Possible fields:
 			For Section:
-				string $title:	Section title.
-				bool $enabled:	Should section be shown?
-				array $areas:	Array of areas within this section.
+				string $title:		Section title.
+				bool $enabled:		Should section be shown?
+				array $areas:		Array of areas within this section.
 
 			For Areas:
-				array $own:	Array of permissions to determine who can access this area - if the user is the owner of the profile.
-				array $any:	As above if the user is not the owner of the profile.
-				string $label:	Optional text string for link (Otherwise $txt[$index] will be used)
-				string $href:	Optional href for area.
-				bool $enabled:	Should area be shown?
-				bool $validate:	Does the session need to be checked before accessing this section on save?
-				string $sc:	Session check validation to do on save - note without this save will get unset - if set.
-				bool $hidden:	Does this not actually appear on the menu?
+				array $own:		Array of permissions to determine who can access this area - if the user is the owner of the profile.
+				array $any:		As above if the user is not the owner of the profile.
+				string $label:		Optional text string for link (Otherwise $txt[$index] will be used)
+				string $href:		Optional href for area.
+				bool $enabled:		Should area be shown?
+				bool $validate:		Does the session need to be checked before accessing this section on save?
+				string $sc:		Session check validation to do on save - note without this save will get unset - if set.
+				bool $hidden:		Does this not actually appear on the menu?
+				bool $load_member:	Should we load the member context for this area?
 	*/
 	$context['profile_areas'] = array(
 		'info' => array(
@@ -179,6 +176,7 @@ function ModifyProfile($post_errors = array())
 				'statPanel' => array(
 					'own' => array('profile_view_any', 'profile_view_own'),
 					'any' => array('profile_view_any'),
+					'load_member' => true,
 				),
 				'showPosts' => array(
 					'own' => array('profile_view_any', 'profile_view_own'),
@@ -295,7 +293,7 @@ function ModifyProfile($post_errors = array())
 		foreach ($section['areas'] as $area_id => $area)
 		{
 			// Were we trying to see this?
-			if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $area_id && (!isset($area['enabled']) || $area['enabled'] != false))
+			if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && !empty($area[$context['user']['is_owner'] ? 'own' : 'any']))
 			{
 				$security_checks['permission'] = $area[$context['user']['is_owner'] ? 'own' : 'any'];
 
@@ -309,10 +307,17 @@ function ModifyProfile($post_errors = array())
 				// Does this require session validating?
 				if (!empty($area['validate']))
 					$security_checks['validate'] = true;
+
+				// Load this users data?
+				if (!empty($area['load_member']))
+				{
+					loadMemberContext($memID);
+					$context['member'] = $memberContext[$memID];
+				}
 			}
 
 			// Can we do this?
-			if ((!isset($area['enabled']) || $area['enabled'] != false) && allowedTo($area[$context['user']['is_owner'] ? 'own' : 'any']) && empty($area['hidden']))
+			if ((!isset($area['enabled']) || $area['enabled'] != false) && !empty($area[$context['user']['is_owner'] ? 'own' : 'any']) && allowedTo($area[$context['user']['is_owner'] ? 'own' : 'any']) && empty($area['hidden']))
 			{
 				// Replace the contents with a link.
 				$context['profile_areas'][$section_id]['areas'][$area_id] = '<a href="' . (isset($area['href']) ? $area['href'] : $scripturl . '?action=profile;u=' . $memID . ';sa=' . $area_id) . '">' . (isset($area['label']) ? $area['label'] : $txt[$area_id]) . '</a>';
@@ -1065,11 +1070,11 @@ function loadProfileFields($force_reload = false)
 	foreach ($profile_fields as $key => $field)
 	{
 		// Do we have permission to do this?
-		if (isset($cur_field['permission']) && !allowedTo($cur_field['permission'] . '_' . ($context['user']['is_owner'] ? 'own' : 'any')) && !allowedTo($cur_field['permission']))
+		if (isset($field['permission']) && !allowedTo($field['permission'] . '_' . ($context['user']['is_owner'] ? 'own' : 'any')) && !allowedTo($field['permission']))
 			unset($profile_fields[$key]);
 
 		// Is it enabled?
-		if (isset($cur_field['enabled']) && !$cur_field['enabled'])
+		if (isset($field['enabled']) && !$field['enabled'])
 			unset($profile_fields[$key]);
 	}
 }

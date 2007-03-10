@@ -231,10 +231,11 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 		);
 		$request = $smfFunc['db_query']('', "
 			SELECT mem.id_member, c.id_cat, IFNULL(cc.id_cat, 0) AS is_collapsed, c.can_collapse
-			FROM {$db_prefix}members AS mem, {$db_prefix}categories AS c
+			FROM {$db_prefix}members AS mem
+				INNER JOIN {$db_prefix}categories AS c ON (c.id_cat IN (" . implode(', ', $categories) . '))
 				LEFT JOIN {$db_prefix}collapsed_categories AS cc ON (cc.id_cat = c.id_cat AND cc.id_member = mem.id_member)
-			WHERE c.id_cat IN (" . implode(', ', $categories) . ')' . ($members === null ? '' : "
-				AND id_member IN (" . implode(', ', $members) . ')'), __FILE__, __LINE__);
+			' . ($members === null ? '' : "
+				WHERE mem.id_member IN (" . implode(', ', $members) . ')'), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['is_collapsed']) && (!empty($row['can_collapse']) || !$check_collapsable))
