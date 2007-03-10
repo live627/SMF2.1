@@ -79,6 +79,9 @@ class xmlArray
 	//ie. $xml = new xmlArray(file('data.xml'));
 	public function __construct($data, $auto_trim = false, $level = null, $is_clone = false)
 	{
+		// If we're using this try to get some more memory.
+		@ini_set('memory_limit', '32M');
+
 		// Set the debug level.
 		$this->debug_level = $level !== null ? $level : error_reporting();
 		$this->trim = $auto_trim;
@@ -407,22 +410,46 @@ class xmlArray
 			// If this ISN'T empty, remove the close tag and parse the inner data.
 			if ((!isset($match[3]) || $match[3] != ' /') && (!isset($match[2]) || $match[2] != ' /'))
 			{
-				$tag = preg_quote($match[1], '/');
-				$reg = '/\A(.*?(<' . $tag . ' .*?' . '>.*?<\/' . $tag . '>.*?)*?)<\/' . $tag . '>/s';
+				// Because PHP 5.2.0+ seems to croak using regex, we'll have to do this the less fun way.
+				$last_tag_end = strpos($data, '</' . $match[1]. '>');
+				if ($last_tag_end === false)
+					continue;
 
-				// Remove the element and fetch the inner data.
-				preg_match($reg, $data, $inner_match);
-				$data = preg_replace($reg, '', $data, 1);
+				$offset = 0;
+				while (1 == 1)
+				{
+					// Where is the next start tag?
+					$next_tag_start = strpos($data, '<' . $match[1], $offset);
+					// If the next start tag is after the last end tag then we've found the right close.
+					if ($next_tag_start === false || $next_tag_start > $last_tag_end)
+						break;
 
-				if (!isset($inner_match[1]))
+					// If not then find the next ending tag.
+					$next_tag_end = strpos($data, '</' . $match[1]. '>', $offset);
+
+					// Didn't find one? Then just use the last and sod it.
+					if ($next_tag_end === false)
+						break;
+					else
+					{
+						$last_tag_end = $next_tag_end;
+						$offset = $next_tag_start + 1;
+					}
+				}
+				// Parse the insides.
+				$inner_match = substr($data, 0, $last_tag_end);
+				// Data now starts from where this section ends.
+				$data = substr($data, $last_tag_end + strlen('</' . $match[1]. '>'));
+
+				if (empty($inner_match))
 					continue;
 
 				// Parse the inner data.
-				if (strpos($inner_match[1], '<') !== false)
-					$el += $this->_parse($inner_match[1]);
-				elseif (trim($inner_match[1]) != '')
+				if (strpos($inner_match, '<') !== false)
+					$el += $this->_parse($inner_match);
+				elseif (trim($inner_match) != '')
 				{
-					$text_value = $this->_from_cdata($inner_match[1]);
+					$text_value = $this->_from_cdata($inner_match);
 					if ($text_value != '')
 						$el[] = array(
 							'name' => '!',
