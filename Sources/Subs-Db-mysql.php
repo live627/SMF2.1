@@ -118,7 +118,7 @@ function db_fix_prefix (&$db_prefix, $db_name)
 // Do a query.  Takes care of errors too.
 function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 {
-	global $db_cache, $db_count, $db_connection, $db_show_debug, $modSettings;
+	global $db_cache, $db_count, $db_connection, $db_show_debug, $db_unbuffered, $modSettings;
 
 	// Decide which connection to use.
 	$connection = $connection == null ? $db_connection : $connection;
@@ -216,7 +216,10 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 		}
 	}
 
-	$ret = @mysql_query($db_string, $connection);
+	if (empty($db_unbuffered))
+		$ret = @mysql_query($db_string, $connection);
+	else
+		$ret = @mysql_unbuffered_query($db_string, $connection);
 	if ($ret === false && $file !== false)
 		$ret = db_error($db_string, $file, $line, $connection);
 

@@ -46,6 +46,12 @@ $databases = array(
 		'version_check' => '$version = pg_version(); return $version[\'client\'];',
 		'always_has_db' => true,
 	),
+	'sqlite' => array(
+		'name' => 'SQLite',
+		'version' => '1',
+		'version_check' => 'return 1;',
+		'always_has_db' => true,
+	),
 );
 
 // General options for the script.
@@ -2410,66 +2416,73 @@ function parse_sql($filename)
 
 function upgrade_query($string, $unbuffered = false)
 {
-	global $db_connection, $db_server, $db_user, $db_passwd, $command_line, $upcontext, $upgradeurl;
+	global $db_connection, $db_server, $db_user, $db_passwd, $db_type, $command_line, $upcontext, $upgradeurl, $modSettings, $db_unbuffered, $smfFunc;
 
-	// Get the query result!
-	$result = $unbuffered ? mysql_unbuffered_query($string) : mysql_query($string);
+	// Get the query result - working around some SMF specific ideas!
+	$modSettings['disableQueryCheck'] = true;
+	$db_unbuffered = $unbuffered;
+	$result = $smfFunc['db_query']('', $string, false, false);
+	$db_unbuffered = false;
 
 	// Failure?!
 	if ($result !== false)
 		return $result;
 
-	$mysql_error = mysql_error($db_connection);
-	$mysql_errno = mysql_errno($db_connection);
-	$error_query = in_array(substr(trim($string), 0, 11), array('INSERT INTO', 'UPDATE IGNO', 'ALTER TABLE', 'DROP TABLE ', 'ALTER IGNOR'));
-
-	// Error numbers:
-	//    1016: Can't open file '....MYI'
-	//    1050: Table already exists.
-	//    1054: Unknown column name.
-	//    1060: Duplicate column name.
-	//    1061: Duplicate key name.
-	//    1062: Duplicate entry for unique key.
-	//    1068: Multiple primary keys.
-	//    1072: Key column '%s' doesn't exist in table.
-	//    1091: Can't drop key, doesn't exist.
-	//    1146: Table doesn't exist.
-	//    2013: Lost connection to server during query.
-
-	if ($mysql_errno == 1016)
+	$db_error_message = $smfFunc['db_error']($db_connection);
+	// If MySQL we do something more clever.
+	if ($db_type == 'mysql')
 	{
-		if (preg_match('~\'([^\.\']+)~', $mysql_error, $match) != 0 && !empty($match[1]))
-			mysql_query("
-				REPAIR TABLE `$match[1]`");
-
-		$result = mysql_query($string);
-		if ($result !== false)
-			return $result;
-	}
-	elseif ($mysql_errno == 2013)
-	{
-		$db_connection = mysql_connect($db_server, $db_user, $db_passwd);
-		mysql_select_db($db_name, $db_connection);
-
-		if ($db_connection)
+		$mysql_errno = mysql_errno($db_connection);
+		$error_query = in_array(substr(trim($string), 0, 11), array('INSERT INTO', 'UPDATE IGNO', 'ALTER TABLE', 'DROP TABLE ', 'ALTER IGNOR'));
+	
+		// Error numbers:
+		//    1016: Can't open file '....MYI'
+		//    1050: Table already exists.
+		//    1054: Unknown column name.
+		//    1060: Duplicate column name.
+		//    1061: Duplicate key name.
+		//    1062: Duplicate entry for unique key.
+		//    1068: Multiple primary keys.
+		//    1072: Key column '%s' doesn't exist in table.
+		//    1091: Can't drop key, doesn't exist.
+		//    1146: Table doesn't exist.
+		//    2013: Lost connection to server during query.
+	
+		if ($mysql_errno == 1016)
 		{
+			if (preg_match('~\'([^\.\']+)~', $db_error_message, $match) != 0 && !empty($match[1]))
+				mysql_query("
+					REPAIR TABLE `$match[1]`");
+	
 			$result = mysql_query($string);
-
 			if ($result !== false)
 				return $result;
 		}
+		elseif ($mysql_errno == 2013)
+		{
+			$db_connection = mysql_connect($db_server, $db_user, $db_passwd);
+			mysql_select_db($db_name, $db_connection);
+	
+			if ($db_connection)
+			{
+				$result = mysql_query($string);
+	
+				if ($result !== false)
+					return $result;
+			}
+		}
+		// Duplicate column name... should be okay ;).
+		elseif (in_array($mysql_errno, array(1060, 1061, 1068, 1091)))
+			return false;
+		// Duplicate insert... make sure it's the proper type of query ;).
+		elseif (in_array($mysql_errno, array(1054, 1062, 1146)) && $error_query)
+			return false;
+		// Creating an index on a non-existent column.
+		elseif ($mysql_errno == 1072)
+			return false;
+		elseif ($mysql_errno == 1050 && substr(trim($string), 0, 12) == 'RENAME TABLE')
+			return false;
 	}
-	// Duplicate column name... should be okay ;).
-	elseif (in_array($mysql_errno, array(1060, 1061, 1068, 1091)))
-		return false;
-	// Duplicate insert... make sure it's the proper type of query ;).
-	elseif (in_array($mysql_errno, array(1054, 1062, 1146)) && $error_query)
-		return false;
-	// Creating an index on a non-existent column.
-	elseif ($mysql_errno == 1072)
-		return false;
-	elseif ($mysql_errno == 1050 && substr(trim($string), 0, 12) == 'RENAME TABLE')
-		return false;
 
 	// Get the query string so we pass everything.
 	$query_string = '';
@@ -2480,14 +2493,14 @@ function upgrade_query($string, $unbuffered = false)
 
 	if ($command_line)
 	{
-		echo 'Unsuccessful!  MySQL error message:', "\n", mysql_error(), "\n";
+		echo 'Unsuccessful!  Database error message:', "\n", $db_error_message, "\n";
 		die;
 	}
 
 	// Bit of a bodge - do we want the error?
 	if (!empty($upcontext['return_error']))
 	{
-		$upcontext['error_message'] = $mysql_error;
+		$upcontext['error_message'] = $db_error_message;
 		return false;
 	}
 
@@ -2499,7 +2512,7 @@ function upgrade_query($string, $unbuffered = false)
 				<blockquote><tt>' . nl2br(htmlspecialchars(trim($string))) . ';</tt></blockquote>
 
 				Caused the error:
-				<blockquote>' . nl2br(htmlspecialchars($mysql_error)) . '</blockquote>
+				<blockquote>' . nl2br(htmlspecialchars($db_error_message)) . '</blockquote>
 			</div>
 
 			<form action="', $upgradeurl, $query_string, '" method="post">
