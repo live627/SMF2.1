@@ -50,70 +50,170 @@ function ModerationMain($dont_call = false)
 	//!!! The above/below needs to be moved to a small shared template!
 	loadTemplate('Admin');
 
-	// Moderation area 'Main'.
-	$context['admin_areas']['main'] = array(
-		'title' => $txt['mc_main'],
-		'areas' => array(
-			'index' => array($txt['moderation_center'], 'ModerationCenter.php', 'ModerationHome'),
-			'modlog' => array($txt['modlog_view'], 'Modlog.php', 'ViewModlog'),
-			'notice' => array('', 'ModerationCenter.php', 'ShowNotice'),
-		),
-	);
+	/* Define all the sections on the moderation center - these are then properly converted into context!
 
-	// Show the warning log?
-	if ($modSettings['warning_settings']{0} == 1)
-		$context['admin_areas']['main']['areas']['warnlog'] = array($txt['mc_warning_log'], 'ModerationCenter.php', 'ViewWarningLog');
-	// Add user watch.
-	$context['admin_areas']['main']['areas']['userwatch'] = array($txt['mc_watched_users_title'], 'ModerationCenter.php', 'ViewWatchedUsers');
+		Possible fields:
+			For Section:
+				string $title:		Section title.
+				bool $enabled:		Should section be shown?
+				array $areas:		Array of areas within this section.
+				array $permission:	Permission required to access the whole section.
 
-	// Moderation area 'Posts'.
-	$context['admin_areas']['posts'] = array(
-		'title' => $txt['mc_posts'],
-		'areas' => array(
-			'postmod' => array($txt['mc_unapproved_posts'], 'PostModeration.php', 'PostModerationMain', $scripturl . '?action=moderate;area=postmod;sa=posts'),
-			'attachmod' => array($txt['mc_unapproved_attachments'], 'PostModeration.php', 'PostModerationMain', $scripturl . '?action=moderate;area=attachmod;sa=attachments'),
-			'reports' => array($txt['mc_reported_posts'], 'ModerationCenter.php', 'ReportedPosts'),
-		),
-	);
+			For Areas:
+				array $permission:	Array of permissions to determine who can access this area.
+				string $label:		Optional text string for link (Otherwise $txt[$index] will be used)
+				string $file:		Name of source file required for this area.
+				string $function:	Function to call when area is selected.
+				string $custom_url:	URL to use for this menu item.
+				bool $enabled:		Should this area even be shown?
+				string $select:		If set this item will not be displayed - instead the item indexed here shall be.
+				array $subsections:	Array of subsections from this area.
 
-	// Moderation area 'Groups'.
-	if (!empty($user_info['mod_cache']['gq']) || allowedTo('manage_membergroups'))
-	{
-		$context['admin_areas']['groups'] = array(
-			'title' => $txt['mc_groups'],
+			For Subsections:
+				string 0:		Text label for this subsection.
+				array 0:		Array of permissions to check for this subsection.
+	*/
+
+	$context['admin_areas'] = array(
+		'main' => array(
+			'title' => $txt['mc_main'],
 			'areas' => array(
-				'groups' => array($txt['mc_group_requests'], 'Groups.php', 'Groups', $scripturl . '?action=moderate;area=groups;sa=requests'),
-				'viewgroups' => array($txt['mc_view_groups'], 'Groups.php', 'Groups'),
+				'index' => array(
+					'label' => $txt['moderation_center'],
+					'function' => 'ModerationHome',
+				),
+				'modlog' => array(
+					'label' => $txt['modlog_view'],
+					'file' => 'Modlog.php',
+					'function' => 'ViewModlog',
+				),
+				'notice' => array(
+					'file' => 'ModerationCenter.php',
+					'function' => 'ShowNotice',
+					'select' => 'index'
+				),
+				'warnlog' => array(
+					'label' => $txt['mc_warning_log'],
+					'enabled' => $modSettings['warning_settings']{0} == 1,
+					'function' => 'ViewWarningLog',
+				),
+				'userwatch' => array(
+					'label' => $txt['mc_watched_users_title'],
+					'function' => 'ViewWatchedUsers',
+				),
 			),
-		);
-	}
-
-	$context['admin_areas']['prefs'] = array(
-		'title' => $txt['mc_prefs'],
-		'areas' => array(
-			'settings' => array($txt['mc_settings'], 'ModerationCenter.php', 'ModerationSettings'),
+		),
+		'posts' => array(
+			'title' => $txt['mc_posts'],
+			'areas' => array(
+				'postmod' => array(
+					'label' => $txt['mc_unapproved_posts'],
+					'file' => 'PostModeration.php',
+					'function' => 'PostModerationMain',
+					'custom_url' => $scripturl . '?action=moderate;area=postmod;sa=posts',
+				),
+				'attachmod' => array(
+					'label' => $txt['mc_unapproved_attachments'],
+					'file' => 'PostModeration.php',
+					'function' => 'PostModerationMain',
+					'custom_url' => $scripturl . '?action=moderate;area=attachmod;sa=attachments',
+				),
+				'reports' => array(
+					'label' => $txt['mc_reported_posts'],
+					'file' => 'ModerationCenter.php',
+					'function' => 'ReportedPosts',
+				),
+			),
+		),
+		'groups' => array(
+			'title' => $txt['mc_groups'],
+			'enabled' => !empty($user_info['mod_cache']['gq']) || allowedTo('manage_membergroups'),
+			'areas' => array(
+				'groups' => array(
+					'label' => $txt['mc_group_requests'],
+					'file' => 'Groups.php',
+					'function' => 'Groups',
+					'custom_url' => $scripturl . '?action=moderate;area=groups;sa=requests',
+				),
+				'viewgroups' => array(
+					'label' => $txt['mc_view_groups'],
+					'file' => 'Groups.php',
+					'function' => 'Groups',
+				),
+			),
+		),
+		'prefs' => array(
+			'title' => $txt['mc_prefs'],
+			'enabled' => !empty($user_info['mod_cache']['gq']) || allowedTo('manage_membergroups'),
+			'areas' => array(
+				'settings' => array(
+					'label' => $txt['mc_settings'],
+					'function' => 'ModerationSettings',
+				),
+			),
 		),
 	);
 
 	// I don't know where we're going - I don't know where we've been...
-	$area = isset($_GET['area']) ? $_GET['area'] : 'index';
-	foreach ($context['admin_areas'] as $id => $section)
+	$mod_area = isset($_GET['area']) ? $_GET['area'] : 'index';
+	$mod_include_data = $context['admin_areas']['main']['areas']['index'];
+
+	// Now do all the formatting!
+	foreach ($context['admin_areas'] as $section_id => $section)
 	{
-		if (isset($section['areas'][$area]))
+		// Is this enabled - or has as permission check!
+		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($area['permission']) && !allowedTo($area['permission'])))
+			unset($context['admin_areas'][$section_id]);
+
+		foreach ($section['areas'] as $area_id => $area)
 		{
-			$context['admin_section'] = $id;
-			foreach ($section['areas'] as $id => $elements)
-				if ($id == $area)
+			// Is this what we are looking for?
+			if ($mod_area == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
+			{
+				// Found and validated where we want to be!
+				$context['admin_section'] = $section_id;
+				$context['admin_area'] = isset($area['select']) ? $area['select'] : $area_id;
+				$mod_include_data = $area;
+
+				// Flag to the section that this is active.
+				$context['admin_areas'][$section_id]['selected'] = true;
+			}
+
+			// Can we do this?
+			if ((!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
+			{
+				// Replace the contents with some ickle data - assuming it has a label.
+				if (isset($area['label']) || isset($txt[$area_id]))
 				{
-					$actual_area = $area;
-					$context['admin_area'] = isset($elements['select']) ? $elements['select'] : $area;
+					$context['admin_areas'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
+					// Does it have a custom URL?
+					if (isset($area['custom_url']))
+						$context['admin_areas'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
+
+					// Did it have subsections?
+					if (isset($area['subsections']))
+					{
+						$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'] = array();
+						foreach ($area['subsections'] as $sa => $sub)
+							if (empty($sub[1]) || allowedTo($sub[1]))
+								$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
+					}
 				}
+				else
+					unset($context['admin_areas'][$section_id]['areas'][$area_id]);
+			}
+			// Otherwise unset it!
+			else
+				unset($context['admin_areas'][$section_id]['areas'][$area_id]);
 		}
+
+		// Did we remove every possible area?
+		if (empty($context['admin_areas'][$section_id]['areas']))
+			unset($context['admin_areas'][$section_id]);
 	}
 
 	if (empty($context['admin_area']))
 	{
-		$actual_area = 'index';
 		$context['admin_area'] = 'index';
 		$context['admin_section'] = 'main';
 	}
@@ -124,8 +224,10 @@ function ModerationMain($dont_call = false)
 	// Now - finally - call the right place!
 	if (!$dont_call)
 	{
-		require_once($sourcedir . '/' . $context['admin_areas'][$context['admin_section']]['areas'][$actual_area][1]);
-		$context['admin_areas'][$context['admin_section']]['areas'][$actual_area][2]();
+		if (isset($mod_include_data['file']))
+			require_once($sourcedir . '/' . $mod_include_data['file']);
+	
+		$mod_include_data['function']();
 	}
 }
 
