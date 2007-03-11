@@ -349,17 +349,17 @@ function show_settings()
 		$known_settings['theme_path_url_settings'] += array(
 			'theme_'. $id.'_theme_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme : null),
 			'theme_'. $id.'_images_url'=>array('theme', 'string', $exist && !empty($this_theme) ? $url . '/Themes/' . $this_theme . '/images' : null),
-			'theme_' . $id . '_dir' => array('theme', 'string', $exist && !empty($this_theme) ? realpath(dirname(__FILE__) . '/Themes/' . $this_theme) : null),
+			'theme_' . $id . '_theme_dir' => array('theme', 'string', $exist && !empty($this_theme) ? realpath(dirname(__FILE__) . '/Themes/' . $this_theme) : null),
 		);
 		$settings += array(
 			'theme_' . $id . '_theme_url' => $theme['theme_url'],
 			'theme_' . $id . '_images_url' => $theme['images_url'],
-			'theme_' . $id . '_dir' => $theme['theme_dir'],
+			'theme_' . $id . '_theme_dir' => $theme['theme_dir'],
 		);
 		
 		$txt['theme_' . $id . '_theme_url'] = $theme['name'] . ' URL';
 		$txt['theme_' . $id . '_images_url'] = $theme['name'] . ' Images URL';
-		$txt['theme_' . $id . '_dir'] = $theme['name'] . ' Directory';
+		$txt['theme_' . $id . '_theme_dir'] = $theme['name'] . ' Directory';
 	}
 
 	if (isset($attempt) && $attempt)
@@ -616,7 +616,7 @@ function set_settings()
 		$setString .= "
 				($match[1], 0, '$match[2]', SUBSTRING('$val', 1, 65534)),";
 	}
-	
+
 	if (!empty($setString))
 		@mysql_query("
 			REPLACE INTO {$db_prefix}themes
