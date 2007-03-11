@@ -862,6 +862,10 @@ function template_send()
 		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
 
+	if ($context['visual_verification'])
+		echo '
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
+
 	// Show which messages were sent successfully and which failed.
 	if (!empty($context['send_log']))
 	{
@@ -956,16 +960,18 @@ function template_send()
 								<td>';
 		if ($context['use_graphic_library'])
 			echo '
-									<img src="', $context['verificiation_image_href'], '" alt="', $txt['pm_visual_verification_desc'], '" /><br />';
+									<img src="', $context['verification_image_href'], '" id="verification_image" alt="', $txt['pm_visual_verification_desc'], '" /><br />';
 		else
 			echo '
-									<img src="', $context['verificiation_image_href'], ';letter=1" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verificiation_image_href'], ';letter=2" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verificiation_image_href'], ';letter=3" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verificiation_image_href'], ';letter=4" alt="', $txt['pm_visual_verification_desc'], '" />
-									<img src="', $context['verificiation_image_href'], ';letter=5" alt="', $txt['pm_visual_verification_desc'], '" /><br />';
+									<img src="', $context['verification_image_href'], ';letter=1" id="verification_image_1" alt="', $txt['pm_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=2" id="verification_image_2" alt="', $txt['pm_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=3" id="verification_image_3" alt="', $txt['pm_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=4" id="verification_image_4" alt="', $txt['pm_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['pm_visual_verification_desc'], '" /><br />';
 		echo '
-									<a href="', $context['verificiation_image_href'], ';sound" onclick="return reqWin(this.href, 400, 120);">', $txt['pm_visual_verification_listen'], '</a><br /><br />
+									<span class="smalltext">
+										<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
+									</span>
 									<input type="text" name="visual_verification_code" size="30" tabindex="', $context['tabindex']++, '" />
 									<div class="smalltext">', $txt['pm_visual_verification_desc'], '</div>
 								</td>
@@ -1194,7 +1200,13 @@ function template_send()
 				for (i in textFields)
 					if (document.forms.postmodify.elements[textFields[i]])
 						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
-			}
+			}';
+
+	if ($context['visual_verification'])
+		echo '
+		captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
+
+	echo '
 		// ]]></script>';
 }
 
@@ -1246,7 +1258,7 @@ function template_labels()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-	<form action="', $scripturl, '?action=pm;sa=manlabels;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '">
 		<table width="60%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">', $txt['pm_manage_labels'], '</td>
@@ -1295,7 +1307,7 @@ function template_labels()
 		</table>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>
-	<form action="', $scripturl, '?action=pm;sa=manlabels;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 1ex;">
+	<form action="', $scripturl, '?action=pm;sa=manlabels" method="post" accept-charset="', $context['character_set'], '" style="margin-top: 1ex;">
 		<table width="60%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2" align="left">
@@ -1316,6 +1328,7 @@ function template_labels()
 				</td>
 			</tr>
 		</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
 }
 

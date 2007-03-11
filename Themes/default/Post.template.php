@@ -10,6 +10,10 @@ function template_main()
 		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/spellcheck.js"></script>';
 
+	if ($context['visual_verification'])
+		echo '
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
+
 	// Start the javascript... and boy is there a lot.
 	echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
@@ -356,6 +360,35 @@ function template_main()
 							</tr>';
 	}
 
+	// Is visual verification enabled?
+	if ($context['visual_verification'])
+	{
+		echo '
+							<tr>
+								<td align="right" valign="top">
+									<b>', $txt['post_visual_verification_label'], ':</b>
+								</td>
+								<td>';
+		if ($context['use_graphic_library'])
+			echo '
+									<img src="', $context['verification_image_href'], '" id="verification_image" alt="', $txt['post_visual_verification_desc'], '" /><br />';
+		else
+			echo '
+									<img src="', $context['verification_image_href'], ';letter=1" id="verification_image_1" alt="', $txt['post_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=2" id="verification_image_2" alt="', $txt['post_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=3" id="verification_image_3" alt="', $txt['post_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=4" id="verification_image_4" alt="', $txt['post_visual_verification_desc'], '" />
+									<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['post_visual_verification_desc'], '" /><br />';
+		echo '
+									<span class="smalltext">
+										<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
+									</span>
+									<input type="text" name="visual_verification_code" size="30" tabindex="', $context['tabindex']++, '" />
+									<div class="smalltext">', $txt['post_visual_verification_desc'], '</div>
+								</td>
+							</tr>';
+	}
+
 	// Are you posting a calendar event?
 	if ($context['make_event'])
 	{
@@ -690,11 +723,21 @@ function template_main()
 			<input type="hidden" name="seqnum" value="', $context['form_sequence_number'], '" />
 		</form>';
 
+	echo '
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+
+	// Make the visual verification image?
+	if ($context['visual_verification'])
+		echo '
+		captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
+
 	// Now some javascript to hide the additional options on load...
 	if (!empty($settings['additional_options_collapsable']) && !$context['show_additional_options'])
 		echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			swapOptions();
+		
+			swapOptions();';
+
+	echo '
 		// ]]></script>';
 
 	// A hidden form to post data to the spell checking window.

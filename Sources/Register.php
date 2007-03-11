@@ -146,7 +146,7 @@ function Register()
 	if ($context['visual_verification'])
 	{
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-		$context['verificiation_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
 		// Only generate a new code if one hasn't been set yet
 		if (!isset($_SESSION['visual_verification_code']))
@@ -589,7 +589,7 @@ function VerificationCode()
 		loadLanguage('Login');
 		loadTemplate('Register');
 
-		$context['verificiation_sound_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand()) . ';format=.wav';
+		$context['verification_sound_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand()) . ';format=.wav';
 		$context['sub_template'] = 'verification_sound';
 		$context['template_layers'] = array();
 

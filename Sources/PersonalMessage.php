@@ -1446,7 +1446,7 @@ function MessagePost()
 	if ($context['visual_verification'])
 	{
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-		$context['verificiation_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
 		// Skip I, J, L, O, Q, S and Z.
 		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
@@ -1553,7 +1553,7 @@ function messagePostError($error_types, $to, $bcc)
 	if ($context['visual_verification'])
 	{
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-		$context['verificiation_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 	}
 
 	// No check for the previous submission is needed.

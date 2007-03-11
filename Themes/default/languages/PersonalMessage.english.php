@@ -127,7 +127,6 @@ $txt['pm_search_orderby_old_first'] = 'Oldest first';
 
 $txt['pm_visual_verification_label'] = 'Verification';
 $txt['pm_visual_verification_desc'] = 'Please enter the code in the image above to send this pm.';
-$txt['pm_visual_verification_listen'] = 'Listen to the Letters';
 
 $txt['pm_settings'] = 'Change Settings';
 $txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';

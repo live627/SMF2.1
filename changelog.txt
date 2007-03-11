@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2675 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2676 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -45,6 +45,8 @@ February 2007
  ! Converted the lists in the ban admin section to the standardized form. (ManageBans.php, ManageBans template)
  ! Profile now uses a generic template and has only one point of entry. (Profile.php)
  ! Make it possible for administrators to decide which standard fields are displayed where. (ModSettings.php, Profile.php, Register.php, ModSettings template)
+ ! Added a setting to enable visual verification on posting for certain users. (ManagePosts.php, Post.php)
+ ! Moved visual verification javascript to a separate file that automatically populates links as required. (captcha.js)
 
 
 January 2007

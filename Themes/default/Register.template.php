@@ -9,6 +9,7 @@ function template_before()
 	// Make sure they've agreed to the terms and conditions.
 	echo '
 <script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/register.js"></script>
+<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>
 <script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	function verifyAgree()
 	{
@@ -41,36 +42,7 @@ function template_before()
 		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || isEmptyText(document.forms.creator.passwrd1) || !document.forms.creator.regagree.checked;
 		setTimeout("checkAgree();", 1000);
 	}
-	setTimeout("checkAgree();", 1000);';
-
-	if ($context['visual_verification'])
-	{
-		echo '
-	function refreshImages()
-	{
-		// Make sure we are using a new rand code.
-		var new_url = new String("', $context['verificiation_image_href'], '");
-		new_url = new_url.substr(0, new_url.indexOf("rand=") + 5);
-
-		// Quick and dirty way of converting decimal to hex
-		var hexstr = "0123456789abcdef";
-		for(var i=0; i < 32; i++)
-			new_url = new_url + hexstr.substr(Math.floor(Math.random() * 16), 1);';
-
-		if ($context['use_graphic_library'])
-			echo '
-		document.getElementById("verificiation_image").src = new_url;';
-		else
-			echo '
-		document.getElementById("verificiation_image_1").src = new_url + ";letter=1";
-		document.getElementById("verificiation_image_2").src = new_url + ";letter=2";
-		document.getElementById("verificiation_image_3").src = new_url + ";letter=3";
-		document.getElementById("verificiation_image_4").src = new_url + ";letter=4";
-		document.getElementById("verificiation_image_5").src = new_url + ";letter=5";';
-		echo '
-	}';
-	}
-echo '
+	setTimeout("checkAgree();", 1000);
 // ]]></script>
 
 <form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
@@ -142,18 +114,18 @@ echo '
 						<td>
 							<div class="smalltext" style="margin: 4px 0 8px 0;">
 								<input type="text" name="visual_verification_code" size="30" tabindex="', $context['tabindex']++, '" />
-								<a href="', $context['verificiation_image_href'], ';sound" onclick="return reqWin(this.href, 400, 120);">', $txt['visual_verification_sound'], '</a> / <a href="', $scripturl, '?action=register" onclick="refreshImages(); return false;">', $txt['visual_verification_request_new'], '</a>
+								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="', $scripturl, '?action=register" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a>
 							</div>';
 		if ($context['use_graphic_library'])
 			echo '
-							<img src="', $context['verificiation_image_href'], '" alt="', $txt['visual_verification_description'], '" id="verificiation_image" /><br />';
+							<img src="', $context['verification_image_href'], '" alt="', $txt['visual_verification_description'], '" id="verification_image" /><br />';
 		else
 			echo '
-							<img src="', $context['verificiation_image_href'], ';letter=1" alt="', $txt['visual_verification_description'], '" id="verificiation_image_1" />
-							<img src="', $context['verificiation_image_href'], ';letter=2" alt="', $txt['visual_verification_description'], '" id="verificiation_image_2" />
-							<img src="', $context['verificiation_image_href'], ';letter=3" alt="', $txt['visual_verification_description'], '" id="verificiation_image_3" />
-							<img src="', $context['verificiation_image_href'], ';letter=4" alt="', $txt['visual_verification_description'], '" id="verificiation_image_4" />
-							<img src="', $context['verificiation_image_href'], ';letter=5" alt="', $txt['visual_verification_description'], '" id="verificiation_image_5" />';
+							<img src="', $context['verification_image_href'], ';letter=1" alt="', $txt['visual_verification_description'], '" id="verification_image_1" />
+							<img src="', $context['verification_image_href'], ';letter=2" alt="', $txt['visual_verification_description'], '" id="verification_image_2" />
+							<img src="', $context['verification_image_href'], ';letter=3" alt="', $txt['visual_verification_description'], '" id="verification_image_3" />
+							<img src="', $context['verification_image_href'], ';letter=4" alt="', $txt['visual_verification_description'], '" id="verification_image_4" />
+							<img src="', $context['verification_image_href'], ';letter=5" alt="', $txt['visual_verification_description'], '" id="verification_image_5" />';
 		echo '
 						</td>
 					</tr>';
@@ -181,83 +153,86 @@ echo '
 			<td width="100%">
 				<table cellpadding="3" cellspacing="0" border="0" width="100%">';
 
-	// Any fields we particularly want?
-	foreach ($context['profile_fields'] as $key => $field)
+	if (!empty($context['profile_fields']))
 	{
-		if ($field['type'] == 'callback')
+		// Any fields we particularly want?
+		foreach ($context['profile_fields'] as $key => $field)
 		{
-			if (isset($field['callback_func']) && function_exists('template_profile_' . $field['callback_func']))
+			if ($field['type'] == 'callback')
 			{
-				$callback_func = 'template_profile_' . $field['callback_func'];
-				$callback_func();
+				if (isset($field['callback_func']) && function_exists('template_profile_' . $field['callback_func']))
+				{
+					$callback_func = 'template_profile_' . $field['callback_func'];
+					$callback_func();
+				}
 			}
-		}
-		else
-		{
-		echo '
+			else
+			{
+			echo '
 					<tr valign="top">
 						<td width="40%">
 							<b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
-
-		// Does it have any subtext to show?
-		if (!empty($field['subtext']))
-			echo '
+	
+			// Does it have any subtext to show?
+			if (!empty($field['subtext']))
+				echo '
 							<div class="smalltext">', $field['subtext'], '</div>';
-
-		echo '
+	
+			echo '
 						</td>
 						<td>';
-
-		// Want to put something infront of the box?
-		if (!empty($field['preinput']))
-			echo '
-							', $field['preinput'];
-
-		// What type of data are we showing?
-		if ($field['type'] == 'label')
-			echo '
-							', $field['value'];
-
-		// Maybe it's a text box - very likely!
-		elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
-			echo '
+	
+			// Want to put something infront of the box?
+			if (!empty($field['preinput']))
+				echo '
+								', $field['preinput'];
+	
+			// What type of data are we showing?
+			if ($field['type'] == 'label')
+				echo '
+								', $field['value'];
+	
+			// Maybe it's a text box - very likely!
+			elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
+				echo '
 							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' />';
-
-		// You "checking" me out? ;)
-		elseif ($field['type'] == 'check')
-			echo '
+	
+			// You "checking" me out? ;)
+			elseif ($field['type'] == 'check')
+				echo '
 							<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" class="check" ', $field['input_attr'], ' />';
-
-		// Always fun - select boxes!
-		elseif ($field['type'] == 'select')
-		{
-			echo '
-							<select name="', $key, '" id="', $key, '">';
-
-			if (isset($field['options']))
+	
+			// Always fun - select boxes!
+			elseif ($field['type'] == 'select')
 			{
-				// Is this some code to generate the options?
-				if (!is_array($field['options']))
-					$field['options'] = eval($field['options']);
-				// Assuming we now have some!
-				if (is_array($field['options']))
-					foreach ($field['options'] as $value => $name)
-						echo '
+				echo '
+							<select name="', $key, '" id="', $key, '">';
+	
+				if (isset($field['options']))
+				{
+					// Is this some code to generate the options?
+					if (!is_array($field['options']))
+						$field['options'] = eval($field['options']);
+					// Assuming we now have some!
+					if (is_array($field['options']))
+						foreach ($field['options'] as $value => $name)
+							echo '
 								<option value="', $value, '" ', $value == $field['value'] ? 'selected="selected"' : '', '>', $name, '</option>';
-			}
-
-			echo '
+				}
+	
+				echo '
 							</select>';
-		}
-
-		// Something to end with?
-		if (!empty($field['postinput']))
+			}
+	
+			// Something to end with?
+			if (!empty($field['postinput']))
+				echo '
+								', $field['postinput'];
+	
 			echo '
-							', $field['postinput'];
-
-		echo '
 						</td>
 					</tr>';
+			}
 		}
 	}
 
@@ -309,6 +284,7 @@ echo '
 	document.forms.creator.regagree.checked = false;
 	document.forms.creator.regSubmit.disabled = !document.forms.creator.regagree.checked;';
 
+	// Clever registration stuff...
 echo '
 	var regTextStrings = {
 		"username_valid": "', $txt['registration_username_available'], '",
@@ -320,7 +296,14 @@ echo '
 		"password_no_match": "', $txt['registration_password_no_match'], '",
 		"password_valid": "', $txt['registration_password_valid'], '"
 	};
-	verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);
+	verificationHandle = new smfRegister("creator", ', empty($modSettings['password_strength']) ? 0 : $modSettings['password_strength'], ', regTextStrings);';
+
+	// Have we got visual verification on the move?
+	if ($context['visual_verification'])
+		echo '
+	captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
+
+echo '
 // ]]></script>';
 }
 
@@ -465,18 +448,18 @@ function template_verification_sound()
 		echo '
 			<object classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95" type="audio/x-wav">
 				<param name="AutoStart" value="1" />
-				<param name="FileName" value="', $context['verificiation_sound_href'], ';format=.wav" />
+				<param name="FileName" value="', $context['verification_sound_href'], ';format=.wav" />
 			</object>';
 	else
 		echo '
-			<object type="audio/x-wav" data="', $context['verificiation_sound_href'], ';format=.wav">
-				<a href="', $context['verificiation_sound_href'], ';format=.wav">', $context['verificiation_sound_href'], ';format=.wav</a>
+			<object type="audio/x-wav" data="', $context['verification_sound_href'], ';format=.wav">
+				<a href="', $context['verification_sound_href'], ';format=.wav">', $context['verification_sound_href'], ';format=.wav</a>
 			</object>';
 	echo '
 			<br />
-			<a href="', $context['verificiation_sound_href'], ';sound">', $txt['visual_verification_sound_again'], '</a><br />
+			<a href="', $context['verification_sound_href'], ';sound">', $txt['visual_verification_sound_again'], '</a><br />
 			<a href="javascript:self.close();">', $txt['visual_verification_sound_close'], '</a><br />
-			<a href="', $context['verificiation_sound_href'], ';format=.wav">', $txt['visual_verification_sound_direct'], '</a>
+			<a href="', $context['verification_sound_href'], ';format=.wav">', $txt['visual_verification_sound_direct'], '</a>
 		</div>
 	</body>
 </html>';
@@ -663,7 +646,7 @@ function template_admin_settings()
 		function refreshImages()
 		{
 			var imageType = document.getElementById(\'visual_verification_type_select\').value;
-			document.getElementById(\'verificiation_image\').src = \'', $context['verificiation_image_href'], ';type=\' + imageType;
+			document.getElementById(\'verification_image\').src = \'', $context['verification_image_href'], ';type=\' + imageType;
 		}
 	// ]]></script>';
 	}
@@ -750,7 +733,7 @@ function template_admin_settings()
 								</select><br />';
 	if ($context['use_graphic_library'])
 		echo '
-								<img src="', $context['verificiation_image_href'], ';type=', empty($modSettings['visual_verification_type']) ? 0 : $modSettings['visual_verification_type'], '" alt="', $txt['admin_setting_image_verification_sample'], '" id="verificiation_image" /><br />';
+								<img src="', $context['verification_image_href'], ';type=', empty($modSettings['visual_verification_type']) ? 0 : $modSettings['visual_verification_type'], '" alt="', $txt['admin_setting_image_verification_sample'], '" id="verification_image" /><br />';
 	else
 	{
 		echo '

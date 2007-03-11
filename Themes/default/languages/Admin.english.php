@@ -591,6 +591,8 @@ $txt['spamWaitTime'] = 'Time required between posts from the same IP';
 $txt['edit_wait_time'] = 'Courtesy edit wait time';
 $txt['edit_disable_time'] = 'Maximum time after posting to allow edit';
 $txt['edit_disable_time_zero'] = '0 to disable';
+$txt['posts_require_captcha'] = 'Post count under which users must enter a visual code to post a message';
+$txt['posts_require_captcha_desc'] = '(0 for no limit, moderators are exempt)';
 
 $txt['enableBBC'] = 'Enable bulletin board code (BBC)';
 $txt['enablePostHTML'] = 'Enable <i>basic</i> HTML in posts';

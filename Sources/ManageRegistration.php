@@ -304,7 +304,7 @@ function AdminSettings()
 
 	// Generate a sample registration image.
 	$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
-	$context['verificiation_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+	$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
 	$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
 	$_SESSION['visual_verification_code'] = '';

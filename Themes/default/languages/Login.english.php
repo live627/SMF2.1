@@ -147,10 +147,8 @@ $txt['coppa_form_body'] = 'I {PARENT_NAME},<br /><br />Give permission for {CHIL
 
 $txt['visual_verification_label'] = 'Visual verification';
 $txt['visual_verification_description'] = 'Type the letters shown in the picture';
-$txt['visual_verification_sound'] = 'Listen to the letters';
 $txt['visual_verification_sound_again'] = 'Play again';
 $txt['visual_verification_sound_close'] = 'Close window';
-$txt['visual_verification_request_new'] = 'Request another image';
 $txt['visual_verification_sound_direct'] = 'Having problems hearing this?  Try a direct link to it.';
 
 // Use numeric entities in the below.
