@@ -84,7 +84,15 @@ function Register()
 
 	// If you have to agree to the agreement, it needs to be fetched from the file.
 	if ($context['require_agreement'])
-		$context['agreement'] = file_exists($boarddir . '/agreement.txt') ? parse_bbc(file_get_contents($boarddir . '/agreement.txt'), true, 'agreement') : '';
+	{
+		// Have we got a local one?
+		if (file_exists($boarddir . '/agreement_' . $user_info['language'] . '.txt'))
+			$context['agreement'] = parse_bbc(file_get_contents($boarddir . '/agreement_' . $user_info['language'] . '.txt'), true, 'agreement_' . $user_info['language']);
+		elseif (file_exists($boarddir . '/agreement.txt'))
+			$context['agreement'] = parse_bbc(file_get_contents($boarddir . '/agreement.txt'), true, 'agreement');
+		else
+			$context['agreement'] = '';
+	}
 
 	if (!empty($modSettings['userLanguage']))
 	{

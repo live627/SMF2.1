@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2677 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2678 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -9,6 +9,7 @@ March 2007
  ! Make it possible for administrators to decide which standard fields are displayed where. (ModSettings.php, Profile.php, Register.php, ModSettings template)
  ! Added a setting to enable visual verification on posting for certain users. (ManagePosts.php, Post.php)
  ! Moved visual verification javascript to a separate file that automatically populates links as required. (captcha.js)
+ ! It is now possible to translate the agreement file by creating a new file called agreement_language.txt - this can be edited from the admin center. (ManageRegistration.php, Register.php)
 
 
 February 2007

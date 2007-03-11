@@ -198,25 +198,55 @@ function AdminRegister()
 // I hereby agree not to be a lazy bum.
 function EditAgreement()
 {
-	global $txt, $boarddir, $context, $modSettings, $smfFunc;
+	global $txt, $boarddir, $context, $modSettings, $smfFunc, $settings;
+
+	// By default we look at agreement.txt.
+	$context['current_agreement'] = '';
+
+	// What potential languages are there?
+	$language_directories = array(
+		$settings['default_theme_dir'] . '/languages',
+		$settings['actual_theme_dir'] . '/languages',
+	);
+	if (!empty($settings['base_theme_dir']))
+		$language_directories[] = $settings['base_theme_dir'] . '/languages';
+	$language_directories = array_unique($language_directories);
+
+	// Is there more than one to edit?
+	$context['editable_agreements'] = array(
+		'' => $txt['admin_agreement_default'],
+	);
+	foreach ($language_directories as $language_dir)
+	{
+		if (!file_exists($language_dir))
+			continue;
+
+		$dir = dir($language_dir);
+		while ($entry = $dir->read())
+			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && file_exists($boarddir . '/agreement_' . $matches[1] . '.txt'))
+			{
+				$context['editable_agreements']['_' . $matches[1]] = $smfFunc['ucwords'](strtr($matches[1], '_', ' '));
+				// Are we editing this?
+				if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '_' . $matches[1])
+					$context['current_agreement'] = '_' . $matches[1];
+			}
+		$dir->close();
+	}
 
 	if (isset($_POST['agreement']))
 	{
 		checkSession();
 
 		// Off it goes to the agreement file.
-		$fp = fopen($boarddir . '/agreement.txt', 'w');
+		$fp = fopen($boarddir . '/agreement' . $context['current_agreement'] . '.txt', 'w');
 		fwrite($fp, str_replace("\r", '', $smfFunc['db_unescape_string']($_POST['agreement'])));
 		fclose($fp);
 
 		updateSettings(array('requireAgreement' => !empty($_POST['requireAgreement'])));
-
-		redirectexit('action=admin;area=regcenter;sa=agreement');
 	}
 
-	// Get the current agreement.
-	$context['agreement'] = file_exists($boarddir . '/agreement.txt') ? htmlspecialchars(file_get_contents($boarddir . '/agreement.txt')) : '';
-	$context['warning'] = is_writable($boarddir . '/agreement.txt') ? '' : $txt['agreement_not_writable'];
+	$context['agreement'] = file_exists($boarddir . '/agreement' . $context['current_agreement'] . '.txt') ? htmlspecialchars(file_get_contents($boarddir . '/agreement' . $context['current_agreement'] . '.txt')) : '';
+	$context['warning'] = is_writable($boarddir . '/agreement' . $context['current_agreement'] . '.txt') ? '' : $txt['agreement_not_writable'];
 	$context['require_agreement'] = !empty($modSettings['requireAgreement']);
 
 	$context['sub_template'] = 'edit_agreement';

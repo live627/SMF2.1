@@ -568,7 +568,6 @@ function template_edit_agreement()
 
 	// Just a big box to edit the text file ;).
 	echo '
-	<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">
 		<table border="0" cellspacing="0" cellpadding="4" align="center" width="80%" class="tborder">
 			<tr class="titlebg">
 				<td align="center">', $txt['registration_agreement'], '</td>
@@ -582,22 +581,51 @@ function template_edit_agreement()
 					', $context['warning'], '
 				</td>
 			</tr>';
+
+	// Are there more than one language to choose from?
+	if (count($context['editable_agreements']) > 1)
+	{
+		echo '
+			<tr class="windowbg2">
+				<td align="center">
+					<div align="left" style="width: 94%">
+						<form action="', $scripturl, '?action=admin;area=regcenter" id="change_reg" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
+							<b>', $txt['admin_agreement_select_language'], ':</b>&nbsp;
+							<select name="agree_lang" onchange="document.getElementById(\'change_reg\').submit();">';
+
+		foreach ($context['editable_agreements'] as $file => $name)
+			echo '
+								<option value="', $file, '" ', $context['current_agreement'] == $file ? 'selected="selected"' : '', '>', $name, '</option>';
+
+		echo '
+							</select>
+							<input type="hidden" name="sa" value="agreement" />
+							<input type="hidden" name="sc" value="', $context['session_id'], '" />
+							<input type="submit" name="change" value="', $txt['admin_agreement_select_language_change'], '" />
+						</form>
+					</div>
+				</td>
+			</tr>';
+	}
+
 	echo '
 			<tr class="windowbg2">
-				<td align="center" style="padding-bottom: 1ex; padding-top: 2ex;">';
+				<td align="center" style="padding-bottom: 1ex; padding-top: 2ex;">
+					<form action="', $scripturl, '?action=admin;area=regcenter" method="post" accept-charset="', $context['character_set'], '">';
 
 	// Show the actual agreement in an oversized text box.
 	echo '
-					<textarea cols="70" rows="20" name="agreement" style="width: 94%; margin-bottom: 1ex;">', $context['agreement'], '</textarea><br />
-					<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt['admin_agreement'], '.</label><br />
-					<br />
-					<input type="submit" value="', $txt['save'], '" />
-					<input type="hidden" name="sa" value="agreement" />
+						<textarea cols="70" rows="20" name="agreement" style="width: 94%; margin-bottom: 1ex;">', $context['agreement'], '</textarea><br />
+						<label for="requireAgreement"><input type="checkbox" name="requireAgreement" id="requireAgreement"', $context['require_agreement'] ? ' checked="checked"' : '', ' value="1" /> ', $txt['admin_agreement'], '.</label><br />
+						<br />
+						<input type="submit" value="', $txt['save'], '" />
+						<input type="hidden" name="agree_lang" value="', $context['current_agreement'], '" />
+						<input type="hidden" name="sa" value="agreement" />
+						<input type="hidden" name="sc" value="', $context['session_id'], '" />
+					</form>
 				</td>
 			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
+		</table>';
 }
 
 function template_edit_reserved_words()
