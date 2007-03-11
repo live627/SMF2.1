@@ -1,8 +1,16 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2676 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2677 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+March 2007
+--------------------------------------------------------------------------------
+ ! Profile now uses a generic template and has only one point of entry. (Profile.php)
+ ! Make it possible for administrators to decide which standard fields are displayed where. (ModSettings.php, Profile.php, Register.php, ModSettings template)
+ ! Added a setting to enable visual verification on posting for certain users. (ManagePosts.php, Post.php)
+ ! Moved visual verification javascript to a separate file that automatically populates links as required. (captcha.js)
+
+
 February 2007
 --------------------------------------------------------------------------------
  ! Fixed a remaining, if not extremely difficult to exploit, issue with downloads on IE - reported by Jessica Hope. (Display.php)
@@ -43,10 +51,6 @@ February 2007
  + Implemented a generic form of displaying lists, so that lists used in SMF can all be based on the same template. (Subs-List.php, GenericList template)
  ! Converted the lists in the admin areas 'Calendar', 'Smileys and Message Icons', 'Attachements and Avatars', 'Members' and 'Membergroups' to the standardized form. (ManageAttachments.php, ManageCalendar.php, ManageMembergroups.php, ManageMembers.php, ManageSmileys.php, Subs-Calendar.php, Subs-Membergroups.php, Subs-Members.php, ManageAttachments template, ManageCalendar template, ManageMembergroups template, ManageMembers template, ManageSmileys template)
  ! Converted the lists in the ban admin section to the standardized form. (ManageBans.php, ManageBans template)
- ! Profile now uses a generic template and has only one point of entry. (Profile.php)
- ! Make it possible for administrators to decide which standard fields are displayed where. (ModSettings.php, Profile.php, Register.php, ModSettings template)
- ! Added a setting to enable visual verification on posting for certain users. (ManagePosts.php, Post.php)
- ! Moved visual verification javascript to a separate file that automatically populates links as required. (captcha.js)
 
 
 January 2007
