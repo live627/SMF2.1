@@ -360,6 +360,10 @@ function ModifyProfile($post_errors = array())
 	// All the subactions that require a user password in order to validate.
 	$context['require_password'] = in_array($context['menu_item_selected'], $context['password_areas']);
 
+	// Is there an updated message to show?
+	if (isset($_GET['updated']))
+		$context['profile_updated'] = $txt['profile_updated_own'];
+
 	// This is here so the menu won't be shown unless it's actually needed.
 	if (!isset($context['profile_areas']['info']['areas']['trackUser']) && !isset($context['profile_areas']['info']['areas']['showPermissions']) && !isset($context['profile_areas']['edit_profile']) && !isset($context['profile_areas']['profile_action']['areas']['banUser']) && !isset($context['profile_areas']['profile_action']['areas']['deleteAccount']))
 		$context['profile_areas'] = array();
@@ -485,7 +489,7 @@ function ModifyProfile($post_errors = array())
 	}
 	// If it's you then we should redirect upon save.
 	elseif (!empty($profile_vars) && $context['user']['is_owner'])
-		redirectexit('action=profile;sa=' . $_REQUEST['sa']);
+		redirectexit('action=profile;sa=' . $_REQUEST['sa'] . ';updated');
 	elseif (!empty($force_redirect))
 		redirectexit('action=profile;u=' . $memID . ';sa=' . $_REQUEST['sa']);
 

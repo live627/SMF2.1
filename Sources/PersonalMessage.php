@@ -2198,8 +2198,10 @@ function ManageLabels()
 			$the_labels[$label['id']] = $smfFunc['db_escape_string']($label['name']);
 	}
 
-	if (isset($_GET['sesc']))
+	if (isset($_POST['sc']))
 	{
+		checkSession('post');
+
 		// This will be for updating messages.
 		$message_changes = array();
 		$new_labels = array();
@@ -2351,6 +2353,9 @@ function ManageLabels()
 					WHERE id_rule IN (" . implode(', ', $rule_changes) . ")
 							AND id_member = $user_info[id]", __FILE__, __LINE__);
 		}
+
+		// Make sure we're not caching this!
+		cache_put_data('labelCounts:' . $user_info['id'], null, 720);
 
 		// To make the changes appear right away, redirect.
 		redirectexit('action=pm;sa=manlabels');
