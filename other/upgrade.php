@@ -258,7 +258,7 @@ if (!class_exists('ftp_connection'))
 				return false;
 	
 			// No slash on the end, please...
-			if (substr($ftp_path, -1) == '/')
+			if (substr($ftp_path, -1) == '/' && $ftp_path !== '/')
 				$ftp_path = substr($ftp_path, 0, -1);
 	
 			fwrite($this->connection, 'CWD ' . $ftp_path . "\r\n");
