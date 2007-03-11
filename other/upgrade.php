@@ -88,6 +88,13 @@ require_once($upgrade_path . '/Settings.php');
 if (isset($upgradeData))
 {
 	$upcontext['user'] = unserialize(base64_decode($upgradeData));
+
+	// Check for sensible values.
+	if (empty($upcontext['user']['started']) || $upcontext['user']['started'] < time() - 86400)
+		$upcontext['user']['started'] = time();
+	if (empty($upcontext['user']['updated']) || $upcontext['user']['updated'] < time() - 86400)
+		$upcontext['user']['updated'] = time();
+
 	$upcontext['started'] = $upcontext['user']['started'];
 	$upcontext['updated'] = $upcontext['user']['updated'];
 }
@@ -2293,13 +2300,11 @@ function parse_sql($filename)
 
 				$upcontext['current_debug_item_num']++;
 				if (trim($line) != '---#')
-				{
 					$upcontext['current_debug_item_name'] = htmlspecialchars(rtrim(substr($line, 4)));
 
-					// Have we already done something?
-					if (isset($_GET['xml']) && $done_something)
-						return $upcontext['current_debug_item_num'] >= $upcontext['debug_items'] ? true : false;
-				}
+				// Have we already done something?
+				if (isset($_GET['xml']) && $done_something)
+					return $upcontext['current_debug_item_num'] >= $upcontext['debug_items'] ? true : false;
 
 				if ($do_current)
 				{
