@@ -7,7 +7,7 @@ function template_admin_above()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// try out a menu here :)
-	if (empty($modSettings['showsidebarAdmin']))
+	if ($context['show_drop_down'])
 	{
 		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['theme_url'], '/scripts/menu.js"></script>
@@ -84,9 +84,9 @@ function template_admin_above()
 	
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
-		<table width="100%" cellspacing="0"' , empty($modSettings['showsidebarAdmin']) ? ' cellpadding="10" class="tborder"' : ' cellpadding="0"' , ' border="0" style="margin-top: 0; clear: left;"><tr>';
+		<table width="100%" cellspacing="0"' , $context['show_drop_down'] ? ' cellpadding="10" class="tborder"' : ' cellpadding="0"' , ' border="0" style="margin-top: 0; clear: left;"><tr>';
 
-	if(!empty($modSettings['showsidebarAdmin']))
+	if (!$context['show_drop_down'])
 	{
 		echo '
 			<td width="150" valign="top" style="width: 23ex; padding-right: 10px; padding-bottom: 10px;">

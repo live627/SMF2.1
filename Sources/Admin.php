@@ -369,6 +369,7 @@ function AdminMain()
 
 	// obExit will know what to do!
 	$context['template_layers'][] = 'admin';
+	$context['show_drop_down'] = empty($modSettings['showsidebarAdmin']) && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0 && !isset($settings['disable_drop_down']);
 
 	// Now - finally - call the right place!
 	if (isset($admin_include_data['file']))

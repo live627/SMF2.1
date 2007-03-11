@@ -54,6 +54,9 @@ function template_init()
 
 	/* Show sticky and lock status separate from topic icons? */
 	$settings['seperate_sticky_lock'] = false;
+
+	/* Babylon doesn't support drop down menus yet */
+	$settings['disable_drop_down'] = true;
 }
 
 // The main sub template above the content.

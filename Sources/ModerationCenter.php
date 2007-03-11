@@ -223,6 +223,7 @@ function ModerationMain($dont_call = false)
 
 	// And put the lovely surround around it all, beutiful.
 	$context['template_layers'][] = 'admin';
+	$context['show_drop_down'] = empty($modSettings['showsidebarAdmin']) && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0 && !isset($settings['disable_drop_down']);
 
 	// Now - finally - call the right place!
 	if (!$dont_call)
