@@ -1427,22 +1427,26 @@ function loadTheme($id_theme = 0, $initialize = true)
 		else
 			$templates = array('index');
 
-		// Custom template layers?
-		if (isset($settings['theme_layers']))
-			$context['template_layers'] = explode(',', $settings['theme_layers']);
-		else
-			$context['template_layers'] = array('html', 'body');
-
 		// Load each template.... and attempt to load its associated language file.
 		foreach ($templates as $template)
 		{
 			loadTemplate($template);
 			loadLanguage($template . '+Modifications', '', false);
 		}
+
+		// Custom template layers?
+		if (isset($settings['theme_layers']))
+			$context['template_layers'] = explode(',', $settings['theme_layers']);
+		else
+			$context['template_layers'] = array('html', 'body');
 	}
 
 	// Initialize the theme.
 	loadSubTemplate('init', 'ignore');
+
+	// Let's be compatible with old themes!
+	if (!function_exists('template_html_above') && in_array('html', $context['template_layers']))
+		$context['template_layers'] = array('main');
 
 	// Allow overriding the board wide time/number formats.
 	if (empty($user_settings['time_format']) && !empty($txt['time_format']))
