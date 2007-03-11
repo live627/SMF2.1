@@ -1360,7 +1360,7 @@ function CleanupMods()
 	global $db_prefix, $modSettings, $upcontext, $boarddir, $sourcedir, $settings, $smfFunc;
 
 	// If we get here withOUT SSI we need to redirect to ensure we get it!
-	if (!isset($_GET['ssi']))
+	if (!isset($_GET['ssi']) || !function_exists('mktree'))
 		redirectLocation('&amp;ssi=1');
 
 	$upcontext['sub_template'] = 'clean_mods';
