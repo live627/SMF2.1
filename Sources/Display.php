@@ -258,8 +258,9 @@ function Display()
 
 	// Check if spellchecking is both enabled and actually working. (for quick reply.)
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
-	// Are we showing signatures?
+	// Are we showing signatures - or disabled fields?
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
+	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
 
 	// Censor the title...
 	censorText($topicinfo['subject']);

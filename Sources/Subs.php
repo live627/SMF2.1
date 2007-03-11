@@ -2586,7 +2586,7 @@ function obExit($header = null, $do_footer = null, $from_index = false)
 	$_SESSION['USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
 	// Hand off the output to the portal, etc. we're integrated with.
-	if (isset($modSettings['integrate_exit'], $context['template_layers']) && in_array('main', $context['template_layers']) && function_exists($modSettings['integrate_exit']))
+	if (isset($modSettings['integrate_exit'], $context['template_layers']) && (in_array('main', $context['template_layers']) || in_array('html', $context['template_layers'])) && function_exists($modSettings['integrate_exit']))
 		call_user_func($modSettings['integrate_exit'], $do_footer && !WIRELESS);
 
 	// Don't exit if we're coming from index.php; that will pass through normally.

@@ -304,8 +304,11 @@ function AdminMain()
 	foreach ($context['admin_areas'] as $section_id => $section)
 	{
 		// Is this enabled - or has as permission check!
-		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($area['permission']) && !allowedTo($area['permission'])))
+		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($section['permission']) && !allowedTo($section['permission'])))
+		{
 			unset($context['admin_areas'][$section_id]);
+			continue;
+		}
 
 		foreach ($section['areas'] as $area_id => $area)
 		{

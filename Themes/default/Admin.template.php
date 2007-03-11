@@ -1710,6 +1710,39 @@ function template_show_custom_profile()
 {
 	global $context, $txt, $settings, $scripturl;
 
+	// Standard fields.
+	echo '
+	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profile;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tborder">
+			<tr class="titlebg">
+				<td colspan="6">', $txt['standard_profile_title'], '</td>
+			</tr><tr class="windowbg">
+				<td width="60%"><b>', $txt['standard_profile_field'], '</b></td>
+				<td width="20%" align="center"><b>', $txt['custom_edit_active'], '</b></td>
+				<td width="20%" align="center"><b>', $txt['custom_edit_registration'], '</b></td>
+			</tr>';
+
+	foreach ($context['standard_fields'] as $field)
+	{
+		echo '
+			<tr class="windowbg2">
+				<td>', $field['label'], '</td>
+				<td align="center"><input type="checkbox" name="active[]" value="', $field['id'], '" ', $field['disabled'] ? '' : 'checked="checked"', ' class="check" ', $field['can_show_register'] ? 'onclick="document.getElementById(\'reg_' . $field['id'] . '\').disabled = !this.checked;"' : '', ' /></td>
+				<td align="center"><input type="checkbox" name="reg[]" id="reg_', $field['id'], '" value="', $field['id'], '" ', $field['on_register'] && !$field['disabled'] ? 'checked="checked"' : '', ' ', $field['can_show_register'] ? '' : 'disabled="disabled"', 'class="check" /></td>
+			</tr>';
+	}
+
+	echo '
+			<tr class="titlebg">
+				<td colspan="6" align="right">
+					<input type="submit" name="save" value="', $txt['save'], '" />
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
+
+	// Custom fields.
 	echo '
 	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tborder">
@@ -1724,7 +1757,7 @@ function template_show_custom_profile()
 
 	foreach ($context['profile_fields'] as $field)
 		echo '
-			<tr class="windowbg">
+			<tr class="windowbg2">
 				<td>
 					', $field['name'], '
 					<div class="smalltext">', $field['desc'], '</div>
@@ -1749,6 +1782,18 @@ function template_show_custom_profile()
 		</table>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';
+
+	// Some little javascript to disabled fields at startup
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+
+	foreach ($context['standard_fields'] as $field)
+		if ($field['disabled'])
+			echo '
+		document.getElementById("reg_', $field['id'], '").disabled = true;';
+
+	echo '
+	// ]]></script>';
 }
 
 // Edit a profile field?

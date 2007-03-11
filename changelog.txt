@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2674 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2675 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -44,6 +44,7 @@ February 2007
  ! Converted the lists in the admin areas 'Calendar', 'Smileys and Message Icons', 'Attachements and Avatars', 'Members' and 'Membergroups' to the standardized form. (ManageAttachments.php, ManageCalendar.php, ManageMembergroups.php, ManageMembers.php, ManageSmileys.php, Subs-Calendar.php, Subs-Membergroups.php, Subs-Members.php, ManageAttachments template, ManageCalendar template, ManageMembergroups template, ManageMembers template, ManageSmileys template)
  ! Converted the lists in the ban admin section to the standardized form. (ManageBans.php, ManageBans template)
  ! Profile now uses a generic template and has only one point of entry. (Profile.php)
+ ! Make it possible for administrators to decide which standard fields are displayed where. (ModSettings.php, Profile.php, Register.php, ModSettings template)
 
 
 January 2007

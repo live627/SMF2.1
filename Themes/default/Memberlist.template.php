@@ -108,25 +108,54 @@ function template_main()
 	if (!empty($context['members']))
 	{
 		foreach ($context['members'] as $member)
+		{
 			echo '
 		<tr style="text-align: center;"', empty($member['sort_letter']) ? '' : ' id="letter' . $member['sort_letter'] . '"', '>
 			<td class="windowbg2">
 				', $context['can_send_pm'] ? '<a href="' . $member['online']['href'] . '" title="' . $member['online']['text'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $member['online']['image_href'] . '" alt="' . $member['online']['text'] . '" align="middle" />' : $member['online']['label'], $context['can_send_pm'] ? '</a>' : '', '
 			</td>
 			<td class="windowbg" align="left">', $member['link'], '</td>
-			<td class="windowbg2">', $member['hide_email'] ? '' : '<a href="mailto:' . $member['email'] . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $member['name'] . '" /></a>', '</td>
-			<td class="windowbg">', $member['website']['url'] != '' ? '<a href="' . $member['website']['url'] . '" target="_blank"><img src="' . $settings['images_url'] . '/www.gif" alt="' . $member['website']['title'] . '" title="' . $member['website']['title'] . '" /></a>' : '', '</td>
-			<td class="windowbg2">', $member['icq']['link'], '</td>
-			<td class="windowbg2">', $member['aim']['link'], '</td>
-			<td class="windowbg2">', $member['yim']['link'], '</td>
-			<td class="windowbg2">', $member['msn']['link'], '</td>
+			<td class="windowbg2">', $member['hide_email'] ? '' : '<a href="mailto:' . $member['email'] . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $member['name'] . '" /></a>', '</td>';
+
+		if (!isset($context['disabled_fields']['website']))
+			echo '
+			<td class="windowbg">', $member['website']['url'] != '' ? '<a href="' . $member['website']['url'] . '" target="_blank"><img src="' . $settings['images_url'] . '/www.gif" alt="' . $member['website']['title'] . '" title="' . $member['website']['title'] . '" /></a>' : '', '</td>';
+
+		// ICQ?
+		if (!isset($context['disabled_fields']['icq']))
+			echo '
+			<td class="windowbg2">', $member['icq']['link'], '</td>';
+
+		// AIM?
+		if (!isset($context['disabled_fields']['aim']))
+			echo '
+			<td class="windowbg2">', $member['aim']['link'], '</td>';
+
+		// YIM?
+		if (!isset($context['disabled_fields']['yim']))
+			echo '
+			<td class="windowbg2">', $member['yim']['link'], '</td>';
+
+		// MSN?
+		if (!isset($context['disabled_fields']['msn']))
+			echo '
+			<td class="windowbg2">', $member['msn']['link'], '</td>';
+
+		// Group and date.
+		echo '
 			<td class="windowbg" align="left">', empty($member['group']) ? $member['post_group'] : $member['group'], '</td>
-			<td class="windowbg" align="left">', $member['registered_date'], '</td>
+			<td class="windowbg" align="left">', $member['registered_date'], '</td>';
+
+		if (!isset($context['disabled_fields']['posts']))
+			echo '
 			<td class="windowbg2" width="15">', $member['posts'], '</td>
 			<td class="windowbg" width="100" align="left">
 				', $member['posts'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $member['post_percent'] . '" height="15" alt="" />' : '', '
-			</td>
+			</td>';
+
+		echo '
 		</tr>';
+		}
 	}
 	// No members?
 	else

@@ -540,6 +540,7 @@ function loadProfileFields($force_reload = false)
 								with this string.
 				bool $is_dummy:			If set then nothing is acted upon for this element.
 				bool $enabled:			A test to determine whether this is even available - if not is unset.
+				string $link_with:		Key which links this field to an overall set.
 
 		Note that all elements that have a custom input_validate must ensure they set the value of $cur_profile correct to enable
 		the changes to be displayed correctly on submit of the form.
@@ -553,7 +554,7 @@ function loadProfileFields($force_reload = false)
 			'subtext' => $txt['your_aim'],
 			'size' => 24,
 			'input_attr' => array('maxlength="16"'),
-			'value' => strtr($cur_profile['aim'], '+', ' '),
+			'value' => strtr(empty($cur_profile['aim']) ? '' : $cur_profile['aim'], '+', ' '),
 			'permission' => 'profile_extra',
 			'input_validate' => create_function('&$value', '
 				$value = strtr($value, \' \', \'+\');
@@ -576,7 +577,7 @@ function loadProfileFields($force_reload = false)
 				global $cur_profile, $context;
 
 				// Split up the birthdate....
-				list ($uyear, $umonth, $uday) = explode(\'-\', $cur_profile[\'birthdate\']);
+				list ($uyear, $umonth, $uday) = empty($cur_profile[\'birthdate\']) ? \'0000-00-00\' : explode(\'-\', $cur_profile[\'birthdate\']);
 				$context[\'member\'][\'birth_date\'] = array(
 					\'year\' => $uyear,
 					\'month\' => $umonth,
@@ -612,7 +613,7 @@ function loadProfileFields($force_reload = false)
 				}
 				else
 				{
-					$value = "\'" . $cur_profile[\'birthdate\'] . "\'";
+					$value = "\'" . empty($cur_profile[\'birthdate\']) ? \'0004-01-01\' : $cur_profile[\'birthdate\'] . "\'";
 					return false;
 				}
 			'),
@@ -978,7 +979,7 @@ function loadProfileFields($force_reload = false)
 		'theme_settings' => array(
 			'type' => 'callback',
 			'callback_func' => 'theme_settings',
-			'permissions' => 'profile_extra',
+			'permission' => 'profile_extra',
 			'is_dummy' => true,
 			'preload' => create_function('', '
 				loadLanguage(\'Settings\');
@@ -988,7 +989,7 @@ function loadProfileFields($force_reload = false)
 		'time_format' => array(
 			'type' => 'callback',
 			'callback_func' => 'timeformat_modify',
-			'permissions' => 'profile_extra',
+			'permission' => 'profile_extra',
 			'preload' => create_function('', '
 				global $context, $user_info, $txt, $cur_profile;
 
@@ -1010,7 +1011,7 @@ function loadProfileFields($force_reload = false)
 		'time_offset' => array(
 			'type' => 'callback',
 			'callback_func' => 'timeoffset_modify',
-			'permissions' => 'profile_extra',
+			'permission' => 'profile_extra',
 			'preload' => create_function('', '
 				global $context, $cur_profile;
 				$context[\'member\'][\'time_offset\'] = $cur_profile[\'time_offset\'];
@@ -1039,6 +1040,7 @@ function loadProfileFields($force_reload = false)
 			'subtext' => $txt['include_website_url'],
 			'size' => 50,
 			'permission' => 'profile_extra',
+			'link_with' => 'website',
 		),
 		'website_url' => array(
 			'type' => 'text',
@@ -1055,6 +1057,7 @@ function loadProfileFields($force_reload = false)
 					$value = \'\';
 				return true;
 			'),
+			'link_with' => 'website',
 		),
 		'yim' => array(
 			'type' => 'text',
@@ -1066,6 +1069,7 @@ function loadProfileFields($force_reload = false)
 		),
 	);
 
+	$disabled_fields = !empty($modSettings['disabled_profile_fields']) ? explode(',', $modSettings['disabled_profile_fields']) : array();
 	// For each of the above let's take out the bits which don't apply - to save memory and security!
 	foreach ($profile_fields as $key => $field)
 	{
@@ -1075,6 +1079,10 @@ function loadProfileFields($force_reload = false)
 
 		// Is it enabled?
 		if (isset($field['enabled']) && !$field['enabled'])
+			unset($profile_fields[$key]);
+
+		// Is it specifically disabled?
+		if (in_array($key, $disabled_fields) || (isset($field['link_with']) && in_array($field['link_with'], $disabled_fields)))
 			unset($profile_fields[$key]);
 	}
 }
@@ -1086,6 +1094,11 @@ function setupProfileContext($fields)
 
 	// Make sure we have this!
 	loadProfileFields(true);
+
+	// First check for any linked sets.
+	foreach ($profile_fields as $key => $field)
+		if (isset($field['link_with']) && in_array($field['link_with'], $field))
+			$fields[] = $key;
 
 	// Some default bits.
 	$context['profile_prehtml'] = '';
@@ -1523,6 +1536,9 @@ function summary($memID)
 		'can_issue_warning' => allowedTo('issue_warning') && $modSettings['warning_settings']{0} == 1,
 	);
 	$context['member'] = &$memberContext[$memID];
+
+	// Are there things we don't show?
+	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
 
 	// See if they have broken any warning levels...
 	list ($modSettings['warning_enable'], $modSettings['warning_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
@@ -2681,7 +2697,7 @@ function forumProfile($memID)
 			'icq', 'aim', 'msn', 'yim', 'hr',
 			'usertitle', 'signature', 'hr',
 			'karma_good', 'hr',
-			'website_title', 'website_url',
+			'website_url', 'website_title',
 		)
 	);
 }

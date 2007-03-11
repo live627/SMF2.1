@@ -675,7 +675,7 @@ function pauseSignatureApplySettings()
 // Show all the custom profile fields available to the user.
 function ShowCustomProfiles()
 {
-	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc;
+	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc, $modSettings;
 
 	$context['page_title'] = $txt['custom_profile_title'];
 	$context['sub_template'] = 'show_custom_profile';
@@ -697,6 +697,57 @@ function ShowCustomProfiles()
 		);
 	}
 	$smfFunc['db_free_result']($request);
+
+	// What about standard fields they can tweak?
+	$standard_fields = array('icq', 'msn', 'aim', 'yim', 'location', 'gender', 'website', 'posts');
+	// What fields can't you put on the registration page?
+	$context['fields_no_registration'] = array('posts');
+
+	// Are we saving any standard field changes?
+	if (isset($_POST['save']))
+	{
+		checkSession('get');
+
+		// Do the active ones first.
+		$disable_fields = array_flip($standard_fields);
+		if (!empty($_POST['active']))
+		{
+			foreach ($_POST['active'] as $value)
+				if (isset($disable_fields[$value]))
+					unset($disable_fields[$value]);
+		}
+		// What we have left!
+		$changes['disabled_profile_fields'] = empty($disable_fields) ? '' : implode(',', array_keys($disable_fields));
+
+		// Things we want to show on registration?
+		$reg_fields = array();
+		if (!empty($_POST['reg']))
+		{
+			foreach ($_POST['reg'] as $value)
+				if (in_array($value, $standard_fields) && !isset($disable_fields[$value]))
+					$reg_fields[] = $value;
+		}
+		// What we have left!
+		$changes['registration_fields'] = empty($reg_fields) ? '' : implode(',', $reg_fields);
+
+		if (!empty($changes))
+			updateSettings($changes);
+	}
+
+	// Special settings for special things!
+	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? explode(',', $modSettings['disabled_profile_fields']) : array();
+	$context['registration_fields'] = isset($modSettings['registration_fields']) ? explode(',', $modSettings['registration_fields']) : array();
+
+	// Set it into context.
+	$context['standard_fields'] = array();
+	foreach ($standard_fields as $field)
+		$context['standard_fields'][] = array(
+			'id' => $field,
+			'label' => isset($txt['standard_profile_field_' . $field]) ? $txt['standard_profile_field_' . $field] : (isset($txt[$field]) ? $txt[$field] : $field),
+			'disabled' => in_array($field, $context['disabled_fields']),
+			'on_register' => in_array($field, $context['registration_fields']) && !in_array($field, $context['fields_no_registration']),
+			'can_show_register' => !in_array($field, $context['fields_no_registration']),
+		);
 }
 
 // Edit some profile fields?

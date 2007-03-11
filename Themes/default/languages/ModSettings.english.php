@@ -187,4 +187,7 @@ $txt['custom_edit_mask_regex'] = 'Regex (Advanced)';
 // Use numeric entities in the string below!
 $txt['custom_edit_delete_sure'] = 'Are you sure you wish to delete this field - all related user data will be lost!';
 
+$txt['standard_profile_title'] = 'Standard Profile Fields';
+$txt['standard_profile_field'] = 'Field';
+
 ?>

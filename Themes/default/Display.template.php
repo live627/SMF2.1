@@ -310,12 +310,13 @@ function template_main()
 								', $context['can_send_pm'] ? '<a href="' . $message['member']['online']['href'] . '" title="' . $message['member']['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $message['member']['online']['image_href'] . '" alt="' . $message['member']['online']['text'] . '" border="0" style="margin-top: 2px;" />' : $message['member']['online']['text'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $message['member']['online']['text'] . '</span>' : '', '<br /><br />';
 
 			// Show the member's gender icon?
-			if (!empty($settings['show_gender']) && $message['member']['gender']['image'] != '')
+			if (!empty($settings['show_gender']) && $message['member']['gender']['image'] != '' && !isset($context['disabled_fields']['gender']))
 				echo '
 								', $txt['gender'], ': ', $message['member']['gender']['image'], '<br />';
 
 			// Show how many posts they have made.
-			echo '
+			if (!isset($context['disabled_fields']['posts']))
+				echo '
 								', $txt['member_postcount'], ': ', $message['member']['posts'], '<br />';
 
 			// Any custom fields?
@@ -345,10 +346,11 @@ function template_main()
 
 			// This shows the popular messaging icons.
 			echo '
-								', $message['member']['icq']['link'], '
-								', $message['member']['msn']['link'], '
-								', $message['member']['aim']['link'], '
-								', $message['member']['yim']['link'], '<br />';
+								', !isset($context['disabled_fields']['icq']) ? $message['member']['icq']['link'] : '', '
+								', !isset($context['disabled_fields']['msn']) ? $message['member']['msn']['link'] : '', '
+								', !isset($context['disabled_fields']['aim']) ? $message['member']['aim']['link'] : '', '
+								', !isset($context['disabled_fields']['yim']) ? $message['member']['yim']['link'] : '', '
+								<br />';
 
 			// Show the profile, website, email address, and personal message buttons.
 			if ($settings['show_profile_buttons'])
@@ -359,7 +361,7 @@ function template_main()
 								<a href="', $message['member']['href'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" />' : $txt['view_profile']), '</a>';
 
 				// Don't show an icon if they haven't specified a website.
-				if ($message['member']['website']['url'] != '')
+				if ($message['member']['website']['url'] != '' && !isset($context['disabled_fields']['website']))
 					echo '
 								<a href="', $message['member']['website']['url'], '" title="' . $message['member']['website']['title'] . '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a>';
 

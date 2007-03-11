@@ -58,7 +58,7 @@ if (!defined('SMF'))
 // Show a listing of the registered members.
 function Memberlist()
 {
-	global $scripturl, $txt, $modSettings, $context, $settings;
+	global $scripturl, $txt, $modSettings, $context, $settings, $modSettings;
 
 	// Make sure they can view the memberlist.
 	isAllowedTo('view_mlist');
@@ -100,7 +100,8 @@ function Memberlist()
 		),
 		'website_url' => array(
 			'label' => $txt['website'],
-			'width' => '25'
+			'width' => '25',
+			'link_with' => 'website',
 		),
 		'icq' => array(
 			'label' => $txt['icq'],
@@ -130,6 +131,19 @@ function Memberlist()
 			'colspan' => '2'
 		)
 	);
+
+	$context['colspan'] = 0;
+	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
+	foreach ($context['columns'] as $key => $column)
+	{
+		if (isset($context['disabled_fields'][$key]) || (isset($column['link_with']) && isset($context['disabled_fields'][$column['link_with']])))
+		{
+			unset($context['columns'][$key]);
+			continue;
+		}
+
+		$context['colspan'] += isset($column['colspan']) ? $column['colspan'] : 1;
+	}
 
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=mlist',

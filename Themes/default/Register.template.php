@@ -108,22 +108,7 @@ echo '
 
 	echo '
 						</td>
-					</tr>';
-
-	// Are there any custom fields?
-	if (!empty($context['custom_fields']))
-	{
-		foreach ($context['custom_fields'] as $field)
-		{
-			echo '
-					<tr valign="top">
-						<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
-						<td>', $field['input_html'], '</td>
-					</tr>';
-		}
-	}
-
-	echo '
+					</tr>
 					<tr>
 						<td width="40%">
 							<b>', $txt['choose_pass'], ':</b>
@@ -182,6 +167,112 @@ echo '
 							<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" class="check" /> <b>', $context['coppa_desc'], '.</b></label>
 						</td>
 					</tr>';
+
+	// If we have some optional fields show them too!
+	if (!empty($context['profile_fields']) || !empty($context['custom_fields']))
+		echo '
+				</table>
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td><hr /></td>
+		</tr>
+		<tr class="windowbg">
+			<td width="100%">
+				<table cellpadding="3" cellspacing="0" border="0" width="100%">';
+
+	// Any fields we particularly want?
+	foreach ($context['profile_fields'] as $key => $field)
+	{
+		if ($field['type'] == 'callback')
+		{
+			if (isset($field['callback_func']) && function_exists('template_profile_' . $field['callback_func']))
+			{
+				$callback_func = 'template_profile_' . $field['callback_func'];
+				$callback_func();
+			}
+		}
+		else
+		{
+		echo '
+					<tr valign="top">
+						<td width="40%">
+							<b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
+
+		// Does it have any subtext to show?
+		if (!empty($field['subtext']))
+			echo '
+							<div class="smalltext">', $field['subtext'], '</div>';
+
+		echo '
+						</td>
+						<td>';
+
+		// Want to put something infront of the box?
+		if (!empty($field['preinput']))
+			echo '
+							', $field['preinput'];
+
+		// What type of data are we showing?
+		if ($field['type'] == 'label')
+			echo '
+							', $field['value'];
+
+		// Maybe it's a text box - very likely!
+		elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
+			echo '
+							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' />';
+
+		// You "checking" me out? ;)
+		elseif ($field['type'] == 'check')
+			echo '
+							<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" class="check" ', $field['input_attr'], ' />';
+
+		// Always fun - select boxes!
+		elseif ($field['type'] == 'select')
+		{
+			echo '
+							<select name="', $key, '" id="', $key, '">';
+
+			if (isset($field['options']))
+			{
+				// Is this some code to generate the options?
+				if (!is_array($field['options']))
+					$field['options'] = eval($field['options']);
+				// Assuming we now have some!
+				if (is_array($field['options']))
+					foreach ($field['options'] as $value => $name)
+						echo '
+								<option value="', $value, '" ', $value == $field['value'] ? 'selected="selected"' : '', '>', $name, '</option>';
+			}
+
+			echo '
+							</select>';
+		}
+
+		// Something to end with?
+		if (!empty($field['postinput']))
+			echo '
+							', $field['postinput'];
+
+		echo '
+						</td>
+					</tr>';
+		}
+	}
+
+	// Are there any custom fields?
+	if (!empty($context['custom_fields']))
+	{
+		foreach ($context['custom_fields'] as $field)
+		{
+			echo '
+					<tr valign="top">
+						<td width="40%"><b>', $field['name'], ': </b><div class="smalltext">', $field['desc'], '</div></td>
+						<td>', $field['input_html'], '</td>
+					</tr>';
+		}
+	}
 
 	echo '
 				</table>

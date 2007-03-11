@@ -125,6 +125,22 @@ function Register()
 	require_once($sourcedir . '/Profile.php');
 	loadCustomFields(0, 'register');
 
+	// Or any standard ones?
+	if (!empty($modSettings['registration_fields']))
+	{
+		// Setup some important context.
+		loadLanguage('Profile');
+		loadTemplate('Profile');
+
+		$context['user']['is_owner'] = true;
+
+		// Here, and here only, emulate the permissions the user would have to do this.
+		$user_info['permissions'] = array_merge($user_info['permissions'], array('profile_account_own', 'profile_extra_own'));
+
+		// Load all the fields in question.
+		setupProfileContext(explode(',', $modSettings['registration_fields']));
+	}
+
 	// Generate a visual verification code to make sure the user is no bot.
 	$context['visual_verification'] = empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1;
 	if ($context['visual_verification'])

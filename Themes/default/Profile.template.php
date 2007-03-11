@@ -126,11 +126,16 @@ function template_summary()
 					<td>', $context['member']['title'], '</td>
 				</tr>';
 	}
-	echo '
+
+	if (!isset($context['disabled_fields']['posts']))
+		echo '
 				<tr>
 					<td><b>', $txt['profile_posts'], ': </b></td>
 					<td>', $context['member']['posts'], ' (', $context['member']['posts_per_day'], ' ', $txt['posts_per_day'], ')</td>
-				</tr><tr>
+				</tr>';
+
+	echo '
+				<tr>
 					<td><b>', $txt['position'], ': </b></td>
 					<td>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</td>
 				</tr>';
@@ -244,19 +249,38 @@ function template_summary()
 	echo '
 				<tr>
 					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
-				</tr><tr>
+				</tr>';
+
+	if (!isset($context['disabled_fields']['icq']))
+		echo '
+				<tr>
 					<td><b>', $txt['icq'], ':</b></td>
 					<td>', $context['member']['icq']['link_text'], '</td>
-				</tr><tr>
+				</tr>';
+
+	if (!isset($context['disabled_fields']['aim']))
+		echo '
+				<tr>
 					<td><b>', $txt['aim'], ': </b></td>
 					<td>', $context['member']['aim']['link_text'], '</td>
-				</tr><tr>
+				</tr>';
+
+	if (!isset($context['disabled_fields']['msn']))
+		echo '
+				<tr>
 					<td><b>', $txt['msn'], ': </b></td>
 					<td>', $context['member']['msn']['link_text'], '</td>
-				</tr><tr>
+				</tr>';
+
+	if (!isset($context['disabled_fields']['yim']))
+		echo '
+				<tr>
 					<td><b>', $txt['yim'], ': </b></td>
 					<td>', $context['member']['yim']['link_text'], '</td>
-				</tr><tr>
+				</tr>';
+
+	echo '
+				<tr>
 					<td><b>', $txt['email'], ': </b></td>
 					<td>';
 
@@ -275,10 +299,17 @@ function template_summary()
 	// Some more information.
 	echo '
 					</td>
-				</tr><tr>
+				</tr>';
+
+	if (!isset($context['disabled_fields']['website']))
+		echo '
+				<tr>
 					<td><b>', $txt['website'], ': </b></td>
 					<td><a href="', $context['member']['website']['url'], '" target="_blank">', $context['member']['website']['title'], '</a></td>
-				</tr><tr>
+				</tr>';
+
+	echo '
+				<tr>
 					<td><b>', $txt['current_status'], ' </b></td>
 					<td>
 						<i>', $context['can_send_pm'] ? '<a href="' . $context['member']['online']['href'] . '" title="' . $context['member']['online']['label'] . '">' : '', $settings['use_image_buttons'] ? '<img src="' . $context['member']['online']['image_href'] . '" alt="' . $context['member']['online']['text'] . '" align="middle" />' : $context['member']['online']['text'], $context['can_send_pm'] ? '</a>' : '', $settings['use_image_buttons'] ? '<span class="smalltext"> ' . $context['member']['online']['text'] . '</span>' : '', '</i>';
@@ -292,16 +323,30 @@ function template_summary()
 					</td>
 				</tr><tr>
 					<td colspan="2"><hr size="1" width="100%" class="hrcolor" /></td>
-				</tr><tr>
+				</tr>';
+
+	if (!isset($context['disabled_fields']['gender']))
+		echo '
+				<tr>
 					<td><b>', $txt['gender'], ': </b></td>
 					<td>', $context['member']['gender']['name'], '</td>
-				</tr><tr>
+				</tr>';
+
+	echo '
+				<tr>
 					<td><b>', $txt['age'], ':</b></td>
 					<td>', $context['member']['age'] . ($context['member']['today_is_birthday'] ? ' &nbsp; <img src="' . $settings['images_url'] . '/bdaycake.gif" width="40" alt="" />' : ''), '</td>
-				</tr><tr>
+				</tr>';
+
+	if (!isset($context['disabled_fields']['location']))
+		echo '
+				<tr>
 					<td><b>', $txt['location'], ':</b></td>
 					<td>', $context['member']['location'], '</td>
-				</tr><tr>
+				</tr>';
+
+	echo '
+				<tr>
 					<td><b>', $txt['local_time'], ':</b></td>
 					<td>', $context['member']['local_time'], '</td>
 				</tr><tr>';
@@ -1217,8 +1262,14 @@ function template_edit_options()
 							</tr>';
 
 	// Start the big old loop 'of love.
+	$lastItem = 'hr';
 	foreach ($context['profile_fields'] as $key => $field)
 	{
+		// We add a little hack to be sure we never get two hr in a row!
+		if ($lastItem == 'hr' && $field['type'] == 'hr')
+			continue;
+
+		$lastItem = $field['type'];
 		if ($field['type'] == 'hr')
 		{
 			echo '
@@ -1306,7 +1357,8 @@ function template_edit_options()
 	// Are there any custom profile fields - if so print them!
 	if (!empty($context['custom_fields']))
 	{
-		echo '
+		if ($lastItem != 'hr')
+			echo '
 							<tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
 							</tr>';
