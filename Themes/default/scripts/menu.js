@@ -7,7 +7,7 @@ function smfMenu(menuID)
 	enableHover(menuID);
 
 	// This makes the menu act correctly with internet explorer.
-	function enableHover(menuID)
+	function enableHover()
 	{
 		// Cannot find it?
 		if (!menuHandle)
@@ -17,19 +17,15 @@ function smfMenu(menuID)
 		if (!is_ie)
 			return false;
 
-		// For each of the children attach the hover function.
-		for (i = 0; i < menuHandle.childNodes.length; i++)
+		// Get all potential child nodes.
+		var menuItems = menuHandle.getElementsByTagName("LI");
+		for (i = 0; i < menuItems.length; i++)
 		{
-			// Found the list element?
-			currentNode = menuHandle.childNodes[i];
-			if (currentNode.nodeName == "LI")
-			{
-				currentNode.onmouseover=function() {
-					toggleMenuVisible(this, true);
-				}
-				currentNode.onmouseout=function() {
-					toggleMenuVisible(this, false);
-				}
+			menuItems[i].onmouseover=function() {
+				toggleMenuVisible(this, true);
+			}
+			menuItems[i].onmouseout=function() {
+				toggleMenuVisible(this, false);
 			}
 		}
 	}
