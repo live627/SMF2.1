@@ -39,15 +39,11 @@ function template_admin_above()
 
 				// Is this the current area, or just some area?
 				if ($i == $context['admin_area'])
-				{
 					echo '
 						<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a>';
-				}
 				else
-				{
 					echo '
 						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a>';
-				}
 
 				// Is there any subsections?
 				if (!empty($area['subsections']))
@@ -58,8 +54,16 @@ function template_admin_above()
 					foreach ($area['subsections'] as $sa => $sub)
 					{
 						echo '
-							<li>
-								<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sa=', $sa, ';sesc=', $context['session_id'], '">', $sub['label'], '</a>
+							<li>';
+
+						if (!empty($sub['selected']))
+							echo '
+								<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sa=', $sa, ';sesc=', $context['session_id'], '">', $sub['label'], '</a>';
+						else
+							echo '
+								<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $context['bar_area'] . ';area=' . $i), ';sa=', $sa, ';sesc=', $context['session_id'], '">', $sub['label'], '</a>';
+
+						echo '
 							</li>';
 					}
 

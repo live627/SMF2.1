@@ -99,7 +99,7 @@ function AdminMain()
 
 			For Subsections:
 				string 0:		Text label for this subsection.
-				array 0:		Array of permissions to check for this subsection.
+				array 1:		Array of permissions to check for this subsection.
 	*/
 
 	$context['admin_areas'] = array(
@@ -262,11 +262,19 @@ function AdminMain()
 					'label' => $txt['maintain_title'],
 					'file' => 'ManageMaintenance.php',
 					'function' => 'ManageMaintenance',
+					'subsections' => array(
+						'general' => array($txt['maintain_common'], 'admin_forum'),
+						'tasks' => array($txt['maintain_tasks'], 'admin_forum'),
+					),
 				),
 				'mailqueue' => array(
 					'label' => $txt['mailqueue_title'],
 					'file' => 'ManageMail.php',
 					'function' => 'ManageMail',
+					'subsections' => array(
+						'browse' => array($txt['mailqueue_browse'], 'admin_forum'),
+						'settings' => array($txt['mailqueue_settings'], 'admin_forum'),
+					),
 				),
 				'reports' => array(
 					'label' => $txt['generate_reports'],
@@ -341,7 +349,12 @@ function AdminMain()
 						$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'] = array();
 						foreach ($area['subsections'] as $sa => $sub)
 							if (empty($sub[1]) || allowedTo($sub[1]))
+							{
 								$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
+								// A bit complicated - but is this set?
+								if ($admin_area == $area_id && (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $sa))
+									$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa]['selected'] = true;
+							}
 					}
 				}
 				else

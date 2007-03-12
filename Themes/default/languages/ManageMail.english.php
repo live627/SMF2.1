@@ -4,8 +4,6 @@
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
 $txt['mailqueue_desc'] = 'From this page you can configure your mail settings, as well as viewing and administrating the current mail queue if it is enabled.';
-$txt['mailqueue_browse'] = 'Browse Queue';
-$txt['mailqueue_settings'] = 'Mail Settings';
 
 $txt['mail_type'] = 'Mail type';
 $txt['mail_type_default'] = '(PHP default)';
