@@ -369,7 +369,13 @@ function AdminMain()
 
 	// obExit will know what to do!
 	$context['template_layers'][] = 'admin';
-	$context['show_drop_down'] = empty($modSettings['showsidebarAdmin']) && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0 && !isset($settings['disable_drop_down']);
+	$context['show_drop_down'] = empty($modSettings['showsidebarAdmin']) && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
+
+	// We want a menu, but missing the stylesheet? Get the fallback stylesheet then!
+	if ($context['show_drop_down'] && file_exists($settings['theme_dir'].'/css/dropmenu.css'))
+		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/dropmenu.css" />';
+	elseif ($context['show_drop_down'] && !file_exists($settings['theme_dir'].'/css/dropmenu.css'))
+		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/dropmenu_default.css" />';
 
 	// Now - finally - call the right place!
 	if (isset($admin_include_data['file']))

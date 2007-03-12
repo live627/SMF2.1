@@ -10,13 +10,13 @@ function template_admin_above()
 	if ($context['show_drop_down'])
 	{
 		echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['theme_url'], '/scripts/menu.js"></script>
-		<ul id="admin_menu">';
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>
+		<div id="adm_container"><ul id="admin_menu">';
 
 		// main areas first
 		foreach ($context['admin_areas'] as $section)
 		{
-			if (isset($section['chosen']))
+			if (isset($section['selected']))
 			{
 				echo '
 			<li class="chosen"><h4>', $section['title'] , '</h4>
@@ -76,7 +76,7 @@ function template_admin_above()
 		}
 	
 		echo '
-		</ul>
+		</ul></div>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			menuHandle = new smfMenu("admin_menu");
 		// ]]></script>';
