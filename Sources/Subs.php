@@ -2973,12 +2973,12 @@ function setupThemeContext()
 			'show' => $context['allow_pm'],
 			'sub_buttons' => array(
 				'pm_read' => array(
-					'title' => 'Read your PMs',
+					'title' => $txt['pm_menu_read'],
 					'href' => $scripturl . '?action=pm',
 					'show' => true,
 				),
 				'pm_send' => array(
-					'title' => 'Send a PM',
+					'title' => $txt['pm_menu_send'],
 					'href' => $scripturl . '?action=pm;sa=send',
 					'show' => true,
 				),
@@ -2995,12 +2995,12 @@ function setupThemeContext()
 			'show' => $context['allow_memberlist'],
 			'sub_buttons' => array(
 				'mlist_view' => array(
-					'title' => 'View the memberlist',
+					'title' => $txt['mlist_menu_view'],
 					'href' => $scripturl . '?action=mlist',
 					'show' => true,
 				),
 				'mlist_search' => array(
-					'title' => 'Search the memberlist',
+					'title' => $txt['mlist_search'],
 					'href' => $scripturl . '?action=mlist;sa=search',
 					'show' => true,
 				),

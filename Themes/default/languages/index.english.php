@@ -479,6 +479,7 @@ $txt['mlist_search_group'] = 'Search by position';
 $txt['mlist_search_name'] = 'Search by name';
 $txt['mlist_search_website'] = 'Search by website';
 $txt['mlist_search_results'] = 'Search results for';
+$txt['mlist_menu_view'] = 'View the memberlist';
 
 $txt['attach_downloaded'] = 'downloaded';
 $txt['attach_viewed'] = 'viewed';
@@ -642,6 +643,9 @@ $txt['modify_cancel'] = 'Cancel';
 $txt['mark_read_short'] = 'Mark Read';
 
 $txt['pm_short'] = 'My Messages';
+$txt['pm_menu_read'] = 'Read your messages';
+$txt['pm_menu_send'] = 'Send a message';
+
 $txt['hello_member_ndt'] = 'Hello';
 
 $txt['unapproved_posts'] = 'Unapproved Posts (Topics: %d, Posts: %d)';
