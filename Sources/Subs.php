@@ -2971,6 +2971,18 @@ function setupThemeContext()
 			'title' => $txt['pm_short'] . (!$user_info['is_guest'] && $context['user']['unread_messages'] > 0 ? ' [<strong>'. $context['user']['unread_messages'] . '</strong>]' : ''),
 			'href' => $scripturl . '?action=pm',
 			'show' => $context['allow_pm'],
+			'sub_buttons' => array(
+				'pm_read' => array(
+					'title' => 'Read your PMs',
+					'href' => $scripturl . '?action=pm',
+					'show' => true,
+				),
+				'pm_send' => array(
+					'title' => 'Send a PM',
+					'href' => $scripturl . '?action=pm;sa=send',
+					'show' => true,
+				),
+			),
 		),
 		'calendar' => array(
 			'title' => $txt['calendar'],
@@ -2981,6 +2993,18 @@ function setupThemeContext()
 			'title' => $txt['members_title'],
 			'href' => $scripturl . '?action=mlist',
 			'show' => $context['allow_memberlist'],
+			'sub_buttons' => array(
+				'mlist_view' => array(
+					'title' => 'View the memberlist',
+					'href' => $scripturl . '?action=mlist',
+					'show' => true,
+				),
+				'mlist_search' => array(
+					'title' => 'Search the memberlist',
+					'href' => $scripturl . '?action=mlist;sa=search',
+					'show' => true,
+				),
+			),
 		),
 		'login' => array(
 			'title' => $txt['login'],
@@ -3012,6 +3036,9 @@ function setupThemeContext()
 	elseif ($context['current_action'] == 'theme')
 		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
 
+	// Only load the menu javascript stuff when we have to.
+	$context['load_menu_js'] = false;
+
 	// Now we put the buttons in the context so the theme can use them.
 	$context['menu_buttons'] = array();
 	foreach($buttons AS $act => $button)
@@ -3026,6 +3053,18 @@ function setupThemeContext()
 					$context['menu_buttons'][$last_button]['is_last'] = false;
 				$last_button = $act;
 			}
+
+			// Go through the sub buttons if there are any.
+			if (!empty($button['sub_buttons']))
+				foreach($button['sub_buttons'] AS $key => $subbutton)
+				{
+					if (empty($subbutton['show']))
+						unset($button['sub_buttons'][$key]);
+				}
+
+			// If this still has some sub buttons then we need to tell the template to load the menu javascript file.
+			if (!empty($button['sub_buttons']))
+				$context['load_menu_js'] = true;
 
 			$context['menu_buttons'][$act] = $button;
 		}
