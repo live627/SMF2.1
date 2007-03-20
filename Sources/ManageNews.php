@@ -319,6 +319,9 @@ function ComposeMailing()
 	// Clean the other vars.
 	SendMailing(true);
 
+	// We need a couple strings from the email template file
+	loadLanguage('EmailTemplates');
+
 	// Get a list of all full banned users.  Use their Username and email to find them.  Only get the ones that can't login to turn off notification.
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.id_member

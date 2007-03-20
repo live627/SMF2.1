@@ -76,7 +76,7 @@ We\'re pleased to notify you that your application to join the &quot;{GROUPNAME}
 	),
 	'mc_group_reject' => array(
 		/*
-			@additional_params: mc_group_approve
+			@additional_params: mc_group_reject
 				USERNAME: The user name for the member receiving the email.
 				GROUPNAME: The name of the membergroup that the user was rejected from.
 			@description: The request to join a particular membergroup has been rejected.
@@ -90,7 +90,7 @@ We\'re sorry to notify you that your application to join the &quot;{GROUPNAME}&q
 	),
 	'mc_group_reject_reason' => array(
 		/*
-			@additional_params: mc_group_approve
+			@additional_params: mc_group_reject_reason
 				USERNAME: The user name for the member receiving the email.
 				GROUPNAME: The name of the membergroup that the user was rejected from.
 				REASON: Reason for the rejection.
@@ -107,7 +107,7 @@ This is due to the following reason: {REASON}
 	),
 	'admin_approve_accept' => array(
 		/*
-			@additional_params: mc_group_approve
+			@additional_params: admin_approve_accept
 				USERNAME: The user name for the member receiving the email.
 				PROFILELINK: The URL of the profile page.
 			@description:
@@ -124,7 +124,7 @@ You may change it after you login by going to the profile page, or by visiting t
 	),
 	'admin_approve_activation' => array(
 		/*
-			@additional_params: mc_group_approve
+			@additional_params: admin_approve_activation
 				USERNAME: The user name for the member receiving the email.
 				ACTIVATIONLINK:  The url link to activate the member's account.
 			@description:
@@ -139,7 +139,7 @@ Your account on {FORUMNAME} has been approved by the forum administrator, and mu
 	),
 	'admin_approve_reject' => array(
 		/*
-			@additional_params: mc_group_approve
+			@additional_params: admin_approve_reject
 				USERNAME: The user name for the member receiving the email.
 			@description:
 		*/
@@ -152,7 +152,7 @@ Regrettably, your application to join {FORUMNAME} has been rejected.
 	),
 	'admin_approve_delete' => array(
 		/*
-			@additional_params: mc_group_approve
+			@additional_params: admin_approve_delete
 				USERNAME: The user name for the member receiving the email.
 			@description:
 		*/
@@ -165,7 +165,7 @@ Your account on {FORUMNAME} has been deleted.  This may be because you never act
 	),
 	'admin_approve_remind' => array(
 		/*
-			@additional_params: mc_group_approve
+			@additional_params: admin_approve_remind
 				USERNAME: The user name for the member receiving the email.
 				ACTIVATIONLINK:  The url link to activate the member's account.
 			@description:
@@ -200,7 +200,7 @@ You can view the full announcement by following this link:
 	),
 	'notify_boards_once_body' => array(
 		/*
-			@additional_params: notify_boards_once
+			@additional_params: notify_boards_once_body
 				TOPICSUBJECT: The subject of the topic causing the notification
 				TOPICLINK: A link to the topic.
 				MESSAGE: This is the body of the message.
@@ -246,7 +246,7 @@ Unsubscribe to new topics from this board by using this link:
 	),
 	'notify_boards_body' => array(
 		/*
-			@additional_params: notify_boards_once
+			@additional_params: notify_boards_body
 				TOPICSUBJECT: The subject of the topic causing the notification
 				TOPICLINK: A link to the topic.
 				MESSAGE: This is the body of the message.
@@ -271,7 +271,7 @@ Unsubscribe to new topics from this board by using this link:
 	),
 	'notify_boards' => array(
 		/*
-			@additional_params: notify_boards_once
+			@additional_params: notify_boards
 				TOPICSUBJECT: The subject of the topic causing the notification
 				TOPICLINK: A link to the topic.
 				UNSUBSCRIBELINK: Link to unsubscribe from notifications.
@@ -347,9 +347,9 @@ Username: {MEMBERNAME}
 	),
 	'scheduled_approval' => array(
 		/*
-			@additional_params: 
-				REALNAME:
-				BODY:
+			@additional_params: scheduled_approval
+				REALNAME: The real (display) name of the person receiving the email.
+				BODY: The generated body of the mail.
 			@description:
 		*/
 		'subject' => 'Summary of posts awaiting approval at {FORUMNAME}',
@@ -366,9 +366,9 @@ Please log in to the forum to review these items.
 	),
 	'happy_birthday' => array(
 		/*
-			@additional_params:
-				REALNAME:
-			@description:
+			@additional_params: happy_birthday
+				REALNAME: The real (display) name of the person receiving the birthday message.
+			@description: A message sent to members on their birthday.
 		*/
 		'subject' => 'Happy birthday from {FORUMNAME}.',
 		'body' => 'Dear {REALNAME},
@@ -379,11 +379,11 @@ We here at {FORUMNAME} would like to wish you a happy birthday.  May this day an
 	),
 	'send_topic' => array(
 		/*
-			@additional_params:
-				TOPICSUBJECT: 
-				SENDERNAME: 
-				RECPNAME: 
-				TOPICLINK: 
+			@additional_params: send_topic
+				TOPICSUBJECT: The subject of the topic being sent.
+				SENDERNAME: The name of the member sending the topic.
+				RECPNAME: The name of the person receiving the email.
+				TOPICLINK: A link to the topic being sent.
 			@description:
 		*/
 		'subject' => 'Topic: {TOPICSUBJECT} (From: {SENDERNAME})',
@@ -398,12 +398,12 @@ Thanks,
 	),
 	'send_topic_comment' => array(
 		/*
-			@additional_params:
-				TOPICSUBJECT: 
-				SENDERNAME: 
-				RECPNAME: 
-				TOPICLINK: 
-				COMMENT: 
+			@additional_params: send_topic_comment
+				TOPICSUBJECT: The subject of the topic being sent.
+				SENDERNAME: The name of the member sending the topic.
+				RECPNAME: The name of the person receiving the email.
+				TOPICLINK: A link to the topic being sent.
+				COMMENT: A comment left by the sender.
 			@description:
 		*/
 		'subject' => 'Topic: {TOPICSUBJECT} (From: {SENDERNAME})',
@@ -443,9 +443,9 @@ The reporter has made the following comment:
 	),
 	'change_password' => array(
 		/*
-			@additional_params:
-				USERNAME: 
-				PASSWORD: 
+			@additional_params: change_password
+				USERNAME: The user name for the member receiving the email.
+				PASSWORD: The password for the member.
 			@description:
 		*/
 		'subject' => 'New Password Details',
@@ -462,10 +462,10 @@ You may change it after you login by going to the profile page, or by visiting t
 	),
 	'register_activate' => array(
 		/*
-			@additional_params:
-				REALNAME: 
-				USERNAME: 
-				PASSWORD: 
+			@additional_params: register_activate
+				REALNAME: The display name for the member receiving the email.
+				USERNAME: The user name for the member receiving the email.
+				PASSWORD: The password for the member.
 				ACTIVATIONLINK:  The url link to reactivate the member's account.
 				ACTIVATIONCODE:  The code needed to reactivate the member's account.
 			@description:
@@ -485,10 +485,10 @@ Should you have any problems with activation, please use the code "{ACTIVATIONCO
 	),
 	'register_immediate' => array(
 		/*
-			@additional_params:
-				REALNAME: 
-				USERNAME: 
-				PASSWORD: 
+			@additional_params: register_immediate
+				REALNAME: The display name for the member receiving the email.
+				USERNAME: The user name for the member receiving the email.
+				PASSWORD: The password for the member.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
@@ -504,10 +504,10 @@ You may change your password after you login by going to your profile, or by vis
 	),
 	'register_pending' => array(
 		/*
-			@additional_params:
-				REALNAME: 
-				USERNAME: 
-				PASSWORD: 
+			@additional_params: register_pending
+				REALNAME: The display name for the member receiving the email.
+				USERNAME: The user name for the member receiving the email.
+				PASSWORD: The password for the member.
 			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
@@ -521,7 +521,7 @@ Before you can login and start using the forum, your request will be reviewed an
 	),
 	'notification_reply' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_reply
 				TOPICSUBJECT:
 				POSTERNAME:
 				TOPICLINK:
@@ -539,7 +539,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'notification_reply_body' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_reply_body
 				TOPICSUBJECT:
 				POSTERNAME:
 				TOPICLINK:
@@ -561,7 +561,7 @@ The text of the reply is shown below:
 	),
 	'notification_reply_once' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_reply_once
 				TOPICSUBJECT:
 				POSTERNAME:
 				TOPICLINK:
@@ -581,7 +581,7 @@ More replies may be posted, but you won\'t receive any more notifications until 
 	),
 	'notification_reply_body_once' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_reply_body_once
 				TOPICSUBJECT:
 				POSTERNAME:
 				TOPICLINK:
@@ -605,7 +605,7 @@ More replies may be posted, but you won\'t receive any more notifications until 
 	),
 	'notification_sticky' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_sticky
 			@description:
 		*/
 		'subject' => 'Topic stickied: {TOPICSUBJECT}',
@@ -619,7 +619,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'notification_lock' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_lock
 			@description:
 		*/
 		'subject' => 'Topic locked: {TOPICSUBJECT}',
@@ -633,7 +633,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'notification_unlock' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_unlock
 			@description:
 		*/
 		'subject' => 'Topic unlocked: {TOPICSUBJECT}',
@@ -647,7 +647,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'notification_remove' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_remove
 			@description:
 		*/
 		'subject' => 'Topic removed: {TOPICSUBJECT}',
@@ -657,7 +657,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'notification_move' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_move
 			@description:
 		*/
 		'subject' => 'Topic moved: {TOPICSUBJECT}',
@@ -671,7 +671,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'notification_merged' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_merged
 			@description:
 		*/
 		'subject' => 'Topic merged: {TOPICSUBJECT}',
@@ -685,7 +685,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'notification_split' => array(
 		/*
-			@additional_params:
+			@additional_params: notification_split
 			@description:
 		*/
 		'subject' => 'Topic split: {TOPICSUBJECT}',
@@ -699,7 +699,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'admin_notify' => array(
 		/*
-			@additional_params:
+			@additional_params: admin_notify
 				USERNAME: 
 				PROFILELINK: 
 			@description:
@@ -712,7 +712,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	),
 	'admin_notify_approval' => array(
 		/*
-			@additional_params:
+			@additional_params: admin_notify_approval
 				USERNAME: 
 				PROFILELINK: 
 				APPROVALLINK: 

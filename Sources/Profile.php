@@ -3615,7 +3615,7 @@ function loadCustomFields($memID, $area = 'summary')
 
 function ignoreboards($memID)
 {
-	global $txt, $user_info, $db_prefix, $context, $db_prefix, $modSettings, $smfFunc;
+	global $txt, $user_info, $db_prefix, $context, $db_prefix, $modSettings, $smfFunc, $cur_profile;
 
 	// Have the admins enabled this option?
 	if (empty($modSettings['allow_ignore_boards']))
