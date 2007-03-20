@@ -13,8 +13,6 @@
 
 global $context;
 
-$txt['regards_team'] = 'Regards,' . "\n" . 'The ' . $context['forum_name'] . ' Team.';
-
 $txt['scheduled_approval_email_topic'] = 'The following topics are awaiting approval:';
 $txt['scheduled_approval_email_msg'] = 'The following posts are awaiting approval:';
 $txt['scheduled_approval_email_attach'] = 'The following attachments are awaiting approval:';

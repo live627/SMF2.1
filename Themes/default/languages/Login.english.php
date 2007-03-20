@@ -30,14 +30,6 @@ $txt['login_hash_error'] = 'Password security has recently been upgraded.  Pleas
 
 $txt['register_age_confirmation'] = 'I am at least %d years old';
 
-// Use numeric entities in the below six strings.
-$txt['register_subject'] = 'Welcome to ' . $context['forum_name'];
-
-// For the below three messages, %1$s is the display name, %2$s is the username, %3$s is the password, %4$s is the activation code, and %5$s is the activation link (the last two are only for activation.)
-$txt['register_immediate_message'] = 'You are now registered with an account at ' . $context['forum_name'] . ', %1$s!' . "\n\n" . 'Your account\'s username is %2$s and its password is %3$s.' . "\n\n" . 'You may change your password after you login by going to your profile, or by visiting this page after you login:' . "\n\n" .$scripturl . '?action=profile' . "\n\n" . $txt['regards_team'];
-$txt['register_activate_message'] = 'You are now registered with an account at ' . $context['forum_name'] . ', %1$s!' . "\n\n" . 'Your account\'s username is %2$s and its password is %3$s (which can be changed later.)' . "\n\n" . 'Before you can login, you first need to activate your account. To do so, please follow this link:' . "\n\n" . '%5$s' . "\n\n" . 'Should you have any problems with activation, please use the code "%4$s".' . "\n\n" . $txt['regards_team'];
-$txt['register_pending_message'] = 'Your registration request at ' . $context['forum_name'] . ' has been received, %1$s.' . "\n\n" . 'The username you registered with was %2$s and the password was %3$s.' . "\n\n" . 'Before you can login and start using the forum, your request will be reviewed and approved.  When this happens, you will receive another email from this address.' . "\n\n" . $txt['regards_team'];
-
 $txt['ban_register_prohibited'] = 'Sorry, you are not allowed to register on this forum.';
 $txt['under_age_registration_prohibited'] = 'Sorry, but users under the age of %d are not allowed to register on this forum.';
 
