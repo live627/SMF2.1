@@ -158,7 +158,7 @@ function ViewErrorLog()
 		if (!empty($row['file']) && !empty($row['line']))
 		{
 			// Eval'd files rarely point to the right location and cause havoc for linking, so don't link them.
-			$linkfile = strpos($row['file'], 'eval') === false || strpos($row['file'], '?') === false;
+			$linkfile = strpos($row['file'], 'eval') === false || strpos($row['file'], '?') === false;  // De Morgan's Law.  Want this true unless both are present.
 
 			$context['errors'][$row['id_error']]['file'] = array(
 				'file' => $row['file'],

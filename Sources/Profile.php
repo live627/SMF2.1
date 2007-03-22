@@ -1101,7 +1101,7 @@ function setupProfileContext($fields)
 
 	// First check for any linked sets.
 	foreach ($profile_fields as $key => $field)
-		if (isset($field['link_with']) && in_array($field['link_with'], $field))
+		if (isset($field['link_with']) && in_array($field['link_with'], $fields))
 			$fields[] = $key;
 
 	// Some default bits.

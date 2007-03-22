@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2682 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2683 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -14,6 +14,8 @@ March 2007
  + Added the ability to define sub menu buttons for the template menu.  (Subs.php)
  & Added language strings for above (index language files)
  ! An invisible UTF-8 character wasn't filtered out properly. (Load.php)
+ ! The website profile fields should now only show up in the correct page of the profile. (Profile.php)
+ ! The admin template had the wrong Simple Machines file names. (Admin template)
 
 
 February 2007

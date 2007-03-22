@@ -583,8 +583,8 @@ function template_credits()
 	echo '
 		// ]]></script>
 		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=current-version.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=/latest-news.js"></script>
-		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-support.js?"></script>';
+		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-news.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $scripturl, '?action=viewsmfile;filename=latest-support.js"></script>';
 
 	// This sets the latest support stuff.
 	echo '
