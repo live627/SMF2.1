@@ -979,7 +979,8 @@ function scheduled_fetchSMfiles()
 	foreach($js_files AS $ID_FILE => $file)
 	{
 		// Create the url
-		$url = 'http://www.simplemachines.org' . (!empty($file['path']) ? $file['path'] : '') . $file['filename'] . (!empty($file['parameters']) ? '?' . $file['parameters'] : '');
+		$file['path'] = empty($file['path']) || substr($file['path'], 0, 7) != 'http://' ? 'http://www.simplemachines.org' : $file['path'];
+		$url = $file['path'] . $file['filename'] . (!empty($file['parameters']) ? '?' . $file['parameters'] : '');
 
 		// Get the file
 		$file_data = fetch_web_data($url);

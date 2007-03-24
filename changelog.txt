@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2683 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2684 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -16,6 +16,7 @@ March 2007
  ! An invisible UTF-8 character wasn't filtered out properly. (Load.php)
  ! The website profile fields should now only show up in the correct page of the profile. (Profile.php)
  ! The admin template had the wrong Simple Machines file names. (Admin template)
+ + Added the ability to store files retrieved from sites other then Simple Machines. (ScheduledTasks.php)
 
 
 February 2007
