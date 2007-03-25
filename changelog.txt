@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2685 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2686 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -19,6 +19,7 @@ March 2007
  + Added the ability to store files retrieved from sites other then Simple Machines. (ScheduledTasks.php)
  ! Limit SSI polls to polls outside of the recycling board. (SSI.php)
  ! The function logAction now does a check to ensure that the log is active before doing a lot of work. (Subs.php)
+ ! The moderation center wasn't loading the menu stylesheet. (ModerationCenter.php)
 
 
 February 2007
