@@ -733,7 +733,7 @@ function ssi_topPoll($output_method = 'echo')
 // Show the most recently posted poll.
 function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 {
-	global $db_prefix, $txt, $settings, $boardurl, $sc, $user_info, $context, $smfFunc;
+	global $db_prefix, $txt, $settings, $boardurl, $sc, $user_info, $context, $smfFunc, $modSettings;
 
 	$boardsAllowed = array_intersect(boardsAllowedTo('poll_view'), boardsAllowedTo('poll_vote'));
 
@@ -750,7 +750,8 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		WHERE p.voting_locked = 0
 			AND lp.id_choice IS NULL
 			AND $user_info[query_wanna_see_board]" . (!in_array(0, $boardsAllowed) ? "
-			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
+			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
+			AND b.id_board != $modSettings[recycle_board]" : '') . "
 		ORDER BY " . ($topPollInstead ? 'pc.votes' : 'p.id_poll') . " DESC
 		LIMIT 1", __FILE__, __LINE__);
 	$row = $smfFunc['db_fetch_assoc']($request);

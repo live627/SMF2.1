@@ -2599,6 +2599,10 @@ function logAction($action, $extra = array())
 {
 	global $db_prefix, $modSettings, $user_info, $smfFunc;
 
+	// No point in doing anything if the log isn't even enabled.
+	if (empty($modSettings['modlog_enabled']))
+		return false;
+
 	if (!is_array($extra))
 		trigger_error('logAction(): data is not an array with action \'' . $action . '\'', E_USER_NOTICE);
 
@@ -2647,19 +2651,14 @@ function logAction($action, $extra = array())
 	else
 		$msg_id = '0';
 	
-	if (!empty($modSettings['modlog_enabled']))
-	{
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}log_actions
-				(log_time, id_member, ip, action, id_board, id_topic, id_msg, extra)
-			VALUES (" . time() . ", $user_info[id], SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$action', 1, 30),
-				$board_id, $topic_id, $msg_id,
-				SUBSTRING('" . $smfFunc['db_escape_string'](serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
+	$smfFunc['db_query']('', "
+		INSERT INTO {$db_prefix}log_actions
+			(log_time, id_member, ip, action, id_board, id_topic, id_msg, extra)
+		VALUES (" . time() . ", $user_info[id], SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$action', 1, 30),
+			$board_id, $topic_id, $msg_id,
+			SUBSTRING('" . $smfFunc['db_escape_string'](serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
 
-		return db_insert_id("{$db_prefix}log_actions", 'id_action');
-	}
-
-	return false;
+	return db_insert_id("{$db_prefix}log_actions", 'id_action');
 }
 
 // Track Statistics.
