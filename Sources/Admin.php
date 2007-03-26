@@ -109,15 +109,18 @@ function AdminMain()
 				'index' => array(
 					'label' => $txt['admin_center'],
 					'function' => 'AdminHome',
+					'icon' => 'administration.gif',
 				),
 				'credits' => array(
 					'label' => $txt['support_credits_title'],
 					'function' => 'AdminHome',
+					'icon' => 'support.gif',
 				),
 				'news' => array(
 					'label' => $txt['news_title'],
 					'file' => 'ManageNews.php',
 					'function' => 'ManageNews',
+					'icon' => 'news.gif',
 					'permission' => array('edit_news', 'send_mail', 'admin_forum'),
 					'subsections' => array(
 						'edit_news' => array($txt['admin_edit_news'], 'edit_news'),
@@ -130,6 +133,7 @@ function AdminMain()
 					'file' => 'Packages.php',
 					'function' => 'Packages',
 					'permission' => array('edit_news', 'send_mail', 'admin_forum'),
+					'icon' => 'packages.gif',
 				),
 				'cleanperms' => array(
 					'function' => 'CleanupPermissions',
@@ -156,23 +160,27 @@ function AdminMain()
 					'label' => $txt['modSettings_title'],
 					'file' => 'ModSettings.php',
 					'function' => 'ModifyFeatureSettings',
+					'icon' => 'features.gif',
 				),
 				'serversettings' => array(
 					'label' => $txt['admin_server_settings'],
 					'file' => 'ManageServer.php',
 					'function' => 'ModifySettings',
+					'icon' => 'server.gif',
 				),
 				'current_theme' => array(
 					'label' => $txt['theme_current_settings'],
 					'file' => 'Themes.php',
 					'function' => 'ThemesMain',
 					'custom_url' => $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id'],
+					'icon' => 'current_theme.gif',
 				),
 				'theme' => array(
 					'label' => $txt['theme_admin'],
 					'file' => 'Themes.php',
 					'function' => 'ThemesMain',
 					'custom_url' => $scripturl . '?action=admin;area=theme;sa=admin',
+					'icon' => 'themes.gif',
 				),
 			),
 		),
@@ -342,6 +350,12 @@ function AdminMain()
 					// Does it have a custom URL?
 					if (isset($area['custom_url']))
 						$context['admin_areas'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
+
+					// and a icon as well?
+					if (isset($area['icon']))
+						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
+					else
+						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '';
 
 					// Did it have subsections?
 					if (isset($area['subsections']))
