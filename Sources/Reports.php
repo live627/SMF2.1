@@ -471,12 +471,19 @@ function MemberGroupsReport()
 		SELECT id_board, name, member_groups, id_profile
 		FROM {$db_prefix}boards", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		if (trim($row['member_groups']) == '')
+			$groups = array(1);
+		else
+			$groups = array_merge(array(1), explode(',', $row['member_groups']));
+
 		$boards[$row['id_board']] = array(
 			'id' => $row['id_board'],
 			'name' => $row['name'],
 			'profile' => $row['id_profile'],
-			'groups' => array_merge(array(1), explode(',', $row['member_groups'])),
+			'groups' => $groups,
 		);
+	}
 	$smfFunc['db_free_result']($request);
 
 	// Standard settings.

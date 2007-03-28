@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2687 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2688 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -10,7 +10,7 @@ March 2007
  ! Added a setting to enable visual verification on posting for certain users. (ManagePosts.php, Post.php)
  ! Moved visual verification javascript to a separate file that automatically populates links as required. (captcha.js)
  ! It is now possible to translate the agreement file by creating a new file called agreement_language.txt - this can be edited from the admin center. (ManageRegistration.php, Register.php)
- * Updated admin menu to fallback on default stylesheet for older themes + changed look for default, classic and babylon admin menu ( Admin.php, babylon/index.template, classic/index.template, Admin.template, style.css, css/dropmenu.css, css/dropmenu_default.css, babylon/css/dropmenu.css, classic/css/dropmenu.css )
+ * Updated admin menu to fallback on default stylesheet for older themes + changed look for default, classic and babylon admin menu. (Admin.php, babylon/index.template, classic/index.template, Admin.template, style.css, css/dropmenu.css, css/dropmenu_default.css, babylon/css/dropmenu.css, classic/css/dropmenu.css)
  + Added the ability to define sub menu buttons for the template menu.  (Subs.php)
  & Added language strings for above (index language files)
  ! An invisible UTF-8 character wasn't filtered out properly. (Load.php)
@@ -20,7 +20,10 @@ March 2007
  ! Limit SSI polls to polls outside of the recycling board. (SSI.php)
  ! The function logAction now does a check to ensure that the log is active before doing a lot of work. (Subs.php)
  ! The moderation center wasn't loading the menu stylesheet. (ModerationCenter.php)
- * added initial support for icons to admin menu, changed minor css.( Admin.php, Admin.template.php , Themes/default/images/admin )
+ * Added initial support for icons to admin menu, changed minor css. (Admin.php, Admin.template.php, Themes/default/images/admin)
+ ! The membergroup report was incorrectly reporting that regular members had access to certain boards. (Reports.php)
+ ! The PHP tag is no longer a block level element in both parsing and HTML. (Subs.php)
+ ! Added CSS classes to many of the BBC tags and moved much of the inline styles into the CSS file. (Subs.php, style.css)
 
 
 February 2007

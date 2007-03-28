@@ -974,12 +974,12 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'black',
-				'before' => '<span style="color: black;">',
+				'before' => '<span style="color: black;" class="bbc_color">',
 				'after' => '</span>',
 			),
 			array(
 				'tag' => 'blue',
-				'before' => '<span style="color: blue;">',
+				'before' => '<span style="color: blue;" class="bbc_color">',
 				'after' => '</span>',
 			),
 			array(
@@ -1073,20 +1073,20 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'color',
 				'type' => 'unparsed_equals',
 				'test' => '(#[\da-fA-F]{3}|#[\da-fA-F]{6}|[A-Za-z]{1,12})\]',
-				'before' => '<span style="color: $1;">',
+				'before' => '<span style="color: $1;" class="bbc_color">',
 				'after' => '</span>',
 			),
 			array(
 				'tag' => 'email',
 				'type' => 'unparsed_content',
-				'content' => '<a href="mailto:$1">$1</a>',
+				'content' => '<a href="mailto:$1" class="bbc_email">$1</a>',
 				// !!! Should this respect guest_hideContacts?
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 			),
 			array(
 				'tag' => 'email',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="mailto:$1">',
+				'before' => '<a href="mailto:$1" class="bbc_email">',
 				'after' => '</a>',
 				// !!! Should this respect guest_hideContacts?
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
@@ -1095,13 +1095,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'ftp',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1" target="_blank">$1</a>',
+				'content' => '<a href="$1" target="_blank" class="bbc_ftp">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 			),
 			array(
 				'tag' => 'ftp',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" target="_blank">',
+				'before' => '<a href="$1" target="_blank" class="bbc_ftp">',
 				'after' => '</a>',
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
 				'disabled_after' => ' ($1)',
@@ -1110,7 +1110,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'font',
 				'type' => 'unparsed_equals',
 				'test' => '[A-Za-z0-9_,\-\s]+?\]',
-				'before' => '<span style="font-family: $1;">',
+				'before' => '<span style="font-family: $1;" class="bbc_font">',
 				'after' => '</span>',
 			),
 			array(
@@ -1125,7 +1125,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'green',
-				'before' => '<span style="color: green;">',
+				'before' => '<span style="color: green;" class="bbc_color">',
 				'after' => '</span>',
 			),
 			array(
@@ -1156,14 +1156,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					'width' => array('optional' => true, 'value' => ' width="$1"', 'match' => '(\d+)'),
 					'height' => array('optional' => true, 'value' => ' height="$1"', 'match' => '(\d+)'),
 				),
-				'content' => '<img src="$1" alt="{alt}"{width}{height} border="0" />',
+				'content' => '<img src="$1" alt="{alt}"{width}{height} class="bbc_img" />',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 				'disabled_content' => '($1)',
 			),
 			array(
 				'tag' => 'img',
 				'type' => 'unparsed_content',
-				'content' => '<img src="$1" alt="" border="0" />',
+				'content' => '<img src="$1" alt="" class="bbc_img" />',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 				'disabled_content' => '($1)',
 			),
@@ -1175,13 +1175,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'iurl',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1">$1</a>',
+				'content' => '<a href="$1" class="bbc_link">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 			),
 			array(
 				'tag' => 'iurl',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1">',
+				'before' => '<a href="$1" class="bbc_link">',
 				'after' => '</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '
 					if (substr($data, 0, 1) == \'#\')
@@ -1201,7 +1201,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'list',
-				'before' => '<ul style="margin-top: 0; margin-bottom: 0;">',
+				'before' => '<ul class="bbc_list">',
 				'after' => '</ul>',
 				'trim' => 'inside',
 				'require_children' => array('li'),
@@ -1212,7 +1212,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'parameters' => array(
 					'type' => array('match' => '(none|disc|circle|square|decimal|decimal-leading-zero|lower-roman|upper-roman|lower-alpha|upper-alpha|lower-greek|lower-latin|upper-latin|hebrew|armenian|georgian|cjk-ideographic|hiragana|katakana|hiragana-iroha|katakana-iroha)'),
 				),
-				'before' => '<ul style="margin-top: 0; margin-bottom: 0; list-style-type: {type};">',
+				'before' => '<ul style="list-style-type: {type};" class="bbc_list">',
 				'after' => '</ul>',
 				'trim' => 'inside',
 				'require_children' => array('li'),
@@ -1259,7 +1259,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'php',
 				'type' => 'unparsed_content',
-				'content' => '<div class="phpcode">$1</div>',
+				'content' => '<span class="phpcode">$1</span>',
 				'validate' => isset($disabled['php']) ? null : create_function('&$tag, &$data, $disabled', '
 					if (!isset($disabled[\'php\']))
 					{
@@ -1268,7 +1268,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 						if ($add_begin)
 							$data = preg_replace(array(\'~^(.+?)&lt;\?.{0,40}?php(&nbsp;|\s)~\', \'~\?&gt;((?:</(font|span)>)*)$~\'), \'$1\', $data, 2);
 					}'),
-				'block_level' => true,
+				'block_level' => false,
 				'disabled_content' => '$1',
 			),
 			array(
@@ -1322,7 +1322,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'red',
-				'before' => '<span style="color: red;">',
+				'before' => '<span style="color: red;" class="bbc_color">',
 				'after' => '</span>',
 			),
 			array(
@@ -1340,16 +1340,14 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
 				'test' => '([1-9][\d]?p[xt]|(?:x-)?small(?:er)?|(?:x-)?large[r]?)\]',
-				// !!! line-height
-				'before' => '<span style="font-size: $1; line-height: 1.3em;">',
+				'before' => '<span style="font-size: $1;" class="bbc_size">',
 				'after' => '</span>',
 			),
 			array(
 				'tag' => 'size',
 				'type' => 'unparsed_equals',
 				'test' => '[1-9]\]',
-				// !!! line-height
-				'before' => '<font size="$1" style="line-height: 1.3em;">',
+				'before' => '<font size="$1" class="bbc_size">',
 				'after' => '</font>',
 			),
 			array(
@@ -1407,7 +1405,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'table',
-				'before' => '<table style="font: inherit; color: inherit;">',
+				'before' => '<table class="bbc_table">',
 				'after' => '</table>',
 				'trim' => 'inside',
 				'require_children' => array('tr'),
@@ -1426,7 +1424,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			),
 			array(
 				'tag' => 'td',
-				'before' => '<td valign="top" style="font: inherit; color: inherit;">',
+				'before' => '<td>',
 				'after' => '</td>',
 				'require_parents' => array('tr'),
 				'trim' => 'outside',
@@ -1437,25 +1435,25 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_content',
-				'content' => '<a href="$1" target="_blank">$1</a>',
+				'content' => '<a href="$1" target="_blank" class="bbc_link extern">$1</a>',
 				'validate' => create_function('&$tag, &$data, $disabled', '$data = strtr($data, array(\'<br />\' => \'\'));'),
 			),
 			array(
 				'tag' => 'url',
 				'type' => 'unparsed_equals',
-				'before' => '<a href="$1" target="_blank">',
+				'before' => '<a href="$1" target="_blank" class="bbc_link extern">',
 				'after' => '</a>',
 				'disallow_children' => array('email', 'ftp', 'url', 'iurl'),
 				'disabled_after' => ' ($1)',
 			),
 			array(
 				'tag' => 'u',
-				'before' => '<span style="text-decoration: underline;">',
+				'before' => '<span class="bbc_u">',
 				'after' => '</span>',
 			),
 			array(
 				'tag' => 'white',
-				'before' => '<span style="color: white;">',
+				'before' => '<span style="color: white;" class="bbc_color">',
 				'after' => '</span>',
 			),
 		);

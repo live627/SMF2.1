@@ -488,3 +488,42 @@ a img
 	left: 0;
 }
 
+/* Styling for BBC tags */
+.bbc_color a
+{
+	color: inherit;
+}
+
+.bbc_img
+{
+	border: 0;
+}
+
+.bbc_list
+{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.bbc_size
+{
+	line-height: 1.3em;
+}
+
+.bbc_table
+{
+	font: inherit;
+	color: inherit;
+}
+
+.bbc_table td
+{
+	font: inherit;
+	color: inherit;
+	vertical-align: top;
+}
+
+.bbc_u
+{
+	text-decoration: underline;
+}
