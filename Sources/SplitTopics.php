@@ -7,7 +7,7 @@
 * =============================================================================== *
 * Software Version:           SMF 2.0 Alpha                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
-* Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
+* Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
 * Support, News, Updates at:  http://www.simplemachines.org                       *
 ***********************************************************************************
@@ -21,9 +21,8 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
-
-/* Original module by Mach8 - We'll never forget you.                        */
-/*****************************************************************************/
+/* Original module by Mach8 - We'll never forget you.                            */
+/*********************************************************************************/
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
