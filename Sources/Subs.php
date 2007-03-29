@@ -3149,13 +3149,15 @@ function template_header()
 
 	header('Content-Type: text/' . (isset($_REQUEST['xml']) ? 'xml' : 'html') . '; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
 
+	$checked_securityFiles = false;
 	foreach ($context['template_layers'] as $layer)
 	{
 		loadSubTemplate($layer . '_above', true);
 
-		// May seem contrived, but this is done in case the main layer isn't there...
-		if ($layer == 'main' && allowedTo('admin_forum') && !$user_info['is_guest'])
+		// May seem contrived, but this is done in case the body and main layer aren't there...
+		if (in_array($layer, array('body', 'main')) && allowedTo('admin_forum') && !$user_info['is_guest'] && !$checked_securityFiles)
 		{
+			$checked_securityFiles = true;
 			$securityFiles = array('install.php', 'webinstall.php', 'upgrade.php', 'convert.php', 'repair_paths.php', 'repair_settings.php');
 			foreach ($securityFiles as $i => $securityFile)
 			{

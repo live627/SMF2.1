@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2688 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2689 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -24,6 +24,7 @@ March 2007
  ! The membergroup report was incorrectly reporting that regular members had access to certain boards. (Reports.php)
  ! The PHP tag is no longer a block level element in both parsing and HTML. (Subs.php)
  ! Added CSS classes to many of the BBC tags and moved much of the inline styles into the CSS file. (Subs.php, style.css)
+ ! Main layer split caused the security check on files to not be done. (Subs.php)
 
 
 February 2007
