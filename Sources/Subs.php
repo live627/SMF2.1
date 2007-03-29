@@ -2943,6 +2943,43 @@ function setupThemeContext()
 			'title' => $txt['help'],
 			'href' => $scripturl . '?action=help',
 			'show' => true,
+			'sub_buttons' => array(
+				'intro' => array(
+					'title' => $txt['manual_index_intro'],
+					'href' => $scripturl . '?action=help;page=index',
+					'show' => true,
+				),
+				'register' => array(
+					'title' => $txt['manual_index_register'],
+					'href' => $scripturl . '?action=help;page=registering',
+					'show' => true,
+				),
+				'login' => array(
+					'title' => $txt['manual_index_login'],
+					'href' => $scripturl . '?action=help;page=loginout',
+					'show' => true,
+				),
+				'profile' => array(
+					'title' => $txt['manual_index_profile'],
+					'href' => $scripturl . '?action=help;page=profile',
+					'show' => true,
+				),
+				'posting' => array(
+					'title' => $txt['manual_index_posting'],
+					'href' => $scripturl . '?action=help;page=post',
+					'show' => true,
+				),
+				'pm' => array(
+					'title' => $txt['manual_index_pm'],
+					'href' => $scripturl . '?action=help;page=pm',
+					'show' => true,
+				),
+				'search' => array(
+					'title' => $txt['manual_index_search'],
+					'href' => $scripturl . '?action=help;page=searching',
+					'show' => true,
+				),
+			),
 		),
 		'search' => array(
 			'title' => $txt['search'],
@@ -2953,16 +2990,77 @@ function setupThemeContext()
 			'title' => $txt['admin'],
 			'href' => $scripturl . '?action=admin',
 			'show' => $context['allow_admin'],
+			'sub_buttons' => array(
+				'featuresettings' => array(
+					'title' => $txt['modSettings_title'],
+					'href' => $scripturl . '?action=admin;area=featuresettings;sesc=' . $context['session_id'],
+					'show' => allowedTo('admin_forum'),
+				),
+				'packages' => array(
+					'title' => $txt['package'],
+					'href' => $scripturl . '?action=admin;area=packages;sesc=' . $context['session_id'],
+					'show' => allowedTo('admin_forum'),
+				),
+				'errorlog' => array(
+					'title' => $txt['errlog'],
+					'href' => $scripturl . '?action=admin;area=errorlog;sesc=' . $context['session_id'],
+					'show' => allowedTo('admin_forum'),
+				),
+				'permissions' => array(
+					'title' => $txt['edit_permissions'],
+					'href' => $scripturl . '?action=admin;area=permissions;sesc=' . $context['session_id'],
+					'show' => allowedTo('manage_permissions'),
+				),
+			),
 		),
 		'moderate' => array(
 			'title' => $txt['moderate'],
 			'href' => $scripturl . '?action=moderate',
 			'show' => $context['allow_moderation_center'],
+			'sub_buttons' => array(
+				'modlog' => array(
+					'title' => $txt['mc_unapproved_poststopics'],
+					'href' => $scripturl . '?action=moderate;area=modlog;sesc=' . $context['session_id'],
+					'show' => true,
+				),
+				'attachments' => array(
+					'title' => $txt['mc_unapproved_attachments'],
+					'href' => $scripturl . '?action=moderate;area=attachmod;sa=attachments;sesc=' . $context['session_id'],
+					'show' => true,
+				),
+				'reports' => array(
+					'title' => $txt['mc_reported_posts'],
+					'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
+					'show' => true,
+				),
+				'reports' => array(
+					'title' => $txt['mc_reported_posts'],
+					'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
+					'show' => true,
+				),
+			),
 		),
 		'profile' => array(
 			'title' => $txt['profile'],
 			'href' => $scripturl . '?action=profile',
 			'show' => $context['allow_edit_profile'],
+			'sub_buttons' => array(
+				'summary' => array(
+					'title' => $txt['summary'],
+					'href' => $scripturl . '?action=profile',
+					'show' => true,
+				),
+				'account' => array(
+					'title' => $txt['account'],
+					'href' => $scripturl . '?action=profile;sa=account',
+					'show' => allowedTo(array('profile_identity_any', 'profile_identity_own', 'manage_membergroups')),
+				),
+				'profile' => array(
+					'title' => $txt['forumProfile'],
+					'href' => $scripturl . '?action=profile;sa=forumProfile',
+					'show' => allowedTo(array('profile_extra_any', 'profile_extra_own')),
+				),
+			),
 		),
 		'pm' => array(
 			'title' => $txt['pm_short'] . (!$user_info['is_guest'] && $context['user']['unread_messages'] > 0 ? ' [<strong>'. $context['user']['unread_messages'] . '</strong>]' : ''),
@@ -2985,6 +3083,18 @@ function setupThemeContext()
 			'title' => $txt['calendar'],
 			'href' => $scripturl . '?action=calendar',
 			'show' => $context['allow_calendar'],
+			'sub_buttons' => array(
+				'view' => array(
+					'title' => $txt['calendar_menu'],
+					'href' => $scripturl . '?action=calendar',
+					'show' => true,
+				),
+				'post' => array(
+					'title' => $txt['calendar_post_event'],
+					'href' => $scripturl . '?action=calendar;sa=post;sesc=' . $context['session_id'],
+					'show' => allowedTo('calendar_post'),
+				),
+			),
 		),
 		'mlist' => array(
 			'title' => $txt['members_title'],

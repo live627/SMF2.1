@@ -136,7 +136,6 @@ $txt['deleteAccount_confirm'] = 'Are you completely sure you want to delete this
 $txt['deleteAccount_approval'] = 'Please note that the forum moderators will have to approve this account\'s deletion before it will be removed.';
 
 $txt['profileInfo'] = 'Profile Info';
-$txt['summary'] = 'Summary';
 $txt['showPosts'] = 'Show Posts';
 $txt['statPanel'] = 'Show Stats';
 $txt['editBuddies'] = 'Edit Buddies';
@@ -144,9 +143,7 @@ $txt['trackUser'] = 'Track User';
 $txt['trackIP'] = 'Track IP';
 
 $txt['profileEdit'] = 'Modify Profile';
-$txt['account'] = 'Account Settings';
 $txt['account_info'] = 'These are your account settings. This page holds all critical information that identifies you on this forum. For security reasons, you will need to enter your (current) password to make changes to this information.';
-$txt['forumProfile'] = 'Forum Profile';
 $txt['forumProfile_info'] = 'You can change your personal information on this page. This information will be displayed throughout ' . $context['forum_name'] . '. If you aren\'t comfortable with sharing some information, simply skip it - nothing here is required.';
 $txt['theme'] = 'Look and Layout';
 $txt['theme_info'] = 'This section allows you to customize the look and layout of the forum.';

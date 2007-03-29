@@ -8,13 +8,11 @@ $txt['mc_main'] = 'Main';
 $txt['mc_posts'] = 'Posts';
 $txt['mc_groups'] = 'Groups';
 
-$txt['mc_reported_posts'] = 'Reported Posts';
 $txt['mc_view_groups'] = 'View Groups';
 
 $txt['mc_description'] = 'This is your &quot;Moderation Center&quot;. From here you can perform all the moderation actions assigned to yourself by the Administrator. This home page contains a summary of all the latest happenings in your community. You can personalize the layout by clicking <a href="' . $scripturl . '?action=moderate;sa=personalize">here</a>.';
 $txt['mc_group_requests'] = 'Group Requests';
 $txt['mc_unapproved_posts'] = 'Unapproved Posts';
-$txt['mc_unapproved_attachments'] = 'Unapproved Attachments';
 $txt['mc_watched_users'] = 'Recent Watched Users';
 $txt['mc_watched_topics'] = 'Watched Topics';
 $txt['mc_scratch_board'] = 'Moderator Scratch Board';
@@ -78,7 +76,6 @@ $txt['mc_modreport_whoreported_title'] = 'Members who have reported this posts';
 $txt['mc_modreport_whoreported_data'] = 'Reported by %1$s on %2$s.  They left the following message:';
 $txt['mc_modreport_modactions'] = 'Actions taken by other moderators';
 
-$txt['modlog_view'] = 'Moderation Log';
 $txt['modlog_date'] = 'Date';
 $txt['modlog_member'] = 'Member';
 $txt['modlog_position'] = 'Position';

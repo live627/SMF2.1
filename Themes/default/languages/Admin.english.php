@@ -59,7 +59,6 @@ $txt['admin_fader_delay'] = 'Fading delay between items for the news fader';
 $txt['admin_bbc'] = 'Show BBC Buttons on Posting and PM Send Pages?';
 
 $txt['admin_backup_fail'] = 'Failed to make backup of Settings.php - make sure Settings_bak.php exists and is writable.';
-$txt['modSettings_title'] = 'Features and Options';
 $txt['modSettings_info'] = 'Change or set options that control how this forum operates.';
 $txt['database_server'] = 'Server on which the database resides:';
 $txt['database_user'] = 'Database Username:';
@@ -110,7 +109,6 @@ $txt['manage_search'] = 'Search';
 
 $txt['smileys_manage'] = 'Smileys and Message Icons';
 $txt['smileys_manage_info'] = 'Install new smiley sets, add smileys to existing ones, or manage your message icons.';
-$txt['package'] = 'Packages';
 $txt['package_info'] = 'Install new features or modify existing ones with this interface.';
 $txt['theme_admin'] = 'Themes and Layout';
 $txt['theme_admin_info'] = 'Setup and manage your themes and set or reset theme options.';
@@ -344,7 +342,6 @@ $txt['default_language'] = 'Default Forum Language';
 $txt['maintenance_subject'] = 'Subject for display:';
 $txt['maintenance_message'] = 'Message for display:';
 
-$txt['errlog'] = 'Error Log';
 $txt['errlog_desc'] = 'The error log tracks every error encountered by your forum.  To delete any errors from the database, mark the checkbox, and click the %1$s button at the bottom of the page.';
 
 $txt['theme_settings'] = 'Theme Settings';
@@ -429,7 +426,6 @@ $txt['support_versions'] = 'Version Information';
 $txt['support_latest'] = 'Common Support &amp; Issues';
 $txt['support_latest_fetch'] = 'Retrieving support information...';
 
-$txt['edit_permissions'] = 'Permissions';
 $txt['edit_permissions_info'] = 'Change restrictions and available features globally or to specific boards.';
 $txt['membergroups_members'] = 'Regular Members';
 $txt['membergroups_guests'] = 'Guests';

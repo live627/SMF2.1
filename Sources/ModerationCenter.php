@@ -193,6 +193,12 @@ function ModerationMain($dont_call = false)
 					if (isset($area['custom_url']))
 						$context['admin_areas'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
 
+					// and a icon as well?
+					if (isset($area['icon']))
+						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
+					else
+						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '';
+
 					// Did it have subsections?
 					if (isset($area['subsections']))
 					{

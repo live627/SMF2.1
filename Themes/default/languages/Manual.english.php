@@ -14,13 +14,6 @@ $txt['manual_index_visit_simple_machines'] = 'Visit Simple Machines!';
 $txt['manual_smf_user_help'] = 'SMF User Help';
 
 // Entries for template: index.
-$txt['manual_index_intro'] = 'Introduction';
-$txt['manual_index_register'] = 'Registering';
-$txt['manual_index_login'] = 'Logging In';
-$txt['manual_index_profile'] = 'Profile';
-$txt['manual_index_posting'] = 'Posting';
-$txt['manual_index_pm'] = 'Personal Message';
-$txt['manual_index_search'] = 'Searching';
 $txt['manual_index_you_have_arrived_part1'] = 'So you\'ve arrived at this ';
 $txt['manual_index_you_have_arrived_link_site0'] = 'Simple Machines Forum';
 $txt['manual_index_you_have_arrived_part2'] = ' (SMF)! Perhaps you\'ve been looking at the ';

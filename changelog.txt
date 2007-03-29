@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2689 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2690 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -12,7 +12,7 @@ March 2007
  ! It is now possible to translate the agreement file by creating a new file called agreement_language.txt - this can be edited from the admin center. (ManageRegistration.php, Register.php)
  * Updated admin menu to fallback on default stylesheet for older themes + changed look for default, classic and babylon admin menu. (Admin.php, babylon/index.template, classic/index.template, Admin.template, style.css, css/dropmenu.css, css/dropmenu_default.css, babylon/css/dropmenu.css, classic/css/dropmenu.css)
  + Added the ability to define sub menu buttons for the template menu.  (Subs.php)
- & Added language strings for above (index language files)
+ & Added language strings for above. (index language files)
  ! An invisible UTF-8 character wasn't filtered out properly. (Load.php)
  ! The website profile fields should now only show up in the correct page of the profile. (Profile.php)
  ! The admin template had the wrong Simple Machines file names. (Admin template)
@@ -25,6 +25,9 @@ March 2007
  ! The PHP tag is no longer a block level element in both parsing and HTML. (Subs.php)
  ! Added CSS classes to many of the BBC tags and moved much of the inline styles into the CSS file. (Subs.php, style.css)
  ! Main layer split caused the security check on files to not be done. (Subs.php)
+ ! Added more sub menu items to the main menu. (Subs.php)
+ & Moved and added language strings for above. (index, Admin, Manual, ModerationCenter, and Profile language files)
+ ! Moderation center wasn't dealing with the icon issue in its menu. (ModerationCenter.php)
 
 
 February 2007

@@ -658,4 +658,24 @@ $txt['view_unread_category'] = 'Unread Posts';
 $txt['visual_verification_sound'] = 'Listen to the letters';
 $txt['visual_verification_request_new'] = 'Request another image';
 
+// Sub menu labels
+$txt['summary'] = 'Summary';
+$txt['account'] = 'Account Settings';
+$txt['forumProfile'] = 'Forum Profile';
+$txt['manual_index_intro'] = 'Introduction';
+$txt['manual_index_register'] = 'Registering';
+$txt['manual_index_login'] = 'Logging In';
+$txt['manual_index_profile'] = 'Profile';
+$txt['manual_index_posting'] = 'Posting';
+$txt['manual_index_pm'] = 'Personal Message';
+$txt['manual_index_search'] = 'Searching';
+$txt['modSettings_title'] = 'Features and Options';
+$txt['package'] = 'Packages';
+$txt['errlog'] = 'Error Log';
+$txt['edit_permissions'] = 'Permissions';
+$txt['mc_unapproved_attachments'] = 'Unapproved Attachments';
+$txt['mc_unapproved_poststopics'] = 'Unapproved Posts and Topics';
+$txt['mc_reported_posts'] = 'Reported Posts';
+$txt['modlog_view'] = 'Moderation Log';
+$txt['calendar_menu'] = 'View Calendar';
 ?>
