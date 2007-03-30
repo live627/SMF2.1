@@ -2835,6 +2835,11 @@ function setupThemeContext()
 	global $modSettings, $user_info, $scripturl, $context, $settings, $options, $txt, $maintenance;
 	global $user_settings, $smfFunc;
 
+	$context['in_maintenance'] = !empty($maintenance);
+	$context['current_time'] = timeformat(time(), false);
+	$context['current_action'] = isset($_GET['action']) ? $_GET['action'] : '';
+	$context['show_quick_login'] = !empty($modSettings['enableVBStyleLogin']) && $user_info['is_guest'];
+
 	// Get some news...
 	$context['news_lines'] = explode("\n", str_replace("\r", '', trim(addslashes($modSettings['news']))));
 	$context['fader_news_lines'] = array();
@@ -2917,264 +2922,8 @@ function setupThemeContext()
 			$context['disable_login_hashing'] = true;
 	}
 
-	// Set up the menu privileges.
-	$context['allow_search'] = allowedTo('search_posts');
-	$context['allow_admin'] = allowedTo(array('admin_forum', 'manage_boards', 'manage_permissions', 'moderate_forum', 'manage_membergroups', 'manage_bans', 'send_mail', 'edit_news', 'manage_attachments', 'manage_smileys'));
-	$context['allow_edit_profile'] = !$user_info['is_guest'] && allowedTo(array('profile_view_own', 'profile_view_any', 'profile_identity_own', 'profile_identity_any', 'profile_extra_own', 'profile_extra_any', 'profile_remove_own', 'profile_remove_any', 'moderate_forum', 'manage_membergroups'));
-	$context['allow_memberlist'] = allowedTo('view_mlist');
-	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);
-	$context['allow_moderation_center'] = allowedTo('access_mod_center') || !empty($user_info['mod_cache']['gq']) || !empty($user_info['mod_cache']['bq']);
-
-	$context['allow_pm'] = allowedTo('pm_read');
-
-	$context['in_maintenance'] = !empty($maintenance);
-	$context['current_time'] = timeformat(time(), false);
-	$context['current_action'] = isset($_GET['action']) ? $_GET['action'] : '';
-	$context['show_quick_login'] = !empty($modSettings['enableVBStyleLogin']) && $user_info['is_guest'];
-
-	// All the buttons we can possible want and then some.
-	$buttons = array(
-		'home' => array(
-			'title' => $txt['home'],
-			'href' => $scripturl,
-			'show' => true,
-		),
-		'help' => array(
-			'title' => $txt['help'],
-			'href' => $scripturl . '?action=help',
-			'show' => true,
-			'sub_buttons' => array(
-				'intro' => array(
-					'title' => $txt['manual_index_intro'],
-					'href' => $scripturl . '?action=help;page=index',
-					'show' => true,
-				),
-				'register' => array(
-					'title' => $txt['manual_index_register'],
-					'href' => $scripturl . '?action=help;page=registering',
-					'show' => true,
-				),
-				'login' => array(
-					'title' => $txt['manual_index_login'],
-					'href' => $scripturl . '?action=help;page=loginout',
-					'show' => true,
-				),
-				'profile' => array(
-					'title' => $txt['manual_index_profile'],
-					'href' => $scripturl . '?action=help;page=profile',
-					'show' => true,
-				),
-				'posting' => array(
-					'title' => $txt['manual_index_posting'],
-					'href' => $scripturl . '?action=help;page=post',
-					'show' => true,
-				),
-				'pm' => array(
-					'title' => $txt['manual_index_pm'],
-					'href' => $scripturl . '?action=help;page=pm',
-					'show' => true,
-				),
-				'search' => array(
-					'title' => $txt['manual_index_search'],
-					'href' => $scripturl . '?action=help;page=searching',
-					'show' => true,
-				),
-			),
-		),
-		'search' => array(
-			'title' => $txt['search'],
-			'href' => $scripturl . '?action=search',
-			'show' => $context['allow_search'],
-		),
-		'admin' => array(
-			'title' => $txt['admin'],
-			'href' => $scripturl . '?action=admin',
-			'show' => $context['allow_admin'],
-			'sub_buttons' => array(
-				'featuresettings' => array(
-					'title' => $txt['modSettings_title'],
-					'href' => $scripturl . '?action=admin;area=featuresettings;sesc=' . $context['session_id'],
-					'show' => allowedTo('admin_forum'),
-				),
-				'packages' => array(
-					'title' => $txt['package'],
-					'href' => $scripturl . '?action=admin;area=packages;sesc=' . $context['session_id'],
-					'show' => allowedTo('admin_forum'),
-				),
-				'errorlog' => array(
-					'title' => $txt['errlog'],
-					'href' => $scripturl . '?action=admin;area=errorlog;sesc=' . $context['session_id'],
-					'show' => allowedTo('admin_forum'),
-				),
-				'permissions' => array(
-					'title' => $txt['edit_permissions'],
-					'href' => $scripturl . '?action=admin;area=permissions;sesc=' . $context['session_id'],
-					'show' => allowedTo('manage_permissions'),
-				),
-			),
-		),
-		'moderate' => array(
-			'title' => $txt['moderate'],
-			'href' => $scripturl . '?action=moderate',
-			'show' => $context['allow_moderation_center'],
-			'sub_buttons' => array(
-				'modlog' => array(
-					'title' => $txt['mc_unapproved_poststopics'],
-					'href' => $scripturl . '?action=moderate;area=modlog;sesc=' . $context['session_id'],
-					'show' => true,
-				),
-				'attachments' => array(
-					'title' => $txt['mc_unapproved_attachments'],
-					'href' => $scripturl . '?action=moderate;area=attachmod;sa=attachments;sesc=' . $context['session_id'],
-					'show' => true,
-				),
-				'reports' => array(
-					'title' => $txt['mc_reported_posts'],
-					'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
-					'show' => true,
-				),
-				'reports' => array(
-					'title' => $txt['mc_reported_posts'],
-					'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
-					'show' => true,
-				),
-			),
-		),
-		'profile' => array(
-			'title' => $txt['profile'],
-			'href' => $scripturl . '?action=profile',
-			'show' => $context['allow_edit_profile'],
-			'sub_buttons' => array(
-				'summary' => array(
-					'title' => $txt['summary'],
-					'href' => $scripturl . '?action=profile',
-					'show' => true,
-				),
-				'account' => array(
-					'title' => $txt['account'],
-					'href' => $scripturl . '?action=profile;sa=account',
-					'show' => allowedTo(array('profile_identity_any', 'profile_identity_own', 'manage_membergroups')),
-				),
-				'profile' => array(
-					'title' => $txt['forumProfile'],
-					'href' => $scripturl . '?action=profile;sa=forumProfile',
-					'show' => allowedTo(array('profile_extra_any', 'profile_extra_own')),
-				),
-			),
-		),
-		'pm' => array(
-			'title' => $txt['pm_short'] . (!$user_info['is_guest'] && $context['user']['unread_messages'] > 0 ? ' [<strong>'. $context['user']['unread_messages'] . '</strong>]' : ''),
-			'href' => $scripturl . '?action=pm',
-			'show' => $context['allow_pm'],
-			'sub_buttons' => array(
-				'pm_read' => array(
-					'title' => $txt['pm_menu_read'],
-					'href' => $scripturl . '?action=pm',
-					'show' => true,
-				),
-				'pm_send' => array(
-					'title' => $txt['pm_menu_send'],
-					'href' => $scripturl . '?action=pm;sa=send',
-					'show' => true,
-				),
-			),
-		),
-		'calendar' => array(
-			'title' => $txt['calendar'],
-			'href' => $scripturl . '?action=calendar',
-			'show' => $context['allow_calendar'],
-			'sub_buttons' => array(
-				'view' => array(
-					'title' => $txt['calendar_menu'],
-					'href' => $scripturl . '?action=calendar',
-					'show' => true,
-				),
-				'post' => array(
-					'title' => $txt['calendar_post_event'],
-					'href' => $scripturl . '?action=calendar;sa=post;sesc=' . $context['session_id'],
-					'show' => allowedTo('calendar_post'),
-				),
-			),
-		),
-		'mlist' => array(
-			'title' => $txt['members_title'],
-			'href' => $scripturl . '?action=mlist',
-			'show' => $context['allow_memberlist'],
-			'sub_buttons' => array(
-				'mlist_view' => array(
-					'title' => $txt['mlist_menu_view'],
-					'href' => $scripturl . '?action=mlist',
-					'show' => true,
-				),
-				'mlist_search' => array(
-					'title' => $txt['mlist_search'],
-					'href' => $scripturl . '?action=mlist;sa=search',
-					'show' => true,
-				),
-			),
-		),
-		'login' => array(
-			'title' => $txt['login'],
-			'href' => $scripturl . '?action=login',
-			'show' => $user_info['is_guest'],
-		),
-		'register' => array(
-			'title' => $txt['register'],
-			'href' => $scripturl . '?action=register',
-			'show' => $user_info['is_guest'],
-			'is_last' => true,
-		),
-		'logout' => array(
-			'title' => $txt['logout'],
-			'href' => $scripturl . '?action=logout;sesc=' . $context['session_id'],
-			'show' => !$user_info['is_guest'],
-			'is_last' => true,
-		),
-	);
-
-	// Figure out which action we are doing so we can set the active tab.
-	// Default to home.
-	$current_action = 'home';
-	 
-	if (in_array($context['current_action'], array('admin', 'calendar', 'help', 'login', 'moderate', 'mlist', 'pm', 'profile', 'register', 'search',)))
-		$current_action = $context['current_action'];
-	elseif ($context['current_action'] == 'search2')
-		$current_action = 'search';
-	elseif ($context['current_action'] == 'theme')
-		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
-
-	// Only load the menu javascript stuff when we have to.
-	$context['load_menu_js'] = false;
-
-	// Now we put the buttons in the context so the theme can use them.
-	$context['menu_buttons'] = array();
-	foreach($buttons AS $act => $button)
-		if (!empty($button['show']))
-		{
-			$button['active_button'] = $current_action == $act;
-
-			// Make sure the last button truely is the last button.
-			if (!empty($button['is_last']))
-			{
-				if (isset($last_button))
-					$context['menu_buttons'][$last_button]['is_last'] = false;
-				$last_button = $act;
-			}
-
-			// Go through the sub buttons if there are any.
-			if (!empty($button['sub_buttons']))
-				foreach($button['sub_buttons'] AS $key => $subbutton)
-				{
-					if (empty($subbutton['show']))
-						unset($button['sub_buttons'][$key]);
-				}
-
-			// If this still has some sub buttons then we need to tell the template to load the menu javascript file.
-			if (!empty($button['sub_buttons']))
-				$context['load_menu_js'] = true;
-
-			$context['menu_buttons'][$act] = $button;
-		}
+	// Setup the main menu items.
+	setupMenuContext();
 
 	if (empty($settings['theme_version']))
 		$context['show_vBlogin'] = $context['show_quick_login'];
@@ -3701,4 +3450,240 @@ function loadClassFile($filename)
 		require_once($sourcedir . '/' . $filename);
 }
 
+function setupMenuContext()
+{
+	global $context, $modSettings, $user_info, $txt, $scripturl;
+
+	// Set up the menu privileges.
+	$context['allow_search'] = allowedTo('search_posts');
+	$context['allow_admin'] = allowedTo(array('admin_forum', 'manage_boards', 'manage_permissions', 'moderate_forum', 'manage_membergroups', 'manage_bans', 'send_mail', 'edit_news', 'manage_attachments', 'manage_smileys'));
+	$context['allow_edit_profile'] = !$user_info['is_guest'] && allowedTo(array('profile_view_own', 'profile_view_any', 'profile_identity_own', 'profile_identity_any', 'profile_extra_own', 'profile_extra_any', 'profile_remove_own', 'profile_remove_any', 'moderate_forum', 'manage_membergroups'));
+	$context['allow_memberlist'] = allowedTo('view_mlist');
+	$context['allow_calendar'] = allowedTo('calendar_view') && !empty($modSettings['cal_enabled']);
+	$context['allow_moderation_center'] = allowedTo('access_mod_center') || !empty($user_info['mod_cache']['gq']) || !empty($user_info['mod_cache']['bq']);
+	$context['allow_pm'] = allowedTo('pm_read');
+
+	$cacheTime = $modSettings['lastActive'] * 60;
+
+	// All the buttons we can possible want and then some, try pulling the final list of buttons from cache first.
+	if (($buttonData = cache_get_data('menu_buttons-' . implode('_',$user_info['groups']), $cacheTime)) === null || time() - $cacheTime <= $modSettings['settings_updated'])
+	{
+		$buttons = array(
+			'home' => array(
+				'title' => $txt['home'],
+				'href' => $scripturl,
+				'show' => true,
+			),
+			'help' => array(
+				'title' => $txt['help'],
+				'href' => $scripturl . '?action=help',
+				'show' => true,
+			),
+			'search' => array(
+				'title' => $txt['search'],
+				'href' => $scripturl . '?action=search',
+				'show' => $context['allow_search'],
+			),
+			'admin' => array(
+				'title' => $txt['admin'],
+				'href' => $scripturl . '?action=admin',
+				'show' => $context['allow_admin'],
+				'sub_buttons' => array(
+					'featuresettings' => array(
+						'title' => $txt['modSettings_title'],
+						'href' => $scripturl . '?action=admin;area=featuresettings;sesc=' . $context['session_id'],
+						'show' => allowedTo('admin_forum'),
+					),
+					'packages' => array(
+						'title' => $txt['package'],
+						'href' => $scripturl . '?action=admin;area=packages;sesc=' . $context['session_id'],
+						'show' => allowedTo('admin_forum'),
+					),
+					'errorlog' => array(
+						'title' => $txt['errlog'],
+						'href' => $scripturl . '?action=admin;area=errorlog;sesc=' . $context['session_id'],
+						'show' => allowedTo('admin_forum'),
+					),
+					'permissions' => array(
+						'title' => $txt['edit_permissions'],
+						'href' => $scripturl . '?action=admin;area=permissions;sesc=' . $context['session_id'],
+						'show' => allowedTo('manage_permissions'),
+					),
+				),
+			),
+			'moderate' => array(
+				'title' => $txt['moderate'],
+				'href' => $scripturl . '?action=moderate',
+				'show' => $context['allow_moderation_center'],
+				'sub_buttons' => array(
+					'modlog' => array(
+						'title' => $txt['mc_unapproved_poststopics'],
+						'href' => $scripturl . '?action=moderate;area=modlog;sesc=' . $context['session_id'],
+						'show' => true,
+					),
+					'attachments' => array(
+						'title' => $txt['mc_unapproved_attachments'],
+						'href' => $scripturl . '?action=moderate;area=attachmod;sa=attachments;sesc=' . $context['session_id'],
+						'show' => true,
+					),
+					'reports' => array(
+						'title' => $txt['mc_reported_posts'],
+						'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
+						'show' => true,
+					),
+					'reports' => array(
+						'title' => $txt['mc_reported_posts'],
+						'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
+						'show' => true,
+					),
+				),
+			),
+			'profile' => array(
+				'title' => $txt['profile'],
+				'href' => $scripturl . '?action=profile',
+				'show' => $context['allow_edit_profile'],
+				'sub_buttons' => array(
+					'summary' => array(
+						'title' => $txt['summary'],
+						'href' => $scripturl . '?action=profile',
+						'show' => true,
+					),
+					'account' => array(
+						'title' => $txt['account'],
+						'href' => $scripturl . '?action=profile;sa=account',
+						'show' => allowedTo(array('profile_identity_any', 'profile_identity_own', 'manage_membergroups')),
+					),
+					'profile' => array(
+						'title' => $txt['forumProfile'],
+						'href' => $scripturl . '?action=profile;sa=forumProfile',
+						'show' => allowedTo(array('profile_extra_any', 'profile_extra_own')),
+					),
+				),
+			),
+			'pm' => array(
+				'title' => $txt['pm_short'],
+				'href' => $scripturl . '?action=pm',
+				'show' => $context['allow_pm'],
+				'sub_buttons' => array(
+					'pm_read' => array(
+						'title' => $txt['pm_menu_read'],
+						'href' => $scripturl . '?action=pm',
+						'show' => true,
+					),
+					'pm_send' => array(
+						'title' => $txt['pm_menu_send'],
+						'href' => $scripturl . '?action=pm;sa=send',
+						'show' => true,
+					),
+				),
+			),
+			'calendar' => array(
+				'title' => $txt['calendar'],
+				'href' => $scripturl . '?action=calendar',
+				'show' => $context['allow_calendar'],
+				'sub_buttons' => array(
+					'view' => array(
+						'title' => $txt['calendar_menu'],
+						'href' => $scripturl . '?action=calendar',
+						'show' => true,
+					),
+					'post' => array(
+						'title' => $txt['calendar_post_event'],
+						'href' => $scripturl . '?action=calendar;sa=post;sesc=' . $context['session_id'],
+						'show' => allowedTo('calendar_post'),
+					),
+				),
+			),
+			'mlist' => array(
+				'title' => $txt['members_title'],
+				'href' => $scripturl . '?action=mlist',
+				'show' => $context['allow_memberlist'],
+				'sub_buttons' => array(
+					'mlist_view' => array(
+						'title' => $txt['mlist_menu_view'],
+						'href' => $scripturl . '?action=mlist',
+						'show' => true,
+					),
+					'mlist_search' => array(
+						'title' => $txt['mlist_search'],
+						'href' => $scripturl . '?action=mlist;sa=search',
+						'show' => true,
+					),
+				),
+			),
+			'login' => array(
+				'title' => $txt['login'],
+				'href' => $scripturl . '?action=login',
+				'show' => $user_info['is_guest'],
+			),
+			'register' => array(
+				'title' => $txt['register'],
+				'href' => $scripturl . '?action=register',
+				'show' => $user_info['is_guest'],
+				'is_last' => true,
+			),
+			'logout' => array(
+				'title' => $txt['logout'],
+				'href' => $scripturl . '?action=logout;sesc=' . $context['session_id'],
+				'show' => !$user_info['is_guest'],
+				'is_last' => true,
+			),
+		);
+
+		$load_menu_js = false;
+		// Now we put the buttons in the context so the theme can use them.
+		$menu_buttons = array();
+		foreach($buttons AS $act => $button)
+			if (!empty($button['show']))
+			{
+				$button['active_button'] = false;
+
+				// Make sure the last button truely is the last button.
+				if (!empty($button['is_last']))
+				{
+					if (isset($last_button))
+						$menu_buttons[$last_button]['is_last'] = false;
+					$last_button = $act;
+				}
+
+				// Go through the sub buttons if there are any.
+				if (!empty($button['sub_buttons']))
+					foreach($button['sub_buttons'] AS $key => $subbutton)
+					{
+						if (empty($subbutton['show']))
+							unset($button['sub_buttons'][$key]);
+					}
+
+				// If this still has some sub buttons then we need to tell the template to load the menu javascript file.
+				if (!empty($button['sub_buttons']))
+					$load_menu_js = true;
+
+				$menu_buttons[$act] = $button;
+			}
+		$buttonData = array($menu_buttons, $load_menu_js);
+
+		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
+			cache_put_data('menu_buttons-' . implode('_',$user_info['groups']), $buttonData, $cacheTime);
+	}
+	list($context['menu_buttons'], $context['load_menu_js']) = $buttonData;
+
+	// Figure out which action we are doing so we can set the active tab.
+	// Default to home.
+	$current_action = 'home';
+	 
+	if (isset($context['menu_buttons'][$context['current_action']]))
+		$current_action = $context['current_action'];
+	elseif ($context['current_action'] == 'search2')
+		$current_action = 'search';
+	elseif ($context['current_action'] == 'theme')
+		$current_action = isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'pick' ? 'profile' : 'admin';
+
+	$context['menu_buttons'][$current_action]['active_button'] = true;
+
+	// Only load the menu javascript stuff when we have to.
+	$context['load_menu_js'] = false;
+
+	if (!$user_info['is_guest'] && $context['user']['unread_messages'] > 0 && isset($context['menu_buttons']['pm']))
+		$context['menu_buttons']['pm'] .= ' [<strong>'. $context['user']['unread_messages'] . '</strong>]';
+}
 ?>

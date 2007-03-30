@@ -439,7 +439,7 @@ function PlushSearch2()
 		$search_params['brd'] = empty($_REQUEST['brd']) ? array() : $_REQUEST['brd'];
 	else
 	{
-		$see_board = empty($search_parms['advanced']) ? 'query_wanna_see_board' : 'query_see_board';
+		$see_board = empty($search_params['advanced']) ? 'query_wanna_see_board' : 'query_see_board';
 		$request = $smfFunc['db_query']('', "
 			SELECT b.id_board
 			FROM {$db_prefix}boards AS b

@@ -662,13 +662,7 @@ $txt['visual_verification_request_new'] = 'Request another image';
 $txt['summary'] = 'Summary';
 $txt['account'] = 'Account Settings';
 $txt['forumProfile'] = 'Forum Profile';
-$txt['manual_index_intro'] = 'Introduction';
-$txt['manual_index_register'] = 'Registering';
-$txt['manual_index_login'] = 'Logging In';
-$txt['manual_index_profile'] = 'Profile';
-$txt['manual_index_posting'] = 'Posting';
-$txt['manual_index_pm'] = 'Personal Message';
-$txt['manual_index_search'] = 'Searching';
+
 $txt['modSettings_title'] = 'Features and Options';
 $txt['package'] = 'Packages';
 $txt['errlog'] = 'Error Log';
