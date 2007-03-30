@@ -151,15 +151,15 @@ function smf_themesMoreInfo(id)
 {
 	window.smfLatestThemes_temp = getOuterHTML(document.getElementById("smfLatestThemesWindow"));
 	setOuterHTML(document.getElementById("smfLatestThemesWindow"),
-	'<table id="smfLatestThemesWindow" width="100%" cellpadding="2" cellspacing="0" style="background: white; color=black; border: 1px solid black;"><tr>\
-		<td style="background: white; color:black;">\
-			<div align="center" class="largetext" style="margin-bottom: 4px;">' + smf_themeInfo[id].name + '</div>\
-			<div><a style="color: black;" class="largetext" href="http://themes.simplemachines.org?lemma=' + id + '">View Theme Now!</a></div>\
-			<img src="http://themes.simplemachines.org?action=download;lemma='+id+';image=thumb" alt="" style="float: left; margin-right: 10px;" />\
-			<div style="margin: 1ex;">' + smf_themeInfo[id].desc.replace(/<a href/g, '<a style="color: black;" href') + '</div>\
-			<div align="center" class="smalltext"><a style="color: black;clear: both;" href="javascript:smf_themesBack();void(0);">(go back)</a></div>\
-		</td>\
-	</tr></table>');
+	'<div id="smfLatestThemesWindow" class="tborder" style="overflow: auto;">\
+		<h3 class="catbg" style="margin: 0; padding: 4px;">' + smf_themeInfo[id].name + '</h3>\
+		<h4 class="titlebg2" style="margin: 0;padding: 4px;"><a href="http://themes.simplemachines.org?lemma=' + id + '">View Theme Now!</a></h4>\
+		<div style="padding: 5px; overflow: auto;">\
+			<img src="http://themes.simplemachines.org?action=download;lemma='+id+';image=thumb" alt="" style="float: right; margin: 10px;" />\
+			<div style="padding:8px;">' + smf_themeInfo[id].desc.replace(/<a href/g, '<a href') + '</div>\
+		</div>\
+		<div style="padding: 8px;" class="catbg smalltext"><a href="javascript:smf_themesBack();void(0);">(go back)</a></div>\
+	</div>');
 }
 
 function smf_themesBack()
@@ -169,42 +169,39 @@ function smf_themesBack()
 }
 
 window.smfLatestThemes = '\
-	<table id="smfLatestThemesWindow" width=100%" cellpadding="5" cellspacing="0" style="background: white; color: black; border: 1px solid black;"><tr>\
-		<td width="110" style="background: white; color: black;"><img src="http://www.simplemachines.org/smf/package.png" width="100" height="96" alt="(package)" /></td>\
-		<td valign="top"><center><strong>Latest Themes</strong></center>\
-			<ul>';
+	<div id="smfLatestThemesWindow" class="tborder">\
+		<h3 class="catbg" style="padding: 4px; margin: 0;">Latest Themes</h3>\
+		<div style="padding: 5px;">\
+			<img src="http://www.simplemachines.org/smf/images/themes.png" width="102" height="98" style="float: right; margin: 10px;" alt="(package)" />\
+			<ul style="list-style: none; padding: 5px;">';
 for(var i=0; i < smf_latestThemes.length; i++)
 {
 	var id_theme = smf_latestThemes[i];
 	window.smfLatestThemes += '\
-				<li><a style="color: black;" href="javascript:smf_themesMoreInfo(' + id_theme + ');void(0);">' + smf_themeInfo[id_theme].name + ' by ' + smf_themeInfo[id_theme].author + '</a></li>';
+				<li><a href="javascript:smf_themesMoreInfo(' + id_theme + ');void(0);">' + smf_themeInfo[id_theme].name + ' by ' + smf_themeInfo[id_theme].author + '</a></li>';
 }
 
 window.smfLatestThemes += '\
-			</ul>\
-		</td>';
+			</ul>';
 if ( smf_featured !=0 || smf_random != 0 )
 {
-	window.smfLatestThemes += '\
-		<td valign="top">';
 		
 	if ( smf_featured != 0 )
 		window.smfLatestThemes += '\
-			<center><strong>Featured Theme</center></strong>\
-			<ul>\
-				<li><a style="color: black;" href="javascript:smf_themesMoreInfo('+smf_featured+');void(0);">'+smf_themeInfo[smf_featured].name + ' by ' + smf_themeInfo[smf_featured].author+'</a></li>\
-			</ul>';
+				<h4 style="padding: 4px 4px 0 4px; margin: 0;">Featured Theme</h4>\
+				<p style="padding: 0 8px; margin: 0;">\
+					<a href="javascript:smf_themesMoreInfo('+smf_featured+');void(0);">'+smf_themeInfo[smf_featured].name + ' by ' + smf_themeInfo[smf_featured].author+'</a>\
+				</p>';
 	if ( smf_random != 0 )
 		window.smfLatestThemes += '\
-			<center><strong>Theme of the Moment</center></strong>\
-			<ul>\
-				<li><a style="color: black;" href="javascript:smf_themesMoreInfo('+smf_random+');void(0);">'+smf_themeInfo[smf_random].name + ' by ' + smf_themeInfo[smf_random].author+'</a></li>\
-			</ul>';
-	window.smfLatestThemes += '\
-		</td>';
+				<h4 style="padding: 4px 4px 0 4px;margin: 0;">Theme of the Moment</h4>\
+				<p style="padding: 0 4px;">\
+					<a href="javascript:smf_themesMoreInfo('+smf_random+');void(0);">'+smf_themeInfo[smf_random].name + ' by ' + smf_themeInfo[smf_random].author+'</a>\
+				</p>';
 }
 window.smfLatestThemes += '\
-	</table>';
+		</div>\
+	</div>';
 
 function findTop(el)
 {

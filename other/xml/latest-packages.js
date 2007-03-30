@@ -156,14 +156,12 @@ function smf_packagesMoreInfo(id)
 	window.smfLatestPackages_temp = getOuterHTML(document.getElementById("smfLatestPackagesWindow"));
 
 	setOuterHTML(document.getElementById("smfLatestPackagesWindow"),
-	'<table id="smfLatestPackagesWindow" width="100%" cellpadding="2" cellspacing="0" style="background: white; color: black; border: 1px solid black; height: 100px;"><tr>\
-		<td style="background: white; color: black;">\
-			<div align="center" class="largetext" style="margin-bottom: 4px;">' + smf_modificationInfo[id].name + '</div>\
-			<div><a style="color: black;" href="' + window.smfForum_scripturl + '?action=pgdownload;auto;package=http://custom.simplemachines.org/mods/downloads/' + id + '/' + smf_modificationInfo[id].file + ';sesc=' + window.smfForum_sessionid + '">Install Now!</a></div>\
-			<div style="margin: 1ex;">' + smf_modificationInfo[id].desc.replace(/<a href/g, '<a style="color: black;" href') + '</div>\
-			<div align="center" class="smalltext"><a style="color: black;" href="javascript:smf_packagesBack();void(0);">(go back)</a></div>\
-		</td>\
-	</tr></table>');
+	'<div id="smfLatestPackagesWindow" class="tborder">\
+		<h3 class="catbg" style="margin: 0; padding: 4px;">' + smf_modificationInfo[id].name + '</h3>\
+			<h4 class="titlebg" style="padding: 4px; margin: 0;"><a href="' + window.smfForum_scripturl + '?action=pgdownload;auto;package=http://custom.simplemachines.org/mods/downloads/' + id + '/' + smf_modificationInfo[id].file + ';sesc=' + window.smfForum_sessionid + '">Install Now!</a></h4>\
+			<div style="margin: 4px;">' + smf_modificationInfo[id].desc.replace(/<a href/g, '<a href') + '</div>\
+			<div class="titlebg" style="padding: 4px; margin: 0;"><a href="javascript:smf_packagesBack();void(0);">(go back)</a></div>\
+	</div>');
 }
 
 function smf_packagesBack()
@@ -173,40 +171,36 @@ function smf_packagesBack()
 }
 
 window.smfLatestPackages = '\
-	<table id="smfLatestPackagesWindow" width="100%" cellpadding="2" cellspacing="0" style="background: white; color: black; border: 1px solid black; height: 100px;"><tr>\
-		<td width="110" style="background: white; color: black;"><img src="http://www.simplemachines.org/smf/package.png" width="100" height="96" alt="(package)" /></td>\
-		<td valign="top" width="30%" style="background: white; color: black;">\
-			<b>New Packages:</b><br />\
-			<ol style="margin-top: 3px;">';
+	<div id="smfLatestPackagesWindow" class="tborder" style="overflow: auto;">\
+		<h3 class="titlebg" style="margin: 0; padding: 4px;">New Packages:</h3>\
+		<img src="http://www.simplemachines.org/smf/images/package.png" width="102" height="98" style="float: right; margin: 4px;" alt="(package)" />\
+		<ul style="list-style: none; margin-top: 3px; padding: 0 4px;">';
 
 for (var i = 0; i < smf_latestModifications.length; i++)
 {
 	var id_mod = smf_latestModifications[i];
 
-	window.smfLatestPackages += '<li><a style="color: black;" href="javascript:smf_packagesMoreInfo(' + id_mod + ');void(0);">' + smf_modificationInfo[id_mod].name + '</a></li>';
+	window.smfLatestPackages += '<li><a href="javascript:smf_packagesMoreInfo(' + id_mod + ');void(0);">' + smf_modificationInfo[id_mod].name + '</a></li>';
 }
 
 window.smfLatestPackages += '\
-			</ol>\
-		</td>\
-		<td valign="top" style="background: white; color: black;">';
+		</ul>';
 
 if (typeof(window.smfVersion) != "undefined" && (window.smfVersion < "SMF 1.0.6" || (window.smfVersion == "SMF 1.1 RC2" && !in_array('smf:smf-1.0.7', window.smfInstalledPackages))))
 	window.smfLatestPackages += '\
-			<b style="color: red;">Updates for SMF:</b><br />\
-			<ul style="margin-top: 3px;">\
-				<li><a style="color: black;" href="' + window.smfForum_scripturl + '?action=pgdownload;auto;package=http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;sesc=' + window.smfForum_sessionid + '">Security update (X-Forwarded-For header vulnerability)</a></li>\
-			</ul>';
+		<h3 class="error" style="margin: 0; padding: 4px;">Updates for SMF:</h3>\
+		<div style="padding: 0 4px;">\
+			<a href="' + window.smfForum_scripturl + '?action=pgdownload;auto;package=http://custom.simplemachines.org/mods/downloads/smf_patch_1.0.7_1.1-RC2-1.tar.gz;sesc=' + window.smfForum_sessionid + '">Security update (X-Forwarded-For header vulnerability)</a>\
+		</div>';
 else
 	window.smfLatestPackages += '\
-			<b>Package of the Moment:</b><br />\
-			<ul style="margin-top: 3px;">\
-				<li><a style="color: black;" href="javascript:smf_packagesMoreInfo(<?php echo $moment_id; ?>);void(0);"><?php echo addcslashes($mods[$moment_id]['name'], "'"), ' ', addcslashes($mod['version'], "'"); ?></a></li>\
-			</ul>';
+		<h3 style="margin: 0; padding: 4px;">Package of the Moment:</h3>\
+		<div style="padding: 0 4px;">\
+			<a href="javascript:smf_packagesMoreInfo(<?php echo $moment_id; ?>);void(0);"><?php echo addcslashes($mods[$moment_id]['name'], "'"), ' ', addcslashes($mod['version'], "'"); ?></a>\
+		</div>';
 
 window.smfLatestPackages += '\
-		</td>\
-	</tr></table>';
+	</div>';
 }
 
 function findTop(el)
