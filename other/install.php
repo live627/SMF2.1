@@ -1029,7 +1029,10 @@ function doStep1()
 // Step two-A: Ask for the administrator login information.
 function doStep2a()
 {
-	global $txt;
+	global $txt, $db_type;
+
+	// Need this to check whether we need the database password.
+	require_once(dirname(__FILE__) . '/Settings.php');
 
 	if (!isset($_POST['username']))
 		$_POST['username'] = '';
@@ -1068,15 +1071,21 @@ function doStep2a()
 									<div style="font-size: smaller; margin-bottom: 2ex;">', $txt['user_settings_email_info'], '</div>
 								</td>
 							</tr>
-						</table>
+						</table>';
+
+	if (empty($db_type) || $db_type != 'sqlite')
+	{
+		echo '
 
 						<h2>', $txt['user_settings_database'], '</h2>
 						<h3>', $txt['user_settings_database_info'], '</h3>
 
 						<div style="margin-bottom: 2ex; padding-', empty($txt['lang_rtl']) ? 'left' : 'right', ': 17%;">
 							<input type="password" name="password3" size="30" />
-						</div>
+						</div>';
+	}
 
+	echo '
 						<div style="margin: 1ex; text-align: ', empty($txt['lang_rtl']) ? 'right' : 'left', ';"><input type="submit" value="', $txt['user_settings_proceed'], '" /></div>
 					</form>
 				</div>';
@@ -1098,11 +1107,11 @@ function doStep2()
 		$smfFunc = array();
 	require_once($sourcedir . '/Subs-Db-' . $db_type . '.php');
 
-	if (!isset($_POST['password3']))
+	if (!isset($_POST['password3']) && (empty($db_type) || $db_type != 'sqlite'))
 		return doStep2a();
 
 	$needsDB = !empty($databases[$db_type]['always_has_db']);
-	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $_POST['password3'], $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
+	$db_connection = smf_db_initiate($db_server, $db_name, $db_user, isset($_POST['password3']) ? $_POST['password3'] : '', $db_prefix, array('non_fatal' => true, 'dont_select_db' => !$needsDB));
 	if (!$db_connection)
 	{
 		echo '

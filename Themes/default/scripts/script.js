@@ -990,3 +990,43 @@ IconList.prototype.collapseList = function()
 	this.iCurMessageId = 0;
 	document.body.removeEventListener('mousedown', this.onWindowMouseDown, false);
 }
+
+// Handy shortcuts for getting the mouse position on the screen - only used for IE at the moment.
+function smf_mousePose(evnt)
+{
+	var x = 0;
+	var y = 0;
+
+	if (evnt.pageX)
+	{
+		y = evnt.pageY;
+		x = evnt.pageX;
+	}
+	else if (evnt.clientX)
+	{
+		x = evnt.clientX + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft);
+		y = evnt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+	}
+
+	return [x, y];
+}
+
+// Short function for finding the actual position of an item.
+function smf_itemPos(itemHandle)
+{
+	var itemX = 0;
+	var itemY = 0;
+
+	if (itemHandle.offsetParent)
+	{
+		itemX = itemHandle.offsetLeft;
+		itemY = itemHandle.offsetTop;
+		while (itemHandle = itemHandle.offsetParent)
+		{
+			itemX += itemHandle.offsetLeft;
+			itemY += itemHandle.offsetTop;
+		}
+	}
+
+	return [itemX, itemY];
+}
