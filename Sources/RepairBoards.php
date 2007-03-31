@@ -838,10 +838,6 @@ function RepairBoards()
 			'calendar_updated' => time(),
 		));
 
-		// Force a group cache refresh.
-		require_once($sourcedir . '/ManageMembergroups.php');
-		cacheGroups();
-
 		$context['raw_data'] = '
 			<table width="100%" border="0" cellspacing="0" cellpadding="4" class="tborder">
 				<tr class="titlebg">

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2693 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2694 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -31,6 +31,7 @@ March 2007
  & Changed the layout of latest-themes.js and latest-packages.js (latest-themes.js, latest-packages.js, package.png, themes.png)
  ! A typo was causing the ignore boards setting to be used for advanced searches. (Search.php)
  ! Added caching for the main menu items. (Subs.php)
+ ! Searching for the end position in the package manager could fail. (Subs-Package.php)
 
 
 February 2007

@@ -441,20 +441,20 @@ class xmlArray
 				// Data now starts from where this section ends.
 				$data = substr($data, $last_tag_end + strlen('</' . $match[1]. '>'));
 
-				if (empty($inner_match))
-					continue;
-
-				// Parse the inner data.
-				if (strpos($inner_match, '<') !== false)
-					$el += $this->_parse($inner_match);
-				elseif (trim($inner_match) != '')
+				if (!empty($inner_match))
 				{
-					$text_value = $this->_from_cdata($inner_match);
-					if ($text_value != '')
-						$el[] = array(
-							'name' => '!',
-							'value' => $text_value
-						);
+					// Parse the inner data.
+					if (strpos($inner_match, '<') !== false)
+						$el += $this->_parse($inner_match);
+					elseif (trim($inner_match) != '')
+					{
+						$text_value = $this->_from_cdata($inner_match);
+						if ($text_value != '')
+							$el[] = array(
+								'name' => '!',
+								'value' => $text_value
+							);
+					}
 				}
 			}
 

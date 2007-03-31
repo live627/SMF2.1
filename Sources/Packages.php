@@ -381,9 +381,10 @@ function PackageInstallTest()
 			{
 				if ($mod_action['type'] == 'opened')
 					$failed = false;
-				elseif ($mod_action['type'] == 'failure' && empty($mod_action['is_custom']))
+				elseif ($mod_action['type'] == 'failure')
 				{
-					$context['has_failure'] = true;
+					if (empty($mod_action['is_custom']))
+						$context['has_failure'] = true;
 					$failed = true;
 				}
 				elseif ($mod_action['type'] == 'chmod')
