@@ -1465,6 +1465,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 						'type' => 'failure',
 						'filename' => $working_file,
 						'search' => $search['search'],
+						'is_custom' => $theme != 1,
 					);
 
 					// Skip to the next operation.
@@ -1485,6 +1486,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 									'type' => 'failure',
 									'filename' => $working_file,
 									'search' => $search['search'],
+									'is_custom' => $theme != 1,
 								);
 
 							// Continue to the next operation.
@@ -1583,6 +1585,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 							'type' => 'failure',
 							'filename' => $working_file,
 							'search' => $actual_operation['searches'][$i]['preg_search'],
+							'is_custom' => $theme != 1,
 						);
 
 						$everything_found = false;
@@ -1596,6 +1599,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 							'type' => 'failure',
 							'filename' => $working_file,
 							'search' => $actual_operation['searches'][$i]['preg_search'],
+							'is_custom' => $theme != 1,
 						);
 
 						$everything_found = false;
@@ -1906,6 +1910,7 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 					'type' => 'failure',
 					'filename' => $working_file,
 					'search' => $working_search,
+					'is_custom' => $is_custom,
 				);
 
 				$everything_found = false;
