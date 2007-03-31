@@ -69,7 +69,7 @@ if (!defined('SMF'))
 // The main admin handling function.
 function AdminMain()
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir;
+	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smfFunc, $db_prefix;
 
 	// Load the language and templates....
 	loadLanguage('Admin');
@@ -77,6 +77,19 @@ function AdminMain()
 
 	// Ensure we are admin'ing.
 	$context['bar_area'] = 'admin';
+
+	// Are we toggling the bar?
+	if (isset($_GET['togglebar']))
+	{
+		$options['use_side_bar'] = (int) $_GET['togglebar'];
+		$smfFunc['db_insert'](
+			'replace',
+			"{$db_prefix}themes",
+			array('id_member', 'id_theme', 'variable', 'value'),
+			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
+			array('id_member', 'id_theme', 'value')
+		);
+	}
 
 	/* Define all the sections on the admin area - these are then properly converted into context!
 
@@ -396,7 +409,8 @@ function AdminMain()
 
 	// obExit will know what to do!
 	$context['template_layers'][] = 'admin';
-	$context['show_drop_down'] = empty($modSettings['showsidebarAdmin']) && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
+	$context['can_toggle_drop_down'] = isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
+	$context['show_drop_down'] = empty($options['use_side_bar']) && $context['can_toggle_drop_down'];
 
 	// We want a menu, but missing the stylesheet? Get the fallback stylesheet then!
 	if ($context['show_drop_down'] && file_exists($settings['theme_dir'].'/css/dropmenu.css'))

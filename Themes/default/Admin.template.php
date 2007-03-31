@@ -6,14 +6,14 @@ function template_admin_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	// try out a menu here :)
+	// Try out a menu here :)
 	if ($context['show_drop_down'])
 	{
 		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>
 		<div id="adm_container"><ul id="admin_menu">';
 
-		// main areas first
+		// Main areas first.
 		foreach ($context['admin_areas'] as $section)
 		{
 			if (isset($section['selected']))
@@ -80,6 +80,9 @@ function template_admin_above()
 		}
 	
 		echo '
+			<li>
+				<a href="', $scripturl, '?action=', $context['bar_area'], ';area=', $context['admin_area'], ';sa=', $context['admin_section'], ';sc=', $context['session_id'], ';togglebar=1"><<</a>
+			</li>
 		</ul></div>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			menuHandle = new smfMenu("admin_menu");
@@ -97,12 +100,19 @@ function template_admin_above()
 				<table width="100%" cellpadding="4" cellspacing="1" border="0" class="bordercolor">';
 
 		// For every section that appears on the sidebar...
+		$firstSection = true;
 		foreach ($context['admin_areas'] as $section)
 		{
 			// Show the section header - and pump up the line spacing for readability.
 			echo '
 					<tr>
-						<td class="catbg">', $section['title'], '</td>
+						<td class="catbg">', $section['title'];
+
+			if ($firstSection && !empty($context['can_toggle_drop_down']))
+				echo '
+						<a href="', $scripturl, '?action=', $context['bar_area'], ';area=', $context['admin_area'], ';sa=', $context['admin_section'], ';sc=', $context['session_id'], ';togglebar=0">>></a>';
+			echo '
+						</td>
 					</tr>
 					<tr class="windowbg2">
 						<td class="smalltext" style="line-height: 1.3; padding-bottom: 3ex;">';
@@ -126,6 +136,8 @@ function template_admin_above()
 			echo '
 						</td>
 					</tr>';
+
+			$firstSection = false;
 		}
 
 		// This is where the actual "main content" area for the admin section starts.

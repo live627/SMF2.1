@@ -32,7 +32,7 @@ if (!defined('SMF'))
 // Entry point for the moderation center.
 function ModerationMain($dont_call = false)
 {
-	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir;
+	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smfFunc, $db_prefix;
 
 	// Don't run twice!
 	if (isset($context['admin_areas']))
@@ -40,6 +40,19 @@ function ModerationMain($dont_call = false)
 
 	// We are always moderating here.
 	$context['bar_area'] = 'moderate';
+
+	// Are we toggling the bar?
+	if (isset($_GET['togglebar']))
+	{
+		$options['use_side_bar'] = (int) $_GET['togglebar'];
+		$smfFunc['db_insert'](
+			'replace',
+			"{$db_prefix}themes",
+			array('id_member', 'id_theme', 'variable', 'value'),
+			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
+			array('id_member', 'id_theme', 'value')
+		);
+	}
 
 	// Everyone using this area must be allowed here!
 	if (empty($user_info['mod_cache']['gq']) && empty($user_info['mod_cache']['bq']) && !allowedTo('manage_membergroups'))
@@ -229,7 +242,8 @@ function ModerationMain($dont_call = false)
 
 	// And put the lovely surround around it all, beutiful.
 	$context['template_layers'][] = 'admin';
-	$context['show_drop_down'] = empty($modSettings['showsidebarAdmin']) && isset($settings['theme_version']) && $settings['theme_version'] >= 2.0 && !isset($settings['disable_drop_down']);
+	$context['can_toggle_drop_down'] = isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
+	$context['show_drop_down'] = empty($options['use_side_bar']) && $context['can_toggle_drop_down'];
 
 	// We want a menu, but missing the stylesheet? Get the fallback stylesheet then!
 	if ($context['show_drop_down'] && file_exists($settings['theme_dir'].'/css/dropmenu.css'))
