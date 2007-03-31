@@ -260,6 +260,7 @@ function ModerationHome()
 	// Load what blocks the user actually wants...
 	$valid_blocks = array(
 		'n' => 'LatestNews',
+		'p' => 'Notes',
 		'w' => 'WatchedUsers',
 		'r' => 'ReportedPosts',
 		'g' => 'GroupRequests'
@@ -331,6 +332,67 @@ function ModBlockWatchedUsers()
 	}
 
 	return 'watched_users';
+}
+
+// Show an area for the moderator to type into.
+function ModBlockNotes()
+{
+	global $context, $smfFunc, $db_prefix, $scripturl, $txt, $user_info;
+
+	// Are we saving a note?
+	if (isset($_POST['makenote']) && isset($_POST['new_note']))
+	{
+		checkSession();
+
+		$_POST['new_note'] = $smfFunc['htmlspecialchars'](trim($_POST['new_note']));
+		// Make sure they actually entered something.
+		if (!empty($_POST['new_note']) && $_POST['new_note'] !== $txt['mc_click_add_note'])
+		{
+			// Insert it into the database then!
+			$smfFunc['db_query']('', "
+				INSERT INTO {$db_prefix}log_comments
+					(id_member, member_name, comment_type, recipient_name, body, log_time)
+				VALUES
+					($user_info[id], '$user_info[name]', 'modnote', '', '$_POST[new_note]', " . time() . ")", __FILE__, __LINE__);
+
+			// Clear the cache.
+			cache_put_data('moderator_notes', null, 240);
+		}
+	}
+
+	// Grab the current notes.
+	if (($moderator_notes = cache_get_data('moderator_notes', 240)) === null)
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
+				lc.log_time, lc.body
+			FROM {$db_prefix}log_comments AS lc
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+			WHERE lc.comment_type = 'modnote'
+			ORDER BY id_comment DESC
+			LIMIT 0, 15", __FILE__, __LINE__);
+		$moderator_notes = array();
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$moderator_notes[] = $row;
+		$smfFunc['db_free_result']($request);
+	
+		cache_put_data('moderator_notes', $moderator_notes, 240);
+	}
+
+	$context['notes'] = array();
+	foreach ($moderator_notes as $note)
+	{
+		$context['notes'][] = array(
+			'author' => array(
+				'id' => $note['id_member'],
+				'link' => $note['id_member'] ? ('<a href="' . $scripturl . '?action=profile;u=' . $note['id_member'] . '">' . $note['member_name'] . '</a>') : $note['member_name'],
+			),
+			'time' => timeformat($note['log_time']),
+			'text' => parse_bbc($note['body']),
+		);
+	}
+
+	return 'notes';
 }
 
 // Show a list of the most recent reported posts.
@@ -1013,6 +1075,7 @@ function ModerationSettings()
 	// What blocks can this user see?
 	$context['homepage_blocks'] = array(
 		'n' => $txt['mc_prefs_latest_news'],
+		'p' => $txt['mc_notes'],
 		'w' => $txt['mc_watched_users'],
 	);
 	if ($context['can_moderate_groups'])

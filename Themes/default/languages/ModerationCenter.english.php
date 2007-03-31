@@ -19,6 +19,7 @@ $txt['mc_scratch_board'] = 'Moderator Scratch Board';
 $txt['mc_latest_news'] = 'Simple Machines Latest News';
 $txt['mc_recent_reports'] = 'Recent Topic Reports';
 $txt['mc_warning_log'] = 'Warning Log';
+$txt['mc_notes'] = 'Moderator Notes';
 
 $txt['mc_cannot_connect_sm'] = 'You are unable to connect to simplemachines.org\'s latest news file.';
 
@@ -142,5 +143,9 @@ $txt['mc_prefs_notify_report_never'] = 'Never';
 $txt['mc_prefs_notify_report_moderator'] = 'Only if it\'s a board I moderate';
 $txt['mc_prefs_notify_report_always'] = 'Always';
 $txt['mc_prefs_notify_approval'] = 'Notify of items awaiting approval';
+
+// Use entities in the below string.
+$txt['mc_click_add_note'] = 'Add a new note';
+$txt['mc_add_note'] = 'Add';
 
 ?>

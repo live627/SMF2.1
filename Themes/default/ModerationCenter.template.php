@@ -59,7 +59,7 @@ function template_latest_news()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['mc_latest_news'], '
@@ -116,7 +116,7 @@ function template_group_requests_block()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=groups;sa=requests">', $txt['mc_group_requests'], '</a>
@@ -143,6 +143,9 @@ function template_group_requests_block()
 		</tr>';
 
 	echo '
+		<tr class="windowbg" style="height: 100%;">
+			<td></td>
+		</tr>
 	</table>';
 }
 
@@ -152,7 +155,7 @@ function template_reported_posts_block()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=moderate;area=reports">', $txt['mc_recent_reports'], '</a>
@@ -179,6 +182,9 @@ function template_reported_posts_block()
 		</tr>';
 
 	echo '
+		<tr class="windowbg" style="height: 100%;">
+			<td></td>
+		</tr>
 	</table>';
 }
 
@@ -187,20 +193,17 @@ function template_watched_users()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=moderate;area=userwatch">', $txt['mc_watched_users'], '</a>
 			</td>
 		</tr>';
 
-	$alternate = 0;
 	foreach ($context['watched_users'] as $user)
 	{
-		$alternate = !$alternate;
-
 		echo '
-		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+		<tr class="windowbg2">
 			<td>
 				<span class="smalltext">', $user['link'], ' ', $txt['mc_seen'], ' ', $user['last_login'], '</span>
 			</td>
@@ -217,7 +220,52 @@ function template_watched_users()
 		</tr>';
 
 	echo '
+		<tr class="windowbg" style="height: 100%;">
+			<td></td>
+		</tr>
 	</table>';
+}
+
+// Little section for making... notes.
+function template_notes()
+{
+	global $settings, $options, $context, $txt, $scripturl;
+
+	echo '
+	<form action="', $scripturl, '?action=moderate;area=index" method="post">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
+		<tr>
+			<td class="catbg">
+				', $txt['mc_notes'], '
+			</td>
+		</tr>';
+
+	// Cycle through the notes.
+	foreach ($context['notes'] as $note)
+		echo '
+		<tr>
+			<td class="windowbg2" align="left">
+				<span class="smalltext">', $note['author']['link'], ': ', $note['text'], '</span>
+			</td>
+		</tr>';
+
+	echo '
+		<tr class="windowbg" style="height: 100%;">
+			<td></td>
+		</tr>
+		<tr class="windowbg">
+			<td>
+				<div style="float: left;" style="width: 90%;">
+					<input type="text" name="new_note" value="', $txt['mc_click_add_note'], '" style="width: 100%;" onclick="if (this.value == \'', $txt['mc_click_add_note'], '\') this.value = \'\';" />
+				</div>
+				<div style="float: right;">
+					<input type="submit" name="makenote" value="', $txt['mc_add_note'], '" style="width: 100%;" />
+				</div>
+			</td>
+		</tr>
+	</table>
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
 }
 
 function template_reported_posts()
