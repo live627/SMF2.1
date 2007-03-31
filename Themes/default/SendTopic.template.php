@@ -6,9 +6,9 @@
 	simple: it collects the information we need to actually send the topic.
 
 	The main sub template gets shown from:
-		'?action=sendtopic;topic=##.##'
+		'?action=emailuser;sa=sendtopic;topic=##.##'
 	And should submit to:
-		'?action=sendtopic;topic=' . $context['current_topic'] . '.' . $context['start']
+		'?action=emailuser;sa=sendtopic;topic=' . $context['current_topic'] . '.' . $context['start']
 	It should send the following fields:
 		y_name: sender's name.
 		y_email: sender's email.
@@ -33,7 +33,7 @@ function template_main()
 	global $context, $settings, $options, $txt, $scripturl;
 
 	echo '
-		<form action="', $scripturl, '?action=sendtopic;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
+		<form action="', $scripturl, '?action=emailuser;sa=sendtopic;topic=', $context['current_topic'], '.', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
 			<table width="400" cellpadding="3" cellspacing="0" border="0" class="tborder" align="center">
 				<tr class="titlebg">
 					<td align="left" colspan="2">
@@ -71,6 +71,77 @@ function template_main()
 					<td align="center" colspan="2"><br /><input type="submit" name="send" value="', $txt['sendtopic_send'], '" /></td>
 				</tr>
 			</table>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		</form>';
+}
+
+// Send an email to a user!
+function template_custom_email()
+{
+	global $context, $settings, $options, $txt, $scripturl;
+
+	echo '
+		<form action="', $scripturl, '?action=emailuser;sa=email" method="post" accept-charset="', $context['character_set'], '">
+			<table width="60%" cellpadding="3" cellspacing="0" border="0" class="tborder" align="center">
+				<tr class="titlebg">
+					<td align="left" colspan="2">
+						<img src="', $settings['images_url'], '/email_sm.gif" alt="" />
+						', $context['page_title'], '
+					</td>
+				</tr>
+				<tr class="windowbg">
+					<td width="30%"><b>', $txt['sendtopic_receiver_name'], ':</b></td>
+					<td>', $context['recipient']['link'], '</td>
+				</tr>';
+
+	// If it's a guest we need their details.
+	if ($context['user']['is_guest'])
+		echo '
+				<tr class="windowbg" valign="top">
+					<td width="30%"><b>', $txt['sendtopic_sender_name'], ':</b></td>
+					<td><input type="text" name="y_name" size="24" maxlength="40" value="', $context['user']['name'], '" /></td>
+				</tr>
+				<tr class="windowbg" valign="top">
+					<td width="30%">
+						<b>', $txt['sendtopic_sender_email'], ':</b>
+						<div class="smalltext">', $txt['send_email_disclosed'], '</div>
+					</td>
+					<td><input type="text" name="y_email" size="24" maxlength="50" value="', $context['user']['email'], '" /></td>
+				</tr>';
+	// Otherwise show the user that we know their email.
+	else
+		echo '
+				<tr class="windowbg" valign="top">
+					<td width="30%">
+						<b>', $txt['sendtopic_sender_email'], ':</b>
+						<div class="smalltext">', $txt['send_email_disclosed'], '</div>
+					</td>
+					<td><i>', $context['user']['email'], '</i></td>
+				</tr>';
+
+	echo '
+				<tr class="windowbg">
+					<td width="30%"><b>', $txt['send_email_subject'], ':</b></td>
+					<td><input type="text" name="email_subject" size="50" maxlength="100" /></td>
+				</tr>
+				<tr class="windowbg" valign="top">
+					<td width="30%">
+						<b>', $txt['message'], ':</b>
+					</td>
+					<td>
+						<textarea name="email_body" rows="10" cols="20" style="width: 90%;"></textarea>
+					</td>
+				</tr>
+				<tr class="windowbg">
+					<td align="center" colspan="2"><br /><input type="submit" name="send" value="', $txt['sendtopic_send'], '" /></td>
+				</tr>
+			</table>';
+
+	foreach ($context['form_hidden_vars'] as $key => $value)
+		echo '
+			<input type="hidden" name="', $key, '" value="', $value, '" />';
+
+	echo '
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		</form>';
 }

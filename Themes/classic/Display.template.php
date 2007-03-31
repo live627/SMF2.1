@@ -714,7 +714,7 @@ function theme_show_main_buttons()
 	if ($context['can_mark_notify'])
 		$buttonArray[] = '<a href="' . $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/notify.gif" alt="' . $txt['notify_replies'] . '" border="0" />' : $txt['notify_replies']) . '</a>';
 	if ($context['can_send_topic'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt['send_topic'] . '" border="0" />' : $txt['send_topic']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=emailuser;sa=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt['send_topic'] . '" border="0" />' : $txt['send_topic']) . '</a>';
 	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank" rel="nofollow">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt['print'] . '" border="0" />' : $txt['print']) . '</a>';
 
 	return implode($context['menu_separator'], $buttonArray);

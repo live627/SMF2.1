@@ -827,6 +827,7 @@ CREATE TABLE {$db_prefix}log_errors (
 CREATE TABLE {$db_prefix}log_floodcontrol (
   ip char(16) NOT NULL default '                ',
   log_time int(10) unsigned NOT NULL default '0',
+  log_type varchar(8) NOT NULL default 'post',
   PRIMARY KEY (ip(16))
 ) TYPE=MyISAM;
 

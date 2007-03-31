@@ -48,6 +48,7 @@ $txt['topic_one_post'] = 'This topic only contains one message and cannot be spl
 $txt['no_posts_selected'] = 'no messages selected';
 $txt['slected_all_posts'] = 'Unable to split. You have selected every message.';
 $txt['cant_find_messages'] = 'Unable to find messages';
+$txt['cant_find_user_email'] = 'Unable to find user\'s email address.';
 $txt['cant_insert_topic'] = 'Unable to insert topic';
 $txt['already_a_mod'] = 'You have chosen a username of an already existing moderator. Please choose another username';
 $txt['session_timeout'] = 'Your session timed out while posting.  Please go back and try again.';
@@ -193,9 +194,15 @@ $txt['who_off'] = 'You cannot access Who\'s Online right now because it is disab
 $txt['merge_create_topic_failed'] = 'Error creating a new topic.';
 $txt['merge_need_more_topics'] = 'Merge topics require at least two topics to merge.';
 
-$txt['spamWaitTime_broken'] = 'The last posting from your IP was less than %d seconds ago. Please try again later.';
+$txt['postWaitTime_broken'] = 'The last posting from your IP was less than %d seconds ago. Please try again later.';
 $txt['registerWaitTime_broken'] = 'You already registered just %d seconds ago!';
 $txt['loginWaitTime_broken'] = 'You will have to wait about %d seconds to login again, sorry.';
+$txt['pmWaitTime_broken'] = 'The last personal message from your IP was less than %d seconds ago. Please try again later.';
+$txt['reporttmWaitTime_broken'] = 'The last topic report from your IP was less than %d seconds ago. Please try again later.';
+$txt['sendtopcWaitTime_broken'] = 'The last topic sent from your IP was less than %d seconds ago. Please try again later.';
+$txt['sendmailWaitTime_broken'] = 'The last email sent from your IP was less than %d seconds ago. Please try again later.';
+
+$txt['email_missing_data'] = 'You must enter something in both the subject and message boxes.';
 
 $txt['topic_gone'] = 'The topic or board you are looking for appears to be either missing or off limits to you.';
 $txt['theme_edit_missing'] = 'The file you are trying to edit... can\'t even be found!';

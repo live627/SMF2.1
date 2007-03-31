@@ -1663,7 +1663,7 @@ function MessagePost2()
 	}
 
 	// Protect from message spamming.
-	spamProtection('spam');
+	spamProtection('pm');
 
 	// Prevent double submission of this form.
 	checkSubmitOnce('check');

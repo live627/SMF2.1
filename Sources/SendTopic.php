@@ -33,7 +33,12 @@ if (!defined('SMF'))
 		- uses the SendTopic template, with the main sub template.
 		- requires the send_topic permission.
 		- redirects back to the first page of the topic when done.
-		- is accessed via ?action=sendtopic.
+		- is accessed via ?action=emailuser;sa=sendtopic.
+
+	void CustomEmail()
+		- send an email to the user - allow the sender to write the message.
+		- can either be passed a user ID as uid or a message id as msg.
+		- does not check permissions for a message ID as there is no information disclosed.
 
 	void ReportToModerator()
 		- gathers data from the user to report abuse to the moderator(s).
@@ -52,6 +57,25 @@ if (!defined('SMF'))
 	void BrowseMessageReports()
 		// !!!
 */
+
+// The main handling function for sending specialist (Or otherwise) emails to a user.
+function EmailUser()
+{
+	global $topic, $txt, $db_prefix, $context, $scripturl, $sourcedir, $smfFunc;
+
+	// Load the template.
+	loadTemplate('SendTopic');
+
+	$sub_actions = array(
+		'email' => 'CustomEmail',
+		'sendtopic' => 'SendTopic',
+	);
+
+	if (!isset($_GET['sa']) || !isset($sub_actions[$_GET['sa']]))
+		$_GET['sa'] = 'sendtopic';
+
+	$sub_actions[$_GET['sa']]();
+}
 
 // Send a topic to a friend.
 function SendTopic()
@@ -83,7 +107,6 @@ function SendTopic()
 	// Sending yet, or just getting prepped?
 	if (empty($_POST['send']))
 	{
-		loadTemplate('SendTopic');
 		$context['page_title'] = sprintf($txt['sendtopic_title'], $row['subject']);
 		$context['start'] = $_REQUEST['start'];
 
@@ -92,7 +115,7 @@ function SendTopic()
 
 	// Actually send the message...
 	checkSession();
-	spamProtection('spam');
+	spamProtection('sendtopc');
 
 	// This is needed for sendmail().
 	require_once($sourcedir . '/Subs-Post.php');
@@ -141,6 +164,109 @@ function SendTopic()
 
 	// Back to the topic!
 	redirectexit('topic=' . $topic . '.0');
+}
+
+// Allow a user to send an email.
+function CustomEmail()
+{
+	global $context, $modSettings, $user_info, $smfFunc, $db_prefix, $txt, $scripturl, $sourcedir;
+
+	// Can the user even see this information?
+	if ($user_info['is_guest'] && !empty($modSettings['guest_hideContacts']))
+		fatal_lang_error('no_access');
+
+	// Are we sending to a user?
+	$context['form_hidden_vars'] = array();
+	if (isset($_REQUEST['uid']))
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT email_address AS email, member_name AS name, id_member
+			FROM {$db_prefix}members
+			WHERE id_member = " . (int) $_REQUEST['uid'], __FILE__, __LINE__);
+
+		$context['form_hidden_vars']['uid'] = (int) $_REQUEST['uid'];
+	}
+	elseif (isset($_REQUEST['msg']))
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT IFNULL(mem.email_address, m.poster_email) AS email, m.poster_name AS name, IFNULL(mem.id_member, 0) AS id_member
+			FROM {$db_prefix}messages AS m
+				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			WHERE m.id_msg = " . (int) $_REQUEST['msg'], __FILE__, __LINE__);
+
+		$context['form_hidden_vars']['msg'] = (int) $_REQUEST['msg'];
+	}
+
+	if (empty($request) || $smfFunc['db_num_rows']($request) == 0)
+		fatal_lang_error('cant_find_user_email');
+
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
+
+	// Setup the context!
+	$context['recipient'] = array(
+		'id' => $row['id_member'],
+		'name' => $row['name'],
+		'email' => $row['email'],
+		'link' => $row['id_member'] ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['name'] . '</a>' : $row['name'],
+	);
+
+	// Are we actually sending it?
+	if (isset($_POST['send']) && isset($_POST['email_body']))
+	{
+		require_once($sourcedir . '/Subs-Post.php');
+
+		checkSession();
+
+		// If it's a guest sort out their names.
+		if ($user_info['is_guest'])
+		{
+			if (empty($_POST['y_name']) || $_POST['y_name'] == '_' || trim($_POST['y_name']) == '')
+				fatal_lang_error('no_name', false);
+			if (empty($_POST['y_email']))
+				fatal_lang_error('no_email', false);
+			if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['y_email'])) == 0)
+				fatal_lang_error('email_invalid_character', false);
+
+			$from_name = trim($_POST['y_name']);
+			$from_email = trim($_POST['y_email']);
+		}
+		else
+		{
+			$from_name = $user_info['name'];
+			$from_email = $user_info['email'];
+		}
+
+		// Check we have a body (etc).
+		if (trim($_POST['email_body']) == '' || trim($_POST['email_subject']) == '')
+			fatal_lang_error('email_missing_data');
+
+		// We use a template incase they want to customise!
+		$replacements = array(
+			'EMAILSUBJECT' => $_POST['email_subject'],
+			'EMAILBODY' => $_POST['email_body'],
+			'SENDERNAME' => $from_name,
+			'RECPNAME' => $context['recipient']['name'],
+		);
+
+		// Get the template and get out!
+		$emaildata = loadEmailTemplate('send_email', $replacements);
+		sendmail($context['recipient']['email'], $emaildata['subject'], $emaildata['body'], $from_email);
+
+		// Don't let them send too many!
+		spamProtection('sendmail');
+
+		// Now work out where to go!
+		if (isset($_REQUEST['uid']))
+			redirectexit('action=profile;u=' . (int) $_REQUEST['uid']);
+		elseif (isset($_REQUEST['msg']))
+			redirectexit('msg=' . (int) $_REQUEST['msg']);
+		else
+			redirectexit();
+	}
+
+	$context['sub_template'] = 'custom_email';
+	$context['page_title'] = $txt['send_email'];
 }
 
 // Report a post to the moderator... ask for a comment.
@@ -198,7 +324,7 @@ function ReportToModerator2()
 
 	// Check their session... don't want them redirected here without their knowledge.
 	checkSession();
-	spamProtection('spam');
+	spamProtection('reporttm');
 
 	// You must have the proper permissions!
 	isAllowedTo('report_any');

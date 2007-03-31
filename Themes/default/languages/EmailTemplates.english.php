@@ -417,6 +417,18 @@ Thanks,
 
 {SENDERNAME}',
 	),
+	'send_email' => array(
+		/*
+			@additional_params: send_email
+				EMAILSUBJECT: The subject the user wants to email.
+				EMAILBODY: The body the user wants to email.
+				SENDERNAME: The name of the member sending the email.
+				RECPNAME: The name of the person receiving the email.
+			@description:
+		*/
+		'subject' => '{EMAILSUBJECT}',
+		'body' => '{EMAILBODY}',
+	),
 	'report_to_moderator' => array(
 		/* 
 			@additional_params: report_to_moderator

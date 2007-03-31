@@ -175,7 +175,7 @@ if (!defined('SMF'))
 	void spamProtection(string error_type)
 		- attempts to protect from spammed messages and the like.
 		- takes a $txt index. (not an actual string.)
-		- depends on the spamWaitTime setting.
+		- time taken depends on error_type - generally uses the modSetting.
 
 	array url_image_size(string url)
 		- uses getimagesize() to determine the size of a file.
@@ -2708,30 +2708,40 @@ function spamProtection($error_type)
 {
 	global $modSettings, $txt, $db_prefix, $user_info, $smfFunc;
 
-	// Delete old entries... if you can moderate this board or this is login, override spamWaitTime with 2.
-	if ($error_type == 'spam' && !allowedTo('moderate_board'))
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_floodcontrol
-			WHERE log_time < " . (time() - $modSettings['spamWaitTime']), __FILE__, __LINE__);
+	// Certain types take less/more time.
+	$timeOverrides = array(
+		'login' => 2,
+		'register' => 2,
+		'sendtopc' => $modSettings['spamWaitTime'] * 4,
+		'sendmail' => $modSettings['spamWaitTime'] * 5,
+		'reporttm' => $modSettings['spamWaitTime'] * 4,
+	);
+
+	// Moderators are free...
+	if (!allowedTo('moderate_board'))
+		$timeLimit = isset($timeOverrides[$error_type]) ? $timeOverrides[$error_type] : $modSettings['spamWaitTime'];
 	else
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_floodcontrol
-			WHERE (log_time < " . (time() - 2) . " AND ip = '$user_info[ip]')
-				OR log_time < " . (time() - $modSettings['spamWaitTime']), __FILE__, __LINE__);
+		$timeLimit = 2;
+
+	// Delete old entries...
+	$smfFunc['db_query']('', "
+		DELETE FROM {$db_prefix}log_floodcontrol
+		WHERE log_time < " . (time() - $timeLimit) . "
+			AND log_type = '$error_type'", __FILE__, __LINE__);
 
 	// Add a new entry, deleting the old if necessary.
 	$smfFunc['db_insert']('replace',
 		"{$db_prefix}log_floodcontrol",
-		array('ip', 'log_time'),
-		array("SUBSTRING('$user_info[ip]', 1, 16)", time()),
-		array('ip'), __FILE__, __LINE__
+		array('ip', 'log_time', 'log_type'),
+		array("SUBSTRING('$user_info[ip]', 1, 16)", time(), "'$error_type'"),
+		array('ip', 'log_type'), __FILE__, __LINE__
 	);
 
 	// If affected is 0 or 2, it was there already.
 	if (db_affected_rows() != 1)
 	{
 		// Spammer!  You only have to wait a *few* seconds!
-		fatal_lang_error($error_type . 'WaitTime_broken', false, array($modSettings['spamWaitTime']));
+		fatal_lang_error($error_type . 'WaitTime_broken', false, array($timeLimit));
 		return true;
 	}
 

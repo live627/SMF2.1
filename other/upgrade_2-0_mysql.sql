@@ -1424,12 +1424,17 @@ DROP COLUMN id_board;
 ---#
 
 /******************************************************************************/
---- Adding Ignore Board Option.
+--- Adding Some Additional Functionality.
 /******************************************************************************/
 
 ---# Adding column to hold the boards being ignored ...
 ALTER TABLE {$db_prefix}members
 ADD ignore_boards tinytext NOT NULL;
+---#
+
+---# Adding advanced flood control ...
+ALTER TABLE {$db_prefix}log_floodcontrol
+ADD log_type varchar(8) NOT NULL default 'post';
 ---#
 
 /******************************************************************************/

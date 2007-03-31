@@ -1392,7 +1392,7 @@ function Post2()
 
 	// Make sure the user isn't spamming the board.
 	if (!isset($_REQUEST['msg']))
-		spamProtection('spam');
+		spamProtection('post');
 
 	// At about this point, we're posting and that's that.
 	ignore_user_abort(true);

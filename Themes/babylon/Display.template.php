@@ -222,7 +222,7 @@ function template_main()
 		$buttonArray[] = '<a href="' . $scripturl . '?action=editpoll;add;topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/addpoll.gif" alt="' . $txt['add_poll'] . '" border="0" />' : $txt['add_poll']) . '</a>';
 
 	if ($context['can_send_topic'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt['send_topic'] . '" border="0" />' : $txt['send_topic']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=emailuser;sa=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt['send_topic'] . '" border="0" />' : $txt['send_topic']) . '</a>';
 	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank" rel="nofollow">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt['print'] . '" border="0" />' : $txt['print']) . '</a>';
 
 	echo implode($context['menu_separator'], $buttonArray);
@@ -588,7 +588,7 @@ function template_main()
 		$buttonArray[] = '<a href="' . $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . '">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/markunread.gif" alt="' . $txt['mark_unread'] . '" border="0" />' : $txt['mark_unread']) . '</a>';
 
 	if ($context['can_send_topic'])
-		$buttonArray[] = '<a href="' . $scripturl . '?action=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt['send_topic'] . '" border="0" />' : $txt['send_topic']) . '</a>';
+		$buttonArray[] = '<a href="' . $scripturl . '?action=emailuser;sa=sendtopic;topic=' . $context['current_topic'] . '.0">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/sendtopic.gif" alt="' . $txt['send_topic'] . '" border="0" />' : $txt['send_topic']) . '</a>';
 	$buttonArray[] = '<a href="' . $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0" target="_blank">' . ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt['print'] . '" border="0" />' : $txt['print']) . '</a>';
 
 	echo implode($context['menu_separator'], $buttonArray);

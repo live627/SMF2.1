@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2696 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2697 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -35,6 +35,9 @@ March 2007
  ! Finally fixed a nasty problem with upgrade stopping it working properly when uninstalling mods. (upgrade.php)
  + Added mime type information to attachments to allow for the type of the file to be detected upon upload increasing security. (Display.php, Profile.php, Subs-Post.php, Subs-Graphics.php, upgrade_2-0.sql)
  ! Added little feature to allow moderators to make notes to each other in the moderation center. (ModerationCenter.php)
+ ! Enhanced spam protection to take into account the various types of actions being protected against. (upgrade scripts, Subs.php)
+ + Added functionality for sending emails to people without revealing their email address - not quite used yet. (SendTopic.php, SendTopic template)
+ * Changed URL for sending a topic to enable email sending functions to be grouped together better. (Display templates, index.php)
 
 
 February 2007
