@@ -3684,6 +3684,6 @@ function setupMenuContext()
 	$context['load_menu_js'] = false;
 
 	if (!$user_info['is_guest'] && $context['user']['unread_messages'] > 0 && isset($context['menu_buttons']['pm']))
-		$context['menu_buttons']['pm'] .= ' [<strong>'. $context['user']['unread_messages'] . '</strong>]';
+		$context['menu_buttons']['pm']['title'] .= ' [<strong>'. $context['user']['unread_messages'] . '</strong>]';
 }
 ?>
