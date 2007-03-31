@@ -117,17 +117,21 @@ else
 	);
 }
 
-// Are we going to be using SSI at this point?
+// Load up some essential data...
+loadEssentialData();
+
+// Are we going to be mimic'ing SSI at this point?
 if (isset($_GET['ssi']))
 {
-	$ssi_maintenance_off = true;
-	require_once($upgrade_path . '/SSI.php');
+	require_once($sourcedir . '/Subs.php');
+	require_once($sourcedir . '/Errors.php');
+	require_once($sourcedir . '/Load.php');
+	require_once($sourcedir . '/Security.php');
 	require_once($sourcedir . '/Subs-Package.php');
-	initialize_inputs();
+
+	loadUserSettings();
+	loadPermissions();
 }
-// If not we need to do some setup ourselves as SMF is out of the picture.
-else
-	loadEssentialData();
 
 // All the non-SSI stuff.
 if (!function_exists('un_htmlspecialchars'))

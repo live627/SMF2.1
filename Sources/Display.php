@@ -968,7 +968,7 @@ function Download()
 	if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'avatar')
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT filename, id_attach, attachment_type, approved
+			SELECT filename, fileext, id_attach, attachment_type, mime_type, approved
 			FROM {$db_prefix}attachments
 			WHERE id_attach = $_REQUEST[attach]
 				AND id_member > 0
@@ -982,7 +982,7 @@ function Download()
 
 		// Make sure this attachment is on this board.
 		$request = $smfFunc['db_query']('', "
-			SELECT a.filename, a.id_attach, a.attachment_type, a.approved
+			SELECT a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {$db_prefix}attachments AS a
 				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
@@ -991,7 +991,7 @@ function Download()
 	}
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_access', false);
-	list ($real_filename, $id_attach, $attachment_type, $is_approved) = $smfFunc['db_fetch_row']($request);
+	list ($real_filename, $file_ext, $id_attach, $attachment_type, $mime_type, $is_approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// If it isn't yet approved, do they have permission to view it?
@@ -1064,55 +1064,21 @@ function Download()
 	header('Connection: close');
 	header('ETag: ' . $file_md5);
 
-	if (filesize($filename) != 0)
+	// Does this have a mime type?
+	if ($mime_type && (isset($_REQUEST['image']) || !in_array($file_ext, array('jpg', 'gif', 'jpeg', 'bmp', 'png', 'psd', 'tiff', 'iff'))))
+		header('Content-Type: ' . $mime_type);
+	else
 	{
-		$size = @getimagesize($filename);
-		if (!empty($size))
-		{
-			// What headers are valid?
-			$validTypes = array(
-				1 => 'gif',
-				2 => 'jpeg',
-				3 => 'png',
-				5 => 'psd',
-				6 => 'bmp',
-				7 => 'tiff',
-				8 => 'tiff',
-				9 => 'jpeg',
-				14 => 'iff',
-			);
-
-			// Stupid damn IE - work around it and it's exploits.
-			$fp = fopen($filename, 'rb');
-			if ($fp)
-			{
-				if (preg_match('~<script|<embed|<object|<html|<head|<body~si', fread($fp, 250)))
-					$size = array(2 => 'invalid');
-				fclose($fp);
-			}
-
-			// Do we have a mime type we can simpy use?
-			if (!empty($size['mime']))
-				header('Content-Type: ' . $size['mime']);
-			elseif (isset($validTypes[$size[2]]))
-				header('Content-Type: image/' . $validTypes[$size[2]]);
-			// Otherwise - let's think safety first... it might not be an image...
-			elseif (isset($_REQUEST['image']))
-				unset($_REQUEST['image']);
-		}
-		// Once again - safe!
-		elseif (isset($_REQUEST['image']))
+		header('Content-Type: application/octet-stream');
+		if (isset($_REQUEST['image']))
 			unset($_REQUEST['image']);
 	}
 
 	if (!isset($_REQUEST['image']))
-	{
 		header('Content-Disposition: attachment; filename="' . $real_filename . '"');
-		header('Content-Type: application/octet-stream');
-	}
 
 	// If this has an "image extension" - but isn't actually an image - then ensure it isn't cached cause of silly IE.
-	if (!isset($_REQUEST['image']) && in_array(substr($real_filename, -4), array('.gif', '.jpg', '.bmp', '.png', 'jpeg', 'tiff')))
+	if (!isset($_REQUEST['image']) && in_array($file_ext, array('gif', 'jpg', 'bmp', 'png', 'jpeg', 'tiff')))
     		header('Cache-Control: no-cache'); 
     	else
 		header('Cache-Control: max-age=' . (525600 * 60) . ', private');
@@ -1124,7 +1090,7 @@ function Download()
 	@set_time_limit(0);
 
 	// For text files.....
-	if (!isset($_REQUEST['image']) && in_array(substr($real_filename, -4), array('.txt', '.css', '.htm', '.php', '.xml')))
+	if (!isset($_REQUEST['image']) && in_array($file_ext, array('txt', 'css', 'htm', 'html', 'php', 'xml')))
 	{
 		if (strpos($_SERVER['HTTP_USER_AGENT'], 'Windows') !== false)
 			$callback = create_function('$buffer', 'return preg_replace(\'~[\r]?\n~\', "\r\n", $buffer);');

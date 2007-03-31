@@ -879,6 +879,148 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}group_moderators (
 ---#
 
 /******************************************************************************/
+--- Updating attachment data...
+/******************************************************************************/
+
+---# Altering attachment table.
+ALTER TABLE {$db_prefix}attachments
+ADD COLUMN fileext varchar(8) NOT NULL default '',
+ADD COLUMN mime_type varchar(20) NOT NULL default '';
+---#
+
+---# Populate the attachment extension.
+UPDATE {$db_prefix}attachments
+SET fileext = LOWER(SUBSTRING(filename, 1 - (INSTR(REVERSE(filename), '.'))))
+WHERE fileext = ''
+	AND INSTR(filename, '.')
+	AND attachment_type != 3;
+---#
+
+---# Updating thumbnail attachments.
+UPDATE {$db_prefix}attachments
+SET fileext = 'jpg'
+WHERE attachment_type = 3
+	AND fileext = ''
+	AND RIGHT(filename, 9) = 'JPG_thumb';
+
+UPDATE {$db_prefix}attachments
+SET fileext = 'png'
+WHERE attachment_type = 3
+	AND fileext = ''
+	AND RIGHT(filename, 9) = 'PNG_thumb';
+---#
+
+---# Calculating attachment mime types.
+---{
+// Don't ever bother doing this twice.
+//!!! 1==1 is temporary to allow alpha testers not to complain.
+if (1 == 1 || @$modSettings['smfVersion'] < '2.0')
+{
+	$_GET['a'] = isset($_GET['a']) ? (int) $_GET['a'] : 0;
+
+	if (!function_exists('getAttachmentFilename'))
+	{
+		function getAttachmentFilename($filename, $attachment_id)
+		{
+			global $modSettings;
+		
+			$clean_name = strtr($filename, 'ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');
+			$clean_name = strtr($clean_name, array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', 'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
+			$clean_name = preg_replace(array('/\s/', '/[^\w_\.\-]/'), array('_', ''), $clean_name);
+			$enc_name = $attachment_id . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
+			$clean_name = preg_replace('~\.[\.]+~', '.', $clean_name);
+		
+			if ($attachment_id == false)
+				return $clean_name;
+		
+			if (file_exists($modSettings['attachmentUploadDir'] . '/' . $enc_name))
+				$filename = $modSettings['attachmentUploadDir'] . '/' . $enc_name;
+			else
+				$filename = $modSettings['attachmentUploadDir'] . '/' . $clean_name;
+		
+			return $filename;
+		}
+	}
+
+	$ext_updates = array();
+	
+	// What headers are valid results for getimagesize?
+	$validTypes = array(
+		1 => 'gif',
+		2 => 'jpeg',
+		3 => 'png',
+		5 => 'psd',
+		6 => 'bmp',
+		7 => 'tiff',
+		8 => 'tiff',
+		9 => 'jpeg',
+		14 => 'iff',
+	);
+	
+	$is_done = false;
+	while (!$is_done)
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT id_attach, filename, fileext
+			FROM {$db_prefix}attachments
+			WHERE fileext != ''
+				AND mime_type = ''
+			LIMIT $_GET[a], 100", false, false);
+		// Finished?
+		if ($smfFunc['db_num_rows']($request) == 0)
+			$is_done = true;
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+			if (!file_exists($filename))
+				continue;
+	
+			// Is it an image?
+			$size = @getimagesize($filename);
+			// Nothing valid?
+			if (empty($size) || empty($size[0]))
+				continue;
+			// Got the mime?
+			elseif (!empty($size['mime']))
+				$mime = $size['mime'];
+			// Otherwise is it valid?
+			elseif (!isset($validTypes[$size[2]]))
+				continue;
+			else
+				$mime = 'image/' . $validTypes[$size[2]];
+	
+			// Let's try keep updates to a minimum.
+			if (!isset($ext_updates[$row['fileext'] . $size['mime']]))
+				$ext_updates[$row['fileext'] . $size['mime']] = array(
+					'fileext' => $row['fileext'],
+					'mime' => $mime,
+					'files' => array(),
+				);
+			$ext_updates[$row['fileext'] . $size['mime']]['files'][] = $row['id_attach'];
+		}
+		$smfFunc['db_free_result']($request);
+	
+		// Do the updates?
+		foreach ($ext_updates as $key => $update)
+		{
+			$smfFunc['db_query']('', "
+				UPDATE {$db_prefix}attachments
+				SET mime_type = '$update[mime]'
+				WHERE id_attach IN (" . implode(',', $update[files]) . ")", false, false);
+
+			// Remove it.
+			unset($ext_updates[$key]);
+		}
+	
+		$_GET['a'] += 100;
+	}
+	
+	unset($_GET['a']);
+}
+---}
+---#
+
+/******************************************************************************/
 --- Adding Post Moderation.
 /******************************************************************************/
 

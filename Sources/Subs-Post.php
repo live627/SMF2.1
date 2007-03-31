@@ -1891,9 +1891,26 @@ function createAttachment(&$attachmentOptions)
 		return false;
 	}
 
-	if (!$file_restricted || $already_uploaded)
-		list ($attachmentOptions['width'], $attachmentOptions['height']) = @getimagesize($attachmentOptions['tmp_name']);
+	// These are the only valid image types for SMF.
+	$validImageTypes = array(1 => 'gif', 2 => 'jpeg', 3 => 'png', 5 => 'psd', 6 => 'bmp', 7 => 'tiff', 8 => 'tiff', 9 => 'jpeg', 14 => 'iff');
 
+	if (!$file_restricted || $already_uploaded)
+	{
+		$size = @getimagesize($attachmentOptions['tmp_name']);
+		list ($attachmentOptions['width'], $attachmentOptions['height']) = $size;
+
+		// If it's an image get the mime type right.
+		if (empty($attachmentOptions['mime_type']) && $attachmentOptions['width'])
+		{
+			// Got a proper mime type?
+			if (!empty($size['mime']))
+				$attachmentOptions['mime_type'] = $size['mime'];
+			// Otherwise a valid one?
+			elseif (isset($validImageTypes[$size[2]]))
+				$attachmentOptions['mime_type'] = 'image/' . $validImageTypes[$size[2]];
+		}
+ 	}
+ 
 	// Remove special foreign characters from the filename.
 	if (empty($modSettings['attachmentEncryptFilenames']))
 		$attachmentOptions['name'] = getAttachmentFilename($attachmentOptions['name'], false, true);
@@ -1964,10 +1981,18 @@ function createAttachment(&$attachmentOptions)
 	if (!is_writable($modSettings['attachmentUploadDir']))
 		fatal_lang_error('attachments_no_write', 'critical');
 
+	// Assuming no-one set the extension let's take a look at it.
+	if (empty($attachmentOptions['fileext']))
+	{
+		$attachmentOptions['fileext'] = strtolower(strrpos($attachmentOptions['name'], '.') !== false ? substr($attachmentOptions['name'], strrpos($attachmentOptions['name'], '.') + 1) : '');
+		if (strlen($attachmentOptions['fileext']) > 8 || '.' . $attachmentOptions['fileext'] == $attachmentOptions['name'])
+			$attachmentOptions['fileext'] = '';
+	}
+
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}attachments
-			(id_msg, filename, size, width, height, approved)
-		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
+			(id_msg, filename, fileext, size, width, height, mime_type, approved)
+		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? "SUBSTRING('$attachmentOptions[mime_type]', 1, 20)" : '') . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
 	$attachmentOptions['id'] = db_insert_id("{$db_prefix}attachments", 'id_attach');
 
 	if (empty($attachmentOptions['id']))
@@ -1990,14 +2015,25 @@ function createAttachment(&$attachmentOptions)
 	// We couldn't access the file before...
 	elseif ($file_restricted)
 	{
-		list ($attachmentOptions['width'], $attachmentOptions['height']) = @getimagesize($attachmentOptions['destination']);
+		$size = @getimagesize($attachmentOptions['destination']);
+		list ($attachmentOptions['width'], $attachmentOptions['height']) = $size;
+
+		// Have a go at getting the right mime type.
+		if (empty($attachmentOptions['mime_type']) && $attachmentOptions['width'])
+		{
+			if (!empty($size['mime']))
+				$attachmentOptions['mime_type'] = $size['mime'];
+			elseif (isset($validImageTypes[$size[2]]))
+				$attachmentOptions['mime_type'] = 'image/' . $validImageTypes[$size[2]];
+		}
 
 		if (!empty($attachmentOptions['width']) && !empty($attachmentOptions['height']))
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}attachments
 				SET
 					width = " . (int) $attachmentOptions['width'] . ",
-					height = " . (int) $attachmentOptions['height'] . "
+					height = " . (int) $attachmentOptions['height'] . ",
+					mime_type = '" . (empty($attachmentOptions['mime_type']) ? '' : $attachmentOptions['mime_type']) . "'
 				WHERE id_attach = $attachmentOptions[id]", __FILE__, __LINE__);
 	}
 
@@ -2014,15 +2050,25 @@ function createAttachment(&$attachmentOptions)
 		if (createThumbnail($attachmentOptions['destination'], $modSettings['attachmentThumbWidth'], $modSettings['attachmentThumbHeight']))
 		{
 			// Figure out how big we actually made it.
-			list ($thumb_width, $thumb_height) = @getimagesize($attachmentOptions['destination'] . '_thumb');
+			$size = @getimagesize($attachmentOptions['destination'] . '_thumb');
+			list ($thumb_width, $thumb_height) = $size;
+
+			if (!empty($size['mime']))
+				$thumb_mime = $size['mime'];
+			elseif (isset($validImageTypes[$size[2]]))
+				$thumb_mime = 'image/' . $validImageTypes[$size[2]];
+			// Lord only knows how this happened...
+			else
+				$thumb_mime = '';
+
 			$thumb_filename = $smfFunc['db_escape_string']($attachmentOptions['name'] . '_thumb');
 			$thumb_size = filesize($attachmentOptions['destination'] . '_thumb');
 
 			// To the database we go!
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}attachments
-					(id_msg, attachment_type, filename, size, width, height, approved)
-				VALUES (" . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
+					(id_msg, attachment_type, filename, fileext, size, width, height, mime_type, approved)
+				VALUES (" . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ", SUBSTRING('$thumb_mime', 1, 20), " . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
 			$attachmentOptions['thumb'] = db_insert_id("{$db_prefix}attachments", 'id_attach');
 
 			if (!empty($attachmentOptions['thumb']))

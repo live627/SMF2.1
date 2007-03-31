@@ -97,7 +97,8 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 {
 	global $modSettings, $db_prefix, $sourcedir, $gd2, $smfFunc;
 
-	$destName = 'avatar_' . $memID . '.' . (!empty($modSettings['avatar_download_png']) ? 'png' : 'jpeg');
+	$ext = !empty($modSettings['avatar_download_png']) ? 'png' : 'jpeg';
+	$destName = 'avatar_' . $memID . '.' . $ext;
 
 	$default_formats = array(
 		'1' => 'gif',
@@ -126,8 +127,8 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	removeAttachments('a.id_member = ' . $memID);
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}attachments
-			(id_member, attachment_type, filename, size)
-		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', 1)", __FILE__, __LINE__);
+			(id_member, attachment_type, filename, fileext, size)
+		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', '$ext', 1)", __FILE__, __LINE__);
 	$attachID = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
 	// Retain this globally incase the script wants it.
 	$modSettings['new_avatar_data'] = array(
@@ -189,11 +190,13 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 		if (rename($destName . '.tmp', $destName))
 		{
 			list ($width, $height) = getimagesize($destName);
+			$mime_type = 'image/' . $ext;
 
 			// Write filesize in the database.
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}attachments
-				SET size = " . filesize($destName) . ", width = " . (int) $width . ", height = " . (int) $height . "
+				SET size = " . filesize($destName) . ", width = " . (int) $width . ", height = " . (int) $height . ",
+					mime_type = '$mime_type'
 				WHERE id_attach = $attachID", __FILE__, __LINE__);
 			return true;
 		}

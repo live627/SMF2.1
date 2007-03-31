@@ -4049,14 +4049,15 @@ function profileSaveAvatarData(&$value)
 			elseif (is_array($sizes))
 			{
 				$extensions = array(
-					'1' => '.gif',
-					'2' => '.jpg',
-					'3' => '.png',
-					'6' => '.bmp'
+					'1' => 'gif',
+					'2' => 'jpg',
+					'3' => 'png',
+					'6' => 'bmp'
 				);
-				$extension = isset($extensions[$sizes[2]]) ? $extensions[$sizes[2]] : '.bmp';
 
-				$destName = 'avatar_' . $memID . $extension;
+				$extension = isset($extensions[$sizes[2]]) ? $extensions[$sizes[2]] : 'bmp';
+				$mime_type = 'image/' . ($extension == 'jpg' ? 'jpeg' : $extension);
+				$destName = 'avatar_' . $memID . '.' . $extension;
 				list ($width, $height) = getimagesize($_FILES['attachment']['tmp_name']);
 
 				// Remove previous attachments this member might have had.
@@ -4067,8 +4068,8 @@ function profileSaveAvatarData(&$value)
 
 				$smfFunc['db_query']('', "
 					INSERT INTO {$db_prefix}attachments
-						(id_member, attachment_type, filename, size, width, height)
-					VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', " . filesize($uploadDir . '/' . $destName) . ", " . (int) $width . ", " . (int) $height . ")", __FILE__, __LINE__);
+						(id_member, attachment_type, filename, fileext, size, width, height, mime_type)
+					VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', '$extension', " . filesize($uploadDir . '/' . $destName) . ", " . (int) $width . ", " . (int) $height . ", '$mime_type')", __FILE__, __LINE__);
 
 				$cur_profile['id_attach'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
 				$cur_profile['filename'] = $destName;

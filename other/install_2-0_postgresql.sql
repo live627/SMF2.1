@@ -145,10 +145,12 @@ CREATE TABLE {$db_prefix}attachments (
   id_member int NOT NULL default '0',
   attachment_type smallint NOT NULL default '0',
   filename varchar(255) NOT NULL,
+  fileext varchar(8) NOT NULL default '',
   size int NOT NULL default '0',
   downloads int NOT NULL default '0',
   width int NOT NULL default '0',
   height int NOT NULL default '0',
+  mime_type varchar(20) NOT NULL default '',
   approved smallint NOT NULL default '1',
   PRIMARY KEY (id_attach)
 );
