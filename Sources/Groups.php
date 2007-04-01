@@ -270,7 +270,7 @@ function MembergroupMembers()
 	// Sort out the sorting!
 	$sort_methods = array(
 		'name' => 'real_name',
-		'email' => (allowedTo('moderate_forum') || empty($modSettings['allow_hide_email'])) ? 'email_address' : 'hide_email ' . (isset($_REQUEST['desc']) ? 'DESC' : 'ASC') . ', email_address',
+		'email' => allowedTo('moderate_forum') ? 'email_address' : 'hide_email ' . (isset($_REQUEST['desc']) ? 'DESC' : 'ASC') . ', email_address',
 		'active' => 'last_login',
 		'registered' => 'date_registered',
 		'posts' => 'posts',
@@ -308,6 +308,7 @@ function MembergroupMembers()
 	// Create the page index.
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=viewgroups;sa=members;group=' . $_REQUEST['group'] . ';sort=' . $context['sort_by'] . (isset($_REQUEST['desc']) ? ';desc' : ''), $_REQUEST['start'], $context['total_members'], $modSettings['defaultMaxMembers']);
 	$context['start'] = $_REQUEST['start'];
+	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 
 	// Load up all members of this group.
 	$request = $smfFunc['db_query']('', "
@@ -329,7 +330,9 @@ function MembergroupMembers()
 		$context['members'][] = array(
 			'id' => $row['id_member'],
 			'name' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
-			'email' => allowedTo('moderate_forum') || empty($modSettings['allow_hide_email']) || empty($row['hide_email']) ? ('<a href="mailto:' . $row['email_address'] . '" ' . (empty($row['hide_email']) ? '' : 'style="font-style: italic;"') . '>' . $row['email_address'] . '</a>') : ('<i>' . $txt['hidden'] . '</i>'),
+			'email' => $row['email_address'],
+			'hide_email' => $row['hide_email'] || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']),
+			//'email' => allowedTo('moderate_forum') || empty($row['hide_email']) ? ('<a href="mailto:' . $row['email_address'] . '" ' . (empty($row['hide_email']) ? '' : 'style="font-style: italic;"') . '>' . $row['email_address'] . '</a>') : ('<i>' . $txt['hidden'] . '</i>'),
 			'ip' => '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['member_ip'] . '">' . $row['member_ip'] . '</a>',
 			'registered' => timeformat($row['date_registered']),
 			'last_online' => $last_online,

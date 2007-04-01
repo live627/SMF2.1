@@ -284,10 +284,15 @@ function template_summary()
 					<td><b>', $txt['email'], ': </b></td>
 					<td>';
 
-	// Only show the email address if it's not hidden.
-	if ($context['member']['email_public'])
+	// Only show the email address fully if it's not hidden - and we reveal the email.
+	if ($context['member']['email_public'] && !empty($modSettings['make_email_viewable']))
 		echo '
 						<a href="mailto:', $context['member']['email'], '">', $context['member']['email'], '</a>';
+	// What about if we allow email only via the forum??
+	elseif ($context['member']['email_public'] )
+		echo '
+						<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '"><img src="', $settings['images_url'], '/email_sm.gif" alt="', $txt['email'], '" /></a>';
+
 	// ... Or if the one looking at the profile is an admin they can see it anyway.
 	elseif (!$context['member']['hide_email'])
 		echo '
@@ -626,7 +631,7 @@ function template_editBuddies()
 			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 				<td>', $buddy['link'], '</td>
 				<td align="center"><a href="', $buddy['online']['href'], '"><img src="', $buddy['online']['image_href'], '" alt="', $buddy['online']['label'], '" title="', $buddy['online']['label'], '" /></a></td>
-				<td align="center">', ($buddy['hide_email'] ? '' : '<a href="mailto:' . $buddy['email'] . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $buddy['name'] . '" /></a>'), '</td>
+				<td align="center">', ($buddy['hide_email'] ? '' : '<a href="' . (!empty($modSettings['make_email_viewable']) || $context['can_moderate_forum'] ? 'mailto:' . $buddy['email'] : $scripturl . '?action=emailuser;sa=email;uid=' . $buddy['id']) . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $buddy['name'] . '" /></a>'), '</td>
 				<td align="center">', $buddy['icq']['link'], '</td>
 				<td align="center">', $buddy['aim']['link'], '</td>
 				<td align="center">', $buddy['yim']['link'], '</td>

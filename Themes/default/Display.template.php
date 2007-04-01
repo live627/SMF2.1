@@ -368,7 +368,7 @@ function template_main()
 				// Don't show the email address if they want it hidden.
 				if (empty($message['member']['hide_email']))
 					echo '
-								<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
+								<a href="', !empty($modSettings['make_email_viewable']) ? 'mailto:' . $message['member']['email'] : $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])

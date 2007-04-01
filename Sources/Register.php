@@ -70,7 +70,6 @@ function Register()
 
 	// All the basic template information...
 	$context['sub_template'] = 'before';
-	$context['allow_hide_email'] = !empty($modSettings['allow_hide_email']);
 	$context['require_agreement'] = !empty($modSettings['requireAgreement']);
 
 	// Under age restrictions?

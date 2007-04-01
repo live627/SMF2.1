@@ -71,14 +71,8 @@ function template_before()
 							<div class="smalltext">', $txt['valid_email'], '</div>
 						</td>
 						<td>
-							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" />';
-
-	// Are they allowed to hide their email?
-	if ($context['allow_hide_email'])
-		echo '
-							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt['hide_email'], '</label>';
-
-	echo '
+							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" />
+							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt['hide_email'], '</label>
 						</td>
 					</tr>
 					<tr>

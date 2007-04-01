@@ -547,7 +547,7 @@ function getXmlNews($xml_format)
 				'title' => cdata_parse($row['subject']),
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				'description' => cdata_parse($row['body']),
-				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !empty($modSettings['allow_hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
 				'comments' => $scripturl . '?action=post;topic=' . $row['id_topic'] . '.0',
 				'category' => '<![CDATA[' . $row['bname'] . ']]>',
 				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['poster_time']),
@@ -654,7 +654,7 @@ function getXmlRecent($xml_format)
 				'title' => cdata_parse($row['subject']),
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'description' => cdata_parse($row['body']),
-				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !empty($modSettings['allow_hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
+				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
 				'category' => cdata_parse($row['bname']),
 				'comments' => $scripturl . '?action=post;topic=' . $row['id_topic'] . '.0',
 				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['poster_time']),
@@ -812,7 +812,7 @@ function getXmlProfile($xml_format)
 				'bad' => $profile['karma']['bad']
 			);
 
-		if ((empty($profile['hide_email']) || empty($modSettings['allow_hide_email'])) && !(!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']))
+		if (empty($profile['hide_email']) && !(!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']))
 			$data['email'] = $profile['email'];
 
 		if (!empty($profile['birth_date']) && substr($profile['birth_date'], 0, 4) != '0000')

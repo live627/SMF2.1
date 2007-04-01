@@ -157,7 +157,7 @@ function deleteMembers($users)
 	// Make these peoples' posts guest posts.
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}messages
-		SET id_member = 0" . (!empty($modSettings['allow_hide_email']) ? ", poster_email = ''" : '') . "
+		SET id_member = 0, poster_email = ''
 		WHERE id_member $condition", __FILE__, __LINE__);
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}polls

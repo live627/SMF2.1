@@ -1636,9 +1636,6 @@ function PlushSearch2()
 
 	$context['key_words'] = &$searchArray;
 
-	// Set the basic stuff for the template.
-	$context['allow_hide_email'] = !empty($modSettings['allow_hide_email']);
-
 	// Setup the default topic icons... for checking they exist and the like!
 	$stable_icons = array('xx', 'thumbup', 'thumbdown', 'exclamation', 'question', 'lamp', 'smiley', 'angry', 'cheesy', 'grin', 'sad', 'wink', 'moved', 'recycled', 'wireless');
 	$context['icon_sources'] = array();

@@ -271,6 +271,7 @@ function MLAll()
 	$context['start'] = $_REQUEST['start'] + 1;
 	$context['end'] = min($_REQUEST['start'] + $modSettings['defaultMaxMembers'], $context['num_members']);
 
+	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 	$context['page_title'] = sprintf($txt['viewing_members'], $context['start'], $context['end']);
 	$context['linktree'][] = array(
 		'url' => $scripturl . '?action=mlist;sort=' . $_REQUEST['sort'] . ';start=' . $_REQUEST['start'],
@@ -289,8 +290,8 @@ function MLAll()
 			'up' => 'mem.real_name DESC'
 		),
 		'email_address' => array(
-			'down' => (allowedTo('moderate_forum') || empty($modSettings['allow_hide_email'])) ? 'mem.email_address ASC' : 'mem.hide_email ASC, mem.email_address ASC',
-			'up' => (allowedTo('moderate_forum') || empty($modSettings['allow_hide_email'])) ? 'mem.email_address DESC' : 'mem.hide_email DESC, mem.email_address DESC'
+			'down' => allowedTo('moderate_forum') ? 'mem.email_address ASC' : 'mem.hide_email ASC, mem.email_address ASC',
+			'up' => allowedTo('moderate_forum') ? 'mem.email_address DESC' : 'mem.hide_email DESC, mem.email_address DESC'
 		),
 		'website_url' => array(
 			'down' => 'LENGTH(mem.websiteURL) > 0 DESC, ISNULL(mem.websiteURL) ASC, mem.websiteURL ASC',

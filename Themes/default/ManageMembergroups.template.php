@@ -381,7 +381,26 @@ function template_group_members()
 		echo '
 				<tr class="windowbg2">
 					<td>', $member['name'], '</td>
-					<td>', $member['email'], '</td>
+					<td ', !$member['hide_email'] && !$context['can_moderate_forum'] && empty($modSettings['make_email_viewable']) ? 'align="center"' : '', '>';
+
+		// Is it totally hidden?
+		if ($member['hide_email'] && !$context['can_moderate_forum'])
+			echo '
+						<em>', $txt['hidden'], '</em>';
+		// ... otherwise they want it hidden but it's not to this person?
+		elseif ($member['hide_email'])
+			echo '
+						<a href="mailto:', $member['email'], '"><em>', $member['email'], '</em></a>';
+		// ... otherwise it's visible - but only via an image?
+		elseif (empty($modSettings['make_email_viewable']) && !$context['can_moderate_forum'])
+			echo '
+						<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $member['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
+		else
+			echo '
+						<a href="mailto:', $member['email'], '">', $member['email'], '</a>';
+
+		echo '
+					</td>
 					<td class="windowbg">', $member['last_online'], '</td>
 					<td class="windowbg">', $member['registered'], '</td>
 					<td', empty($context['group']['assignable']) ? ' colspan="2"' : '', '>', $member['posts'], '</td>';

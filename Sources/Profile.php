@@ -677,9 +677,17 @@ function loadProfileFields($force_reload = false)
 		),
 		'hide_email' => array(
 			'type' => 'check',
-			'label' => $txt['hide_email'],
+			'value' => empty($cur_profile['hide_email']) ? true : false,
+			'label' => $txt['allow_user_email'],
 			'permission' => 'profile_identity',
-			'enabled' => !empty($modSettings['allow_hide_email']) || allowedTo('moderate_forum'),
+			// Reverse the logic.
+			'input_validate' => create_function('&$value', '
+				if ($value == 0)
+					$value = 1;
+				else
+					$value = 0;
+				return true;
+			'),
 		),
 		'icq' => array(
 			'type' => 'text',
@@ -1533,7 +1541,6 @@ function summary($memID)
 
 	// Set up the stuff and load the user.
 	$context += array(
-		'allow_hide_email' => !empty($modSettings['allow_hide_email']),
 		'page_title' => $txt['profile_of'] . ' ' . $memberContext[$memID]['name'],
 		'can_send_pm' => allowedTo('pm_send'),
 		'can_have_buddy' => allowedTo('profile_identity_own') && !empty($modSettings['enable_buddylist']),
@@ -1992,7 +1999,8 @@ function editBuddies($memID)
 	if (!$context['user']['is_owner'] || empty($modSettings['enable_buddylist']))
 		fatal_lang_error('no_access', false);
 
-	// !!! No page_title.
+	// Can we email the user direct?
+	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 
 	// For making changes!
 	$buddiesArray = explode(',', $user_profile[$memID]['buddy_list']);

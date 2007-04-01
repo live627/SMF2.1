@@ -14,7 +14,6 @@ $txt['allow_guestAccess'] = 'Allow guests to browse the forum';
 $txt['userLanguage'] = 'Enable user-selectable language support';
 $txt['allow_editDisplayName'] = 'Allow users to edit their displayed name?';
 $txt['allow_hideOnline'] = 'Allow non-administrators to hide their online status?';
-$txt['allow_hide_email'] = 'Allow users to hide their email from everyone except admins?';
 $txt['guest_hideContacts'] = 'Do not reveal contact details of members to guests';
 $txt['titlesEnable'] = 'Enable custom titles';
 $txt['enable_buddylist'] = 'Enable buddy lists';
@@ -50,7 +49,8 @@ $txt['max_pm_recipients'] = 'Maximum number of recipients allowed in a personal 
 $txt['pm_posts_verification'] = 'Post count under which users must enter code when sending personal messages.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
 $txt['pm_posts_per_hour'] = 'Number of personal messages a user may send in an hour.<div class="smalltext">(0 for no limit, moderators are exempt)</div>';
 $txt['showsidebarAdmin'] = 'Use a sidebar instead of dropdown-menu for admin section';
-$txt['mods_cat_layout'] = 'Layout and Options';
+$txt['mods_cat_security'] = 'Security';
+$txt['mods_cat_layout'] = 'Layout';
 $txt['compactTopicPagesEnable'] = 'Limit number of displayed page links';
 $txt['contiguous_page_display'] = 'Contiguous pages to display:';
 $txt['to_display'] = 'to display';
@@ -65,6 +65,7 @@ $txt['defaultMaxMembers'] = 'Members per page in member list';
 $txt['timeLoadPageEnable'] = 'Display time taken to create every page';
 $txt['disableHostnameLookup'] = 'Disable hostname lookups?';
 $txt['who_enabled'] = 'Enable who\'s online list';
+$txt['make_email_viewable'] = 'Allow viewable email addresses.';
 
 $txt['karma'] = 'Karma';
 $txt['karmaMode'] = 'Karma mode';

@@ -219,7 +219,6 @@ $txtChanges = array(
 		'avatar_allow_external_url' => 'avatar_external',
 		'avatar_allow_upload' => 'avatar_upload',
 		'default_personalText' => 'default_personal_text',
-		'allow_hideEmail' => 'allow_hide_email',
 	),
 	'index' => array(
 		2 => 'admin',
@@ -559,7 +558,6 @@ $txtChanges = array(
 	),
 	'ModSettings' => array(
 		'default_personalText' => 'default_personal_text',
-		'allow_hideEmail' => 'allow_hide_email',
 		'smf3' => 'modSettings_desc',
 		'smf34' => 'disable_polls',
 		'smf32' => 'enable_polls',

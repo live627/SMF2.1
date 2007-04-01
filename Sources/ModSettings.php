@@ -31,10 +31,10 @@ if (!defined('SMF'))
 	void ModifyFeatureSettings()
 		// !!!
 
-	void ModifyFeatureSettings2()
+	void ModifyBasicSettings()
 		// !!!
 
-	void ModifyBasicSettings()
+	void ModifySecuritySettings()
 		// !!!
 
 	void ModifyLayoutSettings()
@@ -131,6 +131,7 @@ function ModifyFeatureSettings()
 		'layout' => 'ModifyLayoutSettings',
 		'karma' => 'ModifyKarmaSettings',
 		'moderation' => 'ModifyModerationSettings',
+		'security' => 'ModifySecuritySettings',
 		'sig' => 'ModifySignatureSettings',
 		'profile' => 'ShowCustomProfiles',
 		'profileedit' => 'EditCustomProfiles',
@@ -149,6 +150,10 @@ function ModifyFeatureSettings()
 			'basic' => array(
 				'title' => $txt['mods_cat_features'],
 				'href' => $scripturl . '?action=admin;area=featuresettings;sa=basic;sesc=' . $context['session_id'],
+			),
+			'security' => array(
+				'title' => $txt['mods_cat_security'],
+				'href' => $scripturl . '?action=admin;area=featuresettings;sa=security;sesc=' . $context['session_id'],
 			),
 			'layout' => array(
 				'title' => $txt['mods_cat_layout'],
@@ -197,8 +202,6 @@ function ModifyBasicSettings()
 			array('check', 'userLanguage'),
 			array('check', 'allow_editDisplayName'),
 			array('check', 'allow_hideOnline'),
-			array('check', 'allow_hide_email'),
-			array('check', 'guest_hideContacts'),
 			array('check', 'titlesEnable'),
 			array('check', 'enable_buddylist'),
 			array('text', 'default_personal_text'),
@@ -207,17 +210,10 @@ function ModifyBasicSettings()
 			array('text', 'time_format'),
 			array('select', 'number_format', array('1234.00' => '1234.00', '1,234.00' => '1,234.00', '1.234,00' => '1.234,00', '1 234,00' => '1 234,00', '1234,00' => '1234,00')),
 			array('float', 'time_offset'),
-			array('int', 'failed_login_threshold'),
 			array('int', 'lastActive'),
 			array('check', 'trackStats'),
 			array('check', 'hitStats'),
-			array('check', 'enableErrorLogging'),
-			array('check', 'securityDisable'),
 			array('check', 'showsidebarAdmin'),
-		'',
-			// Reactive on email, and approve on delete
-			array('check', 'send_validation_onChange'),
-			array('check', 'approveAccountDeletion'),
 		'',
 			// Option-ish things... miscellaneous sorta.
 			array('check', 'allow_disableAnnounce'),
@@ -227,6 +223,42 @@ function ModifyBasicSettings()
 			// Width/Height image reduction.
 			array('int', 'max_image_width'),
 			array('int', 'max_image_height'),
+	);
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		checkSession();
+
+		saveDBSettings($config_vars);
+
+		writeLog();
+		redirectexit('action=admin;area=featuresettings;sa=basic');
+	}
+
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=basic';
+	$context['settings_title'] = $txt['mods_cat_features'];
+
+	prepareDBSettingContext($config_vars);
+}
+
+// Settings really associated with general security aspects.
+function ModifySecuritySettings()
+{
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	$config_vars = array(
+			array('check', 'guest_hideContacts'),
+			array('check', 'make_email_viewable'),
+		'',
+			array('int', 'failed_login_threshold'),
+		'',
+			array('check', 'enableErrorLogging'),
+			array('check', 'securityDisable'),
+		'',
+			// Reactive on email, and approve on delete
+			array('check', 'send_validation_onChange'),
+			array('check', 'approveAccountDeletion'),
 		'',
 			// Reporting of personal messages?
 			array('check', 'enableReportPM'),
@@ -245,7 +277,7 @@ function ModifyBasicSettings()
 		saveDBSettings($save_vars);
 
 		writeLog();
-		redirectexit('action=admin;area=featuresettings;sa=basic');
+		redirectexit('action=admin;area=featuresettings;sa=security');
 	}
 
 	// Hack for PM spam settings.
@@ -254,8 +286,8 @@ function ModifyBasicSettings()
 	$config_vars[] = array('int', 'pm_posts_verification');
 	$config_vars[] = array('int', 'pm_posts_per_hour');
 
-	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=basic';
-	$context['settings_title'] = $txt['mods_cat_features'];
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=security';
+	$context['settings_title'] = $txt['mods_cat_security'];
 
 	prepareDBSettingContext($config_vars);
 }

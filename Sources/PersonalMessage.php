@@ -360,7 +360,6 @@ function MessageFolder()
 		$_GET['start'] = 'new';
 
 	// Set up some basic theme stuff.
-	$context['allow_hide_email'] = !empty($modSettings['allow_hide_email']);
 	$context['from_or_to'] = $context['folder'] != 'sent' ? 'from' : 'to';
 	$context['get_pmessage'] = 'prepareMessageContext';
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;

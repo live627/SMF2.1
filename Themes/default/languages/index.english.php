@@ -324,7 +324,7 @@ $txt['sendtopic_comment'] = 'Add a comment';
 // Use numeric entities in the below string.
 $txt['sendtopic2'] = 'A comment has also been added regarding this topic';
 
-$txt['hide_email'] = 'Hide email address from public?';
+$txt['allow_user_email'] = 'Allow users to email you?';
 
 $txt['check_all'] = 'Check all';
 

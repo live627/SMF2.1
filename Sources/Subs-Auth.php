@@ -416,7 +416,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	$results = array();
 
 	// This ensures you can't search someones email address if you can't see it.
-	$email_condition = $user_info['is_admin'] || empty($modSettings['allow_hide_email']) ? '' : 'hide_email = 0 AND ';
+	$email_condition = allowedTo('moderate_forum') ? '' : 'hide_email = 0 AND ';
 
 	if ($use_wildcards || $maybe_email)
 		$email_condition = "
@@ -439,7 +439,7 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 			'id' => $row['id_member'],
 			'name' => $row['real_name'],
 			'username' => $row['member_name'],
-			'email' => empty($row['hide_email']) || empty($modSettings['allow_hide_email']) || $user_info['is_admin'] ? $row['email_address'] : '',
+			'email' => empty($row['hide_email']) || allowedTo('moderate_forum') ? $row['email_address'] : '',
 			'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
 		);

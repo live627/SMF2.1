@@ -180,7 +180,7 @@ function CustomEmail()
 	if (isset($_REQUEST['uid']))
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT email_address AS email, member_name AS name, id_member
+			SELECT email_address AS email, member_name AS name, id_member, hide_email
 			FROM {$db_prefix}members
 			WHERE id_member = " . (int) $_REQUEST['uid'], __FILE__, __LINE__);
 
@@ -189,7 +189,7 @@ function CustomEmail()
 	elseif (isset($_REQUEST['msg']))
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT IFNULL(mem.email_address, m.poster_email) AS email, m.poster_name AS name, IFNULL(mem.id_member, 0) AS id_member
+			SELECT IFNULL(mem.email_address, m.poster_email) AS email, m.poster_name AS name, IFNULL(mem.id_member, 0) AS id_member, hide_email
 			FROM {$db_prefix}messages AS m
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.id_msg = " . (int) $_REQUEST['msg'], __FILE__, __LINE__);
@@ -202,6 +202,10 @@ function CustomEmail()
 
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
+
+	// Can they actually do this?
+	if ($row['hide_email'] && !allowedTo('moderate_forum'))
+		fatal_lang_error('no_access');
 
 	// Setup the context!
 	$context['recipient'] = array(
