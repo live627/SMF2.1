@@ -3729,7 +3729,7 @@ function profileLoadLanguages()
 // Load all the group info for the profile.
 function profileLoadGroups()
 {
-	global $cur_profile, $txt, $context, $smfFunc, $db_prefix;
+	global $cur_profile, $txt, $context, $smfFunc, $db_prefix, $user_settings;
 
 	$context['member_groups'] = array(
 		0 => array(
@@ -3765,6 +3765,8 @@ function profileLoadGroups()
 		);
 	}
 	$smfFunc['db_free_result']($request);
+
+	$context['member']['group'] = $user_settings['id_group'];
 
 	return true;
 }
