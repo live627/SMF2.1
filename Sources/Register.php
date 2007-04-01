@@ -85,8 +85,8 @@ function Register()
 	if ($context['require_agreement'])
 	{
 		// Have we got a local one?
-		if (file_exists($boarddir . '/agreement_' . $user_info['language'] . '.txt'))
-			$context['agreement'] = parse_bbc(file_get_contents($boarddir . '/agreement_' . $user_info['language'] . '.txt'), true, 'agreement_' . $user_info['language']);
+		if (file_exists($boarddir . '/agreement.' . $user_info['language'] . '.txt'))
+			$context['agreement'] = parse_bbc(file_get_contents($boarddir . '/agreement.' . $user_info['language'] . '.txt'), true, 'agreement_' . $user_info['language']);
 		elseif (file_exists($boarddir . '/agreement.txt'))
 			$context['agreement'] = parse_bbc(file_get_contents($boarddir . '/agreement.txt'), true, 'agreement');
 		else

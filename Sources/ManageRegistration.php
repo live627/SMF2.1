@@ -223,12 +223,12 @@ function EditAgreement()
 
 		$dir = dir($language_dir);
 		while ($entry = $dir->read())
-			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && file_exists($boarddir . '/agreement_' . $matches[1] . '.txt'))
+			if (preg_match('~^index\.(.+)\.php$~', $entry, $matches) && file_exists($boarddir . '/agreement.' . $matches[1] . '.txt'))
 			{
 				$context['editable_agreements']['_' . $matches[1]] = $smfFunc['ucwords'](strtr($matches[1], '_', ' '));
 				// Are we editing this?
 				if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '_' . $matches[1])
-					$context['current_agreement'] = '_' . $matches[1];
+					$context['current_agreement'] = '.' . $matches[1];
 			}
 		$dir->close();
 	}
