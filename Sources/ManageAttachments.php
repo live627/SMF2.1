@@ -181,13 +181,9 @@ function ManageAttachments()
 	$subActions[$context['sub_action']]();
 }
 
-function ManageAttachmentSettings()
+function ManageAttachmentSettings($return_config = false)
 {
 	global $txt, $db_prefix, $modSettings, $scripturl, $context, $options, $sourcedir;
-
-	// These are very likely to come in handy! (i.e. without them we're doomed!)
-	require_once($sourcedir .'/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
 
 	$context['valid_upload_dir'] = is_dir($modSettings['attachmentUploadDir']) && is_writable($modSettings['attachmentUploadDir']);
 
@@ -215,6 +211,13 @@ function ManageAttachmentSettings()
 			array('text', 'attachmentThumbHeight', 6),
 	);
 
+	if ($return_config)
+		return $config_vars;
+
+	// These are very likely to come in handy! (i.e. without them we're doomed!)
+	require_once($sourcedir .'/ManagePermissions.php');
+	require_once($sourcedir .'/ManageServer.php');
+
 	// Saving settings?
 	if (isset($_GET['save']))
 	{
@@ -229,16 +232,12 @@ function ManageAttachmentSettings()
 	$context['sub_template'] = 'show_settings';
 }
 
-function ManageAvatarSettings()
+function ManageAvatarSettings($return_config = false)
 {
 	global $txt, $context, $db_prefix, $modSettings, $sourcedir, $scripturl;
 
 	// Perform a test to see if the GD module is installed.
 	$testGD = get_extension_funcs('gd');
-
-	// We need these files for the inline permission settings, and the settings template.
-	require_once($sourcedir .'/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
 
 	$context['valid_avatar_dir'] = is_dir($modSettings['avatar_directory']);
 	$context['valid_custom_avatar_dir'] = empty($modSettings['custom_avatar_enabled']) || (is_dir($modSettings['custom_avatar_dir']) && is_writable($modSettings['custom_avatar_dir']));
@@ -275,6 +274,13 @@ function ManageAvatarSettings()
 			array('text', 'custom_avatar_dir', 40, 'subtext' => $txt['custom_avatar_dir_desc'], 'invalid' => !$context['valid_custom_avatar_dir']),
 			array('text', 'custom_avatar_url', 40),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// We need these files for the inline permission settings, and the settings template.
+	require_once($sourcedir .'/ManagePermissions.php');
+	require_once($sourcedir .'/ManageServer.php');
 
 	// Saving avatar settings?
 	if (isset($_GET['save']))

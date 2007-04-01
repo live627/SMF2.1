@@ -257,17 +257,9 @@ function EditHoliday()
 	$context['holiday']['last_day'] = (int) strftime('%d', mktime(0, 0, 0, $context['holiday']['month'] == 12 ? 1 : $context['holiday']['month'] + 1, 0, $context['holiday']['month'] == 12 ? $context['holiday']['year'] + 1 : $context['holiday']['year']));
 }
 
-function ModifyCalendarSettings()
+function ModifyCalendarSettings($return_config = false)
 {
 	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $sourcedir, $scripturl, $smfFunc;
-
-	// Get the settings template fired up.
-	require_once($sourcedir .'/ManageServer.php');
-
-	// Some important context stuff
-	$context['page_title'] = $txt['calendar_settings'];
-	$context['sub_template'] = 'modify_settings';
-	$context['sub_template'] = 'show_settings';
 
 	// Load the boards list.
 	$boards = array('');
@@ -311,6 +303,17 @@ function ModifyCalendarSettings()
 			array('check', 'cal_allowspan'),
 			array('int', 'cal_maxspan'),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Get the settings template fired up.
+	require_once($sourcedir .'/ManageServer.php');
+
+	// Some important context stuff
+	$context['page_title'] = $txt['calendar_settings'];
+	$context['sub_template'] = 'modify_settings';
+	$context['sub_template'] = 'show_settings';
 
 	// Get the final touches in place.
 	$context['post_url'] = $scripturl . '?action=admin;area=managecalendar;save;sa=settings';

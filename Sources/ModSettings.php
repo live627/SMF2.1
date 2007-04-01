@@ -189,7 +189,7 @@ function ModifyFeatureSettings()
 	$subActions[$_REQUEST['sa']]();
 }
 
-function ModifyBasicSettings()
+function ModifyBasicSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
@@ -225,6 +225,9 @@ function ModifyBasicSettings()
 			array('int', 'max_image_height'),
 	);
 
+	if ($return_config)
+		return $config_vars;
+
 	// Saving?
 	if (isset($_GET['save']))
 	{
@@ -243,7 +246,7 @@ function ModifyBasicSettings()
 }
 
 // Settings really associated with general security aspects.
-function ModifySecuritySettings()
+function ModifySecuritySettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
@@ -263,6 +266,9 @@ function ModifySecuritySettings()
 			// Reporting of personal messages?
 			array('check', 'enableReportPM'),
 	);
+
+	if ($return_config)
+		return $config_vars;
 
 	// Saving?
 	if (isset($_GET['save']))
@@ -292,7 +298,7 @@ function ModifySecuritySettings()
 	prepareDBSettingContext($config_vars);
 }
 
-function ModifyLayoutSettings()
+function ModifyLayoutSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc;
 
@@ -318,6 +324,9 @@ function ModifyLayoutSettings()
 			array('check', 'who_enabled'),
 	);
 
+	if ($return_config)
+		return $config_vars;
+
 	// Saving?
 	if (isset($_GET['save']))
 	{
@@ -335,7 +344,7 @@ function ModifyLayoutSettings()
 	prepareDBSettingContext($config_vars);
 }
 
-function ModifyKarmaSettings()
+function ModifyKarmaSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc;
 
@@ -354,6 +363,9 @@ function ModifyKarmaSettings()
 			array('text', 'karmaSmiteLabel'),
 	);
 
+	if ($return_config)
+		return $config_vars;
+
 	// Saving?
 	if (isset($_GET['save']))
 	{
@@ -370,7 +382,7 @@ function ModifyKarmaSettings()
 }
 
 // Moderation type settings - although there are fewer than we have you believe ;)
-function ModifyModerationSettings()
+function ModifyModerationSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
@@ -385,6 +397,9 @@ function ModifyModerationSettings()
 			array('int', 'warning_mute'),
 			'rem3' => array('int', 'user_limit'),
 	);
+
+	if ($return_config)
+		return $config_vars;
 
 	// Saving?
 	if (isset($_GET['save']))
@@ -423,9 +438,30 @@ function ModifyModerationSettings()
 }
 
 // You'll never guess what this function does...
-function ModifySignatureSettings()
+function ModifySignatureSettings($return_config = false)
 {
 	global $context, $txt, $modSettings, $db_prefix, $sig_start, $smfFunc, $helptxt, $scripturl, $sc;
+
+	$config_vars = array(
+			// Are signatures even enabled?
+			array('check', 'signature_enable'),
+		'',
+			// Tweaking settings!
+			array('int', 'signature_max_length'),
+			array('int', 'signature_max_lines'),
+			array('int', 'signature_max_font_size'),
+			array('int', 'signature_max_smileys'),
+		'',
+			// Image settings.
+			array('int', 'signature_max_images'),
+			array('int', 'signature_max_image_width'),
+			array('int', 'signature_max_image_height'),
+		'',
+			array('bbc', 'signature_bbc'),
+	);
+
+	if ($return_config)
+		return $config_vars;
 
 	// Applying to ALL signatures?!!
 	if (isset($_GET['apply']))
@@ -613,24 +649,6 @@ function ModifySignatureSettings()
 	// Temporarily make each setting a modSetting!
 	foreach ($context['signature_settings'] as $key => $value)
 		$modSettings['signature_' . $key] = $value;
-
-	$config_vars = array(
-			// Are signatures even enabled?
-			array('check', 'signature_enable'),
-		'',
-			// Tweaking settings!
-			array('int', 'signature_max_length'),
-			array('int', 'signature_max_lines'),
-			array('int', 'signature_max_font_size'),
-			array('int', 'signature_max_smileys'),
-		'',
-			// Image settings.
-			array('int', 'signature_max_images'),
-			array('int', 'signature_max_image_width'),
-			array('int', 'signature_max_image_height'),
-		'',
-			array('bbc', 'signature_bbc'),
-	);
 
 	// Make sure we check the right tags!
 	$modSettings['bbc_disabled_signature_bbc'] = $disabledTags;

@@ -344,6 +344,18 @@ function template_admin()
 	if (!empty($context['more_admins_link']))
 		echo '
 							 (', $context['more_admins_link'], ')';
+
+	if ($context['user']['is_admin'])
+		echo '
+							<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
+								<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
+								<select name="search_type">
+									<option value="internal">', $txt['admin_search_type_internal'], '</option>
+									<option value="member">', $txt['admin_search_type_member'], '</option>
+								</select>
+								<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
+							</form> ';
+
 	echo '
 						</td>
 					</tr>
@@ -2045,6 +2057,63 @@ function template_show_notice()
 	</body>
 </html>';
 
+}
+
+// Results page for an admin search.
+function template_admin_search_results()
+{
+	global $context, $txt, $settings, $options, $scripturl;
+
+	echo '
+	<table width="100%" cellpadding="2" cellspacing="0" class="tborder" />
+		<tr>
+			<td class="catbg">
+				', $txt['admin_search_results'], '
+			</td>
+		</tr>
+		<tr>
+			<td class="windowbg2">
+				<div style="float: left;">
+					', sprintf($txt['admin_search_results_desc'], $context['search_term']), '
+				</div>
+				<div style="float: right;">
+					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
+						<input type="text" name="search_term" value="', $context['search_term'], '" />
+						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
+						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" />
+					</form> 
+				</div>
+			</td>
+		</tr>';
+
+	if (empty($context['search_results']))
+	{
+		echo '
+		<tr>
+			<td class="windowbg" align="center">
+				<strong>', $txt['admin_search_results_none'], '</strong>
+			</td>
+		</tr>';
+	}
+
+	foreach ($context['search_results'] as $result)
+	{
+		echo '
+		<tr>
+			<td class="windowbg">
+				<em>', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'], ':</em> <a href="', $result['url'], '" style="font-weight: bold;">', $result['name'], '</a>';
+
+		if ($result['help'])
+			echo '
+				<br /><span class="smalltext">', $result['help'], '</span>';
+
+		echo '			
+			</td>
+		</tr>';
+	}
+
+	echo '
+	</table>';
 }
 
 ?>

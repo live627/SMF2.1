@@ -140,13 +140,9 @@ function ManageSmileys()
 	$subActions[$_REQUEST['sa']]();
 }
 
-function EditSmileySettings()
+function EditSmileySettings($return_config = false)
 {
 	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $sourcedir, $scripturl;
-
-	// Setup the basics of the settings template.
-	require_once($sourcedir .'/ManageServer.php');
-	$context['sub_template'] = 'show_settings';
 
 	// The directories...
 	$context['smileys_dir'] = empty($modSettings['smileys_dir']) ? $boarddir . '/Smileys' : $modSettings['smileys_dir'];
@@ -175,6 +171,13 @@ function EditSmileySettings()
 			// Message icons.
 			array('check', 'messageIcons_enable', 'subtext' => $txt['setting_messageIcons_enable_note']),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Setup the basics of the settings template.
+	require_once($sourcedir .'/ManageServer.php');
+	$context['sub_template'] = 'show_settings';
 
 	// Finish up the form...
 	$context['post_url'] = $scripturl . '?action=admin;area=smileys;save;sa=settings';

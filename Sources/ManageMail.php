@@ -141,7 +141,7 @@ function BrowseMailQueue()
 	$context['sub_template'] = 'browse';
 }
 
-function ModifyMailSettings()
+function ModifyMailSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings;
 
@@ -159,6 +159,9 @@ function ModifyMailSettings()
 			array('password', 'smtp_password'),
 		'',
 	);
+
+	if ($return_config)
+		return $config_vars;
 
 	// Saving?
 	if (isset($_GET['save']))

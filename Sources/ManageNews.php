@@ -658,16 +658,9 @@ function SendMailing($clean_only = false)
 	$context['sub_template'] = 'email_members_send';
 }
 
-function ModifyNewsSettings()
+function ModifyNewsSettings($return_config = false)
 {
 	global $context, $db_prefix, $sourcedir, $modSettings, $txt, $scripturl;
-
-	$context['page_title'] = $txt['admin_edit_news'] . ' - ' . $txt['settings'];
-	$context['sub_template'] = 'show_settings';
-
-	// Needed for the inline permission functions, and the settings template.
-	require_once($sourcedir .'/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
 
 	$config_vars = array(
 		array('title', 'settings'),
@@ -679,6 +672,16 @@ function ModifyNewsSettings()
 			array('check', 'xmlnews_enable', 'onclick' => 'document.getElementById(\'xmlnews_maxlen\').disabled = !this.checked;'),
 			array('text', 'xmlnews_maxlen', 10),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	$context['page_title'] = $txt['admin_edit_news'] . ' - ' . $txt['settings'];
+	$context['sub_template'] = 'show_settings';
+
+	// Needed for the inline permission functions, and the settings template.
+	require_once($sourcedir .'/ManagePermissions.php');
+	require_once($sourcedir .'/ManageServer.php');
 
 	// Wrap it all up nice and warm...
 	$context['post_url'] = $scripturl . '?action=admin;area=news;save;sa=settings';

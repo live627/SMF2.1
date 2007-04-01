@@ -681,4 +681,16 @@ $txt['admin_news_cannot_pm_emails_js'] = 'You cannot send a personal message to 
 $txt['mailqueue_browse'] = 'Browse Queue';
 $txt['mailqueue_settings'] = 'Mail Settings';
 
+$txt['admin_search'] = 'Quick Search';
+$txt['admin_search_type_internal'] = 'Task/Setting';
+$txt['admin_search_type_member'] = 'Member';
+$txt['admin_search_go'] = 'Go';
+$txt['admin_search_results'] = 'Search Results';
+$txt['admin_search_results_desc'] = 'Results for search: &quot;%1$s&quot;';
+$txt['admin_search_results_again'] = 'Search again';
+$txt['admin_search_results_none'] = 'No results found!';
+
+$txt['admin_search_section_sections'] = 'Section';
+$txt['admin_search_section_settings'] = 'Setting';
+
 ?>

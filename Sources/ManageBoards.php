@@ -664,19 +664,9 @@ function ModifyCat()
 	redirectexit();
 }
 
-function EditBoardSettings()
+function EditBoardSettings($return_config = false)
 {
 	global $context, $txt, $db_prefix, $sourcedir, $modSettings, $scripturl, $smfFunc;
-
-	$context['page_title'] = $txt['boards_and_cats'] . ' - ' . $txt['settings'];
-
-	loadTemplate('ManageBoards');
-	$context['sub_template'] = 'modify_general_settings';
-	$context['sub_template'] = 'show_settings';
-
-	// Needed for the settings template and inline permission functions.
-	require_once($sourcedir . '/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
 
 	// Load the boards list - for the recycle bin!
 	$recycle_boards = array('');
@@ -701,9 +691,21 @@ function EditBoardSettings()
 			array('check', 'allow_ignore_boards'),
 	);
 
+	if ($return_config)
+		return $config_vars;
+
+	// Needed for the settings template and inline permission functions.
+	require_once($sourcedir . '/ManagePermissions.php');
+	require_once($sourcedir .'/ManageServer.php');
+
 	// Don't let guests have these permissions.
 	$context['post_url'] = $scripturl . '?action=admin;area=manageboards;save;sa=settings';
 	$context['permissions_excluded'] = array(-1);
+
+	$context['page_title'] = $txt['boards_and_cats'] . ' - ' . $txt['settings'];
+
+	loadTemplate('ManageBoards');
+	$context['sub_template'] = 'show_settings';
 
 	// Add some javascript stuff for the recycle box.
 	$context['settings_insert_below'] = '

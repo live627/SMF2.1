@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2698 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2699 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -41,6 +41,8 @@ March 2007
  ! Removed the admin setting to stop users from hiding their email address. (ModSettings.php, upgrade script, various files)
  ! Added a (normally enabled) setting to force users to email other users via a forum form instead of their client. (SendTopic.php, ModSettings.php, various other files)
  ! Changed the nature of the "Hide email" user setting to now mean "Disallow users from emailing yourself". (Profile.php, index language file)
+ + Added a (currently) basic search to the admin section. (Admin.php, Admin template)
+ ! All setting related functions now take an optional parameter to return what setting data they are dealing with. (Various files)
 
 
 February 2007

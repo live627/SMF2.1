@@ -64,6 +64,16 @@ if (!defined('SMF'))
 		  smoother and potentially more securely.
 		- can set permissions to either restrictive, free, or standard.
 		- accessed via ?action=admin;area=cleanperms.
+
+	void AdminSearch()
+		// !!
+
+	void AdminSearchInteral()
+		// !!
+
+	void AdminSearchMember()
+		// !!
+
 */
 
 // The main admin handling function.
@@ -160,6 +170,11 @@ function AdminMain()
 				),
 				'copyright' => array(
 					'function' => 'ManageCopyright',
+					'permission' => array('admin_forum'),
+					'select' => 'index'
+				),
+				'search' => array(
+					'function' => 'AdminSearch',
 					'permission' => array('admin_forum'),
 					'select' => 'index'
 				),
@@ -723,6 +738,162 @@ function DisplayAdminFile()
 	header('Content-Type: ' . $filetype);
 	echo $file_data;
 	obExit(false);
+}
+
+// This allocates out all the search stuff.
+function AdminSearch()
+{
+	global $txt, $context;
+
+	isAllowedTo('admin_forum');
+
+	// What can we search for?
+	$subactions = array(
+		'internal' => 'AdminSearchInternal',
+		'member' => 'AdminSearchMember',
+	);
+
+	$context['search_type'] = !isset($_REQUEST['search_type']) || !isset($subactions[$_REQUEST['search_type']]) ? 'internal' : $_REQUEST['search_type'];
+	$context['search_term'] = $_REQUEST['search_term'];
+
+	$context['sub_template'] = 'admin_search_results';
+	$context['page_title'] = $txt['admin_search_results'];
+
+	$subactions[$context['search_type']]();
+}
+
+// A complicated but relatively quick internal search.
+function AdminSearchInternal()
+{
+	global $context, $txt, $helptxt, $scripturl, $sourcedir;
+
+	// Load a lot of language files.
+	$language_files = array(
+		'Help', 'ManageMail', 'ModSettings', 'ManageCalendar', 'ManageBoards', 'ManagePermissions', 'Search',
+		'ManageSmileys',
+	);
+	loadLanguage(implode('+', $language_files));
+
+	// All the files we need to include.
+	$include_files = array(
+		'ModSettings', 'ManageBoards', 'ManageNews', 'ManageAttachments', 'ManageCalendar', 'ManageMail', 'ManagePermissions',
+		'ManagePosts', 'ManageSearch', 'ManageServer', 'ManageSmileys',
+	);
+	foreach ($include_files as $file)
+		require_once($sourcedir . '/' . $file . '.php');
+
+	/* This is the huge array that defines everything... it's a huge array of items formatted as follows:
+		0 = Language index (Can be array of indexes) to search through for this setting.
+		1 = URL for this indexes page.
+		2 = Help index for help associated with this item (If different from 0)
+	*/
+
+	$search_data = array(
+		// All the major sections of the forum.
+		'sections' => array(
+		),
+		'settings' => array(
+			array('COPPA', 'area=regcenter;sa=settings'),
+			array('CAPTCHA', 'area=regcenter;sa=settings'),
+		),
+	);
+
+	// Go through the admin menu structure trying to find suitably named areas!
+	foreach ($context['admin_areas'] as $section)
+	{
+		foreach ($section['areas'] as $menu_key => $menu_item)
+		{
+			$search_data['sections'][] = array($menu_item['label'], 'area=' . $menu_key);
+			if (!empty($menu_item['subsections']))
+				foreach ($menu_item['subsections'] as $key => $sublabel)
+					$search_data['sections'][] = array($sublabel['label'], 'area=' . $menu_key . ';sa=' . $key);
+		}
+	}
+
+	// This is a special array of functions that contain setting data - we query all these to simply pull all setting bits!
+	$settings_search = array(
+		array('ModifyBasicSettings', 'area=featuresettings;sa=basic'),
+		array('ModifySecuritySettings', 'area=featuresettings;sa=security'),
+		array('ModifyLayoutSettings', 'area=featuresettings;sa=layout'),
+		array('ModifyKarmaSettings', 'area=featuresettings;sa=karma'),
+		array('ModifyModerationSettings', 'area=featuresettings;sa=moderate'),
+		array('ModifySignatureSettings', 'area=featuresettings;sa=sig'),
+		array('ManageAttachmentSettings', 'area=manageattachments;sa=attachments'),
+		array('ManageAvatarSettings', 'area=manageattachments;sa=avatars'),
+		array('ModifyCalendarSettings', 'area=managecalendar;sa=settings'),
+		array('EditBoardSettings', 'area=manageboards;sa=settings'),
+		array('ModifyMailSettings', 'area=mailqueue;sa=settings'),
+		array('ModifyNewsSettings', 'area=news;sa=settings'),
+		array('GeneralPermissionSettings', 'area=permissions;sa=settings'),
+		array('ModifyPostSettings', 'area=postsettings;sa=posts'),
+		array('ModifyBBCSettings', 'area=postsettings;sa=bbc'),
+		array('ModifyTopicSettings', 'area=postsettings;sa=topics'),
+		array('EditSearchSettings', 'area=managesearch;sa=settings'),
+		array('EditSmileySettings', 'area=smileys;sa=settings'),
+		array('ModifyOtherSettings', 'area=serversettings;sa=other'),
+		array('ModifyCacheSettings', 'area=serversettings;sa=cache'),
+	);
+
+	foreach ($settings_search as $setting_area)
+	{
+		// Get a list of their variables.
+		$config_vars = $setting_area[0](true);
+
+		foreach ($config_vars as $var)
+		{
+			if (!empty($var[1]) && $var[0] != 'permissions')
+				$search_data['settings'][] = array($var[1], $setting_area[1]);
+		}
+	}
+
+	$context['search_results'] = array();
+	$search_term = strtolower($context['search_term']);
+	// Go through all the search data trying to find this text!
+	foreach ($search_data as $section => $data)
+	{
+		foreach ($data as $item)
+		{
+			$found = false;
+			if (!is_array($item[0]))
+				$item[0] = array($item[0]);
+			foreach ($item[0] as $term)
+			{
+				$lc_term = strtolower($term);
+				if (strpos($lc_term, $search_term) !== false || (isset($txt[$term]) && strpos($txt[$term], $search_term) !== false) || (isset($txt['setting_' . $term]) && strpos($txt['setting_' . $term], $search_term) !== false))
+				{
+					$found = $term;
+					break;
+				}
+			}
+
+			if ($found)
+			{
+				// Format the name - and remove any descriptions the entry may have.
+				$name = isset($txt[$found]) ? $txt[$found] : (isset($txt['setting_' . $found]) ? $txt['setting_' . $found] : $found);
+				$name = preg_replace('~<(div|span)\sclass="smalltext">.+?</div>~', '', $name);
+
+				$context['search_results'][] = array(
+					'url' => (substr($item[1], 0, 4) == 'area' ? $scripturl . '?action=admin;' . $item[1] : $item[1]) . ';sc=' . $context['session_id'] . ((substr($item[1], 0, 4) == 'area' && $section == 'settings' ? '#' . $item[0][0] : '')),
+					'name' => $name,
+					'type' => $section,
+					'help' => shorten_subject(isset($item[2]) ? $helptxt[$item2] : (isset($helptxt[$found]) ? $helptxt[$found] : ''), 255),
+				);
+			}
+		}
+	}
+}
+
+// All this does is pass through to manage members.
+function AdminSearchMember()
+{
+	global $context, $sourcedir;
+
+	require_once($sourcedir . '/ManageMembers.php');
+	$_REQUEST['sa'] = 'query';
+
+	$_POST['membername'] = $context['search_term'];
+
+	ViewMembers();
 }
 
 ?>

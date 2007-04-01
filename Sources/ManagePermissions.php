@@ -992,16 +992,9 @@ function ModifyMembergroup2()
 }
 
 // Screen for modifying general permission settings.
-function GeneralPermissionSettings()
+function GeneralPermissionSettings($return_config = false)
 {
 	global $context, $db_prefix, $modSettings, $sourcedir, $txt, $scripturl, $smfFunc;
-
-	$context['page_title'] = $txt['permission_settings_title'];
-	$context['sub_template'] = 'show_settings';
-
-	// Needed for the inline permission functions, and the settings template.
-	require_once($sourcedir .'/ManagePermissions.php');
-	require_once($sourcedir .'/ManageServer.php');
 
 	// All the setting variables
 	$config_vars = array(
@@ -1013,6 +1006,16 @@ function GeneralPermissionSettings()
 			array('check', 'permission_enable_deny', 0, $txt['permission_settings_enable_deny'], 'help' => 'permissions_deny'),
 			array('check', 'permission_enable_postgroups', 0, $txt['permission_settings_enable_postgroups'], 'help' => 'permissions_postgroups'),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	$context['page_title'] = $txt['permission_settings_title'];
+	$context['sub_template'] = 'show_settings';
+
+	// Needed for the inline permission functions, and the settings template.
+	require_once($sourcedir .'/ManagePermissions.php');
+	require_once($sourcedir .'/ManageServer.php');
 
 	// Don't let guests have these permissions.
 	$context['post_url'] = $scripturl . '?action=admin;area=permissions;save;sa=settings';

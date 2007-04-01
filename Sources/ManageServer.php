@@ -331,7 +331,7 @@ function ModifyCoreSettings2()
 }
 
 // This function basically edits anything which is configuration and stored in the database, except for caching.
-function ModifyOtherSettings()
+function ModifyOtherSettings($return_config = false)
 {
 	global $context, $scripturl, $txt, $helptxt, $sc, $modSettings;
 
@@ -355,6 +355,9 @@ function ModifyOtherSettings()
 			array('int', 'databaseSession_lifetime'),
 	);
 
+	if ($return_config)
+		return $config_vars;
+
 	// Are we saving?
 	if (isset($_GET['save']))
 	{
@@ -376,7 +379,7 @@ function ModifyOtherSettings()
 }
 
 // Simply modifying cache functions
-function ModifyCacheSettings()
+function ModifyCacheSettings($return_config = false)
 {
 	global $context, $scripturl, $txt, $helptxt, $sc, $modSettings;
 
@@ -389,6 +392,9 @@ function ModifyCacheSettings()
 		array('select', 'cache_enable', array($txt['cache_off'], $txt['cache_level1'], $txt['cache_level2'], $txt['cache_level3'])),
 		array('text', 'cache_memcached'),
 	);
+
+	if ($return_config)
+		return $config_vars;
 
 	// Saving again?
 	if (isset($_GET['save']))

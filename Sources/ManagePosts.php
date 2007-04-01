@@ -207,17 +207,9 @@ function SetCensor()
 }
 
 // Modify all settings related to posts and posting.
-function ModifyPostSettings()
+function ModifyPostSettings($return_config = false)
 {
 	global $context, $txt, $db_prefix, $modSettings, $scripturl, $sourcedir, $smfFunc;
-
-	// We'll want this for our easy save.
-	require_once($sourcedir .'/ManageServer.php');
-
-	// Setup the template.
-	$context['sub_template'] = 'edit_post_settings';
-	$context['page_title'] = $txt['manageposts_settings'];
-	$context['sub_template'] = 'show_settings';
 
 	// All the settings...
 	$config_vars = array(
@@ -239,6 +231,16 @@ function ModifyPostSettings()
 			array('int', 'edit_disable_time', 'subtext' => $txt['edit_disable_time_zero'], 'postinput' => $txt['manageposts_minutes']),
 			array('int', 'posts_require_captcha', 'subtext' => $txt['posts_require_captcha_desc']),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// We'll want this for our easy save.
+	require_once($sourcedir .'/ManageServer.php');
+
+	// Setup the template.
+	$context['page_title'] = $txt['manageposts_settings'];
+	$context['sub_template'] = 'show_settings';
 
 	// Are we saving them - are we??
 	if (isset($_GET['save']))
@@ -304,14 +306,9 @@ function ModifyPostSettings()
 }
 
 // Bulletin Board Code...a lot of Bulletin Board Code.
-function ModifyBBCSettings()
+function ModifyBBCSettings($return_config = false)
 {
 	global $context, $txt, $modSettings, $helptxt, $scripturl, $sourcedir;
-
-	// Setup the template.
-	require_once($sourcedir . '/ManageServer.php');
-	$context['sub_template'] = 'show_settings';
-	$context['page_title'] = $txt['manageposts_bbc_settings_title'];
 
 	$config_vars = array(
 			// Main tweaks
@@ -321,6 +318,14 @@ function ModifyBBCSettings()
 		'',
 			array('bbc', 'disabledBBC'),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Setup the template.
+	require_once($sourcedir . '/ManageServer.php');
+	$context['sub_template'] = 'show_settings';
+	$context['page_title'] = $txt['manageposts_bbc_settings_title'];
 
 	// Make sure we check the right tags!
 	$modSettings['bbc_disabled_disabledBBC'] = empty($modSettings['disabledBBC']) ? array() : explode(',', $modSettings['disabledBBC']);
@@ -353,16 +358,9 @@ function ModifyBBCSettings()
 }
 
 // Function for modifying topic settings. Not very exciting.
-function ModifyTopicSettings()
+function ModifyTopicSettings($return_config = false)
 {
 	global $context, $txt, $modSettings, $sourcedir, $scripturl;
-
-	// Get the settings template ready.
-	require_once($sourcedir .'/ManageServer.php');
-
-	// Setup the template.
-	$context['page_title'] = $txt['manageposts_topic_settings'];
-	$context['sub_template'] = 'show_settings';
 
 	// Here are all the topic settings.
 	$config_vars = array(
@@ -384,6 +382,16 @@ function ModifyTopicSettings()
 			array('check', 'enablePreviousNext'),
 		
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Get the settings template ready.
+	require_once($sourcedir .'/ManageServer.php');
+
+	// Setup the template.
+	$context['page_title'] = $txt['manageposts_topic_settings'];
+	$context['sub_template'] = 'show_settings';
 
 	// Are we saving them - are we??
 	if (isset($_GET['save']))

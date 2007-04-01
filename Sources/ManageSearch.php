@@ -127,15 +127,9 @@ function ManageSearch()
 	$subActions[$_REQUEST['sa']]();
 }
 
-function EditSearchSettings()
+function EditSearchSettings($return_config = false)
 {
 	global $txt, $context, $sc, $scripturl, $sourcedir;
-
-	$context['page_title'] = $txt['search_settings_title'];
-	$context['sub_template'] = 'show_settings';
-
-	// We'll need this for the settings.
-	require_once($sourcedir . '/ManageServer.php');
 
 	// What are we editing anyway?
 	$config_vars = array(
@@ -146,6 +140,15 @@ function EditSearchSettings()
 			array('int', 'search_results_per_page'),
 			array('int', 'search_max_results', 'subtext' => $txt['search_max_results_disable']),
 	);
+
+	if ($return_config)
+		return $config_vars;
+
+	$context['page_title'] = $txt['search_settings_title'];
+	$context['sub_template'] = 'show_settings';
+
+	// We'll need this for the settings.
+	require_once($sourcedir . '/ManageServer.php');
 
 	// A form was submitted.
 	if (isset($_REQUEST['save']))
