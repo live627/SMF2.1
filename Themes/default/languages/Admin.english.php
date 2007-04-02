@@ -8,7 +8,7 @@ $txt['admin_users'] = 'Members';
 $txt['admin_newsletters'] = 'Newsletters';
 $txt['admin_edit_news'] = 'News';
 $txt['admin_groups'] = 'Membergroups';
-$txt['admin_members'] = 'Manage members';
+$txt['admin_members'] = 'Manage Members';
 $txt['admin_members_list'] = 'Below is a listing of all the members currently registered with your forum.';
 $txt['admin_next'] = 'Next';
 $txt['admin_censored_words'] = 'Censored Words';
@@ -524,7 +524,7 @@ $txt['attach_repair_file_size_of_zero'] = '%d attachments/avatars have a size of
 $txt['attach_repair_attachment_no_msg'] = '%d attachments no longer have a message associated with them';
 $txt['attach_repair_avatar_no_member'] = '%d avatars no longer have a member associated with them';
 
-$txt['news_title'] = 'News and newsletters';
+$txt['news_title'] = 'News and Newsletters';
 $txt['news_settings_desc'] = 'Here you can change the settings and permissions related to news and newsletters.';
 $txt['news_settings_submit'] = 'Save';
 $txt['news_mailing_desc'] = 'From this menu you can send messages to all members who\'ve registered and entered their email addresses. You may edit the distribution list, or send messages to all. Useful for important update/news information.';
