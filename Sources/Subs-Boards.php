@@ -592,7 +592,7 @@ function modifyBoard($board_id, &$boardOptions)
 		reorderBoards();
 }
 
-// Create a new board and set it's properties and position.
+// Create a new board and set its properties and position.
 function createBoard($boardOptions)
 {
 	global $boards, $db_prefix, $modSettings, $smfFunc;
