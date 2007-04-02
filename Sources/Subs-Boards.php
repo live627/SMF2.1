@@ -851,7 +851,7 @@ function fixChildren($parent, $newLevel, $newParent)
 		fixChildren($child, $newLevel + 1, $child);
 }
 
-// Load a lot of usefull information regarding the boards and categories.
+// Load a lot of useful information regarding the boards and categories.
 function getBoardTree()
 {
 	global $db_prefix, $cat_tree, $boards, $boardList, $txt, $modSettings, $smfFunc;
