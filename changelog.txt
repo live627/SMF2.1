@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2700 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2701 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -10,6 +10,7 @@ April 2007
  ! Changed the nature of the "Hide email" user setting to now mean "Disallow users from emailing yourself". (Profile.php, index language file)
  + Added a (currently) basic search to the admin section. (Admin.php, Admin template)
  ! All setting related functions now take an optional parameter to return what setting data they are dealing with. (Various files)
+ ! Allow the brd search paramter to be used in the url as a non array. (Search.php)
 
 
 March 2007
