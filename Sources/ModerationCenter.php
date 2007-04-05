@@ -87,7 +87,7 @@ function ModerationMain($dont_call = false)
 				array 0:		Array of permissions to check for this subsection.
 	*/
 
-	$context['admin_areas'] = array(
+	$moderation_areas = array(
 		'main' => array(
 			'title' => $txt['mc_main'],
 			'areas' => array(
@@ -169,17 +169,15 @@ function ModerationMain($dont_call = false)
 
 	// I don't know where we're going - I don't know where we've been...
 	$mod_area = isset($_GET['area']) ? $_GET['area'] : 'index';
-	$mod_include_data = $context['admin_areas']['main']['areas']['index'];
+	$mod_include_data = $moderation_areas['main']['areas']['index'];
 
 	// Now do all the formatting!
-	foreach ($context['admin_areas'] as $section_id => $section)
+	$context['admin_areas'] = array();
+	foreach ($moderation_areas as $section_id => $section)
 	{
 		// Is this enabled - or has as permission check!
 		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($section['permission']) && !allowedTo($section['permission'])))
-		{
 			continue;
-			unset($context['admin_areas'][$section_id]);
-		}
 
 		foreach ($section['areas'] as $area_id => $area)
 		{
@@ -198,7 +196,7 @@ function ModerationMain($dont_call = false)
 			// Can we do this?
 			if ((!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
 			{
-				// Replace the contents with some ickle data - assuming it has a label.
+				// Add it to the context... if it has some form of name!
 				if (isset($area['label']) || isset($txt[$area_id]))
 				{
 					$context['admin_areas'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
@@ -221,18 +219,12 @@ function ModerationMain($dont_call = false)
 								$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
 					}
 				}
-				else
-					unset($context['admin_areas'][$section_id]['areas'][$area_id]);
 			}
-			// Otherwise unset it!
-			else
-				unset($context['admin_areas'][$section_id]['areas'][$area_id]);
 		}
-
-		// Did we remove every possible area?
-		if (empty($context['admin_areas'][$section_id]['areas']))
-			unset($context['admin_areas'][$section_id]);
 	}
+
+	// Remove the memory hog.
+	unset($moderation_areas);
 
 	if (empty($context['admin_area']))
 	{

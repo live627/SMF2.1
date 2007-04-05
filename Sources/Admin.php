@@ -125,7 +125,7 @@ function AdminMain()
 				array 1:		Array of permissions to check for this subsection.
 	*/
 
-	$context['admin_areas'] = array(
+	$admin_areas = array(
 		'forum' => array(
 			'title' => $txt['admin_main'],
 			'areas' => array(
@@ -339,20 +339,19 @@ function AdminMain()
 
 	// Figure out which one we're in now... making some defaults if required.
 	$admin_area = isset($_GET['area']) ? $_GET['area'] : 'index';
-	$admin_include_data = $context['admin_areas']['forum']['areas']['index'];
+	$admin_include_data = $admin_areas['forum']['areas']['index'];
 
 	// Add a work around for editing current theme.
 	if ($admin_area == 'theme' && isset($_GET['th']) && $_GET['th'] == $settings['theme_id'])
 		$admin_area = 'current_theme';
 
-	foreach ($context['admin_areas'] as $section_id => $section)
+	// Populate the admin area context.
+	$context['admin_areas'] = array();
+	foreach ($admin_areas as $section_id => $section)
 	{
 		// Is this enabled - or has as permission check!
 		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($section['permission']) && !allowedTo($section['permission'])))
-		{
-			unset($context['admin_areas'][$section_id]);
 			continue;
-		}
 
 		foreach ($section['areas'] as $area_id => $area)
 		{
@@ -371,7 +370,7 @@ function AdminMain()
 			// Can we do this?
 			if ((!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
 			{
-				// Replace the contents with some ickle data - assuming it has a label.
+				// Add it to the context... if it has some form of name!
 				if (isset($area['label']) || isset($txt[$area_id]))
 				{
 					$context['admin_areas'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
@@ -399,18 +398,12 @@ function AdminMain()
 							}
 					}
 				}
-				else
-					unset($context['admin_areas'][$section_id]['areas'][$area_id]);
 			}
-			// Otherwise unset it!
-			else
-				unset($context['admin_areas'][$section_id]['areas'][$area_id]);
 		}
-
-		// Did we remove every possible area?
-		if (empty($context['admin_areas'][$section_id]['areas']))
-			unset($context['admin_areas'][$section_id]);
 	}
+
+	// Remove excess memory eat.
+	unset($admin_areas);
 
 	// Make sure the administrator has a valid session...
 	validateSession();
