@@ -900,7 +900,7 @@ function AdminSearchMember()
 // This file allows the user to search the SM online manual for a little of help.
 function AdminSearchOM()
 {
-	global $context;
+	global $context, $sourcedir;
 
 	$docsURL = 'docs.simplemachines.org';
 	$context['doc_scripturl'] = 'http://docs.simplemachines.org/index.php';
@@ -917,34 +917,12 @@ function AdminSearchOM()
 	// This is what we will send.
 	$postVars = implode('&', $postVars);
 
-	// Open up a connection to the SM site.
-	$fp = @fsockopen($docsURL, 80, $errno, $errstr);
-	if ($fp)
-	{
-		$length = strlen($postVars);
-
-		$out = "POST /index.php?action=search2&xml HTTP/1.1\r\n";
-		$out .= "Host: " . $docsURL . "\r\n";
-		$out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-		$out .= "Content-Length: $length\r\n\r\n";
-		$out .= "$postVars\r\n";
-		$out .= "Connection: Close\r\n\r\n";
-		fwrite($fp, $out);
-
-		// What are we going to get back?
-		$search_results = '';
-		while (!feof($fp))
-			$search_results .= fgets($fp, 128);
-
-		fclose($fp);
-	}
-	else
-	{
-	  fatal_lang_error('cannot_connect_doc_site');
- 	}
+	// Get the results from the doc site.
+	require_once($sourcedir . '/Subs-Package.php');
+	$search_results = fetch_web_data($context['doc_scripturl'] . '?action=search2&xml', $postVars);
 
 	// If we didn't get any xml back we are in trouble - perhaps the doc site is overloaded?
-	if (preg_match('~<' . '\?xml\sversion="\d+\.\d+"\sencoding=".+?"\?' . '>\s*(<smf>.+?</smf>)~is', $search_results, $matches) != true)
+	if (!$search_results || preg_match('~<' . '\?xml\sversion="\d+\.\d+"\sencoding=".+?"\?' . '>\s*(<smf>.+?</smf>)~is', $search_results, $matches) != true)
 		fatal_lang_error('cannot_connect_doc_site');
 
 	$search_results = $matches[1];
