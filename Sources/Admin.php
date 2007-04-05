@@ -85,8 +85,7 @@ function AdminMain()
 	loadLanguage('Admin');
 	loadTemplate('Admin');
 
-	// Ensure we are admin'ing.
-	$context['bar_area'] = 'admin';
+	require_once($sourcedir . '/Subs-Menu.php');
 
 	// Are we toggling the bar?
 	if (isset($_GET['togglebar']))
@@ -101,30 +100,7 @@ function AdminMain()
 		);
 	}
 
-	/* Define all the sections on the admin area - these are then properly converted into context!
-
-		Possible fields:
-			For Section:
-				string $title:		Section title.
-				bool $enabled:		Should section be shown?
-				array $areas:		Array of areas within this section.
-				array $permission:	Permission required to access the whole section.
-
-			For Areas:
-				array $permission:	Array of permissions to determine who can access this area.
-				string $label:		Optional text string for link (Otherwise $txt[$index] will be used)
-				string $file:		Name of source file required for this area.
-				string $function:	Function to call when area is selected.
-				string $custom_url:	URL to use for this menu item.
-				bool $enabled:		Should this area even be shown?
-				string $select:		If set this item will not be displayed - instead the item indexed here shall be.
-				array $subsections:	Array of subsections from this area.
-
-			For Subsections:
-				string 0:		Text label for this subsection.
-				array 1:		Array of permissions to check for this subsection.
-	*/
-
+	// Define all the menu structure - see Subs-Menu.php for details!
 	$admin_areas = array(
 		'forum' => array(
 			'title' => $txt['admin_main'],
@@ -337,94 +313,24 @@ function AdminMain()
 		),
 	);
 
-	// Figure out which one we're in now... making some defaults if required.
-	$admin_area = isset($_GET['area']) ? $_GET['area'] : 'index';
-	$admin_include_data = $admin_areas['forum']['areas']['index'];
+	$menuOptions = array();
 
 	// Add a work around for editing current theme.
-	if ($admin_area == 'theme' && isset($_GET['th']) && $_GET['th'] == $settings['theme_id'])
-		$admin_area = 'current_theme';
+	if (isset($_GET['area']) && $_GET['area'] == 'theme' && isset($_GET['th']) && $_GET['th'] == $settings['theme_id'])
+		$menuOptions['current_area'] = 'current_theme';
 
-	// Populate the admin area context.
-	$context['admin_areas'] = array();
-	foreach ($admin_areas as $section_id => $section)
-	{
-		// Is this enabled - or has as permission check!
-		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($section['permission']) && !allowedTo($section['permission'])))
-			continue;
-
-		foreach ($section['areas'] as $area_id => $area)
-		{
-			// Is this what we are looking for?
-			if ($admin_area == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
-			{
-				// Found and validated where we want to be!
-				$context['admin_section'] = $section_id;
-				$context['admin_area'] = isset($area['select']) ? $area['select'] : $area_id;
-				$admin_include_data = $area;
-
-				// Flag to the section that this is active.
-				$context['admin_areas'][$section_id]['selected'] = true;
-			}
-
-			// Can we do this?
-			if ((!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
-			{
-				// Add it to the context... if it has some form of name!
-				if (isset($area['label']) || isset($txt[$area_id]))
-				{
-					$context['admin_areas'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
-					// Does it have a custom URL?
-					if (isset($area['custom_url']))
-						$context['admin_areas'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
-
-					// and a icon as well?
-					if (isset($area['icon']))
-						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
-					else
-						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '';
-
-					// Did it have subsections?
-					if (isset($area['subsections']))
-					{
-						$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'] = array();
-						foreach ($area['subsections'] as $sa => $sub)
-							if (empty($sub[1]) || allowedTo($sub[1]))
-							{
-								$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
-								// A bit complicated - but is this set?
-								if ($admin_area == $area_id && (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $sa))
-									$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa]['selected'] = true;
-							}
-					}
-				}
-			}
-		}
-	}
-
-	// Remove excess memory eat.
+	$admin_include_data = createMenu($admin_areas, $menuOptions);
 	unset($admin_areas);
+
+	// Nothing valid?
+	if ($admin_include_data == false)
+		fatal_lang_error('no_access');
+
+	// Why on the admin are we?
+	$context['admin_area'] = $admin_include_data['current_area'];
 
 	// Make sure the administrator has a valid session...
 	validateSession();
-
-	// If we didn't find it make sure the context is right!
-	if (empty($context['admin_area']))
-	{
-		$context['admin_area'] = 'index';
-		$context['admin_section'] = 'forum';
-	}
-
-	// obExit will know what to do!
-	$context['template_layers'][] = 'admin';
-	$context['can_toggle_drop_down'] = isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
-	$context['show_drop_down'] = empty($options['use_side_bar']) && $context['can_toggle_drop_down'];
-
-	// We want a menu, but missing the stylesheet? Get the fallback stylesheet then!
-	if ($context['show_drop_down'] && file_exists($settings['theme_dir'].'/css/dropmenu.css'))
-		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/dropmenu.css" />';
-	elseif ($context['show_drop_down'] && !file_exists($settings['theme_dir'].'/css/dropmenu.css'))
-		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/dropmenu_default.css" />';
 
 	// Now - finally - call the right place!
 	if (isset($admin_include_data['file']))

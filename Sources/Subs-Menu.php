@@ -29,9 +29,33 @@ if (!defined('SMF'))
 */
 
 // Create a menu...
-function createMenu($menuData, $menuOptions)
+function createMenu($menuData, $menuOptions = array())
 {
 	global $context, $settings, $options, $txt, $modSettings, $scripturl;
+
+	/* Note menuData is array of form:
+
+		Possible fields:
+			For Section:
+				string $title:		Section title.
+				bool $enabled:		Should section be shown?
+				array $areas:		Array of areas within this section.
+				array $permission:	Permission required to access the whole section.
+
+			For Areas:
+				array $permission:	Array of permissions to determine who can access this area.
+				string $label:		Optional text string for link (Otherwise $txt[$index] will be used)
+				string $file:		Name of source file required for this area.
+				string $function:	Function to call when area is selected.
+				string $custom_url:	URL to use for this menu item.
+				bool $enabled:		Should this area even be shown?
+				string $select:		If set this item will not be displayed - instead the item indexed here shall be.
+				array $subsections:	Array of subsections from this area.
+
+			For Subsections:
+				string 0:		Text label for this subsection.
+				array 1:		Array of permissions to check for this subsection.
+	*/
 
 	// Every menu gets a unique ID, these are shown in first in, first out order.
 	$context['max_menu_id'] = isset($context['max_menu_id']) ? $context['max_menu_id'] + 1 : 1;
@@ -50,7 +74,7 @@ function createMenu($menuData, $menuOptions)
 	$include_data = false;
 
 	// Now setup the context correctly.
-	foreach ($menu_data as $section_id => $section)
+	foreach ($menuData as $section_id => $section)
 	{
 		// Is this enabled - or has as permission check - which fails?
 		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($section['permission']) && !allowedTo($section['permission'])))
@@ -63,25 +87,29 @@ function createMenu($menuData, $menuOptions)
 			if ((!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
 			{
 				// Add it to the context... if it has some form of name!
-				if (isset($area['label']) || isset($txt[$area_id]))
+				if (isset($area['label']) || (isset($txt[$area_id]) && !isset($area['select'])))
 				{
 					// If we haven't got an area then the first valid one is our choice.
 					if (!isset($menu_context['current_area']))
 					{
 						$menu_context['current_area'] = $area_id;
 						$include_data = $area;
-     				}
+     			}
+
+     			// First time this section?
+     			if (!isset($menu_context['sections'][$section_id]))
+     				$menu_context['sections'][$section_id]['title'] = $section['title'];
 
 					$menu_context['sections'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
 					// Does it have a custom URL?
 					if (isset($area['custom_url']))
-						$context['admin_areas'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
+						$menu_context['sections'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
 
 					// and a icon as well?
 					if (isset($area['icon']))
-						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
+						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
 					else
-						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '';
+						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '';
 
 					// Did it have subsections?
 					if (isset($area['subsections']))
@@ -147,9 +175,15 @@ function createMenu($menuData, $menuOptions)
 
 	// Almost there - load the template and add to the template layers.
 	loadTemplate(isset($menuOptions['template_name']) ? $menuOptions['template_name'] : 'GenericMenu');
-	$context['template_layers'][] = (isset($menuOptions['layer_name']) ? $menuOptions['layer_name'] : 'generic_menu') . $options['use_side_bar'];
+	$context['template_layers'][] = (isset($menuOptions['layer_name']) ? $menuOptions['layer_name'] : 'generic_menu') . $menuOptions['menu_type'];
 
 	// Finally - return information on the selected item.
+	$include_data += array(
+		'current_action' => $menu_context['current_action'],
+		'current_area' => $menu_context['current_area'],
+		'current_section' => $menu_context['current_section'],
+	);
+
 	return $include_data;
 }
 

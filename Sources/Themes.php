@@ -671,10 +671,6 @@ function SetThemeSettings()
 	loadLanguage('Admin');
 	isAllowedTo('admin_forum');
 
-	// If editing the current theme highlight the right bit on the admin menu.
-	if ($settings['theme_id'] == $_GET['th'])
-		$context['admin_area'] = 'current_theme';
-
 	// Validate inputs/user.
 	if (empty($_GET['th']))
 		fatal_lang_error('no_theme', false);
