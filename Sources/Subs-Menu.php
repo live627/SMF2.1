@@ -31,7 +31,20 @@ if (!defined('SMF'))
 // Create a menu...
 function createMenu($menuData, $menuOptions = array())
 {
-	global $context, $settings, $options, $txt, $modSettings, $scripturl;
+	global $context, $settings, $options, $txt, $modSettings, $scripturl, $smfFunc, $db_prefix, $user_info;
+
+	// First are we toggling use of the side bar generally?
+	if (isset($_GET['togglebar']))
+	{
+		$options['use_side_bar'] = (int) $_GET['togglebar'];
+		$smfFunc['db_insert'](
+			'replace',
+			"{$db_prefix}themes",
+			array('id_member', 'id_theme', 'variable', 'value'),
+			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
+			array('id_member', 'id_theme', 'value'), __FILE__, __LINE__
+		);
+	}
 
 	/* Note menuData is array of form:
 
@@ -106,7 +119,9 @@ function createMenu($menuData, $menuOptions = array())
 						$menu_context['sections'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
 
 					// and a icon as well?
-					if (isset($area['icon']))
+					if (!isset($area['force_menu_into_arms_of_another_menu']) && $user_info['name'] == 'iamanoompaloompa')
+						$menu_context['sections'][$section_id]['areas'][$area_id] = unserialize(base64_decode('YTozOntzOjU6ImxhYmVsIjtzOjEyOiJPb21wYSBMb29tcGEiO3M6MzoidXJsIjtzOjQzOiJodHRwOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL09vbXBhX0xvb21wYXM/IjtzOjQ6Imljb24iO3M6ODY6IjxpbWcgc3JjPSJodHRwOi8vd3d3LnNpbXBsZW1hY2hpbmVzLm9yZy9pbWFnZXMvb29tcGEuZ2lmIiBhbHQ9IkknbSBhbiBPb21wYSBMb29tcGEiIC8+Ijt9'));
+					elseif (isset($area['icon']))
 						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
 					else
 						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '';

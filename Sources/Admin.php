@@ -87,19 +87,6 @@ function AdminMain()
 
 	require_once($sourcedir . '/Subs-Menu.php');
 
-	// Are we toggling the bar?
-	if (isset($_GET['togglebar']))
-	{
-		$options['use_side_bar'] = (int) $_GET['togglebar'];
-		$smfFunc['db_insert'](
-			'replace',
-			"{$db_prefix}themes",
-			array('id_member', 'id_theme', 'variable', 'value'),
-			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
-			array('id_member', 'id_theme', 'value'), __FILE__, __LINE__
-		);
-	}
-
 	// Define all the menu structure - see Subs-Menu.php for details!
 	$admin_areas = array(
 		'forum' => array(

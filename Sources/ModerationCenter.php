@@ -34,59 +34,21 @@ function ModerationMain($dont_call = false)
 {
 	global $txt, $context, $scripturl, $sc, $modSettings, $user_info, $settings, $sourcedir, $options, $smfFunc, $db_prefix;
 
-	// Don't run twice!
-	if (isset($context['admin_areas']))
+	// Don't run this twice... and don't conflict with the admin bar.
+	if (isset($context['admin_area']))
 		return;
-
-	// We are always moderating here.
-	$context['bar_area'] = 'moderate';
-
-	// Are we toggling the bar?
-	if (isset($_GET['togglebar']))
-	{
-		$options['use_side_bar'] = (int) $_GET['togglebar'];
-		$smfFunc['db_insert'](
-			'replace',
-			"{$db_prefix}themes",
-			array('id_member', 'id_theme', 'variable', 'value'),
-			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
-			array('id_member', 'id_theme', 'value'), __FILE__, __LINE__
-		);
-	}
 
 	// Everyone using this area must be allowed here!
 	if (empty($user_info['mod_cache']['gq']) && empty($user_info['mod_cache']['bq']) && !allowedTo('manage_membergroups'))
 		isAllowedTo('access_mod_center');
 
+	// We're gonna want a menu of some kind.
+	require_once($sourcedir .'/Subs-Menu.php');
+
 	// Load the language, and the template.
 	loadLanguage('ModerationCenter');
-	//!!! The above/below needs to be moved to a small shared template!
-	loadTemplate('Admin');
 
-	/* Define all the sections on the moderation center - these are then properly converted into context!
-
-		Possible fields:
-			For Section:
-				string $title:		Section title.
-				bool $enabled:		Should section be shown?
-				array $areas:		Array of areas within this section.
-				array $permission:	Permission required to access the whole section.
-
-			For Areas:
-				array $permission:	Array of permissions to determine who can access this area.
-				string $label:		Optional text string for link (Otherwise $txt[$index] will be used)
-				string $file:		Name of source file required for this area.
-				string $function:	Function to call when area is selected.
-				string $custom_url:	URL to use for this menu item.
-				bool $enabled:		Should this area even be shown?
-				string $select:		If set this item will not be displayed - instead the item indexed here shall be.
-				array $subsections:	Array of subsections from this area.
-
-			For Subsections:
-				string 0:		Text label for this subsection.
-				array 0:		Array of permissions to check for this subsection.
-	*/
-
+	// This is the menu structure - refer to Subs-Menu.php for the details.
 	$moderation_areas = array(
 		'main' => array(
 			'title' => $txt['mc_main'],
@@ -168,82 +130,17 @@ function ModerationMain($dont_call = false)
 	);
 
 	// I don't know where we're going - I don't know where we've been...
-	$mod_area = isset($_GET['area']) ? $_GET['area'] : 'index';
-	$mod_include_data = $moderation_areas['main']['areas']['index'];
-
-	// Now do all the formatting!
-	$context['admin_areas'] = array();
-	foreach ($moderation_areas as $section_id => $section)
-	{
-		// Is this enabled - or has as permission check!
-		if ((isset($section['enabled']) && $section['enabled'] == false) || (isset($section['permission']) && !allowedTo($section['permission'])))
-			continue;
-
-		foreach ($section['areas'] as $area_id => $area)
-		{
-			// Is this what we are looking for?
-			if ($mod_area == $area_id && (!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
-			{
-				// Found and validated where we want to be!
-				$context['admin_section'] = $section_id;
-				$context['admin_area'] = isset($area['select']) ? $area['select'] : $area_id;
-				$mod_include_data = $area;
-
-				// Flag to the section that this is active.
-				$context['admin_areas'][$section_id]['selected'] = true;
-			}
-
-			// Can we do this?
-			if ((!isset($area['enabled']) || $area['enabled'] != false) && (empty($area['permission']) || allowedTo($area['permission'])))
-			{
-				// Add it to the context... if it has some form of name!
-				if (isset($area['label']) || isset($txt[$area_id]))
-				{
-					$context['admin_areas'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
-					// Does it have a custom URL?
-					if (isset($area['custom_url']))
-						$context['admin_areas'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];
-
-					// and a icon as well?
-					if (isset($area['icon']))
-						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
-					else
-						$context['admin_areas'][$section_id]['areas'][$area_id]['icon'] = '';
-
-					// Did it have subsections?
-					if (isset($area['subsections']))
-					{
-						$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'] = array();
-						foreach ($area['subsections'] as $sa => $sub)
-							if (empty($sub[1]) || allowedTo($sub[1]))
-								$context['admin_areas'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
-					}
-				}
-			}
-		}
-	}
-
-	// Remove the memory hog.
+	$mod_include_data = createMenu($moderation_areas);
 	unset($moderation_areas);
 
-	if (empty($context['admin_area']))
-	{
-		$context['admin_area'] = 'index';
-		$context['admin_section'] = 'main';
-	}
+	// We got something - didn't we? DIDN'T WE!
+	if ($mod_include_data == false)
+		fatal_lang_error('no_access');
 
-	// And put the lovely surround around it all, beutiful.
-	$context['template_layers'][] = 'admin';
-	$context['can_toggle_drop_down'] = isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
-	$context['show_drop_down'] = empty($options['use_side_bar']) && $context['can_toggle_drop_down'];
+	// What a pleasant shortcut - even tho we're not *really* on the admin screen who cares...
+	$context['admin_area'] = $mod_include_data['current_area'];
 
-	// We want a menu, but missing the stylesheet? Get the fallback stylesheet then!
-	if ($context['show_drop_down'] && file_exists($settings['theme_dir'].'/css/dropmenu.css'))
-		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/dropmenu.css" />';
-	elseif ($context['show_drop_down'] && !file_exists($settings['theme_dir'].'/css/dropmenu.css'))
-		$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/dropmenu_default.css" />';
-
-	// Now - finally - call the right place!
+	// Now - finally - the bit before the encore - the main performance of course!
 	if (!$dont_call)
 	{
 		if (isset($mod_include_data['file']))

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2702 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2703 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -12,6 +12,7 @@ April 2007
  ! All setting related functions now take an optional parameter to return what setting data they are dealing with. (Various files)
  ! Allow the brd search paramter to be used in the url as a non array. (Search.php)
  ! Allow people to search the online manual from the admin panel and display results within the admin area. (Admin.php, Admin template)
+ ! Added a function and generic templates for displaying a menu - and used them for the admin and moderation centers. (Admin.php, ModerationCenter.php, Subs-Menu.php, GenericMenu template)
 
 
 March 2007
