@@ -352,6 +352,7 @@ function template_admin()
 								<select name="search_type">
 									<option value="internal">', $txt['admin_search_type_internal'], '</option>
 									<option value="member">', $txt['admin_search_type_member'], '</option>
+									<option value="online">', $txt['admin_search_type_online'], '</option>
 								</select>
 								<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
 							</form> ';
@@ -2098,18 +2099,39 @@ function template_admin_search_results()
 
 	foreach ($context['search_results'] as $result)
 	{
-		echo '
+		// Is it a result from the online manual?
+		if ($context['search_type'] == 'online')
+		{
+			echo '
+			<tr>
+				<td class="windowbg">
+					<a href="', $result['category']['href'], '" target="_blank">', $result['category']['name'], '</a> &gt;
+					<a href="', $result['board']['href'], '" target="_blank">', $result['board']['name'], '</a> &gt;
+					<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank">', $result['messages'][0]['subject'], '</a>
+				</td>
+			</tr>
+			<tr>
+				<td class="windowbg2">
+					', $result['messages'][0]['body'], '
+				</td>
+			</tr>';
+		}
+		// Otherwise it's... not!
+		else
+		{
+			echo '
 		<tr>
 			<td class="windowbg">
 				<em>', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'], ':</em> <a href="', $result['url'], '" style="font-weight: bold;">', $result['name'], '</a>';
 
-		if ($result['help'])
-			echo '
+			if ($result['help'])
+				echo '
 				<br /><span class="smalltext">', $result['help'], '</span>';
 
-		echo '			
+			echo '			
 			</td>
 		</tr>';
+		}
 	}
 
 	echo '

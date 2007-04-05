@@ -743,18 +743,19 @@ function DisplayAdminFile()
 // This allocates out all the search stuff.
 function AdminSearch()
 {
-	global $txt, $context;
+	global $txt, $context, $smfFunc;
 
 	isAllowedTo('admin_forum');
 
 	// What can we search for?
 	$subactions = array(
 		'internal' => 'AdminSearchInternal',
+		'online' => 'AdminSearchOM',
 		'member' => 'AdminSearchMember',
 	);
 
 	$context['search_type'] = !isset($_REQUEST['search_type']) || !isset($subactions[$_REQUEST['search_type']]) ? 'internal' : $_REQUEST['search_type'];
-	$context['search_term'] = $_REQUEST['search_term'];
+	$context['search_term'] = $smfFunc['db_unescape_string']($_REQUEST['search_term']);
 
 	$context['sub_template'] = 'admin_search_results';
 	$context['page_title'] = $txt['admin_search_results'];
@@ -894,6 +895,115 @@ function AdminSearchMember()
 	$_POST['membername'] = $context['search_term'];
 
 	ViewMembers();
+}
+
+// This file allows the user to search the SM online manual for a little of help.
+function AdminSearchOM()
+{
+	global $context;
+
+	$docsURL = 'docs.simplemachines.org';
+	$context['doc_scripturl'] = 'http://docs.simplemachines.org/index.php';
+
+	// Set all the parameters search might expect.
+	$postVars = array(
+		'search' => $context['search_term'],
+	);
+
+	// Encode the search data.
+	foreach ($postVars as $k => $v)
+		$postVars[$k] = urlencode($k) . '=' . urlencode($v);
+
+	// This is what we will send.
+	$postVars = implode('&', $postVars);
+
+	// Open up a connection to the SM site.
+	$fp = @fsockopen($docsURL, 80, $errno, $errstr);
+	if ($fp)
+	{
+		$length = strlen($postVars);
+
+		$out = "POST /index.php?action=search2&xml HTTP/1.1\r\n";
+		$out .= "Host: " . $docsURL . "\r\n";
+		$out .= "Content-Type: application/x-www-form-urlencoded\r\n";
+		$out .= "Content-Length: $length\r\n\r\n";
+		$out .= "$postVars\r\n";
+		$out .= "Connection: Close\r\n\r\n";
+		fwrite($fp, $out);
+
+		// What are we going to get back?
+		$search_results = '';
+		while (!feof($fp))
+			$search_results .= fgets($fp, 128);
+
+		fclose($fp);
+	}
+	else
+	{
+	  fatal_lang_error('cannot_connect_doc_site');
+ 	}
+
+	// If we didn't get any xml back we are in trouble - perhaps the doc site is overloaded?
+	if (preg_match('~<' . '\?xml\sversion="\d+\.\d+"\sencoding=".+?"\?' . '>\s*(<smf>.+?</smf>)~is', $search_results, $matches) != true)
+		fatal_lang_error('cannot_connect_doc_site');
+
+	$search_results = $matches[1];
+
+	// Otherwise we simply walk through the XML and stick it in context for display.
+	$context['search_results'] = array();
+	loadClassFile('Class-Package.php');
+
+	// Get the results loaded into an array for processing!
+	$results = new xmlArray($search_results, false);
+
+	// Move through the smf layer.
+	if (!$results->exists('smf'))
+		fatal_lang_error('cannot_connect_doc_site');
+	$results = $results->path('smf[0]');
+
+	// Are there actually some results?
+	if (!$results->exists('noresults') && !$results->exists('results'))
+		fatal_lang_error('cannot_connect_doc_site');
+	elseif ($results->exists('results'))
+	{
+		foreach ($results->set('results/result') as $result)
+		{
+			if (!$result->exists('messages'))
+				continue;
+
+			$context['search_results'][$result->fetch('id')] = array(
+				'topic_id' => $result->fetch('id'),
+				'relevance' => $result->fetch('relevance'),
+				'board' => array(
+					'id' => $result->fetch('board/id'),
+					'name' => $result->fetch('board/name'),
+					'href' => $result->fetch('board/href'),
+				),
+				'category' => array(
+					'id' => $result->fetch('category/id'),
+					'name' => $result->fetch('category/name'),
+					'href' => $result->fetch('category/href'),
+				),
+				'messages' => array(),
+			);
+
+			// Add the messages.
+			foreach ($result->set('messages/message') as $message)
+				$context['search_results'][$result->fetch('id')]['messages'][] = array(
+					'id' => $message->fetch('id'),
+					'subject' => $message->fetch('subject'),
+					'body' => $message->fetch('body'),
+					'time' => $message->fetch('time'),
+					'timestamp' => $message->fetch('timestamp'),
+					'start' => $message->fetch('start'),
+					'author' => array(
+						'id' => $message->fetch('author/id'),
+						'name' => $message->fetch('author/name'),
+						'href' => $message->fetch('author/href'),
+					),
+				);
+  	}
+ 	}
 }
 
 ?>
