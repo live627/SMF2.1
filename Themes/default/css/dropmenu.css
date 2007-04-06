@@ -7,30 +7,30 @@
 	background: url(../images/admintab_left.gif) no-repeat;
 }
 
-ul#admin_menu, ul#admin_menu li ul
+ul.admin_menu, ul.admin_menu li ul
 {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
-ul#admin_menu
+ul.admin_menu
 {	
 	display: table-cell;
 	background: url(../images/admintab_right.gif) top right no-repeat;
 }
-* html #adm_container, * html ul#admin_menu
+* html #adm_container, * html ul.admin_menu
 {
 	height: 1%;
 	width: 30em;
 }
-ul#admin_menu li
+ul.admin_menu li
 {
 	position: relative;
 	float: left;
 	padding-right: 4px; 
 	text-transform: uppercase;
 }
-ul#admin_menu li h4
+#adm_container ul.admin_menu li h4
 {
 	margin: 0;
 	padding: 7px 5px 3px 5px;
@@ -39,17 +39,17 @@ ul#admin_menu li h4
 	font-size: x-small;
 	color: white;
 }
-ul#admin_menu li.chosen
+#adm_container ul.admin_menu li.chosen
 {
 	background: url(../images/admintab_active_left.gif) no-repeat;
 	padding-left: 6px;
 }
-ul#admin_menu li.chosen h4
+#adm_container ul.admin_menu li.chosen h4
 {
 	background: url(../images/admintab_active_right.gif) top right no-repeat;
 	padding-right: 10px;
 }
-ul#admin_menu li ul li
+ul.admin_menu li ul li
 {
 	background: none;
 	width: 14em;
@@ -57,7 +57,7 @@ ul#admin_menu li ul li
 	margin: 0;
 	padding: 0;
 }
-ul#admin_menu li ul 
+ul.admin_menu li ul 
 {
 	margin: 0 0 0 8px;
 	z-index: 90;
@@ -67,7 +67,7 @@ ul#admin_menu li ul
 	border: solid 1px #808080;
 	background: #F8F8FB;
 }
-ul#admin_menu li ul li ul, ul#admin_menu li ul li.over ul
+ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
 {
 	display: none;
 	position: absolute; 
@@ -76,7 +76,7 @@ ul#admin_menu li ul li ul, ul#admin_menu li ul li.over ul
 	border: solid 1px #A0A0A0;
 	background: #FFF;
 }
-ul#admin_menu li ul li a
+ul.admin_menu li ul li a
 {
 	display: block;
 	padding: 3px 6px 3px 6px;
@@ -86,24 +86,24 @@ ul#admin_menu li ul li a
 	text-transform: none;
 	color: black;
 }
-ul#admin_menu li ul li a.chosen
+ul.admin_menu li ul li a.chosen
 {
 	font-weight: bold;
 }
-ul#admin_menu li ul li a:hover, #admin_menu ul li ul li:hover 
+ul.admin_menu li ul li a:hover, #admin_menu ul li ul li:hover 
 {
 	background: #C8E2FB; 
 }
-ul#admin_menu li > ul
+ul.admin_menu li > ul
 {
 	top: auto;
 	left: auto;
 }
-ul#admin_menu li:hover ul, ul#admin_menu li.over ul
+ul.admin_menu li:hover ul, ul.admin_menu li.over ul
 {
 	display: block; 
 }
-ul#admin_menu li ul li:hover ul, ul#admin_menu li ul li.over ul
+ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 {
 	display: block;
 	left: 13em;

@@ -287,8 +287,23 @@ function template_admin()
 		</table>
 	</div>';
 
+	if ($context['user']['is_admin'])
+		echo '
+	<div class="bordercolor" style="padding: 1px; margin-top: 0.5em;">
+		<form class="titlebg2" style="padding: 5px 5px 5px 10px;" action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
+			<img src="' , $settings['images_url'] , '/buttons/search.gif" alt="" style="float: right;" />
+			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
+			<select name="search_type">
+				<option value="internal">', $txt['admin_search_type_internal'], '</option>
+				<option value="member">', $txt['admin_search_type_member'], '</option>
+				<option value="online">', $txt['admin_search_type_online'], '</option>
+			</select>
+			<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
+		</form>
+	</div>';
+
 	echo '
-		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 1.5ex;"><tr>';
+		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 0.5em;"><tr>';
 
 	// Display the "live news" from simplemachines.org.
 	echo '
@@ -345,24 +360,13 @@ function template_admin()
 		echo '
 							 (', $context['more_admins_link'], ')';
 
-	if ($context['user']['is_admin'])
-		echo '
-							<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
-								<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
-								<select name="search_type">
-									<option value="internal">', $txt['admin_search_type_internal'], '</option>
-									<option value="member">', $txt['admin_search_type_member'], '</option>
-									<option value="online">', $txt['admin_search_type_online'], '</option>
-								</select>
-								<input type="submit" name="search_go" value="', $txt['admin_search_go'], '" />
-							</form> ';
-
 	echo '
 						</td>
 					</tr>
 				</table>
 			</td>
 		</tr></table>';
+
 
 	echo '
 		<table width="100%" cellpadding="5" cellspacing="0" border="0" class="tborder" style="margin-top: 1.5ex;">
@@ -2066,75 +2070,76 @@ function template_admin_search_results()
 	global $context, $txt, $settings, $options, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="2" cellspacing="0" class="tborder" />
+	<table width="100%" cellpadding="4" cellspacing="0" class="tborder" />
 		<tr>
 			<td class="catbg">
 				', $txt['admin_search_results'], '
 			</td>
 		</tr>
 		<tr>
-			<td class="windowbg2">
+			<td class="titlebg">
 				<div style="float: left;">
 					', sprintf($txt['admin_search_results_desc'], $context['search_term']), '
 				</div>
 				<div style="float: right;">
-					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
+					<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" style="font-weight: normal; display: inline;">
 						<input type="text" name="search_term" value="', $context['search_term'], '" />
 						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
 						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" />
 					</form> 
 				</div>
 			</td>
-		</tr>';
+		</tr>
+		<tr>
+			<td class="windowbg">';
 
 	if (empty($context['search_results']))
 	{
 		echo '
-		<tr>
-			<td class="windowbg" align="center">
-				<strong>', $txt['admin_search_results_none'], '</strong>
-			</td>
-		</tr>';
+				<p class="windowbg" align="center">
+					<strong>', $txt['admin_search_results_none'], '</strong>
+				</p>';
 	}
 
+	echo '
+				<ol class="search_results">';
 	foreach ($context['search_results'] as $result)
 	{
 		// Is it a result from the online manual?
 		if ($context['search_type'] == 'online')
 		{
 			echo '
-			<tr>
-				<td class="windowbg">
-					<a href="', $result['category']['href'], '" target="_blank">', $result['category']['name'], '</a> &gt;
-					<a href="', $result['board']['href'], '" target="_blank">', $result['board']['name'], '</a> &gt;
-					<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank">', $result['messages'][0]['subject'], '</a>
-				</td>
-			</tr>
-			<tr>
-				<td class="windowbg2">
-					', $result['messages'][0]['body'], '
-				</td>
-			</tr>';
+					<li class="windowbg">
+						<p>
+							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank"><strong>', $result['messages'][0]['subject'], '</strong></a>
+							<br /><span class="smalltext"><a href="', $result['category']['href'], '" target="_blank">', $result['category']['name'], '</a> &nbsp;/&nbsp; 
+							<a href="', $result['board']['href'], '" target="_blank">', $result['board']['name'], '</a> /</span>
+						</p>	
+						<p class="quote">
+							', $result['messages'][0]['body'], '
+						</p>
+					</li>';
 		}
 		// Otherwise it's... not!
 		else
 		{
 			echo '
-		<tr>
-			<td class="windowbg">
-				<em>', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'], ':</em> <a href="', $result['url'], '" style="font-weight: bold;">', $result['name'], '</a>';
+					<li class="windowbg">
+						<a href="', $result['url'], '">', $result['name'], '</a> [', isset($txt['admin_search_section_' . $result['type']]) ? $txt['admin_search_section_' . $result['type']] : $result['type'] , ']';
 
 			if ($result['help'])
 				echo '
-				<br /><span class="smalltext">', $result['help'], '</span>';
+						<br /><span class="smalltext">', $result['help'], '</span>';
 
 			echo '			
-			</td>
-		</tr>';
+					</li>';
 		}
 	}
 
 	echo '
+				</ol>
+			</td>
+		</tr>
 	</table>';
 }
 

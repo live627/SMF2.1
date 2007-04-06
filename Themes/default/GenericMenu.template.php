@@ -27,7 +27,7 @@ function template_generic_menu_sidebar_above()
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
 			echo '
-						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=0">>></a>';
+						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="' , $settings['images_url'] , '/admin/change_menu2.png" alt="" /></a>';
 		echo '
 						</td>
 					</tr>
@@ -183,7 +183,7 @@ function template_generic_menu_dropdown_above()
 
 	echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>
-		<div id="adm_container"><ul id="dropdown_menu_', $context['cur_menu_id'], '">';
+		<div id="adm_container"><ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
 
 	// Main areas first.
 	foreach ($menu_context['sections'] as $section)
@@ -252,8 +252,8 @@ function template_generic_menu_dropdown_above()
 	}
 
 	echo '
-			<li>
-				<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><<</a>
+			<li style="white-space: nowrap;">
+				<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 4px 10px 0 0;" src="' , $settings['images_url'] , '/admin/change_menu.png" alt="" /></a>
 			</li>
 		</ul></div>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -262,7 +262,7 @@ function template_generic_menu_dropdown_above()
 
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
-		<table width="100%" cellspacing="0" cellpadding="10" class="tborder" border="0" style="margin-top: 0; clear: left;"><tr>
+		<table width="100%" cellspacing="0" cellpadding="4" class="tborder" border="0" style="margin-top: 0; clear: left;"><tr>
 			<td valign="top">';
 }
 
