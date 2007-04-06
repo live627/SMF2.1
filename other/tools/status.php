@@ -1073,18 +1073,23 @@ function show_header()
 		<style type="text/css">
 			body
 			{
-				font-family: Verdana, sans-serif;
-				background-color: #D4D4D4;
-				margin: 0;
+				background-color: #E5E5E8;
+				margin: 0px;
+				padding: 0px;
 			}
 			body, td
 			{
-				font-size: 10pt;
+				color: #000000;
+				font-size: small;
+				font-family: verdana, sans-serif;
 			}
 			div#header
 			{
-				background-color: white;
+				background-image: url(Themes/default/images/catbg.jpg);
+				background-repeat: repeat-x;
+				background-color: #88A6C0;
 				padding: 22px 4% 12px 4%;
+				color: white;
 				font-family: Georgia, serif;
 				font-size: xx-large;
 				border-bottom: 1px solid black;
@@ -1104,7 +1109,7 @@ function show_header()
 			div.panel
 			{
 				border: 1px solid gray;
-				background-color: #F0F0F0;
+				background-color: #F6F6F6;
 				margin: 1ex 0;
 				padding: 1.2ex;
 			}
@@ -1134,20 +1139,6 @@ function show_header()
 				font-weight: bold;
 				white-space: nowrap;
 				padding-right: 2ex;
-			}
-
-			div.code
-			{
-				margin: 1ex 3ex 2ex 3ex;
-				padding: 3px;
-				background-color: #FAFAFA;
-				font-family: monospace;
-				overflow: auto;
-			}
-			div.code span.comment
-			{
-				font-style: italic;
-				color: #000066;
 			}
 		</style>
 	</head>
