@@ -14,7 +14,6 @@ $txt['membergroups_add_group'] = 'Add group';
 $txt['membergroups_regular'] = 'Regular groups';
 $txt['membergroups_post'] = 'Post count based groups';
 
-$txt['membergroups_new_group'] = 'Add Membergroup';
 $txt['membergroups_group_name'] = 'Membergroup name';
 $txt['membergroups_new_board'] = 'Visible Boards';
 $txt['membergroups_new_board_desc'] = 'Boards the membergroup can see';
@@ -69,7 +68,6 @@ $txt['membergroups_members_description'] = 'Description';
 
 $txt['membergroups_postgroups'] = 'Post groups';
 
-$txt['membergroups_edit_groups'] = 'Edit Membergroups';
 $txt['membergroups_settings'] = 'Membergroup Settings';
 $txt['groups_manage_membergroups'] = 'Groups allowed to change membergroups';
 $txt['membergroups_select_permission_type'] = 'Select permission profile';

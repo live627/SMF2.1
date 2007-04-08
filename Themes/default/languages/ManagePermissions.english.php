@@ -38,7 +38,6 @@ $txt['permissions_profile_copy_from'] = 'Copy Permissions From';
 
 $txt['permissions_includes_inherited'] = 'Inherited Groups';
 
-$txt['permissions_groups'] = 'Permissions by Membergroup';
 $txt['permissions_all'] = 'all';
 $txt['permissions_none'] = 'none';
 $txt['permissions_set_permissions'] = 'Set permissions';
@@ -59,8 +58,6 @@ $txt['permissions_select_permission'] = 'Select a permission';
 $txt['permissions_only_one_option'] = 'You can only select one action to modify the permissions';
 $txt['permissions_no_action'] = 'No action selected';
 $txt['permissions_deny_dangerous'] = 'You are about to deny one or more permissions.\\nThis can be dangerous and cause unexpected results if you haven\'t made sure no one is \\"accidentally\\" in the group or groups you are denying permissions to.\\n\\nAre you sure you want to continue?';
-
-$txt['permissions_boards'] = 'Permissions by Board';
 
 $txt['permissions_modify_group'] = 'Modify Group';
 $txt['permissions_general'] = 'General Permissions';

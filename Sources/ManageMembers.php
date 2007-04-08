@@ -134,27 +134,27 @@ function ViewMembers()
 	{
 		$context['admin_tabs']['tabs'] = array(
 			'viewmembers' => array(
-				'title' => $txt['view_all_members'],
+				'label' => $txt['view_all_members'],
 				'description' => $txt['admin_members_list'],
-				'href' => $scripturl . '?action=admin;area=viewmembers;sa=all',
+				'url' => $scripturl . '?action=admin;area=viewmembers;sa=all',
 				'is_selected' => $_REQUEST['sa'] == 'all',
 			),
 			'search' => array(
-				'title' => $txt['mlist_search'],
+				'label' => $txt['mlist_search'],
 				'description' => $txt['admin_members_list'],
-				'href' => $scripturl . '?action=admin;area=viewmembers;sa=search',
+				'url' => $scripturl . '?action=admin;area=viewmembers;sa=search',
 				'is_selected' => $_REQUEST['sa'] == 'search' || $_REQUEST['sa'] == 'query',
 			),
 			'approve' => array(
-				'title' => sprintf($txt['admin_browse_awaiting_approval'], $context['awaiting_approval']),
+				'label' => sprintf($txt['admin_browse_awaiting_approval'], $context['awaiting_approval']),
 				'description' => $txt['admin_browse_approve_desc'],
-				'href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=approve',
+				'url' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=approve',
 				'is_selected' => false,
 			),
 			'activate' => array(
-				'title' => sprintf($txt['admin_browse_awaiting_activate'], $context['awaiting_activation']),
+				'label' => sprintf($txt['admin_browse_awaiting_activate'], $context['awaiting_activation']),
 				'description' => $txt['admin_browse_activate_desc'],
-				'href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=activate',
+				'url' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=activate',
 				'is_selected' => false,
 				'is_last' => true,
 			),
@@ -174,6 +174,8 @@ function ViewMembers()
 		unset($context['admin_tabs']['tabs']['approve']);
 	}
 
+	//!!! Temp.
+	$context['tabs'] = $context['admin_tabs']['tabs'];
 	$subActions[$_REQUEST['sa']][0]();
 }
 

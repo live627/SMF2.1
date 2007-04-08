@@ -715,4 +715,9 @@ $txt['smileys_edit'] = 'Edit Smileys';
 $txt['smileys_set_order'] = 'Set smiley order';
 $txt['icons_edit_message_icons'] = 'Edit Message Icons';
 
+$txt['membergroups_new_group'] = 'Add Membergroup';
+$txt['membergroups_edit_groups'] = 'Edit Membergroups';
+$txt['permissions_groups'] = 'Permissions by Membergroup';
+$txt['permissions_boards'] = 'Permissions by Board';
+
 ?>

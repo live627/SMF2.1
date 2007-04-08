@@ -46,7 +46,9 @@ function template_generic_menu_sidebar_above()
 			{
 				echo '
 							<b><a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['label'], '</a></b><br />';
-				$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
+
+				if (empty($context['tabs']))
+					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
     		}
 			else
 				echo '
@@ -67,98 +69,9 @@ function template_generic_menu_sidebar_above()
 		<td valign="top">';
 
 	// If there are any "tabs" setup, this is the place to shown them.
+	//!!! Clean this up!
 	if (!empty($context['tabs']))
-	{
-		echo '
-				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ' , (isset($settings['use_tabs']) && $settings['use_tabs']) ? '' : 'style="margin-bottom: 2ex;"' , '>
-					<tr class="titlebg">
-						<td>';
-		// Show a help item?
-		if (!empty($context['tabs']['help']))
-			echo '
-							<a href="', $scripturl, '?action=helpadmin;help=', $context['admin_tabs']['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
-		echo '
-							', $context['admin_tabs']['title'], '
-						</td>
-					</tr>
-					<tr class="windowbg">';
-
-		// Shall we use the tabs?
-		if (!empty($settings['use_tabs']))
-		{
-			// Find the selected tab
-			foreach($context['tabs'] as $tab)
-				if (!empty($tab['is_selected']))
-					$selected_tab = $tab;
-			echo '
-						<td class="smalltext" style="padding: 2ex;">', !empty($selected_tab['description']) ? $selected_tab['description'] : $context['admin_tabs']['description'], '</td>
-					</tr>
-				</table>';
-
-			// The admin tabs.
-			echo '
-				<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
-					<tr>
-						<td class="maintab_first">&nbsp;</td>';
-
-			// Print out all the items in this tab.
-			foreach ($context['tabs'] as $sa => $tab)
-			{
-				if ($menu_context['current_subsection'] == $sa)
-				{
-					echo '
-						<td class="maintab_active_first">&nbsp;</td>
-						<td valign="top" class="maintab_active_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
-						</td>
-						<td class="maintab_active_last">&nbsp;</td>';
-				}
-				else
-					echo '
-						<td valign="top" class="maintab_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
-						</td>';
-			}
-
-			// the end of tabs
-			echo '
-						<td class="maintab_last">&nbsp;</td>
-					</tr>
-				</table><br />';
-		}
-		// ...if not use the old style
-		else
-		{
-			echo '
-						<td align="left"><b>';
-
-			// Print out all the items in this tab.
-			foreach ($context['tabs'] as $sa => $tab)
-			{
-				if ($menu_context['current_subsection'] == $sa)
-				{
-					echo '
-							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a></b>';
-
-					$selected_tab = $tab;
-				}
-				else
-					echo '
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>';
-
-				if (empty($tab['is_last']))
-					echo ' | ';
-			}
-
-			echo '
-						</b></td>
-					</tr>
-					<tr class="windowbg">
-						<td class="smalltext" style="padding: 2ex;">', isset($selected_tab['description']) ? $selected_tab['description'] : $context['admin_tabs']['description'], '</td>
-					</tr>
-				</table>';
-		}
-	}
+		template_generic_menu_tabs($menu_context);
 }
 
 // Part of the sidebar layer - closes off the main bit.
@@ -264,6 +177,10 @@ function template_generic_menu_dropdown_above()
 	echo '
 		<table width="100%" cellspacing="0" cellpadding="4" class="tborder" border="0" style="margin-top: 0; clear: left;"><tr>
 			<td valign="top">';
+
+	// It's possible that some pages have their own tabs they wanna force...
+	if (!empty($context['tabs']))
+		template_generic_menu_tabs($menu_context);
 }
 
 // Part of the admin layer - used with admin_above to close the table started in it.
@@ -275,6 +192,102 @@ function template_generic_menu_dropdown_below()
 			</td>
 		</tr>
 	</table>';
+}
+
+// Some code for showing a tabbed view.
+function template_generic_menu_tabs(&$menu_context)
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	echo '
+				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ' , (isset($settings['use_tabs']) && $settings['use_tabs']) ? '' : 'style="margin-bottom: 2ex;"' , '>
+					<tr class="titlebg">
+						<td>';
+	// Show a help item?
+	if (!empty($context['tabs']['help']))
+		echo '
+							<a href="', $scripturl, '?action=helpadmin;help=', $context['admin_tabs']['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
+	echo '
+							', $context['admin_tabs']['title'], '
+						</td>
+					</tr>
+					<tr class="windowbg">';
+
+	// Shall we use the tabs?
+	if (!empty($settings['use_tabs']))
+	{
+		// Find the selected tab
+		foreach($context['tabs'] as $tab)
+			if (!empty($tab['is_selected']))
+				$selected_tab = $tab;
+		echo '
+						<td class="smalltext" style="padding: 2ex;">', !empty($selected_tab['description']) ? $selected_tab['description'] : $context['admin_tabs']['description'], '</td>
+					</tr>
+				</table>';
+
+		// The admin tabs.
+		echo '
+				<table cellpadding="0" cellspacing="0" border="0" style="margin-left: 10px;">
+					<tr>
+						<td class="maintab_first">&nbsp;</td>';
+
+		// Print out all the items in this tab.
+		foreach ($context['tabs'] as $sa => $tab)
+		{
+			if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
+			{
+				echo '
+						<td class="maintab_active_first">&nbsp;</td>
+						<td valign="top" class="maintab_active_back">
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
+						</td>
+						<td class="maintab_active_last">&nbsp;</td>';
+			}
+			else
+				echo '
+						<td valign="top" class="maintab_back">
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
+						</td>';
+		}
+
+		// the end of tabs
+		echo '
+						<td class="maintab_last">&nbsp;</td>
+					</tr>
+				</table><br />';
+	}
+	// ...if not use the old style
+	else
+	{
+		echo '
+						<td align="left"><b>';
+
+		// Print out all the items in this tab.
+		foreach ($context['tabs'] as $sa => $tab)
+		{
+			if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
+			{
+				echo '
+							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a></b>';
+
+				$selected_tab = $tab;
+			}
+			else
+				echo '
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>';
+
+			if (empty($tab['is_last']))
+				echo ' | ';
+		}
+
+		echo '
+						</b></td>
+					</tr>
+					<tr class="windowbg">
+						<td class="smalltext" style="padding: 2ex;">', isset($selected_tab['description']) ? $selected_tab['description'] : $context['admin_tabs']['description'], '</td>
+					</tr>
+				</table>';
+	}
 }
 
 ?>

@@ -235,9 +235,9 @@ function ViewErrorLog()
 		'description' => sprintf($txt['errlog_desc'], $txt['remove']),
 		'tabs' => array(
 			'all' => array(
-				'title' => $txt['errortype_all'],
+				'label' => $txt['errortype_all'],
 				'description' => isset($txt['errortype_all_desc']) ? $txt['errortype_all_desc'] : '',
-				'href' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : ''),
+				'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : ''),
 				'is_selected' => empty($filter),
 			),
 		),
@@ -256,16 +256,16 @@ function ViewErrorLog()
 		$sum += $row['num_errors'];
 
 		$context['admin_tabs']['tabs'][$sum] = array(
-			'title' => (isset($txt['errortype_' . $row['error_type']]) ? $txt['errortype_' . $row['error_type']] : $row['error_type']) . ' (' . $row['num_errors'] . ')',
+			'label' => (isset($txt['errortype_' . $row['error_type']]) ? $txt['errortype_' . $row['error_type']] : $row['error_type']) . ' (' . $row['num_errors'] . ')',
 			'description' => isset($txt['errortype_' . $row['error_type'] . '_desc']) ? $txt['errortype_' . $row['error_type'] . '_desc'] : '',
-			'href' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
+			'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
 			'is_selected' => isset($filter) && $filter['value']['sql'] == $smfFunc['db_escape_string'](addcslashes($row['error_type'], '\\_%')),
 		);
 	}
 	$smfFunc['db_free_result']($request);
 
 	// Update the all errors tab with the total number of errors
-	$context['admin_tabs']['tabs']['all']['title'] .= ' (' . $sum . ')';
+	$context['admin_tabs']['tabs']['all']['label'] .= ' (' . $sum . ')';
 
 	// Finally, work out what is the last tab!
 	if (isset($context['admin_tabs']['tabs'][$sum]))
@@ -277,6 +277,9 @@ function ViewErrorLog()
 	$context['page_title'] = $txt['errlog'];
 	$context['has_filter'] = isset($filter);
 	$context['sub_template'] = 'error_log';
+
+	//!!! Temporary fix.
+	$context['tabs'] = $context['admin_tabs']['tabs'];
 }
 
 // Delete errors from the database.

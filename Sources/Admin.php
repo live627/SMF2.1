@@ -274,12 +274,22 @@ function AdminMain()
 					'file' => 'ManageMembergroups.php',
 					'function' => 'ModifyMembergroups',
 					'permission' => array('moderate_forum'),
+					'subsections' => array(
+						'index' => array($txt['membergroups_edit_groups'], 'manage_membergroups'),
+						'add' => array($txt['membergroups_new_group'], 'manage_membergroups'),
+						'settings' => array($txt['settings'], 'admin_forum'),
+					),
 				),
 				'permissions' => array(
 					'label' => $txt['edit_permissions'],
 					'file' => 'ManagePermissions.php',
 					'function' => 'ModifyPermissions',
 					'permission' => array('moderate_forum'),
+					'subsections' => array(
+						'index' => array($txt['permissions_groups'], 'manage_permissions'),
+						'board_permissions' => array($txt['permissions_boards'], 'manage_permissions'),
+						'settings' => array($txt['settings'], 'admin_forum'),
+					),
 				),
 				'regcenter' => array(
 					'label' => $txt['registration_center'],
@@ -291,7 +301,13 @@ function AdminMain()
 					'label' => $txt['ban_title'],
 					'file' => 'ManageBans.php',
 					'function' => 'Ban',
-					'permission' => array('manage_bans'),
+					'permission' => 'manage_bans',
+					'subsections' => array(
+						'list' => array($txt['ban_edit_list']),
+						'add' => array($txt['ban_add_new']),
+						'browse' => array($txt['ban_trigger_browse']),
+						'log' => array($txt['ban_log']),
+					),
 				),
 			),
 		),
