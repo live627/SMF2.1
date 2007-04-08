@@ -6,7 +6,6 @@
 $txt['calendar_desc'] = 'From here you can modify all aspects of the calendar.';
 
 // Calendar Settings
-$txt['calendar_settings'] = 'Calendar Settings';
 $txt['calendar_settings_desc'] = 'Here you can enable the calendar, and determine the settings that it should use.';
 $txt['save_settings'] = 'Save Settings';
 $txt['groups_calendar_view'] = 'Membergroups allowed to view the calendar';
@@ -33,7 +32,6 @@ $txt['setting_cal_maxspan'] = 'Max number of days an event can span';
 $txt['setting_cal_showInTopic'] = 'Show linked events in topic display';
 
 // Adding/Editing/Viewing Holidays
-$txt['manage_holidays'] = 'Manage Holidays';
 $txt['manage_holidays_desc'] = 'From here you can add and remove holidays from your forum calendar.';
 $txt['current_holidays'] = 'Current Holidays';
 $txt['holidays_title'] = 'Holiday';

@@ -5,7 +5,6 @@
 
 $txt['modSettings_desc'] = 'This page allows you to change the settings of features, mods, and basic options in your forum.  Please see the <a href="' . $scripturl . '?action=theme;sa=settings;th=%s;sesc=%s">theme settings</a> for more options.  Click the help icons for more information about a setting.';
 
-$txt['mods_cat_features'] = 'Basic Features';
 $txt['pollMode'] = 'Poll mode';
 $txt['disable_polls'] = 'Disable polls';
 $txt['enable_polls'] = 'Enable polls';
@@ -49,8 +48,6 @@ $txt['max_pm_recipients'] = 'Maximum number of recipients allowed in a personal 
 $txt['pm_posts_verification'] = 'Post count under which users must enter code when sending personal messages.<div class="smalltext">(0 for no limit, admins are exempt)</div>';
 $txt['pm_posts_per_hour'] = 'Number of personal messages a user may send in an hour.<div class="smalltext">(0 for no limit, moderators are exempt)</div>';
 $txt['showsidebarAdmin'] = 'Use a sidebar instead of dropdown-menu for admin section';
-$txt['mods_cat_security'] = 'Security';
-$txt['mods_cat_layout'] = 'Layout';
 $txt['compactTopicPagesEnable'] = 'Limit number of displayed page links';
 $txt['contiguous_page_display'] = 'Contiguous pages to display:';
 $txt['to_display'] = 'to display';
@@ -67,7 +64,6 @@ $txt['disableHostnameLookup'] = 'Disable hostname lookups?';
 $txt['who_enabled'] = 'Enable who\'s online list';
 $txt['make_email_viewable'] = 'Allow viewable email addresses.';
 
-$txt['karma'] = 'Karma';
 $txt['karmaMode'] = 'Karma mode';
 $txt['karma_options'] = 'Disable karma|Enable karma total|Enable karma positive/negative';
 $txt['karmaMinPosts'] = 'Set the minimum posts needed to modify karma';
@@ -112,7 +108,6 @@ $txt['cache_level2'] = 'Level 2 Caching (Not Recommended)';
 $txt['cache_level3'] = 'Level 3 Caching (Not Recommended)';
 $txt['cache_memcached'] = 'Memcache settings';
 
-$txt['moderation_settings_short'] = 'Moderation';
 $txt['moderation_settings'] = 'Moderation Settings';
 $txt['setting_warning_enable'] = 'Enable User Warning System';
 $txt['setting_warning_watch'] = 'Warning level for user watch<div class="smalltext">The user warning level after which a user watch is put in place - 0 to disable.</div>';
@@ -120,7 +115,6 @@ $txt['setting_warning_moderate'] = 'Warning level for post moderation<div class=
 $txt['setting_warning_mute'] = 'Warning level for user muting<div class="smalltext">The user warning level after which a user cannot post any further - 0 to disable.</div>';
 $txt['setting_user_limit'] = 'Maximum user warning points per day<div class="smalltext">This value is the maximum amount of warning points a single moderator can assign to a user in a 24 hour period - 0 for no limit.</div>';
 
-$txt['signature_settings_short'] = 'Signatures';
 $txt['signature_settings'] = 'Signature Settings';
 $txt['signature_settings_desc'] = 'Use the settings on this page to decide how member signatures should be treated in SMF.';
 $txt['signature_settings_warning'] = 'Note that settings are not applied to existing signatures by default. Click <a href="' . $scripturl . '?action=admin;area=featuresettings;sa=sig;apply;sesc=%1$s">here</a> to apply rules to all existing signatures.';
@@ -135,7 +129,6 @@ $txt['signature_max_image_height'] = 'Maximum height of signature images (pixels
 $txt['signature_max_font_size'] = 'Maximum font size allowed in signatures<div class="smalltext">(0 for no max)</div>';
 $txt['signature_bbc'] = 'Enabled BBC tags';
 
-$txt['custom_profile_shorttitle'] = 'Profile Fields';
 $txt['custom_profile_title'] = 'Custom Profile Fields';
 $txt['custom_profile_desc'] = 'From this page you can create your own custom profile fields that fit in with your own forums requirements';
 $txt['custom_profile_active'] = 'Active';

@@ -3,7 +3,6 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-$txt['smiley_sets'] = 'Smiley Sets';
 $txt['smiley_sets_save'] = 'Save Changes';
 $txt['smiley_sets_add'] = 'New smiley Set';
 $txt['smiley_sets_delete'] = 'Delete selected';
@@ -25,7 +24,6 @@ $txt['smiley_sets_default'] = 'Default';
 $txt['smiley_sets_latest'] = 'Smileys of The Moment';
 $txt['smiley_sets_latest_fetch'] = 'Loading smiley information from simplemachines.org...';
 
-$txt['smileys_add'] = 'Add Smiley';
 $txt['smileys_add_method'] = 'Image Source';
 $txt['smileys_add_existing'] = 'Use Existing File';
 $txt['smileys_add_upload'] = 'Upload New Smiley';
@@ -35,7 +33,6 @@ $txt['smileys_add_upload_all'] = 'Same image for all sets';
 $txt['smileys_add_upload_for1'] = 'Image for the';
 $txt['smileys_add_upload_for2'] = 'set';
 
-$txt['smileys_edit'] = 'Edit Smileys';
 $txt['smileys_enable_note'] = '(otherwise, the default smileys will be used.)';
 $txt['smileys_code'] = 'Code';
 $txt['smileys_filename'] = 'Filename';
@@ -53,7 +50,6 @@ $txt['smiley_editsmileys_explain'] = 'Change your smileys here by clicking on th
 $txt['smiley_setorder_explain'] = 'Change the order of the smileys here.';
 $txt['smiley_addsmiley_explain'] = 'Here you can add a new smiley - either from an existing file or by uploading new ones.';
 
-$txt['smileys_set_order'] = 'Set smiley order';
 $txt['smiley_set_select_default'] = 'Default Smiley Set';
 $txt['smiley_set_new'] = 'Create new smiley set';
 $txt['smiley_set_modify_existing'] = 'Modify existing smiley set';
@@ -81,8 +77,6 @@ $txt['smileys_location_popup_description'] = 'These smileys will be shown in a p
 $txt['smileys_move_select_destination'] = 'Select smiley destination';
 $txt['smileys_move_select_smiley'] = 'Select smiley to move';
 $txt['smileys_move_here'] = 'Move smiley to this location';
-
-$txt['icons_edit_message_icons'] = 'Edit Message Icons';
 
 $txt['icons_edit_icons_explain'] = 'From here you can change which message icons are available throughout your board. You can add, edit and remove icons, as well as limit their use to certain boards.';
 $txt['icons_edit_icons_all_boards'] = 'Available In All Boards';

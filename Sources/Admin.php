@@ -153,9 +153,13 @@ function AdminMain()
 					'function' => 'ModifyFeatureSettings',
 					'icon' => 'features.gif',
 					'subsections' => array(
-						'core' => array($txt['core_configuration']),
-						'other' => array($txt['other_configuration']),
-						'cache' => array($txt['caching_settings']),
+						'basic' => array($txt['mods_cat_features']),
+						'security' => array($txt['mods_cat_security']),
+						'layout' => array($txt['mods_cat_layout']),
+						'karma' => array($txt['karma']),
+						'moderation' => array($txt['moderation_settings_short']),
+						'sig' => array($txt['signature_settings_short']),
+						'profile' => array($txt['custom_profile_shorttitle']),
 					),
 				),
 				'serversettings' => array(
@@ -163,6 +167,11 @@ function AdminMain()
 					'file' => 'ManageServer.php',
 					'function' => 'ModifySettings',
 					'icon' => 'server.gif',
+					'subsections' => array(
+						'core' => array($txt['core_configuration']),
+						'other' => array($txt['other_configuration']),
+						'cache' => array($txt['caching_settings']),
+					),
 				),
 				'current_theme' => array(
 					'label' => $txt['theme_current_settings'],
@@ -189,30 +198,58 @@ function AdminMain()
 					'file' => 'ManageBoards.php',
 					'function' => 'ManageBoards',
 					'permission' => array('manage_boards'),
+					'subsections' => array(
+						'main' => array($txt['boardsEdit']),
+						'newcat' => array($txt['mboards_new_cat']),
+						'settings' => array($txt['settings'], 'admin_forum'),
+					),
 				),
 				'postsettings' => array(
 					'label' => $txt['manageposts'],
 					'file' => 'ManagePosts.php',
 					'function' => 'ManagePostSettings',
 					'permission' => array('admin_forum', 'moderate_forum'),
+					'subsections' => array(
+						'posts' => array($txt['manageposts_settings'], 'admin_forum'),
+						'bbc' => array($txt['manageposts_bbc_settings'], 'admin_forum'),
+						'censor' => array($txt['admin_censored_words'], 'moderate_forum'),
+						'topics' => array($txt['manageposts_topic_settings'], 'admin_forum'),
+					),
 				),
 				'managecalendar' => array(
 					'label' => $txt['manage_calendar'],
 					'file' => 'ManageCalendar.php',
 					'function' => 'ManageCalendar',
 					'permission' => array('admin_forum'),
+					'subsections' => array(
+						'holidays' => array($txt['manage_holidays'], 'admin_forum'),
+						'settings' => array($txt['calendar_settings'], 'admin_forum'),
+					),
 				),
 				'managesearch' => array(
 					'label' => $txt['manage_search'],
 					'file' => 'ManageSearch.php',
 					'function' => 'ManageSearch',
 					'permission' => array('admin_forum'),
+					'subsections' => array(
+						'weights' => array($txt['search_weights']),
+						'method' => array($txt['search_method']),
+						'settings' => array($txt['settings']),
+					),
 				),
 				'smileys' => array(
 					'label' => $txt['smileys_manage'],
 					'file' => 'ManageSmileys.php',
 					'function' => 'ManageSmileys',
 					'permission' => array('manage_smileys'),
+					'subsections' => array(
+						'editsets' => array($txt['smiley_sets']),
+						'addsmiley' => array($txt['smileys_add']),
+						'editsmileys' => array($txt['smileys_edit']),
+						'setorder' => array($txt['smileys_set_order']),
+						'editicons' => array($txt['icons_edit_message_icons']),
+						'settings' => array($txt['settings']),
+					),
 				),
 				'manageattachments' => array(
 					'label' => $txt['attachments_avatars'],

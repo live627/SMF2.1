@@ -14,7 +14,6 @@ $txt['catConfirm'] = 'Do you really want to delete this category?';
 $txt['boardConfirm'] = 'Do you really want to delete this board?';
 
 $txt['catEdit'] = 'Edit Category';
-$txt['boardsEdit'] = 'Modify Boards';
 $txt['collapse_enable'] = 'Collapsible';
 $txt['collapse_desc'] = 'Allow users to collapse this category?';
 $txt['catModify'] = '(modify)';
@@ -23,7 +22,6 @@ $txt['mboards_order_after'] = 'After ';
 $txt['mboards_order_inside'] = 'Inside ';
 $txt['mboards_order_first'] = 'In first place';
 
-$txt['mboards_new_cat'] = 'Create new category';
 $txt['mboards_new_board'] = 'Add Board';
 $txt['mboards_new_cat_name'] = 'New Category';
 $txt['mboards_add_cat_button'] = 'Add Category';

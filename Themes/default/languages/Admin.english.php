@@ -694,4 +694,25 @@ $txt['admin_search_results_none'] = 'No results found!';
 $txt['admin_search_section_sections'] = 'Section';
 $txt['admin_search_section_settings'] = 'Setting';
 
+$txt['mods_cat_features'] = 'Basic Features';
+$txt['mods_cat_security'] = 'Security';
+$txt['mods_cat_layout'] = 'Layout';
+$txt['karma'] = 'Karma';
+$txt['moderation_settings_short'] = 'Moderation';
+$txt['signature_settings_short'] = 'Signatures';
+$txt['custom_profile_shorttitle'] = 'Profile Fields';
+
+$txt['boardsEdit'] = 'Modify Boards';
+$txt['mboards_new_cat'] = 'Create new category';
+$txt['manage_holidays'] = 'Manage Holidays';
+$txt['calendar_settings'] = 'Calendar Settings';
+$txt['search_weights'] = 'Weights';
+$txt['search_method'] = 'Search method';
+
+$txt['smiley_sets'] = 'Smiley Sets';
+$txt['smileys_add'] = 'Add Smiley';
+$txt['smileys_edit'] = 'Edit Smileys';
+$txt['smileys_set_order'] = 'Set smiley order';
+$txt['icons_edit_message_icons'] = 'Edit Message Icons';
+
 ?>
