@@ -68,6 +68,7 @@ function createMenu($menuData, $menuOptions = array())
 			For Subsections:
 				string 0:		Text label for this subsection.
 				array 1:		Array of permissions to check for this subsection.
+				bool 2:			Is this the default subaction - if not set for any will default to first...
 	*/
 
 	// Every menu gets a unique ID, these are shown in first in, first out order.
@@ -127,17 +128,39 @@ function createMenu($menuData, $menuOptions = array())
 						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '';
 
 					// Did it have subsections?
-					if (isset($area['subsections']))
+					if (!empty($area['subsections']))
 					{
 						$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'] = array();
+						$first_sa = 0;
 						foreach ($area['subsections'] as $sa => $sub)
 							if (empty($sub[1]) || allowedTo($sub[1]))
 							{
 								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
 								// A bit complicated - but is this set?
-								if ($menu_context['current_area'] == $area_id && (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $sa))
-									$menu_context['current_subsection'] = $sa;
+								if ($menu_context['current_area'] == $area_id)
+								{
+									// Save which is the first...
+									if (empty($first_sa))
+										$first_sa = $sa;
+
+									// Is this the current subsection?
+									if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == $sa)
+										$menu_context['current_subsection'] = $sa;
+									// Otherwise is it the default?
+									elseif (!isset($menu_context['current_subsection']) && !empty($sub[2]))
+										$menu_context['current_subsection'] = $sa;
+								}
+								$last_sa = $sa;
 							}
+
+						// Set which one is last and selected in the group.
+						if (!empty($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']))
+						{
+							$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['is_last'] = true;
+							if ($menu_context['current_area'] == $area_id && !isset($menu_context['current_subsection']))
+								$menu_context['current_subsection'] = $first_sa;
+
+						}
 					}
 				}
 
@@ -172,7 +195,7 @@ function createMenu($menuData, $menuOptions = array())
 	// What type of menu is this?
 	if (!isset($menuOptions['menu_type']))
 	{
-		$menuOptions['menu_type'] = '_' . ($options['use_side_bar'] ? 'sidebar' : 'dropdown');
+		$menuOptions['menu_type'] = '_' . (!empty($options['use_side_bar']) ? 'sidebar' : 'dropdown');
 		$menu_context['can_toggle_drop_down'] = isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
 	}
 	else

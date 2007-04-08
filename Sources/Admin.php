@@ -152,6 +152,11 @@ function AdminMain()
 					'file' => 'ModSettings.php',
 					'function' => 'ModifyFeatureSettings',
 					'icon' => 'features.gif',
+					'subsections' => array(
+						'core' => array($txt['core_configuration']),
+						'other' => array($txt['other_configuration']),
+						'cache' => array($txt['caching_settings']),
+					),
 				),
 				'serversettings' => array(
 					'label' => $txt['admin_server_settings'],
@@ -306,6 +311,10 @@ function AdminMain()
 	if (isset($_GET['area']) && $_GET['area'] == 'theme' && isset($_GET['th']) && $_GET['th'] == $settings['theme_id'])
 		$menuOptions['current_area'] = 'current_theme';
 
+	// Make sure the administrator has a valid session...
+	validateSession();
+
+	// Actually create the menu!
 	$admin_include_data = createMenu($admin_areas, $menuOptions);
 	unset($admin_areas);
 
@@ -315,9 +324,6 @@ function AdminMain()
 
 	// Why on the admin are we?
 	$context['admin_area'] = $admin_include_data['current_area'];
-
-	// Make sure the administrator has a valid session...
-	validateSession();
 
 	// Now - finally - call the right place!
 	if (isset($admin_include_data['file']))

@@ -50,6 +50,7 @@ $txt['actual_theme_name'] = 'This theme\'s name: ';
 $txt['actual_theme_dir'] = 'This theme\'s directory: ';
 $txt['actual_theme_url'] = 'This theme\'s URL: ';
 $txt['actual_images_url'] = 'This theme\'s images URL: ';
+$txt['current_theme_style'] = 'This theme\'s style: ';
 
 $txt['show_group_key'] = 'Show group key on board index';
 $txt['additional_options_collapsable'] = 'Enable collapsible additional post options';

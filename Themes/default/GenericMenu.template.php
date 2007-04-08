@@ -83,11 +83,11 @@ function template_generic_menu_sidebar_above()
 					</tr>
 					<tr class="windowbg">';
 
-		// shall we use the tabs?
+		// Shall we use the tabs?
 		if (!empty($settings['use_tabs']))
 		{
 			// Find the selected tab
-			foreach($context['admin_tabs']['tabs'] as $tab)
+			foreach($context['tabs'] as $tab)
 				if (!empty($tab['is_selected']))
 					$selected_tab = $tab;
 			echo '
@@ -102,21 +102,21 @@ function template_generic_menu_sidebar_above()
 						<td class="maintab_first">&nbsp;</td>';
 
 			// Print out all the items in this tab.
-			foreach ($context['tabs']['tabs'] as $tab)
+			foreach ($context['tabs'] as $sa => $tab)
 			{
-				if (!empty($tab['is_selected']))
+				if ($menu_context['current_subsection'] == $sa)
 				{
 					echo '
 						<td class="maintab_active_first">&nbsp;</td>
 						<td valign="top" class="maintab_active_back">
-							<a href="', $tab['href'], '">', $tab['title'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
 						</td>
 						<td class="maintab_active_last">&nbsp;</td>';
 				}
 				else
 					echo '
 						<td valign="top" class="maintab_back">
-							<a href="', $tab['href'], '">', $tab['title'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
 						</td>';
 			}
 
@@ -133,18 +133,18 @@ function template_generic_menu_sidebar_above()
 						<td align="left"><b>';
 
 			// Print out all the items in this tab.
-			foreach ($context['tabs']['tabs'] as $tab)
+			foreach ($context['tabs'] as $sa => $tab)
 			{
-				if (!empty($tab['is_selected']))
+				if ($menu_context['current_subsection'] == $sa)
 				{
 					echo '
-							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', $tab['href'], '">', $tab['title'], '</a></b>';
+							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a></b>';
 
 					$selected_tab = $tab;
 				}
 				else
 					echo '
-							<a href="', $tab['href'], '">', $tab['title'], '</a>';
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>';
 
 				if (empty($tab['is_last']))
 					echo ' | ';
