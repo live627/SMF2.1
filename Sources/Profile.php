@@ -369,8 +369,11 @@ function ModifyProfile($post_errors = array())
 	if (!function_exists($_REQUEST['sa']))
 		fatal_lang_error('no_access');
 
-	// Set the profile layer to be displayed - now we've done the security stuff.
-	$context['template_layers'][] = 'profile';
+	// If we're in wireless then we have a cut down template...
+	if (WIRELESS && $context['sub_template'] == 'summary' && WIRELESS_PROTOCOL != 'wap')
+		$context['sub_template'] = WIRELESS_PROTOCOL . '_profile';
+	else
+		$context['template_layers'][] = 'profile';
 
 	// These will get populated soon!
 	$post_errors = array();

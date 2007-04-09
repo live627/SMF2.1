@@ -828,7 +828,6 @@ function Display()
 	// Wireless shows a "more" if you can do anything special.
 	if (WIRELESS && WIRELESS_PROTOCOL != 'wap')
 	{
-		//!!! Add banning.
 		$context['wireless_more'] = $context['can_sticky'] || $context['can_lock'] || allowedTo('modify_any');
 		$context['wireless_moderate'] = isset($_GET['moderate']) ? ';moderate' : '';
 	}

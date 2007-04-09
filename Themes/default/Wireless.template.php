@@ -288,8 +288,8 @@ function template_imode_display()
 
 		echo '
 			<tr><td>', $message['first_new'] ? '
-				<a name="new"></a>' : '', '
-				<b>', $message['member']['name'], '</b>:
+				<a name="new"></a>' : '',
+				$context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';imode">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
 				', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . ';imode">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 				', $wireless_message, '
 			</td></tr>';
@@ -579,6 +579,139 @@ function template_imode_error()
 		</table>';
 }
 
+function template_imode_profile()
+{
+	global $context, $settings, $options, $scripturl, $board, $txt;
+
+	echo '
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['summary'], ' - ', $context['member']['name'], '</font></td></tr>
+			<tr><td>
+				<b>', $txt['name'], ':</b> ', $context['member']['name'], '
+			</td></tr>
+			<tr><td>
+				<b>', $txt['position'], ': </b>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '
+			</td></tr>
+			<tr><td>
+				<b>', $txt['lastLoggedIn'], ':</b> ', $context['member']['last_login'], '
+			</td></tr>';
+
+	if (!empty($context['member']['bans']))
+	{
+		echo '
+			<tr><td>
+				<font color="red"><b>', $txt['user_banned_by_following'], ':</b></font>';
+
+		foreach ($context['member']['bans'] as $ban)
+				echo '
+				<br />', $ban['explanation'], '';
+
+		echo '
+			</td></tr>';
+	}
+
+	echo '
+
+			<tr bgcolor="#b6dbff"><td>', $txt['additional_info'], '</td></tr>';
+
+	if (!$context['user']['is_owner'] && $context['can_send_pm'])
+		echo '
+			<tr><td><a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], ';imode">', $txt['wireless_profile_pm'], '.</a></td></tr>';
+
+	if (!$context['user']['is_owner'] && $context['can_edit_ban'])
+		echo '
+			<tr><td><a href="', $scripturl, '?action=admin;area=ban;sa=add;u=', $context['id_member'], ';imode">', $txt['profileBanUser'], '.</a></td></tr>';
+
+	echo '
+			<tr><td><a href="', $scripturl, '?imode">', $txt['wireless_error_home'], '.</a></td></tr>';
+
+	echo '
+		</table>';
+}
+
+function template_imode_ban_edit()
+{
+	global $context, $settings, $options, $scripturl, $board, $txt;
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=ban;sa=add;imode" method="post">
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '</font></td></tr>
+			<tr><td>
+				<b>', $txt['ban_name'], ': </b>
+				<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="20" />
+			</td></tr>
+			<tr><td>
+				<b>', $txt['ban_expiration'], ': </b><br />
+				<input type="radio" name="expiration" value="never" ', $context['ban']['expiration']['status'] == 'never' ? ' checked="checked"' : '', ' class="check" /> ', $txt['never'], '<br />
+				<input type="radio" name="expiration" value="one_day" ', $context['ban']['expiration']['status'] == 'still_active_but_we_re_counting_the_days' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_will_expire_within'], ' <input type="text" name="expire_date" size="3" value="', $context['ban']['expiration']['days'], '" /> ', $txt['ban_days'], '<br />
+				<input type="radio" name="expiration" value="expired" ', $context['ban']['expiration']['status'] == 'expired' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_expired'], '<br />
+			</td></tr>
+			<tr><td>
+				<b>', $txt['ban_reason'], ': </b>
+				<input type="text" name="reason" value="', $context['ban']['reason'], '" size="20" />
+			</td></tr>
+			<tr><td>
+				<b>', $txt['ban_notes'], ': </b><br />
+				<textarea name="notes" cols="20" rows="3">', $context['ban']['notes'], '</textarea>
+			</td></tr>
+			<tr><td>
+				<b>', $txt['ban_restriction'], ': </b><br />
+				<input type="checkbox" name="full_ban" value="1"', $context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_full_ban'], '<br />
+				<input type="checkbox" name="cannot_post" value="1"', $context['ban']['cannot']['post'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_post'], '<br />
+				<input type="checkbox" name="cannot_register" value="1"', $context['ban']['cannot']['register'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_register'], '<br />
+				<input type="checkbox" name="cannot_login" value="1"', $context['ban']['cannot']['login'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_login'], '
+			</td></tr>';
+
+	if (!empty($context['ban_suggestions']))
+	{
+		echo '
+			<tr bgcolor="#b6dbff"><td>', $txt['ban_triggers'], '</td></tr>
+			<tr><td>
+				<input type="checkbox" name="ban_suggestion[]" value="main_ip" class="check" /> <b>', $txt['wireless_ban_ip'], ':</b><br />
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="20" />
+			</td></tr>';
+
+		if (empty($modSettings['disableHostnameLookup']))
+			echo '
+			<tr><td>
+				<input type="checkbox" name="ban_suggestion[]" value="hostname" class="check" /> <b>', $txt['wireless_ban_hostname'], ':</b><br />
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="20" />
+			</td></tr>';
+
+		echo '
+			<tr><td>
+				<input type="checkbox" name="ban_suggestion[]" value="email" class="check" /> <b>', $txt['wireless_ban_email'], ':</b><br />
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="20" />
+			</td></tr>
+			<tr><td>
+				<input type="checkbox" name="ban_suggestion[]" value="user" class="check" /> <b>', $txt['ban_on_username'], ':</b><br />';
+
+		if (empty($context['ban_suggestions']['member']['id']))
+			echo '
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="user" value="" size="20" />';
+		else
+			echo '
+				&nbsp;&nbsp;&nbsp;&nbsp;', $context['ban_suggestions']['member']['name'], '
+				<input type="hidden" name="bannedUser" value="', $context['ban_suggestions']['member']['id'], '" />';
+
+		echo '
+			</td></tr>';
+	}
+
+	echo '
+			<tr><td><input type="submit" name="', $context['ban']['is_new'] ? 'add_ban' : 'modify_ban', '" value="', $context['ban']['is_new'] ? $txt['ban_add'] : $txt['ban_modify'], '" /></td></tr>
+			<tr bgcolor="#b6dbff"><td>', $txt['wireless_additional_info'], '</td></tr>
+			<tr><td><a href="', $scripturl, '?imode">', $txt['wireless_error_home'], '.</a></td></tr>';
+
+	echo '
+		</table>
+		<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
+		<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
+}
+
 function template_imode_below()
 {
 	global $context, $settings, $options;
@@ -695,7 +828,7 @@ function template_wap2_display()
 		echo $message['first_new'] ? '
 		<a name="new"></a>' : '', '
 		<p class="windowbg', $alternate ? '' : '2', '">
-			<b>', $message['member']['name'], '</b>:
+			', $context['wireless_moderate'] && $message['member']['id'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';wap2">' . $message['member']['name'] . '</a>' : '<b>' . $message['member']['name'] . '</b>', ':
 			', ((empty($context['wireless_more']) && $message['can_modify']) || !empty($context['wireless_moderate']) ? '[<a href="' . $scripturl . '?action=post;msg=' . $message['id'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';sesc=' . $context['session_id'] . ';wap2">' . $txt['wireless_display_edit'] . '</a>]' : ''), '<br />
 			', $wireless_message, '
 		</p>';
@@ -967,6 +1100,126 @@ function template_wap2_error()
 		<p class="catbg">', $context['error_title'], '</p>
 		<p class="windowbg">', $context['error_message'], '</p>
 		<p class="windowbg">[0] <a href="', $scripturl, '?wap2" accesskey="0">', $txt['wireless_error_home'], '</a></p>';
+}
+
+function template_wap2_profile()
+{
+	global $context, $settings, $options, $scripturl, $board, $txt;
+
+	echo '
+		<p class="catbg">', $txt['summary'], ' - ', $context['member']['name'], '</p>
+		<p class="windowbg"><b>', $txt['name'], ':</b> ', $context['member']['name'], '</p>
+		<p class="windowbg"><b>', $txt['position'], ': </b>', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</p>
+		<p class="windowbg"><b>', $txt['lastLoggedIn'], ':</b> ', $context['member']['last_login'], '</p>';
+
+	if (!empty($context['member']['bans']))
+	{
+		echo '
+		<p class="titlebg"><b>', $txt['user_banned_by_following'], ':</b></p>';
+
+		foreach ($context['member']['bans'] as $ban)
+			echo '
+		<p class="windowbg">', $ban['explanation'], '</p>';
+
+	}
+
+	echo '
+
+		<p class="titlebg">', $txt['additional_info'], '</p>';
+
+	if (!$context['user']['is_owner'] && $context['can_send_pm'])
+		echo '
+		<p class="windowbg"><a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], ';wap2">', $txt['wireless_profile_pm'], '.</a></p>';
+
+	if (!$context['user']['is_owner'] && $context['can_edit_ban'])
+		echo '
+		<p class="windowbg"><a href="', $scripturl, '?action=admin;area=ban;sa=add;u=', $context['id_member'], ';wap2">', $txt['profileBanUser'], '.</a></p>';
+
+	echo '
+		<p class="windowbg"><a href="', $scripturl, '?wap2">', $txt['wireless_error_home'], '.</a></p>';
+
+}
+
+function template_wap2_ban_edit()
+{
+	global $context, $settings, $options, $scripturl, $board, $txt;
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=ban;sa=add;wap2" method="post">
+		<p class="catbg">', $context['ban']['is_new'] ? $txt['ban_add_new'] : $txt['ban_edit'] . ' \'' . $context['ban']['name'] . '\'', '</p>
+		<p class="windowbg">
+			<b>', $txt['ban_name'], ': </b>
+			<input type="text" name="ban_name" value="', $context['ban']['name'], '" size="20" />
+		</p>
+		<p class="windowbg">
+			<b>', $txt['ban_expiration'], ': </b><br />
+			<input type="radio" name="expiration" value="never" ', $context['ban']['expiration']['status'] == 'never' ? ' checked="checked"' : '', ' class="check" /> ', $txt['never'], '<br />
+			<input type="radio" name="expiration" value="one_day" ', $context['ban']['expiration']['status'] == 'still_active_but_we_re_counting_the_days' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_will_expire_within'], ' <input type="text" name="expire_date" size="3" value="', $context['ban']['expiration']['days'], '" /> ', $txt['ban_days'], '<br />
+			<input type="radio" name="expiration" value="expired" ', $context['ban']['expiration']['status'] == 'expired' ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_expired'], '<br />
+		</p>
+		<p class="windowbg">
+			<b>', $txt['ban_reason'], ': </b>
+			<input type="text" name="reason" value="', $context['ban']['reason'], '" size="20" />
+		</p>
+		<p class="windowbg">
+			<b>', $txt['ban_notes'], ': </b><br />
+			<textarea name="notes" cols="20" rows="3">', $context['ban']['notes'], '</textarea>
+		</p>
+		<p class="windowbg">
+			<b>', $txt['ban_restriction'], ': </b><br />
+			<input type="checkbox" name="full_ban" value="1"', $context['ban']['cannot']['access'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_full_ban'], '<br />
+			<input type="checkbox" name="cannot_post" value="1"', $context['ban']['cannot']['post'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_post'], '<br />
+			<input type="checkbox" name="cannot_register" value="1"', $context['ban']['cannot']['register'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_register'], '<br />
+			<input type="checkbox" name="cannot_login" value="1"', $context['ban']['cannot']['login'] ? ' checked="checked"' : '', ' class="check" /> ', $txt['ban_cannot_login'], '
+		</p>';
+
+	if (!empty($context['ban_suggestions']))
+	{
+		echo '
+		<p class="titlebg">', $txt['ban_triggers'], '</p>
+		<p class="windowbg">
+			<input type="checkbox" name="ban_suggestion[]" value="main_ip" class="check" /> <b>', $txt['wireless_ban_ip'], ':</b><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="main_ip" value="', $context['ban_suggestions']['main_ip'], '" size="20" />
+		</p>';
+
+		if (empty($modSettings['disableHostnameLookup']))
+			echo '
+		<p class="windowbg">
+			<input type="checkbox" name="ban_suggestion[]" value="hostname" class="check" /> <b>', $txt['wireless_ban_hostname'], ':</b><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="hostname" value="', $context['ban_suggestions']['hostname'], '" size="20" />
+		<p>';
+
+		echo '
+		<p class="windowbg">
+			<input type="checkbox" name="ban_suggestion[]" value="email" class="check" /> <b>', $txt['wireless_ban_email'], ':</b><br />
+			&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="email" value="', $context['ban_suggestions']['email'], '" size="20" />
+		</p>
+		<p class="windowbg">
+			<input type="checkbox" name="ban_suggestion[]" value="user" class="check" /> <b>', $txt['ban_on_username'], ':</b><br />';
+
+		if (empty($context['ban_suggestions']['member']['id']))
+			echo '
+			&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="user" value="" size="20" />';
+		else
+			echo '
+			&nbsp;&nbsp;&nbsp;&nbsp;', $context['ban_suggestions']['member']['name'], '
+			<input type="hidden" name="bannedUser" value="', $context['ban_suggestions']['member']['id'], '" />';
+
+		echo '
+		</p>';
+	}
+
+	echo '
+
+		<p class="windowbg"><input type="submit" name="', $context['ban']['is_new'] ? 'add_ban' : 'modify_ban', '" value="', $context['ban']['is_new'] ? $txt['ban_add'] : $txt['ban_modify'], '" /></p>
+		<p class="titlebg">', $txt['wireless_additional_info'], '</p>
+		<p class="windowbg"><a href="', $scripturl, '?wap2">', $txt['wireless_error_home'], '.</a></p>';
+
+	echo '
+		<input type="hidden" name="old_expire" value="', $context['ban']['expiration']['days'], '" />
+		<input type="hidden" name="bg" value="', $context['ban']['id'], '" />
+		<input type="hidden" name="sc" value="', $context['session_id'], '" />
+	</form>';
 }
 
 function template_wap2_below()

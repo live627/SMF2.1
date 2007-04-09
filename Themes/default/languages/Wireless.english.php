@@ -38,4 +38,10 @@ $txt['wireless_display_unsticky'] = 'Un-Sticky';
 $txt['wireless_display_lock'] = 'Lock';
 $txt['wireless_display_unlock'] = 'Unlock';
 
+$txt['wireless_profile_pm'] = 'Send Personal Message';
+$txt['wireless_ban_ip'] = 'Ban on IP';
+$txt['wireless_ban_hostname'] = 'Ban on Hostname';
+$txt['wireless_ban_email'] = 'Ban on Email';
+$txt['wireless_additional_info'] = 'Additional Information';
+
 ?>
