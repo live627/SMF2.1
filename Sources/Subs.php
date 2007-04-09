@@ -3511,7 +3511,7 @@ function setupMenuContext()
 					),
 					'errorlog' => array(
 						'title' => $txt['errlog'],
-						'href' => $scripturl . '?action=admin;area=errorlog;sesc=' . $context['session_id'],
+						'href' => $scripturl . '?action=admin;area=errorlog;desc;sesc=' . $context['session_id'],
 						'show' => allowedTo('admin_forum'),
 					),
 					'permissions' => array(
@@ -3595,7 +3595,7 @@ function setupMenuContext()
 					'view' => array(
 						'title' => $txt['calendar_menu'],
 						'href' => $scripturl . '?action=calendar',
-						'show' => true,
+						'show' => allowedTo('calendar_post'),
 					),
 					'post' => array(
 						'title' => $txt['calendar_post_event'],

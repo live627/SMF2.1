@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2707 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2708 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -17,6 +17,8 @@ April 2007
  ! mktree could potentially get itself into a loop. (Subs-Package.php)
  ! Allow users to override wap detection if they wish. (index.php)
  + It is now possible to ban users using wireless mode. (Profile.php, ManageBans.php, Wireless template, Wireless language files)
+ ! Don't show the calendar submenu if the user can't post an event. (Subs.php)
+ ! Changed to the link the submenu to sort the errorlog in desc order. (Subs.php)
 
 
 March 2007
