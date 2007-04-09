@@ -33,14 +33,10 @@ $txt['delete_list'] = 'Delete Mod List';
 $txt['php_safe_mode'] = 'Sorry, you server has PHP set to SAFE MODE.  This feature is not compatible with SAFE MODE.  Sorry.';
 $txt['lets_try_anyway'] = 'Let me try anyway.';
 
-$txt['download_packages'] = 'Download Packages';
-$txt['installed_packages'] = 'Installed Packages';
-$txt['package_settings'] = 'Options';
 $txt['package_manager_desc'] = 'From the package manager you can download and install modifications to your forum through an easy to use interface.';
 $txt['installed_packages_desc'] = 'You can use the interface below to view those packages currently installed on the forum, and remove the ones you no longer require.';
 $txt['download_packages_desc'] = 'From this section you can choose to either download new packages from package servers, or upload a package file directly to the forum.';
 
-$txt['browse_packages'] = 'Browse Packages';
 $txt['create_package'] = 'Create a New Package';
 $txt['download_new_package'] = 'Download New Packages';
 $txt['view_and_remove'] = 'View and Remove Installed Packages';

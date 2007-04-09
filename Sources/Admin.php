@@ -120,6 +120,12 @@ function AdminMain()
 					'function' => 'Packages',
 					'permission' => array('edit_news', 'send_mail', 'admin_forum'),
 					'icon' => 'packages.gif',
+					'subsections' => array(
+						'browse' => array($txt['browse_packages']),
+						'packageget' => array($txt['download_packages'], 'url' => $scripturl . '?action=admin;area=packages;get'),
+						'installed' => array($txt['installed_packages']),
+						'options' => array($txt['package_settings']),
+					),
 				),
 				'cleanperms' => array(
 					'function' => 'CleanupPermissions',
@@ -179,6 +185,12 @@ function AdminMain()
 					'function' => 'ThemesMain',
 					'custom_url' => $scripturl . '?action=admin;area=theme;sa=settings;th=' . $settings['theme_id'],
 					'icon' => 'current_theme.gif',
+					'subsections' => array(
+						'admin' => array($txt['themeadmin_admin_title']),
+						'list' => array($txt['themeadmin_list_title']),
+						'reset' => array($txt['themeadmin_reset_title']),
+						'edit' => array($txt['themeadmin_edit_title']),
+					),
 				),
 				'theme' => array(
 					'label' => $txt['theme_admin'],
@@ -186,6 +198,12 @@ function AdminMain()
 					'function' => 'ThemesMain',
 					'custom_url' => $scripturl . '?action=admin;area=theme;sa=admin',
 					'icon' => 'themes.gif',
+					'subsections' => array(
+						'admin' => array($txt['themeadmin_admin_title']),
+						'list' => array($txt['themeadmin_list_title']),
+						'reset' => array($txt['themeadmin_reset_title']),
+						'edit' => array($txt['themeadmin_edit_title']),
+					),
 				),
 			),
 		),
@@ -256,6 +274,12 @@ function AdminMain()
 					'file' => 'ManageAttachments.php',
 					'function' => 'ManageAttachments',
 					'permission' => array('manage_attachments'),
+					'subsections' => array(
+						'browse' => array($txt['attachment_manager_browse']),
+						'attachments' => array($txt['attachment_manager_settings']),
+						'avatars' => array($txt['attachment_manager_avatar_settings']),
+						'maintenance' => array($txt['attachment_manager_maintenance']),
+					),
 				),
 			),
 		),
@@ -268,6 +292,10 @@ function AdminMain()
 					'file' => 'ManageMembers.php',
 					'function' => 'ViewMembers',
 					'permission' => array('moderate_forum'),
+					'subsections' => array(
+						'viewmembers' => array($txt['view_all_members']),
+						'search' => array($txt['mlist_search']),
+					),
 				),
 				'membergroups' => array(
 					'label' => $txt['admin_groups'],
@@ -296,6 +324,12 @@ function AdminMain()
 					'file' => 'ManageRegistration.php',
 					'function' => 'RegCenter',
 					'permission' => array('admin_forum', 'moderate_forum'),
+					'subsections' => array(
+						'register' => array($txt['admin_browse_register_new'], 'moderate_forum'),
+						'agreement' => array($txt['registration_agreement'], 'admin_forum'),
+						'reservednames' => array($txt['admin_reserved_set'], 'admin_forum'),
+						'settings' => array($txt['settings'], 'admin_forum'),
+					),
 				),
 				'ban' => array(
 					'label' => $txt['ban_title'],
@@ -370,6 +404,9 @@ function AdminMain()
 	// Actually create the menu!
 	$admin_include_data = createMenu($admin_areas, $menuOptions);
 	unset($admin_areas);
+
+	// Make a note of the Unique ID for this menu.
+	$context['admin_menu_id'] = $context['max_menu_id'];
 
 	// Nothing valid?
 	if ($admin_include_data == false)

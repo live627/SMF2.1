@@ -60,7 +60,7 @@ function UnapprovedPosts()
 {
 	global $txt, $scripturl, $context, $db_prefix, $user_info, $sourcedir, $smfFunc;
 
-	$context['current_view'] = isset($_GET['from']) && $_GET['from'] == 'topics' ? 'topics' : 'replies';
+	$context['current_view'] = isset($_GET['sa']) && $_GET['sa'] == 'topics' ? 'topics' : 'replies';
 	$context['page_title'] = $txt['mc_unapproved_posts'];
 
 	// Work out what boards we can work in!
@@ -217,12 +217,16 @@ function UnapprovedPosts()
 			),
 			'topics' => array(
 				'title' => $txt['mc_unapproved_topics'] . ' (' . $context['total_unapproved_topics'] . ')',
-				'href' => $scripturl . '?action=moderate;area=postmod;sa=posts;from=topics',
+				'href' => $scripturl . '?action=moderate;area=postmod;sa=topics',
 				'is_selected' => $context['current_view'] == 'topics',
 				'is_last' => true,
 			)
 		)
 	);
+
+	// Update the tabs with the correct number of posts.
+	$context['menu_data_' . $context['moderation_menu_id']]['sections']['posts']['areas']['postmod']['subsections']['posts']['label'] .= ' (' . $context['total_unapproved_posts'] . ')';
+	$context['menu_data_' . $context['moderation_menu_id']]['sections']['posts']['areas']['postmod']['subsections']['topics']['label'] .= ' (' . $context['total_unapproved_posts'] . ')';
 
 	// Get all unapproved posts.
 	$request = $smfFunc['db_query']('', "

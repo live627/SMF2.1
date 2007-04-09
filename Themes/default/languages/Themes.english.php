@@ -87,13 +87,9 @@ $txt['theme_options_title'] = 'Change or reset default options';
 
 $txt['themeadmin_title'] = 'Themes and Layout Settings';
 $txt['themeadmin_description'] = 'Here you can modify the settings for your themes, update theme selections, reset member options, and the like.';
-$txt['themeadmin_admin_title'] = 'Manage and Install';
 $txt['themeadmin_admin_desc'] = 'This page allows you to change the default theme, reset members to all use a certain theme, and choose other settings related to theme selection.  You are also able to install themes from here.<br /><br />Don\'t forget to look at the theme settings for your themes for layout options.';
-$txt['themeadmin_list_title'] = 'Themes Settings';
 $txt['themeadmin_list_desc'] = 'From here, you can view the list of themes you currently have installed, change their paths and settings, and uninstall them.';
-$txt['themeadmin_reset_title'] = 'Member Options';
 $txt['themeadmin_reset_desc'] = 'Below you will see an interface to change the current theme-specific options for all your members.  You will only see those themes that have their own set of settings.';
-$txt['themeadmin_edit_title'] = 'Modify Themes';
 $txt['themeadmin_edit_desc'] = 'Modify the stylesheet and source code of your installed themes.  Please consult the documentation for more information.';
 
 $txt['themeadmin_list_heading'] = 'Theme Settings Overview';

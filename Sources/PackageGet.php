@@ -88,6 +88,9 @@ function PackageGet()
 	else
 		$context['sub_action'] = 'servers';
 
+	// We need to force the "Download" tab as selected.
+	$context['menu_data_' . $context['admin_menu_id']]['current_subsection'] = 'packageget';
+
 	// Now create the tabs for the template.
 	$context['admin_tabs'] = array(
 		'title' => &$txt['package_manager'],

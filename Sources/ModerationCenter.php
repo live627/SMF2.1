@@ -75,6 +75,10 @@ function ModerationMain($dont_call = false)
 				'userwatch' => array(
 					'label' => $txt['mc_watched_users_title'],
 					'function' => 'ViewWatchedUsers',
+					'subsections' => array(
+						'member' => array($txt['mc_watched_users_member']),
+						'post' => array($txt['mc_watched_users_post']),
+					),
 				),
 			),
 		),
@@ -86,6 +90,10 @@ function ModerationMain($dont_call = false)
 					'file' => 'PostModeration.php',
 					'function' => 'PostModerationMain',
 					'custom_url' => $scripturl . '?action=moderate;area=postmod;sa=posts',
+					'subsections' => array(
+						'posts' => array($txt['mc_unapproved_replies']),
+						'topics' => array($txt['mc_unapproved_topics']),
+					),
 				),
 				'attachmod' => array(
 					'label' => $txt['mc_unapproved_attachments'],
@@ -97,6 +105,10 @@ function ModerationMain($dont_call = false)
 					'label' => $txt['mc_reported_posts'],
 					'file' => 'ModerationCenter.php',
 					'function' => 'ReportedPosts',
+					'subsections' => array(
+						'open' => array($txt['mc_reportedp_open']),
+						'closed' => array($txt['mc_reportedp_closed']),
+					),
 				),
 			),
 		),
@@ -132,6 +144,9 @@ function ModerationMain($dont_call = false)
 	// I don't know where we're going - I don't know where we've been...
 	$mod_include_data = createMenu($moderation_areas);
 	unset($moderation_areas);
+
+	// Retain the ID information incase required by a subaction.
+	$context['moderation_menu_id'] = $context['max_menu_id'];
 
 	// We got something - didn't we? DIDN'T WE!
 	if ($mod_include_data == false)
@@ -418,7 +433,7 @@ function ReportedPosts()
 	$context['sub_template'] = 'reported_posts';
 
 	// Are we viewing open or closed reports?
-	$context['view_closed'] = isset($_GET['c']) ? 1 : 0;
+	$context['view_closed'] = isset($_GET['sa']) && $_GET['sa'] == 'closed' ? 1 : 0;
 
 	// Put the open and closed options into tabs, because we can...
 	$context['admin_tabs'] = array(
@@ -426,14 +441,14 @@ function ReportedPosts()
 		'help' => '',
 		'description' => $txt['mc_reported_posts_desc'],
 		'tabs' => array(
-			'browse' => array(
+			'open' => array(
 				'title' => $txt['mc_reportedp_open'],
 				'href' => $scripturl . '?action=moderate;area=reports',
 				'is_selected' => !$context['view_closed'],
 			),
-			'settings' => array(
+			'closed' => array(
 				'title' => $txt['mc_reportedp_closed'],
-				'href' => $scripturl . '?action=moderate;area=reports;c=1',
+				'href' => $scripturl . '?action=moderate;area=reports;sa=closed',
 				'is_last' => true,
 				'is_selected' => $context['view_closed'],
 			),
@@ -490,7 +505,7 @@ function ReportedPosts()
 	$smfFunc['db_free_result']($request);
 
 	// So, that means we can page index, yes?
-	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=reports' . ($context['view_closed'] ? ';c=1' : ''), $_GET['start'], $context['total_reports'], 10);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=reports' . ($context['view_closed'] ? ';sa=closed' : ''), $_GET['start'], $context['total_reports'], 10);
 	$context['start'] = $_GET['start'];
 
 	// By George, that means we in a position to get the reports, golly good.
@@ -730,7 +745,7 @@ function ViewWatchedUsers()
 
 	// Some important context!
 	$context['page_title'] = $txt['mc_watched_users_title'];
-	$context['view_posts'] = isset($_GET['post']);
+	$context['view_posts'] = isset($_GET['sa']) && $_GET['sa'] == 'post';
 	$context['sub_template'] = $context['view_posts'] ? 'user_watches_posts' : 'user_watches_member';
 
 	loadTemplate('ModerationCenter');
@@ -752,7 +767,7 @@ function ViewWatchedUsers()
 			),
 			'post' => array(
 				'title' => $txt['mc_watched_users_post'],
-				'href' => $scripturl . '?action=moderate;area=userwatch;post',
+				'href' => $scripturl . '?action=moderate;area=userwatch;sa=post',
 				'is_last' => true,
 				'is_selected' => $context['view_posts'],
 			),
@@ -815,7 +830,7 @@ function ViewWatchedUsers()
 	// Do the page index.
 	$perPage = (int) $modSettings['defaultMaxMessages'];
 	$context['start'] = (int) $_REQUEST['start'];
-	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=userwatch' . $context['view_posts'] ? ';post' : '', $context['start'], $context['total_entries'], $perPage);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=userwatch' . $context['view_posts'] ? ';sa=post' : '', $context['start'], $context['total_entries'], $perPage);
 
 	$context['can_issue_warnings'] = allowedTo('issue_warning');
 

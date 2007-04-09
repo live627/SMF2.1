@@ -720,4 +720,14 @@ $txt['membergroups_edit_groups'] = 'Edit Membergroups';
 $txt['permissions_groups'] = 'Permissions by Membergroup';
 $txt['permissions_boards'] = 'Permissions by Board';
 
+$txt['browse_packages'] = 'Browse Packages';
+$txt['download_packages'] = 'Download Packages';
+$txt['installed_packages'] = 'Installed Packages';
+$txt['package_settings'] = 'Options';
+$txt['themeadmin_admin_title'] = 'Manage and Install';
+$txt['themeadmin_list_title'] = 'Themes Settings';
+$txt['themeadmin_reset_title'] = 'Member Options';
+$txt['themeadmin_edit_title'] = 'Modify Themes';
+$txt['admin_browse_register_new'] = 'Register new member';
+
 ?>

@@ -136,6 +136,10 @@ function createMenu($menuData, $menuOptions = array())
 							if (empty($sub[1]) || allowedTo($sub[1]))
 							{
 								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
+								// Custom URL?
+								if (isset($sub['url']))
+									$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['url'] = $sub['url'];
+
 								// A bit complicated - but is this set?
 								if ($menu_context['current_area'] == $area_id)
 								{

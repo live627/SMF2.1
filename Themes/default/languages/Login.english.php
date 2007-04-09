@@ -119,8 +119,6 @@ $txt['admin_register_group_desc'] = 'Primary membergroup new member will belong 
 $txt['admin_register_group_none'] = '(no primary membergroup)';
 $txt['admin_register_done'] = 'Member %s has been registered successfully!';
 
-$txt['admin_browse_register_new'] = 'Register new member';
-
 $txt['coppa_title'] = 'Age Restricted Forum';
 $txt['coppa_after_registration'] = 'Thank you for registering with ' . $context['forum_name'] . '.<br /><br />Because you fall under the age of {MINIMUM_AGE}, it is a legal requirement
 	to obtain your parent or guardian\'s permission before you may begin to use your account.  To arrange for account activation please print off the form below:';

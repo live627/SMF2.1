@@ -273,7 +273,7 @@ function template_reported_posts()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<form action="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';c=1' : '', ';start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $context['view_closed'] ? $txt['mc_reportedp_closed'] : $txt['mc_reportedp_open'], '</td>
@@ -299,8 +299,8 @@ function template_reported_posts()
 							<b><a href="', $report['report_href'], '">', $report['subject'], '</a></b> ', $txt['mc_reportedp_by'], ' <b>', $report['author']['link'], '</b>
 						</div>
 						<div style="float: right">
-							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';c=1' : '', ';ignore=', !$report['ignore'], ';rid=', $report['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '" ', !$report['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $report['ignore'] ? $unignore_button : $ignore_button, '</a>
-							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';c=1' : '', ';close=', !$report['closed'], ';rid=', $report['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '">', $close_button, '</a>
+							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';ignore=', !$report['ignore'], ';rid=', $report['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '" ', !$report['ignore'] ? 'onclick="return confirm(\'' . $txt['mc_reportedp_ignore_confirm'] . '\');"' : '', '>', $report['ignore'] ? $unignore_button : $ignore_button, '</a>
+							<a href="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';close=', !$report['closed'], ';rid=', $report['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '">', $close_button, '</a>
 							', !$context['view_closed'] ? '<input type="checkbox" name="close[]" value="' . $report['id'] . '" class="check" />' : '', '
 						</div>
 					</div><br />
@@ -351,7 +351,7 @@ function template_unapproved_posts()
 
 	// Just a big table of it all really...
 	echo '
-	<form action="', $scripturl, '?action=moderate;area=postmod;sa=posts;start=', $context['start'], ';from=', $context['current_view'], '" method="post" accept-charset="', $context['character_set'], '">
+	<form action="', $scripturl, '?action=moderate;area=postmod;sa=posts;start=', $context['start'], ';sa=', $context['current_view'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $txt['mc_unapproved_posts'], '</td>
@@ -405,12 +405,12 @@ function template_unapproved_posts()
 						<tr>
 							<td colspan="3" class="windowbg2" align="', !$context['right_to_left'] ? 'right' : 'left', '"><span class="middletext">
 
-					<a href="', $scripturl, '?action=moderate;area=postmod;sa=posts;from=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';approve=', $item['id'], '">', $approve_button, '</a>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=posts;sa=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';approve=', $item['id'], '">', $approve_button, '</a>';
 
 			if ($item['can_delete'])
 				echo '
 					', $context['menu_separator'], '
-					<a href="', $scripturl, '?action=moderate;area=postmod;sa=posts;from=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';delete=', $item['id'], '">', $remove_button, '</a>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=posts;sa=', $context['current_view'], ';start=', $context['start'], ';sesc=', $context['session_id'], ';delete=', $item['id'], '">', $remove_button, '</a>';
 
 			echo '
 					<input type="checkbox" name="item[]" value="', $item['id'], '" checked="checked" class="check" /> ';
@@ -676,7 +676,7 @@ function template_user_watches_posts()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<form action="', $scripturl, '?action=moderate;area=userwatch;post;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['mc_watched_users_delete_posts'], '\');">
+	<form action="', $scripturl, '?action=moderate;area=userwatch;sa=post;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['mc_watched_users_delete_posts'], '\');">
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $txt['mc_watched_users_title'], ' - ', $txt['mc_watched_users_member'], '</td>
@@ -700,7 +700,7 @@ function template_user_watches_posts()
 							<b><a href="', $scripturl, '?topic=', $post['id_topic'], '.', $post['id'], '#msg', $post['id'], '">', $post['subject'], '</a></b> ', $txt['mc_reportedp_by'], ' <b>', $post['author']['link'], '</b>
 						</div>
 						<div style="float: right">
-							<a href="', $scripturl, '?action=moderate;area=userwatch;post;delete=', $post['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'' . $txt['mc_watched_users_delete_post'] . '\');">', $delete_button, '</a>
+							<a href="', $scripturl, '?action=moderate;area=userwatch;sa=post;delete=', $post['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'' . $txt['mc_watched_users_delete_post'] . '\');">', $delete_button, '</a>
 							<input type="checkbox" name="delete[]" value="', $post['id'], '" class="check" />
 						</div>
 					</div><br />
