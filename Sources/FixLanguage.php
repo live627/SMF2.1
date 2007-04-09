@@ -778,7 +778,6 @@ $txtChanges = array(
 		475 => 'my_own_pic',
 		479 => 'date_format',
 		486 => 'time_format',
-		487 => 'time_offset_between',
 		518 => 'display_name_desc',
 		519 => 'personal_time_offset',
 		563 => 'dob',

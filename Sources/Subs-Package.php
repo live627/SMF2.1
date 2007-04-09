@@ -1196,8 +1196,8 @@ function mktree($strPath, $mode)
 		else
 			return false;
 	}
-
-	if (!mktree(dirname($strPath), $mode))
+	// Is this an invalid path and/or we can't make the directory?
+	if ($strPath == dirname($strPath) || !mktree(dirname($strPath), $mode))
 		return false;
 
 	if (!is_writable(dirname($strPath)) && $mode !== false)
