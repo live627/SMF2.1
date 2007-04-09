@@ -24,7 +24,7 @@ function template_main()
 		</table>';
 
 	// Loop through all child boards.
-	if (isset($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
+	if (!empty($context['boards']) && (!empty($options['show_children']) || $context['start'] == 0))
 	{
 		echo '
 		<div class="tborder" style="padding: 1px; margin-bottom: 2ex;"><table border="0" width="100%" cellspacing="1" cellpadding="5">
