@@ -27,6 +27,9 @@ $GLOBALS['db_script_version'] = '2-0';
 
 $GLOBALS['required_php_version'] = '4.1.0';
 
+// Don't have PHP support, do you?
+// ><html dir="ltr"><head><title>Error!</title></head><body>Sorry, this installer requires PHP!<div style="display: none;">
+
 // Database info.
 $databases = array(
 	'mysql' => array(
@@ -64,9 +67,6 @@ $databases = array(
 // Initialize everything and load the language files.
 initialize_inputs();
 load_lang_file();
-
-// Don't have PHP support, do you?
-// ><html dir="ltr"><head><title>Error!</title></head><body>Sorry, this installer requires PHP!<div style="display: none;">
 
 header('Content-Type: text/html; charset=' . (isset($txt['lang_character_set']) ? $txt['lang_character_set'] : 'ISO-8859-1'));
 

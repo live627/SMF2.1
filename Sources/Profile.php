@@ -120,9 +120,6 @@ function ModifyProfile($post_errors = array())
 		loadLanguage('Profile');
 	loadTemplate('Profile');
 
-	// Set the profile layer to be displayed.
-	$context['template_layers'][] = 'profile';
-
 	// Did we get the user by name...
 	if (isset($_REQUEST['user']))
 		$memberResult = loadMemberData($_REQUEST['user'], true, 'profile');
@@ -371,6 +368,9 @@ function ModifyProfile($post_errors = array())
 	// Make sure that the subaction function does exist!
 	if (!function_exists($_REQUEST['sa']))
 		fatal_lang_error('no_access');
+
+	// Set the profile layer to be displayed - now we've done the security stuff.
+	$context['template_layers'][] = 'profile';
 
 	// These will get populated soon!
 	$post_errors = array();
