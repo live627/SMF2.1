@@ -633,8 +633,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		if (!curElement || !buttonControls[curElement.code])
 			return false;
 
-		setFocus();
-
 		// Are handling a hover?
 		if (ev.type == 'mouseover' || ev.type == 'mouseout')
 		{
@@ -643,6 +641,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		}
 		else if (ev.type == 'click')
 		{
+			setFocus();
+
 			// An special SMF function?
 			if (smfExec[curElement.code])
 			{
