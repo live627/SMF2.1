@@ -83,15 +83,39 @@ if (isset($_GET['scheduled']))
 	AutoTask();
 }
 
-// Determine if this is using WAP, WAP2, or imode.  Technically, we should check that wap comes before application/xhtml or text/html, but this doesn't work in practice as much as it should.
-if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/vnd.wap.xhtml+xml') !== false)
-	$_REQUEST['wap2'] = 1;
-elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'text/vnd.wap.wml') !== false)
+// Check if compressed output is enabled, supported, and not already being done.
+if (!empty($modSettings['enableCompressedOutput']) && !headers_sent() && ob_get_length() == 0)
 {
-	if (strpos($_SERVER['HTTP_USER_AGENT'], 'DoCoMo/') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'portalmmm/') !== false)
-		$_REQUEST['imode'] = 1;
+	// If zlib is being used, turn off output compression.
+	if (@ini_get('zlib.output_compression') == '1' || @ini_get('output_handler') == 'ob_gzhandler' || @version_compare(PHP_VERSION, '4.2.0') == -1)
+		$modSettings['enableCompressedOutput'] = '0';
 	else
-		$_REQUEST['wap'] = 1;
+		ob_start('ob_gzhandler');
+}
+// This makes it so headers can be sent!
+if (empty($modSettings['enableCompressedOutput']))
+	ob_start();
+
+// Register an error handler.
+set_error_handler('error_handler');
+
+// Start the session. (assuming it hasn't already been.)
+loadSession();
+
+// Determine if this is using WAP, WAP2, or imode.  Technically, we should check that wap comes before application/xhtml or text/html, but this doesn't work in practice as much as it should.
+if (isset($_REQUEST['nowap']))
+	$_SESSION['nowap'] = true;
+elseif (!isset($_SESSION['nowap']))
+{
+	if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/vnd.wap.xhtml+xml') !== false)
+		$_REQUEST['wap2'] = 1;
+	elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'text/vnd.wap.wml') !== false)
+	{
+		if (strpos($_SERVER['HTTP_USER_AGENT'], 'DoCoMo/') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'portalmmm/') !== false)
+			$_REQUEST['imode'] = 1;
+		else
+			$_REQUEST['wap'] = 1;
+	}
 }
 
 if (!defined('WIRELESS'))
@@ -112,25 +136,6 @@ if (WIRELESS)
 	if (WIRELESS_PROTOCOL == 'wap')
 		header('Content-Type: text/vnd.wap.wml');
 }
-
-// Check if compressed output is enabled, supported, and not already being done.
-if (!empty($modSettings['enableCompressedOutput']) && !headers_sent() && ob_get_length() == 0)
-{
-	// If zlib is being used, turn off output compression.
-	if (@ini_get('zlib.output_compression') == '1' || @ini_get('output_handler') == 'ob_gzhandler' || @version_compare(PHP_VERSION, '4.2.0') == -1)
-		$modSettings['enableCompressedOutput'] = '0';
-	else
-		ob_start('ob_gzhandler');
-}
-// This makes it so headers can be sent!
-if (empty($modSettings['enableCompressedOutput']))
-	ob_start();
-
-// Register an error handler.
-set_error_handler('error_handler');
-
-// Start the session. (assuming it hasn't already been.)
-loadSession();
 
 // What function shall we execute? (done like this for memory's sake.)
 call_user_func(smf_main());
