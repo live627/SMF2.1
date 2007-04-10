@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2708 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2709 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -19,6 +19,8 @@ April 2007
  + It is now possible to ban users using wireless mode. (Profile.php, ManageBans.php, Wireless template, Wireless language files)
  ! Don't show the calendar submenu if the user can't post an event. (Subs.php)
  ! Changed to the link the submenu to sort the errorlog in desc order. (Subs.php)
+ ! The ban error wasn't being shown on themes using the new layeres. (Subs.php)
+ ! Fixed the error with posting attachments. (Subs-Post.php)
 
 
 March 2007

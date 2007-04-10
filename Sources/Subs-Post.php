@@ -1992,7 +1992,7 @@ function createAttachment(&$attachmentOptions)
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}attachments
 			(id_msg, filename, fileext, size, width, height, mime_type, approved)
-		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? "SUBSTRING('$attachmentOptions[mime_type]', 1, 20)" : '') . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
+		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? "SUBSTRING('$attachmentOptions[mime_type]', 1, 20)" : "''") . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
 	$attachmentOptions['id'] = db_insert_id("{$db_prefix}attachments", 'id_attach');
 
 	if (empty($attachmentOptions['id']))

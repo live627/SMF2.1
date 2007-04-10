@@ -3019,6 +3019,7 @@ function template_header()
 	header('Content-Type: text/' . (isset($_REQUEST['xml']) ? 'xml' : 'html') . '; charset=' . (empty($context['character_set']) ? 'ISO-8859-1' : $context['character_set']));
 
 	$checked_securityFiles = false;
+	$showed_banned = false;
 	foreach ($context['template_layers'] as $layer)
 	{
 		loadSubTemplate($layer . '_above', true);
@@ -3056,8 +3057,9 @@ function template_header()
 			}
 		}
 		// If the user is banned from posting inform them of it.
-		elseif ($layer == 'main' && isset($_SESSION['ban']['cannot_post']))
+		elseif (in_array($layer, array('main', 'body')) && isset($_SESSION['ban']['cannot_post']) && !$showed_banned)
 		{
+			$showed_banned = true;
 			echo '
 				<div class="windowbg" style="margin: 2ex; padding: 2ex; border: 2px dashed red; color: red;">
 					', sprintf($txt['you_are_post_banned'], $user_info['is_guest'] ? $txt['guest_title'] : $user_info['name']);
