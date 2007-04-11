@@ -3485,16 +3485,22 @@ function setupMenuContext()
 				'title' => $txt['home'],
 				'href' => $scripturl,
 				'show' => true,
+				'sub_buttons' => array(
+				),
 			),
 			'help' => array(
 				'title' => $txt['help'],
 				'href' => $scripturl . '?action=help',
 				'show' => true,
+				'sub_buttons' => array(
+				),
 			),
 			'search' => array(
 				'title' => $txt['search'],
 				'href' => $scripturl . '?action=search',
 				'show' => $context['allow_search'],
+				'sub_buttons' => array(
+				),
 			),
 			'admin' => array(
 				'title' => $txt['admin'],
@@ -3627,17 +3633,23 @@ function setupMenuContext()
 				'title' => $txt['login'],
 				'href' => $scripturl . '?action=login',
 				'show' => $user_info['is_guest'],
+				'sub_buttons' => array(
+				),
 			),
 			'register' => array(
 				'title' => $txt['register'],
 				'href' => $scripturl . '?action=register',
 				'show' => $user_info['is_guest'],
+				'sub_buttons' => array(
+				),
 				'is_last' => true,
 			),
 			'logout' => array(
 				'title' => $txt['logout'],
 				'href' => $scripturl . '?action=logout;sesc=' . $context['session_id'],
 				'show' => !$user_info['is_guest'],
+				'sub_buttons' => array(
+				),
 				'is_last' => true,
 			),
 		);
