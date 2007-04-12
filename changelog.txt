@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2710 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2711 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -22,6 +22,8 @@ April 2007
  ! The ban error wasn't being shown on themes using the new layers. (Subs.php)
  ! Fixed the error with posting attachments. (Subs-Post.php)
  ! Added the sub button code into all menu items so modification authors can easily add some. (Subs.php)
+ ! SSI.php didn't update some of its txt variables. (SSI.php)
+ ! Trying to do array operations on a boolean type is bad. (Subs-Menu.php)
 
 
 March 2007

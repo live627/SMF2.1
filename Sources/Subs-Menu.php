@@ -85,7 +85,7 @@ function createMenu($menuData, $menuOptions = array())
 	if (isset($menuOptions['current_area']) || isset($_GET['area']))
 		$menu_context['current_area'] = isset($menuOptions['current_area']) ? $menuOptions['current_area'] : $_GET['area'];
 
-	$include_data = false;
+	$include_data = array();
 
 	// Now setup the context correctly.
 	foreach ($menuData as $section_id => $section)

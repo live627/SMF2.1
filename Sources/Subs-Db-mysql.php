@@ -36,16 +36,6 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 {
 	global $smfFunc, $mysql_set_mode;
 
-	// Just some debugging code, make sure to remove it before release.
-	$parameters = array(
-		'server' => $db_server,
-		'name' => $db_name,
-		'user' => $db_user,
-		'pass' => $db_passwd,
-		'opts' => $db_options,
-	);
-	//echo '<pre>'; print_r($parameters); echo '</pre>';
-
 	// Map some database specific functions, only do this once.
 	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'mysql_fetch_assoc')
 		$smfFunc += array(

@@ -1231,7 +1231,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		if ($output_method == 'echo')
-			die($txt['smf_news_error2']);
+			die($txt['ssi_no_guests']);
 		else
 			return array();
 	}
@@ -1305,11 +1305,11 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 			'timestamp' => forum_time(true, $row['poster_time']),
 			'body' => $row['body'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
-			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['num_replies'] . ' ' . ($row['num_replies'] == 1 ? $txt['smf_news_1'] : $txt['smf_news_2']) . '</a>',
+			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['num_replies'] . ' ' . ($row['num_replies'] == 1 ? $txt['ssi_comment'] : $txt['ssi_comments']) . '</a>',
 			'replies' => $row['num_replies'],
 			'comment_href' => !empty($row['locked']) ? '' : $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . ';num_replies=' . $row['num_replies'],
-			'comment_link' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . ';num_replies=' . $row['num_replies'] . '">' . $txt['smf_news_3'] . '</a>',
-			'new_comment' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . '">' . $txt['smf_news_3'] . '</a>',
+			'comment_link' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . ';num_replies=' . $row['num_replies'] . '">' . $txt['ssi_write_comment'] . '</a>',
+			'new_comment' => !empty($row['locked']) ? '' : '<a href="' . $scripturl . '?action=post;topic=' . $row['id_topic'] . '.' . $row['num_replies'] . '">' . $txt['ssi_write_comment'] . '</a>',
 			'poster' => array(
 				'id' => $row['id_member'],
 				'name' => $row['poster_name'],
