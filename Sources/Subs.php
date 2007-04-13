@@ -3535,18 +3535,18 @@ function setupMenuContext()
 				'show' => $context['allow_moderation_center'],
 				'sub_buttons' => array(
 					'modlog' => array(
-						'title' => $txt['mc_unapproved_poststopics'],
+						'title' => $txt['modlog_view'],
 						'href' => $scripturl . '?action=moderate;area=modlog;sesc=' . $context['session_id'],
+						'show' => true,
+					),
+					'poststopics' => array(
+						'title' => $txt['mc_unapproved_poststopics'],
+						'href' => $scripturl . '?action=moderate;area=postmod;sa=posts;sesc=' . $context['session_id'],
 						'show' => true,
 					),
 					'attachments' => array(
 						'title' => $txt['mc_unapproved_attachments'],
 						'href' => $scripturl . '?action=moderate;area=attachmod;sa=attachments;sesc=' . $context['session_id'],
-						'show' => true,
-					),
-					'reports' => array(
-						'title' => $txt['mc_reported_posts'],
-						'href' => $scripturl . '?action=moderate;area=reports;sesc=' . $context['session_id'],
 						'show' => true,
 					),
 					'reports' => array(
