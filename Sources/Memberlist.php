@@ -294,8 +294,8 @@ function MLAll()
 			'up' => allowedTo('moderate_forum') ? 'mem.email_address DESC' : 'mem.hide_email DESC, mem.email_address DESC'
 		),
 		'website_url' => array(
-			'down' => 'LENGTH(mem.websiteURL) > 0 DESC, ISNULL(mem.websiteURL) ASC, mem.websiteURL ASC',
-			'up' => 'LENGTH(mem.websiteURL) > 0 ASC, ISNULL(mem.websiteURL) DESC, mem.websiteURL DESC'
+			'down' => 'LENGTH(mem.website_url) > 0 DESC, ISNULL(mem.website_url) ASC, mem.website_url ASC',
+			'up' => 'LENGTH(mem.website_url) > 0 ASC, ISNULL(mem.website_url) DESC, mem.website_url DESC'
 		),
 		'icq' => array(
 			'down' => 'LENGTH(mem.icq) > 0 DESC, ISNULL(mem.icq) OR mem.icq = 0 ASC, mem.icq ASC',
