@@ -108,11 +108,11 @@ function createMenu($menuData, $menuOptions = array())
 					{
 						$menu_context['current_area'] = $area_id;
 						$include_data = $area;
-     			}
+     					}
 
-     			// First time this section?
-     			if (!isset($menu_context['sections'][$section_id]))
-     				$menu_context['sections'][$section_id]['title'] = $section['title'];
+     					// First time this section?
+     					if (!isset($menu_context['sections'][$section_id]))
+     						$menu_context['sections'][$section_id]['title'] = $section['title'];
 
 					$menu_context['sections'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
 					// Does it have a custom URL?
@@ -171,7 +171,7 @@ function createMenu($menuData, $menuOptions = array())
 				// Is this the current section?
 				if ($menu_context['current_area'] == $area_id && empty($found_section))
 				{
-					// Only get one section - ever.
+					// Only do this once?
 					$found_section = true;
 
 					// Update the context if required - as we can have areas pretending to be others. ;)
@@ -179,6 +179,13 @@ function createMenu($menuData, $menuOptions = array())
 					$menu_context['current_area'] = isset($area['select']) ? $area['select'] : $area_id;
 
 					// This will be the data we return.
+					$include_data = $area;
+				}
+				// Make sure we have something incase it's an invalid area.
+				elseif (empty($found_section) && empty($include_data))
+				{
+					$menu_context['current_section'] = $section_id;
+					$menu_context['current_area'] = isset($area['select']) ? $area['select'] : $area_id;
 					$include_data = $area;
 				}
 			}
