@@ -336,7 +336,7 @@ function ModifyOtherSettings($return_config = false)
 	global $context, $scripturl, $txt, $helptxt, $sc, $modSettings;
 
 	// In later life we may move the setting definitions out of the language files, but for now it's RC2 and I can't be bothered.
-	loadLanguage('ModSettings');
+	loadLanguage('ManageSettings');
 
 	// Define the variables we want to edit.
 	$config_vars = array(
@@ -384,7 +384,7 @@ function ModifyCacheSettings($return_config = false)
 	global $context, $scripturl, $txt, $helptxt, $sc, $modSettings;
 
 	// Cache information is in here, honest.
-	loadLanguage('ModSettings');
+	loadLanguage('ManageSettings');
 
 	// Define the variables we want to edit.
 	$config_vars = array(

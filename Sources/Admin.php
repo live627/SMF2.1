@@ -155,7 +155,7 @@ function AdminMain()
 			'areas' => array(
 				'featuresettings' => array(
 					'label' => $txt['modSettings_title'],
-					'file' => 'ModSettings.php',
+					'file' => 'ManageSettings.php',
 					'function' => 'ModifyFeatureSettings',
 					'icon' => 'features.gif',
 					'subsections' => array(
@@ -752,14 +752,14 @@ function AdminSearchInternal()
 
 	// Load a lot of language files.
 	$language_files = array(
-		'Help', 'ManageMail', 'ModSettings', 'ManageCalendar', 'ManageBoards', 'ManagePermissions', 'Search',
+		'Help', 'ManageMail', 'ManageSettings', 'ManageCalendar', 'ManageBoards', 'ManagePermissions', 'Search',
 		'ManageSmileys',
 	);
 	loadLanguage(implode('+', $language_files));
 
 	// All the files we need to include.
 	$include_files = array(
-		'ModSettings', 'ManageBoards', 'ManageNews', 'ManageAttachments', 'ManageCalendar', 'ManageMail', 'ManagePermissions',
+		'ManageSettings', 'ManageBoards', 'ManageNews', 'ManageAttachments', 'ManageCalendar', 'ManageMail', 'ManagePermissions',
 		'ManagePosts', 'ManageSearch', 'ManageServer', 'ManageSmileys',
 	);
 	foreach ($include_files as $file)

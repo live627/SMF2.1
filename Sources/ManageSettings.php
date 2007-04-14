@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************
-* ModSettings.php                                                                 *
+* ManageSettings.php                                                              *
 ***********************************************************************************
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
@@ -118,7 +118,7 @@ function ModifyFeatureSettings()
 	isAllowedTo('admin_forum');
 
 	loadLanguage('Help');
-	loadLanguage('ModSettings');
+	loadLanguage('ManageSettings');
 
 	// Will need the utility functions from here.
 	require_once($sourcedir . '/ManageServer.php');

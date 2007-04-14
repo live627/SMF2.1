@@ -556,7 +556,7 @@ $txtChanges = array(
 		'icons_enable_customized' => 'setting_messageIcons_enable',
 		'icons_enable_customized_note' => 'setting_messageIcons_enable_note',
 	),
-	'ModSettings' => array(
+	'ManageSettings' => array(
 		'default_personalText' => 'default_personal_text',
 		'smf3' => 'modSettings_desc',
 		'smf34' => 'disable_polls',
