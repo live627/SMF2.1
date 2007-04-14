@@ -1429,9 +1429,19 @@ ALTER TABLE {$db_prefix}members
 ADD ignore_boards tinytext NOT NULL;
 ---#
 
+---# Purge flood control ...
+DELETE FROM {$db_prefix}log_floodcontrol;
+---#
+
 ---# Adding advanced flood control ...
 ALTER TABLE {$db_prefix}log_floodcontrol
 ADD log_type varchar(8) NOT NULL default 'post';
+---#
+
+---# Sorting out flood control keys ...
+ALTER TABLE {$db_prefix}log_floodcontrol
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (ip(16), log_type(8));
 ---#
 
 /******************************************************************************/

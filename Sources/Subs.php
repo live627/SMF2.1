@@ -1659,6 +1659,13 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 							$no_autolink_area = true;
 				}
 
+				// Don't go backwards.
+				//!!! Don't think is the real solution....
+				$lastAutoPos = isset($lastAutoPos) ? $lastAutoPos : 0;
+				if ($pos < $lastAutoPos)
+					$no_autolink_area = true;
+				$lastAutoPos = $pos;
+
 				if (!$no_autolink_area)
 				{
 					// Parse any URLs.... have to get rid of the @ problems some things cause... stupid email addresses.

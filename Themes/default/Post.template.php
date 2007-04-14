@@ -819,7 +819,6 @@ function template_postbox(&$message)
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/editor.js"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_smileys_url = \'', $settings['smileys_url'], '\';
-		var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 'true' : 'false', ');
 	// ]]></script>';
 
 	// Assuming BBC code is enabled then print the buttons and some javascript to handle it.
@@ -1010,7 +1009,8 @@ function template_postbox(&$message)
 
 	// Now it's all drawn out we'll actually setup the box.
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+				var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 'true' : 'false', ', \'', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');';
 
 	// Create the controls.
 	if (!empty($context['bbc_tags']))
@@ -1062,7 +1062,6 @@ function template_postbox(&$message)
 		editorHandle', $context['post_box_name'], '.initSelect(\'face\');
 		editorHandle', $context['post_box_name'], '.initSelect(\'size\');
 		editorHandle', $context['post_box_name'], '.initSelect(\'color\');
-		editorHandle', $context['post_box_name'], '.init(\'', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');
 		smf_editorArray[smf_editorArray.length] = editorHandle', $context['post_box_name'], ';
 	// ]]></script>';
 }

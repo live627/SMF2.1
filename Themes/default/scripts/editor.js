@@ -1,9 +1,14 @@
-function smfEditor(sessionID, uniqueId, wysiwyg)
+function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 {
 	// Create some links to the editor object.
 	this.uid = uniqueId;
 	this.textHandle = false;
-	this.currentText = '';
+	this.currentText = typeof(currentText) != "undefined" ? text : '';
+
+	// How big?
+	this.editWidth = typeof(editWidth) != "undefined" ? editWidth : '70%';
+	this.editHeight = typeof(editHeight) != "undefined" ? editHeight : '150px';
+
 	var showDebug = false;
 	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
 	//!!! This partly works on opera - it's a rubbish browser for JS.
@@ -208,7 +213,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 				breadHandle.style.display = 'none';
 			}
 
-			setTimeout(InitIframe, 200);
+			InitIframe();
 		}
 		// If we can't do advanced stuff then just do the basics.
 		else
@@ -227,24 +232,20 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 		frameDocument = frameElement.contentWindow.document;
 		frameWindow = frameElement.contentWindow;
 
+		// Mark it as editable...
+		frameDocument.body.contentEditable = true;
+
 		// Populate it first.
 		frameDocument.open();
-		frameDocument.write("<html><head></head><body></body></html>");
+		frameDocument.write("<br />");
 		frameDocument.close();
 
 		// Work out what font it should have!
 		defFontFamily = fetchDefaultFont(textHandle, 'font-family');
 		defFontSize = fetchDefaultFont(textHandle, 'font-size');
 
-		if (frameDocument.body.contentEditable)
-		{
-			frameDocument.body.contentEditable = true;
-		}
-		else
-		{
-			frameDocument.designMode = 'off';
-			frameDocument.designMode = 'on';
-		}
+		frameDocument.designMode = 'on';
+
 		frameDocument.body.style.fontFamily = defFontFamily;
 		frameDocument.body.style.fontSize = defFontSize;
 		frameHandle.style.display = mode ? '' : 'none';
@@ -1169,4 +1170,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg)
 
 		return new_size;
 	}
+
+	init(this.text, this.editWidth, this.editHeight);
 }
