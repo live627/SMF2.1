@@ -1,3 +1,4 @@
+// Make an editor!!
 function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 {
 	// Create some links to the editor object.
@@ -12,8 +13,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	var showDebug = false;
 	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
 	//!!! This partly works on opera - it's a rubbish browser for JS.
-	//var richTextPossible = is_ie5up || is_ff || is_opera9up;
-	var richTextPossible = is_ie5up || is_ff;
+	var richTextPossible = is_ie5up || is_ff || is_opera9up;
+	//var richTextPossible = is_ie5up || is_ff;
 
 	var frameHandle = null;
 	var frameElement = null;
@@ -172,97 +173,101 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		else if (mode == 0)
 			currentText = smf_unhtmlspecialchars(currentText);
 
-		// Create the iFrame element.
+		// Only try to do this if rich text is supported.
 		if (richTextPossible)
 		{
+			// Make the iframe itself, stick it next to the current text area, and give it an ID.
 			frameElement = document.createElement('iframe');
 			frameHandle = textHandle.parentNode.appendChild(frameElement);
 			frameHandle.id = 'html_' . uid;
-	
-			// Create the debug window...
+
+			// Create some handy shortcuts.
+			frameDocument = frameElement.contentWindow.document;
+			frameWindow = frameElement.contentWindow;
+
+			// Create the debug window... and stick this under the main frame - make it invisible by default.
 			breadElement = document.createElement('div');
 			breadHandle = frameHandle.parentNode.appendChild(breadElement);
 			breadHandle.id = 'bread_' . uid;
+			breadHandle.style.visibility = 'visible';
 			breadHandle.style.display = 'none';
 
-			// Size the iframe to something sensible.
+			// Size the iframe dimensions to something sensible.
 			frameHandle.style.width = editWidth;
 			frameHandle.style.height = editHeight;
 			frameHandle.style.visibility = 'visible';
 
+			// Only bother formatting the debug window if debug is enabled.
 			if (showDebug)
 			{
 				breadHandle.style.width = editWidth;
 				breadHandle.style.height = '20px';
 				breadHandle.className = 'windowbg2';
 				breadHandle.style.border = '1px black solid';
-				breadHandle.style.visibility = 'visible';
 				breadHandle.style.display = '';
 			}
 	
-			// Show the iframe only if wysiwyg is on.
-			if (mode)
+			// Show the iframe only if wysiwyg is on - and hide the text area.
+			textHandle.style.display = mode ? 'none' : '';
+			frameHandle.style.display = mode ? '' : 'none';
+			breadHandle.style.display = mode ? '' : 'none';
+
+			// Populate the editor with nothing by default.
+			if (!is_opera9up)
 			{
-				textHandle.style.display = 'none';
-				frameHandle.style.visibility = 'visible';
-				breadHandle.style.visibility = 'visible';
+				frameDocument.open();
+				frameDocument.write("<br />");
+				frameDocument.close();
+			}
+
+			// Mark it as editable...
+			if (frameDocument.body.contentEditable)
+				frameDocument.body.contentEditable = true;
+			else
+				frameDocument.designMode = 'on';
+
+			// Fetch the font that should be used...
+			defFontFamily = fetchDefaultFont(textHandle, 'font-family');
+			defFontSize = fetchDefaultFont(textHandle, 'font-size');
+
+			frameDocument.body.style.fontFamily = defFontFamily;
+			frameDocument.body.style.fontSize = defFontSize;
+
+			// Listen for input.
+			if (is_ff)
+			{
+				frameDocument.addEventListener('keyup', editorKeyUp, true);
+				frameDocument.addEventListener('mouseup', editorKeyUp, true);
 			}
 			else
 			{
-				frameHandle.style.display = 'none';
-				breadHandle.style.display = 'none';
+				frameDocument.onkeyup = editorKeyUp;
+				frameDocument.onmouseup = editorKeyUp;
 			}
-
-			InitIframe();
 		}
 		// If we can't do advanced stuff then just do the basics.
 		else
 		{
 			// Cannot have WYSIWYG anyway!
 			mode = 0;
-
-			initClose();
 		}
+
+		// Clean up!
+		initClose();
 	}
 
 	// Actually get the iframe up and running.
 	function InitIframe()
 	{
-		// Finally get the document... and the window for focusing the mind (/window)
-		frameDocument = frameElement.contentWindow.document;
-		frameWindow = frameElement.contentWindow;
-
-		// Mark it as editable...
-		frameDocument.body.contentEditable = true;
-
-		// Populate it first.
-		frameDocument.open();
-		frameDocument.write("<br />");
-		frameDocument.close();
-
+		
 		// Work out what font it should have!
-		defFontFamily = fetchDefaultFont(textHandle, 'font-family');
-		defFontSize = fetchDefaultFont(textHandle, 'font-size');
+		//defFontFamily = fetchDefaultFont(textHandle, 'font-family');
+		//defFontSize = fetchDefaultFont(textHandle, 'font-size');
 
-		frameDocument.designMode = 'on';
+		
 
-		frameDocument.body.style.fontFamily = defFontFamily;
-		frameDocument.body.style.fontSize = defFontSize;
-		frameHandle.style.display = mode ? '' : 'none';
-
-		// Attach our events.
-		if (is_ff)
-		{
-			frameDocument.addEventListener('keyup', editorKeyUp, true);
-			frameDocument.addEventListener('mouseup', editorKeyUp, true);
-		}
-		else
-		{
-			frameDocument.onkeyup = editorKeyUp;
-			frameDocument.onmouseup = editorKeyUp;
-		}
-
-		initClose();
+		//frameDocument.body.style.fontFamily = defFontFamily;
+		//frameDocument.body.style.fontSize = defFontSize;
 
 		return true;
 	}
@@ -487,8 +492,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 						container.insertBefore(element, afterNode); 
 						container.insertBefore(beforeNode, element); 
 						container.removeChild(textNode); 
-						range.setEndBefore(afterNode); 
-						range.setStartBefore(afterNode); 
+
+						//!!! Why does this not work on opera?
+						if (!is_opera)
+						{
+							range.setEndBefore(afterNode); 
+							range.setStartBefore(afterNode); 
+						}
 					}
 					else
 					{ 
@@ -919,7 +929,10 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	function toggleView(view)
 	{
 		if (!richTextPossible)
+		{
 			alert('Your browser does not support Rich Text editing.');
+			return false;
+		}
 
 		// Overriding or alternating?
 		if (typeof(view) != "undefined")

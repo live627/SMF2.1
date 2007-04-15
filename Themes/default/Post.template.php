@@ -1010,7 +1010,7 @@ function template_postbox(&$message)
 	// Now it's all drawn out we'll actually setup the box.
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-				var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 'true' : 'false', ', \'', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');';
+		var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 'true' : 'false', ', \'', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');';
 
 	// Create the controls.
 	if (!empty($context['bbc_tags']))
