@@ -41,7 +41,7 @@ function SMF_header_include( ) {
 	if (isset($_REQUEST['option']) && $_REQUEST['option'] == 'com_gallery2' && $mosConfig_sef == 1)
 		$_SERVER['QUERY_STRING'] = strtr($_SERVER['QUERY_STRING'],array('?'=>'','&amp;'=>'/','&'=>'/','='=>','));
 
-	if (!defined('SMF') && $_REQUEST['option'] != 'com_smf'){		
+	if (!defined('SMF') && (!isset($_REQUEST['option']) || $_REQUEST['option'] != 'com_smf')){		
 		$database =& mamboDatabase::getInstance();
 		$mainframe =& mosMainFrame::getInstance();
 	
@@ -71,7 +71,7 @@ function SMF_header_include( ) {
 			
 		require_once ($smf_path."/SSI.php");
 		
-		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/script.js?rc2"></script>' );
+		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?rc2"></script>' );
 		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_theme_url = "'. $settings['theme_url']. '";
 			var smf_images_url = "'. $settings['images_url']. '";

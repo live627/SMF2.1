@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1 RC2                                         *
+* Software Version:           SMF 1.1                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -70,16 +70,18 @@ function SMF_header_include( ) {
 		require_once ($smf_path."/SSI.php");
 		$_REQUEST = $requestSave;
 		
-		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/script.js?rc2"></script>' );
+		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>' );
 		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_theme_url = "'. $settings['theme_url']. '";
 			var smf_images_url = "'. $settings['images_url']. '";
-			var smf_scripturl = "'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl) : $mosConfig_live_site . '/'. $myurl ) . '";
+			var smf_scripturl = "'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl) : un_htmlspecialchars($mosConfig_live_site . '/'. $myurl) ) . '";
+			var smf_iso_case_folding = '. $context['server']['iso_case_folding'] ? 'true' : 'false'. ';
+			var smf_charset = "'. $context['character_set']. '";
 			var smf_session_id = "'. $context['session_id'] . '";
 			// ]]></script>' );
 		if ($smf_css == 'true'){
-			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?rc2" />' );
-			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?rc2" media="print" />' );
+			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?fin11" />' );
+			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?fin11" media="print" />' );
 		}
 		$mainframe->addCustomHeadTag( '<link rel="help" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'action=help') : $mosConfig_live_site . '/'. $myurl  . 'action=help' ) .'" target="_blank" />' );
 		$mainframe->addCustomHeadTag( '<link rel="search" href="' . ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'action=search') : $mosConfig_live_site . '/'. $myurl . 'action=search' ) .'" />' );

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2713 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2714 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -26,6 +26,15 @@ April 2007
  ! Trying to do array operations on a boolean type is bad. (Subs-Menu.php)
  ! Memberlist was using the wrong column for website sorting. (Memberlist.php)
  ! Renamed ModSettings.php to ManageSettings.php, and the same for the language file. (ManageSettings.php, ManageSettings language file)
+ ! Joomla bridge was removing some semi-colons in URLs instead of converting them to SEF. (Joomla bridge/smf.php)
+ ! Made bridged outgoing emails smarter when converting URLs. (Mambo/Joomla bridges/smf.php)
+ ! Bridge wasn't using UTF-8 language files appropriately in certain circumstances (Joomla bridge/mod_smf_login.php, smf.php)
+ ! Mambo 4.6 sometimes loads arrays as objects, invalidating output. (Mambo 4.6 bridge/admin.smf.php)
+ ! Sanitize input from the Joomla bridge registration, as the javascript check doesn't necessarily take care of it all. (Mambo/Joomla bridge/smf_registration.php)
+ + Added AEC compatibility to Joomla bridge. (several files)
+ ! Some HTML header information was missing from Joomla headers. (Mambo/Joomla bridges/smf.php, SMF_header_include.php)
+ ! Fixed an undefined constant in e107 bridge language files (e107 bridge/admin_smf_config.php, English.php, French.php)
+
 
 
 March 2007

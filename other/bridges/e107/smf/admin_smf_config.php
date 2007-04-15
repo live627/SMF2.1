@@ -62,7 +62,7 @@ if (isset($message)) {
 			</select>
 		</td>
 	</tr>
-	<tr><td colspan='2'  style='text-align:left' class='fcaption'><input class='button' type='submit' name='updatesettings' value='".EC_LAN_77."' /></td></tr>
+	<tr><td colspan='2'  style='text-align:left' class='fcaption'><input class='button' type='submit' name='updatesettings' value='".SMF_LAN_ADMIN_H11."' /></td></tr>
 	</table>
 	</form>
 	</div>";

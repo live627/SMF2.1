@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0                                             *
+* Software Version:           SMF 1.1                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -132,10 +132,10 @@ function sendNewPass($option)
 
 		// Check if the email address  and/or username is in use.
 		$request = mysql_query("
-			SELECT id_member
+			SELECT ID_MEMBER
 			FROM {$db_prefix}members
-			WHERE email_address = '$confirmEmail'
-				AND member_name = '$checkusername'
+			WHERE emailAddress = '$confirmEmail'
+				AND memberName = '$checkusername'
 			LIMIT 1");
 		if (mysql_num_rows($request) != 0 && !$userid)
 		{
@@ -227,8 +227,8 @@ function sendNewPass($option)
 	mysql_query("
 		UPDATE {$db_prefix}members 
 		SET passwd = '$smf_newpass' 
-		WHERE member_name = '$checkusername' 
-			AND email_address = '$confirmEmail'");
+		WHERE memberName = '$checkusername' 
+			AND emailAddress = '$confirmEmail'");
 
 	mysql_select_db($mosConfig_db);
 	mosRedirect('index.php?mosmsg=' . _NEWPASS_SENT);
@@ -323,31 +323,31 @@ function saveRegistration($option)
 
 	mysql_select_db($db_name);
 	$possible_strings = array(
-		'website_url', 'website_title',
-		'aim', 'yim',
+		'websiteUrl', 'websiteTitle',
+		'AIM', 'YIM',
 		'location', 'birthdate',
-		'time_format',
+		'timeFormat',
 		'buddy_list',
 		'pm_ignore_list',
-		'smiley_set',
-		'signature', 'personal_text', 'avatar',
+		'smileySet',
+		'signature', 'personalText', 'avatar',
 		'lngfile',
-		'secret_question', 'secret_answer',
-		'real_name'
+		'secretQuestion', 'secretAnswer',
+		'realName'
 	);
 	$possible_ints = array(
 		'pm_email_notify',
-		'notify_types',
-		'icq',
+		'notifyTypes',
+		'ICQ',
 		'gender',
-		'id_theme',
+		'ID_THEME',
 	);
 	$possible_floats = array(
-		'time_offset',
+		'timeOffset',
 	);
 	$possible_bools = array(
-		'notify_announcements', 'notifyOnce', 'notify_send_body',
-		'hide_email', 'show_online',
+		'notifyAnnouncements', 'notifyOnce', 'notifySendBody',
+		'hideEmail', 'showOnline',
 	);
 	
 	// Needed for isReservedName() and registerMember().
@@ -356,7 +356,7 @@ function saveRegistration($option)
 	// Set the options needed for registration.
 	$regOptions = array(
 		'interface' => 'guest',
-		'username' => $_POST['username'],
+		'username' => htmlspecialchars($_POST['username']),
 		'email' => $_POST['email'],
 		'password' => $_POST['password'],
 		'password_check' => $_POST['password2'],
@@ -369,7 +369,7 @@ function saveRegistration($option)
 		'theme_vars' => array(),
 	);
 		
-	$_POST['real_name'] = $use_realname=='true' ? $_POST['name'] : $_POST['username'];
+	$_POST['realName'] = $use_realname=='true' ? $_POST['name'] : $_POST['username'];
 	
 	// Include the additional options that might have been filled in.
 	foreach ($possible_strings as $var)
@@ -390,7 +390,7 @@ function saveRegistration($option)
 		$_POST['options'] = isset($_POST['options']) ? $_POST['options'] + $_POST['default_options'] : $_POST['default_options'];
 	$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
-	if(isReservedName($_POST['real_name']))
+	if(isReservedName($_POST['realName']))
 		$regOptions['password'] = 'chocolate cake';
 
 	//Make sure that Mambo/Joomla handles admin notification here
@@ -512,7 +512,7 @@ function activate($option)
 			SET 
 				is_activated = '1',
 				validation_code = '' 
-			WHERE member_name = '$result[1]'
+			WHERE memberName = '$result[1]'
 			LIMIT 1");
 		mysql_select_db($mosConfig_db);
 

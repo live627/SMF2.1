@@ -362,7 +362,7 @@ function saveRegistration($option)
 	// Set the options needed for registration.
 	$regOptions = array(
 		'interface' => 'guest',
-		'username' => $_POST['username'],
+		'username' => htmlspecialchars($_POST['username']),
 		'email' => $_POST['email'],
 		'password' => $_POST['password'],
 		'password_check' => $_POST['password2'],

@@ -213,6 +213,12 @@ function ob_mambofix($buffer)
 			$buffer = str_replace($myurl . 'action=activate"', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode"', $buffer);
 			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
+		
+		case "AEC":
+			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_acctexp&amp;task=register', $buffer);
+			$buffer = str_replace($myurl . 'action=activate"', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode"', $buffer);
+			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
+		break;		
 	}
 
 	// Don't forget attachments and CAPTCHA
@@ -227,7 +233,7 @@ function ob_mambofix($buffer)
 		preg_match_all('~([\(=]")' . preg_quote($mosConfig_live_site . '/index.php?option=com_smf') . '([^"]*)"{1}~', $buffer, $nonsefurls);
 		foreach($nonsefurls[0] as $nonsefurl)
 		{
-			$nqsefurl = substr($nonsefurl, 0, strpos($nonsefurl, 'option')) . preg_replace('/(\;)([^=#]*)([#"])/', '$1$2=$2$3', substr($nonsefurl, strpos($nonsefurl, 'option'), strlen($nonsefurl)));
+			$nqsefurl = substr($nonsefurl, 0, strpos($nonsefurl, 'option')) . preg_replace('/(\;)([^=#]*)([\;#"])/', '$1$2=$2$3', substr($nonsefurl, strpos($nonsefurl, 'option'), strlen($nonsefurl)));
 			$sefurl = sefReltoAbs(substr($nqsefurl, strlen($mosConfig_live_site) + 3, strlen($nqsefurl) - strlen($mosConfig_live_site) - 4));
 			$sefurl = str_replace(";", "/", $sefurl);
 			$sefurl = str_replace("=", ",", $sefurl);
@@ -292,7 +298,7 @@ function mambo_smf_exit($with_output)
 
 	$myurl = basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $menu_item['id'] . '&amp;';
 
-	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/script.js?fin11"></script>' );
+	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>' );
 	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "'. $settings['theme_url']. '";
 		var smf_images_url = "'. $settings['images_url']. '";');
@@ -300,16 +306,18 @@ function mambo_smf_exit($with_output)
 		$mainframe->addCustomHeadTag( ob_mambofix('var smf_scripturl ="'. $scripturl . '";'));
 	else
 		$mainframe->addCustomHeadTag( 'var smf_scripturl = "'. un_htmlspecialchars(mambo_smf_url($scripturl)) . '";');
-	
+
+	$mainframe->addCustomHeadTag( '	var smf_iso_case_folding = '. $context['server']['iso_case_folding'] ? 'true' : 'false'. ';
+		var smf_charset = "'. $context['character_set']. '";');
 	$mainframe->addCustomHeadTag( '	var smf_session_id = "'. $context['session_id'] . '";
 		// ]]></script>' );
 	if ($smf_css == 'true'){
 		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?fin11" />' );
 		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?fin11" media="print" />' );
 	}
-	$mainframe->addCustomHeadTag( '<link rel="help" href="'. mambo_smf_url($scripturl. 'action=help') .'" target="_blank" />' );
-	$mainframe->addCustomHeadTag( '<link rel="search" href="' . mambo_smf_url($scripturl . 'action=search') .'" />' );
-	$mainframe->addCustomHeadTag( '<link rel="contents" href="'. mambo_smf_url($scripturl). '" />' );
+	$mainframe->addCustomHeadTag( '<link rel="help" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl . 'action=help') : $mosConfig_live_site . '/'. $myurl . 'action=help' ).'" target="_blank" />' );
+	$mainframe->addCustomHeadTag( '<link rel="search" href="' . ( $mosConfig_sef == 1 ? sefReltoAbs($myurl . 'action=search') : $mosConfig_live_site . '/'. $myurl . 'action=search' ) .'" />' );
+	$mainframe->addCustomHeadTag( '<link rel="contents" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl) : $mosConfig_live_site . '/'. $myurl ) . '" />' );
 
 	// If RSS feeds are enabled, advertise the presence of one. 
 	if (!empty($modSettings['xmlnews_enable']))  
@@ -548,37 +556,18 @@ function integrate_outgoing_email($subject, &$message, $headers)
 	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid, $hotmail_fix;
 
 	//First, we need to set up the email so that ob_mambofix knows what to do with it
-	$message = str_replace ($scripturl, '"="' . $scripturl, $message);
-	//Next, let's make sure that URLs with # and . characters don't get mashed up
-	$message = str_replace ('#new', '"#new', $message);
-	$message = preg_replace ('/(\.[0-9])/', '"$1', $message);
-	$message .= '"="';
+	$message = str_replace ($scripturl, '="' . $scripturl, $message);
+	$message = preg_replace ('/(http.+)(\b)/', '$1"', $message);
 	$message = ob_mambofix($message);
 	//Now we need to undo those changes so the email looks normal again
-	$message = str_replace ('"="', ' ', $message);
-	$message = str_replace ('"#new', '#new', $message);
-	$message = str_replace ('".', '.', $message);
-	//This is an email, after all, so let's make sure entities and special characters are text, not HTML
+	$message = str_replace ('="', '', $message);
+	$message = preg_replace ('/(http.+)(")/', '$1', $message);
+	//THis is an email, after all, so let's make sure entities and special characters are text, not HTML
 	$message = trim($message);
     $message = html_entity_decode($message);
 	$message = un_htmlspecialchars($message);
-	//No idea why sefReltoAbs does this, but....
-	$message = str_replace ('____', '
-', $message ); //yes, it looks ridiculous, but it works :P
-	$message = substr($message, 0, -1);
 	$hotmail_fix = false;
 	return true;
-	
-/*		if ($mosConfig_sef == '1'){		
-			$message = str_replace ($mosConfig_live_site . '/index.php', 'index.php', $message);
-			preg_match ('~index\.php.+~', $message, $url);
-			if (isset($url[0])){
-				$new_url = sefReltoAbs(trim($url[0]));
-				$new_url = str_replace(';', '/', $new_url);			
-				$message = str_replace($url[0], $new_url, $message);
-			}
-		}*/
-
 }
 
 
@@ -653,8 +642,7 @@ function integrate_login($username, $passwd, $cookielength)
 					(id, user_id) 
 				VALUES ('$mos_id', '$mos_id')");
 
-		//maybe this user exists, but has not yet activated their account?
-
+	//maybe this user exists, but has not yet activated their account?
 	} 
 	elseif ($mos_array[1] == 1)
 	{
@@ -665,13 +653,14 @@ function integrate_login($username, $passwd, $cookielength)
 			// ]]></script>', "\n";
 		exit();
 	}
-		
+
+	//We'll need the real password to login to Mambo/Joomla, and the id for AEC
 	$mos_pwd_qry = mysql_query("
-		SELECT password 
+		SELECT id, password 
 		FROM {$mosConfig_dbprefix}users
 		WHERE username = '$username'
 		LIMIT 1");
-	list($passwd) = mysql_fetch_row($mos_pwd_qry);
+	list($id, $passwd) = mysql_fetch_row($mos_pwd_qry);
 		
 	$currentDate = date("Y-m-d\TH:i:s");
 	mysql_query("
@@ -679,7 +668,32 @@ function integrate_login($username, $passwd, $cookielength)
 		SET lastvisitDate = '$currentDate'
 		WHERE username = '$username'");
 
-	// Get rid of the online entry for that old guest....
+	//Did we install AEC?  Maybe we should check for an expiration....
+	if (file_exists($mosConfig_absolute_path . '/components/com_acctexp/acctexp.php')){
+		$exp_query = mysql_query("
+			SELECT expiration 
+			FROM {$mosConfig_dbprefix}acctexp 
+			WHERE userid=$id AND expiration<>'9999-12-31'");
+		list($expiration) = mysql_fetch_row($exp_query);
+		if ($expiration) {
+			$expiration = $expiration . " 00:00:00";
+			$expstamp = strtotime($expiration);
+			$status_query = mysql_query("
+				SELECT status 
+				FROM {$mosConfig_dbprefix}acctexp_subscr 
+				WHERE userid=$id");
+			$expiration = null;
+			list($status) = mysql_fetch_row($status_query);
+			if ($status=='Pending') {
+				mosRedirect( sefReltoAbs('index.php?option=com_acctexp&task=pending&userid=' . $id) );
+				exit();
+			}
+			if ( $status=='Closed' || $status=='Cancelled' || ( ($expstamp > 0) && ( $expstamp-(time()+$mosConfig_offset_user*3600) < 0 ) )) {
+				mosRedirect( sefReltoAbs('index.php?option=com_acctexp&task=expired&userid=' . $id . '&expiration=' . strftime(_ACCT_DATE_FORMAT, $expstamp)));
+				exit();
+			}
+		}
+	}
 	
 	// Log into Mambo now.....
 	$request = mysql_query("
@@ -716,7 +730,6 @@ function integrate_login($username, $passwd, $cookielength)
 	setcookie($sessionCookieName, '', -3600, '/');
 	
 	//Joomla 1.0.8 compatibility
-	
 	if (isset($_VERSION) && $_VERSION->PRODUCT == 'Joomla!' && $_VERSION->DEV_LEVEL >= '8'){
 		$remCookieName 	= mosMainFrame::remCookieName_User();
 						//Joomla 1.0.9 compatibility
@@ -997,6 +1010,9 @@ function integrate_register($Options, $theme_vars)
 	//Just in case....
 	if (!isset($group) || $group == '' || $group == 0 )
 		$group = '18';
+
+	//registration will be considered now
+	$r_date = date("Y-m-d H:i:s");
 		
 	//What if the realName field isn't being used?
 	if (!isset($Options['register_vars']['realName']) || $Options['register_vars']['realName']=='')
@@ -1004,8 +1020,8 @@ function integrate_register($Options, $theme_vars)
 				
 	mysql_query("
 		INSERT INTO {$mosConfig_dbprefix}users 
-			(name, username, email, password, gid) 
-		VALUES (" . $Options['register_vars']['realName'] . ", " . $Options['register_vars']['memberName'] . ", " . $Options['register_vars']['emailAddress'] . ", '" . md5($Options['password']) . "', '$group')");
+			(name, username, email, password, registerDate, gid) 
+		VALUES (" . $Options['register_vars']['realName'] . ", " . $Options['register_vars']['memberName'] . ", " . $Options['register_vars']['emailAddress'] . ", '" . md5($Options['password']) . "', '$r_date', '$group')");
 	
 	$mos_find_userid = mysql_query("
 		SELECT `id`
@@ -1080,7 +1096,7 @@ function integrate_pre_load () {
 				else if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8.php'))
 					$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8';					
 				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '.php'))
-					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+					$GLOBALS['language'] = $_REQUEST['lang'];					
 				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '-utf8.php'))
 					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
 			}

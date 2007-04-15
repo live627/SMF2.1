@@ -141,9 +141,7 @@ if (!defined('SMF_INTEGRATION_SETTINGS')){
 if (!defined('SMF'))
 {	
 	require_once($smf_path . '/SSI.php');
-}	
-
-	reloadSettings();
+}
 	
 global $boarddir, $context, $txt, $scripturl, $boardurl, $settings, $mosConfig_dbprefix, $db_prefix, $db_name, $smf_date, $mosConfig_db, $mosConfig_sef, $smf_lang, $language;
 
@@ -178,6 +176,7 @@ $smf_loggedin_time = $params->get('smf_loggedin_time');
 $smf_notify_logged_in = $params->get('smf_notify_logged_in');
 $smf_logout_button = $params->get('smf_logout_button');
 $smf_logout_button_image = $params->get('smf_logout_button_image');
+$show_expiration = $params->get('show_expiration');
 
 mysql_select_db($db_name);
 echo '
@@ -257,7 +256,6 @@ echo '
 		if ($params->get('logout')=="2")
 			$_SESSION['return'] = $mosConfig_sef=='1' ? sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING']) : $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'];
 
-
 		echo '<br />
 			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['images_url'] . '/' . $context['user']['language'] . '/logout.gif').'" alt="' . $txt[108] . '" style="margin: 2px 0;" border="0" />' : $txt[108], '</a>';
 	}
@@ -265,7 +263,7 @@ echo '
 	else
 	{
 		$txt['welcome_guest'] = str_replace($boardurl.'/index.php?', $scripturl , $txt['welcome_guest']);
-		$txt['welcome_guest'] = str_replace($scripturl.'?', $scripturl, $txt['welcome_guest']);
+		$txt['welcome_guest'] = str_replace('&amp;?', '&amp;', $txt['welcome_guest']);
 		$txt['welcome_guest'] = str_replace($scripturl.'action=login', sefReltoAbs($scripturl.'action=login'), $txt['welcome_guest']);
 		
 	switch ($bridge_reg){
@@ -292,7 +290,13 @@ echo '
 		case "jw":
 			$txt['welcome_guest'] = str_replace($scripturl.'action=register', sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?option=com_jw_registration&amp;task=register'), $txt['welcome_guest']);
 			$txt['welcome_guest'] = str_replace($scripturl.'action=activate', sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode'), $txt['welcome_guest']);
-		break;		
+		break;
+
+		case "AEC":
+			$txt['welcome_guest'] = str_replace($scripturl.'action=register', sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?option=com_acctexp&amp;task=register'), $txt['welcome_guest']);
+			$txt['welcome_guest'] = str_replace($scripturl.'action=activate', sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode'), $txt['welcome_guest']);
+		break;
+		
 	}
 		$txt[34] = str_replace('&?','&', $txt[34]);
 		if (!isset($login))
@@ -304,7 +308,7 @@ echo '
 		', $txt['welcome_guest'], '<br />
 		', $context['current_time'], '<br />
 
-			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
+			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
 
 			<form action="', sefReltoAbs($scripturl . 'action=login2'), '" method="post" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
 				',$txt[35],': <input type="text" name="user" size="10" /> 

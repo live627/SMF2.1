@@ -37,7 +37,7 @@
 	integrate_change_email($username, $email)
 	- updates Mambo with email changes made in SMF
 	
-	integrate_change_member_data ( array $member_names, string $var, string $value)
+	integrate_change_member_data ( array $memberNames, string $var, string $value)
 	- updates Mambo with member data changes in SMF
 
 	integrate_reset_pass($old_username, $username, $password)
@@ -227,7 +227,7 @@ function ob_mambofix($buffer)
 		preg_match_all('~([\(=]")' . preg_quote($mosConfig_live_site . '/index.php?option=com_smf') . '([^"]*)"{1}~', $buffer, $nonsefurls);
 		foreach($nonsefurls[0] as $nonsefurl)
 		{
-			$nqsefurl = substr($nonsefurl, 0, strpos($nonsefurl, 'option')) . preg_replace('/(\;)([^=#]*)([#"])/', '$1$2=$2$3', substr($nonsefurl, strpos($nonsefurl, 'option'), strlen($nonsefurl)));
+			$nqsefurl = substr($nonsefurl, 0, strpos($nonsefurl, 'option')) . preg_replace('/(\;)([^=#]*)([\;#"])/', '$1$2=$2$3', substr($nonsefurl, strpos($nonsefurl, 'option'), strlen($nonsefurl)));
 			$sefurl = sefReltoAbs(substr($nqsefurl, strlen($mosConfig_live_site) + 3, strlen($nqsefurl) - strlen($mosConfig_live_site) - 4));
 			$sefurl = str_replace(";", "/", $sefurl);
 			$sefurl = str_replace("=", ",", $sefurl);
@@ -293,7 +293,7 @@ function mambo_smf_exit($with_output)
 	$myurl = 'index.php?option=com_smf&amp;Itemid=' . $menu_item['id'] . '&amp;';
 	$c_handler->_buffer = ob_mambofix($buffer);
 	
-	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/scripts/script.js?rc3"></script>' );
+	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?rc3"></script>' );
 	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "'. $settings['theme_url']. '";
 		var smf_images_url = "'. $settings['images_url']. '";');
@@ -385,7 +385,7 @@ function mambo_smf_exit($with_output)
 	{
 		if ($link_num > 0 && $tree['name']!='' && isset($tree['name'])) { // Don't show first linktree element, because forum menu item will already be in Mambo Pathway.
 			//If there is a url and this is not the last link item, show as a link. Otherwise just show.
-			$mainframe->appendPathWay((ob_mambofix('<a href="' . $tree['url'] . '" class="pathway">') . $tree['name'] . '</a>') . ' <img src="images/M_images/arrow.png" /> ' );
+			$mainframe->appendPathWay((ob_mambofix('<a href="' . (isset($tree['url']) ? $tree['url'] : '#') . '" class="pathway">') . $tree['name'] . '</a>') . ' <img src="images/M_images/arrow.png" /> ' );
 		}
 	}	
 
@@ -442,7 +442,7 @@ function integrate_change_email($username, $email)
 	mysql_select_db($mosConfig_db);
 	$request = mysql_query("
 		UPDATE {$mosConfig_dbprefix}users
-		SET email_address = '$email'
+		SET emailAddress = '$email'
 		WHERE username = '" . addslashes($username) . "'
 		LIMIT 1");
 	mysql_select_db($db_name);
@@ -450,24 +450,24 @@ function integrate_change_email($username, $email)
 	return true;
 }
 
-function integrate_change_member_data ($member_names, $var, $value)
+function integrate_change_member_data ($memberNames, $var, $value)
 {
 
 	global $mosConfig_db, $db_name, $mosConfig_dbprefix;
 	
 	$synch_mambo_fields = array(
-   			'member_name' => 'username',
-			'real_name' => 'name',
-			'email_address' => 'email',
-			'id_group' => '',
+   			'memberName' => 'username',
+			'realName' => 'name',
+			'emailAddress' => 'email',
+			'ID_GROUP' => '',
 			'gender'=>'',
 			'birthdate'=>'',
-			'website_title'=>'',
-			'website_url'=>'',
+			'websiteTitle'=>'',
+			'websiteUrl'=>'',
 			'location'=>'',
-			'hide_email'=>'',
-			'time_format'=>'',
-			'time_offset'=>'',
+			'hideEmail'=>'',
+			'timeFormat'=>'',
+			'timeOffset'=>'',
 			'avatar'=>'',
 			'lngfile'=>'',
 			);
@@ -477,14 +477,14 @@ function integrate_change_member_data ($member_names, $var, $value)
 	if ($field != ''){
 		mysql_select_db($mosConfig_db);
 	
-		foreach ($member_names as $member_name){
+		foreach ($memberNames as $memberName){
 			mysql_query ("UPDATE {$mosConfig_dbprefix}users
 						SET `$field` = $value
-						WHERE username = '$member_name'
+						WHERE username = '$memberName'
 						LIMIT 1");
 						
 			//  If the real name is changed, we need to make sure to update the ACL
-			if ($var == 'real_name'){
+			if ($var == 'realName'){
 				$mos_find_id = mysql_query("
 					SELECT `id`
 					FROM {$mosConfig_dbprefix}users
@@ -501,7 +501,7 @@ function integrate_change_member_data ($member_names, $var, $value)
 		mysql_select_db($db_name);
 	}
 		
-	if ($var == 'id_group'){
+	if ($var == 'ID_GROUP'){
 		mysql_select_db($mosConfig_db);
 		
 		$query = mysql_query (" SELECT `value2`
@@ -513,16 +513,16 @@ function integrate_change_member_data ($member_names, $var, $value)
 		if (!isset($group) || $group == '' || $group == 0 )
 			$group = '18';
 		
-		foreach ($member_names as $member_name){
+		foreach ($memberNames as $memberName){
 
 			mysql_query ("UPDATE {$mosConfig_dbprefix}users
 						SET `gid` = '$group'
-						WHERE username = '$member_name'
+						WHERE username = '$memberName'
 						");
 			$mos_find_name = mysql_query("
 						SELECT `name`
 						FROM {$mosConfig_dbprefix}users
-						WHERE username = '$member_name'
+						WHERE username = '$memberName'
 						LIMIT 1");
 			list($mos_name) = mysql_fetch_row($mos_find_name);
 			$mos_map_sql = mysql_query("
@@ -543,38 +543,21 @@ function integrate_change_member_data ($member_names, $var, $value)
 
 function integrate_outgoing_email($subject, &$message, $headers)
 {
-	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid;
+	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid, $hotmail_fix;
 
-	//First, we need to set up the email so that ob_mambofdix knows what to do with it
-	$message = str_replace ($scripturl, '"="' . $scripturl, $message);
-	//Next, let's make sure that URLs with # and . characters don't get mashed up
-	$message = str_replace ('#new', '"#new', $message);
-	$message = preg_replace ('/(\.[0-9])/', '"$1', $message);
-	$message .= '"="';
+	//First, we need to set up the email so that ob_mambofix knows what to do with it
+	$message = str_replace ($scripturl, '="' . $scripturl, $message);
+	$message = preg_replace ('/(http.+)(\b)/', '$1"', $message);
 	$message = ob_mambofix($message);
 	//Now we need to undo those changes so the email looks normal again
-	$message = str_replace ('"="', ' ', $message);
-	$message = str_replace ('"#new', '#new', $message);
-	$message = str_replace ('".', '.', $message);
-	//THis is an email, after all, so let's make sure entities and specail characters are text, not HTML
+	$message = str_replace ('="', '', $message);
+	$message = preg_replace ('/(http.+)(")/', '$1', $message);
+	//THis is an email, after all, so let's make sure entities and special characters are text, not HTML
 	$message = trim($message);
     $message = html_entity_decode($message);
 	$message = un_htmlspecialchars($message);
-	//No idea why sefReltoAbs does this, but....
-	$message = str_replace ('____', '
-', $message ); //yes, it looks ridiculous, but it works :P
+	$hotmail_fix = false;
 	return true;
-	
-/*		if ($mosConfig_sef == '1'){		
-			$message = str_replace ($mosConfig_live_site . '/index.php', 'index.php', $message);
-			preg_match ('~index\.php.+~', $message, $url);
-			if (isset($url[0])){
-				$new_url = sefReltoAbs(trim($url[0]));
-				$new_url = str_replace(';', '/', $new_url);			
-				$message = str_replace($url[0], $new_url, $message);
-			}
-		}*/
-
 }
 
 
@@ -604,7 +587,7 @@ function integrate_login($username, $passwd, $cookielength)
 		$mos_sync_groups = mysql_query("
 				SELECT `value2`
 				FROM {$mosConfig_dbprefix}smf_config
-				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['id_group'] . "'
+				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['ID_GROUP'] . "'
 				");
 		list($group) = mysql_fetch_row($mos_sync_groups);
 
@@ -615,7 +598,7 @@ function integrate_login($username, $passwd, $cookielength)
 		$mos_write = mysql_query("
 			INSERT INTO {$mosConfig_dbprefix}users 
 				(name,username,email,password,gid) 
-			VALUES ('$username', '$username', '$user_settings[email_address]', '$passwd', '$group')");
+			VALUES ('$username', '$username', '$user_settings[emailAddress]', '$passwd', '$group')");
 
 		$mos_find_id = mysql_query("
 			SELECT id
@@ -656,7 +639,7 @@ function integrate_login($username, $passwd, $cookielength)
 	{
 		echo '
 			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-				alert("' . _LOGIN_BLOCKED . '"); 
+				alert("' . T_('Your login has been blocked. Please contact the administrator.') . '"); 
 				window.history.go(-1);
 			// ]]></script>', "\n";
 		exit();
@@ -884,9 +867,9 @@ function integrate_validate_login($username, $password, $cookietime)
 	// Check if the user already exists in SMF.
 	mysql_select_db($db_name);
 	$request = mysql_query("
-		SELECT id_member
+		SELECT ID_MEMBER
 		FROM {$db_prefix}members
-		WHERE member_name = '$username'
+		WHERE memberName = '$username'
 		LIMIT 1");
 	if ($request !== false && mysql_num_rows($request) === 1)
 	{
@@ -901,7 +884,7 @@ function integrate_validate_login($username, $password, $cookietime)
 
 		//!!! How about sendEmail and activation?
 		$request = mysql_query("
-			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS date_registered, activation
+			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS dateRegistered, activation
 			FROM {$mosConfig_dbprefix}users
 			WHERE username = '$username'");
 
@@ -929,8 +912,8 @@ function integrate_validate_login($username, $password, $cookietime)
 		//There must be a result, so let's write this one into SMF....
 		mysql_query("
 			INSERT INTO {$db_prefix}members 
-				(member_name, real_name, passwd, email_address, date_registered, id_post_group, lngfile, buddy_list, pm_ignore_list, message_labels, personal_text, website_title, website_url, location, icq, msn, signature, avatar, usertitle, member_ip, member_ip2, secret_question, additional_groups)
-			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[date_registered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(memberName, realName, passwd, emailAddress, dateRegistered, ID_POST_GROUP, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups)
+			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[dateRegistered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 		$memberID = db_insert_id();
 		
 		updateStats('member', $memberID, $name);
@@ -968,31 +951,34 @@ function integrate_register($Options, $theme_vars)
 	if (!isset($group) || $group == '' || $group == 0 )
 		$group = '18';
 		
-	//What if the real_name field isn't being used?
-	if (!isset($Options['register_vars']['real_name']) || $Options['register_vars']['real_name']=='')
-		$Options['register_vars']['real_name'] = $Options['register_vars']['member_name'];
+	//registration will be considered now
+	$r_date = date("Y-m-d H:i:s");
+		
+	//What if the realName field isn't being used?
+	if (!isset($Options['register_vars']['realName']) || $Options['register_vars']['realName']=='')
+		$Options['register_vars']['realName'] = $Options['register_vars']['memberName'];
 				
 	mysql_query("
 		INSERT INTO {$mosConfig_dbprefix}users 
-			(name, username, email, password, gid) 
-		VALUES (" . $Options['register_vars']['real_name'] . ", " . $Options['register_vars']['member_name'] . ", " . $Options['register_vars']['email_address'] . ", '" . md5($Options['password']) . "', '$group')");
+			(name, username, email, password, registerDate, gid) 
+		VALUES (" . $Options['register_vars']['realName'] . ", " . $Options['register_vars']['memberName'] . ", " . $Options['register_vars']['emailAddress'] . ", '" . md5($Options['password']) . "', '$r_date', '$group')");
 	
 	$mos_find_userid = mysql_query("
 		SELECT `id`
 		FROM {$mosConfig_dbprefix}users
-		WHERE username = " . $Options['register_vars']['member_name'] . "
+		WHERE username = " . $Options['register_vars']['memberName'] . "
 		LIMIT 1");
 	list($mos_id) = mysql_fetch_row($mos_find_userid); 
 
 	mysql_query( "
 		INSERT INTO {$mosConfig_dbprefix}core_acl_aro 
 			(aro_id, section_value, value, order_value, name, hidden)
-		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['real_name'] . ", '0');");
+		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['realName'] . ", '0');");
 
 	$mos_map_sql = mysql_query("
 		SELECT aro_id
 		FROM {$mosConfig_dbprefix}core_acl_aro
-		WHERE name = " . $Options['register_vars']['real_name'] . "
+		WHERE name = " . $Options['register_vars']['realName'] . "
 		LIMIT 1");
 	list($aro_id) = mysql_fetch_row($mos_map_sql);
 

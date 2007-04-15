@@ -34,6 +34,8 @@ define("SMF_LAN_ADMIN_H7", "Bridge Settins Saved Successfully.");
 define("SMF_LAN_ADMIN_H8", "Bridge integration:");
 define("SMF_LAN_ADMIN_H9", "Configure SMF Bridge");
 define("SMF_LAN_ADMIN_H10", "SMF bridge successfully upgraded, now using version");
+define("SMF_LAN_ADMIN_H11", "Save bridge Settings");
+
 
 
 ?>

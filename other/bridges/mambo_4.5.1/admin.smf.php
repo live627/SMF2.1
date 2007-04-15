@@ -269,6 +269,7 @@ function showConfig($option, $cb_reg)
 						<option value="default"', $bridge_reg == 'default' ? ' selected="selected"' : '', '>Use Mambo/Joomla Registration</option>
 						<option value="CB"', $bridge_reg == 'CB' ? ' selected="selected"' : '', '>Use Community Builder Registration</option>
 						<option value="jw"', $bridge_reg == 'jw' ? ' selected="selected"' : '', '>Use MamboCharge Registration</option>
+						<option value="AEC"', $bridge_reg == 'AEC' ? ' selected="selected"' : '', '>Use Account Expiration Registration</option>
 					</select>
 					&nbsp;&nbsp;
 				</td>
