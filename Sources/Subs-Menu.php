@@ -185,12 +185,16 @@ function createMenu($menuData, $menuOptions = array())
 				elseif (empty($found_section) && empty($include_data))
 				{
 					$menu_context['current_section'] = $section_id;
-					$menu_context['current_area'] = isset($area['select']) ? $area['select'] : $area_id;
+					$backup_area = isset($area['select']) ? $area['select'] : $area_id;
 					$include_data = $area;
 				}
 			}
 		}
 	}
+
+	// If we didn't find the area we were looking for go to a default one.
+	if (isset($backup_area) && empty($found_section))
+		$context['current_area'] = $backup_area;
 
 	// If still no data then return - nothing to show!
 	if (empty($menu_context['sections']))
