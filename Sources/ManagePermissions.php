@@ -1014,7 +1014,6 @@ function GeneralPermissionSettings($return_config = false)
 	$context['sub_template'] = 'show_settings';
 
 	// Needed for the inline permission functions, and the settings template.
-	require_once($sourcedir .'/ManagePermissions.php');
 	require_once($sourcedir .'/ManageServer.php');
 
 	// Don't let guests have these permissions.

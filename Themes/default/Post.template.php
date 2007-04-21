@@ -33,136 +33,6 @@ function template_main()
 			{
 				document.images.icons.src = icon_urls[document.forms.postmodify.icon.options[document.forms.postmodify.icon.selectedIndex].value];
 			}';
-	// The functions used to preview a posts without loading a new page.
-	echo '
-			var current_board = ', empty($context['current_board']) ? 'null' : $context['current_board'], ';
-			var make_poll = ', $context['make_poll'] ? 'true' : 'false', ';
-			var txt_preview_title = "', $txt['preview_title'], '";
-			var txt_preview_fetch = "', $txt['preview_fetch'], '";
-			function previewPost()
-			{', $context['browser']['is_firefox'] ? '
-				// Firefox doesn\'t render <marquee> that have been put it using javascript
-				if (document.forms.postmodify.elements["message"].value.indexOf("[move]") != -1)
-				{
-					return submitThisOnce(document.forms.postmodify);
-				}' : '', '
-				if (window.XMLHttpRequest)
-				{
-					// Opera didn\'t support setRequestHeader() before 8.01.
-					if (typeof(window.opera) != "undefined")
-					{
-						var test = new XMLHttpRequest();
-						if (typeof(test.setRequestHeader) != "function")
-							return submitThisOnce(document.forms.postmodify);
-					}
-					// !!! Currently not sending poll options and option checkboxes.
-					var i, x = new Array();
-					var textFields = ["subject", "message", "icon", "guestname", "email", "evtitle", "question", "topic"];
-					var numericFields = [
-						"board", "topic", "num_replies",
-						"eventid", "calendar", "year", "month", "day",
-						"poll_max_votes", "poll_expire", "poll_change_vote", "poll_hide"
-					];
-					var checkboxFields = [
-						"ns",
-					];
-
-
-					for (i in textFields)
-						if (document.forms.postmodify.elements[textFields[i]])
-						{
-							// Handle the WYSIWYG editor.
-							if (textFields[i] == "message" && editorHandlemessage && editorHandlemessage.getMode() == 1)
-								x[x.length] = "editor_mode=1&" + textFields[i] + "=" + escape(textToEntities(editorHandlemessage.getText(true).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
-							else
-								x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
-						}
-					for (i in numericFields)
-						if (document.forms.postmodify.elements[numericFields[i]] && typeof(document.forms.postmodify[numericFields[i]].value) != "undefined")
-							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
-					for (i in checkboxFields)
-						if (document.forms.postmodify.elements[checkboxFields[i]] && document.forms.postmodify.elements[checkboxFields[i]].checked)
-							x[x.length] = checkboxFields[i] + "=" + document.forms.postmodify.elements[checkboxFields[i]].value;
-
-					sendXMLDocument(smf_scripturl + "?action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);
-
-					document.getElementById("preview_section").style.display = "";
-					setInnerHTML(document.getElementById("preview_subject"), txt_preview_title);
-					setInnerHTML(document.getElementById("preview_body"), txt_preview_fetch);
-
-					return false;
-				}
-				else
-					return submitThisOnce(document.forms.postmodify);
-			}
-			function onDocSent(XMLDoc)
-			{
-				if (!XMLDoc)
-				{
-					document.forms.postmodify.preview.onclick = new function ()
-					{
-						return true;
-					}
-					document.forms.postmodify.preview.click();
-				}
-
-				// Show the preview section.
-				var i, preview = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("preview")[0];
-				setInnerHTML(document.getElementById("preview_subject"), preview.getElementsByTagName("subject")[0].firstChild.nodeValue);
-
-				var bodyText = "";
-				for (i = 0; i < preview.getElementsByTagName("body")[0].childNodes.length; i++)
-					bodyText += preview.getElementsByTagName("body")[0].childNodes[i].nodeValue;
-
-				setInnerHTML(document.getElementById("preview_body"), bodyText);
-				document.getElementById("preview_body").className = "post";
-
-				// Show a list of errors (if any).
-				var errors = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("errors")[0];
-				var numErrors = errors.getElementsByTagName("error").length, errorList = new Array();
-				for (i = 0; i < numErrors; i++)
-					errorList[errorList.length] = errors.getElementsByTagName("error")[i].firstChild.nodeValue;
-				document.getElementById("errors").style.display = numErrors == 0 ? "none" : "";
-				document.getElementById("error_serious").style.display = errors.getAttribute("serious") == 1 ? "" : "none";
-				setInnerHTML(document.getElementById("error_list"), numErrors == 0 ? "" : errorList.join("<br />"));
-
-				// Show a warning if the topic has been locked.
-				document.getElementById("lock_warning").style.display = errors.getAttribute("topic_locked") == 1 ? "" : "none";
-
-				// Adjust the color of captions if the given data is erroneous.
-				var captions = errors.getElementsByTagName("caption"), numCaptions = errors.getElementsByTagName("caption").length;
-				for (i = 0; i < numCaptions; i++)
-					if (document.getElementById("caption_" + captions[i].getAttribute("name")))
-						document.getElementById("caption_" + captions[i].getAttribute("name")).style.color = captions[i].getAttribute("color");
-
-				if (errors.getElementsByTagName("post_error").length == 1)
-					document.forms.postmodify.message.style.border = "1px solid red";
-				else if (document.forms.postmodify.message.style.borderColor == "red" || document.forms.postmodify.message.style.borderColor == "red red red red")
-				{
-					if (typeof(document.forms.postmodify.message.runtimeStyle) == "undefined")
-						document.forms.postmodify.message.style.border = null;
-					else
-						document.forms.postmodify.message.style.borderColor = "";
-				}
-
-				// Set the new number of replies.
-				if (document.forms.postmodify.elements["num_replies"])
-					document.forms.postmodify.num_replies.value = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("num_replies")[0].firstChild.nodeValue;
-
-				var newPosts = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0] ? XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0].getElementsByTagName("post") : {length: 0};
-				var numNewPosts = newPosts.length;
-				if (numNewPosts != 0)
-				{
-					var newTable = \'<span id="new_replies"></span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
-					for (i = 0; i < numNewPosts; i++)
-						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
-					newTable += \'</table>\';
-					setOuterHTML(document.getElementById("new_replies"), newTable);
-				}
-
-				if (typeof(smf_codeFix) != "undefined")
-					smf_codeFix();
-			}';
 
 	// A function needed to discern HTML entities from non-western characters.
 	echo '
@@ -726,10 +596,142 @@ function template_main()
 	echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
+	// The functions used to preview a posts without loading a new page.
+	echo '
+			var current_board = ', empty($context['current_board']) ? 'null' : $context['current_board'], ';
+			var make_poll = ', $context['make_poll'] ? 'true' : 'false', ';
+			var txt_preview_title = "', $txt['preview_title'], '";
+			var txt_preview_fetch = "', $txt['preview_fetch'], '";
+			function previewPost()
+			{
+				', $context['browser']['is_firefox'] ? '
+				// Firefox doesn\'t render <marquee> that have been put it using javascript
+				if (document.forms.postmodify.elements["message"].value.indexOf("[move]") != -1)
+				{
+					return submitThisOnce(document.forms.postmodify);
+				}' : '', '
+				if (window.XMLHttpRequest)
+				{
+					// Opera didn\'t support setRequestHeader() before 8.01.
+					if (typeof(window.opera) != "undefined")
+					{
+						var test = new XMLHttpRequest();
+						if (typeof(test.setRequestHeader) != "function")
+							return submitThisOnce(document.forms.postmodify);
+					}
+					// !!! Currently not sending poll options and option checkboxes.
+					var i, x = new Array();
+					var textFields = ["subject", "message", "icon", "guestname", "email", "evtitle", "question", "topic"];
+					var numericFields = [
+						"board", "topic", "num_replies",
+						"eventid", "calendar", "year", "month", "day",
+						"poll_max_votes", "poll_expire", "poll_change_vote", "poll_hide"
+					];
+					var checkboxFields = [
+						"ns",
+					];
+
+
+					for (i in textFields)
+						if (document.forms.postmodify.elements[textFields[i]])
+						{
+							// Handle the WYSIWYG editor.
+							if (textFields[i] == "message" && editorHandle', $context['post_box_name'], ' && editorHandle', $context['post_box_name'], '.getMode() == 1)
+								x[x.length] = "editor_mode=1&" + textFields[i] + "=" + escape(textToEntities(editorHandle', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+							else
+								x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+						}
+					for (i in numericFields)
+						if (document.forms.postmodify.elements[numericFields[i]] && typeof(document.forms.postmodify[numericFields[i]].value) != "undefined")
+							x[x.length] = numericFields[i] + "=" + parseInt(document.forms.postmodify.elements[numericFields[i]].value);
+					for (i in checkboxFields)
+						if (document.forms.postmodify.elements[checkboxFields[i]] && document.forms.postmodify.elements[checkboxFields[i]].checked)
+							x[x.length] = checkboxFields[i] + "=" + document.forms.postmodify.elements[checkboxFields[i]].value;
+
+					sendXMLDocument(smf_scripturl + "?action=post2" + (current_board ? ";board=" + current_board : "") + (make_poll ? ";poll" : "") + ";preview;xml", x.join("&"), onDocSent);
+
+					document.getElementById("preview_section").style.display = "";
+					setInnerHTML(document.getElementById("preview_subject"), txt_preview_title);
+					setInnerHTML(document.getElementById("preview_body"), txt_preview_fetch);
+
+					return false;
+				}
+				else
+					return submitThisOnce(document.forms.postmodify);
+			}
+			function onDocSent(XMLDoc)
+			{
+				if (!XMLDoc)
+				{
+					document.forms.postmodify.preview.onclick = new function ()
+					{
+						return true;
+					}
+					document.forms.postmodify.preview.click();
+				}
+
+				// Show the preview section.
+				var i, preview = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("preview")[0];
+				setInnerHTML(document.getElementById("preview_subject"), preview.getElementsByTagName("subject")[0].firstChild.nodeValue);
+
+				var bodyText = "";
+				for (i = 0; i < preview.getElementsByTagName("body")[0].childNodes.length; i++)
+					bodyText += preview.getElementsByTagName("body")[0].childNodes[i].nodeValue;
+
+				setInnerHTML(document.getElementById("preview_body"), bodyText);
+				document.getElementById("preview_body").className = "post";
+
+				// Show a list of errors (if any).
+				var errors = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("errors")[0];
+				var numErrors = errors.getElementsByTagName("error").length, errorList = new Array();
+				for (i = 0; i < numErrors; i++)
+					errorList[errorList.length] = errors.getElementsByTagName("error")[i].firstChild.nodeValue;
+				document.getElementById("errors").style.display = numErrors == 0 ? "none" : "";
+				document.getElementById("error_serious").style.display = errors.getAttribute("serious") == 1 ? "" : "none";
+				setInnerHTML(document.getElementById("error_list"), numErrors == 0 ? "" : errorList.join("<br />"));
+
+				// Show a warning if the topic has been locked.
+				document.getElementById("lock_warning").style.display = errors.getAttribute("topic_locked") == 1 ? "" : "none";
+
+				// Adjust the color of captions if the given data is erroneous.
+				var captions = errors.getElementsByTagName("caption"), numCaptions = errors.getElementsByTagName("caption").length;
+				for (i = 0; i < numCaptions; i++)
+					if (document.getElementById("caption_" + captions[i].getAttribute("name")))
+						document.getElementById("caption_" + captions[i].getAttribute("name")).style.color = captions[i].getAttribute("color");
+
+				if (errors.getElementsByTagName("post_error").length == 1)
+					document.forms.postmodify.message.style.border = "1px solid red";
+				else if (document.forms.postmodify.message.style.borderColor == "red" || document.forms.postmodify.message.style.borderColor == "red red red red")
+				{
+					if (typeof(document.forms.postmodify.message.runtimeStyle) == "undefined")
+						document.forms.postmodify.message.style.border = null;
+					else
+						document.forms.postmodify.message.style.borderColor = "";
+				}
+
+				// Set the new number of replies.
+				if (document.forms.postmodify.elements["num_replies"])
+					document.forms.postmodify.num_replies.value = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("num_replies")[0].firstChild.nodeValue;
+
+				var newPosts = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0] ? XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("new_posts")[0].getElementsByTagName("post") : {length: 0};
+				var numNewPosts = newPosts.length;
+				if (numNewPosts != 0)
+				{
+					var newTable = \'<span id="new_replies"></span><table width="100%" class="windowbg" cellspacing="0" cellpadding="2" align="center" style="table-layout: fixed;">\';
+					for (i = 0; i < numNewPosts; i++)
+						newTable += \'<tr class="catbg"><td colspan="2" align="left" class="smalltext"><div style="float: right;">', $txt['posted_on'], ': \' + newPosts[i].getElementsByTagName("time")[0].firstChild.nodeValue + \' <img src="\' + smf_images_url + \'/', $context['user']['language'], '/new.gif" alt="', $txt['preview_new'], '" /></div>', $txt['posted_by'], ': \' + newPosts[i].getElementsByTagName("poster")[0].firstChild.nodeValue + \'</td></tr><tr class="windowbg2"><td colspan="2" class="smalltext" id="msg\' + newPosts[i].getAttribute("id") + \'" width="100%"><div align="right" class="smalltext"><a href="#top" onclick="return insertQuoteFast(\\\'\' + newPosts[i].getAttribute("id") + \'\\\');">', $txt['bbc_quote'], '</a></div><div class="post">\' + newPosts[i].getElementsByTagName("message")[0].firstChild.nodeValue + \'</div></td></tr>\';
+					newTable += \'</table>\';
+					setOuterHTML(document.getElementById("new_replies"), newTable);
+				}
+
+				if (typeof(smf_codeFix) != "undefined")
+					smf_codeFix();
+			}';
+
 	// Make the visual verification image?
 	if ($context['visual_verification'])
 		echo '
-		captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
+			captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
 
 	// Now some javascript to hide the additional options on load...
 	if (!empty($settings['additional_options_collapsable']) && !$context['show_additional_options'])
@@ -751,32 +753,30 @@ function template_main()
 	if (isset($context['previous_posts']) && count($context['previous_posts']) > 0)
 	{
 		echo '
-			<br />
-			<br />
+		<br />
+		<br />
 
-			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-				function insertQuoteFast(messageid)
-				{
-					if (window.XMLHttpRequest)
-						getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.getMode(), onDocReceived);
-					else
-						reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.getMode(), 240, 90);
-
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			function insertQuoteFast(messageid)
+			{
+				if (window.XMLHttpRequest)
+					getXMLDocument("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';xml;pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.getMode(), onDocReceived);
+				else
+					reqWin("', $scripturl, '?action=quotefast;quote=" + messageid + ";sesc=', $context['session_id'], ';pb=', $context['post_box_name'], ';mode=" + editorHandle', $context['post_box_name'], '.getMode(), 240, 90);
 					return true;
-				}
-				function onDocReceived(XMLDoc)
-				{
-					var text = "";
-					for (var i = 0; i < XMLDoc.getElementsByTagName("quote")[0].childNodes.length; i++)
-						text += XMLDoc.getElementsByTagName("quote")[0].childNodes[i].nodeValue;
-
-					editorHandle', $context['post_box_name'], '.InsertText(text);
-				}
-				function spellCheckDone()
-				{
-					editorHandle', $context['post_box_name'], '.spellCheckEnd();
-				}
-			// ]]></script>
+			}
+			function onDocReceived(XMLDoc)
+			{
+				var text = "";
+				for (var i = 0; i < XMLDoc.getElementsByTagName("quote")[0].childNodes.length; i++)
+					text += XMLDoc.getElementsByTagName("quote")[0].childNodes[i].nodeValue;
+				editorHandle', $context['post_box_name'], '.insertText(text);
+			}
+			function spellCheckDone()
+			{
+				editorHandle', $context['post_box_name'], '.spellCheckEnd();
+			}
+		// ]]></script>
 
 			<table cellspacing="1" cellpadding="0" width="92%" align="center" class="bordercolor">
 				<tr>

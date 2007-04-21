@@ -315,7 +315,7 @@ function AdminMain()
 					'permission' => array('moderate_forum'),
 					'subsections' => array(
 						'index' => array($txt['permissions_groups'], 'manage_permissions'),
-						'board_permissions' => array($txt['permissions_boards'], 'manage_permissions'),
+						'board' => array($txt['permissions_boards'], 'manage_permissions'),
 						'settings' => array($txt['settings'], 'admin_forum'),
 					),
 				),

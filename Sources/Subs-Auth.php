@@ -697,10 +697,10 @@ function rebuildModCache()
 	if ($board_query == 0)
 	{
 		$boards = boardsAllowedTo('moderate_board');
-		//!!! This must be removed!!!
+		//!!! This should be removed as it's about the test board at SM!!!
 		$disable = true;
 		foreach ($boards as $board)
-			if ($board != 7)
+			if ($board != 7 || $GLOBALS['scripturl'] != 'http://www.simplemachines.org/community/index.php')
 				$disable = false;
 		if ($disable)
 			$boards = array();

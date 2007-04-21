@@ -158,22 +158,22 @@ function ThemesMain()
 		'description' => $txt['themeadmin_description'],
 		'tabs' => array(
 			'admin' => array(
-				'title' => $txt['themeadmin_admin_title'],
+				'title' => isset($txt['themeadmin_admin_title']) ? $txt['themeadmin_admin_title'] : '',
 				'description' => $txt['themeadmin_admin_desc'],
 				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=admin',
 			),
 			'list' => array(
-				'title' => $txt['themeadmin_list_title'],
+				'title' => isset($txt['themeadmin_list_title']) ? $txt['themeadmin_list_title'] : '',
 				'description' => $txt['themeadmin_list_desc'],
 				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=list',
 			),
 			'reset' => array(
-				'title' => $txt['themeadmin_reset_title'],
+				'title' => isset($txt['themeadmin_reset_title']) ? $txt['themeadmin_reset_title'] : '',
 				'description' => $txt['themeadmin_reset_desc'],
 				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=reset',
 			),
 			'edit' => array(
-				'title' => $txt['themeadmin_edit_title'],
+				'title' => isset($txt['themeadmin_edit_title']) ? $txt['themeadmin_edit_title'] : '',
 				'description' => $txt['themeadmin_edit_desc'],
 				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=edit',
 				'is_last' => true,
@@ -456,7 +456,7 @@ function SetThemeOptions()
 		$setValues = array();
 
 		foreach ($_POST['options'] as $opt => $val)
-			$setValues[] = array(-1, $_GET[th], "SUBSTRING('$opt', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
+			$setValues[] = array(-1, $_GET['th'], "SUBSTRING('$opt', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
 
 		$old_settings = array();
 		foreach ($_POST['default_options'] as $opt => $val)

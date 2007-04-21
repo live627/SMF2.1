@@ -145,8 +145,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		}
 
 		// Clean it up - including removing semi-colons.
-		text = text.replace(/&nbsp;/g, ' ');
-		text = text.replace(/;/g, '#smcol#');
+		if (prepareEntities)
+		{
+			text = text.replace(/&nbsp;/g, ' ');
+			text = text.replace(/;/g, '#smcol#');
+		}
 
 		// Return it.
 		return text;
@@ -804,7 +807,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		if (rightTag == '')
 			insertText(leftTag);
 		else
+		{
 			insertText(leftTag + selection + rightTag);
+		}
 	}
 
 	// Insert a URL link.

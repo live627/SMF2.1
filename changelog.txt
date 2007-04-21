@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2714 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2715 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -34,6 +34,8 @@ April 2007
  + Added AEC compatibility to Joomla bridge. (several files)
  ! Some HTML header information was missing from Joomla headers. (Mambo/Joomla bridges/smf.php, SMF_header_include.php)
  ! Fixed an undefined constant in e107 bridge language files (e107 bridge/admin_smf_config.php, English.php, French.php)
+ ! ModLog wasn't properly restricting entries for users. (ModLog.php)
+ ! WYSIWYG editor wasn't previewing correctly. (Post.php, editor.js)
 
 
 

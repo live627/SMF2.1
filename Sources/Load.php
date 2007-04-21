@@ -2165,7 +2165,7 @@ function cache_put_data($key, $value, $ttl = 120)
 	elseif (function_exists('output_cache_put'))
 		output_cache_put($key, $value);
 	// Otherwise custom cache?
-	else
+	elseif (function_exists('fwrite'))
 	{
 		if ($value === null)
 			@unlink($cachedir . '/data_' . $key . '.php');
