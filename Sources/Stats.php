@@ -75,7 +75,7 @@ function DisplayStats()
 
 		$context['sub_template'] = 'stats';
 		getDailyStats("YEAR(date) = $year AND MONTH(date) = $month");
-		$context['monthly'][$year . sprintf('%02d', $month)]['date'] = array(
+		$context['yearly'][$year]['months'][$month]['date'] = array(
 			'month' => sprintf('%02d', $month),
 			'year' => $year,
 		);
@@ -494,12 +494,26 @@ function DisplayStats()
 		FROM {$db_prefix}log_activity
 		GROUP BY stats_year, stats_month", __FILE__, __LINE__);
 	$context['monthly'] = array();
+	$context['yearly'] = array();
 	while ($row_months = $smfFunc['db_fetch_assoc']($months_result))
 	{
 		$ID_MONTH = $row_months['stats_year'] . sprintf('%02d', $row_months['stats_month']);
 		$expanded = !empty($_SESSION['expanded_stats'][$row_months['stats_year']]) && in_array($row_months['stats_month'], $_SESSION['expanded_stats'][$row_months['stats_year']]);
 
-		$context['monthly'][$ID_MONTH] = array(
+		if (!isset($context['yearly'][$row_months['stats_year']]))
+			$context['yearly'][$row_months['stats_year']] = array(
+				'year' => $row_months['stats_year'],
+				'new_topics' => 0,
+				'new_posts' => 0,
+				'new_members' => 0,
+				'most_members_online' => 0,
+				'hits' => 0,
+				'num_months' => 0,
+				'months' => array(),
+				'expanded' => false,
+			);
+
+		$context['yearly'][$row_months['stats_year']]['months'][$row_months['stats_month']] = array(
 			'id' => $ID_MONTH,
 			'date' => array(
 				'month' => sprintf('%02d', $row_months['stats_month']),
@@ -518,10 +532,32 @@ function DisplayStats()
 			'days' => array(),
 			'expanded' => $expanded
 		);
+		
+		$context['yearly'][$row_months['stats_year']]['new_topics'] += $row_months['topics'];
+		$context['yearly'][$row_months['stats_year']]['new_posts'] += $row_months['posts'];
+		$context['yearly'][$row_months['stats_year']]['new_members'] += $row_months['registers'];
+		$context['yearly'][$row_months['stats_year']]['hits'] += $row_months['hits'];
+		$context['yearly'][$row_months['stats_year']]['num_months']++;
+		$context['yearly'][$row_months['stats_year']]['expanded'] |= $expanded;
+
+		if ($row_months['most_on'] > $context['yearly'][$row_months['stats_year']]['most_members_online'])
+			$context['yearly'][$row_months['stats_year']]['most_members_online'] += $row_months['most_on'];
+
+
 	}
 
-	// This gets rid of the filesort on the query ;).
-	krsort($context['monthly']);
+	krsort($context['yearly']);
+
+	foreach($context['yearly'] AS $year => $data)
+	{
+		// This gets rid of the filesort on the query ;).
+		krsort($context['yearly'][$year]['months']);
+		$context['yearly'][$year]['new_topics'] = comma_format($data['new_topics']);
+		$context['yearly'][$year]['new_posts'] = comma_format($data['new_posts']);
+		$context['yearly'][$year]['new_members'] = comma_format($data['new_members']);
+		$context['yearly'][$year]['most_members_online'] = comma_format($data['most_members_online']);
+		$context['yearly'][$year]['hits'] = comma_format($data['hits']);
+	}
 
 	if (empty($_SESSION['expanded_stats']))
 		return;
@@ -549,7 +585,7 @@ function getDailyStats($condition)
 		WHERE $condition
 		ORDER BY stats_day ASC", __FILE__, __LINE__);
 	while ($row_days = $smfFunc['db_fetch_assoc']($days_result))
-		$context['monthly'][$row_days['stats_year'] . sprintf('%02d', $row_days['stats_month'])]['days'][] = array(
+		$context['yearly'][$row_days['stats_year']]['months'][$row_days['stats_month']]['days'][] = array(
 			'day' => sprintf('%02d', $row_days['stats_day']),
 			'month' => sprintf('%02d', $row_days['stats_month']),
 			'year' => $row_days['stats_year'],

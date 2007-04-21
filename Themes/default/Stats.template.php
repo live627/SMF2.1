@@ -180,144 +180,116 @@ function template_main()
 				<td class="windowbg" width="20" valign="middle" align="center"><img src="', $settings['images_url'], '/stats_history.gif" width="20" height="20" alt="" /></td>
 				<td class="windowbg2" colspan="4">';
 
-	if (!empty($context['monthly']))
+	if (!empty($context['yearly']))
 	{
-		echo '
+			echo '
 					<table border="0" width="100%" cellspacing="1" cellpadding="4" class="tborder" style="margin-bottom: 1ex;" id="stats">
 						<tr class="titlebg" valign="middle" align="center">
-							<td width="25%">', $txt['monthly_summary'], '</td>
+							<td width="25%">', $txt['yearly_summary'], '</td>
 							<td width="15%">', $txt['stats_new_topics'], '</td>
 							<td width="15%">', $txt['stats_new_posts'], '</td>
 							<td width="15%">', $txt['stats_new_members'], '</td>
 							<td width="15%">', $txt['smf_stats_14'], '</td>';
+
 		if (!empty($modSettings['hitStats']))
 			echo '
 							<td>', $txt['page_views'], '</td>';
 		echo '
 						</tr>';
 
-		foreach ($context['monthly'] as $month)
+		foreach($context['yearly'] AS $id => $year)
 		{
 			echo '
-						<tr class="windowbg2" valign="middle" id="tr_', $month['id'], '">
+						<tr class="windowbg2" valign="middle" id="year_', $id, '">
 							<th align="left" width="25%">
-								<a name="', $month['id'], '" id="link_', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse || expand_collapse(\'', $month['id'], '\', ', $month['num_days'], ');"><img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> ', $month['month'], ' ', $month['year'], '</a>
+								<a href="#" onclick="yearElements[', $id, '].toggle(); return false;"><img id="year_img_', $id, '" src="', $settings['images_url'], '/collapse.gif" alt="*" /></a> ', $year['year'], '</a>
 							</th>
-							<th align="center" width="15%">', $month['new_topics'], '</th>
-							<th align="center" width="15%">', $month['new_posts'], '</th>
-							<th align="center" width="15%">', $month['new_members'], '</th>
-							<th align="center" width="15%">', $month['most_members_online'], '</th>';
+							<th align="center" width="15%">', $year['new_topics'], '</th>
+							<th align="center" width="15%">', $year['new_posts'], '</th>
+							<th align="center" width="15%">', $year['new_members'], '</th>
+							<th align="center" width="15%">', $year['most_members_online'], '</th>';
 			if (!empty($modSettings['hitStats']))
 				echo '
-							<th align="center">', $month['hits'], '</th>';
+							<th align="center">', $year['hits'], '</th>';
 			echo '
 						</tr>';
 
-			if ($month['expanded'])
+			foreach ($year['months'] as $month)
 			{
-				foreach ($month['days'] as $day)
+				echo '
+							<tr class="windowbg2" valign="middle" id="tr_month_', $month['id'], '">
+								<th align="left" width="25%" style="padding-left: 3ex;">
+									<a name="', $month['id'], '" id="link_', $month['id'], '" href="', $month['href'], '" onclick="return doingExpandCollapse || yearElements[', $id, '].toggleMonth(', $month['id'], ');"><img src="', $settings['images_url'], '/', $month['expanded'] ? 'collapse.gif' : 'expand.gif', '" alt="" id="img_', $month['id'], '" /> ', $month['month'], ' ', $month['year'], '</a>
+								</th>
+								<th align="center" width="15%">', $month['new_topics'], '</th>
+								<th align="center" width="15%">', $month['new_posts'], '</th>
+								<th align="center" width="15%">', $month['new_members'], '</th>
+								<th align="center" width="15%">', $month['most_members_online'], '</th>';
+				if (!empty($modSettings['hitStats']))
+					echo '
+								<th align="center">', $month['hits'], '</th>';
+				echo '
+							</tr>';
+
+				if ($month['expanded'])
 				{
-					echo '
-						<tr class="windowbg2" valign="middle" align="left">
-							<td align="left" style="padding-left: 3ex;">', $day['year'], '-', $day['month'], '-', $day['day'], '</td>
-							<td align="center">', $day['new_topics'], '</td>
-							<td align="center">', $day['new_posts'], '</td>
-							<td align="center">', $day['new_members'], '</td>
-							<td align="center">', $day['most_members_online'], '</td>';
-					if (!empty($modSettings['hitStats']))
+					foreach ($month['days'] as $day)
+					{
 						echo '
-							<td align="center">', $day['hits'], '</td>';
-					echo '
-						</tr>';
+							<tr class="windowbg2" valign="middle" align="left" id="tr_day_', $day['year'], '-', $day['month'], '-', $day['day'], '">
+								<td align="left" style="padding-left: 6ex;">', $day['year'], '-', $day['month'], '-', $day['day'], '</td>
+								<td align="center">', $day['new_topics'], '</td>
+								<td align="center">', $day['new_posts'], '</td>
+								<td align="center">', $day['new_members'], '</td>
+								<td align="center">', $day['most_members_online'], '</td>';
+						if (!empty($modSettings['hitStats']))
+							echo '
+								<td align="center">', $day['hits'], '</td>';
+						echo '
+							</tr>';
+					}
 				}
 			}
 		}
+
 		echo '
 					</table>';
 	}
-
 	echo '
 				</td>
 			</tr>
 		</table>
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			var doingExpandCollapse = false;
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/stats.js"></script>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
-			function expand_collapse(curId, numDays)
+	if (!empty($context['yearly']))
+	{
+		echo '
+			var yearElements = new Array();';
+
+		foreach($context['yearly'] AS $id => $year)
+		{
+			echo '
+			yearElements[', $id, '] = new smfStats_year("', $id, '", false);';
+
+			foreach($year['months'] AS $month)
 			{
-				if (window.XMLHttpRequest)
-				{
-					if (document.getElementById("img_" + curId).src.indexOf("expand") > 0)
-					{
-						getXMLDocument(smf_scripturl + "?action=stats;expand=" + curId + ";xml", onDocReceived);
-						if (typeof(window.ajax_indicator) == "function")
-							ajax_indicator(true);
-						doingExpandCollapse = true;
-					}
-					else
-					{
-						var myTable = document.getElementById("stats"), i;
-						var start = document.getElementById("tr_" + curId).rowIndex + 1;
-						for (i = 0; i < numDays; i++)
-							myTable.deleteRow(start);
-						// Adjust the image and link.
-						document.getElementById("img_" + curId).src = smf_images_url + "/expand.gif";
-						document.getElementById("link_" + curId).href = smf_scripturl + "?action=stats;expand=" + curId + "#" + curId;
-						// Modify the session variables.
-						getXMLDocument(smf_scripturl + "?action=stats;collapse=" + curId + ";xml");
-					}
-					return false;
-				}
-				else
-					return true;
+				echo '
+				yearElements[', $id, '].addMonth("', $month['id'], '", ', $month['expanded'] ? 'false' : 'true', ');';
+
+				if ($month['expanded'])
+					foreach($month['days'] AS $day)
+						echo '
+					yearElements[', $id, '].addDay(', $month['id'], ', "', $day['year'], '-', $day['month'], '-', $day['day'], '");';
 			}
-			function onDocReceived(XMLDoc)
-			{
-				var numMonths = XMLDoc.getElementsByTagName("month").length, i, j, k, numDays, curDay, start;
-				var myTable = document.getElementById("stats"), curId, myRow, myCell, myData;
-				var dataCells = [
-					"date",
-					"new_topics",
-					"new_posts",
-					"new_members",
-					"most_members_online"
-				];
+			
+			if (!$year['expanded'])
+				echo '
+			yearElements[', $id, '].toggle()';
+		}
+	}
 
-				if (numMonths > 0 && XMLDoc.getElementsByTagName("month")[0].getElementsByTagName("day").length > 0 && XMLDoc.getElementsByTagName("month")[0].getElementsByTagName("day")[0].getAttribute("hits") != null)
-					dataCells[5] = "hits";
-
-				for (i = 0; i < numMonths; i++)
-				{
-					numDays = XMLDoc.getElementsByTagName("month")[i].getElementsByTagName("day").length;
-					curId = XMLDoc.getElementsByTagName("month")[i].getAttribute("id");
-					start = document.getElementById("tr_" + curId).rowIndex + 1;
-					for (j = 0; j < numDays; j++)
-					{
-						curDay = XMLDoc.getElementsByTagName("month")[i].getElementsByTagName("day")[j];
-						myRow = myTable.insertRow(start + j);
-						myRow.className = "windowbg2";
-
-						for (k in dataCells)
-						{
-							myCell = myRow.insertCell(-1);
-							if (dataCells[k] == "date")
-								myCell.style.paddingLeft = "3ex";
-							else
-								myCell.style.textAlign = "center";
-							myData = document.createTextNode(curDay.getAttribute(dataCells[k]));
-							myCell.appendChild(myData);
-						}
-					}
-					// Adjust the arrow to point downwards.
-					document.getElementById("img_" + curId).src = smf_images_url + "/collapse.gif";
-					// Adjust the link to collapse instead of expand
-					document.getElementById("link_" + curId).href = smf_scripturl + "?action=stats;collapse=" + curId + "#" + curId;
-				}
-
-				doingExpandCollapse = false;
-				if (typeof(window.ajax_indicator) == "function")
-					ajax_indicator(false);
-			}
+	echo '
 		// ]]></script>';
 }
 

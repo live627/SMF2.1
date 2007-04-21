@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2715 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2716 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -36,7 +36,7 @@ April 2007
  ! Fixed an undefined constant in e107 bridge language files (e107 bridge/admin_smf_config.php, English.php, French.php)
  ! ModLog wasn't properly restricting entries for users. (ModLog.php)
  ! WYSIWYG editor wasn't previewing correctly. (Post.php, editor.js)
-
+ ! Group monthly statistics by year. (Stats.php, Stats and XML template files, Stats language, stats.js)
 
 
 March 2007

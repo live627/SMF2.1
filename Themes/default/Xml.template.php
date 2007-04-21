@@ -127,7 +127,8 @@ function template_stats()
 
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>';
-	foreach ($context['monthly'] as $month)
+	foreach ($context['yearly'] as $year)
+	foreach ($year['months'] as $month);
 	{
 		echo '
 	<month id="', $month['date']['year'], $month['date']['month'], '">';
