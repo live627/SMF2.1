@@ -493,7 +493,7 @@ function DisplayStats()
 			YEAR(date) AS stats_year, MONTH(date) AS stats_month, SUM(hits) AS hits, SUM(registers) AS registers, SUM(topics) AS topics, SUM(posts) AS posts, MAX(most_on) AS most_on, COUNT(*) AS num_days
 		FROM {$db_prefix}log_activity
 		GROUP BY stats_year, stats_month", __FILE__, __LINE__);
-	$context['monthly'] = array();
+
 	$context['yearly'] = array();
 	while ($row_months = $smfFunc['db_fetch_assoc']($months_result))
 	{
@@ -511,6 +511,7 @@ function DisplayStats()
 				'num_months' => 0,
 				'months' => array(),
 				'expanded' => false,
+				'current_year' => $row_months['stats_year'] == date('Y'),
 			);
 
 		$context['yearly'][$row_months['stats_year']]['months'][$row_months['stats_month']] = array(
@@ -539,11 +540,7 @@ function DisplayStats()
 		$context['yearly'][$row_months['stats_year']]['hits'] += $row_months['hits'];
 		$context['yearly'][$row_months['stats_year']]['num_months']++;
 		$context['yearly'][$row_months['stats_year']]['expanded'] |= $expanded;
-
-		if ($row_months['most_on'] > $context['yearly'][$row_months['stats_year']]['most_members_online'])
-			$context['yearly'][$row_months['stats_year']]['most_members_online'] += $row_months['most_on'];
-
-
+		$context['yearly'][$row_months['stats_year']]['most_members_online'] = max($context['yearly'][$row_months['stats_year']]['most_members_online'], $row_months['most_on']);
 	}
 
 	krsort($context['yearly']);

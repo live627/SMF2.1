@@ -283,7 +283,7 @@ function template_main()
 					yearElements[', $id, '].addDay(', $month['id'], ', "', $day['year'], '-', $day['month'], '-', $day['day'], '");';
 			}
 			
-			if (!$year['expanded'])
+			if (!$year['expanded'] && !$year['current_year'])
 				echo '
 			yearElements[', $id, '].toggle()';
 		}
