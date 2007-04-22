@@ -152,47 +152,31 @@ function ThemesMain()
 	);
 
 	// !!! Layout Settings?
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['themeadmin_title'],
 		'help' => 'themes',
 		'description' => $txt['themeadmin_description'],
 		'tabs' => array(
 			'admin' => array(
-				'title' => isset($txt['themeadmin_admin_title']) ? $txt['themeadmin_admin_title'] : '',
 				'description' => $txt['themeadmin_admin_desc'],
-				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=admin',
 			),
 			'list' => array(
-				'title' => isset($txt['themeadmin_list_title']) ? $txt['themeadmin_list_title'] : '',
 				'description' => $txt['themeadmin_list_desc'],
-				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=list',
 			),
 			'reset' => array(
-				'title' => isset($txt['themeadmin_reset_title']) ? $txt['themeadmin_reset_title'] : '',
 				'description' => $txt['themeadmin_reset_desc'],
-				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=reset',
 			),
 			'edit' => array(
-				'title' => isset($txt['themeadmin_edit_title']) ? $txt['themeadmin_edit_title'] : '',
 				'description' => $txt['themeadmin_edit_desc'],
-				'href' => $scripturl . '?action=admin;area=theme;sesc=' . $context['session_id'] . ';sa=edit',
-				'is_last' => true,
 			),
 		),
 	);
 
 	// Follow the sa or just go to administration.
 	if (!empty($subActions[$_GET['sa']]))
-	{
-		if (isset($context['admin_tabs']['tabs'][$_GET['sa']]))
-			$context['admin_tabs']['tabs'][$_GET['sa']]['is_selected'] = true;
 		$subActions[$_GET['sa']]();
-	}
 	else
-	{
-		$context['admin_tabs']['tabs']['admin']['is_selected'] = true;
 		$subActions['admin']();
-	}
 }
 
 function ThemeAdmin()
@@ -666,7 +650,7 @@ function SetThemeSettings()
 	$_GET['th'] = isset($_GET['th']) ? (int) $_GET['th'] : (int) $_GET['id'];
 
 	// Select the best fitting tab.
-	$context['admin_tabs']['tabs']['list']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'list';
 
 	loadLanguage('Admin');
 	isAllowedTo('admin_forum');
@@ -1593,7 +1577,7 @@ function CopyTemplate()
 	isAllowedTo('admin_forum');
 	loadTemplate('Themes');
 
-	$context['admin_tabs']['tabs']['edit']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'edit';
 
 	$_GET['th'] = isset($_GET['th']) ? (int) $_GET['th'] : (int) $_GET['id'];
 

@@ -122,31 +122,27 @@ function Ban()
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Tabs for browsing the different ban functions.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['ban_title'],
 		'help' => 'ban_members',
 		'description' => $txt['ban_description'],
 		'tabs' => array(
 			'list' => array(
-				'title' => $txt['ban_edit_list'],
 				'description' => $txt['ban_description'],
 				'href' => $scripturl . '?action=admin;area=ban;sa=list',
 				'is_selected' => $_REQUEST['sa'] == 'list' || $_REQUEST['sa'] == 'edit' || $_REQUEST['sa'] == 'edittrigger',
 			),
 			'add' => array(
-				'title' => $txt['ban_add_new'],
 				'description' => $txt['ban_description'],
 				'href' => $scripturl . '?action=admin;area=ban;sa=add',
 				'is_selected' => $_REQUEST['sa'] == 'add',
 			),
 			'browse' => array(
-				'title' => $txt['ban_trigger_browse'],
 				'description' => $txt['ban_trigger_browse_description'],
 				'href' => $scripturl . '?action=admin;area=ban;sa=browse',
 				'is_selected' => $_REQUEST['sa'] == 'browse',
 			),
-			'register' => array(
-				'title' => $txt['ban_log'],
+			'log' => array(
 				'description' => $txt['ban_log_description'],
 				'href' => $scripturl . '?action=admin;area=ban;sa=log',
 				'is_selected' => $_REQUEST['sa'] == 'log',

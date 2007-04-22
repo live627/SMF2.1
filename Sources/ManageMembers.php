@@ -124,58 +124,54 @@ function ViewMembers()
 	$context['show_approve'] = (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2) || !empty($context['awaiting_approval']);
 
 	// Setup the admin tabs.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['admin_members'],
 		'help' => 'view_members',
 		'description' => $txt['admin_members_list'],
 		'tabs' => array(),
 	);
-	if (allowedTo('moderate_forum'))
-	{
-		$context['admin_tabs']['tabs'] = array(
-			'viewmembers' => array(
-				'label' => $txt['view_all_members'],
-				'description' => $txt['admin_members_list'],
-				'url' => $scripturl . '?action=admin;area=viewmembers;sa=all',
-				'is_selected' => $_REQUEST['sa'] == 'all',
-			),
-			'search' => array(
-				'label' => $txt['mlist_search'],
-				'description' => $txt['admin_members_list'],
-				'url' => $scripturl . '?action=admin;area=viewmembers;sa=search',
-				'is_selected' => $_REQUEST['sa'] == 'search' || $_REQUEST['sa'] == 'query',
-			),
-			'approve' => array(
-				'label' => sprintf($txt['admin_browse_awaiting_approval'], $context['awaiting_approval']),
-				'description' => $txt['admin_browse_approve_desc'],
-				'url' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=approve',
-				'is_selected' => false,
-			),
-			'activate' => array(
-				'label' => sprintf($txt['admin_browse_awaiting_activate'], $context['awaiting_activation']),
-				'description' => $txt['admin_browse_activate_desc'],
-				'url' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=activate',
-				'is_selected' => false,
-				'is_last' => true,
-			),
-		);
-	}
+
+	$context['tabs'] = array(
+		'viewmembers' => array(
+			'label' => $txt['view_all_members'],
+			'description' => $txt['admin_members_list'],
+			'url' => $scripturl . '?action=admin;area=viewmembers;sa=all',
+			'is_selected' => $_REQUEST['sa'] == 'all',
+		),
+		'search' => array(
+			'label' => $txt['mlist_search'],
+			'description' => $txt['admin_members_list'],
+			'url' => $scripturl . '?action=admin;area=viewmembers;sa=search',
+			'is_selected' => $_REQUEST['sa'] == 'search' || $_REQUEST['sa'] == 'query',
+		),
+		'approve' => array(
+			'label' => sprintf($txt['admin_browse_awaiting_approval'], $context['awaiting_approval']),
+			'description' => $txt['admin_browse_approve_desc'],
+			'url' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=approve',
+			'is_selected' => false,
+		),
+		'activate' => array(
+			'label' => sprintf($txt['admin_browse_awaiting_activate'], $context['awaiting_activation']),
+			'description' => $txt['admin_browse_activate_desc'],
+			'url' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=activate',
+			'is_selected' => false,
+			'is_last' => true,
+		),
+	);
 
 	// Sort out the tabs for the ones which may not exist!
 	if (!$context['show_activate'])
 	{
-		$context['admin_tabs']['tabs']['approve']['is_last'] = true;
-		unset($context['admin_tabs']['tabs']['activate']);
+		$context['tabs']['approve']['is_last'] = true;
+		unset($context['tabs']['activate']);
 	}
 	if (!$context['show_approve'])
 	{
 		if (!$context['show_activate'])
-			$context['admin_tabs']['tabs']['search']['is_last'] = true;
-		unset($context['admin_tabs']['tabs']['approve']);
+			$context['tabs']['search']['is_last'] = true;
+		unset($context['tabs']['approve']);
 	}
 
-	//!!! Temp.
-	$context['tabs'] = $context['admin_tabs']['tabs'];
 	$subActions[$_REQUEST['sa']][0]();
 }
 
@@ -653,8 +649,8 @@ function MembersAwaitingActivation()
 	$context['page_title'] = $txt['admin_members'];
 	$context['sub_template'] = 'admin_browse';
 	$context['browse_type'] = isset($_REQUEST['type']) ? $_REQUEST['type'] : (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 1 ? 'activate' : 'approve');
-	if (isset($context['admin_tabs']['tabs'][$context['browse_type']]))
-		$context['admin_tabs']['tabs'][$context['browse_type']]['is_selected'] = true;
+	if (isset($context['tabs'][$context['browse_type']]))
+		$context['tabs'][$context['browse_type']]['is_selected'] = true;
 
 	// Allowed filters are those we can have, in theory.
 	$context['allowed_filters'] = $context['browse_type'] == 'approve' ? array(3, 4, 5) : array(0, 2);

@@ -27,7 +27,7 @@ function template_generic_menu_sidebar_above()
 
 		if ($firstSection && !empty($menu_context['can_toggle_drop_down']))
 			echo '
-						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="' , $settings['images_url'] , '/admin/change_menu2.png" alt="" /></a>';
+						<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=0"><img style="margin: 0 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu2.png" alt="" /></a>';
 		echo '
 						</td>
 					</tr>
@@ -124,8 +124,13 @@ function template_generic_menu_dropdown_above()
 
 			// Is this the current area, or just some area?
 			if ($i == $menu_context['current_area'])
+			{
 				echo '
 						<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">' , $area['icon'] , $area['label'], '</a>';
+
+				if (empty($context['tabs']))
+					$context['tabs'] = isset($area['subsections']) ? $area['subsections'] : array();
+			}
 			else
 				echo '
 						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['icon'] , $area['label'], '</a>';
@@ -138,6 +143,9 @@ function template_generic_menu_dropdown_above()
 
 				foreach ($area['subsections'] as $sa => $sub)
 				{
+					if (!empty($sub['disabled']))
+						continue;
+
 					echo '
 							<li>';
 
@@ -166,7 +174,7 @@ function template_generic_menu_dropdown_above()
 
 	echo '
 			<li style="white-space: nowrap;">
-				<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 4px 10px 0 0;" src="' , $settings['images_url'] , '/admin/change_menu.png" alt="" /></a>
+				<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 4px 10px 0 0;" src="' , $context['menu_image_path'], '/change_menu.png" alt="" /></a>
 			</li>
 		</ul></div>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -199,29 +207,63 @@ function template_generic_menu_tabs(&$menu_context)
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	// Handy shortcut.
+	$tab_context = &$menu_context['tab_data'];
+
 	echo '
 				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ' , (isset($settings['use_tabs']) && $settings['use_tabs']) ? '' : 'style="margin-bottom: 2ex;"' , '>
 					<tr class="titlebg">
 						<td>';
 	// Show a help item?
-	if (!empty($context['tabs']['help']))
+	if (!empty($tab_context['help']))
 		echo '
-							<a href="', $scripturl, '?action=helpadmin;help=', $context['admin_tabs']['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
+							<a href="', $scripturl, '?action=helpadmin;help=', $tab_context['help'], '" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ';
 	echo '
-							', $context['admin_tabs']['title'], '
+							', $tab_context['title'], '
 						</td>
 					</tr>
 					<tr class="windowbg">';
 
+	// Exactly how many tabs do we have?
+	foreach ($context['tabs'] as $id => $tab)
+	{
+		// Can this not be accessed?
+		if (!empty($tab['disabled']))
+		{
+			$tab_context['tabs'][$id]['disabled'] = true;
+			continue;
+		}
+
+		// Did this not even exist - or do we not have a label?
+		if (!isset($tab_context['tabs'][$id]))
+			$tab_context['tabs'][$id] = array('label' => $tab['label']);
+		elseif (!isset($tab_context['tabs'][$id]['label']))
+			$tab_context['tabs'][$id]['label'] = $tab['label'];
+
+		// Has a custom URL defined in the main admin structure?
+		if (isset($tab['url']) && !isset($tab_context['tabs'][$id]['url']))
+			$tab_context['tabs'][$id]['url'] = $tab['url'];
+		// Has it been deemed selected?
+		if (!empty($tab['is_selected']))
+			$tab_context['tabs'][$id]['is_selected'] = true;
+		// Is this the last one?
+		if (!empty($tab['is_last']) && !isset($tab_context['override_last']))
+			$tab_context['tabs'][$id]['is_last'] = true;
+	}
+
+	// Find the selected tab
+	foreach($tab_context['tabs'] as $sa => $tab)
+		if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
+		{
+			$selected_tab = $tab;
+			$tab_context['tabs'][$sa]['is_selected'] = true;
+		}
+
 	// Shall we use the tabs?
 	if (!empty($settings['use_tabs']))
 	{
-		// Find the selected tab
-		foreach($context['tabs'] as $tab)
-			if (!empty($tab['is_selected']))
-				$selected_tab = $tab;
 		echo '
-						<td class="smalltext" style="padding: 2ex;">', !empty($selected_tab['description']) ? $selected_tab['description'] : $context['admin_tabs']['description'], '</td>
+						<td class="smalltext" style="padding: 2ex;">', !empty($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '</td>
 					</tr>
 				</table>';
 
@@ -232,9 +274,12 @@ function template_generic_menu_tabs(&$menu_context)
 						<td class="maintab_first">&nbsp;</td>';
 
 		// Print out all the items in this tab.
-		foreach ($context['tabs'] as $sa => $tab)
+		foreach ($tab_context['tabs'] as $sa => $tab)
 		{
-			if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
+			if (!empty($tab['disabled']))
+				continue;
+
+			if (!empty($tab['is_selected']))
 			{
 				echo '
 						<td class="maintab_active_first">&nbsp;</td>
@@ -263,14 +308,15 @@ function template_generic_menu_tabs(&$menu_context)
 						<td align="left"><b>';
 
 		// Print out all the items in this tab.
-		foreach ($context['tabs'] as $sa => $tab)
+		foreach ($tab_context['tabs'] as $sa => $tab)
 		{
-			if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
+			if (!empty($tab['disabled']))
+				continue;
+
+			if (!empty($tab['is_selected']))
 			{
 				echo '
 							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a></b>';
-
-				$selected_tab = $tab;
 			}
 			else
 				echo '
@@ -284,7 +330,7 @@ function template_generic_menu_tabs(&$menu_context)
 						</b></td>
 					</tr>
 					<tr class="windowbg">
-						<td class="smalltext" style="padding: 2ex;">', isset($selected_tab['description']) ? $selected_tab['description'] : $context['admin_tabs']['description'], '</td>
+						<td class="smalltext" style="padding: 2ex;">', isset($selected_tab['description']) ? $selected_tab['description'] : $tab_context['description'], '</td>
 					</tr>
 				</table>';
 	}

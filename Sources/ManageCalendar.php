@@ -48,32 +48,19 @@ function ManageCalendar()
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'settings';
 
 	// Set up the two tabs here...
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['manage_calendar'],
 		'help' => 'calendar',
 		'description' => $txt['calendar_settings_desc'],
 		'tabs' => array(
 			'holidays' => array(
-				'title' => $txt['manage_holidays'],
 				'description' => $txt['manage_holidays_desc'],
-				'href' => $scripturl . '?action=admin;area=managecalendar;sa=holidays',
 			),
 			'settings' => array(
-				'title' => $txt['calendar_settings'],
 				'description' => $txt['calendar_settings_desc'],
-				'href' => $scripturl . '?action=admin;area=managecalendar;sa=settings',
-				'is_last' => true,
 			),
 		),
 	);
-
-	// Select the tab they're at...
-	if (isset($context['admin_tabs']['tabs'][$_REQUEST['sa']]))
-		$context['admin_tabs']['tabs'][$_REQUEST['sa']]['is_selected'] = true;
-
-	// Some settings may not be enabled, disallow these from the tabs as appropriate.
-	if (empty($modSettings['cal_enabled']))
-		unset($context['admin_tabs']['tabs']['holidays']);
 
 	$subActions[$_REQUEST['sa']]();
 }
@@ -191,7 +178,6 @@ function EditHoliday()
 	$context['is_new'] = !isset($_REQUEST['holiday']);
 	$context['page_title'] = $context['is_new'] ? $txt['holidays_add'] : $txt['holidays_edit'];
 	$context['sub_template'] = 'edit_holiday';
-	$context['admin_tabs']['tabs']['holidays']['is_selected'] = true;
 
 	// Submitting?
 	if (isset($_POST['sc']) && (isset($_REQUEST['delete']) || $_REQUEST['title'] != ''))

@@ -124,31 +124,19 @@ function ManageMaintenance()
 		$context['sub_action'] = 'general';
 
 	// This uses admin tabs - as it should!
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['maintain_title'],
 		'help' => '',
 		'description' => $txt['maintain_info'],
 		'tabs' => array(
 			'general' => array(
-				'title' => $txt['maintain_common'],
 				'description' => $txt['maintain_common_desc'],
-				'href' => $scripturl . '?action=admin;area=maintain;sa=general',
 			),
 			'tasks' => array(
-				'title' => $txt['maintain_tasks'],
 				'description' => $txt['maintain_tasks_desc'],
-				'href' => $scripturl . '?action=admin;area=maintain;sa=tasks',
-				'is_last' => true,
 			),
 		),
 	);
-
-	// Select the right tab based on the sub action.
-	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
-	{
-		$context['page_title'] = $context['admin_tabs']['tabs'][$context['sub_action']]['title'];
-		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
-	}
 
 	// Finally fall through to what we are doing.
 	$subActions[$context['sub_action']]();
@@ -320,7 +308,6 @@ function Maintenance()
 
 	$context['sub_template'] = 'maintain';
 	$context['page_title'] = $txt['maintain_title'];
-	$context['admin_tabs']['tabs']['general']['is_selected'] = true;
 }
 
 // List all the scheduled task in place on the forum.
@@ -435,7 +422,7 @@ function EditTask()
 	global $context, $txt, $db_prefix, $sourcedir, $smfFunc;
 
 	// Just set up some lovely context stuff.
-	$context['admin_tabs']['tabs']['tasks']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
 	$context['sub_template'] = 'edit_scheduled_tasks';
 	$context['page_title'] = $txt['scheduled_task_edit'];
 
@@ -562,7 +549,7 @@ function TaskLog()
 
 	// Just context bits...
 	$context['sub_template'] = 'task_log';
-	$context['admin_tabs']['tabs']['tasks']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
 	$context['page_title'] = $txt['scheduled_log'];
 }
 

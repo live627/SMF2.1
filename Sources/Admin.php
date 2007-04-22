@@ -240,7 +240,7 @@ function AdminMain()
 					'function' => 'ManageCalendar',
 					'permission' => array('admin_forum'),
 					'subsections' => array(
-						'holidays' => array($txt['manage_holidays'], 'admin_forum'),
+						'holidays' => array($txt['manage_holidays'], 'admin_forum', 'enabled' => !empty($modSettings['cal_enabled'])),
 						'settings' => array($txt['calendar_settings'], 'admin_forum'),
 					),
 				),
@@ -265,7 +265,7 @@ function AdminMain()
 						'addsmiley' => array($txt['smileys_add']),
 						'editsmileys' => array($txt['smileys_edit']),
 						'setorder' => array($txt['smileys_set_order']),
-						'editicons' => array($txt['icons_edit_message_icons']),
+						'editicons' => array($txt['icons_edit_message_icons'], 'enabled' => !empty($modSettings['messageIcons_enable'])),
 						'settings' => array($txt['settings']),
 					),
 				),
@@ -407,6 +407,7 @@ function AdminMain()
 
 	// Make a note of the Unique ID for this menu.
 	$context['admin_menu_id'] = $context['max_menu_id'];
+	$context['admin_menu_name'] = 'menu_data_' . $context['admin_menu_id'];
 
 	// Nothing valid?
 	if ($admin_include_data == false)

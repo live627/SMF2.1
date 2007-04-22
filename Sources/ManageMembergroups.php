@@ -106,36 +106,11 @@ function ModifyMembergroups()
 	loadTemplate('ManageMembergroups');
 
 	// Setup the admin tabs.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['membergroups_title'],
 		'help' => 'membergroups',
 		'description' => $txt['membergroups_description'],
-		'tabs' => array(),
 	);
-	if (allowedTo('manage_membergroups'))
-	{
-		$context['admin_tabs']['tabs']['index'] = array(
-			'title' => $txt['membergroups_edit_groups'],
-			'description' => $txt['membergroups_description'],
-			'href' => $scripturl . '?action=admin;area=membergroups',
-			'is_selected' => $_REQUEST['sa'] != 'add' && $_REQUEST['sa'] != 'settings',
-		);
-		$context['admin_tabs']['tabs']['add_cat'] = array(
-			'title' => $txt['membergroups_new_group'],
-			'description' => $txt['membergroups_description'],
-			'href' => $scripturl . '?action=admin;area=membergroups;sa=add',
-			'is_selected' => $_REQUEST['sa'] == 'add',
-			'is_last' => !allowedTo('admin_forum'),
-		);
-	}
-	if (allowedTo('admin_forum'))
-		$context['admin_tabs']['tabs']['settings'] = array(
-			'title' => $txt['settings'],
-			'description' => $txt['membergroups_description'],
-			'href' => $scripturl . '?action=admin;area=membergroups;sa=settings',
-			'is_selected' => $_REQUEST['sa'] == 'settings',
-			'is_last' => true,
-		);
 
 	// Call the right function.
 	$subActions[$_REQUEST['sa']][0]();

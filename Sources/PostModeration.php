@@ -205,23 +205,10 @@ function UnapprovedPosts()
 	$context['start'] = $_GET['start'];
 
 	// We have enough to make some pretty tabs!
-	$context['admin_tabs'] = array(
+	$context[$context['moderation_menu_name']]['tab_data'] = array(
 		'title' => &$txt['mc_unapproved_posts'],
 		'help' => 'postmod',
 		'description' => $txt['mc_unapproved_posts_desc'],
-		'tabs' => array(
-			'posts' => array(
-				'title' => $txt['mc_unapproved_replies'] . ' (' . $context['total_unapproved_posts'] . ')',
-				'href' => $scripturl . '?action=moderate;area=postmod;sa=posts',
-				'is_selected' => $context['current_view'] == 'replies',
-			),
-			'topics' => array(
-				'title' => $txt['mc_unapproved_topics'] . ' (' . $context['total_unapproved_topics'] . ')',
-				'href' => $scripturl . '?action=moderate;area=postmod;sa=topics',
-				'is_selected' => $context['current_view'] == 'topics',
-				'is_last' => true,
-			)
-		)
 	);
 
 	// Update the tabs with the correct number of posts.

@@ -229,20 +229,21 @@ function ViewErrorLog()
 	}
 
 	// Setup the admin tabs!
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['errlog'],
 		'help' => 'error_log',
 		'description' => sprintf($txt['errlog_desc'], $txt['remove']),
-		'tabs' => array(
-			'all' => array(
-				'label' => $txt['errortype_all'],
-				'description' => isset($txt['errortype_all_desc']) ? $txt['errortype_all_desc'] : '',
-				'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : ''),
-				'is_selected' => empty($filter),
-			),
-		),
 	);
-	
+
+	$context['tabs'] = array();
+
+	$context['tabs']['all'] = array(
+		'label' => $txt['errortype_all'],
+		'description' => isset($txt['errortype_all_desc']) ? $txt['errortype_all_desc'] : '',
+		'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : ''),
+		'is_selected' => empty($filter),
+	);
+
 	$sum = 0;
 	// What type of errors do we have and how many do we have?
 	$request = $smfFunc['db_query']('', "
@@ -255,7 +256,7 @@ function ViewErrorLog()
 		// Total errors so far?
 		$sum += $row['num_errors'];
 
-		$context['admin_tabs']['tabs'][$sum] = array(
+		$context['tabs'][$sum] = array(
 			'label' => (isset($txt['errortype_' . $row['error_type']]) ? $txt['errortype_' . $row['error_type']] : $row['error_type']) . ' (' . $row['num_errors'] . ')',
 			'description' => isset($txt['errortype_' . $row['error_type'] . '_desc']) ? $txt['errortype_' . $row['error_type'] . '_desc'] : '',
 			'url' => $scripturl . '?action=admin;area=errorlog' . ($context['sort_direction'] == 'down' ? ';desc' : '') . ';filter=error_type;value='. $row['error_type'],
@@ -265,21 +266,18 @@ function ViewErrorLog()
 	$smfFunc['db_free_result']($request);
 
 	// Update the all errors tab with the total number of errors
-	$context['admin_tabs']['tabs']['all']['label'] .= ' (' . $sum . ')';
+	$context['tabs']['all']['label'] .= ' (' . $sum . ')';
 
 	// Finally, work out what is the last tab!
-	if (isset($context['admin_tabs']['tabs'][$sum]))
-		$context['admin_tabs']['tabs'][$sum]['is_last'] = true;
+	if (isset($context['tabs'][$sum]))
+		$context['tabs'][$sum]['is_last'] = true;
 	else
-		$context['admin_tabs']['tabs']['all']['is_last'] = true;
+		$context['tabs']['all']['is_last'] = true;
 
 	// And this is pretty basic ;).
 	$context['page_title'] = $txt['errlog'];
 	$context['has_filter'] = isset($filter);
 	$context['sub_template'] = 'error_log';
-
-	//!!! Temporary fix.
-	$context['tabs'] = $context['admin_tabs']['tabs'];
 }
 
 // Delete errors from the database.

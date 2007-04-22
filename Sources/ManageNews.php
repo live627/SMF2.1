@@ -97,35 +97,25 @@ function ManageNews()
 	isAllowedTo($subActions[$_REQUEST['sa']][1]);
 
 	// Create the tabs for the template.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['news_title'],
 		'help' => 'edit_news',
 		'description' => $txt['admin_news_desc'],
-		'tabs' => array(),
+		'tabs' => array(
+			'edit_news' => array(
+			),
+			'mailingmembers' => array(
+				'description' => $txt['news_mailing_desc'],
+			),
+			'settings' => array(
+				'description' => $txt['news_settings_desc'],
+			),
+		),
 	);
-	if (allowedTo('edit_news'))
-		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['admin_edit_news'],
-			'description' => $txt['admin_news_desc'],
-			'href' => $scripturl . '?action=admin;area=news',
-			'is_selected' => $_REQUEST['sa'] == 'editnews',
-		);
-	if (allowedTo('send_mail'))
-		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['admin_newsletters'],
-			'description' => $txt['news_mailing_desc'],
-			'href' => $scripturl . '?action=admin;area=news;sa=mailingmembers',
-			'is_selected' => substr($_REQUEST['sa'], 0, 7) == 'mailing',
-		);
-	if (allowedTo('admin_forum'))
-		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['settings'],
-			'description' => $txt['news_settings_desc'],
-			'href' => $scripturl . '?action=admin;area=news;sa=settings',
-			'is_selected' => $_REQUEST['sa'] == 'settings',
-		);
 
-	$context['admin_tabs']['tabs'][count($context['admin_tabs']['tabs']) - 1]['is_last'] = true;
+	// Force the right area...
+	if (substr($_REQUEST['sa'], 0, 7) == 'mailing')
+		$context[$context['admin_menu_name']]['current_subsection'] = 'mailingmembers';
 
 	$subActions[$_REQUEST['sa']][0]();
 }

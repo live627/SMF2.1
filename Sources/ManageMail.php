@@ -70,28 +70,11 @@ function ManageMail()
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Load up all the tabs...
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['mailqueue_title'],
 		'help' => '',
 		'description' => $txt['mailqueue_desc'],
-		'tabs' => array(
-			'browse' => array(
-				'title' => $txt['mailqueue_browse'],
-				'href' => $scripturl . '?action=admin;area=mailqueue;sa=browse;sesc=' . $context['session_id'],
-			),
-			'settings' => array(
-				'title' => $txt['mailqueue_settings'],
-				'href' => $scripturl . '?action=admin;area=mailqueue;sa=settings;sesc=' . $context['session_id'],
-				'is_last' => true,
-			),
-		),
 	);
-
-	// Select the right tab based on the sub action.
-	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
-		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
-	else
-		$context['admin_tabs']['tabs']['browse']['is_selected'] = true;
 
 	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']]();

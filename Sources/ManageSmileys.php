@@ -83,57 +83,40 @@ function ManageSmileys()
 	$context['sub_template'] = $context['sub_action'];
 
 	// Load up all the tabs...
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['smileys_manage'],
 		'help' => 'smileys',
 		'description' => $txt['smiley_settings_explain'],
 		'tabs' => array(
 			'editsets' => array(
-				'title' => $txt['smiley_sets'],
 				'description' => $txt['smiley_editsets_explain'],
-				'href' => $scripturl . '?action=admin;area=smileys;sa=editsets',
 			),
 			'addsmiley' => array(
-				'title' => $txt['smileys_add'],
 				'description' => $txt['smiley_addsmiley_explain'],
-				'href' => $scripturl . '?action=admin;area=smileys;sa=addsmiley',
 			),
 			'editsmileys' => array(
-				'title' => $txt['smileys_edit'],
 				'description' => $txt['smiley_editsmileys_explain'],
-				'href' => $scripturl . '?action=admin;area=smileys;sa=editsmileys',
 			),
 			'setorder' => array(
-				'title' => $txt['smileys_set_order'],
 				'description' => $txt['smiley_setorder_explain'],
-				'href' => $scripturl . '?action=admin;area=smileys;sa=setorder',
 			),
 			'editicons' => array(
-				'title' => $txt['icons_edit_message_icons'],
 				'description' => $txt['icons_edit_icons_explain'],
-				'href' => $scripturl . '?action=admin;area=smileys;sa=editicons',
 			),
 			'settings' => array(
-				'title' => $txt['settings'],
 				'description' => $txt['smiley_settings_explain'],
-				'href' => $scripturl . '?action=admin;area=smileys;sa=settings',
-				'is_last' => true,
 			),
 		),
 	);
 
-	// Select the right tab based on the sub action.
-	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
-		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
-
 	// Some settings may not be enabled, disallow these from the tabs as appropriate.
 	if (empty($modSettings['messageIcons_enable']))
-		unset($context['admin_tabs']['tabs']['editicons']);
+		$context[$context['admin_menu_name']]['tab_data']['tabs']['editicons']['disabled'] = true;
 	if (empty($modSettings['smiley_enable']))
 	{
-		unset($context['admin_tabs']['tabs']['addsmiley']);
-		unset($context['admin_tabs']['tabs']['editsmileys']);
-		unset($context['admin_tabs']['tabs']['setorder']);
+		$context[$context['admin_menu_name']]['tab_data']['tabs']['addsmiley']['disabled'] = true;
+		$context[$context['admin_menu_name']]['tab_data']['tabs']['editsmileys']['disabled'] = true;
+		$context[$context['admin_menu_name']]['tab_data']['tabs']['setorder']['disabled'] = true;
 	}
 
 	// Call the right function for this sub-acton.
@@ -206,7 +189,7 @@ function EditSmileySets()
 	global $smfFunc, $scripturl, $sourcedir;
 
 	// Set the right tab to be selected.
-	$context['admin_tabs']['tabs']['editsets']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'editsets';
 
 	// They must've been submitted a form.
 	if (isset($_POST['sc']))
@@ -743,7 +726,7 @@ function EditSmileys()
 	global $smfFunc, $scripturl, $sourcedir;
 
 	// Force the correct tab to be displayed.
-	$context['admin_tabs']['tabs']['editsmileys']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'editsmileys';
 
 	// Submitting a form?
 	if (isset($_POST['sc']))
@@ -1124,7 +1107,7 @@ function Editsmiley_order()
 	global $modSettings, $context, $settings, $db_prefix, $txt, $boarddir, $smfFunc;
 
 	// Move smileys to another position.
-	if (isset($_GET['sesc']))
+	if (isset($_REQUEST['reorder']))
 	{
 		checkSession('get');
 
@@ -1459,7 +1442,7 @@ function EditMessageIcons()
 			redirectexit('action=admin;area=smileys;sa=editicons');
 	}
 
-	$context['admin_tabs']['tabs']['editicons']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'editicons';
 
 	$listOptions = array(
 		'id' => 'message_icon_list',

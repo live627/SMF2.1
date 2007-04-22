@@ -46,6 +46,9 @@ function createMenu($menuData, $menuOptions = array())
 		);
 	}
 
+	// Work out where we should get our images from.
+	$context['menu_image_path'] = file_exists($settings['images_url'] . '/admin/change_menu.png') ? $settings['images_url'] . '/admin' : $settings['default_images_url'] . '/admin';
+
 	/* Note menuData is array of form:
 
 		Possible fields:
@@ -69,6 +72,7 @@ function createMenu($menuData, $menuOptions = array())
 				string 0:		Text label for this subsection.
 				array 1:		Array of permissions to check for this subsection.
 				bool 2:			Is this the default subaction - if not set for any will default to first...
+				bool enabled:		Bool to say whether this should be enabled or not.
 	*/
 
 	// Every menu gets a unique ID, these are shown in first in, first out order.
@@ -123,7 +127,7 @@ function createMenu($menuData, $menuOptions = array())
 					if (!isset($area['force_menu_into_arms_of_another_menu']) && $user_info['name'] == 'iamanoompaloompa')
 						$menu_context['sections'][$section_id]['areas'][$area_id] = unserialize(base64_decode('YTozOntzOjU6ImxhYmVsIjtzOjEyOiJPb21wYSBMb29tcGEiO3M6MzoidXJsIjtzOjQzOiJodHRwOi8vZW4ud2lraXBlZGlhLm9yZy93aWtpL09vbXBhX0xvb21wYXM/IjtzOjQ6Imljb24iO3M6ODY6IjxpbWcgc3JjPSJodHRwOi8vd3d3LnNpbXBsZW1hY2hpbmVzLm9yZy9pbWFnZXMvb29tcGEuZ2lmIiBhbHQ9IkknbSBhbiBPb21wYSBMb29tcGEiIC8+Ijt9'));
 					elseif (isset($area['icon']))
-						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $settings['images_url'] . '/admin/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
+						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '<img src="' . $context['menu_image_path'] . '/' . $area['icon'] . '" alt="" />&nbsp;&nbsp;';
 					else
 						$menu_context['sections'][$section_id]['areas'][$area_id]['icon'] = '';
 
@@ -133,7 +137,8 @@ function createMenu($menuData, $menuOptions = array())
 						$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'] = array();
 						$first_sa = 0;
 						foreach ($area['subsections'] as $sa => $sub)
-							if (empty($sub[1]) || allowedTo($sub[1]))
+						{
+							if ((empty($sub[1]) || allowedTo($sub[1])) && (!isset($sub['enabled']) || !empty($sub['enabled'])))
 							{
 								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa] = array('label' => $sub[0]);
 								// Custom URL?
@@ -156,6 +161,10 @@ function createMenu($menuData, $menuOptions = array())
 								}
 								$last_sa = $sa;
 							}
+							// Mark it as disabled...
+							else
+								$menu_context['sections'][$section_id]['areas'][$area_id]['subsections'][$sa]['disabled'] = true;
+						}
 
 						// Set which one is last and selected in the group.
 						if (!empty($menu_context['sections'][$section_id]['areas'][$area_id]['subsections']))

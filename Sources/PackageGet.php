@@ -92,31 +92,21 @@ function PackageGet()
 	$context['menu_data_' . $context['admin_menu_id']]['current_subsection'] = 'packageget';
 
 	// Now create the tabs for the template.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['package_manager'],
 		//'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(
 			'browse' => array(
-				'title' => $txt['browse_packages'],
-				'href' => $scripturl . '?action=admin;area=packages;sa=browse',
 			),
 			'packageget' => array(
-				'title' => $txt['download_packages'],
 				'description' => $txt['download_packages_desc'],
-				'href' => $scripturl . '?action=admin;area=packages;get',
-				'is_selected' => true,
 			),
 			'installed' => array(
-				'title' => $txt['installed_packages'],
 				'description' => $txt['installed_packages_desc'],
-				'href' => $scripturl . '?action=admin;area=packages;sa=installed',
 			),
 			'options' => array(
-				'title' => $txt['package_settings'],
 				'description' => $txt['package_install_options_ftp_why'],
-				'href' => $scripturl . '?action=admin;area=packages;sa=options',
-				'is_last' => true,
 			),
 		),
 	);

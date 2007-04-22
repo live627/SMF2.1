@@ -95,33 +95,22 @@ function ManageSearch()
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Create the tabs for the template.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['manage_search'],
 		'help' => 'search',
 		'description' => $txt['search_settings_desc'],
 		'tabs' => array(
 			'weights' => array(
-				'title' => $txt['search_weights'],
 				'description' => $txt['search_weights_desc'],
-				'href' => $scripturl . '?action=admin;area=managesearch;sa=weights',
 			),
 			'method' => array(
-				'title' => $txt['search_method'],
 				'description' => $txt['search_method_desc'],
-				'href' => $scripturl . '?action=admin;area=managesearch;sa=method',
 			),
 			'settings' => array(
-				'title' => $txt['settings'],
 				'description' => $txt['search_settings_desc'],
-				'href' => $scripturl . '?action=admin;area=managesearch;sa=settings',
-				'is_last' => true,
 			),
 		),
 	);
-
-	// Make sure the tab they are using has is_selected set.
-	if (isset($context['admin_tabs']['tabs'][$_REQUEST['sa']]))
-		$context['admin_tabs']['tabs'][$_REQUEST['sa']]['is_selected'] = true;
 
 	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']]();
@@ -205,7 +194,7 @@ function EditSearchMethod()
 {
 	global $txt, $context, $modSettings, $db_prefix, $smfFunc;
 
-	$context['admin_tabs']['tabs']['method']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
 	$context['page_title'] = $txt['search_method_title'];
 	$context['sub_template'] = 'select_search_method';
 	$context['supports_fulltext'] = $smfFunc['db_search_support']('fulltext');
@@ -376,7 +365,7 @@ function CreateMessageIndex()
 {
 	global $modSettings, $context, $db_prefix, $smfFunc;
 
-	$context['admin_tabs']['tabs']['method']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
 
 	$messages_per_batch = 100;
 

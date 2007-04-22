@@ -84,43 +84,25 @@ function ManagePostSettings()
 	$context['page_title'] = $txt['manageposts_title'];
 
 	// Tabs for browsing the different ban functions.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['manageposts_title'],
 		'help' => 'posts_and_topics',
 		'description' => $txt['manageposts_description'],
-		'tabs' => array()
+		'tabs' => array(
+			'posts' => array(
+				'description' => $txt['manageposts_settings_description'],
+			),
+			'bbc' => array(
+				'description' => $txt['manageposts_bbc_settings_description'],
+			),
+			'censor' => array(
+				'description' => $txt['admin_censored_desc'],
+			),
+			'topics' => array(
+				'description' => $txt['manageposts_topic_settings_description'],
+			),
+		),
 	);
-	if (allowedTo('admin_forum'))
-	{
-		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['manageposts_settings'],
-			'description' => $txt['manageposts_settings_description'],
-			'href' => $scripturl . '?action=admin;area=postsettings;sa=posts',
-			'is_selected' => $_REQUEST['sa'] == 'posts',
-		);
-		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['manageposts_bbc_settings'],
-			'description' => $txt['manageposts_bbc_settings_description'],
-			'href' => $scripturl . '?action=admin;area=postsettings;sa=bbc',
-			'is_selected' => $_REQUEST['sa'] == 'bbc',
-		);
-	}
-	if (allowedTo('moderate_forum'))
-		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['admin_censored_words'],
-			'description' => $txt['admin_censored_desc'],
-			'href' => $scripturl . '?action=admin;area=postsettings;sa=censor',
-			'is_selected' => $_REQUEST['sa'] == 'censor',
-			'is_last' => !allowedTo('admin_forum'),
-		);
-	if (allowedTo('admin_forum'))
-		$context['admin_tabs']['tabs'][] = array(
-			'title' => $txt['manageposts_topic_settings'],
-			'description' => $txt['manageposts_topic_settings_description'],
-			'href' => $scripturl . '?action=admin;area=postsettings;sa=topics',
-			'is_selected' => $_REQUEST['sa'] == 'topics',
-			'is_last' => true,
-		);
 
 	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']][0]();

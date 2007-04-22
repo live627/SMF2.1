@@ -90,30 +90,11 @@ function ModifySettings()
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Load up all the tabs...
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['admin_server_settings'],
 		'help' => 'serversettings',
 		'description' => $txt['admin_basic_settings'],
-		'tabs' => array(
-			'core' => array(
-				'title' => $txt['core_configuration'],
-				'href' => $scripturl . '?action=admin;area=serversettings;sa=core;sesc=' . $context['session_id'],
-			),
-			'other' => array(
-				'title' => $txt['other_configuration'],
-				'href' => $scripturl . '?action=admin;area=serversettings;sa=other;sesc=' . $context['session_id'],
-			),
-			'cache' => array(
-				'title' => $txt['caching_settings'],
-				'href' => $scripturl . '?action=admin;area=serversettings;sa=cache;sesc=' . $context['session_id'],
-				'is_last' => true,
-			),
-		),
 	);
-
-	// Select the right tab based on the sub action.
-	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
-		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
 
 	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']]();

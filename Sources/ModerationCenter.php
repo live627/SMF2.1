@@ -147,6 +147,7 @@ function ModerationMain($dont_call = false)
 
 	// Retain the ID information incase required by a subaction.
 	$context['moderation_menu_id'] = $context['max_menu_id'];
+	$context['moderation_menu_name'] = 'menu_data_' . $context['moderation_menu_id'];
 
 	// We got something - didn't we? DIDN'T WE!
 	if ($mod_include_data == false)
@@ -436,23 +437,10 @@ function ReportedPosts()
 	$context['view_closed'] = isset($_GET['sa']) && $_GET['sa'] == 'closed' ? 1 : 0;
 
 	// Put the open and closed options into tabs, because we can...
-	$context['admin_tabs'] = array(
+	$context[$context['moderation_menu_name']]['tab_data'] = array(
 		'title' => $txt['mc_reported_posts'],
 		'help' => '',
 		'description' => $txt['mc_reported_posts_desc'],
-		'tabs' => array(
-			'open' => array(
-				'title' => $txt['mc_reportedp_open'],
-				'href' => $scripturl . '?action=moderate;area=reports',
-				'is_selected' => !$context['view_closed'],
-			),
-			'closed' => array(
-				'title' => $txt['mc_reportedp_closed'],
-				'href' => $scripturl . '?action=moderate;area=reports;sa=closed',
-				'is_last' => true,
-				'is_selected' => $context['view_closed'],
-			),
-		),
 	);
 
 	// Are we doing any work?
@@ -755,23 +743,10 @@ function ViewWatchedUsers()
 	$modSettings['warning_watch'] = empty($modSettings['warning_watch']) ? 1 : $modSettings['warning_watch'];
 
 	// Put some pretty tabs on cause we're gonna be doing hot stuff here...
-	$context['admin_tabs'] = array(
+	$context[$context['moderation_menu_name']]['tab_data'] = array(
 		'title' => $txt['mc_watched_users_title'],
 		'help' => '',
 		'description' => $txt['mc_watched_users_desc'],
-		'tabs' => array(
-			'member' => array(
-				'title' => $txt['mc_watched_users_member'],
-				'href' => $scripturl . '?action=moderate;area=userwatch',
-				'is_selected' => !$context['view_posts'],
-			),
-			'post' => array(
-				'title' => $txt['mc_watched_users_post'],
-				'href' => $scripturl . '?action=moderate;area=userwatch;sa=post',
-				'is_last' => true,
-				'is_selected' => $context['view_posts'],
-			),
-		),
 	);
 
 	// First off - are we deleting?

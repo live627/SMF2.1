@@ -145,37 +145,11 @@ function ManageAttachments()
 		$context['sub_action'] = 'browse';
 
 	// This uses admin tabs - as it should!
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['attachments_avatars'],
 		'help' => 'manage_files',
 		'description' => $txt['attachments_desc'],
-		'tabs' => array(
-			'browse' => array(
-				'title' => $txt['attachment_manager_browse'],
-				'href' => $scripturl . '?action=admin;area=manageattachments;sa=browse',
-			),
-			'attachments' => array(
-				'title' => $txt['attachment_manager_settings'],
-				'href' => $scripturl . '?action=admin;area=manageattachments;sa=attachments',
-			),
-			'avatars' => array(
-				'title' => $txt['attachment_manager_avatar_settings'],
-				'href' => $scripturl . '?action=admin;area=manageattachments;sa=avatars',
-			),
-			'maintenance' => array(
-				'title' => $txt['attachment_manager_maintenance'],
-				'href' => $scripturl . '?action=admin;area=manageattachments;sa=maintenance',
-				'is_last' => true,
-			),
-		),
 	);
-
-	// Select the right tab based on the sub action.
-	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
-	{
-		$context['page_title'] = $context['admin_tabs']['tabs'][$context['sub_action']]['title'];
-		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
-	}
 
 	// Finally fall through to what we are doing.
 	$subActions[$context['sub_action']]();
@@ -1112,7 +1086,7 @@ function RepairAttachments()
 
 	// Got here we must be doing well - just the template! :D
 	$context['page_title'] = $txt['repair_attachments'];
-	$context['admin_tabs']['tabs']['maintenance']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'maintenance';
 	$context['sub_template'] = 'attachment_repair';
 
 	// What stage are we at?
@@ -1141,7 +1115,7 @@ function pauseAttachmentMaintenance($to_fix, $max_substep = 0)
 	$context['sub_template'] = 'not_done';
 
 	// Specific stuff to not break this template!
-	$context['admin_tabs']['tabs']['maintenance']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'maintenance';
 
 	// Change these two if more steps are added!
 	if (empty($max_substep))

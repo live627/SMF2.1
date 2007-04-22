@@ -28,18 +28,18 @@ if (!defined('SMF'))
 /*	ManagePermissions handles all possible permission stuff. The following
 	functions are used:
 
-   void ModifyPermissions()
-      - calls the right function based on the given subaction.
-      - checks the permissions, based on the sub-action.
-      - called by ?action=managepermissions.
-      - loads the ManagePermissions language file.
-
-   void PermissionIndex()
-      - sets up the permissions by membergroup index page.
-      - called by ?action=managepermissions
-      - uses the permission_index template of the ManageBoards template.
-      - loads the ManagePermissions language and template.
-      - creates an array of all the groups with the number of members and permissions.
+	void ModifyPermissions()
+		- calls the right function based on the given subaction.
+		- checks the permissions, based on the sub-action.
+		- called by ?action=managepermissions.
+		- loads the ManagePermissions language file.
+		
+	void PermissionIndex()
+		- sets up the permissions by membergroup index page.
+		- called by ?action=managepermissions
+		- uses the permission_index template of the ManageBoards template.
+		- loads the ManagePermissions language and template.
+		- creates an array of all the groups with the number of members and permissions.
 
 	void SetQuickGroups()
 		- handles permission modification actions from the upper part of the
@@ -118,36 +118,22 @@ function ModifyPermissions()
 	isAllowedTo($subActions[$_REQUEST['sa']][1]);
 
 	// Create the tabs for the template.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['permissions_title'],
 		'help' => 'permissions',
 		'description' => '',
-		'tabs' => array(),
+		'tabs' => array(
+			'index' => array(
+				'description' => $txt['permissions_groups'],
+			),
+			'board' => array(
+				'description' => $txt['permission_by_board_desc'],
+			),
+			'settings' => array(
+				'description' => $txt['permission_settings_desc'],
+			),
+		),
 	);
-	if (allowedTo('manage_permissions'))
-	{
-		$context['admin_tabs']['tabs']['index'] = array(
-			'title' => $txt['permissions_groups'],
-			'description' => $txt['permission_by_membergroup_desc'],
-			'href' => $scripturl . '?action=admin;area=permissions',
-			'is_selected' => in_array($_REQUEST['sa'], array('modify', 'index')) && empty($_REQUEST['boardid']),
-		);
-		$context['admin_tabs']['tabs']['board_permissions'] = array(
-			'title' => $txt['permissions_boards'],
-			'description' => $txt['permission_by_board_desc'],
-			'href' => $scripturl . '?action=admin;area=permissions;sa=board',
-			'is_selected' => in_array($_REQUEST['sa'], array('board', 'switch', 'profiles')) || (in_array($_REQUEST['sa'], array('modify', 'index')) && !empty($_REQUEST['boardid'])),
-			'is_last' => !allowedTo('admin_forum'),
-		);
-	}
-	if (allowedTo('admin_forum'))
-		$context['admin_tabs']['tabs']['settings'] = array(
-			'title' => $txt['settings'],
-			'description' => $txt['permission_settings_desc'],
-			'href' => $scripturl . '?action=admin;area=permissions;sa=settings',
-			'is_selected' => $_REQUEST['sa'] == 'settings',
-			'is_last' => true,
-		);
 
 	$subActions[$_REQUEST['sa']][0]();
 }
@@ -352,8 +338,7 @@ function PermissionIndex()
 		$_REQUEST['pid'] = (int) $_REQUEST['pid'];
 
 		// Change the selected tab to better reflect that this really is a board profile.
-		$context['admin_tabs']['tabs']['board_permissions']['is_selected'] = true;
-		$context['admin_tabs']['tabs']['index']['is_selected'] = false;
+		$context[$context['admin_menu_name']]['current_subsection'] = 'board';
 
 		$request = $smfFunc['db_query']('', "
 			SELECT id_profile, id_group, COUNT(*) AS num_permissions, add_deny
@@ -792,6 +777,7 @@ function SwitchBoard()
 
 	// Finally, just the template stuff.
 	$context['sub_template'] = 'switch_profiles';
+	$context[$context['admin_menu_name']]['current_subsection'] = 'board';
 	$context['page_title'] = sprintf($txt['permissions_profiles_change_for_board'], $context['board']['name']);
 }
 
@@ -834,8 +820,7 @@ function ModifyMembergroup()
 	if ($context['local'])
 	{
 		$context['profile']['name'] = $context['profiles'][$_GET['pid']]['name'];
-		$context['admin_tabs']['tabs']['board_permissions']['is_selected'] = true;
-		$context['admin_tabs']['tabs']['index']['is_selected'] = false;
+		$context[$context['admin_menu_name']]['current_subsection'] = 'board';
 	}
 
 	// Fetch the current permissions.
@@ -1689,6 +1674,7 @@ function EditPermissionProfiles()
 
 	// Setup the template, first for fun.
 	$context['page_title'] = $txt['permissions_profile_edit'];
+	$context[$context['admin_menu_name']]['current_subsection'] = 'board';
 	$context['sub_template'] = 'edit_profiles';
 
 	// If we're creating a new one do it first.

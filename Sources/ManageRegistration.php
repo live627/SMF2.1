@@ -91,42 +91,25 @@ function RegCenter()
 	loadTemplate('Register');
 
 	// Next create the tabs for the template.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['registration_center'],
 		'help' => 'registrations',
 		'description' => $txt['admin_settings_desc'],
 		'tabs' => array(
 			'register' => array(
-				'title' => $txt['admin_browse_register_new'],
 				'description' => $txt['admin_register_desc'],
-				'href' => $scripturl . '?action=admin;area=regcenter;sa=register',
-				'is_selected' => $context['sub_action'] == 'register',
-				'is_last' => !allowedTo('admin_forum'),
+			),
+			'agreement' => array(
+				'description' => $txt['registration_agreement_desc'],
+			),
+			'reservednames' => array(
+				'description' => $txt['admin_reserved_desc'],
+			),
+			'settings' => array(
+				'description' => $txt['admin_settings_desc'],
 			)
 		)
 	);
-	if (allowedTo('admin_forum'))
-	{
-		$context['admin_tabs']['tabs']['agreement'] = array(
-			'title' => $txt['registration_agreement'],
-			'description' => $txt['registration_agreement_desc'],
-			'href' => $scripturl . '?action=admin;area=regcenter;sa=agreement',
-			'is_selected' => $context['sub_action'] == 'agreement',
-		);
-		$context['admin_tabs']['tabs']['reservednames'] = array(
-			'title' => $txt['admin_reserved_set'],
-			'description' => $txt['admin_reserved_desc'],
-			'href' => $scripturl . '?action=admin;area=regcenter;sa=reservednames',
-			'is_selected' => $context['sub_action'] == 'reservednames',
-		);
-		$context['admin_tabs']['tabs']['settings'] = array(
-			'title' => $txt['settings'],
-			'description' => $txt['admin_settings_desc'],
-			'href' => $scripturl . '?action=admin;area=regcenter;sa=settings',
-			'is_last' => true,
-			'is_selected' => $context['sub_action'] == 'settings',
-		);
-	}
 
 	// Finally, get around to calling the function...
 	$subActions[$context['sub_action']][0]();
@@ -136,9 +119,6 @@ function RegCenter()
 function AdminRegister()
 {
 	global $txt, $context, $db_prefix, $sourcedir, $scripturl, $smfFunc;
-
-	// Setup the "tab", just incase an error occurs.
-	$context['admin_tabs']['tabs']['register']['is_selected'] = true;
 
 	if (!empty($_POST['regSubmit']))
 	{

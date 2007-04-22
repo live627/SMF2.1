@@ -106,40 +106,24 @@ function Packages()
 		$context['sub_action'] = 'browse';
 
 	// Set up some tabs...
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['package_manager'],
 		// !!! 'help' => 'registrations',
 		'description' => $txt['package_manager_desc'],
 		'tabs' => array(
 			'browse' => array(
-				'title' => $txt['browse_packages'],
-				'href' => $scripturl . '?action=admin;area=packages;sa=browse',
 			),
 			'packageget' => array(
-				'title' => $txt['download_packages'],
 				'description' => $txt['download_packages_desc'],
-				'href' => $scripturl . '?action=admin;area=packages;get',
 			),
 			'installed' => array(
-				'title' => $txt['installed_packages'],
 				'description' => $txt['installed_packages_desc'],
-				'href' => $scripturl . '?action=admin;area=packages;sa=installed',
 			),
 			'options' => array(
-				'title' => $txt['package_settings'],
 				'description' => $txt['package_install_options_ftp_why'],
-				'href' => $scripturl . '?action=admin;area=packages;sa=options',
-				'is_last' => true,
 			),
 		),
 	);
-
-	// Attempt to automatically select the right tab.
-	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
-		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
-	// Otherwise it's going to be the browse anyway...
-	else
-		$context['admin_tabs']['tabs']['browse']['is_selected'] = true;
 
 	// Call the function we're handing control to.
 	$subActions[$context['sub_action']]();

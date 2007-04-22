@@ -142,48 +142,29 @@ function ModifyFeatureSettings()
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Load up all the tabs...
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['modSettings_title'],
 		'help' => 'modsettings',
 		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id']),
 		'tabs' => array(
 			'basic' => array(
-				'title' => $txt['mods_cat_features'],
-				'href' => $scripturl . '?action=admin;area=featuresettings;sa=basic;sesc=' . $context['session_id'],
 			),
 			'security' => array(
-				'title' => $txt['mods_cat_security'],
-				'href' => $scripturl . '?action=admin;area=featuresettings;sa=security;sesc=' . $context['session_id'],
 			),
 			'layout' => array(
-				'title' => $txt['mods_cat_layout'],
-				'href' => $scripturl . '?action=admin;area=featuresettings;sa=layout;sesc=' . $context['session_id'],
 			),
 			'karma' => array(
-				'title' => $txt['karma'],
-				'href' => $scripturl . '?action=admin;area=featuresettings;sa=karma;sesc=' . $context['session_id'],
 			),
 			'moderation' => array(
-				'title' => $txt['moderation_settings_short'],
-				'href' => $scripturl . '?action=admin;area=featuresettings;sa=moderation;sesc=' . $context['session_id'],
 			),
 			'sig' => array(
-				'title' => $txt['signature_settings_short'],
 				'description' => $txt['signature_settings_desc'],
-				'href' => $scripturl . '?action=admin;area=featuresettings;sa=sig;sesc=' . $context['session_id'],
 			),
 			'profile' => array(
-				'title' => $txt['custom_profile_shorttitle'],
 				'description' => $txt['custom_profile_desc'],
-				'href' => $scripturl . '?action=admin;area=featuresettings;sa=profile;sesc=' . $context['session_id'],
-				'is_last' => true,
 			),
 		),
 	);
-
-	// Select the right tab based on the sub action.
-	if (isset($context['admin_tabs']['tabs'][$context['sub_action']]))
-		$context['admin_tabs']['tabs'][$context['sub_action']]['is_selected'] = true;
 
 	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']]();
@@ -711,7 +692,7 @@ function pauseSignatureApplySettings()
 	$context['sub_template'] = 'not_done';
 
 	// Specific stuff to not break this template!
-	$context['admin_tabs']['tabs']['sig']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'sig';
 
 	// Get the right percent.
 	$context['continue_percent'] = round(($_GET['step'] / $context['max_member']) * 100);
@@ -807,7 +788,7 @@ function EditCustomProfiles()
 
 	// Sort out the context!
 	$context['fid'] = isset($_GET['fid']) ? (int) $_GET['fid'] : 0;
-	$context['admin_tabs']['tabs']['profile']['is_selected'] = true;
+	$context[$context['admin_menu_name']]['current_subsection'] = 'profile';
 	$context['page_title'] = $context['fid'] ? $txt['custom_edit_title'] : $txt['custom_add_title'];
 	$context['sub_template'] = 'edit_profile_field';
 

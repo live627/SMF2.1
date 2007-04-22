@@ -104,36 +104,20 @@ function ManageBoards()
 	isAllowedTo($subActions[$_REQUEST['sa']][1]);
 
 	// Create the tabs for the template.
-	$context['admin_tabs'] = array(
+	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => $txt['boards_and_cats'],
 		'help' => 'manage_boards',
 		'description' => $txt['boards_and_cats_desc'],
-		'tabs' => array(),
+		'tabs' => array(
+			'main' => array(
+			),
+			'newcat' => array(
+			),
+			'settings' => array(
+				'description' => $txt['mboards_settings_desc'],
+			),
+		),
 	);
-	if (allowedTo('manage_boards'))
-	{
-		$context['admin_tabs']['tabs']['modify_boards'] = array(
-			'title' => $txt['boardsEdit'],
-			'description' => $txt['boards_and_cats_desc'],
-			'href' => $scripturl . '?action=admin;area=manageboards',
-			'is_selected' => $_REQUEST['sa'] != 'newcat' && $_REQUEST['sa'] != 'settings',
-		);
-		$context['admin_tabs']['tabs']['add_cat'] = array(
-			'title' => $txt['mboards_new_cat'],
-			'description' => $txt['boards_and_cats_desc'],
-			'href' => $scripturl . '?action=admin;area=manageboards;sa=newcat',
-			'is_selected' => $_REQUEST['sa'] == 'newcat',
-			'is_last' => !allowedTo('admin_forum'),
-		);
-	}
-	if (allowedTo('admin_forum'))
-		$context['admin_tabs']['tabs']['settings'] = array(
-			'title' => $txt['settings'],
-			'description' => $txt['mboards_settings_desc'],
-			'href' => $scripturl . '?action=admin;area=manageboards;sa=settings',
-			'is_selected' => $_REQUEST['sa'] == 'settings',
-			'is_last' => true,
-		);
 
 	$subActions[$_REQUEST['sa']][0]();
 }

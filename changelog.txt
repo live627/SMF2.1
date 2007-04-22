@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2716 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2717 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -37,6 +37,7 @@ April 2007
  ! ModLog wasn't properly restricting entries for users. (ModLog.php)
  ! WYSIWYG editor wasn't previewing correctly. (Post.php, editor.js)
  ! Group monthly statistics by year. (Stats.php, Stats and XML template files, Stats language, stats.js)
+ ! Completed the backend changes for the new admin menu and made tabs visible regardless of menu preference. (Most Admin files)
 
 
 March 2007
