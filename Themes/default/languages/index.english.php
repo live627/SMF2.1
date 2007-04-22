@@ -675,7 +675,7 @@ $txt['calendar_menu'] = 'View Calendar';
 
 //!!! Send email strings - should move?
 $txt['send_email'] = 'Send Email';
-$txt['send_email_disclosed'] = 'Note this will be visable to the recipient.';
+$txt['send_email_disclosed'] = 'Note this will be visible to the recipient.';
 $txt['send_email_subject'] = 'Email Subject';
 
 ?>
