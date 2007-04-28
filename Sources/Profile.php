@@ -1740,7 +1740,7 @@ function showPosts($memID)
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_first_msg = m.id_msg)" : '') . "
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
 		WHERE m.id_member = $memID
-			AND m.approved = 1", __FILE__, __LINE__);
+			" . ($context['user']['is_owner'] ? '' : 'AND m.approved = 1'), __FILE__, __LINE__);
 	list ($msgCount) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1748,7 +1748,7 @@ function showPosts($memID)
 		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {$db_prefix}messages AS m
 		WHERE m.id_member = $memID
-			AND m.approved = 1", __FILE__, __LINE__);
+			" . ($context['user']['is_owner'] ? '' : 'AND m.approved = 1'), __FILE__, __LINE__);
 	list ($min_msg_member, $max_msg_member) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1799,8 +1799,7 @@ function showPosts($memID)
 				" . (empty($range_limit) ? '' : "
 				AND $range_limit") . "
 				AND $user_info[query_see_board]
-				AND t.approved = 1
-				AND m.approved = 1
+				" . ($context['user']['is_owner'] ? '' : 'AND m.approved = 1 AND t.approved = 1') . "
 			ORDER BY m.id_msg " . ($reverse ? 'ASC' : 'DESC') . "
 			LIMIT $start, $maxIndex", __FILE__, __LINE__);
 
@@ -1936,7 +1935,7 @@ function showAttachments($memID)
 			AND m.id_member = $memID
 			AND $user_info[query_see_board]" . (!in_array(0, $boardsAllowed) ? "
 			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
-			AND m.approved = 1", __FILE__, __LINE__);
+			" . ($context['user']['is_owner'] ? '' : 'AND m.approved = 1'), __FILE__, __LINE__);
 	list ($attachCount) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -1969,7 +1968,7 @@ function showAttachments($memID)
 			AND m.id_member = $memID
 			AND $user_info[query_see_board]" . (!in_array(0, $boardsAllowed) ? "
 			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . "
-			AND m.approved = 1
+			" . ($context['user']['is_owner'] ? '' : 'AND m.approved = 1') . "
 		ORDER BY $sort " . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . "
 		LIMIT $context[start], $maxIndex", __FILE__, __LINE__);
 	$context['attachments'] = array();

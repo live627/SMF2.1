@@ -289,7 +289,7 @@ function MessageIndex()
 				LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)" : '') . ($context['sort_by'] === 'last_poster' ? "
 				LEFT JOIN {$db_prefix}members AS meml ON (meml.id_member = ml.id_member)" : '') . "
 			WHERE t.id_board = $board
-				" . ($context['can_approve_posts'] ? '' : ' AND t.approved = 1') . "
+				" . ($context['can_approve_posts'] ? '' : " AND (t.approved = 1 OR (t.id_member_started != 0 AND t.id_member_started = $user_info[id]))") . "
 			ORDER BY " . (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . "
 			LIMIT $start, $maxindex", __FILE__, __LINE__);
 		$topic_ids = array();
@@ -320,7 +320,7 @@ function MessageIndex()
 				LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
 				LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = $board AND lmr.id_member = $user_info[id])"). "
 			WHERE " . ($pre_query ? 't.id_topic IN (' . implode(', ', $topic_ids) . ')' : "t.id_board = $board") . "
-				" . ($context['can_approve_posts'] ? '' : ' AND t.approved = 1') . "
+				" . ($context['can_approve_posts'] ? '' : " AND (t.approved = 1 OR (t.id_member_started != 0 AND t.id_member_started = $user_info[id]))") . "
 			ORDER BY " . ($pre_query ? "FIND_IN_SET(t.id_topic, '" . implode(',', $topic_ids) . "')" : (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC')) . "
 			LIMIT " . ($pre_query ? '' : "$start, ") . "$maxindex", __FILE__, __LINE__);
 

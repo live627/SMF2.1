@@ -440,7 +440,17 @@ function template_main()
 								</td>
 							</tr></table>
 							<hr width="100%" size="1" class="hrcolor" />
-							<div class="post"', $message['can_modify'] ? ' id="msg_' . $message['id'] . '"' : '', '>', $message['body'], '</div>', $message['can_modify'] ? '
+							<div class="post"', $message['can_modify'] ? ' id="msg_' . $message['id'] . '"' : '', '>';
+
+		if (!$message['approved'] && $message['member']['id'] != 0 && $message['member']['id'] == $context['user']['id'])
+			echo '
+								<div style="margin: 2ex; padding: 1ex; border: 2px dashed #cc3344; color: black; font-weight: bold;">
+									', $txt['post_awaiting_approval'], '
+								</div>';
+
+		echo '
+								', $message['body'], '
+							</div>', $message['can_modify'] ? '
 							<img src="' . $settings['images_url'] . '/icons/modify_inline.gif" alt="" align="right" id="modify_button_' . $message['id'] . '" style="cursor: ' . ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] ? 'hand' : 'pointer') . '; display: none;" onclick="oQuickModify.modifyMsg(\'' . $message['id'] . '\', \'' . $context['session_id'] . '\')" />' : '' , '
 						</td>
 					</tr>';

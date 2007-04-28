@@ -113,7 +113,7 @@ function Display()
 					(t2.id_last_msg $gt_lt t.id_last_msg AND t2.is_sticky $gt_lt= t.is_sticky) OR t2.is_sticky $gt_lt t.is_sticky") . ")
 				WHERE t.id_topic = $topic
 					AND t2.id_board = $board
-					" . (allowedTo('approve_posts') ? '' : ' AND t2.approved = 1') . "
+					" . (allowedTo('approve_posts') ? '' : " AND (t2.approved = 1 OR (t2.id_member_started != 0 AND t2.id_member_started = $user_info[id]))") . "
 				ORDER BY" . (empty($modSettings['enableStickyTopics']) ? '' : " t2.is_sticky$order,") . " t2.id_last_msg$order
 				LIMIT 1", __FILE__, __LINE__);
 
@@ -127,7 +127,7 @@ function Display()
 					SELECT id_topic
 					FROM {$db_prefix}topics
 					WHERE id_board = $board
-						" . (allowedTo('approve_posts') ? '' : ' AND approved = 1') . "
+						" . (allowedTo('approve_posts') ? '' : " AND (approved = 1 OR (id_member_started != 0 AND id_member_started = $user_info[id]))") . "
 					ORDER BY" . (empty($modSettings['enableStickyTopics']) ? '' : " is_sticky$order,") . " id_last_msg$order
 					LIMIT 1", __FILE__, __LINE__);
 			}
@@ -241,7 +241,7 @@ function Display()
 					FROM {$db_prefix}messages
 					WHERE id_msg < $virtual_msg
 						AND id_topic = $topic
-						AND approved = 1", __FILE__, __LINE__);
+						AND (approved = 1 OR (id_member != 0 AND id_member = $user_info[id]))", __FILE__, __LINE__);
 				list ($context['start_from']) = $smfFunc['db_fetch_row']($request);
 				$smfFunc['db_free_result']($request);
 			}
@@ -689,7 +689,7 @@ function Display()
 		SELECT id_msg, id_member
 		FROM {$db_prefix}messages
 		WHERE id_topic = $topic
-			" . (allowedTo('approve_posts') ? '' : ' AND approved = 1') . "
+			" . (allowedTo('approve_posts') ? '' : " AND (approved = 1 OR (id_member != 0 AND id_member = $user_info[id]))") . "
 		ORDER BY id_msg " . ($ascending ? '' : 'DESC') . ($modSettings['defaultMaxMessages'] == -1 ? '' : "
 		LIMIT $start, $limit"), __FILE__, __LINE__);
 
@@ -721,7 +721,7 @@ function Display()
 					LEFT JOIN {$db_prefix}attachments AS thumb ON (thumb.id_attach = a.id_thumb)") . "
 				WHERE a.id_msg IN (" . implode(',', $messages) . ")
 					AND a.attachment_type = 0
-					" . (allowedTo('approve_posts') ? '' : ' AND a.approved = 1'), __FILE__, __LINE__);
+					" . (allowedTo('approve_posts') ? '' : " AND a.approved = 1"), __FILE__, __LINE__);
 			$temp = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{

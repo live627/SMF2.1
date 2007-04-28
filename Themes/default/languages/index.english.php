@@ -118,6 +118,7 @@ $txt['reply'] = 'Reply';
 $txt['approve'] = 'Approve';
 $txt['approve_all'] = 'approve all';
 $txt['attach_awaiting_approve'] = 'Attachments awaiting approval';
+$txt['post_awaiting_approval'] = 'Note: This message is awaiting approval by a moderator.';
 
 $txt['msg_alert_none'] = 'No messages...';
 $txt['msg_alert_you_have'] = 'you have';

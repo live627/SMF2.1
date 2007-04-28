@@ -92,6 +92,8 @@ $txt['restricted_filename'] = 'That is a restricted filename. Please try a diffe
 $txt['topic_locked_no_reply'] = 'Warning: topic is currently/will be locked!<br />Only admins and moderators can reply.';
 $txt['awaiting_approval'] = 'Awaiting approval';
 $txt['attachment_requires_approval'] = 'Note that any files attached will not be displayed until approved by a moderator.';
+// Use numeric entities in the below string.
+$txt['js_post_will_require_approval'] = 'Reminder: This post will not appear until approved by a moderator.';
 
 $txt['enter_comment'] = 'Enter comment';
 // Use numeric entities in the below two strings.
