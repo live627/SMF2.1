@@ -262,9 +262,9 @@ function AdminMain()
 					'permission' => array('manage_smileys'),
 					'subsections' => array(
 						'editsets' => array($txt['smiley_sets']),
-						'addsmiley' => array($txt['smileys_add']),
-						'editsmileys' => array($txt['smileys_edit']),
-						'setorder' => array($txt['smileys_set_order']),
+						'addsmiley' => array($txt['smileys_add'], 'enabled' => !empty($modSettings['smiley_enable'])),
+						'editsmileys' => array($txt['smileys_edit'], 'enabled' => !empty($modSettings['smiley_enable'])),
+						'setorder' => array($txt['smileys_set_order'], 'enabled' => !empty($modSettings['smiley_enable'])),
 						'editicons' => array($txt['icons_edit_message_icons'], 'enabled' => !empty($modSettings['messageIcons_enable'])),
 						'settings' => array($txt['settings']),
 					),
@@ -783,14 +783,17 @@ function AdminSearchInternal()
 	);
 
 	// Go through the admin menu structure trying to find suitably named areas!
-	foreach ($context['admin_areas'] as $section)
+	foreach ($context[$context['admin_menu_name']]['sections'] as $section)
 	{
 		foreach ($section['areas'] as $menu_key => $menu_item)
 		{
 			$search_data['sections'][] = array($menu_item['label'], 'area=' . $menu_key);
 			if (!empty($menu_item['subsections']))
 				foreach ($menu_item['subsections'] as $key => $sublabel)
-					$search_data['sections'][] = array($sublabel['label'], 'area=' . $menu_key . ';sa=' . $key);
+				{
+					if (isset($sublabel['label']))
+						$search_data['sections'][] = array($sublabel['label'], 'area=' . $menu_key . ';sa=' . $key);
+				}
 		}
 	}
 

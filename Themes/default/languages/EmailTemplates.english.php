@@ -68,7 +68,7 @@ Before you can login and start using the forum, your request will be reviewed an
 		'subject' => 'Group Membership Approval',
 		'body' => '{USERNAME},
 
-We\'re pleased to notify you that your application to join the &quot;{GROUPNAME}&quot; group at {FORUMNAME} has been accepted, and your account has been updated to include this new membergroup.
+We\'re pleased to notify you that your application to join the "{GROUPNAME}" group at {FORUMNAME} has been accepted, and your account has been updated to include this new membergroup.
 
 {REGARDS}',
 	),
@@ -82,7 +82,7 @@ We\'re pleased to notify you that your application to join the &quot;{GROUPNAME}
 		'subject' => 'Group Membership Rejection',
 		'body' => '{USERNAME},
 
-We\'re sorry to notify you that your application to join the &quot;{GROUPNAME}&quot; group at {FORUMNAME} has been rejected.
+We\'re sorry to notify you that your application to join the "{GROUPNAME}" group at {FORUMNAME} has been rejected.
 
 {REGARDS}',
 	),
@@ -97,7 +97,7 @@ We\'re sorry to notify you that your application to join the &quot;{GROUPNAME}&q
 		'subject' => 'Group Membership Rejection',
 		'body' => '{USERNAME},
 
-We\'re sorry to notify you that your application to join the &quot;{GROUPNAME}&quot; group at {FORUMNAME} has been rejected.
+We\'re sorry to notify you that your application to join the "{GROUPNAME}" group at {FORUMNAME} has been rejected.
 
 This is due to the following reason: {REASON}
 
@@ -299,7 +299,7 @@ Unsubscribe to new topics from this board by using this link:
 		'subject' => 'New Group Application',
 		'body' => '{RECPNAME},
 		
-{APPYNAME} has requested membership to the &quot;{GROUPNAME}&quot; group. The user has given the following reason:
+{APPYNAME} has requested membership to the "{GROUPNAME}" group. The user has given the following reason:
 
 {REASON}
 
@@ -463,7 +463,7 @@ The reporter has made the following comment:
 
 Your login details at {FORUMNAME} have been changed and your password reset. Below are your new login details.
 
-Your username is &quot;{USERNAME}&quot; and your password is &quot;{PASSWORD}&quot;.
+Your username is "{USERNAME}" and your password is "{PASSWORD}".
 
 You may change it after you login by going to the profile page, or by visiting this page after you login:
 {SCRIPTURL}?action=profile

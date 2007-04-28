@@ -76,7 +76,7 @@ function ManageSmileys()
 	);
 
 	// Default the sub-action to 'edit smiley settings'.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'settings';
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'editsets';
 
 	$context['page_title'] = &$txt['smileys_manage'];
 	$context['sub_action'] = $_REQUEST['sa'];

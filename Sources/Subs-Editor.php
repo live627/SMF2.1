@@ -117,6 +117,9 @@ function html_to_bbc($text)
 	// Remove any newlines - as they are useless.
 	$text = strtr($text, array("\n" => ''));
 
+	// Though some of us love paragraphs the parser will do better with breaks.
+	$text = preg_replace('~</p>\s*?<p>~i', '<br />', $text);
+
 	// Do the smileys ultra first!
 	preg_match_all('~<img\s+[^<>]*?id="*smiley_\d+_([^<>]+?)[\s"/>]\s*[^<>]*?/*>~i', $text, $matches);
 	if (!empty($matches))

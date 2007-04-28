@@ -3,12 +3,12 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 {
 	// Create some links to the editor object.
 	this.uid = uniqueId;
-	this.textHandle = false;
-	this.currentText = typeof(currentText) != "undefined" ? text : '';
+	var textHandle = false;
+	var currentText = typeof(text) != "undefined" ? text : '';
 
 	// How big?
-	this.editWidth = typeof(editWidth) != "undefined" ? editWidth : '70%';
-	this.editHeight = typeof(editHeight) != "undefined" ? editHeight : '150px';
+	var editWidth = typeof(editWidth) != "undefined" ? editWidth : '70%';
+	var editHeight = typeof(editHeight) != "undefined" ? editHeight : '150px';
 
 	var showDebug = false;
 	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
@@ -168,13 +168,12 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 
 		// Set the textHandle.	
 		textHandle = document.getElementById(uniqueId);
-		currentText = getInnerHTML(textHandle);
 
 		// Ensure the currentText is set correctly depending on the mode.
 		if (typeof(text) != "undefined" && mode == 1)
 			currentText = text;
-		else if (mode == 0)
-			currentText = smf_unhtmlspecialchars(currentText);
+		else if (currentText == '' && mode == 0)
+			currentText = smf_unhtmlspecialchars(getInnerHTML(textHandle));
 
 		// Only try to do this if rich text is supported.
 		if (richTextPossible)
