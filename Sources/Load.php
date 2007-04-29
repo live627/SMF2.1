@@ -1084,6 +1084,7 @@ function loadMemberContext($user)
 		'post_group_color' => $profile['post_group_color'],
 		'group_stars' => str_repeat('<img src="' . str_replace('$language', $context['user']['language'], isset($profile['stars'][1]) ? $settings['images_url'] . '/' . $profile['stars'][1] : '') . '" alt="*" border="0" />', empty($profile['stars'][0]) || empty($profile['stars'][1]) ? 0 : $profile['stars'][0]),
 		'warning' => &$profile['warning'],
+		'warning_status' => !empty($modSettings['warning_mute']) && $modSettings['warning_mute'] <= $profile['warning'] ? 'mute' : (!empty($modSettings['warning_moderate']) && $modSettings['warning_moderate'] <= $profile['warning'] ? 'moderate' : (!empty($modSettings['warning_watch']) && $modSettings['warning_watch'] <= $profile['warning'] ? 'watch' : (''))),
 		'local_time' => timeformat(time() + ($profile['time_offset'] - $user_info['time_offset']) * 3600, false),
 	);
 
@@ -1280,9 +1281,10 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_guest' => &$user_info['is_guest'],
 		'is_admin' => &$user_info['is_admin'],
 		'is_mod' => false,
+		'can_mod' => allowedTo('access_mod_center') || !empty($user_info['mod_cache']['gq']) || !empty($user_info['mod_cache']['bq']),
 		'username' => &$user_info['username'],
 		'language' => &$user_info['language'],
-		'email' => &$user_info['email']
+		'email' => &$user_info['email'],
 	);
 	if ($context['user']['is_guest'])
 		$context['user']['name'] = &$txt['guest_title'];

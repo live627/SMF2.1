@@ -375,6 +375,12 @@ function template_main()
 					echo '
 								<a href="', $scripturl, '?action=pm;sa=send;u=', $message['member']['id'], '" title="', $message['member']['online']['label'], '">', $settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/im_' . ($message['member']['online']['is_online'] ? 'on' : 'off') . '.gif" alt="' . $message['member']['online']['label'] . '" border="0" />' : $message['member']['online']['label'], '</a>';
 			}
+
+			// Are we showing the warning status?
+			if (!isset($context['disabled_fields']['warning_status']) && $message['member']['warning_status'] && ($context['user']['can_mod'] || !empty($modSettings['warning_show'])))
+				echo '
+								<br />
+								', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';sa=issueWarning">' : '', '<img src="', $settings['images_url'], '/warning_', $message['member']['warning_status'], '.gif" alt="', $txt['user_warn_' . $message['member']['warning_status']], '"/>', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $message['member']['warning_status'], '">', $txt['warn_' . $message['member']['warning_status']], '</span>';
 		}
 		// Otherwise, show the guest's email.
 		elseif (empty($message['member']['hide_email']))

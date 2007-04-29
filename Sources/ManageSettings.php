@@ -378,6 +378,7 @@ function ModifyModerationSettings($return_config = false)
 			array('int', 'warning_mute'),
 			'rem2' => array('int', 'user_limit'),
 			'rem3' => array('int', 'warning_decrement'),
+			array('check', 'warning_show'),
 	);
 
 	if ($return_config)
@@ -733,9 +734,9 @@ function ShowCustomProfiles()
 	$smfFunc['db_free_result']($request);
 
 	// What about standard fields they can tweak?
-	$standard_fields = array('icq', 'msn', 'aim', 'yim', 'location', 'gender', 'website', 'posts');
+	$standard_fields = array('icq', 'msn', 'aim', 'yim', 'location', 'gender', 'website', 'posts', 'warning_status');
 	// What fields can't you put on the registration page?
-	$context['fields_no_registration'] = array('posts');
+	$context['fields_no_registration'] = array('posts', 'warning_status');
 
 	// Are we saving any standard field changes?
 	if (isset($_POST['save']))

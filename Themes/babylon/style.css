@@ -308,6 +308,22 @@ a img{
 	color: #000080;
 }
 
+/* Colours for warnings */
+.warn_mute
+{
+	color: red;
+}
+
+.warn_moderate
+{
+	color: orange;
+}
+
+.warn_watch
+{
+	color: green;
+}
+
 /* The AJAX notifier */
 #ajax_in_progress
 {

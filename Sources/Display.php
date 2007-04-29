@@ -793,7 +793,8 @@ function Display()
 		'can_send_topic' => 'send_topic',
 		'can_send_pm' => 'pm_send',
 		'can_report_moderator' => 'report_any',
-		'can_moderate_forum' => 'moderate_forum'
+		'can_moderate_forum' => 'moderate_forum',
+		'can_issue_warning' => 'issue_warning',
 	);
 	foreach ($common_permissions as $contextual => $perm)
 		$context[$contextual] = allowedTo($perm);
