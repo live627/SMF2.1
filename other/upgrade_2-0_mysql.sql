@@ -835,7 +835,8 @@ ADD INDEX warning (warning);
 INSERT IGNORE INTO {$db_prefix}settings
 	(variable, value)
 VALUES
-	('warning_settings', '1,10,20'),
+	('warning_settings', '1,20,0'),
+	('warning_watch', '10'),
 	('warning_moderate', '35'),
 	('warning_mute', '60');
 ---#
@@ -1167,11 +1168,17 @@ INSERT IGNORE INTO {$db_prefix}scheduled_tasks
 VALUES
 	(0, 0, 2, 'h', 0, 'approval_notification'),
 	(0, 0, 7, 'd', 0, 'auto_optimize'),
-	(0, 0, 12, 'h', 0, 'clean_cache'),
+	(0, 60, 1, 'd', 0, 'daily_maintenance'),
 	(0, 0, 1, 'd', 0, 'daily_digest'),
 	(0, 0, 1, 'w', 0, 'weekly_digest'),
 	(0, 0, 1, 'd', 0, 'fetchSMfiles'),
 	(0, -55800, 1, 'd', 1, 'birthdayemails');
+---#
+
+---# Populating Scheduled Task Table...
+UPDATE {$db_prefix}scheduled_tasks
+SET task = 'daily_maintenance', time_regularity = 1, time_unit = 'd', time_offset = 60
+WHERE task = 'clean_cache';
 ---#
 
 ---# Moving auto optimise settings to scheduled task...

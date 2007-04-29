@@ -222,7 +222,6 @@ function ModBlockWatchedUsers()
 
 	if (($watched_users = cache_get_data('recent_user_watches', 240)) === null)
 	{
-		list (, $modSettings['warning_watch']) = explode(',', $modSettings['warning_settings']);
 		$modSettings['warning_watch'] = empty($modSettings['warning_watch']) ? 1 : $modSettings['warning_watch'];
 		$request = $smfFunc['db_query']('', "
 			SELECT id_member, real_name, last_login
@@ -739,7 +738,6 @@ function ViewWatchedUsers()
 	loadTemplate('ModerationCenter');
 
 	// Get some key settings!
-	list ($modSettings['warn_enabled'], $modSettings['warning_watch']) = explode(',', $modSettings['warning_settings']);
 	$modSettings['warning_watch'] = empty($modSettings['warning_watch']) ? 1 : $modSettings['warning_watch'];
 
 	// Put some pretty tabs on cause we're gonna be doing hot stuff here...

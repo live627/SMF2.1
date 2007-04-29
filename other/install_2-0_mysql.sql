@@ -1474,7 +1474,7 @@ INSERT INTO {$db_prefix}scheduled_tasks
 VALUES
 	(1, 0, 0, 2, 'h', 0, 'approval_notification'),
 	(2, 0, 0, 7, 'd', 0, 'auto_optimize'),
-	(3, 0, 0, 12, 'h', 0, 'clean_cache'),
+	(3, 0, 60, 1, 'd', 0, 'daily_maintenance'),
 	(5, 0, 0, 1, 'd', 0, 'daily_digest'),
 	(6, 0, 0, 1, 'w', 0, 'weekly_digest'),
 	(7, 0, 0, 1, 'd', 0, 'fetchSMfiles'),
@@ -1648,7 +1648,8 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('mail_recent', '0000000000|0'),
 	('settings_updated', '0'),
 	('next_task_time', '1'),
-	('warning_settings', '1,10,20'),
+	('warning_settings', '1,20,0'),
+	('warning_watch', '10'),
 	('warning_moderate', '35'),
 	('warning_mute', '60'),
 	('last_mod_report_action', '0');

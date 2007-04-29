@@ -1597,7 +1597,7 @@ CREATE UNIQUE INDEX {$db_prefix}scheduled_tasks_task ON {$db_prefix}scheduled_ta
 BEGIN TRANSACTION;
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (1, 0, 0, 2, 'h', 0, 'approval_notification');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (2, 0, 0, 7, 'd', 0, 'auto_optimize');
-INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (3, 0, 0, 12, 'h', 0, 'clean_cache');
+INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (3, 0, 60, 1, 'd', 0, 'daily_maintenance');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (5, 0, 0, 1, 'd', 0, 'daily_digest');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (6, 0, 0, 1, 'w', 0, 'weekly_digest');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (7, 0, 0, 1, 'd', 0, 'fetchSMfiles');
@@ -1772,7 +1772,8 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('mail_next_send', '0'
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('mail_recent', '0000000000|0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('settings_updated', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('next_task_time', '1');
-INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_settings', '1,10,20');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_settings', '1,20,0');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_watch', '10');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_moderate', '35');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_mute', '60');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('last_mod_report_action', '0');

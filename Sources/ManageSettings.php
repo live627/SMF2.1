@@ -373,10 +373,11 @@ function ModifyModerationSettings($return_config = false)
 		'',
 			// Warning system?
 			'rem1' => array('check', 'warning_enable'),
-			'rem2' => array('int', 'warning_watch'),
+			array('int', 'warning_watch'),
 			array('int', 'warning_moderate'),
 			array('int', 'warning_mute'),
-			'rem3' => array('int', 'user_limit'),
+			'rem2' => array('int', 'user_limit'),
+			'rem3' => array('int', 'warning_decrement'),
 	);
 
 	if ($return_config)
@@ -390,17 +391,19 @@ function ModifyModerationSettings($return_config = false)
 		// Make sure these don't have an effect.
 		if (!$_POST['warning_enable'])
 		{
+			$_POST['warning_watch'] = 0;
 			$_POST['warning_moderate'] = 0;
 			$_POST['warning_mute'] = 0;
 		}
 		else
 		{
+			$_POST['warning_watch'] = min($_POST['warning_watch'], 100);
 			$_POST['warning_moderate'] = min($_POST['warning_moderate'], 100);
 			$_POST['warning_mute'] = min($_POST['warning_mute'], 100);
 		}
 
 		// Fix the warning setting array!
-		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['warning_watch']) . ',' . min(100, (int) $_POST['user_limit']);
+		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['user_limit']) . ',' . min(100, (int) $_POST['warning_decrement']);
 		$save_vars = $config_vars;
 		$save_vars[] = array('text', 'warning_settings');
 		unset($save_vars['rem1'], $save_vars['rem2'], $save_vars['rem3']);
@@ -410,7 +413,7 @@ function ModifyModerationSettings($return_config = false)
 	}
 
 	// We actually store lots of these together - for efficiency.
-	list ($modSettings['warning_enable'], $modSettings['warning_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+	list ($modSettings['warning_enable'], $modSettings['user_limit'], $modSettings['warning_decrement']) = explode(',', $modSettings['warning_settings']);
 
 	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=moderation';
 	$context['settings_title'] = $txt['moderation_settings'];

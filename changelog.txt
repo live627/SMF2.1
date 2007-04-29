@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2718 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2719 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -39,6 +39,7 @@ April 2007
  ! Group monthly statistics by year. (Stats.php, Stats and XML template files, Stats language, stats.js)
  ! Completed the backend changes for the new admin menu and made tabs visible regardless of menu preference. (Most Admin files)
  ! Show unapproved posts to the people who made them assuming they are not guests - also give a javascript warning on their post requiring approval. (Display.php, MessageIndex.php, Profile.php, Post template, index and Post language files)
+ ! Added ability to decrement warning points from users every 24 hours and changed the clean cache scheduled task into a daily maintenance one. (Profile.php, ManageSettings.php, upgrade and install scripts, ScheduledTasks.php, Admin language files)
 
 
 March 2007

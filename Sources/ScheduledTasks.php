@@ -33,7 +33,7 @@ if (!defined('SMF'))
 	void scheduled_approval_notification()
 		// !!!
 
-	void scheduled_clean_cache()
+	void scheduled_daily_maintenance()
 		// !!!
 
 	void scheduled_auto_optimize()
@@ -355,10 +355,67 @@ function scheduled_approval_notification()
 	return true;
 }
 
-// Empty out the cache folder.
-function scheduled_clean_cache()
+// Do some daily cleaning up.
+function scheduled_daily_maintenance()
 {
+	global $smfFunc, $db_prefix, $modSettings;
+
+	// First clean out the data cache.
 	clean_cache('data');
+
+	// Then delete some settings that needn't be set if they are otherwise empty.
+	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch');
+
+	$smfFunc['db_query']('', "
+		DELETE FROM {$db_prefix}settings
+		WHERE variable IN ('" . implode("', '", $emptySettings) . "')
+			AND (value = 0 OR value = '')", __FILE__, __LINE__);
+
+	// If warning decrement is enabled and we have people who have not had a new warning in 24 hours, lower their warning level.
+	list (, , $modSettings['warning_decrement']) = explode(',', $modSettings['warning_settings']);
+	if ($modSettings['warning_decrement'])
+	{
+		// Find every member who has a warning level...
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member, warning
+			FROM {$db_prefix}members
+			WHERE warning > 0", __FILE__, __LINE__);
+		$members = array();
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$members[$row['id_member']] = $row['warning'];
+		$smfFunc['db_free_result']($request);
+
+		// Have some members to check?
+		if (!empty($members))
+		{
+			// Find out when they were last warned.
+			$request = $smfFunc['db_query']('', "
+				SELECT id_recipient, MAX(log_time) AS last_warning
+				FROM {$db_prefix}log_comments
+				WHERE id_recipient IN (" . implode(',', array_keys($members)) . ")
+					AND comment_type = 'warning'
+				GROUP BY id_recipient", __FILE__, __LINE__);
+			$member_changes = array();
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+			{
+				// More than 24 hours ago?
+				if ($row['last_warning'] <= time() - 86400)
+					$member_changes[] = array(
+						'id' => $row['id_recipient'],
+						'warning' => $members[$row['id_recipient']] >= $modSettings['warning_decrement'] ? $members[$row['id_recipient']] - $modSettings['warning_decrement'] : 0,
+					);
+			}
+			$smfFunc['db_free_result']($request);
+
+			// Have some members to change?
+			if (!empty($member_changes))
+				foreach ($member_changes as $change)
+					$smfFunc['db_query']('', "
+						UPDATE {$db_prefix}members
+						SET warning = $change[warning]
+						WHERE id_member = $change[id]", __FILE__, __LINE__);
+		}
+	}
 
 	// Log we've done it...
 	return true;

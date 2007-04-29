@@ -1555,7 +1555,7 @@ function summary($memID)
 	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : array();
 
 	// See if they have broken any warning levels...
-	list ($modSettings['warning_enable'], $modSettings['warning_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+	list ($modSettings['warning_enable'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
 	if (!empty($modSettings['warning_mute']) && $modSettings['warning_mute'] <= $context['member']['warning'])
 		$context['warning_status'] = $txt['profile_warning_is_muted'];
 	elseif (!empty($modSettings['warning_moderate']) && $modSettings['warning_moderate'] <= $context['member']['warning'])
@@ -3222,11 +3222,16 @@ function issueWarning($memID)
 	global $context, $cur_profile, $memberContext, $smfFunc, $sourcedir;
 
 	// Get all the actual settings.
-	list ($modSettings['warning_enable'], $modSettings['warning_watch'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
+	list ($modSettings['warning_enable'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
 
 	// Doesn't hurt to be overly cautious.
 	if (empty($modSettings['warning_enable']) || $context['user']['is_owner'] || !allowedTo('issue_warnings'))
 		fatal_lang_error('no_access', false);
+
+	// Make sure things which are disabled stay disabled.
+	$modSettings['warning_watch'] = !empty($modSettings['warning_watch']) ? $modSettings['warning_watch'] : 110;
+	$modSettings['warning_moderate'] = !empty($modSettings['warning_moderate']) ? $modSettings['warning_moderate'] : 110;
+	$modSettings['warning_mute'] = !empty($modSettings['warning_mute']) ? $modSettings['warning_mute'] : 110;
 
 	$context['warning_limit'] = allowedTo('admin_forum') ? 0 : $modSettings['user_limit'];
 	$context['member']['warning'] = $cur_profile['warning'];
