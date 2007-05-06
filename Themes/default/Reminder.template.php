@@ -113,7 +113,7 @@ function template_ask()
 			</tr><tr class="windowbg2">
 				<td width="45%">
 					<b>', $txt['choose_pass'], ': </b><br />
-					<span class="smalltext">', $txt['password_stregth'], '</span>
+					<span class="smalltext">', $txt['password_strength'], '</span>
 				</td>
 				<td valign="top"><input type="password" name="passwrd1" size="22" /></td>
 			</tr><tr class="windowbg2">
