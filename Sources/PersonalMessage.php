@@ -479,7 +479,7 @@ function MessageFolder()
 	}
 
 	// Set up the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=pm;f=' . $context['folder'] . (isset($_REQUEST['l']) ? ';l=' . (int) $_REQUEST['l'] : '') . ';sort=' . $context['sort_by'] . (isset($_GET['desc']) ? ';desc' : ''), $_GET['start'], $max_messages, $modSettings['defaultMaxMessages']);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=pm;f=' . $context['folder'] . (isset($_REQUEST['l']) ? ';l=' . (int) $_REQUEST['l'] : '') . ';sort=' . $context['sort_by'] . ($descending ? ';desc' : ''), $_GET['start'], $max_messages, $modSettings['defaultMaxMessages']);
 	$context['start'] = $_GET['start'];
 
 	// Determine the navigation context (especially useful for the wireless template).

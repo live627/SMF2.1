@@ -1,8 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2721 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2722 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+May 2007
+--------------------------------------------------------------------------------
+ + If posting an attachment and using the default message icon, change the icon to a clip icon. (Post.php, Display.php MessageIndex.php, Recent.php, Search.php)
+ ! The page index wasn't properly sorting the PMs. (PersonalMessage.php)
+
+
 April 2007
 --------------------------------------------------------------------------------
  ! Removed the admin setting to stop users from hiding their email address. (ModSettings.php, upgrade script, various files)
@@ -41,7 +47,6 @@ April 2007
  ! Show unapproved posts to the people who made them assuming they are not guests - also give a javascript warning on their post requiring approval. (Display.php, MessageIndex.php, Profile.php, Post template, index and Post language files)
  ! Added ability to decrement warning points from users every 24 hours and changed the clean cache scheduled task into a daily maintenance one. (Profile.php, ManageSettings.php, upgrade and install scripts, ScheduledTasks.php, Admin language files)
  ! Display warning status on topic display (If setting enabled) and allow the admin to decide whether only moderators can see warning status. (ManageSettings.php, Display.php, Load.php, Display template, index language file, style.css, images directory)
- + If posting an attachment and using the default message icon, change the icon to a clip icon. (Post.php, Display.php MessageIndex.php, Recent.php, Search.php)
 
 
 
