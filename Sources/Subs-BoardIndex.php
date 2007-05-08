@@ -283,3 +283,4 @@ function getBoardIndex($boardIndexOptions)
 
 	return 	$boardIndexOptions['include_categories'] ? $categories : $this_category;
 }
+?>

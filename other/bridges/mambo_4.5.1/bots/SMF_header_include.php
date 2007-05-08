@@ -154,3 +154,4 @@ function SMF_header_include( ) {
 	
 	return true;
 }
+?>

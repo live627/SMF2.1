@@ -80,3 +80,4 @@ function getBoardList($boardListOptions)
 	return $return_value;
 }
 
+?>
