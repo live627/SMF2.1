@@ -27,7 +27,7 @@
 
 */
 
-function getBoardList($boardListOptions)
+function getBoardList($boardListOptions = array())
 {
 	global $smfFunc, $db_prefix, $user_info;
 
