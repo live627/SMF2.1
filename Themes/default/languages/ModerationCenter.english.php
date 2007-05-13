@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $scripturl;
+
 $txt['moderation_center'] = 'Moderation Center';
 $txt['mc_main'] = 'Main';
 $txt['mc_posts'] = 'Posts';

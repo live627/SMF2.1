@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $context;
+
 $txt['post_reply'] = 'Post reply';
 $txt['message_icon'] = 'Message icon';
 $txt['subject_not_filled'] = 'The Subject field was not filled out. It is required.';

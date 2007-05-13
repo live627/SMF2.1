@@ -460,6 +460,7 @@ function loadUserSettings()
 		'total_time_logged_in' => empty($user_settings['total_time_logged_in']) ? 0 : $user_settings['total_time_logged_in'],
 		'buddies' => !empty($modSettings['enable_buddylist']) && !empty($user_settings['buddy_list']) ? explode(',', $user_settings['buddy_list']) : array(),
 		'ignoreboards' => !empty($user_settings['ignore_boards']) && !empty($modSettings['allow_ignore_boards']) ? explode(',',$user_settings['ignore_boards']) : array(),
+		'ignoreusers' => !empty($user_settings['pm_ignore_list']) ? ($user_settings['pm_ignore_list'] == '*' ? '*' : explode(',', $user_settings['pm_ignore_list'])) : array(),
 		'warning' => isset($user_settings['warning']) ? $user_settings['warning'] : 0,
 		'permissions' => array(),
 	);
@@ -1285,6 +1286,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'username' => &$user_info['username'],
 		'language' => &$user_info['language'],
 		'email' => &$user_info['email'],
+		'ignoreusers' => &$user_info['ignoreusers'],
 	);
 	if ($context['user']['is_guest'])
 		$context['user']['name'] = &$txt['guest_title'];

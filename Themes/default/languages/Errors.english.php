@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $scripturl, $modSettings;
+
 $txt['no_access'] = 'You are not allowed to access this section';
 
 $txt['mods_only'] = 'Only Moderators can use the direct remove function, please remove this message through the modify feature.';

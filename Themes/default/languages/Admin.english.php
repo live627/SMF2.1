@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $settings, $scripturl;
+
 $txt['admin_boards'] = 'Boards';
 $txt['admin_users'] = 'Members';
 $txt['admin_newsletters'] = 'Newsletters';

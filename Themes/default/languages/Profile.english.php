@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $scripturl, $context;
+
 $txt['no_profile_edit'] = 'You are not allowed to change this person\'s profile.';
 $txt['website_title'] = 'Website title';
 $txt['website_url'] = 'Website URL';

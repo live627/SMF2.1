@@ -245,11 +245,20 @@ function template_main()
 	echo '
 <table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">';
 
+	$ignoredMsgs = array();
+
 	// Get all the messages...
 	while ($message = $context['get_message']())
 	{
+		$ignoring = false;
 		echo '
 	<tr><td style="padding: 1px 1px 0 1px;">';
+
+		if ($context['user']['ignoreusers'] != '*' && in_array($message['member']['id'], $context['user']['ignoreusers']))
+		{
+			$ignoring = true;
+			$ignoredMsgs[] = $message['id'];
+		}
 
 		// Show the message anchor and a "new" anchor if this message is new.
 		if ($message['id'] != $context['first_message'])
@@ -266,7 +275,7 @@ function template_main()
 					<tr>
 						<td valign="top" width="16%" rowspan="2" style="overflow: hidden;">
 							<b>', $message['member']['link'], '</b>
-							<div class="smalltext">';
+							<div class="smalltext" id="msg_', $message['id'], '_extra_info">';
 
 		// Show the member's custom title, if they have one.
 		if (isset($message['member']['title']) && $message['member']['title'] != '')
@@ -404,7 +413,7 @@ function template_main()
 		// If this is the first post, (#0) just say when it was posted - otherwise give the reply #.
 		echo '
 									<div class="smalltext">&#171; <b>', !empty($message['counter']) ? $txt['reply'] . ' #' . $message['counter'] : '', ' ', $txt['on'], ':</b> ', $message['time'], ' &#187;</div></td>
-								<td align="', !$context['right_to_left'] ? 'right' : 'left', '" valign="bottom" height="20" style="font-size: smaller;">';
+								<td align="', !$context['right_to_left'] ? 'right' : 'left', '" valign="bottom" height="20" style="font-size: smaller;"><div id="msg_', $message['id'], '_quick_mod">';
 
 		// Maybe we can approve it, maybe we should?
 		if ($message['can_approve'])
@@ -443,17 +452,22 @@ function template_main()
 
 		// Show the post itself, finally!
 		echo '
-								</td>
+								</div></td>
 							</tr></table>
-							<hr width="100%" size="1" class="hrcolor" />
-							<div class="post"', $message['can_modify'] ? ' id="msg_' . $message['id'] . '"' : '', '>';
+							<hr width="100%" size="1" class="hrcolor" />';
+		if ($ignoring)
+		{
+			echo '				<div id="msg_', $message['id'], '_ignored_prompt" style="display: none;">', $txt['ignoring_user'], '  <a href="#" onclick="return ignoreToggles[', $message['id'], '].toggle()">', $txt['show_ignore_user_post'], '</a></div>';
+		}
+
+		echo '
+							<div class="post" id="msg_', $message['id'], '"', '>';
 
 		if (!$message['approved'] && $message['member']['id'] != 0 && $message['member']['id'] == $context['user']['id'])
 			echo '
 								<div style="margin: 2ex; padding: 1ex; border: 2px dashed #cc3344; color: black; font-weight: bold;">
 									', $txt['post_awaiting_approval'], '
 								</div>';
-
 		echo '
 								', $message['body'], '
 							</div>', $message['can_modify'] ? '
@@ -463,7 +477,7 @@ function template_main()
 
 		// Now for the attachments, signature, ip logged, etc...
 		echo '
-					<tr>
+					<tr id="msg_', $message['id'], '_footer">
 						<td valign="bottom" class="smalltext" width="85%">
 							<table width="100%" border="0" style="table-layout: fixed;"><tr>
 								<td colspan="2" class="smalltext" width="100%">';
@@ -749,9 +763,29 @@ function template_main()
 			sItemBackground: "transparent",
 			sItemBackgroundHover: "#e0e0f0"
 		});
-	}
-// ]]></script>';
+	}';
 
+	if (!empty($ignoredMsgs))
+	{
+		echo '
+	var ignoreToggles = new Array()';
+
+		foreach($ignoredMsgs AS $msgid)
+		{
+			echo '
+		ignoreToggles[', $msgid, '] = new smfToggle("ignore_msg_', $msgid, '", false);
+			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_extra_info");
+			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '");
+			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_footer");
+			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_quick_mod");
+			ignoreToggles[', $msgid, '].addTogglePanel("modify_button_', $msgid, '");
+			ignoreToggles[', $msgid, '].addTogglePanel("msg_', $msgid, '_ignored_prompt", true);
+		ignoreToggles[', $msgid, '].toggle()';
+		}
+	}
+
+	echo '
+	// ]]></script>';
 }
 
 ?>

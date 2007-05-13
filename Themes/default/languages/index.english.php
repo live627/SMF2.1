@@ -11,7 +11,7 @@
 
 */
 
-global $forum_copyright, $forum_version, $webmaster_email;
+global $forum_copyright, $forum_version, $webmaster_email, $scripturl, $context, $boardurl;
 
 // Locale (strftime, pspell_new) and spelling. (pspell_new, can be left as '' normally.)
 // For more information see:
@@ -686,4 +686,6 @@ $txt['send_email'] = 'Send Email';
 $txt['send_email_disclosed'] = 'Note this will be visible to the recipient.';
 $txt['send_email_subject'] = 'Email Subject';
 
+$txt['ignoring_user'] = 'You are ignoring this user.';
+$txt['show_ignore_user_post'] = 'Show me the post.';
 ?>

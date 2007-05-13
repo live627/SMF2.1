@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $context;
+
 $txt['most_online'] = 'Most Online';
 
 $txt['stats_center'] = 'Statistics Center';

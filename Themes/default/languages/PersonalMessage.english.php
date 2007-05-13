@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $context;
+
 $txt['pm_inbox'] = 'Personal Messages Index';
 $txt['send_message'] = 'Send message';
 $txt['pm_to'] = 'To';

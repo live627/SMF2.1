@@ -3,6 +3,8 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
+global $scripturl, $context;
+
 $txt['who_hidden'] = '<em>Nothing, or nothing you can see...</em>';
 $txt['who_unknown'] = '<em>Unknown Action</em>';
 $txt['who_user'] = 'User';
