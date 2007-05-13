@@ -1176,8 +1176,7 @@ VALUES
 ---#
 
 ---# Populating Scheduled Task Table...
-UPDATE {$db_prefix}scheduled_tasks
-SET task = 'daily_maintenance', time_regularity = 1, time_unit = 'd', time_offset = 60
+DELETE FROM {$db_prefix}scheduled_tasks
 WHERE task = 'clean_cache';
 ---#
 
