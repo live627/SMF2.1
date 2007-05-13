@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2723 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2724 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -8,6 +8,7 @@ May 2007
  + If posting an attachment and using the default message icon, change the icon to a clip icon. (Post.php, Display.php MessageIndex.php, Recent.php, Search.php)
  ! The page index wasn't properly sorting the PMs. (PersonalMessage.php)
  & Change the recommended password length from six to eight.  (Profile language file)
+ ! Don't do language file caching if caching is generally disabled. (ManageMaintenance.php)
 
 
 April 2007

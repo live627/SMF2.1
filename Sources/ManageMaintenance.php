@@ -1425,7 +1425,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	global $sourcedir, $cachedir, $smfFunc;
 
 	// Is the file writable?
-	$can_write = is_writable($cachedir) ? 1 : 0;
+	$can_write = !empty($modSettings['cache_enable']) && is_writable($cachedir) ? 1 : 0;
 	// By default include it afterwards.
 	$do_include = true;
 
@@ -1440,6 +1440,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	if ($can_write)
 	{
 		$fh = fopen($cachedir . '/lang_' . $template_name . '_' . $lang . '_' . $theme_name . '.php', 'w');
+		@flock($fp, LOCK_EX);
 		fwrite($fh, "<?php\n");
 	}
 
@@ -1467,6 +1468,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		foreach ($attempts as $k => $file)
 			if (file_exists($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'))
 			{
+				// Are we caching?
 				if ($can_write)
 				{
 					foreach (file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php') as $line)
@@ -1482,6 +1484,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				// If the cache directory is not writable we're having a bad day.
 				else
 				{
+					//!!! Do we need to eval these days?
 					$fc = implode('', file($file[0] . '/languages/' . $file[1] . '.' . $file[2] . '.php'));
 					$fc = preg_replace('~\{NL\}~', '\\\\n', $fc);
 					$fc = preg_replace('~<\?php~', '', $fc);
@@ -1535,6 +1538,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	if ($can_write)
 	{
 		fwrite($fh, "?>");
+		@flock($fp, LOCK_UN);
 		fclose($fh);
 	}
 
