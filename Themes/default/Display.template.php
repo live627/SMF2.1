@@ -254,7 +254,7 @@ function template_main()
 		echo '
 	<tr><td style="padding: 1px 1px 0 1px;">';
 
-		if ($context['user']['ignoreusers'] != '*' && in_array($message['member']['id'], $context['user']['ignoreusers']))
+		if (in_array($message['member']['id'], $context['user']['ignoreusers']))
 		{
 			$ignoring = true;
 			$ignoredMsgs[] = $message['id'];
