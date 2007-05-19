@@ -1427,7 +1427,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 	// Is the file writable?
 	$can_write = !empty($modSettings['cache_enable']) && is_writable($cachedir) ? 1 : 0;
 	// By default include it afterwards.
-	$do_include = true;
+	$do_include = $can_write;
 
 	// Make sure we have $settings - if not we're in trouble and need to find it!
 	if (empty($settings['default_theme_dir']))

@@ -3293,8 +3293,8 @@ function issueWarning($memID)
 			require_once($sourcedir . '/Subs-Post.php');
 			$from = array(
 				'id' => 0,
-				'name' => $context['forum_name'],
-				'username' => $context['forum_name'],
+				'name' => $smfFunc['db_escape_string']($context['forum_name']),
+				'username' => $smfFunc['db_escape_string']($context['forum_name']),
 			);
 			sendpm(array('to' => array($memID), 'bcc' => array()), $_POST['warn_sub'], $_POST['warn_body'], false, $from);
 

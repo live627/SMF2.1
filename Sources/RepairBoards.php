@@ -63,6 +63,14 @@ function RepairBoards()
 	$context['page_title'] = $txt['admin_repair'];
 	$context['sub_template'] = 'rawdata';
 
+	// Make sure the tabs stay nice.
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['maintain_title'],
+		'help' => '',
+		'description' => $txt['maintain_info'],
+		'tabs' => array(),
+	);
+
 	// Start displaying errors without fixing them.
 	if (isset($_GET['fixErrors']))
 		checkSession('get');

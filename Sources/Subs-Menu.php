@@ -239,6 +239,10 @@ function createMenu($menuData, $menuOptions = array())
 	loadTemplate(isset($menuOptions['template_name']) ? $menuOptions['template_name'] : 'GenericMenu');
 	$context['template_layers'][] = (isset($menuOptions['layer_name']) ? $menuOptions['layer_name'] : 'generic_menu') . $menuOptions['menu_type'];
 
+	// Check we had something - for sanity sake.
+	if (empty($include_data))
+		return false;
+
 	// Finally - return information on the selected item.
 	$include_data += array(
 		'current_action' => $menu_context['current_action'],

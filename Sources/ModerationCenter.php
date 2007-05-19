@@ -131,7 +131,6 @@ function ModerationMain($dont_call = false)
 		),
 		'prefs' => array(
 			'title' => $txt['mc_prefs'],
-			'enabled' => !empty($user_info['mod_cache']['gq']) || allowedTo('manage_membergroups'),
 			'areas' => array(
 				'settings' => array(
 					'label' => $txt['mc_settings'],
@@ -710,6 +709,8 @@ function ShowNotice()
 	$context['page_title'] = $txt['show_notice'];
 	$context['sub_template'] = 'show_notice';
 	$context['template_layers'] = array();
+
+	loadTemplate('ModerationCenter');
 
 	//!!! Assumes nothing needs permission more than accessing moderation center!
 	$id_notice = (int) $_GET['nid'];

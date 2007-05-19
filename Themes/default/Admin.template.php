@@ -1764,52 +1764,6 @@ function template_edit_profile_field()
 	// ]]></script>';
 }
 
-// Show a notice sent to a user.
-function template_show_notice()
-{
-	global $txt, $settings, $options, $context;
-
-	// We do all the HTML for this one!
-	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
-		<title>', $context['page_title'], '</title>
-		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
-		<style type="text/css">';
-
-	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
-	if ($context['browser']['needs_size_fix'])
-		echo '
-			@import(', $settings['default_theme_url'], '/fonts-compat.css);';
-
-	echo '
-		</style>
-	</head>
-	<body>
-		<table width="100%" cellpadding="4" cellspacing="0" class="tborder" />
-			<tr>
-				<td class="catbg">
-					', $txt['show_notice'], '
-				</td>
-			</tr>
-			<tr>
-				<td class="windowbg">
-					<b>', $txt['show_notice_subject'], '</b>: ', $context['notice_subject'], '
-				</td>
-			</tr>
-			<tr>
-				<td class="windowbg">
-					<b>', $txt['show_notice_text'], '</b>:<br />
-					<div class="smalltext" style="width: 100%; height: 50px; background-color: white;border: 1px solid black;">', $context['notice_body'], '</div>
-				</td>
-			</tr>
-		</table>
-	</body>
-</html>';
-
-}
-
 // Results page for an admin search.
 function template_admin_search_results()
 {

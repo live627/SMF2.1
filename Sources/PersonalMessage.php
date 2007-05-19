@@ -2554,15 +2554,15 @@ function ReportMessage()
 				// Make the body.
 				$report_body = str_replace(array('{REPORTER}', '{SENDER}'), array(un_htmlspecialchars($user_info['name']), $memberFromName), $txt['pm_report_pm_user_sent']);
 				// !!! I don't think this handles slashes in the reason properly.
-				$report_body .= "\n[b]$_REQUEST[reason][/b]\n\n";
+				$report_body .= $smfFunc['db_unescape_string']("\n[b]$_REQUEST[reason][/b]\n\n");
 				if (!empty($recipients))
 					$report_body .= $txt['pm_report_pm_other_recipients'] . " " . implode(', ', $recipients) . "\n\n";
 				$report_body .= $txt['pm_report_pm_unedited_below'] . "\n[quote author=" . (empty($memberFromID) ? '&quot;' . $memberFromName . '&quot;' : $memberFromName . ' link=action=profile;u=' . $memberFromID . ' date=' . $time) . "]\n" . un_htmlspecialchars($body) . '[/quote]';
 
 				// Plonk it in the array ;)
 				$messagesToSend[$cur_language] = array(
-					'subject' => ($smfFunc['strpos']($subject, $txt['pm_report_pm_subject']) === false ? $txt['pm_report_pm_subject'] : '') . $subject,
-					'body' => $report_body,
+					'subject' => $smfFunc['db_escape_string'](($smfFunc['strpos']($subject, $txt['pm_report_pm_subject']) === false ? $txt['pm_report_pm_subject'] : '') . $subject),
+					'body' => $smfFunc['db_escape_string']($report_body),
 					'recipients' => array(
 						'to' => array(),
 						'bcc' => array()
