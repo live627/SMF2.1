@@ -185,7 +185,7 @@ if (!defined('SMF'))
 	void determineTopicClass(array &topic_context)
 		// !!!
 
-	void setupThemeContext()
+	void setupThemeContext(bool force_reload = false)
 		// !!!
 
 	void template_rawdata()
@@ -2847,10 +2847,18 @@ function determineTopicClass(&$topic_context)
 }
 
 // Sets up the basic theme context stuff.
-function setupThemeContext()
+function setupThemeContext($forceload = false)
 {
 	global $modSettings, $user_info, $scripturl, $context, $settings, $options, $txt, $maintenance;
 	global $user_settings, $smfFunc;
+	static $loaded = false;
+
+	// Under SSI this function can be called more then once.  That can cause some problems.
+	//   So only run the function once unless we are forced to run it again.
+	if ($loaded && !$forceload)
+		return;
+
+	$loaded = true;
 
 	$context['in_maintenance'] = !empty($maintenance);
 	$context['current_time'] = timeformat(time(), false);

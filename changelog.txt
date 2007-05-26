@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2727 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2728 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -14,6 +14,7 @@ May 2007
  * If the poster is being ignored by the user use javascript to collapse the post. (Display template)
  ! Reporting a personal message needed some more sanitation. (PersonalMessage.php)
  ! Added $cachedir to the list of globals. (SSI.php)
+ ! Prevent setupThemeContext from being ran more then once under SSI. (Subs.php)
 
 
 April 2007
