@@ -22,6 +22,7 @@
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
 
+// Forum slow? Having  performance problems?  This little blue pill will assist in finding the problem!
 
 // !!! eAccelerator, etc.?
 
