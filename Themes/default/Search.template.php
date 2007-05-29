@@ -23,7 +23,7 @@ function template_main()
 			var current = document.getElementById("searchBoardsExpand").style.display != "none";
 
 			document.getElementById("searchBoardsExpand").style.display = current ? "none" : "";
-			document.getElementById("exandBoardsIcon").src = smf_images_url + (current ? "/expand.gif" : "/collapse.gif");
+			document.getElementById("expandBoardsIcon").src = smf_images_url + (current ? "/expand.gif" : "/collapse.gif");
 		}
 	// ]]></script>
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
@@ -160,7 +160,7 @@ function template_main()
 		{
 			echo '	
 					<fieldset class="windowbg2" style="padding: 10px;">
-						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="exandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a><br />
+						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a><br />
 
 						<table id="searchBoardsExpand" width="100%" border="0" cellpadding="1" cellspacing="0" align="center" style="margin-top: 1ex; display: none;">';
 

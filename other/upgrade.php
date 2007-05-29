@@ -4076,7 +4076,7 @@ function template_upgrade_templates()
 	if ($upcontext['temp_progress'] == 0 && !$upcontext['is_test'] && (!empty($upcontext['languages']) || !empty($upcontext['themes'])))
 	{
 		echo '
-		The following template files will be updated to ensure they are compatible with this version of SMF. Note that this can only fix a limited number of compatibilty issues and in general you should seek out the latest version of these themes/language files.
+		The following template files will be updated to ensure they are compatible with this version of SMF. Note that this can only fix a limited number of compatibility issues and in general you should seek out the latest version of these themes/language files.
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
 			<tr style="background-color: #EEEEEE;">
 				<td width="80%"><b>Area</b></td>

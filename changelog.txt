@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2729 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2730 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -16,6 +16,8 @@ May 2007
  ! Added $cachedir to the list of globals. (SSI.php)
  ! Prevent setupThemeContext from being ran more then once under SSI. (Subs.php)
  ! Use the correct URL for installing packages from the latest packages script. (latest-packages.js)
+ * Changed a javascript variable name to one that makes more sense. (Search template)
+ ! Fixed a small spelling mistake in the upgrade script. (upgrade.php)
 
 
 April 2007
