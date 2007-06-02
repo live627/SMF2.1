@@ -940,7 +940,7 @@ function ModifyMembergroup2()
 
 		if (!empty($givePerms['membergroup']))
 		{
-			$smfFunc['db_insert']('insert',
+			$smfFunc['db_insert']('replace',
 				"{$db_prefix}permissions",
 				array('id_group', 'permission', 'add_deny'),
 				$givePerms['membergroup'],
@@ -959,7 +959,7 @@ function ModifyMembergroup2()
 	{
 		foreach ($givePerms['board'] as $k => $v)
 			$givePerms['board'][$k][] = $profileid;
-		$smfFunc['db_insert']('insert',
+		$smfFunc['db_insert']('replace',
 			"{$db_prefix}board_permissions",
 			array('id_group', 'permission', 'add_deny', 'id_profile'),
 			$givePerms['board'],

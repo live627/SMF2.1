@@ -417,14 +417,14 @@ function ViewMemberlist()
 			'file' => $sourcedir . '/Subs-Members.php',
 			'function' => 'list_getMembers',
 			'params' => array(
-				isset($where) ? $where : '1',
+				isset($where) ? $where : '1=1',
 			),
 		),
 		'get_count' => array(
 			'file' => $sourcedir . '/Subs-Members.php',
 			'function' => 'list_getNumMembers',
 			'params' => array(
-				isset($where) ? $where : '1',
+				isset($where) ? $where : '1=1',
 			),
 		),
 		'columns' => array(

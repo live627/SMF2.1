@@ -67,6 +67,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_select_db' => '',
 			'db_title' => 'SQLite',
 			'db_sybase' => true,
+			'db_case_sensitive' => false,
 		);
 
 	if (substr($db_name, -3) != 'db')
@@ -199,7 +200,7 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 
 	// Do most of the substrings!
 	//!!! This is no good - must not act on strings!
-	$db_string = preg_replace('~SUBSTRING\(\s*\'~i', 'SUBSTR(\'', $db_string);
+	$db_string = preg_replace('~SUBSTRING\(\s*\'~', 'SUBSTR(\'', $db_string);
 
 	$ret = @sqlite_query($db_string, $connection, SQLITE_BOTH, $err_msg);
 	if ($ret === false && $file !== false)

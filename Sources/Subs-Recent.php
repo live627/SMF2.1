@@ -1,6 +1,6 @@
 <?php
 /**********************************************************************************
-* Subs-MembersOnline.php                                                          *
+* Subs-Recent.php                                                                 *
 ***********************************************************************************
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *

@@ -1059,9 +1059,9 @@ function template_postbox(&$message)
 
 	// Create the drop downs and then initialise my friend!
 	echo '
-		editorHandle', $context['post_box_name'], '.initSelect(\'face\');
-		editorHandle', $context['post_box_name'], '.initSelect(\'size\');
-		editorHandle', $context['post_box_name'], '.initSelect(\'color\');
+		editorHandle', $context['post_box_name'], '.addSelect(\'face\');
+		editorHandle', $context['post_box_name'], '.addSelect(\'size\');
+		editorHandle', $context['post_box_name'], '.addSelect(\'color\');
 		smf_editorArray[smf_editorArray.length] = editorHandle', $context['post_box_name'], ';
 	// ]]></script>';
 }

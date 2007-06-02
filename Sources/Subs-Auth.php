@@ -424,12 +424,16 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	else
 		$email_condition = '';
 
+	// Get the case of the columns right - but only if we need to as things like MySQL will go slow needlessly otherwise.
+	$member_name = $smfFunc['db_case_sensitive'] ? 'LOWER(member_name)' : 'member_name';
+	$real_name = $smfFunc['db_case_sensitive'] ? 'LOWER(real_name)' : 'real_name';
+
 	// Search by username, display name, and email address.
 	$request = $smfFunc['db_query']('', "
 		SELECT id_member, member_name, real_name, email_address, hide_email
 		FROM {$db_prefix}members
-		WHERE (member_name $comparison '" . implode("' OR member_name $comparison '", $names) . "'
-			OR real_name $comparison '" . implode("' OR real_name $comparison '", $names) . "'$email_condition)
+		WHERE ($member_name $comparison '" . implode("' OR $member_name $comparison '", $names) . "'
+			OR $real_name $comparison '" . implode("' OR $real_name $comparison '", $names) . "'$email_condition)
 			" . ($buddies_only ? 'AND id_member IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
 			AND is_activated IN (1, 11)" . ($max == null ? '' : "
 		LIMIT " . (int) $max), __FILE__, __LINE__);

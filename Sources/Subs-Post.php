@@ -836,10 +836,10 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	}
 	if (!empty($usernames))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('pm_find_username', "
 			SELECT id_member, member_name
 			FROM {$db_prefix}members
-			WHERE member_name IN ('" . implode("', '", array_keys($usernames)) . "')", __FILE__, __LINE__);
+			WHERE " . ($smfFunc['db_case_sensitive'] ? 'LOWER(member_name)' : 'member_name') . " IN ('" . implode("', '", array_keys($usernames)) . "')", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (isset($usernames[$smfFunc['strtolower']($row['member_name'])]))
 				$usernames[$smfFunc['strtolower']($row['member_name'])] = $row['id_member'];

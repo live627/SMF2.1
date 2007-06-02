@@ -58,6 +58,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_select_db' => 'mysql_select_db',
 			'db_title' => 'MySQL',
 			'db_sybase' => false,
+			'db_case_sensitive' => false,
 		);
 
 	if (!empty($db_options['persist']))

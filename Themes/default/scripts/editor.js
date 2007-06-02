@@ -31,8 +31,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	// This will be used for loading the wysiwyg stuff.
 	this.init = init;
 	this.addButton = addButton;
-	this.initSelect = initSelect;
 	this.addSmiley = addSmiley;
+	this.addSelect = addSelect;
 	this.toggleView = toggleView;
 	this.insertText = insertText;
 	this.insertSmiley = insertSmiley;
@@ -209,11 +209,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 				breadHandle.style.display = '';
 			}
 	
-			// Show the iframe only if wysiwyg is on - and hide the text area.
-			textHandle.style.display = mode ? 'none' : '';
-			frameHandle.style.display = mode ? '' : 'none';
-			breadHandle.style.display = mode ? '' : 'none';
-
 			// Populate the editor with nothing by default.
 			if (!is_opera9up)
 			{
@@ -246,6 +241,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 				frameDocument.onkeyup = editorKeyUp;
 				frameDocument.onmouseup = editorKeyUp;
 			}
+
+			// Show the iframe only if wysiwyg is on - and hide the text area.
+			textHandle.style.display = mode ? 'none' : '';
+			frameHandle.style.display = mode ? '' : 'none';
+			breadHandle.style.display = mode ? '' : 'none';
 		}
 		// If we can't do advanced stuff then just do the basics.
 		else
@@ -256,22 +256,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 
 		// Clean up!
 		initClose();
-	}
-
-	// Actually get the iframe up and running.
-	function InitIframe()
-	{
-		
-		// Work out what font it should have!
-		//defFontFamily = fetchDefaultFont(textHandle, 'font-family');
-		//defFontSize = fetchDefaultFont(textHandle, 'font-size');
-
-		
-
-		//frameDocument.body.style.fontFamily = defFontFamily;
-		//frameDocument.body.style.fontSize = defFontSize;
-
-		return true;
 	}
 
 	// The final elements of initalisation.
@@ -560,12 +544,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		codeHandle.addEventListener('mouseout', buttonEventHandler, false);
 
 		codeHandle.code = code;		
-	}
-
-	// Because select boxes rely on things which don't yet exist we need to initialise them after the frame.
-	function initSelect(selType)
-	{
-		selectControls[selType] = selType;
 	}
 
 	// Populate/handle the select boxes.
