@@ -67,7 +67,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 			'db_error' => 'pg_last_error',
 			'db_select_db' => 'postg_select_db',
 			'db_title' => 'PostgreSQL',
-			'db_sybase' => false,
+			'db_sybase' => true,
 			'db_case_sensitive' => true,
 		);
 
