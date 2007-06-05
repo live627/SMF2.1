@@ -358,7 +358,7 @@ function escapestring__recursive($var)
 }
 
 // Adds html entities to the array/variable.  Uses two underscores to guard against overloading.
-function htmlspecialchars__recursive($var)
+function htmlspecialchars__recursive($var, $level = 0)
 {
 	global $smfFunc;
 
@@ -366,11 +366,14 @@ function htmlspecialchars__recursive($var)
 		return isset($smfFunc['htmlspecialchars']) ? $smfFunc['htmlspecialchars']($var, ENT_QUOTES) : htmlspecialchars($var, ENT_QUOTES);
 
 	// Add the htmlspecialchars to every element.
-	return array_map('htmlspecialchars__recursive', $var);
+	foreach ($var as $k => $v)
+		$var[$k] = $level > 25 ? null : htmlspecialchars__recursive($v, $level + 1);
+
+	return $var;
 }
 
 // Removes url stuff from the array/variable.  Uses two underscores to guard against overloading.
-function urldecode__recursive($var)
+function urldecode__recursive($var, $level = 0)
 {
 	if (!is_array($var))
 		return urldecode($var);
@@ -380,7 +383,7 @@ function urldecode__recursive($var)
 
 	// Add the htmlspecialchars to every element.
 	foreach ($var as $k => $v)
-		$new_var[urldecode($k)] = urldecode__recursive($v);
+		$new_var[urldecode($k)] = $level > 25 ? null : urldecode__recursive($v, $level + 1);
 
 	return $new_var;
 }
@@ -403,7 +406,7 @@ function unescapestring__recursive($var)
 }
 
 // Remove slashes recursively...
-function stripslashes__recursive($var)
+function stripslashes__recursive($var, $level = 0)
 {
 	if (!is_array($var))
 		return stripslashes($var);
@@ -413,13 +416,13 @@ function stripslashes__recursive($var)
 
 	// Strip the slashes from every element.
 	foreach ($var as $k => $v)
-		$new_var[stripslashes($k)] = stripslashes__recursive($v);
+		$new_var[stripslashes($k)] = $level > 25 ? null : stripslashes__recursive($v, $level + 1);
 
 	return $new_var;
 }
 
 // Trim a string including the HTML space, character 160.
-function htmltrim__recursive($var)
+function htmltrim__recursive($var, $level = 0)
 {
 	global $smfFunc;
 	
@@ -428,7 +431,10 @@ function htmltrim__recursive($var)
 		return isset($smfFunc) ? $smfFunc['htmltrim']($var) : trim($var, " \t\n\r\x0B\0\xA0");
 
 	// Go through all the elements and remove the whitespace.
-	return array_map('htmltrim__recursive', $var);
+	foreach ($var as $k => $v)
+		$var[$k] = $level > 25 ? null : htmltrim__recursive($v, $level + 1);
+
+	return $var;
 }
 
 // !!!
