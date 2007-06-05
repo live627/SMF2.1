@@ -1,8 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2730 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2731 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+June 2007
+--------------------------------------------------------------------------------
+ ! Sending newsletters could cause a timeout on large boards. (ManageNews.php)
+ ! Session fixation could in rare cases be applied - reported by David Vieira-Kurz). (Subs-Auth.php)
+
+
 May 2007
 --------------------------------------------------------------------------------
  + If posting an attachment and using the default message icon, change the icon to a clip icon. (Post.php, Display.php MessageIndex.php, Recent.php, Search.php)

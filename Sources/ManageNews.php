@@ -314,17 +314,33 @@ function ComposeMailing()
 
 	// Get a list of all full banned users.  Use their Username and email to find them.  Only get the ones that can't login to turn off notification.
 	$request = $smfFunc['db_query']('', "
-		SELECT mem.id_member
+		SELECT DISTINCT mem.id_member
 		FROM {$db_prefix}ban_groups AS bg
-		LEFT JOIN {$db_prefix}ban_items AS bi ON (bg.id_ban_group = bi.id_ban_group)
-		LEFT JOIN {$db_prefix}members AS mem ON (bi.id_member = mem.id_member OR mem.email_address LIKE bi.email_address)
-		WHERE (bg.cannot_access = 1 OR bg.cannot_login = 1) AND (ISNULL(bg.expire_time) OR bg.expire_time > " . time() . ")
-			AND NOT ISNULL(mem.id_member)
-		GROUP BY mem.id_member", __FILE__, __LINE__);
-	// For each of these add them to the excluded list.
-	while ($row = $smfFunc['db_fetch_row']($request))
+			INNER JOIN {$db_prefix}ban_items AS bi ON (bg.id_ban_group = bi.id_ban_group)
+			INNER JOIN {$db_prefix}members AS mem ON (bi.id_member = mem.id_member)
+		WHERE (bg.cannot_access = 1 OR bg.cannot_login = 1)
+			AND (ISNULL(bg.expire_time) OR bg.expire_time > " . time() . ")", __FILE__, __LINE__);
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['recipients']['exclude_members'][] = $row['id_member'];
 	$smfFunc['db_free_result']($request);
+
+	$request = $smfFunc['db_query']('', "
+		SELECT DISTINCT bi.email_address
+		FROM {$db_prefix}ban_items AS bi
+			INNER JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
+		WHERE (bg.cannot_access = 1 OR bg.cannot_login = 1)
+			AND (ISNULL(bg.expire_time) OR bg.expire_time > " . time() . ")
+			AND bi.email_address != ''", __FILE__, __LINE__);
+	$condition_array = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$condition_array[] = "email_address LIKE '" . $row['email_address'] . "'";
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member
+		FROM {$db_prefix}members
+		WHERE " . implode(' OR ', $condition_array), __FILE__, __LINE__);
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$context['recipients']['exclude_members'][] = $row['id_member'];
 
 	// Did they select moderators - if so add them as specific members...
 	if ((!empty($context['recipients']['groups']) && in_array(3, $context['recipients']['groups'])) || (!empty($context['recipients']['exclude_groups']) && in_array(3, $context['recipients']['exclude_groups'])))

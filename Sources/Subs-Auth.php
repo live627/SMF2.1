@@ -172,7 +172,33 @@ function setLoginCookie($cookie_length, $id, $password = '')
 	}
 
 	$_COOKIE[$cookiename] = $data;
-	$_SESSION['login_' . $cookiename] = $data;
+
+	// Make sure the user logs in with a new session ID.
+	if (!isset($_SESSION['login_' . $cookiename]) || $_SESSION['login_' . $cookiename] !== $data)
+	{
+		session_regenerate_id();
+
+		// Version 4.3.2 didn't store the cookie of the new session.
+		if (version_compare(PHP_VERSION, '4.3.2') === 0)
+			setcookie(session_name(), session_id(), time() + $cookie_length, $cookie_url[1], '', 0);
+
+		$_SESSION['login_' . $cookiename] = $data;
+	}
+}
+
+// PHP < 4.3.2 doesn't have this function
+if (!function_exists('session_regenerate_id'))
+{
+	function session_regenerate_id()
+	{
+		// Too late to change the session now.
+		if (headers_sent())
+			return false;
+
+		session_id(strtolower(md5(uniqid(rand(), true))));
+		return true;
+	}
+
 }
 
 // Get the domain and path for the cookie...
