@@ -249,7 +249,7 @@ function ModifyProfile($post_errors = array())
 				),
 				'issueWarning' => array(
 					'own' => array('pm_send'),
-					'any' => array('issue_warnings'),
+					'any' => array('issue_warning'),
 					'enabled' => $modSettings['warning_settings']{0} == 1 && !$context['user']['is_owner'],
 					'label' => $txt['profile_issue_warning'],					
 				),
@@ -3225,7 +3225,7 @@ function issueWarning($memID)
 	list ($modSettings['warning_enable'], $modSettings['user_limit']) = explode(',', $modSettings['warning_settings']);
 
 	// Doesn't hurt to be overly cautious.
-	if (empty($modSettings['warning_enable']) || $context['user']['is_owner'] || !allowedTo('issue_warnings'))
+	if (empty($modSettings['warning_enable']) || $context['user']['is_owner'] || !allowedTo('issue_warning'))
 		fatal_lang_error('no_access', false);
 
 	// Make sure things which are disabled stay disabled.

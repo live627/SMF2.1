@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2731 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2732 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -7,6 +7,7 @@ June 2007
 --------------------------------------------------------------------------------
  ! Sending newsletters could cause a timeout on large boards. (ManageNews.php)
  ! Session fixation could in rare cases be applied - reported by David Vieira-Kurz). (Subs-Auth.php)
+ ! Check the correct permission for issuing warnings. (Profile.php)
 
 
 May 2007
