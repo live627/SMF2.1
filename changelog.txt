@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2734 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2735 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -11,6 +11,8 @@ June 2007
  ! Prevent recursive functions causing a stack overflow in PHP. (QueryString.php)
  ! Inform users with login bans about why they can't login. (Security.php, LogInOut.php, index language files)
  * Let user mark selected topics read on unread and unreadreplies searches. (index and Recent default theme Templates, default theme style.css)
+ ! When splitting stickied topics don't make the new topic sticky also. (SplitTopics.php)
+ ! Bad query was making the message previews not work. (MessageIndex.php)
 
 
 May 2007

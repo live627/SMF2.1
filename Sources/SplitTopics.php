@@ -464,6 +464,8 @@ function SplitSelectionExecute()
 	// Make sure the session id was passed with post.
 	checkSession();
 
+	echo '<pre>'; print_r($_REQUEST); die('</pre>');
+
 	// Default the subject in case it's blank.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
 		$_POST['subname'] = $txt['new_topic'];
@@ -495,11 +497,11 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 
 	// Get some board info.
 	$request = $smfFunc['db_query']('', "
-		SELECT id_board, is_sticky, approved
+		SELECT id_board, approved
 		FROM {$db_prefix}topics
 		WHERE id_topic = $split1_ID_TOPIC
 		LIMIT 1", __FILE__, __LINE__);
-	list ($id_board, $is_sticky, $split1_approved) = $smfFunc['db_fetch_row']($request);
+	list ($id_board, $split1_approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Find the new first and last not in the list. (old topic)
@@ -601,7 +603,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}topics
 			(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, num_replies, unapproved_posts, approved, is_sticky)
-		VALUES ($id_board, $split2_firstMem, $split2_lastMem, 0, 0, $split2_replies, $split2_unapprovedposts, $split2_approved, $is_sticky)", __FILE__, __LINE__);
+		VALUES ($id_board, $split2_firstMem, $split2_lastMem, 0, 0, $split2_replies, $split2_unapprovedposts, $split2_approved, 0)", __FILE__, __LINE__);
 	$split2_ID_TOPIC = db_insert_id("{$db_prefix}topics", 'id_topic');
 	if ($split2_ID_TOPIC <= 0)
 		fatal_lang_error('cant_insert_topic');
