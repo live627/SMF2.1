@@ -464,8 +464,6 @@ function SplitSelectionExecute()
 	// Make sure the session id was passed with post.
 	checkSession();
 
-	echo '<pre>'; print_r($_REQUEST); die('</pre>');
-
 	// Default the subject in case it's blank.
 	if (!isset($_POST['subname']) || $_POST['subname'] == '')
 		$_POST['subname'] = $txt['new_topic'];
