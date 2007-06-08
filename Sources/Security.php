@@ -283,8 +283,8 @@ function is_not_banned($forceCheck = false)
 		}
 
 		// Mark the cannot_access and cannot_post bans as being 'hit'.
-		if (isset($_SESSION['ban']['cannot_access']) || isset($_SESSION['ban']['cannot_post']))
-			log_ban(array_merge(isset($_SESSION['ban']['cannot_access']) ? $_SESSION['ban']['cannot_access']['ids'] : array(), isset($_SESSION['ban']['cannot_post']) ? $_SESSION['ban']['cannot_post']['ids'] : array()));
+		if (isset($_SESSION['ban']['cannot_access']) || isset($_SESSION['ban']['cannot_post']) || isset($_SESSION['ban']['cannot_login']))
+			log_ban(array_merge(isset($_SESSION['ban']['cannot_access']) ? $_SESSION['ban']['cannot_access']['ids'] : array(), isset($_SESSION['ban']['cannot_post']) ? $_SESSION['ban']['cannot_post']['ids'] : array(), isset($_SESSION['ban']['cannot_login']) ? $_SESSION['ban']['cannot_login']['ids'] : array()));
 
 		// If for whatever reason the is_activated flag seems wrong, do a little work to clear it up.
 		if ($user_info['id'] && (($user_settings['is_activated'] >= 10 && !$flag_is_activated)
@@ -294,7 +294,7 @@ function is_not_banned($forceCheck = false)
 			updateBanMembers();
 		}
 	}
-
+	
 	// Hey, I know you! You're ehm...
 	if (!isset($_SESSION['ban']['cannot_access']) && !empty($_COOKIE[$cookiename . '_']))
 	{
@@ -350,7 +350,8 @@ function is_not_banned($forceCheck = false)
 			'is_logged' => false,
 			'is_admin' => false,
 			'is_mod' => false,
-			'language' => $user_info['language']
+			'can_mod' => false,
+			'language' => $user_info['language'],
 		);
 
 		// A goodbye present.
@@ -373,17 +374,32 @@ function is_not_banned($forceCheck = false)
 	// You're not allowed to log in but yet you are. Let's fix that.
 	elseif (isset($_SESSION['ban']['cannot_login']) && !$user_info['is_guest'])
 	{
-		// !!! Why doesn't this use the function made for logging bans?
+		$old_name = isset($user_info['name']) && $user_info['name'] != '' ? $user_info['name'] : $txt['guest_title'];
+		// We don't wanna see you!
 		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}ban_items
-			SET hits = hits + 1
-			WHERE id_ban IN (" . implode(', ', $_SESSION['ban']['cannot_login']['ids']) . ')', __FILE__, __LINE__);
+			DELETE FROM {$db_prefix}log_online
+			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
 
-		// Log this ban.
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}log_banned
-				(id_member, ip, email, log_time)
-			VALUES ($user_info[id], SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$user_info[email]', 1, 255), " . time() . ')', __FILE__, __LINE__);
+		// 'Log' the user out.  Can't have any funny business... (save the name!)
+		$old_name = isset($user_info['name']) && $user_info['name'] != '' ? $user_info['name'] : $txt['guest_title'];
+		$user_info['name'] = '';
+		$user_info['username'] = '';
+		$user_info['is_guest'] = true;
+		$user_info['is_admin'] = false;
+		$user_info['permissions'] = array();
+		$user_info['id'] = 0;
+		$context['user'] = array(
+			'id' => 0,
+			'username' => '',
+			'name' => $txt['guest_title'],
+			'is_guest' => true,
+			'is_logged' => false,
+			'is_admin' => false,
+			'is_mod' => false,
+			'can_mod' => false,
+			'language' => $user_info['language'],
+		);
+
 
 		// SMF's Wipe 'n Clean(r) erases all traces.
 		$_GET['action'] = '';
@@ -391,9 +407,10 @@ function is_not_banned($forceCheck = false)
 		$_GET['topic'] = '';
 		writeLog(true);
 
-		// Logged in, but not for long...
 		require_once($sourcedir . '/LogInOut.php');
-		Logout(true);
+		Logout(true, false);
+
+		fatal_error(sprintf($txt['your_ban_cannot_login'], $old_name) . (empty($_SESSION['ban']['cannot_login']['reason']) ? '' : '<br />' . $_SESSION['ban']['cannot_login']['reason']) . '<br />' . (!empty($_SESSION['ban']['expire_time']) ? sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)) : $txt['your_ban_expires_never']), 'user');
 	}
 
 	// Fix up the banning permissions.

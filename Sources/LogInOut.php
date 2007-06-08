@@ -428,7 +428,7 @@ function Login2()
 }
 
 // Log the user out.
-function Logout($internal = false)
+function Logout($internal = false, $redirect=true)
 {
 	global $db_prefix, $sourcedir, $user_info, $user_settings, $context, $modSettings, $smfFunc;
 
@@ -459,14 +459,17 @@ function Logout($internal = false)
 	setLoginCookie(-3600, 0);
 
 	// Off to the merry board index we go!
-	if (empty($_SESSION['logout_url']))
-		redirectexit('', $context['server']['needs_login_fix']);
-	else
+	if ($redirect)
 	{
-		$temp = $_SESSION['logout_url'];
-		unset($_SESSION['logout_url']);
+		if (empty($_SESSION['logout_url']))
+			redirectexit('', $context['server']['needs_login_fix']);
+		else
+		{
+			$temp = $_SESSION['logout_url'];
+			unset($_SESSION['logout_url']);
 
-		redirectexit($temp, $context['server']['needs_login_fix']);
+			redirectexit($temp, $context['server']['needs_login_fix']);
+		}
 	}
 }
 

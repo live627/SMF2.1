@@ -520,8 +520,12 @@ function template_button_strip($button_strip, $direction = 'top', $force_reset =
 			continue;
 		}
 		elseif (!isset($buttons[$key]) || $force_reset)
-			$buttons[$key] = '<a href="' . $value['url'] . '" ' .( isset($value['custom']) ? $value['custom'] : '') . '>' . $txt[$value['text']] . '</a>';
-
+		{
+			if ($value['url'] === '{SUBMIT}')
+				$buttons[$key] = '<input type="submit" value="' .( isset($value['custom']) ? $value['custom'] : '') . $txt[$value['text']] . '" class="button_strip_submit" />';
+			else
+				$buttons[$key] = '<a href="' . $value['url'] . '" ' .( isset($value['custom']) ? $value['custom'] : '') . '>' . $txt[$value['text']] . '</a>';
+		}
 		$button_strip[$key] = $buttons[$key];
 	}
 
