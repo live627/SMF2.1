@@ -176,7 +176,16 @@ function setLoginCookie($cookie_length, $id, $password = '')
 	// Make sure the user logs in with a new session ID.
 	if (!isset($_SESSION['login_' . $cookiename]) || $_SESSION['login_' . $cookiename] !== $data)
 	{
+		// Backup and remove the old session.
+		$oldSessionData = $_SESSION;
+		$_SESSION = array();
+		session_destroy();
+
+		// Recreate and restore the new session.
+		loadSession();
 		session_regenerate_id();
+		$_SESSION = $oldSessionData;
+
 
 		// Version 4.3.2 didn't store the cookie of the new session.
 		if (version_compare(PHP_VERSION, '4.3.2') === 0)
