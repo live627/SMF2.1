@@ -371,13 +371,22 @@ function PermissionByBoard()
 	// Load all permission profiles.
 	loadPermissionProfiles();
 
+	// Get all the board moderator counts first - cause PostgreSQL doesn't allow clever/illegal groups dependant on opinion.
 	$request = $smfFunc['db_query']('', "
-		SELECT b.id_board, b.name, COUNT(mods.id_member) AS moderators, b.member_groups, b.child_level,
+		SELECT id_board, COUNT(id_member) AS moderators
+		FROM {$db_prefix}moderators
+		WHERE id_board > 0
+		GROUP BY id_board", __FILE__, __LINE__);
+	$moderator_counts = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$moderator_counts[$row['id_board']] = $row['moderators'];
+	$smfFunc['db_free_result']($request);
+
+	$request = $smfFunc['db_query']('', "
+		SELECT b.id_board, b.name, b.member_groups, b.child_level,
 			b.id_profile
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
-		GROUP BY b.id_board
 		ORDER BY b.board_order", __FILE__, __LINE__);
 	$context['boards'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -396,7 +405,7 @@ function PermissionByBoard()
 			'id' => $row['id_board'],
 			'child_level' => $row['child_level'],
 			'name' => $row['name'],
-			'num_moderators' => $row['moderators'],
+			'num_moderators' => empty($moderator_counts[$row['id_board']]) ? 0 : $moderator_counts[$row['id_board']],
 			'public' => in_array(0, $row['member_groups']) || in_array(-1, $row['member_groups']),
 			'membergroups' => $row['member_groups'],
 			'profile' => $row['id_profile'],
@@ -705,15 +714,15 @@ function SwitchBoard()
 					WHERE id_profile = " . $context['board']['profile'], __FILE__, __LINE__);
 				$inserts = array();
 				while ($row = $smfFunc['db_fetch_assoc']($request))
-					$inserts[] = "($profile_id, $row[id_group], '$row[permission]', $row[add_deny])";
+					$inserts[] = array($profile_id, $row['id_group'], "'$row[permission]'", $row['add_deny']);
 				$smfFunc['db_free_result']($request);
 
 				if (!empty($inserts))
-					$smfFunc['db_query']('', "
-						INSERT INTO {$db_prefix}board_permissions
-							(id_profile, id_group, permission, add_deny)
-						VALUES
-							" . implode(',', $inserts), __FILE__, __LINE__);
+					$smfFunc['db_insert']('insert',
+						"{$db_prefix}board_permissions",
+						array('id_profile', 'id_group', 'permission', 'add_deny'),
+						$inserts,
+						array('id_profile', 'id_group'), __FILE__, __LINE__);
 
 				// Link the board to the profile.
 				$smfFunc['db_query']('', "
@@ -1230,16 +1239,25 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			WHERE id_group = $group
 				AND id_profile = 1", __FILE__, __LINE__);
 
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}permissions
-				(id_group, permission)
-			VALUES ($group, '" . implode("'),
-				($group, '", $groupLevels['global'][$level]) . "')", __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}board_permissions
-				(id_profile, id_group, permission)
-			VALUES (1, $group, '" . implode("'),
-				(1, $group, '", $groupLevels['board'][$level]) . "')", __FILE__, __LINE__);
+		$groupInserts = array();
+		foreach ($groupLevels['global'][$level] as $level)
+			$groupInserts[] = array($group, $level);
+
+		$smfFunc['db_insert']('insert',
+			"{$db_prefix}permissions",
+			array('id_group', 'permission'),
+			$groupInserts,
+			array('id_group'), __FILE__, __LINE__);
+
+		$boardInserts = array();
+		foreach ($groupLevels['board'][$level] as $level)
+			$boardInserts[] = array(1, $group, $level);
+
+		$smfFunc['db_insert']('insert',
+			"{$db_prefix}board_permissions",
+			array('id_profile', 'id_group', 'permission'),
+			$boardInserts,
+			array('id_profile', 'id_group'), __FILE__, __LINE__);
 	}
 	// Setting profile permissions for a specific group.
 	elseif ($profile !== 'null' && $group !== 'null')
@@ -1257,11 +1275,15 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		if (!empty($groupLevels['board'][$level]))
 		{
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}board_permissions
-					(id_profile, id_group, permission)
-				VALUES ($profile, $group, '" . implode("'),
-					($profile, $group, '", $groupLevels['board'][$level]) . "')", __FILE__, __LINE__);
+			$boardInserts = array();
+			foreach ($groupLevels['board'][$level] as $level)
+				$boardInserts[] = array($profile, $group, $level);
+
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}board_permissions",
+				array('id_profile', 'id_group', 'permission'),
+				$boardInserts,
+				array('id_profile', 'id_group'), __FILE__, __LINE__);
 		}
 	}
 	// Setting profile permissions for all groups.
@@ -1286,20 +1308,28 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		{
 			$group = $row[0];
 
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}board_permissions
-					(id_profile, id_group, permission)
-				VALUES ($profile, $group, '" . implode("'),
-					($profile, $group, '", $boardLevels[$level]) . "')", __FILE__, __LINE__);
+			$boardInserts = array();
+			foreach ($boardLevels[$level] as $level)
+				$boardInserts[] = array($profile, $group, $level);
+
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}board_permissions",
+				array('id_profile', 'id_group', 'permission'),
+				$boardInserts,
+				array('id_profile', 'id_group'), __FILE__, __LINE__);
 		}
 		$smfFunc['db_free_result']($query);
 
 		// Add permissions for ungrouped members.
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}board_permissions
-				(id_profile, id_group, permission)
-			VALUES ($profile, 0, '" . implode("'),
-				($profile, 0, '", $boardLevels[$level]) . "')", __FILE__, __LINE__);
+		$boardInserts = array();
+		foreach ($boardLevels[$level] as $level)
+			$boardInserts[] = array($profile, 0, $level);
+
+		$smfFunc['db_insert']('insert',
+				"{$db_prefix}board_permissions",
+				array('id_profile', 'id_group', 'permission'),
+				$boardInserts,
+				array('id_profile', 'id_group'), __FILE__, __LINE__);
 	}
 	// $profile and $group are both null!
 	else

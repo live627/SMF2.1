@@ -73,6 +73,10 @@ CREATE OR REPLACE FUNCTION TO_DAYS (timestamp) RETURNS integer AS
   'SELECT DATE_PART(''DAY'', $1 - ''0000-01-01'')::integer AS result'
 LANGUAGE 'sql';
 
+CREATE OR REPLACE FUNCTION CONCAT (text, text) RETURNS text AS
+  'SELECT $1 || $2 AS result'
+LANGUAGE 'sql'; 
+
 #
 # Create PostgreSQL operators.
 #

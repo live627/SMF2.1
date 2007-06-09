@@ -874,6 +874,7 @@ function MembersAwaitingActivation()
 		'javascript' => $javascript,
 		'form' => array(
 			'href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'],
+			'name' => 'postForm',
 			'include_start' => true,
 			'include_sort' => true,
 			'hidden_fields' => array(

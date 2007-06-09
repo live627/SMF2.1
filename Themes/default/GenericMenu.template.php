@@ -284,14 +284,14 @@ function template_generic_menu_tabs(&$menu_context)
 				echo '
 						<td class="maintab_active_first">&nbsp;</td>
 						<td valign="top" class="maintab_active_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
 						</td>
 						<td class="maintab_active_last">&nbsp;</td>';
 			}
 			else
 				echo '
 						<td valign="top" class="maintab_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
 						</td>';
 		}
 
@@ -316,11 +316,11 @@ function template_generic_menu_tabs(&$menu_context)
 			if (!empty($tab['is_selected']))
 			{
 				echo '
-							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a></b>';
+							<img src="', $settings['images_url'], '/selected.gif" alt="*" /> <b><a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], '">' , $tab['label'], '</a></b>';
 			}
 			else
 				echo '
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area']), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>';
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>';
 
 			if (empty($tab['is_last']))
 				echo ' | ';

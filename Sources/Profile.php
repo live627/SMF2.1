@@ -421,6 +421,10 @@ function ModifyProfile($post_errors = array())
 			$profile_vars['member_ip'] = "'$user_info[ip]'";
 
 		// Now call the sub-action function...
+		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'activateAccount' && empty($post_errors))
+		{
+			activateAccount($memID);
+		}
 		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'deleteAccount' && empty($post_errors))
 		{
 			deleteAccount2($profile_vars, $post_errors, $memID);
@@ -3586,7 +3590,7 @@ function loadCustomFields($memID, $area = 'summary')
 			foreach ($options as $k => $v)
 			{
 				$true = (!$exists && $row['default_value'] == $v) || $value == $v;
-				$input_html .= '<option value="' . $k . '"' . ($true ? ' selected="selected"' : '') . '>' . $v . '</option>';
+				$input_html .= '<option value="' . $k . '" ' . ($true ? 'selected="selected"' : '') . '>' . $v . '</option>';
 				if ($true)
 					$output_html = $v;
 			}
