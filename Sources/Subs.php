@@ -323,7 +323,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 				$inserts[] = array("'$word'", $parameter1);
 
 			if (!empty($inserts))
-				$smfFunc['db_insert']('insert',
+				$smfFunc['db_insert']('ignore',
 					"{$db_prefix}log_search_subjects",
 					array('word', 'id_topic'),
 					$inserts,

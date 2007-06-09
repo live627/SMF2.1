@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2739 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2740 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -20,6 +20,8 @@ June 2007
  ! Allow users to see their unapproved topics and tell them it's not approved. (index.php, MessageIndex.php)
  ! Tell moderators how many topics/posts are unapproved in the board and allow them to filter these out in the moderation center. (PostModeration.php, MessageIndex.php)
  & New language strings for the above (index language file)
+ ! MySQL's utf8 collation mapped some characters as equal causing a database insert on posting a topic to go wrong in rare cases. (Subs.php)
+ ! Modifying posts could cause a database error in some cases. (Subs-Post.php)
 
 
 May 2007
