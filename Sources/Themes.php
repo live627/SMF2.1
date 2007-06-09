@@ -1325,7 +1325,6 @@ function EditTheme()
 			}
 		}
 
-		loadTemplate('Themes');
 		$context['sub_template'] = 'edit_list';
 
 		return;
@@ -1378,7 +1377,6 @@ function EditTheme()
 		else
 			$context['theme_files'] = get_file_listing($theme_dir, '');
 
-		loadTemplate('Themes');
 		$context['sub_template'] = 'edit_browse';
 
 		return;
