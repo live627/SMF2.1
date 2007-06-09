@@ -958,7 +958,7 @@ function Post()
 	$context['can_post_attachment_unapproved'] = allowedTo('post_attachment');
 
 	$context['subject'] = addcslashes($form_subject, '"');
-	$context['message'] = str_replace(array('"', '<', '>', '  '), array('&quot;', '&lt;', '&gt;', ' &nbsp;'), $form_message);
+	$context['message'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_message);
 
 	// Needed for message icons.
 	require_once($sourcedir . '/Subs-Editor.php');
