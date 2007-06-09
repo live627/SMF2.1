@@ -581,7 +581,7 @@ function loadBoard()
 				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
 				mem.real_name" . (!empty($topic) ? ", b.id_board" : '') . ", b.child_level,
 				b.id_theme, b.override_theme, b.count_posts, b.id_profile,
-				b.unapproved_topics" . (!empty($topic) ? ', t.approved' : '') . "
+				b.unapproved_topics, b.unapproved_posts" . (!empty($topic) ? ', t.approved, t.id_member_started' : '') . "
 			FROM {$db_prefix}boards AS b
 				" . (!empty($topic) ? "INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)" : '') . "
 				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
@@ -608,7 +608,8 @@ function loadBoard()
 				'name' => $row['bname'],
 				'description' => $row['description'],
 				'num_topics' => $row['num_topics'],
-				'num_unapproved_topics' => $row['unapproved_topics'],
+				'unapproved_topics' => $row['unapproved_topics'],
+				'unapproved_posts' => $row['unapproved_posts'],
 				'parent_boards' => getBoardParents($row['id_parent']),
 				'parent' => $row['id_parent'],
 				'child_level' => $row['child_level'],
@@ -617,6 +618,7 @@ function loadBoard()
 				'profile' => $row['id_profile'],
 				'posts_count' => empty($row['count_posts']),
 				'cur_topic_approved' => empty($topic) || $row['approved'],
+				'cur_topic_starter' => empty($topic) ? 0 : $row['id_member_started'],
 			);
 
 			// Load the membergroups allowed, and check permissions.

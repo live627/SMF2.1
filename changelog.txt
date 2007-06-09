@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2738 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2739 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -17,6 +17,9 @@ June 2007
  ! Fixed minor typo showing wrong number of unapproved topics in moderation center. (PostModeration.php)
  + Added new functions to SSI.php including fetchPost, fetchMember, randomMember and fetchGroupMembers (SSI.php, ssi_examples.php, ssi_examples.shtml)
  ! Stop putting &nbsp;'s into the message editing window. (Post.php)
+ ! Allow users to see their unapproved topics and tell them it's not approved. (index.php, MessageIndex.php)
+ ! Tell moderators how many topics/posts are unapproved in the board and allow them to filter these out in the moderation center. (PostModeration.php, MessageIndex.php)
+ & New language strings for the above (index language file)
 
 
 May 2007

@@ -142,6 +142,19 @@ function template_main()
 		echo '
 	</tr>';
 
+		// If this person can approve items and we have some awaiting approval tell them.
+		if ($context['can_approve_posts'])
+		{
+			echo '
+	<tr class="windowbg2">
+		<td colspan="' , !empty($options['display_quick_mod']) ? '8' : '7' , '">
+			<small>
+				<span style="color: red;">!</span> ', $context['unapproved_posts_message'], '
+			</small>
+		</td>
+	</tr>';
+		}
+
 		foreach ($context['topics'] as $topic)
 		{
 			// Calculate the colour class of the topic.
@@ -157,7 +170,7 @@ function template_main()
 		<td class="windowbg2" valign="middle" align="center" width="4%">
 			<img src="', $settings[$context['icon_sources'][$topic['first_post']['icon']]], '/post/', $topic['first_post']['icon'], '.gif" alt="" border="0" align="middle" /></td>
 		<td class="', $colour_class, '" valign="middle" width="42%">
-			', $topic['first_post']['link'], ' ', $topic['new'] && $context['user']['is_logged'] ? '<a href="' . $scripturl . '?topic=' . $topic['id'] . '.msg' . $topic['new_from'] . '#new"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>' : '', ' <span class="smalltext">', $topic['pages'], '</span></td>
+			', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), ' ', $topic['new'] && $context['user']['is_logged'] ? '<a href="' . $scripturl . '?topic=' . $topic['id'] . '.msg' . $topic['new_from'] . '#new"><img src="' . $settings['lang_images_url'] . '/new.gif" alt="' . $txt['new'] . '" border="0" /></a>' : '', ' <span class="smalltext">', $topic['pages'], '</span></td>
 		<td class="windowbg2" valign="middle" width="14%">
 			', $topic['first_post']['member']['link'], '</td>
 		<td class="windowbg" valign="middle" width="4%" align="center">

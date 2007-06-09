@@ -66,6 +66,14 @@ function UnapprovedPosts()
 	// Work out what boards we can work in!
 	$approve_boards = boardsAllowedTo('approve_posts');
 
+	// If we filtered by board remove ones outside of this board.
+	//!!! Put a message saying we're filtered?
+	if (isset($_REQUEST['brd']))
+	{
+		$filter_board = array((int) $_REQUEST['brd']);
+		$approve_boards = $approve_boards == array(0) ? $filter_board : array_intersect($approve_boards, $filter_board);
+	}
+
 	if ($approve_boards == array(0))
 		$approve_query = '';
 	elseif (!empty($approve_boards))

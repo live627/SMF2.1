@@ -170,6 +170,19 @@ function template_main()
 		echo '
 				</tr>';
 
+		// If this person can approve items and we have some awaiting approval tell them.
+		if ($context['can_approve_posts'])
+		{
+			echo '
+				<tr class="windowbg2">
+					<td colspan="' , !empty($options['display_quick_mod']) ? '8' : '7' , '">
+						<small>
+							<span style="color: red;">!</span> ', $context['unapproved_posts_message'], '
+						</small>
+					</td>
+				</tr>';
+		}
+
 		foreach ($context['topics'] as $topic)
 		{
 			// Calculate the colour class of the topic.
@@ -187,7 +200,7 @@ function template_main()
 						<img src="', $topic['first_post']['icon_url'], '" alt="" />
 					</td>
 					<td class="', $colour_class, '" valign="middle" ', (!empty($topic['quick_mod']['remove']) ? 'id="topic_' . $topic['first_post']['id'] . '" onmouseout="mouse_on_div = 0;" onmouseover="mouse_on_div = 1;" ondblclick="modify_topic(\'' . $topic['id'] . '\', \'' . $topic['first_post']['id'] . '\', \'' . $context['session_id'] . '\');"' : ''), '>
-						<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>';
+						<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>';
 
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new'] && $context['user']['is_logged'])

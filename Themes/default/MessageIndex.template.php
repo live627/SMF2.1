@@ -208,6 +208,19 @@ function template_main()
 					</tr>';
 		}
 
+		// If this person can approve items and we have some awaiting approval tell them.
+		if ($context['can_approve_posts'])
+		{
+			echo '
+					<tr class="windowbg2">
+						<td colspan="' , !empty($options['display_quick_mod']) ? '8' : '7' , '">
+							<small>
+								<span style="color: red;">!</span> ', $context['unapproved_posts_message'], '
+							</small>
+						</td>
+					</tr>';
+		}
+
 		foreach ($context['topics'] as $topic)
 		{
 			// Do we want to seperate the sticky and lock status out?
@@ -238,7 +251,7 @@ function template_main()
 							' , $topic['is_sticky'] ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" id="stickyicon' . $topic['first_post']['id'] . '" style="margin: 0;" />' : '';
 
 			echo '
-							', $topic['is_sticky'] ? '<b>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</b>' : '';
+							', $topic['is_sticky'] ? '<b>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], (!$context['can_approve_posts'] && !$topic['approved'] ? '&nbsp;<em>(' . $txt['awaiting_approval'] . ')</em>' : ''), '</span>', $topic['is_sticky'] ? '</b>' : '';
 
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new'] && $context['user']['is_logged'])

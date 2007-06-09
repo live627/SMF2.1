@@ -50,10 +50,18 @@ function MessageIndex()
 	$context['name'] = $board_info['name'];
 	$context['description'] = $board_info['description'];
 	// How many topics do we have in total?
-	$board_info['total_topics'] = allowedTo('approve_posts') ? $board_info['num_topics'] + $board_info['num_unapproved_topics'] : $board_info['num_topics'];
+	$board_info['total_topics'] = allowedTo('approve_posts') ? $board_info['num_topics'] + $board_info['unapproved_topics'] : $board_info['num_topics'];
 
 	// View all the topics, or just a few?
 	$maxindex = isset($_REQUEST['all']) && !empty($modSettings['enableAllMessages']) ? $board_info['total_topics'] : $modSettings['defaultMaxTopics'];
+
+	// If we can view unapproved messages build up a list.
+	if (allowedTo('approve_posts'))
+	{
+		$untopics = $board_info['unapproved_topics'] ? '<a href="' . $scripturl . '?action=moderate;area=postmod;sa=topics;brd=' . $board . '">' . $board_info['unapproved_topics'] . '</a>' : 0;
+		$unposts = $board_info['unapproved_posts'] ? '<a href="' . $scripturl . '?action=moderate;area=postmod;sa=posts;brd=' . $board . '">' . ($board_info['unapproved_posts'] - $board_info['unapproved_topics']) . '</a>' : 0;
+		$context['unapproved_posts_message'] = sprintf($txt['there_are_unapproved_topics'], $untopics, $unposts, $scripturl . '?action=moderate;area=postmod;sa=' . $board_info['unapproved_topics'] ? 'topics' : 'posts' . ';brd=' . $board);
+	}
 
 	// Make sure the starting place makes sense and construct the page index.
 	if (isset($_REQUEST['sort']))
