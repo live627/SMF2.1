@@ -213,7 +213,7 @@ function UnapprovedPosts()
 
 	// Update the tabs with the correct number of posts.
 	$context['menu_data_' . $context['moderation_menu_id']]['sections']['posts']['areas']['postmod']['subsections']['posts']['label'] .= ' (' . $context['total_unapproved_posts'] . ')';
-	$context['menu_data_' . $context['moderation_menu_id']]['sections']['posts']['areas']['postmod']['subsections']['topics']['label'] .= ' (' . $context['total_unapproved_posts'] . ')';
+	$context['menu_data_' . $context['moderation_menu_id']]['sections']['posts']['areas']['postmod']['subsections']['topics']['label'] .= ' (' . $context['total_unapproved_topics'] . ')';
 
 	// Get all unapproved posts.
 	$request = $smfFunc['db_query']('', "

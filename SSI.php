@@ -226,17 +226,67 @@ function ssi_logout($redirect_to = '', $output_method = 'echo')
 }
 
 // Recent post list:   [board] Subject by Poster	Date
-function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method = 'echo')
+function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_boards = null, $output_method = 'echo')
 {
 	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
 	global $modSettings, $smfFunc;
 
+	// Excluding certain boards...
 	if ($exclude_boards === null && !empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0)
 		$exclude_boards = array($modSettings['recycle_board']);
 	else
 		$exclude_boards = empty($exclude_boards) ? array() : (is_array($exclude_boards) ? $exclude_boards : array($exclude_boards));
 
-	// Find all the posts.  Newer ones will have higher IDs.
+	// What about including certain boards - note we do some protection here as pre-2.0 didn't have this parameter.
+	if (is_array($include_boards) || (int) $include_boards === $include_boards)
+	{
+		$include_boards = is_array($include_boards) ? $include_boards : array($include_boards);
+	}
+	elseif ($include_boards != null)
+	{
+		$output_method = $include_boards;
+		$include_boards = array();
+	}
+
+	// Let's restrict the query boys (and girls)
+	$query_where = "
+		m.id_msg >= " . ($modSettings['maxMsgID'] - 25 * min($num_recent, 5)) . "
+		" . (empty($exclude_boards) ? '' : "
+		AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
+		" . (empty($include_boards) ? '' : "
+		AND b.id_board IN (" . implode(', ', $include_boards) . ")") . "
+		AND $user_info[query_wanna_see_board]
+		AND m.approved = 1";
+
+	// Past to this simpleton of a function...
+	ssi_queryPosts($query_where, $num_recent, 'm.id_msg DESC', $output_method);
+}
+
+// Fetch a post with a particular ID. By default will only show if you have permission to the see the board in question - this can be overriden.
+function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method = 'echo')
+{
+	global $user_info;
+
+	// Allow the user to request more than one - why not?
+	$post_ids = is_array($post_ids) ? $post_ids : array($post_ids);
+
+	// Restrict the posts required...
+	$query_where = "
+		m.id_msg IN (" . implode(', ', $post_ids) . ")
+		" . ($override_permissions ? '' : "AND $user_info[query_wanna_see_board]") . "
+		AND m.approved = 1";
+
+	// Then make the query and dump the data.
+	ssi_queryPosts($query_where, '', 'm.id_msg DESC', $output_method);
+}
+
+// This removes code duplication in other queries - don't call it direct unless you really know what you're up to.
+function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_msg DESC', $output_method = 'echo')
+{
+	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
+	global $modSettings, $smfFunc;
+
+	// Find all the posts. Newer ones will have higher IDs.
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg, m.id_board, b.name AS board_name,
@@ -248,13 +298,9 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
 			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = m.id_topic AND lt.id_member = $user_info[id])
 			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = m.id_board AND lmr.id_member = $user_info[id])" : '') . "
-		WHERE m.id_msg >= " . ($modSettings['maxMsgID'] - 25 * min($num_recent, 5)) . "
-			" . (empty($exclude_boards) ? '' : "
-			AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
-			AND $user_info[query_wanna_see_board]
-			AND m.approved = 1
-		ORDER BY m.id_msg DESC
-		LIMIT $num_recent", __FILE__, __LINE__);
+		WHERE $query_where
+		ORDER BY $query_order
+		" . ($query_limit == '' ? '' : "LIMIT $query_limit"), __FILE__, __LINE__);
 	$posts = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -320,7 +366,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $output_method
 }
 
 // Recent topic list:   [board] Subject by Poster	Date
-function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_method = 'echo')
+function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boards = null, $output_method = 'echo')
 {
 	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
 	global $modSettings, $smfFunc;
@@ -329,6 +375,17 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_metho
 		$exclude_boards = array($modSettings['recycle_board']);
 	else
 		$exclude_boards = empty($exclude_boards) ? array() : (is_array($exclude_boards) ? $exclude_boards : array($exclude_boards));
+
+	// Only some boards?.
+	if (is_array($include_boards) || (int) $include_boards === $include_boards)
+	{
+		$include_boards = is_array($include_boards) ? $include_boards : array($include_boards);
+	}
+	elseif ($include_boards != null)
+	{
+		$output_method = $include_boards;
+		$include_boards = array();
+	}
 
 	$stable_icons = array('xx', 'thumbup', 'thumbdown', 'exclamation', 'question', 'lamp', 'smiley', 'angry', 'cheesy', 'grin', 'sad', 'wink', 'moved', 'recycled', 'wireless');
 	$icon_sources = array();
@@ -352,6 +409,8 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $output_metho
 		WHERE t.id_last_msg >= " . ($modSettings['maxMsgID'] - 35 * min($num_recent, 5)) . "
 			" . (empty($exclude_boards) ? '' : "
 			AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
+			" . (empty($include_boards) ? '' : "
+			AND b.id_board IN (" . implode(', ', $include_boards) . ")") . "
 			AND $user_info[query_wanna_see_board]
 			AND t.approved = 1
 			AND m.approved = 1
@@ -607,6 +666,123 @@ function ssi_latestMember($output_method = 'echo')
 	', $txt['welcome_member'], ' ', $context['common_stats']['latest_member']['link'], '', $txt['newest_member'], '<br />';
 	else
 		return $context['common_stats']['latest_member'];
+}
+
+// Fetch a random member - if type set to 'day' will only change once a day!
+function ssi_randomMember($random_type = '', $output_method = 'echo')
+{
+	global $modSettings;
+
+	// If we're looking for something to stay the same each day then seed the generator.
+	if ($random_type == 'day')
+	{
+		// Set the seed to change only once per day.
+		srand(floor(time() / 86400));
+	}
+
+	// Get the lowest ID we're interested in.
+	$member_id = rand(0, $modSettings['latestMember']);
+
+	$where_query = "
+		id_member >= $member_id
+		AND is_activated = 1";
+
+	$result = ssi_queryMembers($where_query, 1, 'id_member ASC', $output_method);
+
+	// If we got nothing do the reverse - incase of unactivated members.
+	if (empty($result))
+	{
+		$where_query = "
+			id_member <= $member_id
+			AND is_activated = 1";
+
+		$result = ssi_queryMembers($where_query, 1, 'id_member DESC', $output_method);
+	}
+
+	// Just to be sure put the random generator back to something... random.
+	if ($random_type != '')
+		srand(time());
+}
+
+// Fetch a specific member.
+function ssi_fetchMember($member_ids, $output_method = 'echo')
+{
+	// Can have more than one member if you really want...
+	$member_ids = is_array($member_ids) ? $member_ids : array($member_ids);
+
+	// Restrict it right!
+	$query_where = "
+		id_member IN (" . implode(', ', $member_ids) . ")";
+
+	// Then make the query and dump the data.
+	ssi_queryMembers($query_where, '', 'id_member', $output_method);
+}
+
+// Get all members of a group.
+function ssi_fetchGroupMembers($group_id, $output_method = 'echo')
+{
+	$query_where = "
+		id_group = $group_id
+		OR id_post_group = $group_id
+		OR FIND_IN_SET($group_id, additional_groups)";
+
+	ssi_queryMembers($query_where, '', 'member_name', $output_method);
+}
+
+// Fetch some member data!
+function ssi_queryMembers($query_where, $query_limit = '', $query_order = 'id_member DESC', $output_method = 'echo')
+{
+	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
+	global $modSettings, $smfFunc, $memberContext;
+
+	// Fetch the members in question.
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member
+		FROM {$db_prefix}members
+		WHERE $query_where
+		ORDER BY $query_order
+		" . ($query_limit == '' ? '' : "LIMIT $query_limit"), __FILE__, __LINE__);
+	$members = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$members[] = $row['id_member'];
+	$smfFunc['db_free_result']($request);
+
+	if (empty($members))
+		return array();
+
+	// Load the members.
+	loadMemberData($members);
+
+	// Draw the table!
+	if ($output_method == 'echo')
+		echo '
+		<table border="0" class="ssi_table">';
+
+	foreach ($members as $member)
+	{
+		// Load their context data.
+		if (!loadMemberContext($member))
+			continue;
+
+		// Only do something if we're echo'ing.
+		if ($output_method == 'echo')
+			echo '
+			<tr>
+				<td align="right" valign="top" nowrap="nowrap">
+					', $memberContext[$member]['link'], '
+					<br />', $memberContext[$member]['blurb'], '
+					<br />', $memberContext[$member]['avatar']['image'], '
+				</td>
+			</tr>';
+	}
+
+	// End the table if appropriate.
+	if ($output_method == 'echo')
+		echo '
+		</table>';
+
+	// Send back the data.
+	return $memberContext;
 }
 
 // Show some basic stats:  Total This: XXXX, etc.
@@ -1086,7 +1262,7 @@ function ssi_news($output_method = 'echo')
 // Show today's birthdays.
 function ssi_todaysBirthdays($output_method = 'echo')
 {
-	global $scripturl, $modSettings;
+	global $scripturl, $modSettings, $user_info;
 
 	$eventOptions = array(
 		'include_birthdays' => true,
@@ -1105,7 +1281,7 @@ function ssi_todaysBirthdays($output_method = 'echo')
 // Show today's holidays.
 function ssi_todaysHolidays($output_method = 'echo')
 {
-	global $modSettings;
+	global $modSettings, $user_info;
 
 	$eventOptions = array(
 		'include_holidays' => true,
@@ -1124,7 +1300,7 @@ function ssi_todaysHolidays($output_method = 'echo')
 // Show today's events.
 function ssi_todaysEvents($output_method = 'echo')
 {
-	global $modSettings;
+	global $modSettings, $user_info;
 
 	$eventOptions = array(
 		'include_events' => true,
@@ -1148,7 +1324,7 @@ function ssi_todaysEvents($output_method = 'echo')
 // Show all calendar entires for today. (birthdays, holodays, and events.)
 function ssi_todaysCalendar($output_method = 'echo')
 {
-	global $modSettings, $txt, $scripturl;
+	global $modSettings, $txt, $scripturl, $user_info;
 
 	$eventOptions = array(
 		'include_birthdays' => true,

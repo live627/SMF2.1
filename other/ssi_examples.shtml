@@ -62,6 +62,11 @@
 
 		<hr />
 
+			<h3>Random Member Function: &lt;!--#include virtual="./SSI.php?ssi_function=randomMember" --&gt;</h3>
+			<!--#include virtual="./SSI.php?ssi_function=randomMember" -->
+
+		<hr />
+
 			<h3>Board Stats: &lt;!--#include virtual="./SSI.php?ssi_function=boardStats" --&gt;</h3>
 			<!--#include virtual="./SSI.php?ssi_function=boardStats" -->
 

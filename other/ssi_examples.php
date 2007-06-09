@@ -94,6 +94,11 @@ require(dirname(__FILE__) . '/SSI.php');
 
 		<hr />
 
+			<h3>Member of the Day: &lt;?php ssi_randomMember('day'); ?&gt;</h3>
+			<?php ssi_randomMember('day'); flush(); ?>
+
+		<hr />
+
 			<h3>Board Stats: &lt;?php ssi_boardStats(); ?&gt;</h3>
 			<?php ssi_boardStats(); flush(); ?>
 
