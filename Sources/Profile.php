@@ -601,7 +601,13 @@ function loadProfileFields($force_reload = false)
 				global $profile_vars, $cur_profile;
 
 				if (isset($_POST[\'bday2\']) && $value > 0 && $_POST[\'bday2\'] > 0)
-					$value = checkdate($value, $_POST[\'bday2\'], $_POST[\'bday3\'] < 4 ? 4 : $_POST[\'bday3\']) ? sprintf(\'%04d-%02d-%02d\', $_POST[\'bday3\'] < 4 ? 4 : $_POST[\'bday3\'], $_POST[\'bday1\'], $_POST[\'bday2\']) : \'0001-01-01\';
+				{
+					// Set to blank?
+					if ((int) $_POST[\'bday1\'] == 1 && (int) $_POST[\'bday2\'] == 1 && (int) $value == 1)
+						$value = \'0001-01-01\';
+					else 
+						$value = checkdate($value, $_POST[\'bday2\'], $_POST[\'bday3\'] < 4 ? 4 : $_POST[\'bday3\']) ? sprintf(\'%04d-%02d-%02d\', $_POST[\'bday3\'] < 4 ? 4 : $_POST[\'bday3\'], $_POST[\'bday1\'], $_POST[\'bday2\']) : \'0001-01-01\';
+				}
 				else
 					$value = \'0001-01-01\';
 
