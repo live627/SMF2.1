@@ -173,7 +173,7 @@ function db_insert_sql($tableName)
 
 	// Get everything from the table.
 	$result = $smfFunc['db_query']('', "
-		SELECT /*!40001 SQL_NO_CACHE */ *
+		SELECT
 		FROM $tableName", false, false);
 
 	// The number of rows, just for record keeping and breaking INSERTs up.
