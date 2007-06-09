@@ -317,7 +317,7 @@ function smf_db_get_version()
 	global $smfFunc;
 
 	$request = $smfFunc['db_query']('', "
-		SELECT VERSION()", false, false);
+		SELECT server_version", false, false);
 	list ($ver) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 

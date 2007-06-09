@@ -485,8 +485,7 @@ function smf_db_list_indexes($table_name, $detail = false)
 
 	$result = $smfFunc['db_query']('', "
 		SHOW KEYS
-		FROM `$table_name`
-		ORDER BY Seq_in_index", false, false);
+		FROM `$table_name`", false, false);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
