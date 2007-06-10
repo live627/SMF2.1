@@ -19,6 +19,7 @@ $txt['mail_quantity'] = 'Maximum amount of emails to send per page load';
 
 $txt['mailqueue_stats'] = 'Mail Queue Statistics';
 $txt['mailqueue_oldest'] = 'Oldest Mail';
+$txt['mailqueue_oldest_not_available'] = 'N/A';
 $txt['mailqueue_size'] = 'Queue Length';
 
 $txt['mailqueue_age'] = 'Age';
@@ -26,6 +27,7 @@ $txt['mailqueue_priority'] = 'Priority';
 $txt['mailqueue_recipient'] = 'Recipient';
 $txt['mailqueue_subject'] = 'Subject';
 $txt['mailqueue_clear_list'] = 'Send Mail Queue Now';
+$txt['mailqueue_no_items'] = 'The mail queue is currently empty';
 // Do not use numeric entities in below string.
 $txt['mailqueue_clear_list_warning'] = 'Are you sure you wish to send the whole mail queue now? This will override any limits you have set.';
 

@@ -710,28 +710,11 @@ function pauseSignatureApplySettings()
 // Show all the custom profile fields available to the user.
 function ShowCustomProfiles()
 {
-	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc, $modSettings;
+	global $txt, $scripturl, $context, $settings, $sc, $db_prefix, $smfFunc;
+	global $modSettings, $sourcedir;
 
 	$context['page_title'] = $txt['custom_profile_title'];
 	$context['sub_template'] = 'show_custom_profile';
-
-	// Load all the fields.
-	$request = $smfFunc['db_query']('', "
-		SELECT id_field, col_name, field_name, field_desc, field_type, active
-		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
-	$context['profile_fields'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-	{
-		$context['profile_fields'][] = array(
-			'id' => $row['id_field'],
-			'col' => $row['col_name'],
-			'name' => $row['field_name'],
-			'desc' => $row['field_desc'],
-			'type' => $row['field_type'],
-			'active' => $row['active'],
-		);
-	}
-	$smfFunc['db_free_result']($request);
 
 	// What about standard fields they can tweak?
 	$standard_fields = array('icq', 'msn', 'aim', 'yim', 'location', 'gender', 'website', 'posts', 'warning_status');
@@ -741,7 +724,7 @@ function ShowCustomProfiles()
 	// Are we saving any standard field changes?
 	if (isset($_POST['save']))
 	{
-		checkSession('get');
+		checkSession();
 
 		// Do the active ones first.
 		$disable_fields = array_flip($standard_fields);
@@ -769,20 +752,201 @@ function ShowCustomProfiles()
 			updateSettings($changes);
 	}
 
-	// Special settings for special things!
-	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? explode(',', $modSettings['disabled_profile_fields']) : array();
-	$context['registration_fields'] = isset($modSettings['registration_fields']) ? explode(',', $modSettings['registration_fields']) : array();
+	require_once($sourcedir . '/Subs-List.php');
 
-	// Set it into context.
-	$context['standard_fields'] = array();
-	foreach ($standard_fields as $field)
-		$context['standard_fields'][] = array(
-			'id' => $field,
-			'label' => isset($txt['standard_profile_field_' . $field]) ? $txt['standard_profile_field_' . $field] : (isset($txt[$field]) ? $txt[$field] : $field),
-			'disabled' => in_array($field, $context['disabled_fields']),
-			'on_register' => in_array($field, $context['registration_fields']) && !in_array($field, $context['fields_no_registration']),
-			'can_show_register' => !in_array($field, $context['fields_no_registration']),
-		);
+	$listOptions = array(
+		'id' => 'standard_profile_fields',
+		'title' => $txt['standard_profile_title'],
+		'base_href' => $scripturl . '?action=admin;area=featuresettings;sa=profile',
+		'get_items' => array(
+			'function' => 'list_getProfileFields',
+			'params' => array(
+				true,
+			),
+		),
+		'columns' => array(
+			'field' => array(
+				'header' => array(
+					'value' => $txt['standard_profile_field'],
+					'style' => 'text-align: left;',
+				),
+				'data' => array(
+					'db_htmlsafe' => 'label',
+					'style' => 'width: 60%;',
+				),
+			),
+			'active' => array(
+				'header' => array(
+					'value' => $txt['custom_edit_active'],
+				),
+				'data' => array(
+					'eval' => 'return \'<input type="checkbox" name="active[]" id="active_\' . %id% . \'" value="\' . %id% . \'" \' . (%disabled% ? \'\' : \'checked="checked"\') . \' class="check" \' . (%can_show_register% ? \'onclick="document.getElementById(\\\'reg_\' . %id% . \'\\\').disabled = !this.checked;"\' : \'\') . \' />\';',
+					'class' => 'windowbg',
+					'style' => 'width: 20%; text-align: center;',
+				),
+			),
+			'show_on_registration' => array(
+				'header' => array(
+					'value' => $txt['custom_edit_registration'],
+				),
+				'data' => array(
+					'eval' => 'return \'<input type="checkbox" name="reg[]" id="reg_\' . %id% . \'" value="\' . %id% . \'" \' . (%on_register% && !%disabled% ? \'checked="checked"\' : \'\') . \' \' . (%can_show_register% ? \'\' : \'disabled="disabled"\') . \'class="check" />\';',
+					'class' => 'windowbg',
+					'style' => 'width: 20%; text-align: center;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=featuresettings;sa=profile',
+			'name' => 'standardProfileFields',
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="save" value="' . $txt['save'] . '" />',
+				'style' => 'text-align: right;',
+				'class' => 'titlebg',
+			),
+		),
+	);
+	createList($listOptions);
+
+	$listOptions = array(
+		'id' => 'custom_profile_fields',
+		'title' => $txt['standard_profile_title'],
+		'base_href' => $scripturl . '?action=admin;area=featuresettings;sa=profile',
+		'default_sort_col' => 'field_name',
+		'no_items_label' => $txt['custom_profile_none'],
+		'items_per_page' => 25,
+		'get_items' => array(
+			'function' => 'list_getProfileFields',
+			'params' => array(
+				false,
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getProfileFieldSize',
+		),
+		'columns' => array(
+			'field_name' => array(
+				'header' => array(
+					'value' => $txt['custom_profile_fieldname'],
+					'style' => 'text-align: left;',
+				),
+				'data' => array(
+					'eval' => 'return htmlspecialchars(%field_name%) . \'<div class="smalltext">\' . htmlspecialchars(%field_desc%) . \'</div>\';',
+					'style' => 'width: 62%;',
+				),
+				'sort' => array(
+					'default' => 'field_name',
+					'reverse' => 'field_name DESC',
+				),
+			),
+			'field_type' => array(
+				'header' => array(
+					'value' => $txt['custom_profile_fieldtype'],
+					'style' => 'text-align: left;',
+				),
+				'data' => array(
+					'eval' => 'return isset($txt[\'custom_profile_type_\' . %field_type%]) ? $txt[\'custom_profile_type_\' . %field_type%] : %field_type%;',
+					'style' => 'width: 15%;',
+				),
+				'sort' => array(
+					'default' => 'field_type',
+					'reverse' => 'field_type DESC',
+				),
+			),
+			'active' => array(
+				'header' => array(
+					'value' => $txt['custom_profile_active'],
+				),
+				'data' => array(
+					'eval' => 'return %active% ? $txt[\'yes\'] : $txt[\'no\'];',
+					'class' => 'windowbg',
+					'style' => 'width: 8%; text-align: center;',
+				),
+				'sort' => array(
+					'default' => 'active DESC',
+					'reverse' => 'active',
+				),
+			),
+			'show_on_registration' => array(
+				'header' => array(
+					'value' => $txt['modify'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=admin;area=featuresettings;sa=profileedit;fid=%1$s">' . $txt['modify'] . '</a>',
+						'params' => array(
+							'id_field' => false,
+						),
+					),
+					'class' => 'windowbg',
+					'style' => 'width: 15%; text-align: center;',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '[<a href="' . $scripturl . '?action=admin;area=featuresettings;sa=profileedit">' . $txt['custom_profile_make_new'] . '</a>]',
+				'class' => 'titlebg',
+			),
+		),
+	);
+	createList($listOptions);
+}
+
+function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
+{
+	global $txt, $modSettings, $smfFunc, $db_prefix;
+
+	$list = array();
+
+	if ($standardFields)
+	{
+		$standard_fields = array('icq', 'msn', 'aim', 'yim', 'location', 'gender', 'website', 'posts', 'warning_status');
+		$fields_no_registration = array('posts', 'warning_status');
+		$disabled_fields = isset($modSettings['disabled_profile_fields']) ? explode(',', $modSettings['disabled_profile_fields']) : array();
+		$registration_fields = isset($modSettings['registration_fields']) ? explode(',', $modSettings['registration_fields']) : array();
+
+		foreach ($standard_fields as $field)
+			$list[] = array(
+				'id' => $field,
+				'label' => isset($txt['standard_profile_field_' . $field]) ? $txt['standard_profile_field_' . $field] : (isset($txt[$field]) ? $txt[$field] : $field),
+				'disabled' => in_array($field, $disabled_fields),
+				'on_register' => in_array($field, $registration_fields) && !in_array($field, $fields_no_registration),
+				'can_show_register' => !in_array($field, $fields_no_registration),
+			);
+	}
+	else
+	{
+		// Load all the fields.
+		$request = $smfFunc['db_query']('', "
+			SELECT id_field, col_name, field_name, field_desc, field_type, active
+			FROM {$db_prefix}custom_fields
+			ORDER BY $sort
+			LIMIT $start, $items_per_page", __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$list[] = $row;
+		$smfFunc['db_free_result']($request);
+	}
+
+	return $list;
+}
+
+function list_getProfileFieldSize()
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
+		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
+	
+	list ($numProfileFields) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+	
+	return $numProfileFields;
 }
 
 // Edit some profile fields?

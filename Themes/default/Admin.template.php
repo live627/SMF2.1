@@ -1490,89 +1490,24 @@ function template_show_custom_profile()
 	global $context, $txt, $settings, $scripturl;
 
 	// Standard fields.
-	echo '
-	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profile;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tborder">
-			<tr class="titlebg">
-				<td colspan="6">', $txt['standard_profile_title'], '</td>
-			</tr><tr class="windowbg">
-				<td width="60%"><b>', $txt['standard_profile_field'], '</b></td>
-				<td width="20%" align="center"><b>', $txt['custom_edit_active'], '</b></td>
-				<td width="20%" align="center"><b>', $txt['custom_edit_registration'], '</b></td>
-			</tr>';
-
-	foreach ($context['standard_fields'] as $field)
-	{
-		echo '
-			<tr class="windowbg2">
-				<td>', $field['label'], '</td>
-				<td align="center"><input type="checkbox" name="active[]" value="', $field['id'], '" ', $field['disabled'] ? '' : 'checked="checked"', ' class="check" ', $field['can_show_register'] ? 'onclick="document.getElementById(\'reg_' . $field['id'] . '\').disabled = !this.checked;"' : '', ' /></td>
-				<td align="center"><input type="checkbox" name="reg[]" id="reg_', $field['id'], '" value="', $field['id'], '" ', $field['on_register'] && !$field['disabled'] ? 'checked="checked"' : '', ' ', $field['can_show_register'] ? '' : 'disabled="disabled"', 'class="check" /></td>
-			</tr>';
-	}
+	template_show_list('standard_profile_fields');
 
 	echo '
-			<tr class="titlebg">
-				<td colspan="6" align="right">
-					<input type="submit" name="save" value="', $txt['save'], '" />
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var iNumChecks = document.forms.standardProfileFields.length;
+		for (var i = 0; i < iNumChecks; i++)
+			if (document.forms.standardProfileFields[i].id.indexOf(\'reg_\') == 0)
+				document.forms.standardProfileFields[i].disabled = document.forms.standardProfileFields[i].disabled || !document.getElementById(\'active_\' + document.forms.standardProfileFields[i].id.substr(4)).checked;
+	// ]]></script><br />';
 
 	// Custom fields.
-	echo '
-	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tborder">
-			<tr class="titlebg">
-				<td colspan="4">', $txt['custom_profile_title'], '</td>
-			</tr><tr class="windowbg">
-				<td width="62%"><b>', $txt['custom_profile_fieldname'], '</b></td>
-				<td width="15%"><b>', $txt['custom_profile_fieldtype'], '</b></td>
-				<td width="8%" align="center"><b>', $txt['custom_profile_active'], '</b></td>
-				<td width="15%" align="center"><b>', $txt['modify'], '</b></td>
-			</tr>';
+	template_show_list('custom_profile_fields');
 
-	foreach ($context['profile_fields'] as $field)
-		echo '
-			<tr class="windowbg2">
-				<td>
-					', $field['name'], '
-					<div class="smalltext">', $field['desc'], '</div>
-				</td>
-				<td>', isset($txt['custom_profile_type_' . $field['type']]) ? $txt['custom_profile_type_' . $field['type']] : $field['type'], '</td>
-				<td align="center">', $field['active'] ? $txt['yes'] : $txt['no'], '</td>
-				<td align="center"><a href="', $scripturl, '?action=admin;area=featuresettings;sa=profileedit;fid=', $field['id'], ';sesc=', $context['session_id'], '">', $txt['modify'], '</a></td>
-			</tr>';
-
-	if (empty($context['profile_fields']))
-		echo '
-			<tr class="windowbg2">
-				<td colspan="4" align="center">', $txt['custom_profile_none'], '</td>
-			</tr>';
-
-	echo '
-			<tr class="titlebg">
-				<td colspan="4" align="right">
-					<input type="submit" name="new_field" value="', $txt['custom_profile_make_new'], '" />
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
 
 	// Some little javascript to disabled fields at startup
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+	';
 
-	foreach ($context['standard_fields'] as $field)
-		if ($field['disabled'])
-			echo '
-		document.getElementById("reg_', $field['id'], '").disabled = true;';
-
-	echo '
-	// ]]></script>';
 }
 
 // Edit a profile field?

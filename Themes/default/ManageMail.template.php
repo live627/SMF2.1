@@ -19,7 +19,12 @@ function template_browse()
 			<td width="70%">', $context['oldest_mail'], '</td>
 		</tr>
 	</table>
-	<br />
+	<br />';
+
+	template_show_list('mail_queue');
+
+
+/*	echo'
 	<table border="0" align="center" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
 		<tr class="titlebg">
 			<td colspan="4">', $txt['mailqueue_browse'], '</td>
@@ -52,7 +57,7 @@ function template_browse()
 		<tr class="catbg">
 			<td align="left" colspan="4" style="padding: 5px;"><b>', $txt['pages'], ':</b> ', $context['page_index'], '</td>
 		</tr>
-	</table>';
+	</table>';*/
 }
 
 ?>

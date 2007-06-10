@@ -84,6 +84,7 @@ function ManageMail()
 function BrowseMailQueue()
 {
 	global $scripturl, $context, $db_prefix, $modSettings, $txt, $smfFunc;
+	global $sourcedir;
 
 	// How many items do we have?
 	$request = $smfFunc['db_query']('', "
@@ -92,8 +93,96 @@ function BrowseMailQueue()
 	list ($mailQueueSize, $mailOldest) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	$context['oldest_mail'] = empty($mailOldest) ? 'N/A' : time_since(time() - $mailOldest);
+	$context['oldest_mail'] = empty($mailOldest) ? $txt['mailqueue_oldest_not_available'] : time_since(time() - $mailOldest);
 	$context['mail_queue_size'] = comma_format($mailQueueSize);
+
+	$listOptions = array(
+		'id' => 'mail_queue',
+		'title' => $txt['mailqueue_browse'],
+		'items_per_page' => 20,
+		'base_href' => $scripturl . '?action=admin;area=mailqueue',
+		'default_sort_col' => 'age',
+		'no_items_label' => $txt['mailqueue_no_items'],
+		'get_items' => array(
+			'function' => 'list_getMailQueue',
+		),
+		'get_count' => array(
+			'function' => 'list_getMailQueueSize',
+		),
+		'columns' => array(
+			'subject' => array(
+				'header' => array(
+					'value' => $txt['mailqueue_subject'],
+				),
+				'data' => array(
+					'eval' => 'return strlen(%subject%) > 50 ? substr(htmlspecialchars(%subject%), 0, 47) . \'...\' : htmlspecialchars(%subject%);',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'subject',
+					'reverse' => 'subject DESC',
+				),
+			),
+			'recipient' => array(
+				'header' => array(
+					'value' => $txt['mailqueue_recipient'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="mailto:%1$s">%1$s</a>',
+						'params' => array(
+							'recipient' => true,
+						),
+					),
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'recipient',
+					'reverse' => 'recipient DESC',
+				),
+			),
+			'priority' => array(
+				'header' => array(
+					'value' => $txt['mailqueue_priority'],
+				),
+				'data' => array(
+					'eval' => 'return isset($txt[\'mq_priority_\' . %priority%]) ? $txt[\'mq_priority_\' . %priority%] : $txt[\'mq_priority_3\'];',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'priority DESC',
+					'reverse' => 'priority',
+				),
+			),
+			'age' => array(
+				'header' => array(
+					'value' => $txt['mailqueue_age'],
+				),
+				'data' => array(
+					'eval' => 'return time_since(time() - %time_sent%);',
+					'class' => 'smalltext',
+				),
+				'sort' => array(
+					'default' => 'priority DESC',
+					'reverse' => 'priority',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '[<a href="' . $scripturl . '?action=admin;area=mailqueue;sa=clear;sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['mailqueue_clear_list_warning'] . '\');">' . $txt['mailqueue_clear_list'] . '</a>]',
+				'class' => 'titlebg',
+			),
+		),
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	loadTemplate('ManageMail');
+	$context['sub_template'] = 'browse';
+	return;
 
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=mailqueue;sa=browse', $_REQUEST['start'], $mailQueueSize, 20);
 	$context['start'] = $_REQUEST['start'];
@@ -124,7 +213,40 @@ function BrowseMailQueue()
 	$context['sub_template'] = 'browse';
 }
 
-function ModifyMailSettings($return_config = false)
+function list_getMailQueue($start, $items_per_page, $sort)
+{
+	global $db_prefix, $smfFunc;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_mail, time_sent, recipient, priority, subject
+		FROM {$db_prefix}mail_queue
+		ORDER BY id_mail ASC
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$mails = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$mails[] = $row;
+	$smfFunc['db_free_result']($request);
+
+	return $mails;
+}
+
+function list_getMailQueueSize()
+{
+	global $db_prefix, $smfFunc;
+
+	// How many items do we have?
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*) AS queueSize
+		FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
+	list ($mailQueueSize) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+	
+	return $mailQueueSize;
+}
+
+
+
+function ModifyMailSettings()
 {
 	global $txt, $scripturl, $context, $settings;
 
