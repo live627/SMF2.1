@@ -416,7 +416,7 @@ function PlushSearch2()
 		$_REQUEST['brd'] = $search_params['brd'];
 
 	// Ensure that brd is an array.
-	if (!is_array($_REQUEST['brd']) && !empty($_REQUEST['brd']))
+	if (!empty($_REQUEST['brd']) && !is_array($_REQUEST['brd']))
 		$_REQUEST['brd'] = strpos($_REQUEST['brd'], ',') !== false ? explode(',', $_REQUEST['brd']) : array($_REQUEST['brd']);
 
 	// Make sure all boards are integers.

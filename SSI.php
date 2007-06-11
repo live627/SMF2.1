@@ -702,6 +702,8 @@ function ssi_randomMember($random_type = '', $output_method = 'echo')
 	// Just to be sure put the random generator back to something... random.
 	if ($random_type != '')
 		srand(time());
+
+	return $result;
 }
 
 // Fetch a specific member.
@@ -715,7 +717,7 @@ function ssi_fetchMember($member_ids, $output_method = 'echo')
 		id_member IN (" . implode(', ', $member_ids) . ")";
 
 	// Then make the query and dump the data.
-	ssi_queryMembers($query_where, '', 'id_member', $output_method);
+	return ssi_queryMembers($query_where, '', 'id_member', $output_method);
 }
 
 // Get all members of a group.
@@ -726,7 +728,7 @@ function ssi_fetchGroupMembers($group_id, $output_method = 'echo')
 		OR id_post_group = $group_id
 		OR FIND_IN_SET($group_id, additional_groups)";
 
-	ssi_queryMembers($query_where, '', 'member_name', $output_method);
+	return ssi_queryMembers($query_where, '', 'member_name', $output_method);
 }
 
 // Fetch some member data!

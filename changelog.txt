@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2741 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2742 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -23,6 +23,8 @@ June 2007
  ! MySQL's utf8 collation mapped some characters as equal causing a database insert on posting a topic to go wrong in rare cases. (Subs.php)
  ! Modifying posts could cause a database error in some cases. (Subs-Post.php)
  ! Converted the lists for profile fields and mail queue to the standardized list form. (ManageMail.php, ManageMail template, ManageMail language file, ManageSettings.php, Admin template)
+ ! Rearranged checks in brd search conditional to avoid undefined index errors. (Search.php)
+ ! Make sure to return something from the SSI functions. (SSI.php)
 
 
 May 2007
