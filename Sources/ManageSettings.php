@@ -813,7 +813,7 @@ function ShowCustomProfiles()
 
 	$listOptions = array(
 		'id' => 'custom_profile_fields',
-		'title' => $txt['standard_profile_title'],
+		'title' => $txt['custom_profile_title'],
 		'base_href' => $scripturl . '?action=admin;area=featuresettings;sa=profile',
 		'default_sort_col' => 'field_name',
 		'no_items_label' => $txt['custom_profile_none'],
