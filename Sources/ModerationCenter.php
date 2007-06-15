@@ -420,19 +420,8 @@ function ReportedPosts()
 	if (empty($user_info['mod_cache']['bq']))
 		isAllowedTo('moderate_forum');
 
-	// Are they wanting to view a particular report?
-	if (!empty($_REQUEST['report']))
-		return ModReport();
-
 	// First load the template.
 	loadTemplate('ModerationCenter');
-
-	// Set up the comforting bits...
-	$context['page_title'] = $txt['mc_reported_posts'];
-	$context['sub_template'] = 'reported_posts';
-
-	// Are we viewing open or closed reports?
-	$context['view_closed'] = isset($_GET['sa']) && $_GET['sa'] == 'closed' ? 1 : 0;
 
 	// Put the open and closed options into tabs, because we can...
 	$context[$context['moderation_menu_name']]['tab_data'] = array(
@@ -440,6 +429,17 @@ function ReportedPosts()
 		'help' => '',
 		'description' => $txt['mc_reported_posts_desc'],
 	);
+
+	// Are they wanting to view a particular report?
+	if (!empty($_REQUEST['report']))
+		return ModReport();
+
+	// Set up the comforting bits...
+	$context['page_title'] = $txt['mc_reported_posts'];
+	$context['sub_template'] = 'reported_posts';
+
+	// Are we viewing open or closed reports?
+	$context['view_closed'] = isset($_GET['sa']) && $_GET['sa'] == 'closed' ? 1 : 0;
 
 	// Are we doing any work?
 	if ((isset($_GET['ignore']) || isset($_GET['close'])) && isset($_GET['rid']))
