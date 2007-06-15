@@ -165,6 +165,40 @@ function RepairBoards()
 			$smfFunc['db_free_result']($resultTopic);
 		}
 
+		// Fix all id_first_msg, id_last_msg in the topic table.
+		if (empty($to_fix) || in_array('stats_topics', $to_fix))
+		{
+			$resultTopic = $smfFunc['db_query']('', "
+				SELECT
+					t.id_topic, t.id_first_msg, t.id_last_msg,
+					IF (MIN(ma.id_msg),
+						IF (MIN(mu.id_msg),
+							IF (MIN(mu.id_msg) < MIN(ma.id_msg), mu.id_msg, ma.id_msg),
+						MIN(ma.id_msg)),
+					MIN(mu.id_msg)) AS myid_first_msg,
+					IF (MAX(ma.id_msg), MAX(ma.id_msg), MIN(mu.id_msg)) AS myid_last_msg,
+					t.approved, mf.approved AS myApproved
+				FROM {$db_prefix}topics AS t
+					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
+					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
+					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+				GROUP BY t.id_topic
+				HAVING id_first_msg != myid_first_msg OR id_last_msg != myid_last_msg
+					OR approved != myApproved", __FILE__, __LINE__);
+			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
+			{
+				$memberStartedID = getMsgMemberID($topicArray['myid_first_msg']);
+				$memberUpdatedID = getMsgMemberID($topicArray['myid_last_msg']);
+				$smfFunc['db_query']('', "
+					UPDATE {$db_prefix}topics
+					SET id_first_msg = '$topicArray[myid_first_msg]',
+						id_member_started = '$memberStartedID', id_last_msg = '$topicArray[myid_last_msg]',
+						id_member_updated = '$memberUpdatedID', approved = '$topicArray[myApproved]'
+					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
+			}
+			$smfFunc['db_free_result']($resultTopic);
+		}
+
 		// Fix all messages that have a topic ID that cannot be found in the topics table.
 		if (empty($to_fix) || in_array('missing_topics', $to_fix))
 		{
@@ -204,40 +238,6 @@ function RepairBoards()
 
 			// Force the check of unapproved posts for this.
 			$to_fix[] = 'stats_topics';
-		}
-
-		// Fix all id_first_msg, id_last_msg in the topic table.
-		if (empty($to_fix) || in_array('stats_topics', $to_fix))
-		{
-			$resultTopic = $smfFunc['db_query']('', "
-				SELECT
-					t.id_topic, t.id_first_msg, t.id_last_msg,
-					IF (MIN(ma.id_msg),
-						IF (MIN(mu.id_msg),
-							IF (MIN(mu.id_msg) < MIN(ma.id_msg), mu.id_msg, ma.id_msg),
-						MIN(ma.id_msg)),
-					MIN(mu.id_msg)) AS myid_first_msg,
-					IF (MAX(ma.id_msg), MAX(ma.id_msg), MIN(mu.id_msg)) AS myid_last_msg,
-					t.approved, mf.approved AS myApproved
-				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
-					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
-				GROUP BY t.id_topic
-				HAVING id_first_msg != myid_first_msg OR id_last_msg != myid_last_msg
-					OR approved != myApproved", __FILE__, __LINE__);
-			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
-			{
-				$memberStartedID = getMsgMemberID($topicArray['myid_first_msg']);
-				$memberUpdatedID = getMsgMemberID($topicArray['myid_last_msg']);
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}topics
-					SET id_first_msg = '$topicArray[myid_first_msg]',
-						id_member_started = '$memberStartedID', id_last_msg = '$topicArray[myid_last_msg]',
-						id_member_updated = '$memberUpdatedID', approved = '$topicArray[myApproved]'
-					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($resultTopic);
 		}
 
 		// Fix all num_replies in the topic table.
