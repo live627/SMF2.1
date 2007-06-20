@@ -1277,6 +1277,18 @@ function loadTheme($id_theme = 0, $initialize = true)
 		}
 	}
 
+	$settings['template_dirs'] = array();
+	// This theme First
+	$settings['template_dirs'][] = $settings['theme_dir'];
+
+	// Based on theme (if there is one)
+	if (!empty($settings['base_theme_dir']))
+		$settings['template_dirs'][] = $settings['base_theme_dir'];
+
+	//Lastly the default theme
+	if ($settings['theme_dir'] != $settings['default_theme_dir'])
+		$settings['template_dirs'][] = $settings['default_theme_dir'];
+
 	// Set up the contextual user array.
 	$context['user'] = array(
 		'id' => &$user_info['id'],
@@ -1489,25 +1501,31 @@ function loadTemplate($template_name, $fatal = true)
 {
 	global $context, $settings, $txt, $scripturl, $boarddir, $db_show_debug;
 
-	// Try the current theme's first.
-	if (file_exists($settings['theme_dir'] . '/' . $template_name . '.template.php'))
+	$loaded = false;
+
+	foreach($settings['template_dirs'] AS $template_dir)
 	{
-		template_include($settings['theme_dir'] . '/' . $template_name . '.template.php', true);
-		$actual_template = $template_name . ' (' . basename($settings['theme_dir']) . ')';
+		if (file_exists($template_dir . '/' . $template_name . '.template.php'))
+		{
+			$loaded = true;
+			template_include($template_dir . '/' . $template_name . '.template.php', true);
+			$actual_template = $template_name . ' (' . basename($template_dir) . ')';
+			break;
+		}
 	}
-	// Are we using a base theme?  If so, does it have the template?
-	elseif (isset($settings['base_theme_dir']) && file_exists($settings['base_theme_dir'] . '/' . $template_name . '.template.php'))
+
+	if ($loaded)
 	{
-		template_include($settings['base_theme_dir'] . '/' . $template_name . '.template.php', true);
-		$actual_template = $template_name . ' (' . basename($settings['base_theme_dir']) . ')';
-	}
-	// Perhaps we'll just use the default template, then...
-	elseif (file_exists($settings['default_theme_dir'] . '/' . $template_name . '.template.php'))
-	{
-		// Make it known that this template uses different directories...
-		$settings['default_template'] = true;
-		template_include($settings['default_theme_dir'] . '/' . $template_name . '.template.php', true);
-		$actual_template = $template_name . ' (' . basename($settings['default_theme_dir']) . ')';
+		// For compatibility reasons, if this is the index template without new functions, include compatible stuff.
+		if (substr($template_name, 0, 5) == 'index' && !function_exists('template_button_strip'))
+			loadTemplate('Combat');
+
+		if ($db_show_debug === true)
+			$context['debug']['templates'][] = $actual_template;
+
+		// If they have specified an initialization function for this template, go ahead and call it now.
+		if (function_exists('template_' . $template_name . '_init'))
+			call_user_func('template_' . $template_name . '_init');
 	}
 	// Hmmm... doesn't exist?!  I don't suppose the directory is wrong, is it?
 	elseif (!file_exists($settings['default_theme_dir']) && file_exists($boarddir . '/Themes/default'))
@@ -1532,17 +1550,6 @@ function loadTemplate($template_name, $fatal = true)
 		die(log_error(sprintf(isset($txt['theme_template_error']) ? $txt['theme_template_error'] : 'Unable to load Themes/default/%s.template.php!', (string) $template_name), 'template'));
 	else
 		return false;
-
-	// For compatibility reasons, if this is the index template without new functions, include compatible stuff.
-	if (substr($template_name, 0, 5) == 'index' && !function_exists('template_button_strip'))
-		loadTemplate('Combat');
-
-	if ($db_show_debug === true)
-		$context['debug']['templates'][] = $actual_template;
-
-	// If they have specified an initialization function for this template, go ahead and call it now.
-	if (function_exists('template_' . $template_name . '_init'))
-		call_user_func('template_' . $template_name . '_init');
 }
 
 // Load a sub template... fatal is for templates that shouldn't get a 'pretty' error screen.

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2743 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2744 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -26,6 +26,7 @@ June 2007
  ! Rearranged checks in brd search conditional to avoid undefined index errors. (Search.php)
  ! Make sure to return something from the SSI functions. (SSI.php)
  ! Ensure bday3 is also set when checking birthdates. (Profile.php)
+ + Added the ability to specify other directories in which to check for template files. (Load.php)
 
 
 May 2007
