@@ -220,7 +220,7 @@ function list_getMailQueue($start, $items_per_page, $sort)
 	$request = $smfFunc['db_query']('', "
 		SELECT id_mail, time_sent, recipient, priority, subject
 		FROM {$db_prefix}mail_queue
-		ORDER BY id_mail ASC
+		ORDER BY $sort
 		LIMIT $start, $items_per_page", __FILE__, __LINE__);
 	$mails = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))

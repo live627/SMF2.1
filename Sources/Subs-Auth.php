@@ -125,7 +125,7 @@ function setLoginCookie($cookie_length, $id, $password = '')
 
 	// The cookie may already exist, and have been set with different options.
 	$cookie_state = (empty($modSettings['localCookies']) ? 0 : 1) | (empty($modSettings['globalCookies']) ? 0 : 2);
-	if (isset($_COOKIE[$cookiename]))
+	if (isset($_COOKIE[$cookiename]) && preg_match('~^a:[34]:\{i:0;(i:\d{1,6}|s:[1-8]:"\d{1,8}");i:1;s:(0|40):"([a-fA-F0-9]{40})?";i:2;[id]:\d{1,14};(i:3;i:\d;)?\}$~', $_COOKIE[$cookiename]) === 1)
 	{
 		$array = @unserialize($_COOKIE[$cookiename]);
 
@@ -223,14 +223,15 @@ function url_parts($local, $global)
 		$parsed_url['path'] = '';
 
 	// Globalize cookies across domains (filter out IP-addresses)?
-	if ($global && preg_match('~^\d{1,3}(\.\d{1,3}){3}$~', $parsed_url['host']) == 0)
-	{
-		// If we can't figure it out, just skip it.
-		if (preg_match('~(?:[^\.]+\.)?([^\.]{2,}\..+)\z~i', $parsed_url['host'], $parts) == 1)
+	if ($global && preg_match('~^\d{1,3}(\.\d{1,3}){3}$~', $parsed_url['host']) == 0 && preg_match('~(?:[^\.]+\.)?([^\.]{2,}\..+)\z~i', $parsed_url['host'], $parts) == 1)
 			$parsed_url['host'] = '.' . $parts[1];
-	}
+
 	// We shouldn't use a host at all if both options are off.
-	elseif (!$local)
+	elseif (!$local && !$global)
+		$parsed_url['host'] = '';
+		
+	// The host also shouldn't be set if there aren't any dots in it.
+	elseif (!isset($parsed_url['host']) || strpos($parsed_url['host'], '.') === false)
 		$parsed_url['host'] = '';
 
 	return array($parsed_url['host'], $parsed_url['path'] . '/');

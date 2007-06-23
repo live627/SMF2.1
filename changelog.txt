@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2744 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2745 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -27,6 +27,10 @@ June 2007
  ! Make sure to return something from the SSI functions. (SSI.php)
  ! Ensure bday3 is also set when checking birthdates. (Profile.php)
  + Added the ability to specify other directories in which to check for template files. (Load.php)
+ ! Cookies were in some cases not stored on localhost. (Subs-Auth.php)
+ ! Make sure cookies are inspected before being unserialized. (LogInOut.php, Subs-Auth.php)
+ ! The mail queue list wasn't sorting properly. (ManageMail.php)
+ ! The additional row after the title of a generic list wasn't shown. (GenericList template)
 
 
 May 2007

@@ -25,7 +25,7 @@ function template_show_list($list_id = null)
 				<td colspan="', $cur_list['num_columns'], '">', $cur_list['title'], '</td>
 			</tr>';
 
-	if (isset($cur_list['additional_rows']['top_of_list']))
+	if (isset($cur_list['additional_rows']['after_title']))
 		template_additional_rows('after_title', $cur_list);
 
 	// Show the page index (if this list doesn't intend to show all items).
