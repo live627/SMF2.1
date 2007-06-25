@@ -9,6 +9,14 @@ if (empty($_GET['format']))
 
 $latest_news = array(
 	array(
+		'time' => 1182736360,
+
+		'subject_english' => 'SMF 1.1.3',
+		'message_english' => 'A number of small bugs and a potential security issue have been discovered in SMF 1.1.2.  We urge all forum administrators to upgrade to SMF 1.1.3&mdash;simply visit the package manager to install the patch.',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=178757.0',
+		'author_english' => 'Thantos',
+	),
+	array(
 		'time' => 1171200945,
 
 		'subject_english' => 'SMF 1.1.2',
