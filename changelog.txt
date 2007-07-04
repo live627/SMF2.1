@@ -1,8 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2745 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2746 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+
+July 2007
+--------------------------------------------------------------------------------
+ * Updated icons/images wuth optimized versions, thanks to AlienCowFarm (default/images)
+
+
 June 2007
 --------------------------------------------------------------------------------
  ! Sending newsletters could cause a timeout on large boards. (ManageNews.php)
