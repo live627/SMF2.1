@@ -240,24 +240,28 @@ function smf_sqlite_last_error()
 }
 
 // Do a transaction.
-function smf_db_transaction($type = 'commit')
+function smf_db_transaction($type = 'commit', $connection)
 {
 	global $db_connection, $db_in_transact;
+
+	// Decide which connection to use
+	$connection = $connection == null ? $db_connection : $connection;
+
 
 	if ($type == 'begin')
 	{
 		$db_in_transact = true;
-		return @sqlite_query('BEGIN', $db_connection);
+		return @sqlite_query('BEGIN', $connection);
 	}
 	elseif ($type == 'rollback')
 	{
 		$db_in_transact = false;
-		return @sqlite_query('ROLLBACK', $db_connection);
+		return @sqlite_query('ROLLBACK', $connection);
 	}
 	elseif ($type == 'commit')
 	{
 		$db_in_transact = false;
-		return @sqlite_query('COMMIT', $db_connection);
+		return @sqlite_query('COMMIT', $connection);
 	}
 
 	return false; 
@@ -455,7 +459,7 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection=null)
 {
 	global $db_in_transact, $smfFunc;
 
@@ -465,11 +469,11 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 	$priv_trans = false;
 	if (count($data) > 1 && !$db_in_transact && !$disable_trans)
 	{
-		$smfFunc['db_transaction']('begin');
+		$smfFunc['db_transaction']('begin', $connection);
 		$priv_trans = true;
 	}
 
-	// PostgreSQL doesn't support replace or insert ignore so we need to work around it.
+	// SQLite doesn't support replace or insert ignore so we need to work around it.
 	if ($method == 'replace')
 	{
 		// Try and update the entries.
@@ -486,7 +490,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 			}
 			$sql = substr($sql, 0, -2) . " WHERE $where";
 
-			$smfFunc['db_query']('', $sql, $file, $line);
+			$smfFunc['db_query']('', $sql, $file, $line, $connection);
 			if (db_affected_rows() != 0)
 				unset($data[$k]);
 		}
@@ -499,11 +503,11 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 				INSERT INTO $table
 					(" . implode(', ', $columns) . ")
 				VALUES
-					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : $file, $line);
+					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : $file, $line, $connection);
 	}
 
 	if ($priv_trans)
-		$smfFunc['db_transaction']('commit');
+		$smfFunc['db_transaction']('commit', $connection);
 }
 
 // Doesn't do anything on sqlite!

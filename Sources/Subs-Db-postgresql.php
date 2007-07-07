@@ -286,16 +286,19 @@ function db_insert_id($table, $field, $connection = null)
 }
 
 // Do a transaction.
-function smf_db_transaction($type = 'commit')
+function smf_db_transaction($type = 'commit', $connection = null)
 {
 	global $db_connection;
 
+	// Decide which connection to use
+	$connection = $connection == null ? $db_connection : $connection;
+
 	if ($type == 'begin')
-		return @pg_query($db_connection, 'BEGIN');
+		return @pg_query($connection, 'BEGIN');
 	elseif ($type == 'rollback')
-		return @pg_query($db_connection, 'ROLLBACK');
+		return @pg_query($connection, 'ROLLBACK');
 	elseif ($type == 'commit')
-		return @pg_query($db_connection, 'COMMIT');
+		return @pg_query($connection, 'COMMIT');
 
 	return false; 
 }
@@ -535,7 +538,7 @@ function smf_postg_unescape_string($string)
 }
 
 // For inserting data in a special way...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection = null)
 {
 	global $db_replace_result, $db_in_transact, $smfFunc;
 
@@ -545,7 +548,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 	$priv_trans = false;
 	if (count($data) > 1 && !$db_in_transact && !$disable_trans)
 	{
-		$smfFunc['db_transaction']('begin');
+		$smfFunc['db_transaction']('begin', $connection);
 		$priv_trans = true;
 	}
 
@@ -566,7 +569,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 			}
 			$sql = substr($sql, 0, -2) . " WHERE $where";
 
-			$smfFunc['db_query']('', $sql, $file, $line);
+			$smfFunc['db_query']('', $sql, $file, $line, $connection);
 			// Make a note that the replace actually overwrote.
 			if (db_affected_rows() != 0)
 			{
@@ -583,11 +586,11 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 				INSERT INTO $table
 					(" . implode(', ', $columns) . ")
 				VALUES
-					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : $file, $line);
+					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : $file, $line, $connection);
 	}
 
 	if ($priv_trans)
-		$smfFunc['db_transaction']('commit');
+		$smfFunc['db_transaction']('commit', $connection);
 }
 
 // Dummy function really.

@@ -3083,6 +3083,13 @@ function template_header()
 				echo '
 					<div style="padding-left: 4ex; padding-top: 1ex;">', $_SESSION['ban']['cannot_post']['reason'], '</div>';
 
+			if (!empty($_SESSION['ban']['expire_time']))
+				echo '
+					<div>', sprintf($txt['your_ban_expires'], timeformat($_SESSION['ban']['expire_time'], false)), '</div>';
+			else
+				echo '
+					<div>', $txt['your_ban_expires_never'], '</div>';
+
 			echo '
 				</div>';
 		}

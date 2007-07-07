@@ -44,10 +44,6 @@ if (!defined('SMF'))
 		- allows sorting on different criteria.
 		- also handles removal of selected ban items.
 
-	array getBanEntry(bool $reset = false)
-		- callback function for BanList, loading a single ban.
-		- called by the main ManageBans template.
-
 	void BanEdit()
 		- the screen for adding new bans and modifying existing ones.
 		- adding new bans:

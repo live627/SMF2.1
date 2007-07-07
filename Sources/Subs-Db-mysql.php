@@ -237,16 +237,19 @@ function db_insert_id($table, $field, $connection = null)
 }
 
 // Do a transaction.
-function smf_db_transaction($type = 'commit')
+function smf_db_transaction($type = 'commit', $connection = null)
 {
 	global $db_connection;
 
+	// Decide which connection to use
+	$connection = $connection == null ? $db_connection : $connection;
+
 	if ($type == 'begin')
-		return @mysql_query('BEGIN', $db_connection);
+		return @mysql_query('BEGIN', $connection);
 	elseif ($type == 'rollback')
-		return @mysql_query('ROLLBACK', $db_connection);
+		return @mysql_query('ROLLBACK', $connection);
 	elseif ($type == 'commit')
-		return @mysql_query('COMMIT', $db_connection);
+		return @mysql_query('COMMIT', $connection);
 
 	return false; 
 }
@@ -438,7 +441,7 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false)
+function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection = null)
 {
 	global $smfFunc;
 
@@ -456,7 +459,7 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 		$queryTitle INTO $table
 			(" . implode(', ', $columns) . ")
 		VALUES
-			" . implode(', ', $data), $file, $line);
+			" . implode(', ', $data), $file, $line, $connection);
 }
 
 ?>
