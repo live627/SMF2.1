@@ -1278,14 +1278,14 @@ function loadTheme($id_theme = 0, $initialize = true)
 	}
 
 	$settings['template_dirs'] = array();
-	// This theme First
+	// This theme first.
 	$settings['template_dirs'][] = $settings['theme_dir'];
 
-	// Based on theme (if there is one)
+	// Based on theme (if there is one).
 	if (!empty($settings['base_theme_dir']))
 		$settings['template_dirs'][] = $settings['base_theme_dir'];
 
-	//Lastly the default theme
+	// Lastly the default theme.
 	if ($settings['theme_dir'] != $settings['default_theme_dir'])
 		$settings['template_dirs'][] = $settings['default_theme_dir'];
 

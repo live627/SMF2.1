@@ -207,7 +207,7 @@ function ssi_menubar($output_method = 'echo')
 		template_menu();
 	// What else could this do?
 	else
-		return $context;
+		return $context['menu_buttons'];
 }
 
 // Show a logout link.
@@ -222,7 +222,12 @@ function ssi_logout($redirect_to = '', $output_method = 'echo')
 	if ($context['user']['is_guest'])
 		return false;
 
-	echo '<a href="', $scripturl, '?action=logout;sesc=', $sc, '">', $txt['logout'], '</a>';
+	$link = '<a href="' . $scripturl . '?action=logout;sesc=' . $sc . '">' . $txt['logout'] . '</a>';
+
+	if ($output_method == 'echo')
+		echo $link;
+	else
+		return $link;
 }
 
 // Recent post list:   [board] Subject by Poster	Date
@@ -259,7 +264,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 		AND m.approved = 1";
 
 	// Past to this simpleton of a function...
-	ssi_queryPosts($query_where, $num_recent, 'm.id_msg DESC', $output_method);
+	return ssi_queryPosts($query_where, $num_recent, 'm.id_msg DESC', $output_method);
 }
 
 // Fetch a post with a particular ID. By default will only show if you have permission to the see the board in question - this can be overriden.
@@ -277,7 +282,7 @@ function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method
 		AND m.approved = 1";
 
 	// Then make the query and dump the data.
-	ssi_queryPosts($query_where, '', 'm.id_msg DESC', $output_method);
+	return ssi_queryPosts($query_where, '', 'm.id_msg DESC', $output_method);
 }
 
 // This removes code duplication in other queries - don't call it direct unless you really know what you're up to.

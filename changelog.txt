@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2747 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2748 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -9,6 +9,10 @@ July 2007
  * Updated icons/images wuth optimized versions, thanks to AlienCowFarm (default/images)
  ! Tell the user how long their post ban is for. (Subs.php)
  ! The db_insert function now accepts a connection variable for use with multiple connections. (Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php)
+ ! The ssi_menu function now returns the menu items instead of $context. (SSI.php)
+ ! Ensure that the SSI function properly respect the output method variable. (SSI.php)
+ ! Seperate out the Login2 function into seperate parts.  (LogInOut.php)
+ ! The GET parameters were not correctly handling url encoded values. (QueryString.php)
 
 
 June 2007

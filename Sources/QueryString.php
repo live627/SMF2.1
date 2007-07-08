@@ -123,7 +123,7 @@ function cleanRequest()
 		$_GET = array();
 
 		// Was this redirected?  If so, get the REDIRECT_QUERY_STRING.
-		$_SERVER['QUERY_STRING'] = urldecode(substr($_SERVER['QUERY_STRING'], 0, 5) == 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING']);
+		$_SERVER['QUERY_STRING'] = substr($_SERVER['QUERY_STRING'], 0, 5) == 'url=/' ? $_SERVER['REDIRECT_QUERY_STRING'] : $_SERVER['QUERY_STRING'];
 
 		// Replace ';' with '&' and '&something&' with '&something=&'.  (this is done for compatibility...)
 		// !!! smflib

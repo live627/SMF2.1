@@ -1502,12 +1502,6 @@ function template_show_custom_profile()
 
 	// Custom fields.
 	template_show_list('custom_profile_fields');
-
-
-	// Some little javascript to disabled fields at startup
-	echo '
-	';
-
 }
 
 // Edit a profile field?

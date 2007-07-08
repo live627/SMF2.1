@@ -232,43 +232,8 @@ function Login2()
 	$user_settings = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
-	// What is the true activation status of this account?
-	$activation_status = $user_settings['is_activated'] > 10 ? $user_settings['is_activated'] - 10 : $user_settings['is_activated'];
-
-	// Check if the account is activated - COPPA first...
-	if ($activation_status == 5)
-	{
-		$context['login_error'] = $txt['coppa_no_concent'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_need_more_details'] . '</a>';
+	if (!checkActivation())
 		return;
-	}
-	// Awaiting approval still?
-	elseif ($activation_status == 3)
-		fatal_lang_error('still_awaiting_approval', 'user');
-	// Awaiting deletion, changed their mind?
-	elseif ($activation_status == 4)
-	{
-		// Display an error if we haven't decided to undelete.
-		if (!isset($_REQUEST['undelete']))
-		{
-			$context['login_error'] = $txt['awaiting_delete_account'];
-			$context['login_show_undelete'] = true;
-			return;
-		}
-		// Otherwise reactivate!
-		else
-		{
-			updateMemberData($user_settings['id_member'], array('is_activated' => 1));
-			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 0 ? $modSettings['unapprovedMembers'] - 1 : 0)));
-		}
-	}
-	// Standard activation?
-	elseif ($activation_status != 1)
-	{
-		log_error($txt['activate_not_completed1'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', false);
-
-		$context['login_error'] = $txt['activate_not_completed1'] . ' <a href="' . $scripturl . '?action=activate;sa=resend;u=' . $user_settings['id_member'] . '">' . $txt['activate_not_completed2'] . '</a>';
-		return;
-	}
 
 	// Figure out the password using SMF's encryption - if what they typed is right.
 	if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
@@ -379,6 +344,61 @@ function Login2()
 		updateMemberData($user_settings['id_member'], array('password_salt' => '\'' . $user_settings['password_salt'] . '\''));
 	}
 
+	DoLogin();
+}
+
+function checkActivation()
+{
+	global $context, $txt, $scripturl, $user_settings, $modSettings;
+
+	// What is the true activation status of this account?
+	$activation_status = $user_settings['is_activated'] > 10 ? $user_settings['is_activated'] - 10 : $user_settings['is_activated'];
+
+	// Check if the account is activated - COPPA first...
+	if ($activation_status == 5)
+	{
+		$context['login_error'] = $txt['coppa_no_concent'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_need_more_details'] . '</a>';
+		return false;
+	}
+	// Awaiting approval still?
+	elseif ($activation_status == 3)
+		fatal_lang_error('still_awaiting_approval', 'user');
+	// Awaiting deletion, changed their mind?
+	elseif ($activation_status == 4)
+	{
+		// Display an error if we haven't decided to undelete.
+		if (!isset($_REQUEST['undelete']))
+		{
+			$context['login_error'] = $txt['awaiting_delete_account'];
+			$context['login_show_undelete'] = true;
+			return false;
+		}
+		// Otherwise reactivate!
+		else
+		{
+			updateMemberData($user_settings['id_member'], array('is_activated' => 1));
+			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 0 ? $modSettings['unapprovedMembers'] - 1 : 0)));
+		}
+	}
+	// Standard activation?
+	elseif ($activation_status != 1)
+	{
+		log_error($txt['activate_not_completed1'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', false);
+
+		$context['login_error'] = $txt['activate_not_completed1'] . ' <a href="' . $scripturl . '?action=activate;sa=resend;u=' . $user_settings['id_member'] . '">' . $txt['activate_not_completed2'] . '</a>';
+		return false;
+	}
+	return true;
+}
+
+function DoLogin()
+{
+	global $txt, $db_prefix, $scripturl, $user_info, $user_settings, $smfFunc;
+	global $cookiename, $maintenance, $modSettings, $context, $sc, $sourcedir;
+
+	// Load cookie authentication stuff.
+	require_once($sourcedir . '/Subs-Auth.php');
+
 	if (isset($modSettings['integrate_login']) && function_exists($modSettings['integrate_login']))
 		$modSettings['integrate_login']($user_settings['member_name'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']);
 
@@ -428,7 +448,7 @@ function Login2()
 }
 
 // Log the user out.
-function Logout($internal = false, $redirect=true)
+function Logout($internal = false, $redirect = true)
 {
 	global $db_prefix, $sourcedir, $user_info, $user_settings, $context, $modSettings, $smfFunc;
 
