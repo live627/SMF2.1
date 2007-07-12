@@ -448,7 +448,7 @@ function AdminHome()
 <div style="margin-top: 1ex;"><b>Support Specialists:</b> Ben Scott, Michael &quot;Oldiesmann&quot; Eshom, A&auml;ron van Geffen, Alexandre "Ap2" Patenaude, Andrea Hubacher, Chris Cromer, [darksteel], dtm.exe, Fizzy, Horseman, Huw Ayling-Miller, Jan "Owdy" Eriksson, jerm, Juan "JayBachatero" Hernandez, Justyne, Killer Possum, Kindred, Matthew "Mattitude" Hall, Mediman, Metho, Omar Bazavilvazo, Pitti, redone, Tomer "Lamper" Dean, and xenovanis.</div>
 <div style="margin-top: 1ex;"><b>Mod Developers:</b> snork13, Cristi&aacute;n "Anguz" L&aacute;vaque, Goosemoose, Jack.R.Abbit, James "Cheschire" Yarbro, Jesse "Gobalopper" Reid, Kirby, and vbgamer45.</div>
 <div style="margin-top: 1ex;"><b>Documentation Writers:</b> akabugeyes, eldacar, Jerry, Nave, Matthew "Mattitude" Hall, and Trekkie101.</div>
-<div style="margin-top: 1ex;"><b>Language Coordinators:</b> Daniel Diehl and Adam &quot;Bostasp&quot; Southall.</div>
+<div style="margin-top: 1ex;"><b>Language Coordinators:</b> Daniel Diehl.</div>
 <div style="margin-top: 1ex;"><b>Graphic Designers:</b> Bjoern "Bloc" Kristiansen, Alienine (Adrian), A.M.A, babylonking, BlackouT, Burpee, diplomat, Eren "forsakenlad" Yasarkurt, Hyper Piranha, Killer Possum, Mystica, Nico "aliencowfarm" Boer, Philip "Meriadoc" Renich and Tippmaster.</div>
 <div style="margin-top: 1ex;"><b>Site team:</b> Douglas, dschwab9, and Tim.</div>
 <div style="margin-top: 1ex;">And for anyone we may have missed, thank you!</div>';
