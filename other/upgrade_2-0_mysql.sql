@@ -1662,7 +1662,7 @@ WHERE id_pm_head = 0;
 /******************************************************************************/
 
 ---# Adding Open ID Assocation table...
-CREATE TABLE {$db_prefix}openid_assoc (
+CREATE TABLE IF NOT EXISTS {$db_prefix}openid_assoc (
 	server_url text NOT NULL,
 	handle tinytext NOT NULL,
 	secret text NOT NULL,
@@ -1671,7 +1671,7 @@ CREATE TABLE {$db_prefix}openid_assoc (
 	assoc_type varchar(64) NOT NULL,
 	PRIMARY KEY  (`server_url`(255),`handle`(255)),
 	KEY `expires` (`expires`)
-) TYPE=MyISAM($db_collation);
+) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Adding column to hold Open ID URL
