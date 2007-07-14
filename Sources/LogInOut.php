@@ -175,6 +175,12 @@ function Login2()
 	$context['login_error'] = &$txt['error_occured'];
 	$context['page_title'] = $txt['login'];
 
+	if (!empty($_REQUEST['openid_url']))
+	{
+		require_once($sourcedir . '/Subs-OpenID.php');
+		return smf_openID_validate($_REQUEST['openid_url']);
+	}
+
 	// You forgot to type your username, dummy!
 	if (!isset($_REQUEST['user']) || $_REQUEST['user'] == '')
 	{

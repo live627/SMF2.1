@@ -570,3 +570,9 @@ ol.search_results li
 {
 	color: #e0e0ff;
 }
+
+.openid_login
+{
+	background: white url(images/openid.gif) no-repeat;
+	padding-left: 18px;
+}

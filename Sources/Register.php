@@ -167,6 +167,14 @@ function Register()
 				$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
 		}
 	}
+
+	// Are they coming from an OpenID login attempt?
+	if (!empty($_SESSION['openid']['verified']) && !empty($_SESSION['openid']['openid_uri']))
+	{
+		$context['openid'] = $_SESSION['openid']['openid_uri'];
+		$context['username'] = $_SESSION['openid']['nickname'];
+		$context['email'] = $_SESSION['openid']['email'];
+	}
 }
 
 // Actually register the member.
@@ -312,6 +320,8 @@ function Register2()
 		'email' => $_POST['email'],
 		'password' => $_POST['passwrd1'],
 		'password_check' => $_POST['passwrd2'],
+		'openid' => $_POST['openid_url'],
+		'auth_method' => $_POST['authenticate'],
 		'check_reserved_name' => true,
 		'check_password_strength' => true,
 		'check_email_ban' => true,

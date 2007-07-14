@@ -270,7 +270,12 @@ function template_body_above()
 										<option value="-1" selected="selected">', $txt['forever'], '</option>
 									</select>
 									<input type="submit" value="', $txt['login'], '" /><br />
-									<span class="middletext">', $txt['quick_login_dec'], '</span>
+									<span class="middletext">', $txt['quick_login_dec'], '</span>';
+		if (empty($modSettings['disable_openid']))
+			echo'<br />
+									<input type="text" name="openid_url" id="openid_url" size="25" class="openid_login" />';
+
+		echo '
 									<input type="hidden" name="hash_passwrd" value="" />
 								</form>';
 	}

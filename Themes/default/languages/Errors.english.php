@@ -354,4 +354,13 @@ $txt['warning_notify_blank'] = 'You selected to notify the user but did not fill
 
 $txt['cannot_connect_doc_site'] = 'Could not connect to the Simple Machines Online Manual. Please check your server configuration allows external internet connections and try again later.';
 
+// Open ID error strings
+$txt['openid_server_bad_response'] = 'The requested identifier did not return the proper information.';
+$txt['openid_return_no_mode'] = 'The identity provider did not respond with the Open ID mode.';
+$txt['openid_not_resolved'] = 'The identity provider did not approve your request.';
+$txt['openid_no_assoc'] = 'Could not find the requested association with the identity provider.';
+$txt['openid_sig_invalid'] = 'The signature from the identity provider is invalid.';
+$txt['openid_load_data'] = 'Could not load the data from your login request.  Please try again.';
+$txt['openid_not_verified'] = 'The OpenID address given has not been verified yet.  Please log in to verify.';
+
 ?>

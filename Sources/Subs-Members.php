@@ -305,6 +305,15 @@ function registerMember(&$regOptions)
 			fatal_lang_error('register_only_once', false);
 	}
 
+	// What method of authorizaton are we going to use?
+	if (empty($regOptions['auth_method']) || !in_array($regOptions['auth_method'], array('password', 'openid')))
+	{
+		if (!empty($regOptions['openid']))
+			$regOptions['auth_method'] = 'openid';
+		else
+			$regOptions['auth_method'] = 'password';
+	}
+
 	// No name?!  How can you register with no name?
 	if (empty($regOptions['username']))
 		fatal_lang_error('need_username', false);
@@ -340,19 +349,24 @@ function registerMember(&$regOptions)
 		$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
 	// If you haven't put in a password generated one.
-	if ($regOptions['interface'] == 'admin' && $regOptions['password'] == '')
+	if ($regOptions['interface'] == 'admin' && $regOptions['password'] == '' && $regOptions['auth_method'] == 'password')
 	{
 		srand(time() + 1277);
 		$regOptions['password'] = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 		$regOptions['password_check'] = $regOptions['password'];
 	}
 	// Does the first password match the second?
-	elseif ($regOptions['password'] != $regOptions['password_check'])
+	elseif ($regOptions['password'] != $regOptions['password_check'] && $regOptions['auth_method'] == 'password')
 		fatal_lang_error('passwords_dont_match', false);
 
 	// That's kind of easy to guess...
 	if ($regOptions['password'] == '')
-		fatal_lang_error('no_password', false);
+	{
+		if ($regOptions['auth_method'] == 'password')
+			fatal_lang_error('no_password', false);
+		else
+			$regOptions['password'] = sha1(rand());
+	}
 
 	// Now perform hard password validation as required.
 	if (!empty($regOptions['check_password_strength']))
@@ -363,6 +377,11 @@ function registerMember(&$regOptions)
 		if ($passwordError != null)
 			fatal_lang_error('profile_error_password_' . $passwordError, false);
 	}
+
+	// If they are using an OpenID that hasn't been verified yet error out.
+	// !!! Change this so they can register without having to attempt a login first
+	if ($regOptions['auth_method'] == 'openid' && (empty($_SESSION['openid']['verified']) || $_SESSION['openid']['openid_uri'] != $regOptions['openid']))
+		fatal_lang_error('openid_not_verified', false);
 
 	// You may not be allowed to register this email.
 	if (!empty($regOptions['check_email_ban']))
@@ -417,6 +436,7 @@ function registerMember(&$regOptions)
 		'additional_groups' => "''",
 		'ignore_boards' => "''",
 		'smiley_set' => "''",
+		'openid_uri' => "'" . (!empty($regOptions['openid']) ? $regOptions['openid'] : '') . "'",
 	);
 
 	// Setup the activation status on this new account so it is correct - firstly is it an under age account?

@@ -153,4 +153,7 @@ $txt['registration_password_numbercase'] = 'Password must contain both upper and
 $txt['registration_password_no_match'] = 'Passwords do not match';
 $txt['registration_password_valid'] = 'Password is valid';
 
+$txt['authenticate_label'] = 'Authenticate using';
+$txt['authenticate_password'] = 'Password';
+$txt['authenticate_openid'] = 'OpenID';
 ?>

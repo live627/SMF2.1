@@ -33,13 +33,25 @@ function template_before()
 	echo '
 
 		return true;
-	}';
+	}
+	function getAuthValue()
+	{
+		var obj = document.forms.creator.authenticate;
+		for(i=0,n=obj.length; i < n; i++)
+		{
+			if (obj[i].checked)
+				return obj[i].value
+		}
+
+		return "";
+	}
+	';
 
 	if ($context['require_agreement'])
 		echo '
 	function checkAgree()
 	{
-		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || isEmptyText(document.forms.creator.passwrd1) || !document.forms.creator.regagree.checked;
+		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || (isEmptyText(document.forms.creator.passwrd1) && getAuthValue() == "passwd") || (isEmptyText(document.forms.creator.openid_url) && getAuthValue() == "openid") || !document.forms.creator.regagree.checked;
 		setTimeout("checkAgree();", 1000);
 	}
 	setTimeout("checkAgree();", 1000);
@@ -58,7 +70,7 @@ function template_before()
 							<div class="smalltext">', $txt['identification_by_smf'], '</div>
 						</td>
 						<td>
-							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" />
+							<input type="text" name="user" id="smf_autov_username" size="30" tabindex="', $context['tabindex']++, '" maxlength="25" value="', isset($context['username']) ? $context['username'] : '', '" />
 							<span id="smf_autov_username_div" style="display: none;">
 								<a id="smf_autov_username_link" href="#">
 									<img id="smf_autov_username_img" src="', $settings['images_url'], '/icons/field_check.gif" alt="*" />
@@ -71,7 +83,7 @@ function template_before()
 							<div class="smalltext">', $txt['valid_email'], '</div>
 						</td>
 						<td>
-							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" />
+							<input type="text" name="email" id="smf_autov_reserve1" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['email']) ? $context['email'] : '', '" />
 							<label for="hide_email"><input type="checkbox" name="hide_email" id="hide_email" class="check" /> ', $txt['allow_user_email'], '</label>
 						</td>
 					</tr>
@@ -95,13 +107,33 @@ function template_before()
 								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
 							</span>
 						</td>
+					</tr>
+					<tr>
+						<td>
+							<b>', $txt['openid'], ':</b>
+						</td>
+						<td>
+							<input type="text" name="openid_url" size="30" tabindex="', $context['tabindex']++, '" value="', isset($context['openid']) ? $context['openid'] : '', '" />
+							<span><img src="', $settings['images_url'], '/openid.gif" alt="', $txt['openid'], '" /></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<b>', $txt['authenticate_label'], ':</b>
+						</td>
+						<td>
+							<input type="radio" name="authenticate" value="passwd" id="auth_pass" ', empty($context['openid']) ? 'checked="checked" ' : '', '/>
+							<label for="auth_pass">', $txt['authenticate_password'], '</label><br />
+							<input type="radio" name="authenticate" value="openid" id="auth_openid" ', !empty($context['openid']) ? 'checked="checked" ' : '', '/>
+							<label for="auth_openid">', $txt['authenticate_openid'], '</label>
+						</td>
 					</tr>';
 
 	if ($context['visual_verification'])
 	{
 		echo '
 					<tr valign="top">
-						<td width="40%" align="top">
+						<td width="40%" valign="top">
 							<b>', $txt['visual_verification_label'], ':</b>
 							<div class="smalltext">', $txt['visual_verification_description'], '</div>
 						</td>
