@@ -5,7 +5,7 @@
 /******************************************************************************/
 
 ---# Adding Open ID Assocation table...
-CREATE TABLE `smf_openid_assoc` (
+CREATE TABLE {$db_prefix}openid_assoc (
 	server_url text NOT NULL,
 	handle tinytext NOT NULL,
 	secret text NOT NULL,
