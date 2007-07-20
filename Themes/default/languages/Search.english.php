@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Search
+// Version: 2.0 Beta 1; Search
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 

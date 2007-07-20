@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -270,7 +270,10 @@ function deleteMembers($users)
 	$smfFunc['db_free_result']($request);
 
 	// Make sure no member's birthday is still sticking in the calendar...
-	updateStats('calendar');
+	updateSettings(array(
+		'calendar_updated' => time(),
+	));
+
 	updateStats('member');
 }
 

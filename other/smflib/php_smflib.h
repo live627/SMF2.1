@@ -1,8 +1,8 @@
 #ifndef PHP_SMFLIB_H
 #define PHP_SMFLIB_H 1
 
-#define PHP_SMFLIB_VERSION "SMF 2.0 Alpha(a) r1"
-#define PHP_SMFLIB_SMF_VERSION "SMF 2.0 Alpha"
+#define PHP_SMFLIB_VERSION "SMF 2.0 Beta 1(a) r1"
+#define PHP_SMFLIB_SMF_VERSION "SMF 2.0 Beta 1"
 
 #define PHP_SMFLIB_EXTNAME "smflib"
 

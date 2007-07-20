@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -159,7 +159,7 @@ function db_list_tables($db = false, $filter = false)
 	global $db_name, $smfFunc;
 
 	$db = $db == false ? $db_name : $db;
-	$filter = $filter == false ? '' : " LIKE $filter";
+	$filter = $filter == false ? '' : " LIKE '$filter'";
 
 	$request = $smfFunc['db_query']('', "
 		SHOW TABLES

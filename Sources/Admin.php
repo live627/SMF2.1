@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -87,6 +87,9 @@ function AdminMain()
 
 	require_once($sourcedir . '/Subs-Menu.php');
 
+	// Some features we may have hidden.
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,k');
+
 	// Define all the menu structure - see Subs-Menu.php for details!
 	$admin_areas = array(
 		'forum' => array(
@@ -162,7 +165,7 @@ function AdminMain()
 						'basic' => array($txt['mods_cat_features']),
 						'security' => array($txt['mods_cat_security']),
 						'layout' => array($txt['mods_cat_layout']),
-						'karma' => array($txt['karma']),
+						'karma' => array($txt['karma'], 'enabled' => in_array('k', $context['admin_features'])),
 						'moderation' => array($txt['moderation_settings_short']),
 						'sig' => array($txt['signature_settings_short']),
 						'profile' => array($txt['custom_profile_shorttitle']),
@@ -239,6 +242,7 @@ function AdminMain()
 					'file' => 'ManageCalendar.php',
 					'function' => 'ManageCalendar',
 					'permission' => array('admin_forum'),
+					'enabled' => in_array('cd', $context['admin_features']),
 					'subsections' => array(
 						'holidays' => array($txt['manage_holidays'], 'admin_forum', 'enabled' => !empty($modSettings['cal_enabled'])),
 						'settings' => array($txt['calendar_settings'], 'admin_forum'),

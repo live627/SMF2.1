@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; SplitTopics
+// Version: 2.0 Beta 1; SplitTopics
 
 function template_ask()
 {
@@ -357,7 +357,7 @@ function template_merge_extra_options()
 							<option value="0">', $txt['merge_custom_subject'], ':</option>
 						</select> <input type="text" name="custom_subject" size="60" disabled="disabled" id="customSubject" /><br />
 						<br />
-						<input type="checkbox" class="check" name="enforce_subject" value="1" /> ', $txt['merge_enforce_subject'], '
+						<label for="enforce_subject"><input type="checkbox" class="check" name="enforce_subject" id="enforce_subject" value="1" /> ', $txt['merge_enforce_subject'], '</label>
 					</td>
 				</tr>';
 

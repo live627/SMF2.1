@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Calendar
+// Version: 2.0 Beta 1; Calendar
 
 // The main calendar - January, for example.
 function template_main()

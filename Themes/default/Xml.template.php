@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Xml
+// Version: 2.0 Beta 1; Xml
 
 function template_sendbody()
 {

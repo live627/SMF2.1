@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Post
+// Version: 2.0 Beta 1; Post
 
 // The main template for the post page.
 function template_main()

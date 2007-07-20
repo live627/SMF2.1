@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -335,12 +335,15 @@ function ComposeMailing()
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$condition_array[] = "email_address LIKE '" . $row['email_address'] . "'";
 
-	$request = $smfFunc['db_query']('', "
-		SELECT id_member
-		FROM {$db_prefix}members
-		WHERE " . implode(' OR ', $condition_array), __FILE__, __LINE__);
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['recipients']['exclude_members'][] = $row['id_member'];
+	if (!empty($condition_array))
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
+			FROM {$db_prefix}members
+			WHERE " . implode(' OR ', $condition_array), __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$context['recipients']['exclude_members'][] = $row['id_member'];
+	}
 
 	// Did they select moderators - if so add them as specific members...
 	if ((!empty($context['recipients']['groups']) && in_array(3, $context['recipients']['groups'])) || (!empty($context['recipients']['exclude_groups']) && in_array(3, $context['recipients']['exclude_groups'])))

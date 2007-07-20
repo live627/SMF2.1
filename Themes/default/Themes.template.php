@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Themes
+// Version: 2.0 Beta 1; Themes
 
 // The main sub template - for theme administration.
 function template_main()

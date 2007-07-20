@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -733,7 +733,7 @@ function SetThemeSettings()
 
 	foreach ($settings as $setting => $dummy)
 	{
-		if (!in_array($setting, array('theme_url', 'theme_dir', 'images_url')))
+		if (!in_array($setting, array('theme_url', 'theme_dir', 'images_url', 'template_dirs')))
 			$settings[$setting] = htmlspecialchars($settings[$setting]);
 	}
 
@@ -1732,7 +1732,7 @@ function convert_template($output_dir, $old_template = '')
 
 	// Step 4: Now we add the beginning and end...
 	$old_template = '<?php
-// Version: 2.0 Alpha; index
+// Version: 2.0 Beta 1; index
 
 // Initialize the template... mainly little settings.
 function template_init()

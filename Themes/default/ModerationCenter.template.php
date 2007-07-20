@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; ModerationCenter
+// Version: 2.0 Beta 1; ModerationCenter
 
 function template_moderation_center()
 {

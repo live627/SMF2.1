@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Profile
+// Version: 2.0 Beta 1; Profile
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 

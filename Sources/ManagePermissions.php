@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -1485,6 +1485,10 @@ function loadAllPermissions()
 		'topic',
 		'post',
 	);
+
+	// Some permissions are hidden if features are off.
+	if (!in_array('cd', $context['admin_features']))
+		unset($permissionList['membergroup']['calendar']);
 
 	$context['permissions'] = array();
 	foreach ($permissionList as $permissionType => $permissionGroups)

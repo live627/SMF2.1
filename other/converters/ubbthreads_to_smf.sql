@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "UBB.threads 6.4/6.5"
 /******************************************************************************/
----~ version: "SMF 2.0 Alpha"
+---~ version: "SMF 2.0 Beta 1"
 ---~ settings: "/config.inc.php", "/includes/config.inc.php"
 ---~ globals: config
 ---~ from_prefix: "`$config[dbname]`.$config[tbprefix]"

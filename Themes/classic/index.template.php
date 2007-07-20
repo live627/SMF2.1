@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; index
+// Version: 2.0 Beta 1; index
 
 /*	This template is, perhaps, the most important template in the theme.  It
 	contains the main template layer that displays the header and footer of
@@ -44,7 +44,7 @@ function template_init()
 
 	/* The version this template/theme is for.
 		This should probably be the version of SMF it was created for. */
-	$settings['theme_version'] = '2.0 Alpha';
+	$settings['theme_version'] = '2.0 Beta 1';
 
 	/* Set a setting that tells the theme that it can render the tabs. */
 	$settings['use_tabs'] = false;

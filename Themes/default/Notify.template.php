@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Notify
+// Version: 2.0 Beta 1; Notify
 
 function template_main()
 {

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -25,7 +25,7 @@
 
 $convert_data = array(
 	'name' => 'YaBB 1 Gold',
-	'version' => 'SMF 2.0 Alpha',
+	'version' => 'SMF 2.0 Beta 1',
 	'flatfile' => true,
 	'settings' => array('/Settings.pl'),
 	'parameters' => array(

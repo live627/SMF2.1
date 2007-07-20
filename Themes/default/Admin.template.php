@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Admin
+// Version: 2.0 Beta 1; Admin
 
 // This is the administration center home.
 function template_admin()
@@ -1770,6 +1770,77 @@ function template_admin_search_results()
 			</td>
 		</tr>
 	</table>';
+}
+
+// Turn on and off certain key features.
+function template_core_features()
+{
+	global $context, $txt, $settings, $options, $scripturl;
+
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function toggleItem(itemID)
+		{
+			// Toggle the hidden item.
+			var itemValueHandle = document.getElementById("feature_" + itemID);
+			itemValueHandle.value = itemValueHandle.value == 1 ? 0 : 1;
+
+			// Change the image and alt.
+			document.getElementById("switch_" + itemID).src = \'', $settings['images_url'], '/admin/switch_\' + (itemValueHandle.value == 1 ? \'on\' : \'off\') + \'.gif\'; 
+			document.getElementById("switch_" + itemID).alt = itemValueHandle.value == 1 ? \'', $txt['core_settings_switch_off'], '\' : \'', $txt['core_settings_switch_on'], '\'; 
+
+			// Don\'t reload.
+			return false;
+		}
+	// ]]></script>';
+
+	if ($context['is_new_install'])
+	{
+		echo '
+		<div>
+			', $txt['core_settings_welcome_msg'], '
+		</div>';
+	}
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<table align="center" width="80%" cellpadding="2" cellspacing="0" class="tborder">
+		<tr class="titlebg">
+			<td colspan="3">
+				', $txt['core_settings_title'], '
+			</td>
+		</tr>';
+
+	$alternate = 0;
+	foreach ($context['features'] as $id => $feature)
+	{
+		echo '
+		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '" valign="top">
+			<td width="60">
+				<img src="', $settings['images_url'], '/on.gif" alt="', $feature['title'], '" />
+			</td>
+			<td>
+				<h4>', $feature['title'], '</h4>
+				<h6>', $feature['desc'], '</h6>
+			</td>
+			<td width="40">
+				<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');" />
+					<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.gif" id="switch_', $id, '" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />
+				</a>
+			</td>
+		</tr>';
+
+		$alternate = !$alternate;
+	}
+
+	echo '
+		<tr class="catbg">
+			<td colspan="3" align="right">
+				<input type="submit" value="', $txt['save'], '" name="save" />
+			</td>
+		</tr>
+	</table>
+	</form>';
 }
 
 ?>

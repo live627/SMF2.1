@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; ManageSettings
+// Version: 2.0 Beta 1; ManageSettings
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
@@ -187,5 +187,14 @@ $txt['custom_edit_delete_sure'] = 'Are you sure you wish to delete this field - 
 
 $txt['standard_profile_title'] = 'Standard Profile Fields';
 $txt['standard_profile_field'] = 'Field';
+
+$txt['core_settings_title'] = 'Core Features';
+$txt['core_settings_welcome_msg'] = 'Welcome to your new forum - to get you started we suggest you turn on only those features you need at this stage.';
+$txt['core_settings_item_cd'] = 'Calendar';
+$txt['core_settings_item_cd_desc'] = 'Enabling this feature will open up a selection of options to enable your users to view the calendar, add and review events, see users birthdates on a calendar and much, much more.';
+$txt['core_settings_item_k'] = 'Karma';
+$txt['core_settings_item_k_desc'] = 'Karma is a feature that shows the popularity of a member. Members, if allowed, can \'applaud\' or \'smite\' other members, which is how their popularity is calculated.';
+$txt['core_settings_switch_on'] = 'Click to Enable';
+$txt['core_settings_switch_off'] = 'Click to Disable';
 
 ?>

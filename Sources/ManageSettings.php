@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -29,6 +29,9 @@ if (!defined('SMF'))
 	and options.  It uses the following functions:
 
 	void ModifyFeatureSettings()
+		// !!!
+
+	void ModifyCoreFeatures()
 		// !!!
 
 	void ModifyBasicSettings()
@@ -128,6 +131,7 @@ function ModifyFeatureSettings()
 
 	$subActions = array(
 		'basic' => 'ModifyBasicSettings',
+		'core' => 'ModifyCoreFeatures',
 		'layout' => 'ModifyLayoutSettings',
 		'karma' => 'ModifyKarmaSettings',
 		'moderation' => 'ModifyModerationSettings',
@@ -168,6 +172,78 @@ function ModifyFeatureSettings()
 
 	// Call the right function for this sub-acton.
 	$subActions[$_REQUEST['sa']]();
+}
+
+// This is an overall control panel enabling/disabling lots of SMF's key feature components.
+function ModifyCoreFeatures($return_config = false)
+{
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	/* This is an array of all the features that can be enabled/disabled - each option can have the following:
+		title		- Text title of this item (If standard string does not exist).
+		desc		- Description of this feature (If standard string does not exist).
+		image		- Custom image to show next to feature.
+		settings	- Array of settings to change (For each name => value) on enable - reverse is done for disable. If > 1 will not change value if set.
+	*/
+	$core_features = array(
+		// cd = calendar.
+		'cd' => array(
+			'settings' => array(
+				'cal_enabled' => 1,
+			),
+		),
+		// k = karma.
+		'k' => array(
+			'settings' => array(
+				'karmaMode' => 2,
+			),
+		),
+	);
+
+	// Are we saving?
+	if (isset($_POST['save']))
+	{
+		$setting_changes = array('admin_features' => array());
+
+		// Cycle each feature and change things as required!
+		foreach ($core_features as $id => $feature)
+		{
+			// Enabled?
+			if (!empty($_POST['feature_' . $id]))
+				$setting_changes['admin_features'][] = $id;
+
+			// Setting values to change?
+			if (isset($feature['settings']))
+			{
+				foreach ($feature['settings'] as $key => $value)
+				{
+					if (empty($_POST['feature_' . $id]) || (!empty($_POST['feature_' . $id]) && ($value < 2 || empty($modSettings[$key]))))
+						$setting_changes[$key] = !empty($_POST['feature_' . $id]) ? $value : !$value;
+				}
+			}
+		}
+
+		// Make sure this one setting is a string!
+		$setting_changes['admin_features'] = implode(',', $setting_changes['admin_features']);
+
+		// Make any setting changes!
+		updateSettings($setting_changes);
+
+		redirectexit('action=admin;area=featuresettings;sa=core;sesc=' . $context['session_id']);
+	}
+
+	// Put them in context.
+	$context['features'] = array();
+	foreach ($core_features as $id => $feature)
+		$context['features'][$id] = array(
+			'title' => isset($feature['title']) ? $feature['title'] : $txt['core_settings_item_' . $id],
+			'desc' => isset($feature['desc']) ? $feature['desc'] : $txt['core_settings_item_' . $id . '_desc'],
+			'enabled' => in_array($id, $context['admin_features']),
+		);
+
+	// Are they a new user?
+	$context['is_new_install'] = !isset($modSettings['admin_features']);
+	$context['sub_template'] = 'core_features';
 }
 
 function ModifyBasicSettings($return_config = false)
@@ -448,6 +524,15 @@ function ModifySignatureSettings($return_config = false)
 	if ($return_config)
 		return $config_vars;
 
+	// Setup the template.
+	$context['page_title'] = $txt['signature_settings'];
+	$context['sub_template'] = 'show_settings';
+
+	// Load all the signature settings.
+	list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
+	$sig_limits = explode(',', $sig_limits);
+	$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
+
 	// Applying to ALL signatures?!!
 	if (isset($_GET['apply']))
 	{
@@ -457,9 +542,6 @@ function ModifySignatureSettings($return_config = false)
 		$sig_start = time();
 		// This is horrid - but I suppose some people will want the option to do it.
 		$_GET['step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
-		list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
-		$sig_limits = explode(',', $sig_limits);
-		$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
 		$done = false;
 
 		$request = $smfFunc['db_query']('', "
@@ -610,15 +692,6 @@ function ModifySignatureSettings($return_config = false)
 				pauseSignatureApplySettings();
 		}
 	}
-
-	// Setup the template.
-	$context['page_title'] = $txt['signature_settings'];
-	$context['sub_template'] = 'show_settings';
-
-	// Load all the signature settings.
-	list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
-	$sig_limits = explode(',', $sig_limits);
-	$disabledTags = !empty($sig_bbc) ? explode(',', $sig_bbc) : array();
 
 	$context['signature_settings'] = array(
 		'enable' => isset($sig_limits[0]) ? $sig_limits[0] : 0,

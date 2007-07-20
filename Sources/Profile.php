@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -710,7 +710,7 @@ function loadProfileFields($force_reload = false)
 			'permission' => 'profile_extra',
 			// Need to make sure ICQ doesn't equal 0.
 			'input_validate' => create_function('&$value', '
-				if ($value === 0)
+				if (empty($value))
 					$value = \'\';
 				else
 					$value = (int) $value;
@@ -3557,7 +3557,7 @@ function loadThemeOptions($memID)
 // Load any custom fields for this area... no area means load all, 'summary' loads all public ones.
 function loadCustomFields($memID, $area = 'summary')
 {
-	global $db_prefix, $context, $txt, $cur_profile, $smfFunc;
+	global $db_prefix, $context, $txt, $user_profile, $smfFunc;
 
 	// Get the right restrictions in place...
 	$where = 'active = 1';
@@ -3578,8 +3578,8 @@ function loadCustomFields($memID, $area = 'summary')
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Shortcut.
-		$exists = $memID && isset($cur_profile['options'][$row['col_name']]);
-		$value = $exists && $cur_profile['options'][$row['col_name']] ? $cur_profile['options'][$row['col_name']] : '';
+		$exists = $memID && isset($user_profile[$memID], $user_profile[$memID]['options'][$row['col_name']]);
+		$value = $exists && $user_profile[$memID]['options'][$row['col_name']] ? $user_profile[$memID]['options'][$row['col_name']] : '';
 
 		// HTML for the input form.
 		$output_html = $value;

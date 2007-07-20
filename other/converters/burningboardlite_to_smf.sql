@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "Burning Board Lite 1.0"
 /******************************************************************************/
----~ version: "SMF 2.0 Alpha"
+---~ version: "SMF 2.0 Beta 1"
 ---~ settings: "/acp/lib/config.inc.php"
 ---~ from_prefix: "`$sqldb`.bb{$n}_"
 ---~ table_test: "{$from_prefix}users"

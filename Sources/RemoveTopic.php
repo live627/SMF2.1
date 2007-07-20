@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -540,6 +540,42 @@ function removeMessage($message, $decreasePostCount = true)
 		return true;
 	}
 
+	// Deleting a recycled message can not lower anyone's post count.
+	if ($row['icon'] == 'recycled')
+		$decreasePostCount = false;
+
+	// This is the last post, update the last post on the board.
+	if ($row['id_last_msg'] == $message)
+	{
+		// Find the last message, set it, and decrease the post count.
+		$request = $smfFunc['db_query']('', "
+			SELECT id_msg, id_member
+			FROM {$db_prefix}messages
+			WHERE id_topic = $row[id_topic]
+				AND id_msg != $message
+			ORDER BY approved DESC, id_msg DESC
+			LIMIT 1", __FILE__, __LINE__);
+		$row2 = $smfFunc['db_fetch_assoc']($request);
+		$smfFunc['db_free_result']($request);
+
+		$smfFunc['db_query']('', "
+			UPDATE {$db_prefix}topics
+			SET
+				id_last_msg = $row2[id_msg],
+				id_member_updated = $row2[id_member]" . ($row['approved'] ? ",
+				num_replies = CASE WHEN num_replies = 0 THEN 0 ELSE num_replies - 1 END" : ",
+				unapproved_posts = CASE WHEN unapproved_posts = 0 THEN 0 ELSE unapproved_posts - 1 END") . "
+			WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+	}
+	// Only decrease post counts.
+	else
+		$smfFunc['db_query']('', "
+			UPDATE {$db_prefix}topics
+			SET " . ($row['approved'] ? "
+				num_replies = CASE WHEN num_replies = 0 THEN 0 ELSE num_replies - 1 END" : "
+				unapproved_posts = CASE WHEN unapproved_posts = 0 THEN 0 ELSE unapproved_posts - 1 END") . "
+			WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+
 	// Default recycle to false.
 	$recycle = false;
 
@@ -631,42 +667,6 @@ function removeMessage($message, $decreasePostCount = true)
 			updateStats('subject', $topicID, $row['subject']);
 		}
 	}
-
-	// Deleting a recycled message can not lower anyone's post count.
-	if ($row['icon'] == 'recycled')
-		$decreasePostCount = false;
-
-	// This is the last post, update the last post on the board.
-	if ($row['id_last_msg'] == $message)
-	{
-		// Find the last message, set it, and decrease the post count.
-		$request = $smfFunc['db_query']('', "
-			SELECT id_msg, id_member
-			FROM {$db_prefix}messages
-			WHERE id_topic = $row[id_topic]
-				AND id_msg != $message
-			ORDER BY approved DESC, id_msg DESC
-			LIMIT 1", __FILE__, __LINE__);
-		$row2 = $smfFunc['db_fetch_assoc']($request);
-		$smfFunc['db_free_result']($request);
-
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}topics
-			SET
-				id_last_msg = $row2[id_msg],
-				id_member_updated = $row2[id_member]" . ($row['approved'] ? ",
-				num_replies = CASE WHEN num_replies = 0 THEN 0 ELSE num_replies - 1 END" : ",
-				unapproved_posts = CASE WHEN unapproved_posts = 0 THEN 0 ELSE unapproved_posts - 1 END") . "
-			WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
-	}
-	// Only decrease post counts.
-	else
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}topics
-			SET " . ($row['approved'] ? "
-				num_replies = CASE WHEN num_replies = 0 THEN 0 ELSE num_replies - 1 END" : "
-				unapproved_posts = CASE WHEN unapproved_posts = 0 THEN 0 ELSE unapproved_posts - 1 END") . "
-			WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
 
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}boards

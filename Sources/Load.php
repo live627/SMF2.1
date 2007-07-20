@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Alpha                                       *
+* Software Version:           SMF 2.0 Beta 1                                       *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -1197,6 +1197,18 @@ function loadTheme($id_theme = 0, $initialize = true)
 	$settings['actual_images_url'] = $settings['images_url'];
 	$settings['actual_theme_dir'] = $settings['theme_dir'];
 
+	$settings['template_dirs'] = array();
+	// This theme first.
+	$settings['template_dirs'][] = $settings['theme_dir'];
+
+	// Based on theme (if there is one).
+	if (!empty($settings['base_theme_dir']))
+		$settings['template_dirs'][] = $settings['base_theme_dir'];
+
+	// Lastly the default theme.
+	if ($settings['theme_dir'] != $settings['default_theme_dir'])
+		$settings['template_dirs'][] = $settings['default_theme_dir'];
+
 	if (!$initialize)
 		return;
 
@@ -1276,18 +1288,6 @@ function loadTheme($id_theme = 0, $initialize = true)
 				$context['linktree'][$k]['url'] = strtr($dummy['url'], array($oldurl => $boardurl));
 		}
 	}
-
-	$settings['template_dirs'] = array();
-	// This theme first.
-	$settings['template_dirs'][] = $settings['theme_dir'];
-
-	// Based on theme (if there is one).
-	if (!empty($settings['base_theme_dir']))
-		$settings['template_dirs'][] = $settings['base_theme_dir'];
-
-	// Lastly the default theme.
-	if ($settings['theme_dir'] != $settings['default_theme_dir'])
-		$settings['template_dirs'][] = $settings['default_theme_dir'];
 
 	// Set up the contextual user array.
 	$context['user'] = array(
@@ -1613,14 +1613,14 @@ function loadLanguage($template_name, $lang = '', $fatal = true, $force_reload =
 	// Remember what we have loaded, and in which language.
 	$already_loaded[$template_name] = $lang;
 
-	//!!! /**************** 2.0 ALPHA FIXES - START ********************/
+	//!!! /**************** 2.0 Beta 1 FIXES - START ********************/
 	if (!in_array($lang, array('dutch', 'english', 'german', 'spanish')))
 	{
 		global $txtChanges;
 		require_once($sourcedir . '/FixLanguage.php');
 		applyTxtFixes();
 	}
-	//!!! /**************** 2.0 ALPHA FIXES - END **********************/
+	//!!! /**************** 2.0 Beta 1 FIXES - END **********************/
 
 	// Return the language actually loaded.
 	return $lang;

@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; ManageCalendar
+// Version: 2.0 Beta 1; ManageCalendar
 
 // Editing or adding holidays.
 function template_edit_holiday()

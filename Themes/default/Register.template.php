@@ -1,5 +1,5 @@
 <?php
-// Version: 2.0 Alpha; Register
+// Version: 2.0 Beta 1; Register
 
 // Before registering - get their information.
 function template_before()

@@ -3,7 +3,7 @@
 /******************************************************************************/
 ---~ name: "MiniBB 2.0"
 /******************************************************************************/
----~ version: "SMF 2.0 Alpha"
+---~ version: "SMF 2.0 Beta 1"
 ---~ settings: "/setup_options.php"
 ---~ from_prefix: "`$DBname`."
 ---~ globals: Tf, Tp, Tt, Tu, Ts, Tb, admin_usr
