@@ -2064,7 +2064,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 	{
 		// Calculate the number of messages each member's gonna lose...
 		$request = $smfFunc['db_query']('', "
-			SELECT id_member, COUNT(*) AS numDeletedMessages, CASE WHEN is_read & 1 >= 1 THEN 1 ELSE 0 END AS is_read
+			SELECT id_member, COUNT(*) AS num_deleted_messages, CASE WHEN is_read & 1 >= 1 THEN 1 ELSE 0 END AS is_read
 			FROM {$db_prefix}pm_recipients
 			WHERE id_member IN (" . implode(', ', $owner) . ")
 				AND deleted = 0$where
@@ -2073,16 +2073,16 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['is_read'])
-				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : "instant_messages - $row[numDeletedMessages]"));
+				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : "instant_messages - $row[num_deleted_messages]"));
 			else
-				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : "instant_messages - $row[numDeletedMessages]", 'unread_messages' => $where == '' ? 0 : "unread_messages - $row[numDeletedMessages]"));
+				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : "instant_messages - $row[num_deleted_messages]", 'unread_messages' => $where == '' ? 0 : "unread_messages - $row[num_deleted_messages]"));
 
 			// If this is the current member we need to make their message count correct.
 			if ($user_info['id'] == $row['id_member'])
 			{
-				$user_info['messages'] -= $row['numDeletedMessages'];
+				$user_info['messages'] -= $row['num_deleted_messages'];
 				if (!($row['is_read']))
-					$user_info['unread_messages'] -= $row['numDeletedMessages'];
+					$user_info['unread_messages'] -= $row['num_deleted_messages'];
 			}
 		}
 		$smfFunc['db_free_result']($request);
