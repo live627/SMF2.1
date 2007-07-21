@@ -1747,15 +1747,16 @@ function EditPermissionProfiles()
 			WHERE id_profile = $_POST[copy_from]", __FILE__, __LINE__);
 		$inserts = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$inserts[] = "($profile_id, $row[id_group], '$row[permission]', $row[add_deny])";
+			$inserts[] = array($profile_id, $row['id_group'], "'$row[permission]'", $row['add_deny']);
 		$smfFunc['db_free_result']($request);
 
 		if (!empty($inserts))
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}board_permissions
-					(id_profile, id_group, permission, add_deny)
-				VALUES
-					" . implode(',', $inserts), __FILE__, __LINE__);
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}board_permissions",
+				array('id_profile', 'id_group', 'permission', 'add_deny'),
+				$inserts,
+				array('id_profile', 'id_group', 'permission'), __FILE__, __LINE__
+			);
 	}
 	// Saving changes?
 	elseif (isset($_POST['save']) && !empty($_POST['predef']))
@@ -1870,7 +1871,7 @@ function updateChildPermissions($parents, $profile = null)
 		$permissions = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			foreach ($children[$row['id_group']] as $child)
-				$permissions[] = "($child, '$row[permission]', $row[add_deny])";
+				$permissions[] = array($child, "'$row[permission]'", $row['add_deny']);
 		$smfFunc['db_free_result']($request);
 
 		$smfFunc['db_query']('', "
@@ -1880,11 +1881,12 @@ function updateChildPermissions($parents, $profile = null)
 		// Finally insert.
 		if (!empty($permissions))
 		{
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}permissions
-					(id_group, permission, add_deny)
-				VALUES
-					" . implode(',', $permissions), __FILE__, __LINE__);
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}permissions",
+				array('id_group', 'permission', 'add_deny'),
+				$permissions,
+				array('id_group', 'permission'), __FILE__, __LINE__
+			);
 		}
 	}
 
@@ -1902,7 +1904,7 @@ function updateChildPermissions($parents, $profile = null)
 		$permissions = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			foreach ($children[$row['id_group']] as $child)
-				$permissions[] = "($child, $row[id_profile], '$row[permission]', $row[add_deny])";
+				$permissions[] = array($child, $row['id_profile'], "'$row[permission]'", $row['add_deny']);
 		$smfFunc['db_free_result']($request);
 
 		$smfFunc['db_query']('', "
@@ -1913,11 +1915,12 @@ function updateChildPermissions($parents, $profile = null)
 		// Do the insert.
 		if (!empty($permissions))
 		{
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}board_permissions
-					(id_group, id_profile, permission, add_deny)
-				VALUES
-					" . implode(',', $permissions), __FILE__, __LINE__);
+			$smfFunc['db_insert']('insert',
+				"{$db_prefix}board_permissions",
+				array('id_group', 'id_profile', 'permission', 'add_deny'),
+				$permissions,
+				array('id_group', 'id_profile', 'permission'), __FILE__, __LINE__
+			);
 		}
 	}
 }
