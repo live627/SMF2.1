@@ -696,7 +696,8 @@ $txt['admin_search_results_none'] = 'No results found!';
 $txt['admin_search_section_sections'] = 'Section';
 $txt['admin_search_section_settings'] = 'Setting';
 
-$txt['mods_cat_features'] = 'Basic Features';
+$txt['core_settings_title'] = 'Core Features';
+$txt['mods_cat_features'] = 'Options';
 $txt['mods_cat_security'] = 'Security';
 $txt['mods_cat_layout'] = 'Layout';
 $txt['karma'] = 'Karma';

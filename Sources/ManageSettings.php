@@ -142,7 +142,7 @@ function ModifyFeatureSettings()
 	);
 
 	// By default do the basic settings.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'basic';
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'core';
 	$context['sub_action'] = $_REQUEST['sa'];
 
 	// Load up all the tabs...
@@ -151,6 +151,8 @@ function ModifyFeatureSettings()
 		'help' => 'modsettings',
 		'description' => sprintf($txt['modSettings_desc'], $settings['theme_id'], $context['session_id']),
 		'tabs' => array(
+			'core' => array(
+			),
 			'basic' => array(
 			),
 			'security' => array(
@@ -218,16 +220,34 @@ function ModifyCoreFeatures($return_config = false)
 				'karmaMode' => 2,
 			),
 		),
+		// ml = moderation log.
+		'ml' => array(
+			'settings' => array(
+				'modlog_enabled' => 1,
+			),
+		),
 		// rg = report generator.
 		'rg' => array(
 		),
-		// wn = warning.
+		// w = warning.
 		'w' => array(
 			'setting_callback' => create_function('$value', '
 				global $modSettings;
 				list ($modSettings[\'warning_enable\'], $modSettings[\'user_limit\'], $modSettings[\'warning_decrement\']) = explode(\',\', $modSettings[\'warning_settings\']);
 				$warning_settings = ($value ? 1 : 0) . \',\' . $modSettings[\'user_limit\'] . \',\' . $modSettings[\'warning_decrement\'];
-				return array(\'warning_settings\' => $warning_settings);
+				if (!$value)
+				{
+					$returnSettings = array(
+						\'warning_watch\' => 0,
+						\'warning_moderate\' => 0,
+						\'warning_mute\' => 0,
+					);
+				}
+				else
+					$returnSettings = array();
+
+				$returnSettings[\'warning_settings\'] = $warning_settings;
+				return $returnSettings;
 			'),
 		),
 	);
@@ -483,16 +503,12 @@ function ModifyModerationSettings($return_config = false)
 	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
 
 	$config_vars = array(
-			// Is the moderation log enabled?
-			array('check', 'modlog_enabled'),
-		'',
 			// Warning system?
-			'rem1' => array('check', 'warning_enable'),
-			array('int', 'warning_watch'),
+			array('int', 'warning_watch', 'help' => 'warning_enable'),
 			array('int', 'warning_moderate'),
 			array('int', 'warning_mute'),
-			'rem2' => array('int', 'user_limit'),
-			'rem3' => array('int', 'warning_decrement'),
+			'rem1' => array('int', 'user_limit'),
+			'rem2' => array('int', 'warning_decrement'),
 			array('check', 'warning_show'),
 	);
 
@@ -505,7 +521,7 @@ function ModifyModerationSettings($return_config = false)
 		checkSession();
 
 		// Make sure these don't have an effect.
-		if (!$_POST['warning_enable'])
+		if (substr($modSettings['warning_settings'], 0, 1) != 1)
 		{
 			$_POST['warning_watch'] = 0;
 			$_POST['warning_moderate'] = 0;
@@ -519,10 +535,10 @@ function ModifyModerationSettings($return_config = false)
 		}
 
 		// Fix the warning setting array!
-		$_POST['warning_settings'] = min(1, (int) $_POST['warning_enable']) . ',' . min(100, (int) $_POST['user_limit']) . ',' . min(100, (int) $_POST['warning_decrement']);
+		$_POST['warning_settings'] = '1,' . min(100, (int) $_POST['user_limit']) . ',' . min(100, (int) $_POST['warning_decrement']);
 		$save_vars = $config_vars;
 		$save_vars[] = array('text', 'warning_settings');
-		unset($save_vars['rem1'], $save_vars['rem2'], $save_vars['rem3']);
+		unset($save_vars['rem1'], $save_vars['rem2']);
 
 		saveDBSettings($save_vars);
 		redirectexit('action=admin;area=featuresettings;sa=moderation');

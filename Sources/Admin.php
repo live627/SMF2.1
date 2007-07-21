@@ -89,7 +89,7 @@ function AdminMain()
 
 	// Some features we may have hidden.
 	//!!! Temp until upgrade enabled for this!
-	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg');
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml');
 
 	// Define all the menu structure - see Subs-Menu.php for details!
 	$admin_areas = array(
@@ -163,11 +163,12 @@ function AdminMain()
 					'function' => 'ModifyFeatureSettings',
 					'icon' => 'features.gif',
 					'subsections' => array(
+						'core' => array($txt['core_settings_title']),
 						'basic' => array($txt['mods_cat_features']),
 						'security' => array($txt['mods_cat_security']),
 						'layout' => array($txt['mods_cat_layout']),
 						'karma' => array($txt['karma'], 'enabled' => in_array('k', $context['admin_features'])),
-						'moderation' => array($txt['moderation_settings_short']),
+						'moderation' => array($txt['moderation_settings_short'], 'enabled' => substr($modSettings['warning_settings'], 0, 1) == 1),
 						'sig' => array($txt['signature_settings_short']),
 						'profile' => array($txt['custom_profile_shorttitle'], 'enabled' => in_array('cp', $context['admin_features'])),
 					),

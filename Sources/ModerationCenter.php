@@ -58,6 +58,7 @@ function ModerationMain($dont_call = false)
 					'function' => 'ModerationHome',
 				),
 				'modlog' => array(
+					'enabled' => !empty($modSettings['modlog_enabled']),
 					'label' => $txt['modlog_view'],
 					'file' => 'Modlog.php',
 					'function' => 'ViewModlog',

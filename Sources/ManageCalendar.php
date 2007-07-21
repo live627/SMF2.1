@@ -45,7 +45,7 @@ function ManageCalendar()
 		'settings' => 'ModifyCalendarSettings'
 	);
 
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'settings';
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'holidays';
 
 	// Set up the two tabs here...
 	$context[$context['admin_menu_name']]['tab_data'] = array(
@@ -260,8 +260,7 @@ function ModifyCalendarSettings($return_config = false)
 	// Look, all the calendar settings - of which there are many!
 	$config_vars = array(
 			// All the permissions:
-			array('check', 'cal_enabled'),
-			array('permissions', 'calendar_view'),
+			array('permissions', 'calendar_view', 'help' => 'cal_enabled'),
 			array('permissions', 'calendar_post'),
 			array('permissions', 'calendar_edit_own'),
 			array('permissions', 'calendar_edit_any'),

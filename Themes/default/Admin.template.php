@@ -1817,16 +1817,22 @@ function template_core_features()
 		echo '
 		<tr class="', $alternate ? 'windowbg' : 'windowbg2', '" valign="top">
 			<td width="60">
-				<img src="', $settings['images_url'], '/on.gif" alt="', $feature['title'], '" />
+				<img src="', $settings['default_images_url'], '/admin/feature_', $id, '.gif" alt="', $feature['title'], '" />
 			</td>
 			<td>
 				<h4>', $feature['title'], '</h4>
 				<h6>', $feature['desc'], '</h6>
 			</td>
 			<td width="40">
-				<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');" />
-					<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.gif" id="switch_', $id, '" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />
-				</a>
+				<div id="js_feature_', $id, '" style="display: none;">
+					<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');" />
+						<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.gif" id="switch_', $id, '" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />
+					</a>
+				</div>
+				<div id="plain_feature_', $id, '">
+					<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_', $id, '" id="plain_feature_', $id, '_radio_on" value="1" ', $feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>
+					<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_', $id, '" id="plain_feature_', $id, '_radio_off" value="0" ', !$feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_disabled'], '</label>
+				</div>
 			</td>
 		</tr>';
 
@@ -1841,6 +1847,16 @@ function template_core_features()
 		</tr>
 	</table>
 	</form>';
+
+	// Turn on the pretty javascript if we can!
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+		foreach ($context['features'] as $id => $feature)
+			echo '
+		document.getElementById(\'js_feature_', $id, '\').style.display = "";
+		document.getElementById(\'plain_feature_', $id, '\').style.display = "none";';
+	echo '
+	// ]]></script>';
 }
 
 ?>
