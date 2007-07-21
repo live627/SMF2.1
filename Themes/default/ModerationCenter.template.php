@@ -391,7 +391,7 @@ function template_unapproved_posts()
 								', $item['counter'], '
 							</td>
 							<td width="75%" class="middletext">
-								&nbsp;<a href="', $scripturl, '#', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a>
+								&nbsp;<a href="', $scripturl, '#', $item['category']['id'], '">', $item['category']['name'], '</a> / <a href="', $scripturl, '?board=', $item['board']['id'], '.0">', $item['board']['name'], '</a> / <a href="', $scripturl, '?topic=', $item['topic']['id'], '.msg', $item['id'], '#msg', $item['id'], '">', $item['subject'], '</a>
 							</td>
 							<td class="middletext" align="right" style="padding: 0 1ex; white-space: nowrap;">
 								', $txt['mc_unapproved_by'], ' ', $item['poster']['link'], ' ', $txt['on'], ': ', $item['time'], '
