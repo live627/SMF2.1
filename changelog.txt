@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2750 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2751 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -15,6 +15,7 @@ July 2007
  ! The GET parameters were not correctly handling url encoded values. (QueryString.php)
  + Added initial support for OpenID.  (Lots of files)
  + Added start of "core feature" page for turning on and off big features. (ManageSettings.php, Admin.php, Admin template)
+ ! Don't allow searching of one character items. (Search.php, Errors language file)
 
 
 June 2007

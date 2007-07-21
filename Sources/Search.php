@@ -584,6 +584,12 @@ function PlushSearch2()
 	{
 		if (($searchArray[$index] = trim($value, '-_\' ')) === '' || in_array($searchArray[$index], $blacklisted_words))
 			unset($searchArray[$index]);
+		// Don't allow very, very short words.
+		elseif (strlen($value) < 2)
+		{
+			$context['search_errors']['search_string_small_words'] = true;
+			unset($searchArray[$index]);
+		}
 		else
 			$searchArray[$index] = $smfFunc['db_escape_string']($searchArray[$index]);
 	}
@@ -609,6 +615,9 @@ function PlushSearch2()
 		foreach ($searchArray as $index => $value)
 			$orParts[$index] = array($value);
 
+	// Don't allow duplicate error messages if one string is too short.
+	if (isset($context['search_errors']['search_string_small_words'], $context['search_errors']['invalid_search_string']))
+		unset($context['search_errors']['invalid_search_string']);
 	// Make sure the excluded words are in all or-branches.
 	foreach ($orParts as $orIndex => $andParts)
 		foreach ($excludedWords as $word)

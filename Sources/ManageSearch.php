@@ -90,7 +90,7 @@ function ManageSearch()
 	);
 
 	// Default the sub-action to 'edit search settings'.
-	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'settings';
+	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : 'weights';
 
 	$context['sub_action'] = $_REQUEST['sa'];
 

@@ -282,6 +282,7 @@ $txt['attachment_not_found'] = 'Attachment Not Found';
 
 $txt['error_no_boards_selected'] = 'No valid boards were selected!';
 $txt['error_invalid_search_string'] = 'Did you forget to put something to search for?';
+$txt['error_search_string_small_words'] = 'Each word must be at least two characters long.';
 $txt['error_query_not_specific_enough'] = 'Your search query didn\'t return any matches.';
 $txt['error_no_messages_in_time_frame'] = 'No messages found in selected time frame.';
 $txt['error_no_labels_selected'] = 'No labels were selected!';
