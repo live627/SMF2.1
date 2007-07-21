@@ -1222,7 +1222,7 @@ CREATE TABLE {$db_prefix}members (
   mod_prefs varchar(20) NOT NULL default '',
   message_labels text NOT NULL,
   passwd varchar(64) NOT NULL default '',
-  openid_uri tinytext NOT NULL,
+  openid_uri varchar(255) NOT NULL,
   email_address varchar(255) NOT NULL,
   personal_text varchar(255) NOT NULL,
   gender smallint NOT NULL default '0',
@@ -1380,14 +1380,19 @@ CREATE TABLE {$db_prefix}moderators (
 
 CREATE TABLE {$db_prefix}openid_assoc (
 	server_url text NOT NULL,
-	handle tinytext NOT NULL,
+	handle varchar(255) NOT NULL,
 	secret text NOT NULL,
-	issued int(11) NOT NULL,
-	expires int(11) NOT NULL,
+	issued int NOT NULL,
+	expires int NOT NULL,
 	assoc_type varchar(64) NOT NULL,
-	PRIMARY KEY  (`server_url`(255),`handle`(255)),
-	KEY `expires` (`expires`)
-) TYPE=MyISAM{$db_collation};
+	PRIMARY KEY (server_url, handle)
+);
+
+#
+# Indexes for table `openid_assoc`
+#
+
+CREATE INDEX {$db_prefix}openid_assoc_expires ON {$db_prefix}openid_assoc (expires);
 
 #
 # Table structure for table `package_servers`

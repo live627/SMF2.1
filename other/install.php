@@ -371,7 +371,7 @@ function doStep0()
 		if ($db['supported'])
 		{
 			if (!file_exists(dirname(__FILE__) . '/install_' . $GLOBALS['db_script_version'] . '_' . $key . '.sql'))
-				$databases[$key]['suppoted'] = false;
+				$databases[$key]['supported'] = false;
 			else
 			{
 				$db_type = $key;
@@ -1247,8 +1247,8 @@ function doStep2()
 
 		$request = $smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}members
-				(member_name, real_name, passwd, email_address, id_group, posts, date_registered, hide_email, password_salt, lngfile, personal_text, avatar, member_ip, member_ip2, buddy_list, pm_ignore_list, message_labels, website_title, website_url, location, icq, msn, signature, usertitle, secret_question, additional_groups, ignore_boards)
-			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '$ip', '$ip', '', '', '', '', '', '', '', '', '', '', '', '', '')", false, false);
+				(member_name, real_name, passwd, email_address, id_group, posts, date_registered, hide_email, password_salt, lngfile, personal_text, avatar, member_ip, member_ip2, buddy_list, pm_ignore_list, message_labels, website_title, website_url, location, icq, msn, signature, usertitle, secret_question, additional_groups, ignore_boards, openid_uri)
+			VALUES (SUBSTRING('$_POST[username]', 1, 25), SUBSTRING('$_POST[username]', 1, 25), '" . sha1(strtolower($_POST['username']) . $_POST['password1']) . "', '$_POST[email]', 1, '0', '" . time() . "', '0', '$salt', '', '', '', '$ip', '$ip', '', '', '', '', '', '', '', '', '', '', '', '', '', '')", false, false);
 
 		// Awww, crud!
 		if ($request === false)
