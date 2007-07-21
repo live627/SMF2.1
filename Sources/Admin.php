@@ -88,7 +88,8 @@ function AdminMain()
 	require_once($sourcedir . '/Subs-Menu.php');
 
 	// Some features we may have hidden.
-	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,k');
+	//!!! Temp until upgrade enabled for this!
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg');
 
 	// Define all the menu structure - see Subs-Menu.php for details!
 	$admin_areas = array(
@@ -168,7 +169,7 @@ function AdminMain()
 						'karma' => array($txt['karma'], 'enabled' => in_array('k', $context['admin_features'])),
 						'moderation' => array($txt['moderation_settings_short']),
 						'sig' => array($txt['signature_settings_short']),
-						'profile' => array($txt['custom_profile_shorttitle']),
+						'profile' => array($txt['custom_profile_shorttitle'], 'enabled' => in_array('cp', $context['admin_features'])),
 					),
 				),
 				'serversettings' => array(
@@ -372,6 +373,7 @@ function AdminMain()
 					),
 				),
 				'reports' => array(
+					'enabled' => in_array('rg', $context['admin_features']),
 					'label' => $txt['generate_reports'],
 					'file' => 'Reports.php',
 					'function' => 'ReportsMain',

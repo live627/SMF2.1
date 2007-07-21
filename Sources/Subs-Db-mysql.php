@@ -445,12 +445,13 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 {
 	global $smfFunc;
 
+	if (empty($data))
+		return;
+
 	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
 
 	$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
-	if (empty($data))
-		return;
 
 	foreach ($data as $key => $entry)
 		$data[$key] = '(' . implode(', ', $entry) . ')';

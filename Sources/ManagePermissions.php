@@ -314,6 +314,7 @@ function PermissionIndex()
 		$request = $smfFunc['db_query']('', "
 			SELECT id_group, COUNT(*) AS num_permissions, add_deny
 			FROM {$db_prefix}permissions
+			" . (empty($context['hidden_permissions']) ? '' : " WHERE permission NOT IN ('" . implode("', '", $context['hidden_permissions']) . "')") . "
 			GROUP BY id_group, add_deny", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (isset($context['groups'][(int) $row['id_group']]) && (!empty($row['add_deny']) || $row['id_group'] != -1))
@@ -325,6 +326,7 @@ function PermissionIndex()
 			SELECT id_profile, id_group, COUNT(*) AS num_permissions, add_deny
 			FROM {$db_prefix}board_permissions
 			WHERE id_profile = 1
+			" . (empty($context['hidden_permissions']) ? '' : " AND permission NOT IN ('" . implode("', '", $context['hidden_permissions']) . "')") . "
 			GROUP BY id_profile, id_group, add_deny", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -1241,7 +1243,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		$groupInserts = array();
 		foreach ($groupLevels['global'][$level] as $level)
-			$groupInserts[] = array($group, $level);
+			$groupInserts[] = array($group, "'$level'");
 
 		$smfFunc['db_insert']('insert',
 			"{$db_prefix}permissions",
@@ -1251,7 +1253,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		$boardInserts = array();
 		foreach ($groupLevels['board'][$level] as $level)
-			$boardInserts[] = array(1, $group, $level);
+			$boardInserts[] = array(1, $group, "'$level'");
 
 		$smfFunc['db_insert']('insert',
 			"{$db_prefix}board_permissions",
@@ -1277,7 +1279,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		{
 			$boardInserts = array();
 			foreach ($groupLevels['board'][$level] as $level)
-				$boardInserts[] = array($profile, $group, $level);
+				$boardInserts[] = array($profile, $group, "'$level'");
 
 			$smfFunc['db_insert']('insert',
 				"{$db_prefix}board_permissions",
@@ -1310,7 +1312,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 			$boardInserts = array();
 			foreach ($boardLevels[$level] as $level)
-				$boardInserts[] = array($profile, $group, $level);
+				$boardInserts[] = array($profile, $group, "'$level'");
 
 			$smfFunc['db_insert']('insert',
 				"{$db_prefix}board_permissions",
@@ -1323,7 +1325,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		// Add permissions for ungrouped members.
 		$boardInserts = array();
 		foreach ($boardLevels[$level] as $level)
-			$boardInserts[] = array($profile, 0, $level);
+			$boardInserts[] = array($profile, 0, "'$level'");
 
 		$smfFunc['db_insert']('insert',
 				"{$db_prefix}board_permissions",
@@ -1487,10 +1489,15 @@ function loadAllPermissions()
 	);
 
 	// Some permissions are hidden if features are off.
+	$hiddenPermissions = array();
+	$hiddenGroups = array();
 	if (!in_array('cd', $context['admin_features']))
-		unset($permissionList['membergroup']['calendar']);
+		$hiddenGroups[] = 'calendar';
+	if (!in_array('wn', $context['admin_features']))
+		$hiddenPermissions[] = 'issue_warning';
 
 	$context['permissions'] = array();
+	$context['hidden_permissions'] = array();
 	foreach ($permissionList as $permissionType => $permissionGroups)
 	{
 		$context['permissions'][$permissionType] = array(
@@ -1509,6 +1516,7 @@ function loadAllPermissions()
 				'name' => &$txt['permissiongroup_' . $permissionGroup],
 				'icon' => isset($txt['permissionicon_' . $permissionGroup]) ? $txt['permissionicon_' . $permissionGroup] : $txt['permissionicon'],
 				'help' => isset($txt['permissionhelp_' . $permissionGroup]) ? $txt['permissionhelp_' . $permissionGroup] : '',
+				'hidden' => in_array($permissionGroup, $hiddenGroups),
 				'permissions' => array()
 			);
 
@@ -1529,8 +1537,12 @@ function loadAllPermissions()
 					'any' => array(
 						'id' => $perm . '_any',
 						'name' => $has_own_any ? $txt['permissionname_' . $perm . '_any'] : ''
-					)
+					),
+					'hidden' => in_array($perm, $hiddenPermissions),
 				);
+
+				if (in_array($perm, $hiddenPermissions) || in_array($permissionGroup, $hiddenGroups))
+					$context['hidden_permissions'][] = $perm;
 			}
 
 			if (empty($context['permissions'][$permissionType]['columns'][$position][$permissionGroup]['permissions']))

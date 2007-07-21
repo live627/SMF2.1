@@ -192,8 +192,14 @@ $txt['core_settings_title'] = 'Core Features';
 $txt['core_settings_welcome_msg'] = 'Welcome to your new forum - to get you started we suggest you turn on only those features you need at this stage.';
 $txt['core_settings_item_cd'] = 'Calendar';
 $txt['core_settings_item_cd_desc'] = 'Enabling this feature will open up a selection of options to enable your users to view the calendar, add and review events, see users birthdates on a calendar and much, much more.';
+$txt['core_settings_item_cp'] = 'Advanced Profile Fields';
+$txt['core_settings_item_cp_desc'] = 'This enables you to hide standard profile fields, add profile fields to registration, and create new profile fields for your forum.';
 $txt['core_settings_item_k'] = 'Karma';
 $txt['core_settings_item_k_desc'] = 'Karma is a feature that shows the popularity of a member. Members, if allowed, can \'applaud\' or \'smite\' other members, which is how their popularity is calculated.';
+$txt['core_settings_item_rg'] = 'Report Generation';
+$txt['core_settings_item_rg_desc'] = 'This administration feature allows the generation of reports (Which can be printed) to present your current forum setup in an easy to view manner - particularly useful for large forums.';
+$txt['core_settings_item_w'] = 'Warning System';
+$txt['core_settings_item_w_desc'] = 'This functionality allows administrators and moderators to issue warnings to users; it also includes advanced functionality for automatically removing user rights as their warning level increases.';
 $txt['core_settings_switch_on'] = 'Click to Enable';
 $txt['core_settings_switch_off'] = 'Click to Disable';
 

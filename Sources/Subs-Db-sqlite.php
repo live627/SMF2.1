@@ -463,6 +463,9 @@ function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = 
 {
 	global $db_in_transact, $smfFunc;
 
+	if (empty($data))
+		return;
+
 	if (!is_array($data[array_rand($data)]))
 		$data = array($data);
 

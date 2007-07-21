@@ -184,6 +184,8 @@ function ModifyCoreFeatures($return_config = false)
 		desc		- Description of this feature (If standard string does not exist).
 		image		- Custom image to show next to feature.
 		settings	- Array of settings to change (For each name => value) on enable - reverse is done for disable. If > 1 will not change value if set.
+		setting_callback- Function that returns an array of settings to save - takes one parameter which is value for this feature.
+		save_callback	- Function called on save, takes state as parameter.
 	*/
 	$core_features = array(
 		// cd = calendar.
@@ -192,11 +194,41 @@ function ModifyCoreFeatures($return_config = false)
 				'cal_enabled' => 1,
 			),
 		),
+		// cp = custom profile fields.
+		'cp' => array(
+			'save_callback' => create_function('$value', '
+				global $smfFunc, $db_prefix;
+				if (!$value)
+				{
+					$smfFunc[\'db_query\'](\'\', "
+						UPDATE {$db_prefix}custom_fields
+						SET active = 0", __FILE__, __LINE__);
+				}
+			'),
+			'setting_callback' => create_function('$value', '
+				return array(
+					\'disabled_profile_fields\' => \'\',
+					\'registration_fields\' => \'\',
+				);
+			'),
+		),
 		// k = karma.
 		'k' => array(
 			'settings' => array(
 				'karmaMode' => 2,
 			),
+		),
+		// rg = report generator.
+		'rg' => array(
+		),
+		// wn = warning.
+		'w' => array(
+			'setting_callback' => create_function('$value', '
+				global $modSettings;
+				list ($modSettings[\'warning_enable\'], $modSettings[\'user_limit\'], $modSettings[\'warning_decrement\']) = explode(\',\', $modSettings[\'warning_settings\']);
+				$warning_settings = ($value ? 1 : 0) . \',\' . $modSettings[\'user_limit\'] . \',\' . $modSettings[\'warning_decrement\'];
+				return array(\'warning_settings\' => $warning_settings);
+			'),
 		),
 	);
 
@@ -221,6 +253,13 @@ function ModifyCoreFeatures($return_config = false)
 						$setting_changes[$key] = !empty($_POST['feature_' . $id]) ? $value : !$value;
 				}
 			}
+			// Is there a call back for settings?
+			if (isset($feature['setting_callback']))
+				$setting_changes = array_merge($setting_changes, $feature['setting_callback'](!empty($_POST['feature_' . $id])));
+
+			// Standard save callback?
+			if (isset($feature['save_callback']))
+				$feature['save_callback'](!empty($_POST['feature_' . $id]));
 		}
 
 		// Make sure this one setting is a string!
