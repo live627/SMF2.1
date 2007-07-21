@@ -430,7 +430,7 @@ function template_modify_group()
 						foreach ($permissionGroup['permissions'] as $permission)
 						{
 							// If it's hidden keep the last value.
-							if ($permission['hidden'])
+							if ($permission['hidden'] || $permissionGroup['hidden'])
 							{
 								if ($permission['has_own_any'])
 									echo '

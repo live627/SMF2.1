@@ -226,6 +226,16 @@ function ModifyCoreFeatures($return_config = false)
 				'modlog_enabled' => 1,
 			),
 		),
+		// pm = post moderation.
+		'pm' => array(
+			'setting_callback' => create_function('$value', '
+				// Cant use warning post moderation if disabled!
+				if (!$value)
+					return array(\'warning_moderate\' => 0);
+				else
+					return array();
+			'),
+		),
 		// rg = report generator.
 		'rg' => array(
 		),
@@ -257,11 +267,14 @@ function ModifyCoreFeatures($return_config = false)
 	{
 		$setting_changes = array('admin_features' => array());
 
+		// Are we using the javascript stuff or radios to submit?
+		$post_var_prefix = empty($_POST['js_worked']) ? 'feature_plain_' : 'feature_';
+
 		// Cycle each feature and change things as required!
 		foreach ($core_features as $id => $feature)
 		{
 			// Enabled?
-			if (!empty($_POST['feature_' . $id]))
+			if (!empty($_POST[$post_var_prefix . $id]))
 				$setting_changes['admin_features'][] = $id;
 
 			// Setting values to change?
@@ -269,17 +282,21 @@ function ModifyCoreFeatures($return_config = false)
 			{
 				foreach ($feature['settings'] as $key => $value)
 				{
-					if (empty($_POST['feature_' . $id]) || (!empty($_POST['feature_' . $id]) && ($value < 2 || empty($modSettings[$key]))))
-						$setting_changes[$key] = !empty($_POST['feature_' . $id]) ? $value : !$value;
+					if (empty($_POST[$post_var_prefix . $id]) || (!empty($_POST[$post_var_prefix . $id]) && ($value < 2 || empty($modSettings[$key]))))
+						$setting_changes[$key] = !empty($_POST[$post_var_prefix . $id]) ? $value : !$value;
 				}
 			}
 			// Is there a call back for settings?
 			if (isset($feature['setting_callback']))
-				$setting_changes = array_merge($setting_changes, $feature['setting_callback'](!empty($_POST['feature_' . $id])));
+			{
+				$returned_settings = $feature['setting_callback'](!empty($_POST[$post_var_prefix . $id]));
+				if (!empty($returned_settings))
+					$setting_changes = array_merge($setting_changes, $returned_settings);
+			}
 
 			// Standard save callback?
 			if (isset($feature['save_callback']))
-				$feature['save_callback'](!empty($_POST['feature_' . $id]));
+				$feature['save_callback'](!empty($_POST[$post_var_prefix . $id]));
 		}
 
 		// Make sure this one setting is a string!
@@ -302,6 +319,11 @@ function ModifyCoreFeatures($return_config = false)
 
 	// Are they a new user?
 	$context['is_new_install'] = !isset($modSettings['admin_features']);
+	$context['force_disable_tabs'] = $context['is_new_install'];
+	// Don't show them this twice!
+	if ($context['is_new_install'])
+		updateSettings(array('admin_features' => ''));
+
 	$context['sub_template'] = 'core_features';
 }
 
@@ -505,7 +527,7 @@ function ModifyModerationSettings($return_config = false)
 	$config_vars = array(
 			// Warning system?
 			array('int', 'warning_watch', 'help' => 'warning_enable'),
-			array('int', 'warning_moderate'),
+			'moderate' => array('int', 'warning_moderate'),
 			array('int', 'warning_mute'),
 			'rem1' => array('int', 'user_limit'),
 			'rem2' => array('int', 'warning_decrement'),
@@ -514,6 +536,10 @@ function ModifyModerationSettings($return_config = false)
 
 	if ($return_config)
 		return $config_vars;
+
+	// Cannot use moderation if post moderation is not enabled.
+	if (!in_array('pm', $context['admin_features']))
+		unset($config_vars['moderate']);
 
 	// Saving?
 	if (isset($_GET['save']))
@@ -530,7 +556,7 @@ function ModifyModerationSettings($return_config = false)
 		else
 		{
 			$_POST['warning_watch'] = min($_POST['warning_watch'], 100);
-			$_POST['warning_moderate'] = min($_POST['warning_moderate'], 100);
+			$_POST['warning_moderate'] = in_array('pm', $modSettings['admin_features']) ? min($_POST['warning_moderate'], 100) : 0;
 			$_POST['warning_mute'] = min($_POST['warning_mute'], 100);
 		}
 

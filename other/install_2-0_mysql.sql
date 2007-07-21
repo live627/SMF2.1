@@ -1668,6 +1668,7 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('warning_watch', '10'),
 	('warning_moderate', '35'),
 	('warning_mute', '60'),
+	('admin_features', ''),
 	('last_mod_report_action', '0');
 # --------------------------------------------------------
 

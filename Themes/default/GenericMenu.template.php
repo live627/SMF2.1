@@ -70,7 +70,7 @@ function template_generic_menu_sidebar_above()
 
 	// If there are any "tabs" setup, this is the place to shown them.
 	//!!! Clean this up!
-	if (!empty($context['tabs']))
+	if (!empty($context['tabs']) && empty($context['force_disable_tabs']))
 		template_generic_menu_tabs($menu_context);
 }
 

@@ -1797,8 +1797,13 @@ function template_core_features()
 	if ($context['is_new_install'])
 	{
 		echo '
-		<div>
-			', $txt['core_settings_welcome_msg'], '
+		<div align="center">
+			<div align="center" style="padding: 3px; width: 80%; border: 2px dashed darkblue; background-color: white;">
+				<h2 style="text-decoration: underline; display: inline;">', $txt['core_settings_welcome_msg'], '</h2>
+				<div align="left">
+					<h5 style="display: inline;">', $txt['core_settings_welcome_msg_desc'], '</h5>
+				</div>
+			</div>
 		</div>';
 	}
 
@@ -1830,8 +1835,8 @@ function template_core_features()
 					</a>
 				</div>
 				<div id="plain_feature_', $id, '">
-					<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_', $id, '" id="plain_feature_', $id, '_radio_on" value="1" ', $feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>
-					<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_', $id, '" id="plain_feature_', $id, '_radio_off" value="0" ', !$feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_disabled'], '</label>
+					<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_on" value="1" ', $feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>
+					<label for="plain_feature_', $id, '_radio_off"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_off" value="0" ', !$feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_disabled'], '</label>
 				</div>
 			</td>
 		</tr>';
@@ -1842,6 +1847,7 @@ function template_core_features()
 	echo '
 		<tr class="catbg">
 			<td colspan="3" align="right">
+				<input type="hidden" value="0" name="js_worked" id="js_worked" />
 				<input type="submit" value="', $txt['save'], '" name="save" />
 			</td>
 		</tr>
@@ -1850,7 +1856,8 @@ function template_core_features()
 
 	// Turn on the pretty javascript if we can!
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		document.getElementById(\'js_worked\').value = "1";';
 		foreach ($context['features'] as $id => $feature)
 			echo '
 		document.getElementById(\'js_feature_', $id, '\').style.display = "";

@@ -89,7 +89,7 @@ function AdminMain()
 
 	// Some features we may have hidden.
 	//!!! Temp until upgrade enabled for this!
-	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml');
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
 
 	// Define all the menu structure - see Subs-Menu.php for details!
 	$admin_areas = array(

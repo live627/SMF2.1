@@ -1450,6 +1450,28 @@ DROP PRIMARY KEY,
 ADD PRIMARY KEY (ip(16), log_type(8));
 ---#
 
+---# Implementing admin feature toggles.
+---{
+if (!isset($modSettings['admin_features']))
+{
+	// Work out what they used to have enabled.
+	$enabled_features = array('rg');
+	if (!empty($modSettings['cal_enabled']))
+		$enabled_features[] = 'cd';
+	if (!empty($modSettings['karmaMode']))
+		$enabled_features[] = 'k';
+	if (!empty($modSettings['modlog_enabled']))
+		$enabled_features[] = 'ml';
+
+	upgrade_query("
+		INSERT INTO {$db_prefix}settings
+			(variable, value)
+		VALUES
+			('admin_features', '$enabled_features')");
+}
+---}
+---#
+
 /******************************************************************************/
 --- Adding some columns to moderation log
 /******************************************************************************/

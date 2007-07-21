@@ -1495,6 +1495,8 @@ function loadAllPermissions()
 		$hiddenGroups[] = 'calendar';
 	if (!in_array('wn', $context['admin_features']))
 		$hiddenPermissions[] = 'issue_warning';
+	if (!in_array('pm', $context['admin_features']))
+		$hiddenGroups[] = 'approval';
 
 	$context['permissions'] = array();
 	$context['hidden_permissions'] = array();

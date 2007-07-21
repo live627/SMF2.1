@@ -48,6 +48,8 @@ function ModerationMain($dont_call = false)
 	// Load the language, and the template.
 	loadLanguage('ModerationCenter');
 
+	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
+
 	// This is the menu structure - refer to Subs-Menu.php for the details.
 	$moderation_areas = array(
 		'main' => array(
@@ -88,6 +90,7 @@ function ModerationMain($dont_call = false)
 			'areas' => array(
 				'postmod' => array(
 					'label' => $txt['mc_unapproved_posts'],
+					'enabled' => in_array('pm', $context['admin_features']),
 					'file' => 'PostModeration.php',
 					'function' => 'PostModerationMain',
 					'custom_url' => $scripturl . '?action=moderate;area=postmod;sa=posts',
@@ -98,6 +101,7 @@ function ModerationMain($dont_call = false)
 				),
 				'attachmod' => array(
 					'label' => $txt['mc_unapproved_attachments'],
+					'enabled' => in_array('pm', $context['admin_features']),
 					'file' => 'PostModeration.php',
 					'function' => 'PostModerationMain',
 					'custom_url' => $scripturl . '?action=moderate;area=attachmod;sa=attachments',
