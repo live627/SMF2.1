@@ -1688,8 +1688,8 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}openid_assoc (
 	server_url text NOT NULL,
 	handle tinytext NOT NULL,
 	secret text NOT NULL,
-	issued int(11) NOT NULL,
-	expires int(11) NOT NULL,
+	issued int(10) NOT NULL default '0',
+	expires int(10) NOT NULL default '0',
 	assoc_type varchar(64) NOT NULL,
 	PRIMARY KEY  (server_url(255), handle(255)),
 	KEY expires (expires)

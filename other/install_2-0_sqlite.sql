@@ -1379,13 +1379,13 @@ CREATE TABLE {$db_prefix}moderators (
 #
 
 CREATE TABLE {$db_prefix}openid_assoc (
-	server_url text NOT NULL,
-	handle varchar(255) NOT NULL,
-	secret text NOT NULL,
-	issued int NOT NULL,
-	expires int NOT NULL,
-	assoc_type varchar(64) NOT NULL,
-	PRIMARY KEY (server_url, handle)
+  server_url text NOT NULL,
+  handle varchar(255) NOT NULL,
+  secret text NOT NULL,
+  issued int NOT NULL default '0',
+  expires int NOT NULL default '0',
+  assoc_type varchar(64) NOT NULL,
+  PRIMARY KEY (server_url, handle)
 );
 
 #

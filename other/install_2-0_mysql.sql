@@ -1273,15 +1273,15 @@ CREATE TABLE {$db_prefix}moderators (
 #
 
 CREATE TABLE {$db_prefix}openid_assoc (
-	server_url text NOT NULL,
-	handle tinytext NOT NULL,
-	secret text NOT NULL,
-	issued int(11) NOT NULL,
-	expires int(11) NOT NULL,
-	assoc_type varchar(64) NOT NULL,
-	PRIMARY KEY  (server_url(255), handle(255)),
-	KEY expires (expires)
-) TYPE=MyISAM{$db_collation};
+  server_url text NOT NULL,
+  handle tinytext NOT NULL,
+  secret text NOT NULL,
+  issued int(10) NOT NULL default '0',
+  expires int(10) NOT NULL default '0',
+  assoc_type varchar(64) NOT NULL,
+  PRIMARY KEY (server_url(255), handle(255)),
+  KEY expires (expires)
+) TYPE=MyISAM;
 
 #
 # Table structure for table `package_servers`
