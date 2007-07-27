@@ -86,7 +86,7 @@ elseif (isset($_COOKIE['ssi_theme']) && (int) $_COOKIE['ssi_theme'] == (int) $ss
 	die('Hacking attempt...');
 elseif (isset($_REQUEST['ssi_layers']))
 {
-	if ((get_magic_quotes_gpc() ? addslashes($_REQUEST['ssi_layers']) : $_REQUEST['ssi_layers']) == htmlspecialchars($ssi_layers))
+	if ((function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() ? addslashes($_REQUEST['ssi_layers']) : $_REQUEST['ssi_layers']) == htmlspecialchars($ssi_layers))
 		die('Hacking attempt...');
 }
 if (isset($_REQUEST['context']))
@@ -171,7 +171,8 @@ elseif (basename($_SERVER['PHP_SELF']) == 'SSI.php')
 	die(sprintf($txt['ssi_not_direct'], $user_info['is_admin'] ? '\'' . addslashes(__FILE__) . '\'' : '\'SSI.php\''));
 
 error_reporting($ssi_error_reporting);
-@set_magic_quotes_runtime($ssi_magic_quotes_runtime);
+if (function_exists('set_magic_quotes_runtime'))
+	@set_magic_quotes_runtime($ssi_magic_quotes_runtime);
 
 return true;
 

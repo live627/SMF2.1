@@ -155,6 +155,7 @@ $txt['error_db_queries_line'] = 'Line #';
 $txt['error_db_missing'] = 'The installer was unable to detect any database support in PHP.  Please ask your host to ensure that PHP was compiled with the desired database, or that the proper extension is being loaded.';
 $txt['error_session_missing'] = 'The installer was unable to detect sessions support in your server\'s installation of PHP.  Please ask your host to ensure that PHP was compiled with session support (in fact, it has to be explicitly compiled without it.)';
 $txt['error_user_settings_again_match'] = 'You typed in two completely different passwords!';
+$txt['error_user_settings_no_password'] = 'Your password must be at least four characters long.';
 $txt['error_user_settings_taken'] = 'Sorry, a member is already registered with that username and/or email address.<br /><br />A new account has not been created.';
 $txt['error_user_settings_query'] = 'A database error occurred while trying to create an administrator.  This error was:';
 $txt['error_subs_missing'] = 'Unable to find the Sources/Subs.php file.  Please make sure it was uploaded properly, and then try again.';

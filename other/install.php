@@ -210,7 +210,7 @@ function initialize_inputs()
 	}
 
 	// Add slashes, as long as they aren't already being added.
-	if (get_magic_quotes_gpc() == 0)
+	if (!function_exists('get_magic_quotes_gpc') || get_magic_quotes_gpc() == 0)
 	{
 		foreach ($_POST as $k => $v)
 			$_POST[$k] = addslashes($v);
@@ -1139,6 +1139,17 @@ function doStep2()
 		echo '
 				<div class="error_message">
 					<div style="color: red;">', $txt['error_user_settings_again_match'], '</div>
+				</div>
+				<br />';
+
+		return doStep2a();
+	}
+	// No password?
+	elseif (strlen($_POST['password1']) < 4)
+	{
+		echo '
+				<div class="error_message">
+					<div style="color: red;">', $txt['error_user_settings_no_password'], '</div>
 				</div>
 				<br />';
 
