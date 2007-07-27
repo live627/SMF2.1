@@ -67,11 +67,11 @@ function MoveTopic()
 			INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
 		WHERE t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	list ($id_member_started, $context['subject'], $approved) = $smfFunc['db_fetch_row']($request);
+	list ($id_member_started, $context['subject'], $context['is_approved']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Can they see it - if not approved?
-	if (!$approved)
+	if (!$context['is_approved'])
 		isAllowedTo('approve_posts');
 
 	// Permission check!
@@ -161,11 +161,11 @@ function MoveTopic2()
 		FROM {$db_prefix}topics
 		WHERE id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
-	list ($id_member_started, $id_first_msg, $approved) = $smfFunc['db_fetch_row']($request);
+	list ($id_member_started, $id_first_msg, $context['is_approved']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Can they see it?
-	if (!$approved)
+	if (!$context['is_approved'])
 		isAllowedTo('approve_posts');
 
 	// Can they move topics on this board?
@@ -183,7 +183,7 @@ function MoveTopic2()
 		$boards = boardsAllowedTo('move_any');
 
 	// If this topic isn't approved don't let them move it if they can't approve it!
-	if (!$approved && !allowedTo('approve_posts'))
+	if (!$context['is_approved'] && !allowedTo('approve_posts'))
 	{
 		// Only allow them to move it to other boards they can't approve it in.
 		$can_approve = boardsAllowedTo('approve_posts');

@@ -469,6 +469,7 @@ $txt['moveTopic1'] = 'Post a redirection topic';
 $txt['moveTopic2'] = 'Change the topic\'s subject';
 $txt['moveTopic3'] = 'New subject';
 $txt['moveTopic4'] = 'Change every message\'s subject';
+$txt['move_topic_unapproved_js'] = 'Warning! This topic has not yet been approved.\\n\\nIt is not recommended that you create a redirection topic unless you intend to approve the post immediately following the move.';
 
 $txt['theme_template_error'] = 'Unable to load the \'%s\' template.';
 $txt['theme_language_error'] = 'Unable to load the \'%s\' language file.';
