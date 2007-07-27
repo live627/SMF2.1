@@ -751,7 +751,7 @@ $txtChanges = array(
 		'poll_options3' => 'poll_results_voted',
 		'poll_options4' => 'poll_results_expire',
 		'poll_options5' => 'poll_max_votes',
-		'poll_options7' => 'poll_change_vote',
+		'poll_options7' => 'poll_do_change_vote',
 		'poll_error1' => 'poll_too_many_votes',
 	),
 	'Profile' => array(
