@@ -61,7 +61,7 @@ $upgradeurl = $_SERVER['PHP_SELF'];
 // Where the SMF images etc are kept.
 $smfsite = 'http://www.simplemachines.org/smf';
 // Disable the need for admins to login?
-$disable_security = 1;
+$disable_security = 0;
 // How long, in seconds, must admin be inactive to allow someone else to run?
 $upcontext['inactive_timeout'] = 10;
 
