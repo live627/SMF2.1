@@ -168,7 +168,8 @@ function initialize_inputs()
 	global $databases;
 
 	// Turn off magic quotes runtime and enable error reporting.
-	@set_magic_quotes_runtime(0);
+	if (function_exists('set_magic_quotes_runtime'))
+		@set_magic_quotes_runtime(0);
 	error_reporting(E_ALL);
 
 	// Fun.  Low PHP version...
@@ -390,7 +391,7 @@ function doStep0()
 		$error = 'error_missing_files';
 	// Very simple check on the session.save_path for Windows.
 	// !!! Move this down later if they don't use database-driven sessions?
-	elseif (session_save_path() == '/tmp' && substr(__FILE__, 1, 2) == ':\\')
+	elseif (@ini_get('session.save_path') == '/tmp' && substr(__FILE__, 1, 2) == ':\\')
 		$error = 'error_session_save_path';
 
 	// Since each of the three messages would look the same, anyway...

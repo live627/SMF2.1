@@ -1316,7 +1316,7 @@ function Post2()
 		preparsecode($_POST['message']);
 
 		// Let's see if there's still some content left without the tags.
-		if ($smfFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '')
+		if ($smfFunc['htmltrim'](strip_tags(parse_bbc($_POST['message'], false), '<img>')) === '' && (!allowedTo('admin_forum') || strpos($_POST['message'], '[html]') === false))
 			$post_errors[] = 'no_message';
 	}
 	if (isset($_POST['calendar']) && !isset($_REQUEST['deleteevent']) && $smfFunc['htmltrim']($_POST['evtitle']) === '')

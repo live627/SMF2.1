@@ -185,7 +185,7 @@ function cleanRequest()
 	$_GET = htmlspecialchars__recursive($_GET);
 
 	// If we're using a database with quote escaped quotes and magic quotes is on we have some work...
-	if (get_magic_quotes_gpc() != 0 && $smfFunc['db_sybase'] && !$magicSybase)
+	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && $smfFunc['db_sybase'] && !$magicSybase)
 	{
 		$_ENV = stripslashes__recursive($_ENV);
 		$_POST = stripslashes__recursive($_POST);
@@ -194,7 +194,7 @@ function cleanRequest()
 			$_FILES[$k]['name'] = stripslashes__recursive($_FILES[$k]['name']);
 	}
 	// Emulate magic quotes!
-	if ((get_magic_quotes_gpc() == 0 && empty($modSettings['integrate_magic_quotes'])) || ($smfFunc['db_sybase'] && !$magicSybase))
+	if (!function_exists('get_magic_quotes_gpc') || (get_magic_quotes_gpc() == 0 && empty($modSettings['integrate_magic_quotes'])) || ($smfFunc['db_sybase'] && !$magicSybase))
 	{
 		// E(G)PCS: ENV, (GET was already done), POST, COOKIE, SERVER.
 		$_ENV = escapestring__recursive($_ENV);

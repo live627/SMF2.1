@@ -38,7 +38,8 @@ $forum_version = 'SMF 2.0 Beta 1';
 
 // Get everything started up...
 define('SMF', 1);
-@set_magic_quotes_runtime(0);
+if (function_exists('set_magic_quotes_runtime'))
+	@set_magic_quotes_runtime(0);
 error_reporting(defined('E_STRICT') ? E_ALL | E_STRICT : E_ALL);
 $time_start = microtime();
 

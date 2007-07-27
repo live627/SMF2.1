@@ -648,20 +648,32 @@ function VerificationCode()
 // See if a username already exists.
 function RegisterCheckUsername()
 {
-	global $sourcedir, $smfFunc, $context;
+	global $sourcedir, $smfFunc, $context, $txt;
 
 	// This is XML!
 	loadTemplate('Xml');
 	$context['sub_template'] = 'check_username';
 	$context['checked_username'] = isset($_GET['username']) ? $_GET['username'] : '';
+	$context['valid_username'] = true;
 
-	if (empty($_GET['username']))
+	// Clean it up like mother would.
+	$context['checked_username'] = preg_replace('~[\t\n\r\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0') . ']+~' . ($context['utf8'] ? 'u' : ''), ' ', $context['checked_username']);
+	if ($smfFunc['strlen']($context['checked_username']) > 25)
+		$context['checked_username'] = $smfFunc['htmltrim']($smfFunc['substr']($context['checked_username'], 0, 25));
+
+	// Only these characters are permitted.
+	if (preg_match('~[<>&"\'=\\\]~', $context['checked_username']) != 0 || $context['checked_username'] == '_' || $context['checked_username'] == '|' || strpos($context['checked_username'], '[code') !== false || strpos($context['checked_username'], '[/code') !== false)
+		$context['valid_username'] = false;
+
+	if (stristr($context['checked_username'], $txt['guest_title']) !== false)
+		$context['valid_username'] = false;
+
+	if (trim($context['checked_username']) == '')
 		$context['valid_username'] = false;
 	else
 	{
 		require_once($sourcedir . '/Subs-Members.php');
-		$context['valid_username'] = $smfFunc['strlen']($_GET['username']) <= 60;
-		$context['valid_username'] &= isReservedName($_GET['username'], 0, false, false) ? 0 : 1;
+		$context['valid_username'] &= isReservedName($context['checked_username'], 0, false, false) ? 0 : 1;
 	}
 }
 
