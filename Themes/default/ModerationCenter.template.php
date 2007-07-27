@@ -137,7 +137,7 @@ function template_group_requests_block()
 	if (empty($context['group_requests']))
 		echo '
 		<tr>
-			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2;">
+			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2px;">
 				<b class="smalltext">', $txt['mc_group_requests_none'], '</b>
 			</td>
 		</tr>';
@@ -176,7 +176,7 @@ function template_reported_posts_block()
 	if (empty($context['reported_posts']))
 		echo '
 		<tr>
-			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2;">
+			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2px;">
 				<b class="smalltext">', $txt['mc_recent_reports_none'], '</b>
 			</td>
 		</tr>';
@@ -214,7 +214,7 @@ function template_watched_users()
 	if (empty($context['watched_users']))
 		echo '
 		<tr>
-			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2;">
+			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2px;">
 				<b class="smalltext">', $txt['mc_watched_users_none'], '</b>
 			</td>
 		</tr>';
