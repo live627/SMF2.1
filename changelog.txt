@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2751 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2752 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -16,6 +16,7 @@ July 2007
  + Added initial support for OpenID.  (Lots of files)
  + Added start of "core feature" page for turning on and off big features. (ManageSettings.php, Admin.php, Admin template)
  ! Don't allow searching of one character items. (Search.php, Errors language file)
+ ! Attempt to make Personal Message conversations work on PostgreSQL. (PersonalMessage.php)
 
 
 June 2007

@@ -1691,12 +1691,12 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}openid_assoc (
 	issued int(11) NOT NULL,
 	expires int(11) NOT NULL,
 	assoc_type varchar(64) NOT NULL,
-	PRIMARY KEY  (`server_url`(255),`handle`(255)),
-	KEY `expires` (`expires`)
+	PRIMARY KEY  (server_url(255), handle(255)),
+	KEY expires (expires)
 ) TYPE=MyISAM{$db_collation};
 ---#
 
----# Adding column to hold Open ID URL
+---# Adding column to hold Open ID URL...
 ALTER TABLE {$db_prefix}members
 ADD openid_uri text NOT NULL;
 ---#

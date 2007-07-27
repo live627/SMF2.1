@@ -498,21 +498,62 @@ function MessageFolder()
 	// First work out what messages we need to see - if grouped is a little trickier...
 	if ($context['display_mode'] == 2)
 	{
-		$request = $smfFunc['db_query']('', "
-			SELECT MAX(pm.id_pm) AS id_pm, pm.id_pm_head
-			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? "
-				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
-				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
-					AND pmr.id_member = $user_info[id]
-					AND pmr.deleted = 0
-					$labelQuery)") . ($context['sort_by'] == 'name' ? ("
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
-			WHERE " . ($context['folder'] == 'sent' ? "pm.id_member_from = $user_info[id]
-				AND pm.deleted_by_sender = 0" : "1=1") . (empty($_GET['pmsg']) ? '' : "
-				AND pm.id_pm = " . (int) $_GET['pmsg']) . "
-			GROUP BY pm.id_pm_head
-			ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
-			LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+		// On a non-default sort due to PostgreSQL we have to do a harder sort.
+		if ($smfFunc['db_title'] == 'PostgreSQL' && $_GET['sort'] != 'pm.id_pm')
+		{
+			$sub_request = $smfFunc['db_query']('', "
+				SELECT MAX($_GET[sort]) AS sort_param, pm.id_pm_head
+				FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? "
+					LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
+					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = $user_info[id]
+						AND pmr.deleted = 0
+						$labelQuery)") . ($context['sort_by'] == 'name' ? ("
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
+				WHERE " . ($context['folder'] == 'sent' ? "pm.id_member_from = $user_info[id]
+					AND pm.deleted_by_sender = 0" : "1=1") . (empty($_GET['pmsg']) ? '' : "
+					AND pm.id_pm = " . (int) $_GET['pmsg']) . "
+				GROUP BY pm.id_pm_head
+				ORDER BY sort_param" . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
+				LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+			$sub_pms = array();
+			while ($row = $smfFunc['db_fetch_assoc']($sub_request))
+			{
+				$sub_pms[$row['id_pm_head']] = $row['sort_param'];
+			}
+			$smfFunc['db_free_result']($sub_request);
+
+			$request = $smfFunc['db_query']('', "
+				SELECT pm.id_pm AS id_pm, pm.id_pm_head
+				FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? "
+					LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
+					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = $user_info[id]
+						AND pmr.deleted = 0
+						$labelQuery)") . ($context['sort_by'] == 'name' ? ("
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
+				WHERE " . (empty($sub_pms) ? '0=1' : 'pm.id_pm IN (' . implode(',', array_keys($sub_pms)) . ')') . "
+				ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
+				LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+		}
+		else
+		{
+			$request = $smfFunc['db_query']('', "
+				SELECT MAX(pm.id_pm) AS id_pm, pm.id_pm_head
+				FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? "
+					LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
+					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = $user_info[id]
+						AND pmr.deleted = 0
+						$labelQuery)") . ($context['sort_by'] == 'name' ? ("
+					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
+				WHERE " . ($context['folder'] == 'sent' ? "pm.id_member_from = $user_info[id]
+					AND pm.deleted_by_sender = 0" : "1=1") . (empty($_GET['pmsg']) ? '' : "
+					AND pm.id_pm = " . (int) $_GET['pmsg']) . "
+				GROUP BY pm.id_pm_head
+				ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
+				LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+		}
 	}
 	// This is kinda simple!
 	else
