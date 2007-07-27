@@ -3,7 +3,7 @@
 
 // Important! Before editing these language files please read the text at the topic of index.english.php.
 
-// Since all of these strings are being used in emails, numeric entities shold be used.
+// Since all of these strings are being used in emails, numeric entities should be used.
 
 // Do not translate anything that is between {}, they are used as replacement variables and MUST remain exactly how they are.
 //   Additionally do not translate the @additioinal_parmas: line or the variable names in the lines that follow it.  You may
@@ -23,7 +23,7 @@ $txt['emails'] = array(
 		/* 
 			@additional_params: resend_activate_message
 				REALNAME: The display name for the member receiving the email.
-				USERNAME:  The user name for the emmber receiving the email.
+				USERNAME:  The user name for the member receiving the email.
 				ACTIVATIONLINK:  The url link to activate the member's account.
 				ACTIVATIONCODE:  The code needed to activate the member's account.
 			@description: 
@@ -46,7 +46,7 @@ Should you have any problems with activation, please use the code "{ACTIVATIONCO
 		/* 
 			@additional_params: resend_pending_message
 				REALNAME: The display name for the member receiving the email.
-				USERNAME:  The user name for the emmber receiving the email.
+				USERNAME:  The user name for the member receiving the email.
 			@description: 
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',

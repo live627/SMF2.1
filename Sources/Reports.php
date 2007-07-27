@@ -88,7 +88,7 @@ if (!defined('SMF'))
 		  will add a seperator accross the table at this point.
 		- once the incoming data has been sanitized, it is added to the table.
 
-	void addSeperator(string title = '', int custom_table = null)
+	void addSeparator(string title = '', int custom_table = null)
 		- adds a seperator with title given by attribute "title" after the
 		  current row in the table.
 		- if there are no existing tables, will create one with default
@@ -389,7 +389,7 @@ function BoardPermissionsReport()
 		addData($member_groups);
 
 		// Add the seperator.
-		addSeperator($txt['board_perms_permission']);
+		addSeparator($txt['board_perms_permission']);
 
 		// Here cycle through all the detected permissions.
 		foreach ($permissions as $ID_PERM => $perm_info)
@@ -605,7 +605,7 @@ function GroupPermissionsReport()
 	addData($groups);
 
 	// Add a seperator
-	addSeperator($txt['board_perms_permission']);
+	addSeparator($txt['board_perms_permission']);
 
 	// Now the big permission fetch!
 	$request = $smfFunc['db_query']('', "
@@ -834,7 +834,7 @@ function addData($inc_data, $custom_table = null)
 }
 
 // Add a seperator row, only really used when adding data by rows.
-function addSeperator($title = '', $custom_table = null)
+function addSeparator($title = '', $custom_table = null)
 {
 	global $context;
 
