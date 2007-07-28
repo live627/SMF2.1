@@ -1242,8 +1242,8 @@ function setPermissionLevel($level, $group, $profile = 'null')
 				AND id_profile = 1", __FILE__, __LINE__);
 
 		$groupInserts = array();
-		foreach ($groupLevels['global'][$level] as $level)
-			$groupInserts[] = array($group, "'$level'");
+		foreach ($groupLevels['global'][$level] as $permission)
+			$groupInserts[] = array($group, "'$permission'");
 
 		$smfFunc['db_insert']('insert',
 			"{$db_prefix}permissions",
@@ -1252,8 +1252,8 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			array('id_group'), __FILE__, __LINE__);
 
 		$boardInserts = array();
-		foreach ($groupLevels['board'][$level] as $level)
-			$boardInserts[] = array(1, $group, "'$level'");
+		foreach ($groupLevels['board'][$level] as $permission)
+			$boardInserts[] = array(1, $group, "'$permission'");
 
 		$smfFunc['db_insert']('insert',
 			"{$db_prefix}board_permissions",
@@ -1278,8 +1278,8 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		if (!empty($groupLevels['board'][$level]))
 		{
 			$boardInserts = array();
-			foreach ($groupLevels['board'][$level] as $level)
-				$boardInserts[] = array($profile, $group, "'$level'");
+			foreach ($groupLevels['board'][$level] as $permission)
+				$boardInserts[] = array($profile, $group, "'$permission'");
 
 			$smfFunc['db_insert']('insert',
 				"{$db_prefix}board_permissions",
@@ -1311,8 +1311,8 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			$group = $row[0];
 
 			$boardInserts = array();
-			foreach ($boardLevels[$level] as $level)
-				$boardInserts[] = array($profile, $group, "'$level'");
+			foreach ($boardLevels[$level] as $permission)
+				$boardInserts[] = array($profile, $group, "'$permission'");
 
 			$smfFunc['db_insert']('insert',
 				"{$db_prefix}board_permissions",
@@ -1324,8 +1324,8 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 		// Add permissions for ungrouped members.
 		$boardInserts = array();
-		foreach ($boardLevels[$level] as $level)
-			$boardInserts[] = array($profile, 0, "'$level'");
+		foreach ($boardLevels[$level] as $permission)
+			$boardInserts[] = array($profile, 0, "'$permission'");
 
 		$smfFunc['db_insert']('insert',
 				"{$db_prefix}board_permissions",
