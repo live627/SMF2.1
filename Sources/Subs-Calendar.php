@@ -329,7 +329,7 @@ function getTodayInfo()
 // Returns the information needed to show a calendar grid for the given month.
 function getCalendarGrid($month, $year, $calendarOptions)
 {
-	global $scripturl;
+	global $scripturl, $modSettings;
 
 	// Eventually this is what we'll be returning.
 	$calendarGrid = array(
@@ -338,10 +338,12 @@ function getCalendarGrid($month, $year, $calendarOptions)
 		'previous_calendar' => array(
 			'year' => $month == 1 ? $year - 1 : $year,
 			'month' => $month == 1 ? 12 : $month - 1,
+			'disabled' => $modSettings['cal_minyear'] > ($month == 1 ? $year - 1 : $year),
 		),
 		'next_calendar' => array(
 			'year' => $month == 12 ? $year + 1 : $year,
-			'month' => $month == 12 ? 1 : $month + 1
+			'month' => $month == 12 ? 1 : $month + 1,
+			'disabled' => $modSettings['cal_maxyear'] < ($month == 12 ? $year + 1 : $year),
 		),
 	);
 

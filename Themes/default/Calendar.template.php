@@ -112,7 +112,7 @@ function template_main()
 					<td>';
 
 	// Is there a calendar for last month to look at?
-	if (isset($context['previous_calendar']))
+	if (empty($context['previous_calendar']['disabled']))
 		echo '
 						<b><a href="', $context['previous_calendar']['href'], '">&#171; ', $txt['months_short'][$context['previous_calendar']['month']], ' ', $context['previous_calendar']['year'], '</a></b>';
 	echo '
@@ -151,7 +151,7 @@ function template_main()
 					<td align="', !$context['right_to_left'] ? 'right' : 'left', '">';
 
 	// Is there a calendar for next month?
-	if (isset($context['next_calendar']))
+	if (empty($context['next_calendar']['disabled']))
 		echo '
 						<b><a href="', $context['next_calendar']['href'], '">' . $txt['months_short'][$context['next_calendar']['month']] . ' ' . $context['next_calendar']['year'] . ' &#187;</a></b>';
 	echo '
