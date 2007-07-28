@@ -418,7 +418,7 @@ function template_main()
 							</tr>
 							<tr>
 								<td align="right"></td>
-								<td class="smalltext"><label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_change_vote'], '</label></td>
+								<td class="smalltext"><label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll_options']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_do_change_vote'], '</label></td>
 							</tr>
 							<tr>
 								<td align="right"></td>
