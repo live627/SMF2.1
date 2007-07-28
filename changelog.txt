@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2754 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2755 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -20,6 +20,7 @@ July 2007
  ! Warn anyone attempting to make a redirection topic when moving an unapproved topic. (MoveTopic, index language file)
  ! Allow admins to post HTML without other text being present. (Post.php)
  ! Attempt to make SMF 2.0 slightly more PHP6 friendly. (index.php, install.php, QueryString.php)
+ ! Undeleting an account wasn't checking the password. (LogInOut.php, Login template)
 
 
 June 2007

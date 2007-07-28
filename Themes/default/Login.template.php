@@ -17,11 +17,12 @@ function template_login()
 					</td>';
 
 	// Did they make a mistake last time?
-	if (isset($context['login_error']))
-		echo '
+	if (!empty($context['login_errors']))
+		foreach ($context['login_errors'] as $error)
+			echo '
 				</tr><tr class="windowbg">
-				<td align="center" colspan="2" style="padding: 1ex;">
-						<b style="color: red;">', $context['login_error'], '</b>
+					<td align="center" colspan="2" style="padding: 1ex;">
+						<b style="color: red;">', $error, '</b>
 					</td>';
 
 	// Or perhaps there's some special description for this time?

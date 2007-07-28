@@ -172,7 +172,7 @@ function Login2()
 	$context['default_username'] = isset($_REQUEST['user']) ? htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['user'])) : '';
 	$context['default_password'] = '';
 	$context['never_expire'] = $modSettings['cookieTime'] == 525600 || $modSettings['cookieTime'] == 3153600;
-	$context['login_error'] = &$txt['error_occured'];
+	$context['login_errors'] = array($txt['error_occured']);
 	$context['page_title'] = $txt['login'];
 
 	if (!empty($_REQUEST['openid_url']))
@@ -184,21 +184,21 @@ function Login2()
 	// You forgot to type your username, dummy!
 	if (!isset($_REQUEST['user']) || $_REQUEST['user'] == '')
 	{
-		$context['login_error'] = &$txt['need_username'];
+		$context['login_errors'] = array($txt['need_username']);
 		return;
 	}
 
 	// Hmm... maybe 'admin' will login with no password. Uhh... NO!
 	if ((!isset($_REQUEST['passwrd']) || $_REQUEST['passwrd'] == '') && (!isset($_REQUEST['hash_passwrd']) || strlen($_REQUEST['hash_passwrd']) != 40))
 	{
-		$context['login_error'] = &$txt['no_password'];
+		$context['login_errors'] = array($txt['no_password']);
 		return;
 	}
 
 	// No funky symbols either.
 	if (preg_match('~[<>&"\'=\\\]~', $_REQUEST['user']) != 0)
 	{
-		$context['login_error'] = &$txt['error_invalid_characters_username'];
+		$context['login_errors'] = array($txt['error_invalid_characters_username']);
 		return;
 	}
 
@@ -206,7 +206,7 @@ function Login2()
 	if (isset($modSettings['integrate_validate_login']) && function_exists($modSettings['integrate_validate_login']))
 		if (call_user_func($modSettings['integrate_validate_login'], $_REQUEST['user'], isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40 ? $_REQUEST['hash_passwrd'] : null, $modSettings['cookieTime']) == 'retry')
 		{
-			$context['login_error'] = $txt['login_hash_error'];
+			$context['login_errors'] = array($txt['login_hash_error']);
 			$context['disable_login_hashing'] = true;
 			return;
 		}
@@ -230,7 +230,7 @@ function Login2()
 		// Let them try again, it didn't match anything...
 		if ($smfFunc['db_num_rows']($request) == 0)
 		{
-			$context['login_error'] = &$txt['username_no_exist'];
+			$context['login_errors'] = array($txt['username_no_exist']);
 			return;
 		}
 	}
@@ -238,16 +238,13 @@ function Login2()
 	$user_settings = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
-	if (!checkActivation())
-		return;
-
 	// Figure out the password using SMF's encryption - if what they typed is right.
 	if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
 	{
 		// Needs upgrading?
 		if (strlen($user_settings['passwd']) != 40)
 		{
-			$context['login_error'] = $txt['login_hash_error'];
+			$context['login_errors'] = array($txt['login_hash_error']);
 			$context['disable_login_hashing'] = true;
 			return;
 		}
@@ -265,7 +262,7 @@ function Login2()
 				log_error($txt['incorrect_password'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
 				$context['disable_login_hashing'] = true;
-				$context['login_error'] = $txt['incorrect_password'];
+				$context['login_errors'] = array($txt['incorrect_password']);
 				return;
 			}
 		}
@@ -338,7 +335,7 @@ function Login2()
 				// Log an error so we know that it didn't go well in the error log.
 				log_error($txt['incorrect_password'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', 'user');
 
-				$context['login_error'] = $txt['incorrect_password'];
+				$context['login_errors'] = array($txt['incorrect_password']);
 				return;
 			}
 		}
@@ -350,6 +347,10 @@ function Login2()
 		updateMemberData($user_settings['id_member'], array('password_salt' => '\'' . $user_settings['password_salt'] . '\''));
 	}
 
+	// Check their activation status.
+	if (!checkActivation())
+		return;
+
 	DoLogin();
 }
 
@@ -357,13 +358,16 @@ function checkActivation()
 {
 	global $context, $txt, $scripturl, $user_settings, $modSettings;
 
+	if (!isset($context['login_errors']))
+		$context['login_errors'] = array();
+
 	// What is the true activation status of this account?
 	$activation_status = $user_settings['is_activated'] > 10 ? $user_settings['is_activated'] - 10 : $user_settings['is_activated'];
 
 	// Check if the account is activated - COPPA first...
 	if ($activation_status == 5)
 	{
-		$context['login_error'] = $txt['coppa_no_concent'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_need_more_details'] . '</a>';
+		$context['login_errors'][] = $txt['coppa_no_concent'] . ' <a href="' . $scripturl . '?action=coppa;member=' . $user_settings['id_member'] . '">' . $txt['coppa_need_more_details'] . '</a>';
 		return false;
 	}
 	// Awaiting approval still?
@@ -372,18 +376,17 @@ function checkActivation()
 	// Awaiting deletion, changed their mind?
 	elseif ($activation_status == 4)
 	{
-		// Display an error if we haven't decided to undelete.
-		if (!isset($_REQUEST['undelete']))
-		{
-			$context['login_error'] = $txt['awaiting_delete_account'];
-			$context['login_show_undelete'] = true;
-			return false;
-		}
-		// Otherwise reactivate!
-		else
+		// Check they haven't done the wrong password etc!
+		if (isset($_REQUEST['undelete']) && empty($context['login_errors']))
 		{
 			updateMemberData($user_settings['id_member'], array('is_activated' => 1));
 			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 0 ? $modSettings['unapprovedMembers'] - 1 : 0)));
+		}
+		else
+		{
+			$context['login_errors'][] = $txt['awaiting_delete_account'];
+			$context['login_show_undelete'] = true;
+			return false;
 		}
 	}
 	// Standard activation?
@@ -391,7 +394,7 @@ function checkActivation()
 	{
 		log_error($txt['activate_not_completed1'] . ' - <span class="remove">' . $user_settings['member_name'] . '</span>', false);
 
-		$context['login_error'] = $txt['activate_not_completed1'] . ' <a href="' . $scripturl . '?action=activate;sa=resend;u=' . $user_settings['id_member'] . '">' . $txt['activate_not_completed2'] . '</a>';
+		$context['login_errors'][] = $txt['activate_not_completed1'] . ' <a href="' . $scripturl . '?action=activate;sa=resend;u=' . $user_settings['id_member'] . '">' . $txt['activate_not_completed2'] . '</a>';
 		return false;
 	}
 	return true;
