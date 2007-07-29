@@ -3330,7 +3330,7 @@ function issueWarning($memID)
 					counter, body)
 			VALUES
 				($user_info[id], '" . $smfFunc['db_escape_string']($user_info['name']) . "', 'warning',
-				$memID, '" . $smfFunc['db_escape_string']($cur_profile['name']) . "', " . time() . ",
+				$memID, '" . $smfFunc['db_escape_string']($cur_profile['real_name']) . "', " . time() . ",
 				$id_notice, $level_change, SUBSTRING('$_POST[warn_reason]', 1, 65534))", __FILE__, __LINE__);
 
 		// Make the change.
