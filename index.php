@@ -21,7 +21,7 @@
 * See the "license.txt" file for details of the Simple Machines license.          *
 * The latest version can always be found at http://www.simplemachines.org.        *
 **********************************************************************************/
-
+//test
 
 /*	This, as you have probably guessed, is the crux on which SMF functions.
 	Everything should start here, so all the setup and security is done
