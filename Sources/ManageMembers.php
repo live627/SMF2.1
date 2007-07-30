@@ -509,8 +509,8 @@ function ViewMemberlist()
 					),
 				),
 				'sort' => array(
-					'default' => 'member_ip',
-					'reverse' => 'member_ip DESC',
+					'default' => 'INET_ATON(member_ip)',
+					'reverse' => 'INET_ATON(member_ip) DESC',
 				),
 			),
 			'last_active' => array(
