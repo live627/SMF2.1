@@ -902,17 +902,29 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
  	}
  	$smfFunc['db_free_result']($request);
 
+	// Load the membergrounp message limits.
+	//!!! Consider caching this?
+	static $message_limit_cache = array();
+	if (!allowedTo('moderate_forum') && empty($message_limit_cache))
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT id_group, max_messages
+			FROM {$db_prefix}membergroups", __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$message_limit_cache[$row['id_group']] = $row['max_messages'];
+		$smfFunc['db_free_result']($request);
+	}
+
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			mem.member_name, mem.real_name, mem.id_member, mem.email_address, mem.lngfile, mg.max_messages,
-			mem.pm_email_notify, mem.instant_messages," . (allowedTo('moderate_forum') ? ' 0' : "
-			(mem.pm_ignore_list = '*' OR FIND_IN_SET($from[id], mem.pm_ignore_list))") . " AS ignored,
-			FIND_IN_SET($from[id], mem.buddy_list) AS is_buddy, mem.is_activated,
-			(mem.id_group = 1 OR FIND_IN_SET(1, mem.additional_groups)) AS is_admin
+			member_name, real_name, id_member, email_address, lngfile,
+			pm_email_notify, instant_messages," . (allowedTo('moderate_forum') ? ' 0' : "
+			(pm_ignore_list = '*' OR FIND_IN_SET($from[id], pm_ignore_list))") . " AS ignored,
+			FIND_IN_SET($from[id], buddy_list) AS is_buddy, is_activated,
+			additional_groups, id_group, id_post_group
 		FROM {$db_prefix}members AS mem
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
-		WHERE mem.id_member IN (" . implode(", ", $all_to) . ")
-		ORDER BY mem.lngfile
+		WHERE id_member IN (" . implode(", ", $all_to) . ")
+		ORDER BY lngfile
 		LIMIT " . count($all_to), __FILE__, __LINE__);
 	$notifications = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -921,12 +933,27 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		if (isset($deletes[$row['id_member']]))
 			continue;
 
-		// Has the receiver gone over their message limit, assuming that neither they nor the sender are important?!
-		if (!empty($row['max_messages']) && $row['max_messages'] <= $row['instant_messages'] && !allowedTo('moderate_forum') && !$row['is_admin'])
+		// We need to know this members groups.
+		$groups = implode(',', $row['additional_groups']);
+		$groups[] = $row['id_group'];
+		$groups[] = $row['id_post_group'];
+
+		$message_limit = -1;
+		// For each group see whether they've gone over their limit - assuming they're not an admin.
+		if (!in_array(1, $groups))
 		{
-			$log['failed'][] = sprintf($txt['pm_error_data_limit_reached'], $row['real_name']);
-			unset($all_to[array_search($row['id_member'], $all_to)]);
-			continue;
+			foreach ($groups as $id)
+			{
+				if (isset($message_limit_cache[$id]) && $message_limit != 0 && $message_limit < $message_limit_cache[$id])
+					$message_limit = $message_limit_cache[$id];
+			}
+
+			if ($message_limit > 0 && $message_limit <= $row['instant_messages'])
+			{
+				$log['failed'][] = sprintf($txt['pm_error_data_limit_reached'], $row['real_name']);
+				unset($all_to[array_search($row['id_member'], $all_to)]);
+				continue;
+			}
 		}
 
 		if (!empty($row['ignored']))

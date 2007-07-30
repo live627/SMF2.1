@@ -553,6 +553,10 @@ function Post()
 			}
 			else
 				$context['preview_subject'] = '<i>' . $txt['no_subject'] . '</i>';
+
+			// Protect any CDATA blocks.
+			if (isset($_REQUEST['xml']))
+				$context['preview_message'] = strtr($context['preview_message'], array(']]>' => ']]]]><![CDATA[>'));
 		}
 
 		// Set up the checkboxes.
@@ -2437,7 +2441,7 @@ function JavaScriptModify()
 				),
 				'subject' => $smfFunc['db_unescape_string']($msgOptions['subject']),
 				'first_in_topic' => $row['id_msg'] == $row['id_first_msg'],
-				'body' => $smfFunc['db_unescape_string']($msgOptions['body']),
+				'body' => strtr($smfFunc['db_unescape_string']($msgOptions['body']), array(']]>' => ']]]]><![CDATA[>')),
 			);
 
 			censorText($context['message']['subject']);
