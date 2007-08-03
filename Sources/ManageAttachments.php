@@ -144,6 +144,9 @@ function ManageAttachments()
 	else
 		$context['sub_action'] = 'browse';
 
+	// Default page title is good.
+	$context['page_title'] = $txt['attachments_avatars'];
+
 	// This uses admin tabs - as it should!
 	$context[$context['admin_menu_name']]['tab_data'] = array(
 		'title' => &$txt['attachments_avatars'],
@@ -202,7 +205,6 @@ function ManageAttachmentSettings($return_config = false)
 	$context['post_url'] = $scripturl . '?action=admin;area=manageattachments;save;sa=attachments';
 	prepareDBSettingContext($config_vars);
 
-	$context['page_title'] = $txt['attachments_avatars'];
 	$context['sub_template'] = 'show_settings';
 }
 
@@ -277,7 +279,6 @@ function BrowseFiles()
 	global $context, $db_prefix, $txt, $scripturl, $options, $modSettings;
 	global $smfFunc, $sourcedir;
 
-	$context['page_title'] = $txt['attachments_avatars'];
 	$context['sub_template'] = 'browse';
 
 	// Attachments or avatars?
@@ -473,7 +474,6 @@ function MaintainFiles()
 {
 	global $db_prefix, $context, $modSettings, $txt, $smfFunc;
 
-	$context['page_title'] = $txt['attachments_avatars'];
 	$context['sub_template'] = 'maintenance';
 
 	// Get the number of attachments....
