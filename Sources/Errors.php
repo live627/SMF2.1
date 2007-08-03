@@ -113,8 +113,11 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	if (empty($user_info['ip']))
 		$user_info['ip'] = '';
 
+	// Find the best query string we can...
+	$query_string = empty($_SERVER['QUERY_STRING']) ? (empty($_SERVER['REQUEST_URL']) ? '' : $_SERVER['REQUEST_URL']) : $_SERVER['QUERY_STRING'];
+
 	// Don't log the session hash in the url twice, it's a waste.
-	$query_string = empty($_SERVER['QUERY_STRING']) ? '' : $smfFunc['db_escape_string'](htmlspecialchars('?' . preg_replace(array('~;sesc=[^&;]+~', '~' . session_name() . '=' . session_id() . '[&;]~'), array(';sesc', ''), $_SERVER['QUERY_STRING'])));
+	$query_string = $smfFunc['db_escape_string'](htmlspecialchars('?' . preg_replace(array('~;sesc=[^&;]+~', '~' . session_name() . '=' . session_id() . '[&;]~'), array(';sesc', ''), $query_string)));
 
 	// Just so we know what board error messages are from.
 	if (isset($_POST['board']) && !isset($_GET['board']))
