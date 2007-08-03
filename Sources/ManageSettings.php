@@ -377,7 +377,7 @@ function ModifyBasicSettings($return_config = false)
 		redirectexit('action=admin;area=featuresettings;sa=basic');
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=basic';
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=basic';
 	$context['settings_title'] = $txt['mods_cat_features'];
 
 	prepareDBSettingContext($config_vars);
@@ -476,7 +476,7 @@ function ModifyLayoutSettings($return_config = false)
 		redirectexit('action=admin;area=featuresettings;sa=layout');
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=layout';
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=layout';
 	$context['settings_title'] = $txt['mods_cat_layout'];
 
 	prepareDBSettingContext($config_vars);
@@ -513,7 +513,7 @@ function ModifyKarmaSettings($return_config = false)
 		redirectexit('action=admin;area=featuresettings;sa=karma');
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;save;sa=karma';
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=karma';
 	$context['settings_title'] = $txt['karma'];
 
 	prepareDBSettingContext($config_vars);

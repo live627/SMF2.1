@@ -352,7 +352,7 @@ function ModifyOtherSettings($return_config = false)
 		redirectexit('action=admin;area=serversettings;sa=other;sesc=' . $sc);
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;save;sa=other';
+	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;sa=other';
 	$context['settings_title'] = $txt['other_configuration'];
 
 	// Prepare the template.
@@ -384,7 +384,7 @@ function ModifyCacheSettings($return_config = false)
 		redirectexit('action=admin;area=serversettings;sa=cache;sesc=' . $sc);
 	}
 
-	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;save;sa=cache';
+	$context['post_url'] = $scripturl . '?action=admin;area=serversettings;save;sa=cache';
 	$context['settings_title'] = $txt['caching_settings'];
 	$context['settings_message'] = $txt['caching_information'];
 
