@@ -333,7 +333,7 @@ $txt['profile_error_signature_disabled_bbc'] = 'The following BBC is not allowed
 
 $txt['profile_issue_warning'] = 'Issue a warning';
 $txt['profile_warning_level'] = 'Warning Level';
-$txt['profile_warning_desc'] = 'From this section you can adjust the users warning level and issue them with a written warning if necesary. You can also track their warning history and view the effects of their current warning level as determined by the administrator.';
+$txt['profile_warning_desc'] = 'From this section you can adjust the users warning level and issue them with a written warning if necessary. You can also track their warning history and view the effects of their current warning level as determined by the administrator.';
 $txt['profile_warning_name'] = 'Member Name';
 $txt['profile_warning_impact'] = 'Result';
 $txt['profile_warning_reason'] = 'Reason for Warning';
