@@ -2553,6 +2553,10 @@ function updateLastMessages($setboards, $id_msg = 0)
 {
 	global $db_prefix, $board_info, $board, $modSettings, $smfFunc;
 
+	// Please - let's be sane.
+	if (empty($setboards))
+		return false;
+
 	if (!is_array($setboards))
 		$setboards = array($setboards);
 

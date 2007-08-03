@@ -1,8 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2757 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2758 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
+August 2007
+--------------------------------------------------------------------------------
+ ! Try to do a better job of logging the URL on an error if SEF is enabled. (Errors.php)
+ ! Make sure it's hard to force an error with a silly URL. (Subs-Post.php)
+
 
 July 2007
 --------------------------------------------------------------------------------
@@ -23,7 +28,6 @@ July 2007
  ! Undeleting an account wasn't checking the password. (LogInOut.php, Login template)
  ! Stop CDATA blocks breaking preview/quick modify. (Post.php)
  ! Also check a members additional groups when deciding if they are over their personal message limit. (Subs-Post.php)
- ! Try to do a better job of logging the URL on an error if SEF is enabled. (Errors.php)
 
 
 June 2007
