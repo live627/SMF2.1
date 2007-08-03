@@ -64,6 +64,56 @@ if (!defined('SMF'))
 		// !!!
 */
 
+/*	Adding options to one of the setting screens isn't hard. Call prepareDBSettingsContext;
+	The basic format for a checkbox is:
+		array('check', 'nameInModSettingsAndSQL'),
+
+	   And for a text box:
+		array('text', 'nameInModSettingsAndSQL')
+	   (NOTE: You have to add an entry for this at the bottom!)
+
+	   In these cases, it will look for $txt['nameInModSettingsAndSQL'] as the description,
+	   and $helptxt['nameInModSettingsAndSQL'] as the help popup description.
+
+	Here's a quick explanation of how to add a new item:
+
+	 * A text input box.  For textual values.
+	ie.	array('text', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth'),
+
+	 * A text input box.  For numerical values.
+	ie.	array('int', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth'),
+
+	 * A text input box.  For floating point values.
+	ie.	array('float', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth'),
+			
+	 * A large text input box. Used for textual values spanning multiple lines.
+	ie.	array('large_text', 'nameInModSettingsAndSQL', 'OptionalNumberOfRows'),
+
+	 * A check box.  Either one or zero. (boolean)
+	ie.	array('check', 'nameInModSettingsAndSQL'),
+
+	 * A selection box.  Used for the selection of something from a list.
+	ie.	array('select', 'nameInModSettingsAndSQL', array('valueForSQL' => &$txt['displayedValue'])),
+	Note that just saying array('first', 'second') will put 0 in the SQL for 'first'.
+
+	 * A password input box. Used for passwords, no less!
+	ie.	array('password', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth'),
+
+	* A permission - for picking groups who have a permission.
+	ie.	array('permission', 'manage_groups'),
+
+	* A BBC selection box.
+	ie.	array('bbc', 'sig_bbc'),
+
+	For each option:
+		type (see above), variable name, size/possible values.
+	OR	make type '' for an empty string for a horizontal rule.
+	SET	preinput - to put some HTML prior to the input box.
+	SET	postinput - to put some HTML following the input box.
+	SET	invalid - to mark the data as invalid.
+	PLUS	You can override label and help parameters by forcing their keys in the array, for example:
+		array('text', 'invalidlabel', 3, 'label' => 'Actual Label') */
+
 // This is the main pass through function, it creates tabs and the like.
 function ModifySettings()
 {

@@ -61,56 +61,8 @@ if (!defined('SMF'))
 	void EditCustomProfiles()
 		// !!!
 
-	Adding new settings to the $modSettings array:
-	---------------------------------------------------------------------------
 // !!!
 */
-
-/*	Adding options to one of the setting screens isn't hard.  The basic format for a checkbox is:
-		array('check', 'nameInModSettingsAndSQL'),
-
-	   And for a text box:
-		array('text', 'nameInModSettingsAndSQL')
-	   (NOTE: You have to add an entry for this at the bottom!)
-
-	   In these cases, it will look for $txt['nameInModSettingsAndSQL'] as the description,
-	   and $helptxt['nameInModSettingsAndSQL'] as the help popup description.
-
-	Here's a quick explanation of how to add a new item:
-
-	 * A text input box.  For textual values.
-	ie.	array('text', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth',
-			&$txt['OptionalDescriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
-
-	 * A text input box.  For numerical values.
-	ie.	array('int', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth',
-			&$txt['OptionalDescriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
-
-	 * A text input box.  For floating point values.
-	ie.	array('float', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth',
-			&$txt['OptionalDescriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
-			
-	 * A large text input box. Used for textual values spanning multiple lines.
-	ie.	array('large_text', 'nameInModSettingsAndSQL', 'OptionalNumberOfRows',
-			&$txt['OptionalDescriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
-
-	 * A check box.  Either one or zero. (boolean)
-	ie.	array('check', 'nameInModSettingsAndSQL', null, &$txt['descriptionOfTheOption'],
-			'OptionalReferenceToHelpAdmin'),
-
-	 * A selection box.  Used for the selection of something from a list.
-	ie.	array('select', 'nameInModSettingsAndSQL', array('valueForSQL' => &$txt['displayedValue']),
-			&$txt['descriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
-	Note that just saying array('first', 'second') will put 0 in the SQL for 'first'.
-
-	 * A password input box. Used for passwords, no less!
-	ie.	array('password', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth',
-			&$txt['descriptionOfTheOption'], 'OptionalReferenceToHelpAdmin'),
-
-	For each option:
-		type (see above), variable name, size/possible values, description, helptext.
-	OR	make type 'rule' for an empty string for a horizontal rule.
-	OR	make type 'heading' with a string for a titled section. */
 
 // This function passes control through to the relevant tab.
 function ModifyFeatureSettings()
