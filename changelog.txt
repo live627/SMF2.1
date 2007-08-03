@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2758 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2759 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -7,6 +7,7 @@ August 2007
 --------------------------------------------------------------------------------
  ! Try to do a better job of logging the URL on an error if SEF is enabled. (Errors.php)
  ! Make sure it's hard to force an error with a silly URL. (Subs-Post.php)
+ ! If using an old version of host which doesn't support the -W command don't call it. (Subs.php)
 
 
 July 2007
