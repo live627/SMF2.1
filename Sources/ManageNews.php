@@ -659,7 +659,7 @@ function SendMailing($clean_only = false)
 		$context['start'] = $last_id_member;
 
 	// Working out progress is a black art of sorts.
-	$percentEmails = (count($context['recipients']['emails']) / $context['total_emails']) * ($context['total_emails'] / ($context['total_emails'] + $context['max_id_member']));
+	$percentEmails = $context['total_emails'] == 0 ? 0 : ((count($context['recipients']['emails']) / $context['total_emails']) * ($context['total_emails'] / ($context['total_emails'] + $context['max_id_member'])));
 	$percentMembers = ($context['start'] / $context['max_id_member']) * ($context['max_id_member'] / ($context['total_emails'] + $context['max_id_member']));
 	$context['percentage_done'] = round(($percentEmails + $percentMembers) * 100, 2);
 
