@@ -214,6 +214,15 @@ function ModifyCoreFeatures($return_config = false)
 		),
 	);
 
+	// Are we getting info for the help section.
+	if ($return_config)
+	{
+		$return_data = array();
+		foreach ($core_features as $id => $data)
+			$return_data[] = array('switch', isset($data['title']) ? $data['title'] : $txt['core_settings_item_' . $id]);
+		return $return_data;
+	}
+
 	// Are we saving?
 	if (isset($_POST['save']))
 	{

@@ -246,7 +246,7 @@ function list_getMailQueueSize()
 
 
 
-function ModifyMailSettings()
+function ModifyMailSettings($return_config = false)
 {
 	global $txt, $scripturl, $context, $settings;
 

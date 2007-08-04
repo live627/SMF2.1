@@ -806,6 +806,7 @@ function AdminSearchInternal()
 
 	// This is a special array of functions that contain setting data - we query all these to simply pull all setting bits!
 	$settings_search = array(
+		array('ModifyCoreFeatures', 'area=featuresettings;sa=core'),
 		array('ModifyBasicSettings', 'area=featuresettings;sa=basic'),
 		array('ModifySecuritySettings', 'area=featuresettings;sa=security'),
 		array('ModifyLayoutSettings', 'area=featuresettings;sa=layout'),
