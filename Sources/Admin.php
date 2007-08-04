@@ -299,7 +299,7 @@ function AdminMain()
 					'function' => 'ViewMembers',
 					'permission' => array('moderate_forum'),
 					'subsections' => array(
-						'viewmembers' => array($txt['view_all_members']),
+						'all' => array($txt['view_all_members']),
 						'search' => array($txt['mlist_search']),
 					),
 				),

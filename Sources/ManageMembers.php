@@ -160,14 +160,14 @@ function ViewMembers()
 	);
 
 	// Sort out the tabs for the ones which may not exist!
-	if (!$context['show_activate'])
+	if (!$context['show_activate'] && ($_REQUEST['sa'] != 'browse' || $_REQUEST['type'] != 'activate'))
 	{
 		$context['tabs']['approve']['is_last'] = true;
 		unset($context['tabs']['activate']);
 	}
-	if (!$context['show_approve'])
+	if (!$context['show_approve'] && ($_REQUEST['sa'] != 'browse' || $_REQUEST['type'] != 'approve'))
 	{
-		if (!$context['show_activate'])
+		if (!$context['show_activate'] && ($_REQUEST['sa'] != 'browse' || $_REQUEST['type'] != 'activate'))
 			$context['tabs']['search']['is_last'] = true;
 		unset($context['tabs']['approve']);
 	}
@@ -873,7 +873,7 @@ function MembersAwaitingActivation()
 		),
 		'javascript' => $javascript,
 		'form' => array(
-			'href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'],
+			'href' => $scripturl . '?action=admin;area=viewmembers;sa=approve;type=' . $context['browse_type'],
 			'name' => 'postForm',
 			'include_start' => true,
 			'include_sort' => true,

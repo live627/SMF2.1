@@ -1529,7 +1529,8 @@ function template_profile_theme_settings()
 											</td>
 										</tr>';
 
-	echo '
+	if (!empty($modSettings['cal_enabled']))
+		echo '
 										<tr>
 											<td colspan="2"><label for="calendar_start_day">', $txt['calendar_start_day'], ':</label>
 												<select name="default_options[calendar_start_day]" id="calendar_start_day">
@@ -1538,7 +1539,10 @@ function template_profile_theme_settings()
 													<option value="6"', !empty($context['member']['options']['calendar_start_day']) && $context['member']['options']['calendar_start_day'] == 6 ? ' selected="selected"' : '', '>', $txt['days'][6], '</option>
 												</select>
 											</td>
-										</tr><tr>
+										</tr>';
+
+	echo '
+										<tr>
 											<td colspan="2"><label for="display_quick_reply">', $txt['display_quick_reply'], '</label>
 												<select name="default_options[display_quick_reply]" id="display_quick_reply">
 													<option value="0"', empty($context['member']['options']['display_quick_reply']) ? ' selected="selected"' : '', '>', $txt['display_quick_reply1'], '</option>
