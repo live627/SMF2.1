@@ -257,8 +257,6 @@ Unsubscribe to new topics from this board by using this link:
 You can see it at
 {TOPICLINK}
 
-More topics may be posted, but you won\'t receive more email notifications until you return to the board and read some of them.
-
 The text of the topic is shown below:
 {MESSAGE}
 
