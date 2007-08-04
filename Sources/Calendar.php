@@ -72,12 +72,16 @@ function CalendarMain()
 	// Set the page title to mention the calendar ;).
 	$context['page_title'] = $context['forum_name'] . ': ' . $txt['calendar'];
 
+	// Is this a week view?
+	$context['view_week'] = isset($_GET['viewweek']);
+
 	// Get the current day of month...
 	require_once($sourcedir . '/Subs-Calendar.php');
 	$today = getTodayInfo();
 
 	// If the month and year are not passed in, use today's date as a starting point.
 	$curPage = array(
+		'day' => isset($_REQUEST['day']) ? (int) $_REQUEST['day'] : $today['day'],
 		'month' => isset($_REQUEST['month']) ? (int) $_REQUEST['month'] : $today['month'],
 		'year' => isset($_REQUEST['year']) ? (int) $_REQUEST['year'] : $today['year']
 	);
@@ -87,6 +91,14 @@ function CalendarMain()
 		fatal_lang_error('invalid_month', false);
 	if ($curPage['year'] < $modSettings['cal_minyear'] || $curPage['year'] > $modSettings['cal_maxyear'])
 		fatal_lang_error('invalid_year', false);
+	// If we have a day clean that too.
+	if ($context['view_week'])
+	{
+		// Note $isValid is -1 < PHP 5.1
+		$isValid = mktime(0, 0, 0, $curPage['month'], $curPage['day'], $curPage['year']);
+		if ($curPage['day'] > 31 || !$isValid || $isValid == -1)
+			fatal_lang_error('invalid_day', false);
+	}
 
 	// Load all the context information needed to show the calendar grid.
 	$calendarOptions = array(
@@ -99,7 +111,12 @@ function CalendarMain()
 		'show_next_prev' => true,
 		'size' => 'large',
 	);
-	$context['calendar_grid_main'] = getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
+
+	// Load up the main view.
+	if ($context['view_week'])
+		$context['calendar_grid_main'] = getCalendarWeek($curPage['month'], $curPage['year'], $curPage['day'], $calendarOptions);
+	else
+		$context['calendar_grid_main'] = getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
 
 	// Load up the previous and next months.
 	$calendarOptions['show_birthdays'] = $calendarOptions['show_events'] = $calendarOptions['show_holidays'] = false;

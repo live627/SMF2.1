@@ -21,7 +21,7 @@ function template_main()
 				</div>
 			</div>
 			<div style="float: right; align: center;">
-				', template_show_month_grid('main'), '
+				', $context['view_week'] ? template_show_week_grid('main') : template_show_month_grid('main'), '
 			</div>
 		</div>
 		<div>
@@ -344,14 +344,14 @@ function template_show_month_grid($grid_name)
 				// Should the day number be a link?
 				if (!empty($modSettings['cal_daysaslink']) && $context['can_post'])
 						echo '
-					<a href="', $scripturl, '?action=calendar;sa=post;month=', $context['current_month'], ';year=', $context['current_year'], ';day=', $day['day'], ';sesc=', $context['session_id'], '">', $day['day'], '</a>';
+					<a href="', $scripturl, '?action=calendar;sa=post;month=', $calendar_data['current_month'], ';year=', $calendar_data['current_year'], ';day=', $day['day'], ';sesc=', $context['session_id'], '">', $day['day'], '</a>';
 					else
 						echo '
 					', $day['day'];
 
 				// Is this the first day of the week? (and are we showing week numbers?)
-				if ($day['is_first_day'])
-					echo '<span class="smalltext"> - ', $txt['calendar_week'], ' ', $week['number'], '</span>';
+				if ($day['is_first_day'] && $calendar_data['size'] != 'small')
+					echo '<span class="smalltext"> - <a href="', $scripturl, '?action=calendar;viewweek;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $day['day'], '">', $txt['calendar_week'], ' ', $week['number'], '</a></span>';
 
 				// Are there any holidays?
 				if (!empty($day['holidays']))
@@ -403,6 +403,115 @@ function template_show_month_grid($grid_name)
 
 		echo '
 			</tr>';
+	}
+
+	echo '
+		</table>';
+}
+
+// Or show a weekly one?
+function template_show_week_grid($grid_name)
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	if (!isset($context['calendar_grid_' . $grid_name]))
+		return false;
+
+	$calendar_data = &$context['calendar_grid_' . $grid_name];
+
+	echo '
+		<table cellspacing="1" cellpadding="2" width="100%" class="bordercolor">';
+
+	// Loop through each month (At least one) and print out each day.
+	foreach ($calendar_data['months'] as $month_data)
+	{
+		echo '
+			<tr>
+				<td class="titlebg" align="center" colspan="2" style="font-size: large;">
+					<div style="float: left; display: inline;">';
+
+		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
+			echo '
+						<b><a href="', $calendar_data['previous_week']['href'], '">&#171;</a></b>';
+
+		echo '
+					</div>
+					<div style="display: inline;">
+						<a href="', $scripturl, '?action=calendar;month=', $month_data['current_month'], ';year=', $month_data['current_year'], '">', $txt['months_titles'][$month_data['current_month']], ' ', $month_data['current_year'], '</a>', empty($done_title) && !empty($calendar_data['week_number']) ? (' - ' . $txt['calendar_week'] . ' ' . $calendar_data['week_number']) : '', '
+					</div>
+					<div style="float: right; display: inline">';
+
+		if (empty($calendar_data['next_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
+			echo '
+						<b><a href="', $calendar_data['next_week']['href'], '">&#187;</a></b>';
+
+		echo '
+					</div>
+				</td>
+			</tr>';
+
+		$done_title = true;
+
+		foreach ($month_data['days'] as $day)
+		{
+			echo '
+			<tr>
+				<td class="catbg" colspan="2">
+					', $txt['days'][$day['day_of_week']], '
+				</td>
+			</tr>
+			<tr style="height: 50px;">
+				<td class="titlebg" align="center" width="25" style="font-size: large;">
+					', $day['day'], '
+				</td>
+				<td class="', $day['is_today'] ? 'calendar_today' : 'windowbg', '" valign="top" width="100%">';
+
+			// Are there any holidays?
+			if (!empty($day['holidays']))
+				echo '
+					<div class="smalltext holiday">', $txt['calendar_prompt'], ' ', implode(', ', $day['holidays']), '</div>';
+
+			// Show any birthdays...
+			if (!empty($day['birthdays']))
+			{
+				echo '
+					<div class="smalltext">
+						<span class="birthday">', $txt['birthdays'], '</span> ';
+
+				/* Each of the birthdays has:
+					id, name (person), age (if they have one set?), and is_last. (last in list?) */
+				foreach ($day['birthdays'] as $member)
+					echo '
+						<a href="', $scripturl, '?action=profile;u=', $member['id'], '">', $member['name'], isset($member['age']) ? ' (' . $member['age'] . ')' : '', '</a>', $member['is_last'] ? '' : ', ';
+				echo '
+					</div>';
+			}
+
+			// Any special posted events?
+			if (!empty($day['events']))
+			{
+				echo '
+					<div class="smalltext">
+						<span class="event">', $txt['events'], '</span>';
+				/* The events are made up of:
+					title, href, is_last, can_edit (are they allowed to?), and modify_href. */
+				foreach ($day['events'] as $event)
+				{
+					// If they can edit the event, show a star they can click on....
+					if ($event['can_edit'])
+						echo '
+						<a href="', $event['modify_href'], '" style="color: #FF0000;">*</a> ';
+						echo '
+						', $event['link'], $event['is_last'] ? '' : ', ';
+				}
+				echo '
+					</div>';
+			}
+
+			echo '
+				</td>
+			</tr>';
+		}
 	}
 
 	echo '

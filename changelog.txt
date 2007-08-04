@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2762 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2763 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -11,6 +11,7 @@ August 2007
  ! Allow a subject of just &nbsp; and other HTMLesc characters. (Post.php)
  * Changed some visuals on the calendar display. (Calendar.php, Calendar template)
  ! Force the admin to turn on OpenID. (ManageRegistration.php, LogInOut.php; Register, index, Login templates; Login language file)
+ + Added a (currently hardly used) way to view the calendar by weeks. (Subs-Calendar.php, Calendar.php, Calendar template)
 
 
 July 2007

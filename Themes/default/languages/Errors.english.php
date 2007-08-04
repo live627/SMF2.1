@@ -154,6 +154,7 @@ $txt['modify_post_time_passed'] = 'You may not modify this post as the time limi
 $txt['calendar_off'] = 'You cannot access the calendar right now because it is disabled.';
 $txt['invalid_month'] = 'Invalid month value.';
 $txt['invalid_year'] = 'Invalid year value.';
+$txt['invalid_day'] = 'Invalid day value.';
 $txt['event_month_missing'] = 'Event month is missing.';
 $txt['event_year_missing'] = 'Event year is missing.';
 $txt['event_day_missing'] = 'Event day is missing.';

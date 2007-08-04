@@ -71,6 +71,10 @@ if (!defined('SMF'))
 		- also provides information (link, month, year) about the previous and
 		  next month.
 
+	array getCalendarWeek(int month, int year, int day, array calendarOptions)
+		- as for getCalendarGrid but provides information relating to the week
+		  within which the passed date sits.
+
 	array cache_getOffsetIndependentEvents(int days_to_index)
 		- cache callback function used to retrieve the birthdays, holidays, and
 		  events between now and now + days_to_index.
@@ -470,6 +474,124 @@ function getCalendarGrid($month, $year, $calendarOptions)
 	// Set the previous and the next month's links.
 	$calendarGrid['previous_calendar']['href'] = $scripturl . '?action=calendar;year=' . $calendarGrid['previous_calendar']['year'] . ';month=' . $calendarGrid['previous_calendar']['month'];
 	$calendarGrid['next_calendar']['href'] = $scripturl . '?action=calendar;year=' . $calendarGrid['next_calendar']['year'] . ';month=' . $calendarGrid['next_calendar']['month'];
+
+	return $calendarGrid;
+}
+
+// Returns the information needed to show a calendar for the given week.
+function getCalendarWeek($month, $year, $day, $calendarOptions)
+{
+	global $scripturl, $modSettings;
+
+	// Get todays date.
+	$today = getTodayInfo();
+
+	// What is the actual "start date" for the passed day.
+	$calendarOptions['start_day'] = empty($calendarOptions['start_day']) ? 0 : (int) $calendarOptions['start_day'];
+	$day_of_week = (int) strftime('%w', mktime(0, 0, 0, $month, $day, $year));
+	if ($day_of_week != $calendarOptions['start_day'])
+	{
+		// Here we offset accordingly to get things to the real start of a week.
+		$date_diff = $day_of_week - $calendarOptions['start_day'];
+		if ($date_diff < 0)
+			$date_diff += 7;
+		$new_timestamp = mktime(0, 0, 0, $month, $day, $year) - $date_diff * 86400;
+		$day = (int) strftime('%d', $new_timestamp);
+		$month = (int) strftime('%m', $new_timestamp);
+		$year = (int) strftime('%Y', $new_timestamp);
+	}
+
+	// Now start filling in the calendar grid.
+	$calendarGrid = array(
+		'show_next_prev' => !empty($calendarOptions['show_next_prev']),
+		// Previous week is easy - just step back one day.
+		'previous_week' => array(
+			'year' => $day == 1 ? ($month == 1 ? $year - 1 : $year) : $year,
+			'month' => $day == 1 ? ($month == 1 ? 12 : $month - 1) : $month,
+			'day' => $day == 1 ? 28 : $day - 1,
+			'disabled' => $day < 7 && $modSettings['cal_minyear'] > ($month == 1 ? $year - 1 : $year),
+		),
+		'next_week' => array(
+			'disabled' => $day > 25 && $modSettings['cal_maxyear'] < ($month == 12 ? $year + 1 : $year),
+		),
+	);
+
+	// The next week calculation requires a bit more work.
+	$curTimestamp = mktime(0, 0, 0, $month, $day, $year);
+	$nextWeekTimestamp = $curTimestamp + 604800;
+	$calendarGrid['next_week']['day'] = (int) strftime('%d', $nextWeekTimestamp);
+	$calendarGrid['next_week']['month'] = (int) strftime('%m', $nextWeekTimestamp);
+	$calendarGrid['next_week']['year'] = (int) strftime('%Y', $nextWeekTimestamp);
+
+	// Fetch the arrays for birthdays, posted events, and holidays.
+	$startDate = strftime('%Y-%m-%d', $curTimestamp);
+	$endDate = strftime('%Y-%m-%d', $nextWeekTimestamp);
+	$bday = $calendarOptions['show_birthdays'] ? getBirthdayRange($startDate, $endDate) : array();
+	$events = $calendarOptions['show_events'] ? getEventRange($startDate, $endDate) : array();
+	$holidays = $calendarOptions['show_holidays'] ? getHolidayRange($startDate, $endDate) : array();
+
+	// An adjustment value to apply to all calculated week numbers.
+	if (!empty($calendarOptions['show_week_num']))
+	{
+		$first_day_of_year = (int) strftime('%w', mktime(0, 0, 0, 1, 1, $year));
+
+		// All this is as getCalendarGrid.
+		if ($calendarOptions['start_day'] === 0)
+			$nWeekAdjust = $first_day_of_year === 0 ? 0 : 1;
+		else
+			$nWeekAdjust = $calendarOptions['start_day'] > $first_day_of_year && $first_day_of_year !== 0 ? 2 : 1;
+
+		$calendarGrid['week_number'] = (int) strftime('%U', mktime(0, 0, 0, $month, $day, $year)) + $nWeekAdjust;
+
+		// If this crosses a year boundry and includes january it should be week one.
+		if ((int) strftime('%Y', $curTimestamp + 518400) != $year && $calendarGrid['week_number'] == 53)
+			$calendarGrid['week_number'] = 1;
+	}
+
+	// This holds all the main data - there is at least one month!
+	$calendarGrid['months'] = array();
+	$lastDay = 99;
+	$curDay = $day;
+	$curDayOfWeek = $calendarOptions['start_day'];
+	for ($i = 0; $i < 7; $i++)
+	{
+		// Have we gone into a new month (Always happens first cycle too)
+		if ($lastDay > $curDay)
+		{
+			$curMonth = $lastDay == 99 ? $month : ($month == 12 ? 1 : $month + 1);
+			$curYear = $lastDay == 99 ? $year : ($curMonth == 1 && $month == 12 ? $year + 1 : $year);
+			$calendarGrid['months'][$curMonth] = array(
+				'current_month' => $curMonth,
+				'current_year' => $curYear,
+				'days' => array(),
+			);
+		}
+
+		// Add todays information to the pile!
+		$date = sprintf('%04d-%02d-%02d', $curYear, $curMonth, $curDay);
+
+		$calendarGrid['months'][$curMonth]['days'][$curDay] = array(
+			'day' => $curDay,
+			'day_of_week' => $curDayOfWeek,
+			'date' => $date,
+			'is_today' => $date == $today['date'],
+			'holidays' => !empty($holidays[$date]) ? $holidays[$date] : array(),
+			'events' => !empty($events[$date]) ? $events[$date] : array(),
+			'birthdays' => !empty($bday[$date]) ? $bday[$date] : array()
+		);
+
+		// Make the last day what the current day is and work out what the next day is.
+		$lastDay = $curDay;
+		$curTimestamp += 86400;
+		$curDay = (int) strftime('%d', $curTimestamp);
+
+		// Also increment the current day of the week.
+		$curDayOfWeek = $curDayOfWeek > 6 ? 0 : ++$curDayOfWeek;
+	}
+
+	// Set the previous and the next week's links.
+	$calendarGrid['previous_week']['href'] = $scripturl . '?action=calendar;viewweek;year=' . $calendarGrid['previous_week']['year'] . ';month=' . $calendarGrid['previous_week']['month'] . ';day=' . $calendarGrid['previous_week']['day'];
+	$calendarGrid['next_week']['href'] = $scripturl . '?action=calendar;viewweek;year=' . $calendarGrid['next_week']['year'] . ';month=' . $calendarGrid['next_week']['month'] . ';day=' . $calendarGrid['next_week']['day'];
 
 	return $calendarGrid;
 }
