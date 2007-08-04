@@ -934,7 +934,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			continue;
 
 		// We need to know this members groups.
-		$groups = implode(',', $row['additional_groups']);
+		$groups = explode(',', $row['additional_groups']);
 		$groups[] = $row['id_group'];
 		$groups[] = $row['id_post_group'];
 
