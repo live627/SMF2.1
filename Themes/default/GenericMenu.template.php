@@ -172,10 +172,13 @@ function template_generic_menu_dropdown_above()
 			</li>';
 	}
 
-	echo '
+	if (!empty($menu_context['can_toggle_drop_down']))
+		echo '
 			<li style="white-space: nowrap;">
 				<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 4px 10px 0 0;" src="' , $context['menu_image_path'], '/change_menu.png" alt="" /></a>
-			</li>
+			</li>';
+
+	echo '
 		</ul></div>
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			menuHandle = new smfMenu("dropdown_menu_', $context['cur_menu_id'], '");
