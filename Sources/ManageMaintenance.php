@@ -1421,11 +1421,12 @@ function AdminBoardRecount()
 // This function caches the relevant language files, and if the cache doesn't work includes them with eval.
 function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 {
-	global $language, $settings, $txt, $db_prefix;
+	global $language, $settings, $txt, $db_prefix, $modSettings;
 	global $sourcedir, $cachedir, $smfFunc;
 
 	// Is the file writable?
 	$can_write = !empty($modSettings['cache_enable']) && is_writable($cachedir) ? 1 : 0;
+
 	// By default include it afterwards.
 	$do_include = $can_write;
 
@@ -1489,6 +1490,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 					$fc = preg_replace('~\{NL\}~', '\\\\n', $fc);
 					$fc = preg_replace('~<\?php~', '', $fc);
 					$fc = preg_replace('~\?>~', '', $fc);
+					global $context, $modSettings, $scripturl, $boardurl;
 					eval($fc);
 
 					// Mark that we're messed up!
