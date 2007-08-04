@@ -675,8 +675,7 @@ function MembersAwaitingActivation()
 		$context['current_filter'] = $context['available_filters'][0]['type'];
 
 	// This little variable is used to determine if we should flag where we are looking.
-	if (($context['current_filter'] != 0 && $context['current_filter'] != 3) && count($context['available_filters']) == 1)
-		$context['show_filter'] = true;
+	$context['show_filter'] = ($context['current_filter'] != 0 && $context['current_filter'] != 3) || count($context['available_filters']) > 1;
 
 	// The columns that can be sorted.
 	$context['columns'] = array(
@@ -759,7 +758,7 @@ function MembersAwaitingActivation()
 	$listOptions = array(
 		'id' => 'approve_list',
 		'items_per_page' => $modSettings['defaultMaxMembers'],
-		'base_href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'],
+		'base_href' => $scripturl . '?action=admin;area=viewmembers;sa=browse;type=' . $context['browse_type'] . (!empty($context['show_filter']) ? ';filter=' . $context['current_filter'] : ''),
 		'default_sort_col' => 'date_registered',
 		'get_items' => array(
 			'file' => $sourcedir . '/Subs-Members.php',
@@ -920,8 +919,8 @@ function MembersAwaitingActivation()
 		$listOptions['additional_rows'][] = array(
 			'position' => 'above_column_headers',
 			'value' => '<span class="smalltext"><b>' . $txt['admin_browse_filter_show'] . ':</b> ' . $context['available_filters'][0]['desc'] . '</span>',
-			'style' => 'text-align: center;',
-			'class' => 'titlebg',
+			'style' => 'text-align: left;',
+			'class' => 'windowbg2',
 		);
 
 	// Now that we have all the options, create the list.
