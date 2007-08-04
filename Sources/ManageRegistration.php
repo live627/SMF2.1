@@ -299,6 +299,7 @@ function AdminSettings()
 			'coppaPost' => $_POST['coppaPost'],
 			'coppaFax' => !empty($_POST['coppaFax']) ? $_POST['coppaFax'] : '',
 			'coppaPhone' => !empty($_POST['coppaPhone']) ? $_POST['coppaPhone'] : '',
+			'enableOpenID' => !empty($_POST['enableOpenID']) ? 1 : 0,
 		));
 
 		// Reload the page, so the tabs are accurate.

@@ -72,6 +72,9 @@ $txt['approval_after_registration'] = 'Thank you for registering. The admin must
 
 $txt['admin_settings_desc'] = 'Here you can change a variety of settings related to registration of new members.';
 
+$txt['admin_setting_enableOpenID'] = 'Allow users to register using OpenID';
+$txt['admin_setting_enableOpenID_warning'] = 'Note: This feature is not yet functionally complete';
+
 $txt['admin_setting_registration_method'] = 'Method of registration employed for new members';
 $txt['admin_setting_registration_disabled'] = 'Registration Disabled';
 $txt['admin_setting_registration_standard'] = 'Immediate Registration';

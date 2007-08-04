@@ -42,14 +42,19 @@ function template_login()
 				</tr><tr class="windowbg">
 					<td align="right"><b>', $txt['password'], ':</b></td>
 					<td><input type="password" name="passwrd" value="', $context['default_password'], '" size="20" /></td>
-				</tr><tr class="windowbg">
+				</tr>';
+				
+	if (!empty($modSettings['enableOpenID']))
+		echo '<tr class="windowbg">
 					<td colspan="2" align="center"><b>&mdash;', $txt['or'], '&mdash;</b></td>
 				</tr><tr class="windowbg">
 					<td align="right"><b>', $txt['openid'], ':</b></td>
 					<td><input type="text" name="openid_url" class="openid_login" size="17" /></td>
 				</tr><tr class="windowbg">
 					<td colspan="2" align="center"><hr /></td>
-				</tr><tr class="windowbg">
+				</tr>';
+				
+	echo '<tr class="windowbg">
 					<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
 					<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '"', $context['never_expire'] ? ' disabled="disabled"' : '', ' /></td>
 				</tr><tr class="windowbg">
@@ -114,7 +119,19 @@ function template_kick_guest()
 							</tr><tr>
 								<td align="right"><b>', $txt['password'], ':</b></td>
 								<td><input type="password" name="passwrd" size="20" /></td>
+							</tr>';
+				
+	if (!empty($modSettings['enableOpenID']))
+		echo '<tr>
+								<td colspan="2" align="center"><b>&mdash;', $txt['or'], '&mdash;</b></td>
 							</tr><tr>
+								<td align="right"><b>', $txt['openid'], ':</b></td>
+								<td><input type="text" name="openid_url" class="openid_login" size="17" /></td>
+							</tr><tr>
+								<td colspan="2" align="center"><hr /></td>
+							</tr>';
+							
+	echo '<tr>
 								<td align="right"><b>', $txt['mins_logged_in'], ':</b></td>
 								<td><input type="text" name="cookielength" size="4" maxlength="4" value="', $modSettings['cookieTime'], '" /></td>
 							</tr><tr>

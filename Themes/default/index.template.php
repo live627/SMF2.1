@@ -271,7 +271,7 @@ function template_body_above()
 									</select>
 									<input type="submit" value="', $txt['login'], '" /><br />
 									<span class="middletext">', $txt['quick_login_dec'], '</span>';
-		if (empty($modSettings['disable_openid']))
+		if (!empty($modSettings['enableOpenID']))
 			echo'<br />
 									<input type="text" name="openid_url" id="openid_url" size="25" class="openid_login" />';
 

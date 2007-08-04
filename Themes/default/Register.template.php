@@ -51,7 +51,7 @@ function template_before()
 		echo '
 	function checkAgree()
 	{
-		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || (isEmptyText(document.forms.creator.passwrd1) && getAuthValue() == "passwd") || (isEmptyText(document.forms.creator.openid_url) && getAuthValue() == "openid") || !document.forms.creator.regagree.checked;
+		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || ', !empty($modSettings['enableOpenID']) ? '(isEmptyText(document.forms.creator.passwrd1) && getAuthValue() == "passwd") || (isEmptyText(document.forms.creator.openid_url) && getAuthValue() == "openid") || ' : '', '!document.forms.creator.regagree.checked;
 		setTimeout("checkAgree();", 1000);
 	}
 	setTimeout("checkAgree();", 1000);
@@ -107,7 +107,10 @@ function template_before()
 								<img id="smf_autov_pwverify_img" src="', $settings['images_url'], '/icons/field_valid.gif" alt="*" />
 							</span>
 						</td>
-					</tr>
+					</tr>';
+				
+	if (!empty($modSettings['enableOpenID']))
+		echo '
 					<tr>
 						<td>
 							<b>', $txt['openid'], ':</b>
@@ -741,6 +744,15 @@ function template_admin_settings()
 									<option value="2"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2 ? ' selected="selected"' : '', '>', $txt['admin_setting_registration_approval'], '</option>
 									<option value="3"', !empty($modSettings['registration_method']) && $modSettings['registration_method'] == 3 ? ' selected="selected"' : '', '>', $txt['admin_setting_registration_disabled'], '</option>
 								</select>
+							</td>
+						</tr>
+						<tr class="windowbg2">
+							<th width="50%" align="right">
+								<label for="enableOpenID">', $txt['admin_setting_enableOpenID'], '</label>:
+							</th>
+							<td width="50%" align="left">
+								<input type="checkbox" name="enableOpenID" id="enableOpenID" ', !empty($modSettings['enableOpenID']) ? 'checked="checked"' : '', ' class="check" />
+								<span class="smalltext">', $txt['admin_setting_enableOpenID_warning'], '</span>
 							</td>
 						</tr>
 						<tr class="windowbg2">

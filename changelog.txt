@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2761 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2762 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -10,6 +10,7 @@ August 2007
  ! If using an old version of host which doesn't support the -W command don't call it. (Subs.php)
  ! Allow a subject of just &nbsp; and other HTMLesc characters. (Post.php)
  * Changed some visuals on the calendar display. (Calendar.php, Calendar template)
+ ! Force the admin to turn on OpenID. (ManageRegistration.php, LogInOut.php; Register, index, Login templates; Login language file)
 
 
 July 2007
