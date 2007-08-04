@@ -335,6 +335,10 @@ function getCalendarGrid($month, $year, $calendarOptions)
 	$calendarGrid = array(
 		'week_days' => array(),
 		'weeks' => array(),
+		'short_day_titles' => !empty($calendarOptions['short_day_titles']),
+		'current_month' => $month,
+		'current_year' => $year,
+		'show_next_prev' => !empty($calendarOptions['show_next_prev']),
 		'previous_calendar' => array(
 			'year' => $month == 1 ? $year - 1 : $year,
 			'month' => $month == 1 ? 12 : $month - 1,
@@ -345,6 +349,8 @@ function getCalendarGrid($month, $year, $calendarOptions)
 			'month' => $month == 12 ? 1 : $month + 1,
 			'disabled' => $modSettings['cal_maxyear'] < ($month == 12 ? $year + 1 : $year),
 		),
+		//!!! Better tweaks?
+		'size' => isset($calendarOptions['size']) ? $calendarOptions['size'] : 'large',
 	);
 
 	// Get todays date.

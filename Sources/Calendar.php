@@ -95,8 +95,20 @@ function CalendarMain()
 		'show_events' => in_array($modSettings['cal_showevents'], array(1, 2)),
 		'show_holidays' => in_array($modSettings['cal_showholidays'], array(1, 2)),
 		'show_week_num' => !empty($modSettings['cal_showweeknum']),
+		'short_day_titles' => false,
+		'show_next_prev' => true,
+		'size' => 'large',
 	);
-	$context += getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
+	$context['calendar_grid_main'] = getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
+
+	// Load up the previous and next months.
+	$calendarOptions['show_birthdays'] = $calendarOptions['show_events'] = $calendarOptions['show_holidays'] = false;
+	$calendarOptions['short_day_titles'] = true;
+	$calendarOptions['show_next_prev'] = false;
+	$calendarOptions['size'] = 'small';
+	$context['calendar_grid_current'] = getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
+	$context['calendar_grid_prev'] = getCalendarGrid($context['calendar_grid_current']['previous_calendar']['month'], $context['calendar_grid_current']['previous_calendar']['year'], $calendarOptions);
+	$context['calendar_grid_next'] = getCalendarGrid($context['calendar_grid_current']['next_calendar']['month'], $context['calendar_grid_current']['next_calendar']['year'], $calendarOptions);
 
 	// Basic template stuff.
 	$context['can_post'] = allowedTo('calendar_post');
