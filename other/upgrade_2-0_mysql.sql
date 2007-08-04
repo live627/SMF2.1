@@ -894,13 +894,15 @@ WHERE fileext = ''
 	AND attachment_type != 3;
 ---#
 
----# Updating thumbnail attachments.
+---# Updating thumbnail attachments JPG.
 UPDATE {$db_prefix}attachments
 SET fileext = 'jpg'
 WHERE attachment_type = 3
 	AND fileext = ''
 	AND RIGHT(filename, 9) = 'JPG_thumb';
+---#
 
+---# Updating thumbnail attachments PNG.
 UPDATE {$db_prefix}attachments
 SET fileext = 'png'
 WHERE attachment_type = 3
@@ -911,10 +913,17 @@ WHERE attachment_type = 3
 ---# Calculating attachment mime types.
 ---{
 // Don't ever bother doing this twice.
-//!!! 1==1 is temporary to allow alpha testers not to complain.
-if (1 == 1 || @$modSettings['smfVersion'] < '2.0')
+if (@$modSettings['smfVersion'] < '2.0')
 {
+	$request = $smfFunc['db_query']('', "
+		SELECT MAX(id_attach)
+		FROM {$db_prefix}attachments", false, false);
+	list ($step_progress['total']) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
 	$_GET['a'] = isset($_GET['a']) ? (int) $_GET['a'] : 0;
+	$step_progress['name'] = 'Calculating MIME Types';
+	$step_progress['current'] = $_GET['a'];
 
 	if (!function_exists('getAttachmentFilename'))
 	{
@@ -958,6 +967,8 @@ if (1 == 1 || @$modSettings['smfVersion'] < '2.0')
 	$is_done = false;
 	while (!$is_done)
 	{
+		nextSubStep($substep);
+
 		$request = $smfFunc['db_query']('', "
 			SELECT id_attach, filename, fileext
 			FROM {$db_prefix}attachments
@@ -1011,6 +1022,7 @@ if (1 == 1 || @$modSettings['smfVersion'] < '2.0')
 		}
 	
 		$_GET['a'] += 100;
+		$step_progress['current'] = $_GET['a'];
 	}
 	
 	unset($_GET['a']);
@@ -1099,6 +1111,7 @@ ADD file tinytext NOT NULL,
 ADD line mediumint(8) unsigned NOT NULL default '0';
 ---#
 
+---# Updating error log table...
 ---{
 $request = upgrade_query("
 	SELECT COUNT(*)
@@ -1107,6 +1120,8 @@ list($totalActions) = mysql_fetch_row($request);
 mysql_free_result($request);
 
 $_GET['m'] = !empty($_GET['m']) ? (int) $_GET['m'] : '0';
+$step_progress['total'] = $totalActions;
+$step_progress['current'] = $_GET['m'];
 
 while ($_GET['m'] < $totalActions)
 {
@@ -1138,9 +1153,11 @@ while ($_GET['m'] < $totalActions)
 	}
 
 	$_GET['m'] += 500;
+	$step_progress['current'] = $_GET['m'];
 }
 unset($_GET['m']);
 ---}
+---#
 
 /******************************************************************************/
 --- Adding Scheduled Tasks Data.
@@ -1691,7 +1708,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}openid_assoc (
 	issued int(10) NOT NULL default '0',
 	expires int(10) NOT NULL default '0',
 	assoc_type varchar(64) NOT NULL,
-	PRIMARY KEY  (server_url(255), handle(255)),
+	PRIMARY KEY (server_url(100), handle(100)),
 	KEY expires (expires)
 ) TYPE=MyISAM{$db_collation};
 ---#
