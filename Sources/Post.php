@@ -386,9 +386,9 @@ function Post()
 		// Validate inputs.
 		if (empty($context['post_error']))
 		{
-			if (htmltrim__recursive($_REQUEST['subject']) == '')
+			if (htmltrim__recursive(htmlspecialchars__recursive($_REQUEST['subject'])) == '')
 				$context['post_error']['no_subject'] = true;
-			if (htmltrim__recursive($_REQUEST['message']) == '')
+			if (htmltrim__recursive(htmlspecialchars__recursive($_REQUEST['message'])) == '')
 				$context['post_error']['no_message'] = true;
 			if (!empty($modSettings['max_messageLength']) && strlen($_REQUEST['message']) > $modSettings['max_messageLength'])
 				$context['post_error']['long_message'] = true;
@@ -1303,9 +1303,9 @@ function Post2()
 	}
 
 	// Check the subject and message.
-	if (!isset($_POST['subject']) || $smfFunc['htmltrim']($_POST['subject']) === '')
+	if (!isset($_POST['subject']) || $smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['subject'])) === '')
 		$post_errors[] = 'no_subject';
-	if (!isset($_POST['message']) || $smfFunc['htmltrim']($_POST['message']) === '')
+	if (!isset($_POST['message']) || $smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['message']), ENT_QUOTES) === '')
 		$post_errors[] = 'no_message';
 	elseif (!empty($modSettings['max_messageLength']) && $smfFunc['strlen']($_POST['message']) > $modSettings['max_messageLength'])
 		$post_errors[] = 'long_message';
@@ -2301,7 +2301,7 @@ function JavaScriptModify()
 	}
 
 	$post_errors = array();
-	if (isset($_POST['subject']) && $smfFunc['htmltrim']($_POST['subject']) !== '')
+	if (isset($_POST['subject']) && $smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['subject'])) !== '')
 	{
 		$_POST['subject'] = strtr($smfFunc['htmlspecialchars']($_POST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
 
@@ -2317,7 +2317,7 @@ function JavaScriptModify()
 
 	if (isset($_POST['message']))
 	{
-		if ($smfFunc['htmltrim']($_POST['message']) === '')
+		if ($smfFunc['htmltrim']($smfFunc['htmlspecialchars']($_POST['message'])) === '')
 		{
 			$post_errors[] = 'no_message';
 			unset($_POST['message']);
