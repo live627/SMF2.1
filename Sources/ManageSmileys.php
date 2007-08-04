@@ -532,7 +532,7 @@ function AddSmiley()
 		$request = $smfFunc['db_query']('', "
 			SELECT id_smiley
 			FROM {$db_prefix}smileys
-			WHERE code = BINARY '$_POST[smiley_code]'", __FILE__, __LINE__);
+			WHERE code = " . ($smfFunc['db_title'] == 'MySQL' ? 'BINARY' : '') . " '$_POST[smiley_code]'", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			fatal_lang_error('smiley_not_unique');
 		$smfFunc['db_free_result']($request);
@@ -779,7 +779,7 @@ function EditSmileys()
 			$request = $smfFunc['db_query']('', "
 				SELECT id_smiley
 				FROM {$db_prefix}smileys
-				WHERE code = BINARY '$_POST[smiley_code]'" . (empty($_POST['smiley']) ? '' : "
+				WHERE code = " . ($smfFunc['db_title'] == 'MySQL' ? 'BINARY' : '') . " '$_POST[smiley_code]'" . (empty($_POST['smiley']) ? '' : "
 					AND id_smiley != $_POST[smiley]"), __FILE__, __LINE__);
 			if ($smfFunc['db_num_rows']($request) > 0)
 				fatal_lang_error('smiley_not_unique');
