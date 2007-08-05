@@ -3456,7 +3456,7 @@ function template_welcome_message()
 				<br /><br />You can choose to either run the upgrade again from the beginning - or alternatively continue from the last step reached during the last upgrade.';
 		else
 			echo '
-				<br /><br />This upgrade script cannot be run until ', $upcontext['user']['name'], ' has been inactive for at least ', round($upcontext['inactive_timeout'] / 60, 1), ' minutes!';
+				<br /><br />This upgrade script cannot be run until ', $upcontext['user']['name'], ' has been inactive for at least ', ($upcontext['inactive_timeout'] > 120 ? round($upcontext['inactive_timeout'] / 60, 1) . ' minutes!' : $upcontext['inactive_timeout'] . ' seconds!');
 
 		echo '
 			</div>
@@ -3735,7 +3735,7 @@ function template_database_changes()
 		echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var lastItem = ', $upcontext['current_debug_item_num'], ';
-			var sLastString = "";
+			var sLastString = "', strtr($upcontext['current_debug_item_name'], array('"' => '&quot;')), '";
 			var curFile = ', $upcontext['cur_file_num'], ';
 			var totalItems = 0;
 			var prevFile = 0;
@@ -3813,17 +3813,6 @@ function template_database_changes()
 				}
 				retryCount = 0;
 
-				// Is there an error?
-				if (oXMLDoc.getElementsByTagName("error")[0])
-				{
-					var sErrorMsg = "";
-					for (var i = 0; i < oXMLDoc.getElementsByTagName("error")[0].childNodes.length; i++)
-						sErrorMsg += oXMLDoc.getElementsByTagName("error")[0].childNodes[i].nodeValue;
-					document.getElementById("error_block").style.display = "";
-					setInnerHTML(document.getElementById("error_message"), sErrorMsg);
-					return false;
-				}
-
 				for (var i = 0; i < oXMLDoc.getElementsByTagName("item")[0].childNodes.length; i++)
 					sItemName += oXMLDoc.getElementsByTagName("item")[0].childNodes[i].nodeValue;
 				for (var i = 0; i < oXMLDoc.getElementsByTagName("debug")[0].childNodes.length; i++)
@@ -3846,6 +3835,10 @@ function template_database_changes()
 				curFile = parseInt(oXMLDoc.getElementsByTagName("file")[0].getAttribute("num"));
 				debugItems = parseInt(oXMLDoc.getElementsByTagName("file")[0].getAttribute("debug_items"));
 				totalItems = parseInt(oXMLDoc.getElementsByTagName("file")[0].getAttribute("items"));
+
+				// If we have an error we haven\'t completed!
+				if (oXMLDoc.getElementsByTagName("error")[0] && bIsComplete)
+					iDebugNum = lastItem;
 
 				// Do we have the additional progress bar?
 				if (iSubStepProgress != -1)
@@ -3938,6 +3931,17 @@ function template_database_changes()
 		}
 
 		echo '
+				// Is there an error?
+				if (oXMLDoc.getElementsByTagName("error")[0])
+				{
+					var sErrorMsg = "";
+					for (var i = 0; i < oXMLDoc.getElementsByTagName("error")[0].childNodes.length; i++)
+						sErrorMsg += oXMLDoc.getElementsByTagName("error")[0].childNodes[i].nodeValue;
+					document.getElementById("error_block").style.display = "";
+					setInnerHTML(document.getElementById("error_message"), sErrorMsg);
+					return false;
+				}
+
 				// Get the progress bar right.
 				barTotal = debugItems * ', $upcontext['file_count'], ';
 				barDone = (debugItems * (curFile - 1)) + lastItem;
@@ -3962,7 +3966,7 @@ function template_database_changes()
 				if (!attemptAgain)
 				{
 					document.getElementById("error_block").style.display = "";
-					setInnerHTML(document.getElementById("error_message"), "Server has not responded for ', ($timeLimitThreshold * 10), ' seconds. Please click <a href=\"#\" onclick=\"retTimeout(true); return false;\">here</a> to try this step again");
+					setInnerHTML(document.getElementById("error_message"), "Server has not responded for ', ($timeLimitThreshold * 10), ' seconds. It may be worth waiting a little longer or otherwise please click <a href=\"#\" onclick=\"retTimeout(true); return false;\">here</a> to try this step again");
 				}
 				else
 				{
