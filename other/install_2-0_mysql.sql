@@ -1279,7 +1279,7 @@ CREATE TABLE {$db_prefix}openid_assoc (
   issued int(10) NOT NULL default '0',
   expires int(10) NOT NULL default '0',
   assoc_type varchar(64) NOT NULL,
-  PRIMARY KEY (server_url(255), handle(255)),
+  PRIMARY KEY (server_url(125), handle(125)),
   KEY expires (expires)
 ) TYPE=MyISAM;
 
