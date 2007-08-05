@@ -3281,9 +3281,6 @@ function db_debug_junk()
 	echo '
 	<a href="' . $scripturl . '?action=viewquery;sa=hide">[' . (empty($_SESSION['view_queries']) ? 'show' : 'hide') . ' queries]</a>
 </div></body></html>';
-
-	//!!! Clean the language cache - to enable developers to not have to manually do it.
-	clean_cache('lang');
 }
 
 // Get an attachment's encrypted filename.  If $new is true, won't check for file existence.
