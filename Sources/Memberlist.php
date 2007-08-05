@@ -385,6 +385,7 @@ function MLSearch()
 	global $txt, $scripturl, $db_prefix, $context, $user_info, $modSettings, $smfFunc;
 
 	$context['page_title'] = $txt['mlist_search'];
+	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 
 	// They're searching..
 	if (isset($_REQUEST['search']) && isset($_REQUEST['fields']))

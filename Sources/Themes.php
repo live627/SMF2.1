@@ -152,25 +152,28 @@ function ThemesMain()
 	);
 
 	// !!! Layout Settings?
-	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => &$txt['themeadmin_title'],
-		'help' => 'themes',
-		'description' => $txt['themeadmin_description'],
-		'tabs' => array(
-			'admin' => array(
-				'description' => $txt['themeadmin_admin_desc'],
+	if (!empty($context['admin_menu_name']))
+	{
+		$context[$context['admin_menu_name']]['tab_data'] = array(
+			'title' => &$txt['themeadmin_title'],
+			'help' => 'themes',
+			'description' => $txt['themeadmin_description'],
+			'tabs' => array(
+				'admin' => array(
+					'description' => $txt['themeadmin_admin_desc'],
+				),
+				'list' => array(
+					'description' => $txt['themeadmin_list_desc'],
+				),
+				'reset' => array(
+					'description' => $txt['themeadmin_reset_desc'],
+				),
+				'edit' => array(
+					'description' => $txt['themeadmin_edit_desc'],
+				),
 			),
-			'list' => array(
-				'description' => $txt['themeadmin_list_desc'],
-			),
-			'reset' => array(
-				'description' => $txt['themeadmin_reset_desc'],
-			),
-			'edit' => array(
-				'description' => $txt['themeadmin_edit_desc'],
-			),
-		),
-	);
+		);
+	}
 
 	// Follow the sa or just go to administration.
 	if (!empty($subActions[$_GET['sa']]))
