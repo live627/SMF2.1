@@ -2268,8 +2268,6 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false)
 
 	preg_match('~^(http|ftp)(s)?://([^/:]+)(:(\d))?(.+)$~', $url, $match);
 
-	echo '<pre>'; print_r($match); die('</pre>');
-
 	// An FTP url.  We should try connecting and RETRieving it...
 	if (isset($match[1]) && $match[1] == 'ftp')
 	{
