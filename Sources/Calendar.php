@@ -48,6 +48,9 @@ if (!defined('SMF'))
 		- requires the calendar_post permission to use.
 		- uses the event_post sub template in the Calendar template.
 		- is accessed with ?action=calendar;sa=post.
+
+	void iCalDownload()
+		- offers up a download of an event in iCal 2.0 format.
 */
 
 // Show the calendar.
@@ -55,15 +58,20 @@ function CalendarMain()
 {
 	global $txt, $context, $modSettings, $scripturl, $options, $sourcedir;
 
-	// If we are posting a new event defect to the posting function.
-	if (isset($_GET['sa']) && $_GET['sa'] == 'post')
-		return CalendarPost();
+	// Permissions, permissions, permissions.
+	isAllowedTo('calendar_view');
+
+	// Doing something other than calendar viewing?
+	$subActions = array(
+		'ical' => 'iCalDownload',
+		'post' => 'CalendarPost',
+	);
+
+	if (isset($_GET['sa']) && isset($subActions[$_GET['sa']]))
+		return $subActions[$_GET['sa']]();
 
 	// This is gonna be needed...
 	loadTemplate('Calendar');
-
-	// Permissions, permissions, permissions.
-	isAllowedTo('calendar_view');
 
 	// You can't do anything if the calendar is off.
 	if (empty($modSettings['cal_enabled']))
@@ -282,6 +290,81 @@ function CalendarPost()
 	$context['linktree'][] = array(
 		'name' => $context['page_title'],
 	);
+}
+
+function iCalDownload()
+{
+	global $smfFunc, $db_prefix, $sourcedir, $forum_version, $context, $modSettings;
+
+	// Goes without saying that this is required.
+	if (!isset($_REQUEST['eventid']))
+		fatal_lang_error('no_access');
+
+	// This is kinda wanted.
+	require_once($sourcedir . '/Subs-Calendar.php');
+
+	// Load up the event in question and check it exists.
+	$event = getEventProperties($_REQUEST['eventid']);
+
+	if ($event === false)
+		fatal_lang_error('no_access');
+
+	// Check the title isn't too long - iCal requires some formatting if so.
+	$title = str_split($event['title'], 30);
+	foreach ($title as $id => $line)
+	{
+		if ($id != 0)
+			$title[$id] = ' ' . $title[$id];
+		$title[$id] .= "\n";
+	}
+
+	// Format the date.
+	$date = $event['year'] . '-' . ($event['month'] < 10 ? '0' . $event['month'] : $event['month']) . '-' . ($event['day'] < 10 ? '0' . $event['day'] : $event['day']) . 'T';
+	$date .= '1200:00:00Z';
+
+	// This is what we will be sending later.
+	$filecontents = '';
+	$filecontents .= "BEGIN:VCALENDAR\n";
+	$filecontents .= "VERSION:2.0\n";
+	$filecontents .= "PRODID:-//SimpleMachines//SMF " . (empty($forum_version) ? 1.0 : strtr($forum_version, array('SMF ' => ''))) . "//EN\n";
+	$filecontents .= "BEGIN:VEVENT\n";
+	$filecontents .= "DTSTART:$date\n";
+	$filecontents .= "DTEND:$date\n";
+	$filecontents .= "SUMMARY:" . implode('', $title);
+	$filecontents .= "END:VEVENT\n";
+	$filecontents .= "END:VCALENDAR";
+
+	// Send some standard headers.
+	ob_end_clean();
+	if (!empty($modSettings['enableCompressedOutput']))
+		@ob_start('ob_gzhandler');
+	else
+		ob_start();
+
+	// Send the file headers
+	header('Pragma: ');
+	header('Cache-Control: no-cache');
+	if (!$context['browser']['is_gecko'])
+		header('Content-Transfer-Encoding: binary');
+	header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 525600 * 60) . ' GMT');
+	header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . 'GMT');
+	header('Accept-Ranges: bytes');
+	header('Set-Cookie:');
+	header('Connection: close');
+	header('Content-Disposition: attachment; filename=' . $event['title'] . '.ics');
+
+	// How big is it?
+	if (empty($modSettings['enableCompressedOutput']))
+		header('Content-Length: ' . $smfFunc['strlen']($filecontents));
+
+	// This is a calendar item!
+	header('Content-Type: text/calendar');
+
+	// Chuck out the card.
+	echo $filecontents;
+
+	// Off we pop - lovely!
+	obExit(false);
 }
 
 ?>

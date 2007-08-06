@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2765 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2766 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -14,6 +14,7 @@ August 2007
  + Added a (currently hardly used) way to view the calendar by weeks. (Subs-Calendar.php, Calendar.php, Calendar template)
  & The notify_boards_body email shouldn't say that there might be other topics. (EmailTemplates language file)
  ! Allow the use of em in the size BBC tag. (Subs.php)
+ ! Added a function that should in theory allow exporting of events in iCal format. (Calendar.php)
 
 
 July 2007
