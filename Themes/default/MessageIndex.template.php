@@ -209,7 +209,7 @@ function template_main()
 		}
 
 		// If this person can approve items and we have some awaiting approval tell them.
-		if ($context['can_approve_posts'])
+		if (!empty($context['unapproved_posts_message']))
 		{
 			echo '
 					<tr class="windowbg2">
