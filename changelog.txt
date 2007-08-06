@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2764 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2765 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -13,6 +13,7 @@ August 2007
  ! Force the admin to turn on OpenID. (ManageRegistration.php, LogInOut.php; Register, index, Login templates; Login language file)
  + Added a (currently hardly used) way to view the calendar by weeks. (Subs-Calendar.php, Calendar.php, Calendar template)
  & The notify_boards_body email shouldn't say that there might be other topics. (EmailTemplates language file)
+ ! Allow the use of em in the size BBC tag. (Subs.php)
 
 
 July 2007
