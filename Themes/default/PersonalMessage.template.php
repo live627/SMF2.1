@@ -1696,6 +1696,8 @@ function template_add_rule()
 							curDef = document.getElementById("ruledefgroup" + curNum).value;
 						else if (curVal != "bud")
 							curDef = document.getElementById("ruledef" + curNum).value;
+						else
+							curDef = "";
 
 						curDef = smf_htmlspecialchars(curDef);
 						// What type of test is this?
@@ -1725,6 +1727,8 @@ function template_add_rule()
 						curVal = document.forms.addrule.elements[i].value;
 						if (curVal == "lab")
 							curDef = document.getElementById("labdef" + curNum).value;
+						else
+							curDef = "";
 
 						curDef = smf_htmlspecialchars(curDef);
 						// Now pick the actions.
