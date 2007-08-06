@@ -418,7 +418,7 @@ function CreateMessageIndex()
 		if ($context['start'] === 0)
 		{
 			$smfFunc['db_search_query']('drop_words_table', "
-				DROP TABLE IF EXISTS {$db_prefix}log_search_words", __FILE__, __LINE__);
+				DROP TABLE " . ($smfFunc['db_title'] == 'PostgreSQL' ? '' : 'IF EXISTS') . " {$db_prefix}log_search_words", __FILE__, __LINE__);
 
 			$smfFunc['db_create_word_search']($index_properties[$context['index_settings']['bytes_per_word']]['column_definition']);
 			

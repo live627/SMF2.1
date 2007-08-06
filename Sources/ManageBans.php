@@ -334,7 +334,7 @@ function list_getBans($start, $items_per_page, $sort)
 		SELECT bg.id_ban_group, bg.name, bg.ban_time, bg.expire_time, bg.reason, bg.notes, COUNT(*) AS num_triggers
 		FROM {$db_prefix}ban_groups AS bg
 			LEFT JOIN {$db_prefix}ban_items AS bi ON (bi.id_ban_group = bg.id_ban_group)
-		GROUP BY bg.id_ban_group
+		GROUP BY bg.id_ban_group, $sort
 		ORDER BY $sort
 		LIMIT $start, $items_per_page", __FILE__, __LINE__);
 	$bans = array();
