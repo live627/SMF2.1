@@ -364,7 +364,7 @@ function scheduled_daily_maintenance()
 	clean_cache('data');
 
 	// Then delete some settings that needn't be set if they are otherwise empty.
-	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show');
+	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage');
 
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}settings

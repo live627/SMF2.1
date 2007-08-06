@@ -1368,6 +1368,10 @@ function makeThemeChanges($memID, $id_theme)
 	{
 		foreach ($_POST['options'] as $opt => $val)
 		{
+			// These need to be controlled.
+			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
+				$val = max(0, min($val, 50));
+
 			$themeSetArray[] = array($memID, $id_theme, "SUBSTRING('" . $smfFunc['db_escape_string']($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
 		}
 	}
@@ -1376,6 +1380,10 @@ function makeThemeChanges($memID, $id_theme)
 	if (isset($_POST['default_options']) && is_array($_POST['default_options']))
 		foreach ($_POST['default_options'] as $opt => $val)
 		{
+			// These need to be controlled.
+			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
+				$val = max(0, min($val, 50));
+
 			$themeSetArray[] = array($memID, 1, "SUBSTRING('" . $smfFunc['db_escape_string']($opt) . "', 1, 255)", "SUBSTRING('" . (is_array($val) ? implode(',', $val) : $val) . "', 1, 65534)");
 			$erase_options[] = $smfFunc['db_escape_string']($opt);
 		}

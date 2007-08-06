@@ -224,6 +224,7 @@ $helptxt['topbottomEnable'] = 'This will add go up and go down buttons, so that 
 		without scrolling.';
 $helptxt['onlineEnable'] = 'This will show an image to indicate whether the member is online or offline';
 $helptxt['todayMod'] = 'This will show &quot;Today&quot;, or &quot;Yesterday&quot;, instead of the date.';
+$helptxt['disableCustomPerPage'] = 'Check this option to stop users from customizing the amount of messages and topics to display per page on the Message Index and Topic Display page respectively.';
 $helptxt['enablePreviousNext'] = 'This will show a link to the next and previous topic.';
 $helptxt['pollMode'] = 'This selects whether polls are enabled or not. If polls are disabled, any existing polls will be hidden
 		from the topic listing. You can choose to continue to show the regular topic without their polls by selecting

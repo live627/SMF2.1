@@ -1529,6 +1529,33 @@ function template_profile_theme_settings()
 											</td>
 										</tr>';
 
+	if (empty($modSettings['disableCustomPerPage']))
+	{
+		echo '
+										<tr>
+											<td colspan="2"><label for="topics_per_page">', $txt['topics_per_page'], '</label>
+												<select name="default_options[topics_per_page]" id="topics_per_page">
+													<option value="0"', empty($context['member']['options']['topics_per_page']) ? ' selected="selected"' : '', '>', $txt['per_page_default'], ' (', $modSettings['defaultMaxTopics'], ')</option>
+													<option value="5"', !empty($context['member']['options']['topics_per_page']) && $context['member']['options']['topics_per_page'] == 5 ? ' selected="selected"' : '', '>5</option>
+													<option value="10"', !empty($context['member']['options']['topics_per_page']) && $context['member']['options']['topics_per_page'] == 10 ? ' selected="selected"' : '', '>10</option>
+													<option value="25"', !empty($context['member']['options']['topics_per_page']) && $context['member']['options']['topics_per_page'] == 25 ? ' selected="selected"' : '', '>25</option>
+													<option value="50"', !empty($context['member']['options']['topics_per_page']) && $context['member']['options']['topics_per_page'] == 55 ? ' selected="selected"' : '', '>50</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2"><label for="messages_per_page">', $txt['messages_per_page'], '</label>
+												<select name="default_options[messages_per_page]" id="messages_per_page">
+													<option value="0"', empty($context['member']['options']['messages_per_page']) ? ' selected="selected"' : '', '>', $txt['per_page_default'], ' (', $modSettings['defaultMaxMessages'], ')</option>
+													<option value="5"', !empty($context['member']['options']['messages_per_page']) && $context['member']['options']['messages_per_page'] == 5 ? ' selected="selected"' : '', '>5</option>
+													<option value="10"', !empty($context['member']['options']['messages_per_page']) && $context['member']['options']['messages_per_page'] == 10 ? ' selected="selected"' : '', '>10</option>
+													<option value="25"', !empty($context['member']['options']['messages_per_page']) && $context['member']['options']['messages_per_page'] == 25 ? ' selected="selected"' : '', '>25</option>
+													<option value="50"', !empty($context['member']['options']['messages_per_page']) && $context['member']['options']['messages_per_page'] == 55 ? ' selected="selected"' : '', '>50</option>
+												</select>
+											</td>
+										</tr>';
+	}
+
 	if (!empty($modSettings['cal_enabled']))
 		echo '
 										<tr>

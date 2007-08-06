@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2766 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2767 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -15,6 +15,9 @@ August 2007
  & The notify_boards_body email shouldn't say that there might be other topics. (EmailTemplates language file)
  ! Allow the use of em in the size BBC tag. (Subs.php)
  ! Added a function that should in theory allow exporting of events in iCal format. (Calendar.php)
+ + Allow users to select how many topics/messages they want on each page - and allow the admin to disable this. (ManagePosts.php, Themes.php, Profile.php, MessageIndex.php, Display.php, Recent.php)
+ * Update templates to reflect the above. (Profile, Settings template)
+ & New language entries for above. (Admin, Help, Profile language files)
 
 
 July 2007

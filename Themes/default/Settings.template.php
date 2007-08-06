@@ -72,6 +72,30 @@ function template_options()
 			'default' => true,
 		),
 		array(
+			'id' => 'topics_per_page',
+			'label' => $txt['topics_per_page'],
+			'options' => array(
+				0 => $txt['per_page_default'],
+				5 => 5,
+				10 => 10,
+				25 => 25,
+				50 => 50,
+			),
+			'default' => true,
+		),
+		array(
+			'id' => 'messages_per_page',
+			'label' => $txt['messages_per_page'],
+			'options' => array(
+				0 => $txt['per_page_default'],
+				5 => 5,
+				10 => 10,
+				25 => 25,
+				50 => 50,
+			),
+			'default' => true,
+		),
+		array(
 			'id' => 'calendar_start_day',
 			'label' => $txt['calendar_start_day'],
 			'options' => array(

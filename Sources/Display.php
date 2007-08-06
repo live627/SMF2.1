@@ -35,7 +35,7 @@ if (!defined('SMF'))
 		- uses the main sub template of the Display template.
 		- requires a topic, and can go to the previous or next topic from it.
 		- jumps to the correct post depending on a number/time/IS_MSG passed.
-		- depends on the defaultMaxMessages and enableAllMessages settings.
+		- depends on the messages_per_page, defaultMaxMessages and enableAllMessages settings.
 		- is accessed by ?topic=id_topic.START.
 
 	array prepareDisplayContext(bool reset = false)
@@ -421,31 +421,32 @@ function Display()
 	}
 
 	// Construct the page index, allowing for the .START method...
-	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $topicinfo['num_replies'] + 1, $modSettings['defaultMaxMessages'], true);
+	$context['messages_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['messages_per_page']) ? $options['messages_per_page'] : $modSettings['defaultMaxMessages'];
+	$context['page_index'] = constructPageIndex($scripturl . '?topic=' . $topic . '.%d', $_REQUEST['start'], $topicinfo['num_replies'] + 1, $context['messages_per_page'], true);
 	$context['start'] = $_REQUEST['start'];
 
 	// This is information about which page is current, and which page we're on - in case you don't like the constructed page index. (again, wireles..)
 	$context['page_info'] = array(
-		'current_page' => $_REQUEST['start'] / $modSettings['defaultMaxMessages'] + 1,
-		'num_pages' => floor($topicinfo['num_replies'] / $modSettings['defaultMaxMessages']) + 1
+		'current_page' => $_REQUEST['start'] / $context['messages_per_page'] + 1,
+		'num_pages' => floor($topicinfo['num_replies'] / $context['messages_per_page']) + 1
 	);
 
 	// Figure out all the link to the next/prev/first/last/etc. for wireless mainly.
 	$context['links'] = array(
-		'first' => $_REQUEST['start'] >= $modSettings['defaultMaxMessages'] ? $scripturl . '?topic=' . $topic . '.0' : '',
-		'prev' => $_REQUEST['start'] >= $modSettings['defaultMaxMessages'] ? $scripturl . '?topic=' . $topic . '.' . ($_REQUEST['start'] - $modSettings['defaultMaxMessages']) : '',
-		'next' => $_REQUEST['start'] + $modSettings['defaultMaxMessages'] < $topicinfo['num_replies'] + 1 ? $scripturl . '?topic=' . $topic. '.' . ($_REQUEST['start'] + $modSettings['defaultMaxMessages']) : '',
-		'last' => $_REQUEST['start'] + $modSettings['defaultMaxMessages'] < $topicinfo['num_replies'] + 1 ? $scripturl . '?topic=' . $topic. '.' . (floor($topicinfo['num_replies'] / $modSettings['defaultMaxMessages']) * $modSettings['defaultMaxMessages']) : '',
+		'first' => $_REQUEST['start'] >= $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.0' : '',
+		'prev' => $_REQUEST['start'] >= $context['messages_per_page'] ? $scripturl . '?topic=' . $topic . '.' . ($_REQUEST['start'] - $context['messages_per_page']) : '',
+		'next' => $_REQUEST['start'] + $context['messages_per_page'] < $topicinfo['num_replies'] + 1 ? $scripturl . '?topic=' . $topic. '.' . ($_REQUEST['start'] + $context['messages_per_page']) : '',
+		'last' => $_REQUEST['start'] + $context['messages_per_page'] < $topicinfo['num_replies'] + 1 ? $scripturl . '?topic=' . $topic. '.' . (floor($topicinfo['num_replies'] / $context['messages_per_page']) * $context['messages_per_page']) : '',
 		'up' => $scripturl . '?board=' . $board . '.0'
 	);
 
 	// If they are viewing all the posts, show all the posts, otherwise limit the number.
-	if (!empty($modSettings['enableAllMessages']) && $topicinfo['num_replies'] + 1 > $modSettings['defaultMaxMessages'] && $topicinfo['num_replies'] + 1 < $modSettings['enableAllMessages'])
+	if (!empty($modSettings['enableAllMessages']) && $topicinfo['num_replies'] + 1 > $context['messages_per_page'] && $topicinfo['num_replies'] + 1 < $modSettings['enableAllMessages'])
 	{
 		if (isset($_REQUEST['all']))
 		{
 			// No limit! (actually, there is a limit, but...)
-			$modSettings['defaultMaxMessages'] = -1;
+			$context['messages_per_page'] = -1;
 			$context['page_index'] .= empty($modSettings['compactTopicPagesEnable']) ? '<b>' . $txt['all'] . '</b> ' : '[<b>' . $txt['all'] . '</b>] ';
 
 			// Set start back to 0...
@@ -674,9 +675,9 @@ function Display()
 	// Calculate the fastest way to get the messages!
 	$ascending = empty($options['view_newest_first']);
 	$start = $_REQUEST['start'];
-	$limit = $modSettings['defaultMaxMessages'];
+	$limit = $context['messages_per_page'];
 	$firstIndex = 0;
-	if ($start > $topicinfo['num_replies'] / 2 && $modSettings['defaultMaxMessages'] != -1)
+	if ($start > $topicinfo['num_replies'] / 2 && $context['messages_per_page'] != -1)
 	{
 		$ascending = !$ascending;
 		$limit = $topicinfo['num_replies'] < $start + $limit ? $topicinfo['num_replies'] - $start + 1 : $limit;
@@ -690,7 +691,7 @@ function Display()
 		FROM {$db_prefix}messages
 		WHERE id_topic = $topic
 			" . (allowedTo('approve_posts') ? '' : " AND (approved = 1 OR (id_member != 0 AND id_member = $user_info[id]))") . "
-		ORDER BY id_msg " . ($ascending ? '' : 'DESC') . ($modSettings['defaultMaxMessages'] == -1 ? '' : "
+		ORDER BY id_msg " . ($ascending ? '' : 'DESC') . ($context['messages_per_page'] == -1 ? '' : "
 		LIMIT $start, $limit"), __FILE__, __LINE__);
 
 	$messages = array();

@@ -613,6 +613,7 @@ $txt['hotTopicPosts'] = 'Number of posts for a hot topic';
 $txt['hotTopicVeryPosts'] = 'Number of posts for a very hot topic';
 $txt['enableAllMessages'] = 'Max topic size to show &quot;All&quot; posts';
 $txt['enableAllMessages_zero'] = '0 to never show &quot;All&quot;';
+$txt['disableCustomPerPage'] = 'Disable customizing topic/message count per page';
 $txt['enablePreviousNext'] = 'Enable previous/next topic links';
 
 $txt['not_done_title'] = 'Not done yet!';

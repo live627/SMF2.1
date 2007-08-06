@@ -373,7 +373,7 @@ function RecentPosts()
 function UnreadTopics()
 {
 	global $board, $txt, $scripturl, $db_prefix, $sourcedir;
-	global $user_info, $context, $settings, $modSettings, $smfFunc;
+	global $user_info, $context, $settings, $modSettings, $smfFunc, $options;
 
 	// Guests can't have unread things, we don't know anything about them.
 	is_not_guest();
@@ -387,6 +387,7 @@ function UnreadTopics()
 	}
 
 	$context['showing_all_topics'] = isset($_GET['all']);
+	$context['topics_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['topics_per_page']) ? $options['topics_per_page'] : $modSettings['defaultMaxTopics'];
 	if ($_REQUEST['action'] == 'unread')
 		$context['page_title'] = $context['showing_all_topics'] ? $txt['unread_topics_all'] : $txt['unread_topics_visit'];
 	else
@@ -681,19 +682,19 @@ function UnreadTopics()
 		$smfFunc['db_free_result']($request);
 
 		// Make sure the starting place makes sense and construct the page index.
-		$context['page_index'] = constructPageIndex($scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . $context['querystring_board_limits'] . $context['querystring_sort_limits'], $_REQUEST['start'], $num_topics, $modSettings['defaultMaxTopics'], true);
-		$context['current_page'] = (int) $_REQUEST['start'] / $modSettings['defaultMaxTopics'];
+		$context['page_index'] = constructPageIndex($scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . $context['querystring_board_limits'] . $context['querystring_sort_limits'], $_REQUEST['start'], $num_topics, $context['topics_per_page'], true);
+		$context['current_page'] = (int) $_REQUEST['start'] / $context['topics_per_page'];
 
 		$context['links'] = array(
-			'first' => $_REQUEST['start'] >= $modSettings['defaultMaxTopics'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
-			'prev' => $_REQUEST['start'] >= $modSettings['defaultMaxTopics'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
-			'next' => $_REQUEST['start'] + $modSettings['defaultMaxTopics'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
-			'last' => $_REQUEST['start'] + $modSettings['defaultMaxTopics'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $modSettings['defaultMaxTopics']) * $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
+			'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
+			'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'next' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'last' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
 			'up' => $scripturl,
 		);
 		$context['page_info'] = array(
-			'current_page' => $_REQUEST['start'] / $modSettings['defaultMaxTopics'] + 1,
-			'num_pages' => floor(($num_topics - 1) / $modSettings['defaultMaxTopics']) + 1
+			'current_page' => $_REQUEST['start'] / $context['topics_per_page'] + 1,
+			'num_pages' => floor(($num_topics - 1) / $context['topics_per_page']) + 1
 		);
 
 		if ($num_topics == 0)
@@ -742,19 +743,19 @@ function UnreadTopics()
 		$smfFunc['db_free_result']($request);
 
 		// Make sure the starting place makes sense and construct the page index.
-		$context['page_index'] = constructPageIndex($scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . $context['querystring_board_limits'] . $context['querystring_sort_limits'], $_REQUEST['start'], $num_topics, $modSettings['defaultMaxTopics'], true);
-		$context['current_page'] = (int) $_REQUEST['start'] / $modSettings['defaultMaxTopics'];
+		$context['page_index'] = constructPageIndex($scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . $context['querystring_board_limits'] . $context['querystring_sort_limits'], $_REQUEST['start'], $num_topics, $context['topics_per_page'], true);
+		$context['current_page'] = (int) $_REQUEST['start'] / $context['topics_per_page'];
 
 		$context['links'] = array(
-			'first' => $_REQUEST['start'] >= $modSettings['defaultMaxTopics'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
-			'prev' => $_REQUEST['start'] >= $modSettings['defaultMaxTopics'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
-			'next' => $_REQUEST['start'] + $modSettings['defaultMaxTopics'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
-			'last' => $_REQUEST['start'] + $modSettings['defaultMaxTopics'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $modSettings['defaultMaxTopics']) * $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
+			'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
+			'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'next' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'last' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
 			'up' => $scripturl,
 		);
 		$context['page_info'] = array(
-			'current_page' => $_REQUEST['start'] / $modSettings['defaultMaxTopics'] + 1,
-			'num_pages' => floor(($num_topics - 1) / $modSettings['defaultMaxTopics']) + 1
+			'current_page' => $_REQUEST['start'] / $context['topics_per_page'] + 1,
+			'num_pages' => floor(($num_topics - 1) / $context['topics_per_page']) + 1
 		);
 
 		if ($num_topics == 0)
@@ -863,19 +864,19 @@ function UnreadTopics()
 		}
 
 		// Make sure the starting place makes sense and construct the page index.
-		$context['page_index'] = constructPageIndex($scripturl . '?action=' . $_REQUEST['action'] . $context['querystring_board_limits'] . $context['querystring_sort_limits'], $_REQUEST['start'], $num_topics, $modSettings['defaultMaxTopics'], true);
-		$context['current_page'] = (int) $_REQUEST['start'] / $modSettings['defaultMaxTopics'];
+		$context['page_index'] = constructPageIndex($scripturl . '?action=' . $_REQUEST['action'] . $context['querystring_board_limits'] . $context['querystring_sort_limits'], $_REQUEST['start'], $num_topics, $context['topics_per_page'], true);
+		$context['current_page'] = (int) $_REQUEST['start'] / $context['topics_per_page'];
 
 		$context['links'] = array(
-			'first' => $_REQUEST['start'] >= $modSettings['defaultMaxTopics'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
-			'prev' => $_REQUEST['start'] >= $modSettings['defaultMaxTopics'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
-			'next' => $_REQUEST['start'] + $modSettings['defaultMaxTopics'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
-			'last' => $_REQUEST['start'] + $modSettings['defaultMaxTopics'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $modSettings['defaultMaxTopics']) * $modSettings['defaultMaxTopics']) . $context['querystring_sort_limits'] : '',
+			'first' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], 0) . $context['querystring_sort_limits'] : '',
+			'prev' => $_REQUEST['start'] >= $context['topics_per_page'] ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] - $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'next' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], $_REQUEST['start'] + $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
+			'last' => $_REQUEST['start'] + $context['topics_per_page'] < $num_topics ? $scripturl . '?action=' . $_REQUEST['action'] . ($context['showing_all_topics'] ? ';all' : '') . sprintf($context['querystring_board_limits'], floor(($num_topics - 1) / $context['topics_per_page']) * $context['topics_per_page']) . $context['querystring_sort_limits'] : '',
 			'up' => $scripturl,
 		);
 		$context['page_info'] = array(
-			'current_page' => $_REQUEST['start'] / $modSettings['defaultMaxTopics'] + 1,
-			'num_pages' => floor(($num_topics - 1) / $modSettings['defaultMaxTopics']) + 1
+			'current_page' => $_REQUEST['start'] / $context['topics_per_page'] + 1,
+			'num_pages' => floor(($num_topics - 1) / $context['topics_per_page']) + 1
 		);
 
 		if ($num_topics == 0)
