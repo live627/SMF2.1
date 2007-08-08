@@ -137,8 +137,6 @@ function smf_openID_makeAssocation($server)
 	foreach($matches[1] AS $key => $match)
 		$assoc_data[$match] = $matches[2][$key];
 
-	echo 'Line: ', __LINE__, '<br /><pre>', htmlspecialchars($data), '<hr />'; print_r($assoc_data); die('</pre>');
-
 	if (!isset($assoc_data['assoc_type']) || empty($assoc_data['mac_key']))
 		fatal_lang_error('openid_server_bad_response');
 
@@ -400,8 +398,6 @@ function smf_openID_getServerInfo($openid_url)
 
 	if (empty($response_data['server']))
 		fatal_lang_error('openid_server_bad_response');
-
-//	echo 'Line: ', __LINE__, '<br /><pre>', htmlspecialchars($webdata), '<hr />'; print_r($response_data); die('</pre>');
 
 	return $response_data;
 }

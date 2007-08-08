@@ -175,7 +175,7 @@ function Login2()
 	$context['login_errors'] = array($txt['error_occured']);
 	$context['page_title'] = $txt['login'];
 
-	if (!empty($_REQUEST['openid_url']) && !empty($modSettings['enableOpenId']))
+	if (!empty($_REQUEST['openid_url']) && !empty($modSettings['enableOpenID']))
 	{
 		require_once($sourcedir . '/Subs-OpenID.php');
 		return smf_openID_validate($_REQUEST['openid_url']);
