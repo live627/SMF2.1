@@ -1937,7 +1937,7 @@ function showAttachments($memID)
 	global $context, $user_profile, $sourcedir, $smfFunc;
 
 	// OBEY permissions!
-	$boardsAllowed = boardsAllowedTo('view_attachment');
+	$boardsAllowed = boardsAllowedTo('view_attachments');
 	// Make sure we can't actually see anything...
 	if (empty($boardsAllowed))
 		$boardsAllowed = array(-1);

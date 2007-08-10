@@ -321,6 +321,7 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 
 		// Build the array.
 		$posts[] = array(
+			'id' => $row['id_msg'],
 			'board' => array(
 				'id' => $row['id_board'],
 				'name' => $row['board_name'],

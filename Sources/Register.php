@@ -467,6 +467,11 @@ function Activate()
 		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 3);
 
 		$context['page_title'] = $txt['invalid_activation_resend'];
+
+		// This will ensure we don't actually get an error message if it works!
+		if (!empty($email_change))
+			$context['error_title'] = '';
+
 		fatal_lang_error(!empty($email_change) ? 'change_email_success' : 'resend_email_success', false);
 	}
 
