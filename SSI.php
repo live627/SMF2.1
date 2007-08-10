@@ -266,7 +266,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 		AND m.approved = 1";
 
 	// Past to this simpleton of a function...
-	return ssi_queryPosts($query_where, $num_recent, 'm.id_msg DESC', $output_method);
+	return ssi_queryPosts($query_where, $num_recent, 'm.id_msg DESC', $output_method, true);
 }
 
 // Fetch a post with a particular ID. By default will only show if you have permission to the see the board in question - this can be overriden.
@@ -288,7 +288,7 @@ function ssi_fetchPosts($post_ids, $override_permissions = false, $output_method
 }
 
 // This removes code duplication in other queries - don't call it direct unless you really know what you're up to.
-function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_msg DESC', $output_method = 'echo')
+function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_msg DESC', $output_method = 'echo', $limit_body = false)
 {
 	global $context, $settings, $scripturl, $txt, $db_prefix, $user_info;
 	global $modSettings, $smfFunc;
@@ -299,7 +299,7 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg, m.id_board, b.name AS board_name,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
-			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", SUBSTRING(m.body, 0, 384) AS body, m.smileys_enabled
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", " . ($limit_body ? 'SUBSTRING(m.body, 0, 384) AS body' : 'm.body') . ", m.smileys_enabled
 		FROM {$db_prefix}messages AS m
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
@@ -312,8 +312,6 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
-		if ($smfFunc['strlen']($row['body']) > 128)
-			$row['body'] = $smfFunc['substr']($row['body'], 0, 128) . '...';
 
 		// Censor it!
 		censorText($row['subject']);
@@ -337,7 +335,8 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 			),
 			'subject' => $row['subject'],
 			'short_subject' => shorten_subject($row['subject'], 25),
-			'preview' => $row['body'],
+			'preview' => $smfFunc['strlen']($row['body']) > 128 ? $smfFunc['substr']($row['body'], 0, 128) . '...' : $row['body'],
+			'body' => $row['body'],
 			'time' => timeformat($row['poster_time']),
 			'timestamp' => forum_time(true, $row['poster_time']),
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . ';topicseen#new',
