@@ -187,10 +187,10 @@ function smf_main()
 	if (!empty($maintenance) && !allowedTo('admin_forum'))
 	{
 		// You can only login.... otherwise, you're getting the "maintenance mode" display.
-		if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'login2')
+		if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login2' || $_REQUEST['action'] == 'logout'))
 		{
 			require_once($sourcedir . '/LogInOut.php');
-			return 'Login2';
+			return $_REQUEST['action'] == 'login2' ? 'Login2' : 'Logout';
 		}
 		// Don't even try it, sonny.
 		else
