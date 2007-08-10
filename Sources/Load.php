@@ -489,7 +489,7 @@ function loadUserSettings()
 		$user_info['query_see_board'] = '1=1';
 	// Registered user.... just the groups in $user_info['groups'].
 	else
-		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups) OR ' . $_SESSION['mc']['mq'] . ')';
+		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups) OR ' . $user_info['mod_cache']['mq'] . ')';
 
 	// Build the list of boards they WANT to see.  
 	// This will take the place of query_see_boards in certain spots, so it better include the boards they can see also

@@ -732,7 +732,7 @@ function rebuildModCache()
 	}
 
 	// Then, same again, just the boards this time!
-	$board_query = allowedTo('moderate_forum') ? '1=1' : 0;
+	$board_query = allowedTo('moderate_forum') ? '1=1' : '0=1';
 
 	if ($board_query == 0)
 	{
@@ -746,7 +746,7 @@ function rebuildModCache()
 			$boards = array();
 
 		if (empty($boards))
-			$board_query = '0';
+			$board_query = '0=1';
 		else
 			$board_query = 'id_board IN (' . implode(',', $boards) . ')';
 	}
@@ -764,7 +764,7 @@ function rebuildModCache()
 		$smfFunc['db_free_result']($request);
 	}
 
-	$mod_query = empty($boards_mod) ? '0' : 'b.id_board IN (' . implode(',', $boards_mod) . ')';
+	$mod_query = empty($boards_mod) ? '0=1' : 'b.id_board IN (' . implode(',', $boards_mod) . ')';
 
 	$_SESSION['mc'] = array(
 		'time' => time(),
