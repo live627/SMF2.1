@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2768 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2769 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -19,6 +19,7 @@ August 2007
  * Update templates to reflect the above. (Profile, Settings template)
  & New language entries for above. (Admin, Help, Profile language files)
  ! Allow users to log out in maintenance mode. (index.php)
+ ! The WYSIWYG editor will now attempt to highlight the current active buttons. (editor.js)
 
 
 July 2007

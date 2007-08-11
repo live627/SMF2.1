@@ -306,6 +306,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			return;
 
 		crumb = new Array();
+		allCrumbs = new Array();
 		max_length = 6;
 
 		// What is the current element?
@@ -334,6 +335,18 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			// Don't bother with this...
 			else if (crumbname == 'p')
 				continue;
+			// A link?
+			else if (crumbname == 'a')
+			{
+				crumbname = 'url';
+				if (urlInfo = crumb[i].getAttribute('href'))
+				{
+					if (urlInfo.substr(0, 3) == 'ftp')
+						crumbname = 'ftp';
+					else if (urlInfo.substr(0, 6) == 'mailto')
+						crumbname = 'email';
+				}
+			}
 			else if (crumbname == 'span' || crumbname == 'div')
 			{
 				for (j = 0; j < breadCrumbNameStyles.length; j++)
@@ -398,6 +411,17 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			}
 
 			tree += (i != 0 ? '&nbsp;<b>&gt;</b>' : '') + '&nbsp;' + crumbname;
+			allCrumbs[allCrumbs.length] = crumbname;
+		}
+
+		for (i in buttonControls)
+		{
+			newState = in_array(buttonControls[i][1], allCrumbs);
+			if (newState != buttonControls[i][4])
+			{
+				buttonControls[i][4] = newState;
+				buttonControls[i][0].style.backgroundImage = "url(" + smf_images_url + (newState ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
+			}
 		}
 
 		// Try set the font boxes correct.
@@ -531,11 +555,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	{
 		codeHandle = document.getElementById('cmd_' + code);
 
-		buttonControls[code] = Array(3);
+		buttonControls[code] = Array(4);
 		buttonControls[code][0] = codeHandle;
 		buttonControls[code][1] = code;
 		buttonControls[code][2] = before;
 		buttonControls[code][3] = after;
+		// This holds whether or not it's active.
+		buttonControls[code][4] = false;
 
 		// Tie all the relevant actions to the event handler.
 		createEventListener(codeHandle);
@@ -627,8 +653,12 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		// Are handling a hover?
 		if (ev.type == 'mouseover' || ev.type == 'mouseout')
 		{
-			if (buttonControls[curElement.code])
-				curElement.style.backgroundImage = "url(" + smf_images_url + (ev.type == 'mouseover' ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
+			// Work out whether we should highlight it or not. On non-WYSWIYG we highlight on mouseover, on WYSWIYG we toggle current state.
+			isHighlight = ev.type == 'mouseover' ? true : false;
+			if (mode && buttonControls[curElement.code][4])
+				isHighlight = !isHighlight;
+
+			curElement.style.backgroundImage = "url(" + smf_images_url + (isHighlight ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
 		}
 		else if (ev.type == 'click')
 		{
@@ -644,18 +674,15 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 				// In text this is easy...
 				if (!mode)
 				{
-					if (buttonControls[curElement.code])
+					// Replace?
+					if (buttonControls[curElement.code][3] == '')
 					{
-						// Replace?
-						if (buttonControls[curElement.code][3] == '')
-						{
-							replaceText(buttonControls[curElement.code][2], textHandle)
-						}
-						// Surround!
-						else
-						{
-							surroundText(buttonControls[curElement.code][2], buttonControls[curElement.code][3], textHandle)
-						}
+						replaceText(buttonControls[curElement.code][2], textHandle)
+					}
+					// Surround!
+					else
+					{
+						surroundText(buttonControls[curElement.code][2], buttonControls[curElement.code][3], textHandle)
 					}
 				}
 				else
@@ -681,6 +708,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 						InsertCustomHTML(curElement.code);
 					}
 				}
+			}
+
+			// If this is WYSWIYG toggle this button state.
+			if (mode)
+			{
+				buttonControls[curElement.code][4] = !buttonControls[curElement.code][4];
+				curElement.style.backgroundImage = "url(" + smf_images_url + (buttonControls[curElement.code][4] ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
 			}
 
 			updateEditorControls();
@@ -923,6 +957,16 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			mode = !mode;
 
 		requestParsedMessage(mode);
+
+		// If we're leaving WYSIWYG all buttons need to be off.
+		if (!mode)
+		{
+			for (i in buttonControls)
+			{
+				buttonControls[i][4] = false;
+				buttonControls[i][0].style.backgroundImage = "url(" + smf_images_url + '/bbc/bbc_bg.gif' + ")";
+			}
+		}
 	}
 
 	// Request the message in a different form.
