@@ -465,13 +465,14 @@ function updateMemberData($members, $data)
 			$data[$var] = $var . ' - 1';
 	}
 
-	// Ensure posts, instant_messages, and unread_messages never go below 0.
-	if (isset($data['posts']))
-		$data['posts'] = 'CASE WHEN ' . $data['posts'] . ' < 0 THEN 0 ELSE ' . $data['posts'] . ' END';
-	if (isset($data['instant_messages']))
-		$data['instant_messages'] = 'CASE WHEN ' . $data['instant_messages'] . ' < 0 THEN 0 ELSE ' . $data['instant_messages'] . ' END';
-	if (isset($data['unread_messages']))
-		$data['unread_messages'] = 'CASE WHEN ' . $data['unread_messages'] . ' < 0 THEN 0 ELSE ' . $data['unread_messages'] . ' END';
+	// Ensure posts, instant_messages, and unread_messages don't overflow or underflow.
+	foreach(array('posts', 'instant_messages', 'unread_messages') AS $type)
+	{
+		if (isset($data[$type]) && preg_match('~^' . $type . ' - ([\d]+)~', $data[$type], $match))
+		{
+			$data[$type] = 'CASE WHEN ' . $type . ' <= ' . $match[1] . ' THEN 0 ELSE ' . $data[$type] . ' END';
+		}
+	}
 
 	$setString = '';
 	foreach ($data as $var => $val)
