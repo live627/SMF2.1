@@ -1189,7 +1189,7 @@ VALUES
 	(0, 0, 1, 'd', 0, 'daily_digest'),
 	(0, 0, 1, 'w', 0, 'weekly_digest'),
 	(0, 0, 1, 'd', 0, 'fetchSMfiles'),
-	(0, -55800, 1, 'd', 1, 'birthdayemails');
+	(0, 0, 1, 'd', 1, 'birthdayemails');
 ---#
 
 ---# Populating Scheduled Task Table...

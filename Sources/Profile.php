@@ -2168,26 +2168,25 @@ function statPanel($memID)
 		ORDER BY message_count DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['popular_boards'] = array();
-	$maxPosts = 0;
+	$max_percent = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
-		if ($row['message_count'] > $maxPosts)
-			$maxPosts = $row['message_count'];
-
 		$context['popular_boards'][$row['id_board']] = array(
 			'id' => $row['id_board'],
 			'posts' => $row['message_count'],
 			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
 			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
-			'posts_percent' => 0,
+			'posts_percent' => $row['num_posts'] == 0 ? 0 : ($row['message_count'] * 100) / $row['num_posts'],
 			'total_posts' => $row['num_posts'],
 		);
+
+		$max_percent = max($max_percent, $context['popular_boards'][$row['id_board']]['posts_percent']);
 	}
 	$smfFunc['db_free_result']($result);
 
 	// Now that we know the total, calculate the percentage.
 	foreach ($context['popular_boards'] as $id_board => $board_data)
-		$context['popular_boards'][$id_board]['posts_percent'] = $board_data['total_posts'] == 0 ? 0 : comma_format(($board_data['posts'] * 100) / $board_data['total_posts'], 2);
+		$context['popular_boards'][$id_board]['posts_percent'] = $max_percent == 0 ? 0 : comma_format(($board_data['posts_percent'] / $max_percent) * 100, 2);
 
 	// Now get the 10 boards this user has most often participated in.
 	$result = $smfFunc['db_query']('', "
@@ -2201,16 +2200,24 @@ function statPanel($memID)
 		ORDER BY percentage DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['board_activity'] = array();
+	$max_percent = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
+		$max_percent = max($max_percent, $row['percentage']);
 		$context['board_activity'][$row['id_board']] = array(
-			'id' => $id_board,
+			'id' => $row['id_board'],
 			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
 			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
 			'percent' => $row['percentage'],
 		);
 	}
 	$smfFunc['db_free_result']($result);
+
+	foreach($context['board_activity'] AS $id_board => $board_data)
+	{
+		$context['board_activity'][$id_board]['relative_percent'] = $max_percent == 0 ? 0 : ($board_data['percent'] / $max_percent) * 100;
+		$context['board_activity'][$id_board]['percent'] = $board_data['percent'];
+	}
 
 	// Posting activity by time.
 	$result = $smfFunc['db_query']('user_activity_by_time', "

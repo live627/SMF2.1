@@ -1892,7 +1892,7 @@ INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_r
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (5, 0, 0, 1, 'd', 0, 'daily_digest');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (6, 0, 0, 1, 'w', 0, 'weekly_digest');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (7, 0, 0, 1, 'd', 0, 'fetchSMfiles');
-INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (8, 0, -55800, 1, 'd', 1, 'birthdayemails');
+INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (8, 0, 0, 1, 'd', 1, 'birthdayemails');
 
 # --------------------------------------------------------
 

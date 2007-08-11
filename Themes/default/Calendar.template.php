@@ -9,22 +9,22 @@ function template_main()
 	echo '
 		<div style="padding: 3px;">', theme_linktree(), '</div>
 		<div>
-			<div style="padding: 1px; align: center; float: left;">
-				<div style="width: 200px;">
+			<div style="padding: 1px; align: center; float: left; width: 200px;">
+				<div>
 					', template_show_month_grid('prev'), '
 				</div><br />
-				<div style="width: 200px;">
+				<div>
 					', template_show_month_grid('current'), '
 				</div><br />
-				<div style="width: 200px;">
+				<div>
 					', template_show_month_grid('next'), '
 				</div>
 			</div>
-			<div style="float: right; align: center;">
+			<div style="align: center;', $context['browser']['is_ie'] ? 'float: right; ' : 'margin-left: 250px; ', '">
 				', $context['view_week'] ? template_show_week_grid('main') : template_show_month_grid('main'), '
 			</div>
 		</div>
-		<div>
+		<div style="clear: both;">
 		<form action="', $scripturl, '?action=calendar" method="post" accept-charset="', $context['character_set'], '">
 			<table cellspacing="0" cellpadding="3" width="100%" class="tborder"">
 				<tr class="titlebg2">

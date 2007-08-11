@@ -1217,7 +1217,7 @@ function template_statPanel()
 			echo '
 						<tr>
 							<td width="60%" valign="top">', $activity['link'], '</td>
-							<td width="20%" valign="top">', $activity['percent'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $activity['percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
+							<td width="20%" valign="top">', $activity['percent'] > 0 ? '<img src="' . $settings['images_url'] . '/bar.gif" width="' . $activity['relative_percent'] . '" height="15" alt="" />' : '&nbsp;', '</td>
 							<td width="20%" align="', !$context['right_to_left'] ? 'right' : 'left', '" valign="top">', $activity['percent'], '%</td>
 						</tr>';
 		}

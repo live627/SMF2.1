@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2770 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2771 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -21,6 +21,8 @@ August 2007
  ! Allow users to log out in maintenance mode. (index.php)
  ! The WYSIWYG editor will now attempt to highlight the current active buttons. (editor.js)
  ! Attempt to detect post count underflow without relying on such behavior. (Subs.php)
+ ! Change the size of the profile stats bar graphs so that smaller values are more likely to show a bar. (Profile.php, Profile template)
+ ! Changed the birthday emails offset value to avoid a problem with a negative timestamp. (install SQL files, mysql upgrade file)
 
 
 July 2007
