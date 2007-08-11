@@ -1531,6 +1531,7 @@ function loadTemplate($template_name, $fatal = true)
 	elseif (!file_exists($settings['default_theme_dir']) && file_exists($boarddir . '/Themes/default'))
 	{
 		$settings['default_theme_dir'] = $boarddir . '/Themes/default';
+		$settings['template_dirs'][] = $settings['default_theme_dir'];
 
 		if (!empty($context['user']['is_admin']) && !isset($_GET['th']))
 		{

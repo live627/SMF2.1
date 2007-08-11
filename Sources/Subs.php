@@ -704,7 +704,10 @@ function timeformat($log_time, $show_today = true)
 		// Try to make something of a time format string...
 		$s = strpos($user_info['time_format'], '%S') === false ? '' : ':%S';
 		if (strpos($user_info['time_format'], '%H') === false && strpos($user_info['time_format'], '%T') === false)
-			$today_fmt = '%I:%M' . $s . ' %p';
+		{
+			$h = strpos($user_info['time_format'], '%l') === false ? '%I' : '%l';
+			$today_fmt = $h . '%M' . $s . ' %p';
+		}
 		else
 			$today_fmt = '%H:%M' . $s;
 

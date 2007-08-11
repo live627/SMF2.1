@@ -247,6 +247,13 @@ function template_main()
 	</table>';
 	}
 
+	template_info_center();
+}
+
+function template_info_center()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
 	// Here's where the "Info Center" starts...
 	echo '<br />
 	<div class="tborder" ', $context['browser']['needs_size_fix'] && !$context['browser']['is_ie6'] ? 'style="width: 100%;"' : '', '>

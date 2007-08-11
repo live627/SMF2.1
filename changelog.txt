@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2771 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2772 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -23,7 +23,10 @@ August 2007
  ! Attempt to detect post count underflow without relying on such behavior. (Subs.php)
  ! Change the size of the profile stats bar graphs so that smaller values are more likely to show a bar. (Profile.php, Profile template)
  ! Changed the birthday emails offset value to avoid a problem with a negative timestamp. (install SQL files, mysql upgrade file)
-
+ ! When the default theme directory is wrong but the standard path is available add it to the list of directories to load from. (Load.php)
+ ! Respect the use of %l in the Today/Yesterday time format. (Subs.php)
+ * Move the info center code into its own function. (BoardIndex template files)
+ ! Close moderation reports when topics and messages are deleted. (RemoveTopic.php)
 
 July 2007
 --------------------------------------------------------------------------------

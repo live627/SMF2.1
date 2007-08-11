@@ -263,6 +263,17 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			require_once($sourcedir . '/MoveTopic.php');
 			moveTopics($recycleTopics, $modSettings['recycle_board']);
 
+			// Close reports that are being recycled.
+			require_once($sourcedir . '/ModerationCenter.php');
+			
+			$smfFunc['db_query']('', "
+				UPDATE {$db_prefix}log_reported
+				SET closed = 1
+				WHERE id_topic IN (" . implode(', ', $recycleTopics) . ")", __FILE__, __LINE__);
+
+			updateSettings(array('last_mod_report_action' => time()));
+			recountOpenReports();
+
 			// Topics that were recycled don't need to be deleted, so subtract them.
 			$topics = array_diff($topics, $recycleTopics);
 
@@ -504,6 +515,18 @@ function removeMessage($message, $decreasePostCount = true)
 		if (!$row['approved'])
 			isAllowedTo('approve_posts');
 	}
+
+	// Close any moderation reports for this message.
+	require_once($sourcedir . '/ModerationCenter.php');
+	
+	$smfFunc['db_query']('', "
+		UPDATE {$db_prefix}log_reported
+		SET closed = 1
+		WHERE id_msg = $message", __FILE__, __LINE__);
+
+	updateSettings(array('last_mod_report_action' => time()));
+	recountOpenReports();
+
 
 	// Delete the *whole* topic, but only if the topic consists of one message.
 	if ($row['id_first_msg'] == $message)

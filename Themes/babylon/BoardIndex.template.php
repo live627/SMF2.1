@@ -229,6 +229,13 @@ function template_main()
 </table></div>';
 	}
 
+	template_info_center();
+}
+
+function template_info_center()
+{
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
 	// Here's where the "Info Center" starts...
 	echo '
 <br />
@@ -501,5 +508,4 @@ function template_main()
 	echo '
 </table></div>';
 }
-
 ?>
