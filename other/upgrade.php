@@ -695,6 +695,10 @@ function upgradeExit()
 		call_user_func('template_' . $upcontext['sub_template']);
 	}
 
+	// Was there an error?
+	if (!empty($upcontext['forced_error_message']))
+		echo $upcontext['forced_error_message'];
+
 	// Show the footer.
 	if (!isset($_GET['xml']))
 		template_upgrade_below();
@@ -2189,14 +2193,17 @@ function parse_sql($filename)
 */
 
 	// Our custom error handler - does nothing but does stop public errors from XML!
-	function sql_error_handler($errno, $errstr, $errfile, $errline)
+	if (!function_exists('sql_error_handler'))
 	{
-		global $support_js;
-
-		if ($support_js)
-			return true;
-		else
-			echo 'Error: ' . $errstr . ' File: ' . $errfile . ' Line: ' . $errline;
+		function sql_error_handler($errno, $errstr, $errfile, $errline)
+		{
+			global $support_js;
+	
+			if ($support_js)
+				return true;
+			else
+				echo 'Error: ' . $errstr . ' File: ' . $errfile . ' Line: ' . $errline;
+		}
 	}
 
 	// Make our own error handler.
@@ -2508,7 +2515,8 @@ function upgrade_query($string, $unbuffered = false)
 		return false;
 	}
 
-	echo '
+	// Otherwise we have to display this somewhere appropriate if possible.
+	$upcontext['forced_error_message'] = '
 			<b>Unsuccessful!</b><br />
 
 			<div style="margin: 2ex;">
@@ -2519,7 +2527,7 @@ function upgrade_query($string, $unbuffered = false)
 				<blockquote>' . nl2br(htmlspecialchars($db_error_message)) . '</blockquote>
 			</div>
 
-			<form action="', $upgradeurl, $query_string, '" method="post">
+			<form action="' . $upgradeurl . $query_string . '" method="post">
 				<input type="submit" value="Try again" />
 			</form>
 		</div>';
@@ -3073,11 +3081,11 @@ function makeFilesWritable(&$files)
 		}
 	}
 
-	if (empty($files))
-		return true;
-
 	// What remains?
 	$upcontext['chmod']['files'] = $files;
+
+	if (empty($files))
+		return true;
 
 	return false;
 }

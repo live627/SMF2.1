@@ -177,9 +177,6 @@ ORDER BY boardOrder;
 ALTER TABLE {$db_prefix}smileys
 CHANGE COLUMN smileyOrder smileyOrder smallint(5) unsigned NOT NULL default '0';
 
-ALTER TABLE {$db_prefix}smileys
-ORDER BY LENGTH(code) DESC;
-
 UPDATE {$db_prefix}smileys
 SET filename = 'embarrassed.gif'
 WHERE filename = 'embarassed.gif';
@@ -954,7 +951,7 @@ $request = upgrade_query("
 list ($totalMembers) = mysql_fetch_row($request);
 mysql_free_result($request);
 
-$_GET['m'] = (int) @$_GET['m'];
+$_GET['m'] = isset($_GET['m']) ? (int) $_GET['m'] : 0;
 
 while ($_GET['m'] < $totalMembers)
 {
@@ -992,7 +989,7 @@ $request = upgrade_query("
 list ($totalMembers) = mysql_fetch_row($request);
 mysql_free_result($request);
 
-$_GET['m'] = (int) @$_GET['m'];
+$_GET['m'] = isset($_GET['m']) ? (int) $_GET['m'] : 0;
 
 while ($_GET['m'] < $totalMembers)
 {
