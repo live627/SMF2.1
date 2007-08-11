@@ -311,7 +311,8 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 	$posts = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
+		$preview = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br />' => '&#10;')));
+		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// Censor it!
 		censorText($row['subject']);
@@ -335,7 +336,7 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 			),
 			'subject' => $row['subject'],
 			'short_subject' => shorten_subject($row['subject'], 25),
-			'preview' => $smfFunc['strlen']($row['body']) > 128 ? $smfFunc['substr']($row['body'], 0, 128) . '...' : $row['body'],
+			'preview' => $smfFunc['strlen']($preview) > 128 ? $smfFunc['substr']($preview, 0, 128) . '...' : $preview,
 			'body' => $row['body'],
 			'time' => timeformat($row['poster_time']),
 			'timestamp' => forum_time(true, $row['poster_time']),
