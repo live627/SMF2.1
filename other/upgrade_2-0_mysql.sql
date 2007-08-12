@@ -1285,6 +1285,11 @@ mysql_free_result($request);
 
 if ($profileCount == 0)
 {
+	// Everything starts off invalid.
+	upgrade_query("
+		UPDATE {$db_prefix}board_permissions
+		SET id_profile = 0");
+
 	// Insert a boat load of default profile permissions.
 	upgrade_query("
 		INSERT INTO {$db_prefix}permission_profiles
@@ -1377,7 +1382,7 @@ if ($profileCount == 0)
 	while ($row = mysql_fetch_assoc($request))
 	{
 		// Is it a truely local permission board? If so this is a new profile!
-		if ($row['permission_mode'] != 0 && !empty($modSettings['permission_enable_by_board']))
+		if ($row['permission_mode'] == 1)
 		{
 			// I know we could cache this, but I think we need to be practical - this is slow but guaranteed to work.
 			upgrade_query("
@@ -1419,6 +1424,11 @@ if ($profileCount == 0)
 				WHERE id_board IN ($boards)
 					AND id_profile = 0");
 	}
+
+	// Just in case we have any random permissions that didn't have boards.
+	upgrade_query("
+		DELETE FROM {$db_prefix}board_permissions
+		WHERE id_profile = 0");
 }
 ---}
 ---#
