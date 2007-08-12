@@ -269,6 +269,7 @@ function template_show_month_grid($grid_name)
 		return false;
 
 	$calendar_data = &$context['calendar_grid_' . $grid_name];
+	$colspan = !empty($calendar_data['show_week_links']) ? 8 : 7;
 
 	echo '
 		<table cellspacing="1" cellpadding="2" width="100%" class="bordercolor">';
@@ -277,7 +278,7 @@ function template_show_month_grid($grid_name)
 	{
 		echo '
 			<tr class="titlebg">
-				<td style="font-size: ', $calendar_data['size'] == 'large' ? 'x-large' : 'x-small', ';" align="center" colspan="7">
+				<td style="font-size: ', $calendar_data['size'] == 'large' ? 'x-large' : 'x-small', ';" align="center" colspan="', $colspan, '">
 					<div style="float: left; display: inline;">';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'])
@@ -315,6 +316,10 @@ function template_show_month_grid($grid_name)
 		echo '
 			<tr>';
 
+		if (!empty($calendar_data['show_week_links']))
+			echo '
+				<td class="titlebg2">&nbsp;</td>';
+
 		foreach ($calendar_data['week_days'] as $day)
 			echo '
 				<td class="titlebg2" width="14%" align="center" ', $calendar_data['size'] == 'small' ? 'style="font-size: x-small;"' : '', '>', !empty($calendar_data['short_day_titles']) ? substr($txt['days'][$day], 0, 1) : $txt['days'][$day], '</td>';
@@ -329,6 +334,11 @@ function template_show_month_grid($grid_name)
 		echo '
 			<tr>';
 
+		if (!empty($calendar_data['show_week_links']))
+			echo '
+				<td valign="middle" align="center" class="windowbg2">
+					<a href="', $scripturl, '?action=calendar;viewweek;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], ';day=', $week['days'][0]['day'], '">&#187;</a>
+				</td>';
 		/* Every day has the following:
 			day (# in month), is_today (is this day *today*?), is_first_day (first day of the week?),
 			holidays, events, birthdays. (last three are lists.) */

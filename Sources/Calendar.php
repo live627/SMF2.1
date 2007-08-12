@@ -117,6 +117,7 @@ function CalendarMain()
 		'show_week_num' => !empty($modSettings['cal_showweeknum']),
 		'short_day_titles' => false,
 		'show_next_prev' => true,
+		'show_week_links' => true,
 		'size' => 'large',
 	);
 
@@ -130,6 +131,7 @@ function CalendarMain()
 	$calendarOptions['show_birthdays'] = $calendarOptions['show_events'] = $calendarOptions['show_holidays'] = false;
 	$calendarOptions['short_day_titles'] = true;
 	$calendarOptions['show_next_prev'] = false;
+	$calendarOptions['show_week_links'] = false;
 	$calendarOptions['size'] = 'small';
 	$context['calendar_grid_current'] = getCalendarGrid($curPage['month'], $curPage['year'], $calendarOptions);
 	$context['calendar_grid_prev'] = getCalendarGrid($context['calendar_grid_current']['previous_calendar']['month'], $context['calendar_grid_current']['previous_calendar']['year'], $calendarOptions);

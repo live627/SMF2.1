@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2773 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2774 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -30,6 +30,7 @@ August 2007
  ! Work harder to avoid timeouts during maintenance, and don't let the debug cache get too big. (ManageMaintenance, Subs-Db-xxx.php)
  + Allow guests to vote in polls if they have the relevant permissions and the poll starter allows it. (Post.php, Poll.php, ManagePermissions.php, install, upgrade scripts)
  * Some template and language changes for the above. (Poll template, Post template, Errors, Post language files)
+ ! Show a link to weekly view in the calendar. (Calendar template, Subs-Calendar.php, Calendar.php)
 
 
 July 2007

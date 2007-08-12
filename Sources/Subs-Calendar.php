@@ -343,6 +343,7 @@ function getCalendarGrid($month, $year, $calendarOptions)
 		'current_month' => $month,
 		'current_year' => $year,
 		'show_next_prev' => !empty($calendarOptions['show_next_prev']),
+		'show_week_links' => !empty($calendarOptions['show_week_links']),
 		'previous_calendar' => array(
 			'year' => $month == 1 ? $year - 1 : $year,
 			'month' => $month == 1 ? 12 : $month - 1,
