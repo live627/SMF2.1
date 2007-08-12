@@ -597,7 +597,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	$headers = 'From: "' . $from_name . '" <' . (empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from']) . '>' . $line_break;
 	$headers .= $from !== null ? 'Reply-To: <' . $from . '>' . $line_break : '';
 	$headers .= 'Return-Path: ' . (empty($modSettings['mail_from']) ? $webmaster_email: $modSettings['mail_from']) . $line_break;
-	$headers .= 'Date: ' . gmdate('D, d M Y H:i:s') . ' +0000' . $line_break;
+	$headers .= 'Date: ' . gmdate('D, d M Y H:i:s') . ' -0000' . $line_break;
 
 	if ($message_id !== null && empty($modSettings['mail_no_message_id']))
 		$headers .= 'Message-ID: <' . md5($scripturl . microtime()) . '-' . $message_id . strstr(empty($modSettings['mail_from']) ? $webmaster_email : $modSettings['mail_from'], '@') . '>' . $line_break;

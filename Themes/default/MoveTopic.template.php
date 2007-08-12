@@ -39,7 +39,7 @@ function template_main()
 
 	// Disable the reason textarea when the postRedirect checkbox is unchecked...
 	echo '
-					<label for="postRedirect"><input type="checkbox" name="postRedirect" id="postRedirect" ', $context['is_approved'] ? 'checked="checked"' : '', ' onclick="', $context['is_approved'] ('if (this.checked && !confirm(\'' . $txt['move_topic_unapproved_js'] . '\')) return false; ' : ''), 'document.getElementById(\'reasonArea\').style.display = this.checked ? \'block\' : \'none\';" class="check" /> ', $txt['moveTopic1'], '.</label><br />
+					<label for="postRedirect"><input type="checkbox" name="postRedirect" id="postRedirect" ', $context['is_approved'] ? 'checked="checked"' : '', ' onclick="', $context['is_approved'] ? '' : 'if (this.checked && !confirm(\'' . $txt['move_topic_unapproved_js'] . '\')) return false; ', 'document.getElementById(\'reasonArea\').style.display = this.checked ? \'block\' : \'none\';" class="check" /> ', $txt['moveTopic1'], '.</label><br />
 					<div id="reasonArea" style="margin-top: 1ex;', $context['is_approved'] ? '' : 'display: none;', '">
 						', $txt['moved_why'], '<br />
 						<textarea name="reason" rows="3" cols="40">', $txt['movetopic_default'], '</textarea><br />
