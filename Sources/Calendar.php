@@ -141,6 +141,7 @@ function CalendarMain()
 	$context['can_post'] = allowedTo('calendar_post');
 	$context['current_month'] = $curPage['month'];
 	$context['current_year'] = $curPage['year'];
+	$context['show_all_birthdays'] = isset($_GET['showbd']);
 
 	// Load up the linktree!
 	$context['linktree'][] = array(

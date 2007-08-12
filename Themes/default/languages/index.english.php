@@ -465,6 +465,7 @@ $txt['calendar_how_edit'] = 'how do you edit these events?';
 $txt['calendar_link_event'] = 'Link Event To Post:';
 $txt['calendar_confirm_delete'] = 'Are you sure you want to delete this event?';
 $txt['calendar_linked_events'] = 'Linked Events';
+$txt['calendar_click_all'] = 'click to see all %1$s';
 
 $txt['moveTopic1'] = 'Post a redirection topic';
 $txt['moveTopic2'] = 'Change the topic\'s subject';
