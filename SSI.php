@@ -927,14 +927,14 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		return array();
 
 	$request = $smfFunc['db_query']('', "
-		SELECT p.id_poll, p.question, t.id_topic, p.max_votes
+		SELECT p.id_poll, p.question, t.id_topic, p.max_votes, p.guest_vote
 		FROM {$db_prefix}polls AS p
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_poll = p.id_poll AND t.approved = 1)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)" . ($topPollInstead ? "
 			INNER JOIN {$db_prefix}poll_choices AS pc ON (pc.id_poll = p.id_poll)" : '') . "
-			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member = $user_info[id])
+			LEFT JOIN {$db_prefix}log_polls AS lp ON (lp.id_poll = p.id_poll AND lp.id_member > 0 AND lp.id_member = $user_info[id])
 		WHERE p.voting_locked = 0
-			AND lp.id_choice IS NULL
+			AND " . ($user_info['is_guest'] ? 'p.guest_vote = 1' : 'lp.id_choice IS NULL') . "
 			AND $user_info[query_wanna_see_board]" . (!in_array(0, $boardsAllowed) ? "
 			AND b.id_board IN (" . implode(', ', $boardsAllowed) . ")" : '') . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 			AND b.id_board != $modSettings[recycle_board]" : '') . "
@@ -946,6 +946,10 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 	// This user has voted on all the polls.
 	if ($row === false)
 		return array();
+
+	// If this is a guest who's voted we'll through ourselves to show poll to show the results.
+	if ($user_info['is_guest'] && (!$row['guest_vote'] || (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote'])))))
+		return ssi_showPoll($row['id_topic'], $output_method);
 
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(DISTINCT id_member)
@@ -1038,7 +1042,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			p.id_poll, p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes
+			p.id_poll, p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes, p.guest_vote
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
@@ -1058,7 +1062,11 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 	// Check if they can vote.
 	if (!empty($row['expire_time']) && $row['expire_time'] < time())
 		$allow_vote = false;
-	elseif ($user_info['is_guest'] || !empty($row['voting_locked']) || !allowedTo('poll_vote'))
+	elseif (!empty($row['voting_locked']) || !allowedTo('poll_vote'))
+		$allow_vote = false;
+	elseif ($user_info['is_guest'] && $row['guest_vote'] && (!isset($_COOKIE['guest_poll_vote']) || !in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote']))))
+		$allow_vote = true;
+	elseif ($user_info['is_guest'])
 		$allow_vote = false;
 	else
 	{
@@ -1174,7 +1182,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 // Takes care of voting - don't worry, this is done automatically.
 function ssi_pollVote()
 {
-	global $db_prefix, $user_info, $sc, $smfFunc;
+	global $db_prefix, $user_info, $sc, $smfFunc, $sourcedir, $modSettings;
 
 	if (!isset($_POST['sc']) || $_POST['sc'] != $sc || empty($_POST['options']) || !isset($_POST['poll']))
 	{
@@ -1197,7 +1205,7 @@ function ssi_pollVote()
 
 	// Check if they have already voted, or voting is locked.
 	$request = $smfFunc['db_query']('', "
-		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.expire_time, p.max_votes, t.id_topic
+		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.expire_time, p.max_votes, p.guest_vote, t.id_topic
 		FROM {$db_prefix}polls AS p
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_poll = $_POST[poll])
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
@@ -1211,12 +1219,30 @@ function ssi_pollVote()
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
-	if (!empty($row['voting_locked']) || $row['selected'] != -1 || (!empty($row['expire_time']) && time() > $row['expire_time']))
+	if (!empty($row['voting_locked']) || ($row['selected'] != -1 && !$user_info['is_guest']) || (!empty($row['expire_time']) && time() > $row['expire_time']))
 		redirectexit('topic=' . $row['id_topic'] . '.0');
 
 	// Too many options checked?
 	if (count($_REQUEST['options']) > $row['max_votes'])
 		redirectexit('topic=' . $row['id_topic'] . '.0');
+
+	// It's a guest who has already voted?
+	if ($user_info['is_guest'])
+	{
+		// Guest voting disabled?
+		if (!$row['guest_vote'])
+			redirectexit('topic=' . $row['id_topic'] . '.0');
+		// Already voted?
+		elseif (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote'])))
+			redirectexit('topic=' . $row['id_topic'] . '.0');
+
+		$request = $smfFunc['db_query']('', "
+			SELECT MIN(id_member)
+			FROM {$db_prefix}log_polls
+			WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
+		list ($guest_id) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
+	}
 
 	$options = array();
 	$inserts = array();
@@ -1225,7 +1251,7 @@ function ssi_pollVote()
 		$id = (int) $id;
 
 		$options[] = $id;
-		$inserts[] = array($_POST['poll'], $user_info['id'], $id);
+		$inserts[] = array($_POST['poll'], $user_info['is_guest'] ? $guest_id : $user_info['id'], $id);
 	}
 
 	// Add their vote in to the tally.
@@ -1240,6 +1266,16 @@ function ssi_pollVote()
 		SET votes = votes + 1
 		WHERE id_poll = $_POST[poll]
 			AND id_choice IN (" . implode(', ', $options) . ")", __FILE__, __LINE__);
+
+	// Track the vote if a guest.
+	if ($user_info['is_guest'])
+	{
+		$_COOKIE['guest_poll_vote'] = !empty($_COOKIE['guest_poll_vote']) ? ($_COOKIE['guest_poll_vote'] . ',' . $row['id_poll']) : $row['id_poll'];
+
+		require_once($sourcedir . '/Subs-Auth.php');
+		$cookie_url = url_parts(!empty($modSettings['localCookies']), !empty($modSettings['globalCookies']));
+		setcookie('guest_poll_vote', $_COOKIE['guest_poll_vote'], time() + 2500000, $cookie_url[1], $cookie_url[0], 0);
+	}
 
 	redirectexit('topic=' . $row['id_topic'] . '.0');
 }
