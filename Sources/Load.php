@@ -475,10 +475,15 @@ function loadUserSettings()
 		$user_info['language'] = strtr($_SESSION['language'], './\\:', '____');
 
 	// Load the mod cache so we can know what additional boards they should see, but no sense in doing it for admins and guests
-	if (!$user_info['is_guest'] && !$user_info['is_admin'] && (!isset($_SESSION['mc']) || $_SESSION['mc']['time'] <= $modSettings['settings_updated']))
+	if (!$user_info['is_guest'] && !$user_info['is_admin'])
 	{
-		require_once($sourcedir . '/Subs-Auth.php');
-		rebuildModCache();
+		if (!isset($_SESSION['mc']) || $_SESSION['mc']['time'] <= $modSettings['settings_updated'])
+		{
+			require_once($sourcedir . '/Subs-Auth.php');
+			rebuildModCache();
+		}
+		else
+			$user_info['mod_cache'] = $_SESSION['mc'];
 	}
 
 	// Just build this here, it makes it easier to change/use.

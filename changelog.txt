@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2775 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2776 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -32,6 +32,7 @@ August 2007
  * Some template and language changes for the above. (Poll template, Post template, Errors, Post language files)
  ! Show a link to weekly view in the calendar. (Calendar template, Subs-Calendar.php, Calendar.php)
  ! If there are more than fifteen birthdays on a day then hide anything over ten using javascript. (Calendar.php, Calendar template)
+ ! Ensure that the mod_cache is set in $user_info before trying to create the query restrictions. (Load.php)
 
 
 July 2007
