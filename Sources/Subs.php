@@ -706,7 +706,7 @@ function timeformat($log_time, $show_today = true)
 		if (strpos($user_info['time_format'], '%H') === false && strpos($user_info['time_format'], '%T') === false)
 		{
 			$h = strpos($user_info['time_format'], '%l') === false ? '%I' : '%l';
-			$today_fmt = $h . '%M' . $s . ' %p';
+			$today_fmt = $h . ':%M' . $s . ' %p';
 		}
 		else
 			$today_fmt = '%H:%M' . $s;
