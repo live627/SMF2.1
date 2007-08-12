@@ -1498,6 +1498,8 @@ if (!isset($modSettings['admin_features']))
 	if (!empty($modSettings['modlog_enabled']))
 		$enabled_features[] = 'ml';
 
+	$enabled_features = implode(',', $enabled_features);
+
 	upgrade_query("
 		INSERT INTO {$db_prefix}settings
 			(variable, value)
