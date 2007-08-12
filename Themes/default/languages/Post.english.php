@@ -131,6 +131,7 @@ $txt['poll_max_votes'] = 'Maximum votes per user.';
 $txt['poll_do_change_vote'] = 'Allow user to change vote.';
 $txt['poll_too_many_votes'] = 'You selected too many options.  For this poll, you may only select %s options.';
 $txt['poll_add_option'] = 'Add Option';
+$txt['poll_guest_vote'] = 'Allow guests to vote.';
 
 $txt['spellcheck_done'] = 'Spell checking complete.';
 $txt['spellcheck_change_to'] = 'Change To:';

@@ -82,20 +82,17 @@ if (!defined('SMF'))
 // Allow the user to vote.
 function Vote()
 {
-	global $topic, $txt, $db_prefix, $user_info, $smfFunc;
+	global $topic, $txt, $db_prefix, $user_info, $smfFunc, $sourcedir, $modSettings;
 
 	// Make sure you can vote.
 	isAllowedTo('poll_vote');
-
-	// Even with poll_vote permission we would never be able to register you.
-	if ($user_info['is_guest'])
-		fatal_lang_error('cannot_poll_vote', 'permission');
 
 	loadLanguage('Post');
 
 	// Check if they have already voted, or voting is locked.
 	$request = $smfFunc['db_query']('', "
-		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.id_poll, p.expire_time, p.max_votes, p.change_vote
+		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.id_poll, p.expire_time, p.max_votes, p.change_vote,
+			p.guest_vote
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 			LEFT JOIN {$db_prefix}log_polls AS lp ON (p.id_poll = lp.id_poll AND lp.id_member = $user_info[id])
@@ -106,15 +103,26 @@ function Vote()
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
+	// If this is a guest can they vote?
+	if ($user_info['is_guest'])
+	{
+		// Guest voting disabled?
+		if (!$row['guest_vote'])
+			fatal_lang_error('guest_vote_disabled');
+		// Already voted?
+		elseif (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], $_COOKIE['guest_poll_vote']))
+			fatal_lang_error('poll_error', false);	
+	}
+
 	// Is voting locked or has it expired?
 	if (!empty($row['voting_locked']) || (!empty($row['expire_time']) && time() > $row['expire_time']))
 		fatal_lang_error('poll_error', false);
 
 	// If they have already voted and aren't allowed to change their vote - hence they are outta here!
-	if ($row['selected'] != -1 && empty($row['change_vote']))
+	if (!$user_info['is_guest'] && $row['selected'] != -1 && empty($row['change_vote']))
 		fatal_lang_error('poll_error', false);
 	// Otherwise if they can change their vote yet they haven't sent any options... remove their vote and redirect.
-	elseif (!empty($row['change_vote']))
+	elseif (!empty($row['change_vote']) && !$user_info['is_guest'])
 	{
 		$pollOptions = array();
 
@@ -159,6 +167,17 @@ function Vote()
 	if (count($_REQUEST['options']) > $row['max_votes'])
 		fatal_lang_error('poll_error1', false, array($row['max_votes']));
 
+	// If this is a guest generate them a unique ID.
+	if ($user_info['is_guest'])
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT MIN(id_member)
+			FROM {$db_prefix}log_polls
+			WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
+		list ($guest_id) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
+	}
+
 	$pollOptions = array();
 	$inserts = array();
 	foreach ($_REQUEST['options'] as $id)
@@ -166,7 +185,7 @@ function Vote()
 		$id = (int) $id;
 
 		$pollOptions[] = $id;
-		$inserts[] = array($row['id_poll'], $user_info['id'], $id);
+		$inserts[] = array($row['id_poll'], $user_info['is_guest'] ? $guest_id - 1 : $user_info['id'], $id);
 	}
 
 	// Add their vote to the tally.
@@ -182,6 +201,16 @@ function Vote()
 		SET votes = votes + 1
 		WHERE id_poll = $row[id_poll]
 			AND id_choice IN (" . implode(', ', $pollOptions) . ")", __FILE__, __LINE__);
+
+	// If it's a guest don't let them vote again.
+	if ($user_info['is_guest'])
+	{
+		$_COOKIE['guest_poll_vote'] = !empty($_COOKIE['guest_poll_vote']) ? ($_COOKIE['guest_poll_vote'] . ',' . $row['id_poll']) : $row['id_poll'];
+
+		require_once($sourcedir . '/Subs-Auth.php');
+		$cookie_url = url_parts(!empty($modSettings['localCookies']), !empty($modSettings['globalCookies']));
+		setcookie('guest_poll_vote', $_COOKIE['guest_poll_vote'], time() + 2500000, $cookie_url[1], $cookie_url[0], 0);
+	}
 
 	// Return to the post...
 	redirectexit('topic=' . $topic . '.' . $_REQUEST['start']);
@@ -235,7 +264,7 @@ function LockVoting()
 // Ask what to change in a poll.
 function EditPoll()
 {
-	global $txt, $db_prefix, $user_info, $context, $topic, $smfFunc;
+	global $txt, $db_prefix, $user_info, $context, $topic, $board, $smfFunc, $sourcedir;
 
 	if (empty($topic))
 		fatal_lang_error('no_access', false);
@@ -251,7 +280,7 @@ function EditPoll()
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			t.id_member_started, p.id_poll, p.question, p.hide_results, p.expire_time, p.max_votes, p.change_vote,
-			p.id_member AS pollStarter
+			p.guest_vote, p.id_member AS pollStarter
 		FROM {$db_prefix}topics AS t
 			LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 		WHERE t.id_topic = $topic
@@ -277,6 +306,10 @@ function EditPoll()
 	elseif (!$context['is_edit'] && !allowedTo('poll_add_any'))
 		isAllowedTo('poll_add_' . ($user_info['id'] == $pollinfo['id_member_started'] ? 'own' : 'any'));
 
+	// Do we enable guest voting?
+	require_once($sourcedir . '/Subs-Members.php');
+	$groupsAllowedVote = groupsAllowedTo('poll_vote', $board);
+
 	// Want to make sure before you actually submit?  Must be a lot of options, or something.
 	if (isset($_POST['preview']))
 	{
@@ -288,6 +321,8 @@ function EditPoll()
 			'question' => $question,
 			'hide_results' => empty($_POST['poll_hide']) ? 0 : $_POST['poll_hide'],
 			'change_vote' => isset($_POST['poll_change_vote']),
+			'guest_vote' => isset($_POST['poll_guest_vote']),
+			'guest_vote_allowed' => in_array(-1, $groupsAllowedVote['allowed']),
 			'max_votes' => empty($_POST['poll_max_votes']) ? '1' : max(1, $_POST['poll_max_votes']),
 		);
 
@@ -408,6 +443,8 @@ function EditPoll()
 			'hide_results' => $pollinfo['hide_results'],
 			'max_votes' => $pollinfo['max_votes'],
 			'change_vote' => !empty($pollinfo['change_vote']),
+			'guest_vote' => !empty($pollinfo['guest_vote']),
+			'guest_vote_allowed' => in_array(-1, $groupsAllowedVote['allowed']),
 		);
 
 		// Poll expiration time?
@@ -485,7 +522,7 @@ function EditPoll()
 function EditPoll2()
 {
 	global $txt, $topic, $board, $db_prefix, $context;
-	global $modSettings, $user_info, $smfFunc;
+	global $modSettings, $user_info, $smfFunc, $sourcedir;
 
 	if (checkSession('post', '', false) != '')
 		$poll_errors[] = 'session_timeout';
@@ -564,6 +601,16 @@ function EditPoll2()
 
 	$_POST['poll_hide'] = (int) $_POST['poll_hide'];
 	$_POST['poll_change_vote'] = isset($_POST['poll_change_vote']) ? 1 : 0;
+	$_POST['poll_guest_vote'] = isset($_POST['poll_guest_vote']) ? 1 : 0;
+
+	// Make sure guests are actually allowed to vote generally.
+	if ($_POST['poll_guest_vote'])
+	{
+		require_once($sourcedir . '/Subs-Members.php');
+		$allowedGroups = groupsAllowedTo('poll_vote', $board);
+		if (!in_array(-1, $allowedGroups['allowed']))
+			$_POST['poll_guest_vote'] = 0;
+	}
 
 	// Ensure that the number options allowed makes sense, and the expiration date is valid.
 	if (!$isEdit || allowedTo('moderate_board'))
@@ -585,7 +632,8 @@ function EditPoll2()
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}polls
 			SET question = '$_POST[question]', change_vote = $_POST[poll_change_vote]," . (allowedTo('moderate_board') ? "
-				hide_results = $_POST[poll_hide], expire_time = $_POST[poll_expire], max_votes = $_POST[poll_max_votes]" : "
+				hide_results = $_POST[poll_hide], expire_time = $_POST[poll_expire], max_votes = $_POST[poll_max_votes],
+				guest_vote = $_POST[poll_guest_vote]" : "
 				hide_results = CASE WHEN expire_time = 0 AND $_POST[poll_hide] = 2 THEN 1 ELSE $_POST[poll_hide] END") . "
 			WHERE id_poll = $bcinfo[id_poll]", __FILE__, __LINE__);
 	}
@@ -595,8 +643,8 @@ function EditPoll2()
 		// Create the poll.
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}polls
-				(question, hide_results, max_votes, expire_time, id_member, poster_name, change_vote)
-			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes], $_POST[poll_expire], $user_info[id], SUBSTRING('$user_info[username]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
+				(question, hide_results, max_votes, guest_vote, expire_time, id_member, poster_name, change_vote)
+			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes], $_POST[poll_guest_vote], $_POST[poll_expire], $user_info[id], SUBSTRING('$user_info[username]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
 
 		// Set the poll ID.
 		$bcinfo['id_poll'] = db_insert_id("{$db_prefix}polls", 'id_poll');

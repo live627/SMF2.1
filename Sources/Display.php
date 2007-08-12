@@ -563,7 +563,7 @@ function Display()
 		$request = $smfFunc['db_query']('', "
 			SELECT
 				p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes, p.change_vote,
-				p.id_member, IFNULL(mem.real_name, p.poster_name) AS poster_name
+				p.guest_vote, p.id_member, IFNULL(mem.real_name, p.poster_name) AS poster_name
 			FROM {$db_prefix}polls AS p
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = p.id_member)
 			WHERE p.id_poll = $topicinfo[id_poll]
@@ -596,6 +596,10 @@ function Display()
 		}
 		$smfFunc['db_free_result']($request);
 
+		// If this is a guest we need to do our best to work out if they have voted.
+		if ($user_info['is_guest'] && $pollinfo['guest_vote'] && allowedTo('poll_vote'))
+			$pollinfo['has_voted'] = isset($_COOKIE['guest_poll_vote']) && in_array($topicinfo['id_poll'], explode(',', $_COOKIE['guest_poll_vote']));
+
 		// Set up the basic poll information.
 		$context['poll'] = array(
 			'id' => $topicinfo['id_poll'],
@@ -621,12 +625,12 @@ function Display()
 
 		// You're allowed to vote if:
 		// 1. the poll did not expire, and
-		// 2. you're not a guest... and
+		// 2. you're either not a guest OR guest voting is enabled... and
 		// 3. you're not trying to view the results, and
 		// 4. the poll is not locked, and
 		// 5. you have the proper permissions, and
 		// 6. you haven't already voted before.
-		$context['allow_vote'] = !$context['poll']['is_expired'] && !$user_info['is_guest'] && empty($pollinfo['voting_locked']) && allowedTo('poll_vote') && !$context['poll']['has_voted'];
+		$context['allow_vote'] = !$context['poll']['is_expired'] && (!$user_info['is_guest'] || ($pollinfo['guest_vote'] && allowedTo('poll_vote'))) && empty($pollinfo['voting_locked']) && allowedTo('poll_vote') && !$context['poll']['has_voted'];
 
 		// You're allowed to view the results if:
 		// 1. you're just a super-nice-guy, or

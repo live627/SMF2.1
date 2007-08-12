@@ -89,6 +89,7 @@ function template_main()
 							</tr><tr>';
 
 	if ($context['can_moderate_poll'])
+	{
 		echo '
 								<td align="right"><b>', $txt['poll_options'], ':</b></td>
 								<td class="smalltext"><input type="text" name="poll_max_votes" size="2" value="', $context['poll']['max_votes'], '" /> ', $txt['poll_max_votes'], '</td>
@@ -97,9 +98,18 @@ function template_main()
 								<td class="smalltext">', $txt['poll_run'], ' <input type="text" name="poll_expire" size="2" value="', $context['poll']['expiration'], '" onchange="this.form.poll_hide[2].disabled = isEmptyText(this) || this.value == 0; if (this.form.poll_hide[2].checked) this.form.poll_hide[1].checked = true;" /> ', $txt['poll_run_days'], '</td>
 							</tr><tr>
 								<td align="right"></td>
-								<td class="smalltext"><label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_do_change_vote'], '</label></td>
+								<td class="smalltext">
+									<label for="poll_change_vote"><input type="checkbox" id="poll_change_vote" name="poll_change_vote"', !empty($context['poll']['change_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_do_change_vote'], '</label>';
+
+		if ($context['poll']['guest_vote_allowed'])
+			echo '
+									<br /><label for="poll_guest_vote"><input type="checkbox" id="poll_guest_vote" name="poll_guest_vote"', !empty($context['poll']['guest_vote']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['poll_guest_vote'], '</label>';
+
+		echo '
+								</td>
 							</tr><tr>
 								<td align="right"></td>';
+	}
 	else
 		echo '
 								<td align="right" valign="top"><b>', $txt['poll_options'], ':</b></td>';

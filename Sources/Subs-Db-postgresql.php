@@ -179,7 +179,8 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 			$_SESSION['debug_redirect'] = array();
 		}
 
-		$db_cache[$db_count]['q'] = $db_string;
+		// Don't overload it.
+		$db_cache[$db_count]['q'] = $db_count < 50 ? $db_string : '...';
 		$db_cache[$db_count]['f'] = $file;
 		$db_cache[$db_count]['l'] = $line;
 		$st = microtime();

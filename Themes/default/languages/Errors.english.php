@@ -56,6 +56,7 @@ $txt['already_a_mod'] = 'You have chosen a username of an already existing moder
 $txt['session_timeout'] = 'Your session timed out while posting.  Please go back and try again.';
 $txt['session_varify_fail'] = 'Session verification failed.  Please try logging out and back in again, and then try again.';
 $txt['verify_url_fail'] = 'Unable to verify referring url.  Please go back and try again.';
+$txt['guest_vote_disabled'] = 'Guests cannot vote in this poll.';
 
 // Untranslated!
 $txt['cannot_access_mod_center'] = 'You do not have permission to access the moderation center.';

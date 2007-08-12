@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2772 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2773 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -27,6 +27,10 @@ August 2007
  ! Respect the use of %l in the Today/Yesterday time format. (Subs.php)
  * Move the info center code into its own function. (BoardIndex template files)
  ! Close moderation reports when topics and messages are deleted. (RemoveTopic.php)
+ ! Work harder to avoid timeouts during maintenance, and don't let the debug cache get too big. (ManageMaintenance, Subs-Db-xxx.php)
+ + Allow guests to vote in polls if they have the relevant permissions and the poll starter allows it. (Post.php, Poll.php, ManagePermissions.php, install, upgrade scripts)
+ * Some template and language changes for the above. (Poll template, Post template, Errors, Post language files)
+
 
 July 2007
 --------------------------------------------------------------------------------

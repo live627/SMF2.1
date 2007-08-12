@@ -1091,7 +1091,7 @@ function AdminBoardRecount()
 	list ($max_topics) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	$increment = min(ceil($max_topics / 4), 2000);
+	$increment = min(max(50, ceil($max_topics / 4)), 2000);
 	if (empty($_REQUEST['start']))
 		$_REQUEST['start'] = 0;
 

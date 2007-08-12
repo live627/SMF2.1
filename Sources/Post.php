@@ -226,12 +226,17 @@ function Post()
 		else
 			isAllowedTo('poll_add_any');
 
+		require_once($sourcedir . '/Subs-Members.php');
+		$allowedVoteGroups = groupsAllowedTo('poll_vote', $board);
+
 		// Set up the poll options.
 		$context['poll_options'] = array(
 			'max_votes' => empty($_POST['poll_max_votes']) ? '1' : max(1, $_POST['poll_max_votes']),
 			'hide' => empty($_POST['poll_hide']) ? 0 : $_POST['poll_hide'],
 			'expire' => !isset($_POST['poll_expire']) ? '' : $_POST['poll_expire'],
-			'change_vote' => isset($_POST['poll_change_vote'])
+			'change_vote' => isset($_POST['poll_change_vote']),
+			'guest_vote' => isset($_POST['poll_guest_vote']),
+			'guest_vote_enabled' => in_array(-1, $allowedVoteGroups['allowed']),
 		);
 
 		// Make all five poll choices empty.
@@ -1429,6 +1434,16 @@ function Post2()
 			$_POST['poll_hide'] = (int) $_POST['poll_hide'];
 		$_POST['poll_change_vote'] = isset($_POST['poll_change_vote']) ? 1 : 0;
 
+		$_POST['poll_guest_vote'] = isset($_POST['poll_guest_vote']) ? 1 : 0;
+		// Make sure guests are actually allowed to vote generally.
+		if ($_POST['poll_guest_vote'])
+		{
+			require_once($sourcedir . '/Subs-Members.php');
+			$allowedVoteGroups = groupsAllowedTo('poll_vote', $board);
+			if (!in_array(-1, $allowedVoteGroups['allowed']))
+				$_POST['poll_guest_vote'] = 0;
+		}
+
 		// If the user tries to set the poll too far in advance, don't let them.
 		if (!empty($_POST['poll_expire']) && $_POST['poll_expire'] < 1)
 			fatal_lang_error('poll_range_error', false);
@@ -1556,9 +1571,10 @@ function Post2()
 		// Create the poll.
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}polls
-				(question, hide_results, max_votes, expire_time, id_member, poster_name, change_vote)
+				(question, hide_results, max_votes, expire_time, id_member, poster_name, change_vote, guest_vote)
 			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes],
-				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $user_info[id], SUBSTRING('$_POST[guestname]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
+				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $user_info[id], SUBSTRING('$_POST[guestname]', 1, 255),
+				$_POST[poll_change_vote], $_POST[poll_guest_vote])", __FILE__, __LINE__);
 		$id_poll = db_insert_id("{$db_prefix}polls", 'id_poll');
 
 		// Create each answer choice.

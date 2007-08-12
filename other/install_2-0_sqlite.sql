@@ -1573,6 +1573,7 @@ CREATE TABLE {$db_prefix}polls (
   expire_time int NOT NULL default '0',
   hide_results smallint NOT NULL default '0',
   change_vote smallint NOT NULL default '0',
+  guest_vote smallint NOT NULL default '0',
   id_member int NOT NULL default '0',
   poster_name varchar(255) NOT NULL
 );

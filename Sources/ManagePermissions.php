@@ -1461,7 +1461,6 @@ function loadAllPermissions()
 		'profile_server_avatar',
 		'profile_upload_avatar',
 		'profile_remote_avatar',
-		'poll_vote',
 		'mark_any_notify',
 		'mark_notify',
 		'admin_forum',

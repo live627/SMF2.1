@@ -1477,6 +1477,14 @@ DROP PRIMARY KEY,
 ADD PRIMARY KEY (ip(16), log_type(8));
 ---#
 
+---# Adding guest voting ...
+ALTER TABLE {$db_prefix}polls
+ADD guest_vote tinyint(3) NOT NULL default '0';
+
+ALTER TABLE {$db_prefix}log_polls
+CHANGE COLUMN id_member id_member mediumint(8) NOT NULL default '0';
+---#
+
 ---# Implementing admin feature toggles.
 ---{
 if (!isset($modSettings['admin_features']))
