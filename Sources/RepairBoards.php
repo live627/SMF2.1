@@ -718,6 +718,7 @@ function RepairBoards()
 				FROM {$db_prefix}log_polls AS lp
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lp.id_member)
 				WHERE mem.id_member IS NULL
+					AND lp.id_member > 0
 				GROUP BY lp.id_member", __FILE__, __LINE__);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($result))
