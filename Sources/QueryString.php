@@ -103,7 +103,7 @@ function cleanRequest()
 		die('Invalid request variable.');
 
 	// Same goes for numeric keys.
-	foreach (array_merge(array_keys($_REQUEST), array_keys($_FILES)) as $key)
+	foreach (array_merge(array_keys($_POST), array_keys($_GET), array_keys($_FILES)) as $key)
 		if (is_numeric($key))
 			die('Invalid request variable.');
 

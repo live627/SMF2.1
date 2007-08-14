@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2778 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2779 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -38,6 +38,7 @@ August 2007
  + Added some missing information when viewing PMs in wireless mode. (PersonalMessage.php)
  + Added an integration hook after the theme is loaded. (Load.php)
  + Removed the layer check for integrate_exit. (Subs.php)
+ + Check GET and POST instead of REQUEST for numeric keys. (QueryString.php)
 
 
 July 2007
