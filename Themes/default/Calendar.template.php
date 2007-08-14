@@ -8,24 +8,16 @@ function template_main()
 
 	echo '
 		<div style="padding: 3px;">', theme_linktree(), '</div>
-		<div>
 			<div style="padding: 1px; align: center; float: left; width: 200px;">
-				<div>
 					', template_show_month_grid('prev'), '
-				</div><br />
-				<div>
 					', template_show_month_grid('current'), '
-				</div><br />
-				<div>
 					', template_show_month_grid('next'), '
-				</div>
 			</div>
-			<div style="align: center;', $context['browser']['is_ie'] ? 'float: right; ' : 'margin-left: 250px; ', '">
+			<div style="align: center;', $context['browser']['is_ie'] ? 'float: right; ' : 'margin-left: 220px; ', '">
 				', $context['view_week'] ? template_show_week_grid('main') : template_show_month_grid('main'), '
 			</div>
 		</div>
-		<div style="clear: both;">
-		<form action="', $scripturl, '?action=calendar" method="post" accept-charset="', $context['character_set'], '">
+		<form style="clear: both;" action="', $scripturl, '?action=calendar" method="post" accept-charset="', $context['character_set'], '">
 			<table cellspacing="0" cellpadding="3" width="100%" class="tborder"">
 				<tr class="titlebg2">
 					<td align="center">';
@@ -61,8 +53,7 @@ function template_main()
 					</td>
 				</tr>
 			</table>
-		</form>
-		</div>';
+		</form>';
 }
 
 // Template for posting a calendar event.
@@ -272,22 +263,21 @@ function template_show_month_grid($grid_name)
 	$colspan = !empty($calendar_data['show_week_links']) ? 8 : 7;
 
 	echo '
-		<table cellspacing="1" cellpadding="2" width="100%" class="bordercolor">';
+		<table cellspacing="1" cellpadding="2" width="100%" class="bordercolor" style="margin-bottom: 1em;">';
 
 	if (empty($calendar_data['disable_title']))
 	{
 		echo '
 			<tr class="titlebg">
-				<td style="font-size: ', $calendar_data['size'] == 'large' ? 'x-large' : 'x-small', ';" align="center" colspan="', $colspan, '">
-					<div style="float: left; display: inline;">';
+				<td style="font-size: ', $calendar_data['size'] == 'large' ? 'x-large' : 'x-small', ';" align="center" colspan="', $colspan, '">';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'])
 			echo '
-						<b><a href="', $calendar_data['previous_calendar']['href'], '">&#171;</a></b>';
+						<b style="display: block; float: left;"><a href="', $calendar_data['previous_calendar']['href'], '">&#171;</a></b>';
 
-		echo '
-					</div>
-					<div style="display: inline;">';
+		if (empty($calendar_data['next_calendar']['disabled']) && $calendar_data['show_next_prev'])
+			echo '
+						<b style="display: block; float: right;"><a href="', $calendar_data['next_calendar']['href'], '">&#187;</a></b>';
 
 		if ($calendar_data['show_next_prev'])
 			echo '
@@ -296,16 +286,8 @@ function template_show_month_grid($grid_name)
 			echo '
 						<a href="', $scripturl, '?action=calendar;year=', $calendar_data['current_year'], ';month=', $calendar_data['current_month'], '">', $txt['months_titles'][$calendar_data['current_month']], ' ', $calendar_data['current_year'], '</a>';
 
-		echo '
-					</div>
-					<div style="float: right; display: inline">';
-
-		if (empty($calendar_data['next_calendar']['disabled']) && $calendar_data['show_next_prev'])
-			echo '
-						<b><a href="', $calendar_data['next_calendar']['href'], '">&#187;</a></b>';
 
 		echo '
-					</div>
 				</td>
 			</tr>';
 	}
@@ -453,26 +435,18 @@ function template_show_week_grid($grid_name)
 	{
 		echo '
 			<tr>
-				<td class="titlebg" align="center" colspan="2" style="font-size: large;">
-					<div style="float: left; display: inline;">';
+				<td class="titlebg" align="center" colspan="2" style="font-size: large;">';
 
 		if (empty($calendar_data['previous_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
 			echo '
-						<b><a href="', $calendar_data['previous_week']['href'], '">&#171;</a></b>';
-
-		echo '
-					</div>
-					<div style="display: inline;">
-						<a href="', $scripturl, '?action=calendar;month=', $month_data['current_month'], ';year=', $month_data['current_year'], '">', $txt['months_titles'][$month_data['current_month']], ' ', $month_data['current_year'], '</a>', empty($done_title) && !empty($calendar_data['week_number']) ? (' - ' . $txt['calendar_week'] . ' ' . $calendar_data['week_number']) : '', '
-					</div>
-					<div style="float: right; display: inline">';
+						<b style="float: left; display: block;"><a href="', $calendar_data['previous_week']['href'], '">&#171;</a></b>';
 
 		if (empty($calendar_data['next_calendar']['disabled']) && $calendar_data['show_next_prev'] && empty($done_title))
 			echo '
-						<b><a href="', $calendar_data['next_week']['href'], '">&#187;</a></b>';
+						<b style="float: right; display: block;"><a href="', $calendar_data['next_week']['href'], '">&#187;</a></b>';
 
 		echo '
-					</div>
+						<a href="', $scripturl, '?action=calendar;month=', $month_data['current_month'], ';year=', $month_data['current_year'], '">', $txt['months_titles'][$month_data['current_month']], ' ', $month_data['current_year'], '</a>', empty($done_title) && !empty($calendar_data['week_number']) ? (' - ' . $txt['calendar_week'] . ' ' . $calendar_data['week_number']) : '' , '
 				</td>
 			</tr>';
 

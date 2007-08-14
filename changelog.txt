@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2780 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2781 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -40,6 +40,9 @@ August 2007
  ! Removed the layer check for integrate_exit. (Subs.php)
  ! Check GET and POST instead of REQUEST for numeric keys. (QueryString.php)
  ! Adjust the can_mod check to handle the new group query from the mod cache. (Load.php)
+ * Fixed wrong padding in search panel in admin section (Admin.template)
+ * Added icons to Core Features screen (Themes/default/images/admin/several icons , Admin.template )
+ * Fixed headers and cosmetic errors in Calendar (Calendar.template)
 
 
 July 2007
