@@ -228,7 +228,7 @@ function MessageMain()
 	);
 
 	// Preferences...
-	$context['display_mode'] = $user_settings['pm_prefs'] & 3;
+	$context['display_mode'] = WIRELESS ? 0 : $user_settings['pm_prefs'] & 3;
 
 	$subActions = array(
 		'addbuddy' => 'WirelessAddBuddy',

@@ -616,14 +616,14 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	// The mime boundary separates the different alternative versions.
 	$mime_boundary = 'SMF-' . md5($message . time());
 
+	// Using mime, as it allows to send a plain unencoded alternative.
+	$headers .= 'Mime-Version: 1.0' . $line_break;
+	$headers .= 'Content-Type: multipart/alternative; boundary="' . $mime_boundary . '"' . $line_break;
+	$headers .= 'Content-Transfer-Encoding: 7bit' . $line_break;
+
 	// Sending HTML?  Let's plop in some basic stuff, then.
 	if ($send_html)
 	{
-		// This should send a text message with MIME multipart/alternative stuff.
-		$headers .= 'Mime-Version: 1.0' . $line_break;
-		$headers .= 'Content-Type: multipart/alternative; boundary="' . $mime_boundary . '"' . $line_break;
-		$headers .= 'Content-Transfer-Encoding: 7bit' . $line_break;
-
 		$no_html_message = un_htmlspecialchars(strip_tags(strtr($orig_message, array('</title>' => $line_break))));
 
 		// But, then, dump it and use a plain one for dinosaur clients.
@@ -645,11 +645,6 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 	// Text is good too.
 	else
 	{
-		// Using mime, as it allows to send a plain unencoded alternative.
-		$headers .= 'Mime-Version: 1.0' . $line_break;
-		$headers .= 'Content-Type: multipart/alternative; boundary="' . $mime_boundary . '"' . $line_break;
-		$headers .= 'Content-Transfer-Encoding: 7bit' . $line_break;
-
 		// Send a plain message first, for the older web clients.
 		list(, $plain_message) = mimespecialchars($orig_message, false, true, $line_break);
 		$message = $plain_message . $line_break . '--' . $mime_boundary . $line_break;
@@ -702,7 +697,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		}
 	}
 	else
-		$mail_result = $mail_result  && smtp_mail($to_array, $subject, $message, $send_html ? $headers : 'Mime-Version: 1.0' . $line_break . $headers);
+		$mail_result = $mail_result  && smtp_mail($to_array, $subject, $message, $headers);
 
 	// Everything go smoothly?
 	return $mail_result;

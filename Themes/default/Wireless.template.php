@@ -516,7 +516,8 @@ function template_imode_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$message['body'] = strtr(strip_tags(strtr($message['body'], array('</div>' => '[br]', '<div class="quoteheader">' => '[br]'))), array('[br]' => '<br />'));
+		$message['body'] = strip_tags(str_replace(array('<div class="quote">', '<div class="code">', '</div>'), '<br />', $message['body']), '<br>');
+
 		echo '
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $message['subject'], '</tr></td>
@@ -1045,7 +1046,7 @@ function template_wap2_pm()
 	else
 	{
 		$message = $context['get_pmessage']();
-		$message['body'] = strtr(strip_tags(strtr($message['body'], array('</div>' => '[br]', '<div class="quoteheader">' => '[br]'))), array('[br]' => '<br />'));
+		$message['body'] = strip_tags(str_replace(array('<div class="quote">', '<div class="code">', '</div>'), '<br />', $message['body']), '<br>');
 		echo '
 			<p class="catbg">', $message['subject'], '</p>
 			<p class="titlebg">

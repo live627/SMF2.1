@@ -2736,7 +2736,7 @@ function forumProfile($memID)
 			'icq', 'aim', 'msn', 'yim', 'hr',
 			'usertitle', 'signature', 'hr',
 			'karma_good', 'hr',
-			'website_url', 'website_title',
+			'website_title', 'website_url',
 		)
 	);
 }
