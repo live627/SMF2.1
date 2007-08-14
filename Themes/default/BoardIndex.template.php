@@ -50,7 +50,7 @@ function template_main()
 					// Surround each item with... anything special?
 					var smfFadeBefore = "<b>", smfFadeAfter = "</b>";
 
-					var foreColor, backEl, backColor;
+					var foreColor, foreEl, backEl, backColor;
 
 					if (typeof(document.getElementById(\'smfFadeScroller\').currentStyle) != "undefined")
 					{
@@ -66,14 +66,21 @@ function template_main()
 					}
 					else if (typeof(window.opera) == "undefined" && typeof(document.defaultView) != "undefined")
 					{
-						foreColor = document.defaultView.getComputedStyle(document.getElementById(\'smfFadeScroller\'), null).color.match(/rgb\((\d+), (\d+), (\d+)\)/);
+
+						foreEl = document.getElementById(\'smfFadeScroller\');
+
+						while (document.defaultView.getComputedStyle(foreEl, null).getPropertyCSSValue("color") == null && typeof(foreEl.parentNode) != "undefined" && typeof(foreEl.parentNode.tagName) != "undefined")
+							foreEl = foreEl.parentNode;
+
+						foreColor = document.defaultView.getComputedStyle(foreEl, null).getPropertyValue("color").match(/rgb\((\d+), (\d+), (\d+)\)/);
 						smfFadeFrom = {"r": parseInt(foreColor[1]), "g": parseInt(foreColor[2]), "b": parseInt(foreColor[3])};
 
 						backEl = document.getElementById(\'smfFadeScroller\');
-						while (document.defaultView.getComputedStyle(backEl, null).backgroundColor == "transparent" && typeof(backEl.parentNode) != "undefined" && typeof(backEl.parentNode.tagName) != "undefined")
+
+						while (document.defaultView.getComputedStyle(backEl, null).getPropertyCSSValue("background-color") == null && typeof(backEl.parentNode) != "undefined" && typeof(backEl.parentNode.tagName) != "undefined")
 							backEl = backEl.parentNode;
 
-						backColor = document.defaultView.getComputedStyle(backEl, null).backgroundColor.match(/rgb\((\d+), (\d+), (\d+)\)/);
+						backColor = document.defaultView.getComputedStyle(backEl, null).getPropertyValue("background-color");//.match(/rgb\((\d+), (\d+), (\d+)\)/);
 						smfFadeTo = {"r": parseInt(backColor[1]), "g": parseInt(backColor[2]), "b": parseInt(backColor[3])};
 					}
 

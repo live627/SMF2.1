@@ -283,7 +283,7 @@ function reloadSettings()
 	// Integration is cool.
 	if (defined('SMF_INTEGRATION_SETTINGS'))
 		$modSettings = unserialize(SMF_INTEGRATION_SETTINGS) + $modSettings;
-		
+
 	if (isset($modSettings['integrate_pre_include']) && file_exists(strtr($modSettings['integrate_pre_include'], array('$boarddir' => $boarddir))))
 		require_once(strtr($modSettings['integrate_pre_include'], array('$boarddir' => $boarddir)));
 		
@@ -1499,6 +1499,9 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Compatibility.
 	if (!isset($settings['theme_version']))
 		$modSettings['memberCount'] = $modSettings['totalMembers'];
+
+	if (isset($modSettings['integrate_load_theme']) && function_exists($modSettings['integrate_load_theme']))
+		call_user_func($modSettings['integrate_load_theme']);
 }
 
 // Load a template - if the theme doesn't include it, use the default.

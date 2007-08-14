@@ -765,6 +765,8 @@ function prepareMessageContext($type = 'subject', $reset = false)
 		$output = array(
 			'id' => $subject['id_pm'],
 			'member' => array(
+				'id' => $subject['id_member_from'],
+				'name' => $subject['from_name'],
 				'link' => $subject['not_guest'] ? '<a href="' . $scripturl . '?action=profile;u=' . $subject['id_member_from'] . '">' . $subject['from_name'] . '</a>' : $subject['from_name'],
 			),
 			'recipients' => &$recipients[$subject['id_pm']],

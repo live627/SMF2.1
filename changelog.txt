@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2777 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2778 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -34,6 +34,10 @@ August 2007
  ! If there are more than fifteen birthdays on a day then hide anything over ten using javascript. (Calendar.php, Calendar template)
  ! Ensure that the mod_cache is set in $user_info before trying to create the query restrictions. (Load.php)
  ! Change the email date format to use -0000 to better comply with the RFC. (Subs-Post.php)
+ * The news fader should now work with Safari. (BoardIndex template files)
+ + Added some missing information when viewing PMs in wireless mode. (PersonalMessage.php)
+ + Added an integration hook after the theme is loaded. (Load.php)
+ + Removed the layer check for integrate_exit. (Subs.php)
 
 
 July 2007
