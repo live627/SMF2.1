@@ -133,7 +133,7 @@ function template_generic_menu_dropdown_above()
 			}
 			else
 				echo '
-						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">', $area['icon'] , $area['label'], '</a>';
+						<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sesc=', $context['session_id'], '">' , !empty($area['subsections']) ? '<div style="float: right;">&raquo;&nbsp;</div>' : '' , $area['icon'] , $area['label'], '</a>';
 
 			// Is there any subsections?
 			if (!empty($area['subsections']))
