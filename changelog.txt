@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2779 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2780 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -36,9 +36,10 @@ August 2007
  ! Change the email date format to use -0000 to better comply with the RFC. (Subs-Post.php)
  * The news fader should now work with Safari. (BoardIndex template files)
  + Added some missing information when viewing PMs in wireless mode. (PersonalMessage.php)
- + Added an integration hook after the theme is loaded. (Load.php)
- + Removed the layer check for integrate_exit. (Subs.php)
- + Check GET and POST instead of REQUEST for numeric keys. (QueryString.php)
+ ! Added an integration hook after the theme is loaded. (Load.php)
+ ! Removed the layer check for integrate_exit. (Subs.php)
+ ! Check GET and POST instead of REQUEST for numeric keys. (QueryString.php)
+ ! Adjust the can_mod check to handle the new group query from the mod cache. (Load.php)
 
 
 July 2007
