@@ -39,7 +39,7 @@ function ModerationMain($dont_call = false)
 		return;
 
 	// Everyone using this area must be allowed here!
-	if (empty($user_info['mod_cache']['gq']) && empty($user_info['mod_cache']['bq']) && !allowedTo('manage_membergroups'))
+	if (empty($user_info['mod_cache']['gq']) && $user_info['mod_cache']['bq'] == '0=1' && !allowedTo('manage_membergroups'))
 		isAllowedTo('access_mod_center');
 
 	// We're gonna want a menu of some kind.

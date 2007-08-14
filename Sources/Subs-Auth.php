@@ -734,7 +734,7 @@ function rebuildModCache()
 	// Then, same again, just the boards this time!
 	$board_query = allowedTo('moderate_forum') ? '1=1' : '0=1';
 
-	if ($board_query == 0)
+	if ($board_query == '0=1')
 	{
 		$boards = boardsAllowedTo('moderate_board');
 		//!!! This should be removed as it's about the test board at SM!!!
