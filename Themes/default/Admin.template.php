@@ -37,7 +37,7 @@ function template_admin()
 		echo '
 	<div class="bordercolor" style="padding: 1px; margin-top: 0.5em;">
 		<form class="titlebg2" style="margin: 0; padding: 5px 5px 5px 10px;" action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '">
-			<img src="' , $settings['images_url'] , '/buttons/search.gif" alt="" style="float: right;" />
+			<img src="' , $settings['images_url'] , '/filter.gif" alt="" style="float: right;" />
 			<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" />
 			<select name="search_type">
 				<option value="internal">', $txt['admin_search_type_internal'], '</option>
@@ -1809,7 +1809,7 @@ function template_core_features()
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-	<table align="center" width="100%" cellpadding="2" cellspacing="0" class="tborder">
+	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td colspan="3">
 				', $txt['core_settings_title'], '
@@ -1821,7 +1821,7 @@ function template_core_features()
 	{
 		echo '
 				<div class="features">
-					<img class="features_image" src="', $settings['default_images_url'], '/admin/feature_', $id, '.jpg" alt="', $feature['title'], '" />
+					<img class="features_image" src="', $settings['default_images_url'], '/admin/feature_', $id, '.png" alt="', $feature['title'], '" />
 					<div class="features_switch" id="js_feature_', $id, '" style="display: none;">
 						<a href="', $scripturl, '?action=admin;area=featuresettings;sa=core;sesc=', $context['session_id'], ';toggle=', $id, ';state=', $feature['enabled'] ? 0 : 1, '" onclick="return toggleItem(\'', $id, '\');" />
 							<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.gif" id="switch_', $id, '" style="margin-top: 1.3em;" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />

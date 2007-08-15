@@ -378,3 +378,64 @@ a img{
 {
 	text-decoration: underline;
 }
+/* styling the admin section */
+ol.search_results
+{
+	margin-top: 0;
+	padding-top: 0;
+}
+ol.search_results li
+{
+	padding-top: 5px;
+}
+
+.button_strip_submit
+{
+	background: transparent;
+	color: white;
+	text-transform: uppercase;
+	vertical-align: top;
+	text-decoration: none;
+	font-size: 9px;
+	font-family: tahoma, sans-serif;
+	border: 0;
+}
+
+.button_strip_submit:hover
+{
+	color: #e0e0ff;
+}
+
+.openid_login
+{
+	background: white url(images/openid.gif) no-repeat;
+	padding-left: 18px;
+}
+
+/* new features settings screen */
+.features
+{
+	clear: both;
+	border-bottom: solid 1px #e0e0e0;
+}
+.features_image
+{
+	float: left;
+	margin: 1em 2em 0.5em 1em;
+}
+.features_switch
+{
+	margin: 0.2em 1em 1em 1em;
+	float: right;
+}
+.features h4
+{
+	padding: 2em 0 0.5em 0.5em;
+	margin: 0;
+	font-size: 1.1em;
+}
+.features p
+{
+	padding: 0 1em 1em 1em;
+	margin: 0;
+}

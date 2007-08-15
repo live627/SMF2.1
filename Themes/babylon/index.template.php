@@ -1,9 +1,9 @@
 <?php
 // Version: 2.0 Beta 1; index
 
-/*	This template is, perhaps, the most important template in the theme.  It
+/*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
-	the forum, namely with main_above and main_below.  It also contains the
+	the forum, namely with main_above and main_below. It also contains the
 	menu sub template, which appropriately displays the menu; the init sub
 	template, which is there to set the theme up; (init can be missing.) and
 	the linktree sub template, which sorts out the link tree.
@@ -68,7 +68,7 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title'], '" />
 	<meta name="keywords" content="PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2p"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_images_url = "', $settings['images_url'], '";
@@ -128,27 +128,26 @@ function template_html_above()
 	echo $context['html_headers'], '
 
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var current_header = ', empty($options['collapse_header']) ? 'false' : 'true', ';
+		// Create the main header object.
+		var mainHeader = new smfToggle("upshrink", ', empty($options['collapse_header']) ? 'false' : 'true', ');
+		mainHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+		mainHeader.setOptions("collapse_header", "', $context['session_id'], '");
+		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
+		mainHeader.addTogglePanel("upshrinkHeader");
+		mainHeader.addTogglePanel("upshrinkHeader2");
 
-		function shrinkHeader(mode)
-		{';
-
-	// Guests don't have theme options!!
-	if ($context['user']['is_guest'])
-		echo '
-			document.cookie = "upshrink=" + (mode ? 1 : 0);';
-	else
-		echo '
-			smf_setThemeOption("collapse_header", mode ? 1 : 0, null, "', $context['session_id'], '");';
+		// And create the info center object.
+		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
+		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
+		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
+		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
+		infoHeader.addTogglePanel("upshrinkHeaderIC");
+	// ]]></script>';
 
 	echo '
-			document.getElementById("upshrink").src = smf_images_url + (mode ? "/upshrink2.gif" : "/upshrink.gif");
-
-			document.getElementById("upshrinkHeader").style.display = mode ? "none" : "";
-
-			current_header = mode;
-		}
-	// ]]></script>
+<!--[if lt IE 7]>
+<script defer type="text/javascript" src="' , $settings['default_theme_url'] , '/scripts/pngfix.js"></script>
+<![endif]-->
 </head>
 <body>';
 }

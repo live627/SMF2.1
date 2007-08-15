@@ -1,9 +1,9 @@
 <?php
 // Version: 2.0 Beta 1; index
 
-/*	This template is, perhaps, the most important template in the theme.  It
+/*	This template is, perhaps, the most important template in the theme. It
 	contains the main template layer that displays the header and footer of
-	the forum, namely with main_above and main_below.  It also contains the
+	the forum, namely with main_above and main_below. It also contains the
 	menu sub template, which appropriately displays the menu; the init sub
 	template, which is there to set the theme up; (init can be missing.) and
 	the linktree sub template, which sorts out the link tree.
@@ -68,7 +68,7 @@ function template_html_above()
 	<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 	<meta name="description" content="', $context['page_title'], '" />
 	<meta name="keywords" content="PHP, MySQL, bulletin, board, free, open, source, smf, simple, machines, forum" />
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2"></script>
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2p"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_images_url = "', $settings['images_url'], '";
@@ -119,6 +119,9 @@ function template_html_above()
 
 	// Output any remaining HTML headers. (from mods, maybe?)
 	echo $context['html_headers'], '
+<!--[if lt IE 7]>
+<script defer type="text/javascript" src="' , $settings['default_theme_url'] , '/scripts/pngfix.js"></script>
+<![endif]-->
 </head>
 <body>';
 }
