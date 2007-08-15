@@ -126,8 +126,11 @@ QuickModify.prototype.onMessageReceived = function (XMLDoc)
 	this.oCurMessageDiv = document.getElementById(this.sCurMessageId);
 	this.sMessageBuffer = getInnerHTML(this.oCurMessageDiv);
 
+	// We have to force the body to lose it's dollar signs thanks to IE.
+	sBodyText = sBodyText.replace(/\$/g, '{&dollarfix;$}');
+
 	// Actually create the content, with a bodge for dissapearing dollar signs.
-	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/\$/g, '{&dollarfix;$}').replace(/%body%/, sBodyText).replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/\{&dollarfix;\$\}/g, '$'));
+	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/%body%/, sBodyText).replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/\{&dollarfix;\$\}/g, '$'));
 	
 	// Replace the subject part.
 	this.oCurSubjectDiv = document.getElementById('subject_' + this.sCurMessageId.substr(4));

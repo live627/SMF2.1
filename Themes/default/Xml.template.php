@@ -30,6 +30,7 @@ function template_modifyfast()
 	<subject><![CDATA[', $context['message']['subject'], ']]></subject>
 	<message id="msg_', $context['message']['id'], '"><![CDATA[', $context['message']['body'], ']]></message>
 </smf>';
+
 }
 
 function template_modifydone()
