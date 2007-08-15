@@ -1472,7 +1472,7 @@ function MessagePost()
 
 	// Set the defaults...
 	$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];
-	$context['message'] = str_replace(array('"', '<', '>'), array('&quot;', '&lt;', '&gt;'), $form_message);
+	$context['message'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_message);
 	$context['to'] = isset($_REQUEST['to']) ? $smfFunc['db_unescape_string']($_REQUEST['to']) : '';
 	$context['bcc'] = isset($_REQUEST['bcc']) ? $smfFunc['db_unescape_string']($_REQUEST['bcc']) : '';
 	$context['post_error'] = array();

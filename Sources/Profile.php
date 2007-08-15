@@ -178,6 +178,7 @@ function ModifyProfile($post_errors = array())
 				'showPosts' => array(
 					'own' => array('profile_view_any', 'profile_view_own'),
 					'any' => array('profile_view_any'),
+					'load_member' => true,
 				),
 				'trackUser' => array(
 					'own' => array('moderate_forum'),

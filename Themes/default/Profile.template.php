@@ -440,7 +440,7 @@ function template_showPosts()
 		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="3" height="26">
-					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['showPosts'], '
+					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['showPosts'], ' - ', $context['member']['name'], '
 				</td>
 			</tr>
 			<tr class="windowbg" valign="middle">
