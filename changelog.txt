@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2782 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2783 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -44,6 +44,7 @@ August 2007
  * Added icons to Core Features screen (Themes/default/images/admin/several icons , Admin.template )
  * Fixed headers and cosmetic errors in Calendar (Calendar.template)
  ! Fixed long standing issue with dollar signs in quick edit. (xml_topic.js)
+ ! Attempt to fix invalid BBC orders breaking forum layout. (Subs-Post.php)
 
 
 July 2007

@@ -1816,7 +1816,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				}
 			}
 
-			foreach ($to_close as $tag)
+			foreach (array_reverse($to_close) as $tag)
 			{
 				$message = substr($message, 0, $pos) . $tag['after'] . substr($message, $pos2 + 1);
 				$pos += strlen($tag['after']);
