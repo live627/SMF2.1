@@ -430,7 +430,7 @@ function template_view_installed()
 		foreach ($context['installed_mods'] as $i => $file)
 		{
 			echo '
-						<tr class="', $alt ? 'windowbg' : 'windowbg2', '>
+						<tr class="', $alt ? 'windowbg' : 'windowbg2', '">
 							<td>', ++$i, '.</td>
 							<td>', $file['name'], '</td>
 							<td>', $file['version'], '</td>
@@ -953,7 +953,7 @@ function template_package_list()
 		{
 			echo '
 			<h2><a href="#" onclick="ps_', $i, '.toggle(); return false;"><img id="ps_img_', $i, '" src="', $settings['images_url'], '/blank.gif" alt="*" /></a> ', $packageSection['title'], '</h2>';
-			
+
 			if (!empty($packageSection['text']))
 				echo '
 			<h3>', $packageSection['text'], '</h3>';
