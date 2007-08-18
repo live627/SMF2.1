@@ -332,7 +332,7 @@ function registerMember(&$regOptions)
 	if (preg_match('~[<>&"\'=\\\]~', $regOptions['username']) != 0 || $regOptions['username'] == '_' || $regOptions['username'] == '|' || strpos($regOptions['username'], '[code') !== false || strpos($regOptions['username'], '[/code') !== false)
 		fatal_lang_error('error_invalid_characters_username', false);
 
-	if (stristr($regOptions['username'], $txt['guest_title']) !== false)
+	if ($smfFunc['strtolower']($regOptions['username']) === $smfFunc['strtolower']($txt['guest_title']))
 		fatal_lang_error('username_reserved', 'general', array($txt['guest_title']));
 
 	// !!! Separate the sprintf?

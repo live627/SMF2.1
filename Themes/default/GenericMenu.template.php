@@ -149,12 +149,10 @@ function template_generic_menu_dropdown_above()
 					echo '
 							<li>';
 
-					if (!empty($sub['selected']))
-						echo '
-								<a class="chosen" href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $sub['label'], '</a>';
-					else
-						echo '
-								<a href="', (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i), ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $sub['label'], '</a>';
+					$url = isset($sub['url']) ? $sub['url'] : (isset($area['url']) ? $area['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $i);
+
+					echo '
+								<a ', !empty($sub['selected']) ? 'class="chosen" ' : '', 'href="', $url, ';sa=', $sa, ';sesc=', $context['session_id'], '">' , $sub['label'], '</a>';
 
 					echo '
 							</li>';

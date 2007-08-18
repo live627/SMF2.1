@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2785 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2786 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -49,6 +49,8 @@ August 2007
  * Updated admin features icons to use 24bit PNG images , added javascript fix for IE ( Admin.template, babylon/style.css, classic/style.css , index.template for all 3 themes )
  + Added the old topic warning to quick reply. (Display.php, Display Template, index and Post language files)
  * The info center should respect the show latest member theme option. (BoardIndex templates)
+ * If a menu has a subsection with a defined URL, make sure to use that.  (GenericMenu template)
+ ! Allow usernames that contain the guest title as a substring provided that the username isn't the guest title. (Subs-Members.php)
 
 
 July 2007
