@@ -154,7 +154,6 @@ $txt['error_new_reply'] = 'Warning - while you were typing a new reply has been 
 $txt['error_new_replies'] = 'Warning - while you were typing %d new replies have been posted. You may wish to review your post.';
 $txt['error_new_reply_reading'] = 'Warning - while you were reading a new reply has been posted. You may wish to review your post.';
 $txt['error_new_replies_reading'] = 'Warning - while you were reading %d new replies have been posted. You may wish to review your post.';
-$txt['error_old_topic'] = 'Warning: this topic has not been posted in for at least %d days.<br />Unless you\'re sure you want to reply, please consider starting a new topic.';
 
 $txt['announce_this_topic'] = 'Send an announcement about this topic to the members:';
 $txt['announce_title'] = 'Send an announcement';

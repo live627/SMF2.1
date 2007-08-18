@@ -361,7 +361,7 @@ function template_info_center()
 				</td>
 				<td class="smalltext">
 					', $txt['total_members'], ': <b>', $context['show_member_list'] ? '<a href="' . $scripturl . '?action=mlist">' . $context['common_stats']['total_members'] . '</a>' : $context['common_stats']['total_members'], '</b><br />
-					', $txt['latest_member'], ': <b>', $context['common_stats']['latest_member']['link'], '</b><br />';
+					', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <b> ' . $context['common_stats']['latest_member']['link'] . '</b><br />' : '';
 		// If they are logged in, show their unread message count, etc..
 		if ($context['user']['is_logged'] && $context['allow_pm'])
 			echo '

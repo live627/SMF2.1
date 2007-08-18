@@ -661,7 +661,7 @@ function template_main()
 		<td colspan="2" class="catbg"><a href="javascript:oQuickReply.swap();"><img src="', $settings['images_url'], '/', $options['display_quick_reply'] == 2 ? 'collapse' : 'expand', '.gif" alt="+" id="quickReplyExpand" /></a> <a href="javascript:oQuickReply.swap();">', $txt['quick_reply'], '</a></td>
 		</tr>
 	<tr id="quickReplyOptions"', $options['display_quick_reply'] == 2 ? '' : ' style="display: none"', '>
-		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_desc'], $context['is_locked'] ? '<br /><br /><b>' . $txt['quick_reply_warning'] . '</b>' : '', '</td>
+		<td class="windowbg" width="25%" valign="top">', $txt['quick_reply_desc'], $context['is_locked'] ? '<br /><br /><b>' . $txt['quick_reply_warning'] . '</b>' : '', $context['oldTopicError'] ? '<br /><br /><b>' . sprintf($txt['error_old_topic'], $modSettings['oldTopicDays']) . '</b>' : '', '</td>
 		<td class="windowbg" width="75%" align="center">
 			', $context['can_reply_approved'] ? '' : '<i>' . $txt['wait_for_approval'] . '</i>', '
 			<form action="', $scripturl, '?action=post2" method="post" accept-charset="', $context['character_set'], '" name="postmodify" id="postmodify" onsubmit="submitonce(this);" style="margin: 0;">

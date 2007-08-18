@@ -382,7 +382,7 @@ function template_info_center()
 					</td>
 					<td class="windowbg2" width="100%">
 						<span class="middletext">
-							', $context['common_stats']['total_posts'], ' ', $txt['posts_made'], ' ', $txt['in'], ' ', $context['common_stats']['total_topics'], ' ', $txt['topics'], ' ', $txt['by'], ' ', $context['common_stats']['total_members'], ' ', $txt['members'], '. ', $txt['latest_member'], ': <b> ', $context['common_stats']['latest_member']['link'], '</b>
+							', $context['common_stats']['total_posts'], ' ', $txt['posts_made'], ' ', $txt['in'], ' ', $context['common_stats']['total_topics'], ' ', $txt['topics'], ' ', $txt['by'], ' ', $context['common_stats']['total_members'], ' ', $txt['members'], '. ', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <b> ' . $context['common_stats']['latest_member']['link'] . '</b>' : '', '
 							<br /> ' . $txt['latest_post'] . ': <b>&quot;' . $context['latest_post']['link'] . '&quot;</b>  ( ' . $context['latest_post']['time'] . ' )<br />
 							<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
 							<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '

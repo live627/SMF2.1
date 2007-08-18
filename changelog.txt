@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2784 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2785 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -47,6 +47,9 @@ August 2007
  ! Attempt to fix invalid BBC orders breaking forum layout. (Subs-Post.php)
  * Added in missing images and styles in admins ection of Classic and Babylon theme ( babylon/css/dropdown.css, classic/css/dropdown.css, multiple images )
  * Updated admin features icons to use 24bit PNG images , added javascript fix for IE ( Admin.template, babylon/style.css, classic/style.css , index.template for all 3 themes )
+ + Added the old topic warning to quick reply. (Display.php, Display Template, index and Post language files)
+ * The info center should respect the show latest member theme option. (BoardIndex templates)
+
 
 July 2007
 --------------------------------------------------------------------------------

@@ -390,7 +390,7 @@ function template_info_center()
 				</td>
 				<td width="32%" class="smalltext" valign="top">
 					', $txt['total_members'], ': <b><a href="', $scripturl, '?action=mlist">', $context['common_stats']['total_members'], '</a></b><br />
-					', $txt['latest_member'], ': <b>', $context['common_stats']['latest_member']['link'], '</b><br />';
+					', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <b> ' . $context['common_stats']['latest_member']['link'] . '</b><br />' : '';
 		// If they are logged in, show their unread message count, etc..
 		if ($context['user']['is_logged'])
 			echo '

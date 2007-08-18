@@ -647,6 +647,7 @@ $txt['preview_title'] = 'Preview post';
 $txt['preview_fetch'] = 'Fetching preview...';
 $txt['preview_new'] = 'New message';
 $txt['error_while_submitting'] = 'The following error or errors occurred while posting this message:';
+$txt['error_old_topic'] = 'Warning: this topic has not been posted in for at least %d days.<br />Unless you\'re sure you want to reply, please consider starting a new topic.';
 
 $txt['split_selected_posts'] = 'Selected posts';
 $txt['split_selected_posts_desc'] = 'The posts below will form a new topic after splitting.';

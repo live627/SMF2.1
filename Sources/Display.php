@@ -173,6 +173,18 @@ function Display()
 	$topicinfo = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
+	// When was the last time this topic was replied to?  Should we warn them about it?
+	$request = $smfFunc['db_query']('', "
+		SELECT poster_time
+		FROM {$db_prefix}messages
+		WHERE id_msg = $topicinfo[id_last_msg]
+		LIMIT 1", __FILE__, __LINE__);
+
+	list ($lastPostTime) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	$context['oldTopicError'] = !empty($modSettings['oldTopicDays']) && $lastPostTime + $modSettings['oldTopicDays'] * 86400 < time() && empty($sticky);
+
 	// The start isn't a number; it's information about what to do, where to go.
 	if (!is_numeric($_REQUEST['start']))
 	{
