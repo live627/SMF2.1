@@ -1091,6 +1091,9 @@ function template_spellcheck()
 			{
 				font-size: small;
 				margin: 0;
+				background: #f0f0f0;
+				color: #000;
+				padding: 10px;
 			}
 			.highlight
 			{
@@ -1102,9 +1105,10 @@ function template_spellcheck()
 				border-style: outset;
 				border: 1px solid black;
 				padding: 5px;
-				width: 98%;
-				height: 344px;
+				width: 95%;
+				height: 314px;
 				overflow: auto;
+				background: #ffffff;
 			}';
 
 	if ($context['browser']['needs_size_fix'])
@@ -1138,7 +1142,7 @@ function template_spellcheck()
 					</select>
 				</td>
 			</tr></table>
-			<div class="titlebg" align="right" style="padding: 4px;">
+			<div align="right" style="padding: 4px;">
 				<input type="button" name="change" value="', $txt['spellcheck_change'], '" onclick="replaceWord();" />
 				<input type="button" name="changeall" value="', $txt['spellcheck_change_all'], '" onclick="replaceAll();" />
 				<input type="button" name="ignore" value="', $txt['spellcheck_ignore'], '" onclick="nextWord(false);" />
