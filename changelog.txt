@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2786 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2787 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -51,7 +51,8 @@ August 2007
  * The info center should respect the show latest member theme option. (BoardIndex templates)
  * If a menu has a subsection with a defined URL, make sure to use that.  (GenericMenu template)
  ! Allow usernames that contain the guest title as a substring provided that the username isn't the guest title. (Subs-Members.php)
-
+ * Fixed a few CSS issues in admin dropdown menu. (Admin.template, Themes/default/css/dropmenu.css, GenericMenu.template, images)
+ * Fixed headers in ModerationCenter being too high. (ModerationCenter.template)
 
 July 2007
 --------------------------------------------------------------------------------

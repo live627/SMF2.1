@@ -95,8 +95,13 @@ function template_generic_menu_dropdown_above()
 	$menu_context = &$context['menu_data_' . $context['cur_menu_id']];
 
 	echo '
-		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>
-		<div id="adm_container"><ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>
+	<div id="adm_container">
+		<ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
+
+	if (!empty($menu_context['can_toggle_drop_down']))
+		echo '
+		<li><a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 6px 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu.png" alt="" /></a></li>';
 
 	// Main areas first.
 	foreach ($menu_context['sections'] as $section)
@@ -169,12 +174,6 @@ function template_generic_menu_dropdown_above()
 				</ul>
 			</li>';
 	}
-
-	if (!empty($menu_context['can_toggle_drop_down']))
-		echo '
-			<li style="white-space: nowrap;">
-				<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 4px 10px 0 0;" src="' , $context['menu_image_path'], '/change_menu.png" alt="" /></a>
-			</li>';
 
 	echo '
 		</ul></div>

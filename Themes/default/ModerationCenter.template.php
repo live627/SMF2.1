@@ -59,14 +59,14 @@ function template_latest_news()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=helpadmin;help=live_news" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="top" /></a> ', $txt['mc_latest_news'], '
 			</td>
 		</tr><tr>
-			<td class="windowbg2" valign="top" style="height: 18ex; padding: 0;">
-				<div id="smfAnnouncements" style="height: 18ex; overflow: auto; padding-right: 1ex;"><div style="margin: 4px; font-size: 0.85em;">', $txt['mc_cannot_connect_sm'], '</div></div>
+			<td class="windowbg2" valign="top" style="height: 14em; padding: 0;">
+				<div id="smfAnnouncements" style="height: 14em; overflow: auto; padding-right: 1ex;"><div style="margin: 4px; font-size: 0.85em;">', $txt['mc_cannot_connect_sm'], '</div></div>
 			</td>
 		</tr>
 	</table>';
@@ -116,7 +116,7 @@ function template_group_requests_block()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=groups;sa=requests">', $txt['mc_group_requests'], '</a>
@@ -137,15 +137,12 @@ function template_group_requests_block()
 	if (empty($context['group_requests']))
 		echo '
 		<tr>
-			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2px;">
+			<td class="windowbg2" align="center" valign="top" style="height: 14em; padding: 2px;">
 				<b class="smalltext">', $txt['mc_group_requests_none'], '</b>
 			</td>
 		</tr>';
 
 	echo '
-		<tr class="windowbg" style="height: 100%;">
-			<td></td>
-		</tr>
 	</table>';
 }
 
@@ -155,7 +152,7 @@ function template_reported_posts_block()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" >
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=moderate;area=reports">', $txt['mc_recent_reports'], '</a>
@@ -176,15 +173,12 @@ function template_reported_posts_block()
 	if (empty($context['reported_posts']))
 		echo '
 		<tr>
-			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2px;">
+			<td class="windowbg2" align="center" valign="top" style="height: 14em; padding: 2px;">
 				<b class="smalltext">', $txt['mc_recent_reports_none'], '</b>
 			</td>
 		</tr>';
 
 	echo '
-		<tr class="windowbg" style="height: 100%;">
-			<td></td>
-		</tr>
 	</table>';
 }
 
@@ -193,7 +187,7 @@ function template_watched_users()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" >
 		<tr>
 			<td class="catbg">
 				<a href="', $scripturl, '?action=moderate;area=userwatch">', $txt['mc_watched_users'], '</a>
@@ -214,15 +208,12 @@ function template_watched_users()
 	if (empty($context['watched_users']))
 		echo '
 		<tr>
-			<td class="windowbg2" align="center" valign="top" style="height: 18ex; padding: 2px;">
+			<td class="windowbg2" align="center" valign="top" style="height: 14em; padding: 2px;">
 				<b class="smalltext">', $txt['mc_watched_users_none'], '</b>
 			</td>
 		</tr>';
 
 	echo '
-		<tr class="windowbg" style="height: 100%;">
-			<td></td>
-		</tr>
 	</table>';
 }
 
@@ -233,7 +224,7 @@ function template_notes()
 
 	echo '
 	<form action="', $scripturl, '?action=moderate;area=index" method="post">
-	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" style="height: 180px;">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr>
 			<td class="catbg">
 				', $txt['mc_notes'], '
@@ -250,9 +241,6 @@ function template_notes()
 		</tr>';
 
 	echo '
-		<tr class="windowbg" style="height: 100%;">
-			<td></td>
-		</tr>
 		<tr class="windowbg">
 			<td>
 				<div style="float: left;" style="width: 90%;">
