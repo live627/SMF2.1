@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2787 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2788 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -53,6 +53,9 @@ August 2007
  ! Allow usernames that contain the guest title as a substring provided that the username isn't the guest title. (Subs-Members.php)
  * Fixed a few CSS issues in admin dropdown menu. (Admin.template, Themes/default/css/dropmenu.css, GenericMenu.template, images)
  * Fixed headers in ModerationCenter being too high. (ModerationCenter.template)
+ ! Ensure posts in locked topics can't be modified without the proper permission. (Display.php, Post.php)
+ ! Make sure to update the post counts correctly when moving topics. (MessageIndex.php, MoveTopic.php)
+
 
 July 2007
 --------------------------------------------------------------------------------

@@ -754,19 +754,24 @@ function QuickModeration()
 	{
 		// I know - I just KNOW you're trying to beat the system.  Too bad for you... we CHECK :P.
 		$request = $smfFunc['db_query']('', "
-			SELECT id_topic, id_board
-			FROM {$db_prefix}topics
-			WHERE id_topic IN (" . implode(', ', $moveCache[0]) . ")" . (!empty($board) && !allowedTo('move_any') ? "
-				AND id_member_started = $user_info[id]" : '') . "
+			SELECT t.id_topic, t.id_board, b.count_posts
+			FROM {$db_prefix}topics AS t
+				LEFT JOIN {$db_prefix}boards AS b ON (t.id_board = b.id_board)
+			WHERE t.id_topic IN (" . implode(', ', $moveCache[0]) . ")" . (!empty($board) && !allowedTo('move_any') ? "
+				AND t.id_member_started = $user_info[id]" : '') . "
 			LIMIT " . count($moveCache[0]), __FILE__, __LINE__);
 		$moveTos = array();
 		$moveCache2 = array();
+		$countPosts = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$to = $moveCache[1][$row['id_topic']];
 
 			if (empty($to))
 				continue;
+
+			// Does this topic's board count the posts or not?
+			$countPosts[$row['id_topic']] = empty($row['count_posts']);
 
 			if (!isset($moveTos[$to]))
 				$moveTos[$to] = array();
@@ -785,6 +790,63 @@ function QuickModeration()
 		// Do the actual moves...
 		foreach ($moveTos as $to => $topics)
 			moveTopics($topics, $to);
+
+		// Does the post counts need to be updated?
+		if (!empty($moveTos))
+		{
+			$topicRecounts = array();
+			$request = $smfFunc['db_query']('', "
+				SELECT id_board, count_posts
+				FROM {$db_prefix}boards
+				WHERE id_board IN (" . implode(', ', array_keys($moveTos)) . ')', __FILE__, __LINE__);
+
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+			{
+				$cp = empty($row['count_posts']);
+
+				// Go through all the topics that are being moved to this board.
+				foreach($moveTos[$row['id_board']] AS $topic)
+				{
+					// If both boards have the same value for post counting then no adjustment needs to be made.
+					if ($countPosts[$topic] != $cp)
+					{
+						// If the board being moved to does count the posts then the other one doesn't so add to their post count.
+						$topicRecounts[$topic] = $cp ? '+' : '-';
+					}
+				}
+			}
+
+			$smfFunc['db_free_result']($request);
+
+			if (!empty($topicRecounts))
+			{
+				$members = array();
+
+				// Get all the members who have posted in the moved topics.
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member, id_topic
+					FROM {$db_prefix}messages
+					WHERE id_topic IN (" . implode(', ', array_keys($topicRecounts)) . ')', __FILE__, __LINE__);
+
+				while ($row = $smfFunc['db_fetch_assoc']($request))
+				{
+					if (!isset($members[$row['id_member']]))
+						$members[$row['id_member']] = 0;
+
+					if ($topicRecounts[$row['id_topic']] === '+')
+						$members[$row['id_member']] += 1;
+					else
+						$members[$row['id_member']] -= 1;
+				}
+
+				$smfFunc['db_free_result']($request);
+
+				// And now update them member's post counts
+				foreach($members AS $id_member => $post_adj)
+					updateMemberData($id_member, array('posts' => 'posts + ' . $post_adj));
+	
+			}
+		}
 	}
 
 	// Now delete the topics...

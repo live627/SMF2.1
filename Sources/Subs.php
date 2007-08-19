@@ -468,9 +468,9 @@ function updateMemberData($members, $data)
 	// Ensure posts, instant_messages, and unread_messages don't overflow or underflow.
 	foreach(array('posts', 'instant_messages', 'unread_messages') AS $type)
 	{
-		if (isset($data[$type]) && preg_match('~^' . $type . ' - ([\d]+)~', $data[$type], $match))
+		if (isset($data[$type]) && preg_match('~^' . $type . ' (- |\+ -)([\d]+)~', $data[$type], $match))
 		{
-			$data[$type] = 'CASE WHEN ' . $type . ' <= ' . $match[1] . ' THEN 0 ELSE ' . $data[$type] . ' END';
+			$data[$type] = 'CASE WHEN ' . $type . ' <= ' . abs($match[2]) . ' THEN 0 ELSE ' . $data[$type] . ' END';
 		}
 	}
 

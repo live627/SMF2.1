@@ -300,15 +300,23 @@ function MoveTopic2()
 			WHERE id_topic = $topic", __FILE__, __LINE__);
 		$posters = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$posters[] = $row['id_member'];
+		{
+			if (!isset($posters[$row['id_member']]))
+				$posters[$row['id_member']] = 0;
+
+			$posters[$row['id_member']]++;
+		}
 		$smfFunc['db_free_result']($request);
 
-		// The board we're moving from counted posts, but not to.
-		if (empty($pcounter_from))
-			updateMemberData($posters, array('posts' => '-'));
-		// The reverse: from didn't, to did.
-		else
-			updateMemberData($posters, array('posts' => '+'));
+		foreach($posters AS $id_member => $posts)
+		{
+			// The board we're moving from counted posts, but not to.
+			if (empty($pcounter_from))
+				updateMemberData($id_member, array('posts' => 'posts - ' . $posts));
+			// The reverse: from didn't, to did.
+			else
+				updateMemberData($id_member, array('posts' => 'posts + ' . $posts));
+		}
 	}
 
 	// Do the move (includes statistics update needed for the redirect topic).

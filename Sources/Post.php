@@ -2183,19 +2183,24 @@ function QuoteFast()
 
 	include_once($sourcedir . '/Subs-Post.php');
 
+	$moderate_boards = boardsAllowedTo('moderate_board');
+
 	// Where we going if we need to?
 	$context['post_box_name'] = isset($_GET['pb']) ? $_GET['pb'] : '';
 
 	$request = $smfFunc['db_query']('', "
 		SELECT IFNULL(mem.real_name, m.poster_name) AS poster_name, m.poster_time, m.body, m.id_topic, m.subject
-		FROM {$db_prefix}messages AS m
+		FROM ({$db_prefix}messages AS m, {$db_prefix}topics AS t)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_msg = " . (int) $_REQUEST['quote'] .
 			(allowedTo('approve_posts') ? '' : ' AND m.approved = 1') . "
+			AND t.id_topic = m.id_topic" . (isset($_REQUEST['modify']) || (!empty($moderate_boards) && $moderate_boards[0] == 0) ? '' : '
+			AND (t.locked = 0 OR b.id_board IN (' . implode(', ', $moderate_boards) . '))') . "
 		LIMIT 1", __FILE__, __LINE__);
 	$context['close_window'] = $smfFunc['db_num_rows']($request) == 0;
 
+	$context['sub_template'] = 'quotefast';
 	if ($smfFunc['db_num_rows']($request) != 0)
 	{
 		$row = $smfFunc['db_fetch_assoc']($request);
@@ -2262,8 +2267,6 @@ function QuoteFast()
 			'mozilla' => '',
 			'text' => '',
 		);
-
-	$context['sub_template'] = 'quotefast';
 }
 
 function JavaScriptModify()
@@ -2297,6 +2300,9 @@ function JavaScriptModify()
 	// Change either body or subject requires permissions to modify messages.
 	if (isset($_POST['message']) || isset($_POST['subject']) || isset($_REQUEST['icon']))
 	{
+		if (!empty($row['locked']))
+			isAllowedTo('moderate_board');
+
 		if ($row['id_member'] == $user_info['id'] && !allowedTo('modify_any'))
 		{
 			if (!empty($modSettings['edit_disable_time']) && $row['poster_time'] + ($modSettings['edit_disable_time'] + 5) * 60 < time())
