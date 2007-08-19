@@ -84,7 +84,6 @@ $txt['cannot_make_sticky'] = 'You don\'t have permission to sticky this topic.';
 $txt['cannot_manage_attachments'] = 'You\'re not allowed to manage attachments or avatars.';
 $txt['cannot_manage_bans'] = 'You\'re not allowed to change the list of bans.';
 $txt['cannot_manage_boards'] = 'You are not allowed to manage boards and categories.';
-$txt['cannot_manage_membergroups'] = 'You cannot manage groups.';
 $txt['cannot_manage_membergroups'] = 'You don\'t have permission to modify or assign membergroups.';
 $txt['cannot_manage_permissions'] = 'You don\'t have permission to manage permissions.';
 $txt['cannot_manage_smileys'] = 'You\'re not allowed to manage smileys.';
