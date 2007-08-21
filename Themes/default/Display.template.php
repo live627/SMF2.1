@@ -711,7 +711,7 @@ function template_main()
 		sJumpAnchor: "quickreply"
 	});';
 
-	if (empty($settings['use_tabs']))
+	if (empty($settings['use_tabs']) && $context['can_remove_post'] && !empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1)
 		echo '
 	document.getElementById("quickmodSubmit").style.display = "none";';
 
