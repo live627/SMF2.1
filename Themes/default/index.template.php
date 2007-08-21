@@ -47,7 +47,7 @@ function template_init()
 	$settings['theme_version'] = '2.0 Beta 1';
 
 	/* Set a setting that tells the theme that it can render the tabs. */
-	$settings['use_tabs'] = false;
+	$settings['use_tabs'] = true;
 
 	/* Use plain buttons - as oppossed to text buttons? */
 	$settings['use_buttons'] = true;
