@@ -1789,6 +1789,9 @@ function Post2()
 				AND id_board = $board", __FILE__, __LINE__);
 	}
 
+	if ($board_info['num_topics'] == 0)
+		cache_put_data('board-' . $board, null, 120);
+
 	if (!empty($_POST['announce_topic']))
 		redirectexit('action=announce;sa=selectgroup;topic=' . $topic . (!empty($_POST['move']) && allowedTo('move_any') ? ';move' : '') . (empty($_REQUEST['goback']) ? '' : ';goback'));
 

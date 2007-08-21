@@ -55,7 +55,7 @@ function template_profile_above()
 				<td width="100%" valign="top">';
 	}
 
-	// If an error occurred whilst trying to save previously, give the user a clue!
+	// If an error occurred while trying to save previously, give the user a clue!
 	if (!empty($context['post_errors']))
 	{
 		echo '

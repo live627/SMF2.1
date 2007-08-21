@@ -3596,7 +3596,7 @@ function template_backup_database()
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $support_js, $is_debug;
 
 	echo '
-			<h3>Please wait whilst a backup is created. For large forums this may take some time!</h3>';
+			<h3>Please wait while a backup is created. For large forums this may take some time!</h3>';
 
 	echo '
 			<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '" name="upform"  id="upform" method="post">

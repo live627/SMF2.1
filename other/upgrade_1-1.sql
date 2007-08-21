@@ -1771,7 +1771,7 @@ if ($upgradeLogTable)
 	$_GET['prep_lt'] = isset($_GET['prep_lt']) ? (int) $_GET['prep_lt'] : 0;
 	$step_progress['name'] = 'Preparing log table update';
 	$step_progress['current'] = $_GET['prep_lt'];
-	$custom_warning = 'This step may take quite some time. During this time it may appear that nothing is happening whilst
+	$custom_warning = 'This step may take quite some time. During this time it may appear that nothing is happening while
 		the databases MySQL tables are expanded. Please be patient.';
 
 	// All these changes need to be made, they may take a while, so let's timeout neatly.
@@ -2090,7 +2090,7 @@ if ($upgradeLogTable)
 	$_GET['prep_lt'] = isset($_GET['prep_lt']) ? (int) $_GET['prep_lt'] : 0;
 	$step_progress['name'] = 'Cleaning up old log table index\'s';
 	$step_progress['current'] = $_GET['prep_lt'];
-	$custom_warning = 'This step may take quite some time. During this time it may appear that nothing is happening whilst
+	$custom_warning = 'This step may take quite some time. During this time it may appear that nothing is happening while
 		the databases MySQL tables are cleaned. Please be patient.';
 
 	// Here we remove all the unused indexes

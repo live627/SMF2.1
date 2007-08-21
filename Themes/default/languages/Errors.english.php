@@ -317,8 +317,8 @@ $txt['name_censored'] = 'Sorry, the name you tried to use, %s, contains words wh
 $txt['poll_already_exists'] = 'A topic can only have one poll associated with it!';
 $txt['poll_not_found'] = 'There is no poll associated with this topic!';
 
-$txt['error_while_adding_poll'] = 'The following error or errors occurred whilst adding this poll';
-$txt['error_while_editing_poll'] = 'The following error or errors occurred whilst editing this poll';
+$txt['error_while_adding_poll'] = 'The following error or errors occurred while adding this poll';
+$txt['error_while_editing_poll'] = 'The following error or errors occurred while editing this poll';
 
 $txt['loadavg_search_disabled'] = 'Due to high stress on the server, the search function has been automatically and temporarily disabled.  Please try again in a short while.';
 $txt['loadavg_generic_disabled'] = 'Sorry, because of high stress on the server, this feature is currently unavailable.';
