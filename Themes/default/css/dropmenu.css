@@ -58,7 +58,7 @@ ul.admin_menu li
 ul.admin_menu li ul li
 {
 	background: none;
-	width: 18em;
+	width: 16em;
 	float: none;
 	margin: 0;
 	padding: 0;
@@ -71,7 +71,7 @@ ul.admin_menu li ul
 	position: absolute; 
 	top: 100%;
 	border: solid 1px #808080;
-	border-left: solid 5px #6888A7; 
+	border-left: solid 2px #6888A7; 
 	background: #F8F8FB;
 }
 ul.admin_menu li ul ul 
@@ -85,7 +85,7 @@ ul.admin_menu li ul li ul, ul.admin_menu li ul li.over ul
 	left: -999em;
 	top: 0;
 	border: solid 1px #A0A0A0;
-	border-left: solid 5px #6888A7; 
+	border-left: solid 2px #6888A7; 
 	background: #FFF;
 }
 ul.admin_menu li ul li a
@@ -118,7 +118,7 @@ ul.admin_menu li:hover ul, ul.admin_menu li.over ul
 ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 {
 	display: block;
-	left: 11em;
+	left: 15.3em;
 }
 
 ul.admin_menu a:hover
