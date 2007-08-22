@@ -1246,13 +1246,13 @@ function loadTheme($id_theme = 0, $initialize = true)
 		{
 			// Okay, this seems weird, but we don't want an endless loop - this will make $_GET not empty ;).
 			if (empty($_GET))
-				redirectexit('www');
+				redirectexit('wwwRedirect');
 			else
 			{
 				list ($k, $v) = each($_GET);
 
-				if ($k != 'www')
-					redirectexit('www;' . $k . '=' . $v);
+				if ($k != 'wwwRedirect')
+					redirectexit('wwwRedirect;' . $k . '=' . $v);
 			}
 		}
 

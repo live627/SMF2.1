@@ -36,6 +36,7 @@ $txt['pm_currently_using'] = '%s messages, %s%% full.';
 $txt['pm_error_user_not_found'] = 'Unable to find member \'%s\'.';
 $txt['pm_error_ignored_by_user'] = 'User \'%s\' has blocked your personal message.';
 $txt['pm_error_data_limit_reached'] = 'PM could not be sent to \'%s\' as their inbox is full!';
+$txt['pm_error_user_cannot_read'] = 'User \'%s\' can not receive personal messages.';
 $txt['pm_successfully_sent'] = 'PM successfully sent to \'%s\'.';
 $txt['pm_send_report'] = 'Send report';
 $txt['pm_save_outbox'] = 'Save a copy in my outbox';

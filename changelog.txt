@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2791 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2792 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -58,6 +58,10 @@ August 2007
  * Cosmetic changes to the admin dropdown menu ( GenericMenu.template, dropmenu.css )
  ! When a topic is created in a board without any topics force the cache to refresh itself. (Post.php)
  ! Don't try to style the quickmodSubmit item if it isn't being generated. (Display template)
+ ! Use wwwRedirect instead of www in the URL when redirecting requests that forgot the www subdomain. (Load.php)
+ ! Allow those with a primary membergroup who can not leave that group still join other groups. (Profile.php)
+ ! Don't allow sending PMs to members who can't read them. (Subs-Post.php)
+ & Language string for above. (PersonalMessages language)
 
 
 July 2007

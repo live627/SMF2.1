@@ -910,6 +910,27 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		$smfFunc['db_free_result']($request);
 	}
 
+	// Load the groups that are allowed to read PMs.
+	$allowed_groups = array();
+	$disallowed_groups = array();
+	$request = $smfFunc['db_query']('', "
+		SELECT id_group, add_deny
+		FROM {$db_prefix}permissions
+		WHERE permission='pm_read'", __FILE__, __LINE__);
+
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		if (empty($row['add_deny']))
+			$disallowed_groups[] = $row['id_group'];
+		else
+			$allowed_groups[] = $row['id_group'];
+	}
+
+	$smfFunc['db_free_result']($request);
+
+	if (empty($modSettings['permission_enable_deny']))
+		$disallowed_groups = array();
+
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			member_name, real_name, id_member, email_address, lngfile,
@@ -949,6 +970,14 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 				unset($all_to[array_search($row['id_member'], $all_to)]);
 				continue;
 			}
+
+			// Do they have any of the allowed groups?
+			if (count(array_intersect($allowed_groups, $groups)) == 0 || count(array_intersect($disallowed_groups, $groups)) != 0)
+			{
+				$log['failed'][] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
+				unset($all_to[array_search($row['id_member'], $all_to)]);
+				continue;
+			}
 		}
 
 		if (!empty($row['ignored']))
@@ -957,6 +986,9 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			unset($all_to[array_search($row['id_member'], $all_to)]);
 			continue;
 		}
+
+		// Does the recipient even have permission to read this message?
+
 
 		// Send a notification, if enabled - taking into account buddy list!.
 		if (!empty($row['email_address']) && ($row['pm_email_notify'] == 1 || ($row['pm_email_notify'] > 1 && ($row['is_buddy'] || !empty($modSettings['enable_buddylist'])))) && $row['is_activated'] == 1)

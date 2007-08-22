@@ -3097,7 +3097,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 
 		// If this is the one we are acting on, can we even act?
 		if (!$context['can_manage_membergroups'] && $row['group_type'] == 0)
-			fatal_lang_error('no_access');
+			$canChangePrimary = false;
 	}
 	$smfFunc['db_free_result']($request);
 
