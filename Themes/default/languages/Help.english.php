@@ -481,13 +481,13 @@ $helptxt['posts_and_topics'] = '
 			Modify the settings related to the posting of messages and the way messages are shown. You can also enable the spell check here.
 		</li><li>
 			<b>Bulletin Board Code</b><br />
-			Enable the code that show forum messages in the right layout. Also adjust which codes are allowed and which aren\'t.
+			Enable the code that shows forum messages in the right layout. Also adjust which codes are allowed and which aren\'t.
 		</li><li>
 			<b>Censored Words</b>
 			In order to keep the language on your forum under control, you can censor certain words. This function allows you to convert forbidden words into innocent versions.
 		</li><li>
 			<b>Topic Settings</b>
-			Modify the settings related to topics. The number of topics per page, whether stickey topics are enabled or not, the number of messages needed for a topic to be hot, etc.
+			Modify the settings related to topics. The number of topics per page, whether sticky topics are enabled or not, the number of messages needed for a topic to be hot, etc.
 		</li>
 	</ul>';
 $helptxt['showsidebarAdmin'] = 'This setting will switch back to the old display of admin section, where a sidebar was used for the menu.';
