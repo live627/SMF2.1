@@ -2855,7 +2855,6 @@ function ApplyRules($all_messages = false)
 			// Loop through all the criteria hoping to make a match.
 			foreach ($rule['criteria'] as $c)
 			{
-				$match = false;
 				if (($c['t'] == 'mid' && $c['v'] == $row['id_member_from']) || ($c['t'] == 'gid' && $c['v'] == $row['id_group']) || ($c['t'] == 'sub' && strpos($row['subject'], $c['v']) !== false) || ($c['t'] == 'msg' && strpos($row['body'], $c['v']) !== false))
 					$match = true;
 				// If we're adding and one criteria don't match then we stop!
@@ -2879,11 +2878,11 @@ function ApplyRules($all_messages = false)
 						{
 							// Get a basic pot started!
 							if (!isset($actions['labels'][$row['id_pm']]))
-								$actions['labels'][$row['id_pm']] = explode(',', $row['labels']);
+								$actions['labels'][$row['id_pm']] = empty($row['labels']) ? array() : explode(',', $row['labels']);
 							$actions['labels'][$row['id_pm']][] = $a['v'];
 						}
 					}
-    			}
+    				}
 			}
   		}
 	}

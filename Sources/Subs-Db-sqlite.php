@@ -70,7 +70,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_case_sensitive' => false,
 		);
 
-	if (substr($db_name, -3) != 'db')
+	if (substr($db_name, -3) != '.db')
 		$db_name .= '.db';
 
 	if (!empty($db_options['persist']))
