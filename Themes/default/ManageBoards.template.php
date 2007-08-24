@@ -100,79 +100,73 @@ function template_modify_category()
 <form action="', $scripturl, '?action=admin;area=manageboards;sa=cat2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="cat" value="', $context['category']['id'], '" />
 
-	<table border="0" width="500" cellspacing="0" cellpadding="0" class="bordercolor" align="center">
-		<tr><td>
-			<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-				<tr class="titlebg">
-					<td>', isset($context['category']['is_new']) ? $txt['mboards_new_cat_name'] : $txt['catEdit'], '</td>
-				</tr><tr>
-					<td class="windowbg" valign="top">
-						<table border="0" width="100%" cellspacing="0" cellpadding="2">
-							<tr>';
+	<table border="0" width="60%" cellspacing="0" cellpadding="4" class="tborder" align="center">
+		<tr class="titlebg">
+			<td colspan="2">', isset($context['category']['is_new']) ? $txt['mboards_new_cat_name'] : $txt['catEdit'], '</td>
+		</tr>
+		<tr class="windowbg2">';
 	// If this isn't the only category, let the user choose where this category should be positioned down the board index.
 	if (count($context['category_order']) > 1)
 	{
 		echo '
-								<td>
-									<b>', $txt['order'], '</b><br />
-									<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<select name="cat_order">';
+			<td>
+				<b>', $txt['order'], ':</b><br />
+				<br /><br />
+			</td>
+			<td valign="top" align="right">
+				<select name="cat_order">';
 		// Print every existing category into a select box.
 		foreach ($context['category_order'] as $order)
 			echo '
-										<option', $order['selected'] ? ' selected="selected"' : '', ' value="', $order['id'], '">', $order['name'], '</option>';
+					<option', $order['selected'] ? ' selected="selected"' : '', ' value="', $order['id'], '">', $order['name'], '</option>';
 		echo '
-									</select>
-								</td>
-							</tr><tr>';
+				</select>
+			</td>
+		</tr>
+		<tr class="windowbg2">';
 	}
 	// Allow the user to edit the category name and/or choose whether you can collapse the category.
 	echo '
-								<td>
-									<b>', $txt['full_name'], ':</b><br />
-									', $txt['name_on_display'], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<input type="text" name="cat_name" value="', $context['category']['editable_name'], '" size="30" tabindex="1" />
-								</td>
-							</tr><tr>
-								<td>
-									<b>' . $txt['collapse_enable'] . '</b><br />
-									' . $txt['collapse_desc'] . '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<input type="checkbox" name="collapse"', $context['category']['can_collapse'] ? ' checked="checked"' : '', ' tabindex="2" class="check" />
-								</td>
-							</tr>';
+			<td>
+				<b>', $txt['full_name'], ':</b><br />
+				', $txt['name_on_display'], '<br /><br />
+			</td>
+			<td valign="top" align="right">
+				<input type="text" name="cat_name" value="', $context['category']['editable_name'], '" size="30" tabindex="1" />
+			</td>
+		</tr>
+		<tr class="windowbg2">
+			<td>
+				<b>' . $txt['collapse_enable'] . '</b><br />
+				' . $txt['collapse_desc'] . '<br /><br />
+			</td>
+			<td valign="top" align="right">
+				<input type="checkbox" name="collapse"', $context['category']['can_collapse'] ? ' checked="checked"' : '', ' tabindex="2" class="check" />
+			</td>
+		</tr>';
 
 	// Table footer.
 	echo '
-							<tr>
-								<td colspan="2" align="right">
-									<br />';
+		<tr class="windowbg2">
+			<td colspan="2" align="right">';
 	if (isset($context['category']['is_new']))
 		echo '
-									<input type="submit" name="add" value="', $txt['mboards_add_cat_button'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />';
+				<input type="submit" name="add" value="', $txt['mboards_add_cat_button'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />';
 	else
 		echo '
-									<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />
-									<input type="submit" name="delete" value="', $txt['mboards_delete_cat'], '" onclick="return confirm(\'', $txt['catConfirm'], '\');" />';
+				<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.cat_name);" tabindex="3" />
+				<input type="submit" name="delete" value="', $txt['mboards_delete_cat'], '" onclick="return confirm(\'', $txt['catConfirm'], '\');" />';
 	echo '
-								</td>
-							</tr>
-						</table>
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+
 	// If this category is empty we don't bother with the next confirmation screen.
 	if ($context['category']['is_empty'])
 		echo '
-						<input type="hidden" name="empty" value="1" />';
+				<input type="hidden" name="empty" value="1" />';
+
 	echo '
-					</td>
-				</tr>
-			</table>
-		</td></tr>
+			</td>
+		</tr>
 	</table>
 </form>';
 }
@@ -247,176 +241,176 @@ function template_modify_board()
 <form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
 
-	<table border="0" width="540" cellspacing="0" cellpadding="0" class="bordercolor" align="center">
-		<tr><td>
-			<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-				<tr class="titlebg">
-					<td>', isset($context['board']['is_new']) ? $txt['mboards_new_board_name'] : $txt['boardsEdit'], '</td>
-				</tr><tr>
-					<td class="windowbg" valign="top">
-						<table border="0" width="100%" cellspacing="0" cellpadding="2">';
+	<table border="0" width="80%" cellspacing="0" cellpadding="4" class="tborder" align="center">
+		<tr class="titlebg">
+			<td colspan="2">', isset($context['board']['is_new']) ? $txt['mboards_new_board_name'] : $txt['boardsEdit'], '</td>
+		</tr>';
 
 	// Option for choosing the category the board lives in.
 	echo '
-							<tr>
-								<td>
-									<b>', $txt['mboards_category'], '</b><br />
-									<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<select name="new_cat" onchange="if (this.form.order) {this.form.order.disabled = this.options[this.selectedIndex].value != 0; this.form.board_order.disabled = this.options[this.selectedIndex].value != 0 || this.form.order.options[this.form.order.selectedIndex].value == \'\';}">';
+		<tr class="windowbg2">
+			<td>
+				<b>', $txt['mboards_category'], ':</b><br />
+				<br />
+			</td>
+			<td valign="top" align="left">
+				<select name="new_cat" onchange="if (this.form.order) {this.form.order.disabled = this.options[this.selectedIndex].value != 0; this.form.board_order.disabled = this.options[this.selectedIndex].value != 0 || this.form.order.options[this.form.order.selectedIndex].value == \'\';}">';
 		foreach ($context['categories'] as $category)
 			echo '
-										<option', $category['selected'] ? ' selected="selected"' : '', ' value="', $category['id'], '">', $category['name'], '</option>';
+					<option', $category['selected'] ? ' selected="selected"' : '', ' value="', $category['id'], '">', $category['name'], '</option>';
 		echo '
-									</select>
-								</td>
-							</tr><tr>';
+				</select>
+			</td>
+		</tr>
+		<tr class="windowbg2">';
 
 	// If this isn't the only board in this category let the user choose where the board is to live.
 	if ((isset($context['board']['is_new']) && count($context['board_order']) > 0) || count($context['board_order']) > 1)
 	{
 		echo '
-								<td>
-									<b>', $txt['order'], '</b><br />
-									<br /><br />
-								</td>
-								<td valign="top" align="right">';
+			<td>
+				<b>', $txt['order'], ':</b><br />
+				<br />
+			</td>
+			<td valign="top" align="left">';
 
 	// The first select box gives the user the option to position it before, after or as a child of another board.
 	echo '
-									<select id="order" name="placement" onchange="this.form.board_order.disabled = this.options[this.selectedIndex].value == \'\';">
-										', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '', '
-										<option value="before">' . $txt['mboards_order_before'] . '...</option>
-										<option value="child">' . $txt['mboards_order_child_of'] . '...</option>
-										<option value="after">' . $txt['mboards_order_after'] . '...</option>
-									</select>&nbsp;&nbsp;';
+				<select id="order" name="placement" onchange="this.form.board_order.disabled = this.options[this.selectedIndex].value == \'\';">
+					', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '', '
+					<option value="before">' . $txt['mboards_order_before'] . '...</option>
+					<option value="child">' . $txt['mboards_order_child_of'] . '...</option>
+					<option value="after">' . $txt['mboards_order_after'] . '...</option>
+				</select>&nbsp;&nbsp;';
 
 	// The second select box lists all the boards in the category.
 	echo '
-									<select id="board_order" name="board_order" ', isset($context['board']['is_new']) ? '' : 'disabled="disabled"', '>
-										', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '';
+				<select id="board_order" name="board_order" ', isset($context['board']['is_new']) ? '' : 'disabled="disabled"', '>
+					', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '';
 		foreach ($context['board_order'] as $order)
 			echo '
-										<option', $order['selected'] ? ' selected="selected"' : '', ' value="', $order['id'], '">', $order['name'], '</option>';
-		echo '
-									</select>
-								</td>
-							</tr><tr>';
+					<option', $order['selected'] ? ' selected="selected"' : '', ' value="', $order['id'], '">', $order['name'], '</option>';
+	echo '
+				</select>
+			</td>
+		</tr>
+		<tr class="windowbg2">';
 	}
 
 	// Options for board name and description.
 	echo '
-								<td>
-									<b>', $txt['full_name'], ':</b><br />
-									', $txt['name_on_display'], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<input type="text" name="board_name" value="', $context['board']['name'], '" size="30" />
-								</td>
-							</tr><tr>
-								<td>
-									<b>', $txt['mboards_description'], '</b><br />
-									', $txt['mboards_description_desc'], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<textarea name="desc" rows="2" cols="29">', $context['board']['description'], '</textarea>
-								</td>
-							</tr><tr>
-								<td valign="top">
-									<b>', $txt['mboards_groups'], '</b><br />
-									', $txt['mboards_groups_desc'], '<br /><br />
-								</td>
-								<td valign="top" align="right">';
+			<td>
+				<b>', $txt['full_name'], ':</b><br />
+				<span class="smalltext">', $txt['name_on_display'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<input type="text" name="board_name" value="', $context['board']['name'], '" size="30" />
+			</td>
+		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
+				<b>', $txt['mboards_description'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_description_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<textarea name="desc" rows="3" cols="29" style="width: 95%;">', $context['board']['description'], '</textarea>
+			</td>
+		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
+				<b>', $txt['mboards_groups'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_groups_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">';
 
 	// List all the membergroups so the user can choose who may access this board.
 	foreach ($context['groups'] as $group)
 		echo '
-									<label for="groups_', $group['id'], '"><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['mboards_groups_post_group'] . '"' : '', '>', $group['name'], '</span> <input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /></label><br />';
+				<label for="groups_', $group['id'], '"><input type="checkbox" name="groups[]" value="', $group['id'], '" id="groups_', $group['id'], '"', $group['checked'] ? ' checked="checked"' : '', ' /><span', $group['is_post_group'] ? ' style="border-bottom: 1px dotted;" title="' . $txt['mboards_groups_post_group'] . '"' : '', '>', $group['name'], '</span></label><br />';
 	echo '
-									<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
-									<br />
-								</td>
-							</tr>';
+				<i>', $txt['check_all'], '</i> <input type="checkbox" onclick="invertAll(this, this.form, \'groups[]\');" /><br />
+				<br />
+			</td>
+		</tr>';
 
 	// Options to choose moderators, specifiy as announcement board and choose whether to count posts here.
 	echo '
-							<tr>
-								<td>
-									<b>', $txt['mboards_moderators'], '</b><br />
-									', $txt['mboards_moderators_desc'], '<br /><br />
-								</td>
-								<td valign="top" align="right" style="white-space: nowrap;">
-									<input type="text" name="moderators" id="moderators" value="', $context['board']['moderator_list'], '" size="30" />
-									<a href="', $scripturl, '?action=findmember;input=moderators;quote;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
-								</td>
-							</tr><tr>
-								<td>
-									<b>', $txt['mboards_count_posts'], '</b><br />
-									', $txt['mboards_count_posts_desc'], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<input type="checkbox" name="count" ', $context['board']['count_posts'] ? ' checked="checked"' : '', ' class="check" />
-								</td>
-							</tr>';
+		<tr class="windowbg2">
+			<td>
+				<b>', $txt['mboards_moderators'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_moderators_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left" style="white-space: nowrap;">
+				<input type="text" name="moderators" id="moderators" value="', $context['board']['moderator_list'], '" size="30" />
+				<a href="', $scripturl, '?action=findmember;input=moderators;quote;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
+			</td>
+		</tr>
+		<tr class="windowbg2">
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr class="windowbg2">
+			<td>
+				<b>', $txt['mboards_count_posts'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_count_posts_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<input type="checkbox" name="count" ', $context['board']['count_posts'] ? ' checked="checked"' : '', ' class="check" />
+			</td>
+		</tr>';
 
 	// Here the user can choose to force this board to use a theme other than the default theme for the forum.
 	echo '
-							<tr>
-								<td>
-									<b>', $txt['mboards_theme'], '</b><br />
-									', $txt['mboards_theme_desc'], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<select name="boardtheme">
-										<option value="0"', $context['board']['theme'] == 0 ? ' selected="selected"' : '', '>', $txt['mboards_theme_default'], '</option>';
+		<tr class="windowbg2">
+			<td>
+				<b>', $txt['mboards_theme'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_theme_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<select name="boardtheme">
+					<option value="0"', $context['board']['theme'] == 0 ? ' selected="selected"' : '', '>', $txt['mboards_theme_default'], '</option>';
 
 	foreach ($context['themes'] as $theme)
 		echo '
-										<option value="', $theme['id'], '"', $context['board']['theme'] == $theme['id'] ? ' selected="selected"' : '', '>', $theme['name'], '</option>';
+					<option value="', $theme['id'], '"', $context['board']['theme'] == $theme['id'] ? ' selected="selected"' : '', '>', $theme['name'], '</option>';
 
 	echo '
-									</select>
-								</td>
-							</tr><tr>
-								<td>
-									<b>', $txt['mboards_override_theme'], '</b><br />
-									', $txt['mboards_override_theme_desc'], '<br /><br />
-								</td>
-								<td valign="top" align="right">
-									<input type="checkbox" name="override_theme"', $context['board']['override_theme'] ? ' checked="checked"' : '', ' class="check" />
-								</td>
-							</tr>';
+				</select>
+			</td>
+		</tr>
+		<tr class="windowbg2">
+			<td>
+				<b>', $txt['mboards_override_theme'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_override_theme_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<input type="checkbox" name="override_theme"', $context['board']['override_theme'] ? ' checked="checked"' : '', ' class="check" />
+			</td>
+		</tr>';
 
 	// Finish off the table.
 	echo '
-							<tr>
-								<td colspan="2" align="right">
-									<br />';
-	if (isset($context['board']['is_new']))
-		echo '
-									<input type="hidden" name="cur_cat" value="', $context['board']['category'], '">
-									<input type="submit" name="add" value="', $txt['mboards_new_board'], '" onclick="return !isEmptyText(this.form.board_name);" />';
-	else
-		echo '
-									<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.board_name);" />
-									<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');" />';
-	echo '
-								</td>
-							</tr>
-						</table>
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+		<tr class="windowbg2">
+			<td colspan="2" align="right">
+				<input type="hidden" name="sc" value="', $context['session_id'], '" />';
 
 	// If this board has no children don't bother with the next confirmation screen.
 	if ($context['board']['no_children'])
 		echo '
-						<input type="hidden" name="no_children" value="1" />';
+				<input type="hidden" name="no_children" value="1" />';
 
+	if (isset($context['board']['is_new']))
+		echo '
+				<input type="hidden" name="cur_cat" value="', $context['board']['category'], '">
+				<input type="submit" name="add" value="', $txt['mboards_new_board'], '" onclick="return !isEmptyText(this.form.board_name);" />';
+	else
+		echo '
+				<input type="submit" name="edit" value="', $txt['modify'], '" onclick="return !isEmptyText(this.form.board_name);" />
+				<input type="submit" name="delete" value="', $txt['mboards_delete_board'], '" onclick="return confirm(\'', $txt['boardConfirm'], '\');" />';
 	echo '
-					</td>
-				</tr>
-			</table>
-		</td></tr>
+			</td>
+		</tr>
 	</table>
 </form>';
 }
@@ -431,7 +425,7 @@ function template_confirm_board_delete()
 <form action="', $scripturl, '?action=admin;area=manageboards;sa=board2" method="post" accept-charset="', $context['character_set'], '">
 	<input type="hidden" name="boardid" value="', $context['board']['id'], '" />
 
-	<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
+	<table width="80%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 		<tr class="titlebg">
 			<td>', $txt['mboards_delete_board'], '</td>
 		</tr><tr class="windowbg">
@@ -449,7 +443,7 @@ function template_confirm_board_delete()
 		</tr>
 	</table>
 	<br />
-	<table width="600" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
+	<table width="80%" cellpadding="4" cellspacing="0" border="0" align="center" class="tborder">
 		<tr class="titlebg">
 			<td>', $txt['mboards_delete_what_do'], ':</td>
 		</tr>

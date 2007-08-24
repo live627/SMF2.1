@@ -16,19 +16,19 @@ function template_new_group()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=add" method="post" accept-charset="', $context['character_set'], '">
-			<table width="90%" cellpadding="4" cellspacing="0" border="0" class="tborder" align="center">
+			<table width="80%" cellpadding="4" cellspacing="0" border="0" class="tborder" align="center">
 				<tr class="titlebg">
-					<td colspan="2" align="center">', $txt['membergroups_new_group'], '</td>
+					<td colspan="2" align="left">', $txt['membergroups_new_group'], '</td>
 				</tr><tr class="windowbg2">
-					<th align="right" width="50%"><label for="group_name_input">', $txt['membergroups_group_name'], ':</label></th>
+					<th align="left" width="50%"><label for="group_name_input">', $txt['membergroups_group_name'], ':</label></th>
 					<td><input type="text" name="group_name" id="group_name_input" size="30" /></td>
 				</tr>';
 	if ($context['undefined_group'])
 		echo '
 				<tr class="windowbg2" valign="top">
-					<th align="right"><label for="group_type">', $txt['membergroups_edit_group_type'], ':</label></th>
+					<th align="left"><label for="group_type">', $txt['membergroups_edit_group_type'], ':</label></th>
 					<td>
-						<fieldset id="group_type">
+						<fieldset id="group_type" style="width: 95%;">
 							<legend>', $txt['membergroups_edit_select_group_type'], '</legend>
 							<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" checked="checked" class="check" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
 							<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" class="check"  onclick="swapPostGroup(0);"/>', $txt['membergroups_group_type_request'], '</label><br />
@@ -41,7 +41,7 @@ function template_new_group()
 	if ($context['post_group'] || $context['undefined_group'])
 		echo '
 				<tr class="windowbg2">
-					<th align="right" id="min_posts_text">', $txt['membergroups_min_posts'], ':</th>
+					<th align="left" id="min_posts_text">', $txt['membergroups_min_posts'], ':</th>
 					<td>
 						<input type="text" name="min_posts" id="min_posts_input" size="5" />
 					</td>
@@ -50,12 +50,12 @@ function template_new_group()
 	{
 		echo '
 				<tr class="windowbg2">
-					<th align="right" valign="top" style="padding-top: 1em;">
+					<th align="left" valign="top" style="padding-top: 1em;">
 						<label for="permission_base">', $txt['membergroups_permissions'], ':</label>
 						<div class="smalltext" style="font-weight: normal;">', $txt['membergroups_can_edit_later'], '</div>
 					</th>
 					<td>
-						<fieldset id="permission_base">
+						<fieldset id="permission_base" style="width: 95%;">
 							<legend>', $txt['membergroups_select_permission_type'], '</legend>
 							<input type="radio" name="perm_type" id="perm_type_inherit" value="inherit" checked="checked" class="check" />
 							<label for="perm_type_inherit">', $txt['membergroups_new_as_inherit'], ':</label>
@@ -93,11 +93,11 @@ function template_new_group()
 	}
 	echo '
 				<tr class="windowbg2">
-					<th align="right" valign="top" style="padding-top: 1em;">
+					<th align="left" valign="top" style="padding-top: 1em;">
 						', $txt['membergroups_new_board'], ':', $context['post_group'] ? '<div class="smalltext" style="font-weight: normal">' . $txt['membergroups_new_board_post_groups'] . '</div>' : '', '
 					</th>
 					<td>
-						<fieldset id="visible_boards">
+						<fieldset id="visible_boards" style="width: 95%;">
 							<legend>', $txt['membergroups_new_board_desc'], '</legend>';
 	foreach ($context['boards'] as $board)
 		echo '
@@ -135,19 +135,19 @@ function template_edit_group()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=membergroups;sa=edit;group=', $context['group']['id'], '" method="post" accept-charset="', $context['character_set'], '" name="groupForm" id="groupForm">
-			<table width="95%" border="0" cellspacing="0" cellpadding="3" class="tborder" align="center">
+			<table width="80%" border="0" cellspacing="0" cellpadding="3" class="tborder" align="center">
 				<tr class="titlebg">
-					<td colspan="2" align="center">', $txt['membergroups_edit_group'], ' - ', $context['group']['name'], '</td>
+					<td colspan="2" align="left">', $txt['membergroups_edit_group'], ' - ', $context['group']['name'], '</td>
 				</tr>
 				<tr class="windowbg2">
-					<th align="right" width="50%"><label for="group_name_input">', $txt['membergroups_edit_name'], ':</label></th>
+					<th align="left" width="50%"><label for="group_name_input">', $txt['membergroups_edit_name'], ':</label></th>
 					<td><input type="text" name="group_name" id="group_name_input" value="', $context['group']['editable_name'], '" size="30" /></td>
 				</tr>';
 
 	if ($context['group']['id'] != 3 && $context['group']['id'] != 4)
 		echo '
 				<tr class="windowbg2" valign="top">
-					<th align="right" width="50%" id="group_desc_text"><label for="group_desc_input">', $txt['membergroups_edit_desc'], ':</label></th>
+					<th align="left" width="50%" id="group_desc_text"><label for="group_desc_input">', $txt['membergroups_edit_desc'], ':</label></th>
 					<td>
 						<textarea name="group_desc" id="group_desc_input" rows="4" cols="40">', $context['group']['description'], '</textarea>
 					</td>
@@ -158,9 +158,9 @@ function template_edit_group()
 	{
 		echo '
 				<tr class="windowbg2" valign="top">
-					<th align="right"><label for="group_type">', $txt['membergroups_edit_group_type'], ':</label></th>
+					<th align="left"><label for="group_type">', $txt['membergroups_edit_group_type'], ':</label></th>
 					<td>
-						<fieldset id="group_type">
+						<fieldset id="group_type" style="width: 95%;">
 							<legend>', $txt['membergroups_edit_select_group_type'], '</legend>
 							<label for="group_type_private"><input type="radio" name="group_type" id="group_type_private" value="0" ', !$context['group']['is_post_group'] && $context['group']['type'] == 0 ? 'checked="checked"' : '', ' class="check" onclick="swapPostGroup(0);" />', $txt['membergroups_group_type_private'], '</label><br />
 							<label for="group_type_request"><input type="radio" name="group_type" id="group_type_request" value="1" ', $context['group']['type'] == 1 ? 'checked="checked"' : '', ' class="check"  onclick="swapPostGroup(0);"/>', $txt['membergroups_group_type_request'], '</label><br />
@@ -175,14 +175,14 @@ function template_edit_group()
 	{
 		echo '
 				<tr class="windowbg2" valign="middle">
-					<th align="right" id="group_moderators_text"><label for="group_moderators_input">', $txt['moderators'], ':</label></th>
+					<th align="left" id="group_moderators_text"><label for="group_moderators_input">', $txt['moderators'], ':</label></th>
 					<td>
 						<input type="text" name="group_moderators" id="group_moderators_input" value="', $context['group']['moderator_list'], '" size="30" />
 						<a href="', $scripturl, '?action=findmember;input=group_moderators;quote;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
 					</td>
 				</tr>
 				<tr class="windowbg2">
-					<th align="right" id="group_hidden_text"><label for="group_hidden_input">', $txt['membergroups_edit_hidden'], ':</label></th>
+					<th align="left" id="group_hidden_text"><label for="group_hidden_input">', $txt['membergroups_edit_hidden'], ':</label></th>
 					<td>
 						<select name="group_hidden" id="group_hidden_input" onchange="if (this.value == 2 && !confirm(\'', $txt['membergroups_edit_hidden_warning'], '\')) this.value = 0;">
 							<option value="0" ', $context['group']['hidden'] ? '' : 'selected="selected"', '>', $txt['membergroups_edit_hidden_no'], '</option>
@@ -198,7 +198,7 @@ function template_edit_group()
 	{
 		echo '
 				<tr class="windowbg2" valign="top">
-					<th align="right" id="group_inherit_text">
+					<th align="left" id="group_inherit_text">
 						<label for="group_inherit_input">
 							', $txt['membergroups_edit_inherit_permissions'], ':
 							<div class="smalltext" style="font-weight: normal;">', $txt['membergroups_edit_inherit_permissions_desc'], '</div>
@@ -225,20 +225,20 @@ function template_edit_group()
 	if ($context['group']['allow_post_group'])
 		echo '
 				<tr class="windowbg2">
-					<th align="right" id="min_posts_text"><label for="min_posts_input">', $txt['membergroups_min_posts'], ':</label></th>
+					<th align="left" id="min_posts_text"><label for="min_posts_input">', $txt['membergroups_min_posts'], ':</label></th>
 					<td><input type="text" name="min_posts" id="min_posts_input"', $context['group']['is_post_group'] ? ' value="' . $context['group']['min_posts'] . '"' : '', ' size="6" /></td>
 				</tr>';
 	echo '
 				<tr class="windowbg2">
-					<th align="right"><label for="online_color_input">', $txt['membergroups_online_color'], ':</label></th>
+					<th align="left"><label for="online_color_input">', $txt['membergroups_online_color'], ':</label></th>
 					<td><input type="text" name="online_color" id="online_color_input" value="', $context['group']['color'], '" size="20" /></td>
 				</tr>
 				<tr class="windowbg2">
-					<th align="right"><label for="star_count_input">', $txt['membergroups_star_count'], ':</label></th>
+					<th align="left"><label for="star_count_input">', $txt['membergroups_star_count'], ':</label></th>
 					<td style="padding-bottom: 0;"><input type="text" name="star_count" id="star_count_input" value="', $context['group']['star_count'], '" size="4" onkeyup="if (this.value.length > 2) this.value = 99;" onkeydown="this.onkeyup();" onchange="if (this.value != 0) this.form.star_image.onchange();" /></td>
 				</tr>
 				<tr class="windowbg2">
-					<th align="right" style="padding-top: 1em;">
+					<th align="left" style="padding-top: 1em;">
 						<label for="star_image_input">', $txt['membergroups_star_image'], ':</label>
 						<div class="smalltext" style="font-weight: normal;">', $txt['membergroups_star_image_note'], '</div>
 					</th>
@@ -249,7 +249,7 @@ function template_edit_group()
 					</td>
 				</tr>
 				<tr class="windowbg2">
-					<th align="right" style="padding-top: 1em;">
+					<th align="left" style="padding-top: 1em;">
 						<label for="max_messages_input">', $txt['membergroups_max_messages'], ':</label>
 						<div class="smalltext" style="font-weight: normal">', $txt['membergroups_max_messages_note'], '</div>
 					</th>
@@ -261,11 +261,11 @@ function template_edit_group()
 	{
 		echo '
 				<tr class="windowbg2">
-					<th align="right" valign="top">
+					<th align="left" valign="top">
 						', $txt['membergroups_new_board'], ':', $context['group']['is_post_group'] ? '<div class="smalltext" style="font-weight: normal">' . $txt['membergroups_new_board_post_groups'] . '</div>' : '', '
 					</th>
 					<td valign="top">
-						<fieldset id="visible_boards">
+						<fieldset id="visible_boards" style="width: 95%;">
 							<legend><a href="javascript:void(0);" onclick="document.getElementById(\'visible_boards\').style.display = \'none\';document.getElementById(\'visible_boards_link\').style.display = \'block\'; return false;">', $txt['membergroups_new_board_desc'], '</a></legend>';
 		foreach ($context['boards'] as $board)
 			echo '
