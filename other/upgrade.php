@@ -792,6 +792,9 @@ function loadEssentialData()
 		require_once($sourcedir . '/QueryString.php');
 		cleanRequest();
 	}
+
+	if (!isset($_GET['substep']))
+		$_GET['substep'] = 0;
 }
 
 function initialize_inputs()
@@ -939,14 +942,14 @@ function WelcomeLogin()
 		throw_error('The upgrader was unable to find language files for the language specified in Settings.php.<br />SMF will not work without the primary language files installed.<br /><br />Please either install them, or <a href="' . $upgradeurl . '?step=0;lang=english">use english instead</a>.');
 		return false;
 	}
-	else
+	elseif (!isset($_GET['skiplang']))
 	{
 		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . (basename($upcontext['language'], '.lng')) . '.php')), 0, 4096);
 		preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
 
 		if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
 		{
-			throw_error('The upgrader found some old or outdated language files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme.');
+			throw_error('The upgrader found some old or outdated language files.<br /><br />Please make certain you uploaded the new versions of all the files included in the package, even the theme and language files for the default theme. [<a href="' . $upgradeurl . '?skiplang">SKIP</a>]');
 			return false;
 		}
 	}
