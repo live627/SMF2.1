@@ -3502,7 +3502,7 @@ function template_welcome_message()
 				</tr>';
 
 	// Can they continue?
-	if (!empty($upcontext['user']['id']) && time() - $upcontext['user']['updated'] > $upcontext['inactive_timeout'])
+	if (!empty($upcontext['user']['id']) && time() - $upcontext['user']['updated'] > $upcontext['inactive_timeout'] && $upcontext['user']['step'] > 1)
 	{
 		echo '
 				<tr>
