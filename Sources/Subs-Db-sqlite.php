@@ -43,10 +43,9 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 		'pass' => $db_passwd,
 		'opts' => $db_options,
 	);
-	//echo '<pre>'; print_r($parameters); echo '</pre>';
 
 	// Map some database specific functions, only do this once.
-	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'mysql_fetch_assoc')
+	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'sqlite_fetch_array')
 		$smfFunc += array(
 			'db_query' => 'smf_db_query',
 			'db_fetch_assoc' => 'sqlite_fetch_array',
