@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2796 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2797 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -68,6 +68,7 @@ August 2007
  ! Attach a class name to the WYSIYWG editor. (style.css, editor.js)
  ! Rename veriable "mode" to something more understandable in the WYSIWYG editor. (editor.js)
  ! Don't allow resuming an upgrade unless they've actually got somewhere. (upgrade.php)
+ ! If the user selects to preview a quick reply and there are new replies in the mean time still show the preview. (Post.php)
 
 
 July 2007

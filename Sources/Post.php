@@ -441,7 +441,8 @@ function Post()
 			if (!isset($_REQUEST['icon']))
 				$_REQUEST['icon'] = 'xx';
 
-			$really_previewing = false;
+			// They are previewing if they asked to preview (i.e. came from quick reply).
+			$really_previewing = !empty($_POST['preview']);
 		}
 
 		// In order to keep the approval status flowing through, we have to pass it through the form...
