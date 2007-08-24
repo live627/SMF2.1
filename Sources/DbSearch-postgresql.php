@@ -36,7 +36,7 @@ function db_search_init()
 {
 	global $smfFunc;
 
-	if (!isset($smfFunc['db_backup_table']) || $smfFunc['db_backup_table'] != 'db_backup_table')
+	if (!isset($smfFunc['db_search_query']) || $smfFunc['db_search_query'] != 'smf_db_search_query')
 		$smfFunc += array(
 			'db_search_query' => 'smf_db_search_query',
 			'db_search_support' => 'smf_db_search_support',

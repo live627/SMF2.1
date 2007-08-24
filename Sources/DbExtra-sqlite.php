@@ -45,20 +45,20 @@ function db_extra_init()
 {
 	global $smfFunc;
 
-	if (!isset($smfFunc['db_backup_table']) || $smfFunc['db_backup_table'] != 'db_backup_table')
+	if (!isset($smfFunc['db_backup_table']) || $smfFunc['db_backup_table'] != 'smf_db_backup_table')
 		$smfFunc += array(
-			'db_backup_table' => 'db_backup_table',
-			'db_optimize_table' => 'db_optimize_table',
-			'db_insert_sql' => 'db_insert_sql',
-			'db_table_sql' => 'db_table_sql',
-			'db_list_tables' => 'db_list_tables',
+			'db_backup_table' => 'smf_db_backup_table',
+			'db_optimize_table' => 'smf_db_optimize_table',
+			'db_insert_sql' => 'smf_db_insert_sql',
+			'db_table_sql' => 'smf_db_table_sql',
+			'db_list_tables' => 'smf_db_list_tables',
 			'db_get_backup' => 'smf_db_get_backup',
 			'db_get_version' => 'smf_db_get_version',
 		);
 }
 
 // Backup $table to $backup_table.
-function db_backup_table($table, $backup_table)
+function smf_db_backup_table($table, $backup_table)
 {
 	global $smfFunc;
 
@@ -135,7 +135,7 @@ function db_backup_table($table, $backup_table)
 }
 
 // Optimize a table - return data freed!
-function db_optimize_table($table)
+function smf_db_optimize_table($table)
 {
 	global $smfFunc;
 
@@ -143,7 +143,7 @@ function db_optimize_table($table)
 }
 
 // List all the tables in the database.
-function db_list_tables($db = false, $filter = false)
+function smf_db_list_tables($db = false, $filter = false)
 {
 	global $db_prefix, $smfFunc;
 
@@ -164,7 +164,7 @@ function db_list_tables($db = false, $filter = false)
 }
 
 // Get the content (INSERTs) for a table.
-function db_insert_sql($tableName)
+function smf_db_insert_sql($tableName)
 {
 	global $smfFunc;
 
@@ -218,7 +218,7 @@ function db_insert_sql($tableName)
 }
 
 // Get the schema (CREATE) for a table.
-function db_table_sql($tableName)
+function smf_db_table_sql($tableName)
 {
 	global $smfFunc;
 

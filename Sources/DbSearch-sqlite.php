@@ -35,7 +35,7 @@ function db_search_init()
 {
 	global $smfFunc;
 
-	if (!isset($smfFunc['db_backup_table']) || $smfFunc['db_backup_table'] != 'db_backup_table')
+	if (!isset($smfFunc['db_search_query']) || $smfFunc['db_search_query'] != 'smf_db_search_query')
 		$smfFunc += array(
 			'db_search_query' => 'smf_db_search_query',
 			'db_search_support' => 'smf_db_search_support',
@@ -71,10 +71,6 @@ function smf_db_search_query($identifier, $db_string, $file, $line, $connection 
 		'create_tmp_log_search_messages' => array(
 			'~mediumint\(\d\)~i' => 'int',
 			'~TYPE=HEAP~i' => '',
-		),
-		'drop_words_table' => array(
-			'~IF EXISTS~' => '',
-			'on_fail' => false,
 		),
 	);
 
