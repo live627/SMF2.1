@@ -575,6 +575,10 @@ else
 	$upcontext['language'] = $upcontext['upgrade_status']['lang'];
 }
 
+// If this isn't the first stage see whether they are logging in and resuming.
+if ($upcontext['current_step'] != 0 || !empty($upcontext['user']['step']))
+	checkLogin();
+
 // This only exists if we're on SMF ;)
 if (isset($modSettings['smfVersion']))
 {
@@ -642,7 +646,7 @@ foreach ($upcontext['steps'] as $num => $step)
 upgradeExit();
 
 // Exit the upgrade script.
-function upgradeExit()
+function upgradeExit($fallThrough = false)
 {
 	global $upcontext, $upgradeurl, $boarddir;
 
@@ -665,45 +669,49 @@ function upgradeExit()
 	}
 	$upcontext['overall_percent'] = (int) $upcontext['overall_percent'];
 
-	if (!isset($_GET['xml']))
-		template_upgrade_above();
-	else
+	// We usually dump our templates out.
+	if (!$fallThrough)
 	{
-		header('Content-Type: text/xml; charset=ISO-8859-1');
-		// Sadly we need to retain the $_GET data thanks to the old upgrade scripts.
-		$upcontext['get_data'] = array();
-		foreach ($_GET as $k => $v)
+		if (!isset($_GET['xml']))
+			template_upgrade_above();
+		else
 		{
-			if (substr($k, 0, 3) != 'amp' && !in_array($k, array('xml', 'substep', 'lang', 'data', 'step', 'filecount')))
+			header('Content-Type: text/xml; charset=ISO-8859-1');
+			// Sadly we need to retain the $_GET data thanks to the old upgrade scripts.
+			$upcontext['get_data'] = array();
+			foreach ($_GET as $k => $v)
 			{
-				$upcontext['get_data'][$k] = $v;
+				if (substr($k, 0, 3) != 'amp' && !in_array($k, array('xml', 'substep', 'lang', 'data', 'step', 'filecount')))
+				{
+					$upcontext['get_data'][$k] = $v;
+				}
 			}
+			template_xml_above();
 		}
-		template_xml_above();
+
+		// Call the template.
+		if (isset($upcontext['sub_template']))
+		{
+			$upcontext['upgrade_status']['curstep'] = $upcontext['current_step'];
+			$upcontext['form_url'] = $upgradeurl . '?step=' . $upcontext['current_step'] . '&amp;substep=' . $_GET['substep'] . '&amp;data=' . base64_encode(serialize($upcontext['upgrade_status']));
+	
+			// Custom stuff to pass back?
+			if (!empty($upcontext['query_string']))
+				$upcontext['form_url'] .= $upcontext['query_string'];
+	
+			call_user_func('template_' . $upcontext['sub_template']);
+		}
+
+		// Was there an error?
+		if (!empty($upcontext['forced_error_message']))
+			echo $upcontext['forced_error_message'];
+
+		// Show the footer.
+		if (!isset($_GET['xml']))
+			template_upgrade_below();
+		else
+			template_xml_below();
 	}
-
-	// Call the template.
-	if (isset($upcontext['sub_template']))
-	{
-		$upcontext['upgrade_status']['curstep'] = $upcontext['current_step'];
-		$upcontext['form_url'] = $upgradeurl . '?step=' . $upcontext['current_step'] . '&amp;substep=' . $_GET['substep'] . '&amp;data=' . base64_encode(serialize($upcontext['upgrade_status']));
-
-		// Custom stuff to pass back?
-		if (!empty($upcontext['query_string']))
-			$upcontext['form_url'] .= $upcontext['query_string'];
-
-		call_user_func('template_' . $upcontext['sub_template']);
-	}
-
-	// Was there an error?
-	if (!empty($upcontext['forced_error_message']))
-		echo $upcontext['forced_error_message'];
-
-	// Show the footer.
-	if (!isset($_GET['xml']))
-		template_upgrade_below();
-	else
-		template_xml_below();
 
 	// Bang - gone!
 	die();
@@ -723,7 +731,9 @@ function redirectLocation($location, $addForm = true)
 
 	while (@ob_end_clean());
 	header('Location: ' . $location);
-	die();
+
+	// Exit - saving status as we go.
+	upgradeExit(true);
 }
 
 // Load all essential data and connect to the DB as this is pre SSI.php
@@ -941,6 +951,16 @@ function WelcomeLogin()
 		}
 	}
 
+	// Either we're logged in or we're going to present the login.
+	return checkLogin();
+}
+
+// Step 0.5: Does the login work?
+function checkLogin()
+{
+	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $cachedir, $upgradeurl, $upcontext, $disable_security;
+	global $smfFunc, $db_type, $databases, $support_js;
+	
 	// Are we trying to login?
 	if (isset($_POST['contbutt']) && (!empty($_POST['user']) || $disable_security))
 	{
@@ -997,7 +1017,13 @@ function WelcomeLogin()
 
 		// Track whether javascript works!
 		if (!empty($_POST['js_works']))
+		{
 			$upcontext['upgrade_status']['js'] = 1;
+			$support_js = 1;
+		}
+		else
+			$support_js = 0;
+
 		// Note down the version we are coming from.
 		if (!empty($modSettings['smfVersion']) && empty($upcontext['user']['version']))
 			$upcontext['user']['version'] = $modSettings['smfVersion'];
@@ -1048,8 +1074,7 @@ function WelcomeLogin()
 			// If we're resuming set the step and substep to be correct.
 			if (isset($_POST['cont']))
 			{
-				// Note it's -1 as it will get autoinc.
-				$upcontext['current_step'] = $upcontext['user']['step'] - 1;
+				$upcontext['current_step'] = $upcontext['user']['step'];
 				$_GET['substep'] = $upcontext['user']['substep'];
 			}
 
@@ -1057,7 +1082,6 @@ function WelcomeLogin()
 		}
 	}
 
-	// All ready - pause and wait for input.
 	return false;
 }
 
@@ -2344,8 +2368,11 @@ function parse_sql($filename)
 						$upcontext['actioned_items'][] = $last_step;
 				}
 
-				// Small step!
-				nextSubstep(++$substep);
+				// Small step - only if we're actually doing stuff.
+				if ($do_current)
+					nextSubstep(++$substep);
+				else
+					$substep++;
 			}
 			elseif ($type == '{')
 				$current_type = 'code';
@@ -2375,36 +2402,38 @@ function parse_sql($filename)
 		}
 
 		$current_data .= $line;
-		if ((!$support_js || isset($_GET['xml'])) && substr(rtrim($current_data), -1) === ';' && $current_type === 'sql')
+		if (substr(rtrim($current_data), -1) === ';' && $current_type === 'sql')
 		{
-			if (!$do_current)
+			if ((!$support_js || isset($_GET['xml'])))
 			{
-				$current_data = '';
-				continue;
-			}
-
-			$current_data = strtr(substr(rtrim($current_data), 0, -1), array('{$db_prefix}' => $db_prefix, '{$boarddir}' => $boarddir, '{$sboarddir}' => addslashes($boarddir), '{$boardurl}' => $boardurl, '{$db_collation}' => $db_collation));
-
-			upgrade_query($current_data);
-			// !!! This will be how it kinda does it once mysql all stripped out - needed for postgre (etc).
-			/*
-			$result = $smfFunc['db_query']('', $current_data, false, false);
-			// Went wrong?
-			if (!$result)
-			{
-				// Bit of a bodge - do we want the error?
-				if (!empty($upcontext['return_error']))
+				if (!$do_current)
 				{
-					$upcontext['error_message'] = $smfFunc['db_error']($db_connection);
-					return false;
+					$current_data = '';
+					continue;
 				}
-			}*/
-
+	
+				$current_data = strtr(substr(rtrim($current_data), 0, -1), array('{$db_prefix}' => $db_prefix, '{$boarddir}' => $boarddir, '{$sboarddir}' => addslashes($boarddir), '{$boardurl}' => $boardurl, '{$db_collation}' => $db_collation));
+	
+				upgrade_query($current_data);
+				// !!! This will be how it kinda does it once mysql all stripped out - needed for postgre (etc).
+				/*
+				$result = $smfFunc['db_query']('', $current_data, false, false);
+				// Went wrong?
+				if (!$result)
+				{
+					// Bit of a bodge - do we want the error?
+					if (!empty($upcontext['return_error']))
+					{
+						$upcontext['error_message'] = $smfFunc['db_error']($db_connection);
+						return false;
+					}
+				}*/
+				$done_something = true;
+			}
 			$current_data = '';
-			$done_something = true;
 		}
 		// If this is xml based and we're just getting the item name then that's grand.
-		elseif ($support_js && !isset($_GET['xml']) && $upcontext['current_debug_item_name'] != '')
+		elseif ($support_js && !isset($_GET['xml']) && $upcontext['current_debug_item_name'] != '' && $do_current)
 			return false;
 
 		// Clean up by cleaning any step info.
@@ -3502,7 +3531,7 @@ function template_welcome_message()
 				</tr>';
 
 	// Can they continue?
-	if (!empty($upcontext['user']['id']) && time() - $upcontext['user']['updated'] > $upcontext['inactive_timeout'] && $upcontext['user']['step'] > 1)
+	if (!empty($upcontext['user']['id']) && time() - $upcontext['user']['updated'] >= $upcontext['inactive_timeout'] && $upcontext['user']['step'] > 1)
 	{
 		echo '
 				<tr>
@@ -3641,7 +3670,7 @@ function template_backup_database()
 				setInnerHTML(document.getElementById(\'tab_done\'), iTableNum);
 				setInnerHTML(document.getElementById(\'current_table\'), sTableName);
 				lastTable = iTableNum;
-				updateStepProgress(iTableNum, ', $upcontext['table_count'], ', ', $upcontext['step_weight'], ');';
+				updateStepProgress(iTableNum, ', $upcontext['table_count'], ', ', $upcontext['step_weight'] * ((100 - $upcontext['step_progress']) / 100), ');';
 
 		// If debug flood the screen.
 		if ($is_debug)
@@ -3890,7 +3919,7 @@ function template_database_changes()
 
 		echo '
 					document.getElementById(\'info2\').style.display = "none";
-					updateStepProgress(100, 100, ', $upcontext['step_weight'], ');
+					updateStepProgress(100, 100, ', $upcontext['step_weight'] * ((100 - $upcontext['step_progress']) / 100), ');
 					return true;
 				}
 				// Was it the last step in the file?
@@ -3954,7 +3983,7 @@ function template_database_changes()
 				barTotal = debugItems * ', $upcontext['file_count'], ';
 				barDone = (debugItems * (curFile - 1)) + lastItem;
 
-				updateStepProgress(barDone, barTotal, ', $upcontext['step_weight'], ');
+				updateStepProgress(barDone, barTotal, ', $upcontext['step_weight'] * ((100 - $upcontext['step_progress']) / 100), ');
 
 				// Finally - update the time here as it shows the server is responding!
 				curTime = new Date();
