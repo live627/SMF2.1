@@ -604,3 +604,8 @@ ol.search_results li
 	padding: 0 1em 1em 1em;
 	margin: 0;
 }
+
+/* This is the WYSIWYG editor */
+.wysiwygEditor
+{
+}

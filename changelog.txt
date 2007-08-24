@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2794 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2795 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -63,6 +63,10 @@ August 2007
  ! Don't allow sending PMs to members who can't read them. (Subs-Post.php)
  & Language string for above. (PersonalMessages language)
  ! Don't allow the use of the Right-To-Left Override character. (Load.php)
+ ! Fixed editing grace period inconsistancies within the post script. (Post.php)
+ ! Don't allow resizing of smileys in WYSIWYG editor - only supported in IE I'm afraid. (Subs-Editor.php, editor.js)
+ ! Attach a class name to the WYSIYWG editor. (style.css, editor.js)
+ ! Rename veriable "mode" to something more understandable in the WYSIWYG editor. (editor.js)
 
 
 July 2007

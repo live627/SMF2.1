@@ -11,7 +11,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	var editHeight = typeof(editHeight) != "undefined" ? editHeight : '150px';
 
 	var showDebug = false;
-	var mode = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
+	var richTextEnabled = typeof(wysiwyg) != "undefined" && wysiwyg == true ? 1 : 0;
 	//!!! This partly works on opera - it's a rubbish browser for JS.
 	var richTextPossible = is_ie5up || is_ff || is_opera9up;
 	//var richTextPossible = is_ie5up || is_ff;
@@ -115,13 +115,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 
 	function getMode()
 	{
-		return mode ? 1 : 0;
+		return richTextEnabled ? 1 : 0;
 	}
 
 	// Return the current text.
 	function getText(prepareEntities, modeOverride)
 	{
-		curMode = typeof(modeOverride) != "undefined" ? modeOverride : mode;
+		curMode = typeof(modeOverride) != "undefined" ? modeOverride : richTextEnabled;
 
 		if (!curMode || !frameDocument)
 		{
@@ -170,9 +170,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		textHandle = document.getElementById(uniqueId);
 
 		// Ensure the currentText is set correctly depending on the mode.
-		if (typeof(text) != "undefined" && mode == 1)
+		if (typeof(text) != "undefined" && richTextEnabled == 1)
 			currentText = text;
-		else if (currentText == '' && mode == 0)
+		else if (currentText == '' && richTextEnabled == 0)
 			currentText = smf_unhtmlspecialchars(getInnerHTML(textHandle));
 
 		// Only try to do this if rich text is supported.
@@ -195,6 +195,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			breadHandle.style.display = 'none';
 
 			// Size the iframe dimensions to something sensible.
+			frameHandle.className = 'wysiwygEditor';
 			frameHandle.style.width = editWidth;
 			frameHandle.style.height = editHeight;
 			frameHandle.style.visibility = 'visible';
@@ -243,15 +244,15 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			}
 
 			// Show the iframe only if wysiwyg is on - and hide the text area.
-			textHandle.style.display = mode ? 'none' : '';
-			frameHandle.style.display = mode ? '' : 'none';
-			breadHandle.style.display = mode ? '' : 'none';
+			textHandle.style.display = richTextEnabled ? 'none' : '';
+			frameHandle.style.display = richTextEnabled ? '' : 'none';
+			breadHandle.style.display = richTextEnabled ? '' : 'none';
 		}
 		// If we can't do advanced stuff then just do the basics.
 		else
 		{
 			// Cannot have WYSIWYG anyway!
-			mode = 0;
+			richTextEnabled = 0;
 		}
 
 		// Clean up!
@@ -302,7 +303,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			selectControls['color'].value = '';
 
 		// Everything else is specific to HTML mode.
-		if (!mode)
+		if (!richTextEnabled)
 			return;
 
 		crumb = new Array();
@@ -440,9 +441,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	function doSubmit()
 	{
 		// Record what we were doing!
-		document.getElementById('editor_mode').value = (mode ? 1 : 0);
+		document.getElementById('editor_mode').value = (richTextEnabled ? 1 : 0);
 
-		if (mode)
+		if (richTextEnabled)
 			textHandle.value = frameDocument.body.innerHTML;
 	}
 
@@ -452,7 +453,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		// Erase it all?
 		if (clear)
 		{
-			if (mode)
+			if (richTextEnabled)
 				frameDocument.body.innerHTML = text;
 			else
 				textHandle.value = text;
@@ -460,7 +461,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		else
 		{
 			setFocus();
-			if (mode)
+			if (richTextEnabled)
 			{
 				// IE croaks if you have an image selected and try to insert!
 				if (typeof(frameDocument.selection) != 'undefined' && frameDocument.selection.type != 'Text' && frameDocument.selection.clear)
@@ -623,7 +624,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	function insertSmiley(name, code, desc)
 	{
 		// In text mode we just add it in as we always did.
-		if (!mode)
+		if (!richTextEnabled)
 		{
 			insertText(' ' + code);
 		}
@@ -631,7 +632,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		else
 		{
 			uniqueid = 1000 + Math.floor(Math.random() * 100000);
-			insertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + uniqueid + '_' + name + '" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
+			insertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + uniqueid + '_' + name + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
 		}
 	}
 
@@ -655,7 +656,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		{
 			// Work out whether we should highlight it or not. On non-WYSWIYG we highlight on mouseover, on WYSWIYG we toggle current state.
 			isHighlight = ev.type == 'mouseover' ? true : false;
-			if (mode && buttonControls[curElement.code][4])
+			if (richTextEnabled && buttonControls[curElement.code][4])
 				isHighlight = !isHighlight;
 
 			curElement.style.backgroundImage = "url(" + smf_images_url + (isHighlight ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
@@ -672,7 +673,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			else
 			{
 				// In text this is easy...
-				if (!mode)
+				if (!richTextEnabled)
 				{
 					// Replace?
 					if (buttonControls[curElement.code][3] == '')
@@ -711,7 +712,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			}
 
 			// If this is WYSWIYG toggle this button state.
-			if (mode)
+			if (richTextEnabled)
 			{
 				buttonControls[curElement.code][4] = !buttonControls[curElement.code][4];
 				curElement.style.backgroundImage = "url(" + smf_images_url + (buttonControls[curElement.code][4] ? '/bbc/bbc_hoverbg.gif' : '/bbc/bbc_bg.gif') + ")";
@@ -746,7 +747,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		if (curElement.code == 'face')
 		{
 			// Not in HTML mode?
-			if (!mode)
+			if (!richTextEnabled)
 			{
 				value = value.replace(/"/, '');
 				surroundText('[font=' + value + ']', '[/font]', textHandle)
@@ -760,7 +761,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		else if (curElement.code == 'size')
 		{
 			// Are we in boring mode?
-			if (!mode)
+			if (!richTextEnabled)
 			{
 				surroundText('[size=' + value + ']', '[/size]', textHandle)
 			}
@@ -773,7 +774,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		else if (curElement.code == 'color')
 		{
 			// Are we in boring mode?
-			if (!mode)
+			if (!richTextEnabled)
 			{
 				surroundText('[color=' + value + ']', '[/color]', textHandle)
 			}
@@ -952,14 +953,14 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 
 		// Overriding or alternating?
 		if (typeof(view) != "undefined")
-			mode = view;
+			richTextEnabled = view;
 		else
-			mode = !mode;
+			richTextEnabled = !richTextEnabled;
 
-		requestParsedMessage(mode);
+		requestParsedMessage(richTextEnabled);
 
 		// If we're leaving WYSIWYG all buttons need to be off.
-		if (!mode)
+		if (!richTextEnabled)
 		{
 			for (i in buttonControls)
 			{
@@ -995,10 +996,10 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		view = XMLDoc.getElementsByTagName("message")[0].getAttribute("view");
 
 		// Only change the text if we have the right data.
-		if (mode != view)
+		if (richTextEnabled != view)
 			return;
 
-		if (mode)
+		if (richTextEnabled)
 		{
 			frameHandle.style.display = '';
 			breadHandle.style.display = '';
@@ -1064,7 +1065,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	// Set the focus for the editing window.
 	function setFocus()
 	{
-		if (!mode)
+		if (!richTextEnabled)
 			textHandle.focus();
 		else
 			frameWindow.focus();
@@ -1111,7 +1112,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			return false;
 
 		// If we're in HTML mode we need to get the non-HTML text.
-		if (mode)
+		if (richTextEnabled)
 		{
 			text = getText(true, 1);
 			text = escape(text);
@@ -1144,7 +1145,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	function spellCheckEnd()
 	{
 		// If HTML edit put the text back!
-		if (mode)
+		if (richTextEnabled)
 		{
 			text = getText(true, 0);
 			text = escape(text);
