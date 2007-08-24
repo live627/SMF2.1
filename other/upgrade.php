@@ -937,6 +937,10 @@ function WelcomeLogin()
 		fclose($fp);
 	}
 
+	// Either we're logged in or we're going to present the login.
+	if (checkLogin())
+		return true;
+
 	if (!file_exists($boarddir . '/Themes/default/languages/index.' . basename($language, '.lng') . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
 	{
 		throw_error('The upgrader was unable to find language files for the language specified in Settings.php.<br />SMF will not work without the primary language files installed.<br /><br />Please either install them, or <a href="' . $upgradeurl . '?step=0;lang=english">use english instead</a>.');
@@ -954,8 +958,7 @@ function WelcomeLogin()
 		}
 	}
 
-	// Either we're logged in or we're going to present the login.
-	return checkLogin();
+	return false;
 }
 
 // Step 0.5: Does the login work?

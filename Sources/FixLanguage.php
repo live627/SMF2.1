@@ -1042,15 +1042,29 @@ function fixTemplateFile($filename, $test = false)
 	// Get all the buttons in the file.
 	$buttons = array();
 	preg_match_all('~create_button\([^,]+,\s*([^,)]+)(,\s*([^,)]+))?[,)]~i', $fileContents, $matches);
-	if (!empty($matches))
+	if (!empty($matches[0]))
 	{
 		foreach ($matches[0] as $k => $match)
 		{
 			$buttons[] = array(
 				'full' => $match,
 				'replace' => $match,
-				'lab1' => strtr($matches[1][$k], array('"' => '', "'" => '')),
-				'lab2' => strtr($matches[3][$k], array('"' => '', "'" => '')),
+				'lab1' => trim(strtr($matches[1][$k], array('"' => '', "'" => ''))),
+				'lab2' => trim(strtr($matches[3][$k], array('"' => '', "'" => ''))),
+			);
+		}
+	}
+
+	// Any template_button_strip type things? (Look for 'text' =>)
+	preg_match_all('~[\s\(]\'text\'\s=>\s(\'*[\da-zA-Z_]+\'*)[\),]~i', $fileContents, $matches);
+	if (!empty($matches[0]))
+	{
+		foreach ($matches[0] as $k => $match)
+		{
+			$buttons[] = array(
+				'full' => $match,
+				'replace' => $match,
+				'lab1' => trim(strtr($matches[1][$k], array('"' => '', "'" => ''))),
 			);
 		}
 	}
@@ -1096,13 +1110,7 @@ function fixTemplateFile($filename, $test = false)
 		}
 	}
 
-	foreach ($buttons as $button)
-	{
-		if ($button['full'] != $button['replace'])
-			$changes['~' . preg_quote($button['full'], '~') . '~'] = $button['replace'];
-	}
-
-	// Finally, some potential sprintf changes....
+	// Some potential sprintf changes....
 	$changes = array(
 		'~([^\(])\$txt\[\'users_active\'\]~' => '$1sprintf($txt[\'users_active\'], $modSettings[\'lastActive\'])',
 		'~([^\(])\$txt\[\'welcome_guest\'\]~' => '$1sprintf($txt[\'welcome_guest\'], $txt[\'guest_title\'])',
@@ -1111,6 +1119,16 @@ function fixTemplateFile($filename, $test = false)
 		'~([^\(])\$txt\[\'info_center_title\'\]~' => '$1sprintf($txt[\'info_center_title\'], $context[\'forum_name\'])',
 		'~([^\(])\$txt\[\'login_with_forum\'\]~' => '$1sprintf($txt[\'login_with_forum\'], $context[\'forum_name\'])',
 	);
+
+	foreach ($buttons as $button)
+	{
+		if ($button['full'] != $button['replace'])
+		{
+			$changes['~' . preg_quote($button['full'], '~') . '~'] = $button['replace'];
+			$edit_count++;
+		}
+	}
+
 	$before = strlen($fileContents);
 	$fileContents = preg_replace(array_keys($changes), array_values($changes), $fileContents);
 
