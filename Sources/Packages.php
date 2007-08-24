@@ -693,7 +693,8 @@ function PackageInstall()
 				// Now include the file and be done with it ;).
 				require($boarddir . '/Packages/temp/' . $context['base_path'] . $action['filename']);
 			}
-			elseif ($action['type'] == 'database' && !empty($action['filename']))
+			// Only do the database changes on uninstall if requested.
+			elseif ($action['type'] == 'database' && !empty($action['filename']) && (!$context['uninstalling'] || !empty($_POST['do_db_changes'])))
 			{
 				// These can also be there for database changes.
 				global $txt, $boarddir, $sourcedir, $modSettings, $context, $settings, $db_prefix, $forum_version, $smfFunc;

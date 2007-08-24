@@ -602,6 +602,42 @@ upgrade_query("
 ---}
 ---#
 
+---# Checking theme layers are correct for default themes.
+---{
+$request = upgrade_query("
+	SELECT id_theme, value, variable
+	FROM {$db_prefix}themes
+	WHERE variable = 'theme_layers'
+		OR variable = 'theme_dir'");
+$themeLayerChanges = array();
+while ($row = mysql_fetch_assoc($request))
+{
+	$themeLayerChanges[$row['id_theme']][$row['variable']] = $row['value'];
+}
+mysql_free_result($request);
+
+foreach ($themeLayerChanges as $id_theme => $data)
+{
+	// Has to be a SMF provided theme and have custom layers defined.
+	if (!isset($data['theme_layers']) || !isset($data['theme_dir']) || !in_array(substr($data['theme_dir'], -7), array('default', 'babylon', 'classic')))
+		continue;
+
+	$layers = explode(',', $data['theme_layers']);
+	foreach ($layers as $k => $v)
+		if ($v == 'main')
+		{
+			$layers[$k] = 'html,body';
+			upgrade_query("
+				UPDATE {$db_prefix}themes
+				SET value = '" . implode(',', $layers) . "'
+				WHERE id_theme = $id_theme
+					AND variable = 'theme_layers'");
+			break;
+		}
+}
+---}
+---#
+
 ---# Adding index to log_notify table...
 ALTER TABLE {$db_prefix}log_notify
 ADD INDEX id_topic (id_topic, id_member);
