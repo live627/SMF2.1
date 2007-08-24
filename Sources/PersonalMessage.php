@@ -468,7 +468,7 @@ function MessageFolder()
 						INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)" : '') . "
 					WHERE pmr.id_member = $user_info[id]
 						AND pmr.deleted = 0$labelQuery
-						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
+						AND pmr.id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
 
 			list ($_GET['start']) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
