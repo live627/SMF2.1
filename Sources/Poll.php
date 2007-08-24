@@ -494,6 +494,8 @@ function EditPoll()
 				'hide_results' => 0,
 				'max_votes' => 1,
 				'change_vote' => 0,
+				'guest_vote' => 0,
+				'guest_vote_allowed' => in_array(-1, $groupsAllowedVote['allowed']),
 				'expiration' => '',
 			);
 
