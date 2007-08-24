@@ -940,7 +940,7 @@ CREATE TABLE {$db_prefix}log_polls (
   id_poll mediumint(8) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
   id_choice tinyint(3) unsigned NOT NULL default '0',
-  PRIMARY KEY (id_poll, id_member, id_choice)
+  KEY id_poll (id_poll, id_member, id_choice)
 ) TYPE=MyISAM;
 
 #

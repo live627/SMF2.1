@@ -1006,9 +1006,14 @@ CREATE INDEX {$db_prefix}log_packages_filename ON {$db_prefix}log_packages (file
 CREATE TABLE {$db_prefix}log_polls (
   id_poll int NOT NULL default '0',
   id_member int NOT NULL default '0',
-  id_choice smallint NOT NULL default '0',
-  PRIMARY KEY (id_poll, id_member, id_choice)
+  id_choice smallint NOT NULL default '0'
 );
+
+#
+# Indexes for table `log_polls`
+#
+
+CREATE INDEX {$db_prefix}log_polls_id_poll ON {$db_prefix}log_polls (id_poll, id_member, id_choice);
 
 #
 # Table structure for table `log_reported`

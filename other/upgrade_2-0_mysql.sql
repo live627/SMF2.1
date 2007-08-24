@@ -1517,8 +1517,14 @@ ADD PRIMARY KEY (ip(16), log_type(8));
 ALTER TABLE {$db_prefix}polls
 ADD guest_vote tinyint(3) NOT NULL default '0';
 
+DELETE FROM {$db_prefix}log_polls
+WHERE id_member < 0;
+
 ALTER TABLE {$db_prefix}log_polls
-CHANGE COLUMN id_member id_member mediumint(8) NOT NULL default '0';
+DROP PRIMARY KEY;
+
+ALTER TABLE {$db_prefix}log_polls
+ADD INDEX id_poll (id_poll, id_member, id_choice);
 ---#
 
 ---# Implementing admin feature toggles.

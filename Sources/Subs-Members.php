@@ -215,13 +215,17 @@ function deleteMembers($users)
 		DELETE FROM {$db_prefix}log_online
 		WHERE id_member $condition", __FILE__, __LINE__);
 	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}log_polls
-		WHERE id_member $condition", __FILE__, __LINE__);
-	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}log_topics
 		WHERE id_member $condition", __FILE__, __LINE__);
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}collapsed_categories
+		WHERE id_member $condition", __FILE__, __LINE__);
+
+	// Make their votes appear as guest votes - at least it keeps the totals right.
+	//!!! Consider adding back in cookie protection.
+	$smfFunc['db_query']('', "
+		UPDATE {$db_prefix}log_polls
+		SET id_member = 0
 		WHERE id_member $condition", __FILE__, __LINE__);
 
 	// Delete personal messages.

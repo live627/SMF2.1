@@ -1678,6 +1678,7 @@ function findForumErrors()
 				FROM {$db_prefix}log_polls AS lp
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lp.id_member)
 				WHERE lp.id_member BETWEEN $_GET[substep] AND $_GET[substep] + 499
+					AND lp.id_member > 0
 					AND mem.id_member IS NULL
 				GROUP BY lp.id_member", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))

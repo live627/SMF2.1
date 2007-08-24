@@ -167,17 +167,6 @@ function Vote()
 	if (count($_REQUEST['options']) > $row['max_votes'])
 		fatal_lang_error('poll_error1', false, array($row['max_votes']));
 
-	// If this is a guest generate them a unique ID.
-	if ($user_info['is_guest'])
-	{
-		$request = $smfFunc['db_query']('', "
-			SELECT MIN(id_member)
-			FROM {$db_prefix}log_polls
-			WHERE id_poll = $row[id_poll]", __FILE__, __LINE__);
-		list ($guest_id) = $smfFunc['db_fetch_row']($request);
-		$smfFunc['db_free_result']($request);
-	}
-
 	$pollOptions = array();
 	$inserts = array();
 	foreach ($_REQUEST['options'] as $id)
@@ -185,7 +174,7 @@ function Vote()
 		$id = (int) $id;
 
 		$pollOptions[] = $id;
-		$inserts[] = array($row['id_poll'], $user_info['is_guest'] ? $guest_id - 1 : $user_info['id'], $id);
+		$inserts[] = array($row['id_poll'], $user_info['id'], $id);
 	}
 
 	// Add their vote to the tally.
