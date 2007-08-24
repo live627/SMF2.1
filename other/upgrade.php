@@ -1411,6 +1411,18 @@ function CleanupMods()
 	if (isset($_POST['cleandone2']))
 		return true;
 
+	// Do we already know about some writable files?
+	if (isset($_POST['writable_files']))
+	{
+		$writable_files = unserialize(base64_decode($_POST['writable_files']));
+		if (!makeFilesWritable($writable_files))
+		{
+			// What have we left?
+			$upcontext['writable_files'] = $writable_files;
+			return false;
+		}
+	}
+
 	// Load all theme paths....
 	$request = $smfFunc['db_query']('', "
 		SELECT id_theme, variable, value
@@ -1602,7 +1614,22 @@ function CleanupMods()
 			}
 		}
 	}
-		
+
+	// Check everything is writable.
+	if ($test && !empty($upcontext['packages']))
+	{
+		$writable_files = array();
+		foreach ($upcontext['packages'] as $package)
+			foreach ($package['files'] as $file)
+				$writable_files[] = $file;
+
+		$writable_files = array_unique($writable_files);
+		$upcontext['writable_files'] = $writable_files;
+
+		if (!makeFilesWritable($writable_files))
+			return false;
+	}
+
 	if (file_exists($boarddir . '/Packages/temp'))
 		deltree($boarddir . '/Packages/temp');
 
@@ -4044,9 +4071,16 @@ function template_clean_mods()
 {
 	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $boarddir, $db_prefix, $boardurl;
 
+	$upcontext['chmod_in_form'] = true;
+
 	echo '
 	<h3>SMF has detected some packages which were installed but not fully removed prior to upgrade. We recommend you remove the following mods and reinstall upon completion of the upgrade.</h3>
-	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1" name="upform"  id="upform" method="post">
+	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1" name="upform"  id="upform" method="post">';
+
+	// Incase it's required.
+	template_chmod();
+
+	echo '
 		<table width="90%" align="center" cellspacing="1" cellpadding="2" style="background-color: black;">
 			<tr style="background-color: #EEEEEE;">
 				<td width="40%"><b>Modification Name</b></td>
@@ -4071,8 +4105,14 @@ function template_clean_mods()
 		</table>
 		<input type="hidden" name="cleandone" value="1" />';
 
+	// Files to make writable?
+	if (!empty($upcontext['writable_files']))
+		echo '
+		<input type="hidden" name="writable_files" value="', base64_encode(serialize($upcontext['writable_files'])), '" />';
+
 	// We'll want a continue button...
-	$upcontext['continue'] = 1;
+	if (empty($upcontext['chmod']['files']))
+		$upcontext['continue'] = 1;
 }
 
 // Finished with the mods - let them know what we've done.
