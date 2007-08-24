@@ -283,7 +283,7 @@ function EditSearchMethod()
 	{
 		checkSession('get');
 
-		db_extend('extra');
+		db_extend();
 		$tables = $smfFunc['db_list_tables'](false, "{$db_prefix}log_search_words");
 		if (!empty($tables))
 		{
@@ -422,7 +422,7 @@ function CreateMessageIndex()
 
 		if ($context['start'] === 0)
 		{
-			db_extend('extra');
+			db_extend();
 			$tables = $smfFunc['db_list_tables'](false, "{$db_prefix}log_search_words");
 			if (!empty($tables))
 			{

@@ -144,7 +144,7 @@ function DumpDatabase2()
 	}
 
 	// Dump each table.
-	$tables = db_list_tables(false, "{$db_prefix}%");
+	$tables = $smfFunc['db_list_tables'](false, "{$db_prefix}%");
 	foreach ($tables as $tableName)
 	{
 		if (function_exists('apache_reset_timeout'))
@@ -159,7 +159,7 @@ function DumpDatabase2()
 				'-- Table structure for table `', $tableName, '`', $crlf,
 				'--', $crlf,
 				$crlf,
-				db_table_sql($tableName), ';', $crlf;
+				$smfFunc['db_table_sql']($tableName), ';', $crlf;
 		}
 
 		// How about the data?
@@ -167,7 +167,7 @@ function DumpDatabase2()
 			continue;
 
 		// Are there any rows in this table?
-		$get_rows = db_insert_sql($tableName);
+		$get_rows = $smfFunc['db_insert_sql']($tableName);
 
 		// No rows to get - skip it.
 		if (empty($get_rows))
