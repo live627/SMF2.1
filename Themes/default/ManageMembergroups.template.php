@@ -175,9 +175,9 @@ function template_edit_group()
 	{
 		echo '
 				<tr class="windowbg2" valign="middle">
-					<th align="left" id="group_moderators_text"><label for="group_moderators_input">', $txt['moderators'], ':</label></th>
+					<th align="left" id="group_moderators_text"><label for="group_moderators">', $txt['moderators'], ':</label></th>
 					<td>
-						<input type="text" name="group_moderators" id="group_moderators_input" value="', $context['group']['moderator_list'], '" size="30" />
+						<input type="text" name="group_moderators" id="group_moderators" value="', $context['group']['moderator_list'], '" size="30" />
 						<a href="', $scripturl, '?action=findmember;input=group_moderators;quote;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
 					</td>
 				</tr>
