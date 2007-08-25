@@ -518,4 +518,297 @@ function template_show_week_grid($grid_name)
 		</table>';
 }
 
+function template_bcd()
+{
+	global $context, $scripturl;
+
+		echo '
+	<center>
+	<table class="site" cellpadding="0" cellspacing="0">
+		<caption>BCD Clock</caption>
+		<tr class="odd">';
+		$alt = false;
+		foreach($context['clockicons'] as $t => $v)
+		{
+			echo '
+			<td style="border-', $alt ? 'right' : 'left', ': 1px solid black;" valign="bottom">';
+			foreach ($v as $i)
+				echo '
+				<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" /><br />';
+			echo '
+			</td>';
+			$alt = !$alt;
+		}
+
+		echo '
+		</tr>
+		<tr class="even"><td colspan="6" align="center"><a href="', $scripturl, '?action=clock;rb">Are you hardcore?</a></td></tr>
+	</table>
+	</center>
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var icons = new Object();';
+
+		foreach($context['clockicons'] as $t => $v)
+		{
+			foreach ($v as $i)
+				echo '
+			icons[\'', $t, '_', $i, '\'] = document.getElementById(\'', $t, '_', $i, '\');';
+		}
+
+		echo '
+		function update()
+		{
+			// Get the current time
+			var time = new Date();
+			var hour = time.getHours();
+			var min = time.getMinutes();
+			var sec = time.getSeconds();
+
+			// Break it up into individual digits
+			var h1 = parseInt(hour / 10);
+			var h2 = hour % 10;
+			var m1 = parseInt(min / 10);
+			var m2 = min % 10;
+			var s1 = parseInt(sec / 10);
+			var s2 = sec % 10;
+
+			// For each digit figure out which ones to turn off and which ones to turn on
+			var turnon = new Array();';
+
+		foreach($context['clockicons'] as $t => $v)
+		{
+			foreach ($v as $i)
+				echo '
+			if (', $t, ' >= ', $i, ')
+			{
+				turnon.push("', $t, '_', $i, '");
+				', $t, ' -= ', $i, ';
+			}';
+		}
+
+		echo '
+			for (var i in icons)
+				if (!in_array(i, turnon))
+					icons[i].src = "', $context['offimg'], '";
+				else
+					icons[i].src = "', $context['onimg'], '";
+
+			window.setTimeout("update();", 500);
+		}
+		// Checks for variable in theArray.
+		function in_array(variable, theArray)
+		{
+			for (var i = 0; i < theArray.length; i++)
+			{
+				if (theArray[i] == variable)
+					return true;
+			}
+			return false;
+		}
+
+		update();
+		// ]]></script>';
+}
+
+function template_hms()
+{
+	global $context, $scripturl;
+	echo '
+<center>
+<table class="site" cellpadding="0" cellspacing="0" border="1">
+	<caption>Binary Clock</caption>';
+	$alt = false;
+	foreach($context['clockicons'] as $t => $v)
+	{
+		echo '
+	<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
+		<td align="right">';
+		foreach ($v as $i)
+			echo '
+			<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" />';
+		echo '
+		</td>';
+		$alt = !$alt;
+	}
+
+	echo '
+	</tr>
+	<tr class="', $alt ? 'windowbg2' : 'windowbg', '"><td colspan="6" align="center"><a href="', $scripturl, '?action=clock">Too tough for you?</a></td></tr>
+</table>
+</center>';
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	var icons = new Object();';
+
+	foreach($context['clockicons'] as $t => $v)
+	{
+		foreach ($v as $i)
+			echo '
+		icons[\'', $t, '_', $i, '\'] = document.getElementById(\'', $t, '_', $i, '\');';
+	}
+
+	echo '
+	function update()
+	{
+		// Get the current time
+		var time = new Date();
+		var h = time.getHours();
+		var m = time.getMinutes();
+		var s = time.getSeconds();
+
+		// For each digit figure out which ones to turn off and which ones to turn on
+		var turnon = new Array();';
+
+	foreach($context['clockicons'] as $t => $v)
+	{
+		foreach ($v as $i)
+			echo '
+		if (', $t, ' >= ', $i, ')
+		{
+			turnon.push("', $t, '_', $i, '");
+			', $t, ' -= ', $i, ';
+		}';
+	}
+
+	echo '
+		for (var i in icons)
+			if (!in_array(i, turnon))
+				icons[i].src = "', $context['offimg'], '";
+			else
+				icons[i].src = "', $context['onimg'], '";
+
+		window.setTimeout("update();", 500);
+	}
+	// Checks for variable in theArray.
+	function in_array(variable, theArray)
+	{
+		for (var i = 0; i < theArray.length; i++)
+		{
+			if (theArray[i] == variable)
+				return true;
+		}
+		return false;
+	}
+
+	update();
+	// ]]></script>';
+}
+
+function template_omfg()
+{
+	global $context, $scripturl;
+
+	echo '
+<center>
+<table class="site" cellpadding="0" cellspacing="0" border="1">
+	<caption>OMFG Binary Clock</caption>';
+	$alt = false;
+	foreach($context['clockicons'] as $t => $v)
+	{
+		echo '
+	<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
+		<td align="right">';
+		foreach ($v as $i)
+			echo '
+			<img src="', $context['offimg'], '" alt="" id="', $t, '_', $i, '" />';
+		echo '
+		</td>';
+		$alt = !$alt;
+	}
+
+	echo '
+	</tr>
+</table>
+</center>';
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+	var icons = new Object();';
+
+	foreach($context['clockicons'] as $t => $v)
+	{
+		foreach ($v as $i)
+			echo '
+		icons[\'', $t, '_', $i, '\'] = document.getElementById(\'', $t, '_', $i, '\');';
+	}
+
+	echo '
+	function update()
+	{
+		// Get the current time
+		var time = new Date();
+		var month = time.getMonth() + 1;
+		var day = time.getDate();
+		var year = time.getFullYear();
+		year = year % 100;
+		var hour = time.getHours();
+		var min = time.getMinutes();
+		var sec = time.getSeconds();
+
+		// For each digit figure out which ones to turn off and which ones to turn on
+		var turnon = new Array();';
+
+	foreach($context['clockicons'] as $t => $v)
+	{
+		foreach ($v as $i)
+			echo '
+		if (', $t, ' >= ', $i, ')
+		{
+			turnon.push("', $t, '_', $i, '");
+			', $t, ' -= ', $i, ';
+		}';
+	}
+
+	echo '
+		for (var i in icons)
+			if (!in_array(i, turnon))
+				icons[i].src = "', $context['offimg'], '";
+			else
+				icons[i].src = "', $context['onimg'], '";
+
+		window.setTimeout("update();", 500);
+	}
+	// Checks for variable in theArray.
+	function in_array(variable, theArray)
+	{
+		for (var i = 0; i < theArray.length; i++)
+		{
+			if (theArray[i] == variable)
+				return true;
+		}
+		return false;
+	}
+
+	update();
+	// ]]></script>';
+}
+
+function template_thetime()
+{
+	global $context, $scripturl;
+
+	echo '
+<center>
+<table class="site" cellpadding="0" cellspacing="0" border="1">
+	<caption>The time you requested</caption>';
+	$alt = false;
+	foreach($context['clockicons'] as $t => $v)
+	{
+		echo '
+	<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
+		<td align="right">';
+		foreach ($v as $i)
+			echo '
+			<img src="', $i ? $context['onimg'] : $context['offimg'], '" alt="" />';
+		echo '
+		</td>';
+		$alt = !$alt;
+	}
+
+	echo '
+	</tr>
+</table>
+</center>';
+
+}
+
 ?>
