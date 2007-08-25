@@ -145,13 +145,13 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_polls (
 
 ---# Creating "log_actions"...
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_actions (
-	id_action int(10) unsigned NOT NULL auto_increment,
+	ID_ACTION int(10) unsigned NOT NULL auto_increment,
 	logTime int(10) unsigned NOT NULL default '0',
 	ID_MEMBER mediumint(8) unsigned NOT NULL default '0',
 	IP tinytext NOT NULL default '',
 	action varchar(30) NOT NULL default '',
 	extra text NOT NULL default '',
-	PRIMARY KEY (id_action),
+	PRIMARY KEY (ID_ACTION),
 	KEY logTime (logTime),
 	KEY ID_MEMBER (ID_MEMBER)
 ) TYPE=MyISAM;
@@ -173,17 +173,17 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}smileys (
 	code varchar(30) NOT NULL default '',
 	filename varchar(48) NOT NULL default '',
 	description varchar(80) NOT NULL default '',
-	smiley_row tinyint(4) unsigned NOT NULL default '0',
-	smiley_order tinyint(4) unsigned NOT NULL default '0',
+	smileyRow tinyint(4) unsigned NOT NULL default '0',
+	smileyOrder tinyint(4) unsigned NOT NULL default '0',
 	hidden tinyint(4) unsigned NOT NULL default '0',
 	PRIMARY KEY (id_smiley),
-	KEY smiley_order (smiley_order)
+	KEY smileyOrder (smileyOrder)
 ) TYPE=MyISAM;
 ---#
 
 ---# Loading default smileys...
 INSERT IGNORE INTO {$db_prefix}smileys
-	(id_smiley, code, filename, description, smiley_order, hidden)
+	(id_smiley, code, filename, description, smileyOrder, hidden)
 VALUES (1, ':)', 'smiley.gif', 'Smiley', 0, 0),
 	(2, ';)', 'wink.gif', 'Wink', 1, 0),
 	(3, ':D', 'cheesy.gif', 'Cheesy', 2, 0),
@@ -208,12 +208,12 @@ VALUES (1, ':)', 'smiley.gif', 'Smiley', 0, 0),
 ---# Dropping "log_search" and recreating it...
 DROP TABLE IF EXISTS {$db_prefix}log_search;
 CREATE TABLE {$db_prefix}log_search (
-	id_search tinyint(3) unsigned NOT NULL default '0',
+	ID_SEARCH tinyint(3) unsigned NOT NULL default '0',
 	ID_TOPIC mediumint(8) unsigned NOT NULL default '0',
 	ID_MSG int(10) unsigned NOT NULL default '0',
 	relevance smallint(5) unsigned NOT NULL default '0',
 	num_matches smallint(5) unsigned NOT NULL default '0',
-	PRIMARY KEY (id_search, ID_TOPIC)
+	PRIMARY KEY (ID_SEARCH, ID_TOPIC)
 ) TYPE=MyISAM;
 ---#
 
@@ -264,11 +264,11 @@ CREATE TABLE {$db_prefix}log_floodcontrol (
 ---# Converting "log_karma"...
 DROP TABLE IF EXISTS {$db_prefix}log_karma;
 CREATE TABLE {$db_prefix}log_karma (
-	id_target mediumint(8) unsigned NOT NULL default '0',
-	id_executor mediumint(8) unsigned NOT NULL default '0',
+	ID_TARGET mediumint(8) unsigned NOT NULL default '0',
+	ID_EXECUTOR mediumint(8) unsigned NOT NULL default '0',
 	logTime int(10) unsigned NOT NULL default '0',
 	action tinyint(4) NOT NULL default '0',
-	PRIMARY KEY (id_target, id_executor),
+	PRIMARY KEY (ID_TARGET, ID_EXECUTOR),
 	KEY logTime (logTime)
 ) TYPE=MyISAM;
 ---#

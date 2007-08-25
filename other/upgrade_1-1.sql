@@ -810,7 +810,7 @@ if ($test)
 		CHANGE COLUMN Description title varchar(80) NOT NULL default '',
 		CHANGE COLUMN ID_BOARD ID_BOARD mediumint(8) unsigned NOT NULL default '0',
 		DROP INDEX id_icon,
-		ADD COLUMN icon_order smallint(5) unsigned NOT NULL default '0'");
+		ADD COLUMN iconOrder smallint(5) unsigned NOT NULL default '0'");
 }
 ---}
 ---#
@@ -821,7 +821,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}message_icons (
 	title varchar(80) NOT NULL default '',
 	filename varchar(80) NOT NULL default '',
 	ID_BOARD mediumint(8) unsigned NOT NULL default 0,
-	icon_order smallint(5) unsigned NOT NULL default 0,
+	iconOrder smallint(5) unsigned NOT NULL default 0,
 	PRIMARY KEY (id_icon),
 	KEY ID_BOARD (ID_BOARD)
 ) TYPE=MyISAM;
@@ -834,7 +834,7 @@ if (@$modSettings['smfVersion'] < '1.1')
 {
 	upgrade_query("
 		INSERT INTO {$db_prefix}message_icons
-			(filename, title, icon_order)
+			(filename, title, iconOrder)
 		VALUES ('xx', 'Standard', '0'),
 			('thumbup', 'Thumb Up', '1'),
 			('thumbdown', 'Thumb Down', '2'),
