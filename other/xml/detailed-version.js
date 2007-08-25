@@ -10,7 +10,7 @@ if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($modified_since) >= 
 }
 
 // Are they a Charter Member?
-if (isset($_GET['version']) && strpos($_GET['version'], 'SMF 2.0 Beta 1') !== false)
+if (isset($_GET['version']) && strpos($_GET['version'], '2.0') !== false)
 {
 ?>window.smfVersions = {
 	'SMF': 'SMF 2.0 Beta 1',
@@ -127,6 +127,7 @@ if (isset($_GET['version']) && strpos($_GET['version'], 'SMF 2.0 Beta 1') !== fa
 	'DefaultManageBans.template.php': '2.0 Beta 1',
 	'DefaultManageBoards.template.php': '2.0 Beta 1',
 	'DefaultManageCalendar.template.php': '2.0 Beta 1',
+	'DefaultManageMail.template.php': '2.0 Beta 1',
 	'DefaultManageMembergroups.template.php': '2.0 Beta 1',
 	'DefaultManageMembers.template.php': '2.0 Beta 1',
 	'DefaultManageNews.template.php': '2.0 Beta 1',
@@ -172,6 +173,7 @@ if (isset($_GET['version']) && strpos($_GET['version'], 'SMF 2.0 Beta 1') !== fa
 	'TemplatesManageBans.template.php': '2.0 Beta 1',
 	'TemplatesManageBoards.template.php': '2.0 Beta 1',
 	'TemplatesManageCalendar.template.php': '2.0 Beta 1',
+	'TemplatesManageMail.template.php': '2.0 Beta 1',
 	'TemplatesManageMembergroups.template.php': '2.0 Beta 1',
 	'TemplatesManageMembers.template.php': '2.0 Beta 1',
 	'TemplatesManageNews.template.php': '2.0 Beta 1',
