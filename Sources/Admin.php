@@ -451,13 +451,14 @@ function AdminHome()
 <i>Simple Machines wants to thank everyone who helped make SMF 1.1 what it is today; shaping and directing our project, all through the thick and the thin. It wouldn\'t have been possible without you.</i><br />
 <div style="margin-top: 1ex;"><i>This includes our users and especially Charter Members - thanks for installing and using our software as well as providing valuable feedback, bug reports, and opinions.</i></div>
 <div style="margin-top: 2ex;"><b>Project Managers:</b> Amacythe, David Recordon, Joseph Fung, and Jeff Lewis.</div>
-<div style="margin-top: 1ex;"><b>Developers:</b> Hendrik Jan &quot;Compuart&quot; Visser, Matt &quot;Grudge&quot; Wolf, Michael "Thantos" Miller, Theodore "Orstio" Hildebrandt, and Unknown W. &quot;[Unknown]&quot; Brackets</div>
-<div style="margin-top: 1ex;"><b>Support Specialists:</b> Ben Scott, Michael &quot;Oldiesmann&quot; Eshom, A&auml;ron van Geffen, Alexandre "Ap2" Patenaude, Andrea Hubacher, Chris Cromer, [darksteel], dtm.exe, Fizzy, Horseman, Huw Ayling-Miller, Jan "Owdy" Eriksson, jerm, Juan "JayBachatero" Hernandez, Justyne, Killer Possum, Kindred, Matthew "Mattitude" Hall, Mediman, Metho, Omar Bazavilvazo, Pitti, redone, Tomer "Lamper" Dean, and xenovanis.</div>
-<div style="margin-top: 1ex;"><b>Mod Developers:</b> snork13, Cristi&aacute;n "Anguz" L&aacute;vaque, Goosemoose, Jack.R.Abbit, James "Cheschire" Yarbro, Jesse "Gobalopper" Reid, Kirby, and vbgamer45.</div>
-<div style="margin-top: 1ex;"><b>Documentation Writers:</b> akabugeyes, eldacar, Jerry, Nave, Matthew "Mattitude" Hall, and Trekkie101.</div>
-<div style="margin-top: 1ex;"><b>Language Coordinators:</b> Daniel Diehl.</div>
-<div style="margin-top: 1ex;"><b>Graphic Designers:</b> Bjoern "Bloc" Kristiansen, Alienine (Adrian), A.M.A, babylonking, BlackouT, Burpee, diplomat, Eren "forsakenlad" Yasarkurt, Hyper Piranha, Killer Possum, Mystica, Nico "aliencowfarm" Boer, Philip "Meriadoc" Renich and Tippmaster.</div>
-<div style="margin-top: 1ex;"><b>Site team:</b> Douglas, dschwab9, and Tim.</div>
+<div style="margin-top: 1ex;"><b>Developers:</b> Hendrik Jan &quot;Compuart&quot; Visser, Matt &quot;Grudge&quot; Wolf, Michael &quot;Thantos&quot; Miller, Theodore &quot;Orstio&quot; Hildebrandt, and Unknown W. &quot;[Unknown]&quot; Brackets</div>
+<div style="margin-top: 1ex;"><b>Support Specialists:</b> Ben Scott, Michael &quot;Oldiesmann&quot; Eshom, Jan-Olof &quot;Owdy&quot; Eriksson, A&auml;ron van Geffen, Alexandre &quot;Ap2&quot; Patenaude, Andrea Hubacher, Chris Cromer, [darksteel], dtm.exe, Nick &quot;Fizzy&quot; Dyer, Horseman, Huw Ayling-Miller, jerm, Justyne, kegobeer, Kindred, Matthew &quot;Mattitude&quot; Hall, Mediman, Metho, Omar Bazavilvazo, Pitti, redone, Tomer &quot;Lamper&quot; Dean, Tony, and xenovanis.</div>
+<div style="margin-top: 1ex;"><b>Mod Developers:</b> snork13, Cristi&aacute;n &quot;Anguz&quot; L&aacute;vaque, Goosemoose, Jack.R.Abbit, James &quot;Cheschire&quot; Yarbro, Jesse &quot;Gobalopper&quot; Reid, Juan &quot;JayBachatero&quot; Hernandez, Kirby, vbgamer45, and winrules.</div>
+<div style="margin-top: 1ex;"><b>Documentation Writers:</b> akabugeyes, eldacar, Gary M. &quot;AwwLilMaggie&quot; Gadsdon, Jerry, and Nave.</div>
+<div style="margin-top: 1ex;"><b>Language Coordinators:</b> Daniel Diehl and Adam &quot;Bostasp&quot; Southall.</div>
+<div style="margin-top: 1ex;"><b>Graphic Designers:</b> Bjoern &quot;Bloc&quot; Kristiansen, Alienine (Adrian), A.M.A, babylonking, BlackouT, Burpee, diplomat, Eren &quot;forsakenlad&quot; Yasarkurt, Hyper Piranha, Killer Possum, Mystica, Nico &quot;aliencowfarm&quot; Boer, Philip &quot;Meriadoc&quot; Renich and Tippmaster.</div>
+<div style="margin-top: 1ex;"><b>Site team:</b> dschwab9 and Tim.</div>
+<div style="margin-top: 1ex;"><b>Marketing:</b> Douglas &quot;The Bear&quot; Hazard, RickC and Trekkie101.</div>
 <div style="margin-top: 1ex;">And for anyone we may have missed, thank you!</div>';
 
 	// Copyright?
