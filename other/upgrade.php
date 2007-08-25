@@ -1500,6 +1500,9 @@ function CleanupMods()
 		}
 	}
 
+	// Anything which reinstalled should not have its entry removed.
+	$reinstall_worked = array();
+
 	// We're gonna be doing some removin'
 	$test = isset($_POST['cleandone']) ? false : true;
 	foreach ($upcontext['packages'] as $id => $package)
@@ -1598,6 +1601,7 @@ function CleanupMods()
 			}
 			if (!$errors)
 			{
+				$reinstall_worked[] = $id;
 				$upcontext['packages'][$id]['result'] = 'Reinstalled';
 				$upcontext['packages'][$id]['color'] = 'green';
 				foreach ($infoInstall as $change)
@@ -1641,13 +1645,19 @@ function CleanupMods()
 	{
 		$deletes = array();
 		foreach ($_POST['remove'] as $id => $dummy)
-			$deletes[] = (int) $id;
+		{
+			if (!in_array((int) $id, $reinstall_worked))
+				$deletes[] = (int) $id;
+		}
 
 		if (!empty($deletes))
 			upgrade_query("
 				UPDATE {$db_prefix}log_packages
 				SET install_state = 0
 				WHERE id_install IN (" . implode(',', $deletes) . ")");
+
+		// Ensure we don't lose our changes!
+		package_put_contents($boarddir . '/Packages/installed.list', time());
 
 		$upcontext['sub_template'] = 'cleanup_done';
 		return false;
