@@ -959,7 +959,7 @@ function PickTheme()
 	}
 	$smfFunc['db_free_result']($request);
 
-	// save the setting first.
+	// Save the setting first.
 	$current_images_url = $settings['images_url']; 
 
 	foreach ($context['available_themes'] as $id_theme => $theme_data)
@@ -968,7 +968,7 @@ function PickTheme()
 		if ($id_theme == 0)
 			continue;
 
-		// the thumbnail needs the correct path.
+		// The thumbnail needs the correct path.
 		$settings['images_url'] = &$theme_data['images_url'];
 
 		if (file_exists($theme_data['theme_dir'] . '/languages/Settings.' . $user_info['language'] . '.php'))
@@ -984,7 +984,7 @@ function PickTheme()
 		$context['available_themes'][$id_theme]['thumbnail_href'] = $txt['theme_thumbnail_href'];
 		$context['available_themes'][$id_theme]['description'] = $txt['theme_description'];
 	}
-	// then return it.
+	// Then return it.
 	$settings['images_url'] = $current_images_url; 
 	
 	// As long as we're not doing the default theme...
