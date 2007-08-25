@@ -2331,7 +2331,7 @@ function parse_sql($filename)
 			$line = preg_replace('~/\*.+?\*/~', '', $line);
 
 		// Always flush.  Flush, flush, flush.  Flush, flush, flush, flush!  FLUSH!
-		if ($is_debug && !$support_js)
+		if ($is_debug && !$support_js && $command_line)
 			flush();
 
 		if (trim($line) === '')
