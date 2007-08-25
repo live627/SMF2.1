@@ -575,6 +575,10 @@ else
 	$upcontext['language'] = $upcontext['upgrade_status']['lang'];
 }
 
+// Don't do security check if on Yabbse
+if (!isset($modSettings['smfVersion']))
+	$disable_security = true;
+
 // If this isn't the first stage see whether they are logging in and resuming.
 if ($upcontext['current_step'] != 0 || !empty($upcontext['user']['step']))
 	checkLogin();
@@ -988,38 +992,41 @@ function checkLogin()
 		}
 
 		// Get what we believe to be their details.
-		if ($oldDB)
-			$request = $smfFunc['db_query']('', "
-				SELECT id_member, memberName AS member_name, passwd, id_group,
-				additionalGroups AS additional_groups
-				FROM {$db_prefix}members
-				WHERE memberName = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
-		else
-			$request = $smfFunc['db_query']('', "
-				SELECT id_member, member_name, passwd, id_group, additional_groups
-				FROM {$db_prefix}members
-				WHERE member_name = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
-		if ($smfFunc['db_num_rows']($request) != 0 && !$disable_security)
+		if (!$disable_security)
 		{
-			list ($id_member, $name, $password, $id_group, $addGroups) = $smfFunc['db_fetch_row']($request);
-
-			$groups = explode(',', $addGroups);
-			$groups[] = $id_group;
-
-			// Figure out the password using SMF's encryption - if what they typed is right.
-			if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
+			if ($oldDB)
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member, memberName AS member_name, passwd, id_group,
+					additionalGroups AS additional_groups
+					FROM {$db_prefix}members
+					WHERE memberName = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
+			else
+				$request = $smfFunc['db_query']('', "
+					SELECT id_member, member_name, passwd, id_group, additional_groups
+					FROM {$db_prefix}members
+					WHERE member_name = '" . $smfFunc['db_escape_string']($_POST['user']) . "'", false, false);
+			if ($smfFunc['db_num_rows']($request) != 0)
 			{
-				// Challenge passed.
-				if ($_REQUEST['hash_passwrd'] == sha1($password . $upcontext['rid']))
-					$sha_passwd = $password;
+				list ($id_member, $name, $password, $id_group, $addGroups) = $smfFunc['db_fetch_row']($request);
+	
+				$groups = explode(',', $addGroups);
+				$groups[] = $id_group;
+	
+				// Figure out the password using SMF's encryption - if what they typed is right.
+				if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
+				{
+					// Challenge passed.
+					if ($_REQUEST['hash_passwrd'] == sha1($password . $upcontext['rid']))
+						$sha_passwd = $password;
+				}
+				else
+					$sha_passwd = sha1(strtolower($name) . un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd'])));
 			}
 			else
-				$sha_passwd = sha1(strtolower($name) . un_htmlspecialchars($smfFunc['db_unescape_string']($_REQUEST['passwrd'])));
+				$upcontext['username_incorrect'] = true;
+			$smfFunc['db_free_result']($request);
 		}
-		else
-			$upcontext['username_incorrect'] = true;
 		$upcontext['username'] = $_POST['user'];
-		$smfFunc['db_free_result']($request);
 
 		// Track whether javascript works!
 		if (!empty($_POST['js_works']))
