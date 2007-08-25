@@ -54,7 +54,9 @@ function template_before()
 		document.forms.creator.regSubmit.disabled = isEmptyText(document.forms.creator.user) || isEmptyText(document.forms.creator.email) || ', !empty($modSettings['enableOpenID']) ? '(isEmptyText(document.forms.creator.passwrd1) && getAuthValue() == "passwd") || (isEmptyText(document.forms.creator.openid_url) && getAuthValue() == "openid") || ' : '', '!document.forms.creator.regagree.checked;
 		setTimeout("checkAgree();", 1000);
 	}
-	setTimeout("checkAgree();", 1000);
+	setTimeout("checkAgree();", 1000);';
+
+	echo '
 // ]]></script>
 
 <form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
@@ -108,7 +110,7 @@ function template_before()
 							</span>
 						</td>
 					</tr>';
-				
+
 	if (!empty($modSettings['enableOpenID']))
 		echo '
 					<tr>
@@ -201,42 +203,42 @@ function template_before()
 					<tr valign="top">
 						<td width="40%">
 							<b', !empty($field['is_error']) ? ' style="color: red;"' : '', '>', $field['label'], '</b>';
-	
+
 			// Does it have any subtext to show?
 			if (!empty($field['subtext']))
 				echo '
 							<div class="smalltext">', $field['subtext'], '</div>';
-	
+
 			echo '
 						</td>
 						<td>';
-	
+
 			// Want to put something infront of the box?
 			if (!empty($field['preinput']))
 				echo '
 								', $field['preinput'];
-	
+
 			// What type of data are we showing?
 			if ($field['type'] == 'label')
 				echo '
 								', $field['value'];
-	
+
 			// Maybe it's a text box - very likely!
 			elseif (in_array($field['type'], array('int', 'float', 'text', 'password')))
 				echo '
 							<input type="', $field['type'] == 'password' ? 'password' : 'text', '" name="', $key, '" id="', $key, '" size="', empty($field['size']) ? 30 : $field['size'], '" value="', $field['value'], '" ', $field['input_attr'], ' />';
-	
+
 			// You "checking" me out? ;)
 			elseif ($field['type'] == 'check')
 				echo '
 							<input type="hidden" name="', $key, '" value="0" /><input type="checkbox" name="', $key, '" id="', $key, '" ', !empty($field['value']) ? ' checked="checked"' : '', ' value="1" class="check" ', $field['input_attr'], ' />';
-	
+
 			// Always fun - select boxes!
 			elseif ($field['type'] == 'select')
 			{
 				echo '
 							<select name="', $key, '" id="', $key, '">';
-	
+
 				if (isset($field['options']))
 				{
 					// Is this some code to generate the options?
@@ -248,16 +250,16 @@ function template_before()
 							echo '
 								<option value="', $value, '" ', $value == $field['value'] ? 'selected="selected"' : '', '>', $name, '</option>';
 				}
-	
+
 				echo '
 							</select>';
 			}
-	
+
 			// Something to end with?
 			if (!empty($field['postinput']))
 				echo '
 								', $field['postinput'];
-	
+
 			echo '
 						</td>
 					</tr>';
