@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2798 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2799 $.
 
 SMF 2.0 Beta 1                                                               ???
 ================================================================================
@@ -70,7 +70,7 @@ August 2007
  ! Don't allow resuming an upgrade unless they've actually got somewhere. (upgrade.php)
  ! If the user selects to preview a quick reply and there are new replies in the mean time still show the preview. (Post.php)
  * Clean up the manage board and manage group templates to make them more consistant and remove some unneeded tables. (ManageBoard, ManageMembergroups template)
-
+ * Fixed showing of same thumbnail for selecting themes in Profile section (Themes.php)
 
 July 2007
 --------------------------------------------------------------------------------
