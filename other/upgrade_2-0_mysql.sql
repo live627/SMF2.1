@@ -1670,12 +1670,12 @@ INSERT IGNORE INTO {$db_prefix}admin_info_files
 	(id_file, filename, path, parameters)
 VALUES
 	(1, 'current-version.js', '/smf/', 'version=%3$s'),
-	(2, 'detailed-version.js', '/smf/', 'language=%1$s'),
+	(2, 'detailed-version.js', '/smf/', 'language=%1$s&version=%3$s'),
 	(3, 'latest-news.js', '/smf/', 'language=%1$s&format=%2$s'),
-	(4, 'latest-packages.js', '/smf/', 'language=%1$s'),
-	(5, 'latest-smileys.js', '/smf/', 'language=%1$s'),
-	(6, 'latest-support.js', '/smf/', 'language=%1$s'),
-	(7, 'latest-themes.js', '/smf/', 'language=%1$s');
+	(4, 'latest-packages.js', '/smf/', 'language=%1$s&version=%3$s'),
+	(5, 'latest-smileys.js', '/smf/', 'language=%1$s&version=%3$s'),
+	(6, 'latest-support.js', '/smf/', 'language=%1$s&version=%3$s'),
+	(7, 'latest-themes.js', '/smf/', 'language=%1$s&version=%3$s');
 ---#
 
 ---# Ensure that the table has the filetype column
