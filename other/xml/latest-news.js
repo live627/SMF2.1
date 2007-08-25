@@ -13,7 +13,7 @@ $latest_news = array(
 
 		'subject_english' => 'SMF 2.0 Beta 1 Released to Charter Members',
 		'message_english' => 'Simple Machines are pleased to announce the first beta of SMF 2.0 has been released to our Charter Members. Visit the Simple Machines site for information on what\'s new',
-		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=178757.0',
+		'href_english' => 'http://www.simplemachines.org/community/index.php?topic=190812.0',
 		'author_english' => 'Grudge',
 	),
 	array(
