@@ -2200,7 +2200,7 @@ function QuoteFast()
 		WHERE m.id_msg = " . (int) $_REQUEST['quote'] .
 			(allowedTo('approve_posts') ? '' : ' AND m.approved = 1') . "
 			AND t.id_topic = m.id_topic" . (isset($_REQUEST['modify']) || (!empty($moderate_boards) && $moderate_boards[0] == 0) ? '' : '
-			AND (t.locked = 0 OR b.id_board IN (' . implode(', ', $moderate_boards) . '))') . "
+			AND (t.locked = 0' . (empty($moderate_boards) ? '' : ' OR b.id_board IN (' . implode(', ', $moderate_boards) . ')') . ')') . "
 		LIMIT 1", __FILE__, __LINE__);
 	$context['close_window'] = $smfFunc['db_num_rows']($request) == 0;
 

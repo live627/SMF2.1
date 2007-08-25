@@ -1,5 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2800 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2801 $.
+
+SMF 2.0 Beta 2                                                               ???
+================================================================================
+August 2007
+--------------------------------------------------------------------------------
+ ! Fast quoting should no longer cause an error when the user doesn't have any moderation rights. (Post.php)
+
 
 SMF 2.0 Beta 1                                                   August 25, 2007
 ================================================================================
