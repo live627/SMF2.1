@@ -101,6 +101,7 @@ $txt['group_perms_name_calendar_edit_own'] = 'Edit own events';
 $txt['group_perms_name_calendar_post'] = 'Post events';
 $txt['group_perms_name_calendar_view'] = 'View events';
 $txt['group_perms_name_edit_news'] = 'Edit forum news';
+$txt['group_perms_name_issue_warning'] = 'Issue warnings';
 $txt['group_perms_name_karma_edit'] = 'Edit user karma';
 $txt['group_perms_name_manage_attachments'] = 'Manage attachments';
 $txt['group_perms_name_manage_bans'] = 'Manage bans';
