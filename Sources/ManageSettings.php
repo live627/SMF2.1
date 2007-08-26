@@ -517,7 +517,7 @@ function ModifyModerationSettings($return_config = false)
 		else
 		{
 			$_POST['warning_watch'] = min($_POST['warning_watch'], 100);
-			$_POST['warning_moderate'] = in_array('pm', $modSettings['admin_features']) ? min($_POST['warning_moderate'], 100) : 0;
+			$_POST['warning_moderate'] = in_array('pm', $context['admin_features']) ? min($_POST['warning_moderate'], 100) : 0;
 			$_POST['warning_mute'] = min($_POST['warning_mute'], 100);
 		}
 
@@ -670,7 +670,7 @@ function ModifySignatureSettings($return_config = false)
 							}
 							elseif ($matches[4][$key])
 								$height = $matches[4][$key];
-		
+
 							// If the dimensions are still not fixed - we need to check the actual image.
 							if (($width == -1 && $sig_limits[5]) || ($height == -1 && $sig_limits[6]))
 							{
@@ -1057,10 +1057,10 @@ function list_getProfileFieldSize()
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
-	
+
 	list ($numProfileFields) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
-	
+
 	return $numProfileFields;
 }
 

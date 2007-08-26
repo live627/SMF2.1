@@ -1,11 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2801 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2802 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
 August 2007
 --------------------------------------------------------------------------------
  ! Fast quoting should no longer cause an error when the user doesn't have any moderation rights. (Post.php)
+ ! The core features are defined in $context not $modSettings. (ManageSettings.php)
+ ! Don't hide permissions because of typos :P. (ManagePermissions.php)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007
@@ -261,7 +263,7 @@ February 2007
  * Added dropdown menu + setting to toggle menu/sidebar for admin section (Admin.php, Admin.template.php, ModSettings.php, ModSettings.english.php, Help.english.php, style.css, admintab_active_left.gif, admintab_active_right.gif, admintab_left.gif, admintab_right.gif)
  & Moved all emails into a single file that uses a template format. (Many language files)
  + Use email templates for sending out emails. (Many source files)
- & Fixed minor typos (Manual language files, Login language files) 
+ & Fixed minor typos (Manual language files, Login language files)
  + Implemented a generic form of displaying lists, so that lists used in SMF can all be based on the same template. (Subs-List.php, GenericList template)
  ! Converted the lists in the admin areas 'Calendar', 'Smileys and Message Icons', 'Attachements and Avatars', 'Members' and 'Membergroups' to the standardized form. (ManageAttachments.php, ManageCalendar.php, ManageMembergroups.php, ManageMembers.php, ManageSmileys.php, Subs-Calendar.php, Subs-Membergroups.php, Subs-Members.php, ManageAttachments template, ManageCalendar template, ManageMembergroups template, ManageMembers template, ManageSmileys template)
  ! Converted the lists in the ban admin section to the standardized form. (ManageBans.php, ManageBans template)

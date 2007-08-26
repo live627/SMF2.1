@@ -33,7 +33,7 @@ if (!defined('SMF'))
 		- checks the permissions, based on the sub-action.
 		- called by ?action=managepermissions.
 		- loads the ManagePermissions language file.
-		
+
 	void PermissionIndex()
 		- sets up the permissions by membergroup index page.
 		- called by ?action=managepermissions
@@ -682,7 +682,7 @@ function SwitchBoard()
 				'id' => $profile['id'],
 				'name' => $profile['name'],
 			);
-			
+
 	}
 
 	// Are we doing some saving?
@@ -1492,7 +1492,7 @@ function loadAllPermissions()
 	$hiddenGroups = array();
 	if (!in_array('cd', $context['admin_features']))
 		$hiddenGroups[] = 'calendar';
-	if (!in_array('wn', $context['admin_features']))
+	if (!in_array('w', $context['admin_features']))
 		$hiddenPermissions[] = 'issue_warning';
 	if (!in_array('pm', $context['admin_features']))
 		$hiddenGroups[] = 'approval';

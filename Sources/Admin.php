@@ -448,7 +448,7 @@ function AdminHome()
 
 	// Some stuff.... :P.
 	$context['credits'] = '
-<i>Simple Machines wants to thank everyone who helped make SMF 1.1 what it is today; shaping and directing our project, all through the thick and the thin. It wouldn\'t have been possible without you.</i><br />
+<i>Simple Machines wants to thank everyone who helped make SMF 2.0 what it is today; shaping and directing our project, all through the thick and the thin. It wouldn\'t have been possible without you.</i><br />
 <div style="margin-top: 1ex;"><i>This includes our users and especially Charter Members - thanks for installing and using our software as well as providing valuable feedback, bug reports, and opinions.</i></div>
 <div style="margin-top: 2ex;"><b>Project Managers:</b> Amacythe, David Recordon, Joseph Fung, and Jeff Lewis.</div>
 <div style="margin-top: 1ex;"><b>Developers:</b> Hendrik Jan &quot;Compuart&quot; Visser, Matt &quot;Grudge&quot; Wolf, Michael &quot;Thantos&quot; Miller, Theodore &quot;Orstio&quot; Hildebrandt, and Unknown W. &quot;[Unknown]&quot; Brackets</div>
@@ -479,7 +479,7 @@ function AdminHome()
 				$out .= "Host: www.simplemachines.org\r\n";
 				$out .= "Connection: Close\r\n\r\n";
 				fwrite($fp, $out);
-	
+
 				$return_data = '';
 				while (!feof($fp))
 					$return_data .= fgets($fp, 128);
@@ -512,7 +512,7 @@ function AdminHome()
 			$context['copyright_expires'] = (int) (($_SESSION['copy_expire'] - time()) / 3600 / 24);
 			$context['copyright_key'] = $_SESSION['copy_key'];
 		}
-	}		
+	}
 
 	// This makes it easier to get the latest news with your time format.
 	$context['time_format'] = urlencode($user_info['time_format']);
@@ -704,7 +704,7 @@ function DisplayAdminFile()
 
 	// Danger Will Robinson.
 	$_REQUEST['filename'] = $smfFunc['db_escape_string']($_REQUEST['filename']);
-	
+
 	$request = $smfFunc['db_query']('', "
 		SELECT data, filetype
 		FROM {$db_prefix}admin_info_files
