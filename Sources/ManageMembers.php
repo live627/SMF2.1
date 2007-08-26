@@ -1104,7 +1104,7 @@ function AdminApprove()
 					'ACTIVATIONLINK' => $scripturl . "?action=activate;u=$member[id];code=$member[code]",
 				);
 
-				$emaildata = loadEmailTemplate('admin_approve_delete', $replacements, $member['language']);
+				$emaildata = loadEmailTemplate('admin_approve_remind', $replacements, $member['language']);
 				sendmail($member['email'], $emaildata['subject'], $emaildata['body']);
 
 		}

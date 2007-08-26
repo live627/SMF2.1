@@ -466,7 +466,7 @@ function updateMemberData($members, $data)
 	}
 
 	// Ensure posts, instant_messages, and unread_messages don't overflow or underflow.
-	foreach(array('posts', 'instant_messages', 'unread_messages') AS $type)
+	foreach (array('posts', 'instant_messages', 'unread_messages') as $type)
 	{
 		if (isset($data[$type]) && preg_match('~^' . $type . ' (- |\+ -)([\d]+)~', $data[$type], $match))
 		{
@@ -1489,9 +1489,9 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 
 		// Inside these tags autolink is not recommendable.
 		$no_autolink_tags = array(
-			'url', 
-			'iurl', 
-			'ftp', 
+			'url',
+			'iurl',
+			'ftp',
 			'email',
 		);
 
@@ -2625,10 +2625,10 @@ function logAction($action, $extra = array())
 	}
 	else
 		$topic_id = '0';
-		
+
 	if (isset($extra['member']) && !is_numeric($extra['member']))
 		trigger_error('logAction(): data\'s member is not an number', E_USER_NOTICE);
-	
+
 	if (isset($extra['board']))
 	{
 		if (!is_numeric($extra['board']))
@@ -2649,7 +2649,7 @@ function logAction($action, $extra = array())
 			unset($extra['board_to']);
 		}
 	}
-	
+
 	if (isset($extra['message']))
 	{
 		if (!is_numeric($extra['message']))
@@ -2659,7 +2659,7 @@ function logAction($action, $extra = array())
 	}
 	else
 		$msg_id = '0';
-	
+
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}log_actions
 			(log_time, id_member, ip, action, id_board, id_topic, id_msg, extra)
@@ -3680,7 +3680,7 @@ function setupMenuContext()
 		$load_menu_js = false;
 		// Now we put the buttons in the context so the theme can use them.
 		$menu_buttons = array();
-		foreach($buttons AS $act => $button)
+		foreach ($buttons as $act => $button)
 			if (!empty($button['show']))
 			{
 				$button['active_button'] = false;
@@ -3695,7 +3695,7 @@ function setupMenuContext()
 
 				// Go through the sub buttons if there are any.
 				if (!empty($button['sub_buttons']))
-					foreach($button['sub_buttons'] AS $key => $subbutton)
+					foreach ($button['sub_buttons'] as $key => $subbutton)
 					{
 						if (empty($subbutton['show']))
 							unset($button['sub_buttons'][$key]);
@@ -3717,7 +3717,7 @@ function setupMenuContext()
 	// Figure out which action we are doing so we can set the active tab.
 	// Default to home.
 	$current_action = 'home';
-	 
+
 	if (isset($context['menu_buttons'][$context['current_action']]))
 		$current_action = $context['current_action'];
 	elseif ($context['current_action'] == 'search2')

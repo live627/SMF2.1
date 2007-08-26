@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2804 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2805 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -11,6 +11,7 @@ August 2007
  ! Mail queue wasn't respecting limits on how many emails to send quite right. (Load.php, ScheduledTasks.php)
  * Some links were still using the old link style for admin pages. (Reports.template.php)
  & Added missing text string for issue_warnings in Generate Group Reports (Reports language file)
+ ! Wrong language string was being used for activation reminder emails. (ManageMembers.php)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007
