@@ -1386,7 +1386,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 			if (empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
 				AutoTask();
 			else
-				ReduceMailQueue(5);
+				ReduceMailQueue();
 		}
 		else
 		{

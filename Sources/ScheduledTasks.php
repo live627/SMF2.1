@@ -743,9 +743,9 @@ function ReduceMailQueue($number = false, $override_limit = false)
 {
 	global $db_prefix, $modSettings, $smfFunc, $sourcedir;
 
-	// By default send 20 at once.
+	// By default send 5 at once.
 	if (!$number)
-		$number = empty($modSettings['mail_quantity']) ? 20 : $modSettings['mail_quantity'];
+		$number = empty($modSettings['mail_quantity']) ? 5 : $modSettings['mail_quantity'];
 
 	// If we came with a timestamp, and that doesn't match the next event, then someone else has beaten us.
 	if (isset($_GET['ts']) && $_GET['ts'] != $modSettings['mail_next_send'])
@@ -754,13 +754,13 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	// By default move the next sending on by 10 seconds, and require an affected row.
 	if (!$override_limit)
 	{
-		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 10 : 2;
+		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 10 : 5;
 		
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}settings
 			SET value = " . (time() + $delay) . "
 			WHERE variable = 'mail_next_send'
-				AND value = '$modSettings[mail_next_send]'", __FILE__, __LINE__);
+				AND value = $modSettings[mail_next_send]", __FILE__, __LINE__);
 		if ($smfFunc['db_affected_rows']() == 0)
 			return false;
 		$modSettings['mail_next_send'] = time() + $delay;
@@ -772,17 +772,15 @@ function ReduceMailQueue($number = false, $override_limit = false)
 		list ($mt, $mn) = @explode('|', $modSettings['mail_recent']);
 
 		// Nothing worth noting...
-		if (empty($mn) || $mt < time() + 60)
+		if (empty($mn) || $mt < time() - 60)
 		{
-			$number = min($number, $modSettings['mail_limit']);
 			$mt = time();
 			$mn = $number;
 		}
 		// Otherwise we have a few more we can spend?
 		elseif ($mn < $modSettings['mail_limit'])
 		{
-			$number = min($modSettings['mail_limit'] - $mn, $number);
-			$mn = $number;
+			$mn += $number;
 		}
 		// No more I'm afraid, return!
 		else

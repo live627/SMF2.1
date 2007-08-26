@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2802 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2803 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -8,6 +8,7 @@ August 2007
  ! Fast quoting should no longer cause an error when the user doesn't have any moderation rights. (Post.php)
  ! The core features are defined in $context not $modSettings. (ManageSettings.php)
  ! Don't hide permissions because of typos :P. (ManagePermissions.php)
+ ! Mail queue wasn't respecting limits on how many emails to send quite right. (Load.php, ScheduledTasks.php)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007
