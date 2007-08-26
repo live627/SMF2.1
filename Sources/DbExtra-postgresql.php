@@ -62,76 +62,19 @@ function smf_db_backup_table($table, $backup_table)
 {
 	global $smfFunc;
 
-	$result = $smfFunc['db_query']('', "
-		SHOW CREATE TABLE " . $table, false, false);
-	list (, $create) = $smfFunc['db_fetch_row']($result);
-	$smfFunc['db_free_result']($result);
-
-	$create = preg_split('/[\n\r]/', $create);
-
-	$auto_inc = '';
-	// Default engine type.
-	$engine = 'MyISAM';
-	$charset = '';
-	$collate = '';
-
-	foreach ($create as $k => $l)
-	{
-		// Get the name of the auto_increment column.
-		if (strpos($l, 'auto_increment'))
-			$auto_inc = trim($l);
-
-		// For the engine type, see if we can work out what it is.
-		if (strpos($l, 'ENGINE') !== false || strpos($l, 'TYPE') !== false)
-		{
-			// Extract the engine type.
-			preg_match('~(ENGINE|TYPE)=(\w+)(\sDEFAULT)?(\sCHARSET=(\w+))?(\sCOLLATE=(\w+))?~', $l, $match);
-
-			if (!empty($match[1]))
-				$engine = $match[1];
-
-			if (!empty($match[2]))
-				$engine = $match[2];
-
-			if (!empty($match[5]))
-				$charset = $match[5];
-
-			if (!empty($match[7]))
-				$collate = $match[7];
-		}
-
-		// Skip everything but keys...
-		if (strpos($l, 'KEY') === false)
-			unset($create[$k]);
-	}
-
-	if (!empty($create))
-		$create = '(
-			' . implode('
-			', $create) . ')';
-	else
-		$create = '';
-
-	$smfFunc['db_query']('', "
-		DROP TABLE IF EXISTS " . $backup_table, false, false);
-
-	$request = $smfFunc['db_query']('', "
-		CREATE TABLE " . $backup_table . " $create
-		TYPE=$engine" . (empty($charset) ? '' : " CHARACTER SET $charset" . (empty($collate) ? '' : " COLLATE $collate")) . "
-		SELECT *
-		FROM " . $table, false, false);
-
-	if ($auto_inc != '')
-	{
-		if (preg_match('~\`(.+?)\`\s~', $auto_inc, $match) != 0 && substr($auto_inc, -1, 1) == ',')
-			$auto_inc = substr($auto_inc, 0, -1);
-
+	// Do we need to drop it first?
+	$tables = smf_db_list_tables(false, $backup_table);
+	if (!empty($tables))
 		$smfFunc['db_query']('', "
-			ALTER TABLE " . $backup_table . "
-			CHANGE COLUMN $match[1] $auto_inc", false, false);
-	}
+			DROP TABLE $backup_table", false, false);
 
-	return $request;
+	//!!! Does not work at the moment!
+	$smfFunc['db_query']('', "
+		CREATE TABLE $backup_table
+		AS SELECT * FROM $table", false, false);
+	$smfFunc['db_query']('', "
+		INSERT INTO $backup_table
+		SELECT * FROM $table", false, false);
 }
 
 // Optimize a table - return data freed!

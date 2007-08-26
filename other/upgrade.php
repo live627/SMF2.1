@@ -1223,25 +1223,18 @@ function BackupDatabase()
 	if (!empty($_POST['backup_done']))
 		return true;
 
-	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
-	{
-		$result = upgrade_query("
-			SHOW TABLES
-			FROM `" . strtr($match[1], array('`' => '')) . "`
-			LIKE '" . str_replace('_', '\_', $match[2]) . "%'");
-	}
-	else
-	{
-		$result = upgrade_query("
-			SHOW TABLES
-			LIKE '" . str_replace('_', '\_', $db_prefix) . "%'");
-	}
+	// Some useful stuff here.
+	db_extend();
+
+	// Get all the table names.
+	$filter = str_replace('_', '\_', preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0 ? $match[2] : $db_prefix) . '%';
+	$db = preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0 ? strtr($match[1], array('`' => '')) : false;
+	$tables = smf_db_list_tables($db, $filter);
 
 	$table_names = array();
-	while ($row = $smfFunc['db_fetch_row']($result))
-		if (substr($row[0], 0, 7) !== 'backup_')
-			$table_names[] = $row[0];
-	$smfFunc['db_free_result']($result);
+	foreach ($tables as $table)
+		if (substr($table, 0, 7) !== 'backup_')
+			$table_names[] = $table;
 
 	$upcontext['table_count'] = count($table_names);
 	$upcontext['cur_table_num'] = $_GET['substep'];
@@ -1261,7 +1254,6 @@ function BackupDatabase()
 	// If we don't support javascript we backup here.
 	if (!$support_js || isset($_GET['xml']))
 	{
-		db_extend();
 		// Backup each table!
 		for ($substep = $_GET['substep'], $n = count($table_names); $substep < $n; $substep++)
 		{
@@ -2266,6 +2258,10 @@ function parse_sql($filename)
 		- {$db_collation}
 */
 
+	// May want to use extended functionality.
+	db_extend();
+	db_extend('packages');
+
 	// Our custom error handler - does nothing but does stop public errors from XML!
 	if (!function_exists('sql_error_handler'))
 	{
@@ -2436,7 +2432,7 @@ function parse_sql($filename)
 					continue;
 				}
 
-				if (eval('global $db_prefix, $modSettings; ' . $current_data) === false)
+				if (eval('global $db_prefix, $modSettings, $smfFunc; ' . $current_data) === false)
 				{
 					$upcontext['error_message'] = 'Error in upgrade script ' . basename($filename) . ' on line ' . $line_number . '!' . $endl;
 					if ($command_line)
@@ -2573,6 +2569,16 @@ function upgrade_query($string, $unbuffered = false)
 		elseif ($mysql_errno == 1050 && substr(trim($string), 0, 12) == 'RENAME TABLE')
 			return false;
 	}
+	// If a table already exists don't go potty.
+	else
+	{
+		if (in_array(substr($string, 0, 8), array('CREATE T', 'DROP TABL')))
+		{
+			if (strpos($db_error_message, 'exists') !== false)
+				return true;
+		}
+	}
+	
 
 	// Get the query string so we pass everything.
 	$query_string = '';
@@ -3614,7 +3620,7 @@ function template_welcome_message()
 
 function template_upgrade_options()
 {
-	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $boarddir, $db_prefix, $mmessage, $mtitle;
+	global $upcontext, $modSettings, $upgradeurl, $disable_security, $settings, $boarddir, $db_prefix, $mmessage, $mtitle, $db_type;
 
 	echo '
 			<h3>Before the upgrade gets underway please review the options below - and hit continue when you\'re ready to begin.
@@ -3622,7 +3628,7 @@ function template_upgrade_options()
 				<table cellpadding="1" cellspacing="0">
 					<tr valign="top">
 						<td width="2%">
-							<input type="checkbox" name="backup" id="backup" value="1" />
+							<input type="checkbox" name="backup" id="backup" value="1" ', $db_type != 'mysql' ? 'disabled="disabled"' : '', '/>
 						</td>
 						<td width="100%">
 							<label for="backup">Backup tables in your database with the prefix &quot;backup_' . $db_prefix . '&quot;.</label>', isset($modSettings['smfVersion']) ? '' : ' (recommended!)', '
