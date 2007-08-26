@@ -1,11 +1,11 @@
-<?
+<?php
 /**********************************************************************************
 * Subs-Charset.php                                                                *
 ***********************************************************************************
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 1                                       *
+* Software Version:           SMF 2.0 Beta 1                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -25,7 +25,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	This file has functions in it to do with character set and string 
+/*	This file has functions in it to do with character set and string
 	manipulation.  It provides these functions:
 
 	string utf8_strtolower(string $string)
