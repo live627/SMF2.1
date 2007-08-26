@@ -65,7 +65,7 @@ function template_main()
 	if (empty($settings['use_tabs']))
 		echo '
 
-					<a href="', $scripturl, '?action=reports;rt=', $context['report_type'], ';st=print" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt['print'] . '" border="0" />' : $txt['print']), '</a>';
+					<a href="', $scripturl, '?action=admin;area=reports;rt=', $context['report_type'], ';st=print" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['lang_images_url'] . '/print.gif" alt="' . $txt['print'] . '" border="0" />' : $txt['print']), '</a>';
 	echo '
 				</div>
 			</div>
@@ -78,7 +78,7 @@ function template_main()
 					<tr>
 						<td class="maintab_first">&nbsp;</td>
 						<td valign="top" class="maintab_back">
-							<a href="', $scripturl, '?action=reports;rt=', $context['report_type'], ';st=print" target="_blank">', $txt['print'], '</a>
+							<a href="', $scripturl, '?action=admin;area=reports;rt=', $context['report_type'], ';st=print" target="_blank">', $txt['print'], '</a>
 						</td>
 						<td class="maintab_last">&nbsp;</td>
 					</tr>

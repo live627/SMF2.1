@@ -130,6 +130,7 @@ $txt['group_perms_name_send_mail'] = 'Send a forum email to members';
 $txt['group_perms_name_view_mlist'] = 'View the memberlist';
 $txt['group_perms_name_view_stats'] = 'View forum stats';
 $txt['group_perms_name_who_view'] = 'See who\'s online';
+$txt['group_perms_name_issue_warning'] = 'Issue warnings';
 
 $txt['report_error_too_many_staff'] = 'You have too many staff members. The report will not work with more than 300 members of staff!';
 $txt['report_staff_position'] = 'Position';
