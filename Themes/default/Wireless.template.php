@@ -632,7 +632,7 @@ function template_imode_profile()
 
 function template_imode_ban_edit()
 {
-	global $context, $settings, $options, $scripturl, $board, $txt;
+	global $context, $settings, $options, $scripturl, $board, $txt, $modSettings;
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=ban;sa=add;imode" method="post">
@@ -1143,7 +1143,7 @@ function template_wap2_profile()
 
 function template_wap2_ban_edit()
 {
-	global $context, $settings, $options, $scripturl, $board, $txt;
+	global $context, $settings, $options, $scripturl, $board, $txt, $modSettings;
 
 	echo '
 	<form action="', $scripturl, '?action=admin;area=ban;sa=add;wap2" method="post">
