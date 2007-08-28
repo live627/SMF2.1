@@ -39,7 +39,7 @@ function ModerationMain($dont_call = false)
 		return;
 
 	// Everyone using this area must be allowed here!
-	if (empty($user_info['mod_cache']['gq']) && $user_info['mod_cache']['bq'] == '0=1' && !allowedTo('manage_membergroups'))
+	if ($user_info['mod_cache']['gq'] == '0=1' && $user_info['mod_cache']['bq'] == '0=1' && !allowedTo('manage_membergroups'))
 		isAllowedTo('access_mod_center');
 
 	// We're gonna want a menu of some kind.
@@ -119,7 +119,7 @@ function ModerationMain($dont_call = false)
 		),
 		'groups' => array(
 			'title' => $txt['mc_groups'],
-			'enabled' => !empty($user_info['mod_cache']['gq']) || allowedTo('manage_membergroups'),
+			'enabled' => $user_info['mod_cache']['gq'] != '0=1' || allowedTo('manage_membergroups'),
 			'areas' => array(
 				'groups' => array(
 					'label' => $txt['mc_group_requests'],
@@ -380,7 +380,7 @@ function ModBlockGroupRequests()
 
 	$context['group_requests'] = array();
 	// Make sure they can even moderate someone!
-	if (empty($user_info['mod_cache']['gq']))
+	if ($user_info['mod_cache']['gq'] == '0=1')
 		return 'group_requests_block';
 
 	// What requests are outstanding?
@@ -389,7 +389,7 @@ function ModBlockGroupRequests()
 		FROM {$db_prefix}log_group_requests AS lgr
 			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
 			INNER JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
-		WHERE " . ($user_info['mod_cache']['gq'] == 1 ? '1=1' : 'lgr.' . $user_info['mod_cache']['gq']) . "
+		WHERE " . ($user_info['mod_cache']['gq'] == '1=1' || $user_info['mod_cache']['gq'] == '0=1' ? $user_info['mod_cache']['gq'] : 'lgr.' . $user_info['mod_cache']['gq']) . "
 		ORDER BY lgr.id_request DESC
 		LIMIT 10", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -572,7 +572,7 @@ function ModerateGroups()
 	global $txt, $context, $scripturl, $modSettings, $user_info, $db_prefix;
 
 	// You need to be allowed to moderate groups...
-	if (empty($user_info['mod_cache']['gq']))
+	if ($user_info['mod_cache']['gq'] == '0=1')
 		isAllowedTo('manage_membergroups');
 
 	// Load the group templates.
@@ -967,7 +967,7 @@ function ModerationSettings()
 
 	// They can only change some settings if they can moderate boards/groups.
 	$context['can_moderate_boards'] = $user_info['mod_cache']['bq'] != '0=1';
-	$context['can_moderate_groups'] = !empty($user_info['mod_cache']['gq']);
+	$context['can_moderate_groups'] = $user_info['mod_cache']['gq'] != '0=1';
 
 	// What blocks can this user see?
 	$context['homepage_blocks'] = array(

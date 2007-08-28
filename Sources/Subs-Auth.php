@@ -712,7 +712,7 @@ function rebuildModCache()
 	global $db_prefix, $user_info, $smfFunc;
 
 	// What groups can they moderate?
-	$group_query = allowedTo('manage_membergroups') ? 1 : 0;
+	$group_query = allowedTo('manage_membergroups') ? '1=1' : '0=1';
 
 	if ($group_query == 0)
 	{
@@ -726,7 +726,7 @@ function rebuildModCache()
 		$smfFunc['db_free_result']($request);
 
 		if (empty($groups))
-			$group_query = '0';
+			$group_query = '0=1';
 		else
 			$group_query = 'id_group IN (' . implode(',', $groups) . ')';
 	}
