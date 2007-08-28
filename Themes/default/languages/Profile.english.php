@@ -336,7 +336,7 @@ $txt['profile_error_signature_disabled_bbc'] = 'The following BBC is not allowed
 
 $txt['profile_issue_warning'] = 'Issue a warning';
 $txt['profile_warning_level'] = 'Warning Level';
-$txt['profile_warning_desc'] = 'From this section you can adjust the users warning level and issue them with a written warning if necessary. You can also track their warning history and view the effects of their current warning level as determined by the administrator.';
+$txt['profile_warning_desc'] = 'From this section you can adjust the user\'s warning level and issue them with a written warning if necessary. You can also track their warning history and view the effects of their current warning level as determined by the administrator.';
 $txt['profile_warning_name'] = 'Member Name';
 $txt['profile_warning_impact'] = 'Result';
 $txt['profile_warning_reason'] = 'Reason for Warning';
@@ -364,7 +364,7 @@ $txt['profile_warning_notify_for_insulting'] = 'insulting other users and/or sta
 $txt['profile_warning_notify_title_insulting'] = 'Insulting Users/Staff';
 $txt['profile_warning_issue'] = 'Issue Warning';
 $txt['profile_warning_max'] = '(Max 100)';
-$txt['profile_warning_limit_attribute'] = 'Note you can not adjust this users level by more than %1$d%% in a 24 hour period.';
+$txt['profile_warning_limit_attribute'] = 'Note you can not adjust this user\'s level by more than %1$d%% in a 24 hour period.';
 
 $txt['profile_warning_previous'] = 'Previous Warnings';
 $txt['profile_warning_previous_none'] = 'This user has not received any previous warnings.';

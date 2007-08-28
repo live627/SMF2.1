@@ -2572,7 +2572,7 @@ function upgrade_query($string, $unbuffered = false)
 	// If a table already exists don't go potty.
 	else
 	{
-		if (in_array(substr($string, 0, 8), array('CREATE T', 'DROP TABL')))
+		if (in_array(substr($string, 0, 8), array('CREATE T', 'DROP TABL', 'ALTER TA')))
 		{
 			if (strpos($db_error_message, 'exists') !== false)
 				return true;

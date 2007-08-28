@@ -669,6 +669,11 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}custom_fields (
 ) TYPE=MyISAM{$db_collation};
 ---#
 
+---# Adding search ability to custom fields.
+ALTER TABLE {$db_prefix}custom_fields
+ADD COLUMN can_search tinyint(3) NOT NULL default '0' AFTER bbc;
+---#
+
 /******************************************************************************/
 --- Adding email digest functionality.
 /******************************************************************************/

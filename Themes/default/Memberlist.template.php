@@ -250,15 +250,23 @@ function template_search()
 					</td>
 				</tr>
 				<tr>
-					<td align="left">
-								<label for="fields-email"><input type="checkbox" name="fields[]" id="fields-email" value="email" checked="checked" class="check" /> ', $txt['mlist_search_email'], '</label><br />
-								<label for="fields-messenger"><input type="checkbox" name="fields[]" id="fields-messenger" value="messenger" class="check" /> ', $txt['mlist_search_messenger'], '</label><br />
-								<label for="fields-group"><input type="checkbox" name="fields[]" id="fields-group" value="group" class="check" /> ', $txt['mlist_search_group'], '</label>
+					<td align="left">';
+
+	$count = 0;
+	foreach ($context['search_fields'] as $id => $title)
+	{
+		echo '
+					<label for="fields-', $id, '"><input type="checkbox" name="fields[]" id="fields-', $id, '" value="', $id, '" ', in_array($id, $context['search_defaults']) ? 'checked="checked"' : '', ' class="check" /> ', $title, '</label><br />';
+
+		// Half way through?
+		if (round(count($context['search_fields']) / 2) == ++$count)
+			echo '
+								
 					</td>
-					<td align="left" valign="top">
-								<label for="fields-name"><input type="checkbox" name="fields[]" id="fields-name" value="name" checked="checked" class="check" /> ', $txt['mlist_search_name'], '</label><br />
-								<label for="fields-website"><input type="checkbox" name="fields[]" id="fields-website" value="website" class="check" /> ', $txt['mlist_search_website'], '</label>
-					</td>
+					<td align="left" valign="top">';
+	}
+	echo '
+		</td>
 				</tr>
 			</table>
 		</div>

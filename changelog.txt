@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2807 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2808 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -14,6 +14,8 @@ August 2007
  ! Wrong language string was being used for activation reminder emails. (ManageMembers.php)
  * Added missing global variables in Wireless template. (Wireless template)
  ! Fix the link to the Mod Center settings. (ModerationCenter language file)
+ & Fixed some grammar problems in Profile language files. (Profile language file)
+ + Allow searching of custom profile fields. (upgrade, install, Memberlist.php, ManageSettings.php, Memberlist template, Memberlist language file)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007

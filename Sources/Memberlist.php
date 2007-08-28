@@ -387,6 +387,23 @@ function MLSearch()
 	$context['page_title'] = $txt['mlist_search'];
 	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 
+	// Can they search custom fields?
+	$request = $smfFunc['db_query']('', "
+		SELECT col_name, field_name, field_desc
+		FROM {$db_prefix}custom_fields
+		WHERE active = 1
+			" . (allowedTo('admin_forum') ? '' : ' AND private = 0') . "
+			AND can_search = 1
+			AND (field_type = 'text' OR field_type = 'textarea')", __FILE__, __LINE__);
+	$context['custom_search_fields'] = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$context['custom_search_fields'][$row['col_name']] = array(
+			'colname' => $row['col_name'],
+			'name' => $row['field_name'],
+			'desc' => $row['field_desc'],
+		);
+	$smfFunc['db_free_result']($request);
+
 	// They're searching..
 	if (isset($_REQUEST['search']) && isset($_REQUEST['fields']))
 	{
@@ -423,12 +440,27 @@ function MLSearch()
 		else
 			$condition = '';
 
+		$customJoin = array();
+		$customCount = 10;
+		// Any custom fields to search for - these being tricky?
+		foreach ($_POST['fields'] as $field)
+		{
+			$curField = substr($field, 5);
+			if (substr($field, 0, 5) == 'cust_' && isset($context['custom_search_fields'][$curField]))
+			{
+				$customJoin[] = "LEFT JOIN {$db_prefix}themes AS t{$curField} ON (t{$curField}.variable = '$curField' AND t{$curField}.id_theme = 1 AND t{$curField}.id_member = mem.id_member)";
+				$fields += array($customCount++ => "IFNULL(t$curField.value, '')");
+			}
+		}
+		
 		$query = $_POST['search'] == '' ? "= ''" : "LIKE '%" . strtr($_POST['search'], array('_' => '\\_', '%' => '\\%', '*' => '%')) . "%'";
 
 		$request = $smfFunc['db_query']('', "
 			SELECT COUNT(*)
 			FROM {$db_prefix}members AS mem
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" .
+				(empty($customJoin) ? '' : implode("
+				", $customJoin)) . "
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
 				AND is_activated = 1", __FILE__, __LINE__);
 		list ($numResults) = $smfFunc['db_fetch_row']($request);
@@ -442,7 +474,9 @@ function MLSearch()
 			SELECT mem.id_member
 			FROM {$db_prefix}members AS mem
 				LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
-				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
+				LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" .
+				(empty($customJoin) ? '' : implode("
+				", $customJoin)) . "
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
 				AND is_activated = 1
 			LIMIT $_REQUEST[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
@@ -451,6 +485,21 @@ function MLSearch()
 	}
 	else
 	{
+		// These are all the possible fields.
+		$context['search_fields'] = array(
+			'name' => $txt['mlist_search_name'],
+			'email' => $txt['mlist_search_email'],
+			'messenger' => $txt['mlist_search_messenger'],
+			'website' => $txt['mlist_search_website'],
+			'group' => $txt['mlist_search_group'],
+		);
+
+		foreach ($context['custom_search_fields'] as $field)
+			$context['search_fields']['cust_' . $field['colname']] = sprintf($txt['mlist_search_by'], $field['name']);
+
+		// What do we search for by default?
+		$context['search_defaults'] = array('name', 'email');
+
 		$context['sub_template'] = 'search';
 		$context['old_search'] = isset($_REQUEST['search']) ? htmlspecialchars($_REQUEST['search']) : '';
 	}

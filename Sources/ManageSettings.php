@@ -1082,7 +1082,7 @@ function EditCustomProfiles()
 	{
 		$request = $smfFunc['db_query']('', "
 			SELECT id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
-				show_reg, show_display, show_profile, private, active, default_value, bbc, mask
+				show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask
 			FROM {$db_prefix}custom_fields
 			WHERE id_field = $context[fid]", __FILE__, __LINE__);
 		$context['field'] = array();
@@ -1113,6 +1113,7 @@ function EditCustomProfiles()
 				'options' => strlen($row['field_options']) > 1 ? explode(',', $row['field_options']) : array('', '', ''),
 				'active' => $row['active'],
 				'private' => $row['private'],
+				'can_search' => $row['can_search'],
 				'mask' => $row['mask'],
 				'regex' => substr($row['mask'], 0, 5) == 'regex' ? substr($row['mask'], 5) : '',
 			);
@@ -1138,6 +1139,7 @@ function EditCustomProfiles()
 			'options' => array('', '', ''),
 			'active' => true,
 			'private' => false,
+			'can_search' => false,
 			'mask' => 'none',
 			'regex' => '',
 		);
@@ -1160,6 +1162,7 @@ function EditCustomProfiles()
 		$show_profile = $_POST['profile_area'];
 		$active = isset($_POST['active']) ? 1 : 0;
 		$private = isset($_POST['private']) ? 1 : 0;
+		$can_search = isset($_POST['can_search']) ? 1 : 0;
 
 		// Some masking stuff...
 		$mask = isset($_POST['mask']) ? $_POST['mask'] : '';
@@ -1287,7 +1290,7 @@ function EditCustomProfiles()
 					field_type = '$_POST[field_type]', field_length = $field_length,
 					field_options = '$field_options', show_reg = $show_reg, show_display = $show_display,
 					show_profile = '$show_profile', private = $private, active = $active, default_value = '$default',
-					bbc = $bbc, mask = '$mask'
+					can_search = $can_search, bbc = $bbc, mask = '$mask'
 				WHERE id_field = $context[fid]", __FILE__, __LINE__);
 
 			// Just clean up any old selects - these are a pain!
@@ -1303,11 +1306,11 @@ function EditCustomProfiles()
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}custom_fields
 					(col_name, field_name, field_desc, field_type, field_length, field_options,
-					show_reg, show_display, show_profile, private, active, default_value, bbc, mask)
+					show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask)
 				VALUES
 					('$colname', '$_POST[field_name]', '$_POST[field_desc]', '$_POST[field_type]',
 					$field_length, '$field_options', $show_reg, $show_display, '$show_profile', $private,
-					$active, '$default', $bbc, '$mask')", __FILE__, __LINE__);
+					$active, '$default', $can_search, $bbc, '$mask')", __FILE__, __LINE__);
 		}
 	}
 	// Deleting?

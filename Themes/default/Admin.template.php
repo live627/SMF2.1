@@ -1521,6 +1521,7 @@ function template_edit_profile_field()
 			document.getElementById("options_div").style.display = curType == "select" || curType == "radio" ? "" : "none";
 			document.getElementById("default_div").style.display = curType == "check" ? "" : "none";
 			document.getElementById("mask_div").style.display = curType == "text" ? "" : "none";
+			document.getElementById("can_search_div").style.display = curType == "text" || curType == "textarea" ? "" : "none";
 			document.getElementById("regex_div").style.display = curType == "text" && document.getElementById("mask").value == "regex" ? "" : "none";
 			document.getElementById("display").disabled = false;
 			// Cannot show this on the topic
@@ -1662,6 +1663,14 @@ function template_edit_profile_field()
 				</td>
 				<td width="50%">
 					<input type="checkbox" name="private" ', $context['field']['private'] ? 'checked="checked"' : '', ' class="check" />
+				</td>
+			</tr><tr class="windowbg2" id="can_search_div">
+				<td width="50%">
+					<b>', $txt['custom_edit_can_search'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_can_search_desc'], '</div>
+				</td>
+				<td width="50%">
+					<input type="checkbox" name="can_search" ', $context['field']['can_search'] ? 'checked="checked"' : '', ' class="check" />
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%">

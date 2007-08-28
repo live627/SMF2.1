@@ -15,3 +15,12 @@ CREATE TABLE {$db_prefix}openid_assoc (
 	PRIMARY KEY (server_url, handle)
 );
 ---#
+
+/******************************************************************************/
+--- Updating custom fields.
+/******************************************************************************/
+
+---# Adding search ability to custom fields.
+ALTER TABLE {$db_prefix}custom_fields
+ADD COLUMN can_search smallint NOT NULL default '0' AFTER bbc;
+---#
