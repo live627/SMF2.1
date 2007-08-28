@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2808 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2809 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -16,6 +16,8 @@ August 2007
  ! Fix the link to the Mod Center settings. (ModerationCenter language file)
  & Fixed some grammar problems in Profile language files. (Profile language file)
  + Allow searching of custom profile fields. (upgrade, install, Memberlist.php, ManageSettings.php, Memberlist template, Memberlist language file)
+ ! Displaying moderators on the board index wasn't working on postgreSQL. (Subs-BoardIndex.php)
+ ! Make sure the babylon and classic themes have their layers set correctly. (theme_info.xml)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007

@@ -61,7 +61,7 @@ function getBoardIndex($boardIndexOptions)
 			(IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS is_read, IFNULL(lb.id_msg, -1) + 1 AS new_from," . ($boardIndexOptions['include_categories'] ? "
 			c.can_collapse, IFNULL(cc.id_member, 0) AS is_collapsed," : '')) . "
 			IFNULL(mem.id_member, 0) AS id_member, m.id_msg,
-			IFNULL(mods_mem.id_member, 0) AS ID_MODERATOR, mods_mem.real_name AS modRealName
+			IFNULL(mods_mem.id_member, 0) AS id_moderator, mods_mem.real_name AS mod_real_name
 		FROM {$db_prefix}boards AS b" . ($boardIndexOptions['include_categories'] ? "
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)" : '') . "
 			LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
@@ -144,15 +144,15 @@ function getBoardIndex($boardIndexOptions)
 					'link' => '<a href="' . $scripturl . '?board=' . $row_board['id_board'] . '.0">' . $row_board['board_name'] . '</a>'
 				);
 			}
-			if (!empty($row_board['ID_MODERATOR']))
+			if (!empty($row_board['id_moderator']))
 			{
-				$this_category[$row_board['id_board']]['moderators'][$row_board['ID_MODERATOR']] = array(
-					'id' => $row_board['ID_MODERATOR'],
-					'name' => $row_board['modRealName'],
-					'href' => $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>'
+				$this_category[$row_board['id_board']]['moderators'][$row_board['id_moderator']] = array(
+					'id' => $row_board['id_moderator'],
+					'name' => $row_board['mod_real_name'],
+					'href' => $scripturl . '?action=profile;u=' . $row_board['id_moderator'],
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_moderator'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['mod_real_name'] . '</a>'
 				);
-				$this_category[$row_board['id_board']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['ID_MODERATOR'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['modRealName'] . '</a>';
+				$this_category[$row_board['id_board']]['link_moderators'][] = '<a href="' . $scripturl . '?action=profile;u=' . $row_board['id_moderator'] . '" title="' . $txt['board_moderator'] . '">' . $row_board['mod_real_name'] . '</a>';
 			}
 		}
 		// Found a child board.... make sure we've found its parent and the child hasn't been set already.

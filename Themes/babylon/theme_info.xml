@@ -7,7 +7,7 @@
 	<!-- Website... where to get updates and more information. -->
 	<website>http://www.simplemachines.org/</website>
 	<!-- Template layers to use, defaults to "main". -->
-	<layers>main</layers>
+	<layers>html,body</layers>
 	<!-- Templates to load on startup.  Default is "index". -->
 	<templates>index</templates>
 	<!-- Base this theme off another?  Default is blank, or no.  It could be "default". -->
