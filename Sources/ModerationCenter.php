@@ -325,7 +325,7 @@ function ModBlockReportedPosts()
 	// Got the info already?
 	$cachekey = md5(serialize($user_info['mod_cache']['bq']));
 	$context['reported_posts'] = array();
-	if (empty($user_info['mod_cache']['bq']))
+	if ($user_info['mod_cache']['bq'] == '0=1')
 		return 'reported_posts_block';
 
 	if (($reported_posts = cache_get_data('reported_posts_' . $cachekey, 240)) === null)
@@ -337,7 +337,7 @@ function ModBlockReportedPosts()
 				IFNULL(mem.id_member, 0) AS id_author		
 			FROM {$db_prefix}log_reported AS lr
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
-			WHERE " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']) . "
+			WHERE " . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']) . "
 				AND lr.closed = 0
 				AND lr.ignore_all = 0
 			ORDER BY lr.time_updated DESC
@@ -422,7 +422,7 @@ function ReportedPosts()
 	global $txt, $context, $scripturl, $modSettings, $user_info, $db_prefix, $smfFunc;
 
 	// This comes under the umbrella of moderating posts.
-	if (empty($user_info['mod_cache']['bq']))
+	if ($user_info['mod_cache']['bq'] == '0=1')
 		isAllowedTo('moderate_forum');
 
 	// First load the template.
@@ -457,7 +457,7 @@ function ReportedPosts()
 			UPDATE {$db_prefix}log_reported
 			SET " . (isset($_GET['ignore']) ? 'ignore_all = ' . (int) $_GET['ignore'] : 'closed = ' . (int) $_GET['close']) . "
 			WHERE id_report = $_GET[rid]
-				AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : $user_info['mod_cache']['bq']), __FILE__, __LINE__);
+				AND " . $user_info['mod_cache']['bq'], __FILE__, __LINE__);
 
 		// Time to update.
 		updateSettings(array('last_mod_report_action' => time()));
@@ -478,7 +478,7 @@ function ReportedPosts()
 				UPDATE {$db_prefix}log_reported
 				SET closed = 1
 				WHERE id_report IN (" . implode(',', $toClose) . ")
-					AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : $user_info['mod_cache']['bq']), __FILE__, __LINE__);
+					AND " . $user_info['mod_cache']['bq'], __FILE__, __LINE__);
 
 			// Time to update.
 			updateSettings(array('last_mod_report_action' => time()));
@@ -491,7 +491,7 @@ function ReportedPosts()
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_reported AS lr
 		WHERE closed = $context[view_closed]
-			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']), __FILE__, __LINE__);
+			AND " . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']), __FILE__, __LINE__);
 	list ($context['total_reports']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -507,7 +507,7 @@ function ReportedPosts()
 		FROM {$db_prefix}log_reported AS lr
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.closed = $context[view_closed]
-			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']) . "
+			AND " . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']) . "
 		ORDER BY lr.time_updated DESC
 		LIMIT $context[start], 10", __FILE__, __LINE__);
 	$context['reports'] = array();
@@ -634,7 +634,7 @@ function ModReport()
 		FROM {$db_prefix}log_reported AS lr
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.id_report = $_REQUEST[report]
-			AND " . ($user_info['mod_cache']['bq'] == 1 ? '1=1' : 'lr.' . $user_info['mod_cache']['bq']) . "
+			AND " . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']) . "
 		LIMIT 1", __FILE__, __LINE__);
 	
 	// So did we find anything?
@@ -966,7 +966,7 @@ function ModerationSettings()
 	$context['sub_template'] = 'moderation_settings';
 
 	// They can only change some settings if they can moderate boards/groups.
-	$context['can_moderate_boards'] = !empty($user_info['mod_cache']['bq']);
+	$context['can_moderate_boards'] = $user_info['mod_cache']['bq'] != '0=1';
 	$context['can_moderate_groups'] = !empty($user_info['mod_cache']['gq']);
 
 	// What blocks can this user see?

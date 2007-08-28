@@ -1325,7 +1325,7 @@ function MessagePost()
 	$context['reply'] = isset($_REQUEST['pmsg']) || isset($_REQUEST['quote']);
 
 	// Check whether we've gone over the limit of messages we can send per hour.
-	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
+	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && $user_info['mod_cache']['bq'] == '0=1' && empty($user_info['mod_cache']['gq']))
 	{
 		// How many messages have they sent this last hour?
 		$request = $smfFunc['db_query']('', "
@@ -1621,7 +1621,7 @@ function MessagePost2()
 	list ($modSettings['max_pm_recipients'], $modSettings['pm_posts_verification'], $modSettings['pm_posts_per_hour']) = explode(',', $modSettings['pm_spam_settings']);
 
 	// Check whether we've gone over the limit of messages we can send per hour - fatal error if fails!
-	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && empty($user_info['mod_cache']['bq']) && empty($user_info['mod_cache']['gq']))
+	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && $user_info['mod_cache']['bq'] == '0=1' && empty($user_info['mod_cache']['gq']))
 	{
 		// How many have they sent this last hour?
 		$request = $smfFunc['db_query']('', "

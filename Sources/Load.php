@@ -1300,7 +1300,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 		'is_guest' => &$user_info['is_guest'],
 		'is_admin' => &$user_info['is_admin'],
 		'is_mod' => false,
-		'can_mod' => allowedTo('access_mod_center') || !empty($user_info['mod_cache']['gq']) || (!empty($user_info['mod_cache']['bq']) && $user_info['mod_cache']['bq'] != '0=1'),
+		'can_mod' => allowedTo('access_mod_center') || !empty($user_info['mod_cache']['gq']) || $user_info['mod_cache']['bq'] != '0=1',
 		'username' => &$user_info['username'],
 		'language' => &$user_info['language'],
 		'email' => &$user_info['email'],

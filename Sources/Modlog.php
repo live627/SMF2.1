@@ -47,7 +47,7 @@ function ViewModlog()
 	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc;
 
 	$context['can_delete'] = allowedTo('admin_forum');
-	$user_info['modlog_query'] = $context['can_delete'] ? '1=1' : (empty($user_info['mod_cache']['bq']) ? 'lm.id_action = 0' : strtr($user_info['mod_cache']['bq'], array('b.' => 'lm')));
+	$user_info['modlog_query'] = $context['can_delete'] || $user_info['mod_cache']['bq'] == '1=1' ? '1=1' : ($user_info['mod_cache']['bq'] == '0=1' ? 'lm.id_action = 0' : strtr($user_info['mod_cache']['bq'], array('b.' => 'lm')));
 
 	loadTemplate('Modlog');
 
