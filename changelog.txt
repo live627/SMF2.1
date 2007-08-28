@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2806 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2807 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -7,12 +7,13 @@ August 2007
 --------------------------------------------------------------------------------
  ! Fast quoting should no longer cause an error when the user doesn't have any moderation rights. (Post.php)
  ! The core features are defined in $context not $modSettings. (ManageSettings.php)
- ! Don't hide permissions because of typos :P. (ManagePermissions.php)
+ ! Don't hide permissions because of typos. (ManagePermissions.php)
  ! Mail queue wasn't respecting limits on how many emails to send quite right. (Load.php, ScheduledTasks.php)
  * Some links were still using the old link style for admin pages. (Reports.template.php)
  & Added missing text string for issue_warnings in Generate Group Reports (Reports language file)
  ! Wrong language string was being used for activation reminder emails. (ManageMembers.php)
  * Added missing global variables in Wireless template. (Wireless template)
+ ! Fix the link to the Mod Center settings. (ModerationCenter language file)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007
