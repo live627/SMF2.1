@@ -377,8 +377,8 @@ function show_db_error($loadavg = false)
 				updateSettingsFile(array('db_last_error' => time()));
 
 			// Language files aren't loaded yet :(.
-			$mysql_error = @$smfFunc['db_error']($db_connection);
-			@mail($webmaster_email, $mbname . ': SMF Database Error!', 'There has been a problem with the database!' . ($mysql_error == '' ? '' : "\nMySQL reported:\n" . $mysql_error) . "\n\nThis is a notice email to let you know that SMF could not connect to the database, contact your host if this continues.");
+			$db_error = @$smfFunc['db_error']($db_connection);
+			@mail($webmaster_email, $mbname . ': SMF Database Error!', 'There has been a problem with the database!' . ($db_error == '' ? '' : "\n" . $smfFunc['db_title'] . " reported:\n" . $db_error) . "\n\nThis is a notice email to let you know that SMF could not connect to the database, contact your host if this continues.");
 		}
 	}
 

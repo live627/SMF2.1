@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2812 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2813 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -21,6 +21,7 @@ August 2007
  ! Fixed numerous problems with cached querys. (Load.php, Groups.php, Subs-Auth.php, Security.php, Modlog.php)
  ! Upgrade was erroring if a package you tried to uninstall had no files. (upgrade.php)
  ! Scheduled tasks was missing a page title. (ManageMaintenance.php)
+ ! When reporting a database error use the right database title. (Subs-Auth.php)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007
