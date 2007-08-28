@@ -219,7 +219,7 @@ function MembergroupMembers()
 		$context['group']['assignable'] = 0;
 
 	// Removing member from group?
-	if (isset($_POST['remove']) && !empty($_REQUEST['rem']) && is_array($_REQUEST['rem']) && $context['group']['assignable'] && $context['group']['can_moderate'])
+	if (isset($_POST['remove']) && !empty($_REQUEST['rem']) && is_array($_REQUEST['rem']) && $context['group']['assignable'])
 	{
 		checkSession();
 
@@ -231,7 +231,7 @@ function MembergroupMembers()
 		removeMembersFromGroups($_REQUEST['rem'], $_REQUEST['group'], true);
 	}
 	// Must be adding new members to the group...
-	elseif (isset($_REQUEST['add']) && !empty($_REQUEST['toAdd']) && $context['group']['assignable'] && $context['group']['can_moderate'])
+	elseif (isset($_REQUEST['add']) && !empty($_REQUEST['toAdd']) && $context['group']['assignable'])
 	{
 		checkSession();
 
