@@ -219,7 +219,7 @@ function MembergroupMembers()
 		$context['group']['assignable'] = 0;
 
 	// Removing member from group?
-	if (isset($_POST['remove']) && !empty($_REQUEST['rem']) && is_array($_REQUEST['rem']) && $context['group']['assignable'])
+	if (isset($_POST['remove']) && !empty($_REQUEST['rem']) && is_array($_REQUEST['rem']) && $context['group']['assignable'] && $context['group']['can_moderate'])
 	{
 		checkSession();
 
@@ -231,7 +231,7 @@ function MembergroupMembers()
 		removeMembersFromGroups($_REQUEST['rem'], $_REQUEST['group'], true);
 	}
 	// Must be adding new members to the group...
-	elseif (isset($_REQUEST['add']) && !empty($_REQUEST['toAdd']) && $context['group']['assignable'])
+	elseif (isset($_REQUEST['add']) && !empty($_REQUEST['toAdd']) && $context['group']['assignable'] && $context['group']['can_moderate'])
 	{
 		checkSession();
 
@@ -357,11 +357,11 @@ function GroupRequests()
 	$context['sub_template'] = 'group_requests';
 
 	// Verify we can be here.
-	if (empty($user_info['mod_cache']['gq']))
+	if ($user_info['mod_cache']['gq'] == '0=1')
 		isAllowedTo('manage_membergroups');
 
 	// Normally, we act normally...
-	$where = $user_info['mod_cache']['gq'] == 1 ? '1=1' : 'lgr.' . $user_info['mod_cache']['gq'];
+	$where = $user_info['mod_cache']['gq'] == '1=1' || $user_info['mod_cache']['gq'] == '0=1' ? $user_info['mod_cache']['gq'] : 'lgr.' . $user_info['mod_cache']['gq'];
 
 	// We've submitted?
 	if (isset($_POST['sc']) && !empty($_POST['groupr']) && !empty($_POST['req_action']))
