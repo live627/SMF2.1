@@ -1534,6 +1534,7 @@ function CleanupMods()
 			copytree($boarddir . '/Packages/' . $filename, $boarddir . '/Packages/temp');
 
 		// Work out how we uninstall...
+		$files = array();
 		foreach ($info as $change)
 		{
 			// Work out two things:
@@ -1547,7 +1548,6 @@ function CleanupMods()
 				else
 					$results = parseModification($contents, $test, $change['reverse'], $cur_theme_paths);
 
-				$files = array();
 				foreach ($results as $action)
 				{
 					// Something we can remove? Probably means it existed!
@@ -1626,14 +1626,20 @@ function CleanupMods()
 	{
 		$writable_files = array();
 		foreach ($upcontext['packages'] as $package)
-			foreach ($package['files'] as $file)
-				$writable_files[] = $file;
+		{
+			if (!empty($package['files']))
+				foreach ($package['files'] as $file)
+					$writable_files[] = $file;
+		}
 
-		$writable_files = array_unique($writable_files);
-		$upcontext['writable_files'] = $writable_files;
+		if (!empty($writable_files))
+		{
+			$writable_files = array_unique($writable_files);
+			$upcontext['writable_files'] = $writable_files;
 
-		if (!makeFilesWritable($writable_files))
-			return false;
+			if (!makeFilesWritable($writable_files))
+				return false;
+		}
 	}
 
 	if (file_exists($boarddir . '/Packages/temp'))
