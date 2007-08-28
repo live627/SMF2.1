@@ -318,6 +318,7 @@ function ScheduledTasks()
 	// Mama, setup the template first - cause it's like the most important bit, like pickle in a sandwich.
 	// ... ironically I don't like pickle. </grudge>
 	$context['sub_template'] = 'view_scheduled_tasks';
+	$context['page_title'] = $txt['maintain_tasks'];
 
 	// Saving changes?
 	if (isset($_REQUEST['save']) && isset($_POST['task']))
