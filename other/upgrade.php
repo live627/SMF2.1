@@ -2239,7 +2239,7 @@ function fixRelativePath($path)
 function parse_sql($filename)
 {
 	global $db_prefix, $db_collation, $boarddir, $boardurl, $command_line, $file_steps, $step_progress, $custom_warning;
-	global $upcontext, $support_js, $is_debug, $smfFunc, $db_connection, $databases, $db_type;
+	global $upcontext, $support_js, $is_debug, $smfFunc, $db_connection, $databases, $db_type, $db_character_set;
 
 /*
 	Failure allowed on:
@@ -2508,7 +2508,8 @@ function parse_sql($filename)
 
 function upgrade_query($string, $unbuffered = false)
 {
-	global $db_connection, $db_server, $db_user, $db_passwd, $db_type, $command_line, $upcontext, $upgradeurl, $modSettings, $db_unbuffered, $smfFunc;
+	global $db_connection, $db_server, $db_user, $db_passwd, $db_type, $command_line, $upcontext, $upgradeurl, $modSettings;
+	global $db_name, $db_unbuffered, $smfFunc;
 
 	// Get the query result - working around some SMF specific ideas!
 	$modSettings['disableQueryCheck'] = true;
@@ -2856,7 +2857,7 @@ function nextSubstep($substep)
 
 function cmdStep0()
 {
-	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $start_time, $cachedir, $databases, $db_type;
+	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $start_time, $cachedir, $databases, $db_type, $smfFunc;
 	$start_time = time();
 
 	ob_end_clean();
