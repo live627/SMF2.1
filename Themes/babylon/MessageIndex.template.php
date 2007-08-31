@@ -37,12 +37,12 @@ function template_main()
 			<tr class="windowbg2">
 				<td class="windowbg" width="6%" align="center" valign="top"><a href="', $scripturl, '?action=unread;board=', $board['id'], '.0;children">';
 
-			// Is this board itself new?
-			if ($board['new'])
-				echo '<img src="', $settings['images_url'], '/on.gif" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
-			// Is one of this board's children new, then?
-			elseif ($board['children_new'])
-				echo '<img src="', $settings['images_url'], '/on2.gif" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+			// Is this board or it's children new?
+			if ($board['new'] || $board['children_new'])
+				echo '<img src="', $settings['images_url'], '/on', $board['new'] ? '' : '2', '.gif" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+			// Is it a redirection board?
+			elseif ($board['is_redirect'])
+				echo '<img src="', $settings['images_url'], '/redirect.gif" alt="*" title="*" border="0" />';
 			// I guess it's not new at all.
 			else
 				echo '<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" border="0" />';
@@ -69,7 +69,10 @@ function template_main()
 				$children = array();
 				foreach ($board['children'] as $child)
 				{
-					$child['link'] = '<a href="' . $child['href'] . '" title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . $child['topics'] . ', ' . $txt['posts'] . ': ' . $child['posts'] . ')">' . $child['name'] . '</a>';
+					if (!$child['is_redirect'])
+						$child['link'] = '<a href="' . $child['href'] . '" title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . $child['topics'] . ', ' . $txt['posts'] . ': ' . $child['posts'] . ')">' . $child['name'] . '</a>';
+					else
+						$child['link'] = '<a href="' . $child['href'] . '" title="' . $child['posts'] . ' ' . $txt['redirects'] . '">' . $child['name'] . '</a>';
 
 					// Does the child have any posts awaiting approval?!
 					if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
@@ -85,8 +88,8 @@ function template_main()
 			echo '
 				</td>
 				<td class="windowbg" valign="middle" align="center" style="width: 12ex;"><span class="smalltext">
-					', $board['posts'], ' ', $txt['posts'], ' ', $txt['in'], '<br />
-					', $board['topics'], ' ', $txt['board_topics'], '
+					', $board['posts'], ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], !$board['is_redirect'] ? ' ' . $txt['in'] . '<br />
+					' . $board['topics'] . ' ' . $txt['board_topics'] : '', '
 				</span></td>
 				<td class="smalltext" valign="middle" width="22%">';
 

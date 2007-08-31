@@ -74,6 +74,7 @@ $txt['name'] = 'Name';
 $txt['email'] = 'Email';
 $txt['subject'] = 'Subject';
 $txt['message'] = 'Message';
+$txt['redirects'] = 'Redirects';
 
 $txt['profile'] = 'Profile';
 

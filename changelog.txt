@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2816 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2817 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -26,6 +26,9 @@ August 2007
  + Enhance privacy settings of custom fields - to allow fields to be user viewable but not editable. (upgrade, ManageSettings.php, Admin template, Profile.php, Memberlist.php)
  & Changed some language strings related to the above. (ManageSettings language file)
  ! Attachments were not being shown as approved in PostgreSQL. (Post.php)
+ + Allow boards to be specified as links to redirect to other areas. (install, upgrade, ManageBoards.php, Subs-BoardIndex.php, Subs-MessageIndex.php, Post.php, Search.php, Subs.php)
+ * Significant template changes for the above. (MessageIndex, ManageBoards, BoardIndex template)
+ & Language entries for redirection boards. (ManageBoards, index language files)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007

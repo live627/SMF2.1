@@ -163,9 +163,15 @@ function template_main()
 				}
 
 				echo '
-		</td>
+		</td>';
+
+	if (!$board['is_redirect'])
+		echo '
 		<td class="windowbg" valign="middle" align="center" width="6%">', $board['topics'], '</td>
 		<td class="windowbg" valign="middle" align="center" width="6%">', $board['posts'], '</td>';
+	else
+		echo '
+		<td class="windowbg" valign="middle" align="center" colspan="2" width="12%">', $board['posts'], ' ', $txt['redirects'], '</td>';
 
 				/* The board's and children's 'last_post's have:
 					time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),

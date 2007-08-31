@@ -47,6 +47,9 @@ function getBoardList($boardListOptions = array())
 	elseif (!empty($boardListOptions['use_permissions']))
 		$where[] = $user_info['query_see_board'];
 
+	if (!empty($boardListOptions['not_redirection']))
+		$where[] = 'b.redirect = \'\'';
+
 
 	$request = $smfFunc['db_query']('', "
 		SELECT c.name AS cat_name, c.id_cat, b.id_board, b.name AS board_name, b.child_level

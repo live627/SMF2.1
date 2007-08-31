@@ -295,7 +295,8 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			// SUM and MAX on a smaller table is better for InnoDB tables.
 			$result = $smfFunc['db_query']('', "
 				SELECT SUM(num_posts) AS total_messages, MAX(id_last_msg) AS max_msg_id
-				FROM {$db_prefix}boards", __FILE__, __LINE__);
+				FROM {$db_prefix}boards
+				WHERE redirect = ''", __FILE__, __LINE__);
 			$row = $smfFunc['db_fetch_assoc']($result);
 			$smfFunc['db_free_result']($result);
 

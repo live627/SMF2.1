@@ -126,7 +126,8 @@ function DisplayStats()
 	// Statistics such as number of boards, categories, etc.
 	$result = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
-		FROM {$db_prefix}boards AS b", __FILE__, __LINE__);
+		FROM {$db_prefix}boards AS b
+		WHERE b.redirect = ''", __FILE__, __LINE__);
 	list ($context['num_boards']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -236,6 +237,7 @@ function DisplayStats()
 		FROM {$db_prefix}boards AS b
 		WHERE $user_info[query_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 			AND b.id_board != $modSettings[recycle_board]" : '') . "
+			AND b.redirect = ''
 		ORDER BY num_posts DESC
 		LIMIT 10", __FILE__, __LINE__);
 	$context['top_boards'] = array();

@@ -64,13 +64,23 @@ function template_main()
 			}
 
 			echo '
-		</td>
+		</td>';
+
+	if (!$board['is_redirect'])
+		echo '
 		<td class="windowbg" valign="middle" align="center" width="6%">
 			', $board['topics'], '
 		</td>
 		<td class="windowbg" valign="middle" align="center" width="6%">
 			', $board['posts'], '
-		</td>
+		</td>';
+	else
+		echo '
+		<td class="windowbg" valign="middle" align="center" colspan="2" width="12%">
+			', $board['posts'], ' ', $txt['redirects'], '
+		</td>';
+
+	echo '
 		<td class="windowbg2" valign="middle" width="22%">
 			<span class="smalltext">
 				', $board['last_post']['time'], '<br />

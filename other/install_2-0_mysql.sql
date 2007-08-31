@@ -416,6 +416,7 @@ CREATE TABLE {$db_prefix}boards (
   override_theme tinyint(4) unsigned NOT NULL default '0',
   unapproved_posts smallint(5) NOT NULL default '0',
   unapproved_topics smallint(5) NOT NULL default '0',
+  redirect varchar(255) NOT NULL default '',
   PRIMARY KEY (id_board),
   UNIQUE categories (id_cat, id_board),
   KEY id_parent (id_parent),

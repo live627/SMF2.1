@@ -1143,7 +1143,8 @@ function AdminBoardRecount()
 		if (empty($_REQUEST['start']))
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}boards
-				SET num_posts = 0", __FILE__, __LINE__);
+				SET num_posts = 0
+				WHERE redirect = ''", __FILE__, __LINE__);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{

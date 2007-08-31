@@ -404,7 +404,7 @@ unset($_GET['ren_col']);
 ---}
 ---#
 
----# Converting "log_online"...
+---# Converting "log_online".
 DROP TABLE IF EXISTS {$db_prefix}log_online;
 CREATE TABLE {$db_prefix}log_online (
 	session varchar(32) NOT NULL default '',
@@ -416,6 +416,15 @@ CREATE TABLE {$db_prefix}log_online (
 	KEY log_time (log_time),
 	KEY id_member (id_member)
 ) TYPE=MyISAM{$db_collation};
+---#
+
+/******************************************************************************/
+--- Adding new board specific features.
+/******************************************************************************/
+
+---# Implementing board redirects.
+ALTER TABLE {$db_prefix}boards
+ADD COLUMN redirect varchar(255) NOT NULL default '';
 ---#
 
 /******************************************************************************/

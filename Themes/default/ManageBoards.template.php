@@ -313,7 +313,7 @@ function template_modify_board()
 				<span class="smalltext">', $txt['mboards_description_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<textarea name="desc" rows="3" cols="29" style="width: 95%;">', $context['board']['description'], '</textarea>
+				<textarea name="desc" rows="3" cols="35">', $context['board']['description'], '</textarea>
 			</td>
 		</tr>
 		<tr valign="top" class="windowbg2">
@@ -352,6 +352,45 @@ function template_modify_board()
 		</tr>
 		<tr class="windowbg2">
 			<td>
+				<b', $context['board']['posts'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_redirect_desc'], '</span><br />
+				', $context['board']['posts'] ? '<span class="smalltext" style="font-style: italic; font-weight: bold;">' . $txt['mboards_redirect_disabled'] . '</span><br />' : '', '
+			</td>
+			<td valign="top" align="left">
+				<input type="checkbox" id="redirect_enable" name="redirect_enable"', $context['board']['posts'] ? ' disabled="disabled"' : '', $context['board']['redirect'] != '' ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="check" />
+			</td>
+		</tr>';
+
+	if (!$context['board']['posts'])
+	{
+		echo '
+		<tr class="windowbg2" id="redirect_address_div">
+			<td>
+				<b>', $txt['mboards_redirect_url'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_redirect_url_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<input type="text" name="redirect_address" value="', $context['board']['redirect'], '" size="40" />
+			</td>
+		</tr>';
+
+		if ($context['board']['redirect'])
+			echo '
+		<tr class="windowbg2" id="reset_redirect_div">
+			<td>
+				<b>', $txt['mboards_redirect_reset'], ':</b><br />
+				<span class="smalltext">', $txt['mboards_redirect_reset_desc'], '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<input type="checkbox" name="reset_redirect" class="check" />
+				<em>(', sprintf($txt['mboards_current_redirects'], $context['board']['posts']), ')</em>
+			</td>
+		</tr>';
+	}
+
+	echo '
+		<tr class="windowbg2" id="count_posts_div">
+			<td>
 				<b>', $txt['mboards_count_posts'], ':</b><br />
 				<span class="smalltext">', $txt['mboards_count_posts_desc'], '</span><br />
 			</td>
@@ -362,13 +401,13 @@ function template_modify_board()
 
 	// Here the user can choose to force this board to use a theme other than the default theme for the forum.
 	echo '
-		<tr class="windowbg2">
+		<tr class="windowbg2" id="board_theme_div">
 			<td>
 				<b>', $txt['mboards_theme'], ':</b><br />
 				<span class="smalltext">', $txt['mboards_theme_desc'], '</span><br />
 			</td>
 			<td valign="top" align="left">
-				<select name="boardtheme">
+				<select name="boardtheme" id="boardtheme" onchange="refreshOptions();">
 					<option value="0"', $context['board']['theme'] == 0 ? ' selected="selected"' : '', '>', $txt['mboards_theme_default'], '</option>';
 
 	foreach ($context['themes'] as $theme)
@@ -379,7 +418,7 @@ function template_modify_board()
 				</select>
 			</td>
 		</tr>
-		<tr class="windowbg2">
+		<tr class="windowbg2" id="override_theme_div">
 			<td>
 				<b>', $txt['mboards_override_theme'], ':</b><br />
 				<span class="smalltext">', $txt['mboards_override_theme_desc'], '</span><br />
@@ -413,6 +452,34 @@ function template_modify_board()
 		</tr>
 	</table>
 </form>';
+
+	// Javascript for deciding what to show.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function refreshOptions()
+		{
+			var redirectEnabled = document.getElementById("redirect_enable").checked;
+			var nonDefaultTheme = document.getElementById("boardtheme").value == 0 ? false : true;
+
+			// What to show?
+			document.getElementById("override_theme_div").style.display = redirectEnabled || !nonDefaultTheme ? "none" : "";
+			document.getElementById("board_theme_div").style.display = redirectEnabled? "none" : "";
+			document.getElementById("count_posts_div").style.display = redirectEnabled ? "none" : "";';
+
+	if (!$context['board']['posts'])
+	{
+		echo '
+			document.getElementById("redirect_address_div").style.display = redirectEnabled ? "" : "none";';
+
+		if ($context['board']['redirect'])
+			echo '
+			document.getElementById("reset_redirect_div").style.display = redirectEnabled ? "" : "none";';
+	}
+
+	echo '
+		}
+		refreshOptions();
+	// ]]></script>';
 }
 
 // A template used when a user is deleting a board with child boards in it - to see what they want to do with them.

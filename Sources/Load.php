@@ -585,7 +585,7 @@ function loadBoard()
 				c.id_cat, b.name AS bname, b.description, b.num_topics, b.member_groups,
 				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
 				mem.real_name" . (!empty($topic) ? ", b.id_board" : '') . ", b.child_level,
-				b.id_theme, b.override_theme, b.count_posts, b.id_profile,
+				b.id_theme, b.override_theme, b.count_posts, b.id_profile, b.redirect,
 				b.unapproved_topics, b.unapproved_posts" . (!empty($topic) ? ', t.approved, t.id_member_started' : '') . "
 			FROM {$db_prefix}boards AS b
 				" . (!empty($topic) ? "INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)" : '') . "
@@ -621,6 +621,7 @@ function loadBoard()
 				'theme' => $row['id_theme'],
 				'override_theme' => !empty($row['override_theme']),
 				'profile' => $row['id_profile'],
+				'redirect' => $row['redirect'],
 				'posts_count' => empty($row['count_posts']),
 				'cur_topic_approved' => empty($topic) || $row['approved'],
 				'cur_topic_starter' => empty($topic) ? 0 : $row['id_member_started'],

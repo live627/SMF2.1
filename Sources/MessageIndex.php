@@ -42,6 +42,17 @@ function MessageIndex()
 	global $txt, $scripturl, $board, $db_prefix, $modSettings, $context;
 	global $options, $settings, $board_info, $user_info, $smfFunc, $sourcedir;
 
+	// If this is a redirection board head off.
+	if ($board_info['redirect'])
+	{
+		$smfFunc['db_query']('', "
+			UPDATE {$db_prefix}boards
+			SET num_posts = num_posts + 1
+			WHERE id_board = $board", __FILE__, __LINE__);
+
+		redirectexit($board_info['redirect']);
+	}
+
 	if (WIRELESS)
 		$context['sub_template'] = WIRELESS_PROTOCOL . '_messageindex';
 	else
@@ -532,6 +543,7 @@ function MessageIndex()
 			require_once($sourcedir . '/Subs-MessageIndex.php');
 			$boardListOptions = array(
 				'excluded_boards' => array($board),
+				'not_redirection' => true,
 				'use_permissions' => true,
 				'selected_board' => empty($_SESSION['move_to_topic']) ? null : $_SESSION['move_to_topic'],
 			);

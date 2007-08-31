@@ -96,7 +96,8 @@ function MoveTopic()
 		SELECT b.id_board, b.name, b.child_level, c.name AS cat_name, c.id_cat
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		WHERE $user_info[query_see_board]", __FILE__, __LINE__);
+		WHERE $user_info[query_see_board]
+			AND redirect = ''", __FILE__, __LINE__);
 	$context['boards'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -204,6 +205,7 @@ function MoveTopic2()
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 		WHERE $user_info[query_see_board]
 			AND b.id_board = $_POST[toboard]
+			AND b.redirect = ''
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board');

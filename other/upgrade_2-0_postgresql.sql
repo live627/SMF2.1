@@ -36,3 +36,12 @@ upgrade_query("
 }
 ---}
 ---#
+
+/******************************************************************************/
+--- Adding new board specific features.
+/******************************************************************************/
+
+---# Implementing board redirects.
+ALTER TABLE {$db_prefix}boards
+ADD COLUMN redirect varchar(255) NOT NULL default '';
+---#

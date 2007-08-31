@@ -1882,6 +1882,7 @@ function prepareSearchContext($reset = false)
 			require_once($sourcedir . '/Subs-MessageIndex.php');
 			$boardListOptions = array(
 				'use_permissions' => true,
+				'not_redirection' => true,
 				'selected_board' => empty($_SESSION['move_to_topic']) ? null : $_SESSION['move_to_topic'],
 			);
 			$context['move_to_boards'] = getBoardList($boardListOptions);

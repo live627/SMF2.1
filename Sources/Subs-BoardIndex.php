@@ -54,6 +54,7 @@ function getBoardIndex($boardIndexOptions)
 		SELECT" . ($boardIndexOptions['include_categories'] ? "
 			c.id_cat, c.name AS cat_name," : '') . "
 			b.id_board, b.name AS board_name, b.description,
+			CASE WHEN b.redirect != '' THEN 1 ELSE 0 END AS is_redirect,
 			b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent,
 			IFNULL(m.poster_time, 0) AS poster_time, IFNULL(mem.member_name, m.poster_name) AS poster_name,
 			m.subject, m.id_topic, IFNULL(mem.real_name, m.poster_name) AS real_name,
@@ -137,6 +138,7 @@ function getBoardIndex($boardIndexOptions)
 					'children_new' => false,
 					'topics' => $row_board['num_topics'],
 					'posts' => $row_board['num_posts'],
+					'is_redirect' => $row_board['is_redirect'],
 					'unapproved_topics' => $row_board['unapproved_topics'],
 					'unapproved_posts' => $row_board['unapproved_posts'] - $row_board['unapproved_topics'],
 					'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['id_board'], $user_info['mod_cache']['ap'])),
@@ -168,6 +170,7 @@ function getBoardIndex($boardIndexOptions)
 				'new' => empty($row_board['is_read']) && $row_board['poster_name'] != '',
 				'topics' => $row_board['num_topics'],
 				'posts' => $row_board['num_posts'],
+				'is_redirect' => $row_board['is_redirect'],
 				'unapproved_topics' => $row_board['unapproved_topics'],
 				'unapproved_posts' => $row_board['unapproved_posts'] - $row_board['unapproved_topics'],
 				'can_approve_posts' => !empty($user_info['mod_cache']['ap']) && ($user_info['mod_cache']['ap'] == array(0) || in_array($row_board['id_board'], $user_info['mod_cache']['ap'])),

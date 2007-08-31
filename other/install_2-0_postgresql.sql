@@ -538,6 +538,7 @@ CREATE TABLE {$db_prefix}boards (
   override_theme smallint NOT NULL default '0',
   unapproved_posts smallint NOT NULL default '0',
   unapproved_topics smallint NOT NULL default '0',
+  redirect varchar(255) NOT NULL default '',
   PRIMARY KEY (id_board)
 );
 

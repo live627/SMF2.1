@@ -402,8 +402,10 @@ function EditBoard()
 			'name' => $txt['mboards_new_board_name'],
 			'description' => '',
 			'count_posts' => 1,
+			'posts' => 0,
 			'theme' => 0,
 			'override_theme' => 0,
+			'redirect' => '',
 			'category' => (int) $_REQUEST['cat'],
 			'no_children' => true,
 		);
@@ -534,7 +536,7 @@ function EditBoard()
 // Make changes to/delete a board.
 function EditBoard2()
 {
-	global $txt, $db_prefix, $sourcedir, $modSettings;
+	global $txt, $db_prefix, $sourcedir, $modSettings, $smfFunc;
 
 	checkSession();
 
@@ -577,6 +579,31 @@ function EditBoard2()
 		$boardOptions['board_description'] = preg_replace('~[&]([^;]{8}|[^;]{0,8}$)~', '&amp;$1', $_POST['desc']);
 
 		$boardOptions['moderator_string'] = $_POST['moderators'];
+
+		// Are they doing redirection?
+		$boardOptions['redirect'] = !empty($_POST['redirect_enable']) && isset($_POST['redirect_address']) && trim($_POST['redirect_address']) != '' ? trim($_POST['redirect_address']) : '';
+
+		// We need to know what used to be case in terms of redirection.
+		if (!empty($_POST['boardid']))
+		{
+			$request = $smfFunc['db_query']('', "
+				SELECT redirect, num_posts
+				FROM {$db_prefix}boards
+				WHERE id_board = $_POST[boardid]", __FILE__, __LINE__);
+			list ($oldRedirect, $numPosts) = $smfFunc['db_fetch_row']($request);
+			$smfFunc['db_free_result']($request);
+
+			// If we're turning redirection on check the board doesn't have posts in it - if it does don't make it a redirection board.
+			if ($boardOptions['redirect'] && empty($oldRedirect) && $numPosts)
+				unset($boardOptions['redirect']);
+			// Reset the redirection count when switching on/off.
+			elseif (empty($boardOptions['redirect']) != empty($oldRedirect))
+				$boardOptions['num_posts'] = 0;
+			// Resetting the count?
+			elseif ($boardOptions['redirect'] && !empty($_POST['reset_redirect']))
+				$boardOptions['num_posts'] = 0;
+
+		}
 
 		// Create a new board...
 		if (isset($_POST['add']))
