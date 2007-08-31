@@ -49,8 +49,8 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 	if (!isset($smfFunc['db_fetch_assoc']) || $smfFunc['db_fetch_assoc'] != 'postg_fetch_assoc')
 		$smfFunc += array(
 			'db_query' => 'smf_db_query',
-			'db_insert' => 'db_insert',
-			'db_insert_id' => 'db_insert_id',
+			'db_insert' => 'smf_db_insert',
+			'db_insert_id' => 'smf_db_insert_id',
 			'db_fetch_assoc' => 'postg_fetch_assoc',
 			'db_fetch_row' => 'postg_fetch_row',
 			'db_free_result' => 'pg_free_result',
@@ -61,7 +61,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 			'db_unescape_string' => 'smf_postg_unescape_string',
 			'db_server_info' => 'postg_version',
 			'db_tablename' => 'mysql_tablename',
-			'db_affected_rows' => 'db_affected_rows',
+			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'pg_last_error',
 			'db_select_db' => 'postg_select_db',
@@ -256,7 +256,7 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 	return $db_last_result;
 }
 
-function db_affected_rows($result = null)
+function smf_db_affected_rows($result = null)
 {
 	global $db_last_result, $db_replace_result;
 
@@ -268,7 +268,7 @@ function db_affected_rows($result = null)
 	return pg_affected_rows($result == null ? $db_last_result : $result);
 }
 
-function db_insert_id($table, $field, $connection = null)
+function smf_db_insert_id($table, $field, $connection = null)
 {
 	global $db_connection, $smfFunc;
 
@@ -538,7 +538,7 @@ function smf_postg_unescape_string($string)
 }
 
 // For inserting data in a special way...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection = null)
+function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection = null)
 {
 	global $db_replace_result, $db_in_transact, $smfFunc;
 

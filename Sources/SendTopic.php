@@ -410,7 +410,7 @@ function ReportToModerator2()
 				VALUES
 					($_POST[msg], $message[id_topic], $message[id_board], $message[ID_POSTER], '$message[real_name]', '$message[subject]', '$message[body]', " . time() . ",
 						" . time() . ", 1, 0)", __FILE__, __LINE__);
-			$id_report = db_insert_id("{$db_prefix}log_reported", 'id_report');
+			$id_report = $smfFunc['db_insert_id']("{$db_prefix}log_reported", 'id_report');
 		}
 
 		// Now just add our report...

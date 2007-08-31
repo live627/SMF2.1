@@ -982,7 +982,7 @@ function PlushSearch2()
 					$numSubjectResults = count($inserts);
 				}
 				else
-					$numSubjectResults += db_affected_rows();
+					$numSubjectResults += $smfFunc['db_affected_rows']();
 				
 				if (!empty($modSettings['search_max_results']) && $numSubjectResults >= $modSettings['search_max_results'])
 					break;
@@ -1162,7 +1162,7 @@ function PlushSearch2()
 						$numSubjectResults = count($inserts);
 					}
 					else
-						$numSubjectResults += db_affected_rows();
+						$numSubjectResults += $smfFunc['db_affected_rows']();
 					
 					if (!empty($modSettings['search_max_results']) && $numSubjectResults >= $modSettings['search_max_results'])
 						break;
@@ -1277,7 +1277,7 @@ function PlushSearch2()
 							$indexedResults = count($inserts);
 						}
 						else
-							$indexedResults += db_affected_rows();
+							$indexedResults += $smfFunc['db_affected_rows']();
 
 						if (!empty($maxMessageResults) && $indexedResults >= $maxMessageResults)
 							break;
@@ -1362,7 +1362,7 @@ function PlushSearch2()
 							$indexedResults = count($inserts);
 						}
 						else
-							$indexedResults += db_affected_rows();
+							$indexedResults += $smfFunc['db_affected_rows']();
 
 						if (!empty($maxMessageResults) && $indexedResults >= $maxMessageResults)
 							break;
@@ -1478,7 +1478,7 @@ function PlushSearch2()
 					$_SESSION['search_cache']['num_results'] += count($inserts);
 				}
 				else
-					$_SESSION['search_cache']['num_results'] = db_affected_rows();
+					$_SESSION['search_cache']['num_results'] = $smfFunc['db_affected_rows']();
 			}
 
 			// Insert subject-only matches.
@@ -1532,7 +1532,7 @@ function PlushSearch2()
 					$_SESSION['search_cache']['num_results'] += count($inserts);
 				}
 				else
-					$_SESSION['search_cache']['num_results'] += db_affected_rows();
+					$_SESSION['search_cache']['num_results'] += $smfFunc['db_affected_rows']();
 			}
 			else
 				$_SESSION['search_cache']['num_results'] = 0;

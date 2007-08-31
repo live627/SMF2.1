@@ -2668,7 +2668,7 @@ function logAction($action, $extra = array())
 			$board_id, $topic_id, $msg_id,
 			SUBSTRING('" . $smfFunc['db_escape_string'](serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
 
-	return db_insert_id("{$db_prefix}log_actions", 'id_action');
+	return $smfFunc['db_insert_id']("{$db_prefix}log_actions", 'id_action');
 }
 
 // Track Statistics.

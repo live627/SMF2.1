@@ -111,7 +111,7 @@ function AutoTask()
 				SET next_time = $next_time
 				WHERE id_task = $row[id_task]
 					AND next_time = $row[next_time]", __FILE__, __LINE__);
-			$affected_rows = db_affected_rows();
+			$affected_rows = $smfFunc['db_affected_rows']();
 
 			// The function must exist or we are wasting our time, plus do some timestamp checking, and database check!
 			if (function_exists('scheduled_' . $row['task']) && (!isset($_GET['ts']) || $_GET['ts'] == $row['next_time']) && $affected_rows)

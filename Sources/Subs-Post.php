@@ -1007,7 +1007,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		INSERT INTO {$db_prefix}personal_messages
 			(id_pm_head, id_member_from, deleted_by_sender, from_name, msgtime, subject, body)
 		VALUES ($pm_head, $from[id], " . ($store_outbox ? '0' : '1') . ", SUBSTRING('$from[username]', 1, 255), " . time() . ", SUBSTRING('$htmlsubject', 1, 255), SUBSTRING('$htmlmessage', 1, 65534))", __FILE__, __LINE__);
-	$id_pm = db_insert_id("{$db_prefix}personal_messages", 'id_pm');
+	$id_pm = $smfFunc['db_insert_id']("{$db_prefix}personal_messages", 'id_pm');
 
 	// Add the recipients.
 	if (!empty($id_pm))
@@ -1754,7 +1754,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 			poster_ip, smileys_enabled, modified_name, icon, approved)
 		VALUES ($topicOptions[board], $topicOptions[id], $posterOptions[id], SUBSTRING('$msgOptions[subject]', 1, 255), SUBSTRING('$msgOptions[body]', 1, 65534), SUBSTRING('$posterOptions[name]', 1, 255), SUBSTRING('$posterOptions[email]', 1, 255), " . time() . ",
 			SUBSTRING('$posterOptions[ip]', 1, 255), " . ($msgOptions['smileys_enabled'] ? '1' : '0') . ", '', SUBSTRING('$msgOptions[icon]', 1, 16), $msgOptions[approved])", __FILE__, __LINE__);
-	$msgOptions['id'] = db_insert_id("{$db_prefix}messages", 'id_msg');
+	$msgOptions['id'] = $smfFunc['db_insert_id']("{$db_prefix}messages", 'id_msg');
 
 	// Something went wrong creating the message...
 	if (empty($msgOptions['id']))
@@ -1777,7 +1777,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				" . ($topicOptions['lock_mode'] === null ? '0' : $topicOptions['lock_mode']) . ', ' .
 				($topicOptions['sticky_mode'] === null ? '0' : $topicOptions['sticky_mode']) . ", 0,
 				" . ($topicOptions['poll'] === null ? '0' : $topicOptions['poll']) . ', ' . ($msgOptions['approved'] ? 0 : 1) . ", $msgOptions[approved])", __FILE__, __LINE__);
-		$topicOptions['id'] = db_insert_id("{$db_prefix}topics", 'id_topic');
+		$topicOptions['id'] = $smfFunc['db_insert_id']("{$db_prefix}topics", 'id_topic');
 
 		// The topic couldn't be created for some reason.
 		if (empty($topicOptions['id']))
@@ -1861,7 +1861,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 				WHERE id_member = $user_info[id]
 					AND id_topic = $topicOptions[id]", __FILE__, __LINE__);
 
-			$flag = db_affected_rows() != 0;
+			$flag = $smfFunc['db_affected_rows']() != 0;
 		}
 
 		if (empty($flag))
@@ -2047,7 +2047,7 @@ function createAttachment(&$attachmentOptions)
 		INSERT INTO {$db_prefix}attachments
 			(id_msg, filename, fileext, size, width, height, mime_type, approved)
 		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? "SUBSTRING('$attachmentOptions[mime_type]', 1, 20)" : "''") . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
-	$attachmentOptions['id'] = db_insert_id("{$db_prefix}attachments", 'id_attach');
+	$attachmentOptions['id'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
 
 	if (empty($attachmentOptions['id']))
 		return false;
@@ -2123,7 +2123,7 @@ function createAttachment(&$attachmentOptions)
 				INSERT INTO {$db_prefix}attachments
 					(id_msg, attachment_type, filename, fileext, size, width, height, mime_type, approved)
 				VALUES (" . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ", SUBSTRING('$thumb_mime', 1, 20), " . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
-			$attachmentOptions['thumb'] = db_insert_id("{$db_prefix}attachments", 'id_attach');
+			$attachmentOptions['thumb'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
 
 			if (!empty($attachmentOptions['thumb']))
 			{

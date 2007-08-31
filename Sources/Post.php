@@ -1577,7 +1577,7 @@ function Post2()
 			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes],
 				" . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ", $user_info[id], SUBSTRING('$_POST[guestname]', 1, 255),
 				$_POST[poll_change_vote], $_POST[poll_guest_vote])", __FILE__, __LINE__);
-		$id_poll = db_insert_id("{$db_prefix}polls", 'id_poll');
+		$id_poll = $smfFunc['db_insert_id']("{$db_prefix}polls", 'id_poll');
 
 		// Create each answer choice.
 		$i = 0;

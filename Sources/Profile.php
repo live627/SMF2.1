@@ -3333,7 +3333,7 @@ function issueWarning($memID)
 					(subject, body)
 				VALUES
 					(SUBSTRING('$_POST[warn_sub]', 1, 255), SUBSTRING('$_POST[warn_body]', 1, 65534))", __FILE__, __LINE__);
-			$id_notice = db_insert_id("{$db_prefix}log_member_notices", 'id_notice');
+			$id_notice = $smfFunc['db_insert_id']("{$db_prefix}log_member_notices", 'id_notice');
 		}
 
 		// Just incase - make sure notice is valid!

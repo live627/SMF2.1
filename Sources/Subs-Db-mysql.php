@@ -43,8 +43,8 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_fetch_assoc' => 'mysql_fetch_assoc',
 			'db_fetch_row' => 'mysql_fetch_row',
 			'db_free_result' => 'mysql_free_result',
-			'db_insert' => 'db_insert',
-			'db_insert_id' => 'db_insert_id',
+			'db_insert' => 'smf_db_insert',
+			'db_insert_id' => 'smf_db_insert_id',
 			'db_num_rows' => 'mysql_num_rows',
 			'db_data_seek' => 'mysql_data_seek',
 			'db_num_fields' => 'mysql_num_fields',
@@ -52,7 +52,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_unescape_string' => 'stripslashes',
 			'db_server_info' => 'mysql_get_server_info',
    			'db_tablename' => 'mysql_tablename',
-			'db_affected_rows' => 'db_affected_rows',
+			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'mysql_error',
 			'db_select_db' => 'mysql_select_db',
@@ -222,14 +222,14 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 	return $ret;
 }
 
-function db_affected_rows($connection = null)
+function smf_db_affected_rows($connection = null)
 {
 	global $db_connection;
 
 	return mysql_affected_rows($connection == null ? $db_connection : $connection);
 }
 
-function db_insert_id($table, $field, $connection = null)
+function smf_db_insert_id($table, $field, $connection = null)
 {
 	global $db_connection;
 
@@ -442,7 +442,7 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection = null)
+function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection = null)
 {
 	global $smfFunc;
 

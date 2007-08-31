@@ -502,7 +502,7 @@ function registerMember(&$regOptions)
 		INSERT INTO {$db_prefix}members
 			(" . implode(', ', array_keys($regOptions['register_vars'])) . ")
 		VALUES (" . implode(', ', $regOptions['register_vars']) . ')', __FILE__, __LINE__);
-	$memberID = db_insert_id("{$db_prefix}members", 'id_member');
+	$memberID = $smfFunc['db_insert_id']("{$db_prefix}members", 'id_member');
 
 	// Grab their real name and send emails using it.
 	$real_name = substr($regOptions['register_vars']['real_name'], 1, -1);
@@ -807,7 +807,7 @@ function reattributePosts($memID, $email = false, $post_count = false)
 		SET id_member = $memID
 		WHERE poster_email = '$email'", __FILE__, __LINE__);
 
-	return db_affected_rows();
+	return $smfFunc['db_affected_rows']();
 }
 
 // This simple function adds/removes the passed user from the current users buddy list.

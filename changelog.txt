@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2817 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2818 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -29,6 +29,7 @@ August 2007
  + Allow boards to be specified as links to redirect to other areas. (install, upgrade, ManageBoards.php, Subs-BoardIndex.php, Subs-MessageIndex.php, Post.php, Search.php, Subs.php)
  * Significant template changes for the above. (MessageIndex, ManageBoards, BoardIndex template)
  & Language entries for redirection boards. (ManageBoards, index language files)
+ ! All database calls should use the $smfFunc variable (Various files)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007

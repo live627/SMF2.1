@@ -644,7 +644,7 @@ function BanEdit()
 					(name, ban_time, expire_time, cannot_access, cannot_register, cannot_post, cannot_login, reason, notes)
 				VALUES
 					(SUBSTRING('$_POST[ban_name]', 1, 20), " . time() . ", $_POST[expiration], $_POST[full_ban], $_POST[cannot_register], $_POST[cannot_post], $_POST[cannot_login], SUBSTRING('$_POST[reason]', 1, 255), SUBSTRING('$_POST[notes]', 1, 65534))", __FILE__, __LINE__);
-			$_REQUEST['bg'] = db_insert_id("{$db_prefix}ban_groups", 'id_ban_group');
+			$_REQUEST['bg'] = $smfFunc['db_insert_id']("{$db_prefix}ban_groups", 'id_ban_group');
 
 			// Now that the ban group is added, add some triggers as well.
 			if (!empty($ban_triggers) && !empty($_REQUEST['bg']))

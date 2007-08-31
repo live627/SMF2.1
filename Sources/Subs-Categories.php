@@ -139,7 +139,7 @@ function createCategory($catOptions)
 		VALUES (SUBSTRING('$catOptions[cat_name]', 1, 48))", __FILE__, __LINE__);
 
 	// Grab the new category ID.
-	$category_id = db_insert_id("{$db_prefix}categories", 'id_cat');
+	$category_id = $smfFunc['db_insert_id']("{$db_prefix}categories", 'id_cat');
 
 	// Set the given properties to the newly created category.
 	modifyCategory($category_id, $catOptions);

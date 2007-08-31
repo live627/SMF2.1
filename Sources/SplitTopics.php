@@ -602,7 +602,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		INSERT INTO {$db_prefix}topics
 			(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, num_replies, unapproved_posts, approved, is_sticky)
 		VALUES ($id_board, $split2_firstMem, $split2_lastMem, 0, 0, $split2_replies, $split2_unapprovedposts, $split2_approved, 0)", __FILE__, __LINE__);
-	$split2_ID_TOPIC = db_insert_id("{$db_prefix}topics", 'id_topic');
+	$split2_ID_TOPIC = $smfFunc['db_insert_id']("{$db_prefix}topics", 'id_topic');
 	if ($split2_ID_TOPIC <= 0)
 		fatal_lang_error('cant_insert_topic');
 

@@ -51,8 +51,8 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_fetch_assoc' => 'sqlite_fetch_array',
 			'db_fetch_row' => 'smf_sqlite_fetch_row',
 			'db_free_result' => 'smf_sqlite_free_result',
-			'db_insert' => 'db_insert',
-			'db_insert_id' => 'db_insert_id',
+			'db_insert' => 'smf_db_insert',
+			'db_insert_id' => 'smf_db_insert_id',
 			'db_num_rows' => 'sqlite_num_rows',
 			'db_data_seek' => 'sqlite_seek',
 			'db_num_fields' => 'sqlite_num_fields',
@@ -60,7 +60,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_unescape_string' => 'smf_sqlite_unescape_string',
 			'db_server_info' => 'sqlite_libversion',
    			'db_tablename' => 'mysql_tablename',
-			'db_affected_rows' => 'db_affected_rows',
+			'db_affected_rows' => 'smf_db_affected_rows',
 			'db_transaction' => 'smf_db_transaction',
 			'db_error' => 'smf_sqlite_last_error',
 			'db_select_db' => '',
@@ -215,14 +215,14 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 	return $ret;
 }
 
-function db_affected_rows($connection = null)
+function smf_db_affected_rows($connection = null)
 {
 	global $db_connection;
 
 	return sqlite_changes($connection == null ? $db_connection : $connection);
 }
 
-function db_insert_id($table, $field, $connection = null)
+function smf_db_insert_id($table, $field, $connection = null)
 {
 	global $db_connection;
 
@@ -459,7 +459,7 @@ function db_error($db_string, $file, $line, $connection = null)
 }
 
 // Insert some data...
-function db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection=null)
+function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection=null)
 {
 	global $db_in_transact, $smfFunc;
 
