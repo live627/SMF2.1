@@ -633,7 +633,7 @@ function Post()
 				m.id_member, m.modified_time, m.smileys_enabled, m.body,
 				m.poster_name, m.poster_email, m.subject, m.icon, m.approved,
 				IFNULL(a.size, -1) AS filesize, a.filename, a.id_attach,
-				a.approved AS aApproved, t.id_member_started AS id_member_poster,
+				a.approved AS attachment_approved, t.id_member_started AS id_member_poster,
 				m.poster_time
 			FROM {$db_prefix}messages AS m
 				INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
@@ -691,7 +691,7 @@ function Post()
 				$context['current_attachments'][] = array(
 					'name' => $attachment['filename'],
 					'id' => $attachment['id_attach'],
-					'approved' => $attachment['aApproved'],
+					'approved' => $attachment['attachment_approved'],
 				);
 		}
 

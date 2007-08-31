@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2815 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2816 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -25,6 +25,7 @@ August 2007
  ! Upgrade has some globals undefined. (upgrade.php)
  + Enhance privacy settings of custom fields - to allow fields to be user viewable but not editable. (upgrade, ManageSettings.php, Admin template, Profile.php, Memberlist.php)
  & Changed some language strings related to the above. (ManageSettings language file)
+ ! Attachments were not being shown as approved in PostgreSQL. (Post.php)
 
 
 SMF 2.0 Beta 1                                                   August 25, 2007
