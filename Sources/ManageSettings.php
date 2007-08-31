@@ -949,7 +949,7 @@ function ShowCustomProfiles()
 					'style' => 'text-align: left;',
 				),
 				'data' => array(
-					'eval' => 'return htmlspecialchars(%field_name%) . \'<div class="smalltext">\' . htmlspecialchars(%field_desc%) . \'</div>\';',
+					'eval' => 'return \'<a href="\' . $scripturl . \'?action=admin;area=featuresettings;sa=profileedit;fid=\' . %id_field% . \'">\' . htmlspecialchars(%field_name%) . \'</a><div class="smalltext">\' . htmlspecialchars(%field_desc%) . \'</div>\';',
 					'style' => 'width: 62%;',
 				),
 				'sort' => array(
@@ -1001,10 +1001,15 @@ function ShowCustomProfiles()
 				),
 			),
 		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=featuresettings;sa=profileedit',
+			'name' => 'customProfileFields',
+		),
 		'additional_rows' => array(
 			array(
 				'position' => 'below_table_data',
-				'value' => '[<a href="' . $scripturl . '?action=admin;area=featuresettings;sa=profileedit">' . $txt['custom_profile_make_new'] . '</a>]',
+				'value' => '<input type="submit" name="new" value="' . $txt['custom_profile_make_new'] . '" />',
+				'style' => 'text-align: right;',
 				'class' => 'titlebg',
 			),
 		),
@@ -1161,7 +1166,7 @@ function EditCustomProfiles()
 		$bbc = isset($_POST['bbc']) ? 1 : 0;
 		$show_profile = $_POST['profile_area'];
 		$active = isset($_POST['active']) ? 1 : 0;
-		$private = isset($_POST['private']) ? 1 : 0;
+		$private = isset($_POST['private']) ? (int) $_POST['private'] : 0;
 		$can_search = isset($_POST['can_search']) ? 1 : 0;
 
 		// Some masking stuff...
@@ -1339,7 +1344,7 @@ function EditCustomProfiles()
 			FROM {$db_prefix}custom_fields
 			WHERE show_display = 1
 				AND active = 1
-				AND private = 0", __FILE__, __LINE__);
+				AND private != 2", __FILE__, __LINE__);
 		$fields = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{

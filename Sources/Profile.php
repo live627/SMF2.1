@@ -1463,13 +1463,16 @@ function makeCustomFieldChanges($memID, $area)
 
 	// Load the fields we are saving too - make sure we save valid data (etc).
 	$request = $smfFunc['db_query']('', "
-		SELECT col_name, field_name, field_desc, field_type, field_length, field_options, default_value, mask
+		SELECT col_name, field_name, field_desc, field_type, field_length, field_options, default_value, mask, private
 		FROM {$db_prefix}custom_fields
 		WHERE $where
 			AND active = 1", __FILE__, __LINE__);
 	$changes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
+		if ($row['private'] != 0 && !isAllowed('admin_forum'))
+			continue;
+
 		// Validate the user data.
 		if ($row['field_type'] == 'check')
 			$value = isset($_POST['customfield'][$row['col_name']]) ? 1 : 0;
@@ -3577,11 +3580,12 @@ function loadCustomFields($memID, $area = 'summary')
 
 	// Get the right restrictions in place...
 	$where = 'active = 1';
-	if ($area == 'summary' && !allowedTo('admin_forum'))
-		$where .= ' AND private = 0';
-	elseif ($area == 'register')
+	if (!allowedTo('admin_forum'))
+		$where .= $area == 'summary' ? ' AND private != 2' : ' AND private = 0';
+
+	if ($area == 'register')
 		$where .= ' AND show_reg = 1';
-	elseif ($area != 'summary' && $area != 'register')
+	elseif ($area != 'summary')
 		$where .= " AND show_profile = '$area'";
 
 	// Load all the relevant fields - and data.

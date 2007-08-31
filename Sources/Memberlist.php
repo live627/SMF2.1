@@ -392,7 +392,7 @@ function MLSearch()
 		SELECT col_name, field_name, field_desc
 		FROM {$db_prefix}custom_fields
 		WHERE active = 1
-			" . (allowedTo('admin_forum') ? '' : ' AND private = 0') . "
+			" . (allowedTo('admin_forum') ? '' : ' AND private != 2') . "
 			AND can_search = 1
 			AND (field_type = 'text' OR field_type = 'textarea')", __FILE__, __LINE__);
 	$context['custom_search_fields'] = array();

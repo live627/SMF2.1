@@ -1658,11 +1658,15 @@ function template_edit_profile_field()
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%">
-					<b>', $txt['custom_edit_private'], ':</b>
-					<div class="smalltext">', $txt['custom_edit_private_desc'], '</div>
+					<b>', $txt['custom_edit_privacy'], ':</b>
+					<div class="smalltext">', $txt['custom_edit_privacy_desc'], '</div>
 				</td>
 				<td width="50%">
-					<input type="checkbox" name="private" ', $context['field']['private'] ? 'checked="checked"' : '', ' class="check" />
+					<select name="private" id="private">
+						<option value="0" ', $context['field']['private'] == 0 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_all'], '</option>
+						<option value="1" ', $context['field']['private'] == 1 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_see'], '</option>
+						<option value="2" ', $context['field']['private'] == 2 ? 'selected="selected"' : '', '>', $txt['custom_edit_privacy_none'], '</option>
+					</select>
 				</td>
 			</tr><tr class="windowbg2" id="can_search_div">
 				<td width="50%">

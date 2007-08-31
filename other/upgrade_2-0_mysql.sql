@@ -674,6 +674,18 @@ ALTER TABLE {$db_prefix}custom_fields
 ADD COLUMN can_search tinyint(3) NOT NULL default '0' AFTER bbc;
 ---#
 
+---# Enhancing privacy settings for custom fields.
+---{
+if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta 1')
+{
+upgrade_query("
+	UPDATE {$db_prefix}custom_fields
+	SET private = 2
+	WHERE private = 1");
+}
+---}
+---#
+
 /******************************************************************************/
 --- Adding email digest functionality.
 /******************************************************************************/
