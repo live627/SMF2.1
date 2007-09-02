@@ -1884,7 +1884,7 @@ function createSalvageArea()
 			INSERT INTO {$db_prefix}categories
 				(name, cat_order)
 			VALUES (SUBSTRING('" . $smfFunc['db_escape_string']($txt['salvaged_category_name']) . "', 1, 255), -1)", __FILE__, __LINE__);
-		if (db_affected_rows() <= 0)
+		if ($smfFunc['db_affected_rows']() <= 0)
 		{
 			loadLanguage('Admin');
 			fatal_lang_error('salvaged_category_error', false);
@@ -1910,7 +1910,7 @@ function createSalvageArea()
 			INSERT INTO {$db_prefix}boards
 				(name, description, id_cat, member_groups, board_order)
 			VALUES (SUBSTRING('" . $smfFunc['db_escape_string']($txt['salvaged_board_name']) . "', 1, 255), SUBSTRING('" . addslashes($txt['salvaged_board_description']) . "', 1, 255), $salvageCatID, '1', -1)", __FILE__, __LINE__);
-		if (db_affected_rows() <= 0)
+		if ($smfFunc['db_affected_rows']() <= 0)
 		{
 			loadLanguage('Admin');
 			fatal_lang_error('salvaged_board_error', false);

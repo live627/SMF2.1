@@ -494,7 +494,7 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $fil
 			$sql = substr($sql, 0, -2) . " WHERE $where";
 
 			$smfFunc['db_query']('', $sql, $file, $line, $connection);
-			if (db_affected_rows() != 0)
+			if (smf_db_affected_rows() != 0)
 				unset($data[$k]);
 		}
 	}

@@ -2180,7 +2180,7 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 			AND id_pm IN (" . implode(', ', $personal_messages) . ")" : ''), __FILE__, __LINE__);
 
 	// If something wasn't marked as read, get the number of unread messages remaining.
-	if (db_affected_rows() > 0)
+	if ($smfFunc['db_affected_rows']() > 0)
 	{
 		if ($owner == $user_info['id'])
 		{

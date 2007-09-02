@@ -1347,6 +1347,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 				'test' => '([1-9][\d]?p[xt]|(?:x-)?small(?:er)?|(?:x-)?large[r]?|(0.[1-9]|[1-9](.[\d])?)?em)\]',
 				'before' => '<span style="font-size: $1;" class="bbc_size">',
 				'after' => '</span>',
+				'disallow_children' => array('size'),
 			),
 			array(
 				'tag' => 'size',
@@ -2415,7 +2416,7 @@ function writeLog($force = false)
 			SET log_time = " . time() . ", ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized'			WHERE session = '$session_id'", __FILE__, __LINE__);
 
 		// Guess it got deleted.
-		if (db_affected_rows() == 0)
+		if ($smfFunc['db_affected_rows']() == 0)
 			$_SESSION['log_time'] = 0;
 	}
 	else
@@ -2699,7 +2700,7 @@ function trackStats($stats = array())
 		UPDATE {$db_prefix}log_activity
 		SET" . substr($setStringUpdate, 0, -1) . "
 		WHERE date = '$date'", __FILE__, __LINE__);
-	if (db_affected_rows() == 0)
+	if ($smfFunc['db_affected_rows']() == 0)
 	{
 		$smfFunc['db_insert']('ignore',
 			"{$db_prefix}log_activity",
@@ -2750,7 +2751,7 @@ function spamProtection($error_type)
 	);
 
 	// If affected is 0 or 2, it was there already.
-	if (db_affected_rows() != 1)
+	if ($smfFunc['db_affected_rows']() != 1)
 	{
 		// Spammer!  You only have to wait a *few* seconds!
 		fatal_lang_error($error_type . 'WaitTime_broken', false, array($timeLimit));

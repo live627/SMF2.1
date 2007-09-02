@@ -2022,7 +2022,7 @@ function sessionWrite($session_id, $data)
 		WHERE session_id = '" . $smfFunc['db_escape_string']($session_id) . "'", __FILE__, __LINE__);
 
 	// If that didn't work, try inserting a new one.
-	if (db_affected_rows() == 0)
+	if ($smfFunc['db_affected_rows']() == 0)
 		$result = $smfFunc['db_insert']('ignore',
 			"{$db_prefix}sessions",
 			array('session_id', 'data', 'last_update'),
