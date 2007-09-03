@@ -1277,7 +1277,7 @@ function doStep2()
 			return false;
 		}
 
-		$id = db_insert_id("{$db_prefix}members", 'id_member');
+		$id = $smfFunc['db_insert_id']("{$db_prefix}members", 'id_member');
 	}
 
 	// Automatically log them in ;).
