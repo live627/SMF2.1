@@ -673,7 +673,7 @@ function ManageCopyright()
 // Clean up the permissions one way or another.
 function CleanupPermissions()
 {
-	global $boarddir, $sourcedir, $scripturl, $package_ftp, $modSettings;
+	global $boarddir, $sourcedir, $scripturl, $package_ftp, $context, $txt, $modSettings;
 
 	isAllowedTo('admin_forum');
 	umask(0);
@@ -685,6 +685,21 @@ function CleanupPermissions()
 		$_REQUEST['perm_type'] = 'free';
 
 	checkSession();
+
+	// Make sure the user gets the right description.
+	$context[$context['admin_menu_name']]['current_subsection'] = 'options';
+	$context[$context['admin_menu_name']]['tab_data'] = array(
+		'title' => &$txt['package_manager'],
+		'description' => $txt['package_manager_desc'],
+		'tabs' => array(
+			'browse' => array(),
+			'packageget' => array(),
+			'installed' => array(),
+			'options' => array(
+				'description' => $txt['package_install_options_ftp_why'],
+			),
+		),
+	);
 
 	// FTP to the rescue!
 	require_once($sourcedir . '/Subs-Package.php');

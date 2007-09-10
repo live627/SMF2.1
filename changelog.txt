@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2822 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2823 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -11,6 +11,7 @@ September 2007
  & Fixed invalid string entry in install.php. (Install.php, Install language file)
  ! Fixed out of date index causing error in display. (Display.php)
  ! Only optimise SMF tables. (install.php, ScheduledTasks.php)
+ ! Cleanup Permissions wasn't displaying the right contextual information. (Admin.php)
 
 
 August 2007
