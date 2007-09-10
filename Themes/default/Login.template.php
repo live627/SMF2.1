@@ -226,7 +226,7 @@ function template_admin_login()
 
 	if (!empty($context['incorrect_password']))
 		echo '
-				<span style="color: red;" class="smalltext">', $txt['admin_incorrect_password'], '</span>';
+				<span style="color: red;" class="smalltext">', $txt['admin_incorrect_password'], '</span><br />';
 
 	echo '
 				<input type="submit" value="', $txt['login'], '" style="margin-top: 2ex;" />
