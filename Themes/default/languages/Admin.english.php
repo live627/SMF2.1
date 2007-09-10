@@ -401,6 +401,7 @@ $txt['censor_case'] = 'Ignore case when censoring';
 $txt['censor_whole_words'] = 'Check only whole words';
 
 $txt['admin_confirm_password'] = '(confirm)';
+$txt['admin_incorrect_password'] = 'Incorrect Password';
 
 $txt['date_format'] = '(YYYY-MM-DD)';
 $txt['undefined_gender'] = 'Undefined';

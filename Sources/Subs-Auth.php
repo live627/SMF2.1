@@ -312,6 +312,8 @@ function adminLogin()
 			unset($_POST['admin_hash_pass']);
 		if (isset($_POST['admin_pass']))
 			unset($_POST['admin_pass']);
+
+		$context['incorrect_password'] = true;
 	}
 
 	// Now go through $_POST.  Make sure the session hash is sent.
