@@ -1,8 +1,12 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2819 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2820 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
+September 2007
+--------------------------------------------------------------------------------
+ ! Update Mambo bridge for SMF 2.0. (Mambo bridge/several files)
+
 August 2007
 --------------------------------------------------------------------------------
  ! Fast quoting should no longer cause an error when the user doesn't have any moderation rights. (Post.php)

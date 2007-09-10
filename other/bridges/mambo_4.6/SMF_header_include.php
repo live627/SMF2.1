@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1                                             *
+* Software Version:           SMF 1.1.2                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -35,10 +35,11 @@ function SMF_header_include( ) {
 
 	global $mainframe, $database, $scripturl, $db_connection, $db_passwd, $maintenance, $db_server, $options;
 	global $db_name, $db_user, $db_prefix, $db_persist, $db_error_send, $db_last_error, $sc, $context;
-	global $settings, $mosConfig_db, $sourcedir, $mosConfig_live_site, $mosConfig_sef, $mosConfig_dbprefix;
-    
+	global $settings, $sourcedir;
+
+ 	$configuration =& mamboCore::getMamboCore();   
 	//Gallery2 bridge+SEF compatibility (Damage control)
-	if (isset($_REQUEST['option']) && $_REQUEST['option'] == 'com_gallery2' && $mosConfig_sef == 1)
+	if (isset($_REQUEST['option']) && $_REQUEST['option'] == 'com_gallery2' && $configuration->get('mosConfig_sef') == 1)
 		$_SERVER['QUERY_STRING'] = strtr($_SERVER['QUERY_STRING'],array('?'=>'','&amp;'=>'/','&'=>'/','='=>','));
 
 	if (!defined('SMF') && (!isset($_REQUEST['option']) || $_REQUEST['option'] != 'com_smf')){		
@@ -59,7 +60,7 @@ function SMF_header_include( ) {
 
 		$result = mysql_query("
 			SELECT id 
-			FROM {$mosConfig_dbprefix}menu 
+			FROM " . $configuration->get('mosConfig_dbprefix') . "menu 
 			WHERE link = 'index.php?option=com_smf'");
 
 		if ($result !== false)
@@ -68,42 +69,44 @@ function SMF_header_include( ) {
 			$menu_item = 1;	
 
 		$myurl = 'index.php?option=com_smf&amp;Itemid=' . $menu_item . '&amp;';
-			
+
 		require_once ($smf_path."/SSI.php");
-		
-		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?rc2"></script>' );
+			
+		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>' );
 		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_theme_url = "'. $settings['theme_url']. '";
 			var smf_images_url = "'. $settings['images_url']. '";
-			var smf_scripturl = "'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl) : $mosConfig_live_site . '/'. $myurl ) . '";
+			var smf_scripturl = "'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl) : un_htmlspecialchars($configuration->get('mosConfig_live_site') . '/'. $myurl) ) . '";
+			var smf_iso_case_folding = '. ($context['server']['iso_case_folding'] ? 'true' : 'false') . ';
+			var smf_charset = "'. $context['character_set']. '";
 			var smf_session_id = "'. $context['session_id'] . '";
 			// ]]></script>' );
 		if ($smf_css == 'true'){
-			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?rc2" />' );
-			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?rc2" media="print" />' );
+			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?fin11" />' );
+			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?fin11" media="print" />' );
 		}
-		$mainframe->addCustomHeadTag( '<link rel="help" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'action=help') : $mosConfig_live_site . '/'. $myurl  . 'action=help' ) .'" target="_blank" />' );
-		$mainframe->addCustomHeadTag( '<link rel="search" href="' . ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'action=search') : $mosConfig_live_site . '/'. $myurl . 'action=search' ) .'" />' );
-		$mainframe->addCustomHeadTag( '<link rel="contents" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl) : $mosConfig_live_site . '/'. $myurl ) . '" />' );
+		$mainframe->addCustomHeadTag( '<link rel="help" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'action=help') : $configuration->get('mosConfig_live_site') . '/'. $myurl  . 'action=help' ) .'" target="_blank" />' );
+		$mainframe->addCustomHeadTag( '<link rel="search" href="' . ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'action=search') : $configuration->get('mosConfig_live_site') . '/'. $myurl . 'action=search' ) .'" />' );
+		$mainframe->addCustomHeadTag( '<link rel="contents" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl) : $configuration->get('mosConfig_live_site') . '/'. $myurl ) . '" />' );
 		// If RSS feeds are enabled, advertise the presence of one. 
 		if (!empty($modSettings['xmlnews_enable']))  
-			$mainframe->addCustomHeadTag( '<link rel="alternate" type="application/rss+xml" title="'. $context['forum_name']. ' - RSS" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'type=rss;action=.xml') : $mosConfig_live_site . '/'. $myurl . 'type=rss;action=.xml') . '" />' ); 
+			$mainframe->addCustomHeadTag( '<link rel="alternate" type="application/rss+xml" title="'. $context['forum_name']. ' - RSS" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'type=rss;action=.xml') : $configuration->get('mosConfig_live_site') . '/'. $myurl . 'type=rss;action=.xml') . '" />' ); 
 
 		// If we're viewing a topic, these should be the previous and next topics, respectively. 
 		if (!empty($context['current_topic'])){ 
-			$mainframe->addCustomHeadTag( '<link rel="prev" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=prev') : $mosConfig_live_site . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=prev') . '" />'); 
-			$mainframe->addCustomHeadTag( '<link rel="next" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=next') : $mosConfig_live_site . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=next') . '" />');
+			$mainframe->addCustomHeadTag( '<link rel="prev" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=prev') : $configuration->get('mosConfig_live_site') . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=prev') . '" />'); 
+			$mainframe->addCustomHeadTag( '<link rel="next" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=next') : $configuration->get('mosConfig_live_site') . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=next') . '" />');
 		}
 		// If we're in a board, or a topic for that matter, the index will be the board's index. 
 		if (!empty($context['current_board'])) 
-			$mainframe->addCustomHeadTag( '<link rel="index" href="' . ( $mosConfig_sef == 1 ? sefReltoAbs($myurl . 'board=' . $context['current_board'] . '.0') :  $mosConfig_live_site . '/' . $myurl . 'board=' . $context['current_board'] . '.0') .'" />'); 
+			$mainframe->addCustomHeadTag( '<link rel="index" href="' . ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl . 'board=' . $context['current_board'] . '.0') :  $configuration->get('mosConfig_live_site') . '/' . $myurl . 'board=' . $context['current_board'] . '.0') .'" />'); 
 
 		// We'll have to use the cookie to remember the header... 
 		if ($context['user']['is_guest']) 
 			$options['collapse_header'] = !empty($_COOKIE['upshrink']);
 
 		// Output any remaining HTML headers. (from mods, maybe?) 
-		$context['html_headers'] = str_replace($scripturl, $mosConfig_live_site . '/'. $myurl, $context['html_headers']);
+		$context['html_headers'] = str_replace($scripturl, $configuration->get('mosConfig_live_site') . '/'. $myurl, $context['html_headers']);
 		
 		$mainframe->addCustomHeadTag( $context['html_headers'] . '
 			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[ 
@@ -150,8 +153,7 @@ function SMF_header_include( ) {
 	
 	}
 	
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 	
 	return true;
 }
-?>

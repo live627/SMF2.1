@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1 RC3                                         *
+* Software Version:           SMF 2.0                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -23,37 +23,31 @@
 **********************************************************************************/
 
 
-global $database, $mainframe, $db_name, $db_prefix, $mosConfig_db, $mosConfig_absolute_path, $mosConfig_lang;
+global $database, $mainframe, $db_name, $db_prefix;
  
 if (!defined('_VALID_MOS'))
 	die('Direct Access to this location is not allowed.');
 
 if (!defined("_MOS_ALLOWHTML"))
 	define("_MOS_ALLOWHTML", 0x0002);
-
+$configuration =& mamboCore::getMamboCore();
 $database =& mamboDatabase::getInstance();
 $mainframe =& mosMainFrame::getInstance();
 
 // get language file
-if (file_exists($mosConfig_absolute_path . '/components/com_smf/language/' . $mosConfig_lang . '.php'))
-	require($mosConfig_absolute_path . '/components/com_smf/language/' . $mosConfig_lang . '.php');
+if (file_exists($configuration->get('mosConfig_absolute_path') . '/components/com_smf/language/' . $configuration->get('mosConfig_lang') . '.php'))
+	require($configuration->get('mosConfig_absolute_path') . '/components/com_smf/language/' . $configuration->get('mosConfig_lang') . '.php');
 else
-	require($mosConfig_absolute_path. '/components/com_smf/language/english.php');
+	require($configuration->get('mosConfig_absolute_path'). '/components/com_smf/language/english.php');
 
 
 $smfbLanguage =& new smfbLanguage();
 
+$vars = array();
 $variables = array_keys($_REQUEST);
 foreach ($variables as $input){
-	$$input = mosGetParam ($_REQUEST, $input);
+	$vars[$input] = mosGetParam ($_REQUEST, $input);
 }
-
-if (!isset($pmOnReg) || $pmOnReg != 'on')
-	$pmOnReg = 'off';
-
-if (!isset($cb_reg) || $cb_reg != 'on')
-	$cb_reg = 'off';
-
 	
 switch ($task) 
 {
@@ -81,7 +75,7 @@ switch ($task)
 						");
 				$smf_groups = $database->loadRowList();
 	
-				mysql_select_db($mosConfig_db);
+				mysql_select_db($configuration->get('mosConfig_db') );
 	
 				$sync_group = array();
 	
@@ -92,7 +86,7 @@ switch ($task)
 				}
 			}
 
-			saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridge_reg, $agreement_required, $im, $pmOnReg, $use_realname, $cb_reg, $sync_group);
+			saveConfig ($option, $vars, $sync_group);
 	break;
 		
 	case "mos2smf":
@@ -110,13 +104,14 @@ switch ($task)
 
 function showConfig($option, $cb_reg)
 {
-	global $mosConfig_absolute_path, $database, $mosConfig_live_site, $database;
-	global $smfbLanguage, $mosConfig_dbprefix, $smf_path, $bridge_reg;
-	global $wrapped, $db_name, $db_prefix, $mosConfig_db;
+	global $database;
+	global $smfbLanguage, $smf_path, $bridge_reg;
+	global $wrapped, $db_name, $db_prefix;
 
+	$configuration =& mamboCore::getMamboCore();
 	$database =& mamboDatabase::getInstance();
 	$tabs = new mosTabs(0);
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db') );
 	$database->setQuery("
 				SELECT `variable`, `value1`
 				FROM #__smf_config
@@ -146,17 +141,18 @@ function showConfig($option, $cb_reg)
 		$not_saved = true;
 	}
 	mysql_select_db($db_name);
+	$smf_groups = array();
 	$query = mysql_query("SELECT id_group, group_name
 				FROM {$db_prefix}membergroups
 				");
-	$smf_groups = mysql_fetch_array($query);
-	
-	
-	mysql_select_db($mosConfig_db);
+	while ($row = mysql_fetch_array($query))
+		$smf_groups[]=$row;
+
+	mysql_select_db($configuration->get('mosConfig_db') );
 	
 	echo '
 	<div id="overDiv" style="position:absolute; visibility:hidden; z-index:10000;"></div>
-	<script language="JavaScript" type="text/javascript" src="', $mosConfig_live_site, '/includes/js/overlib_mini.js"></script>
+	<script language="JavaScript" type="text/javascript" src="', $configuration->get('mosConfig_live_site'), '/includes/js/overlib_mini.js"></script>
 	
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function submitbutton(pressbutton)
@@ -205,7 +201,7 @@ function showConfig($option, $cb_reg)
 		{
 			if (file_exists($mambo_path . $possible . '/Sources/Load.php'))
 			{
-				$smfpath = realpath($mambo_path . $possible);
+				$smfpath = str_replace('\\', '\\\\', realpath($mambo_path . $possible));
 				break;
 			}
 		}
@@ -273,7 +269,7 @@ function showConfig($option, $cb_reg)
 				</td>
 			</tr>
 			<tr>
-				<td width="25%" align="left" valign="top">Ask for icq, aim, yim, msn?</td>
+				<td width="25%" align="left" valign="top">Ask for ICQ, AIM, YIM, MSN?</td>
 				<td align="left" valign="top">
 					<input type="checkbox" name="im"', $im == 'on' ? ' checked="checked"' : '', ' />&nbsp;&nbsp;
 				</td>
@@ -281,6 +277,7 @@ function showConfig($option, $cb_reg)
 			<tr>
 				<td width="25%" align="left" valign="top">Send a SMF PM to the user on registration?</td>
 				<td align="left" valign="top">
+					<input type="hidden" name="pmOnReg" value="off" />
 					<input type="checkbox" name="pmOnReg"', $pmOnReg == 'on' ? ' checked="checked"' : '' ,' />&nbsp;&nbsp;
 				</td>
 			</tr>
@@ -297,6 +294,7 @@ function showConfig($option, $cb_reg)
 			<tr>
 				<td width="25%" align="left" valign="top">Also register into Community Builder? (You must have Community Builder already installed, and be using Bridge Registration)</td>
 				<td align="left" valign="top">
+					<input type="hidden" name="cb_reg" value="off" />
 					<input type="checkbox" name="cb_reg"', $cb_reg=='on' ? ' checked="checked"' : '' ,' />&nbsp;&nbsp;
 				</td>
 			</tr>
@@ -397,7 +395,7 @@ function showConfig($option, $cb_reg)
 						<input type="button" value = "Synchronize Mambo/Joomla groups according to saved settings" onclick="synch()" />
 					</td>
 				</tr>
-			</table>';
+			</table>', $tabs->endTab();
 		}
 		$database->setQuery("
 				SELECT `value1`
@@ -416,74 +414,25 @@ function showConfig($option, $cb_reg)
 		
 		<input type="hidden" name="option" value="', $option, '" />
 		<input type="hidden" name="task" value=" " />
-		<input type="hidden" name="act" value="', $act, '" />
+		<!-- <input type="hidden" name="act" value="', $act, '" /> -->
 		<input type="hidden" name="boxchecked" value="on" />
 	</form>';
 }
 
-function saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridge_reg, $agreement_required, $im, $pmOnReg, $use_realname, $cb_reg, $sync_group)
+function saveConfig ($option, $vars, $sync_group)
 {
 	global $smbfLanguage, $database;
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
 	
-	$database->setQuery("
+	foreach($vars as $key => $value) {
+		$database->setQuery("
 			UPDATE #__smf_config
-			SET `value1` = '$smf_path'
-			WHERE `variable` = 'smf_path'");
-	$result[0] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$wrapped'
-			WHERE `variable` = 'wrapped'");
-	$result[1] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$smf_css'
-			WHERE `variable` = 'smf_css'");
-	$result[2] = $database->query();	
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$synch_lang'
-			WHERE `variable` = 'synch_lang'");
-	$result[3] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$bridge_reg'
-			WHERE `variable` = 'bridge_reg'");
-	$result[4] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$agreement_required'
-			WHERE `variable` = 'agreement_required'");
-	$result[5] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$im'
-			WHERE `variable` = 'im'");
-	$result[6] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$pmOnReg'
-			WHERE `variable` = 'pmOnReg'");
-	$result[7] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$use_realname'
-			WHERE `variable` = 'use_realname'");
-	$result[8] = $database->query();
-	
-	$database->setQuery("
-			UPDATE #__smf_config
-			SET `value1` = '$cb_reg'
-			WHERE `variable` = 'cb_reg'");
-	$result[9] = $database->query();
+			SET `value1` = '$value'
+			WHERE `variable` = '$key'");
+		$result[$key] = $database->query();
+	}
+
 	
 	//Now for the group sync...
 	foreach($sync_group as $smf_group => $mambo_group) {
@@ -512,8 +461,8 @@ function saveConfig ($option, $smf_path, $wrapped, $smf_css, $synch_lang, $bridg
 
 function mos2smf ($option){
 
-	global $smf_path, $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $database, $use_realname;
-
+	global $smf_path, $db_name, $db_prefix, $database, $use_realname;
+	$configuration =& mamboCore::getMamboCore();
 	$database =& mamboDatabase::getInstance();
 	$mainframe =& mosMainFrame::getInstance();
 
@@ -547,7 +496,7 @@ function mos2smf ($option){
 
 	echo '
 	<div id="overDiv" style="position:absolute; visibility:hidden; z-index:10000;"></div>
-	<script language="JavaScript" type="text/javascript" src="', $mosConfig_live_site, '/includes/js/overlib_mini.js"></script>
+	<script language="JavaScript" type="text/javascript" src="', $configuration->get('mosConfig_live_site'), '/includes/js/overlib_mini.js"></script>
 	
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function submitbutton(pressbutton)
@@ -568,9 +517,9 @@ function mos2smf ($option){
 				<td width="100%" align="left" valign="top">';
 				
 	//get usernames already existing in Mambo, one by one
-	mysql_select_db($mosConfig_db);
-	$mos_sql = "SELECT username, password, email, UNIX_TIMESTAMP(registerDate) AS date_registered, name
-		FROM {$mosConfig_dbprefix}users";
+	mysql_select_db($configuration->get('mosConfig_db') );
+	$mos_sql = "SELECT username, password, email, UNIX_TIMESTAMP(registerDate) AS dateRegistered, name
+		FROM " . $configuration->get('mosConfig_dbprefix') . "users";
 
 	$mos_result = mysql_query($mos_sql);
 
@@ -578,7 +527,9 @@ function mos2smf ($option){
 		$mos_user = $mos_row[0];
 		// try to find a match in the SMF users
 		mysql_select_db($db_name);
-		$smf_sql = "SELECT member_name FROM {$db_prefix}members WHERE (member_name ='".$mos_user."')";
+		$smf_sql = "SELECT member_name 
+					FROM {$db_prefix}members 
+					WHERE (member_name ='".$mos_user."')";
 		$smf_result = mysql_query ($smf_sql);
 
 		$smf_row = mysql_fetch_array($smf_result);
@@ -595,7 +546,7 @@ function mos2smf ($option){
 			echo "<font color=green>" . $mos_row[0] . " added to SMF <br /></font>";	  
 		}
 		mysql_free_result($smf_result);
-		mysql_select_db($mosConfig_db);
+		mysql_select_db($configuration->get('mosConfig_db') );
 	}
 	mysql_free_result($mos_result);
 	
@@ -604,8 +555,10 @@ function mos2smf ($option){
 
 function smf2mos ($option){
 
-	global $smf_path, $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $database;
-
+	global $smf_path, $db_name, $db_prefix, $database;
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
 	$database->setQuery("
 				SELECT `variable`, `value1`
 				FROM #__smf_config
@@ -636,7 +589,7 @@ function smf2mos ($option){
 
 	echo '
 	<div id="overDiv" style="position:absolute; visibility:hidden; z-index:10000;"></div>
-	<script language="JavaScript" type="text/javascript" src="', $mosConfig_live_site, '/includes/js/overlib_mini.js"></script>
+	<script language="JavaScript" type="text/javascript" src="', $configuration->get('mosConfig_live_site'), '/includes/js/overlib_mini.js"></script>
 	
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		function submitbutton(pressbutton)
@@ -658,15 +611,18 @@ function smf2mos ($option){
 				
 	//get usernames already existing in SMF, one by one
 	mysql_select_db($db_name);
-	$smf_sql = "SELECT member_name, real_name, passwd, email_address FROM {$db_prefix}members";
+	$smf_sql = "SELECT member_name, real_name, passwd, email_address 
+				FROM {$db_prefix}members";
 
 	$smf_result = mysql_query($smf_sql);
 
 	while ($smf_row = mysql_fetch_array($smf_result,MYSQL_NUM)) {
 		$smf_user = $smf_row[0];
 		// try to find a match in the Mambo/Joomla users
-		mysql_select_db($mosConfig_db);
-		$mos_sql = "SELECT username FROM {$mosConfig_dbprefix}users WHERE (username ='".$smf_user."')";
+		mysql_select_db($configuration->get('mosConfig_db') );
+		$mos_sql = "SELECT username 
+					FROM " . $configuration->get('mosConfig_dbprefix') . "users 
+					WHERE (username ='".$smf_user."')";
 		$mos_result = mysql_query ($mos_sql);
 
 		$mos_row = mysql_fetch_array($mos_result);
@@ -677,29 +633,29 @@ function smf2mos ($option){
 		else {
 			// if the username doesn't exist in Mambo/Joomla, create it
 			$write_user = "
-				INSERT INTO {$mosConfig_dbprefix}users 
+				INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "users 
 					(username, name, password, email) 
 				VALUES ('$smf_row[0]','$smf_row[1]','migrated','$smf_row[3]')";
 			$write_result = mysql_query ($write_user);
 			$mos_find_id = mysql_query("
 				SELECT `id` 
-				FROM {$mosConfig_dbprefix}users 
+				FROM " . $configuration->get('mosConfig_dbprefix') . "users 
 				WHERE name = '$smf_row[1]' 
 				LIMIT 1");
 			list($mos_id) = mysql_fetch_row($mos_find_id);
 			$write_user_acl = mysql_query("
-				INSERT INTO {$mosConfig_dbprefix}core_acl_aro 
+				INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro 
 					(aro_id , section_value , value , order_value , name , hidden)
 				VALUES ('', 'users', '$mos_id', '0', '$smf_row[1]', '0');");
 			$mos_map_sql = mysql_query("
 				SELECT aro_id
-				FROM {$mosConfig_dbprefix}core_acl_aro
+				FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro
 				WHERE name = '".$smf_row[1]."' 
 				LIMIT 1");
 			list($aro_id) = mysql_fetch_row($mos_map_sql);
 
 			$mos_write = mysql_query ("
-				INSERT INTO {$mosConfig_dbprefix}core_acl_groups_aro_map 
+				INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "core_acl_groups_aro_map 
 					(group_id , section_value , aro_id) 
 				VALUES ('18', '', '$aro_id');");
 			echo "<font color=green>" . $smf_row[0] . " added to Mambo/Joomla <br /></font>";	  
@@ -713,8 +669,12 @@ function smf2mos ($option){
 
 function synch_groups ($option){
 
-	global $database, $mosConfig_db, $mosConfig_dbprefix, $db_name, $db_prefix;
-
+	global $database, $db_name, $db_prefix;
+	
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
+	
 	$tabs = new mosTabs(0);
 
 	$database->setQuery("
@@ -731,7 +691,7 @@ function synch_groups ($option){
 	
 	echo '
 		<div id="overDiv" style="position:absolute; visibility:hidden; z-index:10000;"></div>
-		<script language="JavaScript" type="text/javascript" src="', $mosConfig_live_site, '/includes/js/overlib_mini.js"></script>
+		<script language="JavaScript" type="text/javascript" src="', $configuration->get('mosConfig_live_site'), '/includes/js/overlib_mini.js"></script>
 	';
 	
 	$tabs->startPane('configPane');
@@ -765,10 +725,12 @@ function synch_groups ($option){
 				ORDER BY `id_member` ASC
 				");
 				
-	$members = mysql_fetch_array($query);
+	while ($row = mysql_fetch_array($query))
+		$members[] = $row;
+
 	mysql_free_result($query);
 	
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db') );
 	
 	echo '<a href="index2.php?option=com_smf&task=config">Return to Bridge configuration</a><br />';
 	
@@ -790,23 +752,23 @@ function synch_groups ($option){
 
 			//Some people like to delete their admin status and then complain about it.  Let's make sure they can't overwrite the first admin user.
 			$check_admin = mysql_query("SELECT `id`
-					FROM {$mosConfig_dbprefix}users
+					FROM " . $configuration->get('mosConfig_dbprefix') . "users
 					WHERE (`name` = '$name' OR `username` = '$name')
 					");
 			list($user_id) = mysql_fetch_row($check_admin);
 			
 			if ($user_id != '62'){
-				$x = mysql_query ("UPDATE {$mosConfig_dbprefix}users
+				$x = mysql_query ("UPDATE " . $configuration->get('mosConfig_dbprefix') . "users
 						SET `usertype` = '".$mgroups[$group]."', `gid` = '$group'
 						WHERE (`name` = '$name' OR `username` = '$name')
 						");
 				$mos_map_sql = mysql_query("
 						SELECT aro_id
-						FROM {$mosConfig_dbprefix}core_acl_aro
+						FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro
 						WHERE `value` = '$user_id'
 						LIMIT 1");
 				list($aro_id) = mysql_fetch_row($mos_map_sql);
-				$x = mysql_query ("UPDATE {$mosConfig_dbprefix}core_acl_groups_aro_map
+				$x = mysql_query ("UPDATE " . $configuration->get('mosConfig_dbprefix') . "core_acl_groups_aro_map
 						SET `group_id` = '$group'
 						WHERE aro_id = '$aro_id'
 						");

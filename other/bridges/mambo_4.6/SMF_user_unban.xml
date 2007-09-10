@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<mosinstall version="1.1.0" type="mambot" group="authenticator">
+	<name>SMF_user_unban</name>
+	<author>Simple Machines</author>
+	<creationDate>April 2007</creationDate>
+	<copyright>(C) 2007 Simple Machines. All rights reserved.</copyright>
+	<license>http://www.simplemachines.org/license</license>
+	<authorUrl>http://www.simplemachines.org</authorUrl>
+	<version>1.1</version>
+	<description>Unbans a user in SMF when unblocked in Mambo</description>
+	<files>
+		<filename mambot="SMF_user_unban">SMF_user_unban.php</filename>
+	</files>
+	<params/>
+</mosinstall>

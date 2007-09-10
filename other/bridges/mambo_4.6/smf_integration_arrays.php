@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1                                             *
+* Software Version:           SMF 2.0                                            *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -29,8 +29,8 @@
 /** ensure this file is being included by a parent file and stop direct linking */
 defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.' );
 
-global $language_conversion, $mosConfig_live_site, $mosConfig_sitename;
-
+global $language_conversion;
+$configuration =& mamboCore::getMamboCore();
 //define the integration functions
 define('SMF_INTEGRATION_SETTINGS', serialize(array(
 	'integrate_change_email' => 'integrate_change_email',
@@ -46,6 +46,7 @@ define('SMF_INTEGRATION_SETTINGS', serialize(array(
 	'integrate_register' => 'integrate_register',
 	'integrate_pre_load' => 'integrate_pre_load',
 	'integrate_whos_online' => 'integrate_whos_online',
+	'integrate_load_theme' => 'integrate_load_theme',
 )));
 
 //correlate language name to ISO
@@ -84,6 +85,7 @@ $language_conversion = array(
 							'hr' => 'croatian',
 							'hu' => 'hungarian',
 							'hy' => 'armenian',
+							'it' => 'italian',
 							'kr' => 'kanuri',
 							'ml' => 'malayalam',
 							'mo' => 'moldovan',
@@ -109,17 +111,18 @@ $language_conversion = array(
 //Additions to the $txt array for the whos online
 function add_to_txt(){
 
-	global $txt, $mosConfig_live_site, $mosConfig_sitename, $mosConfig_sef;
+	global $txt;
+	$configuration =& mamboCore::getMamboCore();
 	
-	$txt['who_home'] = 'Viewing the home page of <a href="' . $mosConfig_live_site . '">' . $mosConfig_sitename . '</a>.';
-	$txt['who_article'] = 'Viewing the article <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_content&amp;task=view&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=view&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
-	$txt['who_section'] = 'Viewing the section <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_content&amp;task=section&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=section&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
-	$txt['who_blogsection'] = 'Viewing the section <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_content&amp;task=blogsection&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=blogsection&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
-	$txt['who_category'] = 'Viewing the category <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
-	$txt['who_blogcategory'] = 'Viewing the category <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
-	$txt['who_newsfeeds'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_newsfeeds&amp;task=view&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_newsfeeds&amp;task=view&amp;Itemid=%d')) . '">News Feeds</a>.';
-	$txt['who_virtuemart'] = 'Shopping in the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_virtuemart&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_virtuemart&amp;Itemid=%d')) . '">store</a>.';
-	$txt['who_sitesearch'] = 'Using the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_search&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_search&amp;Itemid=%d')) . '">Site Search</a>.';
-	$txt['who_wiki'] = 'Viewing the <a href="' . ($mosConfig_sef !='1' ? $mosConfig_live_site . '/index.php?option=com_wikidoc&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_wikidoc&amp;Itemid=%d')) . '">Wiki</a>.';
+	$txt['who_home'] = 'Viewing the home page of <a href="' . $configuration->get('mosConfig_live_site') . '">' . $configuration->get('mosConfig_sitename') . '</a>.';
+	$txt['who_article'] = 'Viewing the article <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_content&amp;task=view&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=view&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
+	$txt['who_section'] = 'Viewing the section <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_content&amp;task=section&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=section&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
+	$txt['who_blogsection'] = 'Viewing the section <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_content&amp;task=blogsection&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=blogsection&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
+	$txt['who_category'] = 'Viewing the category <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
+	$txt['who_blogcategory'] = 'Viewing the category <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_content&amp;task=category&amp;id=%d&amp;Itemid=%d')) . '">%s</a>.';
+	$txt['who_newsfeeds'] = 'Viewing the <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_newsfeeds&amp;task=view&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_newsfeeds&amp;task=view&amp;Itemid=%d')) . '">News Feeds</a>.';
+	$txt['who_virtuemart'] = 'Shopping in the <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_virtuemart&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_virtuemart&amp;Itemid=%d')) . '">store</a>.';
+	$txt['who_sitesearch'] = 'Using the <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_search&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_search&amp;Itemid=%d')) . '">Site Search</a>.';
+	$txt['who_wiki'] = 'Viewing the <a href="' . ($configuration->get('mosConfig_sef') !='1' ? $configuration->get('mosConfig_live_site') . '/index.php?option=com_wikidoc&amp;Itemid=%d' : sefReltoAbs ('index.php?option=com_wikidoc&amp;Itemid=%d')) . '">Wiki</a>.';
 }
 ?>

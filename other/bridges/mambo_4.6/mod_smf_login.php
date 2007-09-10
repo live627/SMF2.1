@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1 RC3                                         *
+* Software Version:           SMF 1.1.2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -25,8 +25,10 @@
 if (!defined('_VALID_MOS'))
 	die('Direct Access to this location is not allowed.');
 
-	global $smf_path, $bridge_reg, $maintenance, $sourcedir, $context, $user, $mosConfig_live_site, $mosConfig_db, $mosConfig_dbprefix;
-
+	global $smf_path, $bridge_reg, $maintenance, $sourcedir, $context, $user;
+$configuration =& mamboCore::getMamboCore();
+$database =& mamboDatabase::getInstance();
+$mainframe =& mosMainFrame::getInstance();
 // Get the configuration.  This will tell Mambo where SMF is, and some integration settings
 	$database->setQuery("
 				SELECT `variable`, `value1`
@@ -44,13 +46,13 @@ if (!defined('SMF'))
 	require_once($smf_path . '/SSI.php');	
 }
 
-global $context, $txt, $scripturl, $boardurl, $settings, $mosConfig_dbprefix, $db_prefix, $db_name, $smf_date, $mosConfig_db, $mosConfig_sef;
+global $context, $txt, $scripturl, $boardurl, $settings, $db_prefix, $db_name, $smf_date;
 
-mysql_select_db($mosConfig_db);
+mysql_select_db($configuration->get('mosConfig_db'));
 
 $result = mysql_query("
 	SELECT id 
-	FROM {$mosConfig_dbprefix}menu 
+	FROM " . $configuration->get('mosConfig_dbprefix') . "menu 
 	WHERE link = 'index.php?option=com_smf'");
 
 if ($result !== false)
@@ -58,12 +60,12 @@ if ($result !== false)
 else
 	$menu_item['id'] = 1;
 
-$myurl = basename($_SERVER['PHP_SELF']) . '?option=com_smf&amp;Itemid=' . $menu_item['id'] . '&amp;';
+$myurl = 'index.php?option=com_smf&amp;Itemid=' . $menu_item['id'] . '&amp;';
 
-if ($mosConfig_sef == '1'){
+if ($configuration->get('mosConfig_sef') == '1'){
 	$scripturl = $myurl;
 } else {
-	$scripturl = $mosConfig_live_site . '/' . $myurl;
+	$scripturl = $configuration->get('mosConfig_live_site')  . '/' . $myurl;
 }
 
 $smf_align = $params->get('smf_align');
@@ -80,13 +82,13 @@ $smf_logout_button_image = $params->get('smf_logout_button_image');
 mysql_select_db($db_name);
 echo '
 <div class="module" style="position: relative; margin-right: 5px;">
-	<table width="99%" cellpadding="0" cellspacing="5" border="0" align="', $smf_align, '">
+	<table width="99%" cellpadding="0" cellspacing="5" border="0" align="', $smf_align, '" class="moduletable">
 		<tr>', empty($context['user']['avatar']) ? '' : '
 			<td valign="top" align="' . $smf_align . '">' . $context['user']['avatar']['image'] . '
 			</td>
 		</tr>
 		<tr>', '
-			<td width="100%" valign="top" class="smalltext" style="font-family: verdana, arial, sans-serif;" align="', $smf_align, '">';
+			<td width="100%" valign="top" class="smalltext" style="align="', $smf_align, '">';
 	
 	// If the user is logged in, display stuff like their name, new messages, etc.
 	if ($context['user']['is_logged']){
@@ -104,7 +106,7 @@ echo '
 		// Only tell them about their messages if they can read their messages!
 		if($smf_new_pms && $context['allow_pm'])
 			echo 
-			' ', $txt['msg_alert_you_have'], ' <a href="', sefReltoAbs($scripturl. 'action=pm'), '">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt['msg_alert_messages'] : $txt['message_lowercase'], '</a>';
+			' ', $txt[152], ' <a href="', sefReltoAbs($scripturl. 'action=pm'), '">', $context['user']['messages'], ' ', $context['user']['messages'] != 1 ? $txt[153] : $txt[471], '</a>';
 
 		// if defined user can read their new messages
 		if($smf_unread)
@@ -153,16 +155,15 @@ echo '
 			' . $context['current_time'];
 
 		if ($params->get('logout')=="2")
-			$_SESSION['return'] = $mosConfig_sef=='1' ? sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING']) : $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'];
+			$_SESSION['return'] = $configuration->get('mosConfig_sef')=='1' ? sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING']) : $configuration->get('mosConfig_live_site')  . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'];
 
 
 		echo '<br />
-			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['lang_images_url'] . '/logout.gif').'" alt="' . $txt['logout'] . '" style="margin: 2px 0;" border="0" />' : $txt['logout'], '</a>';
+			<a href="', sefReltoAbs($scripturl . 'action=logout&amp;returnurl='.$params->get('logout').'&amp;sesc='. $context['session_id']), '">', $smf_logout_button ? '<img src="' . (!empty($smf_logout_button_image) && $smf_logout_button_image!="" ? $smf_logout_button_image : $settings['images_url'] . '/' . $context['user']['language'] . '/logout.gif').'" alt="' . $txt[108] . '" style="margin: 2px 0;" border="0" />' : $txt[108], '</a>';
 	}
 	// Otherwise they're a guest - so politely ask them to register or login.
 	else
 	{
-		$txt['welcome_guest'] = sprintf($txt['welcome_guest'], $txt['guest_title']);
 		$txt['welcome_guest'] = str_replace($boardurl.'/index.php?', $scripturl , $txt['welcome_guest']);
 		$txt['welcome_guest'] = str_replace($scripturl.'?', $scripturl, $txt['welcome_guest']);
 		$txt['welcome_guest'] = str_replace($scripturl.'action=login', sefReltoAbs($scripturl.'action=login'), $txt['welcome_guest']);
@@ -193,7 +194,7 @@ echo '
 			$txt['welcome_guest'] = str_replace($scripturl.'action=activate', sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode'), $txt['welcome_guest']);
 		break;		
 	}
-		$txt['login'] = str_replace('&?','&', $txt['login']);
+		$txt[34] = str_replace('&?','&', $txt[34]);
 		if (!isset($login))
 			{$login = '';}
 		if (!isset($message_login))
@@ -203,41 +204,41 @@ echo '
 		', $txt['welcome_guest'], '<br />
 		', $context['current_time'], '<br />
 
-			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
+			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
 
 			<form action="', sefReltoAbs($scripturl . 'action=login2'), '" method="post" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-				',$txt['username'],': <input type="text" name="user" size="10" /> 
-				',$txt['password'],': <input type="password" name="passwrd" size="10" />
+				',$txt[35],': <input type="text" name="user" size="10" /> 
+				',$txt[36],': <input type="password" name="passwrd" size="10" />
 				<select name="cookielength">
-					<option value="60">', $txt['one_hour'], '</option>
-					<option value="1440">', $txt['one_day'], '</option>
-					<option value="10080">', $txt['one_week'], '</option>
-					<option value="302400">', $txt['one_month'], '</option>
-					<option value="-1" selected="selected">', $txt['forever'], '</option>
+					<option value="60">', $txt['smf53'], '</option>
+					<option value="1440">', $txt['smf47'], '</option>
+					<option value="10080">', $txt['smf48'], '</option>
+					<option value="302400">', $txt['smf49'], '</option>
+					<option value="-1" selected="selected">', $txt['smf50'], '</option>
 				</select>
-				<input type="submit" value="', $txt['login'], '" /><br />
-				<span class="middletext">', $txt['quick_login_dec'], '</span>
+				<input type="submit" value="', $txt[34], '" /><br />
+				<span class="middletext">', $txt['smf52'], '</span>
 				<input type="hidden" name="hash_passwrd" value="" />
 				<input type="hidden" name="op2" value="login" />
 				<input type="hidden" name="option" value="com_smf" />
 				<input type="hidden" name="Itemid" value="', $menu_item['id'], '" />
 				<input type="hidden" name="action" value="login2" />
 				<input type="hidden" name="returnurl" value="', $params->get('login'), '" />
-				<input type="hidden" name="lang" value="', $mosConfig_lang, '" />
-				<input type="hidden" name="return" value="', $mosConfig_sef=='1' ? sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING']) : $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'], '" />
+				
+				<input type="hidden" name="return" value="', $configuration->get('mosConfig_sef')=='1' ? sefReltoAbs('index.php?' . $_SERVER['QUERY_STRING']) : $configuration->get('mosConfig_live_site')  . '/index.php?' . $_SERVER['QUERY_STRING'], '" />
 				<input type="hidden" name="message" value="', $message_login, '" />
 
 			</form><br />
-			<a href="', ($bridge_reg!='SMF' ? sefReltoAbs(basename($_SERVER['PHP_SELF']). '?option=com_smf_registration&amp;task=lostPassword') : sefReltoAbs($scripturl . 'action=reminder')) , '">',$txt[315],'</a>';
+			<a href="', ($bridge_reg!='SMF' ? sefReltoAbs('index.php?option=com_smf_registration&amp;task=lostPassword') : sefReltoAbs($scripturl . 'action=reminder')) , '">',$txt[315],'</a>';
 	}
 	if ($params->get('login') == '2' && (!isset($_REQUEST['action']) || $_REQUEST['action'] != 'login') && (!isset($_REQUEST['option']) || $_REQUEST['option'] != 'com_smf_registration'))
-		$_SESSION['return'] = $mosConfig_sef=='1' ? sefReltoAbs(basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING']) : $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?' . $_SERVER['QUERY_STRING'];
+		$_SESSION['return'] = $configuration->get('mosConfig_sef')=='1' ? sefReltoAbs('index.php?' . $_SERVER['QUERY_STRING']) : $configuration->get('mosConfig_live_site')  . '/index.php?' . $_SERVER['QUERY_STRING'];
 
 	echo '
 		</td>
 	</tr></table>
 </div>';
 
-mysql_select_db($mosConfig_db);
+mysql_select_db($configuration->get('mosConfig_db'));
 
 ?>

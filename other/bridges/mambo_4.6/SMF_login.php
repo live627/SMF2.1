@@ -40,12 +40,13 @@ class SMF_Login {
 
 	function perform( $loginfo ) {
 
-		global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $mosConfig_live_site;
+		global $db_name, $db_prefix;
 
 
 		//Start up the integration
 		$database =& mamboDatabase::getInstance();
 		$mainframe =& mosMainFrame::getInstance();
+		$configuration =& mamboCore::getMamboCore();
 		
 		// Get the configuration.  This will tell Mambo where SMF is, and some integration settings
 		$database->setQuery("
@@ -76,7 +77,7 @@ class SMF_Login {
 					
 			// Empty the cookie! (set it in the past, and for ID_MEMBER = 0)
 			setLoginCookie(-3600, 0);
-			mysql_select_db($mosConfig_db);
+			mysql_select_db($configuration->get('mosConfig_db'));
 
 			setcookie("usercookie[username]", "", 0, "/");
 			setcookie("usercookie[password]", "", 0, "/");
@@ -89,24 +90,23 @@ class SMF_Login {
 			$request = mysql_query("
 				SELECT ID_MEMBER
 				FROM {$db_prefix}members
-				WHERE memberName = '$username'
+				WHERE memberName = '$_user'
 				LIMIT 1");
 			if ($request !== false && mysql_num_rows($request) === 1)
 			{
 				mysql_free_result($request);
-				return false;
 			}
 
 			//OK, so no user in SMF.  Does this user exist in Mambo?
 			else
 			{
-				mysql_select_db($mosConfig_db);
+				mysql_select_db($configuration->get('mosConfig_db'));
 
 				//!!! How about sendEmail and activation?
 				$request = mysql_query("
 					SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS dateRegistered, activation
-					FROM {$mosConfig_dbprefix}users
-					WHERE username = '$username'");
+					FROM " . $configuration->get('mosConfig_dbprefix') . "users
+					WHERE username = '$_user'");
 
 				//No user in Mambo, either.  This guy is just guessing....
 				if (mysql_num_rows($request) === 0){
@@ -127,13 +127,13 @@ class SMF_Login {
 				if ($use_realname == 'true')
 					$name = $mos_user['name'];
 				else
-					$name = $username;
+					$name = $_user;
 
 				//There must be a result, so let's write this one into SMF....
 				mysql_query("
 					INSERT INTO {$db_prefix}members 
 						(memberName, realName, passwd, emailAddress, dateRegistered, ID_POST_GROUP, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups)
-					VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[dateRegistered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+					VALUES ('$_user', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[dateRegistered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 				$memberID = db_insert_id();
 		
 				updateStats('member', $memberID, $name);
@@ -166,7 +166,7 @@ class SMF_Login {
 
 				setLoginCookie( $cookielength, $user_settings['ID_MEMBER'], sha1($user_settings['passwd'] . $user_settings['passwordSalt']));
 
-				mysql_select_db($mosConfig_db);
+				mysql_select_db($configuration->get('mosConfig_db'));
 				if ($session === null) $session =& mosSession::getCurrent();
 				$database =& mamboDatabase::getInstance();
 				$database->setQuery( "SELECT id, gid, block, usertype"
@@ -185,7 +185,7 @@ class SMF_Login {
 				// fudge Authors, Editors, Publishers and Super Administrators into the Special Group
 				//			$row->usertype = $grp->name;
 					$session->guest = 0;
-					$session->username = $username;
+					$session->username = $_user;
 					$session->userid = $row->id;
 					$session->usertype = $row->usertype;
 					if ($row->usertype == 'Registered') $session->gid = 1;
@@ -202,7 +202,7 @@ class SMF_Login {
 					setcookie("usercookie[password]", md5($_password), $cookielength, "/");
 				}
 			}
-			mysql_select_db($mosConfig_db);
+			mysql_select_db($configuration->get('mosConfig_db'));
 			return true;
 		}
 	}

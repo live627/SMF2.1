@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1                                         *
+* Software Version:           SMF 1.1.2                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -40,12 +40,13 @@ class SMF_register {
 
 	function perform( $loginfo ) {
 
-		global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $mosConfig_live_site, $sourcedir;
+		global $db_name, $db_prefix, $sourcedir;
 
 
 		//Start up the integration
 		$database =& mamboDatabase::getInstance();
 		$mainframe =& mosMainFrame::getInstance();
+		$configuration =& mamboCore::getMamboCore();
 		
 		// Get the configuration.  This will tell Mambo where SMF is, and some integration settings
 		$database->setQuery("
@@ -103,7 +104,7 @@ class SMF_register {
 			'username' => $_POST['username'],
 			'email' => $_POST['email'],
 			'password' => $_POST['password'],
-			'password_check' => $_POST['password2'],
+			'password_check' => $_POST['password'],
 			'check_reserved_name' => true,
 			'check_password_strength' => true,
 			'check_email_ban' => true,
@@ -134,9 +135,6 @@ class SMF_register {
 			$_POST['options'] = isset($_POST['options']) ? $_POST['options'] + $_POST['default_options'] : $_POST['default_options'];
 		$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
-		if(isReservedName($_POST['realName']))
-			$regOptions['password'] = 'chocolate cake';
-
 		//Make sure that Mambo/Joomla handles admin notification here
 		$modSettings['notify_new_registration'] = '';
 		
@@ -148,7 +146,7 @@ class SMF_register {
 				SET registers = registers + 1 
 				WHERE date ='" . date("Y-m-d") . "' 
 				LIMIT 1");
-		mysql_select_db($mosConfig_db);
+		mysql_select_db($configuration->get('mosConfig_db'));
 		return true;
 	}
 }

@@ -37,7 +37,7 @@
 	integrate_change_email($username, $email)
 	- updates Mambo with email changes made in SMF
 	
-	integrate_change_member_data ( array $memberNames, string $var, string $value)
+	integrate_change_member_data ( array $member_names, string $var, string $value)
 	- updates Mambo with member data changes in SMF
 
 	integrate_reset_pass($old_username, $username, $password)
@@ -72,18 +72,20 @@ defined( '_VALID_MOS' ) or die( 'Direct Access to this location is not allowed.'
 if (!defined('_MOS_ALLOWHTML'))
 	define('_MOS_ALLOWHTML', 0x0002);
 	
-// Raise the memory limit -- Loading Mambo/Joomla and SMF can take a lot of RAM
+// Raise the memory limit -- Loading Mambo and SMF can take a lot of RAM
 @ini_set('memory_limit', '16M');
 
 // Just to make sure nobody tries it
 @ini_set('allow_url_fopen', 0);
 
-global $params, $database, $mosConfig_dbprefix, $db_prefix, $mosConfig_db, $txt, $mainframe;
-global $mosConfig_absolute_path, $wrapped, $mosConfig_live_site, $mosConfig_sef;
+global $params, $database, $db_prefix, $txt, $mainframe;
+global $wrapped, $db_connection;
 global $bridge_reg, $menu, $Itemid, $context, $cb_reg, $database, $smf_css, $synch_lang, $language_conversion;
 
 $database =& mamboDatabase::getInstance();
-$mainframe =& mosMainFrame::getInstance();
+if (!is_object($mainframe))
+	$mainframe =& mosMainFrame::getInstance();
+$configuration =& mamboCore::getMamboCore();
 
 // Get the configuration.  This will tell Mambo where SMF is, and some integration settings
 	$database->setQuery("
@@ -102,7 +104,7 @@ $mainframe =& mosMainFrame::getInstance();
 $_SERVER['QUERY_STRING'] = strtr($_SERVER['QUERY_STRING'], array('&amp;?' => '&amp;', '&?' => '&amp;' , '#' => '.'));
 
 
-require_once ($mosConfig_absolute_path . '/components/com_smf/smf_integration_arrays.php');
+require_once ($configuration->get('mosConfig_absolute_path') . '/components/com_smf/smf_integration_arrays.php');
 
 // Are Mambo and SMF using the same database connection?
 if (empty($Itemid) && $database->_resource == $db_connection)
@@ -135,7 +137,7 @@ echo ob_mambofix($buffer);
 error_reporting(E_ALL & !E_NOTICE);
 
 if ($database->_resource == $db_connection)
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 
 // --- Changed to use action in a notice-friendly way.  I would still recommend instead: (more mod friendly!)
 if ($wrapped != 'true' || !in_array('main', $context['template_layers']))
@@ -152,22 +154,24 @@ echo '
 // Rewrite URLs to include the session ID.
 function ob_mambofix($buffer)
 {
-	global $scripturl, $mosConfig_live_site, $mosConfig_sef, $boardurl;
+	global $scripturl, $boardurl;
 	global $bridge_reg, $Itemid, $_VERSION, $wrapped;
+	
+	$configuration =& mamboCore::getMamboCore();
 
-	$myurl = $mosConfig_live_site . '/index.php?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
+	$myurl = $configuration->get('mosConfig_live_site') . '/index.php?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
 	
 	// jumpto redirects
-	$buffer = str_replace('"?board=', $mosConfig_sef=='1' ? '"/board,' : '"&amp;board=', $buffer);
-	$buffer = str_replace('"?action=', $mosConfig_sef=='1' ? '"/action,' : '"&amp;action=', $buffer);
+	$buffer = str_replace('"?board=', $configuration->get('mosConfig_sef')=='1' ? '"/board,' : '"&amp;board=', $buffer);
+	$buffer = str_replace('"?action=', $configuration->get('mosConfig_sef')=='1' ? '"/action,' : '"&amp;action=', $buffer);
 	//relative anchors
-	$buffer = str_replace('href="#', 'href="' . $mosConfig_live_site . '/index.php?' . $_SERVER['QUERY_STRING'] . '#', $buffer);
+	$buffer = str_replace('href="#', 'href="' . $configuration->get('mosConfig_live_site') . '/index.php?' . htmlspecialchars( $_SERVER['QUERY_STRING'] ) . '#', $buffer);
 	//get rid of the question mark
 	$buffer = str_replace('"' . $scripturl . '?', '"' . $myurl, $buffer);
 	//if it's the forum index, we don't need a trailing ampersand
 	$buffer = str_replace('"' . $scripturl . '"', '"' . substr($myurl, 0, -5) . '"', $buffer);
 	//make sure there are no html entities in the javascript of the unwrapped forum
-	if ($mosConfig_sef != '1' && $wrapped != 'true')
+	if ($configuration->get('mosConfig_sef') != '1' && $wrapped != 'true')
 		$buffer = str_replace('var smf_scripturl = "'.substr($myurl, 0, -5).'"', un_htmlspecialchars('var smf_scripturl = "'.substr($myurl, 0, -5).'"'), $buffer);
 	//Sometimes links are inside single quotes
 	$buffer = str_replace('\'' . $scripturl . '?', '\'' . $myurl, $buffer);
@@ -185,33 +189,33 @@ function ob_mambofix($buffer)
 	$buffer = str_replace('option=com_smf;Itemid=' . $Itemid . ';', '', $buffer);
 
 	// New bridged profile options.  Not yet available
-	//$buffer = str_replace($scripturl . 'action=profile;', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_profile&task=view&', $buffer);
-	//$buffer = str_replace($scripturl . 'action=profile', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_profile&task=view', $buffer);
+	//$buffer = str_replace($scripturl . 'action=profile;', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_profile&task=view&', $buffer);
+	//$buffer = str_replace($scripturl . 'action=profile', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_profile&task=view', $buffer);
 
 	// Bridge registration links
 	switch ($bridge_reg){  
 		case "bridge":
-			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=register', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
-			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
+			$buffer = str_replace($myurl . 'action=register', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=register', $buffer);
+			$buffer = str_replace($myurl . 'action=activate', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=reminder', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 		
 		case "default":
-			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_registration&amp;task=register', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
-			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
+			$buffer = str_replace($myurl . 'action=register', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_registration&amp;task=register', $buffer);
+			$buffer = str_replace($myurl . 'action=activate', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=reminder', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 		
 		case "CB":
-			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_comprofiler&amp;task=registers', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
-			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
+			$buffer = str_replace($myurl . 'action=register', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_comprofiler&amp;task=registers', $buffer);
+			$buffer = str_replace($myurl . 'action=activate', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=reminder', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 		
 		case "jw":
-			$buffer = str_replace($myurl . 'action=register', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_jw_registration&amp;task=register', $buffer);
-			$buffer = str_replace($myurl . 'action=activate', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
-			$buffer = str_replace($myurl . 'action=reminder', $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
+			$buffer = str_replace($myurl . 'action=register', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_jw_registration&amp;task=register', $buffer);
+			$buffer = str_replace($myurl . 'action=activate', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostCode', $buffer);
+			$buffer = str_replace($myurl . 'action=reminder', $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf_registration&amp;task=lostPassword', $buffer);
 		break;
 	}
 
@@ -222,18 +226,28 @@ function ob_mambofix($buffer)
 	//And Niko's Arcade Mod
 	$buffer = str_replace($myurl . 'action=arcade;sa=download;file=swf', $boardurl . '/' . basename($_SERVER['PHP_SELF']) . '?action=arcade;sa=download;file=swf', $buffer);
 	// and now for SEF
-	if (!empty($mosConfig_sef) && $mosConfig_sef == '1')
+	if ($configuration->get('mosConfig_sef') == '1')
 	{
-		preg_match_all('~([\(=]")' . preg_quote($mosConfig_live_site . '/index.php?option=com_smf') . '([^"]*)"{1}~', $buffer, $nonsefurls);
+		if (isset($_REQUEST['action']) && $_REQUEST['action']=='.xml')
+			preg_match_all('~(>)' . preg_quote($configuration->get('mosConfig_live_site') . '/index.php?option=com_smf') . '([^<]*)<{1}~', $buffer, $nonsefurls);
+		else
+			preg_match_all('~([\(=]")' . preg_quote($configuration->get('mosConfig_live_site') . '/index.php?option=com_smf') . '([^"]*)"{1}~', $buffer, $nonsefurls);
 		foreach($nonsefurls[0] as $nonsefurl)
 		{
 			$nqsefurl = substr($nonsefurl, 0, strpos($nonsefurl, 'option')) . preg_replace('/(\;)([^=#]*)([\;#"])/', '$1$2=$2$3', substr($nonsefurl, strpos($nonsefurl, 'option'), strlen($nonsefurl)));
-			$sefurl = sefReltoAbs(substr($nqsefurl, strlen($mosConfig_live_site) + 3, strlen($nqsefurl) - strlen($mosConfig_live_site) - 4));
+			if (isset($_REQUEST['action']) && $_REQUEST['action']=='.xml')
+				$offset = 2;
+			else
+				$offset = 3;
+			$sefurl = sefReltoAbs(substr($nqsefurl, strlen($configuration->get('mosConfig_live_site')) + $offset, strlen($nqsefurl) - strlen($configuration->get('mosConfig_live_site')) - ($offset + 1)));
 			$sefurl = str_replace(";", "/", $sefurl);
 			$sefurl = str_replace("=", ",", $sefurl);
 			if (substr($sefurl, strlen($sefurl) - 1, 1) == '/')
 				$sefurl = substr($sefurl, 0, strlen($sefurl) - 1);
-			$buffer = str_replace(substr($nonsefurl, 1, strlen($nonsefurl)), '"' . $sefurl . '"', $buffer);
+			if (isset($_REQUEST['action']) && $_REQUEST['action']=='.xml')
+				$buffer = str_replace(substr($nonsefurl, 0, strlen($nonsefurl)), '>' . $sefurl . '<', $buffer);
+			else
+				$buffer = str_replace(substr($nonsefurl, 1, strlen($nonsefurl)), '"' . $sefurl . '"', $buffer);
 		}
 	}
 	return $buffer;
@@ -241,12 +255,14 @@ function ob_mambofix($buffer)
 
 function mambo_smf_url($url)
 {
-	global $scripturl, $Itemid, $mosConfig_live_site;
+	global $scripturl, $Itemid;
+	
+	$configuration =& mamboCore::getMamboCore();
 
 	if ($Itemid == 0)
 		$Itemid = (int) $_REQUEST['Itemid'];
 	//The ampersands need to be non-entities, because they are used mainly in javascript
-	$myurl = $mosConfig_live_site . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&Itemid=' . $Itemid . '&';
+	$myurl = $configuration->get('mosConfig_live_site') . '/' . basename($_SERVER['PHP_SELF']) . '?option=com_smf&Itemid=' . $Itemid . '&';
 	$url = str_replace($scripturl . '?', $myurl, $url);
 	$url = str_replace($scripturl, $myurl, $url);
 	
@@ -256,10 +272,9 @@ function mambo_smf_url($url)
 
 function mambo_smf_exit($with_output)
 {
-	global $c_handler, $indextype, $mambothandler, $configuration, $wrapped, $mosConfig_db, $database, $cur_template, $mainframe, $boardurl, $smf_css, $context, $db_name;
+	global $mainframe, $c_handler, $indextype, $mambothandler, $wrapped, $cur_template, $boardurl, $smf_css, $context, $db_name;
 
 	$database =& mamboDatabase::getInstance();
-	$mainframe =& mosMainFrame::getInstance();
 	$configuration =& mamboCore::getMamboCore();
 
 	$buffer = ob_get_contents();
@@ -278,11 +293,11 @@ function mambo_smf_exit($with_output)
 		$$name = $GLOBALS[$name];
 
 	if ($database->_resource == $db_connection)
-		mysql_select_db($mosConfig_db);
+		mysql_select_db($configuration->get('mosConfig_db'));
 	
 	$result = mysql_query("
 			SELECT id 
-			FROM {$mosConfig_dbprefix}menu 
+			FROM " . $configuration->get('mosConfig_dbprefix') . "menu 
 			WHERE link = 'index.php?option=com_smf'");
 
 	if ($result !== false)
@@ -297,33 +312,35 @@ function mambo_smf_exit($with_output)
 	$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "'. $settings['theme_url']. '";
 		var smf_images_url = "'. $settings['images_url']. '";');
-	if ($mosConfig_sef=='1')
+	if ($configuration->get('mosConfig_sef')=='1')
 		$mainframe->addCustomHeadTag( ob_mambofix('var smf_scripturl ="'. $scripturl . '";'));
 	else
 		$mainframe->addCustomHeadTag( 'var smf_scripturl = "'. un_htmlspecialchars(mambo_smf_url($scripturl)) . '";');
 	
-	$mainframe->addCustomHeadTag( '	var smf_session_id = "'. $context['session_id'] . '";
-		// ]]></script>' );
+	$mainframe->addCustomHeadTag( '				var smf_iso_case_folding = '. ($context['server']['iso_case_folding'] ? 'true' : 'false') . ';
+			var smf_charset = "'. $context['character_set']. '";
+			var smf_session_id = "'. $context['session_id'] . '";
+			// ]]></script>' );
 	if ($smf_css == 'true'){
-		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?rc3" />' );
-		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?rc3" media="print" />' );
+		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?fin11" />' );
+		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?fin11" media="print" />' );
 	}
-	$mainframe->addCustomHeadTag( '<link rel="help" href="'. mambo_smf_url($scripturl. 'action=help') .'" target="_blank" />' );
-	$mainframe->addCustomHeadTag( '<link rel="search" href="' . mambo_smf_url($scripturl . 'action=search') .'" />' );
-	$mainframe->addCustomHeadTag( '<link rel="contents" href="'. mambo_smf_url($scripturl). '" />' );
+	$mainframe->addCustomHeadTag( '<link rel="help" ' . ob_mambofix('href="' . $scripturl . '?action=help' .'"') . ' target="_blank" />' );
+	$mainframe->addCustomHeadTag( '<link rel="search" ' . ob_mambofix('href="' . $scripturl . '?action=search' .'"') . ' />' );
+	$mainframe->addCustomHeadTag( '<link rel="contents" ' . ob_mambofix('href="'. $scripturl . '"' ) . '  />' );
 
 	// If RSS feeds are enabled, advertise the presence of one. 
 	if (!empty($modSettings['xmlnews_enable']))  
-		$mainframe->addCustomHeadTag( '<link rel="alternate" type="application/rss+xml" title="'. $context['forum_name']. ' - RSS" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'type=rss&amp;action=.xml') : $mosConfig_live_site . '/'. $myurl . 'type=rss&amp;action=.xml') . '" />' ); 
+		$mainframe->addCustomHeadTag( '<link rel="alternate" type="application/rss+xml" title="'. $context['forum_name']. ' - RSS" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'type=rss&amp;action=.xml') : $configuration->get('mosConfig_live_site') . '/'. $myurl . 'type=rss&amp;action=.xml') . '" />' ); 
 
 	// If we're viewing a topic, these should be the previous and next topics, respectively. 
 	if (!empty($context['current_topic'])){ 
-		$mainframe->addCustomHeadTag( '<link rel="prev" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=prev') : $mosConfig_live_site . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=prev') . '" />'); 
-		$mainframe->addCustomHeadTag( '<link rel="next" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=next') : $mosConfig_live_site . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=next') . '" />');
+		$mainframe->addCustomHeadTag( '<link rel="prev" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=prev') : $configuration->get('mosConfig_live_site') . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=prev') . '" />'); 
+		$mainframe->addCustomHeadTag( '<link rel="next" href="'. ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl. 'topic='. $context['current_topic']. '.0&amp;prev_next=next') : $configuration->get('mosConfig_live_site') . '/'. $myurl . 'topic='. $context['current_topic']. '.0;prev_next=next') . '" />');
 	}
 	// If we're in a board, or a topic for that matter, the index will be the board's index. 
 	if (!empty($context['current_board'])) 
-		$mainframe->addCustomHeadTag( '<link rel="index" href="' . ( $mosConfig_sef == 1 ? sefReltoAbs($myurl . 'board=' . $context['current_board'] . '.0') :  $mosConfig_live_site . '/' . $myurl . 'board=' . $context['current_board'] . '.0') .'" />'); 
+		$mainframe->addCustomHeadTag( '<link rel="index" href="' . ( $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl . 'board=' . $context['current_board'] . '.0') :  $configuration->get('mosConfig_live_site') . '/' . $myurl . 'board=' . $context['current_board'] . '.0') .'" />'); 
 
 	// We'll have to use the cookie to remember the header... 
 	if ($context['user']['is_guest']) 
@@ -418,13 +435,15 @@ function mambo_smf_exit($with_output)
 
 function integrate_reset_pass($old_username, $username, $password)
 {
-	global $mosConfig_db, $mosConfig_dbprefix, $db_name;
+	global $db_name;
+	
+	$configuration =& mamboCore::getMamboCore();
 
 	$newpass = md5($password);
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 
 	$request = mysql_query("
-		UPDATE {$mosConfig_dbprefix}users
+		UPDATE " . $configuration->get('mosConfig_dbprefix') . "users
 		SET 
 			password = '$newpass',
 			username = '$username'
@@ -437,12 +456,14 @@ function integrate_reset_pass($old_username, $username, $password)
 
 function integrate_change_email($username, $email)
 {
-	global $mosConfig_db, $mosConfig_dbprefix, $db_name;
+	global $db_name;
+	
+	$configuration =& mamboCore::getMamboCore();
 
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 	$request = mysql_query("
-		UPDATE {$mosConfig_dbprefix}users
-		SET emailAddress = '$email'
+		UPDATE " . $configuration->get('mosConfig_dbprefix') . "users
+		SET email_address = '$email'
 		WHERE username = '" . addslashes($username) . "'
 		LIMIT 1");
 	mysql_select_db($db_name);
@@ -450,16 +471,18 @@ function integrate_change_email($username, $email)
 	return true;
 }
 
-function integrate_change_member_data ($memberNames, $var, $value)
+function integrate_change_member_data ($member_names, $var, $value)
 {
 
-	global $mosConfig_db, $db_name, $mosConfig_dbprefix;
+	global $db_name;
+
+	$configuration =& mamboCore::getMamboCore();
 	
 	$synch_mambo_fields = array(
-   			'memberName' => 'username',
-			'realName' => 'name',
-			'emailAddress' => 'email',
-			'ID_GROUP' => '',
+   			'member_name' => 'username',
+			'real_name' => 'name',
+			'email_address' => 'email',
+			'id_group' => '',
 			'gender'=>'',
 			'birthdate'=>'',
 			'websiteTitle'=>'',
@@ -475,25 +498,25 @@ function integrate_change_member_data ($memberNames, $var, $value)
 	$field = $synch_mambo_fields[$var];
 
 	if ($field != ''){
-		mysql_select_db($mosConfig_db);
+		mysql_select_db($configuration->get('mosConfig_db'));
 	
-		foreach ($memberNames as $memberName){
-			mysql_query ("UPDATE {$mosConfig_dbprefix}users
+		foreach ($member_names as $member_name){
+			mysql_query ("UPDATE " . $configuration->get('mosConfig_dbprefix') . "users
 						SET `$field` = $value
-						WHERE username = '$memberName'
+						WHERE username = '$member_name'
 						LIMIT 1");
 						
 			//  If the real name is changed, we need to make sure to update the ACL
-			if ($var == 'realName'){
+			if ($var == 'real_name'){
 				$mos_find_id = mysql_query("
 					SELECT `id`
-					FROM {$mosConfig_dbprefix}users
+					FROM " . $configuration->get('mosConfig_dbprefix') . "users
 					WHERE name = $value
 					LIMIT 1");
 				$mos_id_array = mysql_fetch_array($mos_find_id);
 				$mos_id = $mos_id_array[0];
 				$mos_write = mysql_query("
-					UPDATE {$mosConfig_dbprefix}core_acl_aro 
+					UPDATE " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro 
 					SET `name` = $value 
 					WHERE `value` = '$mos_id'");
 			}
@@ -501,11 +524,11 @@ function integrate_change_member_data ($memberNames, $var, $value)
 		mysql_select_db($db_name);
 	}
 		
-	if ($var == 'ID_GROUP'){
-		mysql_select_db($mosConfig_db);
+	if ($var == 'id_group'){
+		mysql_select_db($configuration->get('mosConfig_db'));
 		
 		$query = mysql_query (" SELECT `value2`
-					FROM {$mosConfig_dbprefix}smf_config
+					FROM " . $configuration->get('mosConfig_dbprefix') . "smf_config
 					WHERE `variable` = 'sync_group' AND `value1` = $value");
 		list($group) = mysql_fetch_row($query);
 		
@@ -513,25 +536,25 @@ function integrate_change_member_data ($memberNames, $var, $value)
 		if (!isset($group) || $group == '' || $group == 0 )
 			$group = '18';
 		
-		foreach ($memberNames as $memberName){
+		foreach ($member_names as $member_name){
 
-			mysql_query ("UPDATE {$mosConfig_dbprefix}users
+			mysql_query ("UPDATE " . $configuration->get('mosConfig_dbprefix') . "users
 						SET `gid` = '$group'
-						WHERE username = '$memberName'
+						WHERE username = '$member_name'
 						");
 			$mos_find_name = mysql_query("
 						SELECT `name`
-						FROM {$mosConfig_dbprefix}users
-						WHERE username = '$memberName'
+						FROM " . $configuration->get('mosConfig_dbprefix') . "users
+						WHERE username = '$member_name'
 						LIMIT 1");
 			list($mos_name) = mysql_fetch_row($mos_find_name);
 			$mos_map_sql = mysql_query("
 						SELECT aro_id
-						FROM {$mosConfig_dbprefix}core_acl_aro
+						FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro
 						WHERE name = '$mos_name'
 						LIMIT 1");
 			list($aro_id) = mysql_fetch_row($mos_map_sql);
-			mysql_query ("UPDATE {$mosConfig_dbprefix}core_acl_groups_aro_map
+			mysql_query ("UPDATE " . $configuration->get('mosConfig_dbprefix') . "core_acl_groups_aro_map
 						SET `group_id` = '$group'
 						WHERE aro_id = '$aro_id'
 						");
@@ -543,8 +566,10 @@ function integrate_change_member_data ($memberNames, $var, $value)
 
 function integrate_outgoing_email($subject, &$message, $headers)
 {
-	global $boardurl, $mosConfig_live_site, $Itemid, $scripturl, $mosConfig_sef, $modSettings, $Itemid, $hotmail_fix;
+	global $boardurl, $Itemid, $scripturl, $modSettings, $Itemid, $hotmail_fix;
 
+	$configuration =& mamboCore::getMamboCore();
+	
 	//First, we need to set up the email so that ob_mambofix knows what to do with it
 	$message = str_replace ($scripturl, '="' . $scripturl, $message);
 	$message = preg_replace ('/(http.+)(\b)/', '$1"', $message);
@@ -563,18 +588,22 @@ function integrate_outgoing_email($subject, &$message, $headers)
 
 function integrate_login($username, $passwd, $cookielength)
 {
-	global $mosConfig_db, $mosConfig_dbprefix, $user_settings, $db_name, $_VERSION;
-	global $scripturl, $cb_reg, $mosConfig_absolute_path, $mosConfig_live_site, $database;
+	global $user_settings, $db_name, $_VERSION;
+	global $scripturl, $cb_reg, $database;
 
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();	
+	
 	if (!isset($passwd) || $passwd == '' || $passwd == null)
 		$passwd = 'migrated';
 	
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 
 	// Let's see if the user already exists in Mambo
 	$mos_sql = "
 		SELECT username, block, password 
-		FROM {$mosConfig_dbprefix}users 
+		FROM " . $configuration->get('mosConfig_dbprefix') . "users 
 		WHERE username = '$username';";
 	$mos_result = mysql_query($mos_sql);
 	$mos_array = mysql_fetch_array($mos_result);
@@ -586,8 +615,8 @@ function integrate_login($username, $passwd, $cookielength)
 		// What Mambo group do we put you in?  Let's find the sync with $user_settings
 		$mos_sync_groups = mysql_query("
 				SELECT `value2`
-				FROM {$mosConfig_dbprefix}smf_config
-				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['ID_GROUP'] . "'
+				FROM " . $configuration->get('mosConfig_dbprefix') . "smf_config
+				WHERE `variable` = 'sync_group' AND `value1`='" . $user_settings['id_group'] . "'
 				");
 		list($group) = mysql_fetch_row($mos_sync_groups);
 
@@ -596,39 +625,39 @@ function integrate_login($username, $passwd, $cookielength)
 			$group = '18';
 	
 		$mos_write = mysql_query("
-			INSERT INTO {$mosConfig_dbprefix}users 
+			INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "users 
 				(name,username,email,password,gid) 
-			VALUES ('$username', '$username', '$user_settings[emailAddress]', '$passwd', '$group')");
+			VALUES ('$username', '$username', '$user_settings[email_address]', '$passwd', '$group')");
 
 		$mos_find_id = mysql_query("
 			SELECT id
-			FROM {$mosConfig_dbprefix}users
+			FROM " . $configuration->get('mosConfig_dbprefix') . "users
 			WHERE name = '$username'
 			LIMIT 1");
 		$mos_id_array = mysql_fetch_array($mos_find_id);
 		$mos_id = $mos_id_array[0];
 
 		$mos_write = mysql_query("
-			INSERT INTO {$mosConfig_dbprefix}core_acl_aro 
+			INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro 
 				(section_value, value, order_value, name, hidden) 
 			VALUES ('users', '$mos_id', '0', '$username', '0');");
 		
 		$mos_map_sql = mysql_query("
 			SELECT aro_id
-			FROM {$mosConfig_dbprefix}core_acl_aro
+			FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro
 			WHERE name = '$username'
 			LIMIT 1");
 		$mos_map_array = mysql_fetch_array($mos_map_sql);
 		$aro_id = $mos_map_array[0];
 		$mos_write = mysql_query ("
-			INSERT INTO {$mosConfig_dbprefix}core_acl_groups_aro_map 
+			INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "core_acl_groups_aro_map 
 				(group_id, section_value, aro_id) 
 			VALUES ('$group', '', '$aro_id');");
 
 		//Do you have Community Builder?  Might has well get them in there too...
 		if ($cb_reg=="on")
 			$sql = mysql_query("
-				INSERT INTO {$mosConfig_dbprefix}comprofiler 
+				INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "comprofiler 
 					(id, user_id) 
 				VALUES ('$mos_id', '$mos_id')");
 
@@ -647,14 +676,14 @@ function integrate_login($username, $passwd, $cookielength)
 		
 	$mos_pwd_qry = mysql_query("
 		SELECT password 
-		FROM {$mosConfig_dbprefix}users
+		FROM " . $configuration->get('mosConfig_dbprefix') . "users
 		WHERE username = '$username'
 		LIMIT 1");
 	list($passwd) = mysql_fetch_row($mos_pwd_qry);
 		
 	$currentDate = date("Y-m-d\TH:i:s");
 	mysql_query("
-		UPDATE {$mosConfig_dbprefix}users
+		UPDATE " . $configuration->get('mosConfig_dbprefix') . "users
 		SET lastvisitDate = '$currentDate'
 		WHERE username = '$username'");
 
@@ -663,7 +692,7 @@ function integrate_login($username, $passwd, $cookielength)
 	// Log into Mambo now.....
 	$request = mysql_query("
 		SELECT username, id, gid, block, usertype
-		FROM {$mosConfig_dbprefix}users
+		FROM " . $configuration->get('mosConfig_dbprefix') . "users
 		WHERE username = '$username'
 			AND password = '$passwd'");
 	$row = mysql_fetch_array($request);
@@ -681,7 +710,7 @@ function integrate_login($username, $passwd, $cookielength)
 
 	$currentDate = date("Y-m-d\TH:i:s");
 	mysql_query("
-		UPDATE {$mosConfig_dbprefix}users 
+		UPDATE " . $configuration->get('mosConfig_dbprefix') . "users 
 		SET lastvisitDate = '$currentDate' 
 		WHERE id = '$session[userid]'");
 
@@ -689,20 +718,20 @@ function integrate_login($username, $passwd, $cookielength)
 	setcookie('usercookie[username]', $username, $lifetime, '/');
 	setcookie('usercookie[password]', $passwd, $lifetime, '/');
 
-	$sessionCookieName = md5('site' . $mosConfig_live_site);
+	$sessionCookieName = md5('site' . $configuration->get('mosConfig_live_site'));
 	setcookie($sessionCookieName, '', -3600, '/');
 
 	
 	//Let's try to minimize the effects of those nasty extra sessions
 	$sql = mysql_query("
-		DELETE FROM {$mosConfig_dbprefix}session
+		DELETE FROM " . $configuration->get('mosConfig_dbprefix') . "session
 		WHERE username = '$username'");
 		
 	//Try to set the redirect by the login module params...
 
 	$sql = mysql_query ("
 		SELECT params
-		FROM {$mosConfig_dbprefix}modules
+		FROM " . $configuration->get('mosConfig_dbprefix') . "modules
 		WHERE module='mod_smf_login'");
 	$result = mysql_fetch_array($sql);
 	$paramlist = $result[0];
@@ -712,7 +741,7 @@ function integrate_login($username, $passwd, $cookielength)
 	if (!isset($Itemid) || $Itemid == 0)
 		$Itemid = (int) $_REQUEST['Itemid'];
 
-	$myurl = $mosConfig_live_site . '/index.php?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
+	$myurl = $configuration->get('mosConfig_live_site') . '/index.php?option=com_smf&amp;Itemid=' . $Itemid . '&amp;';
 
 
 	// Default, in case we couldn't find anything, or the admin forgot to configure the login module
@@ -727,7 +756,7 @@ function integrate_login($username, $passwd, $cookielength)
 	{
 		//Redirect to Mambo
 		case '0';
-		$_SESSION['login_url'] = $mosConfig_live_site;
+		$_SESSION['login_url'] = $configuration->get('mosConfig_live_site');
 		break;
 
 		//Redirect to SMF
@@ -742,7 +771,7 @@ function integrate_login($username, $passwd, $cookielength)
 
 		//There still might be nothing....
 		case '';
-		$_SESSION['login_url'] = $mosConfig_live_site;
+		$_SESSION['login_url'] = $configuration->get('mosConfig_live_site');
 		break;
 	}
 
@@ -753,12 +782,14 @@ function integrate_login($username, $passwd, $cookielength)
 
 function integrate_redirect (&$setLocation, $refresh)
 {
-	global $boardurl, $mosConfig_live_site, $mosConfig_sef;
+	global $boardurl;
 
+	$configuration =& mamboCore::getMamboCore();
+	
 	$myurl = 'index.php?option=com_smf&amp;Itemid=' . $_REQUEST['Itemid'] . '&amp;' ;
 	
 	if ($setLocation == '')
-		$setLocation = $mosConfig_sef == 1 ? sefReltoAbs($myurl) : $mosConfig_live_site . '/' . $myurl;
+		$setLocation = $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl) : $configuration->get('mosConfig_live_site') . '/' . $myurl;
 	
 	$setLocation = ob_mambofix('="' . $setLocation . '"');
 	$setLocation = str_replace('="','',$setLocation);
@@ -769,19 +800,23 @@ function integrate_redirect (&$setLocation, $refresh)
 
 function integrate_logout ($username)
 {
-	global $mosConfig_db, $mosConfig_dbprefix, $db_name, $mosConfig_live_site, $scripturl, $_VERSION, $mosConfig_sef;
+	global $db_name, $scripturl, $_VERSION;
+
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
 
 	setcookie('usercookie[username]', $username, time() - 3600, '/');
 	setcookie('usercookie[password]', '', time() - 3600, '/');
 
-	$sessionCookieName = md5('site' . $mosConfig_live_site);
+	$sessionCookieName = md5('site' . $configuration->get('mosConfig_live_site'));
 	setcookie($sessionCookieName, '', time() - 3600, '/');
 
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 
 	// Let's try to minimize the effects of those nasty extra sessions.
 	$sql = mysql_query("
-		DELETE FROM {$mosConfig_dbprefix}session
+		DELETE FROM " . $configuration->get('mosConfig_dbprefix') . "session
 		WHERE username = '$username'");
 	
 	//Try to set up the logout redirection
@@ -789,7 +824,7 @@ function integrate_logout ($username)
 	{
 		$sql = mysql_query("
 			SELECT params 
-			FROM {$mosConfig_dbprefix}modules 
+			FROM " . $configuration->get('mosConfig_dbprefix') . "modules 
 			WHERE module='mod_smf_login'");
 		$result = mysql_fetch_array($sql);
 		$paramlist = $result[0];
@@ -813,12 +848,12 @@ function integrate_logout ($username)
 	{
 		//Redirect to Mambo frontpage
 		case "0";
-		$_SESSION['logout_url'] = $mosConfig_live_site;
+		$_SESSION['logout_url'] = $configuration->get('mosConfig_live_site');
 		break;
 
 		//Redirect to SMF
 		case "1";
-		$_SESSION['logout_url'] = $mosConfig_sef == 1 ? sefReltoAbs($myurl) : $mosConfig_live_site . '/' . $myurl;
+		$_SESSION['logout_url'] = $configuration->get('mosConfig_sef') == 1 ? sefReltoAbs($myurl) : $configuration->get('mosConfig_live_site') . '/' . $myurl;
 		break;
 
 		//Redirect back to logout page
@@ -832,29 +867,36 @@ function integrate_logout ($username)
 
 function integrate_delete_member($user)
 {
-	global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix;
+	global $db_name, $db_prefix, $from_mambo;
 
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
+	
+	if ($from_mambo==true)
+		return;
+	
 	$query1 = mysql_query ("
-		SELECT memberName, realName
+		SELECT member_name, real_name
 		FROM {$db_prefix}members
-		WHERE ID_MEMBER = '$user'");
+		WHERE id_member = '$user'");
 	list($username, $name) = mysql_fetch_row($query1);
 
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 
 	$query2 = mysql_query ("
-		DELETE FROM {$mosConfig_dbprefix}users
+		DELETE FROM " . $configuration->get('mosConfig_dbprefix') . "users
 		WHERE username = '$username'");
 	$query3 = mysql_query ("
 		SELECT aro_id
-		FROM {$mosConfig_dbprefix}core_acl_aro
+		FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro
 		WHERE name = '$name'");
 	list($aro_id) = mysql_fetch_row($query3);
 	$query4 = mysql_query ("
-		DELETE FROM {$mosConfig_dbprefix}core_acl_aro
+		DELETE FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro
 		WHERE name = '$name'");
 	$query5 = mysql_query ("
-		DELETE FROM {$mosConfig_dbprefix}core_acl_groups_aro_map
+		DELETE FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_groups_aro_map
 		WHERE aro_id = '$aro_id'");
 
 	mysql_select_db($db_name);
@@ -862,14 +904,18 @@ function integrate_delete_member($user)
 
 function integrate_validate_login($username, $password, $cookietime)
 {
-	global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix, $use_realname, $database;
+	global $db_name, $db_prefix, $use_real_name, $database;
+
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
 
 	// Check if the user already exists in SMF.
 	mysql_select_db($db_name);
 	$request = mysql_query("
-		SELECT ID_MEMBER
+		SELECT id_member
 		FROM {$db_prefix}members
-		WHERE memberName = '$username'
+		WHERE member_name = '$username'
 		LIMIT 1");
 	if ($request !== false && mysql_num_rows($request) === 1)
 	{
@@ -880,12 +926,12 @@ function integrate_validate_login($username, $password, $cookietime)
 	//OK, so no user in SMF.  Does this user exist in Mambo?
 	else
 	{
-		mysql_select_db($mosConfig_db);
+		mysql_select_db($configuration->get('mosConfig_db'));
 
 		//!!! How about sendEmail and activation?
 		$request = mysql_query("
-			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS dateRegistered, activation
-			FROM {$mosConfig_dbprefix}users
+			SELECT name, password, email, UNIX_TIMESTAMP(registerDate) AS date_registered, activation
+			FROM " . $configuration->get('mosConfig_dbprefix') . "users
 			WHERE username = '$username'");
 
 		//No user in Mambo, either.  This guy is just guessing....
@@ -904,7 +950,7 @@ function integrate_validate_login($username, $password, $cookietime)
 		mysql_select_db($db_name);
 
 		//Do we want to use real names on the forum?
-		if ($use_realname == 'true')
+		if ($use_real_name == 'true')
 			$name = $mos_user['name'];
 		else
 			$name = $username;
@@ -912,8 +958,8 @@ function integrate_validate_login($username, $password, $cookietime)
 		//There must be a result, so let's write this one into SMF....
 		mysql_query("
 			INSERT INTO {$db_prefix}members 
-				(memberName, realName, passwd, emailAddress, dateRegistered, ID_POST_GROUP, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups)
-			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[dateRegistered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
+				(member_name, real_name, passwd, email_address, date_registered, id_post_group, lngfile, buddy_list, pm_ignore_list, messageLabels, personalText, websiteTitle, websiteUrl, location, ICQ, MSN, signature, avatar, usertitle, memberIP, memberIP2, secretQuestion, additionalGroups)
+			VALUES ('$username', '$name', '$mos_user[password]', '$mos_user[email]', $mos_user[date_registered], '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '')");
 		$memberID = db_insert_id();
 		
 		updateStats('member', $memberID, $name);
@@ -930,19 +976,23 @@ function integrate_validate_login($username, $password, $cookietime)
 
 function integrate_register($Options, $theme_vars)
 {
-	global $db_name, $db_prefix, $mosConfig_db, $mosConfig_dbprefix;
+	global $db_name, $db_prefix;
 	global $cb_reg, $bridge_reg;
 	
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
+
 	//This function is only for SMF registration
 	if ($bridge_reg!='SMF')
 		return;
 	
-	mysql_select_db($mosConfig_db);
+	mysql_select_db($configuration->get('mosConfig_db'));
 
 	// What Mambo group do we put you in?  SMF Newbies are group #4...
 	$mos_sync_groups = mysql_query("
 				SELECT `value2`
-				FROM {$mosConfig_dbprefix}smf_config
+				FROM " . $configuration->get('mosConfig_dbprefix') . "smf_config
 				WHERE `variable` = 'sync_group' AND `value1`='4'
 				");
 	list($group) = mysql_fetch_row($mos_sync_groups);
@@ -954,43 +1004,43 @@ function integrate_register($Options, $theme_vars)
 	//registration will be considered now
 	$r_date = date("Y-m-d H:i:s");
 		
-	//What if the realName field isn't being used?
-	if (!isset($Options['register_vars']['realName']) || $Options['register_vars']['realName']=='')
-		$Options['register_vars']['realName'] = $Options['register_vars']['memberName'];
+	//What if the real_name field isn't being used?
+	if (!isset($Options['register_vars']['real_name']) || $Options['register_vars']['real_name']=='')
+		$Options['register_vars']['real_name'] = $Options['register_vars']['member_name'];
 				
 	mysql_query("
-		INSERT INTO {$mosConfig_dbprefix}users 
+		INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "users 
 			(name, username, email, password, registerDate, gid) 
-		VALUES (" . $Options['register_vars']['realName'] . ", " . $Options['register_vars']['memberName'] . ", " . $Options['register_vars']['emailAddress'] . ", '" . md5($Options['password']) . "', '$r_date', '$group')");
+		VALUES (" . $Options['register_vars']['real_name'] . ", " . $Options['register_vars']['member_name'] . ", " . $Options['register_vars']['email_address'] . ", '" . md5($Options['password']) . "', '$r_date', '$group')");
 	
 	$mos_find_userid = mysql_query("
 		SELECT `id`
-		FROM {$mosConfig_dbprefix}users
-		WHERE username = " . $Options['register_vars']['memberName'] . "
+		FROM " . $configuration->get('mosConfig_dbprefix') . "users
+		WHERE username = " . $Options['register_vars']['member_name'] . "
 		LIMIT 1");
 	list($mos_id) = mysql_fetch_row($mos_find_userid); 
 
 	mysql_query( "
-		INSERT INTO {$mosConfig_dbprefix}core_acl_aro 
+		INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro 
 			(aro_id, section_value, value, order_value, name, hidden)
-		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['realName'] . ", '0');");
+		VALUES ('', 'users', '$mos_id', '0', " . $Options['register_vars']['real_name'] . ", '0');");
 
 	$mos_map_sql = mysql_query("
 		SELECT aro_id
-		FROM {$mosConfig_dbprefix}core_acl_aro
-		WHERE name = " . $Options['register_vars']['realName'] . "
+		FROM " . $configuration->get('mosConfig_dbprefix') . "core_acl_aro
+		WHERE name = " . $Options['register_vars']['real_name'] . "
 		LIMIT 1");
 	list($aro_id) = mysql_fetch_row($mos_map_sql);
 
 	mysql_query ("
-		INSERT INTO {$mosConfig_dbprefix}core_acl_groups_aro_map 
+		INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "core_acl_groups_aro_map 
 			(group_id, section_value, aro_id) 
 		VALUES ('$group', '', '" . $aro_id . "');");
 
 	//Do you have Community Builder?  Might has well get them in there too...
 	if ($cb_reg == 'on')
 		mysql_query("
-			INSERT INTO {$mosConfig_dbprefix}comprofiler
+			INSERT INTO " . $configuration->get('mosConfig_dbprefix') . "comprofiler
 				(id, user_id)
 			VALUES ('$mos_id', '$mos_id')");
 
@@ -999,9 +1049,8 @@ function integrate_register($Options, $theme_vars)
 
 function integrate_pre_load () {
 
-
 // Try to modify settings so that bridging is less problematic if people have the wrong settings
-	global $modSettings;
+	global $modSettings, $settings, $context;
 
 	//Turn off compressed output
 	$modSettings['enableCompressedOutput'] = '0';
@@ -1009,13 +1058,16 @@ function integrate_pre_load () {
 	$modSettings['localCookies'] = '0';
 	//Turn off SEF in SMF
 	$modSettings['queryless_urls'] = '';
-
+    $context['template_layers'] = array('body');
 // Change the SMF language according to the Mambo/Joomla settings
 
-	global $mosConfig_lang, $language, $synch_lang, $language_conversion, $smf_path;
+	global $language, $synch_lang, $language_conversion, $smf_path;
 
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
 
-	if(isset($mosConfig_lang) && $synch_lang == 'true'){
+	if($configuration->get('mosConfig_lang')!='' && $synch_lang == 'true'){
 
 		if (isset($_COOKIE['mbfcookie']) || isset($_REQUEST['lang'])){
           
@@ -1036,23 +1088,28 @@ function integrate_pre_load () {
 				else if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8.php'))
 					$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8';					
 				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '.php'))
-					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';					
+					$GLOBALS['language'] = $_REQUEST['lang'];					
 				else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '-utf8.php'))
 					$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';
 			}
 			
 		} else if ($synch_lang == 'true')
-			$GLOBALS['language'] = $mosConfig_lang;
-		loadLanguage ('default', $language);
+			$GLOBALS['language'] = $configuration->get('mosConfig_lang');
+		//loadLanguage ('index', $language);
 	}
 }
 
 
 function integrate_whos_online ($actions) {
 
-	global $txt, $database, $mosConfig_db, $mosConfig_dbprefix, $db_name;
+	global $txt, $database, $db_name;
+
+	$configuration =& mamboCore::getMamboCore();
+	$database =& mamboDatabase::getInstance();
+	$mainframe =& mosMainFrame::getInstance();
+
 	//First, we need to add the new language strings
-	add_to_txt();
+	add_to_txt();	
 
 	//it must be the main page
 	if (!isset($actions['option']))
@@ -1070,9 +1127,9 @@ function integrate_whos_online ($actions) {
 		if ($actions['option']=='com_content'){
 			if (isset($actions['task'])){
 				if($actions['task']=='view'){
-					mysql_select_db($mosConfig_db);
+					mysql_select_db($configuration->get('mosConfig_db'));
 					$mos_find_article = mysql_query ("SELECT title
-												FROM {$mosConfig_dbprefix}content
+												FROM " . $configuration->get('mosConfig_dbprefix') . "content
 												WHERE id = $actions[id]
 												LIMIT 1");
 					list ($article_name) = mysql_fetch_row($mos_find_article);
@@ -1080,9 +1137,9 @@ function integrate_whos_online ($actions) {
 					return sprintf($txt['who_article'], $actions['id'], $actions['Itemid'], $article_name);
 				}
 				if ($actions['task']=='section'){
-					mysql_select_db($mosConfig_db);
+					mysql_select_db($configuration->get('mosConfig_db'));
 					$mos_find_article = mysql_query ("SELECT title
-												FROM {$mosConfig_dbprefix}sections
+												FROM " . $configuration->get('mosConfig_dbprefix') . "sections
 												WHERE id = $actions[id]
 												LIMIT 1");
 					list ($section_name) = mysql_fetch_row($mos_find_article);
@@ -1090,9 +1147,9 @@ function integrate_whos_online ($actions) {
 					return sprintf($txt['who_section'], $actions['id'], $actions['Itemid'], $section_name);
 				}
 				if ($actions['task']=='blogsection'){
-					mysql_select_db($mosConfig_db);
+					mysql_select_db($configuration->get('mosConfig_db'));
 					$mos_find_article = mysql_query ("SELECT title
-												FROM {$mosConfig_dbprefix}sections
+												FROM " . $configuration->get('mosConfig_dbprefix') . "sections
 												WHERE id = $actions[id]
 												LIMIT 1");
 					list ($section_name) = mysql_fetch_row($mos_find_article);
@@ -1100,9 +1157,9 @@ function integrate_whos_online ($actions) {
 					return sprintf($txt['who_blogsection'], $actions['id'], $actions['Itemid'], $section_name);
 				}
 				if ($actions['task']=='category'){
-					mysql_select_db($mosConfig_db);
+					mysql_select_db($configuration->get('mosConfig_db'));
 					$mos_find_article = mysql_query ("SELECT title
-												FROM {$mosConfig_dbprefix}categories
+												FROM " . $configuration->get('mosConfig_dbprefix') . "categories
 												WHERE id = $actions[id]
 												LIMIT 1");
 					list ($category_name) = mysql_fetch_row($mos_find_article);
@@ -1110,9 +1167,9 @@ function integrate_whos_online ($actions) {
 					return sprintf($txt['who_category'], $actions['id'], $actions['Itemid'], $category_name);
 				}
 				if ($actions['task']=='blogcategory'){
-					mysql_select_db($mosConfig_db);
+					mysql_select_db($configuration->get('mosConfig_db'));
 					$mos_find_article = mysql_query ("SELECT title
-												FROM {$mosConfig_dbprefix}categories
+												FROM " . $configuration->get('mosConfig_dbprefix') . "categories
 												WHERE id = $actions[id]
 												LIMIT 1");
 					list ($category_name) = mysql_fetch_row($mos_find_article);
@@ -1141,8 +1198,15 @@ function integrate_whos_online ($actions) {
 		}
 		
 	}	
-
-
-
 }
+
+function integrate_load_theme() {
+
+	global $context;
+
+	$context['template_layers'] = array('body');
+
+}	
+
+
 ?>
