@@ -42,7 +42,7 @@ $databases = array(
 	),
 	'postgresql' => array(
 		'name' => 'PostgreSQL',
-		'version' => '8.0.1',
+		'version' => '7.4.10',
 		'version_check' => '$version = pg_version(); return $version[\'client\'];',
 		'always_has_db' => true,
 	),
@@ -888,7 +888,7 @@ function WelcomeLogin()
 	$check = @file_exists($boarddir . '/Themes/default/index.template.php')
 		&& @file_exists($sourcedir . '/QueryString.php')
 		&& @file_exists($sourcedir . '/ManageBoards.php')
-		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0_mysql.sql')
+		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0_' . $db_type . '.sql')
 		&& @file_exists(dirname(__FILE__) . '/upgrade_1-1.sql')
 		&& @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
 	if (!$check && !isset($modSettings['smfVersion']))
@@ -2584,6 +2584,11 @@ function upgrade_query($string, $unbuffered = false)
 			if (strpos($db_error_message, 'exists') !== false)
 				return true;
 		}
+		elseif (strpos($string, 'INSERT IGNORE') !== false)
+		{
+			if (strpos($db_error_message, 'Duplicate') !== false)
+				return true;
+		}
 	}
 	
 
@@ -3635,7 +3640,7 @@ function template_upgrade_options()
 				<table cellpadding="1" cellspacing="0">
 					<tr valign="top">
 						<td width="2%">
-							<input type="checkbox" name="backup" id="backup" value="1" ', $db_type != 'mysql' ? 'disabled="disabled"' : '', '/>
+							<input type="checkbox" name="backup" id="backup" value="1" ', $db_type != 'mysql' && $db_type != 'postgresql' ? 'disabled="disabled"' : '', '/>
 						</td>
 						<td width="100%">
 							<label for="backup">Backup tables in your database with the prefix &quot;backup_' . $db_prefix . '&quot;.</label>', isset($modSettings['smfVersion']) ? '' : ' (recommended!)', '

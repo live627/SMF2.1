@@ -48,7 +48,7 @@ $databases = array(
 	),
 	'postgresql' => array(
 		'name' => 'PostgreSQL',
-		'version' => '8.0.1',
+		'version' => '7.4.10',
 		'function_check' => 'pg_connect',
 		'version_check' => '$version = pg_version(); return $version[\'client\'];',
 		'supported' => function_exists('pg_connect'),

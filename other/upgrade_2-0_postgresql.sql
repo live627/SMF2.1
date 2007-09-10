@@ -21,8 +21,28 @@ CREATE TABLE {$db_prefix}openid_assoc (
 /******************************************************************************/
 
 ---# Adding search ability to custom fields.
-ALTER TABLE {$db_prefix}custom_fields
-ADD COLUMN can_search smallint NOT NULL default '0' AFTER bbc;
+---{
+if ($db_type == 'postgresql' && $smfFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}custom_fields
+		ADD COLUMN can_search smallint");
+
+	upgrade_query("
+		UPDATE {$db_prefix}custom_fields
+		SET can_search = 0");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}custom_fields
+		CHANGE COLUMN can_search SET default = '0'");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}custom_fields
+		ADD COLUMN can_search smallint NOT NULL default '0'");
+}
+---}
 ---#
 
 ---# Enhancing privacy settings for custom fields.
@@ -42,6 +62,30 @@ upgrade_query("
 /******************************************************************************/
 
 ---# Implementing board redirects.
-ALTER TABLE {$db_prefix}boards
-ADD COLUMN redirect varchar(255) NOT NULL default '';
+---{
+if ($db_type == 'postgresql' && $smfFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}boards
+		ADD COLUMN redirect varchar(255)");
+
+	upgrade_query("
+		UPDATE {$db_prefix}boards
+		SET redirect = ''");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}boards
+		ALTER COLUMN redirect SET NOT NULL");
+		
+	upgrade_query("
+		ALTER TABLE {$db_prefix}boards
+		ALTER COLUMN redirect SET DEFAULT ''");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}boards
+		ADD COLUMN redirect varchar(255) NOT NULL DEFAULT ''");
+}
+---}
 ---#
