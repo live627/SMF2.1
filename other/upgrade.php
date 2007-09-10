@@ -888,9 +888,14 @@ function WelcomeLogin()
 	$check = @file_exists($boarddir . '/Themes/default/index.template.php')
 		&& @file_exists($sourcedir . '/QueryString.php')
 		&& @file_exists($sourcedir . '/ManageBoards.php')
-		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0_' . $db_type . '.sql')
-		&& @file_exists(dirname(__FILE__) . '/upgrade_1-1.sql')
-		&& @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
+		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0_' . $db_type . '.sql');
+
+	// Need legacy scripts?
+	if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] < 2.0)
+		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-1.sql');
+	if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] < 1.1)
+		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
+
 	if (!$check && !isset($modSettings['smfVersion']))
 	{
 		// Don't tell them what files exactly because it's a spot check - just like teachers don't tell which problems they are spot checking, that's dumb.
@@ -1158,8 +1163,8 @@ function UpgradeOptions()
 
 		if (!empty($_POST['maintitle']))
 		{
-			$changes['mtitle'] = '\'' . $_POST['maintitle'] . '\'';
-			$changes['mmessage'] = '\'' . $_POST['mainmessage'] . '\'';
+			$changes['mtitle'] = '\'' . addslashes($smfFunc['db_unescape_string']($_POST['maintitle'])) . '\'';
+			$changes['mmessage'] = '\'' . addslashes($smfFunc['db_unescape_string']($_POST['mainmessage'])) . '\'';
 		}
 		else
 		{
@@ -1229,7 +1234,7 @@ function BackupDatabase()
 	// Get all the table names.
 	$filter = str_replace('_', '\_', preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0 ? $match[2] : $db_prefix) . '%';
 	$db = preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0 ? strtr($match[1], array('`' => '')) : false;
-	$tables = smf_db_list_tables($db, $filter);
+	$tables = $smfFunc['db_list_tables']($db, $filter);
 
 	$table_names = array();
 	foreach ($tables as $table)
@@ -2637,31 +2642,27 @@ function protected_alter($change, $substep, $is_test = false)
 {
 	global $db_prefix, $smfFunc;
 
+	db_extend('packages');
+
 	// Firstly, check whether the current index/column exists.
 	$found = false;
 	if ($change['type'] === 'column')
 	{
-		$request = upgrade_query("
-			SHOW FULL COLUMNS
-			FROM {$db_prefix}$change[table]");
-		if ($request !== false)
+		$columns = $smfFunc['db_list_columns']("{$db_prefix}$change[table]", true);
+		foreach ($columns as $column)
 		{
-			while ($table_row = $smfFunc['db_fetch_assoc']($request))
+			// Found it?
+			if ($column['name'] === $change['name'])
 			{
-				// Found it?
-				if ($table_row['Field'] === $change['name'])
-				{
-					$found |= 1;
-					// Do some checks on the data if we have it set.
-					if (isset($change['col_type']))
-						$found &= $change['col_type'] === $table_row['Type'];
-					if (isset($change['null_allowed']))
-						$found &= (strtolower($table_row['Null']) === 'yes') === $change['null_allowed'];
-					if (isset($change['default']))
-						$found &= $change['default'] === $table_row['Default'];
-				}
+				$found |= 1;
+				// Do some checks on the data if we have it set.
+				if (isset($change['col_type']))
+					$found &= $change['col_type'] === $column['type'];
+				if (isset($change['null_allowed']))
+					$found &= $column['null'] == $change['null_allowed'];
+				if (isset($change['default']))
+					$found &= $change['default'] === $column['default'];
 			}
-			$smfFunc['db_free_result']($request);
 		}
 	}
 	elseif ($change['type'] === 'index')
