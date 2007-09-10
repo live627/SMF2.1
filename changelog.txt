@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2825 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2826 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -14,6 +14,7 @@ September 2007
  ! Cleanup Permissions wasn't displaying the right contextual information. (Admin.php)
  ! Upgrade should now work better with PostgreSQL. (upgrade.php, upgrade script)
  & Make the timings of scheduled tasks clearer to users. (ManageMaintenance.php, Admin template, Admin language file)
+ ! Don't allow an ICQ value of zero on registration. (Subs-Members.php)
 
 
 August 2007

@@ -482,6 +482,10 @@ function registerMember(&$regOptions)
 			$regOptions['register_vars']['id_group'] = 0;
 	}
 
+	// ICQ cannot be zero.
+	if (isset($regOptions['extra_register_vars']['icq']) && empty($regOptions['extra_register_vars']['icq']))
+		$regOptions['extra_register_vars']['icq'] = "''";
+
 	// Integrate optional member settings to be set.
 	if (!empty($regOptions['extra_register_vars']))
 		foreach ($regOptions['extra_register_vars'] as $var => $value)
