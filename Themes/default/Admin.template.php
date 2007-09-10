@@ -1205,11 +1205,18 @@ function template_view_scheduled_tasks()
 			<tr class="titlebg">
 				<td colspan="5">', $txt['maintain_tasks'], '</td>
 			</tr>
+			<tr class="windowbg2">
+				<td colspan="5">
+					<span class="smalltext">
+						', $txt['scheduled_tasks_time_offset'], '
+					</span>
+				</td>
+			</tr>
 			<tr class="catbg">
 				<td colspan="5">', $txt['scheduled_tasks_header'], '</td>
 			</tr>
 			<tr class="titlebg">
-				<td>', $txt['scheduled_tasks_name'], '</td>
+				<td width="40%">', $txt['scheduled_tasks_name'], '</td>
 				<td>', $txt['scheduled_tasks_next_time'], '</td>
 				<td>', $txt['scheduled_tasks_regularity'], '</td>
 				<td width="6%">', $txt['scheduled_tasks_enabled'], '</td>
@@ -1225,7 +1232,7 @@ function template_view_scheduled_tasks()
 					<a href="', $scripturl, '?action=admin;area=maintain;sa=taskedit;tid=', $task['id'], '">', $task['name'], '</a><br />
 					<span class="smalltext">', $task['desc'], '</span>
 				</td>
-				<td>', $task['next_time'], '</td>
+				<td><span class="smalltext">', $task['next_time'], '</span></td>
 				<td><span class="smalltext">', $task['regularity'], '</span></td>
 				<td align="center">
 					<input type="hidden" name="task[', $task['id'], ']" id="task_', $task['id'], '" value="0" />
@@ -1266,14 +1273,20 @@ function template_edit_scheduled_tasks()
 		<table align="center" width="80%" cellpadding="4" cellspacing="0" border="0" class="tborder">
 			<tr class="titlebg">
 				<td colspan="2">', $txt['scheduled_task_edit'], '</td>
-			</tr><tr class="windowbg2" valign="top">
+			</tr><tr class="windowbg2">
+				<td colspan="2">
+					<span class="smalltext">
+						<em>', sprintf($txt['scheduled_task_time_offset'], $context['server_time']), '</em>
+					</span>
+				</td>
+			</tr><tr class="windowbg" valign="top">
 				<td width="30%">
 					<b>', $txt['scheduled_tasks_name'], ':</b>
 				</td><td width="70%">
 					', $context['task']['name'], '</a><br />
 					<span class="smalltext">', $context['task']['desc'], '</span>
 				</td>
-			</tr><tr class="windowbg2">
+			</tr><tr class="windowbg">
 				<td width="30%">
 					<b>', $txt['scheduled_task_edit_interval'], ':</b>
 				</td><td width="70%">
@@ -1288,20 +1301,20 @@ function template_edit_scheduled_tasks()
 						<option value="w" ', $context['task']['unit'] == 'w' ? 'selected="selected"' : '', '>', $txt['scheduled_task_reg_unit_w'], '</option>
 					</select>
 				</td>
-			</tr><tr class="windowbg2" valign="top">
+			</tr><tr class="windowbg" valign="top">
 				<td width="30%">
 					<b>', $txt['scheduled_task_edit_start_time'], ':</b><br />
 					<span class="smalltext">', $txt['scheduled_task_edit_start_time_desc'], '</span>
 				</td><td width="70%">
 					<input type="text" name="offset" value="', $context['task']['offset_formatted'], '" size="6" maxlength="5" />
 				</td>
-			</tr><tr class="windowbg2">
+			</tr><tr class="windowbg">
 				<td width="30%">
 					<b>', $txt['scheduled_tasks_enabled'], ':</b>
 				</td><td width="70%">
 					<input type="checkbox" name="enabled" id="enabled" ', !$context['task']['disabled'] ? 'checked="checked"' : '', ' class="check" />
 				</td>
-			</tr><tr class="windowbg2">
+			</tr><tr class="windowbg">
 				<td colspan="2" align="center">
 					<input type="hidden" name="sc" value="', $context['session_id'], '" />
 					<input type="submit" name="save" value="', $txt['scheduled_tasks_save_changes'], '" />

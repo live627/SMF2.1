@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2824 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2825 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -13,6 +13,7 @@ September 2007
  ! Only optimise SMF tables. (install.php, ScheduledTasks.php)
  ! Cleanup Permissions wasn't displaying the right contextual information. (Admin.php)
  ! Upgrade should now work better with PostgreSQL. (upgrade.php, upgrade script)
+ & Make the timings of scheduled tasks clearer to users. (ManageMaintenance.php, Admin template, Admin language file)
 
 
 August 2007

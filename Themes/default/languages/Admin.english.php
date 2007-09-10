@@ -298,6 +298,7 @@ $txt['scheduled_tasks_regularity'] = 'Regularity';
 $txt['scheduled_tasks_enabled'] = 'Enabled';
 $txt['scheduled_tasks_run_now'] = 'Run Task Now';
 $txt['scheduled_tasks_save_changes'] = 'Save Changes';
+$txt['scheduled_tasks_time_offset'] = '<strong>Note:</strong> All times given below are <em>server time</em> and do not take any time offsets setup within SMF into account.';
 
 // Untranslated!
 $txt['scheduled_tasks_na'] = 'N/A';
@@ -331,6 +332,7 @@ $txt['scheduled_task_edit_pick_unit'] = 'Pick Unit';
 $txt['scheduled_task_edit_interval'] = 'Interval';
 $txt['scheduled_task_edit_start_time'] = 'Start Time';
 $txt['scheduled_task_edit_start_time_desc'] = 'Time the first instance of the day should start (hours:minutes)';
+$txt['scheduled_task_time_offset'] = 'Note the start time should be the offset against the current server time. Current server time is: %1$s';
 
 $txt['mailqueue_title'] = 'Mail';
 

@@ -313,7 +313,7 @@ function Maintenance()
 // List all the scheduled task in place on the forum.
 function ScheduledTasks()
 {
-	global $context, $txt, $db_prefix, $sourcedir, $smfFunc;
+	global $context, $txt, $db_prefix, $sourcedir, $smfFunc, $user_info, $modSettings;
 
 	// Mama, setup the template first - cause it's like the most important bit, like pickle in a sandwich.
 	// ... ironically I don't like pickle. </grudge>
@@ -406,7 +406,7 @@ function ScheduledTasks()
 			'function' => $row['task'],
 			'name' => isset($txt['scheduled_task_' . $row['task']]) ? $txt['scheduled_task_' . $row['task']] : $row['task'],
 			'desc' => isset($txt['scheduled_task_desc_' . $row['task']]) ? $txt['scheduled_task_desc_' . $row['task']] : '',
-			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat($row['next_time'] == 0 ? time() : $row['next_time']),
+			'next_time' => $row['disabled'] ? $txt['scheduled_tasks_na'] : timeformat(($row['next_time'] == 0 ? time() : $row['next_time']) - (($user_info['time_offset'] + $modSettings['time_offset']) * 3600)),
 			'disabled' => $row['disabled'],
 			'regularity' => $offset . ', ' . $repeating,
 		);
@@ -420,12 +420,13 @@ function ScheduledTasks()
 // Function for editing a task.
 function EditTask()
 {
-	global $context, $txt, $db_prefix, $sourcedir, $smfFunc;
+	global $context, $txt, $db_prefix, $sourcedir, $smfFunc, $user_info, $modSettings;
 
 	// Just set up some lovely context stuff.
 	$context[$context['admin_menu_name']]['current_subsection'] = 'tasks';
 	$context['sub_template'] = 'edit_scheduled_tasks';
 	$context['page_title'] = $txt['scheduled_task_edit'];
+	$context['server_time'] = timeformat(time() - (($user_info['time_offset'] + $modSettings['time_offset']) * 3600), false);
 
 	// Cleaning...
 	if (!isset($_GET['tid']))
