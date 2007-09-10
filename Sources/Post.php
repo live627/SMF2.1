@@ -1620,6 +1620,7 @@ function Post2()
 		'lock_mode' => isset($_POST['lock']) ? (int) $_POST['lock'] : null,
 		'sticky_mode' => isset($_POST['sticky']) && !empty($modSettings['enableStickyTopics']) ? (int) $_POST['sticky'] : null,
 		'mark_as_read' => true,
+		'is_approved' => empty($topic) || !empty($board_info['cur_topic_approved']),
 	);
 	$posterOptions = array(
 		'id' => $user_info['id'],

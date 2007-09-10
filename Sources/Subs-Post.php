@@ -1705,6 +1705,18 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$posterOptions['id'] = empty($posterOptions['id']) ? 0 : (int) $posterOptions['id'];
 	$posterOptions['ip'] = empty($posterOptions['ip']) ? $user_info['ip'] : $posterOptions['ip'];
 
+	// We need to know if the topic is approved. If we're told that's great - if not find out.
+	if (!empty($topicOptions['id']) && !isset($topicOptions['is_approved']))
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT approved
+			FROM {$db_prefix}topics
+			WHERE id_topic = $topicOptions[id]
+			LIMIT 1", __FILE__, __LINE__);
+		list ($topicOptions['is_approved']) = $smfFunc['db_fetch_row']($request);
+		$smfFunc['db_free_result']($request);
+	}
+
 	// If nothing was filled in as name/e-mail address, try the member table.
 	if (!isset($posterOptions['name']) || $posterOptions['name'] == '' || (empty($posterOptions['email']) && !empty($posterOptions['id'])))
 	{
@@ -1911,8 +1923,10 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Update all the stats so everyone knows about this new topic and message.
 	updateStats('message', true, $msgOptions['id']);
+
+	// Update the last message on the board assuming it's approved AND the topic is.
 	if ($msgOptions['approved'])
-		updateLastMessages($topicOptions['board'], $msgOptions['id']);
+		updateLastMessages($topicOptions['board'], $new_topic || !empty($topicOptions['is_approved']) ? $msgOptions['id'] : 0);
 
 	// Alright, done now... we can abort now, I guess... at least this much is done.
 	ignore_user_abort($previous_ignore_user_abort);
