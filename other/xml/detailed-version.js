@@ -218,6 +218,7 @@ window.smfLanguageVersions = {
 	'Login': '2.0 Beta 1',
 	'ManageBoards': '2.0 Beta 1',
 	'ManageCalendar': '2.0 Beta 1',
+	'ManageMail': '2.0 Beta 1',
 	'ManageMembers': '2.0 Beta 1',
 	'ManagePermissions': '2.0 Beta 1',
 	'ManageSettings': '2.0 Beta 1',
