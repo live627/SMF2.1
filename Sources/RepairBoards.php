@@ -187,6 +187,8 @@ function RepairBoards()
 					OR approved != myApproved", __FILE__, __LINE__);
 			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
 			{
+				$topicArray['myApproved'] = (int) $topicArray['myApproved'];
+
 				$memberStartedID = getMsgMemberID($topicArray['myid_first_msg']);
 				$memberUpdatedID = getMsgMemberID($topicArray['myid_last_msg']);
 				$smfFunc['db_query']('', "

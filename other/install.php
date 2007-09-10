@@ -973,7 +973,7 @@ function doStep1()
 
 	// Let's optimize those new tables.
 	db_extend();
-	$tables = $smfFunc['db_list_tables']($db_name);
+	$tables = $smfFunc['db_list_tables']($db_name, $db_prefix . '%');
 	foreach ($tables as $table)
 	{
 		$smfFunc['db_optimize_table']($table) != -1 or $db_messed = true;
@@ -1242,7 +1242,7 @@ function doStep2()
 		require_once(dirname(__FILE__) . '/Themes/default/languages/' . strtr($_SESSION['installer_temp_lang'], array('Install' => 'Login')));
 		echo '
 				<div class="error_message">
-					<div style="color: red;">', sprintf($txt[500], $_POST['username']), '</div>
+					<div style="color: red;">', sprintf($txt['error_valid_email_needed'], $_POST['username']), '</div>
 				</div>
 				<br />';
 

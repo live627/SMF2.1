@@ -452,7 +452,7 @@ function scheduled_auto_optimize()
 	db_extend();
 
 	// Get all the tables.
-	$tables = $smfFunc['db_list_tables']();
+	$tables = $smfFunc['db_list_tables'](false, $db_prefix . '%');
 
 	// Actually do the optimisation.
 	foreach ($tables as $table)
