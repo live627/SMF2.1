@@ -2050,48 +2050,61 @@ function template_issueWarning()
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function setWarningBarPos(curEvent, isMove)
+		function setWarningBarPos(curEvent, isMove, changeAmount)
 		{
-			if (!curEvent)
-				var curEvent = window.event;
-
-			// If it\'s a movement check the button state first!
-			if (isMove)
-			{
-				if (!curEvent.button || curEvent.button != 1)
-					return false
-			}
-
-			// Get the position of the container.
-			contain = document.getElementById(\'warning_contain\');
-			position = 0;
-			while (contain != null)
-			{
-				position += contain.offsetLeft;
-				contain = contain.offsetParent;
-			}
-
-			// Where is the mouse?
-			if (curEvent.pageX)
-			{
-				mouse = curEvent.pageX;
-			}
-			else
-			{
-				mouse = curEvent.clientX;
-				mouse += document.documentElement.scrollLeft != "undefined" ? document.documentElement.scrollLeft : document.body.scrollLeft;
-			}
-
 			barWidth = ', $warningBarWidth, ';
 
-			// Is this within bounds?
-			if (mouse < position || mouse > position + barWidth)
-				return;
+			// Are we passing the amount to change it by?
+			if (changeAmount)
+			{
+				if (document.getElementById(\'warning_level\').value == \'SAME\')
+					percent = ', $context['member']['warning'], ' + changeAmount;
+				else
+					percent = parseInt(document.getElementById(\'warning_level\').value) + changeAmount;
+			}
+			// If not then it\'s a mouse thing.
+			else
+			{
+				if (!curEvent)
+					var curEvent = window.event;
 
-			percent = Math.round(((mouse - position) / barWidth) * 100);
+				// If it\'s a movement check the button state first!
+				if (isMove)
+				{
+					if (!curEvent.button || curEvent.button != 1)
+						return false
+				}
 
-			// Round percent to the nearest 5 - by kinda cheating!
-			percent = Math.round(percent / 5) * 5;
+
+				// Get the position of the container.
+				contain = document.getElementById(\'warning_contain\');
+				position = 0;
+				while (contain != null)
+				{
+					position += contain.offsetLeft;
+					contain = contain.offsetParent;
+				}
+
+				// Where is the mouse?
+				if (curEvent.pageX)
+				{
+					mouse = curEvent.pageX;
+				}
+				else
+				{
+					mouse = curEvent.clientX;
+					mouse += document.documentElement.scrollLeft != "undefined" ? document.documentElement.scrollLeft : document.body.scrollLeft;
+				}
+
+				// Is this within bounds?
+				if (mouse < position || mouse > position + barWidth)
+					return;
+
+				percent = Math.round(((mouse - position) / barWidth) * 100);
+
+				// Round percent to the nearest 5 - by kinda cheating!
+				percent = Math.round(percent / 5) * 5;
+			}
 
 			// What are the limits?
 			minLimit = ', $context['min_allowed'], ';
@@ -2138,6 +2151,11 @@ function template_issueWarning()
 			document.getElementById(\'warn_temp\').disabled = disable;
 		}
 
+		function changeWarnLevel(amount)
+		{
+			setWarningBarPos(false, false, amount);
+		}
+			
 		// Warn template.
 		function populateNotifyTemplate()
 		{
@@ -2194,9 +2212,15 @@ function template_issueWarning()
 				</td>
 				<td>
 					<div id="warndiv1" style="display: none;">
-						<div id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $warningBarWidth, 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
-							<div id="warning_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['member']['warning'], '%</div>
-							<div id="warning_progress" style="width: ', $context['member']['warning'], '%; height: 12pt; z-index: 1; background-color: ', $context['current_color'], ';">&nbsp;</div>
+						<div>
+							<span style="float: left">
+								<a href="#" onclick="changeWarnLevel(-5); return false;">&#171;</a>
+								<a href="#" onclick="changeWarnLevel(5); return false;">&#187;</a>
+							</span>
+							<div id="warning_contain" style="font-size: 8pt; height: 12pt; width: ', $warningBarWidth, 'px; border: 1px solid black; background-color: white; padding: 1px; position: relative;" onmousedown="setWarningBarPos(event, true);" onmousemove="setWarningBarPos(event, true);" onclick="setWarningBarPos(event);">
+								<div id="warning_text" style="padding-top: 1pt; width: 100%; z-index: 2; color: black; position: absolute; text-align: center; font-weight: bold;">', $context['member']['warning'], '%</div>
+								<div id="warning_progress" style="width: ', $context['member']['warning'], '%; height: 12pt; z-index: 1; background-color: ', $context['current_color'], ';">&nbsp;</div>
+							</div>
 						</div>
 						<div class="smalltext">', $txt['profile_warning_impact'], ': <span id="cur_level_div" class="smalltext">', $context['level_effects'][$context['current_level']], '</span></div>
 						<input type="hidden" name="warning_level" id="warning_level" value="SAME" />

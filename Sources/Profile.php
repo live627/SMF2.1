@@ -249,7 +249,7 @@ function ModifyProfile($post_errors = array())
 					'label' => $txt['profileSendIm'],					
 				),
 				'issueWarning' => array(
-					'own' => array('pm_send'),
+					'own' => array(),
 					'any' => array('issue_warning'),
 					'enabled' => $modSettings['warning_settings']{0} == 1 && !$context['user']['is_owner'],
 					'label' => $txt['profile_issue_warning'],					
@@ -363,7 +363,7 @@ function ModifyProfile($post_errors = array())
 		$context['profile_updated'] = $txt['profile_updated_own'];
 
 	// This is here so the menu won't be shown unless it's actually needed.
-	if (!isset($context['profile_areas']['info']['areas']['trackUser']) && !isset($context['profile_areas']['info']['areas']['showPermissions']) && !isset($context['profile_areas']['edit_profile']) && !isset($context['profile_areas']['profile_action']['areas']['banUser']) && !isset($context['profile_areas']['profile_action']['areas']['deleteAccount']))
+	if (!isset($context['profile_areas']['info']['areas']['trackUser']) && !isset($context['profile_areas']['info']['areas']['showPermissions']) && !isset($context['profile_areas']['edit_profile']) && !isset($context['profile_areas']['profile_action']['areas']['banUser']) && !isset($context['profile_areas']['profile_action']['areas']['issueWarning']) && !isset($context['profile_areas']['profile_action']['areas']['deleteAccount']))
 		$context['profile_areas'] = array();
 
 	// Make sure that the subaction function does exist!

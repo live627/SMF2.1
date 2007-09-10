@@ -44,6 +44,9 @@ function createMenu($menuData, $menuOptions = array())
 			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
 			array('id_member', 'id_theme', 'value'), __FILE__, __LINE__
 		);
+
+		// Make sure we invalidate any cache.
+		cache_put_data('theme_settings-1:' . $user_info['id'], null, 0);
 	}
 
 	// Work out where we should get our images from.

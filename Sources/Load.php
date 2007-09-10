@@ -1161,7 +1161,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	if (empty($flag))
 	{
-			// Load variables from the current or default theme, global or this user's.
+		// Load variables from the current or default theme, global or this user's.
 		$result = $smfFunc['db_query']('', "
 			SELECT variable, value, id_member, id_theme
 			FROM {$db_prefix}themes
