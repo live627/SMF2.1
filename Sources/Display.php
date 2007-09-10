@@ -763,7 +763,7 @@ function Display()
 			SELECT
 				id_msg, icon, subject, poster_time, poster_ip, id_member, modified_time, modified_name, body,
 				smileys_enabled, poster_name, poster_email, approved,
-				id_msg_modified < $topicinfo[new_from] AS isRead
+				id_msg_modified < $topicinfo[new_from] AS is_read
 			FROM {$db_prefix}messages
 			WHERE id_msg IN (" . implode(',', $messages) . ")
 			ORDER BY id_msg" . (empty($options['view_newest_first']) ? '' : ' DESC'), __FILE__, __LINE__);
@@ -952,7 +952,7 @@ function prepareDisplayContext($reset = false)
 			'name' => $message['modified_name']
 		),
 		'body' => $message['body'],
-		'new' => empty($message['isRead']),
+		'new' => empty($message['is_read']),
 		'approved' => $message['approved'],
 		'first_new' => isset($context['start_from']) && $context['start_from'] == $counter,
 		'can_approve' => !$message['approved'] && $context['can_approve'],
