@@ -445,7 +445,7 @@ function template_html_below()
 
 	// The following will be used to let the user know that some AJAX process is running
 	echo '
-	<div id="ajax_in_progress" style="display: none;', $context['browser']['is_ie'] && !$context['browser']['is_ie7'] ? 'position: absolute;' : '', '">', $txt['ajax_in_progress'], '</div>
+	<div id="ajax_in_progress" style="display: none;', $context['browser']['is_ie'] && !$context['browser']['is_ie7'] ? 'position: absolute;' : '', '"><a href="javascript:ajax_indicator(false);"><img src="', $settings['images_url'], '/icons/quick_remove.gif" alt="', $txt['modify_cancel'], '" /></a>', $txt['ajax_in_progress'], '</div>
 </body></html>';
 }
 

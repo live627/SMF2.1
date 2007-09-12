@@ -504,6 +504,14 @@ a img
 	left: 0;
 }
 
+#ajax_in_progress a
+{
+	color: white;
+	text-decoration: underline;
+	font-size: smaller;
+	float: right;
+}
+
 /* Styling for BBC tags */
 .bbc_color a
 {
