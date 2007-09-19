@@ -100,7 +100,7 @@ if (!defined('SMF'))
 
 	void loadCustomFields(int id_member, string area)
 		// !!!
-	
+
 	void ignoreboards(int id_member)
 		// !!!
 
@@ -246,20 +246,20 @@ function ModifyProfile($post_errors = array())
 					'any' => array(),
 					'enabled' => !$context['user']['is_owner'],
 					'href' => $scripturl . '?action=pm;sa=send;u=' . $memID,
-					'label' => $txt['profileSendIm'],					
+					'label' => $txt['profileSendIm'],
 				),
 				'issueWarning' => array(
 					'own' => array(),
 					'any' => array('issue_warning'),
 					'enabled' => $modSettings['warning_settings']{0} == 1 && !$context['user']['is_owner'],
-					'label' => $txt['profile_issue_warning'],					
+					'label' => $txt['profile_issue_warning'],
 				),
 				'banUser' => array(
 					'own' => array(),
 					'any' => array('manage_bans'),
 					'enabled' => $cur_profile['id_group'] != 1 && !in_array(1, explode(',', $cur_profile['additional_groups'])),
 					'href' => $scripturl . '?action=admin;area=ban;sa=add;u=' . $memID,
-					'label' => $txt['profileBanUser'],					
+					'label' => $txt['profileBanUser'],
 				),
 				'deleteAccount' => array(
 					'own' => array('profile_remove_any', 'profile_remove_own'),
@@ -398,16 +398,16 @@ function ModifyProfile($post_errors = array())
 			// You didn't even enter a password!
 			if (trim($_POST['oldpasswrd']) == '')
 				$post_errors[] = 'no_password';
-	
+
 			// Since the password got modified due to all the $_POST cleaning, lets undo it so we can get the correct password
 			$_POST['oldpasswrd'] = $smfFunc['db_escape_string'](un_htmlspecialchars($smfFunc['db_unescape_string']($_POST['oldpasswrd'])));
-	
+
 			// Does the integration want to check passwords?
 			$good_password = false;
 			if (isset($modSettings['integrate_verify_password']) && function_exists($modSettings['integrate_verify_password']))
 				if (call_user_func($modSettings['integrate_verify_password'], $cur_profile['member_name'], $_POST['oldpasswrd'], false) === true)
 					$good_password = true;
-	
+
 			// Bad password!!!
 			if (!$good_password && $user_info['passwd'] != sha1(strtolower($cur_profile['member_name']) . $_POST['oldpasswrd']))
 				$post_errors[] = 'bad_password';
@@ -429,7 +429,7 @@ function ModifyProfile($post_errors = array())
 		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'deleteAccount' && empty($post_errors))
 		{
 			deleteAccount2($profile_vars, $post_errors, $memID);
-	
+
 			if (empty($post_errors))
 				redirectexit();
 		}
@@ -460,7 +460,7 @@ function ModifyProfile($post_errors = array())
 			// If we've changed the password, notify any integration that may be listening in.
 			if (isset($profile_vars['passwd']) && isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
 				call_user_func($modSettings['integrate_reset_pass'], $cur_profile['member_name'], $cur_profile['member_name'], $_POST['passwrd1']);
-	
+
 			updateMemberData($memID, $profile_vars);
 
 			// What if this is the newest member?
@@ -468,7 +468,7 @@ function ModifyProfile($post_errors = array())
 				updateStats('member');
 			elseif (isset($profile_vars['real_name']))
 				updateSettings(array('memberlist_updated' => time()));
-	
+
 			// If the member changed his/her birthdate, update calendar statistics.
 			if (isset($profile_vars['birthdate']) || isset($profile_vars['real_name']))
 				updateSettings(array(
@@ -606,7 +606,7 @@ function loadProfileFields($force_reload = false)
 					// Set to blank?
 					if ((int) $_POST[\'bday3\'] == 1 && (int) $_POST[\'bday2\'] == 1 && (int) $value == 1)
 						$value = \'0001-01-01\';
-					else 
+					else
 						$value = checkdate($value, $_POST[\'bday2\'], $_POST[\'bday3\'] < 4 ? 4 : $_POST[\'bday3\']) ? sprintf(\'%04d-%02d-%02d\', $_POST[\'bday3\'] < 4 ? 4 : $_POST[\'bday3\'], $_POST[\'bday1\'], $_POST[\'bday2\']) : \'0001-01-01\';
 				}
 				else
@@ -742,7 +742,7 @@ function loadProfileFields($force_reload = false)
 					LIMIT 1", __FILE__, __LINE__);
 				list ($name) = $smfFunc[\'db_fetch_row\']($request);
 				$smfFunc[\'db_free_result\']($request);
-		
+
 				$context[\'member\'][\'theme\'] = array(
 					\'id\' => $cur_profile[\'id_theme\'],
 					\'name\' => empty($cur_profile[\'id_theme\']) ? $txt[\'theme_forum_default\'] : $name
@@ -986,7 +986,7 @@ function loadProfileFields($force_reload = false)
 						\'name\' => $set_names[$i],
 						\'selected\' => $set == $context[\'member\'][\'smiley_set\'][\'id\']
 					);
-			
+
 					if ($context[\'smiley_sets\'][$i][\'selected\'])
 						$context[\'member\'][\'smiley_set\'][\'name\'] = $set_names[$i];
 				}
@@ -1046,7 +1046,7 @@ function loadProfileFields($force_reload = false)
 			'input_validate' => create_function('&$value', '
 				// Validate the time_offset...
 				$value = strtr($value, \',\', \'.\');
-			
+
 				if ($value < -23.5 || $value > 23.5)
 					return \'bad_offset\';
 
@@ -1150,7 +1150,7 @@ function setupProfileContext($fields)
 			{
 				if (!isset($cur_field['label']))
 					$cur_field['label'] = isset($txt[$field]) ? $txt[$field] : $field;
-	
+
 				// Everything has a value!
 				if (!isset($cur_field['value']))
 				{
@@ -1315,13 +1315,13 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 	);
 
 	if (isset($_POST['sa']) && $_POST['sa'] == 'ignoreboards' && empty($_POST['ignore_brd']))
-			$_POST['ignore_brd'] = array();	
+			$_POST['ignore_brd'] = array();
 	if (isset($_POST['ignore_brd']))
 	{
 		if (!is_array($_POST['ignore_brd']))
 			$_POST['ignore_brd'] = array ( $_POST['ignore_brd'] );
 
-		foreach($_POST['ignore_brd'] AS $k => $d )
+		foreach ($_POST['ignore_brd'] as $k => $d )
 		{
 			$d = (int) $d;
 			if ($d != 0)
@@ -1331,7 +1331,7 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 		}
 		$_POST['ignore_boards'] = implode(',', $_POST['ignore_brd']);
 		unset($_POST['ignore_brd']);
-		
+
 	}
 
 	// Here's where we sort out all the 'other' values...
@@ -1401,7 +1401,7 @@ function makeThemeChanges($memID, $id_theme)
 				array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
 			);
 		}
-	
+
 		if (!empty($erase_options))
 		{
 			$smfFunc['db_query']('', "
@@ -1410,7 +1410,7 @@ function makeThemeChanges($memID, $id_theme)
 					AND variable IN ('" . implode("', '", $erase_options) . "')
 					AND id_member = $memID", __FILE__, __LINE__);
 		}
-	
+
 		$themes = explode(',', $modSettings['knownThemes']);
 		foreach ($themes as $t)
 			cache_put_data('theme_settings-' . $t . ':' . $memID, null, 60);
@@ -2217,7 +2217,7 @@ function statPanel($memID)
 	}
 	$smfFunc['db_free_result']($result);
 
-	foreach($context['board_activity'] AS $id_board => $board_data)
+	foreach ($context['board_activity'] as $id_board => $board_data)
 	{
 		$context['board_activity'][$id_board]['relative_percent'] = $max_percent == 0 ? 0 : ($board_data['percent'] / $max_percent) * 100;
 		$context['board_activity'][$id_board]['percent'] = $board_data['percent'];
@@ -2290,7 +2290,7 @@ function trackUser($memID)
 		// There's no point worrying ourselves with messages made yonks ago, just get recent ones!
 		$min_msg_member = max(0, $max_msg_member - $user_profile[$memID]['posts'] * 3);
 	}
-	
+
 	// Default to at least the ones we know about.
 	$ips = array(
 		$user_profile[$memID]['member_ip'],
@@ -3668,7 +3668,7 @@ function ignoreboards($memID)
 
 	// Find all the boards this user is allowed to see.
 	$request = $smfFunc['db_query']('', "
-		SELECT b.id_cat, c.name AS cat_name, b.id_board, b.name, b.child_level, 
+		SELECT b.id_cat, c.name AS cat_name, b.id_board, b.name, b.child_level,
 			". (!empty($cur_profile['ignore_boards']) ? 'b.id_board IN (' . $cur_profile['ignore_boards'] . ')' : 'false') ." AS is_ignored
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
@@ -3694,7 +3694,7 @@ function ignoreboards($memID)
 		);
 	}
 	$smfFunc['db_free_result']($request);
-		
+
 	// Now, let's sort the list of categories into the boards for templates that like that.
 	$temp_boards = array();
 	foreach ($context['categories'] as $category)

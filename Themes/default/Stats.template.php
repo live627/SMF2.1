@@ -197,7 +197,7 @@ function template_main()
 		echo '
 						</tr>';
 
-		foreach($context['yearly'] AS $id => $year)
+		foreach ($context['yearly'] as $id => $year)
 		{
 			echo '
 						<tr class="windowbg2" valign="middle" id="year_', $id, '">
@@ -267,22 +267,22 @@ function template_main()
 		echo '
 			var yearElements = new Array();';
 
-		foreach($context['yearly'] AS $id => $year)
+		foreach ($context['yearly'] as $id => $year)
 		{
 			echo '
 			yearElements[', $id, '] = new smfStats_year("', $id, '", false);';
 
-			foreach($year['months'] AS $month)
+			foreach ($year['months'] as $month)
 			{
 				echo '
 				yearElements[', $id, '].addMonth("', $month['id'], '", ', $month['expanded'] ? 'false' : 'true', ');';
 
 				if ($month['expanded'])
-					foreach($month['days'] AS $day)
+					foreach ($month['days'] as $day)
 						echo '
 					yearElements[', $id, '].addDay(', $month['id'], ', "', $day['year'], '-', $day['month'], '-', $day['day'], '");';
 			}
-			
+
 			if (!$year['expanded'] && !$year['current_year'])
 				echo '
 			yearElements[', $id, '].toggle()';

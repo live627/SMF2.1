@@ -521,7 +521,7 @@ function template_main()
 
 			// If we had unapproved attachments clean up.
 			if ($last_approved_state == 0)
-				echo ' 
+				echo '
 									</fieldset>';
 
 			echo '
@@ -770,7 +770,7 @@ function template_main()
 		echo '
 	var ignoreToggles = new Array()';
 
-		foreach($ignoredMsgs AS $msgid)
+		foreach ($ignoredMsgs as $msgid)
 		{
 			echo '
 		ignoreToggles[', $msgid, '] = new smfToggle("ignore_msg_', $msgid, '", false);

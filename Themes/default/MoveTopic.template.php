@@ -5,7 +5,7 @@
 function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl;
-	
+
 	theme_linktree();
 
 	echo '
@@ -21,7 +21,7 @@ function template_main()
 	{
 		echo '
 						<optgroup label="', $category['name'], '">';
-		foreach($category['boards'] AS $board)
+		foreach ($category['boards'] as $board)
 			echo '
 							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', $board['id'] == $context['current_board'] ? ' disabled="disabled"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level']-1) . '=&gt;' : '', $board['name'], '</option>';
 		echo '

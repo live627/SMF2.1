@@ -63,7 +63,7 @@ function template_main()
 		', $txt['who_show1'], '
 		<select name="show">';
 
-	foreach($context['show_methods'] AS $value => $label)
+	foreach ($context['show_methods'] as $value => $label)
 		echo '
 			<option value="', $value, '" ', $value == $context['show_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
 	echo '
@@ -71,7 +71,7 @@ function template_main()
 		', $txt['who_show2'], '
 		<select name="sort">';
 
-	foreach($context['sort_methods'] AS $value => $label)
+	foreach ($context['sort_methods'] as $value => $label)
 		echo '
 			<option value="', $value, '" ', $value == $context['sort_by'] ? ' selected="selected"' : '', '>', $label, '</option>';
 

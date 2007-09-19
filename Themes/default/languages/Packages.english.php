@@ -181,4 +181,11 @@ $txt['package_emulate'] = 'Emulate Version';
 $txt['package_emulate_revert'] = 'Revert';
 $txt['package_emulate_desc'] = 'Sometimes packages are locked to early versions of SMF but remain compatible with a newer version. Here you can choose to &quot;emulate&quot; a different SMF version within the package manager.';
 
+// Operations.
+$txt['operation_find'] = 'Find';
+$txt['operation_replace'] = 'Replace';
+$txt['operation_after'] = 'Add After';
+$txt['operation_before'] = 'Add Before';
+$txt['operation_title'] = 'Operations';
+$txt['operation_ignore'] = 'Ignore Errors';
 ?>

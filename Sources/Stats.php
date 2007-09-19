@@ -288,7 +288,7 @@ function DisplayStats()
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 			AND b.id_board != $modSettings[recycle_board]" : '') . ")
-		WHERE 
+		WHERE
 			$user_info[query_see_board]
 			" . (!empty($topic_ids) ? "
 			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : ' AND t.approved = 1') . "
@@ -349,7 +349,7 @@ function DisplayStats()
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 			AND b.id_board != $modSettings[recycle_board]" : '') . ")
-		WHERE 
+		WHERE
 			$user_info[query_see_board]
 			" . (!empty($topic_ids) ? "
 			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : ' AND t.approved = 1') . "
@@ -535,7 +535,7 @@ function DisplayStats()
 			'days' => array(),
 			'expanded' => $expanded
 		);
-		
+
 		$context['yearly'][$row_months['stats_year']]['new_topics'] += $row_months['topics'];
 		$context['yearly'][$row_months['stats_year']]['new_posts'] += $row_months['posts'];
 		$context['yearly'][$row_months['stats_year']]['new_members'] += $row_months['registers'];
@@ -547,7 +547,7 @@ function DisplayStats()
 
 	krsort($context['yearly']);
 
-	foreach($context['yearly'] AS $year => $data)
+	foreach ($context['yearly'] as $year => $data)
 	{
 		// This gets rid of the filesort on the query ;).
 		krsort($context['yearly'][$year]['months']);
@@ -659,7 +659,7 @@ function SMStats()
 			$out .= "Host: www.simplemachines.org\r\n";
 			$out .= "Content-Type: application/x-www-form-urlencoded\r\n";
 			$out .= "Content-Length: $length\r\n\r\n";
-			$out .= "$stats_to_send\r\n"; 
+			$out .= "$stats_to_send\r\n";
 			$out .= "Connection: Close\r\n\r\n";
 			fwrite($fp, $out);
 			fclose($fp);

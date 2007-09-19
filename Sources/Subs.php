@@ -2509,7 +2509,7 @@ function redirectexit($setLocation = '', $refresh = false)
 		$modSettings['integrate_redirect']($setLocation, $refresh);
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)
-	if ($refresh)
+	if ($refresh && !WIRELESS)
 		header('Refresh: 0; URL=' . strtr($setLocation, array(' ' => '%20', ';' => '%3b')));
 	else
 		header('Location: ' . str_replace(' ', '%20', $setLocation));

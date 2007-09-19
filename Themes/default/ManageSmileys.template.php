@@ -484,11 +484,11 @@ function template_editicon()
 					<select id="icon_board_select" name="icon_board">
 						<option value="0"', empty($context['icon']['board_id']) ? ' selected="selected"' : '', '>', $txt['icons_edit_icons_all_boards'], '</option>';
 
-	foreach($context['categories'] as $category)
+	foreach ($context['categories'] as $category)
 	{
 		echo '
 						<optgroup label="', $category['name'], '">';
-		foreach($category['boards'] as $board)
+		foreach ($category['boards'] as $board)
 			echo '
 							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 		echo '

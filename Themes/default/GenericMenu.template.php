@@ -252,7 +252,7 @@ function template_generic_menu_tabs(&$menu_context)
 	}
 
 	// Find the selected tab
-	foreach($tab_context['tabs'] as $sa => $tab)
+	foreach ($tab_context['tabs'] as $sa => $tab)
 		if (!empty($tab['is_selected']) || (isset($menu_context['current_subsection']) && $menu_context['current_subsection'] == $sa))
 		{
 			$selected_tab = $tab;

@@ -34,7 +34,7 @@ if (!defined('SMF'))
 		- requires the admin_forum permission.
 		- uses the Modlog template, main sub template.
 		- is accessed via ?action=moderate;area=modlog.
-		
+
 	void getModLogEntries($search_param = '', $order= '', $limit = 0)
 		- Gets the moderation log entries that match the specified paramaters
 		- limit can be an array with two values
@@ -373,9 +373,9 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 		}
 		$smfFunc['db_free_result']($request);
 	}
-	
+
 	// Make any message info links so its easier to go find that message
-	foreach($context['entries'] AS $k => $entry)
+	foreach ($context['entries'] as $k => $entry)
 		if (isset($entry['extra']['message']))
 			$context['entries'][$k]['extra']['message'] = '<a href="' . $scripturl . '?msg=' . $entry['extra']['message'] . '">' . $entry['extra']['message'] . '</a>';
 }

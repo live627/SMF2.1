@@ -27,7 +27,7 @@ function template_main()
 					<td valign="top">', $txt['themeadmin_selectable'], ':</td>
 					<td>
 						<div id="known_themes_list">';
-		foreach($context['themes'] AS $theme)
+		foreach ($context['themes'] as $theme)
 			echo '
 							<label for="options-known_themes_', $theme['id'], '"><input type="checkbox" name="options[known_themes][]" id="options-known_themes_', $theme['id'], '" value="', $theme['id'], '"', $theme['known'] ? ' checked="checked"' : '', ' class="check" /> ', $theme['name'], '</label><br />';
 

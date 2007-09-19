@@ -279,11 +279,11 @@ function template_main()
 					echo '
 						<select id="moveItTo" name="move_to" disabled="disabled">';
 
-					foreach($context['move_to_boards'] as $category)
+					foreach ($context['move_to_boards'] as $category)
 					{
 						echo '
 							<optgroup label="', $category['name'], '">';
-						foreach($category['boards'] as $board)
+						foreach ($category['boards'] as $board)
 								echo '
 								<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 						echo '

@@ -216,7 +216,7 @@ function template_event_post()
 		{
 			echo '
 										<optgroup label="', $category['name'], '">';
-			foreach($category['boards'] as $board)
+			foreach ($category['boards'] as $board)
 				echo '
 											<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 			echo '
@@ -528,7 +528,7 @@ function template_bcd()
 		<caption>BCD Clock</caption>
 		<tr class="odd">';
 		$alt = false;
-		foreach($context['clockicons'] as $t => $v)
+		foreach ($context['clockicons'] as $t => $v)
 		{
 			echo '
 			<td style="border-', $alt ? 'right' : 'left', ': 1px solid black;" valign="bottom">';
@@ -548,7 +548,7 @@ function template_bcd()
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var icons = new Object();';
 
-		foreach($context['clockicons'] as $t => $v)
+		foreach ($context['clockicons'] as $t => $v)
 		{
 			foreach ($v as $i)
 				echo '
@@ -575,7 +575,7 @@ function template_bcd()
 			// For each digit figure out which ones to turn off and which ones to turn on
 			var turnon = new Array();';
 
-		foreach($context['clockicons'] as $t => $v)
+		foreach ($context['clockicons'] as $t => $v)
 		{
 			foreach ($v as $i)
 				echo '
@@ -618,7 +618,7 @@ function template_hms()
 <table class="site" cellpadding="0" cellspacing="0" border="1">
 	<caption>Binary Clock</caption>';
 	$alt = false;
-	foreach($context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		echo '
 	<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
@@ -640,7 +640,7 @@ function template_hms()
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	var icons = new Object();';
 
-	foreach($context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -659,7 +659,7 @@ function template_hms()
 		// For each digit figure out which ones to turn off and which ones to turn on
 		var turnon = new Array();';
 
-	foreach($context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -703,7 +703,7 @@ function template_omfg()
 <table class="site" cellpadding="0" cellspacing="0" border="1">
 	<caption>OMFG Binary Clock</caption>';
 	$alt = false;
-	foreach($context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		echo '
 	<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
@@ -724,7 +724,7 @@ function template_omfg()
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 	var icons = new Object();';
 
-	foreach($context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -747,7 +747,7 @@ function template_omfg()
 		// For each digit figure out which ones to turn off and which ones to turn on
 		var turnon = new Array();';
 
-	foreach($context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		foreach ($v as $i)
 			echo '
@@ -791,7 +791,7 @@ function template_thetime()
 <table class="site" cellpadding="0" cellspacing="0" border="1">
 	<caption>The time you requested</caption>';
 	$alt = false;
-	foreach($context['clockicons'] as $t => $v)
+	foreach ($context['clockicons'] as $t => $v)
 	{
 		echo '
 	<tr class="', $alt ? 'windowbg2' : 'windowbg', '">

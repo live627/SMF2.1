@@ -187,7 +187,7 @@ function template_results()
 	global $context, $settings, $options, $txt;
 	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>
 <smf>';
-	
+
 	if (empty($context['topics']))
 		echo '
 		<noresults>', $txt['search_no_results'], '</noresults>';
@@ -195,7 +195,7 @@ function template_results()
 	{
 		echo '
 		<results>';
-		
+
 		while ($topic = $context['get_topics']())
 		{
 			echo '
@@ -213,7 +213,7 @@ function template_results()
 					<href>', $topic['category']['href'], '</href>
 				</category>
 				<messages>';
-			foreach($topic['matches'] AS $message)
+			foreach ($topic['matches'] as $message)
 			{
 				echo '
 					<message>
@@ -223,7 +223,7 @@ function template_results()
 						<time>', $message['time'], '</time>
 						<timestamp>', $message['timestamp'], '</timestamp>
 						<start>', $message['start'], '</start>
-						
+
 						<author>
 							<id>', $message['member']['id'], '</id>
 							<name>', $message['member']['name'], '</name>
@@ -235,7 +235,7 @@ function template_results()
 				</messages>
 			</result>';
 		}
-		
+
 		echo '
 		</results>';
 	}

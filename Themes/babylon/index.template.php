@@ -406,7 +406,7 @@ function template_body_below()
 					if (codeFix[i].className == "code" && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0))
 						codeFix[i].style.overflow = "scroll";
 				}
-			}';			
+			}';
 		else
 		{
 			echo '
@@ -492,7 +492,7 @@ function template_menu()
 	// We aren't showing all the buttons in this theme.
 	$hide_buttons = array('pm', 'mlist');
 
-	foreach($context['menu_buttons'] AS $act => $button)
+	foreach ($context['menu_buttons'] as $act => $button)
 		if (in_array($act, $hide_buttons))
 			continue;
 		else

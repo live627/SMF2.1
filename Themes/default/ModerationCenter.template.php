@@ -43,7 +43,7 @@ function template_moderation_center()
 			</tr>
 		</table>';
 
-		$alternate = !$alternate;			
+		$alternate = !$alternate;
 	}
 
 	// If alternate is 1, we never quite finished off a row.
@@ -51,7 +51,7 @@ function template_moderation_center()
 		echo '
 				<td width="50%"></td>
 			</tr>
-		</table>';	
+		</table>';
 }
 
 function template_latest_news()
@@ -523,7 +523,7 @@ function template_viewmodreport()
 				', sprintf($txt['mc_modreport_summary'], $context['report']['num_reports'], $context['report']['last_updated']), '
 			</td>
 			<td align="right">';
-		
+
 	// Make the buttons.
 	$close_button = create_button('close.gif', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', 'align="middle"');
 	$ignore_button = create_button('ignore.gif', 'mc_reportedp_ignore', 'mc_reportedp_ignore', 'align="middle"');
@@ -545,7 +545,7 @@ function template_viewmodreport()
 		</tr>';
 	$alt = false;
 
-	foreach($context['report']['comments'] AS $comment)
+	foreach ($context['report']['comments'] as $comment)
 	{
 		echo '<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
 			<td>
@@ -557,7 +557,7 @@ function template_viewmodreport()
 	</table><br />';
 
 	$alt = false;
-	
+
 	if (!empty($context['entries']))
 	{
 		echo '
@@ -574,7 +574,7 @@ function template_viewmodreport()
 			<td>', $txt['modlog_ip'], '</td>
 		</tr>';
 
-		foreach($context['entries'] AS $entry)
+		foreach ($context['entries'] as $entry)
 		{
 			echo '
 		<tr class="', $alt ? 'windowbg2' : 'windowbg', '">

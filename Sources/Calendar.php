@@ -460,8 +460,8 @@ function clock()
 		$min = $time['minutes'];
 		$sec = $time['seconds'];
 
-		foreach($context['clockicons'] as $t => $vs)
-			foreach($vs as $v => $dumb)
+		foreach ($context['clockicons'] as $t => $vs)
+			foreach ($vs as $v => $dumb)
 			{
 				if ($$t >= $v)
 				{

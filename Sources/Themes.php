@@ -233,7 +233,7 @@ function ThemeAdmin()
 		checkSession();
 
 		if (isset($_POST['options']['known_themes']))
-			foreach($_POST['options']['known_themes'] AS $key => $id)
+			foreach ($_POST['options']['known_themes'] as $key => $id)
 				$_POST['options']['known_themes'][$key] = (int) $id;
 		else
 			fatal_lang_error('themes_none_selectable', false);
@@ -960,7 +960,7 @@ function PickTheme()
 	$smfFunc['db_free_result']($request);
 
 	// Save the setting first.
-	$current_images_url = $settings['images_url']; 
+	$current_images_url = $settings['images_url'];
 
 	foreach ($context['available_themes'] as $id_theme => $theme_data)
 	{
@@ -985,8 +985,8 @@ function PickTheme()
 		$context['available_themes'][$id_theme]['description'] = $txt['theme_description'];
 	}
 	// Then return it.
-	$settings['images_url'] = $current_images_url; 
-	
+	$settings['images_url'] = $current_images_url;
+
 	// As long as we're not doing the default theme...
 	if (!isset($_REQUEST['u']) || $_REQUEST['u'] >= 0)
 	{

@@ -310,7 +310,7 @@ function MoveTopic2()
 		}
 		$smfFunc['db_free_result']($request);
 
-		foreach($posters AS $id_member => $posts)
+		foreach ($posters as $id_member => $posts)
 		{
 			// The board we're moving from counted posts, but not to.
 			if (empty($pcounter_from))
@@ -462,7 +462,7 @@ function moveTopics($topics, $toBoard)
 	}
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}boards
-		SET 
+		SET
 			num_topics = num_topics + $totalTopics,
 			num_posts = num_posts + $totalPosts,
 			unapproved_posts = unapproved_posts + $totalUnapprovedPosts,

@@ -286,7 +286,7 @@ function reloadSettings()
 
 	if (isset($modSettings['integrate_pre_include']) && file_exists(strtr($modSettings['integrate_pre_include'], array('$boarddir' => $boarddir))))
 		require_once(strtr($modSettings['integrate_pre_include'], array('$boarddir' => $boarddir)));
-		
+
 	if (isset($modSettings['integrate_pre_load']) && function_exists($modSettings['integrate_pre_load']))
 		call_user_func($modSettings['integrate_pre_load']);
 }
@@ -496,7 +496,7 @@ function loadUserSettings()
 	else
 		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups) OR ' . $user_info['mod_cache']['mq'] . ')';
 
-	// Build the list of boards they WANT to see.  
+	// Build the list of boards they WANT to see.
 	// This will take the place of query_see_boards in certain spots, so it better include the boards they can see also
 
 	// If they aren't ignoring any boards then they want to see all the boards they can see
@@ -544,7 +544,7 @@ function loadBoard()
 				cache_put_data('msg_topic-' . $_REQUEST['msg'], $topic, 120);
 			}
 		}
-		
+
 		// Remember redirection is the key to avoiding fallout from your bosses.
 		if (!empty($topic))
 			redirectexit('topic=' . $topic . '.msg' . $_REQUEST['msg'] . '#msg' . $_REQUEST['msg']);
@@ -1406,7 +1406,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 				</script>';
 		}
 	}
-		
+
 	// Set the top level linktree up.
 	array_unshift($context['linktree'], array(
 		'url' => &$scripturl,
@@ -1512,7 +1512,7 @@ function loadTemplate($template_name, $fatal = true)
 
 	$loaded = false;
 
-	foreach($settings['template_dirs'] AS $template_dir)
+	foreach ($settings['template_dirs'] as $template_dir)
 	{
 		if (file_exists($template_dir . '/' . $template_name . '.template.php'))
 		{
@@ -2077,7 +2077,7 @@ function loadDatabase()
 	if ( SMF == 'SSI' && !empty($ssi_db_user) && !empty($ssi_db_passwd))
 		$db_connection = smf_db_initiate($db_server, $db_name, $ssi_db_user, $ssi_db_passwd, $db_prefix, array('persist' => $db_persist, 'non_fatal' => true, 'dont_select_db' => true));
 
-	// Either we aren't in SSI mode, or it failed.  
+	// Either we aren't in SSI mode, or it failed.
 	if (empty($db_connection))
 		$db_connection = smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix, array('persist' => $db_persist, 'dont_select_db' => SMF == 'SSI'));
 

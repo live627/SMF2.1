@@ -337,7 +337,7 @@ function template_main()
 			{
 				echo '
 										<optgroup label="', $category['name'], '">';
-				foreach($category['boards'] as $board)
+				foreach ($category['boards'] as $board)
 					echo '
 											<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 				echo '
@@ -744,7 +744,7 @@ function template_main()
 	// Now some javascript to hide the additional options on load...
 	if (!empty($settings['additional_options_collapsable']) && !$context['show_additional_options'])
 		echo '
-		
+
 			swapOptions();';
 
 	echo '
@@ -879,7 +879,7 @@ function template_postbox(&$message)
 			$context['bbc_tags'][1][] = array();
 			$context['bbc_tags'][1]['toggle'] = array('code' => 'toggle', 'before' => '', 'description' => $txt['toggle_view']);
 		}
-		
+
 		$found_button = false;
 		// Here loop through the array, printing the images/rows/separators!
 		foreach ($context['bbc_tags'][0] as $image => $tag)
@@ -906,7 +906,7 @@ function template_postbox(&$message)
 
 		// Show the font drop down...
 		if (!isset($context['disabled_tags']['face']))
-			echo ' 
+			echo '
 						<select name="sel_face" id="sel_face" style="margin-bottom: 1ex; font-size: x-small;">
 							<option value="" selected="selected">', $txt['font_face'], '</option>
 							<option value="courier">Courier</option>
@@ -914,7 +914,7 @@ function template_postbox(&$message)
 
 		// Font sizes anyone?
 		if (!isset($context['disabled_tags']['size']))
-			echo ' 
+			echo '
 						<select name="sel_size" id="sel_size" style="margin-bottom: 1ex; font-size: x-small;">
 							<option value="" selected="selected">', $txt['font_size'], '</option>
 							<option value="1">8pt</option>

@@ -152,7 +152,7 @@ function template_body_above()
 		if ($context['in_maintenance'] && $context['user']['is_admin'])
 			echo '<br />
 				<b>', $txt['maintain_mode_on'], '</b>';
-				
+
 		if (!empty($context['open_mod_reports']) && $context['show_open_reports'])
 			echo '<br />
 				<a href="', $scripturl, '?action=moderate;area=reports">', sprintf($txt['mod_reports_waiting'], $context['open_mod_reports']), '</a>';
@@ -320,7 +320,7 @@ function template_menu()
 	// We aren't showing all the buttons in this theme.
 	$hide_buttons = array('pm', 'mlist');
 
-	foreach($context['menu_buttons'] AS $act => $button)
+	foreach ($context['menu_buttons'] as $act => $button)
 		if (in_array($act, $hide_buttons))
 			continue;
 		else

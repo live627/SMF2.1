@@ -303,7 +303,7 @@ function template_main()
 
 					if ($topic['quick_mod']['sticky'])
 						echo '<a href="', $scripturl, '?action=quickmod;board=', $context['current_board'], '.', $context['start'], ';actions[', $topic['id'], ']=sticky;sesc=', $context['session_id'], '" onclick="return confirm(\'', $txt['quickmod_confirm'], '\');"><img src="', $settings['images_url'], '/icons/quick_sticky.gif" width="16" alt="', $txt['set_sticky'], '" title="', $txt['set_sticky'], '" /></a>';
-						
+
 					if ($topic['quick_mod']['move'])
 						echo '<a href="', $scripturl, '?action=movetopic;board=', $context['current_board'], '.', $context['start'], ';topic=', $topic['id'], '.0"><img src="', $settings['images_url'], '/icons/quick_move.gif" width="16" alt="', $txt['move_topic'], '" title="', $txt['move_topic'], '" /></a>';
 				}
@@ -335,11 +335,11 @@ function template_main()
 					echo '
 							<select id="moveItTo" name="move_to" disabled="disabled">';
 
-					foreach($context['move_to_boards'] as $category)
+					foreach ($context['move_to_boards'] as $category)
 					{
 						echo '
 								<optgroup label="', $category['name'], '">';
-						foreach($category['boards'] as $board)
+						foreach ($category['boards'] as $board)
 								echo '
 									<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 						echo '

@@ -102,7 +102,7 @@ function template_error_log()
 								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=error_type;value=', $error['error_type']['type'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_type'], '" /></a>
 								', $txt['error_type'], ': ', $error['error_type']['name'], '
 							</td>
-						</tr></td>	
+						</tr></td>
 							<td class="windowbg2" colspan="2"><div style="overflow: hidden; width: 100%; white-space: nowrap;">
 								<a href="', $scripturl, '?action=admin;area=errorlog', $context['sort_direction'] == 'down' ? ';desc' : '', ';filter=url;value=', $error['url']['href'], '" title="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '"><img src="', $settings['images_url'], '/filter.gif" alt="', $txt['apply_filter'], ': ', $txt['filter_only_url'], '" /></a>
 								<a href="', $error['url']['html'], '">', $error['url']['html'], '</a>
@@ -172,7 +172,7 @@ function template_show_file()
 	</head>
 	<body>
 		<table border="0" cellpadding="0" cellspacing="3">';
-	foreach($context['file_data']['contents'] AS $index => $line)
+	foreach ($context['file_data']['contents'] as $index => $line)
 	{
 		$line_num = $index+$context['file_data']['min'];
 		$is_target = $line_num == $context['file_data']['target'];

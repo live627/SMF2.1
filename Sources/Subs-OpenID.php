@@ -37,11 +37,11 @@ if (!defined('SMF'))
 function smf_openID_validate($openid_uri, $return = false)
 {
 	global $sourcedir, $scripturl, $boardurl, $modSettings;
-	
+
 	$openid_url = smf_openID_canonize($openid_uri);
 
 	$response_data = smf_openID_getServerInfo($openid_url);
-	
+
 	if (($assoc = smf_openID_getAssocation($response_data['server'])) == null)
 		$assoc = smf_openID_makeAssocation($response_data['server']);
 
@@ -134,7 +134,7 @@ function smf_openID_makeAssocation($server)
 	preg_match_all('~^([^:]+):(.+)$~m', $data, $matches);
 	$assoc_data = array();
 
-	foreach($matches[1] AS $key => $match)
+	foreach ($matches[1] as $key => $match)
 		$assoc_data[$match] = $matches[2][$key];
 
 	if (!isset($assoc_data['assoc_type']) || empty($assoc_data['mac_key']))
@@ -149,12 +149,12 @@ function smf_openID_makeAssocation($server)
 	$issued = time();
 	$expires = $issued + min((int)$assoc_data['expires_in'], 60);
 	$assoc_type = isset($assoc_data['assoc_type']) ? $smfFunc['db_escape_string']($assoc_data['assoc_type']) : '';
-	
+
 	// Store the data
 	$smfFunc['db_insert']('replace', "{$db_prefix}openid_assoc", array('server_url', 'handle', 'secret', 'issued', 'expires', 'assoc_type'),  array("'$server_url'", "'$handle'", "'$secret'", $issued, $expires, "'$assoc_type'"), array('server_url', 'handle'), __FILE__, __LINE__);
 
 	return array(
-		'server' => $server, 
+		'server' => $server,
 		'handle' => $assoc_data['assoc_handle'],
 		'secret' => $secret,
 		'issued' => $issued,
@@ -293,7 +293,7 @@ function smf_openID_canonize($uri)
 function smf_openid_member_exists($url)
 {
 	global $smfFunc, $db_prefix;
-	
+
 	$url = $smfFunc['db_escape_string']($url);
 
 	$result = $smfFunc['db_query']('openid_member_exists', "
@@ -387,13 +387,13 @@ function smf_openID_getServerInfo($openid_url)
 
 	// Get the html and parse it for the openid variable which will tell us where to go.
 	$webdata = fetch_web_data($openid_url);
-	
+
 	$response_data = array();
 
 	if (preg_match_all('~<link rel="openid.(server|delegate)" +href="([^"]+)" ?/?>~', $webdata, $matches) == 0)
 		fatal_lang_error('openid_server_bad_response');
 
-	foreach($matches[1] AS $key => $match)
+	foreach ($matches[1] as $key => $match)
 		$response_data[$match] = $matches[2][$key];
 
 	if (empty($response_data['server']))
@@ -430,17 +430,17 @@ function sha1_raw($text)
 		$charcode = (int)base_convert($hexcode, 16, 10);
 		$raw .= chr($charcode);
 	}
-	
+
 	return $raw;
 }
 
 function binary_to_long($str)
 {
 	$bytes = array_merge(unpack('C*', $str));
-	
+
 	$n = 0;
 
-	foreach($bytes AS $byte)
+	foreach ($bytes as $byte)
 	{
 		$n = bcmul($n, 256);
 		$n = bcadd($n, $byte);
@@ -476,7 +476,7 @@ function long_to_binary($value)
 	}
 
 	$return = '';
-	
+
 	foreach ($bytes as $byte)
 	{
 		$return .= pack('C', $byte);

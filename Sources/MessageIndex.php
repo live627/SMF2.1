@@ -748,7 +748,7 @@ function QuickModeration()
 			UPDATE {$db_prefix}topics
 			SET is_sticky = CASE WHEN is_sticky = 1 THEN 0 ELSE 1 END
 			WHERE id_topic IN (" . implode(', ', $stickyCache) . ")", __FILE__, __LINE__);
-			
+
 		// Get the board IDs
 		$request = $smfFunc['db_query']('', "
 			SELECT id_topic, id_board
@@ -817,7 +817,7 @@ function QuickModeration()
 				$cp = empty($row['count_posts']);
 
 				// Go through all the topics that are being moved to this board.
-				foreach($moveTos[$row['id_board']] AS $topic)
+				foreach ($moveTos[$row['id_board']] as $topic)
 				{
 					// If both boards have the same value for post counting then no adjustment needs to be made.
 					if ($countPosts[$topic] != $cp)
@@ -854,9 +854,9 @@ function QuickModeration()
 				$smfFunc['db_free_result']($request);
 
 				// And now update them member's post counts
-				foreach($members AS $id_member => $post_adj)
+				foreach ($members as $id_member => $post_adj)
 					updateMemberData($id_member, array('posts' => 'posts + ' . $post_adj));
-	
+
 			}
 		}
 	}

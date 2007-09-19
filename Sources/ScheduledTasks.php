@@ -25,7 +25,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	This file is automatically called and handles all manner of scheduled things. 
+/*	This file is automatically called and handles all manner of scheduled things.
 
 	void AutoTask()
 		//!!!
@@ -275,7 +275,7 @@ function scheduled_approval_notification()
 			'groups' => array_merge(explode(',', $row['additional_groups']), array($row['id_group'])),
 			'language' => $row['lngfile'],
 			'email' => $row['email_address'],
-			'name' => $row['real_name'],		
+			'name' => $row['real_name'],
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -755,7 +755,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	if (!$override_limit)
 	{
 		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 10 : 5;
-		
+
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}settings
 			SET value = " . (time() + $delay) . "
@@ -1012,7 +1012,7 @@ function scheduled_fetchSMfiles()
 		FROM {$db_prefix}admin_info_files", __FILE__, __LINE__);
 
 	$js_files = array();
-	
+
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$js_files[$row['id_file']] = array(
@@ -1021,7 +1021,7 @@ function scheduled_fetchSMfiles()
 			'parameters' => sprintf($row['parameters'], $language, urlencode($modSettings['time_format']), urlencode($forum_version)),
 		);
 	}
-	
+
 	$smfFunc['db_free_result']($request);
 
 	// We're gonna need fetch_web_data() to pull this off.
@@ -1030,8 +1030,8 @@ function scheduled_fetchSMfiles()
 	// Just in case we run into a problem.
 	loadEssentialThemeData();
 	loadLanguage('Errors', $language);
-	
-	foreach($js_files AS $ID_FILE => $file)
+
+	foreach ($js_files as $ID_FILE => $file)
 	{
 		// Create the url
 		$server = empty($file['path']) || substr($file['path'], 0, 7) != 'http://' ? 'http://www.simplemachines.org' : '';
@@ -1094,16 +1094,16 @@ function scheduled_birthdayemails()
 	$smfFunc['db_free_result']($result);
 
 	// Send out the greetings!
-	foreach($birthdays AS $lang => $recps)
+	foreach ($birthdays as $lang => $recps)
 	{
-		foreach($recps AS $recp)
+		foreach ($recps as $recp)
 		{
 			$replacements = array(
 				'REALNAME' => $recp['name'],
 			);
-			
+
 			$emaildata = loadEmailTemplate('happy_birthday', $replacements, $lang);
-			
+
 			sendmail($recp['email'], $emaildata['subject'], $emaildata['body']);
 
 			// Try to stop a timeout, this would be bad...

@@ -175,7 +175,7 @@ if (!defined('SMF'))
 		  smoother and potentially more securely.
 		- can set permissions to either restrictive, free, or standard.
 		- used by Admin.php's CleanupPermissions (action=admin;area=cleanperms).
-		
+
 
 	Creating your own package server:
 	---------------------------------------------------------------------------
@@ -1365,7 +1365,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			// Default is getting done anyway, so no need for involvement here.
 			if ($id == 1)
 				continue;
-	
+
 			// For every template, do we want it? Yea, no, maybe?
 			foreach ($template_changes[1] as $index => $template_file)
 			{
@@ -1396,10 +1396,10 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			if ($working_file[0] != '/' && $working_file[1] != ':')
 			{
 				trigger_error('parseModification(): The filename \'' . $working_file . '\' is not a full path!', E_USER_WARNING);
-	
+
 				$working_file = $boarddir . '/' . $working_file;
 			}
-	
+
 			// Doesn't exist - give an error or what?
 			if (!file_exists($working_file) && (!$file->exists('@error') || !in_array(trim($file->fetch('@error')), array('ignore', 'skip'))))
 			{
@@ -1408,7 +1408,7 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 					'filename' => $working_file,
 					'debug' => $txt['package_modification_missing']
 				);
-	
+
 				$everything_found = false;
 				continue;
 			}
@@ -1427,12 +1427,12 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 			// Phew, it exists!  Load 'er up!
 			else
 				$working_data = str_replace("\r", '', package_get_contents($working_file));
-	
+
 			$actions[] = array(
 				'type' => 'opened',
 				'filename' => $working_file
 			);
-	
+
 			$operations = $file->exists('operation') ? $file->set('operation') : array();
 			foreach ($operations as $operation)
 			{
@@ -1585,7 +1585,11 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 							'type' => 'failure',
 							'filename' => $working_file,
 							'search' => $actual_operation['searches'][$i]['preg_search'],
-							'is_custom' => $theme != 1,
+							'search_original' => $actual_operation['searches'][$i]['search'],
+							'replace_original' => $actual_operation['searches'][$i]['add'],
+							'position' => $search['position'],
+							'is_custom' => $theme > 1 ? $theme : 0,
+							'failed' => $failed,
 						);
 
 						$everything_found = false;
@@ -1599,7 +1603,11 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 							'type' => 'failure',
 							'filename' => $working_file,
 							'search' => $actual_operation['searches'][$i]['preg_search'],
-							'is_custom' => $theme != 1,
+							'search_original' => $actual_operation['searches'][$i]['search'],
+							'replace_original' => $actual_operation['searches'][$i]['add'],
+							'position' => $search['position'],
+							'is_custom' => $theme > 1 ? $theme : 0,
+							'failed' => $failed,
 						);
 
 						$everything_found = false;
@@ -1618,24 +1626,29 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 						'filename' => $working_file,
 						'search' => $actual_operation['searches'][$i]['preg_search'],
 						'replace' =>  $actual_operation['searches'][$i]['preg_replace'],
+						'search_original' => $actual_operation['searches'][$i]['search'],
+						'replace_original' => $actual_operation['searches'][$i]['add'],
+						'position' => $search['position'],
+						'failed' => $failed,
+						'ignore_failure' => $failed && $actual_operation['error'] === 'ignore',
 					);
 				}
 			}
-	
+
 			// Fix any little helper symbols ;).
 			$working_data = strtr($working_data, array('[$PACK' . 'AGE1$]' => '$', '[$PACK' . 'AGE2$]' => '\\'));
-	
+
 			package_chmod($working_file);
-	
+
 			if ((file_exists($working_file) && !is_writable($working_file)) || (!file_exists($working_file) && !is_writable(dirname($working_file))))
 				$actions[] = array(
 					'type' => 'chmod',
 					'filename' => $working_file
 				);
-	
+
 			if (basename($working_file) == 'Settings_bak.php')
 				continue;
-	
+
 			if (!$testing && !empty($modSettings['package_make_backups']) && file_exists($working_file))
 			{
 				// No, no, not Settings.php!
@@ -1644,10 +1657,10 @@ function parseModification($file, $testing = true, $undo = false, $theme_paths =
 				else
 					@copy($working_file, $working_file . '~');
 			}
-	
+
 			// Always call this, even if in testing, because it won't really be written in testing mode.
 			package_put_contents($working_file, $working_data, $testing);
-	
+
 			$actions[] = array(
 				'type' => 'saved',
 				'filename' => $working_file,
@@ -1740,7 +1753,7 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 			// Don't do default, it means nothing to me.
 			if ($id == 1)
 				continue;
-	
+
 			// Now, for each file do we need to edit it?
 			foreach ($template_changes[1] as $pos => $template_file)
 			{
@@ -1901,6 +1914,11 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 					'filename' => $working_file,
 					'search' => $working_search,
 					'replace' => $replace_with,
+					'search_original' => $working_search,
+					'replace_original' => $replace_with,
+					'position' => $code_match[1] == 'replace' ? 'replace' : ($code_match[1] == 'add' || $code_match[1] == 'add after' ? 'before' : 'after'),
+					'is_custom' => $is_custom,
+					'failed' => false,
 				);
 			}
 			// It wasn't found!
@@ -1911,6 +1929,11 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 					'filename' => $working_file,
 					'search' => $working_search,
 					'is_custom' => $is_custom,
+					'search_original' => $working_search,
+					'replace_original' => $replace_with,
+					'position' => $code_match[1] == 'replace' ? 'replace' : ($code_match[1] == 'add' || $code_match[1] == 'add after' ? 'before' : 'after'),
+					'is_custom' => $is_custom,
+					'failed' => true,
 				);
 
 				$everything_found = false;

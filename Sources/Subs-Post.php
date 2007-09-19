@@ -85,7 +85,7 @@ if (!defined('SMF'))
 			hotmail_fix = false, string custom_charset = null)
 		- prepare text strings for sending as email.
 		- in case there are higher ASCII characters in the given string, this
-		  function will attempt the transport method 'quoted-printable'. 
+		  function will attempt the transport method 'quoted-printable'.
 		  Otherwise the transport method '7bit' is used.
 		- with hotmail_fix set all higher ASCII characters are converted to
 		  HTML entities to assure proper display of the mail.
@@ -815,7 +815,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	// Integrated PMs
 	if (isset($modSettings['integrate_personal_message']) && function_exists($modSettings['integrate_personal_message']))
 		$modSettings['integrate_personal_message']($recipients, $from['username'], $subject, $message);
-	
+
 	// Get a list of usernames and convert them to IDs.
 	$usernames = array();
 	foreach ($recipients as $rec_type => $rec)
@@ -1978,7 +1978,7 @@ function createAttachment(&$attachmentOptions)
 				$attachmentOptions['mime_type'] = 'image/' . $validImageTypes[$size[2]];
 		}
  	}
- 
+
 	// Remove special foreign characters from the filename.
 	if (empty($modSettings['attachmentEncryptFilenames']))
 		$attachmentOptions['name'] = getAttachmentFilename($attachmentOptions['name'], false, true);
@@ -2176,7 +2176,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	if (isset($msgOptions['body']))
 	{
 		$messages_columns[] = "body = '$msgOptions[body]'";
-		
+
 		if (!empty($modSettings['search_custom_index_config']))
 		{
 			$request = $smfFunc['db_query']('', "
@@ -2553,7 +2553,7 @@ function sendApprovalNotifications(&$topicData)
 				'TOPICLINK' => $scripturl . '?topic=' . $row['id_topic'] . '.new;topicseen#new',
 				'UNSUBSCRIBELINK' => $scripturl . '?action=notify;topic=' . $row['id_topic'] . '.0',
 			);
-			
+
 			$message_type = 'notification_reply';
 			// Do they want the body of the message sent too?
 			if (!empty($row['notify_send_body']) && empty($modSettings['disallow_sendBody']))
@@ -2750,7 +2750,7 @@ function adminNotify($type, $memberID, $member_name = null)
 			$emailtype .= '_approval';
 		}
 
-		$emaildata = loadEmailTemplate($emailtype, $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);	
+		$emaildata = loadEmailTemplate($emailtype, $replacements, empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']);
 
 		// And do the actual sending...
 		sendmail($row['email_address'], $emaildata['subject'], $emaildata['body'], null, null, false, 0);
@@ -2791,7 +2791,7 @@ function loadEmailTemplate($template, $replacements = array(), $lang = '')
 	$find = array();
 	$replace = array();
 
-	foreach($replacements AS $f => $r)
+	foreach ($replacements as $f => $r)
 	{
 		$find[] = '{' . $f . '}';
 		$replace[] = $r;
@@ -2817,8 +2817,8 @@ function user_info_callback($matches)
 
 	$use_ref = true;
 	$ref = &$user_info;
-	
-	foreach(explode('.', $matches[1]) AS $index)
+
+	foreach (explode('.', $matches[1]) as $index)
 	{
 		if ($use_ref && isset($ref[$index]))
 			$ref = &$ref[$index];

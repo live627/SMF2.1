@@ -473,7 +473,7 @@ function PackageGBrowse()
 
 			$packageNum = in_array($package['type'], array('title', 'heading', 'text', 'remote', 'rule')) ? 0 : $packageNum + 1;
 			$package['count'] = $packageNum;
-			
+
 			if (!in_array($package['type'], array('title', 'text')))
 				$context['package_list'][$packageSection]['items'][] = $package;
 
@@ -487,7 +487,7 @@ function PackageGBrowse()
 
 	foreach ($context['package_list'] as $ps_id => $packageSection)
 	{
-		foreach($packageSection['items'] as $i => $package)
+		foreach ($packageSection['items'] as $i => $package)
 		{
 			if ($package['count'] == 0 || isset($package['can_install']))
 				continue;

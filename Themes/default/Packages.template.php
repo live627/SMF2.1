@@ -8,7 +8,7 @@ function template_main()
 
 function template_view_package()
 {
-	global $context, $settings, $options, $txt, $scripturl;
+	global $context, $settings, $options, $txt, $scripturl, $smfFunc;
 
 	echo '
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
@@ -101,6 +101,7 @@ function template_view_package()
 					', $txt['perform_actions'], '
 					<table border="0" cellpadding="3" cellspacing="0" width="100%" style="margin-top: 1ex;">
 						<tr>
+							<td width="20"></td>
 							<td width="30"></td>
 							<td><b>', $txt['package_install_type'], '</b></td>
 							<td width="50%"><b>', $txt['package_install_action'], '</b></td>
@@ -108,15 +109,61 @@ function template_view_package()
 						</tr>';
 
 		$alternate = true;
-		foreach ($context['actions'] as $i => $packageaction)
+		$i = 1;
+		$action_num = 1;
+		$js_operations = array();
+		foreach ($context['actions'] as $packageaction)
 		{
+			// Did we pass or fail?  Need to now for later on.
+			$js_operations[$action_num] = isset($packageaction['failed']) ? $packageaction['failed'] : 0;
+
 			echo '
 						<tr class="windowbg', $alternate ? '' : '2', '">
-							<td style="padding-right: 2ex;">', $i + 1, '.</td>
+							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" />' : '', '</td>
+							<td style="padding-right: 2ex;">', $i++, '.</td>
 							<td style="padding-right: 2ex;">', $packageaction['type'], '</td>
 							<td style="padding-right: 2ex;">', $packageaction['action'], '</td>
 							<td style="padding-right: 2ex;">', $packageaction['description'], '</td>
 						</tr>';
+
+			// Is there water on the knee? Operation!
+			if (isset($packageaction['operations']))
+			{
+				echo '
+						<tr id="operation_', $action_num, '">
+							<td colspan="5" class="windowbg3">
+								<table border="0" cellpadding="3" cellspacing="0" width="100%">';
+
+				// Show the operations.
+				$alternate2 = true;
+				$operation_num = 1;
+				foreach ($packageaction['operations'] as $operation)
+				{
+					// Determine the possition text.
+					$operation_text = $operation['position'] == 'replace' ? 'operation_replace' : ($operation['position'] == 'before' ? 'operation_after' : 'operation_before');
+
+					echo '
+									<tr class="windowbg', $alternate2 ? '' : '2', '">
+										<td style="padding-right: 2ex;" width="0"></td>
+										<td style="padding-right: 2ex;" width="30" class="smalltext"><a href="' . $scripturl . '?action=admin;area=packages;sa=showoperations;operation_key=', $operation['operation_key'], ';package=', $_REQUEST['package'], ';filename=', $operation['filename'], ($operation['is_boardmod'] ? ';boardmod' : ''), (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'uninstall' ? ';revese' : ''), '" onclick="return reqWin(this.href, 600, 400, false);"><img src="', $settings['images_url'], '/buttons/reply.gif" alt="" /></a></td>
+										<td style="padding-right: 2ex;" width="30" class="smalltext">', $operation_num, '.</td>
+										<td style="padding-right: 2ex;" width="23%" class="smalltext">', $txt[$operation_text], '</td>
+										<td style="padding-right: 2ex;" width="50%" class="smalltext">', $operation['action'], '</td>
+										<td style="padding-right: 2ex;" width="20%" class="smalltext">', $operation['description'], !empty($operation['ignore_failure']) ? ' (' . $txt['operation_ignore'] . ')' : '', '</td>
+									</tr>';
+
+					$operation_num++;
+					$alternate2 = !$alternate2;
+				}
+
+				echo '
+								</table>
+							</td>
+						</tr>';
+
+				// Increase it.
+				$action_num++;
+			}
 			$alternate = !$alternate;
 		}
 					echo '
@@ -129,13 +176,13 @@ function template_view_package()
 		{
 			echo '
 			<tr class="catbg">
-				<td><a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" /></a> ', $txt['package_other_themes'], '</td>
+				<td colspan="6"><a href="#" onclick="return swap_theme_actions();"><img id="swap_theme_image" src="', $settings['images_url'], '/', (empty($context['themes_locked']) ? 'expand.gif' : 'collapse.gif'), '" /></a> ', $txt['package_other_themes'], '</td>
 			</tr>
 			<tr>
 				<td class="windowbg2" id="custom_changes">
 					<table border="0" cellpadding="3" cellspacing="0" width="100%">
 						<tr class="windowbg2">
-							<td colspan="4">
+							<td colspan="6">
 								<span class="smalltext">', $txt['package_other_themes_desc'], '</span>
 							</td>
 						</tr>';
@@ -143,8 +190,12 @@ function template_view_package()
 			// Loop through each theme and display it's name, and then it's details.
 			foreach ($context['theme_actions'] as $id => $theme)
 			{
+				// Pass?
+				$js_operations[$action_num] = $theme['has_failure'];
+
 				echo '
 						<tr class="titlebg">
+							<td></td>
 							<td>';
 				if (!empty($context['themes_locked']))
 					echo '
@@ -161,6 +212,7 @@ function template_view_package()
 				{
 					echo '
 						<tr class="windowbg', $alternate ? '' : '2', '">
+							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" />' : '', '</td>
 							<td width="30" style="padding-right: 2ex;">
 								<input type="checkbox" name="dummy_theme_', $id, '[]" id="dummy_theme_', $id, '[]" class="check" disabled="disabled" ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
 							</td>
@@ -169,8 +221,45 @@ function template_view_package()
 							<td width="20%" style="padding-right: 2ex;"><b>', $action['description'], '</b></td>
 						</tr>';
 
-					$alternate = !$alternate;
+					// Is there water on the knee? Operation!
+					if (isset($action['operations']))
+					{
+						echo '
+						<tr id="operation_', $action_num, '">
+							<td colspan="5" class="windowbg3">
+								<table border="0" cellpadding="3" cellspacing="0" width="100%">';
+
+						$alternate2 = true;
+						$operation_num = 1;
+						foreach ($action['operations'] as $operation)
+						{
+							// Determine the possition text.
+							$operation_text = $operation['position'] == 'replace' ? 'operation_replace' : ($operation['position'] == 'before' ? 'operation_after' : 'operation_before');
+
+							echo '
+									<tr class="windowbg', $alternate2 ? '' : '2', '">
+										<td style="padding-right: 2ex;" width="0"></td>
+										<td style="padding-right: 2ex;" width="30" class="smalltext"><a href="' . $scripturl . '?action=admin;area=packages;sa=showoperations;operation_key=', $operation['operation_key'], ';package=', $_REQUEST['package'], ';filename=', $operation['filename'], ($operation['is_boardmod'] ? ';boardmod' : ''), (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'uninstall' ? ';revese' : ''), '" onclick="return reqWin(this.href, 600, 400, false);"><img src="', $settings['images_url'], '/buttons/reply.gif" alt="" /></a></td>
+										<td style="padding-right: 2ex;" width="30" class="smalltext">', $operation_num, '.</td>
+										<td style="padding-right: 2ex;" width="23%" class="smalltext">', $txt[$operation_text], '</td>
+										<td style="padding-right: 2ex;" width="50%" class="smalltext">', $operation['action'], '</td>
+										<td style="padding-right: 2ex;" width="20%" class="smalltext">', $operation['description'], !empty($operation['ignore_failure']) ? ' (' . $txt['operation_ignore'] . ')' : '', '</td>
+									</tr>';
+							$operation_num++;
+							$alternate2 = !$alternate2;
+						}
+
+						echo '
+								</table>
+							</td>
+						</tr>';
+
+						// Increase it.
+						$action_num++;
+					}
 				}
+
+				$alternate = !$alternate;
 			}
 
 			echo '
@@ -239,6 +328,43 @@ function template_view_package()
 			</table>
 		</form>';
 
+	// Toggle options.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function packageOperation(uniqueId, initialState)
+		{
+			// The id of the field.
+			this.uid = uniqueId;
+			this.operationToggle = new smfToggle(\'operation_\' + uniqueId, initialState);
+			this.operationToggle.addToggleImage(\'operation_img_\' + uniqueId, \'/sort_down.gif\', \'/selected.gif\');
+			this.operationToggle.addTogglePanel(\'operation_\' + uniqueId);
+			this.toggle = toggleOperation;
+
+			function toggleOperation()
+			{
+				this.operationToggle.toggle();
+			}
+		}
+
+		var operationElements = new Array();';
+
+		// Operations.
+		foreach ($js_operations as $key => $operation)
+		{
+			echo '
+			operationElements[', $key, '] = new packageOperation(', $key, ', false);';
+
+			// Failed?
+			if (!$operation)
+				echo '
+			operationElements[', $key, '].toggle();';
+		}
+
+	echo '
+	// ]]></script>';
+echo $time = strtotime('0');
+echo ' | ';
+echo date('l dS \of F Y h:i:s A', $time);
 	// Some javascript for collapsing/expanded theme section.
 	if (!empty($context['theme_actions']))
 		echo '
@@ -963,7 +1089,7 @@ function template_package_list()
 
 			$alt = false;
 
-			foreach($packageSection['items'] AS $id => $package)
+			foreach ($packageSection['items'] as $id => $package)
 			{
 				// Textual message. Could be empty just for a blank line...
 				if ($package['is_text'])
@@ -1050,7 +1176,7 @@ function template_package_list()
 		{
 			echo '
 			<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
-			foreach($context['package_list'] as $section => $ps)
+			foreach ($context['package_list'] as $section => $ps)
 			{
 				echo '
 
@@ -1060,7 +1186,7 @@ function template_package_list()
 					ps_', $section, '.addTogglePanel("package_section_', $section, '");
 					ps_', $section, '.toggle();';
 
-				foreach($ps['items'] AS $id => $package)
+				foreach ($ps['items'] as $id => $package)
 				{
 					if (!$package['is_text'] && !$package['is_line'] && !$package['is_remote'])
 						echo '
@@ -1199,4 +1325,41 @@ function template_ftp_required()
 			</div></div>';
 }
 
+function template_view_operations()
+{
+	global $context, $txt, $settings;
+
+	// Determine the possition text.
+	$operation_text = $context['operations']['position'] == 'replace' ? 'operation_replace' : ($context['operations']['position'] == 'before' ? 'operation_after' : 'operation_before');
+
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
+	<head>
+		<title>', $txt['operation_title'], '</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
+		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
+	</head>
+	<body>
+		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+			<tr class="titlebg" width="100%">
+				<td>', $txt['operation_find'], '</td>
+			</tr>
+			<tr class="windowbg2" width="100%">
+				<td>
+					<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['position'] == 'end' ? '?&gt;' : $context['operations']['search'], '</pre>
+				</td>
+			</tr>
+			<tr class="titlebg" width="100%">
+				<td>', $txt[$operation_text], '</td>
+			</tr>
+			<tr class="windowbg2" width="100%">
+				<td>
+					<pre style="overflow: auto; min-height: 20px; max-height: 200px; margin: 0;">', $context['operations']['replace'], '</pre>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>';
+
+}
 ?>

@@ -408,7 +408,7 @@ function template_body_below()
 					if (codeFix[i].className == "code" && (codeFix[i].scrollWidth > codeFix[i].clientWidth || codeFix[i].clientWidth == 0))
 						codeFix[i].style.overflow = "scroll";
 				}
-			}';			
+			}';
 		else
 			echo '
 			var window_oldOnload = window.onload;
@@ -501,7 +501,7 @@ function template_menu()
 				<tr>
 					<td class="maintab_' , $first , '">&nbsp;</td>';
 
-	foreach($context['menu_buttons'] AS $act => $button)
+	foreach ($context['menu_buttons'] as $act => $button)
 		echo ($button['active_button'] || $context['browser']['is_ie4']) ? '<td class="maintab_active_' . $first . '">&nbsp;</td>' : '' , '				<td valign="top" class="maintab_', $button['active_button'] ? 'active_back' : 'back', '">
 					<a href="', $button['href'], '">', $button['title'], '</a>
 				</td>', $button['active_button'] ? '<td class="maintab_active_' . $last . '">&nbsp;</td>' : '';

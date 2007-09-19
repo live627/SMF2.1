@@ -150,7 +150,7 @@ function template_main()
 					<div style="text-align: center; padding: 1em;">
 						<b>', $txt['search_post_age'], ': </b> 	', $txt['search_between'], ' <input type="text" name="minage" value="', empty($context['search_params']['minage']) ? '0' : $context['search_params']['minage'], '" size="5" maxlength="5" />&nbsp;', $txt['search_and'], '&nbsp;<input type="text" name="maxage" value="', empty($context['search_params']['maxage']) ? '9999' : $context['search_params']['maxage'], '" size="5" maxlength="5" /> ', $txt['days_word'], '.
 					</div>';
-						
+
 		// If $context['search_params']['topic'] is set, that means we're searching just one topic.
 		if (!empty($context['search_params']['topic']))
 			echo '
@@ -158,7 +158,7 @@ function template_main()
 						<input type="hidden" name="topic" value="', $context['search_topic']['id'], '" />';
 		else
 		{
-			echo '	
+			echo '
 					<fieldset class="windowbg2" style="padding: 10px;">
 						<a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><img src="', $settings['images_url'], '/expand.gif" id="expandBoardsIcon" alt="" /></a> <a href="javascript:void(0);" onclick="expandCollapseBoards(); return false;"><b>', $txt['choose_board'], '</b></a><br />
 
@@ -384,11 +384,11 @@ function template_results()
 					echo '
 					<select id="moveItTo" name="move_to" disabled="disabled">';
 
-					foreach($context['move_to_boards'] as $category)
+					foreach ($context['move_to_boards'] as $category)
 					{
 						echo '
 						<optgroup label="', $category['name'], '">';
-						foreach($category['boards'] as $board)
+						foreach ($category['boards'] as $board)
 								echo '
 							<option value="', $board['id'], '"', $board['selected'] ? ' selected="selected"' : '', '>', $board['child_level'] > 0 ? str_repeat('==', $board['child_level'] - 1) . '=&gt;' : '', ' ', $board['name'], '</option>';
 						echo '

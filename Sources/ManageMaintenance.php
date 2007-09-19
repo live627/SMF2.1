@@ -348,7 +348,7 @@ function ScheduledTasks()
 	{
 		// Lets figure out which ones they want to run.
 		$tasks = array();
-		foreach($_POST['run_task'] AS $task => $dummy)
+		foreach ($_POST['run_task'] as $task => $dummy)
 			$tasks[] = (int) $task;
 
 		// Load up the tasks.
@@ -357,7 +357,7 @@ function ScheduledTasks()
 			FROM {$db_prefix}scheduled_tasks
 			WHERE id_task IN (" . implode(', ', $tasks) . ")
 			LIMIT " . count($tasks), __FILE__, __LINE__);
-		
+
 		// Lets get it on!
 		require_once($sourcedir . '/ScheduledTasks.php');
 		ignore_user_abort(true);
@@ -500,7 +500,7 @@ function EditTask()
 			'offset' => $row['time_offset'],
 			'regularity' => $row['time_regularity'],
 			'offset_formatted' => date("H:i", $row['time_offset']),
-			'unit' => $row['time_unit'],			
+			'unit' => $row['time_unit'],
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -647,7 +647,7 @@ function ConvertUtf8()
 		$context['sub_template'] = 'convert_utf8';
 		return;
 	}
-	
+
 	// After this point we're starting the conversion. But first: session check.
 	checkSession();
 
@@ -776,7 +776,7 @@ function ConvertUtf8()
 
 		// Loop through each column.
 		$queryColumns = $smfFunc['db_query']('', "
-			SHOW FULL COLUMNS 
+			SHOW FULL COLUMNS
 			FROM $table_info[Name]", __FILE__, __LINE__);
 		while ($column_info = $smfFunc['db_fetch_assoc']($queryColumns))
 		{
@@ -828,7 +828,7 @@ function ConvertUtf8()
 					foreach ($columns as $column)
 						$update .= "
 							$column[Field] = " . strtr($replace, array('%field%' => $column['Field'])) . ',';
-				
+
 				$smfFunc['db_query']('', "
 					UPDATE $table_info[Name]
 					SET " . substr($update, 0, -1), __FILE__, __LINE__);
@@ -932,7 +932,7 @@ function ConvertEntities()
 		// Get a list of text columns.
 		$columns = array();
 		$request = $smfFunc['db_query']('', "
-			SHOW FULL COLUMNS 
+			SHOW FULL COLUMNS
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
 		while ($column_info = $smfFunc['db_fetch_assoc']($request))
 			if (strpos($column_info['Type'], 'text') !== false || strpos($column_info['Type'], 'char') !== false)
@@ -981,12 +981,12 @@ function ConvertEntities()
 				foreach ($row as $column_name => $column_value)
 					if ($column_name !== $primary_key && strpos($column_value, '&#') !== false)
 						$changes[] = "$column_name = '" . $smfFunc['db_escape_string'](preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$entity_replace(\'\\2\')', $column_value)) . "'";
-				
+
 				// Update the row.
 				if (!empty($changes))
 					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}$cur_table
-						SET 
+						SET
 							" . implode(",
 							", $changes) . "
 						WHERE $primary_key = " . $row[$primary_key], __FILE__, __LINE__);
@@ -1456,14 +1456,14 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 			array($settings['theme_dir'], $template, $lang, $settings['theme_url']),
 			array($settings['theme_dir'], $template, $language, $settings['theme_url']),
 		);
-	
+
 		// Do we have a base theme to worry about?
 		if (isset($settings['base_theme_dir']))
 		{
 			$attempts[] = array($settings['base_theme_dir'], $template, $lang, $settings['base_theme_url']);
 			$attempts[] = array($settings['base_theme_dir'], $template, $language, $settings['base_theme_url']);
 		}
-	
+
 		// Fallback on the default theme if necessary.
 		$attempts[] = array($settings['default_theme_dir'], $template, $lang, $settings['default_theme_url']);
 		$attempts[] = array($settings['default_theme_dir'], $template, $language, $settings['default_theme_url']);
@@ -1503,7 +1503,7 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 				// Hmmm... do we really still need this?
 				$language_url = $file[3];
 				$lang = $file[2];
-	
+
 				break;
 			}
 
