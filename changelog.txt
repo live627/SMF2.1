@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2829 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2830 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -18,8 +18,9 @@ September 2007
  ! Sometimes people couldn't see how to issue warnings. (Profile.php)
  * Make it obvious how the warning level can be changed. (Profile template)
  * Add a cancel option to the AJAX indicator to turn it off. (index template, style css)
- + Added the ability to view the operations that failed when installing/uninstalling a mod. (Packages.php, Subs-Package, Packages templatem Packages language file)
+ + Added the ability to view the operations that failed when installing/uninstalling a mod. (Packages.php, Subs-Package, Packages template, Packages language file)
  ! Cleaned up various files to comply with the SM coding standards. (Various files)
+ ! Wireless devices running Internet Explorer don't like refresh header. (Subs.php)
 
 
 August 2007

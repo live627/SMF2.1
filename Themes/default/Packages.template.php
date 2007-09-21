@@ -362,9 +362,7 @@ function template_view_package()
 
 	echo '
 	// ]]></script>';
-echo $time = strtotime('0');
-echo ' | ';
-echo date('l dS \of F Y h:i:s A', $time);
+
 	// Some javascript for collapsing/expanded theme section.
 	if (!empty($context['theme_actions']))
 		echo '
@@ -1329,7 +1327,7 @@ function template_view_operations()
 {
 	global $context, $txt, $settings;
 
-	// Determine the possition text.
+	// Determine the position text.
 	$operation_text = $context['operations']['position'] == 'replace' ? 'operation_replace' : ($context['operations']['position'] == 'before' ? 'operation_after' : 'operation_before');
 
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
