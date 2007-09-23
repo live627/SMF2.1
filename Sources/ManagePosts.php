@@ -230,27 +230,18 @@ function ModifyPostSettings($return_config = false)
 		// If we're changing the message length let's check the column is big enough.
 		if (!empty($_POST['max_messageLength']) && $_POST['max_messageLength'] != $modSettings['max_messageLength'])
 		{
-			$request = $smfFunc['db_query']('', "
-				SHOW COLUMNS
-				FROM {$db_prefix}messages", false, false);
-			if ($request !== false)
-			{
-				while ($row = $smfFunc['db_fetch_assoc']($request))
-					if ($row['Field'] == 'body')
-						$body_type = $row['Type'];
-				$smfFunc['db_free_result']($request);
-			}
+			db_extend('packages');
 
-			$request = $smfFunc['db_query']('', "
-				SHOW INDEX
-				FROM {$db_prefix}messages", false, false);
-			if ($request !== false)
-			{
-				while ($row = $smfFunc['db_fetch_assoc']($request))
-					if ($row['Column_name'] == 'body' && (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT' || isset($row['Comment']) && $row['Comment'] == 'FULLTEXT'))
+			$colData = $smfFunc['db_list_columns']("{$db_prefix}messages", true);
+			foreach ($colData as $column)
+				if ($column['name'] == 'body')
+					$body_type = $column['type'];
+
+			$indData = $smfFunc['db_list_indexes']("{$db_prefix}messages", true);
+			foreach ($indData as $index)
+				foreach ($index['columns'] as $column)
+					if ($column == 'body' && $index['type'] == 'fulltext')
 						$fulltext = true;
-				$smfFunc['db_free_result']($request);
-			}
 
 			if (isset($body_type) && $_POST['max_messageLength'] > 65535 && $body_type == 'text')
 			{
@@ -261,17 +252,13 @@ function ModifyPostSettings($return_config = false)
 				else
 				{
 					// Make it longer so we can do their limit.
-					$smfFunc['db_query']('', "
-						ALTER TABLE {$db_prefix}messages
-						CHANGE COLUMN body body mediumtext", __FILE__, __LINE__);
+					$smfFunc['db_change_column']("{$db_prefix}messages", 'body', array('type' => 'mediumtext'));
 				}
 			}
 			elseif (isset($body_type) && $_POST['max_messageLength'] <= 65535 && $body_type != 'text')
 			{
 				// Shorten the column so we can have the benefit of fulltext searching again!
-				$smfFunc['db_query']('', "
-					ALTER TABLE {$db_prefix}messages
-					CHANGE COLUMN body body text", __FILE__, __LINE__);
+				$smfFunc['db_change_column']("{$db_prefix}messages", 'body', array('type' => 'text'));
 			}
 		}
 
