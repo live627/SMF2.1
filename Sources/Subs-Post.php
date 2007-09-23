@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 1                                       *
+* Software Version:           SMF 2.0 Beta 1.1                                    *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -241,7 +241,7 @@ function preparsecode(&$message, $previewing = false)
 				$parts[$i] = $parts[$i] . str_repeat('[/list]', $list_open - $list_close);
 
 			// Make sure all tags are lowercase.
-			$parts[$i] = preg_replace('~\[([/]?)(list|li|table|tr|td)([^\]]*)\]~e', '"[$1" . strtolower("$2") . "$3]"', $parts[$i]);
+			$parts[$i] = preg_replace('~\[([/]?)(list|li|table|tr|td)([^\]]*)\]~ie', '\'[$1\' . strtolower(\'$2\') . \'$3]\'', $parts[$i]);
 
 			$mistake_fixes = array(
 				// Find [table]s not followed by [tr].
@@ -1134,7 +1134,8 @@ function mimespecialchars($string, $with_charset = true, $hotmail_fix = false, $
 				return "";');
 
 		// Convert all 'special' characters to HTML entities.
-		return array($charset, preg_replace('~([\x80-' . ($context['server']['complex_preg_chars'] ? '\x{10FFFF}' : pack('C*', 0xF7, 0xBF, 0xBF, 0xBF)) . '])~eu', '$entityConvert("\1")', $string), '7bit');
+		return array($charset, preg_replace('~([\x80-' . ($context['server']['complex_preg_chars'] ? '\x{10FFFF}' : pack('C*', 0xF7, 0xBF, 0xBF, 0xBF)) . '])~eu', '$entityConvert(
+		\'1\')', $string), '7bit');
 	}
 
 	// We don't need to mess with the subject line if no special characters were in it..

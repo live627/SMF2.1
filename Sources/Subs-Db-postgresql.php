@@ -212,7 +212,7 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 
 				$pos = $pos2 + 1;
 			}
-			$clean .= '%s';
+			$clean .= ' %s ';
 
 			$old_pos = $pos + 1;
 		}

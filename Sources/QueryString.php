@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 1                                       *
+* Software Version:           SMF 2.0 Beta 1.1                                    *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -182,7 +182,7 @@ function cleanRequest()
 	}
 
 	// Add entities to GET.  This is kinda like the slashes on everything else.
-	$_GET = htmlspecialchars__recursive($_GET);
+	$_GET = addslashes__recursive(htmlspecialchars__recursive($_GET));
 
 	// If we're using a database with quote escaped quotes and magic quotes is on we have some work...
 	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && $smfFunc['db_sybase'] && !$magicSybase)

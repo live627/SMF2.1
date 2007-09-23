@@ -138,6 +138,10 @@ function createList($listOptions)
 					$params[] = $htmlsafe ? htmlspecialchars($list_item[$sprintf_param]) : $list_item[$sprintf_param];
 				$cur_data['value'] = vsprintf($column['data']['sprintf']['format'], $params);
 			}
+			
+			// The most flexible way probably is applying a custom function.
+			elseif (isset($column['data']['function']))
+				$cur_data['value'] = $column['data']['function']($list_item);
 
 			// A modified value (inject the database values).
 			elseif (isset($column['data']['eval']))

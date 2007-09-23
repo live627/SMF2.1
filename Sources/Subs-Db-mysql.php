@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 1                                       *
+* Software Version:           SMF 2.0 Beta 1.1                                    *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006-2007 by:     Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -179,7 +179,7 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 
 				$pos = $pos2 + 1;
 			}
-			$clean .= '%s';
+			$clean .= ' %s ';
 
 			$old_pos = $pos + 1;
 		}
@@ -193,7 +193,7 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 		elseif (strpos($clean, '/*') > 2 || strpos($clean, '--') !== false || strpos($clean, ';') !== false)
 			$fail = true;
 		// Trying to change passwords, slow us down, or something?
-		elseif (strpos($clean, 'set password') !== false && preg_match('~(^|[^a-z])set password($|[^[_a-z])~s', $clean) != 0)
+		elseif (strpos($clean, 'sleep') !== false && preg_match('~(^|[^a-z])sleep($|[^[_a-z])~s', $clean) != 0)
 			$fail = true;
 		elseif (strpos($clean, 'benchmark') !== false && preg_match('~(^|[^a-z])benchmark($|[^[a-z])~s', $clean) != 0)
 			$fail = true;

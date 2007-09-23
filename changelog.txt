@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2836 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2837 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -30,6 +30,8 @@ September 2007
  * Typo on moderation centre template means watched posts read watched users. (ModerationCenter template)
  ! Ensure theme settings, when saved, take effect instantly. (Load.php)
  ! Who is viewing a topic wasn't saving correctly. (Themes.php)
+ ! Some input values didn't get escaped properly - reported by Michael Brooks. (Groups.php, PersonalMessages.php, Post.php, Profile.php, QueryString.php, Search.php, Subs-Boards.php, Subs.php)
+ ! Some attachment filenames didn't get escaped properly. (Display.php, ManageAttachments.php)
 
 
 August 2007
