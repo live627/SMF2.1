@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2830 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2831 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -21,6 +21,7 @@ September 2007
  + Added the ability to view the operations that failed when installing/uninstalling a mod. (Packages.php, Subs-Package, Packages template, Packages language file)
  ! Cleaned up various files to comply with the SM coding standards. (Various files)
  ! Wireless devices running Internet Explorer don't like refresh header. (Subs.php)
+ ! Continue to the next profile area section if current one is disabled. (Profile.php)
 
 
 August 2007

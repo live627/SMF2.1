@@ -119,7 +119,7 @@ function template_view_package()
 
 			echo '
 						<tr class="windowbg', $alternate ? '' : '2', '">
-							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" />' : '', '</td>
+							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" /></a>' : '', '</td>
 							<td style="padding-right: 2ex;">', $i++, '.</td>
 							<td style="padding-right: 2ex;">', $packageaction['type'], '</td>
 							<td style="padding-right: 2ex;">', $packageaction['action'], '</td>
@@ -212,7 +212,7 @@ function template_view_package()
 				{
 					echo '
 						<tr class="windowbg', $alternate ? '' : '2', '">
-							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" />' : '', '</td>
+							<td style="padding-right: 2ex;">', isset($packageaction['operations']) ? '<a href="#" onclick="operationElements[' . $action_num . '].toggle(); return false;"><img id="operation_img_' . $action_num . '" src="' . $settings['images_url'] . '/sort_down.gif" alt="*" /></a>' : '', '</td>
 							<td width="30" style="padding-right: 2ex;">
 								<input type="checkbox" name="dummy_theme_', $id, '[]" id="dummy_theme_', $id, '[]" class="check" disabled="disabled" ', !empty($context['themes_locked']) ? 'checked="checked"' : '', '/>
 							</td>

@@ -286,7 +286,10 @@ function ModifyProfile($post_errors = array())
 	{
 		// Not even enabled?
 		if (isset($section['enabled']) && $section['enabled'] == false)
+		{
 			unset($context['profile_areas'][$section_id]);
+			continue;
+		}
 
 		foreach ($section['areas'] as $area_id => $area)
 		{
