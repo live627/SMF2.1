@@ -64,7 +64,7 @@ class SMF_user_change {
 		$username = $user_info['username'];
 		if (!isset($username) || $username == '')
 			return;
-		$password = $loginfo['password'];
+		$password = $loginfo->getPassword();
 		$hashed_password = sha1(strtolower($username) . un_htmlspecialchars(stripslashes($password)));
 
 		$new_username = mosGetParam( $_POST, 'username', '' );

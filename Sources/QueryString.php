@@ -504,4 +504,18 @@ function ob_sessrewrite($buffer)
 	return $buffer;
 }
 
+function addslashes__recursive($var, $level = 0)
+{
+	if (!is_array($var))
+		return addslashes($var);
+
+	// Reindex the array with slashes.
+	$new_var = array();
+
+	// Add slashes to every element, even the indexes!
+	foreach ($var as $k => $v)
+		$new_var[addslashes($k)] = $level > 25 ? null : addslashes__recursive($v, $level + 1);
+
+	return $new_var;
+}
 ?>

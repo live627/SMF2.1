@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1.2                                         *
+* Software Version:           SMF 1.1 RC3                                         *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -25,7 +25,7 @@
 if (!defined('_VALID_MOS'))
 	die('Direct Access to this location is not allowed.');
 
-	global $smf_path, $bridge_reg, $maintenance, $sourcedir, $context, $user;
+	global $smf_path, $bridge_reg, $maintenance, $sourcedir, $context, $user, $settings;
 $configuration =& mamboCore::getMamboCore();
 $database =& mamboDatabase::getInstance();
 $mainframe =& mosMainFrame::getInstance();
@@ -40,6 +40,108 @@ $mainframe =& mosMainFrame::getInstance();
 		$variable_name = $variable[0];
 		$$variable_name = $variable[1];
 	}
+
+//This entire structure only needs to be executed on non-SMF pages.
+if (!defined('SMF_INTEGRATION_SETTINGS')){	
+	define('SMF_INTEGRATION_SETTINGS', serialize(array(
+		'integrate_pre_load' => 'integrate_pre_load',
+	)));
+	
+	function integrate_pre_load () {
+
+	global $lang, $mosConfig_lang, $synch_lang, $smf_lang, $smf_path;
+
+	$language_conversion = array(
+							'aa' => 'afar',
+							'ab' => 'abkhaz',
+							'ae' => 'avestan',
+							'af' => 'afrikaans',
+							'ak' => 'akan',
+							'ar' => 'arabic',
+							'am' => 'amharic',
+							'an' => 'aragonese',
+							'as' => 'assamese',
+							'av' => 'avaric',
+							'ay' => 'aymara',
+							'az' => 'azerbaijani',
+							'ba' => 'bashkir',
+							'be' => 'belarusian',
+							'bg' => 'bulgarian',
+							'bh' => 'bihari',
+							'bi' => 'bislama',
+							'bm' => 'bambara',
+							'bn' => 'bangla',
+							'br' => 'breton',
+							'bs' => 'bosnian',
+							'cr' => 'cree',
+							'da' => 'danish',
+							'de' => 'german',
+							'dv' => 'divehi',
+							'dz' => 'dzongkha',
+							'en' => 'english',
+							'fa' => 'farsi',
+							'es' => 'spanish',
+							'fr' => 'french',
+							'gn' => 'guarani',
+							'hr' => 'croatian',
+							'hu' => 'hungarian',
+							'hy' => 'armenian',
+							'it' => 'italian',
+							'kr' => 'kanuri',
+							'ml' => 'malayalam',
+							'mo' => 'moldovan',
+							'nb' => 'bokm&#229;l',
+							'nl' => 'dutch',
+							'nn' => 'nynorsk',
+							'no' => 'norsk',
+							'pl' => 'polish',
+							'pt' => 'portuguese',
+							'sh' => 'serbo-croatian',
+							'sr' => 'serbian',
+							'sq' => 'albanian',
+							'tg' => 'tajik',
+							'th' => 'thai',
+							'tr' => 'turkish',
+							'iu' => 'inuktitut',
+							'za' => 'zhuang',
+							'zh' => 'chinese',
+							'zu' => 'zulu',
+							);
+		if($configuration->get('mosConfig_lang') && $synch_lang == 'true'){
+
+			if (isset($_COOKIE['mbfcookie']) || isset($_REQUEST['lang'])){
+          
+				if (isset($_COOKIE['mbfcookie']['lang'])){ 
+					if (isset($language_conversion[$_COOKIE['mbfcookie']['lang']]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[$_COOKIE['mbfcookie']['lang']] . '.php'))
+						$GLOBALS['language'] = $language_conversion[$_COOKIE['mbfcookie']['lang']];
+					else if (isset($language_conversion[$_COOKIE['mbfcookie']['lang']]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[$_COOKIE['mbfcookie']['lang']] . '-utf8.php'))
+						$GLOBALS['language'] = $language_conversion[$_COOKIE['mbfcookie']['lang']] . '-utf8';
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_COOKIE['mbfcookie']['lang'] . '.php'))
+						$GLOBALS['language'] = $_COOKIE['mbfcookie']['lang'];
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_COOKIE['mbfcookie']['lang'] . '-utf8.php'))
+						$GLOBALS['language'] = $_COOKIE['mbfcookie']['lang'] . '-utf8';
+				}
+
+				if (isset($_REQUEST['lang'])){
+					if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '.php'))
+						$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)];
+					else if (isset($language_conversion[substr($_REQUEST['lang'],0,2)]) && file_exists($smf_path . '/Themes/default/languages/index.' . $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8.php'))
+						$GLOBALS['language'] = $language_conversion[substr($_REQUEST['lang'],0,2)] . '-utf8';					
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '.php'))
+						$GLOBALS['language'] = $_REQUEST['lang'];					
+					else if (file_exists($smf_path . '/Themes/default/languages/index.' . $_REQUEST['lang'] . '-utf8.php'))
+						$GLOBALS['language'] = $_REQUEST['lang'] . '-utf8';
+				}
+			
+			} else if ($synch_lang == 'true')
+				$GLOBALS['language'] = $configuration->get('mosConfig_lang');
+		$context['forum_name'] = $forum_name;
+		loadLanguage ('index', $language);		
+		}	
+
+	}
+}	
+
 	
 if (!defined('SMF'))
 {	
@@ -82,13 +184,13 @@ $smf_logout_button_image = $params->get('smf_logout_button_image');
 mysql_select_db($db_name);
 echo '
 <div class="module" style="position: relative; margin-right: 5px;">
-	<table width="99%" cellpadding="0" cellspacing="5" border="0" align="', $smf_align, '" class="moduletable">
+	<table width="99%" cellpadding="0" cellspacing="5" border="0" align="', $smf_align, '">
 		<tr>', empty($context['user']['avatar']) ? '' : '
 			<td valign="top" align="' . $smf_align . '">' . $context['user']['avatar']['image'] . '
 			</td>
 		</tr>
 		<tr>', '
-			<td width="100%" valign="top" class="smalltext" style="align="', $smf_align, '">';
+			<td width="100%" valign="top" class="smalltext" style="font-family: verdana, arial, sans-serif;" align="', $smf_align, '">';
 	
 	// If the user is logged in, display stuff like their name, new messages, etc.
 	if ($context['user']['is_logged']){
@@ -201,30 +303,30 @@ echo '
 			{$message_login = '';}
 
 		echo '
-		', $txt['welcome_guest'], '<br />
+		', sprintf($txt['welcome_guest'], $txt['guest_title']), '<br />
 		', $context['current_time'], '<br />
 
 			<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/sha1.js"></script>
 
 			<form action="', sefReltoAbs($scripturl . 'action=login2'), '" method="post" style="margin: 3px 1ex 1px 0;"', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '', '>
-				',$txt[35],': <input type="text" name="user" size="10" /> 
-				',$txt[36],': <input type="password" name="passwrd" size="10" />
+				',$txt['username'],': <input type="text" name="user" size="10" /> 
+				',$txt['password'],': <input type="password" name="passwrd" size="10" />
 				<select name="cookielength">
-					<option value="60">', $txt['smf53'], '</option>
-					<option value="1440">', $txt['smf47'], '</option>
-					<option value="10080">', $txt['smf48'], '</option>
-					<option value="302400">', $txt['smf49'], '</option>
-					<option value="-1" selected="selected">', $txt['smf50'], '</option>
+					<option value="60">', $txt['one_hour'], '</option>
+					<option value="1440">', $txt['one_day'], '</option>
+					<option value="10080">', $txt['one_week'], '</option>
+					<option value="302400">', $txt['one_month'], '</option>
+					<option value="-1" selected="selected">', $txt['forever'], '</option>
 				</select>
-				<input type="submit" value="', $txt[34], '" /><br />
-				<span class="middletext">', $txt['smf52'], '</span>
+				<input type="submit" value="', $txt['login'], '" /><br />
+				<span class="middletext">', $txt['quick_login_dec'], '</span>
 				<input type="hidden" name="hash_passwrd" value="" />
 				<input type="hidden" name="op2" value="login" />
 				<input type="hidden" name="option" value="com_smf" />
 				<input type="hidden" name="Itemid" value="', $menu_item['id'], '" />
 				<input type="hidden" name="action" value="login2" />
 				<input type="hidden" name="returnurl" value="', $params->get('login'), '" />
-				
+				<input type="hidden" name="lang" value="', $configuration->get('mosConfig_lang'), '" />
 				<input type="hidden" name="return" value="', $configuration->get('mosConfig_sef')=='1' ? sefReltoAbs('index.php?' . $_SERVER['QUERY_STRING']) : $configuration->get('mosConfig_live_site')  . '/index.php?' . $_SERVER['QUERY_STRING'], '" />
 				<input type="hidden" name="message" value="', $message_login, '" />
 

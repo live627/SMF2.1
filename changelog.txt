@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2837 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2838 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -32,7 +32,10 @@ September 2007
  ! Who is viewing a topic wasn't saving correctly. (Themes.php)
  ! Some input values didn't get escaped properly - reported by Michael Brooks. (Groups.php, PersonalMessages.php, Post.php, Profile.php, QueryString.php, Search.php, Subs-Boards.php, Subs.php)
  ! Some attachment filenames didn't get escaped properly. (Display.php, ManageAttachments.php)
-
+ + Check to see if the Mambo bridge is installed correctly, and if not, die with an error message (Mambo bridge/SMF_header_include.php)
+ ! Use Mambo $loginfo as an object rather than an array. (Mambo bridge/SMF_user_change.php)
+ + Make the Mambo bridge compatible with Nokkaew (Mambo bridge/mod_smf_login.php)
+ ! addslashes__recursive was missing from SMF 2.0. (QueryString.php)
 
 August 2007
 --------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 1.1.2                                             *
+* Software Version:           SMF 2.0                                             *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -65,12 +65,15 @@ function SMF_header_include( ) {
 
 		if ($result !== false)
 			list($menu_item) = mysql_fetch_row($result);
-		else
-			$menu_item = 1;	
+		else {
+			$menu_item = 1;
+			die ('You need to create a menu item to your bridge component!  Remember to use the bridge component, not the wrapper component!');
+		}
 
 		$myurl = 'index.php?option=com_smf&amp;Itemid=' . $menu_item . '&amp;';
 
-		require_once ($smf_path."/SSI.php");
+		if (!@require_once ($smf_path."/SSI.php"))
+			die ('Your path to SMF is not set correctly in the bridge config panel!');
 			
 		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>' );
 		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
