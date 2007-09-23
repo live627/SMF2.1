@@ -738,6 +738,9 @@ function SetThemeSettings()
 		cache_put_data('theme_settings-' . $_GET['th'], null, 90);
 		cache_put_data('theme_settings-1', null, 90);
 
+		// Invalidate the cache.
+		updateSettings(array('settings_updated' => time()));
+
 		redirectexit('action=admin;area=theme;sa=settings;th=' . $_GET['th'] . ';sesc=' . $sc);
 	}
 

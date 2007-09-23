@@ -153,6 +153,7 @@ function template_settings()
 				1 => $txt['who_display_viewing_numbers'],
 				2 => $txt['who_display_viewing_names'],
 			),
+			'type' => 'number',
 		),
 		array(
 			'id' => 'smiley_sets_default',

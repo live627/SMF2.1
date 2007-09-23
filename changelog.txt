@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2835 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2836 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -28,6 +28,8 @@ September 2007
  ! It was possible to get an undefined index error using the mail queue. (Load.php)
  ! The "Send PM" link wasn't showing in profile for non-admins. (Profile.php)
  * Typo on moderation centre template means watched posts read watched users. (ModerationCenter template)
+ ! Ensure theme settings, when saved, take effect instantly. (Load.php)
+ ! Who is viewing a topic wasn't saving correctly. (Themes.php)
 
 
 August 2007
