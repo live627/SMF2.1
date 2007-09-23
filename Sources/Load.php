@@ -429,6 +429,25 @@ function loadUserSettings()
 
 		if (isset($_COOKIE[$cookiename]))
 			$_COOKIE[$cookiename] = '';
+
+		// Do we perhaps think this is a search robot? Check every five minutes just incase...
+		if (!empty($modSettings['spider_mode']) && (!isset($_SESSION['robot_check']) || $_SESSION['robot_check'] < time() - 300))
+		{
+			require_once($sourcedir . '/ManageSearchEngines.php');
+			$user_info['possibly_robot'] = SpiderCheck();
+		}
+		elseif (!empty($modSettings['spider_mode']))
+			$user_info['possibly_robot'] = isset($_SESSION['id_robot']) ? $_SESSION['id_robot'] : 0;
+		// If we haven't turned on proper spider hunts then have a guess!
+		else
+		{
+			$ci_user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+			$user_info['possibly_robot'] = (strpos($_SERVER['HTTP_USER_AGENT'], 'Mozilla') === false && strpos($_SERVER['HTTP_USER_AGENT'], 'Opera') === false) || strpos($ci_user_agent, 'googlebot') !== false || strpos($ci_user_agent, 'slurp') !== false || strpos($ci_user_agent, 'crawl') !== false;
+		}
+
+		// If it is detected as a robot, and we are automatically assigned robots to a preset group, then do it.
+		if ($user_info['possibly_robot'] && !empty($modSettings['spider_group']))
+			$user_info['groups'][] = $modSettings['spider_group'] == 1 ? 0 : $modSettings['spider_group'];
 	}
 
 	// Set up the $user_info array.
@@ -486,15 +505,12 @@ function loadUserSettings()
 			$user_info['mod_cache'] = $_SESSION['mc'];
 	}
 
-	// Just build this here, it makes it easier to change/use.
-	if ($user_info['is_guest'])
-		$user_info['query_see_board'] = 'FIND_IN_SET(-1, b.member_groups)';
-	// Administrators can see all boards.
-	elseif ($user_info['is_admin'])
+	// Just build this here, it makes it easier to change/use - administrators can see all boards.
+	if ($user_info['is_admin'])
 		$user_info['query_see_board'] = '1=1';
-	// Registered user.... just the groups in $user_info['groups'].
+	// Otherwise just the groups in $user_info['groups'].
 	else
-		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups) OR ' . $user_info['mod_cache']['mq'] . ')';
+		$user_info['query_see_board'] = '(FIND_IN_SET(' . implode(', b.member_groups) OR FIND_IN_SET(', $user_info['groups']) . ', b.member_groups)' . (isset($user_info['mod_cache']) ? ' OR ' . $user_info['mod_cache']['mq'] : '') . ')';
 
 	// Build the list of boards they WANT to see.
 	// This will take the place of query_see_boards in certain spots, so it better include the boards they can see also
@@ -1369,8 +1385,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	$context['browser']['needs_size_fix'] = ($context['browser']['is_ie5'] || $context['browser']['is_ie5.5'] || $context['browser']['is_ie4'] || $context['browser']['is_opera6']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Mac') === false;
 
 	// This isn't meant to be reliable, it's just meant to catch most bots to prevent PHPSESSID from showing up.
-	$ci_user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-	$context['browser']['possibly_robot'] = (strpos($_SERVER['HTTP_USER_AGENT'], 'Mozilla') === false && strpos($_SERVER['HTTP_USER_AGENT'], 'Opera') === false) || strpos($ci_user_agent, 'googlebot') !== false || strpos($ci_user_agent, 'slurp') !== false || strpos($ci_user_agent, 'crawl') !== false;
+	$context['browser']['possibly_robot'] = !empty($user_info['possibly_robot']);
 
 	// Robots shouldn't be logging in or registering.  So, they aren't a bot.  Better to be wrong than sorry (or people won't be able to log in!), anyway.
 	if ((isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('login', 'login2', 'register'))) || !$context['user']['is_guest'])

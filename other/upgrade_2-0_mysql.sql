@@ -428,6 +428,51 @@ ADD COLUMN redirect varchar(255) NOT NULL default '';
 ---#
 
 /******************************************************************************/
+--- Adding search engine tracking.
+/******************************************************************************/
+
+---# Creating spider table.
+CREATE TABLE IF NOT EXISTS {$db_prefix}spiders (
+	id_spider smallint(5) NOT NULL auto_increment,
+	spider_name tinytext NOT NULL,
+	user_agent tinytext NOT NULL,
+	ip_info tinytext NOT NULL,
+	PRIMARY KEY id_spider(id_spider)
+) TYPE=MyISAM{$db_collation};
+
+INSERT IGNORE INTO {$db_prefix}spiders
+	(id_spider, spider_name, user_agent, ip_info)
+VALUES
+	(1, 'Google', 'googlebot', ''),
+	(2, 'Yahoo!', 'slurp', ''),
+	(3, 'MSN', 'msn', '');
+---#
+
+---# Creating spider hit tracking table.
+CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_hits (
+	id_spider smallint(5) NOT NULL default '0',
+	session varchar(32) NOT NULL default '',
+	log_time int(10) NOT NULL,
+	url tinytext NOT NULL,
+	processed tinyint(3) NOT NULL default '0',
+	KEY id_spider(id_spider),
+	KEY log_time(log_time),
+	KEY processed (processed)
+) TYPE=MyISAM{$db_collation};
+---#
+
+---# Creating spider statistic table.
+CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_stats (
+	id_spider smallint(5) NOT NULL default '0',
+	unique_visits smallint(5) NOT NULL default '0',
+	page_hits smallint(5) NOT NULL default '0',
+	last_seen int(10) NOT NULL default '0',
+	stat_date date NOT NULL default '0001-01-01',
+	PRIMARY KEY (stat_date, id_spider)
+) TYPE=MyISAM{$db_collation};
+---#
+
+/******************************************************************************/
 --- Adding new forum settings.
 /******************************************************************************/
 

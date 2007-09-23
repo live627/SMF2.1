@@ -1045,6 +1045,34 @@ CREATE TABLE {$db_prefix}log_search_topics (
 ) TYPE=MyISAM;
 
 #
+# Table structure for table `log_spider_hits`
+#
+
+CREATE TABLE {$db_prefix}log_spider_hits (
+  id_spider smallint(5) NOT NULL default '0',
+  session varchar(32) NOT NULL default '',
+  log_time int(10) NOT NULL,
+  url tinytext NOT NULL,
+  processed tinyint(3) NOT NULL default '0',
+  KEY id_spider(id_spider),
+  KEY log_time(log_time),
+  KEY processed (processed)
+) TYPE=MyISAM;
+
+#
+# Table structure for table `log_spider_stats`
+#
+
+CREATE TABLE {$db_prefix}log_spider_stats (
+  id_spider smallint(5) NOT NULL default '0',
+  unique_visits smallint(5) NOT NULL default '0',
+  page_hits smallint(5) NOT NULL default '0',
+  last_seen int(10) NOT NULL default '0',
+  stat_date date NOT NULL default '0001-01-01',
+  PRIMARY KEY (stat_date, id_spider)
+) TYPE=MyISAM;
+
+#
 # Table structure for table `log_topics`
 #
 
@@ -1727,6 +1755,28 @@ VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0),
 	('^-^', 'azn.gif', '{$default_azn_smiley}', 17, 1),
 	('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1);
 # --------------------------------------------------------
+
+#
+# Table structure for table `spiders`
+#
+
+CREATE TABLE {$db_prefix}spiders (
+  id_spider smallint(5) NOT NULL auto_increment,
+  spider_name tinytext NOT NULL,
+  user_agent tinytext NOT NULL,
+  ip_info tinytext NOT NULL,
+  PRIMARY KEY id_spider(id_spider)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table `spiders`
+#
+
+INSERT INTO {$db_prefix}spiders
+	(id_spider, spider_name, user_agent, ip_info)
+VALUES (1, 'Google', 'googlebot', ''),
+	(2, 'Yahoo!', 'slurp', ''),
+	(3, 'MSN', 'msn', '');
 
 #
 # Table structure for table `themes`

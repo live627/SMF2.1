@@ -737,4 +737,9 @@ $txt['themeadmin_reset_title'] = 'Member Options';
 $txt['themeadmin_edit_title'] = 'Modify Themes';
 $txt['admin_browse_register_new'] = 'Register new member';
 
+$txt['search_engines'] = 'Search Engines';
+$txt['spiders'] = 'Spiders';
+$txt['spider_logs'] = 'Logs';
+$txt['spider_stats'] = 'Stats';
+
 ?>

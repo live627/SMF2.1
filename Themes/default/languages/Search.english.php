@@ -100,4 +100,45 @@ $txt['search_did_you_mean'] = 'You may have meant to search for';
 
 $txt['search_example'] = '<i>e.g.</i> Orwell "Animal Farm" -movie';
 
+$txt['search_engines_description'] = 'From this area you can decide in what detail you wish to track search engines as they index your forum as well as review search engine logs.';
+$txt['spider_mode'] = 'Search Engine Tracking Level<div class="smalltext">Note higher level tracking increases server resource requirement.</div>';
+$txt['spider_mode_off'] = 'Disabled';
+$txt['spider_mode_standard'] = 'Standard - Logs minimal spider activity.';
+$txt['spider_mode_high'] = 'High - Provides more accurate statistics.';
+$txt['spider_mode_vhigh'] = 'Very High - As for &quot;High&quot; but logs data about each page visited.';
+
+$txt['spider_group'] = 'Group to Assign Spiders<div class="smalltext">To enable you to tweak the content spiders can access.</div>';
+$txt['spider_group_none'] = 'Disabled';
+
+$txt['spider_name'] = 'Spider Name';
+$txt['spider_last_seen'] = 'Last Seen';
+$txt['spider_last_never'] = 'Never';
+$txt['spider_agent'] = 'User Agent';
+$txt['spider_ip_info'] = 'IP Addresses';
+$txt['spiders_add'] = 'Add New Spider';
+$txt['spiders_edit'] = 'Edit Spider';
+$txt['spiders_remove_selected'] = 'Remove Selected Spiders';
+$txt['spider_remove_selected_confirm'] = 'Are you sure you wish to remove these spiders?\\n\\nAll associated statistics will also be deleted!';
+
+$txt['add_spider_desc'] = 'From this page you can edit the parameters against which a spider is categorised. If a guest\'s user agent/IP address matches those entered below it will be detected as a search engine spider and tracked as per the forum preferences.';
+$txt['spider_name_desc'] = 'Name by which the spider will be referred.';
+$txt['spider_agent_desc'] = 'User agent associated with this spider.';
+$txt['spider_ip_info_desc'] = 'Comma separated list of IP addresses associated with this spider.';
+
+$txt['spider'] = 'Spider';
+$txt['spider_time'] = 'Time';
+$txt['spider_viewing'] = 'Viewing';
+$txt['spider_logs_empty'] = 'There are no logs at this time.';
+$txt['spider_logs_info'] = 'Note that logging of every spider action only occurs if tracking is set to either &quot;high&quot; or &quot;very high&quot;. Detail of every spiders action is only logged if tracking is set to &quot;very high&quot;.';
+$txt['spider_disabled'] = 'Disabled';
+
+$txt['spider_logs_delete'] = 'Delete Entries';
+$txt['spider_logs_delete_older'] = 'Delete all entries older than';
+$txt['spider_logs_delete_day'] = 'days.';
+$txt['spider_logs_delete_submit'] = 'Delete';
+
+$txt['spider_stats_select_month'] = 'Jump To Month';
+$txt['spider_stats_unique_visits'] = 'Unique Visits';
+$txt['spider_stats_page_hits'] = 'Page Hits';
+
 ?>

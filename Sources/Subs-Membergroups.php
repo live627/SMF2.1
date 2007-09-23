@@ -65,7 +65,7 @@ if (!defined('SMF'))
 // Delete one or more membergroups.
 function deleteMembergroups($groups)
 {
-	global $db_prefix, $sourcedir, $smfFunc;
+	global $db_prefix, $sourcedir, $smfFunc, $modSettings;
 
 	// Make sure it's an array.
 	if (!is_array($groups))
@@ -148,10 +148,14 @@ function deleteMembergroups($groups)
 
 	// Recalculate the post groups, as they likely changed.
 	updateStats('postgroups');
+
 	// Make a note of the fact that the cache may be wrong.
-	updateSettings(array(
-		'settings_updated' => time(),
-	));
+	$settings_update = array('settings_updated' => time());
+	// Have we deleted the spider group?
+	if (isset($modSettings['spider_group']) && in_array($modSettings['spider_group'], $groups))
+		$settings_update['spider_group'] = 0;
+
+	updateSettings($settings_update);
 
 	// It was a success.
 	return true;

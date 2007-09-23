@@ -247,4 +247,86 @@ function template_create_index_done()
 	</table>';
 }
 
+// Add or edit a search engine spider.
+function template_spider_edit()
+{
+	global $context, $settings, $options, $scripturl, $txt;
+	echo '
+	<form action="', $scripturl, '?action=admin;area=sengines;sa=editspiders;sid=', $context['spider']['id'], '" method="post" accept-charset="', $context['character_set'], '">
+		<table border="0" cellspacing="0" cellpadding="4" align="center" width="80%" class="tborder">
+			<tr class="titlebg">
+				<td colspan="2">', $context['page_title'], '</td>
+			</tr>
+			<tr class="windowbg2">
+				<td colspan="2" class="smalltext">', $txt['add_spider_desc'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td>
+					<b>', $txt['spider_name'], ':</b>
+					<div class="smalltext">', $txt['spider_name_desc'], '</div>
+				</td>
+				<td>
+					<input type="text" name="spider_name" value="', $context['spider']['name'], '" />
+				</td>
+			</tr>
+			<tr class="windowbg">
+				<td>
+					<b>', $txt['spider_agent'], ':</b>
+					<div class="smalltext">', $txt['spider_agent_desc'], '</div>
+				</td>
+				<td>
+					<input type="text" name="spider_agent" value="', $context['spider']['agent'], '" />
+				</td>
+			</tr>
+			<tr class="windowbg" valign="top">
+				<td>
+					<b>', $txt['spider_ip_info'], ':</b>
+					<div class="smalltext">', $txt['spider_ip_info_desc'], '</div>
+				</td>
+				<td>
+					<textarea name="spider_ip" rows="4" cols="20">', $context['spider']['ip_info'], '</textarea>
+				</td>
+			</tr>
+			<tr class="titlebg">
+				<td align="center" colspan="2">
+					<input type="submit" name="save" value="', $context['page_title'], '" />
+				</td>
+			</tr>
+		</table>
+	</form>';
+}
+
+// Show... spider... logs...
+function template_show_spider_logs()
+{
+	global $context, $txt, $settings, $scripturl;
+
+	// Standard fields.
+	template_show_list('spider_logs');
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=sengines;sa=logs;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<tr class="catbg">
+			<td>
+				', $txt['spider_logs_delete'], '
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td>
+				', $txt['spider_logs_delete_older'], '
+				<input type="text" name="older" value="7" size="3" />
+				', $txt['spider_logs_delete_day'], '
+			</td>
+		</tr>
+		<tr class="catbg">
+			<td align="right">
+				<input type="hidden" name="sc" value="', $context['session_id'], '" />
+				<input type="submit" name="delete_entries" value="', $txt['spider_logs_delete_submit'], '" />
+			</td>
+		</tr>
+	</table>
+	</form>';
+}
+
 ?>

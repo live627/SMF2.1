@@ -160,7 +160,7 @@ function createList($listOptions)
 				$cur_data['style'] = $column['data']['style'];
 
 			// Add the data cell properties to the current row.
-			$cur_row[] = $cur_data;
+			$cur_row[$column_id] = $cur_data;
 		}
 
 		// Insert the row into the list.

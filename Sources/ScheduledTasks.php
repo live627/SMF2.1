@@ -358,13 +358,13 @@ function scheduled_approval_notification()
 // Do some daily cleaning up.
 function scheduled_daily_maintenance()
 {
-	global $smfFunc, $db_prefix, $modSettings;
+	global $smfFunc, $db_prefix, $modSettings, $sourcedir;
 
 	// First clean out the data cache.
 	clean_cache('data');
 
 	// Then delete some settings that needn't be set if they are otherwise empty.
-	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage');
+	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage', 'spider_mode', 'spider_group');
 
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}settings
@@ -415,6 +415,13 @@ function scheduled_daily_maintenance()
 						SET warning = $change[warning]
 						WHERE id_member = $change[id]", __FILE__, __LINE__);
 		}
+	}
+
+	// Do any spider stuff.
+	if (!empty($modSettings['spider_mode']) && $modSettings['spider_mode'] > 1)
+	{
+		require_once($sourcedir . '/ManageSearchEngines.php');
+		consolidateSpiderStats();
 	}
 
 	// Log we've done it...

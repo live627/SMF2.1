@@ -2365,7 +2365,7 @@ function highlight_php_code($code)
 // Put this user in the online log.
 function writeLog($force = false)
 {
-	global $db_prefix, $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc;
+	global $db_prefix, $user_info, $user_settings, $sc, $modSettings, $settings, $topic, $board, $smfFunc, $sourcedir;
 
 	// If we are showing who is viewing a topic, let's see if we are, and force an update if so - to make it accurate.
 	if (!empty($settings['display_who_viewing']) && ($topic || $board))
@@ -2379,6 +2379,13 @@ function writeLog($force = false)
 				$force = false;
 			$_SESSION['last_topic_id'] = $topic;
 		}
+	}
+
+	// Are they a spider we should be tracking? Mode = 1 get's tracked on it's spider check...
+	if (!empty($user_info['possibly_robot']) && !empty($modSettings['spider_mode']) && $modSettings['spider_mode'] > 1)
+	{
+		require_once($sourcedir . '/ManageSearchEngines.php');
+		logSpider();
 	}
 
 	// Don't mark them as online more than every so often.
@@ -2413,7 +2420,8 @@ function writeLog($force = false)
 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_online
-			SET log_time = " . time() . ", ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized'			WHERE session = '$session_id'", __FILE__, __LINE__);
+			SET log_time = " . time() . ", ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized'
+			WHERE session = '$session_id'", __FILE__, __LINE__);
 
 		// Guess it got deleted.
 		if ($smfFunc['db_affected_rows']() == 0)

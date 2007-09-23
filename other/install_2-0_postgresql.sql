@@ -1335,6 +1335,39 @@ CREATE TABLE {$db_prefix}log_search_topics (
 );
 
 #
+# Table structure for table `log_spider_hits`
+#
+
+CREATE TABLE {$db_prefix}log_spider_hits (
+  id_spider smallint NOT NULL default '0',
+  session varchar(32) NOT NULL default '',
+  log_time int NOT NULL,
+  url varchar(255) NOT NULL,
+  processed smallint NOT NULL default '0'
+);
+
+#
+# Indexes for table `log_spider_hits`
+#
+
+CREATE INDEX {$db_prefix}log_spider_hits_id_spider ON {$db_prefix}log_spider_hits (id_spider);
+CREATE INDEX {$db_prefix}log_spider_hits_log_time ON {$db_prefix}log_spider_hits (log_time);
+CREATE INDEX {$db_prefix}log_spider_hits_processed ON {$db_prefix}log_spider_hits (processed);
+
+#
+# Table structure for table `log_spider_stats`
+#
+
+CREATE TABLE {$db_prefix}log_spider_stats (
+  id_spider smallint NOT NULL default '0',
+  unique_visits smallint NOT NULL default '0',
+  page_hits smallint NOT NULL default '0',
+  last_seen int NOT NULL default '0',
+  stat_date date NOT NULL default '0001-01-01',
+  PRIMARY KEY (stat_date, id_spider)
+);
+
+#
 # Table structure for table `log_topics`
 #
 
@@ -2132,6 +2165,32 @@ INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidd
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('^-^', 'azn.gif', '{$default_azn_smiley}', 17, 1);
 INSERT INTO {$db_prefix}smileys	(code, filename, description, smiley_order, hidden) VALUES ('O0', 'afro.gif', '{$default_afro_smiley}', 18, 1);
 # --------------------------------------------------------
+
+#
+# Sequence for table `spiders`
+#
+
+CREATE SEQUENCE {$db_prefix}spiders_seq;
+
+#
+# Table structure for table `spiders`
+#
+
+CREATE TABLE {$db_prefix}spiders (
+  id_spider smallint NOT NULL default nextval('{$db_prefix}spiders_seq'),
+  spider_name varchar(255) NOT NULL,
+  user_agent varchar(255) NOT NULL,
+  ip_info varchar(255) NOT NULL,
+  PRIMARY KEY id_spider(id_spider)
+);
+
+#
+# Dumping data for table `spiders`
+#
+
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (1, 'Google', 'googlebot', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (2, 'Yahoo!', 'slurp', '');
+INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (3, 'MSN', 'msn', '');
 
 #
 # Table structure for table `themes`

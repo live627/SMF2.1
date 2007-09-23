@@ -212,6 +212,9 @@ function ModifyCoreFeatures($return_config = false)
 				return $returnSettings;
 			'),
 		),
+		// Search engines
+		'sp' => array(
+		),
 	);
 
 	// Are we getting info for the help section.

@@ -349,6 +349,19 @@ function AdminMain()
 						'log' => array($txt['ban_log']),
 					),
 				),
+				'sengines' => array(
+					'label' => $txt['search_engines'],
+					'enabled' => in_array('sp', $context['admin_features']),
+					'file' => 'ManageSearchEngines.php',
+					'function' => 'SearchEngines',
+					'permission' => 'admin_forum',
+					'subsections' => array(
+						'stats' => array($txt['spider_stats']),
+						'logs' => array($txt['spider_logs']),
+						'spiders' => array($txt['spiders']),
+						'settings' => array($txt['settings']),
+					),
+				),
 			),
 		),
 		'maintenance' => array(
