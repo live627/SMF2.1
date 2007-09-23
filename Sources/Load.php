@@ -1391,37 +1391,6 @@ function loadTheme($id_theme = 0, $initialize = true)
 	if ((isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('login', 'login2', 'register'))) || !$context['user']['is_guest'])
 		$context['browser']['possibly_robot'] = false;
 
-	// If we think we have mail to send, let's offer up some possibilities... robots get pain (Now with scheduled task support!)
-	if ((!empty($modSettings['mail_next_send']) && $modSettings['mail_next_send'] < time()) || empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
-	{
-		if ($context['browser']['possibly_robot'])
-		{
-			//!!! Maybe move this somewhere better?!
-			require_once($sourcedir . '/ScheduledTasks.php');
-
-			// What to do, what to do?!
-			if (empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
-				AutoTask();
-			else
-				ReduceMailQueue();
-		}
-		else
-		{
-			$type = empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time() ? 'task' : 'mailq';
-			$ts = $type == 'mailq' ? $modSettings['mail_next_send'] : $modSettings['next_task_time'];
-
-			$context['html_headers'] .= '
-				<script language="JavaScript" type="text/javascript">
-					function smfAutoTask()
-					{
-						var tempImage = new Image();
-						tempImage.src = "' . $scripturl . '?scheduled=' . $type . ';ts=' . $ts . '";
-					}
-					window.setTimeout("smfAutoTask();", 1);
-				</script>';
-		}
-	}
-
 	// Set the top level linktree up.
 	array_unshift($context['linktree'], array(
 		'url' => &$scripturl,
@@ -1515,6 +1484,37 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Compatibility.
 	if (!isset($settings['theme_version']))
 		$modSettings['memberCount'] = $modSettings['totalMembers'];
+
+	// If we think we have mail to send, let's offer up some possibilities... robots get pain (Now with scheduled task support!)
+	if ((!empty($modSettings['mail_next_send']) && $modSettings['mail_next_send'] < time()) || empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
+	{
+		if ($context['browser']['possibly_robot'])
+		{
+			//!!! Maybe move this somewhere better?!
+			require_once($sourcedir . '/ScheduledTasks.php');
+
+			// What to do, what to do?!
+			if (empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time())
+				AutoTask();
+			else
+				ReduceMailQueue();
+		}
+		else
+		{
+			$type = empty($modSettings['next_task_time']) || $modSettings['next_task_time'] < time() ? 'task' : 'mailq';
+			$ts = $type == 'mailq' ? $modSettings['mail_next_send'] : $modSettings['next_task_time'];
+
+			$context['html_headers'] .= '
+				<script language="JavaScript" type="text/javascript">
+					function smfAutoTask()
+					{
+						var tempImage = new Image();
+						tempImage.src = "' . $scripturl . '?scheduled=' . $type . ';ts=' . $ts . '";
+					}
+					window.setTimeout("smfAutoTask();", 1);
+				</script>';
+		}
+	}
 
 	if (isset($modSettings['integrate_load_theme']) && function_exists($modSettings['integrate_load_theme']))
 		call_user_func($modSettings['integrate_load_theme']);

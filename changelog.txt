@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2832 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2833 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -25,6 +25,7 @@ September 2007
  + Allow the admins to, optionally, monitor search engine activity on their site. (ManageSearchEngines.php, ManageSettings.php, ScheduledTasks.php, Subs-Membergroups.php, upgrade, install)
  + Allow admin to allocate a membergroup for detected search engines. (Load.php)
  & New language entries for the above. (Search, Admin language files)
+ ! It was possible to get an undefined index error using the mail queue. (Load.php)
 
 
 August 2007
