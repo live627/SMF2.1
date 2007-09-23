@@ -667,7 +667,7 @@ function template_user_watches_posts()
 	<form action="', $scripturl, '?action=moderate;area=userwatch;sa=post;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['mc_watched_users_delete_posts'], '\');">
 		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
-				<td>', $txt['mc_watched_users_title'], ' - ', $txt['mc_watched_users_member'], '</td>
+				<td>', $txt['mc_watched_users_title'], ' - ', $txt['mc_watched_users_post'], '</td>
 			</tr><tr class="catbg">
 				<td>', $txt['pages'], ': ', $context['page_index'], '</td>
 			</tr>';
