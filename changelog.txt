@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2833 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2834 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -26,6 +26,7 @@ September 2007
  + Allow admin to allocate a membergroup for detected search engines. (Load.php)
  & New language entries for the above. (Search, Admin language files)
  ! It was possible to get an undefined index error using the mail queue. (Load.php)
+ ! The "Send PM" link wasn't showing in profile for non-admins. (Profile.php)
 
 
 August 2007

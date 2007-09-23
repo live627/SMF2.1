@@ -242,8 +242,8 @@ function ModifyProfile($post_errors = array())
 			'title' => $txt['profileAction'],
 			'areas' => array(
 				'send_pm' => array(
-					'own' => array('pm_send'),
-					'any' => array(),
+					'own' => array(),
+					'any' => array('pm_send'),
 					'enabled' => !$context['user']['is_owner'],
 					'href' => $scripturl . '?action=pm;sa=send;u=' . $memID,
 					'label' => $txt['profileSendIm'],
