@@ -182,7 +182,7 @@ function cleanRequest()
 	}
 
 	// Add entities to GET.  This is kinda like the slashes on everything else.
-	$_GET = addslashes__recursive(htmlspecialchars__recursive($_GET));
+	$_GET = escapestring__recursive(htmlspecialchars__recursive($_GET));
 
 	// If we're using a database with quote escaped quotes and magic quotes is on we have some work...
 	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && $smfFunc['db_sybase'] && !$magicSybase)
@@ -504,18 +504,4 @@ function ob_sessrewrite($buffer)
 	return $buffer;
 }
 
-function addslashes__recursive($var, $level = 0)
-{
-	if (!is_array($var))
-		return addslashes($var);
-
-	// Reindex the array with slashes.
-	$new_var = array();
-
-	// Add slashes to every element, even the indexes!
-	foreach ($var as $k => $v)
-		$new_var[addslashes($k)] = $level > 25 ? null : addslashes__recursive($v, $level + 1);
-
-	return $new_var;
-}
 ?>
