@@ -359,6 +359,7 @@ function ModifySecuritySettings($return_config = false)
 			array('int', 'failed_login_threshold'),
 		'',
 			array('check', 'enableErrorLogging'),
+			array('check', 'enableErrorQueryLogging'),
 			array('check', 'securityDisable'),
 		'',
 			// Reactive on email, and approve on delete
