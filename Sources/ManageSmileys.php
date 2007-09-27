@@ -368,7 +368,9 @@ function EditSmileySets()
 					'value' => $txt['smiley_sets_default'],
 				),
 				'data' => array(
-					'eval' => 'return %selected% ? \'<b>*</b>\' : \'\';',
+					'function' => create_function('$rowData', '
+						return $rowData[\'selected\'] ? \'<b>*</b>\' : \'\';
+					'),
 					'style' => 'text-align: center;',
 				),
 				'sort' => array(
@@ -425,7 +427,9 @@ function EditSmileySets()
 					'value' => '<input type="checkbox" onclick="invertAll(this, this.form);" class="check" />',
 				),
 				'data' => array(
-					'eval' => 'return %id% == 0 ? \'\' : \'<input type="checkbox" name="smiley_set[\' . %id% . \']" class="check" />\';',
+					'function' => create_function('$rowData', '
+						return $rowData[\'id\'] == 0 ? \'\' : sprintf(\'<input type="checkbox" name="smiley_set[%1$d]" class="check" />\', $rowData[\'id\']);
+					'),
 					'style' => 'text-align: center',
 				),
 			),
@@ -891,7 +895,16 @@ function EditSmileys()
 						'value' => $txt['smileys_location'],
 					),
 					'data' => array(
-						'eval' => 'return empty(%hidden%) ? $txt[\'smileys_location_form\'] : (%hidden% == 1 ? $txt[\'smileys_location_hidden\'] : $txt[\'smileys_location_popup\']);',
+						'function' => create_function('$rowData', '
+							global $txt;
+						
+							if (empty($rowData[\'hidden\']))
+								return $txt[\'smileys_location_form\'];
+							elseif ($rowData[\'hidden\'] == 1)
+								return $txt[\'smileys_location_hidden\'];
+							else
+								return $txt[\'smileys_location_popup\'];
+						'),
 						'class' => 'windowbg',
 					),
 					'sort' => array(
@@ -904,13 +917,22 @@ function EditSmileys()
 						'value' => $txt['smileys_description'],
 					),
 					'data' => array(
-						'eval' => empty($modSettings['smileys_dir']) || !is_dir($modSettings['smileys_dir']) ? 'return %description%;' : '
+						'function' => create_function('$rowData', empty($modSettings['smileys_dir']) || !is_dir($modSettings['smileys_dir']) ? '
+							return htmlspecialchars($rowData[\'description\']);
+						' : '
+							global $context, $txt, $modSettings;	
+						
+							// Check if there are smileys missing in some sets.
 							$missing_sets = array();
 							foreach ($context[\'smiley_sets\'] as $smiley_set)
-								if (!file_exists($modSettings[\'smileys_dir\'] . \'/\' . $smiley_set[\'path\'] . \'/\' . %filename%))
+								if (!file_exists(sprintf(\'%1$s/%2$s/%3$s\', $modSettings[\'smileys_dir\'], $smiley_set[\'path\'], $rowData[\'filename\'])))
 									$missing_sets[] = $smiley_set[\'path\'];
-							return %description% . (empty($missing_sets) ? \'\' : \'<br />
-								<span class="smalltext"><b>\' . $txt[\'smileys_not_found_in_set\'] . \':</b> \' . implode(\', \', $missing_sets) . \'</span>\');',
+									
+							$description = htmlspecialchars($rowData[\'description\']);
+							
+							if (!empty($missing_sets))
+								$description .= sprintf(\'<br /><span class="smalltext"><b>%1$s:</b> %2$s</span>\', $txt[\'smileys_not_found_in_set\'], implode(\', \', $missing_sets));
+						'),
 						'class' => 'windowbg',
 					),
 					'sort' => array(
@@ -1453,7 +1475,12 @@ function EditMessageIcons()
 		'columns' => array(
 			'icon' => array(
 				'data' => array(
-					'eval' => 'return \'<img src="\' . $settings[file_exists($settings[\'theme_dir\'] . \'/images/post/\' . %filename% . \'.gif\') ? \'actual_images_url\' : \'default_images_url\'] . \'/post/\' . %filename% . \'.gif" alt="\' . htmlspecialchars(%title%) . \'" />\';',
+					'function' => create_function('$rowData', '
+						global $settings;
+					
+						$images_url = $settings[file_exists(sprintf(\'%1$s/images/post/%2$s.gif\', $settings[\'theme_dir\'], $rowData[\'filename\'])) ? \'actual_images_url\' : \'default_images_url\'];
+						return sprintf(\'<img src="%1$s/post/%2$s.gif" alt="%3$s" />\', $images_url, $rowData[\'filename\'], htmlspecialchars($rowData[\'title\']));
+					'),
 				),
 				'style' => 'text-align: center;',
 			),
@@ -1484,7 +1511,11 @@ function EditMessageIcons()
 					'value' => $txt['icons_board'],
 				),
 				'data' => array(
-					'eval' => 'return empty(%board_name%) ? $txt[\'icons_edit_icons_all_boards\'] : %board_name%;',
+					'function' => create_function('$rowData', '
+						global $txt;
+					
+						return empty($rowData[\'board_name\']) ? $txt[\'icons_edit_icons_all_boards\'] : $rowData[\'board_name\'];
+					'),
 				),
 			),
 			'modify' => array(

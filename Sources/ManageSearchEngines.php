@@ -116,7 +116,7 @@ function ManageSearchEngineSettings($return_config = false)
 // View a list of all the spiders we know about.
 function ViewSpiders()
 {
-	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix, $last_seen;
+	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix;
 
 	if (!isset($_SESSION['spider_stat']) || $_SESSION['spider_stat'] < time() - 60)
 	{
@@ -154,9 +154,9 @@ function ViewSpiders()
 		FROM {$db_prefix}log_spider_stats
 		GROUP BY id_spider", __FILE__, __LINE__);
 
-	$last_seen = array();
+	$context['spider_last_seen'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$last_seen[$row['id_spider']] = $row['last_seen_time'];
+		$context['spider_last_seen'][$row['id_spider']] = $row['last_seen_time'];
 	$smfFunc['db_free_result']($request);
 
 	$listOptions = array(
@@ -176,7 +176,11 @@ function ViewSpiders()
 					'value' => $txt['spider_name'],
 				),
 				'data' => array(
-					'eval' => 'return \'<a href="\' . $scripturl . \'?action=admin;area=sengines;sa=editspiders;sid=\' . %id_spider% . \'">\' . htmlspecialchars(%spider_name%) . \'</a>\';',
+					'function' => create_function('$rowData', '
+						global $scripturl;
+					
+						return sprintf(\'<a href="%1$s?action=admin;area=sengines;sa=editspiders;sid=%2$d">%3$s</a>\', $scripturl, $rowData[\'id_spider\'], htmlspecialchars($rowData[\'spider_name\']));
+					'),
 					'class' => 'windowbg',
 				),
 				'sort' => array(
@@ -189,7 +193,11 @@ function ViewSpiders()
 					'value' => $txt['spider_last_seen'],
 				),
 				'data' => array(
-					'eval' => 'return isset($GLOBALS[\'last_seen\'][%id_spider%]) ? timeformat($GLOBALS[\'last_seen\'][%id_spider%]) : $txt[\'spider_last_never\'];',
+					'function' => create_function('$rowData', '
+						global $context, $txt;
+					
+						return isset($context[\'spider_last_seen\'][$rowData[\'id_spider\']]) ? timeformat($context[\'spider_last_seen\'][$rowData[\'id_spider\']]) : $txt[\'spider_last_never\'];
+					'),
 					'class' => 'windowbg',
 				),
 			),
@@ -620,7 +628,7 @@ function ip2range($fullip)
 // See what spiders have been up to.
 function SpiderLogs()
 {
-	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix, $last_seen, $modSettings;
+	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix, $modSettings;
 
 	// Did they want to delete some entries?
 	if (!empty($_POST['delete_entries']) && !empty($_POST['older']))
@@ -666,7 +674,9 @@ function SpiderLogs()
 					'value' => $txt['spider_time'],
 				),
 				'data' => array(
-					'eval' => 'return timeformat(%log_time%);',
+					'function' => create_function('$rowData', '
+						return timeformat($rowData[\'log_time\']);
+					'),
 					'class' => 'windowbg',
 				),
 				'sort' => array(
@@ -759,7 +769,7 @@ function list_getNumSpiderLogs()
 // Show the spider statistics.
 function SpiderStats()
 {
-	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix, $last_seen;
+	global $context, $txt, $sourcedir, $scripturl, $smfFunc, $db_prefix;
 
 	// Force an update of the stats every 60 seconds.
 	if (!isset($_SESSION['spider_stat']) || $_SESSION['spider_stat'] < time() - 60)

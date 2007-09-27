@@ -851,7 +851,7 @@ function list_getMembers($start, $items_per_page, $sort, $where)
 			mem.id_member, mem.member_name, mem.real_name, mem.email_address, mem.icq, mem.aim, mem.yim, mem.msn, mem.member_ip, mem.last_login, mem.posts, mem.is_activated, mem.date_registered,
 			mg.group_name
 		FROM {$db_prefix}members AS mem
-			LEFT JOIN {$db_prefix}membergroups AS mg
+			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)
 		WHERE $where
 		ORDER BY $sort
 		LIMIT $start, $items_per_page", __FILE__, __LINE__);

@@ -115,7 +115,9 @@ function BrowseMailQueue()
 					'value' => $txt['mailqueue_subject'],
 				),
 				'data' => array(
-					'eval' => 'return strlen(%subject%) > 50 ? substr(htmlspecialchars(%subject%), 0, 47) . \'...\' : htmlspecialchars(%subject%);',
+					'function' => create_function('$rowData', '
+						return strlen($rowData[\'subject\']) > 50 ? sprintf(\'%1$s...\', substr(htmlspecialchars($rowData[\'subject\']), 0, 47)) : htmlspecialchars($rowData[\'subject\']);
+					'),
 					'class' => 'smalltext',
 				),
 				'sort' => array(
@@ -146,7 +148,15 @@ function BrowseMailQueue()
 					'value' => $txt['mailqueue_priority'],
 				),
 				'data' => array(
-					'eval' => 'return isset($txt[\'mq_priority_\' . %priority%]) ? $txt[\'mq_priority_\' . %priority%] : $txt[\'mq_priority_3\'];',
+					'function' => create_function('$rowData', '
+						global $txt;
+						
+						// We probably have a text label with your priority.
+						$txtKey = sprintf(\'mq_priority_%1$s\', $rowData[\'priority\']);
+						
+						// But if not, revert to priority 3.
+						return isset($txt[$txtKey]) ? $txt[$txtKey] : $txt[\'mq_priority_3\'];
+					'),
 					'class' => 'smalltext',
 				),
 				'sort' => array(
@@ -159,7 +169,9 @@ function BrowseMailQueue()
 					'value' => $txt['mailqueue_age'],
 				),
 				'data' => array(
-					'eval' => 'return time_since(time() - %time_sent%);',
+					'function' => create_function('$rowData', '
+						return time_since(time() - $rowData[\'time_sent\']);
+					'),
 					'class' => 'smalltext',
 				),
 				'sort' => array(

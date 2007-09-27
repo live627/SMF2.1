@@ -899,7 +899,12 @@ function ShowCustomProfiles()
 					'value' => $txt['custom_edit_active'],
 				),
 				'data' => array(
-					'eval' => 'return \'<input type="checkbox" name="active[]" id="active_\' . %id% . \'" value="\' . %id% . \'" \' . (%disabled% ? \'\' : \'checked="checked"\') . \' class="check" \' . (%can_show_register% ? \'onclick="document.getElementById(\\\'reg_\' . %id% . \'\\\').disabled = !this.checked;"\' : \'\') . \' />\';',
+					'function' => create_function('$rowData', '
+						
+						$isChecked = $rowData[\'disabled\'] ? \'\' : \' checked="checked"\';
+						$onClickHandler = $rowData[\'can_show_register\'] ? sprintf(\'onclick="document.getElementById(\\\'reg_%1$d\\\').disabled = !this.checked;"\', $rowData[\'id\']) : \'\';
+						return sprintf(\'<input type="checkbox" name="active[]" id="active_%1$d" value="%1$d" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $onClickHandler);
+					'),
 					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
 				),
@@ -909,7 +914,11 @@ function ShowCustomProfiles()
 					'value' => $txt['custom_edit_registration'],
 				),
 				'data' => array(
-					'eval' => 'return \'<input type="checkbox" name="reg[]" id="reg_\' . %id% . \'" value="\' . %id% . \'" \' . (%on_register% && !%disabled% ? \'checked="checked"\' : \'\') . \' \' . (%can_show_register% ? \'\' : \'disabled="disabled"\') . \'class="check" />\';',
+					'function' => create_function('$rowData', '
+						$isChecked = $rowData[\'on_register\'] && !$rowData[\'disabled\'] ? \' checked="checked"\' : \'\';
+						$isDisabled = $rowData[\'can_show_register\'] ? \'\' : \' disabled="disabled"\';
+						return sprintf(\'<input type="checkbox" name="reg[]" id="reg_%1$d" value="%1$d" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $isDisabled);
+					'),
 					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
 				),
@@ -953,8 +962,13 @@ function ShowCustomProfiles()
 					'style' => 'text-align: left;',
 				),
 				'data' => array(
-					'eval' => 'return \'<a href="\' . $scripturl . \'?action=admin;area=featuresettings;sa=profileedit;fid=\' . %id_field% . \'">\' . htmlspecialchars(%field_name%) . \'</a><div class="smalltext">\' . htmlspecialchars(%field_desc%) . \'</div>\';',
+					'function' => create_function('$rowData', '
+						global $scripturl;
+					
+						return sprintf(\'<a href="%1$s?action=admin;area=featuresettings;sa=profileedit;fid=%2$d">%3$s</a><div class="smalltext">%4$s</div>\', $scripturl, $rowData[\'id_field\'], htmlspecialchars($rowData[\'field_name\']), htmlspecialchars($rowData[\'field_desc\']));
+					'),
 					'style' => 'width: 62%;',
+				
 				),
 				'sort' => array(
 					'default' => 'field_name',
@@ -967,7 +981,12 @@ function ShowCustomProfiles()
 					'style' => 'text-align: left;',
 				),
 				'data' => array(
-					'eval' => 'return isset($txt[\'custom_profile_type_\' . %field_type%]) ? $txt[\'custom_profile_type_\' . %field_type%] : %field_type%;',
+					'function' => create_function('$rowData', '
+						global $txt;
+					
+						$textKey = sprintf(\'custom_profile_type_%1$s\', $rowData[\'field_type\']);
+						return isset($txt[$textKey]) ? $txt[$textKey] : $textKey;
+					'),
 					'style' => 'width: 15%;',
 				),
 				'sort' => array(
@@ -980,7 +999,11 @@ function ShowCustomProfiles()
 					'value' => $txt['custom_profile_active'],
 				),
 				'data' => array(
-					'eval' => 'return %active% ? $txt[\'yes\'] : $txt[\'no\'];',
+					'function' => create_function('$rowData', '
+						global $txt;
+					
+						return $rowData[\'active\'] ? $txt[\'yes\'] : $txt[\'no\'];
+					'),
 					'class' => 'windowbg',
 					'style' => 'width: 8%; text-align: center;',
 				),

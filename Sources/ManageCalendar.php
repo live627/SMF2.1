@@ -121,7 +121,15 @@ function ModifyHolidays()
 					'value' => $txt['date'],
 				),
 				'data' => array(
-					'eval' => 'return %day% . \' \' . $txt[\'months\'][%month%] . \' \' . (%year% == \'0004\' ? \'(\' . $txt[\'every_year\'] . \')\' : %year%);',
+					'function' => create_function('$rowData', '
+						global $txt;
+						
+						// Recurring every year or just a single year?
+						$year = $rowData[\'year\'] == \'0004\' ? sprintf(\'(%1$s)\', $txt[\'every_year\']) : $rowData[\'year\'];
+						
+						// Construct the date.
+						return sprintf(\'%1$d %2$s %3$s\', $rowData[\'day\'], $txt[\'months\'][$rowData[\'month\']], $year);
+					'),
 					'class' => 'windowbg',
 				),
 				'sort' => array(

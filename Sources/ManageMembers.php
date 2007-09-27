@@ -518,27 +518,35 @@ function ViewMemberlist()
 					'value' => $txt['viewmembers_online'],
 				),
 				'data' => array(
-					'eval' => '
+					'function' => create_function('$rowData', '
+						global $txt;
+					
 						// Calculate number of days since last online.
-						if (empty(%last_login%))
+						if (empty($rowData[\'last_login\']))
 							$difference = $txt[\'never\'];
 						else
 						{
-							// Today or some time ago?
-							$difference = jeffsdatediff(%last_login%);
-							if (empty($difference))
+							$num_days_difference = jeffsdatediff($rowData[\'last_login\']);
+							
+							// Today.
+							if (empty($num_days_difference))
 								$difference = $txt[\'viewmembers_today\'];
-							elseif ($difference == 1)
-								$difference .= \' \' . $txt[\'viewmembers_day_ago\'];
+							
+							// Yesterday.
+							elseif ($num_days_difference == 1)
+								$difference = sprintf(\'1 %1$s\', $txt[\'viewmembers_day_ago\']);
+							
+							// X days ago.
 							else
-								$difference .= \' \' . $txt[\'viewmembers_days_ago\'];
+								$difference = sprintf(\'%1$d %2$s\', $num_days_difference, $txt[\'viewmembers_days_ago\']);
 						}
 
 						// Show it in italics if they\'re not activated...
-						if (%is_activated% % 10 != 1)
-							$difference = \'<i title="\' . $txt[\'not_activated\'] . \'">\' . $difference . \'</i>\';
+						if ($rowData[\'is_activated\'] % 10 != 1)
+							$difference = sprintf(\'<i title="%1$s">%2$s</i>\', $txt[\'not_activated\'], $difference);
 
-						return $difference;',
+						return $difference;
+					'),
 				),
 				'sort' =>  array(
 					'default' => 'last_login DESC',
@@ -847,7 +855,9 @@ function MembersAwaitingActivation()
 					'value' => $txt['viewmembers_online'],
 				),
 				'data' => array(
-					'eval' => 'return timeformat(%date_registered%);',
+					'function' => create_function('$rowData', '
+						return timeformat($rowData[\'date_registered\']);
+					'),
 				),
 				'sort' =>  array(
 					'default' => 'date_registered DESC',

@@ -142,14 +142,27 @@ function MembergroupIndex()
 					'value' => $txt['membergroups_name'],
 				),
 				'data' => array(
-					'eval' => '
-						$return_string = %id_group% == 3 ? %group_name% : \'<a href="\' . $scripturl . \'?action=moderate;area=viewgroups;sa=members;group=\' . %id_group% . \'"\' . (empty(%online_color%) ? \'\' : \' style="color: \' . %online_color% . \';"\') . \'>\' . %group_name% . \'</a>\';
-
-						// Add a help options for moderator and administrator.
-						if (%id_group% == 1 || %id_group% == 3)
-							$return_string .= \' (<a href="\' . $scripturl . \'?action=helpadmin;help=membergroup_\' . (%id_group% == 1 ? \'administrator\' : \'moderator\') . \'" onclick="return reqWin(this.href);">?</a>)\';
-
-						return $return_string;',
+					'function' => create_function('$rowData', '
+						global $scripturl;
+					
+						// Since the moderator group has no explicit members, no link is needed.
+						if ($rowData[\'id_group\'] == 3)
+							$group_name = $rowData[\'group_name\'];
+						else
+						{
+							$color_style = empty($rowData[\'online_color\']) ? \'\' : sprintf(\' style="color: %1$s;"\', $rowData[\'online_color\']);
+							$group_name = sprintf(\'<a href="%1$s?action=moderate;area=viewgroups;sa=members;group=%2$d"%3$s>%4$s</a>\', $scripturl, $rowData[\'id_group\'], $color_style, $rowData[\'group_name\']);
+						}
+						
+						// Add a help option for moderator and administrator.
+						if ($rowData[\'id_group\'] == 1)
+							$group_name .= sprintf(\' (<a href="%1$s?action=helpadmin;help=membergroup_administrator" onclick="return reqWin(this.href);">?</a>)\', $scripturl);
+						elseif ($rowData[\'id_group\'] == 3)
+							$group_name .= sprintf(\' (<a href="%1$s?action=helpadmin;help=membergroup_moderator" onclick="return reqWin(this.href);">?</a>)\', $scripturl);
+						
+							
+						return $group_name;
+					'),
 				),
 				'sort' => array(
 					'default' => 'CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name',
@@ -161,9 +174,23 @@ function MembergroupIndex()
 					'value' => $txt['membergroups_stars'],
 				),
 				'data' => array(
-					'eval' => '
-						$stars = explode(\'#\', %stars%);
-						return empty($stars[0]) || empty($stars[1]) ? \'\' : str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/\' . $stars[1] . \'" alt="*" border="0" />\', $stars[0]);'
+					'function' => create_function('$rowData', '
+						global $settings;
+					
+						$stars = explode(\'#\', $rowData[\'stars\']);
+						
+						// In case no stars are setup, return with nothing
+						if (empty($stars[0]) || empty($stars[1]))
+							return \'\';
+						
+						// Otherwise repeat the image a given number of times.
+						else
+						{
+							$image = sprintf(\'<img src="%1$s/%2$s" alt="*" border="0" />\', $settings[\'images_url\'], $stars[1]);
+							return str_repeat($image, $stars[0]);
+						}
+					'),
+				
 				),
 				'sort' => array(
 					'default' => "CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE('#', stars) - 1) DESC, SUBSTRING(stars, LOCATE('#', stars) + 1)",
@@ -175,7 +202,12 @@ function MembergroupIndex()
 					'value' => $txt['membergroups_members_top'],
 				),
 				'data' => array(
-					'eval' => 'return %id_group% == 3 ? $txt[\'membergroups_guests_na\'] : %num_members%;',
+					'function' => create_function('$rowData', '
+						global $txt;
+					
+						// No explicit members for the moderator group.
+						return $rowData[\'id_group\'] == 3 ? $txt[\'membergroups_guests_na\'] : $rowData[\'num_members\'];
+					'),
 					'class' => 'windowbg',
 					'style' => 'text-align: center',
 				),
@@ -234,8 +266,12 @@ function MembergroupIndex()
 					'value' => $txt['membergroups_name'],
 				),
 				'data' => array(
-					'eval' => '
-						return  \'<a href="\' . $scripturl . \'?action=moderate;area=viewgroups;sa=members;group=\' . %id_group% . \'"\' . (empty(%online_color%) ? \'\' : \' style="color: \' . %online_color% . \';"\') . \'>\' . %group_name% . \'</a>\';',
+					'function' => create_function('$rowData', '
+						global $scripturl;
+						
+						$colorStyle = empty($rowData[\'online_color\']) ? \'\' : sprintf(\' style="color: %1$s;"\', $rowData[\'online_color\']);
+						return  sprintf(\'<a href="%1$s?action=moderate;area=viewgroups;sa=members;group=%2$d"%3$s>%4$s</a>\', $scripturl, $rowData[\'id_group\'], $colorStyle, $rowData[\'group_name\']);
+					'),
 				),
 				'sort' => array(
 					'default' => 'group_name',
@@ -247,9 +283,19 @@ function MembergroupIndex()
 					'value' => $txt['membergroups_stars'],
 				),
 				'data' => array(
-					'eval' => '
-						$stars = explode(\'#\', %stars%);
-						return empty($stars[0]) || empty($stars[1]) ? \'\' : str_repeat(\'<img src="\' . $settings[\'images_url\'] . \'/\' . $stars[1] . \'" alt="*" border="0" />\', $stars[0]);'
+					'function' => create_function('$rowData', '
+						global $settings;
+						
+						$stars = explode(\'#\', $rowData[\'stars\']);
+						
+						if (empty($stars[0]) || empty($stars[1]))
+							return \'\';
+						else
+						{
+							$star_image = sprintf(\'<img src="%1$s/%2$s" alt="*" border="0" />\', $settings[\'images_url\'], $stars[1]);
+							return str_repeat($star_image, $stars[0]);
+						}
+					'),
 				),
 				'sort' => array(
 					'default' => "CASE WHEN id_group < 4 THEN id_group ELSE 4 END, SUBSTRING(stars, 1, LOCATE('#', stars) - 1) DESC, SUBSTRING(stars, LOCATE('#', stars) + 1)",
