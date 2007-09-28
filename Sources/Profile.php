@@ -1473,7 +1473,7 @@ function makeCustomFieldChanges($memID, $area)
 	$changes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		if ($row['private'] != 0 && !isAllowed('admin_forum'))
+		if ($row['private'] != 0 && !allowedTo('admin_forum'))
 			continue;
 
 		// Validate the user data.
