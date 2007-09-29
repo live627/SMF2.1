@@ -352,16 +352,16 @@ function template_modify_board()
 		</tr>
 		<tr class="windowbg2">
 			<td>
-				<b', $context['board']['posts'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</b><br />
+				<b', $context['board']['topics'] ? ' style="color: gray;"' : '', '>', $txt['mboards_redirect'], ':</b><br />
 				<span class="smalltext">', $txt['mboards_redirect_desc'], '</span><br />
-				', $context['board']['posts'] ? '<span class="smalltext" style="font-style: italic; font-weight: bold;">' . $txt['mboards_redirect_disabled'] . '</span><br />' : '', '
+				', $context['board']['topics'] ? '<span class="smalltext" style="font-style: italic; font-weight: bold;">' . $txt['mboards_redirect_disabled'] . '</span><br />' : '', '
 			</td>
 			<td valign="top" align="left">
-				<input type="checkbox" id="redirect_enable" name="redirect_enable"', $context['board']['posts'] ? ' disabled="disabled"' : '', $context['board']['redirect'] != '' ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="check" />
+				<input type="checkbox" id="redirect_enable" name="redirect_enable"', $context['board']['topics'] ? ' disabled="disabled"' : '', $context['board']['redirect'] != '' ? ' checked="checked"' : '', ' onclick="refreshOptions();" class="check" />
 			</td>
 		</tr>';
 
-	if (!$context['board']['posts'])
+	if (!$context['board']['topics'])
 	{
 		echo '
 		<tr class="windowbg2" id="redirect_address_div">
@@ -466,7 +466,7 @@ function template_modify_board()
 			document.getElementById("board_theme_div").style.display = redirectEnabled? "none" : "";
 			document.getElementById("count_posts_div").style.display = redirectEnabled ? "none" : "";';
 
-	if (!$context['board']['posts'])
+	if (!$context['board']['topics'])
 	{
 		echo '
 			document.getElementById("redirect_address_div").style.display = redirectEnabled ? "" : "none";';

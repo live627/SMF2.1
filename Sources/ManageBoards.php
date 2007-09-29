@@ -403,6 +403,7 @@ function EditBoard()
 			'description' => '',
 			'count_posts' => 1,
 			'posts' => 0,
+			'topics' => 0,
 			'theme' => 0,
 			'override_theme' => 0,
 			'redirect' => '',
