@@ -2181,7 +2181,7 @@ CREATE TABLE {$db_prefix}spiders (
   spider_name varchar(255) NOT NULL,
   user_agent varchar(255) NOT NULL,
   ip_info varchar(255) NOT NULL,
-  PRIMARY KEY id_spider(id_spider)
+  PRIMARY KEY (id_spider)
 );
 
 #

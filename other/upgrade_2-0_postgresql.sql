@@ -22,7 +22,7 @@ CREATE TABLE {$db_prefix}openid_assoc (
 
 ---# Adding search ability to custom fields.
 ---{
-if ($db_type == 'postgresql' && $smfFunc['db_server_info'] < 8.0)
+if ($smfFunc['db_server_info'] < 8.0)
 {
 	upgrade_query("
 		ALTER TABLE {$db_prefix}custom_fields
@@ -34,7 +34,11 @@ if ($db_type == 'postgresql' && $smfFunc['db_server_info'] < 8.0)
 
 	upgrade_query("
 		ALTER TABLE {$db_prefix}custom_fields
-		CHANGE COLUMN can_search SET default = '0'");
+		ALTER COLUMN can_search SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}custom_fields
+		ALTER COLUMN can_search SET default '0'");
 }
 else
 {
@@ -79,7 +83,7 @@ if ($db_type == 'postgresql' && $smfFunc['db_server_info'] < 8.0)
 		
 	upgrade_query("
 		ALTER TABLE {$db_prefix}boards
-		ALTER COLUMN redirect SET DEFAULT ''");
+		ALTER COLUMN redirect SET default ''");
 }
 else
 {
@@ -104,7 +108,7 @@ CREATE TABLE {$db_prefix}spiders (
 	spider_name varchar(255) NOT NULL,
 	user_agent varchar(255) NOT NULL,
 	ip_info varchar(255) NOT NULL,
-	PRIMARY KEY id_spider(id_spider)
+	PRIMARY KEY (id_spider)
 );
 
 INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (1, 'Google', 'googlebot', '');
