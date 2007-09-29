@@ -107,7 +107,7 @@ $txt['spider_mode_standard'] = 'Standard - Logs minimal spider activity.';
 $txt['spider_mode_high'] = 'High - Provides more accurate statistics.';
 $txt['spider_mode_vhigh'] = 'Very High - As for &quot;High&quot; but logs data about each page visited.';
 
-$txt['spider_group'] = 'Group to Assign Spiders<div class="smalltext">To enable you to tweak the content spiders can access.</div>';
+$txt['spider_group'] = 'Apply restrictive permissions from group<div class="smalltext">To enable you to stop spiders indexing some pages.</div>';
 $txt['spider_group_none'] = 'Disabled';
 
 $txt['spider_name'] = 'Spider Name';

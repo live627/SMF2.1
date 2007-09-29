@@ -42,7 +42,7 @@ function createMenu($menuData, $menuOptions = array())
 			"{$db_prefix}themes",
 			array('id_member', 'id_theme', 'variable', 'value'),
 			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
-			array('id_member', 'id_theme', 'value'), __FILE__, __LINE__
+			array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
 		);
 
 		// Make sure we invalidate any cache.

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2841 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2842 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -35,12 +35,13 @@ September 2007
  + Check to see if the Mambo bridge is installed correctly, and if not, die with an error message (Mambo bridge/SMF_header_include.php)
  ! Use Mambo $loginfo as an object rather than an array. (Mambo bridge/SMF_user_change.php)
  + Make the Mambo bridge compatible with Nokkaew (Mambo bridge/mod_smf_login.php)
- ! addslashes__recursive was missing from SMF 2.0. (QueryString.php)
  + Added the option to add the database query to the error message. (ManageSettings.php, Subs-Db-mysql.php, Subs-Db-postgresql.php, Subs-Db-sqlite.php, ManageSettings and Help language files)
  ! Changed preferred column method from 'eval' to 'function' as it's better readable that way. (ManageAttachments, ManageBans.php, ManageCalendar.php, ManageMail.php, ManageMembergroups.php, ManageMembers.php, ManageSearchEngines.php, ManageSettings.php, ManageSmileys.php)
  ! Fixed a query error shown when listing the members from the admin panel. (Subs-Members.php)
  ! Wrong function name when checking permissions. (Profile.php)
  * Show a confirmation box only when trying to apply changes to failed operations for custom themes. (Packages.template.php)
+ & Tweak the spider group function to ensure that only restrictive permissions are applied. (Load.php, Search and Help language files)
+ ! Switching between drop down menu and side bar was sending the wrong save query. (Subs-Menu.php)
 
 
 August 2007
