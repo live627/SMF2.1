@@ -1379,7 +1379,7 @@ function template_message_settings()
 							<tr>
 								<td colspan="2">
 									<label for="pm_display_mode">', $txt['pm_display_mode'], ':</label>
-									<select name="pm_display_mode" id="pm_display_mode">
+									<select name="pm_display_mode" id="pm_display_mode" onchange="if (this.value == 2 && !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
 										<option value="0"', $context['display_mode'] == 0 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_all'], '</option>
 										<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
 										<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>

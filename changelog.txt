@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2844 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2845 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -44,6 +44,8 @@ September 2007
  ! Switching between drop down menu and side bar was sending the wrong save query. (Subs-Menu.php)
  * Managing a redirection board was being difficult once it had a redirect under it's belt. (ManageBoards.php, Subs-Boards.php, ManageBoards template)
  ! Ensure quoting a personal message always works in conversation view - no matter who sent the PM. (PersonalMessage.php)
+ ! Sometimes deleting PM's in conversation mode wasn't looking like it had done it. (PersonalMessage.php)
+ & Provide some helpful advice when enabling conversations that saving your messages in the outbox will improve the usefulness of the feature. (PersonalMessage language file, PersonalMessage template)
 
 
 August 2007

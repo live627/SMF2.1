@@ -618,14 +618,21 @@ function MessageFolder()
 		if ($context['display_mode'] == 2)
 		{
 			$request = $smfFunc['db_query']('', "
-				SELECT pm.id_pm, pm.id_member_from
+				SELECT pm.id_pm, pm.id_member_from, pm.deleted_by_sender, pmr.id_member, pmr.deleted
 				FROM {$db_prefix}personal_messages AS pm
 					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
 				WHERE pm.id_pm_head = $lastData[head]
-					AND (pm.id_member_from = $user_info[id] OR pmr.id_member = $user_info[id])
+					AND ((pm.id_member_from = $user_info[id] AND pm.deleted_by_sender = 0)
+						OR (pmr.id_member = $user_info[id] AND pmr.deleted = 0))
 				ORDER BY pm.id_pm", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
+				// This is, frankly, a joke. We will put in a workaround for people sending to themselves - yawn!
+				if ($context['folder'] == 'sent' && $row['id_member_from'] == $user_info['id'] && $row['deleted_by_sender'] == 1)
+					continue;
+				elseif ($row['id_member'] == $user_info['id'] & $row['deleted'] == 1)
+					continue;
+
 				if (!isset($recipients[$row['id_pm']]))
 					$recipients[$row['id_pm']] = array(
 						'to' => array(),
