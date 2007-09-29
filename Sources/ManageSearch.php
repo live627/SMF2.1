@@ -192,7 +192,7 @@ function EditWeights()
 
 function EditSearchMethod()
 {
-	global $txt, $context, $modSettings, $db_prefix, $smfFunc;
+	global $txt, $context, $modSettings, $db_prefix, $smfFunc, $db_type;
 
 	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
 	$context['page_title'] = $txt['search_method_title'];
@@ -319,42 +319,45 @@ function EditSearchMethod()
 	);
 
 	// Get some info about the messages table, to show its size and index size.
-	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
-		$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS
-			FROM `" . strtr($match[1], array('`' => '')) . "`
-			LIKE '" . str_replace('_', '\_', $match[2]) . "messages'", false, false);
-	else
-		$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS
-			LIKE '" . str_replace('_', '\_', $db_prefix) . "messages'", false, false);
-	if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
+	if ($db_type == 'mysql')
 	{
-		// Only do this if the user has permission to execute this query.
-		$row = $smfFunc['db_fetch_assoc']($request);
-		$context['table_info']['data_length'] = $row['Data_length'];
-		$context['table_info']['index_length'] = $row['Index_length'];
-		$context['table_info']['fulltext_length'] = $row['Index_length'];
-		$smfFunc['db_free_result']($request);
-	}
-
-	// Now check the custom index table, if it exists at all.
-	if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
-		$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS
-			FROM `" . strtr($match[1], array('`' => '')) . "`
-			LIKE '" . str_replace('_', '\_', $match[2]) . "log_search_words'", false, false);
-	else
-		$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS
-			LIKE '" . str_replace('_', '\_', $db_prefix) . "log_search_words'", false, false);
-	if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
-	{
-		// Only do this if the user has permission to execute this query.
-		$row = $smfFunc['db_fetch_assoc']($request);
-		$context['table_info']['index_length'] += $row['Data_length'] + $row['Index_length'];
-		$context['table_info']['custom_index_length'] = $row['Data_length'] + $row['Index_length'];
-		$smfFunc['db_free_result']($request);
+		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
+			$request = $smfFunc['db_query']('', "
+				SHOW TABLE STATUS
+				FROM `" . strtr($match[1], array('`' => '')) . "`
+				LIKE '" . str_replace('_', '\_', $match[2]) . "messages'", false, false);
+		else
+			$request = $smfFunc['db_query']('', "
+				SHOW TABLE STATUS
+				LIKE '" . str_replace('_', '\_', $db_prefix) . "messages'", false, false);
+		if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
+		{
+			// Only do this if the user has permission to execute this query.
+			$row = $smfFunc['db_fetch_assoc']($request);
+			$context['table_info']['data_length'] = $row['Data_length'];
+			$context['table_info']['index_length'] = $row['Index_length'];
+			$context['table_info']['fulltext_length'] = $row['Index_length'];
+			$smfFunc['db_free_result']($request);
+		}
+	
+		// Now check the custom index table, if it exists at all.
+		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
+			$request = $smfFunc['db_query']('', "
+				SHOW TABLE STATUS
+				FROM `" . strtr($match[1], array('`' => '')) . "`
+				LIKE '" . str_replace('_', '\_', $match[2]) . "log_search_words'", false, false);
+		else
+			$request = $smfFunc['db_query']('', "
+				SHOW TABLE STATUS
+				LIKE '" . str_replace('_', '\_', $db_prefix) . "log_search_words'", false, false);
+		if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
+		{
+			// Only do this if the user has permission to execute this query.
+			$row = $smfFunc['db_fetch_assoc']($request);
+			$context['table_info']['index_length'] += $row['Data_length'] + $row['Index_length'];
+			$context['table_info']['custom_index_length'] = $row['Data_length'] + $row['Index_length'];
+			$smfFunc['db_free_result']($request);
+		}
 	}
 
 	// Format the data and index length in kilobytes.
@@ -447,11 +450,11 @@ function CreateMessageIndex()
 		);
 
 		$request = $smfFunc['db_query']('', "
-			SELECT id_msg >= $context[start] AS todo, COUNT(*) AS numMesages
+			SELECT id_msg >= $context[start] AS todo, COUNT(*) AS num_mesages
 			FROM {$db_prefix}messages
 			GROUP BY todo", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$num_messages[empty($row['todo']) ? 'done' : 'todo'] = $row['numMesages'];
+			$num_messages[empty($row['todo']) ? 'done' : 'todo'] = $row['num_mesages'];
 
 		if (empty($num_messages['todo']))
 		{
@@ -519,7 +522,7 @@ function CreateMessageIndex()
 			while (time() < $stop)
 			{
 				$request = $smfFunc['db_query']('', "
-					SELECT id_word, count(id_word) AS numWords
+					SELECT id_word, count(id_word) AS num_words
 					FROM {$db_prefix}log_search_words
 					WHERE id_word BETWEEN $context[start] AND " . ($context['start'] + $index_properties[$context['index_settings']['bytes_per_word']]['step_size'] - 1) . "
 					GROUP BY id_word
