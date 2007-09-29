@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2843 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2844 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -43,6 +43,7 @@ September 2007
  & Tweak the spider group function to ensure that only restrictive permissions are applied. (Load.php, Search and Help language files)
  ! Switching between drop down menu and side bar was sending the wrong save query. (Subs-Menu.php)
  * Managing a redirection board was being difficult once it had a redirect under it's belt. (ManageBoards.php, Subs-Boards.php, ManageBoards template)
+ ! Ensure quoting a personal message always works in conversation view - no matter who sent the PM. (PersonalMessage.php)
 
 
 August 2007

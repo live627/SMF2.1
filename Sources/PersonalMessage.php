@@ -1346,16 +1346,27 @@ function MessagePost()
 	{
 		$_REQUEST['pmsg'] = (int) $_REQUEST['pmsg'];
 
+		// Work out whether this is one you've received?
+		$request = $smfFunc['db_query']('', "
+			SELECT
+				id_pm
+			FROM {$db_prefix}pm_recipients
+			WHERE id_pm = $_REQUEST[pmsg]
+				AND id_member = $user_info[id]
+			LIMIT 1", __FILE__, __LINE__);
+		$isReceived = $smfFunc['db_num_rows']($request) != 0;
+		$smfFunc['db_free_result']($request);
+
 		// Get the quoted message (and make sure you're allowed to see this quote!).
 		$request = $smfFunc['db_query']('', "
 			SELECT
 				pm.id_pm, CASE WHEN pm.id_pm_head = 0 THEN pm.id_pm ELSE pm.id_pm_head END AS pm_head,
 				pm.body, pm.subject, pm.msgtime, mem.member_name, IFNULL(mem.id_member, 0) AS id_member,
 				IFNULL(mem.real_name, pm.from_name) AS real_name
-			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? '' : "
+			FROM {$db_prefix}personal_messages AS pm" . (!$isReceived ? '' : "
 				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[pmsg])") . "
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
-			WHERE pm.id_pm = $_REQUEST[pmsg]" . ($context['folder'] == 'sent' ? "
+			WHERE pm.id_pm = $_REQUEST[pmsg]" . (!$isReceived ? "
 				AND pm.id_member_from = $user_info[id]" : "
 				AND pmr.id_member = $user_info[id]") . "
 			LIMIT 1", __FILE__, __LINE__);
