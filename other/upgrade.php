@@ -613,7 +613,6 @@ if (php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))
 	$command_line = true;
 
 	cmdStep0();
-	exit;
 }
 else
 	$command_line = false;
@@ -1254,7 +1253,7 @@ function BackupDatabase()
 			$upcontext['previous_tables'][] = $table;
 
 	if ($command_line)
-		echo ' * ';
+		echo 'Backing Up Tables.';
 
 	// If we don't support javascript we backup here.
 	if (!$support_js || isset($_GET['xml']))
@@ -1283,7 +1282,7 @@ function BackupDatabase()
 			flush();
 		}
 		$upcontext['step_progress'] = 100;
-		$upcontext['current_step']++;
+
 		$_GET['substep'] = 0;
 		// Make sure we move on!
 		return true;
@@ -1397,6 +1396,11 @@ function DatabaseChanges()
 	if (!$support_js)
 	{
 		$upcontext['changes_complete'] = true;
+
+		// If this is the command line we can't do any more.
+		if ($command_line)
+			return DeleteUpgrade();
+
 		return true;
 	}
 	return false;
@@ -2013,7 +2017,7 @@ function DeleteUpgrade()
 		echo $endl;
 		echo 'Upgrade Complete!', $endl;
 		echo 'Please delete this file as soon as possible for security reasons.', $endl;
-		return true;
+		exit;
 	}
 
 	// Make sure it says we're done.
@@ -2120,6 +2124,7 @@ function changeSettings($config_vars)
 		{
 			if (isset($settingsArray[$i]) && strncasecmp($settingsArray[$i], '$' . $var, 1 + strlen($var)) == 0)
 			{
+
 				if ($val == '#remove#')
 					unset($settingsArray[$i]);
 				else
@@ -2147,7 +2152,10 @@ function changeSettings($config_vars)
 	{
 		$settingsArray[$end++] = '';
 		foreach ($config_vars as $var => $val)
-			$settingsArray[$end++] = '$' . $var . ' = ' . $val . ';' . "\n";
+		{
+			if ($val != '#remove#')
+				$settingsArray[$end++] = '$' . $var . ' = ' . $val . ';' . "\n";
+		}
 	}
 	// This should be the last line and even last bytes of the file.
 	$settingsArray[$end] = '?' . '>';
@@ -2863,7 +2871,8 @@ function nextSubstep($substep)
 
 function cmdStep0()
 {
-	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $start_time, $cachedir, $databases, $db_type, $smfFunc;
+	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $start_time, $cachedir, $databases, $db_type, $smfFunc, $upcontext;
+	global $language, $is_debug;
 	$start_time = time();
 
 	ob_end_clean();
@@ -2873,6 +2882,7 @@ function cmdStep0()
 	if (!isset($_SERVER['argv']))
 		$_SERVER['argv'] = array();
 	$_GET['maint'] = 1;
+	$_GET['lang'] = basename($language, '.lng');
 
 	foreach ($_SERVER['argv'] as $i => $arg)
 	{
@@ -2883,9 +2893,9 @@ function cmdStep0()
 		elseif ($arg == '--no-maintenance')
 			$_GET['maint'] = 0;
 		elseif ($arg == '--debug')
-			$_GET['debug'] = 1;
+			$is_debug = true;
 		elseif ($arg == '--backup')
-			$_GET['backup'] = 1;
+			$_POST['backup'] = 1;
 		elseif ($arg == '--template' && (file_exists($boarddir . '/template.php') || file_exists($boarddir . '/template.html') && !file_exists($boarddir . '/Themes/converted')))
 			$_GET['conv'] = 1;
 		elseif ($i != 0)
@@ -2897,13 +2907,12 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
     --no-maintenance        Don\'t put the forum into maintenance mode.
     --debug                 Output debugging information.
     --backup                Create backups of tables with "backup_" prefix.';
-			if (file_exists($boarddir . '/template.php') || file_exists($boarddir . '/template.html') && !file_exists($boarddir . '/Themes/converted'))
-				echo '
-    --template              Convert the YaBB SE template file.';
 			echo "\n";
 			exit;
 		}
 	}
+
+	$_POST['lang'] = $_GET['lang'];
 
 	if (!php_version_check())
 		print_error('Error: PHP ' . PHP_VERSION . ' does not match version requirements.', true);
@@ -2929,7 +2938,7 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 	if (!is_writable($boarddir . '/Settings.php'))
 		@chmod($boarddir . '/Settings.php', 0777);
 	if (!is_writable($boarddir . '/Settings.php'))
-		print_error('Error: Unable to obtain write access to "Settings.php".');
+		print_error('Error: Unable to obtain write access to "Settings.php".', true);
 
 	// Make sure Settings.php is writable.
 	if (!is_writable($boarddir . '/Settings_bak.php'))
@@ -2962,20 +2971,22 @@ Usage: /path/to/php -f ' . basename(__FILE__) . ' -- [OPTION]...
 		@chmod($cachedir_temp, 0777);
 
 	if (!is_writable($cachedir_temp))
-		print_error('Error: Unable to obtain write access to "cache".');
+		print_error('Error: Unable to obtain write access to "cache".', true);
 
 	if (!file_exists($boarddir . '/Themes/default/languages/index.' . basename($language, '.lng') . '.php') && !isset($modSettings['smfVersion']) && !isset($_GET['lang']))
-		print_error('Error: Unable to find language files!');
+		print_error('Error: Unable to find language files!', true);
 	else
 	{
 		$temp = substr(@implode('', @file($boarddir . '/Themes/default/languages/index.' . (isset($_GET['lang']) ? $_GET['lang'] : basename($language, '.lng')) . '.php')), 0, 4096);
 		preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*index(?:[\s]{2}|\*/)~i', $temp, $match);
 
 		if (empty($match[1]) || $match[1] != SMF_LANG_VERSION)
-			print_error('Error: Language files out of date.');
+			print_error('Error: Language files out of date.', true);
 	}
 
-	return doStep1();
+	// Make sure we skip the HTML for login.
+	$_POST['upcont'] = true;
+	$upcontext['current_step'] = 1;
 }
 
 function print_error($message, $fatal = false)
