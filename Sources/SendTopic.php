@@ -204,7 +204,7 @@ function CustomEmail()
 	$smfFunc['db_free_result']($request);
 
 	// Can they actually do this?
-	if ($row['hide_email'] && !allowedTo('moderate_forum'))
+	if (showEmailAddress(!empty($row['hide_email']), $row['id_member']) === 'no')
 		fatal_lang_error('no_access');
 
 	// Setup the context!

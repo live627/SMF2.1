@@ -98,6 +98,16 @@ if (!defined('SMF'))
 		- returns an array with only a 0 in it if the user has permission
 		  to do this on every board.
 		- returns an empty array if he or she cannot do this on any board.
+
+	string showEmailAddress(string userProfile_hideEmail, int userProfile_id)
+		- returns whether an email address should be shown and how.
+		- possible outcomes are 
+			'yes': show the full email address
+			'yes_permission_override': show the full email address, either you
+			  are a moderator or it's your own email address.
+			'no_through_forum': don't show the email address, but do allow
+			  things to be mailed using the built-in forum mailer.
+			'no': keep the email address hidden.
 */
 
 // Check if the user is who he/she says he is
@@ -837,6 +847,21 @@ function boardsAllowedTo($permission)
 	$boards = array_values(array_diff($boards, $deny_boards));
 
 	return $boards;
+}
+
+function showEmailAddress($userProfile_hideEmail, $userProfile_id)
+{
+	global $modSettings, $user_info;
+
+	// Should this users email address be shown? 
+	// If you're guest and the forum is set to hide email for guests: no.
+	// If it's your own profile and you've set your address hidden: yes_permission_override.
+	// If you're a moderator with sufficient permissions: yes_permission_override.
+	// If the user has set their email address to be hidden: no.
+	// If the forum is set to show full email addresses: yes.
+	// Otherwise: no_through_forum.
+
+	return !empty($modSettings['guest_hideContacts']) && $user_info['is_guest'] ? 'no' : ((!$user_info['is_guest'] && $user_info['id'] == $userProfile_id && !$userProfile_hideEmail) || allowedTo('moderate_forum') ? 'yes_permission_override' : ($userProfile_hideEmail ? 'no' : (!empty($modSettings['make_email_viewable']) ? 'yes' : 'no_through_forum')));
 }
 
 ?>

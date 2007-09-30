@@ -1026,9 +1026,9 @@ function loadMemberContext($user)
 
 	// What a monstrous array...
 	$memberContext[$user] = array(
-		'username' => &$profile['member_name'],
-		'name' => &$profile['real_name'],
-		'id' => &$profile['id_member'],
+		'username' => $profile['member_name'],
+		'name' => $profile['real_name'],
+		'id' => $profile['id_member'],
 		'is_guest' => $profile['id_member'] == 0,
 		'is_buddy' => $profile['buddy'],
 		'is_reverse_buddy' => in_array($user_info['id'], $buddy_list),
@@ -1036,43 +1036,42 @@ function loadMemberContext($user)
 		'title' => !empty($modSettings['titlesEnable']) ? $profile['usertitle'] : '',
 		'href' => $scripturl . '?action=profile;u=' . $profile['id_member'],
 		'link' => '<a href="' . $scripturl . '?action=profile;u=' . $profile['id_member'] . '" title="' . $txt['profile_of'] . ' ' . $profile['real_name'] . '">' . $profile['real_name'] . '</a>',
-		'email' => &$profile['email_address'],
-		'hide_email' => $profile['email_address'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($profile['hide_email']) && !allowedTo('moderate_forum') && $user_info['id'] != $profile['id_member']),
-		'email_public' => empty($profile['hide_email']) && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']),
+		'email' => $profile['email_address'],
+		'show_email' => showEmailAddress(!empty($profile['hide_email']), $profile['id_member']),
 		'registered' => empty($profile['date_registered']) ? $txt['not_applicable'] : timeformat($profile['date_registered']),
 		'registered_timestamp' => empty($profile['date_registered']) ? 0 : forum_time(true, $profile['date_registered']),
-		'blurb' => &$profile['personal_text'],
+		'blurb' => $profile['personal_text'],
 		'gender' => array(
 			'name' => $gendertxt,
 			'image' => !empty($profile['gender']) ? '<img src="' . $settings['images_url'] . '/' . ($profile['gender'] == 1 ? 'Male' : 'Female') . '.gif" alt="' . $gendertxt . '" border="0" />' : ''
 		),
 		'website' => array(
-			'title' => &$profile['website_title'],
-			'url' => &$profile['website_url'],
+			'title' => $profile['website_title'],
+			'url' => $profile['website_url'],
 		),
 		'birth_date' => empty($profile['birthdate']) || $profile['birthdate'] === '0001-01-01' ? '0000-00-00' : (substr($profile['birthdate'], 0, 4) === '0004' ? '0000' . substr($profile['birthdate'], 4) : $profile['birthdate']),
-		'signature' => &$profile['signature'],
-		'location' => &$profile['location'],
+		'signature' => $profile['signature'],
+		'location' => $profile['location'],
 		'icq' => $profile['icq'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['icq'],
+			'name' => $profile['icq'],
 			'href' => 'http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'],
 			'link' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" target="_blank"><img src="http://status.icq.com/online.gif?img=5&amp;icq=' . $profile['icq'] . '" alt="' . $profile['icq'] . '" width="18" height="18" border="0" /></a>',
 			'link_text' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" target="_blank">' . $profile['icq'] . '</a>',
 		) : array('name' => '', 'add' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'aim' => $profile['aim'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['aim'],
+			'name' => $profile['aim'],
 			'href' => 'aim:goim?screenname=' . urlencode(strtr($profile['aim'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'],
 			'link' => '<a href="aim:goim?screenname=' . urlencode(strtr($profile['aim'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'] . '"><img src="' . $settings['images_url'] . '/aim.gif" alt="' . $profile['aim'] . '" border="0" /></a>',
 			'link_text' => '<a href="aim:goim?screenname=' . urlencode(strtr($profile['aim'], array(' ' => '%20'))) . '&amp;message=' . $txt['aim_default_message'] . '">' . $profile['aim'] . '</a>'
 		) : array('name' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'yim' => $profile['yim'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['yim'],
+			'name' => $profile['yim'],
 			'href' => 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['yim']),
 			'link' => '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['yim']) . '"><img src="http://opi.yahoo.com/online?u=' . urlencode($profile['yim']) . '&amp;m=g&amp;t=0" alt="' . $profile['yim'] . '" border="0" /></a>',
 			'link_text' => '<a href="http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($profile['yim']) . '">' . $profile['yim'] . '</a>'
 		) : array('name' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'msn' => $profile['msn'] !='' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
-			'name' => &$profile['msn'],
+			'name' => $profile['msn'],
 			'href' => 'http://members.msn.com/' . $profile['msn'],
 			'link' => '<a href="http://members.msn.com/' . $profile['msn'] . '" target="_blank"><img src="' . $settings['images_url'] . '/msntalk.gif" alt="' . $profile['msn'] . '" border="0" /></a>',
 			'link_text' => '<a href="http://members.msn.com/' . $profile['msn'] . '" target="_blank">' . $profile['msn'] . '</a>'
@@ -1080,7 +1079,7 @@ function loadMemberContext($user)
 		'real_posts' => $profile['posts'],
 		'posts' => $profile['posts'] > 500000 ? $txt['geek'] : ($profile['posts'] == 1337 ? 'leet' : comma_format($profile['posts'])),
 		'avatar' => array(
-			'name' => &$profile['avatar'],
+			'name' => $profile['avatar'],
 			'image' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? '<img src="' . (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) . '" alt="" class="avatar" border="0" />' : '') : (stristr($profile['avatar'], 'http://') ? '<img src="' . $profile['avatar'] . '"' . $avatar_width . $avatar_height . ' alt="" class="avatar" border="0" />' : '<img src="' . $modSettings['avatar_url'] . '/' . htmlspecialchars($profile['avatar']) . '" alt="" class="avatar" border="0" />'),
 			'href' => $profile['avatar'] == '' ? ($profile['id_attach'] > 0 ? (empty($profile['attachment_type']) ? $scripturl . '?action=dlattach;attach=' . $profile['id_attach'] . ';type=avatar' : $modSettings['custom_avatar_url'] . '/' . $profile['filename']) : '') : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar']),
 			'url' => $profile['avatar'] == '' ? '' : (stristr($profile['avatar'], 'http://') ? $profile['avatar'] : $modSettings['avatar_url'] . '/' . $profile['avatar'])
@@ -1088,19 +1087,19 @@ function loadMemberContext($user)
 		'last_login' => empty($profile['last_login']) ? $txt['never'] : timeformat($profile['last_login']),
 		'last_login_timestamp' => empty($profile['last_login']) ? 0 : forum_time(0, $profile['last_login']),
 		'karma' => array(
-			'good' => &$profile['karma_good'],
-			'bad' => &$profile['karma_bad'],
+			'good' => $profile['karma_good'],
+			'bad' => $profile['karma_bad'],
 			'allow' => !$user_info['is_guest'] && $user_info['posts'] >= $modSettings['karmaMinPosts'] && allowedTo('karma_edit') && !empty($modSettings['karmaMode']) && $user_info['id'] != $user
 		),
 		'ip' => htmlspecialchars($profile['member_ip']),
 		'ip2' => htmlspecialchars($profile['member_ip2']),
 		'online' => array(
 			'is_online' => $profile['is_online'],
-			'text' => &$txt[$profile['is_online'] ? 'online' : 'offline'],
+			'text' => $txt[$profile['is_online'] ? 'online' : 'offline'],
 			'href' => $scripturl . '?action=pm;sa=send;u=' . $profile['id_member'],
 			'link' => '<a href="' . $scripturl . '?action=pm;sa=send;u=' . $profile['id_member'] . '">' . $txt[$profile['is_online'] ? 'online' : 'offline'] . '</a>',
 			'image_href' => $settings['images_url'] . '/' . ($profile['buddy'] ? 'buddy_' : '') . ($profile['is_online'] ? 'useron' : 'useroff') . '.gif',
-			'label' => &$txt[$profile['is_online'] ? 'online4' : 'online5']
+			'label' => $txt[$profile['is_online'] ? 'online' : 'offline']
 		),
 		'language' => $smfFunc['ucwords'](strtr($profile['lngfile'], array('_' => ' ', '-utf8' => ''))),
 		'is_activated' => isset($profile['is_activated']) ? $profile['is_activated'] : 1,
@@ -1113,7 +1112,7 @@ function loadMemberContext($user)
 		'post_group' => $profile['post_group'],
 		'post_group_color' => $profile['post_group_color'],
 		'group_stars' => str_repeat('<img src="' . str_replace('$language', $context['user']['language'], isset($profile['stars'][1]) ? $settings['images_url'] . '/' . $profile['stars'][1] : '') . '" alt="*" border="0" />', empty($profile['stars'][0]) || empty($profile['stars'][1]) ? 0 : $profile['stars'][0]),
-		'warning' => &$profile['warning'],
+		'warning' => $profile['warning'],
 		'warning_status' => !empty($modSettings['warning_mute']) && $modSettings['warning_mute'] <= $profile['warning'] ? 'mute' : (!empty($modSettings['warning_moderate']) && $modSettings['warning_moderate'] <= $profile['warning'] ? 'moderate' : (!empty($modSettings['warning_watch']) && $modSettings['warning_watch'] <= $profile['warning'] ? 'watch' : (''))),
 		'local_time' => timeformat(time() + ($profile['time_offset'] - $user_info['time_offset']) * 3600, false),
 	);
@@ -1317,33 +1316,33 @@ function loadTheme($id_theme = 0, $initialize = true)
 	}
 	// Set up the contextual user array.
 	$context['user'] = array(
-		'id' => &$user_info['id'],
+		'id' => $user_info['id'],
 		'is_logged' => !$user_info['is_guest'],
-		'is_guest' => &$user_info['is_guest'],
-		'is_admin' => &$user_info['is_admin'],
+		'is_guest' => $user_info['is_guest'],
+		'is_admin' => $user_info['is_admin'],
 		'is_mod' => false,
 		// A user can mod if they have permission to see the mod centre, or they are a board/group moderator.
 		'can_mod' => allowedTo('access_mod_center') || (!$user_info['is_guest'] && ($user_info['mod_cache']['gq'] != '0=1' || $user_info['mod_cache']['bq'] != '0=1')),
-		'username' => &$user_info['username'],
-		'language' => &$user_info['language'],
-		'email' => &$user_info['email'],
-		'ignoreusers' => &$user_info['ignoreusers'],
+		'username' => $user_info['username'],
+		'language' => $user_info['language'],
+		'email' => $user_info['email'],
+		'ignoreusers' => $user_info['ignoreusers'],
 	);
 	if ($context['user']['is_guest'])
-		$context['user']['name'] = &$txt['guest_title'];
+		$context['user']['name'] = $txt['guest_title'];
 	else
-		$context['user']['name'] = &$user_info['name'];
+		$context['user']['name'] = $user_info['name'];
 
 	// Determine the current smiley set.
 	$user_info['smiley_set'] = (!in_array($user_info['smiley_set'], explode(',', $modSettings['smiley_sets_known'])) && $user_info['smiley_set'] != 'none') || empty($modSettings['smiley_sets_enable']) ? (!empty($settings['smiley_sets_default']) ? $settings['smiley_sets_default'] : $modSettings['smiley_sets_default']) : $user_info['smiley_set'];
-	$context['user']['smiley_set'] = &$user_info['smiley_set'];
+	$context['user']['smiley_set'] = $user_info['smiley_set'];
 
 	// Some basic information...
 	if (!isset($context['html_headers']))
 		$context['html_headers'] = '';
 	$context['menu_separator'] = !empty($settings['use_image_buttons']) ? ' ' : ' | ';
-	$context['session_id'] = &$sc;
-	$context['forum_name'] = &$mbname;
+	$context['session_id'] = $sc;
+	$context['forum_name'] = $mbname;
 	$context['current_action'] = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
 	$context['current_subaction'] = isset($_REQUEST['sa']) ? $_REQUEST['sa'] : null;
 	if (isset($modSettings['load_average']))
@@ -1398,8 +1397,8 @@ function loadTheme($id_theme = 0, $initialize = true)
 
 	// Set the top level linktree up.
 	array_unshift($context['linktree'], array(
-		'url' => &$scripturl,
-		'name' => &$context['forum_name']
+		'url' => $scripturl,
+		'name' => $context['forum_name']
 	));
 
 	if (!isset($txt))

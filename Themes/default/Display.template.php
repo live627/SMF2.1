@@ -375,9 +375,9 @@ function template_main()
 								<a href="', $message['member']['website']['url'], '" title="' . $message['member']['website']['title'] . '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a>';
 
 				// Don't show the email address if they want it hidden.
-				if (empty($message['member']['hide_email']))
+				if (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 					echo '
-								<a href="', !empty($modSettings['make_email_viewable']) ? 'mailto:' . $message['member']['email'] : $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
+								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
@@ -392,11 +392,11 @@ function template_main()
 								', $context['can_issue_warning'] ? '<a href="' . $scripturl . '?action=profile;u=' . $message['member']['id'] . ';sa=issueWarning">' : '', '<img src="', $settings['images_url'], '/warning_', $message['member']['warning_status'], '.gif" alt="', $txt['user_warn_' . $message['member']['warning_status']], '"/>', $context['can_issue_warning'] ? '</a>' : '', '<span class="warn_', $message['member']['warning_status'], '">', $txt['warn_' . $message['member']['warning_status']], '</span>';
 		}
 		// Otherwise, show the guest's email.
-		elseif (empty($message['member']['hide_email']))
+		elseif (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 			echo '
 								<br />
 								<br />
-								<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
+								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '

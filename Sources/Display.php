@@ -795,9 +795,6 @@ function Display()
 	// Set the callback.  (do you REALIZE how much memory all the messages would take?!?)
 	$context['get_message'] = 'prepareDisplayContext';
 
-	// Basic settings.... may be converted over at some point.
-	$context['allow_hide_email'] = !empty($modSettings['allow_hide_email']) || ($user_info['is_guest'] && !empty($modSettings['guest_hideContacts']));
-
 	// Now set all the wonderful, wonderful permissions... like moderation ones...
 	$common_permissions = array(
 		'can_approve' => 'approve_posts',
@@ -914,7 +911,7 @@ function prepareDisplayContext($reset = false)
 		$memberContext[$message['id_member']]['group'] = $txt['guest_title'];
 		$memberContext[$message['id_member']]['link'] = $message['poster_name'];
 		$memberContext[$message['id_member']]['email'] = $message['poster_email'];
-		$memberContext[$message['id_member']]['hide_email'] = $message['poster_email'] == '' || (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']);
+		$memberContext[$message['id_member']]['show_email'] = showEmailAddress(true, 0);
 		$memberContext[$message['id_member']]['is_guest'] = true;
 	}
 	else

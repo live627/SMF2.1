@@ -517,9 +517,12 @@ function getXmlNews($xml_format)
 		- are actually the latest posts. */
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, t.id_topic, t.id_board,
-			b.name AS bname, t.num_replies, m.id_member, IFNULL(mem.real_name, m.poster_name) AS poster_name,
-			mem.hide_email, IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
+			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.modified_time,
+			t.id_topic, t.id_board, t.num_replies,
+			b.name AS bname,
+			mem.hide_email, COALESCE(mem.id_member, 0) AS id_member,
+			COALESCE(mem.email_address, m.poster_email) AS poster_email,
+			COALESCE(mem.real_name, m.poster_name) AS poster_name
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
@@ -547,7 +550,7 @@ function getXmlNews($xml_format)
 				'title' => cdata_parse($row['subject']),
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				'description' => cdata_parse($row['body']),
-				'author' => (!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']) || (!empty($row['hide_email']) && !allowedTo('moderate_forum')) ? null : $row['poster_email'],
+				'author' => in_array(showEmailAddress(!empty($row['hide_email']), $row['id_member']), array('yes', 'yes_permission_override')) ? $row['poster_email'] : null,
 				'comments' => $scripturl . '?action=post;topic=' . $row['id_topic'] . '.0',
 				'category' => '<![CDATA[' . $row['bname'] . ']]>',
 				'pubDate' => gmdate('D, d M Y H:i:s \G\M\T', $row['poster_time']),
@@ -812,7 +815,7 @@ function getXmlProfile($xml_format)
 				'bad' => $profile['karma']['bad']
 			);
 
-		if (empty($profile['hide_email']) && !(!empty($modSettings['guest_hideContacts']) && $user_info['is_guest']))
+		if (in_array($data['show_email'], array('yes', 'yes_permission_override')))
 			$data['email'] = $profile['email'];
 
 		if (!empty($profile['birth_date']) && substr($profile['birth_date'], 0, 4) != '0000')

@@ -188,7 +188,7 @@ function template_main()
 	// Does this topic have some events linked to it?
 	if (!empty($context['linked_calendar_events']))
 	{
-			echo '
+		echo '
 <table cellpadding="3" cellspacing="0" border="0" width="100%" class="tborder">
 	<tr class="titlebg">
 		<td colspan="2" valign="middle" align="left" style="padding-left: 6px;">
@@ -198,15 +198,15 @@ function template_main()
 	<tr class="windowbg">
 		<td width="5%" valign="top">
 			<ul>';
-	foreach ($context['linked_calendar_events'] as $event)
-	{
-		echo '
+		foreach ($context['linked_calendar_events'] as $event)
+		{
+			echo '
 				<li>
 					<b>', ($event['can_edit'] ? '<a href="' . $event['modify_href'] . '" style="color: red;">*</a> ' : ''), $event['title'], '</b>: ', $event['start_date'], ($event['start_date'] != $event['end_date'] ? ' - ' . $event['end_date'] : '');
-		echo '
+			echo '
 				</li>';
-	}
-	echo '
+		}
+		echo '
 			</ul>
 		</td>
 	</tr>
@@ -355,9 +355,9 @@ function template_main()
 								<a href="', $message['member']['website']['url'], '" title="' . $message['member']['website']['title'] . '" target="_blank">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/www_sm.gif" alt="' . $txt['www'] . '" border="0" />' : $txt['www']), '</a>';
 
 				// Don't show the email address if they want it hidden.
-				if (empty($message['member']['hide_email']))
+				if (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 					echo '
-								<a href="', !empty($modSettings['make_email_viewable']) ? 'mailto:' . $message['member']['email'] : $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
+								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" />' : $txt['email']), '</a>';
 
 				// Since we know this person isn't a guest, you *can* message them.
 				if ($context['can_send_pm'])
@@ -366,11 +366,11 @@ function template_main()
 			}
 		}
 		// Otherwise, show the guest's email.
-		elseif (empty($message['member']['hide_email']))
+		elseif (in_array($message['member']['show_email'], array('yes', 'yes_permission_override', 'no_through_forum')))
 			echo '
 								<br />
 								<br />
-								<a href="mailto:', $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
+								<a href="', $message['member']['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;msg=' . $message['id'] : 'mailto:' . $message['member']['email'], '">', ($settings['use_image_buttons'] ? '<img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . '" border="0" />' : $txt['email']), '</a>';
 
 		// Done with the information about the poster... on to the post itself.
 		echo '
