@@ -1376,7 +1376,9 @@ ALTER TABLE {$db_prefix}board_permissions
 ADD id_profile smallint(5) unsigned NOT NULL default '1' AFTER id_group;
 
 ALTER TABLE {$db_prefix}board_permissions
-DROP PRIMARY KEY,
+DROP PRIMARY KEY;
+
+ALTER TABLE {$db_prefix}board_permissions
 ADD PRIMARY KEY (id_group, id_profile, permission);
 ---#
 
