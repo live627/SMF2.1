@@ -1066,13 +1066,15 @@ function scheduled_fetchSMfiles()
 
 function scheduled_birthdayemails()
 {
-	global $db_prefix, $modSettings, $sourcedir, $mbname, $txt, $smfFunc;
+	global $db_prefix, $modSettings, $sourcedir, $mbname, $txt, $smfFunc, $birthdayEmails;
 
 	// Need this in order to load the language files.
 	loadEssentialThemeData();
 
 	// Going to need this to send the emails.
 	require_once($sourcedir . '/Subs-Post.php');
+
+	$greeting = isset($modSettings['birthday_email']) ? $modSettings['birthday_email'] : 'karlbenson1';
 
 	// Get the month and day of today.
 	$month = date('n'); // Month without leading zeros.
@@ -1103,13 +1105,17 @@ function scheduled_birthdayemails()
 	// Send out the greetings!
 	foreach ($birthdays as $lang => $recps)
 	{
+		// We need to do some shuffling to make this work properly.
+		loadLanguage('EmailTemplates', $lang);
+		$txt['emails']['happy_birthday'] = $birthdayEmails[$greeting];
+
 		foreach ($recps as $recp)
 		{
 			$replacements = array(
 				'REALNAME' => $recp['name'],
 			);
 
-			$emaildata = loadEmailTemplate('happy_birthday', $replacements, $lang);
+			$emaildata = loadEmailTemplate('happy_birthday', $replacements, $lang, false);
 
 			sendmail($recp['email'], $emaildata['subject'], $emaildata['body']);
 

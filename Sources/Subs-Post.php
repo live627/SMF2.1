@@ -2761,12 +2761,13 @@ function adminNotify($type, $memberID, $member_name = null)
 		loadLanguage('Login');
 }
 
-function loadEmailTemplate($template, $replacements = array(), $lang = '')
+function loadEmailTemplate($template, $replacements = array(), $lang = '', $loadLang = true)
 {
 	global $txt, $mbname, $scripturl, $settings, $user_info;
 
-	// First things first, load up the email templates language file.
-	loadLanguage('EmailTemplates', $lang);
+	// First things first, load up the email templates language file, if we need to.
+	if ($loadLang)
+		loadLanguage('EmailTemplates', $lang);
 
 	if (!isset($txt['emails'][$template]))
 		fatal_lang_error('email_no_template', 'template', array($template));

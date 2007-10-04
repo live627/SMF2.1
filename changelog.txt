@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2847 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2848 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -48,6 +48,8 @@ September 2007
  & Provide some helpful advice when enabling conversations that saving your messages in the outbox will improve the usefulness of the feature. (PersonalMessage language file, PersonalMessage template)
  ! Upgrade should once again work in command line mode. (upgrade.php)
  ! Centralize the decision on whether to show the email address and how. (Display.php, Groups.php, Load.php, News.php, PersonalMessages.php, Security.php, SendTopic.php, Subs-Auth.php, Display template, ManageMembergroups template, Memberlist template, PersonalMessages template, Profile template)
+ + Allow admins to select which birthday email to send out.  Thanks to karlbenson, nite0859, zwaldowski, and geezmo for their birthday messages. (ManageMail.php, ScheduledTasks.php, Subs-Post.php, EmailTemplates and ManageMail language files)
+ * Ensure that the latest post column of the boardindex isn't empty for redirection boards. (BoardIndex template)
 
 
 August 2007

@@ -189,6 +189,9 @@ function template_main()
 						<b>', $txt['last_post'], '</b>  ', $txt['by'], ' ', $board['last_post']['member']['link'] , '<br />
 						', $txt['in'], ' ', $board['last_post']['link'], '<br />
 						', $txt['on'], ' ', $board['last_post']['time'];
+				else
+					echo '
+						&nbsp;';
 				echo '
 					</span>
 				</td>

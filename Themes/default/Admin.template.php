@@ -1141,17 +1141,17 @@ function template_show_settings()
 					<fieldset id="enabledBBCTags">
 						<legend>', $txt['bbcTagsToUse_select'], '</legend>
 						<table width="100%"><tr>';
-	foreach ($context['bbc_columns'] as $bbcColumn)
-	{
-		echo '
-							<td valign="top">';
-		foreach ($bbcColumn as $bbcTag)
-			echo '
-								<input type="checkbox" name="', $config_var['name'], '_enabledTags[]" id="tag_', $config_var['name'], '_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $config_var['name'], '_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
-		echo '
-							</td>';
-	}
-	echo '
+					foreach ($context['bbc_columns'] as $bbcColumn)
+					{
+						echo '
+											<td valign="top">';
+						foreach ($bbcColumn as $bbcTag)
+							echo '
+												<input type="checkbox" name="', $config_var['name'], '_enabledTags[]" id="tag_', $config_var['name'], '_', $bbcTag['tag'], '" value="', $bbcTag['tag'], '"', !in_array($bbcTag['tag'], $context['bbc_sections'][$config_var['name']]['disabled']) ? ' checked="checked"' : '', ' class="check" /> <label for="tag_', $config_var['name'], '_', $bbcTag['tag'], '">', $bbcTag['tag'], '</label>', $bbcTag['show_help'] ? ' (<a href="' . $scripturl . '?action=helpadmin;help=tag_' . $bbcTag['tag'] . '" onclick="return reqWin(this.href);">?</a>)' : '', '<br />';
+						echo '
+											</td>';
+					}
+					echo '
 						</tr></table><br />
 						<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
 					</fieldset>';

@@ -260,7 +260,16 @@ function list_getMailQueueSize()
 
 function ModifyMailSettings($return_config = false)
 {
-	global $txt, $scripturl, $context, $settings;
+	global $txt, $scripturl, $context, $settings, $birthdayEmails, $modSettings;
+
+	loadLanguage('EmailTemplates');
+
+	$body = $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['body'];
+	$subject = $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['subject'];
+
+	$emails = array();
+	foreach($birthdayEmails AS $index => $dummy)
+		$emails[$index] = $index;
 
 	$config_vars = array(
 			// Mail queue stuff, this rocks ;)
@@ -275,6 +284,11 @@ function ModifyMailSettings($return_config = false)
 			array('text', 'smtp_username'),
 			array('password', 'smtp_password'),
 		'',
+			array('select', 'birthday_email', $emails, 'value' => empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email'], 'javascript' => 'onchange="fetch_birthday_preview()"'),
+			'birthday_subject' => array('text', 'birthday_subject', 'value' => $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['subject'], 'disabled' => true, 'size' => strlen($subject) + 3),
+			'birthday_body' => array('large_text', 'birthday_body', 'value' => $body, 'disabled' => true, 'size' => (strlen($body) / 20) * 1.5),
+		'',
+
 	);
 
 	if ($return_config)
@@ -291,6 +305,10 @@ function ModifyMailSettings($return_config = false)
 		}
 		checkSession();
 
+		// We don't want to save the subject and body previews.
+		unset($config_vars['birthday_subject']);
+		unset($config_vars['birthday_body']);
+
 		saveDBSettings($config_vars);
 		redirectexit('action=admin;area=mailqueue;sa=settings');
 	}
@@ -299,6 +317,32 @@ function ModifyMailSettings($return_config = false)
 	$context['settings_title'] = $txt['mailqueue_settings'];
 
 	prepareDBSettingContext($config_vars);
+
+	$context['settings_insert_above'] = '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var bDay = new Array();';
+
+	foreach($birthdayEmails AS $index => $email)
+	{
+		// Remove the newlines and count them.
+		$email['body'] = str_replace("\n", '<br />', $email['body'], $newlines);
+		$context['settings_insert_above'] .= '
+			bDay[\'' . $index . '\'] = {
+				subject: \'' . addslashes($email['subject']) . '\',
+				body: \'' . addslashes(str_replace("\r", '', $email['body'])) . '\',
+				newlines: ' . $newlines . '
+			};';
+	}
+	$context['settings_insert_above'] .= '
+		function fetch_birthday_preview()
+		{
+			var index = document.getElementById(\'birthday_email\').value;
+			document.getElementById(\'birthday_subject\').value = bDay[index][\'subject\'];
+			document.getElementById(\'birthday_subject\').size = bDay[index][\'subject\'].length + 2;
+			document.getElementById(\'birthday_body\').value = bDay[index][\'body\'].replace(/<br \/>/g, "\n");
+			document.getElementById(\'birthday_body\').rows = bDay[index][\'body\'].length / 30 + bDay[index][\'newlines\'];
+		}
+	// ]]></script>';
 }
 
 // This function clears the mail queue of all emails, and at the end redirects to browse.
