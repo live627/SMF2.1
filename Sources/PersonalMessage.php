@@ -934,7 +934,7 @@ function MessageSearch2()
 	$context['folder'] = 'inbox';
 
 	// Some useful general permissions.
-	$context['can_send_pm'] = allowedTo('send_pm');
+	$context['can_send_pm'] = allowedTo('pm_send');
 
 	// Some hardcoded veriables that can be tweaked if required.
 	$maxMembersToSearch = 500;
