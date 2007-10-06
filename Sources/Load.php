@@ -716,6 +716,9 @@ function loadBoard()
 		$_GET['board'] = '';
 		$_GET['topic'] = '';
 
+		// The linktree should not give the game away mate!
+		$context['linktree'] = array();
+
 		// If it's a prefetching agent, just make clear they're not allowed.
 		if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 		{
