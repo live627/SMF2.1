@@ -107,7 +107,7 @@ $_SERVER['QUERY_STRING'] = strtr($_SERVER['QUERY_STRING'], array('&amp;?' => '&a
 require_once ($configuration->get('mosConfig_absolute_path') . '/components/com_smf/smf_integration_arrays.php');
 
 // Are Mambo and SMF using the same database connection?
-if (empty($Itemid) && $database->_resource == $db_connection)
+if (empty($Itemid))
 {
 	$database->setQuery("
 		SELECT id
@@ -272,15 +272,23 @@ function mambo_smf_url($url)
 
 function mambo_smf_exit($with_output)
 {
-	global $mainframe, $c_handler, $indextype, $mambothandler, $wrapped, $cur_template, $boardurl, $smf_css, $context, $db_name;
+	global $mainframe, $c_handler, $indextype, $mambothandler, $wrapped, $cur_template, $boardurl, $smf_css, $context, $db_name, $simpleActions;
 
 	$database =& mamboDatabase::getInstance();
 	$configuration =& mamboCore::getMamboCore();
 
 	$buffer = ob_get_contents();
 	ob_end_clean();
-
-	if (!$with_output || $wrapped !='true')
+	
+	$simpleActions = array(
+		'findmember',
+		'helpadmin',
+		'printpage',
+		'quotefast',
+		'spellcheck',
+	);
+	
+	if (!$with_output || $wrapped !='true' || (isset($_REQUEST['action']) && in_array($_REQUEST['action'], $simpleActions)))
 	{		
 		//$buffer = mambo_smf_url($buffer);
 		$buffer = ob_mambofix($buffer);
@@ -292,8 +300,8 @@ function mambo_smf_exit($with_output)
 	foreach ($GLOBALS as $name => $value)
 		$$name = $GLOBALS[$name];
 
-	if ($database->_resource == $db_connection)
-		mysql_select_db($configuration->get('mosConfig_db'));
+
+	mysql_select_db($configuration->get('mosConfig_db'));
 	
 	$result = mysql_query("
 			SELECT id 
@@ -1202,9 +1210,10 @@ function integrate_whos_online ($actions) {
 
 function integrate_load_theme() {
 
-	global $context;
+	global $context, $simpleActions;
 
-	$context['template_layers'] = array('body');
+	if (!WIRELESS && !isset($_REQUEST['xml']))
+		$context['template_layers'] = array('body');
 
 }	
 

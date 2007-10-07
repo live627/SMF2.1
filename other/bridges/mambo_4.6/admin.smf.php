@@ -353,7 +353,7 @@ function showConfig($option, $cb_reg)
 			echo '<table width="100%" border="0" cellpadding="4" cellspacing="2" class="adminForm">
 				<tr>
 					<td colspan="3" align="left">
-						The following buttons will perform mass synching.  You do not NEED to click any of them.  Users will be migrated when they login.  These buttons are useful for migrating all users at once.  Please be careful, especially with the Group Synch button.  You can remove all of your Super Admins if you are not absolutely certain of what you are doing.
+						The following buttons will perform mass synching.  You do not NEED to click any of them, as users will be migrated when they login.  These buttons are useful for migrating all users at once.  Please be careful, especially with the Group Synch button.  You can remove all of your Super Admins if you are not absolutely certain of what you are doing.  If you are uncertain about whether or not you should click any of these buttons, then you should not click any of the buttons.  These buttons are for those who know what they are doing, and know what the buttons will do.  If your bridge is not working as expected, none of these buttons will fix that.
 					</td>
 				</tr>
 				<tr>
