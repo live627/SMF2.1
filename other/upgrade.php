@@ -651,7 +651,7 @@ upgradeExit();
 // Exit the upgrade script.
 function upgradeExit($fallThrough = false)
 {
-	global $upcontext, $upgradeurl, $boarddir;
+	global $upcontext, $upgradeurl, $boarddir, $command_line;
 
 	// Save where we are...
 	if (!empty($upcontext['current_step']) && !empty($upcontext['user']['id']))
@@ -675,6 +675,14 @@ function upgradeExit($fallThrough = false)
 	// We usually dump our templates out.
 	if (!$fallThrough)
 	{
+		// This should not happen my dear... HELP ME DEVELOPERS!!
+		if (!empty($command_line))
+		{
+			echo "\nError: Unexpected call to use the " . (isset($upcontext['sub_template']) ? $upcontext['sub_template'] : '') . " template. Please copy and paste all the text above and visit the SMF support forum to tell the Developers that they've made a boo boo; they'll get you up and running again.";
+			flush();
+			die();
+		}
+
 		if (!isset($_GET['xml']))
 			template_upgrade_above();
 		else
