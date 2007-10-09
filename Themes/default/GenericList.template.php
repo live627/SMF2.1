@@ -6,7 +6,8 @@ function template_show_list($list_id = null)
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	// Get a shortcut to the current list.
-	$cur_list = &$context[$list_id === null ? $context['default_list'] : $list_id];
+	$list_id = $list_id === null ? $context['default_list'] : $list_id;
+	$cur_list = &$context[$list_id];
 
 	if (isset($cur_list['form']))
 		echo '
@@ -62,10 +63,10 @@ function template_show_list($list_id = null)
 	// Show the list rows.
 	elseif (!empty($cur_list['rows']))
 	{
-		foreach ($cur_list['rows'] as $row)
+		foreach ($cur_list['rows'] as $id => $row)
 		{
 			echo '
-			<tr class="windowbg2">';
+			<tr class="windowbg2" id="list_' . $list_id . '_' . $id. '">';
 			foreach ($row as $row_data)
 				echo '
 				<td', empty($row_data['class']) ? '' : ' class="' . $row_data['class'] . '"', empty($row_data['style']) ? '' : ' style="' . $row_data['style'] . '"', '>', $row_data['value'], '</td>';

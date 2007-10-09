@@ -626,6 +626,7 @@ $txt['not_done_continue'] = 'Continue';
 $txt['core_configuration'] = 'Core Configuration';
 $txt['other_configuration'] = 'Feature Configuration';
 $txt['caching_settings'] = 'Caching';
+$txt['language_configuration'] = 'Languages';
 
 $txt['scheduled_view_log'] = 'View Log';
 $txt['scheduled_log_empty'] = 'There are currently no items in the log.';

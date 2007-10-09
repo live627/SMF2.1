@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2851 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2852 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -55,6 +55,7 @@ September 2007
  ! If a user is logged in, they can't be a spider. (Load.php)
  ! Ensure that pages with simple actions are not wrapped in Mambo. (Mambo bridge/smf.php)
  ! Add additional warnings about the use of the user synch buttons in the Mambo admin panel. (Mambo bridge/admin.smf.php)
+ + Allow admin's to edit language entries from the admin panel. (Admin.php, ManageServer.php, Admin template, ManageSettings language file)
 
 
 August 2007

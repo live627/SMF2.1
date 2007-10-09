@@ -216,4 +216,25 @@ $txt['core_settings_switch_off'] = 'Click to Disable';
 $txt['core_settings_enabled'] = 'Enabled';
 $txt['core_settings_disabled'] = 'Disabled';
 
+$txt['languages_lang_name'] = 'Language Name';
+$txt['languages_locale'] = 'Locale';
+$txt['languages_default'] = 'Default';
+$txt['languages_character_set'] = 'Character Set';
+$txt['languages_users'] = 'Users';
+$txt['language_settings_writable'] = 'Warning: Settings.php is not writable so the default language setting cannot be saved.';
+$txt['edit_languages'] = 'Edit Languages';
+$txt['lang_file_not_writable'] = '<b>Warning:</b> The primary language file (%1$s) is not writable. You must make this writable before you can make any changes.';
+$txt['lang_entries_not_writable'] = '<b>Warning:</b> The language file you wish to edit (%1$s) is not writable. You must make this writable before you can make any changes.';
+
+$txt['edit_language_entries_primary'] = 'Below are the primary language settings for this language pack.';
+$txt['edit_language_entries'] = 'Edit Language Entries';
+$txt['edit_language_entries_file'] = 'Select entires to edit';
+$txt['languages_dictionary'] = 'Dictionary';
+$txt['languages_spelling'] = 'Spelling';
+$txt['languages_for_pspell'] = 'This is for <a href="http://www.php.net/function.pspell-new" alt="*" target="_blank">pSpell</a> - if installed';
+$txt['languages_rtl'] = 'Enable &quot;Right to Left&quot; Mode';
+
+$txt['lang_file_desc_index'] = 'General Strings';
+$txt['lang_file_desc_EmailTemplates'] = 'Email Templates';
+
 ?>

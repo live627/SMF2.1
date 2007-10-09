@@ -181,6 +181,7 @@ function AdminMain()
 					'subsections' => array(
 						'core' => array($txt['core_configuration']),
 						'other' => array($txt['other_configuration']),
+						'languages' => array($txt['language_configuration']),
 						'cache' => array($txt['caching_settings']),
 					),
 				),

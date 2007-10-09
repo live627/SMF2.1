@@ -115,7 +115,7 @@ function createList($listOptions)
 
 	// Loop through the list items to be shown and construct the data values.
 	$list_context['rows'] = array();
-	foreach ($list_items as $list_item)
+	foreach ($list_items as $item_id => $list_item)
 	{
 		$cur_row = array();
 		foreach ($listOptions['columns'] as $column_id => $column)
@@ -168,7 +168,7 @@ function createList($listOptions)
 		}
 
 		// Insert the row into the list.
-		$list_context['rows'][] = $cur_row;
+		$list_context['rows'][$item_id] = $cur_row;
 	}
 
 	// The title is currently optional.

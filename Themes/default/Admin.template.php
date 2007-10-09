@@ -1887,4 +1887,187 @@ function template_core_features()
 	// ]]></script>';
 }
 
+// Edit some language entries?
+function template_modify_language_entries()
+{
+	global $context, $settings, $options, $txt, $scripturl;
+
+	echo '
+	<form action="', $scripturl, '?action=admin;area=serversettings;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
+		<tr class="titlebg">
+			<td colspan="2">
+				', $txt['edit_languages'], '
+			</td>
+		</tr>';
+
+	// Not writable?
+	if ($context['lang_file_not_writable_message'])
+		echo '
+		<tr class="windowbg2">
+			<td colspan="2">
+				<span style="color: red;">', $context['lang_file_not_writable_message'], '</span>
+			</td>
+		</tr>';
+
+	echo '
+		<tr class="windowbg">
+			<td colspan="2">
+				<span class="smalltext">', $txt['edit_language_entries_primary'], '</span>
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="50%">
+				<b>', $txt['languages_lang_name'], ':</b>
+			</td>
+			<td>
+				', $context['primary_settings']['name'], '
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="50%">
+				<b>', $txt['languages_character_set'], ':</b>
+			</td>
+			<td>
+				<input type="text" name="character_set" size="20" value="', $context['primary_settings']['character_set'], '" />
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="50%">
+				<b>', $txt['languages_locale'], ':</b>
+			</td>
+			<td>
+				<input type="text" name="locale" size="20" value="', $context['primary_settings']['locale'], '" />
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="50%">
+				<b>', $txt['languages_dictionary'], ':</b>
+			</td>
+			<td>
+				<input type="text" name="dictionary" size="20" value="', $context['primary_settings']['dictionary'], '" />
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="50%">
+				<b>', $txt['languages_spelling'], ':</b>
+			</td>
+			<td>
+				<input type="text" name="spelling" size="20" value="', $context['primary_settings']['spelling'], '" />
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td width="50%">
+				<b>', $txt['languages_character_set'], ':</b>
+			</td>
+			<td>
+				<input type="checkbox" name="rtl" ', $context['primary_settings']['rtl'] ? 'checked="checked"' : '', ' class="check" />
+			</td>
+		</tr>
+		<tr class="titlebg">
+			<td colspan="2" align="right">
+				<input type="submit" name="save_main" value="', $txt['save'], '" ', $context['lang_file_not_writable_message'] ? 'disabled="disabled"' : '', '/>
+			</td>
+		</tr>
+	</table>
+	</form>
+	<form action="', $scripturl, '?action=admin;area=serversettings;sa=editlang;lid=', $context['lang_id'], ';sesc=', $context['session_id'], ';entries" id="entry_form" method="post" accept-charset="', $context['character_set'], '">
+	<table align="center" width="80%" cellpadding="5" cellspacing="1" class="tborder">
+		<tr class="titlebg">
+			<td colspan="2">
+				', $txt['edit_language_entries'], '
+			</td>
+		</tr>
+		<tr class="catbg">
+			<td colspan="2" align="right">
+				', $txt['edit_language_entries_file'], ':
+				<select name="tfid" onchange="if (this.value != -1) document.forms.entry_form.submit();">';
+
+	foreach ($context['possible_files'] as $id_theme => $theme)
+	{
+		echo '
+					<option value="-1">', $theme['name'], '</option>';
+
+		foreach ($theme['files'] as $file)
+			echo '
+					<option value="', $id_theme, '+', $file['id'], '" ', $file['selected'] ? 'selected="selected"' : '', '> =&gt; ', $file['name'], '</option>';
+	}
+
+	echo '
+				</select>
+				<input type="submit" value="', $txt['go'], '"/>
+			</td>
+		</tr>';
+
+	// Is it not writable?
+	if ($context['entries_not_writable_message'])
+		echo '
+		<tr class="windowbg2">
+			<td colspan="2">
+				<span style="color: red;">', $context['entries_not_writable_message'], '</span>
+			</td>
+		</tr>';
+
+	// Already have some?
+	if (!empty($context['file_entries']))
+	{
+		$cached = array();
+		foreach ($context['file_entries'] as $entry)
+		{
+			// Do it in two's!
+			if (empty($cached))
+			{
+				$cached = $entry;
+				continue;
+			}
+
+			echo '
+			<tr class="windowbg">
+				<td width="50%">
+					<span class="smalltext">', $cached['key'], '</span>
+				</td>
+				<td width="50%">
+					<span class="smalltext">', $entry['key'], '</span>
+				</td>
+			</tr>
+			<tr class="windowbg2">
+				<td width="50%">
+					<input type="hidden" name="comp[', $cached['key'], ']" value="', $cached['value'], '" />
+					<textarea name="entry[', $cached['key'], ']" cols="40" rows="2" style="width: 96%;">', $cached['value'], '</textarea>
+				</td>
+				<td width="50%">
+					<input type="hidden" name="comp[', $entry['key'], ']" value="', $entry['value'], '" />
+					<textarea name="entry[', $entry['key'], ']" cols="40" rows="2" style="width: 96%;">', $entry['value'], '</textarea>
+				</td>
+			</tr>';
+			$cached = array();
+		}
+
+		// Odd number?
+		if (!empty($cached))
+			echo '
+			<tr class="windowbg">
+				<td width="50%">
+				<span class="smalltext">', $cached['key'], '</span>
+				</td>
+				<td width="50%"></td>
+			</tr>
+			<tr class="windowbg2">
+				<td width="50%">
+					<input type="hidden" name="comp[', $cached['key'], ']" value="', $cached['value'], '" />
+					<textarea name="entry[', $cached['key'], ']" cols="40" rows="2" style="width: 96%;">', $cached['value'], '</textarea>
+				</td>
+				<td width="50%"></td>
+			</tr>';
+	}
+	echo '
+		<tr class="titlebg">
+			<td colspan="2" align="right">
+				<input type="submit" name="save_entries" value="', $txt['save'], '" ', $context['entries_not_writable_message'] ? 'disabled="disabled"' : '', '/>
+			</td>
+		</tr>
+	</table>
+	</form>';
+}
+
 ?>
