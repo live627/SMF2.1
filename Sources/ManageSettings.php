@@ -163,6 +163,7 @@ function ModifyCoreFeatures($return_config = false)
 				return array(
 					\'disabled_profile_fields\' => \'\',
 					\'registration_fields\' => \'\',
+					\'displayFields\' => \'\',
 				);
 			'),
 		),
