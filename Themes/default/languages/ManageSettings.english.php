@@ -228,7 +228,7 @@ $txt['lang_entries_not_writable'] = '<b>Warning:</b> The language file you wish 
 
 $txt['edit_language_entries_primary'] = 'Below are the primary language settings for this language pack.';
 $txt['edit_language_entries'] = 'Edit Language Entries';
-$txt['edit_language_entries_file'] = 'Select entires to edit';
+$txt['edit_language_entries_file'] = 'Select entries to edit';
 $txt['languages_dictionary'] = 'Dictionary';
 $txt['languages_spelling'] = 'Spelling';
 $txt['languages_for_pspell'] = 'This is for <a href="http://www.php.net/function.pspell-new" alt="*" target="_blank">pSpell</a> - if installed';
