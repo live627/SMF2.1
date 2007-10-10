@@ -573,4 +573,117 @@ function template_inline_permissions()
 		// ]]></script>';
 }
 
+// Edit post moderation permissions.
+function template_postmod_permissions()
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	echo '
+		<form action="' . $scripturl . '?action=admin;area=permissions;sa=postmod;sesc=', $context['session_id'], '" method="post" name="postmodForm" id="postmodForm" accept-charset="', $context['character_set'], '">
+			<table width="100%" border="0" cellpadding="2" cellspacing="1" class="tborder">
+				<tr class="catbg">
+					<td colspan="13">
+						', $txt['permissions_post_moderation'], '
+					</td>
+				</tr>';
+
+	// Got advanced permissions - if so warn!
+	if (!empty($modSettings['permission_enable_deny']))
+		echo '
+				<tr class="catbg">
+					<td colspan="13">
+						<span class="smalltext">', $txt['permissions_post_moderation_deny_note'], '</span>
+					</td>
+				</tr>';
+
+		echo '
+				<tr class="titlebg">
+					<td colspan="13" align="right">
+						', $txt['permissions_post_moderation_select'], ':
+						<select name="pid" onchange="document.forms.postmodForm.submit();">';
+
+	foreach ($context['profiles'] as $profile)
+		echo '
+							<option value="', $profile['id'], '" ', $profile['id'] == $context['current_profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
+
+	echo '
+						</select>
+						<input type="submit" value="', $txt['go'], '" />
+					</td>
+				</tr>
+				<tr class="catbg">
+					<td></td>
+					<td align="center" colspan="3">
+						', $txt['permissions_post_moderation_new_topics'], '
+					</td>
+					<td align="center" colspan="3">
+						', $txt['permissions_post_moderation_replies_own'], '
+					</td>
+					<td align="center" colspan="3">
+						', $txt['permissions_post_moderation_replies_any'], '
+					</td>
+					<td align="center" colspan="3">
+						', $txt['permissions_post_moderation_attachments'], '
+					</td>
+				</tr>
+				<tr class="titlebg">
+					<td width="30%">
+						', $txt['permissions_post_moderation_group'], '
+					</td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['images_url'], '/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+				</tr>';
+
+	foreach ($context['profile_groups'] as $group)
+	{
+		echo '
+				<tr>
+					<td width="40%" class="windowbg">
+						<span ', ($group['color'] ? 'style="color: ' . $group['color'] . '"' : ''), '>', $group['name'], '</span>';
+		if (!empty($group['children']))
+			echo '
+						<br /><span class="smalltext">', $txt['permissions_includes_inherited'], ': &quot;', implode('&quot;, &quot;', $group['children']), '&quot;</span>';
+
+		echo '
+					</td>
+					<td align="center" class="windowbg2"><input type="radio" name="new_topic[', $group['id'], ']" value="allow" ', $group['new_topic'] == 'allow' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg2"><input type="radio" name="new_topic[', $group['id'], ']" value="moderate" ', $group['new_topic'] == 'moderate' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg2"><input type="radio" name="new_topic[', $group['id'], ']" value="disallow" ', $group['new_topic'] == 'disallow' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg"><input type="radio" name="replies_own[', $group['id'], ']" value="allow" ', $group['replies_own'] == 'allow' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg"><input type="radio" name="replies_own[', $group['id'], ']" value="moderate" ', $group['replies_own'] == 'moderate' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg"><input type="radio" name="replies_own[', $group['id'], ']" value="disallow" ', $group['replies_own'] == 'disallow' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg2"><input type="radio" name="replies_any[', $group['id'], ']" value="allow" ', $group['replies_any'] == 'allow' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg2"><input type="radio" name="replies_any[', $group['id'], ']" value="moderate" ', $group['replies_any'] == 'moderate' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg2"><input type="radio" name="replies_any[', $group['id'], ']" value="disallow" ', $group['replies_any'] == 'disallow' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg"><input type="radio" name="attachment[', $group['id'], ']" value="allow" ', $group['attachment'] == 'allow' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg"><input type="radio" name="attachment[', $group['id'], ']" value="moderate" ', $group['attachment'] == 'moderate' ? 'checked="checked"' : '', ' /></td>
+					<td align="center" class="windowbg"><input type="radio" name="attachment[', $group['id'], ']" value="disallow" ', $group['attachment'] == 'disallow' ? 'checked="checked"' : '', ' /></td>
+				</tr>';
+	}
+
+	echo '
+				<tr class="titlebg">
+					<td align="right" colspan="13">
+						<input type="submit" name="save_changes" value="', $txt['scheduled_tasks_save_changes'], '" />
+					</td>
+				</tr>
+			</table>
+	<div class="smalltext">
+		<b>', $txt['permissions_post_moderation_legend'], ':</b><br />
+		<img src="', $settings['images_url'], '/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /> - ', $txt['permissions_post_moderation_allow'], '<br />
+		<img src="', $settings['images_url'], '/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /> - ', $txt['permissions_post_moderation_moderate'], '<br />
+		<img src="', $settings['images_url'], '/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /> - ', $txt['permissions_post_moderation_disallow'], '
+	</div>';
+}
+
 ?>

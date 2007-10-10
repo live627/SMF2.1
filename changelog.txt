@@ -1,8 +1,22 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2852 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2853 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
+October 2007
+--------------------------------------------------------------------------------
+ + Allow admins to select which birthday email to send out.  Thanks to karlbenson, nite0859, zwaldowski, and geezmo for their birthday messages. (ManageMail.php, ScheduledTasks.php, Subs-Post.php, EmailTemplates and ManageMail language files)
+ * Ensure that the latest post column of the boardindex isn't empty for redirection boards. (BoardIndex template)
+ ! Personal Message searching wasn't always showing the right buttons. (PersonalMessage.php)
+ ! Don't show the board and topic names in the link tree if there is an error. (Load.php)
+ ! If a user is logged in, they can't be a spider. (Load.php)
+ ! Ensure that pages with simple actions are not wrapped in Mambo. (Mambo bridge/smf.php)
+ ! Add additional warnings about the use of the user synch buttons in the Mambo admin panel. (Mambo bridge/admin.smf.php)
+ + Allow admin's to edit language entries from the admin panel. (Admin.php, ManageServer.php, Admin template, ManageSettings language file)
+ + Added a dedicated admin screen for setting post moderation settings for a board profile to simplify, what is for some, a confusing process. (Admin.php, ManagePermissions.php, ManagePermissions template)
+ & Some new language entries for the above. (Admin, ManageSettings language files)
+
+
 September 2007
 --------------------------------------------------------------------------------
  ! Update Mambo bridge for SMF 2.0. (Mambo bridge/several files)
@@ -48,14 +62,6 @@ September 2007
  & Provide some helpful advice when enabling conversations that saving your messages in the outbox will improve the usefulness of the feature. (PersonalMessage language file, PersonalMessage template)
  ! Upgrade should once again work in command line mode. (upgrade.php)
  ! Centralize the decision on whether to show the email address and how. (Display.php, Groups.php, Load.php, News.php, PersonalMessages.php, Security.php, SendTopic.php, Subs-Auth.php, Display template, ManageMembergroups template, Memberlist template, PersonalMessages template, Profile template)
- + Allow admins to select which birthday email to send out.  Thanks to karlbenson, nite0859, zwaldowski, and geezmo for their birthday messages. (ManageMail.php, ScheduledTasks.php, Subs-Post.php, EmailTemplates and ManageMail language files)
- * Ensure that the latest post column of the boardindex isn't empty for redirection boards. (BoardIndex template)
- ! Personal Message searching wasn't always showing the right buttons. (PersonalMessage.php)
- ! Don't show the board and topic names in the link tree if there is an error. (Load.php)
- ! If a user is logged in, they can't be a spider. (Load.php)
- ! Ensure that pages with simple actions are not wrapped in Mambo. (Mambo bridge/smf.php)
- ! Add additional warnings about the use of the user synch buttons in the Mambo admin panel. (Mambo bridge/admin.smf.php)
- + Allow admin's to edit language entries from the admin panel. (Admin.php, ManageServer.php, Admin template, ManageSettings language file)
 
 
 August 2007

@@ -226,10 +226,10 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 
 			// Fetch the font that should be used...
 			defFontFamily = fetchDefaultFont(textHandle, 'font-family');
-			defFontSize = fetchDefaultFont(textHandle, 'font-size');
-
 			frameDocument.body.style.fontFamily = defFontFamily;
-			frameDocument.body.style.fontSize = defFontSize;
+			
+			//!!! This should not be hard coded.
+			frameDocument.body.style.fontSize = '10pt';
 
 			// Listen for input.
 			if (is_ff)
