@@ -455,7 +455,7 @@ function PackageInstallTest()
 					$actual_filename = $key;
 
 				// We just need it for actual parse changes.
-				if (!in_array($mod_action['type'], array('result', 'opened', 'saved', 'end', 'missing')))
+				if (!in_array($mod_action['type'], array('result', 'opened', 'saved', 'end', 'missing', 'skipping')))
 				{
 					if (empty($mod_action['is_custom']))
 						$context['actions'][$actual_filename]['operations'][] = array(
@@ -470,8 +470,8 @@ function PackageInstallTest()
 							'ignore_failure' => !empty($mod_action['ignore_failure']),
 						);
 
-				// Themes are under the saved type.
-				if (isset($mod_action['is_custom']) && isset($context['theme_actions'][$mod_action['is_custom']]))
+					// Themes are under the saved type.
+					if (isset($mod_action['is_custom']) && isset($context['theme_actions'][$mod_action['is_custom']]))
 						$context['theme_actions'][$mod_action['is_custom']]['actions'][$actual_filename]['operations'][] = array(
 							'type' => $txt['execute_modification'],
 							'action' => strtr($mod_action['filename'], array($boarddir => '.')),
