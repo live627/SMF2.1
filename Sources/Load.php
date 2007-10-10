@@ -763,14 +763,14 @@ function loadPermissions()
 			$cache_groups .= '-spider';
 		
 
-		if ($modSettings['cache_enable'] >= 2 && !empty($board) && ($temp = cache_get_data('permissions:' . $cache_groups . ':' . $board, 240)) != null)
+		if ($modSettings['cache_enable'] >= 2 && !empty($board) && ($temp = cache_get_data('permissions:' . $cache_groups . ':' . $board, 240)) != null && time() - 240 > $modSettings['settings_updated'])
 		{
 			list ($user_info['permissions']) = $temp;
 			banPermissions();
 
 			return;
 		}
-		elseif (($temp = cache_get_data('permissions:' . $cache_groups, 240)) != null)
+		elseif (($temp = cache_get_data('permissions:' . $cache_groups, 240)) != null && time() - 240 > $modSettings['settings_updated'])
 			list ($user_info['permissions'], $removals) = $temp;
 	}
 

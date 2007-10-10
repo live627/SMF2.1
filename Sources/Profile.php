@@ -164,7 +164,6 @@ function ModifyProfile($post_errors = array())
 	$context['profile_areas'] = array(
 		'info' => array(
 			'title' => $txt['profileInfo'],
-			'enabled' => !$user_info['is_guest'],
 			'areas' => array(
 				'summary' => array(
 					'own' => array('profile_view_any', 'profile_view_own'),

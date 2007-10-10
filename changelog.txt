@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2858 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2859 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -20,6 +20,7 @@ October 2007
  * Fixed error when Managing Members with > 20 unapproved members. (ManageMembers template)
  * Only display a permission section if it has something within it. (ManagePermissions template)
  ! When disabling custom profile fields ensure we stop displaying them. (ManageSettings.php)
+ ! Fix error when guests view a profile. (Profile.php)
 
 
 September 2007
