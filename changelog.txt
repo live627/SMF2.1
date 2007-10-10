@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2859 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2860 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -21,6 +21,7 @@ October 2007
  * Only display a permission section if it has something within it. (ManagePermissions template)
  ! When disabling custom profile fields ensure we stop displaying them. (ManageSettings.php)
  ! Fix error when guests view a profile. (Profile.php)
+ ! When the max post length is reached in quick edit, show them the max post length limit. (Post.php)
 
 
 September 2007

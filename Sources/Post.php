@@ -113,7 +113,7 @@ function Post()
 		fatal_lang_error('no_board', false);
 
 	require_once($sourcedir . '/Subs-Post.php');
-	
+
 	if (isset($_REQUEST['xml']))
 	{
 		$context['sub_template'] = 'post';
@@ -2102,7 +2102,7 @@ function notifyMembersBoard(&$topicData)
 
 			// Figure out which email to send off
 			$emailtype = '';
-	
+
 			// Send only if once is off or it's on and it hasn't been sent.
 			if (!empty($rowmember['notify_regularity']) && !$sentOnceAlready && empty($rowmember['sent']))
 				$emailtype = 'notify_boards_once';
@@ -2231,7 +2231,7 @@ function QuoteFast()
 				'body' => $row['body'],
 				'subject' => addcslashes($row['subject'], '"'),
 			);
-			
+
 			return;
 		}
 
@@ -2289,7 +2289,7 @@ function JavaScriptModify()
 
 	// Assume the first message if no message ID was given.
 	$request = $smfFunc['db_query']('', "
-			SELECT 
+			SELECT
 				t.locked, t.num_replies, t.id_member_started, t.id_first_msg,
 				m.id_msg, m.id_member, m.poster_time, m.subject, m.smileys_enabled, m.body, m.icon,
 				m.modified_time, m.modified_name
@@ -2504,7 +2504,12 @@ function JavaScriptModify()
 
 			loadLanguage('Errors');
 			foreach ($post_errors as $post_error)
-				$context['message']['errors'][] = $txt['error_' . $post_error];
+			{
+				if ($post_error == 'long_message')
+					$context['message']['errors'][] = sprintf($txt['error_' . $post_error], $modSettings['max_messageLength']);
+				else
+					$context['message']['errors'][] = $txt['error_' . $post_error];
+			}
 		}
 	}
 	else
