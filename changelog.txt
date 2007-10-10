@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2855 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2856 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -17,6 +17,7 @@ October 2007
  & Some new language entries for the above. (Admin, ManageSettings language files)
  ! Upgrade script was doing a poor job with large 1.1 forums. (upgrade_1-1.sql)
  ! Update ATOM feeds to version 1.0 - thanks to Oldiesmann. (News.php)
+ * Fixed error when Managing Members with > 20 unapproved members. (ManageMembers template)
 
 
 September 2007

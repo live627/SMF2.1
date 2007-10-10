@@ -232,10 +232,10 @@ function template_admin_browse()
 				<td align="right" colspan="2">
 					<input type="submit" value="', $txt['admin_browse_outstanding_go'], '" />
 					<input type="hidden" name="type" value="', $context['browse_type'], '" />
-					<input type="hidden" name="sort" value="', $context['sort_by'], '" />
-					<input type="hidden" name="start" value="', $context['start'], '" />
+					<input type="hidden" name="sort" value="', $context['approve_list']['sort']['id'], '" />
+					<input type="hidden" name="start" value="', $context['approve_list']['start'], '" />
 					<input type="hidden" name="orig_filter" value="', $context['current_filter'], '" />
-					<input type="hidden" name="sa" value="approve" />', $context['sort_direction'] == 'up' ? '
+					<input type="hidden" name="sa" value="approve" />', !empty($context['approve_list']['sort']['desc']) ? '
 					<input type="hidden" name="desc" value="1" />' : '', '
 				</td>
 			</tr>
