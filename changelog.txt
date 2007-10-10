@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2853 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2854 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -15,6 +15,7 @@ October 2007
  + Allow admin's to edit language entries from the admin panel. (Admin.php, ManageServer.php, Admin template, ManageSettings language file)
  + Added a dedicated admin screen for setting post moderation settings for a board profile to simplify, what is for some, a confusing process. (Admin.php, ManagePermissions.php, ManagePermissions template)
  & Some new language entries for the above. (Admin, ManageSettings language files)
+ ! Upgrade script was doing a poor job with large 1.1 forums. (upgrade_1-1.sql)
 
 
 September 2007
