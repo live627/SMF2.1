@@ -73,7 +73,7 @@ if (!defined('SMF'))
 function ShowXmlFeed()
 {
 	global $db_prefix, $board, $board_info, $context, $scripturl, $txt, $modSettings, $user_info;
-	global $query_this_board, $smfFunc;
+	global $query_this_board, $smfFunc, $forum_version;
 
 	// If it's not enabled, die.
 	if (empty($modSettings['xmlnews_enable']))
@@ -257,13 +257,13 @@ function ShowXmlFeed()
 	elseif ($xml_format == 'atom')
 	{
 		echo '
-<feed version="0.3" xmlns="http://purl.org/atom/ns#">
+<feed xmlns="http://www.w3.org/2005/Atom">
 	<title>', $feed_title, '</title>
 	<link rel="alternate" type="text/html" href="', $scripturl, '" />
 
 	<modified>', gmstrftime('%Y-%m-%dT%H:%M:%SZ'), '</modified>
 	<tagline><![CDATA[', strip_tags($txt['xml_rss_desc']), ']]></tagline>
-	<generator>SMF</generator>
+	<generator uri="http://www.simplemachines.org" version="', strtr($forum_version, array('SMF' => '')), '">SMF</generator>
 	<author>
 		<name>', strip_tags($context['forum_name']), '</name>
 	</author>';
@@ -486,9 +486,8 @@ function getXmlMembers($xml_format)
 			$data[] = array(
 				'title' => cdata_parse($row['real_name']),
 				'link' => $scripturl . '?action=profile;u=' . $row['id_member'],
-				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['date_registered']),
-				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['date_registered']),
-				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['last_login']),
+				'published' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['date_registered']),
+				'updated' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['last_login']),
 				'id' => $scripturl . '?action=profile;u=' . $row['id_member'],
 			);
 		// More logical format for the data, but harder to apply.
@@ -508,7 +507,7 @@ function getXmlMembers($xml_format)
 function getXmlNews($xml_format)
 {
 	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $smfFunc;
+	global $query_this_board, $smfFunc, $settings;
 
 	/* Find the latest posts that:
 		- are the first post in their topic.
@@ -518,11 +517,11 @@ function getXmlNews($xml_format)
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.modified_time,
-			t.id_topic, t.id_board, t.num_replies,
+			m.icon, t.id_topic, t.id_board, t.num_replies,
 			b.name AS bname,
-			mem.hide_email, COALESCE(mem.id_member, 0) AS id_member,
-			COALESCE(mem.email_address, m.poster_email) AS poster_email,
-			COALESCE(mem.real_name, m.poster_name) AS poster_name
+			mem.hide_email, IFNULL(mem.id_member, 0) AS id_member,
+			IFNULL(mem.email_address, m.poster_email) AS poster_email,
+			IFNULL(mem.real_name, m.poster_name) AS poster_name
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
@@ -567,11 +566,16 @@ function getXmlNews($xml_format)
 				'title' => cdata_parse($row['subject']),
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 				'summary' => cdata_parse($row['body']),
-				'author' => array('name' => $row['poster_name']),
-				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
-				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
+				'category' => array('term' => $row['id_board'], 'label' => cdata_parse($row['bname'])),
+				'author' => array(
+					'name' => $row['poster_name'],
+					'email' => in_array(showEmailAddress(!empty($row['hide_email']), $row['id_member']), array('yes', 'yes_permission_override')) ? $row['poster_email'] : null,
+					'uri' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
+				),
+				'published' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
 				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modified_time']) ? $row['poster_time'] : $row['modified_time']),
-				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
+				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+				'icon' => $settings['images_url'] . '/icons/' . $row['icon'] . '.gif',
 			);
 		// The biggest difference here is more information.
 		else
@@ -602,7 +606,7 @@ function getXmlNews($xml_format)
 function getXmlRecent($xml_format)
 {
 	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
-	global $query_this_board, $smfFunc;
+	global $query_this_board, $smfFunc, $settings;
 
 	$request = $smfFunc['db_query']('', "
 		SELECT m.id_msg
@@ -625,7 +629,7 @@ function getXmlRecent($xml_format)
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.id_topic, t.id_board,
-			b.name AS bname, t.num_replies, m.id_member, mf.id_member AS ID_FIRST_MEMBER,
+			b.name AS bname, t.num_replies, m.id_member, m.icon, mf.id_member AS ID_FIRST_MEMBER,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, mf.subject AS first_subject,
 			IFNULL(memf.real_name, mf.poster_name) AS firstPosterName, mem.hide_email,
 			IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
@@ -674,11 +678,19 @@ function getXmlRecent($xml_format)
 				'title' => cdata_parse($row['subject']),
 				'link' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
 				'summary' => cdata_parse($row['body']),
-				'author' => array('name' => $row['poster_name']),
-				'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
-				'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
-				'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modified_time']) ? $row['poster_time'] : $row['modified_time']),
-				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg']
+				'category' => array(
+					'term' => $row['id_board'],
+					'label' => cdata_parse($row['bname'])
+				),
+				'author' => array(
+					'name' => $row['poster_name'],
+					'email' => in_array(showEmailAddress(!empty($row['hide_email']), $row['id_member']), array('yes', 'yes_permission_override')) ? $row['poster_email'] : null,
+					'uri' => !empty($row['id_member']) ? $scripturl . '?action=profile;u=' . $row['id_member'] : ''
+				),
+				'published' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $row['poster_time']),
+				'updated' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', empty($row['modified_time']) ? $row['poster_time'] : $row['modified_time']),
+				'id' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['id_msg'] . '#msg' . $row['id_msg'],
+				'icon' => $settings['images_url'] . '/icons/' . $row['icon'] . '.gif',
 			);
 		// A lot of information here.  Should be enough to please the rss-ers.
 		else
@@ -753,10 +765,15 @@ function getXmlProfile($xml_format)
 			'title' => cdata_parse($profile['name']),
 			'link' => $scripturl  . '?action=profile;u=' . $profile['id'],
 			'summary' => cdata_parse(isset($profile['group']) ? $profile['group'] : $profile['post_group']),
-			'created' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['date_registered']),
-			'issued' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['date_registered']),
-			'modified' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['last_login']),
-			'id' => $scripturl  . '?action=profile;u=' . $profile['id']
+			'author' => array(
+				'name' => $profile['real_name'],
+				'email' => in_array(showEmailAddress(!empty($profile['hide_email']), $profile['id']), array('yes', 'yes_permission_override')) ? $profile['email'] : null,
+				'uri' => !empty($profile['website']) ? $profile['website']['url'] : ''
+			),
+			'published' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['date_registered']),
+			'updated' => gmstrftime('%Y-%m-%dT%H:%M:%SZ', $user_profile[$profile['id']]['last_login']),
+			'id' => $scripturl  . '?action=profile;u=' . $profile['id'],
+			'logo' => !empty($profile['avatar']) ? $profile['avatar']['url'] : '',
 		);
 	else
 	{
