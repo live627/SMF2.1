@@ -579,7 +579,9 @@ ADD COLUMN notifySendBody tinyint(4) NOT NULL default '0',
 ADD COLUMN notifyTypes tinyint(4) NOT NULL default '2',
 CHANGE COLUMN im_ignore_list pm_ignore_list tinytext NOT NULL,
 CHANGE COLUMN im_email_notify pm_email_notify tinyint(4) NOT NULL default '0';
+---#
 
+---# Updating columns on "members" - part 2...
 ALTER TABLE {$db_prefix}members
 CHANGE COLUMN secretAnswer secretAnswer varchar(64) NOT NULL default '';
 
