@@ -1887,6 +1887,85 @@ function template_core_features()
 	// ]]></script>';
 }
 
+// View the languages, and maybe add some.
+function template_language_files()
+{
+	global $context, $settings, $options, $txt, $scripturl;
+
+	// Show the main list.
+	template_show_list('language_list');
+
+	// Temporary until languages installing on PM works.
+	return;
+	// Add a new language?
+	echo '
+	<form action="', $scripturl, '?action=admin;area=serversettings;sa=languages;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
+		<tr class="titlebg">
+			<td>
+				', $txt['add_language'], '
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td>
+				<b>', $txt['add_language_smf'], ':</b>
+				<div class="smalltext">', $txt['add_language_smf_browse'], '</div>';
+
+	if (!empty($context['smf_error']))
+		echo '
+				<div class="smalltext" style="color: red;">', $txt['add_language_error_' . $context['smf_error']], '</div>';
+
+	echo '
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td align="right">
+				<input type="text" name="smf_add" size="40" value="', !empty($context['smf_search_term']) ? $context['smf_search_term'] : '', '" />
+				<input type="submit" name="smf_add_sub" value="', $txt['search'], '" />
+			</td>
+		</tr>';
+
+	// Had some results?
+	if (!empty($context['smf_languages']))
+	{
+		echo '
+		<tr class="windowbg">
+			<td>
+				<span class="smalltext">', $txt['add_language_smf_found'], '</span>
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td align="center">
+				<table width="100%" align="center" cellpadding="3" cellspacing="1" border="0" style="border: 1px black solid;">
+					<tr class="catbg">
+						<td align="left"><b>', $txt['name'], '</b></td>
+						<td align="left"><b>', $txt['add_language_smf_desc'], '</b></td>
+						<td align="left"><b>', $txt['add_language_smf_version'], '</b></td>
+						<td align="center"><b>', $txt['add_language_smf_utf8'], '</b></td>
+						<td align="left"><b>', $txt['add_language_smf_install'], '</b></td>
+					</tr>';
+
+		foreach ($context['smf_languages'] as $language)
+			echo '
+					<tr class="windowbg2">
+						<td align="left">', $language['name'], '</td>
+						<td align="left">', $language['description'], '</td>
+						<td align="left">', $language['version'], '</td>
+						<td align="center">', $language['utf8'] ? $txt['yes'] : $txt['no'], '</td>
+						<td align="left"><a href="', $language['link'], '">', $txt['add_language_smf_install'], '</a></td>
+					</tr>';
+
+		echo '
+				</table>
+			</td>
+		</tr>';
+	}
+
+	echo '
+	</table>
+	</form>';
+}
+
 // Edit some language entries?
 function template_modify_language_entries()
 {

@@ -468,7 +468,7 @@ function ModifyCacheSettings($return_config = false)
 function ModifyLanguageSettings()
 {
 	global $txt, $db_prefix, $context, $scripturl;
-	global $user_info, $smfFunc, $sourcedir, $language, $boarddir;
+	global $user_info, $smfFunc, $sourcedir, $language, $boarddir, $forum_version;
 
 	// Setting a new default?
 	if (!empty($_POST['set_default']) && !empty($_POST['def_language']))
@@ -488,7 +488,6 @@ function ModifyLanguageSettings()
 		'id' => 'language_list',
 		'items_per_page' => 20,
 		'base_href' => $scripturl . '?action=admin;area=serversettings;sa=languages;sesc=' . $context['session_id'],
-		'default_sort_col' => 'name',
 		'title' => $txt['edit_languages'],
 		'get_items' => array(
 			'function' => 'list_getLanguages',
@@ -587,7 +586,50 @@ function ModifyLanguageSettings()
 	require_once($sourcedir . '/Subs-List.php');
 	createList($listOptions);
 
-	$context['sub_template'] = 'show_list';
+	// Are we searching for new languages courtesy of Simple Machines?
+	if (!empty($_POST['smf_add_sub']))
+	{
+		// Need fetch_web_data.
+		require_once($sourcedir . '/Subs-Package.php');
+		
+		$context['smf_search_term'] = trim($_POST['smf_add']);
+
+		// We're going to use this URL.
+		$url = 'http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => '')));
+
+		// Load the class file and stick it into an array.
+		loadClassFile('Class-Package.php');
+		$language_list = new xmlArray(fetch_web_data($url), true);
+
+		// Check it exists.
+		if (!$language_list->exists('languages'))
+			$context['smf_error'] = 'no_response';
+		else
+		{
+			$language_list = $language_list->path('languages[0]');
+			$lang_files = $language_list->set('language');
+			$context['smf_languages'] = array();
+			foreach ($lang_files as $file)
+			{
+				// Were we searching?
+				if (!empty($context['smf_search_term']) && strpos($file->fetch('name'), $context['smf_search_term']) === false)
+					continue;
+
+				$context['smf_languages'][] = array(
+					'id' => $file->fetch('id'),
+					'name' => $smfFunc['ucwords']($file->fetch('name')),
+					'version' => $file->fetch('version'),
+					'utf8' => $file->fetch('utf8'),
+					'description' => $file->fetch('description'),
+					'link' => $scripturl . '?action=admin;area=packages;get;sa=download;package=' . $url . ';fetch=' . urlencode($file->fetch('id')) . ';sesc=' . $context['session_id'],
+				);
+			}
+			if (empty($context['smf_languages']))
+				$context['smf_error'] = 'no_files';
+		}
+	}
+
+	$context['sub_template'] = 'language_files';
 	$context['default_list'] = 'language_list';
 }
 
