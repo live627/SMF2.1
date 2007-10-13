@@ -253,7 +253,7 @@ function LockVoting()
 // Ask what to change in a poll.
 function EditPoll()
 {
-	global $txt, $db_prefix, $user_info, $context, $topic, $board, $smfFunc, $sourcedir;
+	global $txt, $db_prefix, $user_info, $context, $topic, $board, $smfFunc, $sourcedir, $scripturl;
 
 	if (empty($topic))
 		fatal_lang_error('no_access', false);
@@ -269,8 +269,9 @@ function EditPoll()
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			t.id_member_started, p.id_poll, p.question, p.hide_results, p.expire_time, p.max_votes, p.change_vote,
-			p.guest_vote, p.id_member AS pollStarter
+			m.subject, p.guest_vote, p.id_member AS pollStarter
 		FROM {$db_prefix}topics AS t
+			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 		WHERE t.id_topic = $topic
 		LIMIT 1", __FILE__, __LINE__);
@@ -501,8 +502,13 @@ function EditPoll()
 	$context['page_title'] = $context['is_edit'] ? $txt['poll_edit'] : $txt['add_poll'];
 
 	// Build the link tree.
+	censorText($pollinfo['subject']);
 	$context['linktree'][] = array(
-		'name' => $context['page_title']
+		'url' => $scripturl . '?topic=' . $topic . '.0',
+		'name' => $pollinfo['subject'],
+	);
+	$context['linktree'][] = array(
+		'name' => $context['page_title'],
 	);
 
 	// Register this form in the session variables.
