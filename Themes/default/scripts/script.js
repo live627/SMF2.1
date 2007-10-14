@@ -599,7 +599,9 @@ function smfToggle(uniqueId, initialState)
 		{
 			// Inverse?
 			var curMode = this.panelToggles[x][1] ? !mode : mode;
-			document.getElementById(this.panelToggles[x][0]).style.display = curMode ? "none" : "";
+			var curPanel = document.getElementById(this.panelToggles[x][0]);
+			if (curPanel)
+				curPanel.style.display = curMode ? "none" : "";
 		}
 
 		this.state = mode;

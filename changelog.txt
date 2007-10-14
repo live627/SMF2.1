@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2862 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2863 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -24,6 +24,7 @@ October 2007
  ! When the max post length is reached in quick edit, show them the max post length limit. (Post.php)
  ! Skipped files don't need the extra operation data. (Packages.php)
  ! Show the topic name in the link tree for adding/editing a poll. (Poll.php)
+ ! Don't error if a toggle panel div cannot be found. (script.js)
 
 
 September 2007
