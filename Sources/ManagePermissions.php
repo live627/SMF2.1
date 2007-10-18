@@ -1673,7 +1673,7 @@ function save_inline_permissions($permissions)
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}permissions
 		WHERE permission IN ('" . implode("', '", $permissions) . "')
- 		" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
+ 		" . (empty($context['illegal_permissions']) ? '' : " AND permission NOT IN ('" . implode("', '", $context['illegal_permissions']) . "')"), __FILE__, __LINE__);
 
 	// ...and replace them with new ones.
 	if (!empty($insertRows))
@@ -2059,7 +2059,7 @@ function ModifyPostModeration()
 				array('id_profile', 'id_group', 'permission'), __FILE__, __LINE__
 			);
 	}
-		
+
 	// Now get all the permissions!
 	$request = $smfFunc['db_query']('', "
 		SELECT id_group, permission, add_deny
@@ -2092,5 +2092,5 @@ function ModifyPostModeration()
 	}
 	$smfFunc['db_free_result']($request);
 }
-	
+
 ?>

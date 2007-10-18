@@ -793,6 +793,7 @@ $txtChanges = array(
 		602 => 'your_yim',
 		606 => 'sig_info',
 		664 => 'max_sig_characters',
+		688 => 'send_member_pm',
 		722 => 'hidden',
 		741 => 'current_time',
 		749 => 'digits_only',
@@ -1140,7 +1141,7 @@ function fixTemplateFile($filename, $test = false)
 		if (!empty($findArray))
 		{
 			$edit_count += count($findArray);
-	
+
 			$fileContents = str_replace($findArray, $replaceArray, $fileContents);
 		}
 		else

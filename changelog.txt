@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2863 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2864 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -25,6 +25,16 @@ October 2007
  ! Skipped files don't need the extra operation data. (Packages.php)
  ! Show the topic name in the link tree for adding/editing a poll. (Poll.php)
  ! Don't error if a toggle panel div cannot be found. (script.js)
+ ! Wrong language string was being used for date registered in members awaiting approval section. (ManageMembers.php)
+ ! First check to see if the $spider['user_agent'] is not empty before passing it over to strpos. (ManageSearchEngines.php)
+ ! Check to see if $_SESSION['id_robot'] is not empty before logging spider stats. (ManageSearchEngines.php)
+ ! When removing illegal permissions, make sure to enclose the permissions in quotes so they wont get treated as column names. (ManagePermissions.php)
+ ! Wrong permission was being used for the manage permissions tab. (Admin.php)
+ ! Profile page was still using legacy indexes for language strings. (FixLanguage.php, Profile template)
+ & Changed index name for the change above. (Profile language files)
+ ! Sort attachments in profile by date descending by default. (Profile.php, Profile template)
+ * Placed the sort image after the column name for consistensy in Show Attachments section in Profile page. (Profile template)
+
 
 
 September 2007

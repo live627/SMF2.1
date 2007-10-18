@@ -1,7 +1,7 @@
 <?php
 // Version: 2.0 Beta 1; Profile
 
-// Important! Before editing these language files please read the text at the topic of index.english.php.
+// Important! Before editing these language files please read the text at the top of index.english.php.
 
 global $scripturl, $context;
 
@@ -43,7 +43,7 @@ $txt['your_aim'] = 'This is your AOL Instant Messenger nickname.';
 $txt['your_yim'] = 'This is your Yahoo! Instant Messenger nickname.';
 $txt['sig_info'] = 'Signatures are displayed at the bottom of each post or personal message. BBC code and smileys may be used in your signature.';
 $txt['max_sig_characters'] = 'Max characters: %d; characters remaining: ';
-$txt[688] = 'Send this member a personal message';
+$txt['send_member_pm'] = 'Send this member a personal message';
 $txt['hidden'] = 'hidden';
 $txt['current_time'] = 'Current forum time';
 $txt['digits_only'] = 'The \'number of posts\' box can only contain digits.';
@@ -138,6 +138,8 @@ $txt['deleteAccount_approval'] = 'Please note that the forum moderators will hav
 
 $txt['profileInfo'] = 'Profile Info';
 $txt['showPosts'] = 'Show Posts';
+$txt['showTopics'] = 'Show Topics';
+$txt['showAttachments'] = 'Show Attachments';
 $txt['statPanel'] = 'Show Stats';
 $txt['editBuddies'] = 'Edit Buddies';
 $txt['trackUser'] = 'Track User';

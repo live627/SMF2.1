@@ -297,7 +297,7 @@ function template_summary()
 	elseif ($context['member']['show_email'] == 'yes_permission_override')
 		echo '
 						<i><a href="mailto:', $context['member']['email'], '">', $context['member']['email'], '</a></i>';
-	
+
 	// That must mean the email is hidden.
 	else
 		echo '
@@ -422,7 +422,7 @@ function template_summary()
 		<td class="windowbg2" colspan="2">';
 	if (!$context['user']['is_owner'] && $context['can_send_pm'])
 		echo '
-			<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt[688], '.</a><br />
+			<a href="', $scripturl, '?action=pm;sa=send;u=', $context['id_member'], '">', $txt['send_member_pm'], '.</a><br />
 			<br />';
 	echo '
 			<a href="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=showPosts">', $txt['show_latest'], ' ', $txt['posts_member'], '.</a><br />
@@ -442,7 +442,7 @@ function template_showPosts()
 		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="3" height="26">
-					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['showPosts'], ' - ', $context['member']['name'], '
+					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', (!isset($context['attachments']) && empty($context['is_topics']) ? $txt['showPosts'] : (!empty($context['is_topics']) ? $txt['showTopics'] : $txt['showAttachments'])), ' - ', $context['member']['name'], '
 				</td>
 			</tr>
 			<tr class="windowbg" valign="middle">
@@ -529,27 +529,27 @@ function template_showPosts()
 		<table border="0" width="85%" cellspacing="1" cellpadding="2" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td width="25%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=filename', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'filename' ? ';desc' : ''), '">
-						', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=filename', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'filename' ? ';asc' : ''), '">
 						', $txt['show_attach_filename'], '
+						', ($context['sort_order'] == 'filename' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
-				<td width="18%" align="center">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=downloads', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'downloads' ? ';desc' : ''), '">
-						', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+				<td width="12%" align="center">
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=downloads', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'downloads' ? ';asc' : ''), '">
 						', $txt['show_attach_downloads'], '
+						', ($context['sort_order'] == 'downloads' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td width="30%">
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=subject', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'subject' ? ';desc' : ''), '">
-						', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=subject', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'subject' ? ';asc' : ''), '">
 						', $txt['message'], '
+						', ($context['sort_order'] == 'subject' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 				<td>
-					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=posted', ($context['sort_direction'] == 'up' && $context['sort_order'] == 'posted' ? ';desc' : ''), '">
-					', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
+					<a href="', $scripturl, '?action=profile;u=', $context['current_member'], ';sa=showPosts;attach;sort=posted', ($context['sort_direction'] == 'down' && $context['sort_order'] == 'posted' ? ';asc' : ''), '">
 					', $txt['show_attach_posted'], '
+					', ($context['sort_order'] == 'posted' ? '<img src="' . $settings['images_url'] . '/sort_' . ($context['sort_direction'] == 'down' ? 'down' : 'up') . '.gif" alt="" />' : ''), '
 					</a>
 				</td>
 			</tr>';
@@ -1666,7 +1666,7 @@ function template_notification()
 	if (!empty($context['topic_notifications']))
 	{
 		echo '
-				
+
 				<tr class="catbg">
 					<td>' . $txt['subject'] . '</td>
 					<td width="18%">' . $txt['started_by'] . '</td>
@@ -1952,7 +1952,7 @@ function template_groupMembership()
 
 function template_ignoreboards()
 {
-	global $context, $txt, $settings, $scripturl; 
+	global $context, $txt, $settings, $scripturl;
 	// The main containing header.
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
@@ -2157,7 +2157,7 @@ function template_issueWarning()
 		{
 			setWarningBarPos(false, false, amount);
 		}
-			
+
 		// Warn template.
 		function populateNotifyTemplate()
 		{

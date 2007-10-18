@@ -520,22 +520,22 @@ function ViewMemberlist()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt;
-					
+
 						// Calculate number of days since last online.
 						if (empty($rowData[\'last_login\']))
 							$difference = $txt[\'never\'];
 						else
 						{
 							$num_days_difference = jeffsdatediff($rowData[\'last_login\']);
-							
+
 							// Today.
 							if (empty($num_days_difference))
 								$difference = $txt[\'viewmembers_today\'];
-							
+
 							// Yesterday.
 							elseif ($num_days_difference == 1)
 								$difference = sprintf(\'1 %1$s\', $txt[\'viewmembers_day_ago\']);
-							
+
 							// X days ago.
 							else
 								$difference = sprintf(\'%1$d %2$s\', $num_days_difference, $txt[\'viewmembers_days_ago\']);
@@ -852,7 +852,7 @@ function MembersAwaitingActivation()
 			),
 			'date_registered' => array(
 				'header' => array(
-					'value' => $txt['viewmembers_online'],
+					'value' => $txt['date_registered'],
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '

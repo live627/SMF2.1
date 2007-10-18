@@ -1973,12 +1973,12 @@ function showAttachments($memID)
 		'posted' => 'm.poster_time',
 	);
 	$context['sort_order'] = isset($_GET['sort']) && isset($sortTypes[$_GET['sort']]) ? $_GET['sort'] : 'posted';
-	$context['sort_direction'] = isset($_GET['desc']) ? 'down' : 'up';
+	$context['sort_direction'] = isset($_GET['asc']) ? 'up' : 'down';
 
 	$sort =	$sortTypes[$context['sort_order']];
 
 	// Let's get ourselves a lovely page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts;attach;sort=' . $sort . ($context['sort_direction'] == 'down' ? ';desc' : ''), $context['start'], $attachCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts;attach;sort=' . $sort . ($context['sort_direction'] == 'up' ? ';asc' : ''), $context['start'], $attachCount, $maxIndex);
 
 	// Retrieve a some attachments.
 	$request = $smfFunc['db_query']('', "

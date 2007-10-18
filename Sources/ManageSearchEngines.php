@@ -178,7 +178,7 @@ function ViewSpiders()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $scripturl;
-					
+
 						return sprintf(\'<a href="%1$s?action=admin;area=sengines;sa=editspiders;sid=%2$d">%3$s</a>\', $scripturl, $rowData[\'id_spider\'], htmlspecialchars($rowData[\'spider_name\']));
 					'),
 					'class' => 'windowbg',
@@ -195,7 +195,7 @@ function ViewSpiders()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $context, $txt;
-					
+
 						return isset($context[\'spider_last_seen\'][$rowData[\'id_spider\']]) ? timeformat($context[\'spider_last_seen\'][$rowData[\'id_spider\']]) : $txt[\'spider_last_never\'];
 					'),
 					'class' => 'windowbg',
@@ -356,7 +356,7 @@ function EditSpider()
 			);
 		$smfFunc['db_free_result']($request);
 	}
-		
+
 }
 
 //!!! Should this not be... you know... in a different file?
@@ -405,7 +405,7 @@ function SpiderCheck()
 	foreach ($spider_data as $spider)
 	{
 		// User agent is easy.
-		if (strpos($ci_user_agent, strtolower($spider['user_agent'])) !== false)
+		if (!empty($spider['user_agent']) && strpos($ci_user_agent, strtolower($spider['user_agent'])) !== false)
 			$_SESSION['id_robot'] = $spider['id_spider'];
 		// IP stuff is harder.
 		elseif (!empty($ip_parts))
@@ -432,7 +432,7 @@ function SpiderCheck()
 	}
 
 	// If this is low server tracking then log the spider here as oppossed to the main logging function.
-	if ($modSettings['spider_mode'] == 1 && $_SESSION['id_robot'])
+	if ($modSettings['spider_mode'] == 1 && !empty($_SESSION['id_robot']))
 		logSpider(isset($not_unique));
 
 	return !empty($_SESSION['id_robot']) ? $_SESSION['id_robot'] : 0;
@@ -558,7 +558,7 @@ function consolidateSpiderStats()
 			// Just in case...
 			if (empty($stat_updates[$session_checks[$row['session']]['date']]['spiders'][$session_checks[$row['session']]['spider']]['unique']))
 				continue;
-	
+
 			// Deduct the unique hits by one.
 			$stat_updates[$session_checks[$row['session']]['date']]['spiders'][$session_checks[$row['session']]['spider']]['unique']--;
 		}
