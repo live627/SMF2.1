@@ -150,10 +150,10 @@ if (!function_exists('text2words'))
 
 		// Step 1: Remove entities/things we don't consider words:
 		$words = preg_replace('~([\x0B\0\xA0\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~', ' ', $text);
-	
+
 		// Step 2: Entities we left to letters, where applicable, lowercase.
 		$words = preg_replace('~([^&\d]|^)[#;]~', '$1 ', un_htmlspecialchars(strtolower($words)));
-	
+
 		// Step 3: Ready to split apart and index!
 		$words = explode(' ', $words);
 		$returned_words = array();
@@ -179,7 +179,7 @@ if (!function_exists('clean_cache'))
 		// No directory = no game.
 		if (!is_dir($cachedir))
 			return;
-	
+
 		$dh = opendir($cachedir);
 		while ($file = readdir($dh))
 		{
@@ -198,10 +198,10 @@ if (!function_exists('md5_hmac'))
 		if (strlen($key) > 64)
 			$key = pack('H*', md5($key));
 		$key  = str_pad($key, 64, chr(0x00));
-	
+
 		$k_ipad = $key ^ str_repeat(chr(0x36), 64);
 		$k_opad = $key ^ str_repeat(chr(0x5c), 64);
-	
+
 		return md5($k_opad . pack('H*', md5($k_ipad . $data)));
 	}
 }
@@ -212,14 +212,14 @@ if (!class_exists('ftp_connection'))
 	class ftp_connection
 	{
 		var $connection = 'no_connection', $error = false, $last_message, $pasv = array();
-	
+
 		// Create a new FTP connection...
 		function ftp_connection($ftp_server, $ftp_port = 21, $ftp_user = 'anonymous', $ftp_pass = 'ftpclient@simplemachines.org')
 		{
 			if ($ftp_server !== null)
 				$this->connect($ftp_server, $ftp_port, $ftp_user, $ftp_pass);
 		}
-	
+
 		function connect($ftp_server, $ftp_port = 21, $ftp_user = 'anonymous', $ftp_pass = 'ftpclient@simplemachines.org')
 		{
 			if (substr($ftp_server, 0, 6) == 'ftp://')
@@ -229,7 +229,7 @@ if (!class_exists('ftp_connection'))
 			if (substr($ftp_server, 0, 7) == 'http://')
 				$ftp_server = substr($ftp_server, 7);
 			$ftp_server = strtr($ftp_server, array('/' => '', ':' => '', '@' => ''));
-	
+
 			// Connect to the FTP server.
 			$this->connection = @fsockopen($ftp_server, $ftp_port, $err, $err, 5);
 			if (!$this->connection)
@@ -237,14 +237,14 @@ if (!class_exists('ftp_connection'))
 				$this->error = 'bad_server';
 				return;
 			}
-	
+
 			// Get the welcome message...
 			if (!$this->check_response(220))
 			{
 				$this->error = 'bad_response';
 				return;
 			}
-	
+
 			// Send the username, it should ask for a password.
 			fwrite($this->connection, 'USER ' . $ftp_user . "\r\n");
 			if (!$this->check_response(331))
@@ -252,7 +252,7 @@ if (!class_exists('ftp_connection'))
 				$this->error = 'bad_username';
 				return;
 			}
-	
+
 			// Now send the password... and hope it goes okay.
 			fwrite($this->connection, 'PASS ' . $ftp_pass . "\r\n");
 			if (!$this->check_response(230))
@@ -261,31 +261,31 @@ if (!class_exists('ftp_connection'))
 				return;
 			}
 		}
-	
+
 		function chdir($ftp_path)
 		{
 			if (!is_resource($this->connection))
 				return false;
-	
+
 			// No slash on the end, please...
 			if (substr($ftp_path, -1) == '/' && $ftp_path !== '/')
 				$ftp_path = substr($ftp_path, 0, -1);
-	
+
 			fwrite($this->connection, 'CWD ' . $ftp_path . "\r\n");
 			if (!$this->check_response(250))
 			{
 				$this->error = 'bad_path';
 				return false;
 			}
-	
+
 			return true;
 		}
-	
+
 		function chmod($ftp_file, $chmod)
 		{
 			if (!is_resource($this->connection))
 				return false;
-	
+
 			// Convert the chmod value from octal (0777) to text ("777").
 			fwrite($this->connection, 'SITE CHMOD ' . decoct($chmod) . ' ' . $ftp_file . "\r\n");
 			if (!$this->check_response(200))
@@ -293,22 +293,22 @@ if (!class_exists('ftp_connection'))
 				$this->error = 'bad_file';
 				return false;
 			}
-	
+
 			return true;
 		}
-	
+
 		function unlink($ftp_file)
 		{
 			// We are actually connected, right?
 			if (!is_resource($this->connection))
 				return false;
-	
+
 			// Delete file X.
 			fwrite($this->connection, 'DELE ' . $ftp_file . "\r\n");
 			if (!$this->check_response(250))
 			{
 				fwrite($this->connection, 'RMD ' . $ftp_file . "\r\n");
-	
+
 				// Still no love?
 				if (!$this->check_response(250))
 				{
@@ -316,10 +316,10 @@ if (!class_exists('ftp_connection'))
 					return false;
 				}
 			}
-	
+
 			return true;
 		}
-	
+
 		function check_response($desired)
 		{
 			// Wait for a response that isn't continued with -, but don't wait too long.
@@ -327,57 +327,57 @@ if (!class_exists('ftp_connection'))
 			do
 				$this->last_message = fgets($this->connection, 1024);
 			while (substr($this->last_message, 3, 1) != ' ' && time() - $time < 5);
-	
+
 			// Was the desired response returned?
 			return is_array($desired) ? in_array(substr($this->last_message, 0, 3), $desired) : substr($this->last_message, 0, 3) == $desired;
 		}
-	
+
 		function passive()
 		{
 			// We can't create a passive data connection without a primary one first being there.
 			if (!is_resource($this->connection))
 				return false;
-	
+
 			// Request a passive connection - this means, we'll talk to you, you don't talk to us.
 			@fwrite($this->connection, "PASV\r\n");
 			$time = time();
 			do
 				$response = fgets($this->connection, 1024);
 			while (substr($response, 3, 1) != ' ' && time() - $time < 5);
-	
+
 			// If it's not 227, we weren't given an IP and port, which means it failed.
 			if (substr($response, 0, 4) != '227 ')
 			{
 				$this->error = 'bad_response';
 				return false;
 			}
-	
+
 			// Snatch the IP and port information, or die horribly trying...
 			if (preg_match('~\((\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))\)~', $response, $match) == 0)
 			{
 				$this->error = 'bad_response';
 				return false;
 			}
-	
+
 			// This is pretty simple - store it for later use ;).
 			$this->pasv = array('ip' => $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4], 'port' => $match[5] * 256 + $match[6]);
-	
+
 			return true;
 		}
-	
+
 		function create_file($ftp_file)
 		{
 			// First, we have to be connected... very important.
 			if (!is_resource($this->connection))
 				return false;
-	
+
 			// I'd like one passive mode, please!
 			if (!$this->passive())
 				return false;
-	
+
 			// Seems logical enough, so far...
 			fwrite($this->connection, 'STOR ' . $ftp_file . "\r\n");
-	
+
 			// Okay, now we connect to the data port.  If it doesn't work out, it's probably "file already exists", etc.
 			$fp = @fsockopen($this->pasv['ip'], $this->pasv['port'], $err, $err, 5);
 			if (!$fp || !$this->check_response(150))
@@ -386,7 +386,7 @@ if (!class_exists('ftp_connection'))
 				@fclose($fp);
 				return false;
 			}
-	
+
 			// This may look strange, but we're just closing it to indicate a zero-byte upload.
 			fclose($fp);
 			if (!$this->check_response(226))
@@ -394,23 +394,23 @@ if (!class_exists('ftp_connection'))
 				$this->error = 'bad_response';
 				return false;
 			}
-	
+
 			return true;
 		}
-	
+
 		function list_dir($ftp_path = '', $search = false)
 		{
 			// Are we even connected...?
 			if (!is_resource($this->connection))
 				return false;
-	
+
 			// Passive... non-agressive...
 			if (!$this->passive())
 				return false;
-	
+
 			// Get the listing!
 			fwrite($this->connection, 'LIST -1' . ($search ? 'R' : '') . ($ftp_path == '' ? '' : ' ' . $ftp_path) . "\r\n");
-	
+
 			// Connect, assuming we've got a connection.
 			$fp = @fsockopen($this->pasv['ip'], $this->pasv['port'], $err, $err, 5);
 			if (!$fp || !$this->check_response(array(150, 125)))
@@ -419,41 +419,41 @@ if (!class_exists('ftp_connection'))
 				@fclose($fp);
 				return false;
 			}
-	
+
 			// Read in the file listing.
 			$data = '';
 			while (!feof($fp))
 				$data .= fread($fp, 4096);;
 			fclose($fp);
-	
+
 			// Everything go okay?
 			if (!$this->check_response(226))
 			{
 				$this->error = 'bad_response';
 				return false;
 			}
-	
+
 			return $data;
 		}
-	
+
 		function locate($file, $listing = null)
 		{
 			if ($listing === null)
 				$listing = $this->list_dir('', true);
 			$listing = explode("\n", $listing);
-	
+
 			@fwrite($this->connection, "PWD\r\n");
 			$time = time();
 			do
 				$response = fgets($this->connection, 1024);
 			while (substr($response, 3, 1) != ' ' && time() - $time < 5);
-	
+
 			// Check for 257!
 			if (preg_match('~^257 "(.+?)" ~', $response, $match) != 0)
 				$current_dir = strtr($match[1], array('""' => '"'));
 			else
 				$current_dir = '';
-	
+
 			for ($i = 0, $n = count($listing); $i < $n; $i++)
 			{
 				if (trim($listing[$i]) == '' && isset($listing[$i + 1]))
@@ -461,10 +461,10 @@ if (!class_exists('ftp_connection'))
 					$current_dir = substr(trim($listing[++$i]), 0, -1);
 					$i++;
 				}
-	
+
 				// Okay, this file's name is:
 				$listing[$i] = $current_dir . '/' . trim(strlen($listing[$i]) > 30 ? strrchr($listing[$i], ' ') : $listing[$i]);
-	
+
 				if (substr($file, 0, 1) == '*' && substr($listing[$i], -(strlen($file) - 1)) == substr($file, 1))
 					return $listing[$i];
 				if (substr($file, -1) == '*' && substr($listing[$i], 0, strlen($file) - 1) == substr($file, 0, -1))
@@ -472,16 +472,16 @@ if (!class_exists('ftp_connection'))
 				if (basename($listing[$i]) == $file || $listing[$i] == $file)
 					return $listing[$i];
 			}
-	
+
 			return false;
 		}
-	
+
 		function create_dir($ftp_dir)
 		{
 			// We must be connected to the server to do something.
 			if (!is_resource($this->connection))
 				return false;
-	
+
 			// Make this new beautiful directory!
 			fwrite($this->connection, 'MKD ' . $ftp_dir . "\r\n");
 			if (!$this->check_response(257))
@@ -489,25 +489,25 @@ if (!class_exists('ftp_connection'))
 				$this->error = 'bad_file';
 				return false;
 			}
-	
+
 			return true;
 		}
-	
+
 		function detect_path($filesystem_path, $lookup_file = null)
 		{
 			$username = '';
-	
+
 			if (isset($_SERVER['DOCUMENT_ROOT']))
 			{
 				if (preg_match('~^/home[2]?/([^/]+?)/public_html~', $_SERVER['DOCUMENT_ROOT'], $match))
 				{
 					$username = $match[1];
-	
+
 					$path = strtr($_SERVER['DOCUMENT_ROOT'], array('/home/' . $match[1] . '/' => '', '/home2/' . $match[1] . '/' => ''));
-	
+
 					if (substr($path, -1) == '/')
 						$path = substr($path, 0, -1);
-	
+
 					if (strlen(dirname($_SERVER['PHP_SELF'])) > 1)
 						$path .= dirname($_SERVER['PHP_SELF']);
 				}
@@ -518,14 +518,14 @@ if (!class_exists('ftp_connection'))
 			}
 			else
 				$path = '';
-	
+
 			if (is_resource($this->connection) && $this->list_dir($path) == '')
 			{
 				$data = $this->list_dir('', true);
-	
+
 				if ($lookup_file === null)
 					$lookup_file = $_SERVER['PHP_SELF'];
-	
+
 				$found_path = dirname($this->locate('*' . basename(dirname($lookup_file)) . '/' . basename($lookup_file), $data));
 				if ($found_path == false)
 					$found_path = dirname($this->locate(basename($lookup_file)));
@@ -534,16 +534,16 @@ if (!class_exists('ftp_connection'))
 			}
 			elseif (is_resource($this->connection))
 				$found_path = true;
-	
+
 			return array($username, $path, isset($found_path));
 		}
-	
+
 		function close()
 		{
 			// Goodbye!
 			fwrite($this->connection, "QUIT\r\n");
 			fclose($this->connection);
-	
+
 			return true;
 		}
 	}
@@ -705,11 +705,11 @@ function upgradeExit($fallThrough = false)
 		{
 			$upcontext['upgrade_status']['curstep'] = $upcontext['current_step'];
 			$upcontext['form_url'] = $upgradeurl . '?step=' . $upcontext['current_step'] . '&amp;substep=' . $_GET['substep'] . '&amp;data=' . base64_encode(serialize($upcontext['upgrade_status']));
-	
+
 			// Custom stuff to pass back?
 			if (!empty($upcontext['query_string']))
 				$upcontext['form_url'] .= $upcontext['query_string'];
-	
+
 			call_user_func('template_' . $upcontext['sub_template']);
 		}
 
@@ -982,7 +982,7 @@ function checkLogin()
 {
 	global $boarddir, $sourcedir, $db_prefix, $language, $modSettings, $cachedir, $upgradeurl, $upcontext, $disable_security;
 	global $smfFunc, $db_type, $databases, $support_js;
-	
+
 	// Are we trying to login?
 	if (isset($_POST['contbutt']) && (!empty($_POST['user']) || $disable_security))
 	{
@@ -1020,10 +1020,10 @@ function checkLogin()
 			if ($smfFunc['db_num_rows']($request) != 0)
 			{
 				list ($id_member, $name, $password, $id_group, $addGroups) = $smfFunc['db_fetch_row']($request);
-	
+
 				$groups = explode(',', $addGroups);
 				$groups[] = $id_group;
-	
+
 				// Figure out the password using SMF's encryption - if what they typed is right.
 				if (isset($_REQUEST['hash_passwrd']) && strlen($_REQUEST['hash_passwrd']) == 40)
 				{
@@ -1283,7 +1283,7 @@ function BackupDatabase()
 			if (isset($_GET['xml']))
 				return upgradeExit();
 		}
-	
+
 		if ($is_debug && $command_line)
 		{
 			echo "\n Successful.'\n";
@@ -1377,7 +1377,7 @@ function DatabaseChanges()
 						array('\'smfVersion\'', '\'' . $file[2] . '\''),
 						array('variable'), __FILE__, __LINE__
 					);
-			
+
 					$modSettings['smfVersion'] = $file[2];
 				}
 
@@ -1608,7 +1608,7 @@ function CleanupMods()
 						$results = parseBoardMod($contents, true, $change['reverse'], $cur_theme_paths);
 					else
 						$results = parseModification($contents, true, $change['reverse'], $cur_theme_paths);
-	
+
 					// Are there any errors?
 					foreach ($results as $action)
 						if ($action['type'] == 'failure')
@@ -2295,7 +2295,7 @@ function parse_sql($filename)
 		function sql_error_handler($errno, $errstr, $errfile, $errline)
 		{
 			global $support_js;
-	
+
 			if ($support_js)
 				return true;
 			else
@@ -2364,7 +2364,7 @@ function parse_sql($filename)
 	foreach ($lines as $line_number => $line)
 	{
 		$do_current = $substep >= $_GET['substep'];
-		
+
 
 		// Get rid of any comments in the beginning of the line...
 		if (substr(trim($line), 0, 2) === '/*')
@@ -2484,9 +2484,9 @@ function parse_sql($filename)
 					$current_data = '';
 					continue;
 				}
-	
+
 				$current_data = strtr(substr(rtrim($current_data), 0, -1), array('{$db_prefix}' => $db_prefix, '{$boarddir}' => $boarddir, '{$sboarddir}' => addslashes($boarddir), '{$boardurl}' => $boardurl, '{$db_collation}' => $db_collation));
-	
+
 				upgrade_query($current_data);
 				// !!! This will be how it kinda does it once mysql all stripped out - needed for postgre (etc).
 				/*
@@ -2548,7 +2548,7 @@ function upgrade_query($string, $unbuffered = false)
 	{
 		$mysql_errno = mysql_errno($db_connection);
 		$error_query = in_array(substr(trim($string), 0, 11), array('INSERT INTO', 'UPDATE IGNO', 'ALTER TABLE', 'DROP TABLE ', 'ALTER IGNOR'));
-	
+
 		// Error numbers:
 		//    1016: Can't open file '....MYI'
 		//    1050: Table already exists.
@@ -2561,13 +2561,13 @@ function upgrade_query($string, $unbuffered = false)
 		//    1091: Can't drop key, doesn't exist.
 		//    1146: Table doesn't exist.
 		//    2013: Lost connection to server during query.
-	
+
 		if ($mysql_errno == 1016)
 		{
 			if (preg_match('~\'([^\.\']+)~', $db_error_message, $match) != 0 && !empty($match[1]))
 				mysql_query("
 					REPAIR TABLE `$match[1]`");
-	
+
 			$result = mysql_query($string);
 			if ($result !== false)
 				return $result;
@@ -2576,11 +2576,11 @@ function upgrade_query($string, $unbuffered = false)
 		{
 			$db_connection = mysql_connect($db_server, $db_user, $db_passwd);
 			mysql_select_db($db_name, $db_connection);
-	
+
 			if ($db_connection)
 			{
 				$result = mysql_query($string);
-	
+
 				if ($result !== false)
 					return $result;
 			}
@@ -2611,7 +2611,7 @@ function upgrade_query($string, $unbuffered = false)
 				return true;
 		}
 	}
-	
+
 
 	// Get the query string so we pass everything.
 	$query_string = '';
@@ -2732,7 +2732,7 @@ function protected_alter($change, $substep, $is_test = false)
 			$success = upgrade_query("
 				ALTER TABLE {$db_prefix}$change[table]
 				$change[text]", true) !== false;
-			
+
 			if (!$success)
 				return false;
 
@@ -3263,7 +3263,7 @@ function template_chmod()
 		<div class="panel">
 			<h2>Your FTP connection information</h2>
 			<h3>The upgrader can fix any issues with file permissions to make upgrading as simple as possible. Simply enter your connection information below or alternatively click <a href="#" onclick="alert(\'The following files needs to be made writable to continue:\\n', implode('\\n', $upcontext['chmod']['files']), '\'); return false;">here</a> for a list of files which need to be changed.</h3>';
-	
+
 	if (!empty($upcontext['chmod']['ftp_error']))
 		echo '
 			<div class="error_message">
@@ -3626,16 +3626,16 @@ function template_welcome_message()
 					<td colspan="2">
 						<label for="cont"><input type="checkbox" id="cont" name="cont" checked="checked" />Continue from step reached during last execution of upgrade script.</label>
 					</td>
-				</tr>';		
+				</tr>';
 	}
 
 	echo '
 			</table><br />
 			<span class="smalltext">
-				<b>Note:</b> If necessary the above security check can be bypassed for users who may administrate a server but not have admin rights on the forum. In order the bypass the above check simply open &quot;upgrade.php&quot; in a text editor and replace &quot;$disable_security = 0;&quot; with &quot;$disable_security = 1;&quot; and refresh this page.
+				<b>Note:</b> If necessary the above security check can be bypassed for users who may administrate a server but not have admin rights on the forum. In order to bypass the above check simply open &quot;upgrade.php&quot; in a text editor and replace &quot;$disable_security = 0;&quot; with &quot;$disable_security = 1;&quot; and refresh this page.
 			</span>
 			<input type="hidden" name="login_attempt" id="login_attempt" value="1" />
-			<input type="hidden" name="js_works" id="js_works" value="0" />';				
+			<input type="hidden" name="js_works" id="js_works" value="0" />';
 
 	// Say we want the continue button!
 	$upcontext['continue'] = !empty($upcontext['user']['id']) && time() - $upcontext['user']['updated'] < $upcontext['inactive_timeout'] ? 2 : 1;
@@ -3849,7 +3849,7 @@ function template_database_changes()
 			<div style="padding-left: 6ex;" id="error_message">', isset($upcontext['error_message']) ? $upcontext['error_message'] : '', '</div>
 		</div>';
 
-	
+
 
 	// We want to continue at some point!
 	$upcontext['continue'] = $support_js ? 2 : 1;
@@ -3996,7 +3996,7 @@ function template_database_changes()
 					document.getElementById(\'debug_section\').style.display = "none"';
 
 		echo '
-		
+
 					document.getElementById(\'commess\').style.display = "";
 					document.getElementById(\'contbutt\').disabled = 0;
 					document.getElementById(\'database_done\').value = 1;';
@@ -4275,7 +4275,7 @@ function template_upgrade_templates()
 			foreach ($upcontext['themes'] as $theme)
 				$themeFiles += count($theme['files']);
 		echo sprintf('Found <b>%d</b> language files and <b>%d</b> templates requiring an update so far.', $langFiles, $themeFiles) . '<br />';
-	
+
 		// What we're currently doing?
 		if (!empty($upcontext['current_message']))
 			echo '
