@@ -129,7 +129,10 @@ function DeleteMessage()
 	if (allowedTo('delete_any') && (!allowedTo('delete_own') || $poster != $user_info['id']))
 		logAction('delete', array('topic' => $topic, 'subject' => $subject, 'member' => $starter, 'board' => $board));
 
-	if ($full_topic)
+	// We want to redirect back to recent action.
+	if (isset($_REQUEST['recent']))
+		redirectexit('action=recent');
+	elseif ($full_topic)
 		redirectexit('board=' . $board . '.0');
 	else
 		redirectexit('topic=' . $topic . '.' . $_REQUEST['start']);
@@ -173,7 +176,7 @@ function RemoveOldTopics2()
 		SELECT t.id_topic
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
-		WHERE 
+		WHERE
 			m.poster_time < " . (time() - 3600 * 24 * $_POST['maxdays']) . "$condition
 			AND t.id_board IN (" . implode(', ', array_keys($_POST['boards'])) . ')', __FILE__, __LINE__);
 	$topics = array();
@@ -265,7 +268,7 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 
 			// Close reports that are being recycled.
 			require_once($sourcedir . '/ModerationCenter.php');
-			
+
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_reported
 				SET closed = 1
@@ -518,7 +521,7 @@ function removeMessage($message, $decreasePostCount = true)
 
 	// Close any moderation reports for this message.
 	require_once($sourcedir . '/ModerationCenter.php');
-	
+
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}log_reported
 		SET closed = 1

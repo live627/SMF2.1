@@ -89,18 +89,6 @@ function RecentPosts()
 {
 	global $txt, $scripturl, $db_prefix, $user_info, $context, $modSettings, $sourcedir, $board, $smfFunc;
 
-	// They're deleting something... just skip back to it.
-	if (isset($_GET['delete']))
-	{
-		checkSession('get');
-
-		// Luckily, removeMessage() checks permissions for us.
-		require_once($sourcedir . '/RemoveTopic.php');
-		removeMessage((int) $_GET['delete']);
-
-		redirectexit('action=recent');
-	}
-
 	loadTemplate('Recent');
 	$context['page_title'] = $txt['recent_posts'];
 
@@ -402,14 +390,14 @@ function UnreadTopics()
 	if (isset($_REQUEST['children']) && (!empty($board) || !empty($_REQUEST['boards'])))
 	{
 		$boards = array();
-		
+
 		if (!empty($_REQUEST['boards']))
 		{
 			$_REQUEST['boards'] = explode(',', $_REQUEST['boards']);
 			foreach ($_REQUEST['boards'] as $b)
 				$boards[] = (int) $b;
 		}
-		
+
 		if (!empty($board))
 			$boards[] = (int) $board;
 
@@ -422,11 +410,11 @@ function UnreadTopics()
 				AND b.id_board NOT IN (" . implode(', ', $boards) . ")
 			ORDER BY child_level ASC
 			", __FILE__, __LINE__);
-			
+
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (in_array($row['id_parent'], $boards))
 				$boards[] = $row['id_board'];
-				
+
 		$smfFunc['db_free_result']($request);
 
 		if(empty($boards))
