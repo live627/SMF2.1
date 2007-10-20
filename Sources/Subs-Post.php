@@ -1813,6 +1813,9 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		updateStats('topic', true);
 		updateStats('subject', $topicOptions['id'], $msgOptions['subject']);
+		//What if we want to export new topics out to a CMS?
+		if (isset($modSettings['integrate_create_topic']) && function_exists($modSettings['integrate_create_topic']))
+			$modSettings['integrate_create_topic']($msgOptions, $topicOptions, $posterOptions);
 	}
 	// The topic already exists, it only needs a little updating.
 	else

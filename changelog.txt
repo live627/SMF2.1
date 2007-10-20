@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2865 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2866 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -35,6 +35,8 @@ October 2007
  ! Sort attachments in profile by date descending by default. (Profile.php, Profile template)
  * Placed the sort image after the column name for consistensy in Show Attachments section in Profile page. (Profile template)
  ! When deleting posts from the recent posts section, make sure that the modaction is logged. (Recent.php, RemoveTopic.php, Recent template)
+ ! Make sure the bridge knows where the javascript files are. (Mambo bridge/smf.php)
+ + Added a hook to export the first post in a new topic. (Subs-Post.php)
 
 
 September 2007
