@@ -17,14 +17,14 @@ ul.admin_menu
 {	
 	display: table-cell;
 	background: url(../images/admintab_right.gif) top right no-repeat;
-	width: 32em;
+	width: 34em;
 }
 
 /* ie6 special styles :P */ 
 * html #adm_container, * html ul.admin_menu
 {
 	height: 1%;
-	width: 30em;
+	width: 33em;
 }
 /* end */
 

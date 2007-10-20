@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2866 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2867 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -35,12 +35,13 @@ October 2007
  ! Sort attachments in profile by date descending by default. (Profile.php, Profile template)
  * Placed the sort image after the column name for consistensy in Show Attachments section in Profile page. (Profile template)
  ! When deleting posts from the recent posts section, make sure that the modaction is logged. (Recent.php, RemoveTopic.php, Recent template)
+* Adding new images to permissions for membergroup screen (ManagePermissions.template, images from admin folder)
+ 
+ 
+ September 2007
+=======
  ! Make sure the bridge knows where the javascript files are. (Mambo bridge/smf.php)
  + Added a hook to export the first post in a new topic. (Subs-Post.php)
-
-
-September 2007
---------------------------------------------------------------------------------
  ! Update Mambo bridge for SMF 2.0. (Mambo bridge/several files)
  ! BoardIndex was sometimes showing unapproved topic names. (Subs-Post.php, Post.php)
  ! Fixed undefined index error due to the mod cache not being set for guests. (Load.php)
