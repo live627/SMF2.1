@@ -2179,7 +2179,7 @@ function template_issueWarning()
 
 	echo '
 	<form action="', $scripturl, '?action=profile;u=', $context['id_member'], ';sa=issueWarning" method="post" accept-charset="', $context['character_set'], '">
-		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<table border="0" width="85%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="2" height="26">
 					&nbsp;<img src="', $settings['images_url'], '/icons/profile_sm.gif" alt="" align="top" />&nbsp;', $txt['profile_issue_warning'], '
@@ -2302,7 +2302,7 @@ function template_issueWarning()
 
 	// Previous warnings?
 	echo '
-		<table border="0" width="85%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<table border="0" width="85%" cellspacing="1" cellpadding="5" class="bordercolor" align="center">
 			<tr class="titlebg">
 				<td colspan="4">
 					', $txt['profile_warning_previous'], '

@@ -333,7 +333,7 @@ function template_body_above()
 
 	// The main content should go here.
 	echo '
-	<div id="bodyarea" style="padding: 1ex 0px 2ex 0px;">';
+	<div id="bodyarea" style="padding: 2em 0px 2em 0px;">';
 }
 
 function template_body_below()
@@ -454,7 +454,7 @@ function theme_linktree()
 {
 	global $context, $settings, $options;
 
-	echo '<div class="nav" style="font-size: smaller; margin-bottom: 2ex; margin-top: 2ex;">';
+	echo '<div class="nav" style="font-size: smaller; margin-bottom: 2ex;">';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
 	foreach ($context['linktree'] as $link_num => $tree)

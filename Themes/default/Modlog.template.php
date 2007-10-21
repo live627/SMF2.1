@@ -10,8 +10,8 @@ function template_main()
 			<input type="hidden" name="order" value="', $context['order'], '" />
 			<input type="hidden" name="dir" value="', $context['dir'], '" />
 			<input type="hidden" name="start" value="', $context['start'], '" />
-			<div class="tborder">
-				<table border="0" cellspacing="1" cellpadding="4" width="100%">
+			<div>
+				<table border="0" cellspacing="1" cellpadding="4" width="100%" class="bordercolor">
 					<tr class="titlebg">
 						<td>
 							<div style="float: left;"><a href="', $scripturl, '?action=helpadmin;help=modlog" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" align="top" /></a> ', $txt['modlog_moderation_log'], '</div>
@@ -30,7 +30,7 @@ function template_main()
 					</tr>';
 	echo '
 				</table>
-				<table border="0" cellspacing="1" cellpadding="4" width="100%">
+				<table border="0" cellspacing="1" cellpadding="4" class="bordercolor" width="100%">
 					<tr class="titlebg">';
 	if ($context['can_delete'])
 		echo '
@@ -92,7 +92,7 @@ function template_main()
 	echo '
 				</table>
 				<table border="0" cellspacing="1" cellpadding="4" width="100%">
-					<tr class="titlebg">
+					<tr class="titlebg2">
 						<td align="right" valign="bottom">
 							<div style="float: left;">
 								', $txt['modlog_search'], ' (', $txt['modlog_by'], ': ', $context['search']['label'], '):

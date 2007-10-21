@@ -7,3 +7,10 @@ Settings_bak.php
 *.sln
 *.suo
 *.zip
+install.php
+install_2-0_mysql.sql
+install_2-0_postgresql.sql
+install_2-0_sqlite.sql
+Settings.php
+Settings_bak.php
+repair_settings.php

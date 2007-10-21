@@ -7,7 +7,7 @@ function template_moderation_center()
 
 	// Show a welcome message to the user.
 	echo '
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td align="center" colspan="2" class="largetext">', $txt['moderation_center'], '</td>
 			</tr><tr>
@@ -262,7 +262,7 @@ function template_reported_posts()
 
 	echo '
 	<form action="', $scripturl, '?action=moderate;area=reports', $context['view_closed'] ? ';sa=closed' : '', ';start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $context['view_closed'] ? $txt['mc_reportedp_closed'] : $txt['mc_reportedp_open'], '</td>
 			</tr><tr class="catbg">
@@ -340,7 +340,7 @@ function template_unapproved_posts()
 	// Just a big table of it all really...
 	echo '
 	<form action="', $scripturl, '?action=moderate;area=postmod;sa=posts;start=', $context['start'], ';sa=', $context['current_view'], '" method="post" accept-charset="', $context['character_set'], '">
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $txt['mc_unapproved_posts'], '</td>
 			</tr>';
@@ -414,7 +414,7 @@ function template_unapproved_posts()
 	}
 
 	echo '
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td align="right">
 					<select name="do" onchange="if (this.value != 0 && confirm(\'', $txt['mc_unapproved_sure'], '\')) submit();">
@@ -439,7 +439,7 @@ function template_unapproved_attachments()
 	// Show all the attachments still oustanding.
 	echo '
 	<form action="', $scripturl, '?action=moderate;area=attachmod;sa=attachments;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="5">', $txt['mc_unapproved_attachments'], '</td>
 			</tr>';
@@ -513,16 +513,16 @@ function template_viewmodreport()
 {
 	global $context, $scripturl, $txt;
 	echo '
-	<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr class="catbg">
 			<td colspan="2">
 				', sprintf($txt['mc_viewmodreport'], $context['report']['message_link'], $context['report']['author']['link']), '
 			</td>
-		</tr><tr class="windowbg">
+		</tr><tr class="titlebg2">
 			<td>
 				', sprintf($txt['mc_modreport_summary'], $context['report']['num_reports'], $context['report']['last_updated']), '
 			</td>
-			<td align="right">';
+			<td align="center">';
 
 	// Make the buttons.
 	$close_button = create_button('close.gif', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', $context['report']['closed'] ? 'mc_reportedp_open' : 'mc_reportedp_close', 'align="middle"');
@@ -539,18 +539,18 @@ function template_viewmodreport()
 			</td>
 		</tr>
 	</table><br />
-	<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr class="catbg">
 			<td>', $txt['mc_modreport_whoreported_title'], '</td>
 		</tr>';
-	$alt = false;
 
 	foreach ($context['report']['comments'] as $comment)
 	{
-		echo '<tr class="', $alt ? 'windowbg2' : 'windowbg', '">
-			<td>
-				', sprintf($txt['mc_modreport_whoreported_data'], $comment['member']['link'], $comment['time']), '<br />', $comment['message'], '
-			</td>
+		echo '
+		<tr class="windowbg2">
+			<td>	', sprintf($txt['mc_modreport_whoreported_data'], $comment['member']['link'], $comment['time']), '</td>
+		</tr><tr class="windowbg">
+			<td class="middletext">&#171; ', $comment['message'], ' &#187;</td>
 		</tr>';
 	}
 	echo '
@@ -561,7 +561,7 @@ function template_viewmodreport()
 	if (!empty($context['entries']))
 	{
 		echo '
-	<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+	<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 		<tr class="catbg">
 			<td colspan="5">
 				', $txt['mc_modreport_modactions'], '
@@ -604,7 +604,7 @@ function template_user_watches_member()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="5">', $txt['mc_watched_users_title'], ' - ', $txt['mc_watched_users_member'], '</td>
 			</tr><tr class="catbg">
@@ -665,7 +665,7 @@ function template_user_watches_posts()
 
 	echo '
 	<form action="', $scripturl, '?action=moderate;area=userwatch;sa=post;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['mc_watched_users_delete_posts'], '\');">
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td>', $txt['mc_watched_users_title'], ' - ', $txt['mc_watched_users_post'], '</td>
 			</tr><tr class="catbg">
@@ -731,7 +731,7 @@ function template_warning_log()
 	global $settings, $options, $context, $txt, $scripturl;
 
 	echo '
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
+		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
 			<tr class="titlebg">
 				<td colspan="5">', $txt['mc_warning_log'], '</td>
 			</tr><tr class="catbg">
@@ -747,11 +747,11 @@ function template_warning_log()
 	foreach ($context['warnings'] as $warning)
 	{
 		echo '
-			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td class="smalltext">', $warning['issuer']['link'], '</td>
-				<td class="smalltext">', $warning['recipient']['link'], '</td>
-				<td class="smalltext">', $warning['time'], '</td>
-				<td class="smalltext">
+			<tr class="middletext ', $alternate ? 'windowbg' : 'windowbg2', '">
+				<td>', $warning['issuer']['link'], '</td>
+				<td>', $warning['recipient']['link'], '</td>
+				<td>', $warning['time'], '</td>
+				<td>
 					<div style="float: left;">
 						', $warning['reason'], '
 					</div>';
@@ -759,11 +759,11 @@ function template_warning_log()
 		if (!empty($warning['id_notice']))
 			echo '
 					<div style="float: right;">
-						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" title="', $txt['profile_warning_previous_notice'], '">!</a>
+						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" title="', $txt['profile_warning_previous_notice'], '"><img src="' , $settings['default_images_url'] , '/filter.gif" alt="', $txt['profile_warning_previous_notice'], '" /></a>
 					</div>';
 		echo '
 				</td>
-				<td class="smalltext">', $warning['counter'], '</td>
+				<td>', $warning['counter'], '</td>
 			</tr>';
 		$alternate = !$alternate;
 	}
@@ -887,21 +887,21 @@ function template_show_notice()
 		</style>
 	</head>
 	<body>
-		<table width="100%" cellpadding="4" cellspacing="0" class="tborder" />
+		<table width="100%" cellpadding="5" cellspacing="0" class="tborder" />
 			<tr>
 				<td class="catbg">
 					', $txt['show_notice'], '
 				</td>
 			</tr>
 			<tr>
-				<td class="windowbg">
+				<td class="titlebg2">
 					<b>', $txt['show_notice_subject'], '</b>: ', $context['notice_subject'], '
 				</td>
 			</tr>
 			<tr>
 				<td class="windowbg">
-					<b>', $txt['show_notice_text'], '</b>:<br />
-					<div class="smalltext" style="width: 100%; height: 50px; background-color: white;border: 1px solid black;">', $context['notice_body'], '</div>
+					<b>', $txt['show_notice_text'], ':</b>
+					<div class="tborder" style="padding: 10px;">', $context['notice_body'], '</div>
 				</td>
 			</tr>
 		</table>

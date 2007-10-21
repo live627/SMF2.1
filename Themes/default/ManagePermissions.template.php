@@ -688,12 +688,12 @@ function template_postmod_permissions()
 					</td>
 				</tr>
 			</table>
-	<div class="smalltext">
+	<p class="smalltext" style="padding-left: 10px;">
 		<b>', $txt['permissions_post_moderation_legend'], ':</b><br />
 		<img src="', $settings['default_images_url'], '/admin/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /> - ', $txt['permissions_post_moderation_allow'], '<br />
 		<img src="', $settings['default_images_url'], '/admin/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /> - ', $txt['permissions_post_moderation_moderate'], '<br />
 		<img src="', $settings['default_images_url'], '/admin/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /> - ', $txt['permissions_post_moderation_disallow'], '
-	</div>';
+	</p>';
 }
 
 ?>
