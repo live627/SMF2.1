@@ -93,6 +93,10 @@ function DeleteMessage()
 
 	$_REQUEST['msg'] = (int) $_REQUEST['msg'];
 
+	// Is $topic set?
+	if (empty($topic) && isset($_REQUEST['topic']))
+		$topic = (int) $_REQUEST['topic'];
+
 	$request = $smfFunc['db_query']('', "
 		SELECT t.id_member_started, m.id_member, m.subject, m.poster_time, m.approved
 		FROM {$db_prefix}topics AS t
