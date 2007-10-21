@@ -136,7 +136,20 @@ function template_main()
 			{
 				echo '
 	<tr>
-		<td class="windowbg" width="6%" align="center" valign="top"><img src="', $settings['images_url'], $board['new'] ? '/on.gif" alt="' . $txt['new_posts'] . '" title="' . $txt['new_posts'] : '/off.gif" alt="' . $txt['old_posts'] . '" title="' . $txt['old_posts'], '" border="0" /></td>
+		<td class="windowbg" width="6%" align="center" valign="top">';
+
+				// If the board or children is new, show an indicator.
+				if ($board['new'] || $board['children_new'])
+					echo '<img src="', $settings['images_url'], '/on', $board['new'] ? '' : '2', '.gif" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" border="0" />';
+				// Is it a redirection board?
+				elseif ($board['is_redirect'])
+					echo '<img src="', $settings['images_url'], '/redirect.gif" alt="*" title="*" border="0" />';
+				// No new posts at all! The agony!!
+				else
+					echo '<img src="', $settings['images_url'], '/off.gif" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
+
+				echo '
+		</td>
 		<td class="windowbg2" align="left" width="60%">
 			<a name="b', $board['id'], '"></a>
 			<b>', $board['link'], '</b><br />
