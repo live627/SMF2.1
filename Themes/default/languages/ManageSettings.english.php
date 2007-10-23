@@ -248,4 +248,25 @@ $txt['languages_rtl'] = 'Enable &quot;Right to Left&quot; Mode';
 $txt['lang_file_desc_index'] = 'General Strings';
 $txt['lang_file_desc_EmailTemplates'] = 'Email Templates';
 
+$txt['languages_download'] = 'Download Language Pack';
+$txt['languages_download_note'] = 'This page lists all the files that are contained within the language pack and some useful information about each one. All files that have their associated check box marked will be copied.';
+$txt['languages_download_info'] = '<strong>Note:</strong> Files which have the status &quot;Not Writable&quot means SMF will not be able to copy this file to the directory at the present and you must make the destination writable either using an FTP client or by filling in your details at the bottom of the page.<br />
+	The Version information for a file displays the last SMF version which it was updated for. If it is indicated in green then this is a newer version than you have at current. If amber this indicates it\'s the same version number as at current, red indicates you have a newer version installed than contained in the pack.<br />
+	Where a file already exists on your forum the &quot;Already Exists&quot; column will have one of two values. &quot;Identical&quot indicates that the file already exists in an identical form and need not be overwritten. &quot;Different&quot; means that the contents vary in some way and overwriting is probably the optimum solution.';
+
+$txt['languages_download_main_files'] = 'Primary Files';
+$txt['languages_download_filename'] = 'File Name';
+$txt['languages_download_dest'] = 'Destination';
+$txt['languages_download_writable'] = 'Writable';
+$txt['languages_download_version'] = 'Version';
+$txt['languages_download_older'] = 'You have a newer version of this file installed, overwriting is not recommended.';
+$txt['languages_download_exists'] = 'Already Exists';
+$txt['languages_download_exists_same'] = 'Identical';
+$txt['languages_download_exists_different'] = 'Different';
+$txt['languages_download_copy'] = 'Copy';
+$txt['languages_download_not_chmod'] = 'You cannot proceed with the installation until all files selected to be copied are writable.';
+$txt['languages_download_illegal_paths'] = 'Package contains illegal paths - please contact Simple Machines';
+$txt['languages_download_complete'] = 'Installation Complete';
+$txt['languages_download_complete_desc'] = 'Language pack installed successfully. Please click <a href="%1$s">here</a> to return to the languages page';
+
 ?>

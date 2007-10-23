@@ -1896,7 +1896,7 @@ function template_language_files()
 	template_show_list('language_list');
 
 	// Temporary until languages installing on PM works.
-	return;
+	//return;
 	// Add a new language?
 	echo '
 	<form action="', $scripturl, '?action=admin;area=serversettings;sa=languages;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
@@ -1964,6 +1964,192 @@ function template_language_files()
 	echo '
 	</table>
 	</form>';
+}
+
+// Download a new language file?
+function template_download_language()
+{
+	global $context, $settings, $options, $txt, $scripturl;
+
+	// Actually finished?
+	if (!empty($context['install_complete']))
+	{
+		echo '
+	<div>
+		<table border="0" width="80%" cellspacing="0" align="center" cellpadding="4" class="tborder">
+			<tr class="titlebg">
+				<td>', $txt['languages_download_complete'], '</td>
+			</tr>
+			<tr class="windowbg">
+				<td style="padding: 3ex;">
+					', $context['install_complete'], '
+				</td>
+			</tr>
+		</table>
+	</div>';
+		return;
+	}
+
+	// An error?
+	if (!empty($context['error_message']))
+		echo '
+	<div style="width: 98%; border: 1px solid red; background-color: #DDDDDD;">
+		<span style="color: red;">', $context['error_message'], '</span>
+	</div>';
+
+	// Provide something of an introduction...
+	echo '
+	<form action="', $scripturl, '?action=admin;area=serversettings;sa=downloadlang;did=', $context['download_id'], ';sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
+	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
+		<tr class="titlebg">
+			<td>
+				', $txt['languages_download'], '
+			</td>
+		</tr>
+		<tr class="windowbg">
+			<td>
+				', $txt['languages_download_note'], '
+				<div class="smalltext">
+					', $txt['languages_download_info'], '
+				</div>
+			</td>
+		</tr>
+	</table><br />';
+
+	// Show the main files.
+	template_show_list('lang_main_files_list');
+
+	// Now all the images and the like, javascript hidden cause there are so fecking many.
+	echo '
+	<br />
+	<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">
+		<tr class="titlebg">
+			<td colspan="4">
+				', $txt['languages_download'], '
+			</td>
+		</tr>
+		<tr class="titlebg">
+			<td align="center">
+				', $txt['languages_download_filename'], '
+			</td>
+			<td align="center">
+				', $txt['languages_download_writable'], '
+			</td>
+			<td align="center">
+				', $txt['languages_download_exists'], '
+			</td>
+			<td align="center" style="text-align: center; width: 4%;">
+				', $txt['languages_download_copy'], '
+			</td>
+		</tr>';
+
+	foreach ($context['files']['images'] as $theme => $group)
+	{
+		$count = 0;
+		echo '
+		<tr class="catbg">
+			<td colspan="4">
+				<a href="#" onclick="togglePanel', $theme, '.toggle(); return false;"><img src="', $settings['images_url'], '/sort_down.gif" id="toggle_image_', $theme, '" alt="*" />&nbsp;', isset($context['theme_names'][$theme]) ? $context['theme_names'][$theme] : $theme, '</a>
+			</td>
+		</tr>';
+
+		foreach ($group as $file)
+		{
+			echo '
+		<tr class="windowbg2" id="', $theme, '-', $count++, '">
+			<td>
+				<strong>', $file['name'], '</strong><br />
+				<span class="smalltext">', $txt['languages_download_dest'], ': ', $file['destination'], '</span>
+			</td>
+			<td>
+				<span style="color: ', ($file['writable'] ? 'green' : 'red'), ';">', ($file['writable'] ? $txt['yes'] : $txt['no']), '</span>
+			</td>
+			<td>
+				', $file['exists'] ? ($file['exists'] == 'same' ? $txt['languages_download_exists_same'] : $txt['languages_download_exists_different']) : $txt['no'], '
+			</td>
+			<td>
+				<input type="checkbox" name="copy_file[]" value="', $file['generaldest'], '" ', ($file['default_copy'] ? 'checked="checked"' : ''), ' class="check" />
+			</td>
+		</tr>';
+		}
+	}
+
+	echo '
+	</table>';
+
+	// Do we want some FTP baby?
+	if (!empty($context['still_not_writable']))
+	{
+		echo '
+		<br />
+		<div class="tborder">
+			<div class="titlebg" style="padding: 4px;">', $txt['package_ftp_necessary'], '</div>
+			<div class="windowbg" style="padding: 4px;">
+				', $txt['package_ftp_why'];
+
+		if (!empty($context['package_ftp']['error']))
+			echo '
+				<div class="bordercolor" style="padding: 1px; margin: 1ex;"><div class="windowbg2" style="padding: 1ex;">
+					<tt>', $context['package_ftp']['error'], '</tt>
+				</div></div>';
+
+		echo '
+				<table width="520" cellpadding="0" cellspacing="0" border="0" align="center" style="margin-bottom: 1ex; margin-top: 2ex;">
+					<tr>
+						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_server">', $txt['package_ftp_server'], ':</label></td>
+						<td style="padding-bottom: 1ex;">
+							<div style="float: right; margin-right: 1px;"><label for="ftp_port" style="padding-top: 2px; padding-right: 2ex;">', $txt['package_ftp_port'], ':&nbsp;</label> <input type="text" size="3" name="ftp_port" id="ftp_port" value="', isset($context['package_ftp']['port']) ? $context['package_ftp']['port'] : (isset($modSettings['package_port']) ? $modSettings['package_port'] : '21'), '" /></div>
+							<input type="text" size="30" name="ftp_server" id="ftp_server" value="', isset($context['package_ftp']['server']) ? $context['package_ftp']['server'] : (isset($modSettings['package_server']) ? $modSettings['package_server'] : 'localhost'), '" style="width: 70%;" />
+						</td>
+					</tr><tr>
+						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_username">', $txt['package_ftp_username'], ':</label></td>
+						<td style="padding-bottom: 1ex;">
+							<input type="text" size="50" name="ftp_username" id="ftp_username" value="', isset($context['package_ftp']['username']) ? $context['package_ftp']['username'] : (isset($modSettings['package_username']) ? $modSettings['package_username'] : ''), '" style="width: 99%;" />
+						</td>
+					</tr><tr>
+						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_password">', $txt['package_ftp_password'], ':</label></td>
+						<td style="padding-bottom: 1ex;">
+							<input type="password" size="50" name="ftp_password" id="ftp_password" style="width: 99%;" />
+						</td>
+					</tr><tr>
+						<td width="26%" valign="top" style="padding-top: 2px; padding-right: 2ex;"><label for="ftp_path">', $txt['package_ftp_path'], ':</label></td>
+						<td style="padding-bottom: 1ex;">
+							<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" />
+						</td>
+					</tr>
+				</table><br />				
+			</div></div>';
+	}
+
+	// Install?
+	echo '
+	<div align="right" style="margin: 1ex;"><input type="submit" name="do_install" value="', $txt['add_language_smf_install'], '" /></div>
+	</form>';
+
+	// The javascript for expand and collapse of sections.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
+
+	// Each theme gets its own handler.
+	foreach ($context['files']['images'] as $theme => $group)
+	{
+		$count = 0;
+		echo '
+		var togglePanel', $theme, ' = new smfToggle("togglePanel', $theme, '", true);
+		togglePanel', $theme, '.addToggleImage("toggle_image_', $theme, '", "/sort_down.gif", "/selected.gif");';
+
+		// Stick in all the panels.
+		foreach ($group as $file)
+			echo '
+		togglePanel', $theme, '.addTogglePanel("', $theme, '-', $count++, '");';
+
+		// Now do the toggle...
+		echo '
+		togglePanel', $theme, '.toggle(1);';
+	}
+
+	echo '
+	// ]]></script>';
 }
 
 // Edit some language entries?

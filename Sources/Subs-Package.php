@@ -31,12 +31,12 @@ if (!defined('SMF'))
 	Not to mention a few functions to make file handling easier.
 
 	array read_tgz_file(string filename, string destination,
-			bool single_file = false, bool overwrite = false)
+			bool single_file = false, bool overwrite = false, array files_to_extract = null)
 		- reads a .tar.gz file, filename, in and extracts file(s) from it.
 		- essentially just a shortcut for read_tgz_data().
 
 	array read_tgz_data(string data, string destination,
-			bool single_file = false, bool overwrite = false)
+			bool single_file = false, bool overwrite = false, array files_to_extract = null)
 		- extracts a file or files from the .tar.gz contained in data.
 		- detects if the file is really a .zip file, and if so returns the
 		  result of read_zip_data
@@ -52,9 +52,10 @@ if (!defined('SMF'))
 		  is specified.
 		- requires zlib support be built into PHP.
 		- returns an array of the files extracted.
+		- if files_to_extract is not equal to null only extracts file within this array.
 
 	array read_zip_data(string data, string destination,
-			bool single_file = false, bool overwrite = false)
+			bool single_file = false, bool overwrite = false, array files_to_extract = null)
 		- extracts a file or files from the .zip contained in data.
 		- if destination is null, returns a list of files in the archive.
 		- if single_file is true, returns the contents of the file specified
@@ -68,6 +69,7 @@ if (!defined('SMF'))
 		  is specified.
 		- requires zlib support be built into PHP.
 		- returns an array of the files extracted.
+		- if files_to_extract is not equal to null only extracts file within this array.
 
 	bool url_exists(string url)
 		- checks to see if url is valid, and returns a 200 status code.
@@ -93,7 +95,7 @@ if (!defined('SMF'))
 		  information.
 		- in the array returned, an xmlArray is available in 'xml'.
 
-	void packageRequireFTP(string destination_url, array files = none)
+	void packageRequireFTP(string destination_url, array files = none, bool return = false)
 		// !!!
 
 	array parsePackageInfo(xmlArray &package, bool testing_only = true,
@@ -187,7 +189,7 @@ if (!defined('SMF'))
 */
 
 // Get the data from the file and extract it.
-function read_tgz_file($gzfilename, $destination, $single_file = false, $overwrite = false)
+function read_tgz_file($gzfilename, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
 {
 	if (substr($gzfilename, 0, 7) == 'http://')
 	{
@@ -204,11 +206,11 @@ function read_tgz_file($gzfilename, $destination, $single_file = false, $overwri
 			return false;
 	}
 
-	return read_tgz_data($data, $destination, $single_file, $overwrite);
+	return read_tgz_data($data, $destination, $single_file, $overwrite, $files_to_extract);
 }
 
 // Extract tar.gz data.  If destination is null, return a listing.
-function read_tgz_data($data, $destination, $single_file = false, $overwrite = false)
+function read_tgz_data($data, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
 {
 	// This function sorta needs gzinflate!
 	if (!function_exists('gzinflate'))
@@ -227,7 +229,7 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 	{
 		// Okay, this ain't no tar.gz, but maybe it's a zip file.
 		if (substr($data, 0, 2) == 'PK')
-			return read_zip_data($data, $destination, $single_file, $overwrite);
+			return read_zip_data($data, $destination, $single_file, $overwrite, $files_to_extract);
 		else
 			return false;
 	}
@@ -318,6 +320,9 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 			// If we're looking for another file, keep going.
 			elseif ($single_file)
 				continue;
+			// Looking for restricted files?
+			elseif ($files_to_extract !== null && !in_array($current['filename'], $files_to_extract))
+				continue;
 
 			package_put_contents($destination . '/' . $current['filename'], $current['data']);
 		}
@@ -325,6 +330,8 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 		if (substr($current['filename'], -1, 1) != '/')
 			$return[] = array(
 				'filename' => $current['filename'],
+				'md5' => md5($current['data']),
+				'preview' => substr($current['data'], 0, 100),
 				'size' => $current['size'],
 				'skipped' => false
 			);
@@ -340,7 +347,7 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 }
 
 // Extract zip data.  If destination is null, return a listing.
-function read_zip_data($data, $destination, $single_file = false, $overwrite = false)
+function read_zip_data($data, $destination, $single_file = false, $overwrite = false, $files_to_extract = null)
 {
 	umask(0);
 	if ($destination !== null && !file_exists($destination) && !$single_file)
@@ -401,28 +408,31 @@ function read_zip_data($data, $destination, $single_file = false, $overwrite = f
 		else
 			$write_this = false;
 
+		// Check that the data is there and does exist.
+		if (substr($data, $file_info['offset'], 4) != 'PK' . chr(3) . chr(4))
+			return false;
+
+		// Get the actual compressed data.
+		$file_info['data'] = substr($data, $file_info['offset'] + 30 + $file_info['filename_len'] + $file_info['extra_len'], $file_info['compressed_size']);
+
+		// Only inflate it if we need to ;).
+		if ($file_info['compressed_size'] != $file_info['size'])
+			$file_info['data'] = @gzinflate($file_info['data']);
+
 		// Okay!  We can write this file, looks good from here...
 		if ($write_this && $destination !== null)
 		{
 			if (strpos($file_info['filename'], '/') !== false && !$single_file)
 				mktree($destination . '/' . dirname($file_info['filename']), 0777);
 
-			// Check that the data is there and does exist.
-			if (substr($data, $file_info['offset'], 4) != 'PK' . chr(3) . chr(4))
-				return false;
-
-			// Get the actual compressed data.
-			$file_info['data'] = substr($data, $file_info['offset'] + 30 + $file_info['filename_len'] + $file_info['extra_len'], $file_info['compressed_size']);
-
-			// Only inflate it if we need to ;).
-			if ($file_info['compressed_size'] != $file_info['size'])
-				$file_info['data'] = @gzinflate($file_info['data']);
-
 			// If we're looking for a specific file, and this is it... ka-bam, baby.
 			if ($single_file && ($destination == $file_info['filename'] || $destination == '*/' . basename($file_info['filename'])))
 				return $file_info['data'];
 			// Oh?  Another file.  Fine.  You don't like this file, do you?  I know how it is.  Yeah... just go away.  No, don't apologize.  I know this file's just not *good enough* for you.
 			elseif ($single_file)
+				continue;
+			// Don't really want this?
+			elseif ($files_to_extract !== null && !in_array($file_info['filename'], $files_to_extract))
 				continue;
 
 			package_put_contents($destination . '/' . $file_info['filename'], $file_info['data']);
@@ -431,6 +441,8 @@ function read_zip_data($data, $destination, $single_file = false, $overwrite = f
 		if (substr($file_info['filename'], -1, 1) != '/')
 			$return[] = array(
 				'filename' => $file_info['filename'],
+				'md5' => md5($file_info['data']),
+				'preview' => substr($file_info['data'], 0, 100),
 				'size' => $file_info['size'],
 				'skipped' => false
 			);
@@ -572,7 +584,7 @@ function getPackageInfo($gzfilename)
 	return $package;
 }
 
-function packageRequireFTP($destination_url, $files = null)
+function packageRequireFTP($destination_url, $files = null, $return = false)
 {
 	global $context, $modSettings, $package_ftp, $boarddir, $txt;
 
@@ -608,14 +620,14 @@ function packageRequireFTP($destination_url, $files = null)
 
 		// No FTP required!
 		if (empty($files))
-			return;
+			return array();
 	}
 
 	// They've opted to not use FTP, and try anyway.
 	if (isset($_SESSION['pack_ftp']) && $_SESSION['pack_ftp'] == false)
 	{
 		if ($files === null)
-			return;
+			return array();
 
 		foreach ($files as $k => $file)
 		{
@@ -636,7 +648,7 @@ function packageRequireFTP($destination_url, $files = null)
 				unset($files[$k]);
 		}
 
-		return;
+		return $files;
 	}
 	elseif (isset($_SESSION['pack_ftp']))
 	{
@@ -646,7 +658,7 @@ function packageRequireFTP($destination_url, $files = null)
 		$package_ftp = new ftp_connection($_SESSION['pack_ftp']['server'], $_SESSION['pack_ftp']['port'], $_SESSION['pack_ftp']['username'], package_crypt($_SESSION['pack_ftp']['password']));
 
 		if ($files === null)
-			return;
+			return array();
 
 		foreach ($files as $k => $file)
 		{
@@ -669,15 +681,15 @@ function packageRequireFTP($destination_url, $files = null)
 				unset($files[$k]);
 		}
 
-		return;
+		return $files;
 	}
 
 	if (isset($_POST['ftp_none']))
 	{
 		$_SESSION['pack_ftp'] = false;
 
-		packageRequireFTP($destination_url, $files);
-		return;
+		$files = packageRequireFTP($destination_url, $files, $return);
+		return $files;
 	}
 	elseif (isset($_POST['ftp_username']))
 	{
@@ -724,6 +736,10 @@ function packageRequireFTP($destination_url, $files = null)
 			'destination' => $destination_url,
 		);
 
+		// If we're returning dump out here.
+		if ($return)
+			return $files;
+
 		$context['page_title'] = $txt['package_ftp_necessary'];
 		$context['sub_template'] = 'ftp_required';
 		obExit();
@@ -751,8 +767,10 @@ function packageRequireFTP($destination_url, $files = null)
 		if (!isset($modSettings['package_path']) || $modSettings['package_path'] != $_POST['ftp_path'])
 			updateSettings(array('package_path' => $_POST['ftp_path']));
 
-		packageRequireFTP($destination_url, $files);
+		$files = packageRequireFTP($destination_url, $files, $return);
 	}
+
+	return $files;
 }
 
 // Parses a package-info.xml file - method can be 'install', 'upgrade', or 'uninstall'.

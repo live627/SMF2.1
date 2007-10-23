@@ -63,6 +63,9 @@ if (!defined('SMF'))
 	void ModifyLanguage()
 		// !!!
 
+	void DownloadLanguage()
+		// !!!
+
 	void prepareDBSettingContext(array config_vars)
 		// !!!
 
@@ -137,6 +140,7 @@ function ModifySettings()
 
 	$subActions = array(
 		'core' => 'ModifyCoreSettings',
+		'downloadlang' => 'DownloadLanguage',
 		'editlang' => 'ModifyLanguage',
 		'languages' => 'ModifyLanguageSettings',
 		'other' => 'ModifyOtherSettings',
@@ -464,6 +468,326 @@ function ModifyCacheSettings($return_config = false)
 	prepareDBSettingContext($config_vars);
 }
 
+// Download a language file from the Simple Machines website.
+function DownloadLanguage()
+{
+	global $context, $sourcedir, $forum_version, $boarddir, $txt, $smfFunc, $db_prefix, $scripturl;
+
+	loadLanguage('ManageSettings');
+	require_once($sourcedir . '/Subs-Package.php');
+
+	// Clearly we need to know what to request.
+	if (!isset($_GET['did']))
+		fatal_lang_error('no_access');
+
+	// Some lovely context.
+	$context['download_id'] = $_GET['did'];
+	$context['sub_template'] = 'download_language';
+	$context['menu_data_' . $context['admin_menu_id']]['current_subsection'] = 'languages';
+
+	// Can we actually do the installation - and do they want to?
+	if (!empty($_POST['do_install']) && !empty($_POST['copy_file']))
+	{
+		$dont_error = true;
+		$install_files = array();
+		foreach ($_POST['copy_file'] as $file)
+		{
+			// Check it's not very bad.
+			if (strpos($file, '..') !== false || substr($file, 0, 6) != 'Themes')
+				fatal_error($txt['languages_download_illegal_paths']);
+
+			if (!is_writable($boarddir . '/' . $file))
+				$dont_error = false;
+			else
+				$install_files[] = $file;
+		}
+
+		// Something not writable?
+		if (!$dont_error)
+			$context['error_message'] = $txt['languages_download_not_chmod'];
+		// Otherwise, go go go!
+		elseif (!empty($install_files))
+		{
+			$archive_content = read_tgz_file('http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => ''))) . ';fetch=' . urlencode($_GET['did']), $boarddir, false, true, $install_files);
+			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=serversettings;sa=languages;sesc=' . $context['session_id']);
+
+			return;
+		}
+	}
+
+	// Open up the old china.
+	if (!isset($archive_content))
+		$archive_content = read_tgz_file('http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => ''))) . ';fetch=' . urlencode($_GET['did']), null);
+
+	if (empty($archive_content))
+		fatal_error($txt['add_language_error_no_response']);
+
+	// Now for each of the files, let's do some *stuff*
+	$context['files'] = array(
+		'lang' => array(),
+		'other' => array(),
+	);
+	$context['make_writable'] = array();
+	foreach ($archive_content as $file)
+	{
+		$dirname = dirname($file['filename']);
+		$filename = basename($file['filename']);
+		$extension = substr($filename, strrpos($filename, '.') + 1);
+
+		// Don't do anything with files we don't understand.
+		if (!in_array($extension, array('php', 'jpg', 'gif', 'jpeg', 'png', 'txt')))
+			continue;
+
+		// Basic data.
+		$context_data = array(
+			'name' => $filename,
+			'destination' => $boarddir . '/' . $file['filename'],
+			'generaldest' => $file['filename'],
+			'size' => $file['size'],
+			// Does chmod status allow the copy?
+			'writable' => false,
+			// Should we suggest they copy this file?
+			'default_copy' => true,
+			// Does the file already exist, if so is it same or different?
+			'exists' => false,
+		);
+
+		// Does the file exist, is it different and can we overwrite?
+		if (file_exists($boarddir . '/' . $file['filename']))
+		{
+			if (is_writable($boarddir . '/' . $file['filename']))
+				$context_data['writable'] = true;
+
+			// Finally, do we actually think the content has changed?
+			if ($file['size'] == filesize($boarddir . '/' . $file['filename']) && $file['md5'] == md5_file($boarddir . '/' . $file['filename']))
+			{
+				$context_data['exists'] = 'same';
+				$context_data['default_copy'] = false;
+			}
+			else
+				$context_data['exists'] = 'different';
+		}
+		// No overwrite?
+		else
+		{
+			// Can we at least stick it in the directory...
+			if (is_writable($boarddir . '/' . $dirname))
+				$context_data['writable'] = true;
+		}
+
+		// I love PHP files, that's why I'm a developer and not an artistic type spending my time drinking absinth and living a life of sin...
+		if ($extension == 'php' && preg_match('~\w+\.\w+\.php~', $filename))
+		{
+			$context_data += array(
+				'version' => '??',
+				'cur_version' => false,
+				'version_compare' => 'newer',
+			);
+
+			list ($name, $language) = explode('.', $filename);
+
+			// Let's get the new version, I like versions, they tell me that I'm up to date.
+			if (preg_match('~\s*Version:\s+(.+?);\s*' . preg_quote($name, '~') . '~i', $file['preview'], $match) == 1)
+				$context_data['version'] = $match[1];
+
+			// Now does the old file exist - if so what is it's version?
+			if (file_exists($boarddir . '/' . $file['filename']))
+			{
+				// OK - what is the current version?
+				$fp = fopen($boarddir . '/' . $file['filename'], 'rb');
+				$header = fread($fp, 768);
+				fclose($fp);
+	
+				// Find the version.
+				if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . preg_quote($name, '~') . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
+				{
+					$context_data['cur_version'] = $match[1];
+
+					// How does this compare?
+					if ($context_data['cur_version'] == $context_data['version'])
+						$context_data['version_compare'] = 'same';
+					elseif ($context_data['cur_version'] > $context_data['version'])
+						$context_data['version_compare'] = 'older';
+
+					// Don't recommend copying if the version is the same.
+					if ($context_data['version_compare'] != 'newer')
+						$context_data['default_copy'] = false;
+				}
+			}
+
+			// Add the context data to the main set.
+			$context['files']['lang'][] = $context_data;
+		}
+		else
+		{
+			// If we think it's a theme thing work out what the theme is.
+			if (substr($dirname, 0, 6) == 'Themes' && preg_match('~Themes[\\/]([^\\/]+)[\\/]~', $dirname, $match))
+				$theme_name = $match[1];
+			else
+				$theme_name = 'misc';
+
+			// Assume it's an image, could be an acceptance note etc but rare.
+			$context['files']['images'][$theme_name][] = $context_data;
+		}
+
+		// Collect together all non-writable areas.
+		if (!$context_data['writable'])
+			$context['make_writable'][] = $context_data['destination'];
+	}
+
+	// So, I'm a perfectionist - let's get the theme names.
+	$theme_indexes = array();
+	foreach ($context['files']['images'] as $k => $dummy)
+	{
+		$indexes[] = $k;
+	}
+
+	$context['theme_names'] = array();
+	if (!empty($indexes))
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT id_theme, value
+			FROM {$db_prefix}themes
+			WHERE id_member = 0
+				AND variable = 'theme_dir'
+				AND (value LIKE '%" . implode("' OR value LIKE '%", $indexes) . "')", __FILE__, __LINE__);
+		$themes = array();
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			// Find the right one.
+			foreach ($indexes as $index)
+				if (strpos($row['value'], $index) !== false)
+					$themes[$row['id_theme']] = $index;
+		}
+		$smfFunc['db_free_result']($request);
+
+		if (!empty($themes))
+		{
+			// Now we have the id_theme we can get the pretty description.
+			$request = $smfFunc['db_query']('', "
+				SELECT id_theme, value
+				FROM {$db_prefix}themes
+				WHERE id_member = 0
+					AND variable = 'name'
+					AND id_theme IN (" . implode(', ', array_keys($themes)) . ")", __FILE__, __LINE__);
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+			{
+				// Now we have it...
+				$context['theme_names'][$themes[$row['id_theme']]] = $row['value'];
+			}
+			$smfFunc['db_free_result']($request);
+		}
+	}
+
+	// Before we go to far can we make anything writable, eh, eh?
+	if (!empty($context['make_writable']))
+	{
+		// What is left to be made writable?
+		$context['still_not_writable'] = packageRequireFTP('', $context['make_writable'], true);
+
+		// Mark those which are now writable as such.
+		foreach ($context['files'] as $type => $data)
+		{
+			if ($type == 'lang')
+			{
+				foreach ($data as $k => $file)
+					if (!$file['writable'] && !in_array($file['destination'], $context['still_not_writable']))
+						$context['files'][$type][$k]['writable'] = true;
+			}
+			else
+			{
+				foreach ($data as $theme => $files)
+					foreach ($files as $k => $file)
+						if (!$file['writable'] && !in_array($file['destination'], $context['still_not_writable']))
+							$context['files'][$type][$theme][$k]['writable'] = true;
+			}
+		}
+
+		// Are we going to need more language stuff?
+		if (!empty($context['still_not_writable']))
+			loadLanguage('Packages');
+	}
+
+	// This is the list for the main files.
+	$listOptions = array(
+		'id' => 'lang_main_files_list',
+		'title' => $txt['languages_download_main_files'],
+		'get_items' => array(
+			'function' => create_function('', '
+				global $context;
+				return $context[\'files\'][\'lang\'];
+			'),
+		),
+		'columns' => array(
+			'name' => array(
+				'header' => array(
+					'value' => $txt['languages_download_filename'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $context, $txt;
+
+						return \'<strong>\' . $rowData[\'name\'] . \'</strong><br /><span class="smalltext">\' . $txt[\'languages_download_dest\'] . \': \' . $rowData[\'destination\'] . \'</span>\' . ($rowData[\'version_compare\'] == \'older\' ? \'<br />\' . $txt[\'languages_download_older\'] : \'\');
+					'),
+				),
+			),
+			'writable' => array(
+				'header' => array(
+					'value' => $txt['languages_download_writable'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $txt;
+
+						return \'<span style="color: \' . ($rowData[\'writable\'] ? \'green\' : \'red\') . \';">\' . ($rowData[\'writable\'] ? $txt[\'yes\'] : $txt[\'no\']) . \'</span>\';
+					'),
+					'style' => 'text-align: center',
+				),
+			),
+			'version' => array(
+				'header' => array(
+					'value' => $txt['languages_download_version'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $txt;
+
+						return \'<span style="color: \' . ($rowData[\'version_compare\'] == \'older\' ? \'red\' : ($rowData[\'version_compare\'] == \'same\' ? \'orange\' : \'green\')) . \';">\' . $rowData[\'version\'] . \'</span>\';
+					'),
+				),
+			),
+			'exists' => array(
+				'header' => array(
+					'value' => $txt['languages_download_exists'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						global $txt;
+
+						return $rowData[\'exists\'] ? ($rowData[\'exists\'] == \'same\' ? $txt[\'languages_download_exists_same\'] : $txt[\'languages_download_exists_different\']) : $txt[\'no\'];
+					'),
+				),
+			),
+			'copy' => array(
+				'header' => array(
+					'value' => $txt['languages_download_copy'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '					
+						return \'<input type="checkbox" name="copy_file[]" value="\' . $rowData[\'generaldest\'] . \'" \' . ($rowData[\'default_copy\'] ? \'checked="checked"\' : \'\') . \' class="check" />\';
+					'),
+					'style' => 'text-align: center; width: 4%;',
+				),
+			),
+		),
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	$context['default_list'] = 'lang_main_files_list';
+}
+
 // This lists all the current languages and allows editing of them.
 function ModifyLanguageSettings()
 {
@@ -621,7 +945,7 @@ function ModifyLanguageSettings()
 					'version' => $file->fetch('version'),
 					'utf8' => $file->fetch('utf8'),
 					'description' => $file->fetch('description'),
-					'link' => $scripturl . '?action=admin;area=packages;get;sa=download;package=' . $url . ';fetch=' . urlencode($file->fetch('id')) . ';sesc=' . $context['session_id'],
+					'link' => $scripturl . '?action=admin;area=serversettings;sa=downloadlang;did=' . $file->fetch('id') . ';sesc=' . $context['session_id'],
 				);
 			}
 			if (empty($context['smf_languages']))
@@ -989,9 +1313,9 @@ function ModifyLanguage()
 				$file_contents = strtr($file_contents, array($save['find'] => $save['replace']));
 
 			// Save the actual changes.
-			//$fp = fopen($current_file, 'w+');
-			//fwrite($fp, $file_contents);
-			//fclose($fp);
+			$fp = fopen($current_file, 'w+');
+			fwrite($fp, $file_contents);
+			fclose($fp);
 
 			clean_cache('lang');
 		}

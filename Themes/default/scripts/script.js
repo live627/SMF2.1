@@ -591,7 +591,9 @@ function smfToggle(uniqueId, initialState)
 		var x = 0;
 		for (x = 0; x < this.imageToggles.length; x++)
 		{
-			document.getElementById(this.imageToggles[x][0]).src = mode ? this.imageToggles[x][2] : this.imageToggles[x][1];
+			var curImage = document.getElementById(this.imageToggles[x][0]);
+			if (curImage)
+				curImage.src = mode ? this.imageToggles[x][2] : this.imageToggles[x][1];
 		}
 
 		// Now toggle the panels.
