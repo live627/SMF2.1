@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2868 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2869 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -37,6 +37,7 @@ October 2007
  ! When deleting posts from the recent posts section, make sure that the modaction is logged. (Recent.php, RemoveTopic.php, Recent template)
  * Adding new images to permissions for membergroup screen (ManagePermissions.template, images from admin folder)
  + It is now possible to download and install language packs from the Simple Machines site via the admin centre. (ManageServer.php)
+ ! Language files were getting truncated when settings were saved. (ManageServer.php)
  
  
  September 2007

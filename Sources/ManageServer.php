@@ -511,6 +511,7 @@ function DownloadLanguage()
 			$archive_content = read_tgz_file('http://www.simplemachines.org/download/fetch_language.php?version=' . urlencode(strtr($forum_version, array('SMF ' => ''))) . ';fetch=' . urlencode($_GET['did']), $boarddir, false, true, $install_files);
 			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=serversettings;sa=languages;sesc=' . $context['session_id']);
 
+			clean_cache('lang');
 			return;
 		}
 	}
@@ -1131,8 +1132,10 @@ function ModifyLanguage()
 		);
 		$current_data = preg_replace(array_keys($replace_array), array_values($replace_array), $current_data);
 		$fp = fopen($settings['default_theme_dir'] . '/languages/index.' . $context['lang_id'] . '.php', 'w+');
-		fwrite($current_data, $fp);
+		fwrite($fp, $current_data);
 		fclose($fp);
+
+		clean_cache('lang');
 	}
 
 	// Quickly load index language entries.
