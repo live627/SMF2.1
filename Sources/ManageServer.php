@@ -488,22 +488,24 @@ function DownloadLanguage()
 	// Can we actually do the installation - and do they want to?
 	if (!empty($_POST['do_install']) && !empty($_POST['copy_file']))
 	{
-		$dont_error = true;
+		$chmod_files = array();
 		$install_files = array();
+		// Check writable status.
 		foreach ($_POST['copy_file'] as $file)
 		{
 			// Check it's not very bad.
 			if (strpos($file, '..') !== false || substr($file, 0, 6) != 'Themes')
 				fatal_error($txt['languages_download_illegal_paths']);
 
-			if (!is_writable($boarddir . '/' . $file))
-				$dont_error = false;
-			else
-				$install_files[] = $file;
+			$chmod_files[] = $boarddir . '/' . $file;
+			$install_files[] = $file;
 		}
 
+		// Call this incase we have work to do.
+		$files_left = packageRequireFTP('', $chmod_files, true);
+
 		// Something not writable?
-		if (!$dont_error)
+		if (!empty($files_left))
 			$context['error_message'] = $txt['languages_download_not_chmod'];
 		// Otherwise, go go go!
 		elseif (!empty($install_files))
