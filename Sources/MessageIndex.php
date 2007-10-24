@@ -65,6 +65,7 @@ function MessageIndex()
 
 	// View all the topics, or just a few?
 	$context['topics_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['topics_per_page']) && !WIRELESS ? $options['topics_per_page'] : $modSettings['defaultMaxTopics'];
+	$context['messages_per_page'] = empty($modSettings['disableCustomPerPage']) && !empty($options['messages_per_page']) && !WIRELESS ? $options['messages_per_page'] : $modSettings['defaultMaxMessages'];
 	$maxindex = isset($_REQUEST['all']) && !empty($modSettings['enableAllMessages']) ? $board_info['total_topics'] : $context['topics_per_page'];
 
 	// If we can view unapproved messages and there are some build up a list.
@@ -379,11 +380,11 @@ function MessageIndex()
 
 			// Decide how many pages the topic should have.
 			$topic_length = $row['num_replies'] + 1;
-			if ($topic_length > $modSettings['defaultMaxMessages'])
+			if ($topic_length > $context['messages_per_page'])
 			{
 				$tmppages = array();
 				$tmpa = 1;
-				for ($tmpb = 0; $tmpb < $topic_length; $tmpb += $modSettings['defaultMaxMessages'])
+				for ($tmpb = 0; $tmpb < $topic_length; $tmpb += $context['messages_per_page'])
 				{
 					$tmppages[] = '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.' . $tmpb . '">' . $tmpa . '</a>';
 					$tmpa++;

@@ -2265,7 +2265,7 @@ function template_modify_language_entries()
 		</tr>';
 
 	// Is it not writable?
-	if ($context['entries_not_writable_message'])
+	if (!empty($context['entries_not_writable_message']))
 		echo '
 		<tr class="windowbg2">
 			<td colspan="2">
@@ -2328,7 +2328,7 @@ function template_modify_language_entries()
 	echo '
 		<tr class="titlebg">
 			<td colspan="2" align="right">
-				<input type="submit" name="save_entries" value="', $txt['save'], '" ', $context['entries_not_writable_message'] ? 'disabled="disabled"' : '', '/>
+				<input type="submit" name="save_entries" value="', $txt['save'], '" ', !empty($context['entries_not_writable_message']) ? 'disabled="disabled"' : '', '/>
 			</td>
 		</tr>
 	</table>

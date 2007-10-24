@@ -250,9 +250,9 @@ $txt['lang_file_desc_EmailTemplates'] = 'Email Templates';
 
 $txt['languages_download'] = 'Download Language Pack';
 $txt['languages_download_note'] = 'This page lists all the files that are contained within the language pack and some useful information about each one. All files that have their associated check box marked will be copied.';
-$txt['languages_download_info'] = '<strong>Note:</strong> Files which have the status &quot;Not Writable&quot means SMF will not be able to copy this file to the directory at the present and you must make the destination writable either using an FTP client or by filling in your details at the bottom of the page.<br />
+$txt['languages_download_info'] = '<strong>Note:</strong> Files which have the status &quot;Not Writable&quot; means SMF will not be able to copy this file to the directory at the present and you must make the destination writable either using an FTP client or by filling in your details at the bottom of the page.<br />
 	The Version information for a file displays the last SMF version which it was updated for. If it is indicated in green then this is a newer version than you have at current. If amber this indicates it\'s the same version number as at current, red indicates you have a newer version installed than contained in the pack.<br />
-	Where a file already exists on your forum the &quot;Already Exists&quot; column will have one of two values. &quot;Identical&quot indicates that the file already exists in an identical form and need not be overwritten. &quot;Different&quot; means that the contents vary in some way and overwriting is probably the optimum solution.';
+	Where a file already exists on your forum the &quot;Already Exists&quot; column will have one of two values. &quot;Identical&quot; indicates that the file already exists in an identical form and need not be overwritten. &quot;Different&quot; means that the contents vary in some way and overwriting is probably the optimum solution.';
 
 $txt['languages_download_main_files'] = 'Primary Files';
 $txt['languages_download_filename'] = 'File Name';
