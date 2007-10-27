@@ -1036,7 +1036,7 @@ function scheduled_fetchSMfiles()
 
 	// Just in case we run into a problem.
 	loadEssentialThemeData();
-	loadLanguage('Errors', $language);
+	loadLanguage('Errors', $language, false);
 
 	foreach ($js_files as $ID_FILE => $file)
 	{
@@ -1051,7 +1051,7 @@ function scheduled_fetchSMfiles()
 		if ($file_data === false)
 		{
 			log_error(sprintf($txt['st_cannot_retrieve_file'], $url));
-			// No more to do with this file, on to the next
+			// No more to do with this file, on to the next.
 			continue;
 		}
 

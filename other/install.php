@@ -1099,7 +1099,7 @@ function doStep2()
 {
 	global $txt, $db_prefix, $db_connection, $HTTP_SESSION_VARS, $cookiename;
 	global $smfFunc, $db_character_set, $mbname, $context, $scripturl, $boardurl;
-	global $current_smf_version, $databases;
+	global $current_smf_version, $databases, $sourcedir, $forum_version;
 
 	// Load the SQL server login information.
 	require_once(dirname(__FILE__) . '/Settings.php');
@@ -1362,6 +1362,22 @@ function doStep2()
 					<br />
 					', $txt['good_luck'], '
 				</div>';
+
+	// Now is the perfect time to fetch the SM files.
+	require_once($sourcedir . '/ScheduledTasks.php');
+	// Need to make sure all the settings are loaded.
+	$request = $smfFunc['db_query']('', "
+		SELECT variable, value
+		FROM {$db_prefix}settings", false, false);
+	if ($request) // Only proceed if we can load the data.
+	{
+		$modSettings = array();
+		while ($row = $smfFunc['db_fetch_row']($request))
+			$modSettings[$row[0]] = $row[1];
+		$smfFunc['db_free_result']($request);
+		$forum_version = $current_smf_version;  // The variable is usually defined in index.php so lets just use our variable to do it for us.
+		scheduled_fetchSMfiles(); // Now go get those files!
+	}
 
 	return true;
 }
