@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2870 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2871 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -39,6 +39,8 @@ October 2007
  + It is now possible to download and install language packs from the Simple Machines site via the admin centre. (ManageServer.php)
  ! Language files were getting truncated when settings were saved. (ManageServer.php)
  + Grab the SM Files automatically during the install or upgrade. (install.php, upgrade.php, ScheduledTasks.php)
+ ! Birthday email setting needed a help text. (Help language file)
+ ! Help text that were using printf identifiers weren't being used correctly. (Help.php)
  
  
  September 2007

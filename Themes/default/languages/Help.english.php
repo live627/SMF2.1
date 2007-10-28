@@ -308,7 +308,7 @@ $helptxt['enableEmbeddedFlash'] = 'This option will allow your users to use Flas
 	just like images.  This could pose a security risk, although few have successfully exploited it.
 	USE AT YOUR OWN RISK!';
 // !!! Add more information about how to use them here.
-$helptxt['xmlnews_enable'] = 'Allows people to link to <a href="%s?action=.xml;sa=news">Recent news</a>
+$helptxt['xmlnews_enable'] = 'Allows people to link to <a href="%1$s?action=.xml;sa=news">Recent news</a>
 	and similar data.  It is also recommended that you limit the size of recent posts/news because, when rss data
 	is displayed in some clients, like Trillian, it is expected to be truncated.';
 $helptxt['hotTopicPosts'] = 'Change the number of posts for a topic to reach the state of a &quot;hot&quot; or
@@ -428,7 +428,7 @@ $helptxt['latest_packages'] = 'Here you can see some of the most popular and som
 $helptxt['latest_themes'] = 'This area shows a few of the latest and most popular themes from <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>.  It may not show up properly if your computer can\'t find <a href="http://www.simplemachines.org/" target="_blank">www.simplemachines.org</a>, though.';
 
 $helptxt['secret_why_blank'] = 'For your security, the answer to your question (as well as your password) is encrypted in such a way that SMF can only tell you if get it right, so it can never tell you (or anyone else, importantly!) what your answer or password is.';
-$helptxt['moderator_why_missing'] = 'Since moderation is done on a board-by-board basis, you have to make members moderators from the <a href="javascript:window.open(\'%s?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
+$helptxt['moderator_why_missing'] = 'Since moderation is done on a board-by-board basis, you have to make members moderators from the <a href="javascript:window.open(\'%1$s?action=admin;area=manageboards\'); self.close();">board management interface</a>.';
 
 $helptxt['permissions'] = 'Permissions are how you either allow groups to, or deny groups from, doing specific things.<br /><br />You can modify multiple boards at once with the checkboxes, or look at the permissions for a specific group by clicking \'Modify.\'';
 $helptxt['permissions_board'] = 'If a board is set to \'Global,\' it means that the board will not have any special permissions.  \'Local\' means it will have its own permissions - separate from the global ones.  This allows you to have a board that has more or less permissions than another, without requiring you to set them for each and every board.';
@@ -495,4 +495,5 @@ $helptxt['showsidebarAdmin'] = 'This setting will switch back to the old display
 
 $helptxt['spider_group'] = 'By selecting a restrictive group, when a guest is detected as a search crawler it will automatically be assigned any &quot;deny&quot; deny permissions of this group in addition to the normal permissions of a guest. You can use this to provide lesser access to a search engine than you would a normal guest. You might for example wish to create a new group called &quot;Spiders&quot; and select that here. You could then deny permission for that group to view profiles to stop spiders indexing your members profiles.<br />Note: Spider detection is not perfect and can be simulated by users so this feature is not guaranteed to restrict content only to those search engines you have added.';
 
+$helptxt['birthday_email'] = 'Choose the index of the birthday email message to use.  A preview will be shown in the Email Subject and Email Body fields.<br /><strong>Note:</strong> Setting this option does not automatically enable birthday emails.  To enable birthday emails use the <a href="%1$s?action=admin;area=maintain;sa=tasks;sesc=%2$s">Scheduled Tasks</a> page and enable the birthday email task.';
 ?>

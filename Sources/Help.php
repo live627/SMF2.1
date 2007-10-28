@@ -80,7 +80,7 @@ function ShowHelp()
 // Show some of the more detailed help to give the admin an idea...
 function ShowAdminHelp()
 {
-	global $txt, $helptxt, $context;
+	global $txt, $helptxt, $context, $scripturl;
 
 	// Load the admin help language file and template.
 	loadLanguage('Help');
@@ -105,6 +105,12 @@ function ShowAdminHelp()
 		$context['help_text'] = &$txt[$_GET['help']];
 	else
 		$context['help_text'] = $_GET['help'];
+
+	// Does this text contain a link that we should fill in?
+	if (preg_match('~%([0-9]+\$)?s\?~', $context['help_text'], $match))
+	{
+		$context['help_text'] = sprintf($context['help_text'], $scripturl, $context['session_id']);
+	}
 }
 
 ?>
