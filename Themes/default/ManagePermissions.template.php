@@ -640,18 +640,18 @@ function template_postmod_permissions()
 					<td width="30%">
 						', $txt['permissions_post_moderation_group'], '
 					</td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
-					<td align="center"><img src="', $settings['default_images_url'], '/admin/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_deny.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_deny.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_deny.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /></td>
+					<td align="center"><img src="', $settings['default_images_url'], '/admin/post_moderation_deny.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /></td>
 				</tr>';
 
 	foreach ($context['profile_groups'] as $group)
@@ -690,9 +690,9 @@ function template_postmod_permissions()
 			</table>
 	<p class="smalltext" style="padding-left: 10px;">
 		<b>', $txt['permissions_post_moderation_legend'], ':</b><br />
-		<img src="', $settings['default_images_url'], '/admin/warning_watch.gif" alt="', $txt['permissions_post_moderation_allow'], '" /> - ', $txt['permissions_post_moderation_allow'], '<br />
-		<img src="', $settings['default_images_url'], '/admin/warning_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /> - ', $txt['permissions_post_moderation_moderate'], '<br />
-		<img src="', $settings['default_images_url'], '/admin/warning_mute.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /> - ', $txt['permissions_post_moderation_disallow'], '
+		<img src="', $settings['default_images_url'], '/admin/post_moderation_allow.gif" alt="', $txt['permissions_post_moderation_allow'], '" /> - ', $txt['permissions_post_moderation_allow'], '<br />
+		<img src="', $settings['default_images_url'], '/admin/post_moderation_moderate.gif" alt="', $txt['permissions_post_moderation_moderate'], '" /> - ', $txt['permissions_post_moderation_moderate'], '<br />
+		<img src="', $settings['default_images_url'], '/admin/post_moderation_deny.gif" alt="', $txt['permissions_post_moderation_disallow'], '" /> - ', $txt['permissions_post_moderation_disallow'], '
 	</p>';
 }
 
