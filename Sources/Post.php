@@ -1003,7 +1003,7 @@ function Post()
 		));
 	}
 
-	if (isset($topic))
+	if (isset($topic) && !empty($modSettings['topicSummaryPosts']))
 		getTopic();
 
 	$context['back_to_topic'] = isset($_REQUEST['goback']) || (isset($_REQUEST['msg']) && !isset($_REQUEST['subject']));
