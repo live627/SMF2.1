@@ -2612,7 +2612,7 @@ function upgrade_query($string, $unbuffered = false)
 		}
 		elseif (strpos(trim($string), 'INSERT ') !== false)
 		{
-			if (strpos($db_error_message, 'Duplicate') !== false)
+			if (strpos($db_error_message, 'duplicate') !== false)
 				return true;
 		}
 	}
