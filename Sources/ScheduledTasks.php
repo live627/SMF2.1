@@ -1132,4 +1132,21 @@ function scheduled_birthdayemails()
 
 	return true;
 }
+
+function scheduled_pruneErrorLog()
+{
+	global $modSettings, $smfFunc, $db_prefix;
+
+	if (empty($modSettings['pruneErrorLog']))
+		return true;
+
+	// Figure out when our cutoff time is.  1 day = 86400 seconds.
+	$t = time() - $modSettings['pruneErrorLog'] * 86400;
+
+	$smfFunc['db_query']('', $query ="
+		DELETE FROM {$db_prefix}log_errors
+		WHERE log_time < $t", __FILE__, __LINE__);
+
+	return true;
+}
 ?>

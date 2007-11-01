@@ -182,3 +182,12 @@ DROP INDEX {$db_prefix}log_polls_pkey;
 
 CREATE INDEX {$db_prefix}log_polls_id_poll ON {$db_prefix}log_polls (id_poll, id_member, id_choice);
 ---#
+
+******************************************************************************/
+--- Adding error log pruning.
+/******************************************************************************/
+
+--# Adding scheduled task...
+INSERT IGNORE INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (9, 0, 0, 1, 'w', 0, 'pruneErrorLog');
+INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruneErrorLog', '30');
+--#

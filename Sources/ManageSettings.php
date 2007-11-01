@@ -361,6 +361,7 @@ function ModifySecuritySettings($return_config = false)
 		'',
 			array('check', 'enableErrorLogging'),
 			array('check', 'enableErrorQueryLogging'),
+			array('int', 'pruneErrorLog'),
 			array('check', 'securityDisable'),
 		'',
 			// Reactive on email, and approve on delete
@@ -381,6 +382,7 @@ function ModifySecuritySettings($return_config = false)
 
 		// Fix PM settings.
 		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
+		$_POST['pruneErrorLog'] = $_POST['pruneErrorLog'] < 0 ? 0 : (int)$_POST['pruneErrorLog'];
 		$save_vars = $config_vars;
 		$save_vars[] = array('text', 'pm_spam_settings');
 

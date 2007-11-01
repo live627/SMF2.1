@@ -316,6 +316,8 @@ $txt['scheduled_task_fetchSMfiles'] = 'Fetch Simple Machines Files';
 $txt['scheduled_task_desc_fetchSMfiles'] = 'Retrieves javascript files containing notifications of updates and other information.';
 $txt['scheduled_task_birthdayemails'] = 'Send Birthday Emails';
 $txt['scheduled_task_desc_birthdayemails'] = 'Sends out emails wishing members a happy birthday.';
+$txt['scheduled_task_pruneErrorLog'] = 'Prune Error Log';
+$txt['scheduled_task_desc_pruneErrorLog'] = 'Removes old entries from the error log.';
 
 // Untranslated!
 $txt['scheduled_task_reg_starting'] = 'Starting at %s';

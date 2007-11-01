@@ -32,6 +32,7 @@ $txt['databaseSession_loose'] = 'Allow browsers to go back to cached pages';
 $txt['databaseSession_lifetime'] = 'Seconds before an unused session timeout';
 $txt['enableErrorLogging'] = 'Enable error logging';
 $txt['enableErrorQueryLogging'] = 'Include database query in the error log';
+$txt['pruneErrorLog'] = 'Remove error log entries older then (in days) - 0 to disable';
 $txt['cookieTime'] = 'Default login cookies length (in minutes)';
 $txt['localCookies'] = 'Enable local storage of cookies<div class="smalltext">(SSI won\'t work well with this on.)</div>';
 $txt['globalCookies'] = 'Use subdomain independent cookies<div class="smalltext">(turn off local cookies first!)</div>';

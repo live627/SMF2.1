@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2874 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2875 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -44,6 +44,7 @@ October 2007
  ! Don't show topic summary posts if set to zero. (Post.php)
  ! It was sometimes possible to see posts in a child board that you couldn't access. (Subs-Post.php)
  * Give permission profile editing it's own tab. (Admin.php, ManagePermissions.php, ManagePermissions template, Admin and ManagePermissions language files)
+ + Automatically prune the error log.  (ManageSettings.php, ScheduledTasks.php, Admin and ManageSettings language files, install and upgrade files)
  
  
  September 2007

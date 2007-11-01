@@ -131,6 +131,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 		'undefined_vars',
 		'user',
 		'template',
+		'debug',
 	);
 
 	// Make sure the category that was specified is a valid one

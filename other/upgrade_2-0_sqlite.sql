@@ -50,3 +50,12 @@ CREATE TABLE {$db_prefix}log_spider_stats (
   PRIMARY KEY (stat_date, id_spider)
 );
 ---#
+
+/******************************************************************************/
+--- Adding error log pruning.
+/******************************************************************************/
+
+--# Adding scheduled task...
+INSERT INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (9, 0, 0, 1, 'w', 0, 'pruneErrorLog');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruneErrorLog', '30');
+--#

@@ -1525,7 +1525,8 @@ VALUES
 	(5, 0, 0, 1, 'd', 0, 'daily_digest'),
 	(6, 0, 0, 1, 'w', 0, 'weekly_digest'),
 	(7, 0, 0, 1, 'd', 0, 'fetchSMfiles'),
-	(8, 0, 0, 1, 'd', 1, 'birthdayemails');
+	(8, 0, 0, 1, 'd', 1, 'birthdayemails'),
+	(9, 0, 0, 1, 'w', 0, 'pruneErrorLog');
 
 # --------------------------------------------------------
 
@@ -1700,7 +1701,8 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('warning_moderate', '35'),
 	('warning_mute', '60'),
 	('admin_features', ''),
-	('last_mod_report_action', '0');
+	('last_mod_report_action', '0'),
+	('pruneErrorLog', '30');
 # --------------------------------------------------------
 
 #
