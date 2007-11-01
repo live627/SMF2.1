@@ -133,6 +133,9 @@ function ModifyPermissions()
 			'board' => array(
 				'description' => $txt['permission_by_board_desc'],
 			),
+			'profiles' => array(
+				'description' => $txt['permissions_profiles_desc'],
+			),
 			'postmod' => array(
 				'description' => $txt['permissions_post_moderation_desc'],
 			),
@@ -1728,7 +1731,6 @@ function EditPermissionProfiles()
 
 	// Setup the template, first for fun.
 	$context['page_title'] = $txt['permissions_profile_edit'];
-	$context[$context['admin_menu_name']]['current_subsection'] = 'board';
 	$context['sub_template'] = 'edit_profiles';
 
 	// If we're creating a new one do it first.

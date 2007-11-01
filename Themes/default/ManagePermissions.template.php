@@ -185,17 +185,6 @@ function template_by_board()
 
 	echo '
 			</table>';
-
-	echo '
-		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '" style="display: inline;">
-			<table width="80%" align="center" border="0" cellpadding="4" cellspacing="1">
-				<tr>
-					<td align="right">
-						<input type="submit" name="edit" value="', $txt['permissions_profile_edit'], '" />
-					</td>
-				</tr>
-			</table>
-		</form>';
 }
 
 // Edit permission profiles (predefined).

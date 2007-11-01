@@ -15,6 +15,7 @@ $txt['permissions_local'] = 'Local';
 
 $txt['permissions_by_profile'] = 'Permissions by Profile';
 $txt['permissions_profile'] = 'Profile';
+$txt['permissions_profiles_desc'] = 'Permission profiles are assigned to individual boards to allow you to easily manage your security settings. From this area you can create, edit and delete permission profiles.';
 $txt['permissions_profiles_change_for_board'] = 'Edit Permission Profile For: &quot;%s&quot;';
 $txt['permissions_profiles_select_type'] = 'Type of permission profile to use';
 $txt['permissions_profiles_predefined'] = 'Predefined Profile';
