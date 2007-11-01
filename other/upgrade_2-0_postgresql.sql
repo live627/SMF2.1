@@ -140,3 +140,45 @@ CREATE TABLE {$db_prefix}log_spider_stats (
   PRIMARY KEY (stat_date, id_spider)
 );
 ---#
+
+/******************************************************************************/
+--- Adding misc functionality.
+/******************************************************************************/
+
+---# Adding guest voting - part 1...
+---{
+if ($smfFunc['db_server_info'] < 8.0)
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ADD COLUMN guest_vote smallint");
+
+	upgrade_query("
+		UPDATE {$db_prefix}polls
+		SET guest_vote = 0");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ALTER COLUMN guest_vote SET NOT NULL");
+
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ALTER COLUMN guest_vote SET default '0'");
+}
+else
+{
+	upgrade_query("
+		ALTER TABLE {$db_prefix}polls
+		ADD COLUMN guest_vote smallint NOT NULL default '0'");
+}
+---}
+---#
+
+---# Adding guest voting - part 1...
+DELETE FROM {$db_prefix}log_polls
+WHERE id_member < 0;
+
+DROP INDEX {$db_prefix}log_polls_pkey;
+
+CREATE INDEX {$db_prefix}log_polls_id_poll ON {$db_prefix}log_polls (id_poll, id_member, id_choice);
+---#
