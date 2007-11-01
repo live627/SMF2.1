@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2872 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2873 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -42,6 +42,7 @@ October 2007
  ! Birthday email setting needed a help text. (Help language file)
  ! Help text that were using printf identifiers weren't being used correctly. (Help.php)
  ! Don't show topic summary posts if set to zero. (Post.php)
+ ! It was sometimes possible to see posts in a child board that you couldn't access. (Subs-Post.php)
  
  
  September 2007

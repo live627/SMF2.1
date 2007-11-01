@@ -2626,11 +2626,16 @@ function updateLastMessages($setboards, $id_msg = 0)
 	}
 
 	$parent_boards = array();
+	// Keep track of last modified dates.
+	$lastModified = $lastMsg;
 	// Get all the child boards for the parents, if they have some...
 	foreach ($setboards as $id_board)
 	{
 		if (!isset($lastMsg[$id_board]))
+		{
 			$lastMsg[$id_board] = 0;
+			$lastModified[$id_board] = 0;
+		}
 
 		if (!empty($board) && $id_board == $board)
 			$parents = $board_info['parent_boards'];
@@ -2644,10 +2649,10 @@ function updateLastMessages($setboards, $id_msg = 0)
 			if ($parent['level'] != 0)
 			{
 				// If we're already doing this one as a board, is this a higher last modified?
-				if (isset($lastMsg[$id]) && $lastMsg[$id_board] > $lastMsg[$id])
-					$lastMsg[$id] = $lastMsg[$id_board];
-				elseif (!isset($lastMsg[$id]) && (!isset($parent_boards[$id]) || $parent_boards[$id] < $lastMsg[$id_board]))
-					$parent_boards[$id] = $lastMsg[$id_board];
+				if (isset($lastModified[$id]) && $lastModified[$id_board] > $lastModified[$id])
+					$lastModified[$id] = $lastModified[$id_board];
+				elseif (!isset($lastModified[$id]) && (!isset($parent_boards[$id]) || $parent_boards[$id] < $lastModified[$id_board]))
+					$parent_boards[$id] = $lastModified[$id_board];
 			}
 		}
 	}
@@ -2668,10 +2673,15 @@ function updateLastMessages($setboards, $id_msg = 0)
 
 	foreach ($lastMsg as $id => $msg)
 	{
-		if (!isset($board_updates[$msg]))
-			$board_updates[$msg] = array($id);
+		if (!isset($board_updates[$msg . '-' . $lastModified[$id]]))
+			$board_updates[$msg . '-' . $lastModified[$id]] = array(
+				'id' => $msg,
+				'updated' => $lastModified[$id],
+				'boards' => array($id)
+			);
+
 		else
-			$board_updates[$msg][] = $id;
+			$board_updates[$msg . '-' . $lastModified[$id]]['boards'][] = $id;
 	}
 
 	// Now commit the changes!
@@ -2683,12 +2693,12 @@ function updateLastMessages($setboards, $id_msg = 0)
 			WHERE id_board IN (" . implode(',', $boards) . ")
 				AND id_msg_updated < $id_msg", __FILE__, __LINE__);
 	}
-	foreach ($board_updates as $id_msg => $boards)
+	foreach ($board_updates as $board_data)
 	{
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}boards
-			SET id_last_msg = $id_msg, id_msg_updated = $id_msg
-			WHERE id_board IN (" . implode(',', $boards) . ")", __FILE__, __LINE__);
+			SET id_last_msg = $board_data[id], id_msg_updated = $board_data[updated]
+			WHERE id_board IN (" . implode(',', $board_data['boards']) . ")", __FILE__, __LINE__);
 	}
 }
 
