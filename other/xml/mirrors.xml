@@ -70,7 +70,7 @@
 	<!-- List of mirrors which hold the downloads. -->
 	<mirrors>';
 
-	foreach($data['mirrors'] AS $mirror)
+	foreach($data['mirrors'] as $mirror)
 		echo '
 		<mirror name="', $mirror['name'], '">', $mirror['url'], '</mirror>';
 	
@@ -80,7 +80,7 @@
 	<!-- List of current install releases. -->
 	<installs>';
 
-	foreach($data['releases'] AS $release)
+	foreach($data['releases'] as $release)
 		echo '
 		<install access="', $release['access'], '" name="', $release['name'], '">', $release['file'], '</install>';
 		
@@ -93,7 +93,7 @@
 	<!-- Language files available. -->
 	<languages>';
 
-	foreach($data['languages'] AS $language)
+	foreach($data['languages'] as $language)
 		echo '
 		<language name="', $language['name'], '" versions="', implode(', ', $language['versions']), '">', $language['name'], '</language>';
 

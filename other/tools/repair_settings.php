@@ -338,7 +338,7 @@ function show_settings()
 */
 
 	// Create the values for the themes.
-	foreach($theme_settings AS $id => $theme)
+	foreach($theme_settings as $id => $theme)
 	{
 		$this_theme = ($pos = strpos($theme['theme_url'], '/Themes/')) !== false ? substr($theme['theme_url'], $pos+8) : '';
 		if (!empty($this_theme))

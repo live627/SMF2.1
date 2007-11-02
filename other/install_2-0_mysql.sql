@@ -1526,7 +1526,7 @@ VALUES
 	(6, 0, 0, 1, 'w', 0, 'weekly_digest'),
 	(7, 0, 0, 1, 'd', 0, 'fetchSMfiles'),
 	(8, 0, 0, 1, 'd', 1, 'birthdayemails'),
-	(9, 0, 0, 1, 'w', 0, 'pruneErrorLog');
+	(9, 0, 0, 1, 'w', 0, 'weekly_maintenance');
 
 # --------------------------------------------------------
 

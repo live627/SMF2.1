@@ -129,7 +129,7 @@ header('Content-Type: text/javascript');
 echo '
 var smf_themeInfo = {';
 $temp_output = array();
-foreach($themes AS $theme)
+foreach($themes as $theme)
 {
 	
 	$temp_output[] = '

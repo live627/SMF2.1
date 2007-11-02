@@ -1117,7 +1117,7 @@ function fetch_install_info()
 	foreach ($matches as $match)
 	{
 		$versions = explode(', ', $match[2]);
-		foreach($versions AS $id => $ver)
+		foreach($versions as $id => $ver)
 			if (!in_array($ver, $vers))
 				unset($versions[$ver]);
 		

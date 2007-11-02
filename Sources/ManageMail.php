@@ -268,7 +268,7 @@ function ModifyMailSettings($return_config = false)
 	$subject = $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['subject'];
 
 	$emails = array();
-	foreach($birthdayEmails AS $index => $dummy)
+	foreach($birthdayEmails as $index => $dummy)
 		$emails[$index] = $index;
 
 	$config_vars = array(
@@ -322,7 +322,7 @@ function ModifyMailSettings($return_config = false)
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var bDay = new Array();';
 
-	foreach($birthdayEmails AS $index => $email)
+	foreach($birthdayEmails as $index => $email)
 	{
 		// Remove the newlines and count them.
 		$email['body'] = str_replace("\n", '<br />', $email['body'], $newlines);
