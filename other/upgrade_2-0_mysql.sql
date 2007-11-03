@@ -1862,11 +1862,11 @@ INSERT INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity
 --#
 
 /******************************************************************************/
---- Adding error log pruning.
+--- Adding log pruning.
 /******************************************************************************/
 
---# Adding scheduled task...
-INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruneErrorLog', '30');
+--# Adding pruning option...
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
 --#
 
 /******************************************************************************/

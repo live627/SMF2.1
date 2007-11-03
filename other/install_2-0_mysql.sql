@@ -1702,7 +1702,7 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('warning_mute', '60'),
 	('admin_features', ''),
 	('last_mod_report_action', '0'),
-	('pruneErrorLog', '30');
+	('pruningOptions', '30,180,180,180,30');
 # --------------------------------------------------------
 
 #

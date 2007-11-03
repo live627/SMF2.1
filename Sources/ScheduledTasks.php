@@ -1137,18 +1137,83 @@ function scheduled_weekly_maintenance()
 {
 	global $modSettings, $smfFunc, $db_prefix;
 
-	// Prune the error log
-	if (!empty($modSettings['pruneErrorLog']))
+	// Ok should we prune the logs?
+	if (!empty($modSettings['pruningOptions']))
 	{
-		// Figure out when our cutoff time is.  1 day = 86400 seconds.
-		$t = time() - $modSettings['pruneErrorLog'] * 86400;
+		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog']) = explode(',', $modSettings['pruningOptions']);
 
-		$smfFunc['db_query']('', $query ="
-			DELETE FROM {$db_prefix}log_errors
-			WHERE log_time < $t", __FILE__, __LINE__);
+		if (!empty($modSettings['pruneErrorLog']))
+		{
+			// Figure out when our cutoff time is.  1 day = 86400 seconds.
+			$t = time() - $modSettings['pruneErrorLog'] * 86400;
+
+			$smfFunc['db_query']('', "
+				DELETE FROM {$db_prefix}log_errors
+				WHERE log_time < $t", __FILE__, __LINE__);
+		}
+
+		if (!empty($modSettings['pruneModLog']))
+		{
+			// Figure out when our cutoff time is.  1 day = 86400 seconds.
+			$t = time() - $modSettings['pruneModLog'] * 86400;
+
+			$smfFunc['db_query']('', "
+				DELETE FROM {$db_prefix}log_actions
+				WHERE log_time < $t", __FILE__, __LINE__);
+		}
+
+		if (!empty($modSettings['pruneBanLog']))
+		{
+			// Figure out when our cutoff time is.  1 day = 86400 seconds.
+			$t = time() - $modSettings['pruneBanLog'] * 86400;
+
+			$smfFunc['db_query']('', "
+				DELETE FROM {$db_prefix}log_banned
+				WHERE log_time < $t", __FILE__, __LINE__);
+		}
+
+		if (!empty($modSettings['pruneReportLog']))
+		{
+			// Figure out when our cutoff time is.  1 day = 86400 seconds.
+			$t = time() - $modSettings['pruneReportLog'] * 86400;
+
+			// This one is more complex then the other logs.  First we need to figure out which reports are too old.
+			$reports = array();
+			$result = $smfFunc['db_query']('', "
+				SELECT id_report
+				FROM {$db_prefix}log_reported
+				WHERE time_started < $t", __FILE__, __LINE__);
+
+			while ($row = $smfFunc['db_fetch_row']($result))
+				$reports[] = $row[0];
+
+			$smfFunc['db_free_result']($result);
+
+			if (!empty($reports))
+			{
+				$reports = implode(', ', $reports);
+
+				// Now delete the reports...
+				$smfFunc['db_query']('', "
+					DELETE FROM {$db_prefix}log_reported
+					WHERE id_report IN ($reports)", __FILE__, __LINE__);
+				// And delete the comments for those reports...
+				$smfFunc['db_query']('', "
+					DELETE FROM {$db_prefix}log_reported_comments
+					WHERE id_report IN ($reports)", __FILE__, __LINE__);
+			}
+		}
+
+		if (!empty($modSettings['pruneScheduledTaskLog']))
+		{
+			// Figure out when our cutoff time is.  1 day = 86400 seconds.
+			$t = time() - $modSettings['pruneScheduledTaskLog'] * 86400;
+
+			$smfFunc['db_query']('', "
+				DELETE FROM {$db_prefix}log_scheduled_tasks
+				WHERE time_run < $t", __FILE__, __LINE__);
+		}
 	}
-
-
 	return true;
 }
 ?>

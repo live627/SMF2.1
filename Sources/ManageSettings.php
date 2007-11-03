@@ -61,6 +61,9 @@ if (!defined('SMF'))
 	void EditCustomProfiles()
 		// !!!
 
+	void ModifyPruningSettings()
+		// !!!
+
 // !!!
 */
 
@@ -91,6 +94,7 @@ function ModifyFeatureSettings()
 		'sig' => 'ModifySignatureSettings',
 		'profile' => 'ShowCustomProfiles',
 		'profileedit' => 'EditCustomProfiles',
+		'pruning' => 'ModifyPruningSettings',
 	);
 
 	// By default do the basic settings.
@@ -120,6 +124,8 @@ function ModifyFeatureSettings()
 			),
 			'profile' => array(
 				'description' => $txt['custom_profile_desc'],
+			),
+			'pruning' => array(
 			),
 		),
 	);
@@ -361,7 +367,6 @@ function ModifySecuritySettings($return_config = false)
 		'',
 			array('check', 'enableErrorLogging'),
 			array('check', 'enableErrorQueryLogging'),
-			array('int', 'pruneErrorLog'),
 			array('check', 'securityDisable'),
 		'',
 			// Reactive on email, and approve on delete
@@ -1388,4 +1393,65 @@ function EditCustomProfiles()
 	}
 }
 
+function ModifyPruningSettings($return_config = false)
+{
+	global $txt, $scripturl, $context, $settings, $sc, $modSettings;
+
+	$config_vars = array(
+			// Even do the pruning?
+			// The array indexes are there so we can remove/change them before saving.
+			'pruningOptions' => array('check', 'pruningOptions'),
+		'',
+			// Various logs that could be pruned.
+			array('int', 'pruneErrorLog'), // Error log.
+			array('int', 'pruneModLog'), // Moderation log.
+			array('int', 'pruneBanLog'), // Ban hit log.
+			array('int', 'pruneReportLog'), // Report to moderator log.
+			array('int', 'pruneScheduledTaskLog'), // Log of the scheduled tasks and how long they ran.
+			// If you add any additional logs make sure to add them after this point.  Additionally, make sure you add them to the weekly scheduled task.
+	);
+
+	if ($return_config)
+		return $config_vars;
+
+	// Saving?
+	if (isset($_GET['save']))
+	{
+		checkSession();
+
+		$savevar = array(
+			array('text', 'pruningOptions')
+		);
+
+		if (!empty($_POST['pruningOptions']))
+		{
+			$vals = array();
+			foreach($config_vars AS $index => $dummy)
+			{
+				if (!is_array($dummy) || $index == 'pruningOptions')
+					continue;
+
+				$vals[] = empty($_POST[$dummy[1]]) || $_POST[$dummy[1]] < 0 ? 0 : (int) $_POST[$dummy[1]];
+			}
+			$_POST['pruningOptions'] = implode(',', $vals);			
+		}
+		else
+			$_POST['pruningOptions'] = '';
+
+		saveDBSettings($savevar);
+		redirectexit('action=admin;area=featuresettings;sa=pruning');
+	}
+
+	$context['post_url'] = $scripturl . '?action=admin;area=featuresettings;save;sa=pruning';
+	$context['settings_title'] = $txt['pruning_title'];
+
+	// Get the actual values
+	if (!empty($modSettings['pruningOptions']))
+	{
+		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog']) = explode(',', $modSettings['pruningOptions']);
+	}
+	else
+		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog']) = array(0, 0, 0, 0, 0,);
+	prepareDBSettingContext($config_vars);
+}
 ?>

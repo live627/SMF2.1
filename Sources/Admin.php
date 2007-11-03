@@ -171,6 +171,7 @@ function AdminMain()
 						'moderation' => array($txt['moderation_settings_short'], 'enabled' => substr($modSettings['warning_settings'], 0, 1) == 1),
 						'sig' => array($txt['signature_settings_short']),
 						'profile' => array($txt['custom_profile_shorttitle'], 'enabled' => in_array('cp', $context['admin_features'])),
+						'pruning' => array($txt['pruning_title']),
 					),
 				),
 				'serversettings' => array(
