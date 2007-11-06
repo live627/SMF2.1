@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2877 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2878 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -47,6 +47,9 @@ October 2007
  + Automatically prune the error log.  (ManageSettings.php, ScheduledTasks.php, Admin and ManageSettings language files, install and upgrade files)
  + Added a weekly maintenance task. (ScheduledTasks.php, install and upgrade files)
  + Automatically prune the ban hit, moderator action, report to moderator, and schedule task logs as well. (ScheduledTasks.php, Admin.php, manageSettings.php, Admin and ManageSettings language files, install and upgrade files)
+ ! Allow additional paramaters to be added to the url in a generic menu tab. (GenericMenu template)
+ ! Link the (!) after the board name to the list of unapproved topics. (BoardIndex template, style.css)
+ ! When limiting unapproved topics/posts to a board keep the board information in the link for the tabs. (PostModeration.php)
  
  
  September 2007

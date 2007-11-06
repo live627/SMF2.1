@@ -617,3 +617,9 @@ ol.search_results li
 .wysiwygEditor
 {
 }
+
+a.moderation_link, a.moderation_link:visited
+{
+	color: red;
+	font-weight: bold;
+}

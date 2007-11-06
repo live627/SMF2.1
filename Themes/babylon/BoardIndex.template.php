@@ -155,7 +155,7 @@ function template_main()
 				// Has it outstanding posts for approval?
 				if ($board['can_approve_posts'] && ($board['unapproved_posts'] | $board['unapproved_topics']))
 					echo '
-					<b style="color: red;" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '">(!)</b>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=topics;brd=', $board['id'], ';sesc=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 		echo '
 			<br />
 			', $board['description'];

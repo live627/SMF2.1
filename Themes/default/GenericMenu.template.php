@@ -210,6 +210,7 @@ function template_generic_menu_tabs(&$menu_context)
 	// Handy shortcut.
 	$tab_context = &$menu_context['tab_data'];
 
+
 	echo '
 				<table border="0" cellspacing="0" cellpadding="4" align="center" width="100%" class="tborder" ' , (isset($settings['use_tabs']) && $settings['use_tabs']) ? '' : 'style="margin-bottom: 2ex;"' , '>
 					<tr class="titlebg">
@@ -243,6 +244,9 @@ function template_generic_menu_tabs(&$menu_context)
 		// Has a custom URL defined in the main admin structure?
 		if (isset($tab['url']) && !isset($tab_context['tabs'][$id]['url']))
 			$tab_context['tabs'][$id]['url'] = $tab['url'];
+		// Any additional paramaters for the url?
+		if (isset($tab['add_params']) && !isset($tab_context['tabs'][$id]['add_params']))
+			$tab_context['tabs'][$id]['add_params'] = $tab['add_params'];
 		// Has it been deemed selected?
 		if (!empty($tab['is_selected']))
 			$tab_context['tabs'][$id]['is_selected'] = true;
@@ -284,14 +288,14 @@ function template_generic_menu_tabs(&$menu_context)
 				echo '
 						<td class="maintab_active_first">&nbsp;</td>
 						<td valign="top" class="maintab_active_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
 						</td>
 						<td class="maintab_active_last">&nbsp;</td>';
 			}
 			else
 				echo '
 						<td valign="top" class="maintab_back">
-							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], '">' , $tab['label'], '</a>
+							<a href="', (isset($tab['url']) ? $tab['url'] : $scripturl . '?action=' . $menu_context['current_action'] . ';area=' . $menu_context['current_area'] . ';sa=' . $sa), ';sesc=', $context['session_id'], isset($tab['add_params']) ? $tab['add_params'] : '', '">' , $tab['label'], '</a>
 						</td>';
 		}
 
