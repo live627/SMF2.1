@@ -157,7 +157,7 @@ function template_main()
 					<b><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a></b>';
 
 				// Has it outstanding posts for approval?
-				if ($board['can_approve_posts'] && ($board['unapproved_posts'] | $board['unapproved_topics']))
+				if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics']))
 					echo '
 					<a href="', $scripturl, '?action=moderate;area=postmod;sa=topics;brd=', $board['id'], ';sesc=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 
