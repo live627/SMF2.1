@@ -816,7 +816,7 @@ function smf_sessionDestroy($session_id)
 		return false;
 
 	// Just delete the row...
-	return db_query("
+	return smf_query("
 		DELETE FROM $smf_settings[db_prefix]sessions
 		WHERE session_id = '" . addslashes($session_id) . "'", __FILE__, __LINE__);
 }
@@ -830,7 +830,7 @@ function smf_sessionGC($max_lifetime)
 		$max_lifetime = max($smf_settings['databaseSession_lifetime'], 60);
 
 	// Clean up ;).
-	return db_query("
+	return smf_query("
 		DELETE FROM $smf_settings[db_prefix]sessions
 		WHERE last_update < " . (time() - $max_lifetime), __FILE__, __LINE__);
 }
