@@ -2,7 +2,7 @@
 #adm_container
 {
 	display: table;
-	margin-left: 5px;
+	margin-left: 10px;
 	padding: 0 5px 0 5px;
 	background: url(../images/admintab_left.gif) no-repeat;
 }
@@ -124,4 +124,17 @@ ul.admin_menu li ul li:hover ul, ul.admin_menu li ul li.over ul
 ul.admin_menu a:hover
 {
 	text-decoration: none;
+}
+
+/* the menu dropdown toggle image */
+#menu_toggle
+{
+	float: right;
+	margin-right: 10px; 
+	margin-top: 5x;
+}
+#menu_toggle span
+{
+	position: relative;
+	right: 5000px;
 }

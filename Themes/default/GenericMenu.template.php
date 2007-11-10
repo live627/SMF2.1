@@ -95,18 +95,28 @@ function template_generic_menu_dropdown_above()
 	$menu_context = &$context['menu_data_' . $context['cur_menu_id']];
 
 	echo '
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>
-	<div id="adm_container">
-		<ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
+	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/menu.js"></script>';
 
 	if (!empty($menu_context['can_toggle_drop_down']))
 		echo '
-		<li><a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 6px 0 0 5px;" src="' , $context['menu_image_path'], '/change_menu.png" alt="" /></a></li>';
+		<table cellpadding="0" cellspacing="0" id="menu_toggle">
+			<tr>
+				<td class="mirrortab_first"></td>
+				<td class="mirrortab_back">
+					<a href="', $scripturl, '?action=', $menu_context['current_action'], ';area=', $menu_context['current_area'], ';sa=', $menu_context['current_section'], ';sc=', $context['session_id'], ';togglebar=1"><img style="margin: 0 2px 0 2px;" src="' , $context['menu_image_path'], '/change_menu.png" alt="" /><span>!</span></a>
+				</td>
+				<td class="mirrortab_last"></td>
+			</tr>
+		</table>';
+	
+	echo '	
+	<div id="adm_container">
+		<ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
 
 	// Main areas first.
 	foreach ($menu_context['sections'] as $section)
 	{
-		if (isset($section['selected']))
+		if ($section['id'] == $menu_context['current_section'])
 		{
 			echo '
 			<li class="chosen"><h4>', $section['title'] , '</h4>
@@ -183,7 +193,7 @@ function template_generic_menu_dropdown_above()
 
 	// This is the main table - we need it so we can keep the content to the right of it.
 	echo '
-		<table width="100%" cellspacing="0" cellpadding="4" class="tborder" border="0" style="margin-top: 0; clear: left;"><tr>
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 0; clear: both;"><tr>
 			<td valign="top">';
 
 	// It's possible that some pages have their own tabs they wanna force...

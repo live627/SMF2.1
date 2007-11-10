@@ -122,6 +122,8 @@ function createMenu($menuData, $menuOptions = array())
      						$menu_context['sections'][$section_id]['title'] = $section['title'];
 
 					$menu_context['sections'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
+					// get the ID as well
+					$menu_context['sections'][$section_id]['id'] = $section_id;
 					// Does it have a custom URL?
 					if (isset($area['custom_url']))
 						$menu_context['sections'][$section_id]['areas'][$area_id]['url'] = $area['custom_url'];

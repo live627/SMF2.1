@@ -1,8 +1,13 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2878 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2879 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
+November 2007
+--------------------------------------------------------------------------------
+ * Removed white background in admin section, section headers now highlights. (Admin.template, dropdown.css, Genericmenu.template, Subs-Menu.php)
+
+
 October 2007
 --------------------------------------------------------------------------------
  + Allow admins to select which birthday email to send out.  Thanks to karlbenson, nite0859, zwaldowski, and geezmo for their birthday messages. (ManageMail.php, ScheduledTasks.php, Subs-Post.php, EmailTemplates and ManageMail language files)
