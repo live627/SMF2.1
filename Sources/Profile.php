@@ -4156,7 +4156,7 @@ function profileValidateSignature(&$value)
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Admins can do whatever they hell they want!
-	if (allowedTo('admin_forum'))
+	if (!allowedTo('admin_forum'))
 	{
 		// Load all the signature limits.
 		list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
@@ -4178,7 +4178,7 @@ function profileValidateSignature(&$value)
 			return 'signature_max_lines';
 		}
 		// Too many images?!
-		if (!empty($sig_limits[3]) && substr_count(strtolower($unparsed_signature), '[img') > $sig_limits[3])
+		if (!empty($sig_limits[3]) && (substr_count(strtolower($unparsed_signature), '[img') + substr_count(strtolower($unparsed_signature), '<img')) > $sig_limits[3])
 		{
 			$txt['profile_error_signature_max_image_count'] = sprintf($txt['profile_error_signature_max_image_count'], $sig_limits[3]);
 			return 'signature_max_image_count';
@@ -4217,9 +4217,29 @@ function profileValidateSignature(&$value)
 		// The difficult one - image sizes! Don't error on this - just fix it.
 		if ((!empty($sig_limits[5]) || !empty($sig_limits[6])))
 		{
+			// Get all BBC tags...
+			preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~i', $unparsed_signature, $matches);
+			// ... and all HTML ones.
+			preg_match_all('~<img\s+src=(?:")?((?:http://|ftp://|https://|ftps://).+?)(?:")?(?:\s+alt=(?:")?(.*?)(?:")?)?(?:\s?/)?>~i', $unparsed_signature, $matches2, PREG_PATTERN_ORDER);
+			// And stick the HTML in the BBC.
+			if (!empty($matches2))
+			{
+				foreach ($matches2[0] as $ind => $dummy)
+				{
+					$matches[0][] = $matches2[0][$ind];
+					$matches[1][] = '';
+					$matches[2][] = '';
+					$matches[3][] = '';
+					$matches[4][] = '';
+					$matches[5][] = '';
+					$matches[6][] = '';
+					$matches[7][] = $matches2[1][$ind];
+				}
+			}
+
 			$replaces = array();
 			// Try to find all the images!
-			if (preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~i', $unparsed_signature, $matches) !== false)
+			if (!empty($matches))
 			{
 				foreach ($matches[0] as $key => $image)
 				{

@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2881 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2882 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -11,6 +11,7 @@ November 2007
  ! The WYSIWYG editor now doesn't show line breaks in IE when hitting enter, also state of style tracking is improved. (editor.js)
  ! Restricting number of lines in signature was one line out. (Profile.php)
  ! Restricting font size in signature now does best to do px, pt, em and text based sizes. (Profile.php, ManageSettings.php)
+ ! Also check HTML images when restricting signature usage. (Profile.php, ManageSettings.php)
 
 
 October 2007

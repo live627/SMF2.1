@@ -660,8 +660,27 @@ function ModifySignatureSettings($return_config = false)
 				{
 					$replaces = array();
 					$img_count = 0;
+					// Get all BBC tags...
+					preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~i', $sig, $matches);
+					// ... and all HTML ones.
+					preg_match_all('~&lt;img\s+src=(?:&quot;)?((?:http://|ftp://|https://|ftps://).+?)(?:&quot;)?(?:\s+alt=(?:&quot;)?(.*?)(?:&quot;)?)?(?:\s?/)?&gt;~i', $sig, $matches2, PREG_PATTERN_ORDER);
+					// And stick the HTML in the BBC.
+					if (!empty($matches2))
+					{
+						foreach ($matches2[0] as $ind => $dummy)
+						{
+							$matches[0][] = $matches2[0][$ind];
+							$matches[1][] = '';
+							$matches[2][] = '';
+							$matches[3][] = '';
+							$matches[4][] = '';
+							$matches[5][] = '';
+							$matches[6][] = '';
+							$matches[7][] = $matches2[1][$ind];
+						}
+					}
 					// Try to find all the images!
-					if (preg_match_all('~\[img(\s+width=([\d]+))?(\s+height=([\d]+))?(\s+width=([\d]+))?\s*\](?:<br />)*([^<">]+?)(?:<br />)*\[/img\]~i', $sig, $matches) !== false)
+					if (!empty($matches))
 					{
 						foreach ($matches[0] as $key => $image)
 						{
