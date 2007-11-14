@@ -187,14 +187,14 @@ CREATE INDEX {$db_prefix}log_polls_id_poll ON {$db_prefix}log_polls (id_poll, id
 --- Adding weekly maintenance task.
 /******************************************************************************/
 
---# Adding scheduled task...
+---# Adding scheduled task...
 INSERT INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (0, 0, 1, 'w', 0, 'weekly_maintenance');
---#
+---#
 
 /******************************************************************************/
 --- Adding log pruning.
 /******************************************************************************/
 
---# Adding pruning option...
+---# Adding pruning option...
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
---#
+---#
