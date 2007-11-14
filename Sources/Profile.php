@@ -4156,7 +4156,7 @@ function profileValidateSignature(&$value)
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Admins can do whatever they hell they want!
-	if (!allowedTo('admin_forum'))
+	if (allowedTo('admin_forum'))
 	{
 		// Load all the signature limits.
 		list ($sig_limits, $sig_bbc) = explode(':', $modSettings['signature_settings']);
@@ -4172,7 +4172,7 @@ function profileValidateSignature(&$value)
 			return 'signature_max_length';
 		}
 		// Too many lines?
-		if (!empty($sig_limits[2]) && substr_count($unparsed_signature, "\n") > $sig_limits[2])
+		if (!empty($sig_limits[2]) && substr_count($unparsed_signature, "\n") >= $sig_limits[2])
 		{
 			$txt['profile_error_signature_max_lines'] = sprintf($txt['profile_error_signature_max_lines'], $sig_limits[2]);
 			return 'signature_max_lines';
@@ -4192,14 +4192,27 @@ function profileValidateSignature(&$value)
 			return 'signature_max_smileys';
 		}
 		// Maybe we are abusing font sizes?
-		if (!empty($sig_limits[7]) && preg_match_all('~\[size=(\d+)~i', $unparsed_signature, $matches) !== false && isset($matches[1]))
+		if (!empty($sig_limits[7]) && preg_match_all('~\[size=([\d\.]+)?(px|pt|em|x-large|larger)~i', $unparsed_signature, $matches) !== false && isset($matches[2]))
 		{
-			foreach ($matches[1] as $size)
-				if ($size > $sig_limits[7])
+			foreach ($matches[1] as $ind => $size)
+			{
+				$limit_broke = 0;
+				// Attempt to allow all sizes of abuse, so to speak.
+				if ($matches[2][$ind] == 'px' && $size > $sig_limits[7])
+					$limit_broke = $sig_limits[7] . 'px';
+				elseif ($matches[2][$ind] == 'pt' && $size > ($sig_limits[7] * 0.75))
+					$limit_broke = ((int) $sig_limits[7] * 0.75) . 'pt';
+				elseif ($matches[2][$ind] == 'em' && $size > ((float) $sig_limits[7] / 16))
+					$limit_broke = ((float) $sig_limits[7] / 16) . 'em';
+				elseif ($matches[2][$ind] != 'px' && $matches[2][$ind] != 'pt' && $matches[2][$ind] != 'em' && $sig_limits[7] < 18)
+					$limit_broke = 'large';
+
+				if ($limit_broke)
 				{
-					$txt['profile_error_signature_max_font_size'] = sprintf($txt['profile_error_signature_max_font_size'], $sig_limits[7]);
+					$txt['profile_error_signature_max_font_size'] = sprintf($txt['profile_error_signature_max_font_size'], $limit_broke);
 					return 'signature_max_font_size';
 				}
+			}
 		}
 		// The difficult one - image sizes! Don't error on this - just fix it.
 		if ((!empty($sig_limits[5]) || !empty($sig_limits[6])))

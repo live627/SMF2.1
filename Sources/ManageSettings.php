@@ -634,14 +634,25 @@ function ModifySignatureSettings($return_config = false)
 						}
 					}
 				}
-				// Max font size...
-				if (!empty($sig_limits[7]) && preg_match_all('~\[size=(\d+)~', $sig, $matches) !== false && isset($matches[1]))
+
+				if (!empty($sig_limits[7]) && preg_match_all('~\[size=([\d\.]+)?(px|pt|em|x-large|larger)~i', $sig, $matches) !== false && isset($matches[2]))
 				{
-					foreach ($matches[1] as $key => $size)
-						if ($size > $sig_limits[7])
-						{
-							$sig = str_replace($matches[0][$key], '[size=' . $sig_limits[7], $sig);
-						}
+					foreach ($matches[1] as $ind => $size)
+					{
+						$limit_broke = 0;
+						// Attempt to allow all sizes of abuse, so to speak.
+						if ($matches[2][$ind] == 'px' && $size > $sig_limits[7])
+							$limit_broke = $sig_limits[7] . 'px';
+						elseif ($matches[2][$ind] == 'pt' && $size > ($sig_limits[7] * 0.75))
+							$limit_broke = ((int) $sig_limits[7] * 0.75) . 'pt';
+						elseif ($matches[2][$ind] == 'em' && $size > ((float) $sig_limits[7] / 16))
+							$limit_broke = ((float) $sig_limits[7] / 16) . 'em';
+						elseif ($matches[2][$ind] != 'px' && $matches[2][$ind] != 'pt' && $matches[2][$ind] != 'em' && $sig_limits[7] < 18)
+							$limit_broke = 'large';
+
+						if ($limit_broke)
+							$sig = str_replace($matches[0][$key], '[size=' . $sig_limits[7] . 'px', $sig);
+					}
 				}
 
 				// Stupid images - this is stupidly, stupidly challenging.
