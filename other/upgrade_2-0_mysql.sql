@@ -1858,7 +1858,7 @@ ADD openid_uri text NOT NULL;
 /******************************************************************************/
 
 ---# Adding scheduled task...
-INSERT INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (0, 0, 1, 'w', 0, 'weekly_maintenance');
+INSERT IGNORE INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (0, 0, 1, 'w', 0, 'weekly_maintenance');
 ---#
 
 /******************************************************************************/
@@ -1866,7 +1866,7 @@ INSERT INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity
 /******************************************************************************/
 
 ---# Adding pruning option...
-INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
+INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
 ---#
 
 /******************************************************************************/
