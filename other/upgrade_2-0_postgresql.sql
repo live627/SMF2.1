@@ -178,7 +178,7 @@ else
 DELETE FROM {$db_prefix}log_polls
 WHERE id_member < 0;
 
-DROP INDEX {$db_prefix}log_polls_pkey;
+ALTER TABLE {$db_prefix}log_polls DROP CONSTRAINT {$db_prefix}log_polls_pkey;
 
 CREATE INDEX {$db_prefix}log_polls_id_poll ON {$db_prefix}log_polls (id_poll, id_member, id_choice);
 ---#
