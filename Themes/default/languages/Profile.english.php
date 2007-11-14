@@ -332,7 +332,7 @@ $txt['profile_error_signature_max_image_size'] = 'Images in your signature must 
 $txt['profile_error_signature_max_image_width'] = 'Images in your signature must be no wider than %1$d pixels';
 $txt['profile_error_signature_max_image_height'] = 'Images in your signature must be no higher than %1$d pixels';
 $txt['profile_error_signature_max_image_count'] = 'You cannot have more than %d images in your signature';
-$txt['profile_error_signature_max_font_size'] = 'Text in your signature cannot be greater than %d in size';
+$txt['profile_error_signature_max_font_size'] = 'Text in your signature must be smaller than %s in size';
 $txt['profile_error_signature_max_smileys'] = 'You are not allowed to use more than %d smiley\'s within your signature';
 $txt['profile_error_signature_disabled_bbc'] = 'The following BBC is not allowed within your signature: %s';
 
