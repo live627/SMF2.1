@@ -68,7 +68,7 @@ function template_print_above()
 		Standards compliance mode happens when you use xhtml... */
 	if ($context['browser']['needs_size_fix'])
 		echo '
-		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/fonts-compat.css" />';
+		<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/fonts-compat.css" />';
 
 	echo '
 	</head>

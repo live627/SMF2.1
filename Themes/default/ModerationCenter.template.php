@@ -881,7 +881,7 @@ function template_show_notice()
 	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
 	if ($context['browser']['needs_size_fix'])
 		echo '
-			@import(', $settings['default_theme_url'], '/fonts-compat.css);';
+			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
 
 	echo '
 		</style>

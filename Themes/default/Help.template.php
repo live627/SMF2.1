@@ -17,7 +17,7 @@ function template_popup()
 	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
 	if ($context['browser']['needs_size_fix'])
 		echo '
-			@import(', $settings['default_theme_url'], '/fonts-compat.css);';
+			@import(', $settings['default_theme_url'], '/css/fonts-compat.css);';
 
 	// Just show the help text and a "close window" link.
 	echo '

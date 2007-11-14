@@ -331,7 +331,7 @@ function mambo_smf_exit($with_output)
 			// ]]></script>' );
 	if ($smf_css == 'true'){
 		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?fin11" />' );
-		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?fin11" media="print" />' );
+		$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/css/print.css?fin11" media="print" />' );
 	}
 	$mainframe->addCustomHeadTag( '<link rel="help" ' . ob_mambofix('href="' . $scripturl . '?action=help' .'"') . ' target="_blank" />' );
 	$mainframe->addCustomHeadTag( '<link rel="search" ' . ob_mambofix('href="' . $scripturl . '?action=search' .'"') . ' />' );

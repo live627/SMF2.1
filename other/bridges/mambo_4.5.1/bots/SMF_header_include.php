@@ -81,7 +81,7 @@ function SMF_header_include( ) {
 			// ]]></script>' );
 		if ($smf_css == 'true'){
 			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['theme_url']. '/style.css?fin11" />' );
-			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/print.css?fin11" media="print" />' );
+			$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" href="'. $settings['default_theme_url']. '/css/print.css?fin11" media="print" />' );
 		}
 		$mainframe->addCustomHeadTag( '<link rel="help" href="'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'action=help') : $mosConfig_live_site . '/'. $myurl  . 'action=help' ) .'" target="_blank" />' );
 		$mainframe->addCustomHeadTag( '<link rel="search" href="' . ( $mosConfig_sef == 1 ? sefReltoAbs($myurl. 'action=search') : $mosConfig_live_site . '/'. $myurl . 'action=search' ) .'" />' );

@@ -17,13 +17,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	//var richTextPossible = is_ie5up || is_ff;
 
 	var frameHandle = null;
-	var frameElement = null;
 	var frameDocument = null;
 	var frameWindow = null;
 
 	// These hold the breadcrumb.
 	var breadHandle = null;
-	var breadElement = null;
 
 	var smileyPopupWindow = null;
 	var cur_session_id = sessionID;
@@ -179,23 +177,22 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		if (richTextPossible)
 		{
 			// Make the iframe itself, stick it next to the current text area, and give it an ID.
-			frameElement = document.createElement('iframe');
-			frameHandle = textHandle.parentNode.appendChild(frameElement);
+			frameHandle = document.createElement('iframe');
 			frameHandle.id = 'html_' . uid;
+			textHandle.parentNode.appendChild(frameHandle);
 
 			// Create some handy shortcuts.
-			frameDocument = frameElement.contentWindow.document;
-			frameWindow = frameElement.contentWindow;
+			frameDocument = frameHandle.contentWindow.document;
+			frameWindow = frameHandle.contentWindow;
 
 			// Create the debug window... and stick this under the main frame - make it invisible by default.
-			breadElement = document.createElement('div');
-			breadHandle = frameHandle.parentNode.appendChild(breadElement);
+			breadHandle = document.createElement('div');
 			breadHandle.id = 'bread_' . uid;
 			breadHandle.style.visibility = 'visible';
 			breadHandle.style.display = 'none';
+			frameHandle.parentNode.appendChild(breadHandle);
 
 			// Size the iframe dimensions to something sensible.
-			frameHandle.className = 'wysiwygEditor';
 			frameHandle.style.width = editWidth;
 			frameHandle.style.height = editHeight;
 			frameHandle.style.visibility = 'visible';
@@ -214,7 +211,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			if (!is_opera9up)
 			{
 				frameDocument.open();
-				frameDocument.write("<br />");
+				frameDocument.write("");
 				frameDocument.close();
 			}
 
@@ -224,12 +221,13 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			else
 				frameDocument.designMode = 'on';
 
-			// Fetch the font that should be used...
-			defFontFamily = fetchDefaultFont(textHandle, 'font-family');
-			frameDocument.body.style.fontFamily = defFontFamily;
-			
-			//!!! This should not be hard coded.
-			frameDocument.body.style.fontSize = '10pt';
+			// Load the style sheet and set the WYSIWYG editor to the right class...
+			ssheet = frameDocument.createElement('style');
+			frameDocument.documentElement.firstChild.appendChild(ssheet);
+			ssheet.styleSheet.cssText = document.styleSheets['rich_edit_css'].cssText;
+
+			// Apply the class...
+			frameDocument.body.className = 'rich_editor';
 
 			// Listen for input.
 			if (is_ff)
@@ -389,17 +387,17 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			// Do we have a font?
 			else if (crumbname == 'font')
 			{
-				if (crumb[i].getAttribute('face'))
+				if (crumb[i].getAttribute('face') && curFontName == '')
 				{
 					curFontName = crumb[i].getAttribute('face').toLowerCase();
 					crumbname = 'face';
 				}
-				if (crumb[i].getAttribute('size'))
+				if (crumb[i].getAttribute('size') && curFontSize == '')
 				{
 					curFontSize = crumb[i].getAttribute('size');
 					crumbname = 'size';
 				}
-				if (crumb[i].getAttribute('color'))
+				if (crumb[i].getAttribute('color') && curFontColor == '')
 				{
 					curFontColor = crumb[i].getAttribute('color');
 					if (fontColors[curFontColor])
@@ -434,7 +432,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			selectControls['color'].value = curFontColor ;
 
 		if (showDebug)
-			setInnerHTML(breadElement, tree);
+			setInnerHTML(breadHandle, tree);
 	}
 
 	// Set the HTML content to be that of the text box - if we are in wysiwyg mode.
@@ -1069,40 +1067,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			textHandle.focus();
 		else
 			frameWindow.focus();
-	}
-
-	// Get the font type from an element!
-	function fetchDefaultFont(elm, attr)
-	{
-		// Function that actually does the recursive work.
-		function fetchDefaultFontRec(elmR, attrR)
-		{
-			var retValueR = '';
-	
-			if (document.defaultView && document.defaultView.getComputedStyle)
-			{
-				var cStyle = document.defaultView.getComputedStyle(elm, null);
-				if (cStyle && cStyle.getPropertyValue)
-					retValueR = cStyle.getPropertyValue(attr);
-			}
-			if (!retValueR && elm.currentStyle)
-			{
-				retValueR = elm.currentStyle[attr == 'font-family' ? 'fontFamily' : 'fontSize'];
-			}
-	
-			return retValueR;
-		}
-
-		retValue = fetchDefaultFontRec(elm, attr);
-		while (!retValue || retValue == 'transparent')
-		{
-			if (elm == document.body)
-				return '';
-			elm = elm.parentNode;
-			retValue = fetchDefaultFontRec(elm, attr);
-		}
-
-		return retValue;
 	}
 
 	// Start up the spellchecker!

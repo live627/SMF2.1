@@ -74,7 +74,7 @@ function ShowHelp()
 
 	// We actually need a special style sheet for help ;)
 	$context['html_headers'] .= '
-		<link rel="stylesheet" type="text/css" href="' . (file_exists($settings['theme_dir'] . '/help.css') ? $settings['theme_url'] : $settings['default_theme_url']) . '/help.css" />';
+		<link rel="stylesheet" type="text/css" href="' . (file_exists($settings['theme_dir'] . '/css/help.css') ? $settings['theme_url'] : $settings['default_theme_url']) . '/css/help.css" />';
 }
 
 // Show some of the more detailed help to give the admin an idea...

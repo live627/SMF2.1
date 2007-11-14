@@ -1,11 +1,14 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2879 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2880 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
 November 2007
 --------------------------------------------------------------------------------
  * Removed white background in admin section, section headers now highlights. (Admin.template, dropdown.css, Genericmenu.template, Subs-Menu.php)
+ * Moved some additional css files to the css subdirectory. (print.css, wireless.css, fonts-compat.css plus various files)
+ + Added a new css file for the admin center and WYSIWYG editor. (editor.css, admin.css)
+ ! The WYSIWYG editor now doesn't show line breaks in IE when hitting enter, also state of style tracking is improved. (editor.js)
 
 
 October 2007

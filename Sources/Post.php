@@ -99,6 +99,9 @@ function Post()
 
 	loadLanguage('Post');
 
+	// Sometimes we just have to show the lovely editor and that needs style.
+	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/editor.css" />';
+
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 
 	// You can't reply with a poll... hacker.

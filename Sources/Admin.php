@@ -85,6 +85,9 @@ function AdminMain()
 	loadLanguage('Admin');
 	loadTemplate('Admin');
 
+	// We have our own special stylesheet for admin like stuff.
+	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/admin.css" />';
+
 	require_once($sourcedir . '/Subs-Menu.php');
 
 	// Some features we may have hidden.

@@ -732,7 +732,7 @@ function template_wap2_above()
 <html xmlns="http://www.w3.org/1999/xhtml"', $context['right_to_left'] ? ' dir="rtl"' : '', '>
 	<head>
 		<title>', $context['page_title'], '</title>
-		<link rel="stylesheet" href="', $settings['default_theme_url'], '/wireless.css" type="text/css" />
+		<link rel="stylesheet" href="', $settings['default_theme_url'], '/css/wireless.css" type="text/css" />
 	</head>
 	<body>';
 }

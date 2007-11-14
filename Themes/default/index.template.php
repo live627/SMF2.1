@@ -87,7 +87,7 @@ function template_html_above()
 	// The ?rc2 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/print.css?rc2" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
 
 	/* Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are big...)
 		Thus, in Internet Explorer 4, 5, and Opera 6 this will show fonts one size smaller than usual.
@@ -95,7 +95,7 @@ function template_html_above()
 		Standards compliance mode happens when you use xhtml... */
 	if ($context['browser']['needs_size_fix'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/fonts-compat.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/fonts-compat.css" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '

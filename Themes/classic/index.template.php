@@ -80,7 +80,7 @@ function template_html_above()
 	// ]]></script>
 	<title>', $context['page_title'], '</title>
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css?rc2" />
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/print.css?rc2" media="print" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/print.css?rc2" media="print" />';
 
 	// Please don't index these Mr Robot.
 	if (!empty($context['robot_no_index']))
@@ -93,7 +93,7 @@ function template_html_above()
 		Standards compliance mode happens when you use xhtml... */
 	if ($context['browser']['needs_size_fix'])
 		echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/fonts-compat.css" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/fonts-compat.css" />';
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
