@@ -21,7 +21,7 @@ function template_main()
 		{
 			echo '
 			<tr>
-				<td ' , !empty($board['children']) ? 'rowspan="2"' : '' , ' class="windowbg" width="6%" align="center" valign="top"><a href="', $scripturl, '?action=unread;board=', $board['id'], '.0;children">';
+				<td ' , !empty($board['children']) ? 'rowspan="2"' : '' , ' class="windowbg" width="6%" align="center" valign="top"><a href="', ($board['is_redirect'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
 
 			// If the board or children is new, show an indicator.
 			if ($board['new'] || $board['children_new'])
