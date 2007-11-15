@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2888 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2889 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -20,6 +20,7 @@ November 2007
  ! Removed test code for simplemachines.org (Subs-Auth.php)
  ! WYSIWYG editor now works much better with fonts in Internet Explorer. (Subs-Editor.php)
  ! We need the session when doing stats recount. (ManageMaintenance.php)
+ * When toggling an ignored post go back to the post instead of the top. (Display template)
 
 
 October 2007
