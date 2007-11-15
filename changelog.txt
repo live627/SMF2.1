@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2883 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2884 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -15,6 +15,7 @@ November 2007
  ! Only need one approval check per query. (SSI.php)
  ! Spelling and grammer mistakes. (xml_topic.js)
  ! Fixed the size tag regular expression. (Subs.php)
+ * 50 != 55. (Profile template)
 
 
 October 2007
@@ -64,8 +65,8 @@ October 2007
  ! Allow additional paramaters to be added to the url in a generic menu tab. (GenericMenu template)
  ! Link the (!) after the board name to the list of unapproved topics. (BoardIndex template, style.css)
  ! When limiting unapproved topics/posts to a board keep the board information in the link for the tabs. (PostModeration.php)
- 
- 
+
+
  September 2007
 =======
  ! Make sure the bridge knows where the javascript files are. (Mambo bridge/smf.php)
