@@ -1062,7 +1062,7 @@ function template_show_settings()
 			echo '
 					<tr class="titlebg">
 						<td colspan="3">
-							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), ' 
+							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
 							', $config_var['label'], '</td>
 					</tr>';
 
@@ -1089,7 +1089,7 @@ function template_show_settings()
 				$javascript = $config_var['javascript'];
 				$disabled = !empty($config_var['disabled']) ? ' disabled="disabled"' : '';
 				$subtext = !empty($config_var['subtext']) ? '<br /><span class="smalltext"> ' . $config_var['subtext'] . '</span>' : '';
-	
+
 				// Show the [?] button.
 				if ($config_var['help'])
 					echo '
@@ -1097,12 +1097,12 @@ function template_show_settings()
 				else
 					echo '
 							<td class="windowbg2"><a name="setting_', $config_var['name'], '"></a></td>';
-	
+
 				echo '
 							<td valign="top" ', ($config_var['disabled'] ? ' style="color: #777777;"' : ($config_var['invalid'] ? ' style="color: red; font-weight: bold;"' : '')), '><label for="', $config_var['name'], '">', $config_var['label'], $subtext, ($config_var['type'] == 'password' ? '<br /><i>' . $txt['admin_confirm_password'] . '</i>' : ''), '</label></td>
-							<td class="windowbg2" width="50%">', 
+							<td class="windowbg2" width="50%">',
 								$config_var['preinput'];
-	
+
 				// Show a check box.
 				if ($config_var['type'] == 'check')
 					echo '
@@ -1160,7 +1160,7 @@ function template_show_settings()
 				else
 					echo '
 								<input type="text"', $javascript, $disabled, ' name="', $config_var['name'], '" id="', $config_var['name'], '" value="', $config_var['value'], '"', ($config_var['size'] ? ' size="' . $config_var['size'] . '"' : ''), ' />';
-	
+
 				echo '
 								', $config_var['postinput'], '
 							</td>';
@@ -1290,7 +1290,7 @@ function template_edit_scheduled_tasks()
 				<td width="30%">
 					<b>', $txt['scheduled_task_edit_interval'], ':</b>
 				</td><td width="70%">
-					', $txt['scheduled_task_edit_repeat'], ' 
+					', $txt['scheduled_task_edit_repeat'], '
 					<input type="text" name="regularity" value="', empty($context['task']['regularity']) ? 1 : $context['task']['regularity'], '" onchange="if (this.value < 1) this.value = 1;" size="2" maxlength="2" />
 					<select name="unit">
 						<option value="0">', $txt['scheduled_task_edit_pick_unit'], '</option>
@@ -1741,7 +1741,7 @@ function template_admin_search_results()
 						<input type="text" name="search_term" value="', $context['search_term'], '" />
 						<input type="hidden" name="search_type" value="', $context['search_type'], '" />
 						<input type="submit" name="search_go" value="', $txt['admin_search_results_again'], '" />
-					</form> 
+					</form>
 				</div>
 			</td>
 		</tr>
@@ -1767,9 +1767,9 @@ function template_admin_search_results()
 					<li class="windowbg">
 						<p>
 							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank"><strong>', $result['messages'][0]['subject'], '</strong></a>
-							<br /><span class="smalltext"><a href="', $result['category']['href'], '" target="_blank">', $result['category']['name'], '</a> &nbsp;/&nbsp; 
+							<br /><span class="smalltext"><a href="', $result['category']['href'], '" target="_blank">', $result['category']['name'], '</a> &nbsp;/&nbsp;
 							<a href="', $result['board']['href'], '" target="_blank">', $result['board']['name'], '</a> /</span>
-						</p>	
+						</p>
 						<p class="quote">
 							', $result['messages'][0]['body'], '
 						</p>
@@ -1786,7 +1786,7 @@ function template_admin_search_results()
 				echo '
 						<br /><span class="smalltext">', $result['help'], '</span>';
 
-			echo '			
+			echo '
 					</li>';
 		}
 	}
@@ -1812,8 +1812,8 @@ function template_core_features()
 			itemValueHandle.value = itemValueHandle.value == 1 ? 0 : 1;
 
 			// Change the image and alt.
-			document.getElementById("switch_" + itemID).src = \'', $settings['images_url'], '/admin/switch_\' + (itemValueHandle.value == 1 ? \'on\' : \'off\') + \'.gif\'; 
-			document.getElementById("switch_" + itemID).alt = itemValueHandle.value == 1 ? \'', $txt['core_settings_switch_off'], '\' : \'', $txt['core_settings_switch_on'], '\'; 
+			document.getElementById("switch_" + itemID).src = \'', $settings['images_url'], '/admin/switch_\' + (itemValueHandle.value == 1 ? \'on\' : \'off\') + \'.gif\';
+			document.getElementById("switch_" + itemID).alt = itemValueHandle.value == 1 ? \'', $txt['core_settings_switch_off'], '\' : \'', $txt['core_settings_switch_on'], '\';
 
 			// Don\'t reload.
 			return false;
@@ -1899,8 +1899,9 @@ function template_language_files()
 	//return;
 	// Add a new language?
 	echo '
+	<br />
 	<form action="', $scripturl, '?action=admin;area=serversettings;sa=languages;sesc=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-	<table align="center" width="80%" cellpadding="5" cellspacing="0" class="tborder">
+	<table align="center" width="100%" cellpadding="5" cellspacing="0" class="tborder">
 		<tr class="titlebg">
 			<td>
 				', $txt['add_language'], '
@@ -2117,7 +2118,7 @@ function template_download_language()
 							<input type="text" size="50" name="ftp_path" id="ftp_path" value="', $context['package_ftp']['path'], '" style="width: 99%;" />
 						</td>
 					</tr>
-				</table><br />				
+				</table><br />
 			</div></div>';
 	}
 
