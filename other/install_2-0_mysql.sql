@@ -703,7 +703,7 @@ CREATE TABLE {$db_prefix}custom_fields (
 CREATE TABLE {$db_prefix}group_moderators (
   id_group smallint(5) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY (id_group, id_member) 
+  PRIMARY KEY (id_group, id_member)
 ) TYPE=MyISAM;
 
 #
@@ -1702,7 +1702,8 @@ VALUES ('smfVersion', '{$smf_version}'),
 	('warning_mute', '60'),
 	('admin_features', ''),
 	('last_mod_report_action', '0'),
-	('pruningOptions', '30,180,180,180,30');
+	('pruningOptions', '30,180,180,180,30'),
+	('cache_enable', '1');
 # --------------------------------------------------------
 
 #

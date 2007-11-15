@@ -52,6 +52,35 @@ CREATE TABLE {$db_prefix}log_spider_stats (
 ---#
 
 /******************************************************************************/
+--- Adding new forum settings.
+/******************************************************************************/
+
+---# Enable cache if upgrading from 1.1 and lower.
+---{
+if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta 1')
+{
+	$request = upgrade_query("
+		SELECT value
+		FROM {$db_prefix}settings
+		WHERE variable = 'cache_enable'");
+	list ($cache_enable) = $smfFunc['db_fetch_row']($request);
+
+	// No cache before 1.1.
+	if ($smfFunc['db_num_rows']($request) == 0)
+		upgrade_query("
+			INSERT INTO {$db_prefix}settings
+				(variable, value)
+			VALUES ('cache_enable', '1')");
+	elseif (empty($cache_enable))
+		upgrade_query("
+			UPDATE {$db_prefix}settings
+			SET value = '1'
+			WHERE variable = 'cache_enable'");
+}
+---}
+---#
+
+/******************************************************************************/
 --- Adding weekly maintenance task.
 /******************************************************************************/
 

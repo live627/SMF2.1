@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2884 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2885 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -16,6 +16,7 @@ November 2007
  ! Spelling and grammer mistakes. (xml_topic.js)
  ! Fixed the size tag regular expression. (Subs.php)
  * 50 != 55. (Profile template)
+ ! Turn on caching by default on install or upgrading from 1.1 or lower. (install and upgrade files)
 
 
 October 2007

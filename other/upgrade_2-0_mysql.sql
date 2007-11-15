@@ -394,7 +394,7 @@ foreach ($nameChanges as $table_name => $table)
 		// Here we go - hold on!
 		protected_alter($change, $substep);
 	}
-	
+
 	// Update where we are!
 	$step_progress['current'] = $_GET['ren_col'];
 }
@@ -501,6 +501,31 @@ if (mysql_num_rows($request) != 0)
 upgrade_query("
 	DELETE FROM {$db_prefix}themes
 	WHERE variable = 'show_sp1_info'");
+---}
+---#
+
+---# Enable cache if upgrading from 1.1 and lower.
+---{
+if (isset($modSettings['smfVersion']) && $modSettings['smfVersion'] <= '2.0 Beta 1')
+{
+	$request = upgrade_query("
+		SELECT value
+		FROM {$db_prefix}settings
+		WHERE variable = 'cache_enable'");
+	list ($cache_enable) = $smfFunc['db_fetch_row']($request);
+
+	// No cache before 1.1.
+	if ($smfFunc['db_num_rows']($request) == 0)
+		upgrade_query("
+			INSERT INTO {$db_prefix}settings
+				(variable, value)
+			VALUES ('cache_enable', '1')");
+	elseif (empty($cache_enable))
+		upgrade_query("
+			UPDATE {$db_prefix}settings
+			SET value = '1'
+			WHERE variable = 'cache_enable'");
+}
 ---}
 ---#
 
@@ -960,7 +985,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_group_requests (
 	time_applied int(10) unsigned NOT NULL default '0',
 	reason text NOT NULL,
 	PRIMARY KEY (id_request),
-	UNIQUE id_member (id_member, id_group) 
+	UNIQUE id_member (id_member, id_group)
 ) TYPE=MyISAM{$db_collation};
 ---#
 
@@ -979,7 +1004,7 @@ ADD hidden tinyint(3) NOT NULL default '0';
 CREATE TABLE IF NOT EXISTS {$db_prefix}group_moderators (
 	id_group smallint(5) unsigned NOT NULL default '0',
 	id_member mediumint(8) unsigned NOT NULL default '0',
-	PRIMARY KEY (id_group, id_member) 
+	PRIMARY KEY (id_group, id_member)
 ) TYPE=MyISAM{$db_collation};
 ---#
 
@@ -1037,27 +1062,27 @@ if (@$modSettings['smfVersion'] < '2.0')
 		function getAttachmentFilename($filename, $attachment_id)
 		{
 			global $modSettings;
-		
-			$clean_name = strtr($filename, 'ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');
-			$clean_name = strtr($clean_name, array('Þ' => 'TH', 'þ' => 'th', 'Ð' => 'DH', 'ð' => 'dh', 'ß' => 'ss', 'Œ' => 'OE', 'œ' => 'oe', 'Æ' => 'AE', 'æ' => 'ae', 'µ' => 'u'));
+
+			$clean_name = strtr($filename, 'Å Å½Å¡Å¾Å¸Ã€ÃÃ‚ÃƒÃ„Ã…Ã‡ÃˆÃ‰ÃŠÃ‹ÃŒÃÃŽÃÃ‘Ã’Ã“Ã”Ã•Ã–Ã˜Ã™ÃšÃ›ÃœÃÃ Ã¡Ã¢Ã£Ã¤Ã¥Ã§Ã¨Ã©ÃªÃ«Ã¬Ã­Ã®Ã¯Ã±Ã²Ã³Ã´ÃµÃ¶Ã¸Ã¹ÃºÃ»Ã¼Ã½Ã¿', 'SZszYAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy');
+			$clean_name = strtr($clean_name, array('Ãž' => 'TH', 'Ã¾' => 'th', 'Ã' => 'DH', 'Ã°' => 'dh', 'ÃŸ' => 'ss', 'Å’' => 'OE', 'Å“' => 'oe', 'Ã†' => 'AE', 'Ã¦' => 'ae', 'Âµ' => 'u'));
 			$clean_name = preg_replace(array('/\s/', '/[^\w_\.\-]/'), array('_', ''), $clean_name);
 			$enc_name = $attachment_id . '_' . strtr($clean_name, '.', '_') . md5($clean_name);
 			$clean_name = preg_replace('~\.[\.]+~', '.', $clean_name);
-		
+
 			if ($attachment_id == false)
 				return $clean_name;
-		
+
 			if (file_exists($modSettings['attachmentUploadDir'] . '/' . $enc_name))
 				$filename = $modSettings['attachmentUploadDir'] . '/' . $enc_name;
 			else
 				$filename = $modSettings['attachmentUploadDir'] . '/' . $clean_name;
-		
+
 			return $filename;
 		}
 	}
 
 	$ext_updates = array();
-	
+
 	// What headers are valid results for getimagesize?
 	$validTypes = array(
 		1 => 'gif',
@@ -1070,7 +1095,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 		9 => 'jpeg',
 		14 => 'iff',
 	);
-	
+
 	$is_done = false;
 	while (!$is_done)
 	{
@@ -1090,7 +1115,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 			$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
 			if (!file_exists($filename))
 				continue;
-	
+
 			// Is it an image?
 			$size = @getimagesize($filename);
 			// Nothing valid?
@@ -1104,7 +1129,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 				continue;
 			else
 				$mime = 'image/' . $validTypes[$size[2]];
-	
+
 			// Let's try keep updates to a minimum.
 			if (!isset($ext_updates[$row['fileext'] . $size['mime']]))
 				$ext_updates[$row['fileext'] . $size['mime']] = array(
@@ -1115,7 +1140,7 @@ if (@$modSettings['smfVersion'] < '2.0')
 			$ext_updates[$row['fileext'] . $size['mime']]['files'][] = $row['id_attach'];
 		}
 		$smfFunc['db_free_result']($request);
-	
+
 		// Do the updates?
 		foreach ($ext_updates as $key => $update)
 		{
@@ -1127,11 +1152,11 @@ if (@$modSettings['smfVersion'] < '2.0')
 			// Remove it.
 			unset($ext_updates[$key]);
 		}
-	
+
 		$_GET['a'] += 100;
 		$step_progress['current'] = $_GET['a'];
 	}
-	
+
 	unset($_GET['a']);
 }
 ---}
@@ -1239,7 +1264,7 @@ while ($_GET['m'] < $totalActions)
 		FROM {$db_prefix}log_errors
 		LIMIT $_GET[m], 500");
 	while($row = mysql_fetch_assoc($request))
-	{	
+	{
 		preg_match('~<br />(%1\$s: )?([\w\. \\\\/\-_:]+)<br />(%2\$s: )?([\d]+)~', $row['message'], $matches);
 		if (!empty($matches[2]) && !empty($matches[4]) && empty($row['file']) && empty($row['line']))
 		{
@@ -1674,7 +1699,7 @@ while ($_GET['m'] < $totalActions)
 			$board_id = (int) $row['extra']['board_to'];
 			unset($row['extra']['board_to']);
 		}
-		
+
 		if (!empty($row['extra']['topic']))
 		{
 			$topic_id = (int) $row['extra']['topic'];

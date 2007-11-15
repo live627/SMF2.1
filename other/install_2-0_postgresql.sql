@@ -5,7 +5,7 @@
 # Create PostgreSQL functions.
 # Some taken from http://www.xach.com/aolserver/mysql-functions.sql.
 
-CREATE OR REPLACE FUNCTION FROM_UNIXTIME(integer) RETURNS timestamp AS 
+CREATE OR REPLACE FUNCTION FROM_UNIXTIME(integer) RETURNS timestamp AS
   'SELECT timestamp ''epoch'' + $1 * interval ''1 second'' AS result'
 LANGUAGE 'sql';
 
@@ -75,7 +75,7 @@ LANGUAGE 'sql';
 
 CREATE OR REPLACE FUNCTION CONCAT (text, text) RETURNS text AS
   'SELECT $1 || $2 AS result'
-LANGUAGE 'sql'; 
+LANGUAGE 'sql';
 
 #
 # Create PostgreSQL operators.
@@ -2109,6 +2109,7 @@ INSERT INTO {$db_prefix}settings (variable, value) VALUES ('warning_mute', '60')
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('admin_features', '');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('last_mod_report_action', '0');
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
+INSERT INTO {$db_prefix}settings (variable, value) VALUES ('cache_enable', '1');
 # --------------------------------------------------------
 
 #
