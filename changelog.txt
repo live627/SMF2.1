@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2882 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2883 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -12,6 +12,9 @@ November 2007
  ! Restricting number of lines in signature was one line out. (Profile.php)
  ! Restricting font size in signature now does best to do px, pt, em and text based sizes. (Profile.php, ManageSettings.php)
  ! Also check HTML images when restricting signature usage. (Profile.php, ManageSettings.php)
+ ! Only need one approval check per query. (SSI.php)
+ ! Spelling and grammer mistakes. (xml_topic.js)
+ ! Fixed the size tag regular expression. (Subs.php)
 
 
 October 2007

@@ -73,7 +73,7 @@ function QuickModify(oOptions)
 	}
 }
 
-// Determine whether the quick modify can actualy be used.
+// Determine whether the quick modify can actually be used.
 QuickModify.prototype.isXmlHttpCapable = function ()
 {
 	if (typeof(window.XMLHttpRequest) == 'undefined')
@@ -126,10 +126,10 @@ QuickModify.prototype.onMessageReceived = function (XMLDoc)
 	this.oCurMessageDiv = document.getElementById(this.sCurMessageId);
 	this.sMessageBuffer = getInnerHTML(this.oCurMessageDiv);
 
-	// We have to force the body to lose it's dollar signs thanks to IE.
+	// We have to force the body to lose its dollar signs thanks to IE.
 	sBodyText = sBodyText.replace(/\$/g, '{&dollarfix;$}');
 
-	// Actually create the content, with a bodge for dissapearing dollar signs.
+	// Actually create the content, with a bodge for disappearing dollar signs.
 	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/%body%/, sBodyText).replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/\{&dollarfix;\$\}/g, '$'));
 	
 	// Replace the subject part.
@@ -156,7 +156,7 @@ QuickModify.prototype.modifyCancel = function ()
 	return false;
 }
 
-// The function called after a user want to save his pressious message.
+// The function called after a user wants to save his precious message.
 QuickModify.prototype.modifySave = function (sSessionId)
 {
 	// We cannot save if we weren't in edit mode.

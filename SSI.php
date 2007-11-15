@@ -610,7 +610,6 @@ function ssi_topTopics($type = 'replies', $num_topics = 10, $output_method = 'ec
 			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : '') . "
 			AND $user_info[query_wanna_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
 			AND b.id_board != $modSettings[recycle_board]" : '') . "
-			AND t.approved = 1
 		ORDER BY t.num_" . ($type != 'replies' ? 'views' : 'replies') . " DESC
 		LIMIT $num_topics", __FILE__, __LINE__);
 	$topics = array();
