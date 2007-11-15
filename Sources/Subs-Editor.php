@@ -38,6 +38,9 @@ if (!defined('SMF'))
 	void html_to_bbc()
 		// !!
 
+	void fetchTagAttributes()
+		// !!
+
 	array getMessageIcons(int board_id)
 	- retrieves a list of message icons.
 	- based on the settings, the array will either contain a list of default
@@ -300,38 +303,60 @@ function html_to_bbc($text)
  	}
 
 	// Let's do some special stuff for fonts - cause we all love fonts.
-	while (preg_match('~<font\s+([A-Za-z]+="*[#\w\s]+"*)\s*([A-Za-z]+="*[#\w\s]+"*)*\s*([A-Za-z]+="*[#\w\s]+"*)*[^<>]*?>~i', $text, $matches) != false)
+	while (preg_match('~<font\s+([^<>]*)>~i', $text, $matches) != false)
 	{
-	  	$tags = array();
-
 		// Find the position of this again.
-	  	$start_pos = strpos($text, $matches[0]);
+  	$start_pos = strpos($text, $matches[0]);
+  	$end_pos = false;
 		if ($start_pos === false)
 			break;
 
-		// This must have an end tag!
-		$end_pos = strpos(strtolower($text), '</font>', $start_pos);
+		// This must have an end tag - and we must find the right one.
+		$lower_text = strtolower($text);
+
+		$start_pos_test = $start_pos + 4;
+		// How many starting tags must we find closing ones for first?
+		$start_font_tag_stack = 0;
+		while ($start_pos_test < strlen($text))
+		{
+			// Where is the next starting font?
+			$next_start_pos = strpos($lower_text, '<font', $start_pos_test);
+			$next_end_pos = strpos($lower_text, '</font>', $start_pos_test);
+
+			// Did we past another starting tag before an end one?
+			if ($next_start_pos !== false && $next_start_pos < $next_end_pos)
+			{
+				$start_font_tag_stack++;
+				$start_pos_test = $next_start_pos + 4;
+			}
+			// Otherwise we have an end tag but not the right one?
+			elseif ($start_font_tag_stack)
+			{
+				$start_font_tag_stack--;
+				$start_pos_test = $next_end_pos + 4;
+			}
+			// Otherwise we're there!
+			else
+			{
+				$end_pos = $next_end_pos;
+				break;
+			}
+		}
 		if ($end_pos === false)
 			break;
 
-		for ($i = 1; $i < 4; $i++)
+		// Now work out what the attributes are.
+		$attribs = fetchTagAttributes($matches[1]);
+  	$tags = array();
+		foreach ($attribs as $s => $v)
 		{
-			if (!empty($matches[$i]))
-			{
-				$matches[$i] = strtr($matches[$i], array('"' => ''));
-				list ($s, $v) = explode('=', $matches[$i]);
-				if (empty($v))
-					continue;
-				$s = trim(strtolower($s));
-
-				if ($s == 'size')
-					$tags[] = array('[size=' . (int) trim($v) . ']', '[/size]');
-				elseif ($s == 'face')
-					$tags[] = array('[font=' . trim(strtolower($v)) . ']', '[/font]');
-				elseif ($s == 'color')
-					$tags[] = array('[color=' . trim(strtolower($v)) . ']', '[/color]');
-   			}
-  		}
+			if ($s == 'size')
+				$tags[] = array('[size=' . (int) trim($v) . ']', '[/size]');
+			elseif ($s == 'face')
+				$tags[] = array('[font=' . trim(strtolower($v)) . ']', '[/font]');
+			elseif ($s == 'color')
+				$tags[] = array('[color=' . trim(strtolower($v)) . ']', '[/color]');
+		}
 
 		// As before add in our tags.
 		$before = $after = '';
@@ -492,6 +517,61 @@ function html_to_bbc($text)
 	$text = preg_replace('~\[[bisu]\]\s*\[/[bisu]\]~', '', $text);
 
 	return $text;
+}
+
+// Returns an array of attributes associated with a tag.
+function fetchTagAttributes($text)
+{
+	$attribs = array();
+	$key = $value = '';
+	$strpos = 0;
+	$tag_state = 0; // 0 = key, 1 = attribute with no string, 2 = attribute with string
+	for ($i = 0; $i < strlen($text); $i++)
+	{
+		// We're either moving from the key to the attribute or we're in a string and this is fine.
+		if ($text{$i} == '=')
+		{
+			if ($tag_state == 0)
+				$tag_state = 1;
+			elseif ($tag_state == 2)
+				$value .= '=';
+		}
+		// A space is either moving from an attribute back to a potential key or in a string is fine.
+		elseif ($text{$i} == ' ')
+		{
+			if ($tag_state == 2)
+				$value .= ' ';
+			elseif ($tag_state == 1)
+			{
+				$attribs[$key] = $value;
+				$key = $value = '';
+				$tag_state = 0;
+			}
+		}
+		// A quote?
+		elseif ($text{$i} == '"')
+		{
+			// Must be either going into or out of a string.
+			if ($tag_state == 1)
+				$tag_state = 2;
+			else
+				$tag_state = 1;
+		}
+		// Otherwise it's fine.
+		else
+		{
+			if ($tag_state == 0)
+				$key .= $text{$i};
+			else
+				$value .= $text{$i};
+		}
+	}
+
+	// Anything left?
+	if ($key != '' && $value != '')
+		$attribs[$key] = $value;
+
+	return $attribs;
 }
 
 function getMessageIcons($board_id)

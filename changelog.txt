@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2886 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2887 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -18,6 +18,7 @@ November 2007
  * 50 != 55. (Profile template)
  ! Turn on caching by default on install or upgrading from 1.1 or lower. (install and upgrade files)
  ! Removed test code for simplemachines.org (Subs-Auth.php)
+ ! WYSIWYG editor now works much better with fonts in Internet Explorer. (Subs-Editor.php)
 
 
 October 2007
