@@ -77,7 +77,7 @@ if (!defined('SMF'))
 
 	array findMembers(array names, bool use_wildcards = false,
 			bool buddies_only = false, int max = none)
-		- searches for members whose username, display name, or e-mail address 
+		- searches for members whose username, display name, or e-mail address
 		  match the given pattern of array names.
 		- accepts wildcards ? and * in the patern if use_wildcards is set.
 		- retrieves a maximum of max members, if passed.
@@ -229,7 +229,7 @@ function url_parts($local, $global)
 	// We shouldn't use a host at all if both options are off.
 	elseif (!$local && !$global)
 		$parsed_url['host'] = '';
-		
+
 	// The host also shouldn't be set if there aren't any dots in it.
 	elseif (!isset($parsed_url['host']) || strpos($parsed_url['host'], '.') === false)
 		$parsed_url['host'] = '';
@@ -739,13 +739,6 @@ function rebuildModCache()
 	if ($board_query == '0=1')
 	{
 		$boards = boardsAllowedTo('moderate_board');
-		//!!! This should be removed as it's about the test board at SM!!!
-		$disable = true;
-		foreach ($boards as $board)
-			if ($board != 7 || $GLOBALS['scripturl'] != 'http://www.simplemachines.org/community/index.php')
-				$disable = false;
-		if ($disable)
-			$boards = array();
 
 		if (empty($boards))
 			$board_query = '0=1';
