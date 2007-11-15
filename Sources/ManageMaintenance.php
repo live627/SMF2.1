@@ -1128,7 +1128,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=0;start=' . $_REQUEST['start'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=0;start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
 				$context['continue_percent'] = round((100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1167,7 +1167,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=1;start=' . $_REQUEST['start'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=1;start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
 				$context['continue_percent'] = round((200 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1205,7 +1205,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=2;start=' . $_REQUEST['start'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=2;start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
 				$context['continue_percent'] = round((300 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1243,7 +1243,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=3;start=' . $_REQUEST['start'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=3;start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
 				$context['continue_percent'] = round((400 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1281,7 +1281,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=4;start=' . $_REQUEST['start'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=4;start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
 				$context['continue_percent'] = round((500 + 100 * $_REQUEST['start'] / $max_topics) / $total_steps);
 
 				return;
@@ -1318,7 +1318,7 @@ function AdminBoardRecount()
 
 		if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 		{
-			$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=6;start=0';
+			$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=6;start=0;sesc=' . $context['session_id'];
 			$context['continue_percent'] = round(700 / $total_steps);
 
 			return;
@@ -1351,7 +1351,7 @@ function AdminBoardRecount()
 
 			if (array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)) > 3)
 			{
-				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=6;start=' . $_REQUEST['start'];
+				$context['continue_get_data'] = '?action=admin;area=maintain;sa=recount;step=6;start=' . $_REQUEST['start'] . ';sesc=' . $context['session_id'];
 				$context['continue_percent'] = round((700 + 100 * $_REQUEST['start'] / $modSettings['maxMsgID']) / $total_steps);
 
 				return;
