@@ -281,4 +281,8 @@ $txt['permissions_post_moderation_moderate'] = 'Can create but requires approval
 $txt['permissions_post_moderation_disallow'] = 'Cannot create';
 $txt['permissions_post_moderation_group'] = 'Group';
 
+$txt['auto_approve_topics'] = 'Automatically Approve Topics';
+$txt['auto_approve_replies'] = 'Automatically Approve Replies';
+$txt['auto_approve_attachments'] = 'Automatically Approve Attachments';
+
 ?>

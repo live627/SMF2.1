@@ -1,5 +1,5 @@
 Changes go downward, months go upward.  Please scroll to the bottom for a legend.
-Changelog started January 1, 2004; Currently at $Revision: 1.2890 $.
+Changelog started January 1, 2004; Currently at $Revision: 1.2891 $.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
@@ -22,6 +22,10 @@ November 2007
  ! We need the session when doing stats recount. (ManageMaintenance.php)
  * When toggling an ignored post go back to the post instead of the top. (Display template)
  * You can't view unread posts for redirect boards ;). (MessageIndex.template, BoardIndex.template)
+ ! Allow reporting of your own posts.  There are times when it is perfectly logical. (SendTopic.php, Errors language file)
+ ! Made the post moderation permissions more understanable. (ManagePermissions.php, ManagePermissions language file)
+ * When adding a new board default to adding the board below instead of above. (ManageBoard template)
+ & Improved some of the error messages. (Errors language file)
 
 
 October 2007

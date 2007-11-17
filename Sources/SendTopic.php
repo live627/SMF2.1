@@ -305,10 +305,6 @@ function ReportToModerator()
 	list ($_GET['msg'], $member, $starter) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
-	// If they can't modify their post, then they should be able to report it... otherwise it is illogical.
-	if ($member == $user_info['id'] && (allowedTo(array('modify_own', 'modify_any')) || ($user_info['id'] == $starter && allowedTo('modify_replies'))))
-		fatal_lang_error('rtm_not_own', false);
-
 	// Show the inputs for the comment, etc.
 	loadLanguage('Post');
 	loadTemplate('SendTopic');
@@ -339,7 +335,7 @@ function ReportToModerator2()
 	$_POST['msg'] = (int) $_POST['msg'];
 
 	$request = $smfFunc['db_query']('', "
-		SELECT m.id_topic, m.id_board, m.subject, m.body, m.id_member AS ID_POSTER, m.poster_name, mem.real_name
+		SELECT m.id_topic, m.id_board, m.subject, m.body, m.id_member AS id_poster, m.poster_name, mem.real_name
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (m.id_member = mem.id_member)
 		WHERE m.id_msg = $_POST[msg]
@@ -349,9 +345,6 @@ function ReportToModerator2()
 		fatal_lang_error('no_board');
 	$message = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
-
-	if ($message['ID_POSTER'] == $user_info['id'])
-		fatal_lang_error('rtm_not_own', false);
 
 	$poster_name = un_htmlspecialchars($message['real_name']) . ($message['real_name'] != $message['poster_name'] ? ' (' . $message['poster_name'] . ')' : '');
 	$reporterName = un_htmlspecialchars($user_info['name']) . ($user_info['name'] != $user_info['username'] && $user_info['username'] != '' ? ' (' . $user_info['username'] . ')' : '');
@@ -408,7 +401,7 @@ function ReportToModerator2()
 					(id_msg, id_topic, id_board, id_member, membername, subject, body, time_started, time_updated,
 						num_reports, closed)
 				VALUES
-					($_POST[msg], $message[id_topic], $message[id_board], $message[ID_POSTER], '$message[real_name]', '$message[subject]', '$message[body]', " . time() . ",
+					($_POST[msg], $message[id_topic], $message[id_board], $message[id_poster], '$message[real_name]', '$message[subject]', '$message[body]', " . time() . ",
 						" . time() . ", 1, 0)", __FILE__, __LINE__);
 			$id_report = $smfFunc['db_insert_id']("{$db_prefix}log_reported", 'id_report');
 		}

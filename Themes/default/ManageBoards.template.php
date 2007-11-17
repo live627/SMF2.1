@@ -278,9 +278,9 @@ function template_modify_board()
 	echo '
 				<select id="order" name="placement" onchange="this.form.board_order.disabled = this.options[this.selectedIndex].value == \'\';">
 					', !isset($context['board']['is_new']) ? '<option value="">(' . $txt['mboards_unchanged'] . ')</option>' : '', '
-					<option value="before">' . $txt['mboards_order_before'] . '...</option>
-					<option value="child">' . $txt['mboards_order_child_of'] . '...</option>
 					<option value="after">' . $txt['mboards_order_after'] . '...</option>
+					<option value="child">' . $txt['mboards_order_child_of'] . '...</option>
+					<option value="before">' . $txt['mboards_order_before'] . '...</option>
 				</select>&nbsp;&nbsp;';
 
 	// The second select box lists all the boards in the category.

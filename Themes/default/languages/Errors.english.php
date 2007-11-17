@@ -18,8 +18,8 @@ $txt['members_only'] = 'This service is only for members...';
 $txt['login_to_post'] = 'To post you must be logged in. If you don\'t have an account yet, please <a href="' . $scripturl . '?action=register">register</a>.';
 $txt['passwords_dont_match'] = 'Passwords aren\'t the same.';
 $txt['register_to_use'] = 'Sorry, you must register before using this feature.';
-$txt['password_invalid_character'] = 'Invalid character used in Password.';
-$txt['name_invalid_character'] = 'Invalid character used in Name.';
+$txt['password_invalid_character'] = 'Invalid character used in password.';
+$txt['name_invalid_character'] = 'Invalid character used in name.';
 $txt['email_invalid_character'] = 'Invalid character used in email.';
 $txt['username_reserved'] = 'The username you tried to use contains the reserved name \'%s\'. Please try another username.';
 $txt['numbers_one_to_nine'] = 'This field only accepts numbers from 0-9';
@@ -72,8 +72,8 @@ $txt['cannot_calendar_edit_any'] = 'You cannot edit calendar events.';
 $txt['cannot_calendar_edit_own'] = 'You don\'t have the privileges necessary to edit your own events.';
 $txt['cannot_calendar_post'] = 'Event posting isn\'t allowed - sorry.';
 $txt['cannot_calendar_view'] = 'Sorry, but you are not allowed to view the calendar.';
-$txt['cannot_remove_any'] = 'Sorry, but you don\'t have the privilege to remove just any topic.';
-$txt['cannot_remove_own'] = 'You cannot delete your own topics in this board.';
+$txt['cannot_remove_any'] = 'Sorry, but you don\'t have the privilege to remove just any topic.  Check to make sure this topic wasn\'t just moved to another board.';
+$txt['cannot_remove_own'] = 'You cannot delete your own topics in this board.  Check to make sure this topic wasn\'t just moved to another board.';
 $txt['cannot_edit_news'] = 'You are not allowed to edit news items on this forum.';
 $txt['cannot_pm_read'] = 'Sorry, you can\'t read your personal messages.';
 $txt['cannot_pm_send'] = 'You are not allowed to send personal messages.';
@@ -213,8 +213,6 @@ $txt['theme_edit_missing'] = 'The file you are trying to edit... can\'t even be 
 $txt['attachments_no_write'] = 'The attachments upload directory is not writable.  Your attachment or avatar cannot be saved.';
 $txt['attachments_limit_per_post'] = 'You may not upload more than %d attachments per post';
 
-$txt['rtm_not_own'] = 'You can\'t report your own post to the moderator, that doesn\'t make sense!';
-
 $txt['no_dump_database'] = 'Only administrators can make database backups!';
 $txt['pm_not_yours'] = 'The personal message you\'re trying to quote is not your own or does not exist, please go back and try again.';
 $txt['mangled_post'] = 'Mangled form data - please go back and try again.';
@@ -300,7 +298,7 @@ $txt['profile_error_email_taken'] = 'Another user is already registered with tha
 $txt['profile_error_no_password'] = 'You did not enter your password';
 $txt['profile_error_bad_new_password'] = 'The new passwords you entered do not match';
 $txt['profile_error_bad_password'] = 'The password you entered was not correct';
-$txt['profile_error_bad_avatar'] = 'The avatar you have selected is too large, or not an avatar';
+$txt['profile_error_bad_avatar'] = 'The avatar you have selected is either too large or not an avatar';
 $txt['profile_error_password_short'] = 'Your password must be at least ' . (empty($modSettings['password_strength']) ? 4 : 8) . ' characters long.';
 $txt['profile_error_password_restricted_words'] = 'Your password must not contain your username, email address or other commonly used words.';
 $txt['profile_error_password_chars'] = 'Your password must contain a mix of upper and lower case letters, as well as digits.';
@@ -309,7 +307,7 @@ $txt['profile_error_already_requested_group'] = 'You already have an outstanding
 $txt['mysql_error_space'] = ' - check database storage space or contact the server administrator.';
 
 $txt['icon_not_found'] = 'The icon image could not be found in the default theme - please ensure the image has been uploaded and try again.';
-$txt['icon_after_itself'] = 'The icon can not be positioned after itself!';
+$txt['icon_after_itself'] = 'The icon cannot be positioned after itself!';
 $txt['icon_name_too_long'] = 'Icon filenames cannot be more than 16 characters long';
 
 $txt['name_censored'] = 'Sorry, the name you tried to use, %s, contains words which have been censored.  Please try another name.';
@@ -327,7 +325,7 @@ $txt['loadavg_unreadreplies_disabled'] = 'The server is currently under high str
 $txt['loadavg_show_posts_disabled'] = 'Please try again later.  This member\'s posts are not currently available due to high load on the server.';
 
 // Untranslated!
-$txt['cannot_edit_permissions_inherited'] = 'You can not edit inherited permissions directly, you must either edit the parent group or edit the membergroup inheritance.';
+$txt['cannot_edit_permissions_inherited'] = 'You cannot edit inherited permissions directly, you must either edit the parent group or edit the membergroup inheritance.';
 
 $txt['mc_no_modreport_specified'] = 'You need to specify which report you wish to view.';
 $txt['mc_no_modreport_found'] = 'The specified report either doesn\'t exist or is off limits to you';
@@ -343,7 +341,7 @@ $txt['mboards_delete_error'] = 'No category selected!';
 $txt['mboards_delete_board_error'] = 'No board selected!';
 
 $txt['smileys_upload_error_notwritable'] = 'The following smiley directories are not writable: %1$s';
-$txt['smileys_upload_error_types'] = 'Image can only have the following extensions: %1$s.';
+$txt['smileys_upload_error_types'] = 'Smiley images can only have the following extensions: %1$s.';
 
 $txt['change_email_success'] = 'Your email address has been changed, and a new activation email has been sent to it.';
 $txt['resend_email_success'] = 'A new activation email has successfully been sent.';
@@ -354,11 +352,11 @@ $txt['custom_option_not_unique'] = 'Field name is not unique!';
 $txt['warning_no_reason'] = 'You must enter a reason for altering the warning state of a member.';
 $txt['warning_notify_blank'] = 'You selected to notify the user but did not fill in the subject/message fields.';
 
-$txt['cannot_connect_doc_site'] = 'Could not connect to the Simple Machines Online Manual. Please check your server configuration allows external internet connections and try again later.';
+$txt['cannot_connect_doc_site'] = 'Could not connect to the Simple Machines Online Manual. Please check that your server configuration allows external internet connections and try again later.';
 
-// Open ID error strings
+// OpenID error strings
 $txt['openid_server_bad_response'] = 'The requested identifier did not return the proper information.';
-$txt['openid_return_no_mode'] = 'The identity provider did not respond with the Open ID mode.';
+$txt['openid_return_no_mode'] = 'The identity provider did not respond with the OpenID mode.';
 $txt['openid_not_resolved'] = 'The identity provider did not approve your request.';
 $txt['openid_no_assoc'] = 'Could not find the requested association with the identity provider.';
 $txt['openid_sig_invalid'] = 'The signature from the identity provider is invalid.';

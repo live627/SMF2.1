@@ -1362,6 +1362,7 @@ function loadAllPermissions()
 		$txt['permissionname_' . $permission] is used for the names of permissions.
 		$txt['permissiongroup_' . $group] is used for names of groups that start with $.
 		$txt['permissionhelp_' . $permission] is used for extended information.
+		$txt['permissionnote_' . $permission] is used for smalltext notes under the permission name.
 		$txt['permissionicon_' . $permission_or_group] is used for the icons, if it exists.
 */
 
@@ -1413,9 +1414,13 @@ function loadAllPermissions()
 		'board' => array(
 			'general_board' => array(
 				'moderate_board' => false,
+				'approve_posts' => false,
 			),
 			'topic' => array(
+				'post_unapproved_topics' => false,
 				'post_new' => false,
+				'post_unapproved_replies' => true,
+				'post_reply' => true,
 				'merge_any' => false,
 				'split_any' => false,
 				'send_topic' => false,
@@ -1423,7 +1428,6 @@ function loadAllPermissions()
 				'move' => true,
 				'lock' => true,
 				'remove' => true,
-				'post_reply' => true,
 				'modify_replies' => false,
 				'delete_replies' => false,
 				'announce_topic' => false,
@@ -1442,21 +1446,16 @@ function loadAllPermissions()
 				'poll_lock' => true,
 				'poll_remove' => true,
 			),
-			'approval' => array(
-				'approve_posts' => false,
-				'post_unapproved_topics' => false,
-				'post_unapproved_replies' => true,
-				'post_unapproved_attachments' => false,
-			),
 			'notification' => array(
 				'mark_any_notify' => false,
 				'mark_notify' => false,
 			),
 			'attachment' => array(
 				'view_attachments' => false,
+				'post_unapproved_attachments' => false,
 				'post_attachment' => false,
-			)
-		)
+			),
+		),
 	);
 
 	// This is just a helpful array of permissions guests... cannot have.
@@ -1492,7 +1491,6 @@ function loadAllPermissions()
 		'calendar',
 		'maintenance',
 		'member_admin',
-		'general_board',
 		'topic',
 		'post',
 	);
@@ -1500,12 +1498,32 @@ function loadAllPermissions()
 	// Some permissions are hidden if features are off.
 	$hiddenPermissions = array();
 	$hiddenGroups = array();
+	$relabelPermissions = array(); // Permissions to apply a different label to. 
 	if (!in_array('cd', $context['admin_features']))
 		$hiddenGroups[] = 'calendar';
 	if (!in_array('w', $context['admin_features']))
 		$hiddenPermissions[] = 'issue_warning';
 	if (!in_array('pm', $context['admin_features']))
-		$hiddenGroups[] = 'approval';
+	{
+		$hiddenPermissions[] = 'approve_posts';
+		$hiddenPermissions[] = 'post_unapproved_topics';
+		$hiddenPermissions[] = 'post_unapproved_replies';
+		$hiddenPermissions[] = 'post_unapproved_attachments';
+	}
+	else
+	{
+		// Relabel the topics permissions
+		$relabelPermissions['post_new'] = 'auto_approve_topics';
+		$relabelPermissions['post_unapproved_topics'] = 'permissionname_post_new';
+
+		// Relabel the reply permissions
+		$relabelPermissions['post_reply'] = 'auto_approve_replies';
+		$relabelPermissions['post_unapproved_replies'] = 'permissionname_post_reply';
+
+		// Relabel the attachment permissions
+		$relabelPermissions['post_attachment'] = 'auto_approve_attachments';
+		$relabelPermissions['post_unapproved_attachments'] = 'permissionname_post_attachment';
+	}
 
 	$context['permissions'] = array();
 	$context['hidden_permissions'] = array();
@@ -1538,8 +1556,9 @@ function loadAllPermissions()
 
 				$context['permissions'][$permissionType]['columns'][$position][$permissionGroup]['permissions'][$perm] = array(
 					'id' => $perm,
-					'name' => &$txt['permissionname_' . $perm],
+					'name' => !isset($relabelPermissions[$perm]) ? $txt['permissionname_' . $perm] : $txt[$relabelPermissions[$perm]],
 					'show_help' => isset($txt['permissionhelp_' . $perm]),
+					'note' => isset($txt['permissionnote_' . $perm]) ? $txt['permissionnote_' . $perm] : '',
 					'has_own_any' => $has_own_any,
 					'own' => array(
 						'id' => $perm . '_own',
