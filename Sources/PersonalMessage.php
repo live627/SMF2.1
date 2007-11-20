@@ -1502,6 +1502,20 @@ function MessagePost()
 		'name' => $txt['new_message']
 	);
 
+	// Needed for the WYSIWYG editor.
+	require_once($sourcedir . '/Subs-Editor.php');
+
+	// Now create the editor.
+	$editorOptions = array(
+		'id' => 'message',
+		'value' => $context['message'],
+		'width' => '90%',
+	);
+	create_control_richedit($editorOptions);
+
+	// Store the ID for old compatibility.
+	$context['post_box_name'] = $editorOptions['id'];
+
 	$context['visual_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
 	if ($context['visual_verification'])
 	{
@@ -1525,7 +1539,7 @@ function MessagePost()
 function messagePostError($error_types, $to, $bcc)
 {
 	global $txt, $context, $scripturl, $modSettings, $db_prefix;
-	global $smfFunc, $user_info;
+	global $smfFunc, $user_info, $sourcedir;
 
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 
@@ -1616,6 +1630,20 @@ function messagePostError($error_types, $to, $bcc)
 		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 	}
 
+	// We need to load the editor once more.
+	require_once($sourcedir . '/Subs-Editor.php');
+
+	// Create it...
+	$editorOptions = array(
+		'id' => 'message',
+		'value' => $context['message'],
+		'width' => '90%',
+	);
+	create_control_richedit($editorOptions);
+
+	// ... and store the ID again...
+	$context['post_box_name'] = $editorOptions['id'];
+
 	// No check for the previous submission is needed.
 	checkSubmitOnce('free');
 
@@ -1656,7 +1684,7 @@ function MessagePost2()
 	}
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
-	if (!empty($_POST['editor_mode']) && isset($_POST['message']))
+	if (!empty($_POST['message_mode']) && isset($_POST['message']))
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 		// We strip and add slashes back here - so we don't forget!

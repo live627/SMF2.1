@@ -99,9 +99,6 @@ function Post()
 
 	loadLanguage('Post');
 
-	// Sometimes we just have to show the lovely editor and that needs style.
-	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/editor.css" />';
-
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
 
 	// You can't reply with a poll... hacker.
@@ -974,8 +971,18 @@ function Post()
 	$context['subject'] = addcslashes($form_subject, '"');
 	$context['message'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_message);
 
-	// Needed for message icons.
+	// Needed for the editor and message icons.
 	require_once($sourcedir . '/Subs-Editor.php');
+
+	// Now create the editor.
+	$editorOptions = array(
+		'id' => 'message',
+		'value' => $context['message'],
+	);
+	create_control_richedit($editorOptions);
+
+	// Store the ID.
+	$context['post_box_name'] = $editorOptions['id'];
 
 	$context['attached'] = '';
 	$context['allowed_extensions'] = strtr($modSettings['attachmentExtensions'], array(',' => ', '));
@@ -1048,7 +1055,7 @@ function Post2()
 	global $user_info, $board_info, $options, $smfFunc;
 
 	// If we came from WYSIWYG then turn it back into BBC regardless.
-	if (!empty($_REQUEST['editor_mode']) && isset($_REQUEST['message']))
+	if (!empty($_REQUEST['message_mode']) && isset($_REQUEST['message']))
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 

@@ -979,8 +979,7 @@ function template_send()
 	}
 
 	// Show BBC buttons, smileys and textbox.
-	$context['post_box_width'] = '90%';
-	theme_postbox($context['message']);
+	template_control_richedit($context['post_box_name']);
 
 	// Send, Preview, spellcheck buttons.
 	echo '

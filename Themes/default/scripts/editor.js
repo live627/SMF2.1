@@ -179,6 +179,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			// Make the iframe itself, stick it next to the current text area, and give it an ID.
 			frameHandle = document.createElement('iframe');
 			frameHandle.id = 'html_' . uid;
+			frameHandle.style.display = 'none';
 			textHandle.parentNode.appendChild(frameHandle);
 
 			// Create some handy shortcuts.
@@ -221,10 +222,37 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			else
 				frameDocument.designMode = 'on';
 
-			// Load the style sheet and set the WYSIWYG editor to the right class...
-			ssheet = frameDocument.createElement('style');
-			frameDocument.documentElement.firstChild.appendChild(ssheet);
-			ssheet.styleSheet.cssText = document.styleSheets['rich_edit_css'].cssText;
+			// Now we need to try and style the editor - internet explorer allows us to do the whole lot.
+			if (document.styleSheets['rich_edit_css'])
+			{
+				ssheet = frameDocument.createElement('style');
+				frameDocument.documentElement.firstChild.appendChild(ssheet);
+				ssheet.styleSheet.cssText = document.styleSheets['rich_edit_css'].cssText;
+			}
+			// Otherwise we seem to have to try to rip out each of the styles one by one!
+			else if (document.styleSheets.length)
+			{
+				// First we need to find the right style sheet.
+				for (i = 0; i < document.styleSheets.length; i++)
+				{
+					if (document.styleSheets[i].cssRules.length)
+					{
+						// Manually try to find the rich_editor class.
+						for (r = 0; r < document.styleSheets[i].cssRules.length; r++)
+						{
+							// Got it!
+							if (document.styleSheets[i].cssRules[r].selectorText == '.rich_editor')
+							{
+								// Set some possible styles.
+								frameDocument.body.style.color = document.styleSheets[i].cssRules[r].style.color;
+								frameDocument.body.style.backgroundColor = document.styleSheets[i].cssRules[r].style.backgroundColor;
+								frameDocument.body.style.fontSize = document.styleSheets[i].cssRules[r].style.fontSize;
+								frameDocument.body.style.fontFamily = document.styleSheets[i].cssRules[r].style.fontFamily;
+							}
+						}
+					}
+				}
+			}
 
 			// Apply the class...
 			frameDocument.body.className = 'rich_editor';
@@ -438,9 +466,6 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	// Set the HTML content to be that of the text box - if we are in wysiwyg mode.
 	function doSubmit()
 	{
-		// Record what we were doing!
-		document.getElementById('editor_mode').value = (richTextEnabled ? 1 : 0);
-
 		if (richTextEnabled)
 			textHandle.value = frameDocument.body.innerHTML;
 	}
@@ -629,8 +654,8 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		// Otherwise we need to do a whole image...
 		else
 		{
-			uniqueid = 1000 + Math.floor(Math.random() * 100000);
-			insertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + uniqueid + '_' + name + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
+			unique_smiley_id = 1000 + Math.floor(Math.random() * 100000);
+			insertText('<img src="' + smf_smileys_url + '/' + name + '" id="smiley_' + unique_smiley_id + '_' + name + '" onresizestart="return false;" align="bottom" alt="" title="' + smf_htmlspecialchars(desc) + '" />');
 		}
 	}
 
@@ -1015,6 +1040,9 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			insertText(text, true);
 		}
 
+		// Record the new status.
+		document.getElementById(uniqueId + '_mode').value = (richTextEnabled ? 1 : 0);
+
 		// Focus, focus, focus.
 		setFocus();
 
@@ -1175,5 +1203,5 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		return new_size;
 	}
 
-	init(this.text, this.editWidth, this.editHeight);
+	init(text, editWidth, editHeight);
 }

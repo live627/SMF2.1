@@ -38,6 +38,13 @@ if (!defined('SMF'))
 	void html_to_bbc()
 		// !!
 
+	void theme_postbox(string message)
+		- for compatibility - passes right through to the template_control_richedit function.
+
+	void create_control_richedit(&array editorOptions)
+		- outputs a postbox from a template.
+		- takes a default message as a parameter.
+
 	void fetchTagAttributes()
 		// !!
 
@@ -377,9 +384,9 @@ function html_to_bbc($text)
 	// Try our hand at all manner of lists - doesn't matter if we mess up the children as the BBC will clean it.
 	$text = preg_replace('~<(ol|ul)\s*[^<>]*?(listtype="([\w-]+)")*[^<>]*?>(.+?)</(ol|ul)>~ie', "'[list' . (strlen('$3') > 1 ? ' type=$3' : '') . ']$4[/list]'", $text);
 	$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', "[li]$1[/li]", $text);
- 
+
 	// What about URL's - the pain in the ass of the tag world.
-	while (preg_match('~<a\s+([^<>]*)>([^(<a)]*)</a>~i', $text, $matches) != false)
+	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) != false)
 	{
 		// Find the position of the URL.
 	  	$start_pos = strpos($text, $matches[0]);
@@ -409,6 +416,13 @@ function html_to_bbc($text)
 					$tag_type = 'email';
 					$href = substr($href, 7);
 				}
+			}
+
+			// External URL?
+			if (trim($k) == 'target' && $tag_type == 'url')
+			{
+				if (trim($v) == '_blank')
+					$tag_type == 'iurl';
 			}
 		}
 
@@ -515,6 +529,8 @@ function html_to_bbc($text)
 
 	// Some tags often end up as just dummy tags - remove those.
 	$text = preg_replace('~\[[bisu]\]\s*\[/[bisu]\]~', '', $text);
+
+	$text = legalise_bbc($text);
 
 	return $text;
 }
@@ -635,6 +651,421 @@ function getMessageIcons($board_id)
 	}
 
 	return $icons;
+}
+
+// This is an important yet frustrating function - it attempts to clean up illegal BBC caused by browsers like Opera which don't obey the rules!!!
+function legalise_bbc($text)
+{
+	global $modSettings;
+
+	// We are going to cycle through the BBC and keep track of tags as they arise - in order. If get to a block level tag we're going to make sure it's not in a non-block level tag!
+	// This will keep the order of tags that are open.
+	$current_tags = array();
+	// This will quickly let us see if the tag is active.
+	$active_tags = array();
+
+	$disabled = array();
+	// Only do current tags.
+	if (!empty($modSettings['disabledBBC']))
+		{
+			$temp = explode(',', strtolower($modSettings['disabledBBC']));
+
+			foreach ($temp as $tag)
+				$disabled[trim($tag)] = true;
+		}
+
+		if (empty($modSettings['enableEmbeddedFlash']))
+			$disabled['flash'] = true;
+
+	$all_tags = parse_bbc(false);
+	$valid_tags = array();
+	foreach ($all_tags as $tag)
+	{
+		if (!isset($disabled[$tag['tag']]))
+			$valid_tags[$tag['tag']] = !empty($tag['block_level']);
+	}
+
+	// Don't worry if we're in a code/noubbc.
+	$in_code_nobbc = false;
+
+	// These keep track of where we are!
+	$new_text = $text;
+	$new_text_offset = 0;
+
+	// Right - we're going to start by going through the whole lot to make sure we don't have align stuff crossed as this happens load and is stupid!
+	$align_tags = array('left', 'center', 'right', 'pre');
+	foreach ($align_tags as $k => $tag)
+		if (!isset($valid_tags[$tag]))
+			unset($align_tags[$k]);
+	if (!empty($align_tags))
+	{
+		$current_tag = '';
+		while (preg_match('~\[(/)*(' . implode('|', $align_tags) . ')\]~', $text, $matches) != false)
+		{
+			// Get the offset first.
+			$offset = strpos($text, $matches[0]);
+
+			// Is it a closing tag?
+			if ($matches[1] == '/')
+			{
+				// Is it the current tag?
+				if ($matches[2] == $current_tag)
+				{
+					$current_tag = '';
+				}
+				// Otherwise delete it - not important!
+				else
+				{
+					$new_text = substr($new_text, 0, $new_text_offset + $offset) . substr($new_text, $new_text_offset + $offset + strlen($matches[0]));
+					$new_text_offset -= strlen($matches[0]);
+				}
+			}
+			// Otherwise if it's new and we have a tag already assume we DO want to change and hence close the last one.
+			else
+			{
+				if ($current_tag != '' && $matches[2] != $current_tag)
+				{
+					$new_text = substr($new_text, 0, $new_text_offset + $offset) . '[/' . $current_tag . ']' . substr($new_text, $new_text_offset + $offset);
+					$new_text_offset += strlen('[/' . $current_tag . ']');
+				}
+				// A repeat tag gets removed.
+				elseif ($matches[2] == $current_tag)
+				{
+					$new_text = substr($new_text, 0, $new_text_offset + $offset) . substr($new_text, $new_text_offset + $offset + strlen($matches[0]));
+					$new_text_offset -= strlen($matches[0]);
+				}
+				$current_tag = $matches[2];
+			}
+
+			// Finally trim text again.
+			$text = substr($text, $offset + strlen($matches[0]));
+			$new_text_offset += $offset + strlen($matches[0]);
+		}
+	}
+
+	// Quickly remove any tags which are back to back.
+	$strip_b2b_tags = array();
+	foreach ($valid_tags as $tag => $dummy)
+		$strip_b2b_tags['~\[' . $tag . '\]\s*\[/' . $tag . '\]~'] = '';
+	$lastlen = 0;
+	while (strlen($new_text) != $lastlen)
+	{
+		$lastlen = strlen($new_text);
+		$new_text = preg_replace(array_keys($strip_b2b_tags), array_values($strip_b2b_tags), $new_text);
+	}
+
+	// In case things changed above set these back to normal.
+	$in_code_nobbc = false;
+	$text = $new_text;
+	$new_text_offset = 0;
+
+	for ($i = 0; $i < strlen($text); $i++)
+	{
+		// Got a start of a tag?
+		if ($text{$i} == '[')
+		{
+			// Is this actually an end tag?
+			if ($text{$i + 1} == '/')
+			{
+				preg_match('~\[/([A-Za-z]+)\]~', substr($text, $i), $matches);
+				// Is it valid, eh?
+				if (!empty($matches) && isset($valid_tags[$matches[1]]))
+				{
+					// These are special.
+					if ($matches[1] == 'code' || $matches[1] == 'nobbc')
+						$in_code_nobbc = false;
+					// As long as we're not in code and nobbc and it's been started note it's no longer in action.
+					elseif (!$in_code_nobbc && isset($active_tags[$matches[1]]))
+					{
+						$to_add_back = array();
+						// We need to make sure we have the tags closed in the right order.
+						while ($tag = array_pop($current_tags))
+						{
+							// This was the one we are closing so stop.
+							if ($tag['type'] == $matches[1])
+								break;
+							else
+							{
+								$to_add_back[] = $tag;
+							}
+						}
+						// Add the other tags back as they were in the wrong order before.
+						foreach (array_reverse($to_add_back) as $tag)
+						{
+							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
+							$new_text_offset += strlen('[/' . $tag['type'] . ']');
+						}
+						// And reopen...
+						foreach (array_reverse($to_add_back) as $tag)
+						{
+							$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
+							$new_text_offset += strlen($tag['content']);
+						}
+
+						// Set what the tags are these days...
+						foreach ($to_add_back as $tag)
+							array_push($current_tags, $tag);
+
+						unset($active_tags[$matches[1]]);
+					}
+					// What if it's a block level tag we are ending? We need to close any open tags and reopen them afterwards!
+					elseif (!$in_code_nobbc && $valid_tags[$matches[1]])
+					{
+						// Close all the current tags...
+						foreach ($current_tags as $tag)
+						{
+							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
+							$new_text_offset += strlen('[/' . $tag['type'] . ']');
+						}
+
+						// The tags are now reversed!
+						$current_tags = array_reverse($current_tags);
+
+						// ... and reopen them again.
+						foreach ($current_tags as $tag)
+						{
+							$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
+							$new_text_offset += strlen($tag['content']);
+						}
+					}
+				}
+
+				// Now move on.
+				$i += strlen($matches[0]) - 1;
+			}
+			else
+			{
+				// Get the tag.
+				preg_match('~\[([A-Za-z]+)[^\]\s]*\]~', substr($text, $i), $matches);
+
+				// It's possible that this wasn't actually a tag after all - if not continue!
+				if (strpos(substr($text, $i), $matches[0]) !== 0)
+					$matches = array();
+
+				// Is it actually valid?!
+				if (!empty($matches) && isset($valid_tags[$matches[1]]))
+				{
+					// If it's code or nobbc we need to note it.
+					if ($matches[1] == 'code' || $matches[1] == 'nobbc')
+						$in_code_nobbc = true;
+					// Not block level?
+					elseif (!$in_code_nobbc && !$valid_tags[$matches[1]])
+					{
+						// Can't have two tags active that are the same - close the previous one!
+						if (isset($active_tags[$matches[1]]))
+						{
+							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $matches[1] . ']' . substr($new_text, $i + $new_text_offset);
+							$new_text_offset += strlen('[/' . $matches[1] . ']');
+						}
+						$active_tags[$matches[1]] = $matches[0];
+						$tag = array(
+							'type' => $matches[1],
+							'content' => $matches[0],
+						);
+						array_push($current_tags, $tag);
+					}
+					// If it's a block level then we need to close all active tags and reopen them!
+					elseif (!$in_code_nobbc)
+					{
+						// Close all the old ones.
+						foreach (array_reverse($current_tags) as $tag)
+						{
+							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $tag['type'] . ']' . substr($new_text, $i + $new_text_offset);
+							$new_text_offset += strlen('[/' . $tag['type'] . ']');
+						}
+						// Open all the new ones again!
+						foreach (array_reverse($current_tags) as $tag)
+						{
+							$new_text = substr($new_text, 0, $i + strlen($matches[0]) + $new_text_offset) . $tag['content'] . substr($new_text, $i + strlen($matches[0]) + $new_text_offset);
+							$new_text_offset += strlen($tag['content']);
+						}
+					}
+				}
+				// Move on quite a bit!
+				elseif (!empty($matches))
+					$i += strlen($matches[0]) - 1;
+			}
+		}
+	}
+
+	// Final clean up of back to back tags.
+	$lastlen = 0;
+	while (strlen($new_text) != $lastlen)
+	{
+		$lastlen = strlen($new_text);
+		$new_text = preg_replace(array_keys($strip_b2b_tags), array_values($strip_b2b_tags), $new_text);
+	}
+
+	return $new_text;
+}
+
+// Compatibility function - used in 1.1 for showing a post box.
+function theme_postbox($msg)
+{
+	global $context;
+
+	return template_control_richedit($context['post_box_name']);
+}
+
+// Creates a box that can be used for richedit stuff like BBC, Smileys etc.
+function create_control_richedit($editorOptions)
+{
+	global $txt, $modSettings, $db_prefix, $options, $smfFunc;
+	global $context, $settings, $user_info, $sourcedir;
+
+	// Is this the first richedit - if so we need to ensure some template stuff is initialised.
+	if (empty($context['controls']['richedit']))
+	{
+		// Some general stuff.
+		loadTemplate('GenericControls');
+		$settings['smileys_url'] = $modSettings['smileys_url'] . '/' . $user_info['smiley_set'];
+
+		// This really has some WYSIWYG stuff.
+		$context['html_headers'] .= '
+		<link rel="stylesheet" type="text/css" name="rich_edit_css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/editor.css" />
+
+		
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
+		// ]]></script>
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/editor.js"></script>';
+	}
+
+	// Every control must have a ID!
+	assert(isset($editorOptions['id']));
+	assert(isset($editorOptions['value']));
+
+		// PersonalMessage template!
+	if (!isset($context['post_box_width']))
+		$context['post_box_width'] = '70%';
+	if (!isset($context['post_box_height']))
+		$context['post_box_height'] = '150px';
+
+	// Start off the editor...
+	$context['controls']['richedit'][$editorOptions['id']] = array(
+		'id' => $editorOptions['id'],
+		'value' => $editorOptions['value'],
+		'rich_value' => bbc_to_html($editorOptions['value']),
+		'rich_active' => empty($modSettings['disable_wysiwyg']) && (!empty($options['wysiwyg_default']) || !empty($editorOptions['force_rich']) || !empty($_REQUEST[$editorOptions['id'] . '_mode'])),
+		'disable_smiley_box' => !empty($editorOptions['disable_smiley_box']),
+		'columns' => isset($editorOptions['columns']) ? $editorOptions['columns'] : 60,
+		'rows' => isset($editorOptions['rows']) ? $editorOptions['rows'] : 12,
+		'width' => isset($editorOptions['width']) ? $editorOptions['width'] : '70%',
+		'height' => isset($editorOptions['height']) ? $editorOptions['height'] : '150px',
+		'form' => isset($editorOptions['form']) ? $editorOptions['form'] : 'postmodify',
+		'bbc_level' => !empty($editorOptions['bbc_level']) ? $editorOptions['bbc_level'] : 'full',
+	);
+	$editor_context = &$context['controls']['richedit'][$editorOptions['id']];
+
+	// Switch between default images and back... mostly in case you don't have an PersonalMessage template, but do have a Post template.
+	if (isset($settings['use_default_images']) && $settings['use_default_images'] == 'defaults' && isset($settings['default_template']))
+	{
+		$temp1 = $settings['theme_url'];
+		$settings['theme_url'] = $settings['default_theme_url'];
+
+		$temp2 = $settings['images_url'];
+		$settings['images_url'] = $settings['default_images_url'];
+
+		$temp3 = $settings['theme_dir'];
+		$settings['theme_dir'] = $settings['default_theme_dir'];
+	}
+
+	// Load the Post language file... for the moment at least.
+	loadLanguage('Post');
+
+	// Initialize smiley array... if not loaded before.
+	if (empty($context['smileys']) && !empty($editorOptions['disable_smiley_box']))
+	{
+		$context['smileys'] = array(
+			'postform' => array(),
+			'popup' => array(),
+		);
+	
+		// Load smileys - don't bother to run a query if we're not using the database's ones anyhow.
+		if (empty($modSettings['smiley_enable']) && $user_info['smiley_set'] != 'none')
+			$context['smileys']['postform'][] = array(
+				'smileys' => array(
+					array('code' => ':)', 'filename' => 'smiley.gif', 'description' => $txt['icon_smiley']),
+					array('code' => ';)', 'filename' => 'wink.gif', 'description' => $txt['icon_wink']),
+					array('code' => ':D', 'filename' => 'cheesy.gif', 'description' => $txt['icon_cheesy']),
+					array('code' => ';D', 'filename' => 'grin.gif', 'description' => $txt['icon_grin']),
+					array('code' => '>:(', 'filename' => 'angry.gif', 'description' => $txt['icon_angry']),
+					array('code' => ':(', 'filename' => 'sad.gif', 'description' => $txt['icon_sad']),
+					array('code' => ':o', 'filename' => 'shocked.gif', 'description' => $txt['icon_shocked']),
+					array('code' => '8)', 'filename' => 'cool.gif', 'description' => $txt['icon_cool']),
+					array('code' => '???', 'filename' => 'huh.gif', 'description' => $txt['icon_huh']),
+					array('code' => '::)', 'filename' => 'rolleyes.gif', 'description' => $txt['icon_rolleyes']),
+					array('code' => ':P', 'filename' => 'tongue.gif', 'description' => $txt['icon_tongue']),
+					array('code' => ':-[', 'filename' => 'embarrassed.gif', 'description' => $txt['icon_embarrassed']),
+					array('code' => ':-X', 'filename' => 'lipsrsealed.gif', 'description' => $txt['icon_lips']),
+					array('code' => ':-\\', 'filename' => 'undecided.gif', 'description' => $txt['icon_undecided']),
+					array('code' => ':-*', 'filename' => 'kiss.gif', 'description' => $txt['icon_kiss']),
+					array('code' => ':\'(', 'filename' => 'cry.gif', 'description' => $txt['icon_cry'])
+				),
+				'last' => true,
+			);
+		elseif ($user_info['smiley_set'] != 'none')
+		{
+			if (($temp = cache_get_data('posting_smileys', 480)) == null)
+			{
+				$request = $smfFunc['db_query']('', "
+					SELECT code, filename, description, smiley_row, hidden
+					FROM {$db_prefix}smileys
+					WHERE hidden IN (0, 2)
+					ORDER BY smiley_row, smiley_order", __FILE__, __LINE__);
+				while ($row = $smfFunc['db_fetch_assoc']($request))
+				{
+					$row['code'] = htmlspecialchars($row['code']);
+					$row['filename'] = htmlspecialchars($row['filename']);
+					$row['description'] = htmlspecialchars($row['description']);
+	
+					$context['smileys'][empty($row['hidden']) ? 'postform' : 'popup'][$row['smiley_row']]['smileys'][] = $row;
+				}
+				$smfFunc['db_free_result']($request);
+	
+				cache_put_data('posting_smileys', $context['smileys'], 480);
+			}
+			else
+				$context['smileys'] = $temp;
+		}
+	
+		// Clean house... add slashes to the code for javascript.
+		foreach (array_keys($context['smileys']) as $location)
+		{
+			foreach ($context['smileys'][$location] as $j => $row)
+			{
+				$n = count($context['smileys'][$location][$j]['smileys']);
+				for ($i = 0; $i < $n; $i++)
+				{
+					$context['smileys'][$location][$j]['smileys'][$i]['code'] = addslashes($context['smileys'][$location][$j]['smileys'][$i]['code']);
+					$context['smileys'][$location][$j]['smileys'][$i]['js_description'] = addslashes($context['smileys'][$location][$j]['smileys'][$i]['description']);
+				}
+	
+				$context['smileys'][$location][$j]['smileys'][$n - 1]['last'] = true;
+			}
+			if (!empty($context['smileys'][$location]))
+				$context['smileys'][$location][count($context['smileys'][$location]) - 1]['last'] = true;
+		}
+	}
+
+	// Set a flag so the sub template knows what to do...
+	$context['show_bbc'] = !empty($modSettings['enableBBC']) && !empty($settings['show_bbc']);
+
+	// Generate a list of buttons that shouldn't be shown - this should be the fastest way to do this.
+	if (!empty($modSettings['disabledBBC']))
+	{
+		$disabled_tags = explode(',', $modSettings['disabledBBC']);
+		foreach ($disabled_tags as $tag)
+			$context['disabled_tags'][trim($tag)] = true;
+	}
+
+	// Switch the URLs back... now we're back to whatever the main sub template is.  (like folder in PersonalMessage.)
+	if (isset($settings['use_default_images']) && $settings['use_default_images'] == 'defaults' && isset($settings['default_template']))
+	{
+		$settings['theme_url'] = $temp1;
+		$settings['images_url'] = $temp2;
+		$settings['theme_dir'] = $temp3;
+	}
 }
 
 ?>

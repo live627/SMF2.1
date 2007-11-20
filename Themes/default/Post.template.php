@@ -38,7 +38,7 @@ function template_main()
 	echo '
 			function saveEntities()
 			{
-				var textFields = ["subject", "message", "guestname", "evtitle", "question"];
+				var textFields = ["subject", "', $context['post_box_name'], '", "guestname", "evtitle", "question"];
 				for (i in textFields)
 					if (document.forms.postmodify.elements[textFields[i]])
 						document.forms.postmodify[textFields[i]].value = document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#");
@@ -440,7 +440,7 @@ function template_main()
 	}
 
 	// The below function prints the BBC, smileys and the message itself out.
-	theme_postbox($context['message']);
+	template_control_richedit($context['post_box_name']);
 
 	// If this message has been edited in the past - display when it was.
 	if (isset($context['last_modified']))
@@ -614,7 +614,7 @@ function template_main()
 			{
 				', $context['browser']['is_firefox'] ? '
 				// Firefox doesn\'t render <marquee> that have been put it using javascript
-				if (document.forms.postmodify.elements["message"].value.indexOf("[move]") != -1)
+				if (document.forms.postmodify.elements["' . $context['post_box_name'] . '"].value.indexOf("[move]") != -1)
 				{
 					return submitThisOnce(document.forms.postmodify);
 				}' : '', '
@@ -629,7 +629,7 @@ function template_main()
 					}
 					// !!! Currently not sending poll options and option checkboxes.
 					var i, x = new Array();
-					var textFields = ["subject", "message", "icon", "guestname", "email", "evtitle", "question", "topic"];
+					var textFields = ["subject", "', $context['post_box_name'], '", "icon", "guestname", "email", "evtitle", "question", "topic"];
 					var numericFields = [
 						"board", "topic", "num_replies",
 						"eventid", "calendar", "year", "month", "day",
@@ -644,8 +644,8 @@ function template_main()
 						if (document.forms.postmodify.elements[textFields[i]])
 						{
 							// Handle the WYSIWYG editor.
-							if (textFields[i] == "message" && editorHandle', $context['post_box_name'], ' && editorHandle', $context['post_box_name'], '.getMode() == 1)
-								x[x.length] = "editor_mode=1&" + textFields[i] + "=" + escape(textToEntities(editorHandle', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
+							if (textFields[i] == "', $context['post_box_name'], '" && editorHandle', $context['post_box_name'], ' && editorHandle', $context['post_box_name'], '.getMode() == 1)
+								x[x.length] = "message_mode=1&" + textFields[i] + "=" + escape(textToEntities(editorHandle', $context['post_box_name'], '.getText(false).replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
 							else
 								x[x.length] = textFields[i] + "=" + escape(textToEntities(document.forms.postmodify[textFields[i]].value.replace(/&#/g, "&#38;#"))).replace(/\+/g, "%2B");
 						}
@@ -708,13 +708,13 @@ function template_main()
 						document.getElementById("caption_" + captions[i].getAttribute("name")).style.color = captions[i].getAttribute("color");
 
 				if (errors.getElementsByTagName("post_error").length == 1)
-					document.forms.postmodify.message.style.border = "1px solid red";
-				else if (document.forms.postmodify.message.style.borderColor == "red" || document.forms.postmodify.message.style.borderColor == "red red red red")
+					document.forms.postmodify.', $context['post_box_name'], '.style.border = "1px solid red";
+				else if (document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == "red" || document.forms.postmodify.', $context['post_box_name'], '.style.borderColor == "red red red red")
 				{
-					if (typeof(document.forms.postmodify.message.runtimeStyle) == "undefined")
-						document.forms.postmodify.message.style.border = null;
+					if (typeof(document.forms.postmodify.', $context['post_box_name'], '.runtimeStyle) == "undefined")
+						document.forms.postmodify.', $context['post_box_name'], '.style.border = null;
 					else
-						document.forms.postmodify.message.style.borderColor = "";
+						document.forms.postmodify.', $context['post_box_name'], '.style.borderColor = "";
 				}
 
 				// Set the new number of replies.
@@ -815,263 +815,6 @@ function template_main()
 				</tr>
 			</table>';
 	}
-}
-
-// This function displays all the stuff you'd expect to see with a message box, the box, BBC buttons and of course smileys.
-function template_postbox(&$message)
-{
-	global $context, $settings, $options, $txt, $modSettings;
-
-	// We'll need some java!
-	echo '
-	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/editor.js"></script>
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var smf_smileys_url = \'', $settings['smileys_url'], '\';
-	// ]]></script>';
-
-	// Assuming BBC code is enabled then print the buttons and some javascript to handle it.
-	if ($context['show_bbc'])
-	{
-		echo '
-			<tr>
-				<td align="right"></td>
-				<td valign="middle">';
-
-		// The below array makes it dead easy to add images to this page. Add it to the array and everything else is done for you!
-		$context['bbc_tags'] = array();
-		$context['bbc_tags'][] = array(
-			'bold' => array('code' => 'b', 'before' => '[b]', 'after' => '[/b]', 'description' => $txt['bold']),
-			'italicize' => array('code' => 'i', 'before' => '[i]', 'after' => '[/i]', 'description' => $txt['italic']),
-			'underline' => array('code' => 'u', 'before' => '[u]', 'after' => '[/u]', 'description' => $txt['underline']),
-			'strike' => array('code' => 's', 'before' => '[s]', 'after' => '[/s]', 'description' => $txt['strike']),
-			array(),
-			'pre' => array('code' => 'pre', 'before' => '[pre]', 'after' => '[/pre]', 'description' => $txt['preformatted']),
-			'left' => array('code' => 'left', 'before' => '[left]', 'after' => '[/left]', 'description' => $txt['left_align']),
-			'center' => array('code' => 'center', 'before' => '[center]', 'after' => '[/center]', 'description' => $txt['center']),
-			'right' => array('code' => 'right', 'before' => '[right]', 'after' => '[/right]', 'description' => $txt['right_align']),
-		);
-		$context['bbc_tags'][] = array(
-			'flash' => array('code' => 'flash', 'before' => '[flash=200,200]', 'after' => '[/flash]', 'description' => $txt['flash']),
-			'img' => array('code' => 'img', 'before' => '[img]', 'after' => '[/img]', 'description' => $txt['image']),
-			'url' => array('code' => 'url', 'before' => '[url]', 'after' => '[/url]', 'description' => $txt['hyperlink']),
-			'email' => array('code' => 'email', 'before' => '[email]', 'after' => '[/email]', 'description' => $txt['insert_email']),
-			'ftp' => array('code' => 'ftp', 'before' => '[ftp]', 'after' => '[/ftp]', 'description' => $txt['ftp']),
-			array(),
-			'glow' => array('code' => 'glow', 'before' => '[glow=red,2,300]', 'after' => '[/glow]', 'description' => $txt['glow']),
-			'shadow' => array('code' => 'shadow', 'before' => '[shadow=red,left]', 'after' => '[/shadow]', 'description' => $txt['shadow']),
-			'move' => array('code' => 'move', 'before' => '[move]', 'after' => '[/move]', 'description' => $txt['marquee']),
-			array(),
-			'sup' => array('code' => 'sup', 'before' => '[sup]', 'after' => '[/sup]', 'description' => $txt['superscript']),
-			'sub' => array('code' => 'sub', 'before' => '[sub]', 'after' => '[/sub]', 'description' => $txt['subscript']),
-			'tele' => array('code' => 'tt', 'before' => '[tt]', 'after' => '[/tt]', 'description' => $txt['teletype']),
-			array(),
-			'table' => array('code' => 'table', 'before' => '[table]\n[tr]\n[td]', 'after' => '[/td]\n[/tr]\n[/table]', 'description' => $txt['table']),
-			'code' => array('code' => 'code', 'before' => '[code]', 'after' => '[/code]', 'description' => $txt['bbc_code']),
-			'quote' => array('code' => 'quote', 'before' => '[quote]', 'after' => '[/quote]', 'description' => $txt['bbc_quote']),
-			array(),
-			'list' => array('code' => 'list', 'before' => '[list]\n[li]', 'after' => '[/li]\n[li][/li]\n[/list]', 'description' => $txt['list']),
-			'hr' => array('code' => 'hr', 'before' => '[hr]', 'description' => $txt['horizontal_rule']),
-		);
-
-		// Show the toggle?
-		if (empty($modSettings['disable_wysiwyg']))
-		{
-			$context['bbc_tags'][1][] = array();
-			$context['bbc_tags'][1]['toggle'] = array('code' => 'toggle', 'before' => '', 'description' => $txt['toggle_view']);
-		}
-
-		$found_button = false;
-		// Here loop through the array, printing the images/rows/separators!
-		foreach ($context['bbc_tags'][0] as $image => $tag)
-		{
-			// Is there a "before" part for this bbc button? If not, it can't be a button!!
-			if (isset($tag['before']))
-			{
-				// Is this tag disabled?
-				if (!empty($context['disabled_tags'][$tag['code']]))
-					continue;
-
-				$found_button = true;
-
-				// Okay... we have the link. Now for the image and the closing </a>!
-				echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
-			}
-			// I guess it's a divider...
-			elseif ($found_button)
-			{
-				echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
-				$found_button = false;
-			}
-		}
-
-		// Show the font drop down...
-		if (!isset($context['disabled_tags']['face']))
-			echo '
-						<select name="sel_face" id="sel_face" style="margin-bottom: 1ex; font-size: x-small;">
-							<option value="" selected="selected">', $txt['font_face'], '</option>
-							<option value="courier">Courier</option>
-						</select>';
-
-		// Font sizes anyone?
-		if (!isset($context['disabled_tags']['size']))
-			echo '
-						<select name="sel_size" id="sel_size" style="margin-bottom: 1ex; font-size: x-small;">
-							<option value="" selected="selected">', $txt['font_size'], '</option>
-							<option value="1">8pt</option>
-							<option value="2">10pt</option>
-							<option value="3">12pt</option>
-							<option value="4">14pt</option>
-							<option value="5">18pt</option>
-							<option value="6">24pt</option>
-							<option value="7">36pt</option>
-						</select>';
-
-		// Print a drop down list for all the colors we allow!
-		if (!isset($context['disabled_tags']['color']))
-			echo ' <select name="sel_color" id="sel_color" style="margin-bottom: 1ex; font-size: x-small;">
-							<option value="" selected="selected">', $txt['change_color'], '</option>
-							<option value="black">', $txt['black'], '</option>
-							<option value="red">', $txt['red'], '</option>
-							<option value="yellow">', $txt['yellow'], '</option>
-							<option value="pink">', $txt['pink'], '</option>
-							<option value="green">', $txt['green'], '</option>
-							<option value="orange">', $txt['orange'], '</option>
-							<option value="purple">', $txt['purple'], '</option>
-							<option value="blue">', $txt['blue'], '</option>
-							<option value="beige">', $txt['beige'], '</option>
-							<option value="brown">', $txt['brown'], '</option>
-							<option value="teal">', $txt['teal'], '</option>
-							<option value="navy">', $txt['navy'], '</option>
-							<option value="maroon">', $txt['maroon'], '</option>
-							<option value="limeGreen">', $txt['lime_green'], '</option>
-						</select>';
-		echo '<br />';
-
-		$found_button = false;
-		// Print the buttom row of buttons!
-		foreach ($context['bbc_tags'][1] as $image => $tag)
-		{
-			if (isset($tag['before']))
-			{
-				// Is this tag disabled?
-				if (!empty($context['disabled_tags'][$tag['code']]))
-					continue;
-
-				$found_button = true;
-
-				// Okay... we have the link. Now for the image and the closing </a>!
-				echo '<a href="javascript:void(0);" onclick="return false;"><img id="cmd_', $tag['code'], '" src="', $settings['images_url'], '/bbc/', $image, '.gif" align="bottom" width="23" height="22" alt="', $tag['description'], '" title="', $tag['description'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></a>';
-			}
-			// I guess it's a divider...
-			elseif ($found_button)
-			{
-				echo '<img src="', $settings['images_url'], '/bbc/divider.gif" alt="|" style="margin: 0 3px 0 3px;" />';
-				$found_button = false;
-			}
-		}
-
-		echo '
-				</td>
-			</tr>';
-	}
-
-	// Now start printing all of the smileys.
-	if (!empty($context['smileys']['postform']))
-	{
-		echo '
-			<tr>
-				<td align="right"></td>
-				<td valign="middle">';
-
-		// Show each row of smileys ;).
-		foreach ($context['smileys']['postform'] as $smiley_row)
-		{
-			foreach ($smiley_row['smileys'] as $smiley)
-				echo '
-					<a href="javascript:void(0);"><img src="', $settings['smileys_url'], '/', $smiley['filename'], '" id="sml_' . $smiley['filename'] . '" align="bottom" alt="', $smiley['description'], '" title="', $smiley['description'], '" /></a>';
-
-			// If this isn't the last row, show a break.
-			if (empty($smiley_row['last']))
-				echo '<br />';
-		}
-
-		// If the smileys popup is to be shown... show it!
-		if (!empty($context['smileys']['popup']))
-			echo '
-					<a href="javascript:editorHandle', $context['post_box_name'], '.showMoreSmileys(\'', $context['post_box_name'], '\', \'', $txt['more_smileys_title'], '\', \'', $txt['more_smileys_pick'], '\', \'', $txt['more_smileys_close_window'], '\', \'', $settings['theme_url'], '\');">[', $txt['more_smileys'], ']</a>';
-
-		echo '
-				</td>
-			</tr>';
-	}
-
-	// Finally the most important bit - the actual text box to write in!
-	echo '
-			<tr>
-				<td valign="top" align="right"></td>
-				<td>
-					<textarea class="editor" name="', $context['post_box_name'], '" id="', $context['post_box_name'], '" rows="', $context['post_box_rows'], '" cols="', $context['post_box_columns'], '" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onchange="storeCaret(this);" tabindex="', $context['tabindex']++, '" style="width: ', $context['post_box_width'], '; height: ', $context['post_box_height'], ';', isset($context['post_error']['no_message']) || isset($context['post_error']['long_message']) ? 'border: 1px solid red;' : '', '">', $message, '</textarea>
-					<input type="hidden" name="editor_mode" id="editor_mode" value="', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 1 : 0, '" />
-				</td>
-			</tr>';
-
-	// Now it's all drawn out we'll actually setup the box.
-	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var editorHandle', $context['post_box_name'], ' = new smfEditor(\'', $context['session_id'], '\', \'', $context['post_box_name'], '\', ', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? 'true' : 'false', ', \'', empty($modSettings['disable_wysiwyg']) && !empty($options['wysiwyg_default']) ? $context['wysiwyg_message'] : '', '\', \'', $context['post_box_width'], '\', \'', $context['post_box_height'], '\');';
-
-	// Create the controls.
-	if (!empty($context['bbc_tags']))
-	{
-		foreach ($context['bbc_tags'] as $row)
-			foreach ($row as $image => $tag)
-			{
-				if (isset($tag['before']) && empty($context['disabled_tags'][$tag['code']]))
-					echo '
-					editorHandle', $context['post_box_name'], '.addButton(\'', $tag['code'], '\', \'', $tag['before'], '\', \'', empty($tag['after']) ? '' : $tag['after'], '\');';
-			}
-	}
-
-	// Setup the smileys.
-	if (!empty($context['smileys']['postform']))
-	{
-		foreach ($context['smileys']['postform'] as $row)
-			foreach ($row['smileys'] as $smiley)
-				echo '
-					editorHandle', $context['post_box_name'], '.addSmiley(\'', $smiley['code'], '\', \'', $smiley['filename'], '\', \'', $smiley['js_description'], '\');';
-	}
-
-	// Setup the data for the popup smileys.
-	if (!empty($context['smileys']['popup']))
-	{
-		echo '
-		var smileys = [';
-		foreach ($context['smileys']['popup'] as $smiley_row)
-		{
-			echo '
-					[';
-			foreach ($smiley_row['smileys'] as $smiley)
-			{
-				echo '
-						["', $smiley['code'], '","', $smiley['filename'], '","', $smiley['js_description'], '"]';
-				if (empty($smiley['last']))
-					echo ',';
-			}
-
-			echo ']';
-			if (empty($smiley_row['last']))
-				echo ',';
-		}
-		echo ']';
-	}
-
-	// Create the drop downs and then initialise my friend!
-	echo '
-		editorHandle', $context['post_box_name'], '.addSelect(\'face\');
-		editorHandle', $context['post_box_name'], '.addSelect(\'size\');
-		editorHandle', $context['post_box_name'], '.addSelect(\'color\');
-		smf_editorArray[smf_editorArray.length] = editorHandle', $context['post_box_name'], ';
-	// ]]></script>';
 }
 
 // The template for the spellchecker.
