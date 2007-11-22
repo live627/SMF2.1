@@ -159,7 +159,7 @@ function Register()
 		if (!isset($_SESSION['visual_verification_code']))
 		{
 			// Skip I, J, L, O, Q, S and Z.
-			$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
+			$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
 
 			// Generate a new code.
 			$_SESSION['visual_verification_code'] = '';
