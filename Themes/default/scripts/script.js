@@ -1034,3 +1034,57 @@ function smf_itemPos(itemHandle)
 
 	return [itemX, itemY];
 }
+
+function extern_link_window()
+{
+	var win = window.open(this.href, '_blank');
+	win.focus();
+	return false;
+}
+
+function get_extern_links()
+{
+	var links = document.getElementsByTagName('a');
+	for (var i=0; i < links.length; i++)
+	{
+		if (links[i].className.match('extern'))
+		{
+			links[i].onclick = extern_link_window;
+		}
+	}
+}
+
+var onload_events = new Array();
+function add_load_event(func)
+{
+	// Get the old event if there is one.
+	var oldOnload = window.onload;
+
+	// Was the old event really an event?
+	if (typeof(oldOnload) != 'function')
+	{
+		// Since we don't have anything at this point just add it stright in.
+		window.onload = func;
+	}
+	// So it is a function but is it our special function?
+	else if(onload_events.length == 0)
+	{
+		// Nope it is just a regular function...
+		onload_events[0] = oldOnload;
+		onload_events[1] = func;
+		window.onload = function() {
+			for (var i=0; i < onload_events.length; i++)
+			{
+				if (onload_events[i])
+				{
+					onload_events[i]();
+				}
+			}
+		}
+	}
+	else
+		// Ok just add it to the list of functions to call.
+		onload_events[onload_events.length] = func;
+}
+
+add_load_event(get_extern_links);

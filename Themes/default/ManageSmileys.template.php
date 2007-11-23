@@ -28,8 +28,6 @@ function template_editsets()
 
 	echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var tempOldOnload;
-
 		function smfSetLatestSmileys()
 		{
 			if (typeof(window.smfLatestSmileys) != "undefined")
@@ -44,17 +42,12 @@ function template_editsets()
 			loadSmiley(', $context['selected_smiley'], ');';
 
 		echo '
-
-			if (tempOldOnload)
-				tempOldOnload();
 		}';
 
 		// Oh well, could be worse - at least it's only IE4.
 		if ($context['browser']['is_ie4'])
 			echo '
-
-			tempOldOnload = window.onload;
-			window.onload = smfSetLatestSmileys;';
+			add_load_event(smfSetLatestSmileys);';
 		else
 			echo '
 

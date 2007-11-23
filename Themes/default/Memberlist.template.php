@@ -119,7 +119,7 @@ function template_main()
 
 		if (!isset($context['disabled_fields']['website']))
 			echo '
-			<td class="windowbg">', $member['website']['url'] != '' ? '<a href="' . $member['website']['url'] . '" target="_blank"><img src="' . $settings['images_url'] . '/www.gif" alt="' . $member['website']['title'] . '" title="' . $member['website']['title'] . '" /></a>' : '', '</td>';
+			<td class="windowbg">', $member['website']['url'] != '' ? '<a href="' . $member['website']['url'] . '" class="extern"><img src="' . $settings['images_url'] . '/www.gif" alt="' . $member['website']['title'] . '" title="' . $member['website']['title'] . '" /></a>' : '', '</td>';
 
 		// ICQ?
 		if (!isset($context['disabled_fields']['icq']))

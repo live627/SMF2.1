@@ -94,17 +94,7 @@ function template_latest_news()
 				setInnerHTML(document.getElementById("smfAnnouncements"), str + "</div>");
 			}
 
-			var oldonload;
-			if (typeof(window.onload) != "undefined")
-				oldonload = window.onload;
-
-			window.onload = function ()
-			{
-				smfSetAnnouncements();';
-
-	echo '
-				if (oldonload)
-					oldonload();
+			add_load_event(smfSetAnnouncements);
 			}
 		// ]]></script>';
 
@@ -759,7 +749,7 @@ function template_warning_log()
 		if (!empty($warning['id_notice']))
 			echo '
 					<div style="float: right;">
-						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" target="_blank" title="', $txt['profile_warning_previous_notice'], '"><img src="' , $settings['default_images_url'] , '/filter.gif" alt="', $txt['profile_warning_previous_notice'], '" /></a>
+						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" class="extern" title="', $txt['profile_warning_previous_notice'], '"><img src="' , $settings['default_images_url'] , '/filter.gif" alt="', $txt['profile_warning_previous_notice'], '" /></a>
 					</div>';
 		echo '
 				</td>

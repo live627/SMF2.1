@@ -281,7 +281,7 @@ function template_merge()
 											<a href="' . $scripturl . '?action=mergetopics;sa=options;board=' . $context['current_board'] . '.0;from=' . $context['origin_topic'] . ';to=' . $topic['id'] . ';sesc=' . $context['session_id'] . '">' . $merge_button . '</a>&nbsp;
 										</td>
 										<td valign="middle" style="white-space: nowrap;">
-											<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '
+											<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" class="extern">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '
 										</td>
 									</tr>';
 	echo '									
@@ -329,7 +329,7 @@ function template_merge_extra_options()
 									<input type="checkbox" class="check" name="topics[]" value="' . $topic['id'] . '" checked="checked" />
 								</td>
 								<td class="windowbg2" valign="middle">
-									<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" target="_blank">' . $topic['subject'] . '</a>
+									<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" class="extern">' . $topic['subject'] . '</a>
 								</td>
 								<td class="windowbg2" valign="middle">
 									' . $topic['started']['link'] . '<br />
@@ -390,7 +390,7 @@ function template_merge_extra_options()
 			echo '
 						<tr>
 							<td>
-								<input type="radio" name="poll" value="' . $poll['id'] . '"' . ($poll['selected'] ? ' checked="checked"' : '') . ' class="check" /> ' . $poll['question'] . ' (' . $txt['topic'] . ': <a href="' . $scripturl . '?topic=' . $poll['topic']['id'] . '.0" target="_blank">' . $poll['topic']['subject'] . '</a>)
+								<input type="radio" name="poll" value="' . $poll['id'] . '"' . ($poll['selected'] ? ' checked="checked"' : '') . ' class="check" /> ' . $poll['question'] . ' (' . $txt['topic'] . ': <a href="' . $scripturl . '?topic=' . $poll['topic']['id'] . '.0" class="extern">' . $poll['topic']['subject'] . '</a>)
 							</td>
 						</tr>';
 		echo '

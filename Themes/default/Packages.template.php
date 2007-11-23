@@ -620,8 +620,7 @@ function template_browse()
 	if ($context['browser']['is_ie4'])
 		echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			tempOldOnload = window.onload;
-			window.onload = smfSetLatestPackages;
+			add_load_event(smfSetLatestPackages);
 		// ]]></script>';
 	else
 		echo '

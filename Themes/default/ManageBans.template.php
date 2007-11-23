@@ -195,7 +195,7 @@ function template_ban_edit()
 			document.getElementById("cannot_register").disabled = document.getElementById("full_ban").checked;
 			document.getElementById("cannot_login").disabled = document.getElementById("full_ban").checked;
 		}
-		window.onload = updateStatus;
+		add_load_event(updateStatus);
 	// ]]></script>';
 }
 

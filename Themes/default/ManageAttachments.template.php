@@ -19,7 +19,7 @@ function template_avatar_settings_below()
 		document.getElementById("custom_avatar_url").disabled = document.getElementById("custom_avatar_enabled").value == 0;
 
 	}
-	window.onload = updateStatus;
+	add_load_eventupdateStatus);
 // ]]></script>
 ';
 }

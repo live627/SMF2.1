@@ -12,6 +12,7 @@ function template_popup()
 		<meta http-equiv="Content-Type" content="text/html; charset=', $context['character_set'], '" />
 		<title>', $context['page_title'], '</title>
 		<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/style.css" />
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js"></script>
 		<style type="text/css">';
 
 	// Internet Explorer 4/5 and Opera 6 just don't do font sizes properly. (they are bigger...)
@@ -120,7 +121,7 @@ function template_find_members()
 			echo '
 				<tr class="', $alternate ? 'windowbg2' : 'windowbg', '" valign="middle">
 					<td align="left">
-						<a href="', $result['href'], '" target="_blank"><img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" /></a>
+						<a href="', $result['href'], '" class="extern"><img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" /></a>
 						<a href="javascript:void(0);" onclick="addMember(this.title); return false;" title="', $result['username'], '">', $result['name'], '</a>
 					</td>
 				</tr>';
@@ -1034,7 +1035,7 @@ function template_manual_profile()
 										</tr>
 										<tr>
 											<td><b>', $txt['manual_profile_website'], ':</b></td>
-											<td><a href="http://www.simplemachines.org/" target="_blank"></a></td>
+											<td><a href="http://www.simplemachines.org/" class="extern"></a></td>
 										</tr>
 										<tr>
 											<td><b>', $txt['manual_profile_status'], ':</b></td>
@@ -1956,7 +1957,7 @@ Simple
 			<td>', $txt['manual_posting_bbc_flash'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/flash.gif" alt="', $txt['manual_posting_bbc_flash'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_flash_code'], '</td>
-			<td><a href="http://somesite/somefile.swf" class="board" target="_blank">', $txt['manual_posting_flash_output'], '</a></td>
+			<td><a href="http://somesite/somefile.swf" class="board extern">', $txt['manual_posting_flash_output'], '</a></td>
 			<td>', $txt['manual_posting_flash_comment'], '</td>
 		</tr>
 		<tr>
@@ -1974,12 +1975,12 @@ Simple
 			<td rowspan="2">', $txt['manual_posting_bbc_url'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/url.gif" alt="', $txt['manual_posting_bbc_url'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_url_code'], '</td>
-			<td><a href="http://somesite" class="board" target="_blank">', $txt['manual_posting_url_output'], '</a></td>
+			<td><a href="http://somesite" class="board extern">', $txt['manual_posting_url_output'], '</a></td>
 			<td rowspan="2">', $txt['manual_posting_url_comment'], '</td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_url_bottom_code'], '</td>
-			<td><a href="http://somesite" class="board" target="_blank">', $txt['manual_posting_url_bottom_output'], '</a></td>
+			<td><a href="http://somesite" class="board extern">', $txt['manual_posting_url_bottom_output'], '</a></td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_bbc_email'], '</td>
@@ -1992,12 +1993,12 @@ Simple
 			<td rowspan="2">', $txt['manual_posting_bbc_ftp'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/ftp.gif" alt="', $txt['manual_posting_bbc_ftp'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_ftp_code'], '</td>
-			<td><a href="ftp://somesite/somefile" class="board" target="_blank">', $txt['manual_posting_ftp_output'], '</a></td>
+			<td><a href="ftp://somesite/somefile" class="board extern">', $txt['manual_posting_ftp_output'], '</a></td>
 			<td rowspan="2">', $txt['manual_posting_ftp_comment'], '</td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_ftp_bottom_code'], '</td>
-			<td><a href="ftp://somesite/somefile" class="board" target="_blank">', $txt['manual_posting_ftp_bottom_output'], '</a></td>
+			<td><a href="ftp://somesite/somefile" class="board extern">', $txt['manual_posting_ftp_bottom_output'], '</a></td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_bbc_table'], '</td>

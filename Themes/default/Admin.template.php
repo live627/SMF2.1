@@ -227,11 +227,7 @@ function template_admin()
 	// IE 4 won't like it if you try to change the innerHTML before load...
 	echo '
 
-			var oldonload;
-			if (typeof(window.onload) != "undefined")
-				oldonload = window.onload;
-
-			window.onload = function ()
+			var func = function ()
 			{
 				smfSetAnnouncements();
 				smfCurrentVersion();
@@ -252,10 +248,8 @@ function template_admin()
 					window.attachEvent("onload", smf_codeFix);';
 
 	echo '
-
-				if (oldonload)
-					oldonload();
 			}
+			add_load_event(func);
 		// ]]></script>';
 }
 
@@ -389,19 +383,12 @@ function template_credits()
 
 	// IE 4 is rather annoying, this wouldn't be necessary...
 	echo '
-
-			var oldonload;
-			if (typeof(window.onload) != "undefined")
-				oldonload = window.onload;
-
-			window.onload = function ()
+			var func = function ()
 			{
 				smfSetLatestSupport();
 				smfCurrentVersion()
-
-				if (oldonload)
-					oldonload();
 			}
+			add_load_event(func);
 		// ]]></script>';
 }
 
@@ -637,7 +624,7 @@ function template_view_versions()
 	if ($context['browser']['is_ie4'])
 		echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			window.onload = smfDetermineVersions;
+			add_load_event(smfDetermineVersions);
 		// ]]></script>';
 	else
 		echo '
@@ -1766,9 +1753,9 @@ function template_admin_search_results()
 			echo '
 					<li class="windowbg">
 						<p>
-							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" target="_blank"><strong>', $result['messages'][0]['subject'], '</strong></a>
-							<br /><span class="smalltext"><a href="', $result['category']['href'], '" target="_blank">', $result['category']['name'], '</a> &nbsp;/&nbsp;
-							<a href="', $result['board']['href'], '" target="_blank">', $result['board']['name'], '</a> /</span>
+							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" class="extern"><strong>', $result['messages'][0]['subject'], '</strong></a>
+							<br /><span class="smalltext"><a href="', $result['category']['href'], '" class="extern">', $result['category']['name'], '</a> &nbsp;/&nbsp;
+							<a href="', $result['board']['href'], '" class="extern">', $result['board']['name'], '</a> /</span>
 						</p>
 						<p class="quote">
 							', $result['messages'][0]['body'], '

@@ -42,7 +42,7 @@ function template_main()
 
 		if (!empty($member['ip']))
 			echo '
-				(<a href="' . $scripturl . '?action=trackip;searchip=' . $member['ip'] . '" target="_blank">' . $member['ip'] . '</a>)';
+				(<a href="' . $scripturl . '?action=trackip;searchip=' . $member['ip'] . '" class="extern">' . $member['ip'] . '</a>)';
 
 		echo '
 			</td>
