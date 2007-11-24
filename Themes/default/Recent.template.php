@@ -165,10 +165,10 @@ function template_unread()
 
 	foreach ($context['topics'] as $topic)
 	{
-		// Do we want to seperate the sticky and lock status out?
-		if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
+		// Do we want to separate the sticky and lock status out?
+		if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
 			$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_sticky'));
-		if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
+		if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
 			$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_locked'));
 
 		echo '
@@ -177,8 +177,8 @@ function template_unread()
 						<img src="' . $settings['images_url'] . '/topic/' . $topic['class'] . '.gif" alt="" />
 					</td><td class="windowbg2" valign="middle" align="center" width="4%">
 						<img src="' . $topic['first_post']['icon_url'] . '" alt="" align="middle" />
-					</td><td class="windowbg' , $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '3' : '' , '" width="48%" valign="middle">' , $topic['is_locked'] && !empty($settings['seperate_sticky_lock']) ? '
-						<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '
+					</td><td class="windowbg' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" width="48%" valign="middle">' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '
+						<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '
 						<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" />' : '', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a> <span class="smalltext">', $topic['pages'], ' ', $txt['in'], ' ', $topic['board']['link'], '</span></td>
 					<td class="windowbg2" valign="middle" width="14%">
 						', $topic['first_post']['member']['link'], '</td>
@@ -247,7 +247,7 @@ function template_unread()
 				</td>
 				<td align="left" valign="top" style="padding-top: 2ex;" class="smalltext">
 					<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" alt="" align="middle" /> ' . $txt['locked_topic'] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
-					<img src="' . $settings['images_url'] . '/icons/' . (!empty($settings['seperate_sticky_lock']) ? 'quick_sticky' : 'normal_post_sticky') . '.gif" alt="" align="middle" /> ' . $txt['smf96'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
+					<img src="' . $settings['images_url'] . '/icons/' . (!empty($settings['separate_sticky_lock']) ? 'quick_sticky' : 'normal_post_sticky') . '.gif" alt="" align="middle" /> ' . $txt['smf96'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
 					<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : '') . '
 				</td>
 			</tr>
@@ -331,10 +331,10 @@ function template_replies()
 
 	foreach ($context['topics'] as $topic)
 	{
-		// Seperate lock and sticky again?
-		if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
+		// separate lock and sticky again?
+		if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
 			$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_sticky'));
-		if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
+		if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
 			$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_locked'));
 
 		echo '
@@ -343,9 +343,9 @@ function template_replies()
 						<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" /></td>
 					<td class="windowbg2" valign="middle" align="center" width="4%">
 						<img src="', $topic['first_post']['icon_url'], '" alt="" align="middle" /></td>
-					<td class="windowbg', $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '3' : '' , '" width="48%" valign="middle">
-						' , $topic['is_locked'] && !empty($settings['seperate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
-						' , $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" />' : '', ' ', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a> <span class="smalltext">', $topic['pages'], '
+					<td class="windowbg', $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" width="48%" valign="middle">
+						' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
+						' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" />' : '', ' ', $topic['first_post']['link'], ' <a href="', $topic['new_href'], '"><img src="', $settings['lang_images_url'], '/new.gif" alt="', $txt['new'], '" /></a> <span class="smalltext">', $topic['pages'], '
 						', $txt['in'], ' ', $topic['board']['link'], '</span></td>
 					<td class="windowbg2" valign="middle" width="14%">
 						', $topic['first_post']['member']['link'], '</td>
@@ -407,7 +407,7 @@ function template_replies()
 				</td>
 				<td align="left" valign="top" style="padding-top: 2ex;" class="smalltext">
 					<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" alt="" align="middle" /> ' . $txt['locked_topic'] . '<br />' . ($modSettings['enableStickyTopics'] == '1' ? '
-					<img src="' . $settings['images_url'] . '/icons/' . (!empty($settings['seperate_sticky_lock']) ? 'quick_sticky' : 'normal_post_sticky') . '.gif" alt="" align="middle" /> ' . $txt['smf96'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
+					<img src="' . $settings['images_url'] . '/icons/' . (!empty($settings['separate_sticky_lock']) ? 'quick_sticky' : 'normal_post_sticky') . '.gif" alt="" align="middle" /> ' . $txt['smf96'] . '<br />' : '') . ($modSettings['pollMode'] == '1' ? '
 					<img src="' . $settings['images_url'] . '/topic/normal_poll.gif" alt="" align="middle" /> ' . $txt['poll'] : '') . '
 				</td>
 			</tr>

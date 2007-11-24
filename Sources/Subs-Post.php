@@ -1338,7 +1338,7 @@ function SpellCheck()
 		var mispstr = window.opener.document.forms[spell_formname][spell_fieldname].value;
 		var misps = Array(';
 
-	// Get all the words (Javascript already seperated them).
+	// Get all the words (Javascript already separated them).
 	$alphas = explode("\n", $smfFunc['db_unescape_string'](strtr($_POST['spellstring'], array("\r" => ''))));
 
 	$found_words = false;

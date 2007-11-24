@@ -219,7 +219,7 @@ function template_main()
 
 					echo '
 			<tr>
-				<td colspan="3" class="windowbg', !empty($settings['seperate_sticky_lock']) ? '3' : '', '">
+				<td colspan="3" class="windowbg', !empty($settings['separate_sticky_lock']) ? '3' : '', '">
 					<span class="smalltext"><b>', $txt['parent_boards'], '</b>: ', implode(', ', $children), '</span>
 				</td>
 			</tr>';

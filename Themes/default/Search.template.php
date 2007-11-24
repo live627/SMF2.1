@@ -296,9 +296,9 @@ function template_results()
 		while ($topic = $context['get_topics']())
 		{
 			// Work out what the class is if we remove sticky and lock info.
-			if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
+			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'sticky') !== false)
 				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_sticky'));
-			if (!empty($settings['seperate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
+			if (!empty($settings['separate_sticky_lock']) && strpos($topic['class'], 'locked') !== false)
 				$topic['class'] = substr($topic['class'], 0, strrpos($topic['class'], '_locked'));
 
 			echo '
@@ -307,9 +307,9 @@ function template_results()
 					<img src="', $settings['images_url'], '/topic/', $topic['class'], '.gif" alt="" /></td>
 				<td class="windowbg2" valign="top" align="center" width="4%">
 					<img src="', $topic['first_post']['icon_url'], '" alt="" align="middle" /></td>
-				<td class="windowbg' , $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '3' : '' , '" valign="middle">
-					' , $topic['is_locked'] && !empty($settings['seperate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
-					' , $topic['is_sticky'] && !empty($settings['seperate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" /><b>' : '' , $topic['first_post']['link'] , $topic['is_sticky'] ? '</b>' : '' , '
+				<td class="windowbg' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '3' : '' , '" valign="middle">
+					' , $topic['is_locked'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/quick_lock.gif" align="right" alt="" style="margin: 0;" />' : '' , '
+					' , $topic['is_sticky'] && !empty($settings['separate_sticky_lock']) ? '<img src="' . $settings['images_url'] . '/icons/show_sticky.gif" align="right" alt="" style="margin: 0;" /><b>' : '' , $topic['first_post']['link'] , $topic['is_sticky'] ? '</b>' : '' , '
 				<div class="smalltext"><i>', $txt['in'], ' ', $topic['board']['link'], '</i></div>';
 
 			foreach ($topic['matches'] as $message)

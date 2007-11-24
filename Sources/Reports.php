@@ -447,7 +447,7 @@ function BoardPermissionsReport()
 		}
 	}
 
-	// We'll do a little bit of seperate stuff for boards using "simple" local permissions.
+	// We'll do a little bit of separate stuff for boards using "simple" local permissions.
 	setKeys('rows');
 	foreach ($boards as $id => $board)
 	{
