@@ -33,6 +33,9 @@ November 2007
  ! Don't use the characters S and Z in visual verification just like the comment told us. (MangeRegistration.php, PersonalMessage.php, Post.php, Register.php)
  ! Removed target="_blank" from links and moved to a JS solution.  This should allow strict doc-type to be used. (Lots of files)
  * Change seperate to the correct spelling of separate.  Theme authors should note that this changed the setting name from 'seperate_sticky_lock' to 'separate_sticky_lock'. (index, Recent, PersonalMessage, BoardIndex, MessageIndex, Search template files, Reports.php, Subs-Post.php)
+ ! Added the option to view user posts on a particular board. (Profile.php)
+ ! Added a BBC tag to act like the bidirectional override tag. (Subs.php)
+ * The help template should output the pre bbc tag example as shown in the example. (Help template)
 
 
 October 2007

@@ -1724,7 +1724,7 @@ function summary($memID)
 function showPosts($memID)
 {
 	global $txt, $user_info, $scripturl, $modSettings, $db_prefix;
-	global $context, $user_profile, $sourcedir, $smfFunc;
+	global $context, $user_profile, $sourcedir, $smfFunc, $board;
 
 	// Some initial context.
 	$context['start'] = (int) $_REQUEST['start'];
@@ -1758,12 +1758,14 @@ function showPosts($memID)
 	if (empty($_REQUEST['viewscount']) || !is_numeric($_REQUEST['viewscount']))
 		$_REQUEST['viewscount'] = '10';
 
+	
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}messages AS m" . ($context['is_topics'] ? "
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_first_msg = m.id_msg)" : '') . "
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
 		WHERE m.id_member = $memID
+			" . (!empty($board) ? 'AND m.id_board=' . $board : '') . "
 			" . ($context['user']['is_owner'] ? '' : 'AND m.approved = 1'), __FILE__, __LINE__);
 	list ($msgCount) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -1772,6 +1774,7 @@ function showPosts($memID)
 		SELECT MIN(id_msg), MAX(id_msg)
 		FROM {$db_prefix}messages AS m
 		WHERE m.id_member = $memID
+			" . (!empty($board) ? 'AND m.id_board=' . $board : '') . "
 			" . ($context['user']['is_owner'] ? '' : 'AND m.approved = 1'), __FILE__, __LINE__);
 	list ($min_msg_member, $max_msg_member) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -1781,7 +1784,7 @@ function showPosts($memID)
 	$maxIndex = (int) $modSettings['defaultMaxMessages'];
 
 	// Make sure the starting place makes sense and construct our friend the page index.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts' . ($context['is_topics'] ? ';topics' : ''), $context['start'], $msgCount, $maxIndex);
+	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=showPosts' . ($context['is_topics'] ? ';topics' : '') . (!empty($board) ? ';board=' . $board : ''), $context['start'], $msgCount, $maxIndex);
 	$context['current_page'] = $context['start'] / $maxIndex;
 
 	// Reverse the query if we're past 50% of the pages for better performance.
@@ -1820,6 +1823,7 @@ function showPosts($memID)
 				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
 				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 			WHERE m.id_member = $memID
+				" . (!empty($board) ? 'AND m.id_board=' . $board : '') . "
 				" . (empty($range_limit) ? '' : "
 				AND $range_limit") . "
 				AND $user_info[query_see_board]

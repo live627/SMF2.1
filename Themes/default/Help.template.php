@@ -1821,7 +1821,7 @@ function template_manual_posting()
 				<pre>
 Simple
   Machines
-						Forum
+    Forum
 </pre>
 			</td>
 			<td>', $txt['manual_posting_pre_comment'], '</td>
