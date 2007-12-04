@@ -59,7 +59,7 @@ function GetJumpTo()
 	require_once($sourcedir . '/Subs-MessageIndex.php');
 	$boardListOptions = array(
 		'use_permissions' => true,
-		'selected_board' => isset($context['current_board']) && $row['id_board'] == $context['current_board'],
+		'selected_board' => isset($context['current_board']) ? $context['current_board'] : 0,
 	);
 	$context['jump_to'] = getBoardList($boardListOptions);
 	
