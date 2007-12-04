@@ -194,17 +194,18 @@ function template_edit_profiles()
 
 	echo '
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
-			<table width="60%" align="center" border="0" cellpadding="3" cellspacing="1" class="tborder" style="margin-top: 2ex;">
+			<table width="50%" align="center" border="0" cellpadding="3" cellspacing="1" class="tborder" style="margin-top: 2ex;">
 				<tr class="titlebg">
 					<td>', $txt['permissions_profile_edit'], '</td>
 				</tr>
 				<tr class="catbg">
 					<td>', $txt['permissions_profile_name'], '</td>
 				</tr>';
+	$alternate = false;
 	foreach ($context['predefined'] as $profile)
 	{
 		echo '
-				<tr class="windowbg2">
+				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 					<td>
 						<div style="float: left;">
 							', $profile['can_edit'] ? '<input type="text" name="predef[' . $profile['id'] . ']" value="' . $profile['name'] . '" />' : $profile['name'], '
@@ -220,6 +221,7 @@ function template_edit_profiles()
 						</div>
 					</td>
 				</tr>';
+		$alternate = !$alternate;
 	}
 
 	echo '
@@ -233,7 +235,7 @@ function template_edit_profiles()
 		</form>
 
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
-			<table width="60%" align="center" border="0" cellpadding="3" cellspacing="0" class="tborder" style="margin-top: 2ex;">
+			<table width="50%" align="center" border="0" cellpadding="3" cellspacing="0" class="tborder" style="margin-top: 2ex;">
 				<tr class="titlebg">
 					<td colspan="2">', $txt['permissions_profile_new'], '</td>
 				</tr>

@@ -982,7 +982,7 @@ function create_control_richedit($editorOptions)
 	loadLanguage('Post');
 
 	// Initialize smiley array... if not loaded before.
-	if (empty($context['smileys']) && !empty($editorOptions['disable_smiley_box']))
+	if (empty($context['smileys']) && empty($editorOptions['disable_smiley_box']))
 	{
 		$context['smileys'] = array(
 			'postform' => array(),

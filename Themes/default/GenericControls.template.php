@@ -155,7 +155,7 @@ function template_control_richedit($editor_id)
 	}
 
 	// Now start printing all of the smileys.
-	if (!empty($context['smileys']['postform']))
+	if (!empty($context['smileys']['postform']) && !$editor_context['disable_smiley_box'])
 	{
 		echo '
 			<tr>
