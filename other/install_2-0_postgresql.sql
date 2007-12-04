@@ -1708,7 +1708,6 @@ CREATE SEQUENCE {$db_prefix}permission_profiles_seq START WITH 5;
 CREATE TABLE {$db_prefix}permission_profiles (
   id_profile smallint default nextval('{$db_prefix}permission_profiles_seq'),
   profile_name varchar(255) NOT NULL,
-  id_parent smallint NOT NULL default '0',
   PRIMARY KEY (id_profile)
 );
 

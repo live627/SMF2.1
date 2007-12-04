@@ -1459,8 +1459,7 @@ VALUES ('Simple Machines Third-party Mod Site', 'http://mods.simplemachines.org'
 
 CREATE TABLE {$db_prefix}permission_profiles (
   id_profile integer primary key,
-  profile_name varchar(255) NOT NULL,
-  id_parent smallint NOT NULL default '0'
+  profile_name varchar(255) NOT NULL
 );
 
 #

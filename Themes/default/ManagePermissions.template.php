@@ -10,8 +10,8 @@ function template_permission_index()
 			<table width="100%" border="0" cellpadding="2" cellspacing="1" class="tborder">';
 	if (!empty($context['profile']))
 		echo '
-				<tr class="catbg">
-					<td colspan="6" style="padding: 4px;">', $txt['permissions_by_profile'], ': <span style="color: red">', $context['profile']['name'], '</span></td>
+				<tr class="titlebg">
+					<td colspan="6" style="padding: 4px;">', $txt['permissions_for_profile'], ': &quot;', $context['profile']['name'], '&quot;</td>
 				</tr>';
 	echo '
 				<tr class="catbg3">
@@ -56,6 +56,11 @@ function template_permission_index()
 
 	echo '
 				<tr class="windowbg">
+					<td colspan="7">
+						<a href="#" onclick="smfPermissionsPanelToggle.toggle(); return false;"><img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'expand' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '</a>
+					</td>
+				</tr>
+				<tr class="windowbg" id="permissions_panel_advanced">
 					<td colspan="6" style="padding-top: 1ex; padding-bottom: 1ex; text-align: right;">
 						<table width="100%" cellspacing="0" cellpadding="3" border="0"><tr><td>
 							<div style="margin-bottom: 1ex;"><b>', $txt['permissions_with_selection'], '...</b></div>
@@ -123,30 +128,43 @@ function template_permission_index()
 	echo '
 							</select>
 						</td><td valign="bottom" width="16%">
-							<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-								function checkSubmit()
-								{
-									if ((document.forms.permissionForm.predefined.value != "" && (document.forms.permissionForm.copy_from.value != "empty" || document.forms.permissionForm.permissions.value != "")) || (document.forms.permissionForm.copy_from.value != "empty" && document.forms.permissionForm.permissions.value != ""))
-									{
-										alert("', $txt['permissions_only_one_option'], '");
-										return false;
-									}
-									if (document.forms.permissionForm.predefined.value == "" && document.forms.permissionForm.copy_from.value == "" && document.forms.permissionForm.permissions.value == "")
-									{
-										alert("', $txt['permissions_no_action'], '");
-										return false;
-									}
-									if (document.forms.permissionForm.permissions.value != "" && document.forms.permissionForm.add_remove.value == "deny")
-										return confirm("', $txt['permissions_deny_dangerous'], '");
-
-									return true;
-								}
-							// ]]></script>
 							<input type="submit" value="', $txt['permissions_set_permissions'], '" onclick="return checkSubmit();" />
 						</td></tr></table>
 					</td>
 				</tr>
 			</table>';
+
+	// Javascript for the advanced stuff.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var smfPermissionsPanelToggle = new smfToggle("smfPermissionsPanelToggle", ', empty($context['show_advanced_options']) ? 1 : 0, ');
+		smfPermissionsPanelToggle.addToggleImage("permissions_panel_toggle", "/sort_down.gif", "/selected.gif");
+		smfPermissionsPanelToggle.addTogglePanel("permissions_panel_advanced");';
+
+	if (empty($context['show_advanced_options']))
+		echo '
+		document.getElementById(\'permissions_panel_advanced\').style.display = "none";';
+
+	echo '
+	
+		function checkSubmit()
+		{
+			if ((document.forms.permissionForm.predefined.value != "" && (document.forms.permissionForm.copy_from.value != "empty" || document.forms.permissionForm.permissions.value != "")) || (document.forms.permissionForm.copy_from.value != "empty" && document.forms.permissionForm.permissions.value != ""))
+			{
+				alert("', $txt['permissions_only_one_option'], '");
+				return false;
+			}
+			if (document.forms.permissionForm.predefined.value == "" && document.forms.permissionForm.copy_from.value == "" && document.forms.permissionForm.permissions.value == "")
+			{
+				alert("', $txt['permissions_no_action'], '");
+				return false;
+			}
+			if (document.forms.permissionForm.permissions.value != "" && document.forms.permissionForm.add_remove.value == "deny")
+				return confirm("', $txt['permissions_deny_dangerous'], '");
+	
+			return true;
+		}
+	// ]]></script>';
 
 	if (!empty($context['profile']))
 		echo '
@@ -162,29 +180,75 @@ function template_by_board()
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo '
-			<table width="80%" align="center" border="0" cellpadding="4" cellspacing="1" class="tborder" style="margin-top: 2ex;">
+		<form action="', $scripturl, '?action=admin;area=permissions;sa=board" method="post" accept-charset="', $context['character_set'], '">
+			<table width="60%" align="center" border="0" cellpadding="4" cellspacing="1" class="tborder" style="margin-top: 2ex;">
 				<tr class="titlebg">
 					<td colspan="2">', $txt['permissions_boards'], '</td>
 				</tr>
+				<tr class="windowbg2">
+					<td colspan="2" class="smalltext">', $txt['permissions_boards_desc'], '</td>
+				</tr>
 				<tr class="catbg">
 					<td>', $txt['board_name'], '</td>
-					<td>', $txt['permissions_profile'], '</td>
+					<td>', $txt['permission_profile'], '</td>
 				</tr>';
-	foreach ($context['boards'] as $board)
+
+	foreach ($context['categories'] as $category)
 	{
+		echo '
+				<tr class="windowbg">
+					<td colspan="2">
+						<i>', $category['name'], '</i>
+					</td>
+				</tr>';
+
+		foreach ($category['boards'] as $board)
+		{
 			echo '
 				<tr class="windowbg2">
-					<td width="60%" align="left" class="smalltext">
-						<a href="', $scripturl, '?action=admin;area=permissions;sa=switch;boardid=', $board['id'], ';sesc=', $context['session_id'], '"><b>', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
+					<td width="60%" align="left">
+						<a href="', $scripturl, '?action=admin;area=manageboards;sa=board;boardid=', $board['id'], ';sesc=', $context['session_id'], '">', str_repeat('-', $board['child_level']), ' ', $board['name'], '</a>
 					</td>
-					<td width="40%" align="left" class="smalltext">
-						<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $board['profile'], ';sesc=', $context['session_id'], '">', $board['profile_name'], '</a>
+					<td width="40%" align="left">';
+			if ($context['edit_all'])
+			{
+				echo '
+						<select name="boardprofile[', $board['id'], ']">';
+
+				foreach ($context['profiles'] as $id => $profile)
+					echo '
+							<option value="', $id, '" ', $id == $board['profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
+
+				echo '
+						</select>';
+			}
+			else
+				echo '
+						<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $board['profile'], ';sesc=', $context['session_id'], '">', $board['profile_name'], '</a>';
+
+			echo '
 					</td>
 				</tr>';
+		}
 	}
 
 	echo '
-			</table>';
+				<tr class="catbg">
+					<td colspan="2" align="right">';
+
+	if ($context['edit_all'])
+		echo '
+						<input type="submit" name="save_changes" value="', $txt['save'], '" />';
+	else
+		echo '
+						<a href="', $scripturl, '?action=admin;area=permissions;sa=board;edit;sesc=', $context['session_id'], '">', $txt['permissions_board_all'], '</a>';
+
+	echo '
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="sc" value="', $context['session_id'], '" />
+		</form>';
 }
 
 // Edit permission profiles (predefined).
@@ -196,29 +260,32 @@ function template_edit_profiles()
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=profiles" method="post" accept-charset="', $context['character_set'], '">
 			<table width="50%" align="center" border="0" cellpadding="3" cellspacing="1" class="tborder" style="margin-top: 2ex;">
 				<tr class="titlebg">
-					<td>', $txt['permissions_profile_edit'], '</td>
+						<td colspan="3">', $txt['permissions_profile_edit'], '</td>
 				</tr>
 				<tr class="catbg">
 					<td>', $txt['permissions_profile_name'], '</td>
+					<td>', $txt['permissions_profile_used_by'], '</td>
+					<td width="5%">', $txt['delete'], '</td>
 				</tr>';
 	$alternate = false;
-	foreach ($context['predefined'] as $profile)
+	foreach ($context['profiles'] as $profile)
 	{
 		echo '
 				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-					<td>
-						<div style="float: left;">
-							', $profile['can_edit'] ? '<input type="text" name="predef[' . $profile['id'] . ']" value="' . $profile['name'] . '" />' : $profile['name'], '
-						</div>
-						<div style="float: right;">
-							[<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $profile['id'], ';sesc=', $context['session_id'], '">', $txt['permissions_profile_do_edit'], '</a>]';
-
-		if ($profile['can_delete'])
+					<td>';
+		
+		if (!empty($context['show_rename_boxes']) && $profile['can_edit'])
 			echo '
-							[<a href="', $scripturl, '?action=admin;area=permissions;sa=profiles;delete;pid=', $profile['id'], ';sesc=', $context['session_id'], '">', $txt['permissions_profile_do_delete'], '</a>]';
+						<input type="text" name="rename_profile[', $profile['id'], ']" value="', $profile['name'], '" />';
+		else
+			echo '
+						<a href="', $scripturl, '?action=admin;area=permissions;sa=index;pid=', $profile['id'], ';sesc=', $context['session_id'], '">', $profile['name'], '</a>';
 
 		echo '
-						</div>
+					</td><td>
+						', !empty($profile['boards_text']) ? $profile['boards_text'] : $txt['permissions_profile_used_by_none'], '
+					</td><td align="center">
+						<input type="checkbox" name="delete_profile[]" value="', $profile['id'], '" ', $profile['can_delete'] ? '' : 'disabled="disabled"', ' class="check" />
 					</td>
 				</tr>';
 		$alternate = !$alternate;
@@ -226,9 +293,15 @@ function template_edit_profiles()
 
 	echo '
 				<tr class="titlebg">
-					<td align="right">
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />
-						<input type="submit" name="save" value="', $txt['permissions_commit'], '" />
+					<td colspan="3" align="right">
+						<input type="hidden" name="sc" value="', $context['session_id'], '" />';
+
+	if ($context['can_edit_something'])
+		echo '
+						<input type="submit" name="rename" value="', empty($context['show_rename_boxes']) ? $txt['permissions_profile_rename'] : $txt['scheduled_tasks_save_changes'], '" />';
+
+	echo '
+						<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" />
 					</td>
 				</tr>
 			</table>
@@ -266,85 +339,6 @@ function template_edit_profiles()
 					<td align="right" colspan="2">
 						<input type="hidden" name="sc" value="', $context['session_id'], '" />
 						<input type="submit" name="create" value="', $txt['permissions_profile_new_create'], '" />
-					</td>
-				</tr>
-			</table>
-		</form>';
-}
-
-// Switch the permission profile of a board.
-function template_switch_profiles()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-
-	echo '
-		<form action="', $scripturl, '?action=admin;area=permissions;sa=switch;boardid=', $context['board']['id'], '" method="post" accept-charset="', $context['character_set'], '">
-			<table width="80%" align="center" border="0" cellpadding="4" cellspacing="0" class="tborder" style="margin-top: 2ex;">
-				<tr class="titlebg">
-					<td colspan="3">', $context['page_title'], '</td>
-				</tr>
-				<tr class="windowbg2">
-					<td colspan="3"><b>', $txt['permissions_profiles_select_type'], ':</b></td>
-				</tr>
-				<tr class="windowbg2">
-					<td width="5%" align="center" class="windowbg">
-						<input type="radio" name="profile_type" id="profile_type_predefined" value="predefined" ', $context['profile_type'] == 'predefined' ? 'checked="checked"' : '', ' />
-					</td>
-					<td width="45%" align="left">
-						<label for="profile_type_predefined">', $txt['permissions_profiles_predefined'], ':</label>
-					</td>
-					<td width="50%" align="left">
-						<select name="predefined" onchange="document.getElementById(\'profile_type_predefined\').checked = true;">';
-
-	foreach ($context['predefined_profiles'] as $profile)
-		echo '
-							<option value="', $profile['id'], '" ', $context['board']['profile'] == $profile['id'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
-
-	echo '
-						</select>
-					</td>
-				</tr>';
-
-	// Only show a board choice if some boards have custom profiles to copy.
-	if (!empty($context['board_profiles']))
-	{
-		echo '
-				<tr class="windowbg2">
-					<td width="5%" align="center" class="windowbg">
-						<input type="radio" name="profile_type" id="profile_type_as_board" value="as_board" ', $context['profile_type'] == 'as_board' ? 'checked="checked"' : '', ' />
-					</td>
-					<td width="45%" align="left">
-						<label for="profile_type_as_board">', $txt['permissions_profiles_as_board'], ':</label>
-					</td>
-					<td width="50%" align="left">
-						<select name="as_board" onchange="document.getElementById(\'profile_type_as_board\').checked = true;">';
-
-		foreach ($context['board_profiles'] as $profile)
-			echo '
-							<option value="', $profile['id'], '" ', $context['board']['profile'] == $profile['id'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
-
-		echo '
-						</select>
-					</td>
-				</tr>';
-	}
-
-	echo '
-				<tr class="windowbg2">
-					<td width="5%" align="center" class="windowbg">
-						<input type="radio" name="profile_type" id="profile_type_custom" value="custom" ', $context['profile_type'] == 'custom' ? 'checked="checked"' : '', ' />
-					</td>
-					<td width="45%" align="left">
-						<label for="profile_type_custom">', $txt['permissions_profiles_custom_type'], ':</label>
-					</td>
-					<td width="50%" align="left">
-						<i><a href="', $scripturl, '?action=admin;area=permissions;sa=switch;boardid=', $context['board']['id'], ';customize;save;sesc=', $context['session_id'], '">', $txt['permissions_profiles_customize'], '</a></i>
-					</td>
-				</tr>
-				<tr class="windowbg2">
-					<td colspan="3" align="center">
-						<input type="hidden" name="sc" value="', $context['session_id'], '" />
-						<input type="submit" name="save" value="', $txt['permission_settings_submit'], '" />
 					</td>
 				</tr>
 			</table>

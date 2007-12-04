@@ -380,6 +380,11 @@ function EditBoard()
 	require_once($sourcedir . '/Subs-Boards.php');
 	getBoardTree();
 
+	// For editing the profile we'll need this.
+	loadLanguage('ManagePermissions');
+	require_once($sourcedir . '/ManagePermissions.php');
+	loadPermissionProfiles();
+
 	// id_board must be a number....
 	$_REQUEST['boardid'] = isset($_REQUEST['boardid']) ? (int) $_REQUEST['boardid'] : 0;
 	if (!isset($boards[$_REQUEST['boardid']]))
@@ -405,6 +410,7 @@ function EditBoard()
 			'posts' => 0,
 			'topics' => 0,
 			'theme' => 0,
+			'profile' => 1,
 			'override_theme' => 0,
 			'redirect' => '',
 			'category' => (int) $_REQUEST['cat'],
@@ -583,6 +589,9 @@ function EditBoard2()
 
 		// Are they doing redirection?
 		$boardOptions['redirect'] = !empty($_POST['redirect_enable']) && isset($_POST['redirect_address']) && trim($_POST['redirect_address']) != '' ? trim($_POST['redirect_address']) : '';
+
+		// Profiles...
+		$boardOptions['profile'] = $_POST['profile'];
 
 		// We need to know what used to be case in terms of redirection.
 		if (!empty($_POST['boardid']))

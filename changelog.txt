@@ -8,6 +8,9 @@ December 2007
  ! Rich text editor works again in Firefox. (Subs-Editor.php, script.js)
  + Added new auto suggest control for easily adding an auto suggest box. (index.php, suggest.js, Subs-Editor.php, GenericControls template)
  ! Changed the personal message sending template to use auto suggest. (PersonalMessage.php, PersonalMessage template, PersonalMessage language files)
+ ! Removed option to have a permission profile linked directly to a board. (upgrade, install, ManagePermissions)
+ * Various tweaks to the permissions screen. (ManageBoards.php, ManagePermissions.php, ManagePermissions template, ManageBoards template, ManagePermissions language files)
+
 
 November 2007
 --------------------------------------------------------------------------------

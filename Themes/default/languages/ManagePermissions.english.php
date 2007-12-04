@@ -13,26 +13,29 @@ $txt['permissions_switch'] = 'Switch To';
 $txt['permissions_global'] = 'Global';
 $txt['permissions_local'] = 'Local';
 
-$txt['permissions_by_profile'] = 'Permissions by Profile';
+$txt['permissions_for_profile'] = 'Permissions for Profile';
+$txt['permissions_boards_desc'] = 'The list below shows which set of permissions has been assigned to each board on your forum. You may edit the assigned permission profile by either clicking the board name or select &quot;edit all&quot; from the bottom of the page. To edit the profile itself simply click the profile name.';
+$txt['permissions_board_all'] = 'Edit All';
+$txt['permission_profile'] = 'Permission Profile';
+$txt['permission_profile_desc'] = 'Which <a href="%1$s">permission set</a> the board should use.';
+
 $txt['permissions_profile'] = 'Profile';
 $txt['permissions_profiles_desc'] = 'Permission profiles are assigned to individual boards to allow you to easily manage your security settings. From this area you can create, edit and delete permission profiles.';
 $txt['permissions_profiles_change_for_board'] = 'Edit Permission Profile For: &quot;%s&quot;';
-$txt['permissions_profiles_select_type'] = 'Type of permission profile to use';
-$txt['permissions_profiles_predefined'] = 'Predefined Profile';
-$txt['permissions_profiles_as_board'] = 'Use Custom Profile From';
-$txt['permissions_profiles_custom_type'] = 'Custom Profile';
-$txt['permissions_profiles_customize'] = 'Customize';
-$txt['permissions_profile_custom'] = 'Custom';
-$txt['permissions_profile_as_board'] = '%s\'s Profile';
 $txt['permissions_profile_default'] = 'Default';
 $txt['permissions_profile_no_polls'] = 'No Polls';
 $txt['permissions_profile_reply_only'] = 'Reply Only';
 $txt['permissions_profile_read_only'] = 'Read Only';
 
+$txt['permissions_profile_rename'] = 'Rename';
 $txt['permissions_profile_edit'] = 'Edit Profiles';
 $txt['permissions_profile_new'] = 'New Profile';
 $txt['permissions_profile_new_create'] = 'Create';
 $txt['permissions_profile_name'] = 'Profile Name';
+$txt['permissions_profile_used_by'] = 'Used By';
+$txt['permissions_profile_used_by_one'] = 'One Board';
+$txt['permissions_profile_used_by_many'] = '%d Boards';
+$txt['permissions_profile_used_by_none'] = 'No Boards';
 $txt['permissions_profile_do_edit'] = 'Edit';
 $txt['permissions_profile_do_delete'] = 'Delete';
 $txt['permissions_profile_copy_from'] = 'Copy Permissions From';
@@ -43,8 +46,9 @@ $txt['permissions_all'] = 'all';
 $txt['permissions_none'] = 'none';
 $txt['permissions_set_permissions'] = 'Set permissions';
 
+$txt['permissions_advanced_options'] = 'Advanced Options';
 $txt['permissions_with_selection'] = 'With selection';
-$txt['permissions_apply_pre_defined'] = 'Apply pre-defined permission profile';
+$txt['permissions_apply_pre_defined'] = 'Apply pre-defined permission set';
 $txt['permissions_select_pre_defined'] = 'Select a pre-defined profile';
 $txt['permissions_copy_from_board'] = 'Copy permissions from this board';
 $txt['permissions_select_board'] = 'Select a board';
@@ -262,7 +266,7 @@ $txt['permission_settings_enable_deny'] = 'Enable the option to deny permissions
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.
 $txt['permission_disable_deny_warning'] = 'Turning off this option will update \\\'Deny\\\'-permissions to \\\'Disallow\\\'.';
 $txt['permission_by_membergroup_desc'] = 'Here you can set all global permissions for each membergroup. These permissions are valid on all boards that have not been overridden by local permissions set in the \'Permissions by board\'-screen.';
-$txt['permission_by_board_desc'] = 'Here you can set whether a board uses the global permissions or has a specific permission regime. Using local permissions means that for that board, you can set every permission for every membergroup.';
+$txt['permission_by_board_desc'] = 'Here you can set which permissions profile a board uses. You can create new permission profiles from the &quot;Edit Profiles&quot menu.';
 $txt['permission_settings_desc'] = 'Here you can set who has permission to change permissions, as well as how sophisticated the permission system should be.';
 $txt['permission_settings_enable_postgroups'] = 'Enable permissions for post count based groups';
 // Escape any single quotes in here twice.. 'it\'s' -> 'it\\\'s'.

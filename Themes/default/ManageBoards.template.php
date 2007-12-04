@@ -318,6 +318,21 @@ function template_modify_board()
 		</tr>
 		<tr valign="top" class="windowbg2">
 			<td>
+				<b>', $txt['permission_profile'], ':</b><br />
+				<span class="smalltext">', sprintf($txt['permission_profile_desc'], $scripturl . '?action=admin;area=permissions;sa=profiles;sesc=' . $context['session_id']), '</span><br />
+			</td>
+			<td valign="top" align="left">
+				<select name="profile">';
+	foreach ($context['profiles'] as $id => $profile)
+		echo '
+				<option value="', $id, '" ', $id == $context['board']['profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
+
+	echo '
+				</select>
+			</td>
+		</tr>
+		<tr valign="top" class="windowbg2">
+			<td>
 				<b>', $txt['mboards_groups'], ':</b><br />
 				<span class="smalltext">', $txt['mboards_groups_desc'], '</span><br />
 			</td>

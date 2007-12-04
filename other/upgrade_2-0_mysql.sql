@@ -284,7 +284,6 @@ $nameChanges = array(
 	),
 	'permission_profiles' => array(
 		'ID_PROFILE' => 'ID_PROFILE id_profile smallint(5) NOT NULL auto_increment',
-		'ID_PARENT' => 'ID_PARENT id_parent smallint(5) unsigned NOT NULL default \'0\'',
 	),
 	'permissions' => array(
 		'ID_GROUP' => 'ID_GROUP id_group smallint(5) NOT NULL default \'0\'',
@@ -1386,7 +1385,6 @@ if (!isset($modSettings['next_task_time']))
 CREATE TABLE IF NOT EXISTS {$db_prefix}permission_profiles (
 	id_profile smallint(5) NOT NULL auto_increment,
 	profile_name tinytext NOT NULL,
-	id_parent smallint(5) unsigned NOT NULL default '0',
 	PRIMARY KEY (id_profile)
 ) TYPE=MyISAM{$db_collation};
 ---#
@@ -1405,6 +1403,40 @@ DROP PRIMARY KEY;
 
 ALTER TABLE {$db_prefix}board_permissions
 ADD PRIMARY KEY (id_group, id_profile, permission);
+---#
+
+---# Cleaning up some 2.0 Beta 1 permission profile bits...
+---{
+$request = upgrade_query("
+	SELECT id_profile
+	FROM {$db_prefix}permission_profiles
+	WHERE profile_name = ''");
+$profiles = array();
+while ($row = mysql_fetch_assoc($request))
+	$profiles[] = $row['id_profile'];
+mysql_free_result($request);
+
+if (!empty($profiles))
+{
+	$request = upgrade_query("
+		SELECT id_profile, name
+		FROM {$db_prefix}boards
+		WHERE id_profile IN (" . implode(',', $profiles) . ")");
+	$done_ids = array();
+	while ($row = mysql_fetch_assoc($request))
+	{
+		if (isset($done_ids[$row['id_profile']]))
+			continue;
+		$done_ids[$row['id_profile']] = true;
+
+		upgrade_query("
+			UPDATE {$db_prefix}permission_profiles
+			SET profile_name = '$row[name]'
+			WHERE id_profile = $row[id_profile]");
+	}
+	mysql_free_result($request);
+}
+---}
 ---#
 
 ---# Migrating old board profiles to profile sysetem
@@ -1510,7 +1542,7 @@ if ($profileCount == 0)
 
 	// Now we have the profile profiles for this installation. We now need to go through each board and work out what the permission profile should be!
 	$request = upgrade_query("
-		SELECT id_board, permission_mode
+		SELECT id_board, name, permission_mode
 		FROM {$db_prefix}boards");
 	$board_updates = array();
 	while ($row = mysql_fetch_assoc($request))
@@ -1521,9 +1553,9 @@ if ($profileCount == 0)
 			// I know we could cache this, but I think we need to be practical - this is slow but guaranteed to work.
 			upgrade_query("
 				INSERT INTO {$db_prefix}permission_profiles
-					(profile_name, id_parent)
+					(profile_name)
 				VALUES
-					('', $row[id_board])");
+					('$row[name]')");
 			$board_updates[mysql_insert_id()][] = $row['id_board'];
 		}
 		// Otherwise, dear god, this is an old school "simple" permission...

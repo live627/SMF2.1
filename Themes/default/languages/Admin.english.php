@@ -728,9 +728,9 @@ $txt['icons_edit_message_icons'] = 'Edit Message Icons';
 
 $txt['membergroups_new_group'] = 'Add Membergroup';
 $txt['membergroups_edit_groups'] = 'Edit Membergroups';
-$txt['permissions_groups'] = 'Permissions by Membergroup';
-$txt['permissions_boards'] = 'Permissions by Board';
-$txt['permissions_profiles'] = 'Permission Profiles';
+$txt['permissions_groups'] = 'General Permissions';
+$txt['permissions_boards'] = 'Board Permissions';
+$txt['permissions_profiles'] = 'Edit Profiles';
 $txt['permissions_post_moderation'] = 'Post Moderation';
 
 $txt['browse_packages'] = 'Browse Packages';

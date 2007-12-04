@@ -1340,7 +1340,6 @@ VALUES ('Simple Machines Third-party Mod Site', 'http://mods.simplemachines.org'
 CREATE TABLE {$db_prefix}permission_profiles (
   id_profile smallint(5) NOT NULL auto_increment,
   profile_name tinytext NOT NULL,
-  id_parent smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY (id_profile)
 ) TYPE=MyISAM;
 

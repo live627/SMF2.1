@@ -46,9 +46,6 @@ if (!defined('SMF'))
 		  permission manager index.
 		// !!!
 
-	void SwitchBoard()
-		// !!!
-
 	void ModifyMembergroup()
 		- modify (local and global) permissions.
 		// !!!
@@ -115,7 +112,6 @@ function ModifyPermissions()
 		'postmod' => array('ModifyPostModeration', 'manage_permissions'),
 		'profiles' => array('EditPermissionProfiles', 'manage_permissions'),
 		'settings' => array('GeneralPermissionSettings', 'admin_forum'),
-		'switch' => array('SwitchBoard', 'manage_permissions'),
 	);
 
 	$_REQUEST['sa'] = isset($_REQUEST['sa']) && isset($subActions[$_REQUEST['sa']]) ? $_REQUEST['sa'] : (allowedTo('manage_permissions') ? 'index' : 'settings');
@@ -159,6 +155,9 @@ function PermissionIndex()
 
 	// Also load profiles, we may want to reset.
 	loadPermissionProfiles();
+
+	// Are we going to show the advanced options?
+	$context['show_advanced_options'] = !empty($_SESSION['advanced_perm_screen']);
 
 	// Determine the number of ungrouped members.
 	$request = $smfFunc['db_query']('', "
@@ -221,7 +220,7 @@ function PermissionIndex()
 		ORDER BY id_parent = -2 DESC, min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($query))
 	{
-		// If it's inherited just ass it as a child.
+		// If it's inherited just add it as a child.
 		if ($row['id_parent'] != -2)
 		{
 			if (isset($context['groups'][$row['id_parent']]))
@@ -303,22 +302,6 @@ function PermissionIndex()
 			$context['groups'][$id]['link'] = '<a href="' . $data['href'] . '">' . $data['num_members'] . '</a>';
 	}
 
-/*
-	// !!! Why is this here and commented out?
-
-	$board_groups = array();
-	foreach ($context['groups'] as $group)
-		if ($group['allow_modify'])
-			$board_groups[$group['id']] = array(
-				'id' => &$group['id'],
-				'name' => &$group['name'],
-				'num_permissions' => array(
-					'allowed' => 0,
-					'denied' => 0
-				),
-			);
-*/
-
 	if (empty($_REQUEST['pid']))
 	{
 		$request = $smfFunc['db_query']('', "
@@ -350,7 +333,7 @@ function PermissionIndex()
 		$_REQUEST['pid'] = (int) $_REQUEST['pid'];
 
 		// Change the selected tab to better reflect that this really is a board profile.
-		$context[$context['admin_menu_name']]['current_subsection'] = 'board';
+		$context[$context['admin_menu_name']]['current_subsection'] = 'profiles';
 
 		$request = $smfFunc['db_query']('', "
 			SELECT id_profile, id_group, COUNT(*) AS num_permissions, add_deny
@@ -376,55 +359,63 @@ function PermissionIndex()
 
 function PermissionByBoard()
 {
-	global $context, $db_prefix, $modSettings, $txt, $smfFunc;
+	global $context, $db_prefix, $modSettings, $txt, $smfFunc, $sourcedir, $cat_tree, $boardList, $boards;
 
 	$context['page_title'] = $txt['permissions_boards'];
+	$context['edit_all'] = isset($_GET['edit']);
+
+	checkSession('request');
+
+	// Saving?
+	if (!empty($_POST['save_changes']) && !empty($_POST['boardprofile']))
+	{
+		$changes = array();
+		foreach ($_POST['boardprofile'] as $board => $profile)
+		{
+			$changes[(int) $profile][] = (int) $board;
+		}
+
+		if (!empty($changes))
+		{
+			foreach ($changes as $profile => $boards)
+				$smfFunc['db_query']('', "
+					UPDATE {$db_prefix}boards
+					SET id_profile = $profile
+					WHERE id_board IN (" . implode(',', $boards) . ")", __FILE__, __LINE__);
+		}
+
+		$context['edit_all'] = false;
+	}
 
 	// Load all permission profiles.
 	loadPermissionProfiles();
 
-	// Get all the board moderator counts first - cause PostgreSQL doesn't allow clever/illegal groups dependant on opinion.
-	$request = $smfFunc['db_query']('', "
-		SELECT id_board, COUNT(id_member) AS moderators
-		FROM {$db_prefix}moderators
-		WHERE id_board > 0
-		GROUP BY id_board", __FILE__, __LINE__);
-	$moderator_counts = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$moderator_counts[$row['id_board']] = $row['moderators'];
-	$smfFunc['db_free_result']($request);
+	// Get the board tree.
+	require_once($sourcedir . '/Subs-Boards.php');
 
-	$request = $smfFunc['db_query']('', "
-		SELECT b.id_board, b.name, b.member_groups, b.child_level,
-			b.id_profile
-		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-		ORDER BY b.board_order", __FILE__, __LINE__);
-	$context['boards'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
+	getBoardTree();
+
+	// Build the list of the boards.
+	$context['categories'] = array();
+	foreach ($cat_tree as $catid => $tree)
 	{
-		// Format the profile name.
-		$profile_name = $context['profiles'][$row['id_profile']]['name'];
-
-		// If it has a parent format the text accordingly.
-		if ($context['profiles'][$row['id_profile']]['parent'])
-			$profile_name = '<i>' . sprintf($txt['permissions_profile_' . ($context['profiles'][$row['id_profile']]['parent'] == $row['id_board'] ? 'custom' : 'as_board')], $profile_name) . '</i>';
-		else
-			$profile_name = '<b>' . $profile_name . '</b>';
-
-		$row['member_groups'] = explode(',', $row['member_groups']);
-		$context['boards'][$row['id_board']] = array(
-			'id' => $row['id_board'],
-			'child_level' => $row['child_level'],
-			'name' => $row['name'],
-			'num_moderators' => empty($moderator_counts[$row['id_board']]) ? 0 : $moderator_counts[$row['id_board']],
-			'public' => in_array(0, $row['member_groups']) || in_array(-1, $row['member_groups']),
-			'membergroups' => $row['member_groups'],
-			'profile' => $row['id_profile'],
-			'profile_name' => $profile_name,
+		$context['categories'][$catid] = array(
+			'name' => &$tree['node']['name'],
+			'id' => &$tree['node']['id'],
+			'boards' => array()
 		);
+		foreach ($boardList[$catid] as $boardid)
+		{
+			$context['categories'][$catid]['boards'][$boardid] = array(
+				'id' => &$boards[$boardid]['id'],
+				'name' => &$boards[$boardid]['name'],
+				'description' => &$boards[$boardid]['description'],
+				'child_level' => &$boards[$boardid]['level'],
+				'profile' => &$boards[$boardid]['profile'],
+				'profile_name' => $context['profiles'][$boards[$boardid]['profile']]['name'],
+			);
+		}
 	}
-	$smfFunc['db_free_result']($request);
 
 	$context['sub_template'] = 'by_board';
 }
@@ -436,6 +427,9 @@ function SetQuickGroups()
 	checkSession();
 
 	loadIllegalPermissions();
+
+	// Better quick the panel open!
+	$_SESSION['advanced_perm_screen'] = true;
 
 	// Make sure only one of the quick options was selected.
 	if ((!empty($_POST['predefined']) && ((isset($_POST['copy_from']) && $_POST['copy_from'] != 'empty') || !empty($_POST['permissions']))) || (!empty($_POST['copy_from']) && $_POST['copy_from'] != 'empty' && !empty($_POST['permissions'])))
@@ -634,172 +628,6 @@ function SetQuickGroups()
 	}
 
 	redirectexit('action=admin;area=permissions;pid=' . $_REQUEST['pid']);
-}
-
-// Switch a board from one permission profile to another.
-function SwitchBoard()
-{
-	global $db_prefix, $modSettings, $context, $txt, $smfFunc;
-
-	$_GET['boardid'] = (int) $_GET['boardid'];
-
-	// Get the permission profile for this board ;)
-	loadPermissionProfiles();
-
-	// Load the board details.
-	$request = $smfFunc['db_query']('', "
-		SELECT id_board, name, id_profile
-		FROM {$db_prefix}boards
-		WHERE id_board = $_GET[boardid]", __FILE__, __LINE__);
-	if ($smfFunc['db_num_rows']($request) == 0)
-		redirectexit('action=admin;area=permissions;sa=board');
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-	{
-		$context['board'] = array(
-			'id' => $row['id_board'],
-			'name' => $row['name'],
-			'profile' => $row['id_profile'],
-		);
-	}
-	$smfFunc['db_free_result']($request);
-
-	// Cycle through the permission profile types and sort them.
-	$context['predefined_profiles'] = array();
-	$context['board_profiles'] = array();
-	$context['profile_type'] = 'predefined';
-	foreach ($context['profiles'] as $id => $profile)
-	{
-		// Current profile?
-		if ($id == $context['board']['profile'])
-		{
-			// Is custom for this one?
-			if ($profile['parent'] == $context['board']['id'])
-				$context['profile_type'] = 'custom';
-			// Or a slave?
-			elseif ($profile['parent'])
-				$context['profile_type'] = 'as_board';
-		}
-
-		// No parent? Must be predefined!
-		if (!$profile['parent'])
-			$context['predefined_profiles'][] = array(
-				'id' => $profile['id'],
-				'name' => $profile['name'],
-			);
-		// Otherwise it's an another board!
-		elseif ($profile['parent'] != $context['board']['id'])
-			$context['board_profiles'][] = array(
-				'id' => $profile['id'],
-				'name' => $profile['name'],
-			);
-
-	}
-
-	// Are we doing some saving?
-	if (isset($_REQUEST['save']))
-	{
-		// Security above all.
-		checkSession(isset($_GET['customize']) ? 'get' : 'post');
-		validateSession();
-
-		// If the user clicked customize of some form, we need to save it and direct to the customize page.
-		if (isset($_GET['customize']) || $_POST['profile_type'] == 'custom')
-		{
-			// If it was already a custom one then nothing changes.
-			if ($context['profile_type'] == 'custom')
-				$profile_id = $context['board']['profile'];
-			// Otherwise we need to create a new profile for this board.
-			else
-			{
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}permission_profiles
-						(profile_name, id_parent)
-					VALUES
-						('', $_GET[boardid])", __FILE__, __LINE__);
-				// Get the new number.
-				$profile_id = $smfFunc['db_insert_id']("{$db_prefix}permission_profiles", 'id_profile');
-
-				// Assuming it worked copy the previous profile across.
-				$request = $smfFunc['db_query']('', "
-					SELECT id_group, permission, add_deny
-					FROM {$db_prefix}board_permissions
-					WHERE id_profile = " . $context['board']['profile'], __FILE__, __LINE__);
-				$inserts = array();
-				while ($row = $smfFunc['db_fetch_assoc']($request))
-					$inserts[] = array($profile_id, $row['id_group'], "'$row[permission]'", $row['add_deny']);
-				$smfFunc['db_free_result']($request);
-
-				if (!empty($inserts))
-					$smfFunc['db_insert']('insert',
-						"{$db_prefix}board_permissions",
-						array('id_profile', 'id_group', 'permission', 'add_deny'),
-						$inserts,
-						array('id_profile', 'id_group'), __FILE__, __LINE__);
-
-				// Link the board to the profile.
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}boards
-					SET id_profile = $profile_id
-					WHERE id_board = $_GET[boardid]", __FILE__, __LINE__);
-
-				updateSettings(array('settings_updated' => time()));
-			}
-
-			// Customize right away?
-			if (isset($_GET['customize']) || $context['profile_type'] != 'custom')
-				redirectexit('action=admin;area=permissions;sa=index;pid=' . $profile_id);
-			else
-				redirectexit('action=admin;area=permissions;sa=board');
-		}
-
-		// Otherwise it's a simple case of using another profile.
-		$profile_id = $_POST['profile_type'] == 'as_board' ? $_POST['as_board'] : $_POST['predefined'];
-		$profile_id = (int) $profile_id;
-
-		// Just for sanity!
-		if (!$profile_id || !isset($context['profiles'][$profile_id]))
-			fatal_lang_error('no_access');
-
-		// Only bother with bits if it's changing!
-		if ($profile_id != $context['board']['profile'])
-		{
-			// Update the board first.
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}boards
-				SET id_profile = $profile_id
-				WHERE id_board = $_GET[boardid]", __FILE__, __LINE__);
-
-			$old_profile = $context['board']['profile'];
-			// If this board used to have "slaves" they should follow?
-			if ($old_profile != 1 && $context['profiles'][$old_profile]['parent'] == $_GET['boardid'])
-			{
-				// All the old sk00l boards get this new profile.
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}boards
-					SET id_profile = $profile_id
-					WHERE id_profile = $old_profile", __FILE__, __LINE__);
-
-				// The old permissions are gone, the old profile is dead!
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}board_permissions
-					WHERE id_profile = $old_profile", __FILE__, __LINE__);
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}permission_profiles
-					WHERE id_profile = $old_profile", __FILE__, __LINE__);
-			}
-
-			// Void the caches...
-			updateSettings(array('settings_updated' => time()));
-		}
-
-		// Back to permissions.
-		redirectexit('action=admin;area=permissions;sa=board');
-	}
-
-	// Finally, just the template stuff.
-	$context['sub_template'] = 'switch_profiles';
-	$context[$context['admin_menu_name']]['current_subsection'] = 'board';
-	$context['page_title'] = sprintf($txt['permissions_profiles_change_for_board'], $context['board']['name']);
 }
 
 function ModifyMembergroup()
@@ -1718,17 +1546,14 @@ function loadPermissionProfiles()
 	global $context, $db_prefix, $txt, $smfFunc;
 
 	$request = $smfFunc['db_query']('', "
-		SELECT pp.id_profile, pp.profile_name, IFNULL(b.id_board, 0) AS id_real_parent, IFNULL(b.name, '') AS board_name
-		FROM {$db_prefix}permission_profiles AS pp
-			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = pp.id_parent)
-		ORDER BY id_real_parent", __FILE__, __LINE__);
+		SELECT id_profile, profile_name
+		FROM {$db_prefix}permission_profiles
+		ORDER BY id_profile", __FILE__, __LINE__);
 	$context['profiles'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Format the label nicely.
-		if (!empty($row['id_real_parent']))
-			$name = $row['board_name'];
-		elseif (isset($txt['permissions_profile_' . $row['profile_name']]))
+		if (isset($txt['permissions_profile_' . $row['profile_name']]))
 			$name = $txt['permissions_profile_' . $row['profile_name']];
 		else
 			$name = $row['profile_name'];
@@ -1737,7 +1562,6 @@ function loadPermissionProfiles()
 			'id' => $row['id_profile'],
 			'name' => $name,
 			'unformatted_name' => $row['profile_name'],
-			'parent' => $row['id_real_parent'],
 		);
 	}
 	$smfFunc['db_free_result']($request);
@@ -1762,9 +1586,9 @@ function EditPermissionProfiles()
 		// Insert the profile itself.
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}permission_profiles
-				(profile_name, id_parent)
+				(profile_name)
 			VALUES
-				('$_POST[profile_name]', 0)", __FILE__, __LINE__);
+				('$_POST[profile_name]')", __FILE__, __LINE__);
 		$profile_id = $smfFunc['db_insert_id']("{$db_prefix}permission_profiles", 'id_profile');
 
 		// Load the permissions from the one it's being copied from.
@@ -1785,29 +1609,38 @@ function EditPermissionProfiles()
 				array('id_profile', 'id_group', 'permission'), __FILE__, __LINE__
 			);
 	}
-	// Saving changes?
-	elseif (isset($_POST['save']) && !empty($_POST['predef']))
+	// Renaming?
+	elseif (isset($_POST['rename']))
 	{
-		checkSession();
-
-		foreach ($_POST['predef'] as $id => $label)
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}permission_profiles
-				SET profile_name = '$label'
-				WHERE id_profile = $id", __FILE__, __LINE__);
+		// Just showing the boxes?
+		if (!isset($_POST['rename_profile']))
+			$context['show_rename_boxes'] = true;
+		else
+		{
+			foreach ($_POST['rename_profile'] as $id => $value)
+			{
+				if (trim($value) != '')
+					$smfFunc['db_query']('', "
+						UPDATE {$db_prefix}permission_profiles
+						SET profile_name = '$value'
+						WHERE id_profile = " . (int) $id, __FILE__, __LINE__);
+			}
+		}
 	}
 	// Deleting?
-	elseif (isset($_GET['delete']))
+	elseif (isset($_POST['delete']) && !empty($_POST['delete_profile']))
 	{
-		checkSession('get');
+		checkSession('post');
 
-		$_GET['pid'] = (int) $_GET['pid'];
+		$profiles = array();
+		foreach ($_POST['delete_profile'] as $profile)
+			$profiles[] = (int) $profile;
 
 		// Verify it's not in use...
 		$request = $smfFunc['db_query']('', "
 			SELECT id_board
 			FROM {$db_prefix}boards
-			WHERE id_profile = $_GET[pid]
+			WHERE id_profile IN (" . implode(',', $profiles) . ")
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) != 0 || $_GET['pid'] == 1)
 			fatal_lang_error('no_access');
@@ -1816,7 +1649,7 @@ function EditPermissionProfiles()
 		// Oh well, delete.
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}permission_profiles
-			WHERE id_profile = $_GET[pid]", __FILE__, __LINE__);
+			WHERE id_profile IN (" . implode(',', $profiles) . ")", __FILE__, __LINE__);
 	}
 
 	// Clearly, we'll need this!
@@ -1824,34 +1657,29 @@ function EditPermissionProfiles()
 
 	// Work out what ones are in use.
 	$request = $smfFunc['db_query']('', "
-		SELECT id_profile
+		SELECT id_profile, COUNT(id_board) AS board_count
 		FROM {$db_prefix}boards
 		GROUP BY id_profile", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		if (isset($context['profiles'][$row['id_profile']]))
+		{
 			$context['profiles'][$row['id_profile']]['in_use'] = true;
+			$context['profiles'][$row['id_profile']]['boards'] = $row['board_count'];
+			$context['profiles'][$row['id_profile']]['boards_text'] = $row['board_count'] > 1 ? sprintf($txt['permissions_profile_used_by_many'], $row['board_count']) : $txt['permissions_profile_used_by_' . ($row['board_count'] ? 'one' : 'none')];
+		}
 	$smfFunc['db_free_result']($request);
 
-	// Actually, what are predefined?
-	$context['predefined'] = array();
+	// What can we do with these?
+	$context['can_edit_something'] = false;
 	foreach ($context['profiles'] as $id => $profile)
 	{
-		// If it's got no parent it should at least exist.
-		if ($profile['parent'] == 0)
-		{
-			$context['predefined'][$id] = $profile;
+		// Can't delete special ones.
+		$context['profiles'][$id]['can_edit'] = isset($txt['permissions_profile_' . $profile['unformatted_name']]) ? false : true;
+		if ($context['profiles'][$id]['can_edit'])
+			$context['can_edit_something'] = true;
 
-			// Can't delete special ones.
-			$context['predefined'][$id]['can_edit'] = isset($txt['permissions_profile_' . $profile['unformatted_name']]) ? false : true;
-
-			// You can only delete it if you can edit it AND it's not in use.
-			$context['predefined'][$id]['can_delete'] = $context['predefined'][$id]['can_edit'] && empty($profile['in_use']) ? true : false;
-		}
-		// If it's a board highlight it.
-		else
-		{
-			$context['profiles'][$id]['name'] = $txt['board'] . ': &quot;' . $context['profiles'][$id]['name'] . '&quot;';
-		}
+		// You can only delete it if you can edit it AND it's not in use.
+		$context['profiles'][$id]['can_delete'] = $context['profiles'][$id]['can_edit'] && empty($profile['in_use']) ? true : false;
 	}
 }
 
