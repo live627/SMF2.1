@@ -39,6 +39,7 @@ define('SMF_INTEGRATION_SETTINGS', serialize(array(
 	'integrate_delete_member' => 'integrate_delete_member',
 	'integrate_register' => 'integrate_register',
 	'integrate_pre_load' => 'integrate_pre_load',
+	'integrate_verify_user' => 'integrate_verify_user',
 )));
 
 $_SERVER['QUERY_STRING'] = str_replace('&amp;', '&', $_SERVER['QUERY_STRING']);
@@ -137,7 +138,7 @@ function integrate_login ($username, $password, $cookietime)
 		$ip = $e107->getip();
 		$time = time();
 		$u_key = md5(uniqid(rand(), 1));
-		$nid = $sql->db_Insert("user", "0, {$username}, {$username}, '', '$password', '{$u_key}', '$user_settings[emailAddress]', '', '', '', '', '".$time."', '0', '".$time."', '0', '0', '0', '0', '".$ip."', '0', '0', '', '', '0', '0', '{$username}', '', '', '', '0', '' ");
+		$nid = $sql->db_Insert("user", "0, '{$username}', '{$username}', '', '{$password}', '{$u_key}', '" . $user_settings['emailAddress'] . "', '', '', '', '', '".$time."', '0', '".$time."', '0', '0', '0', '0', '".$ip."', '0', '0', '', '', '0', '0', '{$username}', '', '', '', '0', '' ");
 	}
 	
 	$sql->db_Select("user", "*", "user_loginname = '".$username."' ");
@@ -315,12 +316,27 @@ function integrate_change_member_data($memberNames, $var, $value){
 	$field = $synch_e107_fields[$var];
 	
 	if ($field != ''){
-		mysql_select_db($mosConfig_db);
+		mysql_select_db($mySQLdefaultdb);
 	
 		foreach ($memberNames as $memberName){
 			$sql->db_Update("user", "$field = $value WHERE user_loginname = '$memberName' LIMIT 1");
 		}
 		mysql_select_db($db_name);
 	}
+}
+
+function integrate_verify_user ()
+{
+	global $xoopsUser, $db_prefix;
+	
+	if (USER){
+		$query = mysql_query("
+			SELECT ID_MEMBER
+			FROM {$db_prefix}members
+			WHERE memberName = '" . USERNAME . "'");
+		list($ID_MEMBER) = mysql_fetch_row($query);
+	}
+	
+	return $ID_MEMBER;
 }
 ?>
