@@ -285,4 +285,44 @@ function template_check_username()
 </smf>';
 }
 
+// This prints XML in it's most generic form.
+function template_generic_xml()
+{
+	global $context, $settings, $options, $txt;
+
+	echo '<', '?xml version="1.0" encoding="', $context['character_set'], '"?', '>';
+
+	// Show the data.
+	template_generic_xml_recursive($context['xml_data'], 'smf', '', -1);
+}
+
+// Recursive function for displaying generic XML data.
+function template_generic_xml_recursive($xml_data, $parent_ident, $child_ident, $level)
+{
+	// This is simply for neat indentation.
+	$level++;
+
+	echo "\n" . str_repeat("\t", $level), '<', $parent_ident, '>';
+
+	foreach ($xml_data as $key => $data)
+	{
+		// A group?
+		if (is_array($data) && isset($data['identifier']))
+			template_generic_xml_recursive($data['children'], $key, $data['identifier'], $level);
+		// An item...
+		elseif (is_array($data) && isset($data['value']))
+		{
+			echo "\n", str_repeat("\t", $level), '<', $child_ident;
+
+			if (!empty($data['attributes']))
+				foreach ($data['attributes'] as $k => $v)
+					echo ' ' . $k . '="' . $v . '"';
+			echo '><![CDATA[', $data['value'], ']]></', $child_ident, '>';
+		}
+		
+	}
+
+	echo "\n", str_repeat("\t", $level), '</', $parent_ident, '>';
+}
+
 ?>

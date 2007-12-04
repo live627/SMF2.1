@@ -3,6 +3,12 @@ Changelog started January 1, 2004; Currently at $Revision$.
 
 SMF 2.0 Beta 2                                                               ???
 ================================================================================
+December 2007
+--------------------------------------------------------------------------------
+ ! Rich text editor works again in Firefox. (Subs-Editor.php, script.js)
+ + Added new auto suggest control for easily adding an auto suggest box. (index.php, suggest.js, Subs-Editor.php, GenericControls template)
+ ! Changed the personal message sending template to use auto suggest. (PersonalMessage.php, PersonalMessage template, PersonalMessage language files)
+
 November 2007
 --------------------------------------------------------------------------------
  * Removed white background in admin section, section headers now highlights. (Admin.template, dropdown.css, Genericmenu.template, Subs-Menu.php)

@@ -289,6 +289,7 @@ function smf_main()
 		'search2' => array('Search.php', 'PlushSearch2'),
 		'sendtopic' => array('SendTopic.php', 'EmailUser'),
 		'smstats' => array('Stats.php', 'SMStats'),
+		'suggest' => array('Subs-Editor.php', 'AutoSuggestHandler'),
 		'spellcheck' => array('Subs-Post.php', 'SpellCheck'),
 		'splittopics' => array('SplitTopics.php', 'SplitTopics'),
 		'stats' => array('Stats.php', 'DisplayStats'),

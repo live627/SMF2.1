@@ -183,7 +183,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			textHandle.parentNode.appendChild(frameHandle);
 
 			// Create some handy shortcuts.
-			frameDocument = frameHandle.contentWindow.document;
+			frameDocument = frameHandle.contentDocument ? frameHandle.contentDocument : frameHandle.contentWindow.document;
 			frameWindow = frameHandle.contentWindow;
 
 			// Create the debug window... and stick this under the main frame - make it invisible by default.
@@ -220,7 +220,11 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 			if (frameDocument.body.contentEditable)
 				frameDocument.body.contentEditable = true;
 			else
-				frameDocument.designMode = 'on';
+			{
+				frameHandle.style.display = '';
+				frameDocument.designMode = "on";
+				frameHandle.style.display = 'none';
+			}
 
 			// Now we need to try and style the editor - internet explorer allows us to do the whole lot.
 			if (document.styleSheets['rich_edit_css'])

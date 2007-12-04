@@ -253,4 +253,25 @@ function template_control_richedit($editor_id)
 	// ]]></script>';
 }
 
+// Display an auto suggest box.
+function template_control_autosuggest($suggest_id)
+{
+	global $context, $settings, $options, $txt, $modSettings;
+
+	$suggest_context = &$context['controls']['autosuggest'][$suggest_id];
+
+	echo '
+	<input autocomplete="off" type="text" name="', $suggest_id, '" id="', $suggest_id, '" value="', $suggest_context['value'], '" tabindex="', $context['tabindex']++, '" size="', $suggest_context['size'], '" style="width: ', $suggest_context['width'], ';" />';
+
+	if (!empty($suggest_context['button']))
+		echo '
+	<input type="submit" name="', $suggest_id, '_submit" value="', $suggest_context['button'], '" />';
+
+	echo '
+	<div class="auto_suggest_div" id="suggest_div_', $suggest_id, '" style="visibility: hidden;"></div>
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		var suggestHandle', $suggest_id, ' = new smfSuggest(\'', $context['session_id'], '\', \'', $suggest_id, '\');
+	// ]]></script>';
+}
+
 ?>

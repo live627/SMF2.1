@@ -698,7 +698,7 @@ function MessageFolder()
 			foreach (array_reverse($pms) as $pm)
 				$orderBy[] = 'pm.id_pm = ' . $pm;
 
-			// separate query for these bits!
+			// Seperate query for these bits!
 			$subjects_request = $smfFunc['db_query']('', "
 				SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.msgtime, IFNULL(mem.real_name, pm.from_name) AS from_name,
 					IFNULL(mem.id_member, 0) AS not_guest
@@ -1444,28 +1444,35 @@ function MessagePost()
 		$form_message = '';
 	}
 
+	$context['recipients'] = array();
+
 	// Sending by ID?  Replying to all?  Fetch the real_name(s).
 	if (isset($_REQUEST['u']))
 	{
-		// Store all the members who are getting this...
-		$membersTo = array();
-
 		// If the user is replying to all, get all the other members this was sent to..
 		if ($_REQUEST['u'] == 'all' && isset($row_quoted))
 		{
 			// Firstly, to reply to all we clearly already have $row_quoted - so have the original member from.
-			$membersTo[] = '&quot;' . $row_quoted['real_name'] . '&quot;';
+			$context['recipients'][] = array(
+				'id' => $row_quoted['id_member'],
+				'name' => htmlspecialchars($row_quoted['real_name']),
+				'bcc' => false,
+			);
 
 			// Now to get the others.
 			$request = $smfFunc['db_query']('', "
-				SELECT mem.real_name
+				SELECT mem.id_member, mem.real_name
 				FROM {$db_prefix}pm_recipients AS pmr
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
 				WHERE pmr.id_pm = $_REQUEST[pmsg]
 					AND pmr.id_member != $user_info[id]
 					AND bcc = 0", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$membersTo[] = '&quot;' . htmlspecialchars($row['real_name']) . '&quot;';
+				$context['recipients'][] = array(
+					'id' => $row['id_member'],
+					'name' => htmlspecialchars($row['real_name']),
+					'bcc' => false,
+				);
 			$smfFunc['db_free_result']($request);
 		}
 		else
@@ -1475,24 +1482,23 @@ function MessagePost()
 				$_REQUEST['u'][$key] = (int) $uID;
 
 			$request = $smfFunc['db_query']('', "
-				SELECT real_name
+				SELECT id_member, real_name
 				FROM {$db_prefix}members
 				WHERE id_member IN (" . implode(', ', $_REQUEST['u']) . ")
 				LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$membersTo[] = '&quot;' . $row['real_name'] . '&quot;';
+				$context['recipients'][] = array(
+					'id' => $row['id_member'],
+					'name' => htmlspecialchars($row['real_name']),
+					'bcc' => false,
+				);
 			$smfFunc['db_free_result']($request);
 		}
-
-		// Create the 'to' string - Quoting it, just in case it's something like bob,i,like,commas,man.
-		$_REQUEST['to'] = implode(', ', $membersTo);
 	}
 
 	// Set the defaults...
 	$context['subject'] = $form_subject != '' ? $form_subject : $txt['no_subject'];
 	$context['message'] = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_message);
-	$context['to'] = isset($_REQUEST['to']) ? $smfFunc['db_unescape_string']($_REQUEST['to']) : '';
-	$context['bcc'] = isset($_REQUEST['bcc']) ? $smfFunc['db_unescape_string']($_REQUEST['bcc']) : '';
 	$context['post_error'] = array();
 	$context['copy_to_outbox'] = !empty($options['copy_to_outbox']);
 
@@ -1516,6 +1522,15 @@ function MessagePost()
 	// Store the ID for old compatibility.
 	$context['post_box_name'] = $editorOptions['id'];
 
+	// And make the to box...
+	$suggestOptions = array(
+		'id' => 'to',
+		'search_type' => 'member',
+		'width' => '90px',
+		'button' => $txt['pm_add'],
+	);
+	create_control_autosuggest($suggestOptions);
+
 	$context['visual_verification'] = !$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'];
 	if ($context['visual_verification'])
 	{
@@ -1523,7 +1538,7 @@ function MessagePost()
 		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
 		// Skip I, J, L, O, Q, S and Z.
-		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
+		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
 
 		// Generate a new code.
 		$_SESSION['visual_verification_code'] = '';
@@ -1542,18 +1557,33 @@ function messagePostError($error_types, $to, $bcc)
 	global $smfFunc, $user_info, $sourcedir;
 
 	$context['show_spellchecking'] = !empty($modSettings['enableSpellChecking']) && function_exists('pspell_new');
+	$context['pm_area'] = 'send';
 
 	if (!WIRELESS)
 		$context['sub_template'] = 'send';
 
-	if (isset($_REQUEST['u']))
-		$_REQUEST['u'] = is_array($_REQUEST['u']) ? $_REQUEST['u'] : explode(',', $_REQUEST['u']);
-
 	$context['page_title'] = $txt['send_message'];
 
+	// Got some known members?
+	$context['recipients'] = array();
+	if (!empty($context['recipient_ids']))
+	{
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member, real_name
+			FROM {$db_prefix}members
+			WHERE id_member IN (" . implode(',', $context['recipient_ids']) . ")", __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			$context['recipients'][] = array(
+				'id' => $row['id_member'],
+				'name' => $row['real_name'],
+				'bcc' => !empty($_POST['recipient_bcc_' . $row['id_member']]) ? true : false,
+			);
+		}
+		$smfFunc['db_free_result']($request);
+	}
+
 	// Set everything up like before....
-	$context['to'] = $smfFunc['db_unescape_string']($to);
-	$context['bcc'] = $smfFunc['db_unescape_string']($bcc);
 	$context['subject'] = isset($_REQUEST['subject']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['subject'])) : '';
 	$context['message'] = isset($_REQUEST['message']) ? str_replace(array('  '), array('&nbsp; '), $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['message']))) : '';
 	$context['copy_to_outbox'] = !empty($_REQUEST['outbox']);
@@ -1644,6 +1674,16 @@ function messagePostError($error_types, $to, $bcc)
 	// ... and store the ID again...
 	$context['post_box_name'] = $editorOptions['id'];
 
+	// Get the sugget box done too.
+	$suggestOptions = array(
+		'id' => 'to',
+		'search_type' => 'member',
+		'width' => '90px',
+		'value' => $to,
+		'button' => $txt['pm_add'],
+	);
+	create_control_autosuggest($suggestOptions);
+
 	// No check for the previous submission is needed.
 	checkSubmitOnce('free');
 
@@ -1707,8 +1747,70 @@ function MessagePost2()
 		$post_errors[] = 'session_timeout';
 
 	$_REQUEST['subject'] = isset($_REQUEST['subject']) ? trim($_REQUEST['subject']) : '';
-	$_REQUEST['to'] = empty($_POST['to']) ? (empty($_GET['to']) ? '' : $_GET['to']) : $smfFunc['db_unescape_string']($_POST['to']);
-	$_REQUEST['bcc'] = empty($_POST['bcc']) ? (empty($_GET['bcc']) ? '' : $_GET['bcc']) : $smfFunc['db_unescape_string']($_POST['bcc']);
+
+	// Try and work out who they are mailing to.
+	$context['recipient_ids'] = array();
+	if (!empty($_POST['recipient_to']))
+	{
+		foreach ($_POST['recipient_to'] as $recipient)
+			if ($recipient != '{MEMBER_ID}')
+					$context['recipient_ids'][] = (int) $recipient;
+	}
+
+	// Passed some through the long way?
+	if (empty($_REQUEST['u']))
+	{
+		// To who..?
+		$_REQUEST['to'] = empty($_POST['to']) ? (empty($_GET['to']) ? '' : $_GET['to']) : $smfFunc['db_unescape_string']($_POST['to']);
+		if (!empty($_REQUEST['to']))
+		{
+			// We're going to take out the "s anyway ;).
+			$_REQUEST['to'] = strtr($_REQUEST['to'], array('\\"' => '"'));
+
+			preg_match_all('~"([^"]+)"~', $_REQUEST['to'], $matches);
+			$string_members = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['to']))));
+		}
+
+		foreach ($string_members as $index => $member)
+			if (strlen(trim($member)) > 0)
+				$string_members[$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower']($smfFunc['db_unescape_string'](trim($member))));
+			else
+				unset($string_members[$index]);
+
+		// Find the requested members - bcc and to.
+		$foundMembers = findMembers($string_members);
+
+		// Store IDs of the members that were found.
+		foreach ($foundMembers as $member)
+		{
+			// It's easier this way.
+			$member['name'] = strtr($member['name'], array('&#039;' => '\''));
+
+			if (array_intersect(array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])), $string_members))
+			{
+				$context['recipient_ids'][] = $member['id'];
+
+				// Get rid of this username. The ones that remain were not found.
+				$string_members = array_diff($string_members, array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])));
+			}
+		}
+	}
+	else
+	{
+		$_REQUEST['u'] = explode(',', $_REQUEST['u']);
+		foreach ($_REQUEST['u'] as $key => $uID)
+			$_REQUEST['u'][$key] = (int) $uID;
+
+		$request = $smfFunc['db_query']('', "
+			SELECT id_member
+			FROM {$db_prefix}members
+			WHERE id_member IN (" . implode(',', $_REQUEST['u']) . ")
+			LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+			$context['recipient_ids'][] = $row['id_member'];
+		$smfFunc['db_free_result']($request);
+	}
+	$context['recipient_ids'] = array_unique($context['recipient_ids']);
 
 	// Did they make any mistakes?
 	if ($_REQUEST['subject'] == '')
@@ -1717,16 +1819,38 @@ function MessagePost2()
 		$post_errors[] = 'no_message';
 	elseif (!empty($modSettings['max_messageLength']) && $smfFunc['strlen']($_REQUEST['message']) > $modSettings['max_messageLength'])
 		$post_errors[] = 'long_message';
-	if (empty($_REQUEST['to']) && empty($_REQUEST['bcc']) && empty($_REQUEST['u']))
+	if (empty($_REQUEST['to']) && empty($context['recipient_ids']) && empty($_REQUEST['u']))
 		$post_errors[] = 'no_to';
 
 	// Wrong verification code?
 	if (!$user_info['is_admin'] && !empty($modSettings['pm_posts_verification']) && $user_info['posts'] < $modSettings['pm_posts_verification'] && (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
 		$post_errors[] = 'wrong_verification_code';
 
+	// Are we changing the recipients some how?
+	if (!empty($_POST['delete_recipient']) || !empty($_POST['bcc_recipient_change']) || !empty($_POST['to_submit']))
+	{
+		$is_recipient_change = true;
+		// Deleting or BCC? We've already caught additions you see...
+		if (!empty($_POST['delete_recipient']) || !empty($_POST['bcc_recipient_change']))
+		{
+			$recipient_id = !empty($_POST['delete_recipient']) ? (int) $_POST['delete_recipient'] : (int) $_POST['bcc_recipient_change'];
+			foreach ($context['recipient_ids'] as $k => $member)
+			{
+				if ($member == $recipient_id)
+				{
+					if (!empty($_POST['delete_recipient']))
+						unset($context['recipient_ids'][$k]);
+					// Pretend the BCC was/was not changed.
+					else
+						$_POST['recipient_bcc_' . $member] = empty($_POST['recipient_bcc_' . $member]) ? 1 : 0;
+				}
+			}
+		}
+	}
+
 	// If they did, give a chance to make ammends.
-	if (!empty($post_errors))
-		return messagePostError($post_errors, $smfFunc['htmlspecialchars']($_REQUEST['to']), $smfFunc['htmlspecialchars']($_REQUEST['bcc']));
+	if (!empty($post_errors) && empty($is_recipient_change))
+		return messagePostError($post_errors, empty($string_members) ? '' : '&quot;' . implode('&quot;, &quot;', $string_members) . '&quot;', '');
 
 	// Want to take a second glance before you send?
 	if (isset($_REQUEST['preview']))
@@ -1747,7 +1871,20 @@ function MessagePost2()
 		$context['page_title'] = $txt['preview'] . ' - ' . $context['preview_subject'];
 
 		// Pretend they messed up :P.
-		return messagePostError(array(), htmlspecialchars($_REQUEST['to']), htmlspecialchars($_REQUEST['bcc']));
+		return messagePostError(array(), empty($string_members) ? '' : '&quot;' . implode('&quot;, &quot;', $string_members) . '&quot;', '');
+	}
+	// Adding a recipient cause javascript ain't working?
+	elseif (!empty($is_recipient_change))
+	{
+		// Maybe we couldn't find one?
+		if (!empty($string_members))
+		{
+			$post_errors[] = 'bad_to';
+			foreach ($string_members as $i => $member)
+				$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $string_members[$i]);
+		}
+
+		return messagePostError(array(), empty($string_members) ? '' : '&quot;' . implode('&quot;, &quot;', $string_members) . '&quot;', '');
 	}
 
 	// Protect from message spamming.
@@ -1762,76 +1899,12 @@ function MessagePost2()
 		'bcc' => array()
 	);
 
-	// Format the to and bcc members.
-	$input = array(
-		'to' => array(),
-		'bcc' => array()
-	);
-
-	if (empty($_REQUEST['u']))
+	foreach ($context['recipient_ids'] as $recipient)
 	{
-		// To who..?
-		if (!empty($_REQUEST['to']))
-		{
-			// We're going to take out the "s anyway ;).
-			$_REQUEST['to'] = strtr($_REQUEST['to'], array('\\"' => '"'));
-
-			preg_match_all('~"([^"]+)"~', $_REQUEST['to'], $matches);
-			$input['to'] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['to']))));
-		}
-
-		// Your secret's safe with me!
-		if (!empty($_REQUEST['bcc']))
-		{
-			// We're going to take out the "s anyway ;).
-			$_REQUEST['bcc'] = strtr($_REQUEST['bcc'], array('\\"' => '"'));
-
-			preg_match_all('~"([^"]+)"~', $_REQUEST['bcc'], $matches);
-			$input['bcc'] = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['bcc']))));
-		}
-
-		foreach ($input as $rec_type => $rec)
-		{
-			foreach ($rec as $index => $member)
-				if (strlen(trim($member)) > 0)
-					$input[$rec_type][$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower']($smfFunc['db_unescape_string'](trim($member))));
-				else
-					unset($input[$rec_type][$index]);
-		}
-
-		// Find the requested members - bcc and to.
-		$foundMembers = findMembers(array_merge($input['to'], $input['bcc']));
-
-		// Store IDs of the members that were found.
-		foreach ($foundMembers as $member)
-		{
-			// It's easier this way.
-			$member['name'] = strtr($member['name'], array('&#039;' => '\''));
-
-			foreach ($input as $rec_type => $to_members)
-				if (array_intersect(array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])), $to_members))
-				{
-					$recipients[$rec_type][] = $member['id'];
-
-					// Get rid of this username. The ones that remain were not found.
-					$input[$rec_type] = array_diff($input[$rec_type], array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])));
-				}
-		}
-	}
-	else
-	{
-		$_REQUEST['u'] = explode(',', $_REQUEST['u']);
-		foreach ($_REQUEST['u'] as $key => $uID)
-			$_REQUEST['u'][$key] = (int) $uID;
-
-		$request = $smfFunc['db_query']('', "
-			SELECT id_member
-			FROM {$db_prefix}members
-			WHERE id_member IN (" . implode(',', $_REQUEST['u']) . ")
-			LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$recipients['to'][] = $row['id_member'];
-		$smfFunc['db_free_result']($request);
+		if (!empty($_POST['recipient_bcc_' . $recipient]))
+			$recipients['bcc'][] = $recipient;
+		else
+			$recipients['to'][] = $recipient;
 	}
 
 	// Before we send the PM, let's make sure we don't have an abuse of numbers.
@@ -1855,14 +1928,13 @@ function MessagePost2()
 	}
 
 	// Add a log message for all recipients that were not found.
-	foreach ($input as $rec_type => $rec)
+	if (!empty($string_members))
 	{
 		// Either bad_to or bad_bcc.
-		if (!empty($rec) && !in_array('bad_' . $rec_type, $post_errors))
-			$post_errors[] = 'bad_' . $rec_type;
-		foreach ($rec as $i => $member)
+		$post_errors[] = 'bad_to';
+		foreach ($string_members as $i => $member)
 		{
-			$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $input[$rec_type][$i]);
+			$context['send_log']['failed'][] = sprintf($txt['pm_error_user_not_found'], $string_members[$i]);
 		}
 	}
 
@@ -1878,7 +1950,7 @@ function MessagePost2()
 
 	// If one or more of the recipient were invalid, go back to the post screen with the failed usernames.
 	if (!empty($context['send_log']['failed']))
-		return messagePostError($post_errors, empty($input['to']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['to']) . '&quot;', empty($input['bcc']) ? '' : '&quot;' . implode('&quot;, &quot;', $input['bcc']) . '&quot;');
+		return messagePostError($post_errors, empty($string_members) ? '' : '&quot;' . implode('&quot;, &quot;', $string_members) . '&quot;', '');
 
 	// Go back to the where they sent from, if possible...
 	redirectexit($context['current_label_redirect']);

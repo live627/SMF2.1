@@ -932,14 +932,37 @@ function template_send()
 							<tr>
 								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' style="color: red;"' : ''), '>', $txt['pm_to'], ':</b></td>
 								<td class="smalltext">
-									<input type="text" name="to" id="to" value="', $context['to'], '" tabindex="', $context['tabindex']++, '" size="40" />&nbsp;
-									<a href="', $scripturl, '?action=findmember;input=to;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a> <a href="', $scripturl, '?action=findmember;input=to;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);">', $txt['find_members'], '</a>
+									', template_control_autosuggest('to'), '
 								</td>
 							</tr><tr>
-								<td align="right"><b', (isset($context['post_error']['bad_bcc']) ? ' style="color: red;"' : ''), '>', $txt['pm_bcc'], ':</b></td>
-								<td class="smalltext">
-									<input type="text" name="bcc" id="bcc" value="', $context['bcc'], '" tabindex="', $context['tabindex']++, '" size="40" />&nbsp;
-									<a href="', $scripturl, '?action=findmember;input=bcc;quote=1;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a> ', $txt['pm_multiple'], '
+								<td align="right"></td>
+								<td class="smalltext">';
+
+	// Any recipients yet?
+	if (!empty($context['recipients']))
+	{
+		foreach ($context['recipients'] as $member)
+		{
+			echo '
+									<span id="suggest_template_to_', $member['id'], '">
+										<input type="hidden" name="recipient_to[]" value="', $member['id'], '" />
+										<input type="hidden" name="recipient_bcc_', $member['id'], '" id="recipient_bcc_', $member['id'], '" value="', $member['bcc'], '" />
+										<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="recipient_link_to_', $member['id'], '" class="extern" ', $member['bcc'] ? 'style="font-style: italic"' : '', '>', $member['name'], '</a>
+										<input type="image" name="bcc_recipient_change" value="', $member['id'], '" onclick="return toggleBCC(', $member['id'], ')" id="recipient_toggle_bcc_', $member['id'], '" src="', $settings['images_url'], '/pm_recipient_', $member['bcc'] ? 'bcc' : 'to', '.gif" alt="', $member['bcc'] ? $txt['no_bcc'] : $txt['make_bcc'], '" />
+										<input type="image" name="delete_recipient" value="', $member['id'], '" onclick="return suggestHandleto.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+									</span>';
+		}
+	}
+
+	// The bit below is the template for additional folks.
+	echo '
+									<span id="suggest_template_to" style="visibility: hidden;">
+										<input type="hidden" name="recipient_to[]" value="{MEMBER_ID}" />
+										<input type="hidden" name="recipient_bcc_{MEMBER_ID}" id="recipient_bcc_{MEMBER_ID}" value="0" />
+										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_to_{MEMBER_ID}" class="extern">{MEMBER_NAME}</a>
+										<input type="image" onclick="return toggleBCC(\'{MEMBER_ID}\')" id="recipient_toggle_bcc_{MEMBER_ID}" src="', $settings['images_url'], '/pm_recipient_to.gif" alt="', $txt['make_bcc'], '" />
+										<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+									</span>
 								</td>
 							</tr>';
 	// Subject of personal message.
@@ -1042,155 +1065,19 @@ function template_send()
 
 	echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			function autocompleter(element)
+			// Toggle BCC status?
+			function toggleBCC(memberID)
 			{
-				if (typeof(element) != "object")
-					element = document.getElementById(element);
+				curBBC = document.getElementById(\'recipient_bcc_\' + memberID).value;
+				imgSrc = document.getElementById(\'recipient_toggle_bcc_\' + memberID);
+				imgSrc.src = \'', $settings['images_url'], '/\' + (curBBC == 1 ? \'pm_recipient_to.gif\' : \'pm_recipient_bcc.gif\');
+				imgSrc.alt = curBBC == 1 ? \'', $txt['make_bcc'], '\' : \'', $txt['not_bcc'], '\';
 
-				this.element = element;
-				this.key = null;
-				this.request = null;
-				this.source = null;
-				this.lastSearch = "";
-				this.oldValue = "";
-				this.cache = [];
+				document.getElementById(\'recipient_link_to_\' + memberID).style.fontStyle = curBBC == 1 ? \'normal\' : \'italic\';
 
-				this.change = function (ev, force)
-				{
-					if (window.event)
-						this.key = window.event.keyCode + 0;
-					else
-						this.key = ev.keyCode + 0;
-					if (this.key == 27)
-						return true;
-					if (this.key == 34 || this.key == 8 || this.key == 13 || (this.key >= 37 && this.key <= 40))
-						force = false;
+				document.getElementById(\'recipient_bcc_\' + memberID).value = curBBC == 1 ? 0 : 1;
 
-					if (isEmptyText(this.element))
-						return true;
-
-					if (this.request != null && typeof(this.request) == "object")
-						this.request.abort();
-
-					var element = this.element, search = this.element.value.replace(/^("[^"]+",[ ]*)+/, "").replace(/^([^,]+,[ ]*)+/, "");
-					this.oldValue = this.element.value.substr(0, this.element.value.length - search.length);
-					if (search.substr(0, 1) == \'"\')
-						search = search.substr(1);
-
-					if (search == "" || search.substr(search.length - 1) == \'"\')
-						return true;
-
-					if (this.lastSearch == search)
-					{
-						if (force)
-							this.select(this.cache[0]);
-
-						return true;
-					}
-					else if (search.substr(0, this.lastSearch.length) == this.lastSearch && this.cache.length != 100)
-					{
-						// Instead of hitting the server again, just narrow down the results...
-						var newcache = [], j = 0;
-						for (var k = 0; k < this.cache.length; k++)
-						{
-							if (this.cache[k].substr(0, search.length) == search)
-								newcache[j++] = this.cache[k];
-						}
-
-						if (newcache.length != 0)
-						{
-							this.lastSearch = search;
-							this.cache = newcache;
-
-							if (force)
-								this.select(newcache[0]);
-
-							return true;
-						}
-					}
-
-					this.request = new XMLHttpRequest();
-					this.request.onreadystatechange = function ()
-					{
-						element.autocompleter.handler(force);
-					}
-
-					this.request.open("GET", this.source + escape(textToEntities(search).replace(/&#(\d+);/g, "%#$1%")).replace(/%26/g, "%25%23038%25") + ";" + (new Date().getTime()), true);
-					this.request.send(null);
-
-					return true;
-				}
-				this.keyup = function (ev)
-				{
-					this.change(ev, true);
-
-					return true;
-				}
-				this.keydown = function ()
-				{
-					if (this.request != null && typeof(this.request) == "object")
-						this.request.abort();
-				}
-				this.handler = function (force)
-				{
-					if (this.request.readyState != 4)
-						return true;
-
-					var response = this.request.responseText.split("\n");
-					this.lastSearch = this.element.value;
-					this.cache = response;
-
-					if (response.length < 2)
-						return true;
-
-					if (force)
-						this.select(response[0]);
-
-					return true;
-				}
-				this.select = function (value)
-				{
-					if (value == "")
-						return;
-
-					var i = this.element.value.length + (this.element.value.substr(this.oldValue.length, 1) == \'"\' ? 0 : 1);
-					this.element.value = this.oldValue + \'"\' + value + \'"\';
-
-					if (typeof(this.element.createTextRange) != "undefined")
-					{
-						var d = this.element.createTextRange();
-						d.moveStart("character", i);
-						d.select();
-					}
-					else if (this.element.setSelectionRange)
-					{
-						this.element.focus();
-						this.element.setSelectionRange(i, this.element.value.length);
-					}
-				}
-
-				this.element.autocompleter = this;
-				this.element.setAttribute("autocomplete", "off");
-
-				this.element.onchange = function (ev)
-				{
-					this.autocompleter.change(ev);
-				}
-				this.element.onkeyup = function (ev)
-				{
-					this.autocompleter.keyup(ev);
-				}
-				this.element.onkeydown = function (ev)
-				{
-					this.autocompleter.keydown(ev);
-				}
-			}
-
-			if (window.XMLHttpRequest)
-			{
-				var toComplete = new autocompleter("to"), bccComplete = new autocompleter("bcc");
-				toComplete.source = "', $scripturl, '?action=requestmembers;sesc=', $context['session_id'], ';search=";
-				bccComplete.source = "', $scripturl, '?action=requestmembers;sesc=', $context['session_id'], ';search=";
+				return false;
 			}
 
 			function saveEntities()

@@ -42,8 +42,10 @@ if (!defined('SMF'))
 		- for compatibility - passes right through to the template_control_richedit function.
 
 	void create_control_richedit(&array editorOptions)
-		- outputs a postbox from a template.
-		- takes a default message as a parameter.
+		// !!
+
+	void create_control_autosuggest(&array suggestOptions)
+		// !!
 
 	void fetchTagAttributes()
 		// !!
@@ -55,6 +57,12 @@ if (!defined('SMF'))
 	  database.
 	- the board_id is needed for the custom message icons (which can be set for
 	  each board individually).
+
+	void AutoSuggestHandler(string checkRegistered = null)
+		// !!!
+
+	void AutoSuggest_Search_Member()
+		// !!!
 */
 
 // At the moment this is only used for returning WYSIWYG data...
@@ -854,8 +862,15 @@ function legalise_bbc($text)
 						// Can't have two tags active that are the same - close the previous one!
 						if (isset($active_tags[$matches[1]]))
 						{
+							// First add in the new closing tag...
 							$new_text = substr($new_text, 0, $i + $new_text_offset) . '[/' . $matches[1] . ']' . substr($new_text, $i + $new_text_offset);
 							$new_text_offset += strlen('[/' . $matches[1] . ']');
+
+							// Then find and remove the next one!
+							$tag_offset = strpos($new_text, '[/' . $matches[1] . ']', $i + $new_text_offset);
+							if ($tag_offset !== false)
+								$new_text = substr($new_text, 0, $tag_offset) . substr($new_text, $tag_offset + strlen('[/' . $matches[1] . ']'));
+
 						}
 						$active_tags[$matches[1]] = $matches[0];
 						$tag = array(
@@ -935,12 +950,6 @@ function create_control_richedit($editorOptions)
 	assert(isset($editorOptions['id']));
 	assert(isset($editorOptions['value']));
 
-		// PersonalMessage template!
-	if (!isset($context['post_box_width']))
-		$context['post_box_width'] = '70%';
-	if (!isset($context['post_box_height']))
-		$context['post_box_height'] = '150px';
-
 	// Start off the editor...
 	$context['controls']['richedit'][$editorOptions['id']] = array(
 		'id' => $editorOptions['id'],
@@ -955,7 +964,6 @@ function create_control_richedit($editorOptions)
 		'form' => isset($editorOptions['form']) ? $editorOptions['form'] : 'postmodify',
 		'bbc_level' => !empty($editorOptions['bbc_level']) ? $editorOptions['bbc_level'] : 'full',
 	);
-	$editor_context = &$context['controls']['richedit'][$editorOptions['id']];
 
 	// Switch between default images and back... mostly in case you don't have an PersonalMessage template, but do have a Post template.
 	if (isset($settings['use_default_images']) && $settings['use_default_images'] == 'defaults' && isset($settings['default_template']))
@@ -1066,6 +1074,129 @@ function create_control_richedit($editorOptions)
 		$settings['images_url'] = $temp2;
 		$settings['theme_dir'] = $temp3;
 	}
+}
+
+// Create an an autosuggest box?
+function create_control_autosuggest(&$suggestOptions)
+{
+	global $txt, $modSettings, $db_prefix, $options, $smfFunc;
+	global $context, $settings, $user_info, $sourcedir;
+
+	// First autosuggest means we need to set up some bits...
+	if (empty($context['controls']['autosuggest']))
+	{
+		// Will want the template.
+		loadTemplate('GenericControls');
+
+		// Javascript is cool... says Grudge
+		$context['html_headers'] .= '
+		<script language="JavaScript" type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/suggest.js"></script>';
+	}
+
+	// Need an ID and something to search for to suggest!
+	assert(isset($suggestOptions['id']));
+	assert(isset($suggestOptions['search_type']));
+	// Check the search type is registered.
+	assert(AutoSuggestHandler($suggestOptions['search_type']));
+
+	// Log this into our collection.
+	$context['controls']['autosuggest'][$suggestOptions['id']] = array(
+		'id' => $suggestOptions['id'],
+		'value' => !empty($suggestOptions['value']) ? $suggestOptions['value'] : '',
+		'search_type' => $suggestOptions['search_type'],
+		'size' => !empty($suggestOptions['size']) ? $suggestOptions['size'] : 40,
+		'width' => !empty($suggestOptions['width']) ? $suggestOptions['width'] : '200px',
+		'button' => !empty($suggestOptions['button']) ? $suggestOptions['button'] : false,
+	);
+}
+
+// This keeps track of all registered handling functions for auto suggest functionality and passes execution to them.
+function AutoSuggestHandler($checkRegistered = null)
+{
+	global $context;
+
+	// These are all registered types.
+	$searchTypes = array(
+		'member' => 'Member',
+	);
+
+	// If we're just checking the callback function is registered return true or false.
+	if ($checkRegistered != null)
+		return isset($searchTypes[$checkRegistered]) && function_exists('AutoSuggest_Search_' . $checkRegistered);
+
+	checkSession('get');
+	loadTemplate('Xml');
+
+	// Any parameters?
+	$context['search_param'] = isset($_REQUEST['search_param']) ? unserialize(base64_decode($_REQUEST['search_param'])) : array();
+
+	if (isset($_REQUEST['suggest_type'], $_REQUEST['search']) && isset($searchTypes[$_REQUEST['suggest_type']]))
+	{
+		$function = 'AutoSuggest_Search_' . $searchTypes[$_REQUEST['suggest_type']];
+		$context['sub_template'] = 'generic_xml';
+		$context['xml_data'] = $function();
+	}
+}
+
+// Search for a member - by realName or memberName by default.
+function AutoSuggest_Search_Member()
+{
+	global $user_info, $db_prefix, $txt, $smfFunc;
+
+	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search'])) . '*';
+	$_REQUEST['search'] = $smfFunc['db_escape_string'](trim($smfFunc['strtolower']($_REQUEST['search'])));
+	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
+
+	// Find the member.
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, real_name
+		FROM {$db_prefix}members
+		WHERE real_name LIKE '$_REQUEST[search]'" . (!empty($context['search_param']['buddies']) ? '
+			AND id_member IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
+			AND is_activated IN (1, 11)
+		LIMIT " . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'), __FILE__, __LINE__);
+	$xml_data = array(
+		'members' => array(
+			'identifier' => 'member',
+			'children' => array(),
+		),
+	);
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		if (function_exists('iconv'))
+		{
+			$utf8 = iconv($txt['lang_character_set'], 'UTF-8', $row['real_name']);
+			if ($utf8)
+				$row['real_name'] = $utf8;
+		}
+
+		$row['real_name'] = strtr($row['real_name'], array('&amp;' => '&#038;', '&lt;' => '&#060;', '&gt;' => '&#062;', '&quot;' => '&#034;'));
+
+		if (preg_match('~&#\d+;~', $row['real_name']) != 0)
+		{
+			$fixchar = create_function('$n', '
+				if ($n < 128)
+					return chr($n);
+				elseif ($n < 2048)
+					return chr(192 | $n >> 6) . chr(128 | $n & 63);
+				elseif ($n < 65536)
+					return chr(224 | $n >> 12) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);
+				else
+					return chr(240 | $n >> 18) . chr(128 | $n >> 12 & 63) . chr(128 | $n >> 6 & 63) . chr(128 | $n & 63);');
+
+			$row['real_name'] = preg_replace('~&#(\d+);~e', '$fixchar(\'$1\')', $row['real_name']);
+		}
+
+		$xml_data['members']['children'][] = array(
+			'attributes' => array(
+				'id' => $row['id_member'],
+			),
+			'value' => $row['real_name'],
+		);
+	}
+	$smfFunc['db_free_result']($request);
+
+	return $xml_data;
 }
 
 ?>
