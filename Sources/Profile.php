@@ -104,6 +104,9 @@ if (!defined('SMF'))
 	void ignoreboards(int id_member)
 		// !!!
 
+	void subscriptions(int id_member)
+		// !!!
+
 	Adding new fields to the profile:
 	---------------------------------------------------------------------------
 		// !!!
@@ -259,6 +262,11 @@ function ModifyProfile($post_errors = array())
 					'enabled' => $cur_profile['id_group'] != 1 && !in_array(1, explode(',', $cur_profile['additional_groups'])),
 					'href' => $scripturl . '?action=admin;area=ban;sa=add;u=' . $memID,
 					'label' => $txt['profileBanUser'],
+				),
+				'subscriptions' => array(
+					'own' => array('profile_view_own'),
+					'any' => array('moderate_forum'),
+					'enabled' => !empty($modSettings['paid_enabled']),
 				),
 				'deleteAccount' => array(
 					'own' => array('profile_remove_any', 'profile_remove_own'),
@@ -4406,6 +4414,234 @@ function profileSendActivation()
 
 	// We're gone!
 	obExit();
+}
+
+// Function for doing all the paid subscription stuff - kinda.
+function subscriptions($memID)
+{
+	global $context, $txt, $sourcedir, $db_prefix, $modSettings, $smfFunc, $scripturl;
+
+	// Load the paid template anyway.
+	loadTemplate('ManagePaid');
+	loadLanguage('ManagePaid');
+
+	// Load all of the subscriptions.
+	require_once($sourcedir . '/ManagePaid.php');
+	loadSubscriptions();
+	$context['member']['id'] = $memID;
+
+	// Remove any invalid ones.
+	foreach ($context['subscriptions'] as $id => $sub)
+	{
+		// Work out the costs.
+		$costs = @unserialize($sub['real_cost']);
+
+		$cost_array = array();
+		if ($sub['real_length'] == 'F')
+		{
+			foreach ($costs as $duration => $cost)
+			{
+				if ($cost != 0)
+					$cost_array[$duration] = $cost;
+			}
+		}
+		else
+		{
+			$cost_array['fixed'] = $costs['fixed'];
+		}
+
+		if (empty($cost_array))
+			unset($context['subscriptions'][$id]);
+		else
+		{
+			$context['subscriptions'][$id]['member'] = 0;
+			$context['subscriptions'][$id]['subscribed'] = false;
+			$context['subscriptions'][$id]['costs'] = $cost_array;
+		}
+	}
+
+	// Work out what gateways are enabled.
+	$gateways = loadPaymentGateways();
+	foreach ($gateways as $id => $gateway)
+	{
+		$gateways[$id] = new $gateway['display_class']();
+		if (!$gateways[$id]->gatewayEnabled())
+			unset($gateways[$id]);
+	}
+
+	// No gateways yet?
+	if (empty($gateways))
+		fatal_error($txt['paid_admin_not_setup_gateway']);
+
+	// Get the current subscriptions.
+	$request = $smfFunc['db_query']('', "
+		SELECT id_sublog, id_subscribe, start_time, end_time, status, payments_pending, pending_details
+		FROM {$db_prefix}log_subscribed
+		WHERE id_member = $memID", __FILE__, __LINE__);
+	$context['current'] = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// The subscription must exist!
+		if (!isset($context['subscriptions'][$row['id_subscribe']]))
+			continue;
+
+		$context['current'][$row['id_subscribe']] = array(
+			'id' => $row['id_sublog'],
+			'sub_id' => $row['id_subscribe'],
+			'hide' => $row['status'] == 0 && $row['end_time'] == 0 && $row['payments_pending'] == 0,
+			'name' => $context['subscriptions'][$row['id_subscribe']]['name'],
+			'start' => timeformat($row['start_time'], false),
+			'end' => $row['end_time'] == 0 ? 'N/A' : timeformat($row['end_time'], false),
+			'pending_details' => $row['pending_details'],
+			'status' => $row['status'],
+			'status_text' => $row['status'] == 0 ? ($row['payments_pending'] ? $txt['paid_pending'] : $txt['paid_finished']) : $txt['paid_active'],
+		);
+
+		if ($row['status'] == 1)
+			$context['subscriptions'][$row['id_subscribe']]['subscribed'] = true;
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Simple "done"?
+	if (isset($_GET['done']))
+	{
+		$_GET['sub_id'] = (int) $_GET['sub_id'];
+
+		// Must exist but let's be sure...
+		if (isset($context['current'][$_GET['sub_id']]))
+		{
+			// What are the details like?
+			$current_pending = @unserialize(stripslashes($context['current'][$_GET['sub_id']]['pending_details']));
+			$current_pending = array_reverse($current_pending);
+			foreach ($current_pending as $id => $sub)
+			{
+				// Just find one and change it.
+				if ($sub[0] == $_GET['sub_id'] && $sub[3] == 'prepay')
+				{
+					$current_pending[$id][3] = 'payback';
+					break;
+				}
+			}
+
+			// Save the details back.
+			$pending_details = addslashes(serialize($current_pending));
+	
+			$smfFunc['db_query']('', "
+				UPDATE {$db_prefix}log_subscribed
+				SET payments_pending = payments_pending + 1, pending_details = '$pending_details'
+				WHERE id_sublog = " . $context['current'][$_GET['sub_id']]['id'] . "
+					AND id_member = $memID", __FILE__, __LINE__);
+		}
+
+		$context['sub_template'] = 'paid_done';
+		return;
+	}
+	// If this is confirmation then it's simpler...
+	if (isset($_GET['confirm']) && isset($_POST['sub_id']) && is_array($_POST['sub_id']))
+	{
+		// Hopefully just one.
+		foreach ($_POST['sub_id'] as $k => $v)
+			$ID_SUB = (int) $k;
+
+		if (!isset($context['subscriptions'][$ID_SUB]) || $context['subscriptions'][$ID_SUB]['active'] == 0)
+			fatal_lang_error('paid_sub_not_active');
+
+		// Simplify...
+		$context['sub'] = $context['subscriptions'][$ID_SUB];
+		$period = 'xx';
+		if ($context['sub']['flexible'])
+			$period = isset($_POST['cur'][$ID_SUB]) && isset($context['sub']['costs'][$_POST['cur'][$ID_SUB]]) ? $_POST['cur'][$ID_SUB] : 'xx';
+
+		// Check we have a valid cost.
+		if ($context['sub']['flexible'] && $period == 'xx')
+			fatal_lang_error('paid_sub_not_active');
+
+		// Sort out the cost/currency.
+		$context['currency'] = $modSettings['paid_currency_code'];
+		$context['recur'] = $context['sub']['repeatable'];
+
+		if ($context['sub']['flexible'])
+		{
+			// Real cost...
+			$context['value'] = $context['sub']['costs'][$_POST['cur'][$ID_SUB]];
+			$context['cost'] = sprintf($modSettings['paid_currency_symbol'], $context['value']) . '/' . $txt[$_POST['cur'][$ID_SUB]];
+			// The period value for paypal.
+			$context['paypal_period'] = strtoupper(substr($_POST['cur'][$ID_SUB], 0, 1));
+		}
+		else
+		{
+			// Real cost...
+			$context['value'] = $context['sub']['costs']['fixed'];
+			$context['cost'] = sprintf($modSettings['paid_currency_symbol'], $context['value']);
+
+			// Recur?
+			preg_match('~(\d*)(\w)~', $context['sub']['real_length'], $match);
+			$context['paypal_unit'] = $match[1];
+			$context['paypal_period'] = $match[2];
+		}
+
+		// Setup the gateway context.
+		$context['gateways'] = array();
+		foreach ($gateways as $id => $gateway)
+		{
+			$fields = $gateways[$id]->fetchGatewayFields($context['sub']['id'] . '+' . $memID, $context['sub'], $context['value'], $period, $scripturl . '?action=profile;sa=subscriptions;u=' . $memID . ';sub_id=' . $context['sub']['id'] . ';done');
+			if (!empty($fields['form']))
+				$context['gateways'][] = $fields;
+		}
+
+		// Bugger?!
+		if (empty($context['gateways']))
+			fatal_error($txt['paid_admin_not_setup_gateway']);
+
+		// Now we are going to assume they want to take this out ;)
+		$new_data = array($context['sub']['id'], $context['value'], $period, 'prepay');
+		if (isset($context['current'][$context['sub']['id']]))
+		{
+			// What are the details like?
+			$current_pending = array();
+			if ($context['current'][$context['sub']['id']]['pending_details'] != '')
+				$current_pending = @unserialize(stripslashes($context['current'][$context['sub']['id']]['pending_details']));
+			// Don't get silly.
+			if (count($current_pending) > 9)
+				$current_pending = array();
+			$pending_count = 0;
+			// Pnly record real pending payments as will otherwise confuse the admin!
+			foreach ($current_pending as $pending)
+				if ($pending[3] == 'payback')
+					$pending_count++;
+
+			if (!in_array($new_data, $current_pending))
+			{
+				$current_pending[] = $new_data;
+				$pending_details = addslashes(serialize($current_pending));
+	
+				$smfFunc['db_query']('', "
+					UPDATE {$db_prefix}log_subscribed
+					SET payments_pending = $pending_count, pending_details = '$pending_details'
+					WHERE id_sublog = " . $context['current'][$context['sub']['id']]['id'] . "
+						AND id_member = $memID", __FILE__, __LINE__);
+			}
+					
+		}
+		// Never had this before, lovely.
+		else
+		{
+			$pending_details = addslashes(serialize(array($new_data)));
+			$smfFunc['db_query']('', "
+				INSERT INTO {$db_prefix}log_subscribed
+					(id_subscribe, id_member, status, payments_pending, pending_details, start_time, vendor_ref)
+				VALUES
+					(" . $context['sub']['id'] . ", $memID, 0, 0, '$pending_details', " . time() . ", '')", __FILE__, __LINE__);
+		}
+
+		// Change the template.
+		$context['sub_template'] = 'choose_payment';
+
+		// Quit.
+		return;
+	}
+	else
+		$context['sub_template'] = 'user_subscription';
 }
 
 ?>

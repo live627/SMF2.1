@@ -192,6 +192,13 @@ $nameChanges = array(
 		'ID_SEARCH' => 'ID_SEARCH id_search tinyint(3) unsigned NOT NULL default \'0\'',
 		'ID_TOPIC' => 'ID_TOPIC id_topic mediumint(8) unsigned NOT NULL default \'0\'',
 	),
+	'log_subscribed' => array(
+		'ID_SUBLOG' => 'ID_SUBLOG id_sublog int(10) unsigned NOT NULL auto_increment',
+		'ID_SUBSCRIBE' => 'ID_SUBSCRIBE id_subscribe mediumint(8) unsigned NOT NULL default \'0\'',
+		'OLD_ID_GROUP' => 'OLD_ID_GROUP old_id_group smallint(5) NOT NULL default \'0\'',
+		'startTime' => 'startTime start_time int(10) NOT NULL default \'0\'',
+		'endTime' => 'endTime end_time int(10) NOT NULL default \'0\'',
+	), 
 	'log_topics' => array(
 		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
 		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
@@ -318,6 +325,12 @@ $nameChanges = array(
 		'ID_SMILEY' => 'ID_SMILEY id_smiley smallint(5) unsigned NOT NULL auto_increment',
 		'smileyRow' => 'smileyRow smiley_row tinyint(4) unsigned NOT NULL default \'0\'',
 		'smileyOrder' => 'smileyOrder smiley_order smallint(5) unsigned NOT NULL default \'0\'',
+	), 
+	'subscriptions' => array(
+		'ID_SUBSCRIBE' => 'ID_SUBSCRIBE id_subscribe mediumint(8) unsigned NOT NULL auto_increment',
+		'ID_GROUP' => 'ID_GROUP id_group smallint(5) NOT NULL default \'0\'',
+		'addGroups' => 'addGroups add_groups varchar(40) NOT NULL default \'\'',
+		'allowPartial' => 'allowPartial allow_partial tinyint(3) NOT NULL default \'0\'',
 	),
 	'themes' => array(
 		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) NOT NULL default \'0\'',
@@ -1320,7 +1333,8 @@ VALUES
 	(0, 0, 1, 'd', 0, 'daily_digest'),
 	(0, 0, 1, 'w', 0, 'weekly_digest'),
 	(0, 0, 1, 'd', 0, 'fetchSMfiles'),
-	(0, 0, 1, 'd', 1, 'birthdayemails');
+	(0, 0, 1, 'd', 1, 'birthdayemails'),
+	(0, 120, 1, 'd', 0, 'paid_subscriptions');
 ---#
 
 ---# Populating Scheduled Task Table...
@@ -1669,6 +1683,8 @@ if (!isset($modSettings['admin_features']))
 		$enabled_features[] = 'k';
 	if (!empty($modSettings['modlog_enabled']))
 		$enabled_features[] = 'ml';
+	if (!empty($modSettings['paid_enabled']))
+		$enabled_features[] = 'ps';
 
 	$enabled_features = implode(',', $enabled_features);
 
@@ -1908,6 +1924,148 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}openid_assoc (
 ---# Adding column to hold Open ID URL...
 ALTER TABLE {$db_prefix}members
 ADD openid_uri text NOT NULL;
+---#
+
+/******************************************************************************/
+--- Adding paid subscriptions.
+/******************************************************************************/
+
+---# Clean up any pre-2.0 mod settings.
+UPDATE {$db_prefix}settings
+SET variable = 'paid_currency_code'
+WHERE variable = 'currency_code';
+
+UPDATE {$db_prefix}settings
+SET variable = 'paid_currency_symbol'
+WHERE variable = 'currency_symbol';
+
+DELETE FROM {$db_prefix}settings
+WHERE variable = 'currency_code'
+	OR variable = 'currency_symbol';
+---#
+
+---# Clean up any pre-2.0 mod settings (part 2).
+---{
+$request = upgrade_query("
+	SHOW COLUMNS
+	FROM {$db_prefix}subscriptions");
+$new_cols = array('repeatable', 'reminder', 'email_complete', 'allow_partial');
+$new_cols = array_flip($new_cols);
+while ($request && $row = mysql_fetch_row($request))
+{
+	$row[0] = strtolower($row[0]);
+	if (isset($new_cols[$row[0]]))
+		unset($new_cols[$row[0]]);
+}
+if ($request)
+	mysql_free_result($request);
+
+if (isset($new_cols['repeatable']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}subscriptions
+		ADD COLUMN Repeatable tinyint(3) NOT NULL default '0'");
+if (isset($new_cols['reminder']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}subscriptions
+		ADD COLUMN reminder tinyint(3) NOT NULL default '0'");
+if (isset($new_cols['email_complete']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}subscriptions
+		ADD COLUMN email_complete text NOT NULL");
+if (isset($new_cols['allowpartial']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}subscriptions
+		ADD COLUMN allow_partial tinyint(3) NOT NULL default '0'");
+
+$request = upgrade_query("
+	SHOW COLUMNS
+	FROM {$db_prefix}log_subscribed");
+$new_cols = array('reminder_sent', 'vendor_ref', 'payments_pending', 'pending_details');
+$new_cols = array_flip($new_cols);
+while ($request && $row = mysql_fetch_row($request))
+{
+	if (isset($new_cols[$row[0]]))
+		unset($new_cols[$row[0]]);
+}
+if ($request)
+	mysql_free_result($request);
+
+if (isset($new_cols['reminder_sent']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_subscribed
+		ADD COLUMN reminder_sent tinyint(3) NOT NULL default '0'");
+if (isset($new_cols['vendor_ref']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_subscribed
+		ADD COLUMN vendor_ref tinytext NOT NULL");
+if (isset($new_cols['payments_pending']))
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_subscribed
+		ADD COLUMN payments_pending tinyint(3) NOT NULL default '0'");
+if (isset($new_cols['pending_details']))
+{
+	upgrade_query("
+		UPDATE {$db_prefix}log_subscribed
+		SET status = 0
+		WHERE status = 1");
+	upgrade_query("
+		UPDATE {$db_prefix}log_subscribed
+		SET status = 1
+		WHERE status = 2");
+	upgrade_query("
+		ALTER TABLE {$db_prefix}log_subscribed
+		ADD COLUMN pending_details text NOT NULL");
+}
+---}
+---#
+
+---# Creating subscriptions table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}subscriptions(
+	id_subscribe mediumint(8) unsigned NOT NULL auto_increment,
+	name varchar(60) NOT NULL default '',
+	description tinytext NOT NULL,
+	cost text NOT NULL,
+	length varchar(6) NOT NULL default '',
+	id_group smallint(5) NOT NULL default '0',
+	add_groups varchar(40) NOT NULL default '',
+	active tinyint(3) NOT NULL default '1',
+	repeatable tinyint(3) NOT NULL default '0',
+	allow_partial tinyint(3) NOT NULL default '0',
+	reminder tinyint(3) NOT NULL default '0',
+	email_complete text NOT NULL,
+	PRIMARY KEY (id_subscribe),
+	KEY active (active)
+) TYPE=MyISAM{$db_collation};
+---#
+
+---# Creating log_subscribed table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}log_subscribed(
+	id_sublog int(10) unsigned NOT NULL auto_increment,
+	id_subscribe mediumint(8) unsigned NOT NULL default '0',
+	id_member int(10) NOT NULL default '0',
+	old_id_group smallint(5) NOT NULL default '0',
+	start_time int(10) NOT NULL default '0',
+	end_time int(10) NOT NULL default '0',
+	status tinyint(3) NOT NULL default '0',
+	payments_pending tinyint(3) NOT NULL default '0',
+	pending_details text NOT NULL,
+	reminder_sent tinyint(3) NOT NULL default '0',
+	vendor_ref tinytext NOT NULL,
+	PRIMARY KEY (id_sublog),
+	UNIQUE KEY id_subscribe (id_subscribe, id_member),
+	KEY end_time (end_time),
+	KEY reminder_sent (reminder_sent),
+	KEY payments_pending (payments_pending),
+	KEY id_member (id_member)
+) TYPE=MyISAM{$db_collation};
+---#
+
+---# Confirming paid subscription keys are in place ...
+ALTER TABLE {$db_prefix}log_subscribed
+ADD KEY reminder_sent (reminder_sent),
+ADD KEY end_time (end_time),
+ADD KEY payments_pending (payments_pending),
+ADD KEY status (status);
 ---#
 
 /******************************************************************************/

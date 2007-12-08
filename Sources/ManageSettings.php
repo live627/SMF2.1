@@ -195,6 +195,12 @@ function ModifyCoreFeatures($return_config = false)
 					return array();
 			'),
 		),
+		// ps = Paid Subscriptions.
+		'ps' => array(
+			'settings' => array(
+				'paid_enabled' => 1,
+			),
+		),
 		// rg = report generator.
 		'rg' => array(
 		),

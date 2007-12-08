@@ -12,6 +12,7 @@ December 2007
  * Various tweaks to the permissions screen. (ManageBoards.php, ManagePermissions.php, ManagePermissions template, ManageBoards template, ManagePermissions language files)
  ! Xml call for the jump to box wasn't doing the selected board correctly. (Xml.php)
  ! Upgrade was not continuing well from a long absence. (upgrade.php)
+ + Allow users to pay a subscription to get enhanced board access. (subscriptions.php, Subscriptions-PayPal.php, ManagePaid.php, Admin.php, ScheduledTasks.php, upgrade, install, ManagePaid template, ManagePaid language file)
 
 
 November 2007

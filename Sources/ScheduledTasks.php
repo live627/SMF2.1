@@ -45,6 +45,9 @@ if (!defined('SMF'))
 	void scheduled_weekly_digest()
 		// !!!
 
+	void scheduled_paid_subscriptions()
+		// !!!
+
 	void ReduceMailQueue(int number, bool override)
 		// !!!
 
@@ -364,7 +367,9 @@ function scheduled_daily_maintenance()
 	clean_cache('data');
 
 	// Then delete some settings that needn't be set if they are otherwise empty.
-	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage', 'spider_mode', 'spider_group');
+	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage', 'spider_mode', 'spider_group',
+		'paid_currency_code', 'paid_currency_symbol', 'paid_email_to', 'paid_email', 'paid_enabled', 'paypal_email',
+	);
 
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}settings
@@ -1214,6 +1219,81 @@ function scheduled_weekly_maintenance()
 				WHERE time_run < $t", __FILE__, __LINE__);
 		}
 	}
+
+	// Get rid of any paid subscriptions that were never actioned.
+	$smfFunc['db_query']('', "
+		DELETE FROM {$db_prefix}log_subscribed
+		WHERE end_time = 0
+			AND status = 0
+			AND start_time < " . (time() - 60) . "
+			AND payments_pending < 1", __FILE__, __LINE__);
+
 	return true;
 }
+
+// Perform the standard checks on expiring/near expiring subscriptions.
+function scheduled_paid_subscriptions()
+{
+	global $db_prefix, $txt, $sourcedir, $scripturl, $smfFunc;
+
+	// Start off by checking for removed subscriptions.
+	$request = $smfFunc['db_query']('', "
+		SELECT id_subscribe, id_member
+		FROM {$db_prefix}log_subscribed
+		WHERE status = 1
+			AND end_time < " . time(), __FILE__, __LINE__);
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		require_once($sourcedir . '/ManagePaid.php');
+		removeSubscription($row['id_subscribe'], $row['id_member']);
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Get all those about to expire that have not had a reminder sent.
+	$request = $smfFunc['db_query']('', "
+		SELECT ls.id_sublog, m.id_member, m.member_name, m.email_address, s.name, ls.end_time
+		FROM {$db_prefix}log_subscribed AS ls
+			INNER JOIN {$db_prefix}subscriptions AS s ON (s.id_subscribe = ls.id_subscribe)
+			INNER JOIN {$db_prefix}members AS m ON (m.id_member = ls.id_member)
+		WHERE ls.status = 1
+			AND ls.reminder_sent = 0
+			AND s.reminder > 0
+			AND ls.end_time < (" . time() . " + s.reminder * 86400)", __FILE__, __LINE__);
+	$subs_reminded = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// If this is the first one load the important bits.
+		if (empty($subs_reminded))
+		{
+			require_once($sourcedir . '/Subs-Post.php');
+			// Need the below for loadLanguage to work!
+			loadEssentialThemeData();
+		}
+
+		$subs_reminded[] = $row['id_sublog'];
+
+		$replacements = array(
+			'PROFILE_LINK' => $scripturl . '?action=profile;u=' . $row['id_member'] . ';sa=subscriptions',
+			'REALNAME' => $row['member_name'],
+			'SUBSCRIPTION' => $row['name'],
+			'END_DATE' => timeformat($row['end_time']),
+		);
+
+		$emaildata = loadEmailTemplate('paid_subscription_reminder', $replacements);
+
+		// Send the actual email.
+		sendmail($member['email_address'], $emaildata['subject'], $emaildata['body']);
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Mark the reminder as sent.
+	if (!empty($subs_reminded))
+		$smfFunc['db_query']('', "
+			UPDATE {$db_prefix}log_subscribed
+			SET reminder_sent = 1
+			WHERE id_sublog IN (" . implode(',', $subs_reminded) . ")", __FILE__, __LINE__);
+
+	return true;
+}
+
 ?>

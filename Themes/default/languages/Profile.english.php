@@ -376,4 +376,6 @@ $txt['profile_warning_previous_level'] = 'Points';
 $txt['profile_warning_previous_reason'] = 'Reason';
 $txt['profile_warning_previous_notice'] = 'View Notice Sent to Member';
 
+$txt['subscriptions'] = 'Paid Subscriptions';
+
 ?>

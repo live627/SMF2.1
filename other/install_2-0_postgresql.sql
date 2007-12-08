@@ -1368,6 +1368,42 @@ CREATE TABLE {$db_prefix}log_spider_stats (
 );
 
 #
+# Sequence for table `log_subscribed`
+#
+
+CREATE SEQUENCE {$db_prefix}log_subscribed_seq;
+  
+#
+# Table structure for table `log_subscribed`
+#
+
+CREATE TABLE {$db_prefix}log_subscribed (
+  id_sublog int default nextval('{$db_prefix}log_subscribed_seq'),
+  id_subscribe smallint unsigned NOT NULL default '0',
+  id_member int NOT NULL default '0',
+  old_id_group int NOT NULL default '0',
+  start_time int NOT NULL default '0',
+  end_time int NOT NULL default '0',
+  payments_pending smallint NOT NULL default '0',
+  status smallint NOT NULL default '0',
+  pending_details text NOT NULL,
+  reminder_sent NOT NOT NULL default '0',
+  vendor_ref varchar(255) NOT NULL,
+  PRIMARY KEY (id_sublog)
+);
+
+#
+# Indexes for table `log_subscribed`
+#
+
+CREATE INDEX {$db_prefix}log_subscribed_id_subscribe ON {$db_prefix}log_subscribed (id_subscribe, id_member);
+CREATE INDEX {$db_prefix}log_subscribed_end_time ON {$db_prefix}log_subscribed (end_time);
+CREATE INDEX {$db_prefix}log_subscribed_reminder_sent ON {$db_prefix}log_subscribed (reminder_sent);
+CREATE INDEX {$db_prefix}log_subscribed_payments_pending ON {$db_prefix}log_subscribed (payments_pending);
+CREATE INDEX {$db_prefix}log_subscribed_status ON {$db_prefix}log_subscribed (status);
+CREATE INDEX {$db_prefix}log_subscribed_id_member ON {$db_prefix}log_subscribed (id_member);
+
+#
 # Table structure for table `log_topics`
 #
 
@@ -1934,6 +1970,7 @@ INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_r
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (7, 0, 0, 1, 'd', 0, 'fetchSMfiles');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (8, 0, 0, 1, 'd', 1, 'birthdayemails');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (9, 0, 0, 1, 'w', 0, 'weekly_maintenance');
+INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (9, 0, 120, 1, 'd', 0, 'paid_subscriptions');
 
 # --------------------------------------------------------
 
@@ -2193,6 +2230,38 @@ CREATE TABLE {$db_prefix}spiders (
 INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (1, 'Google', 'googlebot', '');
 INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (2, 'Yahoo!', 'slurp', '');
 INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VALUES (3, 'MSN', 'msn', '');
+
+#
+# Sequence for table `subscriptions`
+#
+
+CREATE SEQUENCE {$db_prefix}subscriptions_seq;
+
+#
+# Table structure for table `subscriptions`
+#
+
+CREATE TABLE {$db_prefix}subscriptions(
+  id_subscribe smallint NOT NULL default nextval('{$db_prefix}subscriptions_seq'),
+  name varchar(60) NOT NULL,
+  description varchar(255) NOT NULL,
+  cost text NOT NULL,
+  length varchar(6) NOT NULL,
+  id_group int NOT NULL default '0',
+  add_groups varchar(40) NOT NULL,
+  active smallint NOT NULL default '1',
+  repeatable smallint NOT NULL default '0',
+  allow_partial smallint NOT NULL default '0',
+  reminder smallint NOT NULL default '0',
+  email_complete text NOT NULL,
+  PRIMARY KEY (id_subscribe)
+);
+
+#
+# Indexes for table `subscriptions`
+#
+
+CREATE INDEX {$db_prefix}subscriptions_active ON {$db_prefix}subscriptions (active);
 
 #
 # Table structure for table `themes`

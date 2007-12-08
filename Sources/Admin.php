@@ -356,6 +356,17 @@ function AdminMain()
 						'log' => array($txt['ban_log']),
 					),
 				),
+				'paidsubscribe' => array(
+					'label' => $txt['paid_subscriptions'],
+					'enabled' => in_array('ps', $context['admin_features']),
+					'file' => 'ManagePaid.php',
+					'function' => 'ManagePaidSubscriptions',
+					'permission' => 'admin_forum',
+					'subsections' => array(
+						'view' => array($txt['paid_subs_view']),
+						'settings' => array($txt['settings']),
+					),
+				),
 				'sengines' => array(
 					'label' => $txt['search_engines'],
 					'enabled' => in_array('sp', $context['admin_features']),
@@ -619,6 +630,7 @@ function VersionDetail()
 	require_once($sourcedir . '/Subs-Admin.php');
 	$versionOptions = array(
 		'include_ssi' => true,
+		'include_subscriptions' => true,
 		'sort_results' => true,
 	);
 	$version_info = getFileVersions($versionOptions);
@@ -796,15 +808,15 @@ function AdminSearchInternal()
 
 	// Load a lot of language files.
 	$language_files = array(
-		'Help', 'ManageMail', 'ManageSettings', 'ManageCalendar', 'ManageBoards', 'ManagePermissions', 'Search',
+		'Help', 'ManageMail', 'ManageSettings', 'ManageCalendar', 'ManageBoards', 'ManagePaid', 'ManagePermissions', 'Search',
 		'ManageSmileys',
 	);
 	loadLanguage(implode('+', $language_files));
 
 	// All the files we need to include.
 	$include_files = array(
-		'ManageSettings', 'ManageBoards', 'ManageNews', 'ManageAttachments', 'ManageCalendar', 'ManageMail', 'ManagePermissions',
-		'ManagePosts', 'ManageSearch', 'ManageServer', 'ManageSmileys',
+		'ManageSettings', 'ManageBoards', 'ManageNews', 'ManageAttachments', 'ManageCalendar', 'ManageMail', 'ManagePaid', 'ManagePermissions',
+		'ManagePosts', 'ManageSearch', 'ManageSearchEngines', 'ManageServer', 'ManageSmileys',
 	);
 	foreach ($include_files as $file)
 		require_once($sourcedir . '/' . $file . '.php');
@@ -863,6 +875,8 @@ function AdminSearchInternal()
 		array('EditSmileySettings', 'area=smileys;sa=settings'),
 		array('ModifyOtherSettings', 'area=serversettings;sa=other'),
 		array('ModifyCacheSettings', 'area=serversettings;sa=cache'),
+		array('ManageSearchEngineSettings', 'area=searchengines;sa=settings'),
+		array('ModifySubscriptionSettings', 'area=paidsubscribe;sa=settings'),
 	);
 
 	foreach ($settings_search as $setting_area)

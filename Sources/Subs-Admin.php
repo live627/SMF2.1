@@ -5,7 +5,7 @@
 * SMF: Simple Machines Forum                                                      *
 * Open-Source Project Inspired by Zef Hemel (zef@zefhemel.com)                    *
 * =============================================================================== *
-* Software Version:           SMF 2.0 Beta 1                                       *
+* Software Version:           SMF 2.0 Beta 1                                      *
 * Software by:                Simple Machines (http://www.simplemachines.org)     *
 * Copyright 2006 by:          Simple Machines LLC (http://www.simplemachines.org) *
 *           2001-2006 by:     Lewis Media (http://www.lewismedia.com)             *
@@ -125,6 +125,21 @@ function getFileVersions(&$versionOptions)
 		// Not found!  This is bad.
 		else
 			$version_info['file_versions']['SSI.php'] = '??';
+	}
+
+	// Do the paid subscriptions handler?
+	if (!empty($versionOptions['include_subscriptions']) && file_exists($boarddir . '/subscriptions.php'))
+	{
+		$fp = fopen($boarddir . '/subscriptions.php', 'rb');
+		$header = fread($fp, 4096);
+		fclose($fp);
+
+		// Found it?
+		if (preg_match('~\*\s*Software\s+Version:\s+SMF\s+(.+?)[\s]{2}~i', $header, $match) == 1)
+			$version_info['file_versions']['subscriptions.php'] = $match[1];
+		// If we haven't how do we all get paid?
+		else
+			$version_info['file_versions']['subscriptions.php'] = '??';
 	}
 
 	// Load all the files in the Sources directory, except this file and the redirect.

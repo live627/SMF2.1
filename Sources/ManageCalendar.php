@@ -305,7 +305,6 @@ function ModifyCalendarSettings($return_config = false)
 
 	// Some important context stuff
 	$context['page_title'] = $txt['calendar_settings'];
-	$context['sub_template'] = 'modify_settings';
 	$context['sub_template'] = 'show_settings';
 
 	// Get the final touches in place.

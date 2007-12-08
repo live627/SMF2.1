@@ -307,6 +307,28 @@ You can approve or reject this application by clicking the link below:
 
 {REGARDS}',
 	),
+	'paid_subscription_reminder' => array(
+		/*
+			@additional_params: scheduled_approval
+				REALNAME: The real (display) name of the person receiving the email.
+				PROFILE_LINK: Link to profile of member receiving email where can renew.
+				SUBSCRIPTION: Name of the subscription.
+				END_DATE: Date it expires.
+			@description:
+		*/
+		'subject' => 'Subscription about to expire at {FORUMNAME}',
+		'body' => '{REALNAME},
+		
+A subscription you are subscribed to at {FORUMNAME} is about to expire. If when you took out the subscription you selected to auto-renew you need take no action - otherwise you may wish to consider subscribing once more. Details are below:
+
+Subscription Name: {SUBSCRIPTION}
+Expires: {END_DATE}
+
+To edit your subscriptions visit the following URL:
+{PROFILE_LINK}
+
+{REGARDS}',
+	),
 	'activate_reactivate' => array(
 		/*
 			@additional_params: activate_reactivate

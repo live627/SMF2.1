@@ -1047,7 +1047,7 @@ function template_show_settings()
 		if (is_array($config_var) && $config_var['type'] == 'title')
 		{
 			echo '
-					<tr class="titlebg">
+					<tr class="titlebg" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>
 						<td colspan="3">
 							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
 							', $config_var['label'], '</td>
@@ -1057,7 +1057,7 @@ function template_show_settings()
 		}
 
 		echo '
-					<tr class="windowbg2">';
+					<tr class="windowbg2" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>';
 
 		if (is_array($config_var))
 		{

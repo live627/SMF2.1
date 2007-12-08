@@ -1158,7 +1158,7 @@ function loadTheme($id_theme = 0, $initialize = true)
 	// Verify the id_theme... no foul play.
 	// Always allow the board specific theme, if they are overriding.
 	if (!empty($board_info['theme']) && $board_info['override_theme'])
-		$id_theme=$board_info['theme'];
+		$id_theme = $board_info['theme'];
 	// If they have specified a particular theme to use with SSI allow it to be used.
 	elseif (!empty($ssi_theme) && $id_theme == $ssi_theme)
 		$id_theme = (int) $id_theme;

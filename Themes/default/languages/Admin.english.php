@@ -318,6 +318,8 @@ $txt['scheduled_task_birthdayemails'] = 'Send Birthday Emails';
 $txt['scheduled_task_desc_birthdayemails'] = 'Sends out emails wishing members a happy birthday.';
 $txt['scheduled_task_weekly_maintenance'] = 'Weekly Maintenance';
 $txt['scheduled_task_desc_weekly_maintenance'] = 'Runs essential weekly maintenance on the forum - should not be disabled.';
+$txt['scheduled_task_paid_subscriptions'] = 'Paid Subscription Checks';
+$txt['scheduled_task_desc_paid_subscriptions'] = 'Sends out any necessary paid subscription reminders and removes expired member subscriptions.';
 
 // Untranslated!
 $txt['scheduled_task_reg_starting'] = 'Starting at %s';
@@ -747,5 +749,8 @@ $txt['search_engines'] = 'Search Engines';
 $txt['spiders'] = 'Spiders';
 $txt['spider_logs'] = 'Logs';
 $txt['spider_stats'] = 'Stats';
+
+$txt['paid_subscriptions'] = 'Paid Subscriptions';
+$txt['paid_subs_view'] = 'View Subscriptions';
 
 ?>
