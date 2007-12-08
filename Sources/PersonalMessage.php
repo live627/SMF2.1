@@ -1769,29 +1769,29 @@ function MessagePost2()
 
 			preg_match_all('~"([^"]+)"~', $_REQUEST['to'], $matches);
 			$string_members = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_REQUEST['to']))));
-		}
 
-		foreach ($string_members as $index => $member)
-			if (strlen(trim($member)) > 0)
-				$string_members[$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower']($smfFunc['db_unescape_string'](trim($member))));
-			else
-				unset($string_members[$index]);
+			foreach ($string_members as $index => $member)
+				if (strlen(trim($member)) > 0)
+					$string_members[$index] = $smfFunc['htmlspecialchars']($smfFunc['strtolower']($smfFunc['db_unescape_string'](trim($member))));
+				else
+					unset($string_members[$index]);
 
-		// Find the requested members - bcc and to.
-		$foundMembers = findMembers($string_members);
+			// Find the requested members - bcc and to.
+			$foundMembers = findMembers($string_members);
 
-		// Store IDs of the members that were found.
-		foreach ($foundMembers as $member)
-		{
-			// It's easier this way.
-			$member['name'] = strtr($member['name'], array('&#039;' => '\''));
-
-			if (array_intersect(array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])), $string_members))
+			// Store IDs of the members that were found.
+			foreach ($foundMembers as $member)
 			{
-				$context['recipient_ids'][] = $member['id'];
-
-				// Get rid of this username. The ones that remain were not found.
-				$string_members = array_diff($string_members, array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])));
+				// It's easier this way.
+				$member['name'] = strtr($member['name'], array('&#039;' => '\''));
+	
+				if (array_intersect(array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])), $string_members))
+				{
+					$context['recipient_ids'][] = $member['id'];
+	
+					// Get rid of this username. The ones that remain were not found.
+					$string_members = array_diff($string_members, array($smfFunc['strtolower']($member['username']), $smfFunc['strtolower']($member['name']), $smfFunc['strtolower']($member['email'])));
+				}
 			}
 		}
 	}
