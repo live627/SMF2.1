@@ -99,15 +99,17 @@ if (isset($upgradeData))
 	if (empty($upcontext['user']['started']) || $upcontext['user']['started'] < time() - 86400)
 		$upcontext['user']['started'] = time();
 	if (empty($upcontext['user']['updated']) || $upcontext['user']['updated'] < time() - 86400)
-		$upcontext['user']['updated'] = time();
+		$upcontext['user']['updated'] = 0;
 
 	$upcontext['started'] = $upcontext['user']['started'];
 	$upcontext['updated'] = $upcontext['user']['updated'];
 }
-else
+
+// Nothing sensible?
+if (empty($upcontext['updated']))
 {
 	$upcontext['started'] = time();
-	$upcontext['updated'] = time();
+	$upcontext['updated'] = 0;
 	$upcontext['user'] = array(
 		'id' => 0,
 		'name' => 'Guest',

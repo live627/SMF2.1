@@ -11,6 +11,7 @@ December 2007
  ! Removed option to have a permission profile linked directly to a board. (upgrade, install, ManagePermissions)
  * Various tweaks to the permissions screen. (ManageBoards.php, ManagePermissions.php, ManagePermissions template, ManageBoards template, ManagePermissions language files)
  ! Xml call for the jump to box wasn't doing the selected board correctly. (Xml.php)
+ ! Upgrade was not continuing well from a long absence. (upgrade.php)
 
 
 November 2007
