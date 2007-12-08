@@ -38,14 +38,6 @@ require_once(dirname(__FILE__) . '/SSI.php');
 require_once($sourcedir . '/ManagePaid.php');
 loadLanguage('ManagePaid');
 
-//!!! Temp.
-$modSettings['paypal_email'] = 'me@me.com';
-$_POST['txn_type'] = 'web_accept';
-$_POST['business'] = $modSettings['paypal_email'];
-$_POST['payment_status'] = 'Completed';
-$_POST['tax'] = 5;
-$_POST['mc_gross'] = 8;
-
 // If there's literally nothing coming in, let's take flight!
 if (empty($_POST))
 	die($txt['paid_no_data']);
