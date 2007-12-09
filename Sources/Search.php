@@ -78,6 +78,9 @@ function PlushSearch1()
 		'name' => $txt['search']
 	);
 
+	// This is hard coded maximum string length.
+	$context['search_string_limit'] = 100;
+
 	$context['visual_verification'] = $user_info['is_guest'] && !empty($modSettings['search_enable_captcha']);
 	if ($context['visual_verification'])
 	{
@@ -279,6 +282,8 @@ function PlushSearch2()
 
 	// Number of pages hard maximum - normally not set at all.
 	$modSettings['search_max_results'] = empty($modSettings['search_max_results']) ? 200 * $modSettings['search_results_per_page'] : (int) $modSettings['search_max_results'];
+	// Maximum length of the string.
+	$context['search_string_limit'] = 100;
 
 	loadLanguage('Search');
 	if (!isset($_REQUEST['xml']))
@@ -545,6 +550,12 @@ function PlushSearch2()
 	// Nothing??
 	if (!isset($search_params['search']) || $search_params['search'] == '')
 		$context['search_errors']['invalid_search_string'] = true;
+	// Too long?
+	elseif ($smfFunc['strlen']($search_params['search']) > $context['search_string_limit'])
+	{
+		$context['search_errors']['string_too_long'] = true;
+		$txt['error_string_too_long'] = sprintf($txt['error_string_too_long'], $context['search_string_limit']);
+	}
 
 	// Change non-word characters into spaces.
 	$stripped_query = preg_replace('~([\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0') . '\t\r\s\n(){}\\[\\]<>!@$%^*.,:+=`\~\?/\\\\]|&(amp|lt|gt|quot);)+~' . ($context['utf8'] ? 'u' : ''), ' ', $search_params['search']);

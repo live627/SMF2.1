@@ -45,7 +45,7 @@ function template_main()
 					<table border="0" cellpadding="2" cellspacing="0">
 						<tr>
 							<td>
-								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
+								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
 							</td>
 							<td>
 								', $context['visual_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />', '
@@ -101,7 +101,7 @@ function template_main()
 									<b>', $txt['search_for'], ':</b>
 								</td>
 								<td>
-									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
+									<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
 									<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 										function initSearch()
 										{
@@ -304,7 +304,7 @@ function template_results()
 		echo '
 					<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" style="margin: 0;">
 						<b>', $txt['search_for'], ':</b>
-						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
+						<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' maxlength="', $context['search_string_limit'], '" size="40" />
 						<input type="submit" name="submit" value="', $txt['search_adjust_submit'], '" />
 
 						<input type="hidden" name="searchtype" value="', !empty($context['search_params']['searchtype']) ? $context['search_params']['searchtype'] : 0, '" />
