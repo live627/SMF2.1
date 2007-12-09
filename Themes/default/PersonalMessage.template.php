@@ -959,7 +959,7 @@ function template_send()
 									<span id="suggest_template_to" style="visibility: hidden;">
 										<input type="hidden" name="recipient_to[]" value="{MEMBER_ID}" />
 										<input type="hidden" name="recipient_bcc_{MEMBER_ID}" id="recipient_bcc_{MEMBER_ID}" value="0" />
-										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_to_{MEMBER_ID}" class="extern">{MEMBER_NAME}</a>
+										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
 										<input type="image" onclick="return toggleBCC(\'{MEMBER_ID}\')" id="recipient_toggle_bcc_{MEMBER_ID}" src="', $settings['images_url'], '/pm_recipient_to.gif" alt="', $txt['make_bcc'], '" />
 										<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
 									</span>

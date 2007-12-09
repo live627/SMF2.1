@@ -1526,7 +1526,7 @@ function MessagePost()
 	$suggestOptions = array(
 		'id' => 'to',
 		'search_type' => 'member',
-		'width' => '90px',
+		'width' => '130px',
 		'button' => $txt['pm_add'],
 	);
 	create_control_autosuggest($suggestOptions);
@@ -1678,7 +1678,7 @@ function messagePostError($error_types, $to, $bcc)
 	$suggestOptions = array(
 		'id' => 'to',
 		'search_type' => 'member',
-		'width' => '90px',
+		'width' => '130px',
 		'value' => $to,
 		'button' => $txt['pm_add'],
 	);

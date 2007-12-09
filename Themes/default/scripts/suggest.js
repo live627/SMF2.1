@@ -104,7 +104,7 @@ function smfSuggest(sessionID, textID)
 				deleteCode = 'suggestHandle' + textID + '.deleteItem(' + curElement.memberid + ');';
 
 				// Parse in any variables.
-				newNode.innerHTML = newNode.innerHTML.replace(/\{MEMBER_NAME\}/g, curElement.innerHTML).replace(/'*\{MEMBER_ID\}'*/g, curElement.memberid).replace(/'*\{DELETE_MEMBER_URL\}'*/g, deleteCode);
+				newNode.innerHTML = newNode.innerHTML.replace(/\{MEMBER_NAME\}/g, curElement.innerHTML).replace(/'*(\{|%7B)MEMBER_ID(\}|%7D)'*/g, curElement.memberid).replace(/'*\{DELETE_MEMBER_URL\}'*/g, deleteCode);
 
 				newNode.style.visibility = 'visible';
 			}
