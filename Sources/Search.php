@@ -88,7 +88,7 @@ function PlushSearch1()
 		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
 		// Skip I, J, L, O, Q, S and Z.
-		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
+		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P', 'R'), range('T', 'Y'));
 
 		// Generate a new code.
 		$_SESSION['visual_verification_code'] = '';

@@ -1537,7 +1537,7 @@ function MessagePost()
 		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
 		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
 
-		// Skip I, J, L, O, Q, S and Z.
+		// Skip I, J, L, O and Q.
 		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
 
 		// Generate a new code.
