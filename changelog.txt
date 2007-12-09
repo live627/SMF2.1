@@ -15,6 +15,7 @@ December 2007
  + Allow users to pay a subscription to get enhanced board access. (subscriptions.php, Subscriptions-PayPal.php, ManagePaid.php, Admin.php, ScheduledTasks.php, upgrade, install, ManagePaid template, ManagePaid language file)
  + Add flood control to the search function and allow the admin to enable image verification for guests. (Search.php, ManageSearch.php, Search template, Search language files, upgrade, install)
  ! Don't allow search strings longer than 100 characters. (Search.php, Search template, Search language file)
+ ! Clean up the sessions table every so often. (ScheduledTasks.php)
 
 
 November 2007

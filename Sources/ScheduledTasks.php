@@ -1229,6 +1229,11 @@ function scheduled_weekly_maintenance()
 			AND start_time < " . (time() - 60) . "
 			AND payments_pending < 1", __FILE__, __LINE__);
 
+	// Some OS's don't seem to clean out their sessions.
+	$smfFunc['db_query']('', "
+		DELETE FROM {$db_prefix}sessions
+		WHERE last_update < " . (time() - 86400), __FILE__, __LINE__);
+
 	return true;
 }
 
