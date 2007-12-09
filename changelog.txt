@@ -16,6 +16,7 @@ December 2007
  + Add flood control to the search function and allow the admin to enable image verification for guests. (Search.php, ManageSearch.php, Search template, Search language files, upgrade, install)
  ! Don't allow search strings longer than 100 characters. (Search.php, Search template, Search language file)
  ! Clean up the sessions table every so often. (ScheduledTasks.php)
+ ! Clearing the log_online table was getting done too often thanks to a missing cache call. (Subs.php)
 
 
 November 2007

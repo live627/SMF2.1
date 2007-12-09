@@ -2413,7 +2413,7 @@ function writeLog($force = false)
 	$session_id = $user_info['is_guest'] ? 'ip' . $user_info['ip'] : session_id();
 
 	// Grab the last all-of-SMF-specific log_online deletion time.
-	$do_delete = cache_get_data('log_online-update', 10) < time() - 10;
+	$do_delete = cache_get_data('log_online-update', 30) < time() - 30;
 
 	// If the last click wasn't a long time ago, and there was a last click...
 	if (!empty($_SESSION['log_time']) && $_SESSION['log_time'] >= time() - $modSettings['lastActive'] * 20)
@@ -2424,6 +2424,9 @@ function writeLog($force = false)
 				DELETE FROM {$db_prefix}log_online
 				WHERE log_time < " . (time() - $modSettings['lastActive'] * 60) . "
 					AND session != '$session_id'", __FILE__, __LINE__);
+
+			// Cache when we did it last.
+			cache_put_data('log_online-update', time(), 30);
 		}
 
 		$smfFunc['db_query']('', "
