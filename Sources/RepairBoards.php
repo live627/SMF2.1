@@ -55,7 +55,7 @@ if (!defined('SMF'))
 function RepairBoards()
 {
 	global $db_prefix, $txt, $scripturl, $db_connection, $sc, $context, $sourcedir;
-	global $salvageCatID, $salvageBoardID, $smfFunc;
+	global $salvageCatID, $salvageBoardID, $smfFunc, $errorTests;
 
 	isAllowedTo('admin_forum');
 
@@ -75,12 +75,16 @@ function RepairBoards()
 	if (isset($_GET['fixErrors']))
 		checkSession('get');
 
+	// Will want this.
+	loadForumTests();
+
 	// Giant if/else. The first displays the forum errors if a variable is not set and asks
 	// if you would like to continue, the other fixes the errors.
 	if (!isset($_GET['fixErrors']))
 	{
 		$context['repair_errors'] = array();
 		$to_fix = findForumErrors();
+		$to_fix = array('missing_messages');
 		if (!empty($to_fix))
 		{
 			$_SESSION['repairboards_to_fix'] = $to_fix;
@@ -127,6 +131,9 @@ function RepairBoards()
 		// Get the MySQL version for future reference.
 		$mysql_version = $smfFunc['db_server_info']($db_connection);
 
+		// Actually do the fix.
+		findForumErrors(true);
+
 		if (empty($to_fix) || in_array('zero_topics', $to_fix) || in_array('zero_messages', $to_fix))
 		{
 			// We don't allow 0's in the IDs...
@@ -139,30 +146,6 @@ function RepairBoards()
 				UPDATE {$db_prefix}messages
 				SET id_msg = NULL
 				WHERE id_msg = 0", __FILE__, __LINE__);
-		}
-
-		// Remove all topics that have zero messages in the messages table.
-		if (empty($to_fix) || in_array('missing_messages', $to_fix))
-		{
-			$resultTopic = $smfFunc['db_query']('', "
-				SELECT t.id_topic, COUNT(m.id_msg) AS num_msg
-				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
-				GROUP BY t.id_topic
-				HAVING COUNT(m.id_msg) = 0", __FILE__, __LINE__);
-			if ($smfFunc['db_num_rows']($resultTopic) > 0)
-			{
-				$stupidTopics = array();
-				while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
-					$stupidTopics[] = $topicArray['id_topic'];
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}topics
-					WHERE id_topic IN (" . implode(',', $stupidTopics) . ')', __FILE__, __LINE__);
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_topics
-					WHERE id_topic IN (" . implode(',', $stupidTopics) . ')', __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($resultTopic);
 		}
 
 		// Fix all id_first_msg, id_last_msg in the topic table.
@@ -993,6 +976,19 @@ function loadForumTests()
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_topic
 				HAVING COUNT(m.id_msg) = 0",
+			// Remove all topics that have zero messages in the messages table.
+			'fix_collect' => array(
+				'index' => 'id_topic',
+				'process' => create_function('$topics', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}topics
+						WHERE id_topic IN (" . implode(\',\', $topics) . ")", __FILE__, __LINE__);
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_topics
+						WHERE id_topic IN (" . implode(\',\', $topics) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_messages', 'id_topic'),
 		),
 		'stats_topics' => array(
@@ -1465,7 +1461,7 @@ function loadForumTests()
 	);
 }
 
-function findForumErrors()
+function findForumErrors($do_fix = false)
 {
 	global $db_prefix, $context, $txt, $smfFunc, $errorTests;
 
@@ -1478,9 +1474,6 @@ function findForumErrors()
 	$_GET['step'] = empty($_GET['step']) ? 0 : (int) $_GET['step'];
 	$_GET['substep'] = empty($_GET['substep']) ? 0 : (int) $_GET['substep'];
 
-	// Load up all the tests.
-	loadForumTests();
-
 	// For all the defined error types do the necessary tests.
 	$current_step = -1;
 	foreach ($errorTests as $error_type => $test)
@@ -1490,6 +1483,13 @@ function findForumErrors()
 		// Already done this?
 		if ($_GET['step'] > $current_step)
 			continue;
+
+		// If we're fixing it but it ain't broke why try?
+		if ($do_fix && !in_array($error_type, $to_fix))
+		{
+			$_GET['step']++;
+			continue;
+		}
 
 		// Has it got substeps?
 		if (isset($test['substeps']))
@@ -1510,9 +1510,15 @@ function findForumErrors()
 			}
 		}
 
+		// What is the testing query (Changes if we are testing or fixing)
+		if (!$do_fix)
+			$test_query = 'check_query';
+		else
+			$test_query = isset($test['fix_query']) ? 'fix_query' : 'check_query';
+
 		// Do the test...
 		$request = $smfFunc['db_query']('',
-			$test['check_query'], __FILE__, __LINE__);
+			$test[$test_query], __FILE__, __LINE__);
 		$needs_fix = false;
 		// Does it need a fix?
 		if (!empty($test['check_type']) && $test['check_type'] == 'count')
@@ -1522,40 +1528,59 @@ function findForumErrors()
 
 		if ($needs_fix)
 		{
-			// Assume need to fix.
-			$found_errors = true;
-
 			// What about a message to the user?
-			if (isset($test['message']))
-				$context['repair_errors'][] = $txt[$test['message']];
-			// One per row!
-			elseif (isset($test['messages']))
+			if (!$do_fix)
 			{
-				while ($row = $smfFunc['db_fetch_assoc']($request))
+				// Assume need to fix.
+				$found_errors = true;
+
+				if (isset($test['message']))
+					$context['repair_errors'][] = $txt[$test['message']];
+				// One per row!
+				elseif (isset($test['messages']))
 				{
-					$variables = $test['messages'];
-					foreach ($variables as $k => $v)
+					while ($row = $smfFunc['db_fetch_assoc']($request))
 					{
-						if ($k == 0 && isset($txt[$v]))
-							$variables[$k] = $txt[$v];
-						elseif ($k > 0 && isset($row[$v]))
-							$variables[$k] = $row[$v];
+						$variables = $test['messages'];
+						foreach ($variables as $k => $v)
+						{
+							if ($k == 0 && isset($txt[$v]))
+								$variables[$k] = $txt[$v];
+							elseif ($k > 0 && isset($row[$v]))
+								$variables[$k] = $row[$v];
+						}
+						$context['repair_errors'][] = call_user_func_array('sprintf', $variables);
 					}
-					$context['repair_errors'][] = call_user_func_array('sprintf', $variables);
+				}
+				// A function to process?
+				elseif (isset($test['message_function']))
+				{
+					// Find out if there are actually errors.
+					$found_errors = false;
+					while ($row = $smfFunc['db_fetch_assoc']($request))
+						$found_errors |= $test['message_function']($row);
+				}
+
+				// Actually have something to fix?
+				if ($found_errors)
+					$to_fix[] = $error_type;
+			}
+			// We want to fix, we need to fix - so work out what exactly to do!
+			else
+			{
+				// Are we simply getting a collection of ids?
+				if (isset($test['fix_collect']))
+				{
+					$ids = array();
+					while ($row = $smfFunc['db_fetch_assoc']($request))
+						$ids[] = $row[$test['fix_collect']['index']];
+					if (!empty($ids))
+					{
+						// Fix it!
+						$test['fix_collect']['process']($ids);
+					}
 				}
 			}
-			// A function to process?
-			elseif (isset($test['message_function']))
-			{
-				// Find out if there are actually errors.
-				$found_errors = false;
-				while ($row = $smfFunc['db_fetch_assoc']($request))
-					$found_errors |= $test['message_function']($row);
-			}
-
-			// Actually have something to fix?
-			if ($found_errors)
-				$to_fix[] = $error_type;
 		}
 
 		// Free the result.
