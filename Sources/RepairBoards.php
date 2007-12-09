@@ -321,28 +321,6 @@ function RepairBoards()
 			$smfFunc['db_free_result']($resultBoards);
 		}
 
-		// Last step-make sure all non-guest posters still exist.
-		if (empty($to_fix) || in_array('missing_posters', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT m.id_msg
-				FROM {$db_prefix}messages AS m
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-				WHERE m.id_member != 0
-					AND mem.id_member IS NULL", __FILE__, __LINE__);
-			if ($smfFunc['db_num_rows']($result) > 0)
-			{
-				$guestMessages = array();
-				while ($row = $smfFunc['db_fetch_assoc']($result))
-					$guestMessages[] = $row['id_msg'];
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}messages
-					SET id_member = 0
-					WHERE id_msg IN (" . implode(',', $guestMessages) . ')', __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($result);
-		}
-
 		// Fix all boards that have a parent ID that cannot be found in the boards table.
 		if (empty($to_fix) || in_array('missing_parents', $to_fix))
 		{
@@ -1113,6 +1091,17 @@ function loadForumTests()
 					AND m.id_member != 0
 					AND m.id_msg BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				ORDER BY m.id_msg",
+			// Last step-make sure all non-guest posters still exist.
+			'fix_collect' => array(
+				'index' => 'id_msg',
+				'process' => create_function('$msgs', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						UPDATE {$db_prefix}messages
+						SET id_member = 0
+						WHERE id_msg IN (" . implode(\',\', $msgs) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_posters', 'id_msg', 'id_member'),
 		),
 		// Find boards with nonexistent parents.
