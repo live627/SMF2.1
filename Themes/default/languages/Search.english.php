@@ -23,6 +23,8 @@ $txt['search_orderby_large_first'] = 'Largest topics first';
 $txt['search_orderby_small_first'] = 'Smallest topics first';
 $txt['search_orderby_recent_first'] = 'Most recent topics first';
 $txt['search_orderby_old_first'] = 'Oldest topics first';
+$txt['search_visual_verification_label'] = 'Verification';
+$txt['search_visual_verification_desc'] = 'Please enter the code in the image above to use search.';
 
 $txt['search_specific_topic'] = 'Searching only posts in the topic';
 
@@ -76,6 +78,9 @@ $txt['search_force_index'] = 'Force the use of a search index';
 $txt['search_match_words'] = 'Match whole words only';
 $txt['search_max_results'] = 'Maximum results to show';
 $txt['search_max_results_disable'] = '(0: no limit)';
+$txt['search_floodcontrol_time'] = 'Time required between searches from same member';
+$txt['search_floodcontrol_time_desc'] = '(0 for no limit, in seconds)';
+$txt['search_enable_captcha'] = 'Require image verification on all guest searches';
 
 $txt['search_create_index'] = 'Create index';
 $txt['search_create_index_why'] = 'Why create a search index?';

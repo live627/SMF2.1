@@ -78,6 +78,21 @@ function PlushSearch1()
 		'name' => $txt['search']
 	);
 
+	$context['visual_verification'] = $user_info['is_guest'] && !empty($modSettings['search_enable_captcha']);
+	if ($context['visual_verification'])
+	{
+		$context['use_graphic_library'] = in_array('gd', get_loaded_extensions());
+		$context['verification_image_href'] = $scripturl . '?action=verificationcode;rand=' . md5(rand());
+
+		// Skip I, J, L, O, Q, S and Z.
+		$character_range = array_merge(range('A', 'H'), array('K', 'M', 'N', 'P'), range('R', 'Z'));
+
+		// Generate a new code.
+		$_SESSION['visual_verification_code'] = '';
+		for ($i = 0; $i < 5; $i++)
+			$_SESSION['visual_verification_code'] .= $character_range[array_rand($character_range)];
+	}
+
 	// If you got back from search2 by using the linktree, you get your original search parameters back.
 	if (isset($_REQUEST['params']))
 	{
@@ -220,8 +235,6 @@ function PlushSearch2()
 	global $scripturl, $modSettings, $sourcedir, $txt, $db_prefix, $db_connection;
 	global $user_info, $context, $options, $messages_request, $boards_can;
 	global $excludedWords, $participants, $smfFunc;
-
-	// !!! Add spam protection.
 
 	if (!empty($context['load_average']) && !empty($modSettings['loadavg_search']) && $context['load_average'] >= $modSettings['loadavg_search'])
 		fatal_lang_error('loadavg_search_disabled', false);
@@ -818,6 +831,15 @@ function PlushSearch2()
 	if (isset($context['search_params']['userspec']))
 		$context['search_params']['userspec'] = $smfFunc['htmlspecialchars']($context['search_params']['userspec']);
 
+	// Do we have captcha enabled?
+	if ($user_info['is_guest'] && !empty($modSettings['search_enable_captcha']))
+	{
+		// If we come from another search box tone down the error...
+		if (!isset($_REQUEST['visual_verification_code']))
+			$context['search_errors']['need_verification_code'] = true;
+		elseif (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code'])
+			$context['search_errors']['wrong_verification_code'] = true;
+	}
 
 	// *** Encode all search params
 
@@ -850,6 +872,8 @@ function PlushSearch2()
 		return PlushSearch1();
 	}
 
+	// Spam me not, Spam-a-lot?
+	spamProtection('search');
 
 /*	// !!! This doesn't seem too urgent anymore. Can we remove it?
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)

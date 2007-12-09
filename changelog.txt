@@ -13,6 +13,7 @@ December 2007
  ! Xml call for the jump to box wasn't doing the selected board correctly. (Xml.php)
  ! Upgrade was not continuing well from a long absence. (upgrade.php)
  + Allow users to pay a subscription to get enhanced board access. (subscriptions.php, Subscriptions-PayPal.php, ManagePaid.php, Admin.php, ScheduledTasks.php, upgrade, install, ManagePaid template, ManagePaid language file)
+ + Add flood control to the search function and allow the admin to enable image verification for guests. (Search.php, ManageSearch.php, Search template, Search language files, upgrade, install)
 
 
 November 2007

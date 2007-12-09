@@ -128,6 +128,10 @@ function EditSearchSettings($return_config = false)
 			array('check', 'simpleSearch'),
 			array('int', 'search_results_per_page'),
 			array('int', 'search_max_results', 'subtext' => $txt['search_max_results_disable']),
+		'',
+			// Some limitations.
+			array('int', 'search_floodcontrol_time', 'subtext' => $txt['search_floodcontrol_time_desc']),
+			array('check', 'search_enable_captcha'),
 	);
 
 	if ($return_config)

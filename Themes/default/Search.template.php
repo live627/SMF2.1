@@ -5,27 +5,11 @@ function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
+	if ($context['visual_verification'])
+		echo '
+		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
+
 	echo '
-	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		function selectBoards(ids)
-		{
-			var toggle = true;
-
-			for (i = 0; i < ids.length; i++)
-				toggle = toggle & document.forms.searchform["brd" + ids[i]].checked;
-
-			for (i = 0; i < ids.length; i++)
-				document.forms.searchform["brd" + ids[i]].checked = !toggle;
-		}
-
-		function expandCollapseBoards()
-		{
-			var current = document.getElementById("searchBoardsExpand").style.display != "none";
-
-			document.getElementById("searchBoardsExpand").style.display = current ? "none" : "";
-			document.getElementById("expandBoardsIcon").src = smf_images_url + (current ? "/expand.gif" : "/collapse.gif");
-		}
-	// ]]></script>
 	<form action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '" name="searchform" id="searchform">
 		<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
@@ -58,18 +42,51 @@ function template_main()
 	{
 		echo '
 					<b>', $txt['search_for'], ':</b><br />
-					<table border="0" cellpadding="5" cellspacing="0"><tr>
-						<td><input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" /></td>
-						<td>&nbsp;<input type="submit" name="submit" value="', $txt['search'], '" /></td>
-					</tr>';
+					<table border="0" cellpadding="2" cellspacing="0">
+						<tr>
+							<td>
+								<input type="text" name="search"', !empty($context['search_params']['search']) ? ' value="' . $context['search_params']['search'] . '"' : '', ' size="40" />
+							</td>
+							<td>
+								', $context['visual_verification'] ? '' : '&nbsp;<input type="submit" name="submit" value="' . $txt['search'] . '" />', '
+							</td>
+						</tr>';
 		if (empty($modSettings['search_simple_fulltext']))
 			echo '
-					<tr>
-						<td align="right" class="smalltext">', $txt['search_example'], '</td>
-						<td></td>
-					</tr>';
+						<tr>
+							<td align="right" class="smalltext">', $txt['search_example'], '</td>
+							<td></td>
+						</tr>';
 		echo '
-					</table><br /><br />
+					</table>';
+		if ($context['visual_verification'])
+		{
+			echo '
+					<div style="padding: 0.1em;">
+						<b>', $txt['search_visual_verification_label'], ':</b><br />';
+			if ($context['use_graphic_library'])
+				echo '
+						<img src="', $context['verification_image_href'], '" id="verification_image" alt="', $txt['search_visual_verification_desc'], '" />';
+			else
+				echo '
+						<img src="', $context['verification_image_href'], ';letter=1" id="verification_image_1" alt="', $txt['search_visual_verification_desc'], '" />
+						<img src="', $context['verification_image_href'], ';letter=2" id="verification_image_2" alt="', $txt['search_visual_verification_desc'], '" />
+						<img src="', $context['verification_image_href'], ';letter=3" id="verification_image_3" alt="', $txt['search_visual_verification_desc'], '" />
+						<img src="', $context['verification_image_href'], ';letter=4" id="verification_image_4" alt="', $txt['search_visual_verification_desc'], '" />
+						<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['search_visual_verification_desc'], '" />';
+			echo '
+						<div class="smalltext">
+							<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
+						</div>
+						<input type="text" name="visual_verification_code" size="30" />
+						<div class="smalltext">', $txt['search_visual_verification_desc'], '</div><br />
+						<div style="text-align: right;">
+							<input type="submit" name="submit" value="' . $txt['search'] . '" />
+						</div>
+					</div>';
+		}
+		echo '
+					<br />
 					<a href="', $scripturl, '?action=search;advanced" onclick="this.href += \';search=\' + escape(document.forms.searchform.search.value);">', $txt['search_advanced'], '</a>
 					<input type="hidden" name="advanced" value="0" />';
 	}
@@ -195,8 +212,38 @@ function template_main()
 					</fieldset> ';
 		}
 
+		// Require an image to be typed to save spamming?
+		if ($context['visual_verification'])
+		{
+			echo '
+					<div style="padding: 1em;">
+						<b>', $txt['search_visual_verification_label'], ':</b>
+							<div style="float: left;">';
+			if ($context['use_graphic_library'])
+				echo '
+								<img src="', $context['verification_image_href'], '" id="verification_image" alt="', $txt['search_visual_verification_desc'], '" />';
+			else
+				echo '
+								<img src="', $context['verification_image_href'], ';letter=1" id="verification_image_1" alt="', $txt['search_visual_verification_desc'], '" />
+								<img src="', $context['verification_image_href'], ';letter=2" id="verification_image_2" alt="', $txt['search_visual_verification_desc'], '" />
+								<img src="', $context['verification_image_href'], ';letter=3" id="verification_image_3" alt="', $txt['search_visual_verification_desc'], '" />
+								<img src="', $context['verification_image_href'], ';letter=4" id="verification_image_4" alt="', $txt['search_visual_verification_desc'], '" />
+								<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['search_visual_verification_desc'], '" />';
+			echo '
+							</div>
+							<div class="smalltext">	
+								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a><br />
+								<a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
+							</div><br />
+						<input type="text" name="visual_verification_code" size="30" />
+						<div class="smalltext">', $txt['search_visual_verification_desc'], '</div>
+					</div>';
+		}
+		else
+			echo '
+					<br />';
+
 		echo '
-					<br />
 					<div style="padding: 2px;"><input type="submit" name="submit" value="', $txt['search'], '" /></div>';
 	}
 
@@ -204,7 +251,34 @@ function template_main()
 				</td>
 			</tr>
 		</table>
-	</form>';
+	</form>
+
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function selectBoards(ids)
+		{
+			var toggle = true;
+
+			for (i = 0; i < ids.length; i++)
+				toggle = toggle & document.forms.searchform["brd" + ids[i]].checked;
+
+			for (i = 0; i < ids.length; i++)
+				document.forms.searchform["brd" + ids[i]].checked = !toggle;
+		}
+
+		function expandCollapseBoards()
+		{
+			var current = document.getElementById("searchBoardsExpand").style.display != "none";
+
+			document.getElementById("searchBoardsExpand").style.display = current ? "none" : "";
+			document.getElementById("expandBoardsIcon").src = smf_images_url + (current ? "/expand.gif" : "/collapse.gif");
+		}';
+
+	if ($context['visual_verification'])
+		echo '
+		captchaHandle = new smfCaptcha("', $context['verification_image_href'], '", ', $context['use_graphic_library'] ? 1 : 0, ');';
+
+	echo '
+	// ]]></script>';
 }
 
 function template_results()

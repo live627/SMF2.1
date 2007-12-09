@@ -204,6 +204,7 @@ $txt['pmWaitTime_broken'] = 'The last personal message from your IP was less tha
 $txt['reporttmWaitTime_broken'] = 'The last topic report from your IP was less than %d seconds ago. Please try again later.';
 $txt['sendtopcWaitTime_broken'] = 'The last topic sent from your IP was less than %d seconds ago. Please try again later.';
 $txt['sendmailWaitTime_broken'] = 'The last email sent from your IP was less than %d seconds ago. Please try again later.';
+$txt['searchWaitTime_broken'] = 'You last search was less than %d seconds ago. Please try again later.';
 
 $txt['email_missing_data'] = 'You must enter something in both the subject and message boxes.';
 
@@ -241,6 +242,7 @@ $txt['error_bad_bcc'] = 'One or more \'bcc\'-recipients could not be found.';
 $txt['error_form_already_submitted'] = 'You already submitted this post!  You might have accidently double clicked, or tried to refresh.';
 $txt['error_poll_few'] = 'You must have at least two choices!';
 $txt['error_wrong_verification_code'] = 'The letters you typed don\'t match the letters that were shown in the picture.';
+$txt['error_need_verification_code'] = 'Please enter the verification code below to continue to the results.';
 $txt['error_bad_file'] = 'Sorry but the file specified could not be opened: %1$s';
 $txt['error_bad_line'] = 'The line you specified is invalid.';
 
