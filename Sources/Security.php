@@ -185,7 +185,15 @@ function is_not_guest($message = '')
 
 	// Load the Login template and language file.
 	loadLanguage('Login');
-	loadTemplate('Login');
+
+	// Are we in wireless mode?
+	if (WIRELESS)
+		$context['sub_template'] = WIRELESS_PROTOCOL . '_login';
+	else
+	{
+		loadTemplate('Login');
+		$context['sub_template'] = 'kick_guest';
+	}
 
 	// Use the kick_guest sub template...
 	$context['kick_message'] = $message;

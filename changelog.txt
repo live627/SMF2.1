@@ -18,6 +18,7 @@ December 2007
  ! Clean up the sessions table every so often. (ScheduledTasks.php)
  ! Clearing the log_online table was getting done too often thanks to a missing cache call. (Subs.php)
  ! Begun work to make RepairBoards less repetative by rewriting the find error section into the now common array form. (RepairBoards.php)
+ ! When kicking guests in wireless mode, make sure to use the wireless login template. (Security.php)
 
 
 November 2007
