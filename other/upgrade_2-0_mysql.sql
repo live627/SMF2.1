@@ -1931,6 +1931,47 @@ ADD openid_uri text NOT NULL;
 --- Adding paid subscriptions.
 /******************************************************************************/
 
+---# Creating subscriptions table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}subscriptions(
+	id_subscribe mediumint(8) unsigned NOT NULL auto_increment,
+	name varchar(60) NOT NULL default '',
+	description tinytext NOT NULL,
+	cost text NOT NULL,
+	length varchar(6) NOT NULL default '',
+	id_group smallint(5) NOT NULL default '0',
+	add_groups varchar(40) NOT NULL default '',
+	active tinyint(3) NOT NULL default '1',
+	repeatable tinyint(3) NOT NULL default '0',
+	allow_partial tinyint(3) NOT NULL default '0',
+	reminder tinyint(3) NOT NULL default '0',
+	email_complete text NOT NULL,
+	PRIMARY KEY (id_subscribe),
+	KEY active (active)
+) TYPE=MyISAM{$db_collation};
+---#
+
+---# Creating log_subscribed table...
+CREATE TABLE IF NOT EXISTS {$db_prefix}log_subscribed(
+	id_sublog int(10) unsigned NOT NULL auto_increment,
+	id_subscribe mediumint(8) unsigned NOT NULL default '0',
+	id_member int(10) NOT NULL default '0',
+	old_id_group smallint(5) NOT NULL default '0',
+	start_time int(10) NOT NULL default '0',
+	end_time int(10) NOT NULL default '0',
+	status tinyint(3) NOT NULL default '0',
+	payments_pending tinyint(3) NOT NULL default '0',
+	pending_details text NOT NULL,
+	reminder_sent tinyint(3) NOT NULL default '0',
+	vendor_ref tinytext NOT NULL,
+	PRIMARY KEY (id_sublog),
+	UNIQUE KEY id_subscribe (id_subscribe, id_member),
+	KEY end_time (end_time),
+	KEY reminder_sent (reminder_sent),
+	KEY payments_pending (payments_pending),
+	KEY id_member (id_member)
+) TYPE=MyISAM{$db_collation};
+---#
+
 ---# Clean up any pre-2.0 mod settings.
 UPDATE {$db_prefix}settings
 SET variable = 'paid_currency_code'
@@ -2018,47 +2059,6 @@ if (isset($new_cols['pending_details']))
 		ADD COLUMN pending_details text NOT NULL");
 }
 ---}
----#
-
----# Creating subscriptions table...
-CREATE TABLE IF NOT EXISTS {$db_prefix}subscriptions(
-	id_subscribe mediumint(8) unsigned NOT NULL auto_increment,
-	name varchar(60) NOT NULL default '',
-	description tinytext NOT NULL,
-	cost text NOT NULL,
-	length varchar(6) NOT NULL default '',
-	id_group smallint(5) NOT NULL default '0',
-	add_groups varchar(40) NOT NULL default '',
-	active tinyint(3) NOT NULL default '1',
-	repeatable tinyint(3) NOT NULL default '0',
-	allow_partial tinyint(3) NOT NULL default '0',
-	reminder tinyint(3) NOT NULL default '0',
-	email_complete text NOT NULL,
-	PRIMARY KEY (id_subscribe),
-	KEY active (active)
-) TYPE=MyISAM{$db_collation};
----#
-
----# Creating log_subscribed table...
-CREATE TABLE IF NOT EXISTS {$db_prefix}log_subscribed(
-	id_sublog int(10) unsigned NOT NULL auto_increment,
-	id_subscribe mediumint(8) unsigned NOT NULL default '0',
-	id_member int(10) NOT NULL default '0',
-	old_id_group smallint(5) NOT NULL default '0',
-	start_time int(10) NOT NULL default '0',
-	end_time int(10) NOT NULL default '0',
-	status tinyint(3) NOT NULL default '0',
-	payments_pending tinyint(3) NOT NULL default '0',
-	pending_details text NOT NULL,
-	reminder_sent tinyint(3) NOT NULL default '0',
-	vendor_ref tinytext NOT NULL,
-	PRIMARY KEY (id_sublog),
-	UNIQUE KEY id_subscribe (id_subscribe, id_member),
-	KEY end_time (end_time),
-	KEY reminder_sent (reminder_sent),
-	KEY payments_pending (payments_pending),
-	KEY id_member (id_member)
-) TYPE=MyISAM{$db_collation};
 ---#
 
 ---# Confirming paid subscription keys are in place ...

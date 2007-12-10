@@ -299,328 +299,6 @@ function RepairBoards()
 			$smfFunc['db_free_result']($resultTopics);
 		}
 
-		// Fix all boards that have a cat ID that cannot be found in the cats table.
-		if (empty($to_fix) || in_array('missing_categories', $to_fix))
-		{
-			$resultBoards = $smfFunc['db_query']('', "
-				SELECT b.id_cat
-				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-				WHERE c.id_cat IS NULL
-				GROUP BY b.id_cat", __FILE__, __LINE__);
-			if ($smfFunc['db_num_rows']($resultBoards) > 0)
-				createSalvageArea();
-			while ($boardArray = $smfFunc['db_fetch_assoc']($resultBoards))
-			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}boards
-					SET id_cat = $salvageCatID
-					WHERE id_cat = $boardArray[id_cat]", __FILE__, __LINE__);
-
-			}
-			$smfFunc['db_free_result']($resultBoards);
-		}
-
-		// Fix all boards that have a parent ID that cannot be found in the boards table.
-		if (empty($to_fix) || in_array('missing_parents', $to_fix))
-		{
-			$resultParents = $smfFunc['db_query']('', "
-				SELECT b.id_parent
-				FROM {$db_prefix}boards AS b
-					LEFT JOIN {$db_prefix}boards AS p ON (p.id_board = b.id_parent)
-				WHERE b.id_parent != 0
-					AND (p.id_board IS NULL OR p.id_board = b.id_board)
-				GROUP BY b.id_parent", __FILE__, __LINE__);
-			if ($smfFunc['db_num_rows']($resultParents) > 0)
-				createSalvageArea();
-			while ($parentArray = $smfFunc['db_fetch_assoc']($resultParents))
-			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}boards
-					SET id_parent = $salvageBoardID, id_cat = $salvageCatID, child_level = 1
-					WHERE id_parent = $parentArray[id_parent]", __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($resultParents);
-		}
-
-		if (empty($to_fix) || in_array('missing_polls', $to_fix))
-		{
-			if (version_compare($mysql_version, '4.0.4') >= 0)
-			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}topics AS t
-						LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-					SET t.id_poll = 0
-					WHERE t.id_poll != 0
-						AND p.id_poll IS NULL", __FILE__, __LINE__);
-			}
-			else
-			{
-				$resultPolls = $smfFunc['db_query']('', "
-					SELECT t.id_poll
-					FROM {$db_prefix}topics AS t
-						LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-					WHERE t.id_poll != 0
-						AND p.id_poll IS NULL
-					GROUP BY t.id_poll", __FILE__, __LINE__);
-				$polls = array();
-				while ($rowPolls = $smfFunc['db_fetch_assoc']($resultPolls))
-					$polls[] = $rowPolls['id_poll'];
-				$smfFunc['db_free_result']($resultPolls);
-
-				if (!empty($polls))
-					$smfFunc['db_query']('', "
-						UPDATE {$db_prefix}topics
-						SET id_poll = 0
-						WHERE id_poll IN (" . implode(', ', $polls) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_calendar_topics', $to_fix))
-		{
-			if (version_compare($mysql_version, '4.0.4') >= 0)
-			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}calendar AS cal
-						LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
-					SET cal.id_board = 0, cal.id_topic = 0
-					WHERE cal.id_topic != 0
-						AND t.id_topic IS NULL", __FILE__, __LINE__);
-			}
-			else
-			{
-				$resultEvents = $smfFunc['db_query']('', "
-					SELECT cal.id_topic
-					FROM {$db_prefix}calendar AS cal
-						LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
-					WHERE cal.id_topic != 0
-						AND t.id_topic IS NULL
-					GROUP BY cal.id_topic", __FILE__, __LINE__);
-				$events = array();
-				while ($rowEvents = $smfFunc['db_fetch_assoc']($resultEvents))
-					$events[] = $rowEvents['id_topic'];
-				$smfFunc['db_free_result']($resultEvents);
-
-				if (!empty($events))
-					$smfFunc['db_query']('', "
-						UPDATE {$db_prefix}calendar
-						SET id_topic = 0, id_board = 0
-						WHERE id_topic IN (" . implode(', ', $events) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_log_topics', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lt.id_topic
-				FROM {$db_prefix}log_topics AS lt
-					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lt.id_topic)
-				WHERE t.id_topic IS NULL
-				GROUP BY lt.id_topic", __FILE__, __LINE__);
-			$topics = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$topics[] = $row['id_topic'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($topics))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_topics
-					WHERE id_topic IN (" . implode(', ', $topics) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_log_topics_members', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lt.id_member
-				FROM {$db_prefix}log_topics AS lt
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lt.id_member)
-				WHERE mem.id_member IS NULL
-				GROUP BY lt.id_member", __FILE__, __LINE__);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($members))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_topics
-					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_log_boards', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lb.id_board
-				FROM {$db_prefix}log_boards AS lb
-					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = lb.id_board)
-				WHERE b.id_board IS NULL
-				GROUP BY lb.id_board", __FILE__, __LINE__);
-			$boards = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$boards[] = $row['id_board'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($boards))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_boards
-					WHERE id_board IN (" . implode(', ', $boards) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_log_boards_members', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lb.id_member
-				FROM {$db_prefix}log_boards AS lb
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lb.id_member)
-				WHERE mem.id_member IS NULL
-				GROUP BY lb.id_member", __FILE__, __LINE__);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($members))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_boards
-					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_log_mark_read', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lmr.id_board
-				FROM {$db_prefix}log_mark_read AS lmr
-					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = lmr.id_board)
-				WHERE b.id_board IS NULL
-				GROUP BY lmr.id_board", __FILE__, __LINE__);
-			$boards = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$boards[] = $row['id_board'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($boards))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_mark_read
-					WHERE id_board IN (" . implode(', ', $boards) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_log_mark_read_members', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lmr.id_member
-				FROM {$db_prefix}log_mark_read AS lmr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lmr.id_member)
-				WHERE mem.id_member IS NULL
-				GROUP BY lmr.id_member", __FILE__, __LINE__);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($members))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_mark_read
-					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_pms', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT pmr.id_pm
-				FROM {$db_prefix}pm_recipients AS pmr
-					LEFT JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
-				WHERE pm.id_pm IS NULL
-				GROUP BY pmr.id_pm", __FILE__, __LINE__);
-			$pms = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$pms[] = $row['id_pm'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($pms))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}pm_recipients
-					WHERE id_pm IN (" . implode(', ', $pms) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_recipients', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT pmr.id_member
-				FROM {$db_prefix}pm_recipients AS pmr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
-				WHERE pmr.id_member != 0
-					AND mem.id_member IS NULL
-				GROUP BY pmr.id_member", __FILE__, __LINE__);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($members))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}pm_recipients
-					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_senders', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT pm.id_pm
-				FROM {$db_prefix}personal_messages AS pm
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
-				WHERE pm.id_member_from != 0
-					AND mem.id_member IS NULL", __FILE__, __LINE__);
-			if ($smfFunc['db_num_rows']($result) > 0)
-			{
-				$guestMessages = array();
-				while ($row = $smfFunc['db_fetch_assoc']($result))
-					$guestMessages[] = $row['id_pm'];
-
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}personal_messages
-					SET id_member_from = 0
-					WHERE id_pm IN (" . implode(',', $guestMessages) . ')', __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($result);
-		}
-
-		if (empty($to_fix) || in_array('missing_notify_members', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT ln.id_member
-				FROM {$db_prefix}log_notify AS ln
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
-				WHERE mem.id_member IS NULL
-				GROUP BY ln.id_member", __FILE__, __LINE__);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($members))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_notify
-					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
-			}
-		}
-
 		if (empty($to_fix) || in_array('missing_cached_subject', $to_fix))
 		{
 			$request = $smfFunc['db_query']('', "
@@ -653,152 +331,6 @@ function RepairBoards()
 						(word, id_topic)
 					VALUES (" . implode('),
 						(', $insertRows) . ")", __FILE__, __LINE__);
-		}
-
-		if (empty($to_fix) || in_array('missing_topic_for_cache', $to_fix))
-		{
-			$request = $smfFunc['db_query']('', "
-				SELECT lss.id_topic
-				FROM {$db_prefix}log_search_subjects AS lss
-					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lss.id_topic)
-				WHERE t.id_topic IS NULL
-				GROUP BY lss.id_topic", __FILE__, __LINE__);
-			$deleteTopics = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$deleteTopics[] = $row['id_topic'];
-			$smfFunc['db_free_result']($request);
-
-			if (!empty($deleteTopics))
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_search_subjects
-					WHERE id_topic IN (" . implode(', ', $deleteTopics) . ')', __FILE__, __LINE__);
-		}
-
-		if (empty($to_fix) || in_array('missing_member_vote', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lp.id_member
-				FROM {$db_prefix}log_polls AS lp
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lp.id_member)
-				WHERE mem.id_member IS NULL
-					AND lp.id_member > 0
-				GROUP BY lp.id_member", __FILE__, __LINE__);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($members))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_polls
-					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('missing_log_poll_vote', $to_fix))
-		{
-			$request = $smfFunc['db_query']('', "
-				SELECT lp.id_poll
-				FROM {$db_prefix}log_polls AS lp
-					LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = lp.id_poll)
-				WHERE p.id_poll IS NULL
-				GROUP BY lp.id_poll", __FILE__, __LINE__);
-			$polls = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$polls[] = $row['id_poll'];
-			$smfFunc['db_free_result']($request);
-
-			if (!empty($polls))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_polls
-					WHERE id_poll IN (" . implode(', ', $polls) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('report_missing_comments', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lr.id_report
-				FROM {$db_prefix}log_reported AS lr
-					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.id_report = lr.id_report)
-				WHERE lrc.id_report IS NULL
-				GROUP BY lr.id_report", __FILE__, __LINE__);
-			$reports = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$reports[] = $row['id_report'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($reports))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_reported
-					WHERE id_report IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('comments_missing_report', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lrc.id_report
-				FROM {$db_prefix}log_reported_comments AS lrc
-					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.id_report = lrc.id_report)
-				WHERE lr.id_report IS NULL
-				GROUP BY lrc.id_report", __FILE__, __LINE__);
-			$reports = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$reports[] = $row['id_report'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($reports))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_reported_comments
-					WHERE id_report IN (" . implode(', ', $reports) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('group_request_missing_member', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lgr.id_member
-				FROM {$db_prefix}log_group_requests AS lgr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
-				WHERE mem.id_member IS NULL
-				GROUP BY lgr.id_member", __FILE__, __LINE__);
-			$members = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$members[] = $row['id_member'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($members))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_group_requests
-					WHERE id_member IN (" . implode(', ', $members) . ")", __FILE__, __LINE__);
-			}
-		}
-
-		if (empty($to_fix) || in_array('group_request_missing_group', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT lgr.id_group
-				FROM {$db_prefix}log_group_requests AS lgr
-					LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
-				WHERE mg.id_group IS NULL
-				GROUP BY lgr.id_group", __FILE__, __LINE__);
-			$groups = array();
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$groups[] = $row['id_group'];
-			$smfFunc['db_free_result']($result);
-
-			if (!empty($groups))
-			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_group_requests
-					WHERE id_group IN (" . implode(', ', $groups) . ")", __FILE__, __LINE__);
-			}
 		}
 
 		updateSettings(array(
@@ -1073,6 +605,17 @@ function loadForumTests()
 					LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 				WHERE c.id_cat IS NULL
 				ORDER BY b.id_cat, b.id_board",
+			'fix_collect' => array(
+				'index' => 'id_cat',
+				'process' => create_function('$cats', '
+					global $smfFunc, $db_prefix, $salvageCatID;
+					createSalvageArea();
+					$smfFunc[\'db_query\'](\'\', "
+						UPDATE {$db_prefix}boards
+						SET id_cat = $salvageCatID
+						WHERE id_cat IN (" . implode(\',\', $cats)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_categories', 'id_board', 'id_cat'),
 		),
 		// Find messages with nonexistent members.
@@ -1113,6 +656,17 @@ function loadForumTests()
 				WHERE b.id_parent != 0
 					AND (p.id_board IS NULL OR p.id_board = b.id_board)
 				ORDER BY b.id_parent, b.id_board",
+			'fix_collect' => array(
+				'index' => 'id_parent',
+				'process' => create_function('$parents', '
+					global $smfFunc, $db_prefix, $salvageBoardID, $salvageCatID;
+					createSalvageArea();
+					$smfFunc[\'db_query\'](\'\', "
+						UPDATE {$db_prefix}boards
+						SET id_parent = $salvageBoardID, id_cat = $salvageCatID, child_level = 1
+						WHERE id_parent IN (" . implode(\',\', $parents)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_parents', 'id_board', 'id_parent'),
 		),
 		'missing_polls' => array(
@@ -1130,6 +684,16 @@ function loadForumTests()
 					AND t.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND p.id_poll IS NULL
 				GROUP BY t.id_poll",
+			'fix_collect' => array(
+				'index' => 'id_poll',
+				'process' => create_function('$polls', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						UPDATE {$db_prefix}topics
+						SET id_poll = 0
+						WHERE id_poll IN (" . implode(\',\', $polls)) . ")", __FILE__, __LINE__);
+				'),
+			),			
 			'messages' => array('repair_missing_polls', 'id_topic', 'id_poll'),
 		),
 		'missing_calendar_topics' => array(
@@ -1147,6 +711,16 @@ function loadForumTests()
 					AND cal.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND t.id_topic IS NULL
 				ORDER BY cal.id_topic",
+			'fix_collect' => array(
+				'index' => 'id_topic',
+				'process' => create_function('$events', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						UPDATE {$db_prefix}calendar
+						SET id_topic = 0, id_board = 0
+						WHERE id_topic IN (" . implode(\',\', $events)) . ")", __FILE__, __LINE__);
+				'),
+			),		
 			'messages' => array('repair_missing_calendar_topics', 'id_event', 'id_topic'),
 		),
 		'missing_log_topics' => array(
@@ -1162,6 +736,15 @@ function loadForumTests()
 					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lt.id_topic)
 				WHERE t.id_topic IS NULL
 					AND lt.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}",
+			'fix_collect' => array(
+				'index' => 'id_topic',
+				'process' => create_function('$topics', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_topics
+						WHERE id_topic IN (" . implode(\',\', $topics)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_topics', 'id_topic'),
 		),
 		'missing_log_topics_members' => array(
@@ -1178,6 +761,15 @@ function loadForumTests()
 				WHERE mem.id_member IS NULL
 					AND lt.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lt.id_member",
+			'fix_collect' => array(
+				'index' => 'id_member',
+				'process' => create_function('$members', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_topics
+						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_topics_members', 'id_member'),
 		),
 		'missing_log_boards' => array(
@@ -1194,6 +786,15 @@ function loadForumTests()
 				WHERE b.id_board IS NULL
 					AND lb.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lb.id_board",
+			'fix_collect' => array(
+				'index' => 'id_board',
+				'process' => create_function('$boards', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_boards
+						WHERE id_board IN (" . implode(\',\', $boards)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_boards', 'id_board'),
 		),
 		'missing_log_boards_members' => array(
@@ -1210,6 +811,15 @@ function loadForumTests()
 				WHERE mem.id_member IS NULL
 					AND lb.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lb.id_member",
+			'fix_collect' => array(
+				'index' => 'id_member',
+				'process' => create_function('$members', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_boards
+						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_boards_members', 'id_member'),
 		),
 		'missing_log_mark_read' => array(
@@ -1226,6 +836,15 @@ function loadForumTests()
 				WHERE b.id_board IS NULL
 					AND lmr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lmr.id_board",
+			'fix_collect' => array(
+				'index' => 'id_board',
+				'process' => create_function('$boards', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_mark_read
+						WHERE id_board IN (" . implode(\',\', $boards)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_mark_read', 'id_board'),
 		),
 		'missing_log_mark_read_members' => array(
@@ -1242,6 +861,15 @@ function loadForumTests()
 				WHERE mem.id_member IS NULL
 					AND lmr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY lmr.id_member",
+			'fix_collect' => array(
+				'index' => 'id_member',
+				'process' => create_function('$members', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_mark_read
+						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_mark_read_members', 'id_member'),
 		),
 		'missing_pms' => array(
@@ -1258,6 +886,15 @@ function loadForumTests()
 				WHERE pm.id_pm IS NULL
 					AND pmr.id_pm BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY pmr.id_pm",
+			'fix_collect' => array(
+				'index' => 'id_pm',
+				'process' => create_function('$pms', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}pm_recipients
+						WHERE id_pm IN (" . implode(\',\', $pms)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_pms', 'id_pm'),
 		),
 		'missing_recipients' => array(
@@ -1275,6 +912,15 @@ function loadForumTests()
 					AND pmr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL
 				GROUP BY pmr.id_member",
+			'fix_collect' => array(
+				'index' => 'id_member',
+				'process' => create_function('$members', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}pm_recipients
+						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+				'),
+			),	
 			'messages' => array('repair_missing_recipients', 'id_member'),
 		),
 		'missing_senders' => array(
@@ -1291,6 +937,16 @@ function loadForumTests()
 				WHERE pm.id_member_from != 0
 					AND pm.id_pm BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL",
+			'fix_collect' => array(
+				'index' => 'id_pm',
+				'process' => create_function('$guestMessages', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						UPDATE {$db_prefix}personal_messages
+						SET id_member_from = 0
+						WHERE id_pm IN (" . implode(\',\', $guestMessages)) . ")", __FILE__, __LINE__);
+				'),
+			),	
 			'messages' => array('repair_missing_senders', 'id_pm', 'id_member_from'),
 		),
 		'missing_notify_members' => array(
@@ -1307,6 +963,15 @@ function loadForumTests()
 				WHERE ln.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL
 				GROUP BY ln.id_member",
+			'fix_collect' => array(
+				'index' => 'id_member',
+				'process' => create_function('$members', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_notify
+						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+				'),
+			),		
 			'messages' => array('repair_missing_notify_members', 'id_member'),
 		),
 		'missing_cached_subject' => array(
@@ -1343,11 +1008,20 @@ function loadForumTests()
 					FROM {$db_prefix}log_search_subjects"
 			),
 			'check_query' => "
-				SELECT lss.word
+				SELECT lss.id_topic, lss.word
 				FROM {$db_prefix}log_search_subjects AS lss
 					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = lss.id_topic)
 				WHERE lss.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND t.id_topic IS NULL",
+			'fix_collect' => array(
+				'index' => 'id_topic',
+				'process' => create_function('$deleteTopics', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_search_subjects
+						WHERE id_topic IN (" . implode(\',\', $deleteTopics)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_topic_for_cache', 'word'),
 		),
 		'missing_member_vote' => array(
@@ -1365,6 +1039,15 @@ function loadForumTests()
 					AND lp.id_member > 0
 					AND mem.id_member IS NULL
 				GROUP BY lp.id_member",
+			'fix_collect' => array(
+				'index' => 'id_member',
+				'process' => create_function('$members', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_polls
+						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_poll_member', 'id_poll', 'id_member'),
 		),
 		'missing_log_poll_vote' => array(
@@ -1381,6 +1064,15 @@ function loadForumTests()
 				WHERE lp.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND p.id_poll IS NULL
 				GROUP BY lp.id_poll",
+			'fix_collect' => array(
+				'index' => 'id_poll',
+				'process' => create_function('$polls', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_polls
+						WHERE id_poll IN (" . implode(\',\', $polls)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_missing_log_poll_vote', 'id_member', 'id_poll'),
 		),
 		'report_missing_comments' => array(
@@ -1397,6 +1089,15 @@ function loadForumTests()
 				WHERE lr.id_report BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lrc.id_report IS NULL
 				GROUP BY lr.id_report",
+			'fix_collect' => array(
+				'index' => 'id_report',
+				'process' => create_function('$reports', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_reported
+						WHERE id_report IN (" . implode(\',\', $reports)) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_report_missing_comments', 'id_report', 'subject'),
 		),
 		'comments_missing_report' => array(
@@ -1413,6 +1114,15 @@ function loadForumTests()
 				WHERE lrc.id_report BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lr.id_report IS NULL
 				GROUP BY lrc.id_report",
+			'fix_collect' => array(
+				'index' => 'id_report',
+				'process' => create_function('$reports', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_reported_comments
+						WHERE id_report IN (" . implode(\',\', $reports)) . ")", __FILE__, __LINE__);
+				'),
+			),	
 			'messages' => array('repair_comments_missing_report', 'id_report', 'membername'),
 		),
 		'group_request_missing_member' => array(
@@ -1429,6 +1139,15 @@ function loadForumTests()
 				WHERE lgr.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mem.id_member IS NULL
 				GROUP BY lgr.id_member",
+			'fix_collect' => array(
+				'index' => 'id_member',
+				'process' => create_function('$members', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_group_requests
+						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_group_request_missing_member', 'id_member'),
 		),
 		'group_request_missing_group' => array(
@@ -1445,6 +1164,15 @@ function loadForumTests()
 				WHERE lgr.id_group BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND mg.id_group IS NULL
 				GROUP BY lgr.id_group",
+			'fix_collect' => array(
+				'index' => 'id_group',
+				'process' => create_function('$groups', '
+					global $smfFunc, $db_prefix;
+					$smfFunc[\'db_query\'](\'\', "
+						DELETE FROM {$db_prefix}log_group_requests
+						WHERE id_group IN (" . implode(\',\', $groups) . ")", __FILE__, __LINE__);
+				'),
+			),
 			'messages' => array('repair_group_request_missing_group', 'id_group'),
 		),
 	);
@@ -1593,6 +1321,14 @@ function findForumErrors($do_fix = false)
 
 		$to_fix = array_unique($to_fix);
 
+		// If we're doing fixes and this needed a fix and we're all done then don't do it again.
+		if ($do_fix)
+		{
+			$key = array_search($error_type, $to_fix);
+			if ($key !== false && isset($to_fix[$key]))
+				unset($to_fix[$key]);
+		}
+	
 		// Are we done?
 		pauseRepairProcess($to_fix);
 	}
