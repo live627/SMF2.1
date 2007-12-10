@@ -134,20 +134,6 @@ function RepairBoards()
 		// Actually do the fix.
 		findForumErrors(true);
 
-		if (empty($to_fix) || in_array('zero_topics', $to_fix) || in_array('zero_messages', $to_fix))
-		{
-			// We don't allow 0's in the IDs...
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}topics
-				SET id_topic = NULL
-				WHERE id_topic = 0", __FILE__, __LINE__);
-
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}messages
-				SET id_msg = NULL
-				WHERE id_msg = 0", __FILE__, __LINE__);
-		}
-
 		// Fix all id_first_msg, id_last_msg in the topic table.
 		if (empty($to_fix) || in_array('stats_topics', $to_fix))
 		{
@@ -399,6 +385,17 @@ function loadForumTests()
 {
 	global $smfFunc, $db_prefix, $errorTests;
 
+	/* Here this array is defined like so:
+		string check_query:	Query to be executed when testing if errors exist.
+		string check_type:	Defines how it knows if a problem was found. If set to count looks for the first variable from check_query
+					being > 0. Anything else it looks for some results. If not set assumes you want results.
+		string fix_it_query:	When doing fixes if an error was detected this query is executed to "fix" it.
+		string fix_query:	The query to execute to get data when doing a fix. If not set check_query is used again.
+		array fix_collect:	This array is used if the fix is basically gathering all broken ids and then doing something with it.
+			- string index:		The value returned from the main query and passed to the processing function.
+			- process:		A function passed an array of ids to execute the fix on.
+	*/
+
 	// This great array contains all of our error checks, fixes, etc etc etc.
 	$errorTests = array(
 		// Make a last-ditch-effort check to get rid of topics with zeros..
@@ -408,7 +405,7 @@ function loadForumTests()
 				FROM {$db_prefix}topics
 				WHERE id_topic = 0",
 			'check_type' => 'count',
-			'fix_query' => "
+			'fix_it_query' => "
 				UPDATE {$db_prefix}topics
 				SET id_topic = NULL
 				WHERE id_topic = 0",
@@ -421,7 +418,7 @@ function loadForumTests()
 				FROM {$db_prefix}messages
 				WHERE id_msg = 0",
 			'check_type' => 'count',
-			'fix_query' => "
+			'fix_it_query' => "
 				UPDATE {$db_prefix}messages
 				SET id_msg = NULL
 				WHERE id_msg = 0",
@@ -1297,6 +1294,10 @@ function findForumErrors($do_fix = false)
 						$test['fix_collect']['process']($ids);
 					}
 				}
+				// Simply executing a fix it query?
+				if (isset($test['fix_it_query']))
+					$smfFunc['db_query']('',
+						$test['fix_it_query'], __FILE__, __LINE__);
 			}
 		}
 
