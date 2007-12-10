@@ -84,7 +84,7 @@ function RepairBoards()
 	{
 		$context['repair_errors'] = array();
 		$to_fix = findForumErrors();
-		$to_fix = array('missing_messages');
+
 		if (!empty($to_fix))
 		{
 			$_SESSION['repairboards_to_fix'] = $to_fix;
@@ -613,7 +613,7 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}boards
 						SET id_cat = $salvageCatID
-						WHERE id_cat IN (" . implode(\',\', $cats)) . ")", __FILE__, __LINE__);
+						WHERE id_cat IN (" . implode(\',\', $cats) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_categories', 'id_board', 'id_cat'),
@@ -664,7 +664,7 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}boards
 						SET id_parent = $salvageBoardID, id_cat = $salvageCatID, child_level = 1
-						WHERE id_parent IN (" . implode(\',\', $parents)) . ")", __FILE__, __LINE__);
+						WHERE id_parent IN (" . implode(\',\', $parents) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_parents', 'id_board', 'id_parent'),
@@ -691,7 +691,7 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}topics
 						SET id_poll = 0
-						WHERE id_poll IN (" . implode(\',\', $polls)) . ")", __FILE__, __LINE__);
+						WHERE id_poll IN (" . implode(\',\', $polls) . ")", __FILE__, __LINE__);
 				'),
 			),			
 			'messages' => array('repair_missing_polls', 'id_topic', 'id_poll'),
@@ -718,7 +718,7 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}calendar
 						SET id_topic = 0, id_board = 0
-						WHERE id_topic IN (" . implode(\',\', $events)) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN (" . implode(\',\', $events) . ")", __FILE__, __LINE__);
 				'),
 			),		
 			'messages' => array('repair_missing_calendar_topics', 'id_event', 'id_topic'),
@@ -742,7 +742,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_topics
-						WHERE id_topic IN (" . implode(\',\', $topics)) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN (" . implode(\',\', $topics) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_topics', 'id_topic'),
@@ -767,7 +767,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_topics
-						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_topics_members', 'id_member'),
@@ -792,7 +792,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_boards
-						WHERE id_board IN (" . implode(\',\', $boards)) . ")", __FILE__, __LINE__);
+						WHERE id_board IN (" . implode(\',\', $boards) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_boards', 'id_board'),
@@ -817,7 +817,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_boards
-						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_boards_members', 'id_member'),
@@ -842,7 +842,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_mark_read
-						WHERE id_board IN (" . implode(\',\', $boards)) . ")", __FILE__, __LINE__);
+						WHERE id_board IN (" . implode(\',\', $boards) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_mark_read', 'id_board'),
@@ -867,7 +867,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_mark_read
-						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_mark_read_members', 'id_member'),
@@ -892,7 +892,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}pm_recipients
-						WHERE id_pm IN (" . implode(\',\', $pms)) . ")", __FILE__, __LINE__);
+						WHERE id_pm IN (" . implode(\',\', $pms) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_pms', 'id_pm'),
@@ -918,7 +918,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}pm_recipients
-						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
 				'),
 			),	
 			'messages' => array('repair_missing_recipients', 'id_member'),
@@ -944,7 +944,7 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}personal_messages
 						SET id_member_from = 0
-						WHERE id_pm IN (" . implode(\',\', $guestMessages)) . ")", __FILE__, __LINE__);
+						WHERE id_pm IN (" . implode(\',\', $guestMessages) . ")", __FILE__, __LINE__);
 				'),
 			),	
 			'messages' => array('repair_missing_senders', 'id_pm', 'id_member_from'),
@@ -969,7 +969,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_notify
-						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
 				'),
 			),		
 			'messages' => array('repair_missing_notify_members', 'id_member'),
@@ -1019,7 +1019,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_search_subjects
-						WHERE id_topic IN (" . implode(\',\', $deleteTopics)) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN (" . implode(\',\', $deleteTopics) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_topic_for_cache', 'word'),
@@ -1045,7 +1045,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_polls
-						WHERE id_member IN (" . implode(\',\', $members)) . ")", __FILE__, __LINE__);
+						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_poll_member', 'id_poll', 'id_member'),
@@ -1070,7 +1070,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_polls
-						WHERE id_poll IN (" . implode(\',\', $polls)) . ")", __FILE__, __LINE__);
+						WHERE id_poll IN (" . implode(\',\', $polls) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_missing_log_poll_vote', 'id_member', 'id_poll'),
@@ -1095,7 +1095,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_reported
-						WHERE id_report IN (" . implode(\',\', $reports)) . ")", __FILE__, __LINE__);
+						WHERE id_report IN (" . implode(\',\', $reports) . ")", __FILE__, __LINE__);
 				'),
 			),
 			'messages' => array('repair_report_missing_comments', 'id_report', 'subject'),
@@ -1120,7 +1120,7 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_reported_comments
-						WHERE id_report IN (" . implode(\',\', $reports)) . ")", __FILE__, __LINE__);
+						WHERE id_report IN (" . implode(\',\', $reports) . ")", __FILE__, __LINE__);
 				'),
 			),	
 			'messages' => array('repair_comments_missing_report', 'id_report', 'membername'),
