@@ -90,14 +90,6 @@ $txt['attachmentdir_size_not_set'] = 'No maximum directory size is currently set
 $txt['attachment_delete_admin'] = '[attachment deleted by admin]';
 $txt['live'] = 'Live from Simple Machines...';
 $txt['remove_all'] = 'Remove All';
-$txt['database_optimize'] = 'Optimize Database';
-$txt['database_numb_tables'] = 'Your database contains %d tables.';
-$txt['database_optimize_attempt'] = 'Attempting to optimize your database...';
-$txt['database_optimizing'] = 'Optimizing %1$s... %2$01.2f kb optimized.';
-$txt['database_already_optimized'] = 'All of the tables were already optimized.';
-$txt['database_opimize_unneeded'] = 'It wasn\'t necessary to optimize any tables.';
-$txt['database_optimized'] = ' table(s) optimized.';
-$txt['database_no_id'] = 'has a non-existent member ID';
 $txt['approve_new_members'] = 'Admin must approve all new members';
 $txt['agreement_not_writable'] = 'Warning - agreement.txt is not writable, any changes you make will NOT be saved.';
 
@@ -207,39 +199,6 @@ $txt['ban_log_remove_selected'] = 'Remove selected';
 $txt['ban_log_remove_selected_confirm'] = 'Are you sure you want to delete all selected ban log entries?';
 $txt['ban_no_triggers'] = 'No ban triggers';
 
-$txt['apply_filter'] = 'Apply Filter';
-$txt['applying_filter'] = 'Applying Filter';
-$txt['filter_only_member'] = 'Only show the error messages of this member';
-$txt['filter_only_ip'] = 'Only show the error messages of this IP address';
-$txt['filter_only_session'] = 'Only show the error messages of this session';
-$txt['filter_only_url'] = 'Only show the error messages of this URL';
-$txt['filter_only_message'] = 'Only show the errors with the same message';
-$txt['session'] = 'Session';
-$txt['error_url'] = 'URL of page causing the error';
-$txt['error_message'] = 'Error message';
-$txt['clear_filter'] = 'Clear filter';
-$txt['remove_selection'] = 'Remove Selection';
-$txt['remove_filtered_results'] = 'Remove All Filtered Results';
-$txt['sure_about_errorlog_remove'] = 'Are you sure you want to remove all error messages?';
-$txt['reverse_direction'] = 'Reverse chronological order of list';
-$txt['error_type'] = 'Type of error';
-$txt['filter_only_type'] = 'Only show the errors of this type';
-$txt['filter_only_file'] = 'Only show the errors from this file';
-
-$txt['errortype_all'] = 'All errors';
-$txt['errortype_general'] = 'General';
-$txt['errortype_general_desc'] = 'General errors that have not been categorized into another type';
-$txt['errortype_critical'] = '<span style="color:red;">Critical</span>';
-$txt['errortype_critical_desc'] = 'Critical errors.  These should be taken care of as quickly as possible.  Ignoring these errors can result in your forum failing and possibly security issues';
-$txt['errortype_database'] = 'Database';
-$txt['errortype_database_desc'] = 'Errors caused by faulty queries.  These should be looked at and reported to the SMF team.';
-$txt['errortype_undefined_vars'] = 'Undefined';
-$txt['errortype_undefined_vars_desc'] = 'Errors caused by the use of undefined variables, indexes, or offsets.';
-$txt['errortype_template'] = 'Template';
-$txt['errortype_template_desc'] = 'Errors related to the loading of templates.';
-$txt['errortype_user'] = 'User';
-$txt['errortype_user_desc'] = 'Errors resulting from user errors.  Includes failed passwords, trying to login when banned, and trying to do an action for which they do not have permission.';
-
 $txt['settings_not_writable'] = 'These settings cannot be changed because Settings.php is read only.';
 
 $txt['maintain_title'] = 'Forum Maintenance';
@@ -251,92 +210,6 @@ $txt['maintain_common'] = 'Common Tasks';
 $txt['maintain_common_desc'] = 'Perform common tasks here such as making backups, pruning and checking for errors.';
 $txt['maintain_tasks'] = 'Scheduled Tasks';
 $txt['maintain_tasks_desc'] = 'Manage all the tasks scheduled by SMF.';
-
-$txt['maintain_general'] = 'General Maintenance';
-$txt['maintain_recount'] = 'Recount all forum totals and statistics.';
-$txt['maintain_errors'] = 'Find and repair any errors.';
-$txt['maintain_logs'] = 'Empty out unimportant logs.';
-$txt['maintain_cache'] = 'Empty the file cache.';
-$txt['maintain_optimize'] = 'Optimize all tables to improve performance.';
-$txt['maintain_version'] = 'Check all files against current versions.';
-$txt['maintain_return'] = 'Back to Forum Maintenance';
-
-$txt['maintain_backup'] = 'Backup Database';
-$txt['maintain_backup_struct'] = 'Save the table structure.';
-$txt['maintain_backup_data'] = 'Save the table data. (the important stuff.)';
-$txt['maintain_backup_gz'] = 'Compress the file with gzip.';
-$txt['maintain_backup_save'] = 'Download';
-
-$txt['maintain_old'] = 'Remove Old Posts';
-$txt['maintain_old_since_days1'] = 'Remove all topics not posted in for ';
-$txt['maintain_old_since_days2'] = ' days, which are:';
-$txt['maintain_old_nothing_else'] = 'Any sort of topic.';
-$txt['maintain_old_are_moved'] = 'Moved topic notices.';
-$txt['maintain_old_are_locked'] = 'Locked.';
-$txt['maintain_old_are_not_stickied'] = 'But don\'t count stickied topics.';
-$txt['maintain_old_all'] = 'All Boards';
-$txt['maintain_old_choose'] = 'Choose Specific Boards';
-$txt['maintain_old_remove'] = 'Remove now';
-$txt['maintain_old_confirm'] = 'Are you really sure you want to delete old posts now?\\n\\nThis cannot be undone!';
-
-$txt['maintain_members'] = 'Remove Inactive Members';
-$txt['maintain_members_ungrouped'] = 'Ungrouped Members <span class="smalltext">(Members with no assigned groups)</span>';
-$txt['maintain_members_since1'] = 'Remove all members who have not';
-$txt['maintain_members_since2'] = 'for';
-$txt['maintain_members_since3'] = 'days.';
-$txt['maintain_members_activated'] = 'activated their account';
-$txt['maintain_members_logged_in'] = 'logged in';
-$txt['maintain_members_all'] = 'All Membergroups';
-$txt['maintain_members_choose'] = 'Selected Groups';
-$txt['maintain_members_confirm'] = 'Are you sure you really want to delete these member accounts?\\n\\nThis cannot be undone!';
-
-// Untranslated!
-$txt['scheduled_tasks_header'] = 'All Scheduled Tasks';
-$txt['scheduled_tasks_name'] = 'Task Name';
-$txt['scheduled_tasks_next_time'] = 'Next Due';
-$txt['scheduled_tasks_regularity'] = 'Regularity';
-$txt['scheduled_tasks_enabled'] = 'Enabled';
-$txt['scheduled_tasks_run_now'] = 'Run Task Now';
-$txt['scheduled_tasks_save_changes'] = 'Save Changes';
-$txt['scheduled_tasks_time_offset'] = '<strong>Note:</strong> All times given below are <em>server time</em> and do not take any time offsets setup within SMF into account.';
-
-// Untranslated!
-$txt['scheduled_tasks_na'] = 'N/A';
-$txt['scheduled_task_approval_notification'] = 'Approval Notifications';
-$txt['scheduled_task_desc_approval_notification'] = 'Send out emails to all moderators summarising posts awaiting approval.';
-$txt['scheduled_task_auto_optimize'] = 'Optimize Database';
-$txt['scheduled_task_desc_auto_optimize'] = 'Optimize the database to resolve fragmentation issues.';
-$txt['scheduled_task_daily_maintenance'] = 'Daily Maintenance';
-$txt['scheduled_task_desc_daily_maintenance'] = 'Runs essential daily maintenance on the forum - should not be disabled.';
-$txt['scheduled_task_daily_digest'] = 'Daily Notification Summary';
-$txt['scheduled_task_desc_daily_digest'] = 'Emails out the daily digest for notification subscribers.';
-$txt['scheduled_task_weekly_digest'] = 'Weekly Notification Summary';
-$txt['scheduled_task_desc_weekly_digest'] = 'Emails out the weekly digest for notification subscribers.';
-$txt['scheduled_task_fetchSMfiles'] = 'Fetch Simple Machines Files';
-$txt['scheduled_task_desc_fetchSMfiles'] = 'Retrieves javascript files containing notifications of updates and other information.';
-$txt['scheduled_task_birthdayemails'] = 'Send Birthday Emails';
-$txt['scheduled_task_desc_birthdayemails'] = 'Sends out emails wishing members a happy birthday.';
-$txt['scheduled_task_weekly_maintenance'] = 'Weekly Maintenance';
-$txt['scheduled_task_desc_weekly_maintenance'] = 'Runs essential weekly maintenance on the forum - should not be disabled.';
-$txt['scheduled_task_paid_subscriptions'] = 'Paid Subscription Checks';
-$txt['scheduled_task_desc_paid_subscriptions'] = 'Sends out any necessary paid subscription reminders and removes expired member subscriptions.';
-
-// Untranslated!
-$txt['scheduled_task_reg_starting'] = 'Starting at %s';
-$txt['scheduled_task_reg_repeating'] = 'repeating every %1$d %2$s';
-$txt['scheduled_task_reg_unit_m'] = 'minute(s)';
-$txt['scheduled_task_reg_unit_h'] = 'hour(s)';
-$txt['scheduled_task_reg_unit_d'] = 'day(s)';
-$txt['scheduled_task_reg_unit_w'] = 'week(s)';
-
-// Untranslated!
-$txt['scheduled_task_edit'] = 'Edit Scheduled Task';
-$txt['scheduled_task_edit_repeat'] = 'Repeat task every';
-$txt['scheduled_task_edit_pick_unit'] = 'Pick Unit';
-$txt['scheduled_task_edit_interval'] = 'Interval';
-$txt['scheduled_task_edit_start_time'] = 'Start Time';
-$txt['scheduled_task_edit_start_time_desc'] = 'Time the first instance of the day should start (hours:minutes)';
-$txt['scheduled_task_time_offset'] = 'Note the start time should be the offset against the current server time. Current server time is: %1$s';
 
 $txt['mailqueue_title'] = 'Mail';
 
@@ -354,40 +227,6 @@ $txt['errlog_desc'] = 'The error log tracks every error encountered by your foru
 
 $txt['theme_settings'] = 'Theme Settings';
 $txt['theme_current_settings'] = 'Current Theme';
-
-$txt['repair_zero_ids'] = 'Found topics and/or messages with topic or message IDs of 0.';
-$txt['repair_missing_topics'] = 'Message #%d is in non-existent topic #%d.';
-$txt['repair_missing_messages'] = 'Topic #%d contains no (actual) messages.';
-$txt['repair_stats_topics_1'] = 'Topic #%d has the first message ID %d, which is incorrect.';
-$txt['repair_stats_topics_2'] = 'Topic #%d has the last message ID %d, which is incorrect.';
-$txt['repair_stats_topics_3'] = 'Topic #%d has the wrong number of replies, %d.';
-$txt['repair_stats_topics_4'] = 'Topic #%d has the wrong number of unapproved posts, %d.';
-$txt['repair_stats_topics_5'] = 'Topic #%d has the wrong approval flag set.';
-$txt['repair_missing_boards'] = 'Topic #%d is in board #%d, which is missing.';
-$txt['repair_missing_categories'] = 'Board #%d is in category #%d, which is missing.';
-$txt['repair_missing_posters'] = 'Message #%d was posted by member #%d, who is now missing.';
-$txt['repair_missing_parents'] = 'Board #%d is a child of board #%d, which is missing.';
-$txt['repair_missing_polls'] = 'Topic #%d is tied to non-existent poll #%d.';
-$txt['repair_missing_calendar_topics'] = 'Event #%d is tied to topic #%d, which is missing.';
-$txt['repair_missing_log_topics'] = 'Topic #%d is marked as read for one or more people, but does not exist.';
-$txt['repair_missing_log_topics_members'] = 'Member #%d has marked one or more topics as read, but does not exist.';
-$txt['repair_missing_log_boards'] = 'Board #%d is marked as read for one or more people, but does not exist.';
-$txt['repair_missing_log_boards_members'] = 'Member #%d has marked one or more boards as read, but does not exist.';
-$txt['repair_missing_log_mark_read'] = 'Board #%d is marked as read for one or more people, but does not exist.';
-$txt['repair_missing_log_mark_read_members'] = 'Member #%d has marked one or more boards as read, but does not exist.';
-$txt['repair_missing_pms'] = 'Personal message #%d has been sent to one or more people, but does not exist.';
-$txt['repair_missing_recipients'] = 'Member #%d has received one or more personal messages, but does not exist.';
-$txt['repair_missing_senders'] = 'Personal message #%d was sent by member #%d, who does not exist.';
-$txt['repair_missing_notify_members'] = 'Notifications have been requested by member #%d, who does not exist.';
-$txt['repair_missing_cached_subject'] = 'The subject of topic #%d is currently not stored in the subject cache.';
-$txt['repair_missing_topic_for_cache'] = 'Cached word \'%s\' is linked to a non-existent topic.';
-$txt['repair_missing_log_poll_member'] = 'Poll #%1$d has been given a vote from member #%2$d , who is now missing.';
-$txt['repair_missing_log_poll_vote'] = 'A vote was cast by member #%1$d on a non-existent poll #%2$d.';
-$txt['repair_missing_thumbnail_parent'] = 'A thumbnail exists called %s, but it doesn\'t have a parent.';
-$txt['repair_report_missing_comments'] = 'Report #%d of topic: &quot;%s&quot; has no comments.';
-$txt['repair_comments_missing_report'] = 'Report comment #%d submitted by %s has no related report.';
-$txt['repair_group_request_missing_member'] = 'A group request still exists for deleted member #%d.';
-$txt['repair_group_request_missing_group'] = 'A group request still exists for deleted group #%d.';
 
 $txt['dvc_your'] = 'Your Version';
 $txt['dvc_current'] = 'Current Version';
@@ -554,12 +393,6 @@ $txt['update_available'] = 'Update Available!';
 $txt['update_message'] = 'You\'re using an outdated version of SMF, which contains some bugs which have since been fixed.
 	It is recommended that you <a href="" id="update-link">update your forum</a> to the latest version as soon as possible. It only takes a minute!';
 
-$txt['salvaged_category_name'] = 'Salvage Area';
-$txt['salvaged_category_error'] = 'Unable to create Salvage Area category!';
-$txt['salvaged_board_name'] = 'Salvaged Topics';
-$txt['salvaged_board_description'] = 'Topics created for messages with non-existent topics';
-$txt['salvaged_board_error'] = 'Unable to create Salvaged Topics board!';
-
 $txt['manageposts'] = 'Posts and Topics';
 $txt['manageposts_title'] = 'Manage Posts and Topics';
 $txt['manageposts_description'] = 'Here you can manage all settings related to topics and posts.';
@@ -631,37 +464,6 @@ $txt['core_configuration'] = 'Core Configuration';
 $txt['other_configuration'] = 'Feature Configuration';
 $txt['caching_settings'] = 'Caching';
 $txt['language_configuration'] = 'Languages';
-
-$txt['scheduled_view_log'] = 'View Log';
-$txt['scheduled_log_empty'] = 'There are currently no items in the log.';
-$txt['scheduled_log'] = 'Task Log';
-$txt['scheduled_log_time_run'] = 'Time Run';
-$txt['scheduled_log_time_taken'] = 'Time taken';
-$txt['scheduled_log_time_taken_seconds'] = 'seconds';
-$txt['scheduled_log_empty_log'] = 'Empty Log';
-
-$txt['utf8_title'] = 'Convert the database and data to UTF-8';
-$txt['utf8_introduction'] = 'UTF-8 is an international character set covering nearly all languages around the world. Converting your database and data to UTF-8 can make it easier to support multiple languages on the same board. It also can enhance search and sorting capabilities for languages with non-latin characters.';
-$txt['utf8_warning'] = 'If you want to convert your data and database to UTF-8, be aware of the following:
-<ul>
-	<li>Converting character sets might be <em>harmful</em> for your data! Make sure you have backed up your database <i>before</i> converting.</li>
-	<li>Because UTF-8 is a richer character set than most other character sets, there\'s no way back, unless by restoring your database to before the conversion.</li>
-	<li>After converting your data and database to UTF-8, you will need UTF-8 compatible language files.</li>
-</ul>';
-$txt['utf8_charset_not_supported'] = 'Conversion from %s to UTF-8 is not supported.';
-$txt['utf8_detected_charset'] = 'Based on your default language file (\'%1$s\'), the character set of your data would most likely be \'%2$s\'.';
-$txt['utf8_already_utf8'] = 'Your database and data already seem to be configured as UTF-8 data. No conversion is needed.';
-$txt['utf8_source_charset'] = 'Data character set';
-$txt['utf8_proceed'] = 'Proceed';
-$txt['utf8_database_charset'] = 'Database character set';
-$txt['utf8_target_charset'] = 'Convert data and database to';
-$txt['utf8_utf8'] = 'UTF-8';
-$txt['utf8_db_version_too_low'] = 'The version of MySQL that your database server is using is not high enough to support UTF-8 properly. A minimum version of 4.1.2 is required.';
-
-$txt['entity_convert_title'] = 'Convert HTML-entities to UTF-8 characters';
-$txt['entity_convert_only_utf8'] = 'The database needs to be in UTF-8 format before HTML-entities can be converted to UTF-8';
-$txt['entity_convert_introduction'] = 'This function will convert all characters that are stored in the database as HTML-entities to UTF-8 characters. This is especially useful when you have just converted your forum from a character set like ISO-8859-1 while non-latin characters were used on the forum. The browser then sends all characters as HTML-entities. For example, the HTML-entity &amp;#945; represents the greek letter &#945; (alpha). Converting entities to UTF-8 will improve searching and sorting of text and reduce storage size.';
-$txt['entity_convert_proceed'] = 'Proceed';
 
 $txt['copyright_ends_in'] = 'Your subscription to remove the SMF copyright notice ends in <b>%1$s</b> days.';
 $txt['copyright_click_renew'] = 'Click <a href="http://www.simplemachines.org/copyright/renew.php?key=%1$s" style="color: red;">here</a> to renew';

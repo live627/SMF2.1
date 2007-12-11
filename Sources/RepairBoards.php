@@ -35,7 +35,7 @@ if (!defined('SMF'))
 		- calls createSalvageArea() to create a new board, if necesary.
 		- accessed by ?action=admin;area=repairboards.
 
-	void pauseRepairProcess(array to_fix, int max_substep = none)
+	void pauseRepairProcess(array to_fix, string current_step_desc, int max_substep = none, force = false)
 		- show the not_done template to avoid CGI timeouts and similar.
 		- called when 3 or more seconds have passed while searching for errors.
 		- if max_substep is set, $_GET['substep'] / $max_substep is the percent
@@ -59,9 +59,16 @@ function RepairBoards()
 
 	isAllowedTo('admin_forum');
 
+	// Try secure more memory.
+	@ini_set('memory_limit', '128M');
+
 	// Print out the top of the webpage.
 	$context['page_title'] = $txt['admin_repair'];
 	$context['sub_template'] = 'rawdata';
+	$context[$context['admin_menu_name']]['current_subsection'] = 'general';
+
+	// Load the language file.
+	loadLanguage('ManageMaintenance');
 
 	// Make sure the tabs stay nice.
 	$context[$context['admin_menu_name']]['tab_data'] = array(
@@ -134,191 +141,7 @@ function RepairBoards()
 		// Actually do the fix.
 		findForumErrors(true);
 
-		// Fix all id_first_msg, id_last_msg in the topic table.
-		if (empty($to_fix) || in_array('stats_topics', $to_fix))
-		{
-			$resultTopic = $smfFunc['db_query']('', "
-				SELECT
-					t.id_topic, t.id_first_msg, t.id_last_msg,
-					IF (MIN(ma.id_msg),
-						IF (MIN(mu.id_msg),
-							IF (MIN(mu.id_msg) < MIN(ma.id_msg), mu.id_msg, ma.id_msg),
-						MIN(ma.id_msg)),
-					MIN(mu.id_msg)) AS myid_first_msg,
-					IF (MAX(ma.id_msg), MAX(ma.id_msg), MIN(mu.id_msg)) AS myid_last_msg,
-					t.approved, mf.approved AS myApproved
-				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
-					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
-				GROUP BY t.id_topic
-				HAVING id_first_msg != myid_first_msg OR id_last_msg != myid_last_msg
-					OR approved != myApproved", __FILE__, __LINE__);
-			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
-			{
-				$topicArray['myApproved'] = (int) $topicArray['myApproved'];
-
-				$memberStartedID = getMsgMemberID($topicArray['myid_first_msg']);
-				$memberUpdatedID = getMsgMemberID($topicArray['myid_last_msg']);
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}topics
-					SET id_first_msg = '$topicArray[myid_first_msg]',
-						id_member_started = '$memberStartedID', id_last_msg = '$topicArray[myid_last_msg]',
-						id_member_updated = '$memberUpdatedID', approved = '$topicArray[myApproved]'
-					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($resultTopic);
-		}
-
-		// Fix all messages that have a topic ID that cannot be found in the topics table.
-		if (empty($to_fix) || in_array('missing_topics', $to_fix))
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT
-					m.id_board, m.id_topic, MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg,
-					COUNT(*) - 1 AS myNumReplies
-				FROM {$db_prefix}messages AS m
-					LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
-				WHERE t.id_topic IS NULL
-				GROUP BY m.id_topic", __FILE__, __LINE__);
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-			{
-				// Only if we don't have a reasonable idea of where to put it.
-				if ($row['id_board'] == 0)
-				{
-					createSalvageArea();
-					$row['id_board'] = $salvageBoardID;
-				}
-
-				$memberStartedID = getMsgMemberID($row['myid_first_msg']);
-				$memberUpdatedID = getMsgMemberID($row['myid_last_msg']);
-
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}topics
-						(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, num_replies)
-					VALUES ($row[id_board], $memberStartedID, $memberUpdatedID,
-						$row[myid_first_msg], $row[myid_last_msg], $row[myNumReplies])", __FILE__, __LINE__);
-				$newTopicID = $smfFunc['db_insert_id']("{$db_prefix}topics", 'id_topic');
-
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}messages
-					SET id_topic = $newTopicID, id_board = $row[id_board]
-					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($result);
-
-			// Force the check of unapproved posts for this.
-			$to_fix[] = 'stats_topics';
-		}
-
-		// Fix all num_replies in the topic table.
-		if (empty($to_fix) || in_array('stats_topics2', $to_fix))
-		{
-			$resultTopic = $smfFunc['db_query']('', "
-				SELECT
-					t.id_topic, t.num_replies,
-					IF (COUNT(ma.id_msg), IF (mf.approved, COUNT(ma.id_msg) - 1, COUNT(ma.id_msg)), 0) AS myNumReplies
-				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
-					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
-				GROUP BY t.id_topic
-				HAVING num_replies != myNumReplies", __FILE__, __LINE__);
-			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
-			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}topics
-					SET num_replies = '$topicArray[myNumReplies]'
-					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($resultTopic);
-		}
-
-		// Fix all unapproved_posts in the topic table.
-		if (empty($to_fix) || in_array('stats_topics3', $to_fix))
-		{
-			$resultTopic = $smfFunc['db_query']('', "
-				SELECT
-					t.id_topic, t.unapproved_posts, COUNT(mu.id_msg) AS myUnapprovedPosts
-				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
-				GROUP BY t.id_topic
-				HAVING unapproved_posts != myUnapprovedPosts", __FILE__, __LINE__);
-			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopic))
-			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}topics
-					SET unapproved_posts = '$topicArray[myUnapprovedPosts]'
-					WHERE id_topic = $topicArray[id_topic]", __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($resultTopic);
-		}
-
-		// Fix all topics that have a board ID that cannot be found in the boards table.
-		if (empty($to_fix) || in_array('missing_boards', $to_fix))
-		{
-			$resultTopics = $smfFunc['db_query']('', "
-				SELECT t.id_board, COUNT(*) AS myNumTopics, COUNT(m.id_msg) AS myNumPosts
-				FROM {$db_prefix}topics AS t
-					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
-				WHERE b.id_board IS NULL
-				GROUP BY t.id_board", __FILE__, __LINE__);
-			if ($smfFunc['db_num_rows']($resultTopics) > 0)
-				createSalvageArea();
-			while ($topicArray = $smfFunc['db_fetch_assoc']($resultTopics))
-			{
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}boards
-						(id_cat, name, description, num_topics, num_posts, member_groups)
-					VALUES ($salvageCatID, 'Salvaged board', '', $topicArray[myNumTopics], $topicArray[myNumPosts], '1')", __FILE__, __LINE__);
-				$newBoardID = $smfFunc['db_insert_id']("{$db_prefix}boards", 'id_board');
-
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}topics
-					SET id_board = $newBoardID
-					WHERE id_board = $topicArray[id_board]", __FILE__, __LINE__);
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}messages
-					SET id_board = $newBoardID
-					WHERE id_board = $topicArray[id_board]", __FILE__, __LINE__);
-			}
-			$smfFunc['db_free_result']($resultTopics);
-		}
-
-		if (empty($to_fix) || in_array('missing_cached_subject', $to_fix))
-		{
-			$request = $smfFunc['db_query']('', "
-				SELECT t.id_topic, m.subject
-				FROM {$db_prefix}topics AS t
-					INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-					LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
-				WHERE lss.id_topic IS NULL", __FILE__, __LINE__);
-			$insertRows = array();
-			while ($row = $smfFunc['db_fetch_assoc']($request))
-			{
-				foreach (text2words($row['subject']) as $word)
-					$insertRows[] = "'$word', $row[id_topic]";
-				if (count($insertRows) > 500)
-				{
-					$smfFunc['db_query']('', "
-						INSERT IGNORE INTO {$db_prefix}log_search_subjects
-							(word, id_topic)
-						VALUES (" . implode('),
-							(', $insertRows) . ")", __FILE__, __LINE__);
-					$insertRows = array();
-				}
-
-			}
-			$smfFunc['db_free_result']($request);
-
-			if (!empty($insertRows))
-				$smfFunc['db_query']('', "
-					INSERT IGNORE INTO {$db_prefix}log_search_subjects
-						(word, id_topic)
-					VALUES (" . implode('),
-						(', $insertRows) . ")", __FILE__, __LINE__);
-		}
-
+		// Note that we've changed everything possible ;)
 		updateSettings(array(
 			'settings_updated' => time(),
 		));
@@ -346,9 +169,9 @@ function RepairBoards()
 	}
 }
 
-function pauseRepairProcess($to_fix, $max_substep = 0)
+function pauseRepairProcess($to_fix, $current_step_description, $max_substep = 0, $force = false)
 {
-	global $context, $txt, $time_start;
+	global $context, $txt, $time_start, $db_temp_cache, $db_cache;
 
 	// More time, I need more time!
 	@set_time_limit(600);
@@ -356,10 +179,14 @@ function pauseRepairProcess($to_fix, $max_substep = 0)
 		apache_reset_timeout();
 
 	// Errr, wait.  How much time has this taken already?
-	if (time() - array_sum(explode(' ', $time_start)) < 3)
+	if (!$force && time() - array_sum(explode(' ', $time_start)) < 3)
 		return;
 
-	$context['continue_get_data'] = '?action=admin;area=repairboards' . (isset($_GET['fixErrors']) ? ';fixErrors' : '') . ';step=' . $_GET['step'] . ';substep=' . $_GET['substep'];
+	// Restore the query cache if interested.
+	if (!empty($db_temp_cache))
+		$db_cache = $db_temp_cache;
+
+	$context['continue_get_data'] = '?action=admin;area=repairboards' . (isset($_GET['fixErrors']) ? ';fixErrors' : '') . ';step=' . $_GET['step'] . ';substep=' . $_GET['substep'] . ';sesc=' . $context['session_id'];
 	$context['page_title'] = $txt['not_done_title'];
 	$context['continue_post_data'] = '';
 	$context['continue_countdown'] = '2';
@@ -367,12 +194,17 @@ function pauseRepairProcess($to_fix, $max_substep = 0)
 
 	// Change these two if more steps are added!
 	if (empty($max_substep))
-		$context['continue_percent'] = round(($_GET['step'] * 100) / 25);
+		$context['continue_percent'] = round(($_GET['step'] * 100) / $context['total_steps']);
 	else
-		$context['continue_percent'] = round(($_GET['step'] * 100 + ($_GET['substep'] * 100) / $max_substep) / 25);
+		$context['continue_percent'] = round((($_GET['step'] + ($_GET['substep'] / $max_substep)) * 100) / $context['total_steps']);
 
 	// Never more than 100%!
 	$context['continue_percent'] = min($context['continue_percent'], 100);
+
+	// What about substeps?
+	$context['substep_enabled'] = $max_substep != 0;
+	$context['substep_title'] = sprintf($txt['repair_currently_' . (isset($_GET['fixErrors']) ? 'fixing' : 'checking')], (isset($txt['repair_operation_' . $current_step_description]) ? $txt['repair_operation_' . $current_step_description] : $current_step_description));
+	$context['substep_continue_percent'] = $max_substep == 0 ? 0 : round(($_GET['substep'] * 100) / $max_substep, 1);
 
 	$_SESSION['repairboards_to_fix'] = $to_fix;
 	$_SESSION['repairboards_to_fix2'] = $context['repair_errors'];
@@ -394,6 +226,12 @@ function loadForumTests()
 		array fix_collect:	This array is used if the fix is basically gathering all broken ids and then doing something with it.
 			- string index:		The value returned from the main query and passed to the processing function.
 			- process:		A function passed an array of ids to execute the fix on.
+		function fix_processing:
+					Function called for each row returned from fix_query to execute whatever fixes are required.
+		function fix_full_processing:
+					As above but does the while loop and everything itself - except the freeing.
+		array force_fix:	If this is set then the error types included within this array will also be assumed broken.
+					Note: At the moment only processes these if they occur after the primary error in the array.
 	*/
 
 	// This great array contains all of our error checks, fixes, etc etc etc.
@@ -447,11 +285,11 @@ function loadForumTests()
 				if ($row[\'id_board\'] == 0)
 				{
 					createSalvageArea();
-					$row[\'id_board\'] = $salvageBoardID;
+					$row[\'id_board\'] = (int) $salvageBoardID;
 				}
 
-				$memberStartedID = getMsgMemberID($row[\'myid_first_msg\']);
-				$memberUpdatedID = getMsgMemberID($row[\'myid_last_msg\']);
+				$memberStartedID = (int) getMsgMemberID($row[\'myid_first_msg\']);
+				$memberUpdatedID = (int) getMsgMemberID($row[\'myid_last_msg\']);
 
 				$smfFunc[\'db_query\'](\'\', "
 					INSERT INTO {$db_prefix}topics
@@ -465,7 +303,7 @@ function loadForumTests()
 					SET id_topic = $newTopicID, id_board = $row[id_board]
 					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
 				'),
-			'force_fix' => 'stats_topics',
+			'force_fix' => array('stats_topics'),
 			'messages' => array('repair_missing_topics', 'id_msg', 'id_topic'),
 		),
 		// Find topics with no messages.
@@ -500,7 +338,7 @@ function loadForumTests()
 		),
 		'stats_topics' => array(
 			'substeps' => array(
-				'step_size' => 1000,
+				'step_size' => 500,
 				'step_max' => "
 					SELECT MAX(id_topic)
 					FROM {$db_prefix}topics"
@@ -508,22 +346,42 @@ function loadForumTests()
 			'check_query' => "
 				SELECT
 					t.id_topic, t.id_first_msg, t.id_last_msg,
-					IF (MIN(ma.id_msg),
-						IF (MIN(mu.id_msg),
-							IF (MIN(mu.id_msg) < MIN(ma.id_msg), mu.id_msg, ma.id_msg),
-						MIN(ma.id_msg)),
-					MIN(mu.id_msg)) AS myid_first_msg,
-					IF (MAX(ma.id_msg), MAX(ma.id_msg), MIN(mu.id_msg)) AS myid_last_msg,
+					CASE WHEN MIN(ma.id_msg) > 0 THEN
+						 CASE WHEN MIN(mu.id_msg) > 0 THEN
+							CASE WHEN MIN(mu.id_msg) < MIN(ma.id_msg) THEN MIN(mu.id_msg) ELSE MIN(ma.id_msg) END ELSE
+						MIN(ma.id_msg) END ELSE
+					MIN(mu.id_msg) END AS myid_first_msg,
+					CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END AS myid_last_msg,
 					t.approved, mf.approved AS myApproved
 				FROM {$db_prefix}topics AS t
 					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
 					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
 					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic
-				HAVING id_first_msg != myid_first_msg OR id_last_msg != myid_last_msg
-					OR approved != myApproved
+				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved
+				HAVING id_first_msg != (CASE WHEN MIN(ma.id_msg) > 0 THEN
+						 CASE WHEN MIN(mu.id_msg) > 0 THEN
+							CASE WHEN MIN(mu.id_msg) < MIN(ma.id_msg) THEN MIN(mu.id_msg) ELSE MIN(ma.id_msg) END ELSE
+						MIN(ma.id_msg) END ELSE
+					MIN(mu.id_msg) END) OR id_last_msg != (CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END)
+					OR t.approved != mf.approved
 				ORDER BY t.id_topic",
+			'fix_processing' => create_function('$row', '
+				global $smfFunc, $db_prefix;
+				$row[\'myApproved\'] = (int) $row[\'myApproved\'];
+				$row[\'myid_first_msg\'] = (int) $row[\'myid_first_msg\'];
+				$row[\'myid_last_msg\'] = (int) $row[\'myid_last_msg\'];
+
+				$memberStartedID = (int) getMsgMemberID($row[\'myid_first_msg\']);
+				$memberUpdatedID = (int) getMsgMemberID($row[\'myid_last_msg\']);
+
+				$smfFunc[\'db_query\'](\'\', "
+					UPDATE {$db_prefix}topics
+					SET id_first_msg = $row[myid_first_msg],
+						id_member_started = $memberStartedID, id_last_msg = $row[myid_last_msg],
+						id_member_updated = $memberUpdatedID, approved = $row[myApproved]
+					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+			'),
 			'message_function' => create_function('$row', '
 				global $txt, $context;
 
@@ -548,14 +406,23 @@ function loadForumTests()
 			'check_query' => "
 				SELECT
 					t.id_topic, t.num_replies,
-					IF (COUNT(ma.id_msg), IF (mf.approved, COUNT(ma.id_msg) - 1, COUNT(ma.id_msg)), 0) AS myNumReplies
+					CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END AS myNumReplies
 				FROM {$db_prefix}topics AS t
 					LEFT JOIN {$db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = 1)
 					LEFT JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic
-				HAVING num_replies != myNumReplies
+				GROUP BY t.id_topic, t.num_replies, mf.approved
+				HAVING num_replies != (CASE WHEN COUNT(ma.id_msg) > 0 THEN CASE WHEN mf.approved > 0 THEN COUNT(ma.id_msg) - 1 ELSE COUNT(ma.id_msg) END ELSE 0 END)
 				ORDER BY t.id_topic",
+			'fix_processing' => create_function('$row', '
+				global $smfFunc, $db_prefix;
+				$row[\'myNumReplies\'] = (int) $row[\'myNumReplies\'];
+
+				$smfFunc[\'db_query\'](\'\', "
+					UPDATE {$db_prefix}topics
+					SET num_replies = $row[myNumReplies]
+					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+			'),
 			'messages' => array('repair_stats_topics_3', 'id_topic', 'num_replies'),
 		),
 		// Find topics with incorrect unapproved_posts.
@@ -572,9 +439,18 @@ function loadForumTests()
 				FROM {$db_prefix}topics AS t
 					LEFT JOIN {$db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = 0)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
-				GROUP BY t.id_topic
-				HAVING unapproved_posts != myUnapprovedPosts
+				GROUP BY t.id_topic, t.unapproved_posts
+				HAVING unapproved_posts != COUNT(mu.id_msg)
 				ORDER BY t.id_topic",
+			'fix_processing' => create_function('$row', '
+				global $smfFunc, $db_prefix;
+				$row[\'myUnapprovedPosts\'] = (int) $row[\'myUnapprovedPosts\'];
+
+				$smfFunc[\'db_query\'](\'\', "
+					UPDATE {$db_prefix}topics
+					SET num_replies = $row[myUnapprovedPosts]
+					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+			'),
 			'messages' => array('repair_stats_topics_4', 'id_topic', 'unapproved_posts'),
 		),
 		// Find topics with nonexistent boards.
@@ -592,6 +468,36 @@ function loadForumTests()
 				WHERE b.id_board IS NULL
 					AND t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				ORDER BY t.id_board, t.id_topic",
+			'fix_query' => "
+				SELECT t.id_board, COUNT(*) AS myNumTopics, COUNT(m.id_msg) AS myNumPosts
+				FROM {$db_prefix}topics AS t
+					LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
+					LEFT JOIN {$db_prefix}messages AS m ON (m.id_topic = t.id_topic)
+				WHERE b.id_board IS NULL
+					AND t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
+				GROUP BY t.id_board",
+			'fix_processing' => create_function('$row', '
+				global $smfFunc, $db_prefix, $salvageCatID;
+				createSalvageArea();
+
+				$row[\'myNumTopics\'] = (int) $row[\'myNumTopics\'];
+				$row[\'myNumPosts\'] = (int) $row[\'myNumPosts\'];
+
+				$smfFunc[\'db_query\'](\'\', "
+					INSERT INTO {$db_prefix}boards
+						(id_cat, name, description, num_topics, num_posts, member_groups)
+					VALUES ($salvageCatID, \'Salvaged board\', \'\', $row[myNumTopics], $row[myNumPosts], \'1\')", __FILE__, __LINE__);
+				$newBoardID = $smfFunc[\'db_insert_id\']("{$db_prefix}boards", \'id_board\');
+
+				$smfFunc[\'db_query\'](\'\', "
+					UPDATE {$db_prefix}topics
+					SET id_board = $newBoardID
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
+				$smfFunc[\'db_query\'](\'\', "
+					UPDATE {$db_prefix}messages
+					SET id_board = $newBoardID
+					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
+			'),
 			'messages' => array('repair_missing_boards', 'id_topic', 'id_board'),
 		),
 		// Find boards with nonexistent categories.
@@ -722,7 +628,7 @@ function loadForumTests()
 		),
 		'missing_log_topics' => array(
 			'substeps' => array(
-				'step_size' => 250,
+				'step_size' => 150,
 				'step_max' => "
 					SELECT MAX(id_member)
 					FROM {$db_prefix}log_topics"
@@ -973,7 +879,7 @@ function loadForumTests()
 		),
 		'missing_cached_subject' => array(
 			'substeps' => array(
-				'step_size' => 500,
+				'step_size' => 100,
 				'step_max' => "
 					SELECT MAX(id_topic)
 					FROM {$db_prefix}topics"
@@ -985,6 +891,35 @@ function loadForumTests()
 					LEFT JOIN {$db_prefix}log_search_subjects AS lss ON (lss.id_topic = t.id_topic)
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lss.id_topic IS NULL",
+			'fix_full_processing' => create_function('$result', '
+				global $smfFunc, $db_prefix;
+
+				$inserts = array();
+				while ($row = $smfFunc[\'db_fetch_assoc\']($result))
+				{
+					foreach (text2words($row[\'subject\']) as $word)
+						$inserts[] = array("\'$word\'", $row[\'id_topic\']);
+					if (count($inserts) > 500)
+					{
+						$smfFunc[\'db_insert\'](\'ignore\',
+							"{$db_prefix}log_search_subjects",
+							array(\'word\', \'id_topic\'),
+							$inserts,
+							array(\'word\', \'id_topic\'), __FILE__, __LINE__
+						);
+						$inserts = array();
+					}
+	
+				}
+
+				if (!empty($inserts))
+					$smfFunc[\'db_insert\'](\'ignore\',
+						"{$db_prefix}log_search_subjects",
+						array(\'word\', \'id_topic\'),
+						$inserts,
+						array(\'word\', \'id_topic\'), __FILE__, __LINE__
+					);
+			'),			
 			'message_function' => create_function('$row', '
 				global $txt, $context;
 
@@ -999,7 +934,7 @@ function loadForumTests()
 		),
 		'missing_topic_for_cache' => array(
 			'substeps' => array(
-				'step_size' => 500,
+				'step_size' => 50,
 				'step_max' => "
 					SELECT MAX(id_topic)
 					FROM {$db_prefix}log_search_subjects"
@@ -1099,7 +1034,7 @@ function loadForumTests()
 		),
 		'comments_missing_report' => array(
 			'substeps' => array(
-				'step_size' => 500,
+				'step_size' => 200,
 				'step_max' => "
 					SELECT MAX(id_report)
 					FROM {$db_prefix}log_reported_comments"
@@ -1124,7 +1059,7 @@ function loadForumTests()
 		),
 		'group_request_missing_member' => array(
 			'substeps' => array(
-				'step_size' => 500,
+				'step_size' => 200,
 				'step_max' => "
 					SELECT MAX(id_member)
 					FROM {$db_prefix}log_group_requests"
@@ -1149,7 +1084,7 @@ function loadForumTests()
 		),
 		'group_request_missing_group' => array(
 			'substeps' => array(
-				'step_size' => 500,
+				'step_size' => 200,
 				'step_max' => "
 					SELECT MAX(id_group)
 					FROM {$db_prefix}log_group_requests"
@@ -1177,7 +1112,7 @@ function loadForumTests()
 
 function findForumErrors($do_fix = false)
 {
-	global $db_prefix, $context, $txt, $smfFunc, $errorTests;
+	global $db_prefix, $context, $txt, $smfFunc, $errorTests, $db_cache, $db_temp_cache;
 
 	// This may take some time...
 	@set_time_limit(600);
@@ -1188,8 +1123,15 @@ function findForumErrors($do_fix = false)
 	$_GET['step'] = empty($_GET['step']) ? 0 : (int) $_GET['step'];
 	$_GET['substep'] = empty($_GET['substep']) ? 0 : (int) $_GET['substep'];
 
+	// Don't allow the cache to get too full.
+	$db_temp_cache = $db_cache;
+	$db_cache = '';
+
+	$context['total_steps'] = count($errorTests);
+
 	// For all the defined error types do the necessary tests.
 	$current_step = -1;
+	$total_queries = 0;
 	foreach ($errorTests as $error_type => $test)
 	{
 		$current_step++;
@@ -1205,115 +1147,145 @@ function findForumErrors($do_fix = false)
 			continue;
 		}
 
-		// Has it got substeps?
-		if (isset($test['substeps']))
+		// We in theory keep doing this... the substeps.
+		$done = false;
+		while (!$done)
 		{
-			$step_size = isset($test['substeps']['step_size']) ? $test['substeps']['step_size'] : 100;
-			$request = $smfFunc['db_query']('',
-				$test['substeps']['step_max'], __FILE__, __LINE__);
-			list ($step_max) = $smfFunc['db_fetch_row']($request);
-			$smfFunc['db_free_result']($request);
-
-			$test['check_query'] = strtr($test['check_query'], array('{STEP_LOW}' => $_GET['substep'], '{STEP_HIGH}' => $_GET['substep'] + $step_size - 1));
-
-			// Nothing?
-			if ($step_max == 0)
+			// Has it got substeps?
+			if (isset($test['substeps']))
 			{
-				$_GET['step']++;
-				continue;
+				$step_size = isset($test['substeps']['step_size']) ? $test['substeps']['step_size'] : 100;
+				$request = $smfFunc['db_query']('',
+					$test['substeps']['step_max'], __FILE__, __LINE__);
+				list ($step_max) = $smfFunc['db_fetch_row']($request);
+				$total_queries++;
+				$smfFunc['db_free_result']($request);
+	
+				// Nothing?
+				if (empty($step_max))
+				{
+					break;
+				}
 			}
-		}
 
-		// What is the testing query (Changes if we are testing or fixing)
-		if (!$do_fix)
-			$test_query = 'check_query';
-		else
-			$test_query = isset($test['fix_query']) ? 'fix_query' : 'check_query';
-
-		// Do the test...
-		$request = $smfFunc['db_query']('',
-			$test[$test_query], __FILE__, __LINE__);
-		$needs_fix = false;
-		// Does it need a fix?
-		if (!empty($test['check_type']) && $test['check_type'] == 'count')
-			list ($needs_fix) = $smfFunc['db_fetch_row']($request);
-		else
-			$needs_fix = $smfFunc['db_num_rows']($request);
-
-		if ($needs_fix)
-		{
-			// What about a message to the user?
+			// What is the testing query (Changes if we are testing or fixing)
 			if (!$do_fix)
-			{
-				// Assume need to fix.
-				$found_errors = true;
-
-				if (isset($test['message']))
-					$context['repair_errors'][] = $txt[$test['message']];
-				// One per row!
-				elseif (isset($test['messages']))
-				{
-					while ($row = $smfFunc['db_fetch_assoc']($request))
-					{
-						$variables = $test['messages'];
-						foreach ($variables as $k => $v)
-						{
-							if ($k == 0 && isset($txt[$v]))
-								$variables[$k] = $txt[$v];
-							elseif ($k > 0 && isset($row[$v]))
-								$variables[$k] = $row[$v];
-						}
-						$context['repair_errors'][] = call_user_func_array('sprintf', $variables);
-					}
-				}
-				// A function to process?
-				elseif (isset($test['message_function']))
-				{
-					// Find out if there are actually errors.
-					$found_errors = false;
-					while ($row = $smfFunc['db_fetch_assoc']($request))
-						$found_errors |= $test['message_function']($row);
-				}
-
-				// Actually have something to fix?
-				if ($found_errors)
-					$to_fix[] = $error_type;
-			}
-			// We want to fix, we need to fix - so work out what exactly to do!
+				$test_query = 'check_query';
 			else
+				$test_query = isset($test['fix_query']) ? 'fix_query' : 'check_query';
+
+			// Do the test...
+			$request = $smfFunc['db_query']('',
+				isset($test['substeps']) ? strtr($test[$test_query], array('{STEP_LOW}' => $_GET['substep'], '{STEP_HIGH}' => $_GET['substep'] + $step_size - 1)) : $test[$test_query], __FILE__, __LINE__);
+			$needs_fix = false;
+			// Does it need a fix?
+			if (!empty($test['check_type']) && $test['check_type'] == 'count')
+				list ($needs_fix) = $smfFunc['db_fetch_row']($request);
+			else
+				$needs_fix = $smfFunc['db_num_rows']($request);
+			$total_queries++;
+
+			if ($needs_fix)
 			{
-				// Are we simply getting a collection of ids?
-				if (isset($test['fix_collect']))
+				// What about a message to the user?
+				if (!$do_fix)
 				{
-					$ids = array();
-					while ($row = $smfFunc['db_fetch_assoc']($request))
-						$ids[] = $row[$test['fix_collect']['index']];
-					if (!empty($ids))
+					// Assume need to fix.
+					$found_errors = true;
+	
+					if (isset($test['message']))
+						$context['repair_errors'][] = $txt[$test['message']];
+					// One per row!
+					elseif (isset($test['messages']))
 					{
-						// Fix it!
-						$test['fix_collect']['process']($ids);
+						while ($row = $smfFunc['db_fetch_assoc']($request))
+						{
+							$variables = $test['messages'];
+							foreach ($variables as $k => $v)
+							{
+								if ($k == 0 && isset($txt[$v]))
+									$variables[$k] = $txt[$v];
+								elseif ($k > 0 && isset($row[$v]))
+									$variables[$k] = $row[$v];
+							}
+							$context['repair_errors'][] = call_user_func_array('sprintf', $variables);
+						}
 					}
+					// A function to process?
+					elseif (isset($test['message_function']))
+					{
+						// Find out if there are actually errors.
+						$found_errors = false;
+						while ($row = $smfFunc['db_fetch_assoc']($request))
+							$found_errors |= $test['message_function']($row);
+					}
+	
+					// Actually have something to fix?
+					if ($found_errors)
+						$to_fix[] = $error_type;
 				}
-				// Simply executing a fix it query?
-				if (isset($test['fix_it_query']))
-					$smfFunc['db_query']('',
-						$test['fix_it_query'], __FILE__, __LINE__);
+				// We want to fix, we need to fix - so work out what exactly to do!
+				else
+				{
+					// Are we simply getting a collection of ids?
+					if (isset($test['fix_collect']))
+					{
+						$ids = array();
+						while ($row = $smfFunc['db_fetch_assoc']($request))
+							$ids[] = $row[$test['fix_collect']['index']];
+						if (!empty($ids))
+						{
+							// Fix it!
+							$test['fix_collect']['process']($ids);
+						}
+					}
+					// Simply executing a fix it query?
+					elseif (isset($test['fix_it_query']))
+						$smfFunc['db_query']('',
+							$test['fix_it_query'], __FILE__, __LINE__);
+					// Do we have some processing to do?
+					elseif (isset($test['fix_processing']))
+					{
+						while ($row = $smfFunc['db_fetch_assoc']($request))
+							$test['fix_processing']($row);
+					}
+					// What about the full set of processing?
+					elseif (isset($test['fix_full_processing']))
+					{
+						$test['fix_full_processing']($request);
+					}
+
+					// Do we have other things we need to fix as a result?
+					if (!empty($test['force_fix']))
+						foreach ($test['force_fix'] as $item)
+							if (!in_array($item, $to_fix))
+								$to_fix[] = $item;
+				}
 			}
-		}
+	
+			// Free the result.
+			$smfFunc['db_free_result']($request);
+			// Keep memory down.
+			$db_cache = '';
 
-		// Free the result.
-		$smfFunc['db_free_result']($request);
-
-		// Are we done yet?
-		if (isset($test['substeps']))
-		{
-			$_GET['substep'] += $step_size;
-			// Not done?
-			if ($_GET['substep'] < $step_max)
+			// Are we done yet?
+			if (isset($test['substeps']))
 			{
-				pauseRepairProcess($to_fix, $_GET['substep']);
-				continue;
+				$_GET['substep'] += $step_size;
+				// Not done?
+				if ($_GET['substep'] < $step_max)
+				{
+					pauseRepairProcess($to_fix, $error_type, $step_max);
+				}
+				else
+					$done = true;
 			}
+			else
+				$done = true;
+
+			// Don't allow more than 1000 queries at a time.
+			if ($total_queries >= 1000)
+				pauseRepairProcess($to_fix, $error_type, $step_max, true);
 		}
 
 		// Keep going.
@@ -1331,8 +1303,11 @@ function findForumErrors($do_fix = false)
 		}
 	
 		// Are we done?
-		pauseRepairProcess($to_fix);
+		pauseRepairProcess($to_fix, $error_type, 10, true);
 	}
+
+	// Restore the cache.
+	$db_cache = $db_temp_cache;
 
 	return $to_fix;
 }

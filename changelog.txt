@@ -19,6 +19,9 @@ December 2007
  ! Clearing the log_online table was getting done too often thanks to a missing cache call. (Subs.php)
  ! Begun work to make RepairBoards less repetative by rewriting the find error section into the now common array form. (RepairBoards.php)
  ! When kicking guests in wireless mode, make sure to use the wireless login template. (Security.php)
+ ! Added new template and language files and moved from maintenance related entries into them from the Admin files. (ManageMaintenance and Admin templates, ManageMaintenance and Admin language files)
+ ! RepairBoards now avoids repetition, resumes better during fixing, and displays more information to the admin. It also now works on postgreSQL. (RepairBoards.php, Admin template)
+ & Added a load of new language strings to improve feedback on repair progress. (ManageMaintenance language file)
 
 
 November 2007

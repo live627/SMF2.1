@@ -102,6 +102,10 @@ function ManageMaintenance()
 	// You absolutely must be an admin by here!
 	isAllowedTo('admin_forum');
 
+	// Need something to talk about?
+	loadLanguage('ManageMaintenance');
+	loadTemplate('ManageMaintenance');
+
 	// So many things you can - but frankly I won't let you - just these!
 	$subActions = array(
 		'cleancache' => 'Maintenance',

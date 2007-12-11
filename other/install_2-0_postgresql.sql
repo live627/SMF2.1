@@ -1379,7 +1379,7 @@ CREATE SEQUENCE {$db_prefix}log_subscribed_seq;
 
 CREATE TABLE {$db_prefix}log_subscribed (
   id_sublog int default nextval('{$db_prefix}log_subscribed_seq'),
-  id_subscribe smallint unsigned NOT NULL default '0',
+  id_subscribe smallint NOT NULL default '0',
   id_member int NOT NULL default '0',
   old_id_group int NOT NULL default '0',
   start_time int NOT NULL default '0',
@@ -1387,7 +1387,7 @@ CREATE TABLE {$db_prefix}log_subscribed (
   payments_pending smallint NOT NULL default '0',
   status smallint NOT NULL default '0',
   pending_details text NOT NULL,
-  reminder_sent NOT NOT NULL default '0',
+  reminder_sent smallint NOT NULL default '0',
   vendor_ref varchar(255) NOT NULL,
   PRIMARY KEY (id_sublog)
 );
@@ -1970,7 +1970,7 @@ INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_r
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (7, 0, 0, 1, 'd', 0, 'fetchSMfiles');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (8, 0, 0, 1, 'd', 1, 'birthdayemails');
 INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (9, 0, 0, 1, 'w', 0, 'weekly_maintenance');
-INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (9, 0, 120, 1, 'd', 0, 'paid_subscriptions');
+INSERT INTO {$db_prefix}scheduled_tasks	(id_task, next_time, time_offset, time_regularity, time_unit, disabled, task) VALUES (10, 0, 120, 1, 'd', 0, 'paid_subscriptions');
 
 # --------------------------------------------------------
 

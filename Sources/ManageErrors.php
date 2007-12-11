@@ -63,6 +63,7 @@ function ViewErrorLog()
 	isAllowedTo('admin_forum');
 
 	// Templates, etc...
+	loadLanguage('ManageMaintenance');
 	loadTemplate('Errors');
 
 	// You can filter by any of the following columns:
