@@ -26,6 +26,10 @@ December 2007
  ! Profiles were not saving if you allowed people to change their member name. (Profile.php)
  * Visual improvements to the auto suggest feature and some caching tweaks. (suggest.js, PersonalMessage template)
  * Only apply the PNG fix to certain images, and only those in the admin centre - as resizing remote PNGs croaks on IE6. (Admin.php, pngfix.js)
+ ! Added the character fix for some more poor implementation email clients (att, comcast, bellsouth). (Subs-Post.php)
+ * Added smf_default_theme_url to the list of javascript globals. (index templates)
+ & Changed the text in the string identification_by_smf to remove the reference to SMF. (Login language file)
+ ! SMF was incorrectly reporting it had not optimized tables when it actually had. (DbExtra-mysql.php)
 
 
 November 2007

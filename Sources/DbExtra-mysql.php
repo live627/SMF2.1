@@ -137,20 +137,29 @@ function smf_db_backup_table($table, $backup_table)
 // Optimize a table - return data freed!
 function smf_db_optimize_table($table)
 {
-	global $smfFunc;
+	global $smfFunc, $db_name;
 
+	// Get how much overhead there is.
+	$request = $smfFunc['db_query']('', "
+			SHOW TABLE STATUS LIKE '" . str_replace('_', '\_', $table) . "'", false, false);
+	$row = $smfFunc['db_fetch_assoc']($request);
+	$smfFunc['db_free_result']($request);
+
+	$data_before = isset($row['Data_free']) ? $row['Data_free'] : 0;
 	$request = $smfFunc['db_query']('', "
 			OPTIMIZE TABLE `$table`", false, false);
 	if (!$request)
 		return -1;
 
+	// How much left?
+	$request = $smfFunc['db_query']('', "
+			SHOW TABLE STATUS LIKE '" . str_replace('_', '\_', $table) . "'", false, false);
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
-	if (isset($table['Data_free']))
-			return $table['Data_free'] / 1024;
-	else
-		return 0;
+	$total_change = isset($row['Data_free']) && $data_before > $row['Data_free'] ? $data_before / 1024 : 0;
+
+	return $total_change;
 }
 
 // List all the tables in the database.

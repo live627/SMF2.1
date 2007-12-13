@@ -90,8 +90,8 @@ function smf_db_optimize_table($table)
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
-	if (isset($table['Data_free']))
-			return $table['Data_free'] / 1024;
+	if (isset($row['Data_free']))
+			return $row['Data_free'] / 1024;
 	else
 		return 0;
 }

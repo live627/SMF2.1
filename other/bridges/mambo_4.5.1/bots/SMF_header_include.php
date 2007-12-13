@@ -73,6 +73,7 @@ function SMF_header_include( ) {
 		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript" src="'. $settings['default_theme_url']. '/script.js?fin11"></script>' );
 		$mainframe->addCustomHeadTag( '<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_theme_url = "'. $settings['theme_url']. '";
+			var smf_default_theme_url = "' . $settings['default_theme_url'] . '";
 			var smf_images_url = "'. $settings['images_url']. '";
 			var smf_scripturl = "'. ( $mosConfig_sef == 1 ? sefReltoAbs($myurl) : un_htmlspecialchars($mosConfig_live_site . '/'. $myurl) ) . '";
 			var smf_iso_case_folding = '. $context['server']['iso_case_folding'] ? 'true' : 'false'. ';

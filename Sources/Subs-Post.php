@@ -554,7 +554,7 @@ function sendmail($to, $subject, $message, $from = null, $message_id = null, $se
 		$hotmail_to = array();
 		foreach ($to_array as $i => $to_address)
 		{
-			if (preg_match('~@(yahoo|hotmail)\.[a-zA-Z\.]{2,6}$~i', $to_address) === 1)
+			if (preg_match('~@(yahoo|hotmail|att|comcast|bellsouth)\.[a-zA-Z\.]{2,6}$~i', $to_address) === 1)
 			{
 				$hotmail_to[] = $to_address;
 				$to_array = array_diff($to_array, array($to_address));

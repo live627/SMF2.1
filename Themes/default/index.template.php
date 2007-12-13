@@ -70,6 +70,7 @@ function template_html_above()
 	<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?rc2p"></script>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
+		var smf_default_theme_url = "', $settings['default_theme_url'], '";
 		var smf_images_url = "', $settings['images_url'], '";
 		var smf_scripturl = "', $scripturl, '";
 		var smf_iso_case_folding = ', $context['server']['iso_case_folding'] ? 'true' : 'false', ';
