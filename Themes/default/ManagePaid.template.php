@@ -428,7 +428,7 @@ function template_user_subscription()
 			</tr>';
 
 		// Print out all the subscriptions.
-		foreach ($context['subscriptions'] as $subscription)
+		foreach ($context['subscriptions'] as $id => $subscription)
 		{
 			// Ignore the inactive ones...
 			if (empty($subscription['active']))
@@ -485,7 +485,7 @@ function template_user_subscription()
 			else
 			{
 				echo '
-									<a href="', $scripturl, '?action=admin;area=paidsubscribe;sa=modifyuser;sid=', $subscription['id'], ';uid=', $context['member']['id'], '">', $txt['paid_admin_add'], '</a>';
+									<a href="', $scripturl, '?action=admin;area=paidsubscribe;sa=modifyuser;sid=', $subscription['id'], ';uid=', $context['member']['id'], (empty($context['current'][$subscription['id']]) ? '' : ';lid=' . $context['current'][$subscription['id']]['id']), '">', empty($context['current'][$subscription['id']]) ? $txt['paid_admin_add'] : $txt['paid_edit_subscription'], '</a>';
 			}
 			echo '
 								</td>

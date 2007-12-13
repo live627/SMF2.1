@@ -1587,7 +1587,10 @@ function template_profile_theme_settings()
 													<option value="2"', !empty($context['member']['options']['display_quick_mod']) && $context['member']['options']['display_quick_mod'] != 1 ? ' selected="selected"' : '', '>', $txt['display_quick_mod_image'], '</option>
 												</select>
 											</td>
-										</tr>';
+										</tr>
+									</table>
+								</td>
+							</tr>';
 }
 
 function template_notification()

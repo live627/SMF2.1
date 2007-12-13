@@ -4605,7 +4605,7 @@ function subscriptions($memID)
 			if (count($current_pending) > 9)
 				$current_pending = array();
 			$pending_count = 0;
-			// Pnly record real pending payments as will otherwise confuse the admin!
+			// Only record real pending payments as will otherwise confuse the admin!
 			foreach ($current_pending as $pending)
 				if ($pending[3] == 'payback')
 					$pending_count++;
