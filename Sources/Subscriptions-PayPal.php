@@ -51,7 +51,7 @@ class paypal_display
 	// What do we want?
 	public function fetchGatewayFields($unique_id, $sub_data, $value, $period, $return_url)
 	{
-		global $modSettings, $txt;
+		global $modSettings, $txt, $boardurl;
 
 		$return_data = array(
 			'form' => 'https://www.' . (!empty($modSettings['paidsubs_test']) ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr',
@@ -75,6 +75,7 @@ class paypal_display
 		$return_data['hidden']['return'] = $return_url;
 		$return_data['hidden']['a3'] = $value;
 		$return_data['hidden']['src'] = 1;
+		$return_data['hidden']['notify_url'] = $boardurl . '/subscriptions.php';
 
 		// Now stuff dependant on what we're doing.
 		if ($sub_data['flexible'])
