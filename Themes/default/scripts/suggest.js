@@ -8,12 +8,17 @@ function smfSuggest(sessionID, textID)
 	var lastSearch = "";
 	var cache = [];
 	var displayData = [];
+	// How many objects can we show at once?
+	var maxDisplayQuantity = 15;
+	// How many characters shall we start searching on?
+	var minimumSearchChars = 3;
 
 	var hideTimer = false;
 	var positionComplete = false;
 
 	this.forceAutoSuggest = autoSuggestUpdate;
 	this.deleteItem = deleteAddedItem;
+	this.onSubmit = onElementSubmitted;
 
 	xmlRequestHandle = null;
 
@@ -56,6 +61,31 @@ function smfSuggest(sessionID, textID)
 		
 	}
 
+	// User hit submit?
+	function onElementSubmitted()
+	{
+		return_value = true;
+		// Do we have something that matches the current text?
+		for (i = 0; i < cache.length; i++)
+		{
+			if (textHandle.value.toLowerCase() == cache[i]['name'].toLowerCase().substr(0, textHandle.value.length))
+			{
+				// If we have two matches die.
+				if (return_value != true)
+					return true;
+				return_value = {'memberid': cache[i]['id'], 'membername': cache[i]['name']};
+			}
+		}
+
+		if (return_value == true)
+			return return_value;
+		else
+		{
+			addUserLink(return_value);
+			return false;
+		}
+	}
+
 	// Positions the box correctly on the window.
 	function postitionDiv()
 	{
@@ -66,10 +96,10 @@ function smfSuggest(sessionID, textID)
 		positionComplete = true;
 
 		// Put the div under the text box.
-		var parentPos = findCoords(textHandle);
+		var parentPos = smf_itemPos(textHandle);
 
-		suggestDivHandle.style.left = parentPos.iX + 'px';
-		suggestDivHandle.style.top = (parentPos.iY + textHandle.offsetHeight) + 'px';
+		suggestDivHandle.style.left = parentPos[0] + 'px';
+		suggestDivHandle.style.top = (parentPos[1] + textHandle.offsetHeight) + 'px';
 		suggestDivHandle.style.width = textHandle.style.width;
 	}
 
@@ -89,8 +119,19 @@ function smfSuggest(sessionID, textID)
 		// Is there a div that we are duplicating and populating?
 		if (document.getElementById('suggest_template_' + textID))
 		{
+			var curMember = {'memberid': curElement.memberid, 'membername': curElement.innerHTML};
+			addUserLink(curMember);
+		}
+	}
+
+	// Add a result if not already done.
+	function addUserLink(curUser)
+	{
+		// Is there a div that we are duplicating and populating?
+		if (document.getElementById('suggest_template_' + textID))
+		{
 			// What will the new element be called?
-			newID = 'suggest_template_' + textID + '_' + curElement.memberid;
+			newID = 'suggest_template_' + textID + '_' + curUser.memberid;
 			// Better not exist?
 			if (!document.getElementById(newID))
 			{
@@ -101,10 +142,10 @@ function smfSuggest(sessionID, textID)
 				newNode.id = newID;
 
 				// If it supports remove this will be the javascript.
-				deleteCode = 'suggestHandle' + textID + '.deleteItem(' + curElement.memberid + ');';
+				deleteCode = 'suggestHandle' + textID + '.deleteItem(' + curUser.memberid + ');';
 
 				// Parse in any variables.
-				newNode.innerHTML = newNode.innerHTML.replace(/\{MEMBER_NAME\}/g, curElement.innerHTML).replace(/'*(\{|%7B)MEMBER_ID(\}|%7D)'*/g, curElement.memberid).replace(/'*\{DELETE_MEMBER_URL\}'*/g, deleteCode);
+				newNode.innerHTML = newNode.innerHTML.replace(/\{MEMBER_NAME\}/g, curUser.membername).replace(/'*(\{|%7B)MEMBER_ID(\}|%7D)'*/g, curUser.memberid).replace(/'*\{DELETE_MEMBER_URL\}'*/g, deleteCode);
 
 				newNode.style.visibility = 'visible';
 			}
@@ -164,8 +205,8 @@ function smfSuggest(sessionID, textID)
 			suggestDivHandle.childNodes[0].removeEventListener('mouseout', itemMouseOut, false);
 			suggestDivHandle.childNodes[0].removeEventListener('click', itemClicked, false);
 
-    	suggestDivHandle.removeChild(suggestDivHandle.childNodes[0]);
-    }
+    			suggestDivHandle.removeChild(suggestDivHandle.childNodes[0]);
+    		}
 
 		// Something to display?
 		if (typeof(results) == 'undefined')
@@ -175,7 +216,7 @@ function smfSuggest(sessionID, textID)
 		}
 
 		var newDisplayData = [];
-		for (i = 0; i < results.length; i++)
+		for (i = 0; i < (results.length > maxDisplayQuantity ? maxDisplayQuantity : results.length); i++)
 		{
 			// Create the sub element
 			newDivHandle = document.createElement('div');
@@ -259,6 +300,8 @@ function smfSuggest(sessionID, textID)
 	{
 		if (isEmptyText(textHandle))
 		{
+			cache = [];
+
 			populateDiv();
 
 			autoSuggestHide();
@@ -270,6 +313,10 @@ function smfSuggest(sessionID, textID)
 		if (searchString.substr(0, 1) == '"')
 			searchString = searchString.substr(1);
 
+		// Stop replication ASAP.
+		realLastSearch = lastSearch;
+		lastSearch = searchString;
+
 		if (searchString == "" || searchString.substr(searchString.length - 1) == '"')
 		{
 			populateDiv();
@@ -277,23 +324,33 @@ function smfSuggest(sessionID, textID)
 		}
 
 		// Nothing?
-		if (lastSearch == searchString)
+		if (realLastSearch == searchString)
 		{
 			return true;
 		}
-		else if (searchString.substr(0, lastSearch.length) == lastSearch && cache.length != 100)
+		// Too small?
+		else if (searchString.length < minimumSearchChars)
+		{
+			cache = [];
+			autoSuggestHide();
+			return true;
+		}
+		else if (searchString.substr(0, realLastSearch.length) == realLastSearch && cache.length != 100)
 		{
 			// Instead of hitting the server again, just narrow down the results...
 			var newcache = [], j = 0;
+			var lowercaseSearch = searchString.toLowerCase();
 			for (var k = 0; k < cache.length; k++)
 			{
-				if (cache[k]['name'].substr(0, searchString.length) == searchString)
+				if (cache[k]['name'].substr(0, searchString.length).toLowerCase() == lowercaseSearch)
+				{
 					newcache[j++] = cache[k];
+				}
 			}
 
+			cache = [];
 			if (newcache.length != 0)
 			{
-				lastSearch = searchString;
 				cache = newcache;
 				// Repopulate.
 				populateDiv(cache);

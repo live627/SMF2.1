@@ -928,14 +928,14 @@ function loadProfileFields($force_reload = false)
 			'permission' => 'profile_identity',
 			'enabled' => !empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum'),
 			'input_validate' => create_function('&$value', '
-				global $context, $smfFunc, $sourcedir;
+				global $context, $smfFunc, $sourcedir, $cur_profile;
 
 				$value = trim(preg_replace(\'~[\s]~\' . ($context[\'utf8\'] ? \'u\' : \'\'), \' \', $value));
 				if (trim($value) == \'\')
 					return \'no_name\';
 				elseif ($smfFunc[\'strlen\']($value) > 60)
  					return \'name_too_long\';
-				else
+				elseif ($cur_profile[\'member_name\'] != $value)
 				{
 					require_once($sourcedir . \'/Subs-Members.php\');
 					if (isReservedName($value, $context[\'id_member\']))

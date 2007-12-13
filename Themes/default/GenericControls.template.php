@@ -265,7 +265,7 @@ function template_control_autosuggest($suggest_id)
 
 	if (!empty($suggest_context['button']))
 		echo '
-	<input type="submit" name="', $suggest_id, '_submit" value="', $suggest_context['button'], '" />';
+	<input type="submit" name="', $suggest_id, '_submit" value="', $suggest_context['button'], '" onclick="return suggestHandle', $suggest_id, '.onSubmit();"/>';
 
 	echo '
 	<div class="auto_suggest_div" id="suggest_div_', $suggest_id, '" style="visibility: hidden;"></div>

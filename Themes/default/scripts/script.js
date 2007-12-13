@@ -1021,15 +1021,24 @@ function smf_itemPos(itemHandle)
 	var itemX = 0;
 	var itemY = 0;
 
-	if (itemHandle.offsetParent)
+	if (typeof(itemHandle.offsetParent) != 'undefined')
 	{
 		itemX = itemHandle.offsetLeft;
 		itemY = itemHandle.offsetTop;
-		while (itemHandle = itemHandle.offsetParent)
+		if (itemHandle.offsetParent)
 		{
-			itemX += itemHandle.offsetLeft;
-			itemY += itemHandle.offsetTop;
+			
+			while (itemHandle = itemHandle.offsetParent)
+			{
+				itemX += itemHandle.offsetLeft;
+				itemY += itemHandle.offsetTop;
+			}
 		}
+	}
+	else if (typeof(itemHandle.x) != 'undefined')
+	{
+		itemX = itemHandle.x;
+		itemY = itemHandle.y;
 	}
 
 	return [itemX, itemY];

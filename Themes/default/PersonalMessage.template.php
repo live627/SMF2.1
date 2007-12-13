@@ -877,10 +877,12 @@ function template_send()
 			</tr>
 			<tr>
 				<td class="windowbg">';
-		foreach ($context['send_log']['sent'] as $log_entry)
-			echo '<span style="color: green">', $log_entry, '</span><br />';
-		foreach ($context['send_log']['failed'] as $log_entry)
-			echo '<span style="color: red">', $log_entry, '</span><br />';
+		if (!empty($context['send_log']['sent']))
+			foreach ($context['send_log']['sent'] as $log_entry)
+				echo '<span style="color: green">', $log_entry, '</span><br />';
+		if (!empty($context['send_log']['failed']))
+			foreach ($context['send_log']['failed'] as $log_entry)
+				echo '<span style="color: red">', $log_entry, '</span><br />';
 		echo '
 				</td>
 			</tr>
@@ -944,25 +946,25 @@ function template_send()
 		foreach ($context['recipients'] as $member)
 		{
 			echo '
-									<span id="suggest_template_to_', $member['id'], '">
+									<div id="suggest_template_to_', $member['id'], '">
 										<input type="hidden" name="recipient_to[]" value="', $member['id'], '" />
 										<input type="hidden" name="recipient_bcc_', $member['id'], '" id="recipient_bcc_', $member['id'], '" value="', $member['bcc'], '" />
 										<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="recipient_link_to_', $member['id'], '" class="extern" ', $member['bcc'] ? 'style="font-style: italic"' : '', '>', $member['name'], '</a>
 										<input type="image" name="bcc_recipient_change" value="', $member['id'], '" onclick="return toggleBCC(', $member['id'], ')" id="recipient_toggle_bcc_', $member['id'], '" src="', $settings['images_url'], '/pm_recipient_', $member['bcc'] ? 'bcc' : 'to', '.gif" alt="', $member['bcc'] ? $txt['no_bcc'] : $txt['make_bcc'], '" />
 										<input type="image" name="delete_recipient" value="', $member['id'], '" onclick="return suggestHandleto.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
-									</span>';
+									</div>';
 		}
 	}
 
 	// The bit below is the template for additional folks.
 	echo '
-									<span id="suggest_template_to" style="visibility: hidden;">
+									<div id="suggest_template_to" style="visibility: hidden;">
 										<input type="hidden" name="recipient_to[]" value="{MEMBER_ID}" />
 										<input type="hidden" name="recipient_bcc_{MEMBER_ID}" id="recipient_bcc_{MEMBER_ID}" value="0" />
 										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
 										<input type="image" onclick="return toggleBCC(\'{MEMBER_ID}\')" id="recipient_toggle_bcc_{MEMBER_ID}" src="', $settings['images_url'], '/pm_recipient_to.gif" alt="', $txt['make_bcc'], '" />
 										<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
-									</span>
+									</div>
 								</td>
 							</tr>';
 	// Subject of personal message.
