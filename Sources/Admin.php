@@ -88,6 +88,12 @@ function AdminMain()
 	// We have our own special stylesheet for admin like stuff.
 	$context['html_headers'] .= '<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/admin.css" />';
 
+	// The admin centre uses PNG sometimes.
+	$context['html_headers'] .= '
+		<!--[if lt IE 7]>
+		<script defer type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/pngfix.js"></script>
+		<![endif]-->';
+
 	require_once($sourcedir . '/Subs-Menu.php');
 
 	// Some features we may have hidden.

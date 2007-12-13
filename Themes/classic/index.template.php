@@ -119,9 +119,6 @@ function template_html_above()
 
 	// Output any remaining HTML headers. (from mods, maybe?)
 	echo $context['html_headers'], '
-<!--[if lt IE 7]>
-<script defer type="text/javascript" src="' , $settings['default_theme_url'] , '/scripts/pngfix.js"></script>
-<![endif]-->
 </head>
 <body>';
 }

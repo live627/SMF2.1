@@ -25,6 +25,7 @@ December 2007
  ! Use a rel instead of class to control links opening in a new window. (Lots of files)
  ! Profiles were not saving if you allowed people to change their member name. (Profile.php)
  * Visual improvements to the auto suggest feature and some caching tweaks. (suggest.js, PersonalMessage template)
+ * Only apply the PNG fix to certain images, and only those in the admin centre - as resizing remote PNGs croaks on IE6. (Admin.php, pngfix.js)
 
 
 November 2007
