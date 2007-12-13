@@ -375,7 +375,7 @@ function scheduled_daily_maintenance()
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}settings
 		WHERE variable IN ('" . implode("','", $emptySettings) . "')
-			AND (value = 0 OR value = '')", __FILE__, __LINE__);
+			AND (value = '0' OR value = '')", __FILE__, __LINE__);
 
 	// If warning decrement is enabled and we have people who have not had a new warning in 24 hours, lower their warning level.
 	list (, , $modSettings['warning_decrement']) = explode(',', $modSettings['warning_settings']);
