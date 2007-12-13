@@ -166,7 +166,7 @@ function template_summary()
 					<td width="40%">
 						<b>', $txt['ip'], ': </b>
 					</td><td>
-						<a href="', $scripturl, '?action=trackip;searchip=', $context['member']['ip'], '" class="extern">', $context['member']['ip'], '</a>
+						<a href="', $scripturl, '?action=trackip;searchip=', $context['member']['ip'], '" rel="new_win">', $context['member']['ip'], '</a>
 					</td>
 				</tr><tr>
 					<td width="40%">
@@ -312,7 +312,7 @@ function template_summary()
 		echo '
 				<tr>
 					<td><b>', $txt['website'], ': </b></td>
-					<td><a href="', $context['member']['website']['url'], '" class="extern">', $context['member']['website']['title'], '</a></td>
+					<td><a href="', $context['member']['website']['url'], '" rel="new_win">', $context['member']['website']['title'], '</a></td>
 				</tr>';
 
 	echo '
@@ -818,7 +818,7 @@ function template_trackIP()
 					<td class="windowbg2">';
 		foreach ($context['whois_servers'] as $server)
 			echo '
-						<a href="', $server['url'], '" class="extern"', isset($context['auto_whois_server']) && $context['auto_whois_server']['name'] == $server['name'] ? ' style="font-weight: bold;"' : '', '>', $server['name'], '</a><br />';
+						<a href="', $server['url'], '" rel="new_win"', isset($context['auto_whois_server']) && $context['auto_whois_server']['name'] == $server['name'] ? ' style="font-weight: bold;"' : '', '>', $server['name'], '</a><br />';
 		echo '
 					</td>
 				</tr>
@@ -2332,7 +2332,7 @@ function template_issueWarning()
 		if (!empty($warning['id_notice']))
 			echo '
 					<div style="float: right;">
-						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" class="extern" title="', $txt['profile_warning_previous_notice'], '">!</a>
+						<a href="', $scripturl, '?action=moderate;area=notice;nid=', $warning['id_notice'], '" onclick="window.open(this.href, \'\', \'scrollbars=yes,resizable=yes,width=400,height=250\');return false;" rel="new_win" title="', $txt['profile_warning_previous_notice'], '">!</a>
 					</div>';
 		echo '
 				</td>

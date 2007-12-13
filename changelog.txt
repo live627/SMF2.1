@@ -22,6 +22,7 @@ December 2007
  ! Added new template and language files and moved from maintenance related entries into them from the Admin files. (ManageMaintenance and Admin templates, ManageMaintenance and Admin language files)
  ! RepairBoards now avoids repetition, resumes better during fixing, and displays more information to the admin. It also now works on postgreSQL. (RepairBoards.php, Admin template)
  & Added a load of new language strings to improve feedback on repair progress. (ManageMaintenance language file)
+ ! Use a rel instead of class to control links opening in a new window. (Lots of files)
 
 
 November 2007

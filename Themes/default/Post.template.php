@@ -995,7 +995,7 @@ function template_announcement_send()
 			<table width="600" cellpadding="5" cellspacing="0" border="0" align="center" class="tborder">
 				<tr class="titlebg">
 					<td>
-						', $txt['announce_sending'], ' <a href="', $scripturl, '?topic=', $context['current_topic'], '.0" class="extern">', $context['topic_subject'], '</a>
+						', $txt['announce_sending'], ' <a href="', $scripturl, '?topic=', $context['current_topic'], '.0" rel="new_win">', $context['topic_subject'], '</a>
 					</td>
 				</tr><tr>
 					<td class="windowbg2"><b>', $context['percentage_done'], '% ', $txt['announce_done'], '</b></td>

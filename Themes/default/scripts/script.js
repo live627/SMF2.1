@@ -1035,21 +1035,14 @@ function smf_itemPos(itemHandle)
 	return [itemX, itemY];
 }
 
-function extern_link_window()
-{
-	var win = window.open(this.href, '_blank');
-	win.focus();
-	return false;
-}
-
 function get_extern_links()
 {
 	var links = document.getElementsByTagName('a');
 	for (var i=0; i < links.length; i++)
 	{
-		if (links[i].className.match('extern'))
+		if (links[i].rel.match('new_win'))
 		{
-			links[i].onclick = extern_link_window;
+			links[i].target = '_blank';
 		}
 	}
 }

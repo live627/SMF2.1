@@ -1061,7 +1061,7 @@ function loadMemberContext($user)
 		'icq' => $profile['icq'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(
 			'name' => $profile['icq'],
 			'href' => 'http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'],
-			'link' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" class="extern"><img src="http://status.icq.com/online.gif?img=5&amp;icq=' . $profile['icq'] . '" alt="' . $profile['icq'] . '" width="18" height="18" border="0" /></a>',
+			'link' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" rel="new_win"><img src="http://status.icq.com/online.gif?img=5&amp;icq=' . $profile['icq'] . '" alt="' . $profile['icq'] . '" width="18" height="18" border="0" /></a>',
 			'link_text' => '<a href="http://www.icq.com/whitepages/about_me.php?uin=' . $profile['icq'] . '" class="extern">' . $profile['icq'] . '</a>',
 		) : array('name' => '', 'add' => '', 'href' => '', 'link' => '', 'link_text' => ''),
 		'aim' => $profile['aim'] != '' && (empty($modSettings['guest_hideContacts']) || !$user_info['is_guest']) ? array(

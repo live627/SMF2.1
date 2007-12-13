@@ -1225,9 +1225,9 @@ function template_admin_search_results()
 			echo '
 					<li class="windowbg">
 						<p>
-							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" class="extern"><strong>', $result['messages'][0]['subject'], '</strong></a>
-							<br /><span class="smalltext"><a href="', $result['category']['href'], '" class="extern">', $result['category']['name'], '</a> &nbsp;/&nbsp;
-							<a href="', $result['board']['href'], '" class="extern">', $result['board']['name'], '</a> /</span>
+							<a href="', $context['doc_scripturl'], '?topic=', $result['topic_id'], '.0" rel="new_win"><strong>', $result['messages'][0]['subject'], '</strong></a>
+							<br /><span class="smalltext"><a href="', $result['category']['href'], '" rel="new_win">', $result['category']['name'], '</a> &nbsp;/&nbsp;
+							<a href="', $result['board']['href'], '" rel="new_win">', $result['board']['name'], '</a> /</span>
 						</p>
 						<p class="quote">
 							', $result['messages'][0]['body'], '

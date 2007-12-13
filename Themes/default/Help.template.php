@@ -121,7 +121,7 @@ function template_find_members()
 			echo '
 				<tr class="', $alternate ? 'windowbg2' : 'windowbg', '" valign="middle">
 					<td align="left">
-						<a href="', $result['href'], '" class="extern"><img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" /></a>
+						<a href="', $result['href'], '" rel="new_win"><img src="' . $settings['images_url'] . '/icons/profile_sm.gif" alt="' . $txt['view_profile'] . '" title="' . $txt['view_profile'] . '" border="0" /></a>
 						<a href="javascript:void(0);" onclick="addMember(this.title); return false;" title="', $result['username'], '">', $result['name'], '</a>
 					</td>
 				</tr>';
@@ -1035,7 +1035,7 @@ function template_manual_profile()
 										</tr>
 										<tr>
 											<td><b>', $txt['manual_profile_website'], ':</b></td>
-											<td><a href="http://www.simplemachines.org/" class="extern"></a></td>
+											<td><a href="http://www.simplemachines.org/" rel="new_win"></a></td>
 										</tr>
 										<tr>
 											<td><b>', $txt['manual_profile_status'], ':</b></td>
@@ -1957,7 +1957,7 @@ Simple
 			<td>', $txt['manual_posting_bbc_flash'], '</td>
 			<td><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/flash.gif" alt="', $txt['manual_posting_bbc_flash'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_flash_code'], '</td>
-			<td><a href="http://somesite/somefile.swf" class="board extern">', $txt['manual_posting_flash_output'], '</a></td>
+			<td><a href="http://somesite/somefile.swf" class="board" rel="new_win">', $txt['manual_posting_flash_output'], '</a></td>
 			<td>', $txt['manual_posting_flash_comment'], '</td>
 		</tr>
 		<tr>
@@ -1975,12 +1975,12 @@ Simple
 			<td rowspan="2">', $txt['manual_posting_bbc_url'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/url.gif" alt="', $txt['manual_posting_bbc_url'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_url_code'], '</td>
-			<td><a href="http://somesite" class="board extern">', $txt['manual_posting_url_output'], '</a></td>
+			<td><a href="http://somesite" class="board" rel="new_win">', $txt['manual_posting_url_output'], '</a></td>
 			<td rowspan="2">', $txt['manual_posting_url_comment'], '</td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_url_bottom_code'], '</td>
-			<td><a href="http://somesite" class="board extern">', $txt['manual_posting_url_bottom_output'], '</a></td>
+			<td><a href="http://somesite" class="board" rel="new_win">', $txt['manual_posting_url_bottom_output'], '</a></td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_bbc_email'], '</td>
@@ -1993,12 +1993,12 @@ Simple
 			<td rowspan="2">', $txt['manual_posting_bbc_ftp'], '</td>
 			<td rowspan="2"><img onmouseover="bbc_highlight(this, true);" onmouseout="bbc_highlight(this, false);" src="', $settings['images_url'], '/bbc/ftp.gif" alt="', $txt['manual_posting_bbc_ftp'], '" style="background-image: url(', $settings['images_url'], '/bbc/bbc_bg.gif); margin: 1px 2px 1px 1px;" /></td>
 			<td>', $txt['manual_posting_ftp_code'], '</td>
-			<td><a href="ftp://somesite/somefile" class="board extern">', $txt['manual_posting_ftp_output'], '</a></td>
+			<td><a href="ftp://somesite/somefile" class="board" rel="new_win">', $txt['manual_posting_ftp_output'], '</a></td>
 			<td rowspan="2">', $txt['manual_posting_ftp_comment'], '</td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_ftp_bottom_code'], '</td>
-			<td><a href="ftp://somesite/somefile" class="board extern">', $txt['manual_posting_ftp_bottom_output'], '</a></td>
+			<td><a href="ftp://somesite/somefile" class="board" rel="new_win">', $txt['manual_posting_ftp_bottom_output'], '</a></td>
 		</tr>
 		<tr>
 			<td>', $txt['manual_posting_bbc_table'], '</td>
