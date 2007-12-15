@@ -585,8 +585,7 @@ function loadForumTests()
 					LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 				WHERE t.id_poll != 0
 					AND t.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}
-					AND p.id_poll IS NULL
-				GROUP BY t.id_poll",
+					AND p.id_poll IS NULL",
 			'fix_collect' => array(
 				'index' => 'id_poll',
 				'process' => create_function('$polls', '
@@ -969,8 +968,7 @@ function loadForumTests()
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lp.id_member)
 				WHERE lp.id_member BETWEEN {STEP_LOW} AND {STEP_HIGH}
 					AND lp.id_member > 0
-					AND mem.id_member IS NULL
-				GROUP BY lp.id_member",
+					AND mem.id_member IS NULL",
 			'fix_collect' => array(
 				'index' => 'id_member',
 				'process' => create_function('$members', '
@@ -994,8 +992,7 @@ function loadForumTests()
 				FROM {$db_prefix}log_polls AS lp
 					LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = lp.id_poll)
 				WHERE lp.id_poll BETWEEN {STEP_LOW} AND {STEP_HIGH}
-					AND p.id_poll IS NULL
-				GROUP BY lp.id_poll",
+					AND p.id_poll IS NULL",
 			'fix_collect' => array(
 				'index' => 'id_poll',
 				'process' => create_function('$polls', '
@@ -1019,8 +1016,7 @@ function loadForumTests()
 				FROM {$db_prefix}log_reported AS lr
 					LEFT JOIN {$db_prefix}log_reported_comments AS lrc ON (lrc.id_report = lr.id_report)
 				WHERE lr.id_report BETWEEN {STEP_LOW} AND {STEP_HIGH}
-					AND lrc.id_report IS NULL
-				GROUP BY lr.id_report",
+					AND lrc.id_report IS NULL",
 			'fix_collect' => array(
 				'index' => 'id_report',
 				'process' => create_function('$reports', '
@@ -1044,8 +1040,7 @@ function loadForumTests()
 				FROM {$db_prefix}log_reported_comments AS lrc
 					LEFT JOIN {$db_prefix}log_reported AS lr ON (lr.id_report = lrc.id_report)
 				WHERE lrc.id_report BETWEEN {STEP_LOW} AND {STEP_HIGH}
-					AND lr.id_report IS NULL
-				GROUP BY lrc.id_report",
+					AND lr.id_report IS NULL",
 			'fix_collect' => array(
 				'index' => 'id_report',
 				'process' => create_function('$reports', '
