@@ -36,6 +36,7 @@ December 2007
  ! Work harder to stop search engines trying to pretend to send emails. (SendTopic.php, Display, Profile and Memberlist templates)
  ! It was possible to get a database error when viewing RSS feeds. (News.php)
  ! Entity converter was not respecting primary keys thus breaking data. (ManageMaintenance.php)
+ ! When e107 bridge uses e107 auth, the SMF user might not be created yet (e107 bridge/smf.php)
 
 
 November 2007

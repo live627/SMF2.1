@@ -327,7 +327,7 @@ function integrate_change_member_data($memberNames, $var, $value){
 
 function integrate_verify_user ()
 {
-	global $xoopsUser, $db_prefix;
+	global $db_prefix;
 	
 	if (USER){
 		$query = mysql_query("
