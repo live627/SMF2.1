@@ -638,10 +638,11 @@ function ModifyMembergroup()
 	global $db_prefix, $context, $txt, $modSettings, $smfFunc;
 
 	// It's not likely you'd end up here with this setting disabled.
-	if ($_GET['group'] == 1)
+	if ($_GET['group'] == 1 || ($context['group']['id'] == 3 && empty($_GET['pid'])))
 		redirectexit('action=admin;area=permissions');
 
 	$context['group']['id'] = (int) $_GET['group'];
+	$context['view_type'] = isset($_GET['view']) && $_GET['view'] == 'classic' ? 'classic' : 'simple';
 
 	loadAllPermissions();
 	loadPermissionProfiles();
@@ -666,13 +667,13 @@ function ModifyMembergroup()
 		$context['group']['name'] = &$txt['membergroups_members'];
 
 	$context['profile']['id'] = empty($_GET['pid']) ? 0 : (int) $_GET['pid'];
-	$context['local'] = !empty($_GET['pid']);
+	$context['permission_type'] = $context['profile']['id'] == 0 ? 'membergroup' : 'board';
 
 	// Set up things a little nicer for board related stuff...
-	if ($context['local'])
+	if ($context['permission_type'] == 'board')
 	{
-		$context['profile']['name'] = $context['profiles'][$_GET['pid']]['name'];
-		$context[$context['admin_menu_name']]['current_subsection'] = 'board';
+		$context['profile']['name'] = $context['profiles'][$context['profile']['id']]['name'];
+		$context[$context['admin_menu_name']]['current_subsection'] = 'profile';
 	}
 
 	// Fetch the current permissions.
@@ -680,7 +681,9 @@ function ModifyMembergroup()
 		'membergroup' => array('allowed' => array(), 'denied' => array()),
 		'board' => array('allowed' => array(), 'denied' => array())
 	);
-	if ($context['group']['id'] != 3 && !$context['local'])
+
+	// General permissions?
+	if ($context['permission_type'] == 'membergroup')
 	{
 		$result = $smfFunc['db_query']('', "
 			SELECT permission, add_deny
@@ -689,22 +692,19 @@ function ModifyMembergroup()
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 			$permissions['membergroup'][empty($row['add_deny']) ? 'denied' : 'allowed'][] = $row['permission'];
 		$smfFunc['db_free_result']($result);
-		$context['permissions']['membergroup']['show'] = true;
 	}
+	// Fetch current board permissions?
 	else
-		$context['permissions']['membergroup']['show'] = false;
-
-	// Fetch current board permissions.
-	$result = $smfFunc['db_query']('', "
-		SELECT permission, add_deny
-		FROM {$db_prefix}board_permissions
-		WHERE id_group = {$context['group']['id']}
-			AND id_profile = " . max(1, $context['profile']['id']), __FILE__, __LINE__);
-
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-		$permissions['board'][empty($row['add_deny']) ? 'denied' : 'allowed'][] = $row['permission'];
-	$smfFunc['db_free_result']($result);
-	$context['permissions']['board']['show'] = true;
+	{
+		$result = $smfFunc['db_query']('', "
+			SELECT permission, add_deny
+			FROM {$db_prefix}board_permissions
+			WHERE id_group = {$context['group']['id']}
+				AND id_profile = " . $context['profile']['id'], __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($result))
+			$permissions['board'][empty($row['add_deny']) ? 'denied' : 'allowed'][] = $row['permission'];
+		$smfFunc['db_free_result']($result);
+	}
 
 	// Loop through each permission and set whether it's checked.
 	foreach ($context['permissions'] as $permissionType => $tmp)
@@ -1183,6 +1183,76 @@ function loadAllPermissions()
 {
 	global $context, $txt;
 
+	// List of all the groups dependant on the currently selected view - for the order so it looks pretty, yea?
+	// Note to Mod authors - you don't need to stick your permission group here if you don't mind SMF sticking it the last group of the page.
+	$permissionGroups = array(
+		'membergroup' => array(
+			'simple' => array(
+				'view_basic_info',
+				'post_calendar',
+				'edit_profile',
+				'delete_account',
+				'use_avatar',
+				'moderate',
+				'administrate',
+			),
+			'classic' => array(
+				'general',
+				'pm',
+				'calendar',
+				'maintenance',
+				'member_admin',
+				'profile',
+			),
+		),
+		'board' => array(
+			'simple' => array('pm'),
+			'classic' => array('ge'),
+		),
+	);
+
+/*   The format of this list is as follows:
+		'membergroup' => array(
+			'permissions_inside' => array(has_multiple_options, classic_view_group, simple_view_group(_own)*, simple_view_group_any*),
+		),
+		'board' => array(
+			'permissions_inside' => array(has_multiple_options, classic_view_group, simple_view_group(_own)*, simple_view_group_any*),
+		);
+*/
+	$permissionList = array(
+		'membergroup' => array(
+			'view_stats' => array(false, 'general'),
+			'view_mlist' => array(false, 'general'),
+			'who_view' => array(false, 'general'),
+			'search_posts' => array(false, 'general'),
+			'karma_edit' => array(false, 'general'),
+			'pm_read' => array(false, 'pm'),
+			'pm_send' => array(false, 'pm'),
+			'calendar_view' => array(false, 'calendar'),
+			'calendar_post' => array(false, 'calendar'),
+			'calendar_edit' => array(true, 'calendar'),
+			'admin_forum' => array(false, 'maintenance'),
+			'manage_boards' => array(false, 'maintenance'),
+			'manage_attachments' => array(false, 'maintenance'),
+			'manage_smileys' => array(false, 'maintenance'),
+			'edit_news' => array(false, 'maintenance'),
+			'access_mod_center' => array(false, 'maintenance'),
+			'moderate_forum' => array(false, 'member_admin'),
+			'manage_membergroups' => array(false, 'member_admin'),
+			'manage_permissions' => array(false, 'member_admin'),
+			'manage_bans' => array(false, 'member_admin'),
+			'send_mail' => array(false, 'member_admin'),
+			'issue_warning' => array(false, 'member_admin'),
+			'profile_view' => array(true, 'profile'),
+			'profile_identity' => array(true, 'profile'),
+			'profile_extra' => array(true, 'profile'),
+			'profile_title' => array(true, 'profile'),
+			'profile_remove' => array(true, 'profile'),
+			'profile_server_avatar' => array(false, 'profile'),
+			'profile_upload_avatar' => array(false, 'profile'),
+			'profile_remote_avatar' => array(false, 'profile'),
+		),
+	);
 /*	 The format of this list is as follows:
 		'permission_group' => array(
 			'permissions_inside' => has_multiple_options,

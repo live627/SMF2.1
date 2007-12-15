@@ -363,161 +363,180 @@ function template_modify_group()
 		// ]]></script>
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=modify2;group=', $context['group']['id'], ';pid=', $context['profile']['id'], '" method="post" accept-charset="', $context['character_set'], '" name="permissionForm" id="permissionForm" onsubmit="return warnAboutDeny();">
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="tborder">';
+
 	if (!empty($modSettings['permission_enable_deny']) && $context['group']['id'] != -1)
 		echo '
 				<tr class="windowbg">
 					<td colspan="2" class="smalltext" style="padding: 2ex;">', $txt['permissions_option_desc'], '</td>
 				</tr>';
-	foreach ($context['permissions'] as $permission_type)
-	{
-		if ($permission_type['show'])
-		{
-			echo '
+
+	echo '
 				<tr class="catbg">
 					<td colspan="2" align="center">';
-			if ($context['local'])
-				echo '
-						', $txt['permissions_local_for'], ' \'<span style="color: red;">', $context['group']['name'], '</span>\' ', $txt['permissions_on'], ' \'<span style="color: red;">', $context['profile']['name'], '</span>\'';
-			else
-				echo '
-						', $permission_type['id'] == 'membergroup' ? $txt['permissions_general'] : $txt['permissions_board'], ' - <span style="color: red;">', $context['group']['name'], '</span>';
-			echo '
+	if ($context['permission_type'] == 'board')
+		echo '
+						', $txt['permissions_local_for'], ' &quot;', $context['group']['name'], '&quot; ', $txt['permissions_on'], ' &quot;', $context['profile']['name'], '&quot;';
+	else
+		echo '
+						', $context['permission_type'] == 'membergroup' ? $txt['permissions_general'] : $txt['permissions_board'], ' - &quot;', $context['group']['name'], '&quot;';
+	echo '
 					</td>
 				</tr>
-				<tr class="windowbg2">';
-			foreach ($permission_type['columns'] as $column)
-			{
-				echo '
-					<td valign="top" width="50%">
-						<table width="100%" cellpadding="1" cellspacing="0" border="0">';
-				foreach ($column as $permissionGroup)
-				{
-					if (empty($permissionGroup['permissions']))
-						continue;
+				<tr class="windowbg">
+					<td colspan="2">
+						', $txt['permissions_change_view'], ': ', ($context['view_type'] == 'simple' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', $scripturl, '?action=admin;area=permissions;sa=modify;group=', $context['group']['id'], ($context['permission_type'] == 'board' ? ';pid=' . $context['profile']['id'] : ''), ';view=simple">', $txt['permissions_view_simple'], '</a> |
+						', ($context['view_type'] == 'classic' ? '<img src="' . $settings['images_url'] . '/selected.gif" alt="*" />' : ''), '<a href="', $scripturl, '?action=admin;area=permissions;sa=modify;group=', $context['group']['id'], ($context['permission_type'] == 'board' ? ';pid=' . $context['profile']['id'] : ''), ';view=classic">', $txt['permissions_view_classic'], '</a>
+					</td>
+				</tr>';
 
-					// Are we likely to have something in this group to display or is it all hidden?
-					$has_display_content = false;
-					if (!$permissionGroup['hidden'])
-					{
-						// Before we go any further check we are going to have some data to print otherwise we just have a silly heading.
-						foreach ($permissionGroup['permissions'] as $permission)
-							if (!$permission['hidden'])
-								$has_display_content = true;
+	// Draw out the main bits.
+	if ($context['view_type'] == 'simple')
+		template_modify_group_classic($context['permission_type']);
+	else
+		template_modify_group_classic($context['permission_type']);
 
-						if ($has_display_content)
-						{
-							echo '
-							<tr class="windowbg2">
-								<td colspan="2" width="100%" align="left"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;"><b>', $permissionGroup['name'], '</b></div></td>';
-							if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-								echo '
-								<td colspan="3" width="10"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">&nbsp;</div></td>';
-							else
-								echo '
-								<td align="center"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">', $txt['permissions_option_on'], '</div></td>
-								<td align="center"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">', $txt['permissions_option_off'], '</div></td>
-								<td align="center"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px; color: red;">', $txt['permissions_option_deny'], '</div></td>';
-							echo '
-							</tr>';
-						}
-					}
-
-					$alternate = false;
-					foreach ($permissionGroup['permissions'] as $permission)
-					{
-						// If it's hidden keep the last value.
-						if ($permission['hidden'] || $permissionGroup['hidden'])
-						{
-							if ($permission['has_own_any'])
-								echo '
-									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']" value="', $permission['own']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['own']['select'], '" />
-									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']" value="', $permission['any']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['any']['select'], '" />';
-							else
-								echo '
-									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['id'], ']" value="', $permission['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['select'], '" />';
-						}
-						else
-						{
-							echo '
-							<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-								<td valign="top" width="10" style="padding-right: 1ex;">
-									', $permission['show_help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=permissionhelp_' . $permission['id'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : '', '
-								</td>';
-							if ($permission['has_own_any'])
-							{
-								echo '
-								<td colspan="4" width="100%" valign="top" align="left">', $permission['name'], '</td>
-							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-								<td></td>
-								<td width="100%" class="smalltext" align="right">', $permission['own']['name'], ':</td>';
-
-								if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-									echo '
-								<td colspan="3"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" /></td>';
-								else
-									echo '
-								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" /></td>
-								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
-								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" class="check" /></td>';
-
-								echo '
-							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-								<td></td>
-								<td width="100%" class="smalltext" align="right" style="padding-bottom: 1.5ex;">', $permission['any']['name'], ':</td>';
-
-								if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-									echo '
-								<td colspan="3" style="padding-bottom: 1.5ex;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>';
-								else
-									echo '
-								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" onclick="document.forms.permissionForm.', $permission['own']['id'], '_on.checked = true;" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select']== 'denied' ? ' checked="checked"' : '', ' value="deny" id="', $permission['any']['id'], '_deny" onclick="window.smf_usedDeny = true;" class="check" /></td>';
-
-								echo '
-							</tr>';
-							}
-							else
-							{
-								echo '
-								<td valign="top" width="100%" align="left" style="padding-bottom: 2px;">', $permission['name'], '</td>';
-
-								if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-									echo '
-								<td valign="top" style="padding-bottom: 2px;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>';
-								else
-									echo '
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" onclick="window.smf_usedDeny = true;" class="check" /></td>';
-
-								echo '
-							</tr>';
-							}
-						}
-						$alternate = !$alternate;
-					}
-
-					if (!$permissionGroup['hidden'] && $has_display_content)
-						echo '
-							<tr class="windowbg2">
-								<td colspan="5" width="100%"><div style="border-top: 1px solid; padding-bottom: 1.5ex; margin-top: 2px;">&nbsp;</div></td>
-							</tr>';
-				}
-
-				echo '
-						</table>
-					</td>';
-			}
-		}
-	}
 	echo '
-				</tr><tr class="windowbg2">
+				<tr class="windowbg2">
 					<td colspan="2" align="right"><input type="submit" value="', $txt['permissions_commit'], '" />&nbsp;</td>
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		</form>';
+
+}
+function template_modify_group_classic($type)
+{
+	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+
+	$permission_type = &$context['permissions'][$type];
+
+	echo '
+				<tr class="windowbg2">';
+	foreach ($permission_type['columns'] as $column)
+	{
+		echo '
+					<td valign="top" width="50%">
+						<table width="100%" cellpadding="1" cellspacing="0" border="0">';
+		foreach ($column as $permissionGroup)
+		{
+			if (empty($permissionGroup['permissions']))
+				continue;
+
+					// Are we likely to have something in this group to display or is it all hidden?
+			$has_display_content = false;
+			if (!$permissionGroup['hidden'])
+			{
+				// Before we go any further check we are going to have some data to print otherwise we just have a silly heading.
+				foreach ($permissionGroup['permissions'] as $permission)
+					if (!$permission['hidden'])
+						$has_display_content = true;
+
+				if ($has_display_content)
+				{
+					echo '
+							<tr class="windowbg2">
+								<td colspan="2" width="100%" align="left"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;"><b>', $permissionGroup['name'], '</b></div></td>';
+					if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
+						echo '
+								<td colspan="3" width="10"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">&nbsp;</div></td>';
+					else
+						echo '
+								<td align="center"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">', $txt['permissions_option_on'], '</div></td>
+								<td align="center"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px;">', $txt['permissions_option_off'], '</div></td>
+								<td align="center"><div style="border-bottom: 1px solid; padding-bottom: 2px; margin-bottom: 2px; color: red;">', $txt['permissions_option_deny'], '</div></td>';
+					echo '
+							</tr>';
+				}
+			}
+
+			$alternate = false;
+			foreach ($permissionGroup['permissions'] as $permission)
+			{
+				// If it's hidden keep the last value.
+				if ($permission['hidden'] || $permissionGroup['hidden'])
+				{
+					if ($permission['has_own_any'])
+						echo '
+									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']" value="', $permission['own']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['own']['select'], '" />
+									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']" value="', $permission['any']['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['any']['select'], '" />';
+					else
+						echo '
+									<input type="hidden" name="perm[', $permission_type['id'], '][', $permission['id'], ']" value="', $permission['select'] == 'denied' && !empty($modSettings['permission_enable_deny']) ? 'deny' : $permission['select'], '" />';
+				}
+				else
+				{
+					echo '
+							<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+								<td valign="top" width="10" style="padding-right: 1ex;">
+									', $permission['show_help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=permissionhelp_' . $permission['id'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : '', '
+								</td>';
+					if ($permission['has_own_any'])
+					{
+						echo '
+								<td colspan="4" width="100%" valign="top" align="left">', $permission['name'], '</td>
+							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+								<td></td>
+								<td width="100%" class="smalltext" align="right">', $permission['own']['name'], ':</td>';
+
+						if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
+							echo '
+								<td colspan="3"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" /></td>';
+						else
+							echo '
+								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" /></td>
+								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
+								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" class="check" /></td>';
+
+						echo '
+							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
+								<td></td>
+								<td width="100%" class="smalltext" align="right" style="padding-bottom: 1.5ex;">', $permission['any']['name'], ':</td>';
+
+						if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
+							echo '
+								<td colspan="3" style="padding-bottom: 1.5ex;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>';
+						else
+							echo '
+								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" onclick="document.forms.permissionForm.', $permission['own']['id'], '_on.checked = true;" class="check" /></td>
+								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
+								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select']== 'denied' ? ' checked="checked"' : '', ' value="deny" id="', $permission['any']['id'], '_deny" onclick="window.smf_usedDeny = true;" class="check" /></td>';
+
+						echo '
+							</tr>';
+					}
+					else
+					{
+						echo '
+								<td valign="top" width="100%" align="left" style="padding-bottom: 2px;">', $permission['name'], '</td>';
+
+						if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
+							echo '
+								<td valign="top" style="padding-bottom: 2px;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>';
+						else
+							echo '
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" onclick="window.smf_usedDeny = true;" class="check" /></td>';
+
+						echo '
+					</tr>';
+					}
+				}
+				$alternate = !$alternate;
+			}
+
+			if (!$permissionGroup['hidden'] && $has_display_content)
+				echo '
+							<tr class="windowbg2">
+								<td colspan="5" width="100%"><div style="border-top: 1px solid; padding-bottom: 1.5ex; margin-top: 2px;">&nbsp;</div></td>
+							</tr>';
+		}
+	echo '
+						</table>
+					</td>';
+	}
+	echo '
+				</tr>';
 }
 
 function template_inline_permissions()
