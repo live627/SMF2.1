@@ -352,7 +352,7 @@ function PermissionIndex()
 
 		$context['profile'] = array(
 			'id' => $_REQUEST['pid'],
-			'name' => ' &quot;' . $context['profiles'][$_REQUEST['pid']]['name'] . '&quot;',
+			'name' => $context['profiles'][$_REQUEST['pid']]['name'],
 		);
 	}
 
@@ -637,14 +637,14 @@ function ModifyMembergroup()
 {
 	global $db_prefix, $context, $txt, $modSettings, $smfFunc;
 
+	$context['group']['id'] = (int) $_GET['group'];
+	$context['view_type'] = isset($_GET['view']) && $_GET['view'] == 'classic' ? 'classic' : 'simple';
+
 	// It's not likely you'd end up here with this setting disabled.
 	if ($_GET['group'] == 1 || ($context['group']['id'] == 3 && empty($_GET['pid'])))
 		redirectexit('action=admin;area=permissions');
 
-	$context['group']['id'] = (int) $_GET['group'];
-	$context['view_type'] = isset($_GET['view']) && $_GET['view'] == 'classic' ? 'classic' : 'simple';
-
-	loadAllPermissions();
+	loadAllPermissions($context['view_type']);
 	loadPermissionProfiles();
 
 	if ($context['group']['id'] > 0)
@@ -673,7 +673,7 @@ function ModifyMembergroup()
 	if ($context['permission_type'] == 'board')
 	{
 		$context['profile']['name'] = $context['profiles'][$context['profile']['id']]['name'];
-		$context[$context['admin_menu_name']]['current_subsection'] = 'profile';
+		$context[$context['admin_menu_name']]['current_subsection'] = 'profiles';
 	}
 
 	// Fetch the current permissions.
@@ -717,13 +717,20 @@ function ModifyMembergroup()
 				{
 					// Create a shortcut for the current permission.
 					$curPerm = &$context['permissions'][$permissionType]['columns'][$position][$permissionGroup]['permissions'][$perm['id']];
-					if ($perm['has_own_any'])
+					if ($tmp['view'] == 'classic')
 					{
-						$curPerm['any']['select'] = in_array($perm['id'] . '_any', $permissions[$permissionType]['allowed']) ? 'on' : (in_array($perm['id'] . '_any', $permissions[$permissionType]['denied']) ? 'denied' : 'off');
-						$curPerm['own']['select'] = in_array($perm['id'] . '_own', $permissions[$permissionType]['allowed']) ? 'on' : (in_array($perm['id'] . '_own', $permissions[$permissionType]['denied']) ? 'denied' : 'off');
+						if ($perm['has_own_any'])
+						{
+							$curPerm['any']['select'] = in_array($perm['id'] . '_any', $permissions[$permissionType]['allowed']) ? 'on' : (in_array($perm['id'] . '_any', $permissions[$permissionType]['denied']) ? 'denied' : 'off');
+							$curPerm['own']['select'] = in_array($perm['id'] . '_own', $permissions[$permissionType]['allowed']) ? 'on' : (in_array($perm['id'] . '_own', $permissions[$permissionType]['denied']) ? 'denied' : 'off');
+						}
+						else
+							$curPerm['select'] = in_array($perm['id'], $permissions[$permissionType]['denied']) ? 'denied' : (in_array($perm['id'], $permissions[$permissionType]['allowed']) ? 'on' : 'off');
 					}
 					else
+					{
 						$curPerm['select'] = in_array($perm['id'], $permissions[$permissionType]['denied']) ? 'denied' : (in_array($perm['id'], $permissions[$permissionType]['allowed']) ? 'on' : 'off');
+					}
 				}
 			}
 		}
@@ -1179,7 +1186,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		fatal_lang_error('no_access', false);
 }
 
-function loadAllPermissions()
+function loadAllPermissions($loadType = 'classic')
 {
 	global $context, $txt;
 
@@ -1189,6 +1196,7 @@ function loadAllPermissions()
 		'membergroup' => array(
 			'simple' => array(
 				'view_basic_info',
+				'use_pm_system',
 				'post_calendar',
 				'edit_profile',
 				'delete_account',
@@ -1206,156 +1214,100 @@ function loadAllPermissions()
 			),
 		),
 		'board' => array(
-			'simple' => array('pm'),
-			'classic' => array('ge'),
+			'simple' => array(
+				'make_posts',
+				'make_unapproved_posts',
+				'post_polls',
+				'participate',
+				'modify',
+				'notification',
+				'attach',
+				'moderate',
+			),
+			'classic' => array(
+				'general_board',
+				'topic',
+				'post',
+				'poll',
+				'notification',
+				'attachment',
+			),
 		),
 	);
 
-/*   The format of this list is as follows:
+	/*   The format of this list is as follows:
 		'membergroup' => array(
 			'permissions_inside' => array(has_multiple_options, classic_view_group, simple_view_group(_own)*, simple_view_group_any*),
 		),
 		'board' => array(
 			'permissions_inside' => array(has_multiple_options, classic_view_group, simple_view_group(_own)*, simple_view_group_any*),
 		);
-*/
+	*/
 	$permissionList = array(
 		'membergroup' => array(
-			'view_stats' => array(false, 'general'),
-			'view_mlist' => array(false, 'general'),
-			'who_view' => array(false, 'general'),
-			'search_posts' => array(false, 'general'),
-			'karma_edit' => array(false, 'general'),
-			'pm_read' => array(false, 'pm'),
-			'pm_send' => array(false, 'pm'),
-			'calendar_view' => array(false, 'calendar'),
-			'calendar_post' => array(false, 'calendar'),
-			'calendar_edit' => array(true, 'calendar'),
-			'admin_forum' => array(false, 'maintenance'),
-			'manage_boards' => array(false, 'maintenance'),
-			'manage_attachments' => array(false, 'maintenance'),
-			'manage_smileys' => array(false, 'maintenance'),
-			'edit_news' => array(false, 'maintenance'),
-			'access_mod_center' => array(false, 'maintenance'),
-			'moderate_forum' => array(false, 'member_admin'),
-			'manage_membergroups' => array(false, 'member_admin'),
-			'manage_permissions' => array(false, 'member_admin'),
-			'manage_bans' => array(false, 'member_admin'),
-			'send_mail' => array(false, 'member_admin'),
-			'issue_warning' => array(false, 'member_admin'),
-			'profile_view' => array(true, 'profile'),
-			'profile_identity' => array(true, 'profile'),
-			'profile_extra' => array(true, 'profile'),
-			'profile_title' => array(true, 'profile'),
-			'profile_remove' => array(true, 'profile'),
-			'profile_server_avatar' => array(false, 'profile'),
-			'profile_upload_avatar' => array(false, 'profile'),
-			'profile_remote_avatar' => array(false, 'profile'),
-		),
-	);
-/*	 The format of this list is as follows:
-		'permission_group' => array(
-			'permissions_inside' => has_multiple_options,
-		),
-
-	   It should be noted that if the permission_group starts with $ it is not treated as a permission.
-	   However, if it does not start with $, it is treated as a normal permission.
-		$txt['permissionname_' . $permission] is used for the names of permissions.
-		$txt['permissiongroup_' . $group] is used for names of groups that start with $.
-		$txt['permissionhelp_' . $permission] is used for extended information.
-		$txt['permissionnote_' . $permission] is used for smalltext notes under the permission name.
-		$txt['permissionicon_' . $permission_or_group] is used for the icons, if it exists.
-*/
-
-	$permissionList = array(
-		'membergroup' => array(
-			'general' => array(
-				'view_stats' => false,
-				'view_mlist' => false,
-				'who_view' => false,
-				'search_posts' => false,
-				'karma_edit' => false,
-			),
-			'pm' => array(
-				'pm_read' => false,
-				'pm_send' => false,
-			),
-			'calendar' => array(
-				'calendar_view' => false,
-				'calendar_post' => false,
-				'calendar_edit' => true,
-			),
-			'maintenance' => array(
-				'admin_forum' => false,
-				'manage_boards' => false,
-				'manage_attachments' => false,
-				'manage_smileys' => false,
-				'edit_news' => false,
-				'access_mod_center' => false,
-			),
-			'member_admin' => array(
-				'moderate_forum' => false,
-				'manage_membergroups' => false,
-				'manage_permissions' => false,
-				'manage_bans' => false,
-				'send_mail' => false,
-				'issue_warning' => false,
-			),
-			'profile' => array(
-				'profile_view' => true,
-				'profile_identity' => true,
-				'profile_extra' => true,
-				'profile_title' => true,
-				'profile_remove' => true,
-				'profile_server_avatar' => false,
-				'profile_upload_avatar' => false,
-				'profile_remote_avatar' => false,
-			)
+			'view_stats' => array(false, 'general', 'view_basic_info'),
+			'view_mlist' => array(false, 'general', 'view_basic_info'),
+			'who_view' => array(false, 'general', 'view_basic_info'),
+			'search_posts' => array(false, 'general', 'view_basic_info'),
+			'karma_edit' => array(false, 'general', 'moderate'),
+			'pm_read' => array(false, 'pm', 'use_pm_system'),
+			'pm_send' => array(false, 'pm', 'use_pm_system'),
+			'calendar_view' => array(false, 'calendar', 'view_basic_info'),
+			'calendar_post' => array(false, 'calendar', 'post_calendar'),
+			'calendar_edit' => array(true, 'calendar', 'post_calendar', 'moderate'),
+			'admin_forum' => array(false, 'maintenance', 'administrate'),
+			'manage_boards' => array(false, 'maintenance', 'administrate'),
+			'manage_attachments' => array(false, 'maintenance', 'administrate'),
+			'manage_smileys' => array(false, 'maintenance', 'administrate'),
+			'edit_news' => array(false, 'maintenance', 'administrate'),
+			'access_mod_center' => array(false, 'maintenance', 'moderate'),
+			'moderate_forum' => array(false, 'member_admin', 'moderate'),
+			'manage_membergroups' => array(false, 'member_admin', 'administrate'),
+			'manage_permissions' => array(false, 'member_admin', 'administrate'),
+			'manage_bans' => array(false, 'member_admin', 'administrate'),
+			'send_mail' => array(false, 'member_admin', 'administrate'),
+			'issue_warning' => array(false, 'member_admin', 'moderate'),
+			'profile_view' => array(true, 'profile', 'view_basic_info', 'view_basic_info'),
+			'profile_identity' => array(true, 'profile', 'edit_profile', 'moderate'),
+			'profile_extra' => array(true, 'profile', 'edit_profile', 'moderate'),
+			'profile_title' => array(true, 'profile', 'edit_profile', 'moderate'),
+			'profile_remove' => array(true, 'profile', 'delete_account', 'moderate'),
+			'profile_server_avatar' => array(false, 'profile', 'use_avatar'),
+			'profile_upload_avatar' => array(false, 'profile', 'use_avatar'),
+			'profile_remote_avatar' => array(false, 'profile', 'use_avatar'),
 		),
 		'board' => array(
-			'general_board' => array(
-				'moderate_board' => false,
-				'approve_posts' => false,
-			),
-			'topic' => array(
-				'post_unapproved_topics' => false,
-				'post_new' => false,
-				'post_unapproved_replies' => true,
-				'post_reply' => true,
-				'merge_any' => false,
-				'split_any' => false,
-				'send_topic' => false,
-				'make_sticky' => false,
-				'move' => true,
-				'lock' => true,
-				'remove' => true,
-				'modify_replies' => false,
-				'delete_replies' => false,
-				'announce_topic' => false,
-			),
-			'post' => array(
-				'delete' => true,
-				'modify' => true,
-				'report_any' => false,
-			),
-			'poll' => array(
-				'poll_view' => false,
-				'poll_vote' => false,
-				'poll_post' => false,
-				'poll_add' => true,
-				'poll_edit' => true,
-				'poll_lock' => true,
-				'poll_remove' => true,
-			),
-			'notification' => array(
-				'mark_any_notify' => false,
-				'mark_notify' => false,
-			),
-			'attachment' => array(
-				'view_attachments' => false,
-				'post_unapproved_attachments' => false,
-				'post_attachment' => false,
-			),
+			'moderate_board' => array(false, 'general_board', 'moderate'),
+			'approve_posts' => array(false, 'general_board', 'moderate'),
+			'post_unapproved_topics' => array(false, 'topic', 'make_unapproved_posts'),
+			'post_new' => array(false, 'topic', 'make_posts'),
+			'post_unapproved_replies' => array(true, 'topic', 'make_unapproved_posts', 'make_unapproved_posts'),
+			'post_reply' => array(true, 'topic', 'make_posts', 'make_posts'),
+			'merge_any' => array(false, 'topic', 'moderate'),
+			'split_any' => array(false, 'topic', 'moderate'),
+			'send_topic' => array(false, 'topic', 'moderate'),
+			'make_sticky' => array(false, 'topic', 'moderate'),
+			'move' => array(true, 'topic', 'moderate', 'moderate'),
+			'lock' => array(true, 'topic', 'moderate', 'moderate'),
+			'remove' => array(true, 'topic', 'modify', 'moderate'),
+			'modify_replies' => array(false, 'topic', 'moderate'),
+			'delete_replies' => array(false, 'topic', 'moderate'),
+			'announce_topic' => array(false, 'topic', 'moderate'),
+			'delete' => array(true, 'post', 'modify', 'moderate'),
+			'modify' => array(true, 'post', 'modify', 'moderate'),
+			'report_any' => array(false, 'post', 'participate'),
+			'poll_view' => array(false, 'poll', 'participate'),
+			'poll_vote' => array(false, 'poll', 'participate'),
+			'poll_post' => array(false, 'poll', 'post_polls'),
+			'poll_add' => array(true, 'poll', 'post_polls', 'moderate'),
+			'poll_edit' => array(true, 'poll', 'modify', 'moderate'),
+			'poll_lock' => array(true, 'poll', 'moderate', 'moderate'),
+			'poll_remove' => array(true, 'poll', 'modify', 'moderate'),
+			'mark_any_notify' => array(false, 'notification', 'notification'),
+			'mark_notify' => array(false, 'notification', 'notification'),
+			'view_attachments' => array(false, 'attachment', 'participate'),
+			'post_unapproved_attachments' => array(false, 'attachment', 'make_unapproved_posts'),
+			'post_attachment' => array(false, 'attachment', 'attach'),
 		),
 	);
 
@@ -1386,7 +1338,7 @@ function loadAllPermissions()
 		'send_mail',
 	);
 
-	// All permission groups that will be shown in the left column.
+	// All permission groups that will be shown in the left column on classic view.
 	$leftPermissionGroups = array(
 		'general',
 		'calendar',
@@ -1398,10 +1350,13 @@ function loadAllPermissions()
 
 	// Some permissions are hidden if features are off.
 	$hiddenPermissions = array();
-	$hiddenGroups = array();
 	$relabelPermissions = array(); // Permissions to apply a different label to. 
 	if (!in_array('cd', $context['admin_features']))
-		$hiddenGroups[] = 'calendar';
+	{
+		$hiddenPermissions[] = 'calendar_view';
+		$hiddenPermissions[] = 'calendar_post';
+		$hiddenPermissions[] = 'calendar_edit';
+	}
 	if (!in_array('w', $context['admin_features']))
 		$hiddenPermissions[] = 'issue_warning';
 	if (!in_array('pm', $context['admin_features']))
@@ -1411,7 +1366,8 @@ function loadAllPermissions()
 		$hiddenPermissions[] = 'post_unapproved_replies';
 		$hiddenPermissions[] = 'post_unapproved_attachments';
 	}
-	else
+	// If we show them on classic view we change the name.
+	elseif ($loadType == 'classic')
 	{
 		// Relabel the topics permissions
 		$relabelPermissions['post_new'] = 'auto_approve_topics';
@@ -1428,58 +1384,104 @@ function loadAllPermissions()
 
 	$context['permissions'] = array();
 	$context['hidden_permissions'] = array();
-	foreach ($permissionList as $permissionType => $permissionGroups)
+	foreach ($permissionList as $permissionType => $permissionList)
 	{
 		$context['permissions'][$permissionType] = array(
 			'id' => $permissionType,
-			'columns' => array(
-				'left' => array(),
-				'right' => array()
-			)
+			'view' => $loadType,
+			'columns' => array()
 		);
-		foreach ($permissionGroups as $permissionGroup => $permissionArray)
+		foreach ($permissionList as $permission => $permissionArray)
 		{
-			$position = in_array($permissionGroup, $leftPermissionGroups) ? 'left' : 'right';
-			$context['permissions'][$permissionType]['columns'][$position][$permissionGroup] = array(
-				'type' => $permissionType,
-				'id' => $permissionGroup,
-				'name' => &$txt['permissiongroup_' . $permissionGroup],
-				'icon' => isset($txt['permissionicon_' . $permissionGroup]) ? $txt['permissionicon_' . $permissionGroup] : $txt['permissionicon'],
-				'help' => isset($txt['permissionhelp_' . $permissionGroup]) ? $txt['permissionhelp_' . $permissionGroup] : '',
-				'hidden' => in_array($permissionGroup, $hiddenGroups),
-				'permissions' => array()
-			);
+			// What groups will this permission be in?
+			$own_group = $permissionArray[($loadType == 'classic' ? 1 : 2)];
+			$any_group = $loadType == 'simple' && !empty($permissionArray[3]) ? $permissionArray[3] : ($loadType == 'simple' && $permissionArray[0] ? $permissionArray[2] : '');
 
-			foreach ($permissionArray as $perm => $has_own_any)
+			// First, Do these groups actually exist - if not add them.
+			if (!isset($permissionGroups[$permissionType][$loadType][$own_group]))
+				$permissionGroups[$permissionType][$loadType][$own_group] = true;
+			if (!empty($any_group) && !isset($permissionGroups[$permissionType][$loadType][$any_group]))
+				$permissionGroups[$permissionType][$loadType][$any_group] = true;
+			
+			// What column should this be located into?
+			$position = $loadType == 'classic' && !in_array($own_group, $leftPermissionGroups) ? 1 : 0;
+
+			// If the groups have not yet been created be sure to create them.
+			$bothGroups = array('own' => $own_group);
+			if ($any_group)
+				$bothGroups['any'] = $any_group;
+
+			foreach ($bothGroups as $group)
+				if (!isset($context['permissions'][$permissionType]['columns'][$position][$group]))
+					$context['permissions'][$permissionType]['columns'][$position][$group] = array(
+						'type' => $permissionType,
+						'id' => $group,
+						'name' => $loadType == 'simple' ? (isset($txt['permissiongroup_simple_' . $group]) ? $txt['permissiongroup_simple_' . $group] : '') : $txt['permissiongroup_' . $group],
+						'icon' => isset($txt['permissionicon_' . $group]) ? $txt['permissionicon_' . $group] : $txt['permissionicon'],
+						'help' => isset($txt['permissionhelp_' . $group]) ? $txt['permissionhelp_' . $group] : '',
+						'hidden' => false,
+						'permissions' => array()
+					);
+
+			// If this is a guest permission we don't do it if it's the guest group.
+			if (isset($context['group']['id']) && $context['group']['id'] == -1 && in_array($permission, $non_guest_permissions))
+				continue;
+
+			// This is where we set up the permission dependant on the view.
+			if ($loadType == 'classic')
 			{
-				if (isset($context['group']['id']) && $context['group']['id'] == -1 && in_array($perm, $non_guest_permissions))
-					continue;
-
-				$context['permissions'][$permissionType]['columns'][$position][$permissionGroup]['permissions'][$perm] = array(
-					'id' => $perm,
-					'name' => !isset($relabelPermissions[$perm]) ? $txt['permissionname_' . $perm] : $txt[$relabelPermissions[$perm]],
-					'show_help' => isset($txt['permissionhelp_' . $perm]),
-					'note' => isset($txt['permissionnote_' . $perm]) ? $txt['permissionnote_' . $perm] : '',
-					'has_own_any' => $has_own_any,
+				$context['permissions'][$permissionType]['columns'][$position][$own_group]['permissions'][$permission] = array(
+					'id' => $permission,
+					'name' => !isset($relabelPermissions[$permission]) ? $txt['permissionname_' . $permission] : $txt[$relabelPermissions[$permission]],
+					'show_help' => isset($txt['permissionhelp_' . $permission]),
+					'note' => isset($txt['permissionnote_' . $permission]) ? $txt['permissionnote_' . $permission] : '',
+					'has_own_any' => $permissionArray[0],
 					'own' => array(
-						'id' => $perm . '_own',
-						'name' => $has_own_any ? $txt['permissionname_' . $perm . '_own'] : ''
+						'id' => $permission . '_own',
+						'name' => $permissionArray[0] ? $txt['permissionname_' . $permission . '_own'] : ''
 					),
 					'any' => array(
-						'id' => $perm . '_any',
-						'name' => $has_own_any ? $txt['permissionname_' . $perm . '_any'] : ''
+						'id' => $permission . '_any',
+						'name' => $permissionArray[0] ? $txt['permissionname_' . $permission . '_any'] : ''
 					),
-					'hidden' => in_array($perm, $hiddenPermissions),
+					'hidden' => in_array($permission, $hiddenPermissions),
 				);
-
-				if (in_array($perm, $hiddenPermissions) || in_array($permissionGroup, $hiddenGroups))
-					$context['hidden_permissions'][] = $perm;
+			}
+			else
+			{
+				foreach ($bothGroups as $group_type => $group)
+				{
+					$context['permissions'][$permissionType]['columns'][$position][$group]['permissions'][$permission . ($permissionArray[0] ? '_' . $group_type : '')] = array(
+						'id' => $permission . ($permissionArray[0] ? '_' . $group_type : ''),
+						'name' => isset($txt['permissionname_simple_' . $permission . ($permissionArray[0] ? '_' . $group_type : '')]) ? $txt['permissionname_simple_' . $permission . ($permissionArray[0] ? '_' . $group_type : '')] : $txt['permissionname_' . $permission],
+						'help_index' => isset($txt['permissionhelp_' . $permission]) ? 'permissionhelp_' . $permission : '',
+						'hidden' => in_array($permission, $hiddenPermissions),
+					);
+				}
 			}
 
-			if (empty($context['permissions'][$permissionType]['columns'][$position][$permissionGroup]['permissions']))
-				unset($context['permissions'][$permissionType]['columns'][$position][$permissionGroup]);
+			if (in_array($permission, $hiddenPermissions))
+				$context['hidden_permissions'][] = $permission;
 		}
+		ksort($context['permissions'][$permissionType]['columns']);
 	}
+
+	// Check we don't leave any empty groups - and mark hidden ones as such.
+	foreach ($context['permissions'][$permissionType]['columns'] as $column => $groups)
+		foreach ($groups as $id => $group)
+		{
+			if (empty($group['permissions']))
+				unset($context['permissions'][$permissionType]['columns'][$column][$id]);
+			else
+			{
+				$foundNonHidden = false;
+				foreach ($group['permissions'] as $permission)
+					if (empty($permission['hidden']))
+						$foundNonHidden = true;
+				if (!$foundNonHidden)
+					$context['permissions'][$permissionType]['columns'][$column][$id]['hidden'] = true;
+			}
+		}
 }
 
 // Initialize a form with inline permissions.

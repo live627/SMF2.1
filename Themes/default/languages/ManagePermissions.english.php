@@ -260,6 +260,60 @@ $txt['permissionhelp_view_attachments'] = 'Attachments are files that are attach
 $txt['permissionname_post_attachment'] = 'Post attachments';
 $txt['permissionhelp_post_attachment'] = 'Attachments are files that are attached to posted messages. One message can contain multiple attachments.';
 
+$txt['permissiongroup_simple_view_basic_info'] = 'Use basic forum functionality';
+$txt['permissiongroup_simple_use_pm_system'] = 'Contact members using the personal messaging system';
+$txt['permissiongroup_simple_post_calendar'] = 'Post events onto the calendar';
+$txt['permissiongroup_simple_edit_profile'] = 'Personalise their profile';
+$txt['permissiongroup_simple_delete_account'] = 'Delete their account';
+$txt['permissiongroup_simple_use_avatar'] = 'Select or upload an avatar';
+$txt['permissiongroup_simple_moderate'] = 'Moderate the entire forum';
+$txt['permissiongroup_simple_administrate'] = 'Carry out administrative duties';
+
+$txt['permissionname_simple_calendar_edit_own'] = 'Edit their own calendar events';
+$txt['permissionname_simple_calendar_edit_any'] = 'Edit other people\'s calendar events';
+$txt['permissionname_simple_profile_view_own'] = 'View their own profile';
+$txt['permissionname_simple_profile_view_any'] = 'View other people\'s profiles';
+$txt['permissionname_simple_profile_identity_own'] = 'Edit their account settings';
+$txt['permissionname_simple_profile_identity_any'] = 'Edit other people\'s account settings';
+$txt['permissionname_simple_profile_extra_own'] = 'Edit their additional profile options';
+$txt['permissionname_simple_profile_extra_any'] = 'Edit other people\'s profile options';
+$txt['permissionname_simple_profile_title_own'] = 'Choose a custom title for themselves';
+$txt['permissionname_simple_profile_title_any'] = 'Edit other people\'s custom titles';
+$txt['permissionname_simple_profile_remove_own'] = 'Delete their own account';
+$txt['permissionname_simple_profile_remove_any'] = 'Delete other user\'s accounts';
+
+$txt['permissiongroup_simple_make_unapproved_posts'] = 'Post topics and replies to the board <strong>That do not require approval</strong>';
+$txt['permissiongroup_simple_make_posts'] = 'Post topics and replies to the board';
+$txt['permissiongroup_simple_post_polls'] = 'Make new polls';
+$txt['permissiongroup_simple_participate'] = 'View additional board content';
+$txt['permissiongroup_simple_modify'] = 'Modify their posts';
+$txt['permissiongroup_simple_notification'] = 'Request notifications';
+$txt['permissiongroup_simple_attach'] = 'Post attachments';
+$txt['permissiongroup_simple_moderate'] = 'Moderate the board';
+
+$txt['permissionname_simple_post_unapproved_replies_own'] = 'Post replies that do not need approval to a topic they started';
+$txt['permissionname_simple_post_unapproved_replies_any'] = 'Post replies that do not need approval to any topic';
+$txt['permissionname_simple_post_reply_own'] = 'Post replies to a topic they started';
+$txt['permissionname_simple_post_reply_any'] = 'Post replies to any topic';
+$txt['permissionname_simple_move_own'] = 'Move their own topics';
+$txt['permissionname_simple_move_any'] = 'Move anyone\'s topic';
+$txt['permissionname_simple_lock_own'] = 'Lock their own topic';
+$txt['permissionname_simple_lock_any'] = 'Lock anyone\'s topic';
+$txt['permissionname_simple_remove_own'] = 'Remove their own topic';
+$txt['permissionname_simple_remove_any'] = 'Remove anyone\'s topic';
+$txt['permissionname_simple_delete_own'] = 'Delete a post that they made';
+$txt['permissionname_simple_delete_any'] = 'Delete a post made by anyone';
+$txt['permissionname_simple_modify_own'] = 'Modify their own post';
+$txt['permissionname_simple_modify_any'] = 'Modify someone else\'s post';
+$txt['permissionname_simple_poll_add_own'] = 'Add a poll to a topic they created';
+$txt['permissionname_simple_poll_add_any'] = 'Add a poll to any topic';
+$txt['permissionname_simple_poll_edit_own'] = 'Edit a poll they created';
+$txt['permissionname_simple_poll_edit_any'] = 'Edit anyone\'s poll';
+$txt['permissionname_simple_poll_lock_own'] = 'Lock their own poll';
+$txt['permissionname_simple_poll_lock_any'] = 'Lock anyone\'s poll';
+$txt['permissionname_simple_poll_remove_own'] = 'Remove a poll they created';
+$txt['permissionname_simple_poll_remove_any'] = 'Remove anyone\'s poll';
+
 $txt['permissionicon'] = '';
 
 $txt['permission_settings_title'] = 'Permission Settings';
