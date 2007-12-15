@@ -8,7 +8,7 @@ global $context;
 $txt['pm_inbox'] = 'Personal Messages Index';
 $txt['send_message'] = 'Send message';
 $txt['pm_add'] = 'Add';
-$txt['make_bcc'] = 'Blind Carbon Copy';
+$txt['make_bcc'] = 'Add BCC';
 $txt['not_bcc'] = 'Remove BCC';
 $txt['pm_to'] = 'To';
 $txt['pm_bcc'] = 'Bcc';

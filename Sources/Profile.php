@@ -931,11 +931,12 @@ function loadProfileFields($force_reload = false)
 				global $context, $smfFunc, $sourcedir, $cur_profile;
 
 				$value = trim(preg_replace(\'~[\s]~\' . ($context[\'utf8\'] ? \'u\' : \'\'), \' \', $value));
+
 				if (trim($value) == \'\')
 					return \'no_name\';
 				elseif ($smfFunc[\'strlen\']($value) > 60)
  					return \'name_too_long\';
-				elseif ($cur_profile[\'member_name\'] != $value)
+				elseif ($cur_profile[\'real_name\'] != $value)
 				{
 					require_once($sourcedir . \'/Subs-Members.php\');
 					if (isReservedName($value, $context[\'id_member\']))

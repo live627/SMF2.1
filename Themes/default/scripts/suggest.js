@@ -5,7 +5,8 @@ function smfSuggest(sessionID, textID)
 	// Store the handle to the text box.
 	var textHandle = document.getElementById(textID);
 	var suggestDivHandle = document.getElementById('suggest_div_' + textID);
-	var lastSearch = "";
+	var lastSearch = "", lastDirtySearch = "";
+	var selectedDiv = false;
 	var cache = [];
 	var displayData = [];
 	// How many objects can we show at once?
@@ -50,15 +51,64 @@ function smfSuggest(sessionID, textID)
 		{
 			if (displayData.length > 0)
 			{
-				itemClicked(displayData[0]);
+				if (selectedDiv != false)
+					itemClicked(selectedDiv);
+				else
+					itemClicked(displayData[0]);
 			}
 
 			// Don't let it submit anything.
 			void(0);
 			return false;
 		}
+		// Up/Down arrow?
+		if ((keyPress == 38 || keyPress == 40) && displayData.length && suggestDivHandle.style.visibility != 'hidden')
+		{
+			// Loop through the display data trying to find our entry.
+			prevHandle = false;
+			toHighlight = false;
+			for (i = 0; i < displayData.length; i++)
+			{
+				// If we're going up and yet the top one was already selected don't go around.
+				if (selectedDiv != false && selectedDiv == displayData[i] && i == 0 && keyPress == 38)
+				{
+					toHighlight = selectedDiv;
+					break;
+				}
+				// If nothing is selected and we are going down then we select the first one.
+				if (selectedDiv == false && keyPress == 40)
+				{
+					toHighlight = displayData[i];
+					break;
+				}
 
-		
+				// If the previous handle was the actual previously selected one and we're hitting down then this is the one we want.
+				if (prevHandle != false && prevHandle == selectedDiv && keyPress == 40)
+				{
+					toHighlight = displayData[i];
+					break;
+				}
+				// If we're going up and this is the previously selected one then we want the one before, if there was one.
+				if (prevHandle != false && displayData[i] == selectedDiv && keyPress == 38)
+				{
+					toHighlight = prevHandle;
+					break;
+				}
+				// Make the previous handle this!
+				prevHandle = displayData[i];
+			}
+
+			// If we don't have one to highlight by now then it must be the last one that we're after.
+			if (toHighlight == false)
+				toHighlight = prevHandle;
+
+			// Remove any old highlighting.
+			if (selectedDiv != false)
+				itemMouseOut({'srcElement': selectedDiv});
+			// Mark what the selected div now is.
+			selectedDiv = toHighlight;
+			itemMouseOver({'srcElement': selectedDiv});
+		}		
 	}
 
 	// User hit submit?
@@ -122,6 +172,8 @@ function smfSuggest(sessionID, textID)
 			var curMember = {'memberid': curElement.memberid, 'membername': curElement.innerHTML};
 			addUserLink(curMember);
 		}
+
+		selectedDiv = false;
 	}
 
 	// Add a result if not already done.
@@ -151,7 +203,31 @@ function smfSuggest(sessionID, textID)
 			}
 		}
 
-		textHandle.value = '';
+		// Remove the text we searched for from the div.
+		tempText = textHandle.value.toLowerCase();
+		tempSearch = lastSearch.toLowerCase();
+		startString = tempText.indexOf(tempSearch);
+		// Just attempt to remove the bits we just searched for.
+		if (startString != -1)
+		{
+			while (startString > 0)
+			{
+				if (tempText.charAt(startString - 1) == '"' || tempText.charAt(startString - 1) == ',' || tempText.charAt(startString - 1) == ' ')
+				{
+					startString--;
+					if (tempText.charAt(startString - 1) == ',')
+						break;
+				}
+				else
+					break;
+			}
+
+			// Now remove anything from startString upwards.
+			textHandle.value = textHandle.value.substr(0, startString);
+		}
+		// Just take it all.
+		else
+			textHandle.value = '';
 	}
 
 	// Delete an item that has been added if at all?
@@ -175,7 +251,8 @@ function smfSuggest(sessionID, textID)
 		hideTimer = setTimeout(function()
 			{
 				suggestDivHandle.style.visibility = 'hidden';
-			}, 250
+				selectedDiv = false;
+			}, 50
 		);
 	}
 
@@ -250,6 +327,7 @@ function smfSuggest(sessionID, textID)
 		else
 			curElement = this;
 
+		selectedDiv = curElement;
 		curElement.className = 'auto_suggest_item_hover';
 	}
 
@@ -271,9 +349,6 @@ function smfSuggest(sessionID, textID)
 	{
 		if (xmlRequestHandle.readyState != 4)
 			return true;
-
-		// This was the last search result.
-		lastSearch = textHandle.value;
 
 		var sQuoteText = '';
 		var members = oXMLDoc.getElementsByTagName('member');
@@ -309,6 +384,12 @@ function smfSuggest(sessionID, textID)
 			return true;
 		}
 
+		// Nothing changed?
+		if (textHandle.value == lastDirtySearch)
+			return true;
+		lastDirtySearch = textHandle.value;
+
+		// We're only actually interested in the last string.
 		var searchString = textHandle.value.replace(/^("[^"]+",[ ]*)+/, "").replace(/^([^,]+,[ ]*)+/, "");
 		if (searchString.substr(0, 1) == '"')
 			searchString = searchString.substr(1);
@@ -317,6 +398,7 @@ function smfSuggest(sessionID, textID)
 		realLastSearch = lastSearch;
 		lastSearch = searchString;
 
+		// Either nothing or we've completed a sentance.
 		if (searchString == "" || searchString.substr(searchString.length - 1) == '"')
 		{
 			populateDiv();
@@ -335,7 +417,7 @@ function smfSuggest(sessionID, textID)
 			autoSuggestHide();
 			return true;
 		}
-		else if (searchString.substr(0, realLastSearch.length) == realLastSearch && cache.length != 100)
+		else if (searchString.substr(0, realLastSearch.length) == realLastSearch)
 		{
 			// Instead of hitting the server again, just narrow down the results...
 			var newcache = [], j = 0;
@@ -370,7 +452,7 @@ function smfSuggest(sessionID, textID)
 		searchString = escape(textToEntities(searchString).replace(/&#(\d+);/g, "%#$1%")).replace(/%26/g, "%25%23038%25");
 
 		// Get the document.
-		xmlRequestHandle = getXMLDocument(smf_scripturl + '?action=suggest;suggest_type=member;search=' + textHandle.value + ';sesc=' + sessionID + ';xml;' + (new Date().getTime()), onSuggestionReceived);
+		xmlRequestHandle = getXMLDocument(smf_scripturl + '?action=suggest;suggest_type=member;search=' + searchString + ';sesc=' + sessionID + ';xml;' + (new Date().getTime()), onSuggestionReceived);
 	}
 
 	// Auto initialise!

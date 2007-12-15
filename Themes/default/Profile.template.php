@@ -2530,9 +2530,8 @@ function template_error_message()
 
 		// Cycle through each error and display an error message.
 		foreach ($context['post_errors'] as $error)
-			//if (isset($txt['profile_error_' . $error]))
 				echo '
-				<li>', $txt['profile_error_' . $error], '.</li>';
+				<li>', isset($txt['profile_error_' . $error]) ? $txt['profile_error_' . $error] : $error, '.</li>';
 
 		echo '
 			</ul>
