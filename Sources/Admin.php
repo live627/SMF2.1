@@ -389,7 +389,7 @@ function AdminMain()
 			),
 		),
 		'maintenance' => array(
-			'title' => $txt['admin_maintenace'],
+			'title' => $txt['admin_maintenance'],
 			'permission' => array('admin_forum'),
 			'areas' => array(
 				'maintain' => array(

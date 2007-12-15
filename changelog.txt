@@ -30,6 +30,7 @@ December 2007
  * Added smf_default_theme_url to the list of javascript globals. (index templates)
  & Changed the text in the string identification_by_smf to remove the reference to SMF. (Login language file)
  ! SMF was incorrectly reporting it had not optimized tables when it actually had. (DbExtra-mysql.php)
+ ! Spell maintenance correctly instead of maintenace. (Admin.php, FixLanguage.php, Admin language file) [Bug 1096]
 
 
 November 2007
