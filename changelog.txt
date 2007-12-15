@@ -35,7 +35,6 @@ December 2007
  ! Fixed undefined index error when editing permission profile. (ManagePermissions.php)
  ! Work harder to stop search engines trying to pretend to send emails. (SendTopic.php, Display, Profile and Memberlist templates)
  ! It was possible to get a database error when viewing RSS feeds. (News.php)
- ! Tell search engines not to follow previous/next. (Display.php)
 
 
 November 2007
