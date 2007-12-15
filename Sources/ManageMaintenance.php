@@ -929,6 +929,8 @@ function ConvertEntities()
 	{
 		$cur_table = $tables[$context['table']];
 		$primary_key = '';
+		// Make sure we keep stuff unique!
+		$primary_keys = array();
 
 		if (function_exists('apache_reset_timeout'))
 			apache_reset_timeout();
@@ -948,10 +950,11 @@ function ConvertEntities()
 			FROM {$db_prefix}$cur_table", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
-			if ($row['Key_name'] === 'PRIMARY' && $row['Seq_in_index'] == 1)
+			if ($row['Key_name'] === 'PRIMARY')
 			{
-				$primary_key = $row['Column_name'];
-				break;
+				if (empty($primary_key) && $row['Seq_in_index'] == 1)
+					$primary_key = $row['Column_name'];
+				$primary_keys[] = $row['Column_name'];
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -974,7 +977,7 @@ function ConvertEntities()
 		{
 			// Retrieve a list of rows that has at least one entity to convert.
 			$request = $smfFunc['db_query']('', "
-				SELECT $primary_key, " . implode(', ', $columns) . "
+				SELECT " . (implode(', ', $primary_keys)) . ", " . implode(', ', $columns) . "
 				FROM {$db_prefix}$cur_table
 				WHERE $primary_key BETWEEN $context[start] AND $context[start] + 499
 					AND (" . implode(" LIKE '%&#%' OR ", $columns) . " LIKE '%&#%')
@@ -986,6 +989,11 @@ function ConvertEntities()
 					if ($column_name !== $primary_key && strpos($column_value, '&#') !== false)
 						$changes[] = "$column_name = '" . $smfFunc['db_escape_string'](preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$entity_replace(\'\\2\')', $column_value)) . "'";
 
+				$where = array();
+				foreach ($primary_keys as $key)
+					$where[] = "$key = '" . $row[$key] . "'";
+
+
 				// Update the row.
 				if (!empty($changes))
 					$smfFunc['db_query']('', "
@@ -993,7 +1001,7 @@ function ConvertEntities()
 						SET
 							" . implode(",
 							", $changes) . "
-						WHERE $primary_key = " . $row[$primary_key], __FILE__, __LINE__);
+						WHERE " . implode(' AND ', $where), __FILE__, __LINE__);
 			}
 			$smfFunc['db_free_result']($request);
 			$context['start'] += 500;

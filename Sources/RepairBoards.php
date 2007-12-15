@@ -1303,7 +1303,7 @@ function findForumErrors($do_fix = false)
 		}
 	
 		// Are we done?
-		pauseRepairProcess($to_fix, $error_type, 10, true);
+		pauseRepairProcess($to_fix, $error_type);
 	}
 
 	// Restore the cache.
