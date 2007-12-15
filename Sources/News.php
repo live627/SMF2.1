@@ -85,6 +85,7 @@ function ShowXmlFeed()
 	$_GET['limit'] = empty($_GET['limit']) || (int) $_GET['limit'] < 1 ? 5 : min((int) $_GET['limit'], 255);
 
 	// Handle the cases where a board, boards, or category is asked for.
+	$query_this_board = 1;
 	if (!empty($_REQUEST['c']) && empty($board))
 	{
 		$_REQUEST['c'] = explode(',', $_REQUEST['c']);

@@ -293,6 +293,9 @@ function BoardPermissionsReport()
 {
 	global $context, $db_prefix, $txt, $modSettings, $smfFunc;
 
+	// Get as much memory as possible as this can be big.
+	@ini_set('memory_limit', '256M');
+
 	if (isset($_REQUEST['boards']))
 	{
 		if (!is_array($_REQUEST['boards']))
@@ -321,7 +324,8 @@ function BoardPermissionsReport()
 	$request = $smfFunc['db_query']('', "
 		SELECT id_board, name, id_profile
 		FROM {$db_prefix}boards
-		WHERE $board_clause", __FILE__, __LINE__);
+		WHERE $board_clause
+		ORDER BY id_board", __FILE__, __LINE__);
 	$profiles = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -414,17 +418,11 @@ function BoardPermissionsReport()
 				{
 					// Set the data for this group to be the local permission.
 					$curData[$id_group] = $group_permissions[$ID_PERM];
-
-					// If it's different than the global - then this permission needs to be shown in diff view.
-					if (!isset($board_permissions[0][$id_group][$ID_PERM]) || $board_permissions[0][$id_group][$ID_PERM] != $group_permissions[$ID_PERM])
-						$identicalGlobal = false;
 				}
 				// Otherwise means it's set to disallow..
 				else
 				{
 					$curData[$id_group] = 'x';
-					if (isset($board_permissions[0][$id_group][$ID_PERM]) && $board_permissions[0][$id_group][$ID_PERM] != 'x')
-						$identicalGlobal = false;
 				}
 
 				// Now actually make the data for the group look right.
@@ -441,22 +439,7 @@ function BoardPermissionsReport()
 			}
 
 			// Now add the data for this permission.
-			//!!! Make an option for changing the view here!
-			if (!$identicalGlobal || !isset($_REQUEST['show_differences']))
-				addData($curData);
-		}
-	}
-
-	// We'll do a little bit of separate stuff for boards using "simple" local permissions.
-	setKeys('rows');
-	foreach ($boards as $id => $board)
-	{
-		if ($id != 0 && !empty($board['permission_mode']) && $board['permission_mode'] != 'normal')
-		{
-			newTable($board['name'], 'x', 'top');
-
-			// Just add a description of the permission type.
-			addData(array('<b>' . $txt['board_perms_group_' . $board['permission_mode']] . '</b>'));
+			addData($curData);
 		}
 	}
 }
@@ -803,20 +786,26 @@ function addData($inc_data, $custom_table = null)
 	{
 		// Basically, check every key exists!
 		foreach ($context['keys'] as $key => $dummy)
+		{
 			$data[$key] = array(
-				'value' => empty($inc_data[$key]) ? $context['tables'][$table]['default_value'] : $inc_data[$key],
-				// Special "hack" the adding seperators when doing data by column.
-				'seperator' => substr($key, 0, 5) == '#sep#' ? true : false,
+				'v' => empty($inc_data[$key]) ? $context['tables'][$table]['default_value'] : $inc_data[$key],
 			);
+			// Special "hack" the adding seperators when doing data by column.
+			if (substr($key, 0, 5) == '#sep#')
+				$data[$key]['seperator'] = true;
+		}
 	}
 	else
 	{
 		$data = $inc_data;
 		foreach ($data as $key => $value)
+		{
 			$data[$key] = array(
-				'value' => $value,
-				'seperator' => substr($key, 0, 5) == '#sep#' ? true : false,
+				'v' => $value,
 			);
+			if (substr($key, 0, 5) == '#sep#')
+				$data[$key]['seperator'] = true;
+		}
 	}
 
 	// Is it by row?
@@ -853,7 +842,7 @@ function addSeparator($title = '', $custom_table = null)
 	// Plumb in the seperator
 	$context['tables'][$table]['data'][] = array(0 => array(
 		'seperator' => true,
-		'value' => $title
+		'v' => $title
 	));
 }
 

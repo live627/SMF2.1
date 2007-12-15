@@ -332,6 +332,9 @@ function PermissionIndex()
 	{
 		$_REQUEST['pid'] = (int) $_REQUEST['pid'];
 
+		if (!isset($context['profiles'][$_REQUEST['pid']]))
+			fatal_lang_error('no_access');
+
 		// Change the selected tab to better reflect that this really is a board profile.
 		$context[$context['admin_menu_name']]['current_subsection'] = 'profiles';
 
@@ -349,7 +352,7 @@ function PermissionIndex()
 
 		$context['profile'] = array(
 			'id' => $_REQUEST['pid'],
-			'name' => $context['profiles'][$_REQUEST['pid']]['parent'] ? ' &quot;' . $context['profiles'][$_REQUEST['pid']]['name'] . '&quot;' : $context['profiles'][$_REQUEST['pid']]['name'],
+			'name' => ' &quot;' . $context['profiles'][$_REQUEST['pid']]['name'] . '&quot;',
 		);
 	}
 

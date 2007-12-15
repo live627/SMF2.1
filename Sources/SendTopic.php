@@ -63,6 +63,9 @@ function EmailUser()
 {
 	global $topic, $txt, $db_prefix, $context, $scripturl, $sourcedir, $smfFunc;
 
+	// Don't index anything here.
+	$context['robot_no_index'] = true;
+
 	// Load the template.
 	loadTemplate('SendTopic');
 
@@ -173,7 +176,7 @@ function CustomEmail()
 
 	// Can the user even see this information?
 	if ($user_info['is_guest'] && !empty($modSettings['guest_hideContacts']))
-		fatal_lang_error('no_access');
+		fatal_lang_error('no_access', false);
 
 	// Are we sending to a user?
 	$context['form_hidden_vars'] = array();

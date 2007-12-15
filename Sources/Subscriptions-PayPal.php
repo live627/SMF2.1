@@ -176,11 +176,11 @@ class paypal_payment
 		
 			// Open the connection.
 			$fp = fsockopen('www.' . (!empty($modSettings['paidsubs_test']) ? 'sandbox.' : '') . 'paypal.com', 80, $errno, $errstr, 30);
-		
+
 			// Did it work?
 			if (!$fp)
 				generateSubscriptionError($txt['paypal_could_not_connect']);
-		
+
 			// Put the data to the port.
 			fputs($fp, $header . $requestString);
 		
@@ -191,7 +191,7 @@ class paypal_payment
 				if (strcmp($this->return_data, 'VERIFIED') == 0)
 					break;
 			}
-		
+
 			// Clean up.
 			fclose($fp);
 		}
@@ -200,10 +200,9 @@ class paypal_payment
 		if (strcmp($this->return_data, 'VERIFIED') != 0)
 		{
 			// Send an email.
-			sendmail($webmaster_email, $txt['paypal_unverified_subject'], $txt['paypal_unverified_body']);
-			exit;
+			generateSubscriptionError($txt['paypal_unverified_body']);
 		}
-	
+
 		// Check that this is intended for us.
 		if ($_POST['business'] != $modSettings['paypal_email'])
 			exit;

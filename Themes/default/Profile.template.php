@@ -291,7 +291,7 @@ function template_summary()
 	// What about if we allow email only via the forum??
 	elseif ($context['member']['show_email'] == 'no_through_forum')
 		echo '
-						<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '"><img src="', $settings['images_url'], '/email_sm.gif" alt="', $txt['email'], '" /></a>';
+						<a href="', $scripturl, '?action=emailuser;sa=email;uid=', $context['member']['id'], '" rel="nofollow"><img src="', $settings['images_url'], '/email_sm.gif" alt="', $txt['email'], '" /></a>';
 
 	// ... Or if the one looking at the profile is an admin they can see it anyway.
 	elseif ($context['member']['show_email'] == 'yes_permission_override')
@@ -633,7 +633,7 @@ function template_editBuddies()
 			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 				<td>', $buddy['link'], '</td>
 				<td align="center"><a href="', $buddy['online']['href'], '"><img src="', $buddy['online']['image_href'], '" alt="', $buddy['online']['label'], '" title="', $buddy['online']['label'], '" /></a></td>
-				<td align="center">', ($buddy['show_email'] == 'no' ? '' : '<a href="' . ($buddy['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;uid=' . $buddy['id'] : 'mailto:' . $buddy['email']) . '"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $buddy['name'] . '" /></a>'), '</td>
+				<td align="center">', ($buddy['show_email'] == 'no' ? '' : '<a href="' . ($buddy['show_email'] == 'no_through_forum' ? $scripturl . '?action=emailuser;sa=email;uid=' . $buddy['id'] : 'mailto:' . $buddy['email']) . '" rel="nofollow"><img src="' . $settings['images_url'] . '/email_sm.gif" alt="' . $txt['email'] . '" title="' . $txt['email'] . ' ' . $buddy['name'] . '" /></a>'), '</td>
 				<td align="center">', $buddy['icq']['link'], '</td>
 				<td align="center">', $buddy['aim']['link'], '</td>
 				<td align="center">', $buddy['yim']['link'], '</td>

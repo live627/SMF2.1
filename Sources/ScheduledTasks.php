@@ -295,7 +295,7 @@ function scheduled_approval_notification()
 
 		// Load the language file as required.
 		if (empty($current_language) || $current_language != $member['language'])
-			$current_language = loadLanguage('Admin', $member['language'], false);
+			$current_language = loadLanguage('EmailTemplates', $member['language'], false);
 
 		// Loop through each notice...
 		foreach ($notices as $board => $notice)
