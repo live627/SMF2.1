@@ -1,12 +1,10 @@
 <?php
 	require_once('/home/simple/public_html/community/SSI.php');
 	require_once('/home/simple/security/settings_mirror.php');
-	if (!isset($smfFunc) && isset($func))
-		$smfFunc = $func;
 
 	// Gather all the information together first and then display it.
 	// It doesn't get updated all too often so don't get it too often.
-	if (($data = cache_get_data('mirrors-xml-data', 3600)) === null)
+	if (($data = cache_get_data('mirrors-xml-data', 3600)) === null || (isset($_REQUEST['recache']) && $user_info['is_admin']))
 	{
 		$data = array(
 			'mirrors' => array(),
@@ -21,44 +19,45 @@
 		);
 
 		// Get the releases!
-		$result = db_query("
-			SELECT ver.verName, ver.fileName, ver.public, IFNULL( pkg.access, 1 ) AS access
+		$result = $smfFunc['db_query']('', "
+			SELECT ver.ver_name, ver.file_name, ver.public, IFNULL(pkg.access,1) AS access
 			FROM {$customize_prefix}smfVersions AS ver
-			LEFT JOIN {$download_prefix}packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.fileName, 'install', '%' ) ) 
+			LEFT JOIN {$download_prefix}packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, 'install', '%' ) ) 
 			WHERE obsolete !=1
-			ORDER BY displayOrder DESC", __FILE__, __LINE__);
+			ORDER BY display_order DESC", __FILE__, __LINE__);
 
-		while ( $row = mysql_fetch_assoc($result) )
+		while ( $row = $smfFunc['db_fetch_assoc']($result) )
 			$data['releases'][] = array(
-				'name' => 'SMF ' . $row['verName'],
-				'file' => $row['fileName'],
+				'name' => 'SMF ' . $row['ver_name'],
+				'file' => $row['file_name'],
 				'access' => $row['access'],
 			);
 
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 
 		// Finally get the languages!
-		$result = db_query("
-			SELECT ver.verName, ver.fileName, pkg.filename
+		$result = $smfFunc['db_query']('', $query = "
+			SELECT ver.ver_name, ver.file_name, pkg.filename
 			FROM customize.smfVersions AS ver
-			LEFT JOIN downloads.download_packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.fileName, '%' ) AND pkg.release_type =1 ) 
-			WHERE obsolete !=1
-				AND NOT ISNULL( pkg.filename ) 
-			ORDER BY displayOrder DESC, pkg.filename ASC", __FILE__, __LINE__);
+			LEFT JOIN downloads.download_packages AS pkg ON ( pkg.filename LIKE CONCAT( ver.file_name, '%' ) AND pkg.release_type =1 ) 
+			WHERE obsolete != 1
+				AND public != 0
+				AND NOT ISNULL(pkg.filename) 
+			ORDER BY display_order DESC, pkg.filename ASC", __FILE__, __LINE__);
 
-		while ($row = mysql_fetch_assoc($result))
+		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
-			$lang = str_replace($row['fileName'], '', $row['filename']);
+			$lang = str_replace($row['file_name'], '', $row['filename']);
 			if (!isset($data['languages'][$lang]))
 				$data['languages'][$lang] = array(
 					'name' => $smfFunc['htmlspecialchars']($lang),
 					'access' => $row['access'],
 					'versions' => array(),
 				);
-			$data['languages'][$lang]['versions'][] = $row['verName'];
+			$data['languages'][$lang]['versions'][] = $row['ver_name'];
 		}
 
-		mysql_free_result($result);
+		$smfFunc['db_free_result']($result);
 
 		// Finally store the results for later use.
 		cache_put_data('mirrors-xml-data', $data, 3600);
@@ -70,7 +69,7 @@
 	<!-- List of mirrors which hold the downloads. -->
 	<mirrors>';
 
-	foreach($data['mirrors'] as $mirror)
+	foreach($data['mirrors'] AS $mirror)
 		echo '
 		<mirror name="', $mirror['name'], '">', $mirror['url'], '</mirror>';
 	
@@ -80,7 +79,7 @@
 	<!-- List of current install releases. -->
 	<installs>';
 
-	foreach($data['releases'] as $release)
+	foreach($data['releases'] AS $release)
 		echo '
 		<install access="', $release['access'], '" name="', $release['name'], '">', $release['file'], '</install>';
 		
@@ -93,7 +92,7 @@
 	<!-- Language files available. -->
 	<languages>';
 
-	foreach($data['languages'] as $language)
+	foreach($data['languages'] AS $language)
 		echo '
 		<language name="', $language['name'], '" versions="', implode(', ', $language['versions']), '">', $language['name'], '</language>';
 
