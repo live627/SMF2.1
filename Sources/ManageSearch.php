@@ -297,6 +297,7 @@ function EditSearchMethod()
 
 		updateSettings(array(
 			'search_custom_index_config' => '',
+			'search_custom_index_resume' => '',
 		));
 
 		// Go back to the default search method.
@@ -384,7 +385,7 @@ function CreateMessageIndex()
 
 	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
 
-	$messages_per_batch = 100;
+	$messages_per_batch = 50;
 
 	$index_properties = array(
 		2 => array(

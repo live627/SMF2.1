@@ -70,7 +70,7 @@ function smf_db_create_word_search($size)
 			id_word $size unsigned NOT NULL default '0',
 			id_msg int(10) unsigned NOT NULL default '0',
 			PRIMARY KEY (id_word, id_msg)
-		) TYPE=MyISAM", false, false);
+		) TYPE=InnoDB", false, false);
 }
 
 ?>
