@@ -37,6 +37,7 @@ December 2007
  ! It was possible to get a database error when viewing RSS feeds. (News.php)
  ! Entity converter was not respecting primary keys thus breaking data. (ManageMaintenance.php)
  ! When e107 bridge uses e107 auth, the SMF user might not be created yet (e107 bridge/smf.php)
+ ! The install files had a duplicate id for the scheduled stats. (install_2-0_msql.sql, install_2-0_sqlite.sql) [Bug 1110]
 
 
 November 2007

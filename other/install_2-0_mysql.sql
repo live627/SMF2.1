@@ -1551,7 +1551,7 @@ VALUES
 	(7, 0, 0, 1, 'd', 0, 'fetchSMfiles'),
 	(8, 0, 0, 1, 'd', 1, 'birthdayemails'),
 	(9, 0, 0, 1, 'w', 0, 'weekly_maintenance'),
-	(9, 0, 120, 1, 'd', 0, 'paid_subscriptions');
+	(10, 0, 120, 1, 'd', 0, 'paid_subscriptions');
 
 # --------------------------------------------------------
 
