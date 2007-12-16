@@ -64,7 +64,7 @@ function template_before()
 	{
 		echo '
 	<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
-		<span style="text-decoration: underline;">', $txt['registration_errors_occurred'], ':</span>
+		<span style="text-decoration: underline;">', $txt['registration_errors_occurred'], '</span>
 		<ul>';
 
 		// Cycle through each error and display an error message.
