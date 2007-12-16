@@ -1470,7 +1470,7 @@ function makeCustomFieldChanges($memID, $area)
 {
 	global $db_prefix, $context, $smfFunc, $user_profile;
 
-	$where = $area == 'register' ? "show_reg = 1" : "show_profile = '$area'";
+	$where = $area == 'register' ? "show_reg != 0" : "show_profile = '$area'";
 
 	// Load the fields we are saving too - make sure we save valid data (etc).
 	$request = $smfFunc['db_query']('', "
@@ -3599,7 +3599,7 @@ function loadCustomFields($memID, $area = 'summary')
 		$where .= $area == 'summary' ? ' AND private != 2' : ' AND private = 0';
 
 	if ($area == 'register')
-		$where .= ' AND show_reg = 1';
+		$where .= ' AND show_reg != 0';
 	elseif ($area != 'summary')
 		$where .= " AND show_profile = '$area'";
 
@@ -3615,6 +3615,10 @@ function loadCustomFields($memID, $area = 'summary')
 		// Shortcut.
 		$exists = $memID && isset($user_profile[$memID], $user_profile[$memID]['options'][$row['col_name']]);
 		$value = $exists && $user_profile[$memID]['options'][$row['col_name']] ? $user_profile[$memID]['options'][$row['col_name']] : '';
+
+		// If this was submitted already then make the value the posted version.
+		if (isset($_POST['customfield']) && isset($_POST['customfield'][$row['col_name']]))
+			$value = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['customfield'][$row['col_name']]));
 
 		// HTML for the input form.
 		$output_html = $value;

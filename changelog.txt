@@ -46,6 +46,9 @@ December 2007
  ! Expanded the toggle javascript function to allow it to be used for admin preferences. (script.js)
  ! The SetJavaScript function should invalidate the current themes cache even if the settings are for another theme. (Themes.php)
  ! The manage holidays page had lost the link for adding new ones. (ManageCalendar.php)
+ ! If the user makes an error during registration, take them back to the template. (Register.php, Register template)
+ ! Custom profile fields can now be required on registration, with error checking to ensure they are filled in right. (ManageSettings.php, Register template)
+ ! Some new language strings for the above changes. (Login, Errors language files)
 
 
 November 2007

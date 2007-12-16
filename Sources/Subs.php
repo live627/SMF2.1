@@ -3300,7 +3300,8 @@ function db_debug_junk()
 	&nbsp;&nbsp;&nbsp;';
 			if (!empty($qq['f']) && !empty($qq['l']))
 				echo 'in <i>' . $qq['f'] . '</i> line <i>' . $qq['l'] . '</i>, ';
-			echo 'which took ' . round($qq['t'], 8) . ' seconds.<br />
+			if (isset($qq['t']))
+				echo 'which took ' . round($qq['t'], 8) . ' seconds.<br />
 	<br />';
 		}
 

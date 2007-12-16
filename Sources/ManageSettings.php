@@ -946,8 +946,8 @@ function ShowCustomProfiles()
 					'function' => create_function('$rowData', '
 						
 						$isChecked = $rowData[\'disabled\'] ? \'\' : \' checked="checked"\';
-						$onClickHandler = $rowData[\'can_show_register\'] ? sprintf(\'onclick="document.getElementById(\\\'reg_%1$d\\\').disabled = !this.checked;"\', $rowData[\'id\']) : \'\';
-						return sprintf(\'<input type="checkbox" name="active[]" id="active_%1$d" value="%1$d" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $onClickHandler);
+						$onClickHandler = $rowData[\'can_show_register\'] ? sprintf(\'onclick="document.getElementById(\\\'reg_%1$s\\\').disabled = !this.checked;"\', $rowData[\'id\']) : \'\';
+						return sprintf(\'<input type="checkbox" name="active[]" id="active_%1$s" value="%1$s" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $onClickHandler);
 					'),
 					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
@@ -961,7 +961,7 @@ function ShowCustomProfiles()
 					'function' => create_function('$rowData', '
 						$isChecked = $rowData[\'on_register\'] && !$rowData[\'disabled\'] ? \' checked="checked"\' : \'\';
 						$isDisabled = $rowData[\'can_show_register\'] ? \'\' : \' disabled="disabled"\';
-						return sprintf(\'<input type="checkbox" name="reg[]" id="reg_%1$d" value="%1$d" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $isDisabled);
+						return sprintf(\'<input type="checkbox" name="reg[]" id="reg_%1$s" value="%1$s" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $isDisabled);
 					'),
 					'class' => 'windowbg',
 					'style' => 'width: 20%; text-align: center;',
@@ -1232,7 +1232,7 @@ function EditCustomProfiles()
 		$_POST['field_desc'] = $smfFunc['htmlspecialchars']($_POST['field_desc']);
 
 		// Checkboxes...
-		$show_reg = isset($_POST['reg']) ? 1 : 0;
+		$show_reg = isset($_POST['reg']) ? (int) $_POST['reg'] : 0;
 		$show_display = isset($_POST['display']) ? 1 : 0;
 		$bbc = isset($_POST['bbc']) ? 1 : 0;
 		$show_profile = $_POST['profile_area'];

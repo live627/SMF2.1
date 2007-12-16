@@ -164,6 +164,9 @@ $txt['custom_edit_profile'] = 'Profile Section';
 $txt['custom_edit_profile_desc'] = 'Section of profile this is edited in.';
 $txt['custom_edit_profile_none'] = 'None';
 $txt['custom_edit_registration'] = 'Show on Registration';
+$txt['custom_edit_registration_disable'] = 'No';
+$txt['custom_edit_registration_allow'] = 'Yes';
+$txt['custom_edit_registration_require'] = 'Yes, and require entry';
 $txt['custom_edit_display'] = 'Show on Topic View';
 $txt['custom_edit_picktype'] = 'Field Type';
 

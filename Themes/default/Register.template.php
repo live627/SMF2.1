@@ -57,8 +57,27 @@ function template_before()
 	setTimeout("checkAgree();", 1000);';
 
 	echo '
-// ]]></script>
+// ]]></script>';
 
+	// Any errors?
+	if (!empty($context['registration_errors']))
+	{
+		echo '
+	<div class="windowbg" style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
+		<span style="text-decoration: underline;">', $txt['registration_errors_occurred'], ':</span>
+		<ul>';
+
+		// Cycle through each error and display an error message.
+		foreach ($context['registration_errors'] as $error)
+				echo '
+			<li>', $error, '</li>';
+
+		echo '
+		</ul>
+	</div>';
+	}
+
+	echo '
 <form action="', $scripturl, '?action=register2" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" onsubmit="return verifyAgree();">
 	<table border="0" width="100%" cellpadding="3" cellspacing="0" class="tborder">
 		<tr class="titlebg">
@@ -144,7 +163,7 @@ function template_before()
 						</td>
 						<td>
 							<div class="smalltext" style="margin: 4px 0 8px 0;">
-								<input type="text" name="visual_verification_code" size="30" tabindex="', $context['tabindex']++, '" />
+								<input type="text" name="visual_verification_code" value="', !empty($context['prev_verification_code']) ? $context['prev_verification_code'] : '', '" size="30" tabindex="', $context['tabindex']++, '" />
 								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a> / <a href="', $scripturl, '?action=register" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a>
 							</div>';
 		if ($context['use_graphic_library'])
@@ -167,7 +186,7 @@ function template_before()
 		echo '
 					<tr>
 						<td colspan="2" align="center" style="padding-top: 1ex;">
-							<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" class="check" /> <b>', $context['coppa_desc'], '.</b></label>
+							<label for="skip_coppa"><input type="checkbox" name="skip_coppa" id="skip_coppa" tabindex="', $context['tabindex']++, '" ', !empty($context['skip_coppa']) ? 'checked="checked"' : '', ' class="check" /> <b>', $context['coppa_desc'], '.</b></label>
 						</td>
 					</tr>';
 

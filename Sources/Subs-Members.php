@@ -40,7 +40,7 @@ if (!defined('SMF'))
 		  karma votes.
 		- updates member statistics afterwards.
 
-	int registerMember(array options)
+	int registerMember(array options, bool return_errors)
 		- registers a member to the forum.
 		- returns the ID of the newly created member.
 		- allows two types of interface: 'guest' and 'admin'. The first
@@ -49,6 +49,7 @@ if (!defined('SMF'))
 		- the strings used in the options array are assumed to be escaped.
 		- allows to perform several checks on the input, e.g. reserved names.
 		- adjusts member statistics.
+		- if an error is detected will fatal error on all errors unless return_errors is true.
 
 	bool isReservedName(string name, int id_member = 0, bool is_name = true, bool fatal = true)
 		- checks if name is a reserved name or username.
@@ -281,7 +282,7 @@ function deleteMembers($users)
 	updateStats('member');
 }
 
-function registerMember(&$regOptions)
+function registerMember(&$regOptions, $return_errors = false)
 {
 	global $scripturl, $txt, $modSettings, $db_prefix, $context, $sourcedir;
 	global $user_info, $options, $settings, $smfFunc;
@@ -292,6 +293,9 @@ function registerMember(&$regOptions)
 	require_once($sourcedir . '/Subs-Auth.php');
 	require_once($sourcedir . '/Subs-Post.php');
 
+	// Put any errors in here.
+	$reg_errors = array();
+
 	// Registration from the admin center, let them sweat a little more.
 	if ($regOptions['interface'] == 'admin')
 	{
@@ -301,8 +305,6 @@ function registerMember(&$regOptions)
 	// If you're an admin, you're special ;).
 	elseif ($regOptions['interface'] == 'guest')
 	{
-		spamProtection('register');
-
 		// You cannot register twice...
 		if (empty($user_info['is_guest']))
 			redirectexit();
@@ -323,31 +325,31 @@ function registerMember(&$regOptions)
 
 	// No name?!  How can you register with no name?
 	if (empty($regOptions['username']))
-		fatal_lang_error('need_username', false);
+		$reg_errors[] = array('lang', 'need_username');
 
 	// Spaces and other odd characters are evil...
 	$regOptions['username'] = preg_replace('~[\t\n\r\x0B\0' . ($context['utf8'] ? ($context['server']['complex_preg_chars'] ? '\x{A0}' : pack('C*', 0xC2, 0xA0)) : '\xA0') . ']+~' . ($context['utf8'] ? 'u' : ''), ' ', $regOptions['username']);
 
 	// Don't use too long a name.
 	if ($smfFunc['strlen']($regOptions['username']) > 25)
-		$regOptions['username'] = $smfFunc['htmltrim']($smfFunc['substr']($regOptions['username'], 0, 25));
+		$reg_errors[] = array('lang', 'error_long_name');
 
 	// Only these characters are permitted.
 	if (preg_match('~[<>&"\'=\\\]~', $regOptions['username']) != 0 || $regOptions['username'] == '_' || $regOptions['username'] == '|' || strpos($regOptions['username'], '[code') !== false || strpos($regOptions['username'], '[/code') !== false)
-		fatal_lang_error('error_invalid_characters_username', false);
+		$reg_errors[] = array('lang', 'error_invalid_characters_username');
 
 	if ($smfFunc['strtolower']($regOptions['username']) === $smfFunc['strtolower']($txt['guest_title']))
-		fatal_lang_error('username_reserved', 'general', array($txt['guest_title']));
+		$reg_errors[] = array('lang', 'username_reserved', 'general', array($txt['guest_title']));
 
 	// !!! Separate the sprintf?
 	if (empty($regOptions['email']) || preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($regOptions['email'])) === 0 || strlen($smfFunc['db_unescape_string']($regOptions['email'])) > 255)
-		fatal_error(sprintf($txt['valid_email_needed'], $regOptions['username']), false);
+		$reg_errors[] = array('done', sprintf($txt['valid_email_needed'], $smfFunc['htmlspecialchars']($regOptions['username'])));
 
 	if (!empty($regOptions['check_reserved_name']) && isReservedName($regOptions['username'], 0, false))
 	{
 		if ($regOptions['password'] == 'chocolate cake')
-			fatal_error('Sorry, I don\'t take bribes... you\'ll need to come up with a different name.', false);
-		fatal_error('(' . htmlspecialchars($regOptions['username']) . ') ' . $txt['name_in_use'], false);
+			$reg_errors[] = array('done', 'Sorry, I don\'t take bribes... you\'ll need to come up with a different name.');
+		$reg_errors[] = array('done', '(' . htmlspecialchars($regOptions['username']) . ') ' . $txt['name_in_use']);
 	}
 
 	// Generate a validation code if it's supposed to be emailed.
@@ -364,13 +366,13 @@ function registerMember(&$regOptions)
 	}
 	// Does the first password match the second?
 	elseif ($regOptions['password'] != $regOptions['password_check'] && $regOptions['auth_method'] == 'password')
-		fatal_lang_error('passwords_dont_match', false);
+		$reg_errors[] = array('lang', 'passwords_dont_match');
 
 	// That's kind of easy to guess...
 	if ($regOptions['password'] == '')
 	{
 		if ($regOptions['auth_method'] == 'password')
-			fatal_lang_error('no_password', false);
+			$reg_errors[] = array('lang', 'no_password');
 		else
 			$regOptions['password'] = sha1(rand());
 	}
@@ -382,13 +384,13 @@ function registerMember(&$regOptions)
 
 		// Password isn't legal?
 		if ($passwordError != null)
-			fatal_lang_error('profile_error_password_' . $passwordError, false);
+			$reg_errors[] = array('lang', 'profile_error_password_' . $passwordError);
 	}
 
 	// If they are using an OpenID that hasn't been verified yet error out.
 	// !!! Change this so they can register without having to attempt a login first
 	if ($regOptions['auth_method'] == 'openid' && (empty($_SESSION['openid']['verified']) || $_SESSION['openid']['openid_uri'] != $regOptions['openid']))
-		fatal_lang_error('openid_not_verified', false);
+		$reg_errors[] = array('lang', 'openid_not_verified');
 
 	// You may not be allowed to register this email.
 	if (!empty($regOptions['check_email_ban']))
@@ -403,8 +405,35 @@ function registerMember(&$regOptions)
 		LIMIT 1", __FILE__, __LINE__);
 	// !!! Separate the sprintf?
 	if ($smfFunc['db_num_rows']($request) != 0)
-		fatal_lang_error('email_in_use', false, array(htmlspecialchars($regOptions['email'])));
+		$reg_errors[] = array('lang', 'email_in_use', false, array(htmlspecialchars($regOptions['email'])));
 	$smfFunc['db_free_result']($request);
+
+	// If we found any errors we need to do something about it right away!
+	foreach ($reg_errors as $key => $error)
+	{
+		/* Note for each error:
+			0 = 'lang' if it's an index, 'done' if it's clear text.
+			1 = The text/index.
+			2 = Whether to log.
+			3 = sprintf data if necessary. */
+		if ($error[0] == 'lang')
+			loadLanguage('Errors');
+		$message = $error[0] == 'lang' ? (empty($error[3]) ? $txt[$error[1]] : vsprintf($txt[$error[1]], $error[3])) : $error[1];
+
+		// What to do, what to do, what to do.
+		if ($return_errors)
+		{
+			if (!empty($error[2]))
+				log_error($message, $error[2]);
+			$reg_errors[$key] = $message;
+		}
+		else
+			fatal_error($message, empty($error[2]) ? false : $error[2]);
+	}
+
+	// If there's any errors left return them at once!
+	if (!empty($reg_errors))
+		return $reg_errors;
 
 	// Some of these might be overwritten. (the lower ones that are in the arrays below.)
 	$regOptions['register_vars'] = array(

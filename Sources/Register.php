@@ -46,10 +46,10 @@ if (!defined('SMF'))
 */
 
 // Begin the registration process.
-function Register()
+function Register($reg_errors = array())
 {
 	global $txt, $boarddir, $context, $settings, $modSettings, $user_info;
-	global $db_prefix, $language, $scripturl, $smfFunc, $sourcedir, $smfFunc;
+	global $db_prefix, $language, $scripturl, $smfFunc, $sourcedir, $smfFunc, $cur_profile;
 
 	if (isset($_GET['sa']) && $_GET['sa'] == 'usernamecheck')
 		return RegisterCheckUsername();
@@ -143,9 +143,15 @@ function Register()
 
 		// Here, and here only, emulate the permissions the user would have to do this.
 		$user_info['permissions'] = array_merge($user_info['permissions'], array('profile_account_own', 'profile_extra_own'));
+		$reg_fields = explode(',', $modSettings['registration_fields']);
+
+		// We might have had some submissions on this front - go check.
+		foreach ($reg_fields as $field)
+			if (isset($_POST[$field]))	
+				$cur_profile[$field] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST[$field]));
 
 		// Load all the fields in question.
-		setupProfileContext(explode(',', $modSettings['registration_fields']));
+		setupProfileContext($reg_fields);
 	}
 
 	// Generate a visual verification code to make sure the user is no bot.
@@ -175,6 +181,26 @@ function Register()
 		$context['username'] = $_SESSION['openid']['nickname'];
 		$context['email'] = $_SESSION['openid']['email'];
 	}
+	// See whether we have some prefiled values.
+	else
+	{
+		$context += array(
+			'openid' => isset($_POST['openid_url']) ? $_POST['openid_url'] : '',
+			'username' => isset($_POST['user']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['user'])) : '',
+			'email' => isset($_POST['email']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['email'])) : '',
+		);
+	}
+
+	$context += array(
+		'prev_verification_code' => isset($_POST['visual_verification_code']) ? $smfFunc['htmlspecialchars']($_POST['visual_verification_code']) : '',
+		'skip_coppa' => !empty($_POST['skip_coppa']) ? true : false,
+	);
+
+	// Was there any errors?
+	$context['registration_errors'] = array();
+	if (!empty($reg_errors))
+		foreach ($reg_errors as $error)
+			$context['registration_errors'][] = $error;
 }
 
 // Actually register the member.
@@ -209,20 +235,24 @@ function Register2()
 		fatal_lang_error('under_age_registration_prohibited', false, array($modSettings['coppaAge']));
 	}
 
+	// Start collecting together any errors.
+	$reg_errors = array();
+
 	// Check whether the visual verification code was entered correctly.
-	if ((empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1) && (empty($_REQUEST['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
+	if ((empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1) && (empty($_REQUEST['visual_verification_code']) || empty($_SESSION['visual_verification_code']) || strtoupper($_REQUEST['visual_verification_code']) !== $_SESSION['visual_verification_code']))
 	{
 		// Don't allow lots of errors!
 		$_SESSION['visual_errors'] = isset($_SESSION['visual_errors']) ? $_SESSION['visual_errors'] + 1 : 1;
 		if ($_SESSION['visual_errors'] > 3 && isset($_SESSION['visual_verification_code']))
 			unset($_SESSION['visual_verification_code']);
 
+		loadLanguage('Errors');
 		if (!empty($_REQUEST['visual_verification_code']) && in_array(md5(strtolower($_REQUEST['visual_verification_code'])), array('7921903964212cc383bf910a8bf2d7f4', '9726255eec083aa56dc0449a21b33190')))
 		{
-			loadLanguage('Errors');
-			fatal_error($txt['error_wrong_verification_code'] . '<br />And we don\'t take bribes', false);
+			$reg_errors[] = $txt['error_wrong_verification_code'] . '<br />And we don\'t take bribes';
 		}
-		fatal_lang_error('error_wrong_verification_code', false);
+		else
+			$reg_errors[] = $txt['error_wrong_verification_code'];
 	}
 	elseif (isset($_SESSION['visual_errors']))
 		unset($_SESSION['visual_errors']);
@@ -265,7 +295,7 @@ function Register2()
 	if (isset($_POST['real_name']) && (!empty($modSettings['allow_editDisplayName']) || allowedTo('moderate_forum')))
 	{
 		$_POST['real_name'] = trim(preg_replace('~[\s]~' . ($context['utf8'] ? 'u' : ''), ' ', $_POST['real_name']));
-		if (trim($_POST['real_name']) != '' && !isReservedName($_POST['real_name'], $memID) && $smfFunc['strlen']($_POST['real_name']) > 60)
+		if (trim($_POST['real_name']) != '' && !isReservedName($_POST['real_name'], $memID) && $smfFunc['strlen']($_POST['real_name']) < 60)
 			$possible_strings[] = 'real_name';
 	}
 
@@ -350,7 +380,65 @@ function Register2()
 		$_POST['options'] = isset($_POST['options']) ? $_POST['options'] + $_POST['default_options'] : $_POST['default_options'];
 	$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
-	$memberID = registerMember($regOptions);
+	// Check whether we have fields that simply MUST be displayed?
+	$request = $smfFunc['db_query']('', "
+		SELECT col_name, field_name, field_type, field_length, mask, show_reg
+		FROM {$db_prefix}custom_fields
+		WHERE show_reg != 0
+			AND active = 1", __FILE__, __LINE__);
+	$custom_field_errors = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		// We only care for text fields as the others are valid to be empty.
+		if (!in_array($row['field_type'], array('check', 'select', 'radio')))
+		{
+			$value = isset($_POST['customfield'][$row['col_name']]) ? trim($_POST['customfield'][$row['col_name']]) : '';
+			// Is it too long?
+			if ($row['field_length'] && $row['field_length'] < $smfFunc['strlen']($value))
+				$custom_field_errors[] = array('custom_field_too_long', array($row['field_name'], $row['field_length']));
+
+			// Any masks to apply?
+			if ($row['field_type'] == 'text' && !empty($row['mask']) && $row['mask'] != 'none')
+			{
+				//!!! We never error on this - just ignore it at the moment...
+				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($value)) === 0 || strlen($smfFunc['db_unescape_string']($value)) > 255))
+					$custom_field_errors[] = array('custom_field_invalid_email', array($row['field_name']));
+				elseif ($row['mask'] == 'number' && preg_match('~[^\d]~', $value))
+					$custom_field_errors[] = array('custom_field_not_number', array($row['field_name']));
+				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), $smfFunc['db_unescape_string']($value)) === 0)
+					$custom_field_errors[] = array('custom_field_inproper_format', array($row['field_name']));
+			}
+
+			// Is this required but not there?
+			if (empty($value) && $row['show_reg'] > 1)
+				$custom_field_errors[] = array('custom_field_empty', array($row['field_name']));
+		}
+	}
+	$smfFunc['db_free_result']($request);
+
+	// Process any errors.
+	if (!empty($custom_field_errors))
+	{
+		loadLanguage('Errors');
+		foreach ($custom_field_errors as $error)
+			$reg_errors[] = vsprintf($txt['error_' . $error[0]], $error[1]);
+	}
+
+	$memberID = registerMember($regOptions, true);
+
+	// What there actually an error of some kind dear boy?
+	if (is_array($memberID))
+	{
+		$reg_errors = array_merge($reg_errors, $memberID);
+		return Register($reg_errors);
+	}
+
+	// Do our spam protection now.
+	spamProtection('register');
+
+	// Remove the old code.
+	if ((empty($modSettings['visual_verification_type']) || $modSettings['visual_verification_type'] != 1) && isset($_SESSION['visual_verification_code']))
+		unset($_SESSION['visual_verification_code']);
 
 	// We'll do custom fields after as then we get to use the helper function!
 	require_once($sourcedir . '/Profile.php');

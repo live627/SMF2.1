@@ -1045,7 +1045,11 @@ function template_edit_profile_field()
 			</tr><tr class="windowbg2">
 				<td width="50%"><b>', $txt['custom_edit_registration'], ':</b></td>
 				<td width="50%">
-					<input type="checkbox" name="reg" id="reg" ', $context['field']['reg'] ? 'checked="checked"' : '', ' class="check" />
+					<select name="reg" id="reg">
+						<option value="0" ', $context['field']['reg'] == 0 ? 'selected="selected"' : '', '>', $txt['custom_edit_registration_disable'], '</option>
+						<option value="1" ', $context['field']['reg'] == 1 ? 'selected="selected"' : '', '>', $txt['custom_edit_registration_allow'], '</option>
+						<option value="2" ', $context['field']['reg'] == 2 ? 'selected="selected"' : '', '>', $txt['custom_edit_registration_require'], '</option>
+					</select>
 				</td>
 			</tr><tr class="windowbg2">
 				<td width="50%"><b>', $txt['custom_edit_display'], ':</b></td>

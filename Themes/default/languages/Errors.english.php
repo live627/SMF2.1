@@ -365,4 +365,10 @@ $txt['openid_sig_invalid'] = 'The signature from the identity provider is invali
 $txt['openid_load_data'] = 'Could not load the data from your login request.  Please try again.';
 $txt['openid_not_verified'] = 'The OpenID address given has not been verified yet.  Please log in to verify.';
 
+$txt['error_custom_field_too_long'] = 'The &quot;%1$s&quot; field cannot be greater than %1$d characters in length.';
+$txt['error_custom_field_invalid_email'] = 'The &quot;%1$s&quot; field must be a valid email address.';
+$txt['error_custom_field_not_number'] = 'The &quot;%1$s&quot; field must be numeric.';
+$txt['error_custom_field_inproper_format'] = 'The &quot;%1$s&quot; field is an invalid format.';
+$txt['error_custom_field_empty'] = 'The &quot;%1$s&quot; field cannot be left blank.';
+
 ?>
