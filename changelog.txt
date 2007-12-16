@@ -45,6 +45,7 @@ December 2007
  ! Use the admin preferences variable to store the admin's desired permissions view. (ManagePermissions.php)
  ! Expanded the toggle javascript function to allow it to be used for admin preferences. (script.js)
  ! The SetJavaScript function should invalidate the current themes cache even if the settings are for another theme. (Themes.php)
+ ! The manage holidays page had lost the link for adding new ones. (ManageCalendar.php)
 
 
 November 2007
