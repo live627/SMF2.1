@@ -1107,6 +1107,7 @@ function create_control_autosuggest(&$suggestOptions)
 		'size' => !empty($suggestOptions['size']) ? $suggestOptions['size'] : 40,
 		'width' => !empty($suggestOptions['width']) ? $suggestOptions['width'] : '200px',
 		'button' => !empty($suggestOptions['button']) ? $suggestOptions['button'] : false,
+		'callbacks' => !empty($suggestOptions['callbacks']) ? $suggestOptions['callbacks'] : array(),
 	);
 }
 

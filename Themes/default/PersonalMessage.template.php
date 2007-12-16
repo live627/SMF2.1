@@ -866,6 +866,22 @@ function template_send()
 		echo '
 		<script language="JavaScript" type="text/javascript" src="', $settings['default_theme_url'], '/scripts/captcha.js"></script>';
 
+	// This function stops people appearing on both bcc and to.
+	echo '
+	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
+		function onRecipientAdd(recipientType, memberID)
+		{
+			// Check whether it exists on the other type.
+			if (document.getElementById(\'suggest_template_\' + (recipientType == \'to\' ? \'bcc\' : \'to\') + \'_\' + memberID))
+			{
+				if (recipientType == \'to\')
+					suggestHandlebcc.deleteItem(memberID);
+				else
+					suggestHandleto.deleteItem(memberID);
+			}
+		}
+	// ]]></script>';
+
 	// Show which messages were sent successfully and which failed.
 	if (!empty($context['send_log']))
 	{
@@ -931,45 +947,59 @@ function template_send()
 
 	// To and bcc. Include a button to search for members.
 	echo '
-							<tr>
+							<tr valign="top">
 								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' style="color: red;"' : ''), '>', $txt['pm_to'], ':</b></td>
 								<td class="smalltext">
-									', template_control_autosuggest('to'), '
-								</td>
-							</tr><tr>
-								<td align="right"></td>
-								<td class="smalltext">';
+									', template_control_autosuggest('to'), '<span class="smalltext" id="bcc_link" style="display: none;"><a href="#" onclick="document.getElementById(\'bcc_div\').style.display = \'\';document.getElementById(\'bcc_link\').style.display = \'none\';return false;">', $txt['make_bcc'], '</a> <a href="', $scripturl, '?action=helpadmin;help=pm_bcc" onclick="return reqWin(this.href);">(?)</a></span>';
 
-	// Any recipients yet?
-	if (!empty($context['recipients']))
+	// Any existing recipients?
+	if (!empty($context['recipients']['to']))
 	{
-		foreach ($context['recipients'] as $member)
+		foreach ($context['recipients']['to'] as $member)
 		{
 			echo '
 									<div id="suggest_template_to_', $member['id'], '">
 										<input type="hidden" name="recipient_to[]" value="', $member['id'], '" />
-										<input type="hidden" name="recipient_bcc_', $member['id'], '" id="recipient_bcc_', $member['id'], '" value="', $member['bcc'], '" />
-										<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="recipient_link_to_', $member['id'], '" class="extern" ', $member['bcc'] ? 'style="font-style: italic"' : '', '>', $member['name'], '</a>
-										<input type="image" name="bcc_recipient_change" value="', $member['id'], '" onclick="return toggleBCC(', $member['id'], ')" id="recipient_toggle_bcc_', $member['id'], '" src="', $settings['images_url'], '/pm_recipient_', $member['bcc'] ? 'bcc' : 'to', '.gif" alt="', $member['bcc'] ? $txt['no_bcc'] : $txt['make_bcc'], '" />
+										<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="recipient_link_to_', $member['id'], '" class="extern">', $member['name'], '</a>
 										<input type="image" name="delete_recipient" value="', $member['id'], '" onclick="return suggestHandleto.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
 									</div>';
 		}
 	}
 
-	// The bit below is the template for additional folks.
 	echo '
-									<div id="suggest_template_to" style="visibility: hidden;">
+									<div id="suggest_template_to" style="visibility: hidden; display: none;">
 										<input type="hidden" name="recipient_to[]" value="{MEMBER_ID}" />
-										<input type="hidden" name="recipient_bcc_{MEMBER_ID}" id="recipient_bcc_{MEMBER_ID}" value="0" />
 										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_to_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
-										<input type="image" onclick="return toggleBCC(\'{MEMBER_ID}\')" id="recipient_toggle_bcc_{MEMBER_ID}" src="', $settings['images_url'], '/pm_recipient_to.gif" alt="', $txt['make_bcc'], '" />
 										<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
 									</div>
 								</td>
-							</tr>';
-	// Subject of personal message.
+							</tr><tr valign="top" id="bcc_div">
+								<td align="right"><b', (isset($context['post_error']['no_to']) || isset($context['post_error']['bad_to']) ? ' style="color: red;"' : ''), '>', $txt['pm_bcc'], ':</b></td>
+								<td class="smalltext">
+									', template_control_autosuggest('bcc');
+
+	// Any existing BCC recipients?
+	if (!empty($context['recipients']['bcc']))
+	{
+		foreach ($context['recipients']['bcc'] as $member)
+		{
+			echo '
+									<div id="suggest_template_bcc_', $member['id'], '">
+										<input type="hidden" name="recipient_bcc[]" value="', $member['id'], '" />
+										<a href="', $scripturl, '?action=profile;u=', $member['id'], '" id="recipient_link_bcc_', $member['id'], '" class="extern">', $member['name'], '</a>
+										<input type="image" name="delete_recipient" value="', $member['id'], '" onclick="return suggestHandlebcc.deleteItem(', $member['id'], ');" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+									</div>';
+		}
+	}
+
 	echo '
-							<tr>
+									<div id="suggest_template_bcc" style="visibility: hidden; display: none;">
+										<input type="hidden" name="recipient_bcc[]" value="{MEMBER_ID}" />
+										<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_bcc_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
+										<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+									</div>
+								</td>
+							</tr><tr>
 								<td align="right"><b', (isset($context['post_error']['no_subject']) ? ' style="color: red;"' : ''), '>', $txt['subject'], ':</b></td>
 								<td><input type="text" name="subject" value="', $context['subject'], '" tabindex="', $context['tabindex']++, '" size="40" maxlength="50" /></td>
 							</tr>';
@@ -1066,22 +1096,14 @@ function template_send()
 		</table>';
 
 	echo '
-		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-			// Toggle BCC status?
-			function toggleBCC(memberID)
-			{
-				curBBC = document.getElementById(\'recipient_bcc_\' + memberID).value;
-				imgSrc = document.getElementById(\'recipient_toggle_bcc_\' + memberID);
-				imgSrc.src = \'', $settings['images_url'], '/\' + (curBBC == 1 ? \'pm_recipient_to.gif\' : \'pm_recipient_bcc.gif\');
-				imgSrc.alt = curBBC == 1 ? \'', $txt['make_bcc'], '\' : \'', $txt['not_bcc'], '\';
+		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
-				document.getElementById(\'recipient_link_to_\' + memberID).style.fontStyle = curBBC == 1 ? \'normal\' : \'italic\';
+	if (empty($context['recipients']['bcc']))
+		echo '
+			document.getElementById(\'bcc_div\').style.display = \'none\';
+			document.getElementById(\'bcc_link\').style.display = \'\';';
 
-				document.getElementById(\'recipient_bcc_\' + memberID).value = curBBC == 1 ? 0 : 1;
-
-				return false;
-			}
-
+	echo '
 			function saveEntities()
 			{
 				var textFields = ["subject", "message"];

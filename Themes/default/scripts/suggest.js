@@ -14,12 +14,16 @@ function smfSuggest(sessionID, textID)
 	// How many characters shall we start searching on?
 	var minimumSearchChars = 3;
 
+	var onMemberAddCallback = false;
+
+
 	var hideTimer = false;
 	var positionComplete = false;
 
 	this.forceAutoSuggest = autoSuggestUpdate;
 	this.deleteItem = deleteAddedItem;
 	this.onSubmit = onElementSubmitted;
+	this.registerCallback = registerCallback;
 
 	xmlRequestHandle = null;
 
@@ -111,6 +115,13 @@ function smfSuggest(sessionID, textID)
 		}		
 	}
 
+	// Functions for integration.
+	function registerCallback(callbackType, callbackFunction)
+	{
+		if (callbackType == 'onadd')
+			onMemberAddCallback = callbackFunction;
+	}
+
 	// User hit submit?
 	function onElementSubmitted()
 	{
@@ -200,6 +211,7 @@ function smfSuggest(sessionID, textID)
 				newNode.innerHTML = newNode.innerHTML.replace(/\{MEMBER_NAME\}/g, curUser.membername).replace(/'*(\{|%7B)MEMBER_ID(\}|%7D)'*/g, curUser.memberid).replace(/'*\{DELETE_MEMBER_URL\}'*/g, deleteCode);
 
 				newNode.style.visibility = 'visible';
+				newNode.style.display = '';
 			}
 		}
 
@@ -228,6 +240,12 @@ function smfSuggest(sessionID, textID)
 		// Just take it all.
 		else
 			textHandle.value = '';
+
+		// If there's a callback then call it.
+		if (onMemberAddCallback)
+		{
+			onMemberAddCallback(textID, curUser.memberid);
+		}
 	}
 
 	// Delete an item that has been added if at all?
@@ -252,7 +270,7 @@ function smfSuggest(sessionID, textID)
 			{
 				suggestDivHandle.style.visibility = 'hidden';
 				selectedDiv = false;
-			}, 50
+			}, 250
 		);
 	}
 

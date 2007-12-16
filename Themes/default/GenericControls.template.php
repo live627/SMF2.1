@@ -270,7 +270,13 @@ function template_control_autosuggest($suggest_id)
 	echo '
 	<div class="auto_suggest_div" id="suggest_div_', $suggest_id, '" style="visibility: hidden;"></div>
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
-		var suggestHandle', $suggest_id, ' = new smfSuggest(\'', $context['session_id'], '\', \'', $suggest_id, '\');
+		var suggestHandle', $suggest_id, ' = new smfSuggest(\'', $context['session_id'], '\', \'', $suggest_id, '\');';
+
+	if (!empty($suggest_context['callbacks']))
+		foreach ($suggest_context['callbacks'] as $type => $function)
+			echo '
+			suggestHandle', $suggest_id, '.registerCallback(\'', $type, '\', ', $function, ');';
+	echo '
 	// ]]></script>';
 }
 

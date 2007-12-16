@@ -49,6 +49,7 @@ December 2007
  ! If the user makes an error during registration, take them back to the template. (Register.php, Register template)
  ! Custom profile fields can now be required on registration, with error checking to ensure they are filled in right. (ManageSettings.php, Register template)
  ! Some new language strings for the above changes. (Login, Errors language files)
+ ! sendpm will now return the member ID's as the index in the log. (Subs-Post.php)
 
 
 November 2007

@@ -847,7 +847,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 					$recipients[$rec_type][$id] = $usernames[$member];
 				else
 				{
-					$log['failed'][] = sprintf($txt['pm_error_user_not_found'], $recipients[$rec_type][$id]);
+					$log['failed'][$id] = sprintf($txt['pm_error_user_not_found'], $recipients[$rec_type][$id]);
 					unset($recipients[$rec_type][$id]);
 				}
 			}
@@ -962,7 +962,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 			if ($message_limit > 0 && $message_limit <= $row['instant_messages'])
 			{
-				$log['failed'][] = sprintf($txt['pm_error_data_limit_reached'], $row['real_name']);
+				$log['failed'][$row['id_member']] = sprintf($txt['pm_error_data_limit_reached'], $row['real_name']);
 				unset($all_to[array_search($row['id_member'], $all_to)]);
 				continue;
 			}
@@ -970,7 +970,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			// Do they have any of the allowed groups?
 			if (count(array_intersect($allowed_groups, $groups)) == 0 || count(array_intersect($disallowed_groups, $groups)) != 0)
 			{
-				$log['failed'][] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
+				$log['failed'][$row['id_member']] = sprintf($txt['pm_error_user_cannot_read'], $row['real_name']);
 				unset($all_to[array_search($row['id_member'], $all_to)]);
 				continue;
 			}
@@ -978,7 +978,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 		if (!empty($row['ignored']))
 		{
-			$log['failed'][] = sprintf($txt['pm_error_ignored_by_user'], $row['real_name']);
+			$log['failed'][$row['id_member']] = sprintf($txt['pm_error_ignored_by_user'], $row['real_name']);
 			unset($all_to[array_search($row['id_member'], $all_to)]);
 			continue;
 		}
@@ -990,7 +990,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		if (!empty($row['email_address']) && ($row['pm_email_notify'] == 1 || ($row['pm_email_notify'] > 1 && ($row['is_buddy'] || !empty($modSettings['enable_buddylist'])))) && $row['is_activated'] == 1)
 			$notifications[empty($row['lngfile']) || empty($modSettings['userLanguage']) ? $language : $row['lngfile']][] = $row['email_address'];
 
-		$log['sent'][] = sprintf(isset($txt['pm_successfully_sent']) ? $txt['pm_successfully_sent'] : '', $row['real_name']);
+		$log['sent'][$row['id_member']] = sprintf(isset($txt['pm_successfully_sent']) ? $txt['pm_successfully_sent'] : '', $row['real_name']);
 	}
 	$smfFunc['db_free_result']($request);
 
