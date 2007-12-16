@@ -377,6 +377,11 @@ function CreateMessageIndex()
 {
 	global $modSettings, $context, $db_prefix, $smfFunc;
 
+	// Scotty, we need more time...
+	@set_time_limit(600);
+	if (function_exists('apache_reset_timeout'))
+		apache_reset_timeout();
+
 	$context[$context['admin_menu_name']]['current_subsection'] = 'method';
 
 	$messages_per_batch = 100;
@@ -478,16 +483,28 @@ function CreateMessageIndex()
 					FROM {$db_prefix}messages
 					WHERE id_msg BETWEEN $context[start] AND " . ($context['start'] + $messages_per_batch - 1) . "
 					LIMIT $messages_per_batch", __FILE__, __LINE__);
+				$forced_break = false;
+				$number_processed = 0;
 				while ($row = $smfFunc['db_fetch_assoc']($request))
+				{
+					// In theory it's possible for one of these to take friggin ages so add more timeout protection.
+					if ($stop < time())
+					{
+						$forced_break = true;						
+						break;
+					}
+
+					$number_processed++;
 					foreach (text2words($row['body'], $context['index_settings']['bytes_per_word'], true) as $id_word)
 					{
 						$inserts[] = array($id_word, $row['id_msg']);
 					}
-				$num_messages['done'] += $smfFunc['db_num_rows']($request);
-				$num_messages['todo'] -= $smfFunc['db_num_rows']($request);
+				}
+				$num_messages['done'] += $number_processed;
+				$num_messages['todo'] -= $number_processed;
 				$smfFunc['db_free_result']($request);
 
-				$context['start'] += $messages_per_batch;
+				$context['start'] += $forced_break ? $number_processed : $messages_per_batch;
 
 				if (!empty($inserts))
 					$smfFunc['db_insert']('ignore',

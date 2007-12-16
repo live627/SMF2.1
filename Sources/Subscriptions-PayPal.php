@@ -200,7 +200,7 @@ class paypal_payment
 		if (strcmp($this->return_data, 'VERIFIED') != 0)
 		{
 			// Send an email.
-			generateSubscriptionError($txt['paypal_unverified_body']);
+			exit;
 		}
 
 		// Check that this is intended for us.

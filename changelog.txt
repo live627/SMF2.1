@@ -55,6 +55,8 @@ December 2007
  * Put the rich text editor control script into a table cell so it won't ruin validation. (GenericControls template)
  * Safari should now show more then one line when previewing. (Post template, style.css) [Bug 1034]
  * Use the correct button label for permission submission. (ManagePermissions template) [Bug 1105]
+ ! Some messages have line breaks in to the extreme which was breaking text2words. (Subs.php)
+ ! Try harder not to timeout when creating a search index. (ManageSearch.php)
 
 
 November 2007
