@@ -146,7 +146,7 @@ elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 	// For one off's we want to only capture them once!
 	if (!$gatewayClass->isSubscription())
 	{
-		$real_details = @unserialize(stripslashes($pending_details));
+		$real_details = @unserialize($pending_details);
 		if (empty($real_details))
 			generateSubscriptionError(sprintf($txt['paid_count_not_find_outstanding_payment'], $ID_MEMBER, $ID_SUB));
 		// Now we just try to find anything pending. We don't really care which it is as security happens later.
@@ -157,7 +157,7 @@ elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 				$payments_pending--;
 			break;
 		}
-		$pending_details = empty($real_details) ? '' : addslashes(serialize($real_details));
+		$pending_details = empty($real_details) ? '' : $smfFunc['db_escape_string'](serialize($real_details));
 
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_subscribed

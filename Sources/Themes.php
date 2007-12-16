@@ -1249,7 +1249,7 @@ function WrapAction()
 // Set an option via javascript.
 function SetJavaScript()
 {
-	global $db_prefix, $settings, $user_info, $smfFunc;
+	global $db_prefix, $settings, $user_info, $smfFunc, $options;
 
 	// Sorry, guests can't do this.
 	if ($user_info['is_guest'])
@@ -1264,7 +1264,24 @@ function SetJavaScript()
 
 	// Use a specific theme?
 	if (isset($_GET['th']) || isset($_GET['id']))
+	{
+		// Invalidate the current themes cache too.
+		cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 60);
+
 		$settings['theme_id'] = isset($_GET['th']) ? (int) $_GET['th'] : (int) $_GET['id'];
+	}
+
+	// If this is the admin preferences the passed value will just be an element of it.
+	if ($_GET['var'] == 'admin_preferences')
+	{
+		$options['admin_preferences'] = !empty($options['admin_preferences']) ? unserialize($options['admin_preferences']) : array();
+		// New thingy...
+		if (isset($_GET['admin_key']) && strlen($_GET['admin_key']) < 5)
+			$options['admin_preferences'][$_GET['admin_key']] = $_GET['val'];
+
+		// Change the value to be something nice,
+		$_GET['val'] = $smfFunc['db_escape_string'](serialize($options['admin_preferences']));
+	}
 
 	// Update the option.
 	$smfFunc['db_insert']('replace',

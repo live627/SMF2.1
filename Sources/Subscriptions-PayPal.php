@@ -215,7 +215,7 @@ class paypal_payment
 		}
 
 		// Verify the currency!
-		if (strtolower($_POST['mc_currency']) != $modSettings['currency_code'])
+		if (strtolower($_POST['mc_currency']) != $modSettings['paid_currency_code'])
 			exit;
 
 		// Can't exist if it doesn't contain anything.

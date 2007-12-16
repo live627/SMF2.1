@@ -574,7 +574,7 @@ function ViewSubscribedUsers()
 	$smfFunc['db_free_result']($request);
 
 	// Are we searching for people?
-	$search_string = isset($_POST['ssearch']) && !empty($_POST['sub_search']) ? ' AND IFNULL(mem.real_name, \'$txt[guest]\') LIKE \'%' . addslashes($_POST['sub_search']) . '%\'' : '';
+	$search_string = isset($_POST['ssearch']) && !empty($_POST['sub_search']) ? ' AND IFNULL(mem.real_name, \'$txt[guest]\') LIKE \'%' . $smfFunc['db_escape_string']($_POST['sub_search']) . '%\'' : '';
 
 	$listOptions = array(
 		'id' => 'subscribed_users_list',
@@ -976,7 +976,7 @@ function ModifyUserSubscription()
 		$context['pending_payments'] = array();
 		if (!empty($row['pending_details']))
 		{
-			$pending_details = @unserialize(stripslashes($row['pending_details']));
+			$pending_details = @unserialize($row['pending_details']);
 			foreach ($pending_details as $id => $pending)
 			{
 				// Only this type need be displayed.
@@ -1017,7 +1017,7 @@ function ModifyUserSubscription()
 							addSubscription($context['current_subscription']['id'], $row['id_member'], $context['current_subscription']['real_length'] == 'F' ? strtoupper(substr($pending[2], 0, 1)) : 0);
 						unset($pending_details[$id]);
 
-						$new_details = addslashes(serialize($pending_details));
+						$new_details = $smfFunc['db_escape_string'](serialize($pending_details));
 
 						// Update the entry.
 						$smfFunc['db_query']('', "

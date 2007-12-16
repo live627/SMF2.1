@@ -47,6 +47,9 @@ if (!defined('SMF'))
 		- preserves case, formatting, and additional options in file.
 		- writes nothing if the resulting file would be less than 10 lines
 		  in length (sanity check for read lock.)
+
+	void updateAdminPreferences()
+		- saves the admins current preferences to the database.
 */
 
 
@@ -323,6 +326,36 @@ function updateSettingsFile($config_vars)
 			fwrite($fp, strtr($line, "\r", ''));
 		fclose($fp);
 	}
+}
+
+function updateAdminPreferences()
+{
+	global $options, $context, $smfFunc, $db_prefix, $settings, $user_info;
+
+	// This must exist!
+	if (!isset($context['admin_preferences']))
+		return false;
+
+	// This is what we'll be saving.
+	$options['admin_preferences'] = serialize($context['admin_preferences']);
+
+	// Just check we haven't ended up with something theme exclusive somehow.
+	$smfFunc['db_query']('', "
+		DELETE FROM {$db_prefix}themes
+		WHERE id_theme != 1
+		AND variable = 'admin_preferences'", __FILE__, __LINE__);
+
+	// Update the themes table.
+	$smfFunc['db_insert'](
+		'replace',
+		"{$db_prefix}themes",
+		array('id_member', 'id_theme', 'variable', 'value'),
+		array($user_info['id'], 1, "'admin_preferences'", '\'' . $smfFunc['db_escape_string']($options['admin_preferences']) . '\''),
+		array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
+	);
+
+	// Make sure we invalidate any cache.
+	cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 0);
 }
 
 ?>

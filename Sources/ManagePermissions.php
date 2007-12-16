@@ -157,7 +157,7 @@ function PermissionIndex()
 	loadPermissionProfiles();
 
 	// Are we going to show the advanced options?
-	$context['show_advanced_options'] = !empty($_SESSION['advanced_perm_screen']);
+	$context['show_advanced_options'] = !empty($context['admin_preferences']['app']);
 
 	// Determine the number of ungrouped members.
 	$request = $smfFunc['db_query']('', "
@@ -431,9 +431,6 @@ function SetQuickGroups()
 
 	loadIllegalPermissions();
 
-	// Better quick the panel open!
-	$_SESSION['advanced_perm_screen'] = true;
-
 	// Make sure only one of the quick options was selected.
 	if ((!empty($_POST['predefined']) && ((isset($_POST['copy_from']) && $_POST['copy_from'] != 'empty') || !empty($_POST['permissions']))) || (!empty($_POST['copy_from']) && $_POST['copy_from'] != 'empty' && !empty($_POST['permissions'])))
 		fatal_lang_error('permissions_only_one_option', false);
@@ -635,10 +632,21 @@ function SetQuickGroups()
 
 function ModifyMembergroup()
 {
-	global $db_prefix, $context, $txt, $modSettings, $smfFunc;
+	global $db_prefix, $context, $txt, $modSettings, $smfFunc, $sourcedir;
 
 	$context['group']['id'] = (int) $_GET['group'];
-	$context['view_type'] = isset($_GET['view']) && $_GET['view'] == 'classic' ? 'classic' : 'simple';
+
+	// Are they toggling the view?
+	if (isset($_GET['view']))
+	{
+		$context['admin_preferences']['pv'] = $_GET['view'] == 'classic' ? 'classic' : 'simple';
+
+		// Update the users preferences.
+		require_once($sourcedir . '/Subs-Admin.php');
+		updateAdminPreferences();
+	}
+
+	$context['view_type'] = !empty($context['admin_preferences']['pv']) && $context['admin_preferences']['pv'] == 'classic' ? 'classic' : 'simple';
 
 	// It's not likely you'd end up here with this setting disabled.
 	if ($_GET['group'] == 1 || ($context['group']['id'] == 3 && empty($_GET['pid'])))

@@ -31,22 +31,16 @@ if (!defined('SMF'))
 // Create a menu...
 function createMenu($menuData, $menuOptions = array())
 {
-	global $context, $settings, $options, $txt, $modSettings, $scripturl, $smfFunc, $db_prefix, $user_info;
+	global $context, $settings, $options, $txt, $modSettings, $scripturl, $smfFunc, $db_prefix, $user_info, $sourcedir;
 
 	// First are we toggling use of the side bar generally?
 	if (isset($_GET['togglebar']))
 	{
-		$options['use_side_bar'] = (int) $_GET['togglebar'];
-		$smfFunc['db_insert'](
-			'replace',
-			"{$db_prefix}themes",
-			array('id_member', 'id_theme', 'variable', 'value'),
-			array($user_info['id'], 1, "'use_side_bar'", $options['use_side_bar']),
-			array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
-		);
+		$context['admin_preferences']['tb'] = (int) $_GET['togglebar'];
 
-		// Make sure we invalidate any cache.
-		cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 0);
+		// Update the users preferences.
+		require_once($sourcedir . '/Subs-Admin.php');
+		updateAdminPreferences();
 
 		// Redirect as this seems to work best.
 		redirectexit('action=' . (isset($_GET['action']) ? $_GET['action'] : 'admin') . ';area=' . (isset($_GET['area']) ? $_GET['area'] : 'index') . ';sa=' . (isset($_GET['sa']) ? $_GET['sa'] : 'settings') . ';sc=' . $context['session_id']);
@@ -227,7 +221,7 @@ function createMenu($menuData, $menuOptions = array())
 	// What type of menu is this?
 	if (!isset($menuOptions['menu_type']))
 	{
-		$menuOptions['menu_type'] = '_' . (!empty($options['use_side_bar']) ? 'sidebar' : 'dropdown');
+		$menuOptions['menu_type'] = '_' . (!empty($context['admin_preferences']['tb']) ? 'sidebar' : 'dropdown');
 		$menu_context['can_toggle_drop_down'] = isset($settings['theme_version']) && $settings['theme_version'] >= 2.0;
 	}
 	else

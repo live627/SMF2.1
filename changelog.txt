@@ -38,6 +38,13 @@ December 2007
  ! Entity converter was not respecting primary keys thus breaking data. (ManageMaintenance.php)
  ! When e107 bridge uses e107 auth, the SMF user might not be created yet (e107 bridge/smf.php)
  ! The install files had a duplicate id for the scheduled stats. (install_2-0_msql.sql, install_2-0_sqlite.sql) [Bug 1100]
+ ! Added function for setting admin preferences. (Subs-Admin.php)
+ ! Make the side bar setting part of the admin preferences.
+ ! Added new view to the manage permissions screen which simplifies the display of permissions. (ManagePermissions.php, ManagePermissions template)
+ & Added a load of new strings for the above change. (ManagePermissions language file)
+ ! Use the admin preferences variable to store the admin's desired permissions view. (ManagePermissions.php)
+ ! Expanded the toggle javascript function to allow it to be used for admin preferences. (script.js)
+ ! The SetJavaScript function should invalidate the current themes cache even if the settings are for another theme. (Themes.php)
 
 
 November 2007

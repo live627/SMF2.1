@@ -136,13 +136,6 @@ function template_html_above()
 		mainHeader.addToggleImage("upshrink", "/upshrink.gif", "/upshrink2.gif");
 		mainHeader.addTogglePanel("upshrinkHeader");
 		mainHeader.addTogglePanel("upshrinkHeader2");
-
-		// And create the info center object.
-		var infoHeader = new smfToggle("upshrinkIC", ', empty($options['collapse_header_ic']) ? 'false' : 'true', ');
-		infoHeader.useCookie(', $context['user']['is_guest'] ? 1 : 0, ');
-		infoHeader.setOptions("collapse_header_ic", "', $context['session_id'], '");
-		infoHeader.addToggleImage("upshrink_ic", "/collapse.gif", "/expand.gif");
-		infoHeader.addTogglePanel("upshrinkHeaderIC");
 	// ]]></script>';
 
 	echo '
@@ -315,7 +308,7 @@ function template_body_above()
 			</tr>
 		</table>
 
-		<a href="javascript:void(0);" onclick="shrinkHeader(!current_header); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" style="margin: 2px 2ex 2px 0;" border="0" /></a>';
+		<a href="javascript:void(0);" onclick="mainHeader.toggle(); return false;"><img id="upshrink" src="', $settings['images_url'], '/', empty($options['collapse_header']) ? 'upshrink.gif' : 'upshrink2.gif', '" alt="*" title="', $txt['upshrink_description'], '" style="margin: 2px 2ex 2px 0;" border="0" /></a>';
 
 		// Show the menu here, according to the menu sub template.
 		template_menu();

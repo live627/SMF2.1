@@ -96,9 +96,9 @@ function AdminMain()
 
 	require_once($sourcedir . '/Subs-Menu.php');
 
-	// Some features we may have hidden.
-	//!!! Temp until upgrade enabled for this!
-	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
+	// Some features and preferences.
+	$context['admin_features'] = explode(',', $modSettings['admin_features']);
+	$context['admin_preferences'] = !empty($options['admin_preferences']) ? unserialize($options['admin_preferences']) : array();
 
 	// Define all the menu structure - see Subs-Menu.php for details!
 	$admin_areas = array(

@@ -282,7 +282,7 @@ $txt['permissionname_simple_profile_title_any'] = 'Edit other people\'s custom t
 $txt['permissionname_simple_profile_remove_own'] = 'Delete their own account';
 $txt['permissionname_simple_profile_remove_any'] = 'Delete other user\'s accounts';
 
-$txt['permissiongroup_simple_make_unapproved_posts'] = 'Post topics and replies to the board <strong>That do not require approval</strong>';
+$txt['permissiongroup_simple_make_unapproved_posts'] = 'Post topics and replies to the board - without requiring approval';
 $txt['permissiongroup_simple_make_posts'] = 'Post topics and replies to the board';
 $txt['permissiongroup_simple_post_polls'] = 'Make new polls';
 $txt['permissiongroup_simple_participate'] = 'View additional board content';

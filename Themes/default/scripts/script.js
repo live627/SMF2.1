@@ -435,14 +435,17 @@ function smf_sessionKeepAlive()
 window.setTimeout("smf_sessionKeepAlive();", 1200000);
 
 // Set a theme option through javascript.
-function smf_setThemeOption(option, value, theme, cur_session_id)
+function smf_setThemeOption(option, value, theme, cur_session_id, additional_vars)
 {
 	// Compatibility.
 	if (cur_session_id == null)
 		cur_session_id = smf_session_id;
 
+	if (additional_vars == null)
+		additional_vars = '';
+
 	var tempImage = new Image();
-	tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=jsoption;var=" + option + ";val=" + value + ";sesc=" + cur_session_id + (theme == null ? "" : "&id=" + theme) + ";" + (new Date().getTime());
+	tempImage.src = smf_scripturl + (smf_scripturl.indexOf("?") == -1 ? "?" : "&") + "action=jsoption;var=" + option + ";val=" + value + ";sesc=" + cur_session_id + additional_vars + (theme == null ? "" : "&id=" + theme) + ";" + (new Date().getTime());
 }
 
 function smf_avatarResize()
@@ -553,7 +556,7 @@ function smfToggle(uniqueId, initialState)
 	this.state = initialState;
 	this.use_cookie = 0;
 	// Needed for setting theme options - kept hidden!
-	var themeOptions = Array(3);
+	var themeOptions = Array(5);
 	themeOptions[0] = null;
 	this.useCookie = useCookie;
 	this.toggle = toggleHeader;
@@ -584,7 +587,7 @@ function smfToggle(uniqueId, initialState)
 		if (themeOptions[0] != null)
 		{
 			var curMode = themeOptions[2] ? !mode : mode;
-			smf_setThemeOption(themeOptions[0], mode ? 1 : 0, null, themeOptions[1]);
+			smf_setThemeOption(themeOptions[0], curMode ? 1 : 0, themeOptions[3] == 0 ? null : themeOptions[3], themeOptions[1], themeOptions[4]);
 		}
 
 		// Toggle the images.
@@ -610,11 +613,13 @@ function smfToggle(uniqueId, initialState)
 	}
 
 	// Set the theme option that should change with this.
-	function setOptions(newThemeOptions, sessID, flip)
+	function setOptions(newThemeOptions, sessID, flip, themeID, preferenceKey)
 	{
 		themeOptions[0] = newThemeOptions;
 		themeOptions[1] = sessID;
 		themeOptions[2] = flip == null ? 0 : 1;
+		themeOptions[3] = themeID == null ? 0 : themeID;
+		themeOptions[4] = preferenceKey == null ? '' : ';admin_key=' + preferenceKey;
 	}
 
 	// Add an image to toggle (id, mode = 0 image, mode = 1 image)
