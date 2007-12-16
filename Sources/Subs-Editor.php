@@ -937,7 +937,7 @@ function create_control_richedit($editorOptions)
 
 		// This really has some WYSIWYG stuff.
 		$context['html_headers'] .= '
-		<link rel="stylesheet" type="text/css" name="rich_edit_css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/editor.css" />
+		<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/editor.css" />
 
 		
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[

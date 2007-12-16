@@ -147,8 +147,8 @@ function template_main()
 					<td id="preview_subject">', empty($context['preview_subject']) ? '' : $context['preview_subject'], '</td>
 				</tr>
 				<tr>
-					<td class="windowbg" width="100%">
-						<div id="preview_body" class="post">', empty($context['preview_message']) ? '' : $context['preview_message'], '</div>
+					<td class="post" width="100%" id="preview_body">
+						', empty($context['preview_message']) ? str_repeat('<br />', 5) : $context['preview_message'], '
 					</td>
 				</tr>
 			</table><br />

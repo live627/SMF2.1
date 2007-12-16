@@ -196,6 +196,7 @@ function template_control_richedit($editor_id)
 
 	// Now it's all drawn out we'll actually setup the box.
 	echo '
+			<tr><td colspan="2">
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var editorHandle', $editor_id, ' = new smfEditor(\'', $context['session_id'], '\', \'', $editor_id, '\', ', $editor_context['rich_active'] ? 'true' : 'false', ', \'', $editor_context['rich_active'] ? $editor_context['rich_value'] : '', '\', \'', $editor_context['width'], '\', \'', $editor_context['height'], '\');';
 
@@ -250,7 +251,8 @@ function template_control_richedit($editor_id)
 		editorHandle', $editor_id, '.addSelect(\'size\');
 		editorHandle', $editor_id, '.addSelect(\'color\');
 		smf_editorArray[smf_editorArray.length] = editorHandle', $editor_id, ';
-	// ]]></script>';
+	// ]]></script>
+			</td></tr>';
 }
 
 // Display an auto suggest box.

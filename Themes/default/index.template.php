@@ -100,7 +100,7 @@ function template_html_above()
 
 	// Show all the relative links, such as help, search, contents, and the like.
 	echo '
-	<link rel="help" href="', $scripturl, '?action=help" rel="new_win" />
+	<link rel="help" href="', $scripturl, '?action=help" />
 	<link rel="search" href="' . $scripturl . '?action=search" />
 	<link rel="contents" href="', $scripturl, '" />';
 

@@ -299,7 +299,7 @@ function template_edit_profiles()
 
 	if ($context['can_edit_something'])
 		echo '
-						<input type="submit" name="rename" value="', empty($context['show_rename_boxes']) ? $txt['permissions_profile_rename'] : $txt['scheduled_tasks_save_changes'], '" />';
+						<input type="submit" name="rename" value="', empty($context['show_rename_boxes']) ? $txt['permissions_profile_rename'] : $txt['permissions_commit'], '" />';
 
 	echo '
 						<input type="submit" name="delete" value="', $txt['quickmod_delete_selected'], '" />
@@ -966,7 +966,7 @@ function template_postmod_permissions()
 	echo '
 				<tr class="titlebg">
 					<td align="right" colspan="13">
-						<input type="submit" name="save_changes" value="', $txt['scheduled_tasks_save_changes'], '" />
+						<input type="submit" name="save_changes" value="', $txt['permissions_commit'], '" />
 					</td>
 				</tr>
 			</table>
