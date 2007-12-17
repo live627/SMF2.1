@@ -57,6 +57,7 @@ December 2007
  * Use the correct button label for permission submission. (ManagePermissions template) [Bug 1105]
  ! Some messages have line breaks in to the extreme which was breaking text2words. (Subs.php)
  ! Try harder not to timeout when creating a search index. (ManageSearch.php)
+ ! Removing an unapproved message could cause an error. (RemoveTopic.php)
 
 
 November 2007
