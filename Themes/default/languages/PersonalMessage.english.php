@@ -135,26 +135,7 @@ $txt['pm_visual_verification_label'] = 'Verification';
 $txt['pm_visual_verification_desc'] = 'Please enter the code in the image above to send this pm.';
 
 $txt['pm_settings'] = 'Change Settings';
-$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
-$txt['pm_settings_save'] = 'Save Changes';
-
-$txt['ignorelist'] = 'Ignorelist';
-$txt['username_line'] = 'Add one Username on each line.<br />Or enter * to ignore all messages.';
-$txt['email_notify'] = 'Notify by email every time you receive a personal message:';
-$txt['email_notify_never'] = 'Never';
-$txt['email_notify_buddies'] = 'From Buddies Only';
-$txt['email_notify_always'] = 'Always';
-
-$txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by default.';
-$txt['popup_messages'] = 'Show a popup when you receive new messages?';
-$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
-$txt['pm_display_mode'] = 'Display personal messages';
-$txt['pm_display_mode_all'] = 'All at once';
-$txt['pm_display_mode_one'] = 'One at a time';
-$txt['pm_display_mode_linked'] = 'As a conversation';
 $txt['pm_change_view'] = 'Change View';
-// Use entities in the below string.
-$txt['pm_recommend_enable_outbox'] = 'To make the most of this setting we suggest you enable &quot;Save a copy of each Personal Message in my outbox by default&quot;\\n\\nThis will help ensure that the conversations flow better as you can see both sides of the conversation.';
 
 $txt['pm_manage_rules'] = 'Manage Rules';
 $txt['pm_manage_rules_desc'] = 'Message rules allow you to automatically sort incoming messages dependant on a set of criteria you define. Below are all the rules you currently have setup. To edit a rule simply click the rule name.';

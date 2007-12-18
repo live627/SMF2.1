@@ -892,7 +892,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			mem.total_time_logged_in, mem.id_post_group, mem.notify_announcements, mem.notify_regularity, mem.notify_send_body,
 			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
 			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.ignore_boards, mem.warning,
-			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt";
+			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt, mem.pm_prefs";
 		$select_tables = "
 			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
 			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_member = mem.id_member)

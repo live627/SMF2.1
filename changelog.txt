@@ -58,6 +58,10 @@ December 2007
  ! Some messages have line breaks in to the extreme which was breaking text2words. (Subs.php)
  ! Try harder not to timeout when creating a search index. (ManageSearch.php)
  ! Removing an unapproved message could cause an error. (RemoveTopic.php)
+ ! Split the Profile source file into three elements, keeping the old file as a master, to stop the include size approaching PHP's limit. (Profile.php, Profile-View.php, Profile-Modify.php, Profile-Actions.php)
+ ! Show the personal message settings in the profile as well as in the personal message centre to allow the admin to edit them. (PersonalMessage.php, Profile-Modify.php)
+ * Remove the old template for personal message settings and instead use the generic profile template. (PersonalMessage, Profile template)
+ & Move the language strings for personal message settings back to the profile language file. (PersonalMessage, Profile language files)
 
 
 November 2007

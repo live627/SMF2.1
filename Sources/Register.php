@@ -135,6 +135,8 @@ function Register($reg_errors = array())
 	// Or any standard ones?
 	if (!empty($modSettings['registration_fields']))
 	{
+		require_once($sourcedir . '/Profile-Modify.php');
+
 		// Setup some important context.
 		loadLanguage('Profile');
 		loadTemplate('Profile');
@@ -442,6 +444,7 @@ function Register2()
 
 	// We'll do custom fields after as then we get to use the helper function!
 	require_once($sourcedir . '/Profile.php');
+	require_once($sourcedir . '/Profile-Modify.php');
 	makeCustomFieldChanges($memberID, 'register');
  
 	// If COPPA has been selected then things get complicated, setup the template.

@@ -156,6 +156,7 @@ $txt['groupMembership'] = 'Group Membership';
 $txt['groupMembership_info'] = 'In this section of your profile you can change which groups you belong to.';
 $txt['ignoreboards'] = 'Ignore Boards Options';
 $txt['ignoreboards_info'] = 'This page lets you ignore particular boards.  When a board is ignored, the new post indicator will not show up on the board index.  New posts will not show up using the "unread post" search link (when searching it will not look in those boards) however, ignored boards will still appear on the board index and upon entering will show which topics have new posts.  When using the "unread replies" link, new posts in an ignored board will still be shown.';
+$txt['pmprefs'] = 'Personal Messaging';
 
 $txt['profileAction'] = 'Actions';
 $txt['deleteAccount'] = 'Delete this account';
@@ -377,5 +378,23 @@ $txt['profile_warning_previous_reason'] = 'Reason';
 $txt['profile_warning_previous_notice'] = 'View Notice Sent to Member';
 
 $txt['subscriptions'] = 'Paid Subscriptions';
+
+$txt['pm_settings_desc'] = 'From this page you can change a variety of personal messaging options - including how messages are displayed. You can also create a list of people to reject incoming messages from.';
+$txt['ignorelist'] = 'Ignorelist';
+$txt['username_line'] = 'Add one Username on each line.<br />Or enter * to ignore all messages.';
+$txt['email_notify'] = 'Notify by email every time you receive a personal message:';
+$txt['email_notify_never'] = 'Never';
+$txt['email_notify_buddies'] = 'From Buddies Only';
+$txt['email_notify_always'] = 'Always';
+
+$txt['copy_to_outbox'] = 'Save a copy of each Personal Message in my outbox by default.';
+$txt['popup_messages'] = 'Show a popup when you receive new messages?';
+$txt['pm_remove_inbox_label'] = 'Remove the inbox label when applying another label';
+$txt['pm_display_mode'] = 'Display personal messages';
+$txt['pm_display_mode_all'] = 'All at once';
+$txt['pm_display_mode_one'] = 'One at a time';
+$txt['pm_display_mode_linked'] = 'As a conversation';
+// Use entities in the below string.
+$txt['pm_recommend_enable_outbox'] = 'To make the most of this setting we suggest you enable &quot;Save a copy of each Personal Message in my outbox by default&quot;\\n\\nThis will help ensure that the conversations flow better as you can see both sides of the conversation.';
 
 ?>

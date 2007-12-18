@@ -2572,9 +2572,50 @@ function ManageLabels()
 function MessageSettings()
 {
 	global $txt, $user_settings, $user_info, $db_prefix, $context, $db_prefix, $sourcedir, $smfFunc;
+	global $scripturl, $profile_vars, $cur_profile, $user_profile;
 
-	// Need this for custom fields!
+	// Need this for the display.
 	require_once($sourcedir . '/Profile.php');
+	require_once($sourcedir . '/Profile-Modify.php');
+/*
+	// We want them to submit back to here.
+	$context['profile_custom_submit_url'] = $scripturl . '?action=pm;sa=settings;save';
+
+	loadMemberData($user_info['id'], false, 'profile');
+	$cur_profile = $user_profile[$user_info['id']];
+
+	loadLanguage('Profile');
+	loadTemplate('Profile');
+
+	$context['page_title'] = $txt['pm_settings'];
+	$context['user']['is_owner'] = true;
+	$context['id_member'] = $user_info['id'];
+	$context['require_password'] = false;
+	$context['menu_item_selected'] = 'settings';
+
+	// Are they saving?
+	if (isset($_REQUEST['save']))
+	{
+		checkSession('post');
+
+		// Mimic what profile would do.
+		$_POST = htmltrim__recursive($_POST);
+		$_POST = unescapestring__recursive($_POST);
+		$_POST = htmlspecialchars__recursive($_POST);
+		$_POST = escapestring__recursive($_POST);
+
+		// Save the fields.
+		saveProfileFields();
+
+		if (!empty($profile_vars))
+			updateMemberData($user_info['id'], $profile_vars);
+	}
+
+	// Load up the fields.
+	pmprefs($user_info['id']);
+*/
+
+	loadLanguage('Profile');
 
 	// Are we saving?
 	if (isset($_REQUEST['save']))
@@ -2617,7 +2658,6 @@ function MessageSettings()
 
 	// Tell the template what they are....
 	$context['sub_template'] = 'message_settings';
-	$context['page_title'] = $txt['pm_settings'];
 	$context['send_email'] = $user_settings['pm_email_notify'];
 
 	if ($user_settings['pm_ignore_list'] != '*')

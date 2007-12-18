@@ -1238,7 +1238,7 @@ function template_edit_options()
 
 	// The main header!
 	echo '
-		<form action="', $scripturl, '?action=profile;save" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
+		<form action="', (!empty($context['profile_custom_submit_url']) ? $context['profile_custom_submit_url'] : $scripturl . '?action=profile;save'), '" method="post" accept-charset="', $context['character_set'], '" name="creator" id="creator" enctype="multipart/form-data" onsubmit="return checkProfileSubmit();">
 			<table border="0" width="85%" cellspacing="1" cellpadding="4" align="center" class="bordercolor">
 				<tr class="titlebg">
 					<td height="26">
@@ -1386,11 +1386,13 @@ function template_edit_options()
 							<tr>
 								<td colspan="2">', $context['profile_posthtml'], '</td>
 							</tr>';
-
-	echo '
+	elseif ($lastItem != 'hr')
+		echo '
 							<tr>
 								<td colspan="2"><hr width="100%" size="1" class="hrcolor" /></td>
-							</tr><tr>';
+							</tr>';
+	echo '
+							<tr>';
 
 	// Only show the password box if it's actually needed.
 	if ($context['user']['is_owner'] && $context['require_password'])
@@ -1454,6 +1456,41 @@ function template_edit_options()
 	if (!empty($context['show_spellchecking']))
 		echo '
 		<form name="spell_form" id="spell_form" method="post" accept-charset="', $context['character_set'], '" target="spellWindow" action="', $scripturl, '?action=spellcheck"><input type="hidden" name="spellstring" value="" /></form>';
+}
+
+// Personal Message settings.
+function template_profile_pm_settings()
+{
+	global $context, $settings, $options, $scripturl, $modSettings, $txt;
+
+	echo '
+							<tr>
+								<td colspan="2">
+									<label for="pm_prefs">', $txt['pm_display_mode'], ':</label>
+									<select name="pm_prefs" id="pm_prefs" onchange="if (this.value == 2 && !document.getElementById(\'copy_to_outbox\').checked) alert(\'', $txt['pm_recommend_enable_outbox'], '\');">
+										<option value="0"', $context['display_mode'] == 0 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_all'], '</option>
+										<option value="1"', $context['display_mode'] == 1 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_one'], '</option>
+										<option value="2"', $context['display_mode'] == 2 ? ' selected="selected"' : '', '>', $txt['pm_display_mode_linked'], '</option>
+									</select><br />
+									<label for="pm_email_notify">', $txt['email_notify'], '</label>
+									<select name="pm_email_notify" id="pm_email_notify">
+										<option value="0"', empty($context['send_email']) ? ' selected="selected"' : '', '>', $txt['email_notify_never'], '</option>
+										<option value="1"', !empty($context['send_email']) && ($context['send_email'] == 1 || (empty($modSettings['enable_buddylist']) && $context['send_email'] > 1)) ? ' selected="selected"' : '', '>', $txt['email_notify_always'], '</option>';
+
+	if (!empty($modSettings['enable_buddylist']))
+		echo '
+										<option value="2"', !empty($context['send_email']) && $context['send_email'] > 1 ? ' selected="selected"' : '', '>', $txt['email_notify_buddies'], '</option>';
+
+	echo '
+									</select><br />
+									<input type="hidden" name="default_options[copy_to_outbox]" value="0" />
+									<label for="copy_to_outbox"><input type="checkbox" name="default_options[copy_to_outbox]" id="copy_to_outbox" value="1"', !empty($context['member']['options']['copy_to_outbox']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['copy_to_outbox'], '</label><br />
+									<input type="hidden" name="default_options[popup_messages]" value="0" />
+									<label for="popup_messages"><input type="checkbox" name="default_options[popup_messages]" id="popup_messages" value="1"', !empty($context['member']['options']['popup_messages']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['popup_messages'], '</label><br />
+									<input type="hidden" name="default_options[pm_remove_inbox_label]" value="0" />
+									<label for="pm_remove_inbox_label"><input type="checkbox" name="default_options[pm_remove_inbox_label]" id="pm_remove_inbox_label" value="1"', !empty($context['member']['options']['pm_remove_inbox_label']) ? ' checked="checked"' : '', ' class="check" /> ', $txt['pm_remove_inbox_label'], '</label><br />
+								</td>
+							</tr>';
 }
 
 // Template for showing theme settings. Note: template_options() actually adds the theme specific options.
@@ -2600,6 +2637,27 @@ function template_profile_birthdate()
 									<input type="text" name="bday3" size="4" maxlength="4" value="', $context['member']['birth_date']['year'], '" /> -
 									<input type="text" name="bday1" size="2" maxlength="2" value="', $context['member']['birth_date']['month'], '" /> -
 									<input type="text" name="bday2" size="2" maxlength="2" value="', $context['member']['birth_date']['day'], '" />
+								</td>
+							</tr>';
+}
+
+// Show an ignore user box?
+function template_profile_ignore_list_modify()
+{
+	global $txt, $context, $settings, $scripturl;
+
+	echo '
+							<tr>
+								<td valign="top">
+									<b>', $txt['ignorelist'], ':</b>
+									<div class="smalltext">
+										', $txt['username_line'], '<br />
+										<br />
+										<a href="', $scripturl, '?action=findmember;input=pm_ignore_list;delim=\\n;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" align="middle" /> ', $txt['find_members'], '</a>
+									</div>
+								</td>
+								<td>
+									<textarea name="pm_ignore_list" id="pm_ignore_list" rows="10" cols="50">', $context['ignore_list'], '</textarea>
 								</td>
 							</tr>';
 }
