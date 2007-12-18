@@ -626,7 +626,7 @@ function removeMessage($message, $decreasePostCount = true)
 
 		// Even if it's being recycled respect approval state.
 		$unapproved_posts = $row['approved'] ? 0 : 1;
-		$approved = (int) !$unapproved_posts;
+		$approved = $row['approved'] ? 1 : 0;
 
 		// Insert a new topic in the recycle board.
 		$smfFunc['db_query']('', "

@@ -833,7 +833,7 @@ function getXmlProfile($xml_format)
 				'bad' => $profile['karma']['bad']
 			);
 
-		if (in_array($data['show_email'], array('yes', 'yes_permission_override')))
+		if (in_array($profile['show_email'], array('yes', 'yes_permission_override')))
 			$data['email'] = $profile['email'];
 
 		if (!empty($profile['birth_date']) && substr($profile['birth_date'], 0, 4) != '0000')
