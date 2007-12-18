@@ -50,7 +50,6 @@ December 2007
  ! Custom profile fields can now be required on registration, with error checking to ensure they are filled in right. (ManageSettings.php, Register template)
  ! Some new language strings for the above changes. (Login, Errors language files)
  ! sendpm will now return the member ID's as the index in the log. (Subs-Post.php)
- ! Names and IDs are not allowed on the link tag for css files. (Subs-Editor.php)
  * Not allowed to have a rel on a <link> tag. (index template files)
  * Put the rich text editor control script into a table cell so it won't ruin validation. (GenericControls template)
  * Safari should now show more then one line when previewing. (Post template, style.css) [Bug 1034]
