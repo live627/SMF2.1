@@ -66,6 +66,7 @@ December 2007
  & The email template function was missing the error message required if a template cannot be found. (Errors language file)
  & The email template had the wrong name for the merge notification. (EmailTemplates language file) [Bug 593]
  ! XML had the wrong variable for showing an email address. (News.php)
+ ! Add some table traversal to preparsecode to ensure we don't allow invalid table BBC. (Subs-Post.php) [Bug 1112]
 
 
 November 2007
