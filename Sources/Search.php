@@ -884,7 +884,10 @@ function PlushSearch2()
 	}
 
 	// Spam me not, Spam-a-lot?
-	spamProtection('search');
+	if (empty($_SESSION['last_ss']) || $_SESSION['last_ss'] != $search_params['search'])
+		spamProtection('search');
+	// Store the last search string to allow pages of results to be browsed.
+	$_SESSION['last_ss'] = $search_params['search'];
 
 /*	// !!! This doesn't seem too urgent anymore. Can we remove it?
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)

@@ -63,6 +63,7 @@ December 2007
  * Remove the old template for personal message settings and instead use the generic profile template. (PersonalMessage, Profile template)
  & Move the language strings for personal message settings back to the profile language file. (PersonalMessage, Profile language files)
  * Admin template was linking to credits incorrectly. (Admin template) [Bug 1116]
+ ! Search was using spam protection even when browsing results. (Search.php) [Bug 1115]
 
 
 November 2007
