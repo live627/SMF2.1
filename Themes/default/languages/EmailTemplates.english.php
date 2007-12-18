@@ -686,7 +686,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 
 {REGARDS}',
 	),
-	'notification_merged' => array(
+	'notification_merge' => array(
 		/*
 			@additional_params: notification_merged
 			@description:

@@ -847,7 +847,7 @@ function legalise_bbc($text)
 				preg_match('~\[([A-Za-z]+)[^\]\s]*\]~', substr($text, $i), $matches);
 
 				// It's possible that this wasn't actually a tag after all - if not continue!
-				if (strpos(substr($text, $i), $matches[0]) !== 0)
+				if (!isset($matches[0]) || strpos(substr($text, $i), $matches[0]) !== 0)
 					$matches = array();
 
 				// Is it actually valid?!

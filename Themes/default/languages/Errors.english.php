@@ -371,4 +371,6 @@ $txt['error_custom_field_not_number'] = 'The &quot;%1$s&quot; field must be nume
 $txt['error_custom_field_inproper_format'] = 'The &quot;%1$s&quot; field is an invalid format.';
 $txt['error_custom_field_empty'] = 'The &quot;%1$s&quot; field cannot be left blank.';
 
+$txt['email_no_template'] = 'The email template &quotl%1$s&quot; could not be found.';
+
 ?>
