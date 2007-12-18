@@ -62,6 +62,7 @@ December 2007
  ! Show the personal message settings in the profile as well as in the personal message centre to allow the admin to edit them. (PersonalMessage.php, Profile-Modify.php)
  * Remove the old template for personal message settings and instead use the generic profile template. (PersonalMessage, Profile template)
  & Move the language strings for personal message settings back to the profile language file. (PersonalMessage, Profile language files)
+ * Admin template was linking to credits incorrectly. (Admin template) [Bug 1116]
 
 
 November 2007

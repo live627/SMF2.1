@@ -73,7 +73,7 @@ function template_admin()
 			<td valign="top" style="width: 40%;">
 				<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor" id="supportVersionsTable">
 					<tr>
-						<td class="catbg"><a href="', $scripturl, '?action=admin;credits">', $txt['support_title'], '</a></td>
+						<td class="catbg"><a href="', $scripturl, '?action=admin;area=credits">', $txt['support_title'], '</a></td>
 					</tr><tr>
 						<td class="windowbg2" valign="top" style="height: 18ex;">
 							<b>', $txt['support_versions'], ':</b><br />
