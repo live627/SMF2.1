@@ -2233,29 +2233,6 @@ function getMemberGroups()
 	return $member_groups;
 }
 
-function ip2range($fullip)
-{
-	$ip_parts = explode('.', $fullip);
-	if (count($ip_parts) != 4)
-		return array();
-	$ip_array = array();
-	for ($i = 0; $i < 4; $i++)
-	{
-		if ($ip_parts[$i] == '*')
-			$ip_array[$i] = array('low' => '0', 'high' => '255');
-		elseif (preg_match('/^(\d{1,3})\-(\d{1,3})$/', $ip_parts[$i], $range))
-			$ip_array[$i] = array('low' => $range[1], 'high' => $range[2]);
-		elseif (is_numeric($ip_parts[$i]))
-			$ip_array[$i] = array('low' => $ip_parts[$i], 'high' => $ip_parts[$i]);
-	}
-	if (count($ip_array) == 4)
-		return $ip_array;
-	else
-		return array();
-}
-
-
-
 function fixRelativePath($path)
 {
 	global $install_path;

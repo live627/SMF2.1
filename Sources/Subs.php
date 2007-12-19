@@ -120,7 +120,7 @@ if (!defined('SMF'))
 
 	array permute(array input)
 		- calculates all the possible permutations (orders) of array.
-		- should not be called on huge arrays (bugger than like 10 elements.)
+		- should not be called on huge arrays (bigger than like 10 elements.)
 		- returns an array containing each permutation.
 
 	string doUBBC(string message, bool enableSmileys = true)
