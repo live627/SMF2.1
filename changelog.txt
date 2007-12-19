@@ -70,6 +70,7 @@ December 2007
  ! For no logical reason there was an ip2range function within upgrade.php. (upgrade.php) [Bug 1127]
  ! Don't bother logging the currency setup error. (ManagePaid.php) [Bug 1126]
  ! Week view calendar could cause an undefined index error. (Subs-Calendar.php) [Bug 1121]
+ ! The BBC parsar wasn't closing block quote stuff correctly. (Subs.php) [Bug 1112]
 
 
 November 2007
