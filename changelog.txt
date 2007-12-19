@@ -69,6 +69,7 @@ December 2007
  ! Add some table traversal to preparsecode to ensure we don't allow invalid table BBC. (Subs-Post.php) [Bug 1112]
  ! For no logical reason there was an ip2range function within upgrade.php. (upgrade.php) [Bug 1127]
  ! Don't bother logging the currency setup error. (ManagePaid.php) [Bug 1126]
+ ! Week view calendar could cause an undefined index error. (Subs-Calendar.php) [Bug 1121]
 
 
 November 2007

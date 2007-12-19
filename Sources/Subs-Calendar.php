@@ -587,7 +587,7 @@ function getCalendarWeek($month, $year, $day, $calendarOptions)
 		$curDay = (int) strftime('%d', $curTimestamp);
 
 		// Also increment the current day of the week.
-		$curDayOfWeek = $curDayOfWeek > 6 ? 0 : ++$curDayOfWeek;
+		$curDayOfWeek = $curDayOfWeek >= 6 ? 0 : ++$curDayOfWeek;
 	}
 
 	// Set the previous and the next week's links.
