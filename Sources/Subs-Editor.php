@@ -321,8 +321,8 @@ function html_to_bbc($text)
 	while (preg_match('~<font\s+([^<>]*)>~i', $text, $matches) != false)
 	{
 		// Find the position of this again.
-  	$start_pos = strpos($text, $matches[0]);
-  	$end_pos = false;
+  		$start_pos = strpos($text, $matches[0]);
+  		$end_pos = false;
 		if ($start_pos === false)
 			break;
 
@@ -362,7 +362,7 @@ function html_to_bbc($text)
 
 		// Now work out what the attributes are.
 		$attribs = fetchTagAttributes($matches[1]);
-  	$tags = array();
+  		$tags = array();
 		foreach ($attribs as $s => $v)
 		{
 			if ($s == 'size')
@@ -408,7 +408,13 @@ function html_to_bbc($text)
 		$attrs = explode(' ', $matches[1]);
 		foreach ($attrs as $attrib)
 		{
-			@list ($k, $v) = explode('=', $attrib);
+			// Get the key and attribute.
+			$key_offset = strpos($attrib, '=');
+			if ($key_offset === false)
+				continue;
+			
+			$k = trim(substr($attrib, 0, $key_offset));
+			$v = trim(substr($attrib, $key_offset + 1));
 			if (empty($v))
 				continue;
 
