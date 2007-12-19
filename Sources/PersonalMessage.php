@@ -2577,7 +2577,7 @@ function MessageSettings()
 	// Need this for the display.
 	require_once($sourcedir . '/Profile.php');
 	require_once($sourcedir . '/Profile-Modify.php');
-/*
+
 	// We want them to submit back to here.
 	$context['profile_custom_submit_url'] = $scripturl . '?action=pm;sa=settings;save';
 
@@ -2613,85 +2613,6 @@ function MessageSettings()
 
 	// Load up the fields.
 	pmprefs($user_info['id']);
-*/
-
-	loadLanguage('Profile');
-
-	// Are we saving?
-	if (isset($_REQUEST['save']))
-	{
-		// Validate and set the ignorelist...
-		$_POST['pm_ignore_list'] = preg_replace('~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~', '&#$1;', $_POST['pm_ignore_list']);
-		$_POST['pm_ignore_list'] = strtr(trim($_POST['pm_ignore_list']), array('\\\'' => '&#039;', "\n" => "', '", "\r" => '', '&quot;' => ''));
-
-		if (preg_match('~(\A|,)\*(\Z|,)~s', $_POST['pm_ignore_list']) == 0)
-		{
-			$result = $smfFunc['db_query']('', "
-				SELECT id_member
-				FROM {$db_prefix}members
-				WHERE member_name IN ('$_POST[pm_ignore_list]') OR real_name IN ('$_POST[pm_ignore_list]')
-				LIMIT " . (substr_count($_POST['pm_ignore_list'], '\', \'') + 1), __FILE__, __LINE__);
-			$_POST['pm_ignore_list'] = '';
-			while ($row = $smfFunc['db_fetch_assoc']($result))
-				$_POST['pm_ignore_list'] .= $row['id_member'] . ',';
-			$smfFunc['db_free_result']($result);
-
-			// !!! Did we find all the members?
-			$_POST['pm_ignore_list'] = substr($_POST['pm_ignore_list'], 0, -1);
-		}
-		else
-			$_POST['pm_ignore_list'] = '*';
-
-		// Save the member settings!
-		updateMemberData($user_info['id'], array(
-			'pm_ignore_list' => '\'' . $smfFunc['db_escape_string']($_POST['pm_ignore_list']) . '\'',
-			'pm_email_notify' => (int) $_POST['pm_email_notify'],
-			'pm_prefs' => (int) $_POST['pm_display_mode'],
-		));
-
-		// We'll save the theme settings too!
-		makeThemeChanges($user_info['id'], $user_info['theme']);
-
-		// Redirect to reload.
-		redirectexit('action=pm;sa=settings');
-	}
-
-	// Tell the template what they are....
-	$context['sub_template'] = 'message_settings';
-	$context['send_email'] = $user_settings['pm_email_notify'];
-
-	if ($user_settings['pm_ignore_list'] != '*')
-	{
-		$result = $smfFunc['db_query']('', "
-			SELECT real_name
-			FROM {$db_prefix}members
-			WHERE FIND_IN_SET(id_member, '" . $user_settings['pm_ignore_list'] . "')
-			LIMIT " . (substr_count($user_settings['pm_ignore_list'], ',') + 1), __FILE__, __LINE__);
-		$pm_ignore_list = '';
-		while ($row = $smfFunc['db_fetch_assoc']($result))
-			$pm_ignore_list .= "\n" . $row['real_name'];
-		$smfFunc['db_free_result']($result);
-
-		$pm_ignore_list = substr($pm_ignore_list, 1);
-	}
-	else
-		$pm_ignore_list = '*';
-
-	// Get all their "buddies"...
-	$result = $smfFunc['db_query']('', "
-		SELECT real_name
-		FROM {$db_prefix}members
-		WHERE FIND_IN_SET(id_member, '" . $user_settings['buddy_list'] . "')
-		LIMIT " . (substr_count($user_settings['buddy_list'], ',') + 1), __FILE__, __LINE__);
-	$buddy_list = '';
-	while ($row = $smfFunc['db_fetch_assoc']($result))
-		$buddy_list .= "\n" . $row['real_name'];
-	$smfFunc['db_free_result']($result);
-
-	$context['buddy_list'] = substr($buddy_list, 1);
-	$context['ignore_list'] = $pm_ignore_list;
-
-	loadCustomFields($user_info['id'], 'pmprefs');
 }
 
 // Allows a user to report a personal message they receive to the administrator.

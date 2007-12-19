@@ -68,7 +68,8 @@ December 2007
  ! XML had the wrong variable for showing an email address. (News.php)
  ! Add some table traversal to preparsecode to ensure we don't allow invalid table BBC. (Subs-Post.php) [Bug 1112]
  ! For no logical reason there was an ip2range function within upgrade.php. (upgrade.php) [Bug 1127]
- 
+ ! Don't bother logging the currency setup error. (ManagePaid.php) [Bug 1126]
+
 
 November 2007
 --------------------------------------------------------------------------------

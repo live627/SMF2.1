@@ -1383,12 +1383,8 @@ function pmprefs($memID)
 
 	setupProfileContext(
 		array(
-			'pm_ignore_list', 'personal_text', 'hr',
-			'bday1', 'location', 'gender', 'hr',
-			'icq', 'aim', 'msn', 'yim', 'hr',
-			'', 'hr',
-			'', 'hr',
-			'',
+			'pm_ignore_list', 'hr',
+			'pm_prefs',
 		)
 	);
 }
