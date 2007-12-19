@@ -67,6 +67,11 @@ function template_options()
 			'default' => true,
 		),
 		array(
+			'id' => 'pm_remove_inbox_label',
+			'label' => $txt['pm_remove_inbox_label'],
+			'default' => true,
+		),
+		array(
 			'id' => 'auto_notify',
 			'label' => $txt['auto_notify'],
 			'default' => true,

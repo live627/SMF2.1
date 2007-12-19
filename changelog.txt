@@ -71,6 +71,7 @@ December 2007
  ! Don't bother logging the currency setup error. (ManagePaid.php) [Bug 1126]
  ! Week view calendar could cause an undefined index error. (Subs-Calendar.php) [Bug 1121]
  ! The BBC parsar wasn't closing block quote stuff correctly. (Subs.php) [Bug 1112]
+ ! Allow the admin to toggle the pm_remove_inbox_label theme option. (Settings templates) [Bug 1128]
 
 
 November 2007
