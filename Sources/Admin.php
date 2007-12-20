@@ -881,7 +881,7 @@ function AdminSearchInternal()
 		array('EditSmileySettings', 'area=smileys;sa=settings'),
 		array('ModifyOtherSettings', 'area=serversettings;sa=other'),
 		array('ModifyCacheSettings', 'area=serversettings;sa=cache'),
-		array('ManageSearchEngineSettings', 'area=searchengines;sa=settings'),
+		array('ManageSearchEngineSettings', 'area=sengines;sa=settings'),
 		array('ModifySubscriptionSettings', 'area=paidsubscribe;sa=settings'),
 	);
 
