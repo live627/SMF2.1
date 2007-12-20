@@ -1416,6 +1416,9 @@ function loadSubscriptions()
 	if (!empty($context['subscriptions']))
 		return;
 
+	// Make sure this is loaded, just incase.
+	loadLanguage('ManagePaid');
+
 	$request = $smfFunc['db_query']('', "
 		SELECT id_subscribe, name, description, cost, length, id_group, add_groups, active, repeatable
 		FROM {$db_prefix}subscriptions", __FILE__, __LINE__);
