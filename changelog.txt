@@ -73,6 +73,8 @@ December 2007
  ! The BBC parsar wasn't closing block quote stuff correctly. (Subs.php) [Bug 1112]
  ! Allow the admin to toggle the pm_remove_inbox_label theme option. (Settings templates) [Bug 1128]
  ! URL's made with the WYSIWYG editor were being cut off at the first equals sign. (Subs-Editor.php) [Bug 1113]
+ ! Missing global. (smf_api.php) [Bug 1082]
+
 
 
 November 2007
