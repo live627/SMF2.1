@@ -1481,69 +1481,11 @@ if ($profileCount == 0)
 			(3, 'reply_only'),
 			(4, 'read_only')");
 
-	// Fetch the current "default" permissions.
-	$request = upgrade_query("
-		SELECT id_group, permission, add_deny
-		FROM {$db_prefix}board_permissions
-		WHERE id_board = 0");
-	$cur_perms = array();
-	while ($row = mysql_fetch_assoc($request))
-	{
-		$cur_perms['default'][$row['id_group']][$row['permission']] = $row['add_deny'];
-	}
-	mysql_free_result($request);
-
-	// Work out what the others would be based on this.
-	$permission_mode = array(
-		'read_only' => array(
-			'post_new',
-			'poll_post',
-			'post_reply_own',
-			'post_reply_any',
-		),
-		'reply_only' => array(
-			'post_new',
-			'poll_post',
-		),
-		'no_polls' => array(
-			'poll_post',
-		),
-	);
-
-	$perm_inserts = array();
-	// Cycle through default...
-	foreach ($cur_perms['default'] as $group => $permissions)
-	{
-		// Then permissions...
-		foreach ($permissions as $name => $add_deny)
-		{
-			// Then the other types.
-			foreach ($permission_mode as $type => $restrictions)
-			{
-				// If this isn't restricted or this group can moderate then pass it through.
-				if (!in_array($name, $restrictions) || !empty($cur_perms['default'][$group]['moderate_board']))
-				{
-					$cur_perms[$type][$group][$name] = $add_deny;
-					$numtype = $type == 'no_polls' ? 2 : ($type == 'reply_only' ? 3 : 4);
-					$perm_inserts[] = "($numtype, $group, '$name', $add_deny)";
-				}
-			}
-		}
-	}
-
 	// Update the default permissions, this is easy!
 	upgrade_query("
 		UPDATE {$db_prefix}board_permissions
 		SET id_profile = 1
 		WHERE id_board = 0");
-
-	// Add the three non-default permissions.
-	if (!empty($perm_inserts))
-		upgrade_query("
-			INSERT INTO {$db_prefix}board_permissions
-				(id_profile, id_group, permission, add_deny)
-			VALUES
-				" . implode(',', $perm_inserts));
 
 	// Load all the other permissions
 	$request = upgrade_query("
@@ -1614,6 +1556,87 @@ if ($profileCount == 0)
 ---}
 ---#
 
+---# Removing old board permissions column...
+ALTER TABLE {$db_prefix}board_permissions
+DROP COLUMN id_board;
+---#
+
+---# Check the predefined profiles all have the right permissions.
+---{
+// What are all the permissions people can have.
+$mod_permissions = array(
+	'moderate_board', 'post_new', 'post_reply_own', 'post_reply_any', 'poll_post', 'poll_add_any',
+	'poll_remove_any', 'poll_view', 'poll_vote', 'poll_lock_any', 'poll_edit_any', 'report_any',
+	'lock_own', 'send_topic', 'mark_any_notify', 'mark_notify', 'delete_own', 'modify_own', 'make_sticky',
+	'lock_any', 'remove_any', 'move_any', 'merge_any', 'split_any', 'delete_any', 'modify_any', 'approve_posts',
+	'post_attachment', 'view_attachments', 'post_unapproved_replies_any', 'post_unapproved_replies_own',
+	'post_unapproved_attachments', 'post_unapproved_topics',
+);
+
+$no_poll_reg = array(
+	'post_new', 'post_reply_own', 'post_reply_any', 'poll_view', 'poll_vote', 'report_any',
+	'lock_own', 'send_topic', 'mark_any_notify', 'mark_notify', 'delete_own', 'modify_own',
+	'post_attachment', 'view_attachments', 'remove_own', 'post_unapproved_replies_any', 'post_unapproved_replies_own',
+	'post_unapproved_attachments', 'post_unapproved_topics',
+);
+
+$reply_only_reg = array(
+	'post_reply_own', 'post_reply_any', 'poll_view', 'poll_vote', 'report_any',
+	'lock_own', 'send_topic', 'mark_any_notify', 'mark_notify', 'delete_own', 'modify_own',
+	'post_attachment', 'view_attachments', 'remove_own', 'post_unapproved_replies_any', 'post_unapproved_replies_own',
+	'post_unapproved_attachments',
+);
+
+$read_only_reg = array(
+	'poll_view', 'poll_vote', 'report_any', 'send_topic', 'mark_any_notify', 'mark_notify', 'view_attachments',
+);
+
+// Clear all the current predefined profiles.
+$smfFunc['db_query']('', "				
+	DELETE FROM {$db_prefix}board_permissions
+	WHERE id_profile IN (2,3,4)", __FILE__, __LINE__);
+
+// Get all the membergroups - cheating to use the fact id_group = 1 exists to get a group of 0.
+$request = $smfFunc['db_query']('', "
+	SELECT IF(id_group = 1, 0, id_group) AS id_group
+	FROM {$db_prefix}membergroups
+	WHERE id_group != 0
+		AND min_posts = -1", __FILE__, __LINE__);
+$inserts = array();
+while ($row = mysql_fetch_assoc($request))
+{
+	if ($row['id_group'] == 2 || $row['id_group'] == 3)
+	{
+		foreach ($mod_permissions as $permission)
+		{
+			$inserts[] = "($row[id_group], 2, '$permission')";
+			$inserts[] = "($row[id_group], 3, '$permission')";
+			$inserts[] = "($row[id_group], 4, '$permission')";
+		}
+	}
+	else
+	{
+		foreach ($no_poll_reg as $permission)
+			$inserts[] = "($row[id_group], 2, '$permission')";
+		foreach ($reply_only_reg as $permission)
+			$inserts[] = "($row[id_group], 3, '$permission')";
+		foreach ($read_only_reg as $permission)
+			$inserts[] = "($row[id_group], 4, '$permission')";
+	}
+}
+mysql_free_result($request);
+
+$smfFunc['db_query']('', "				
+	INSERT INTO {$db_prefix}board_permissions
+		(id_group, id_profile, permission)
+	VALUES (-1, 2, 'poll_view'),
+		(-1, 3, 'poll_view'),
+		(-1, 4, 'poll_view'),
+		" . implode(', ', $inserts), __FILE__, __LINE__);
+
+---}
+---#
+
 ---# Adding inherited permissions...
 ALTER TABLE {$db_prefix}membergroups
 ADD id_parent smallint(5) NOT NULL default '-2';
@@ -1627,11 +1650,6 @@ WHERE VARIABLE IN ('permission_enable_by_board', 'autoOptDatabase');
 ---# Removing old permission_mode column...
 ALTER TABLE {$db_prefix}boards
 DROP COLUMN permission_mode;
----#
-
----# Removing old board permissions column...
-ALTER TABLE {$db_prefix}board_permissions
-DROP COLUMN id_board;
 ---#
 
 /******************************************************************************/

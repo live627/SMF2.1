@@ -5,9 +5,11 @@
 
 $txt['permissions_title'] = 'Manage Permissions';
 $txt['permissions_modify'] = 'Modify';
+$txt['permissions_view'] = 'View';
 $txt['permissions_access'] = 'Access';
 $txt['permissions_allowed'] = 'Allowed';
 $txt['permissions_denied'] = 'Denied';
+$txt['permission_cannot_edit'] = '<strong>Note:</strong> You cannot edit this permission profile as it is a predefined profile included within the forum software by default. If you wish to change the permissions of this profile you must first create a duplicate profile. You can carry out this task by clicking <a href="%1$s">here</a>.';
 
 $txt['permissions_switch'] = 'Switch To';
 $txt['permissions_global'] = 'Global';

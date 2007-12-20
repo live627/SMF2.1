@@ -491,9 +491,10 @@ function scheduled_daily_digest()
 		SELECT ln.id_topic, COALESCE(t.id_board, ln.id_board) AS id_board, mem.email_address, mem.member_name, mem.notify_types,
 			mem.lngfile, mem.id_member
 		FROM {$db_prefix}log_notify AS ln
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member
-				AND mem.notify_regularity = " . ($is_weekly ? '3' : '2') . ")
-			LEFT JOIN {$db_prefix}topics AS t ON (ln.id_topic != 0 AND t.id_topic = ln.id_topic)", __FILE__, __LINE__);
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
+			LEFT JOIN {$db_prefix}topics AS t ON (ln.id_topic != 0 AND t.id_topic = ln.id_topic)
+		WHERE mem.notify_regularity = " . ($is_weekly ? '3' : '2') . "
+			AND mem.is_activated = 1", __FILE__, __LINE__);
 	$members = array();
 	$langs = array();
 	$notify = array();

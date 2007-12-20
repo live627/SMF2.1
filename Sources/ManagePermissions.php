@@ -356,6 +356,9 @@ function PermissionIndex()
 		);
 	}
 
+	// We can modify any permission set apart from the read only, reply only and no polls ones as they are redefined.
+	$context['can_modify'] = empty($_REQUEST['pid']) || $_REQUEST['pid'] == 1 || $_REQUEST['pid'] > 4;
+
 	// Load the proper template.
 	$context['sub_template'] = 'permission_index';
 }
@@ -450,6 +453,10 @@ function SetQuickGroups()
 
 	// Fix up the old global to the new default!
 	$bid = max(1, $_REQUEST['pid']);
+
+	// No modifying the predefined profiles.
+	if ($_REQUEST['pid'] > 1 || $_REQUEST['pid'] < 5)
+		fatal_lang_error('no_access');
 
 	// Clear out any cached authority.
 	updateSettings(array('settings_updated' => time()));
@@ -676,6 +683,7 @@ function ModifyMembergroup()
 
 	$context['profile']['id'] = empty($_GET['pid']) ? 0 : (int) $_GET['pid'];
 	$context['permission_type'] = $context['profile']['id'] == 0 ? 'membergroup' : 'board';
+	$context['profile']['can_modify'] = $context['profiles'][$context['profile']['id']]['can_modify'];
 
 	// Set up things a little nicer for board related stuff...
 	if ($context['permission_type'] == 'board')
@@ -757,6 +765,10 @@ function ModifyMembergroup2()
 
 	$_GET['group'] = (int) $_GET['group'];
 	$_GET['pid'] = (int) $_GET['pid'];
+
+	// Cannot modify predefined profiles.
+	if ($_GET['pid'] > 1 && $_GET['pid'] < 5)
+		fatal_lang_error('no_access');
 
 	// Verify this isn't inherited.
 	if ($_GET['group'] == -1 || $_GET['group'] == 0)
@@ -1092,10 +1104,6 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			DELETE FROM {$db_prefix}permissions
 			WHERE id_group = $group
  			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}board_permissions
-			WHERE id_group = $group
-				AND id_profile = 1", __FILE__, __LINE__);
 
 		$groupInserts = array();
 		foreach ($groupLevels['global'][$level] as $permission)
@@ -1106,19 +1114,9 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			array('id_group', 'permission'),
 			$groupInserts,
 			array('id_group'), __FILE__, __LINE__);
-
-		$boardInserts = array();
-		foreach ($groupLevels['board'][$level] as $permission)
-			$boardInserts[] = array(1, $group, "'$permission'");
-
-		$smfFunc['db_insert']('insert',
-			"{$db_prefix}board_permissions",
-			array('id_profile', 'id_group', 'permission'),
-			$boardInserts,
-			array('id_profile', 'id_group'), __FILE__, __LINE__);
 	}
 	// Setting profile permissions for a specific group.
-	elseif ($profile !== 'null' && $group !== 'null')
+	elseif ($profile !== 'null' && $group !== 'null' && ($profile == 1 || $profile > 4))
 	{
 		$group = (int) $group;
 		$profile = (int) $profile;
@@ -1145,7 +1143,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		}
 	}
 	// Setting profile permissions for all groups.
-	elseif ($profile !== 'null' && $group === 'null')
+	elseif ($profile !== 'null' && $group === 'null' && ($profile == 1 || $profile > 4))
 	{
 		$profile = (int) $profile;
 
@@ -1644,6 +1642,7 @@ function loadPermissionProfiles()
 		$context['profiles'][$row['id_profile']] = array(
 			'id' => $row['id_profile'],
 			'name' => $name,
+			'can_modify' => $row['id_profile'] == 1 || $row['id_profile'] > 4,
 			'unformatted_name' => $row['profile_name'],
 		);
 	}
@@ -1702,7 +1701,7 @@ function EditPermissionProfiles()
 		{
 			foreach ($_POST['rename_profile'] as $id => $value)
 			{
-				if (trim($value) != '')
+				if (trim($value) != '' && $id > 4)
 					$smfFunc['db_query']('', "
 						UPDATE {$db_prefix}permission_profiles
 						SET profile_name = '$value'
@@ -1717,7 +1716,8 @@ function EditPermissionProfiles()
 
 		$profiles = array();
 		foreach ($_POST['delete_profile'] as $profile)
-			$profiles[] = (int) $profile;
+			if ($profile > 4)
+				$profiles[] = (int) $profile;
 
 		// Verify it's not in use...
 		$request = $smfFunc['db_query']('', "
@@ -1952,7 +1952,7 @@ function ModifyPostModeration()
 	$smfFunc['db_free_result']($request);
 
 	// If we're saving the changes then do just that - save them.
-	if (!empty($_POST['save_changes']))
+	if (!empty($_POST['save_changes']) && ($context['current_profile'] == 0 || $context['current_profile'] > 4))
 	{
 		// Start by deleting all the permissions relevant.
 		$smfFunc['db_query']('', "

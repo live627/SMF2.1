@@ -5,6 +5,13 @@ function template_permission_index()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
+	// Not allowed to edit?
+	if (!$context['can_modify'])
+	echo '
+		<div style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
+			', sprintf($txt['permission_cannot_edit'], $scripturl . '?action=admin;area=permissions;sa=profiles'), '
+		</div>';
+
 	echo '
 		<form action="' . $scripturl . '?action=admin;area=permissions;sa=quick" method="post" accept-charset="', $context['character_set'], '" name="permissionForm" id="permissionForm">
 			<table width="100%" border="0" cellpadding="2" cellspacing="1" class="tborder">';
@@ -13,6 +20,7 @@ function template_permission_index()
 				<tr class="titlebg">
 					<td colspan="6" style="padding: 4px;">', $txt['permissions_for_profile'], ': &quot;', $context['profile']['name'], '&quot;</td>
 				</tr>';
+
 	echo '
 				<tr class="catbg3">
 					<td valign="middle">', $txt['membergroups_name'], '</td>
@@ -21,9 +29,9 @@ function template_permission_index()
 						', $txt['membergroups_permissions'], empty($modSettings['permission_enable_deny']) ? '' : '<br />
 						<div style="float: left; width: 50%;">' . $txt['permissions_allowed'] . '</div> ' . $txt['permissions_denied'], '
 					</td>
-					<td width="10%" align="center" valign="middle">', $txt['permissions_modify'], '</td>
+					<td width="10%" align="center" valign="middle">', $context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view'], '</td>
 					<td width="4%" align="center" valign="middle">
-						<input type="checkbox" class="check" onclick="invertAll(this, this.form, \'group\');" /></td>
+						', $context['can_modify'] ? '<input type="checkbox" class="check" onclick="invertAll(this, this.form, \'group\');" />' : '', '</td>
 				</tr>';
 
 	foreach ($context['groups'] as $group)
@@ -49,12 +57,15 @@ function template_permission_index()
 						<div style="float: left; width: 50%;">', $group['num_permissions']['allowed'], '</div> ', empty($group['num_permissions']['denied']) || $group['id'] == 1 ? $group['num_permissions']['denied'] : ($group['id'] == -1 ? '<span style="font-style: italic;">' . $group['num_permissions']['denied'] . '</span>' : '<span style="color: red;">' . $group['num_permissions']['denied'] . '</span>');
 		echo '
 					</td>
-					<td class="windowbg2" align="center">', $group['allow_modify'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=modify;group=' . $group['id'] . (empty($context['profile']) ? '' : ';pid=' . $context['profile']['id']) . '">' . $txt['permissions_modify'] . '</a>' : '', '</td>
-					<td class="windowbg" align="center">', $group['allow_modify'] ? '<input type="checkbox" name="group[]" value="' . $group['id'] . '" class="check" />' : '', '</td>
+					<td class="windowbg2" align="center">', $group['allow_modify'] ? '<a href="' . $scripturl . '?action=admin;area=permissions;sa=modify;group=' . $group['id'] . (empty($context['profile']) ? '' : ';pid=' . $context['profile']['id']) . '">' . ($context['can_modify'] ? $txt['permissions_modify'] : $txt['permissions_view']). '</a>' : '', '</td>
+					<td class="windowbg" align="center">', $group['allow_modify'] && $context['can_modify'] ? '<input type="checkbox" name="group[]" value="' . $group['id'] . '" class="check" />' : '', '</td>
 				</tr>';
 	}
 
-	echo '
+	// Advanced stuff...
+	if ($context['can_modify'])
+	{
+		echo '
 				<tr class="windowbg">
 					<td colspan="7">
 						<a href="#" onclick="smfPermissionsPanelToggle.toggle(); return false;"><img src="', $settings['images_url'], '/', empty($context['show_advanced_options']) ? 'expand' : 'sort_down', '.gif" id="permissions_panel_toggle" alt="*" /> ', $txt['permissions_advanced_options'], '</a>
@@ -73,59 +84,59 @@ function template_permission_index()
 								<option value="maintenance">' . $txt['permitgroups_maintenance'] . '</option>
 							</select><br /><br />';
 
-	echo '
+		echo '
 							', $txt['permissions_like_group'], ':
 							<select name="copy_from">
 								<option value="empty">(', $txt['permissions_select_membergroup'], ')</option>';
-	foreach ($context['groups'] as $group)
-	{
-		if ($group['id'] != 1)
-			echo '
-								<option value="', $group['id'], '">', $group['name'], '</option>';
-	}
+		foreach ($context['groups'] as $group)
+		{
+			if ($group['id'] != 1)
+				echo '
+									<option value="', $group['id'], '">', $group['name'], '</option>';
+		}
 
-	echo '
+		echo '
 							</select><br /><br />
 							<select name="add_remove">
 								<option value="add">', $txt['permissions_add'], '...</option>
 								<option value="clear">', $txt['permissions_remove'], '...</option>';
-	if (!empty($modSettings['permission_enable_deny']))
-		echo '
+		if (!empty($modSettings['permission_enable_deny']))
+			echo '
 								<option value="deny">', $txt['permissions_deny'], '...</option>';
-	echo '
+		echo '
 							</select>&nbsp;<select name="permissions">
 								<option value="">(', $txt['permissions_select_permission'], ')</option>';
-	foreach ($context['permissions'] as $permissionType)
-	{
-		if ($permissionType['id'] == 'membergroup' && !empty($context['profile']))
-			continue;
-
-		foreach ($permissionType['columns'] as $column)
+		foreach ($context['permissions'] as $permissionType)
 		{
-			foreach ($column as $permissionGroup)
-			{
-				if ($permissionGroup['hidden'])
-					continue;
+			if ($permissionType['id'] == 'membergroup' && !empty($context['profile']))
+				continue;
 
-				echo '
-								<option value="" disabled="disabled">[', $permissionGroup['name'], ']</option>';
-				foreach ($permissionGroup['permissions'] as $perm)
+			foreach ($permissionType['columns'] as $column)
+			{
+				foreach ($column as $permissionGroup)
 				{
-					if ($perm['hidden'])
+					if ($permissionGroup['hidden'])
 						continue;
 
-					if ($perm['has_own_any'])
-						echo '
+					echo '
+								<option value="" disabled="disabled">[', $permissionGroup['name'], ']</option>';
+					foreach ($permissionGroup['permissions'] as $perm)
+					{
+						if ($perm['hidden'])
+							continue;
+
+						if ($perm['has_own_any'])
+							echo '
 								<option value="', $permissionType['id'], '/', $perm['own']['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], ' (', $perm['own']['name'], ')</option>
 								<option value="', $permissionType['id'], '/', $perm['any']['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], ' (', $perm['any']['name'], ')</option>';
-					else
-						echo '
+						else
+							echo '
 								<option value="', $permissionType['id'], '/', $perm['id'], '">&nbsp;&nbsp;&nbsp;', $perm['name'], '</option>';
+					}
 				}
 			}
 		}
-	}
-	echo '
+		echo '
 							</select>
 						</td><td valign="bottom" width="16%">
 							<input type="submit" value="', $txt['permissions_set_permissions'], '" onclick="return checkSubmit();" />
@@ -134,8 +145,8 @@ function template_permission_index()
 				</tr>
 			</table>';
 
-	// Javascript for the advanced stuff.
-	echo '
+		// Javascript for the advanced stuff.
+		echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var smfPermissionsPanelToggle = new smfToggle("smfPermissionsPanelToggle", ', empty($context['show_advanced_options']) ? 1 : 0, ');
 		smfPermissionsPanelToggle.addToggleImage("permissions_panel_toggle", "/sort_down.gif", "/selected.gif");
@@ -172,7 +183,11 @@ function template_permission_index()
 			<input type="hidden" name="pid" value="', $context['profile']['id'], '" />';
 
 	echo '
-			<input type="hidden" name="sc" value="' . $context['session_id'] . '" />
+			<input type="hidden" name="sc" value="' . $context['session_id'] . '" />';
+
+	}
+
+	echo '
 		</form>';
 }
 
@@ -350,7 +365,17 @@ function template_modify_group()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo '
+	// Cannot be edited?
+	if (!$context['profile']['can_modify'])
+	{
+		echo '
+		<div style="margin: 1ex; padding: 1ex 2ex; border: 1px dashed red; color: red;">
+			', sprintf($txt['permission_cannot_edit'], $scripturl . '?action=admin;area=permissions;sa=profiles'), '
+		</div>';
+	}
+	else
+	{
+		echo '
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			window.smf_usedDeny = false;
 
@@ -361,7 +386,10 @@ function template_modify_group()
 				else
 					return true;
 			}
-		// ]]></script>
+		// ]]></script>';
+	}
+
+	echo '
 		<form action="', $scripturl, '?action=admin;area=permissions;sa=modify2;group=', $context['group']['id'], ';pid=', $context['profile']['id'], '" method="post" accept-charset="', $context['character_set'], '" name="permissionForm" id="permissionForm" onsubmit="return warnAboutDeny();">
 			<table width="100%" cellpadding="4" cellspacing="0" border="0" class="tborder">';
 
@@ -396,10 +424,13 @@ function template_modify_group()
 	else
 		template_modify_group_classic($context['permission_type']);
 
-	echo '
+	if ($context['profile']['can_modify'])
+		echo '
 				<tr class="windowbg2">
 					<td colspan="2" align="right"><input type="submit" value="', $txt['permissions_commit'], '" />&nbsp;</td>
-				</tr>
+				</tr>';
+
+	echo '
 			</table>
 			<input type="hidden" name="sc" value="', $context['session_id'], '" />
 		</form>';
@@ -413,6 +444,9 @@ function template_modify_group_simple($type)
 
 	// Simple only has one column so we only need bother ourself with that one.
 	$permission_data = &$context['permissions'][$type]['columns'][0];
+
+	// Short cut for disabling fields we can't change.
+	$disable_field = $context['profile']['can_modify'] ? '' : 'disabled="disabled" ';
 
 	echo '
 				<tr class="windowbg2">
@@ -457,24 +491,24 @@ function template_modify_group_simple($type)
 					echo '
 								<td colspan="3" width="10">
 									<div id="group_select_div_', $id_group, '">
-										<input type="checkbox" id="group_select_', $id_group, '" name="group_select_', $id_group, '" class="check" onclick="determineGroupState(\'', $id_group, '\', this.checked ? \'on\' : \'off\');" style="display: none;" />
+										<input type="checkbox" id="group_select_', $id_group, '" name="group_select_', $id_group, '" class="check" onclick="determineGroupState(\'', $id_group, '\', this.checked ? \'on\' : \'off\');" style="display: none;" ', $disable_field, '/>
 									</div>
 								</td>';
 				else
 					echo '
 								<td align="center">
 									<div id="group_select_div_on_', $id_group, '">
-										<input type="radio" id="group_select_on_', $id_group, '" name="group_select_', $id_group, '" value="on" onclick="determineGroupState(\'', $id_group, '\', \'on\');" style="display: none;" />
+										<input type="radio" id="group_select_on_', $id_group, '" name="group_select_', $id_group, '" value="on" onclick="determineGroupState(\'', $id_group, '\', \'on\');" style="display: none;" ', $disable_field, '/>
 									</div>
 								</td>
 								<td align="center">
 									<div id="group_select_div_off_', $id_group, '">
-										<input type="radio" id="group_select_off_', $id_group, '" name="group_select_', $id_group, '" value="off" onclick="determineGroupState(\'', $id_group, '\', \'off\');" style="display: none;" />
+										<input type="radio" id="group_select_off_', $id_group, '" name="group_select_', $id_group, '" value="off" onclick="determineGroupState(\'', $id_group, '\', \'off\');" style="display: none;" ', $disable_field, '/>
 									</div>
 								</td>
 								<td align="center">
 									<div id="group_select_div_deny_', $id_group, '">
-										<input type="radio" id="group_select_deny_', $id_group, '" name="group_select_', $id_group, '" value="deny" onclick="determineGroupState(\'', $id_group, '\', \'deny\');" style="display: none;" />
+										<input type="radio" id="group_select_deny_', $id_group, '" name="group_select_', $id_group, '" value="deny" onclick="determineGroupState(\'', $id_group, '\', \'deny\');" style="display: none;" ', $disable_field, '/>
 									</div>
 								</td>';
 				echo '
@@ -502,12 +536,12 @@ function template_modify_group_simple($type)
 
 				if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 					echo '
-								<td valign="top" style="padding-bottom: 2px;"><input type="checkbox" id="select_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' onclick="determineGroupState(\'', $id_group, '\');" value="on" class="check" /></td>';
+								<td valign="top" style="padding-bottom: 2px;"><input type="checkbox" id="select_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' onclick="determineGroupState(\'', $id_group, '\');" value="on" class="check" ', $disable_field, '/></td>';
 				else
 					echo '
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" id="select_on_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" onclick="determineGroupState(\'', $id_group, '\');" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" id="select_off_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'off' ? ' checked="checked"' : '', ' value="off" onclick="determineGroupState(\'', $id_group, '\');" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" id="select_deny_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" onclick="window.smf_usedDeny = true; determineGroupState(\'', $id_group, '\');" class="check" /></td>';
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" id="select_on_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" onclick="determineGroupState(\'', $id_group, '\');" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" id="select_off_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'off' ? ' checked="checked"' : '', ' value="off" onclick="determineGroupState(\'', $id_group, '\');" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" id="select_deny_', $permission['id'], '" name="perm[', $type, '][', $permission['id'], ']"', $permission['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" onclick="window.smf_usedDeny = true; determineGroupState(\'', $id_group, '\');" class="check" ', $disable_field, '/></td>';
 
 				echo '
 							</tr>';
@@ -524,12 +558,14 @@ function template_modify_group_simple($type)
 	echo '
 						</table>';
 
-	// Need to make stuff visible.
-	echo '
+	if ($context['profile']['can_modify'])
+	{
+		// Need to make stuff visible.
+		echo '
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[';
 
-	// Manually toggle the breakdown.
-	echo '
+		// Manually toggle the breakdown.
+		echo '
 	function toggleBreakdown(id_group, forcedisplayType)
 	{
 		displayType = document.getElementById("group_hr_div_" + id_group).style.display == "none" ? "" : "none";
@@ -546,135 +582,132 @@ function template_modify_group_simple($type)
 		return false;
 	}';
 
-	// This function decides what to do when ANYTHING is touched!
-	echo '
-	var groupPermissions = new Array();
-	function determineGroupState(id_group, forceState)
-	{
-		if (typeof(forceState) != "undefined")
-			thisState = forceState;
-
-		// Cycle through this groups elements.
-		var curState = false;
-		for (i = 0; i < groupPermissions[id_group].length; i++)
-		{';
-
-	if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
+		// This function decides what to do when ANYTHING is touched!
 		echo '
-			if (typeof(forceState) != "undefined")
-			{
-				document.getElementById(\'select_\' + groupPermissions[id_group][i]).checked = forceState == \'on\' ? 1 : 0;
-			}
-
-			thisState = document.getElementById(\'select_\' + groupPermissions[id_group][i]).checked ? \'on\' : \'off\';';
-	else
-		echo '
-			if (typeof(forceState) != "undefined")
-			{
-				document.getElementById(\'select_on_\' + groupPermissions[id_group][i]).checked = forceState == \'on\' ? 1 : 0;
-				document.getElementById(\'select_off_\' + groupPermissions[id_group][i]).checked = forceState == \'off\' ? 1 : 0;
-				document.getElementById(\'select_deny_\' + groupPermissions[id_group][i]).checked = forceState == \'deny\' ? 1 : 0;
-			}
-
-			if (document.getElementById(\'select_on_\' + groupPermissions[id_group][i]).checked)
-				thisState = \'on\';
-			else if (document.getElementById(\'select_off_\' + groupPermissions[id_group][i]).checked)
-				thisState = \'off\';
-			else
-				thisState = \'deny\';';
-
-	echo '
-			// Unless this is the first element, or it\'s the same state as the last we\'re buggered.
-			if (curState == false || thisState == curState)
-			{
-				curState = thisState;
-			}
-			else
-			{
-				curState = \'fudged\';
-				i = 999;
-			}
-		}
-
-		// First check the right master is selected!';
-	if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-		echo '
-		document.getElementById("group_select_" + id_group).checked = curState == \'on\' ? 1 : 0;';
-	else
-		echo '
-		document.getElementById("group_select_on_" + id_group).checked = curState == \'on\' ? 1 : 0;
-		document.getElementById("group_select_off_" + id_group).checked = curState == \'off\' ? 1 : 0;
-		document.getElementById("group_select_deny_" + id_group).checked = curState == \'deny\' ? 1 : 0;';
-
-	// Force the display?
-	echo '
-		if (curState != \'fudged\')
-			toggleBreakdown(id_group, "none");';
-	echo '
-	}';
-
-	foreach ($permission_data as $id_group => $permissionGroup)
-	{
-		if (empty($permissionGroup['permissions']))
-			continue;
-
-		// As before...
-		$has_display_content = false;
-		if (!$permissionGroup['hidden'])
+		var groupPermissions = new Array();
+		function determineGroupState(id_group, forceState)
 		{
-			// Make sure we can show it.
-			foreach ($permissionGroup['permissions'] as $permission)
-				if (!$permission['hidden'])
-					$has_display_content = true;
+			if (typeof(forceState) != "undefined")
+				thisState = forceState;
 
-			// Make all the group indicators visible on JS only.
-			if ($has_display_content)
-			{
-				if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-					echo '
-					document.getElementById("group_select_div_', $id_group, '").className = "windowbg3";
-					document.getElementById("group_select_', $id_group, '").style.display = "";';
-				else
-					echo '
-					document.getElementById("group_select_div_on_', $id_group, '").className = "windowbg3";
-					document.getElementById("group_select_div_off_', $id_group, '").className = "windowbg3";
-					document.getElementById("group_select_div_deny_', $id_group, '").className = "windowbg3";
-					document.getElementById("group_select_on_', $id_group, '").style.display = "";
-					document.getElementById("group_select_off_', $id_group, '").style.display = "";
-					document.getElementById("group_select_deny_', $id_group, '").style.display = "";';
-			}
+			// Cycle through this groups elements.
+			var curState = false;
+			for (i = 0; i < groupPermissions[id_group].length; i++)
+			{';
 
-			
-			$perm_ids = array();
-			$count = 0;
-			foreach ($permissionGroup['permissions'] as $permission)
-			{
-				if (!$permission['hidden'])
+		if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
+			echo '
+				if (typeof(forceState) != "undefined")
 				{
-					// Need this for knowing what can be tweaked.
-					$perm_ids[] = "'$permission[id]'";
-					if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
-					echo '';
-					else
-					echo '';
+					document.getElementById(\'select_\' + groupPermissions[id_group][i]).checked = forceState == \'on\' ? 1 : 0;
+				}
+
+				thisState = document.getElementById(\'select_\' + groupPermissions[id_group][i]).checked ? \'on\' : \'off\';';
+		else
+			echo '
+				if (typeof(forceState) != "undefined")
+				{
+					document.getElementById(\'select_on_\' + groupPermissions[id_group][i]).checked = forceState == \'on\' ? 1 : 0;
+					document.getElementById(\'select_off_\' + groupPermissions[id_group][i]).checked = forceState == \'off\' ? 1 : 0;
+					document.getElementById(\'select_deny_\' + groupPermissions[id_group][i]).checked = forceState == \'deny\' ? 1 : 0;
+				}
+
+				if (document.getElementById(\'select_on_\' + groupPermissions[id_group][i]).checked)
+					thisState = \'on\';
+				else if (document.getElementById(\'select_off_\' + groupPermissions[id_group][i]).checked)
+					thisState = \'off\';
+				else
+					thisState = \'deny\';';
+
+		echo '
+				// Unless this is the first element, or it\'s the same state as the last we\'re buggered.
+				if (curState == false || thisState == curState)
+				{
+					curState = thisState;
+				}
+				else
+				{
+					curState = \'fudged\';
+					i = 999;
 				}
 			}
-			// Declare this groups permissions into an array.
-			if (!empty($perm_ids))
-				echo '
-			groupPermissions[\'', $id_group, '\'] = new Array(', count($perm_ids), ');';
-			foreach ($perm_ids as $count => $id)
-				echo '
-				groupPermissions[\'', $id_group, '\'][', $count, '] = ', $id, ';';
 
-			// Show the group as required.
+			// First check the right master is selected!';
+		if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 			echo '
-			determineGroupState(\'', $id_group, '\');';
-		}
-	}
+			document.getElementById("group_select_" + id_group).checked = curState == \'on\' ? 1 : 0;';
+		else
+			echo '
+			document.getElementById("group_select_on_" + id_group).checked = curState == \'on\' ? 1 : 0;
+			document.getElementById("group_select_off_" + id_group).checked = curState == \'off\' ? 1 : 0;
+			document.getElementById("group_select_deny_" + id_group).checked = curState == \'deny\' ? 1 : 0;';
 
-	echo '
-	// ]]></script>';
+		// Force the display?
+		echo '
+			if (curState != \'fudged\')
+				toggleBreakdown(id_group, "none");';
+		echo '
+		}';
+
+		foreach ($permission_data as $id_group => $permissionGroup)
+		{
+			if (empty($permissionGroup['permissions']))
+				continue;
+
+			// As before...
+			$has_display_content = false;
+			if (!$permissionGroup['hidden'])
+			{
+				// Make sure we can show it.
+				foreach ($permissionGroup['permissions'] as $permission)
+					if (!$permission['hidden'])
+						$has_display_content = true;
+
+				// Make all the group indicators visible on JS only.
+				if ($has_display_content)
+				{
+					if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
+						echo '
+			document.getElementById("group_select_div_', $id_group, '").className = "windowbg3";
+			document.getElementById("group_select_', $id_group, '").style.display = "";';
+					else
+						echo '
+			document.getElementById("group_select_div_on_', $id_group, '").className = "windowbg3";
+			document.getElementById("group_select_div_off_', $id_group, '").className = "windowbg3";
+			document.getElementById("group_select_div_deny_', $id_group, '").className = "windowbg3";
+			document.getElementById("group_select_on_', $id_group, '").style.display = "";
+			document.getElementById("group_select_off_', $id_group, '").style.display = "";
+			document.getElementById("group_select_deny_', $id_group, '").style.display = "";';
+				}
+
+			
+				$perm_ids = array();
+				$count = 0;
+				foreach ($permissionGroup['permissions'] as $permission)
+				{
+					if (!$permission['hidden'])
+					{
+						// Need this for knowing what can be tweaked.
+						$perm_ids[] = "'$permission[id]'";
+					}
+				}
+				// Declare this groups permissions into an array.
+				if (!empty($perm_ids))
+					echo '
+			groupPermissions[\'', $id_group, '\'] = new Array(', count($perm_ids), ');';
+				foreach ($perm_ids as $count => $id)
+					echo '
+			groupPermissions[\'', $id_group, '\'][', $count, '] = ', $id, ';';
+
+				// Show the group as required.
+				echo '
+			determineGroupState(\'', $id_group, '\');';
+			}
+		}
+
+		echo '
+		// ]]></script>';
+	}
 
 	echo '
 					</td>
@@ -687,6 +720,7 @@ function template_modify_group_classic($type)
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	$permission_type = &$context['permissions'][$type];
+	$disable_field = $context['profile']['can_modify'] ? '' : 'disabled="disabled" ';
 
 	echo '
 				<tr class="windowbg2">';
@@ -758,12 +792,12 @@ function template_modify_group_classic($type)
 
 						if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 							echo '
-								<td colspan="3"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" /></td>';
+								<td colspan="3"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" ', $disable_field, '/></td>';
 						else
 							echo '
-								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" /></td>
-								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
-								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" class="check" /></td>';
+								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" id="', $permission['own']['id'], '_on" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['own']['id'], ']"', $permission['own']['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" class="check" ', $disable_field, '/></td>';
 
 						echo '
 							</tr><tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
@@ -772,12 +806,12 @@ function template_modify_group_classic($type)
 
 						if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 							echo '
-								<td colspan="3" style="padding-bottom: 1.5ex;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>';
+								<td colspan="3" style="padding-bottom: 1.5ex;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" ', $disable_field, '/></td>';
 						else
 							echo '
-								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" onclick="document.forms.permissionForm.', $permission['own']['id'], '_on.checked = true;" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select']== 'denied' ? ' checked="checked"' : '', ' value="deny" id="', $permission['any']['id'], '_deny" onclick="window.smf_usedDeny = true;" class="check" /></td>';
+								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'on' ? ' checked="checked"' : '', ' value="on" onclick="document.forms.permissionForm.', $permission['own']['id'], '_on.checked = true;" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10" style="padding-bottom: 1.5ex;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['any']['id'], ']"', $permission['any']['select']== 'denied' ? ' checked="checked"' : '', ' value="deny" id="', $permission['any']['id'], '_deny" onclick="window.smf_usedDeny = true;" class="check" ', $disable_field, '/></td>';
 
 						echo '
 							</tr>';
@@ -789,12 +823,12 @@ function template_modify_group_classic($type)
 
 						if (empty($modSettings['permission_enable_deny']) || $context['group']['id'] == -1)
 							echo '
-								<td valign="top" style="padding-bottom: 2px;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>';
+								<td valign="top" style="padding-bottom: 2px;"><input type="checkbox" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" ', $disable_field, '/></td>';
 						else
 							echo '
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" /></td>
-								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" onclick="window.smf_usedDeny = true;" class="check" /></td>';
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'on' ? ' checked="checked"' : '', ' value="on" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'off' ? ' checked="checked"' : '', ' value="off" class="check" ', $disable_field, '/></td>
+								<td valign="top" width="10" style="padding-bottom: 2px;"><input type="radio" name="perm[', $permission_type['id'], '][', $permission['id'], ']"', $permission['select'] == 'denied' ? ' checked="checked"' : '', ' value="deny" onclick="window.smf_usedDeny = true;" class="check" ', $disable_field, '/></td>';
 
 						echo '
 					</tr>';
@@ -895,7 +929,8 @@ function template_postmod_permissions()
 						<select name="pid" onchange="document.forms.postmodForm.submit();">';
 
 	foreach ($context['profiles'] as $profile)
-		echo '
+		if ($profile['can_modify'])
+			echo '
 							<option value="', $profile['id'], '" ', $profile['id'] == $context['current_profile'] ? 'selected="selected"' : '', '>', $profile['name'], '</option>';
 
 	echo '
