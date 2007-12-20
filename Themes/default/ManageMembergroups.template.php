@@ -428,11 +428,15 @@ function template_group_members()
 			<table width="80%" cellpadding="4" cellspacing="0" border="0" class="tborder" align="center">
 				<tr class="titlebg">
 					<td align="left" colspan="2">', $txt['membergroups_members_add_title'], '</td>
-				</tr><tr class="windowbg2">
+				</tr><tr class="windowbg2" valign="top">
 					<td align="right" width="50%"><b>', $txt['membergroups_members_add_desc'], ':</b></td>
 					<td align="left">
-						<input type="text" name="toAdd" id="toAdd" size="30" />
-						<a href="', $scripturl, '?action=findmember;input=toAdd;quote;sesc=', $context['session_id'], '" onclick="return reqWin(this.href, 350, 400);"><img src="', $settings['images_url'], '/icons/assist.gif" alt="', $txt['find_members'], '" /></a>
+						', template_control_autosuggest('toAdd'), '
+						<div id="suggest_template_toAdd" style="visibility: hidden; display: none;">
+							<input type="hidden" name="member_add[]" value="{MEMBER_ID}" />
+							<a href="', $scripturl, '?action=profile;u={MEMBER_ID}" id="recipient_link_toAdd_{MEMBER_ID}" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">{MEMBER_NAME}</a>
+							<input type="image" onclick="return \'{DELETE_MEMBER_URL}\'" src="', $settings['images_url'], '/pm_recipient_delete.gif" alt="', $txt['delete'], '" /></a>
+						</div>
 					</td>
 				</tr><tr class="windowbg2">
 					<td colspan="2" align="center">

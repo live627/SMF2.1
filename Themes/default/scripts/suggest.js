@@ -58,7 +58,7 @@ function smfSuggest(sessionID, textID)
 				if (selectedDiv != false)
 					itemClicked(selectedDiv);
 				else
-					itemClicked(displayData[0]);
+					onElementSubmitted();
 			}
 
 			// Don't let it submit anything.
@@ -129,16 +129,24 @@ function smfSuggest(sessionID, textID)
 		// Do we have something that matches the current text?
 		for (i = 0; i < cache.length; i++)
 		{
-			if (textHandle.value.toLowerCase() == cache[i]['name'].toLowerCase().substr(0, textHandle.value.length))
+			if (lastSearch.toLowerCase() == cache[i]['name'].toLowerCase().substr(0, lastSearch.length))
 			{
-				// If we have two matches die.
+				// Exact match?
+				if (lastSearch.length == cache[i]['name'].length)
+				{
+					// This is the one!
+					return_value = {'memberid': cache[i]['id'], 'membername': cache[i]['name']};
+					break;
+				}
+
+				// If we have two matches don't find anything.
 				if (return_value != true)
-					return true;
+					return_value = false;
 				return_value = {'memberid': cache[i]['id'], 'membername': cache[i]['name']};
 			}
 		}
 
-		if (return_value == true)
+		if (return_value == true || return_value == false)
 			return return_value;
 		else
 		{

@@ -231,9 +231,11 @@ function MembergroupMembers()
 		removeMembersFromGroups($_REQUEST['rem'], $_REQUEST['group'], true);
 	}
 	// Must be adding new members to the group...
-	elseif (isset($_REQUEST['add']) && !empty($_REQUEST['toAdd']) && $context['group']['assignable'])
+	elseif (isset($_REQUEST['add']) && (!empty($_REQUEST['toAdd']) || !empty($_REQUEST['member_add'])) && $context['group']['assignable'])
 	{
 		checkSession();
+
+		$member_query = array();
 
 		// Get all the members to be added... taking into account names can be quoted ;)
 		$_REQUEST['toAdd'] = strtr($smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['toAdd']), ENT_QUOTES)), array('&quot;' => '"'));
@@ -248,23 +250,44 @@ function MembergroupMembers()
 				unset($member_names[$index]);
 		}
 
-		$request = $smfFunc['db_query']('', "
-			SELECT id_member
-			FROM {$db_prefix}members
-			WHERE (LOWER(member_name) IN ('" . implode("', '", $member_names) . "') OR LOWER(real_name) IN ('" . implode("', '", $member_names) . "'))
-				AND id_group != $_REQUEST[group]
-				AND NOT FIND_IN_SET($_REQUEST[group], additional_groups)
-			LIMIT " . count($member_names), __FILE__, __LINE__);
+		// Any passed by ID?
+		$member_ids = array();
+		if (!empty($_REQUEST['member_add']))
+			foreach ($_REQUEST['member_add'] as $id)
+				if ($id > 0)
+					$member_ids[] = (int) $id;
+
+		// Construct the query pelements.
+		if (!empty($member_ids))
+			$member_query[] = 'id_member IN (' . implode(',', $member_ids) . ')';
+		if (!empty($member_names))
+		{
+			$member_query[] = "LOWER(member_name) IN ('" . implode("', '", $member_names) . "')";
+			$member_query[] = "LOWER(real_name) IN ('" . implode("', '", $member_names) . "')";
+		}
+
 		$members = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$members[] = $row['id_member'];
-		$smfFunc['db_free_result']($request);
+		if (!empty($member_query))
+		{
+			$request = $smfFunc['db_query']('', "
+				SELECT id_member
+				FROM {$db_prefix}members
+				WHERE (" . implode(' OR ', $member_query) . ")
+					AND id_group != $_REQUEST[group]
+					AND NOT FIND_IN_SET($_REQUEST[group], additional_groups)", __FILE__, __LINE__);
+			while ($row = $smfFunc['db_fetch_assoc']($request))
+				$members[] = $row['id_member'];
+			$smfFunc['db_free_result']($request);
+		}
 
 		// !!! Add $_POST['additional'] to templates!
 
 		// Do the updates...
-		require_once($sourcedir . '/Subs-Membergroups.php');
-		addMembersToGroup($members, $_REQUEST['group'], isset($_POST['additional']) || $context['group']['hidden'] ? 'only_additional' : 'auto', true);
+		if (!empty($members))
+		{
+			require_once($sourcedir . '/Subs-Membergroups.php');
+			addMembersToGroup($members, $_REQUEST['group'], isset($_POST['additional']) || $context['group']['hidden'] ? 'only_additional' : 'auto', true);
+		}
 	}
 
 	// Sort out the sorting!
@@ -340,6 +363,16 @@ function MembergroupMembers()
 		);
 	}
 	$smfFunc['db_free_result']($request);
+
+	// Create a pretty auto suggest box for the member names.
+	require_once($sourcedir . '/Subs-Editor.php');
+
+	$suggestOptions = array(
+		'id' => 'toAdd',
+		'search_type' => 'member',
+		'width' => '130px',
+	);
+	create_control_autosuggest($suggestOptions);
 
 	// Select the template.
 	$context['sub_template'] = 'group_members';

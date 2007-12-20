@@ -49,6 +49,7 @@ function ModerationMain($dont_call = false)
 	loadLanguage('ModerationCenter');
 
 	$context['admin_features'] = isset($modSettings['admin_features']) ? explode(',', $modSettings['admin_features']) : array('cd,cp,k,w,rg,ml,pm');
+	$context['admin_preferences'] = !empty($options['admin_preferences']) ? unserialize($options['admin_preferences']) : array();
 
 	// This is the menu structure - refer to Subs-Menu.php for the details.
 	$moderation_areas = array(
