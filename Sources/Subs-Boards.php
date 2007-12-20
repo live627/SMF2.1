@@ -625,8 +625,8 @@ function createBoard($boardOptions)
 	// Insert a board, the settings are dealt with later.
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}boards
-			(id_cat, name, description, board_order, member_groups)
-		VALUES ($boardOptions[target_category], SUBSTRING('$boardOptions[board_name]', 1, 255), '', 0, '-1,0')", __FILE__, __LINE__);
+			(id_cat, name, description, board_order, member_groups, redirect)
+		VALUES ($boardOptions[target_category], SUBSTRING('$boardOptions[board_name]', 1, 255), '', 0, '-1,0', '')", __FILE__, __LINE__);
 	$board_id = $smfFunc['db_insert_id']("{$db_prefix}boards", 'id_board');
 
 	if (empty($board_id))

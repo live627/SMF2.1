@@ -1362,8 +1362,8 @@ function createSalvageArea()
 	{
 		$smfFunc['db_query']('', "
 			INSERT INTO {$db_prefix}boards
-				(name, description, id_cat, member_groups, board_order)
-			VALUES (SUBSTRING('" . $smfFunc['db_escape_string']($txt['salvaged_board_name']) . "', 1, 255), SUBSTRING('" . addslashes($txt['salvaged_board_description']) . "', 1, 255), $salvageCatID, '1', -1)", __FILE__, __LINE__);
+				(name, description, id_cat, member_groups, board_order, redirect)
+			VALUES (SUBSTRING('" . $smfFunc['db_escape_string']($txt['salvaged_board_name']) . "', 1, 255), SUBSTRING('" . addslashes($txt['salvaged_board_description']) . "', 1, 255), $salvageCatID, '1', -1, '')", __FILE__, __LINE__);
 		if ($smfFunc['db_affected_rows']() <= 0)
 		{
 			loadLanguage('Admin');

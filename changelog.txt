@@ -79,6 +79,7 @@ December 2007
  ! Force a recache of the users avatar if they change it. (Profile template) [Bug 1129]
  ! Added auto suggest to the "Add members to a group" page. (Groups.php, ManageMembergroups template) [Bug 1109]
  ! Moderator was inheriting permissions from regular members, which is silly. (ManageMembergroups.php) [Bug 1107]
+ ! The XML JumpTo box wasn't doing entities and HTML very well. (Xml.php) [Bug 1025]
 
 
 November 2007
