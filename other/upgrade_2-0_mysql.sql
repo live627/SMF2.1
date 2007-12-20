@@ -1642,6 +1642,13 @@ ALTER TABLE {$db_prefix}membergroups
 ADD id_parent smallint(5) NOT NULL default '-2';
 ---#
 
+---# MAke sure admins and moderators don't inherit...
+UPDATE {$db_prefix}membergroups
+SET id_parent = -2
+WHERE id_group = 1
+	OR id_group = 3;
+---#
+
 ---# Deleting old permission settings...
 DELETE FROM {$db_prefix}settings
 WHERE VARIABLE IN ('permission_enable_by_board', 'autoOptDatabase');

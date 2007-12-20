@@ -1104,6 +1104,10 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			DELETE FROM {$db_prefix}permissions
 			WHERE id_group = $group
  			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
+		$smfFunc['db_query']('', "
+			DELETE FROM {$db_prefix}board_permissions
+			WHERE id_group = $group
+				AND id_profile = 1", __FILE__, __LINE__);
 
 		$groupInserts = array();
 		foreach ($groupLevels['global'][$level] as $permission)
@@ -1114,6 +1118,16 @@ function setPermissionLevel($level, $group, $profile = 'null')
 			array('id_group', 'permission'),
 			$groupInserts,
 			array('id_group'), __FILE__, __LINE__);
+
+		$boardInserts = array();
+		foreach ($groupLevels['board'][$level] as $permission)
+			$boardInserts[] = array(1, $group, "'$permission'");
+
+		$smfFunc['db_insert']('insert',
+			"{$db_prefix}board_permissions",
+			array('id_profile', 'id_group', 'permission'),
+			$boardInserts,
+			array('id_profile', 'id_group'), __FILE__, __LINE__);
 	}
 	// Setting profile permissions for a specific group.
 	elseif ($profile !== 'null' && $group !== 'null' && ($profile == 1 || $profile > 4))

@@ -575,7 +575,7 @@ function EditMembergroup()
 		$_POST['group_desc'] = isset($_POST['group_desc']) && ($_REQUEST['group'] == 1 || (isset($_POST['group_type']) && $_POST['group_type'] != -1)) ? trim($_POST['group_desc']) : '';
 		$_POST['group_type'] = isset($_POST['group_type']) && $_POST['group_type'] >= 0 && $_POST['group_type'] <= 2 ? (int) $_POST['group_type'] : 0;
 		$_POST['group_hidden'] = empty($_POST['group_hidden']) || $_POST['min_posts'] != -1 || $_REQUEST['group'] == 3 ? 0 : (int) $_POST['group_hidden'];
-		$_POST['group_inherit'] = $_REQUEST['group'] > 1 ? (int) $_POST['group_inherit'] : -2;
+		$_POST['group_inherit'] = $_REQUEST['group'] > 1 && $_REQUEST['group'] != 3 ? (int) $_POST['group_inherit'] : -2;
 
 		// !!! Don't set online_color for the Moderators group?
 
