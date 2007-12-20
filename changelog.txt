@@ -76,6 +76,7 @@ December 2007
  ! Missing global. (smf_api.php) [Bug 1082]
  ! Don't allow people to edit the "No polls", "Reply Only" and "Read Only" permissions. (ManagePermissions.php, ManagePermissions template, ManagePermissions language file) [Bug 934]
  ! Do a better job of picking the right permissions in upgrade/install. Note this will override any setup by admins in Beta 1 for the predefined set. (upgrade, install scripts)
+ ! Force a recache of the users avatar if they change it. (Profile template) [Bug 1129]
 
 
 November 2007
