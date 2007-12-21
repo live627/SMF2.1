@@ -89,6 +89,7 @@ December 2007
  ! Database substring function uses 1 based index not 0 based index. (SSI.php)
  ! Removed some erroneous spaces. (Lots of files) [Bug 1134]
  * There can be only one helpmenu ID. (Help template) [Bug 1133]
+ ! More spaces and more other small misc changes. (Load.php, ManageMail.php, ManageSettings.php) [Bug 1135]
 
 
 November 2007

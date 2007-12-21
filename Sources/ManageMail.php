@@ -150,10 +150,10 @@ function BrowseMailQueue()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt;
-						
+
 						// We probably have a text label with your priority.
 						$txtKey = sprintf(\'mq_priority_%1$s\', $rowData[\'priority\']);
-						
+
 						// But if not, revert to priority 3.
 						return isset($txt[$txtKey]) ? $txt[$txtKey] : $txt[\'mq_priority_3\'];
 					'),
@@ -252,7 +252,7 @@ function list_getMailQueueSize()
 		FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
 	list ($mailQueueSize) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
-	
+
 	return $mailQueueSize;
 }
 
@@ -268,7 +268,7 @@ function ModifyMailSettings($return_config = false)
 	$subject = $birthdayEmails[empty($modSettings['birthday_email']) ? 'karlbenson1' : $modSettings['birthday_email']]['subject'];
 
 	$emails = array();
-	foreach($birthdayEmails as $index => $dummy)
+	foreach ($birthdayEmails as $index => $dummy)
 		$emails[$index] = $index;
 
 	$config_vars = array(
@@ -322,7 +322,7 @@ function ModifyMailSettings($return_config = false)
 	<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 		var bDay = new Array();';
 
-	foreach($birthdayEmails as $index => $email)
+	foreach ($birthdayEmails as $index => $email)
 	{
 		// Remove the newlines and count them.
 		$email['body'] = str_replace("\n", '<br />', $email['body'], $newlines);

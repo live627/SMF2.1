@@ -418,7 +418,7 @@ function loadUserSettings()
 		// Because history has proven that it is possible for groups to go bad - clean up incase.
 		foreach ($user_info['groups'] as $k => $v)
 			$user_info['groups'][$k] = (int) $v;
-			
+
 		//this is a logged in user, so definitely not a spider
 		$user_info['possibly_robot'] = false;
 	}
@@ -761,7 +761,6 @@ function loadPermissions()
 		// If it's a spider then cache it different.
 		if ($user_info['possibly_robot'])
 			$cache_groups .= '-spider';
-		
 
 		if ($modSettings['cache_enable'] >= 2 && !empty($board) && ($temp = cache_get_data('permissions:' . $cache_groups . ':' . $board, 240)) != null && time() - 240 > $modSettings['settings_updated'])
 		{

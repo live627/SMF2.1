@@ -944,7 +944,7 @@ function ShowCustomProfiles()
 				),
 				'data' => array(
 					'function' => create_function('$rowData', '
-						
+
 						$isChecked = $rowData[\'disabled\'] ? \'\' : \' checked="checked"\';
 						$onClickHandler = $rowData[\'can_show_register\'] ? sprintf(\'onclick="document.getElementById(\\\'reg_%1$s\\\').disabled = !this.checked;"\', $rowData[\'id\']) : \'\';
 						return sprintf(\'<input type="checkbox" name="active[]" id="active_%1$s" value="%1$s" class="check"%2$s%3$s />\', $rowData[\'id\'], $isChecked, $onClickHandler);
@@ -1008,11 +1008,11 @@ function ShowCustomProfiles()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $scripturl;
-					
+
 						return sprintf(\'<a href="%1$s?action=admin;area=featuresettings;sa=profileedit;fid=%2$d">%3$s</a><div class="smalltext">%4$s</div>\', $scripturl, $rowData[\'id_field\'], htmlspecialchars($rowData[\'field_name\']), htmlspecialchars($rowData[\'field_desc\']));
 					'),
 					'style' => 'width: 62%;',
-				
+
 				),
 				'sort' => array(
 					'default' => 'field_name',
@@ -1027,7 +1027,7 @@ function ShowCustomProfiles()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt;
-					
+
 						$textKey = sprintf(\'custom_profile_type_%1$s\', $rowData[\'field_type\']);
 						return isset($txt[$textKey]) ? $txt[$textKey] : $textKey;
 					'),
@@ -1045,7 +1045,7 @@ function ShowCustomProfiles()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt;
-					
+
 						return $rowData[\'active\'] ? $txt[\'yes\'] : $txt[\'no\'];
 					'),
 					'class' => 'windowbg',
@@ -1462,14 +1462,14 @@ function ModifyPruningSettings($return_config = false)
 		if (!empty($_POST['pruningOptions']))
 		{
 			$vals = array();
-			foreach($config_vars AS $index => $dummy)
+			foreach ($config_vars as $index => $dummy)
 			{
 				if (!is_array($dummy) || $index == 'pruningOptions')
 					continue;
 
 				$vals[] = empty($_POST[$dummy[1]]) || $_POST[$dummy[1]] < 0 ? 0 : (int) $_POST[$dummy[1]];
 			}
-			$_POST['pruningOptions'] = implode(',', $vals);			
+			$_POST['pruningOptions'] = implode(',', $vals);
 		}
 		else
 			$_POST['pruningOptions'] = '';
