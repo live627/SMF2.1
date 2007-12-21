@@ -442,7 +442,7 @@ function subscriptions($memID)
 			'hide' => $row['status'] == 0 && $row['end_time'] == 0 && $row['payments_pending'] == 0,
 			'name' => $context['subscriptions'][$row['id_subscribe']]['name'],
 			'start' => timeformat($row['start_time'], false),
-			'end' => $row['end_time'] == 0 ? 'N/A' : timeformat($row['end_time'], false),
+			'end' => $row['end_time'] == 0 ? $txt['not_applicable'] : timeformat($row['end_time'], false),
 			'pending_details' => $row['pending_details'],
 			'status' => $row['status'],
 			'status_text' => $row['status'] == 0 ? ($row['payments_pending'] ? $txt['paid_pending'] : $txt['paid_finished']) : $txt['paid_active'],
@@ -476,7 +476,7 @@ function subscriptions($memID)
 
 			// Save the details back.
 			$pending_details = addslashes(serialize($current_pending));
-	
+
 			$smfFunc['db_query']('', "
 				UPDATE {$db_prefix}log_subscribed
 				SET payments_pending = payments_pending + 1, pending_details = '$pending_details'
@@ -565,14 +565,14 @@ function subscriptions($memID)
 			{
 				$current_pending[] = $new_data;
 				$pending_details = addslashes(serialize($current_pending));
-	
+
 				$smfFunc['db_query']('', "
 					UPDATE {$db_prefix}log_subscribed
 					SET payments_pending = $pending_count, pending_details = '$pending_details'
 					WHERE id_sublog = " . $context['current'][$context['sub']['id']]['id'] . "
 						AND id_member = $memID", __FILE__, __LINE__);
 			}
-					
+
 		}
 		// Never had this before, lovely.
 		else
