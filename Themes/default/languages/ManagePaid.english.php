@@ -177,7 +177,7 @@ $txt['paid_not_set_currency'] = 'You have not setup your currency yet. Please do
 // Some error strings.
 $txt['paid_error_subject'] = 'Paid Subscription Error Occured';
 $txt['paid_no_data'] = 'No valid data was sent to the script.';
-$txt['paid_error_body'] = 'An error occured whilst attempting to do a paid subscription. The error is shown below:';
+$txt['paid_error_body'] = 'An error occured while attempting to do a paid subscription. The error is shown below:';
 $txt['paid_new_sub_subject'] = 'New Paid Subscription';
 $txt['paid_new_sub_body'] = 'A member has taken out a new paid subscription. Below are the details of this subscription:';
 $txt['paid_new_sub_body_sub'] = 'Subscription:';

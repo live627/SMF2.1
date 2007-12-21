@@ -84,7 +84,8 @@ December 2007
  ! Move the BBC array from the templates to the source files. (GenericControls template, Subs-Editor.php) [Bug 917]
  + Added an icon next to the report to moderator link that can be used to issue a warning because of that post. (Display.php, Profile-Actions.php, Display and Profile template, index and Profile language files) [Feature 1110]
  ! The query to delete permission profiles was refering to the wrong table for id_parent column. (Subs-Boards.php)
-
+ * The generic settings template did not validate. (Admin template)
+ & American english please. (ManagePaid and ManagePermissions language files)
 
 November 2007
 --------------------------------------------------------------------------------

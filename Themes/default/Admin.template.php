@@ -799,22 +799,23 @@ function template_show_settings()
 	echo '
 	<form action="', $context['post_url'], '" method="post" accept-charset="', $context['character_set'], '">
 		<table width="80%" border="0" cellspacing="0" cellpadding="0" class="tborder" align="center">
-			<tr><td>
-				<table border="0" cellspacing="0" cellpadding="4" width="100%">';
+			<tr>
+				<td>
+					<table border="0" cellspacing="0" cellpadding="4" width="100%">';
 
 	// Is there a custom title?
 	if (isset($context['settings_title']))
 		echo '
-					<tr class="titlebg">
-						<td colspan="3">', $context['settings_title'], '</td>
-					</tr>';
+						<tr class="titlebg">
+							<td colspan="3">', $context['settings_title'], '</td>
+						</tr>';
 
 	// Have we got some custom code to insert?
 	if (!empty($context['settings_message']))
 		echo '
-					<tr>
-						<td class="windowbg2" colspan="3">', $context['settings_message'], '</td>
-					</tr>';
+						<tr>
+							<td class="windowbg2" colspan="3">', $context['settings_message'], '</td>
+						</tr>';
 
 	// Now actually loop through all the variables.
 	foreach ($context['config_vars'] as $config_var)
@@ -823,17 +824,18 @@ function template_show_settings()
 		if (is_array($config_var) && $config_var['type'] == 'title')
 		{
 			echo '
-					<tr class="titlebg" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>
-						<td colspan="3">
-							', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
-							', $config_var['label'], '</td>
-					</tr>';
+						<tr class="titlebg" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>
+							<td colspan="3">
+								', ($config_var['help'] ? '<a href="' . $scripturl . '?action=helpadmin;help=' . $config_var['help'] . '" onclick="return reqWin(this.href);" class="help"><img src="' . $settings['images_url'] . '/helptopics.gif" alt="' . $txt['help'] . '" /></a>' : ''), '
+								', $config_var['label'], '
+							</td>
+						</tr>';
 
 			continue;
 		}
 
 		echo '
-					<tr class="windowbg2" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>';
+						<tr class="windowbg2" ', !empty($config_var['force_div_id']) ? 'id="' . $config_var['force_div_id'] . '"' : '', '>';
 
 		if (is_array($config_var))
 		{
@@ -841,9 +843,9 @@ function template_show_settings()
 			if (in_array($config_var['type'], array('message', 'warning')))
 			{
 				echo '
-						<td colspan="3" align="center" ', $config_var['type'] == 'warning' ? 'style="color: red; padding: 2em;"' : '', '>
-							', $config_var['label'], '
-						</td>';
+							<td colspan="3" align="center" ', $config_var['type'] == 'warning' ? 'style="color: red; padding: 2em;"' : '', '>
+								', $config_var['label'], '
+							</td>';
 			}
 			// Otherwise it's an input box of some kind.
 			else
@@ -901,9 +903,10 @@ function template_show_settings()
 				elseif ($config_var['type'] == 'bbc')
 				{
 					echo '
-					<fieldset id="enabledBBCTags">
-						<legend>', $txt['bbcTagsToUse_select'], '</legend>
-						<table width="100%"><tr>';
+								<fieldset id="enabledBBCTags">
+									<legend>', $txt['bbcTagsToUse_select'], '</legend>
+									<table width="100%">
+										<tr>';
 					foreach ($context['bbc_columns'] as $bbcColumn)
 					{
 						echo '
@@ -915,9 +918,10 @@ function template_show_settings()
 											</td>';
 					}
 					echo '
-						</tr></table><br />
-						<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
-					</fieldset>';
+										</tr>
+									</table><br />
+									<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
+								</fieldset>';
 				}
 				// Assume it must be a text box.
 				else
@@ -940,14 +944,15 @@ function template_show_settings()
 							<td colspan="3" class="windowbg2" align="center"><b>' . $config_var . '</b></td>';
 		}
 		echo '
-					</tr>';
+						</tr>';
 	}
 	echo '
-					</tr><tr>
-						<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
-					</tr>
-				</table>
-			</td></tr>
+						<tr>
+							<td class="windowbg2" colspan="3" align="center" valign="middle"><input type="submit" value="', $txt['save'], '"', (!empty($context['save_disabled']) ? ' disabled="disabled"' : ''), ' /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 		</table>
 		<input type="hidden" name="sc" value="', $context['session_id'], '" />
 	</form>';

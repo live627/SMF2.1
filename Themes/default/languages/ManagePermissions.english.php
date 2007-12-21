@@ -332,7 +332,7 @@ $txt['permission_settings_enable_postgroups'] = 'Enable permissions for post cou
 $txt['permission_disable_postgroups_warning'] = 'Disabling this setting will remove permissions currently set to post count based groups.';
 
 $txt['permissions_post_moderation_desc'] = 'From this page you can easily change which groups have their posts moderated for a particular permissions profile.';
-$txt['permissions_post_moderation_deny_note'] = 'Note that whilst you have advanced permissions enabled you cannot apply the &quot;deny&quot; permission from this page. Please edit the permissions directly if you wish to apply a deny permission.';
+$txt['permissions_post_moderation_deny_note'] = 'Note that while you have advanced permissions enabled you cannot apply the &quot;deny&quot; permission from this page. Please edit the permissions directly if you wish to apply a deny permission.';
 $txt['permissions_post_moderation_select'] = 'Select Profile';
 $txt['permissions_post_moderation_new_topics'] = 'New Topics';
 $txt['permissions_post_moderation_replies_own'] = 'Own Replies';
