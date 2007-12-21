@@ -545,6 +545,7 @@ $txt['notification_enable_topic'] = 'Are you sure you wish to enable notificatio
 $txt['notification_disable_topic'] = 'Are you sure you wish to disable notification of new replies for this topic?';
 
 $txt['report_to_mod'] = 'Report to moderator';
+$txt['issue_warning_post'] = 'Issue a warning because of this message';
 
 $txt['unread_topics_visit'] = 'Recent Unread Topics';
 $txt['unread_topics_visit_none'] = 'No unread topics found since your last visit.  <a href="' . $scripturl . '?action=unread;all">Click here to try all unread topics</a>.';

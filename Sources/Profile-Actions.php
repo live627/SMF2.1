@@ -242,6 +242,14 @@ function issueWarning($memID)
 		);
 	}
 	$smfFunc['db_free_result']($request);
+
+	// Are they warning because of a message?
+	if (isset($_REQUEST['msg']) && 0 < (int)$_REQUEST['msg'])
+		$context['warning_for_message'] = (int)$_REQUEST['msg'];
+	else
+		$context['warning_for_message'] = 0;
+
+	$context['warning_template'] = 'profile_warning_notify_template_outline' . (!empty($context['warning_for_message']) ? '_post' : '');
 }
 
 // Present a screen to make sure the user wants to be deleted

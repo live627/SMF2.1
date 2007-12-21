@@ -960,6 +960,9 @@ function prepareDisplayContext($reset = false)
 		'can_see_ip' => allowedTo('moderate_forum') || ($message['id_member'] == $user_info['id'] && !empty($user_info['id'])),
 	);
 
+	// Is this user the message author?
+	$output['is_message_author'] = $message['id_member'] == $user_info['id'];
+
 	if (empty($options['view_newest_first']))
 		$counter++;
 	else

@@ -359,6 +359,7 @@ $txt['profile_warning_notify_body'] = 'Notification Message';
 $txt['profile_warning_notify_template_subject'] = 'You have received a warning';
 // Use numeric entities in below string.
 $txt['profile_warning_notify_template_outline'] = '%1$s,' . "\n\n" . 'You have received a warning for %2$s. Please cease these activities and abide by the forum rules otherwise we will take further action.' . "\n\n" . $txt['regards_team'];
+$txt['profile_warning_notify_template_outline_post'] = '%1$s,' . "\n\n" . 'You have received a warning for %2$s in regards to your message posted [url=' . $scripturl . '?msg=%3$s]here[/url]. Please cease these activities and abide by the forum rules otherwise we will take further action.' . "\n\n" . $txt['regards_team'];
 $txt['profile_warning_notify_for_spamming'] = 'spamming';
 $txt['profile_warning_notify_title_spamming'] = 'Spamming';
 $txt['profile_warning_notify_for_offence'] = 'posting offensive material';

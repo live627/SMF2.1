@@ -544,6 +544,10 @@ function template_main()
 		if ($context['can_report_moderator'])
 			echo '
 									<a href="', $scripturl, '?action=reporttm;topic=', $context['current_topic'], '.', $message['counter'], ';msg=', $message['id'], '">', $txt['report_to_mod'], '</a> &nbsp;';
+
+		if ($context['can_issue_warning'] && !$message['is_message_author'])
+			echo '
+									<a href="', $scripturl, '?action=profile;u=', $message['member']['id'], ';sa=issueWarning;msg=', $message['id'], '"><img src="', $settings['images_url'], '/warn.gif" alt="', $txt['issue_warning_post'], '" border="0" /></a>';
 		echo '
 									<img src="', $settings['images_url'], '/ip.gif" alt="" border="0" />';
 

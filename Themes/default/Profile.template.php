@@ -168,7 +168,11 @@ function template_summary()
 					</td><td>
 						<a href="', $scripturl, '?action=trackip;searchip=', $context['member']['ip'], '" rel="new_win">', $context['member']['ip'], '</a>
 					</td>
-				</tr><tr>
+				</tr>';
+				
+		if (empty($modSettings['disableHostnameLookup']))
+			echo '
+				<tr>
 					<td width="40%">
 						<b>', $txt['hostname'], ': </b>
 					</td><td width="55%">
@@ -2087,7 +2091,7 @@ function template_issueWarning()
 	foreach ($context['notify_types'] as $k => $type)
 		$context['notify_types'][$k] = array(
 			'title' => $txt['profile_warning_notify_title_' . $type],
-			'body' => sprintf($txt['profile_warning_notify_template_outline'], $context['member']['name'], $txt['profile_warning_notify_for_' . $type]),
+			'body' => sprintf($txt[$context['warning_template']], $context['member']['name'], $txt['profile_warning_notify_for_' . $type], $context['warning_for_message']),
 		);
 
 	echo '
