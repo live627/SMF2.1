@@ -59,7 +59,7 @@ if (!defined('SMF'))
 	void reorderBoards()
 		- updates the database to put all boards in the right order.
 		- sorts the records of the boards table.
-		- used by modifyBoard(), deleteBoards(), modifyCategory(), and 
+		- used by modifyBoard(), deleteBoards(), modifyCategory(), and
 		  deleteCategories() functions.
 
 	void fixChildren(int parent, int newLevel, int newParent)
@@ -81,7 +81,7 @@ if (!defined('SMF'))
 
 	void recursiveBoards()
 		- function used by getBoardTree to recursively get a list of boards.
-	
+
 	bool isChildOf(int child, int parent)
 		- determine if a certain board id is a child of another board.
 		- the parent might be several levels higher than the child.
@@ -301,7 +301,7 @@ function MarkRead()
 				if (in_array($row['id_parent'], $boards))
 					$boards[] = $row['id_board'];
 			$smfFunc['db_free_result']($request);
-			
+
 		}
 
 		$clauses = array();
@@ -420,7 +420,7 @@ function modifyBoard($board_id, &$boardOptions)
 			$id_parent = 0;
 			$after = $cat_tree[$id_cat]['last_board_order'];
 		}
-		
+
 		// Move the board to the bottom of a given category.
 		elseif ($boardOptions['move_to'] == 'bottom')
 		{
@@ -754,7 +754,7 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 	if (!empty($profiles))
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT p.id_profile, p.id_parent, IFNULL(b.id_board, 0) AS remainingBoard
+			SELECT p.id_profile, b.id_parent, IFNULL(b.id_board, 0) AS remainingBoard
 			FROM {$db_prefix}permission_profiles AS p
 				LEFT JOIN {$db_prefix}boards AS b ON (b.id_profile = p.id_profile AND b.id_board NOT IN (" . implode(', ', $boards_to_remove) . "))
 			GROUP BY id_profile", __FILE__, __LINE__);
