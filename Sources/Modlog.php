@@ -44,7 +44,7 @@ if (!defined('SMF'))
 // Show the moderation log
 function ViewModlog()
 {
-	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc;
+	global $db_prefix, $txt, $modSettings, $context, $scripturl, $sourcedir, $user_info, $smfFunc, $modlog_descriptions;
 
 	$context['can_delete'] = allowedTo('admin_forum');
 	$user_info['modlog_query'] = $context['can_delete'] || $user_info['mod_cache']['bq'] == '1=1' ? '1=1' : ($user_info['mod_cache']['bq'] == '0=1' ? 'lm.id_action = 0' : strtr($user_info['mod_cache']['bq'], array('b.' => 'lm')));
@@ -136,7 +136,7 @@ function ViewModlog()
 	}
 
 	// This text array holds all the formatting for the supported reporting type.
-	$descriptions = array(
+	$modlog_descriptions = array(
 		'approve' => $txt['modlog_ac_approved'],
 		'approve_topic' => $txt['modlog_ac_approved_topic'],
 		'lock' => $txt['modlog_ac_locked'],
@@ -158,7 +158,7 @@ function ViewModlog()
 	if ($search_params['type'] == 'action' && !empty($search_params['string']))
 	{
 		// For the moment they can only search for ONE action!
-		foreach ($descriptions as $key => $text)
+		foreach ($modlog_descriptions as $key => $text)
 		{
 			if (strpos($text, $search_params['string']) !== false)
 			{
@@ -189,7 +189,7 @@ function ViewModlog()
 
 function getModLogEntries($search_param = '', $order= '', $limit = 0)
 {
-	global $db_prefix, $context, $scripturl, $txt, $smfFunc, $user_info;
+	global $db_prefix, $context, $scripturl, $txt, $smfFunc, $user_info, $modlog_descriptions;
 
 	// Construct our limit.
 	if (empty($limit))
@@ -289,7 +289,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 			'timestamp' => forum_time(true, $row['log_time']),
 			'editable' => time() > $row['log_time'] + $context['hoursdisable'] * 3600,
 			'extra' => $row['extra'],
-			'action' => isset($descriptions[$row['action']]) ? $descriptions[$row['action']] : $row['action'],
+			'action' => isset($modlog_descriptions[$row['action']]) ? $modlog_descriptions[$row['action']] : $row['action'],
 		);
 	}
 	$smfFunc['db_free_result']($result);
