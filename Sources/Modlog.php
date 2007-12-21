@@ -214,7 +214,7 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 		FROM {$db_prefix}log_actions AS lm
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
 			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)"
-		  . (!empty($search_param) ? '
+			. (!empty($search_param) ? '
 			WHERE ' . $search_param : '') . (!empty($order) ? '
 		ORDER BY ' . $order : '') . "
 		$limit", __FILE__, __LINE__);

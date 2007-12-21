@@ -594,7 +594,7 @@ function loadProfileFields($force_reload = false)
 				if (trim($value) == \'\')
 					return \'no_name\';
 				elseif ($smfFunc[\'strlen\']($value) > 60)
- 					return \'name_too_long\';
+					return \'name_too_long\';
 				elseif ($cur_profile[\'real_name\'] != $value)
 				{
 					require_once($sourcedir . \'/Subs-Members.php\');

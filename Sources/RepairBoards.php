@@ -347,7 +347,7 @@ function loadForumTests()
 				SELECT
 					t.id_topic, t.id_first_msg, t.id_last_msg,
 					CASE WHEN MIN(ma.id_msg) > 0 THEN
-						 CASE WHEN MIN(mu.id_msg) > 0 THEN
+						CASE WHEN MIN(mu.id_msg) > 0 THEN
 							CASE WHEN MIN(mu.id_msg) < MIN(ma.id_msg) THEN MIN(mu.id_msg) ELSE MIN(ma.id_msg) END ELSE
 						MIN(ma.id_msg) END ELSE
 					MIN(mu.id_msg) END AS myid_first_msg,
@@ -360,7 +360,7 @@ function loadForumTests()
 				WHERE t.id_topic BETWEEN {STEP_LOW} AND {STEP_HIGH}
 				GROUP BY t.id_topic, t.id_first_msg, t.id_last_msg, t.approved, mf.approved
 				HAVING id_first_msg != (CASE WHEN MIN(ma.id_msg) > 0 THEN
-						 CASE WHEN MIN(mu.id_msg) > 0 THEN
+						CASE WHEN MIN(mu.id_msg) > 0 THEN
 							CASE WHEN MIN(mu.id_msg) < MIN(ma.id_msg) THEN MIN(mu.id_msg) ELSE MIN(ma.id_msg) END ELSE
 						MIN(ma.id_msg) END ELSE
 					MIN(mu.id_msg) END) OR id_last_msg != (CASE WHEN MAX(ma.id_msg) > 0 THEN MAX(ma.id_msg) ELSE MIN(mu.id_msg) END)

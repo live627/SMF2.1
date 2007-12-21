@@ -403,8 +403,8 @@ function AddMembergroup()
 			$copy_id = $_POST['perm_type'] == 'copy' ? (int) $_POST['copyperm'] : (int) $_POST['inheritperm'];
 
 			// Don't allow copying of a real priviledged person!
- 			require_once($sourcedir . '/ManagePermissions.php');
- 			loadIllegalPermissions();
+			require_once($sourcedir . '/ManagePermissions.php');
+			loadIllegalPermissions();
 
 			$request = $smfFunc['db_query']('', "
 				SELECT permission, add_deny
@@ -413,9 +413,9 @@ function AddMembergroup()
 			$inserts = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
- 				if (empty($context['illegal_permissions']) || !in_array($row['permission'], $context['illegal_permissions']))
- 					$inserts[] = array($id_group, "'$row[permission]'", $row['add_deny']);
- 			}
+				if (empty($context['illegal_permissions']) || !in_array($row['permission'], $context['illegal_permissions']))
+					$inserts[] = array($id_group, "'$row[permission]'", $row['add_deny']);
+			}
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($inserts))

@@ -446,7 +446,7 @@ function Register2()
 	require_once($sourcedir . '/Profile.php');
 	require_once($sourcedir . '/Profile-Modify.php');
 	makeCustomFieldChanges($memberID, 'register');
- 
+
 	// If COPPA has been selected then things get complicated, setup the template.
 	if (!empty($modSettings['coppaAge']) && !isset($_POST['skip_coppa']))
 		redirectexit('action=coppa;member=' . $memberID);

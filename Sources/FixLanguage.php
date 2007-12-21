@@ -999,7 +999,7 @@ the cache go to Admin => Maintenance => Clean Cache.
 					$replaceArray[] = '$txt[\'' . $replace . '\']';
 			}
 		}
- 	}
+	}
 
 	if (!empty($findArray))
 	{

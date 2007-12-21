@@ -86,6 +86,10 @@ December 2007
  ! The query to delete permission profiles was refering to the wrong table for id_parent column. (Subs-Boards.php)
  * The generic settings template did not validate. (Admin template)
  & American english please. (ManagePaid and ManagePermissions language files)
+ ! Database substring function uses 1 based index not 0 based index. (SSI.php)
+ ! Removed some erroneous spaces. (Lots of files) [Bug 1134]
+ * There can be only one helpmenu ID. (Help template) [Bug 1133]
+
 
 November 2007
 --------------------------------------------------------------------------------

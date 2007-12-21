@@ -1030,8 +1030,8 @@ function AdminSearchOM()
 						'href' => $message->fetch('author/href'),
 					),
 				);
-	  	}
- 	}
+		}
+	}
 }
 
 ?>

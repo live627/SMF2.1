@@ -299,7 +299,7 @@ function ssi_queryPosts($query_where, $query_limit = '', $query_order = 'm.id_ms
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg, m.id_board, b.name AS board_name,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
-			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", " . ($limit_body ? 'SUBSTRING(m.body, 0, 384) AS body' : 'm.body') . ", m.smileys_enabled
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", " . ($limit_body ? 'SUBSTRING(m.body, 1, 384) AS body' : 'm.body') . ", m.smileys_enabled
 		FROM {$db_prefix}messages AS m
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . (!$user_info['is_guest'] ? "
@@ -406,7 +406,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 			m.poster_time, ms.subject, m.id_topic, m.id_member, m.id_msg, b.id_board, b.name AS board_name, t.num_replies, t.num_views,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, " . ($user_info['is_guest'] ? '1 AS isRead, 0 AS new_from' : '
 			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, 0)) >= m.id_msg_modified AS isRead,
-			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", SUBSTRING(m.body, 0, 384) AS body, m.smileys_enabled, m.icon
+			IFNULL(lt.id_msg, IFNULL(lmr.id_msg, -1)) + 1 AS new_from') . ", SUBSTRING(m.body, 1, 384) AS body, m.smileys_enabled, m.icon
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)

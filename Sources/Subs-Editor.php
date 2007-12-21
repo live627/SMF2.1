@@ -196,7 +196,7 @@ function html_to_bbc($text)
 
 		// Does it have an end tag?
 		if ($matches[5] != '/' && strpos($text, '</' . $matches[1] . '>', $start_pos) !== false)
-  			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
+			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
 		else
 			$end_pos = $start_pos + strlen($matches[0]);
 
@@ -223,15 +223,15 @@ function html_to_bbc($text)
 			{
 				if ($v == 'bold')
 					$tags[] = array('[b]', '[/b]');
-   			}
-   			elseif ($s == 'text-decoration')
+			}
+			elseif ($s == 'text-decoration')
 			{
 				if ($v == 'underline')
 					$tags[] = array('[u]', '[/u]');
 				elseif ($v == 'line-through')
 					$tags[] = array('[s]', '[/s]');
-   			}
-   			elseif ($s == 'text-align')
+			}
+			elseif ($s == 'text-align')
 			{
 				if ($v == 'left')
 					$tags[] = array('[left]', '[/left]');
@@ -239,29 +239,29 @@ function html_to_bbc($text)
 					$tags[] = array('[center]', '[/center]');
 				elseif ($v == 'right')
 					$tags[] = array('[right]', '[/right]');
-   			}
-   			elseif ($s == 'font-style')
+			}
+			elseif ($s == 'font-style')
 			{
 				if ($v == 'italic')
 					$tags[] = array('[i]', '[/i]');
-   			}
-   			// Font colors?
-   			elseif ($s == 'color')
+			}
+			// Font colors?
+			elseif ($s == 'color')
 			{
 				$tags[] = array('[color=' . $v . ']', '[/color]');
-   			}
-   			// Font size?
-   			elseif ($s == 'font-size')
+			}
+			// Font size?
+			elseif ($s == 'font-size')
 			{
 				$tags[] = array('[size=' . $v . ']', '[/size]');
-   			}
-   			// Font family?
-   			elseif ($s == 'font-family')
+			}
+			// Font family?
+			elseif ($s == 'font-family')
 			{
 				$tags[] = array('[font=' . $v . ']', '[/font]');
-   			}
-   			// This is a hack for images with dimensions embedded.
-   			elseif ($s == 'width' || $s == 'height')
+			}
+			// This is a hack for images with dimensions embedded.
+			elseif ($s == 'width' || $s == 'height')
 			{
 				preg_match('~(\d+)~i', $v, $dim);
 				if (!empty($dim[1]))
@@ -274,7 +274,7 @@ function html_to_bbc($text)
 				if (!empty($type[1]))
 					$extra_attr .= ' listtype="' . $type[1] . '"';
 			}
-  		}
+		}
 
 		// Add in all our new tags.
 		$before = $after = '';
@@ -283,7 +283,7 @@ function html_to_bbc($text)
 			$before .= $tag[0];
 			if (isset($tag[1]))
 				$after = $tag[1] . $after;
-  		}
+		}
 
 		// Remove the style from that tag so it's never checked again.
 		$tag = substr($text, $start_pos, strlen($matches[0]));
@@ -292,7 +292,7 @@ function html_to_bbc($text)
 
 		// Put the tags back into the body.
 		$text = substr($text, 0, $start_pos) . $tag . $before . $content . $after . substr($text, $end_pos);
- 	}
+	}
 
 	// Let's pull out any legacy alignments.
 	while (preg_match('~<([A-Za-z]+)\s+[^<>]*?(align="*(left|center|right)"*)[^<>]*?(/?)>~i', $text, $matches) != false)
@@ -304,7 +304,7 @@ function html_to_bbc($text)
 
 		// End tag?
 		if ($matches[4] != '/' && strpos($text, '</' . $matches[1] . '>', $start_pos) !== false)
-  			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
+			$end_pos = strpos($text, '</' . $matches[1] . '>', $start_pos);
 		else
 			$end_pos = $start_pos + strlen($matches[0]);
 
@@ -315,14 +315,14 @@ function html_to_bbc($text)
 
 		// Put the tags back into the body.
 		$text = substr($text, 0, $start_pos) . '[' . $matches[3] . ']' . $tag . $content . '[/' . $matches[3] . ']' . substr($text, $end_pos + strlen('</' . $matches[1] . '>'));
- 	}
+	}
 
 	// Let's do some special stuff for fonts - cause we all love fonts.
 	while (preg_match('~<font\s+([^<>]*)>~i', $text, $matches) != false)
 	{
 		// Find the position of this again.
-  		$start_pos = strpos($text, $matches[0]);
-  		$end_pos = false;
+		$start_pos = strpos($text, $matches[0]);
+		$end_pos = false;
 		if ($start_pos === false)
 			break;
 
@@ -362,7 +362,7 @@ function html_to_bbc($text)
 
 		// Now work out what the attributes are.
 		$attribs = fetchTagAttributes($matches[1]);
-  		$tags = array();
+		$tags = array();
 		foreach ($attribs as $s => $v)
 		{
 			if ($s == 'size')
@@ -380,14 +380,14 @@ function html_to_bbc($text)
 			$before .= $tag[0];
 			if (isset($tag[1]))
 				$after = $tag[1] . $after;
-  		}
+		}
 
 		// Remove the tag so it's never checked again.
 		$content = substr($text, $start_pos + strlen($matches[0]), $end_pos - $start_pos - strlen($matches[0]));
 
 		// Put the tags back into the body.
 		$text = substr($text, 0, $start_pos) . $before . $content . $after . substr($text, $end_pos + 7);
- 	}
+	}
 
 	// Try our hand at all manner of lists - doesn't matter if we mess up the children as the BBC will clean it.
 	$text = preg_replace('~<(ol|ul)\s*[^<>]*?(listtype="([\w-]+)")*[^<>]*?>(.+?)</(ol|ul)>~ie', "'[list' . (strlen('$3') > 1 ? ' type=$3' : '') . ']$4[/list]'", $text);
@@ -397,7 +397,7 @@ function html_to_bbc($text)
 	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) != false)
 	{
 		// Find the position of the URL.
-	  	$start_pos = strpos($text, $matches[0]);
+		$start_pos = strpos($text, $matches[0]);
 		if ($start_pos === false)
 			break;
 		$end_pos = $start_pos + strlen($matches[0]);
@@ -451,13 +451,13 @@ function html_to_bbc($text)
 
 		// Replace the tag
 		$text = substr($text, 0, $start_pos) . $tag . substr($text, $end_pos);
- 	}
+	}
 
- 	// I love my own image...
- 	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) != false)
+	// I love my own image...
+	while (preg_match('~<img\s+([^<>]*)/*>~i', $text, $matches) != false)
 	{
 		// Find the position of the image.
-	  	$start_pos = strpos($text, $matches[0]);
+		$start_pos = strpos($text, $matches[0]);
 		if ($start_pos === false)
 			break;
 		$end_pos = $start_pos + strlen($matches[0]);
@@ -500,8 +500,8 @@ function html_to_bbc($text)
 
 		// Replace the tag
 		$text = substr($text, 0, $start_pos) . $tag . substr($text, $end_pos);
- 	}
- 
+	}
+
 	// The final bits are the easy ones - tags which map to tags which map to tags - etc etc.
 	$tags = array(
 		'~<b(\s(.)*?)*?>~i' => '[b]',

@@ -160,7 +160,7 @@ function template_manual_above()
 
 	echo '
 	<div class="tborder" style="margin-top: 1ex;">
-		<div id="helpmenu" class="titlebg" style="padding: 4px;">';
+		<div class="helpmenu titlebg" style="padding: 4px;">';
 
 	$menu_items = array();
 	foreach ($context['all_pages'] as $page_url => $page_txt)
@@ -183,7 +183,7 @@ function template_manual_below()
 
 	echo '
 		</div>
-		<div id="helpmenu" class="titlebg" style="padding: 4px;">';
+		<div class="helpmenu titlebg" style="padding: 4px;">';
 
 	$menu_items = array();
 	foreach ($context['all_pages'] as $page_url => $page_txt)
@@ -1562,7 +1562,7 @@ function template_manual_posting()
 										</option>
 									</select> <img src="', $settings['images_url'], '/post/xx.gif" name="icons" border="0" hspace="15" alt="" id="icons" /></td>
 								</tr>
-																<tr>
+								<tr>
 									<td align="right"></td>
 									<td valign="middle">
 										<script language="JavaScript" type="text/javascript">

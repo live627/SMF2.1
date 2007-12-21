@@ -112,11 +112,11 @@ function createMenu($menuData, $menuOptions = array())
 					{
 						$menu_context['current_area'] = $area_id;
 						$include_data = $area;
-     					}
+					}
 
-     					// First time this section?
-     					if (!isset($menu_context['sections'][$section_id]))
-     						$menu_context['sections'][$section_id]['title'] = $section['title'];
+   					// First time this section?
+   					if (!isset($menu_context['sections'][$section_id]))
+   						$menu_context['sections'][$section_id]['title'] = $section['title'];
 
 					$menu_context['sections'][$section_id]['areas'][$area_id] = array('label' => isset($area['label']) ? $area['label'] : $txt[$area_id]);
 					// get the ID as well
@@ -216,7 +216,7 @@ function createMenu($menuData, $menuOptions = array())
 			unset($context['max_menu_id']);
 
 		return false;
- 	}
+	}
 
 	// What type of menu is this?
 	if (!isset($menuOptions['menu_type']))

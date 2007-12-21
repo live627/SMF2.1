@@ -585,7 +585,7 @@ function Post()
 					SELECT IFNULL(size, -1) AS filesize, filename, id_attach, approved
 					FROM {$db_prefix}attachments
 					WHERE id_msg = " . (int) $_REQUEST['msg'] . "
-						 AND attachment_type = 0", __FILE__, __LINE__);
+						AND attachment_type = 0", __FILE__, __LINE__);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 				{
 					if ($row['filesize'] <= 0)

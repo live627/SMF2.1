@@ -263,7 +263,7 @@ function cleanRequest()
 
 	// The action needs to be a string and not an array or anything else	
 	if (isset($_REQUEST['action']))
-       		$_REQUEST['action'] = (string) $_REQUEST['action'];
+		$_REQUEST['action'] = (string) $_REQUEST['action'];
 	if (isset($_GET['action']))
 		$_GET['action'] = (string) $_GET['action'];
 

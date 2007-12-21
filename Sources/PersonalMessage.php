@@ -3007,9 +3007,9 @@ function ApplyRules($all_messages = false)
 							$actions['labels'][$row['id_pm']][] = $a['v'];
 						}
 					}
-    				}
+				}
 			}
-  		}
+		}
 	}
 	$smfFunc['db_free_result']($request);
 
@@ -3065,8 +3065,8 @@ function LoadRules($reload = false)
 
 		if ($row['delete_pm'])
 			$context['rules'][$row['id_rule']]['actions'][] = array('t' => 'del', 'v' => 1);
- 	}
- 	$smfFunc['db_free_result']($request);
+	}
+	$smfFunc['db_free_result']($request);
 }
 
 ?>

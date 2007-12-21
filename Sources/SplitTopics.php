@@ -607,7 +607,7 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		fatal_lang_error('cant_insert_topic');
 
 	// Move the messages over to the other topic.
-	 $new_subject = $smfFunc['htmlspecialchars']($new_subject);
+	$new_subject = $smfFunc['htmlspecialchars']($new_subject);
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}messages
 		SET

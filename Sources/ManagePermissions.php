@@ -521,7 +521,7 @@ function SetQuickGroups()
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}permissions
 				WHERE id_group IN (" . implode(', ', $_POST['group']) . ")
- 					" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
+					" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 
 			if (!empty($inserts))
 			{
@@ -588,8 +588,8 @@ function SetQuickGroups()
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}permissions
 					WHERE id_group IN (" . implode(', ', $_POST['group']) . ")
- 						AND permission = '$permission'
- 						" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
+						AND permission = '$permission'
+						" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 			else
 				$smfFunc['db_query']('', "
 					DELETE FROM {$db_prefix}board_permissions
@@ -803,8 +803,8 @@ function ModifyMembergroup2()
 						if (!empty($context['illegal_permissions']) && in_array($permission, $context['illegal_permissions']))
 							continue;
 
- 						$givePerms[$perm_type][] = array($_GET['group'], "'$permission'", $value == 'deny' ? 0 : 1);
- 					}
+						$givePerms[$perm_type][] = array($_GET['group'], "'$permission'", $value == 'deny' ? 0 : 1);
+					}
 			}
 		}
 	}
@@ -815,7 +815,7 @@ function ModifyMembergroup2()
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}permissions
 			WHERE id_group = $_GET[group]
- 			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
+			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 
 		if (!empty($givePerms['membergroup']))
 		{
@@ -1085,9 +1085,9 @@ function setPermissionLevel($level, $group, $profile = 'null')
 	));
 
 	// Make sure we're not granting someone too many permissions!
- 	foreach ($groupLevels['global'][$level] as $k => $permission)
- 		if (!empty($context['illegal_permissions']) && in_array($permission, $context['illegal_permissions']))
- 			unset($groupLevels['global'][$level][$k]);
+	foreach ($groupLevels['global'][$level] as $k => $permission)
+		if (!empty($context['illegal_permissions']) && in_array($permission, $context['illegal_permissions']))
+			unset($groupLevels['global'][$level][$k]);
 
 	// Reset all cached permissions.
 	updateSettings(array('settings_updated' => time()));
@@ -1103,7 +1103,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}permissions
 			WHERE id_group = $group
- 			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
+			" . (empty($context['illegal_permissions']) ? '' : ' AND permission NOT IN (' . implode(', ', $context['illegal_permissions']) . ')'), __FILE__, __LINE__);
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}board_permissions
 			WHERE id_group = $group
@@ -1599,7 +1599,7 @@ function save_inline_permissions($permissions)
 		return;
 
 	// Check they can't do certain things.
- 	loadIllegalPermissions();
+	loadIllegalPermissions();
 
 	$insertRows = array();
 	foreach ($permissions as $permission)
@@ -1618,7 +1618,7 @@ function save_inline_permissions($permissions)
 	$smfFunc['db_query']('', "
 		DELETE FROM {$db_prefix}permissions
 		WHERE permission IN ('" . implode("', '", $permissions) . "')
- 		" . (empty($context['illegal_permissions']) ? '' : " AND permission NOT IN ('" . implode("', '", $context['illegal_permissions']) . "')"), __FILE__, __LINE__);
+		" . (empty($context['illegal_permissions']) ? '' : " AND permission NOT IN ('" . implode("', '", $context['illegal_permissions']) . "')"), __FILE__, __LINE__);
 
 	// ...and replace them with new ones.
 	if (!empty($insertRows))

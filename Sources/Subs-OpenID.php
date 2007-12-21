@@ -410,11 +410,11 @@ function sha1_hmac($data, $key)
 
 	// Pad the key if need be.
 	$key = str_pad($key, 64, chr(0x00));
-    $ipad = str_repeat(chr(0x36), 64);
-    $opad = str_repeat(chr(0x5c), 64);
-    $hash1 = sha1_raw(($key ^ $ipad) . $data);
-    $hmac = sha1_raw(($key ^ $opad) . $hash1);
-    return $hmac;
+	$ipad = str_repeat(chr(0x36), 64);
+	$opad = str_repeat(chr(0x5c), 64);
+	$hash1 = sha1_raw(($key ^ $ipad) . $data);
+	$hmac = sha1_raw(($key ^ $opad) . $hash1);
+	return $hmac;
 }
 
 function sha1_raw($text)

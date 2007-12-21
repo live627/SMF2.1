@@ -942,8 +942,8 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		}
 		if ($delete)
 			$deletes[$row['id_member']] = 1;
- 	}
- 	$smfFunc['db_free_result']($request);
+	}
+	$smfFunc['db_free_result']($request);
 
 	// Load the membergrounp message limits.
 	//!!! Consider caching this?
@@ -1888,7 +1888,7 @@ function createAttachment(&$attachmentOptions)
 			elseif (isset($validImageTypes[$size[2]]))
 				$attachmentOptions['mime_type'] = 'image/' . $validImageTypes[$size[2]];
 		}
- 	}
+	}
 
 	// Remove special foreign characters from the filename.
 	if (empty($modSettings['attachmentEncryptFilenames']))
