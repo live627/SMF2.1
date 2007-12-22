@@ -455,7 +455,7 @@ function PackageInstallTest()
 					$actual_filename = $key;
 
 				// We just need it for actual parse changes.
-				if (!in_array($mod_action['type'], array('result', 'opened', 'saved', 'end', 'missing', 'skipping')))
+				if (!in_array($mod_action['type'], array('result', 'opened', 'saved', 'end', 'missing', 'skipping', 'chmod')))
 				{
 					if (empty($mod_action['is_custom']))
 						$context['actions'][$actual_filename]['operations'][] = array(
