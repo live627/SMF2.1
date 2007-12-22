@@ -89,10 +89,11 @@ if (!defined('SMF'))
 		- for example, it might display "1 234,50".
 		- caches the formatting data from the setting for optimization.
 
-	string timeformat(int time, bool show_today = true)
+	string timeformat(int time, bool show_today = true, string offset_type = false)
 		- returns a pretty formated version of time based on the user's format
 		  in $user_info['time_format'].
-		- applies any necessary time offsets to the timestamp.
+		- applies all necessary time offsets to the timestamp, unless offset_type
+		  is set.
 		- if todayMod is set and show_today was not not specified or true, an
 		  alternate format string is used to show the date with something to
 		  show it is "today" or "yesterday".
@@ -682,16 +683,20 @@ function comma_format($number, $override_decimal_count = false)
 }
 
 // Format a time to make it look purdy.
-function timeformat($log_time, $show_today = true)
+function timeformat($log_time, $show_today = true, $offset_type = false)
 {
 	global $user_info, $txt, $db_prefix, $modSettings, $smfFunc;
 
 	// Offset the time.
-	$time = $log_time + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
+	if (!$offset_type)
+		$log_time = $log_time + ($user_info['time_offset'] + $modSettings['time_offset']) * 3600;
+	// Just the forum offset?
+	elseif ($offset_type == 'forum')
+		$log_time = $log_time + $modSettings['time_offset'] * 3600;
 
 	// We can't have a negative date (on Windows, at least.)
-	if ($time < 0)
-		$time = 0;
+	if ($log_time < 0)
+		$log_time = 0;
 
 	// Today and Yesterday?
 	if ($modSettings['todayMod'] >= 1 && $show_today === true)
@@ -699,7 +704,7 @@ function timeformat($log_time, $show_today = true)
 		// Get the current time.
 		$nowtime = forum_time();
 
-		$then = @getdate($time);
+		$then = @getdate($log_time);
 		$now = @getdate($nowtime);
 
 		// Try to make something of a time format string...
@@ -727,20 +732,20 @@ function timeformat($log_time, $show_today = true)
 	{
 		foreach (array('%a', '%A', '%b', '%B') as $token)
 			if (strpos($str, $token) !== false)
-				$str = str_replace($token, $smfFunc['ucwords'](strftime($token, $time)), $str);
+				$str = str_replace($token, $smfFunc['ucwords'](strftime($token, $log_time)), $str);
 	}
 	else
 	{
 		// Do-it-yourself time localization.  Fun.
 		foreach (array('%a' => 'days_short', '%A' => 'days', '%b' => 'months_short', '%B' => 'months') as $token => $text_label)
 			if (strpos($str, $token) !== false)
-				$str = str_replace($token, $txt[$text_label][(int) strftime($token === '%a' || $token === '%A' ? '%w' : '%m', $time)], $str);
+				$str = str_replace($token, $txt[$text_label][(int) strftime($token === '%a' || $token === '%A' ? '%w' : '%m', $log_time)], $str);
 		if (strpos($str, '%p'))
-			$str = str_replace('%p', (strftime('%H', $time) < 12 ? 'am' : 'pm'), $str);
+			$str = str_replace('%p', (strftime('%H', $log_time) < 12 ? 'am' : 'pm'), $str);
 	}
 
 	// Format any other characters..
-	return strftime($str, $time);
+	return strftime($str, $log_time);
 }
 
 // Removes special entities from strings.  Compatibility...

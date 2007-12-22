@@ -119,6 +119,8 @@ December 2007
  ! Change the color specific BBC tags to [color] BBC tags. (Subs-Post.php)
  ! SSI's showPoll wasn't properly checking the voting permission. (SSI.php) [Bug 235]
  ! Make the new ordered list work flawlessly with the WYSIWYG editor. (editor.js)
+ ! Allow the timeformat function to be passed a variable indicating which offsets to apply. (Subs.php)
+ ! Calendar events shown on Display were incorrectly having user offsets applied. (Display.php)
 
 
 November 2007
