@@ -683,7 +683,7 @@ function ModifyMembergroup()
 
 	$context['profile']['id'] = empty($_GET['pid']) ? 0 : (int) $_GET['pid'];
 	$context['permission_type'] = $context['profile']['id'] == 0 ? 'membergroup' : 'board';
-	$context['profile']['can_modify'] = $context['profiles'][$context['profile']['id']]['can_modify'];
+	$context['profile']['can_modify'] = !$context['profile']['id'] || $context['profiles'][$context['profile']['id']]['can_modify'];
 
 	// Set up things a little nicer for board related stuff...
 	if ($context['permission_type'] == 'board')
