@@ -79,19 +79,18 @@ function EditorMain()
 
 	$context['view'] = (int) $_REQUEST['view'];
 
-	$_REQUEST['message'] = un_htmlspecialchars($_REQUEST['message']);
 	$_REQUEST['message'] = $smfFunc['db_unescape_string']($_REQUEST['message']);
-
-	// Put back in special characters.
-	$_REQUEST['message'] = strtr($_REQUEST['message'], array('#smcol#' => ';', '#smlt#' => '&lt;', '#smgt#' => '&gt;', '#smamp#' => '&amp;'));
 
 	// Return the right thing for the mode.
 	if ($context['view'])
 	{
+		$_REQUEST['message'] = strtr($_REQUEST['message'], array('#smcol#' => ';', '#smlt#' => '&lt;', '#smgt#' => '&gt;', '#smamp#' => '&amp;'));
 		$context['message'] = bbc_to_html($_REQUEST['message']);
 	}
 	else
 	{
+		$_REQUEST['message'] = un_htmlspecialchars($_REQUEST['message']);
+		$_REQUEST['message'] = strtr($_REQUEST['message'], array('#smcol#' => ';', '#smlt#' => '&lt;', '#smgt#' => '&gt;', '#smamp#' => '&amp;'));
 		$context['message'] = html_to_bbc($_REQUEST['message']);
 	}
 
@@ -105,6 +104,7 @@ function bbc_to_html($text)
 
 	// What tags do we allow?
 	$allowed_tags = array('b', 'u', 'i', 's', 'hr', 'list', 'li', 'font', 'size', 'color', 'img', 'pre', 'left', 'center', 'right', 'url', 'email', 'ftp', 'sub', 'sup', 'tt');
+
 	$text = parse_bbc($text, true, '', $allowed_tags);
 
 	// Fix for having a line break then a thingy.
@@ -1075,7 +1075,6 @@ function create_control_richedit($editorOptions)
 					ORDER BY smiley_row, smiley_order", __FILE__, __LINE__);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 				{
-					$row['code'] = htmlspecialchars($row['code']);
 					$row['filename'] = htmlspecialchars($row['filename']);
 					$row['description'] = htmlspecialchars($row['description']);
 	
