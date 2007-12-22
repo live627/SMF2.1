@@ -1321,7 +1321,7 @@ function template_core_features()
 							<input type="hidden" name="feature_', $id, '" id="feature_', $id, '" value="', $feature['enabled'] ? 1 : 0, '" /><img src="', $settings['images_url'], '/admin/switch_', $feature['enabled'] ? 'on' : 'off', '.gif" id="switch_', $id, '" style="margin-top: 1.3em;" alt="', $txt['core_settings_switch_' . ($feature['enabled'] ? 'off' : 'on')], '" />
 						</a>
 					</div>
-					<h4>', $feature['title'], '</h4>
+					<h4>', ($feature['enabled'] && $feature['url'] ? '<a href="' . $feature['url'] . '">' . $feature['title'] . '</a>' : $feature['title']), '</h4>
 					<p>', $feature['desc'], '</p>
 					<div id="plain_feature_', $id, '">
 						<label for="plain_feature_', $id, '_radio_on"><input type="radio" name="feature_plain_', $id, '" id="plain_feature_', $id, '_radio_on" value="1" ', $feature['enabled'] ? 'checked="checked"' : '', ' />', $txt['core_settings_enabled'], '</label>

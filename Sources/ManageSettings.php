@@ -150,12 +150,14 @@ function ModifyCoreFeatures($return_config = false)
 	$core_features = array(
 		// cd = calendar.
 		'cd' => array(
+			'url' => 'action=admin;area=managecalendar',
 			'settings' => array(
 				'cal_enabled' => 1,
 			),
 		),
 		// cp = custom profile fields.
 		'cp' => array(
+			'url' => 'action=admin;area=featuresettings;sa=profile',
 			'save_callback' => create_function('$value', '
 				global $smfFunc, $db_prefix;
 				if (!$value)
@@ -175,18 +177,21 @@ function ModifyCoreFeatures($return_config = false)
 		),
 		// k = karma.
 		'k' => array(
+			'url' => 'action=admin;area=featuresettings;sa=karma',
 			'settings' => array(
 				'karmaMode' => 2,
 			),
 		),
 		// ml = moderation log.
 		'ml' => array(
+			'url' => 'action=moderate;area=modlog',
 			'settings' => array(
 				'modlog_enabled' => 1,
 			),
 		),
 		// pm = post moderation.
 		'pm' => array(
+			'url' => 'action=admin;area=permissions;sa=postmod',
 			'setting_callback' => create_function('$value', '
 				// Cant use warning post moderation if disabled!
 				if (!$value)
@@ -197,15 +202,18 @@ function ModifyCoreFeatures($return_config = false)
 		),
 		// ps = Paid Subscriptions.
 		'ps' => array(
+			'url' => 'action=admin;area=paidsubscribe',
 			'settings' => array(
 				'paid_enabled' => 1,
 			),
 		),
 		// rg = report generator.
 		'rg' => array(
+			'url' => 'action=admin;area=reports',
 		),
 		// w = warning.
 		'w' => array(
+			'url' => 'action=admin;area=featuresettings;sa=moderation',
 			'setting_callback' => create_function('$value', '
 				global $modSettings;
 				list ($modSettings[\'warning_enable\'], $modSettings[\'user_limit\'], $modSettings[\'warning_decrement\']) = explode(\',\', $modSettings[\'warning_settings\']);
@@ -227,6 +235,7 @@ function ModifyCoreFeatures($return_config = false)
 		),
 		// Search engines
 		'sp' => array(
+			'url' => 'action=admin;area=sengines',
 			'settings' => array(
 				'spider_mode' => 1,
 			),
@@ -300,6 +309,7 @@ function ModifyCoreFeatures($return_config = false)
 			'title' => isset($feature['title']) ? $feature['title'] : $txt['core_settings_item_' . $id],
 			'desc' => isset($feature['desc']) ? $feature['desc'] : $txt['core_settings_item_' . $id . '_desc'],
 			'enabled' => in_array($id, $context['admin_features']),
+			'url' => !empty($feature['url']) ? $scripturl . '?' . $feature['url'] . ';sesc=' . $context['session_id'] : '',
 		);
 
 	// Are they a new user?
