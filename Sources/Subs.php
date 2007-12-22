@@ -1616,7 +1616,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					$data = strtr($data, array('&lt;' . $tag . '&gt;' => '<' . $tag . '>', '&lt;/' . $tag . '&gt;' => '</' . $tag . '>'));
 
 					if ($diff > 0)
-						$data .= str_repeat('</' . $tag . '>', $diff);
+						$data = substr($data, 0, -1) . str_repeat('</' . $tag . '>', $diff) . substr($data, -1);
 				}
 
 				// Do <img ... /> - with security... action= -> action-.

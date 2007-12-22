@@ -105,6 +105,7 @@ December 2007
  ! When trying to fix code tags take into account that the parser deals with them unlike the old days, so don't do so much. (Subs-Post.php) [Bug 336]
  ! Give global moderator access to the default board on install. (install scripts) [Bug 822]
  ! Link the titles on the core features page. (ManageSettings.php, Admin template) [Bug 879]
+ ! If we're closing simple HTML then don't break the BBC tag that we're closing it for. (Subs.php) [Bug 254]
 
 
 November 2007
