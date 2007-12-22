@@ -118,6 +118,7 @@ December 2007
  + Added a BBC button for a decimal list. (Subs-Editor.php, orderlist.gif)
  ! Change the color specific BBC tags to [color] BBC tags. (Subs-Post.php)
  ! SSI's showPoll wasn't properly checking the voting permission. (SSI.php) [Bug 235]
+ ! Make the new ordered list work flawlessly with the WYSIWYG editor. (editor.js)
 
 
 November 2007

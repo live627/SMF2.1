@@ -61,6 +61,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 	simpleExec['right'] = 'justifyright';
 	simpleExec['hr'] = 'inserthorizontalrule';
 	simpleExec['list'] = 'insertunorderedlist';
+	simpleExec['orderlist'] = 'insertorderedlist';
 
 	// Codes to call a private function
 	var smfExec = new Array();
