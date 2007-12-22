@@ -115,6 +115,8 @@ December 2007
  ! Respect the hidden setting of a poll in SSI. (SSI.php)
  & Add a new language string to tell the user if they cannot see a poll. (index language file) [Bug 1055]
  ! TrackIP was linking to a users profile even if they didn't exist. (Profile-View.php)
+ + Added a BBC button for a decimal list. (Subs-Editor.php, orderlist.gif)
+ ! Change the color specific BBC tags to [color] BBC tags. (Subs-Post.php)
 
 
 November 2007

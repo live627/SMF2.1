@@ -252,6 +252,10 @@ function preparsecode(&$message, $previewing = false)
 			// Let's look at the time tags...
 			$parts[$i] = preg_replace('~\[time(=(absolute))*\](.+?)\[/time\]~ie', '\'[time]\' . (is_numeric(\'$3\') || @strtotime(\'$3\') == 0 ? \'$3\' : strtotime(\'$3\') - (\'$2\' == \'absolute\' ? 0 : (($modSettings[\'time_offset\'] + $user_info[\'time_offset\']) * 3600))) . \'[/time]\'', $parts[$i]);
 
+			// Change the color specific tags to [color=the color].
+			$parts[$i] = preg_replace('~\[(black|blue|green|red|white)\]~', '[color=$1]', $parts[$i]);  // First do the opening tags.
+			$parts[$i] = preg_replace('~\[/(black|blue|green|red|white)\]~', '[/color]', $parts[$i]);   // And now do the closing tags
+
 			$list_open = substr_count($parts[$i], '[list]') + substr_count($parts[$i], '[list ');
 			$list_close = substr_count($parts[$i], '[/list]');
 			if ($list_close - $list_open > 0)
