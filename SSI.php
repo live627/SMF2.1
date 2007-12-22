@@ -926,7 +926,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		return array();
 
 	$request = $smfFunc['db_query']('', "
-		SELECT p.id_poll, p.question, t.id_topic, p.max_votes, p.guest_vote
+		SELECT p.id_poll, p.question, t.id_topic, p.max_votes, p.guest_vote, p.hide_results, p.expire_time
 		FROM {$db_prefix}polls AS p
 			INNER JOIN {$db_prefix}topics AS t ON (t.id_poll = p.id_poll AND t.approved = 1)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)" . ($topPollInstead ? "
@@ -970,6 +970,10 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 	}
 	$smfFunc['db_free_result']($request);
 
+	// Can they view it?
+	$is_expired = !empty($row['expire_time']) && $row['expire_time'] < time();
+	$allow_view_results = allowedTo('moderate_board') || $row['hide_results'] == 0 || $is_expired;
+
 	$return = array(
 		'id' => $row['id_poll'],
 		'image' => 'poll',
@@ -977,6 +981,7 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 		'total_votes' => $total,
 		'is_locked' => false,
 		'topic' => $row['id_topic'],
+		'allow_view_results' => $allow_view_results,
 		'options' => array()
 	);
 
@@ -1001,7 +1006,9 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 	if ($output_method != 'echo')
 		return $return;
 
-	echo '
+	if ($allow_view_results)
+	{
+		echo '
 		<form action="', $boardurl, '/SSI.php?ssi_function=pollVote" method="post" accept-charset="', $context['character_set'], '">
 			<input type="hidden" name="poll" value="', $return['id'], '" />
 			<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
@@ -1011,18 +1018,22 @@ function ssi_recentPoll($output_method = 'echo', $topPollInstead = false)
 				<tr>
 					<td>', $return['allowed_warning'], '</td>
 				</tr>';
-	foreach ($return['options'] as $option)
-		echo '
+		foreach ($return['options'] as $option)
+			echo '
 				<tr>
 					<td><label for="', $option['id'], '">', $option['vote_button'], ' ', $option['option'], '</label></td>
 				</tr>';
-	echo '
+		echo '
 				<tr>
 					<td><input type="submit" value="', $txt['poll_vote'], '" /></td>
 				</tr>
 			</table>
 			<input type="hidden" name="sc" value="', $sc, '" />
 		</form>';
+	}
+	else
+		echo '
+				', $txt['poll_cannot_see'];
 }
 
 function ssi_showPoll($topic = null, $output_method = 'echo')
@@ -1079,6 +1090,10 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 		$smfFunc['db_free_result']($request);
 	}
 
+	// Can they view?
+	$is_expired = !empty($row['expire_time']) && $row['expire_time'] < time();
+	$allow_view_results = allowedTo('moderate_board') || $row['hide_results'] == 0 || ($row['hide_results'] == 1 && !$allow_vote) || $is_expired;
+
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(DISTINCT id_member)
 		FROM {$db_prefix}log_polls
@@ -1108,6 +1123,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 		'total_votes' => $total,
 		'is_locked' => !empty($pollinfo['voting_locked']),
 		'allow_vote' => $allow_vote,
+		'allow_view_results' => $allow_view_results,
 		'topic' => $topic
 	);
 
@@ -1157,7 +1173,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 				<input type="hidden" name="sc" value="', $sc, '" />
 			</form>';
 	}
-	else
+	elseif ($return['allow_view_results'])
 	{
 		echo '
 				<table border="0" cellspacing="1" cellpadding="0" class="ssi_table">
@@ -1176,6 +1192,10 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 					</tr>
 				</table>';
 	}
+	// Cannot see it I'm afraid!
+	else
+		echo '
+				', $txt['poll_cannot_see'];
 }
 
 // Takes care of voting - don't worry, this is done automatically.

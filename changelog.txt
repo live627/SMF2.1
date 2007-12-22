@@ -111,6 +111,9 @@ December 2007
  ! Only send newsletters to people who have activated their account. (ManageNews.php)
  & Use a dedicated email for coppa joiners. (Subs-Member.php, EmailTemplates language file) [Bug 958]
  ! Don't htmlspecialchars smiley codes as it actually stops them working. (Subs-Editor.php) [Bug 1035]
+ ! We were just sending the digit 1 to UTF8 people using hotmail - which meant emails were harder to understand. (Subs-Post.php)
+ ! Respect the hidden setting of a poll in SSI. (SSI.php)
+ & Add a new language string to tell the user if they cannot see a poll. (index language file) [Bug 1055]
 
 
 November 2007

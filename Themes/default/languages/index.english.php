@@ -521,6 +521,7 @@ $txt['poll_expires_on'] = 'Voting closes';
 $txt['poll_expired_on'] = 'Voting closed';
 $txt['poll_change_vote'] = 'Remove Vote';
 $txt['poll_return_vote'] = 'Voting options';
+$txt['poll_cannot_see'] = 'The cannot see the results of this poll at the moment.';
 
 $txt['quick_mod_approve'] = 'Approve selected';
 $txt['quick_mod_remove'] = 'Remove selected';
