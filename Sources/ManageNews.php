@@ -616,6 +616,7 @@ function SendMailing($clean_only = false)
 			WHERE mem.id_member > $context[start]
 				AND mem.id_member < " . ($context['start'] + $num_at_once - $i) . "
 				AND $sendQuery
+				AND mem.is_activated = 1
 			ORDER BY mem.id_member ASC
 			LIMIT " . ($num_at_once - $i), __FILE__, __LINE__);
 

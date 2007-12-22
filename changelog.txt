@@ -108,6 +108,7 @@ December 2007
  ! If we're closing simple HTML then don't break the BBC tag that we're closing it for. (Subs.php) [Bug 254]
  ! Load the language file for the theme you are editing, if changing theme settings. (Themes.php) [Bug 232]
  ! There is no need for the Set-Cookie header when downloading. (Display.php, Calendar.php) [Bug 981]
+ ! Only send newsletters to people who have activated their account. (ManageNews.php)
 
 
 November 2007
