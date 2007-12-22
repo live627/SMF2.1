@@ -497,7 +497,7 @@ CREATE TABLE {$db_prefix}boards (
 
 INSERT INTO {$db_prefix}boards
 	(id_board, id_cat, board_order, id_last_msg, id_msg_updated, name, description, num_topics, num_posts, member_groups)
-VALUES (1, 1, 1, 1, 1, '{$default_board_name}', '{$default_board_description}', 1, 1, '-1,0');
+VALUES (1, 1, 1, 1, 1, '{$default_board_name}', '{$default_board_description}', 1, 1, '-1,0,2');
 # --------------------------------------------------------
 
 #
