@@ -94,6 +94,7 @@ December 2007
  * Use a transparent background for the warning icon. (warn.gif) [Bug 1139]
  ! Use the language string for moderation log actions. (Modlog.php) [Bug 1072]
  ! Skip chmod actions when installing/uninstalling mods. (Packages.php)
+ ! Make the copyright check more forgiving for older copyright messages. (Subs.php)
 
 
 November 2007
