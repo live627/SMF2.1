@@ -390,8 +390,18 @@ function html_to_bbc($text)
 	}
 
 	// Try our hand at all manner of lists - doesn't matter if we mess up the children as the BBC will clean it.
-	$text = preg_replace('~<(ol|ul)\s*[^<>]*?(listtype="([\w-]+)")*[^<>]*?>(.+?)</(ol|ul)>~ie', "'[list' . (strlen('$3') > 1 ? ' type=$3' : '') . ']$4[/list]'", $text);
-	$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', "[li]$1[/li]", $text);
+	$last_text = '';log_error($text);
+	while ($text != $last_text)
+	{
+		$last_text = $text;
+		$text = preg_replace('~(<br\s*/*>\s*){0,1}<(ol|ul)\s*[^<>]*?(listtype="([\w-]+)")*[^<>]*?>(.+?)</(ol|ul)>~ie', "'[list' . (strlen('$4') > 1 ? ' type=$4' : '') . ']$5[/list]'", $text);
+	}
+	$last_text = '';
+	while ($text != $last_text)
+	{
+		$last_text = $text;
+		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', "[li]$1[/li]", $text);
+	}
 
 	// What about URL's - the pain in the ass of the tag world.
 	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) != false)
