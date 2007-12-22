@@ -97,6 +97,8 @@ December 2007
  ! Make the copyright check more forgiving for older copyright messages. (Subs.php)
  ! Fixed undefined offset when editing permissions. (ManagePermissions.php) [Bug 1138,1137]
  ! Removed even more unnecessary spacing. (ManageSettings.php, Subs-Boards.php) [Bug 1134]
+ ! Banned users wern't being flagged as such for notifications if they also had an expired ban. (ManageBans.php) [Bug 1118]
+ ! Optimise the updateBanMembers function as it was very slow at working out who had an incorrect ban. (ManageBans.php)
 
 
 November 2007

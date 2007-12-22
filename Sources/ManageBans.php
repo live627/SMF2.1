@@ -1417,23 +1417,65 @@ function updateBanMembers()
 	global $db_prefix, $smfFunc;
 
 	$updates = array();
+	$allMembers = array();
 	$newMembers = array();
 
-	// Find members that haven't been marked as 'banned'...yet.
 	$request = $smfFunc['db_query']('', "
-		SELECT mem.id_member, mem.is_activated + 10 AS new_value
-		FROM {$db_prefix}ban_groups AS bg
-			INNER JOIN {$db_prefix}ban_items AS bi ON (bi.id_ban_group = bg.id_ban_group)
-			INNER JOIN {$db_prefix}members AS mem ON ((mem.id_member = bi.id_member OR mem.email_address LIKE bi.email_address)
-				AND mem.is_activated < 10)
-		WHERE bg.cannot_access = 1
+		SELECT bi.id_member, bi.email_address
+		FROM {$db_prefix}ban_items AS bi
+			INNER JOIN {$db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
+		WHERE (bi.id_member > 0 OR bi.email_address != '')
+			AND bg.cannot_access = 1
 			AND (bg.expire_time IS NULL OR bg.expire_time > " . time() . ")", __FILE__, __LINE__);
+	$memberIDs = array();
+	$memberEmails = array();
+	$memberEmailWild = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$updates[$row['new_value']][] = $row['id_member'];
-		$newMembers[] = $row['id_member'];
+		if ($row['id_member'])
+			$memberIDs[$row['id_member']] = $row['id_member'];
+		if ($row['email_address'])
+		{
+			// Does it have a wildcard - if so we can't do a IN on it.
+			if (strpos($row['email_address'], '%') !== false)
+				$memberEmailWild[$row['email_address']] = $row['email_address'];
+			else
+				$memberEmails[$row['email_address']] = $row['email_address'];
+		}
 	}
 	$smfFunc['db_free_result']($request);
+
+	// Build up the query.
+	$queryPart = array();
+	if (!empty($memberIDs))
+		$queryPart[] = 'mem.id_member IN (' . implode(',', $memberIDs) . ')';
+	if (!empty($memberEmails))
+		$queryPart[] = "mem.email_address IN ('" . implode('\',\'', $memberEmails) . "')";
+	foreach ($memberEmailWild as $email)
+		$queryPart[] = "mem.email_address LIKE '$email'";
+
+	if (!empty($queryPart))
+	{
+		//$memberEmails = array();
+		$request = $smfFunc['db_query']('', "
+			SELECT mem.id_member, mem.is_activated
+			FROM {$db_prefix}members AS mem
+			WHERE " . implode( ' OR ', $queryPart), __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			if (!in_array($row['id_member'], $allMembers))
+			{
+				$allMembers[] = $row['id_member'];
+				// Do they need an update?
+				if ($row['is_activated'] < 10)
+				{
+					$updates[($row['is_activated'] + 10)][] = $row['id_member'];
+					$newMembers[] = $row['id_member'];
+				}
+			}
+		}
+		$smfFunc['db_free_result']($request);
+	}
 
 	// We welcome our new members in the realm of the banned.
 	if (!empty($newMembers))
@@ -1450,7 +1492,14 @@ function updateBanMembers()
 		WHERE (bi.id_ban IS NULL OR bg.id_ban_group IS NULL)
 			AND mem.is_activated >= 10", __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$updates[$row['new_value']][] = $row['id_member'];
+	{
+		// Don't do this twice!
+		if (!in_array($row['id_member'], $allMembers))
+		{
+			$updates[$row['new_value']][] = $row['id_member'];
+			$allMembers[] = $row['id_member'];
+		}
+	}
 	$smfFunc['db_free_result']($request);
 
 	if (!empty($updates))
