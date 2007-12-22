@@ -95,7 +95,8 @@ December 2007
  ! Use the language string for moderation log actions. (Modlog.php) [Bug 1072]
  ! Skip chmod actions when installing/uninstalling mods. (Packages.php)
  ! Make the copyright check more forgiving for older copyright messages. (Subs.php)
- ! Fixed undefined offset when editing permissions. (ManagePermissions.php) [Bug 1138 1137]
+ ! Fixed undefined offset when editing permissions. (ManagePermissions.php) [Bug 1138,1137]
+ ! Removed even more unnecessary spacing. (ManageSettings.php, Subs-Boards.php) [Bug 1134]
 
 
 November 2007

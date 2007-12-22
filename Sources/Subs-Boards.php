@@ -301,7 +301,6 @@ function MarkRead()
 				if (in_array($row['id_parent'], $boards))
 					$boards[] = $row['id_board'];
 			$smfFunc['db_free_result']($request);
-
 		}
 
 		$clauses = array();
