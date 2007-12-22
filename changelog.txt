@@ -114,6 +114,7 @@ December 2007
  ! We were just sending the digit 1 to UTF8 people using hotmail - which meant emails were harder to understand. (Subs-Post.php)
  ! Respect the hidden setting of a poll in SSI. (SSI.php)
  & Add a new language string to tell the user if they cannot see a poll. (index language file) [Bug 1055]
+ ! TrackIP was linking to a users profile even if they didn't exist. (Profile-View.php)
 
 
 November 2007

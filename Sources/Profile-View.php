@@ -851,8 +851,8 @@ function TrackIP($memID = 0)
 			'member' => array(
 				'id' => $row['id_member'],
 				'name' => $row['display_name'],
-				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>'
+				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
+				'link' => empty($row['id_member']) ? $row['display_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>',
 			),
 			'board' => array(
 				'id' => $row['id_board'],
