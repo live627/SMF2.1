@@ -611,11 +611,19 @@ function registerMember(&$regOptions, $return_errors = false)
 			'REALNAME' => $real_name,
 			'USERNAME' => $regOptions['username'],
 			'PASSWORD' => $regOptions['password'],
-			'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code,
-			'ACTIVATIONCODE' => $validation_code,
 		);
 
-		$emaildata = loadEmailTemplate('register_activate', $replacements);
+		if ($regOptions['require'] == 'activation')
+			$replacements += array(
+				'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $memberID . ';code=' . $validation_code,
+				'ACTIVATIONCODE' => $validation_code,
+			);
+		else
+			$replacements += array(
+				'COPPALINK' => $scripturl . '?action=coppa;u=' . $memberID,
+			);
+
+		$emaildata = loadEmailTemplate('register_' . ($regOptions['require'] == 'activation' ? 'activate' : 'coppa'), $replacements);
 
 		sendmail($regOptions['email'], $emaildata['subject'], $emaildata['body'], null, null, false, 4);
 	}

@@ -109,6 +109,7 @@ December 2007
  ! Load the language file for the theme you are editing, if changing theme settings. (Themes.php) [Bug 232]
  ! There is no need for the Set-Cookie header when downloading. (Display.php, Calendar.php) [Bug 981]
  ! Only send newsletters to people who have activated their account. (ManageNews.php)
+ & Use a dedicated email for coppa joiners. (Subs-Member.php, EmailTemplates language file) [Bug 958]
 
 
 November 2007

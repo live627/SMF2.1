@@ -500,6 +500,26 @@ Should you have any problems with activation, please use the code "{ACTIVATIONCO
 
 {REGARDS}',
 	),
+	'register_coppa' => array(
+		/*
+			@additional_params: register_coppa
+				REALNAME: The display name for the member receiving the email.
+				USERNAME: The user name for the member receiving the email.
+				PASSWORD: The password for the member.
+				COPPALINK:  The url link to the coppa form.
+			@description:
+		*/
+		'subject' => 'Welcome to {FORUMNAME}',
+		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
+
+Your account\'s username is {USERNAME} and its password is {PASSWORD} (which can be changed later.)
+
+Before you can login, the admin requires consent from your parent/guardian for you to join the community. You can obtain more information at the link below:
+
+{COPPALINK}
+
+{REGARDS}',
+	),
 	'register_immediate' => array(
 		/*
 			@additional_params: register_immediate
