@@ -711,13 +711,6 @@ function allowedTo($permission, $boards = null)
 {
 	global $user_info, $db_prefix, $modSettings, $smfFunc;
 
-	//!!! For testing only... remove this before release. Quick dirty way to test approving/unapproving posts.
-	//!!! For normal use this line should be commented!!!!!!!
-	//if (!is_array($permission) && substr($permission, 0, 6) == 'approv')
-	//	return false;
-	//if (!is_array($permission) && substr($permission, 0, 6) == 'view_u')
-	//	return false;
-
 	// You're always allowed to do nothing. (unless you're a working man, MR. LAZY :P!)
 	if (empty($permission))
 		return true;

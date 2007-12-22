@@ -1052,7 +1052,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			p.id_poll, p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes, p.guest_vote
+			p.id_poll, p.question, p.voting_locked, p.hide_results, p.expire_time, p.max_votes, p.guest_vote, b.id_board
 		FROM {$db_prefix}topics AS t
 			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
 			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
@@ -1072,11 +1072,11 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 	// Check if they can vote.
 	if (!empty($row['expire_time']) && $row['expire_time'] < time())
 		$allow_vote = false;
-	elseif (!empty($row['voting_locked']) || !allowedTo('poll_vote'))
-		$allow_vote = false;
 	elseif ($user_info['is_guest'] && $row['guest_vote'] && (!isset($_COOKIE['guest_poll_vote']) || !in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote']))))
 		$allow_vote = true;
 	elseif ($user_info['is_guest'])
+		$allow_vote = false;
+	elseif (!empty($row['voting_locked']) || !allowedTo('poll_vote', $row['id_board']))
 		$allow_vote = false;
 	else
 	{
