@@ -106,6 +106,7 @@ December 2007
  ! Give global moderator access to the default board on install. (install scripts) [Bug 822]
  ! Link the titles on the core features page. (ManageSettings.php, Admin template) [Bug 879]
  ! If we're closing simple HTML then don't break the BBC tag that we're closing it for. (Subs.php) [Bug 254]
+ ! Load the language file for the theme you are editing, if changing theme settings. (Themes.php) [Bug 232]
 
 
 November 2007

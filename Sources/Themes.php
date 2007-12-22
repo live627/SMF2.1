@@ -692,6 +692,9 @@ function SetThemeSettings()
 	loadTemplate('Settings');
 	loadSubTemplate('settings');
 
+	// Also load the actual themes language file - incase of special settings.
+	loadLanguage('Settings');
+
 	// Submitting!
 	if (isset($_POST['submit']))
 	{
