@@ -989,7 +989,7 @@ function create_control_richedit($editorOptions)
 
 	if (empty($context['bbc_tags']))
 	{
-		// The below array makes it dead easy to add images to this page. Add it to the array and everything else is done for you!
+		// The below array makes it dead easy to add images to this control. Add it to the array and everything else is done for you!
 		$context['bbc_tags'] = array();
 		$context['bbc_tags'][] = array(
 			'bold' => array('code' => 'b', 'before' => '[b]', 'after' => '[/b]', 'description' => $txt['bold']),

@@ -463,25 +463,28 @@ function subscriptions($memID)
 		{
 			// What are the details like?
 			$current_pending = @unserialize(stripslashes($context['current'][$_GET['sub_id']]['pending_details']));
-			$current_pending = array_reverse($current_pending);
-			foreach ($current_pending as $id => $sub)
+			if (!empty($current_pending))
 			{
-				// Just find one and change it.
-				if ($sub[0] == $_GET['sub_id'] && $sub[3] == 'prepay')
+				$current_pending = array_reverse($current_pending);
+				foreach ($current_pending as $id => $sub)
 				{
-					$current_pending[$id][3] = 'payback';
-					break;
+					// Just find one and change it.
+					if ($sub[0] == $_GET['sub_id'] && $sub[3] == 'prepay')
+					{
+						$current_pending[$id][3] = 'payback';
+						break;
+					}
 				}
+
+				// Save the details back.
+				$pending_details = addslashes(serialize($current_pending));
+
+				$smfFunc['db_query']('', "
+					UPDATE {$db_prefix}log_subscribed
+					SET payments_pending = payments_pending + 1, pending_details = '$pending_details'
+					WHERE id_sublog = " . $context['current'][$_GET['sub_id']]['id'] . "
+						AND id_member = $memID", __FILE__, __LINE__);
 			}
-
-			// Save the details back.
-			$pending_details = addslashes(serialize($current_pending));
-
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}log_subscribed
-				SET payments_pending = payments_pending + 1, pending_details = '$pending_details'
-				WHERE id_sublog = " . $context['current'][$_GET['sub_id']]['id'] . "
-					AND id_member = $memID", __FILE__, __LINE__);
 		}
 
 		$context['sub_template'] = 'paid_done';

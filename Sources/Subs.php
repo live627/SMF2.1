@@ -3290,7 +3290,7 @@ function db_debug_junk()
 	<a href="', $scripturl, '?action=viewquery" rel="new_win">Queries used: ', $db_count, $warnings == 0 ? '' : ', ' . $warnings . ' warning(s)', '</a>.<br />
 	<br />';
 
-	if ($_SESSION['view_queries'] == 1)
+	if ($_SESSION['view_queries'] == 1 && !empty($db_cache))
 		foreach ($db_cache as $q => $qq)
 		{
 			$is_select = substr(trim($qq['q']), 0, 6) == 'SELECT' || preg_match('~^INSERT(?: IGNORE)? INTO \w+(?:\s+\([^)]+\))?\s+SELECT .+$~s', trim($qq['q'])) != 0;

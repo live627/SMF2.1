@@ -227,6 +227,14 @@ function ModifyCoreFeatures($return_config = false)
 		),
 		// Search engines
 		'sp' => array(
+			'settings' => array(
+				'spider_mode' => 1,
+			),
+			'setting_callback' => create_function('$value', '
+				// Turn off the spider group if disabling.
+				if (!$value)
+					return array(\'spider_group\' => 0);
+			'),
 		),
 	);
 

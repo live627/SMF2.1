@@ -432,7 +432,7 @@ function SpiderCheck()
 	}
 
 	// If this is low server tracking then log the spider here as oppossed to the main logging function.
-	if ($modSettings['spider_mode'] == 1 && !empty($_SESSION['id_robot']))
+	if (!empty($modSettings['spider_mode']) && $modSettings['spider_mode'] == 1 && !empty($_SESSION['id_robot']))
 		logSpider(isset($not_unique));
 
 	return !empty($_SESSION['id_robot']) ? $_SESSION['id_robot'] : 0;

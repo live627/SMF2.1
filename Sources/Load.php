@@ -434,7 +434,7 @@ function loadUserSettings()
 			$_COOKIE[$cookiename] = '';
 
 		// Do we perhaps think this is a search robot? Check every five minutes just incase...
-		if (!empty($modSettings['spider_mode']) && (!isset($_SESSION['robot_check']) || $_SESSION['robot_check'] < time() - 300))
+		if ((!empty($modSettings['spider_mode']) || !empty($modSettings['spider_group'])) && (!isset($_SESSION['robot_check']) || $_SESSION['robot_check'] < time() - 300))
 		{
 			require_once($sourcedir . '/ManageSearchEngines.php');
 			$user_info['possibly_robot'] = SpiderCheck();
