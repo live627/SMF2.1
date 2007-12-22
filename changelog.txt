@@ -100,6 +100,7 @@ December 2007
  ! Banned users wern't being flagged as such for notifications if they also had an expired ban. (ManageBans.php) [Bug 1118]
  ! Optimise the updateBanMembers function as it was very slow at working out who had an incorrect ban. (ManageBans.php)
  ! Make sure search engine tracking features all get turned off and on at the right points, and work together. (ManageSearchEngines.php, ManageSettings.php) [Bug 993]
+ * Don't show the preview button if you're adding/editing a poll - as we don't support it! (Poll template) [Bug 165]
 
 
 November 2007

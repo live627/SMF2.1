@@ -130,9 +130,7 @@ function template_main()
 	echo '
 							</tr><tr>
 								<td align="center" colspan="2">
-									<span class="smalltext"><br />' . $txt['shortcuts'] . '</span><br />
-									<input type="submit" name="post" value="' . $txt['save'] . '" onclick="return submitThisOnce(this);" accesskey="s" />
-									<input type="submit" name="preview" value="' . $txt['preview'] . '" onclick="return submitThisOnce(this);" accesskey="p" />
+									<input type="submit" name="post" value="', $txt['save'],  '" onclick="return submitThisOnce(this);" accesskey="s" />
 								</td>
 							</tr><tr>
 								<td colspan="2"></td>
