@@ -1420,6 +1420,7 @@ function updateBanMembers()
 	$allMembers = array();
 	$newMembers = array();
 
+	// Start by getting all active bans - it's quicker doing this in parts...
 	$request = $smfFunc['db_query']('', "
 		SELECT bi.id_member, bi.email_address
 		FROM {$db_prefix}ban_items AS bi
@@ -1454,9 +1455,9 @@ function updateBanMembers()
 	foreach ($memberEmailWild as $email)
 		$queryPart[] = "mem.email_address LIKE '$email'";
 
+	// Find all banned members.
 	if (!empty($queryPart))
 	{
-		//$memberEmails = array();
 		$request = $smfFunc['db_query']('', "
 			SELECT mem.id_member, mem.is_activated
 			FROM {$db_prefix}members AS mem
