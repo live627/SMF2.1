@@ -187,15 +187,38 @@ function preparsecode(&$message, $previewing = false)
 	while (substr($message, 0, 8) == '[/quote]')
 		$message = substr($message, 8);
 
-	// Check if all code tags are closed.
-	$codeopen = preg_match_all('~(\[code(?:=[^\]]+)?\])~is', $message, $dummy);
-	$codeclose = preg_match_all('~(\[/code\])~is', $message, $dummy);
+	// Find all code blocks, work out whether we'd be parsing them, then ensure they are all closed.
+	$in_tag = false;
+	$had_tag = false;
+	$codeopen = 0;
+	if (preg_match_all('~(\[(/)*code(?:=[^\]]+)?\])~is', $message, $matches))
+		foreach ($matches[0] as $index => $dummy)
+		{
+			// Closing?
+			if (!empty($matches[2][$index]))
+			{
+				// If it's closing and we're not in a tag we need to open it...
+				if (!$in_tag)
+					$codeopen = true;
+				// Either way we ain't in one any more.
+				$in_tag = false;
+			}
+			// Opening tag...
+			else
+			{
+				$had_tag = true;
+				// If we're in a tag don't do nought!
+				if (!$in_tag)
+					$in_tag = true;
+			}
+		}
 
-	// Close/open all code tags...
-	if ($codeopen > $codeclose)
-		$message .= str_repeat('[/code]', $codeopen - $codeclose);
-	elseif ($codeclose > $codeopen)
-		$message = str_repeat('[code]', $codeclose - $codeopen) . $message;
+	// If we have an open tag, close it.
+	if ($in_tag)
+		$message .= '[/code]';
+	// Open any ones that need to be open, only if we've never had a tag.
+	if ($codeopen && !$had_tag)
+		$message = '[code]' . $message;
 
 	// Now that we've fixed all the code tags, let's fix the img and url tags...
 	$parts = preg_split('~(\[/code\]|\[code(?:=[^\]]+)?\])~i', $message, -1, PREG_SPLIT_DELIM_CAPTURE);

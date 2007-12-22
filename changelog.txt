@@ -102,6 +102,7 @@ December 2007
  ! Make sure search engine tracking features all get turned off and on at the right points, and work together. (ManageSearchEngines.php, ManageSettings.php) [Bug 993]
  * Don't show the preview button if you're adding/editing a poll - as we don't support it! (Poll template) [Bug 165]
  ! Don't show alt or title in smileys being parsed into the WYSIWYG editor as it breaks with entities. (Subs-Editor.php) [Bug 20,980]
+ ! When trying to fix code tags take into account that the parser deals with them unlike the old days, so don't do so much. (Subs-Post.php) [Bug 336]
 
 
 November 2007
