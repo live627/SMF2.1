@@ -123,6 +123,7 @@ December 2007
  ! Calendar events shown on Display were incorrectly having user offsets applied. (Display.php)
  ! If we're using SSI and a serial error occurs don't jump back into the SMF theming, just get out of there. (Errors.php) [Bug 1084]
  ! Handle nested lists better in the WYSIWYG, whilst accepting there are limitations to how clever we can be thanks to different browsers. (Subs-Editor.php) [Bug 597]
+ ! The WYSIWYG editor was not POSTing data, resulting in length limitations. (editor.js)
 
 
 November 2007

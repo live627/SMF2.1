@@ -390,7 +390,7 @@ function html_to_bbc($text)
 	}
 
 	// Try our hand at all manner of lists - doesn't matter if we mess up the children as the BBC will clean it.
-	$last_text = '';log_error($text);
+	$last_text = '';
 	while ($text != $last_text)
 	{
 		$last_text = $text;

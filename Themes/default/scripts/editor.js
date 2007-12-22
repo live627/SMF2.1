@@ -1012,7 +1012,7 @@ function smfEditor(sessionID, uniqueId, wysiwyg, text, editWidth, editHeight)
 		text = getText(true, !view);
 		text = escape(text);
 
-		getXMLDocument(smf_scripturl + '?action=jseditor;view=' + (view ? 1 : 0) + ';sesc=' + cur_session_id + ';xml;message=' + text, onToggleDataReceived);
+		sendXMLDocument(smf_scripturl + '?action=jseditor;view=' + (view ? 1 : 0) + ';sesc=' + cur_session_id + ';xml', 'message=' + text, onToggleDataReceived);
 	}
 
 	function onToggleDataReceived(XMLDoc)
