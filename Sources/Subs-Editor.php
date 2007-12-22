@@ -122,7 +122,7 @@ function bbc_to_html($text)
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)".*?)border="0" class="smiley" />~e', "'<' . \$smfFunc['db_unescape_string']('$2') . 'border=\"0\" onresizestart=\"return false;\" id=\"smiley_' . \$i++ . '_$3\" />'", $text);
+	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', "'<' . \$smfFunc['db_unescape_string']('$2') . 'border=\"0\" alt=\"\" title=\"\" onresizestart=\"return false;\" id=\"smiley_' . \$i++ . '_$3\" />'", $text);
 
 	return $text;
 }
