@@ -281,6 +281,13 @@ function setup_fatal_error_context($error_message)
 		$context['sub_template'] = 'fatal_error';
 	}
 
+	// If this is SSI, we shouldn't put all our layers around, so jump out.
+	if (SMF == 'SSI')
+	{
+		loadSubTemplate('fatal_error');
+		exit;
+	}
+
 	// We want whatever for the header, and a footer. (footer includes sub template!)
 	obExit(null, true);
 
