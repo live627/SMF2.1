@@ -913,12 +913,12 @@ IconList.prototype.openPopup = function (oDiv, iMessageId)
 	this.iCurMessageId = iMessageId;
 
 	// Set the position of the container.
-	var aPos = findCoords(oDiv);
+	var aPos = smf_itemPos(oDiv);
 	if (is_ie50)
-		aPos.iY += 4;
+		aPos[1] += 4;
 
-	this.oContainerDiv.style.top = (aPos.iY + oDiv.offsetHeight) + 'px';
-	this.oContainerDiv.style.left = (aPos.iX - 1) + 'px';
+	this.oContainerDiv.style.top = (aPos[1] + oDiv.offsetHeight) + 'px';
+	this.oContainerDiv.style.left = (aPos[0] - 1) + 'px';
 	this.oClickedIcon = oDiv;
 
 	if (this.bListLoaded)

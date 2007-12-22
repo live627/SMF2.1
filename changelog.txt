@@ -124,6 +124,7 @@ December 2007
  ! If we're using SSI and a serial error occurs don't jump back into the SMF theming, just get out of there. (Errors.php) [Bug 1084]
  ! Handle nested lists better in the WYSIWYG, whilst accepting there are limitations to how clever we can be thanks to different browsers. (Subs-Editor.php) [Bug 597]
  ! The WYSIWYG editor was not POSTing data, resulting in length limitations. (editor.js)
+ * The topic icon dropdown wasn't putting stuff in the right place all the time. (script.js)
 
 
 November 2007
