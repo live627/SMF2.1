@@ -1080,7 +1080,6 @@ function Download()
 	header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 525600 * 60) . ' GMT');
 	header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($filename)) . ' GMT');
 	header('Accept-Ranges: bytes');
-	header('Set-Cookie:');
 	header('Connection: close');
 	header('ETag: ' . $file_md5);
 

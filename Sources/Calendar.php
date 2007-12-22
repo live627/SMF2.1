@@ -353,7 +353,6 @@ function iCalDownload()
 	header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 525600 * 60) . ' GMT');
 	header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . 'GMT');
 	header('Accept-Ranges: bytes');
-	header('Set-Cookie:');
 	header('Connection: close');
 	header('Content-Disposition: attachment; filename=' . $event['title'] . '.ics');
 
