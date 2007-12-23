@@ -736,51 +736,8 @@ function template_trackUser()
 		</td></tr></table>
 		<br />';
 
-	// The second table lists all the error messages the user has caused/received.
-	echo '
-		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="90%"><tr><td>
-			<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%">
-				<tr class="titlebg">
-					<td colspan="4">
-						', $txt['errors_by'], ' ', $context['member']['name'], '
-					</td>
-				</tr><tr class="windowbg">
-					<td class="smalltext" colspan="4" style="padding: 2ex;">
-						', $txt['errors_desc'], '
-					</td>
-				</tr><tr class="titlebg">
-					<td colspan="4">
-						', $txt['pages'], ': ', $context['page_index'], '
-					</td>
-				</tr><tr class="catbg3">
-					<td>', $txt['ip_address'], '</td>
-					<td>', $txt['message'], '</td>
-					<td>', $txt['date'], '</td>
-				</tr>';
-
-	// If there arn't any messages just give a message stating this.
-	if (empty($context['error_messages']))
-		echo '
-				<tr><td class="windowbg2" colspan="4"><i>', $txt['no_errors_from_user'], '</i></td></tr>';
-
-	// Otherwise print every error message out.
-	else
-		// For every error message print the IP address that caused it, the message displayed and the date it occurred.
-		foreach ($context['error_messages'] as $error)
-			echo '
-				<tr>
-					<td class="windowbg2">
-						<a href="', $scripturl, '?action=trackip;searchip=', $error['ip'], ';">', $error['ip'], '</a>
-					</td>
-					<td class="windowbg2">
-						', $error['message'], '<br />
-						<a href="', $error['url'], '">', $error['url'], '</a>
-					</td>
-					<td class="windowbg2">', $error['time'], '</td>
-				</tr>';
-	echo '
-			</table>
-		</td></tr></table>';
+	// Show the track user list.
+	template_show_list('track_user_list');
 }
 
 // The template for trackIP, allowing the admin to see where/who a certain IP has been used.
@@ -859,101 +816,11 @@ function template_trackIP()
 		</td></tr></table>
 		<br />';
 
-	// The third table in the template displays a list of all the messages sent using this IP (can be quite long).
-	echo '
-		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="90%"><tr><td>
-			<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%">
-				<tr class="titlebg">
-					<td colspan="4">
-						', $txt['messages_from_ip'], ' ', $context['ip'], '
-					</td>
-				</tr><tr class="windowbg">
-					<td class="smalltext" colspan="4" style="padding: 2ex;">
-						', $txt['messages_from_ip_desc'], '
-					</td>
-				</tr><tr class="titlebg">
-					<td colspan="4">
-						<b>', $txt['pages'], ':</b> ', $context['message_page_index'], '
-					</td>
-				</tr><tr class="catbg3">
-					<td>', $txt['ip_address'], '</td>
-					<td>', $txt['poster'], '</td>
-					<td>', $txt['subject'], '</td>
-					<td>', $txt['date'], '</td>
-				</tr>';
+	template_show_list('track_message_list');
 
-	// No message means nothing to do!
-	if (empty($context['messages']))
-		echo '
-				<tr><td class="windowbg2" colspan="4"><i>', $txt['no_messages_from_ip'], '</i></td></tr>';
-	else
-		// For every message print the IP, member who posts it, subject (with link) and date posted.
-		foreach ($context['messages'] as $message)
-			echo '
-				<tr>
-					<td class="windowbg2">
-						<a href="', $scripturl, '?action=trackip;searchip=', $message['ip'], '">', $message['ip'], '</a>
-					</td>
-					<td class="windowbg2">
-						', $message['member']['link'], '
-					</td>
-					<td class="windowbg2">
-						<a href="', $scripturl, '?topic=', $message['topic'], '.msg', $message['id'], '#msg', $message['id'], '" rel="nofollow">
-							', $message['subject'], '
-						</a>
-					</td>
-					<td class="windowbg2">', $message['time'], '</td>
-				</tr>';
-	echo '
-			</table>
-		</td></tr></table>
-		<br />';
+	echo '<br />';
 
-	// The final table in the template lists all the error messages caused/received by anyone using this IP address.
-	echo '
-		<table cellpadding="0" cellspacing="0" border="0" class="bordercolor" align="center" width="90%"><tr><td>
-			<table border="0" cellspacing="1" cellpadding="4" align="center" width="100%">
-				<tr class="titlebg">
-					<td colspan="4">
-						', $txt['errors_from_ip'], ' ', $context['ip'], '
-					</td>
-				</tr><tr class="windowbg">
-					<td class="smalltext" colspan="4" style="padding: 2ex;">
-						', $txt['errors_from_ip_desc'], '
-					</td>
-				</tr><tr class="titlebg">
-					<td colspan="4">
-						', $txt['pages'], ': ', $context['error_page_index'], '
-					</td>
-				</tr><tr class="catbg3">
-					<td>', $txt['ip_address'], '</td>
-					<td>', $txt['display_name'], '</td>
-					<td>', $txt['message'], '</td>
-					<td>', $txt['date'], '</td>
-				</tr>';
-	if (empty($context['error_messages']))
-		echo '
-				<tr><td class="windowbg2" colspan="4"><i>', $txt['no_errors_from_ip'], '</i></td></tr>';
-	else
-		// For each error print IP address, member, message received and date caused.
-		foreach ($context['error_messages'] as $error)
-			echo '
-				<tr>
-					<td class="windowbg2">
-						<a href="', $scripturl, '?action=trackip;searchip=', $error['ip'], '">', $error['ip'], '</a>
-					</td>
-					<td class="windowbg2">
-						', $error['member']['link'], '
-					</td>
-					<td class="windowbg2">
-						', $error['message'], '<br />
-						<a href="', $error['url'], '">', $error['url'], '</a>
-					</td>
-					<td class="windowbg2">', $error['error_time'], '</td>
-				</tr>';
-	echo '
-			</table>
-		</td></tr></table>';
+	template_show_list('track_user_list');
 }
 
 function template_showPermissions()

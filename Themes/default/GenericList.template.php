@@ -14,7 +14,7 @@ function template_show_list($list_id = null)
 	<form action="', $cur_list['form']['href'], '" method="post"', empty($cur_list['form']['name']) ? '' : ' name="'. $cur_list['form']['name'] . '" id="' . $cur_list['form']['name'] . '"', ' accept-charset="', $context['character_set'], '">';
 
 	echo '
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor" align="center">';
+		<table border="0" width="', $cur_list['width'] ? $cur_list['width'] : '100%', '" cellspacing="1" cellpadding="4" class="bordercolor" align="center">';
 
 	if (isset($cur_list['additional_rows']['top_of_list']))
 		template_additional_rows('top_of_list', $cur_list);

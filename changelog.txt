@@ -126,6 +126,8 @@ December 2007
  ! The WYSIWYG editor was not POSTing data, resulting in length limitations. (editor.js)
  * The topic icon dropdown wasn't putting stuff in the right place all the time. (script.js)
  ! As search engines change session all the time remove that feature, and get a performance boost. (ManageSearchEngines.php)
+ ! Use the generic list for the tracking user and ip functions. (Profile-View.php, Profile template)
+ ! Allow the generic list function to use a custom start variable name in case two tables are on the same page. (Subs-List.php, GenericList template)
 
 
 November 2007

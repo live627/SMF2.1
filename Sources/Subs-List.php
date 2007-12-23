@@ -68,6 +68,7 @@ function createList($listOptions)
 		$sort = $listOptions['columns'][$list_context['sort']['id']]['sort'][$list_context['sort']['desc'] ? 'reverse' : 'default'];
 	}
 
+	$list_context['start_var_name'] = isset($listOptions['start_var_name']) ? $listOptions['start_var_name'] : 'start';
 	// In some cases the full list must be shown, regardless of the amount of items.
 	if (empty($listOptions['items_per_page']))
 	{
@@ -84,11 +85,11 @@ function createList($listOptions)
 		$list_context['total_num_items'] = call_user_func_array($listOptions['get_count']['function'], empty($listOptions['get_count']['params']) ? array() : $listOptions['get_count']['params']);
 
 		// Default the start to the beginning...sounds logical.
-		$list_context['start'] = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
+		$list_context['start'] = isset($_REQUEST[$list_context['start_var_name']]) ? (int) $_REQUEST[$list_context['start_var_name']] : 0;
 		$list_context['items_per_page'] = $listOptions['items_per_page'];
 
 		// Then create a page index.
-		$list_context['page_index'] = constructPageIndex($listOptions['base_href'] . (empty($list_context['sort']) ? '' : ';' . $request_var_sort . '=' . $list_context['sort']['id'] . ($list_context['sort']['desc'] ? ';' . $request_var_desc : '')), $list_context['start'], $list_context['total_num_items'], $list_context['items_per_page']);
+		$list_context['page_index'] = constructPageIndex($listOptions['base_href'] . (empty($list_context['sort']) ? '' : ';' . $request_var_sort . '=' . $list_context['sort']['id'] . ($list_context['sort']['desc'] ? ';' . $request_var_desc : '')) . ($list_context['start_var_name'] != 'start' ? ';' . $list_context['start_var_name'] . '=%d' : ''), $list_context['start'], $list_context['total_num_items'], $list_context['items_per_page'], $list_context['start_var_name'] != 'start');
 	}
 
 	// Prepare the headers of the table.
@@ -97,7 +98,7 @@ function createList($listOptions)
 		$list_context['headers'][] = array(
 			'id' => $column_id,
 			'label' => isset($column['header']['eval']) ? eval($column['header']['eval']) : (isset($column['header']['value']) ? $column['header']['value'] : ''),
-			'href' => empty($listOptions['default_sort_col']) || empty($column['sort']) ? '' : $listOptions['base_href'] . ';' . $request_var_sort . '=' . $column_id . ($column_id === $list_context['sort']['id'] && !$list_context['sort']['desc'] && isset($column['sort']['reverse']) ? ';' . $request_var_desc : '') . (empty($list_context['start']) ? '' : ';start=' . $list_context['start']),
+			'href' => empty($listOptions['default_sort_col']) || empty($column['sort']) ? '' : $listOptions['base_href'] . ';' . $request_var_sort . '=' . $column_id . ($column_id === $list_context['sort']['id'] && !$list_context['sort']['desc'] && isset($column['sort']['reverse']) ? ';' . $request_var_desc : '') . (empty($list_context['start']) ? '' : ';' . $list_context['start_var_name'] . '=' . $list_context['start']),
 			'sort_image' => empty($listOptions['default_sort_col']) || empty($column['sort']) || $column_id !== $list_context['sort']['id'] ? null : ($list_context['sort']['desc'] ? 'up' : 'down'),
 			'class' => isset($column['header']['class']) ? $column['header']['class'] : '',
 			'style' => isset($column['header']['style']) ? $column['header']['style'] : '',
@@ -105,6 +106,7 @@ function createList($listOptions)
 
 	// We know the amount of columns, might be useful for the template.
 	$list_context['num_columns'] = count($listOptions['columns']);
+	$list_context['width'] = isset($listOptions['width']) ? $listOptions['width'] : '0';
 
 	// Get the file with the function for the item list.
 	if (isset($listOptions['get_items']['file']))
@@ -188,7 +190,7 @@ function createList($listOptions)
 
 		// Include the starting page as hidden field?
 		if (!empty($list_context['form']['include_start']) && !empty($list_context['start']))
-			$list_context['form']['hidden_fields']['start'] = $list_context['start'];
+			$list_context['form']['hidden_fields'][$list_context['start_var_name']] = $list_context['start'];
 
 		// If sorting needs to be the same after submitting, add the parameter.
 		if (!empty($list_context['form']['include_sort']) && !empty($list_context['sort']))

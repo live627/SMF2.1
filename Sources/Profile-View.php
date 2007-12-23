@@ -42,6 +42,18 @@ if (!defined('SMF'))
 	void trackUser(int id_member)
 		// !!!
 
+	int list_getUserErrorCount(string where)
+		// !!!
+
+	array list_getUserErrors(int start, int items_per_page, string sort, string where)
+		// !!!
+
+	int list_getIPMessageCount(string where)
+		// !!!
+
+	array list_getIPMessages(int start, int items_per_page, string sort, string where)
+		// !!!
+
 	void TrackIP(int id_member = none)
 		// !!!
 
@@ -660,7 +672,7 @@ function statPanel($memID)
 
 function trackUser($memID)
 {
-	global $scripturl, $txt, $db_prefix, $modSettings;
+	global $scripturl, $txt, $db_prefix, $modSettings, $sourcedir;
 	global $user_profile, $context, $smfFunc;
 
 	// Verify if the user has sufficient permissions.
@@ -672,6 +684,86 @@ function trackUser($memID)
 	if ($context['last_ip'] != $user_profile[$memID]['member_ip2'])
 		$context['last_ip2'] = $user_profile[$memID]['member_ip2'];
 	$context['member']['name'] = $user_profile[$memID]['real_name'];
+
+	// Set the options for the list component.
+	$listOptions = array(
+		'id' => 'track_user_list',
+		'title' => $txt['errors_by'] . ' ' . $context['member']['name'],
+		'width' => '90%',
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['no_errors_from_user'],
+		'base_href' => $scripturl . '?action=profile;sa=trackUser;u=' . $memID,
+		'default_sort_col' => 'date',
+		'get_items' => array(
+			'function' => 'list_getUserErrors',
+			'params' => array(
+				"le.id_member = $memID",
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getUserErrorCount',
+			'params' => array(
+				"id_member = $memID",
+			),
+		),
+		'columns' => array(
+			'ip_address' => array(
+				'header' => array(
+					'value' => $txt['ip_address'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'params' => array(
+							'ip' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'le.ip',
+					'reverse' => 'le.ip DESC',
+				),
+			),
+			'message' => array(
+				'header' => array(
+					'value' => $txt['message'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '%1$s<br /><a href="%2$s">%2$s</a>',
+						'params' => array(
+							'message' => false,
+							'url' => false,
+						),
+					),
+				),
+			),
+			'date' => array(
+				'header' => array(
+					'value' => $txt['date'],
+				),
+				'data' => array(
+					'db' => 'time',
+				),
+				'sort' => array(
+					'default' => 'le.id_error DESC',
+					'reverse' => 'le.id_error',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'after_title',
+				'value' => '<span class="smalltext">' . $txt['errors_desc'] . '</span>',
+				'class' => 'windowbg',
+				'style' => 'padding: 2ex;',
+			),
+		),
+	);
+
+	// Create the list for viewing.
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
 
 	// If this is a big forum, or a large posting user, let's limit the search.
 	if ($modSettings['totalMessages'] > 50000 && $user_profile[$memID]['posts'] > 500)
@@ -716,38 +808,11 @@ function trackUser($memID)
 		WHERE id_member = $memID
 		GROUP BY ip", __FILE__, __LINE__);
 	$context['error_ips'] = array();
-	$totalErrors = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['error_ips'][] = '<a href="' . $scripturl . '?action=trackip;searchip=' . $row['ip'] . '">' . $row['ip'] . '</a>';
 		$ips[] = $row['ip'];
-		$totalErrors += $row['error_count'];
 	}
-	$smfFunc['db_free_result']($request);
-
-	// Create the page indexes.
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=trackUser', $_REQUEST['start'], $totalErrors, 20);
-	$context['start'] = $_REQUEST['start'];
-
-	// Get a list of error messages from this ip (range).
-	$request = $smfFunc['db_query']('', "
-		SELECT
-			le.log_time, le.ip, le.url, le.message, IFNULL(mem.id_member, 0) AS id_member,
-			IFNULL(mem.real_name, '$txt[guest_title]') AS display_name, mem.member_name
-		FROM {$db_prefix}log_errors AS le
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = le.id_member)
-		WHERE le.id_member = $memID
-		ORDER BY le.id_error DESC
-		LIMIT $context[start], 20", __FILE__, __LINE__);
-	$context['error_messages'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['error_messages'][] = array(
-			'ip' => $row['ip'],
-			'message' => strtr($row['message'], array('&lt;span class=&quot;remove&quot;&gt;' => '', '&lt;/span&gt;' => '')),
-			'url' => $row['url'],
-			'time' => timeformat($row['log_time']),
-			'timestamp' => forum_time(true, $row['log_time'])
-		);
 	$smfFunc['db_free_result']($request);
 
 	// Find other users that might use the same IP.
@@ -777,9 +842,101 @@ function trackUser($memID)
 	}
 }
 
+function list_getUserErrorCount($where)
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*) AS error_count
+		FROM {$db_prefix}log_errors
+		WHERE $where", __FILE__, __LINE__);
+	list ($count) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $count;
+}
+
+function list_getUserErrors($start, $items_per_page, $sort, $where)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl;
+
+	// Get a list of error messages from this ip (range).
+	$request = $smfFunc['db_query']('', "
+		SELECT
+			le.log_time, le.ip, le.url, le.message, IFNULL(mem.id_member, 0) AS id_member,
+			IFNULL(mem.real_name, '$txt[guest_title]') AS display_name, mem.member_name
+		FROM {$db_prefix}log_errors AS le
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = le.id_member)
+		WHERE $where
+		ORDER BY $sort
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$error_messages = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$error_messages[] = array(
+			'ip' => $row['ip'],
+			'member_link' => $row['id_member'] > 0 ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>' : $row['display_name'],
+			'message' => strtr($row['message'], array('&lt;span class=&quot;remove&quot;&gt;' => '', '&lt;/span&gt;' => '')),
+			'url' => $row['url'],
+			'time' => timeformat($row['log_time']),
+			'timestamp' => forum_time(true, $row['log_time']),
+		);
+	$smfFunc['db_free_result']($request);
+
+	return $error_messages;
+}
+
+function list_getIPMessageCount($where)
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*) AS messageCount
+		FROM {$db_prefix}messages
+		WHERE $where", __FILE__, __LINE__);
+	list ($count) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $count;
+}
+
+function list_getIPMessages($start, $items_per_page, $sort, $where)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl;
+
+	// Get all the messages fitting this where clause.
+	// !!!SLOW This query is using a filesort.
+	$request = $smfFunc['db_query']('', "
+		SELECT
+			m.id_msg, m.poster_ip, IFNULL(mem.real_name, m.poster_name) AS display_name, mem.id_member,
+			m.subject, m.poster_time, m.id_topic, m.id_board
+		FROM {$db_prefix}messages AS m
+			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE $where
+		ORDER BY $sort
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$messages = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$messages[] = array(
+			'ip' => $row['poster_ip'],
+			'member_link' => empty($row['id_member']) ? $row['display_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>',
+			'board' => array(
+				'id' => $row['id_board'],
+				'href' => $scripturl . '?board=' . $row['id_board']
+			),
+			'topic' => $row['id_topic'],
+			'id' => $row['id_msg'],
+			'subject' => $row['subject'],
+			'time' => timeformat($row['poster_time']),
+			'timestamp' => forum_time(true, $row['poster_time'])
+		);
+	$smfFunc['db_free_result']($request);
+
+	return $messages;
+}
+
 function TrackIP($memID = 0)
 {
-	global $user_profile, $scripturl, $txt, $user_info;
+	global $user_profile, $scripturl, $txt, $user_info, $modSettings, $sourcedir;
 	global $db_prefix, $context, $smfFunc;
 
 	// Can the user do this?
@@ -804,25 +961,6 @@ function TrackIP($memID = 0)
 
 	$context['page_title'] = $txt['trackIP'] . ' - ' . $context['ip'];
 
-	// Get some totals for pagination.
-	$request = $smfFunc['db_query']('', "
-		SELECT COUNT(*)
-		FROM {$db_prefix}messages
-		WHERE poster_ip $dbip", __FILE__, __LINE__);
-	list ($totalMessages) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
-	$request = $smfFunc['db_query']('', "
-		SELECT COUNT(*)
-		FROM {$db_prefix}log_errors
-		WHERE ip $dbip", __FILE__, __LINE__);
-	list ($totalErrors) = $smfFunc['db_fetch_row']($request);
-	$smfFunc['db_free_result']($request);
-
-	$context['message_start'] = isset($_GET['mesStart']) ? (int) $_GET['mesStart'] : 0;
-	$context['error_start'] = isset($_GET['errStart']) ? $_GET['errStart'] : 0;
-	$context['message_page_index'] = constructPageIndex($scripturl . '?action=' . ($memID == 0 ? 'trackip;searchip=' . $context['ip'] : 'profile;u=' . $memID . ';sa=trackIP') . ';mesStart=%d;errStart=' . $context['error_start'], $context['message_start'], $totalMessages, 20, true);
-	$context['error_page_index'] = constructPageIndex($scripturl . '?action=' . ($memID == 0 ? 'trackip;searchip=' . $context['ip'] : 'profile;u=' . $memID . ';sa=trackIP') . ';mesStart=' . $context['message_start'] . ';errStart=%d', $context['error_start'], $totalErrors, 20, true);
-
 	$request = $smfFunc['db_query']('', "
 		SELECT id_member, real_name AS display_name, member_ip
 		FROM {$db_prefix}members
@@ -834,63 +972,185 @@ function TrackIP($memID = 0)
 
 	ksort($context['ips']);
 
-	// !!!SLOW This query is using a filesort.
-	$request = $smfFunc['db_query']('', "
-		SELECT
-			m.id_msg, m.poster_ip, IFNULL(mem.real_name, m.poster_name) AS display_name, mem.id_member,
-			m.subject, m.poster_time, m.id_topic, m.id_board
-		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.poster_ip $dbip
-		ORDER BY m.id_msg DESC
-		LIMIT $context[message_start], 20", __FILE__, __LINE__);
-	$context['messages'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['messages'][] = array(
-			'ip' => $row['poster_ip'],
-			'member' => array(
-				'id' => $row['id_member'],
-				'name' => $row['display_name'],
-				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
-				'link' => empty($row['id_member']) ? $row['display_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>',
-			),
-			'board' => array(
-				'id' => $row['id_board'],
-				'href' => $scripturl . '?board=' . $row['id_board']
-			),
-			'topic' => $row['id_topic'],
-			'id' => $row['id_msg'],
-			'subject' => $row['subject'],
-			'time' => timeformat($row['poster_time']),
-			'timestamp' => forum_time(true, $row['poster_time'])
-		);
-	$smfFunc['db_free_result']($request);
+	// Gonna want this for the list.
+	require_once($sourcedir . '/Subs-List.php');
 
-	// !!!SLOW This query is using a filesort.
-	$request = $smfFunc['db_query']('', "
-		SELECT
-			le.log_time, le.ip, le.url, le.message, IFNULL(mem.id_member, 0) AS id_member,
-			IFNULL(mem.real_name, '$txt[guest_title]') AS display_name, mem.member_name
-		FROM {$db_prefix}log_errors AS le
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = le.id_member)
-		WHERE le.ip $dbip
-		ORDER BY le.id_error DESC
-		LIMIT $context[error_start], 20", __FILE__, __LINE__);
-	$context['error_messages'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['error_messages'][] = array(
-			'ip' => $row['ip'],
-			'member' => array(
-				'id' => $row['id_member'],
-				'name' => $row['display_name'],
-				'href' => $row['id_member'] > 0 ? $scripturl . '?action=profile;u=' . $row['id_member'] : '',
-				'link' => $row['id_member'] > 0 ? '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['display_name'] . '</a>' : $row['display_name']
+	// Start with the user messages.
+	$listOptions = array(
+		'id' => 'track_message_list',
+		'title' => $txt['messages_from_ip'] . ' ' . $context['ip'],
+		'width' => '90%',
+		'start_var_name' => 'messageStart',
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['no_messages_from_ip'],
+		'base_href' => $scripturl . '?action=profile;sa=trackIP;searchip=' . $context['ip'],
+		'default_sort_col' => 'date',
+		'get_items' => array(
+			'function' => 'list_getIPMessages',
+			'params' => array(
+				"m.poster_ip $dbip",
 			),
-			'message' => strtr($row['message'], array('&lt;span class=&quot;remove&quot;&gt;' => '', '&lt;/span&gt;' => '')),
-			'url' => $row['url'],
-			'error_time' => timeformat($row['log_time'])
-		);
-	$smfFunc['db_free_result']($request);
+		),
+		'get_count' => array(
+			'function' => 'list_getIPMessageCount',
+			'params' => array(
+				"poster_ip $dbip",
+			),
+		),
+		'columns' => array(
+			'ip_address' => array(
+				'header' => array(
+					'value' => $txt['ip_address'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'params' => array(
+							'ip' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'le.ip',
+					'reverse' => 'le.ip DESC',
+				),
+			),
+			'poster' => array(
+				'header' => array(
+					'value' => $txt['poster'],
+				),
+				'data' => array(
+					'db' => 'member_link',
+				),
+			),
+			'subject' => array(
+				'header' => array(
+					'value' => $txt['subject'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?topic=%1$s.msg%2$s#msg%2$s" rel="nofollow">%3$s</a>',
+						'params' => array(
+							'topic' => false,
+							'id' => false,
+							'subject' => false,
+						),
+					),
+				),
+			),
+			'date' => array(
+				'header' => array(
+					'value' => $txt['date'],
+				),
+				'data' => array(
+					'db' => 'time',
+				),
+				'sort' => array(
+					'default' => 'm.id_msg DESC',
+					'reverse' => 'm.id_msg',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'after_title',
+				'value' => '<span class="smalltext">' . $txt['messages_from_ip_desc'] . '</span>',
+				'class' => 'windowbg',
+				'style' => 'padding: 2ex;',
+			),
+		),
+	);
+
+	// Create the messages list.
+	createList($listOptions);
+
+	// Set the options for the error lists.
+	$listOptions = array(
+		'id' => 'track_user_list',
+		'title' => $txt['errors_from_ip'] . ' ' . $context['ip'],
+		'width' => '90%',
+		'start_var_name' => 'errorStart',
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['no_errors_from_ip'],
+		'base_href' => $scripturl . '?action=profile;sa=trackIP;searchip=' . $context['ip'],
+		'default_sort_col' => 'date',
+		'get_items' => array(
+			'function' => 'list_getUserErrors',
+			'params' => array(
+				"le.ip $dbip",
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getUserErrorCount',
+			'params' => array(
+				"ip $dbip",
+			),
+		),
+		'columns' => array(
+			'ip_address' => array(
+				'header' => array(
+					'value' => $txt['ip_address'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=trackip;searchip=%1$s">%1$s</a>',
+						'params' => array(
+							'ip' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'le.ip',
+					'reverse' => 'le.ip DESC',
+				),
+			),
+			'display_name' => array(
+				'header' => array(
+					'value' => $txt['display_name'],
+				),
+				'data' => array(
+					'db' => 'member_link',
+				),
+			),
+			'message' => array(
+				'header' => array(
+					'value' => $txt['message'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '%1$s<br /><a href="%2$s">%2$s</a>',
+						'params' => array(
+							'message' => false,
+							'url' => false,
+						),
+					),
+				),
+			),
+			'date' => array(
+				'header' => array(
+					'value' => $txt['date'],
+				),
+				'data' => array(
+					'db' => 'time',
+				),
+				'sort' => array(
+					'default' => 'le.id_error DESC',
+					'reverse' => 'le.id_error',
+				),
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'after_title',
+				'value' => '<span class="smalltext">' . $txt['errors_from_ip_desc'] . '</span>',
+				'class' => 'windowbg',
+				'style' => 'padding: 2ex;',
+			),
+		),
+	);
+
+	// Create the error list.
+	createList($listOptions);
 
 	$context['single_ip'] = strpos($context['ip'], '*') === false;
 	if ($context['single_ip'])
