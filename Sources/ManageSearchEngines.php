@@ -366,11 +366,7 @@ function SpiderCheck()
 	global $modSettings, $smfFunc, $db_prefix;
 
 	if (isset($_SESSION['id_robot']))
-	{
 		unset($_SESSION['id_robot']);
-		// This is not a new visiting robot.
-		$not_unique = true;
-	}
 	$_SESSION['robot_check'] = time();
 
 	// We cache the spider data for five minutes if we can.
@@ -433,14 +429,14 @@ function SpiderCheck()
 
 	// If this is low server tracking then log the spider here as oppossed to the main logging function.
 	if (!empty($modSettings['spider_mode']) && $modSettings['spider_mode'] == 1 && !empty($_SESSION['id_robot']))
-		logSpider(isset($not_unique));
+		logSpider();
 
 	return !empty($_SESSION['id_robot']) ? $_SESSION['id_robot'] : 0;
 }
 
 // Log the spider presence online.
 //!!! Different file?
-function logSpider($not_unique_spider = false)
+function logSpider()
 {
 	global $smfFunc, $db_prefix, $modSettings, $context;
 
@@ -453,14 +449,14 @@ function logSpider($not_unique_spider = false)
 		$date = strftime('%Y-%m-%d', forum_time(false));
 		$smfFunc['db_query']('', "
 			UPDATE {$db_prefix}log_spider_stats
-			SET last_seen = " . time() . ($not_unique_spider ? '' : ', unique_visits = unique_visits + 1') . "
+			SET last_seen = " . time() . ", page_hits = page_hits + 1
 			WHERE id_spider = $_SESSION[id_robot]
 				AND stat_date = '$date'", __FILE__, __LINE__);
 		if ($smfFunc['db_affected_rows']() == 0)
 		{
 			$smfFunc['db_insert']('insert',
 				"{$db_prefix}log_spider_stats",
-				array('id_spider', 'last_seen', 'stat_date', 'unique_visits'),
+				array('id_spider', 'last_seen', 'stat_date', 'page_hits'),
 				array($_SESSION['id_robot'], time(), "'$date'", 1),
 				array('stat_date'), __FILE__, __LINE__
 			);
@@ -480,8 +476,8 @@ function logSpider($not_unique_spider = false)
 
 		$smfFunc['db_insert']('insert',
 			"{$db_prefix}log_spider_hits",
-			array('id_spider', 'session', 'log_time', 'url'),
-			array($_SESSION['id_robot'], "'$context[session_id]'", time(), "'$url'"),
+			array('id_spider', 'log_time', 'url'),
+			array($_SESSION['id_robot'], time(), "'$url'"),
 			array(), __FILE__, __LINE__
 		);
 	}
@@ -493,9 +489,10 @@ function consolidateSpiderStats()
 	global $smfFunc, $db_prefix;
 
 	$request = $smfFunc['db_query']('', "
-		SELECT id_spider, session, log_time
+		SELECT id_spider, MAX(log_time) AS last_seen, COUNT(*) AS num_hits
 		FROM {$db_prefix}log_spider_hits
-		WHERE processed = 0", __FILE__, __LINE__);
+		WHERE processed = 0
+		GROUP BY id_spider, MONTH(log_time), DAY(log_time)", __FILE__, __LINE__);
 	$spider_hits = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$spider_hits[] = $row;
@@ -504,90 +501,27 @@ function consolidateSpiderStats()
 	if (empty($spider_hits))
 		return;
 
-	// Put them into date categories.
-	$stat_updates = array();
-	$session_checks = array();
-	foreach ($spider_hits as $hit)
-	{
-		$date = strftime('%Y-%m-%d', $hit['log_time']);
-		if (!isset($stat_updates[$date]))
-			$stat_updates[$date] = array(
-				'spiders' => array(),
-				'sessions' => array(),
-			);
-		if (!isset($stat_updates[$date]['spiders'][$hit['id_spider']]))
-			$stat_updates[$date]['spiders'][$hit['id_spider']] = array(
-				'hits' => 0,
-				'unique' => 0,
-				'seen' => 0,
-			);
-
-		$stat_updates[$date]['spiders'][$hit['id_spider']]['hits']++;
-		if ($stat_updates[$date]['spiders'][$hit['id_spider']]['seen'] < $hit['log_time'])
-			$stat_updates[$date]['spiders'][$hit['id_spider']]['seen'] = $hit['log_time'];
-
-		// Not seen this before?
-		if (!in_array($hit['session'], $stat_updates[$date]['sessions']))
-		{
-			$stat_updates[$date]['sessions'][] = $hit['session'];
-			$stat_updates[$date]['spiders'][$hit['id_spider']]['unique']++;
-
-			// We'll need to check we haven't duplicated this.
-			$session_checks[$hit['session']] = array(
-				'date' => $date,
-				'spider' => $hit['id_spider'],
-				'time' => $hit['log_time'],
-			);
-		}
-	}
-
-	// Now check that we haven't already caught these sessions previously - for unique hits.
-	$where_query = array();
-	foreach ($session_checks as $session => $data)
-		$where_query[] = '(log_time > ' . ($data['time'] - 86400) . ' AND ' . ($data['time'] + 86400) . ' AND session = \'' . $session . '\')';
-
-	if (!empty($where_query))
-	{
-		$request = $smfFunc['db_query']('', "
-			SELECT id_spider, session, log_time
-			FROM {$db_prefix}log_spider_hits
-			WHERE processed = 1
-				AND (" . implode(' OR ', $where_query) . ")", __FILE__, __LINE__);
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-		{
-			// Just in case...
-			if (empty($stat_updates[$session_checks[$row['session']]['date']]['spiders'][$session_checks[$row['session']]['spider']]['unique']))
-				continue;
-
-			// Deduct the unique hits by one.
-			$stat_updates[$session_checks[$row['session']]['date']]['spiders'][$session_checks[$row['session']]['spider']]['unique']--;
-		}
-		$smfFunc['db_free_result']($request);
-	}
-
-	// Now we should, finally, have accurate stat updates - action them.
+	// Attempt to update the master data.
 	$stat_inserts = array();
-	foreach ($stat_updates as $date => $stat)
+	foreach ($spider_hits as $stat)
 	{
-		// Try to update first.
-		foreach ($stat['spiders'] as $id => $spider)
-		{
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}log_spider_stats
-				SET page_hits = page_hits + $spider[hits], unique_visits = unique_visits + $spider[unique],
-					last_seen = CASE WHEN last_seen > $spider[seen] THEN last_seen ELSE $spider[seen] END
-				WHERE id_spider = $id
-					AND stat_date = '$date'", __FILE__, __LINE__);
-			if ($smfFunc['db_affected_rows']() == 0)
-				$stat_inserts[] = array("'$date'", $id, $spider['hits'], $spider['unique'], $spider['seen']);
-		}
+		// We assume the max date is within the right day.
+		$date = strftime('%Y-%m-%d', $stat['last_seen']);
+		$smfFunc['db_query']('', "
+			UPDATE {$db_prefix}log_spider_stats
+			SET page_hits = page_hits + $stat[num_hits],
+				last_seen = CASE WHEN last_seen > $stat[last_seen] THEN last_seen ELSE $stat[last_seen] END
+			WHERE id_spider = $stat[id_spider]
+				AND stat_date = '$date'", __FILE__, __LINE__);
+		if ($smfFunc['db_affected_rows']() == 0)
+			$stat_inserts[] = array("'$date'", $stat['id_spider'], $stat['num_hits'], $stat['last_seen']);
 	}
 
 	// New stats?
 	if (!empty($stat_inserts))
 		$smfFunc['db_insert']('insert',
 			"{$db_prefix}log_spider_stats",
-			array('stat_date', 'id_spider', 'page_hits', 'unique_visits', 'last_seen'),
+			array('stat_date', 'id_spider', 'page_hits', 'last_seen'),
 			$stat_inserts,
 			array('stat_date', 'id_spider'), __FILE__, __LINE__
 		);
@@ -872,19 +806,6 @@ function SpiderStats()
 					'reverse' => 's.spider_name DESC',
 				),
 			),
-			'unique_visits' => array(
-				'header' => array(
-					'value' => $txt['spider_stats_unique_visits'],
-				),
-				'data' => array(
-					'db_htmlsafe' => 'unique_visits',
-					'class' => 'windowbg',
-				),
-				'sort' => array(
-					'default' => 'user_agent',
-					'reverse' => 'user_agent DESC',
-				),
-			),
 			'page_hits' => array(
 				'header' => array(
 					'value' => $txt['spider_stats_page_hits'],
@@ -921,7 +842,7 @@ function list_getSpiderStats($start, $items_per_page, $sort)
 	global $db_prefix, $smfFunc;
 
 	$request = $smfFunc['db_query']('', "
-		SELECT ss.id_spider, ss.stat_date, ss.unique_visits, ss.page_hits, s.spider_name
+		SELECT ss.id_spider, ss.stat_date, ss.page_hits, s.spider_name
 		FROM {$db_prefix}log_spider_stats AS ss
 			INNER JOIN {$db_prefix}spiders AS s ON (s.id_spider = ss.id_spider)
 		ORDER BY $sort

@@ -144,7 +144,6 @@ $txt['spider_logs_delete_day'] = 'days.';
 $txt['spider_logs_delete_submit'] = 'Delete';
 
 $txt['spider_stats_select_month'] = 'Jump To Month';
-$txt['spider_stats_unique_visits'] = 'Unique Visits';
 $txt['spider_stats_page_hits'] = 'Page Hits';
 
 ?>

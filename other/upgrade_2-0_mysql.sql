@@ -463,7 +463,6 @@ VALUES
 ---# Creating spider hit tracking table.
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_hits (
 	id_spider smallint(5) NOT NULL default '0',
-	session varchar(32) NOT NULL default '',
 	log_time int(10) NOT NULL,
 	url tinytext NOT NULL,
 	processed tinyint(3) NOT NULL default '0',
@@ -476,7 +475,6 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_hits (
 ---# Creating spider statistic table.
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_stats (
 	id_spider smallint(5) NOT NULL default '0',
-	unique_visits smallint(5) NOT NULL default '0',
 	page_hits smallint(5) NOT NULL default '0',
 	last_seen int(10) NOT NULL default '0',
 	stat_date date NOT NULL default '0001-01-01',

@@ -119,7 +119,6 @@ INSERT INTO {$db_prefix}spiders	(id_spider, spider_name, user_agent, ip_info) VA
 ---# Creating spider hit tracking table.
 CREATE TABLE {$db_prefix}log_spider_hits (
   id_spider smallint NOT NULL default '0',
-  session varchar(32) NOT NULL default '',
   log_time int NOT NULL,
   url varchar(255) NOT NULL,
   processed smallint NOT NULL default '0'
@@ -133,7 +132,6 @@ CREATE INDEX {$db_prefix}log_spider_hits_processed ON {$db_prefix}log_spider_hit
 ---# Creating spider statistic table.
 CREATE TABLE {$db_prefix}log_spider_stats (
   id_spider smallint NOT NULL default '0',
-  unique_visits smallint NOT NULL default '0',
   page_hits smallint NOT NULL default '0',
   last_seen int NOT NULL default '0',
   stat_date date NOT NULL default '0001-01-01',
