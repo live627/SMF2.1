@@ -242,7 +242,7 @@ function ModifyCoreFeatures($return_config = false)
 			'setting_callback' => create_function('$value', '
 				// Turn off the spider group if disabling.
 				if (!$value)
-					return array(\'spider_group\' => 0);
+					return array(\'spider_group\' => 0, \'show_spider_online\' => 0);
 			'),
 		),
 	);
@@ -411,7 +411,7 @@ function ModifySecuritySettings($return_config = false)
 
 		// Fix PM settings.
 		$_POST['pm_spam_settings'] = (int) $_POST['max_pm_recipients'] . ',' . (int) $_POST['pm_posts_verification'] . ',' . (int) $_POST['pm_posts_per_hour'];
-		$_POST['pruneErrorLog'] = $_POST['pruneErrorLog'] < 0 ? 0 : (int)$_POST['pruneErrorLog'];
+
 		$save_vars = $config_vars;
 		$save_vars[] = array('text', 'pm_spam_settings');
 
@@ -1455,12 +1455,14 @@ function ModifyPruningSettings($return_config = false)
 			'pruningOptions' => array('check', 'pruningOptions'),
 		'',
 			// Various logs that could be pruned.
-			array('int', 'pruneErrorLog'), // Error log.
-			array('int', 'pruneModLog'), // Moderation log.
-			array('int', 'pruneBanLog'), // Ban hit log.
-			array('int', 'pruneReportLog'), // Report to moderator log.
-			array('int', 'pruneScheduledTaskLog'), // Log of the scheduled tasks and how long they ran.
+			array('int', 'pruneErrorLog', 'postinput' => $txt['days_word']), // Error log.
+			array('int', 'pruneModLog', 'postinput' => $txt['days_word']), // Moderation log.
+			array('int', 'pruneBanLog', 'postinput' => $txt['days_word']), // Ban hit log.
+			array('int', 'pruneReportLog', 'postinput' => $txt['days_word']), // Report to moderator log.
+			array('int', 'pruneScheduledTaskLog', 'postinput' => $txt['days_word']), // Log of the scheduled tasks and how long they ran.
+			array('int', 'pruneSpiderHitLog', 'postinput' => $txt['days_word']), // Log of the scheduled tasks and how long they ran.
 			// If you add any additional logs make sure to add them after this point.  Additionally, make sure you add them to the weekly scheduled task.
+			// Mod Developers: Do NOT use the pruningOptions master variable for this as SMF Core may overwrite your setting in the future!
 	);
 
 	if ($return_config)
@@ -1500,10 +1502,11 @@ function ModifyPruningSettings($return_config = false)
 	// Get the actual values
 	if (!empty($modSettings['pruningOptions']))
 	{
-		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog']) = explode(',', $modSettings['pruningOptions']);
+		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog'], $modSettings['pruneSpiderHitLog']) = explode(',', $modSettings['pruningOptions']);
 	}
 	else
-		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog']) = array(0, 0, 0, 0, 0,);
+		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog'], $modSettings['pruneSpiderHitLog']) = array(0, 0, 0, 0, 0,);
+
 	prepareDBSettingContext($config_vars);
 }
 ?>

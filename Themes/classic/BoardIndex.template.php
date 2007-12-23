@@ -409,20 +409,16 @@ function template_info_center()
 	echo $context['num_guests'], ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . $context['num_users_online'], ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
 	// Handle hidden users and buddies.
-	if (!empty($context['num_users_hidden']) || ($context['show_buddies'] && !empty($context['num_buddies'])))
-	{
-		echo ' (';
+	$bracketList = array();
+	if ($context['show_buddies'])
+		$bracketList[] = $context['num_buddies'] . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
+	if (!empty($context['num_spiders']))
+		$bracketList[] = $context['num_spiders'] . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
+	if (!empty($context['num_users_hidden']))
+		$bracketList[] = $context['num_users_hidden'] . ' ' . $txt['hidden'];
 
-		// Show the number of buddies online?
-		if ($context['show_buddies'])
-			echo $context['num_buddies'], ' ', $context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies'];
-
-		// How about hidden users?
-		if (!empty($context['num_users_hidden']))
-			echo $context['show_buddies'] ? ', ' : '', $context['num_users_hidden'] . ' ' . $txt['hidden'];
-
-		echo ')';
-	}
+	if (!empty($bracketList))
+		echo ' (' . implode(', ', $bracketList) . ')';
 
 	if ($context['show_who'])
 		echo '</a>';

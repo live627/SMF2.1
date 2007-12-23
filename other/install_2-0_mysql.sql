@@ -971,6 +971,7 @@ CREATE TABLE {$db_prefix}log_online (
   session varchar(32) NOT NULL default '',
   log_time int(10) NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
+  id_spider smallint(5) unsigned NOT NULL default '0',
   ip int(10) unsigned NOT NULL default '0',
   url text NOT NULL,
   PRIMARY KEY (session),
@@ -1117,10 +1118,12 @@ CREATE TABLE {$db_prefix}log_search_topics (
 #
 
 CREATE TABLE {$db_prefix}log_spider_hits (
-  id_spider smallint(5) NOT NULL default '0',
-  log_time int(10) NOT NULL,
+	id_hit int(10) unsigned NOT NULL auto_increment,
+  id_spider smallint(5) unsigned NOT NULL default '0',
+  log_time int(10) unsigned NOT NULL,
   url tinytext NOT NULL,
   processed tinyint(3) NOT NULL default '0',
+  PRIMARY KEY (id_hit),
   KEY id_spider(id_spider),
   KEY log_time(log_time),
   KEY processed (processed)
@@ -1131,9 +1134,9 @@ CREATE TABLE {$db_prefix}log_spider_hits (
 #
 
 CREATE TABLE {$db_prefix}log_spider_stats (
-  id_spider smallint(5) NOT NULL default '0',
-  page_hits smallint(5) NOT NULL default '0',
-  last_seen int(10) NOT NULL default '0',
+  id_spider smallint(5) unsigned NOT NULL default '0',
+  page_hits smallint(5) unsigned NOT NULL default '0',
+  last_seen int(10) unsigned NOT NULL default '0',
   stat_date date NOT NULL default '0001-01-01',
   PRIMARY KEY (stat_date, id_spider)
 ) TYPE=MyISAM;
@@ -1856,7 +1859,7 @@ VALUES (':)', 'smiley.gif', '{$default_smiley_smiley}', 0, 0),
 #
 
 CREATE TABLE {$db_prefix}spiders (
-  id_spider smallint(5) NOT NULL auto_increment,
+  id_spider smallint(5) unsigned NOT NULL auto_increment,
   spider_name tinytext NOT NULL,
   user_agent tinytext NOT NULL,
   ip_info tinytext NOT NULL,

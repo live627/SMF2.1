@@ -112,9 +112,16 @@ $txt['spider_mode_off'] = 'Disabled';
 $txt['spider_mode_standard'] = 'Standard - Logs minimal spider activity.';
 $txt['spider_mode_high'] = 'High - Provides more accurate statistics.';
 $txt['spider_mode_vhigh'] = 'Very High - As for &quot;High&quot; but logs data about each page visited.';
+$txt['spider_settings_desc'] = 'You can change settings for spider tracking from this page. Note, if you wish to enable automatic pruning of the hit logs you can set this up <a href="%1$s">here</a>';
 
 $txt['spider_group'] = 'Apply restrictive permissions from group<div class="smalltext">To enable you to stop spiders indexing some pages.</div>';
 $txt['spider_group_none'] = 'Disabled';
+
+$txt['show_spider_online'] = 'Show spiders in who\'s online list';
+$txt['show_spider_online_no'] = 'Not at all';
+$txt['show_spider_online_summary'] = 'Show spider quantity';
+$txt['show_spider_online_detail'] = 'Show spider details';
+$txt['show_spider_online_detail_admin'] = 'Show spider details - admin only';
 
 $txt['spider_name'] = 'Spider Name';
 $txt['spider_last_seen'] = 'Last Seen';

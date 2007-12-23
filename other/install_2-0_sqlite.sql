@@ -1029,6 +1029,7 @@ CREATE TABLE {$db_prefix}log_online (
   session varchar(32) NOT NULL default '',
   log_time int(10) NOT NULL default '0',
   id_member int NOT NULL default '0',
+  id_spider smallint NOT NULL default '0',
   ip int NOT NULL default '0',
   url text NOT NULL,
   PRIMARY KEY (session)
@@ -1201,6 +1202,7 @@ CREATE TABLE {$db_prefix}log_search_topics (
 #
 
 CREATE TABLE {$db_prefix}log_spider_hits (
+	id_hit int primary key,
   id_spider smallint NOT NULL default '0',
   log_time int NOT NULL,
   url varchar(255) NOT NULL,

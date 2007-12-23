@@ -40,7 +40,7 @@ if (!defined('SMF'))
 // Retrieve a list and several other statistics of the users currently online.
 function getMembersOnlineStats($membersOnlineOptions)
 {
-	global $db_prefix, $smfFunc, $context, $scripturl, $user_info;
+	global $db_prefix, $smfFunc, $context, $scripturl, $user_info, $modSettings;
 
 	// The list can be sorted in several ways.
 	$allowed_sort_options = array(
@@ -67,27 +67,39 @@ function getMembersOnlineStats($membersOnlineOptions)
 		'list_users_online' => array(),
 		'online_groups' => array(),
 		'num_guests' => 0,
+		'num_spiders' => 0,
 		'num_buddies' => 0,
 		'num_users_hidden' => 0,
 		'num_users_online' => 0,
 	);
 
+	// Get any spiders if enabled.
+	$spiders = array();
+	$spider_finds = array();
+	if (!empty($modSettings['show_spider_online']) && ($modSettings['show_spider_online'] < 3 || allowedTo('admin_forum')) && !empty($modSettings['spider_name_cache']))
+		$spiders = unserialize($modSettings['spider_name_cache']);
+
 	// Load the users online right now.
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			lo.id_member, lo.log_time, mem.real_name, mem.member_name, mem.show_online,
+			lo.id_member, lo.log_time, lo.id_spider, mem.real_name, mem.member_name, mem.show_online,
 			mg.online_color, mg.id_group, mg.group_name
 		FROM {$db_prefix}log_online AS lo
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
 			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)", __FILE__, __LINE__);
-
-
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (empty($row['real_name']))
 		{
+			// Do we think it's a spider?
+			if ($row['id_spider'] && isset($spiders[$row['id_spider']]))
+			{
+				$spider_finds[$row['id_spider']] = isset($spider_finds[$row['id_spider']]) ? $spider_finds[$row['id_spider']] + 1 : 1;
+				$memberOnlineStats['num_spiders']++;
+			}
 			// Guests are only nice for statistics.
 			$memberOnlineStats['num_guests']++;
+
 			continue;
 		}
 
@@ -138,6 +150,26 @@ function getMembersOnlineStats($membersOnlineOptions)
 	}
 	$smfFunc['db_free_result']($request);
 
+	// If there are spiders only and we're showing the detail, add them to the online list - at the bottom.
+	if (!empty($spider_finds) && $modSettings['show_spider_online'] > 1)
+		foreach ($spider_finds as $id => $count)
+		{
+			$link = $spiders[$id] . ($count > 1 ? '(' . $count . ')' : '');
+			$sort = $memberOnlineOptions['sort'] = 'log_time' && $memberOnlineOptions['reverse_sort'] ? 0 : 'zzz_';
+			$memberOnlineStats['users_online'][$sort . $spiders[$id]] = array(
+				'id' => 0,
+				'username' => $spiders[$id],
+				'name' => $link,
+				'group' => $txt['spiders'],
+				'href' => '',
+				'link' => $link,
+				'is_buddy' => false,
+				'hidden' => false,
+				'is_last' => false,
+			);
+			$memberOnlineStats['list_users_online'][$sort . $spiders[$id]] = $link;
+		}
+
 	// Time to sort the list a bit.
 	if (!empty($memberOnlineStats['users_online']))
 	{
@@ -157,7 +189,7 @@ function getMembersOnlineStats($membersOnlineOptions)
 	ksort($memberOnlineStats['online_groups']);
 
 	// Hidden and non-hidden members make up all online members.
-	$memberOnlineStats['num_users_online'] = count($memberOnlineStats['users_online']) + $memberOnlineStats['num_users_hidden'];
+	$memberOnlineStats['num_users_online'] = count($memberOnlineStats['users_online']) + $memberOnlineStats['num_users_hidden'] - ($modSettings['show_spider_online'] > 1 ? count($spider_finds) : 0);
 
 	return $memberOnlineStats;
 }

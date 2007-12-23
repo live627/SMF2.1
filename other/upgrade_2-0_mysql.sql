@@ -422,6 +422,7 @@ CREATE TABLE {$db_prefix}log_online (
 	session varchar(32) NOT NULL default '',
 	log_time int(10) NOT NULL default '0',
 	id_member mediumint(8) unsigned NOT NULL default '0',
+	id_spider smallint(5) unsigned NOT NULL default '0',
 	ip int(10) unsigned NOT NULL default '0',
 	url text NOT NULL,
 	PRIMARY KEY (session),
@@ -445,7 +446,7 @@ ADD COLUMN redirect varchar(255) NOT NULL default '';
 
 ---# Creating spider table.
 CREATE TABLE IF NOT EXISTS {$db_prefix}spiders (
-	id_spider smallint(5) NOT NULL auto_increment,
+	id_spider smallint(5) unsigned NOT NULL auto_increment,
 	spider_name tinytext NOT NULL,
 	user_agent tinytext NOT NULL,
 	ip_info tinytext NOT NULL,
@@ -462,21 +463,29 @@ VALUES
 
 ---# Creating spider hit tracking table.
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_hits (
-	id_spider smallint(5) NOT NULL default '0',
-	log_time int(10) NOT NULL,
+	id_hit int(10) unsigned NOT NULL auto_increment,
+	id_spider smallint(5) unsigned NOT NULL default '0',
+	log_time int(10) unsigned NOT NULL,
 	url tinytext NOT NULL,
-	processed tinyint(3) NOT NULL default '0',
+	processed tinyint(3) unsigned NOT NULL default '0',
+	PRIMARY KEY (id_hit),
 	KEY id_spider(id_spider),
 	KEY log_time(log_time),
 	KEY processed (processed)
 ) TYPE=MyISAM{$db_collation};
 ---#
 
+---# Making some changes to spider hit table...
+ALTER TABLE {$db_prefix}log_spider_hits
+ADD COLUMN id_hit int(10) unsigned NOT NULL auto_increment,
+ADD PRIMARY KEY (id_hit);
+---#
+
 ---# Creating spider statistic table.
 CREATE TABLE IF NOT EXISTS {$db_prefix}log_spider_stats (
-	id_spider smallint(5) NOT NULL default '0',
-	page_hits smallint(5) NOT NULL default '0',
-	last_seen int(10) NOT NULL default '0',
+	id_spider smallint(5) unsigned NOT NULL default '0',
+	page_hits smallint(5) unsigned NOT NULL default '0',
+	last_seen int(10) unsigned NOT NULL default '0',
 	stat_date date NOT NULL default '0001-01-01',
 	PRIMARY KEY (stat_date, id_spider)
 ) TYPE=MyISAM{$db_collation};

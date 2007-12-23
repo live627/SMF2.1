@@ -72,7 +72,11 @@ function ManageSearchEngineSettings($return_config = false)
 		// How much detail?
 		array('select', 'spider_mode', array($txt['spider_mode_off'], $txt['spider_mode_standard'], $txt['spider_mode_high'], $txt['spider_mode_vhigh'])),
 		'spider_group' => array('select', 'spider_group', array($txt['spider_group_none'], $txt['membergroups_members'])),
+		array('select', 'show_spider_online', array($txt['show_spider_online_no'], $txt['show_spider_online_summary'], $txt['show_spider_online_detail'], $txt['show_spider_online_detail_admin'])),
 	);
+
+	// Set up a message.
+	$context['settings_message'] = '<span class="smalltext">' . sprintf($txt['spider_settings_desc'], $scripturl . '?action=admin;area=featuresettings;sa=pruning;sc=' . $context['session_id']) . '</span>';
 
 	if ($return_config)
 		return $config_vars;
@@ -146,6 +150,9 @@ function ViewSpiders()
 		$smfFunc['db_query']('', "
 			DELETE FROM {$db_prefix}log_spider_stats
 			WHERE id_spider IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
+
+		cache_put_data('spider_search', null, 300);
+		recacheSpiderNames();
 	}
 
 	// Get the last seens.
@@ -328,6 +335,9 @@ function EditSpider()
 					(spider_name, user_agent, ip_info)
 				VALUES
 					('$_POST[spider_name]', '$_POST[spider_agent]', '$ips')", __FILE__, __LINE__);
+
+		cache_put_data('spider_search', null, 300);
+		recacheSpiderNames();
 
 		redirectexit('action=admin;area=sengines;sa=spiders');
 	}
@@ -614,8 +624,8 @@ function SpiderLogs()
 					'class' => 'windowbg',
 				),
 				'sort' => array(
-					'default' => 'sl.log_time',
-					'reverse' => 'sl.log_time DESC',
+					'default' => 'sl.id_hit',
+					'reverse' => 'sl.id_hit DESC',
 				),
 			),
 			'viewing' => array(
@@ -866,6 +876,22 @@ function list_getNumSpiderStats()
 	$smfFunc['db_free_result']($request);
 
 	return $numStats;
+}
+
+// Recache spider names?
+function recacheSpiderNames()
+{
+	global $smfFunc, $db_prefix;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_spider, spider_name
+		FROM {$db_prefix}spiders", __FILE__, __LINE__);
+	$spiders = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$spiders[$row['id_spider']] = $row['spider_name'];
+	$smfFunc['db_free_result']($request);
+
+	updateSettings(array('spider_name_cache' => $smfFunc['db_escape_string'](serialize($spiders))));
 }
 
 ?>

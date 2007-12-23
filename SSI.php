@@ -849,16 +849,22 @@ function ssi_whosOnline($output_method = 'echo')
 			'hidden' => $return['num_users_hidden'],
 			'buddies' => $return['num_buddies'],
 			'num_users' => $return['num_users_online'],
-			'total_users' => $return['num_users_online'] + $return['num_guests'],
+			'total_users' => $return['num_users_online'] + $return['num_guests'] + $return['num_spiders'],
 		);
 
 	echo '
 		', $return['num_guests'], ' ', $return['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ', $return['num_users_online'], ' ', $return['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
 
-	// Hidden users, or buddies?
-	if ($return['num_users_hidden'] > 0 || !empty($user_info['num_buddies']))
-		echo '
-			(' . ($show_buddies ? ($return['num_buddies'] . ' ' . ($return['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies'])) : '') . (!empty($user_info['buddies']) && $return['num_users_hidden'] ? ', ' : '') . (!$return['num_users_hidden'] ? '' : $return['num_users_hidden'] . ' ' . $txt['hidden']) . ')';
+	$bracketList = array();
+	if (!empty($user_info['buddies']))
+		$bracketList[] = $return['num_buddies'] . ' ' . ($return['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
+	if (!empty($return['num_spiders']))
+		$bracketList[] = $return['num_spiders'] . ' ' . ($return['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
+	if (!empty($return['num_users_hidden']))
+		$bracketList[] = $return['num_users_hidden'] . ' ' . $txt['hidden'];
+
+	if (!empty($bracketList))
+		echo ' (' . implode(', ', $bracketList) . ')';
 
 	echo '<br />
 			', implode(', ', $return['list_users_online']);

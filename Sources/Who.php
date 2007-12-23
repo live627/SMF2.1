@@ -142,7 +142,8 @@ function Who()
 	$request = $smfFunc['db_query']('', "
 		SELECT
 			lo.log_time, lo.id_member, lo.url, INET_NTOA(lo.ip) AS ip, mem.real_name,
-			lo.session, mg.online_color, IFNULL(mem.show_online, 1) AS show_online
+			lo.session, mg.online_color, IFNULL(mem.show_online, 1) AS show_online,
+			lo.id_spider
 		FROM {$db_prefix}log_online AS lo
 			LEFT JOIN {$db_prefix}members AS mem ON (lo.id_member = mem.id_member)
 			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" . (!empty($conditions) ? "
@@ -167,6 +168,7 @@ function Who()
 			'timestamp' => forum_time(true, $row['log_time']),
 			'query' => $actions,
 			'is_hidden' => $row['show_online'] == 0,
+			'id_spider' => $row['id_spider'],
 			'color' => empty($row['online_color']) ? '' : $row['online_color']
 		);
 
@@ -189,6 +191,22 @@ function Who()
 		'is_guest' => true
 	);
 
+	// Are we showing spiders?
+	$spiderContext = array();
+	if (!empty($modSettings['show_spider_online']) && !empty($modSettings['spider_name_cache']))
+	{
+		foreach (unserialize($modSettings['spider_name_cache']) as $id => $name)
+			$spiderContext[$id] = array(
+				'id' => 0,
+				'name' => $name,
+				'group' => $txt['spiders'],
+				'href' => '',
+				'link' => $name,
+				'email' => $name,
+				'is_guest' => true
+			);
+	}
+
 	$url_data = determineActions($url_data);
 
 	// Setup the linktree and page title (do it down here because the language files are now loaded..)
@@ -207,7 +225,10 @@ function Who()
 		// Keep the IP that came from the database.
 		$memberContext[$member['id']]['ip'] = $member['ip'];
 		$context['members'][$i]['action'] = isset($url_data[$i]) ? $url_data[$i] : $txt['who_hidden'];
-		$context['members'][$i] += $memberContext[$member['id']];
+		if ($member['id'] == 0 && isset($spiderContext[$member['id_spider']]))
+			$context['members'][$i] += $spiderContext[$member['id_spider']];
+		else
+			$context['members'][$i] += $memberContext[$member['id']];
 	}
 
 	// Some people can't send personal messages...

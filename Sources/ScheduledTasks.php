@@ -369,7 +369,7 @@ function scheduled_daily_maintenance()
 	// Then delete some settings that needn't be set if they are otherwise empty.
 	$emptySettings = array('warning_mute', 'warning_moderate', 'warning_watch', 'warning_show', 'disableCustomPerPage', 'spider_mode', 'spider_group',
 		'paid_currency_code', 'paid_currency_symbol', 'paid_email_to', 'paid_email', 'paid_enabled', 'paypal_email',
-		'search_enable_captcha', 'search_floodcontrol_time',
+		'search_enable_captcha', 'search_floodcontrol_time', 'show_spider_online',
 	);
 
 	$smfFunc['db_query']('', "
@@ -1147,7 +1147,7 @@ function scheduled_weekly_maintenance()
 	// Ok should we prune the logs?
 	if (!empty($modSettings['pruningOptions']))
 	{
-		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog']) = explode(',', $modSettings['pruningOptions']);
+		list ($modSettings['pruneErrorLog'], $modSettings['pruneModLog'], $modSettings['pruneBanLog'], $modSettings['pruneReportLog'], $modSettings['pruneScheduledTaskLog'], $modSettings['pruneSpiderHitLog']) = explode(',', $modSettings['pruningOptions']);
 
 		if (!empty($modSettings['pruneErrorLog']))
 		{
@@ -1219,6 +1219,16 @@ function scheduled_weekly_maintenance()
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}log_scheduled_tasks
 				WHERE time_run < $t", __FILE__, __LINE__);
+		}
+
+		if (!empty($modSettings['pruneSpiderHitLog']))
+		{
+			// Figure out when our cutoff time is.  1 day = 86400 seconds.
+			$t = time() - $modSettings['pruneSpiderHitLog'] * 86400;
+
+			$smfFunc['db_query']('', "
+				DELETE FROM {$db_prefix}log_spider_hits
+				WHERE log_time < $t", __FILE__, __LINE__);
 		}
 	}
 

@@ -2456,8 +2456,8 @@ function writeLog($force = false)
 
 		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
 				"{$db_prefix}log_online",
-				array('session', 'id_member', 'log_time', 'ip', 'url'),
-				array("'$session_id'", $user_info['id'], time(), "IFNULL(INET_ATON('$user_info[ip]'), 0)", "'$serialized'"),
+				array('session', 'id_member', 'id_spider', 'log_time', 'ip', 'url'),
+				array("'$session_id'", $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), "IFNULL(INET_ATON('$user_info[ip]'), 0)", "'$serialized'"),
 				array('session'), __FILE__, __LINE__
 			);
 	}
