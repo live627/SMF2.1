@@ -147,7 +147,10 @@ function ModerationMain($dont_call = false)
 	);
 
 	// I don't know where we're going - I don't know where we've been...
-	$mod_include_data = createMenu($moderation_areas);
+	$menuOptions = array(
+		'action' => 'moderate',
+	);
+	$mod_include_data = createMenu($moderation_areas, $menuOptions);
 	unset($moderation_areas);
 
 	// Retain the ID information incase required by a subaction.
@@ -740,7 +743,7 @@ function ViewWatchedUsers()
 	// Some important context!
 	$context['page_title'] = $txt['mc_watched_users_title'];
 	$context['view_posts'] = isset($_GET['sa']) && $_GET['sa'] == 'post';
-	$context['sub_template'] = $context['view_posts'] ? 'user_watches_posts' : 'user_watches_member';
+	$context['start'] = isset($_REQUEST['start']) ? (int) $_REQUEST['start'] : 0;
 
 	loadTemplate('ModerationCenter');
 
@@ -775,12 +778,12 @@ function ViewWatchedUsers()
 		}
 	}
 
-	// Get the number of entries.
+	// Start preparing the list by grabbing relevant permissions.
 	if (!$context['view_posts'])
-		$request = $smfFunc['db_query']('', "
-			SELECT COUNT(*)
-			FROM {$db_prefix}members
-			WHERE warning >= $modSettings[warning_watch]", __FILE__, __LINE__);
+	{
+		$approve_query = '';
+		$delete_boards = array();
+	}
 	else
 	{
 		// Still obey permissions!
@@ -794,109 +797,271 @@ function ViewWatchedUsers()
 		// Nada, zip, etc...
 		else
 			$approve_query = ' AND 0';
+	}
 
+	require_once($sourcedir . '/Subs-List.php');
+
+	// This is all the information required for a watched user listing.
+	$listOptions = array(
+		'id' => 'watch_user_list',
+		'title' => $txt['mc_watched_users_title'] . ' - ' . $txt['mc_watched_users_member'],
+		'width' => '85%',
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $context['view_posts'] ? $txt['mc_watched_users_no_posts'] : $txt['mc_watched_users_none'],
+		'base_href' => $scripturl . '?action=moderate;area=userwatch;sa=' . ($context['view_posts'] ? 'post' : 'member'),
+		'default_sort_col' => 'member',
+		'get_items' => array(
+			'function' => $context['view_posts'] ? 'list_getWatchedUserPosts' : 'list_getWatchedUsers',
+			'params' => array(
+				$approve_query,
+				$delete_boards,
+			),
+		),
+		'get_count' => array(
+			'function' => $context['view_posts'] ? 'list_getWatchedUserPostsCount' : 'list_getWatchedUserCount',
+			'params' => array(
+				$approve_query,
+			),
+		),
+		// This assumes we are viewing by user.
+		'columns' => array(
+			'member' => array(
+				'header' => array(
+					'value' => $txt['name'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=profile;u=%1$d">%2$s</a>',
+						'params' => array(
+							'id' => false,
+							'name' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'member_name',
+					'reverse' => 'member_name DESC',
+				),
+			),
+			'warning' => array(
+				'header' => array(
+					'value' => $txt['mc_watched_users_warning'],
+				),
+				'data' => array(
+					'function' => create_function('$member', '
+						global $scripturl;
+						
+						return allowedTo(\'issue_warning\') ? \'<a href="\' . $scripturl . \'?action=profile;u=\' . $member[\'id\'] . \';sa=issueWarning">\' . $member[\'warning\'] . \'%</a>\' : $member[\'warning\'] . \'%\';
+					'),
+				),
+				'sort' => array(
+					'default' => 'warning',
+					'reverse' => 'warning DESC',
+				),
+			),
+			'posts' => array(
+				'header' => array(
+					'value' => $txt['posts'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<a href="' . $scripturl . '?action=profile;u=%1$d;sa=showPosts">%2$s</a>',
+						'params' => array(
+							'id' => false,
+							'posts' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'posts',
+					'reverse' => 'posts DESC',
+				),
+			),
+			'last_login' => array(
+				'header' => array(
+					'value' => $txt['mc_watched_users_last_login'],
+				),
+				'data' => array(
+					'db' => 'last_login',
+				),
+				'sort' => array(
+					'default' => 'last_login',
+					'reverse' => 'last_login DESC',
+				),
+			),
+			'last_post' => array(
+				'header' => array(
+					'value' => $txt['mc_watched_users_last_post'],
+				),
+				'data' => array(
+					'function' => create_function('$member', '
+						global $scripturl;
+
+						if ($member[\'last_post_id\'])
+							return \'<a href="\' . $scripturl . \'?msg=\' . $member[\'last_post_id\'] . \'">\' . $member[\'last_post\'] . \'</a>\';
+						else
+							return $member[\'last_post\'];
+					'),
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=moderate;area=userwatch;sa=post',
+			'include_sort' => true,
+			'include_start' => true,
+			'hidden_fields' => array(
+				'sc' => $context['session_id'],
+			),
+		),
+		'additional_rows' => array(
+			$context['view_posts'] ?
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '
+					<input type="submit" name="delete_selected" value="' . $txt['quickmod_delete_selected'] . '" />',
+				'class' => 'windowbg',
+				'align' => 'right',
+			) : array(),
+		),
+	);
+
+	// If this is being viewed by posts we actually change the columns to call a template each time.
+	if ($context['view_posts'])
+	{
+		$listOptions['columns'] = array(
+			'posts' => array(
+				'data' => array(
+					'function' => create_function('$post', '
+						return template_user_watch_post_callback($post);
+					'),
+				),
+			),
+		);
+	}
+
+	// Create the watched user list.
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'watch_user_list';
+}
+
+function list_getWatchedUserCount($approve_query)
+{
+	global $smfFunc, $db_prefix, $modSettings;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
+		FROM {$db_prefix}members
+		WHERE warning >= $modSettings[warning_watch]", __FILE__, __LINE__);
+	list ($totalMembers) = $smfFunc['db_fetch_row']($request);
+	$smfFunc['db_free_result']($request);
+
+	return $totalMembers;
+}
+
+function list_getWatchedUsers($start, $items_per_page, $sort, $approve_query, $dummy)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl, $modSettings, $user_info;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_member, member_name, last_login, posts, warning
+		FROM {$db_prefix}members
+		WHERE warning >= $modSettings[warning_watch]
+		ORDER BY $sort
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$watched_users = array();
+	$members = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+	{
+		$watched_users[$row['id_member']] = array(
+			'id' => $row['id_member'],
+			'name' => $row['member_name'],
+			'last_login' => $row['last_login'] ? timeformat($row['last_login']) : $txt['never'],
+			'last_post' => $txt['not_applicable'],
+			'last_post_id' => 0,
+			'warning' => $row['warning'],
+			'posts' => $row['posts'],
+		);
+		$members[] = $row['id_member'];
+	}
+	$smfFunc['db_free_result']($request);
+
+	if (!empty($members))
+	{
 		$request = $smfFunc['db_query']('', "
-			SELECT COUNT(*)
+			SELECT MAX(m.poster_time) AS last_post, MAX(m.id_msg) AS last_post_id, m.id_member
+			FROM {$db_prefix}messages AS m
+				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
+			WHERE m.id_member IN (" . implode(',', $members) . ")
+				AND $user_info[query_see_board]
+				AND m.approved = 1
+			GROUP BY m.id_member
+			ORDER BY m.poster_time DESC", __FILE__, __LINE__);
+		while ($row = $smfFunc['db_fetch_assoc']($request))
+		{
+			$watched_users[$row['id_member']]['last_post'] = timeformat($row['last_post']);
+			$watched_users[$row['id_member']]['last_post_id'] = $row['last_post_id'];
+		}
+		$smfFunc['db_free_result']($request);
+	}
+
+	return $watched_users;
+}
+
+function list_getWatchedUserPostsCount($approve_query)
+{
+	global $smfFunc, $db_prefix, $modSettings, $user_info;
+
+	$request = $smfFunc['db_query']('', "
+		SELECT COUNT(*)
 			FROM {$db_prefix}messages AS m
 				INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
 			WHERE warning >= $modSettings[warning_watch]
 				AND $user_info[query_see_board]
 				$approve_query", __FILE__, __LINE__);
-	}
-	list ($context['total_entries']) = $smfFunc['db_fetch_row']($request);
+	list ($totalMemberPosts) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	// Do the page index.
-	$perPage = (int) $modSettings['defaultMaxMessages'];
-	$context['start'] = (int) $_REQUEST['start'];
-	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=userwatch' . $context['view_posts'] ? ';sa=post' : '', $context['start'], $context['total_entries'], $perPage);
+	return $totalMemberPosts;
+}
 
-	$context['can_issue_warnings'] = allowedTo('issue_warning');
+function list_getWatchedUserPosts($start, $items_per_page, $sort, $approve_query, $delete_boards)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl, $modSettings, $user_info;
 
-	// Now get the data itself.
-	if (!$context['view_posts'])
+	$request = $smfFunc['db_query']('', "
+		SELECT m.id_msg, m.id_topic, m.id_board, m.id_member, m.subject, m.body, m.poster_time,
+			m.approved, mem.member_name
+		FROM {$db_prefix}messages AS m
+			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE mem.warning >= $modSettings[warning_watch]
+			AND $user_info[query_see_board]
+			$approve_query
+		ORDER BY m.id_msg DESC
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$member_posts = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$request = $smfFunc['db_query']('', "
-			SELECT id_member, member_name, last_login, posts, warning
-			FROM {$db_prefix}members
-			WHERE warning >= $modSettings[warning_watch]
-			ORDER BY last_login DESC
-			LIMIT $context[start], $perPage", __FILE__, __LINE__);
-		$context['member_watches'] = array();
-		$members = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-		{
-			$context['member_watches'][$row['id_member']] = array(
-				'id' => $row['id_member'],
-				'name' => $row['member_name'],
-				'last_login' => timeformat($row['last_login']),
-				'last_post' => $txt['not_applicable'],
-				'last_post_id' => 0,
-				'warning' => $row['warning'],
-				'posts' => $row['posts'],
-			);
-			$members[] = $row['id_member'];
-		}
-		$smfFunc['db_free_result']($request);
+		$row['subject'] = censorText($row['subject']);
+		$row['body'] = censorText($row['body']);
 
-		if (!empty($members))
-		{
-			$request = $smfFunc['db_query']('', "
-				SELECT MAX(m.poster_time) AS last_post, MAX(m.id_msg) AS last_post_id, m.id_member
-				FROM {$db_prefix}messages AS m
-					INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-				WHERE m.id_member IN (" . implode(',', $members) . ")
-					AND $user_info[query_see_board]
-					AND m.approved = 1
-				GROUP BY m.id_member
-				ORDER BY m.poster_time DESC", __FILE__, __LINE__);
-			while ($row = $smfFunc['db_fetch_assoc']($request))
-			{
-				$context['member_watches'][$row['id_member']]['last_post'] = timeformat($row['last_post']);
-				$context['member_watches'][$row['id_member']]['last_post_id'] = $row['last_post_id'];
-			}
-			$smfFunc['db_free_result']($request);
-		}
+		$member_posts[$row['id_msg']] = array(
+			'id' => $row['id_msg'],
+			'id_topic' => $row['id_topic'],
+			'author_link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+			'subject' => $row['subject'],
+			'body' => parse_bbc($row['body']),
+			'poster_time' => timeformat($row['poster_time']),
+			'approved' => $row['approved'],
+			'can_delete' => $delete_boards == array(0) || in_array($row['id_board'], $delete_boards),
+		);
 	}
-	else
-	{
-		$request = $smfFunc['db_query']('', "
-			SELECT m.id_msg, m.id_topic, m.id_board, m.id_member, m.subject, m.body, m.poster_time,
-				m.approved, mem.member_name
-			FROM {$db_prefix}messages AS m
-				INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE mem.warning >= $modSettings[warning_watch]
-				AND $user_info[query_see_board]
-				$approve_query
-			ORDER BY m.id_msg DESC
-			LIMIT $context[start], $perPage", __FILE__, __LINE__);
-		$context['member_posts'] = array();
-		$members = array();
-		while ($row = $smfFunc['db_fetch_assoc']($request))
-		{
-			$row['subject'] = censorText($row['subject']);
-			$row['body'] = censorText($row['body']);
+	$smfFunc['db_free_result']($request);
 
-			$context['member_posts'][$row['id_msg']] = array(
-				'id' => $row['id_msg'],
-				'id_topic' => $row['id_topic'],
-				'author' => array(
-					'id' => $row['id_member'],
-					'name' => $row['member_name'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
-					'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-				),
-				'subject' => $row['subject'],
-				'body' => parse_bbc($row['body']),
-				'poster_time' => timeformat($row['poster_time']),
-				'approved' => $row['approved'],
-				'can_delete' => $delete_boards == array(0) || in_array($row['id_board'], $delete_boards),
-			);
-		}
-		$smfFunc['db_free_result']($request);
-	}
+	return $member_posts;
 }
 
 // Simply put, look at the warning log!

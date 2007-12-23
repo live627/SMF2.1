@@ -588,131 +588,37 @@ function template_viewmodreport()
 	}
 }
 
-// View members who are being watched
-function template_user_watches_member()
+// Callback function for showing a watched users post in the table.
+function template_user_watch_post_callback($post)
 {
-	global $settings, $options, $context, $txt, $scripturl;
-
-	echo '
-		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
-			<tr class="titlebg">
-				<td colspan="5">', $txt['mc_watched_users_title'], ' - ', $txt['mc_watched_users_member'], '</td>
-			</tr><tr class="catbg">
-				<td width="20%">', $txt['name'], '</td>
-				<td width="18%" align="center">', $txt['mc_watched_users_warning'], '</td>
-				<td width="8%" align="center">', $txt['posts'], '</td>
-				<td width="25%">', $txt['mc_watched_users_last_login'], '</td>
-				<td width="25%">', $txt['mc_watched_users_last_post'], '</td>
-			</tr>';
-
-	// Loop through each member.
-	$alternate = 0;
-	foreach ($context['member_watches'] as $member)
-	{
-		echo '
-			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td><a href="', $scripturl, '?action=profile;u=', $member['id'], '">', $member['name'], '</a></td>
-				<td align="center">', ($context['can_issue_warnings'] ? '<a href="' . $scripturl . '?action=profile;u=' . $member['id'] . ';sa=issueWarning">' . $member['warning'] . '%</a>' : $member['warning'] . '%'), '</td>
-				<td align="center"><a href="', $scripturl, '?action=profile;u=', $member['id'], ';sa=showPosts">', $member['posts'], '</a></td>
-				<td>', $member['last_login'], '</td>
-				<td>';
-
-		if ($member['last_post_id'])
-			echo '
-					<a href="', $scripturl, '?msg=', $member['last_post_id'], '">', $member['last_post'], '</a>';
-		else
-			echo '
-				', $member['last_post'];
-
-		echo '
-				</td>
-			</tr>';
-		$alternate = !$alternate;
-	}
-
-	// Were none found?
-	if (empty($context['member_watches']))
-		echo '
-			<tr class="windowbg">
-				<td colspan="5" align="center">', $txt['mc_watched_users_none'], '</td>
-			</tr>';
-
-	echo '
-			<tr class="catbg">
-				<td colspan="5">
-					<div style="float: left;">
-						', $txt['pages'], ': ', $context['page_index'], '
-					</div>
-				</td>
-			</tr>
-		</table>';
-}
-
-// Viewing user watches - by posts.
-function template_user_watches_posts()
-{
-	global $settings, $options, $context, $txt, $scripturl;
-
-	echo '
-	<form action="', $scripturl, '?action=moderate;area=userwatch;sa=post;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '" onsubmit="return confirm(\'', $txt['mc_watched_users_delete_posts'], '\');">
-		<table width="100%" cellpadding="5" cellspacing="1" border="0" class="bordercolor">
-			<tr class="titlebg">
-				<td>', $txt['mc_watched_users_title'], ' - ', $txt['mc_watched_users_post'], '</td>
-			</tr><tr class="catbg">
-				<td>', $txt['pages'], ': ', $context['page_index'], '</td>
-			</tr>';
-
+	global $scripturl, $context, $txt, $delete_button;
 
 	// We'll have a delete please bob.
-	$delete_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
+	if (empty($delete_button))
+		$delete_button = create_button('delete.gif', 'remove_message', 'remove', 'align="middle"');
 
-	// Do the posts!
-	$alternate = 0;
-	foreach ($context['member_posts'] as $post)
-	{
-		echo '
-			<tr class="', $post['approved'] ? ($alternate ? 'windowbg' : 'windowbg2') : 'approvebg', '">
-				<td>
+	$output_html = '
 					<div>
 						<div style="float: left">
-							<b><a href="', $scripturl, '?topic=', $post['id_topic'], '.', $post['id'], '#msg', $post['id'], '">', $post['subject'], '</a></b> ', $txt['mc_reportedp_by'], ' <b>', $post['author']['link'], '</b>
+							<b><a href="' . $scripturl . '?topic=' . $post['id_topic'] . '.' . $post['id'] . '#msg' . $post['id'] . '">' . $post['subject'] . '</a></b> ' . $txt['mc_reportedp_by'] . ' <b>' . $post['author_link'] . '</b>
 						</div>
-						<div style="float: right">
-							<a href="', $scripturl, '?action=moderate;area=userwatch;sa=post;delete=', $post['id'], ';start=', $context['start'], ';sesc=', $context['session_id'], '" onclick="return confirm(\'' . $txt['mc_watched_users_delete_post'] . '\');">', $delete_button, '</a>
-							<input type="checkbox" name="delete[]" value="', $post['id'], '" class="check" />
+						<div style="float: right">';
+
+	if ($post['can_delete'])
+		$output_html .= '
+							<a href="' . $scripturl . '?action=moderate;area=userwatch;sa=post;delete=' . $post['id'] . ';start=' . $context['start'] . ';sesc=' . $context['session_id'] . '" onclick="return confirm(\'' . $txt['mc_watched_users_delete_post'] . '\');">' . $delete_button . '</a>
+							<input type="checkbox" name="delete[]" value="' . $post['id'] . '" class="check" />';
+
+	$output_html .= '
 						</div>
 					</div><br />
 					<div class="smalltext">
-						&#171; ', $txt['mc_watched_users_posted'], ': ', $post['poster_time'], ' &#187;
+						&#171; ' . $txt['mc_watched_users_posted'] . ': ' . $post['poster_time'] . ' &#187;
 					</div>
 					<hr />
-					', $post['body'], '
-				</td>
-			</tr>';
-		$alternate = !$alternate;
-	}
+					' . $post['body'];
 
-	// No posts?
-	if (empty($context['member_posts']))
-		echo '
-			<tr class="windowbg">
-				<td align="center">', $txt['mc_watched_users_no_posts'], '</td>
-			</tr>';
-
-	echo '
-			<tr class="catbg">
-				<td>
-					<div style="float: left;">
-						', $txt['pages'], ': ', $context['page_index'], '
-					</div>
-					<div style="float: right;">
-						<input type="submit" name="delete_selected" value="', $txt['quickmod_delete_selected'], '" />
-					</div>
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
+	return $output_html;
 }
 
 // A record of all warnings issued to members.

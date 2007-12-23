@@ -130,6 +130,8 @@ December 2007
  ! Allow the generic list function to use a custom start variable name in case two tables are on the same page. (Subs-List.php, GenericList template)
  ! The generic list function now allows you to align the no items label. (Subs-List.php, GenericList template)
  ! Use the generic list function for the user notification lists. (Profile-Modify.php, Profile template)
+ ! Ordered lists weren't necessarily getting converted back to BBC as one might like. (Subs-Editor.php)
+ ! Use the generic list function for viewing group requests and watched members. (Groups.php, ModerationCenter.php, ModerationCenter template, ManageMembergroups template)
 
 
 November 2007

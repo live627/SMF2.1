@@ -40,6 +40,13 @@ if (!defined('SMF'))
 		- allows to add and remove members from the selected membergroup.
 		- allows sorting on several columns.
 		- redirects to itself.
+
+	int list_getGroupRequestCount(string where)
+		// !!!
+
+	array list_getGroupRequests(int start, int items_per_page, string sort, string where)
+		// !!!
+
 */
 
 // Entry point, permission checks, admin bars, etc.
@@ -382,11 +389,10 @@ function MembergroupMembers()
 // Show and manage all group requests.
 function GroupRequests()
 {
-	global $txt, $db_prefix, $context, $scripturl, $user_info, $sourcedir, $smfFunc;
+	global $txt, $db_prefix, $context, $scripturl, $user_info, $sourcedir, $smfFunc, $modSettings;
 
 	// Set up the template stuff...
 	$context['page_title'] = $txt['mc_group_requests'];
-	$context['sub_template'] = 'group_requests';
 
 	// Verify we can be here.
 	if ($user_info['mod_cache']['gq'] == '0=1')
@@ -550,20 +556,130 @@ function GroupRequests()
 		}
 	}
 
-	// There *could* be many, so paginate.
+	// We're going to want this for making our list.
+	require_once($sourcedir . '/Subs-List.php');
+
+	// This is all the information required for a group listing.
+	$listOptions = array(
+		'id' => 'group_request_list',
+		'title' => $txt['mc_group_requests'],
+		'width' => '85%',
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['mc_groupr_none_found'],
+		'base_href' => $scripturl . '?action=groups;sa=requests',
+		'default_sort_col' => 'member',
+		'get_items' => array(
+			'function' => 'list_getGroupRequests',
+			'params' => array(
+				$where,
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getGroupRequestCount',
+			'params' => array(
+				$where,
+			),
+		),
+		'columns' => array(
+			'member' => array(
+				'header' => array(
+					'value' => $txt['mc_groupr_member'],
+				),
+				'data' => array(
+					'db' => 'member_link',
+				),
+				'sort' => array(
+					'default' => 'mem.member_name',
+					'reverse' => 'mem.member_name DESC',
+				),
+			),
+			'group' => array(
+				'header' => array(
+					'value' => $txt['mc_groupr_group'],
+				),
+				'data' => array(
+					'db' => 'group_link',
+				),
+				'sort' => array(
+					'default' => 'mg.group_name',
+					'reverse' => 'mg.group_name DESC',
+				),
+			),
+			'reason' => array(
+				'header' => array(
+					'value' => $txt['mc_groupr_reason'],
+				),
+				'data' => array(
+					'db_htmlsafe' => 'reason',
+				),
+			),
+			'action' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'style' => 'width: 4%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="groupr[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=groups;sa=requests',
+			'include_sort' => true,
+			'include_start' => true,
+			'hidden_fields' => array(
+				'sc' => $context['session_id'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '
+					<select name="req_action" onchange="if (this.value != 0 && (this.value == \'reason\' || confirm(\'' . $txt['mc_groupr_warning'] . '\'))) this.form.submit();">
+						<option value="0">' . $txt['with_selected'] . ':</option>
+						<option value="0">---------------------</option>
+						<option value="approve">' . $txt['mc_groupr_approve'] . '</option>
+						<option value="reject">' . $txt['mc_groupr_reject'] . '</option>
+						<option value="reason">' . $txt['mc_groupr_reject_w_reason'] . '</option>
+					</select>
+					<input type="submit" name="go" value="' . $txt['go'] . '" onclick="var sel = document.getElementById(\'req_action\'); if (sel.value != 0 && sel.value != \'reason\' && !confirm(\'' . $txt['mc_groupr_warning'] . '\')) return false;" />',
+				'class' => 'windowbg',
+				'align' => 'right',
+			),
+		),
+	);
+
+	// Create the request list.
+	createList($listOptions);
+
+	$context['sub_template'] = 'show_list';
+	$context['default_list'] = 'group_request_list';
+}
+
+function list_getGroupRequestCount($where)
+{
+	global $smfFunc, $db_prefix;
+
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_group_requests AS lgr
 		WHERE $where", __FILE__, __LINE__);
-	list ($context['total_requests']) = $smfFunc['db_fetch_row']($request);
+	list ($totalRequests) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	// So, that means we can page index, yes?
-	$context['page_index'] = constructPageIndex($scripturl . '?action=groups;sa=requests', $_GET['start'], $context['total_requests'], 10);
-	$context['start'] = $_GET['start'];
+	return $totalRequests;
+}
 
-	// Fetch all the group requests...
-	//!!! What can they actually see?
+function list_getGroupRequests($start, $items_per_page, $sort, $where)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl;
+
 	$request = $smfFunc['db_query']('', "
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
 			mem.member_name, mg.group_name, mg.online_color
@@ -571,30 +687,22 @@ function GroupRequests()
 			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
 			INNER JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
 		WHERE $where
-		ORDER BY lgr.id_request DESC
-		LIMIT 10", __FILE__, __LINE__);
-	$context['group_requests'] = array();
+		ORDER BY $sort
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$group_requests = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$context['group_requests'][] = array(
+		$group_requests[] = array(
 			'id' => $row['id_request'],
-			'member' => array(
-				'id' => $row['id_member'],
-				'name' => $row['member_name'],
-				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
-				'href' => $scripturl . '?action=profile;u=' . $row['id_member'],
-			),
-			'group' => array(
-				'id' => $row['id_group'],
-				'name' => $row['group_name'],
-				'color' => $row['online_color'],
-				'link' => '<span style="color: ' . $row['online_color'] . '">' . $row['group_name'] . '</span>',
-			),
+			'member_link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['member_name'] . '</a>',
+			'group_link' => '<span style="color: ' . $row['online_color'] . '">' . $row['group_name'] . '</span>',
 			'reason' => censorText($row['reason']),
 			'time_submitted' => timeformat($row['time_applied']),
 		);
 	}
 	$smfFunc['db_free_result']($request);
+
+	return $group_requests;
 }
 
 ?>

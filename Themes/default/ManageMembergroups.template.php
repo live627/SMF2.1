@@ -416,7 +416,7 @@ function template_group_members()
 		echo '
 				<tr class="titlebg">
 					<td colspan="6" align="right">
-						<input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '!" style="font-weight: normal;" />
+						<input type="submit" name="remove" value="', $txt['membergroups_members_remove'], '" style="font-weight: normal;" />
 					</td>
 				</tr>';
 	echo '
@@ -493,71 +493,6 @@ function template_group_index()
 
 	echo '
 		</table>';
-}
-
-// Template for showing outstanding group requests.
-function template_group_requests()
-{
-	global $settings, $options, $context, $txt, $scripturl;
-
-	// Show a welcome message to the user.
-	echo '
-	<form action="', $scripturl, '?action=groups;sa=requests;start=', $context['start'], '" method="post" accept-charset="', $context['character_set'], '">
-		<table width="100%" cellpadding="3" cellspacing="1" border="0" class="bordercolor">
-			<tr class="titlebg">
-				<td colspan="4">', $txt['mc_group_requests'], '</td>
-			</tr><tr class="catbg">
-				<td colspan="4">', $txt['pages'], ': ', $context['page_index'], '</td>
-			</tr><tr class="titlebg">
-				<td width="22%">', $txt['mc_groupr_member'], '</td>
-				<td width="22%">', $txt['mc_groupr_group'], '</td>
-				<td width="52%">', $txt['mc_groupr_reason'], '</td>
-				<td align="center" width="4%"><input type="checkbox" id="selall" class="check" onclick="invertAll(this, this.form);" /></td>
-			</tr>';
-
-	// Loop through and print out each report!
-	$alternate = 0;
-	foreach ($context['group_requests'] as $request)
-	{
-		echo '
-			<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
-				<td width="22%">', $request['member']['link'], '</td>
-				<td width="22%">', $request['group']['link'], '</td>
-				<td width="52%">', $request['reason'], '</td>
-				<td align="center" width="4%"><input type="checkbox" id="groupcheck" name="groupr[]" value="', $request['id'], '" class="check" /></td>
-			</tr>';
-
-		$alternate = !$alternate;
-	}
-
-	// Don't have any?
-	if (empty($context['group_requests']))
-		echo '
-			<tr class="windowbg">
-				<td colspan="4" align="center">', $txt['mc_groupr_none_found'], '</td>
-			</tr>';
-
-	echo '
-			<tr class="catbg">
-				<td colspan="4">
-					<div style="float: left;">
-						', $txt['pages'], ': ', $context['page_index'], '
-					</div>
-					<div style="float: right;">
-						<select name="req_action" onchange="if (this.value != 0 && (this.value == \'reason\' || confirm(\'', $txt['mc_groupr_warning'], '\'))) this.form.submit();">
-							<option value="0">', $txt['with_selected'], ':</option>
-							<option value="0">---------------------</option>
-							<option value="approve">', $txt['mc_groupr_approve'], '</option>
-							<option value="reject">', $txt['mc_groupr_reject'], '</option>
-							<option value="reason">', $txt['mc_groupr_reject_w_reason'], '</option>
-						</select>
-						<input type="submit" name="go" value="', $txt['go'], '" onclick="var sel = document.getElementById(\'req_action\'); if (sel.value != 0 && sel.value != \'reason\' && !confirm(\'', $txt['mc_groupr_warning'], '\')) return false;" />
-					</div>
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="sc" value="', $context['session_id'], '" />
-	</form>';
 }
 
 // Allow the moderator to enter a reason to each user being rejected.
