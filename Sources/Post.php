@@ -787,6 +787,17 @@ function Post()
 		if (empty($_SESSION['temp_attachments']))
 			$_SESSION['temp_attachments'] = array();
 
+		if (!empty($modSettings['currentAttachmentUploadDir']))
+		{
+			if (!is_array($modSettings['attachmentUploadDir']))
+				$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+			// Just use the current path for temp files.
+			$current_attach_dir = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
+		}
+		else
+			$current_attach_dir = $modSettings['attachmentUploadDir'];
+
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
@@ -821,15 +832,15 @@ function Post()
 				{
 					$deleted_attachments = true;
 					unset($_SESSION['temp_attachments'][$attachID]);
-					@unlink($modSettings['attachmentUploadDir'] . '/' . $attachID);
+					@unlink($current_attach_dir . '/' . $attachID);
 					continue;
 				}
 
 				$quantity++;
-				$total_size += filesize($modSettings['attachmentUploadDir'] . '/' . $attachID);
+				$total_size += filesize($current_attach_dir . '/' . $attachID);
 
 				$context['current_attachments'][] = array(
-					'name' => getAttachmentFilename($name, false, true),
+					'name' => getAttachmentFilename($name, false, null, true),
 					'id' => $attachID,
 					'approved' => 1,
 				);
@@ -880,7 +891,7 @@ function Post()
 				{
 					// Make sure the directory isn't full.
 					$dirSize = 0;
-					$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('cant_access_upload_path', 'critical');
+					$dir = @opendir($current_attach_dir) or fatal_lang_error('cant_access_upload_path', 'critical');
 					while ($file = readdir($dir))
 					{
 						if (substr($file, 0, -1) == '.')
@@ -889,12 +900,12 @@ function Post()
 						if (preg_match('~^post_tmp_\d+_\d+$~', $file) != 0)
 						{
 							// Temp file is more than 5 hours old!
-							if (filemtime($modSettings['attachmentUploadDir'] . '/' . $file) < time() - 18000)
-								@unlink($modSettings['attachmentUploadDir'] . '/' . $file);
+							if (filemtime($current_attach_dir . '/' . $file) < time() - 18000)
+								@unlink($current_attach_dir . '/' . $file);
 							continue;
 						}
 
-						$dirSize += filesize($modSettings['attachmentUploadDir'] . '/' . $file);
+						$dirSize += filesize($current_attach_dir . '/' . $file);
 					}
 					closedir($dir);
 
@@ -903,7 +914,7 @@ function Post()
 						fatal_lang_error('ran_out_of_space');
 				}
 
-				if (!is_writable($modSettings['attachmentUploadDir']))
+				if (!is_writable($current_attach_dir))
 					fatal_lang_error('attachments_no_write', 'critical');
 
 				$attachID = 'post_tmp_' . $user_info['id'] . '_' . $temp_start++;
@@ -914,7 +925,7 @@ function Post()
 					'approved' => 1,
 				);
 
-				$destName = $modSettings['attachmentUploadDir'] . '/' . $attachID;
+				$destName = $current_attach_dir . '/' . $attachID;
 
 				if (!move_uploaded_file($_FILES['attachment']['tmp_name'][$n], $destName))
 					fatal_lang_error('attach_timeout', 'critical');
@@ -1487,6 +1498,18 @@ function Post2()
 		if (!allowedTo('post_unapproved_attachments'))
 			isAllowedTo('post_attachment');
 
+		// Make sure we're uploading to the right place.
+		if (!empty($modSettings['currentAttachmentUploadDir']))
+		{
+			if (!is_array($modSettings['attachmentUploadDir']))
+				$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+			// The current directory, of course!
+			$current_attach_dir = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
+		}
+		else
+			$current_attach_dir = $modSettings['attachmentUploadDir'];
+
 		// If this isn't a new post, check the current attachments.
 		if (isset($_REQUEST['msg']))
 		{
@@ -1513,14 +1536,14 @@ function Post2()
 				if (!empty($_POST['attach_del']) && !in_array($attachID, $_POST['attach_del']))
 				{
 					unset($_SESSION['temp_attachments'][$attachID]);
-					@unlink($modSettings['attachmentUploadDir'] . '/' . $attachID);
+					@unlink($current_attach_dir . '/' . $attachID);
 					continue;
 				}
 
 				$_FILES['attachment']['tmp_name'][] = $attachID;
 				$_FILES['attachment']['name'][] = $smfFunc['db_escape_string']($name);
-				$_FILES['attachment']['size'][] = filesize($modSettings['attachmentUploadDir'] . '/' . $attachID);
-				list ($_FILES['attachment']['width'][], $_FILES['attachment']['height'][]) = @getimagesize($modSettings['attachmentUploadDir'] . '/' . $attachID);
+				$_FILES['attachment']['size'][] = filesize($current_attach_dir . '/' . $attachID);
+				list ($_FILES['attachment']['width'][], $_FILES['attachment']['height'][]) = @getimagesize($current_attach_dir . '/' . $attachID);
 
 				unset($_SESSION['temp_attachments'][$attachID]);
 			}

@@ -236,7 +236,7 @@ function Display()
 				$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $topicinfo['num_replies'] - $context['start_from'];
 			}
 		}
-			
+
 		// Link to a message...
 		elseif (substr($_REQUEST['start'], 0, 3) == 'msg')
 		{
@@ -257,7 +257,7 @@ function Display()
 				list ($context['start_from']) = $smfFunc['db_fetch_row']($request);
 				$smfFunc['db_free_result']($request);
 			}
-			
+
 			// We need to reverse the start as well in this case.
 			$_REQUEST['start'] = empty($options['view_newest_first']) ? $context['start_from'] : $topicinfo['num_replies'] - $context['start_from'];
 
@@ -731,7 +731,7 @@ function Display()
 		{
 			$request = $smfFunc['db_query']('', "
 				SELECT
-					a.id_attach, a.id_msg, a.filename, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
+					a.id_attach, a.id_folder, a.id_msg, a.filename, IFNULL(a.size, 0) AS filesize, a.downloads, a.approved,
 					a.width, a.height" . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : ",
 					IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.width AS thumb_width, thumb.height AS thumb_height") . "
 				FROM {$db_prefix}attachments AS a" . (empty($modSettings['attachmentShowImages']) || empty($modSettings['attachmentThumbnails']) ? '' : "
@@ -988,7 +988,7 @@ function Download()
 	if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'avatar')
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT filename, fileext, id_attach, attachment_type, mime_type, approved
+			SELECT id_folder, filename, fileext, id_attach, attachment_type, mime_type, approved
 			FROM {$db_prefix}attachments
 			WHERE id_attach = $_REQUEST[attach]
 				AND id_member > 0
@@ -1002,7 +1002,7 @@ function Download()
 
 		// Make sure this attachment is on this board.
 		$request = $smfFunc['db_query']('', "
-			SELECT a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
+			SELECT a.id_folder, a.filename, a.fileext, a.id_attach, a.attachment_type, a.mime_type, a.approved
 			FROM {$db_prefix}attachments AS a
 				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board AND $user_info[query_see_board])
@@ -1011,13 +1011,13 @@ function Download()
 	}
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_access', false);
-	list ($real_filename, $file_ext, $id_attach, $attachment_type, $mime_type, $is_approved) = $smfFunc['db_fetch_row']($request);
+	list ($id_folder, $real_filename, $file_ext, $id_attach, $attachment_type, $mime_type, $is_approved) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// If it isn't yet approved, do they have permission to view it?
 	if (!$is_approved && ($attachment_type == 0 || $attachment_type == 3))
 		isAllowedTo('approve_posts');
-		
+
 	// Update the download counter (unless it's a thumbnail).
 	if ($attachment_type != 3)
 		$smfFunc['db_query']('attach_download_increase', "
@@ -1025,7 +1025,7 @@ function Download()
 			SET downloads = downloads + 1
 			WHERE id_attach = $id_attach", __FILE__, __LINE__);
 
-	$filename = getAttachmentFilename($real_filename, $_REQUEST['attach']);
+	$filename = getAttachmentFilename($real_filename, $_REQUEST['attach'], $id_folder);
 
 	// This is done to clear any output that was made before now. (would use ob_clean(), but that's PHP 4.2.0+...)
 	ob_end_clean();
@@ -1098,7 +1098,7 @@ function Download()
 
 	// If this has an "image extension" - but isn't actually an image - then ensure it isn't cached cause of silly IE.
 	if (!isset($_REQUEST['image']) && in_array($file_ext, array('gif', 'jpg', 'bmp', 'png', 'jpeg', 'tiff')))
-		header('Cache-Control: no-cache'); 
+		header('Cache-Control: no-cache');
 	else
 		header('Cache-Control: max-age=' . (525600 * 60) . ', private');
 
@@ -1194,11 +1194,25 @@ function loadAttachmentContext($id_msg)
 				// A proper thumb doesn't exist yet? Create one!
 				if (empty($attachment['id_thumb']) || $attachment['thumb_width'] > $modSettings['attachmentThumbWidth'] || $attachment['thumb_height'] > $modSettings['attachmentThumbHeight'] || ($attachment['thumb_width'] < $modSettings['attachmentThumbWidth'] && $attachment['thumb_height'] < $modSettings['attachmentThumbHeight']))
 				{
-					$filename = getAttachmentFilename($attachment['filename'], $attachment['id_attach']);
+					$filename = getAttachmentFilename($attachment['filename'], $attachment['id_attach'], $attachment['id_folder']);
 
 					require_once($sourcedir . '/Subs-Graphics.php');
 					if (createThumbnail($filename, $modSettings['attachmentThumbWidth'], $modSettings['attachmentThumbHeight']))
 					{
+						// So what folder are we putting this image in?
+						if (!empty($modSettings['currentAttachmentUploadDir']))
+						{
+							if (!is_array($modSettings['attachmentUploadDir']))
+								$modSettings['attachmentUploadDir'] = @unserialize($modSettings['attachmentUploadDir']);
+							$path = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
+							$id_folder_thumb = $modSettings['currentAttachmentUploadDir'];
+						}
+						else
+						{
+							$path = $modSettings['attachmentUploadDir'];
+							$id_folder_thumb = 1;
+						}
+
 						// Calculate the size of the created thumbnail.
 						list ($attachment['thumb_width'], $attachment['thumb_height']) = @getimagesize($filename . '_thumb');
 						$thumb_size = filesize($filename . '_thumb');
@@ -1208,8 +1222,8 @@ function loadAttachmentContext($id_msg)
 						// Add this beauty to the database.
 						$smfFunc['db_query']('', "
 							INSERT INTO {$db_prefix}attachments
-								(id_msg, attachment_type, filename, size, width, height)
-							VALUES ($id_msg, 3, '$thumb_filename', " . (int) $thumb_size . ", " . (int) $attachment['thumb_width'] . ", " . (int) $attachment['thumb_height'] . ")", __FILE__, __LINE__);
+								(id_folder, id_msg, attachment_type, filename, size, width, height)
+							VALUES ($id_folder_thumb, $id_msg, 3, '$thumb_filename', " . (int) $thumb_size . ", " . (int) $attachment['thumb_width'] . ", " . (int) $attachment['thumb_height'] . ")", __FILE__, __LINE__);
 						$attachment['id_thumb'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
 						if (!empty($attachment['id_thumb']))
 						{
@@ -1218,8 +1232,8 @@ function loadAttachmentContext($id_msg)
 								SET id_thumb = $attachment[id_thumb]
 								WHERE id_attach = $attachment[id_attach]", __FILE__, __LINE__);
 
-							$thumb_realname = getAttachmentFilename($thumb_filename, $attachment['id_thumb'], true);
-							rename($filename . '_thumb', $modSettings['attachmentUploadDir'] . '/' . $thumb_realname);
+							$thumb_realname = getAttachmentFilename($thumb_filename, $attachment['id_thumb'], $id_folder_thumb, true);
+							rename($filename . '_thumb', $path . '/' . $thumb_realname);
 						}
 					}
 				}

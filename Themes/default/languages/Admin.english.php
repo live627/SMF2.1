@@ -79,7 +79,9 @@ $txt['attachments_desc'] = 'From here you can administer the attached files on y
 $txt['attachment_stats'] = 'File Attachment Statistics';
 $txt['attachment_total'] = 'Total Attachments';
 $txt['attachmentdir_size'] = 'Total Size of Attachment Directory';
+$txt['attachmentdir_size_current'] = 'Total Size of Current Attachment Directory';
 $txt['attachment_space'] = 'Total Space Available in Attachment Directory';
+$txt['attachment_space_current'] = 'Total Space Available in Current Attachment Directory';
 $txt['attachment_options'] = 'File Attachment Options';
 $txt['attachment_log'] = 'Attachment Log';
 $txt['attachment_remove_old'] = 'Remove attachments older than';
@@ -316,7 +318,9 @@ $txt['attachmentCheckExtensions'] = 'Check attachment\'s extension';
 $txt['attachmentExtensions'] = 'Allowed attachment extensions';
 $txt['attachmentShowImages'] = 'Display image attachments as pictures under post';
 $txt['attachmentEncryptFilenames'] = 'Encrypt stored filenames';
-$txt['attachmentUploadDir'] = 'Attachments directory';
+$txt['attachmentUploadDir'] = 'Attachments directory<div class="smalltext"><a href="' . $scripturl . '?action=admin;area=manageattachments;sa=attachpaths">Configure multiple attachment directories</a></div>';
+$txt['attachmentUploadDir_multiple'] = 'Attachments directory';
+$txt['attachmentUploadDir_multiple_configure'] = '<a href="' . $scripturl . '?action=admin;area=manageattachments;sa=attachpaths">[Configure multiple attachment directories]</a>';
 $txt['attachmentDirSizeLimit'] = 'Max attachment folder space';
 $txt['attachmentPostLimit'] = 'Max attachment size per post';
 $txt['attachmentSizeLimit'] = 'Max size per attachment';
@@ -324,6 +328,22 @@ $txt['attachmentNumPerPostLimit'] = 'Max number of attachments per post';
 $txt['attachmentThumbnails'] = 'Resize images when showing under posts';
 $txt['attachmentThumbWidth'] = 'Maximum width of thumbnails';
 $txt['attachmentThumbHeight'] = 'Maximum height of thumbnails';
+
+$txt['attach_dir_does_not_exist'] = 'Does Not Exist';
+$txt['attach_dir_not_writeable'] = 'Not Writeable';
+$txt['attach_dir_files_missing'] = 'Files Missing (<a href="' . $scripturl . '?action=admin;area=manageattachments;sa=repair;sesc=%1$s">Repair</a>)';
+$txt['attach_dir_unused'] = 'Unused';
+$txt['attach_dir_ok'] = 'OK';
+
+$txt['attach_path_manage'] = 'Manage Attachment Paths';
+$txt['attach_paths'] = 'Attachment Paths';
+$txt['attach_current_dir'] = 'Current Directory';
+$txt['attach_path'] = 'Path';
+$txt['attach_current_size'] = 'Current Size (KB)';
+$txt['attach_num_files'] = 'Files';
+$txt['attach_dir_status'] = 'Status';
+$txt['attach_add_path'] = 'Add Path';
+$txt['attach_path_current_bad'] = 'Invalid current attachment path.';
 
 $txt['mods_cat_avatars'] = 'Avatars';
 $txt['avatar_directory'] = 'Avatars directory';
@@ -371,6 +391,7 @@ $txt['attach_repair_file_wrong_size'] = '%d attachments/avatars are being report
 $txt['attach_repair_file_size_of_zero'] = '%d attachments/avatars have a size of zero on disk. (These will be deleted)';
 $txt['attach_repair_attachment_no_msg'] = '%d attachments no longer have a message associated with them';
 $txt['attach_repair_avatar_no_member'] = '%d avatars no longer have a member associated with them';
+$txt['attach_repair_wrong_folder'] = '%d attachments are in the wrong folder';
 
 $txt['news_title'] = 'News and Newsletters';
 $txt['news_settings_desc'] = 'Here you can change the settings and permissions related to news and newsletters.';

@@ -51,6 +51,7 @@ CREATE TABLE {$db_prefix}attachments (
   id_thumb int(10) unsigned NOT NULL default '0',
   id_msg int(10) unsigned NOT NULL default '0',
   id_member mediumint(8) unsigned NOT NULL default '0',
+  id_folder tinyint(3) NOT NULL default '1',
   attachment_type tinyint(3) unsigned NOT NULL default '0',
   filename tinytext NOT NULL,
   fileext varchar(8) NOT NULL default '',

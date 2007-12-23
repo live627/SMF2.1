@@ -225,3 +225,12 @@ INSERT INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_regularity
 ---# Adding pruning option...
 INSERT INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
 ---#
+
+/******************************************************************************/
+--- Updating attachments.
+/******************************************************************************/
+
+---# Adding multiple attachment path functionality.
+ALTER TABLE {$db_prefix}attachments
+ADD COLUMN id_folder smallint NOT NULL default '1';
+---#

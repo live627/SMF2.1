@@ -1878,6 +1878,18 @@ function createAttachment(&$attachmentOptions)
 {
 	global $db_prefix, $modSettings, $sourcedir, $smfFunc;
 
+	// We need to know where this thing is going.
+	if (!empty($modSettings['currentAttachmentUploadDir']))
+	{
+		if (!is_array($modSettings['attachmentUploadDir']))
+			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+		// Just use the current path for temp files.
+		$attach_dir = $modSettings['attachmentUploadDir'][$modSettings['currentAttachmentUploadDir']];
+	}
+	else
+		$attach_dir = $modSettings['attachmentUploadDir'];
+
 	$attachmentOptions['errors'] = array();
 	if (!isset($attachmentOptions['post']))
 		$attachmentOptions['post'] = 0;
@@ -1888,7 +1900,7 @@ function createAttachment(&$attachmentOptions)
 	$file_restricted = @ini_get('open_basedir') != '' && !$already_uploaded;
 
 	if ($already_uploaded)
-		$attachmentOptions['tmp_name'] = $modSettings['attachmentUploadDir'] . '/' . $attachmentOptions['tmp_name'];
+		$attachmentOptions['tmp_name'] = $attach_dir . '/' . $attachmentOptions['tmp_name'];
 
 	// Make sure the file actually exists... sometimes it doesn't.
 	if ((!$file_restricted && !file_exists($attachmentOptions['tmp_name'])) || (!$already_uploaded && !is_uploaded_file($attachmentOptions['tmp_name'])))
@@ -1919,7 +1931,7 @@ function createAttachment(&$attachmentOptions)
 
 	// Remove special foreign characters from the filename.
 	if (empty($modSettings['attachmentEncryptFilenames']))
-		$attachmentOptions['name'] = getAttachmentFilename($attachmentOptions['name'], false, true);
+		$attachmentOptions['name'] = getAttachmentFilename($attachmentOptions['name'], false, $modSettings['currentAttachmentUploadDir'], true);
 
 	// Is the file too big?
 	if (!empty($modSettings['attachmentSizeLimit']) && $attachmentOptions['size'] > $modSettings['attachmentSizeLimit'] * 1024)
@@ -1939,7 +1951,7 @@ function createAttachment(&$attachmentOptions)
 	{
 		// Make sure the directory isn't full.
 		$dirSize = 0;
-		$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('cant_access_upload_path', 'critical');
+		$dir = @opendir($attach_dir) or fatal_lang_error('cant_access_upload_path', 'critical');
 		while ($file = readdir($dir))
 		{
 			if (substr($file, 0, -1) == '.')
@@ -1948,12 +1960,12 @@ function createAttachment(&$attachmentOptions)
 			if (preg_match('~^post_tmp_\d+_\d+$~', $file) != 0)
 			{
 				// Temp file is more than 5 hours old!
-				if (filemtime($modSettings['attachmentUploadDir'] . '/' . $file) < time() - 18000)
-					@unlink($modSettings['attachmentUploadDir'] . '/' . $file);
+				if (filemtime($attach_dir . '/' . $file) < time() - 18000)
+					@unlink($attach_dir . '/' . $file);
 				continue;
 			}
 
-			$dirSize += filesize($modSettings['attachmentUploadDir'] . '/' . $file);
+			$dirSize += filesize($attach_dir . '/' . $file);
 		}
 		closedir($dir);
 
@@ -1984,7 +1996,7 @@ function createAttachment(&$attachmentOptions)
 	if (!empty($attachmentOptions['errors']))
 		return false;
 
-	if (!is_writable($modSettings['attachmentUploadDir']))
+	if (!is_writable($attach_dir))
 		fatal_lang_error('attachments_no_write', 'critical');
 
 	// Assuming no-one set the extension let's take a look at it.
@@ -1997,8 +2009,8 @@ function createAttachment(&$attachmentOptions)
 
 	$smfFunc['db_query']('', "
 		INSERT INTO {$db_prefix}attachments
-			(id_msg, filename, fileext, size, width, height, mime_type, approved)
-		VALUES (" . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? "SUBSTRING('$attachmentOptions[mime_type]', 1, 20)" : "''") . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
+			(id_folder, id_msg, filename, fileext, size, width, height, mime_type, approved)
+		VALUES ($modSettings[currentAttachmentUploadDir], " . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? "SUBSTRING('$attachmentOptions[mime_type]', 1, 20)" : "''") . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
 	$attachmentOptions['id'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
 
 	if (empty($attachmentOptions['id']))
@@ -2012,7 +2024,7 @@ function createAttachment(&$attachmentOptions)
 			VALUES
 				($attachmentOptions[id], " . (int) $attachmentOptions['post'] . ")", __FILE__, __LINE__);
 
-	$attachmentOptions['destination'] = $modSettings['attachmentUploadDir'] . '/' . getAttachmentFilename(basename($attachmentOptions['name']), $attachmentOptions['id'], true);
+	$attachmentOptions['destination'] = $attach_dir . '/' . getAttachmentFilename(basename($attachmentOptions['name']), $attachmentOptions['id'], $modSettings['currentAttachmentUploadDir'], true);
 
 	if ($already_uploaded)
 		rename($attachmentOptions['tmp_name'], $attachmentOptions['destination']);
@@ -2073,8 +2085,8 @@ function createAttachment(&$attachmentOptions)
 			// To the database we go!
 			$smfFunc['db_query']('', "
 				INSERT INTO {$db_prefix}attachments
-					(id_msg, attachment_type, filename, fileext, size, width, height, mime_type, approved)
-				VALUES (" . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ", SUBSTRING('$thumb_mime', 1, 20), " . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
+					(id_folder, id_msg, attachment_type, filename, fileext, size, width, height, mime_type, approved)
+				VALUES ($modSettings[currentAttachmentUploadDir], " . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ", SUBSTRING('$thumb_mime', 1, 20), " . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
 			$attachmentOptions['thumb'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
 
 			if (!empty($attachmentOptions['thumb']))
@@ -2084,7 +2096,7 @@ function createAttachment(&$attachmentOptions)
 					SET id_thumb = $attachmentOptions[thumb]
 					WHERE id_attach = $attachmentOptions[id]", __FILE__, __LINE__);
 
-				rename($attachmentOptions['destination'] . '_thumb', $modSettings['attachmentUploadDir'] . '/' . getAttachmentFilename($thumb_filename, $attachmentOptions['thumb'], true));
+				rename($attachmentOptions['destination'] . '_thumb', $attach_dir . '/' . getAttachmentFilename($thumb_filename, $attachmentOptions['thumb'], $modSettings['currentAttachmentUploadDir'], true));
 			}
 		}
 	}

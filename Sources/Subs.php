@@ -3316,7 +3316,7 @@ function db_debug_junk()
 }
 
 // Get an attachment's encrypted filename.  If $new is true, won't check for file existence.
-function getAttachmentFilename($filename, $attachment_id, $new = false)
+function getAttachmentFilename($filename, $attachment_id, $dir = null, $new = false)
 {
 	global $modSettings;
 
@@ -3335,10 +3335,20 @@ function getAttachmentFilename($filename, $attachment_id, $new = false)
 	elseif ($new)
 		return $enc_name;
 
-	if (file_exists($modSettings['attachmentUploadDir'] . '/' . $enc_name))
-		$filename = $modSettings['attachmentUploadDir'] . '/' . $enc_name;
+	// Are we using multiple directories?
+	if (!empty($modSettings['currentAttachmentUploadDir']))
+	{
+		if (!is_array($modSettings['attachmentUploadDir']))
+			$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+		$path = $modSettings['attachmentUploadDir'][$dir];
+	}
 	else
-		$filename = $modSettings['attachmentUploadDir'] . '/' . $clean_name;
+		$path = $modSettings['attachmentUploadDir'];
+
+	if (file_exists($path . '/' . $enc_name))
+		$filename = $path . '/' . $enc_name;
+	else
+		$filename = $path . '/' . $clean_name;
 
 	return $filename;
 }

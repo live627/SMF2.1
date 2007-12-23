@@ -198,7 +198,7 @@ $nameChanges = array(
 		'OLD_ID_GROUP' => 'OLD_ID_GROUP old_id_group smallint(5) NOT NULL default \'0\'',
 		'startTime' => 'startTime start_time int(10) NOT NULL default \'0\'',
 		'endTime' => 'endTime end_time int(10) NOT NULL default \'0\'',
-	), 
+	),
 	'log_topics' => array(
 		'ID_MEMBER' => 'ID_MEMBER id_member mediumint(8) unsigned NOT NULL default \'0\'',
 		'ID_MSG' => 'ID_MSG id_msg int(10) unsigned NOT NULL default \'0\'',
@@ -325,7 +325,7 @@ $nameChanges = array(
 		'ID_SMILEY' => 'ID_SMILEY id_smiley smallint(5) unsigned NOT NULL auto_increment',
 		'smileyRow' => 'smileyRow smiley_row tinyint(4) unsigned NOT NULL default \'0\'',
 		'smileyOrder' => 'smileyOrder smiley_order smallint(5) unsigned NOT NULL default \'0\'',
-	), 
+	),
 	'subscriptions' => array(
 		'ID_SUBSCRIBE' => 'ID_SUBSCRIBE id_subscribe mediumint(8) unsigned NOT NULL auto_increment',
 		'ID_GROUP' => 'ID_GROUP id_group smallint(5) NOT NULL default \'0\'',
@@ -1025,6 +1025,7 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}group_moderators (
 
 ---# Altering attachment table.
 ALTER TABLE {$db_prefix}attachments
+ADD COLUMN id_folder tinyint(3) NOT NULL default '1',
 ADD COLUMN fileext varchar(8) NOT NULL default '',
 ADD COLUMN mime_type varchar(20) NOT NULL default '';
 ---#
@@ -1590,7 +1591,7 @@ $read_only_reg = array(
 );
 
 // Clear all the current predefined profiles.
-$smfFunc['db_query']('', "				
+$smfFunc['db_query']('', "
 	DELETE FROM {$db_prefix}board_permissions
 	WHERE id_profile IN (2,3,4)", __FILE__, __LINE__);
 
@@ -1624,7 +1625,7 @@ while ($row = mysql_fetch_assoc($request))
 }
 mysql_free_result($request);
 
-$smfFunc['db_query']('', "				
+$smfFunc['db_query']('', "
 	INSERT INTO {$db_prefix}board_permissions
 		(id_group, id_profile, permission)
 	VALUES (-1, 2, 'poll_view'),

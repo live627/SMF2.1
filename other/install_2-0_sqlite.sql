@@ -55,6 +55,7 @@ CREATE TABLE {$db_prefix}attachments (
   id_thumb int NOT NULL default '0',
   id_msg int NOT NULL default '0',
   id_member int NOT NULL default '0',
+  id_folder smallint NOT NULL default '1',
   attachment_type smallint NOT NULL default '0',
   filename varchar(255) NOT NULL,
   fileext varchar(8) NOT NULL default '',
@@ -1225,7 +1226,7 @@ CREATE TABLE {$db_prefix}log_spider_stats (
   stat_date date NOT NULL default '0001-01-01',
   PRIMARY KEY (stat_date, id_spider)
 );
-  
+
 #
 # Table structure for table `log_subscribed`
 #

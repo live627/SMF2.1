@@ -923,6 +923,9 @@ function template_show_settings()
 									<input type="checkbox" id="select_all" onclick="invertAll(this, this.form, \'', $config_var['name'], '_enabledTags\');"', $context['bbc_sections'][$config_var['name']]['all_selected'] ? ' checked="checked"' : '', ' class="check" /> <label for="select_all"><i>', $txt['bbcTagsToUse_select_all'], '</i></label>
 								</fieldset>';
 				}
+				// A simple message?
+				elseif ($config_var['type'] == 'var_message')
+					echo $config_var['var_message'];
 				// Assume it must be a text box.
 				else
 					echo '

@@ -127,6 +127,7 @@ function ManageAttachments()
 	// If they want to delete attachment(s), delete them. (otherwise fall through..)
 	$subActions = array(
 		'attachments' => 'ManageAttachmentSettings',
+		'attachpaths' => 'ManageAttachmentPaths',
 		'avatars' => 'ManageAvatarSettings',
 		'browse' => 'BrowseFiles',
 		'byAge' => 'RemoveAttachmentByAge',
@@ -175,7 +176,7 @@ function ManageAttachmentSettings($return_config = false)
 			array('check', 'attachmentEncryptFilenames'),
 		'',
 			// Directory and size limits.
-			array('text', 'attachmentUploadDir', 40, 'invalid' => !$context['valid_upload_dir']),
+			empty($modSettings['currentAttachmentUploadDir']) ? array('text', 'attachmentUploadDir', 40, 'invalid' => !$context['valid_upload_dir']) : array('var_message', 'attachmentUploadDir_multiple', 'message' => 'attachmentUploadDir_multiple_configure'),
 			array('text', 'attachmentDirSizeLimit', 6, 'postinput' => $txt['kilobyte']),
 			array('text', 'attachmentPostLimit', 6, 'postinput' => $txt['kilobyte']),
 			array('text', 'attachmentSizeLimit', 6, 'postinput' => $txt['kilobyte']),
@@ -311,29 +312,29 @@ function BrowseFiles()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $modSettings, $context, $scripturl;
-						
+
 						$link = \'<a href="\';
-						
+
 						// In case of a custom avatar URL attachments have a fixed directory.
 						if ($rowData[\'attachment_type\'] == 1)
 							$link .= sprintf(\'%1$s/%2$s\', $modSettings[\'custom_avatar_url\'], $rowData[\'filename\']);
-							
+
 						// By default avatars are downloaded almost as attachments.
 						elseif ($context[\'browse_type\'] == \'avatars\')
 							$link .= sprintf(\'%1$s?action=dlattach;type=avatar;id=%2$d\', $scripturl, $rowData[\'id_attach\']);
-							
+
 						// Normal attachments are always linked to a topic ID.
 						else
 							$link .= sprintf(\'%1$s?action=dlattach;topic=%2$d.0;id=%3$d\', $scripturl, $rowData[\'id_topic\'], $rowData[\'id_attach\']);
-						
+
 						$link .= \'"\';
 
 						// Show a popup on click if it\'s a picture and we know its dimensions.
 						if (!empty($rowData[\'width\']) && !empty($rowData[\'height\']))
 							$link .= sprintf(\' onclick="return reqWin(this.href + \\\';image\\\', %1$d, %2$d, true);"\', $rowData[\'width\'] + 20, $rowData[\'height\'] + 20);
-							
+
 						$link .= sprintf(\'>%1$s</a>\', htmlspecialchars($rowData[\'filename\']));
-						
+
 						// Show the dimensions.
 						if (!empty($rowData[\'width\']) && !empty($rowData[\'height\']))
 							$link .= sprintf(\' <span class="smalltext">%1$dx%2$d</span>\', $rowData[\'width\'], $rowData[\'height\']);
@@ -353,7 +354,7 @@ function BrowseFiles()
 				'data' => array(
 					'function' => create_function('$rowData','
 						global $txt;
-					
+
 						return sprintf(\'%1$s%2$s\', round($rowData[\'size\'] / 1024, 2), $txt[\'kilobyte\']);
 					'),
 					'class' => 'windowbg',
@@ -370,11 +371,11 @@ function BrowseFiles()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $scripturl;
-					
+
 						// In case of an attachment, return the poster of the attachment.
 						if (empty($rowData[\'id_member\']))
 							return htmlspecialchars($rowData[\'poster_name\']);
-						
+
 						// Otherwise it must be an avatar, return the link to the owner of it.
 						else
 							return sprintf(\'<a href="%1$s?action=profile;u=%2$d">%3$s</a>\', $scripturl, $rowData[\'id_member\'], $rowData[\'poster_name\']);
@@ -392,14 +393,14 @@ function BrowseFiles()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt, $context, $scripturl;
-					
+
 						// The date the message containing the attachment was posted or the owner of the avatar was active.
 						$date = empty($rowData[\'poster_time\']) ? $txt[\'never\'] : timeformat($rowData[\'poster_time\']);
-						
+
 						// Add a link to the topic in case of an attachment.
 						if ($context[\'browse_type\'] !== \'avatars\')
 							$date .= sprintf(\'<br />%1$s <a href="%2$s?topic=%3$d.0">%4$s</a>\', $txt[\'in\'], $scripturl, $rowData[\'id_topic\'], $rowData[\'subject\']);
-							
+
 						return $date;
 						'),
 					'class' => 'windowbg',
@@ -512,6 +513,11 @@ function MaintainFiles()
 
 	$context['sub_template'] = 'maintenance';
 
+	if (!empty($modSettings['currentAttachmentUploadDir']))
+		$attach_dirs = unserialize($modSettings['attachmentUploadDir']);
+	else
+		$attach_dirs = array($modSettings['attachmentUploadDir']);
+
 	// Get the number of attachments....
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
@@ -529,25 +535,30 @@ function MaintainFiles()
 	list ($context['num_avatars']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	// Find out how big the directory is.
+	// Find out how big the directory is. We have to loop through all our attachment paths in case there's an old temp file in one of them.
 	$attachmentDirSize = 0;
-	$dir = @opendir($modSettings['attachmentUploadDir']) or fatal_lang_error('cant_access_upload_path', 'critical');
-	while ($file = readdir($dir))
+	foreach ($attach_dirs as $id => $attach_dir)
 	{
-		if (substr($file, 0, -1) == '.')
-			continue;
-
-		if (preg_match('~^post_tmp_\d+_\d+$~', $file) != 0)
+		$dir = @opendir($attach_dir) or fatal_lang_error('cant_access_upload_path', 'critical');
+		while ($file = readdir($dir))
 		{
-			// Temp file is more than 5 hours old!
-			if (filemtime($modSettings['attachmentUploadDir'] . '/' . $file) < time() - 18000)
-				@unlink($modSettings['attachmentUploadDir'] . '/' . $file);
-			continue;
-		}
+			if (substr($file, 0, -1) == '.')
+				continue;
 
-		$attachmentDirSize += filesize($modSettings['attachmentUploadDir'] . '/' . $file);
+			if (preg_match('~^post_tmp_\d+_\d+$~', $file) != 0)
+			{
+				// Temp file is more than 5 hours old!
+				if (filemtime($attach_dir . '/' . $file) < time() - 18000)
+					@unlink($attach_dir . '/' . $file);
+				continue;
+			}
+
+			// We're only counting the size of the current attachment directory.
+			if (empty($modSettings['currentAttachmentUploadDir']) || $modSettings['currentAttachmentUploadDir'] == $id)
+				$attachmentDirSize += filesize($attach_dir . '/' . $file);
+		}
+		closedir($dir);
 	}
-	closedir($dir);
 	// Divide it into kilobytes.
 	$attachmentDirSize /= 1024;
 
@@ -555,6 +566,8 @@ function MaintainFiles()
 	if (!empty($modSettings['attachmentDirSizeLimit']))
 		$context['attachment_space'] = max(round($modSettings['attachmentDirSizeLimit'] - $attachmentDirSize, 2), 0);
 	$context['attachment_total_size'] = round($attachmentDirSize, 2);
+
+	$context['attach_multiple_dirs'] = !empty($modSettings['currentAttachmentUploadDir']);
 }
 
 // !!! Not implemented yet.
@@ -574,14 +587,14 @@ function MoveAvatars()
 	}
 
 	$request = $smfFunc['db_query']('', "
-		SELECT id_attach, id_member, filename
+		SELECT id_attach, id_folder, id_member, filename
 		FROM {$db_prefix}attachments
 		WHERE attachment_type = 0
 			AND id_member > 0", __FILE__, __LINE__);
 	$updatedAvatars = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
-		$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+		$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
 
 		if (rename($filename, $modSettings['custom_avatar_dir'] . '/' . $row['filename']))
 			$updatedAvatars[] = $row['id_attach'];
@@ -712,8 +725,8 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 	// Get all the attachment names and ID_MSGs.
 	$request = $smfFunc['db_query']('', "
 		SELECT
-			a.filename, a.attachment_type, a.id_attach, a.id_member" . ($query_type == 'messages' ? ', m.id_msg' : ', a.id_msg') . ",
-			IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb_parent.id_attach AS id_parent
+			a.id_folder, a.filename, a.attachment_type, a.id_attach, a.id_member" . ($query_type == 'messages' ? ', m.id_msg' : ', a.id_msg') . ",
+			thumb.id_folder AS thumb_folder, IFNULL(thumb.id_attach, 0) AS id_thumb, thumb.filename AS thumb_filename, thumb_parent.id_attach AS id_parent
 		FROM {$db_prefix}attachments AS a" .($query_type == 'members' ? "
 			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)" : ($query_type == 'messages' ? "
 			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)" : '')) . "
@@ -727,7 +740,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			@unlink($modSettings['custom_avatar_dir'] . '/' . $row['filename']);
 		else
 		{
-			$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+			$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $id_folder);
 			@unlink($filename);
 
 			// If this was a thumb, the parent attachment should know about it.
@@ -737,7 +750,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			// If this attachments has a thumb, remove it as well.
 			if (!empty($row['id_thumb']) && $autoThumbRemoval)
 			{
-				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['id_thumb']);
+				$thumb_filename = getAttachmentFilename($row['thumb_filename'], $row['id_thumb'], $row['thumb_folder']);
 				@unlink($thumb_filename);
 				$attach[] = $row['id_thumb'];
 			}
@@ -796,14 +809,14 @@ function RepairAttachments()
 			// Nothing?
 			if (empty($_POST['to_fix']))
 				redirectexit('action=admin;area=manageattachments;sa=maintenance');
-	
+
 			$_SESSION['attachments_to_fix'] = array();
 			//!!! No need to do this I think.
 			foreach ($_POST['to_fix'] as $key => $value)
 				$_SESSION['attachments_to_fix'][] = $value;
 		}
 	}
-	
+
 	$to_fix = !empty($_SESSION['attachments_to_fix']) ? $_SESSION['attachments_to_fix'] : array();
 	$context['repair_errors'] = isset($_SESSION['attachments_to_fix2']) ? $_SESSION['attachments_to_fix2'] : array();
 	$fix_errors = isset($_GET['fixErrors']) ? true : false;
@@ -817,6 +830,7 @@ function RepairAttachments()
 		'file_size_of_zero' => 0,
 		'attachment_no_msg' => 0,
 		'avatar_no_member' => 0,
+		'wrong_folder' => 0,
 	);
 
 	// Get stranded thumbnails.
@@ -834,7 +848,7 @@ function RepairAttachments()
 			$to_remove = array();
 
 			$result = $smfFunc['db_query']('', "
-				SELECT thumb.id_attach, thumb.filename
+				SELECT thumb.id_attach, thumb.id_folder, thumb.filename
 				FROM {$db_prefix}attachments AS thumb
 					LEFT JOIN {$db_prefix}attachments AS tparent ON (tparent.id_thumb = thumb.id_attach)
 				WHERE thumb.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
@@ -849,7 +863,7 @@ function RepairAttachments()
 				// If we are repairing remove the file from disk now.
 				if ($fix_errors && in_array('missing_thumbnail_parent', $to_fix))
 				{
-					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
 					@unlink($filename);
 				}
 			}
@@ -863,7 +877,7 @@ function RepairAttachments()
 					DELETE FROM {$db_prefix}attachments
 					WHERE id_attach IN (" . implode(', ', $to_remove) . ")
 						AND attachment_type = 3", __FILE__, __LINE__);
-			
+
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
 
@@ -908,7 +922,7 @@ function RepairAttachments()
 					UPDATE {$db_prefix}attachments
 					SET id_thumb = 0
 					WHERE id_attach IN (" . implode(', ', $to_update) . ")", __FILE__, __LINE__);
-			
+
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
 
@@ -932,7 +946,7 @@ function RepairAttachments()
 			$errors_found = array();
 
 			$result = $smfFunc['db_query']('', "
-				SELECT id_attach, filename, size, attachment_type
+				SELECT id_attach, id_folder, filename, size, attachment_type
 				FROM {$db_prefix}attachments
 				WHERE id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 249", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -941,18 +955,47 @@ function RepairAttachments()
 				if ($row['attachment_type'] == 1)
 					$filename = $modSettings['custom_avatar_dir'] . '/' . $row['filename'];
 				else
-					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
 
 				// File doesn't exist?
 				if (!file_exists($filename))
 				{
-					$to_remove[] = $row['id_attach'];
-					$context['repair_errors']['file_missing_on_disk']++;
-					$errors_found[] = 'file_missing_on_disk';
+					// If we're lucky it might just be in a different folder.
+					if (!empty($modSettings['currentAttachmentUploadDir']))
+					{
+						// Get the attachment name with out the folder.
+						$attachment_name = getAttachmentFilename($row['filename'], $row['id_attach'], null, true);
 
-					// Are we fixing this?
-					if ($fix_errors && in_array('file_missing_on_disk', $to_fix))
+						if (!is_array($modSettings['attachmentUploadDir']))
+							$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+						// Loop through the other folders.
+						foreach ($modSettings['attachmentUploadDir'] as $id => $dir)
+							if (file_exists($dir . '/' . $attachment_name))
+							{
+								$context['repair_errors']['wrong_folder']++;
+								$errors_found[] = 'wrong_folder';
+
+								// Are we going to fix this now?
+								if ($fix_errors && in_array('wrong_folder', $to_fix))
+									$smfFunc['db_query']('', "
+										UPDATE {$db_prefix}attachments
+										SET id_folder = $id
+										WHERE id_attach = $row[id_attach]", __FILE__, __LINE__);
+
+								$wrong_folder = true;
+								break;
+							}
+							else
+								$wrong_folder = false;
+					}
+
+					if (!$wrong_folder)
+					{
 						$to_remove[] = $row['id_attach'];
+						$context['repair_errors']['file_missing_on_disk']++;
+						$errors_found[] = 'file_missing_on_disk';
+					}
 
 				}
 				elseif (filesize($filename) == 0)
@@ -989,6 +1032,8 @@ function RepairAttachments()
 				$to_fix[] = 'file_size_of_zero';
 			if (in_array('file_wrong_size', $errors_found))
 				$to_fix[] = 'file_wrong_size';
+			if (in_array('wrong_folder', $errors_found))
+				$to_fix[] = 'wrong_folder';
 			$smfFunc['db_free_result']($result);
 
 			// Do we need to delete what we have?
@@ -1002,7 +1047,7 @@ function RepairAttachments()
 					SET id_thumb = 0
 					WHERE id_thumb IN (" . implode(', ', $to_remove) . ")", __FILE__, __LINE__);
 			}
-			
+
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
 
@@ -1025,7 +1070,7 @@ function RepairAttachments()
 			$to_remove = array();
 
 			$result = $smfFunc['db_query']('', "
-				SELECT a.id_attach, a.filename, a.attachment_type
+				SELECT a.id_attach, a.id_folder, a.filename, a.attachment_type
 				FROM {$db_prefix}attachments AS a
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = a.id_member)
 				WHERE a.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
@@ -1043,7 +1088,7 @@ function RepairAttachments()
 					if ($row['attachment_type'] == 1)
 						$filename = $modSettings['custom_avatar_dir'] . '/' . $row['filename'];
 					else
-						$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+						$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
 					@unlink($filename);
 				}
 			}
@@ -1058,7 +1103,7 @@ function RepairAttachments()
 					WHERE id_attach IN (" . implode(', ', $to_remove) . ")
 						AND id_member != 0
 						AND id_msg = 0", __FILE__, __LINE__);
-			
+
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
 
@@ -1081,7 +1126,7 @@ function RepairAttachments()
 			$to_remove = array();
 
 			$result = $smfFunc['db_query']('', "
-				SELECT a.id_attach, a.filename
+				SELECT a.id_attach, a.id_folder, a.filename
 				FROM {$db_prefix}attachments AS a
 					LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = a.id_msg)
 				WHERE a.id_attach BETWEEN $_GET[substep] AND $_GET[substep] + 499
@@ -1096,7 +1141,7 @@ function RepairAttachments()
 				// If we are repairing remove the file from disk now.
 				if ($fix_errors && in_array('attachment_no_msg', $to_fix))
 				{
-					$filename = getAttachmentFilename($row['filename'], $row['id_attach']);
+					$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
 					@unlink($filename);
 				}
 			}
@@ -1111,7 +1156,7 @@ function RepairAttachments()
 					WHERE id_attach IN (" . implode(', ', $to_remove) . ")
 						AND id_member = 0
 						AND id_msg != 0", __FILE__, __LINE__);
-			
+
 			pauseAttachmentMaintenance($to_fix, $thumbnails);
 		}
 
@@ -1128,7 +1173,7 @@ function RepairAttachments()
 	// What stage are we at?
 	$context['completed'] = $fix_errors ? true : false;
 	$context['errors_found'] = !empty($to_fix) ? true : false;
-	
+
 }
 
 function pauseAttachmentMaintenance($to_fix, $max_substep = 0)
@@ -1278,4 +1323,248 @@ function ApproveAttachments($attachments)
 		WHERE id_attach IN (" . implode(', ', $attachments) . ")", __FILE__, __LINE__);
 }
 
+function ManageAttachmentPaths()
+{
+	global $modSettings, $scripturl, $context, $txt, $sourcedir, $smfFunc, $db_prefix;
+
+	// Saving?
+	if (isset($_REQUEST['save']))
+	{
+		$new_dirs = array();
+		foreach ($_POST['dirs'] as $id => $path)
+		{
+			$id = (int) $id;
+			if ($id < 1)
+				continue;
+
+			if (empty($path))
+			{
+				// Let's not try to delete a path with files in it.
+				$request = $smfFunc['db_query']('', "
+					SELECT COUNT(id_attach) AS num_attach
+					FROM {$db_prefix}attachments
+					WHERE id_folder = " . (int) $id, __FILE__, __LINE__);
+
+				list ($num_attach) = $smfFunc['db_fetch_row']($request);
+				$smfFunc['db_free_result']($request);
+
+				// It's safe to delete.
+				if ($num_attach == 0)
+					continue;
+			}
+
+
+			$new_dirs[$id] = $smfFunc['db_unescape_string']($path);
+		}
+
+		// We need to make sure the current directory is right.
+		$_POST['current_dir'] = (int) $_POST['current_dir'];
+		if (empty($_POST['current_dir']) || empty($new_dirs[$_POST['current_dir']]))
+			fatal_lang_error('attach_path_current_bad', false);
+
+		// Going back to just one path?
+		if (count($new_dirs) == 1)
+		{
+			// We might need to reset the paths. This loop will just loop through once.
+			foreach ($new_dirs as $id => $dir)
+			{
+				if ($id != 1)
+					$smfFunc['db_query']('', "
+						UPDATE {$db_prefix}attachments
+						SET id_folder = 1
+						WHERE id_folder = $id", __FILE__, __LINE__);
+
+				updateSettings(array(
+					'currentAttachmentUploadDir' => 0,
+					'attachmentUploadDir' => $smfFunc['db_escape_string']($dir),
+				));
+			}
+		}
+		else
+			// Save it to the database.
+			updateSettings(array(
+				'currentAttachmentUploadDir' => $_POST['current_dir'],
+				'attachmentUploadDir' => $smfFunc['db_escape_string'](serialize($new_dirs)),
+			));
+	}
+
+	// Are they here for the first time?
+	if (empty($modSettings['currentAttachmentUploadDir']))
+	{
+		$modSettings['attachmentUploadDir'] = array(
+			1 => $modSettings['attachmentUploadDir']
+		);
+		$modSettings['currentAttachmentUploadDir'] = 1;
+	}
+	// Otherwise just load up their attachment paths.
+	else
+		$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+	$listOptions = array(
+		'id' => 'attach_paths',
+		'base_href' => $scripturl . '?action=admin;area=manageattachments;sa=attachpaths;sesc=' . $context['session_id'],
+		'title' => $txt['attach_paths'],
+		'get_items' => array(
+			'function' => 'list_getAttachDirs',
+		),
+		'columns' => array(
+			'current_dir' => array(
+				'header' => array(
+					'value' => $txt['attach_current_dir'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						return \'<input type="radio" name="current_dir" value="\' . $rowData[\'id\'] . \'" \' . ($rowData[\'current\'] ? \'checked="checked"\' : \'\') . \' class="check" />\';
+					'),
+					'style' => 'text-align: center; width: 15%;',
+				),
+			),
+			'path' => array(
+				'header' => array(
+					'value' => $txt['attach_path'],
+				),
+				'data' => array(
+					'function' => create_function('$rowData', '
+						return \'<input type="text" size="50" name="dirs[\' . $rowData[\'id\'] . \']" value="\' . $rowData[\'path\'] . \'" />\';
+					'),
+					'style' => 'text-align: center; width: 30%;',
+				),
+			),
+			'current_size' => array(
+				'header' => array(
+					'value' => $txt['attach_current_size'],
+				),
+				'data' => array(
+					'db' => 'current_size',
+					'style' => 'text-align: center; width: 15%;',
+				),
+			),
+			'num_files' => array(
+				'header' => array(
+					'value' => $txt['attach_num_files'],
+				),
+				'data' => array(
+					'db' => 'num_files',
+					'style' => 'text-align: center; width: 15%;',
+				),
+			),
+			'status' => array(
+				'header' => array(
+					'value' => $txt['attach_dir_status'],
+				),
+				'data' => array(
+					'db' => 'status',
+					'style' => 'text-align: center; width: 25%;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=admin;area=manageattachments;sa=attachpaths;sesc=' . $context['session_id'],
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="new_path" value="' . $txt['attach_add_path'] . '" />&nbsp;<input type="submit" name="save" value="' . $txt['save'] . '" />',
+				'class' => 'titlebg',
+				'style' => 'text-align: right;',
+			),
+		),
+	);
+
+	require_once($sourcedir . '/Subs-List.php');
+	createList($listOptions);
+
+	// Fix up our template.
+	$context[$context['admin_menu_name']]['current_subsection'] = 'attachments';
+	$context['page_title'] = $txt['attach_path_manage'];
+	$context['sub_template'] = 'attachment_paths';
+}
+
+// Prepare the actual attachment directories to be displayed in the list.
+function list_getAttachDirs()
+{
+	global $smfFunc, $db_prefix, $modSettings, $sc, $txt;
+
+	// The dirs should already have been unserialized but just in case...
+	if (!is_array($modSettings['attachmentUploadDir']))
+		$modSettings['attachmentUploadDir'] = unserialize($modSettings['attachmentUploadDir']);
+
+	$request = $smfFunc['db_query']('', "
+		SELECT id_folder, COUNT(id_attach) AS num_attach
+		FROM {$db_prefix}attachments
+		GROUP BY id_folder", __FILE__, __LINE__);
+
+	$expected_files = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$expected_files[$row['id_folder']] = $row['num_attach'];
+	$smfFunc['db_free_result']($request);
+
+	$attachdirs = array();
+	foreach ($modSettings['attachmentUploadDir'] as $id => $dir)
+	{
+		// If there aren't any attachments in this directory this won't exist.
+		if (!isset($expected_files[$id]))
+			$expected_files[$id] = 0;
+
+		// Check if the directory is doing okay.
+		list ($status, $error, $size) = attachDirStatus($dir, $expected_files[$id]);
+
+		$attachdirs[] = array(
+			'id' => $id,
+			'current' => $id == $modSettings['currentAttachmentUploadDir'],
+			'path' => $dir,
+			'current_size' => $size,
+			'num_files' => $expected_files[$id],
+			'status' => ($error ? '<span style="color: red;">' : '') . sprintf($txt['attach_dir_' . $status], $sc) . ($error ? '</span>' : ''),
+		);
+	}
+
+	// Just stick a new directory on at the bottom.
+	if (isset($_REQUEST['new_path']))
+		$attachdirs[] = array(
+			'id' => max(array_merge(array_keys($expected_files), array_keys($modSettings['attachmentUploadDir']))) + 1,
+			'current' => false,
+			'path' => '',
+			'current_size' => '',
+			'num_files' => '',
+			'status' => '',
+		);
+
+	return $attachdirs;
+}
+
+// Checks the status of an attachment directory and returns an array of the status key, if that status key signifies an error, and the folder size.
+function attachDirStatus($dir, $expected_files)
+{
+	if (!is_dir($dir))
+		return array('does_not_exist', true, '');
+	elseif (!is_writeable($dir))
+		return array('not_writeable', true, '');
+
+	// Everything is okay so far, start to scan through the directory.
+	$dir_size = 0;
+	$num_files = 0;
+	$dir_handle = dir($dir);
+	while ($file = $dir_handle->read())
+	{
+		// Now do we have a real file here?
+		if (substr($file, 0, -1) == '.')
+			continue;
+
+		$dir_size += filesize($dir . '/' . $file);
+		$num_files++;
+	}
+	$dir_handle->close();
+
+	$dir_size = round($dir_size / 1024, 2);
+
+	if ($num_files < $expected_files)
+		return array('files_missing', true, $dir_size);
+	// Empty?
+	elseif ($expected_files == 0)
+		return array('unused', false, $dir_size);
+	// All good!
+	else
+		return array('ok', false, $dir_size);
+}
 ?>

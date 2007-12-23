@@ -94,7 +94,7 @@ if (!defined('SMF'))
 
 	 * A text input box.  For floating point values.
 	ie.	array('float', 'nameInModSettingsAndSQL', 'OptionalInputBoxWidth'),
-			
+
 	 * A large text input box. Used for textual values spanning multiple lines.
 	ie.	array('large_text', 'nameInModSettingsAndSQL', 'OptionalNumberOfRows'),
 
@@ -600,7 +600,7 @@ function DownloadLanguage()
 				$fp = fopen($boarddir . '/' . $file['filename'], 'rb');
 				$header = fread($fp, 768);
 				fclose($fp);
-	
+
 				// Find the version.
 				if (preg_match('~(?://|/\*)\s*Version:\s+(.+?);\s*' . preg_quote($name, '~') . '(?:[\s]{2}|\*/)~i', $header, $match) == 1)
 				{
@@ -776,7 +776,7 @@ function DownloadLanguage()
 					'value' => $txt['languages_download_copy'],
 				),
 				'data' => array(
-					'function' => create_function('$rowData', '					
+					'function' => create_function('$rowData', '
 						return \'<input type="checkbox" name="copy_file[]" value="\' . $rowData[\'generaldest\'] . \'" \' . ($rowData[\'default_copy\'] ? \'checked="checked"\' : \'\') . \' class="check" />\';
 					'),
 					'style' => 'text-align: center; width: 4%;',
@@ -828,7 +828,7 @@ function ModifyLanguageSettings()
 					'value' => $txt['languages_default'],
 				),
 				'data' => array(
-					'function' => create_function('$rowData', '					
+					'function' => create_function('$rowData', '
 						return \'<input type="radio" name="def_language" value="\' . $rowData[\'id\'] . \'" \' . ($rowData[\'default\'] ? \'checked="checked"\' : \'\') . \' onclick="highlightSelected(\\\'list_language_list_\' . $rowData[\'id\'] . \'\\\');" class="check" />\';
 					'),
 					'style' => 'text-align: center; width: 4%;',
@@ -841,7 +841,7 @@ function ModifyLanguageSettings()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $scripturl, $context;
-					
+
 						return sprintf(\'<a href="%1$s?action=admin;area=serversettings;sa=editlang;lid=%2$s;sesc=%3$s">%4$s</a>\', $scripturl, $rowData[\'id\'], $context[\'session_id\'], $rowData[\'name\']);
 					'),
 				),
@@ -896,7 +896,7 @@ function ModifyLanguageSettings()
 						prevDiv = document.getElementById(box);
 						prevClass = prevDiv.className;
 
-						prevDiv.className = "highlight2";				
+						prevDiv.className = "highlight2";
 					}
 					highlightSelected("list_language_list_' . ($language == '' ? 'english' : $language). '");
 		',
@@ -918,7 +918,7 @@ function ModifyLanguageSettings()
 	{
 		// Need fetch_web_data.
 		require_once($sourcedir . '/Subs-Package.php');
-		
+
 		$context['smf_search_term'] = trim($_POST['smf_add']);
 
 		// We're going to use this URL.
@@ -1098,7 +1098,7 @@ function ModifyLanguage()
 			// We're only after the files for this language.
 			if (preg_match('~^([A-Za-z]+)\.' . $context['lang_id'] . '\.php$~', $entry, $matches) == 0)
 				continue;
-	
+
 			//!!! Temp!
 			if ($matches[1] == 'EmailTemplates')
 				continue;
@@ -1426,7 +1426,7 @@ function cleanLangString($string, $to_display = true)
 			// If anything was escaped it ain't any longer!
 			$is_escape = false;
 		}
-		
+
 		// Unhtml then rehtml the whole thing!
 		$new_string = htmlspecialchars(un_htmlspecialchars($new_string));
 	}
@@ -1594,6 +1594,7 @@ function prepareDBSettingContext(&$config_vars)
 				'disabled' => false,
 				'invalid' => !empty($config_var['invalid']),
 				'javascript' => '',
+				'var_message' => !empty($config_var['message']) && isset($txt[$config_var['message']]) ? $txt[$config_var['message']] : '',
 				'preinput' => isset($config_var['preinput']) ? $config_var['preinput'] : '',
 				'postinput' => isset($config_var['postinput']) ? $config_var['postinput'] : '',
 			);

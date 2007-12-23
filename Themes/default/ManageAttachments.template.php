@@ -67,7 +67,7 @@ function template_browse()
 	}
 	// if not, use the old style
 	else
-	{	
+	{
 		echo '
 		<tr class="catbg">
 			<td colspan="5">
@@ -138,9 +138,9 @@ function template_maintenance()
 					</tr><tr>
 						<td>', $txt['attachment_manager_total_avatars'], ':</td><td>', $context['num_avatars'], '</td>
 					</tr><tr>
-						<td>', $txt['attachmentdir_size'], ':</td><td>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;sesc=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></td>
+						<td>', $txt['attachmentdir_size' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</td><td>', $context['attachment_total_size'], ' ', $txt['kilobyte'], ' <a href="', $scripturl, '?action=admin;area=manageattachments;sa=repair;sesc=', $context['session_id'], '">[', $txt['attachment_manager_repair'], ']</a></td>
 					</tr><tr>
-						<td>', $txt['attachment_space'], ':</td><td>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</td>
+						<td>', $txt['attachment_space' . ($context['attach_multiple_dirs'] ? '_current' : '')], ':</td><td>', isset($context['attachment_space']) ? $context['attachment_space'] . ' ' . $txt['kilobyte'] : $txt['attachmentdir_size_not_set'], '</td>
 					</tr>
 				</table>
 			</td>
@@ -246,6 +246,11 @@ function template_attachment_repair()
 	</table>
 	</form>';
 	}
+}
+
+function template_attachment_paths()
+{
+	template_show_list('attach_paths');
 }
 
 ?>
