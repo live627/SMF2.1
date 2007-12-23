@@ -128,6 +128,8 @@ December 2007
  ! As search engines change session all the time remove that feature, and get a performance boost. (ManageSearchEngines.php)
  ! Use the generic list for the tracking user and ip functions. (Profile-View.php, Profile template)
  ! Allow the generic list function to use a custom start variable name in case two tables are on the same page. (Subs-List.php, GenericList template)
+ ! The generic list function now allows you to align the no items label. (Subs-List.php, GenericList template)
+ ! Use the generic list function for the user notification lists. (Profile-Modify.php, Profile template)
 
 
 November 2007

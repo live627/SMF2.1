@@ -203,7 +203,10 @@ function createList($listOptions)
 
 	// Wanna say something nice in case there are no items?
 	if (isset($listOptions['no_items_label']))
+	{
 		$list_context['no_items_label'] = $listOptions['no_items_label'];
+		$list_context['no_items_align'] = isset($listOptions['no_items_align']) ? $listOptions['no_items_align'] : '';
+	}
 
 	// A list can sometimes need a few extra rows above and below.
 	if (isset($listOptions['additional_rows']))

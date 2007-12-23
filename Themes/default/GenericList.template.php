@@ -57,7 +57,7 @@ function template_show_list($list_id = null)
 	if (empty($cur_list['rows']) && !empty($cur_list['no_items_label']))
 		echo '
 			<tr>
-				<td class="windowbg" colspan="', $cur_list['num_columns'], '">(', $cur_list['no_items_label'], ')</td>
+				<td class="windowbg" colspan="', $cur_list['num_columns'], '" align="', !empty($cur_list['no_items_align']) ? $cur_list['no_items_align'] : 'center', '">', $cur_list['no_items_label'], '</td>
 			</tr>';
 	
 	// Show the list rows.

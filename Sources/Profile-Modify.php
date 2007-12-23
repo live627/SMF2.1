@@ -83,6 +83,15 @@ if (!defined('SMF'))
 	void notification(int id_member)
 		// !!!
 
+	int list_getTopicNotificationCount(int memID)
+		// !!!
+
+	array list_getTopicNotifications(int start, int items_per_page, string sort, int memID)
+		// !!!
+
+	array list_getBoardNotifications(int start, int items_per_page, string sort, int memID)
+		// !!!
+
 	void groupMembership(int id_member)
 		// !!!
 
@@ -1488,27 +1497,217 @@ function theme($memID)
 // Display the notifications and settings for changes.
 function notification($memID)
 {
-	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc;
+	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $modSettings, $smfFunc, $sourcedir, $settings;
 
-	// All the boards with notification on..
-	$request = $smfFunc['db_query']('', "
-		SELECT b.id_board, b.name, IFNULL(lb.id_msg, 0) AS board_read, b.id_msg_updated
-		FROM {$db_prefix}log_notify AS ln
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = ln.id_board)
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
-		WHERE ln.id_member = $memID
-			AND $user_info[query_see_board]
-		ORDER BY b.board_order", __FILE__, __LINE__);
-	$context['board_notifications'] = array();
-	while ($row = $smfFunc['db_fetch_assoc']($request))
-		$context['board_notifications'][] = array(
-			'id' => $row['id_board'],
-			'name' => $row['name'],
-			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
-			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
-			'new' => $row['board_read'] < $row['id_msg_updated']
-		);
-	$smfFunc['db_free_result']($request);
+	// Gonna want this for the list.
+	require_once($sourcedir . '/Subs-List.php');
+
+	// Fine, start with the board list.
+	$listOptions = array(
+		'id' => 'board_notification_list',
+		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_boards'],
+		'width' => '85%',
+		'no_items_label' => $txt['notifications_boards_none'] . '<br /><br />' . $txt['notifications_boards_howto'],
+		'no_items_align' => 'left',
+		'base_href' => $scripturl . '?action=profile;sa=notification;u=' . $memID,
+		'default_sort_col' => 'board_name',
+		'get_items' => array(
+			'function' => 'list_getBoardNotifications',
+			'params' => array(
+				$memID,
+			),
+		),
+		'columns' => array(
+			'board_name' => array(
+				'header' => array(
+					'value' => $txt['board'],
+					'style' => 'text-align: left',
+				),
+				'data' => array(
+					'function' => create_function('$board', '
+						global $settings, $txt;
+						
+						$link = $board[\'link\'];
+
+						if ($board[\'new\'])
+							$link .= \'<a href="\' . $board[\'href\'] . \'"><img src="\' . $settings[\'lang_images_url\'] . \'/new.gif" alt="\' . $txt[\'new\'] . \'" /></a>\';
+
+						return $link;
+					'),
+				),
+				'sort' => array(
+					'default' => 'name',
+					'reverse' => 'name DESC',
+				),
+			),
+			'delete' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'style' => 'width: 4%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="notify_boards[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=profile;save',
+			'include_sort' => true,
+			'include_start' => true,
+			'hidden_fields' => array(
+				'u' => $memID,
+				'sa' => $context['menu_item_selected'],
+				'sc' => $context['session_id'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '<input type="submit" name="edit_notify_boards" value="' . $txt['notifications_update'] . '" />',
+				'class' => 'windowbg',
+				'align' => 'right',
+			),
+		),
+	);
+
+	// Create the board notification list.
+	createList($listOptions);
+
+	// Now do the topic notifications.
+	$listOptions = array(
+		'id' => 'topic_notification_list',
+		'title' => '&nbsp;<img src="' . $settings['images_url'] . '/icons/notify_sm.gif" alt="" align="top" />&nbsp;' . $txt['notifications_topics'],
+		'width' => '85%',
+		'items_per_page' => $modSettings['defaultMaxMessages'],
+		'no_items_label' => $txt['notifications_topics_none'] . '<br /><br />' . $txt['notifications_topics_howto'],
+		'no_items_align' => 'left',
+		'base_href' => $scripturl . '?action=profile;sa=notification;u=' . $memID,
+		'default_sort_col' => 'last_post',
+		'get_items' => array(
+			'function' => 'list_getTopicNotifications',
+			'params' => array(
+				$memID,
+			),
+		),
+		'get_count' => array(
+			'function' => 'list_getTopicNotificationCount',
+			'params' => array(
+				$memID,
+			),
+		),
+		'columns' => array(
+			'subject' => array(
+				'header' => array(
+					'value' => $txt['subject'],
+				),
+				'data' => array(
+					'function' => create_function('$topic', '
+						global $settings, $txt;
+						
+						$link = $topic[\'link\'];
+
+						if ($topic[\'new\'])
+							$link .= \'<a href="\' . $topic[\'new_href\'] . \'"><img src="\' . $settings[\'lang_images_url\'] . \'/new.gif" alt="\' . $txt[\'new\'] . \'" /></a>\';
+
+						$link .= \'<br /><span class="smalltext"><i>\' . $txt[\'in\'] . \' \' . $topic[\'board_link\'] . \'</i></span>\';
+
+						return $link;
+					'),
+				),
+				'sort' => array(
+					'default' => 'ms.subject',
+					'reverse' => 'ms.subject DESC',
+				),
+			),
+			'started_by' => array(
+				'header' => array(
+					'value' => $txt['started_by'],
+				),
+				'data' => array(
+					'db' => 'poster_link',
+				),
+				'sort' => array(
+					'default' => 'real_name',
+					'reverse' => 'real_name DESC',
+				),
+			),
+			'last_post' => array(
+				'header' => array(
+					'value' => $txt['last_post'],
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<span class="smalltext">%1$s<br />' . $txt['by'] . ' %2$s</span>',
+						'params' => array(
+							'updated' => false,
+							'poster_updated_link' => false,
+						),
+					),
+				),
+				'sort' => array(
+					'default' => 'ml.id_msg DESC',
+					'reverse' => 'ml.id_msg',
+				),
+			),
+			'delete' => array(
+				'header' => array(
+					'value' => '<input type="checkbox" class="check" onclick="invertAll(this, this.form);" />',
+					'style' => 'width: 4%;',
+				),
+				'data' => array(
+					'sprintf' => array(
+						'format' => '<input type="checkbox" name="notify_topics[]" value="%1$d" class="check" />',
+						'params' => array(
+							'id' => false,
+						),
+					),
+					'style' => 'text-align: center;',
+				),
+			),
+		),
+		'form' => array(
+			'href' => $scripturl . '?action=profile;save',
+			'include_sort' => true,
+			'include_start' => true,
+			'hidden_fields' => array(
+				'u' => $memID,
+				'sa' => $context['menu_item_selected'],
+				'sc' => $context['session_id'],
+			),
+		),
+		'additional_rows' => array(
+			array(
+				'position' => 'bottom_of_list',
+				'value' => '<input type="submit" name="edit_notify_topics" value="' . $txt['notifications_update'] . '" />',
+				'class' => 'windowbg',
+				'align' => 'right',
+			),
+		),
+	);
+
+	// Create the notification list.
+	createList($listOptions);
+
+	// What options are set?
+	$context['member'] = array(
+		'notify_announcements' => $user_profile[$memID]['notify_announcements'],
+		'notify_send_body' => $user_profile[$memID]['notify_send_body'],
+		'notify_types' => $user_profile[$memID]['notify_types'],
+		'notify_regularity' => $user_profile[$memID]['notify_regularity'],
+	);
+
+	loadThemeOptions($memID);
+}
+
+function list_getTopicNotificationCount($memID)
+{
+	global $smfFunc, $db_prefix, $user_info;
 
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
@@ -1518,10 +1717,15 @@ function notification($memID)
 		WHERE ln.id_member = $memID
 			AND $user_info[query_see_board]
 			AND t.approved = 1", __FILE__, __LINE__);
-	list ($context['num_topic_notifications']) = $smfFunc['db_fetch_row']($request);
+	list ($totalNotifications) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
-	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=notification', $_REQUEST['start'], $context['num_topic_notifications'], $modSettings['defaultMaxMessages']);
+	return $totalNotifications;
+}
+
+function list_getTopicNotifications($start, $items_per_page, $sort, $memID)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl, $user_info;
 
 	// All the topics with notification on...
 	$request = $smfFunc['db_query']('', "
@@ -1540,27 +1744,17 @@ function notification($memID)
 			LEFT JOIN {$db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = $user_info[id])
 			LEFT JOIN {$db_prefix}log_mark_read AS lmr ON (lmr.id_board = b.id_board AND lmr.id_member = $user_info[id])
 		WHERE ln.id_member = $memID
-		ORDER BY ms.id_msg DESC
-		LIMIT $_REQUEST[start], $modSettings[defaultMaxMessages]", __FILE__, __LINE__);
-	$context['topic_notifications'] = array();
+		ORDER BY $sort
+		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+	$notification_topics = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		censorText($row['subject']);
 
-		$context['topic_notifications'][] = array(
+		$notification_topics[] = array(
 			'id' => $row['id_topic'],
-			'poster' => array(
-				'id' => $row['id_member'],
-				'name' => $row['real_name'],
-				'href' => empty($row['id_member']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member'],
-				'link' => empty($row['id_member']) ? $row['real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>'
-			),
-			'poster_updated' => array(
-				'id' => $row['id_member_updated'],
-				'name' => $row['last_real_name'],
-				'href' => empty($row['id_member_updated']) ? '' : $scripturl . '?action=profile;u=' . $row['id_member_updated'],
-				'link' => empty($row['id_member_updated']) ? $row['last_real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_updated'] . '">' . $row['last_real_name'] . '</a>'
-			),
+			'poster_link' => empty($row['id_member']) ? $row['real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>',
+			'poster_updated_link' => empty($row['id_member_updated']) ? $row['last_real_name'] : '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member_updated'] . '">' . $row['last_real_name'] . '</a>',
 			'subject' => $row['subject'],
 			'href' => $scripturl . '?topic=' . $row['id_topic'] . '.0',
 			'link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['subject'] . '</a>',
@@ -1569,31 +1763,38 @@ function notification($memID)
 			'updated' => timeformat($row['poster_time']),
 			'new_href' => $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new',
 			'new_link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.msg' . $row['new_from'] . '#new">' . $row['subject'] . '</a>',
-			'board' => array(
-				'id' => $row['id_board'],
-				'name' => $row['name'],
-				'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
-				'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>'
-			)
+			'board_link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
 		);
 	}
 	$smfFunc['db_free_result']($request);
 
-	// What options are set?
-	$context['member'] = array(
-		'notify_announcements' => $user_profile[$memID]['notify_announcements'],
-		'notify_send_body' => $user_profile[$memID]['notify_send_body'],
-		'notify_types' => $user_profile[$memID]['notify_types'],
-		'notify_regularity' => $user_profile[$memID]['notify_regularity'],
-	);
+	return $notification_topics;
+}
 
-	// How many rows can we expect?
-	$context['num_rows'] = array(
-		'topic' => count($context['topic_notifications']) + 3,
-		'board' => count($context['board_notifications']) + 2
-	);
+function list_getBoardNotifications($start, $items_per_page, $sort, $memID)
+{
+	global $smfFunc, $db_prefix, $txt, $scripturl, $user_info;
 
-	loadThemeOptions($memID);
+	$request = $smfFunc['db_query']('', "
+		SELECT b.id_board, b.name, IFNULL(lb.id_msg, 0) AS board_read, b.id_msg_updated
+		FROM {$db_prefix}log_notify AS ln
+			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = ln.id_board)
+			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])
+		WHERE ln.id_member = $memID
+			AND $user_info[query_see_board]
+		ORDER BY $sort", __FILE__, __LINE__);
+	$notification_boards = array();
+	while ($row = $smfFunc['db_fetch_assoc']($request))
+		$notification_boards[] = array(
+			'id' => $row['id_board'],
+			'name' => $row['name'],
+			'href' => $scripturl . '?board=' . $row['id_board'] . '.0',
+			'link' => '<a href="' . $scripturl . '?board=' . $row['id_board'] . '.0">' . $row['name'] . '</a>',
+			'new' => $row['board_read'] < $row['id_msg_updated']
+		);
+	$smfFunc['db_free_result']($request);
+
+	return $notification_boards;
 }
 
 function loadThemeOptions($memID)
