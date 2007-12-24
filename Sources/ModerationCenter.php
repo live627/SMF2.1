@@ -809,7 +809,7 @@ function ViewWatchedUsers()
 		'items_per_page' => $modSettings['defaultMaxMessages'],
 		'no_items_label' => $context['view_posts'] ? $txt['mc_watched_users_no_posts'] : $txt['mc_watched_users_none'],
 		'base_href' => $scripturl . '?action=moderate;area=userwatch;sa=' . ($context['view_posts'] ? 'post' : 'member'),
-		'default_sort_col' => 'member',
+		'default_sort_col' => $context['view_posts'] ? '' : 'member',
 		'get_items' => array(
 			'function' => $context['view_posts'] ? 'list_getWatchedUserPosts' : 'list_getWatchedUsers',
 			'params' => array(
