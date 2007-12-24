@@ -134,6 +134,7 @@ December 2007
  ! Ordered lists weren't necessarily getting converted back to BBC as one might like. (Subs-Editor.php)
  ! Use the generic list function for viewing group requests and watched members. (Groups.php, ModerationCenter.php, ModerationCenter template, ManageMembergroups template)
  ! Add an option for showing search engines on the board index and who's online list. (Subs-MembersOnline.php, Who.php, SSI.php, ManageSearchEngines.php, upgrade and install scripts)
+ ! Upgrade wasn't checking for a 2.0 specific file when trying to find out of date ones. (upgrade.php) [Bug 1150]
 
 
 November 2007

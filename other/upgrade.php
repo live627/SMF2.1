@@ -798,6 +798,11 @@ function loadEssentialData()
 			$modSettings[$row['variable']] = $row['value'];
 		$smfFunc['db_free_result']($request);
 	}
+	else
+	{
+		throw_error('Cannot find ' . $sourcedir . '/Subs-Db-' . $db_type . '.php' . '. Please check you have uploaded all source files and have the correct paths set.');
+		return false;
+	}
 
 	// If they don't have the file, they're going to get a warning anyway so we won't need to clean request vars.
 	if (file_exists($sourcedir . '/QueryString.php'))
@@ -874,6 +879,25 @@ function WelcomeLogin()
 
 	$upcontext['sub_template'] = 'welcome_message';
 
+	// Check for some key files - one template, one language, and a new and an old source file.
+	$check = @file_exists($boarddir . '/Themes/default/index.template.php')
+		&& @file_exists($sourcedir . '/QueryString.php')
+		&& @file_exists($sourcedir . '/Subs-Db-' . $db_type . '.php')
+		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0_' . $db_type . '.sql');
+
+	// Need legacy scripts?
+	if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] < 2.0)
+		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-1.sql');
+	if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] < 1.1)
+		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
+
+	if (!$check && !isset($modSettings['smfVersion']))
+	{
+		// Don't tell them what files exactly because it's a spot check - just like teachers don't tell which problems they are spot checking, that's dumb.
+		throw_error('The upgrader was unable to find some crucial files.<br /><br />Please make sure you uploaded all of the files included in the package, including the Themes, Sources, and other directories.');
+		return false;
+	}
+
 	// Do they meet the install requirements?
 	if (!php_version_check())
 	{
@@ -890,25 +914,6 @@ function WelcomeLogin()
 	if (!empty($databases[$db_type]['alter_support']) && $smfFunc['db_query']('alter_boards', "ALTER TABLE {$db_prefix}boards ORDER BY id_board", false, false) === false)
 	{
 		throw_error('The ' . $databases[$db_type]['name'] . ' user you have set in Settings.php does not have proper privileges.<br /><br />Please ask your host to give this user the ALTER, CREATE, and DROP privileges.');
-		return false;
-	}
-
-	// Check for some key files - one template, one language, and a new and an old source file.
-	$check = @file_exists($boarddir . '/Themes/default/index.template.php')
-		&& @file_exists($sourcedir . '/QueryString.php')
-		&& @file_exists($sourcedir . '/ManageBoards.php')
-		&& @file_exists(dirname(__FILE__) . '/upgrade_2-0_' . $db_type . '.sql');
-
-	// Need legacy scripts?
-	if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] < 2.0)
-		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-1.sql');
-	if (!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] < 1.1)
-		$check &= @file_exists(dirname(__FILE__) . '/upgrade_1-0.sql');
-
-	if (!$check && !isset($modSettings['smfVersion']))
-	{
-		// Don't tell them what files exactly because it's a spot check - just like teachers don't tell which problems they are spot checking, that's dumb.
-		throw_error('The upgrader was unable to find some crucial files.<br /><br />Please make sure you uploaded all of the files included in the package, including the Themes, Sources, and other directories.');
 		return false;
 	}
 
