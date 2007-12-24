@@ -251,7 +251,6 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 	}
 	elseif ($include_boards != null)
 	{
-		$output_method = $include_boards;
 		$include_boards = array();
 	}
 
@@ -260,7 +259,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 		m.id_msg >= " . ($modSettings['maxMsgID'] - 25 * min($num_recent, 5)) . "
 		" . (empty($exclude_boards) ? '' : "
 		AND b.id_board NOT IN (" . implode(', ', $exclude_boards) . ")") . "
-		" . (empty($include_boards) ? '' : "
+		" . ($include_boards === null ? '' : "
 		AND b.id_board IN (" . implode(', ', $include_boards) . ")") . "
 		AND $user_info[query_wanna_see_board]
 		AND m.approved = 1";
