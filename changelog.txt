@@ -140,6 +140,8 @@ December 2007
  ! Stop encoding semi-colons in the refresh header as it doesn't seem to work everywhere. (Subs.php)
  ! Multiple attachment folders was breaking new attachments. (Subs-Post.php)
  ! If a post is still awaiting approval don't bother applying the time limit. (Post.php, Display.php) [Bug 1155]
+ ! Sending personal messages with WAP was broken. (PersonalMessage.php, PersonalMessage template)
+ ! Personal Messages now supports labels on WAP. (Wireless template) [Bug 886]
 
 
 November 2007

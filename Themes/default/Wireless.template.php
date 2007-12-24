@@ -459,7 +459,18 @@ function template_imode_pm()
 						<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['new_message'], '</tr></td>', empty($context['post_error']['messages']) ? '' : '
 						<tr><td><font color="#ff0000">' . implode('<br />', $context['post_error']['messages']) . '</font></tr></td>', '
 						<tr><td>
-							<b>', $txt['pm_to'], ':</b> ', empty($context['to']) ? $txt['wireless_pm_no_recipients'] : $context['to'], empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
+							<b>', $txt['pm_to'], ':</b> ';
+			if (empty($context['recipients']['to']))
+				echo $txt['wireless_pm_no_recipients'];
+			else
+			{
+				$to_names = array();
+				foreach ($context['recipients']['to'] as $to)
+					$to_names[] = $to['name'];
+				echo implode(', ', $to_names);
+			}
+			echo '
+				', empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
 							<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';sesc=', $context['session_id'], ';imode">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
 							<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';imode">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 						</tr></td>
@@ -494,7 +505,7 @@ function template_imode_pm()
 	{
 		echo '
 		<table border="0" cellspacing="0" cellpadding="0">
-			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['wireless_pm_inbox'], '</tr></td>
+			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $context['current_label_id'] == -1 ? $txt['wireless_pm_inbox'] : $txt['pm_current_label'] . ': ' . $context['current_label'], '</td></tr>
 			<tr><td>', empty($context['links']['prev']) ? '' : '<a href="' . $context['links']['first'] . ';imode">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';imode">&lt;</a> ', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', empty($context['links']['next']) ? '' : ' <a href="' . $context['links']['next'] . ';imode">&gt;</a> <a href="' . $context['links']['last'] . ';imode">&gt;&gt;</a> ', '</tr></td>';
 		$count = 0;
 		while ($message = $context['get_pmessage']())
@@ -502,8 +513,21 @@ function template_imode_pm()
 			$count++;
 			echo '
 			<tr><td>
-				', $count < 10 ? '&#' . (59105 + $count) . '; ' : '', '<a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <i>', $txt['wireless_pm_by'], '</i> ', $message['member']['name'], '</a>
-			</tr></td>';
+				', $count < 10 ? '&#' . (59105 + $count) . '; ' : '', '<a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';l=', $context['current_label_id'], ';imode"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <i>', $txt['wireless_pm_by'], '</i> ', $message['member']['name'], '</a>
+			</td></tr>';
+		}
+
+		if ($context['currently_using_labels'])
+		{
+			$labels = array();
+			ksort($context['labels']);
+			foreach ($context['labels'] as $label)
+				$labels[] = '<a href="' . $scripturl . '?action=pm;l=' . $label['id'] . ';imode">' . $label['name'] . '</a>' . (!empty($label['unread_messages']) ? ' (' . $label['unread_messages'] . ')' : '');
+			echo '
+			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $txt['pm_labels'], '</font></td></tr>
+			<tr><td>
+				', implode(', ', $labels), '
+			</td></tr>';
 		}
 		echo '
 			<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</tr></td>
@@ -520,16 +544,16 @@ function template_imode_pm()
 
 		echo '
 		<table border="0" cellspacing="0" cellpadding="0">
-			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $message['subject'], '</tr></td>
+			<tr bgcolor="#6d92aa"><td><font color="#ffffff">', $message['subject'], '</td></tr>
 			<tr bgcolor="#b6dbff"><td>
 				<b>', $txt['wireless_pm_by'], ':</b> ', $message['member']['name'], '<br />
 				<b>', $txt['on'], ':</b> ', $message['time'], '
-			</tr></td>
+			</td></tr>
 			<tr><td>
 				', $message['body'], '
-			</tr></td>
+			</td></tr>
 			<tr bgcolor="#b6dbff"><td>', $txt['wireless_navigation'], '</tr></td>
-			<tr><td>[0] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></tr></td>';
+			<tr><td>[0] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';l=', $context['current_label_id'], ';imode" accesskey="0">', $txt['wireless_navigation_up'], '</a></tr></td>';
 			if ($context['can_send_pm'])
 				echo '
 			<tr><td><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=', $message['member']['id'], ';reply;imode">', $txt['wireless_pm_reply'], '</a></tr></td>
@@ -992,7 +1016,18 @@ function template_wap2_pm()
 					<p class="catbg">', $txt['new_message'], '</p>', empty($context['post_error']['messages']) ? '' : '
 					<p class="windowbg" style="color: red;">' . implode('<br />', $context['post_error']['messages']) . '</p>', '
 					<p class="windowbg">
-						<b>', $txt['pm_to'], ':</b> ', empty($context['to']) ? $txt['wireless_pm_no_recipients'] : $context['to'], empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
+						<b>', $txt['pm_to'], ':</b> ';
+			if (empty($context['recipients']['to']))
+				echo $txt['wireless_pm_no_recipients'];
+			else
+			{
+				$to_names = array();
+				foreach ($context['recipients']['to'] as $to)
+					$to_names[] = $to['name'];
+				echo implode(', ', $to_names);
+			}
+			echo '
+				', empty($_REQUEST['u']) ? '' : '<input type="hidden" name="u" value="' . implode(',', $_REQUEST['u']) . '" />', '<br />
 						<a href="', $scripturl, '?action=findmember', empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u']), ';sesc=', $context['session_id'], ';wap2">', $txt['wireless_pm_search_member'], '</a>', empty($user_info['buddies']) ? '' : '<br />
 						<a href="' . $scripturl . '?action=pm;sa=addbuddy' . (empty($_REQUEST['u']) ? '' : ';u=' . implode(',', $_REQUEST['u'])) . ';wap2">' . $txt['wireless_pm_add_buddy'] . '</a>', '
 					</p>
@@ -1025,7 +1060,7 @@ function template_wap2_pm()
 	elseif (empty($_GET['pmsg']))
 	{
 		echo '
-			<p class="catbg">', $txt['wireless_pm_inbox'], '</p>
+			<p class="catbg">', $context['current_label_id'] == -1 ? $txt['wireless_pm_inbox'] : $txt['pm_current_label'] . ': ' . $context['current_label'], '</p>
 			<p class="windowbg">', empty($context['links']['prev']) ? '' : '<a href="' . $context['links']['first'] . ';wap2">&lt;&lt;</a> <a href="' . $context['links']['prev'] . ';wap2">&lt;</a> ', '(', $context['page_info']['current_page'], '/', $context['page_info']['num_pages'], ')', empty($context['links']['next']) ? '' : ' <a href="' . $context['links']['next'] . ';wap2">&gt;</a> <a href="' . $context['links']['last'] . ';wap2">&gt;&gt;</a> ', '</p>';
 		$count = 0;
 		while ($message = $context['get_pmessage']())
@@ -1033,9 +1068,25 @@ function template_wap2_pm()
 			$count++;
 			echo '
 			<p class="windowbg">
-				[', $count < 10 ? $count : '-', '] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';wap2"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <i>', $txt['wireless_pm_by'], '</i> ', $message['member']['name'], '</a>
+				[', $count < 10 ? $count : '-', '] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';pmsg=', $message['id'], ';l=', $context['current_label_id'], ';wap2"', $count < 10 ? ' accesskey="' . $count . '"' : '', '>', $message['subject'], ' <i>', $txt['wireless_pm_by'], '</i> ', $message['member']['name'], '</a>
 			</p>';
 		}
+
+		if ($context['currently_using_labels'])
+		{
+			$labels = array();
+			ksort($context['labels']);
+			foreach ($context['labels'] as $label)
+				$labels[] = '<a href="' . $scripturl . '?action=pm;l=' . $label['id'] . ';wap2">' . $label['name'] . '</a>' . (!empty($label['unread_messages']) ? ' (' . $label['unread_messages'] . ')' : '');
+			echo '
+			<p class="catbg">
+				', $txt['pm_labels'], '
+			</p>
+			<p class="windowbg">
+				', implode(', ', $labels), '
+			</p>';
+		}
+
 		echo '
 			<p class="titlebg">', $txt['wireless_navigation'], '</p>
 			<p class="windowbg">[0] <a href="', $scripturl, '?wap2" accesskey="0">', $txt['wireless_navigation_up'], '</a></p>', empty($context['links']['next']) ? '' : '
@@ -1057,7 +1108,7 @@ function template_wap2_pm()
 				', $message['body'], '
 			</p>
 			<p class="titlebg">', $txt['wireless_navigation'], '</p>
-			<p class="windowbg">[0] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';wap2" accesskey="0">', $txt['wireless_navigation_up'], '</a></p>';
+			<p class="windowbg">[0] <a href="', $scripturl, '?action=pm;start=', $context['start'], ';l=', $context['current_label_id'], ';wap2" accesskey="0">', $txt['wireless_navigation_up'], '</a></p>';
 			if ($context['can_send_pm'])
 				echo '
 			<p class="windowbg"><a href="', $scripturl, '?action=pm;sa=send;pmsg=', $message['id'], ';u=', $message['member']['id'], ';reply;wap2">', $txt['wireless_pm_reply'], '</a></p>';

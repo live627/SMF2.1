@@ -1494,6 +1494,8 @@ function MessagePost()
 				);
 			$smfFunc['db_free_result']($request);
 		}
+
+		$_REQUEST['u'] = array_unique($_REQUEST['u']);
 	}
 
 	// Set the defaults...
@@ -1857,8 +1859,10 @@ function MessagePost2()
 			WHERE id_member IN (" . implode(',', $_REQUEST['u']) . ")
 			LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$context['recipient_ids']['to'] = $row['id_member'];
+			$context['recipient_ids']['to'][] = $row['id_member'];
 		$smfFunc['db_free_result']($request);
+
+		$_REQUEST['u'] = array_unique($_REQUEST['u']);
 	}
 	$context['recipient_ids']['to'] = array_unique($context['recipient_ids']['to']);
 	$context['recipient_ids']['bcc'] = array_unique($context['recipient_ids']['bcc']);
