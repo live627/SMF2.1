@@ -1034,9 +1034,11 @@ CREATE TABLE IF NOT EXISTS {$db_prefix}group_moderators (
 
 ---# Altering attachment table.
 ALTER TABLE {$db_prefix}attachments
-ADD COLUMN id_folder tinyint(3) NOT NULL default '1',
 ADD COLUMN fileext varchar(8) NOT NULL default '',
 ADD COLUMN mime_type varchar(20) NOT NULL default '';
+
+ALTER TABLE {$db_prefix}attachments
+ADD COLUMN id_folder tinyint(3) NOT NULL default '1';
 ---#
 
 ---# Populate the attachment extension.

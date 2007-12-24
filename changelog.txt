@@ -136,6 +136,9 @@ December 2007
  ! Add an option for showing search engines on the board index and who's online list. (Subs-MembersOnline.php, Who.php, SSI.php, ManageSearchEngines.php, upgrade and install scripts)
  ! Upgrade wasn't checking for a 2.0 specific file when trying to find out of date ones. (upgrade.php) [Bug 1150]
  ! If anything other than null is passed as include_boards in SSI recentTopics use it in the query. (SSI.php) [Bug 1152]
+ * Don't allow Firefox and it's ilk to remember the admin session password - otherwise what is the point!! (Login template)
+ ! Stop encoding semi-colons in the refresh header as it doesn't seem to work everywhere. (Subs.php)
+ ! Multiple attachment folders was breaking new attachments. (Subs-Post.php)
 
 
 November 2007

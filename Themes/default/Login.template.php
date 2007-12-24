@@ -222,7 +222,7 @@ function template_admin_login()
 	echo '
 		<tr class="windowbg">
 			<td align="center" style="padding: 1ex 0;">
-				<b>', $txt['password'], ':</b> <input type="password" name="admin_pass" size="24" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="middle" /></a><br />';
+				<b>', $txt['password'], ':</b> <input type="password" name="admin_pass" size="24" autocomplete="off" /> <a href="', $scripturl, '?action=helpadmin;help=securityDisable_why" onclick="return reqWin(this.href);" class="help"><img src="', $settings['images_url'], '/helptopics.gif" alt="', $txt['help'], '" align="middle" /></a><br />';
 
 	if (!empty($context['incorrect_password']))
 		echo '

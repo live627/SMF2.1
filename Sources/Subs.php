@@ -2534,7 +2534,7 @@ function redirectexit($setLocation = '', $refresh = false)
 
 	// We send a Refresh header only in special cases because Location looks better. (and is quicker...)
 	if ($refresh && !WIRELESS)
-		header('Refresh: 0; URL=' . strtr($setLocation, array(' ' => '%20', ';' => '%3b')));
+		header('Refresh: 0; URL=' . strtr($setLocation, array(' ' => '%20')));
 	else
 		header('Location: ' . str_replace(' ', '%20', $setLocation));
 
