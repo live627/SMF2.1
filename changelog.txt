@@ -139,6 +139,7 @@ December 2007
  * Don't allow Firefox and it's ilk to remember the admin session password - otherwise what is the point!! (Login template)
  ! Stop encoding semi-colons in the refresh header as it doesn't seem to work everywhere. (Subs.php)
  ! Multiple attachment folders was breaking new attachments. (Subs-Post.php)
+ ! If a post is still awaiting approval don't bother applying the time limit. (Post.php, Display.php) [Bug 1155]
 
 
 November 2007
