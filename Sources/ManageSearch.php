@@ -544,11 +544,11 @@ function CreateMessageIndex()
 			while (time() < $stop)
 			{
 				$request = $smfFunc['db_query']('', "
-					SELECT id_word, count(id_word) AS num_words
+					SELECT id_word, COUNT(id_word) AS num_words
 					FROM {$db_prefix}log_search_words
 					WHERE id_word BETWEEN $context[start] AND " . ($context['start'] + $index_properties[$context['index_settings']['bytes_per_word']]['step_size'] - 1) . "
 					GROUP BY id_word
-					HAVING numWords > $max_messages", __FILE__, __LINE__);
+					HAVING COUNT(id_word) > $max_messages", __FILE__, __LINE__);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$stop_words[] = $row['id_word'];
 				$smfFunc['db_free_result']($request);

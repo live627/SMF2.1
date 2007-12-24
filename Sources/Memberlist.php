@@ -462,7 +462,7 @@ function MLSearch()
 				(empty($customJoin) ? '' : implode("
 				", $customJoin)) . "
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
-				AND is_activated = 1", __FILE__, __LINE__);
+				AND mem.is_activated = 1", __FILE__, __LINE__);
 		list ($numResults) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -478,7 +478,7 @@ function MLSearch()
 				(empty($customJoin) ? '' : implode("
 				", $customJoin)) . "
 			WHERE " . implode(" $query OR ", $fields) . " $query$condition
-				AND is_activated = 1
+				AND mem.is_activated = 1
 			LIMIT $_REQUEST[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
 		printMemberListRows($request);
 		$smfFunc['db_free_result']($request);

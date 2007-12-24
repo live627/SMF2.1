@@ -915,8 +915,8 @@ function BanEditTrigger()
 				mem.member_name, mem.real_name
 			FROM {$db_prefix}ban_items AS bi
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = bi.id_member)
-			WHERE id_ban = " . (int) $_REQUEST['bi'] . "
-				AND id_ban_group = " . (int) $_REQUEST['bg'] . "
+			WHERE bi.id_ban = " . (int) $_REQUEST['bi'] . "
+				AND bi.id_ban_group = " . (int) $_REQUEST['bg'] . "
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('ban_not_found', false);

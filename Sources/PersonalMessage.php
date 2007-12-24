@@ -1468,7 +1468,7 @@ function MessagePost()
 					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
 				WHERE pmr.id_pm = $_REQUEST[pmsg]
 					AND pmr.id_member != $user_info[id]
-					AND bcc = 0", __FILE__, __LINE__);
+					AND pmr.bcc = 0", __FILE__, __LINE__);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['recipients']['to'][] = array(
 					'id' => $row['id_member'],
@@ -2310,7 +2310,7 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 	$request = $smfFunc['db_query']('', "
 		SELECT pm.id_pm, pmr.id_pm AS recipient
 		FROM {$db_prefix}personal_messages AS pm
-			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND deleted = 0)
+			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.deleted = 0)
 		WHERE pm.deleted_by_sender = 1
 			" . str_replace('id_pm', 'pm.id_pm', $where) . "
 		HAVING recipient IS null", __FILE__, __LINE__);
@@ -2787,7 +2787,7 @@ function ManageRules()
 			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = $user_info[id])
 		WHERE mg.min_posts = -1
 			AND mg.id_group != 3
-			AND hidden = 0
+			AND mg.hidden = 0
 		ORDER BY mg.group_name", __FILE__, __LINE__);
 	$context['groups'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))

@@ -744,7 +744,7 @@ function list_getSubscribedUserCount($id_sub, $search_string)
 		SELECT COUNT(*) AS total_subs
 		FROM {$db_prefix}log_subscribed AS ls
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ls.id_member)
-		WHERE id_subscribe = $id_sub $search_string
+		WHERE ls.id_subscribe = $id_sub $search_string
 			AND (ls.end_time != 0 OR ls.payments_pending != 0)", __FILE__, __LINE__);
 	list ($memberCount) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -961,11 +961,11 @@ function ModifyUserSubscription()
 	else
 	{
 		$request = $smfFunc['db_query']('', "
-			SELECT id_sublog, id_subscribe, ls.id_member, start_time, end_time, status, payments_pending, pending_details,
+			SELECT ls.id_sublog, ls.id_subscribe, ls.id_member, start_time, end_time, status, payments_pending, pending_details,
 				IFNULL(mem.real_name, '') AS username
 			FROM {$db_prefix}log_subscribed AS ls
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ls.id_member)
-			WHERE id_sublog = $context[log_id]
+			WHERE ls.id_sublog = $context[log_id]
 			LIMIT 1", __FILE__, __LINE__);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error(1);
@@ -1315,9 +1315,9 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 
 	// Get all of the subscriptions for this user - it will be necessary!
 	$request = $smfFunc['db_query']('', "
-		SELECT ls.id_subscribe, ls.old_id_group
-		FROM {$db_prefix}log_subscribed AS ls
-		WHERE ls.id_member = $id_member
+		SELECT id_subscribe, old_id_group
+		FROM {$db_prefix}log_subscribed
+		WHERE id_member = $id_member
 			AND status = 1", __FILE__, __LINE__);
 
 	// What if like, there isn't any?

@@ -494,7 +494,7 @@ function ReportedPosts()
 	$request = $smfFunc['db_query']('', "
 		SELECT COUNT(*)
 		FROM {$db_prefix}log_reported AS lr
-		WHERE closed = $context[view_closed]
+		WHERE lr.closed = $context[view_closed]
 			AND " . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']), __FILE__, __LINE__);
 	list ($context['total_reports']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -549,7 +549,7 @@ function ReportedPosts()
 				IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 			FROM {$db_prefix}log_reported_comments AS lrc
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
-			WHERE id_report IN (" . implode(',', $report_ids) . ")", __FILE__, __LINE__);
+			WHERE lrc.id_report IN (" . implode(',', $report_ids) . ")", __FILE__, __LINE__);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['id_member'] == 0 || !isset($context['reports'][$row['id_report']]['comments'][$row['id_member']]))
@@ -679,7 +679,7 @@ function ModReport()
 			IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lrc.membername) AS reporter
 		FROM {$db_prefix}log_reported_comments AS lrc
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lrc.id_member)
-		WHERE id_report = " . $context['report']['id'], __FILE__, __LINE__);
+		WHERE lrc.id_report = " . $context['report']['id'], __FILE__, __LINE__);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($row['id_member'] == 0 || !isset($context['report']['comments'][$row['id_member']]))
@@ -1018,7 +1018,7 @@ function list_getWatchedUserPostsCount($approve_query)
 			FROM {$db_prefix}messages AS m
 				INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE warning >= $modSettings[warning_watch]
+			WHERE mem.warning >= $modSettings[warning_watch]
 				AND $user_info[query_see_board]
 				$approve_query", __FILE__, __LINE__);
 	list ($totalMemberPosts) = $smfFunc['db_fetch_row']($request);
@@ -1098,7 +1098,7 @@ function ViewWarningLog()
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lc.id_member)
 			LEFT JOIN {$db_prefix}members AS mem2 ON (mem2.id_member = lc.id_recipient)
 		WHERE lc.comment_type = 'warning'
-		ORDER BY log_time DESC
+		ORDER BY lc.log_time DESC
 		LIMIT $context[start], $perPage", __FILE__, __LINE__);
 	$context['warnings'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))

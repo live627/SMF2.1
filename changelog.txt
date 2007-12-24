@@ -143,7 +143,8 @@ December 2007
  ! Sending personal messages with WAP was broken. (PersonalMessage.php, PersonalMessage template)
  ! Personal Messages now supports labels on WAP. (Wireless template) [Bug 886]
  ! Make sure show_spider_online is set before trying to use it. (Subs-MembersOnline.php) [Bug 1161]
-
+ ! Some small fixes in database queries. (several files)
+ 
 
 November 2007
 --------------------------------------------------------------------------------

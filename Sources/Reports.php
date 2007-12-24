@@ -241,7 +241,7 @@ function BoardReport()
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 			LEFT JOIN {$db_prefix}boards AS par ON (par.id_board = b.id_parent)
-			LEFT JOIN {$db_prefix}themes AS th ON (th.id_theme = b.id_theme AND variable = 'name')", __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}themes AS th ON (th.id_theme = b.id_theme AND th.variable = 'name')", __FILE__, __LINE__);
 	$boards = array(0 => array('name' => $txt['global_boards']));
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

@@ -97,7 +97,7 @@ function MoveTopic()
 		FROM {$db_prefix}boards AS b
 			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE $user_info[query_see_board]
-			AND redirect = ''", __FILE__, __LINE__);
+			AND b.redirect = ''", __FILE__, __LINE__);
 	$context['boards'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

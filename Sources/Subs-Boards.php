@@ -293,7 +293,7 @@ function MarkRead()
 				SELECT b.id_board, b.id_parent
 				FROM {$db_prefix}boards AS b
 				WHERE $user_info[query_see_board]
-					AND child_level > 0
+					AND b.child_level > 0
 					AND b.id_board NOT IN (" . implode(', ', $boards) . ")
 				ORDER BY child_level ASC
 				", __FILE__, __LINE__);
@@ -778,16 +778,6 @@ function deleteBoards($boards_to_remove, $moveChildrenTo = null)
 			$smfFunc['db_query']('', "
 				DELETE FROM {$db_prefix}board_permissions
 				WHERE id_profile IN (" . implode(', ', $profiles['delete']) . ")", __FILE__, __LINE__);
-		}
-
-		// And the ones that need fixing!
-		if (!empty($profiles['update']))
-		{
-			foreach ($profiles['update'] as $profile => $board)
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}permission_profiles
-					SET id_parent = $board
-					WHERE id_profile = $profile", __FILE__, __LINE__);
 		}
 	}
 

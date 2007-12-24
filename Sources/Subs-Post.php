@@ -1013,7 +1013,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 			(pm_ignore_list = '*' OR FIND_IN_SET($from[id], pm_ignore_list))") . " AS ignored,
 			FIND_IN_SET($from[id], buddy_list) AS is_buddy, is_activated,
 			additional_groups, id_group, id_post_group
-		FROM {$db_prefix}members AS mem
+		FROM {$db_prefix}members
 		WHERE id_member IN (" . implode(", ", $all_to) . ")
 		ORDER BY lngfile
 		LIMIT " . count($all_to), __FILE__, __LINE__);

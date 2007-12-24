@@ -399,7 +399,7 @@ function SplitSelectTopics()
 			FROM {$db_prefix}messages AS m
 				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.id_topic = $topic
-				AND id_msg IN (" . implode(', ', $_SESSION['split_selection'][$topic]) . ")
+				AND m.id_msg IN (" . implode(', ', $_SESSION['split_selection'][$topic]) . ")
 				AND $approveQuery
 			ORDER BY m.id_msg DESC
 			LIMIT " . $context['selected']['start'] . ", $modSettings[defaultMaxMessages]", __FILE__, __LINE__);

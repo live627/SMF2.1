@@ -53,7 +53,7 @@ function PrintTopic()
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_topic = $topic
-		ORDER BY id_msg
+		ORDER BY m.id_msg
 		LIMIT 1", __FILE__, __LINE__);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board');
@@ -76,8 +76,8 @@ function PrintTopic()
 		SELECT subject, poster_time, body, IFNULL(mem.real_name, poster_name) AS poster_name
 		FROM {$db_prefix}messages AS m
 			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE id_topic = $topic
-		ORDER BY id_msg", __FILE__, __LINE__);
+		WHERE m.id_topic = $topic
+		ORDER BY m.id_msg", __FILE__, __LINE__);
 	$context['posts'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

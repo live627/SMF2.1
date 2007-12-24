@@ -796,9 +796,9 @@ function membersAllowedTo($permission, $board_id = null)
 	$request = $smfFunc['db_query']('', "
 		SELECT mem.id_member
 		FROM {$db_prefix}members AS mem" . ($include_moderators || $exclude_moderators ? "
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_member = mem.id_member AND id_board = $board_id)" : '') . "
-		WHERE (" . ($include_moderators ? "mods.id_member IS NOT NULL OR " : '') . 'id_group IN (' . implode(', ', $member_groups['allowed']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['allowed']) . ", mem.additional_groups))" . (empty($member_groups['denied']) ? '' : "
-			AND NOT (" . ($exclude_moderators ? "mods.id_member IS NOT NULL OR " : '') . 'id_group IN (' . implode(', ', $member_groups['denied']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['denied']) . ", mem.additional_groups))"), __FILE__, __LINE__);
+			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_member = mem.id_member AND mods.id_board = $board_id)" : '') . "
+		WHERE (" . ($include_moderators ? "mods.id_member IS NOT NULL OR " : '') . 'mem.id_group IN (' . implode(', ', $member_groups['allowed']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['allowed']) . ", mem.additional_groups))" . (empty($member_groups['denied']) ? '' : "
+			AND NOT (" . ($exclude_moderators ? "mods.id_member IS NOT NULL OR " : '') . 'mem.id_group IN (' . implode(', ', $member_groups['denied']) . ") OR FIND_IN_SET(" . implode(', mem.additional_groups) OR FIND_IN_SET(', $member_groups['denied']) . ", mem.additional_groups))"), __FILE__, __LINE__);
 	$members = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$members[] = $row['id_member'];

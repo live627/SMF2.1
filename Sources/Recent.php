@@ -406,7 +406,7 @@ function UnreadTopics()
 			SELECT b.id_board, b.id_parent
 			FROM {$db_prefix}boards AS b
 			WHERE $user_info[query_wanna_see_board]
-				AND child_level > 0
+				AND b.child_level > 0
 				AND b.id_board NOT IN (" . implode(', ', $boards) . ")
 			ORDER BY child_level ASC
 			", __FILE__, __LINE__);
