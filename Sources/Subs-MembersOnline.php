@@ -189,7 +189,7 @@ function getMembersOnlineStats($membersOnlineOptions)
 	ksort($memberOnlineStats['online_groups']);
 
 	// Hidden and non-hidden members make up all online members.
-	$memberOnlineStats['num_users_online'] = count($memberOnlineStats['users_online']) + $memberOnlineStats['num_users_hidden'] - ($modSettings['show_spider_online'] > 1 ? count($spider_finds) : 0);
+	$memberOnlineStats['num_users_online'] = count($memberOnlineStats['users_online']) + $memberOnlineStats['num_users_hidden'] - (isset($modSettings['show_spider_online']) && $modSettings['show_spider_online'] > 1 ? count($spider_finds) : 0);
 
 	return $memberOnlineStats;
 }

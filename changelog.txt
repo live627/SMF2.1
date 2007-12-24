@@ -142,6 +142,7 @@ December 2007
  ! If a post is still awaiting approval don't bother applying the time limit. (Post.php, Display.php) [Bug 1155]
  ! Sending personal messages with WAP was broken. (PersonalMessage.php, PersonalMessage template)
  ! Personal Messages now supports labels on WAP. (Wireless template) [Bug 886]
+ ! Make sure show_spider_online is set before trying to use it. (Subs-MembersOnline.php) [Bug 1161]
 
 
 November 2007
