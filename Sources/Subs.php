@@ -1744,7 +1744,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 			{
 				$message = substr($message, 0, $last_pos) . $data . substr($message, $pos + 1);
 
-				// Since we changed it, look again incase we added or removed a tag.  But we don't want to skip any.
+				// Since we changed it, look again in case we added or removed a tag.  But we don't want to skip any.
 				$old_pos = strlen($data) + $last_pos - 1;
 				$pos = strpos($message, '[', $last_pos);
 				$pos = $pos === false ? $old_pos : min($pos, $old_pos);
@@ -2492,7 +2492,7 @@ function redirectexit($setLocation = '', $refresh = false)
 {
 	global $scripturl, $context, $modSettings, $db_show_debug, $db_cache;
 
-	// Incase we have mail to send, better do that - as obExit doesn't always quite make it...
+	// In case we have mail to send, better do that - as obExit doesn't always quite make it...
 	if (!empty($context['flush_mail']))
 		AddMailQueue(true);
 

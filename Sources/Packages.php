@@ -882,7 +882,7 @@ function PackageInstall()
 	if (file_exists($boarddir . '/Packages/temp'))
 		deltree($boarddir . '/Packages/temp');
 
-	// Just incase it's modified any language files let's remove them all.
+	// Just in case it's modified any language files let's remove them all.
 	clean_cache('lang');
 }
 

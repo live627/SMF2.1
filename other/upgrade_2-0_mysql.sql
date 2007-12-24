@@ -2117,7 +2117,17 @@ INSERT IGNORE INTO {$db_prefix}scheduled_tasks (next_time, time_offset, time_reg
 /******************************************************************************/
 
 ---# Adding pruning option...
-INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30');
+INSERT IGNORE INTO {$db_prefix}settings (variable, value) VALUES ('pruningOptions', '30,180,180,180,30,0');
+---#
+
+---# Adding search engine pruning option...
+---{
+if (!empty($modSettings['pruningOptions']) && substr_count($modSettings['pruningOptions'], ',') < 5)
+	upgrade_query("
+		UPDATE {$db_prefix}settings
+		SET value = CONCAT(value, ',0')
+		WHERE variable = 'pruningOptions'");
+---}
 ---#
 
 /******************************************************************************/

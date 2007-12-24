@@ -731,7 +731,7 @@ function scheduled_daily_digest()
 			WHERE daily = 0", __FILE__, __LINE__);
 	}
 
-	// Just incase the member changes their settings mark this as sent.
+	// Just in case the member changes their settings mark this as sent.
 	$members = array_keys($members);
 	$smfFunc['db_query']('', "
 		UPDATE {$db_prefix}log_notify
@@ -934,7 +934,7 @@ function CalculateNextTrigger($tasks = array(), $forceUpdate = false)
 // Simply returns a time stamp of the next instance of these time parameters.
 function next_time($regularity, $unit, $offset)
 {
-	// Just incase!
+	// Just in case!
 	if ($regularity == 0)
 		$regularity = 2;
 

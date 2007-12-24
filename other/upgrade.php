@@ -2345,7 +2345,7 @@ function parse_sql($filename)
 	$upcontext['current_item_name'] = '';
 	$upcontext['current_debug_item_num'] = 0;
 	$upcontext['current_debug_item_name'] = '';
-	// This array keeps a record of what we've done incase java is dead...
+	// This array keeps a record of what we've done in case java is dead...
 	$upcontext['actioned_items'] = array();
 
 	$done_something = false;
@@ -4124,7 +4124,7 @@ function template_clean_mods()
 	<h3>SMF has detected some packages which were installed but not fully removed prior to upgrade. We recommend you remove the following mods and reinstall upon completion of the upgrade.</h3>
 	<form action="', $upcontext['form_url'], '&amp;lang=', $upcontext['language'], '&amp;ssi=1" name="upform"  id="upform" method="post">';
 
-	// Incase it's required.
+	// In case it's required.
 	template_chmod();
 
 	echo '

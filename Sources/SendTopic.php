@@ -248,7 +248,7 @@ function CustomEmail()
 		if (trim($_POST['email_body']) == '' || trim($_POST['email_subject']) == '')
 			fatal_lang_error('email_missing_data');
 
-		// We use a template incase they want to customise!
+		// We use a template in case they want to customise!
 		$replacements = array(
 			'EMAILSUBJECT' => $_POST['email_subject'],
 			'EMAILBODY' => $_POST['email_body'],

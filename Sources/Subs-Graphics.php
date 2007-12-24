@@ -130,7 +130,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			(id_member, attachment_type, filename, fileext, size)
 		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', '$ext', 1)", __FILE__, __LINE__);
 	$attachID = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
-	// Retain this globally incase the script wants it.
+	// Retain this globally in case the script wants it.
 	$modSettings['new_avatar_data'] = array(
 		'id' => $attachID,
 		'filename' => $destName,
@@ -589,7 +589,7 @@ function showCodeImage($code)
 	// Special case to allow the admin center to show samples.
 	if ($user_info['is_admin'] && isset($_GET['type']))
 		$imageType = (int) $_GET['type'];
-	// Just incase PM is on, reg is off.
+	// Just in case PM is on, reg is off.
 	elseif ($imageType == 1)
 		$imageType = 4;
 

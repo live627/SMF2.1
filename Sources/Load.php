@@ -415,14 +415,14 @@ function loadUserSettings()
 				)
 			);
 
-		// Because history has proven that it is possible for groups to go bad - clean up incase.
+		// Because history has proven that it is possible for groups to go bad - clean up in case.
 		foreach ($user_info['groups'] as $k => $v)
 			$user_info['groups'][$k] = (int) $v;
 
 		//this is a logged in user, so definitely not a spider
 		$user_info['possibly_robot'] = false;
 	}
-	// If the user is a guest, initialize all the critial user settings.
+	// If the user is a guest, initialize all the critical user settings.
 	else
 	{
 		// This is what a guest's variables should be.
@@ -433,7 +433,7 @@ function loadUserSettings()
 		if (isset($_COOKIE[$cookiename]))
 			$_COOKIE[$cookiename] = '';
 
-		// Do we perhaps think this is a search robot? Check every five minutes just incase...
+		// Do we perhaps think this is a search robot? Check every five minutes just in case...
 		if ((!empty($modSettings['spider_mode']) || !empty($modSettings['spider_group'])) && (!isset($_SESSION['robot_check']) || $_SESSION['robot_check'] < time() - 300))
 		{
 			require_once($sourcedir . '/ManageSearchEngines.php');

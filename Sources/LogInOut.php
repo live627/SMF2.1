@@ -415,7 +415,7 @@ function DoLogin()
 	$username = $user_settings['member_name'];
 	$user_info['id'] = $user_settings['id_member'];
 
-	// Bam!  Cookie set.  A session too, just incase.
+	// Bam!  Cookie set.  A session too, just in case.
 	setLoginCookie(60 * $modSettings['cookieTime'], $user_settings['id_member'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
 
 	// Reset the login threshold.

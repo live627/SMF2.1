@@ -79,7 +79,7 @@ function db_packages_init()
 		$db_package_log = array();
 	}
 
-	// We setup an array of SMF tables we can't do auto-remove on - incase a mod writer cocks it up!
+	// We setup an array of SMF tables we can't do auto-remove on - in case a mod writer cocks it up!
 	$reservedTables = array('admin_info_files', 'approval_queue', 'attachments', 'ban_groups', 'ban_items',
 		'board_permissions', 'boards', 'calendar', 'calendar_holidays', 'categories', 'collapsed_categories',
 		'custom_fields', 'group_moderators', 'log_actions', 'log_activity', 'log_banned', 'log_boards',

@@ -797,7 +797,7 @@ function RepairAttachments()
 	$_GET['step'] = empty($_GET['step']) ? 0 : (int) $_GET['step'];
 	$_GET['substep'] = empty($_GET['substep']) ? 0 : (int) $_GET['substep'];
 
-	// Don't recall the session just incase.
+	// Don't recall the session just in case.
 	if ($_GET['step'] == 0 && $_GET['substep'] == 0)
 	{
 		unset($_SESSION['attachments_to_fix']);

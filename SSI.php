@@ -695,7 +695,7 @@ function ssi_randomMember($random_type = '', $output_method = 'echo')
 
 	$result = ssi_queryMembers($where_query, 1, 'id_member ASC', $output_method);
 
-	// If we got nothing do the reverse - incase of unactivated members.
+	// If we got nothing do the reverse - in case of unactivated members.
 	if (empty($result))
 	{
 		$where_query = "

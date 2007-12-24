@@ -69,7 +69,7 @@ if (empty($txnType))
 if (empty($ID_MEMBER))
 	generateSubscriptionError($txt['paid_empty_member']);
 
-// Integer these just incase.
+// Integer these just in case.
 $ID_SUB = (int) $ID_SUB;
 $ID_MEMBER = (int) $ID_MEMBER;
 
@@ -229,7 +229,7 @@ elseif ($gatewayClass->isPayment() || $gatewayClass->isSubscription())
 	}
 }
 
-// Incase we have anything specific to do.
+// In case we have anything specific to do.
 $gatewayClass->close();
 
 // Log an error then die.

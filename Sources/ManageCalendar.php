@@ -316,7 +316,7 @@ function ModifyCalendarSettings($return_config = false)
 	{
 		saveDBSettings($config_vars);
 
-		// Update the stats incase.
+		// Update the stats in case.
 		updateSettings(array(
 			'calendar_updated' => time(),
 		));

@@ -153,7 +153,7 @@ function ModerationMain($dont_call = false)
 	$mod_include_data = createMenu($moderation_areas, $menuOptions);
 	unset($moderation_areas);
 
-	// Retain the ID information incase required by a subaction.
+	// Retain the ID information in case required by a subaction.
 	$context['moderation_menu_id'] = $context['max_menu_id'];
 	$context['moderation_menu_name'] = 'menu_data_' . $context['moderation_menu_id'];
 

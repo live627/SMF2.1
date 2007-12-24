@@ -1127,7 +1127,7 @@ function AdminApprove()
 		loadLanguage('ManageMembers');
 	}
 
-	// Although updateStats *may* catch this, best to do it manually just incase (Doesn't always sort out unapprovedMembers).
+	// Although updateStats *may* catch this, best to do it manually just in case (Doesn't always sort out unapprovedMembers).
 	if (in_array($current_filter, array(3, 4)))
 		updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > $member_count ? $modSettings['unapprovedMembers'] - $member_count : 0)));
 

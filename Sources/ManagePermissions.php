@@ -1632,7 +1632,7 @@ function save_inline_permissions($permissions)
 	// Do a full child update.
 	updateChildPermissions(array(), -1);
 
-	// Just incase we cached this.
+	// Just in case we cached this.
 	updateSettings(array('settings_updated' => time()));
 }
 
@@ -1896,7 +1896,7 @@ function ModifyPostModeration()
 {
 	global $context, $txt, $smfFunc, $db_prefix, $modSettings;
 
-	// Just incase.
+	// Just in case.
 	checkSession('get');
 
 	$context['page_title'] = $txt['permissions_post_moderation'];

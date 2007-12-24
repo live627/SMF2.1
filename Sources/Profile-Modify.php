@@ -1222,7 +1222,7 @@ function activateAccount($memID)
 		// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
 		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? '11' : '1', 'validation_code' => '\'\''));
 
-		// If we are doing approval, update the stats for the member just incase.
+		// If we are doing approval, update the stats for the member just in case.
 		if (in_array($user_profile[$memID]['is_activated'], array(3, 4, 13, 14)))
 			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 1 ? $modSettings['unapprovedMembers'] - 1 : 0)));
 
@@ -2546,7 +2546,7 @@ function profileSendActivation()
 
 	require_once($sourcedir . '/Subs-Post.php');
 
-	// Shouldn't happen but just incase.
+	// Shouldn't happen but just in case.
 	if (empty($profile_vars['email_address']))
 		return;
 

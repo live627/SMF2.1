@@ -1322,7 +1322,7 @@ function Post2()
 			isBannedEmail($_POST['email'], 'cannot_post', sprintf($txt['you_are_post_banned'], $txt['guest_title']));
 		}
 
-		// Incase they are making multiple posts this visit, help them along by storing their name.
+		// In case they are making multiple posts this visit, help them along by storing their name.
 		if (empty($post_errors))
 		{
 			$_SESSION['guest_name'] = $_POST['guestname'];

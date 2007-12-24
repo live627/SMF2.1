@@ -63,7 +63,7 @@ function activateAccount($memID)
 		// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
 		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? '11' : '1', 'validation_code' => '\'\''));
 
-		// If we are doing approval, update the stats for the member just incase.
+		// If we are doing approval, update the stats for the member just in case.
 		if (in_array($user_profile[$memID]['is_activated'], array(3, 4, 13, 14)))
 			updateSettings(array('unapprovedMembers' => ($modSettings['unapprovedMembers'] > 1 ? $modSettings['unapprovedMembers'] - 1 : 0)));
 
@@ -167,7 +167,7 @@ function issueWarning($memID)
 			$id_notice = $smfFunc['db_insert_id']("{$db_prefix}log_member_notices", 'id_notice');
 		}
 
-		// Just incase - make sure notice is valid!
+		// Just in case - make sure notice is valid!
 		$id_notice = (int) $id_notice;
 
 		// What have we changed?

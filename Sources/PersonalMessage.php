@@ -1753,7 +1753,7 @@ function MessagePost2()
 		// We need to unhtml it now as it gets done shortly.
 		$_POST['message'] = un_htmlspecialchars($_POST['message']);
 
-		// We need this incase of errors etc.
+		// We need this in case of errors etc.
 		$_REQUEST['message'] = $_POST['message'];
 	}
 

@@ -1200,7 +1200,7 @@ function addSubscription($id_subscribe, $id_member, $renewel = 0, $forceStartTim
 		SELECT m.id_group, m.additional_groups
 		FROM {$db_prefix}members AS m
 		WHERE m.id_member = $id_member", __FILE__, __LINE__);
-	// Just incase the member doesn't exist.
+	// Just in case the member doesn't exist.
 	if ($smfFunc['db_num_rows']($request) == 0)
 		return;
 
@@ -1302,7 +1302,7 @@ function removeSubscription($id_subscribe, $id_member, $delete = false)
 		FROM {$db_prefix}members AS m
 		WHERE m.id_member = $id_member", __FILE__, __LINE__);
 
-	// Just incase of errors.
+	// Just in case of errors.
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_query']('', "
@@ -1416,7 +1416,7 @@ function loadSubscriptions()
 	if (!empty($context['subscriptions']))
 		return;
 
-	// Make sure this is loaded, just incase.
+	// Make sure this is loaded, just in case.
 	loadLanguage('ManagePaid');
 
 	$request = $smfFunc['db_query']('', "

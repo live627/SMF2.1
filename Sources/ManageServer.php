@@ -501,7 +501,7 @@ function DownloadLanguage()
 			$install_files[] = $file;
 		}
 
-		// Call this incase we have work to do.
+		// Call this in case we have work to do.
 		$files_left = packageRequireFTP('', $chmod_files, true);
 
 		// Something not writable?
@@ -1053,7 +1053,7 @@ function ModifyLanguage()
 	$context['lang_id'] = $_GET['lid'];
 	list($theme_id, $file_id) = empty($_REQUEST['tfid']) ? array(1, '') : explode('+', $_REQUEST['tfid']);
 
-	// Clean the ID - just incase.
+	// Clean the ID - just in case.
 	preg_match('~([A-Za-z0-9]+)~', $context['lang_id'], $matches);
 	$context['lang_id'] = $matches[1];
 
@@ -1076,7 +1076,7 @@ function ModifyLanguage()
 
 	// This will be where we look
 	$lang_dirs = array();
-	// Check we have themes with a path and a name - just incase - and add the path.
+	// Check we have themes with a path and a name - just in case - and add the path.
 	foreach ($themes as $id => $data)
 	{
 		if (count($data) != 2)

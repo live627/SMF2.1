@@ -185,7 +185,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 			$members[$key] = (int) $value;
 	}
 
-	// Just incase.
+	// Just in case.
 	if (empty($members))
 		return false;
 	elseif ($groups === null)

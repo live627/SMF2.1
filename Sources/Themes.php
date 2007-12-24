@@ -692,7 +692,7 @@ function SetThemeSettings()
 	loadTemplate('Settings');
 	loadSubTemplate('settings');
 
-	// Also load the actual themes language file - incase of special settings.
+	// Also load the actual themes language file - in case of special settings.
 	loadLanguage('Settings');
 
 	// Submitting!

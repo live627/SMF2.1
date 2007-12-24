@@ -192,7 +192,7 @@ function createMenu($menuData, $menuOptions = array())
 					// This will be the data we return.
 					$include_data = $area;
 				}
-				// Make sure we have something incase it's an invalid area.
+				// Make sure we have something in case it's an invalid area.
 				elseif (empty($found_section) && empty($include_data))
 				{
 					$menu_context['current_section'] = $section_id;

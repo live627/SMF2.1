@@ -199,7 +199,7 @@ function BrowseMailQueue()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=admin;area=mailqueue;sa=browse', $_REQUEST['start'], $mailQueueSize, 20);
 	$context['start'] = $_REQUEST['start'];
 
-	// Even if it's disabled we should still show the mail queue, incase there's stuff left!
+	// Even if it's disabled we should still show the mail queue, in case there's stuff left!
 	$request = $smfFunc['db_query']('', "
 		SELECT id_mail, time_sent, recipient, priority, subject
 		FROM {$db_prefix}mail_queue
