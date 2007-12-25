@@ -2153,7 +2153,7 @@ function phpcodefix($string)
 	global $smfFunc;
 
 	// First remove the slashes from the single quotes.
-	$string = strtr($smfFunc['db_unescape_string']($string), array('\\\'' => '\''));
+	$string = strtr(stripslashes($string), array('\\\'' => '\''));
 
 	// Now add on an end echo and begin echo ;).
 	$string = '\';

@@ -785,7 +785,7 @@ function ModifySignatureSettings($return_config = false)
 
 				$sig = strtr($sig, array("\n" => '<br />'));
 				if ($sig != $row['signature'])
-					$changes[$row['id_member']] = $smfFunc['db_escape_string']($sig);
+					$changes[$row['id_member']] = $sig;
 			}
 			if ($smfFunc['db_num_rows']($request) == 0)
 				$done = true;
@@ -797,11 +797,11 @@ function ModifySignatureSettings($return_config = false)
 				foreach ($changes as $id => $sig)
 					$smfFunc['db_query']('', '
 						UPDATE {db_prefix}members
-						SET signature = {string:inject_string_1}
-						WHERE id_member = {int:inject_int_1}',
+						SET signature = {string:signature}
+						WHERE id_member = {int:id_member}',
 						array(
-							'inject_int_1' => $id,
-							'inject_string_1' => $sig,
+							'id_member' => $id,
+							'signature' => $sig,
 						)
 					);
 			}
@@ -1517,7 +1517,7 @@ function EditCustomProfiles()
 		$smfFunc['db_free_result']($request);
 
 		$fields = implode('|', $fields);
-		updateSettings(array('displayFields' => strtr($fields, array('\'' => '\\\''))));
+		updateSettings(array('displayFields' => $fields));
 		redirectexit('action=admin;area=featuresettings;sa=profile');
 	}
 }

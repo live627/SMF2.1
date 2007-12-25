@@ -145,6 +145,9 @@ December 2007
  ! Make sure show_spider_online is set before trying to use it. (Subs-MembersOnline.php) [Bug 1161]
  ! Some small fixes in database queries. (several files)
  ! Redesigned the database query system to allow multiple data types to be injected safely in the query. (several files)
+ ! File based caching could die if the caching variable contained a slash and quote. (Load.php)
+ ! updateSettings now requires all based variables to not be escaped. (Subs.php)
+ ! $_POST and $_COOKIE are no longer escaped by cleanRequest. (QueryString.php)
  
 
 November 2007

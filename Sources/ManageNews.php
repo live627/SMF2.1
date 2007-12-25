@@ -142,7 +142,7 @@ function EditNews()
 				unset($temp_news[$i]);
 
 		// Update the database.
-		updateSettings(array('news' => $smfFunc['db_escape_string'](implode("\n", $temp_news))));
+		updateSettings(array('news' => implode("\n", $temp_news)));
 
 		logAction('news');
 	}

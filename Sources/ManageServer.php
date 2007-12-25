@@ -1451,9 +1451,6 @@ function cleanLangString($string, $to_display = true)
 	}
 	else
 	{
-		// Would have been escaped - sadly!
-		$string = $smfFunc['db_unescape_string']($string);
-
 		// Keep track of what we're doing...
 		$in_string = 0;
 		// This is for deciding whether to HTML a quote.

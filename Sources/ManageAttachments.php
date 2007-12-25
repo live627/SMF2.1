@@ -1549,7 +1549,7 @@ function ManageAttachmentPaths()
 
 				updateSettings(array(
 					'currentAttachmentUploadDir' => 0,
-					'attachmentUploadDir' => $smfFunc['db_escape_string']($dir),
+					'attachmentUploadDir' => $dir,
 				));
 			}
 		}
@@ -1557,7 +1557,7 @@ function ManageAttachmentPaths()
 			// Save it to the database.
 			updateSettings(array(
 				'currentAttachmentUploadDir' => $_POST['current_dir'],
-				'attachmentUploadDir' => $smfFunc['db_escape_string'](serialize($new_dirs)),
+				'attachmentUploadDir' => serialize($new_dirs),
 			));
 	}
 

@@ -206,9 +206,9 @@ function EditSmileySets()
 					unset($set_paths[$id], $set_names[$id]);
 
 			updateSettings(array(
-				'smiley_sets_known' => $smfFunc['db_escape_string'](implode(',', $set_paths)),
-				'smiley_sets_names' => $smfFunc['db_escape_string'](implode("\n", $set_names)),
-				'smiley_sets_default' => $smfFunc['db_escape_string'](in_array($modSettings['smiley_sets_default'], $set_paths) ? $modSettings['smiley_sets_default'] : $set_paths[0]),
+				'smiley_sets_known' => implode(',', $set_paths),
+				'smiley_sets_names' => implode("\n", $set_names),
+				'smiley_sets_default' => in_array($modSettings['smiley_sets_default'], $set_paths) ? $modSettings['smiley_sets_default'] : $set_paths[0],
 			));
 
 			cache_put_data('parsing_smileys', null, 480);
@@ -230,9 +230,9 @@ function EditSmileySets()
 					fatal_lang_error('smiley_set_already_exists');
 
 				updateSettings(array(
-					'smiley_sets_known' => $smfFunc['db_escape_string']($modSettings['smiley_sets_known']) . ',' . $_POST['smiley_sets_path'],
-					'smiley_sets_names' => $smfFunc['db_escape_string']($modSettings['smiley_sets_names']) . "\n" . $_POST['smiley_sets_name'],
-					'smiley_sets_default' => empty($_POST['smiley_sets_default']) ? $modSettings['smiley_sets_default'] : $smfFunc['db_escape_string']($_POST['smiley_sets_path']),
+					'smiley_sets_known' => $modSettings['smiley_sets_known'] . ',' . $_POST['smiley_sets_path'],
+					'smiley_sets_names' => $modSettings['smiley_sets_names'] . "\n" . $_POST['smiley_sets_name'],
+					'smiley_sets_default' => empty($_POST['smiley_sets_default']) ? $modSettings['smiley_sets_default'] : $_POST['smiley_sets_path'],
 				));
 			}
 			// Modify an existing smiley set.
@@ -246,12 +246,12 @@ function EditSmileySets()
 				if (in_array($_POST['smiley_sets_path'], $set_paths) && $_POST['smiley_sets_path'] != $set_paths[$_POST['set']])
 					fatal_lang_error('smiley_set_path_already_used');
 
-				$set_paths[$_POST['set']] = $smfFunc['db_unescape_string']($_POST['smiley_sets_path']);
-				$set_names[$_POST['set']] = $smfFunc['db_unescape_string']($_POST['smiley_sets_name']);
+				$set_paths[$_POST['set']] = $_POST['smiley_sets_path'];
+				$set_names[$_POST['set']] = ($_POST['smiley_sets_name'];
 				updateSettings(array(
-					'smiley_sets_known' => $smfFunc['db_escape_string'](implode(',', $set_paths)),
-					'smiley_sets_names' => $smfFunc['db_escape_string'](implode("\n", $set_names)),
-					'smiley_sets_default' => empty($_POST['smiley_sets_default']) ? $smfFunc['db_escape_string']($modSettings['smiley_sets_default']) : $_POST['smiley_sets_path']
+					'smiley_sets_known' => implode(',', $set_paths),
+					'smiley_sets_names' => implode("\n", $set_names),
+					'smiley_sets_default' => empty($_POST['smiley_sets_default']) ? $modSettings['smiley_sets_default'] : $_POST['smiley_sets_path']
 				));
 			}
 
@@ -1361,8 +1361,8 @@ function InstallSmileySet()
 		redirectexit('action=admin;area=smileys');
 
 	updateSettings(array(
-		'smiley_sets_known' => $smfFunc['db_escape_string']($modSettings['smiley_sets_known'] . ',' . $name),
-		'smiley_sets_names' => $smfFunc['db_escape_string']($modSettings['smiley_sets_names'] . "\n" . strtok(basename(isset($_FILES['set_gz']) ? $_FILES['set_gz']['name'] : $_REQUEST['set_gz']), '.'))
+		'smiley_sets_known' => $modSettings['smiley_sets_known'] . ',' . $name,
+		'smiley_sets_names' => $modSettings['smiley_sets_names'] . "\n" . strtok(basename(isset($_FILES['set_gz']) ? $_FILES['set_gz']['name'] : $_REQUEST['set_gz']), '.'),
 	));
 
 	cache_put_data('parsing_smileys', null, 480);

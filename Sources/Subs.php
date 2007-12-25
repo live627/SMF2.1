@@ -293,10 +293,10 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$result = $smfFunc['db_query']('', '
 				SELECT real_name
 				FROM {db_prefix}members
-				WHERE id_member = {int:inject_int_1}
+				WHERE id_member = {int:id_member}
 				LIMIT 1',
 				array(
-					'inject_int_1' => (int) $changes['latestMember'],
+					'id_member' => (int) $changes['latestMember'],
 				)
 			);
 			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
@@ -553,7 +553,6 @@ function updateMemberData($members, $data)
 }
 
 // Updates the settings table as well as $modSettings... only does one at a time if $update is true.
-// All input variables and values are assumed to have escaped apostrophes(')!
 function updateSettings($changeArray, $update = false)
 {
 	global $db_prefix, $modSettings, $smfFunc;
@@ -568,14 +567,14 @@ function updateSettings($changeArray, $update = false)
 		{
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}settings
-				SET value = {string:inject_string_1}
-				WHERE variable = {string:inject_string_2}',
+				SET value = {raw:value}
+				WHERE variable = {string:variable}',
 				array(
-					'inject_string_1' => $value === true ? 'value + 1' : ($value === false ? 'value - 1' : '\'' . $value . '\''),
-					'inject_string_2' => $variable,
+					'value' => $value === true ? 'value + 1' : ($value === false ? 'value - 1' : '\'' . $value . '\''),
+					'variable' => $variable,
 				)
 			);
-			$modSettings[$variable] = $value === true ? $modSettings[$variable] + 1 : ($value === false ? $modSettings[$variable] - 1 : $smfFunc['db_unescape_string']($value));
+			$modSettings[$variable] = $value === true ? $modSettings[$variable] + 1 : ($value === false ? $modSettings[$variable] - 1 : $value);
 		}
 
 		// Clean out the cache and make sure the cobwebs are gone too.
@@ -588,7 +587,7 @@ function updateSettings($changeArray, $update = false)
 	foreach ($changeArray as $variable => $value)
 	{
 		// Don't bother if it's already like that ;).
-		if (isset($modSettings[$variable]) && $modSettings[$variable] == $smfFunc['db_unescape_string']($value))
+		if (isset($modSettings[$variable]) && $modSettings[$variable] == $value)
 			continue;
 		// If the variable isn't set, but would only be set to nothing'ness, then don't bother setting it.
 		elseif (!isset($modSettings[$variable]) && empty($value))
@@ -596,7 +595,7 @@ function updateSettings($changeArray, $update = false)
 
 		$replaceArray[] = array($variable, $value);
 
-		$modSettings[$variable] = $smfFunc['db_unescape_string']($value);
+		$modSettings[$variable] = $value;
 	}
 
 	if (empty($replaceArray))

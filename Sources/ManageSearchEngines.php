@@ -981,7 +981,7 @@ function recacheSpiderNames()
 		$spiders[$row['id_spider']] = $row['spider_name'];
 	$smfFunc['db_free_result']($request);
 
-	updateSettings(array('spider_name_cache' => $smfFunc['db_escape_string'](serialize($spiders))));
+	updateSettings(array('spider_name_cache' => serialize($spiders)));
 }
 
 ?>

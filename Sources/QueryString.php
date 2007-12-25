@@ -198,7 +198,6 @@ function cleanRequest()
 	{
 		// E(G)PCS: ENV, (GET was already done), POST, COOKIE, SERVER.
 		$_ENV = escapestring__recursive($_ENV);
-		$_POST = escapestring__recursive($_POST);
 
 		// FILES work like this: k -> name -> array.  So be careful.
 		foreach ($_FILES as $k => $dummy)
