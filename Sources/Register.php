@@ -383,11 +383,16 @@ function Register2()
 	$regOptions['theme_vars'] = isset($_POST['options']) && is_array($_POST['options']) ? $_POST['options'] : array();
 
 	// Check whether we have fields that simply MUST be displayed?
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT col_name, field_name, field_type, field_length, mask, show_reg
-		FROM {$db_prefix}custom_fields
-		WHERE show_reg != 0
-			AND active = 1", __FILE__, __LINE__);
+		FROM {db_prefix}custom_fields
+		WHERE show_reg != {int:inject_int_1}
+			AND active = {int:inject_int_2}',
+		array(
+			'inject_int_1' => 0,
+			'inject_int_2' => 1,
+		)
+	);
 	$custom_field_errors = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -491,12 +496,17 @@ function Activate()
 	}
 
 	// Get the code from the database...
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, validation_code, member_name, real_name, email_address, is_activated, passwd
-		FROM {$db_prefix}members" . (empty($_REQUEST['u']) ? "
-		WHERE member_name = '$_POST[user]' OR email_address = '$_POST[user]'" : "
-		WHERE id_member = " . (int) $_REQUEST['u']) . "
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members' . (empty($_REQUEST['u']) ? '
+		WHERE member_name = {string:inject_string_1} OR email_address = {string:inject_string_1}' : '
+		WHERE id_member = {int:inject_int_1}') . '
+		LIMIT 1',
+		array(
+			'inject_int_1' => (int) $_REQUEST['u'],
+			'inject_string_1' => $_POST['user'],
+		)
+	);
 
 	// Does this user exist at all?
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -525,17 +535,21 @@ function Activate()
 		isBannedEmail($_POST['new_email'], 'cannot_register', $txt['ban_register_prohibited']);
 
 		// Ummm... don't even dare try to take someone else's email!!
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member
-			FROM {$db_prefix}members
-			WHERE email_address = '$_POST[new_email]'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE email_address = {string:inject_string_1}
+			LIMIT 1',
+			array(
+				'inject_string_1' => $_POST['new_email'],
+			)
+		);
 		// !!! Separate the sprintf?
 		if ($smfFunc['db_num_rows']($request) != 0)
 			fatal_lang_error('email_in_use', false, array(htmlspecialchars($_POST['new_email'])));
 		$smfFunc['db_free_result']($request);
 
-		updateMemberData($row['id_member'], array('email_address' => "'$_POST[new_email]'"));
+		updateMemberData($row['id_member'], array('email_address' => '\'' . $_POST['new_email'] . '\''));
 		$row['email_address'] = $smfFunc['db_unescape_string']($_POST['new_email']);
 
 		$email_change = true;
@@ -623,11 +637,16 @@ function CoppaForm()
 		fatal_lang_error('no_access');
 
 	// Get the user details...
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT member_name
-		FROM {$db_prefix}members
-		WHERE id_member = " . (int) $_GET['member'] . "
-			AND is_activated = 5", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE id_member = {int:inject_int_1}
+			AND is_activated = {int:inject_int_2}',
+		array(
+			'inject_int_1' => (int) $_GET['member'],
+			'inject_int_2' => 5,
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_access');
 	list ($username) = $smfFunc['db_fetch_row']($request);
@@ -655,7 +674,7 @@ function CoppaForm()
 			// The data.
 			$ul = '                ';
 			$crlf = "\r\n";
-			$data = $context['forum_contacts'] . "$crlf" . $txt['coppa_form_address'] . ":$crlf" . $txt['coppa_form_date'] . ":$crlf$crlf$crlf" . $txt['coppa_form_body'];
+			$data = $context['forum_contacts'] . $crlf . $txt['coppa_form_address'] . ':' . $crlf . $txt['coppa_form_date'] . ':' . $crlf . $crlf . $crlf . $txt['coppa_form_body'];
 			$data = str_replace(array('{PARENT_NAME}', '{CHILD_NAME}', '{USER_NAME}', '<br>', '<br />'), array($ul, $ul, $username, $crlf, $crlf), $data);
 
 			// Send the headers.

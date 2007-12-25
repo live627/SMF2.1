@@ -328,15 +328,15 @@ function iCalDownload()
 
 	// This is what we will be sending later.
 	$filecontents = '';
-	$filecontents .= "BEGIN:VCALENDAR\n";
-	$filecontents .= "VERSION:2.0\n";
-	$filecontents .= "PRODID:-//SimpleMachines//SMF " . (empty($forum_version) ? 1.0 : strtr($forum_version, array('SMF ' => ''))) . "//EN\n";
-	$filecontents .= "BEGIN:VEVENT\n";
-	$filecontents .= "DTSTART:$date\n";
-	$filecontents .= "DTEND:$date\n";
-	$filecontents .= "SUMMARY:" . implode('', $title);
-	$filecontents .= "END:VEVENT\n";
-	$filecontents .= "END:VCALENDAR";
+	$filecontents .= 'BEGIN:VCALENDAR' . "\n";
+	$filecontents .= 'VERSION:2.0' . "\n";
+	$filecontents .= 'PRODID:-//SimpleMachines//SMF ' . (empty($forum_version) ? 1.0 : strtr($forum_version, array('SMF ' => ''))) . '//EN' . "\n";
+	$filecontents .= 'BEGIN:VEVENT' . "\n";
+	$filecontents .= 'DTSTART:' . $date . "\n";
+	$filecontents .= 'DTEND:' . $date . "\n";
+	$filecontents .= 'SUMMARY:' . implode('', $title);
+	$filecontents .= 'END:VEVENT' . "\n";
+	$filecontents .= 'END:VCALENDAR';
 
 	// Send some standard headers.
 	ob_end_clean();

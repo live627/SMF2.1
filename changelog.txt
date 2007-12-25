@@ -144,6 +144,7 @@ December 2007
  ! Personal Messages now supports labels on WAP. (Wireless template) [Bug 886]
  ! Make sure show_spider_online is set before trying to use it. (Subs-MembersOnline.php) [Bug 1161]
  ! Some small fixes in database queries. (several files)
+ ! Redesigned the database query system to allow multiple data types to be injected safely in the query. (several files)
  
 
 November 2007

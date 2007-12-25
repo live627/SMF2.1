@@ -36,23 +36,29 @@ function getLastPosts($latestPostOptions)
 
 	// Find all the posts.  Newer ones will have higher IDs.  (assuming the last 20 * number are accessable...)
 	// !!!SLOW This query is now slow, NEEDS to be fixed.  Maybe break into two?
-	$request = $smfFunc['db_query']('get_last_posts', "
+	$request = $smfFunc['db_query']('get_last_posts', '
 		SELECT
 			m.poster_time, m.subject, m.id_topic, m.id_member, m.id_msg,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, t.id_board, b.name AS board_name,
 			SUBSTRING(m.body, 1, 385) AS body, m.smileys_enabled
-		FROM {$db_prefix}messages AS m
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg >= " . max(0, $modSettings['maxMsgID'] - 20 * $latestPostOptions['number_posts']) .
-			(!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . "
-			AND $user_info[query_wanna_see_board]
-			AND t.approved = 1
-			AND m.approved = 1
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_msg >= {int:inject_int_1}' .
+			(!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:inject_int_2}' : '') . '
+			AND ' . $user_info['query_wanna_see_board'] . '
+			AND t.approved = {int:inject_int_3}
+			AND m.approved = {int:inject_int_3}
 		ORDER BY m.id_msg DESC
-		LIMIT $latestPostOptions[number_posts]", __FILE__, __LINE__);
+		LIMIT ' . $latestPostOptions['number_posts'],
+		array(
+			'inject_int_1' => max(0, $modSettings['maxMsgID'] - 20 * $latestPostOptions['number_posts']),
+			'inject_int_2' => $modSettings['recycle_board'],
+			'inject_int_3' => 1,
+		)
+	);
 	$posts = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

@@ -380,7 +380,7 @@ function show_db_error($loadavg = false)
 
 			// Language files aren't loaded yet :(.
 			$db_error = @$smfFunc['db_error']($db_connection);
-			@mail($webmaster_email, $mbname . ': SMF Database Error!', 'There has been a problem with the database!' . ($db_error == '' ? '' : "\n" . $smfFunc['db_title'] . " reported:\n" . $db_error) . "\n\nThis is a notice email to let you know that SMF could not connect to the database, contact your host if this continues.");
+			@mail($webmaster_email, $mbname . ': SMF Database Error!', 'There has been a problem with the database!' . ($db_error == '' ? '' : "\n" . $smfFunc['db_title'] . ' reported:' . "\n" . $db_error) . "\n\n" . 'This is a notice email to let you know that SMF could not connect to the database, contact your host if this continues.');
 		}
 	}
 
@@ -457,8 +457,8 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	$email_condition = allowedTo('moderate_forum') ? '' : 'hide_email = 0 AND ';
 
 	if ($use_wildcards || $maybe_email)
-		$email_condition = "
-			OR (" . $email_condition . "email_address $comparison '" . implode("') OR ($email_condition email_address $comparison '", $names) . "')";
+		$email_condition = '
+			OR (' . $email_condition . 'email_address ' . $comparison . ' \'' . implode( '\') OR (' . $email_condition . ' email_address ' . $comparison . ' \'', $names) . '\')';
 	else
 		$email_condition = '';
 
@@ -467,14 +467,18 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	$real_name = $smfFunc['db_case_sensitive'] ? 'LOWER(real_name)' : 'real_name';
 
 	// Search by username, display name, and email address.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, hide_email
-		FROM {$db_prefix}members
-		WHERE ($member_name $comparison '" . implode("' OR $member_name $comparison '", $names) . "'
-			OR $real_name $comparison '" . implode("' OR $real_name $comparison '", $names) . "'$email_condition)
-			" . ($buddies_only ? 'AND id_member IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
-			AND is_activated IN (1, 11)" . ($max == null ? '' : "
-		LIMIT " . (int) $max), __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE (' . $member_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $member_name . ' ' . $comparison . ' \'', $names) . '\'
+			OR ' . $real_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $real_name . ' ' . $comparison . ' \'', $names) . '\'' . $email_condition . ')
+			' . ($buddies_only ? 'AND id_member IN ({array_int:inject_array_int_1})' : '') . '
+			AND is_activated IN (1, 11)' . ($max == null ? '' : '
+		LIMIT ' . (int) $max),
+		array(
+			'inject_array_int_1' => $user_info['buddies'],
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$results[$row['id_member']] = array(
@@ -571,13 +575,17 @@ function RequestMembers()
 	if (function_exists('iconv'))
 		header('Content-Type: text/plain; charset=UTF-8');
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT real_name
-		FROM {$db_prefix}members
-		WHERE real_name LIKE '$_REQUEST[search]'" . (isset($_REQUEST['buddies']) ? '
-			AND id_member IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
+		FROM {db_prefix}members
+		WHERE real_name LIKE \'' . $_REQUEST['search'] . '\'' . (isset($_REQUEST['buddies']) ? '
+			AND id_member IN ({array_int:inject_array_int_1})' : '') . '
 			AND is_activated IN (1, 11)
-		LIMIT " . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'), __FILE__, __LINE__);
+		LIMIT ' . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'),
+		array(
+			'inject_array_int_1' => $user_info['buddies'],
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (function_exists('iconv'))
@@ -621,10 +629,14 @@ function resetPassword($memID, $username = null)
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Get some important details.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT member_name, email_address
-		FROM {$db_prefix}members
-		WHERE id_member = $memID", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE id_member = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $memID,
+		)
+	);
 	list ($user, $email) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -718,10 +730,14 @@ function rebuildModCache()
 
 	if ($group_query == 0)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_group
-			FROM {$db_prefix}group_moderators
-			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
+			FROM {db_prefix}group_moderators
+			WHERE id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+			)
+		);
 		$groups = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$groups[] = $row['id_group'];
@@ -750,10 +766,14 @@ function rebuildModCache()
 	$boards_mod = array();
 	if (!$user_info['is_guest'])
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_board
-			FROM {$db_prefix}moderators
-			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
+			FROM {db_prefix}moderators
+			WHERE id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$boards_mod[] = $row['id_board'];
 		$smfFunc['db_free_result']($request);

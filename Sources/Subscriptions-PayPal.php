@@ -170,9 +170,9 @@ class paypal_payment
 		else
 		{
 			// Setup the headers.
-			$header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
-			$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-			$header .= "Content-Length: " . strlen ($requestString) . "\r\n\r\n";
+			$header = 'POST /cgi-bin/webscr HTTP/1.0' . "\r\n";
+			$header .= 'Content-Type: application/x-www-form-urlencoded' . "\r\n";
+			$header .= 'Content-Length: ' . strlen ($requestString) . "\r\n\r\n";
 		
 			// Open the connection.
 			$fp = fsockopen('www.' . (!empty($modSettings['paidsubs_test']) ? 'sandbox.' : '') . 'paypal.com', 80, $errno, $errstr, 30);
@@ -268,10 +268,15 @@ class paypal_payment
 		if ($_POST['txn_type'] == 'subscr_payment' && !empty($_POST['subscr_id']))
 		{
 			$_POST['subscr_id'] = $smfFunc['db_escape_string']($_POST['subscr_id']);
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}log_subscribed
-				SET vendor_ref = '$_POST[subscr_id]'
-				WHERE id_sublog = $ID_SUB", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}log_subscribed
+				SET vendor_ref = {string:inject_string_1}
+				WHERE id_sublog = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $ID_SUB,
+					'inject_string_1' => $_POST['subscr_id'],
+				)
+			);
 		}
 
 		exit();
@@ -288,11 +293,15 @@ class paypal_payment
 		$_POST['subscr_id'] = $smfFunc['db_escape_string']($_POST['subscr_id']);
 
 		// Do we have this in the database?
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, id_subscribe
-			FROM {$db_prefix}log_subscribed
-			WHERE vendor_ref = '$_POST[subscr_id]'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}log_subscribed
+			WHERE vendor_ref = {string:inject_string_1}
+			LIMIT 1',
+			array(
+				'inject_string_1' => $_POST['subscr_id'],
+			)
+		);
 		// No joy?
 		if ($smfFunc['db_num_rows']($request) == 0)
 		{
@@ -301,12 +310,16 @@ class paypal_payment
 			{
 				$smfFunc['db_free_result']($request);
 				$_POST['payer_email'] = addslashes($_POST['payer_email']);
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT ls.id_member, ls.id_subscribe
-					FROM {$db_prefix}log_subscribed AS ls
-						INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ls.id_member)
-					WHERE mem.email_address = '$_POST[payer_email]'
-					LIMIT 1", __FILE__, __LINE__);
+					FROM {db_prefix}log_subscribed AS ls
+						INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ls.id_member)
+					WHERE mem.email_address = {string:inject_string_1}
+					LIMIT 1',
+					array(
+						'inject_string_1' => $_POST['payer_email'],
+					)
+				);
 				if ($smfFunc['db_num_rows']($request) == 0)
 					return false;
 			}

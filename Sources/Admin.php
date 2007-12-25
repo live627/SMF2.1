@@ -509,12 +509,12 @@ function AdminHome()
 		{
 			list ($key, $expires) = explode(',', $modSettings['copy_settings']);
 			// Get the expired date.
-			$fp = @fsockopen("www.simplemachines.org", 80, $errno, $errstr, 1);
+			$fp = @fsockopen('www.simplemachines.org', 80, $errno, $errstr, 1);
 			if ($fp)
 			{
-				$out = "GET /smf/copyright/check_copyright.php?site=" . base64_encode($boardurl) . "&key=" . $key . "&version=" . base64_encode($forum_version) . " HTTP/1.1\r\n";
-				$out .= "Host: www.simplemachines.org\r\n";
-				$out .= "Connection: Close\r\n\r\n";
+				$out = 'GET /smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $key . '&version=' . base64_encode($forum_version) . ' HTTP/1.1' . "\r\n";
+				$out .= 'Host: www.simplemachines.org' . "\r\n";
+				$out .= 'Connection: Close' . "\r\n\r\n";
 				fwrite($fp, $out);
 
 				$return_data = '';
@@ -536,10 +536,15 @@ function AdminHome()
 				else
 				{
 					$_SESSION['copy_expire'] = '';
-					$smfFunc['db_query']('', "
-						DELETE FROM {$db_prefix}settings
-						WHERE variable = 'copy_settings'
-							OR variable = 'copyright_key'", __FILE__, __LINE__);
+					$smfFunc['db_query']('', '
+						DELETE FROM {db_prefix}settings
+						WHERE variable = {string:inject_string_1}
+							OR variable = {string:inject_string_2}',
+						array(
+							'inject_string_1' => 'copy_settings',
+							'inject_string_2' => 'copyright_key',
+						)
+					);
 				}
 			}
 		}
@@ -671,12 +676,12 @@ function ManageCopyright()
 		$_POST['copy_code'] = urlencode($_POST['copy_code']);
 
 		// Check the actual code.
-		$fp = @fsockopen("www.simplemachines.org", 80, $errno, $errstr);
+		$fp = @fsockopen('www.simplemachines.org', 80, $errno, $errstr);
 		if ($fp)
 		{
-			$out = "GET /smf/copyright/check_copyright.php?site=" . base64_encode($boardurl) . "&key=" . $_POST['copy_code'] . "&version=" . base64_encode($forum_version) . " HTTP/1.1\r\n";
-			$out .= "Host: www.simplemachines.org\r\n";
-			$out .= "Connection: Close\r\n\r\n";
+			$out = 'GET /smf/copyright/check_copyright.php?site=' . base64_encode($boardurl) . '&key=' . $_POST['copy_code'] . '&version=' . base64_encode($forum_version) . ' HTTP/1.1' . "\r\n";
+			$out .= 'Host: www.simplemachines.org' . "\r\n";
+			$out .= 'Connection: Close' . "\r\n\r\n";
 			fwrite($fp, $out);
 
 			$return_data = '';
@@ -758,11 +763,15 @@ function DisplayAdminFile()
 	// Danger Will Robinson.
 	$_REQUEST['filename'] = $smfFunc['db_escape_string']($_REQUEST['filename']);
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT data, filetype
-		FROM {$db_prefix}admin_info_files
-		WHERE filename = '$_REQUEST[filename]'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}admin_info_files
+		WHERE filename = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $_REQUEST['filename'],
+		)
+	);
 
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('admin_file_not_found', true, array($_REQUEST['filename']));

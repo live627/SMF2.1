@@ -48,13 +48,17 @@ function PrintTopic()
 	$context['robot_no_index'] = true;
 
 	// Get the topic starter information.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT m.poster_time, IFNULL(mem.real_name, m.poster_name) AS poster_name
-		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_topic = $topic
+		FROM {db_prefix}messages AS m
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_topic = {int:current_topic}
 		ORDER BY m.id_msg
-		LIMIT 1", __FILE__, __LINE__);
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board');
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -72,12 +76,16 @@ function PrintTopic()
 		$context['parent_boards'][] = $parent['name'];
 
 	// Split the topics up so we can print them.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT subject, poster_time, body, IFNULL(mem.real_name, poster_name) AS poster_name
-		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_topic = $topic
-		ORDER BY m.id_msg", __FILE__, __LINE__);
+		FROM {db_prefix}messages AS m
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_topic = {int:current_topic}
+		ORDER BY m.id_msg',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	$context['posts'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

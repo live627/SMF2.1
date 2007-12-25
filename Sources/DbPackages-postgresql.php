@@ -156,18 +156,21 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// If we've got this far - good news - no table exists. We can build our own!
 	$smfFunc['db_transaction']('begin');
-	$table_query = "CREATE TABLE $table_name\n(";
+	$table_query = 'CREATE TABLE ' . $table_name . "\n" .'(';
 	foreach ($columns as $column)
 	{
 		// If we have an auto increment do it!
 		if (!empty($column['auto']))
 		{
-			$smfFunc['db_query']('', "
-				CREATE SEQUENCE {$table_name}_seq", $error == 'fatal' ? __FILE__ : false, __LINE__);
-			$default = "default nextval('{$table_name}_seq')";
+			$smfFunc['db_query']('', '
+				CREATE SEQUENCE ' . $table_name . '_seq',
+				array(
+				)
+			);
+			$default = 'default nextval(\'' . $table_name . '_seq\')';
 		}
 		elseif (isset($column['default']) && $column['default'] != null)
-			$default = "default '$column[default]'";
+			$default = 'default \'' . $column['default'] . '\'';
 		else
 			$default = '';
 
@@ -178,7 +181,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$type = $type . '(' . $size . ')';
 
 		// Now just put it together!
-		$table_query .= "\n\t$column[name] $type " . (!empty($column['null']) ? '' : 'NOT NULL') . " $default";
+		$table_query .= "\n\t" .$column['name'] .' ' . $type . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default;
 	}
 
 	// Loop through the indexes a sec...
@@ -189,12 +192,12 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 		// Primary goes in the table...
 		if (isset($index['type']) && $index['type'] == 'primary')
-			$table_query .= "\n\tPRIMARY KEY (" . implode(',', $index['columns']) . "),";
+			$table_query .= "\n\t" . 'PRIMARY KEY (' . implode(',', $index['columns']) . '),';
 		else
 		{
 			if (empty($index['name']))
 				$index['name'] = implode('_', $index['columns']);
-			$index_queries[] = "CREATE " . (isset($index['type']) && $index['type'] == 'unique' ? 'UNIQUE' : '') . " INDEX {$table_name}_{$index['name']} ON {$table_name} ($columns)";
+			$index_queries[] = 'CREATE ' . (isset($index['type']) && $index['type'] == 'unique' ? 'UNIQUE' : '') . ' INDEX ' . $table_name . '_' . $index['name'] . ' ON ' . $table_name . ' (' . $columns . ')';
 		}
 	}
 
@@ -202,13 +205,19 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	if (substr($table_query, -1) == ',')
 		$table_query = substr($table_query, 0, -1);
 
-	$table_query .= ")";
+	$table_query .= ')';
 
 	// Create the table!
-	$smfFunc['db_query']('', $table_query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+	$smfFunc['db_query']('', $table_query,
+		array(
+		)
+	);
 	// And the indexes...
 	foreach ($index_queries as $query)
-		$smfFunc['db_query']('', $query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', $query,
+		array(
+		)
+	);
 
 	// Go, go power rangers!
 	$smfFunc['db_transaction']('commit');
@@ -226,8 +235,11 @@ function smf_db_drop_table($table_name, $error = 'fatal')
 	// Does it exist?
 	if (in_array($table_name, $smfFunc['db_list_tables']()))
 	{
-		$query = "DROP TABLE $table_name";
-		$smfFunc['db_query']('', $query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$query = 'DROP TABLE ' . $table_name;
+		$smfFunc['db_query']('', $query,
+		array(
+		)
+	);
 
 		return true;
 	}
@@ -263,10 +275,13 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 		$type = $type . '(' . $size . ')';
 
 	// Now add the thing!
-	$query = "
-		ALTER TABLE $table_name
-		ADD COLUMN $column_info[name] $type";
-	$smfFunc['db_query']('', $query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+	$query = '
+		ALTER TABLE ' . $table_name . '
+		ADD COLUMN ' . $column_info['name'] . ' ' . $type;
+	$smfFunc['db_query']('', $query,
+		array(
+		)
+	);
 
 	// If there's more attributes they need to be done via a change on PostgreSQL.
 	unset($column_info['type']);
@@ -290,11 +305,17 @@ function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
 		{
 			// If there is an auto we need remove it!
 			if ($column['auto'])
-				$smfFunc['db_query']('', "DROP SEQUENCE {$table_name}_seq", $error == 'fatal' ? __FILE__ : false, __LINE__);
+				$smfFunc['db_query']('', 'DROP SEQUENCE ' . $table_name . '_seq',
+		array(
+		)
+	);
 
-			$smfFunc['db_query']('', "
-				ALTER TABLE $table_name
-				DROP COLUMN $column_name", $error == 'fatal' ? __FILE__ : false, __LINE__);
+			$smfFunc['db_query']('', '
+				ALTER TABLE ' . $table_name . '
+				DROP COLUMN ' . $column_name,
+				array(
+				)
+			);
 
 			return true;
 		}
@@ -322,17 +343,23 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 	// Now we check each bit individually and ALTER as required.
 	if (isset($column_info['name']) && $column_info['name'] != $old_column)
 	{
-		$smfFunc['db_query']('', "
-			ALTER TABLE $table_name
-			RENAME COLUMN $old_column TO $column_info[name]", $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $table_name . '
+			RENAME COLUMN ' . $old_column . ' TO ' . $column_info['name'],
+			array(
+			)
+		);
 	}
 	// Different default?
 	if (isset($column_info['default']) && $column_info['default'] != $old_info['default'])
 	{
-		$action = $column_info['default'] !== null ? "SET DEFAULT '$column_info[default]'" : 'DROP DEFAULT';
-		$smfFunc['db_query']('', "
-			ALTER TABLE $table_name
-			ALTER COLUMN $column_info[name] $action", $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$action = $column_info['default'] !== null ? 'SET DEFAULT \'' . $column_info['default'] . '\'' : 'DROP DEFAULT';
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $table_name . '
+			ALTER COLUMN ' . $column_info['name'] . ' ' . $action,
+			array(
+			)
+		);
 	}
 	// Is it null - or otherwise?
 	if (isset($column_info['null']) && $column_info['null'] != $old_info['null'])
@@ -343,14 +370,20 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 		{
 			// We have to set it to something if we are making it NOT NULL.
 			$setTo = isset($column_info['default']) ? $column_info['default'] : '';
-			$smfFunc['db_query']('', "
-				UPDATE $table_name
-				SET $column_info[name] = '$setTo'
-				WHERE $column_info[name] = NULL", $error == 'fatal' ? __FILE__ : false, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE ' . $table_name . '
+				SET ' . $column_info['name'] . ' = \'' . $setTo . '\'
+				WHERE ' . $column_info['name'] . ' = NULL',
+				array(
+				)
+			);
 		}
-		$smfFunc['db_query']('', "
-			ALTER TABLE $table_name
-			ALTER COLUMN $column_info[name] $action NOT NULL", $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $table_name . '
+			ALTER COLUMN ' . $column_info['name'] . ' ' . $action . ' NOT NULL',
+			array(
+			)
+		);
 		$smfFunc['db_transaction']('commit');
 	}
 	// What about a change in type?
@@ -363,18 +396,30 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 
 		// The alter is a pain.
 		$smfFunc['db_transaction']('begin');
-		$smfFunc['db_query']('', "
-			ALTER TABLE $table_name
-			ADD COLUMN $column_info[name]_tempxx $type", $error == 'fatal' ? __FILE__ : false, __LINE__);
-		$smfFunc['db_query']('', "
-			UPDATE $table_name
-			SET $column_info[name]_tempxx = CAST($column_info[name] AS $type)", $error == 'fatal' ? __FILE__ : false, __LINE__);
-		$smfFunc['db_query']('', "
-			ALTER TABLE $table_name
-			DROP COLUMN $column_info[name]", $error == 'fatal' ? __FILE__ : false, __LINE__);
-		$smfFunc['db_query']('', "
-			ALTER TABLE $table_name
-			RENAME COLUMN $column_info[name]_tempxx TO $column_info[name]", $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $table_name . '
+			ADD COLUMN ' . $column_info['name'] . '_tempxx ' . $type,
+			array(
+			)
+		);
+		$smfFunc['db_query']('', '
+			UPDATE ' . $table_name . '
+			SET ' . $column_info['name'] . '_tempxx = CAST(' . $column_info['name'] . ' AS ' . $type . ')',
+			array(
+			)
+		);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $table_name . '
+			DROP COLUMN ' . $column_info['name'],
+			array(
+			)
+		);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $table_name . '
+			RENAME COLUMN ' . $column_info['name'] . '_tempxx TO ' . $column_info['name'],
+			array(
+			)
+		);
 		$smfFunc['db_transaction']('commit');
 	}
 	// Finally - auto increment?!
@@ -384,20 +429,32 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 		if ($old_info['auto'])
 		{
 			// Alter the table first - then drop the sequence.
-			$smfFunc['db_query']('', "
-				ALTER TABLE $table_name
-				ALTER COLUMN $column_info[name] SET DEFAULT '0'", $error == 'fatal' ? __FILE__ : false, __LINE__);
-			$smfFunc['db_query']('', "
-				DROP SEQUENCE {$table_name}_seq", $error == 'fatal' ? __FILE__ : false, __LINE__);
+			$smfFunc['db_query']('', '
+				ALTER TABLE ' . $table_name . '
+				ALTER COLUMN ' . $column_info['name'] . ' SET DEFAULT \'0\'',
+				array(
+				)
+			);
+			$smfFunc['db_query']('', '
+				DROP SEQUENCE ' . $table_name . '_seq',
+				array(
+				)
+			);
 		}
 		// Otherwise add it!
 		else
 		{
-			$smfFunc['db_query']('', "
-				CREATE SEQUENCE {$table_name}_seq", $error == 'fatal' ? __FILE__ : false, __LINE__);
-			$smfFunc['db_query']('', "
-				ALTER TABLE $table_name
-				ALTER COLUMN $column_info[name] SET DEFAULT nextval('{$table_name}_seq')", $error == 'fatal' ? __FILE__ : false, __LINE__);
+			$smfFunc['db_query']('', '
+				CREATE SEQUENCE ' . $table_name . '_seq',
+				array(
+				)
+			);
+			$smfFunc['db_query']('', '
+				ALTER TABLE ' . $table_name . '
+				ALTER COLUMN ' . $column_info['name'] . ' SET DEFAULT nextval(\'' . $table_name . '_seq\')',
+				array(
+				)
+			);
 		}
 	}
 }
@@ -445,14 +502,20 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 	// If we're here we know we don't have the index - so just add it.
 	if (!empty($index_info['type']) && $index_info['type'] == 'primary')
 	{
-		$smfFunc['db_query']('', "
-			ALTER TABLE {$table_name}
-			ADD PRIMARY KEY ($columns)", $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $table_name . '
+			ADD PRIMARY KEY (' . $columns . ')',
+			array(
+			)
+		);
 	}
 	else
 	{
-		$smfFunc['db_query']('', "
-			CREATE " . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : '') . " INDEX {$index_info['name']} ON {$table_name} ($columns)", $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', '
+			CREATE ' . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : '') . ' INDEX ' . $index_info['name'] . ' ON ' . $table_name . ' (' . $columns . ')',
+			array(
+			)
+		);
 	}
 }
 
@@ -472,17 +535,23 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 		if ($index['type'] == 'primary' && $index_name == 'primary')
 		{
 			// Dropping primary key is odd...
-			$smfFunc['db_query']('', "
-				ALTER TABLE $table_name
-				DROP CONSTRAINT {$index['name']}", $error == 'fatal' ? __FILE__ : false, __LINE__);
+			$smfFunc['db_query']('', '
+				ALTER TABLE ' . $table_name . '
+				DROP CONSTRAINT ' . $index['name'],
+				array(
+				)
+			);
 
 			return true;
 		}
 		if ($index['name'] == $index_name)
 		{
 			// Drop the bugger...
-			$smfFunc['db_query']('', "
-				DROP INDEX {$index_name}", $error == 'fatal' ? __FILE__ : false, __LINE__);
+			$smfFunc['db_query']('', '
+				DROP INDEX ' . $index_name,
+				array(
+				)
+			);
 
 			return true;
 		}
@@ -548,11 +617,14 @@ function smf_db_list_columns($table_name, $detail = false)
 {
 	global $smfFunc;
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
 		FROM information_schema.columns
-		WHERE table_name = '$table_name'
-		ORDER BY ordinal_position", false, false);
+		WHERE table_name = \'' . $table_name . '\'
+		ORDER BY ordinal_position',
+		array(
+		)
+	);
 	$columns = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -599,15 +671,18 @@ function smf_db_list_indexes($table_name, $detail = false)
 {
 	global $smfFunc;
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary,
 			CASE WHEN i.indisunique THEN 1 ELSE 0 END AS is_unique,
 			c2.relname AS name,
 			pg_get_indexdef(i.indexrelid) AS inddef
 		FROM pg_class AS c, pg_class AS c2, pg_index AS i
-		WHERE c.relname = '{$table_name}'
+		WHERE c.relname = \'' . $table_name . '\'
 			AND c.oid = i.indrelid
-			AND i.indexrelid = c2.oid", false, false);
+			AND i.indexrelid = c2.oid',
+		array(
+		)
+	);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{

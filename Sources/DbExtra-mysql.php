@@ -62,8 +62,11 @@ function smf_db_backup_table($table, $backup_table)
 {
 	global $smfFunc;
 
-	$result = $smfFunc['db_query']('', "
-		SHOW CREATE TABLE " . $table, false, false);
+	$result = $smfFunc['db_query']('', '
+		SHOW CREATE TABLE ' . $table,
+		array(
+		)
+	);
 	list (, $create) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -112,23 +115,32 @@ function smf_db_backup_table($table, $backup_table)
 	else
 		$create = '';
 
-	$smfFunc['db_query']('', "
-		DROP TABLE IF EXISTS " . $backup_table, false, false);
+	$smfFunc['db_query']('', '
+		DROP TABLE IF EXISTS ' . $backup_table,
+		array(
+		)
+	);
 
-	$request = $smfFunc['db_query']('', "
-		CREATE TABLE " . $backup_table . " $create
-		TYPE=$engine" . (empty($charset) ? '' : " CHARACTER SET $charset" . (empty($collate) ? '' : " COLLATE $collate")) . "
+	$request = $smfFunc['db_query']('', '
+		CREATE TABLE ' . $backup_table . ' ' . $create . '
+		TYPE=' . $engine . (empty($charset) ? '' : ' CHARACTER SET ' . $charset . (empty($collate) ? '' : ' COLLATE ' . $collate)) . '
 		SELECT *
-		FROM " . $table, false, false);
+		FROM ' . $table,
+		array(
+		)
+	);
 
 	if ($auto_inc != '')
 	{
 		if (preg_match('~\`(.+?)\`\s~', $auto_inc, $match) != 0 && substr($auto_inc, -1, 1) == ',')
 			$auto_inc = substr($auto_inc, 0, -1);
 
-		$smfFunc['db_query']('', "
-			ALTER TABLE " . $backup_table . "
-			CHANGE COLUMN $match[1] $auto_inc", false, false);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $backup_table . '
+			CHANGE COLUMN ' . $match[1] . ' ' . $auto_inc,
+			array(
+			)
+		);
 	}
 
 	return $request;
@@ -140,20 +152,29 @@ function smf_db_optimize_table($table)
 	global $smfFunc, $db_name;
 
 	// Get how much overhead there is.
-	$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS LIKE '" . str_replace('_', '\_', $table) . "'", false, false);
+	$request = $smfFunc['db_query']('', '
+			SHOW TABLE STATUS LIKE \'' . str_replace('_', '\_', $table) . '\'',
+			array(
+			)
+		);
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
 	$data_before = isset($row['Data_free']) ? $row['Data_free'] : 0;
-	$request = $smfFunc['db_query']('', "
-			OPTIMIZE TABLE `$table`", false, false);
+	$request = $smfFunc['db_query']('', '
+			OPTIMIZE TABLE `' . $table . '`',
+			array(
+			)
+		);
 	if (!$request)
 		return -1;
 
 	// How much left?
-	$request = $smfFunc['db_query']('', "
-			SHOW TABLE STATUS LIKE '" . str_replace('_', '\_', $table) . "'", false, false);
+	$request = $smfFunc['db_query']('', '
+			SHOW TABLE STATUS LIKE \'' . str_replace('_', '\_', $table) . '\'',
+			array(
+			)
+		);
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -168,12 +189,15 @@ function smf_db_list_tables($db = false, $filter = false)
 	global $db_name, $smfFunc;
 
 	$db = $db == false ? $db_name : $db;
-	$filter = $filter == false ? '' : " LIKE '$filter'";
+	$filter = $filter == false ? '' : ' LIKE \'' . $filter . '\'';
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SHOW TABLES
-		FROM $db
-		$filter", false, false);
+		FROM ' . $db . '
+		' . $filter,
+		array(
+		)
+	);
 	$tables = array();
 	while ($row = $smfFunc['db_fetch_row']($request))
 		$tables[] = $row[0];
@@ -191,9 +215,12 @@ function smf_db_insert_sql($tableName)
 	$crlf = "\r\n";
 
 	// Get everything from the table.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT /*!40001 SQL_NO_CACHE */ *
-		FROM `$tableName`", false, false);
+		FROM `' . $tableName . '`',
+		array(
+		)
+	);
 
 	// The number of rows, just for record keeping and breaking INSERTs up.
 	$num_rows = $smfFunc['db_num_rows']($result);
@@ -206,7 +233,7 @@ function smf_db_insert_sql($tableName)
 	$smfFunc['db_data_seek']($result, 0);
 
 	// Start it off with the basic INSERT INTO.
-	$data = 'INSERT INTO `' . $tableName . '`' . $crlf . "\t(`" . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
+	$data = 'INSERT INTO `' . $tableName . '`' . $crlf . "\t" . '(`' . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
 
 	// Loop through each row.
 	while ($row = $smfFunc['db_fetch_row']($result))
@@ -223,7 +250,7 @@ function smf_db_insert_sql($tableName)
 			elseif (is_numeric($row[$j]))
 				$field_list[] = $row[$j];
 			else
-				$field_list[] = "'" . $smfFunc['db_escape_string']($row[$j]) . "'";
+				$field_list[] = '\'' . $smfFunc['db_escape_string']($row[$j]) . '\'';
 		}
 
 		// 'Insert' the data.
@@ -231,7 +258,7 @@ function smf_db_insert_sql($tableName)
 
 		// Start a new INSERT statement after every 250....
 		if ($current_row > 249 && $current_row % 250 == 0)
-			$data .= ';' . $crlf . 'INSERT INTO `' . $tableName . '`' . $crlf . "\t(`" . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
+			$data .= ';' . $crlf . 'INSERT INTO `' . $tableName . '`' . $crlf . "\t" . '(`' . implode('`, `', $fields) . '`)' . $crlf . 'VALUES ';
 		// All done!
 		elseif ($current_row == $num_rows)
 			$data .= ';' . $crlf;
@@ -260,9 +287,12 @@ function smf_db_table_sql($tableName)
 	$schema_create .= 'CREATE TABLE `' . $tableName . '` (' . $crlf;
 
 	// Find all the fields.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SHOW FIELDS
-		FROM `$tableName`", false, false);
+		FROM `' . $tableName . '`',
+		array(
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		// Make the CREATE for this column.
@@ -275,7 +305,7 @@ function smf_db_table_sql($tableName)
 			if ($row['Default'] == 'CURRENT_TIMESTAMP')
 				$schema_create .= ' /*!40102 NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP */';
 			else
-				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : "'" . $smfFunc['db_escape_string']($row['Default']) . "'");
+				$schema_create .= ' default ' . (is_numeric($row['Default']) ? $row['Default'] : '\'' . $smfFunc['db_escape_string']($row['Default']) . '\'');
 		}
 
 		// And now any extra information. (such as auto_increment.)
@@ -287,9 +317,12 @@ function smf_db_table_sql($tableName)
 	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
 
 	// Find the keys.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SHOW KEYS
-		FROM `$tableName`", false, false);
+		FROM `' . $tableName . '`',
+		array(
+		)
+	);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -318,9 +351,12 @@ function smf_db_table_sql($tableName)
 	}
 
 	// Now just get the comment and type... (MyISAM, etc.)
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SHOW TABLE STATUS
-		LIKE '" . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . "'", false, false);
+		LIKE \'' . strtr($tableName, array('_' => '\\_', '%' => '\\%')) . '\'',
+		array(
+		)
+	);
 	$row = $smfFunc['db_fetch_assoc']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -335,8 +371,11 @@ function smf_db_get_version()
 {
 	global $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
-		SELECT VERSION()", false, false);
+	$request = $smfFunc['db_query']('', '
+		SELECT VERSION()',
+		array(
+		)
+	);
 	list ($ver) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 

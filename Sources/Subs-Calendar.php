@@ -119,24 +119,28 @@ function getBirthdayRange($low_date, $high_date)
 
 	// Birthdays people set without specifying a year (no age, see?) are the easiest ;).
 	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
-		$allyear_part = "birthdate BETWEEN '0004" . substr($low_date, 4) . "' AND '0004-12-31'
-			OR birthdate BETWEEN '0004-01-01' AND '0004" . substr($high_date, 4) . "'";
+		$allyear_part = 'birthdate BETWEEN \'0004' . substr($low_date, 4) . '\' AND \'0004-12-31\'
+			OR birthdate BETWEEN \'0004-01-01\' AND \'0004' . substr($high_date, 4) . '\'';
 	else
-		$allyear_part = "birthdate BETWEEN '0004" . substr($low_date, 4) . "' AND '0004" . substr($high_date, 4) . "'";
+		$allyear_part = 'birthdate BETWEEN \'0004' . substr($low_date, 4) . '\' AND \'0004' . substr($high_date, 4) . '\'';
 
 	// We need to search for any birthday in this range, and whatever year that birthday is on.
 	$year_low = (int) substr($low_date, 0, 4);
 	$year_high = (int) substr($high_date, 0, 4);
 
 	// Collect all of the birthdays for this month.  I know, it's a painful query.
-	$result = $smfFunc['db_query']('birthday_array', "
+	$result = $smfFunc['db_query']('birthday_array', '
 		SELECT id_member, real_name, YEAR(birthdate) AS birthYear, birthdate
-		FROM {$db_prefix}members
-		WHERE YEAR(birthdate) != '0001'
-			AND	($allyear_part
-				OR DATE_FORMAT(birthdate, '{$year_low}-%m-%d') BETWEEN '$low_date' AND '$high_date'" . ($year_low == $year_high ? '' : "
-				OR DATE_FORMAT(birthdate, '{$year_high}-%m-%d') BETWEEN '$low_date' AND '$high_date'") . ")
-			AND is_activated = 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE YEAR(birthdate) != \'0001\'
+			AND	(' . $allyear_part . '
+				OR DATE_FORMAT(birthdate, \'' . $year_low . '-%m-%d\') BETWEEN \'' . $low_date . '\' AND \'' . $high_date . '\'' . ($year_low == $year_high ? '' : '
+				OR DATE_FORMAT(birthdate, \'' . $year_high . '-%m-%d\') BETWEEN \'' . $low_date . '\' AND \'' . $high_date . '\'') . ')
+			AND is_activated = {int:inject_int_1}',
+		array(
+			'inject_int_1' => 1,
+		)
+	);
 	$bday = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -172,16 +176,22 @@ function getEventRange($low_date, $high_date, $use_permissions = true)
 	$high_date_time = mktime(0, 0, 0, $high_date_time[1], $high_date_time[2], $high_date_time[0]);
 
 	// Find all the calendar info...
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT
 			cal.id_event, cal.start_date, cal.end_date, cal.title, cal.id_member, cal.id_topic,
 			cal.id_board, b.member_groups, t.id_first_msg, t.approved, b.id_board
-		FROM {$db_prefix}calendar AS cal
-			LEFT JOIN {$db_prefix}boards AS b ON (b.id_board = cal.id_board)
-			LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
-		WHERE cal.start_date <= '$high_date'
-			AND cal.end_date >= '$low_date'" . ($use_permissions ? "
-			AND (cal.id_board = 0 OR $user_info[query_wanna_see_board])" : ''), __FILE__, __LINE__);
+		FROM {db_prefix}calendar AS cal
+			LEFT JOIN {db_prefix}boards AS b ON (b.id_board = cal.id_board)
+			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = cal.id_topic)
+		WHERE cal.start_date <= {date:inject_date_1}
+			AND cal.end_date >= {date:inject_date_2}' . ($use_permissions ? '
+			AND (cal.id_board = {int:inject_int_1} OR ' . $user_info['query_wanna_see_board'] . ')' : ''),
+		array(
+			'inject_date_1' => $high_date,
+			'inject_date_2' => $low_date,
+			'inject_int_1' => 0,
+		)
+	);
 	$events = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -257,17 +267,20 @@ function getHolidayRange($low_date, $high_date)
 
 	// Get the lowest and highest dates for "all years".
 	if (substr($low_date, 0, 4) != substr($high_date, 0, 4))
-		$allyear_part = "event_date BETWEEN '0004" . substr($low_date, 4) . "' AND '0004-12-31'
-			OR event_date BETWEEN '0004-01-01' AND '0004" . substr($high_date, 4) . "'";
+		$allyear_part = 'event_date BETWEEN \'0004' . substr($low_date, 4) . '\' AND \'0004-12-31\'
+			OR event_date BETWEEN \'0004-01-01\' AND \'0004' . substr($high_date, 4) . '\'';
 	else
-		$allyear_part = "event_date BETWEEN '0004" . substr($low_date, 4) . "' AND '0004" . substr($high_date, 4) . "'";
+		$allyear_part = 'event_date BETWEEN \'0004' . substr($low_date, 4) . '\' AND \'0004' . substr($high_date, 4) . '\'';
 
 	// Find some holidays... ;).
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT event_date, YEAR(event_date) AS year, title
-		FROM {$db_prefix}calendar_holidays
-		WHERE event_date BETWEEN '$low_date' AND '$high_date'
-			OR $allyear_part", __FILE__, __LINE__);
+		FROM {db_prefix}calendar_holidays
+		WHERE event_date BETWEEN \'' . $low_date . '\' AND \'' . $high_date . '\'
+			OR ' . $allyear_part,
+		array(
+		)
+	);
 	$holidays = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -301,11 +314,15 @@ function canLinkEvent()
 	if (!allowedTo('admin_forum') && !allowedTo('moderate_board'))
 	{
 		// Not admin or a moderator of this board. You better be the owner - or else.
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT id_member_started
-			FROM {$db_prefix}topics
-			WHERE id_topic = $topic
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:current_topic}
+			LIMIT 1',
+			array(
+				'current_topic' => $topic,
+			)
+		);
 		if ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Not the owner of the topic.
@@ -794,11 +811,15 @@ function getEventPoster($event_id)
 	global $smfFunc, $db_prefix;
 
 	// A simple database query, how hard can that be?
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member
-		FROM {$db_prefix}calendar
-		WHERE id_event = $event_id
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}calendar
+		WHERE id_event = {int:inject_int_1}
+		LIMIT 1',
+		array(
+			'inject_int_1' => $event_id,
+		)
+	);
 	
 	// No results, return false.
 	if ($smfFunc['db_num_results'] === 0)
@@ -834,10 +855,13 @@ function insertEvent(&$eventOptions)
 	$eventOptions['topic'] = isset($eventOptions['topic']) ? (int) $eventOptions['topic'] : 0;
 
 	// Insert the event!
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}calendar
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}calendar
 			(id_board, id_topic, title, id_member, start_date, end_date)
-		VALUES ($eventOptions[board], $eventOptions[topic], SUBSTRING('$eventOptions[title]', 1, 48), $eventOptions[member], '$eventOptions[start_date]', '$eventOptions[end_date]')", __FILE__, __LINE__);
+		VALUES (' . $eventOptions['board'] . ', ' . $eventOptions['topic'] . ', SUBSTRING(\'' . $eventOptions['title'] . '\', 1, 48), ' . $eventOptions['member'] . ', \'' . $eventOptions['start_date'] . '\', \'' . $eventOptions['end_date'] . '\')',
+		array(
+		)
+	);
 
 	// Store the just inserted id_event for future reference.
 	$eventOptions['id'] = $smfFunc['db_insert_id'];
@@ -866,15 +890,23 @@ function modifyEvent($event_id, &$eventOptions)
 	if (!isset($eventOptions['end_date']))
 		$eventOptions['end_date'] = strftime('%Y-%m-%d', mktime(0, 0, 0, $month, $day, $year) + $eventOptions['span'] * 86400);
 
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}calendar
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}calendar
 		SET 
-			start_date = '$eventOptions[start_date]',
-			end_date = '$eventOptions[end_date]', 
-			title = SUBSTRING('$eventOptions[title]', 1, 48),
-			id_board = " . (isset($eventOptions['board']) ? (int) $eventOptions['board'] : 'id_board') . ",
-			id_topic = " . (isset($eventOptions['topic']) ? (int) $eventOptions['topic'] : 'id_board') . "
-		WHERE id_event = $event_id", __FILE__, __LINE__);
+			start_date = {date:inject_date_1},
+			end_date = {date:inject_date_2}, 
+			title = SUBSTRING(\'' . $eventOptions['title'] . '\', 1, 48),
+			id_board = {int:inject_int_1},
+			id_topic = {int:inject_int_2}
+		WHERE id_event = {int:inject_int_3}',
+		array(
+			'inject_date_1' => $eventOptions['start_date'],
+			'inject_date_2' => $eventOptions['end_date'],
+			'inject_int_1' => isset($eventOptions['board']) ? (int) $eventOptions['board'] : 'id_board',
+			'inject_int_2' => isset($eventOptions['topic']) ? (int) $eventOptions['topic'] : 'id_board',
+			'inject_int_3' => $event_id,
+		)
+	);
 
 	updateSettings(array(
 		'calendar_updated' => time(),
@@ -885,9 +917,13 @@ function removeEvent($event_id)
 {
 	global $smfFunc, $db_prefix;
 
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}calendar
-		WHERE id_event = $_REQUEST[eventid]", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}calendar
+		WHERE id_event = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $_REQUEST['eventid'],
+		)
+	);
 
 	updateSettings(array(
 		'calendar_updated' => time(),
@@ -898,15 +934,19 @@ function getEventProperties($event_id)
 {
 	global $smfFunc, $db_prefix;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			c.id_event, c.id_board, c.id_topic, MONTH(c.start_date) AS month,
 			DAYOFMONTH(c.start_date) AS day, YEAR(c.start_date) AS year,
 			(TO_DAYS(c.end_date) - TO_DAYS(c.start_date)) AS span, c.id_member, c.title,
 			t.id_first_msg, t.id_member_started
-		FROM {$db_prefix}calendar AS c
-			LEFT JOIN {$db_prefix}topics AS t ON (t.id_topic = c.id_topic)
-		WHERE c.id_event = $event_id", __FILE__, __LINE__);
+		FROM {db_prefix}calendar AS c
+			LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = c.id_topic)
+		WHERE c.id_event = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $event_id,
+		)
+	);
 
 	// If nothing returned, we are in poo, poo.
 	if ($smfFunc['db_num_rows']($request) === 0)
@@ -942,11 +982,14 @@ function list_getHolidays($start, $items_per_page, $sort)
 {
 	global $smfFunc, $db_prefix;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
-		FROM {$db_prefix}calendar_holidays
-		ORDER BY $sort
-		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+		FROM {db_prefix}calendar_holidays
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+		)
+	);
 	$holidays = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$holidays[] = $row;
@@ -959,9 +1002,12 @@ function list_getNumHolidays()
 {
 	global $smfFunc, $db_prefix;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}calendar_holidays", __FILE__, __LINE__);
+		FROM {db_prefix}calendar_holidays',
+		array(
+		)
+	);
 	list($num_items) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -972,9 +1018,13 @@ function removeHolidays($holiday_ids)
 {
 	global $smfFunc, $db_prefix;
 
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}calendar_holidays
-		WHERE id_holiday IN (" . implode(', ', $_REQUEST['holiday']) . ")", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}calendar_holidays
+		WHERE id_holiday IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $_REQUEST['holiday'],
+		)
+	);
 
 	updateSettings(array(
 		'calendar_updated' => time(),

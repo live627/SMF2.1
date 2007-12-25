@@ -723,7 +723,7 @@ class gif_file
 		$out .= $tmp . pack('N', crc32($tmp));
 
 		// EOF marker...
-		$out .= "\x00\x00\x00\x00IEND\xAE\x42\x60\x82";
+		$out .= "\x00\x00\x00\x00" . 'IEND' . "\xAE\x42\x60\x82";
 
 		return $out;
 	}

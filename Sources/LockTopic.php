@@ -58,11 +58,15 @@ function LockTopic()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Find out who started the topic - in case User Topic Locking is enabled.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member_started, locked
-		FROM {$db_prefix}topics
-		WHERE id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics
+		WHERE id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	list ($starter, $locked) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -87,10 +91,15 @@ function LockTopic()
 		fatal_lang_error('locked_by_admin', 'user');
 
 	// Actually lock the topic in the database with the new value.
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}topics
-		SET locked = $locked
-		WHERE id_topic = $topic", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}topics
+		SET locked = {int:inject_int_1}
+		WHERE id_topic = {int:current_topic}',
+		array(
+			'current_topic' => $topic,
+			'inject_int_1' => $locked,
+		)
+	);
 
 	// If they are allowed a "moderator" permission, log it in the moderator log.
 	if (!$user_lock)
@@ -124,19 +133,28 @@ function Sticky()
 	require_once($sourcedir . '/Subs-Post.php');
 
 	// Is this topic already stickied, or no?
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT is_sticky
-		FROM {$db_prefix}topics
-		WHERE id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics
+		WHERE id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	list ($is_sticky) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Toggle the sticky value.... pretty simple ;).
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}topics
-		SET is_sticky = " . (empty($is_sticky) ? 1 : 0) . "
-		WHERE id_topic = $topic", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}topics
+		SET is_sticky = {int:inject_int_1}
+		WHERE id_topic = {int:current_topic}',
+		array(
+			'current_topic' => $topic,
+			'inject_int_1' => empty($is_sticky) ? 1 : 0,
+		)
+	);
 
 	// Log this sticky action - always a moderator thing.
 	logAction('sticky', array('topic' => $topic));

@@ -87,9 +87,12 @@ function BrowseMailQueue()
 	global $sourcedir;
 
 	// How many items do we have?
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS queueSize, MIN(time_sent) AS oldest
-		FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
+		FROM {db_prefix}mail_queue',
+		array(
+		)
+	);
 	list ($mailQueueSize, $mailOldest) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -200,11 +203,14 @@ function BrowseMailQueue()
 	$context['start'] = $_REQUEST['start'];
 
 	// Even if it's disabled we should still show the mail queue, in case there's stuff left!
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_mail, time_sent, recipient, priority, subject
-		FROM {$db_prefix}mail_queue
+		FROM {db_prefix}mail_queue
 		ORDER BY id_mail ASC
-		LIMIT $context[start], 20", __FILE__, __LINE__);
+		LIMIT ' . $context['start'] . ', 20',
+		array(
+		)
+	);
 	$context['mails'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -229,11 +235,14 @@ function list_getMailQueue($start, $items_per_page, $sort)
 {
 	global $db_prefix, $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_mail, time_sent, recipient, priority, subject
-		FROM {$db_prefix}mail_queue
-		ORDER BY $sort
-		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+		FROM {db_prefix}mail_queue
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+		)
+	);
 	$mails = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$mails[] = $row;
@@ -247,9 +256,12 @@ function list_getMailQueueSize()
 	global $db_prefix, $smfFunc;
 
 	// How many items do we have?
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS queueSize
-		FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
+		FROM {db_prefix}mail_queue',
+		array(
+		)
+	);
 	list ($mailQueueSize) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -359,9 +371,12 @@ function ClearMailQueue()
 	if (!isset($_GET['te']))
 	{
 		// How many items do we have?
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*) AS queueSize
-			FROM {$db_prefix}mail_queue", __FILE__, __LINE__);
+			FROM {db_prefix}mail_queue',
+			array(
+			)
+		);
 		list ($_GET['te']) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 	}

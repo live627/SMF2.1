@@ -444,11 +444,16 @@ function EditBoard()
 	);
 
 	// Load membergroups.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT group_name, id_group, min_posts
-		FROM {$db_prefix}membergroups
-		WHERE id_group > 3 OR id_group = 2
-		ORDER BY min_posts, id_group != 2, group_name", __FILE__, __LINE__);
+		FROM {db_prefix}membergroups
+		WHERE id_group > {int:inject_int_1} OR id_group = {int:inject_int_2}
+		ORDER BY min_posts, id_group != {int:inject_int_2}, group_name',
+		array(
+			'inject_int_1' => 3,
+			'inject_int_2' => 2,
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($_REQUEST['sa'] == 'newboard' && $row['min_posts'] == -1)
@@ -506,11 +511,15 @@ function EditBoard()
 			'selected' => $catID == $curBoard['category']
 		);
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT mem.real_name
-		FROM {$db_prefix}moderators AS mods
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-		WHERE mods.id_board = $_REQUEST[boardid]", __FILE__, __LINE__);
+		FROM {db_prefix}moderators AS mods
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+		WHERE mods.id_board = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $_REQUEST['boardid'],
+		)
+	);
 	$context['board']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['board']['moderators'][] = $row['real_name'];
@@ -519,10 +528,14 @@ function EditBoard()
 	$context['board']['moderator_list'] = empty($context['board']['moderators']) ? '' : '&quot;' . implode('&quot;, &quot;', $context['board']['moderators']) . '&quot;';
 
 	// Get all the themes...
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_theme AS id, value AS name
-		FROM {$db_prefix}themes
-		WHERE variable = 'name'", __FILE__, __LINE__);
+		FROM {db_prefix}themes
+		WHERE variable = {string:inject_string_1}',
+		array(
+			'inject_string_1' => 'name',
+		)
+	);
 	$context['themes'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['themes'][] = $row;
@@ -596,10 +609,14 @@ function EditBoard2()
 		// We need to know what used to be case in terms of redirection.
 		if (!empty($_POST['boardid']))
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT redirect, num_posts
-				FROM {$db_prefix}boards
-				WHERE id_board = $_POST[boardid]", __FILE__, __LINE__);
+				FROM {db_prefix}boards
+				WHERE id_board = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $_POST['boardid'],
+				)
+			);
 			list ($oldRedirect, $numPosts) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 
@@ -669,10 +686,13 @@ function ModifyCat()
 	$_POST['id'] = substr($_POST['id'][1], 0, 3);
 
 	// Select the stuff we need from the DB.
-	$request = $smfFunc['db_query']('', "
-		SELECT CONCAT('$_POST[id]s ar', 'e,o ', '$allowed_sa[2]e, ')
-		FROM {$db_prefix}categories
-		LIMIT 1", __FILE__, __LINE__);
+	$request = $smfFunc['db_query']('', '
+		SELECT CONCAT(\'' . $_POST['id'] . 's ar\', \'e,o \', \'' . $allowed_sa[2] . 'e, \')
+		FROM {db_prefix}categories
+		LIMIT 1',
+		array(
+		)
+	);
 	list ($cat) = $smfFunc['db_fetch_row']($request);
 
 	// Free resources.
@@ -691,10 +711,13 @@ function EditBoardSettings($return_config = false)
 
 	// Load the boards list - for the recycle bin!
 	$recycle_boards = array('');
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
-		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)", __FILE__, __LINE__);
+		FROM {db_prefix}boards AS b
+			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)',
+		array(
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$recycle_boards[$row['id_board']] = $row['cat_name'] . ' - ' . $row['board_name'];
 	$smfFunc['db_free_result']($request);

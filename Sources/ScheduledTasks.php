@@ -78,13 +78,18 @@ function AutoTask()
 	else
 	{
 		// Select the next task to do.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_task, task, next_time, time_offset, time_regularity, time_unit
-			FROM {$db_prefix}scheduled_tasks
-			WHERE disabled = 0
-				AND next_time <= " . time() . "
+			FROM {db_prefix}scheduled_tasks
+			WHERE disabled = {int:inject_int_1}
+				AND next_time <= {int:inject_int_2}
 			ORDER BY next_time ASC
-			LIMIT 1", __FILE__, __LINE__);
+			LIMIT 1',
+			array(
+				'inject_int_1' => 0,
+				'inject_int_2' => time(),
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) != 0)
 		{
 			// The two important things really...
@@ -109,11 +114,17 @@ function AutoTask()
 				$next_time += $duration;
 
 			// Update it now, so no others run this!
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}scheduled_tasks
-				SET next_time = $next_time
-				WHERE id_task = $row[id_task]
-					AND next_time = $row[next_time]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}scheduled_tasks
+				SET next_time = {int:inject_int_1}
+				WHERE id_task = {int:inject_int_2}
+					AND next_time = {int:inject_int_3}',
+				array(
+					'inject_int_1' => $next_time,
+					'inject_int_2' => $row['id_task'],
+					'inject_int_3' => $row['next_time'],
+				)
+			);
 			$affected_rows = $smfFunc['db_affected_rows']();
 
 			// The function must exist or we are wasting our time, plus do some timestamp checking, and database check!
@@ -128,23 +139,30 @@ function AutoTask()
 				if ($completed)
 				{
 					$total_time = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $time_start)), 3);
-					$smfFunc['db_query']('', "
-						INSERT INTO {$db_prefix}log_scheduled_tasks
+					$smfFunc['db_query']('', '
+						INSERT INTO {db_prefix}log_scheduled_tasks
 							(id_task, time_run, time_taken)
 						VALUES
-							($row[id_task], " . time() . ", $total_time)", __FILE__, __LINE__);
+							(' . $row['id_task'] . ', ' . time() . ', ' . $total_time . ')',
+						array(
+						)
+					);
 				}
 			}
 		}
 		$smfFunc['db_free_result']($request);
 
 		// Get the next timestamp right.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT next_time
-			FROM {$db_prefix}scheduled_tasks
-			WHERE disabled = 0
+			FROM {db_prefix}scheduled_tasks
+			WHERE disabled = {int:inject_int_1}
 			ORDER BY next_time ASC
-			LIMIT 1", __FILE__, __LINE__);
+			LIMIT 1',
+			array(
+				'inject_int_1' => 0,
+			)
+		);
 		// No new task scheduled yet?
 		if ($smfFunc['db_num_rows']($request) === 0)
 			$nextEvent = time() + 86400;
@@ -171,13 +189,16 @@ function scheduled_approval_notification()
 	global $db_prefix, $scripturl, $modSettings, $mbname, $txt, $sourcedir, $smfFunc;
 
 	// Grab all the items awaiting approval and sort type then board - clear up any things that are no longer relevant.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT aq.id_msg, aq.id_attach, aq.id_event, m.id_topic, m.id_board, m.subject, t.id_first_msg,
 			b.id_profile
-		FROM {$db_prefix}approval_queue AS aq
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = aq.id_msg)
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)", __FILE__, __LINE__);
+		FROM {db_prefix}approval_queue AS aq
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = aq.id_msg)
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)',
+		array(
+		)
+	);
 	$notices = array();
 	$profiles = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -206,8 +227,11 @@ function scheduled_approval_notification()
 	$smfFunc['db_free_result']($request);
 
 	// Delete it all!
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}approval_queue", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}approval_queue',
+		array(
+		)
+	);
 
 	// If nothing quit now.
 	if (empty($notices))
@@ -216,11 +240,16 @@ function scheduled_approval_notification()
 	// Now we need to think about finding out *who* can approve - this is hard!
 
 	// First off, get all the groups with this permission and sort by board.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_group, id_profile, add_deny
-		FROM {$db_prefix}board_permissions
-		WHERE permission = 'approve_posts'
-			AND id_profile IN (" . implode(', ', $profiles) . ")", __FILE__, __LINE__);
+		FROM {db_prefix}board_permissions
+		WHERE permission = {string:inject_string_1}
+			AND id_profile IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $profiles,
+			'inject_string_1' => 'approve_posts',
+		)
+	);
 	$perms = array();
 	$addGroups = array(1);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -242,9 +271,12 @@ function scheduled_approval_notification()
 	$members = array();
 	if (in_array(2, $addGroups))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, id_board
-			FROM {$db_prefix}moderators", __FILE__, __LINE__);
+			FROM {db_prefix}moderators',
+			array(
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$mods[$row['id_member']][$row['id_board']] = true;
@@ -255,13 +287,19 @@ function scheduled_approval_notification()
 	}
 
 	// Come along one and all... until we reject you ;)
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, email_address, lngfile, id_group, additional_groups, mod_prefs
-		FROM {$db_prefix}members
-		WHERE id_group IN (" . implode(', ', $addGroups) . ")
-			OR FIND_IN_SET(" . implode(', additional_groups) OR FIND_IN_SET(', $addGroups) . ", additional_groups)
-			" . (empty($members) ? '' : " OR id_member IN (" . implode(', ', $members) . ")") . "
-		ORDER BY lngfile", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE id_group IN ({array_int:inject_array_int_1})
+			OR FIND_IN_SET({string:inject_string_1}, additional_groups)
+			' . (empty($members) ? '' : ' OR id_member IN ({array_int:inject_array_int_2})') . '
+		ORDER BY lngfile',
+		array(
+			'inject_array_int_1' => $addGroups,
+			'inject_array_int_2' => $members,
+			'inject_string_1' => implode(', additional_groups) OR FIND_IN_SET(', $addGroups),
+		)
+	);
 	$members = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -331,7 +369,7 @@ function scheduled_approval_notification()
 			{
 				// Build up the top of this section.
 				$emailbody .= $txt['scheduled_approval_email_' . $type] . "\n" .
-					"------------------------------------------------------\n";
+					'------------------------------------------------------' . "\n";
 
 				foreach ($items as $item)
 					$emailbody .= $item['subject'] . ' - ' . $item['href'] . "\n";
@@ -372,20 +410,29 @@ function scheduled_daily_maintenance()
 		'search_enable_captcha', 'search_floodcontrol_time', 'show_spider_online',
 	);
 
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}settings
-		WHERE variable IN ('" . implode("','", $emptySettings) . "')
-			AND (value = '0' OR value = '')", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}settings
+		WHERE variable IN (\'' . implode('\',\'', $emptySettings) . '\')
+			AND (value = {string:inject_string_1} OR value = {string:inject_string_2})',
+		array(
+			'inject_string_1' => '0',
+			'inject_string_2' => '',
+		)
+	);
 
 	// If warning decrement is enabled and we have people who have not had a new warning in 24 hours, lower their warning level.
 	list (, , $modSettings['warning_decrement']) = explode(',', $modSettings['warning_settings']);
 	if ($modSettings['warning_decrement'])
 	{
 		// Find every member who has a warning level...
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, warning
-			FROM {$db_prefix}members
-			WHERE warning > 0", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE warning > {int:inject_int_1}',
+			array(
+				'inject_int_1' => 0,
+			)
+		);
 		$members = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$members[$row['id_member']] = $row['warning'];
@@ -395,12 +442,17 @@ function scheduled_daily_maintenance()
 		if (!empty($members))
 		{
 			// Find out when they were last warned.
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_recipient, MAX(log_time) AS last_warning
-				FROM {$db_prefix}log_comments
-				WHERE id_recipient IN (" . implode(',', array_keys($members)) . ")
-					AND comment_type = 'warning'
-				GROUP BY id_recipient", __FILE__, __LINE__);
+				FROM {db_prefix}log_comments
+				WHERE id_recipient IN ({array_int:inject_array_int_1})
+					AND comment_type = {string:inject_string_1}
+				GROUP BY id_recipient',
+				array(
+					'inject_array_int_1' => array_keys($members),
+					'inject_string_1' => 'warning',
+				)
+			);
 			$member_changes = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
@@ -416,10 +468,15 @@ function scheduled_daily_maintenance()
 			// Have some members to change?
 			if (!empty($member_changes))
 				foreach ($member_changes as $change)
-					$smfFunc['db_query']('', "
-						UPDATE {$db_prefix}members
-						SET warning = $change[warning]
-						WHERE id_member = $change[id]", __FILE__, __LINE__);
+					$smfFunc['db_query']('', '
+						UPDATE {db_prefix}members
+						SET warning = {int:inject_int_1}
+						WHERE id_member = {int:inject_int_2}',
+						array(
+							'inject_int_1' => $change['warning'],
+							'inject_int_2' => $change['id'],
+						)
+					);
 		}
 	}
 
@@ -448,9 +505,12 @@ function scheduled_auto_optimize()
 	// Otherwise are we restricting the number of people online for this?
 	if (!empty($modSettings['autoOptMaxOnline']))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*)
-			FROM {$db_prefix}log_online", __FILE__, __LINE__);
+			FROM {db_prefix}log_online',
+			array(
+			)
+		);
 		list ($dont_do_it) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -487,14 +547,20 @@ function scheduled_daily_digest()
 	$is_weekly = !empty($is_weekly) ? 1 : 0;
 
 	// Right - get all the notification data FIRST.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT ln.id_topic, COALESCE(t.id_board, ln.id_board) AS id_board, mem.email_address, mem.member_name, mem.notify_types,
 			mem.lngfile, mem.id_member
-		FROM {$db_prefix}log_notify AS ln
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
-			LEFT JOIN {$db_prefix}topics AS t ON (ln.id_topic != 0 AND t.id_topic = ln.id_topic)
-		WHERE mem.notify_regularity = " . ($is_weekly ? '3' : '2') . "
-			AND mem.is_activated = 1", __FILE__, __LINE__);
+		FROM {db_prefix}log_notify AS ln
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
+			LEFT JOIN {db_prefix}topics AS t ON (ln.id_topic != {int:inject_int_1} AND t.id_topic = ln.id_topic)
+		WHERE mem.notify_regularity = {int:inject_int_2}
+			AND mem.is_activated = {int:inject_int_3}',
+		array(
+			'inject_int_1' => 0,
+			'inject_int_2' => $is_weekly ? '3' : '2',
+			'inject_int_3' => 1,
+		)
+	);
 	$members = array();
 	$langs = array();
 	$notify = array();
@@ -525,10 +591,14 @@ function scheduled_daily_digest()
 		return true;
 
 	// Just get the board names.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_board, name
-		FROM {$db_prefix}boards
-		WHERE id_board IN (" . implode(',', $boards) . ")", __FILE__, __LINE__);
+		FROM {db_prefix}boards
+		WHERE id_board IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $boards,
+		)
+	);
 	$boards = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$boards[$row['id_board']] = $row['name'];
@@ -538,15 +608,20 @@ function scheduled_daily_digest()
 		return true;
 
 	// Get the actual topics...
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT ld.note_type, t.id_topic, t.id_board, t.id_member_started, m.id_msg, m.subject,
 			b.name AS board_name
-		FROM {$db_prefix}log_digest AS ld
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ld.id_topic
-				AND t.id_board IN (" . implode(',', array_keys($boards)) . "))
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE " . ($is_weekly ? 'ld.daily != 2' : 'ld.daily IN (0, 2)'), __FILE__, __LINE__);
+		FROM {db_prefix}log_digest AS ld
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ld.id_topic
+				AND t.id_board IN ({array_int:inject_array_int_1}))
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE ' . ($is_weekly ? 'ld.daily != {int:inject_int_1}' : 'ld.daily IN (0, 2)'),
+		array(
+			'inject_array_int_1' => array_keys($boards),
+			'inject_int_1' => 2,
+		)
+	);
 	$types = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -635,7 +710,7 @@ function scheduled_daily_digest()
 		// Do the start stuff!
 		$email = array(
 			'subject' => $mbname . ' - ' . $langtxt[$lang]['subject'],
-			'body' => $member['name'] . ",\n\n" . $langtxt[$lang]['intro'] . "\n" . $scripturl . '?action=profile;u=' . $member['id'] . ';sa=notification' . "\n",
+			'body' => $member['name'] . ',' . "\n\n" . $langtxt[$lang]['intro'] . "\n" . $scripturl . '?action=profile;u=' . $member['id'] . ';sa=notification' . "\n",
 			'email' => $member['email'],
 		);
 
@@ -649,7 +724,7 @@ function scheduled_daily_digest()
 					{
 						if (!$titled)
 						{
-							$email['body'] .= "\n" . $langtxt[$lang]['new_topics'] . ":\n-----------------------------------------------";
+							$email['body'] .= "\n" . $langtxt[$lang]['new_topics'] . ':' . "\n" . '-----------------------------------------------';
 							$titled = true;
 						}
 						$email['body'] .= "\n" . sprintf($langtxt[$lang]['topic_lines'], $topic['subject'], $board['name']);
@@ -668,7 +743,7 @@ function scheduled_daily_digest()
 					{
 						if (!$titled)
 						{
-							$email['body'] .= "\n" . $langtxt[$lang]['new_replies'] . ":\n-----------------------------------------------";
+							$email['body'] .= "\n" . $langtxt[$lang]['new_replies'] . ':' . "\n" . '-----------------------------------------------';
 							$titled = true;
 						}
 						$email['body'] .= "\n" . ($topic['count'] == 1 ? sprintf($langtxt[$lang]['replies_one'], $topic['subject']) : sprintf($langtxt[$lang]['replies_many'], $topic['count'], $topic['subject']));
@@ -691,7 +766,7 @@ function scheduled_daily_digest()
 					{
 						if (!$titled)
 						{
-							$email['body'] .= "\n" . $langtxt[$lang]['mod_actions'] . ":\n-----------------------------------------------";
+							$email['body'] .= "\n" . $langtxt[$lang]['mod_actions'] . ':' . "\n" . '-----------------------------------------------';
 							$titled = true;
 						}
 						$email['body'] .= "\n" . sprintf($langtxt[$lang][$note_type], $topic['subject']);
@@ -711,32 +786,55 @@ function scheduled_daily_digest()
 	// Clean up...
 	if ($is_weekly)
 	{
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_digest
-			WHERE daily != 0", __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_digest
-			SET daily = 2
-			WHERE daily = 0", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_digest
+			WHERE daily != {int:inject_int_1}',
+			array(
+				'inject_int_1' => 0,
+			)
+		);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_digest
+			SET daily = {int:inject_int_1}
+			WHERE daily = {int:inject_int_2}',
+			array(
+				'inject_int_1' => 2,
+				'inject_int_2' => 0,
+			)
+		);
 	}
 	else
 	{
 		// Clear any only weekly ones, and stop us from sending daily again.
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_digest
-			WHERE daily = 2", __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_digest
-			SET daily = 1
-			WHERE daily = 0", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_digest
+			WHERE daily = {int:inject_int_1}',
+			array(
+				'inject_int_1' => 2,
+			)
+		);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_digest
+			SET daily = {int:inject_int_1}
+			WHERE daily = {int:inject_int_2}',
+			array(
+				'inject_int_1' => 1,
+				'inject_int_2' => 0,
+			)
+		);
 	}
 
 	// Just in case the member changes their settings mark this as sent.
 	$members = array_keys($members);
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}log_notify
-		SET sent = 1
-		WHERE id_member IN (" . implode(',', $members) . ")", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}log_notify
+		SET sent = {int:inject_int_1}
+		WHERE id_member IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $members,
+			'inject_int_1' => 1,
+		)
+	);
 
 	// Log we've done it...
 	return true;
@@ -770,11 +868,17 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	{
 		$delay = !empty($modSettings['mail_limit']) && $modSettings['mail_limit'] < 5 ? 10 : 5;
 
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}settings
-			SET value = " . (time() + $delay) . "
-			WHERE variable = 'mail_next_send'
-				AND value = $modSettings[mail_next_send]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}settings
+			SET value = {string:inject_string_1}
+			WHERE variable = {string:inject_string_2}
+				AND value = {string:inject_string_3}',
+			array(
+				'inject_string_1' => time() + $delay,
+				'inject_string_2' => 'mail_next_send',
+				'inject_string_3' => $modSettings['mail_next_send'],
+			)
+		);
 		if ($smfFunc['db_affected_rows']() == 0)
 			return false;
 		$modSettings['mail_next_send'] = time() + $delay;
@@ -805,11 +909,14 @@ function ReduceMailQueue($number = false, $override_limit = false)
 	}
 
 	// Now we know how many we're sending, let's send them.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT /*!40001 SQL_NO_CACHE */ id_mail, recipient, body, subject, headers, send_html
-		FROM {$db_prefix}mail_queue
+		FROM {db_prefix}mail_queue
 		ORDER BY priority DESC, id_mail ASC
-		LIMIT $number", __FILE__, __LINE__);
+		LIMIT ' . $number,
+		array(
+		)
+	);
 	$ids = array();
 	$emails = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -828,19 +935,29 @@ function ReduceMailQueue($number = false, $override_limit = false)
 
 	// Delete, delete, delete!!!
 	if (!empty($ids))
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}mail_queue
-			WHERE id_mail IN (" . implode(',', $ids) . ")", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}mail_queue
+			WHERE id_mail IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $ids,
+			)
+		);
 
 	// Don't believe we have any left?
 	if (count($ids) < $number)
 	{
 		// Only update the setting if no-one else has beaten us to it.
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}settings
-			SET value = '0'
-			WHERE variable = 'mail_next_send'
-				AND value = '$modSettings[mail_next_send]'", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}settings
+			SET value = {string:inject_string_1}
+			WHERE variable = {string:inject_string_2}
+				AND value = {string:inject_string_3}',
+			array(
+				'inject_string_1' => '0',
+				'inject_string_2' => 'mail_next_send',
+				'inject_string_3' => $modSettings['mail_next_send'],
+			)
+		);
 	}
 
 	if (empty($ids))
@@ -870,7 +987,7 @@ function ReduceMailQueue($number = false, $override_limit = false)
 				apache_reset_timeout();
 		}
 		else
-			smtp_mail(array($email['to']), $email['subject'], $email['body'], $email['send_html'] ? $email['headers'] : "Mime-Version: 1.0\r\n" . $email['headers']);
+			smtp_mail(array($email['to']), $email['subject'], $email['body'], $email['send_html'] ? $email['headers'] : 'Mime-Version: 1.0' . "\r\n" . $email['headers']);
 	}
 
 	// Had something to send...
@@ -897,11 +1014,15 @@ function CalculateNextTrigger($tasks = array(), $forceUpdate = false)
 	$nextTaskTime = empty($tasks) ? time() + 86400 : $modSettings['next_task_time'];
 
 	// Get the critical info for the tasks.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_task, next_time, time_offset, time_regularity, time_unit
-		FROM {$db_prefix}scheduled_tasks
-		WHERE disabled = 0
-			$task_query", __FILE__, __LINE__);
+		FROM {db_prefix}scheduled_tasks
+		WHERE disabled = {int:inject_int_1}
+			' . $task_query,
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	$tasks = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -921,10 +1042,15 @@ function CalculateNextTrigger($tasks = array(), $forceUpdate = false)
 
 	// Now make the changes!
 	foreach ($tasks as $id => $time)
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}scheduled_tasks
-			SET next_time = $time
-			WHERE id_task = $id", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}scheduled_tasks
+			SET next_time = {int:inject_int_1}
+			WHERE id_task = {int:inject_int_2}',
+			array(
+				'inject_int_1' => $time,
+				'inject_int_2' => $id,
+			)
+		);
 
 	// If the next task is now different update.
 	if ($modSettings['next_task_time'] != $nextTaskTime)
@@ -938,14 +1064,14 @@ function next_time($regularity, $unit, $offset)
 	if ($regularity == 0)
 		$regularity = 2;
 
-	$curHour = date("H", time());
-	$curMin = date("i", time());
+	$curHour = date('H', time());
+	$curMin = date('i', time());
 	$next_time = 9999999999;
 
 	// If the unit is minutes only check regularity in minutes.
 	if ($unit == 'm')
 	{
-		$off = date("i", $offset);
+		$off = date('i', $offset);
 
 		// If it's now just pretend it ain't,
 		if ($off == $curMin)
@@ -965,7 +1091,7 @@ function next_time($regularity, $unit, $offset)
 	// Otherwise, work out what the offset would be with todays date.
 	else
 	{
-		$next_time = mktime(date("H", $offset), date("i", $offset), 0, date("m"), date("d"), date("Y"));
+		$next_time = mktime(date('H', $offset), date('i', $offset), 0, date('m'), date('d'), date('Y'));
 
 		// Make the time offset in the past!
 		if ($next_time > time())
@@ -1000,11 +1126,15 @@ function loadEssentialThemeData()
 	global $settings, $modSettings, $db_prefix, $smfFunc;
 
 	// Get all the default theme variables.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT id_theme, variable, value
-		FROM {$db_prefix}themes
-		WHERE id_member = 0
-			AND id_theme IN (1, $modSettings[theme_guests])", __FILE__, __LINE__);
+		FROM {db_prefix}themes
+		WHERE id_member = {int:inject_int_1}
+			AND id_theme IN (1, ' . $modSettings['theme_guests'] . ')',
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		$settings[$row['variable']] = $row['value'];
@@ -1021,9 +1151,12 @@ function scheduled_fetchSMfiles()
 	global $db_prefix, $sourcedir, $txt, $language, $settings, $forum_version, $modSettings, $smfFunc;
 
 	// What files do we want to get
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_file, filename, path, parameters
-		FROM {$db_prefix}admin_info_files", __FILE__, __LINE__);
+		FROM {db_prefix}admin_info_files',
+		array(
+		)
+	);
 
 	$js_files = array();
 
@@ -1063,10 +1196,14 @@ function scheduled_fetchSMfiles()
 		}
 
 		// Save the file to the database.
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}admin_info_files
-			SET data = SUBSTRING('" . $smfFunc['db_escape_string']($file_data) . "', 1, 65534)
-			WHERE id_file = $ID_FILE", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}admin_info_files
+			SET data = SUBSTRING(\'' . $smfFunc['db_escape_string']($file_data) . '\', 1, 65534)
+			WHERE id_file = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $ID_FILE,
+			)
+		);
 	}
 	return true;
 }
@@ -1088,13 +1225,17 @@ function scheduled_birthdayemails()
 	$day = date('j'); // Day without leading zeros.
 
 	// So who are the lucky ones?  Don't include those who don't want them.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, lngfile, email_address
-		FROM {$db_prefix}members
-		WHERE MONTH(birthdate) = $month
-			AND DAYOFMONTH(birthdate) = $day
-			AND notify_announcements = 1
-			AND YEAR(birthdate) > 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE MONTH(birthdate) = ' . $month . '
+			AND DAYOFMONTH(birthdate) = ' . $day . '
+			AND notify_announcements = {int:inject_int_1}
+			AND YEAR(birthdate) > 1',
+		array(
+			'inject_int_1' => 1,
+		)
+	);
 
 	// Group them by languages.
 	$birthdays = array();
@@ -1154,9 +1295,13 @@ function scheduled_weekly_maintenance()
 			// Figure out when our cutoff time is.  1 day = 86400 seconds.
 			$t = time() - $modSettings['pruneErrorLog'] * 86400;
 
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_errors
-				WHERE log_time < $t", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_errors
+				WHERE log_time < {int:inject_int_1}',
+				array(
+					'inject_int_1' => $t,
+				)
+			);
 		}
 
 		if (!empty($modSettings['pruneModLog']))
@@ -1164,9 +1309,13 @@ function scheduled_weekly_maintenance()
 			// Figure out when our cutoff time is.  1 day = 86400 seconds.
 			$t = time() - $modSettings['pruneModLog'] * 86400;
 
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_actions
-				WHERE log_time < $t", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_actions
+				WHERE log_time < {int:inject_int_1}',
+				array(
+					'inject_int_1' => $t,
+				)
+			);
 		}
 
 		if (!empty($modSettings['pruneBanLog']))
@@ -1174,9 +1323,13 @@ function scheduled_weekly_maintenance()
 			// Figure out when our cutoff time is.  1 day = 86400 seconds.
 			$t = time() - $modSettings['pruneBanLog'] * 86400;
 
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_banned
-				WHERE log_time < $t", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_banned
+				WHERE log_time < {int:inject_int_1}',
+				array(
+					'inject_int_1' => $t,
+				)
+			);
 		}
 
 		if (!empty($modSettings['pruneReportLog']))
@@ -1186,10 +1339,14 @@ function scheduled_weekly_maintenance()
 
 			// This one is more complex then the other logs.  First we need to figure out which reports are too old.
 			$reports = array();
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT id_report
-				FROM {$db_prefix}log_reported
-				WHERE time_started < $t", __FILE__, __LINE__);
+				FROM {db_prefix}log_reported
+				WHERE time_started < {int:inject_int_1}',
+				array(
+					'inject_int_1' => $t,
+				)
+			);
 
 			while ($row = $smfFunc['db_fetch_row']($result))
 				$reports[] = $row[0];
@@ -1201,13 +1358,21 @@ function scheduled_weekly_maintenance()
 				$reports = implode(', ', $reports);
 
 				// Now delete the reports...
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_reported
-					WHERE id_report IN ($reports)", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					DELETE FROM {db_prefix}log_reported
+					WHERE id_report IN ({array_int:inject_array_int_1})',
+					array(
+						'inject_array_int_1' => $reports,
+					)
+				);
 				// And delete the comments for those reports...
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}log_reported_comments
-					WHERE id_report IN ($reports)", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					DELETE FROM {db_prefix}log_reported_comments
+					WHERE id_report IN ({array_int:inject_array_int_1})',
+					array(
+						'inject_array_int_1' => $reports,
+					)
+				);
 			}
 		}
 
@@ -1216,9 +1381,13 @@ function scheduled_weekly_maintenance()
 			// Figure out when our cutoff time is.  1 day = 86400 seconds.
 			$t = time() - $modSettings['pruneScheduledTaskLog'] * 86400;
 
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_scheduled_tasks
-				WHERE time_run < $t", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_scheduled_tasks
+				WHERE time_run < {int:inject_int_1}',
+				array(
+					'inject_int_1' => $t,
+				)
+			);
 		}
 
 		if (!empty($modSettings['pruneSpiderHitLog']))
@@ -1226,24 +1395,38 @@ function scheduled_weekly_maintenance()
 			// Figure out when our cutoff time is.  1 day = 86400 seconds.
 			$t = time() - $modSettings['pruneSpiderHitLog'] * 86400;
 
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_spider_hits
-				WHERE log_time < $t", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_spider_hits
+				WHERE log_time < {int:inject_int_1}',
+				array(
+					'inject_int_1' => $t,
+				)
+			);
 		}
 	}
 
 	// Get rid of any paid subscriptions that were never actioned.
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}log_subscribed
-		WHERE end_time = 0
-			AND status = 0
-			AND start_time < " . (time() - 60) . "
-			AND payments_pending < 1", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_subscribed
+		WHERE end_time = {int:inject_int_1}
+			AND status = {int:inject_int_1}
+			AND start_time < {int:inject_int_2}
+			AND payments_pending < {int:inject_int_3}',
+		array(
+			'inject_int_1' => 0,
+			'inject_int_2' => time() - 60,
+			'inject_int_3' => 1,
+		)
+	);
 
 	// Some OS's don't seem to clean out their sessions.
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}sessions
-		WHERE last_update < " . (time() - 86400), __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}sessions
+		WHERE last_update < {int:inject_int_1}',
+		array(
+			'inject_int_1' => time() - 86400,
+		)
+	);
 
 	return true;
 }
@@ -1254,11 +1437,16 @@ function scheduled_paid_subscriptions()
 	global $db_prefix, $txt, $sourcedir, $scripturl, $smfFunc;
 
 	// Start off by checking for removed subscriptions.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_subscribe, id_member
-		FROM {$db_prefix}log_subscribed
-		WHERE status = 1
-			AND end_time < " . time(), __FILE__, __LINE__);
+		FROM {db_prefix}log_subscribed
+		WHERE status = {int:inject_int_1}
+			AND end_time < {int:inject_int_2}',
+		array(
+			'inject_int_1' => 1,
+			'inject_int_2' => time(),
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		require_once($sourcedir . '/ManagePaid.php');
@@ -1267,15 +1455,20 @@ function scheduled_paid_subscriptions()
 	$smfFunc['db_free_result']($request);
 
 	// Get all those about to expire that have not had a reminder sent.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT ls.id_sublog, m.id_member, m.member_name, m.email_address, s.name, ls.end_time
-		FROM {$db_prefix}log_subscribed AS ls
-			INNER JOIN {$db_prefix}subscriptions AS s ON (s.id_subscribe = ls.id_subscribe)
-			INNER JOIN {$db_prefix}members AS m ON (m.id_member = ls.id_member)
-		WHERE ls.status = 1
-			AND ls.reminder_sent = 0
-			AND s.reminder > 0
-			AND ls.end_time < (" . time() . " + s.reminder * 86400)", __FILE__, __LINE__);
+		FROM {db_prefix}log_subscribed AS ls
+			INNER JOIN {db_prefix}subscriptions AS s ON (s.id_subscribe = ls.id_subscribe)
+			INNER JOIN {db_prefix}members AS m ON (m.id_member = ls.id_member)
+		WHERE ls.status = {int:inject_int_1}
+			AND ls.reminder_sent = {int:inject_int_2}
+			AND s.reminder > {int:inject_int_2}
+			AND ls.end_time < (' . time() . ' + s.reminder * 86400)',
+		array(
+			'inject_int_1' => 1,
+			'inject_int_2' => 0,
+		)
+	);
 	$subs_reminded = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -1305,10 +1498,15 @@ function scheduled_paid_subscriptions()
 
 	// Mark the reminder as sent.
 	if (!empty($subs_reminded))
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_subscribed
-			SET reminder_sent = 1
-			WHERE id_sublog IN (" . implode(',', $subs_reminded) . ")", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_subscribed
+			SET reminder_sent = {int:inject_int_1}
+			WHERE id_sublog IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $subs_reminded,
+				'inject_int_1' => 1,
+			)
+		);
 
 	return true;
 }

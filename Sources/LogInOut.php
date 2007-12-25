@@ -212,21 +212,29 @@ function Login2()
 		}
 
 	// Load the data up!
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
-		FROM {$db_prefix}members
-		WHERE member_name = '$_REQUEST[user]'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE member_name = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $_REQUEST['user'],
+		)
+	);
 	// Probably mistyped or their email, try it as an email address. (member_name first, though!)
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
-			FROM {$db_prefix}members
-			WHERE email_address = '$_REQUEST[user]'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE email_address = {string:inject_string_1}
+			LIMIT 1',
+			array(
+				'inject_string_1' => $_REQUEST['user'],
+			)
+		);
 		// Let them try again, it didn't match anything...
 		if ($smfFunc['db_num_rows']($request) == 0)
 		{
@@ -444,9 +452,12 @@ function DoLogin()
 	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'member_ip2' => '\'' . $_SERVER['BAN_CHECK_IP'] . '\''));
 
 	// Get rid of the online entry for that old guest....
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}log_online
-		WHERE session = 'ip$user_info[ip]'", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_online
+		WHERE session = \'ip' . $user_info['ip'] . '\'',
+		array(
+		)
+	);
 	$_SESSION['log_time'] = 0;
 
 	// Just log you back out if it's in maintenance mode and you AREN'T an admin.
@@ -477,9 +488,13 @@ function Logout($internal = false, $redirect = true)
 			call_user_func($modSettings['integrate_logout'], $user_settings['member_name']);
 	
 		// If you log out, you aren't online anymore :P.
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_online
-			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_online
+			WHERE id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+			)
+		);
 	}
 
 	$_SESSION['log_time'] = 0;

@@ -80,13 +80,17 @@ function getMembersOnlineStats($membersOnlineOptions)
 		$spiders = unserialize($modSettings['spider_name_cache']);
 
 	// Load the users online right now.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			lo.id_member, lo.log_time, lo.id_spider, mem.real_name, mem.member_name, mem.show_online,
 			mg.online_color, mg.id_group, mg.group_name
-		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lo.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)", __FILE__, __LINE__);
+		FROM {db_prefix}log_online AS lo
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lo.id_member)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)',
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if (empty($row['real_name']))
@@ -213,17 +217,21 @@ function trackStatsUsersOnline($total_users_online)
 	// No entry exists for today yet?
 	if (!isset($modSettings['mostOnlineUpdated']) || $modSettings['mostOnlineUpdated'] != $date)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT most_on
-			FROM {$db_prefix}log_activity
-			WHERE date = '$date'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}log_activity
+			WHERE date = {date:inject_date_1}
+			LIMIT 1',
+			array(
+				'inject_date_1' => $date,
+			)
+		);
 
 		// The log_activity hasn't got an entry for today?
 		if ($smfFunc['db_num_rows']($request) === 0)
 		{
 			$smfFunc['db_insert']('ignore',
-				"{$db_prefix}log_activity",
+				$db_prefix . 'log_activity',
 				array('date', 'most_on'),
 				array('\'' . $date . '\'', $total_users_online),
 				array('date'), __FILE__, __LINE__

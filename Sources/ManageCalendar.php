@@ -193,23 +193,36 @@ function EditHoliday()
 		checkSession();
 
 		if (isset($_REQUEST['delete']))
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}calendar_holidays
-				WHERE id_holiday = $_REQUEST[holiday]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}calendar_holidays
+				WHERE id_holiday = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $_REQUEST['holiday'],
+				)
+			);
 		else
 		{
 			$date = strftime($_REQUEST['year'] <= 4 ? '0004-%m-%d' : '%Y-%m-%d', mktime(0, 0, 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']));
 			if (isset($_REQUEST['edit']))
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}calendar_holidays
-					SET event_date = '$date', title = '$_REQUEST[title]'
-					WHERE id_holiday = $_REQUEST[holiday]", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}calendar_holidays
+					SET event_date = {date:inject_date_1}, title = {string:inject_string_1}
+					WHERE id_holiday = {int:inject_int_1}',
+					array(
+						'inject_date_1' => $date,
+						'inject_int_1' => $_REQUEST['holiday'],
+						'inject_string_1' => $_REQUEST['title'],
+					)
+				);
 			else
-				$smfFunc['db_query']('', "
-					INSERT INTO {$db_prefix}calendar_holidays
+				$smfFunc['db_query']('', '
+					INSERT INTO {db_prefix}calendar_holidays
 						(event_date, title)
 					VALUES
-						('$date', SUBSTRING('$_REQUEST[title]', 1, 48))", __FILE__, __LINE__);
+						(\'' . $date . '\', SUBSTRING(\'' . $_REQUEST['title'] . '\', 1, 48))',
+					array(
+					)
+				);
 		}
 
 		updateSettings(array(
@@ -231,11 +244,15 @@ function EditHoliday()
 	// If it's not new load the data.
 	else
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_holiday, YEAR(event_date) AS year, MONTH(event_date) AS month, DAYOFMONTH(event_date) AS day, title
-			FROM {$db_prefix}calendar_holidays
-			WHERE id_holiday = $_REQUEST[holiday]
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}calendar_holidays
+			WHERE id_holiday = {int:inject_int_1}
+			LIMIT 1',
+			array(
+				'inject_int_1' => $_REQUEST['holiday'],
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['holiday'] = array(
 				'id' => $row['id_holiday'],
@@ -257,10 +274,13 @@ function ModifyCalendarSettings($return_config = false)
 
 	// Load the boards list.
 	$boards = array('');
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT b.id_board, b.name AS board_name, c.name AS cat_name
-		FROM {$db_prefix}boards AS b
-			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)", __FILE__, __LINE__);
+		FROM {db_prefix}boards AS b
+			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)',
+		array(
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$boards[$row['id_board']] = $row['cat_name'] . ' - ' . $row['board_name'];
 	$smfFunc['db_free_result']($request);

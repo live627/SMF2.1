@@ -913,7 +913,7 @@ function fixLanguageFile($filename, $type, $lang, $test = false)
 	// The warning for editing files direct?
 	if ($type != 'index' && $type != 'Install' && preg_match('~//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*//\s[\w\d\s!\.&;]*index\.' . $lang . '\.php\.~', $fileContents, $matches) == false)
 	{
-		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$1// Important! Before editing these language files please read the text at the topic of index.$lang.php.\n\n", $fileContents);
+		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" .'1// Important! Before editing these language files please read the text at the topic of index.' . $lang . '.php.' . "\n\n", $fileContents);
 		$edit_count = 0;
 	}
 	// Instructions on index?
@@ -928,14 +928,14 @@ the cache go to Admin => Maintenance => Clean Cache.
    except for line breaks.
 
 */';
-		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$1$long_warning\n\n", $fileContents);
+		$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$" .'1' . $long_warning . "\n\n", $fileContents);
 
 		$edit_count = 0;
 	}
 	// Fix up the help file with existing indexes.
 	if ($type == 'Help' && preg_match('~\\t\{\$~', $fileContents))
 	{
-		$fileContents = preg_replace('~\\t\{\$~', "\t{" . '\\\\' . "$", $fileContents);
+		$fileContents = preg_replace('~\\t\{\$~', "\t" . '{' . '\\\\' . "$", $fileContents);
 		$edit_count = 0;
 	}
 	// More silly amounts of joins.
@@ -947,41 +947,41 @@ the cache go to Admin => Maintenance => Clean Cache.
 	// Scripturl/Boardurl?
 	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(scripturl|boardurl)~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~\$(scripturl|boardurl)~', "#$1", $fileContents);
+		$fileContents = preg_replace('~\$(scripturl|boardurl)~', '#' . "$" .'1', $fileContents);
 	}
 	// Forumname/images/regards?
 	if ($type != 'Install' && $type != 'Help' && preg_match('~\$(context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\]~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\])~', "#$1", $fileContents);
+		$fileContents = preg_replace('~\$((context|settings|txt)\[\'?(forum_name|images_url|130|regards_team)\'?\])~', '#' . "$" .'1', $fileContents);
 	}
 	// Remove variables.
 	if ($type != 'Install' && preg_match('~\' \. \$(\w*) \. \'~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~\' \. \$(\w*) \. \'~', "%s", $fileContents);
+		$fileContents = preg_replace('~\' \. \$(\w*) \. \'~', '%s', $fileContents);
 		$edit_count = 0;
 	}
 	// And any double arrays.
 	if ($type != 'Install' && preg_match('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', $fileContents))
 	{
-		$fileContents = preg_replace('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "%s", $fileContents);
+		$fileContents = preg_replace('~\' \. \$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', '%s', $fileContents);
 		$edit_count = 0;
 	}
 	// Do the same for ones which are only half opened.
 	if ($type != 'Install' && preg_match('~\$(\w*) \. \'~', $fileContents))
 	{
-		$fileContents = preg_replace('~\$(\w*) \. \'~', "'%s", $fileContents);
+		$fileContents = preg_replace('~\$(\w*) \. \'~', '\'%s', $fileContents);
 		$edit_count = 0;
 	}
 	// And any double arrays.
 	if ($type != 'Install' && preg_match('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', $fileContents))
 	{
-		$fileContents = preg_replace('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', "'%s", $fileContents);
+		$fileContents = preg_replace('~\$(\w*)\[\'?([\d\w]*)\'?\] \. \'~', '\'%s', $fileContents);
 		$edit_count = 0;
 	}
 	// Put back in any variables.
 	if ($type != 'Install' && $type != 'Help' && preg_match('~#(context|settings|txt|boardurl|scripturl)~', $fileContents, $match))
 	{
-		$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$1", $fileContents);
+		$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$" .'1', $fileContents);
 	}
 
 	if (isset($txtChanges[$type]))
@@ -1050,8 +1050,8 @@ function fixTemplateFile($filename, $test = false)
 			$buttons[] = array(
 				'full' => $match,
 				'replace' => $match,
-				'lab1' => trim(strtr($matches[1][$k], array('"' => '', "'" => ''))),
-				'lab2' => trim(strtr($matches[3][$k], array('"' => '', "'" => ''))),
+				'lab1' => trim(strtr($matches[1][$k], array('"' => '', '\'' => ''))),
+				'lab2' => trim(strtr($matches[3][$k], array('"' => '', '\'' => ''))),
 			);
 		}
 	}
@@ -1065,7 +1065,7 @@ function fixTemplateFile($filename, $test = false)
 			$buttons[] = array(
 				'full' => $match,
 				'replace' => $match,
-				'lab1' => trim(strtr($matches[1][$k], array('"' => '', "'" => ''))),
+				'lab1' => trim(strtr($matches[1][$k], array('"' => '', '\'' => ''))),
 			);
 		}
 	}
@@ -1099,13 +1099,13 @@ function fixTemplateFile($filename, $test = false)
 				if (isset($button['lab1']) && $button['lab1'] == $find)
 				{
 					unset($buttons[$k]['lab1']);
-					$buttons[$k]['replace'] = strtr($buttons[$k]['replace'], array($find => is_numeric($find) ? "'$replace'" : $replace));
+					$buttons[$k]['replace'] = strtr($buttons[$k]['replace'], array($find => is_numeric($find) ? '\'' . $replace . '\'' : $replace));
 				}
 
 				if (isset($button['lab2']) && $button['lab2'] == $find)
 				{
 					unset($buttons[$k]['lab2']);
-					$buttons[$k]['replace'] = strtr($buttons[$k]['replace'], array($find => is_numeric($find) ? "'$replace'" : $replace));
+					$buttons[$k]['replace'] = strtr($buttons[$k]['replace'], array($find => is_numeric($find) ? '\'' . $replace . '\'' : $replace));
 				}
 			}
 		}

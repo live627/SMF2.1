@@ -93,14 +93,20 @@ function GroupList()
 	global $txt, $db_prefix, $scripturl, $user_profile, $user_info, $context, $settings, $modSettings, $smfFunc;
 
 	// Yep, find the groups...
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, mg.description, mg.group_type, mg.online_color, mg.hidden,
 			mg.stars, IFNULL(gm.id_member, 0) AS can_moderate
-		FROM {$db_prefix}membergroups AS mg
-			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = $user_info[id])
-		WHERE mg.min_posts = -1
-			AND mg.id_group != 3
-		ORDER BY group_name", __FILE__, __LINE__);
+		FROM {db_prefix}membergroups AS mg
+			LEFT JOIN {db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = {int:current_member})
+		WHERE mg.min_posts = {int:inject_int_1}
+			AND mg.id_group != {int:inject_int_2}
+		ORDER BY group_name',
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => -1,
+			'inject_int_2' => 3,
+		)
+	);
 	// This is where we store our groups.
 	$context['groups'] = array();
 	$group_ids = array();
@@ -131,11 +137,15 @@ function GroupList()
 	// Count up the members separately...
 	if (!empty($group_ids))
 	{
-		$query = $smfFunc['db_query']('', "
+		$query = $smfFunc['db_query']('', '
 			SELECT id_group, COUNT(*) AS num_members
-			FROM {$db_prefix}members
-			WHERE id_group IN (" . implode(', ', $group_ids) . ")
-			GROUP BY id_group", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_group IN ({array_int:inject_array_int_1})
+			GROUP BY id_group',
+			array(
+				'inject_array_int_1' => $group_ids,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($query))
 			$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
 		$smfFunc['db_free_result']($query);
@@ -143,14 +153,19 @@ function GroupList()
 		// Only do additional groups if we can moderate...
 		if ($context['can_moderate'])
 		{
-			$query = $smfFunc['db_query']('', "
+			$query = $smfFunc['db_query']('', '
 				SELECT mg.id_group, COUNT(*) AS num_members
-				FROM {$db_prefix}membergroups AS mg
-					INNER JOIN {$db_prefix}members AS mem ON (mem.additional_groups != ''
+				FROM {db_prefix}membergroups AS mg
+					INNER JOIN {db_prefix}members AS mem ON (mem.additional_groups != {string:inject_string_1}
 						AND mem.id_group != mg.id_group
 						AND FIND_IN_SET(mg.id_group, mem.additional_groups))
-				WHERE mg.id_group IN (" . implode(', ', $group_ids) . ")
-				GROUP BY mg.id_group", __FILE__, __LINE__);
+				WHERE mg.id_group IN ({array_int:inject_array_int_1})
+				GROUP BY mg.id_group',
+				array(
+					'inject_array_int_1' => $group_ids,
+					'inject_string_1' => '',
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($query))
 				$context['groups'][$row['id_group']]['num_members'] += $row['num_members'];
 			$smfFunc['db_free_result']($query);
@@ -173,12 +188,17 @@ function MembergroupMembers()
 		fatal_lang_error('membergroup_does_not_exist', false);
 
 	// Load up the group details.
-	$request = $smfFunc['db_query']('', "
-		SELECT id_group AS id, group_name AS name, min_posts = -1 AS assignable, hidden, online_color,
-			stars, description, min_posts != -1 AS is_post_group
-		FROM {$db_prefix}membergroups
-		WHERE id_group = $_REQUEST[group]
-		LIMIT 1", __FILE__, __LINE__);
+	$request = $smfFunc['db_query']('', '
+		SELECT id_group AS id, group_name AS name, min_posts = {int:inject_int_1} AS assignable, hidden, online_color,
+			stars, description, min_posts != {int:inject_int_1} AS is_post_group
+		FROM {db_prefix}membergroups
+		WHERE id_group = {int:inject_int_2}
+		LIMIT 1',
+		array(
+			'inject_int_1' => -1,
+			'inject_int_2' => $_REQUEST['group'],
+		)
+	);
 	// Doesn't exist?
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('membergroup_does_not_exist', false);
@@ -196,11 +216,15 @@ function MembergroupMembers()
 	);
 
 	// Load all the group moderators, for fun.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT mem.id_member, mem.real_name
-		FROM {$db_prefix}group_moderators AS mods
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-		WHERE mods.id_group = $_REQUEST[group]", __FILE__, __LINE__);
+		FROM {db_prefix}group_moderators AS mods
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+		WHERE mods.id_group = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $_REQUEST['group'],
+		)
+	);
 	$context['group']['moderators'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -269,19 +293,24 @@ function MembergroupMembers()
 			$member_query[] = 'id_member IN (' . implode(',', $member_ids) . ')';
 		if (!empty($member_names))
 		{
-			$member_query[] = "LOWER(member_name) IN ('" . implode("', '", $member_names) . "')";
-			$member_query[] = "LOWER(real_name) IN ('" . implode("', '", $member_names) . "')";
+			$member_query[] = 'LOWER(member_name) IN (\'' . implode('\', \'', $member_names) . '\')';
+			$member_query[] = 'LOWER(real_name) IN (\'' . implode('\', \'', $member_names) . '\')';
 		}
 
 		$members = array();
 		if (!empty($member_query))
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_member
-				FROM {$db_prefix}members
-				WHERE (" . implode(' OR ', $member_query) . ")
-					AND id_group != $_REQUEST[group]
-					AND NOT FIND_IN_SET($_REQUEST[group], additional_groups)", __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE (' . implode(' OR ', $member_query) . ')
+					AND id_group != {int:inject_int_1}
+					AND NOT FIND_IN_SET({string:inject_string_1}, additional_groups)',
+				array(
+					'inject_int_1' => $_REQUEST['group'],
+					'inject_string_1' => $_REQUEST['group'],
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$members[] = $row['id_member'];
 			$smfFunc['db_free_result']($request);
@@ -323,15 +352,18 @@ function MembergroupMembers()
 
 	// The where on the query is interesting. Non-moderators should only see people who are in this group as primary.
 	if ($context['group']['can_moderate'])
-		$where = $context['group']['is_post_group'] ? "id_post_group = $_REQUEST[group]" : "id_group = $_REQUEST[group] OR FIND_IN_SET($_REQUEST[group], additional_groups)";
+		$where = $context['group']['is_post_group'] ? 'id_post_group = ' . $_REQUEST['group'] : 'id_group = ' . $_REQUEST['group'] . ' OR FIND_IN_SET(' . $_REQUEST['group'] . ', additional_groups)';
 	else
-		$where = $context['group']['is_post_group'] ? "id_post_group = $_REQUEST[group]" : "id_group = $_REQUEST[group]";
+		$where = $context['group']['is_post_group'] ? 'id_post_group = ' . $_REQUEST['group'] : 'id_group = ' . $_REQUEST['group'];
 
 	// Count members of the group.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}members
-		WHERE $where", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE ' . $where,
+		array(
+		)
+	);
 	list ($context['total_members']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -341,13 +373,16 @@ function MembergroupMembers()
 	$context['can_moderate_forum'] = allowedTo('moderate_forum');
 
 	// Load up all members of this group.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, member_ip, date_registered, last_login,
 			hide_email, posts, is_activated
-		FROM {$db_prefix}members
-		WHERE $where
-		ORDER BY $querySort " . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . "
-		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE ' . $where . '
+		ORDER BY ' . $querySort . ' ' . ($context['sort_direction'] == 'down' ? 'DESC' : 'ASC') . '
+		LIMIT ' . $context['start'] . ', ' . $modSettings['defaultMaxMembers'],
+		array(
+		)
+	);
 	$context['members'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -422,16 +457,20 @@ function GroupRequests()
 		else
 		{
 			// Get the details of all the members concerned...
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT lgr.id_request, lgr.id_member, lgr.id_group, mem.email_address, mem.id_group AS primary_group,
 					mem.additional_groups AS additional_groups, mem.lngfile, mem.member_name, mem.notify_types,
 					mg.hidden, mg.group_name
-				FROM {$db_prefix}log_group_requests AS lgr
-					INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
-					INNER JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
-				WHERE $where
-					AND lgr.id_request IN (" . implode(',', $_POST['groupr']) . ")
-				ORDER BY mem.lngfile", __FILE__, __LINE__);
+				FROM {db_prefix}log_group_requests AS lgr
+					INNER JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
+					INNER JOIN {db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
+				WHERE ' . $where . '
+					AND lgr.id_request IN ({array_int:inject_array_int_1})
+				ORDER BY mem.lngfile',
+				array(
+					'inject_array_int_1' => $_POST['groupr'],
+				)
+			);
 			$email_details = array();
 			$group_changes = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -480,9 +519,13 @@ function GroupRequests()
 			$smfFunc['db_free_result']($request);
 
 			// Remove the evidence...
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_group_requests
-				WHERE id_request IN (" . implode(',', $_POST['groupr']) . ")", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_group_requests
+				WHERE id_request IN ({array_int:inject_array_int_1})',
+				array(
+					'inject_array_int_1' => $_POST['groupr'],
+				)
+			);
 
 			// Ensure everyone who is online gets their changes right away.
 			updateSettings(array('settings_updated' => time()));
@@ -502,10 +545,16 @@ function GroupRequests()
 							if ($value == 0 || trim($value) == '')
 								unset($groups['add'][$key]);
 
-						$smfFunc['db_query']('', "
-							UPDATE {$db_prefix}members
-							SET id_group = $groups[primary], additional_groups = '" . implode(',', $groups['add']) . "'
-							WHERE id_member = $id", __FILE__, __LINE__);
+						$smfFunc['db_query']('', '
+							UPDATE {db_prefix}members
+							SET id_group = {int:inject_int_1}, additional_groups = {string:inject_string_1}
+							WHERE id_member = {int:inject_int_2}',
+							array(
+								'inject_int_1' => $groups['primary'],
+								'inject_int_2' => $id,
+								'inject_string_1' => implode(',', $groups['add']),
+							)
+						);
 					}
 
 					$lastLng = $user_info['language'];
@@ -666,10 +715,13 @@ function list_getGroupRequestCount($where)
 {
 	global $smfFunc, $db_prefix;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}log_group_requests AS lgr
-		WHERE $where", __FILE__, __LINE__);
+		FROM {db_prefix}log_group_requests AS lgr
+		WHERE ' . $where,
+		array(
+		)
+	);
 	list ($totalRequests) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -680,15 +732,18 @@ function list_getGroupRequests($start, $items_per_page, $sort, $where)
 {
 	global $smfFunc, $db_prefix, $txt, $scripturl;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT lgr.id_request, lgr.id_member, lgr.id_group, lgr.time_applied, lgr.reason,
 			mem.member_name, mg.group_name, mg.online_color
-		FROM {$db_prefix}log_group_requests AS lgr
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
-			INNER JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
-		WHERE $where
-		ORDER BY $sort
-		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+		FROM {db_prefix}log_group_requests AS lgr
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = lgr.id_member)
+			INNER JOIN {db_prefix}membergroups AS mg ON (mg.id_group = lgr.id_group)
+		WHERE ' . $where . '
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+		)
+	);
 	$group_requests = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

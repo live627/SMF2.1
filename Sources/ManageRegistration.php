@@ -161,14 +161,22 @@ function AdminRegister()
 	$context['page_title'] = $txt['registration_center'];
 
 	// Load the assignable member groups.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT group_name, id_group
-		FROM {$db_prefix}membergroups
-		WHERE id_group != 3
-			AND min_posts = -1" . (allowedTo('admin_forum') ? '' : "
-			AND id_group != 1") . "
-			AND hidden != 2
-		ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
+		FROM {db_prefix}membergroups
+		WHERE id_group != {int:inject_int_1}
+			AND min_posts = {int:inject_int_2}' . (allowedTo('admin_forum') ? '' : '
+			AND id_group != {int:inject_int_3}') . '
+			AND hidden != {int:inject_int_4}
+		ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_5} THEN id_group ELSE 4 END, group_name',
+		array(
+			'inject_int_1' => 3,
+			'inject_int_2' => -1,
+			'inject_int_3' => 1,
+			'inject_int_4' => 2,
+			'inject_int_5' => 4,
+		)
+	);
 	$context['member_groups'] = array(0 => &$txt['admin_register_group_none']);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$context['member_groups'][$row['id_group']] = $row['group_name'];

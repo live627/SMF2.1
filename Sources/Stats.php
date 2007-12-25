@@ -74,7 +74,7 @@ function DisplayStats()
 			obExit(false);
 
 		$context['sub_template'] = 'stats';
-		getDailyStats("YEAR(date) = $year AND MONTH(date) = $month");
+		getDailyStats('YEAR(date) = ' . $year . ' AND MONTH(date) = ' . $month);
 		$context['yearly'][$year]['months'][$month]['date'] = array(
 			'month' => sprintf('%02d', $month),
 			'year' => $year,
@@ -97,11 +97,14 @@ function DisplayStats()
 	$context['show_member_list'] = allowedTo('view_mlist');
 
 	// Get averages...
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT
 			SUM(posts) AS posts, SUM(topics) AS topics, SUM(registers) AS registers,
 			SUM(most_on) AS most_on, MIN(date) AS date, SUM(hits) AS hits
-		FROM {$db_prefix}log_activity", __FILE__, __LINE__);
+		FROM {db_prefix}log_activity',
+		array(
+		)
+	);
 	$row = $smfFunc['db_fetch_assoc']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -117,23 +120,33 @@ function DisplayStats()
 	$context['num_hits'] = comma_format($row['hits'], 0);
 
 	// How many users are online now.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}log_online", __FILE__, __LINE__);
+		FROM {db_prefix}log_online',
+		array(
+		)
+	);
 	list ($context['users_online']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
 	// Statistics such as number of boards, categories, etc.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}boards AS b
-		WHERE b.redirect = ''", __FILE__, __LINE__);
+		FROM {db_prefix}boards AS b
+		WHERE b.redirect = {string:inject_string_1}',
+		array(
+			'inject_string_1' => '',
+		)
+	);
 	list ($context['num_boards']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}categories AS c", __FILE__, __LINE__);
+		FROM {db_prefix}categories AS c',
+		array(
+		)
+	);
 	list ($context['num_categories']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -154,10 +167,13 @@ function DisplayStats()
 	// Male vs. female ratio - let's calculate this only every four minutes.
 	if (($context['gender'] = cache_get_data('stats_gender', 240)) == null)
 	{
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT COUNT(*) AS totalMembers, gender
-			FROM {$db_prefix}members
-			GROUP BY gender", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			GROUP BY gender',
+			array(
+			)
+		);
 		$context['gender'] = array();
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
@@ -191,23 +207,31 @@ function DisplayStats()
 	$date = strftime('%Y%m%d', forum_time(false));
 
 	// Members online so far today.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT most_on
-		FROM {$db_prefix}log_activity
-		WHERE date = $date
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}log_activity
+		WHERE date = {date:inject_date_1}
+		LIMIT 1',
+		array(
+			'inject_date_1' => $date,
+		)
+	);
 	list ($context['online_today']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
 	$context['online_today'] = comma_format((int) $context['online_today']);
 
 	// Poster top 10.
-	$members_result = $smfFunc['db_query']('', "
+	$members_result = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, posts
-		FROM {$db_prefix}members
-		WHERE posts > 0
+		FROM {db_prefix}members
+		WHERE posts > {int:inject_int_1}
 		ORDER BY posts DESC
-		LIMIT 10", __FILE__, __LINE__);
+		LIMIT 10',
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	$context['top_posters'] = array();
 	$max_num_posts = 1;
 	while ($row_members = $smfFunc['db_fetch_assoc']($members_result))
@@ -232,14 +256,19 @@ function DisplayStats()
 	}
 
 	// Board top 10.
-	$boards_result = $smfFunc['db_query']('', "
+	$boards_result = $smfFunc['db_query']('', '
 		SELECT id_board, name, num_posts
-		FROM {$db_prefix}boards AS b
-		WHERE $user_info[query_see_board]" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . "
-			AND b.redirect = ''
+		FROM {db_prefix}boards AS b
+		WHERE ' . $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:inject_int_1}' : '') . '
+			AND b.redirect = {string:inject_string_1}
 		ORDER BY num_posts DESC
-		LIMIT 10", __FILE__, __LINE__);
+		LIMIT 10',
+		array(
+			'inject_int_1' => $modSettings['recycle_board'],
+			'inject_string_1' => '',
+		)
+	);
 	$context['top_boards'] = array();
 	$max_num_posts = 1;
 	while ($row_board = $smfFunc['db_fetch_assoc']($boards_result))
@@ -266,13 +295,18 @@ function DisplayStats()
 	// Are you on a larger forum?  If so, let's try to limit the number of topics we search through.
 	if ($modSettings['totalMessages'] > 100000)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_topic
-			FROM {$db_prefix}topics
-			WHERE num_replies != 0
-				AND approved = 1
+			FROM {db_prefix}topics
+			WHERE num_replies != {int:inject_int_1}
+				AND approved = {int:inject_int_2}
 			ORDER BY num_replies DESC
-			LIMIT 100", __FILE__, __LINE__);
+			LIMIT 100',
+			array(
+				'inject_int_1' => 0,
+				'inject_int_2' => 1,
+			)
+		);
 		$topic_ids = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$topic_ids[] = $row['id_topic'];
@@ -282,18 +316,24 @@ function DisplayStats()
 		$topic_ids = array();
 
 	// Topic replies top 10.
-	$topic_reply_result = $smfFunc['db_query']('', "
+	$topic_reply_result = $smfFunc['db_query']('', '
 		SELECT m.subject, t.num_replies, t.id_board, t.id_topic, b.name
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . ")
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:inject_int_1}' : '') . ')
 		WHERE
-			$user_info[query_see_board]
-			" . (!empty($topic_ids) ? "
-			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : ' AND t.approved = 1') . "
+			' . $user_info['query_see_board'] . '
+			' . (!empty($topic_ids) ? '
+			AND t.id_topic IN ({array_int:inject_array_int_1})' : ' AND t.approved = {int:inject_int_2}') . '
 		ORDER BY t.num_replies DESC
-		LIMIT 10", __FILE__, __LINE__);
+		LIMIT 10',
+		array(
+			'inject_array_int_1' => $topic_ids,
+			'inject_int_1' => $modSettings['recycle_board'],
+			'inject_int_2' => 1,
+		)
+	);
 	$context['top_topics_replies'] = array();
 	$max_num_replies = 1;
 	while ($row_topic_reply = $smfFunc['db_fetch_assoc']($topic_reply_result))
@@ -328,12 +368,16 @@ function DisplayStats()
 	// Large forums may need a bit more prodding...
 	if ($modSettings['totalMessages'] > 100000)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_topic
-			FROM {$db_prefix}topics
-			WHERE num_views != 0
+			FROM {db_prefix}topics
+			WHERE num_views != {int:inject_int_1}
 			ORDER BY num_views DESC
-			LIMIT 100", __FILE__, __LINE__);
+			LIMIT 100',
+			array(
+				'inject_int_1' => 0,
+			)
+		);
 		$topic_ids = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$topic_ids[] = $row['id_topic'];
@@ -343,18 +387,24 @@ function DisplayStats()
 		$topic_ids = array();
 
 	// Topic views top 10.
-	$topic_view_result = $smfFunc['db_query']('', "
+	$topic_view_result = $smfFunc['db_query']('', '
 		SELECT m.subject, t.num_views, t.id_board, t.id_topic, b.name
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : '') . ")
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != {int:inject_int_1}' : '') . ')
 		WHERE
-			$user_info[query_see_board]
-			" . (!empty($topic_ids) ? "
-			AND t.id_topic IN (" . implode(', ', $topic_ids) . ")" : ' AND t.approved = 1') . "
+			' . $user_info['query_see_board'] . '
+			' . (!empty($topic_ids) ? '
+			AND t.id_topic IN ({array_int:inject_array_int_1})' : ' AND t.approved = {int:inject_int_2}') . '
 		ORDER BY t.num_views DESC
-		LIMIT 10", __FILE__, __LINE__);
+		LIMIT 10',
+		array(
+			'inject_array_int_1' => $topic_ids,
+			'inject_int_1' => $modSettings['recycle_board'],
+			'inject_int_2' => 1,
+		)
+	);
 	$context['top_topics_views'] = array();
 	$max_num_views = 1;
 	while ($row_topic_views = $smfFunc['db_fetch_assoc']($topic_view_result))
@@ -389,13 +439,17 @@ function DisplayStats()
 	// Try to cache this when possible, because it's a little unavoidably slow.
 	if (($members = cache_get_data('stats_top_starters', 360)) == null)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member_started, COUNT(*) AS hits
-			FROM {$db_prefix}topics" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			WHERE id_board != $modSettings[recycle_board]" : '') . "
+			FROM {db_prefix}topics' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			WHERE id_board != {int:inject_int_1}' : '') . '
 			GROUP BY id_member_started
 			ORDER BY hits DESC
-			LIMIT 20", __FILE__, __LINE__);
+			LIMIT 20',
+			array(
+				'inject_int_1' => $modSettings['recycle_board'],
+			)
+		);
 		$members = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$members[$row['id_member_started']] = $row['hits'];
@@ -408,13 +462,18 @@ function DisplayStats()
 		$members = array(0 => 0);
 
 	// Topic poster top 10.
-	$members_result = $smfFunc['db_query']('', "
+	$members_result = $smfFunc['db_query']('', '
 		SELECT id_member, real_name
-		FROM {$db_prefix}members
-		WHERE id_member IN (" . implode(', ', array_keys($members)) . ")
+		FROM {db_prefix}members
+		WHERE id_member IN ({array_int:inject_array_int_1})
 		GROUP BY id_member, real_name
-		ORDER BY FIND_IN_SET(id_member, '" . implode(',', array_keys($members)) . "')
-		LIMIT 10", __FILE__, __LINE__);
+		ORDER BY FIND_IN_SET(id_member, {string:inject_string_1})
+		LIMIT 10',
+		array(
+			'inject_array_int_1' => array_keys($members),
+			'inject_string_1' => implode(',', array_keys($members)),
+		)
+	);
 	$context['top_starters'] = array();
 	$max_num_topics = 1;
 	while ($row_members = $smfFunc['db_fetch_assoc']($members_result))
@@ -441,12 +500,16 @@ function DisplayStats()
 	// Time online top 10.
 	// !!!SLOW This query is sorta slow.  Should we just add a key? (or would that be bad in the long run?)
 	$temp = cache_get_data('stats_total_time_members', 600);
-	$members_result = $smfFunc['db_query']('', "
+	$members_result = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, total_time_logged_in
-		FROM {$db_prefix}members" . (!empty($temp) ? "
-		WHERE id_member IN (" . implode(', ', $temp) . ")" : '') . "
+		FROM {db_prefix}members' . (!empty($temp) ? '
+		WHERE id_member IN ({array_int:inject_array_int_1})' : '') . '
 		ORDER BY total_time_logged_in DESC
-		LIMIT 20", __FILE__, __LINE__);
+		LIMIT 20',
+		array(
+			'inject_array_int_1' => $temp,
+		)
+	);
 	$context['top_time_online'] = array();
 	$temp2 = array();
 	$max_time_online = 1;
@@ -490,11 +553,14 @@ function DisplayStats()
 		cache_put_data('stats_total_time_members', $temp2, 480);
 
 	// Activity by month.
-	$months_result = $smfFunc['db_query']('', "
+	$months_result = $smfFunc['db_query']('', '
 		SELECT
 			YEAR(date) AS stats_year, MONTH(date) AS stats_month, SUM(hits) AS hits, SUM(registers) AS registers, SUM(topics) AS topics, SUM(posts) AS posts, MAX(most_on) AS most_on, COUNT(*) AS num_days
-		FROM {$db_prefix}log_activity
-		GROUP BY stats_year, stats_month", __FILE__, __LINE__);
+		FROM {db_prefix}log_activity
+		GROUP BY stats_year, stats_month',
+		array(
+		)
+	);
 
 	$context['yearly'] = array();
 	while ($row_months = $smfFunc['db_fetch_assoc']($months_result))
@@ -564,7 +630,7 @@ function DisplayStats()
 	$condition = array();
 	foreach ($_SESSION['expanded_stats'] as $year => $months)
 		if (!empty($months))
-			$condition[] = "YEAR(date) = $year AND MONTH(date) IN (" . implode(', ', $months) . ')';
+			$condition[] = 'YEAR(date) = ' . $year . ' AND MONTH(date) IN (' . implode(', ', $months) . ')';
 
 	// No daily stats to even look at?
 	if (empty($condition))
@@ -578,11 +644,14 @@ function getDailyStats($condition)
 	global $context, $db_prefix, $smfFunc;
 
 	// Activity by day.
-	$days_result = $smfFunc['db_query']('', "
+	$days_result = $smfFunc['db_query']('', '
 		SELECT YEAR(date) AS stats_year, MONTH(date) AS stats_month, DAYOFMONTH(date) AS stats_day, topics, posts, registers, most_on, hits
-		FROM {$db_prefix}log_activity
-		WHERE $condition
-		ORDER BY stats_day ASC", __FILE__, __LINE__);
+		FROM {db_prefix}log_activity
+		WHERE ' . $condition . '
+		ORDER BY stats_day ASC',
+		array(
+		)
+	);
 	while ($row_days = $smfFunc['db_fetch_assoc']($days_result))
 		$context['yearly'][$row_days['stats_year']]['months'][$row_days['stats_month']]['days'][] = array(
 			'day' => sprintf('%02d', $row_days['stats_day']),
@@ -650,17 +719,17 @@ function SMStats()
 	else
 	{
 		// Connect to the collection script.
-		$fp = @fsockopen("www.simplemachines.org", 80, $errno, $errstr);
+		$fp = @fsockopen('www.simplemachines.org', 80, $errno, $errstr);
 		if ($fp)
 		{
 			$length = strlen($stats_to_send);
 
-			$out = "POST /smf/stats/collect_stats.php HTTP/1.1\r\n";
-			$out .= "Host: www.simplemachines.org\r\n";
-			$out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-			$out .= "Content-Length: $length\r\n\r\n";
-			$out .= "$stats_to_send\r\n";
-			$out .= "Connection: Close\r\n\r\n";
+			$out = 'POST /smf/stats/collect_stats.php HTTP/1.1' . "\r\n";
+			$out .= 'Host: www.simplemachines.org' . "\r\n";
+			$out .= 'Content-Type: application/x-www-form-urlencoded' . "\r\n";
+			$out .= 'Content-Length: ' . $length . "\r\n\r\n";
+			$out .= $stats_to_send . "\r\n";
+			$out .= 'Connection: Close' . "\r\n\r\n";
 			fwrite($fp, $out);
 			fclose($fp);
 		}

@@ -65,12 +65,15 @@ function smf_db_create_word_search($size)
 	else
 		$size = 'int(10)';
 
-	$smfFunc['db_query']('', "
-		CREATE TABLE {$db_prefix}log_search_words (
-			id_word $size unsigned NOT NULL default '0',
-			id_msg int(10) unsigned NOT NULL default '0',
+	$smfFunc['db_query']('', '
+		CREATE TABLE {db_prefix}log_search_words (
+			id_word ' . $size . ' unsigned NOT NULL default \'0\',
+			id_msg int(10) unsigned NOT NULL default \'0\',
 			PRIMARY KEY (id_word, id_msg)
-		) TYPE=InnoDB", false, false);
+		) TYPE=InnoDB',
+		array(
+		)
+	);
 }
 
 ?>

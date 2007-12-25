@@ -127,8 +127,11 @@ function ViewQuery()
 		// Explain the query.
 		if ($query_id == $q && $is_select_query)
 		{
-			$result = $smfFunc['db_query']('', "
-				EXPLAIN " . $select, false, false);
+			$result = $smfFunc['db_query']('', '
+				EXPLAIN ' . $select,
+				array(
+				)
+			);
 			if ($result === false)
 			{
 				echo '

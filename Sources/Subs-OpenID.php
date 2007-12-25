@@ -93,19 +93,28 @@ function smf_openID_getAssocation($server, $handle = null, $no_delete = false)
 	if (!$no_delete)
 	{
 		// Delete the already expired assocations.
-		$smfFunc['db_query']('openid_delete_assoc_old', "
-			DELETE FROM {$db_prefix}openid_assoc
-			WHERE expires <= " . time(), __FILE__, __LINE__);
+		$smfFunc['db_query']('openid_delete_assoc_old', '
+			DELETE FROM {db_prefix}openid_assoc
+			WHERE expires <= {int:inject_int_1}',
+			array(
+				'inject_int_1' => time(),
+			)
+		);
 	}
 
 	// Get the assocation that has the longest lifetime from now.
-	$request = $smfFunc['db_query']('openid_select_assoc', "
+	$request = $smfFunc['db_query']('openid_select_assoc', '
 		SELECT server_url, handle, secret, issued, expires, assoc_type
-		FROM {$db_prefix}openid_assoc
-		WHERE server_url = '$server'" . ($handle === null ? '' : "
-			AND handle = '$handle'") . "
+		FROM {db_prefix}openid_assoc
+		WHERE server_url = {string:inject_string_1}' . ($handle === null ? '' : '
+			AND handle = {string:inject_string_2}') . '
 		ORDER BY expires DESC
-		LIMIT 1", __FILE__, __LINE__);
+		LIMIT 1',
+		array(
+			'inject_string_1' => $server,
+			'inject_string_2' => $handle,
+		)
+	);
 
 	if ($smfFunc['db_num_rows']($request) == 0)
 		return null;
@@ -151,7 +160,7 @@ function smf_openID_makeAssocation($server)
 	$assoc_type = isset($assoc_data['assoc_type']) ? $smfFunc['db_escape_string']($assoc_data['assoc_type']) : '';
 
 	// Store the data
-	$smfFunc['db_insert']('replace', "{$db_prefix}openid_assoc", array('server_url', 'handle', 'secret', 'issued', 'expires', 'assoc_type'),  array("'$server_url'", "'$handle'", "'$secret'", $issued, $expires, "'$assoc_type'"), array('server_url', 'handle'), __FILE__, __LINE__);
+	$smfFunc['db_insert']('replace', $db_prefix . 'openid_assoc', array('server_url', 'handle', 'secret', 'issued', 'expires', 'assoc_type'),  array( '\'' . $server_url . '\'', '\'' . $handle . '\'', '\'' . $secret . '\'', $issued, $expires, '\'' . $assoc_type . '\''), array('server_url', 'handle'), __FILE__, __LINE__);
 
 	return array(
 		'server' => $server,
@@ -169,10 +178,14 @@ function smf_openID_removeAssocation($handle)
 
 	$handle = $smfFunc['db_escape_string']($handle);
 
-	$smfFunc['db_query']('openid_remove_assocation', "
-		DELETE FROM {$db_prefix}openid_assoc
-		WHERE handle = '$handle'
-		LIMIT 1", __FILE__, __LINE__);
+	$smfFunc['db_query']('openid_remove_assocation', '
+		DELETE FROM {db_prefix}openid_assoc
+		WHERE handle = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $handle,
+		)
+	);
 }
 
 function smf_openID_return()
@@ -208,7 +221,7 @@ function smf_openID_return()
 	$verify_str = '';
 	foreach ($signed AS $sign)
 	{
-		$verify_str .= "$sign:" . strtr($_GET['openid_' . str_replace('.', '_', $sign)], array('&amp;' => '&')) . "\n";
+		$verify_str .= $sign . ':' . strtr($_GET['openid_' . str_replace('.', '_', $sign)], array('&amp;' => '&')) . "\n";
 	}
 
 	$verify_str = base64_encode(sha1_hmac($verify_str, $secret));
@@ -228,11 +241,15 @@ function smf_openID_return()
 		fatal_lang_error('openid_load_data');
 
 	// Is there a user with this OpenID_uri?
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT passwd, id_member, id_group, lngfile, is_activated, email_address, additional_groups, member_name, password_salt
-		FROM {$db_prefix}members
-		WHERE openid_uri = '$openid_uri'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE openid_uri = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $openid_uri,
+		)
+	);
 
 	if ($smfFunc['db_num_rows']($result) == 0)
 	{
@@ -260,7 +277,7 @@ function smf_openID_return()
 		$user_settings['passwd'] = sha1(strtolower($user_settings['member_name']) . $secret);
 		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
 
-		updateMemberData($user_settings['id_member'], array('passwd' => "'$user_settings[passwd]'", 'password_salt' => "'$user_settings[password_salt]'"));
+		updateMemberData($user_settings['id_member'], array('passwd' => '\'' . $user_settings['passwd'] . '\'', 'password_salt' => '\'' . $user_settings['password_salt'] . '\''));
 
 		// Cleanup on Aisle 5.
 		$_SESSION['openid'] = array(
@@ -296,11 +313,15 @@ function smf_openid_member_exists($url)
 
 	$url = $smfFunc['db_escape_string']($url);
 
-	$result = $smfFunc['db_query']('openid_member_exists', "
+	$result = $smfFunc['db_query']('openid_member_exists', '
 		SELECT id_member, member_name
-		FROM {$db_prefix}members AS mem
-		WHERE mem.openid_uri = '$url'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members AS mem
+		WHERE mem.openid_uri = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $url,
+		)
+	);
 
 	$ret = array();
 

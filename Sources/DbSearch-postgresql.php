@@ -94,7 +94,10 @@ function smf_db_search_query($identifier, $db_string, $file, $line, $connection 
 	if (in_array($identifier, $nonFatal))
 		$file = false;
 
-	return $smfFunc['db_query']('', $db_string, $file, $line);
+	return $smfFunc['db_query']('', $db_string,
+		array(
+		)
+	);
 }
 
 // Highly specific - create the custom word index table!
@@ -104,12 +107,15 @@ function smf_db_create_word_search($size)
 
 	$size = 'int';
 
-	$smfFunc['db_query']('', "
-		CREATE TABLE {$db_prefix}log_search_words (
-			id_word $size unsigned NOT NULL default '0',
-			id_msg int(10) unsigned NOT NULL default '0',
+	$smfFunc['db_query']('', '
+		CREATE TABLE {db_prefix}log_search_words (
+			id_word ' . $size . ' unsigned NOT NULL default \'0\',
+			id_msg int(10) unsigned NOT NULL default \'0\',
 			PRIMARY KEY (id_word, id_msg)
-		)", false, false);
+		)',
+		array(
+		)
+	);
 }
 
 ?>

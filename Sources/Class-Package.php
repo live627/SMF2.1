@@ -564,7 +564,7 @@ class xmlArray
 		$trans_tbl = array_flip(get_html_translation_table(HTML_ENTITIES, ENT_QUOTES));
 
 		// Translate all the entities out.
-		$data = strtr(preg_replace('~&#(\d{1,4});~e', "chr('\$1')", $data), $trans_tbl);
+		$data = strtr(preg_replace('~&#(\d{1,4});~e', 'chr(\'\$1\')', $data), $trans_tbl);
 
 		return $this->trim ? trim($data) : $data;
 	}
@@ -797,7 +797,7 @@ if (!class_exists('ftp_connection'))
 				return false;
 	
 			// Request a passive connection - this means, we'll talk to you, you don't talk to us.
-			@fwrite($this->connection, "PASV\r\n");
+			@fwrite($this->connection, 'PASV' . "\r\n");
 			$time = time();
 			do
 				$response = fgets($this->connection, 1024);
@@ -900,7 +900,7 @@ if (!class_exists('ftp_connection'))
 				$listing = $this->list_dir('', true);
 			$listing = explode("\n", $listing);
 	
-			@fwrite($this->connection, "PWD\r\n");
+			@fwrite($this->connection, 'PWD' . "\r\n");
 			$time = time();
 			do
 				$response = fgets($this->connection, 1024);
@@ -999,7 +999,7 @@ if (!class_exists('ftp_connection'))
 		public function close()
 		{
 			// Goodbye!
-			fwrite($this->connection, "QUIT\r\n");
+			fwrite($this->connection, 'QUIT' . "\r\n");
 			fclose($this->connection);
 	
 			return true;

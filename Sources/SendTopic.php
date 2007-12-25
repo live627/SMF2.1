@@ -93,12 +93,16 @@ function SendTopic()
 		fatal_lang_error('not_a_topic', false);
 
 	// Get the topic's subject.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT m.subject
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-		WHERE t.id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+		WHERE t.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('not_a_topic', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -182,20 +186,28 @@ function CustomEmail()
 	$context['form_hidden_vars'] = array();
 	if (isset($_REQUEST['uid']))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT email_address AS email, member_name AS name, id_member, hide_email
-			FROM {$db_prefix}members
-			WHERE id_member = " . (int) $_REQUEST['uid'], __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_member = {int:inject_int_1}',
+			array(
+				'inject_int_1' => (int) $_REQUEST['uid'],
+			)
+		);
 
 		$context['form_hidden_vars']['uid'] = (int) $_REQUEST['uid'];
 	}
 	elseif (isset($_REQUEST['msg']))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT IFNULL(mem.email_address, m.poster_email) AS email, m.poster_name AS name, IFNULL(mem.id_member, 0) AS id_member, hide_email
-			FROM {$db_prefix}messages AS m
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-			WHERE m.id_msg = " . (int) $_REQUEST['msg'], __FILE__, __LINE__);
+			FROM {db_prefix}messages AS m
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			WHERE m.id_msg = {int:inject_int_1}',
+			array(
+				'inject_int_1' => (int) $_REQUEST['msg'],
+			)
+		);
 
 		$context['form_hidden_vars']['msg'] = (int) $_REQUEST['msg'];
 	}
@@ -296,13 +308,18 @@ function ReportToModerator()
 	$_GET['msg'] = empty($_GET['msg']) ? (int) $_GET['mid'] : (int) $_GET['msg'];
 
 	// Check the message's ID - don't want anyone reporting a post they can't even see!
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT m.id_msg, m.id_member, t.id_member_started
-		FROM {$db_prefix}messages AS m
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)
-		WHERE m.id_msg = $_GET[msg]
-			AND m.id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
+		WHERE m.id_msg = {int:inject_int_1}
+			AND m.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+			'inject_int_1' => $_GET['msg'],
+		)
+	);
 	if ($smfFunc['db_num_rows']($result) == 0)
 		fatal_lang_error('no_board');
 	list ($_GET['msg'], $member, $starter) = $smfFunc['db_fetch_row']($result);
@@ -337,13 +354,18 @@ function ReportToModerator2()
 	// Get the basic topic information, and make sure they can see it.
 	$_POST['msg'] = (int) $_POST['msg'];
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT m.id_topic, m.id_board, m.subject, m.body, m.id_member AS id_poster, m.poster_name, mem.real_name
-		FROM {$db_prefix}messages AS m
-			LEFT JOIN {$db_prefix}members AS mem ON (m.id_member = mem.id_member)
-		WHERE m.id_msg = $_POST[msg]
-			AND m.id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}messages AS m
+			LEFT JOIN {db_prefix}members AS mem ON (m.id_member = mem.id_member)
+		WHERE m.id_msg = {int:inject_int_1}
+			AND m.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+			'inject_int_1' => $_POST['msg'],
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board');
 	$message = $smfFunc['db_fetch_assoc']($request);
@@ -357,12 +379,17 @@ function ReportToModerator2()
 	require_once($sourcedir . '/Subs-Members.php');
 	$moderators = membersAllowedTo('moderate_board', $board);
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, email_address, lngfile, mod_prefs
-		FROM {$db_prefix}members
-		WHERE id_member IN (" . implode(', ', $moderators) . ")
-			AND notify_types != 4
-		ORDER BY lngfile", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE id_member IN ({array_int:inject_array_int_1})
+			AND notify_types != {int:inject_int_1}
+		ORDER BY lngfile',
+		array(
+			'inject_array_int_1' => $moderators,
+			'inject_int_1' => 4,
+		)
+	);
 
 	// Check that moderators do exist!
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -371,12 +398,18 @@ function ReportToModerator2()
 	// If we get here, I believe we should make a record of this, for historical significance, yabber.
 	if (empty($modSettings['disable_log_report']))
 	{
-		$request2 = $smfFunc['db_query']('', "
+		$request2 = $smfFunc['db_query']('', '
 			SELECT id_report, ignore_all
-			FROM {$db_prefix}log_reported
-			WHERE id_msg = $_POST[msg]
-				AND (closed = 0 OR ignore_all = 1)
-			ORDER BY ignore_all DESC", __FILE__, __LINE__);
+			FROM {db_prefix}log_reported
+			WHERE id_msg = {int:inject_int_1}
+				AND (closed = {int:inject_int_2} OR ignore_all = {int:inject_int_3})
+			ORDER BY ignore_all DESC',
+			array(
+				'inject_int_1' => $_POST['msg'],
+				'inject_int_2' => 0,
+				'inject_int_3' => 1,
+			)
+		);
 		if ($smfFunc['db_num_rows']($request2) != 0)
 			list ($id_report, $ignore) = $smfFunc['db_fetch_row']($request2);
 		$smfFunc['db_free_result']($request2);
@@ -387,10 +420,15 @@ function ReportToModerator2()
 
 		// Already reported? My god, we could be dealing with a real rogue here...
 		if (!empty($id_report))
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}log_reported
-				SET num_reports = num_reports + 1, time_updated = " . time() . "
-				WHERE id_report = $id_report", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}log_reported
+				SET num_reports = num_reports + 1, time_updated = {int:inject_int_1}
+				WHERE id_report = {int:inject_int_2}',
+				array(
+					'inject_int_1' => time(),
+					'inject_int_2' => $id_report,
+				)
+			);
 		// Otherwise, we shall make one!
 		else
 		{
@@ -399,14 +437,17 @@ function ReportToModerator2()
 			if (empty($message['real_name']))
 				$message['real_name'] = $message['poster_name'];
 
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}log_reported
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}log_reported
 					(id_msg, id_topic, id_board, id_member, membername, subject, body, time_started, time_updated,
 						num_reports, closed)
 				VALUES
-					($_POST[msg], $message[id_topic], $message[id_board], $message[id_poster], '$message[real_name]', '$message[subject]', '$message[body]', " . time() . ",
-						" . time() . ", 1, 0)", __FILE__, __LINE__);
-			$id_report = $smfFunc['db_insert_id']("{$db_prefix}log_reported", 'id_report');
+					(' . $_POST['msg'] . ', ' . $message['id_topic'] . ', ' . $message['id_board'] . ', ' . $message['id_poster'] . ', \'' . $message['real_name'] . '\', \'' . $message['subject'] . '\', \'' . $message['body'] . '\', ' . time() . ',
+						' . time() . ', 1, 0)',
+				array(
+				)
+			);
+			$id_report = $smfFunc['db_insert_id']( $db_prefix . 'log_reported', 'id_report');
 		}
 
 		// Now just add our report...
@@ -414,19 +455,26 @@ function ReportToModerator2()
 		{
 			$posterComment = strtr(htmlspecialchars($_POST['comment']), array("\r" => '', "\n" => '', "\t" => ''));
 
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}log_reported_comments
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}log_reported_comments
 					(id_report, id_member, membername, comment, time_sent)
 				VALUES
-					($id_report, $user_info[id], '$user_info[name]', '$posterComment', " . time() . ")", __FILE__, __LINE__);
+					(' . $id_report . ', ' . $user_info['id'] . ', \'' . $user_info['name'] . '\', \'' . $posterComment . '\', ' . time() . ')',
+				array(
+				)
+			);
 		}
 	}
 
 	// Find out who the real moderators are - for mod preferences.
-	$request2 = $smfFunc['db_query']('', "
+	$request2 = $smfFunc['db_query']('', '
 		SELECT id_member
-		FROM {$db_prefix}moderators
-		WHERE id_board = $board", __FILE__, __LINE__);
+		FROM {db_prefix}moderators
+		WHERE id_board = {int:current_board}',
+		array(
+			'current_board' => $board,
+		)
+	);
 	$real_mods = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request2))
 		$real_mods[] = $row['id_member'];

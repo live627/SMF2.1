@@ -103,13 +103,20 @@ function issueWarning($memID)
 	if ($context['warning_limit'] > 0)
 	{
 		// Make sure we cannot go outside of our limit for the day.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT SUM(counter)
-			FROM {$db_prefix}log_comments
-			WHERE id_recipient = $memID
-				AND id_member = $user_info[id]
-				AND comment_type = 'warning'
-				AND log_time > " . (time() - 86400), __FILE__, __LINE__);
+			FROM {db_prefix}log_comments
+			WHERE id_recipient = {int:inject_int_1}
+				AND id_member = {int:current_member}
+				AND comment_type = {string:inject_string_1}
+				AND log_time > {int:inject_int_2}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $memID,
+				'inject_int_2' => time() - 86400,
+				'inject_string_1' => 'warning',
+			)
+		);
 		list ($current_applied) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -159,12 +166,15 @@ function issueWarning($memID)
 			sendpm(array('to' => array($memID), 'bcc' => array()), $_POST['warn_sub'], $_POST['warn_body'], false, $from);
 
 			// Log the notice!
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}log_member_notices
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}log_member_notices
 					(subject, body)
 				VALUES
-					(SUBSTRING('$_POST[warn_sub]', 1, 255), SUBSTRING('$_POST[warn_body]', 1, 65534))", __FILE__, __LINE__);
-			$id_notice = $smfFunc['db_insert_id']("{$db_prefix}log_member_notices", 'id_notice');
+					(SUBSTRING(\'' . $_POST['warn_sub'] . '\', 1, 255), SUBSTRING(\'' . $_POST['warn_body'] . '\', 1, 65534))',
+				array(
+				)
+			);
+			$id_notice = $smfFunc['db_insert_id']( $db_prefix . 'log_member_notices', 'id_notice');
 		}
 
 		// Just in case - make sure notice is valid!
@@ -174,14 +184,17 @@ function issueWarning($memID)
 		$level_change = $_POST['warning_level'] - $cur_profile['warning'];
 
 		// Log what we've done!
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}log_comments
+		$smfFunc['db_query']('', '
+			INSERT INTO {db_prefix}log_comments
 				(id_member, member_name, comment_type, id_recipient, recipient_name, log_time, id_notice,
 					counter, body)
 			VALUES
-				($user_info[id], '" . $smfFunc['db_escape_string']($user_info['name']) . "', 'warning',
-				$memID, '" . $smfFunc['db_escape_string']($cur_profile['real_name']) . "', " . time() . ",
-				$id_notice, $level_change, SUBSTRING('$_POST[warn_reason]', 1, 65534))", __FILE__, __LINE__);
+				(' . $user_info['id'] . ', \'' . $smfFunc['db_escape_string']($user_info['name']) . '\', \'warning\',
+				' . $memID . ', \'' . $smfFunc['db_escape_string']($cur_profile['real_name']) . '\', ' . time() . ',
+				' . $id_notice . ', ' . $level_change . ', SUBSTRING(\'' . $_POST['warn_reason'] . '\', 1, 65534))',
+			array(
+			)
+		);
 
 		// Make the change.
 		updateMemberData($memID, array('warning' => $_POST['warning_level']));
@@ -204,11 +217,16 @@ function issueWarning($memID)
 			$context['current_level'] = $limit;
 
 	// Load up all the old warnings - count first!
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}log_comments
-		WHERE id_recipient = $memID
-			AND comment_type = 'warning'", __FILE__, __LINE__);
+		FROM {db_prefix}log_comments
+		WHERE id_recipient = {int:inject_int_1}
+			AND comment_type = {string:inject_string_1}',
+		array(
+			'inject_int_1' => $memID,
+			'inject_string_1' => 'warning',
+		)
+	);
 	list ($context['total_warnings']) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -218,15 +236,20 @@ function issueWarning($memID)
 	$context['page_index'] = constructPageIndex($scripturl . '?action=profile;u=' . $memID . ';sa=issueWarning', $context['start'], $context['total_warnings'], $perPage);
 
 	// Now do the data itself.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT IFNULL(mem.id_member, 0) AS id_member, IFNULL(mem.real_name, lc.member_name) AS member_name,
 			lc.log_time, lc.body, lc.counter, lc.id_notice
-		FROM {$db_prefix}log_comments AS lc
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lc.id_member)
-		WHERE lc.id_recipient = $memID
-			AND lc.comment_type = 'warning'
+		FROM {db_prefix}log_comments AS lc
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lc.id_member)
+		WHERE lc.id_recipient = {int:inject_int_1}
+			AND lc.comment_type = {string:inject_string_1}
 		ORDER BY log_time DESC
-		LIMIT $context[start], $perPage", __FILE__, __LINE__);
+		LIMIT ' . $context['start'] . ', ' . $perPage,
+		array(
+			'inject_int_1' => $memID,
+			'inject_string_1' => 'warning',
+		)
+	);
 	$context['previous_warnings'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -291,12 +314,17 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 		// Are you allowed to administrate the forum, as they are?
 		isAllowedTo('admin_forum');
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member
-			FROM {$db_prefix}members
-			WHERE (id_group = 1 OR FIND_IN_SET(1, additional_groups))
-				AND id_member != $memID
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE (id_group = {int:inject_int_1} OR FIND_IN_SET(1, additional_groups))
+				AND id_member != {int:inject_int_2}
+			LIMIT 1',
+			array(
+				'inject_int_1' => 1,
+				'inject_int_2' => $memID,
+			)
+		);
 		list ($another) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -323,10 +351,14 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 			if ($_POST['remove_type'] == 'topics')
 			{
 				// Fetch all topics started by this user within the time period.
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT t.id_topic
-					FROM {$db_prefix}topics AS t
-					WHERE t.id_member_started = $memID", __FILE__, __LINE__);
+					FROM {db_prefix}topics AS t
+					WHERE t.id_member_started = {int:inject_int_1}',
+					array(
+						'inject_int_1' => $memID,
+					)
+				);
 				$topicIDs = array();
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$topicIDs[] = $row['id_topic'];
@@ -338,12 +370,16 @@ function deleteAccount2($profile_vars, $post_errors, $memID)
 			}
 
 			// Now delete the remaining messages.
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT m.id_msg
-				FROM {$db_prefix}messages AS m
-					INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic
+				FROM {db_prefix}messages AS m
+					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic
 						AND t.id_first_msg != m.id_msg)
-				WHERE m.id_member = $memID", __FILE__, __LINE__);
+				WHERE m.id_member = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $memID,
+				)
+			);
 			// This could take a while... but ya know it's gonna be worth it in the end.
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				removeMessage($row['id_msg']);
@@ -425,10 +461,14 @@ function subscriptions($memID)
 		fatal_error($txt['paid_admin_not_setup_gateway']);
 
 	// Get the current subscriptions.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_sublog, id_subscribe, start_time, end_time, status, payments_pending, pending_details
-		FROM {$db_prefix}log_subscribed
-		WHERE id_member = $memID", __FILE__, __LINE__);
+		FROM {db_prefix}log_subscribed
+		WHERE id_member = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $memID,
+		)
+	);
 	$context['current'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -479,11 +519,17 @@ function subscriptions($memID)
 				// Save the details back.
 				$pending_details = addslashes(serialize($current_pending));
 
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}log_subscribed
-					SET payments_pending = payments_pending + 1, pending_details = '$pending_details'
-					WHERE id_sublog = " . $context['current'][$_GET['sub_id']]['id'] . "
-						AND id_member = $memID", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}log_subscribed
+					SET payments_pending = payments_pending + 1, pending_details = {string:inject_string_1}
+					WHERE id_sublog = {int:inject_int_1}
+						AND id_member = {int:inject_int_2}',
+					array(
+						'inject_int_1' => $context['current'][$_GET['sub_id']]['id'],
+						'inject_int_2' => $memID,
+						'inject_string_1' => $pending_details,
+					)
+				);
 			}
 		}
 
@@ -569,11 +615,18 @@ function subscriptions($memID)
 				$current_pending[] = $new_data;
 				$pending_details = addslashes(serialize($current_pending));
 
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}log_subscribed
-					SET payments_pending = $pending_count, pending_details = '$pending_details'
-					WHERE id_sublog = " . $context['current'][$context['sub']['id']]['id'] . "
-						AND id_member = $memID", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}log_subscribed
+					SET payments_pending = {int:inject_int_1}, pending_details = {string:inject_string_1}
+					WHERE id_sublog = {int:inject_int_2}
+						AND id_member = {int:inject_int_3}',
+					array(
+						'inject_int_1' => $pending_count,
+						'inject_int_2' => $context['current'][$context['sub']['id']]['id'],
+						'inject_int_3' => $memID,
+						'inject_string_1' => $pending_details,
+					)
+				);
 			}
 
 		}
@@ -581,11 +634,14 @@ function subscriptions($memID)
 		else
 		{
 			$pending_details = addslashes(serialize(array($new_data)));
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}log_subscribed
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}log_subscribed
 					(id_subscribe, id_member, status, payments_pending, pending_details, start_time, vendor_ref)
 				VALUES
-					(" . $context['sub']['id'] . ", $memID, 0, 0, '$pending_details', " . time() . ", '')", __FILE__, __LINE__);
+					(' . $context['sub']['id'] . ', ' . $memID . ', 0, 0, \'' . $pending_details . '\', ' . time() . ', \'\')',
+				array(
+				)
+			);
 		}
 
 		// Change the template.

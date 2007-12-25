@@ -379,7 +379,7 @@ function ModifyProfile($post_errors = array())
 
 		// Change the IP address in the database.
 		if ($context['user']['is_owner'])
-			$profile_vars['member_ip'] = "'$user_info[ip]'";
+			$profile_vars['member_ip'] = '\'' . $user_info['ip'] . '\'';
 
 		// Now call the sub-action function...
 		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'activateAccount' && empty($post_errors))
@@ -482,14 +482,17 @@ function loadCustomFields($memID, $area = 'summary')
 	if ($area == 'register')
 		$where .= ' AND show_reg != 0';
 	elseif ($area != 'summary')
-		$where .= " AND show_profile = '$area'";
+		$where .= ' AND show_profile = \'' . $area . '\'';
 
 	// Load all the relevant fields - and data.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT col_name, field_name, field_desc, field_type, field_length, field_options,
 			default_value, bbc
-		FROM {$db_prefix}custom_fields
-		WHERE $where", __FILE__, __LINE__);
+		FROM {db_prefix}custom_fields
+		WHERE ' . $where,
+		array(
+		)
+	);
 	$context['custom_fields'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

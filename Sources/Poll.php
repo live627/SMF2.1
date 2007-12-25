@@ -90,14 +90,19 @@ function Vote()
 	loadLanguage('Post');
 
 	// Check if they have already voted, or voting is locked.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT IFNULL(lp.id_choice, -1) AS selected, p.voting_locked, p.id_poll, p.expire_time, p.max_votes, p.change_vote,
 			p.guest_vote
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-			LEFT JOIN {$db_prefix}log_polls AS lp ON (p.id_poll = lp.id_poll AND lp.id_member = $user_info[id])
-		WHERE t.id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+			LEFT JOIN {db_prefix}log_polls AS lp ON (p.id_poll = lp.id_poll AND lp.id_member = {int:current_member})
+		WHERE t.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_member' => $user_info['id'],
+			'current_topic' => $topic,
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('poll_error', false);
 	$row = $smfFunc['db_fetch_assoc']($request);
@@ -127,11 +132,16 @@ function Vote()
 		$pollOptions = array();
 
 		// Find out what they voted for before.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_choice
-			FROM {$db_prefix}log_polls
-			WHERE id_member = $user_info[id]
-				AND id_poll = $row[id_poll]", __FILE__, __LINE__);
+			FROM {db_prefix}log_polls
+			WHERE id_member = {int:current_member}
+				AND id_poll = {int:inject_int_1}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $row['id_poll'],
+			)
+		);
 		while ($choice = $smfFunc['db_fetch_row']($request))
 			$pollOptions[] = $choice[0];
 		$smfFunc['db_free_result']($request);
@@ -140,18 +150,29 @@ function Vote()
 		if (!empty($pollOptions))
 		{
 			// Update the poll totals.
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}poll_choices
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}poll_choices
 				SET votes = votes - 1
-				WHERE id_poll = $row[id_poll]
-					AND id_choice IN (" . implode(', ', $pollOptions) . ")
-					AND votes > 0", __FILE__, __LINE__);
+				WHERE id_poll = {int:inject_int_1}
+					AND id_choice IN ({array_int:inject_array_int_1})
+					AND votes > {int:inject_int_2}',
+				array(
+					'inject_array_int_1' => $pollOptions,
+					'inject_int_1' => $row['id_poll'],
+					'inject_int_2' => 0,
+				)
+			);
 
 			// Delete off the log.
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_polls
-				WHERE id_member = $user_info[id]
-					AND id_poll = $row[id_poll]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_polls
+				WHERE id_member = {int:current_member}
+					AND id_poll = {int:inject_int_1}',
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => $row['id_poll'],
+				)
+			);
 		}
 
 		// Redirect back to the topic so the user can vote again!
@@ -179,17 +200,22 @@ function Vote()
 
 	// Add their vote to the tally.
 	$smfFunc['db_insert']('insert',
-		"{$db_prefix}log_polls",
+		$db_prefix . 'log_polls',
 		array('id_poll', 'id_member', 'id_choice'),
 		$inserts,
 		array('id_poll', 'id_member', 'id_choice'), __FILE__, __LINE__
 	);
 
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}poll_choices
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}poll_choices
 		SET votes = votes + 1
-		WHERE id_poll = $row[id_poll]
-			AND id_choice IN (" . implode(', ', $pollOptions) . ")", __FILE__, __LINE__);
+		WHERE id_poll = {int:inject_int_1}
+			AND id_choice IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $pollOptions,
+			'inject_int_1' => $row['id_poll'],
+		)
+	);
 
 	// If it's a guest don't let them vote again.
 	if ($user_info['is_guest'])
@@ -213,12 +239,16 @@ function LockVoting()
 	checkSession('get');
 
 	// Get the poll starter, ID, and whether or not it is locked.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT t.id_member_started, t.id_poll, p.voting_locked
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-		WHERE t.id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+		WHERE t.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	list ($memberID, $pollID, $voting_locked) = $smfFunc['db_fetch_row']($request);
 
 	// If the user _can_ modify the poll....
@@ -242,10 +272,15 @@ function LockVoting()
 		$voting_locked = '1';
 
 	// Lock!  *Poof* - no one can vote.
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}polls
-		SET voting_locked = $voting_locked
-		WHERE id_poll = $pollID", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}polls
+		SET voting_locked = {int:inject_int_1}
+		WHERE id_poll = {int:inject_int_2}',
+		array(
+			'inject_int_1' => $voting_locked,
+			'inject_int_2' => $pollID,
+		)
+	);
 
 	redirectexit('topic=' . $topic . '.' . $_REQUEST['start']);
 }
@@ -266,15 +301,19 @@ function EditPoll()
 	$context['is_edit'] = isset($_REQUEST['add']) ? 0 : 1;
 
 	// Check if a poll currently exists on this topic, and get the id, question and starter.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			t.id_member_started, p.id_poll, p.question, p.hide_results, p.expire_time, p.max_votes, p.change_vote,
 			m.subject, p.guest_vote, p.id_member AS pollStarter
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-		WHERE t.id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			LEFT JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+		WHERE t.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 
 	// Assume the the topic exists, right?
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -323,10 +362,14 @@ function EditPoll()
 		// Get all the choices - if this is an edit.
 		if ($context['is_edit'])
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT label, votes, id_choice
-				FROM {$db_prefix}poll_choices
-				WHERE id_poll = $pollinfo[id_poll]", __FILE__, __LINE__);
+				FROM {db_prefix}poll_choices
+				WHERE id_poll = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $pollinfo['id_poll'],
+				)
+			);
 			$context['choices'] = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
@@ -443,10 +486,14 @@ function EditPoll()
 		// Get all the choices - if this is an edit.
 		if ($context['is_edit'])
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT label, votes, id_choice
-				FROM {$db_prefix}poll_choices
-				WHERE id_poll = $pollinfo[id_poll]", __FILE__, __LINE__);
+				FROM {db_prefix}poll_choices
+				WHERE id_poll = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $pollinfo['id_poll'],
+				)
+			);
 			$context['choices'] = array();
 			$number = 1;
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -535,12 +582,16 @@ function EditPoll2()
 	$isEdit = isset($_REQUEST['add']) ? 0 : 1;
 
 	// Get the starter and the poll's ID - if it's an edit.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT t.id_member_started, t.id_poll, p.id_member AS pollStarter
-		FROM {$db_prefix}topics AS t
-			LEFT JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-		WHERE t.id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			LEFT JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+		WHERE t.id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 		fatal_lang_error('no_board');
 	$bcinfo = $smfFunc['db_fetch_assoc']($request);
@@ -626,38 +677,61 @@ function EditPoll2()
 	// If we're editing, let's commit the changes.
 	if ($isEdit)
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}polls
-			SET question = '$_POST[question]', change_vote = $_POST[poll_change_vote]," . (allowedTo('moderate_board') ? "
-				hide_results = $_POST[poll_hide], expire_time = $_POST[poll_expire], max_votes = $_POST[poll_max_votes],
-				guest_vote = $_POST[poll_guest_vote]" : "
-				hide_results = CASE WHEN expire_time = 0 AND $_POST[poll_hide] = 2 THEN 1 ELSE $_POST[poll_hide] END") . "
-			WHERE id_poll = $bcinfo[id_poll]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}polls
+			SET question = {string:inject_string_1}, change_vote = {int:inject_int_1},' . (allowedTo('moderate_board') ? '
+				hide_results = {int:inject_int_2}, expire_time = {int:inject_int_3}, max_votes = {int:inject_int_4},
+				guest_vote = {int:inject_int_5}' : '
+				hide_results = CASE WHEN expire_time = {int:inject_int_6} AND ' . $_POST['poll_hide'] . ' = 2 THEN 1 ELSE ' . $_POST['poll_hide'] . ' END') . '
+			WHERE id_poll = {int:inject_int_7}',
+			array(
+				'inject_int_1' => $_POST['poll_change_vote'],
+				'inject_int_2' => $_POST['poll_hide'],
+				'inject_int_3' => $_POST['poll_expire'],
+				'inject_int_4' => $_POST['poll_max_votes'],
+				'inject_int_5' => $_POST['poll_guest_vote'],
+				'inject_int_6' => 0,
+				'inject_int_7' => $bcinfo['id_poll'],
+				'inject_string_1' => $_POST['question'],
+			)
+		);
 	}
 	// Otherwise, let's get our poll going!
 	else
 	{
 		// Create the poll.
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}polls
+		$smfFunc['db_query']('', '
+			INSERT INTO {db_prefix}polls
 				(question, hide_results, max_votes, guest_vote, expire_time, id_member, poster_name, change_vote)
-			VALUES (SUBSTRING('$_POST[question]', 1, 255), $_POST[poll_hide], $_POST[poll_max_votes], $_POST[poll_guest_vote], $_POST[poll_expire], $user_info[id], SUBSTRING('$user_info[username]', 1, 255), $_POST[poll_change_vote])", __FILE__, __LINE__);
+			VALUES (SUBSTRING(\'' . $_POST['question'] . '\', 1, 255), ' . $_POST['poll_hide'] . ', ' . $_POST['poll_max_votes'] . ', ' . $_POST['poll_guest_vote'] . ', ' . $_POST['poll_expire'] . ', ' . $user_info['id'] . ', SUBSTRING(\'' . $user_info['username'] . '\', 1, 255), ' . $_POST['poll_change_vote'] . ')',
+			array(
+			)
+		);
 
 		// Set the poll ID.
-		$bcinfo['id_poll'] = $smfFunc['db_insert_id']("{$db_prefix}polls", 'id_poll');
+		$bcinfo['id_poll'] = $smfFunc['db_insert_id']( $db_prefix . 'polls', 'id_poll');
 
 		// Link the poll to the topic
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}topics
-			SET id_poll = $bcinfo[id_poll]
-			WHERE id_topic = $topic", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}topics
+			SET id_poll = {int:inject_int_1}
+			WHERE id_topic = {int:current_topic}',
+			array(
+				'current_topic' => $topic,
+				'inject_int_1' => $bcinfo['id_poll'],
+			)
+		);
 	}
 
 	// Get all the choices.  (no better way to remove all emptied and add previously non-existent ones.)
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_choice
-		FROM {$db_prefix}poll_choices
-		WHERE id_poll = $bcinfo[id_poll]", __FILE__, __LINE__);
+		FROM {db_prefix}poll_choices
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $bcinfo['id_poll'],
+		)
+	);
 	$choices = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$choices[] = $row['id_choice'];
@@ -685,41 +759,69 @@ function EditPoll2()
 
 		// If it's already there, update it.  If it's not... add it.
 		if (in_array($k, $choices))
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}poll_choices
-				SET label = '$option'
-				WHERE id_poll = $bcinfo[id_poll]
-					AND id_choice = $k", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}poll_choices
+				SET label = {string:inject_string_1}
+				WHERE id_poll = {int:inject_int_1}
+					AND id_choice = {int:inject_int_2}',
+				array(
+					'inject_int_1' => $bcinfo['id_poll'],
+					'inject_int_2' => $k,
+					'inject_string_1' => $option,
+				)
+			);
 		else
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}poll_choices
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}poll_choices
 					(id_poll, id_choice, label, votes)
-				VALUES ($bcinfo[id_poll], $k, SUBSTRING('$option', 1, 255), 0)", __FILE__, __LINE__);
+				VALUES (' . $bcinfo['id_poll'] . ', ' . $k . ', SUBSTRING(\'' . $option . '\', 1, 255), 0)',
+				array(
+				)
+			);
 	}
 
 	// I'm sorry, but... well, no one was choosing you.  Poor options, I'll put you out of your misery.
 	if (!empty($delete_options))
 	{
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_polls
-			WHERE id_poll = $bcinfo[id_poll]
-				AND id_choice IN (" . implode(', ', $delete_options) . ")", __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}poll_choices
-			WHERE id_poll = $bcinfo[id_poll]
-				AND id_choice IN (" . implode(', ', $delete_options) . ")", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_polls
+			WHERE id_poll = {int:inject_int_1}
+				AND id_choice IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $delete_options,
+				'inject_int_1' => $bcinfo['id_poll'],
+			)
+		);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}poll_choices
+			WHERE id_poll = {int:inject_int_1}
+				AND id_choice IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $delete_options,
+				'inject_int_1' => $bcinfo['id_poll'],
+			)
+		);
 	}
 
 	// Shall I reset the vote count, sir?
 	if (isset($_POST['resetVoteCount']))
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}poll_choices
-			SET votes = 0
-			WHERE id_poll = $bcinfo[id_poll]", __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_polls
-			WHERE id_poll = $bcinfo[id_poll]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}poll_choices
+			SET votes = {int:inject_int_1}
+			WHERE id_poll = {int:inject_int_2}',
+			array(
+				'inject_int_1' => 0,
+				'inject_int_2' => $bcinfo['id_poll'],
+			)
+		);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_polls
+			WHERE id_poll = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $bcinfo['id_poll'],
+			)
+		);
 	}
 
 	// Off we go.
@@ -738,12 +840,16 @@ function RemovePoll()
 	// Check permissions.
 	if (!allowedTo('poll_remove_any'))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT t.id_member_started, p.id_member AS pollStarter
-			FROM {$db_prefix}topics AS t
-				INNER JOIN {$db_prefix}polls AS p ON (p.id_poll = t.id_poll)
-			WHERE t.id_topic = $topic
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}topics AS t
+				INNER JOIN {db_prefix}polls AS p ON (p.id_poll = t.id_poll)
+			WHERE t.id_topic = {int:current_topic}
+			LIMIT 1',
+			array(
+				'current_topic' => $topic,
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('no_access');
 		list ($topicStarter, $pollStarter) = $smfFunc['db_fetch_row']($request);
@@ -753,31 +859,52 @@ function RemovePoll()
 	}
 
 	// Retrieve the poll ID.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_poll
-		FROM {$db_prefix}topics
-		WHERE id_topic = $topic
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics
+		WHERE id_topic = {int:current_topic}
+		LIMIT 1',
+		array(
+			'current_topic' => $topic,
+		)
+	);
 	list ($pollID) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Remove all user logs for this poll.
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}log_polls
-		WHERE id_poll = $pollID", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_polls
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $pollID,
+		)
+	);
 	// Remove all poll choices.
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}poll_choices
-		WHERE id_poll = $pollID", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}poll_choices
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $pollID,
+		)
+	);
 	// Remove the poll itself.
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}polls
-		WHERE id_poll = $pollID", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}polls
+		WHERE id_poll = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $pollID,
+		)
+	);
 	// Finally set the topic poll ID back to 0!
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}topics
-		SET id_poll = 0
-		WHERE id_topic = $topic", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}topics
+		SET id_poll = {int:inject_int_1}
+		WHERE id_topic = {int:current_topic}',
+		array(
+			'current_topic' => $topic,
+			'inject_int_1' => 0,
+		)
+	);
 
 	// Take the moderator back to the topic.
 	redirectexit('topic=' . $topic . '.' . $_REQUEST['start']);

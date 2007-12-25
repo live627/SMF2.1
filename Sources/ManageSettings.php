@@ -622,9 +622,12 @@ function ModifySignatureSettings($return_config = false)
 		$_GET['step'] = isset($_GET['step']) ? (int) $_GET['step'] : 0;
 		$done = false;
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT MAX(id_member)
-			FROM {$db_prefix}members", __FILE__, __LINE__);
+			FROM {db_prefix}members',
+			array(
+			)
+		);
 		list ($context['max_member']) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -632,10 +635,13 @@ function ModifySignatureSettings($return_config = false)
 		{
 			$changes = array();
 
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_member, signature
-				FROM {$db_prefix}members
-				WHERE id_member BETWEEN $_GET[step] AND $_GET[step] + 49", __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE id_member BETWEEN ' . $_GET['step'] . ' AND ' . $_GET['step'] . ' + 49',
+				array(
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// Apply all the rules we can realistically do.
@@ -789,10 +795,15 @@ function ModifySignatureSettings($return_config = false)
 			if (!empty($changes))
 			{
 				foreach ($changes as $id => $sig)
-					$smfFunc['db_query']('', "
-						UPDATE {$db_prefix}members
-						SET signature = '$sig'
-						WHERE id_member = $id", __FILE__, __LINE__);
+					$smfFunc['db_query']('', '
+						UPDATE {db_prefix}members
+						SET signature = {string:inject_string_1}
+						WHERE id_member = {int:inject_int_1}',
+						array(
+							'inject_int_1' => $id,
+							'inject_string_1' => $sig,
+						)
+					);
 			}
 
 			$_GET['step'] += 50;
@@ -1129,11 +1140,14 @@ function list_getProfileFields($start, $items_per_page, $sort, $standardFields)
 	else
 	{
 		// Load all the fields.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_field, col_name, field_name, field_desc, field_type, active
-			FROM {$db_prefix}custom_fields
-			ORDER BY $sort
-			LIMIT $start, $items_per_page", __FILE__, __LINE__);
+			FROM {db_prefix}custom_fields
+			ORDER BY ' . $sort . '
+			LIMIT ' . $start . ', ' . $items_per_page,
+			array(
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$list[] = $row;
 		$smfFunc['db_free_result']($request);
@@ -1146,9 +1160,12 @@ function list_getProfileFieldSize()
 {
 	global $smfFunc, $db_prefix;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}custom_fields", __FILE__, __LINE__);
+		FROM {db_prefix}custom_fields',
+		array(
+		)
+	);
 
 	list ($numProfileFields) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -1172,11 +1189,15 @@ function EditCustomProfiles()
 
 	if ($context['fid'])
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_field, col_name, field_name, field_desc, field_type, field_length, field_options,
 				show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask
-			FROM {$db_prefix}custom_fields
-			WHERE id_field = $context[fid]", __FILE__, __LINE__);
+			FROM {db_prefix}custom_fields
+			WHERE id_field = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $context['fid'],
+			)
+		);
 		$context['field'] = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -1308,10 +1329,14 @@ function EditCustomProfiles()
 			$unique = false;
 			while ($unique == false)
 			{
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT id_field
-					FROM {$db_prefix}custom_fields
-					WHERE col_name = '$colname'", __FILE__, __LINE__);
+					FROM {db_prefix}custom_fields
+					WHERE col_name = {string:inject_string_1}',
+					array(
+						'inject_string_1' => $colname,
+					)
+				);
 				if ($smfFunc['db_num_rows']($request) == 0)
 					$unique = true;
 				else
@@ -1330,10 +1355,15 @@ function EditCustomProfiles()
 				|| (($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio') && $context['field']['type'] != 'select' && $context['field']['type'] != 'radio')
 				|| ($context['field']['type'] == 'check' && $_POST['field_type'] != 'check'))
 			{
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}themes
-					WHERE variable = '" . $context['field']['colname'] . "'
-						AND id_member > 0", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					DELETE FROM {db_prefix}themes
+					WHERE variable = {string:inject_string_1}
+						AND id_member > {int:inject_int_1}',
+					array(
+						'inject_int_1' => 0,
+						'inject_string_1' => $context['field']['colname'],
+					)
+				);
 			}
 			// Otherwise - if the select is edited may need to adjust!
 			elseif ($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio')
@@ -1354,7 +1384,7 @@ function EditCustomProfiles()
 					}
 
 					// Damn - it's gone!
-					$optionChanges[$k] = strtr($option, array("'" => "\'"));
+					$optionChanges[$k] = strtr($option, array('\'' => '\\\''));
 				}
 
 				// Finally - have we renamed it - or is it really gone?
@@ -1362,12 +1392,19 @@ function EditCustomProfiles()
 				{
 					// Just been renamed?
 					if (!in_array($k, $takenKeys) && !empty($newOptions[$k]))
-						$smfFunc['db_query']('', "
-							UPDATE {$db_prefix}themes
-							SET value = '" . $newOptions[$k] . "'
-							WHERE variable = '" . $context['field']['colname'] . "'
-								AND value = '$option'
-								AND id_member > 0", __FILE__, __LINE__);
+						$smfFunc['db_query']('', '
+							UPDATE {db_prefix}themes
+							SET value = {string:inject_string_1}
+							WHERE variable = {string:inject_string_2}
+								AND value = {string:inject_string_3}
+								AND id_member > {int:inject_int_1}',
+							array(
+								'inject_int_1' => 0,
+								'inject_string_1' => $newOptions[$k],
+								'inject_string_2' => $context['field']['colname'],
+								'inject_string_3' => $option,
+							)
+						);
 				}
 			}
 			//!!! Maybe we should adjust based on new text length limits?
@@ -1376,33 +1413,59 @@ function EditCustomProfiles()
 		// Do the insertion/updates.
 		if ($context['fid'])
 		{
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}custom_fields
-				SET field_name = '$_POST[field_name]', field_desc = '$_POST[field_desc]',
-					field_type = '$_POST[field_type]', field_length = $field_length,
-					field_options = '$field_options', show_reg = $show_reg, show_display = $show_display,
-					show_profile = '$show_profile', private = $private, active = $active, default_value = '$default',
-					can_search = $can_search, bbc = $bbc, mask = '$mask'
-				WHERE id_field = $context[fid]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}custom_fields
+				SET field_name = {string:inject_string_1}, field_desc = {string:inject_string_2},
+					field_type = {string:inject_string_3}, field_length = {int:inject_int_1},
+					field_options = {string:inject_string_4}, show_reg = {int:inject_int_2}, show_display = {int:inject_int_3},
+					show_profile = {string:inject_string_5}, private = {int:inject_int_4}, active = {int:inject_int_5}, default_value = {string:inject_string_6},
+					can_search = {int:inject_int_6}, bbc = {int:inject_int_7}, mask = {string:inject_string_7}
+				WHERE id_field = {int:inject_int_8}',
+				array(
+					'inject_int_1' => $field_length,
+					'inject_int_2' => $show_reg,
+					'inject_int_3' => $show_display,
+					'inject_int_4' => $private,
+					'inject_int_5' => $active,
+					'inject_int_6' => $can_search,
+					'inject_int_7' => $bbc,
+					'inject_int_8' => $context['fid'],
+					'inject_string_1' => $_POST['field_name'],
+					'inject_string_2' => $_POST['field_desc'],
+					'inject_string_3' => $_POST['field_type'],
+					'inject_string_4' => $field_options,
+					'inject_string_5' => $show_profile,
+					'inject_string_6' => $default,
+					'inject_string_7' => $mask,
+				)
+			);
 
 			// Just clean up any old selects - these are a pain!
 			if (($_POST['field_type'] == 'select' || $_POST['field_type'] == 'radio') && !empty($newOptions))
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}themes
-					WHERE variable = '" . $context['field']['colname'] . "'
-						AND value NOT IN ('" . implode("', '", $newOptions) . "')
-						AND id_member > 0", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					DELETE FROM {db_prefix}themes
+					WHERE variable = {string:inject_string_1}
+						AND value NOT IN (\'' . implode('\', \'', $newOptions) . '\')
+						AND id_member > {int:inject_int_1}',
+					array(
+						'inject_int_1' => 0,
+						'inject_string_1' => $context['field']['colname'],
+					)
+				);
 		}
 		else
 		{
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}custom_fields
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}custom_fields
 					(col_name, field_name, field_desc, field_type, field_length, field_options,
 					show_reg, show_display, show_profile, private, active, default_value, can_search, bbc, mask)
 				VALUES
-					('$colname', '$_POST[field_name]', '$_POST[field_desc]', '$_POST[field_type]',
-					$field_length, '$field_options', $show_reg, $show_display, '$show_profile', $private,
-					$active, '$default', $can_search, $bbc, '$mask')", __FILE__, __LINE__);
+					(\'' . $colname . '\', \'' . $_POST['field_name'] . '\', \'' . $_POST['field_desc'] . '\', \'' . $_POST['field_type'] . '\',
+					' . $field_length . ', \'' . $field_options . '\', ' . $show_reg . ', ' . $show_display . ', \'' . $show_profile . '\', ' . $private . ',
+					' . $active . ', \'' . $default . '\', ' . $can_search . ', ' . $bbc . ', \'' . $mask . '\')',
+				array(
+				)
+			);
 		}
 	}
 	// Deleting?
@@ -1411,14 +1474,23 @@ function EditCustomProfiles()
 		checkSession();
 
 		// Delete the user data first.
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}themes
-			WHERE variable = '" . $context['field']['colname'] . "'
-				AND id_member > 0", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}themes
+			WHERE variable = {string:inject_string_1}
+				AND id_member > {int:inject_int_1}',
+			array(
+				'inject_int_1' => 0,
+				'inject_string_1' => $context['field']['colname'],
+			)
+		);
 		// Finally - the field itself is gone!
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}custom_fields
-			WHERE id_field = $context[fid]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}custom_fields
+			WHERE id_field = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $context['fid'],
+			)
+		);
 	}
 
 	// Rebuild display cache etc.
@@ -1426,12 +1498,17 @@ function EditCustomProfiles()
 	{
 		checkSession();
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT col_name, field_name
-			FROM {$db_prefix}custom_fields
-			WHERE show_display = 1
-				AND active = 1
-				AND private != 2", __FILE__, __LINE__);
+			FROM {db_prefix}custom_fields
+			WHERE show_display = {int:inject_int_1}
+				AND active = {int:inject_int_1}
+				AND private != {int:inject_int_2}',
+			array(
+				'inject_int_1' => 1,
+				'inject_int_2' => 2,
+			)
+		);
 		$fields = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -1440,7 +1517,7 @@ function EditCustomProfiles()
 		$smfFunc['db_free_result']($request);
 
 		$fields = implode('|', $fields);
-		updateSettings(array('displayFields' => strtr($fields, array("'" => "\'"))));
+		updateSettings(array('displayFields' => strtr($fields, array('\'' => '\\''))));
 		redirectexit('action=admin;area=featuresettings;sa=profile');
 	}
 }

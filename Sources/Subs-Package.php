@@ -247,9 +247,9 @@ function read_tgz_data($data, $destination, $single_file = false, $overwrite = f
 	// "Read" the filename and comment. // !!! Might be mussed.
 	if ($flags & 12)
 	{
-		while ($flags & 8 && $data{$offset++} != "\0")
+		while ($flags & 8 && $data{$offset++} != '\0')
 			continue;
-		while ($flags & 4 && $data{$offset++} != "\0")
+		while ($flags & 4 && $data{$offset++} != '\0')
 			continue;
 	}
 
@@ -471,7 +471,7 @@ function url_exists($url)
 	if (!$fid)
 		return false;
 
-	fputs($fid, 'HEAD ' . $a_url['path'] . " HTTP/1.0\r\nHost: " . $a_url['host'] . "\r\n\r\n");
+	fputs($fid, 'HEAD ' . $a_url['path'] . ' HTTP/1.0' . "\r\n" . 'Host: ' . $a_url['host'] . "\r\n\r\n");
 	$head = fread($fid, 1024);
 	fclose($fid);
 
@@ -487,20 +487,28 @@ function loadInstalledPackages()
 	$install_file = implode('', file($boarddir . '/Packages/installed.list'));
 	if (trim($install_file) == '')
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_packages
-			SET install_state = 0", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_packages
+			SET install_state = {int:inject_int_1}',
+			array(
+				'inject_int_1' => 0,
+			)
+		);
 
 		// Don't have anything left, so send an empty array.
 		return array();
 	}
 
 	// Load the packages from the database - note this is ordered by install time to ensure latest package uninstalled first.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_install, package_id, filename, name, version
-		FROM {$db_prefix}log_packages
-		WHERE install_state != 0
-		ORDER BY time_installed DESC", __FILE__, __LINE__);
+		FROM {db_prefix}log_packages
+		WHERE install_state != {int:inject_int_1}
+		ORDER BY time_installed DESC',
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	$installed = array();
 	$found = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1115,7 +1123,7 @@ function parse_path($path)
 
 	// do we parse in a package directory?
 	if (!empty($temp_path))
-		$dirs['$package'] = $temp_path;
+		$dirs[$package] = $temp_path;
 
 	if (strlen($path) == 0)
 		trigger_error('parse_path(): There should never be an empty filename', E_USER_ERROR);
@@ -1781,7 +1789,7 @@ function parseBoardMod($file, $testing = true, $undo = false, $theme_paths = arr
 					// Actually add it to the mod file too, so we can see that it will work ;)
 					if (!empty($temp_changes[$pos]['changes']))
 					{
-						$file .= "\n\n<edit file>\n$theme[theme_dir]/$template_file\n</edit file>\n\n" . implode("\n\n", $temp_changes[$pos]['changes']);
+						$file .= "\n\n" .'<edit file>' . "\n" .$theme['theme_dir'] .'/' . $template_file . "\n" .'</edit file>' . "\n\n" . implode("\n\n", $temp_changes[$pos]['changes']);
 						$theme_id_ref[$counter] = $id;
 						$counter += 1 + count($temp_changes[$pos]['changes']);
 					}
@@ -2197,11 +2205,16 @@ function package_create_backup($id = 'backup')
 		$sourcedir => empty($_REQUEST['use_full_paths']) ? 'Sources/' : strtr($sourcedir . '/', '\\', '/')
 	);
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT value
-		FROM {$db_prefix}themes
-		WHERE id_member = 0
-			AND variable = 'theme_dir'", __FILE__, __LINE__);
+		FROM {db_prefix}themes
+		WHERE id_member = {int:inject_int_1}
+			AND variable = {string:inject_string_1}',
+		array(
+			'inject_int_1' => 0,
+			'inject_string_1' => 'theme_dir',
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$dirs[$row['value']] = empty($_REQUEST['use_full_paths']) ? 'Themes/' . basename($row['value']) . '/' : strtr($row['value'] . '/', '\\', '/');
 	$smfFunc['db_free_result']($request);
@@ -2362,7 +2375,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false)
 		// I want this, from there, and I'm not going to be bothering you for more (probably.)
 		if (empty($post_data))
 		{
-			fwrite($fp, 'GET ' . $match[6] . " HTTP/1.0\r\n");
+			fwrite($fp, 'GET ' . $match[6] . ' HTTP/1.0' . "\r\n");
 			fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? '443' : '') : ':' . $match[5]) . "\r\n");
 			fwrite($fp, 'User-Agent: PHP/SMF' . "\r\n");
 			if ($keep_alive)
@@ -2372,7 +2385,7 @@ function fetch_web_data($url, $post_data = '', $keep_alive = false)
 		}
 		else
 		{
-			fwrite($fp, 'POST ' . $match[6] . " HTTP/1.0\r\n");
+			fwrite($fp, 'POST ' . $match[6] . ' HTTP/1.0' . "\r\n");
 			fwrite($fp, 'Host: ' . $match[3] . (empty($match[5]) ? ($match[2] ? '443' : '') : ':' . $match[5]) . "\r\n");
 			fwrite($fp, 'User-Agent: PHP/SMF' . "\r\n");
 			if ($keep_alive)

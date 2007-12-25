@@ -233,27 +233,38 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		if (!empty($modSettings['registration_method']) && $modSettings['registration_method'] == 2)
 		{
 			// Update the latest activated member (highest id_member) and count.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT COUNT(*), MAX(id_member)
-				FROM {$db_prefix}members
-				WHERE is_activated = 1", __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE is_activated = {int:inject_int_1}',
+				array(
+					'inject_int_1' => 1,
+				)
+			);
 			list ($changes['totalMembers'], $changes['latestMember']) = $smfFunc['db_fetch_row']($result);
 			$smfFunc['db_free_result']($result);
 
 			// Get the latest activated member's display name.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT real_name
-				FROM {$db_prefix}members
-				WHERE id_member = " . (int) $changes['latestMember'] . "
-				LIMIT 1", __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE id_member = {int:inject_int_1}
+				LIMIT 1',
+				array(
+					'inject_int_1' => (int) $changes['latestMember'],
+				)
+			);
 			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
 			$smfFunc['db_free_result']($result);
 
 			// Update the amount of members awaiting approval - ignoring COPPA accounts, as you can't approve them until you get permission.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT COUNT(*)
-				FROM {$db_prefix}members
-				WHERE is_activated IN (3, 4)", __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE is_activated IN (3, 4)',
+				array(
+				)
+			);
 			list ($changes['unapprovedMembers']) = $smfFunc['db_fetch_row']($result);
 			$smfFunc['db_free_result']($result);
 		}
@@ -269,18 +280,25 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		elseif ($parameter1 !== false)
 		{
 			// Update the latest member (highest id_member) and count.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT COUNT(*), MAX(id_member)
-				FROM {$db_prefix}members", __FILE__, __LINE__);
+				FROM {db_prefix}members',
+				array(
+				)
+			);
 			list ($changes['totalMembers'], $changes['latestMember']) = $smfFunc['db_fetch_row']($result);
 			$smfFunc['db_free_result']($result);
 
 			// Get the latest member's display name.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT real_name
-				FROM {$db_prefix}members
-				WHERE id_member = " . (int) $changes['latestMember'] . "
-				LIMIT 1", __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE id_member = {int:inject_int_1}
+				LIMIT 1',
+				array(
+					'inject_int_1' => (int) $changes['latestMember'],
+				)
+			);
 			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
 			$smfFunc['db_free_result']($result);
 		}
@@ -294,10 +312,14 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		else
 		{
 			// SUM and MAX on a smaller table is better for InnoDB tables.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT SUM(num_posts) AS total_messages, MAX(id_last_msg) AS max_msg_id
-				FROM {$db_prefix}boards
-				WHERE redirect = ''", __FILE__, __LINE__);
+				FROM {db_prefix}boards
+				WHERE redirect = {string:inject_string_1}',
+				array(
+					'inject_string_1' => '',
+				)
+			);
 			$row = $smfFunc['db_fetch_assoc']($result);
 			$smfFunc['db_free_result']($result);
 
@@ -310,9 +332,13 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 
 	case 'subject':
 		// Remove the previous subject (if any).
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_search_subjects
-			WHERE id_topic = " . (int) $parameter1, __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_search_subjects
+			WHERE id_topic = {int:inject_int_1}',
+			array(
+				'inject_int_1' => (int) $parameter1,
+			)
+		);
 
 		// Insert the new subject.
 		if ($parameter2 !== null)
@@ -322,11 +348,11 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 
 			$inserts = array();
 			foreach ($parameter2 as $word)
-				$inserts[] = array("'$word'", $parameter1);
+				$inserts[] = array( '\'' . $word . '\'', $parameter1);
 
 			if (!empty($inserts))
 				$smfFunc['db_insert']('ignore',
-					"{$db_prefix}log_search_subjects",
+					$db_prefix . 'log_search_subjects',
 					array('word', 'id_topic'),
 					$inserts,
 					array('word', 'id_topic'), __FILE__, __LINE__
@@ -341,10 +367,14 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		{
 			// Get the number of topics - a SUM is better for InnoDB tables.
 			// We also ignore the recycle bin here because there will probably be a bunch of one-post topics there.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT SUM(num_topics) AS total_topics
-				FROM {$db_prefix}boards" . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-				WHERE id_board != $modSettings[recycle_board]" : ''), __FILE__, __LINE__);
+				FROM {db_prefix}boards' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+				WHERE id_board != {int:inject_int_1}' : ''),
+				array(
+					'inject_int_1' => $modSettings['recycle_board'],
+				)
+			);
 			$row = $smfFunc['db_fetch_assoc']($result);
 			$smfFunc['db_free_result']($result);
 
@@ -360,10 +390,14 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		if (($postgroups = cache_get_data('updateStats:postgroups', 360)) == null)
 		{
 			// Fetch the postgroups!
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_group, min_posts
-				FROM {$db_prefix}membergroups
-				WHERE min_posts != -1", __FILE__, __LINE__);
+				FROM {db_prefix}membergroups
+				WHERE min_posts != {int:inject_int_1}',
+				array(
+					'inject_int_1' => -1,
+				)
+			);
 			$postgroups = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$postgroups[$row['id_group']] = $row['min_posts'];
@@ -389,12 +423,15 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		}
 
 		// A big fat CASE WHEN... END is faster than a zillion UPDATE's ;).
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}members
-			SET id_post_group = CASE$conditions
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}members
+			SET id_post_group = CASE' . $conditions . '
 					ELSE 0
-				END" . ($parameter1 != null ? "
-			WHERE $parameter1" : ''), __FILE__, __LINE__);
+				END' . ($parameter1 != null ? '
+			WHERE ' . $parameter1 : ''),
+			array(
+			)
+		);
 		break;
 
 		default:
@@ -444,10 +481,13 @@ function updateMemberData($members, $data)
 			else
 			{
 				$member_names = array();
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT member_name
-					FROM {$db_prefix}members
-					WHERE $condition", __FILE__, __LINE__);
+					FROM {db_prefix}members
+					WHERE ' . $condition,
+					array(
+					)
+				);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$member_names[] = $row['member_name'];
 				$smfFunc['db_free_result']($request);
@@ -479,14 +519,17 @@ function updateMemberData($members, $data)
 	$setString = '';
 	foreach ($data as $var => $val)
 	{
-		$setString .= "
-			$var = $val,";
+		$setString .= '
+			' . $var . ' = ' . $val . ',';
 	}
 
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}members
-		SET" . substr($setString, 0, -1) . '
-		WHERE ' . $condition, __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}members
+		SET' . substr($setString, 0, -1) . '
+		WHERE ' . $condition,
+		array(
+		)
+	);
 
 	updateStats('postgroups', $condition, array_keys($data));
 
@@ -523,10 +566,15 @@ function updateSettings($changeArray, $update = false)
 	{
 		foreach ($changeArray as $variable => $value)
 		{
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}settings
-				SET value = " . ($value === true ? 'value + 1' : ($value === false ? 'value - 1' : "'$value'")) . "
-				WHERE variable = '$variable'", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}settings
+				SET value = {string:inject_string_1}
+				WHERE variable = {string:inject_string_2}',
+				array(
+					'inject_string_1' => $value === true ? 'value + 1' : ($value === false ? 'value - 1' : '\'' . $value . '\''),
+					'inject_string_2' => $variable,
+				)
+			);
 			$modSettings[$variable] = $value === true ? $modSettings[$variable] + 1 : ($value === false ? $modSettings[$variable] - 1 : $smfFunc['db_unescape_string']($value));
 		}
 
@@ -546,7 +594,7 @@ function updateSettings($changeArray, $update = false)
 		elseif (!isset($modSettings[$variable]) && empty($value))
 			continue;
 
-		$replaceArray[] = array("SUBSTRING('$variable', 1, 255)", "SUBSTRING('$value', 1, 65534)");
+		$replaceArray[] = array( 'SUBSTRING(\'' . $variable . '\', 1, 255)', 'SUBSTRING(\'' . $value . '\', 1, 65534)');
 
 		$modSettings[$variable] = $smfFunc['db_unescape_string']($value);
 	}
@@ -555,7 +603,7 @@ function updateSettings($changeArray, $update = false)
 		return;
 
 	$smfFunc['db_insert']('replace',
-		"{$db_prefix}settings",
+		$db_prefix . 'settings',
 		array('variable', 'value'),
 		$replaceArray,
 		array('variable'), __FILE__, __LINE__
@@ -619,7 +667,7 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 
 		// Show the ... after the first page.  (1 >...< 6 7 [8] 9 10 ... 15)
 		if ($start > $num_per_page * ($PageContiguous + 1))
-			$pageindex .= '<span style="font-weight: bold;" onclick="expandPages(this, \'' . ($flexible_start ? strtr($base_url, array("'" => "\\'")) : strtr($base_url, array('%' => '%%', "'" => "\\'")) . ';start=%d') . '\', ' . $num_per_page . ', ' . ($start - $num_per_page * $PageContiguous) . ', ' . $num_per_page . ');" onmouseover="this.style.cursor=\'pointer\';"> ... </span>';
+			$pageindex .= '<span style="font-weight: bold;" onclick="expandPages(this, \'' . ($flexible_start ? strtr($base_url, array('\'' => '\\\'')) : strtr($base_url, array('%' => '%%', '\'' => '\\\'')) . ';start=%d') . '\', ' . $num_per_page . ', ' . ($start - $num_per_page * $PageContiguous) . ', ' . $num_per_page . ');" onmouseover="this.style.cursor=\'pointer\';"> ... </span>';
 
 		// Show the pages before the current one. (1 ... >6 7< [8] 9 10 ... 15)
 		for ($nCont = $PageContiguous; $nCont >= 1; $nCont--)
@@ -646,7 +694,7 @@ function constructPageIndex($base_url, &$start, $max_value, $num_per_page, $flex
 
 		// Show the '...' part near the end. (1 ... 6 7 [8] 9 10 >...< 15)
 		if ($start + $num_per_page * ($PageContiguous + 1) < $tmpMaxPages)
-			$pageindex .= '<span style="font-weight: bold;" onclick="expandPages(this, \'' . ($flexible_start ? strtr($base_url, array("'" => "\\'")) : strtr($base_url, array('%' => '%%', "'" => "\\'")) . ';start=%d') . '\', ' . ($start + $num_per_page * ($PageContiguous + 1)) . ', ' . $tmpMaxPages . ', ' . $num_per_page . ');" onmouseover="this.style.cursor=\'pointer\';"> ... </span>';
+			$pageindex .= '<span style="font-weight: bold;" onclick="expandPages(this, \'' . ($flexible_start ? strtr($base_url, array('\'' => '\\\'')) : strtr($base_url, array('%' => '%%', '\'' => '\\\'')) . ';start=%d') . '\', ' . ($start + $num_per_page * ($PageContiguous + 1)) . ', ' . $tmpMaxPages . ', ' . $num_per_page . ');" onmouseover="this.style.cursor=\'pointer\';"> ... </span>';
 
 		// Show the last number in the list. (1 ... 6 7 [8] 9 10 ... >15<)
 		if ($start + $num_per_page * $PageContiguous < $tmpMaxPages)
@@ -1729,7 +1777,7 @@ function parse_bbc($message, $smileys = true, $cache_id = '', $parse_tags = arra
 					$data = strtr($data, array($breaker => '< >', '&nbsp;' => $context['utf8'] ? "\xC2\xA0" : "\xA0"));
 					$data = preg_replace(
 						'~(?<=[>;:!? ' . $non_breaking_space . '\]()]|^)([\w\.]{' . $modSettings['fixLongWords'] . ',})~e' . ($context['utf8'] ? 'u' : ''),
-						"preg_replace('/(.{" . ($modSettings['fixLongWords'] - 1) . '})/' . ($context['utf8'] ? 'u' : '') . "', '\\\$1< >', '\$1')",
+						'preg_replace(\'/(.{' . ($modSettings['fixLongWords'] - 1) . '})/' . ($context['utf8'] ? 'u' : '') . '\', \'\\\$1< >\', \'\$1\')',
 						$data);
 					$data = strtr($data, array('< >' => $breaker, $context['utf8'] ? "\xC2\xA0" : "\xA0" => '&nbsp;'));
 				}
@@ -2307,9 +2355,12 @@ function parsesmileys(&$message)
 			// Load the smileys in reverse order by length so they don't get parsed wrong.
 			if (($temp = cache_get_data('parsing_smileys', 480)) == null)
 			{
-				$result = $smfFunc['db_query']('', "
+				$result = $smfFunc['db_query']('', '
 					SELECT code, filename, description
-					FROM {$db_prefix}smileys", __FILE__, __LINE__);
+					FROM {db_prefix}smileys',
+					array(
+					)
+				);
 				$smileysfrom = array();
 				$smileysto = array();
 				$smileysdescs = array();
@@ -2370,7 +2421,7 @@ function highlight_php_code($code)
 	error_reporting($oldlevel);
 
 	// Yes, I know this is kludging it, but this is the best way to preserve tabs from PHP :P.
-	$buffer = preg_replace('~SMF_TAB(</(font|span)><(font color|span style)="[^"]*?">)?\(\);~', "<pre style=\"display: inline;\">\t</pre>", $buffer);
+	$buffer = preg_replace('~SMF_TAB(</(font|span)><(font color|span style)="[^"]*?">)?\(\);~', '<pre style=\"display: inline;\">' . "\t" . '</pre>', $buffer);
 
 	return strtr($buffer, array('\'' => '&#039;', '<code>' => '', '</code>' => ''));
 }
@@ -2425,19 +2476,30 @@ function writeLog($force = false)
 	{
 		if ($do_delete)
 		{
-			$smfFunc['db_query']('delete_log_online_interval', "
-				DELETE FROM {$db_prefix}log_online
-				WHERE log_time < " . (time() - $modSettings['lastActive'] * 60) . "
-					AND session != '$session_id'", __FILE__, __LINE__);
+			$smfFunc['db_query']('delete_log_online_interval', '
+				DELETE FROM {db_prefix}log_online
+				WHERE log_time < {int:inject_int_1}
+					AND session != {string:inject_string_1}',
+				array(
+					'inject_int_1' => time() - $modSettings['lastActive'] * 60,
+					'inject_string_1' => $session_id,
+				)
+			);
 
 			// Cache when we did it last.
 			cache_put_data('log_online-update', time(), 30);
 		}
 
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_online
-			SET log_time = " . time() . ", ip = IFNULL(INET_ATON('$user_info[ip]'), 0), url = '$serialized'
-			WHERE session = '$session_id'", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_online
+			SET log_time = {int:inject_int_1}, ip = IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0), url = {string:inject_string_1}
+			WHERE session = {string:inject_string_2}',
+			array(
+				'inject_int_1' => time(),
+				'inject_string_1' => $serialized,
+				'inject_string_2' => $session_id,
+			)
+		);
 
 		// Guess it got deleted.
 		if ($smfFunc['db_affected_rows']() == 0)
@@ -2450,14 +2512,19 @@ function writeLog($force = false)
 	if (empty($_SESSION['log_time']))
 	{
 		if ($do_delete || !empty($user_info['id']))
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_online
-				WHERE " . ($do_delete ? "log_time < " . (time() - $modSettings['lastActive'] * 60) : '') . ($do_delete && !empty($user_info['id']) ? ' OR ' : '') . (empty($user_info['id']) ? '' : "id_member = $user_info[id]"), __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_online
+				WHERE ' . ($do_delete ? 'log_time < {int:inject_int_1}' : '') . ($do_delete && !empty($user_info['id']) ? ' OR ' : '') . (empty($user_info['id']) ? '' : 'id_member = {int:current_member}'),
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => time() - $modSettings['lastActive'] * 60,
+				)
+			);
 
 		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
-				"{$db_prefix}log_online",
+				$db_prefix . 'log_online',
 				array('session', 'id_member', 'id_spider', 'log_time', 'ip', 'url'),
-				array("'$session_id'", $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), "IFNULL(INET_ATON('$user_info[ip]'), 0)", "'$serialized'"),
+				array( '\'' . $session_id . '\'', $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', '\'' . $serialized . '\''),
 				array('session'), __FILE__, __LINE__
 			);
 	}
@@ -2524,9 +2591,9 @@ function redirectexit($setLocation = '', $refresh = false)
 	if (!empty($modSettings['queryless_urls']) && (empty($context['server']['is_cgi']) || @ini_get('cgi.fix_pathinfo') == 1) && !empty($context['server']['is_apache']))
 	{
 		if (defined('SID') && SID != '')
-			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2?' . SID", $setLocation);
+			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#]+?)(#[^"]*?)?$/e', '\$scripturl . \'/\' . strtr(\'\$1\', \'&;=\', \'//,\') . \'.html\$2?\' . SID', $setLocation);
 		else
-			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', "\$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $setLocation);
+			$setLocation = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?$/e', '\$scripturl . \'/\' . strtr(\'\$1\', \'&;=\', \'//,\') . \'.html\$2\'', $setLocation);
 	}
 
 	if (isset($modSettings['integrate_redirect']) && function_exists($modSettings['integrate_redirect']))
@@ -2686,14 +2753,17 @@ function logAction($action, $extra = array())
 	else
 		$msg_id = '0';
 
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}log_actions
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}log_actions
 			(log_time, id_member, ip, action, id_board, id_topic, id_msg, extra)
-		VALUES (" . time() . ", $user_info[id], SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$action', 1, 30),
-			$board_id, $topic_id, $msg_id,
-			SUBSTRING('" . $smfFunc['db_escape_string'](serialize($extra)) . "', 1, 65534))", __FILE__, __LINE__);
+		VALUES (' . time() . ', ' . $user_info['id'] . ', SUBSTRING(\'' . $user_info['ip'] . '\', 1, 16), SUBSTRING(\'' . $action . '\', 1, 30),
+			' . $board_id . ', ' . $topic_id . ', ' . $msg_id . ',
+			SUBSTRING(\'' . $smfFunc['db_escape_string'](serialize($extra)) . '\', 1, 65534))',
+		array(
+		)
+	);
 
-	return $smfFunc['db_insert_id']("{$db_prefix}log_actions", 'id_action');
+	return $smfFunc['db_insert_id']( $db_prefix . 'log_actions', 'id_action');
 }
 
 // Track Statistics.
@@ -2720,14 +2790,18 @@ function trackStats($stats = array())
 	}
 
 	$date = strftime('%Y-%m-%d', forum_time(false));
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}log_activity
-		SET" . substr($setStringUpdate, 0, -1) . "
-		WHERE date = '$date'", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}log_activity
+		SET' . substr($setStringUpdate, 0, -1) . '
+		WHERE date = {date:inject_date_1}',
+		array(
+			'inject_date_1' => $date,
+		)
+	);
 	if ($smfFunc['db_affected_rows']() == 0)
 	{
 		$smfFunc['db_insert']('ignore',
-			"{$db_prefix}log_activity",
+			$db_prefix . 'log_activity',
 			array_merge(array_keys($cache_stats), array('date')),
 			array_merge($cache_stats, array('\'' . $date . '\'')),
 			array('date'), __FILE__, __LINE__
@@ -2762,16 +2836,21 @@ function spamProtection($error_type)
 		$timeLimit = 2;
 
 	// Delete old entries...
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}log_floodcontrol
-		WHERE log_time < " . (time() - $timeLimit) . "
-			AND log_type = '$error_type'", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_floodcontrol
+		WHERE log_time < {int:inject_int_1}
+			AND log_type = {string:inject_string_1}',
+		array(
+			'inject_int_1' => time() - $timeLimit,
+			'inject_string_1' => $error_type,
+		)
+	);
 
 	// Add a new entry, deleting the old if necessary.
 	$smfFunc['db_insert']('replace',
-		"{$db_prefix}log_floodcontrol",
+		$db_prefix . 'log_floodcontrol',
 		array('ip', 'log_time', 'log_type'),
-		array("SUBSTRING('$user_info[ip]', 1, 16)", time(), "'$error_type'"),
+		array( 'SUBSTRING(\'' . $user_info['ip'] . '\', 1, 16)', time(), '\'' . $error_type . '\''),
 		array('ip', 'log_type'), __FILE__, __LINE__
 	);
 

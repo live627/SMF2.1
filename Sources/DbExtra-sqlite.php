@@ -62,8 +62,11 @@ function smf_db_backup_table($table, $backup_table)
 {
 	global $smfFunc;
 
-	$result = $smfFunc['db_query']('', "
-		SHOW CREATE TABLE " . $table, false, false);
+	$result = $smfFunc['db_query']('', '
+		SHOW CREATE TABLE ' . $table,
+		array(
+		)
+	);
 	list (, $create) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -112,23 +115,32 @@ function smf_db_backup_table($table, $backup_table)
 	else
 		$create = '';
 
-	$smfFunc['db_query']('', "
-		DROP TABLE IF EXISTS " . $backup_table, false, false);
+	$smfFunc['db_query']('', '
+		DROP TABLE IF EXISTS ' . $backup_table,
+		array(
+		)
+	);
 
-	$request = $smfFunc['db_query']('', "
-		CREATE TABLE " . $backup_table . " $create
-		TYPE=$engine" . (empty($charset) ? '' : " CHARACTER SET $charset" . (empty($collate) ? '' : " COLLATE $collate")) . "
+	$request = $smfFunc['db_query']('', '
+		CREATE TABLE ' . $backup_table . ' ' . $create . '
+		TYPE=' . $engine . (empty($charset) ? '' : ' CHARACTER SET ' . $charset . (empty($collate) ? '' : ' COLLATE ' . $collate)) . '
 		SELECT *
-		FROM " . $table, false, false);
+		FROM ' . $table,
+		array(
+		)
+	);
 
 	if ($auto_inc != '')
 	{
 		if (preg_match('~\`(.+?)\`\s~', $auto_inc, $match) != 0 && substr($auto_inc, -1, 1) == ',')
 			$auto_inc = substr($auto_inc, 0, -1);
 
-		$smfFunc['db_query']('', "
-			ALTER TABLE " . $backup_table . "
-			CHANGE COLUMN $match[1] $auto_inc", false, false);
+		$smfFunc['db_query']('', '
+			ALTER TABLE ' . $backup_table . '
+			CHANGE COLUMN ' . $match[1] . ' ' . $auto_inc,
+			array(
+			)
+		);
 	}
 
 	return $request;
@@ -147,14 +159,17 @@ function smf_db_list_tables($db = false, $filter = false)
 {
 	global $db_prefix, $smfFunc;
 
-	$filter = $filter == false ? '' : " AND name LIKE '$filter'";
+	$filter = $filter == false ? '' : ' AND name LIKE \'' . $filter . '\'';
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT name
 		FROM sqlite_master
-		WHERE type = 'table'
-		$filter
-		ORDER BY name", false, false);
+		WHERE type = \'table\'
+		' . $filter . '
+		ORDER BY name',
+		array(
+		)
+	);
 	$tables = array();
 	while ($row = $smfFunc['db_fetch_row']($request))
 		$tables[] = $row[0];
@@ -172,9 +187,12 @@ function smf_db_insert_sql($tableName)
 	$crlf = "\r\n";
 
 	// Get everything from the table.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT
-		FROM $tableName", false, false);
+		FROM ' . $tableName,
+		array(
+		)
+	);
 
 	// The number of rows, just for record keeping and breaking INSERTs up.
 	$num_rows = $smfFunc['db_num_rows']($result);
@@ -188,7 +206,7 @@ function smf_db_insert_sql($tableName)
 
 	// Start it off with the basic INSERT INTO.
 	$data = '';
-	$insert_msg = $crlf . 'INSERT INTO ' . $tableName . $crlf . "\t(" . implode(', ', $fields) . ')' . $crlf . 'VALUES ' . $crlf . "\t";
+	$insert_msg = $crlf . 'INSERT INTO ' . $tableName . $crlf . "\t" . '(' . implode(', ', $fields) . ')' . $crlf . 'VALUES ' . $crlf . "\t";
 
 	// Loop through each row.
 	while ($row = $smfFunc['db_fetch_row']($result))
@@ -205,7 +223,7 @@ function smf_db_insert_sql($tableName)
 			elseif (is_numeric($row[$j]))
 				$field_list[] = $row[$j];
 			else
-				$field_list[] = "'" . $smfFunc['db_escape_string']($row[$j]) . "'";
+				$field_list[] = '\'' . $smfFunc['db_escape_string']($row[$j]) . '\'';
 		}
 
 		// 'Insert' the data.
@@ -231,11 +249,14 @@ function smf_db_table_sql($tableName)
 	$seq_create = '';
 
 	// Find all the fields.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT column_name, column_default, is_nullable, data_type, character_maximum_length
 		FROM information_schema.columns
-		WHERE table_name = '$tableName'
-		ORDER BY ordinal_position", false, false);
+		WHERE table_name = \'' . $tableName . '\'
+		ORDER BY ordinal_position',
+		array(
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
 		if ($row['data_type'] == 'character varying')
@@ -257,9 +278,12 @@ function smf_db_table_sql($tableName)
 			if (preg_match('~nextval\(\'(.+?)\'(.+?)*\)~i', $row['column_default'], $matches) != 0)
 			{
 				// Get to find the next variable first!
-				$count_req = $smfFunc['db_query']('', "
-					SELECT MAX($row[column_name])
-					FROM $tableName", false, false);
+				$count_req = $smfFunc['db_query']('', '
+					SELECT MAX(' . $row['column_name'] . ')
+					FROM ' . $tableName,
+					array(
+					)
+				);
 				list ($max_ind) = $smfFunc['db_fetch_row']($count_req);
 				$smfFunc['db_free_result']($count_req);
 				//!!! Get the right bloody start!
@@ -274,12 +298,15 @@ function smf_db_table_sql($tableName)
 	// Take off the last comma.
 	$schema_create = substr($schema_create, 0, -strlen($crlf) - 1);
 
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT CASE WHEN i.indisprimary THEN 1 ELSE 0 END AS is_primary, pg_get_indexdef(i.indexrelid) AS inddef
 		FROM pg_class AS c, pg_class AS c2, pg_index AS i
-		WHERE c.relname = '{$tableName}'
+		WHERE c.relname = \'' . $tableName . '\'
 			AND c.oid = i.indrelid
-			AND i.indexrelid = c2.oid", false, false);
+			AND i.indexrelid = c2.oid',
+		array(
+		)
+	);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{

@@ -340,17 +340,22 @@ function updateAdminPreferences()
 	$options['admin_preferences'] = serialize($context['admin_preferences']);
 
 	// Just check we haven't ended up with something theme exclusive somehow.
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}themes
-		WHERE id_theme != 1
-		AND variable = 'admin_preferences'", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}themes
+		WHERE id_theme != {int:inject_int_1}
+		AND variable = {string:inject_string_1}',
+		array(
+			'inject_int_1' => 1,
+			'inject_string_1' => 'admin_preferences',
+		)
+	);
 
 	// Update the themes table.
 	$smfFunc['db_insert'](
 		'replace',
-		"{$db_prefix}themes",
+		$db_prefix . 'themes',
 		array('id_member', 'id_theme', 'variable', 'value'),
-		array($user_info['id'], 1, "'admin_preferences'", '\'' . $smfFunc['db_escape_string']($options['admin_preferences']) . '\''),
+		array($user_info['id'], 1, '\'admin_preferences\'', '\'' . $smfFunc['db_escape_string']($options['admin_preferences']) . '\''),
 		array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
 	);
 

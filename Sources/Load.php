@@ -141,15 +141,21 @@ function reloadSettings()
 
 	// Most database systems have not set UTF-8 as their default input charset.
 	if (isset($db_character_set))
-		$smfFunc['db_query']('', "
-			SET NAMES $db_character_set", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			SET NAMES ' . $db_character_set,
+			array(
+			)
+		);
 
 	// Try to load it from the cache first; it'll never get cached if the setting is off.
 	if (($modSettings = cache_get_data('modSettings', 90)) == null)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT variable, value
-			FROM {$db_prefix}settings", false, false);
+			FROM {db_prefix}settings',
+			array(
+			)
+		);
 		$modSettings = array();
 		if (!$request)
 			db_fatal_error();
@@ -332,12 +338,16 @@ function loadUserSettings()
 		// Is the member data cached?
 		if (empty($modSettings['cache_enable']) || $modSettings['cache_enable'] < 2 || ($user_settings = cache_get_data('user_settings-' . $id_member, 60)) == null)
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT mem.*, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type
-				FROM {$db_prefix}members AS mem
-					LEFT JOIN {$db_prefix}attachments AS a ON (a.id_member = $id_member)
-				WHERE mem.id_member = $id_member
-				LIMIT 1", __FILE__, __LINE__);
+				FROM {db_prefix}members AS mem
+					LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = {int:inject_int_1})
+				WHERE mem.id_member = {int:inject_int_1}
+				LIMIT 1',
+				array(
+					'inject_int_1' => $id_member,
+				)
+			);
 			$user_settings = $smfFunc['db_fetch_assoc']($request);
 			$smfFunc['db_free_result']($request);
 
@@ -375,11 +385,15 @@ function loadUserSettings()
 		if (SMF != 'SSI' && !isset($_REQUEST['xml']) && (!isset($_REQUEST['action']) || $_REQUEST['action'] != '.xml') && empty($_SESSION['id_msg_last_visit']) && (empty($modSettings['cache_enable']) || ($_SESSION['id_msg_last_visit'] = cache_get_data('user_last_visit-' . $id_member, 5 * 3600)) === null))
 		{
 			// Do a quick query to make sure this isn't a mistake.
-			$result = $smfFunc['db_query']('', "
+			$result = $smfFunc['db_query']('', '
 				SELECT poster_time
-				FROM {$db_prefix}messages
-				WHERE id_msg = $user_settings[id_msg_last_visit]
-				LIMIT 1", __FILE__, __LINE__);
+				FROM {db_prefix}messages
+				WHERE id_msg = {int:inject_int_1}
+				LIMIT 1',
+				array(
+					'inject_int_1' => $user_settings['id_msg_last_visit'],
+				)
+			);
 			list ($visitTime) = $smfFunc['db_fetch_row']($result);
 			$smfFunc['db_free_result']($result);
 
@@ -544,11 +558,15 @@ function loadBoard()
 		// Looking through the message table can be slow, so try using the cache first.
 		if (($topic = cache_get_data('msg_topic-' . $_REQUEST['msg'], 120)) === NULL)
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_topic
-				FROM {$db_prefix}messages
-				WHERE id_msg = $_REQUEST[msg]
-				LIMIT 1", __FILE__, __LINE__);
+				FROM {db_prefix}messages
+				WHERE id_msg = {int:inject_int_1}
+				LIMIT 1',
+				array(
+					'inject_int_1' => $_REQUEST['msg'],
+				)
+			);
 
 			// So did it find anything?
 			if ($smfFunc['db_num_rows']($request))
@@ -595,19 +613,24 @@ function loadBoard()
 
 	if (empty($temp))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT
 				c.id_cat, b.name AS bname, b.description, b.num_topics, b.member_groups,
 				b.id_parent, c.name AS cname, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
-				mem.real_name" . (!empty($topic) ? ", b.id_board" : '') . ", b.child_level,
+				mem.real_name' . (!empty($topic) ? ', b.id_board' : '') . ', b.child_level,
 				b.id_theme, b.override_theme, b.count_posts, b.id_profile, b.redirect,
-				b.unapproved_topics, b.unapproved_posts" . (!empty($topic) ? ', t.approved, t.id_member_started' : '') . "
-			FROM {$db_prefix}boards AS b
-				" . (!empty($topic) ? "INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = $topic)" : '') . "
-				LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)
-				LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = " . (empty($topic) ? $board : 't.id_board') . ")
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-			WHERE b.id_board = " . (empty($topic) ? $board : "t.id_board"), __FILE__, __LINE__);
+				b.unapproved_topics, b.unapproved_posts' . (!empty($topic) ? ', t.approved, t.id_member_started' : '') . '
+			FROM {db_prefix}boards AS b' . (!empty($topic) ? '
+				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})' : '') . '
+				LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
+				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = {raw:board_link})
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+			WHERE b.id_board = {raw:board_link}',
+			array(
+				'current_topic' => $topic,
+				'board_link' => empty($topic) ? $smfFunc['db_quote']('{int:current_board}', array('current_board' => $board)) : 't.id_board',
+			)
+		);
 		// If there aren't any, skip.
 		if ($smfFunc['db_num_rows']($request) > 0)
 		{
@@ -774,16 +797,20 @@ function loadPermissions()
 	}
 
 	// If it is detected as a robot, and we are restricting permissions as a special group - then implement this.
-	$spider_restrict = $user_info['possibly_robot'] && !empty($modSettings['spider_group']) ? " OR (id_group = $modSettings[spider_group] && add_deny = 0)" : '';
+	$spider_restrict = $user_info['possibly_robot'] && !empty($modSettings['spider_group']) ? ' OR (id_group = ' . $modSettings['spider_group'] . ' && add_deny = 0)' : '';
 
 	if (empty($user_info['permissions']))
 	{
 		// Get the general permissions.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT permission, add_deny
-			FROM {$db_prefix}permissions
-			WHERE id_group IN (" . implode(', ', $user_info['groups']) . ")
-				$spider_restrict", __FILE__, __LINE__);
+			FROM {db_prefix}permissions
+			WHERE id_group IN ({array_int:inject_array_int_1})
+				' . $spider_restrict,
+			array(
+				'inject_array_int_1' => $user_info['groups'],
+			)
+		);
 		$removals = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -805,12 +832,17 @@ function loadPermissions()
 		if (!isset($board_info['profile']))
 			fatal_lang_error('no_board');
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT permission, add_deny
-			FROM {$db_prefix}board_permissions
-			WHERE (id_group IN (" . implode(', ', $user_info['groups']) . ")
-				$spider_restrict)
-				AND id_profile = $board_info[profile]", __FILE__, __LINE__);
+			FROM {db_prefix}board_permissions
+			WHERE (id_group IN ({array_int:inject_array_int_1})
+				' . $spider_restrict . ')
+				AND id_profile = {int:inject_int_1}',
+			array(
+				'inject_array_int_1' => $user_info['groups'],
+				'inject_int_1' => $board_info['profile'],
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['add_deny']))
@@ -862,41 +894,41 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 
 	if ($set == 'normal')
 	{
-		$select_columns = "
+		$select_columns = '
 			IFNULL(lo.log_time, 0) AS is_online, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
 			mem.signature, mem.personal_text, mem.location, mem.gender, mem.avatar, mem.id_member, mem.member_name,
 			mem.real_name, mem.email_address, mem.hide_email, mem.date_registered, mem.website_title, mem.website_url,
 			mem.birthdate, mem.member_ip, mem.member_ip2, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login,
 			mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online,
-			mem.buddy_list, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
-			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.is_activated, mem.warning,
-			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars" . (!empty($modSettings['titlesEnable']) ? ',
+			mem.buddy_list, mg.online_color AS member_group_color, IFNULL(mg.group_name, \'\') AS member_group,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, \'\') AS post_group, mem.is_activated, mem.warning,
+			CASE WHEN mem.id_group = 0 OR mg.stars = \'\' THEN pg.stars ELSE mg.stars END AS stars' . (!empty($modSettings['titlesEnable']) ? ',
 			mem.usertitle' : '');
-		$select_tables = "
-			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
-			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_member = mem.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)";
+		$select_tables = '
+			LEFT JOIN ' . $db_prefix . 'log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN ' . $db_prefix . 'attachments AS a ON (a.id_member = mem.id_member)
+			LEFT JOIN ' . $db_prefix . 'membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN ' . $db_prefix . 'membergroups AS mg ON (mg.id_group = mem.id_group)';
 	}
 	elseif ($set == 'profile')
 	{
-		$select_columns = "
+		$select_columns = '
 			IFNULL(lo.log_time, 0) AS is_online, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type,
 			mem.signature, mem.personal_text, mem.location, mem.gender, mem.avatar, mem.id_member, mem.member_name,
 			mem.real_name, mem.email_address, mem.hide_email, mem.date_registered, mem.website_title, mem.website_url,
 			mem.birthdate, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login, mem.karma_good,
 			mem.karma_bad, mem.member_ip, mem.member_ip2, mem.lngfile, mem.id_group, mem.id_theme, mem.buddy_list,
-			mem.pm_ignore_list, mem.pm_email_notify, mem.time_offset" . (!empty($modSettings['titlesEnable']) ? ', mem.usertitle' : '') . ",
+			mem.pm_ignore_list, mem.pm_email_notify, mem.time_offset' . (!empty($modSettings['titlesEnable']) ? ', mem.usertitle' : '') . ',
 			mem.time_format, mem.secret_question, mem.is_activated, mem.additional_groups, mem.smiley_set, mem.show_online,
 			mem.total_time_logged_in, mem.id_post_group, mem.notify_announcements, mem.notify_regularity, mem.notify_send_body,
-			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, '') AS member_group,
-			pg.online_color AS post_group_color, IFNULL(pg.group_name, '') AS post_group, mem.ignore_boards, mem.warning,
-			CASE WHEN mem.id_group = 0 OR mg.stars = '' THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt, mem.pm_prefs";
-		$select_tables = "
-			LEFT JOIN {$db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
-			LEFT JOIN {$db_prefix}attachments AS a ON (a.id_member = mem.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)";
+			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, \'\') AS member_group,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, \'\') AS post_group, mem.ignore_boards, mem.warning,
+			CASE WHEN mem.id_group = 0 OR mg.stars = \'\' THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt, mem.pm_prefs';
+		$select_tables = '
+			LEFT JOIN ' . $db_prefix . 'log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN ' . $db_prefix . 'attachments AS a ON (a.id_member = mem.id_member)
+			LEFT JOIN ' . $db_prefix . 'membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN ' . $db_prefix . 'membergroups AS mg ON (mg.id_group = mem.id_group)';
 	}
 	elseif ($set == 'minimal')
 	{
@@ -911,10 +943,13 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	if (!empty($users))
 	{
 		// Load the member's data.
-		$request = $smfFunc['db_query']('', "
-			SELECT$select_columns
-			FROM {$db_prefix}members AS mem$select_tables
-			WHERE mem." . ($is_name ? 'member_name' : 'id_member') . (count($users) == 1 ? " = '" . current($users) . "'" : " IN ('" . implode("', '", $users) . "')"), __FILE__, __LINE__);
+		$request = $smfFunc['db_query']('', '
+			SELECT' . $select_columns . '
+			FROM {db_prefix}members AS mem' . $select_tables . '
+			WHERE mem.' . ($is_name ? 'member_name' : 'id_member') . (count($users) == 1 ? ' = \'' . current($users) . '\'' : ' IN (\'' . implode('\', \'', $users) . '\')'),
+			array(
+			)
+		);
 		$new_loaded_ids = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -928,10 +963,13 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 
 	if (!empty($new_loaded_ids) && $set !== 'minimal')
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT *
-			FROM {$db_prefix}themes
-			WHERE id_member" . (count($new_loaded_ids) == 1 ? ' = ' . $new_loaded_ids[0] : ' IN (' . implode(', ', $new_loaded_ids) . ')'), __FILE__, __LINE__);
+			FROM {db_prefix}themes
+			WHERE id_member' . (count($new_loaded_ids) == 1 ? ' = ' . $new_loaded_ids[0] : ' IN (' . implode(', ', $new_loaded_ids) . ')'),
+			array(
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$user_profile[$row['id_member']]['options'][$row['variable']] = $row['value'];
 		$smfFunc['db_free_result']($request);
@@ -948,11 +986,15 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 	{
 		if (($row = cache_get_data('moderator_group_info', 480)) == null)
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT group_name AS member_group, online_color AS member_group_color, stars
-				FROM {$db_prefix}membergroups
-				WHERE id_group = 3
-				LIMIT 1", __FILE__, __LINE__);
+				FROM {db_prefix}membergroups
+				WHERE id_group = {int:inject_int_1}
+				LIMIT 1',
+				array(
+					'inject_int_1' => 3,
+				)
+			);
 			$row = $smfFunc['db_fetch_assoc']($request);
 			$smfFunc['db_free_result']($request);
 
@@ -1187,11 +1229,14 @@ function loadTheme($id_theme = 0, $initialize = true)
 	if (empty($flag))
 	{
 		// Load variables from the current or default theme, global or this user's.
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT variable, value, id_member, id_theme
-			FROM {$db_prefix}themes
-			WHERE id_member" . (empty($themeData[0]) ? " IN (-1, 0, $member)" : " = $member") . "
-				AND id_theme" . ($id_theme == 1 ? ' = 1' : " IN ($id_theme, 1)"), __FILE__, __LINE__);
+			FROM {db_prefix}themes
+			WHERE id_member' . (empty($themeData[0]) ? ' IN (-1, 0, ' . $member . ')' : ' = ' . $member) . '
+				AND id_theme' . ($id_theme == 1 ? ' = 1' : ' IN (' . $id_theme . ', 1)'),
+			array(
+			)
+		);
 		// Pick between $settings and $options depending on whose data it is.
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
@@ -1670,14 +1715,18 @@ function getBoardParents($id_parent)
 	// Loop while the parent is non-zero.
 	while ($id_parent != 0)
 	{
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT
-				b.id_parent, b.name, $id_parent AS id_board, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
+				b.id_parent, b.name, ' . $id_parent . ' AS id_board, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
 				mem.real_name, b.child_level
-			FROM {$db_prefix}boards AS b
-				LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-			WHERE b.id_board = $id_parent", __FILE__, __LINE__);
+			FROM {db_prefix}boards AS b
+				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
+			WHERE b.id_board = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $id_parent,
+			)
+		);
 		// In the EXTREMELY unlikely event this happens, give an error message.
 		if ($smfFunc['db_num_rows']($result) == 0)
 			fatal_lang_error('parent_not_found', 'critical');
@@ -1858,11 +1907,11 @@ function template_include($filename, $once = false)
 
 				// Fix the PHP code stuff...
 				if ($context['browser']['is_ie4'] || $context['browser']['is_ie5'] || $context['browser']['is_ie5.5'])
-					$data2 = str_replace("\t", "<pre style=\"display: inline;\">\t</pre>", $data2);
+					$data2 = str_replace("\t", '<pre style=\"display: inline;\">' . "\t" . '</pre>', $data2);
 				elseif (!$context['browser']['is_gecko'])
-					$data2 = str_replace("\t", "<span style=\"white-space: pre;\">\t</span>", $data2);
+					$data2 = str_replace("\t", '<span style=\"white-space: pre;\">' . "\t" . '</span>', $data2);
 				else
-					$data2 = str_replace("<pre style=\"display: inline;\">\t</pre>", "\t", $data2);
+					$data2 = str_replace('<pre style=\"display: inline;\">' . "\t" . '</pre>', "\t", $data2);
 
 				// Now we get to work around a bug in PHP where it doesn't escape <br />s!
 				$j = -1;
@@ -2022,11 +2071,15 @@ function sessionRead($session_id)
 		return false;
 
 	// Look for it in the database.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT data
-		FROM {$db_prefix}sessions
-		WHERE session_id = '" . $smfFunc['db_escape_string']($session_id) . "'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}sessions
+		WHERE session_id = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $smfFunc['db_escape_string']($session_id),
+		)
+	);
 	list ($sess_data) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -2041,15 +2094,21 @@ function sessionWrite($session_id, $data)
 		return false;
 
 	// First try to update an existing row...
-	$result = $smfFunc['db_query']('', "
-		UPDATE {$db_prefix}sessions
-		SET data = '" . $smfFunc['db_escape_string']($data) . "', last_update = " . time() . "
-		WHERE session_id = '" . $smfFunc['db_escape_string']($session_id) . "'", __FILE__, __LINE__);
+	$result = $smfFunc['db_query']('', '
+		UPDATE {db_prefix}sessions
+		SET data = {string:inject_string_1}, last_update = {int:inject_int_1}
+		WHERE session_id = {string:inject_string_2}',
+		array(
+			'inject_int_1' => time(),
+			'inject_string_1' => $smfFunc['db_escape_string']($data),
+			'inject_string_2' => $smfFunc['db_escape_string']($session_id),
+		)
+	);
 
 	// If that didn't work, try inserting a new one.
 	if ($smfFunc['db_affected_rows']() == 0)
 		$result = $smfFunc['db_insert']('ignore',
-			"{$db_prefix}sessions",
+			$db_prefix . 'sessions',
 			array('session_id', 'data', 'last_update'),
 			array('\'' . $smfFunc['db_escape_string']($session_id) . '\'', '\'' . $smfFunc['db_escape_string']($data) . '\'', time()),
 			array('session_id'), __FILE__, __LINE__
@@ -2066,9 +2125,13 @@ function sessionDestroy($session_id)
 		return false;
 
 	// Just delete the row...
-	return $smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}sessions
-		WHERE session_id = '" . $smfFunc['db_escape_string']($session_id) . "'", __FILE__, __LINE__);
+	return $smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}sessions
+		WHERE session_id = {string:inject_string_1}',
+		array(
+			'inject_string_1' => $smfFunc['db_escape_string']($session_id),
+		)
+	);
 }
 
 function sessionGC($max_lifetime)
@@ -2080,9 +2143,13 @@ function sessionGC($max_lifetime)
 		$max_lifetime = max($modSettings['databaseSession_lifetime'], 60);
 
 	// Clean up ;).
-	return $smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}sessions
-		WHERE last_update < " . (time() - $max_lifetime), __FILE__, __LINE__);
+	return $smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}sessions
+		WHERE last_update < {int:inject_int_1}',
+		array(
+			'inject_int_1' => time() - $max_lifetime,
+		)
+	);
 }
 
 function loadDatabase()
@@ -2223,7 +2290,7 @@ function cache_put_data($key, $value, $ttl = 120)
 			{
 				// Write the header.
 				@flock($fp, LOCK_EX);
-				fwrite($fp, '<?php if(!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, "'") . '\';}?>');
+				fwrite($fp, '<?php if(!defined(\'SMF\')) die; if (' . (time() + $ttl) . ' < time()) $expired = true; else{$expired = false; $value = \'' . addcslashes($value, '\'') . '\';}?>');
 				@flock($fp, LOCK_UN);
 				fclose($fp);
 			}

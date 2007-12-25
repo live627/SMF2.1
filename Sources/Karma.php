@@ -68,9 +68,13 @@ function ModifyKarma()
 	$dir = $_REQUEST['sa'] != 'applaud' ? -1 : 1;
 
 	// Delete any older items from the log. (karmaWaitTime is by hour.)
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}log_karma
-		WHERE " . time() . " - log_time > " . (int) ($modSettings['karmaWaitTime'] * 3600), __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}log_karma
+		WHERE ' . time() . ' - log_time > {int:inject_int_1}',
+		array(
+			'inject_int_1' => (int) ($modSettings['karmaWaitTime'] * 3600),
+		)
+	);
 
 	// Start off with no change in karma.
 	$action = 0;
@@ -79,12 +83,17 @@ function ModifyKarma()
 	if (!empty($modSettings['karmaTimeRestrictAdmins']) || !allowedTo('moderate_forum'))
 	{
 		// Find out if this user has done this recently...
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT action
-			FROM {$db_prefix}log_karma
-			WHERE id_target = $_REQUEST[uid]
-				AND id_executor = $user_info[id]
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}log_karma
+			WHERE id_target = {int:inject_int_1}
+				AND id_executor = {int:current_member}
+			LIMIT 1',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $_REQUEST['uid'],
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			list ($action) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -95,7 +104,7 @@ function ModifyKarma()
 	{
 		// Put it in the log.
 		$smfFunc['db_insert']('replace',
-				"{$db_prefix}log_karma",
+				$db_prefix . 'log_karma',
 				array('action', 'id_target', 'id_executor', 'log_time'),
 				array($dir, $_REQUEST['uid'], $user_info['id'], time()),
 				array('id_target', 'id_executor'), __FILE__, __LINE__
@@ -111,11 +120,18 @@ function ModifyKarma()
 			fatal_lang_error('karma_wait_time', false, array($modSettings['karmaWaitTime'], $txt['hours']));
 
 		// You decided to go back on your previous choice?
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_karma
-			SET action = $dir, log_time = " . time() . "
-			WHERE id_target = $_REQUEST[uid]
-				AND id_executor = $user_info[id]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_karma
+			SET action = {int:inject_int_1}, log_time = {int:inject_int_2}
+			WHERE id_target = {int:inject_int_3}
+				AND id_executor = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $dir,
+				'inject_int_2' => time(),
+				'inject_int_3' => $_REQUEST['uid'],
+			)
+		);
 
 		// It was recently changed the OTHER way... so... reverse it!
 		if ($dir == 1)

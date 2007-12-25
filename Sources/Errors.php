@@ -139,10 +139,13 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	
 
 	// Insert the error into the database.
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}log_errors
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}log_errors
 			(id_member, log_time, ip, url, message, session, error_type, file, line)
-		VALUES ($user_info[id], " . time() . ", SUBSTRING('$user_info[ip]', 1, 16), SUBSTRING('$query_string', 1, 65534), SUBSTRING('" . $smfFunc['db_escape_string']($error_message) . "', 1, 65534), '$sc', '$error_type', SUBSTRING('$file', 1, 255), $line)", false, false) or die($error_message);
+		VALUES (' . $user_info['id'] . ', ' . time() . ', SUBSTRING(\'' . $user_info['ip'] . '\', 1, 16), SUBSTRING(\'' . $query_string . '\', 1, 65534), SUBSTRING(\'' . $smfFunc['db_escape_string']($error_message) . '\', 1, 65534), \'' . $sc . '\', \'' . $error_type . '\', SUBSTRING(\'' . $file . '\', 1, 255), ' . $line . ')',
+		array(
+		)
+	);
 
 	// Return the message to make things simpler.
 	return $error_message;

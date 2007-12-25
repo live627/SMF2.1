@@ -50,30 +50,36 @@ function getBoardIndex($boardIndexOptions)
 		);
 
 	// Find all boards and categories, as well as related information.  This will be sorted by the natural order of boards and categories, which we control.
-	$result_boards = $smfFunc['db_query']('boardindex_fetch_boards', "
-		SELECT" . ($boardIndexOptions['include_categories'] ? "
-			c.id_cat, c.name AS cat_name," : '') . "
+	$result_boards = $smfFunc['db_query']('boardindex_fetch_boards', '
+		SELECT' . ($boardIndexOptions['include_categories'] ? '
+			c.id_cat, c.name AS cat_name,' : '') . '
 			b.id_board, b.name AS board_name, b.description,
-			CASE WHEN b.redirect != '' THEN 1 ELSE 0 END AS is_redirect,
+			CASE WHEN b.redirect != {string:inject_string_1} THEN 1 ELSE 0 END AS is_redirect,
 			b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent,
 			IFNULL(m.poster_time, 0) AS poster_time, IFNULL(mem.member_name, m.poster_name) AS poster_name,
 			m.subject, m.id_topic, IFNULL(mem.real_name, m.poster_name) AS real_name,
-			" . ($user_info['is_guest'] ? "	1 AS is_read, 0 AS new_from," : "
-			(IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS is_read, IFNULL(lb.id_msg, -1) + 1 AS new_from," . ($boardIndexOptions['include_categories'] ? "
-			c.can_collapse, IFNULL(cc.id_member, 0) AS is_collapsed," : '')) . "
+			' . ($user_info['is_guest'] ? '	1 AS is_read, 0 AS new_from,' : '
+			(IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS is_read, IFNULL(lb.id_msg, -1) + 1 AS new_from,' . ($boardIndexOptions['include_categories'] ? '
+			c.can_collapse, IFNULL(cc.id_member, 0) AS is_collapsed,' : '')) . '
 			IFNULL(mem.id_member, 0) AS id_member, m.id_msg,
 			IFNULL(mods_mem.id_member, 0) AS id_moderator, mods_mem.real_name AS mod_real_name
-		FROM {$db_prefix}boards AS b" . ($boardIndexOptions['include_categories'] ? "
-			LEFT JOIN {$db_prefix}categories AS c ON (c.id_cat = b.id_cat)" : '') . "
-			LEFT JOIN {$db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)" . ($user_info['is_guest'] ? '' : "
-			LEFT JOIN {$db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = $user_info[id])" . ($boardIndexOptions['include_categories'] ? "
-			LEFT JOIN {$db_prefix}collapsed_categories AS cc ON (cc.id_cat = c.id_cat AND cc.id_member = $user_info[id])" : '')) . "
-			LEFT JOIN {$db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
-			LEFT JOIN {$db_prefix}members AS mods_mem ON (mods_mem.id_member = mods.id_member)
-		WHERE $user_info[query_see_board]" . (empty($boardIndexOptions['countChildPosts']) ? (empty($boardIndexOptions['base_level']) ? '' : "
-			AND b.child_level >= $boardIndexOptions[base_level]") : "
-			AND b.child_level BETWEEN $boardIndexOptions[base_level] AND " . ($boardIndexOptions['base_level'] + 1)), __FILE__, __LINE__);
+		FROM {db_prefix}boards AS b' . ($boardIndexOptions['include_categories'] ? '
+			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)' : '') . '
+			LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = b.id_last_msg)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)' . ($user_info['is_guest'] ? '' : '
+			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})' . ($boardIndexOptions['include_categories'] ? '
+			LEFT JOIN {db_prefix}collapsed_categories AS cc ON (cc.id_cat = c.id_cat AND cc.id_member = {int:current_member})' : '')) . '
+			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
+			LEFT JOIN {db_prefix}members AS mods_mem ON (mods_mem.id_member = mods.id_member)
+		WHERE ' . $user_info['query_see_board'] . (empty($boardIndexOptions['countChildPosts']) ? (empty($boardIndexOptions['base_level']) ? '' : '
+			AND b.child_level >= {int:inject_int_1}') : '
+			AND b.child_level BETWEEN ' . $boardIndexOptions['base_level'] . ' AND ' . ($boardIndexOptions['base_level'] + 1)),
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => $boardIndexOptions['base_level'],
+			'inject_string_1' => '',
+		)
+	);
 
 	// Start with an empty array.
 	if ($boardIndexOptions['include_categories'])

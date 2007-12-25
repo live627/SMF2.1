@@ -71,9 +71,9 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, &$db_prefix
 		);
 
 	if (!empty($db_options['persist']))
-		$connection = @pg_pconnect("host=$db_server dbname=$db_name user=$db_user password=$db_passwd");
+		$connection = @pg_pconnect('host=' . $db_server . ' dbname=' . $db_name . ' user=' . $db_user . ' password=' . $db_passwd);
 	else
-		$connection = @pg_connect("host=$db_server dbname=$db_name user=$db_user password=$db_passwd");
+		$connection = @pg_connect( 'host=' . $db_server . ' dbname=' . $db_name . ' user=' . $db_user . ' password=' . $db_passwd);
 
 	// Something's wrong, show an error if its fatal (which we assume it is)
 	if (!$connection)
@@ -276,7 +276,10 @@ function smf_db_insert_id($table, $field, $connection = null)
 		$connection = $db_connection;
 
 	// Try get the last ID for the auto increment field.
-	$request = $smfFunc['db_query']('', "SELECT CURRVAL('{$table}_seq') AS insertID", __FILE__, __LINE__);
+	$request = $smfFunc['db_query']('', 'SELECT CURRVAL(\'' . $table . '_seq\') AS insertID',
+		array(
+		)
+	);
 	if (!$request)
 		return false;
 	list ($lastID) = $smfFunc['db_fetch_row']($request);
@@ -330,7 +333,7 @@ function db_error($db_string, $file, $line, $connection = null)
 
 	// Log the error.
 	if ($query_errno != 1213 && $query_errno != 1205 && function_exists('log_error'))
-		log_error($txt['database_error'] . ': ' . $query_error . (!empty($modSettings['enableErrorQueryLogging']) ? "\n\n$db_string" : ''), 'database', $file, $line);
+		log_error($txt['database_error'] . ': ' . $query_error . (!empty($modSettings['enableErrorQueryLogging']) ? "\n\n" .$db_string : ''), 'database', $file, $line);
 
 	// Database error auto fixing ;).
 	if (function_exists('cache_get_data') && (!isset($modSettings['autoFixDatabase']) || $modSettings['autoFixDatabase'] == '1'))
@@ -391,8 +394,11 @@ function db_error($db_string, $file, $line, $connection = null)
 
 			// Attempt to find and repair the broken table.
 			foreach ($fix_tables as $table)
-				$smfFunc['db_query']('', "
-					REPAIR TABLE $table", false, false);
+				$smfFunc['db_query']('', '
+					REPAIR TABLE ' . $table,
+					array(
+					)
+				);
 
 			// And send off an email!
 			sendmail($webmaster_email, $txt['database_error'], $txt['tried_to_repair']);
@@ -400,7 +406,10 @@ function db_error($db_string, $file, $line, $connection = null)
 			$modSettings['cache_enable'] = $old_cache;
 
 			// Try the query again...?
-			$ret = $smfFunc['db_query']('', $db_string, false, false);
+			$ret = $smfFunc['db_query']('', $db_string,
+		array(
+		)
+	);
 			if ($ret !== false)
 				return $ret;
 		}
@@ -438,7 +447,10 @@ function db_error($db_string, $file, $line, $connection = null)
 				// Try a deadlock more than once more.
 				for ($n = 0; $n < 4; $n++)
 				{
-					$ret = $smfFunc['db_query']('', $db_string, false, false);
+					$ret = $smfFunc['db_query']('', $db_string,
+		array(
+		)
+	);
 
 					$new_errno = mysql_errno($db_connection);
 					if ($ret !== false || in_array($new_errno, array(1205, 1213)))
@@ -534,7 +546,7 @@ function db_data_seek($request, $counter)
 // Unescape an escaped string!
 function smf_postg_unescape_string($string)
 {
-	return strtr($string, array("''" => "'"));
+	return strtr($string, array('\'\'' => '\''));
 }
 
 // For inserting data in a special way...
@@ -561,18 +573,21 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $fil
 		// Try and update the entries.
 		foreach ($data as $k => $entry)
 		{
-			$sql = "UPDATE $table SET";
+			$sql = 'UPDATE ' . $table . ' SET';
 			$where = '';
 			foreach ($columns as $k1 => $v)
 			{
-				$sql .= " $v = {$entry[$k1]}, ";
+				$sql .= ' ' . $v . ' = ' . $entry[$k1] . ', ';
 				// Has it got a key?
 				if (in_array($v, $keys))
-					$where .= (empty($where) ? '' : ' AND') . " $v = {$entry[$k1]}";
+					$where .= (empty($where) ? '' : ' AND') . ' ' . $v . ' = ' . $entry[$k1];
 			}
-			$sql = substr($sql, 0, -2) . " WHERE $where";
+			$sql = substr($sql, 0, -2) . ' WHERE ' . $where;
 
-			$smfFunc['db_query']('', $sql, $file, $line, $connection);
+			$smfFunc['db_query']('', $sql,
+		array(
+		), $line
+	);
 			// Make a note that the replace actually overwrote.
 			if (smf_db_affected_rows() != 0)
 			{
@@ -585,11 +600,14 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $fil
 	if (!empty($data))
 	{
 		foreach ($data as $entry)
-			$smfFunc['db_query']('', "
-				INSERT INTO $table
-					(" . implode(', ', $columns) . ")
+			$smfFunc['db_query']('', '
+				INSERT INTO ' . $table . '
+					(' . implode(', ', $columns) . ')
 				VALUES
-					(" . implode(', ', $entry) . ")", $method == 'ignore' ? false : $file, $line, $connection);
+					(' . implode(', ', $entry) . ')',
+				array(
+				), $line
+			);
 	}
 
 	if ($priv_trans)

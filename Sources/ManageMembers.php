@@ -97,11 +97,15 @@ function ViewMembers()
 	loadTemplate('ManageMembers');
 
 	// Get counts on every type of activation - for sections and filtering alike.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS totalMembers, is_activated
-		FROM {$db_prefix}members
-		WHERE is_activated != 1
-		GROUP BY is_activated", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE is_activated != {int:inject_int_1}
+		GROUP BY is_activated',
+		array(
+			'inject_int_1' => 1,
+		)
+	);
 	$context['activation_numbers'] = array();
 	$context['awaiting_activation'] = 0;
 	$context['awaiting_approval'] = 0;
@@ -210,11 +214,16 @@ function ViewMemberlist()
 		);
 		$context['postgroups'] = array();
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_group, group_name, min_posts
-			FROM {$db_prefix}membergroups
-			WHERE id_group != 3
-			ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
+			FROM {db_prefix}membergroups
+			WHERE id_group != {int:inject_int_1}
+			ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_2} THEN id_group ELSE 4 END, group_name',
+			array(
+				'inject_int_1' => 3,
+				'inject_int_2' => 4,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['min_posts'] == -1)
@@ -339,13 +348,13 @@ function ViewMemberlist()
 					$upperlimit = sprintf('%04d-%02d-%02d', $datearray['year'] - $_POST[$param_name], $datearray['mon'], $datearray['mday']);
 					$lowerlimit = sprintf('%04d-%02d-%02d', $datearray['year'] - $_POST[$param_name] - 1, $datearray['mon'], $datearray['mday']);
 					if (in_array($_POST['types'][$param_name], array('-', '--', '=')))
-						$query_parts[] = "{$param_info['db_fields'][0]} > '" . ($_POST['types'][$param_name] == '--' ? $upperlimit : $lowerlimit) . "'";
+						$query_parts[] = ($param_info['db_fields'][0]) . ' > \'' . ($_POST['types'][$param_name] == '--' ? $upperlimit : $lowerlimit) . '\'';
 					if (in_array($_POST['types'][$param_name], array('+', '++', '=')))
 					{
-						$query_parts[] = "{$param_info['db_fields'][0]} <= '" . ($_POST['types'][$param_name] == '++' ? $lowerlimit : $upperlimit) . "'";
+						$query_parts[] = ($param_info['db_fields'][0]) . ' <= \'' . ($_POST['types'][$param_name] == '++' ? $lowerlimit : $upperlimit) . '\'';
 
 						// Make sure that members that didn't set their birth year are not queried.
-						$query_parts[] = "{$param_info['db_fields'][0]} > '0000-12-31'";
+						$query_parts[] = ($param_info['db_fields'][0]) . ' > \'0000-12-31\'';
 					}
 				}
 				// Special case - equals a date.
@@ -361,14 +370,14 @@ function ViewMemberlist()
 				if (!is_array($_POST[$param_name]) || count($_POST[$param_name]) == 0 || count($_POST[$param_name]) == count($param_info['values']))
 					continue;
 
-				$query_parts[] = "{$param_info['db_fields'][0]} IN ('" . implode("', '", $_POST[$param_name]) . "')";
+				$query_parts[] = ($param_info['db_fields'][0]) . ' IN (\'' . implode('\', \'', $_POST[$param_name]) . '\')';
 			}
 			else
 			{
 				// Replace the wildcard characters ('*' and '?') into MySQL ones.
 				$_POST[$param_name] = strtolower($smfFunc['db_escape_string'](strtr($_POST[$param_name], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_'))));
 
-				$query_parts[] = '(' . implode(" LIKE '%{$_POST[$param_name]}%' OR ", $param_info['db_fields']) . " LIKE '%{$_POST[$param_name]}%')";
+				$query_parts[] = '(' . implode( ' LIKE \'%' . $_POST[$param_name] . '%\' OR ', $param_info['db_fields']) . ' LIKE \'%' . $_POST[$param_name] . '%\')';
 			}
 		}
 
@@ -377,12 +386,12 @@ function ViewMemberlist()
 
 		// Primary membergroups, but only if at least was was not selected.
 		if (!empty($_POST['membergroups'][1]) && count($context['membergroups']) != count($_POST['membergroups'][1]))
-			$mg_query_parts[] = "id_group IN (" . implode(", ", $_POST['membergroups'][1]) . ")";
+			$mg_query_parts[] = 'id_group IN (' . implode(', ', $_POST['membergroups'][1]) . ')';
 
 		// Additional membergroups (these are only relevant if not all primary groups where selected!).
 		if (!empty($_POST['membergroups'][2]) && (empty($_POST['membergroups'][1]) || count($context['membergroups']) != count($_POST['membergroups'][1])))
 			foreach ($_POST['membergroups'][2] as $mg)
-				$mg_query_parts[] = "FIND_IN_SET(" . (int) $mg . ", additional_groups)";
+				$mg_query_parts[] = 'FIND_IN_SET(' . (int) $mg . ', additional_groups)';
 
 		// Combine the one or two membergroup parts into one query part linked with an OR.
 		if (!empty($mg_query_parts))
@@ -390,7 +399,7 @@ function ViewMemberlist()
 
 		// Get all selected post count related membergroups.
 		if (!empty($_POST['postgroups']) && count($_POST['postgroups']) != count($context['postgroups']))
-			$query_parts[] = "id_post_group IN (" . implode(", ", $_POST['postgroups']) . ")";
+			$query_parts[] = 'id_post_group IN (' . implode(', ', $_POST['postgroups']) . ')';
 
 		// Construct the where part of the query.
 		$where = empty($query_parts) ? '1' : implode('
@@ -622,11 +631,16 @@ function SearchMembers()
 	);
 	$context['postgroups'] = array();
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_name, min_posts
-		FROM {$db_prefix}membergroups
-		WHERE id_group != 3
-		ORDER BY min_posts, CASE WHEN id_group < 4 THEN id_group ELSE 4 END, group_name", __FILE__, __LINE__);
+		FROM {db_prefix}membergroups
+		WHERE id_group != {int:inject_int_1}
+		ORDER BY min_posts, CASE WHEN id_group < {int:inject_int_2} THEN id_group ELSE 4 END, group_name',
+		array(
+			'inject_int_1' => 3,
+			'inject_int_2' => 4,
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		if ($row['min_posts'] == -1)
@@ -772,14 +786,14 @@ function MembersAwaitingActivation()
 			'file' => $sourcedir . '/Subs-Members.php',
 			'function' => 'list_getMembers',
 			'params' => array(
-				"is_activated = $context[current_filter]",
+				'is_activated = ' . $context['current_filter'],
 			),
 		),
 		'get_count' => array(
 			'file' => $sourcedir . '/Subs-Members.php',
 			'function' => 'list_getNumMembers',
 			'params' => array(
-				"is_activated = $context[current_filter]",
+				'is_activated = ' . $context['current_filter'],
 			),
 		),
 		'columns' => array(
@@ -964,8 +978,8 @@ function AdminApprove()
 	if (isset($_POST['time_passed']))
 	{
 		$timeBefore = time() - 86400 * (int) $_POST['time_passed'];
-		$condition = "
-			AND date_registered < $timeBefore";
+		$condition = '
+			AND date_registered < ' . $timeBefore;
 	}
 	// Coming from checkboxes - validate the members passed through to us.
 	else
@@ -973,16 +987,20 @@ function AdminApprove()
 		$members = array();
 		foreach ($_POST['todoAction'] as $id)
 			$members[] = (int) $id;
-		$condition = "
-			AND id_member IN (" . implode(', ', $members) . ")";
+		$condition = '
+			AND id_member IN (' . implode(', ', $members) . ')';
 	}
 
 	// Get information on each of the members, things that are important to us, like email address...
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, validation_code, lngfile
-		FROM {$db_prefix}members
-		WHERE is_activated = $current_filter$condition
-		ORDER BY lngfile", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE is_activated = {int:inject_int_1}' . $condition . '
+		ORDER BY lngfile',
+		array(
+			'inject_int_1' => $current_filter,
+		)
+	);
 
 	$member_count = $smfFunc['db_num_rows']($request);
 
@@ -1011,10 +1029,16 @@ function AdminApprove()
 	if ($_POST['todo'] == 'ok' || $_POST['todo'] == 'okemail')
 	{
 		// Approve/activate this member.
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}members
-			SET validation_code = '', is_activated = 1
-			WHERE is_activated = $current_filter$condition", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}members
+			SET validation_code = {string:inject_string_1}, is_activated = {int:inject_int_1}
+			WHERE is_activated = {int:inject_int_2}' . $condition,
+			array(
+				'inject_int_1' => 1,
+				'inject_int_2' => $current_filter,
+				'inject_string_1' => '',
+			)
+		);
 
 		// Do we have to let the integration code know about the activations?
 		if (isset($modSettings['integrate_activate']) && function_exists($modSettings['integrate_activate']))
@@ -1048,16 +1072,23 @@ function AdminApprove()
 			$validation_code = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
 			// Set these members for activation - I know this includes two id_member checks but it's safer than bodging $condition ;).
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}members
-				SET validation_code = '$validation_code', is_activated = 0
-				WHERE is_activated = $current_filter
-					$condition
-					AND id_member = $member[id]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}members
+				SET validation_code = {string:inject_string_1}, is_activated = {int:inject_int_1}
+				WHERE is_activated = {int:inject_int_2}
+					' . $condition . '
+					AND id_member = {int:inject_int_3}',
+				array(
+					'inject_int_1' => 0,
+					'inject_int_2' => $current_filter,
+					'inject_int_3' => $member['id'],
+					'inject_string_1' => $validation_code,
+				)
+			);
 
 				$replacements = array(
 					'USERNAME' => $member['name'],
-					'ACTIVATIONLINK' => $scripturl . "?action=activate;u=$member[id];code=$validation_code",
+					'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $validation_code,
 				);
 
 				$emaildata = loadEmailTemplate('admin_approve_activation', $replacements, $member['language']);
@@ -1111,7 +1142,7 @@ function AdminApprove()
 		{
 				$replacements = array(
 					'USERNAME' => $member['name'],
-					'ACTIVATIONLINK' => $scripturl . "?action=activate;u=$member[id];code=$member[code]",
+					'ACTIVATIONLINK' => $scripturl . '?action=activate;u=' . $member['id'] . ';code=' . $member['code'],
 				);
 
 				$emaildata = loadEmailTemplate('admin_approve_remind', $replacements, $member['language']);

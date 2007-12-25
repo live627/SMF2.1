@@ -125,11 +125,14 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 
 	require_once($sourcedir . '/ManageAttachments.php');
 	removeAttachments('a.id_member = ' . $memID);
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}attachments
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}attachments
 			(id_member, attachment_type, filename, fileext, size)
-		VALUES ($memID, " . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ", '$destName', '$ext', 1)", __FILE__, __LINE__);
-	$attachID = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
+		VALUES (' . $memID . ', ' . (empty($modSettings['custom_avatar_enabled']) ? '0' : '1') . ', \'' . $destName . '\', \'' . $ext . '\', 1)',
+		array(
+		)
+	);
+	$attachID = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
 	// Retain this globally in case the script wants it.
 	$modSettings['new_avatar_data'] = array(
 		'id' => $attachID,
@@ -193,11 +196,19 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 			$mime_type = 'image/' . $ext;
 
 			// Write filesize in the database.
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}attachments
-				SET size = " . filesize($destName) . ", width = " . (int) $width . ", height = " . (int) $height . ",
-					mime_type = '$mime_type'
-				WHERE id_attach = $attachID", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}attachments
+				SET size = {int:inject_int_1}, width = {int:inject_int_2}, height = {int:inject_int_3},
+					mime_type = {string:inject_string_1}
+				WHERE id_attach = {int:inject_int_4}',
+				array(
+					'inject_int_1' => filesize($destName),
+					'inject_int_2' => (int) $width,
+					'inject_int_3' => (int) $height,
+					'inject_int_4' => $attachID,
+					'inject_string_1' => $mime_type,
+				)
+			);
 			return true;
 		}
 		else
@@ -205,9 +216,13 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	}
 	else
 	{
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}attachments
-			WHERE id_attach = $attachID", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}attachments
+			WHERE id_attach = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $attachID,
+			)
+		);
 
 		@unlink($destName . '.tmp');
 		return false;

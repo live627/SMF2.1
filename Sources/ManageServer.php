@@ -337,12 +337,12 @@ function ModifyCoreSettings2()
 	foreach ($config_passwords as $config_var)
 	{
 		if (isset($_POST[$config_var][1]) && $_POST[$config_var][0] == $_POST[$config_var][1])
-			$config_vars[$config_var] = '\'' . addcslashes($_POST[$config_var][0], "'\\") . '\'';
+			$config_vars[$config_var] = '\'' . addcslashes($_POST[$config_var][0], '\'\\') . '\'';
 	}
 	foreach ($config_strs as $config_var)
 	{
 		if (isset($_POST[$config_var]))
-			$config_vars[$config_var] = '\'' . addcslashes($_POST[$config_var], "'\\") . '\'';
+			$config_vars[$config_var] = '\'' . addcslashes($_POST[$config_var], '\'\\') . '\'';
 	}
 	foreach ($config_ints as $config_var)
 	{
@@ -648,12 +648,17 @@ function DownloadLanguage()
 	$context['theme_names'] = array();
 	if (!empty($indexes))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_theme, value
-			FROM {$db_prefix}themes
-			WHERE id_member = 0
-				AND variable = 'theme_dir'
-				AND (value LIKE '%" . implode("' OR value LIKE '%", $indexes) . "')", __FILE__, __LINE__);
+			FROM {db_prefix}themes
+			WHERE id_member = {int:inject_int_1}
+				AND variable = {string:inject_string_1}
+				AND (value LIKE \'%' . implode('\' OR value LIKE \'%', $indexes) . '\')',
+			array(
+				'inject_int_1' => 0,
+				'inject_string_1' => 'theme_dir',
+			)
+		);
 		$themes = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -667,12 +672,18 @@ function DownloadLanguage()
 		if (!empty($themes))
 		{
 			// Now we have the id_theme we can get the pretty description.
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_theme, value
-				FROM {$db_prefix}themes
-				WHERE id_member = 0
-					AND variable = 'name'
-					AND id_theme IN (" . implode(', ', array_keys($themes)) . ")", __FILE__, __LINE__);
+				FROM {db_prefix}themes
+				WHERE id_member = {int:inject_int_1}
+					AND variable = {string:inject_string_1}
+					AND id_theme IN ({array_int:inject_array_int_1})',
+				array(
+					'inject_array_int_1' => array_keys($themes),
+					'inject_int_1' => 0,
+					'inject_string_1' => 'name',
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// Now we have it...
@@ -803,7 +814,7 @@ function ModifyLanguageSettings()
 		if ($_POST['def_language'] != $language)
 		{
 			require_once($sourcedir . '/Subs-Admin.php');
-			updateSettingsFile(array('language' => "'$_POST[def_language]'"));
+			updateSettingsFile(array('language' => '\'' . $_POST['def_language'] . '\''));
 			$language = $_POST['def_language'];
 		}
 	}
@@ -1014,10 +1025,13 @@ function list_getLanguages()
 	$dir->close();
 
 	// Work out how many people are using each language.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT lngfile, COUNT(*) AS num_users
-		FROM {$db_prefix}members
-		GROUP BY lngfile", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		GROUP BY lngfile',
+		array(
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		// Default?
@@ -1058,12 +1072,17 @@ function ModifyLanguage()
 	$context['lang_id'] = $matches[1];
 
 	// Get all the theme data.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_theme, variable, value
-		FROM {$db_prefix}themes
-		WHERE id_theme != 1
-			AND id_member = 0
-			AND variable IN ('name', 'theme_dir')", __FILE__, __LINE__);
+		FROM {db_prefix}themes
+		WHERE id_theme != {int:inject_int_1}
+			AND id_member = {int:inject_int_2}
+			AND variable IN (\'name\', \'theme_dir\')',
+		array(
+			'inject_int_1' => 1,
+			'inject_int_2' => 0,
+		)
+	);
 	$themes = array(
 		1 => array(
 			'name' => $txt['dvc_default'],
@@ -1224,8 +1243,8 @@ function ModifyLanguage()
 			if (in_array($k, $arrays))
 			{
 				// Get off the first bits.
-				$v['entry'] = substr($v['entry'], strpos($v['entry'], "(") + 1, strrpos($v['entry'], ")") - strpos($v['entry'], "("));
-				$v['entry'] = explode(",", strtr($v['entry'], array(' ' => '')));
+				$v['entry'] = substr($v['entry'], strpos($v['entry'], '(') + 1, strrpos($v['entry'], ')') - strpos($v['entry'], '('));
+				$v['entry'] = explode(',', strtr($v['entry'], array(' ' => '')));
 
 				// Now create an entry for each item.
 				$cur_index = 0;
@@ -1239,16 +1258,16 @@ function ModifyLanguage()
 					if (preg_match('~^(\d+)~', $v2, $matches))
 					{
 						$cur_index = $matches[1];
-						$v2 = substr($v2, strpos($v2, "'"));
+						$v2 = substr($v2, strpos($v2, '\''));
 					}
 
 					// Clean up some bits.
-					$v2 = strtr($v2, array('"' => '', "'" => '', ')' => ''));
+					$v2 = strtr($v2, array('"' => '', '\'' => '', ')' => ''));
 
 					// Can we save?
 					if (isset($save_strings[$k . '-+- ' . $cur_index]))
 					{
-						$save_cache['entries'][$cur_index] = strtr($save_strings[$k . '-+- ' . $cur_index], array("'" => ''));
+						$save_cache['entries'][$cur_index] = strtr($save_strings[$k . '-+- ' . $cur_index], array('\'' => ''));
 						$save_cache['enabled'] = true;
 					}
 					else
@@ -1273,11 +1292,11 @@ function ModifyLanguage()
 						// Manually show the custom index.
 						if ($k2 != $cur_index)
 						{
-							$items[] = $k2 . " => '" . $v2 . "'";
+							$items[] = $k2 . ' => \'' . $v2 . '\'';
 							$cur_index = $k2;
 						}
 						else
-							$items[] = "'$v2'";
+							$items[] = '\'' . $v2 . '\'';
 
 						$cur_index++;
 					}
@@ -1362,7 +1381,7 @@ function cleanLangString($string, $to_display = true)
 				continue;
 			}
 			// Have we got a single quote?
-			elseif ($string{$i} == "'")
+			elseif ($string{$i} == '\'')
 			{
 				// Already in a parsed string, or escaped in a linear string, means we print it - otherwise something special.
 				if ($in_string != 2 && ($in_string != 1 || !$is_escape))
@@ -1470,7 +1489,7 @@ function cleanLangString($string, $to_display = true)
 			if ($in_string != 1)
 			{
 				$in_string = 1;
-				$new_string .= ($new_string ? ' . ' : '') . "'";
+				$new_string .= ($new_string ? ' . ' : '') . '\'';
 			}
 
 			// Is this a variable?
@@ -1481,7 +1500,7 @@ function cleanLangString($string, $to_display = true)
 				if (!empty($matches[1]))
 				{
 					if ($in_string == 1)
-						$new_string .= "' . ";
+						$new_string .= '\' . ';
 					elseif ($new_string)
 						$new_string .= ' . ';
 
@@ -1532,7 +1551,7 @@ function cleanLangString($string, $to_display = true)
 				}
 			}
 			// A single quote?
-			elseif ($string{$i} == "'")
+			elseif ($string{$i} == '\'')
 			{
 				// Must be in a string so escape it.
 				$new_string .= '\\';
@@ -1544,7 +1563,7 @@ function cleanLangString($string, $to_display = true)
 
 		// If we ended as a string then close it off.
 		if ($in_string == 1)
-			$new_string .= "'";
+			$new_string .= '\'';
 		elseif ($in_string == 2)
 			$new_string .= '"';
 	}
@@ -1618,7 +1637,7 @@ function prepareDBSettingContext(&$config_vars)
 				if (!is_numeric($k))
 				{
 					if (substr($k, 0, 2) == 'on')
-						$context['config_vars'][$config_var[1]]['javascript'] .= " $k=\"$v\"";
+						$context['config_vars'][$config_var[1]]['javascript'] .= ' ' . $k . '="' . $v . '"';
 					else
 						$context['config_vars'][$config_var[1]][$k] = $v;
 				}

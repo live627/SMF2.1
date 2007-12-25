@@ -82,11 +82,16 @@ function ManageSearchEngineSettings($return_config = false)
 		return $config_vars;
 
 	// We need to load the groups for the spider group thingy.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_group, group_name
-		FROM {$db_prefix}membergroups
-		WHERE id_group != 1
-			AND id_group != 3", __FILE__, __LINE__);
+		FROM {db_prefix}membergroups
+		WHERE id_group != {int:inject_int_1}
+			AND id_group != {int:inject_int_2}',
+		array(
+			'inject_int_1' => 1,
+			'inject_int_2' => 3,
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$config_vars['spider_group'][2][$row['id_group']] = $row['group_name'];
 	$smfFunc['db_free_result']($request);
@@ -141,25 +146,40 @@ function ViewSpiders()
 			$_POST['remove'][(int) $index] = (int) $spider_id;
 
 		// Delete them all!
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}spiders
-			WHERE id_spider IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_spider_hits
-			WHERE id_spider IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_spider_stats
-			WHERE id_spider IN (" . implode(', ', $_POST['remove']) . ')', __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}spiders
+			WHERE id_spider IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $_POST['remove'],
+			)
+		);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_spider_hits
+			WHERE id_spider IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $_POST['remove'],
+			)
+		);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_spider_stats
+			WHERE id_spider IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $_POST['remove'],
+			)
+		);
 
 		cache_put_data('spider_search', null, 300);
 		recacheSpiderNames();
 	}
 
 	// Get the last seens.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_spider, MAX(last_seen) AS last_seen_time
-		FROM {$db_prefix}log_spider_stats
-		GROUP BY id_spider", __FILE__, __LINE__);
+		FROM {db_prefix}log_spider_stats
+		GROUP BY id_spider',
+		array(
+		)
+	);
 
 	$context['spider_last_seen'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -272,11 +292,14 @@ function list_getSpiders($start, $items_per_page, $sort)
 {
 	global $db_prefix, $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_spider, spider_name, user_agent, ip_info
-		FROM {$db_prefix}spiders
-		ORDER BY $sort
-		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+		FROM {db_prefix}spiders
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+		)
+	);
 	$spiders = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$spiders[$row['id_spider']] = $row;
@@ -289,9 +312,12 @@ function list_getNumSpiders()
 {
 	global $db_prefix, $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS num_spiders
-		FROM {$db_prefix}spiders", __FILE__, __LINE__);
+		FROM {db_prefix}spiders',
+		array(
+		)
+	);
 	list ($numSpiders) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -324,17 +350,27 @@ function EditSpider()
 
 		// Goes in as it is...
 		if ($context['id_spider'])
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}spiders
-				SET spider_name = '$_POST[spider_name]', user_agent = '$_POST[spider_agent]',
-					ip_info = '$ips'
-				WHERE id_spider = $context[id_spider]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}spiders
+				SET spider_name = {string:inject_string_1}, user_agent = {string:inject_string_2},
+					ip_info = {string:inject_string_3}
+				WHERE id_spider = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $context['id_spider'],
+					'inject_string_1' => $_POST['spider_name'],
+					'inject_string_2' => $_POST['spider_agent'],
+					'inject_string_3' => $ips,
+				)
+			);
 		else
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}spiders
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}spiders
 					(spider_name, user_agent, ip_info)
 				VALUES
-					('$_POST[spider_name]', '$_POST[spider_agent]', '$ips')", __FILE__, __LINE__);
+					(\'' . $_POST['spider_name'] . '\', \'' . $_POST['spider_agent'] . '\', \'' . $ips . '\')',
+				array(
+				)
+			);
 
 		cache_put_data('spider_search', null, 300);
 		recacheSpiderNames();
@@ -353,10 +389,14 @@ function EditSpider()
 	// An edit?
 	if ($context['id_spider'])
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_spider, spider_name, user_agent, ip_info
-			FROM {$db_prefix}spiders
-			WHERE id_spider = $context[id_spider]", __FILE__, __LINE__);
+			FROM {db_prefix}spiders
+			WHERE id_spider = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $context['id_spider'],
+			)
+		);
 		if ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['spider'] = array(
 				'id' => $row['id_spider'],
@@ -387,9 +427,12 @@ function SpiderCheck()
 
 	if (!isset($spider_data) || $spider_data === NULL)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_spider, user_agent, ip_info
-			FROM {$db_prefix}spiders", __FILE__, __LINE__);
+			FROM {db_prefix}spiders',
+			array(
+			)
+		);
 		$spider_data = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -457,17 +500,23 @@ function logSpider()
 	if ($modSettings['spider_mode'] == 1)
 	{
 		$date = strftime('%Y-%m-%d', forum_time(false));
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_spider_stats
-			SET last_seen = " . time() . ", page_hits = page_hits + 1
-			WHERE id_spider = $_SESSION[id_robot]
-				AND stat_date = '$date'", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_spider_stats
+			SET last_seen = {int:inject_int_1}, page_hits = page_hits + 1
+			WHERE id_spider = {int:inject_int_2}
+				AND stat_date = {date:inject_date_1}',
+			array(
+				'inject_date_1' => $date,
+				'inject_int_1' => time(),
+				'inject_int_2' => $_SESSION['id_robot'],
+			)
+		);
 		if ($smfFunc['db_affected_rows']() == 0)
 		{
 			$smfFunc['db_insert']('insert',
-				"{$db_prefix}log_spider_stats",
+				$db_prefix . 'log_spider_stats',
 				array('id_spider', 'last_seen', 'stat_date', 'page_hits'),
-				array($_SESSION['id_robot'], time(), "'$date'", 1),
+				array($_SESSION['id_robot'], time(), '\'' . $date . '\'', 1),
 				array('stat_date'), __FILE__, __LINE__
 			);
 		}
@@ -485,9 +534,9 @@ function logSpider()
 			$url = '';
 
 		$smfFunc['db_insert']('insert',
-			"{$db_prefix}log_spider_hits",
+			$db_prefix . 'log_spider_hits',
 			array('id_spider', 'log_time', 'url'),
-			array($_SESSION['id_robot'], time(), "'$url'"),
+			array($_SESSION['id_robot'], time(), '\'' . $url . '\''),
 			array(), __FILE__, __LINE__
 		);
 	}
@@ -498,11 +547,15 @@ function consolidateSpiderStats()
 {
 	global $smfFunc, $db_prefix;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_spider, MAX(log_time) AS last_seen, COUNT(*) AS num_hits
-		FROM {$db_prefix}log_spider_hits
-		WHERE processed = 0
-		GROUP BY id_spider, MONTH(log_time), DAY(log_time)", __FILE__, __LINE__);
+		FROM {db_prefix}log_spider_hits
+		WHERE processed = {int:inject_int_1}
+		GROUP BY id_spider, MONTH(log_time), DAY(log_time)',
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	$spider_hits = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$spider_hits[] = $row;
@@ -517,30 +570,41 @@ function consolidateSpiderStats()
 	{
 		// We assume the max date is within the right day.
 		$date = strftime('%Y-%m-%d', $stat['last_seen']);
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_spider_stats
-			SET page_hits = page_hits + $stat[num_hits],
-				last_seen = CASE WHEN last_seen > $stat[last_seen] THEN last_seen ELSE $stat[last_seen] END
-			WHERE id_spider = $stat[id_spider]
-				AND stat_date = '$date'", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_spider_stats
+			SET page_hits = page_hits + ' . $stat['num_hits'] . ',
+				last_seen = CASE WHEN last_seen > {int:inject_int_1} THEN last_seen ELSE ' . $stat['last_seen'] . ' END
+			WHERE id_spider = {int:inject_int_2}
+				AND stat_date = {date:inject_date_1}',
+			array(
+				'inject_date_1' => $date,
+				'inject_int_1' => $stat['last_seen'],
+				'inject_int_2' => $stat['id_spider'],
+			)
+		);
 		if ($smfFunc['db_affected_rows']() == 0)
-			$stat_inserts[] = array("'$date'", $stat['id_spider'], $stat['num_hits'], $stat['last_seen']);
+			$stat_inserts[] = array( '\'' . $date . '\'', $stat['id_spider'], $stat['num_hits'], $stat['last_seen']);
 	}
 
 	// New stats?
 	if (!empty($stat_inserts))
 		$smfFunc['db_insert']('insert',
-			"{$db_prefix}log_spider_stats",
+			$db_prefix . 'log_spider_stats',
 			array('stat_date', 'id_spider', 'page_hits', 'last_seen'),
 			$stat_inserts,
 			array('stat_date', 'id_spider'), __FILE__, __LINE__
 		);
 
 	// All processed.
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}log_spider_hits
-		SET processed = 1
-		WHERE processed = 0", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}log_spider_hits
+		SET processed = {int:inject_int_1}
+		WHERE processed = {int:inject_int_2}',
+		array(
+			'inject_int_1' => 1,
+			'inject_int_2' => 0,
+		)
+	);
 }
 
 //!!! Move this somewhere as duplicated in ManageBans.php
@@ -582,9 +646,13 @@ function SpiderLogs()
 		$deleteTime = time() - (((int) $_POST['older']) * 24 * 60 * 60);
 
 		// Delete the entires.
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_spider_hits
-			WHERE log_time < $deleteTime", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_spider_hits
+			WHERE log_time < {int:inject_int_1}',
+			array(
+				'inject_int_1' => $deleteTime,
+			)
+		);
 	}
 
 	$listOptions = array(
@@ -683,12 +751,15 @@ function list_getSpiderLogs($start, $items_per_page, $sort)
 {
 	global $db_prefix, $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT sl.id_spider, sl.url, sl.log_time, s.spider_name
-		FROM {$db_prefix}log_spider_hits AS sl
-			INNER JOIN {$db_prefix}spiders AS s ON (s.id_spider = sl.id_spider)
-		ORDER BY $sort
-		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+		FROM {db_prefix}log_spider_hits AS sl
+			INNER JOIN {db_prefix}spiders AS s ON (s.id_spider = sl.id_spider)
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+		)
+	);
 	$spider_logs = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$spider_logs[] = $row;
@@ -701,9 +772,12 @@ function list_getNumSpiderLogs()
 {
 	global $db_prefix, $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS num_logs
-		FROM {$db_prefix}log_spider_hits", __FILE__, __LINE__);
+		FROM {db_prefix}log_spider_hits',
+		array(
+		)
+	);
 	list ($numLogs) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -723,9 +797,12 @@ function SpiderStats()
 	}
 
 	// Get the earliest and latest dates.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT MIN(stat_date) AS first_date, MAX(stat_date) AS last_date
-		FROM {$db_prefix}log_spider_stats", __FILE__, __LINE__);
+		FROM {db_prefix}log_spider_stats',
+		array(
+		)
+	);
 
 	list ($min_date, $max_date) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
@@ -770,10 +847,14 @@ function SpiderStats()
 	{
 		$date_query = sprintf('%04d-%02d-01', substr($current_date, 0, 4), substr($current_date, 4));
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*) AS offset
-			FROM {$db_prefix}log_spider_stats
-			WHERE stat_date < '$date_query'", __FILE__, __LINE__);
+			FROM {db_prefix}log_spider_stats
+			WHERE stat_date < {date:inject_date_1}',
+			array(
+				'inject_date_1' => $date_query,
+			)
+		);
 		list ($_REQUEST['start']) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 	}
@@ -851,12 +932,15 @@ function list_getSpiderStats($start, $items_per_page, $sort)
 {
 	global $db_prefix, $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT ss.id_spider, ss.stat_date, ss.page_hits, s.spider_name
-		FROM {$db_prefix}log_spider_stats AS ss
-			INNER JOIN {$db_prefix}spiders AS s ON (s.id_spider = ss.id_spider)
-		ORDER BY $sort
-		LIMIT $start, $items_per_page", __FILE__, __LINE__);
+		FROM {db_prefix}log_spider_stats AS ss
+			INNER JOIN {db_prefix}spiders AS s ON (s.id_spider = ss.id_spider)
+		ORDER BY ' . $sort . '
+		LIMIT ' . $start . ', ' . $items_per_page,
+		array(
+		)
+	);
 	$spider_stats = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$spider_stats[] = $row;
@@ -869,9 +953,12 @@ function list_getNumSpiderStats()
 {
 	global $db_prefix, $smfFunc;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*) AS num_stats
-		FROM {$db_prefix}log_spider_stats", __FILE__, __LINE__);
+		FROM {db_prefix}log_spider_stats',
+		array(
+		)
+	);
 	list ($numStats) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -883,9 +970,12 @@ function recacheSpiderNames()
 {
 	global $smfFunc, $db_prefix;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_spider, spider_name
-		FROM {$db_prefix}spiders", __FILE__, __LINE__);
+		FROM {db_prefix}spiders',
+		array(
+		)
+	);
 	$spiders = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$spiders[$row['id_spider']] = $row['spider_name'];

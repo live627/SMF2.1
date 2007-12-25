@@ -67,12 +67,17 @@ function Notify()
 		loadTemplate('Notify');
 
 		// Find out if they have notification set for this topic already.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member
-			FROM {$db_prefix}log_notify
-			WHERE id_member = $user_info[id]
-				AND id_topic = $topic
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}log_notify
+			WHERE id_member = {int:current_member}
+				AND id_topic = {int:current_topic}
+			LIMIT 1',
+			array(
+				'current_member' => $user_info['id'],
+				'current_topic' => $topic,
+			)
+		);
 		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
 		$smfFunc['db_free_result']($request);
 
@@ -89,7 +94,7 @@ function Notify()
 
 		// Attempt to turn notifications on.
 		$smfFunc['db_insert']('ignore',
-			"{$db_prefix}log_notify",
+			$db_prefix . 'log_notify',
 			array('id_member', 'id_topic'),
 			array($user_info['id'], $topic),
 			array('id_member', 'id_topic'), __FILE__, __LINE__
@@ -100,10 +105,15 @@ function Notify()
 		checkSession('get');
 
 		// Just turn notifications off.
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_notify
-			WHERE id_member = $user_info[id]
-				AND id_topic = $topic", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify
+			WHERE id_member = {int:current_member}
+				AND id_topic = {int:current_topic}',
+			array(
+				'current_member' => $user_info['id'],
+				'current_topic' => $topic,
+			)
+		);
 	}
 
 	// Send them back to the topic.
@@ -129,12 +139,17 @@ function BoardNotify()
 		loadTemplate('Notify');
 
 		// Find out if they have notification set for this topic already.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member
-			FROM {$db_prefix}log_notify
-			WHERE id_member = $user_info[id]
-				AND id_board = $board
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}log_notify
+			WHERE id_member = {int:current_member}
+				AND id_board = {int:current_board}
+			LIMIT 1',
+			array(
+				'current_board' => $board,
+				'current_member' => $user_info['id'],
+			)
+		);
 		$context['notification_set'] = $smfFunc['db_num_rows']($request) != 0;
 		$smfFunc['db_free_result']($request);
 
@@ -153,7 +168,7 @@ function BoardNotify()
 
 		// Turn notification on.  (note this just blows smoke if it's already on.)
 		$smfFunc['db_insert']('ignore',
-			"{$db_prefix}log_notify",
+			$db_prefix . 'log_notify',
 			array('id_member', 'id_board'),
 			array($user_info['id'], $board),
 			array('id_member', 'id_board'), __FILE__, __LINE__
@@ -165,10 +180,15 @@ function BoardNotify()
 		checkSession('get');
 
 		// Turn notification off for this board.
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_notify
-			WHERE id_member = $user_info[id]
-				AND id_board = $board", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_notify
+			WHERE id_member = {int:current_member}
+				AND id_board = {int:current_board}',
+			array(
+				'current_board' => $board,
+				'current_member' => $user_info['id'],
+			)
+		);
 	}
 
 	// Back to the board!

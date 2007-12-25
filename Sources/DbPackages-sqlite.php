@@ -155,19 +155,19 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	}
 
 	// Righty - let's do the damn thing!
-	$table_query = "CREATE TABLE $table_name\n(";
+	$table_query = 'CREATE TABLE ' . $table_name . "\n" .'(';
 	$done_primary = false;
 	foreach ($columns as $column)
 	{
 		// Auto increment is special
 		if (!empty($column['auto']))
 		{
-			$table_query .= "\n$column[name] integer PRIMARY KEY,";
+			$table_query .= "\n" .$column['name'] .' integer PRIMARY KEY,';
 			$done_primary = true;
 			continue;
 		}
 		elseif (isset($column['default']) && $column['default'] != null)
-			$default = "default '$column[default]'";
+			$default = 'default \'' . $column['default'] . '\'';
 		else
 			$default = '';
 
@@ -178,7 +178,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 			$type = $type . '(' . $size . ')';
 
 		// Now just put it together!
-		$table_query .= "\n\t$column[name] $type " . (!empty($column['null']) ? '' : 'NOT NULL') . " $default,";
+		$table_query .= "\n\t" .$column['name'] .' ' . $type . ' ' . (!empty($column['null']) ? '' : 'NOT NULL') . ' ' . $default . ',';
 	}
 
 	// Loop through the indexes next...
@@ -192,13 +192,13 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		{
 			// IF we've done the primary via auto_inc don't do it again!
 			if (!$done_primary)
-				$table_query .= "\n\tPRIMARY KEY (" . implode(',', $index['columns']) . "),";
+				$table_query .= "\n\t" . 'PRIMARY KEY (' . implode(',', $index['columns']) . '),';
 		}
 		else
 		{
 			if (empty($index['name']))
 				$index['name'] = implode('_', $index['columns']);
-			$index_queries[] = "CREATE " . (isset($index['type']) && $index['type'] == 'unique' ? 'UNIQUE' : '') . " INDEX {$table_name}_{$index['name']} ON {$table_name} ($columns)";
+			$index_queries[] = 'CREATE ' . (isset($index['type']) && $index['type'] == 'unique' ? 'UNIQUE' : '') . ' INDEX ' . $table_name . '_' . $index['name'] . ' ON ' . $table_name . ' (' . $columns . ')';
 		}
 	}
 
@@ -206,13 +206,19 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 	if (substr($table_query, -1) == ',')
 		$table_query = substr($table_query, 0, -1);
 
-	$table_query .= ")";
+	$table_query .= ')';
 
 	$smfFunc['db_transaction']('begin');
 	// Do the table and indexes...
-	$smfFunc['db_query']('', $table_query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+	$smfFunc['db_query']('', $table_query,
+		array(
+		)
+	);
 	foreach ($index_queries as $query)
-		$smfFunc['db_query']('', $query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', $query,
+		array(
+		)
+	);
 
 	$smfFunc['db_transaction']('commit');
 }
@@ -229,8 +235,11 @@ function smf_db_drop_table($table_name, $error = 'fatal')
 	// Does it exist?
 	if (in_array($table_name, $smfFunc['db_list_tables']()))
 	{
-		$query = "DROP TABLE $table_name";
-		$smfFunc['db_query']('', $query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$query = 'DROP TABLE ' . $table_name;
+		$smfFunc['db_query']('', $query,
+		array(
+		)
+	);
 
 		return true;
 	}
@@ -266,11 +275,14 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 		$type = $type . '(' . $size . ')';
 
 	// Now add the thing!
-	$query = "
-		ALTER TABLE $table_name
-		ADD $column_info[name] $type " . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
-			(empty($column_info['default']) ? '' : "default '$column_info[default]'");
-	$smfFunc['db_query']('', $query, $error == 'fatal' ? __FILE__ : false, __LINE__);
+	$query = '
+		ALTER TABLE ' . $table_name . '
+		ADD ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
+			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'');
+	$smfFunc['db_query']('', $query,
+		array(
+		)
+	);
 
 	return true;
 }
@@ -338,8 +350,11 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 	}
 	else
 	{
-		$smfFunc['db_query']('', "
-			CREATE " . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : '') . " INDEX {$index_info['name']} ON {$table_name} ($columns)", $error == 'fatal' ? __FILE__ : false, __LINE__);
+		$smfFunc['db_query']('', '
+			CREATE ' . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : '') . ' INDEX ' . $index_info['name'] . ' ON ' . $table_name . ' (' . $columns . ')',
+			array(
+			)
+		);
 	}
 }
 
@@ -357,8 +372,11 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 		if ($index['type'] != 'primary' && $index['name'] == $index_name)
 		{
 			// Drop the bugger...
-			$smfFunc['db_query']('', "
-				DROP INDEX {$index_name}", $error == 'fatal' ? __FILE__ : false, __LINE__);
+			$smfFunc['db_query']('', '
+				DROP INDEX ' . $index_name,
+				array(
+				)
+			);
 
 			return true;
 		}
@@ -419,8 +437,11 @@ function smf_db_list_columns($table_name, $detail = false)
 {
 	global $smfFunc;
 
-	$result = $smfFunc['db_query']('', "
-		PRAGMA table_info($table_name)", false, false);
+	$result = $smfFunc['db_query']('', '
+		PRAGMA table_info(' . $table_name . ')',
+		array(
+		)
+	);
 	$columns = array();
 
 	$primaries = array();
@@ -472,8 +493,11 @@ function smf_db_list_indexes($table_name, $detail = false)
 {
 	global $smfFunc;
 
-	$result = $smfFunc['db_query']('', "
-		PRAGMA index_list($table_name)", false, false);
+	$result = $smfFunc['db_query']('', '
+		PRAGMA index_list(' . $table_name . ')',
+		array(
+		)
+	);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -481,8 +505,11 @@ function smf_db_list_indexes($table_name, $detail = false)
 			$indexes[] = $row['name'];
 		else
 		{
-			$result2 = $smfFunc['db_query']('', "
-				PRAGMA index_info($row[name])", false, false);
+			$result2 = $smfFunc['db_query']('', '
+				PRAGMA index_info(' . $row['name'] . ')',
+				array(
+				)
+			);
 			while ($row2 = $smfFunc['db_fetch_assoc']($result2))
 			{
 				// What is the type?

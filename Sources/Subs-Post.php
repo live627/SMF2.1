@@ -790,11 +790,14 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	if (($flush || $cur_insert_len > 800000)&& !empty($cur_insert))
 	{
 		// Explode out the query and run it.
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}mail_queue
+		$smfFunc['db_query']('', '
+			INSERT INTO {db_prefix}mail_queue
 				(time_sent, recipient, body, subject, headers, send_html, priority)
 			VALUES
-				" . implode(',', $cur_insert), __FILE__, __LINE__);
+				' . implode(',', $cur_insert),
+			array(
+			)
+		);
 
 		$cur_insert = array();
 		$cur_insert_len = 0;
@@ -807,11 +810,17 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 	{
 		$nextSendTime = time() + 10;
 
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}settings
-			SET value = '$nextSendTime'
-			WHERE variable = 'mail_next_send'
-				AND value = '0'", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}settings
+			SET value = {string:inject_string_1}
+			WHERE variable = {string:inject_string_2}
+				AND value = {string:inject_string_3}',
+			array(
+				'inject_string_1' => $nextSendTime,
+				'inject_string_2' => 'mail_next_send',
+				'inject_string_3' => '0',
+			)
+		);
 
 		return true;
 	}
@@ -835,11 +844,15 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 		if ($this_insert_len + $cur_insert_len > 1000000)
 		{
 			// Flush out what we have so far.
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}mail_queue
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}mail_queue
 					(time_sent, recipient, body, subject, headers, send_html, priority)
 				VALUES
-					" . implode(",\n", $cur_insert), __FILE__, __LINE__);
+					' . implode(',
+					', $cur_insert),
+				array(
+				)
+			);
 
 			// Clear this out.
 			$cur_insert = array();
@@ -847,7 +860,7 @@ function AddMailQueue($flush = false, $to_array = array(), $subject = '', $messa
 		}
 
 		// Now add the current insert to the array...
-		$cur_insert[] = "(" . time() . ", '$to', '$message', '$subject', '$headers', " . ($send_html ? 1 : 0) . ", $priority)";
+		$cur_insert[] = '(' . time() . ', \'' . $to . '\', \'' . $message . '\', \'' . $subject . '\', \'' . $headers . '\', ' . ($send_html ? 1 : 0) . ', ' . $priority . ')';
 		$cur_insert_len += $this_insert_len;
 	}
 
@@ -906,10 +919,13 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	}
 	if (!empty($usernames))
 	{
-		$request = $smfFunc['db_query']('pm_find_username', "
+		$request = $smfFunc['db_query']('pm_find_username', '
 			SELECT id_member, member_name
-			FROM {$db_prefix}members
-			WHERE " . ($smfFunc['db_case_sensitive'] ? 'LOWER(member_name)' : 'member_name') . " IN ('" . implode("', '", array_keys($usernames)) . "')", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE ' . ($smfFunc['db_case_sensitive'] ? 'LOWER(member_name)' : 'member_name') . ' IN (\'' . implode('\', \'', array_keys($usernames)) . '\')',
+			array(
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			if (isset($usernames[$smfFunc['strtolower']($row['member_name'])]))
 				$usernames[$smfFunc['strtolower']($row['member_name'])] = $row['id_member'];
@@ -942,12 +958,17 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	$all_to = array_merge($recipients['to'], $recipients['bcc']);
 
 	// Check no-one will want it deleted right away!
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			id_member, criteria, is_or
-		FROM {$db_prefix}pm_rules
-		WHERE id_member IN (" . implode(", ", $all_to) . ")
-			AND delete_pm = 1", __FILE__, __LINE__);
+		FROM {db_prefix}pm_rules
+		WHERE id_member IN ({array_int:inject_array_int_1})
+			AND delete_pm = {int:inject_int_1}',
+		array(
+			'inject_array_int_1' => $all_to,
+			'inject_int_1' => 1,
+		)
+	);
 	$deletes = array();
 	// Check whether we have to apply anything...
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -977,9 +998,12 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	static $message_limit_cache = array();
 	if (!allowedTo('moderate_forum') && empty($message_limit_cache))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_group, max_messages
-			FROM {$db_prefix}membergroups", __FILE__, __LINE__);
+			FROM {db_prefix}membergroups',
+			array(
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$message_limit_cache[$row['id_group']] = $row['max_messages'];
 		$smfFunc['db_free_result']($request);
@@ -988,10 +1012,13 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	// Load the groups that are allowed to read PMs.
 	$allowed_groups = array();
 	$disallowed_groups = array();
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_group, add_deny
-		FROM {$db_prefix}permissions
-		WHERE permission='pm_read'", __FILE__, __LINE__);
+		FROM {db_prefix}permissions
+		WHERE permission=\'pm_read\'',
+		array(
+		)
+	);
 
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -1006,17 +1033,22 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	if (empty($modSettings['permission_enable_deny']))
 		$disallowed_groups = array();
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			member_name, real_name, id_member, email_address, lngfile,
-			pm_email_notify, instant_messages," . (allowedTo('moderate_forum') ? ' 0' : "
-			(pm_ignore_list = '*' OR FIND_IN_SET($from[id], pm_ignore_list))") . " AS ignored,
-			FIND_IN_SET($from[id], buddy_list) AS is_buddy, is_activated,
+			pm_email_notify, instant_messages,' . (allowedTo('moderate_forum') ? ' 0' : '
+			(pm_ignore_list = \'*\' OR FIND_IN_SET({string:inject_string_1}, pm_ignore_list))') . ' AS ignored,
+			FIND_IN_SET({string:inject_string_1}, buddy_list) AS is_buddy, is_activated,
 			additional_groups, id_group, id_post_group
-		FROM {$db_prefix}members
-		WHERE id_member IN (" . implode(", ", $all_to) . ")
+		FROM {db_prefix}members
+		WHERE id_member IN ({array_int:inject_array_int_1})
 		ORDER BY lngfile
-		LIMIT " . count($all_to), __FILE__, __LINE__);
+		LIMIT ' . count($all_to),
+		array(
+			'inject_array_int_1' => $all_to,
+			'inject_string_1' => $from['id'],
+		)
+	);
 	$notifications = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -1078,26 +1110,37 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		return $log;
 
 	// Insert the message itself and then grab the last insert id.
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}personal_messages
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}personal_messages
 			(id_pm_head, id_member_from, deleted_by_sender, from_name, msgtime, subject, body)
-		VALUES ($pm_head, $from[id], " . ($store_outbox ? '0' : '1') . ", SUBSTRING('$from[username]', 1, 255), " . time() . ", SUBSTRING('$htmlsubject', 1, 255), SUBSTRING('$htmlmessage', 1, 65534))", __FILE__, __LINE__);
-	$id_pm = $smfFunc['db_insert_id']("{$db_prefix}personal_messages", 'id_pm');
+		VALUES (' . $pm_head . ', ' . $from['id'] . ', ' . ($store_outbox ? '0' : '1') . ', SUBSTRING(\'' . $from['username'] . '\', 1, 255), ' . time() . ', SUBSTRING(\'' . $htmlsubject . '\', 1, 255), SUBSTRING(\'' . $htmlmessage . '\', 1, 65534))',
+		array(
+		)
+	);
+	$id_pm = $smfFunc['db_insert_id']( $db_prefix . 'personal_messages', 'id_pm');
 
 	// Add the recipients.
 	if (!empty($id_pm))
 	{
 		// If this is new we need to set it part of it's own conversation.
 		if (empty($pm_head))
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}personal_messages
-				SET id_pm_head = $id_pm
-				WHERE id_pm = $id_pm", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}personal_messages
+				SET id_pm_head = {int:inject_int_1}
+				WHERE id_pm = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $id_pm,
+				)
+			);
 
 		// Some people think manually deleting personal_messages is fun... it's not. We protect against it though :)
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}pm_recipients
-			WHERE id_pm = $id_pm", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}pm_recipients
+			WHERE id_pm = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $id_pm,
+			)
+		);
 
 		$insertRows = array();
 		foreach ($all_to as $to)
@@ -1106,7 +1149,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 		}
 
 		$smfFunc['db_insert']('insert',
-			"{$db_prefix}pm_recipients",
+			$db_prefix . 'pm_recipients',
 			array('id_pm', 'id_member', 'bcc', 'deleted', 'is_new'),
 			$insertRows,
 			array('id_pm', 'id_member'), __FILE__, __LINE__
@@ -1310,7 +1353,7 @@ function smtp_mail($mail_to_array, $subject, $message, $headers)
 	}
 
 	// Fix the message for any lines beginning with a period! (the first is ignored, you see.)
-	$message = strtr($message, array("\r\n." => "\r\n.."));
+	$message = strtr($message, array("\r\n" . '.' => "\r\n" . '..'));
 
 	// !! Theoretically, we should be able to just loop the RCPT TO.
 	$mail_to_array = array_values($mail_to_array);
@@ -1332,7 +1375,7 @@ function smtp_mail($mail_to_array, $subject, $message, $headers)
 			return false;
 		fputs($socket, 'Subject: ' . $subject . "\r\n");
 		if (strlen($mail_to) > 0)
-			fputs($socket, 'To: <' . $mail_to . ">\r\n");
+			fputs($socket, 'To: <' . $mail_to . '>' . "\r\n");
 		fputs($socket, $headers . "\r\n\r\n");
 		fputs($socket, $message . "\r\n");
 
@@ -1345,7 +1388,7 @@ function smtp_mail($mail_to_array, $subject, $message, $headers)
 		if (function_exists('apache_reset_timeout'))
 			apache_reset_timeout();
 	}
-	fputs($socket, "QUIT\r\n");
+	fputs($socket, 'QUIT' . "\r\n");
 	fclose($socket);
 
 	return true;
@@ -1471,15 +1514,19 @@ function sendNotifications($topics, $type, $exclude = array())
 		$topics = array($topics);
 
 	// Get the subject and body...
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT mf.subject, ml.body, ml.id_member, t.id_last_msg, t.id_topic,
 			IFNULL(mem.real_name, ml.poster_name) AS poster_name
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
-			INNER JOIN {$db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = ml.id_member)
-		WHERE t.id_topic IN (" . implode(',', $topics) . ")
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}messages AS ml ON (ml.id_msg = t.id_last_msg)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = ml.id_member)
+		WHERE t.id_topic IN ({array_int:inject_array_int_1})
+		LIMIT 1',
+		array(
+			'inject_array_int_1' => $topics,
+		)
+	);
 	$topicData = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
 	{
@@ -1514,29 +1561,40 @@ function sendNotifications($topics, $type, $exclude = array())
 	// Insert all of these items into the digest log for those who want notifications later.
 	$digest_insert = array();
 	foreach ($topicData as $id => $data)
-		$digest_insert[] = "($data[topic], $data[last_id], '$type', " . ((int) $data['exclude']) . ')';
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}log_digest
+		$digest_insert[] = '(' . $data['topic'] . ', ' . $data['last_id'] . ', \'' . $type . '\', ' . ((int) $data['exclude']) . ')';
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}log_digest
 			(id_topic, id_msg, note_type, exclude)
 		VALUES
-			" . implode(', ', $digest_insert), __FILE__, __LINE__);
+			' . implode(', ', $digest_insert),
+		array(
+		)
+	);
 
 	// Find the members with notification on for this topic.
-	$members = $smfFunc['db_query']('', "
+	$members = $smfFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_types, mem.notify_send_body, mem.lngfile,
 			ln.sent, mem.id_group, mem.additional_groups, b.member_groups, mem.id_post_group, t.id_member_started,
 			ln.id_topic
-		FROM {$db_prefix}log_notify AS ln
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE ln.id_topic IN (" . implode(',', $topics) . ")
-			AND mem.notify_types < " . ($type == 'reply' ? '4' : '3') . "
-			AND mem.notify_regularity < 2
-			AND mem.is_activated = 1
-			AND ln.id_member != $user_info[id]
-		ORDER BY mem.lngfile", __FILE__, __LINE__);
+		FROM {db_prefix}log_notify AS ln
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE ln.id_topic IN ({array_int:inject_array_int_1})
+			AND mem.notify_types < {int:inject_int_1}
+			AND mem.notify_regularity < {int:inject_int_2}
+			AND mem.is_activated = {int:inject_int_3}
+			AND ln.id_member != {int:current_member}
+		ORDER BY mem.lngfile',
+		array(
+			'current_member' => $user_info['id'],
+			'inject_array_int_1' => $topics,
+			'inject_int_1' => $type == 'reply' ? '4' : '3',
+			'inject_int_2' => 2,
+			'inject_int_3' => 1,
+		)
+	);
 	$sent = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($members))
 	{
@@ -1600,22 +1658,34 @@ function sendNotifications($topics, $type, $exclude = array())
 
 	// Sent!
 	if ($type == 'reply' && !empty($sent))
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_notify
-			SET sent = 1
-			WHERE id_topic IN (" . implode(',', $topics) . ")
-				AND id_member != $user_info[id]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_notify
+			SET sent = {int:inject_int_1}
+			WHERE id_topic IN ({array_int:inject_array_int_1})
+				AND id_member != {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_array_int_1' => $topics,
+				'inject_int_1' => 1,
+			)
+		);
 
 	// For approvals we need to unsend the exclusions (This *is* the quickest way!)
 	if (!empty($sent) && !empty($exclude))
 	{
 		foreach ($topicData as $id => $data)
 			if ($data['exclude'])
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}log_notify
-					SET sent = 0
-					WHERE id_topic = $id
-						AND id_member = $data[exclude]", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}log_notify
+					SET sent = {int:inject_int_1}
+					WHERE id_topic = {int:inject_int_2}
+						AND id_member = {int:inject_int_3}',
+					array(
+						'inject_int_1' => 0,
+						'inject_int_2' => $id,
+						'inject_int_3' => $data['exclude'],
+					)
+				);
 	}
 }
 
@@ -1643,11 +1713,15 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// We need to know if the topic is approved. If we're told that's great - if not find out.
 	if (!empty($topicOptions['id']) && !isset($topicOptions['is_approved']))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT approved
-			FROM {$db_prefix}topics
-			WHERE id_topic = $topicOptions[id]
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:inject_int_1}
+			LIMIT 1',
+			array(
+				'inject_int_1' => $topicOptions['id'],
+			)
+		);
 		list ($topicOptions['is_approved']) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 	}
@@ -1663,11 +1737,15 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		}
 		elseif ($posterOptions['id'] != $user_info['id'])
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT member_name, email_address
-				FROM {$db_prefix}members
-				WHERE id_member = $posterOptions[id]
-				LIMIT 1", __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE id_member = {int:inject_int_1}
+				LIMIT 1',
+				array(
+					'inject_int_1' => $posterOptions['id'],
+				)
+			);
 			// Couldn't find the current poster?
 			if ($smfFunc['db_num_rows']($request) == 0)
 			{
@@ -1695,13 +1773,16 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	$new_topic = empty($topicOptions['id']);
 
 	// Insert the post.
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}messages
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}messages
 			(id_board, id_topic, id_member, subject, body, poster_name, poster_email, poster_time,
 			poster_ip, smileys_enabled, modified_name, icon, approved)
-		VALUES ($topicOptions[board], $topicOptions[id], $posterOptions[id], SUBSTRING('$msgOptions[subject]', 1, 255), SUBSTRING('$msgOptions[body]', 1, 65534), SUBSTRING('$posterOptions[name]', 1, 255), SUBSTRING('$posterOptions[email]', 1, 255), " . time() . ",
-			SUBSTRING('$posterOptions[ip]', 1, 255), " . ($msgOptions['smileys_enabled'] ? '1' : '0') . ", '', SUBSTRING('$msgOptions[icon]', 1, 16), $msgOptions[approved])", __FILE__, __LINE__);
-	$msgOptions['id'] = $smfFunc['db_insert_id']("{$db_prefix}messages", 'id_msg');
+		VALUES (' . $topicOptions['board'] . ', ' . $topicOptions['id'] . ', ' . $posterOptions['id'] . ', SUBSTRING(\'' . $msgOptions['subject'] . '\', 1, 255), SUBSTRING(\'' . $msgOptions['body'] . '\', 1, 65534), SUBSTRING(\'' . $posterOptions['name'] . '\', 1, 255), SUBSTRING(\'' . $posterOptions['email'] . '\', 1, 255), ' . time() . ',
+			SUBSTRING(\'' . $posterOptions['ip'] . '\', 1, 255), ' . ($msgOptions['smileys_enabled'] ? '1' : '0') . ', \'\', SUBSTRING(\'' . $msgOptions['icon'] . '\', 1, 16), ' . $msgOptions['approved'] . ')',
+		array(
+		)
+	);
+	$msgOptions['id'] = $smfFunc['db_insert_id']( $db_prefix . 'messages', 'id_msg');
 
 	// Something went wrong creating the message...
 	if (empty($msgOptions['id']))
@@ -1709,39 +1790,56 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Fix the attachments.
 	if (!empty($msgOptions['attachments']))
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}attachments
-			SET id_msg = $msgOptions[id]
-			WHERE id_attach IN (" . implode(', ', $msgOptions['attachments']) . ')', __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}attachments
+			SET id_msg = {int:inject_int_1}
+			WHERE id_attach IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $msgOptions['attachments'],
+				'inject_int_1' => $msgOptions['id'],
+			)
+		);
 
 	// Insert a new topic (if the topicID was left empty.
 	if ($new_topic)
 	{
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}topics
+		$smfFunc['db_query']('', '
+			INSERT INTO {db_prefix}topics
 				(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, locked, is_sticky, num_views, id_poll, unapproved_posts, approved)
-			VALUES ($topicOptions[board], $posterOptions[id], $posterOptions[id], $msgOptions[id], $msgOptions[id],
-				" . ($topicOptions['lock_mode'] === null ? '0' : $topicOptions['lock_mode']) . ', ' .
-				($topicOptions['sticky_mode'] === null ? '0' : $topicOptions['sticky_mode']) . ", 0,
-				" . ($topicOptions['poll'] === null ? '0' : $topicOptions['poll']) . ', ' . ($msgOptions['approved'] ? 0 : 1) . ", $msgOptions[approved])", __FILE__, __LINE__);
-		$topicOptions['id'] = $smfFunc['db_insert_id']("{$db_prefix}topics", 'id_topic');
+			VALUES (' . $topicOptions['board'] . ', ' . $posterOptions['id'] . ', ' . $posterOptions['id'] . ', ' . $msgOptions['id'] . ', ' . $msgOptions['id'] . ',
+				' . ($topicOptions['lock_mode'] === null ? '0' : $topicOptions['lock_mode']) . ', ' .
+				($topicOptions['sticky_mode'] === null ? '0' : $topicOptions['sticky_mode']) . ', 0,
+				' . ($topicOptions['poll'] === null ? '0' : $topicOptions['poll']) . ', ' . ($msgOptions['approved'] ? 0 : 1) . ', ' . $msgOptions['approved'] . ')',
+			array(
+			)
+		);
+		$topicOptions['id'] = $smfFunc['db_insert_id']( $db_prefix . 'topics', 'id_topic');
 
 		// The topic couldn't be created for some reason.
 		if (empty($topicOptions['id']))
 		{
 			// We should delete the post that did work, though...
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}messages
-				WHERE id_msg = $msgOptions[id]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}messages
+				WHERE id_msg = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $msgOptions['id'],
+				)
+			);
 
 			return false;
 		}
 
 		// Fix the message with the topic.
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}messages
-			SET id_topic = $topicOptions[id]
-			WHERE id_msg = $msgOptions[id]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}messages
+			SET id_topic = {int:inject_int_1}
+			WHERE id_msg = {int:inject_int_2}',
+			array(
+				'inject_int_1' => $topicOptions['id'],
+				'inject_int_2' => $msgOptions['id'],
+			)
+		);
 
 		// There's been a new topic AND a new post today.
 		trackStats(array('topics' => '+', 'posts' => '+'));
@@ -1758,14 +1856,22 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		$countChange = $msgOptions['approved'] ? 'num_replies = num_replies + 1' : 'unapproved_posts = unapproved_posts + 1';
 
 		// Update the number of replies and the lock/sticky status.
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}topics
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}topics
 			SET
-				" . ($msgOptions['approved'] ? "id_member_updated = $posterOptions[id], id_last_msg = $msgOptions[id]," : '') . "
-				$countChange" . ($topicOptions['lock_mode'] === null ? '' : ",
-				locked = $topicOptions[lock_mode]") . ($topicOptions['sticky_mode'] === null ? '' : ",
-				is_sticky = $topicOptions[sticky_mode]") . "
-			WHERE id_topic = $topicOptions[id]", __FILE__, __LINE__);
+				' . ($msgOptions['approved'] ? 'id_member_updated = {int:inject_int_1}, id_last_msg = {int:inject_int_2},' : '') . '
+				' . $countChange . ($topicOptions['lock_mode'] === null ? '' : ',
+				locked = {int:inject_int_3}') . ($topicOptions['sticky_mode'] === null ? '' : ',
+				is_sticky = {int:inject_int_4}') . '
+			WHERE id_topic = {int:inject_int_5}',
+			array(
+				'inject_int_1' => $posterOptions['id'],
+				'inject_int_2' => $msgOptions['id'],
+				'inject_int_3' => $topicOptions['lock_mode'],
+				'inject_int_4' => $topicOptions['sticky_mode'],
+				'inject_int_5' => $topicOptions['id'],
+			)
+		);
 
 		// One new post has been added today.
 		trackStats(array('posts' => '+'));
@@ -1773,30 +1879,45 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 	// Creating is modifying...in a way.
 	//!!! Why not set id_msg_modified on the insert?
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}messages
-		SET id_msg_modified = $msgOptions[id]
-		WHERE id_msg = $msgOptions[id]", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}messages
+		SET id_msg_modified = {int:inject_int_1}
+		WHERE id_msg = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $msgOptions['id'],
+		)
+	);
 
 	// Increase the number of posts and topics on the board.
 	if ($msgOptions['approved'])
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}boards
-			SET num_posts = num_posts + 1" . ($new_topic ? ', num_topics = num_topics + 1' : '') . "
-			WHERE id_board = $topicOptions[board]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}boards
+			SET num_posts = num_posts + 1' . ($new_topic ? ', num_topics = num_topics + 1' : '') . '
+			WHERE id_board = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $topicOptions['board'],
+			)
+		);
 	else
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}boards
-			SET unapproved_posts = unapproved_posts + 1" . ($new_topic ? ', unapproved_topics = unapproved_topics + 1' : '') . "
-			WHERE id_board = $topicOptions[board]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}boards
+			SET unapproved_posts = unapproved_posts + 1' . ($new_topic ? ', unapproved_topics = unapproved_topics + 1' : '') . '
+			WHERE id_board = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $topicOptions['board'],
+			)
+		);
 
 		// Add to the approval queue too.
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}approval_queue
+		$smfFunc['db_query']('', '
+			INSERT INTO {db_prefix}approval_queue
 				(id_msg)
 			VALUES
-				($msgOptions[id])", __FILE__, __LINE__);
+				(' . $msgOptions['id'] . ')',
+			array(
+			)
+		);
 	}
 
 	// Mark inserted topic as read (only for the user calling this function).
@@ -1805,11 +1926,17 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		// Since it's likely they *read* it before replying, let's try an UPDATE first.
 		if (!$new_topic)
 		{
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}log_topics
-				SET id_msg = $msgOptions[id] + 1
-				WHERE id_member = $user_info[id]
-					AND id_topic = $topicOptions[id]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}log_topics
+				SET id_msg = {int:inject_int_1} + 1
+				WHERE id_member = {int:current_member}
+					AND id_topic = {int:inject_int_2}',
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => $msgOptions['id'],
+					'inject_int_2' => $topicOptions['id'],
+				)
+			);
 
 			$flag = $smfFunc['db_affected_rows']() != 0;
 		}
@@ -1817,7 +1944,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		if (empty($flag))
 		{
 			$smfFunc['db_insert']('replace',
-				"{$db_prefix}log_topics",
+				$db_prefix . 'log_topics',
 				array('id_topic', 'id_member', 'id_msg'),
 				array($topicOptions['id'], $user_info['id'], $msgOptions['id'] + 1),
 				array('id_topic', 'id_member'), __FILE__, __LINE__
@@ -1836,7 +1963,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 
 		if (!empty($inserts))
 			$smfFunc['db_insert']('ignore',
-				"{$db_prefix}log_search_words",
+				$db_prefix . 'log_search_words',
 				array('id_word', 'id_msg'),
 				$inserts,
 				array('id_word', 'id_msg'), __FILE__, __LINE__
@@ -1987,11 +2114,15 @@ function createAttachment(&$attachmentOptions)
 			$attachmentOptions['errors'][] = 'bad_filename';
 
 		// Check if there's another file with that name...
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_attach
-			FROM {$db_prefix}attachments
-			WHERE filename = '" . strtolower($attachmentOptions['name']) . "'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}attachments
+			WHERE filename = {string:inject_string_1}
+			LIMIT 1',
+			array(
+				'inject_string_1' => strtolower($attachmentOptions['name']),
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) > 0)
 			$attachmentOptions['errors'][] = 'taken_filename';
 		$smfFunc['db_free_result']($request);
@@ -2011,22 +2142,28 @@ function createAttachment(&$attachmentOptions)
 			$attachmentOptions['fileext'] = '';
 	}
 
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}attachments
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}attachments
 			(id_folder, id_msg, filename, fileext, size, width, height, mime_type, approved)
-		VALUES ($id_folder, " . (int) $attachmentOptions['post'] . ", SUBSTRING('" . $attachmentOptions['name'] . "', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? "SUBSTRING('$attachmentOptions[mime_type]', 1, 20)" : "''") . ', ' . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
-	$attachmentOptions['id'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
+		VALUES (' . $id_folder . ', ' . (int) $attachmentOptions['post'] . ', SUBSTRING(\'' . $attachmentOptions['name'] . '\', 1, 255), SUBSTRING(\'' . $attachmentOptions['fileext'] . '\', 1, 8), ' . (int) $attachmentOptions['size'] . ', ' . (empty($attachmentOptions['width']) ? '0' : (int) $attachmentOptions['width']) . ', ' . (empty($attachmentOptions['height']) ? '0' : (int) $attachmentOptions['height']) . ', ' . (!empty($attachmentOptions['mime_type']) ? 'SUBSTRING(\'' . $attachmentOptions['mime_type'] . '\', 1, 20)' : '\'\'') . ', ' . (int) $attachmentOptions['approved'] . ')',
+		array(
+		)
+	);
+	$attachmentOptions['id'] = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
 
 	if (empty($attachmentOptions['id']))
 		return false;
 
 	// If it's not approved add to the approval queue.
 	if (!$attachmentOptions['approved'])
-		$smfFunc['db_query']('', "
-			INSERT INTO {$db_prefix}approval_queue
+		$smfFunc['db_query']('', '
+			INSERT INTO {db_prefix}approval_queue
 				(id_attach, id_msg)
 			VALUES
-				($attachmentOptions[id], " . (int) $attachmentOptions['post'] . ")", __FILE__, __LINE__);
+				(' . $attachmentOptions['id'] . ', ' . (int) $attachmentOptions['post'] . ')',
+			array(
+			)
+		);
 
 	$attachmentOptions['destination'] = $attach_dir . '/' . getAttachmentFilename(basename($attachmentOptions['name']), $attachmentOptions['id'], $id_folder, true);
 
@@ -2050,13 +2187,20 @@ function createAttachment(&$attachmentOptions)
 		}
 
 		if (!empty($attachmentOptions['width']) && !empty($attachmentOptions['height']))
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}attachments
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}attachments
 				SET
-					width = " . (int) $attachmentOptions['width'] . ",
-					height = " . (int) $attachmentOptions['height'] . ",
-					mime_type = '" . (empty($attachmentOptions['mime_type']) ? '' : $attachmentOptions['mime_type']) . "'
-				WHERE id_attach = $attachmentOptions[id]", __FILE__, __LINE__);
+					width = {int:inject_int_1},
+					height = {int:inject_int_2},
+					mime_type = {string:inject_string_1}
+				WHERE id_attach = {int:inject_int_3}',
+				array(
+					'inject_int_1' => (int) $attachmentOptions['width'],
+					'inject_int_2' => (int) $attachmentOptions['height'],
+					'inject_int_3' => $attachmentOptions['id'],
+					'inject_string_1' => empty($attachmentOptions['mime_type']) ? '' : $attachmentOptions['mime_type'],
+				)
+			);
 	}
 
 	// Attempt to chmod it.
@@ -2087,18 +2231,26 @@ function createAttachment(&$attachmentOptions)
 			$thumb_size = filesize($attachmentOptions['destination'] . '_thumb');
 
 			// To the database we go!
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}attachments
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}attachments
 					(id_folder, id_msg, attachment_type, filename, fileext, size, width, height, mime_type, approved)
-				VALUES ($id_folder, " . (int) $attachmentOptions['post'] . ", 3, SUBSTRING('$thumb_filename', 1, 255), SUBSTRING('" . $attachmentOptions['fileext'] . "', 1, 8), " . (int) $thumb_size . ", " . (int) $thumb_width . ", " . (int) $thumb_height . ", SUBSTRING('$thumb_mime', 1, 20), " . (int) $attachmentOptions['approved'] . ')', __FILE__, __LINE__);
-			$attachmentOptions['thumb'] = $smfFunc['db_insert_id']("{$db_prefix}attachments", 'id_attach');
+				VALUES (' . $id_folder . ', ' . (int) $attachmentOptions['post'] . ', 3, SUBSTRING(\'' . $thumb_filename . '\', 1, 255), SUBSTRING(\'' . $attachmentOptions['fileext'] . '\', 1, 8), ' . (int) $thumb_size . ', ' . (int) $thumb_width . ', ' . (int) $thumb_height . ', SUBSTRING(\'' . $thumb_mime . '\', 1, 20), ' . (int) $attachmentOptions['approved'] . ')',
+				array(
+				)
+			);
+			$attachmentOptions['thumb'] = $smfFunc['db_insert_id']( $db_prefix . 'attachments', 'id_attach');
 
 			if (!empty($attachmentOptions['thumb']))
 			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}attachments
-					SET id_thumb = $attachmentOptions[thumb]
-					WHERE id_attach = $attachmentOptions[id]", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}attachments
+					SET id_thumb = {int:inject_int_1}
+					WHERE id_attach = {int:inject_int_2}',
+					array(
+						'inject_int_1' => $attachmentOptions['thumb'],
+						'inject_int_2' => $attachmentOptions['id'],
+					)
+				);
 
 				rename($attachmentOptions['destination'] . '_thumb', $attach_dir . '/' . getAttachmentFilename($thumb_filename, $attachmentOptions['thumb'], $id_folder, true));
 			}
@@ -2120,58 +2272,73 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	// This is longer than it has to be, but makes it so we only set/change what we have to.
 	$messages_columns = array();
 	if (isset($posterOptions['name']))
-		$messages_columns[] = "poster_name = '$posterOptions[name]'";
+		$messages_columns[] = 'poster_name = \'' . $posterOptions['name'] . '\'';
 	if (isset($posterOptions['email']))
-		$messages_columns[] = "poster_email = '$posterOptions[email]'";
+		$messages_columns[] = 'poster_email = \'' . $posterOptions['email'] . '\'';
 	if (isset($msgOptions['icon']))
-		$messages_columns[] = "icon = '$msgOptions[icon]'";
+		$messages_columns[] = 'icon = \'' . $msgOptions['icon'] . '\'';
 	if (isset($msgOptions['subject']))
-		$messages_columns[] = "subject = '$msgOptions[subject]'";
+		$messages_columns[] = 'subject = \'' . $msgOptions['subject'] . '\'';
 	if (isset($msgOptions['body']))
 	{
-		$messages_columns[] = "body = '$msgOptions[body]'";
+		$messages_columns[] = 'body = \'' . $msgOptions['body'] . '\'';
 
 		if (!empty($modSettings['search_custom_index_config']))
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT body
-				FROM {$db_prefix}messages
-				WHERE id_msg = $msgOptions[id]", __FILE__, __LINE__);
+				FROM {db_prefix}messages
+				WHERE id_msg = {int:inject_int_1}',
+				array(
+					'inject_int_1' => $msgOptions['id'],
+				)
+			);
 			list ($old_body) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 		}
 	}
 	if (!empty($msgOptions['modify_time']))
 	{
-		$messages_columns[] = "modified_time = $msgOptions[modify_time]";
-		$messages_columns[] = "modified_name = '$msgOptions[modify_name]'";
-		$messages_columns[] = "id_msg_modified = $modSettings[maxMsgID]";
+		$messages_columns[] = 'modified_time = ' . $msgOptions['modify_time'];
+		$messages_columns[] = 'modified_name = \'' . $msgOptions['modify_name'] . '\'';
+		$messages_columns[] = 'id_msg_modified = ' . $modSettings['maxMsgID'];
 	}
 	if (isset($msgOptions['smileys_enabled']))
-		$messages_columns[] = "smileys_enabled = " . (empty($msgOptions['smileys_enabled']) ? '0' : '1');
+		$messages_columns[] = 'smileys_enabled = ' . (empty($msgOptions['smileys_enabled']) ? '0' : '1');
 
 	// Change the post.
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}messages
-		SET " . implode(', ', $messages_columns) . "
-		WHERE id_msg = $msgOptions[id]", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}messages
+		SET ' . implode(', ', $messages_columns) . '
+		WHERE id_msg = {int:inject_int_1}',
+		array(
+			'inject_int_1' => $msgOptions['id'],
+		)
+	);
 
 	// Lock and or sticky the post.
 	if ($topicOptions['sticky_mode'] !== null || $topicOptions['lock_mode'] !== null || $topicOptions['poll'] !== null)
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}topics
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}topics
 			SET
-				is_sticky = " . ($topicOptions['sticky_mode'] === null ? 'is_sticky' : $topicOptions['sticky_mode']) . ",
-				locked = " . ($topicOptions['lock_mode'] === null ? 'locked' : $topicOptions['lock_mode']) . ",
-				id_poll = " . ($topicOptions['poll'] === null ? 'id_poll' : $topicOptions['poll']) . "
-			WHERE id_topic = $topicOptions[id]", __FILE__, __LINE__);
+				is_sticky = {int:inject_int_1},
+				locked = {int:inject_int_2},
+				id_poll = {int:inject_int_3}
+			WHERE id_topic = {int:inject_int_4}',
+			array(
+				'inject_int_1' => $topicOptions['sticky_mode'] === null ? 'is_sticky' : $topicOptions['sticky_mode'],
+				'inject_int_2' => $topicOptions['lock_mode'] === null ? 'locked' : $topicOptions['lock_mode'],
+				'inject_int_3' => $topicOptions['poll'] === null ? 'id_poll' : $topicOptions['poll'],
+				'inject_int_4' => $topicOptions['id'],
+			)
+		);
 	}
 
 	// Mark inserted topic as read.
 	if (!empty($topicOptions['mark_as_read']) && !$user_info['is_guest'])
 		$smfFunc['db_insert']('replace',
-			"{$db_prefix}log_topics",
+			$db_prefix . 'log_topics',
 			array('id_topic', 'id_member', 'id_msg'),
 			array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
 			array('id_topic', 'id_member'), __FILE__, __LINE__
@@ -2191,10 +2358,15 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		if (!empty($removed_words))
 		{
 			$removed_words = array_merge($removed_words, $inserted_words);
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}log_search_words
-				WHERE id_msg = $msgOptions[id]
-					AND id_word IN (" . implode(", ", $removed_words) . ")", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}log_search_words
+				WHERE id_msg = {int:inject_int_1}
+					AND id_word IN ({array_int:inject_array_int_1})',
+				array(
+					'inject_array_int_1' => $removed_words,
+					'inject_int_1' => $msgOptions['id'],
+				)
+			);
 		}
 
 		// Add the new words to be indexed.
@@ -2202,9 +2374,9 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		{
 			$inserts = array();
 			foreach ($inserted_words as $word)
-				$inserts[] = array("'$word'", $msgOptions['id']);
+				$inserts[] = array( '\'' . $word . '\'', $msgOptions['id']);
 			$smfFunc['db_insert']('insert',
-				"{$db_prefix}log_search_words",
+				$db_prefix . 'log_search_words',
 				array('id_word', 'id_msg'),
 				$inserts,
 				array('id_word', 'id_msg'), __FILE__, __LINE__
@@ -2215,11 +2387,15 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	if (isset($msgOptions['subject']))
 	{
 		// Only update the subject if this was the first message in the topic.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_topic
-			FROM {$db_prefix}topics
-			WHERE id_first_msg = $msgOptions[id]
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}topics
+			WHERE id_first_msg = {int:inject_int_1}
+			LIMIT 1',
+			array(
+				'inject_int_1' => $msgOptions['id'],
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) == 1)
 			updateStats('subject', $topicOptions['id'], $msgOptions['subject']);
 		$smfFunc['db_free_result']($request);
@@ -2244,15 +2420,20 @@ function approvePosts($msgs, $approve = true)
 		return false;
 
 	// May as well start at the beginning, working out *what* we need to change.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT m.id_msg, m.approved, m.id_topic, m.id_board, t.id_first_msg, t.id_last_msg,
 			m.body, m.subject, IFNULL(mem.real_name, m.poster_name) AS poster_name, m.id_member,
 			t.approved AS topic_approved
-		FROM {$db_prefix}messages AS m
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg IN (" . implode(',', $msgs) . ")
-			AND m.approved = " . ($approve ? 0 : 1), __FILE__, __LINE__);
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE m.id_msg IN ({array_int:inject_array_int_1})
+			AND m.approved = {int:inject_int_1}',
+		array(
+			'inject_array_int_1' => $msgs,
+			'inject_int_1' => $approve ? 0 : 1,
+		)
+	);
 	$msgs = array();
 	$topics = array();
 	$topic_changes = array();
@@ -2333,20 +2514,30 @@ function approvePosts($msgs, $approve = true)
 		return;
 
 	// Now we have the differences make the changes, first the easy one.
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}messages
-		SET approved = " . ($approve ? 1 : 0) . "
-		WHERE id_msg IN (" . implode(',', $msgs) . ")", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}messages
+		SET approved = {int:inject_int_1}
+		WHERE id_msg IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $msgs,
+			'inject_int_1' => $approve ? 1 : 0,
+		)
+	);
 
 	// If we were unapproving find the last msg in the topics...
 	if (!$approve)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_topic, MAX(id_msg) AS id_last_msg
-			FROM {$db_prefix}messages
-			WHERE id_topic IN (" . implode(',', $topics) . ")
-				AND approved = 1
-			GROUP BY id_topic", __FILE__, __LINE__);
+			FROM {db_prefix}messages
+			WHERE id_topic IN ({array_int:inject_array_int_1})
+				AND approved = {int:inject_int_1}
+			GROUP BY id_topic',
+			array(
+				'inject_array_int_1' => $topics,
+				'inject_int_1' => 1,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$topic_changes[$row['id_topic']]['id_last_msg'] = $row['id_last_msg'];
 		$smfFunc['db_free_result']($request);
@@ -2354,19 +2545,29 @@ function approvePosts($msgs, $approve = true)
 
 	// ... next the topics...
 	foreach ($topic_changes as $id => $changes)
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}topics
-			SET approved = $changes[approved], unapproved_posts = unapproved_posts + $changes[unapproved_posts],
-				num_replies = num_replies + $changes[replies], id_last_msg = $changes[id_last_msg]
-			WHERE id_topic = $id", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}topics
+			SET approved = {int:inject_int_1}, unapproved_posts = unapproved_posts + ' . $changes['unapproved_posts'] . ',
+				num_replies = num_replies + ' . $changes['replies'] . ', id_last_msg = {int:inject_int_2}
+			WHERE id_topic = {int:inject_int_3}',
+			array(
+				'inject_int_1' => $changes['approved'],
+				'inject_int_2' => $changes['id_last_msg'],
+				'inject_int_3' => $id,
+			)
+		);
 
 	// ... finally the boards...
 	foreach ($board_changes as $id => $changes)
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}boards
-			SET num_posts = num_posts + $changes[posts], unapproved_posts = unapproved_posts + $changes[unapproved_posts],
-				num_topics = num_topics + $changes[topics], unapproved_topics = unapproved_topics + $changes[unapproved_topics]
-			WHERE id_board = $id", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}boards
+			SET num_posts = num_posts + ' . $changes['posts'] . ', unapproved_posts = unapproved_posts + ' . $changes['unapproved_posts'] . ',
+				num_topics = num_topics + ' . $changes['topics'] . ', unapproved_topics = unapproved_topics + ' . $changes['unapproved_topics'] . '
+			WHERE id_board = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $id,
+			)
+		);
 
 	// Finally, least importantly, notifications!
 	if ($approve)
@@ -2379,10 +2580,15 @@ function approvePosts($msgs, $approve = true)
 		if (!empty($notification_posts))
 			sendApprovalNotifications($notification_posts);
 
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}approval_queue
-			WHERE id_msg IN (" . implode(',', $msgs) . ")
-				AND id_attach = 0", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}approval_queue
+			WHERE id_msg IN ({array_int:inject_array_int_1})
+				AND id_attach = {int:inject_int_1}',
+			array(
+				'inject_array_int_1' => $msgs,
+				'inject_int_1' => 0,
+			)
+		);
 	}
 	// If unapproving add to the approval queue!
 	else
@@ -2392,7 +2598,7 @@ function approvePosts($msgs, $approve = true)
 			$msgInserts[] = array($msg);
 
 		$smfFunc['db_insert']('ignore',
-			"{$db_prefix}approval_queue",
+			$db_prefix . 'approval_queue',
 			array('id_msg'),
 			$msgInserts,
 			array('id_msg'), __FILE__, __LINE__
@@ -2419,11 +2625,16 @@ function approveTopics($topics, $approve = true)
 	$approve_type = $approve ? 0 : 1;
 
 	// Just get the messages to be approved and pass through...
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_msg
-		FROM {$db_prefix}messages
-		WHERE id_topic IN (" . implode(',', $topics) . ")
-			AND approved = $approve_type", __FILE__, __LINE__);
+		FROM {db_prefix}messages
+		WHERE id_topic IN ({array_int:inject_array_int_1})
+			AND approved = {int:inject_int_1}',
+		array(
+			'inject_array_int_1' => $topics,
+			'inject_int_1' => $approve_type,
+		)
+	);
 	$msgs = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$msgs[] = $row['id_msg'];
@@ -2453,32 +2664,42 @@ function sendApprovalNotifications(&$topicData)
 		$topicData[$topic][$msgKey]['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($topicData[$topic][$msgKey]['body'], false), array('<br />' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
 
 		$topics[] = $msg['id'];
-		$digest_insert[] = "($msg[topic], $msg[id], 'reply', $user_info[id])";
+		$digest_insert[] = '(' . $msg['topic'] . ', ' . $msg['id'] . ', \'reply\', ' . $user_info['id'] . ')';
 	}
 
 	// These need to go into the digest too...
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}log_digest
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}log_digest
 			(id_topic, id_msg, note_type, exclude)
 		VALUES
-			" . implode(', ', $digest_insert), __FILE__, __LINE__);
+			' . implode(', ', $digest_insert),
+		array(
+		)
+	);
 
 	// Find everyone who needs to know about this.
-	$members = $smfFunc['db_query']('', "
+	$members = $smfFunc['db_query']('', '
 		SELECT
 			mem.id_member, mem.email_address, mem.notify_regularity, mem.notify_types, mem.notify_send_body, mem.lngfile,
 			ln.sent, mem.id_group, mem.additional_groups, b.member_groups, mem.id_post_group, t.id_member_started,
 			ln.id_topic
-		FROM {$db_prefix}log_notify AS ln
-			INNER JOIN {$db_prefix}members AS mem ON (mem.id_member = ln.id_member)
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE ln.id_topic IN (" . implode(',', $topics) . ")
-			AND mem.is_activated = 1
-			AND mem.notify_types < 4
-			AND mem.notify_regularity < 2
+		FROM {db_prefix}log_notify AS ln
+			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = ln.id_topic)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+		WHERE ln.id_topic IN ({array_int:inject_array_int_1})
+			AND mem.is_activated = {int:inject_int_1}
+			AND mem.notify_types < {int:inject_int_2}
+			AND mem.notify_regularity < {int:inject_int_3}
 		GROUP BY mem.id_member, ln.id_topic
-		ORDER BY mem.lngfile", __FILE__, __LINE__);
+		ORDER BY mem.lngfile',
+		array(
+			'inject_array_int_1' => $topics,
+			'inject_int_1' => 1,
+			'inject_int_2' => 4,
+			'inject_int_3' => 2,
+		)
+	);
 	$sent = 0;
 	while ($row = $smfFunc['db_fetch_assoc']($members))
 	{
@@ -2536,11 +2757,17 @@ function sendApprovalNotifications(&$topicData)
 
 	// Sent!
 	if (!empty($sent))
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}log_notify
-			SET sent = 1
-			WHERE id_topic IN (" . implode(',', $topics) . ")
-				AND id_member != $user_info[id]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}log_notify
+			SET sent = {int:inject_int_1}
+			WHERE id_topic IN ({array_int:inject_array_int_1})
+				AND id_member != {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_array_int_1' => $topics,
+				'inject_int_1' => 1,
+			)
+		);
 }
 
 // Update the last message in a board, and its parents.
@@ -2559,12 +2786,17 @@ function updateLastMessages($setboards, $id_msg = 0)
 	if (!$id_msg)
 	{
 		// Find the latest message on this board (highest id_msg.)
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_board, MAX(id_last_msg) AS id_msg
-			FROM {$db_prefix}topics
-			WHERE id_board IN (" . implode(', ', $setboards) . ")
-				AND approved = 1
-			GROUP BY id_board", __FILE__, __LINE__);
+			FROM {db_prefix}topics
+			WHERE id_board IN ({array_int:inject_array_int_1})
+				AND approved = {int:inject_int_1}
+			GROUP BY id_board',
+			array(
+				'inject_array_int_1' => $setboards,
+				'inject_int_1' => 1,
+			)
+		);
 		$lastMsg = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$lastMsg[$row['id_board']] = $row['id_msg'];
@@ -2638,18 +2870,29 @@ function updateLastMessages($setboards, $id_msg = 0)
 	// Now commit the changes!
 	foreach ($parent_updates as $id_msg => $boards)
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}boards
-			SET id_msg_updated = $id_msg
-			WHERE id_board IN (" . implode(',', $boards) . ")
-				AND id_msg_updated < $id_msg", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}boards
+			SET id_msg_updated = {int:inject_int_1}
+			WHERE id_board IN ({array_int:inject_array_int_1})
+				AND id_msg_updated < {int:inject_int_1}',
+			array(
+				'inject_array_int_1' => $boards,
+				'inject_int_1' => $id_msg,
+			)
+		);
 	}
 	foreach ($board_updates as $board_data)
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}boards
-			SET id_last_msg = $board_data[id], id_msg_updated = $board_data[updated]
-			WHERE id_board IN (" . implode(',', $board_data['boards']) . ")", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}boards
+			SET id_last_msg = {int:inject_int_1}, id_msg_updated = {int:inject_int_2}
+			WHERE id_board IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $board_data['boards'],
+				'inject_int_1' => $board_data['id'],
+				'inject_int_2' => $board_data['updated'],
+			)
+		);
 	}
 }
 
@@ -2665,11 +2908,15 @@ function adminNotify($type, $memberID, $member_name = null)
 	if ($member_name == null)
 	{
 		// Get the new user's name....
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT real_name
-			FROM {$db_prefix}members
-			WHERE id_member = $memberID
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_member = {int:inject_int_1}
+			LIMIT 1',
+			array(
+				'inject_int_1' => $memberID,
+			)
+		);
 		list ($member_name) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 	}
@@ -2678,12 +2925,18 @@ function adminNotify($type, $memberID, $member_name = null)
 	$groups = array();
 
 	// All membergroups who can approve members.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_group
-		FROM {$db_prefix}permissions
-		WHERE permission = 'moderate_forum'
-			AND add_deny = 1
-			AND id_group != 0", __FILE__, __LINE__);
+		FROM {db_prefix}permissions
+		WHERE permission = {string:inject_string_1}
+			AND add_deny = {int:inject_int_1}
+			AND id_group != {int:inject_int_2}',
+		array(
+			'inject_int_1' => 1,
+			'inject_int_2' => 0,
+			'inject_string_1' => 'moderate_forum',
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$groups[] = $row['id_group'];
 	$smfFunc['db_free_result']($request);
@@ -2693,12 +2946,18 @@ function adminNotify($type, $memberID, $member_name = null)
 	$groups = array_unique($groups);
 
 	// Get a list of all members who have ability to approve accounts - these are the people who we inform.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, lngfile, email_address
-		FROM {$db_prefix}members
-		WHERE (id_group IN (" . implode(', ', $groups) . ") OR FIND_IN_SET(" . implode(', additional_groups) OR FIND_IN_SET(', $groups) . ", additional_groups))
-			AND notify_types != 4
-		ORDER BY lngfile", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE (id_group IN ({array_int:inject_array_int_1}) OR FIND_IN_SET({string:inject_string_1}, additional_groups))
+			AND notify_types != {int:inject_int_1}
+		ORDER BY lngfile',
+		array(
+			'inject_array_int_1' => $groups,
+			'inject_int_1' => 4,
+			'inject_string_1' => implode(', additional_groups) OR FIND_IN_SET(', $groups),
+		)
+	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$replacements = array(

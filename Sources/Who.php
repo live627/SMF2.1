@@ -126,11 +126,14 @@ function Who()
 	}
 
 	// Get the total amount of members online.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (lo.id_member = mem.id_member)" . (!empty($conditions) ? "
-		WHERE " . implode(' AND ', $conditions) : ''), __FILE__, __LINE__);
+		FROM {db_prefix}log_online AS lo
+			LEFT JOIN {db_prefix}members AS mem ON (lo.id_member = mem.id_member)' . (!empty($conditions) ? '
+		WHERE ' . implode(' AND ', $conditions) : ''),
+		array(
+		)
+	);
 	list ($totalMembers) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -139,17 +142,21 @@ function Who()
 	$context['start'] = $_REQUEST['start'];
 
 	// Look for people online, provided they don't mind if you see they are.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			lo.log_time, lo.id_member, lo.url, INET_NTOA(lo.ip) AS ip, mem.real_name,
 			lo.session, mg.online_color, IFNULL(mem.show_online, 1) AS show_online,
 			lo.id_spider
-		FROM {$db_prefix}log_online AS lo
-			LEFT JOIN {$db_prefix}members AS mem ON (lo.id_member = mem.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)" . (!empty($conditions) ? "
-		WHERE " . implode(' AND ', $conditions) : '') . "
-		ORDER BY $_REQUEST[sort] " . (isset($_REQUEST['asc']) ? 'ASC' : 'DESC') . "
-		LIMIT $context[start], $modSettings[defaultMaxMembers]", __FILE__, __LINE__);
+		FROM {db_prefix}log_online AS lo
+			LEFT JOIN {db_prefix}members AS mem ON (lo.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)' . (!empty($conditions) ? '
+		WHERE ' . implode(' AND ', $conditions) : '') . '
+		ORDER BY ' . $_REQUEST['sort'] . ' ' . (isset($_REQUEST['asc']) ? 'ASC' : 'DESC') . '
+		LIMIT ' . $context['start'] . ', ' . $modSettings['defaultMaxMembers'],
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	$context['members'] = array();
 	$member_ids = array();
 	$url_data = array();
@@ -352,15 +359,20 @@ function determineActions($urls)
 				// Find out what message they are accessing.
 				$msgid = (int) (isset($actions['msg']) ? $actions['msg'] : (isset($actions['quote']) ? $actions['quote'] : 0));
 
-				$result = $smfFunc['db_query']('', "
+				$result = $smfFunc['db_query']('', '
 					SELECT m.id_topic, m.subject
-					FROM {$db_prefix}messages AS m
-						INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-						INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = 1)
-					WHERE m.id_msg = $msgid
-						AND $user_info[query_see_board]
-						AND m.approved = 1
-					LIMIT 1", __FILE__, __LINE__);
+					FROM {db_prefix}messages AS m
+						INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+						INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.approved = {int:inject_int_1})
+					WHERE m.id_msg = {int:inject_int_2}
+						AND ' . $user_info['query_see_board'] . '
+						AND m.approved = {int:inject_int_1}
+					LIMIT 1',
+					array(
+						'inject_int_1' => 1,
+						'inject_int_2' => $msgid,
+					)
+				);
 				list ($id_topic, $subject) = $smfFunc['db_fetch_row']($result);
 				$data[$k] = sprintf($txt['whopost_' . $actions['action']], $id_topic, $subject);
 				$smfFunc['db_free_result']($result);
@@ -388,15 +400,20 @@ function determineActions($urls)
 	// Load topic names.
 	if (!empty($topic_ids))
 	{
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT t.id_topic, m.subject
-			FROM {$db_prefix}topics AS t
-				INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-				INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			WHERE $user_info[query_see_board]
-				AND t.id_topic IN (" . implode(', ', array_keys($topic_ids)) . ")
-				AND t.approved = 1
-			LIMIT " . count($topic_ids), __FILE__, __LINE__);
+			FROM {db_prefix}topics AS t
+				INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+				INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			WHERE ' . $user_info['query_see_board'] . '
+				AND t.id_topic IN ({array_int:inject_array_int_1})
+				AND t.approved = {int:inject_int_1}
+			LIMIT ' . count($topic_ids),
+			array(
+				'inject_array_int_1' => array_keys($topic_ids),
+				'inject_int_1' => 1,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Show the topic's subject for each of the actions.
@@ -409,12 +426,16 @@ function determineActions($urls)
 	// Load board names.
 	if (!empty($board_ids))
 	{
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.name
-			FROM {$db_prefix}boards AS b
-			WHERE $user_info[query_see_board]
-				AND b.id_board IN (" . implode(', ', array_keys($board_ids)) . ")
-			LIMIT " . count($board_ids), __FILE__, __LINE__);
+			FROM {db_prefix}boards AS b
+			WHERE ' . $user_info['query_see_board'] . '
+				AND b.id_board IN ({array_int:inject_array_int_1})
+			LIMIT ' . count($board_ids),
+			array(
+				'inject_array_int_1' => array_keys($board_ids),
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// Put the board name into the string for each member...
@@ -427,11 +448,15 @@ function determineActions($urls)
 	// Load member names for the profile.
 	if (!empty($profile_ids) && (allowedTo('profile_view_any') || allowedTo('profile_view_own')))
 	{
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT id_member, real_name
-			FROM {$db_prefix}members
-			WHERE id_member IN (" . implode(', ', array_keys($profile_ids)) . ")
-			LIMIT " . count($profile_ids), __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:inject_array_int_1})
+			LIMIT ' . count($profile_ids),
+			array(
+				'inject_array_int_1' => array_keys($profile_ids),
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			// If they aren't allowed to view this person's profile, skip it.

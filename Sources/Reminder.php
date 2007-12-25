@@ -84,20 +84,28 @@ function RemindMail()
 		fatal_lang_error('username_no_exist', false);
 
 	// Find the user!
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
-		FROM {$db_prefix}members
-		WHERE member_name = '$_POST[user]'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE member_name = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $_POST['user'],
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name, member_name, email_address, is_activated, validation_code
-			FROM {$db_prefix}members
-			WHERE email_address = '$_POST[user]'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE email_address = {string:inject_string_1}
+			LIMIT 1',
+			array(
+				'inject_string_1' => $_POST['user'],
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('username_no_exist', false);
 	}
@@ -124,7 +132,7 @@ function RemindMail()
 	$password = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
 	// Set the password in the database.
-	updateMemberData($row['id_member'], array('validation_code' => "'" . substr(md5($password), 0, 10) . "'"));
+	updateMemberData($row['id_member'], array('validation_code' => '\'' . substr(md5($password), 0, 10) . '\''));
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -185,13 +193,19 @@ function setPassword2()
 	loadLanguage('Login');
 
 	// Get the code as it should be from the database.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT validation_code, member_name, email_address
-		FROM {$db_prefix}members
-		WHERE id_member = $_POST[u]
-			AND is_activated = 1
-			AND validation_code != ''
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE id_member = {int:inject_int_1}
+			AND is_activated = {int:inject_int_2}
+			AND validation_code != {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_int_1' => $_POST['u'],
+			'inject_int_2' => 1,
+			'inject_string_1' => '',
+		)
+	);
 
 	// Does this user exist at all?
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -241,20 +255,28 @@ function secret_answerInput()
 		fatal_lang_error('username_no_exist', false);
 
 	// Get the stuff....
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT real_name, member_name, secret_question
-		FROM {$db_prefix}members
-		WHERE member_name = '$_POST[user]'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE member_name = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $_POST['user'],
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT real_name, member_name, secret_question
-			FROM {$db_prefix}members
-			WHERE email_address = '$_POST[user]'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE email_address = {string:inject_string_1}
+			LIMIT 1',
+			array(
+				'inject_string_1' => $_POST['user'],
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('username_no_exist', false);
 	}
@@ -287,20 +309,28 @@ function secret_answer2()
 	loadLanguage('Login');
 
 	// Get the information from the database.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, member_name, secret_answer, secret_question
-		FROM {$db_prefix}members
-		WHERE member_name = '$_POST[user]'
-		LIMIT 1", __FILE__, __LINE__);
+		FROM {db_prefix}members
+		WHERE member_name = {string:inject_string_1}
+		LIMIT 1',
+		array(
+			'inject_string_1' => $_POST['user'],
+		)
+	);
 	if ($smfFunc['db_num_rows']($request) == 0)
 	{
 		$smfFunc['db_free_result']($request);
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name, member_name, secret_answer, secret_question
-			FROM {$db_prefix}members
-			WHERE email_address = '$_POST[user]'
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE email_address = {string:inject_string_1}
+			LIMIT 1',
+			array(
+				'inject_string_1' => $_POST['user'],
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('username_no_exist', false);
 	}

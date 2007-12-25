@@ -135,10 +135,14 @@ function MessageMain()
 	if (!$user_info['is_admin'] && ($context['message_limit'] = cache_get_data('msgLimit:' . $user_info['id'], 360)) === null)
 	{
 		// !!! Why do we do this?  It seems like if they have any limit we should use it.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT MAX(max_messages) AS topLimit, MIN(max_messages) AS bottomLimit
-			FROM {$db_prefix}membergroups
-			WHERE id_group IN (" . implode(', ', $user_info['groups']) . ')', __FILE__, __LINE__);
+			FROM {db_prefix}membergroups
+			WHERE id_group IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $user_info['groups'],
+			)
+		);
 		list ($maxMessage, $minMessage) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -174,10 +178,15 @@ function MessageMain()
 
 		ApplyRules();
 		updateMemberData($user_info['id'], array('new_pm' => 0));
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}pm_recipients
-			SET is_new = 0
-			WHERE id_member = $user_info[id]", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}pm_recipients
+			SET is_new = {int:inject_int_1}
+			WHERE id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+			)
+		);
 	}
 
 	// Load the label data.
@@ -189,11 +198,15 @@ function MessageMain()
 		$context['labels'][-1] = array('id' => -1, 'name' => $txt['pm_msg_label_inbox'], 'messages' => 0, 'unread_messages' => 0);
 
 		// Looks like we need to reseek!
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT labels, is_read, COUNT(*) AS num
-			FROM {$db_prefix}pm_recipients
-			WHERE id_member = $user_info[id]
-			GROUP BY labels, is_read", __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients
+			WHERE id_member = {int:current_member}
+			GROUP BY labels, is_read',
+			array(
+				'current_member' => $user_info['id'],
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
 			$this_labels = explode(',', $row['labels']);
@@ -364,8 +377,8 @@ function MessageFolder()
 	$context['get_pmessage'] = 'prepareMessageContext';
 	$context['signature_enabled'] = substr($modSettings['signature_settings'], 0, 1) == 1;
 
-	$labelQuery = $context['folder'] != 'sent' ? "
-			AND FIND_IN_SET('$context[current_label_id]', pmr.labels)" : '';
+	$labelQuery = $context['folder'] != 'sent' ? '
+			AND FIND_IN_SET(\'' . $context['current_label_id'] . '\', pmr.labels)' : '';
 
 	// Set the index bar correct!
 	messageIndexBar($context['current_label_id'] == -1 ? $context['folder'] : 'label' . $context['current_label_id']);
@@ -373,7 +386,7 @@ function MessageFolder()
 	// Sorting the folder.
 	$sort_methods = array(
 		'date' => 'pm.id_pm',
-		'name' => "IFNULL(mem.real_name, '')",
+		'name' => 'IFNULL(mem.real_name, \'\')',
 		'subject' => 'pm.subject',
 	);
 
@@ -418,18 +431,28 @@ function MessageFolder()
 
 	// Figure out how many messages there are.
 	if ($context['folder'] == 'sent')
-		$request = $smfFunc['db_query']('', "
-			SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
-			FROM {$db_prefix}personal_messages AS pm
-			WHERE pm.id_member_from = $user_info[id]
-				AND pm.deleted_by_sender = 0", __FILE__, __LINE__);
+		$request = $smfFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}personal_messages AS pm
+			WHERE pm.id_member_from = {int:current_member}
+				AND pm.deleted_by_sender = {int:inject_int_1}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+			)
+		);
 	else
-		$request = $smfFunc['db_query']('', "
-			SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
-			FROM {$db_prefix}pm_recipients AS pmr" . ($context['display_mode'] == 2 ? "
-				INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)" : '') . "
-			WHERE pmr.id_member = $user_info[id]
-				AND pmr.deleted = 0$labelQuery", __FILE__, __LINE__);
+		$request = $smfFunc['db_query']('', '
+			SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+			FROM {db_prefix}pm_recipients AS pmr' . ($context['display_mode'] == 2 ? '
+				INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)' : '') . '
+			WHERE pmr.id_member = {int:current_member}
+				AND pmr.deleted = {int:inject_int_1}' . $labelQuery,
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+			)
+		);
 	list ($max_messages) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
@@ -455,20 +478,30 @@ function MessageFolder()
 		elseif (!isset($_GET['kstart']))
 		{
 			if ($context['folder'] == 'sent')
-				$request = $smfFunc['db_query']('', "
-					SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
-					FROM {$db_prefix}personal_messages
-					WHERE id_member_from = $user_info[id]
-						AND deleted_by_sender = 0
-						AND id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
+				$request = $smfFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}personal_messages
+					WHERE id_member_from = {int:current_member}
+						AND deleted_by_sender = {int:inject_int_1}
+						AND id_pm ' . ($descending ? '>' : '<') . ' ' . $_GET['pmid'],
+					array(
+						'current_member' => $user_info['id'],
+						'inject_int_1' => 0,
+					)
+				);
 			else
-				$request = $smfFunc['db_query']('', "
-					SELECT COUNT(" . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ")
-					FROM {$db_prefix}pm_recipients AS pmr" . ($context['display_mode'] == 2 ? "
-						INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)" : '') . "
-					WHERE pmr.id_member = $user_info[id]
-						AND pmr.deleted = 0$labelQuery
-						AND pmr.id_pm " . ($descending ? '>' : '<') . " $_GET[pmid]", __FILE__, __LINE__);
+				$request = $smfFunc['db_query']('', '
+					SELECT COUNT(' . ($context['display_mode'] == 2 ? 'DISTINCT pm.id_pm_head' : '*') . ')
+					FROM {db_prefix}pm_recipients AS pmr' . ($context['display_mode'] == 2 ? '
+						INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)' : '') . '
+					WHERE pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:inject_int_1}' . $labelQuery . '
+						AND pmr.id_pm ' . ($descending ? '>' : '<') . ' ' . $_GET['pmid'],
+					array(
+						'current_member' => $user_info['id'],
+						'inject_int_1' => 0,
+					)
+				);
 
 			list ($_GET['start']) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
@@ -501,21 +534,28 @@ function MessageFolder()
 		// On a non-default sort due to PostgreSQL we have to do a harder sort.
 		if ($smfFunc['db_title'] == 'PostgreSQL' && $_GET['sort'] != 'pm.id_pm')
 		{
-			$sub_request = $smfFunc['db_query']('', "
-				SELECT MAX($_GET[sort]) AS sort_param, pm.id_pm_head
-				FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? "
-					LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
-					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
-						AND pmr.id_member = $user_info[id]
-						AND pmr.deleted = 0
-						$labelQuery)") . ($context['sort_by'] == 'name' ? ("
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
-				WHERE " . ($context['folder'] == 'sent' ? "pm.id_member_from = $user_info[id]
-					AND pm.deleted_by_sender = 0" : "1=1") . (empty($_GET['pmsg']) ? '' : "
-					AND pm.id_pm = " . (int) $_GET['pmsg']) . "
+			$sub_request = $smfFunc['db_query']('', '
+				SELECT MAX(' . $_GET['sort'] . ') AS sort_param, pm.id_pm_head
+				FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:inject_int_1}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:inject_int_2})') : '') . '
+				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
+					AND pm.deleted_by_sender = {int:inject_int_1}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+					AND pm.id_pm = {int:inject_int_3}') . '
 				GROUP BY pm.id_pm_head
-				ORDER BY sort_param" . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
-				LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+				ORDER BY sort_param' . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => 0,
+					'inject_int_2' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+					'inject_int_3' => (int) $_GET['pmsg'],
+				)
+			);
 			$sub_pms = array();
 			while ($row = $smfFunc['db_fetch_assoc']($sub_request))
 			{
@@ -523,56 +563,77 @@ function MessageFolder()
 			}
 			$smfFunc['db_free_result']($sub_request);
 
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT pm.id_pm AS id_pm, pm.id_pm_head
-				FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? "
-					LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
-					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
-						AND pmr.id_member = $user_info[id]
-						AND pmr.deleted = 0
-						$labelQuery)") . ($context['sort_by'] == 'name' ? ("
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
-				WHERE " . (empty($sub_pms) ? '0=1' : 'pm.id_pm IN (' . implode(',', array_keys($sub_pms)) . ')') . "
-				ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
-				LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+				FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:inject_int_1}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:inject_int_2})') : '') . '
+				WHERE ' . (empty($sub_pms) ? '0=1' : 'pm.id_pm IN ({array_int:inject_array_int_1})') . '
+				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'inject_array_int_1' => array_keys($sub_pms),
+					'inject_int_1' => 0,
+					'inject_int_2' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+				)
+			);
 		}
 		else
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT MAX(pm.id_pm) AS id_pm, pm.id_pm_head
-				FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? "
-					LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
-					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
-						AND pmr.id_member = $user_info[id]
-						AND pmr.deleted = 0
-						$labelQuery)") . ($context['sort_by'] == 'name' ? ("
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
-				WHERE " . ($context['folder'] == 'sent' ? "pm.id_member_from = $user_info[id]
-					AND pm.deleted_by_sender = 0" : "1=1") . (empty($_GET['pmsg']) ? '' : "
-					AND pm.id_pm = " . (int) $_GET['pmsg']) . "
+				FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? ($context['sort_by'] == 'name' ? '
+					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+						AND pmr.id_member = {int:current_member}
+						AND pmr.deleted = {int:inject_int_1}
+						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:inject_int_2})') : '') . '
+				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
+					AND pm.deleted_by_sender = {int:inject_int_1}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+					AND pm.id_pm = {int:inject_int_3}') . '
 				GROUP BY pm.id_pm_head
-				ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
-				LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => 0,
+					'inject_int_2' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+					'inject_int_3' => (int) $_GET['pmsg'],
+				)
+			);
 		}
 	}
 	// This is kinda simple!
 	else
 	{
 		// !!!SLOW This query uses a filesort. (inbox only.)
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT pm.id_pm, pm.id_pm_head, pm.id_member_from
-			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? '' . ($context['sort_by'] == 'name' ? "
-				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') : "
-				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
-					AND pmr.id_member = $user_info[id]
-					AND pmr.deleted = 0
-					$labelQuery)") . ($context['sort_by'] == 'name' ? ("
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")") : '') . "
-			WHERE " . ($context['folder'] == 'sent' ? "pm.id_member_from = $user_info[id]
-				AND pm.deleted_by_sender = 0" : "1=1") . (empty($_GET['pmsg']) ? '' : "
-				AND pm.id_pm = " . (int) $_GET['pmsg']) . "
-			ORDER BY " . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? "
-			LIMIT $_GET[start], $modSettings[defaultMaxMessages]" : ''), __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? '' . ($context['sort_by'] == 'name' ? '
+				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
+					AND pmr.id_member = {int:current_member}
+					AND pmr.deleted = {int:inject_int_1}
+					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:inject_int_2})') : '') . '
+			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
+				AND pm.deleted_by_sender = {int:inject_int_1}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+				AND pm.id_pm = {int:inject_int_3}') . '
+			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
+			LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+				'inject_int_2' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+				'inject_int_3' => (int) $_GET['pmsg'],
+			)
+		);
 	}
 	// Load the id_pms and initialize recipients.
 	$pms = array();
@@ -617,14 +678,20 @@ function MessageFolder()
 		// At this point we know the main id_pm's. But - if we are looking at conversations we need the others!
 		if ($context['display_mode'] == 2)
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT pm.id_pm, pm.id_member_from, pm.deleted_by_sender, pmr.id_member, pmr.deleted
-				FROM {$db_prefix}personal_messages AS pm
-					INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
-				WHERE pm.id_pm_head = $lastData[head]
-					AND ((pm.id_member_from = $user_info[id] AND pm.deleted_by_sender = 0)
-						OR (pmr.id_member = $user_info[id] AND pmr.deleted = 0))
-				ORDER BY pm.id_pm", __FILE__, __LINE__);
+				FROM {db_prefix}personal_messages AS pm
+					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
+				WHERE pm.id_pm_head = {int:inject_int_1}
+					AND ((pm.id_member_from = {int:current_member} AND pm.deleted_by_sender = {int:inject_int_2})
+						OR (pmr.id_member = {int:current_member} AND pmr.deleted = {int:inject_int_2}))
+				ORDER BY pm.id_pm',
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => $lastData['head'],
+					'inject_int_2' => 0,
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// This is, frankly, a joke. We will put in a workaround for people sending to themselves - yawn!
@@ -649,11 +716,15 @@ function MessageFolder()
 		$all_pms = array_unique($all_pms);
 
 		// Get recipients (don't include bcc-recipients for your inbox, you're not supposed to know :P).
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT pmr.id_pm, mem_to.id_member AS id_member_to, mem_to.real_name AS to_name, pmr.bcc, pmr.labels, pmr.is_read
-			FROM {$db_prefix}pm_recipients AS pmr
-				LEFT JOIN {$db_prefix}members AS mem_to ON (mem_to.id_member = pmr.id_member)
-			WHERE pmr.id_pm IN (" . implode(', ', $all_pms) . ")", __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients AS pmr
+				LEFT JOIN {db_prefix}members AS mem_to ON (mem_to.id_member = pmr.id_member)
+			WHERE pmr.id_pm IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $all_pms,
+			)
+		);
 		$context['message_labels'] = array();
 		$context['message_replied'] = array();
 		$context['message_unread'] = array();
@@ -699,27 +770,36 @@ function MessageFolder()
 				$orderBy[] = 'pm.id_pm = ' . $pm;
 
 			// Seperate query for these bits!
-			$subjects_request = $smfFunc['db_query']('', "
+			$subjects_request = $smfFunc['db_query']('', '
 				SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.msgtime, IFNULL(mem.real_name, pm.from_name) AS from_name,
 					IFNULL(mem.id_member, 0) AS not_guest
-				FROM {$db_prefix}personal_messages AS pm
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
-				WHERE pm.id_pm IN (" . implode(',', $pms) . ")
-				ORDER BY " . implode(', ', $orderBy) . "
-				LIMIT " . count($pms), __FILE__, __LINE__);
+				FROM {db_prefix}personal_messages AS pm
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+				WHERE pm.id_pm IN ({array_int:inject_array_int_1})
+				ORDER BY ' . implode(', ', $orderBy) . '
+				LIMIT ' . count($pms),
+				array(
+					'inject_array_int_1' => $pms,
+				)
+			);
 		}
 
 
 		// Execute the query!
-		$messages_request = $smfFunc['db_query']('', "
+		$messages_request = $smfFunc['db_query']('', '
 			SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.body, pm.msgtime, pm.from_name
-			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? "
-				LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)" : '') . ($context['sort_by'] == 'name' ? "
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = " . ($context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from') . ")" : '') . "
-			WHERE pm.id_pm IN (" . implode(',', $display_pms) . ")" . ($context['folder'] == 'sent' ? "
-			GROUP BY pm.id_pm" : '') . "
-			ORDER BY " . ($context['display_mode'] == 2 ? 'pm.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . "
-			LIMIT " . count($display_pms), __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? '
+				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') . ($context['sort_by'] == 'name' ? '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:inject_int_1})' : '') . '
+			WHERE pm.id_pm IN ({array_int:inject_array_int_1})' . ($context['folder'] == 'sent' ? '
+			GROUP BY pm.id_pm' : '') . '
+			ORDER BY ' . ($context['display_mode'] == 2 ? 'pm.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . '
+			LIMIT ' . count($display_pms),
+			array(
+				'inject_array_int_1' => $display_pms,
+				'inject_int_1' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+			)
+		);
 	}
 	else
 		$messages_request = false;
@@ -997,21 +1077,24 @@ function MessageSearch2()
 
 		// Who matches those criteria?
 		// !!! This doesn't support sent item searching.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member
-			FROM {$db_prefix}members
-			WHERE real_name LIKE '" . implode("' OR real_name LIKE '", $possible_users) . "'", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE real_name LIKE \'' . implode('\' OR real_name LIKE \'', $possible_users) . '\'',
+			array(
+			)
+		);
 		// Simply do nothing if there're too many members matching the criteria.
 		if ($smfFunc['db_num_rows']($request) > $maxMembersToSearch)
 			$userQuery = '';
 		elseif ($smfFunc['db_num_rows']($request) == 0)
-			$userQuery = "AND pm.id_member_from = 0 AND (pm.from_name LIKE '" . implode("' OR pm.from_name LIKE '", $possible_users) . "')";
+			$userQuery = 'AND pm.id_member_from = 0 AND (pm.from_name LIKE \'' . implode('\' OR pm.from_name LIKE \'', $possible_users) . '\')';
 		else
 		{
 			$memberlist = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$memberlist[] = $row['id_member'];
-			$userQuery = "AND (pm.id_member_from IN (" . implode(', ', $memberlist) . ") OR (pm.id_member_from = 0 AND (pm.from_name LIKE '" . implode("' OR pm.from_name LIKE '", $possible_users) . "')))";
+			$userQuery = 'AND (pm.id_member_from IN (' . implode(', ', $memberlist) . ') OR (pm.id_member_from = 0 AND (pm.from_name LIKE \'' . implode('\' OR pm.from_name LIKE \'', $possible_users) . '\')))';
 		}
 		$smfFunc['db_free_result']($request);
 	}
@@ -1051,8 +1134,8 @@ function MessageSearch2()
 			$context['search_errors']['no_labels_selected'] = true;
 		// Otherwise prepare the query!
 		elseif (count($_REQUEST['searchlabel']) != count($context['labels']))
-			$labelQuery = "
-			AND (FIND_IN_SET('" . implode("', pmr.labels) OR FIND_IN_SET('", $_REQUEST['searchlabel']) . "', pmr.labels))";
+			$labelQuery = '
+			AND (FIND_IN_SET(\'' . implode('\', pmr.labels) OR FIND_IN_SET(\'', $_REQUEST['searchlabel']) . '\', pmr.labels))';
 	}
 
 	// What are we actually searching for?
@@ -1142,9 +1225,9 @@ function MessageSearch2()
 			continue;
 
 		if ($search_params['subject_only'])
-			$andQueryParts[] = "pm.subject" . (in_array($word, $excludedWords) ? ' NOT' : '') . " LIKE '%" . strtr($word, array('_' => '\\_', '%' => '\\%')) . "%'";
+			$andQueryParts[] = 'pm.subject' . (in_array($word, $excludedWords) ? ' NOT' : '') . ' LIKE \'%' . strtr($word, array('_' => '\\_', '%' => '\\%')) . '%\'';
 		else
-			$andQueryParts[] = '(pm.subject' . (in_array($word, $excludedWords) ? ' NOT' : '') . " LIKE '%" . strtr($word, array('_' => '\\_', '%' => '\\%')) . "%' " . (in_array($word, $excludedWords) ? 'AND pm.body NOT' : 'OR pm.body') . " LIKE '%" . strtr($word, array('_' => '\\_', '%' => '\\%')) . "%')";
+			$andQueryParts[] = '(pm.subject' . (in_array($word, $excludedWords) ? ' NOT' : '') . ' LIKE \'%' . strtr($word, array('_' => '\\_', '%' => '\\%')) . '%\' ' . (in_array($word, $excludedWords) ? 'AND pm.body NOT' : 'OR pm.body') . ' LIKE \'%' . strtr($word, array('_' => '\\_', '%' => '\\%')) . '%\')';
 	}
 
 	$searchQuery = ' 1';
@@ -1159,35 +1242,45 @@ function MessageSearch2()
 	}
 
 	// Get the amount of results.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}pm_recipients AS pmr
-			INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
-		WHERE " . ($context['folder'] == 'inbox' ? "
-			pmr.id_member = $user_info[id]
-			AND pmr.deleted = 0" : "
-			pm.id_member_from = $user_info[id]
-			AND pm.deleted_by_sender = 0") . "
-			$userQuery$labelQuery
-			AND ($searchQuery)", __FILE__, __LINE__);
+		FROM {db_prefix}pm_recipients AS pmr
+			INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+		WHERE ' . ($context['folder'] == 'inbox' ? '
+			pmr.id_member = {int:current_member}
+			AND pmr.deleted = {int:inject_int_1}' : '
+			pm.id_member_from = {int:current_member}
+			AND pm.deleted_by_sender = {int:inject_int_1}') . '
+			' . $userQuery . $labelQuery . '
+			AND (' . $searchQuery . ')',
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => 0,
+		)
+	);
 	list ($numResults) = $smfFunc['db_fetch_row']($request);
 	$smfFunc['db_free_result']($request);
 
 	// Get all the matching messages... using standard search only (No caching and the like!)
 	// !!! This doesn't support sent item searching yet.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT pm.id_pm, pm.id_member_from
-		FROM {$db_prefix}pm_recipients AS pmr
-			INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
-		WHERE " . ($context['folder'] == 'inbox' ? "
-			pmr.id_member = $user_info[id]
-			AND pmr.deleted = 0" : "
-			pm.id_member_from = $user_info[id]
-			AND pm.deleted_by_sender = 0") . "
-			$userQuery$labelQuery
-			AND ($searchQuery)
-		ORDER BY $search_params[sort] $search_params[sort_dir]
-		LIMIT $context[start], $modSettings[search_results_per_page]", __FILE__, __LINE__);
+		FROM {db_prefix}pm_recipients AS pmr
+			INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+		WHERE ' . ($context['folder'] == 'inbox' ? '
+			pmr.id_member = {int:current_member}
+			AND pmr.deleted = {int:inject_int_1}' : '
+			pm.id_member_from = {int:current_member}
+			AND pm.deleted_by_sender = {int:inject_int_1}') . '
+			' . $userQuery . $labelQuery . '
+			AND (' . $searchQuery . ')
+		ORDER BY ' . $search_params['sort'] . ' ' . $search_params['sort_dir'] . '
+		LIMIT ' . $context['start'] . ', ' . $modSettings['search_results_per_page'],
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => 0,
+		)
+	);
 	$foundMessages = array();
 	$posters = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1212,13 +1305,17 @@ function MessageSearch2()
 	if (!empty($foundMessages))
 	{
 		// Now get recipients (but don't include bcc-recipients for your inbox, you're not supposed to know :P!)
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT
 				pmr.id_pm, mem_to.id_member AS id_member_to, mem_to.real_name AS to_name,
 				pmr.bcc, pmr.labels, pmr.is_read
-			FROM {$db_prefix}pm_recipients AS pmr
-				LEFT JOIN {$db_prefix}members AS mem_to ON (mem_to.id_member = pmr.id_member)
-			WHERE pmr.id_pm IN (" . implode(', ', $foundMessages) . ")", __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients AS pmr
+				LEFT JOIN {db_prefix}members AS mem_to ON (mem_to.id_member = pmr.id_member)
+			WHERE pmr.id_pm IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $foundMessages,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($context['folder'] == 'sent' || empty($row['bcc']))
@@ -1243,12 +1340,16 @@ function MessageSearch2()
 		}
 
 		// Prepare the query for the callback!
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT pm.id_pm, pm.subject, pm.id_member_from, pm.body, pm.msgtime, pm.from_name
-			FROM {$db_prefix}personal_messages AS pm
-			WHERE pm.id_pm IN (" . implode(',', $foundMessages) . ")
-			ORDER BY $search_params[sort] $search_params[sort_dir]
-			LIMIT " . count($foundMessages), __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm
+			WHERE pm.id_pm IN ({array_int:inject_array_int_1})
+			ORDER BY ' . $search_params['sort'] . ' ' . $search_params['sort_dir'] . '
+			LIMIT ' . count($foundMessages),
+			array(
+				'inject_array_int_1' => $foundMessages,
+			)
+		);
 		$counter = 0;
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
@@ -1335,12 +1436,17 @@ function MessagePost()
 	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && $user_info['mod_cache']['bq'] == '0=1' && $user_info['mod_cache']['gq'] == '0=1')
 	{
 		// How many messages have they sent this last hour?
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(pr.id_pm) AS postCount
-			FROM {$db_prefix}personal_messages AS pm
-				INNER JOIN {$db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
-			WHERE pm.id_member_from = $user_info[id]
-				AND pm.msgtime > " . (time() - 3600), __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
+			WHERE pm.id_member_from = {int:current_member}
+				AND pm.msgtime > {int:inject_int_1}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => time() - 3600,
+			)
+		);
 		list ($postCount) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -1354,29 +1460,40 @@ function MessagePost()
 		$_REQUEST['pmsg'] = (int) $_REQUEST['pmsg'];
 
 		// Work out whether this is one you've received?
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT
 				id_pm
-			FROM {$db_prefix}pm_recipients
-			WHERE id_pm = $_REQUEST[pmsg]
-				AND id_member = $user_info[id]
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients
+			WHERE id_pm = {int:inject_int_1}
+				AND id_member = {int:current_member}
+			LIMIT 1',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $_REQUEST['pmsg'],
+			)
+		);
 		$isReceived = $smfFunc['db_num_rows']($request) != 0;
 		$smfFunc['db_free_result']($request);
 
 		// Get the quoted message (and make sure you're allowed to see this quote!).
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT
-				pm.id_pm, CASE WHEN pm.id_pm_head = 0 THEN pm.id_pm ELSE pm.id_pm_head END AS pm_head,
+				pm.id_pm, CASE WHEN pm.id_pm_head = {int:inject_int_1} THEN pm.id_pm ELSE pm.id_pm_head END AS pm_head,
 				pm.body, pm.subject, pm.msgtime, mem.member_name, IFNULL(mem.id_member, 0) AS id_member,
 				IFNULL(mem.real_name, pm.from_name) AS real_name
-			FROM {$db_prefix}personal_messages AS pm" . (!$isReceived ? '' : "
-				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[pmsg])") . "
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
-			WHERE pm.id_pm = $_REQUEST[pmsg]" . (!$isReceived ? "
-				AND pm.id_member_from = $user_info[id]" : "
-				AND pmr.id_member = $user_info[id]") . "
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm' . (!$isReceived ? '' : '
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = {int:inject_int_2})') . '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+			WHERE pm.id_pm = {int:inject_int_2}' . (!$isReceived ? '
+				AND pm.id_member_from = {int:current_member}' : '
+				AND pmr.id_member = {int:current_member}') . '
+			LIMIT 1',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+				'inject_int_2' => $_REQUEST['pmsg'],
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('pm_not_yours', false);
 		$row_quoted = $smfFunc['db_fetch_assoc']($request);
@@ -1410,9 +1527,9 @@ function MessagePost()
 			if (!empty($modSettings['removeNestedQuotes']))
 				$form_message = preg_replace(array('~\n?\[quote.*?\].+?\[/quote\]\n?~is', '~^\n~', '~\[/quote\]~'), '', $form_message);
 			if (empty($row_quoted['id_member']))
-				$form_message = '[quote author=&quot;' . $row_quoted['real_name'] . "&quot;]\n" . $form_message . "\n[/quote]";
+				$form_message = '[quote author=&quot;' . $row_quoted['real_name'] . '&quot;]' . "\n" . $form_message . "\n" . '[/quote]';
 			else
-				$form_message = '[quote author=' . $row_quoted['real_name'] . ' link=action=profile;u=' . $row_quoted['id_member'] . ' date=' . $row_quoted['msgtime'] . "]\n" . $form_message . "\n[/quote]";
+				$form_message = '[quote author=' . $row_quoted['real_name'] . ' link=action=profile;u=' . $row_quoted['id_member'] . ' date=' . $row_quoted['msgtime'] . ']' . "\n" . $form_message . "\n" . '[/quote]';
 		}
 		else
 			$form_message = '';
@@ -1462,13 +1579,19 @@ function MessagePost()
 			);
 
 			// Now to get the others.
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT mem.id_member, mem.real_name
-				FROM {$db_prefix}pm_recipients AS pmr
-					LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
-				WHERE pmr.id_pm = $_REQUEST[pmsg]
-					AND pmr.id_member != $user_info[id]
-					AND pmr.bcc = 0", __FILE__, __LINE__);
+				FROM {db_prefix}pm_recipients AS pmr
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pmr.id_member)
+				WHERE pmr.id_pm = {int:inject_int_1}
+					AND pmr.id_member != {int:current_member}
+					AND pmr.bcc = {int:inject_int_2}',
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => $_REQUEST['pmsg'],
+					'inject_int_2' => 0,
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['recipients']['to'][] = array(
 					'id' => $row['id_member'],
@@ -1482,11 +1605,15 @@ function MessagePost()
 			foreach ($_REQUEST['u'] as $key => $uID)
 				$_REQUEST['u'][$key] = (int) $uID;
 
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_member, real_name
-				FROM {$db_prefix}members
-				WHERE id_member IN (" . implode(', ', $_REQUEST['u']) . ")
-				LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
+				FROM {db_prefix}members
+				WHERE id_member IN ({array_int:inject_array_int_1})
+				LIMIT ' . count($_REQUEST['u']),
+				array(
+					'inject_array_int_1' => $_REQUEST['u'],
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$context['recipients']['to'][] = array(
 					'id' => $row['id_member'],
@@ -1581,10 +1708,14 @@ function messagePostError($error_types, $to, $bcc)
 	{
 		$allRecipients = array_merge($context['recipient_ids']['to'], $context['recipient_ids']['bcc']);
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name
-			FROM {$db_prefix}members
-			WHERE id_member IN (" . implode(',', $allRecipients) . ")", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $allRecipients,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$recipientType = in_array($row['id_member'], $context['recipient_ids']['bcc']) ? 'bcc' : 'to';
@@ -1606,18 +1737,24 @@ function messagePostError($error_types, $to, $bcc)
 	{
 		$_REQUEST['replied_to'] = (int) $_REQUEST['replied_to'];
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT
-				pm.id_pm, CASE WHEN pm.id_pm_head = 0 THEN pm.id_pm ELSE pm.id_pm_head END AS pm_head,
+				pm.id_pm, CASE WHEN pm.id_pm_head = {int:inject_int_1} THEN pm.id_pm ELSE pm.id_pm_head END AS pm_head,
 				pm.body, pm.subject, pm.msgtime, mem.member_name, IFNULL(mem.id_member, 0) AS id_member,
 				IFNULL(mem.real_name, pm.from_name) AS real_name
-			FROM {$db_prefix}personal_messages AS pm" . ($context['folder'] == 'sent' ? '' : "
-				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = $_REQUEST[replied_to])") . "
-				LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
-			WHERE pm.id_pm = $_REQUEST[replied_to]" . ($context['folder'] == 'sent' ? "
-				AND pm.id_member_from = $user_info[id]" : "
-				AND pmr.id_member = $user_info[id]") . "
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm' . ($context['folder'] == 'sent' ? '' : '
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = {int:inject_int_2})') . '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+			WHERE pm.id_pm = {int:inject_int_2}' . ($context['folder'] == 'sent' ? '
+				AND pm.id_member_from = {int:current_member}' : '
+				AND pmr.id_member = {int:current_member}') . '
+			LIMIT 1',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+				'inject_int_2' => $_REQUEST['replied_to'],
+			)
+		);
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('pm_not_yours', false);
 		$row_quoted = $smfFunc['db_fetch_assoc']($request);
@@ -1730,12 +1867,17 @@ function MessagePost2()
 	if (!empty($modSettings['pm_posts_per_hour']) && !allowedTo(array('admin_forum', 'moderate_forum', 'send_mail')) && $user_info['mod_cache']['bq'] == '0=1' && $user_info['mod_cache']['gq'] == '0=1')
 	{
 		// How many have they sent this last hour?
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(pr.id_pm) AS postCount
-			FROM {$db_prefix}personal_messages AS pm
-				INNER JOIN {$db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
-			WHERE pm.id_member_from = $user_info[id]
-				AND pm.msgtime > " . (time() - 3600), __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pr ON (pr.id_pm = pm.id_pm)
+			WHERE pm.id_member_from = {int:current_member}
+				AND pm.msgtime > {int:inject_int_1}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => time() - 3600,
+			)
+		);
 		list ($postCount) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -1853,11 +1995,15 @@ function MessagePost2()
 		foreach ($_REQUEST['u'] as $key => $uID)
 			$_REQUEST['u'][$key] = (int) $uID;
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member
-			FROM {$db_prefix}members
-			WHERE id_member IN (" . implode(',', $_REQUEST['u']) . ")
-			LIMIT " . count($_REQUEST['u']), __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:inject_array_int_1})
+			LIMIT ' . count($_REQUEST['u']),
+			array(
+				'inject_array_int_1' => $_REQUEST['u'],
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['recipient_ids']['to'][] = $row['id_member'];
 		$smfFunc['db_free_result']($request);
@@ -1991,11 +2137,16 @@ function MessagePost2()
 	// Mark the message as "replied to".
 	if (!empty($context['send_log']['sent']) && !empty($_REQUEST['replied_to']) && isset($_REQUEST['f']) && $_REQUEST['f'] == 'inbox')
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}pm_recipients
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}pm_recipients
 			SET is_read = is_read | 2
-			WHERE id_pm = " . (int) $_REQUEST['replied_to'] . "
-				AND id_member = $user_info[id]", __FILE__, __LINE__);
+			WHERE id_pm = {int:inject_int_1}
+				AND id_member = {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => (int) $_REQUEST['replied_to'],
+			)
+		);
 	}
 
 	// If one or more of the recipient were invalid, go back to the post screen with the failed usernames.
@@ -2024,12 +2175,16 @@ function WirelessAddBuddy()
 	$context['buddies'] = array();
 	if (!empty($user_info['buddies']))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name
-			FROM {$db_prefix}members
-			WHERE id_member IN (" . implode(',', $user_info['buddies']) . ")
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:inject_array_int_1})
 			ORDER BY real_name
-			LIMIT " . count($user_info['buddies']), __FILE__, __LINE__);
+			LIMIT ' . count($user_info['buddies']),
+			array(
+				'inject_array_int_1' => $user_info['buddies'],
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['buddies'][] = array(
 				'id' => $row['id_member'],
@@ -2100,12 +2255,17 @@ function MessageActionsApply()
 		$updateErrors = 0;
 
 		// Get information about each message...
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_pm, labels
-			FROM {$db_prefix}pm_recipients
-			WHERE id_member = $user_info[id]
-				AND id_pm IN (" . implode(',', array_keys($to_label)) . ")
-			LIMIT " . count($to_label), __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients
+			WHERE id_member = {int:current_member}
+				AND id_pm IN ({array_int:inject_array_int_1})
+			LIMIT ' . count($to_label),
+			array(
+				'current_member' => $user_info['id'],
+				'inject_array_int_1' => array_keys($to_label),
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			$labels = $row['labels'] == '' ? array('-1') : explode(',', trim($row['labels']));
@@ -2129,11 +2289,17 @@ function MessageActionsApply()
 				$updateErrors++;
 			else
 			{
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}pm_recipients
-					SET labels = '$set'
-					WHERE id_pm = $row[id_pm]
-						AND id_member = $user_info[id]", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}pm_recipients
+					SET labels = {string:inject_string_1}
+					WHERE id_pm = {int:inject_int_1}
+						AND id_member = {int:current_member}',
+					array(
+						'current_member' => $user_info['id'],
+						'inject_int_1' => $row['id_pm'],
+						'inject_string_1' => $set,
+					)
+				);
 			}
 		}
 		$smfFunc['db_free_result']($request);
@@ -2198,24 +2364,36 @@ function MessagePrune()
 		$toDelete = array();
 
 		// Select all the messages they have sent older than $deleteTime.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_pm
-			FROM {$db_prefix}personal_messages
-			WHERE deleted_by_sender = 0
-				AND id_member_from = $user_info[id]
-				AND msgtime < $deleteTime", __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages
+			WHERE deleted_by_sender = {int:inject_int_1}
+				AND id_member_from = {int:current_member}
+				AND msgtime < {int:inject_int_2}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+				'inject_int_2' => $deleteTime,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_row']($request))
 			$toDelete[] = $row[0];
 		$smfFunc['db_free_result']($request);
 
 		// Select all messages in their inbox older than $deleteTime.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT pmr.id_pm
-			FROM {$db_prefix}pm_recipients AS pmr
-				INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
-			WHERE pmr.deleted = 0
-				AND pmr.id_member = $user_info[id]
-				AND pm.msgtime < $deleteTime", __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients AS pmr
+				INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+			WHERE pmr.deleted = {int:inject_int_1}
+				AND pmr.id_member = {int:current_member}
+				AND pm.msgtime < {int:inject_int_2}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => 0,
+				'inject_int_2' => $deleteTime,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$toDelete[] = $row['id_pm'];
 		$smfFunc['db_free_result']($request);
@@ -2265,28 +2443,39 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 
 	if ($folder == 'sent' || $folder === null)
 	{
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}personal_messages
-			SET deleted_by_sender = 1
-			WHERE id_member_from IN (" . implode(', ', $owner) . ")
-				AND deleted_by_sender = 0$where", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}personal_messages
+			SET deleted_by_sender = {int:inject_int_1}
+			WHERE id_member_from IN ({array_int:inject_array_int_1})
+				AND deleted_by_sender = {int:inject_int_2}' . $where,
+			array(
+				'inject_array_int_1' => $owner,
+				'inject_int_1' => 1,
+				'inject_int_2' => 0,
+			)
+		);
 	}
 	if ($folder != 'sent' || $folder === null)
 	{
 		// Calculate the number of messages each member's gonna lose...
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, COUNT(*) AS num_deleted_messages, CASE WHEN is_read & 1 >= 1 THEN 1 ELSE 0 END AS is_read
-			FROM {$db_prefix}pm_recipients
-			WHERE id_member IN (" . implode(', ', $owner) . ")
-				AND deleted = 0$where
-			GROUP BY id_member, is_read", __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients
+			WHERE id_member IN ({array_int:inject_array_int_1})
+				AND deleted = {int:inject_int_1}' . $where . '
+			GROUP BY id_member, is_read',
+			array(
+				'inject_array_int_1' => $owner,
+				'inject_int_1' => 0,
+			)
+		);
 		// ...And update the statistics accordingly - now including unread messages!.
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['is_read'])
-				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : "instant_messages - $row[num_deleted_messages]"));
+				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : 'instant_messages - ' . $row['num_deleted_messages']));
 			else
-				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : "instant_messages - $row[num_deleted_messages]", 'unread_messages' => $where == '' ? 0 : "unread_messages - $row[num_deleted_messages]"));
+				updateMemberData($row['id_member'], array('instant_messages' => $where == '' ? 0 : 'instant_messages - ' . $row['num_deleted_messages'], 'unread_messages' => $where == '' ? 0 : 'unread_messages - ' . $row['num_deleted_messages']));
 
 			// If this is the current member we need to make their message count correct.
 			if ($user_info['id'] == $row['id_member'])
@@ -2299,21 +2488,32 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 		$smfFunc['db_free_result']($request);
 
 		// Do the actual deletion.
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}pm_recipients
-			SET deleted = 1
-			WHERE id_member IN (" . implode(', ', $owner) . ")
-				AND deleted = 0$where", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}pm_recipients
+			SET deleted = {int:inject_int_1}
+			WHERE id_member IN ({array_int:inject_array_int_1})
+				AND deleted = {int:inject_int_2}' . $where,
+			array(
+				'inject_array_int_1' => $owner,
+				'inject_int_1' => 1,
+				'inject_int_2' => 0,
+			)
+		);
 	}
 
 	// If sender and recipients all have deleted their message, it can be removed.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT pm.id_pm, pmr.id_pm AS recipient
-		FROM {$db_prefix}personal_messages AS pm
-			LEFT JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.deleted = 0)
-		WHERE pm.deleted_by_sender = 1
-			" . str_replace('id_pm', 'pm.id_pm', $where) . "
-		HAVING recipient IS null", __FILE__, __LINE__);
+		FROM {db_prefix}personal_messages AS pm
+			LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm AND pmr.deleted = {int:inject_int_1})
+		WHERE pm.deleted_by_sender = {int:inject_int_2}
+			' . str_replace('id_pm', 'pm.id_pm', $where) . '
+		HAVING recipient IS null',
+		array(
+			'inject_int_1' => 0,
+			'inject_int_2' => 1,
+		)
+	);
 	$remove_pms = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$remove_pms[] = $row['id_pm'];
@@ -2321,13 +2521,21 @@ function deleteMessages($personal_messages, $folder = null, $owner = null)
 
 	if (!empty($remove_pms))
 	{
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}personal_messages
-			WHERE id_pm IN (" . implode(', ', $remove_pms) . ")", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}personal_messages
+			WHERE id_pm IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $remove_pms,
+			)
+		);
 
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}pm_recipients
-			WHERE id_pm IN (" . implode(', ', $remove_pms) . ')', __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}pm_recipients
+			WHERE id_pm IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $remove_pms,
+			)
+		);
 	}
 }
 
@@ -2339,13 +2547,19 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 	if ($owner === null)
 		$owner = $user_info['id'];
 
-	$smfFunc['db_query']('', "
-		UPDATE {$db_prefix}pm_recipients
+	$smfFunc['db_query']('', '
+		UPDATE {db_prefix}pm_recipients
 		SET is_read = is_read | 1
-		WHERE id_member = $owner
-			AND NOT (is_read & 1 >= 1)" . ($label === null ? '' : "
-			AND FIND_IN_SET($label, labels)") . ($personal_messages !== null ? "
-			AND id_pm IN (" . implode(', ', $personal_messages) . ")" : ''), __FILE__, __LINE__);
+		WHERE id_member = {int:inject_int_1}
+			AND NOT (is_read & 1 >= 1)' . ($label === null ? '' : '
+			AND FIND_IN_SET({string:inject_string_1}, labels)') . ($personal_messages !== null ? '
+			AND id_pm IN ({array_int:inject_array_int_1})' : ''),
+		array(
+			'inject_array_int_1' => $personal_messages,
+			'inject_int_1' => $owner,
+			'inject_string_1' => $label,
+		)
+	);
 
 	// If something wasn't marked as read, get the number of unread messages remaining.
 	if ($smfFunc['db_affected_rows']() > 0)
@@ -2356,12 +2570,16 @@ function markMessages($personal_messages = null, $label = null, $owner = null)
 				$context['labels'][(int) $label['id']]['unread_messages'] = 0;
 		}
 
-		$result = $smfFunc['db_query']('', "
+		$result = $smfFunc['db_query']('', '
 			SELECT labels, COUNT(*) AS num
-			FROM {$db_prefix}pm_recipients
-			WHERE id_member = $owner
+			FROM {db_prefix}pm_recipients
+			WHERE id_member = {int:inject_int_1}
 				AND NOT (is_read & 1 >= 1)
-			GROUP BY labels", __FILE__, __LINE__);
+			GROUP BY labels',
+			array(
+				'inject_int_1' => $owner,
+			)
+		);
 		$total_unread = 0;
 		while ($row = $smfFunc['db_fetch_assoc']($result))
 		{
@@ -2476,7 +2694,7 @@ function ManageLabels()
 		}
 
 		// Save the label status.
-		updateMemberData($user_info['id'], array('message_labels' => "'" . implode(',', $the_labels) . "'"));
+		updateMemberData($user_info['id'], array('message_labels' => '\'' . implode(',', $the_labels) . '\''));
 
 		// Update all the messages currently with any label changes in them!
 		if (!empty($message_changes))
@@ -2490,11 +2708,15 @@ function ManageLabels()
 			}
 
 			// Now find the messages to change.
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT id_pm, labels
-				FROM {$db_prefix}pm_recipients
-				WHERE FIND_IN_SET('" . implode("', labels) OR FIND_IN_SET('", $searchArray) . "', labels)
-					AND id_member = $user_info[id]", __FILE__, __LINE__);
+				FROM {db_prefix}pm_recipients
+				WHERE FIND_IN_SET(\'' . implode('\', labels) OR FIND_IN_SET(\'', $searchArray) . '\', labels)
+					AND id_member = {int:current_member}',
+				array(
+					'current_member' => $user_info['id'],
+				)
+			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				// Do the long task of updating them...
@@ -2513,11 +2735,17 @@ function ManageLabels()
 					$toChange[] = '-1';
 
 				// Update the message.
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}pm_recipients
-					SET labels = '" . implode(',', array_unique($toChange)) . "'
-					WHERE id_pm = $row[id_pm]
-						AND id_member = $user_info[id]", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}pm_recipients
+					SET labels = {string:inject_string_1}
+					WHERE id_pm = {int:inject_int_1}
+						AND id_member = {int:current_member}',
+					array(
+						'current_member' => $user_info['id'],
+						'inject_int_1' => $row['id_pm'],
+						'inject_string_1' => implode(',', array_unique($toChange)),
+					)
+				);
 			}
 			$smfFunc['db_free_result']($request);
 
@@ -2548,20 +2776,31 @@ function ManageLabels()
 			foreach ($rule_changes as $k => $id)
 				if (!empty($context['rules'][$id]['actions']))
 				{
-					$smfFunc['db_query']('', "
-						UPDATE {$db_prefix}pm_rules
-						SET actions = '" . $smfFunc['db_escape_string'](serialize($context['rules'][$id]['actions'])) . "'
-						WHERE id_rule = $id
-							AND id_member = $user_info[id]", __FILE__, __LINE__);
+					$smfFunc['db_query']('', '
+						UPDATE {db_prefix}pm_rules
+						SET actions = {string:inject_string_1}
+						WHERE id_rule = {int:inject_int_1}
+							AND id_member = {int:current_member}',
+						array(
+							'current_member' => $user_info['id'],
+							'inject_int_1' => $id,
+							'inject_string_1' => $smfFunc['db_escape_string'](serialize($context['rules'][$id]['actions'])),
+						)
+					);
 					unset($rule_changes[$k]);
 				}
 
 			// Anything left here means it's lost all actions...
 			if (!empty($rule_changes))
-				$smfFunc['db_query']('', "
-					DELETE FROM {$db_prefix}pm_rules
-					WHERE id_rule IN (" . implode(', ', $rule_changes) . ")
-							AND id_member = $user_info[id]", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					DELETE FROM {db_prefix}pm_rules
+					WHERE id_rule IN ({array_int:inject_array_int_1})
+							AND id_member = {int:current_member}',
+					array(
+						'current_member' => $user_info['id'],
+						'inject_array_int_1' => $rule_changes,
+					)
+				);
 		}
 
 		// Make sure we're not caching this!
@@ -2639,11 +2878,15 @@ function ReportMessage()
 
 		// !!! I don't like being able to pick who to send it to.  Favoritism, etc. sucks.
 		// Now, get all the administrators.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name
-			FROM {$db_prefix}members
-			WHERE id_group = 1 OR FIND_IN_SET(1, additional_groups)
-			ORDER BY real_name", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_group = {int:inject_int_1} OR FIND_IN_SET(1, additional_groups)
+			ORDER BY real_name',
+			array(
+				'inject_int_1' => 1,
+			)
+		);
 		$context['admins'] = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$context['admins'][$row['id_member']] = $row['real_name'];
@@ -2656,15 +2899,21 @@ function ReportMessage()
 	else
 	{
 		// First, pull out the message contents, and verify it actually went to them!
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT pm.subject, pm.body, pm.msgtime, pm.id_member_from, IFNULL(m.real_name, pm.from_name) AS senderName
-			FROM {$db_prefix}personal_messages AS pm
-				INNER JOIN {$db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
-				LEFT JOIN {$db_prefix}members AS m ON (m.id_member = pm.id_member_from)
-			WHERE pm.id_pm = $context[pm_id]
-				AND pmr.id_member = $user_info[id]
-				AND pmr.deleted = 0
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}personal_messages AS pm
+				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)
+				LEFT JOIN {db_prefix}members AS m ON (m.id_member = pm.id_member_from)
+			WHERE pm.id_pm = {int:inject_int_1}
+				AND pmr.id_member = {int:current_member}
+				AND pmr.deleted = {int:inject_int_2}
+			LIMIT 1',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $context['pm_id'],
+				'inject_int_2' => 0,
+			)
+		);
 		// Can only be a hacker here!
 		if ($smfFunc['db_num_rows']($request) == 0)
 			fatal_lang_error('no_access', false);
@@ -2675,12 +2924,17 @@ function ReportMessage()
 		$body = preg_replace('~<br( /)?' . '>~i', "\n", $body);
 
 		// Get any other recipients of the email.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT mem_to.id_member AS id_member_to, mem_to.real_name AS to_name, pmr.bcc
-			FROM {$db_prefix}pm_recipients AS pmr
-				LEFT JOIN {$db_prefix}members AS mem_to ON (mem_to.id_member = pmr.id_member)
-			WHERE pmr.id_pm = $context[pm_id]
-				AND pmr.id_member != $user_info[id]", __FILE__, __LINE__);
+			FROM {db_prefix}pm_recipients AS pmr
+				LEFT JOIN {db_prefix}members AS mem_to ON (mem_to.id_member = pmr.id_member)
+			WHERE pmr.id_pm = {int:inject_int_1}
+				AND pmr.id_member != {int:current_member}',
+			array(
+				'current_member' => $user_info['id'],
+				'inject_int_1' => $context['pm_id'],
+			)
+		);
 		$recipients = array();
 		$hidden_recipients = 0;
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2697,12 +2951,17 @@ function ReportMessage()
 			$recipients[] = sprintf($txt['pm_report_pm_hidden'], $hidden_recipients);
 
 		// Now let's get out and loop through the admins.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_member, real_name, lngfile
-			FROM {$db_prefix}members
-			WHERE (id_group = 1 OR FIND_IN_SET(1, additional_groups))
-				" . (empty($_REQUEST['ID_ADMIN']) ? '' : 'AND id_member = ' . (int) $_REQUEST['ID_ADMIN']) . "
-			ORDER BY lngfile", __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE (id_group = {int:inject_int_1} OR FIND_IN_SET(1, additional_groups))
+				' . (empty($_REQUEST['ID_ADMIN']) ? '' : 'AND id_member = {int:inject_int_2}') . '
+			ORDER BY lngfile',
+			array(
+				'inject_int_1' => 1,
+				'inject_int_2' => (int) $_REQUEST['ID_ADMIN'],
+			)
+		);
 
 		// Maybe we shouldn't advertise this?
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -2726,10 +2985,10 @@ function ReportMessage()
 				// Make the body.
 				$report_body = str_replace(array('{REPORTER}', '{SENDER}'), array(un_htmlspecialchars($user_info['name']), $memberFromName), $txt['pm_report_pm_user_sent']);
 				// !!! I don't think this handles slashes in the reason properly.
-				$report_body .= $smfFunc['db_unescape_string']("\n[b]$_REQUEST[reason][/b]\n\n");
+				$report_body .= $smfFunc['db_unescape_string']( "\n" .'[b]' . $_REQUEST['reason'] . '[/b]' . "\n\n");
 				if (!empty($recipients))
-					$report_body .= $txt['pm_report_pm_other_recipients'] . " " . implode(', ', $recipients) . "\n\n";
-				$report_body .= $txt['pm_report_pm_unedited_below'] . "\n[quote author=" . (empty($memberFromID) ? '&quot;' . $memberFromName . '&quot;' : $memberFromName . ' link=action=profile;u=' . $memberFromID . ' date=' . $time) . "]\n" . un_htmlspecialchars($body) . '[/quote]';
+					$report_body .= $txt['pm_report_pm_other_recipients'] . ' ' . implode(', ', $recipients) . "\n\n";
+				$report_body .= $txt['pm_report_pm_unedited_below'] . "\n" . '[quote author=' . (empty($memberFromID) ? '&quot;' . $memberFromName . '&quot;' : $memberFromName . ' link=action=profile;u=' . $memberFromID . ' date=' . $time) . ']' . "\n" . un_htmlspecialchars($body) . '[/quote]';
 
 				// Plonk it in the array ;)
 				$messagesToSend[$cur_language] = array(
@@ -2781,14 +3040,21 @@ function ManageRules()
 	LoadRules();
 
 	// Likely to need all the groups!
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT mg.id_group, mg.group_name, IFNULL(gm.id_member, 0) AS can_moderate, mg.hidden
-		FROM {$db_prefix}membergroups AS mg
-			LEFT JOIN {$db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = $user_info[id])
-		WHERE mg.min_posts = -1
-			AND mg.id_group != 3
-			AND mg.hidden = 0
-		ORDER BY mg.group_name", __FILE__, __LINE__);
+		FROM {db_prefix}membergroups AS mg
+			LEFT JOIN {db_prefix}group_moderators AS gm ON (gm.id_group = mg.id_group AND gm.id_member = {int:current_member})
+		WHERE mg.min_posts = {int:inject_int_1}
+			AND mg.id_group != {int:inject_int_2}
+			AND mg.hidden = {int:inject_int_3}
+		ORDER BY mg.group_name',
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => -1,
+			'inject_int_2' => 3,
+			'inject_int_3' => 0,
+		)
+	);
 	$context['groups'] = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -2824,10 +3090,14 @@ function ManageRules()
 
 			if (!empty($members))
 			{
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT id_member, member_name
-					FROM {$db_prefix}members
-					WHERE id_member IN (" . implode(', ', array_keys($members)) . ")", __FILE__, __LINE__);
+					FROM {db_prefix}members
+					WHERE id_member IN ({array_int:inject_array_int_1})',
+					array(
+						'inject_array_int_1' => array_keys($members),
+					)
+				);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$context['rule']['criteria'][$members[$row['id_member']]]['v'] = $row['member_name'];
 				$smfFunc['db_free_result']($request);
@@ -2871,11 +3141,15 @@ function ManageRules()
 			{
 				$name = trim($_POST['ruledef'][$ind]);
 				$name = $smfFunc['db_escape_string'](stripslashes($name));
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT id_member
-					FROM {$db_prefix}members
-					WHERE real_name = '$name'
-						OR member_name = '$name'", __FILE__, __LINE__);
+					FROM {db_prefix}members
+					WHERE real_name = {string:inject_string_1}
+						OR member_name = {string:inject_string_1}',
+					array(
+						'inject_string_1' => $name,
+					)
+				);
 				if ($smfFunc['db_num_rows']($request) == 0)
 					continue;
 				list ($memID) = $smfFunc['db_fetch_row']($request);
@@ -2917,18 +3191,31 @@ function ManageRules()
 
 		// Create the rule?
 		if (empty($context['rid']))
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}pm_rules
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}pm_rules
 					(id_member, rule_name, criteria, actions, delete_pm, is_or)
 				VALUES
-					($user_info[id], '$ruleName', '$criteria', '$actions', $doDelete, $isOr)", __FILE__, __LINE__);
+					(' . $user_info['id'] . ', \'' . $ruleName . '\', \'' . $criteria . '\', \'' . $actions . '\', ' . $doDelete . ', ' . $isOr . ')',
+				array(
+				)
+			);
 		else
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}pm_rules
-				SET rule_name = '$ruleName', criteria = '$criteria', actions = '$actions',
-					delete_pm = $doDelete, is_or = $isOr
-				WHERE id_rule = $context[rid]
-					AND id_member = $user_info[id]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}pm_rules
+				SET rule_name = {string:inject_string_1}, criteria = {string:inject_string_2}, actions = {string:inject_string_3},
+					delete_pm = {int:inject_int_1}, is_or = {int:inject_int_2}
+				WHERE id_rule = {int:inject_int_3}
+					AND id_member = {int:current_member}',
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => $doDelete,
+					'inject_int_2' => $isOr,
+					'inject_int_3' => $context['rid'],
+					'inject_string_1' => $ruleName,
+					'inject_string_2' => $criteria,
+					'inject_string_3' => $actions,
+				)
+			);
 
 		redirectexit('action=pm;sa=manrules');
 	}
@@ -2940,10 +3227,15 @@ function ManageRules()
 			$toDelete[] = (int) $k;
 
 		if (!empty($toDelete))
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}pm_rules
-				WHERE id_rule IN (" . implode(', ', $toDelete) . ")
-					AND id_member = $user_info[id]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}pm_rules
+				WHERE id_rule IN ({array_int:inject_array_int_1})
+					AND id_member = {int:current_member}',
+				array(
+					'current_member' => $user_info['id'],
+					'inject_array_int_1' => $toDelete,
+				)
+			);
 
 		redirectexit('action=pm;sa=manrules');
 	}	
@@ -2962,19 +3254,24 @@ function ApplyRules($all_messages = false)
 		return;
 
 	// Just unread ones?
-	$ruleQuery = $all_messages ? '' : " AND pmr.is_new = 1";
+	$ruleQuery = $all_messages ? '' : ' AND pmr.is_new = 1';
 
 	//!!! Apply all should have timeout protection!
 	// Get all the messages that match this.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			pmr.id_pm, pm.id_member_from, pm.subject, pm.body, mem.id_group, pmr.labels
-		FROM {$db_prefix}pm_recipients AS pmr
-			INNER JOIN {$db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
-		WHERE pmr.id_member = $user_info[id]
-			AND pmr.deleted = 0
-			$ruleQuery", __FILE__, __LINE__);
+		FROM {db_prefix}pm_recipients AS pmr
+			INNER JOIN {db_prefix}personal_messages AS pm ON (pm.id_pm = pmr.id_pm)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = pm.id_member_from)
+		WHERE pmr.id_member = {int:current_member}
+			AND pmr.deleted = {int:inject_int_1}
+			' . $ruleQuery,
+		array(
+			'current_member' => $user_info['id'],
+			'inject_int_1' => 0,
+		)
+	);
 	$actions = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -3032,11 +3329,17 @@ function ApplyRules($all_messages = false)
 				if (in_array($label['id'], $labels) && ($label['id'] != -1 || empty($options['pm_remove_inbox_label'])))
 					$realLabels[] = $label['id'];
 
-			$smfFunc['db_query']('', "
-				UPDATE {$db_prefix}pm_recipients
-				SET labels = '" . (empty($realLabels) ? '' : implode(',', $realLabels)) . "'
-				WHERE id_pm = $pm
-					AND id_member = $user_info[id]", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				UPDATE {db_prefix}pm_recipients
+				SET labels = {string:inject_string_1}
+				WHERE id_pm = {int:inject_int_1}
+					AND id_member = {int:current_member}',
+				array(
+					'current_member' => $user_info['id'],
+					'inject_int_1' => $pm,
+					'inject_string_1' => empty($realLabels) ? '' : implode(',', $realLabels),
+				)
+			);
 		}
 	}
 }
@@ -3049,11 +3352,15 @@ function LoadRules($reload = false)
 	if (isset($context['rules']) && !$reload)
 		return;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			id_rule, rule_name, criteria, actions, delete_pm, is_or
-		FROM {$db_prefix}pm_rules
-		WHERE id_member = $user_info[id]", __FILE__, __LINE__);
+		FROM {db_prefix}pm_rules
+		WHERE id_member = {int:current_member}',
+		array(
+			'current_member' => $user_info['id'],
+		)
+	);
 	$context['rules'] = array();
 	// Simply fill in the data!
 	while ($row = $smfFunc['db_fetch_assoc']($request))

@@ -94,21 +94,29 @@ function ShowXmlFeed()
 
 		if (count($_REQUEST['c']) == 1)
 		{
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SELECT name
-				FROM {$db_prefix}categories
-				WHERE id_cat = " . (int) $_REQUEST['c'][0], __FILE__, __LINE__);
+				FROM {db_prefix}categories
+				WHERE id_cat = {int:inject_int_1}',
+				array(
+					'inject_int_1' => (int) $_REQUEST['c'][0],
+				)
+			);
 			list ($feed_title) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 
 			$feed_title = ' - ' . strip_tags($feed_title);
 		}
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts
-			FROM {$db_prefix}boards AS b
-			WHERE b.id_cat IN (" . implode(', ', $_REQUEST['c']) . ")
-				AND $user_info[query_see_board]", __FILE__, __LINE__);
+			FROM {db_prefix}boards AS b
+			WHERE b.id_cat IN ({array_int:inject_array_int_1})
+				AND ' . $user_info['query_see_board'],
+			array(
+				'inject_array_int_1' => $_REQUEST['c'],
+			)
+		);
 		$total_cat_posts = 0;
 		$boards = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -132,12 +140,16 @@ function ShowXmlFeed()
 		foreach ($_REQUEST['boards'] as $i => $b)
 			$_REQUEST['boards'][$i] = (int) $b;
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT b.id_board, b.num_posts, b.name
-			FROM {$db_prefix}boards AS b
-			WHERE b.id_board IN (" . implode(', ', $_REQUEST['boards']) . ")
-				AND $user_info[query_see_board]
-			LIMIT " . count($_REQUEST['boards']), __FILE__, __LINE__);
+			FROM {db_prefix}boards AS b
+			WHERE b.id_board IN ({array_int:inject_array_int_1})
+				AND ' . $user_info['query_see_board'] . '
+			LIMIT ' . count($_REQUEST['boards']),
+			array(
+				'inject_array_int_1' => $_REQUEST['boards'],
+			)
+		);
 
 		// Either the board specified doesn't exist or you have no access.
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -165,11 +177,15 @@ function ShowXmlFeed()
 	}
 	elseif (!empty($board))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT num_posts
-			FROM {$db_prefix}boards
-			WHERE id_board = $board
-			LIMIT 1", __FILE__, __LINE__);
+			FROM {db_prefix}boards
+			WHERE id_board = {int:current_board}
+			LIMIT 1',
+			array(
+				'current_board' => $board,
+			)
+		);
 		list ($total_posts) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
 
@@ -184,8 +200,8 @@ function ShowXmlFeed()
 	}
 	else
 	{
-		$query_this_board = $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? "
-			AND b.id_board != $modSettings[recycle_board]" : ''). '
+		$query_this_board = $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
+			AND b.id_board != ' . $modSettings['recycle_board'] : ''). '
 			AND m.id_msg >= ' . max(0, $modSettings['maxMsgID'] - 100 - $_GET['limit'] * 5);
 	}
 
@@ -329,7 +345,7 @@ function fix_possible_url($val)
 	if (empty($modSettings['queryless_urls']) || ($context['server']['is_cgi'] && @ini_get('cgi.fix_pathinfo') == 0) || !$context['server']['is_apache'])
 		return $val;
 
-	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', "'' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2'", $val);
+	$val = preg_replace('/^' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+)(#[^"]*)?$/e', '\'\' . \$scripturl . \'/\' . strtr(\'\$1\', \'&;=\', \'//,\') . \'.html\$2\'', $val);
 	return $val;
 }
 
@@ -461,11 +477,14 @@ function getXmlMembers($xml_format)
 	global $db_prefix, $scripturl, $smfFunc;
 
 	// Find the most recent members.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, date_registered, last_login
-		FROM {$db_prefix}members
+		FROM {db_prefix}members
 		ORDER BY id_member DESC
-		LIMIT $_GET[limit]", __FILE__, __LINE__);
+		LIMIT ' . $_GET['limit'],
+		array(
+		)
+	);
 	$data = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -515,7 +534,7 @@ function getXmlNews($xml_format)
 		- are on an any board OR in a specified board.
 		- can be seen by this user.
 		- are actually the latest posts. */
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.modified_time,
 			m.icon, t.id_topic, t.id_board, t.num_replies,
@@ -523,15 +542,20 @@ function getXmlNews($xml_format)
 			mem.hide_email, IFNULL(mem.id_member, 0) AS id_member,
 			IFNULL(mem.email_address, m.poster_email) AS poster_email,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name
-		FROM {$db_prefix}topics AS t
-			INNER JOIN {$db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE $query_this_board
-			" . (empty($board) ? '' : "AND t.id_board = $board") . "
-			AND t.approved = 1
+		FROM {db_prefix}topics AS t
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+		WHERE ' . $query_this_board . '
+			' . (empty($board) ? '' : 'AND t.id_board = {int:current_board}') . '
+			AND t.approved = {int:inject_int_1}
 		ORDER BY t.id_first_msg DESC
-		LIMIT $_GET[limit]", __FILE__, __LINE__);
+		LIMIT ' . $_GET['limit'],
+		array(
+			'current_board' => $board,
+			'inject_int_1' => 1,
+		)
+	);
 	$data = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
@@ -609,15 +633,20 @@ function getXmlRecent($xml_format)
 	global $db_prefix, $user_info, $scripturl, $modSettings, $board;
 	global $query_this_board, $smfFunc, $settings;
 
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT m.id_msg
-		FROM {$db_prefix}messages AS m
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = m.id_board)
-		WHERE $query_this_board
-			" . (empty($board) ? '' : "AND m.id_board = $board") . "
-			AND m.approved = 1
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
+		WHERE ' . $query_this_board . '
+			' . (empty($board) ? '' : 'AND m.id_board = {int:current_board}') . '
+			AND m.approved = {int:inject_int_1}
 		ORDER BY m.id_msg DESC
-		LIMIT $_GET[limit]", __FILE__, __LINE__);
+		LIMIT ' . $_GET['limit'],
+		array(
+			'current_board' => $board,
+			'inject_int_1' => 1,
+		)
+	);
 	$messages = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 		$messages[] = $row['id_msg'];
@@ -627,23 +656,28 @@ function getXmlRecent($xml_format)
 		return array();
 
 	// Find the most recent posts this user can see.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT
 			m.smileys_enabled, m.poster_time, m.id_msg, m.subject, m.body, m.id_topic, t.id_board,
 			b.name AS bname, t.num_replies, m.id_member, m.icon, mf.id_member AS ID_FIRST_MEMBER,
 			IFNULL(mem.real_name, m.poster_name) AS poster_name, mf.subject AS first_subject,
 			IFNULL(memf.real_name, mf.poster_name) AS firstPosterName, mem.hide_email,
 			IFNULL(mem.email_address, m.poster_email) AS poster_email, m.modified_time
-		FROM {$db_prefix}messages AS m
-			INNER JOIN {$db_prefix}topics AS t ON (t.id_topic = m.id_topic)
-			INNER JOIN {$db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
-			INNER JOIN {$db_prefix}boards AS b ON (b.id_board = t.id_board)
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = m.id_member)
-			LEFT JOIN {$db_prefix}members AS memf ON (memf.id_member = mf.id_member)
-		WHERE m.id_msg IN (" . implode(', ', $messages) . ")
-			" . (empty($board) ? '' : "AND t.id_board = $board") . "
+		FROM {db_prefix}messages AS m
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
+			INNER JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
+			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
+			LEFT JOIN {db_prefix}members AS memf ON (memf.id_member = mf.id_member)
+		WHERE m.id_msg IN ({array_int:inject_array_int_1})
+			' . (empty($board) ? '' : 'AND t.id_board = {int:current_board}') . '
 		ORDER BY m.id_msg DESC
-		LIMIT $_GET[limit]", __FILE__, __LINE__);
+		LIMIT ' . $_GET['limit'],
+		array(
+			'current_board' => $board,
+			'inject_array_int_1' => $messages,
+		)
+	);
 	$data = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{

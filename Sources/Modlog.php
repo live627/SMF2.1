@@ -60,14 +60,22 @@ function ViewModlog()
 
 	// Handle deletion...
 	if (isset($_POST['removeall']) && $context['can_delete'])
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_actions
-			WHERE log_time < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_actions
+			WHERE log_time < {int:inject_int_1}',
+			array(
+				'inject_int_1' => time() - $context['hoursdisable'] * 3600,
+			)
+		);
 	elseif (!empty($_POST['remove']) && isset($_POST['delete']) && $context['can_delete'])
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}log_actions
-			WHERE id_action IN ('" . implode("', '", array_unique($_POST['delete'])) . "')
-				AND log_time < " . (time() - $context['hoursdisable'] * 3600), __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_actions
+			WHERE id_action IN (\'' . implode('\', \'', array_unique($_POST['delete'])) . '\')
+				AND log_time < {int:inject_int_1}',
+			array(
+				'inject_int_1' => time() - $context['hoursdisable'] * 3600,
+			)
+		);
 
 	// Pass order and direction variables to template so they can be used after a remove command.
 	$context['dir'] = isset($_REQUEST['d']) ? ';d' : '';
@@ -169,13 +177,17 @@ function ViewModlog()
 	}
 
 	// Count the amount of entries in total for pagination.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
-		FROM {$db_prefix}log_actions AS lm
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)
-		WHERE" . (!empty($search_params['string']) ? " INSTR($search_params[type_sql], '$search_params[string]')
-			AND" : '') . " $user_info[modlog_query]", __FILE__, __LINE__);
+		FROM {db_prefix}log_actions AS lm
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)
+		WHERE' . (!empty($search_params['string']) ? ' INSTR(' . $search_params['type_sql'] . ', \'' . $search_params['string'] . '\')
+			AND' : '') . ' ' . $user_info['modlog_query'],
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 	list ($context['entry_count']) = $smfFunc['db_fetch_row']($result);
 	$smfFunc['db_free_result']($result);
 
@@ -183,7 +195,7 @@ function ViewModlog()
 	$context['page_index'] = constructPageIndex($scripturl . '?action=moderate;area=modlog;order=' . $context['order'] . $context['dir'] . (!empty($context['search_params']) ? ';params=' . $context['search_params'] : ''), $_REQUEST['start'], $context['entry_count'], $context['displaypage']);
 	$context['start'] = $_REQUEST['start'];
 
-	getModLogEntries((!empty($search_params['string']) ? " INSTR($search_params[type_sql], '$search_params[string]') AND " : '') . $user_info['modlog_query'], $orderType . (isset($_REQUEST['d']) ? '' : ' DESC'), array($context['start'], $context['displaypage']));
+	getModLogEntries((!empty($search_params['string']) ? ' INSTR(' . $search_params['type_sql'] . ', \'' . $search_params['string'] . '\') AND ' : '') . $user_info['modlog_query'], $orderType . (isset($_REQUEST['d']) ? '' : ' DESC'), array($context['start'], $context['displaypage']));
 }
 
 
@@ -207,17 +219,21 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 	$seeIP = allowedTo('moderate_forum');
 
 	// Here we have the query getting the log details.
-	$result = $smfFunc['db_query']('', "
+	$result = $smfFunc['db_query']('', '
 		SELECT
 			lm.id_action, lm.id_member, lm.ip, lm.log_time, lm.action, lm.id_board, lm.id_topic, lm.id_msg, lm.extra,
 			mem.real_name, mg.group_name
-		FROM {$db_prefix}log_actions AS lm
-			LEFT JOIN {$db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-			LEFT JOIN {$db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)"
+		FROM {db_prefix}log_actions AS lm
+			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)'
 			. (!empty($search_param) ? '
 			WHERE ' . $search_param : '') . (!empty($order) ? '
-		ORDER BY ' . $order : '') . "
-		$limit", __FILE__, __LINE__);
+		ORDER BY ' . $order : '') . '
+		' . $limit,
+		array(
+			'inject_int_1' => 0,
+		)
+	);
 
 	// Arrays for decoding objects into.
 	$topics = array();
@@ -296,11 +312,15 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 
 	if (!empty($boards))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_board, name
-			FROM {$db_prefix}boards
-			WHERE id_board IN (" . implode(', ', array_keys($boards)) . ")
-			LIMIT " . count(array_keys($boards)), __FILE__, __LINE__);
+			FROM {db_prefix}boards
+			WHERE id_board IN ({array_int:inject_array_int_1})
+			LIMIT ' . count(array_keys($boards)),
+			array(
+				'inject_array_int_1' => array_keys($boards),
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			foreach ($boards[$row['id_board']] as $action)
@@ -319,12 +339,16 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 
 	if (!empty($topics))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT ms.subject, t.id_topic
-			FROM {$db_prefix}topics AS t
-				INNER JOIN {$db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
-			WHERE t.id_topic IN (" . implode(', ', array_keys($topics)) . ")
-			LIMIT " . count(array_keys($topics)), __FILE__, __LINE__);
+			FROM {db_prefix}topics AS t
+				INNER JOIN {db_prefix}messages AS ms ON (ms.id_msg = t.id_first_msg)
+			WHERE t.id_topic IN ({array_int:inject_array_int_1})
+			LIMIT ' . count(array_keys($topics)),
+			array(
+				'inject_array_int_1' => array_keys($topics),
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			foreach ($topics[$row['id_topic']] as $action)
@@ -351,11 +375,15 @@ function getModLogEntries($search_param = '', $order= '', $limit = 0)
 
 	if (!empty($members))
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT real_name, id_member
-			FROM {$db_prefix}members
-			WHERE id_member IN (" . implode(', ', array_keys($members)) . ")
-			LIMIT " . count(array_keys($members)), __FILE__, __LINE__);
+			FROM {db_prefix}members
+			WHERE id_member IN ({array_int:inject_array_int_1})
+			LIMIT ' . count(array_keys($members)),
+			array(
+				'inject_array_int_1' => array_keys($members),
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			foreach ($members[$row['id_member']] as $action)

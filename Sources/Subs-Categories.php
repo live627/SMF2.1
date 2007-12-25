@@ -73,10 +73,13 @@ function modifyCategory($category_id, $catOptions)
 			$cats[] = $category_id;
 
 		// Grab the categories sorted by cat_order.
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_cat, cat_order
-			FROM {$db_prefix}categories
-			ORDER BY cat_order", __FILE__, __LINE__);
+			FROM {db_prefix}categories
+			ORDER BY cat_order',
+			array(
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if ($row['id_cat'] != $category_id)
@@ -90,10 +93,15 @@ function modifyCategory($category_id, $catOptions)
 		// Set the new order for the categories.
 		foreach ($cats as $index => $cat)
 			if ($index != $cat_order[$cat])
-				$smfFunc['db_query']('', "
-					UPDATE {$db_prefix}categories
-					SET cat_order = $index
-					WHERE id_cat = $cat", __FILE__, __LINE__);
+				$smfFunc['db_query']('', '
+					UPDATE {db_prefix}categories
+					SET cat_order = {int:inject_int_1}
+					WHERE id_cat = {int:inject_int_2}',
+					array(
+						'inject_int_1' => $index,
+						'inject_int_2' => $cat,
+					)
+				);
 
 		// If the category order changed, so did the board order.
 		require_once($sourcedir . '/Subs-Boards.php');
@@ -109,12 +117,16 @@ function modifyCategory($category_id, $catOptions)
 
 	// Do the updates (if any).
 	if (!empty($catUpdates))
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}categories
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}categories
 			SET 
-				" . implode(',
-				', $catUpdates) . "
-			WHERE id_cat = $category_id", __FILE__, __LINE__);
+				' . implode(',
+				', $catUpdates) . '
+			WHERE id_cat = {int:inject_int_1}',
+			array(
+				'inject_int_1' => $category_id,
+			)
+		);
 }
 
 // Create a new category.
@@ -133,13 +145,16 @@ function createCategory($catOptions)
 		$catOptions['is_collapsible'] = true;
 
 	// Add the category to the database.
-	$smfFunc['db_query']('', "
-		INSERT INTO {$db_prefix}categories
+	$smfFunc['db_query']('', '
+		INSERT INTO {db_prefix}categories
 			(name)
-		VALUES (SUBSTRING('$catOptions[cat_name]', 1, 48))", __FILE__, __LINE__);
+		VALUES (SUBSTRING(\'' . $catOptions['cat_name'] . '\', 1, 48))',
+		array(
+		)
+	);
 
 	// Grab the new category ID.
-	$category_id = $smfFunc['db_insert_id']("{$db_prefix}categories", 'id_cat');
+	$category_id = $smfFunc['db_insert_id']( $db_prefix . 'categories', 'id_cat');
 
 	// Set the given properties to the newly created category.
 	modifyCategory($category_id, $catOptions);
@@ -158,10 +173,14 @@ function deleteCategories($categories, $moveBoardsTo = null)
 	// With no category set to move the boards to, delete them all.
 	if ($moveBoardsTo === null)
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT id_board
-			FROM {$db_prefix}boards
-			WHERE id_cat IN (" . implode(', ', $categories) . ')', __FILE__, __LINE__);
+			FROM {db_prefix}boards
+			WHERE id_cat IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $categories,
+			)
+		);
 		$boards_inside = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$boards_inside[] = $row['id_board'];
@@ -177,20 +196,33 @@ function deleteCategories($categories, $moveBoardsTo = null)
 
 	// Move the boards inside the categories to a safe category.
 	else
-		$smfFunc['db_query']('', "
-			UPDATE {$db_prefix}boards
-			SET id_cat = $moveBoardsTo
-			WHERE id_cat IN (" . implode(', ', $categories) . ')', __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			UPDATE {db_prefix}boards
+			SET id_cat = {int:inject_int_1}
+			WHERE id_cat IN ({array_int:inject_array_int_1})',
+			array(
+				'inject_array_int_1' => $categories,
+				'inject_int_1' => $moveBoardsTo,
+			)
+		);
 
 	// Noone will ever be able to collapse these categories anymore.
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}collapsed_categories
-		WHERE id_cat IN (" . implode(', ', $categories) . ")", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}collapsed_categories
+		WHERE id_cat IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $categories,
+		)
+	);
 
 	// Do the deletion of the category itself
-	$smfFunc['db_query']('', "
-		DELETE FROM {$db_prefix}categories
-		WHERE id_cat IN (" . implode(', ', $categories) . ")", __FILE__, __LINE__);
+	$smfFunc['db_query']('', '
+		DELETE FROM {db_prefix}categories
+		WHERE id_cat IN ({array_int:inject_array_int_1})',
+		array(
+			'inject_array_int_1' => $categories,
+		)
+	);
 
 	// Get all boards back into the right order.
 	reorderBoards();
@@ -204,21 +236,32 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 	// Collapse or expand the categories.
 	if ($new_status === 'collapse' || $new_status === 'expand')
 	{
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}collapsed_categories
-			WHERE id_cat IN (" . implode(', ', $categories) . ')' . ($members === null ? '' : "
-				AND id_member IN (" . implode(', ', $members) . ')'), __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}collapsed_categories
+			WHERE id_cat IN ({array_int:inject_array_int_1})' . ($members === null ? '' : '
+				AND id_member IN ({array_int:inject_array_int_2})'),
+			array(
+				'inject_array_int_1' => $categories,
+				'inject_array_int_2' => $members,
+			)
+		);
 
 		if ($new_status === 'collapse')
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}collapsed_categories
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}collapsed_categories
 					(id_cat, id_member)
 				SELECT c.id_cat, mem.id_member
-				FROM {$db_prefix}categories AS c
-					INNER JOIN {$db_prefix}members AS mem ON (" . ($members === null ? '1=1' : "
-						mem.id_member IN (" . implode(', ', $members) . ')') . ")
-				WHERE c.id_cat IN (" . implode(', ', $categories) . ')' . ($check_collapsable ? "
-					AND c.can_collapse = 1" : ''), __FILE__, __LINE__);
+				FROM {db_prefix}categories AS c
+					INNER JOIN {db_prefix}members AS mem ON (' . ($members === null ? '1=1' : '
+						mem.id_member IN ({array_int:inject_array_int_1})') . ')
+				WHERE c.id_cat IN ({array_int:inject_array_int_2})' . ($check_collapsable ? '
+					AND c.can_collapse = {int:inject_int_1}' : ''),
+				array(
+					'inject_array_int_1' => $members,
+					'inject_array_int_2' => $categories,
+					'inject_int_1' => 1,
+				)
+			);
 	}
 
 	// Toggle the categories: collapsed get expanded and expanded get collapsed.
@@ -229,36 +272,48 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 			'insert' => array(),
 			'remove' => array(),
 		);
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SELECT mem.id_member, c.id_cat, IFNULL(cc.id_cat, 0) AS is_collapsed, c.can_collapse
-			FROM {$db_prefix}members AS mem
-				INNER JOIN {$db_prefix}categories AS c ON (c.id_cat IN (" . implode(', ', $categories) . '))
+			FROM {db_prefix}members AS mem
+				INNER JOIN {db_prefix}categories AS c ON (c.id_cat IN ({array_int:inject_array_int_1}))
 				LEFT JOIN {$db_prefix}collapsed_categories AS cc ON (cc.id_cat = c.id_cat AND cc.id_member = mem.id_member)
-			' . ($members === null ? '' : "
-				WHERE mem.id_member IN (" . implode(', ', $members) . ')'), __FILE__, __LINE__);
+			' . ($members === null ? '' : '
+				WHERE mem.id_member IN ({array_int:inject_array_int_2})'),
+			array(
+				'inject_array_int_1' => $categories,
+				'inject_array_int_2' => $members,
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
 			if (empty($row['is_collapsed']) && (!empty($row['can_collapse']) || !$check_collapsable))
-				$updates['insert'][] = "$row[id_member], $row[id_cat]";
+				$updates['insert'][] = $row['id_member'] . ', ' . $row['id_cat'];
 			elseif (!empty($row['is_collapsed']))
-				$updates['remove'][] = "$row[id_member] AND id_cat = $row[id_cat]";
+				$updates['remove'][] = $row['id_member'] . ' AND id_cat = ' . $row['id_cat'];
 		}
 		$smfFunc['db_free_result']($request);
 
 		// Collapse the ones that were originally expanded...
 		if (!empty($updates['insert']))
-			$smfFunc['db_query']('', "
-				INSERT INTO {$db_prefix}collapsed_categories
+			$smfFunc['db_query']('', '
+				INSERT INTO {db_prefix}collapsed_categories
 					(id_cat, id_member)
 				VALUES
-					(" . implode("),
-					(", $updates['insert']) . ')', __FILE__, __LINE__);
+					(' . implode('),
+					(', $updates['insert']) . ')',
+				array(
+				)
+			);
 		
 		// And expand the ones that were originally collapsed.
 		if (!empty($updates['remove']))
-			$smfFunc['db_query']('', "
-				DELETE FROM {$db_prefix}collapsed_categories
-				WHERE (id_member = " . implode(') OR (id_member = ', $updates['remove']) . ")", __FILE__, __LINE__);
+			$smfFunc['db_query']('', '
+				DELETE FROM {db_prefix}collapsed_categories
+				WHERE (id_member = {int:inject_int_1})',
+				array(
+					'inject_int_1' => implode(') OR (id_member = ', $updates['remove']),
+				)
+			);
 	}
 }
 

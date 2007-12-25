@@ -428,7 +428,7 @@ function htmltrim__recursive($var, $level = 0)
 	
 	// Remove spaces (32), tabs (9), returns (13, 10, and 11), nulls (0), and hard spaces. (160)
 	if (!is_array($var))
-		return isset($smfFunc) ? $smfFunc['htmltrim']($var) : trim($var, " \t\n\r\x0B\0\xA0");
+		return isset($smfFunc) ? $smfFunc['htmltrim']($var) : trim($var, ' ' . "\t\n\r\x0B" . '\0' . "\xA0");
 
 	// Go through all the elements and remove the whitespace.
 	foreach ($var as $k => $v)
@@ -495,9 +495,9 @@ function ob_sessrewrite($buffer)
 	{
 		// Let's do something special for session ids!
 		if (defined('SID') && SID != '')
-			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html?' . SID . '\$2\"'", $buffer);
+			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?(?:' . SID . ';)((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', '\'\"\' . \$scripturl . \'/\' . strtr(\'\$1\', \'&;=\', \'//,\') . \'.html?\' . SID . \'\$2\"\'', $buffer);
 		else
-			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', "'\"' . \$scripturl . '/' . strtr('\$1', '&;=', '//,') . '.html\$2\"'", $buffer);
+			$buffer = preg_replace('/"' . preg_quote($scripturl, '/') . '\?((?:board|topic)=[^#"]+?)(#[^"]*?)?"/e', '\'\"\' . \$scripturl . \'/\' . strtr(\'\$1\', \'&;=\', \'//,\') . \'.html\$2\"\'', $buffer);
 	}
 
 	// Return the changed buffer.

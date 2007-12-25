@@ -206,9 +206,12 @@ function EditSearchMethod()
 	// Detect whether a fulltext index is set.
 	if ($context['supports_fulltext'])
 	{
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SHOW INDEX
-			FROM {$db_prefix}messages", false, false);
+			FROM {db_prefix}messages',
+			array(
+			)
+		);
 		$context['fulltext_index'] = '';
 		if ($request !== false || $smfFunc['db_num_rows']($request) != 0)
 		{
@@ -221,9 +224,12 @@ function EditSearchMethod()
 				$context['fulltext_index'] = array_unique($context['fulltext_index']);
 		}
 
-		$request = $smfFunc['db_query']('', "
+		$request = $smfFunc['db_query']('', '
 			SHOW COLUMNS
-			FROM {$db_prefix}messages", false, false);
+			FROM {db_prefix}messages',
+			array(
+			)
+		);
 		if ($request !== false)
 		{
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -233,14 +239,20 @@ function EditSearchMethod()
 		}
 	
 		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SHOW TABLE STATUS
-				FROM `" . strtr($match[1], array('`' => '')) . "`
-				LIKE '" . str_replace('_', '\_', $match[2]) . "messages'", false, false);
+				FROM `' . strtr($match[1], array('`' => '')) . '`
+				LIKE \'' . str_replace('_', '\_', $match[2]) . 'messages\'',
+				array(
+				)
+			);
 		else
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SHOW TABLE STATUS
-				LIKE '" . str_replace('_', '\_', $db_prefix) . "messages'", false, false);
+				LIKE \'' . str_replace('_', '\_', '{db_prefix}') . 'messages\'',
+				array(
+				)
+			);
 	
 		if ($request !== false)
 		{
@@ -256,13 +268,19 @@ function EditSearchMethod()
 		checkSession('get');
 
 		// Make sure it's gone before creating it.
-		$smfFunc['db_query']('', "
-			ALTER TABLE {$db_prefix}messages
-			DROP INDEX body", false, false);
+		$smfFunc['db_query']('', '
+			ALTER TABLE {db_prefix}messages
+			DROP INDEX body',
+			array(
+			)
+		);
 
-		$smfFunc['db_query']('', "
-			ALTER TABLE {$db_prefix}messages
-			ADD FULLTEXT body (body)", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			ALTER TABLE {db_prefix}messages
+			ADD FULLTEXT body (body)',
+			array(
+			)
+		);
 
 		$context['fulltext_index'] = 'body';
 	}
@@ -270,10 +288,13 @@ function EditSearchMethod()
 	{
 		checkSession('get');
 
-		$smfFunc['db_query']('', "
-			ALTER TABLE {$db_prefix}messages
-			DROP INDEX " . implode(',
-			DROP INDEX ', $context['fulltext_index']), __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			ALTER TABLE {db_prefix}messages
+			DROP INDEX ' . implode(',
+			DROP INDEX ', $context['fulltext_index']),
+			array(
+			)
+		);
 
 		$context['fulltext_index'] = '';
 
@@ -288,11 +309,11 @@ function EditSearchMethod()
 		checkSession('get');
 
 		db_extend();
-		$tables = $smfFunc['db_list_tables'](false, "{$db_prefix}log_search_words");
+		$tables = $smfFunc['db_list_tables'](false, $db_prefix . 'log_search_words');
 		if (!empty($tables))
 		{
-			$smfFunc['db_search_query']('drop_words_table', "
-				DROP TABLE {$db_prefix}log_search_words", __FILE__, __LINE__);
+			$smfFunc['db_search_query']('drop_words_table', '
+				DROP TABLE ' . $db_prefix . 'log_search_words', __FILE__, __LINE__);
 		}
 
 		updateSettings(array(
@@ -327,14 +348,20 @@ function EditSearchMethod()
 	if ($db_type == 'mysql')
 	{
 		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) != 0)
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SHOW TABLE STATUS
-				FROM `" . strtr($match[1], array('`' => '')) . "`
-				LIKE '" . str_replace('_', '\_', $match[2]) . "messages'", false, false);
+				FROM `' . strtr($match[1], array('`' => '')) . '`
+				LIKE \'' . str_replace('_', '\_', $match[2]) . 'messages\'',
+				array(
+				)
+			);
 		else
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SHOW TABLE STATUS
-				LIKE '" . str_replace('_', '\_', $db_prefix) . "messages'", false, false);
+				LIKE \'' . str_replace('_', '\_', '{db_prefix}') . 'messages\'',
+				array(
+				)
+			);
 		if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
 		{
 			// Only do this if the user has permission to execute this query.
@@ -347,14 +374,20 @@ function EditSearchMethod()
 	
 		// Now check the custom index table, if it exists at all.
 		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SHOW TABLE STATUS
-				FROM `" . strtr($match[1], array('`' => '')) . "`
-				LIKE '" . str_replace('_', '\_', $match[2]) . "log_search_words'", false, false);
+				FROM `' . strtr($match[1], array('`' => '')) . '`
+				LIKE \'' . str_replace('_', '\_', $match[2]) . 'log_search_words\'',
+				array(
+				)
+			);
 		else
-			$request = $smfFunc['db_query']('', "
+			$request = $smfFunc['db_query']('', '
 				SHOW TABLE STATUS
-				LIKE '" . str_replace('_', '\_', $db_prefix) . "log_search_words'", false, false);
+				LIKE \'' . str_replace('_', '\_', '{db_prefix}') . 'log_search_words\'',
+				array(
+				)
+			);
 		if ($request !== false && $smfFunc['db_num_rows']($request) == 1)
 		{
 			// Only do this if the user has permission to execute this query.
@@ -436,11 +469,11 @@ function CreateMessageIndex()
 		if ($context['start'] === 0)
 		{
 			db_extend();
-			$tables = $smfFunc['db_list_tables'](false, "{$db_prefix}log_search_words");
+			$tables = $smfFunc['db_list_tables'](false, $db_prefix . 'log_search_words');
 			if (!empty($tables))
 			{
-				$smfFunc['db_search_query']('drop_words_table', "
-					DROP TABLE {$db_prefix}log_search_words", __FILE__, __LINE__);
+				$smfFunc['db_search_query']('drop_words_table', '
+					DROP TABLE ' . $db_prefix . 'log_search_words', __FILE__, __LINE__);
 			}
 
 			$smfFunc['db_create_word_search']($index_properties[$context['index_settings']['bytes_per_word']]['column_definition']);
@@ -459,10 +492,14 @@ function CreateMessageIndex()
 			'todo' => 0,
 		);
 
-		$request = $smfFunc['db_query']('', "
-			SELECT id_msg >= $context[start] AS todo, COUNT(*) AS num_mesages
-			FROM {$db_prefix}messages
-			GROUP BY todo", __FILE__, __LINE__);
+		$request = $smfFunc['db_query']('', '
+			SELECT id_msg >= {int:inject_int_1} AS todo, COUNT(*) AS num_mesages
+			FROM {db_prefix}messages
+			GROUP BY todo',
+			array(
+				'inject_int_1' => $context['start'],
+			)
+		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$num_messages[empty($row['todo']) ? 'done' : 'todo'] = $row['num_mesages'];
 
@@ -479,11 +516,14 @@ function CreateMessageIndex()
 			while (time() < $stop)
 			{
 				$inserts = array();
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT id_msg, body
-					FROM {$db_prefix}messages
-					WHERE id_msg BETWEEN $context[start] AND " . ($context['start'] + $messages_per_batch - 1) . "
-					LIMIT $messages_per_batch", __FILE__, __LINE__);
+					FROM {db_prefix}messages
+					WHERE id_msg BETWEEN ' . $context['start'] . ' AND ' . ($context['start'] + $messages_per_batch - 1) . '
+					LIMIT ' . $messages_per_batch,
+					array(
+					)
+				);
 				$forced_break = false;
 				$number_processed = 0;
 				while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -509,7 +549,7 @@ function CreateMessageIndex()
 
 				if (!empty($inserts))
 					$smfFunc['db_insert']('ignore',
-						"{$db_prefix}log_search_words",
+						$db_prefix . 'log_search_words',
 						array('id_word', 'id_msg'),
 						$inserts,
 						array('id_word', 'id_msg'), __FILE__, __LINE__
@@ -543,12 +583,15 @@ function CreateMessageIndex()
 
 			while (time() < $stop)
 			{
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT id_word, COUNT(id_word) AS num_words
-					FROM {$db_prefix}log_search_words
-					WHERE id_word BETWEEN $context[start] AND " . ($context['start'] + $index_properties[$context['index_settings']['bytes_per_word']]['step_size'] - 1) . "
+					FROM {db_prefix}log_search_words
+					WHERE id_word BETWEEN ' . $context['start'] . ' AND ' . ($context['start'] + $index_properties[$context['index_settings']['bytes_per_word']]['step_size'] - 1) . '
 					GROUP BY id_word
-					HAVING COUNT(id_word) > $max_messages", __FILE__, __LINE__);
+					HAVING COUNT(id_word) > ' . $max_messages,
+					array(
+					)
+				);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$stop_words[] = $row['id_word'];
 				$smfFunc['db_free_result']($request);
@@ -556,9 +599,12 @@ function CreateMessageIndex()
 				updateSettings(array('search_stopwords' => implode(',', $stop_words)));
 
 				if (!empty($stop_words))
-					$smfFunc['db_query']('', "
-						DELETE FROM {$db_prefix}log_search_words
-						WHERE id_word in (" . implode(', ', $stop_words) . ')', __FILE__, __LINE__);
+					$smfFunc['db_query']('', '
+						DELETE FROM {db_prefix}log_search_words
+						WHERE id_word in (' . implode(', ', $stop_words) . ')',
+						array(
+						)
+					);
 
 				$context['start'] += $index_properties[$context['index_settings']['bytes_per_word']]['step_size'];
 				if ($context['start'] > $index_properties[$context['index_settings']['bytes_per_word']]['max_size'])
@@ -577,9 +623,13 @@ function CreateMessageIndex()
 		$context['sub_template'] = 'create_index_done';
 
 		updateSettings(array('search_index' => 'custom', 'search_custom_index_config' => serialize($context['index_settings'])));
-		$smfFunc['db_query']('', "
-			DELETE FROM {$db_prefix}settings
-			WHERE variable = 'search_custom_index_resume'", __FILE__, __LINE__);
+		$smfFunc['db_query']('', '
+			DELETE FROM {db_prefix}settings
+			WHERE variable = {string:inject_string_1}',
+			array(
+				'inject_string_1' => 'search_custom_index_resume',
+			)
+		);
 	}
 }
 

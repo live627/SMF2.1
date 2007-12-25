@@ -112,17 +112,17 @@ function bbc_to_html($text)
 
 	// Note that IE doesn't understand spans really - make them something "legacy"
 	$working_html = array(
-		'~<del>(.+?)</del>~i' => "<strike>$1</strike>",
-		'~<span\sstyle="text-decoration:\sunderline;">(.+?)</span>~i' => "<u>$1</u>",
-		'~<span\sstyle="color:\s*([#\d\w]+);">(.+?)</span>~i' => "<font color=\"$1\">$2</font>",
-		'~<span\sstyle="font-family:\s*([#\d\w\s]+);">(.+?)</span>~i' => "<font face=\"$1\">$2</font>",
-		'~<div\sstyle="text-align:\s*(left|center|right);">(.+?)</div>~i' => "<p align=\"$1\">$2</p>",
+		'~<del>(.+?)</del>~i' => '<strike>' . "$" .'1</strike>',
+		'~<span\sstyle="text-decoration:\sunderline;">(.+?)</span>~i' => '<u>' . "$" .'1</u>',
+		'~<span\sstyle="color:\s*([#\d\w]+);">(.+?)</span>~i' => '<font color="' . "$" .'1">' . "$" .'2</font>',
+		'~<span\sstyle="font-family:\s*([#\d\w\s]+);">(.+?)</span>~i' => '<font face="' . "$" .'1">' . "$" .'2</font>',
+		'~<div\sstyle="text-align:\s*(left|center|right);">(.+?)</div>~i' => '<p align="' . "$" .'1">' . "$" .'2</p>',
 	);
 	$text = preg_replace(array_keys($working_html), array_values($working_html), $text);
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', "'<' . \$smfFunc['db_unescape_string']('$2') . 'border=\"0\" alt=\"\" title=\"\" onresizestart=\"return false;\" id=\"smiley_' . \$i++ . '_$3\" />'", $text);
+	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', '\'<\' . ' . "\$" .'smfFunc[\'db_unescape_string\'](\'' . "$" .'2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_' . "$" .'3" />\'', $text);
 
 	return $text;
 }
@@ -167,10 +167,14 @@ function html_to_bbc($text)
 
 			if (!empty($names))
 			{
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT code, filename
-					FROM {$db_prefix}smileys
-					WHERE filename IN (" . implode(', ', $names) . ")", __FILE__, __LINE__);
+					FROM {db_prefix}smileys
+					WHERE filename IN ({array_string:inject_array_string_1})',
+					array(
+						'inject_array_string_1' => $names,
+					)
+				);
 				$mappings = array();
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$mappings[$row['filename']] = $row['code'];
@@ -396,13 +400,13 @@ function html_to_bbc($text)
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~(<br\s*/*>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', "'[list' . ('$2' == 'ol' || '$2' == 'OL' ? ' type=decimal' : (strlen('$4') > 1 ? ' type=$4' : '')) . ']$5[/list]'", $text);
+		$text = preg_replace('~(<br\s*/*>\s*){0,1}<(ol|ul)[^<>]*?(listtype="([^<>"\s]+)"[^<>]*?)*>(.+?)</(ol|ul)>~ie', '\'[list\' . (\'' . "$" .'2\' == \'ol\' || \'' . "$" .'2\' == \'OL\' ? \' type=decimal\' : (strlen(\'' . "$" .'4\') > 1 ? \' type=' . "$" .'4\' : \'\')) . \']' . "$" .'5[/list]\'', $text);
 	}
 	$last_text = '';
 	while ($text != $last_text)
 	{
 		$last_text = $text;
-		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', "[li]$1[/li]", $text);
+		$text = preg_replace('~<li\s*[^<>]*?>(.+?)</li>~i', '[li]' . "$" .'1[/li]', $text);
 	}
 	// What about URL's - the pain in the ass of the tag world.
 	while (preg_match('~<a\s+([^<>]*)>([^<>]*)</a>~i', $text, $matches) != false)
@@ -649,10 +653,13 @@ function getMessageIcons($board_id)
 	{
 		if (($temp = cache_get_data('posting_icons-' . $board_id, 480)) == null)
 		{
-			$request = $smfFunc['db_query']('select_message_icons', "
+			$request = $smfFunc['db_query']('select_message_icons', '
 				SELECT title, filename
-				FROM {$db_prefix}message_icons
-				WHERE id_board IN (0, $board_id)", __FILE__, __LINE__);
+				FROM {db_prefix}message_icons
+				WHERE id_board IN (0, ' . $board_id . ')',
+				array(
+				)
+			);
 			$icon_data = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$icon_data[] = $row;
@@ -1080,11 +1087,14 @@ function create_control_richedit($editorOptions)
 		{
 			if (($temp = cache_get_data('posting_smileys', 480)) == null)
 			{
-				$request = $smfFunc['db_query']('', "
+				$request = $smfFunc['db_query']('', '
 					SELECT code, filename, description, smiley_row, hidden
-					FROM {$db_prefix}smileys
+					FROM {db_prefix}smileys
 					WHERE hidden IN (0, 2)
-					ORDER BY smiley_row, smiley_order", __FILE__, __LINE__);
+					ORDER BY smiley_row, smiley_order',
+					array(
+					)
+				);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 				{
 					$row['filename'] = htmlspecialchars($row['filename']);
@@ -1212,13 +1222,17 @@ function AutoSuggest_Search_Member()
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	// Find the member.
-	$request = $smfFunc['db_query']('', "
+	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name
-		FROM {$db_prefix}members
-		WHERE real_name LIKE '$_REQUEST[search]'" . (!empty($context['search_param']['buddies']) ? '
-			AND id_member IN (' . implode(', ', $user_info['buddies']) . ')' : '') . "
+		FROM {db_prefix}members
+		WHERE real_name LIKE \'' . $_REQUEST['search'] . '\'' . (!empty($context['search_param']['buddies']) ? '
+			AND id_member IN ({array_int:inject_array_int_1})' : '') . '
 			AND is_activated IN (1, 11)
-		LIMIT " . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'), __FILE__, __LINE__);
+		LIMIT ' . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'),
+		array(
+			'inject_array_int_1' => $user_info['buddies'],
+		)
+	);
 	$xml_data = array(
 		'members' => array(
 			'identifier' => 'member',
