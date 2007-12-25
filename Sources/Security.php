@@ -229,6 +229,7 @@ function is_not_banned($forceCheck = false)
 		);
 
 		$ban_query = array();
+		$ban_query_vars = array('current_time' => time());
 		$flag_is_activated = false;
 
 		// Check both IP addresses.
@@ -247,7 +248,10 @@ function is_not_banned($forceCheck = false)
 				{
 					$hostname = host_from_ip($user_info[$ip_number]);
 					if (strlen($hostname) > 0)
-						$ban_query[] = '(\'' . $smfFunc['db_escape_string']($hostname) . '\' LIKE bi.hostname)';
+					{
+						$ban_query[] = '({string:hostname} LIKE bi.hostname)';
+						$ban_query_vars['hostname'] = $hostname;
+					}
 				}
 			}
 			// We use '255.255.255.255' for 'unknown' since it's not valid anyway.
@@ -260,11 +264,17 @@ function is_not_banned($forceCheck = false)
 
 		// Is their email address banned?
 		if (strlen($user_info['email']) != 0)
-			$ban_query[] = '(\'' . $smfFunc['db_escape_string']($user_info['email']) . '\' LIKE bi.email_address)';
+		{
+			$ban_query[] = '({string:email} LIKE bi.email_address)';
+			$ban_query_vars['email'] = $user_info['email'];
+		}
 
 		// How about this user?
 		if (!$user_info['is_guest'] && !empty($user_info['id']))
-			$ban_query[] = 'bi.id_member = ' . $user_info['id'];
+		{
+			$ban_query[] = 'bi.id_member = {int:id_member}';
+			$ban_query_vars['id_member'] = $user_info['id'];
+		}
 
 		// Check the ban, if there's information.
 		if (!empty($ban_query))
@@ -279,11 +289,11 @@ function is_not_banned($forceCheck = false)
 				SELECT bi.id_ban, bi.email_address, bi.id_member, bg.cannot_access, bg.cannot_register,
 					bg.cannot_post, bg.cannot_login, bg.reason, IFNULL(bg.expire_time, 0) AS expire_time
 				FROM {db_prefix}ban_items AS bi
-					INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > {int:inject_int_1}))
+					INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > {int:current_time}))
 				WHERE 
 					(' . implode(' OR ', $ban_query) . ')',
 				array(
-					'inject_int_1' => time(),
+					$ban_query_vars
 				)
 			);
 			// Store every type of ban that applies to you in your session.
@@ -327,14 +337,13 @@ function is_not_banned($forceCheck = false)
 			SELECT bi.id_ban, bg.reason
 			FROM {db_prefix}ban_items AS bi
 				INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
-			WHERE bi.id_ban IN ({array_int:inject_array_int_1})
-				AND (bg.expire_time IS NULL OR bg.expire_time > {int:inject_int_1})
-				AND bg.cannot_access = {int:inject_int_2}
+			WHERE bi.id_ban IN ({array_int:ban_list})
+				AND (bg.expire_time IS NULL OR bg.expire_time > {int:current_time})
+				AND bg.cannot_access = 1
 			LIMIT ' . count($bans),
 			array(
-				'inject_array_int_1' => $bans,
-				'inject_int_1' => time(),
-				'inject_int_2' => 1,
+				'ban_list' => $bans,
+				'current_time' => time(),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -539,12 +548,11 @@ function log_ban($ban_ids = array(), $email = null)
 	if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 		return;
 
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}log_banned
-			(id_member, ip, email, log_time)
-		VALUES (' . $user_info['id'] . ', SUBSTRING(\'' . $user_info['ip'] . '\', 1, 16), \'' . ($email === null ? ($user_info['is_guest'] ? '' : $user_info['email']) : $email) . '\', ' . time() . ')',
-		array(
-		)
+	$smfFunc['db_new_insert']('',
+		$db_prefix . 'log_banned',
+		array('id_member' => 'int', 'ip' => 'string-16', 'email' => 'string', 'log_time' => 'int'),
+		array($user_info['id'], $user_info['ip'], ($email === null ? ($user_info['is_guest'] ? '' : $user_info['email']) : $email), time()),
+		array('id_ban_log')
 	);
 
 	// One extra point for these bans.
@@ -552,9 +560,9 @@ function log_ban($ban_ids = array(), $email = null)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}ban_items
 			SET hits = hits + 1
-			WHERE id_ban IN ({array_int:inject_array_int_1})',
+			WHERE id_ban IN ({array_int:ban_ids})',
 			array(
-				'inject_array_int_1' => $ban_ids,
+				'ban_ids' => $ban_ids,
 			)
 		);
 }
@@ -577,10 +585,10 @@ function isBannedEmail($email, $restriction, $error)
 		SELECT bi.id_ban, bg.' . $restriction . ', bg.cannot_access, bg.reason
 		FROM {db_prefix}ban_items AS bi
 			INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
-		WHERE \'' . $email . '\' LIKE bi.email_address
-			AND (bg.' . $restriction . ' = 1 OR bg.cannot_access = {int:inject_int_1})',
+		WHERE {string:email} LIKE bi.email_address
+			AND (bg.' . $restriction . ' = 1 OR bg.cannot_access = 1)',
 		array(
-			'inject_int_1' => 1,
+			'email' => $email,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -773,16 +781,16 @@ function allowedTo($permission, $boards = null)
 		FROM {db_prefix}boards AS b
 			INNER JOIN {db_prefix}board_permissions AS bp ON (bp.id_profile = b.id_profile)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
-		WHERE b.id_board IN ({array_int:inject_array_int_1})
-			AND bp.id_group IN ({array_int:inject_array_int_2}, 3)
-			AND bp.permission ' . (is_array($permission) ? 'IN (\'' . implode('\', \'', $permission) . '\')' : ' = \'' . $permission . '\'') . '
-			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:inject_int_1})
+		WHERE b.id_board IN ({array_int:board_list})
+			AND bp.id_group IN ({array_int:group_list}, 3)
+			AND bp.permission {raw:permission_list}
+			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)
 		GROUP BY b.id_board',
 		array(
 			'current_member' => $user_info['id'],
-			'inject_array_int_1' => $boards,
-			'inject_array_int_2' => $user_info['groups'],
-			'inject_int_1' => 3,
+			'board_list' => $boards,
+			'group_list' => $user_info['groups'],
+			'permission_list' => (is_array($permission) ? 'IN (\'' . implode('\', \'', $permission) . '\')' : ' = \'' . $permission . '\''),
 		)
 	);
 
@@ -867,14 +875,13 @@ function boardsAllowedTo($permission)
 		FROM {db_prefix}board_permissions AS bp
 			INNER JOIN {db_prefix}boards AS b ON (b.id_profile = bp.id_profile)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
-		WHERE bp.id_group IN ({array_int:inject_array_int_1}, 3)
-			AND bp.permission = {string:inject_string_1}
-			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:inject_int_1})',
+		WHERE bp.id_group IN ({array_int:group_list}, 3)
+			AND bp.permission = {string:permission}
+			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)',
 		array(
 			'current_member' => $user_info['id'],
-			'inject_array_int_1' => $groups,
-			'inject_int_1' => 3,
-			'inject_string_1' => $permission,
+			'group_list' => $groups,
+			'permission' => $permission,
 		)
 	);
 	$boards = array();

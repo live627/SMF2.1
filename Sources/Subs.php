@@ -348,14 +348,14 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 
 			$inserts = array();
 			foreach ($parameter2 as $word)
-				$inserts[] = array( '\'' . $word . '\'', $parameter1);
+				$inserts[] = array($word, $parameter1);
 
 			if (!empty($inserts))
-				$smfFunc['db_insert']('ignore',
+				$smfFunc['db_new_insert']('ignore',
 					$db_prefix . 'log_search_subjects',
-					array('word', 'id_topic'),
+					array('word' => 'string', 'id_topic' => 'int'),
 					$inserts,
-					array('word', 'id_topic'), __FILE__, __LINE__
+					array('word', 'id_topic')
 				);
 		}
 		break;
@@ -594,7 +594,7 @@ function updateSettings($changeArray, $update = false)
 		elseif (!isset($modSettings[$variable]) && empty($value))
 			continue;
 
-		$replaceArray[] = array( 'SUBSTRING(\'' . $variable . '\', 1, 255)', 'SUBSTRING(\'' . $value . '\', 1, 65534)');
+		$replaceArray[] = array($variable, $value);
 
 		$modSettings[$variable] = $smfFunc['db_unescape_string']($value);
 	}
@@ -602,11 +602,11 @@ function updateSettings($changeArray, $update = false)
 	if (empty($replaceArray))
 		return;
 
-	$smfFunc['db_insert']('replace',
+	$smfFunc['db_new_insert']('replace',
 		$db_prefix . 'settings',
-		array('variable', 'value'),
+		array('variable' => 'string-255', 'value' => 'string-65534'),
 		$replaceArray,
-		array('variable'), __FILE__, __LINE__
+		array('variable')
 	);
 
 	// Kill the cache - it needs redoing now, but we won't bother ourselves with that here.
@@ -2460,7 +2460,7 @@ function writeLog($force = false)
 	{
 		$serialized = $_GET + array('USER_AGENT' => $_SERVER['HTTP_USER_AGENT']);
 		unset($serialized['sesc']);
-		$serialized = $smfFunc['db_escape_string'](serialize($serialized));
+		$serialized = serialize($serialized);
 	}
 	else
 		$serialized = '';
@@ -2521,11 +2521,11 @@ function writeLog($force = false)
 				)
 			);
 
-		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
+		$smfFunc['db_new_insert']($do_delete ? 'ignore' : 'replace',
 				$db_prefix . 'log_online',
-				array('session', 'id_member', 'id_spider', 'log_time', 'ip', 'url'),
-				array( '\'' . $session_id . '\'', $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', '\'' . $serialized . '\''),
-				array('session'), __FILE__, __LINE__
+				array('session' => 'string', 'id_member' => 'int', 'id_spider' => 'int', 'log_time' => 'int', 'ip' => 'raw', 'url' => 'string'),
+				array($session_id, $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', $serialized),
+				array('session')
 			);
 	}
 
@@ -2753,17 +2753,14 @@ function logAction($action, $extra = array())
 	else
 		$msg_id = '0';
 
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}log_actions
-			(log_time, id_member, ip, action, id_board, id_topic, id_msg, extra)
-		VALUES (' . time() . ', ' . $user_info['id'] . ', SUBSTRING(\'' . $user_info['ip'] . '\', 1, 16), SUBSTRING(\'' . $action . '\', 1, 30),
-			' . $board_id . ', ' . $topic_id . ', ' . $msg_id . ',
-			SUBSTRING(\'' . $smfFunc['db_escape_string'](serialize($extra)) . '\', 1, 65534))',
-		array(
-		)
+	$smfFunc['db_new_insert']('',
+		$db_prefix . 'log_actions',
+		array('log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action', 'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534'),
+		array(time(), $user_info['id'], $user_info['ip'], $action, $board_id, $topic_id, $msg_id, serialize($extra)),
+		array('id_action')
 	);
 
-	return $smfFunc['db_insert_id']( $db_prefix . 'log_actions', 'id_action');
+	return $smfFunc['db_insert_id']($db_prefix . 'log_actions', 'id_action');
 }
 
 // Track Statistics.
@@ -2780,6 +2777,7 @@ function trackStats($stats = array())
 		return false;
 
 	$setStringUpdate = '';
+	$insert_keys = array();
 	foreach ($cache_stats as $field => $change)
 	{
 		$setStringUpdate .= '
@@ -2787,6 +2785,7 @@ function trackStats($stats = array())
 
 		if ($change === '+')
 			$cache_stats[$field] = 1;
+		$insert_keys[$field] = 'int';
 	}
 
 	$date = strftime('%Y-%m-%d', forum_time(false));
@@ -2800,11 +2799,11 @@ function trackStats($stats = array())
 	);
 	if ($smfFunc['db_affected_rows']() == 0)
 	{
-		$smfFunc['db_insert']('ignore',
+		$smfFunc['db_new_insert']('ignore',
 			$db_prefix . 'log_activity',
-			array_merge(array_keys($cache_stats), array('date')),
-			array_merge($cache_stats, array('\'' . $date . '\'')),
-			array('date'), __FILE__, __LINE__
+			array_merge($insert_keys, array('date' => 'date')),
+			array_merge($cache_stats, array($date)),
+			array('date')
 		);
 	}
 
@@ -2847,11 +2846,11 @@ function spamProtection($error_type)
 	);
 
 	// Add a new entry, deleting the old if necessary.
-	$smfFunc['db_insert']('replace',
+	$smfFunc['db_new_insert']('replace',
 		$db_prefix . 'log_floodcontrol',
-		array('ip', 'log_time', 'log_type'),
-		array( 'SUBSTRING(\'' . $user_info['ip'] . '\', 1, 16)', time(), '\'' . $error_type . '\''),
-		array('ip', 'log_type'), __FILE__, __LINE__
+		array('ip' => 'string-16', 'log_time' => 'int', 'log_type' => 'string'),
+		array($user_info['ip'], time(), $error_type),
+		array('ip', 'log_type')
 	);
 
 	// If affected is 0 or 2, it was there already.

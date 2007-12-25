@@ -100,7 +100,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 		$file = '';
 	else
 		// Window style slashes don't play well, lets convert them to the unix style.
-		$file = $smfFunc['db_escape_string'](str_replace('\\', '/', $file));
+		$file = str_replace('\\', '/', $file);
 
 	if ($line == null)
 		$line = 0;
@@ -117,7 +117,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	$query_string = empty($_SERVER['QUERY_STRING']) ? (empty($_SERVER['REQUEST_URL']) ? '' : str_replace($scripturl, '', $_SERVER['REQUEST_URL'])) : $_SERVER['QUERY_STRING'];
 
 	// Don't log the session hash in the url twice, it's a waste.
-	$query_string = $smfFunc['db_escape_string'](htmlspecialchars('?' . preg_replace(array('~;sesc=[^&;]+~', '~' . session_name() . '=' . session_id() . '[&;]~'), array(';sesc', ''), $query_string)));
+	$query_string = htmlspecialchars('?' . preg_replace(array('~;sesc=[^&;]+~', '~' . session_name() . '=' . session_id() . '[&;]~'), array(';sesc', ''), $query_string));
 
 	// Just so we know what board error messages are from.
 	if (isset($_POST['board']) && !isset($_GET['board']))
@@ -136,15 +136,13 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 
 	// Make sure the category that was specified is a valid one
 	$error_type = in_array($error_type, $known_error_types) && $error_type !== true ? $error_type : 'general';
-	
 
 	// Insert the error into the database.
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}log_errors
-			(id_member, log_time, ip, url, message, session, error_type, file, line)
-		VALUES (' . $user_info['id'] . ', ' . time() . ', SUBSTRING(\'' . $user_info['ip'] . '\', 1, 16), SUBSTRING(\'' . $query_string . '\', 1, 65534), SUBSTRING(\'' . $smfFunc['db_escape_string']($error_message) . '\', 1, 65534), \'' . $sc . '\', \'' . $error_type . '\', SUBSTRING(\'' . $file . '\', 1, 255), ' . $line . ')',
-		array(
-		)
+	$smfFunc['db_new_insert']('',
+		$db_prefix . 'log_errors',
+		array('id_member' => 'int', 'log_time' => 'int', 'ip' => 'string-16', 'url' => 'string-65534', 'message' => 'string-65534', 'session' => 'string', 'error_type' => 'string', 'file' => 'string-255', 'line' => 'int'),
+		array($user_info['id'], time(), $user_info['ip'], $query_string, $error_message, $sc, $error_type, $file, $line),
+		array('id_error')
 	);
 
 	// Return the message to make things simpler.

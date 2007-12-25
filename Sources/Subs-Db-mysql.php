@@ -45,6 +45,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_fetch_row' => 'mysql_fetch_row',
 			'db_free_result' => 'mysql_free_result',
 			'db_insert' => 'smf_db_insert',
+			'db_new_insert' => 'smf_db_new_insert',
 			'db_insert_id' => 'smf_db_insert_id',
 			'db_num_rows' => 'mysql_num_rows',
 			'db_data_seek' => 'mysql_data_seek',
@@ -640,6 +641,54 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $fil
 			' . implode(', ', $data),
 		array(
 		)
+	);
+}
+
+// Insert some data...
+function smf_db_new_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
+{
+	global $smfFunc, $db_connection;
+	
+	$connection = $connection === null ? $db_connection : $connection;
+
+	// With nothing to insert, simply return.
+	if (empty($data))
+		return;
+
+	// Inserting data as a single row can be done as a single array.
+	if (!is_array($data[array_rand($data)]))
+		$data = array($data);
+
+	// Create the mold for a single row insert.
+	$insertData = '(';
+	foreach ($columns as $columnName => $type)
+	{
+		// Are we restricting the length?
+		if (strpos($type, 'string-') !== false)
+			$insertData .= sprintf('SUBSTRING({string:%1$s}, 1, ' . substr($type, 7) . '), ', $columnName);
+		else
+			$insertData .= sprintf('{%1$s:%2$s}, ', $type, $columnName);
+	}
+	$insertData = substr($insertData, 0, -2) . ')';
+
+	// Create an array consisting of only the columns.
+	$indexed_columns = array_keys($columns);
+
+	// Here's where the variables are injected to the query.
+	$insertRows = array();
+	foreach ($data as $dataRow)
+		$insertRows[] = smf_db_quote($insertData, array_combine($indexed_columns, $dataRow), $connection);
+
+	// Determine the method of insertion.
+	$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
+	
+	// Do the insert.
+	$smfFunc['db_query']('', '
+		' . $queryTitle . ' INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
+		VALUES
+			' . implode(',
+			', $insertRows), array(),
+		$connection
 	);
 }
 

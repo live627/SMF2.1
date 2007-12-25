@@ -54,7 +54,7 @@ function getBoardIndex($boardIndexOptions)
 		SELECT' . ($boardIndexOptions['include_categories'] ? '
 			c.id_cat, c.name AS cat_name,' : '') . '
 			b.id_board, b.name AS board_name, b.description,
-			CASE WHEN b.redirect != {string:inject_string_1} THEN 1 ELSE 0 END AS is_redirect,
+			CASE WHEN b.redirect != {string:blank_string} THEN 1 ELSE 0 END AS is_redirect,
 			b.num_posts, b.num_topics, b.unapproved_posts, b.unapproved_topics, b.id_parent,
 			IFNULL(m.poster_time, 0) AS poster_time, IFNULL(mem.member_name, m.poster_name) AS poster_name,
 			m.subject, m.id_topic, IFNULL(mem.real_name, m.poster_name) AS real_name,
@@ -72,12 +72,12 @@ function getBoardIndex($boardIndexOptions)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
 			LEFT JOIN {db_prefix}members AS mods_mem ON (mods_mem.id_member = mods.id_member)
 		WHERE ' . $user_info['query_see_board'] . (empty($boardIndexOptions['countChildPosts']) ? (empty($boardIndexOptions['base_level']) ? '' : '
-			AND b.child_level >= {int:inject_int_1}') : '
+			AND b.child_level >= {int:child_level}') : '
 			AND b.child_level BETWEEN ' . $boardIndexOptions['base_level'] . ' AND ' . ($boardIndexOptions['base_level'] + 1)),
 		array(
 			'current_member' => $user_info['id'],
-			'inject_int_1' => $boardIndexOptions['base_level'],
-			'inject_string_1' => '',
+			'child_level' => $boardIndexOptions['base_level'],
+			'blank_string' => '',
 		)
 	);
 

@@ -86,9 +86,8 @@ function getMembersOnlineStats($membersOnlineOptions)
 			mg.online_color, mg.id_group, mg.group_name
 		FROM {db_prefix}log_online AS lo
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lo.id_member)
-			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)',
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)',
 		array(
-			'inject_int_1' => 0,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -220,21 +219,21 @@ function trackStatsUsersOnline($total_users_online)
 		$request = $smfFunc['db_query']('', '
 			SELECT most_on
 			FROM {db_prefix}log_activity
-			WHERE date = {date:inject_date_1}
+			WHERE date = {date:date}
 			LIMIT 1',
 			array(
-				'inject_date_1' => $date,
+				'date' => $date,
 			)
 		);
 
 		// The log_activity hasn't got an entry for today?
 		if ($smfFunc['db_num_rows']($request) === 0)
 		{
-			$smfFunc['db_insert']('ignore',
+			$smfFunc['db_new_insert']('ignore',
 				$db_prefix . 'log_activity',
-				array('date', 'most_on'),
-				array('\'' . $date . '\'', $total_users_online),
-				array('date'), __FILE__, __LINE__
+				array('date' => 'date', 'most_on' => 'insert'),
+				array($date, $total_users_online),
+				array('date')
 			);
 		}
 		// There's an entry in log_activity on today...

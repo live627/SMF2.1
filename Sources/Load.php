@@ -314,8 +314,6 @@ function loadUserSettings()
 
 	if (empty($id_member) && isset($_COOKIE[$cookiename]))
 	{
-		$_COOKIE[$cookiename] = $smfFunc['db_unescape_string']($_COOKIE[$cookiename]);
-
 		// Fix a security hole in PHP 4.3.9 and below...
 		if (preg_match('~^a:[34]:\{i:0;(i:\d{1,6}|s:[1-8]:"\d{1,8}");i:1;s:(0|40):"([a-fA-F0-9]{40})?";i:2;[id]:\d{1,14};(i:3;i:\d;)?\}$~i', $_COOKIE[$cookiename]) == 1)
 		{
@@ -328,7 +326,7 @@ function loadUserSettings()
 	elseif (empty($id_member) && isset($_SESSION['login_' . $cookiename]) && ($_SESSION['USER_AGENT'] == $_SERVER['HTTP_USER_AGENT'] || !empty($modSettings['disableCheckUA'])))
 	{
 		// !!! Perhaps we can do some more checking on this, such as on the first octet of the IP?
-		list ($id_member, $password, $login_span) = @unserialize($smfFunc['db_unescape_string']($_SESSION['login_' . $cookiename]));
+		list ($id_member, $password, $login_span) = @unserialize($_SESSION['login_' . $cookiename]);
 		$id_member = !empty($id_member) && strlen($password) == 40 && $login_span > time() ? (int) $id_member : 0;
 	}
 
@@ -341,11 +339,11 @@ function loadUserSettings()
 			$request = $smfFunc['db_query']('', '
 				SELECT mem.*, IFNULL(a.id_attach, 0) AS id_attach, a.filename, a.attachment_type
 				FROM {db_prefix}members AS mem
-					LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = {int:inject_int_1})
-				WHERE mem.id_member = {int:inject_int_1}
+					LEFT JOIN {db_prefix}attachments AS a ON (a.id_member = {int:id_member})
+				WHERE mem.id_member = {int:id_member}
 				LIMIT 1',
 				array(
-					'inject_int_1' => $id_member,
+					'id_member' => $id_member,
 				)
 			);
 			$user_settings = $smfFunc['db_fetch_assoc']($request);
@@ -2107,11 +2105,11 @@ function sessionWrite($session_id, $data)
 
 	// If that didn't work, try inserting a new one.
 	if ($smfFunc['db_affected_rows']() == 0)
-		$result = $smfFunc['db_insert']('ignore',
+		$result = $smfFunc['db_new_insert']('ignore',
 			$db_prefix . 'sessions',
-			array('session_id', 'data', 'last_update'),
-			array('\'' . $smfFunc['db_escape_string']($session_id) . '\'', '\'' . $smfFunc['db_escape_string']($data) . '\'', time()),
-			array('session_id'), __FILE__, __LINE__
+			array('session_id' => 'string', 'data' => 'string', 'last_update' => 'int'),
+			array($session_id, $data, time()),
+			array('session_id')
 		);
 
 	return $result;
