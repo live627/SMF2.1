@@ -337,9 +337,13 @@ function loadProfileFields($force_reload = false)
 				$request = $smfFunc[\'db_query\'](\'\', "
 					SELECT value
 					FROM {$db_prefix}themes
-					WHERE id_theme = " . ((int) $cur_profile[\'id_theme\']) . "
-						AND variable = \'name\'
-					LIMIT 1", __FILE__, __LINE__);
+					WHERE id_theme = {int:id_theme}
+						AND variable = {string:variable}
+					LIMIT 1", array(
+						\'id_theme\' => $cur_profile[\'id_theme\'],
+						\'variable\' => \'name\',
+					)
+				);
 				list ($name) = $smfFunc[\'db_fetch_row\']($request);
 				$smfFunc[\'db_free_result\']($request);
 
@@ -480,7 +484,7 @@ function loadProfileFields($force_reload = false)
 					return \'password_\' . $passwordErrors;
 
 				// Set up the new password variable... ready for storage.
-				$value = sha1(strtolower($old_profile[\'member_name\']) . un_htmlspecialchars($smfFunc[\'db_unescape_string\']($value)));
+				$value = sha1(strtolower($old_profile[\'member_name\']) . un_htmlspecialchars($value));
 				return true;
 			'),
 		),
@@ -914,7 +918,7 @@ function saveProfileFields()
 					$profile_fields[$key]['is_error'] = $is_valid;
 				}
 				// Retain the old value.
-				$cur_profile[$key] = $smfFunc['db_unescape_string']($_POST[$key]);
+				$cur_profile[$key] = $_POST[$key];
 				continue;
 			}
 		}
@@ -936,7 +940,7 @@ function saveProfileFields()
 			// Set the save variable.
 			$profile_vars[$db_key] = in_array($field['cast_type'], array('int', 'float', 'check')) ? $_POST[$key] : '\'' . $_POST[$key] . '\'';
 			// And update the user profile.
-			$cur_profile[$key] = $smfFunc['db_unescape_string']($_POST[$key]);
+			$cur_profile[$key] = $_POST[$key];
 		}
 	}
 
@@ -1052,7 +1056,7 @@ function makeThemeChanges($memID, $id_theme)
 			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
 				$val = max(0, min($val, 50));
 
-			$themeSetArray[] = array($memID, $id_theme, 'SUBSTRING(\'' . $smfFunc['db_escape_string']($opt) . '\', 1, 255)', 'SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)');
+			$themeSetArray[] = array($memID, $id_theme, $opt, is_array($val) ? implode(',', $val) : $val);
 		}
 	}
 
@@ -1064,8 +1068,8 @@ function makeThemeChanges($memID, $id_theme)
 			if ($opt == 'topics_per_page' || $opt == 'messages_per_page')
 				$val = max(0, min($val, 50));
 
-			$themeSetArray[] = array($memID, 1, 'SUBSTRING(\'' . $smfFunc['db_escape_string']($opt) . '\', 1, 255)', 'SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)');
-			$erase_options[] = $smfFunc['db_escape_string']($opt);
+			$themeSetArray[] = array($memID, 1, $opt, is_array($val) ? implode(',', $val) : $val);
+			$erase_options[] = $opt;
 		}
 
 	// If themeSetArray isn't still empty, send it to the database.
@@ -1073,11 +1077,11 @@ function makeThemeChanges($memID, $id_theme)
 	{
 		if (!empty($themeSetArray))
 		{
-			$smfFunc['db_insert']('replace',
+			$smfFunc['db_new_insert']('replace',
 				$db_prefix . 'themes',
-				array('id_member', 'id_theme', 'variable', 'value'),
+				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$themeSetArray,
-				array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
+				array('id_member', 'id_theme', 'variable')
 			);
 		}
 
@@ -1085,12 +1089,12 @@ function makeThemeChanges($memID, $id_theme)
 		{
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}themes
-				WHERE id_theme != {int:inject_int_1}
-					AND variable IN (\'' . implode('\', \'', $erase_options) . '\')
-					AND id_member = {int:inject_int_2}',
+				WHERE id_theme != 1
+					AND variable IN ({array_string:erase_variables})
+					AND id_member = {int:id_member}',
 				array(
-					'inject_int_1' => 1,
-					'inject_int_2' => $memID,
+					'id_member' => $memID,
+					'erase_variables' => $erase_options
 				)
 			);
 		}
@@ -1192,13 +1196,13 @@ function makeCustomFieldChanges($memID, $area)
 			if ($row['field_type'] == 'text' && !empty($row['mask']) && $row['mask'] != 'none')
 			{
 				//!!! We never error on this - just ignore it at the moment...
-				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($value)) === 0 || strlen($smfFunc['db_unescape_string']($value)) > 255))
+				if ($row['mask'] == 'email' && (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $value) === 0 || strlen($value) > 255))
 					$value = '';
 				elseif ($row['mask'] == 'number')
 				{
 					$value = (int) $value;
 				}
-				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), $smfFunc['db_unescape_string']($value)) === 0)
+				elseif (substr($row['mask'], 0, 5) == 'regex' && preg_match(substr($row['mask'], 5), $value) === 0)
 					$value = '';
 			}
 		}
@@ -1290,7 +1294,7 @@ function editBuddies($memID)
 	elseif (isset($_POST['new_buddy']))
 	{
 		// Prepare the string for extraction...
-		$_POST['new_buddy'] = strtr($smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['new_buddy']), ENT_QUOTES)), array('&quot;' => '"'));
+		$_POST['new_buddy'] = strtr($smfFunc['htmlspecialchars']($_POST['new_buddy'], ENT_QUOTES), array('&quot;' => '"'));
 		preg_match_all('~"([^"]+)"~', $_POST['new_buddy'], $matches);
 		$new_buddies = array_unique(array_merge($matches[1], explode(',', preg_replace('~"([^"]+)"~', '', $_POST['new_buddy']))));
 
@@ -2410,9 +2414,9 @@ function profileValidateSignature(&$value)
 
 		$unparsed_signature = strtr(un_htmlspecialchars($value), array("\r" => '', '&#039' => '\''));
 		// Too long?
-		if (!empty($sig_limits[1]) && $smfFunc['strlen']($smfFunc['db_unescape_string']($unparsed_signature)) > $sig_limits[1])
+		if (!empty($sig_limits[1]) && $smfFunc['strlen']($unparsed_signature) > $sig_limits[1])
 		{
-			$_POST['signature'] = trim($smfFunc['db_escape_string'](htmlspecialchars($smfFunc['db_unescape_string']($smfFunc['substr']($unparsed_signature, 0, $sig_limits[1])), ENT_QUOTES)));
+			$_POST['signature'] = trim(htmlspecialchars($smfFunc['substr']($unparsed_signature, 0, $sig_limits[1]), ENT_QUOTES));
 			$txt['profile_error_signature_max_length'] = sprintf($txt['profile_error_signature_max_length'], $sig_limits[1]);
 			return 'signature_max_length';
 		}
@@ -2569,7 +2573,7 @@ function profileValidateEmail($email, $memID = 0)
 	// Check the name and email for validity.
 	if (trim($email) == '')
 		return 'no_email';
-	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($email)) == 0)
+	if (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $email) == 0)
 		return 'bad_email';
 
 	// Email addresses should be and stay unique.
@@ -2600,7 +2604,7 @@ function profileReloadUser()
 	if (isset($_POST['passwrd2']) && $_POST['passwrd2'] != '')
 	{
 		require_once($sourcedir . '/Subs-Auth.php');
-		setLoginCookie(60 * $modSettings['cookieTime'], $context['id_member'], sha1(sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($smfFunc['db_unescape_string']($_POST['passwrd2']))) . $cur_profile['password_salt']));
+		setLoginCookie(60 * $modSettings['cookieTime'], $context['id_member'], sha1(sha1(strtolower($cur_profile['member_name']) . un_htmlspecialchars($_POST['passwrd2'])) . $cur_profile['password_salt']));
 	}
 
 	loadUserSettings();

@@ -172,8 +172,8 @@ function smf_db_replacement__callback($matches)
 					trigger_error('Database error, given array of string values is empty.', E_USER_ERROR);
 				
 				foreach ($replacement as $key => $value)
-					$replacement[$key] = sprintf('\'%1$s\'', mysql_real_escape_string($replacement, $connection));
-				
+					$replacement[$key] = sprintf('\'%1$s\'', mysql_real_escape_string($value, $connection));
+
 				return implode(', ', $replacement);
 			}
 			else
