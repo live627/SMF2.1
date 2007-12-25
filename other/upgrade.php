@@ -1177,11 +1177,11 @@ function UpgradeOptions()
 			preg_match('~SITE-ID:\s(\w{10})~', $return_data, $ID);
 
 			if (!empty($ID[1]))
-				$smfFunc['db_insert']('replace',
+				$smfFunc['db_new_insert']('replace',
 					$db_prefix . 'settings',
-					array('variable', 'value'),
-					array('\'allow_sm_stats\'', '\'' . $ID[1] . '\''),
-					array('variable'), __FILE__, __LINE__
+					array('variable' => 'string', 'value' => 'string'),
+					array('allow_sm_stats', $ID[1]),
+					array('variable')
 				);
 		}
 	}
@@ -1407,11 +1407,11 @@ function DatabaseChanges()
 				if ($nextFile)
 				{
 					// Only update the version of this if complete.
-					$smfFunc['db_insert']('replace',
+					$smfFunc['db_new_insert']('replace',
 						$db_prefix . 'settings',
-						array('variable', 'value'),
-						array('\'smfVersion\'', '\'' . $file[2] . '\''),
-						array('variable'), __FILE__, __LINE__
+						array('variable' => 'string', 'value' => 'string'),
+						array('smfVersion', $file[2]),
+						array('variable')
 					);
 
 					$modSettings['smfVersion'] = $file[2];
@@ -1994,15 +1994,15 @@ function UpgradeTemplate()
 
 		$themeData = array();
 		foreach ($values as $variable => $value)
-			$themeData[] = array(0, $id_theme, '\'' . $variable . '\'', '\'' . $value . '\'');
+			$themeData[] = array(0, $id_theme, $variable, $value);
 
 		if (!empty($themeData))
 		{
-			$smfFunc['db_insert']('ignore',
+			$smfFunc['db_new_insert']('ignore',
 				$db_prefix . 'themes',
-				array('id_member', 'id_theme', 'variable', 'value'),
+				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string', 'value' => 'string'),
 				$themeData,
-				array('id_theme', 'id_member', 'variable'), __FILE__, __LINE__
+				array('id_theme', 'id_member', 'variable')
 			);
 		}
 
@@ -2015,11 +2015,11 @@ function UpgradeTemplate()
 			)
 		);
 
-		$smfFunc['db_insert']('replace',
+		$smfFunc['db_new_insert']('replace',
 				$db_prefix . 'settings',
-				array('variable', 'value'),
-				array(array('\'theme_guests\'', $id_theme), array('\'smiley_sets_default\'', '\'classic\'')),
-				array('variable'), __FILE__, __LINE__
+				array('variable' => 'string', 'value' => 'string'),
+				array(array('theme_guests', $id_theme), array('smiley_sets_default', 'classic')),
+				array('variable')
 			);
 
 		if ($is_debug && $command_line)
@@ -2129,15 +2129,15 @@ function convertSettingsToTheme()
 		if (!isset($value) || $value === null)
 			$value = 0;
 
-		$themeData[] = array(0, 1, '\'' . $variable . '\'', '\'' . $value . '\'');
+		$themeData[] = array(0, 1, $variable, $value);
 	}
 	if (!empty($themeData))
 	{
-		$smfFunc['db_insert']('ignore',
+		$smfFunc['db_new_insert']('ignore',
 			$db_prefix . 'themes',
-			array('id_member', 'id_theme', 'variable', 'value'),
+			array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string', 'value' => 'string'),
 			$themeData,
-			array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
+			array('id_member', 'id_theme', 'variable')
 		);
 	}
 }

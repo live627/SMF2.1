@@ -700,7 +700,7 @@ function PlushSearch2()
 
 			$searchWords[$orIndex]['all_words'][] = $word;
 
-			$subjectWords = text2words($smfFunc['db_unescape_string']($word));
+			$subjectWords = text2words($word);
 			if (!$is_excluded || count($subjectWords) === 1)
 			{
 				$searchWords[$orIndex]['subject_words'] = array_merge($searchWords[$orIndex]['subject_words'], $subjectWords);
@@ -712,7 +712,7 @@ function PlushSearch2()
 
 			if (!empty($modSettings['search_index']))
 			{
-				$subwords = text2words($smfFunc['db_unescape_string']($word), $modSettings['search_index'] === 'fulltext' ? null : $min_word_length, $modSettings['search_index'] === 'custom');
+				$subwords = text2words($word, $modSettings['search_index'] === 'fulltext' ? null : $min_word_length, $modSettings['search_index'] === 'custom');
 
 				if (($modSettings['search_index'] === 'custom' || ($modSettings['search_index'] === 'fulltext' && !$canDoBooleanSearch && count($subwords) > 1)) && empty($modSettings['search_force_index']))
 					$searchWords[$orIndex]['words'][] = $word;

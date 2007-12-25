@@ -337,11 +337,11 @@ function Display()
 	// Guests can't mark topics read or for notifications, just can't sorry.
 	if (!$user_info['is_guest'])
 	{
-		$smfFunc['db_insert']('replace',
+		$smfFunc['db_new_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_member', 'id_topic', 'id_msg'),
+			array('id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int'),
 			array($user_info['id'], $topic, $modSettings['maxMsgID']),
-			array('id_member', 'id_topic'), __FILE__, __LINE__
+			array('id_member', 'id_topic')
 		);
 
 		// Check for notifications on this topic OR board.
@@ -421,11 +421,11 @@ function Display()
 		// Mark board as seen if we came using last post link from BoardIndex. (or other places...)
 		if (isset($_REQUEST['boardseen']))
 		{
-			$smfFunc['db_insert']('replace',
+			$smfFunc['db_new_insert']('replace',
 				$db_prefix . 'log_boards',
-				array('id_msg', 'id_member', 'id_board'),
+				array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 				array($modSettings['maxMsgID'], $user_info['id'], $board),
-				array('id_member', 'id_board'), __FILE__, __LINE__
+				array('id_member', 'id_board')
 			);
 		}
 	}

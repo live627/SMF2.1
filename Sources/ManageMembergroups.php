@@ -424,16 +424,16 @@ function AddMembergroup()
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
 				if (empty($context['illegal_permissions']) || !in_array($row['permission'], $context['illegal_permissions']))
-					$inserts[] = array($id_group, '\'' . $row['permission'] . '\'', $row['add_deny']);
+					$inserts[] = array($id_group, $row['permission'], $row['add_deny']);
 			}
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($inserts))
-				$smfFunc['db_insert']('insert',
+				$smfFunc['db_new_insert']('insert',
 					$db_prefix . 'permissions',
-					array('id_group', 'permission', 'add_deny'),
+					array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 					$inserts,
-					array('id_group', 'permission'), __FILE__, __LINE__
+					array('id_group', 'permission')
 				);
 
 			$request = $smfFunc['db_query']('', '
@@ -446,15 +446,15 @@ function AddMembergroup()
 			);
 			$inserts = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
-				$inserts[] = array($id_group, $row['id_profile'], '\'' . $row['permission'] . '\'', $row['add_deny']);
+				$inserts[] = array($id_group, $row['id_profile'], $row['permission'], $row['add_deny']);
 			$smfFunc['db_free_result']($request);
 
 			if (!empty($inserts))
-				$smfFunc['db_insert']('insert',
+				$smfFunc['db_new_insert']('insert',
 					$db_prefix . 'board_permissions',
-					array('id_group', 'id_profile', 'permission', 'add_deny'),
+					array('id_group' => 'int', 'id_profile' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 					$inserts,
-					array('id_group', 'id_profile', 'permission'), __FILE__, __LINE__
+					array('id_group', 'id_profile', 'permission')
 				);
 
 			// Also get some membergroup information if we're copying and not copying from guests...
@@ -823,11 +823,11 @@ function EditMembergroup()
 				foreach ($group_moderators as $moderator)
 					$mod_insert[] = array($_REQUEST['group'], $moderator);
 
-				$smfFunc['db_insert']('insert',
+				$smfFunc['db_new_insert']('insert',
 					$db_prefix . 'group_moderators',
-					array('id_group', 'id_member'),
+					array('id_group' => 'int', 'id_member' => 'int'),
 					$mod_insert,
-					array('id_group', 'id_member'), __FILE__, __LINE__
+					array('id_group', 'id_member')
 				);
 			}
 		}

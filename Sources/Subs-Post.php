@@ -1958,7 +1958,7 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		//$index_settings = unserialize($modSettings['search_custom_index_config']);
 
 		$inserts = array();
-		foreach (text2words($smfFunc['db_unescape_string']($msgOptions['body']), 4, true) as $word)
+		foreach (text2words($msgOptions['body'], 4, true) as $word)
 			$inserts[] = array($word, $msgOptions['id']);
 
 		if (!empty($inserts))
@@ -2349,7 +2349,7 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	{
 		$stopwords = empty($modSettings['search_stopwords']) ?  array() : explode(',', $smfFunc['db_escape_string']($modSettings['search_stopwords']));
 		$old_index = text2words($old_body, 4, true);
-		$new_index = text2words($smfFunc['db_unescape_string']($msgOptions['body']), 4, true);
+		$new_index = text2words($msgOptions['body'], 4, true);
 
 		// Calculate the words to be added and removed from the index.
 		$removed_words = array_diff(array_diff($old_index, $new_index), $stopwords);

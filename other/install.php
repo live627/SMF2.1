@@ -919,11 +919,11 @@ function doStep1()
 
 		if (!empty($rows))
 		{
-			$smfFunc['db_insert']('replace',
+			$smfFunc['db_new_insert']('replace',
 				"{$db_prefix}settings",
-				array('variable', 'value'),
+				array('variable' => 'string', 'value' => 'string'),
 				$rows,
-				array('variable'), __FILE__, __LINE__
+				array('variable')
 			);
 		}
 	}

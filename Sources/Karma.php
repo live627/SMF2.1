@@ -103,11 +103,11 @@ function ModifyKarma()
 	if (empty($action) || empty($modSettings['karmaWaitTime']))
 	{
 		// Put it in the log.
-		$smfFunc['db_insert']('replace',
+		$smfFunc['db_new_insert']('replace',
 				$db_prefix . 'log_karma',
-				array('action', 'id_target', 'id_executor', 'log_time'),
+				array('action' => 'int', 'id_target' => 'int', 'id_executor' => 'int', 'log_time' => 'int'),
 				array($dir, $_REQUEST['uid'], $user_info['id'], time()),
-				array('id_target', 'id_executor'), __FILE__, __LINE__
+				array('id_target', 'id_executor')
 			);
 
 		// Change by one.
