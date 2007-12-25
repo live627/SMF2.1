@@ -591,20 +591,20 @@ function MessageFolder()
 					LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
 					INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
 						AND pmr.id_member = {int:current_member}
-						AND pmr.deleted = {int:inject_int_1}
+						AND pmr.deleted = {int:deleted_by}
 						' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:inject_int_2})') : '') . '
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:pm_member})') : '') . '
 				WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
-					AND pm.deleted_by_sender = {int:inject_int_1}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
-					AND pm.id_pm = {int:inject_int_3}') . '
+					AND pm.deleted_by_sender = {int:deleted_by}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+					AND pm.id_pm = {int:pmsg}') . '
 				GROUP BY pm.id_pm_head
 				ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
 				LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
 				array(
 					'current_member' => $user_info['id'],
-					'inject_int_1' => 0,
-					'inject_int_2' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
-					'inject_int_3' => (int) $_GET['pmsg'],
+					'deleted_by' => 0,
+					'pm_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+					'pmsg' => isset($_GET['pmsg']) ? (int) $_GET['pmsg'] : 0,
 				)
 			);
 		}
@@ -619,19 +619,19 @@ function MessageFolder()
 				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm)' : '') : '
 				INNER JOIN {db_prefix}pm_recipients AS pmr ON (pmr.id_pm = pm.id_pm
 					AND pmr.id_member = {int:current_member}
-					AND pmr.deleted = {int:inject_int_1}
+					AND pmr.deleted = {int:is_deleted}
 					' . $labelQuery . ')') . ($context['sort_by'] == 'name' ? ( '
-				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:inject_int_2})') : '') . '
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = {int:pm_member})') : '') . '
 			WHERE ' . ($context['folder'] == 'sent' ? 'pm.id_member_from = {int:current_member}
-				AND pm.deleted_by_sender = {int:inject_int_1}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
-				AND pm.id_pm = {int:inject_int_3}') . '
+				AND pm.deleted_by_sender = {int:is_deleted}' : '1=1') . (empty($_GET['pmsg']) ? '' : '
+				AND pm.id_pm = {int:pmsg}') . '
 			ORDER BY ' . ($_GET['sort'] == 'pm.id_pm' && $context['folder'] != 'sent' ? 'pmr.id_pm' : $_GET['sort']) . ($descending ? ' DESC' : ' ASC') . (empty($_GET['pmsg']) ? '
 			LIMIT ' . $_GET['start'] . ', ' . $modSettings['defaultMaxMessages'] : ''),
 			array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => 0,
-				'inject_int_2' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
-				'inject_int_3' => (int) $_GET['pmsg'],
+				'is_deleted' => 0,
+				'pm_member' => $context['folder'] == 'sent' ? 'pmr.id_member' : 'pm.id_member_from',
+				'pmsg' => isset($_GET['pmsg']) ? (int) $_GET['pmsg'] : 0,
 			)
 		);
 	}

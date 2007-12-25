@@ -2305,13 +2305,13 @@ function getTopic()
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_topic = {int:current_topic}' . (isset($_REQUEST['msg']) ? '
-			AND m.id_msg < {int:inject_int_1}' : '') .
-			(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:inject_int_2}') . '
+			AND m.id_msg < {int:id_msg}' : '') .
+			(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:approved}') . '
 		ORDER BY m.id_msg DESC' . $limit,
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => (int) $_REQUEST['msg'],
-			'inject_int_2' => 1,
+			'id_msg' => isset($_REQUEST['msg']) ? (int) $_REQUEST['msg'] : 0,
+			'approved' => 1,
 		)
 	);
 	$context['previous_posts'] = array();

@@ -1517,7 +1517,7 @@ function EditCustomProfiles()
 		$smfFunc['db_free_result']($request);
 
 		$fields = implode('|', $fields);
-		updateSettings(array('displayFields' => strtr($fields, array('\'' => '\\''))));
+		updateSettings(array('displayFields' => strtr($fields, array('\'' => '\\\''))));
 		redirectexit('action=admin;area=featuresettings;sa=profile');
 	}
 }

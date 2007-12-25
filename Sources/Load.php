@@ -2074,10 +2074,10 @@ function sessionRead($session_id)
 	$result = $smfFunc['db_query']('', '
 		SELECT data
 		FROM {db_prefix}sessions
-		WHERE session_id = {string:inject_string_1}
+		WHERE session_id = {string:session_id}
 		LIMIT 1',
 		array(
-			'inject_string_1' => $smfFunc['db_escape_string']($session_id),
+			'session_id' => $session_id,
 		)
 	);
 	list ($sess_data) = $smfFunc['db_fetch_row']($result);
@@ -2096,12 +2096,12 @@ function sessionWrite($session_id, $data)
 	// First try to update an existing row...
 	$result = $smfFunc['db_query']('', '
 		UPDATE {db_prefix}sessions
-		SET data = {string:inject_string_1}, last_update = {int:inject_int_1}
-		WHERE session_id = {string:inject_string_2}',
+		SET data = {string:data}, last_update = {int:last_update}
+		WHERE session_id = {string:session_id}',
 		array(
-			'inject_int_1' => time(),
-			'inject_string_1' => $smfFunc['db_escape_string']($data),
-			'inject_string_2' => $smfFunc['db_escape_string']($session_id),
+			'last_update' => time(),
+			'data' => $data,
+			'session_id' => $session_id,
 		)
 	);
 
@@ -2127,9 +2127,9 @@ function sessionDestroy($session_id)
 	// Just delete the row...
 	return $smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}sessions
-		WHERE session_id = {string:inject_string_1}',
+		WHERE session_id = {string:session_id}',
 		array(
-			'inject_string_1' => $smfFunc['db_escape_string']($session_id),
+			'session_id' => $session_id,
 		)
 	);
 }
@@ -2145,9 +2145,9 @@ function sessionGC($max_lifetime)
 	// Clean up ;).
 	return $smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}sessions
-		WHERE last_update < {int:inject_int_1}',
+		WHERE last_update < {int:last_update}',
 		array(
-			'inject_int_1' => time() - $max_lifetime,
+			'last_update' => time() - $max_lifetime,
 		)
 	);
 }
