@@ -160,6 +160,9 @@ function summary($memID)
 		$context['can_edit_ban'] = allowedTo('manage_bans');
 
 		$ban_query = array();
+		$ban_query_vars = array(
+			'time' => time(),
+		);
 		$ban_query[] = 'id_member = ' . $context['member']['id'];
 
 		// Valid IP?
@@ -172,7 +175,10 @@ function summary($memID)
 
 			// Do we have a hostname already?
 			if (!empty($context['member']['hostname']))
-				$ban_query[] = '(\'' . $smfFunc['db_escape_string']($context['member']['hostname']) . '\' LIKE hostname)';
+			{
+				$ban_query[] = '({string:hostname} LIKE hostname)';
+				$ban_query_vars['hostname'] = $context['member']['hostname'];
+			}
 		}
 		// Use '255.255.255.255' for 'unknown' - it's not valid anyway.
 		elseif ($memberContext[$memID]['ip'] == 'unknown')
@@ -183,17 +189,20 @@ function summary($memID)
 
 		// Check their email as well...
 		if (strlen($context['member']['email']) != 0)
-			$ban_query[] = '(\'' . $smfFunc['db_escape_string']($context['member']['email']) . '\' LIKE bi.email_address)';
+		{
+			$ban_query[] = '({string:email} LIKE bi.email_address)';
+			$ban_query_vars['email'] = $context['member']['email'];
+		}
 
 		// So... are they banned?  Dying to know!
 		$request = $smfFunc['db_query']('', '
 			SELECT bg.id_ban_group, bg.name, bg.cannot_access, bg.cannot_post, bg.cannot_register,
 				bg.cannot_login, bg.reason
 			FROM {db_prefix}ban_items AS bi
-				INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > {int:inject_int_1}))
+				INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > {int:time}))
 			WHERE (' . implode(' OR ', $ban_query) . ')',
 			array(
-				'inject_int_1' => time(),
+				$ban_query_vars
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))

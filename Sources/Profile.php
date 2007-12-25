@@ -360,7 +360,7 @@ function ModifyProfile($post_errors = array())
 				$post_errors[] = 'no_password';
 
 			// Since the password got modified due to all the $_POST cleaning, lets undo it so we can get the correct password
-			$_POST['oldpasswrd'] = $smfFunc['db_escape_string'](un_htmlspecialchars($smfFunc['db_unescape_string']($_POST['oldpasswrd'])));
+			$_POST['oldpasswrd'] = un_htmlspecialchars($_POST['oldpasswrd']);
 
 			// Does the integration want to check passwords?
 			$good_password = false;
@@ -502,7 +502,7 @@ function loadCustomFields($memID, $area = 'summary')
 
 		// If this was submitted already then make the value the posted version.
 		if (isset($_POST['customfield']) && isset($_POST['customfield'][$row['col_name']]))
-			$value = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['customfield'][$row['col_name']]));
+			$value = $smfFunc['htmlspecialchars']($_POST['customfield'][$row['col_name']]);
 
 		// HTML for the input form.
 		$output_html = $value;
