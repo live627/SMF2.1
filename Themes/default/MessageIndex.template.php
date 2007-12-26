@@ -39,9 +39,9 @@ function template_main()
 					<b><a href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a></b>';
 
 			// Has it outstanding posts for approval?
-			if ($board['can_approve_posts'] && ($board['unapproved_posts'] | $board['unapproved_topics']))
+			if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics']))
 				echo '
-					<b style="color: red;" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '">(!)</b>';
+					<a href="', $scripturl, '?action=moderate;area=postmod;sa=topics;brd=', $board['id'], ';sesc=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
 
 			echo '
 				<br />
@@ -92,7 +92,7 @@ function template_main()
 
 					// Has it posts awaiting approval?
 					if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
-						$child['link'] .= '<b style="color: red;" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '">(!)</b>';
+						$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=topics;brd=' . $child['id'] . ';sesc=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'] . $child['unapproved_topics'] . $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
 
 					$children[] = $child['new'] ? '<b>' . $child['link'] . '</b>' : $child['link'];
 				}

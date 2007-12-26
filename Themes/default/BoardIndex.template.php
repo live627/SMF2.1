@@ -212,7 +212,7 @@ function template_main()
 
 						// Has it posts awaiting approval?
 						if ($child['can_approve_posts'] && ($child['unapproved_posts'] | $child['unapproved_topics']))
-							$child['link'] .= '<b style="color: red;" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '">(!)</b>';
+							$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=topics;brd=' . $child['id'] . ';sesc=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'] . $child['unapproved_topics'] . $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
 
 						$children[] = $child['new'] ? '<b>' . $child['link'] . '</b>' : $child['link'];
 					}
