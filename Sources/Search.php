@@ -1070,9 +1070,9 @@ function PlushSearch2()
 			{
 				$smfFunc['db_insert']('',
 					$db_prefix . 'log_search_results',
-					array('id_search', 'id_topic', 'relevance', 'id_msg', 'num_matches'),
+					array('id_search' => 'int', 'id_topic' => 'int', 'relevance' => 'int', 'id_msg' => 'int', 'num_matches' => 'int'),
 					$inserts,
-					array('id_search', 'id_topic'), __FILE__, __LINE__
+					array('id_search', 'id_topic')
 				);
 			}
 	
@@ -1262,9 +1262,9 @@ function PlushSearch2()
 				{
 					$smfFunc['db_insert']('',
 						($db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_topics'),
-						$createTemporary ? array('id_topic') : array('id_search', 'id_topic'),
+						$createTemporary ? array('id_topic' => 'int') : array('id_search' => 'int', 'id_topic' => 'int'),
 						$inserts,
-						$createTemporary ? array('id_topic') : array('id_search', 'id_topic'), __FILE__, __LINE__
+						$createTemporary ? array('id_topic') : array('id_search', 'id_topic')
 					);
 				}
 
@@ -1478,9 +1478,9 @@ function PlushSearch2()
 				{
 					$smfFunc['db_insert']('',
 						isset($custom_query['insert_into']) ? $custom_query['insert_into'] : $fulltext_query['insert_into'],
-						$createTemporary ? array('id_msg') : array('id_msg', 'id_search'),
+						$createTemporary ? array('id_msg' => 'int') : array('id_msg' => 'int', 'id_search' => 'int'),
 						$inserts,
-						$createTemporary ? array('id_msg') : array('id_msg', 'id_search'), __FILE__, __LINE__
+						$createTemporary ? array('id_msg') : array('id_msg', 'id_search')
 					);
 				}
 
@@ -1575,11 +1575,15 @@ function PlushSearch2()
 					// Now put them in!
 					if (!empty($inserts))
 					{
+						$query_columns = array();
+						foreach ($main_query['select'] as $k => $v)
+							$query_columns[$k] = 'int';
+
 						$smfFunc['db_insert']('',
 							$db_prefix . 'log_search_results',
-							array_keys($main_query['select']),
+							$query_columns,
 							$inserts,
-							array('id_search', 'id_topic'), __FILE__, __LINE__
+							array('id_search', 'id_topic')
 						);
 					}
 					$_SESSION['search_cache']['num_results'] += count($inserts);
@@ -1634,9 +1638,9 @@ function PlushSearch2()
 					{
 						$smfFunc['db_insert']('',
 							$db_prefix . 'log_search_results',
-							array('id_search', 'id_topic', 'relevance', 'id_msg', 'num_matches'),
+							array('id_search' => 'int', 'id_topic' => 'int', 'relevance' => 'int', 'id_msg' => 'int', 'num_matches' => 'int'),
 							$inserts,
-							array('id_search', 'id_topic'), __FILE__, __LINE__
+							array('id_search', 'id_topic')
 						);
 					}
 					$_SESSION['search_cache']['num_results'] += count($inserts);

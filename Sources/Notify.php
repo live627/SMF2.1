@@ -95,9 +95,9 @@ function Notify()
 		// Attempt to turn notifications on.
 		$smfFunc['db_insert']('ignore',
 			$db_prefix . 'log_notify',
-			array('id_member', 'id_topic'),
+			array('id_member' => 'int', 'id_topic' => 'int'),
 			array($user_info['id'], $topic),
-			array('id_member', 'id_topic'), __FILE__, __LINE__
+			array('id_member', 'id_topic')
 		);
 	}
 	else
@@ -169,9 +169,9 @@ function BoardNotify()
 		// Turn notification on.  (note this just blows smoke if it's already on.)
 		$smfFunc['db_insert']('ignore',
 			$db_prefix . 'log_notify',
-			array('id_member', 'id_board'),
+			array('id_member' => 'int', 'id_board' => 'int'),
 			array($user_info['id'], $board),
-			array('id_member', 'id_board'), __FILE__, __LINE__
+			array('id_member', 'id_board')
 		);
 	}
 	// ...or off?

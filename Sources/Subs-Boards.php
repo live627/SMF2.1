@@ -136,16 +136,16 @@ function markBoardsRead($boards, $unread = false)
 		// Update log_mark_read and log_boards.
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_mark_read',
-			array('id_msg', 'id_member', 'id_board'),
+			array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 			$markRead,
-			array('id_board', 'id_member'), __FILE__, __LINE__
+			array('id_board', 'id_member')
 		);
 
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_boards',
-			array('id_msg', 'id_member', 'id_board'),
+			array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 			$markRead,
-			array('id_board', 'id_member'), __FILE__, __LINE__
+			array('id_board', 'id_member')
 		);
 	}
 
@@ -243,9 +243,9 @@ function MarkRead()
 
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_msg', 'id_member', 'id_topic'),
+			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			$markRead,
-			array('id_member', 'id_topic'), __FILE__, __LINE__
+			array('id_member', 'id_topic')
 		);
 
 		if (isset($_SESSION['topicseen_cache']))
@@ -294,9 +294,9 @@ function MarkRead()
 		// Use a time one second earlier than the first time: blam, unread!
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_msg', 'id_member', 'id_topic'),
+			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			array($earlyMsg, $user_info['id'], $topic),
-			array('id_member', 'id_topic'), __FILE__, __LINE__
+			array('id_member', 'id_topic')
 		);
 
 		redirectexit('board=' . $board . '.0');
@@ -397,9 +397,9 @@ function MarkRead()
 
 				$smfFunc['db_insert']('replace',
 					$db_prefix . 'log_boards',
-					array('id_msg', 'id_member', 'id_board'),
+					array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 					$logBoardInserts,
-					array('id_member', 'id_board'), __FILE__, __LINE__
+					array('id_member', 'id_board')
 				);
 			}
 			$smfFunc['db_free_result']($result);
@@ -655,9 +655,9 @@ function modifyBoard($board_id, &$boardOptions)
 
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'moderators',
-				array('id_board', 'id_member'),
+				array('id_board' => 'int', 'id_member' => 'int'),
 				$inserts,
-				array('id_board', 'id_member'), __FILE__, __LINE__
+				array('id_board', 'id_member')
 			);
 		}
 

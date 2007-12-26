@@ -134,9 +134,9 @@ function MessageIndex()
 
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_boards',
-			array('id_msg', 'id_member', 'id_board'),
+			array('id_msg' => 'int', 'id_member' => 'int', 'id_board' => 'int'),
 			array($modSettings['maxMsgID'], $user_info['id'], $board),
-			array('id_member', 'id_board'), __FILE__, __LINE__
+			array('id_member', 'id_board')
 		);
 
 		if (!empty($board_info['parent_boards']))
@@ -1056,9 +1056,9 @@ function QuickModeration()
 
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_msg', 'id_member', 'id_topic'),
+			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			$markArray,
-			array('id_member', 'id_topic'), __FILE__, __LINE__
+			array('id_member', 'id_topic')
 		);
 	}
 

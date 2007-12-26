@@ -45,7 +45,6 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 			'db_fetch_row' => 'mysql_fetch_row',
 			'db_free_result' => 'mysql_free_result',
 			'db_insert' => 'smf_db_insert',
-			'db_new_insert' => 'smf_db_new_insert',
 			'db_insert_id' => 'smf_db_insert_id',
 			'db_num_rows' => 'mysql_num_rows',
 			'db_data_seek' => 'mysql_data_seek',
@@ -619,33 +618,7 @@ function db_error($db_string, $connection = null)
 }
 
 // Insert some data...
-function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $file = false, $line = false, $disable_trans = false, $connection = null)
-{
-	global $smfFunc;
-
-	if (empty($data))
-		return;
-
-	if (!is_array($data[array_rand($data)]))
-		$data = array($data);
-
-	$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
-
-	foreach ($data as $key => $entry)
-		$data[$key] = '(' . implode(', ', $entry) . ')';
-
-	$smfFunc['db_query']('', '
-		' . $queryTitle . ' INTO ' . $table . '
-			(' . implode(', ', $columns) . ')
-		VALUES
-			' . implode(', ', $data),
-		array(
-		)
-	);
-}
-
-// Insert some data...
-function smf_db_new_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
+function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
 {
 	global $smfFunc, $db_connection;
 	

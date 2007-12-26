@@ -461,9 +461,9 @@ function moveTopics($topics, $toBoard)
 		{
 			$smfFunc['db_insert']('replace',
 				$db_prefix . 'log_topics',
-				array('id_topic', 'id_member', 'id_msg'),
+				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 				$log_topics,
-				array('id_topic', 'id_member'), __FILE__, __LINE__
+				array('id_topic', 'id_member')
 			);
 
 			$log_topics = array();
@@ -477,9 +477,9 @@ function moveTopics($topics, $toBoard)
 		// Insert that information into the database!
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_topic', 'id_member', 'id_msg'),
+			array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 			$log_topics,
-			array('id_topic', 'id_member'), __FILE__, __LINE__
+			array('id_topic', 'id_member')
 		);
 	}
 
@@ -572,9 +572,9 @@ function moveTopics($topics, $toBoard)
 	{
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_boards',
-			array('id_board', 'id_member', 'id_msg'),
+			array('id_board' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 			array($toBoard, $user_info['id'], $modSettings['maxMsgID']),
-			array('id_board', 'id_member'), __FILE__, __LINE__
+			array('id_board', 'id_member')
 		);
 	}
 

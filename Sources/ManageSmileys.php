@@ -1546,14 +1546,14 @@ function EditMessageIcons()
 				if ($id != 0)
 					$icon['title'] = $smfFunc['db_escape_string']($icon['title']);
 
-				$iconInsert[] = array($id, $icon['board_id'], 'SUBSTRING(\'' . $icon['title'] . '\', 1, 80)', 'SUBSTRING(\'' . $icon['filename'] . '\', 1, 80)', $icon['true_order']);
+				$iconInsert[] = array($id, $icon['board_id'], $icon['title'], $icon['filename'], $icon['true_order']);
 			}
 
 			$smfFunc['db_insert']('replace',
 				$db_prefix . 'message_icons',
-				array('id_icon', 'id_board', 'title', 'filename', 'icon_order'),
+				array('id_icon' => 'int', 'id_board' => 'int', 'title' => 'string-80', 'filename' => 'string-80', 'icon_order' => 'int'),
 				$iconInsert,
-				array('id_icon'), __FILE__, __LINE__
+				array('id_icon')
 			);
 		}
 

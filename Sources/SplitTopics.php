@@ -755,9 +755,9 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	if (!$user_info['is_guest'])
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_msg', 'id_member', 'id_topic'),
+			array('id_msg' => 'int', 'id_member' => 'int', 'id_topic' => 'int'),
 			array($modSettings['maxMsgID'], $user_info['id'], $split2_ID_TOPIC),
-			array('id_member', 'id_topic'), __FILE__, __LINE__
+			array('id_member', 'id_topic')
 		);
 
 	// Housekeeping.
@@ -1352,9 +1352,9 @@ function MergeExecute($topics = array())
 
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_member', 'id_topic', 'id_msg'),
+			array('id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int'),
 			$replaceEntries,
-			array('id_member', 'id_topic'), __FILE__, __LINE__
+			array('id_member', 'id_topic')
 		);
 		unset($replaceEntries);
 
@@ -1392,9 +1392,9 @@ function MergeExecute($topics = array())
 
 			$smfFunc['db_insert']('replace',
 					$db_prefix . 'log_notify',
-					array('id_member', 'id_topic', 'id_board', 'sent'),
+					array('id_member' => 'int', 'id_topic' => 'int', 'id_board' => 'int', 'sent' => 'int'),
 					$replaceEntries,
-					array('id_member', 'id_topic', 'id_board'), __FILE__, __LINE__
+					array('id_member', 'id_topic', 'id_board')
 				);
 			unset($replaceEntries);
 

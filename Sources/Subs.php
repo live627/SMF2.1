@@ -351,7 +351,7 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 				$inserts[] = array($word, $parameter1);
 
 			if (!empty($inserts))
-				$smfFunc['db_new_insert']('ignore',
+				$smfFunc['db_insert']('ignore',
 					$db_prefix . 'log_search_subjects',
 					array('word' => 'string', 'id_topic' => 'int'),
 					$inserts,
@@ -601,7 +601,7 @@ function updateSettings($changeArray, $update = false)
 	if (empty($replaceArray))
 		return;
 
-	$smfFunc['db_new_insert']('replace',
+	$smfFunc['db_insert']('replace',
 		$db_prefix . 'settings',
 		array('variable' => 'string-255', 'value' => 'string-65534'),
 		$replaceArray,
@@ -2520,7 +2520,7 @@ function writeLog($force = false)
 				)
 			);
 
-		$smfFunc['db_new_insert']($do_delete ? 'ignore' : 'replace',
+		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
 				$db_prefix . 'log_online',
 				array('session' => 'string', 'id_member' => 'int', 'id_spider' => 'int', 'log_time' => 'int', 'ip' => 'raw', 'url' => 'string'),
 				array($session_id, $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', $serialized),
@@ -2752,7 +2752,7 @@ function logAction($action, $extra = array())
 	else
 		$msg_id = '0';
 
-	$smfFunc['db_new_insert']('',
+	$smfFunc['db_insert']('',
 		$db_prefix . 'log_actions',
 		array('log_time' => 'int', 'id_member' => 'int', 'ip' => 'string-16', 'action', 'id_board' => 'int', 'id_topic' => 'int', 'id_msg' => 'int', 'extra' => 'string-65534'),
 		array(time(), $user_info['id'], $user_info['ip'], $action, $board_id, $topic_id, $msg_id, serialize($extra)),
@@ -2798,7 +2798,7 @@ function trackStats($stats = array())
 	);
 	if ($smfFunc['db_affected_rows']() == 0)
 	{
-		$smfFunc['db_new_insert']('ignore',
+		$smfFunc['db_insert']('ignore',
 			$db_prefix . 'log_activity',
 			array_merge($insert_keys, array('date' => 'date')),
 			array_merge($cache_stats, array($date)),
@@ -2845,7 +2845,7 @@ function spamProtection($error_type)
 	);
 
 	// Add a new entry, deleting the old if necessary.
-	$smfFunc['db_new_insert']('replace',
+	$smfFunc['db_insert']('replace',
 		$db_prefix . 'log_floodcontrol',
 		array('ip' => 'string-16', 'log_time' => 'int', 'log_type' => 'string'),
 		array($user_info['ip'], time(), $error_type),

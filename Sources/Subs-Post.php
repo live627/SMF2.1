@@ -1150,9 +1150,9 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 
 		$smfFunc['db_insert']('insert',
 			$db_prefix . 'pm_recipients',
-			array('id_pm', 'id_member', 'bcc', 'deleted', 'is_new'),
+			array('id_pm' => 'int', 'id_member' => 'int', 'bcc' => 'int', 'deleted' => 'int', 'is_new' => 'int'),
 			$insertRows,
-			array('id_pm', 'id_member'), __FILE__, __LINE__
+			array('id_pm', 'id_member')
 		);
 	}
 
@@ -1945,9 +1945,9 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		{
 			$smfFunc['db_insert']('replace',
 				$db_prefix . 'log_topics',
-				array('id_topic', 'id_member', 'id_msg'),
+				array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 				array($topicOptions['id'], $user_info['id'], $msgOptions['id'] + 1),
-				array('id_topic', 'id_member'), __FILE__, __LINE__
+				array('id_topic', 'id_member')
 			);
 		}
 	}
@@ -1964,9 +1964,9 @@ function createPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		if (!empty($inserts))
 			$smfFunc['db_insert']('ignore',
 				$db_prefix . 'log_search_words',
-				array('id_word', 'id_msg'),
+				array('id_word' => 'int', 'id_msg' => 'int'),
 				$inserts,
-				array('id_word', 'id_msg'), __FILE__, __LINE__
+				array('id_word', 'id_msg')
 			);
 	}
 
@@ -2339,9 +2339,9 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 	if (!empty($topicOptions['mark_as_read']) && !$user_info['is_guest'])
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_topic', 'id_member', 'id_msg'),
+			array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 			array($topicOptions['id'], $user_info['id'], $modSettings['maxMsgID']),
-			array('id_topic', 'id_member'), __FILE__, __LINE__
+			array('id_topic', 'id_member')
 		);
 
 	// If there's a custom search index, it needs to be modified...
@@ -2374,12 +2374,12 @@ function modifyPost(&$msgOptions, &$topicOptions, &$posterOptions)
 		{
 			$inserts = array();
 			foreach ($inserted_words as $word)
-				$inserts[] = array( '\'' . $word . '\'', $msgOptions['id']);
+				$inserts[] = array($word, $msgOptions['id']);
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'log_search_words',
-				array('id_word', 'id_msg'),
+				array('id_word' => 'string', 'id_msg' => 'int'),
 				$inserts,
-				array('id_word', 'id_msg'), __FILE__, __LINE__
+				array('id_word', 'id_msg')
 			);
 		}
 	}
@@ -2599,9 +2599,9 @@ function approvePosts($msgs, $approve = true)
 
 		$smfFunc['db_insert']('ignore',
 			$db_prefix . 'approval_queue',
-			array('id_msg'),
+			array('id_msg' => 'int'),
 			$msgInserts,
-			array('id_msg'), __FILE__, __LINE__
+			array('id_msg')
 		);
 	}
 

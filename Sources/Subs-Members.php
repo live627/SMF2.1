@@ -652,12 +652,12 @@ function registerMember(&$regOptions, $return_errors = false)
 	{
 		$inserts = array();
 		foreach ($theme_vars as $var => $val)
-			$inserts[] = array($memberID, 'SUBSTRING(\'' . $var . '\', 1, 255)', 'SUBSTRING(\'' . $val . '\', 1, 65534)');
+			$inserts[] = array($memberID, $var, $val);
 		$smfFunc['db_insert']('insert',
 			$db_prefix . 'themes',
-			array('id_member', 'variable', 'value'),
+			array('id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534',
 			$inserts,
-			array('id_member', 'variable'), __FILE__, __LINE__
+			array('id_member', 'variable')
 		);
 	}
 

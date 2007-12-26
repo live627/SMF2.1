@@ -2105,7 +2105,7 @@ function sessionWrite($session_id, $data)
 
 	// If that didn't work, try inserting a new one.
 	if ($smfFunc['db_affected_rows']() == 0)
-		$result = $smfFunc['db_new_insert']('ignore',
+		$result = $smfFunc['db_insert']('ignore',
 			$db_prefix . 'sessions',
 			array('session_id' => 'string', 'data' => 'string', 'last_update' => 'int'),
 			array($session_id, $data, time()),

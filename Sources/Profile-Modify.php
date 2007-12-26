@@ -1077,7 +1077,7 @@ function makeThemeChanges($memID, $id_theme)
 	{
 		if (!empty($themeSetArray))
 		{
-			$smfFunc['db_new_insert']('replace',
+			$smfFunc['db_insert']('replace',
 				$db_prefix . 'themes',
 				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$themeSetArray,
@@ -1216,9 +1216,9 @@ function makeCustomFieldChanges($memID, $area)
 	if (!empty($changes) && empty($context['password_auth_failed']))
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'themes',
-			array('id_theme', 'variable', 'value', 'id_member'),
+			array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534', 'id_member' => 'int'),
 			$changes,
-			array('id_theme', 'variable', 'id_member'), __FILE__, __LINE__
+			array('id_theme', 'variable', 'id_member')
 		);
 }
 

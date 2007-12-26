@@ -1669,15 +1669,15 @@ function Post2()
 		$pollOptions = array();
 		foreach ($_POST['options'] as $option)
 		{
-			$pollOptions[] = array($id_poll, $i, 'SUBSTRING(\'' . $option . '\', 1, 255)');
+			$pollOptions[] = array($id_poll, $i, $option);
 			$i++;
 		}
 
 		$smfFunc['db_insert']('insert',
 			$db_prefix . 'poll_choices',
-			array('id_poll', 'id_choice', 'label'),
+			array('id_poll' => 'int', 'id_choice' => 'int', 'label' => 'string-255'),
 			$pollOptions,
-			array('id_poll', 'id_choice'), __FILE__, __LINE__
+			array('id_poll', 'id_choice')
 		);
 	}
 	else
@@ -1845,9 +1845,9 @@ function Post2()
 		if (allowedTo('mark_any_notify'))
 			$smfFunc['db_insert']('ignore',
 				$db_prefix . 'log_notify',
-				array('id_member', 'id_topic', 'id_board'),
+				array('id_member' => 'int', 'id_topic' => 'int', 'id_board' => 'int'),
 				array($user_info['id'], $topic, 0),
-				array('id_member', 'id_topic', 'id_board'), __FILE__, __LINE__
+				array('id_member', 'id_topic', 'id_board')
 			);
 	}
 	elseif (!$newTopic)

@@ -138,7 +138,7 @@ function log_error($error_message, $error_type = 'general', $file = null, $line 
 	$error_type = in_array($error_type, $known_error_types) && $error_type !== true ? $error_type : 'general';
 
 	// Insert the error into the database.
-	$smfFunc['db_new_insert']('',
+	$smfFunc['db_insert']('',
 		$db_prefix . 'log_errors',
 		array('id_member' => 'int', 'log_time' => 'int', 'ip' => 'string-16', 'url' => 'string-65534', 'message' => 'string-65534', 'session' => 'string', 'error_type' => 'string', 'file' => 'string-255', 'line' => 'int'),
 		array($user_info['id'], time(), $user_info['ip'], $query_string, $error_message, $sc, $error_type, $file, $line),

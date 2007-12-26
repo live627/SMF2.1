@@ -160,7 +160,12 @@ function smf_openID_makeAssocation($server)
 	$assoc_type = isset($assoc_data['assoc_type']) ? $smfFunc['db_escape_string']($assoc_data['assoc_type']) : '';
 
 	// Store the data
-	$smfFunc['db_insert']('replace', $db_prefix . 'openid_assoc', array('server_url', 'handle', 'secret', 'issued', 'expires', 'assoc_type'),  array( '\'' . $server_url . '\'', '\'' . $handle . '\'', '\'' . $secret . '\'', $issued, $expires, '\'' . $assoc_type . '\''), array('server_url', 'handle'), __FILE__, __LINE__);
+	$smfFunc['db_insert']('replace',
+		$db_prefix . 'openid_assoc',
+		array('server_url' => 'string', 'handle' => 'string', 'secret' => 'string', 'issued' => 'int', 'expires' => 'int', 'assoc_type' => 'string'),
+		array($server_url, $handle, $secret, $issued, $expires, $assoc_type),
+		array('server_url', 'handle')
+	);
 
 	return array(
 		'server' => $server,

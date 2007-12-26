@@ -1177,7 +1177,7 @@ function UpgradeOptions()
 			preg_match('~SITE-ID:\s(\w{10})~', $return_data, $ID);
 
 			if (!empty($ID[1]))
-				$smfFunc['db_new_insert']('replace',
+				$smfFunc['db_insert']('replace',
 					$db_prefix . 'settings',
 					array('variable' => 'string', 'value' => 'string'),
 					array('allow_sm_stats', $ID[1]),
@@ -1407,7 +1407,7 @@ function DatabaseChanges()
 				if ($nextFile)
 				{
 					// Only update the version of this if complete.
-					$smfFunc['db_new_insert']('replace',
+					$smfFunc['db_insert']('replace',
 						$db_prefix . 'settings',
 						array('variable' => 'string', 'value' => 'string'),
 						array('smfVersion', $file[2]),
@@ -1998,7 +1998,7 @@ function UpgradeTemplate()
 
 		if (!empty($themeData))
 		{
-			$smfFunc['db_new_insert']('ignore',
+			$smfFunc['db_insert']('ignore',
 				$db_prefix . 'themes',
 				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string', 'value' => 'string'),
 				$themeData,
@@ -2015,7 +2015,7 @@ function UpgradeTemplate()
 			)
 		);
 
-		$smfFunc['db_new_insert']('replace',
+		$smfFunc['db_insert']('replace',
 				$db_prefix . 'settings',
 				array('variable' => 'string', 'value' => 'string'),
 				array(array('theme_guests', $id_theme), array('smiley_sets_default', 'classic')),
@@ -2133,7 +2133,7 @@ function convertSettingsToTheme()
 	}
 	if (!empty($themeData))
 	{
-		$smfFunc['db_new_insert']('ignore',
+		$smfFunc['db_insert']('ignore',
 			$db_prefix . 'themes',
 			array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string', 'value' => 'string'),
 			$themeData,

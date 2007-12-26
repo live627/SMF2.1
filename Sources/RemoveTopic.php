@@ -791,18 +791,18 @@ function removeMessage($message, $decreasePostCount = true)
 			if (!$user_info['is_guest'])
 				$smfFunc['db_insert']('replace',
 					$db_prefix . 'log_topics',
-					array('id_topic', 'id_member', 'id_msg'),
+					array('id_topic' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 					array($topicID, $user_info['id'], $modSettings['maxMsgID']),
-					array('id_topic', 'id_member'), __FILE__, __LINE__
+					array('id_topic', 'id_member')
 				);
 
 			// Mark recycle board as seen, if it was marked as seen before.
 			if (!empty($isRead) && !$user_info['is_guest'])
 				$smfFunc['db_insert']('replace',
 					$db_prefix . 'log_boards',
-					array('id_board', 'id_member', 'id_msg'),
+					array('id_board' => 'int', 'id_member' => 'int', 'id_msg' => 'int'),
 					array($modSettings['recycle_board'], $user_info['id'], $modSettings['maxMsgID']),
-					array('id_board', 'id_member'), __FILE__, __LINE__
+					array('id_board', 'id_member')
 				);
 
 			// Add one topic and post to the recycle bin board.

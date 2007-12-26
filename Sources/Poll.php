@@ -201,9 +201,9 @@ function Vote()
 	// Add their vote to the tally.
 	$smfFunc['db_insert']('insert',
 		$db_prefix . 'log_polls',
-		array('id_poll', 'id_member', 'id_choice'),
+		array('id_poll' => 'int', 'id_member' => 'int', 'id_choice' => 'int'),
 		$inserts,
-		array('id_poll', 'id_member', 'id_choice'), __FILE__, __LINE__
+		array('id_poll', 'id_member', 'id_choice')
 	);
 
 	$smfFunc['db_query']('', '

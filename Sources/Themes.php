@@ -284,24 +284,21 @@ function ThemeList()
 			$themes[$row['id_theme']][$row['variable']] = $row['value'];
 		$smfFunc['db_free_result']($request);
 
-		$_POST['reset_dir'] = $smfFunc['db_unescape_string']($_POST['reset_dir']);
-		$_POST['reset_url'] = $smfFunc['db_unescape_string']($_POST['reset_url']);
-
 		$setValues = array();
 		foreach ($themes as $id => $theme)
 		{
 			if (file_exists($_POST['reset_dir'] . '/' . basename($theme['theme_dir'])))
 			{
-				$setValues[] = array($id, 0, '\'theme_dir\'', '\'' . $smfFunc['db_escape_string'](realpath($_POST['reset_dir'] . '/' . basename($theme['theme_dir']))) . '\'');
-				$setValues[] = array($id, 0, '\'theme_url\'', '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['theme_dir'])) . '\'');
-				$setValues[] = array($id, 0, '\'images_url\'', '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['theme_dir'])) . '/' . basename($theme['images_url']) . '\'');
+				$setValues[] = array($id, 0, 'theme_dir', realpath($_POST['reset_dir'] . '/' . basename($theme['theme_dir'])));
+				$setValues[] = array($id, 0, 'theme_url', $_POST['reset_url'] . '/' . basename($theme['theme_dir']));
+				$setValues[] = array($id, 0, 'images_url', $_POST['reset_url'] . '/' . basename($theme['theme_dir']) . '/' . basename($theme['images_url']));
 			}
 
 			if (isset($theme['base_theme_dir']) && file_exists($_POST['reset_dir'] . '/' . basename($theme['base_theme_dir'])))
 			{
-				$setValues[] = array($id, 0, '\'base_theme_dir\'', '\'' . $smfFunc['db_escape_string'](realpath($_POST['reset_dir'] . '/' . basename($theme['base_theme_dir']))) . '\'');
-				$setValues[] = array($id, 0, '\'base_theme_url\'', '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['base_theme_dir'])) . '\'');
-				$setValues[] = array($id, 0, '\'base_images_url\'', '\'' . $smfFunc['db_escape_string']($_POST['reset_url'] . '/' . basename($theme['base_theme_dir'])) . '/' . basename($theme['base_images_url']) . '\'');
+				$setValues[] = array($id, 0, 'base_theme_dir', realpath($_POST['reset_dir'] . '/' . basename($theme['base_theme_dir'])));
+				$setValues[] = array($id, 0, 'base_theme_url', $_POST['reset_url'] . '/' . basename($theme['base_theme_dir']));
+				$setValues[] = array($id, 0, 'base_images_url', $_POST['reset_url'] . '/' . basename($theme['base_theme_dir']) . '/' . basename($theme['base_images_url']));
 			}
 
 			cache_put_data('theme_settings-' . $id, null, 90);
@@ -311,9 +308,9 @@ function ThemeList()
 		{
 			$smfFunc['db_insert']('replace',
 				$db_prefix . 'themes',
-				array('id_theme', 'id_member', 'variable', 'value'),
+				array('id_theme' => 'int', 'id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$setValues,
-				array('id_theme', 'variable', 'id_member'), __FILE__, __LINE__
+				array('id_theme', 'variable', 'id_member')
 			);
 		}
 
@@ -471,14 +468,14 @@ function SetThemeOptions()
 		$setValues = array();
 
 		foreach ($_POST['options'] as $opt => $val)
-			$setValues[] = array(-1, $_GET['th'], 'SUBSTRING(\'' . $opt . '\', 1, 255)', 'SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)');
+			$setValues[] = array(-1, $_GET['th'], $opt, is_array($val) ? implode(',', $val) : $val);
 
 		$old_settings = array();
 		foreach ($_POST['default_options'] as $opt => $val)
 		{
 			$old_settings[] = $opt;
 
-			$setValues[] = array(-1, 1, 'SUBSTRING(\'' . $opt . '\', 1, 255)', 'SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)');
+			$setValues[] = array(-1, 1, $opt, is_array($val) ? implode(',', $val) : $val);
 		}
 
 		// If we're actually inserting something..
@@ -499,9 +496,9 @@ function SetThemeOptions()
 
 			$smfFunc['db_insert']('replace',
 				$db_prefix . 'themes',
-				array('id_member', 'id_theme', 'variable', 'value'),
+				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$setValues,
-				array('id_theme', 'variable', 'id_member'), __FILE__, __LINE__
+				array('id_theme', 'variable', 'id_member')
 			);
 		}
 
@@ -801,17 +798,17 @@ function SetThemeSettings()
 		// Set up the sql query.
 		$inserts = array();
 		foreach ($_POST['options'] as $opt => $val)
-			$inserts[] = array(0, $_GET['th'], 'SUBSTRING(\'' . $opt . '\', 1, 255)', 'SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)');
+			$inserts[] = array(0, $_GET['th'], $opt, is_array($val) ? implode(',', $val) : $val);
 		foreach ($_POST['default_options'] as $opt => $val)
-			$inserts[] = array(0, 1, 'SUBSTRING(\'' . $opt . '\', 1, 255)', 'SUBSTRING(\'' . (is_array($val) ? implode(',', $val) : $val) . '\', 1, 65534)');
+			$inserts[] = array(0, 1, $opt, is_array($val) ? implode(',', $val) : $val);
 		// If we're actually inserting something..
 		if (!empty($inserts))
 		{
 			$smfFunc['db_insert']('replace',
 				$db_prefix . 'themes',
-				array('id_member', 'id_theme', 'variable', 'value'),
+				array('id_member' => 'int', 'id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$inserts,
-				array('id_member', 'id_theme', 'variable'), __FILE__, __LINE__
+				array('id_member', 'id_theme', 'variable')
 			);
 		}
 
@@ -1316,14 +1313,14 @@ function ThemeInstall()
 
 		$inserts = array();
 		foreach ($install_info as $var => $val)
-			$inserts[] = array($id_theme, 'SUBSTRING(\'' . $smfFunc['db_escape_string']($var) . '\', 1, 255)', 'SUBSTRING(\'' . $smfFunc['db_escape_string']($val) . '\', 1, 65534)');
+			$inserts[] = array($id_theme, $var, $val);
 
 		if (!empty($inserts))
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'themes',
-				array('id_theme', 'variable', 'value'),
+				array('id_theme' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 				$inserts,
-				array('id_theme', 'variable'), __FILE__, __LINE__
+				array('id_theme', 'variable')
 			);
 
 		updateSettings(array('knownThemes' => strtr($modSettings['knownThemes'] . ',' . $id_theme, array(',,' => ','))));
@@ -1402,9 +1399,9 @@ function SetJavaScript()
 	// Update the option.
 	$smfFunc['db_insert']('replace',
 		$db_prefix . 'themes',
-		array('id_theme', 'id_member', 'variable', 'value'),
-		array($settings['theme_id'], $user_info['id'], 'SUBSTRING(\'' . $_GET['var'] . '\', 1, 255)', 'SUBSTRING(\'' . (is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']) . '\', 1, 65534)'),
-		array('id_theme', 'id_member', 'variable'), __FILE__, __LINE__
+		array('id_theme' => 'int', 'id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
+		array($settings['theme_id'], $user_info['id'], $_GET['var'], is_array($_GET['val']) ? implode(',', $_GET['val']) : $_GET['val']),
+		array('id_theme', 'id_member', 'variable')
 	);
 
 	cache_put_data('theme_settings-' . $settings['theme_id'] . ':' . $user_info['id'], null, 60);

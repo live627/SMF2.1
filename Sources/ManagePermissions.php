@@ -573,7 +573,7 @@ function SetQuickGroups()
 			if (!empty($inserts))
 			{
 				// ..and insert the new ones.
-				$smfFunc['db_new_insert']('',
+				$smfFunc['db_insert']('',
 					$db_prefix . 'permissions',
 					array('permission' => 'string', 'id_group' => 'int', 'add_deny' => 'int'),
 					$inserts,
@@ -618,7 +618,7 @@ function SetQuickGroups()
 		if (!empty($inserts))
 		{
 			// ..and insert the new ones.
-			$smfFunc['db_new_insert']('',
+			$smfFunc['db_insert']('',
 				$db_prefix . 'board_permissions',
 				array('permission' => 'string', 'id_group' => 'int', 'id_profile' => 'int', 'add_deny' => 'int'),
 				$inserts,
@@ -681,7 +681,7 @@ function SetQuickGroups()
 			if (!empty($permChange))
 			{
 				if ($permissionType == 'membergroup')
-					$smfFunc['db_new_insert']('replace',
+					$smfFunc['db_insert']('replace',
 						$db_prefix . 'permissions',
 						array('permission' => 'string', 'id_group' => 'int', 'add_deny' => 'int'),
 						$permChange,
@@ -689,7 +689,7 @@ function SetQuickGroups()
 					);
 				// Board permissions go into the other table.
 				else
-					$smfFunc['db_new_insert']('replace',
+					$smfFunc['db_insert']('replace',
 						$db_prefix . 'board_permissions',
 						array('permission' => 'string', 'id_group' => 'int', 'id_profile' => 'int', 'add_deny' => 'int'),
 						$permChange,
@@ -908,7 +908,7 @@ function ModifyMembergroup2()
 
 		if (!empty($givePerms['membergroup']))
 		{
-			$smfFunc['db_new_insert']('replace',
+			$smfFunc['db_insert']('replace',
 				$db_prefix . 'permissions',
 				array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$givePerms['membergroup'],
@@ -932,7 +932,7 @@ function ModifyMembergroup2()
 	{
 		foreach ($givePerms['board'] as $k => $v)
 			$givePerms['board'][$k][] = $profileid;
-		$smfFunc['db_new_insert']('replace',
+		$smfFunc['db_insert']('replace',
 			$db_prefix . 'board_permissions',
 			array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int', 'id_profile' => 'int'),
 			$givePerms['board'],
@@ -1241,7 +1241,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		foreach ($groupLevels['global'][$level] as $permission)
 			$groupInserts[] = array($group, $permission);
 
-		$smfFunc['db_new_insert']('insert',
+		$smfFunc['db_insert']('insert',
 			$db_prefix . 'permissions',
 			array('id_group' => 'int', 'permission' => 'string'),
 			$groupInserts,
@@ -1252,7 +1252,7 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		foreach ($groupLevels['board'][$level] as $permission)
 			$boardInserts[] = array(1, $group, $permission);
 
-		$smfFunc['db_new_insert']('insert',
+		$smfFunc['db_insert']('insert',
 			$db_prefix . 'board_permissions',
 			array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 			$boardInserts,
@@ -1282,13 +1282,14 @@ function setPermissionLevel($level, $group, $profile = 'null')
 		{
 			$boardInserts = array();
 			foreach ($groupLevels['board'][$level] as $permission)
-				$boardInserts[] = array($profile, $group, '\'' . $permission . '\'');
+				$boardInserts[] = array($profile, $group, $permission);
 
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'board_permissions',
-				array('id_profile', 'id_group', 'permission'),
+				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 				$boardInserts,
-				array('id_profile', 'id_group'), __FILE__, __LINE__);
+				array('id_profile', 'id_group')
+			);
 		}
 	}
 	// Setting profile permissions for all groups.
@@ -1324,26 +1325,28 @@ function setPermissionLevel($level, $group, $profile = 'null')
 
 			$boardInserts = array();
 			foreach ($boardLevels[$level] as $permission)
-				$boardInserts[] = array($profile, $group, '\'' . $permission . '\'');
+				$boardInserts[] = array($profile, $group, $permission);
 
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'board_permissions',
-				array('id_profile', 'id_group', 'permission'),
+				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 				$boardInserts,
-				array('id_profile', 'id_group'), __FILE__, __LINE__);
+				array('id_profile', 'id_group')
+			);
 		}
 		$smfFunc['db_free_result']($query);
 
 		// Add permissions for ungrouped members.
 		$boardInserts = array();
 		foreach ($boardLevels[$level] as $permission)
-			$boardInserts[] = array($profile, 0, '\'' . $permission . '\'');
+			$boardInserts[] = array($profile, 0, $permission);
 
 		$smfFunc['db_insert']('insert',
 				$db_prefix . 'board_permissions',
-				array('id_profile', 'id_group', 'permission'),
+				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string'),
 				$boardInserts,
-				array('id_profile', 'id_group'), __FILE__, __LINE__);
+				array('id_profile', 'id_group')
+			);
 	}
 	// $profile and $group are both null!
 	else
@@ -1764,7 +1767,7 @@ function save_inline_permissions($permissions)
 		foreach ($_POST[$permission] as $id_group => $value)
 		{
 			if (in_array($value, array('on', 'deny')) && (empty($context['illegal_permissions']) || !in_array($permission, $context['illegal_permissions'])))
-				$insertRows[] = array((int) $id_group, '\'' . $permission . '\'', $value == 'on' ? 1 : 0);
+				$insertRows[] = array((int) $id_group, $permission, $value == 'on' ? 1 : 0);
 		}
 	}
 
@@ -1781,9 +1784,9 @@ function save_inline_permissions($permissions)
 	if (!empty($insertRows))
 		$smfFunc['db_insert']('insert',
 			$db_prefix . 'permissions',
-			array('id_group', 'permission', 'add_deny'),
+			array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 			$insertRows,
-			array('id_group', 'permission'), __FILE__, __LINE__
+			array('id_group', 'permission')
 		);
 
 	// Do a full child update.
@@ -1861,15 +1864,15 @@ function EditPermissionProfiles()
 		);
 		$inserts = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
-			$inserts[] = array($profile_id, $row['id_group'], '\'' . $row['permission'] . '\'', $row['add_deny']);
+			$inserts[] = array($profile_id, $row['id_group'], $row['permission'], $row['add_deny']);
 		$smfFunc['db_free_result']($request);
 
 		if (!empty($inserts))
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'board_permissions',
-				array('id_profile', 'id_group', 'permission', 'add_deny'),
+				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$inserts,
-				array('id_profile', 'id_group', 'permission'), __FILE__, __LINE__
+				array('id_profile', 'id_group', 'permission')
 			);
 	}
 	// Renaming?
@@ -2015,7 +2018,7 @@ function updateChildPermissions($parents, $profile = null)
 		$permissions = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			foreach ($children[$row['id_group']] as $child)
-				$permissions[] = array($child, '\'' . $row['permission'] . '\'', $row['add_deny']);
+				$permissions[] = array($child, $row['permission'], $row['add_deny']);
 		$smfFunc['db_free_result']($request);
 
 		$smfFunc['db_query']('', '
@@ -2031,7 +2034,7 @@ function updateChildPermissions($parents, $profile = null)
 		{
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'permissions',
-				array('id_group', 'permission', 'add_deny'),
+				array('id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$permissions,
 				array('id_group', 'permission'), __FILE__, __LINE__
 			);
@@ -2056,7 +2059,7 @@ function updateChildPermissions($parents, $profile = null)
 		$permissions = array();
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			foreach ($children[$row['id_group']] as $child)
-				$permissions[] = array($child, $row['id_profile'], '\'' . $row['permission'] . '\'', $row['add_deny']);
+				$permissions[] = array($child, $row['id_profile'], $row['permission'], $row['add_deny']);
 		$smfFunc['db_free_result']($request);
 
 		$smfFunc['db_query']('', '
@@ -2073,9 +2076,9 @@ function updateChildPermissions($parents, $profile = null)
 		{
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'board_permissions',
-				array('id_group', 'id_profile', 'permission', 'add_deny'),
+				array('id_group' => 'int', 'id_profile' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$permissions,
-				array('id_group', 'id_profile', 'permission'), __FILE__, __LINE__
+				array('id_group', 'id_profile', 'permission')
 			);
 		}
 	}
@@ -2201,11 +2204,11 @@ function ModifyPostModeration()
 					if ($_POST[$index][$group['id']] == 'allow')
 					{
 						// Give them both sets for fun.
-						$new_permissions[] = array($context['current_profile'], $group['id'], '\'' . $data[0] . '\'', 1);
-						$new_permissions[] = array($context['current_profile'], $group['id'], '\'' . $data[1] . '\'', 1);
+						$new_permissions[] = array($context['current_profile'], $group['id'], $data[0], 1);
+						$new_permissions[] = array($context['current_profile'], $group['id'], $data[1], 1);
 					}
 					elseif ($_POST[$index][$group['id']] == 'moderate')
-						$new_permissions[] = array($context['current_profile'], $group['id'], '\'' . $data[0] . '\'', 1);
+						$new_permissions[] = array($context['current_profile'], $group['id'], $data[0], 1);
 				}
 			}
 		}
@@ -2214,9 +2217,9 @@ function ModifyPostModeration()
 		if (!empty($new_permissions))
 			$smfFunc['db_insert']('',
 				$db_prefix . 'board_permissions',
-				array('id_profile', 'id_group', 'permission', 'add_deny'),
+				array('id_profile' => 'int', 'id_group' => 'int', 'permission' => 'string', 'add_deny' => 'int'),
 				$new_permissions,
-				array('id_profile', 'id_group', 'permission'), __FILE__, __LINE__
+				array('id_profile', 'id_group', 'permission')
 			);
 	}
 

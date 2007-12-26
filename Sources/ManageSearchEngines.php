@@ -515,9 +515,9 @@ function logSpider()
 		{
 			$smfFunc['db_insert']('insert',
 				$db_prefix . 'log_spider_stats',
-				array('id_spider', 'last_seen', 'stat_date', 'page_hits'),
-				array($_SESSION['id_robot'], time(), '\'' . $date . '\'', 1),
-				array('stat_date'), __FILE__, __LINE__
+				array('id_spider' => 'int', 'last_seen' => 'int', 'stat_date' => 'date', 'page_hits' => 'int'),
+				array($_SESSION['id_robot'], time(), $date, 1),
+				array('stat_date')
 			);
 		}
 	}
@@ -535,9 +535,9 @@ function logSpider()
 
 		$smfFunc['db_insert']('insert',
 			$db_prefix . 'log_spider_hits',
-			array('id_spider', 'log_time', 'url'),
-			array($_SESSION['id_robot'], time(), '\'' . $url . '\''),
-			array(), __FILE__, __LINE__
+			array('id_spider' => 'int', 'log_time' => 'int', 'url' => 'string'),
+			array($_SESSION['id_robot'], time(), $url),
+			array()
 		);
 	}
 }
@@ -583,16 +583,16 @@ function consolidateSpiderStats()
 			)
 		);
 		if ($smfFunc['db_affected_rows']() == 0)
-			$stat_inserts[] = array( '\'' . $date . '\'', $stat['id_spider'], $stat['num_hits'], $stat['last_seen']);
+			$stat_inserts[] = array($date, $stat['id_spider'], $stat['num_hits'], $stat['last_seen']);
 	}
 
 	// New stats?
 	if (!empty($stat_inserts))
 		$smfFunc['db_insert']('insert',
 			$db_prefix . 'log_spider_stats',
-			array('stat_date', 'id_spider', 'page_hits', 'last_seen'),
+			array('stat_date' => 'date', 'id_spider' => 'int', 'page_hits' => 'int', 'last_seen' => 'int'),
 			$stat_inserts,
-			array('stat_date', 'id_spider'), __FILE__, __LINE__
+			array('stat_date', 'id_spider')
 		);
 
 	// All processed.
