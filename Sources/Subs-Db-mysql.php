@@ -627,7 +627,7 @@ function db_error($db_string, $connection = null)
 function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $disable_trans = false, $connection = null)
 {
 	global $smfFunc, $db_connection;
-	
+
 	$connection = $connection === null ? $db_connection : $connection;
 
 	// With nothing to insert, simply return.

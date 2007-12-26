@@ -1658,7 +1658,7 @@ function Post2()
 			),
 			array(
 				$_POST['question'], $_POST['poll_hide'], $_POST['poll_max_votes'], (empty($_POST['poll_expire']) ? 0 : time() + $_POST['poll_expire'] * 3600 * 24), $user_info['id'],
-				$_POST['guestname'], $_POST['poll_change_vote'], $_POST['poll_guest_vote']
+				$_POST['guestname'], $_POST['poll_change_vote'], $_POST['poll_guest_vote'],
 			),
 			array('id_poll')
 		);
