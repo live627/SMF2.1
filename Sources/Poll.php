@@ -342,7 +342,7 @@ function EditPoll()
 	// Want to make sure before you actually submit?  Must be a lot of options, or something.
 	if (isset($_POST['preview']))
 	{
-		$question = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['question']));
+		$question = $smfFunc['htmlspecialchars']($_POST['question']);
 
 		// Basic theme info...
 		$context['poll'] = array(
@@ -405,7 +405,7 @@ function EditPoll()
 		// If an option exists, update it.  If it is new, add it - but don't reuse ids!
 		foreach ($_POST['options'] as $id => $label)
 		{
-			$label = $smfFunc['db_unescape_string']($smfFunc['htmlspecialchars']($label));
+			$label = $smfFunc['htmlspecialchars']($label);
 			censorText($label);
 
 			if (isset($context['choices'][$id]))
