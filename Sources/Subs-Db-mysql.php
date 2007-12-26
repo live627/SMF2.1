@@ -263,7 +263,11 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
 
 	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false)
+	{
+		//!!! TEMP.
+		var_dump(debug_backtrace());
 		fatal_error('Hacking attempt...', false);
+	}
 	
 	if (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false)
 	{
@@ -312,7 +316,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		$db_cache[$db_count]['l'] = $line;
 		$st = microtime();
 	}
-$modSettings['disableQueryCheck'] = true;
+
 	// First, we clean strings out of the query, reduce whitespace, lowercase, and trim - so we can check it over.
 	if (empty($modSettings['disableQueryCheck']))
 	{

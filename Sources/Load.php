@@ -386,10 +386,10 @@ function loadUserSettings()
 			$result = $smfFunc['db_query']('', '
 				SELECT poster_time
 				FROM {db_prefix}messages
-				WHERE id_msg = {int:inject_int_1}
+				WHERE id_msg = {int:id_msg}
 				LIMIT 1',
 				array(
-					'inject_int_1' => $user_settings['id_msg_last_visit'],
+					'id_msg' => $user_settings['id_msg_last_visit'],
 				)
 			);
 			list ($visitTime) = $smfFunc['db_fetch_row']($result);
@@ -559,10 +559,10 @@ function loadBoard()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_topic
 				FROM {db_prefix}messages
-				WHERE id_msg = {int:inject_int_1}
+				WHERE id_msg = {int:id_msg}
 				LIMIT 1',
 				array(
-					'inject_int_1' => $_REQUEST['msg'],
+					'id_msg' => $_REQUEST['msg'],
 				)
 			);
 
@@ -795,7 +795,7 @@ function loadPermissions()
 	}
 
 	// If it is detected as a robot, and we are restricting permissions as a special group - then implement this.
-	$spider_restrict = $user_info['possibly_robot'] && !empty($modSettings['spider_group']) ? ' OR (id_group = ' . $modSettings['spider_group'] . ' && add_deny = 0)' : '';
+	$spider_restrict = $user_info['possibly_robot'] && !empty($modSettings['spider_group']) ? ' OR (id_group = {int:spider_group} && add_deny = 0)' : '';
 
 	if (empty($user_info['permissions']))
 	{
@@ -803,10 +803,11 @@ function loadPermissions()
 		$request = $smfFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}permissions
-			WHERE id_group IN ({array_int:inject_array_int_1})
+			WHERE id_group IN ({array_int:member_groups})
 				' . $spider_restrict,
 			array(
-				'inject_array_int_1' => $user_info['groups'],
+				'member_groups' => $user_info['groups'],
+				'spider_group' => !empty($modSettings['spider_group']) ? $modSettings['spider_group'] : 0,
 			)
 		);
 		$removals = array();
@@ -833,12 +834,13 @@ function loadPermissions()
 		$request = $smfFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}board_permissions
-			WHERE (id_group IN ({array_int:inject_array_int_1})
+			WHERE (id_group IN ({array_int:member_groups})
 				' . $spider_restrict . ')
-				AND id_profile = {int:inject_int_1}',
+				AND id_profile = {int:id_profile}',
 			array(
-				'inject_array_int_1' => $user_info['groups'],
-				'inject_int_1' => $board_info['profile'],
+				'member_groups' => $user_info['groups'],
+				'id_profile' => $board_info['profile'],
+				'spider_group' => !empty($modSettings['spider_group']) ? $modSettings['spider_group'] : 0,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -898,9 +900,9 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			mem.real_name, mem.email_address, mem.hide_email, mem.date_registered, mem.website_title, mem.website_url,
 			mem.birthdate, mem.member_ip, mem.member_ip2, mem.icq, mem.aim, mem.yim, mem.msn, mem.posts, mem.last_login,
 			mem.karma_good, mem.id_post_group, mem.karma_bad, mem.lngfile, mem.id_group, mem.time_offset, mem.show_online,
-			mem.buddy_list, mg.online_color AS member_group_color, IFNULL(mg.group_name, \'\') AS member_group,
-			pg.online_color AS post_group_color, IFNULL(pg.group_name, \'\') AS post_group, mem.is_activated, mem.warning,
-			CASE WHEN mem.id_group = 0 OR mg.stars = \'\' THEN pg.stars ELSE mg.stars END AS stars' . (!empty($modSettings['titlesEnable']) ? ',
+			mem.buddy_list, mg.online_color AS member_group_color, IFNULL(mg.group_name, {string:blank_string}) AS member_group,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, {string:blank_string}) AS post_group, mem.is_activated, mem.warning,
+			CASE WHEN mem.id_group = 0 OR mg.stars = {string:blank_string} THEN pg.stars ELSE mg.stars END AS stars' . (!empty($modSettings['titlesEnable']) ? ',
 			mem.usertitle' : '');
 		$select_tables = '
 			LEFT JOIN ' . $db_prefix . 'log_online AS lo ON (lo.id_member = mem.id_member)
@@ -919,9 +921,9 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			mem.pm_ignore_list, mem.pm_email_notify, mem.time_offset' . (!empty($modSettings['titlesEnable']) ? ', mem.usertitle' : '') . ',
 			mem.time_format, mem.secret_question, mem.is_activated, mem.additional_groups, mem.smiley_set, mem.show_online,
 			mem.total_time_logged_in, mem.id_post_group, mem.notify_announcements, mem.notify_regularity, mem.notify_send_body,
-			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, \'\') AS member_group,
-			pg.online_color AS post_group_color, IFNULL(pg.group_name, \'\') AS post_group, mem.ignore_boards, mem.warning,
-			CASE WHEN mem.id_group = 0 OR mg.stars = \'\' THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt, mem.pm_prefs';
+			mem.notify_types, lo.url, mg.online_color AS member_group_color, IFNULL(mg.group_name, {string:blank_string}) AS member_group,
+			pg.online_color AS post_group_color, IFNULL(pg.group_name, {string:blank_string}) AS post_group, mem.ignore_boards, mem.warning,
+			CASE WHEN mem.id_group = 0 OR mg.stars = {string:blank_string} THEN pg.stars ELSE mg.stars END AS stars, mem.password_salt, mem.pm_prefs';
 		$select_tables = '
 			LEFT JOIN ' . $db_prefix . 'log_online AS lo ON (lo.id_member = mem.id_member)
 			LEFT JOIN ' . $db_prefix . 'attachments AS a ON (a.id_member = mem.id_member)
@@ -944,8 +946,10 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 		$request = $smfFunc['db_query']('', '
 			SELECT' . $select_columns . '
 			FROM {db_prefix}members AS mem' . $select_tables . '
-			WHERE mem.' . ($is_name ? 'member_name' : 'id_member') . (count($users) == 1 ? ' = \'' . current($users) . '\'' : ' IN (\'' . implode('\', \'', $users) . '\')'),
+			WHERE mem.' . ($is_name ? 'member_name' : 'id_member') . (count($users) == 1 ? ' = {' . ($is_name ? 'string' : 'int') . ':users}' : ' IN ({' . ($is_name ? 'array_string' : 'array_int') . ':users})'),
 			array(
+				'blank_string' => '',
+				'users' => count($users) == 1 ? current($users) : $users,
 			)
 		);
 		$new_loaded_ids = array();
@@ -964,8 +968,9 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 		$request = $smfFunc['db_query']('', '
 			SELECT *
 			FROM {db_prefix}themes
-			WHERE id_member' . (count($new_loaded_ids) == 1 ? ' = ' . $new_loaded_ids[0] : ' IN (' . implode(', ', $new_loaded_ids) . ')'),
+			WHERE id_member' . (count($new_loaded_ids) == 1 ? ' = {int:loaded_ids}' : ' IN ({array_int}loaded_ids)'),
 			array(
+				'loaded_ids' => count($new_loaded_ids) == 1 ? $new_loaded_ids[0] : $new_loaded_ids,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -987,10 +992,10 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 			$request = $smfFunc['db_query']('', '
 				SELECT group_name AS member_group, online_color AS member_group_color, stars
 				FROM {db_prefix}membergroups
-				WHERE id_group = {int:inject_int_1}
+				WHERE id_group = {int:moderator_group}
 				LIMIT 1',
 				array(
-					'inject_int_1' => 3,
+					'moderator_group' => 3,
 				)
 			);
 			$row = $smfFunc['db_fetch_assoc']($request);
@@ -1230,9 +1235,11 @@ function loadTheme($id_theme = 0, $initialize = true)
 		$result = $smfFunc['db_query']('', '
 			SELECT variable, value, id_member, id_theme
 			FROM {db_prefix}themes
-			WHERE id_member' . (empty($themeData[0]) ? ' IN (-1, 0, ' . $member . ')' : ' = ' . $member) . '
-				AND id_theme' . ($id_theme == 1 ? ' = 1' : ' IN (' . $id_theme . ', 1)'),
+			WHERE id_member' . (empty($themeData[0]) ? ' IN (-1, 0, {int:id_member})' : ' = {int:id_member}') . '
+				AND id_theme' . ($id_theme == 1 ? ' = {int:id_theme}' : ' IN ({int:id_theme}, 1)'),
 			array(
+				'id_theme' => $id_theme,
+				'id_member' => $member,
 			)
 		);
 		// Pick between $settings and $options depending on whose data it is.
@@ -1715,14 +1722,14 @@ function getBoardParents($id_parent)
 	{
 		$result = $smfFunc['db_query']('', '
 			SELECT
-				b.id_parent, b.name, ' . $id_parent . ' AS id_board, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
+				b.id_parent, b.name, {int:board_parent} AS id_board, IFNULL(mem.id_member, 0) AS ID_MODERATOR,
 				mem.real_name, b.child_level
 			FROM {db_prefix}boards AS b
 				LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board)
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = mods.id_member)
-			WHERE b.id_board = {int:inject_int_1}',
+			WHERE b.id_board = {int:board_parent}',
 			array(
-				'inject_int_1' => $id_parent,
+				'board_parent' => $id_parent,
 			)
 		);
 		// In the EXTREMELY unlikely event this happens, give an error message.

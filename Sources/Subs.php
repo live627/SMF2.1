@@ -2504,11 +2504,11 @@ function writeLog($force = false)
 		{
 			$smfFunc['db_query']('delete_log_online_interval', '
 				DELETE FROM {db_prefix}log_online
-				WHERE log_time < {int:inject_int_1}
-					AND session != {string:inject_string_1}',
+				WHERE log_time < {int:log_time}
+					AND session != {string:session}',
 				array(
-					'inject_int_1' => time() - $modSettings['lastActive'] * 60,
-					'inject_string_1' => $session_id,
+					'log_time' => time() - $modSettings['lastActive'] * 60,
+					'session' => $session_id,
 				)
 			);
 
@@ -2518,12 +2518,13 @@ function writeLog($force = false)
 
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_online
-			SET log_time = {int:inject_int_1}, ip = IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0), url = {string:inject_string_1}
-			WHERE session = {string:inject_string_2}',
+			SET log_time = {int:log_time}, ip = IFNULL(INET_ATON({string:ip}), 0), url = {string:url}
+			WHERE session = {string:session}',
 			array(
-				'inject_int_1' => time(),
-				'inject_string_1' => $serialized,
-				'inject_string_2' => $session_id,
+				'log_time' => time(),
+				'ip' => $user_info['ip'],
+				'url' => $serialized,
+				'session' => $session_id,
 			)
 		);
 
@@ -2540,10 +2541,10 @@ function writeLog($force = false)
 		if ($do_delete || !empty($user_info['id']))
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}log_online
-				WHERE ' . ($do_delete ? 'log_time < {int:inject_int_1}' : '') . ($do_delete && !empty($user_info['id']) ? ' OR ' : '') . (empty($user_info['id']) ? '' : 'id_member = {int:current_member}'),
+				WHERE ' . ($do_delete ? 'log_time < {int:log_time}' : '') . ($do_delete && !empty($user_info['id']) ? ' OR ' : '') . (empty($user_info['id']) ? '' : 'id_member = {int:current_member}'),
 				array(
 					'current_member' => $user_info['id'],
-					'inject_int_1' => time() - $modSettings['lastActive'] * 60,
+					'log_time' => time() - $modSettings['lastActive'] * 60,
 				)
 			);
 
@@ -2804,24 +2805,27 @@ function trackStats($stats = array())
 
 	$setStringUpdate = '';
 	$insert_keys = array();
+	$date = strftime('%Y-%m-%d', forum_time(false));
+	$update_paramaters = array(
+		'current_date' => $date,
+	);
 	foreach ($cache_stats as $field => $change)
 	{
 		$setStringUpdate .= '
-			' . $field . ' = ' . ($change === '+' ? $field . ' + 1' : $change) . ',';
+			' . $field . ' = ' . ($change === '+' ? $field . ' + 1' : '{int:' . $field . '}') . ',';
 
 		if ($change === '+')
 			$cache_stats[$field] = 1;
+		else
+			$update_paramaters[$field] = $change;
 		$insert_keys[$field] = 'int';
 	}
 
-	$date = strftime('%Y-%m-%d', forum_time(false));
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_activity
 		SET' . substr($setStringUpdate, 0, -1) . '
 		WHERE date = {date:inject_date_1}',
-		array(
-			'inject_date_1' => $date,
-		)
+		$update_paramaters
 	);
 	if ($smfFunc['db_affected_rows']() == 0)
 	{
@@ -2863,11 +2867,11 @@ function spamProtection($error_type)
 	// Delete old entries...
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_floodcontrol
-		WHERE log_time < {int:inject_int_1}
-			AND log_type = {string:inject_string_1}',
+		WHERE log_time < {int:log_time}
+			AND log_type = {string:log_type}',
 		array(
-			'inject_int_1' => time() - $timeLimit,
-			'inject_string_1' => $error_type,
+			'log_time' => time() - $timeLimit,
+			'log_type' => $error_type,
 		)
 	);
 
