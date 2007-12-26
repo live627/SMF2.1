@@ -74,7 +74,7 @@ function DisplayStats()
 			obExit(false);
 
 		$context['sub_template'] = 'stats';
-		getDailyStats('YEAR(date) = ' . $year . ' AND MONTH(date) = ' . $month);
+		getDailyStats('YEAR(date) = {int:year} AND MONTH(date) = {int:month}', array('year' => $year, 'month' => $month));
 		$context['yearly'][$year]['months'][$month]['date'] = array(
 			'month' => sprintf('%02d', $month),
 			'year' => $year,
@@ -133,9 +133,9 @@ function DisplayStats()
 	$result = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}boards AS b
-		WHERE b.redirect = {string:inject_string_1}',
+		WHERE b.redirect = {string:blank_redirect}',
 		array(
-			'inject_string_1' => '',
+			'blank_redirect' => '',
 		)
 	);
 	list ($context['num_boards']) = $smfFunc['db_fetch_row']($result);
@@ -168,7 +168,7 @@ function DisplayStats()
 	if (($context['gender'] = cache_get_data('stats_gender', 240)) == null)
 	{
 		$result = $smfFunc['db_query']('', '
-			SELECT COUNT(*) AS totalMembers, gender
+			SELECT COUNT(*) AS total_members, gender
 			FROM {db_prefix}members
 			GROUP BY gender',
 			array(
@@ -179,7 +179,7 @@ function DisplayStats()
 		{
 			// Assuming we're telling... male or female?
 			if (!empty($row['gender']))
-				$context['gender'][$row['gender'] == 2 ? 'females' : 'males'] = $row['totalMembers'];
+				$context['gender'][$row['gender'] == 2 ? 'females' : 'males'] = $row['total_members'];
 		}
 		$smfFunc['db_free_result']($result);
 
@@ -204,16 +204,16 @@ function DisplayStats()
 		cache_put_data('stats_gender', $context['gender'], 240);
 	}
 
-	$date = strftime('%Y%m%d', forum_time(false));
+	$date = strftime('%Y-%m-%d', forum_time(false));
 
 	// Members online so far today.
 	$result = $smfFunc['db_query']('', '
 		SELECT most_on
 		FROM {db_prefix}log_activity
-		WHERE date = {date:inject_date_1}
+		WHERE date = {date:today_date}
 		LIMIT 1',
 		array(
-			'inject_date_1' => $date,
+			'today_date' => $date,
 		)
 	);
 	list ($context['online_today']) = $smfFunc['db_fetch_row']($result);
@@ -225,11 +225,11 @@ function DisplayStats()
 	$members_result = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, posts
 		FROM {db_prefix}members
-		WHERE posts > {int:inject_int_1}
+		WHERE posts > {int:no_posts}
 		ORDER BY posts DESC
 		LIMIT 10',
 		array(
-			'inject_int_1' => 0,
+			'no_posts' => 0,
 		)
 	);
 	$context['top_posters'] = array();
@@ -260,13 +260,13 @@ function DisplayStats()
 		SELECT id_board, name, num_posts
 		FROM {db_prefix}boards AS b
 		WHERE ' . $user_info['query_see_board'] . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND b.id_board != {int:inject_int_1}' : '') . '
-			AND b.redirect = {string:inject_string_1}
+			AND b.id_board != {int:recycle_board}' : '') . '
+			AND b.redirect = {string:blank_redirect}
 		ORDER BY num_posts DESC
 		LIMIT 10',
 		array(
-			'inject_int_1' => $modSettings['recycle_board'],
-			'inject_string_1' => '',
+			'recycle_board' => $modSettings['recycle_board'],
+			'blank_redirect' => '',
 		)
 	);
 	$context['top_boards'] = array();
@@ -298,13 +298,13 @@ function DisplayStats()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_topic
 			FROM {db_prefix}topics
-			WHERE num_replies != {int:inject_int_1}
-				AND approved = {int:inject_int_2}
+			WHERE num_replies != {int:no_replies}
+				AND approved = {int:is_approved}
 			ORDER BY num_replies DESC
 			LIMIT 100',
 			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => 1,
+				'no_replies' => 0,
+				'is_approved' => 1,
 			)
 		);
 		$topic_ids = array();
@@ -321,17 +321,17 @@ function DisplayStats()
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND b.id_board != {int:inject_int_1}' : '') . ')
+			AND b.id_board != {int:recycle_board}' : '') . ')
 		WHERE
 			' . $user_info['query_see_board'] . '
 			' . (!empty($topic_ids) ? '
-			AND t.id_topic IN ({array_int:inject_array_int_1})' : ' AND t.approved = {int:inject_int_2}') . '
+			AND t.id_topic IN ({array_int:topic_list})' : ' AND t.approved = {int:is_approved}') . '
 		ORDER BY t.num_replies DESC
 		LIMIT 10',
 		array(
-			'inject_array_int_1' => $topic_ids,
-			'inject_int_1' => $modSettings['recycle_board'],
-			'inject_int_2' => 1,
+			'topic_list' => $topic_ids,
+			'recycle_board' => $modSettings['recycle_board'],
+			'is_approved' => 1,
 		)
 	);
 	$context['top_topics_replies'] = array();
@@ -371,11 +371,11 @@ function DisplayStats()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_topic
 			FROM {db_prefix}topics
-			WHERE num_views != {int:inject_int_1}
+			WHERE num_views != {int:no_views}
 			ORDER BY num_views DESC
 			LIMIT 100',
 			array(
-				'inject_int_1' => 0,
+				'no_views' => 0,
 			)
 		);
 		$topic_ids = array();
@@ -392,17 +392,17 @@ function DisplayStats()
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			AND b.id_board != {int:inject_int_1}' : '') . ')
+			AND b.id_board != {int:recycle_board}' : '') . ')
 		WHERE
 			' . $user_info['query_see_board'] . '
 			' . (!empty($topic_ids) ? '
-			AND t.id_topic IN ({array_int:inject_array_int_1})' : ' AND t.approved = {int:inject_int_2}') . '
+			AND t.id_topic IN ({array_int:topic_list})' : ' AND t.approved = {int:is_approved}') . '
 		ORDER BY t.num_views DESC
 		LIMIT 10',
 		array(
-			'inject_array_int_1' => $topic_ids,
-			'inject_int_1' => $modSettings['recycle_board'],
-			'inject_int_2' => 1,
+			'topic_list' => $topic_ids,
+			'recycle_board' => $modSettings['recycle_board'],
+			'is_approved' => 1,
 		)
 	);
 	$context['top_topics_views'] = array();
@@ -442,12 +442,12 @@ function DisplayStats()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member_started, COUNT(*) AS hits
 			FROM {db_prefix}topics' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-			WHERE id_board != {int:inject_int_1}' : '') . '
+			WHERE id_board != {int:recycle_board}' : '') . '
 			GROUP BY id_member_started
 			ORDER BY hits DESC
 			LIMIT 20',
 			array(
-				'inject_int_1' => $modSettings['recycle_board'],
+				'recycle_board' => $modSettings['recycle_board'],
 			)
 		);
 		$members = array();
@@ -465,13 +465,13 @@ function DisplayStats()
 	$members_result = $smfFunc['db_query']('', '
 		SELECT id_member, real_name
 		FROM {db_prefix}members
-		WHERE id_member IN ({array_int:inject_array_int_1})
+		WHERE id_member IN ({array_int:member_list})
 		GROUP BY id_member, real_name
-		ORDER BY FIND_IN_SET(id_member, {string:inject_string_1})
+		ORDER BY FIND_IN_SET(id_member, {string:top_topic_posters})
 		LIMIT 10',
 		array(
-			'inject_array_int_1' => array_keys($members),
-			'inject_string_1' => implode(',', array_keys($members)),
+			'member_list' => array_keys($members),
+			'top_topic_posters' => implode(',', array_keys($members)),
 		)
 	);
 	$context['top_starters'] = array();
@@ -503,11 +503,11 @@ function DisplayStats()
 	$members_result = $smfFunc['db_query']('', '
 		SELECT id_member, real_name, total_time_logged_in
 		FROM {db_prefix}members' . (!empty($temp) ? '
-		WHERE id_member IN ({array_int:inject_array_int_1})' : '') . '
+		WHERE id_member IN ({array_int:member_list_cached})' : '') . '
 		ORDER BY total_time_logged_in DESC
 		LIMIT 20',
 		array(
-			'inject_array_int_1' => $temp,
+			'member_list_cached' => $temp,
 		)
 	);
 	$context['top_time_online'] = array();
@@ -627,19 +627,24 @@ function DisplayStats()
 	if (empty($_SESSION['expanded_stats']))
 		return;
 
-	$condition = array();
+	$condition_text = array();
+	$condition_params = array();
 	foreach ($_SESSION['expanded_stats'] as $year => $months)
 		if (!empty($months))
-			$condition[] = 'YEAR(date) = ' . $year . ' AND MONTH(date) IN (' . implode(', ', $months) . ')';
+		{
+			$condition_text[] = 'YEAR(date) = {int:year_' . $year . '} AND MONTH(date) IN ({array_int:months_' . $year . '})';
+			$condition_params['year_' . $year] = $year;
+			$condition_params['months_' . $year] = $months;
+		}
 
 	// No daily stats to even look at?
-	if (empty($condition))
+	if (empty($condition_text))
 		return;
 
-	getDailyStats(implode(' OR ', $condition));
+	getDailyStats(implode(' OR ', $condition_text), $condition_params);
 }
 
-function getDailyStats($condition)
+function getDailyStats($condition_string, $condition_parameters = array())
 {
 	global $context, $db_prefix, $smfFunc;
 
@@ -647,10 +652,9 @@ function getDailyStats($condition)
 	$days_result = $smfFunc['db_query']('', '
 		SELECT YEAR(date) AS stats_year, MONTH(date) AS stats_month, DAYOFMONTH(date) AS stats_day, topics, posts, registers, most_on, hits
 		FROM {db_prefix}log_activity
-		WHERE ' . $condition . '
+		WHERE ' . $condition_string . '
 		ORDER BY stats_day ASC',
-		array(
-		)
+		$condition_parameters
 	);
 	while ($row_days = $smfFunc['db_fetch_assoc']($days_result))
 		$context['yearly'][$row_days['stats_year']]['months'][$row_days['stats_month']]['days'][] = array(
