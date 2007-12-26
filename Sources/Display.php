@@ -339,8 +339,12 @@ function Display()
 	{
 		$smfFunc['db_insert']('replace',
 			$db_prefix . 'log_topics',
-			array('id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int'),
-			array($user_info['id'], $topic, $modSettings['maxMsgID']),
+			array(
+				'id_member' => 'int', 'id_topic' => 'int', 'id_msg' => 'int',
+			),
+			array(
+				$user_info['id'], $topic, $modSettings['maxMsgID'],
+			),
 			array('id_member', 'id_topic')
 		);
 

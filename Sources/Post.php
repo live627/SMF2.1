@@ -130,7 +130,7 @@ function Post()
 			SELECT
 				t.locked, IFNULL(ln.id_topic, 0) AS notify, t.is_sticky, t.id_poll, t.num_replies, mf.id_member,
 				t.id_first_msg, mf.subject,
-				CASE WHEN ml.poster_time > ml.modified_time THEN ml.poster_time ELSE ml.modified_time END AS lastPostTime
+				CASE WHEN ml.poster_time > ml.modified_time THEN ml.poster_time ELSE ml.modified_time END AS last_post_time
 			FROM {db_prefix}topics AS t
 				LEFT JOIN {db_prefix}log_notify AS ln ON (ln.id_topic = t.id_topic AND ln.id_member = {int:current_member})
 				LEFT JOIN {db_prefix}messages AS mf ON (mf.id_msg = t.id_first_msg)
@@ -286,10 +286,10 @@ function Post()
 					id_member, title, MONTH(start_date) AS month, DAYOFMONTH(start_date) AS day,
 					YEAR(start_date) AS year, (TO_DAYS(end_date) - TO_DAYS(start_date)) AS span
 				FROM {db_prefix}calendar
-				WHERE id_event = {int:inject_int_1}
+				WHERE id_event = {int:id_event}
 				LIMIT 1',
 				array(
-					'inject_int_1' => $context['event']['id'],
+					'id_event' => $context['event']['id'],
 				)
 			);
 			$row = $smfFunc['db_fetch_assoc']($request);
@@ -430,7 +430,7 @@ function Post()
 				{
 					if (!isset($_REQUEST['email']) || $_REQUEST['email'] == '')
 						$context['post_error']['no_email'] = true;
-					elseif (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_REQUEST['email'])) == 0)
+					elseif (preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_REQUEST['email']) == 0)
 						$context['post_error']['bad_email'] = true;
 				}
 			}
@@ -461,8 +461,8 @@ function Post()
 		$context['can_announce'] &= $context['becomes_approved'];
 
 		// Set up the inputs for the form.
-		$form_subject = strtr($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['subject'])), array("\r" => '', "\n" => '', "\t" => ''));
-		$form_message = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['message']), ENT_QUOTES);
+		$form_subject = strtr($smfFunc['htmlspecialchars']($_REQUEST['subject']), array("\r" => '', "\n" => '', "\t" => ''));
+		$form_message = $smfFunc['htmlspecialchars']($_REQUEST['message'], ENT_QUOTES);
 
 		// Make sure the subject isn't too long - taking into account special characters.
 		if ($smfFunc['strlen']($form_subject) > 100)
@@ -498,7 +498,7 @@ function Post()
 
 		if (isset($_REQUEST['poll']))
 		{
-			$context['question'] = isset($_REQUEST['question']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string'](trim($_REQUEST['question']))) : '';
+			$context['question'] = isset($_REQUEST['question']) ? $smfFunc['htmlspecialchars'](trim($_REQUEST['question'])) : '';
 
 			$context['choices'] = array();
 			$choice_id = 0;
@@ -593,11 +593,11 @@ function Post()
 				$request = $smfFunc['db_query']('', '
 					SELECT IFNULL(size, -1) AS filesize, filename, id_attach, approved
 					FROM {db_prefix}attachments
-					WHERE id_msg = {int:inject_int_1}
-						AND attachment_type = {int:inject_int_2}',
+					WHERE id_msg = {int:id_msg}
+						AND attachment_type = {int:attachment_type}',
 					array(
-						'inject_int_1' => (int) $_REQUEST['msg'],
-						'inject_int_2' => 0,
+						'id_msg' => (int) $_REQUEST['msg'],
+						'attachment_type' => 0,
 					)
 				);
 				while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -619,12 +619,12 @@ function Post()
 				$request = $smfFunc['db_query']('', '
 					SELECT id_member, poster_name, poster_email
 					FROM {db_prefix}messages
-					WHERE id_msg = {int:inject_int_1}
+					WHERE id_msg = {int:id_msg}
 						AND id_topic = {int:current_topic}
 					LIMIT 1',
 					array(
 						'current_topic' => $topic,
-						'inject_int_1' => (int) $_REQUEST['msg'],
+						'id_msg' => (int) $_REQUEST['msg'],
 					)
 				);
 				$row = $smfFunc['db_fetch_assoc']($request);
@@ -657,13 +657,13 @@ function Post()
 				m.poster_time
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-				LEFT JOIN {db_prefix}attachments AS a ON (a.id_msg = m.id_msg AND a.attachment_type = {int:inject_int_1})
-			WHERE m.id_msg = {int:inject_int_2}
+				LEFT JOIN {db_prefix}attachments AS a ON (a.id_msg = m.id_msg AND a.attachment_type = {int:attachment_type})
+			WHERE m.id_msg = {int:id_msg}
 				AND m.id_topic = {int:current_topic}',
 			array(
 				'current_topic' => $topic,
-				'inject_int_1' => 0,
-				'inject_int_2' => $_REQUEST['msg'],
+				'attachment_type' => 0,
+				'id_msg' => $_REQUEST['msg'],
 			)
 		);
 		// The message they were trying to edit was most likely deleted.
@@ -759,12 +759,12 @@ function Post()
 				FROM {db_prefix}messages AS m
 					INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND ' . $user_info['query_see_board'] . ')
 					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-				WHERE m.id_msg = {int:inject_int_1}
-					' . (allowedTo('approve_posts') ? '' : ' AND m.approved = {int:inject_int_2}') . '
+				WHERE m.id_msg = {int:id_msg}
+					' . (allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}') . '
 				LIMIT 1',
 				array(
-					'inject_int_1' => (int) $_REQUEST['quote'],
-					'inject_int_2' => 1,
+					'id_msg' => (int) $_REQUEST['quote'],
+					'is_approved' => 1,
 				)
 			);
 			if ($smfFunc['db_num_rows']($request) == 0)
@@ -834,11 +834,11 @@ function Post()
 			$request = $smfFunc['db_query']('', '
 				SELECT COUNT(*), SUM(size)
 				FROM {db_prefix}attachments
-				WHERE id_msg = {int:inject_int_1}
-					AND attachment_type = {int:inject_int_2}',
+				WHERE id_msg = {int:id_msg}
+					AND attachment_type = {int:attachment_type}',
 				array(
-					'inject_int_1' => (int) $_REQUEST['msg'],
-					'inject_int_2' => 0,
+					'id_msg' => (int) $_REQUEST['msg'],
+					'attachment_type' => 0,
 				)
 			);
 			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
@@ -953,9 +953,9 @@ function Post()
 					fatal_lang_error('attachments_no_write', 'critical');
 
 				$attachID = 'post_tmp_' . $user_info['id'] . '_' . $temp_start++;
-				$_SESSION['temp_attachments'][$attachID] = $smfFunc['db_unescape_string'](basename($_FILES['attachment']['name'][$n]));
+				$_SESSION['temp_attachments'][$attachID] = basename($_FILES['attachment']['name'][$n]);
 				$context['current_attachments'][] = array(
-					'name' => basename($smfFunc['db_unescape_string']($_FILES['attachment']['name'][$n])),
+					'name' => basename($_FILES['attachment']['name'][$n]),
 					'id' => $attachID,
 					'approved' => 1,
 				);
@@ -1105,10 +1105,7 @@ function Post2()
 	{
 		require_once($sourcedir . '/Subs-Editor.php');
 
-		// We strip and add slashes back here - so we don't forget!
-		$_REQUEST['message'] = $smfFunc['db_unescape_string']($_REQUEST['message']);
 		$_REQUEST['message'] = html_to_bbc($_REQUEST['message']);
-		$_REQUEST['message'] = $smfFunc['db_escape_string']($_REQUEST['message']);
 
 		// We need to unhtml it now as it gets done shortly.
 		$_REQUEST['message'] = un_htmlspecialchars($_REQUEST['message']);
@@ -1259,11 +1256,11 @@ function Post2()
 				t.id_first_msg, t.locked, t.is_sticky, t.id_member_started AS id_member_poster
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-			WHERE m.id_msg = {int:inject_int_1}
+			WHERE m.id_msg = {int:id_msg}
 			LIMIT 1',
 			array(
 				'current_topic' => $topic,
-				'inject_int_1' => $_REQUEST['msg'],
+				'id_msg' => $_REQUEST['msg'],
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -1335,8 +1332,8 @@ function Post2()
 
 		if (!allowedTo('moderate_forum') || !$posterIsGuest)
 		{
-			$_POST['guestname'] = $smfFunc['db_escape_string']($row['poster_name']);
-			$_POST['email'] = $smfFunc['db_escape_string']($row['poster_email']);
+			$_POST['guestname'] = $row['poster_name'];
+			$_POST['email'] = $row['poster_email'];
 		}
 	}
 
@@ -1358,7 +1355,7 @@ function Post2()
 			{
 				if (!allowedTo('moderate_forum') && (!isset($_POST['email']) || $_POST['email'] == ''))
 					$post_errors[] = 'no_email';
-				if (!allowedTo('moderate_forum') && preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $smfFunc['db_unescape_string']($_POST['email'])) == 0)
+				if (!allowedTo('moderate_forum') && preg_match('~^[0-9A-Za-z=_+\-/][0-9A-Za-z=_\'+\-/\.]*@[\w\-]+(\.[\w\-]+)*(\.[\w]{2,6})$~', $_POST['email']) == 0)
 					$post_errors[] = 'bad_email';
 			}
 
@@ -1384,7 +1381,7 @@ function Post2()
 	else
 	{
 		// Prepare the message a bit for some additional testing.
-		$_POST['message'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['message']), ENT_QUOTES));
+		$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
 
 		// Preparse code. (Zef)
 		if ($user_info['is_guest'])
@@ -1442,8 +1439,8 @@ function Post2()
 	// If the user isn't a guest, get his or her name and email.
 	elseif (!isset($_REQUEST['msg']))
 	{
-		$_POST['guestname'] = $smfFunc['db_escape_string']($user_info['username']);
-		$_POST['email'] = $smfFunc['db_escape_string']($user_info['email']);
+		$_POST['guestname'] = $user_info['username'];
+		$_POST['email'] = $user_info['email'];
 	}
 
 	// Any mistakes?
@@ -1481,7 +1478,7 @@ function Post2()
 
 	// At this point, we want to make sure the subject isn't too long.
 	if ($smfFunc['strlen']($_POST['subject']) > 100)
-		$_POST['subject'] = $smfFunc['db_escape_string']($smfFunc['substr']($smfFunc['db_unescape_string']($_POST['subject']), 0, 100));
+		$_POST['subject'] = $smfFunc['substr']($_POST['subject'], 0, 100);
 
 	// Make the poll...
 	if (isset($_REQUEST['poll']))
@@ -1560,11 +1557,11 @@ function Post2()
 			$request = $smfFunc['db_query']('', '
 				SELECT COUNT(*), SUM(size)
 				FROM {db_prefix}attachments
-				WHERE id_msg = {int:inject_int_1}
-					AND attachment_type = {int:inject_int_2}',
+				WHERE id_msg = {int:id_msg}
+					AND attachment_type = {int:attachment_type}',
 				array(
-					'inject_int_1' => (int) $_REQUEST['msg'],
-					'inject_int_2' => 0,
+					'id_msg' => (int) $_REQUEST['msg'],
+					'attachment_type' => 0,
 				)
 			);
 			list ($quantity, $total_size) = $smfFunc['db_fetch_row']($request);
@@ -1590,7 +1587,7 @@ function Post2()
 				}
 
 				$_FILES['attachment']['tmp_name'][] = $attachID;
-				$_FILES['attachment']['name'][] = $smfFunc['db_escape_string']($name);
+				$_FILES['attachment']['name'][] = $name;
 				$_FILES['attachment']['size'][] = filesize($current_attach_dir . '/' . $attachID);
 				list ($_FILES['attachment']['width'][], $_FILES['attachment']['height'][]) = @getimagesize($current_attach_dir . '/' . $attachID);
 
@@ -1653,14 +1650,17 @@ function Post2()
 	if (isset($_REQUEST['poll']))
 	{
 		// Create the poll.
-		$smfFunc['db_query']('', '
-			INSERT INTO {db_prefix}polls
-				(question, hide_results, max_votes, expire_time, id_member, poster_name, change_vote, guest_vote)
-			VALUES (SUBSTRING(\'' . $_POST['question'] . '\', 1, 255), ' . $_POST['poll_hide'] . ', ' . $_POST['poll_max_votes'] . ',
-				' . (empty($_POST['poll_expire']) ? '0' : time() + $_POST['poll_expire'] * 3600 * 24) . ', ' . $user_info['id'] . ', SUBSTRING(\'' . $_POST['guestname'] . '\', 1, 255),
-				' . $_POST['poll_change_vote'] . ', ' . $_POST['poll_guest_vote'] . ')',
+		$smfFunc['db_insert']('',
+			$db_prefix . 'polls',
 			array(
-			)
+				'question' => 'string-255', 'hide_results' => 'int', 'max_votes' => 'int', 'expire_time' => 'int', 'id_member' => 'int',
+				'poster_name' => 'string-255', 'change_vote' => 'int', 'guest_vote' => 'int'
+			),
+			array(
+				$_POST['question'], $_POST['poll_hide'], $_POST['poll_max_votes'], (empty($_POST['poll_expire']) ? 0 : time() + $_POST['poll_expire'] * 3600 * 24), $user_info['id'],
+				$_POST['guestname'], $_POST['poll_change_vote'], $_POST['poll_guest_vote']
+			),
+			array('id_poll')
 		);
 		$id_poll = $smfFunc['db_insert_id']( $db_prefix . 'polls', 'id_poll');
 
@@ -1721,7 +1721,7 @@ function Post2()
 		if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $user_info['id'] != $row['id_member'])
 		{
 			$msgOptions['modify_time'] = time();
-			$msgOptions['modify_name'] = $smfFunc['db_escape_string']($user_info['name']);
+			$msgOptions['modify_name'] = $user_info['name'];
 		}
 
 		// This will save some time...
@@ -1773,9 +1773,9 @@ function Post2()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_member
 				FROM {db_prefix}calendar
-				WHERE id_event = {int:inject_int_1}',
+				WHERE id_event = {int:id_event}',
 				array(
-					'inject_int_1' => $_REQUEST['eventid'],
+					'id_event' => $_REQUEST['eventid'],
 				)
 			);
 			$row2 = $smfFunc['db_fetch_assoc']($request);
@@ -1789,9 +1789,9 @@ function Post2()
 		if (isset($_REQUEST['deleteevent']))
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}calendar
-				WHERE id_event = {int:inject_int_1}',
+				WHERE id_event = {int:id_event}',
 				array(
-					'inject_int_1' => $_REQUEST['eventid'],
+					'id_event' => $_REQUEST['eventid'],
 				)
 			);
 		// ... or just update it?
@@ -1802,15 +1802,15 @@ function Post2()
 
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}calendar
-				SET end_date = {date:inject_date_1},
-					start_date = {date:inject_date_2},
-					title = {string:inject_string_1}
-				WHERE id_event = {int:inject_int_1}',
+				SET end_date = {date:end_date},
+					start_date = {date:start_date},
+					title = {string:title}
+				WHERE id_event = {int:id_event}',
 				array(
-					'inject_date_1' => strftime('%Y-%m-%d', $start_time + $span * 86400),
-					'inject_date_2' => strftime('%Y-%m-%d', $start_time),
-					'inject_int_1' => $_REQUEST['eventid'],
-					'inject_string_1' => $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['evtitle']), ENT_QUOTES)),
+					'end_date' => strftime('%Y-%m-%d', $start_time + $span * 86400),
+					'start_date' => strftime('%Y-%m-%d', $start_time),
+					'id_event' => $_REQUEST['eventid'],
+					'title' => $smfFunc['htmlspecialchars']($_REQUEST['evtitle'], ENT_QUOTES),
 				)
 			);
 		}
@@ -1827,13 +1827,13 @@ function Post2()
 		{
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_boards
-				SET id_msg = {int:inject_int_1}
+				SET id_msg = {int:id_msg}
 				WHERE id_member = {int:current_member}
-					AND id_board IN ({array_int:inject_array_int_1})',
+					AND id_board IN ({array_int:board_list})',
 				array(
 					'current_member' => $user_info['id'],
-					'inject_array_int_1' => array_keys($board_info['parent_boards']),
-					'inject_int_1' => $modSettings['maxMsgID'],
+					'board_list' => array_keys($board_info['parent_boards']),
+					'id_msg' => $modSettings['maxMsgID'],
 				)
 			);
 		}
@@ -1878,7 +1878,7 @@ function Post2()
 		if ($newTopic)
 		{
 			$notifyData = array(
-				'body' => $smfFunc['db_unescape_string']($_POST['message']),
+				'body' => $_POST['message'],
 				'subject' => $_POST['subject'],
 				'name' => $user_info['name'],
 				'poster' => $user_info['id'],
@@ -1898,13 +1898,13 @@ function Post2()
 		// Mark the board as read.... because it might get confusing otherwise.
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_boards
-			SET id_msg = {int:inject_int_1}
+			SET id_msg = {int:maxMsgID}
 			WHERE id_member = {int:current_member}
 				AND id_board = {int:current_board}',
 			array(
 				'current_board' => $board,
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $modSettings['maxMsgID'],
+				'maxMsgID' => $modSettings['maxMsgID'],
 			)
 		);
 	}
@@ -1975,12 +1975,12 @@ function AnnouncementSelectMembergroup()
 		SELECT mg.id_group, mg.group_name, COUNT(mem.id_member) AS num_members
 		FROM {db_prefix}membergroups AS mg
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_group = mg.id_group OR FIND_IN_SET(mg.id_group, mem.additional_groups) OR mg.id_group = mem.id_post_group)
-		WHERE mg.id_group IN ({array_int:inject_array_int_1})
+		WHERE mg.id_group IN ({array_int:group_list})
 		GROUP BY mg.id_group
-		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:inject_int_1} THEN mg.id_group ELSE 4 END, mg.group_name',
+		ORDER BY mg.min_posts, CASE WHEN mg.id_group < {int:newbie_id_group} THEN mg.id_group ELSE 4 END, mg.group_name',
 		array(
-			'inject_array_int_1' => $groups,
-			'inject_int_1' => 4,
+			'group_list' => $groups,
+			'newbie_id_group' => 4,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -2065,18 +2065,19 @@ function AnnouncementSend()
 		SELECT mem.id_member, mem.email_address, mem.lngfile
 		FROM {db_prefix}members AS mem
 		WHERE mem.id_member != {int:current_member}' . (!empty($modSettings['allow_disableAnnounce']) ? '
-			AND mem.notify_announcements = {int:inject_int_1}' : '') . '
-			AND mem.is_activated = {int:inject_int_1}
-			AND (mem.id_group IN ({array_int:inject_array_int_1}) OR mem.id_post_group IN ({array_int:inject_array_int_1}) OR FIND_IN_SET({string:inject_string_1}, mem.additional_groups))
-			AND mem.id_member > {int:inject_int_2}
+			AND mem.notify_announcements = {int:notify_announcements}' : '') . '
+			AND mem.is_activated = {int:is_activated}
+			AND (mem.id_group IN ({array_int:group_list}) OR mem.id_post_group IN ({array_int:group_list}) OR FIND_IN_SET({raw:additional_group_list}, mem.additional_groups))
+			AND mem.id_member > {int:start}
 		ORDER BY mem.id_member
 		LIMIT ' . $chunkSize,
 		array(
 			'current_member' => $user_info['id'],
-			'inject_array_int_1' => $_POST['who'],
-			'inject_int_1' => 1,
-			'inject_int_2' => $context['start'],
-			'inject_string_1' => implode(', mem.additional_groups) OR FIND_IN_SET(', $_POST['who']),
+			'group_list' => $_POST['who'],
+			'notify_announcements' => 1,
+			'is_activated' => 1,
+			'start' => $context['start'],
+			'additional_group_list' => implode(', mem.additional_groups) OR FIND_IN_SET(', $_POST['who']),
 		)
 	);
 
@@ -2176,14 +2177,14 @@ function notifyMembersBoard(&$topicData)
 	// Yea, we need to add this to the digest queue.
 	$digest_insert = array();
 	foreach ($topicData as $id => $data)
-		$digest_insert[] = '(' . $data['topic'] . ', ' . $data['msg'] . ', \'topic\', ' . $user_info['id'] . ')';
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}log_digest
-			(id_topic, id_msg, note_type, exclude)
-		VALUES
-			' . implode(', ', $digest_insert),
+		$digest_insert[] = array($data['topic'], $data['msg'], 'topic', $user_info['id']);
+	$smfFunc['db_insert']('',
+		$db_prefix . 'log_digest',
 		array(
-		)
+			'id_topic' => 'int', 'id_msg' => 'int', 'note_type' => 'string', 'exclude' => 'int',
+		),
+		$digest_insert,
+		array()
 	);
 
 	// Find the members with notification on for these boards.
@@ -2195,18 +2196,18 @@ function notifyMembersBoard(&$topicData)
 		FROM {db_prefix}log_notify AS ln
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = ln.id_board)
 			INNER JOIN {db_prefix}members AS mem ON (mem.id_member = ln.id_member)
-		WHERE ln.id_board IN ({array_int:inject_array_int_1})
+		WHERE ln.id_board IN ({array_int:board_list})
 			AND mem.id_member != {int:current_member}
-			AND mem.is_activated = {int:inject_int_1}
-			AND mem.notify_types != {int:inject_int_2}
-			AND mem.notify_regularity < {int:inject_int_3}
+			AND mem.is_activated = {int:is_activated}
+			AND mem.notify_types != {int:notify_types}
+			AND mem.notify_regularity < {int:notify_regularity}
 		ORDER BY mem.lngfile',
 		array(
 			'current_member' => $user_info['id'],
-			'inject_array_int_1' => $board_index,
-			'inject_int_1' => 1,
-			'inject_int_2' => 4,
-			'inject_int_3' => 2,
+			'board_list' => $board_index,
+			'is_activated' => 1,
+			'notify_types' => 4,
+			'notify_regularity' => 2,
 		)
 	);
 	while ($rowmember = $smfFunc['db_fetch_assoc']($members))
@@ -2273,13 +2274,13 @@ function notifyMembersBoard(&$topicData)
 	// Sent!
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_notify
-		SET sent = {int:inject_int_1}
-		WHERE id_board IN ({array_int:inject_array_int_1})
+		SET sent = {int:is_sent}
+		WHERE id_board IN ({array_int:board_list})
 			AND id_member != {int:current_member}',
 		array(
 			'current_member' => $user_info['id'],
-			'inject_array_int_1' => $board_index,
-			'inject_int_1' => 1,
+			'board_list' => $board_index,
+			'is_sent' => 1,
 		)
 	);
 }
@@ -2360,16 +2361,16 @@ function QuoteFast()
 		FROM ({db_prefix}messages AS m, {db_prefix}topics AS t)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board AND ' . $user_info['query_see_board'] . ')
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE m.id_msg = {int:inject_int_1}' .
-			(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:inject_int_2}') . '
+		WHERE m.id_msg = {int:id_msg}' .
+			(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}') . '
 			AND t.id_topic = m.id_topic' . (isset($_REQUEST['modify']) || (!empty($moderate_boards) && $moderate_boards[0] == 0) ? '' : '
-			AND (t.locked = {int:inject_int_3}' . (empty($moderate_boards) ? '' : ' OR b.id_board IN ({array_int:inject_array_int_1})') . ')') . '
+			AND (t.locked = {int:not_locked}' . (empty($moderate_boards) ? '' : ' OR b.id_board IN ({array_int:moderation_board_list})') . ')') . '
 		LIMIT 1',
 		array(
-			'inject_array_int_1' => $moderate_boards,
-			'inject_int_1' => (int) $_REQUEST['quote'],
-			'inject_int_2' => 1,
-			'inject_int_3' => 0,
+			'moderation_board_list' => $moderate_boards,
+			'id_msg' => (int) $_REQUEST['quote'],
+			'is_approved' => 1,
+			'not_locked' => 0,
 		)
 	);
 	$context['close_window'] = $smfFunc['db_num_rows']($request) == 0;
@@ -2463,13 +2464,13 @@ function JavaScriptModify()
 				m.modified_time, m.modified_name, m.approved
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-			WHERE m.id_msg = {int:inject_int_1}
+			WHERE m.id_msg = {raw:id_msg}
 				AND m.id_topic = {int:current_topic}' .
-				(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:inject_int_2}'),
+				(allowedTo('approve_posts') ? '' : ' AND m.approved = {int:is_approved}'),
 			array(
 				'current_topic' => $topic,
-				'inject_int_1' => empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg'],
-				'inject_int_2' => 1,
+				'id_msg' => empty($_REQUEST['msg']) ? 't.id_first_msg' : (int) $_REQUEST['msg'],
+				'is_approved' => 1,
 			)
 		);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -2509,7 +2510,7 @@ function JavaScriptModify()
 
 		// Maximum number of characters.
 		if ($smfFunc['strlen']($_POST['subject']) > 100)
-			$_POST['subject'] = $smfFunc['db_escape_string']($smfFunc['substr']($smfFunc['db_unescape_string']($_POST['subject']), 0, 100));
+			$_POST['subject'] = $smfFunc['substr']($_POST['subject'], 0, 100);
 	}
 	elseif (isset($_POST['subject']))
 	{
@@ -2531,7 +2532,7 @@ function JavaScriptModify()
 		}
 		else
 		{
-			$_POST['message'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['message']), ENT_QUOTES));
+			$_POST['message'] = $smfFunc['htmlspecialchars']($_POST['message'], ENT_QUOTES);
 
 			preparsecode($_POST['message']);
 
@@ -2588,7 +2589,7 @@ function JavaScriptModify()
 			if (time() - $row['poster_time'] > $modSettings['edit_wait_time'] || $user_info['id'] != $row['id_member'])
 			{
 				$msgOptions['modify_time'] = time();
-				$msgOptions['modify_name'] = $smfFunc['db_escape_string']($user_info['name']);
+				$msgOptions['modify_name'] = $user_info['name'];
 			}
 		}
 
@@ -2620,13 +2621,13 @@ function JavaScriptModify()
 
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}messages
-				SET subject = {string:inject_string_1}
+				SET subject = {string:subject}
 				WHERE id_topic = {int:current_topic}
-					AND id_msg != {int:inject_int_1}',
+					AND id_msg != {int:id_first_msg}',
 				array(
 					'current_topic' => $topic,
-					'inject_int_1' => $row['id_first_msg'],
-					'inject_string_1' => $context['response_prefix'] . $_POST['subject'],
+					'id_first_msg' => $row['id_first_msg'],
+					'subject' => $context['response_prefix'] . $_POST['subject'],
 				)
 			);
 		}
@@ -2645,11 +2646,11 @@ function JavaScriptModify()
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
 					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
-					'name' => isset($msgOptions['modify_time']) ? $smfFunc['db_unescape_string']($msgOptions['modify_name']) : '',
+					'name' => isset($msgOptions['modify_time']) ? $msgOptions['modify_name'] : '',
 				),
-				'subject' => $smfFunc['db_unescape_string']($msgOptions['subject']),
+				'subject' => $msgOptions['subject'],
 				'first_in_topic' => $row['id_msg'] == $row['id_first_msg'],
-				'body' => strtr($smfFunc['db_unescape_string']($msgOptions['body']), array(']]>' => ']]]]><![CDATA[>')),
+				'body' => strtr($msgOptions['body'], array(']]>' => ']]]]><![CDATA[>')),
 			);
 
 			censorText($context['message']['subject']);
@@ -2666,9 +2667,9 @@ function JavaScriptModify()
 				'modified' => array(
 					'time' => isset($msgOptions['modify_time']) ? timeformat($msgOptions['modify_time']) : '',
 					'timestamp' => isset($msgOptions['modify_time']) ? forum_time(true, $msgOptions['modify_time']) : 0,
-					'name' => isset($msgOptions['modify_time']) ? $smfFunc['db_unescape_string']($msgOptions['modify_name']) : '',
+					'name' => isset($msgOptions['modify_time']) ? $msgOptions['modify_name'] : '',
 				),
-				'subject' => isset($msgOptions['subject']) ? $smfFunc['db_unescape_string']($msgOptions['subject']) : '',
+				'subject' => isset($msgOptions['subject']) ? $msgOptions['subject'] : '',
 			);
 
 			censorText($context['message']['subject']);

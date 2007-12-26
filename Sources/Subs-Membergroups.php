@@ -250,7 +250,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 			)
 		);
 
-		updateStats('postgroups', 'id_member IN (' . implode(', ', $members) . ')');
+		updateStats('postgroups', $members);
 
 		return true;
 	}
@@ -332,7 +332,7 @@ function removeMembersFromGroups($members, $groups = null, $permissionCheckDone 
 		);
 
 	// Their post groups may have changed now...
-	updateStats('postgroups', 'id_member IN (' . implode(', ', $members) . ')');
+	updateStats('postgroups', $members);
 
 	// Mission successful.
 	return true;
@@ -447,7 +447,7 @@ function addMembersToGroup($members, $group, $type = 'auto', $permissionCheckDon
 		trigger_error('addMembersToGroup(): Unknown type \'' . $type . '\'', E_USER_WARNING);
 
 	// Update their postgroup statistics.
-	updateStats('postgroups', 'id_member IN (' . implode(', ', $members) . ')');
+	updateStats('postgroups', $members);
 
 	return true;
 }

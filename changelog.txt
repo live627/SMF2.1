@@ -150,6 +150,7 @@ December 2007
  ! $_POST and $_COOKIE are no longer escaped by cleanRequest. (QueryString.php)
  ! updateMemberData now requires that all passed data is NOT escaped but sent as the field's true value. (Subs.php, various files)
  ! Allow the hacking attempt protection within db_query to be overrided, and use this in db_insert. (Subs-Db-xxx.php)
+ ! updateStats('postgroup') now requires that parameter one is the array of members to act on, if set. (Subs.php)
  
 
 November 2007

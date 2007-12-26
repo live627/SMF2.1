@@ -79,8 +79,6 @@ function EditorMain()
 
 	$context['view'] = (int) $_REQUEST['view'];
 
-	$_REQUEST['message'] = $smfFunc['db_unescape_string']($_REQUEST['message']);
-
 	// Return the right thing for the mode.
 	if ($context['view'])
 	{
@@ -122,7 +120,7 @@ function bbc_to_html($text)
 
 	// Parse unique ID's and disable javascript into the smileys - using the double space.
 	$i = 1;
-	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', '\'<\' . ' . "\$" .'smfFunc[\'db_unescape_string\'](\'' . "$" .'2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_' . "$" .'3" />\'', $text);
+	$text = preg_replace('~(\s|&nbsp;){1}?<(img\ssrc="' . preg_quote($modSettings['smileys_url'], '~') . '/.+?/(.+?)"\s*).*?border="0" class="smiley" />~e', '\'<\' . ' . 'stripslashes(\'' . "$" .'2\') . \'border="0" alt="" title="" onresizestart="return false;" id="smiley_\' . ' . "\$" .'i++ . \'_' . "$" .'3" />\'', $text);
 
 	return $text;
 }
@@ -162,7 +160,7 @@ function html_to_bbc($text)
 			// Load all the smileys.
 			$names = array();
 			foreach ($matches[1] as $file)
-				$names[] = '\'' . $smfFunc['db_escape_string']($file) . '\'';
+				$names[] = $file;
 			$names = array_unique($names);
 
 			if (!empty($names))
@@ -170,9 +168,9 @@ function html_to_bbc($text)
 				$request = $smfFunc['db_query']('', '
 					SELECT code, filename
 					FROM {db_prefix}smileys
-					WHERE filename IN ({array_string:inject_array_string_1})',
+					WHERE filename IN ({array_string:smiley_filenames})',
 					array(
-						'inject_array_string_1' => $names,
+						'smiley_filenames' => $names,
 					)
 				);
 				$mappings = array();
@@ -656,8 +654,9 @@ function getMessageIcons($board_id)
 			$request = $smfFunc['db_query']('select_message_icons', '
 				SELECT title, filename
 				FROM {db_prefix}message_icons
-				WHERE id_board IN (0, ' . $board_id . ')',
+				WHERE id_board IN (0, {int:board_id})',
 				array(
+					'board_id' => $board_id,
 				)
 			);
 			$icon_data = array();
@@ -1217,20 +1216,21 @@ function AutoSuggest_Search_Member()
 {
 	global $user_info, $db_prefix, $txt, $smfFunc;
 
-	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search'])) . '*';
-	$_REQUEST['search'] = $smfFunc['db_escape_string'](trim($smfFunc['strtolower']($_REQUEST['search'])));
+	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($_REQUEST['search']) . '*';
+	$_REQUEST['search'] = trim($smfFunc['strtolower']($_REQUEST['search']));
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	// Find the member.
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, real_name
 		FROM {db_prefix}members
-		WHERE real_name LIKE \'' . $_REQUEST['search'] . '\'' . (!empty($context['search_param']['buddies']) ? '
-			AND id_member IN ({array_int:inject_array_int_1})' : '') . '
+		WHERE real_name LIKE {string:search}' . (!empty($context['search_param']['buddies']) ? '
+			AND id_member IN ({array_int:buddy_list})' : '') . '
 			AND is_activated IN (1, 11)
 		LIMIT ' . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'),
 		array(
-			'inject_array_int_1' => $user_info['buddies'],
+			'buddy_list' => $user_info['buddies'],
+			'search' => $_REQUEST['search'],
 		)
 	);
 	$xml_data = array(

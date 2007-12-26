@@ -799,11 +799,12 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member
 		FROM {db_prefix}members
-		WHERE ' . (empty($current_ID_MEMBER) ? '' : 'id_member != {int:inject_int_1}
-			AND ') . '(real_name LIKE \'' . $checkName . '\' OR member_name LIKE \'' . $checkName . '\')
+		WHERE ' . (empty($current_ID_MEMBER) ? '' : 'id_member != {int:current_member}
+			AND ') . '(real_name LIKE {string:check_name} OR member_name LIKE {string:check_name})
 		LIMIT 1',
 		array(
-			'inject_int_1' => $current_ID_MEMBER,
+			'current_member' => $current_ID_MEMBER,
+			'check_name' => $checkName,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) > 0)
@@ -816,9 +817,10 @@ function isReservedName($name, $current_ID_MEMBER = 0, $is_name = true, $fatal =
 	$request = $smfFunc['db_query']('', '
 		SELECT id_group
 		FROM {db_prefix}membergroups
-		WHERE group_name LIKE \'' . $checkName . '\'
+		WHERE group_name LIKE {string:check_name}
 		LIMIT 1',
 		array(
+			'check_name' => $checkName,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) > 0)

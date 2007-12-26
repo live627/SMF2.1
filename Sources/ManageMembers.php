@@ -1167,7 +1167,7 @@ function AdminApprove()
 
 	// If they haven't been deleted, update the post group statistics on them...
 	if (!in_array($_POST['todo'], array('delete', 'deleteemail', 'reject', 'rejectemail', 'remind')))
-		updateStats('postgroups', 'id_member IN (' . implode(', ', $members) . ')');
+		updateStats('postgroups', $members);
 
 	redirectexit('action=admin;area=viewmembers;sa=browse;type=' . $_REQUEST['type'] . ';sort=' . $_REQUEST['sort'] . ';filter=' . $current_filter . ';start=' . $_REQUEST['start']);
 }

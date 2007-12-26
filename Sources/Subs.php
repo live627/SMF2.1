@@ -428,9 +428,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			SET id_post_group = CASE {raw:conditions}
 					ELSE 0
 				END' . ($parameter1 != null ? '
-			WHERE {int:parameter1}' : ''),
+			WHERE ' . (is_array($parameter1) ? 'id_member IN ({array_int:members})' : 'id_member = {int:members}') : ''),
 			array(
-				'parameter1' => $parameter1,
+				'members' => $parameter1,
 				'conditions' => $conditions,
 			)
 		);
@@ -558,7 +558,7 @@ function updateMemberData($members, $data)
 		$parameters
 	);
 
-	updateStats('postgroups', $condition, array_keys($data));
+	updateStats('postgroups', $members, array_keys($data));
 
 	// Clear any caching?
 	if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2 && !empty($members))
