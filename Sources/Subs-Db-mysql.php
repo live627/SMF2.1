@@ -262,12 +262,14 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	// One more query....
 	$db_count = !isset($db_count) ? 1 : $db_count + 1;
 
-	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false)
+	if (empty($modSettings['disableQueryCheck']) && strpos($db_string, '\'') !== false && $db_values !== 'security_override')
 	{
 		//!!! TEMP.
 		var_dump(debug_backtrace());
 		fatal_error('Hacking attempt...', false);
 	}
+	elseif ($db_values === 'security_override')
+		$db_values = array();
 	
 	if (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false)
 	{
@@ -658,13 +660,13 @@ function smf_db_insert($method = 'replace', $table, $columns, $data, $keys, $dis
 
 	// Determine the method of insertion.
 	$queryTitle = $method == 'replace' ? 'REPLACE' : ($method == 'ignore' ? 'INSERT IGNORE' : 'INSERT');
-	
+
 	// Do the insert.
 	$smfFunc['db_query']('', '
 		' . $queryTitle . ' INTO ' . $table . '(' . implode(', ', $indexed_columns) . ')
 		VALUES
 			' . implode(',
-			', $insertRows), array(),
+			', $insertRows), 'security_override',
 		$connection
 	);
 }

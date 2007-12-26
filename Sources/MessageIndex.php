@@ -143,13 +143,13 @@ function MessageIndex()
 		{
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_boards
-				SET id_msg = {int:inject_int_1}
+				SET id_msg = {int:id_msg}
 				WHERE id_member = {int:current_member}
-					AND id_board IN ({array_int:inject_array_int_1})',
+					AND id_board IN ({array_int:board_list})',
 				array(
 					'current_member' => $user_info['id'],
-					'inject_array_int_1' => array_keys($board_info['parent_boards']),
-					'inject_int_1' => $modSettings['maxMsgID'],
+					'board_list' => array_keys($board_info['parent_boards']),
+					'id_msg' => $modSettings['maxMsgID'],
 				)
 			);
 
@@ -181,13 +181,13 @@ function MessageIndex()
 			{
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}log_notify
-					SET sent = {int:inject_int_1}
+					SET sent = {int:is_sent}
 					WHERE id_board = {int:current_board}
 						AND id_member = {int:current_member}',
 					array(
 						'current_board' => $board,
 						'current_member' => $user_info['id'],
-						'inject_int_1' => 0,
+						'is_sent' => 0,
 					)
 				);
 			}
@@ -230,11 +230,12 @@ function MessageIndex()
 				mg.online_color, mg.id_group, mg.group_name
 			FROM {db_prefix}log_online AS lo
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lo.id_member)
-				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)
-			WHERE INSTR(lo.url, \'s:5:"board";i:' . $board . ';\') OR lo.session = {string:inject_string_1}',
+				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_member_group} THEN mem.id_post_group ELSE mem.id_group END)
+			WHERE INSTR(lo.url, \'s:5:"board";i:{int:board};\') OR lo.session = {string:session}',
 			array(
-				'inject_int_1' => 0,
-				'inject_string_1' => $user_info['is_guest'] ? 'ip' . $user_info['ip'] : session_id(),
+				'reg_member_group' => 0,
+				'board' => $board,
+				'session' => $user_info['is_guest'] ? 'ip' . $user_info['ip'] : session_id(),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -336,14 +337,16 @@ function MessageIndex()
 				LEFT JOIN {db_prefix}members AS memf ON (memf.id_member = mf.id_member)' : '') . ($context['sort_by'] === 'last_poster' ? '
 				LEFT JOIN {db_prefix}members AS meml ON (meml.id_member = ml.id_member)' : '') . '
 			WHERE t.id_board = {int:current_board}
-				' . ($context['can_approve_posts'] ? '' : ' AND (t.approved = {int:inject_int_1} OR (t.id_member_started != {int:inject_int_2} AND t.id_member_started = {int:current_member}))') . '
+				' . ($context['can_approve_posts'] ? '' : ' AND (t.approved = {int:is_approved} OR (t.id_member_started != {int:member_started} AND t.id_member_started = {int:current_member}))') . '
 			ORDER BY ' . (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC') . '
-			LIMIT ' . $start . ', ' . $maxindex,
+			LIMIT {int:start}, {int:maxindex}',
 			array(
 				'current_board' => $board,
 				'current_member' => $user_info['id'],
-				'inject_int_1' => 1,
-				'inject_int_2' => 0,
+				'is_approved' => 1,
+				'member_started' => 0,
+				'start' => $start,
+				'maxindex' => $maxindex,
 			)
 		);
 		$topic_ids = array();
@@ -373,17 +376,19 @@ function MessageIndex()
 				LEFT JOIN {db_prefix}members AS memf ON (memf.id_member = mf.id_member)' . ($user_info['is_guest'] ? '' : '
 				LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = {int:current_member})
 				LEFT JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = {int:current_board} AND lmr.id_member = {int:current_member})'). '
-			WHERE ' . ($pre_query ? 't.id_topic IN ({array_int:inject_array_int_1})' : 't.id_board = {int:current_board}') . '
-				' . ($context['can_approve_posts'] ? '' : ' AND (t.approved = {int:inject_int_1} OR (t.id_member_started != {int:inject_int_2} AND t.id_member_started = {int:current_member}))') . '
-			ORDER BY ' . ($pre_query ? 'FIND_IN_SET(t.id_topic, {string:inject_string_1})' : (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC')) . '
-			LIMIT ' . ($pre_query ? '' : $start . ', ') . $maxindex,
+			WHERE ' . ($pre_query ? 't.id_topic IN ({array_int:topic_list})' : 't.id_board = {int:current_board}') . '
+				' . ($context['can_approve_posts'] ? '' : ' AND (t.approved = {int:is_approved} OR (t.id_member_started != {int:id_member_started} AND t.id_member_started = {int:current_member}))') . '
+			ORDER BY ' . ($pre_query ? 'FIND_IN_SET(t.id_topic, {string:find_set_topics})' : (!empty($modSettings['enableStickyTopics']) ? 'is_sticky' . ($fake_ascending ? '' : ' DESC') . ', ' : '') . $_REQUEST['sort'] . ($ascending ? '' : ' DESC')) . '
+			LIMIT ' . ($pre_query ? '' : '{int:start}, ') . '{int:maxindex}',
 			array(
 				'current_board' => $board,
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => $topic_ids,
-				'inject_int_1' => 1,
-				'inject_int_2' => 0,
-				'inject_string_1' => implode(',', $topic_ids),
+				'topic_list' => $topic_ids,
+				'is_approved' => 1,
+				'id_member_started' => 0,
+				'find_set_topics' => implode(',', $topic_ids),
+				'start' => $start,
+				'maxindex' => $maxindex,
 			)
 		);
 
@@ -533,13 +538,13 @@ function MessageIndex()
 			$result = $smfFunc['db_query']('', '
 				SELECT id_topic
 				FROM {db_prefix}messages
-				WHERE id_topic IN ({array_int:inject_array_int_1})
+				WHERE id_topic IN ({array_int:topic_list})
 					AND id_member = {int:current_member}
 				GROUP BY id_topic
 				LIMIT ' . count($topic_ids),
 				array(
 					'current_member' => $user_info['id'],
-					'inject_array_int_1' => $topic_ids,
+					'topic_list' => $topic_ids,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -719,10 +724,10 @@ function QuickModeration()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_topic, id_member_started, id_board, locked, approved, unapproved_posts
 			FROM {db_prefix}topics
-			WHERE id_topic IN ({array_int:inject_array_int_1})
+			WHERE id_topic IN ({array_int:action_topic_ids})
 			LIMIT ' . count($_REQUEST['actions']),
 			array(
-				'inject_array_int_1' => array_keys($_REQUEST['actions']),
+				'action_topic_ids' => array_keys($_REQUEST['actions']),
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -798,11 +803,11 @@ function QuickModeration()
 	{
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}topics
-			SET is_sticky = CASE WHEN is_sticky = {int:inject_int_1} THEN 0 ELSE 1 END
-			WHERE id_topic IN ({array_int:inject_array_int_1})',
+			SET is_sticky = CASE WHEN is_sticky = {int:is_sticky} THEN 0 ELSE 1 END
+			WHERE id_topic IN ({array_int:sticky_topic_ids})',
 			array(
-				'inject_array_int_1' => $stickyCache,
-				'inject_int_1' => 1,
+				'sticky_topic_ids' => $stickyCache,
+				'is_sticky' => 1,
 			)
 		);
 
@@ -810,10 +815,10 @@ function QuickModeration()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_topic, id_board
 			FROM {db_prefix}topics
-			WHERE id_topic IN ({array_int:inject_array_int_1})
+			WHERE id_topic IN ({array_int:sticky_topic_ids})
 			LIMIT ' . count($stickyCache),
 			array(
-				'inject_array_int_1' => $stickyCache,
+				'sticky_topic_ids' => $stickyCache,
 			)
 		);
 		$stickyCacheBoards = array();
@@ -830,12 +835,12 @@ function QuickModeration()
 			SELECT t.id_topic, t.id_board, b.count_posts
 			FROM {db_prefix}topics AS t
 				LEFT JOIN {db_prefix}boards AS b ON (t.id_board = b.id_board)
-			WHERE t.id_topic IN ({array_int:inject_array_int_1})' . (!empty($board) && !allowedTo('move_any') ? '
+			WHERE t.id_topic IN ({array_int:move_topic_ids})' . (!empty($board) && !allowedTo('move_any') ? '
 				AND t.id_member_started = {int:current_member}' : '') . '
 			LIMIT ' . count($moveCache[0]),
 			array(
 				'current_member' => $user_info['id'],
-				'inject_array_int_1' => $moveCache[0],
+				'move_topic_ids' => $moveCache[0],
 			)
 		);
 		$moveTos = array();
@@ -876,9 +881,9 @@ function QuickModeration()
 			$request = $smfFunc['db_query']('', '
 				SELECT id_board, count_posts
 				FROM {db_prefix}boards
-				WHERE id_board IN ({array_int:inject_array_int_1})',
+				WHERE id_board IN ({array_int:move_boards})',
 				array(
-					'inject_array_int_1' => array_keys($moveTos),
+					'move_boards' => array_keys($moveTos),
 				)
 			);
 
@@ -908,9 +913,9 @@ function QuickModeration()
 				$request = $smfFunc['db_query']('', '
 					SELECT id_member, id_topic
 					FROM {db_prefix}messages
-					WHERE id_topic IN ({array_int:inject_array_int_1})',
+					WHERE id_topic IN ({array_int:moved_topic_ids})',
 					array(
-						'inject_array_int_1' => array_keys($topicRecounts),
+						'moved_topic_ids' => array_keys($topicRecounts),
 					)
 				);
 
@@ -944,12 +949,12 @@ function QuickModeration()
 			$result = $smfFunc['db_query']('', '
 				SELECT id_topic, id_board
 				FROM {db_prefix}topics
-				WHERE id_topic IN ({array_int:inject_array_int_1})
+				WHERE id_topic IN ({array_int:removed_topic_ids})
 					AND id_member_started = {int:current_member}
 				LIMIT ' . count($removeCache),
 				array(
 					'current_member' => $user_info['id'],
-					'inject_array_int_1' => $removeCache,
+					'removed_topic_ids' => $removeCache,
 				)
 			);
 			$removeCache = array();
@@ -985,13 +990,13 @@ function QuickModeration()
 			$result = $smfFunc['db_query']('', '
 				SELECT id_topic, locked, id_board
 				FROM {db_prefix}topics
-				WHERE id_topic IN ({array_int:inject_array_int_1})
+				WHERE id_topic IN ({array_int:locked_topic_ids})
 					AND id_member_started = {int:current_member}
 					AND locked IN (2, 0)
 				LIMIT ' . count($lockCache),
 				array(
 					'current_member' => $user_info['id'],
-					'inject_array_int_1' => $lockCache,
+					'locked_topic_ids' => $lockCache,
 				)
 			);
 			$lockCache = array();
@@ -1009,10 +1014,10 @@ function QuickModeration()
 			$result = $smfFunc['db_query']('', '
 				SELECT id_topic, locked, id_board
 				FROM {db_prefix}topics
-				WHERE id_topic IN ({array_int:inject_array_int_1})
+				WHERE id_topic IN ({array_int:locked_topic_ids})
 				LIMIT ' . count($lockCache),
 				array(
-					'inject_array_int_1' => $lockCache,
+					'locked_topic_ids' => $lockCache,
 				)
 			);
 			$lockCacheBoards = array();
@@ -1030,11 +1035,11 @@ function QuickModeration()
 			// Alternate the locked value.
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}topics
-				SET locked = CASE WHEN locked = {int:inject_int_1} THEN ' . (allowedTo('lock_any') ? '1' : '2') . ' ELSE 0 END
-				WHERE id_topic IN ({array_int:inject_array_int_1})',
+				SET locked = CASE WHEN locked = {int:is_locked} THEN ' . (allowedTo('lock_any') ? '1' : '2') . ' ELSE 0 END
+				WHERE id_topic IN ({array_int:locked_topic_ids})',
 				array(
-					'inject_array_int_1' => $lockCache,
-					'inject_int_1' => 0,
+					'locked_topic_ids' => $lockCache,
+					'is_locked' => 0,
 				)
 			);
 		}
