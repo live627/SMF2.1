@@ -305,7 +305,7 @@ function readLanguage($filename)
 			break;
 		}
 	}
-	
+
 	return $file;
 }
 

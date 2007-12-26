@@ -21,7 +21,7 @@ function template_modify_subscription()
 				{
 					document.getElementById("fixed_area").style.display = "none";
 					document.getElementById("flexible_area").style.display = "inline";
-					
+
 				}
 			}
 		// ]]></script>';

@@ -42,7 +42,7 @@ FROM {$from_prefix}users;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	cat_id AS id_cat, SUBSTRING(cat_title, 1, 255) AS name,
 	cat_order AS cat_order
 FROM {$from_prefix}bb_categories;

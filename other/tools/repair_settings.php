@@ -260,7 +260,7 @@ function show_settings()
 				FROM $settings[db_prefix]themes
 				WHERE id_member = 0
 					AND variable IN ('theme_dir', 'theme_url', 'images_url', 'name')");
-			
+
 			$theme_settings = array();
 			while ($row = @mysql_fetch_row($request))
 				$theme_settings[$row[2]][$row[0]] = $row[1];
@@ -356,7 +356,7 @@ function show_settings()
 			'theme_' . $id . '_images_url' => $theme['images_url'],
 			'theme_' . $id . '_theme_dir' => $theme['theme_dir'],
 		);
-		
+
 		$txt['theme_' . $id . '_theme_url'] = $theme['name'] . ' URL';
 		$txt['theme_' . $id . '_images_url'] = $theme['name'] . ' Images URL';
 		$txt['theme_' . $id . '_theme_dir'] = $theme['name'] . ' Directory';

@@ -99,7 +99,7 @@ WHERE id_board != 0;
 ---* {$to_prefix}boards
 SELECT
 	id AS id_board, topics AS num_topics, posts AS num_posts,
-	SUBSTRING(name, 1, 255) AS name, 
+	SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, position AS board_order,
 	category AS id_cat, parent_id AS id_parent, '-1,0' AS member_groups
 FROM {$from_prefix}forums;
@@ -290,7 +290,7 @@ WHERE vid != 'sent';
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	msg_id AS id_pm, recipient_id AS id_member, read_state = 1 AS is_read,
 	'' AS labels
 FROM {$from_prefix}messages

@@ -22,8 +22,8 @@ WHERE min_posts != -1
 if (trim($row['stars']) != '')
 	$row['stars'] = sprintf("%d#star.gif", substr_count($row['stars'], ';') + 1);
 ---}
-SELECT 
-	SUBSTRING(ranktitle, 1, 80) AS group_name, needposts AS min_posts, 
+SELECT
+	SUBSTRING(ranktitle, 1, 80) AS group_name, needposts AS min_posts,
 	'' AS online_color, rankimages AS stars
 FROM {$from_prefix}ranks
 WHERE groupid NOT IN (1, 2, 3)
@@ -112,9 +112,9 @@ $row['signature'] = substr(preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$
 ---}
 SELECT
 	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
-	u.userposts AS posts, u.regdate AS date_registered, 
-	{$_SESSION['group_id_clause']} AS id_group, 
-	SUBSTRING(u.title, 1, 255) AS usertitle, u.lastvisit AS last_login, 
+	u.userposts AS posts, u.regdate AS date_registered,
+	{$_SESSION['group_id_clause']} AS id_group,
+	SUBSTRING(u.title, 1, 255) AS usertitle, u.lastvisit AS last_login,
 	SUBSTRING(u.username, 1, 255) AS real_name,
 	SUBSTRING(u.email, 1, 255) AS email_address,
 	{$_SESSION['password_clause']} AS passwd,
@@ -124,7 +124,7 @@ SELECT
 	SUBSTRING(u.homepage, 1, 255) AS website_url, u.birthday AS birthdate,
 	IF(u.invisible = 0, 1, 0) AS show_online, u.gender,
 	SUBSTRING(u.usertext, 1, 255) AS personal_text,
-	IF(u.showemail = 0, 1, 0) AS hide_email, 
+	IF(u.showemail = 0, 1, 0) AS hide_email,
 	u.signature AS signature, u.timezoneoffset AS time_offset, '' AS lngfile,
 	'' AS buddy_list, '' AS pm_ignore_list, '' AS message_labels,
 	'' AS location, '' AS time_format, '' AS avatar, '' AS member_ip,
@@ -165,8 +165,8 @@ FROM {$from_prefix}avatars;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
-	boardid AS id_cat, SUBSTRING(title, 1, 255) AS name, 
+SELECT
+	boardid AS id_cat, SUBSTRING(title, 1, 255) AS name,
 	boardorder AS cat_order
 FROM {$from_prefix}boards
 WHERE isboard = 0;

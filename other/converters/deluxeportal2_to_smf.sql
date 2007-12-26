@@ -179,7 +179,7 @@ WHERE folder != 'sent';
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	privatemessageid AS id_pm, touserid AS id_member, isread = 1 AS is_read,
 	'' AS label
 FROM {$from_prefix}privatemessage

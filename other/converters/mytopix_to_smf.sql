@@ -205,7 +205,7 @@ FROM {$from_prefix}notes AS n
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	notes_id AS id_pm, notes_recipient AS id_member, notes_isRead AS is_read,
 	'' AS labels
 FROM {$from_prefix}notes;

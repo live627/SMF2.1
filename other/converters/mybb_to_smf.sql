@@ -26,7 +26,7 @@ SELECT
 	SUBSTRING(website, 1, 255) AS website_title,
 	SUBSTRING(icq, 1, 255) AS icq, SUBSTRING(aim, 1, 16) AS aim,
 	SUBSTRING(yahoo, 1, 32) AS yim, SUBSTRING(msn AS msn, 1, 255) AS msn,
-	SUBSTRING(signature, 1, 65534) AS signature, hideemail AS hide_email, 
+	SUBSTRING(signature, 1, 65534) AS signature, hideemail AS hide_email,
 	SUBSTRING(buddylist, 1, 255) AS buddy_list,
 	SUBSTRING(regip, 1, 255) AS member_ip,
 	SUBSTRING(regip, 1, 255) AS member_ip2,
@@ -60,7 +60,7 @@ WHERE id_board != 0;
 /* The converter will set id_cat for us based on id_parent being wrong. */
 ---* {$to_prefix}boards
 SELECT
-	fid AS id_board, SUBSTRING(name, 1, 255) AS name, 
+	fid AS id_board, SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, disporder AS board_order,
 	posts AS num_posts, threads AS num_topics, pid AS id_parent,
 	usepostcounts != 'yes' AS count_posts, '-1,0' AS member_groups
@@ -104,7 +104,7 @@ SELECT
 	SUBSTRING(p.username, 1, 255) AS poster_name, p.dateline AS poster_time,
 	SUBSTRING(p.ipaddress, 1, 255) AS poster_ip,
 	SUBSTRING(IF(p.subject = '', t.subject, p.subject), 1, 255) AS subject,
-	SUBSTRING(u.email, 1, 255) AS poster_email, 
+	SUBSTRING(u.email, 1, 255) AS poster_email,
 	p.smilieoff = 'no' AS smileys_enabled,
 	SUBSTRING(edit_u.username, 1, 255) AS modified_name,
 	p.edittime AS modified_time,

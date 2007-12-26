@@ -20,13 +20,13 @@ $txt['scheduled_approval_email_event'] = 'The following events are awaiting appr
 
 $txt['emails'] = array(
 	'resend_activate_message' => array(
-		/* 
+		/*
 			@additional_params: resend_activate_message
 				REALNAME: The display name for the member receiving the email.
 				USERNAME:  The user name for the member receiving the email.
 				ACTIVATIONLINK:  The url link to activate the member's account.
 				ACTIVATIONCODE:  The code needed to activate the member's account.
-			@description: 
+			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
 		'body' => 'You are now registered with an account at {FORUMNAME}, {REALNAME}!
@@ -43,11 +43,11 @@ Should you have any problems with activation, please use the code "{ACTIVATIONCO
 	),
 
 	'resend_pending_message' => array(
-		/* 
+		/*
 			@additional_params: resend_pending_message
 				REALNAME: The display name for the member receiving the email.
 				USERNAME:  The user name for the member receiving the email.
-			@description: 
+			@description:
 		*/
 		'subject' => 'Welcome to {FORUMNAME}',
 		'body' => 'Your registration request at {FORUMNAME} has been received, {REALNAME}.
@@ -296,7 +296,7 @@ Unsubscribe to new topics from this board by using this link:
 		*/
 		'subject' => 'New Group Application',
 		'body' => '{RECPNAME},
-		
+
 {APPYNAME} has requested membership to the "{GROUPNAME}" group. The user has given the following reason:
 
 {REASON}
@@ -318,7 +318,7 @@ You can approve or reject this application by clicking the link below:
 		*/
 		'subject' => 'Subscription about to expire at {FORUMNAME}',
 		'body' => '{REALNAME},
-		
+
 A subscription you are subscribed to at {FORUMNAME} is about to expire. If when you took out the subscription you selected to auto-renew you need take no action - otherwise you may wish to consider subscribing once more. Details are below:
 
 Subscription Name: {SUBSCRIPTION}
@@ -334,7 +334,7 @@ To edit your subscriptions visit the following URL:
 			@additional_params: activate_reactivate
 				ACTIVATIONLINK:  The url link to reactivate the member's account.
 				ACTIVATIONCODE:  The code needed to reactivate the member's account.
-			@description: 
+			@description:
 		*/
 		'subject' => 'Welcome back to {FORUMNAME}',
 		'body' => 'In order to re-validate your email address, your account has been deactivated.  Click the following link to activate it again:
@@ -350,8 +350,8 @@ Should you have any problems with activation, please use the code "{ACTIVATIONCO
 				REALNAME: The real (display) name of the person receiving the reminder.
 				REMINDLINK: The link to reset the password.
 				IP: The IP address of the requester.
-				MEMBERNAME: 
-			@description: 
+				MEMBERNAME:
+			@description:
 		*/
 		'subject' => 'New password for {FORUMNAME}',
 		'body' => 'Dear {REALNAME},
@@ -372,7 +372,7 @@ Username: {MEMBERNAME}
 		*/
 		'subject' => 'Summary of posts awaiting approval at {FORUMNAME}',
 		'body' => '{REALNAME},
-		
+
 This email contains a summary of all items awaiting approval at {FORUMNAME}.
 
 {BODY}
@@ -437,7 +437,7 @@ Thanks,
 		'body' => '{EMAILBODY}',
 	),
 	'report_to_moderator' => array(
-		/* 
+		/*
 			@additional_params: report_to_moderator
 				TOPICSUBJECT: The subject of the reported post.
 				POSTERNAME: The report post's author's name.
@@ -581,7 +581,7 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 				POSTERNAME:
 				TOPICLINK:
 				UNSUBSCRIBELINK:
-				MESSAGE: 
+				MESSAGE:
 			@description:
 		*/
 		'subject' => 'Topic reply: {TOPICSUBJECT}',
@@ -623,7 +623,7 @@ More replies may be posted, but you won\'t receive any more notifications until 
 				POSTERNAME:
 				TOPICLINK:
 				UNSUBSCRIBELINK:
-				MESSAGE: 
+				MESSAGE:
 			@description:
 		*/
 		'subject' => 'Topic reply: {TOPICSUBJECT}',
@@ -737,8 +737,8 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	'admin_notify' => array(
 		/*
 			@additional_params: admin_notify
-				USERNAME: 
-				PROFILELINK: 
+				USERNAME:
+				PROFILELINK:
 			@description:
 		*/
 		'subject' => 'A new member has joined',
@@ -750,9 +750,9 @@ Unsubscribe to this topic by using this link: {UNSUBSCRIBELINK}
 	'admin_notify_approval' => array(
 		/*
 			@additional_params: admin_notify_approval
-				USERNAME: 
-				PROFILELINK: 
-				APPROVALLINK: 
+				USERNAME:
+				PROFILELINK:
+				APPROVALLINK:
 			@description:
 		*/
 		'subject' => 'A new member has joined',
@@ -802,7 +802,7 @@ We would like to wish you a very special birthday.
 	),
 	'nite0859' => array(
 		'subject' => 'Happy Birthday!',
-		'body' => 'Your friends at {FORUMNAME} would like to take a moment of your time to wish you a happy birthday, {REALNAME}. If you have not done so recently, please visit our community in order for others to have the opportunity to pass along their warm regards. 
+		'body' => 'Your friends at {FORUMNAME} would like to take a moment of your time to wish you a happy birthday, {REALNAME}. If you have not done so recently, please visit our community in order for others to have the opportunity to pass along their warm regards.
 
 Even though today is your birthday, {REALNAME}, we would like to remind you that your membership in our community has been the best gift to us thus far.
 
@@ -823,9 +823,9 @@ Another year in your life has passed.  We at {FORUMNAME} hope it has been filled
 		'subject' => 'Happy birthday, {REALNAME}!',
 		'body' => 'Do you know who\'s having a birthday today, {REALNAME}?
 
-We know... YOU! 
+We know... YOU!
 
-Happy birthday! 
+Happy birthday!
 
 You\'re now a year older but we hope you\'re a lot happier than last year.
 

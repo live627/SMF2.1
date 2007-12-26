@@ -19,7 +19,7 @@ SELECT
 	MEMBER_ID AS id_member, SUBSTRING(M_NAME, 1, 255) AS real_name,
 	SUBSTRING(M_PASSWORD, 1, 64) AS passwd,
 	SUBSTRING(M_EMAIL, 1, 255) AS email_address,
-	SUBSTRING(M_COUNTRY, 1, 255) AS location, 
+	SUBSTRING(M_COUNTRY, 1, 255) AS location,
 	SUBSTRING(M_HOMEPAGE, 1, 255) AS website_title,
 	SUBSTRING(M_HOMEPAGE, 1, 255) AS website_url,
 	SUBSTRING(REPLACE(M_SIG, '\n', '<br />'), 1, 65534) AS signature,

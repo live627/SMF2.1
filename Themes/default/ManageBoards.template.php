@@ -19,7 +19,7 @@ function template_main()
 			<tr class="windowbg2" height="30">
 				<td>', $context['move_title'], ' [<a href="', $scripturl, '?action=admin;area=manageboards">', $txt['mboards_cancel_moving'], '</a>]</td>
 			</tr>';
-			
+
 	// Loop through every categories, listing the boards in each as we go.
 	foreach ($context['categories'] as $category)
 	{

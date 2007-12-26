@@ -51,7 +51,7 @@ TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
 SELECT
-	forum_id AS id_cat, SUBSTRING(forum_name, 1, 255) AS name, 
+	forum_id AS id_cat, SUBSTRING(forum_name, 1, 255) AS name,
 	forum_position AS cat_order
 FROM {$from_prefix}forums
 WHERE forum_parent = 0;

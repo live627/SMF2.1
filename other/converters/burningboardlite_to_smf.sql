@@ -23,7 +23,7 @@ if (trim($row['stars']) != '')
 	$row['stars'] = sprintf("%d#star.gif", substr_count($row['stars'], ';') + 1);
 ---}
 SELECT
-	SUBSTRING(ranktitle, 1, 80) AS group_name, needposts AS min_posts, 
+	SUBSTRING(ranktitle, 1, 80) AS group_name, needposts AS min_posts,
 	rankimages AS stars, '' AS online_color
 FROM {$from_prefix}ranks
 WHERE groupid NOT IN (1, 2, 3)
@@ -92,7 +92,7 @@ FROM {$from_prefix}avatars;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	boardid AS id_cat, SUBSTRING(title, 1, 255) AS name,
 	boardorder AS cat_order
 FROM {$from_prefix}boards
@@ -112,7 +112,7 @@ WHERE id_board != 0;
 ---* {$to_prefix}boards
 SELECT
 	boardid AS id_board, parentid AS id_parent, boardorder AS board_order,
-	SUBSTRING(title, 1, 255) AS name, 
+	SUBSTRING(title, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS description, threadcount AS num_topics,
 	postcount AS num_posts, '-1,0' AS member_groups
 FROM {$from_prefix}boards

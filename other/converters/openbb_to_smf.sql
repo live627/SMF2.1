@@ -48,7 +48,7 @@ WHERE p.username != '';
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	forumid AS id_cat, SUBSTRING(title, 1, 255) AS name,
 	displayorder AS cat_order
 FROM {$from_prefix}forum_display

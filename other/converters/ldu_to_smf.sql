@@ -32,7 +32,7 @@ SELECT
 	SUBSTRING(user_website, 1, 255) AS website_title,
 	SUBSTRING(user_website, 1, 255) AS website_url, user_hideemail AS hide_email,
 	CASE user_gender WHEN 'M' THEN 1 WHEN 'F' THEN 2 ELSE 0 END AS gender,
-	SUBSTRING(user_email, 1, 255) AS email_address, 
+	SUBSTRING(user_email, 1, 255) AS email_address,
 	user_pmnotify AS pm_email_notify, user_regdate AS date_registered,
 	user_lastlog AS last_login, user_postcount AS posts, '' AS lngfile,
 	'' AS buddy_list, '' AS pm_ignore_list, '' AS personal_text, '' AS aim,
@@ -108,7 +108,7 @@ TRUNCATE {$to_prefix}attachments;
 ---* {$to_prefix}messages 200
 SELECT
 	p.fp_id AS id_msg, p.fp_topicid AS id_topic, p.fp_sectionid AS id_board,
-	p.fp_posterid AS id_member, 
+	p.fp_posterid AS id_member,
 	SUBSTRING(p.fp_postername, 1, 255) AS poster_name,
 	p.fp_creation AS poster_time,
 	SUBSTRING(p.fp_updater, 1, 255) AS modified_name,
@@ -133,7 +133,7 @@ TRUNCATE {$to_prefix}log_polls;
 ---* {$to_prefix}polls
 SELECT
 	p.poll_id AS id_poll, IF(p.poll_state != 0, 1, 0) AS voting_locked,
-	SUBSTRING(p.poll_text, 1, 255) AS question, 
+	SUBSTRING(p.poll_text, 1, 255) AS question,
 	t.ft_firstposterid AS id_member,
 	SUBSTRING(t.ft_firstpostername, 1, 255) AS poster_name
 FROM ({$from_prefix}{$db_polls} AS p, {$from_prefix}{$db_forum_topics} AS t)
@@ -193,7 +193,7 @@ FROM {$from_prefix}{$db_pm};
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	pm_id AS id_pm, pm_touserid AS id_member, pm_state != 0 AS is_read,
 	'' AS labels
 FROM {$from_prefix}{$db_pm};

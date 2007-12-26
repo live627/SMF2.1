@@ -90,7 +90,7 @@ function template_select_search_method()
 				<td>
 					', $txt['search_index_none'], '
 				</td>';
-				
+
 	if ($context['supports_fulltext'])
 	{
 		echo '

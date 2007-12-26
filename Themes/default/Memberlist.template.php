@@ -239,7 +239,7 @@ function template_search()
 
 	// Display the input boxes for the form.
 	echo '
-		
+
 		<div class="windowbg" align="center" style="padding-bottom: 1ex;">
 			<table width="440" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -261,7 +261,7 @@ function template_search()
 		// Half way through?
 		if (round(count($context['search_fields']) / 2) == ++$count)
 			echo '
-								
+
 					</td>
 					<td align="left" valign="top">';
 	}

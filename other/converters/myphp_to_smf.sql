@@ -61,7 +61,7 @@ DELETE FROM {$to_prefix}board_permissions
 WHERE id_board != 0;
 
 ---* {$to_prefix}boards
-SELECT 
+SELECT
 	fid AS id_board, 1 AS id_cat, SUBSTRING(name, 1, 255) AS name,
 	SUBSTRING(description, 1, 65534) AS name, dorder AS board_order
 FROM {$from_prefix}forum;

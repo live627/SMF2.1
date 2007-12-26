@@ -52,7 +52,7 @@ TRUNCATE {$to_prefix}categories;
 ---{
 $row['name'] = stripslashes($row['name']);
 ---}
-SELECT 
+SELECT
 	(fid + 1) AS id_cat, SUBSTRING(name, 1, 255) AS name,
 	displayorder + 2 AS cat_order
 FROM {$from_prefix}forums
@@ -127,8 +127,8 @@ $row['body'] = preg_replace('~\[align=(center|right|left)\](.+?)\[/align\]~i', '
 SELECT
 	p.pid AS id_msg, p.tid AS id_topic, p.dateline AS poster_time,
 	uf.uid AS id_member, SUBSTRING(p.subject, 1, 255) AS subject,
-	SUBSTRING(p.author, 1, 255) AS poster_name, 
-	SUBSTRING(uf.email, 1, 255) AS poster_email, 
+	SUBSTRING(p.author, 1, 255) AS poster_name,
+	SUBSTRING(uf.email, 1, 255) AS poster_email,
 	SUBSTRING(p.useip, 1, 255) AS poster_ip, p.fid AS id_board,
 	IF(p.smileyoff = 0, 1, 0) AS smileys_enabled,
 	SUBSTRING(REPLACE(p.message, '<br>', '<br />'), 1, 255) AS body,
@@ -215,7 +215,7 @@ WHERE pm.folder != 'outbox';
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	pm.u2uid AS id_pm, uf.uid AS id_member, pm.readstatus = 'yes' AS is_read,
 	'' AS labels
 FROM ({$from_prefix}u2u AS pm, {$from_prefix}members AS uf)

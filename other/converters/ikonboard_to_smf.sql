@@ -58,7 +58,7 @@ FROM {$from_prefix}member_profiles;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	CAT_ID AS id_cat, SUBSTRING(CAT_NAME, 1, 255) AS name, CAT_POS AS cat_order
 FROM {$from_prefix}categories;
 ---*

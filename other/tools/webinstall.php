@@ -393,7 +393,7 @@ function doStep0()
 		echo '
 											<td>
 												<label for="language-', $file, '">
-													<input type="checkbox" name="languages[]" id="language-', $file, '" value="', $file, '" /> 
+													<input type="checkbox" name="languages[]" id="language-', $file, '" value="', $file, '" />
 													<strong>', $data['name'], '</strong> <span class="smalltext">(SMF ', implode(', SMF ', $data['versions']), ')</span>
 												</label>
 											</td>';
@@ -1095,7 +1095,7 @@ function fetch_install_info()
 		'install' => array(),
 		'languages' => array(),
 	);
-	
+
 	$vers = array();
 
 	// Get mirrors.
@@ -1120,7 +1120,7 @@ function fetch_install_info()
 		foreach($versions as $id => $ver)
 			if (!in_array($ver, $vers))
 				unset($versions[$ver]);
-		
+
 		if (empty($versions))
 			continue;
 

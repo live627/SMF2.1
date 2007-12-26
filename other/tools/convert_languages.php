@@ -27,7 +27,7 @@ function loadDirs()
 	while ($direntry = $dir->read())
 	{
 		// Found the language directory?
-		if (file_exists($curdir . $direntry . '/languages')) 
+		if (file_exists($curdir . $direntry . '/languages'))
 		{
 			$dirs['lang'][] = $curdir . $direntry . '/languages';
 		}
@@ -146,13 +146,13 @@ function doStep1()
 			if (substr($entry, -4) == '.php' && strlen($entry) > 10)
 			{
 				$needs_edit = false;
-	
+
 				// Load the file.
 				$fileContents = implode('', file($langdir . '/' . $entry));
-	
+
 				// First try find the info line.
 				list ($type, $lang) = explode('.', $entry);
-	
+
 				// The warning for editing files direct?
 				if ($type != 'index' && $type != 'Install' && preg_match('~//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*//\s[\w\d\s!\.&;]*index\.' . $lang . '\.php\.~', $fileContents, $matches) == false)
 				{
@@ -166,15 +166,15 @@ function doStep1()
 		1) All language entries in SMF 2.0 are cached. All edits should therefore be made through the admin menu. If you do
 		   edit a language file manually you will not see the changes in SMF until the cache refreshes. To manually refresh
 		   the cache go to Admin => Maintenance => Clean Cache.
-	
+
 		2) Please also follow the following rules:
-	
+
 			a) All strings should use single quotes, not double quotes for enclosing the string.
 			b) As a result of (a) all newline characters (etc) need to be escaped. i.e. "\\n" is now \'\\\\\\\\n\'.
-	
+
 	*/';
 					$fileContents = preg_replace('~(//\sVersion:[\s\d\w\.]*;\s*' . $type . '\s*)~', "$1$long_warning\n\n", $fileContents);
-	
+
 					$needs_edit = true;
 				}
 				// Fix up the help file with existing indexes.
@@ -244,13 +244,13 @@ function doStep1()
 				{
 					$fileContents = preg_replace('~#(context|settings|txt|boardurl|scripturl)~', "$$1", $fileContents);
 				}
-	
+
 				if ($needs_edit)
 				{
 					$files[$entry] = array(
 						'name' => substr($entry, 0, strpos($entry, '.')),
 					);
-	
+
 					$fp = fopen($langdir . '/' . $entry, 'w');
 					fwrite($fp, $fileContents);
 					fclose($fp);
@@ -304,7 +304,7 @@ function doStep2()
 				);
 				// Load the file.
 				$fileContents = implode('', file($langdir . '/' . $entry));
-	
+
 				foreach ($txtChanges as $type => $set)
 					foreach ($txtChanges[$type] as $find => $replace)
 					{
@@ -372,17 +372,17 @@ function doStep3()
 			if (substr($entry, -4) == '.php' && strlen($entry) > 10)
 			{
 				$name = substr($entry, 0, strpos($entry, '.'));
-	
+
 				// Load the file.
 				$fileContents = implode('', file($langdir . '/' . $entry));
 
 				$findArray = array();
-				$replaceArray = array();	
+				$replaceArray = array();
 				foreach ($txtChanges as $type => $set)
 					foreach ($txtChanges[$type] as $find => $replace)
 					{
 						$find2 = is_integer($find) ? '$txt[' . $find . ']' : '$txt[\'' . $find . '\']';
-	
+
 						if (strpos($fileContents, $find2) !== false)
 						{
 							$findArray[] = $find2;
@@ -396,7 +396,7 @@ function doStep3()
 				if (!empty($findArray))
 				{
 					$fileContents = str_replace($findArray, $replaceArray, $fileContents);
-	
+
 					$fp = fopen($langdir . '/' . $entry, 'w');
 					fwrite($fp, $fileContents);
 					fclose($fp);
@@ -506,7 +506,7 @@ function doStep5()
 			if (substr($entry, -4) == '.php' && strlen($entry) > 7)
 			{
 				$name = substr($entry, 0, strpos($entry, '.'));
-	
+
 				// Load the file.
 				$fileContents = implode('', file($themedir . '/' . $entry));
 
@@ -517,7 +517,7 @@ function doStep5()
 					foreach ($txtChanges[$type] as $find => $replace)
 					{
 						$find2 = is_integer($find) ? '$txt[' . $find . ']' : '$txt[\'' . $find . '\']';
-	
+
 						if (strpos($fileContents, $find2) !== false)
 						{
 							$findArray[] = $find2;
@@ -529,7 +529,7 @@ function doStep5()
 
 						// Check for ones in quotes too.
 						$find2 = '\'$txt[' . $find . ']\'';
-	
+
 						if (strpos($fileContents, $find2) !== false)
 						{
 							$findArray[] = $find2;

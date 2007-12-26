@@ -189,7 +189,7 @@ ADD PRIMARY KEY (ID_MEMBER, ID_BOARD);
 ---#
 
 ---# Updating indexes on "log_mark_read"...
-ALTER TABLE {$db_prefix}log_mark_read 
+ALTER TABLE {$db_prefix}log_mark_read
 DROP PRIMARY KEY,
 ADD PRIMARY KEY (ID_MEMBER, ID_BOARD);
 ---#
@@ -521,7 +521,7 @@ if ((!isset($modSettings['smfVersion']) || $modSettings['smfVersion'] <= '1.1 RC
 
 			if (!empty($insertRows))
 				upgrade_query("
-					INSERT IGNORE INTO {$db_prefix}themes 
+					INSERT IGNORE INTO {$db_prefix}themes
 						(ID_MEMBER, ID_THEME, variable, value)
 					VALUES
 						" . implode(',
@@ -1636,14 +1636,14 @@ if ($numIndexedWords == 0 || isset($_GET['lt']))
 				$inserts[] = "'$word', $row[ID_TOPIC]";
 		}
 		mysql_free_result($request);
-	
+
 		if (!empty($inserts))
 			upgrade_query("
 				INSERT INTO {$db_prefix}log_search_subjects
 					(word, ID_TOPIC)
 				VALUES (" . implode('),
 					(', array_unique($inserts)) . ")");
-	
+
 		$_GET['lt'] += 250;
 		$step_progress['current'] = $_GET['lt'];
 		nextSubstep($substep);
@@ -1659,23 +1659,23 @@ if (isset($modSettings['search_method']))
 {
 	if (!empty($modSettings['search_method']))
 		$request = upgrade_query("
-			INSERT INTO {$db_prefix}settings 
+			INSERT INTO {$db_prefix}settings
 				(variable, value)
-			VALUES 
+			VALUES
 				('search_match_words', '1')");
-	
+
 	if ($modSettings['search_method'] > 1)
 		$request = upgrade_query("
-			INSERT INTO {$db_prefix}settings 
+			INSERT INTO {$db_prefix}settings
 				(variable, value)
-			VALUES 
+			VALUES
 				('search_index', 'fulltext')");
 
 	if ($modSettings['search_method'] == 3)
 		$request = upgrade_query("
-			INSERT INTO {$db_prefix}settings 
+			INSERT INTO {$db_prefix}settings
 				(variable, value)
-			VALUES 
+			VALUES
 				('search_force_index', '1')");
 
 	$request = upgrade_query("

@@ -16,7 +16,7 @@ TRUNCATE {$to_prefix}members;
 
 ---* {$to_prefix}members
 SELECT
-	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name, 
+	u.userid AS id_member, SUBSTRING(u.username, 1, 80) AS member_name,
 	SUBSTRING(u.username, 1, 255) AS real_name,
 	SUBSTRING(u.password, 1, 64) AS passwd,
 	SUBSTRING(u.email, 1, 255) AS email_address,
@@ -49,7 +49,7 @@ WHERE u.userid != 0;
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	forumid AS id_cat, SUBSTRING(title, 1, 255) AS name,
 	displayorder AS cat_order
 FROM {$from_prefix}forum
@@ -204,7 +204,7 @@ WHERE pmt.pmtextid = pm.pmtextid
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
+SELECT
 	pm.pmid AS id_pm, pm.touserid AS id_member, pm.readtime != 0 AS is_read,
 	'' AS labels
 FROM {$from_prefix}pmreceipt AS pm;

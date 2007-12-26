@@ -196,7 +196,7 @@ SELECT
 	SUBSTRING(m.poster_ip, 1, 255) AS poster_ip,
 	SUBSTRING(m.subject, 1, 255) AS subject,
 	m.smiliesEnabled AS smileys_enabled,
-	m.modified_time, 
+	m.modified_time,
 	SUBSTRING(m.modified_name, 1, 255) AS modified_name,
 	SUBSTRING(REPLACE(m.body, '<br>', '<br />'), 1, 65534) AS body,
 	'xx' AS icon

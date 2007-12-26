@@ -284,7 +284,7 @@ function template_merge()
 											<a href="' . $scripturl . '?topic=' . $topic['id'] . '.0" rel="new_win">' . $topic['subject'] . '</a> ' . $txt['started_by'] . ' ' . $topic['poster']['link'] . '
 										</td>
 									</tr>';
-	echo '									
+	echo '
 								</table>
 							</td>
 						</tr>

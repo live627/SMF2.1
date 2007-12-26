@@ -231,7 +231,7 @@ function template_main()
 								<img src="', $context['verification_image_href'], ';letter=5" id="verification_image_5" alt="', $txt['search_visual_verification_desc'], '" />';
 			echo '
 							</div>
-							<div class="smalltext">	
+							<div class="smalltext">
 								<a href="', $context['verification_image_href'], ';sound" id="visual_verification_sound">', $txt['visual_verification_sound'], '</a><br />
 								<a href="#" id="visual_verification_refresh">', $txt['visual_verification_request_new'], '</a><br />
 							</div><br />

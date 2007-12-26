@@ -158,7 +158,7 @@ function template_permission_index()
 		document.getElementById(\'permissions_panel_advanced\').style.display = "none";';
 
 	echo '
-	
+
 		function checkSubmit()
 		{
 			if ((document.forms.permissionForm.predefined.value != "" && (document.forms.permissionForm.copy_from.value != "empty" || document.forms.permissionForm.permissions.value != "")) || (document.forms.permissionForm.copy_from.value != "empty" && document.forms.permissionForm.permissions.value != ""))
@@ -173,7 +173,7 @@ function template_permission_index()
 			}
 			if (document.forms.permissionForm.permissions.value != "" && document.forms.permissionForm.add_remove.value == "deny")
 				return confirm("', $txt['permissions_deny_dangerous'], '");
-	
+
 			return true;
 		}
 	// ]]></script>';
@@ -289,7 +289,7 @@ function template_edit_profiles()
 		echo '
 				<tr class="', $alternate ? 'windowbg' : 'windowbg2', '">
 					<td>';
-		
+
 		if (!empty($context['show_rename_boxes']) && $profile['can_edit'])
 			echo '
 						<input type="text" name="rename_profile[', $profile['id'], ']" value="', $profile['name'], '" />';
@@ -680,7 +680,7 @@ function template_modify_group_simple($type)
 			document.getElementById("group_select_deny_', $id_group, '").style.display = "";';
 				}
 
-			
+
 				$perm_ids = array();
 				$count = 0;
 				foreach ($permissionGroup['permissions'] as $permission)

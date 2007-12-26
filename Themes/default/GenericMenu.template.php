@@ -108,8 +108,8 @@ function template_generic_menu_dropdown_above()
 				<td class="mirrortab_last"></td>
 			</tr>
 		</table>';
-	
-	echo '	
+
+	echo '
 	<div id="adm_container">
 		<ul class="admin_menu" id="dropdown_menu_', $context['cur_menu_id'], '">';
 

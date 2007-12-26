@@ -121,7 +121,7 @@ while (($filename = readdir($dh)) !== false)
 				{
 					$link_type = $part;
 					$state = 2;
-				}				
+				}
 				// This is just the reference name for the link...
 				elseif ($state == 2)
 				{

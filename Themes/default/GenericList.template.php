@@ -40,7 +40,7 @@ function template_show_list($list_id = null)
 
 	if (isset($cur_list['additional_rows']['above_column_headers']))
 		template_additional_rows('above_column_headers', $cur_list);
-	
+
 	// Show the column headers.
 	echo '
 			<tr class="titlebg">';
@@ -49,7 +49,7 @@ function template_show_list($list_id = null)
 	foreach ($cur_list['headers'] as $col_header)
 		echo '
 				<th valign="top"', empty($col_header['class']) ? '' : ' class="' . $col_header['class'] . '"', empty($col_header['style']) ? '' : ' style="' . $col_header['style'] . '"', '>', empty($col_header['href']) ? '' : '<a href="' . $col_header['href'] . '">', $col_header['label'], empty($col_header['href']) ? '' : '</a>', empty($col_header['sort_image']) ? '' : ' <img src="' . $settings['images_url'] . '/sort_' . $col_header['sort_image'] . '.gif" alt="" />', '</th>';
-	
+
 	echo '
 			</tr>';
 
@@ -59,7 +59,7 @@ function template_show_list($list_id = null)
 			<tr>
 				<td class="windowbg" colspan="', $cur_list['num_columns'], '" align="', !empty($cur_list['no_items_align']) ? $cur_list['no_items_align'] : 'center', '">', $cur_list['no_items_label'], '</td>
 			</tr>';
-	
+
 	// Show the list rows.
 	elseif (!empty($cur_list['rows']))
 	{
@@ -86,7 +86,7 @@ function template_show_list($list_id = null)
 					<b>', $txt['pages'], ':</b> ', $cur_list['page_index'], '
 				</td>
 			</tr>';
-	
+
 	if (isset($cur_list['additional_rows']['bottom_of_list']))
 		template_additional_rows('bottom_of_list', $cur_list);
 

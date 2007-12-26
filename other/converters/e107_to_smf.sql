@@ -34,7 +34,7 @@ WHERE group_name LIKE 'e107%';
 			if ($groupname !== '')
 				$inserts .= "
 					(SUBSTRING('e107 " . addslashes($groupname) . "', 1, 255), $prefs[forum_thresholds], '', '')";
-		
+
 		if (!empty($inserts))
 			mysql_query("
 				INSERT INTO {$to_prefix}membergroups
@@ -64,12 +64,12 @@ TRUNCATE {$to_prefix}members;
 SELECT
 	u.user_id AS id_member, SUBSTRING(u.user_name, 1, 80) AS member_name,
 	u.user_join AS date_registered, u.user_forums AS posts,
-	IF (u.user_admin = 1, 1, 0) AS id_group, u.user_lastvisit AS last_login, 
+	IF (u.user_admin = 1, 1, 0) AS id_group, u.user_lastvisit AS last_login,
 	SUBSTRING(u.user_name, 1, 255) AS real_name,
 	SUBSTRING(u.user_password, 1, 64) AS passwd,
 	SUBSTRING(u.user_email, 1, 255) AS email_address, 0 AS gender,
 	u.user_birthday AS birthdate,
-	SUBSTRING(REPLACE(u.user_homepage, 'http://', ''), 1, 255) AS website_title, 
+	SUBSTRING(REPLACE(u.user_homepage, 'http://', ''), 1, 255) AS website_title,
 	SUBSTRING(u.user_homepage, 1, 255) AS website_url,
 	SUBSTRING(u.user_location, 1, 255) AS location,
 	SUBSTRING(u.user_icq, 1, 255) AS icq, SUBSTRING(u.user_aim, 1, 16) AS aim,
@@ -79,7 +79,7 @@ SELECT
 	SUBSTRING(u.user_image, 1, 255) AS avatar,
 	SUBSTRING(u.user_customtitle, 1, 255) AS usertitle,
 	SUBSTRING(u.user_ip, 1, 255) AS member_ip, '' AS lngfile, '' AS buddy_list,
-	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text, '' AS yim, 
+	'' AS pm_ignore_list, '' AS message_labels, '' AS personal_text, '' AS yim,
 	'' AS time_format, '' AS secret_question, '' AS secret_answer,
 	'' AS validation_code, '' AS additional_groups, '' AS smiley_set,
 	'' AS password_salt, SUBSTRING(u.user_ip, 1, 255) AS member_ip2
@@ -160,7 +160,7 @@ if ($last_member != 0)
 TRUNCATE {$to_prefix}categories;
 
 ---* {$to_prefix}categories
-SELECT 
+SELECT
 	forum_id AS id_cat, SUBSTRING(forum_name, 1, 255) AS name,
 	forum_order AS cat_order
 FROM {$from_prefix}forum
@@ -212,7 +212,7 @@ SELECT
 	t.thread_forum_id AS id_board, t.thread_id AS id_first_msg,
 	IFNULL(tl.thread_id, t.thread_id) AS id_last_msg,
 	IFNULL(us.user_id, 0) AS id_member_started,
-	IFNULL(ul.user_id, IFNULL(us.user_id, 0)) AS id_member_updated, 
+	IFNULL(ul.user_id, IFNULL(us.user_id, 0)) AS id_member_updated,
 	IFNULL(p.poll_id, 0) AS id_poll, COUNT(*) AS num_replies, t.thread_views AS num_views,
 	IF(t.thread_active = 1, 0, 1) AS locked
 FROM {$from_prefix}forum_t AS t
@@ -235,9 +235,9 @@ TRUNCATE {$to_prefix}messages;
 ---{
 $row['body'] = preg_replace('~\[size=([789]|[012]\d)\]~is', '[size=$1px]', $row['body']);
 ---}
-SELECT m.thread_id AS id_msg, 
-	IF(m.thread_parent = 0, m.thread_id, m.thread_parent) AS id_topic, 
-	m.thread_forum_id AS id_board, m.thread_datestamp AS poster_time, 
+SELECT m.thread_id AS id_msg,
+	IF(m.thread_parent = 0, m.thread_id, m.thread_parent) AS id_topic,
+	m.thread_forum_id AS id_board, m.thread_datestamp AS poster_time,
 	IFNULL(u.user_id, 0) AS id_member,
 	SUBSTRING(m.thread_name, 1, 255) AS subject,
 	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(m.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS poster_name,
@@ -260,7 +260,7 @@ TRUNCATE {$to_prefix}log_polls;
 SELECT
 	p.poll_id AS id_poll, SUBSTRING(p.poll_title, 1, 255) AS question,
 	0 AS voting_locked, 1 AS max_votes, p.poll_end_datestamp AS expire_time,
-	0 AS hide_results, 0 AS change_vote, p.poll_admin_id AS id_member, 
+	0 AS hide_results, 0 AS change_vote, p.poll_admin_id AS id_member,
 	SUBSTRING(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(t.thread_user, '.', 2), '.', -1), 0x1, 1), 1, 255) AS poster_name
 FROM ({$from_prefix}poll AS p, {$from_prefix}forum_t AS t)
 WHERE p.poll_datestamp = t.thread_id;
@@ -272,11 +272,11 @@ WHERE p.poll_datestamp = t.thread_id;
 
 ---{
 $request = mysql_query("
-	SELECT 
+	SELECT
 		poll_id, poll_option_1, poll_option_2, poll_option_3, poll_option_4,
-		poll_option_5, poll_option_6, poll_option_7, poll_option_8, 
+		poll_option_5, poll_option_6, poll_option_7, poll_option_8,
 		poll_option_9, poll_option_10, poll_votes_1, poll_votes_2, poll_votes_3,
-		poll_votes_4, poll_votes_5, poll_votes_6, poll_votes_7, poll_votes_8, 
+		poll_votes_4, poll_votes_5, poll_votes_6, poll_votes_7, poll_votes_8,
 		poll_votes_9, poll_votes_10
 	FROM ({$from_prefix}poll AS p, {$from_prefix}forum_t AS t)
 	WHERE p.poll_datestamp = t.thread_id");
@@ -324,8 +324,8 @@ WHERE uf.user_name = pm.pm_from_user;
 TRUNCATE {$to_prefix}pm_recipients;
 
 ---* {$to_prefix}pm_recipients
-SELECT 
-	pm.pm_id AS id_pm, ut.user_id AS id_member, 0 AS bcc, 
+SELECT
+	pm.pm_id AS id_pm, ut.user_id AS id_member, 0 AS bcc,
 	IF (pm.pm_rcv_datestamp = 0, 0, 1) AS is_read, 0 AS deleted, '' AS labels
 FROM ({$from_prefix}pm_messages AS pm, {$from_prefix}user AS ut)
 WHERE ut.user_name = pm.pm_to_user;
@@ -338,7 +338,7 @@ WHERE ut.user_name = pm.pm_to_user;
 TRUNCATE {$to_prefix}log_notify;
 
 ---* {$to_prefix}log_notify
-SELECT 
+SELECT
 	u.user_id AS id_member, t.thread_id AS id_topic, 0 AS sent
 FROM ({$from_prefix}forum_t AS t, {$from_prefix}user AS u)
 WHERE u.user_id = SUBSTRING_INDEX(t.thread_user, '.', 1)
@@ -474,7 +474,7 @@ if (mysql_num_rows($request) > 0)
 
 	if (empty($ID_BAN_GROUP))
 		continue;
-	
+
 	$inserts = '';
 	while ($row = mysql_fetch_assoc($request))
 		$inserts .= "

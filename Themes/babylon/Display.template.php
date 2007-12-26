@@ -497,7 +497,7 @@ function template_main()
 
 			// If we had unapproved attachments clean up.
 			if ($last_approved_state == 0)
-				echo ' 
+				echo '
 									</fieldset>';
 
 			echo '

@@ -169,7 +169,7 @@ function template_summary()
 						<a href="', $scripturl, '?action=trackip;searchip=', $context['member']['ip'], '" rel="new_win">', $context['member']['ip'], '</a>
 					</td>
 				</tr>';
-				
+
 		if (empty($modSettings['disableHostnameLookup']))
 			echo '
 				<tr>

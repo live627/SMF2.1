@@ -65,7 +65,7 @@ function template_email_members()
 		{
 			// What styles are we doing?
 			divStyle = mode ? "" : "none";
-	
+
 			for (var i = 0; i < 20; i++)
 				if (document.getElementById("advanced_div_" + i))
 					document.getElementById("advanced_div_" + i).style.display = divStyle;

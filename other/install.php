@@ -760,7 +760,7 @@ function doStep1()
 		{
 			$smfFunc['db_query']('', "
 				CREATE DATABASE IF NOT EXISTS `$_POST[db_prefix]$db_name`", false, false, $db_connection);
-	
+
 			if ($smfFunc['db_select_db']($_POST['db_prefix'] . $db_name, $db_connection))
 			{
 				$db_name = $_POST['db_prefix'] . $db_name;
@@ -777,7 +777,7 @@ function doStep1()
 						<br />
 						<a href="', $_SERVER['PHP_SELF'], '?step=0&amp;overphp=true">', $txt['error_message_click'], '</a> ', $txt['error_message_try_again'], '
 					</div>';
-	
+
 			return false;
 		}
 	}
