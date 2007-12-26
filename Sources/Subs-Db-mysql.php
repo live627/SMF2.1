@@ -122,7 +122,7 @@ function smf_db_replacement__callback($matches)
 	
 	if ($matches[1] === 'db_prefix')
 		return $db_prefix;
-	
+
 	if (!isset($matches[2]))
 		trigger_error('Invalid value injected or no type specified.', E_USER_ERROR);
 		
@@ -275,10 +275,10 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	{
 		// Pass some values to the global space for use in the callback function.
 		$db_callback = array($db_values, $connection);
-		
+
 		// Inject the values passed to this function.
 		$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
-		
+
 		// This shouldn't be residing in global space any longer.
 		$db_callback = array();
 	}

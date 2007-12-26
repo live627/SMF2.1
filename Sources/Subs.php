@@ -2549,11 +2549,11 @@ function writeLog($force = false)
 			);
 
 		$smfFunc['db_insert']($do_delete ? 'ignore' : 'replace',
-				$db_prefix . 'log_online',
-				array('session' => 'string', 'id_member' => 'int', 'id_spider' => 'int', 'log_time' => 'int', 'ip' => 'raw', 'url' => 'string'),
-				array($session_id, $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', $serialized),
-				array('session')
-			);
+			$db_prefix . 'log_online',
+			array('session' => 'string', 'id_member' => 'int', 'id_spider' => 'int', 'log_time' => 'int', 'ip' => 'raw', 'url' => 'string'),
+			array($session_id, $user_info['id'], empty($_SESSION['id_robot']) ? 0 : $_SESSION['id_robot'], time(), 'IFNULL(INET_ATON(\'' . $user_info['ip'] . '\'), 0)', $serialized),
+			array('session')
+		);
 	}
 
 	// Mark your session as being logged.

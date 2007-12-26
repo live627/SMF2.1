@@ -968,7 +968,7 @@ function loadMemberData($users, $is_name = false, $set = 'normal')
 		$request = $smfFunc['db_query']('', '
 			SELECT *
 			FROM {db_prefix}themes
-			WHERE id_member' . (count($new_loaded_ids) == 1 ? ' = {int:loaded_ids}' : ' IN ({array_int}loaded_ids)'),
+			WHERE id_member' . (count($new_loaded_ids) == 1 ? ' = {int:loaded_ids}' : ' IN ({array_int:loaded_ids})'),
 			array(
 				'loaded_ids' => count($new_loaded_ids) == 1 ? $new_loaded_ids[0] : $new_loaded_ids,
 			)
