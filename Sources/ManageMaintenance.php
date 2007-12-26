@@ -233,9 +233,15 @@ function Maintenance()
 			foreach ($_POST['groups'] as $id => $dummy)
 				$groups[] = (int) $id;
 			$time_limit = (time() - ($_POST['maxdays'] * 24 * 3600));
-			$where = 'mem.last_login < ' . $time_limit;
+			$where_vars = array(
+				'last_login' => $time_limit,
+			);
+			$where = 'mem.last_login < {int:last_login}';
 			if ($_POST['del_type'] == 'activated')
-					$where .= ' AND mem.is_activated = 0';
+			{
+				$where .= ' AND mem.is_activated = {int:is_activated}';
+				$where_vars['is_activated'] = 0;
+			}
 
 			// Need to get *all* groups then work out which (if any) we avoid.
 			$request = $smfFunc['db_query']('', '
@@ -251,16 +257,25 @@ function Maintenance()
 				{
 					// Post group?
 					if ($row['min_posts'] != -1)
-						$where .= ' AND mem.id_post_group != ' . $row['id_group'];
+					{
+						$where .= ' AND mem.id_post_group != {int:id_post_group_' . $row['id_group'] . '}';
+						$where_vars['id_post_group_' . $row['id_group']] = $row['id_group'];
+					}
 					else
-						$where .= ' AND mem.id_group != ' . $row['id_group'] . ' AND NOT FIND_IN_SET(' . $row['id_group'] . ', mem.additional_groups)';
+					{
+						$where .= ' AND mem.id_group != {int:id_group_' . $row['id_group'] . '} AND NOT FIND_IN_SET({int:id_group_' . $row['id_group'] . '}, mem.additional_groups)';
+						$where_vars['id_group_' . $row['id_group']] = $row['id_group'];
+					}
 				}
 			}
 			$smfFunc['db_free_result']($request);
 
 			// If we have ungrouped unselected we need to avoid those guys.
 			if (!in_array(0, $groups))
-				$where .= ' AND (mem.id_group != 0 OR mem.additional_groups != \'\')';
+			{
+				$where .= ' AND (mem.id_group != 0 OR mem.additional_groups != {string:blank_add_groups})';
+				$where_vars['blank_add_groups'] = '';
+			}
 
 			// Select all the members we're about to murder/remove...
 			$request = $smfFunc['db_query']('', '
@@ -268,8 +283,7 @@ function Maintenance()
 				FROM {db_prefix}members AS mem
 					LEFT JOIN {db_prefix}moderators AS m ON (m.id_member = mem.id_member)
 				WHERE ' . $where,
-				array(
-				)
+				$where_vars
 			);
 			$members = array();
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -377,9 +391,9 @@ function ScheduledTasks()
 		// Do the update!
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}scheduled_tasks
-			SET disabled = CASE WHEN id_task IN ({array_int:inject_array_int_1}) THEN 0 ELSE 1 END',
+			SET disabled = CASE WHEN id_task IN ({array_int:id_task_enable}) THEN 0 ELSE 1 END',
 			array(
-				'inject_array_int_1' => $enablers,
+				'id_task_enable' => $enablers,
 			)
 		);
 
@@ -399,10 +413,10 @@ function ScheduledTasks()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_task, task
 			FROM {db_prefix}scheduled_tasks
-			WHERE id_task IN ({array_int:inject_array_int_1})
+			WHERE id_task IN ({array_int:tasks})
 			LIMIT ' . count($tasks),
 			array(
-				'inject_array_int_1' => $tasks,
+				'tasks' => $tasks,
 			)
 		);
 
@@ -428,13 +442,11 @@ function ScheduledTasks()
 			if ($completed)
 			{
 				$total_time = round(array_sum(explode(' ', microtime())) - array_sum(explode(' ', $start_time)), 3);
-				$smfFunc['db_query']('', '
-					INSERT INTO {db_prefix}log_scheduled_tasks
-						(id_task, time_run, time_taken)
-					VALUES
-						(' . $row['id_task'] . ', ' . time() . ', ' . $total_time . ')',
-					array(
-					)
+				$smfFunc['db_insert']('',
+					$db_prefix . 'log_scheduled_tasks',
+					array('id_task' => 'int', 'time_run' => 'int', 'time_taken' => 'int'),
+					array($row['id_task'], time(), $total_time),
+					array('id_task')
 				);
 			}
 
@@ -521,15 +533,15 @@ function EditTask()
 		// Do the update!
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}scheduled_tasks
-			SET disabled = {int:inject_int_1}, time_offset = {int:inject_int_2}, time_unit = {string:inject_string_1},
-				time_regularity = {int:inject_int_3}
-			WHERE id_task = {int:inject_int_4}',
+			SET disabled = {int:disabled}, time_offset = {int:time_offset}, time_unit = {string:time_unit},
+				time_regularity = {int:time_regularity}
+			WHERE id_task = {int:id_task}',
 			array(
-				'inject_int_1' => $disabled,
-				'inject_int_2' => $offset,
-				'inject_int_3' => $interval,
-				'inject_int_4' => $_GET['tid'],
-				'inject_string_1' => $unit,
+				'disabled' => $disabled,
+				'time_offset' => $offset,
+				'time_regularity' => $interval,
+				'id_task' => $_GET['tid'],
+				'time_unit' => $unit,
 			)
 		);
 
@@ -544,9 +556,9 @@ function EditTask()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_task, next_time, time_offset, time_regularity, time_unit, disabled, task
 		FROM {db_prefix}scheduled_tasks
-		WHERE id_task = {int:inject_int_1}',
+		WHERE id_task = {int:id_task}',
 		array(
-			'inject_int_1' => $_GET['tid'],
+			'id_task' => $_GET['tid'],
 		)
 	);
 
@@ -690,8 +702,9 @@ function ConvertUtf8()
 		$request = $smfFunc['db_query']('', '
 			SHOW FULL COLUMNS
 			FROM {db_prefix}messages
-			LIKE \'body\'',
+			LIKE {string:body_like}',
 			array(
+				'body_like' => 'body',
 			)
 		);
 		$column_info = $smfFunc['db_fetch_assoc']($request);
@@ -841,15 +854,17 @@ function ConvertUtf8()
 		$queryTables = $smfFunc['db_query']('', '
 			SHOW TABLE STATUS
 			FROM `' . strtr($match[1], array('`' => '')) . '`
-			LIKE \'' . str_replace('_', '\_', $match[2]) . '%\'',
+			LIKE {string:table_name}',
 			array(
+				'table_name' => str_replace('_', '\_', $match[2]) . '%',
 			)
 		);
 	else
 		$queryTables = $smfFunc['db_query']('', '
 			SHOW TABLE STATUS
-			LIKE \'' . str_replace('_', '\_', '{db_prefix}') . '%\'',
+			LIKE {string:table_name}',
 			array(
+				'table_name' => str_replace('_', '\_', $db_prefix) . '%',
 			)
 		);
 
@@ -908,8 +923,10 @@ function ConvertUtf8()
 
 			// Change the columns to binary form.
 			$smfFunc['db_query']('', '
-				ALTER TABLE ' . $table_info['Name'] . substr($updates_blob, 0, -1),
+				ALTER TABLE {raw:table_name}{raw:updates_blob}',
 				array(
+					'table_name' => $table_info['Name'],
+					'updates_blob' => substr($updates_blob, 0, -1),
 				)
 			);
 
@@ -923,17 +940,21 @@ function ConvertUtf8()
 							' . $column['Field'] . ' = ' . strtr($replace, array('%field%' => $column['Field'])) . ',';
 
 				$smfFunc['db_query']('', '
-					UPDATE ' . $table_info['Name'] . '
-					SET ' . substr($update, 0, -1),
+					UPDATE {raw:table_name}
+					SET {raw:updates}',
 					array(
+						'table_name' => $table_info['Name'],
+						'updates' => substr($update, 0, -1),
 					)
 				);
 			}
 
 			// Change the columns back, but with the proper character set.
 			$smfFunc['db_query']('', '
-				ALTER TABLE ' . $table_info['Name'] . substr($updates_text, 0, -1),
+				ALTER TABLE {raw:table_name}{raw:updates_text}',
 				array(
+					'table_name' => $table_info['Name'],
+					'updates_text' => substr($updates_text, 0, -1),
 				)
 			);
 		}
@@ -941,9 +962,10 @@ function ConvertUtf8()
 		// Now do the actual conversion (if still needed).
 		if ($charsets[$_POST['src_charset']] !== 'utf8')
 			$smfFunc['db_query']('', '
-				ALTER TABLE ' . $table_info['Name'] . '
+				ALTER TABLE {raw:table_name}
 				CONVERT TO CHARACTER SET utf8',
 				array(
+					'table_name' => $table_info['Name'],
 				)
 			);
 	}
@@ -1084,12 +1106,18 @@ function ConvertEntities()
 		{
 			// Retrieve a list of rows that has at least one entity to convert.
 			$request = $smfFunc['db_query']('', '
-				SELECT ' . (implode(', ', $primary_keys)) . ', ' . implode(', ', $columns) . '
-				FROM {db_prefix}' . $cur_table . '
-				WHERE ' . $primary_key . ' BETWEEN ' . $context['start'] . ' AND ' . $context['start'] . ' + 499
-					AND (' . implode(' LIKE \'%&#%\' OR ', $columns) . ' LIKE \'%&#%\')
+				SELECT {raw:primary_keys}, {raw:columns}
+				FROM {db_prefix}{raw:cur_table}
+				WHERE {raw:primary_key} BETWEEN {int:start} AND {int:start} + 499
+					AND {raw:like_compare}
 				LIMIT 500',
 				array(
+					'primary_keys' => implode(', ', $primary_keys),
+					'columns' => implode(', ', $columns),
+					'cur_table' => $cur_table,
+					'primary_key' => $primary_key,
+					'start' => $context['start'],
+					'like_compare' => '(' . implode(' LIKE \'%&#%\' OR ', $columns) . ' LIKE \'%&#%\')',
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))

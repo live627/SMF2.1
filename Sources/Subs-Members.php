@@ -655,7 +655,7 @@ function registerMember(&$regOptions, $return_errors = false)
 			$inserts[] = array($memberID, $var, $val);
 		$smfFunc['db_insert']('insert',
 			$db_prefix . 'themes',
-			array('id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534',
+			array('id_member' => 'int', 'variable' => 'string-255', 'value' => 'string-65534'),
 			$inserts,
 			array('id_member', 'variable')
 		);

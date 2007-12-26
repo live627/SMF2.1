@@ -292,9 +292,7 @@ function is_not_banned($forceCheck = false)
 					INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > {int:current_time}))
 				WHERE 
 					(' . implode(' OR ', $ban_query) . ')',
-				array(
-					$ban_query_vars
-				)
+				$ban_query_vars
 			);
 			// Store every type of ban that applies to you in your session.
 			while ($row = $smfFunc['db_fetch_assoc']($request))

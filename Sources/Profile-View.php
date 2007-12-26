@@ -201,9 +201,7 @@ function summary($memID)
 			FROM {db_prefix}ban_items AS bi
 				INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > {int:time}))
 			WHERE (' . implode(' OR ', $ban_query) . ')',
-			array(
-				$ban_query_vars
-			)
+			$ban_query_vars
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 		{
