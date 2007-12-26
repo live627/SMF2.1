@@ -376,7 +376,7 @@ function UnapprovedAttachments()
 			if ($curAction == 'approve')
 				ApproveAttachments($attachments);
 			else
-				removeAttachments('a.id_attach IN (' . implode(', ', $attachments) . ')');
+				removeAttachments(array('id_attach' => $attachments));
 		}
 	}
 

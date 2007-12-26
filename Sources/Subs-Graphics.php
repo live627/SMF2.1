@@ -124,7 +124,7 @@ function downloadAvatar($url, $memID, $max_width, $max_height)
 	unset($testGD);
 
 	require_once($sourcedir . '/ManageAttachments.php');
-	removeAttachments('a.id_member = ' . $memID);
+	removeAttachments(array('members' => $memID));
 	$smfFunc['db_query']('', '
 		INSERT INTO {db_prefix}attachments
 			(id_member, attachment_type, filename, fileext, size)

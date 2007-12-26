@@ -2266,12 +2266,12 @@ function profileSaveAvatarData(&$value)
 		$profile_vars['avatar'] = preg_match('~^([\w _!@%*=\-#()\[\]&.,]+/)?[\w _!@%*=\-#()\[\]&.,]+$~', $profile_vars['avatar']) != 0 && preg_match('/\.\./', $profile_vars['avatar']) == 0 && file_exists($modSettings['avatar_directory'] . '/' . $profile_vars['avatar']) ? ($profile_vars['avatar'] == 'blank.gif' ? '' : $profile_vars['avatar']) : '';
 
 		// Get rid of their old avatar. (if uploaded.)
-		removeAttachments('a.id_member = ' . $memID);
+		removeAttachments(array('id_member' => $memID));
 	}
 	elseif ($value == 'external' && allowedTo('profile_remote_avatar') && strtolower(substr($_POST['userpicpersonal'], 0, 7)) == 'http://' && empty($modSettings['avatar_download_external']))
 	{
 		// Remove any attached avatar...
-		removeAttachments('a.id_member = ' . $memID);
+		removeAttachments(array('id_member' => $memID));
 
 		$profile_vars['avatar'] = preg_replace('~action(=|%3d)(?!dlattach)~i', 'action-', $_POST['userpicpersonal']);
 
@@ -2357,7 +2357,7 @@ function profileSaveAvatarData(&$value)
 				list ($width, $height) = getimagesize($_FILES['attachment']['tmp_name']);
 
 				// Remove previous attachments this member might have had.
-				removeAttachments('a.id_member = ' . $memID);
+				removeAttachments(array('id_member' => $memID));
 
 				if (!rename($_FILES['attachment']['tmp_name'], $uploadDir . '/' . $destName))
 					fatal_lang_error('attach_timeout', 'critical');
