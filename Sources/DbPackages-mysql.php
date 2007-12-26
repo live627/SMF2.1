@@ -27,7 +27,7 @@ if (!defined('SMF'))
 
 /*	This file contains database functionality specifically designed for packages to utilize.
 
-	bool smf_db_create_table(string table_name, array columns, array indexes = array(), 
+	bool smf_db_create_table(string table_name, array columns, array indexes = array(),
 		array parameters = array(), string if_exists = 'ignore')
 		- Can be used to create a table without worrying about schema compatabilities.
 		- Will add $db_prefix to the table name unless 'no_prefix' set as a parameter.
@@ -535,7 +535,7 @@ function smf_db_list_indexes($table_name, $detail = false)
 				$type = 'fulltext';
 			else
 				$type = 'index';
-	
+
 			// This is the first column we've seen?
 			if (empty($indexes[$row['Key_name']]))
 			{
@@ -545,7 +545,7 @@ function smf_db_list_indexes($table_name, $detail = false)
 					'columns' => array(),
 				);
 			}
-	
+
 			// Is it a partial index?
 			if (!empty($row['Sub_part']))
 				$indexes[$row['Key_name']]['columns'][] = $row['Column_name'] . '(' . $row['Sub_part'] . ')';

@@ -46,9 +46,9 @@ if (!defined('SMF'))
 		- called by ?action=admin;area=manageboards;sa=cat
 		- uses the modify_category sub-template of the ManageBoards template.
 		- requires manage_boards permission.
-		- also used to show the confirm deletion of category screen 
+		- also used to show the confirm deletion of category screen
 		  (sub-template confirm_category_delete).
-		
+
 	void EditCategory2()
 		- function for handling a submitted form saving the category.
 		- called by ?action=admin;area=manageboards;sa=cat2
@@ -61,7 +61,7 @@ if (!defined('SMF'))
 		- called by ?action=admin;area=manageboards;sa=board
 		- uses the modify_board sub-template of the ManageBoards template.
 		- requires manage_boards permission.
-		- also used to show the confirm deletion of category screen 
+		- also used to show the confirm deletion of category screen
 		  (sub-template confirm_board_delete).
 
 	void EditBoard2()
@@ -190,7 +190,7 @@ function ManageBoardsMain()
 						'label' => $txt['mboards_order_before'] . ' \'' . htmlspecialchars($boards[$boardid]['name']) . '\'',
 						'href' => $scripturl . '?action=admin;area=manageboards;sa=move;src_board=' . $context['move_board'] . ';target_board='. $boardid . ';move_to=before;sesc=' . $context['session_id'],
 					);
-				
+
 				if (!$context['categories'][$catid]['boards'][$boardid]['move'])
 				$context['categories'][$catid]['boards'][$boardid]['move_links'] = array(
 					array(

@@ -310,7 +310,7 @@ function determineActions($urls)
 				$board_ids[$actions['board']][$k] = $txt['who_board'];
 			}
 			// It's the board index!!  It must be!
-			else 
+			else
 			{
 				$data[$k] = $txt['who_index'];
 				// ...or maybe it's just integrated into another system...

@@ -27,7 +27,7 @@ if (!defined('SMF'))
 
 /*	This file contains database functionality specifically designed for packages to utilize.
 
-	bool smf_db_create_table(string table_name, array columns, array indexes = array(), 
+	bool smf_db_create_table(string table_name, array columns, array indexes = array(),
 		array parameters = array(), string if_exists = 'ignore')
 		- Can be used to create a table without worrying about schema compatabilities.
 		- Will add $db_prefix to the table name unless 'no_prefix' set as a parameter.
@@ -288,7 +288,7 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 	unset($column_info['size']);
 
 	if (count($column_info) != 1)
-		return $smfFunc['db_change_column']($table_name, $column_info['name'], $column_info);	
+		return $smfFunc['db_change_column']($table_name, $column_info['name'], $column_info);
 	else
 		return true;
 }

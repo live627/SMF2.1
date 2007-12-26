@@ -520,7 +520,7 @@ function loadProfileFields($force_reload = false)
 					while ($row = $smfFunc[\'db_fetch_assoc\']($result))
 						$pm_ignore_list .= "\n" . $row[\'real_name\'];
 					$smfFunc[\'db_free_result\']($result);
-			
+
 					$context[\'ignore_list\'] = substr($pm_ignore_list, 1);
 				}
 				else
@@ -532,6 +532,28 @@ function loadProfileFields($force_reload = false)
 			'input_validate' => create_function('&$value', '
 				global $smfFunc, $db_prefix;
 
+<<<<<<< .mine
+				// Validate and set the ignorelist...
+				$value = preg_replace(\'~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~\', \'&#$1;\', $value);
+				$value = strtr(trim($value), array(\'\\\\\\\'\' => \'&#039;\', "\n" => "\', \'", "\r" => \'\', \'&quot;\' => \'\'));
+
+				if (preg_match(\'~(\A|,)\*(\Z|,)~s\', $value) == 0)
+				{
+					$result = $smfFunc[\'db_query\'](\'\', "
+						SELECT id_member
+						FROM {$db_prefix}members
+						WHERE member_name IN (\'$value\') OR real_name IN (\'$value\')
+						LIMIT " . (substr_count($value, \'\\\', \\\'\') + 1), __FILE__, __LINE__);
+					$value = \'\';
+					while ($row = $smfFunc[\'db_fetch_assoc\']($result))
+						$value .= $row[\'id_member\'] . \',\';
+					$smfFunc[\'db_free_result\']($result);
+
+					// !!! Did we find all the members?
+					$value = substr($value, 0, -1);
+				}
+				else
+=======
 				// Validate and set the ignorelist...
 				$value = preg_replace(\'~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~\', \'&#$1;\', $value);
 				$value = strtr(trim($value), array(\'\\\'\' => \'&#039;\', "\n" => "\', \'", "\r" => \'\', \'&quot;\' => \'\'));
@@ -552,6 +574,7 @@ function loadProfileFields($force_reload = false)
 					$value = substr($value, 0, -1);
 				}
 				else
+>>>>>>> .r6372
 					$value = \'*\';
 
 				return true;
@@ -566,7 +589,6 @@ function loadProfileFields($force_reload = false)
 				global $context, $cur_profile;
 				$context[\'display_mode\'] = $cur_profile[\'pm_prefs\'] & 3;
 				$context[\'send_email\'] = $cur_profile[\'pm_email_notify\'];
-
 				return true;
 			'),
 			'input_validate' => create_function('&$value', '
@@ -1557,7 +1579,7 @@ function notification($memID)
 				'data' => array(
 					'function' => create_function('$board', '
 						global $settings, $txt;
-						
+
 						$link = $board[\'link\'];
 
 						if ($board[\'new\'])
@@ -1640,7 +1662,7 @@ function notification($memID)
 				'data' => array(
 					'function' => create_function('$topic', '
 						global $settings, $txt;
-						
+
 						$link = $topic[\'link\'];
 
 						if ($topic[\'new\'])

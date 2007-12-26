@@ -785,19 +785,19 @@ function showCodeImage($code)
 					$font_size = $gd2 ? rand(17, 19) : rand(18, 25);
 				else
 					$font_size = $gd2 ? 18 : 24;
-	
+
 				// Work out the sizes - also fix the character width cause TTF not quite so wide!
 				$font_x = $fontHorSpace == 'minus' && $cur_x > 0 ? $cur_x - 3 : $cur_x + 5;
 				$font_y = $max_height - ($fontVerPos == 'vrandom' ? rand(2, 8) : ($fontVerPos == 'random' ? rand(3, 5) : 5));
-	
+
 				// What font face?
 				if (!empty($ttfont_list))
 					$fontface = $settings['default_theme_dir'] . '/fonts/' . $ttfont_list[rand(0, count($ttfont_list) - 1)];
-	
+
 				// What color are we to do it in?
 				$is_reverse = $showReverseChars ? rand(0, 1) : false;
 				$char_color = function_exists('imagecolorallocatealpha') && $fontTrans ? imagecolorallocatealpha($code_image, $char_fg_color[0], $char_fg_color[1], $char_fg_color[2], 50) : imagecolorallocate($code_image, $char_fg_color[0], $char_fg_color[1], $char_fg_color[2]);
-	
+
 				$fontcord = @imagettftext($code_image, $font_size, $angle, $font_x, $font_y, $char_color, $fontface, $character['id']);
 				if (empty($fontcord))
 					$can_do_ttf = false;
@@ -807,11 +807,11 @@ function showCodeImage($code)
 					// Put the character back!
 					imagettftext($code_image, $font_size, $angle, $font_x, $font_y, $randomness_color, $fontface, $character['id']);
 				}
-	
+
 				if ($can_do_ttf)
 					$cur_x = max($fontcord[2], $fontcord[4]) + ($angle == 0 ? 0 : 3);
 			}
-	
+
 			if (!$can_do_ttf)
 			{
 				// Rotating the characters a little...
@@ -826,7 +826,7 @@ function showCodeImage($code)
 					imagedestroy($rotated_char);
 					imagedestroy($char_image);
 				}
-		
+
 				// Sorry, no rotation available.
 				else
 					imagechar($code_image, $loaded_fonts[$character['font']], $cur_x, floor(($max_height - $character['height']) / 2), $character['id'], imagecolorallocate($code_image, $char_fg_color[0], $char_fg_color[1], $char_fg_color[2]));
@@ -872,7 +872,7 @@ function showCodeImage($code)
 					$y2 = rand(0, $max_height);
 					$x1 = 0; $x2 = $total_width;
 				}
-		
+
 				imageline($code_image, $x1, $y1, $x2, $y2, rand (0, 1) ? $fg_color : $randomness_color);
 			}
 		}

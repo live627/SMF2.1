@@ -1271,7 +1271,7 @@ function MergeExecute($topics = array())
 		)
 	);
 
-	// Grab the response prefix (like 'Re: ') in the default forum language.	
+	// Grab the response prefix (like 'Re: ') in the default forum language.
 	if (!isset($context['response_prefix']) && !($context['response_prefix'] = cache_get_data('response_prefix')))
 	{
 		if ($language === $user_info['language'])

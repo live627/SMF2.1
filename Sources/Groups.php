@@ -514,7 +514,7 @@ function GroupRequests()
 						'group_name' => $row['group_name'],
 						'email' => $row['email_address'],
 						'language' => $row['lngfile'],
-					);					
+					);
 			}
 			$smfFunc['db_free_result']($request);
 

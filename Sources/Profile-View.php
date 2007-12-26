@@ -273,7 +273,7 @@ function showPosts($memID)
 	if (empty($_REQUEST['viewscount']) || !is_numeric($_REQUEST['viewscount']))
 		$_REQUEST['viewscount'] = '10';
 
-	
+
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}messages AS m' . ($context['is_topics'] ? '

@@ -528,7 +528,7 @@ function SendMailing($clean_only = false)
 		$context['message'] = htmlspecialchars($smfFunc['db_unescape_string']($_POST['message']));
 		$context['send_html'] = !empty($_POST['send_html']) ? '1' : '0';
 		$context['parse_html'] = !empty($_POST['parse_html']) ? '1' : '0';
-	
+
 		// Prepare the message for HTML.
 		if (!empty($_POST['send_html']) && !empty($_POST['parse_html']))
 			$_POST['message'] = str_replace(array("\n", '  '), array('<br />' . "\n", '&nbsp; '), $smfFunc['db_unescape_string']($_POST['message']));

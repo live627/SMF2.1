@@ -476,7 +476,7 @@ function MLSearch()
 				$fields += array($customCount++ => 'IFNULL(t' . $curField . '.value, \'\')');
 			}
 		}
-		
+
 		$query = $_POST['search'] == '' ? '= \'\'' : 'LIKE \'%' . strtr($_POST['search'], array('_' => '\\_', '%' => '\\%', '*' => '%')) . '%\'';
 
 		$request = $smfFunc['db_query']('', '

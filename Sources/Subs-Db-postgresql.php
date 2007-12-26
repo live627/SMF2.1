@@ -148,14 +148,14 @@ function smf_db_query($identifier, $db_string, $file, $line, $connection = null)
 
 	// Comments that are allowed in a query are preg_removed.
 	static $allowed_comments_from = array(
-		'~\s+~s', 
-		'~/\*!40001 SQL_NO_CACHE \*/~', 
+		'~\s+~s',
+		'~/\*!40001 SQL_NO_CACHE \*/~',
 		'~/\*!40000 USE INDEX \([A-Za-z\_]+?\) \*/~',
 		'~/\*!40100 ON DUPLICATE KEY UPDATE id_msg = \d+ \*/~',
 	);
 	static $allowed_comments_to = array(
-		' ', 
-		'', 
+		' ',
+		'',
 		'',
 		'',
 	);
@@ -303,7 +303,7 @@ function smf_db_transaction($type = 'commit', $connection = null)
 	elseif ($type == 'commit')
 		return @pg_query($connection, 'COMMIT');
 
-	return false; 
+	return false;
 }
 
 // Database error!

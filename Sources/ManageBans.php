@@ -253,7 +253,7 @@ function BanList()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $context;
-					
+
 						return timeformat($rowData[\'ban_time\'], empty($context[\'ban_time_format\']) ? true : $context[\'ban_time_format\']);
 					'),
 				),
@@ -269,15 +269,15 @@ function BanList()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt;
-						
+
 						// This ban never expires...whahaha.
 						if ($rowData[\'expire_time\'] === null)
 							return $txt[\'never\'];
-							
+
 						// This ban has already expired.
 						elseif ($rowData[\'expire_time\'] < time())
 							return sprintf(\'<span style="color: red">%1$s</span>\', $txt[\'ban_expired\']);
-						
+
 						// Still need to wait a few days for this ban to expire.
 						else
 							return sprintf(\'%1$d&nbsp;%2$s\', ceil(($rowData[\'expire_time\'] - time()) / (60 * 60 * 24)), $txt[\'ban_days\']);
@@ -1244,7 +1244,7 @@ function list_getBanTriggers($start, $items_per_page, $sort, $trigger_type)
 	);
 
 	$request = $smfFunc['db_query']('', '
-		SELECT 
+		SELECT
 			bi.id_ban, bi.ip_low1, bi.ip_high1, bi.ip_low2, bi.ip_high2, bi.ip_low3, bi.ip_high3, bi.ip_low4, bi.ip_high4, bi.hostname, bi.email_address, bi.hits,
 			bg.id_ban_group, bg.name' . ($trigger_type === 'member' ? ',
 			mem.id_member, mem.real_name' : '') . '

@@ -25,7 +25,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	
+/*
 	//!!!
 */
 
@@ -169,7 +169,7 @@ function ModerationMain($dont_call = false)
 	{
 		if (isset($mod_include_data['file']))
 			require_once($sourcedir . '/' . $mod_include_data['file']);
-	
+
 		$mod_include_data['function']();
 	}
 }
@@ -245,7 +245,7 @@ function ModBlockWatchedUsers()
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$watched_users[] = $row;
 		$smfFunc['db_free_result']($request);
-	
+
 		cache_put_data('recent_user_watches', $watched_users, 240);
 	}
 
@@ -312,7 +312,7 @@ function ModBlockNotes()
 		while ($row = $smfFunc['db_fetch_assoc']($request))
 			$moderator_notes[] = $row;
 		$smfFunc['db_free_result']($request);
-	
+
 		cache_put_data('moderator_notes', $moderator_notes, 240);
 	}
 
@@ -349,7 +349,7 @@ function ModBlockReportedPosts()
 		$request = $smfFunc['db_query']('', '
 			SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject,
 				lr.num_reports, IFNULL(mem.real_name, lr.membername) AS author_name,
-				IFNULL(mem.id_member, 0) AS id_author		
+				IFNULL(mem.id_member, 0) AS id_author
 			FROM {db_prefix}log_reported AS lr
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 			WHERE ' . ($user_info['mod_cache']['bq'] == '1=1' || $user_info['mod_cache']['bq'] == '0=1' ? $user_info['mod_cache']['bq'] : 'lr.' . $user_info['mod_cache']['bq']) . '
@@ -540,7 +540,7 @@ function ReportedPosts()
 	$request = $smfFunc['db_query']('', '
 		SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
-			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR		
+			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
 		FROM {db_prefix}log_reported AS lr
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.closed = {int:inject_int_1}
@@ -679,7 +679,7 @@ function ModReport()
 	$request = $smfFunc['db_query']('', '
 		SELECT lr.id_report, lr.id_msg, lr.id_topic, lr.id_board, lr.id_member, lr.subject, lr.body,
 			lr.time_started, lr.time_updated, lr.num_reports, lr.closed, lr.ignore_all,
-			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR		
+			IFNULL(mem.real_name, lr.membername) AS author_name, IFNULL(mem.id_member, 0) AS ID_AUTHOR
 		FROM {db_prefix}log_reported AS lr
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lr.id_member)
 		WHERE lr.id_report = {int:inject_int_1}
@@ -689,7 +689,7 @@ function ModReport()
 			'inject_int_1' => $_REQUEST['report'],
 		)
 	);
-	
+
 	// So did we find anything?
 	if (!$smfFunc['db_num_rows']($request))
 		fatal_lang_error('mc_no_modreport_found');
@@ -697,7 +697,7 @@ function ModReport()
 	// Woohoo we found a report and they can see it!  Bad news is we have more work to do
 	$row = $smfFunc['db_fetch_assoc']($request);
 	$smfFunc['db_free_result']($request);
-	
+
 	$context['report'] = array(
 		'id' => $row['id_report'],
 		'topic_id' => $row['id_topic'],
@@ -752,7 +752,7 @@ function ModReport()
 
 	// What have the other moderators done to this message?
 	// !!! Should this limit the results to the boards the mod can see or not?
-	
+
 	require_once($sourcedir . '/Modlog.php');
 	getModLogEntries('lm.id_msg = ' . $context['report']['message_id']);
 
@@ -907,7 +907,7 @@ function ViewWatchedUsers()
 				'data' => array(
 					'function' => create_function('$member', '
 						global $scripturl;
-						
+
 						return allowedTo(\'issue_warning\') ? \'<a href="\' . $scripturl . \'?action=profile;u=\' . $member[\'id\'] . \';sa=issueWarning">\' . $member[\'warning\'] . \'%</a>\' : $member[\'warning\'] . \'%\';
 					'),
 				),
@@ -1249,7 +1249,7 @@ function ModerationSettings()
 	{
 		/* Current format of mod_prefs is:
 			x|ABCD|yyy
-	
+
 			WHERE:
 				x = Show report count on forum header.
 				ABCD = Block indexes to show on moderation main page.

@@ -34,7 +34,7 @@ if (!defined('SMF'))
  		- this is used for database connection error handling.
  		- loadavg means this is a load average problem, not a database error.
 
-	string log_error(string error_message, string error_type = general 
+	string log_error(string error_message, string error_type = general
 			string filename = none,	int line = none)
 		- logs an error, if error logging is enabled.
 		- depends on the enableErrorLogging setting.
@@ -52,7 +52,7 @@ if (!defined('SMF'))
 		- loads the Errors language file.
 		- applies the sprintf information if specified.
 		- the information is logged if log is true or missing.
-		- logs the error in the forum's default language while displaying the error 
+		- logs the error in the forum's default language while displaying the error
 		  message in the user's language
 
 	void error_handler(int error_level, string error_string, string filename,
@@ -65,7 +65,7 @@ if (!defined('SMF'))
 		- uses the fatal_error sub template of the Errors template - or the
 		  error sub template in the Wireless template.
 		- used by fatal_error() and fatal_lang_error()
-		
+
 */
 
 // Just wrap it so we don't take up time and space here in Errors.php.

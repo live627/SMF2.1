@@ -59,7 +59,7 @@ function smf_db_search_query($identifier, $db_string, $file, $line, $connection 
 
 	// Search queries that need processing are here!
 	$nonFatal = array(
-		'drop_tmp_log_search_topics', 
+		'drop_tmp_log_search_topics',
 		'drop_tmp_log_search_messages',
 	);
 

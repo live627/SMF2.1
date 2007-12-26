@@ -25,7 +25,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	This file contains the functions to add, modify, remove, collapse and expand 
+/*	This file contains the functions to add, modify, remove, collapse and expand
 	categories.
 
 	void modifyCategory(int category_id, array catOptions)
@@ -41,11 +41,11 @@ if (!defined('SMF'))
 		- general function to delete one or more categories.
 		- allows to move all boards in the categories to a different category
 		  before deleting them.
-		- if moveChildrenTo is set to null, all boards inside the given 
+		- if moveChildrenTo is set to null, all boards inside the given
 		  categorieswill be deleted.
 		- deletes all information that's associated with the given categories.
 		- updates the statistics to reflect the new situation.
-	
+
 	void collapseCategories(array categories, string new_status, array members = null, bool check_collapsable = true)
 		- collapses or expands one or more categories for one or more members.
 		- if members is null, the category is collapsed/expanded for all members.
@@ -113,13 +113,13 @@ function modifyCategory($category_id, $catOptions)
 
 	// Can a user collapse this category or is it too important?
 	if (isset($catOptions['is_collapsible']))
-		$catUpdates[] = 'can_collapse = ' . ($catOptions['is_collapsible'] ? '1' : '0');	
+		$catUpdates[] = 'can_collapse = ' . ($catOptions['is_collapsible'] ? '1' : '0');
 
 	// Do the updates (if any).
 	if (!empty($catUpdates))
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}categories
-			SET 
+			SET
 				' . implode(',
 				', $catUpdates) . '
 			WHERE id_cat = {int:inject_int_1}',
@@ -304,7 +304,7 @@ function collapseCategories($categories, $new_status, $members = null, $check_co
 				array(
 				)
 			);
-		
+
 		// And expand the ones that were originally collapsed.
 		if (!empty($updates['remove']))
 			$smfFunc['db_query']('', '

@@ -264,7 +264,7 @@ function smf_db_transaction($type = 'commit', $connection)
 		return @sqlite_query('COMMIT', $connection);
 	}
 
-	return false; 
+	return false;
 }
 
 // Database error!
@@ -578,13 +578,13 @@ function smf_udf_inet_ntoa($n)
 
 	$a = join('.', $t);
 	return($a);
-} 
+}
 
 // Emulate FIND_IN_SET.
 function smf_udf_find_in_set($find, $groups)
 {
 	foreach (explode(',', $groups) as $group)
-	{  
+	{
 		if ($group == $find)
 			return true;
 	}

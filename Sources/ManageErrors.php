@@ -40,7 +40,7 @@ if (!defined('SMF'))
 		- should only be called by ViewErrorLog().
 		- attempts to TRUNCATE the table to reset the auto_increment.
 		- redirects back to the error log when done.
-		
+
 	void ViewFile()
 		- will do php highlighting on the file specified in $_REQUEST['file']
 		- file must be readable
@@ -362,7 +362,7 @@ function ViewFile()
 
 	// We don't want to slice off too many so lets make sure we stop at the last one
 	$max = min($max, max(array_keys($file_data)));
-	
+
 	$file_data = array_slice($file_data, $min-1, $max - $min);
 
 	$context['file_data'] = array(

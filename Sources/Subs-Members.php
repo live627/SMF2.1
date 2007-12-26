@@ -58,7 +58,7 @@ if (!defined('SMF'))
 		  current member.
 
 	array groupsAllowedTo(string permission, int board_id = null)
-		- retrieves a list of membergroups that are allowed to do the given 
+		- retrieves a list of membergroups that are allowed to do the given
 		  permission.
 		- if board_id is not null, a board permission is assumed.
 		- takes different permission settings into account.

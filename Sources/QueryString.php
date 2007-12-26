@@ -259,7 +259,7 @@ function cleanRequest()
 	if (empty($_REQUEST['start']) || $_REQUEST['start'] < 0)
 		$_REQUEST['start'] = 0;
 
-	// The action needs to be a string and not an array or anything else	
+	// The action needs to be a string and not an array or anything else
 	if (isset($_REQUEST['action']))
 		$_REQUEST['action'] = (string) $_REQUEST['action'];
 	if (isset($_GET['action']))
@@ -423,7 +423,7 @@ function stripslashes__recursive($var, $level = 0)
 function htmltrim__recursive($var, $level = 0)
 {
 	global $smfFunc;
-	
+
 	// Remove spaces (32), tabs (9), returns (13, 10, and 11), nulls (0), and hard spaces. (160)
 	if (!is_array($var))
 		return isset($smfFunc) ? $smfFunc['htmltrim']($var) : trim($var, ' ' . "\t\n\r\x0B" . '\0' . "\xA0");

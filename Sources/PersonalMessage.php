@@ -812,7 +812,7 @@ function MessageFolder()
 	// Finally mark the relevant messages as read.
 	if ($context['folder'] != 'sent' && !empty($context['labels'][(int) $context['current_label_id']]['unread_messages']))
 	{
-		// If the display mode is "old sk00l" do them all... 
+		// If the display mode is "old sk00l" do them all...
 		if ($context['display_mode'] == 0)
 			markMessages(null, $context['current_label_id']);
 		// Otherwise do just the current one!
@@ -3238,7 +3238,7 @@ function ManageRules()
 			);
 
 		redirectexit('action=pm;sa=manrules');
-	}	
+	}
 }
 
 // This will apply rules to all unread messages. If all_messages is set will, clearly, do it to all!

@@ -141,7 +141,7 @@ class paypal_payment
 
 		// Build the request string - starting with the minimum requirement.
 		$requestString = 'cmd=_notify-validate';
-	
+
 		// Now my dear, add all the posted bits.
 		foreach ($_POST as $k => $v)
 		{
@@ -152,17 +152,17 @@ class paypal_payment
 		// Can we use curl?
 		if (function_exists('curl_init') && $curl = curl_init('http://www.', !empty($modSettings['paidsubs_test']) ? 'sandbox.' : '', 'paypal.com/cgi-bin/webscr'))
 		{
-			// Set the post data.	
+			// Set the post data.
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDSIZE, 0);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $requestString);
-		
+
 			// Fetch the data returned as a string.
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); 
-		
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
 			// Fetch the data.
 			$this->return_data = curl_exec($curl);
-		
+
 			// Close the session.
 			curl_close($curl);
 		}
@@ -173,7 +173,7 @@ class paypal_payment
 			$header = 'POST /cgi-bin/webscr HTTP/1.0' . "\r\n";
 			$header .= 'Content-Type: application/x-www-form-urlencoded' . "\r\n";
 			$header .= 'Content-Length: ' . strlen ($requestString) . "\r\n\r\n";
-		
+
 			// Open the connection.
 			$fp = fsockopen('www.' . (!empty($modSettings['paidsubs_test']) ? 'sandbox.' : '') . 'paypal.com', 80, $errno, $errstr, 30);
 
@@ -183,7 +183,7 @@ class paypal_payment
 
 			// Put the data to the port.
 			fputs($fp, $header . $requestString);
-		
+
 			// Get the data back...
 			while (!feof($fp))
 			{

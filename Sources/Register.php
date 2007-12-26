@@ -149,7 +149,7 @@ function Register($reg_errors = array())
 
 		// We might have had some submissions on this front - go check.
 		foreach ($reg_fields as $field)
-			if (isset($_POST[$field]))	
+			if (isset($_POST[$field]))
 				$cur_profile[$field] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST[$field]));
 
 		// Load all the fields in question.

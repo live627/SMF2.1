@@ -64,7 +64,7 @@ if (!defined('SMF'))
 	array getTodayInfo()
 		- returns an array with the current date, day, month, and year.
 		- takes the users time offset into account.
-	
+
 	array getCalendarGrid(int month, int year, array calendarOptions)
 		- returns an array containing all the information needed to show a
 		  calendar grid for the given month.
@@ -737,14 +737,14 @@ function cache_getRecentEvents($eventOptions)
 					$cache_block[\'data\'][\'calendar_events\'][$k][\'modify_href\'] = $GLOBALS[\'scripturl\'] . \'?action=\' . ($event[\'topic\'] == 0 ? \'calendar;sa=post;\' : \'post;msg=\' . $event[\'msg\'] . \';topic=\' . $event[\'topic\'] . \'.0;calendar;\') . \'eventid=\' . $event[\'id\'] . \';sesc=\' . $GLOBALS[\'sc\'];
 				}
 			}
-			
+
 			if (empty($params[\'include_holidays\']))
 				$return_data[\'calendar_holidays\'] = array();
 			if (empty($params[\'include_birthdays\']))
 				$return_data[\'calendar_birthdays\'] = array();
 			if (empty($params[\'include_events\']))
 				$return_data[\'calendar_events\'] = array();
-				
+
 			$cache_block[\'data\'][\'show_calendar\'] = !empty($cache_block[\'data\'][\'calendar_holidays\']) || !empty($cache_block[\'data\'][\'calendar_birthdays\']) || !empty($cache_block[\'data\'][\'calendar_events\']);',
 	);
 }
@@ -820,7 +820,7 @@ function getEventPoster($event_id)
 			'inject_int_1' => $event_id,
 		)
 	);
-	
+
 	// No results, return false.
 	if ($smfFunc['db_num_results'] === 0)
 		return false;
@@ -892,9 +892,9 @@ function modifyEvent($event_id, &$eventOptions)
 
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}calendar
-		SET 
+		SET
 			start_date = {date:inject_date_1},
-			end_date = {date:inject_date_2}, 
+			end_date = {date:inject_date_2},
 			title = SUBSTRING(\'' . $eventOptions['title'] . '\', 1, 48),
 			id_board = {int:inject_int_1},
 			id_topic = {int:inject_int_2}

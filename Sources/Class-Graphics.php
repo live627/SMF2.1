@@ -31,7 +31,7 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/*	Classes used for reading gif files (in case PHP's GD doesn't provide the 
+/*	Classes used for reading gif files (in case PHP's GD doesn't provide the
 	proper gif-functions).
 
 */

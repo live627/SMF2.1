@@ -56,9 +56,9 @@ function getMembersOnlineStats($membersOnlineOptions)
 		$memberOnlineOptions['sort'] = 'log_time';
 		$memberOnlineOptions['reverse_sort'] = true;
 	}
-	
+
 	// Not allowed sort method? Bang! Error!
-	elseif (!in_array($memberOnlineOptions['sort'], $allowed_sort_options)) 
+	elseif (!in_array($memberOnlineOptions['sort'], $allowed_sort_options))
 		trigger_error('Sort method for getMembersOnlineStats() function is not allowed', E_USER_NOTICE);
 
 	// Initialize the array that'll be returned later on.

@@ -177,7 +177,7 @@ function html_to_bbc($text)
 				while ($row = $smfFunc['db_fetch_assoc']($request))
 					$mappings[$row['filename']] = $row['code'];
 				$smfFunc['db_free_result']($request);
-	
+
 				foreach ($matches[1] as $k => $file)
 					if (isset($mappings[$file]))
 						$matches[1][$k] = isset($mappings[$file]) ? ' ' . $mappings[$file] : '';
@@ -425,7 +425,7 @@ function html_to_bbc($text)
 			$key_offset = strpos($attrib, '=');
 			if ($key_offset === false)
 				continue;
-			
+
 			$k = trim(substr($attrib, 0, $key_offset));
 			$v = trim(substr($attrib, $key_offset + 1));
 			if (empty($v))
@@ -962,7 +962,7 @@ function create_control_richedit($editorOptions)
 		$context['html_headers'] .= '
 		<link rel="stylesheet" type="text/css" id="rich_edit_css" href="' . $settings['default_theme_url'] . '/css/editor.css" />
 
-		
+
 		<script language="JavaScript" type="text/javascript"><!-- // --><![CDATA[
 			var smf_smileys_url = \'' . $settings['smileys_url'] . '\';
 		// ]]></script>
@@ -1058,7 +1058,7 @@ function create_control_richedit($editorOptions)
 			'postform' => array(),
 			'popup' => array(),
 		);
-	
+
 		// Load smileys - don't bother to run a query if we're not using the database's ones anyhow.
 		if (empty($modSettings['smiley_enable']) && $user_info['smiley_set'] != 'none')
 			$context['smileys']['postform'][] = array(
@@ -1098,17 +1098,17 @@ function create_control_richedit($editorOptions)
 				{
 					$row['filename'] = htmlspecialchars($row['filename']);
 					$row['description'] = htmlspecialchars($row['description']);
-	
+
 					$context['smileys'][empty($row['hidden']) ? 'postform' : 'popup'][$row['smiley_row']]['smileys'][] = $row;
 				}
 				$smfFunc['db_free_result']($request);
-	
+
 				cache_put_data('posting_smileys', $context['smileys'], 480);
 			}
 			else
 				$context['smileys'] = $temp;
 		}
-	
+
 		// Clean house... add slashes to the code for javascript.
 		foreach (array_keys($context['smileys']) as $location)
 		{
@@ -1120,7 +1120,7 @@ function create_control_richedit($editorOptions)
 					$context['smileys'][$location][$j]['smileys'][$i]['code'] = addslashes($context['smileys'][$location][$j]['smileys'][$i]['code']);
 					$context['smileys'][$location][$j]['smileys'][$i]['js_description'] = addslashes($context['smileys'][$location][$j]['smileys'][$i]['description']);
 				}
-	
+
 				$context['smileys'][$location][$j]['smileys'][$n - 1]['last'] = true;
 			}
 			if (!empty($context['smileys'][$location]))

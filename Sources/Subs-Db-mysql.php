@@ -93,7 +93,7 @@ function smf_db_initiate($db_server, $db_name, $db_user, $db_passwd, $db_prefix,
 
 	return $connection;
 }
- 
+
 // Extend the database functionality.
 function db_extend ($type = 'extra')
 {
@@ -113,24 +113,24 @@ function db_fix_prefix (&$db_prefix, $db_name)
 function smf_db_replacement__callback($matches)
 {
 	global $db_callback, $db_prefix;
-	
+
 	list ($values, $connection) = $db_callback;
-	
+
 	// !!! REMOVE ME. Temporary code to filter out old type queries.
 	if (!is_resource($connection))
 		var_dump(debug_backtrace());
-	
+
 	if ($matches[1] === 'db_prefix')
 		return $db_prefix;
 
 	if (!isset($matches[2]))
 		trigger_error('Invalid value injected or no type specified.', E_USER_ERROR);
-		
+
 	if (!isset($values[$matches[2]]))
 		trigger_error(var_dump(debug_backtrace()) . 'The database value you\'re trying to inject does not exist: ' . htmlspecialchars($matches[2]), E_USER_ERROR);
-	
+
 	$replacement = $values[$matches[2]];
-	
+
 	switch ($matches[1])
 	{
 		case 'int':
@@ -138,12 +138,12 @@ function smf_db_replacement__callback($matches)
 				trigger_error(var_dump(debug_backtrace()) . 'Wrong value type sent to the database. Integer expected.', E_USER_ERROR);
 			return (string) (int) $replacement;
 		break;
-		
+
 		case 'string':
 		case 'text':
 			return sprintf('\'%1$s\'', mysql_real_escape_string($replacement, $connection));
 		break;
-		
+
 		case 'array_int':
 			if (is_array($replacement))
 			{
@@ -154,22 +154,22 @@ function smf_db_replacement__callback($matches)
 				{
 					if (!is_numeric($value) || (string) $value !== (string) (int) $value)
 						trigger_error('Wrong value type sent to the database. Array of integers expected.', E_USER_ERROR);
-						
+
 					$replacement[$key] = (string) (int) $value;
 				}
-				
+
 				return implode(', ', $replacement);
 			}
 			else
 				trigger_error('Wrong value type sent to the database. Array of integers expected.', E_USER_ERROR);
 		break;
-		
+
 		case 'array_string':
 			if (is_array($replacement))
 			{
 				if (empty($replacement))
 					trigger_error('Database error, given array of string values is empty.', E_USER_ERROR);
-				
+
 				foreach ($replacement as $key => $value)
 					$replacement[$key] = sprintf('\'%1$s\'', mysql_real_escape_string($value, $connection));
 
@@ -178,29 +178,29 @@ function smf_db_replacement__callback($matches)
 			else
 				trigger_error('Wrong value type sent to the database. Array of strings expected.', E_USER_ERROR);
 		break;
-		
+
 		case 'date':
 			if (preg_match('~^(\d{4})-([0-1]?\d)-([0-3]?\d)$~', $replacement, $date_matches) === 1)
 				return sprintf('\'%04d-%02d-%02d\'', $date_matches[1], $date_matches[2], $date_matches[3]);
-			else 
+			else
 				trigger_error('Wrong value type sent to the database. Date expected.', E_USER_ERROR);
 		break;
-		
+
 		case 'float':
 			if (!is_numeric($replacement))
 				trigger_error('Wrong value type sent to the database. Floating point number expected.', E_USER_ERROR);
 			return (string) (float) $replacement;
 		break;
-		
+
 		case 'identifier':
 			// Backticks inside identifiers are supported as of MySQL 4.1. We don't need them for SMF.
 			return '`' . strtr($replacement, array('`' => '', '.' => '')) . '`';
 		break;
-		
+
 		case 'raw':
 			return $replacement;
 		break;
-	
+
 		default:
 			trigger_error('Undefined type used in the database query');
 		break;
@@ -218,13 +218,13 @@ function smf_db_quote($db_string, $db_values, $connection = null)
 
 	// This is needed by the callback function.
 	$db_callback = array($db_values, $connection == null ? $db_connection : $connection);
-	
+
 	// Do the quoting and escaping
 	$db_string = preg_replace_callback('~{([a-z_]+)(?::([a-zA-Z0-9_-]+))?}~', 'smf_db_replacement__callback', $db_string);
-	
+
 	// Clear this global variable.
 	$db_callback = array();
-	
+
 	return $db_string;
 }
 
@@ -233,29 +233,29 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 {
 	global $db_cache, $db_count, $db_connection, $db_show_debug;
 	global $db_unbuffered, $db_callback, $modSettings;
-	
+
 	// !!! REMOVE ME. Temporary code to filter out old type queries.
 	if (is_int($connection))
 	{
 		echo '<pre>OLD TYPE QUERY ALERT', "\n";
 		var_dump(debug_backtrace());
 	}
-	
+
 
 	// Comments that are allowed in a query are preg_removed.
 	static $allowed_comments_from = array(
-		'~\s+~s', 
-		'~/\*!40001 SQL_NO_CACHE \*/~', 
+		'~\s+~s',
+		'~/\*!40001 SQL_NO_CACHE \*/~',
 		'~/\*!40000 USE INDEX \([A-Za-z\_]+?\) \*/~',
 		'~/\*!40100 ON DUPLICATE KEY UPDATE id_msg = \d+ \*/~',
 	);
 	static $allowed_comments_to = array(
-		' ', 
-		'', 
+		' ',
+		'',
 		'',
 		'',
 	);
-	
+
 	// Decide which connection to use.
 	$connection = $connection == null ? $db_connection : $connection;
 
@@ -270,7 +270,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 	}
 	elseif ($db_values === 'security_override')
 		$db_values = array();
-	
+
 	if (!empty($db_values) || strpos($db_string, '{db_prefix}') !== false)
 	{
 		// Pass some values to the global space for use in the callback function.
@@ -290,15 +290,15 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 		if (function_exists('debug_backtrace'))
 		{
 			$backtrace = debug_backtrace();
-			$file = $backtrace[0]['file'];	
-			$line = $backtrace[0]['line'];	
+			$file = $backtrace[0]['file'];
+			$line = $backtrace[0]['line'];
 		}
-		
+
 		// For PHP < 4.3, this will have to do.
-		else 
+		else
 		{
 			$file = __FILE__;
-			$line = __LINE__;	
+			$line = __LINE__;
 		}
 
 		// Initialize $db_cache if not already initialized.
@@ -311,7 +311,7 @@ function smf_db_query($identifier, $db_string, $db_values = array(), $connection
 			$db_count = count($db_cache) + 1;
 			$_SESSION['debug_redirect'] = array();
 		}
-		
+
 		// Don't overload it.
 		$db_cache[$db_count]['q'] = $db_count < 50 ? $db_string : '...';
 		$db_cache[$db_count]['f'] = $file;
@@ -419,7 +419,7 @@ function smf_db_transaction($type = 'commit', $connection = null)
 	elseif ($type == 'commit')
 		return @mysql_query('COMMIT', $connection);
 
-	return false; 
+	return false;
 }
 
 // Database error!
@@ -429,20 +429,20 @@ function db_error($db_string, $connection = null)
 	global $forum_version, $db_connection, $db_last_error, $db_persist;
 	global $db_server, $db_user, $db_passwd, $db_name, $db_show_debug, $ssi_db_user, $ssi_db_passwd;
 	global $smfFunc;
-	
+
 	// We'll try recovering the file and line number the original db query was called from.
 	if (function_exists('debug_backtrace'))
 	{
 		$backtrace = debug_backtrace();
-		$file = isset($backtrace[1]) ? $backtrace[1]['file'] : __FILE__;	
-		$line = isset($backtrace[1]) ? $backtrace[1]['line'] : __LINE__;	
+		$file = isset($backtrace[1]) ? $backtrace[1]['file'] : __FILE__;
+		$line = isset($backtrace[1]) ? $backtrace[1]['line'] : __LINE__;
 	}
-	
+
 	// For PHP < 4.3, this will have to do.
-	else 
+	else
 	{
 		$file = __FILE__;
-		$line = __LINE__;	
+		$line = __LINE__;
 	}
 
 	// Decide which connection to use

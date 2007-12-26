@@ -51,7 +51,7 @@ if (!defined('SMF'))
 		- edit the search method and search index used.
 		- called by ?action=admin;area=managesearch;sa=method.
 		- requires the admin_forum permission.
-		- uses the 'select_search_method' sub template of the ManageSearch 
+		- uses the 'select_search_method' sub template of the ManageSearch
 		  template.
 		- allows to create and delete a fulltext index on the messages table.
 		- allows to delete a custom index (that CreateMessageIndex() created).
@@ -62,9 +62,9 @@ if (!defined('SMF'))
 		- called by ?action=admin;area=managesearch;sa=createmsgindex.
 		- linked from the EditSearchMethod screen.
 		- requires the admin_forum permission.
-		- uses the 'create_index', 'create_index_progress', and 
+		- uses the 'create_index', 'create_index_progress', and
 		  'create_index_done' sub templates of the ManageSearch template.
-		- depending on the size of the message table, the process is divided 
+		- depending on the size of the message table, the process is divided
 		  in steps.
 */
 
@@ -219,7 +219,7 @@ function EditSearchMethod()
 				if ($row['Column_name'] == 'body' && (isset($row['Index_type']) && $row['Index_type'] == 'FULLTEXT' || isset($row['Comment']) && $row['Comment'] == 'FULLTEXT'))
 					$context['fulltext_index'][] = $row['Key_name'];
 			$smfFunc['db_free_result']($request);
-	
+
 			if (is_array($context['fulltext_index']))
 				$context['fulltext_index'] = array_unique($context['fulltext_index']);
 		}
@@ -237,7 +237,7 @@ function EditSearchMethod()
 					$context['cannot_create_fulltext'] = true;
 			$smfFunc['db_free_result']($request);
 		}
-	
+
 		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
 			$request = $smfFunc['db_query']('', '
 				SHOW TABLE STATUS
@@ -253,7 +253,7 @@ function EditSearchMethod()
 				array(
 				)
 			);
-	
+
 		if ($request !== false)
 		{
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -371,7 +371,7 @@ function EditSearchMethod()
 			$context['table_info']['fulltext_length'] = $row['Index_length'];
 			$smfFunc['db_free_result']($request);
 		}
-	
+
 		// Now check the custom index table, if it exists at all.
 		if (preg_match('~^`(.+?)`\.(.+?)$~', $db_prefix, $match) !== 0)
 			$request = $smfFunc['db_query']('', '
@@ -477,7 +477,7 @@ function CreateMessageIndex()
 			}
 
 			$smfFunc['db_create_word_search']($index_properties[$context['index_settings']['bytes_per_word']]['column_definition']);
-			
+
 			// Temporarily switch back to not using a search index.
 			if (!empty($modSettings['search_index']) && $modSettings['search_index'] == 'custom')
 				updateSettings(array('search_index' => ''));
@@ -531,7 +531,7 @@ function CreateMessageIndex()
 					// In theory it's possible for one of these to take friggin ages so add more timeout protection.
 					if ($stop < time())
 					{
-						$forced_break = true;						
+						$forced_break = true;
 						break;
 					}
 

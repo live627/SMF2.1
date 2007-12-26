@@ -77,7 +77,7 @@ function createList($listOptions)
 	}
 
 	// With items per page set, calculate total number of items and page index.
-	else 
+	else
 	{
 		// First get an impression of how many items to expect.
 		if (isset($listOptions['get_count']['file']))
@@ -140,7 +140,7 @@ function createList($listOptions)
 					$params[] = $htmlsafe ? htmlspecialchars($list_item[$sprintf_param]) : $list_item[$sprintf_param];
 				$cur_data['value'] = vsprintf($column['data']['sprintf']['format'], $params);
 			}
-			
+
 			// The most flexible way probably is applying a custom function.
 			elseif (isset($column['data']['function']))
 				$cur_data['value'] = $column['data']['function']($list_item);

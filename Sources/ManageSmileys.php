@@ -892,7 +892,7 @@ function EditSmileys()
 			),
 			'columns' => array(
 				'picture' => array(
-					
+
 					'data' => array(
 						'sprintf' => array(
 							'format' => '<a href="' . $scripturl . '?action=admin;area=smileys;sa=modifysmiley;smiley=%1$d"><img src="' . $modSettings['smileys_url'] . '/' . $modSettings['smiley_sets_default'] . '/%2$s" alt="%3$s" style="padding: 2px;" id="smiley%1$d" /><input type="hidden" name="smileys[%1$d][filename]" value="%2$s" /></a>',
@@ -937,7 +937,7 @@ function EditSmileys()
 					'data' => array(
 						'function' => create_function('$rowData', '
 							global $txt;
-						
+
 							if (empty($rowData[\'hidden\']))
 								return $txt[\'smileys_location_form\'];
 							elseif ($rowData[\'hidden\'] == 1)
@@ -960,16 +960,16 @@ function EditSmileys()
 						'function' => create_function('$rowData', empty($modSettings['smileys_dir']) || !is_dir($modSettings['smileys_dir']) ? '
 							return htmlspecialchars($rowData[\'description\']);
 						' : '
-							global $context, $txt, $modSettings;	
-						
+							global $context, $txt, $modSettings;
+
 							// Check if there are smileys missing in some sets.
 							$missing_sets = array();
 							foreach ($context[\'smiley_sets\'] as $smiley_set)
 								if (!file_exists(sprintf(\'%1$s/%2$s/%3$s\', $modSettings[\'smileys_dir\'], $smiley_set[\'path\'], $rowData[\'filename\'])))
 									$missing_sets[] = $smiley_set[\'path\'];
-									
+
 							$description = htmlspecialchars($rowData[\'description\']);
-							
+
 							if (!empty($missing_sets))
 								$description .= sprintf(\'<br /><span class="smalltext"><b>%1$s:</b> %2$s</span>\', $txt[\'smileys_not_found_in_set\'], implode(\', \', $missing_sets));
 						'),
@@ -1460,7 +1460,7 @@ function EditMessageIcons()
 	);
 	$last_icon = 0;
 	$trueOrder = 0;
-	while ($row = $smfFunc['db_fetch_assoc']($request)) 
+	while ($row = $smfFunc['db_fetch_assoc']($request))
 	{
 		$context['icons'][$row['id_icon']] = array(
 			'id' => $row['id_icon'],
@@ -1583,7 +1583,7 @@ function EditMessageIcons()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $settings;
-					
+
 						$images_url = $settings[file_exists(sprintf(\'%1$s/images/post/%2$s.gif\', $settings[\'theme_dir\'], $rowData[\'filename\'])) ? \'actual_images_url\' : \'default_images_url\'];
 						return sprintf(\'<img src="%1$s/post/%2$s.gif" alt="%3$s" />\', $images_url, $rowData[\'filename\'], htmlspecialchars($rowData[\'title\']));
 					'),
@@ -1619,7 +1619,7 @@ function EditMessageIcons()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt;
-					
+
 						return empty($rowData[\'board_name\']) ? $txt[\'icons_edit_icons_all_boards\'] : $rowData[\'board_name\'];
 					'),
 				),

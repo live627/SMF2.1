@@ -123,10 +123,10 @@ function ModifyHolidays()
 				'data' => array(
 					'function' => create_function('$rowData', '
 						global $txt;
-						
+
 						// Recurring every year or just a single year?
 						$year = $rowData[\'year\'] == \'0004\' ? sprintf(\'(%1$s)\', $txt[\'every_year\']) : $rowData[\'year\'];
-						
+
 						// Construct the date.
 						return sprintf(\'%1$d %2$s %3$s\', $rowData[\'day\'], $txt[\'months\'][$rowData[\'month\']], $year);
 					'),

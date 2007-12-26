@@ -132,7 +132,7 @@ function ModifySubscriptionSettings($return_config = false)
 	$modSettings['paid_currency'] = !empty($modSettings['paid_currency_code']) ? $modSettings['paid_currency_code'] : '';
 	if (!empty($modSettings['paid_currency_code']) && !in_array($modSettings['paid_currency_code'], array('usd', 'eur', 'gbp')))
 		$modSettings['paid_currency'] = 'other';
-		
+
 	// These are all the default settings.
 	$config_vars = array(
 			array('select', 'paid_email', array(0 => $txt['paid_email_no'], 1 => $txt['paid_email_error'], 2 => $txt['paid_email_all']), 'subtext' => $txt['paid_email_desc']),
@@ -188,7 +188,7 @@ function ModifySubscriptionSettings($return_config = false)
 				{
 					document.getElementById("custom_currency_code_div").style.display = "none";
 					document.getElementById("custom_currency_symbol_div").style.display = "none";
-					
+
 				}
 			}
 			toggleOther();
@@ -903,7 +903,7 @@ function ModifyUserSubscription()
 			);
 			if ($smfFunc['db_num_rows']($request) == 0)
 				fatal_lang_error('error_member_not_found');
-			
+
 			list ($id_member, $id_group) = $smfFunc['db_fetch_row']($request);
 			$smfFunc['db_free_result']($request);
 

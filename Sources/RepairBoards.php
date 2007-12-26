@@ -641,7 +641,7 @@ function loadForumTests()
 						)
 					);
 				'),
-			),			
+			),
 			'messages' => array('repair_missing_polls', 'id_topic', 'id_poll'),
 		),
 		'missing_calendar_topics' => array(
@@ -672,7 +672,7 @@ function loadForumTests()
 						)
 					);
 				'),
-			),		
+			),
 			'messages' => array('repair_missing_calendar_topics', 'id_event', 'id_topic'),
 		),
 		'missing_log_topics' => array(
@@ -904,7 +904,7 @@ function loadForumTests()
 						)
 					);
 				'),
-			),	
+			),
 			'messages' => array('repair_missing_recipients', 'id_member'),
 		),
 		'missing_senders' => array(
@@ -933,7 +933,7 @@ function loadForumTests()
 							\'guestMessages\' => $guestMessages
 						));
 				'),
-			),	
+			),
 			'messages' => array('repair_missing_senders', 'id_pm', 'id_member_from'),
 		),
 		'missing_notify_members' => array(
@@ -962,7 +962,7 @@ function loadForumTests()
 						)
 					);
 				'),
-			),		
+			),
 			'messages' => array('repair_missing_notify_members', 'id_member'),
 		),
 		'missing_cached_subject' => array(
@@ -997,7 +997,7 @@ function loadForumTests()
 						);
 						$inserts = array();
 					}
-	
+
 				}
 
 				if (!empty($inserts))
@@ -1007,7 +1007,7 @@ function loadForumTests()
 						$inserts,
 						array(\'word\', \'id_topic\')
 					);
-			'),			
+			'),
 			'message_function' => create_function('$row', '
 				global $txt, $context;
 
@@ -1158,7 +1158,7 @@ function loadForumTests()
 						)
 					);
 				'),
-			),	
+			),
 			'messages' => array('repair_comments_missing_report', 'id_report', 'membername'),
 		),
 		'group_request_missing_member' => array(
@@ -1275,7 +1275,7 @@ function findForumErrors($do_fix = false)
 				list ($step_max) = $smfFunc['db_fetch_row']($request);
 				$total_queries++;
 				$smfFunc['db_free_result']($request);
-	
+
 				// Nothing?
 				if (empty($step_max))
 				{
@@ -1310,7 +1310,7 @@ function findForumErrors($do_fix = false)
 				{
 					// Assume need to fix.
 					$found_errors = true;
-	
+
 					if (isset($test['message']))
 						$context['repair_errors'][] = $txt[$test['message']];
 					// One per row!
@@ -1337,7 +1337,7 @@ function findForumErrors($do_fix = false)
 						while ($row = $smfFunc['db_fetch_assoc']($request))
 							$found_errors |= $test['message_function']($row);
 					}
-	
+
 					// Actually have something to fix?
 					if ($found_errors)
 						$to_fix[] = $error_type;
@@ -1383,7 +1383,7 @@ function findForumErrors($do_fix = false)
 								$to_fix[] = $item;
 				}
 			}
-	
+
 			// Free the result.
 			$smfFunc['db_free_result']($request);
 			// Keep memory down.
@@ -1422,7 +1422,7 @@ function findForumErrors($do_fix = false)
 			if ($key !== false && isset($to_fix[$key]))
 				unset($to_fix[$key]);
 		}
-	
+
 		// Are we done?
 		pauseRepairProcess($to_fix, $error_type);
 	}

@@ -313,7 +313,7 @@ function PlushSearch2()
 		// Try to determine the minimum number of letters for a fulltext search.
 		$request = $smfFunc['db_search_query']('max_fulltext_length', '
 			SHOW VARIABLES
-			LIKE \'ft_min_word_len\'', 
+			LIKE \'ft_min_word_len\'',
 			array(
 			)
 		);
@@ -535,7 +535,7 @@ function PlushSearch2()
 	else
 		$boardQuery = '';
 
-	
+
 
 	$search_params['show_complete'] = !empty($search_params['show_complete']) || !empty($_REQUEST['show_complete']);
 	$search_params['subject_only'] = !empty($search_params['subject_only']) || !empty($_REQUEST['subject_only']);
@@ -951,7 +951,7 @@ function PlushSearch2()
 		// Clear the previous cache of the final results cache.
 		$smfFunc['db_search_query']('delete_log_search_results', '
 			DELETE FROM ' . $db_prefix . 'log_search_results
-			WHERE id_search = ' . $_SESSION['search_cache']['id_search'], 
+			WHERE id_search = ' . $_SESSION['search_cache']['id_search'],
 			array(
 			)
 		);
@@ -1016,11 +1016,11 @@ function PlushSearch2()
 						$subject_query['where'][] = 'm.subject NOT ' . (empty($modSettings['search_match_words']) || $no_regexp ? ' LIKE \'%' . strtr($phrase, array('_' => '\\_', '%' => '\\%')) . '%\'' : ' RLIKE \'[[:<:]]' . addcslashes(preg_replace(array('/([\[\]$.+*?|{}()])/'), array('[$1]'), $phrase), '\\\'') . '[[:>:]]\'');
 				}
 
-				$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_results_subject', 
+				$ignoreRequest = $smfFunc['db_search_query']('insert_log_search_results_subject',
 					($smfFunc['db_support_ignore'] ? '
 					INSERT IGNORE INTO ' . $db_prefix . 'log_search_results
 						(id_search, id_topic, relevance, id_msg, num_matches)' : '') . '
-					SELECT 
+					SELECT
 						' . $_SESSION['search_cache']['id_search'] . ',
 						t.id_topic,
 						1000 * (
@@ -1060,7 +1060,7 @@ function PlushSearch2()
 				}
 				else
 					$numSubjectResults += $smfFunc['db_affected_rows']();
-				
+
 				if (!empty($modSettings['search_max_results']) && $numSubjectResults >= $modSettings['search_max_results'])
 					break;
 			}
@@ -1075,7 +1075,7 @@ function PlushSearch2()
 					array('id_search', 'id_topic')
 				);
 			}
-	
+
 			$_SESSION['search_cache']['num_results'] = $numSubjectResults;
 		}
 		else
@@ -1231,7 +1231,7 @@ function PlushSearch2()
 							LEFT JOIN ', $subject_query['left_join'])) . '
 						WHERE ' . implode('
 							AND ', $subject_query['where']) . (empty($modSettings['search_max_results']) ? '' : '
-						LIMIT ' . ($modSettings['search_max_results'] - $numSubjectResults)), 
+						LIMIT ' . ($modSettings['search_max_results'] - $numSubjectResults)),
 						array(
 						)
 					);
@@ -1244,7 +1244,7 @@ function PlushSearch2()
 							// No duplicates!
 							if (isset($inserts[$row[$ind]]))
 								continue;
-	
+
 							$inserts[$row[$ind]] = $row;
 						}
 						$smfFunc['db_free_result']($ignoreRequest);
@@ -1252,7 +1252,7 @@ function PlushSearch2()
 					}
 					else
 						$numSubjectResults += $smfFunc['db_affected_rows']();
-					
+
 					if (!empty($modSettings['search_max_results']) && $numSubjectResults >= $modSettings['search_max_results'])
 						break;
 				}
@@ -1289,7 +1289,7 @@ function PlushSearch2()
 					CREATE TEMPORARY TABLE ' . $db_prefix . 'tmp_log_search_messages (
 						id_msg int(10) unsigned NOT NULL default \'0\',
 						PRIMARY KEY (id_msg)
-					) TYPE=HEAP', 
+					) TYPE=HEAP',
 					array(
 					)
 				) !== false;
@@ -1297,7 +1297,7 @@ function PlushSearch2()
 				if (!$createTemporary)
 					$smfFunc['db_search_query']('delete_log_search_messages', '
 						DELETE FROM ' . $db_prefix . 'log_search_messages
-						WHERE id_search = ' . $_SESSION['search_cache']['id_search'], 
+						WHERE id_search = ' . $_SESSION['search_cache']['id_search'],
 						array(
 						)
 					);
@@ -1371,7 +1371,7 @@ function PlushSearch2()
 								// No duplicates - again!
 								if (isset($inserts[$row[0]]))
 									continue;
-		
+
 								$inserts[$row[0]] = $row;
 							}
 							$smfFunc['db_free_result']($ignoreRequest);
@@ -1399,7 +1399,7 @@ function PlushSearch2()
 
 						if (!$createTemporary)
 							$custom_query['select']['id_search'] = $_SESSION['search_cache']['id_search'];
-						
+
 						foreach ($words['words'] as $regularWord)
 							$custom_query['where'][] = 'm.body' . (in_array($regularWord, $excludedWords) ? ' NOT' : '') . (empty($modSettings['search_match_words']) || $no_regexp ? ' LIKE \'%' . strtr($regularWord, array('_' => '\\_', '%' => '\\%')) . '%\'' : ' RLIKE \'[[:<:]]' . addcslashes(preg_replace(array('/([\[\]$.+*?|{}()])/'), array('[$1]'), $regularWord), '\\\'') . '[[:>:]]\'');
 
@@ -1448,7 +1448,7 @@ function PlushSearch2()
 								LEFT JOIN ', $custom_query['left_join'])) . '
 							WHERE ' . implode('
 								AND ', $custom_query['where']) . (empty($maxMessageResults) ? '' : '
-							LIMIT ' . ($maxMessageResults - $indexedResults)), 
+							LIMIT ' . ($maxMessageResults - $indexedResults)),
 							array(
 							)
 						);
@@ -1459,7 +1459,7 @@ function PlushSearch2()
 								// No duplicates!
 								if (isset($inserts[$row[0]]))
 									continue;
-		
+
 								$inserts[$row[0]] = $row;
 							}
 							$smfFunc['db_free_result']($ignoreRequest);
@@ -1554,7 +1554,7 @@ function PlushSearch2()
 					WHERE ' : '') . implode('
 						AND ', $main_query['where']) . (empty($main_query['group_by']) ? '' : '
 					GROUP BY ' . implode(', ', $main_query['group_by'])) . (empty($modSettings['search_max_results']) ? '' : '
-					LIMIT ' . $modSettings['search_max_results']), 
+					LIMIT ' . $modSettings['search_max_results']),
 					array(
 					)
 				);
@@ -1614,7 +1614,7 @@ function PlushSearch2()
 					FROM ' . $db_prefix . 'topics AS t
 						INNER JOIN ' . $db_prefix . ($createTemporary ? 'tmp_' : '') . 'log_search_topics AS lst ON (lst.id_topic = t.id_topic)
 					' . (empty($modSettings['search_max_results']) ? '' : '
-					LIMIT ' . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])), 
+					LIMIT ' . ($modSettings['search_max_results'] - $_SESSION['search_cache']['num_results'])),
 					array(
 					)
 				);

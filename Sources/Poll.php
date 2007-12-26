@@ -116,7 +116,7 @@ function Vote()
 			fatal_lang_error('guest_vote_disabled');
 		// Already voted?
 		elseif (isset($_COOKIE['guest_poll_vote']) && in_array($row['id_poll'], explode(',', $_COOKIE['guest_poll_vote'])))
-			fatal_lang_error('poll_error', false);	
+			fatal_lang_error('poll_error', false);
 	}
 
 	// Is voting locked or has it expired?

@@ -487,7 +487,7 @@ function Logout($internal = false, $redirect = true)
 	{
 		if (isset($modSettings['integrate_logout']) && function_exists($modSettings['integrate_logout']))
 			call_user_func($modSettings['integrate_logout'], $user_settings['member_name']);
-	
+
 		// If you log out, you aren't online anymore :P.
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_online

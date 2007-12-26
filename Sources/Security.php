@@ -101,7 +101,7 @@ if (!defined('SMF'))
 
 	string showEmailAddress(string userProfile_hideEmail, int userProfile_id)
 		- returns whether an email address should be shown and how.
-		- possible outcomes are 
+		- possible outcomes are
 			'yes': show the full email address
 			'yes_permission_override': show the full email address, either you
 			  are a moderator or it's your own email address.
@@ -242,7 +242,7 @@ function is_not_banned($forceCheck = false)
 							AND (' . $ip_parts[2] . ' BETWEEN bi.ip_low2 AND bi.ip_high2)
 							AND (' . $ip_parts[3] . ' BETWEEN bi.ip_low3 AND bi.ip_high3)
 							AND (' . $ip_parts[4] . ' BETWEEN bi.ip_low4 AND bi.ip_high4))';
-	
+
 				// IP was valid, maybe there's also a hostname...
 				if (empty($modSettings['disableHostnameLookup']))
 				{
@@ -290,7 +290,7 @@ function is_not_banned($forceCheck = false)
 					bg.cannot_post, bg.cannot_login, bg.reason, IFNULL(bg.expire_time, 0) AS expire_time
 				FROM {db_prefix}ban_items AS bi
 					INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group AND (bg.expire_time IS NULL OR bg.expire_time > {int:current_time}))
-				WHERE 
+				WHERE
 					(' . implode(' OR ', $ban_query) . ')',
 				$ban_query_vars
 			);
@@ -324,7 +324,7 @@ function is_not_banned($forceCheck = false)
 			updateBanMembers();
 		}
 	}
-	
+
 	// Hey, I know you! You're ehm...
 	if (!isset($_SESSION['ban']['cannot_access']) && !empty($_COOKIE[$cookiename . '_']))
 	{
@@ -527,7 +527,7 @@ function banPermissions()
 	}
 
 	// Now that we have the mod cache taken care of lets setup a cache for the number of mod reports still open
-	if (isset($_SESSION['rc']) && $_SESSION['rc']['time'] > $modSettings['last_mod_report_action'] && $_SESSION['rc']['id'] == $user_info['id'])	
+	if (isset($_SESSION['rc']) && $_SESSION['rc']['time'] > $modSettings['last_mod_report_action'] && $_SESSION['rc']['id'] == $user_info['id'])
 		$context['open_mod_reports'] = $_SESSION['rc']['reports'];
 	elseif ($_SESSION['mc']['bq'] != '0=1')
 	{
@@ -737,7 +737,7 @@ function checkSubmitOnce($action, $is_fatal = true)
 			return false;
 	}
 	// Don't check, just free the stack number.
-	elseif ($action == 'free' && isset($_REQUEST['seqnum']) && in_array($_REQUEST['seqnum'], $_SESSION['forms']))	
+	elseif ($action == 'free' && isset($_REQUEST['seqnum']) && in_array($_REQUEST['seqnum'], $_SESSION['forms']))
 		$_SESSION['forms'] = array_diff($_SESSION['forms'], array($_REQUEST['seqnum']));
 	elseif ($action != 'free')
 		trigger_error('checkSubmitOnce(): Invalid action \'' . $action . '\'', E_USER_WARNING);
@@ -906,7 +906,7 @@ function showEmailAddress($userProfile_hideEmail, $userProfile_id)
 {
 	global $modSettings, $user_info;
 
-	// Should this users email address be shown? 
+	// Should this users email address be shown?
 	// If you're guest and the forum is set to hide email for guests: no.
 	// If it's your own profile and you've set your address hidden: yes_permission_override.
 	// If you're a moderator with sufficient permissions: yes_permission_override.

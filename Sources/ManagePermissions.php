@@ -1517,7 +1517,7 @@ function loadAllPermissions($loadType = 'classic')
 
 	// Some permissions are hidden if features are off.
 	$hiddenPermissions = array();
-	$relabelPermissions = array(); // Permissions to apply a different label to. 
+	$relabelPermissions = array(); // Permissions to apply a different label to.
 	if (!in_array('cd', $context['admin_features']))
 	{
 		$hiddenPermissions[] = 'calendar_view';
@@ -1569,7 +1569,7 @@ function loadAllPermissions($loadType = 'classic')
 				$permissionGroups[$permissionType][$loadType][$own_group] = true;
 			if (!empty($any_group) && !isset($permissionGroups[$permissionType][$loadType][$any_group]))
 				$permissionGroups[$permissionType][$loadType][$any_group] = true;
-			
+
 			// What column should this be located into?
 			$position = $loadType == 'classic' && !in_array($own_group, $leftPermissionGroups) ? 1 : 0;
 
