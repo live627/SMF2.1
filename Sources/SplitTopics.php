@@ -166,13 +166,13 @@ function SplitIndex()
 		SELECT m.subject, t.num_replies, t.id_first_msg, t.approved
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
-		WHERE m.id_msg = {int:inject_int_1}
+		WHERE m.id_msg = {int:split_at}
 			' . $approveQuery . '
 			AND m.id_topic = {int:current_topic}
 		LIMIT 1',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => $_GET['at'],
+			'split_at' => $_GET['at'],
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -230,10 +230,10 @@ function SplitExecute()
 			SELECT id_msg
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:current_topic}
-				AND id_msg >= {int:inject_int_1}',
+				AND id_msg >= {int:split_at}',
 			array(
 				'current_topic' => $topic,
-				'inject_int_1' => $_POST['at'],
+				'split_at' => $_POST['at'],
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -299,12 +299,13 @@ function SplitSelectTopics()
 			SELECT id_msg
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:current_topic}' . (empty($_SESSION['split_selection'][$topic]) ? '' : '
-				AND id_msg NOT IN (' . implode(', ', $_SESSION['split_selection'][$topic]) . ')') . '
+				AND id_msg NOT IN ({array_int:no_split_msgs})') . '
 				AND ' . $approveQuery . '
 			ORDER BY id_msg DESC
 			LIMIT ' . $context['not_selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 			array(
 				'current_topic' => $topic,
+				'no_split_msgs' => empty($_SESSION['split_selection'][$topic]) ? array() : $_SESSION['split_selection'][$topic],
 			)
 		);
 		// You can't split the last message off.
@@ -319,13 +320,13 @@ function SplitSelectTopics()
 				SELECT id_msg
 				FROM {db_prefix}messages
 				WHERE id_topic = {int:current_topic}
-					AND id_msg IN ({array_int:inject_array_int_1})
+					AND id_msg IN ({array_int:split_msgs})
 					AND ' . $approveQuery . '
 				ORDER BY id_msg DESC
 				LIMIT ' . $context['selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 				array(
 					'current_topic' => $topic,
-					'inject_array_int_1' => $_SESSION['split_selection'][$topic],
+					'split_msgs' => $_SESSION['split_selection'][$topic],
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -354,11 +355,11 @@ function SplitSelectTopics()
 			SELECT id_msg
 			FROM {db_prefix}messages
 			WHERE id_topic = {int:current_topic}
-				AND id_msg IN ({array_int:inject_array_int_1})
+				AND id_msg IN ({array_int:split_msgs})
 				AND ' . $approveQuery,
 			array(
 				'current_topic' => $topic,
-				'inject_array_int_1' => $_SESSION['split_selection'][$topic],
+				'split_msgs' => $_SESSION['split_selection'][$topic],
 			)
 		);
 		$_SESSION['split_selection'][$topic] = array();
@@ -369,14 +370,14 @@ function SplitSelectTopics()
 
 	// Get the number of messages (not) selected to be split.
 	$request = $smfFunc['db_query']('', '
-		SELECT ' . (empty($_SESSION['split_selection'][$topic]) ? '0' : 'm.id_msg IN ({array_int:inject_array_int_1})') . ' AS is_selected, COUNT(*) AS num_messages
+		SELECT ' . (empty($_SESSION['split_selection'][$topic]) ? '0' : 'm.id_msg IN ({array_int:split_msgs})') . ' AS is_selected, COUNT(*) AS num_messages
 		FROM {db_prefix}messages AS m
 		WHERE m.id_topic = {int:current_topic}
 			AND ' . $approveQuery . '
 		GROUP BY is_selected',
 		array(
 			'current_topic' => $topic,
-			'inject_array_int_1' => $_SESSION['split_selection'][$topic],
+			'split_msgs' => !empty($_SESSION['split_selection'][$topic]) ? $_SESSION['split_selection'][$topic] : array(),
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -398,12 +399,13 @@ function SplitSelectTopics()
 		FROM {db_prefix}messages AS m
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 		WHERE m.id_topic = {int:current_topic}' . (empty($_SESSION['split_selection'][$topic]) ? '' : '
-			AND id_msg NOT IN (' . implode(', ', $_SESSION['split_selection'][$topic]) . ')') . '
+			AND id_msg NOT IN ({array_int:no_split_msgs})') . '
 			AND ' . $approveQuery . '
 		ORDER BY m.id_msg DESC
 		LIMIT ' . $context['not_selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 		array(
 			'current_topic' => $topic,
+			'no_split_msgs' => !empty($_SESSION['split_selection'][$topic]) ? $_SESSION['split_selection'][$topic] : array(),
 		)
 	);
 	$context['messages'] = array();
@@ -432,13 +434,13 @@ function SplitSelectTopics()
 			FROM {db_prefix}messages AS m
 				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
 			WHERE m.id_topic = {int:current_topic}
-				AND m.id_msg IN ({array_int:inject_array_int_1})
+				AND m.id_msg IN ({array_int:split_msgs})
 				AND ' . $approveQuery . '
 			ORDER BY m.id_msg DESC
 			LIMIT ' . $context['selected']['start'] . ', ' . $modSettings['defaultMaxMessages'],
 			array(
 				'current_topic' => $topic,
-				'inject_array_int_1' => $_SESSION['split_selection'][$topic],
+				'split_msgs' => $_SESSION['split_selection'][$topic],
 			)
 		);
 		$context['messages'] = array();
@@ -528,17 +530,14 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	if (empty($splitMessages))
 		fatal_lang_error('no_posts_selected', false);
 
-	// No sense in imploding it over and over again.
-	$postList = implode(',', $splitMessages);
-
 	// Get some board info.
 	$request = $smfFunc['db_query']('', '
 		SELECT id_board, approved
 		FROM {db_prefix}topics
-		WHERE id_topic = {int:inject_int_1}
+		WHERE id_topic = {int:id_topic}
 		LIMIT 1',
 		array(
-			'inject_int_1' => $split1_ID_TOPIC,
+			'id_topic' => $split1_ID_TOPIC,
 		)
 	);
 	list ($id_board, $split1_approved) = $smfFunc['db_fetch_row']($request);
@@ -549,14 +548,15 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		SELECT MIN(m.id_msg) AS myid_first_msg, MAX(m.id_msg) AS myid_last_msg, COUNT(*) AS message_count,
 			m.approved
 		FROM {db_prefix}messages AS m
-			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:inject_int_1})
-		WHERE m.id_msg NOT IN (' . $postList . ')
-			AND m.id_topic = {int:inject_int_1}
+			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:id_topic})
+		WHERE m.id_msg NOT IN ({array_int:no_msg_list})
+			AND m.id_topic = {int:id_topic}
 		GROUP BY m.approved
 		ORDER BY m.approved DESC
 		LIMIT 2',
 		array(
-			'inject_int_1' => $split1_ID_TOPIC,
+			'id_topic' => $split1_ID_TOPIC,
+			'no_msg_list' => $splitMessages,
 		)
 	);
 	// You can't select ALL the messages!
@@ -596,14 +596,14 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		SELECT MIN(id_msg) AS myid_first_msg, MAX(id_msg) AS myid_last_msg, COUNT(*) AS message_count,
 			approved
 		FROM {db_prefix}messages
-		WHERE id_msg IN ({array_int:inject_array_int_1})
-			AND id_topic = {int:inject_int_1}
+		WHERE id_msg IN ({array_int:msg_list})
+			AND id_topic = {int:id_topic}
 		GROUP BY id_topic, approved
 		ORDER BY approved DESC
 		LIMIT 2',
 		array(
-			'inject_array_int_1' => $postList,
-			'inject_int_1' => $split1_ID_TOPIC,
+			'msg_list' => $splitMessages,
+			'id_topic' => $split1_ID_TOPIC,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -649,13 +649,18 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		fatal_lang_error('split_first_post', false);
 
 	// We're off to insert the new topic!  Use 0 for now to avoid UNIQUE errors.
-	$smfFunc['db_query']('', '
-		INSERT INTO {db_prefix}topics
-			(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, num_replies, unapproved_posts, approved, is_sticky)
-		VALUES (' . $id_board . ', ' . $split2_firstMem . ', ' . $split2_lastMem . ', 0, 0, ' . $split2_replies . ', ' . $split2_unapprovedposts . ', ' . $split2_approved . ', 0)',
-		array(
-		)
-	);
+	$smfFunc['db_insert']('',
+			$db_prefix . 'topics',
+			array(
+				'id_board' => 'int', 'id_member_started' => 'int', 'id_member_updated' => 'int', 'id_first_msg' => 'int',
+				'id_last_msg' => 'int', 'num_replies' => 'int', 'unapproved_posts' => 'int', 'approved' => 'int', 'is_sticky' => 'int',
+			),
+			array(
+				(int) $id_board, $split2_firstMem, $split2_lastMem, 0,
+				0, $split2_replies, $split2_unapprovedposts, (int) $split2_approved, 0,
+			),
+			array('id_topic')
+		);
 	$split2_ID_TOPIC = $smfFunc['db_insert_id']( $db_prefix . 'topics', 'id_topic');
 	if ($split2_ID_TOPIC <= 0)
 		fatal_lang_error('cant_insert_topic');
@@ -665,13 +670,13 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}messages
 		SET
-			id_topic = {int:inject_int_1},
-			subject = {string:inject_string_1}
-		WHERE id_msg IN ({array_int:inject_array_int_1})',
+			id_topic = {int:id_topic},
+			subject = {string:new_subject}
+		WHERE id_msg IN ({array_int:split_msgs})',
 		array(
-			'inject_array_int_1' => $postList,
-			'inject_int_1' => $split2_ID_TOPIC,
-			'inject_string_1' => $new_subject,
+			'split_msgs' => $splitMessages,
+			'id_topic' => $split2_ID_TOPIC,
+			'new_subject' => $new_subject,
 		)
 	);
 
@@ -681,11 +686,11 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	// Any associated reported posts better follow...
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_reported
-		SET id_topic = {int:inject_int_1}
-		WHERE id_msg IN ({array_int:inject_array_int_1})',
+		SET id_topic = {int:id_topic}
+		WHERE id_msg IN ({array_int:split_msgs})',
 		array(
-			'inject_array_int_1' => $postList,
-			'inject_int_1' => $split2_ID_TOPIC,
+			'split_msgs' => $splitMessages,
+			'id_topic' => $split2_ID_TOPIC,
 		)
 	);
 
@@ -693,21 +698,21 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET
-			num_replies = {int:inject_int_1},
-			id_first_msg = {int:inject_int_2},
-			id_last_msg = {int:inject_int_3},
-			id_member_started = {int:inject_int_4},
-			id_member_updated = {int:inject_int_5},
-			unapproved_posts = {int:inject_int_6}
-		WHERE id_topic = {int:inject_int_7}',
+			num_replies = {int:num_replies},
+			id_first_msg = {int:id_first_msg},
+			id_last_msg = {int:id_last_msg},
+			id_member_started = {int:id_member_started},
+			id_member_updated = {int:id_member_updated},
+			unapproved_posts = {int:unapproved_posts}
+		WHERE id_topic = {int:id_topic}',
 		array(
-			'inject_int_1' => $split1_replies,
-			'inject_int_2' => $split1_first_msg,
-			'inject_int_3' => $split1_last_msg,
-			'inject_int_4' => $split1_firstMem,
-			'inject_int_5' => $split1_lastMem,
-			'inject_int_6' => $split1_unapprovedposts,
-			'inject_int_7' => $split1_ID_TOPIC,
+			'num_replies' => $split1_replies,
+			'id_first_msg' => $split1_first_msg,
+			'id_last_msg' => $split1_last_msg,
+			'id_member_started' => $split1_firstMem,
+			'id_member_updated' => $split1_lastMem,
+			'unapproved_posts' => $split1_unapprovedposts,
+			'id_topic' => $split1_ID_TOPIC,
 		)
 	);
 
@@ -715,13 +720,13 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET
-			id_first_msg = {int:inject_int_1},
-			id_last_msg = {int:inject_int_2}
-		WHERE id_topic = {int:inject_int_3}',
+			id_first_msg = {int:id_first_msg},
+			id_last_msg = {int:id_last_msg}
+		WHERE id_topic = {int:id_topic}',
 		array(
-			'inject_int_1' => $split2_first_msg,
-			'inject_int_2' => $split2_last_msg,
-			'inject_int_3' => $split2_ID_TOPIC,
+			'id_first_msg' => $split2_first_msg,
+			'id_last_msg' => $split2_last_msg,
+			'id_topic' => $split2_ID_TOPIC,
 		)
 	);
 
@@ -733,9 +738,9 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 			WHERE id_msg = {int:inject_int_2}
 				AND id_topic = {int:inject_int_3}',
 			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => $split2_first_msg,
-				'inject_int_3' => $split2_ID_TOPIC,
+				'approved' => 0,
+				'id_msg' => $split2_first_msg,
+				'id_topic' => $split2_ID_TOPIC,
 			)
 		);
 
@@ -745,9 +750,9 @@ function splitTopic($split1_ID_TOPIC, $splitMessages, $new_subject)
 		SET ' . ($split2_approved ? '
 			num_topics = num_topics + 1' : '
 			unapproved_topics = unapproved_topics + 1') . '
-		WHERE id_board = {int:inject_int_1}',
+		WHERE id_board = {int:id_board}',
 		array(
-			'inject_int_1' => $id_board,
+			'id_board' => $id_board,
 		)
 	);
 
@@ -810,10 +815,10 @@ function MergeIndex()
 	$request = $smfFunc['db_query']('', '
 		SELECT COUNT(*)
 		FROM {db_prefix}topics AS t
-		WHERE t.id_board = {int:inject_int_1}
+		WHERE t.id_board = {int:id_board}
 			' . $approveQuery,
 		array(
-			'inject_int_1' => $_REQUEST['targetboard'],
+			'id_board' => $_REQUEST['targetboard'],
 		)
 	);
 	list ($topiccount) = $smfFunc['db_fetch_row']($request);
@@ -827,13 +832,13 @@ function MergeIndex()
 		SELECT m.subject
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-		WHERE t.id_topic = {int:inject_int_1}
+		WHERE t.id_topic = {int:id_topic}
 			AND t.id_board = {int:current_board}
 			' . $approveQuery . '
 		LIMIT 1',
 		array(
 			'current_board' => $board,
-			'inject_int_1' => $_GET['from'],
+			'id_topic' => $_GET['from'],
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -859,9 +864,9 @@ function MergeIndex()
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE ' . $user_info['query_see_board'] . (!in_array(0, $merge_boards) ? '
-			AND b.id_board IN ({array_int:inject_array_int_1})' : ''),
+			AND b.id_board IN ({array_int:merge_boards})' : ''),
 		array(
-			'inject_array_int_1' => $merge_boards,
+			'merge_boards' => $merge_boards,
 		)
 	);
 	$context['boards'] = array();
@@ -879,14 +884,14 @@ function MergeIndex()
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = m.id_member)
-		WHERE t.id_board = {int:inject_int_1}
-			AND t.id_topic != {int:inject_int_2}
+		WHERE t.id_board = {int:id_board}
+			AND t.id_topic != {int:id_topic}
 			' . $approveQuery . '
 		ORDER BY ' . (!empty($modSettings['enableStickyTopics']) ? 't.is_sticky DESC, ' : '') . 't.id_last_msg DESC
 		LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxTopics'],
 		array(
-			'inject_int_1' => $_REQUEST['targetboard'],
-			'inject_int_2' => $_GET['from'],
+			'id_board' => $_REQUEST['targetboard'],
+			'id_topic' => $_GET['from'],
 		)
 	);
 	$context['topics'] = array();
@@ -957,11 +962,11 @@ function MergeExecute($topics = array())
 			INNER JOIN {db_prefix}messages AS m2 ON (m2.id_msg = t.id_last_msg)
 			LEFT JOIN {db_prefix}members AS mem1 ON (mem1.id_member = m1.id_member)
 			LEFT JOIN {db_prefix}members AS mem2 ON (mem2.id_member = m2.id_member)
-		WHERE t.id_topic IN ({array_int:inject_array_int_1})
+		WHERE t.id_topic IN ({array_int:topic_list})
 		ORDER BY t.id_first_msg
 		LIMIT ' . count($topics),
 		array(
-			'inject_array_int_1' => $topics,
+			'topic_list' => $topics,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) < 2)
@@ -1041,13 +1046,13 @@ function MergeExecute($topics = array())
 	$request = $smfFunc['db_query']('', '
 		SELECT b.id_board
 		FROM {db_prefix}boards AS b
-		WHERE b.id_board IN ({array_int:inject_array_int_1})
+		WHERE b.id_board IN ({array_int:boards})
 			AND ' . $user_info['query_see_board'] . (!in_array(0, $merge_boards) ? '
-			AND b.id_board IN ({array_int:inject_array_int_2})' : '') . '
+			AND b.id_board IN ({array_int:merge_boards})' : '') . '
 		LIMIT ' . count($boards),
 		array(
-			'inject_array_int_1' => $boards,
-			'inject_array_int_2' => $merge_boards,
+			'boards' => $boards,
+			'merge_boards' => $merge_boards,
 		)
 	);
 	// If the number of boards that's in the output isn't exactly the same as we've put in there, you're in trouble.
@@ -1064,10 +1069,10 @@ function MergeExecute($topics = array())
 				FROM {db_prefix}polls AS p
 					INNER JOIN {db_prefix}topics AS t ON (t.id_poll = p.id_poll)
 					INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-				WHERE p.id_poll IN ({array_int:inject_array_int_1})
+				WHERE p.id_poll IN ({array_int:polls})
 				LIMIT ' . count($polls),
 				array(
-					'inject_array_int_1' => $polls,
+					'polls' => $polls,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1087,11 +1092,11 @@ function MergeExecute($topics = array())
 			$request = $smfFunc['db_query']('', '
 				SELECT id_board, name
 				FROM {db_prefix}boards
-				WHERE id_board IN ({array_int:inject_array_int_1})
+				WHERE id_board IN ({array_int:boards})
 				ORDER BY name
 				LIMIT ' . count($boards),
 				array(
-					'inject_array_int_1' => $boards,
+					'boards' => $boards,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1137,11 +1142,11 @@ function MergeExecute($topics = array())
 	$request = $smfFunc['db_query']('', '
 		SELECT approved, MIN(id_msg) AS first_msg, MAX(id_msg) AS last_msg, COUNT(*) AS message_count
 		FROM {db_prefix}messages
-		WHERE id_topic IN ({array_int:inject_array_int_1})
+		WHERE id_topic IN ({array_int:topics})
 		GROUP BY approved
 		ORDER BY approved DESC',
 		array(
-			'inject_array_int_1' => $topics,
+			'topics' => $topics,
 		)
 	);
 	$topic_approved = 1;
@@ -1202,11 +1207,12 @@ function MergeExecute($topics = array())
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member
 		FROM {db_prefix}messages
-		WHERE id_msg IN ({array_int:inject_array_int_1}, ' . $last_msg . ')
+		WHERE id_msg IN ({int:first_msg}, {int:last_msg})
 		ORDER BY id_msg
 		LIMIT 2',
 		array(
-			'inject_array_int_1' => $first_msg,
+			'first_msg' => $first_msg,
+			'last_msg' => $last_msg,
 		)
 	);
 	list ($member_started) = $smfFunc['db_fetch_row']($request);
@@ -1220,16 +1226,16 @@ function MergeExecute($topics = array())
 	$deleted_topics = array_diff($topics, array($id_topic));
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}topics
-		WHERE id_topic IN ({array_int:inject_array_int_1})',
+		WHERE id_topic IN ({array_int:deleted_topics})',
 		array(
-			'inject_array_int_1' => $deleted_topics,
+			'deleted_topics' => $deleted_topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_search_subjects
-		WHERE id_topic IN ({array_int:inject_array_int_1})',
+		WHERE id_topic IN ({array_int:deleted_topics})',
 		array(
-			'inject_array_int_1' => $deleted_topics,
+			'deleted_topics' => $deleted_topics,
 		)
 	);
 
@@ -1237,31 +1243,31 @@ function MergeExecute($topics = array())
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}topics
 		SET
-			id_board = {int:inject_int_1},
-			id_member_started = {int:inject_int_2},
-			id_member_updated = {int:inject_int_3},
-			id_first_msg = {int:inject_int_4},
-			id_last_msg = {int:inject_int_5},
-			id_poll = {int:inject_int_6},
-			num_replies = {int:inject_int_7},
-			unapproved_posts = {int:inject_int_8},
-			num_views = {int:inject_int_9},
-			is_sticky = {int:inject_int_10},
-			approved = {int:inject_int_11}
-		WHERE id_topic = {int:inject_int_12}',
+			id_board = {int:id_board},
+			id_member_started = {int:id_member_started},
+			id_member_updated = {int:id_member_updated},
+			id_first_msg = {int:id_first_msg},
+			id_last_msg = {int:id_last_msg},
+			id_poll = {int:id_poll},
+			num_replies = {int:num_replies},
+			unapproved_posts = {int:unapproved_posts},
+			num_views = {int:num_views},
+			is_sticky = {int:is_sticky},
+			approved = {int:approved}
+		WHERE id_topic = {int:id_topic}',
 		array(
-			'inject_int_1' => $target_board,
-			'inject_int_10' => $is_sticky,
-			'inject_int_11' => $topic_approved,
-			'inject_int_12' => $id_topic,
-			'inject_int_2' => $member_started,
-			'inject_int_3' => $member_updated,
-			'inject_int_4' => $first_msg,
-			'inject_int_5' => $last_msg,
-			'inject_int_6' => $target_poll,
-			'inject_int_7' => $num_replies,
-			'inject_int_8' => $num_unapproved,
-			'inject_int_9' => $num_views,
+			'id_board' => $target_board,
+			'is_sticky' => $is_sticky,
+			'approved' => $topic_approved,
+			'id_topic' => $id_topic,
+			'id_member_started' => $member_started,
+			'id_member_updated' => $member_updated,
+			'id_first_msg' => $first_msg,
+			'id_last_msg' => $last_msg,
+			'id_poll' => $target_poll,
+			'num_replies' => $num_replies,
+			'unapproved_posts' => $num_unapproved,
+			'num_views' => $num_views,
 		)
 	);
 
@@ -1283,15 +1289,15 @@ function MergeExecute($topics = array())
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}messages
 		SET
-			id_topic = {int:inject_int_1},
-			id_board = {int:inject_int_2}' . (empty($_POST['enforce_subject']) ? '' : ',
-			subject = {string:inject_string_1}') . '
-		WHERE id_topic IN ({array_int:inject_array_int_1})',
+			id_topic = {int:id_topic},
+			id_board = {int:target_board}' . (empty($_POST['enforce_subject']) ? '' : ',
+			subject = {string:subject}') . '
+		WHERE id_topic IN ({array_int:topic_list})',
 		array(
-			'inject_array_int_1' => $topics,
-			'inject_int_1' => $id_topic,
-			'inject_int_2' => $target_board,
-			'inject_string_1' => $context['response_prefix'] . $target_subject,
+			'topic_list' => $topics,
+			'id_topic' => $id_topic,
+			'target_board' => $target_board,
+			'subject' => $context['response_prefix'] . $target_subject,
 		)
 	);
 
@@ -1299,24 +1305,24 @@ function MergeExecute($topics = array())
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_reported
 		SET
-			id_topic = {int:inject_int_1},
-			id_board = {int:inject_int_2}
-		WHERE id_topic IN ({array_int:inject_array_int_1})',
+			id_topic = {int:id_topic},
+			id_board = {int:target_board}
+		WHERE id_topic IN ({array_int:topics_list})',
 		array(
-			'inject_array_int_1' => $topics,
-			'inject_int_1' => $id_topic,
-			'inject_int_2' => $target_board,
+			'topics_list' => $topics,
+			'id_topic' => $id_topic,
+			'target_board' => $target_board,
 		)
 	);
 
 	// Change the subject of the first message...
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}messages
-		SET subject = {string:inject_string_1}
-		WHERE id_msg = {int:inject_int_1}',
+		SET subject = {string:target_subject}
+		WHERE id_msg = {int:first_msg}',
 		array(
-			'inject_int_1' => $first_msg,
-			'inject_string_1' => $target_subject,
+			'first_msg' => $first_msg,
+			'target_subject' => $target_subject,
 		)
 	);
 
@@ -1324,13 +1330,13 @@ function MergeExecute($topics = array())
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}calendar
 		SET
-			id_topic = {int:inject_int_1},
-			id_board = {int:inject_int_2}
-		WHERE id_topic IN ({array_int:inject_array_int_1})',
+			id_topic = {int:id_topic},
+			id_board = {int:target_board}
+		WHERE id_topic IN ({array_int:deleted_topics})',
 		array(
-			'inject_array_int_1' => $deleted_topics,
-			'inject_int_1' => $id_topic,
-			'inject_int_2' => $target_board,
+			'deleted_topics' => $deleted_topics,
+			'id_topic' => $id_topic,
+			'target_board' => $target_board,
 		)
 	);
 
@@ -1338,10 +1344,10 @@ function MergeExecute($topics = array())
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, MIN(id_msg) AS new_id_msg
 		FROM {db_prefix}log_topics
-		WHERE id_topic IN ({array_int:inject_array_int_1})
+		WHERE id_topic IN ({array_int:topics})
 		GROUP BY id_member',
 		array(
-			'inject_array_int_1' => $topics,
+			'topics' => $topics,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) > 0)
@@ -1361,9 +1367,9 @@ function MergeExecute($topics = array())
 		// Get rid of the old log entries.
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_topics
-			WHERE id_topic IN ({array_int:inject_array_int_1})',
+			WHERE id_topic IN ({array_int:deleted_topics})',
 			array(
-				'inject_array_int_1' => $deleted_topics,
+				'deleted_topics' => $deleted_topics,
 			)
 		);
 	}
@@ -1378,10 +1384,10 @@ function MergeExecute($topics = array())
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member, MAX(sent) AS sent
 			FROM {db_prefix}log_notify
-			WHERE id_topic IN ({array_int:inject_array_int_1})
+			WHERE id_topic IN ({array_int:topics_list})
 			GROUP BY id_member',
 			array(
-				'inject_array_int_1' => $_POST['notifications'],
+				'topics_list' => $_POST['notifications'],
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) > 0)
@@ -1400,9 +1406,9 @@ function MergeExecute($topics = array())
 
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}log_topics
-				WHERE id_topic IN ({array_int:inject_array_int_1})',
+				WHERE id_topic IN ({array_int:deleted_topics})',
 				array(
-					'inject_array_int_1' => $deleted_topics,
+					'deleted_topics' => $deleted_topics,
 				)
 			);
 		}
@@ -1414,23 +1420,23 @@ function MergeExecute($topics = array())
 	{
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}polls
-			WHERE id_poll IN ({array_int:inject_array_int_1})',
+			WHERE id_poll IN ({array_int:deleted_polls})',
 			array(
-				'inject_array_int_1' => $deleted_polls,
+				'deleted_polls' => $deleted_polls,
 			)
 		);
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}poll_choices
-			WHERE id_poll IN ({array_int:inject_array_int_1})',
+			WHERE id_poll IN ({array_int:deleted_polls})',
 			array(
-				'inject_array_int_1' => $deleted_polls,
+				'deleted_polls' => $deleted_polls,
 			)
 		);
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_polls
-			WHERE id_poll IN ({array_int:inject_array_int_1})',
+			WHERE id_poll IN ({array_int:deleted_polls})',
 			array(
-				'inject_array_int_1' => $deleted_polls,
+				'deleted_polls' => $deleted_polls,
 			)
 		);
 	}
@@ -1441,13 +1447,17 @@ function MergeExecute($topics = array())
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET
-				num_topics = CASE WHEN ' . $stats['topics'] . ' > num_topics THEN 0 ELSE num_topics - ' . $stats['topics'] . ' END,
-				unapproved_topics = CASE WHEN ' . $stats['unapproved_topics'] . ' > unapproved_topics THEN 0 ELSE unapproved_topics - ' . $stats['unapproved_topics'] . ' END,
-				num_posts = CASE WHEN ' . $stats['posts'] . ' > num_posts THEN 0 ELSE num_posts - ' . $stats['posts'] . ' END,
-				unapproved_posts = CASE WHEN ' . $stats['unapproved_posts'] . ' > unapproved_posts THEN 0 ELSE unapproved_posts - ' . $stats['unapproved_posts'] . ' END
-			WHERE id_board = {int:inject_int_1}',
+				num_topics = CASE WHEN {int:topics} > num_topics THEN 0 ELSE num_topics - {int:topics} END,
+				unapproved_topics = CASE WHEN {int:unapproved_topics} > unapproved_topics THEN 0 ELSE unapproved_topics - {int:unapproved_topics} END,
+				num_posts = CASE WHEN {int:posts} > num_posts THEN 0 ELSE num_posts - {int:posts} END,
+				unapproved_posts = CASE WHEN {int:unapproved_posts} > unapproved_posts THEN 0 ELSE unapproved_posts - {int:unapproved_posts} END
+			WHERE id_board = {int:id_board}',
 			array(
-				'inject_int_1' => $id_board,
+				'id_board' => $id_board,
+				'topics' => $stats['topics'],
+				'unapproved_topics' => $stats['unapproved_topics'],
+				'posts' => $stats['posts'],
+				'unapproved_posts' => $stats['unapproved_posts'],
 			)
 		);
 	}
@@ -1456,9 +1466,10 @@ function MergeExecute($topics = array())
 	$request = $smfFunc['db_query']('', '
 		SELECT id_board
 		FROM {db_prefix}topics
-		WHERE id_topic=' . $id_topic . '
+		WHERE id_topic = {int:id_topic}
 		LIMIT 1',
 		array(
+			'id_topic' => $id_topic,
 		)
 	);
 	list($id_board) = $smfFunc['db_fetch_row']($request);

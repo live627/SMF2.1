@@ -127,7 +127,7 @@ function smf_db_replacement__callback($matches)
 		trigger_error('Invalid value injected or no type specified.', E_USER_ERROR);
 		
 	if (!isset($values[$matches[2]]))
-		trigger_error('The database value you\'re trying to inject does not exist: ' . htmlspecialchars($matches[2]), E_USER_ERROR);
+		trigger_error(var_dump(debug_backtrace()) . 'The database value you\'re trying to inject does not exist: ' . htmlspecialchars($matches[2]), E_USER_ERROR);
 	
 	$replacement = $values[$matches[2]];
 	

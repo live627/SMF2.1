@@ -104,12 +104,12 @@ function DeleteMessage()
 	$request = $smfFunc['db_query']('', '
 		SELECT t.id_member_started, m.id_member, m.subject, m.poster_time, m.approved
 		FROM {db_prefix}topics AS t
-			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = {int:inject_int_1} AND m.id_topic = {int:current_topic})
+			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = {int:id_msg} AND m.id_topic = {int:current_topic})
 		WHERE t.id_topic = {int:current_topic}
 		LIMIT 1',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => $_REQUEST['msg'],
+			'id_msg' => $_REQUEST['msg'],
 		)
 	);
 	list ($starter, $poster, $subject, $post_time, $approved) = $smfFunc['db_fetch_row']($request);
@@ -168,21 +168,35 @@ function RemoveOldTopics2()
 
 	// Custom conditions.
 	$condition = '';
+	$condition_params = array(
+		'boards' => array_keys($_POST['boards']),
+		'poster_time' => time() - 3600 * 24 * $_POST['maxdays'],
+	);
 
 	// Just moved notice topics?
 	if ($_POST['delete_type'] == 'moved')
+	{
 		$condition .= '
-			AND m.icon = \'moved\'
-			AND t.locked = 1';
+			AND m.icon = {string:icon}
+			AND t.locked = {int:locked}';
+		$condition_params['icon'] = 'moved';
+		$condition_params['locked'] = 1;
+	}
 	// Otherwise, maybe locked topics only?
 	elseif ($_POST['delete_type'] == 'locked')
+	{
 		$condition .= '
-			AND t.locked = 1';
+			AND t.locked = {int:locked}';
+		$condition_params['locked'] = 1;
+	}
 
 	// Exclude stickies?
 	if (isset($_POST['delete_old_not_sticky']))
+	{
 		$condition .= '
-			AND t.is_sticky = 0';
+			AND t.is_sticky = {int:is_sticky}';
+		$condition_params['is_sticky'] = 0;
+	}
 
 	// All we're gonna do here is grab the ID_TOPICs and send them to removeTopics().
 	$request = $smfFunc['db_query']('', '
@@ -190,12 +204,9 @@ function RemoveOldTopics2()
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_last_msg)
 		WHERE
-			m.poster_time < {int:inject_int_1}' . $condition . '
-			AND t.id_board IN ({array_int:inject_array_int_1})',
-		array(
-			'inject_array_int_1' => array_keys($_POST['boards']),
-			'inject_int_1' => time() - 3600 * 24 * $_POST['maxdays'],
-		)
+			m.poster_time < {int:poster_time}' . $condition . '
+			AND t.id_board IN ({array_int:boards})',
+		$condition_params
 	);
 	$topics = array();
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -221,14 +232,8 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	// Only a single topic.
 	elseif (is_numeric($topics))
 	{
-		$condition = '= ' . $topics;
 		$topics = array($topics);
 	}
-	elseif (count($topics) == 1)
-		$condition = '= ' . $topics[0];
-	// More than one topic.
-	else
-		$condition = 'IN (' . implode(', ', $topics) . ')';
 
 	// Decrease the post counts.
 	if ($decreasePostCount)
@@ -237,13 +242,14 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			SELECT m.id_member, COUNT(*) AS posts
 			FROM {db_prefix}messages AS m
 				INNER JOIN {db_prefix}boards AS b ON (b.id_board = m.id_board)
-			WHERE m.id_topic ' . $condition . '
-				AND m.icon != {string:inject_string_1}
-				AND b.count_posts = {int:inject_int_1}
+			WHERE m.id_topic IN ({array_int:topics})
+				AND m.icon != {string:recycled}
+				AND b.count_posts = {int:dont_count_posts}
 			GROUP BY m.id_member',
 			array(
-				'inject_int_1' => 0,
-				'inject_string_1' => 'recycled',
+				'dont_count_posts' => 0,
+				'recycled' => 'recycled',
+				'topics' => $topics,
 			)
 		);
 		if ($smfFunc['db_num_rows']($requestMembers) > 0)
@@ -260,11 +266,12 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		$request = $smfFunc['db_query']('', '
 			SELECT id_topic
 			FROM {db_prefix}topics
-			WHERE id_topic ' . $condition . '
-				AND id_board != {int:inject_int_1}
+			WHERE id_topic IN ({array_int:topics})
+				AND id_board != {int:recycle_board}
 			LIMIT ' . count($topics),
 			array(
-				'inject_int_1' => $modSettings['recycle_board'],
+				'recycle_board' => $modSettings['recycle_board'],
+				'topics' => $topics,
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) > 0)
@@ -278,11 +285,11 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			// Mark recycled topics as recycled.
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}messages
-				SET icon = {string:inject_string_1}
-				WHERE id_topic IN ({array_int:inject_array_int_1})',
+				SET icon = {string:recycled}
+				WHERE id_topic IN ({array_int:recycle_topics})',
 				array(
-					'inject_array_int_1' => $recycleTopics,
-					'inject_string_1' => 'recycled',
+					'recycle_topics' => $recycleTopics,
+					'recycled' => 'recycled',
 				)
 			);
 
@@ -290,12 +297,13 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}topics
 				SET
-					locked = {int:inject_int_1},
-					is_sticky = {int:inject_int_1}
-				WHERE id_topic IN ({array_int:inject_array_int_1})',
+					locked = {int:not_locked},
+					is_sticky = {int:not_sticky}
+				WHERE id_topic IN ({array_int:recycle_topics})',
 				array(
-					'inject_array_int_1' => $recycleTopics,
-					'inject_int_1' => 0,
+					'recycle_topics' => $recycleTopics,
+					'not_locked' => 0,
+					'not_sticky' => 0,
 				)
 			);
 
@@ -308,11 +316,11 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_reported
-				SET closed = {int:inject_int_1}
-				WHERE id_topic IN ({array_int:inject_array_int_1})',
+				SET closed = {int:is_closed}
+				WHERE id_topic IN ({array_int:recycle_topics})',
 				array(
-					'inject_array_int_1' => $recycleTopics,
-					'inject_int_1' => 1,
+					'recycle_topics' => $recycleTopics,
+					'is_closed' => 1,
 				)
 			);
 
@@ -321,9 +329,6 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 
 			// Topics that were recycled don't need to be deleted, so subtract them.
 			$topics = array_diff($topics, $recycleTopics);
-
-			// Topic list has changed, so does the condition to select topics.
-			$condition = 'IN (' . implode(', ', $topics) . ')';
 		}
 		else
 			$smfFunc['db_free_result']($request);
@@ -340,9 +345,10 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		SELECT id_board, approved, COUNT(*) AS num_topics, SUM(unapproved_posts) AS unapproved_posts,
 			SUM(num_replies) AS num_replies
 		FROM {db_prefix}topics
-		WHERE id_topic ' . $condition . '
+		WHERE id_topic IN ({array_int:topics})
 		GROUP BY id_board, approved',
 		array(
+			'topics' => $topics,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -375,13 +381,17 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET
-				num_posts = CASE WHEN ' . $stats['num_posts'] . ' > num_posts THEN 0 ELSE num_posts - ' . $stats['num_posts'] . ' END,
-				num_topics = CASE WHEN ' . $stats['num_topics'] . ' > num_topics THEN 0 ELSE num_topics - ' . $stats['num_topics'] . ' END,
-				unapproved_posts = CASE WHEN ' . $stats['unapproved_posts'] . ' > unapproved_posts THEN 0 ELSE unapproved_posts - ' . $stats['unapproved_posts'] . ' END,
-				unapproved_topics = CASE WHEN ' . $stats['unapproved_topics'] . ' > unapproved_topics THEN 0 ELSE unapproved_topics - ' . $stats['unapproved_topics'] . ' END
-			WHERE id_board = {int:inject_int_1}',
+				num_posts = CASE WHEN {int:num_posts} > num_posts THEN 0 ELSE num_posts - {int:num_posts} END,
+				num_topics = CASE WHEN {int:num_topics} > num_topics THEN 0 ELSE num_topics - {int:num_topics} END,
+				unapproved_posts = CASE WHEN {int:unapproved_posts} > unapproved_posts THEN 0 ELSE unapproved_posts - {int:unapproved_posts} END,
+				unapproved_topics = CASE WHEN {int:unapproved_topics} > unapproved_topics THEN 0 ELSE unapproved_topics - {int:unapproved_topics} END
+			WHERE id_board = {int:id_board}',
 			array(
-				'inject_int_1' => $stats['id_board'],
+				'id_board' => $stats['id_board'],
+				'num_posts' => $stats['num_posts'],
+				'num_topics' => $stats['num_topics'],
+				'unapproved_posts' => $stats['unapproved_posts'],
+				'unapproved_topics' => $stats['unapproved_topics'],
 			)
 		);
 	}
@@ -390,11 +400,12 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	$request = $smfFunc['db_query']('', '
 		SELECT id_poll
 		FROM {db_prefix}topics
-		WHERE id_topic ' . $condition . '
-			AND id_poll > {int:inject_int_1}
+		WHERE id_topic IN ({array_int:topics})
+			AND id_poll > {int:no_poll}
 		LIMIT ' . count($topics),
 		array(
-			'inject_int_1' => 0,
+			'no_poll' => 0,
+			'topics' => $topics,
 		)
 	);
 	$polls = array();
@@ -408,20 +419,23 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}polls
-			WHERE id_poll ' . $pollCondition,
+			WHERE id_poll IN ({array_int:polls})',
 			array(
+				'poll' => $polls,
 			)
 		);
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}poll_choices
-			WHERE id_poll ' . $pollCondition,
+			WHERE id_poll IN ({array_int:polls})',
 			array(
+				'poll' => $polls,
 			)
 		);
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_polls
-			WHERE id_poll ' . $pollCondition,
+			WHERE id_poll IN ({array_int:polls})',
 			array(
+				'poll' => $polls,
 			)
 		);
 	}
@@ -444,8 +458,9 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		$request = $smfFunc['db_query']('', '
 			SELECT id_msg, body
 			FROM {db_prefix}messages
-			WHERE id_topic ' . $condition,
+			WHERE id_topic IN ({array_int:topics})',
 			array(
+				'topics' => $topics,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -459,11 +474,11 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 		if (!empty($words) && !empty($messages))
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}log_search_words
-				WHERE id_word IN ({array_int:inject_array_int_1})
-					AND id_msg IN ({array_int:inject_array_int_2})',
+				WHERE id_word IN ({array_int:word_list})
+					AND id_msg IN ({array_int:message_list})',
 				array(
-					'inject_array_int_1' => $words,
-					'inject_array_int_2' => $messages,
+					'word_list' => $words,
+					'message_list' => $messages,
 				)
 			);
 	}
@@ -471,38 +486,44 @@ function removeTopics($topics, $decreasePostCount = true, $ignoreRecycling = fal
 	// Delete anything related to the topic.
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}messages
-		WHERE id_topic ' . $condition,
+		WHERE id_topic IN ({array_int:topics})',
 		array(
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}calendar
-		WHERE id_topic ' . $condition,
+		WHERE id_topic IN ({array_int:topics})',
 		array(
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_topics
-		WHERE id_topic ' . $condition,
+		WHERE id_topic IN ({array_int:topics})',
 		array(
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_notify
-		WHERE id_topic ' . $condition,
+		WHERE id_topic IN ({array_int:topics})',
 		array(
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}topics
-		WHERE id_topic ' . $condition,
+		WHERE id_topic IN ({array_int:topics})',
 		array(
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_search_subjects
-		WHERE id_topic ' . $condition,
+		WHERE id_topic IN ({array_int:topics})',
 		array(
+			'topics' => $topics,
 		)
 	);
 
@@ -532,15 +553,15 @@ function removeMessage($message, $decreasePostCount = true)
 		SELECT
 			m.id_member, m.icon, m.poster_time, m.subject,' . (empty($modSettings['search_custom_index_config']) ? '' : ' m.body,') . '
 			m.approved, t.id_topic, t.id_first_msg, t.id_last_msg, t.num_replies, t.id_board,
-			t.id_member_started AS ID_MEMBER_POSTER,
+			t.id_member_started AS id_member_poster,
 			b.count_posts
 		FROM {db_prefix}messages AS m
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic)
 			INNER JOIN {db_prefix}boards AS b ON (b.id_board = t.id_board)
-		WHERE m.id_msg = {int:inject_int_1}
+		WHERE m.id_msg = {int:id_msg}
 		LIMIT 1',
 		array(
-			'inject_int_1' => $message,
+			'id_msg' => $message,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -563,7 +584,7 @@ function removeMessage($message, $decreasePostCount = true)
 			{
 				if (!$delete_own)
 				{
-					if ($row['ID_MEMBER_POSTER'] == $user_info['id'])
+					if ($row['id_member_poster'] == $user_info['id'])
 					{
 						if (!$delete_replies)
 							fatal_lang_error('cannot_delete_replies', 'permission');
@@ -571,10 +592,10 @@ function removeMessage($message, $decreasePostCount = true)
 					else
 						fatal_lang_error('cannot_delete_own', 'permission');
 				}
-				elseif (($row['ID_MEMBER_POSTER'] != $user_info['id'] || !$delete_replies) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
+				elseif (($row['id_member_poster'] != $user_info['id'] || !$delete_replies) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
 					fatal_lang_error('modify_post_time_passed', false);
 			}
-			elseif ($row['ID_MEMBER_POSTER'] == $user_info['id'])
+			elseif ($row['id_member_poster'] == $user_info['id'])
 			{
 				if (!$delete_replies)
 					fatal_lang_error('cannot_delete_replies', 'permission');
@@ -598,15 +619,15 @@ function removeMessage($message, $decreasePostCount = true)
 		{
 			if (!allowedTo('delete_own'))
 			{
-				if ($row['ID_MEMBER_POSTER'] == $user_info['id'] && !allowedTo('delete_any'))
+				if ($row['id_member_poster'] == $user_info['id'] && !allowedTo('delete_any'))
 					isAllowedTo('delete_replies');
 				elseif (!allowedTo('delete_any'))
 					isAllowedTo('delete_own');
 			}
-			elseif (!allowedTo('delete_any') && ($row['ID_MEMBER_POSTER'] != $user_info['id'] || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
+			elseif (!allowedTo('delete_any') && ($row['id_member_poster'] != $user_info['id'] || !allowedTo('delete_replies')) && !empty($modSettings['edit_disable_time']) && $row['poster_time'] + $modSettings['edit_disable_time'] * 60 < time())
 				fatal_lang_error('modify_post_time_passed', false);
 		}
-		elseif ($row['ID_MEMBER_POSTER'] == $user_info['id'] && !allowedTo('delete_any'))
+		elseif ($row['id_member_poster'] == $user_info['id'] && !allowedTo('delete_any'))
 			isAllowedTo('delete_replies');
 		else
 			isAllowedTo('delete_any');
@@ -620,11 +641,11 @@ function removeMessage($message, $decreasePostCount = true)
 
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_reported
-		SET closed = {int:inject_int_1}
-		WHERE id_msg = {int:inject_int_2}',
+		SET closed = {int:is_closed}
+		WHERE id_msg = {int:id_msg}',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => $message,
+			'is_closed' => 1,
+			'id_msg' => $message,
 		)
 	);
 
@@ -678,13 +699,13 @@ function removeMessage($message, $decreasePostCount = true)
 		$request = $smfFunc['db_query']('', '
 			SELECT id_msg, id_member
 			FROM {db_prefix}messages
-			WHERE id_topic = {int:inject_int_1}
-				AND id_msg != {int:inject_int_2}
+			WHERE id_topic = {int:id_topic}
+				AND id_msg != {int:id_msg}
 			ORDER BY approved DESC, id_msg DESC
 			LIMIT 1',
 			array(
-				'inject_int_1' => $row['id_topic'],
-				'inject_int_2' => $message,
+				'id_topic' => $row['id_topic'],
+				'id_msg' => $message,
 			)
 		);
 		$row2 = $smfFunc['db_fetch_assoc']($request);
@@ -693,16 +714,17 @@ function removeMessage($message, $decreasePostCount = true)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}topics
 			SET
-				id_last_msg = {int:inject_int_1},
-				id_member_updated = {int:inject_int_2}' . ($row['approved'] ? ',
-				num_replies = CASE WHEN num_replies = {int:inject_int_3} THEN 0 ELSE num_replies - 1 END' : ',
-				unapproved_posts = CASE WHEN unapproved_posts = {int:inject_int_3} THEN 0 ELSE unapproved_posts - 1 END') . '
-			WHERE id_topic = {int:inject_int_4}',
+				id_last_msg = {int:id_last_msg},
+				id_member_updated = {int:id_member_updated}' . ($row['approved'] ? ',
+				num_replies = CASE WHEN num_replies = {int:no_replies} THEN 0 ELSE num_replies - 1 END' : ',
+				unapproved_posts = CASE WHEN unapproved_posts = {int:no_unapproved} THEN 0 ELSE unapproved_posts - 1 END') . '
+			WHERE id_topic = {int:id_topic}',
 			array(
-				'inject_int_1' => $row2['id_msg'],
-				'inject_int_2' => $row2['id_member'],
-				'inject_int_3' => 0,
-				'inject_int_4' => $row['id_topic'],
+				'id_last_msg' => $row2['id_msg'],
+				'id_member_updated' => $row2['id_member'],
+				'no_replies' => 0,
+				'no_unapproved' => 0,
+				'id_topic' => $row['id_topic'],
 			)
 		);
 	}
@@ -711,12 +733,13 @@ function removeMessage($message, $decreasePostCount = true)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}topics
 			SET ' . ($row['approved'] ? '
-				num_replies = CASE WHEN num_replies = {int:inject_int_1} THEN 0 ELSE num_replies - 1 END' : '
-				unapproved_posts = CASE WHEN unapproved_posts = {int:inject_int_1} THEN 0 ELSE unapproved_posts - 1 END') . '
-			WHERE id_topic = {int:inject_int_2}',
+				num_replies = CASE WHEN num_replies = {int:no_replies} THEN 0 ELSE num_replies - 1 END' : '
+				unapproved_posts = CASE WHEN unapproved_posts = {int:no_unapproved} THEN 0 ELSE unapproved_posts - 1 END') . '
+			WHERE id_topic = {int:id_topic}',
 			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => $row['id_topic'],
+				'no_replies' => 0,
+				'no_unapproved' => 0,
+				'id_topic' => $row['id_topic'],
 			)
 		);
 
@@ -732,10 +755,10 @@ function removeMessage($message, $decreasePostCount = true)
 			SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen
 			FROM {db_prefix}boards AS b
 				LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
-			WHERE b.id_board = {int:inject_int_1}',
+			WHERE b.id_board = {int:recycle_board}',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $modSettings['recycle_board'],
+				'recycle_board' => $modSettings['recycle_board'],
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) == 0)
@@ -748,12 +771,17 @@ function removeMessage($message, $decreasePostCount = true)
 		$approved = $row['approved'] ? 1 : 0;
 
 		// Insert a new topic in the recycle board.
-		$smfFunc['db_query']('', '
-			INSERT INTO {db_prefix}topics
-				(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, unapproved_posts, approved)
-			VALUES (' . $modSettings['recycle_board'] . ', ' . $row['id_member'] . ', ' . $row['id_member'] . ', ' . $message . ', ' . $message . ', ' . $unapproved_posts . ', ' . $approved . ')',
+		$smfFunc['db_insert']('',
+			$db_prefix . 'topics',
 			array(
-			)
+				'id_board' => 'int', 'id_member_started' => 'int', 'id_member_updated' => 'int', 'id_first_msg' => 'int',
+				'id_last_msg' => 'int', 'unapproved_posts' => 'int', 'approved' => 'int',
+			),
+			array(
+				$modSettings['recycle_board'], $row['id_member'], $row['id_member'], $message,
+				$message, $unapproved_posts, $approved,
+			),
+			array('id_topic')
 		);
 
 		// Capture the ID of the new topic...
@@ -765,15 +793,15 @@ function removeMessage($message, $decreasePostCount = true)
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}messages
 				SET
-					id_topic = {int:inject_int_1},
-					id_board = {int:inject_int_2},
-					icon = {string:inject_string_1}
-				WHERE id_msg = {int:inject_int_3}',
+					id_topic = {int:id_topic},
+					id_board = {int:recycle_board},
+					icon = {string:recycled}
+				WHERE id_msg = {int:id_msg}',
 				array(
-					'inject_int_1' => $topicID,
-					'inject_int_2' => $modSettings['recycle_board'],
-					'inject_int_3' => $message,
-					'inject_string_1' => 'recycled',
+					'id_topic' => $topicID,
+					'recycle_board' => $modSettings['recycle_board'],
+					'id_msg' => $message,
+					'recycled' => 'recycled',
 				)
 			);
 
@@ -781,13 +809,13 @@ function removeMessage($message, $decreasePostCount = true)
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}log_reported
 				SET
-					id_topic = {int:inject_int_1},
-					id_board = {int:inject_int_2}
-				WHERE id_msg = {int:inject_int_3}',
+					id_topic = {int:id_topic},
+					id_board = {int:recycle_board}
+				WHERE id_msg = {int:id_msg}',
 				array(
-					'inject_int_1' => $topicID,
-					'inject_int_2' => $modSettings['recycle_board'],
-					'inject_int_3' => $message,
+					'id_topic' => $topicID,
+					'recycle_board' => $modSettings['recycle_board'],
+					'id_msg' => $message,
 				)
 			);
 
@@ -816,9 +844,9 @@ function removeMessage($message, $decreasePostCount = true)
 					SET
 						num_topics = num_topics + 1,
 						num_posts = num_posts + 1
-					WHERE id_board = {int:inject_int_1}',
+					WHERE id_board = {int:recycle_board}',
 					array(
-						'inject_int_1' => $modSettings['recycle_board'],
+						'recycle_board' => $modSettings['recycle_board'],
 					)
 				);
 			else
@@ -827,9 +855,9 @@ function removeMessage($message, $decreasePostCount = true)
 					SET
 						unapproved_topics = unapproved_topics + 1,
 						unapproved_posts = unapproved_posts + 1
-					WHERE id_board = {int:inject_int_1}',
+					WHERE id_board = {int:recycle_board}',
 					array(
-						'inject_int_1' => $modSettings['recycle_board'],
+						'recycle_board' => $modSettings['recycle_board'],
 					)
 				);
 
@@ -844,12 +872,13 @@ function removeMessage($message, $decreasePostCount = true)
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}boards
 		SET ' . ($row['approved'] ? '
-			num_posts = CASE WHEN num_posts = {int:inject_int_1} THEN 0 ELSE num_posts - 1 END' : '
-			unapproved_posts = CASE WHEN unapproved_posts = {int:inject_int_1} THEN 0 ELSE unapproved_posts - 1 END') . '
-		WHERE id_board = {int:inject_int_2}',
+			num_posts = CASE WHEN num_posts = {int:no_posts} THEN 0 ELSE num_posts - 1 END' : '
+			unapproved_posts = CASE WHEN unapproved_posts = {int:no_unapproved} THEN 0 ELSE unapproved_posts - 1 END') . '
+		WHERE id_board = {int:id_board}',
 		array(
-			'inject_int_1' => 0,
-			'inject_int_2' => $row['id_board'],
+			'no_posts' => 0,
+			'no_unapproved' => 0,
+			'id_board' => $row['id_board'],
 		)
 	);
 
@@ -864,9 +893,9 @@ function removeMessage($message, $decreasePostCount = true)
 		// Remove the message!
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}messages
-			WHERE id_msg = {int:inject_int_1}',
+			WHERE id_msg = {int:id_msg}',
 			array(
-				'inject_int_1' => $message,
+				'id_msg' => $message,
 			)
 		);
 
@@ -877,11 +906,11 @@ function removeMessage($message, $decreasePostCount = true)
 			if (!empty($words))
 				$smfFunc['db_query']('', '
 					DELETE FROM {db_prefix}log_search_words
-					WHERE id_word IN ({array_int:inject_array_int_1})
-						AND id_msg = {int:inject_int_1}',
+					WHERE id_word IN ({array_int:word_list})
+						AND id_msg = {int:id_msg}',
 					array(
-						'inject_array_int_1' => $words,
-						'inject_int_1' => $message,
+						'word_list' => $words,
+						'id_msg' => $message,
 					)
 				);
 		}

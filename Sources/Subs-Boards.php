@@ -442,7 +442,7 @@ function getMsgMemberID($messageID)
 		$memberID = 0;
 	$smfFunc['db_free_result']($result);
 
-	return $memberID;
+	return (int) $memberID;
 }
 
 // Modify the settings and position of a board.
