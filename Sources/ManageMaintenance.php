@@ -1094,14 +1094,21 @@ function ConvertEntities()
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 			{
+				$insertion_variables = array();
 				$changes = array();
 				foreach ($row as $column_name => $column_value)
 					if ($column_name !== $primary_key && strpos($column_value, '&#') !== false)
-						$changes[] = $column_name . ' = \'' . $smfFunc['db_escape_string'](preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$entity_replace(\'\\2\')', $column_value)) . '\'';
+					{
+						$changes[] = $column_name . ' = {string:changes_' . $column_name . '}';
+						$insertion_variables['changes_' . $column_name] = preg_replace('~(&#(\d{1,7}|x[0-9a-fA-F]{1,6});)~e', '$entity_replace(\'\\2\')', $column_value);
+					}
 
 				$where = array();
 				foreach ($primary_keys as $key)
-					$where[] = $key . ' = \'' . $row[$key] . '\'';
+				{
+					$where[] = $key . ' = {string:where_' . $key . '}';
+					$insertion_variables['where_'  . $key] = $row[$key];
+				}
 
 
 				// Update the row.
@@ -1113,6 +1120,7 @@ function ConvertEntities()
 							', $changes) . '
 						WHERE ' . implode(' AND ', $where),
 						array(
+							$insertion_variables
 						)
 					);
 			}
@@ -1238,29 +1246,29 @@ function AdminBoardRecount()
 				SELECT /*!40001 SQL_NO_CACHE */ t.id_topic, MAX(t.num_replies) AS num_replies, MAX(t.unapproved_posts) AS unapproved_posts,
 					CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END AS real_num_replies, COUNT(mu.id_msg) AS real_unapproved_posts
 				FROM {db_prefix}topics AS t
-					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = {int:inject_int_1})
-					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = {int:inject_int_2})
-				WHERE t.id_topic > {int:inject_int_3}
-					AND t.id_topic <= {int:inject_int_4}
+					LEFT JOIN {db_prefix}messages AS ma ON (ma.id_topic = t.id_topic AND ma.approved = {int:is_approved})
+					LEFT JOIN {db_prefix}messages AS mu ON (mu.id_topic = t.id_topic AND mu.approved = {int:not_approved})
+				WHERE t.id_topic > {int:start}
+					AND t.id_topic <= {int:max_id}
 				GROUP BY t.id_topic
 				HAVING CASE WHEN COUNT(ma.id_msg) >= 1 THEN COUNT(ma.id_msg) - 1 ELSE 0 END != MAX(t.num_replies)
 					OR COUNT(mu.id_msg) != MAX(t.unapproved_posts)',
 				array(
-					'inject_int_1' => 1,
-					'inject_int_2' => 0,
-					'inject_int_3' => $_REQUEST['start'],
-					'inject_int_4' => $_REQUEST['start'] + $increment,
+					'is_approved' => 1,
+					'not_approved' => 0,
+					'start' => $_REQUEST['start'],
+					'max_id' => $_REQUEST['start'] + $increment,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}topics
-					SET num_replies = {int:inject_int_1}, unapproved_posts = {int:inject_int_2}
-					WHERE id_topic = {int:inject_int_3}',
+					SET num_replies = {int:num_replies}, unapproved_posts = {int:unapproved_posts}
+					WHERE id_topic = {int:id_topic}',
 					array(
-						'inject_int_1' => $row['real_num_replies'],
-						'inject_int_2' => $row['real_unapproved_posts'],
-						'inject_int_3' => $row['id_topic'],
+						'num_replies' => $row['real_num_replies'],
+						'unapproved_posts' => $row['real_unapproved_posts'],
+						'id_topic' => $row['id_topic'],
 					)
 				);
 			$smfFunc['db_free_result']($request);
@@ -1285,11 +1293,11 @@ function AdminBoardRecount()
 		if (empty($_REQUEST['start']))
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}boards
-				SET num_posts = {int:inject_int_1}
-				WHERE redirect = {string:inject_string_1}',
+				SET num_posts = {int:num_posts}
+				WHERE redirect = {string:redirect}',
 				array(
-					'inject_int_1' => 0,
-					'inject_string_1' => '',
+					'num_posts' => 0,
+					'redirect' => '',
 				)
 			);
 
@@ -1298,23 +1306,24 @@ function AdminBoardRecount()
 			$request = $smfFunc['db_query']('', '
 				SELECT /*!40001 SQL_NO_CACHE */ m.id_board, COUNT(*) AS real_num_posts
 				FROM {db_prefix}messages AS m
-				WHERE m.id_topic > {int:inject_int_1}
-					AND m.id_topic <= {int:inject_int_2}
-					AND m.approved = {int:inject_int_3}
+				WHERE m.id_topic > {int:id_topic_min}
+					AND m.id_topic <= {int:id_topic_max}
+					AND m.approved = {int:is_approved}
 				GROUP BY m.id_board',
 				array(
-					'inject_int_1' => $_REQUEST['start'],
-					'inject_int_2' => $_REQUEST['start'] + $increment,
-					'inject_int_3' => 1,
+					'id_topic_min' => $_REQUEST['start'],
+					'id_topic_max' => $_REQUEST['start'] + $increment,
+					'is_approved' => 1,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET num_posts = num_posts + ' . $row['real_num_posts'] . '
-					WHERE id_board = {int:inject_int_1}',
+					SET num_posts = num_posts + {int:real_num_posts}
+					WHERE id_board = {int:id_board}',
 					array(
-						'inject_int_1' => $row['id_board'],
+						'id_board' => $row['id_board'],
+						'real_num_posts' => $row['real_num_posts'],
 					)
 				);
 			$smfFunc['db_free_result']($request);
@@ -1339,9 +1348,9 @@ function AdminBoardRecount()
 		if (empty($_REQUEST['start']))
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}boards
-				SET num_topics = {int:inject_int_1}',
+				SET num_topics = {int:num_topics}',
 				array(
-					'inject_int_1' => 0,
+					'num_topics' => 0,
 				)
 			);
 
@@ -1350,23 +1359,24 @@ function AdminBoardRecount()
 			$request = $smfFunc['db_query']('', '
 				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, COUNT(*) AS real_num_topics
 				FROM {db_prefix}topics AS t
-				WHERE t.approved = {int:inject_int_1}
-					AND t.id_topic > {int:inject_int_2}
-					AND t.id_topic <= {int:inject_int_3}
+				WHERE t.approved = {int:is_approved}
+					AND t.id_topic > {int:id_topic_min}
+					AND t.id_topic <= {int:id_topic_max}
 				GROUP BY t.id_board',
 				array(
-					'inject_int_1' => 1,
-					'inject_int_2' => $_REQUEST['start'],
-					'inject_int_3' => $_REQUEST['start'] + $increment,
+					'is_approved' => 1,
+					'id_topic_min' => $_REQUEST['start'],
+					'id_topic_max' => $_REQUEST['start'] + $increment,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET num_topics = num_topics + ' . $row['real_num_topics'] . '
-					WHERE id_board = {int:inject_int_1}',
+					SET num_topics = num_topics + {int:real_num_topics}
+					WHERE id_board = {int:id_board}',
 					array(
-						'inject_int_1' => $row['id_board'],
+						'id_board' => $row['id_board'],
+						'real_num_topics' => $row['real_num_topics'],
 					)
 				);
 			$smfFunc['db_free_result']($request);
@@ -1391,9 +1401,9 @@ function AdminBoardRecount()
 		if (empty($_REQUEST['start']))
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}boards
-				SET unapproved_posts = {int:inject_int_1}',
+				SET unapproved_posts = {int:unapproved_posts}',
 				array(
-					'inject_int_1' => 0,
+					'unapproved_posts' => 0,
 				)
 			);
 
@@ -1402,23 +1412,24 @@ function AdminBoardRecount()
 			$request = $smfFunc['db_query']('', '
 				SELECT /*!40001 SQL_NO_CACHE */ m.id_board, COUNT(*) AS real_unapproved_posts
 				FROM {db_prefix}messages AS m
-				WHERE m.id_topic > {int:inject_int_1}
-					AND m.id_topic <= {int:inject_int_2}
-					AND m.approved = {int:inject_int_3}
+				WHERE m.id_topic > {int:id_topic_min}
+					AND m.id_topic <= {int:id_topic_max}
+					AND m.approved = {int:is_approved}
 				GROUP BY m.id_board',
 				array(
-					'inject_int_1' => $_REQUEST['start'],
-					'inject_int_2' => $_REQUEST['start'] + $increment,
-					'inject_int_3' => 0,
+					'id_topic_min' => $_REQUEST['start'],
+					'id_topic_max' => $_REQUEST['start'] + $increment,
+					'is_approved' => 0,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET unapproved_posts = unapproved_posts + ' . $row['real_unapproved_posts'] . '
-					WHERE id_board = {int:inject_int_1}',
+					SET unapproved_posts = unapproved_posts + {int:unapproved_posts}
+					WHERE id_board = {int:id_board}',
 					array(
-						'inject_int_1' => $row['id_board'],
+						'id_board' => $row['id_board'],
+						'unapproved_posts' => $row['unapproved_posts'],
 					)
 				);
 			$smfFunc['db_free_result']($request);
@@ -1443,34 +1454,35 @@ function AdminBoardRecount()
 		if (empty($_REQUEST['start']))
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}boards
-				SET unapproved_topics = {int:inject_int_1}',
+				SET unapproved_topics = {int:unapproved_topics}',
 				array(
-					'inject_int_1' => 0,
+					'unapproved_topics' => 0,
 				)
 			);
 
 		while ($_REQUEST['start'] < $max_topics)
 		{
 			$request = $smfFunc['db_query']('', '
-				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, COUNT(*) AS realUnapprovedTopics
+				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, COUNT(*) AS real_unapproved_topics
 				FROM {db_prefix}topics AS t
-				WHERE t.approved = {int:inject_int_1}
-					AND t.id_topic > {int:inject_int_2}
-					AND t.id_topic <= {int:inject_int_3}
+				WHERE t.approved = {int:is_approved}
+					AND t.id_topic > {int:id_topic_min}
+					AND t.id_topic <= {int:id_topic_max}
 				GROUP BY t.id_board',
 				array(
-					'inject_int_1' => 0,
-					'inject_int_2' => $_REQUEST['start'],
-					'inject_int_3' => $_REQUEST['start'] + $increment,
+					'is_approved' => 0,
+					'id_topic_min' => $_REQUEST['start'],
+					'id_topic_max' => $_REQUEST['start'] + $increment,
 				)
 			);
 			while ($row = $smfFunc['db_fetch_assoc']($request))
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET unapproved_topics = unapproved_topics + ' . $row['realUnapprovedTopics'] . '
-					WHERE id_board = {int:inject_int_1}',
+					SET unapproved_topics = unapproved_topics + {int:real_unapproved_topics}
+					WHERE id_board = {int:id_board}',
 					array(
-						'inject_int_1' => $row['id_board'],
+						'id_board' => $row['id_board'],
+						'real_unapproved_topics' => $row['real_unapproved_topics'],
 					)
 				);
 			$smfFunc['db_free_result']($request);
@@ -1496,11 +1508,11 @@ function AdminBoardRecount()
 			SELECT /*!40001 SQL_NO_CACHE */ mem.id_member, COUNT(pmr.id_pm) AS real_num,
 				MAX(mem.instant_messages) AS instant_messages
 			FROM {db_prefix}members AS mem
-				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = {int:inject_int_1})
+				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = {int:is_not_deleted})
 			GROUP BY mem.id_member
 			HAVING COUNT(pmr.id_pm) != MAX(mem.instant_messages)',
 			array(
-				'inject_int_1' => 0,
+				'is_not_deleted' => 0,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1511,11 +1523,12 @@ function AdminBoardRecount()
 			SELECT /*!40001 SQL_NO_CACHE */ mem.id_member, COUNT(pmr.id_pm) AS real_num,
 				MAX(mem.unread_messages) AS unread_messages
 			FROM {db_prefix}members AS mem
-				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = {int:inject_int_1} AND pmr.is_read = {int:inject_int_1})
+				LEFT JOIN {db_prefix}pm_recipients AS pmr ON (mem.id_member = pmr.id_member AND pmr.deleted = {int:is_not_deleted} AND pmr.is_read = {int:is_not_read})
 			GROUP BY mem.id_member
 			HAVING COUNT(pmr.id_pm) != MAX(mem.unread_messages)',
 			array(
-				'inject_int_1' => 0,
+				'is_not_deleted' => 0,
+				'is_not_read' => 0,
 			)
 		);
 		while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -1540,11 +1553,11 @@ function AdminBoardRecount()
 				SELECT /*!40001 SQL_NO_CACHE */ t.id_board, m.id_msg
 				FROM {db_prefix}messages AS m
 					INNER JOIN {db_prefix}topics AS t ON (t.id_topic = m.id_topic AND t.id_board != m.id_board)
-				WHERE m.id_msg > {int:inject_int_1}
-					AND m.id_msg <= {int:inject_int_2}',
+				WHERE m.id_msg > {int:id_msg_min}
+					AND m.id_msg <= {int:id_msg_max}',
 				array(
-					'inject_int_1' => $_REQUEST['start'],
-					'inject_int_2' => $_REQUEST['start'] + $increment,
+					'id_msg_min' => $_REQUEST['start'],
+					'id_msg_max' => $_REQUEST['start'] + $increment,
 				)
 			);
 			$boards = array();
@@ -1555,11 +1568,11 @@ function AdminBoardRecount()
 			foreach ($boards as $board_id => $messages)
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}messages
-					SET id_board = {int:inject_int_1}
-					WHERE id_msg IN ({array_int:inject_array_int_1})',
+					SET id_board = {int:id_board}
+					WHERE id_msg IN ({array_int:id_msg_array})',
 					array(
-						'inject_array_int_1' => $messages,
-						'inject_int_1' => $board_id,
+						'id_msg_array' => $messages,
+						'id_board' => $board_id,
 					)
 				);
 
@@ -1581,10 +1594,10 @@ function AdminBoardRecount()
 	$request = $smfFunc['db_query']('', '
 		SELECT m.id_board, MAX(m.id_msg) AS local_last_msg
 		FROM {db_prefix}messages AS m
-		WHERE m.approved = {int:inject_int_1}
+		WHERE m.approved = {int:is_approved}
 		GROUP BY m.id_board',
 		array(
-			'inject_int_1' => 1,
+			'is_approved' => 1,
 		)
 	);
 	$realBoardCounts = array();
@@ -1622,11 +1635,11 @@ function AdminBoardRecount()
 			if ($curLastMsg != $row['id_last_msg'])
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}boards
-					SET id_last_msg = {int:inject_int_1}
-					WHERE id_board = {int:inject_int_2}',
+					SET id_last_msg = {int:id_last_msg}
+					WHERE id_board = {int:id_board}',
 					array(
-						'inject_int_1' => $curLastMsg,
-						'inject_int_2' => $row['id_board'],
+						'id_last_msg' => $curLastMsg,
+						'id_board' => $row['id_board'],
 					)
 				);
 
@@ -1744,28 +1757,6 @@ function cacheLanguage($template_name, $lang, $fatal, $theme_name)
 		}
 		else
 			unset($language_url);
-
-		// If this includes the index template put in the language settings too.
-		//!!! Remove this for now - we may add it back later.
-		/*if ($template == 'index')
-		{
-			$request = $smfFunc['db_query']('', "
-				SELECT time_format, number_format, charset, locale, dictionary, rtl, image_lang
-				FROM {$db_prefix}languages
-				WHERE codename = '$lang'", __FILE__, __LINE__);
-			$row = $smfFunc['db_fetch_assoc']($request);
-			if (!empty($row))
-			{
-				foreach ($row as $k => $v)
-				{
-					if ($can_write)
-						fwrite($fh, '$txt[\'' . $k . '\'] = \'' . $v . "';\n");
-					else
-						$txt[$k] = $v;
-				}
-			}
-			$smfFunc['db_free_result']($request);
-		}*/
 	}
 
 	if ($can_write)

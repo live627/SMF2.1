@@ -291,17 +291,22 @@ function loadForumTests()
 				$memberStartedID = (int) getMsgMemberID($row[\'myid_first_msg\']);
 				$memberUpdatedID = (int) getMsgMemberID($row[\'myid_last_msg\']);
 
-				$smfFunc[\'db_query\'](\'\', "
-					INSERT INTO {$db_prefix}topics
-						(id_board, id_member_started, id_member_updated, id_first_msg, id_last_msg, num_replies)
-					VALUES ($row[id_board], $memberStartedID, $memberUpdatedID,
-						$row[myid_first_msg], $row[myid_last_msg], $row[myNumReplies])", __FILE__, __LINE__);
+				$smfFunc[\'db_insert\'](\'\',
+					$db_prefix . \'topics\',
+					array(\'id_board\' => \'int\', \'id_member_started\' => \'int\', \'id_member_updated\' => \'int\', \'id_first_msg\' => \'int\', \'id_last_msg\' => \'int\', \'num_replies\' => \'int\'),
+					array($row[\'id_board\'], $memberStartedID, $memberUpdatedID, $row[\'myid_first_msg\'], $row[\'myid_last_msg\'], $row[\'myNumReplies\']),
+					array(\'id_topic\')
+				);
+
 				$newTopicID = $smfFunc[\'db_insert_id\']("{$db_prefix}topics", \'id_topic\');
 
 				$smfFunc[\'db_query\'](\'\', "
 					UPDATE {$db_prefix}messages
 					SET id_topic = $newTopicID, id_board = $row[id_board]
-					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+					WHERE id_topic = $row[id_topic]",
+					array(
+					)
+				);
 				'),
 			'force_fix' => array('stats_topics'),
 			'messages' => array('repair_missing_topics', 'id_msg', 'id_topic'),
@@ -328,10 +333,18 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}topics
-						WHERE id_topic IN (" . implode(\',\', $topics) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN ({array_int:topics})",
+						array(
+							\'topics\' => $topics
+						)
+					);
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_topics
-						WHERE id_topic IN (" . implode(\',\', $topics) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN ({array_int:topics})",
+						array(
+							\'topics\' => $topics
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_messages', 'id_topic'),
@@ -380,7 +393,10 @@ function loadForumTests()
 					SET id_first_msg = $row[myid_first_msg],
 						id_member_started = $memberStartedID, id_last_msg = $row[myid_last_msg],
 						id_member_updated = $memberUpdatedID, approved = $row[myApproved]
-					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+					WHERE id_topic = $row[id_topic]",
+					array(
+					)
+				);
 			'),
 			'message_function' => create_function('$row', '
 				global $txt, $context;
@@ -421,7 +437,10 @@ function loadForumTests()
 				$smfFunc[\'db_query\'](\'\', "
 					UPDATE {$db_prefix}topics
 					SET num_replies = $row[myNumReplies]
-					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+					WHERE id_topic = $row[id_topic]",
+					array(
+					)
+				);
 			'),
 			'messages' => array('repair_stats_topics_3', 'id_topic', 'num_replies'),
 		),
@@ -449,7 +468,10 @@ function loadForumTests()
 				$smfFunc[\'db_query\'](\'\', "
 					UPDATE {$db_prefix}topics
 					SET num_replies = $row[myUnapprovedPosts]
-					WHERE id_topic = $row[id_topic]", __FILE__, __LINE__);
+					WHERE id_topic = $row[id_topic]",
+					array(
+					)
+				);
 			'),
 			'messages' => array('repair_stats_topics_4', 'id_topic', 'unapproved_posts'),
 		),
@@ -483,20 +505,28 @@ function loadForumTests()
 				$row[\'myNumTopics\'] = (int) $row[\'myNumTopics\'];
 				$row[\'myNumPosts\'] = (int) $row[\'myNumPosts\'];
 
-				$smfFunc[\'db_query\'](\'\', "
-					INSERT INTO {$db_prefix}boards
-						(id_cat, name, description, num_topics, num_posts, member_groups)
-					VALUES ($salvageCatID, \'Salvaged board\', \'\', $row[myNumTopics], $row[myNumPosts], \'1\')", __FILE__, __LINE__);
+				$smfFunc[\'db_insert\'](\'\',
+					$db_prefix . \'boards\',
+					array(\'id_cat\' => \'int\', \'name\' => \'string\', \'description\' => \'string\', \'num_topics\' => \'int\', \'num_posts\' => \'int\', \'member_groups\' => \'string\'),
+					array($salvageCatID, \'Salvaged board\', \'\', $row[\'myNumTopics\'], $row[\'myNumPosts\'], \'1\'),
+					array(\'id_board\')
+				);
 				$newBoardID = $smfFunc[\'db_insert_id\']("{$db_prefix}boards", \'id_board\');
 
 				$smfFunc[\'db_query\'](\'\', "
 					UPDATE {$db_prefix}topics
 					SET id_board = $newBoardID
-					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
+					WHERE id_board = $row[id_board]",
+					array(
+					)
+				);
 				$smfFunc[\'db_query\'](\'\', "
 					UPDATE {$db_prefix}messages
 					SET id_board = $newBoardID
-					WHERE id_board = $row[id_board]", __FILE__, __LINE__);
+					WHERE id_board = $row[id_board]",
+					array(
+					)
+				);
 			'),
 			'messages' => array('repair_missing_boards', 'id_topic', 'id_board'),
 		),
@@ -516,7 +546,11 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}boards
 						SET id_cat = $salvageCatID
-						WHERE id_cat IN (" . implode(\',\', $cats) . ")", __FILE__, __LINE__);
+						WHERE id_cat IN ({array_int:categories})",
+						array(
+							\'categories\' => $cats
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_categories', 'id_board', 'id_cat'),
@@ -545,7 +579,11 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}messages
 						SET id_member = 0
-						WHERE id_msg IN (" . implode(\',\', $msgs) . ")", __FILE__, __LINE__);
+						WHERE id_msg IN ({array_int:msgs})",
+						array(
+							\'msgs\' => $msgs
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_posters', 'id_msg', 'id_member'),
@@ -567,7 +605,11 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}boards
 						SET id_parent = $salvageBoardID, id_cat = $salvageCatID, child_level = 1
-						WHERE id_parent IN (" . implode(\',\', $parents) . ")", __FILE__, __LINE__);
+						WHERE id_parent IN ({array_int:parents})",
+						array(
+							\'parents\' => $parents
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_parents', 'id_board', 'id_parent'),
@@ -593,7 +635,11 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}topics
 						SET id_poll = 0
-						WHERE id_poll IN (" . implode(\',\', $polls) . ")", __FILE__, __LINE__);
+						WHERE id_poll IN ({array_int:polls})",
+						array(
+							\'polls\' => $polls
+						)
+					);
 				'),
 			),			
 			'messages' => array('repair_missing_polls', 'id_topic', 'id_poll'),
@@ -620,7 +666,11 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}calendar
 						SET id_topic = 0, id_board = 0
-						WHERE id_topic IN (" . implode(\',\', $events) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN ({array_int:events})",
+						array(
+							\'events\' => $events
+						)
+					);
 				'),
 			),		
 			'messages' => array('repair_missing_calendar_topics', 'id_event', 'id_topic'),
@@ -644,7 +694,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_topics
-						WHERE id_topic IN (" . implode(\',\', $topics) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN ({array_int:topics})",
+						array(
+							\'topics\' => $topics
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_topics', 'id_topic'),
@@ -669,7 +723,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_topics
-						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+						WHERE id_member IN ({array_int:members})",
+						array(
+							\'members\' => $members
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_topics_members', 'id_member'),
@@ -694,7 +752,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_boards
-						WHERE id_board IN (" . implode(\',\', $boards) . ")", __FILE__, __LINE__);
+						WHERE id_board IN ({array_int:boards})",
+						array(
+							\'boards\' => $boards
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_boards', 'id_board'),
@@ -719,7 +781,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_boards
-						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+						WHERE id_member IN ({array_int:members})",
+						array(
+							\'members\' => $members
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_boards_members', 'id_member'),
@@ -744,7 +810,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_mark_read
-						WHERE id_board IN (" . implode(\',\', $boards) . ")", __FILE__, __LINE__);
+						WHERE id_board IN ({array_int:boards})",
+						array(
+							\'boards\' => $boards
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_mark_read', 'id_board'),
@@ -769,7 +839,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_mark_read
-						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+						WHERE id_member IN ({array_int:members})",
+						array(
+							\'members\' => $members
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_mark_read_members', 'id_member'),
@@ -794,7 +868,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}pm_recipients
-						WHERE id_pm IN (" . implode(\',\', $pms) . ")", __FILE__, __LINE__);
+						WHERE id_pm IN ({array_int:pms})",
+						array(
+							\'pms\' => $pms
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_pms', 'id_pm'),
@@ -820,7 +898,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}pm_recipients
-						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+						WHERE id_member IN ({array_int:members})",
+						array(
+							\'members\' => $members
+						)
+					);
 				'),
 			),	
 			'messages' => array('repair_missing_recipients', 'id_member'),
@@ -846,7 +928,10 @@ function loadForumTests()
 					$smfFunc[\'db_query\'](\'\', "
 						UPDATE {$db_prefix}personal_messages
 						SET id_member_from = 0
-						WHERE id_pm IN (" . implode(\',\', $guestMessages) . ")", __FILE__, __LINE__);
+						WHERE id_pm IN ({array_int:guestMessages})",
+						array(
+							\'guestMessages\' => $guestMessages
+						));
 				'),
 			),	
 			'messages' => array('repair_missing_senders', 'id_pm', 'id_member_from'),
@@ -871,7 +956,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_notify
-						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+						WHERE id_member IN ({array_int:members})",
+						array(
+							\'members\' => $members
+						)
+					);
 				'),
 			),		
 			'messages' => array('repair_missing_notify_members', 'id_member'),
@@ -897,14 +986,14 @@ function loadForumTests()
 				while ($row = $smfFunc[\'db_fetch_assoc\']($result))
 				{
 					foreach (text2words($row[\'subject\']) as $word)
-						$inserts[] = array("\'$word\'", $row[\'id_topic\']);
+						$inserts[] = array($word, $row[\'id_topic\']);
 					if (count($inserts) > 500)
 					{
 						$smfFunc[\'db_insert\'](\'ignore\',
 							"{$db_prefix}log_search_subjects",
-							array(\'word\', \'id_topic\'),
+							array(\'word\' => \'string\', \'id_topic\' => \'int\'),
 							$inserts,
-							array(\'word\', \'id_topic\'), __FILE__, __LINE__
+							array(\'word\', \'id_topic\')
 						);
 						$inserts = array();
 					}
@@ -914,9 +1003,9 @@ function loadForumTests()
 				if (!empty($inserts))
 					$smfFunc[\'db_insert\'](\'ignore\',
 						"{$db_prefix}log_search_subjects",
-						array(\'word\', \'id_topic\'),
+						array(\'word\' => \'string\', \'id_topic\' => \'int\'),
 						$inserts,
-						array(\'word\', \'id_topic\'), __FILE__, __LINE__
+						array(\'word\', \'id_topic\')
 					);
 			'),			
 			'message_function' => create_function('$row', '
@@ -950,7 +1039,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_search_subjects
-						WHERE id_topic IN (" . implode(\',\', $deleteTopics) . ")", __FILE__, __LINE__);
+						WHERE id_topic IN ({array_int:deleteTopics})",
+						array(
+							\'deleteTopics\' => $deleteTopics
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_topic_for_cache', 'word'),
@@ -975,7 +1068,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_polls
-						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+						WHERE id_member IN ({array_int:members})",
+						array(
+							\'members\' => $members
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_poll_member', 'id_poll', 'id_member'),
@@ -999,7 +1096,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_polls
-						WHERE id_poll IN (" . implode(\',\', $polls) . ")", __FILE__, __LINE__);
+						WHERE id_poll IN ({array_int:polls})",
+						array(
+							\'polls\' => $polls
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_missing_log_poll_vote', 'id_member', 'id_poll'),
@@ -1023,7 +1124,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_reported
-						WHERE id_report IN (" . implode(\',\', $reports) . ")", __FILE__, __LINE__);
+						WHERE id_report IN ({array_int:reports})",
+						array(
+							\'reports\' => $reports
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_report_missing_comments', 'id_report', 'subject'),
@@ -1047,7 +1152,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_reported_comments
-						WHERE id_report IN (" . implode(\',\', $reports) . ")", __FILE__, __LINE__);
+						WHERE id_report IN ({array_int:reports})",
+						array(
+							\'reports\' => $reports
+						)
+					);
 				'),
 			),	
 			'messages' => array('repair_comments_missing_report', 'id_report', 'membername'),
@@ -1072,7 +1181,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_group_requests
-						WHERE id_member IN (" . implode(\',\', $members) . ")", __FILE__, __LINE__);
+						WHERE id_member IN ({array_int:members})",
+						array(
+							\'members\' => $members
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_group_request_missing_member', 'id_member'),
@@ -1097,7 +1210,11 @@ function loadForumTests()
 					global $smfFunc, $db_prefix;
 					$smfFunc[\'db_query\'](\'\', "
 						DELETE FROM {$db_prefix}log_group_requests
-						WHERE id_group IN (" . implode(\',\', $groups) . ")", __FILE__, __LINE__);
+						WHERE id_group IN ({array_int:groups})",
+						array(
+							\'groups\' => $groups
+						)
+					);
 				'),
 			),
 			'messages' => array('repair_group_request_missing_group', 'id_group'),
@@ -1152,9 +1269,9 @@ function findForumErrors($do_fix = false)
 				$step_size = isset($test['substeps']['step_size']) ? $test['substeps']['step_size'] : 100;
 				$request = $smfFunc['db_query']('',
 					$test['substeps']['step_max'],
-		array(
-		)
-	);
+					array(
+					)
+				);
 				list ($step_max) = $smfFunc['db_fetch_row']($request);
 				$total_queries++;
 				$smfFunc['db_free_result']($request);
@@ -1175,9 +1292,9 @@ function findForumErrors($do_fix = false)
 			// Do the test...
 			$request = $smfFunc['db_query']('',
 				isset($test['substeps']) ? strtr($test[$test_query], array('{STEP_LOW}' => $_GET['substep'], '{STEP_HIGH}' => $_GET['substep'] + $step_size - 1)) : $test[$test_query],
-		array(
-		)
-	);
+				array(
+				)
+			);
 			$needs_fix = false;
 			// Does it need a fix?
 			if (!empty($test['check_type']) && $test['check_type'] == 'count')
@@ -1244,9 +1361,9 @@ function findForumErrors($do_fix = false)
 					elseif (isset($test['fix_it_query']))
 						$smfFunc['db_query']('',
 							$test['fix_it_query'],
-		array(
-		)
-	);
+							array(
+							)
+						);
 					// Do we have some processing to do?
 					elseif (isset($test['fix_processing']))
 					{
@@ -1335,10 +1452,10 @@ function createSalvageArea()
 	$result = $smfFunc['db_query']('', '
 		SELECT id_cat
 		FROM {db_prefix}categories
-		WHERE name = {string:inject_string_1}
+		WHERE name = {string:cat_name}
 		LIMIT 1',
 		array(
-			'inject_string_1' => $smfFunc['db_escape_string']($txt['salvaged_category_name']),
+			'cat_name' => $txt['salvaged_category_name'],
 		)
 	);
 	if ($smfFunc['db_num_rows']($result) != 0)
@@ -1347,13 +1464,13 @@ function createSalvageArea()
 
 	if (empty($salveageCatID))
 	{
-		$smfFunc['db_query']('', '
-			INSERT INTO {db_prefix}categories
-				(name, cat_order)
-			VALUES (SUBSTRING(\'' . $smfFunc['db_escape_string']($txt['salvaged_category_name']) . '\', 1, 255), -1)',
-			array(
-			)
+		$smfFunc['db_insert']('',
+			$db_prefix . 'categories',
+			array('name' => 'string-255', 'cat_order' => 'int'),
+			array($txt['salvaged_category_name'], -1),
+			array('id_cat')
 		);
+
 		if ($smfFunc['db_affected_rows']() <= 0)
 		{
 			loadLanguage('Admin');
@@ -1367,12 +1484,12 @@ function createSalvageArea()
 	$result = $smfFunc['db_query']('', '
 		SELECT id_board
 		FROM {db_prefix}boards
-		WHERE id_cat = {int:inject_int_1}
-			AND name = {string:inject_string_1}
+		WHERE id_cat = {int:id_cat}
+			AND name = {string:board_name}
 		LIMIT 1',
 		array(
-			'inject_int_1' => $salvageCatID,
-			'inject_string_1' => $smfFunc['db_escape_string']($txt['salvaged_board_name']),
+			'id_cat' => $salvageCatID,
+			'board_name' => $txt['salvaged_board_name'],
 		)
 	);
 	if ($smfFunc['db_num_rows']($result) != 0)
@@ -1381,13 +1498,13 @@ function createSalvageArea()
 
 	if (empty($salvageBoardID))
 	{
-		$smfFunc['db_query']('', '
-			INSERT INTO {db_prefix}boards
-				(name, description, id_cat, member_groups, board_order, redirect)
-			VALUES (SUBSTRING(\'' . $smfFunc['db_escape_string']($txt['salvaged_board_name']) . '\', 1, 255), SUBSTRING(\'' . addslashes($txt['salvaged_board_description']) . '\', 1, 255), ' . $salvageCatID . ', \'1\', -1, \'\')',
-			array(
-			)
+		$smfFunc['db_insert']('',
+			$db_prefix . 'boards',
+			array('name' => 'string-255', 'description' => 'string-255', 'id_cat' => 'int', 'member_groups' => 'string', 'board_order' => 'int', 'redirect' => 'string'),
+			array($txt['salvaged_board_name'], $txt['salvaged_board_description'], $salvageCatID, '1', -1, ''),
+			array('id_board')
 		);
+
 		if ($smfFunc['db_affected_rows']() <= 0)
 		{
 			loadLanguage('Admin');

@@ -232,7 +232,7 @@ function trackStatsUsersOnline($total_users_online)
 		{
 			$smfFunc['db_insert']('ignore',
 				$db_prefix . 'log_activity',
-				array('date' => 'date', 'most_on' => 'insert'),
+				array('date' => 'date', 'most_on' => 'int'),
 				array($date, $total_users_online),
 				array('date')
 			);
