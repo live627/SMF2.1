@@ -386,11 +386,11 @@ function Register2()
 	$request = $smfFunc['db_query']('', '
 		SELECT col_name, field_name, field_type, field_length, mask, show_reg
 		FROM {db_prefix}custom_fields
-		WHERE show_reg != {int:inject_int_1}
-			AND active = {int:inject_int_2}',
+		WHERE show_reg != {int:reg_disabled}
+			AND active = {int:is_active}',
 		array(
-			'inject_int_1' => 0,
-			'inject_int_2' => 1,
+			'reg_disabled' => 0,
+			'is_active' => 1,
 		)
 	);
 	$custom_field_errors = array();
@@ -499,12 +499,12 @@ function Activate()
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, validation_code, member_name, real_name, email_address, is_activated, passwd
 		FROM {db_prefix}members' . (empty($_REQUEST['u']) ? '
-		WHERE member_name = {string:inject_string_1} OR email_address = {string:inject_string_1}' : '
-		WHERE id_member = {int:inject_int_1}') . '
+		WHERE member_name = {string:email_address} OR email_address = {string:email_address}' : '
+		WHERE id_member = {int:id_member}') . '
 		LIMIT 1',
 		array(
-			'inject_int_1' => (int) $_REQUEST['u'],
-			'inject_string_1' => $_POST['user'],
+			'id_member' => (int) $_REQUEST['u'],
+			'email_address' => $_POST['user'],
 		)
 	);
 
@@ -538,10 +538,10 @@ function Activate()
 		$request = $smfFunc['db_query']('', '
 			SELECT id_member
 			FROM {db_prefix}members
-			WHERE email_address = {string:inject_string_1}
+			WHERE email_address = {string:email_address}
 			LIMIT 1',
 			array(
-				'inject_string_1' => $_POST['new_email'],
+				'email_address' => $_POST['new_email'],
 			)
 		);
 		// !!! Separate the sprintf?
@@ -640,11 +640,11 @@ function CoppaForm()
 	$request = $smfFunc['db_query']('', '
 		SELECT member_name
 		FROM {db_prefix}members
-		WHERE id_member = {int:inject_int_1}
-			AND is_activated = {int:inject_int_2}',
+		WHERE id_member = {int:id_member}
+			AND is_activated = {int:is_coppa}',
 		array(
-			'inject_int_1' => (int) $_GET['member'],
-			'inject_int_2' => 5,
+			'id_member' => (int) $_GET['member'],
+			'is_coppa' => 5,
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)

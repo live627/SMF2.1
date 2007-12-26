@@ -340,7 +340,7 @@ function adminLogin_outputPostVars($k, $v)
 
 	if (!is_array($v))
 		return '
-<input type="hidden" name="' . $k . '" value="' . strtr($smfFunc['db_unescape_string']($v), array('"' => '&quot;', '<' => '&lt;', '>' => '&gt;')) . '" />';
+<input type="hidden" name="' . $k . '" value="' . strtr($v, array('"' => '&quot;', '<' => '&lt;', '>' => '&gt;')) . '" />';
 	else
 	{
 		$ret = '';
@@ -435,16 +435,16 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	$maybe_email = false;
 	foreach ($names as $i => $name)
 	{
-		// Escape, trim, and fix wildcards for each name.
-		$names[$i] = $smfFunc['db_escape_string'](trim($smfFunc['strtolower']($name)));
+		// Trim, and fix wildcards for each name.
+		$names[$i] = trim($smfFunc['strtolower']($name));
 
 		$maybe_email |= strpos($name, '@') !== false;
 
 		// Make it so standard wildcards will work. (* and ?)
 		if ($use_wildcards)
-			$names[$i] = strtr($names[$i], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '\\\'' => '&#039;'));
+			$names[$i] = strtr($names[$i], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '\'' => '&#039;'));
 		else
-			$names[$i] = strtr($names[$i], array('\\\'' => '&#039;'));
+			$names[$i] = strtr($names[$i], array('\'' => '&#039;'));
 	}
 
 	// What are we using to compare?
@@ -470,13 +470,16 @@ function findMembers($names, $use_wildcards = false, $buddies_only = false, $max
 	$request = $smfFunc['db_query']('', '
 		SELECT id_member, member_name, real_name, email_address, hide_email
 		FROM {db_prefix}members
-		WHERE (' . $member_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $member_name . ' ' . $comparison . ' \'', $names) . '\'
-			OR ' . $real_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $real_name . ' ' . $comparison . ' \'', $names) . '\'' . $email_condition . ')
-			' . ($buddies_only ? 'AND id_member IN ({array_int:inject_array_int_1})' : '') . '
+		WHERE ({raw:member_name_search}
+			OR {raw:member_name_search} {raw:email_condition})
+			' . ($buddies_only ? 'AND id_member IN ({array_int:buddy_list})' : '') . '
 			AND is_activated IN (1, 11)' . ($max == null ? '' : '
 		LIMIT ' . (int) $max),
 		array(
-			'inject_array_int_1' => $user_info['buddies'],
+			'buddy_list' => $user_info['buddies'],
+			'member_name_search' => $member_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $member_name . ' ' . $comparison . ' \'', $names) . '\'',
+			'real_name_search' => $real_name . ' ' . $comparison . ' \'' . implode( '\' OR ' . $real_name . ' ' . $comparison . ' \'', $names) . '\'',
+			'email_condition' => $email_condition,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -514,7 +517,7 @@ function JSMembers()
 	}
 
 	if (isset($_REQUEST['search']))
-		$context['last_search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search']), ENT_QUOTES);
+		$context['last_search'] = $smfFunc['htmlspecialchars']($_REQUEST['search'], ENT_QUOTES);
 	else
 		$_REQUEST['start'] = 0;
 
@@ -522,7 +525,7 @@ function JSMembers()
 	$context['input_box_name'] = isset($_REQUEST['input']) && preg_match('~^[\w-]+$~', $_REQUEST['input']) === 1 ? $_REQUEST['input'] : 'to';
 
 	// Take the delimiter over GET in case it's \n or something.
-	$context['delimiter'] = isset($_REQUEST['delim']) ? $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['delim'])) : ', ';
+	$context['delimiter'] = isset($_REQUEST['delim']) ? $smfFunc['htmlspecialchars']($_REQUEST['delim']) : ', ';
 	$context['quote_results'] = !empty($_REQUEST['quote']);
 
 	// List all the results.
@@ -535,7 +538,7 @@ function JSMembers()
 	// If the user has done a search, well - search.
 	if (isset($_REQUEST['search']))
 	{
-		$_REQUEST['search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search']), ENT_QUOTES);
+		$_REQUEST['search'] = $smfFunc['htmlspecialchars']($_REQUEST['search'], ENT_QUOTES);
 
 		$context['results'] = findMembers(array($_REQUEST['search']), true, $context['buddy_search']);
 		$total_results = count($context['results']);
@@ -568,8 +571,8 @@ function RequestMembers()
 
 	checkSession('get');
 
-	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_REQUEST['search'])) . '*';
-	$_REQUEST['search'] = $smfFunc['db_escape_string'](trim($smfFunc['strtolower']($_REQUEST['search'])));
+	$_REQUEST['search'] = $smfFunc['htmlspecialchars']($_REQUEST['search']) . '*';
+	$_REQUEST['search'] = trim($smfFunc['strtolower']($_REQUEST['search']));
 	$_REQUEST['search'] = strtr($_REQUEST['search'], array('%' => '\%', '_' => '\_', '*' => '%', '?' => '_', '&#038;' => '&amp;'));
 
 	if (function_exists('iconv'))
@@ -578,12 +581,13 @@ function RequestMembers()
 	$request = $smfFunc['db_query']('', '
 		SELECT real_name
 		FROM {db_prefix}members
-		WHERE real_name LIKE \'' . $_REQUEST['search'] . '\'' . (isset($_REQUEST['buddies']) ? '
-			AND id_member IN ({array_int:inject_array_int_1})' : '') . '
+		WHERE real_name LIKE {string:search}' . (isset($_REQUEST['buddies']) ? '
+			AND id_member IN ({array_int:buddy_list})' : '') . '
 			AND is_activated IN (1, 11)
 		LIMIT ' . (strlen($_REQUEST['search']) <= 2 ? '100' : '800'),
 		array(
-			'inject_array_int_1' => $user_info['buddies'],
+			'buddy_list' => $user_info['buddies'],
+			'search' => $_REQUEST['search'],
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -632,9 +636,9 @@ function resetPassword($memID, $username = null)
 	$request = $smfFunc['db_query']('', '
 		SELECT member_name, email_address
 		FROM {db_prefix}members
-		WHERE id_member = {int:inject_int_1}',
+		WHERE id_member = {int:id_member}',
 		array(
-			'inject_int_1' => $memID,
+			'id_member' => $memID,
 		)
 	);
 	list ($user, $email) = $smfFunc['db_fetch_row']($request);

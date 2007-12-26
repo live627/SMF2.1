@@ -1529,7 +1529,12 @@ function Post2()
 			$del_temp[$i] = (int) $dummy;
 
 		require_once($sourcedir . '/ManageAttachments.php');
-		removeAttachments('a.attachment_type = 0 AND a.id_msg = ' . (int) $_REQUEST['msg'] . ' AND a.id_attach NOT IN (' . implode(', ', $del_temp) . ')');
+		$attachmentQuery = array(
+			'attachment_type' => 0,
+			'id_msg' => (int) $_REQUEST['msg'],
+			'not_id_attach' => $del_temp,
+		);
+		removeAttachments($attachmentQuery);
 	}
 
 	// ...or attach a new file...

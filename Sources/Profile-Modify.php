@@ -534,7 +534,7 @@ function loadProfileFields($force_reload = false)
 
 				// Validate and set the ignorelist...
 				$value = preg_replace(\'~&amp;#(\d{4,5}|[2-9]\d{2,4}|1[2-9]\d);~\', \'&#$1;\', $value);
-				$value = strtr(trim($value), array(\'\\\\\\\'\' => \'&#039;\', "\n" => "\', \'", "\r" => \'\', \'&quot;\' => \'\'));
+				$value = strtr(trim($value), array(\'\\\'\' => \'&#039;\', "\n" => "\', \'", "\r" => \'\', \'&quot;\' => \'\'));
 
 				if (preg_match(\'~(\A|,)\*(\Z|,)~s\', $value) == 0)
 				{
@@ -1301,7 +1301,7 @@ function editBuddies($memID)
 
 		foreach ($new_buddies as $k => $dummy)
 		{
-			$new_buddies[$k] = strtr(trim($new_buddies[$k]), array('\\\'' => '&#039;'));
+			$new_buddies[$k] = strtr(trim($new_buddies[$k]), array('\'' => '&#039;'));
 
 			if (strlen($new_buddies[$k]) == 0)
 				unset($new_buddies[$k]);
@@ -2569,7 +2569,7 @@ function profileValidateEmail($email, $memID = 0)
 {
 	global $smfFunc, $db_prefix, $context;
 
-	$email = strtr($email, array('&#039;' => '\\\''));
+	$email = strtr($email, array('&#039;' => '\''));
 
 	// Check the name and email for validity.
 	if (trim($email) == '')

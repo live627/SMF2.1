@@ -2824,7 +2824,7 @@ function trackStats($stats = array())
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_activity
 		SET' . substr($setStringUpdate, 0, -1) . '
-		WHERE date = {date:inject_date_1}',
+		WHERE date = {date:current_date}',
 		$update_paramaters
 	);
 	if ($smfFunc['db_affected_rows']() == 0)

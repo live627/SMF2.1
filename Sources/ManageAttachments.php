@@ -769,6 +769,24 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 {
 	global $db_prefix, $modSettings, $smfFunc;
 
+	//!!! Need to do more on this, WIP - for one don't trust passed vars!!
+	$new_condition = array();
+	if (is_array($condition))
+	{
+		foreach ($condition as $type => $restriction)
+		{
+			if ($type == 'member')
+				$new_condition[] = 'a.id_member IN (' . (is_array($restriction) ? implode(',', $restriction) : $restriction) . ')';
+			elseif ($type == 'attachment_type')
+				$new_condition[] = 'a.attachment_type = ' . $restriction;
+			elseif ($type == 'id_msg')
+				$new_condition[] = 'a.id_msg IN (' . (is_array($restriction) ? implode(',', $restriction) : $restriction) . ')';
+			elseif ($type == 'not_id_attach')
+				$new_condition[] = 'a.id_attach NOT IN (' . (is_array($restriction) ? implode(',', $restriction) : $restriction) . ')';
+		}
+		$condition = implode(' AND ', $new_condition);
+	}
+
 	// Delete it only if it exists...
 	$msgs = array();
 	$attach = array();
@@ -796,7 +814,7 @@ function removeAttachments($condition, $query_type = '', $return_affected_messag
 			@unlink($modSettings['custom_avatar_dir'] . '/' . $row['filename']);
 		else
 		{
-			$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $id_folder);
+			$filename = getAttachmentFilename($row['filename'], $row['id_attach'], $row['id_folder']);
 			@unlink($filename);
 
 			// If this was a thumb, the parent attachment should know about it.
