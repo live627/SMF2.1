@@ -1089,10 +1089,11 @@ function makeThemeChanges($memID, $id_theme)
 		{
 			$smfFunc['db_query']('', '
 				DELETE FROM {db_prefix}themes
-				WHERE id_theme != 1
+				WHERE id_theme != {int:id_theme}
 					AND variable IN ({array_string:erase_variables})
 					AND id_member = {int:id_member}',
 				array(
+					'id_theme' => 1,
 					'id_member' => $memID,
 					'erase_variables' => $erase_options
 				)

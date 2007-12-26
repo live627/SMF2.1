@@ -339,9 +339,10 @@ function is_not_banned($forceCheck = false)
 				INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
 			WHERE bi.id_ban IN ({array_int:ban_list})
 				AND (bg.expire_time IS NULL OR bg.expire_time > {int:current_time})
-				AND bg.cannot_access = 1
+				AND bg.cannot_access = {int:cannot_access}
 			LIMIT ' . count($bans),
 			array(
+				'cannot_access' => 1,
 				'ban_list' => $bans,
 				'current_time' => time(),
 			)
@@ -586,9 +587,10 @@ function isBannedEmail($email, $restriction, $error)
 		FROM {db_prefix}ban_items AS bi
 			INNER JOIN {db_prefix}ban_groups AS bg ON (bg.id_ban_group = bi.id_ban_group)
 		WHERE {string:email} LIKE bi.email_address
-			AND (bg.' . $restriction . ' = 1 OR bg.cannot_access = 1)',
+			AND (bg.' . $restriction . ' = {int:cannot_access} OR bg.cannot_access = {int:cannot_access})',
 		array(
 			'email' => $email,
+			'cannot_access' => 1,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
@@ -782,14 +784,15 @@ function allowedTo($permission, $boards = null)
 			INNER JOIN {db_prefix}board_permissions AS bp ON (bp.id_profile = b.id_profile)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
 		WHERE b.id_board IN ({array_int:board_list})
-			AND bp.id_group IN ({array_int:group_list}, 3)
+			AND bp.id_group IN ({array_int:group_list}, {int:moderator_group})
 			AND bp.permission {raw:permission_list}
-			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)
+			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})
 		GROUP BY b.id_board',
 		array(
 			'current_member' => $user_info['id'],
 			'board_list' => $boards,
 			'group_list' => $user_info['groups'],
+			'moderator_group' => 3,
 			'permission_list' => (is_array($permission) ? 'IN (\'' . implode('\', \'', $permission) . '\')' : ' = \'' . $permission . '\''),
 		)
 	);
@@ -875,12 +878,13 @@ function boardsAllowedTo($permission)
 		FROM {db_prefix}board_permissions AS bp
 			INNER JOIN {db_prefix}boards AS b ON (b.id_profile = bp.id_profile)
 			LEFT JOIN {db_prefix}moderators AS mods ON (mods.id_board = b.id_board AND mods.id_member = {int:current_member})
-		WHERE bp.id_group IN ({array_int:group_list}, 3)
+		WHERE bp.id_group IN ({array_int:group_list}, {int:moderator_group})
 			AND bp.permission = {string:permission}
-			AND (mods.id_member IS NOT NULL OR bp.id_group != 3)',
+			AND (mods.id_member IS NOT NULL OR bp.id_group != {int:moderator_group})',
 		array(
 			'current_member' => $user_info['id'],
 			'group_list' => $groups,
+			'moderator_group' => 3,
 			'permission' => $permission,
 		)
 	);

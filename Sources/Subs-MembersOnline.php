@@ -86,8 +86,9 @@ function getMembersOnlineStats($membersOnlineOptions)
 			mg.online_color, mg.id_group, mg.group_name
 		FROM {db_prefix}log_online AS lo
 			LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lo.id_member)
-			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = 0 THEN mem.id_post_group ELSE mem.id_group END)',
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_mem_group} THEN mem.id_post_group ELSE mem.id_group END)',
 		array(
+			'reg_mem_group' => 0,
 		)
 	);
 	while ($row = $smfFunc['db_fetch_assoc']($request))
