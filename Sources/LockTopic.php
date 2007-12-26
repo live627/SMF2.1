@@ -93,11 +93,11 @@ function LockTopic()
 	// Actually lock the topic in the database with the new value.
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}topics
-		SET locked = {int:inject_int_1}
+		SET locked = {int:locked}
 		WHERE id_topic = {int:current_topic}',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => $locked,
+			'locked' => $locked,
 		)
 	);
 
@@ -148,11 +148,11 @@ function Sticky()
 	// Toggle the sticky value.... pretty simple ;).
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}topics
-		SET is_sticky = {int:inject_int_1}
+		SET is_sticky = {int:is_sticky}
 		WHERE id_topic = {int:current_topic}',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => empty($is_sticky) ? 1 : 0,
+			'is_sticky' => empty($is_sticky) ? 1 : 0,
 		)
 	);
 
