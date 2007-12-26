@@ -152,6 +152,7 @@ December 2007
  ! Allow the hacking attempt protection within db_query to be overridden, and use this in db_insert. (Subs-Db-xxx.php)
  ! updateStats('postgroup') now requires that parameter one is the array of members to act on, if set. (Subs.php)
  * Link (!) in child board lists to the mod center. (BoardIndex and MessageIndex template) [Bug 1172]
+ ! Magic quotes removal wasn't working properly, causing login to fail. (QueryString.php)
  
 
 November 2007

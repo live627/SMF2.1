@@ -185,7 +185,7 @@ function cleanRequest()
 	$_GET = escapestring__recursive(htmlspecialchars__recursive($_GET));
 
 	// If we're using a database with quote escaped quotes and magic quotes is on we have some work...
-	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && $smfFunc['db_sybase'] && !$magicSybase)
+	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() != 0 && (!$smfFunc['db_sybase'] || $magicSybase))
 	{
 		$_ENV = stripslashes__recursive($_ENV);
 		$_POST = stripslashes__recursive($_POST);
