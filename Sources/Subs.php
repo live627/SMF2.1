@@ -236,9 +236,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$result = $smfFunc['db_query']('', '
 				SELECT COUNT(*), MAX(id_member)
 				FROM {db_prefix}members
-				WHERE is_activated = {int:inject_int_1}',
+				WHERE is_activated = {int:is_activated}',
 				array(
-					'inject_int_1' => 1,
+					'is_activated' => 1,
 				)
 			);
 			list ($changes['totalMembers'], $changes['latestMember']) = $smfFunc['db_fetch_row']($result);
@@ -248,10 +248,10 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$result = $smfFunc['db_query']('', '
 				SELECT real_name
 				FROM {db_prefix}members
-				WHERE id_member = {int:inject_int_1}
+				WHERE id_member = {int:id_member}
 				LIMIT 1',
 				array(
-					'inject_int_1' => (int) $changes['latestMember'],
+					'id_member' => (int) $changes['latestMember'],
 				)
 			);
 			list ($changes['latestRealName']) = $smfFunc['db_fetch_row']($result);
@@ -315,9 +315,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$result = $smfFunc['db_query']('', '
 				SELECT SUM(num_posts) AS total_messages, MAX(id_last_msg) AS max_msg_id
 				FROM {db_prefix}boards
-				WHERE redirect = {string:inject_string_1}',
+				WHERE redirect = {string:blank_redirect}',
 				array(
-					'inject_string_1' => '',
+					'blank_redirect' => '',
 				)
 			);
 			$row = $smfFunc['db_fetch_assoc']($result);
@@ -334,9 +334,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		// Remove the previous subject (if any).
 		$smfFunc['db_query']('', '
 			DELETE FROM {db_prefix}log_search_subjects
-			WHERE id_topic = {int:inject_int_1}',
+			WHERE id_topic = {int:id_topic}',
 			array(
-				'inject_int_1' => (int) $parameter1,
+				'id_topic' => (int) $parameter1,
 			)
 		);
 
@@ -370,9 +370,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$result = $smfFunc['db_query']('', '
 				SELECT SUM(num_topics) AS total_topics
 				FROM {db_prefix}boards' . (!empty($modSettings['recycle_enable']) && $modSettings['recycle_board'] > 0 ? '
-				WHERE id_board != {int:inject_int_1}' : ''),
+				WHERE id_board != {int:recycle_board}' : ''),
 				array(
-					'inject_int_1' => $modSettings['recycle_board'],
+					'recycle_board' => $modSettings['recycle_board'],
 				)
 			);
 			$row = $smfFunc['db_fetch_assoc']($result);
@@ -393,9 +393,9 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 			$request = $smfFunc['db_query']('', '
 				SELECT id_group, min_posts
 				FROM {db_prefix}membergroups
-				WHERE min_posts != {int:inject_int_1}',
+				WHERE min_posts != {int:min_posts}',
 				array(
-					'inject_int_1' => -1,
+					'min_posts' => -1,
 				)
 			);
 			$postgroups = array();
@@ -425,11 +425,13 @@ function updateStats($type, $parameter1 = null, $parameter2 = null)
 		// A big fat CASE WHEN... END is faster than a zillion UPDATE's ;).
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}members
-			SET id_post_group = CASE' . $conditions . '
+			SET id_post_group = CASE {raw:conditions}
 					ELSE 0
 				END' . ($parameter1 != null ? '
-			WHERE ' . $parameter1 : ''),
+			WHERE {int:parameter1}' : ''),
 			array(
+				'parameter1' => $parameter1,
+				'conditions' => $conditions,
 			)
 		);
 		break;
@@ -444,12 +446,19 @@ function updateMemberData($members, $data)
 {
 	global $db_prefix, $modSettings, $user_info, $smfFunc;
 
+	$parameters = array();
 	if (is_array($members))
-		$condition = 'id_member IN (' . implode(', ', $members) . ')';
+	{
+		$condition = 'id_member IN ({array_int:members})';
+		$parameters['members'] = $members;
+	}
 	elseif ($members === null)
 		$condition = '1';
 	else
-		$condition = 'id_member = ' . $members;
+	{
+		$condition = 'id_member = {int:member}';
+		$parameters['member'] = $members;
+	}
 
 	if (isset($modSettings['integrate_change_member_data']) && function_exists($modSettings['integrate_change_member_data']))
 	{
@@ -499,36 +508,54 @@ function updateMemberData($members, $data)
 		}
 	}
 
-	foreach ($data as $var => $val)
-	{
-		if ($val === '+')
-			$data[$var] = $var . ' + 1';
-		elseif ($val === '-')
-			$data[$var] = $var . ' - 1';
-	}
-
-	// Ensure posts, instant_messages, and unread_messages don't overflow or underflow.
-	foreach (array('posts', 'instant_messages', 'unread_messages') as $type)
-	{
-		if (isset($data[$type]) && preg_match('~^' . $type . ' (- |\+ -)([\d]+)~', $data[$type], $match))
-		{
-			$data[$type] = 'CASE WHEN ' . $type . ' <= ' . abs($match[2]) . ' THEN 0 ELSE ' . $data[$type] . ' END';
-		}
-	}
+	// Everything is assumed to be a string unless it's in the below.
+	$knownInts = array(
+		'date_registered', 'posts', 'id_group', 'last_login', 'instant_messages', 'unread_messages',
+		'new_pm', 'pm_prefs', 'gender', 'hide_email', 'show_email', 'pm_email_notify', 'karma_good', 'karma_bad',
+		'notify_announcements', 'notify_send_body', 'notify_regularity', 'notify_types',
+		'id_theme', 'is_activated', 'id_msg_last_visit', 'id_post_group', 'total_time_logged_in', 'warning',
+	);
+	$knownFloats = array(
+		'time_offset',
+	);
 
 	$setString = '';
 	foreach ($data as $var => $val)
 	{
-		$setString .= '
-			' . $var . ' = ' . $val . ',';
+		$type = 'string';
+		if (in_array($var, $knownInts))
+			$type = 'int';
+		elseif (in_array($var, $knownFloats))
+			$type = 'float';
+		elseif ($var == 'birthdate')
+			$type = 'date';
+
+		// Doing an increment?
+		if ($type == 'int' && ($val === '+' || $val === '-'))
+		{
+			$val = $var . ' ' . $val . ' 1';
+			$type = 'raw';
+
+			// Ensure posts, instant_messages, and unread_messages don't overflow or underflow.
+			if (in_array($var, array('posts', 'instant_messages', 'unread_messages')))
+			{
+				if (preg_match('~^' . $var . ' (- |\+ -)([\d]+)~', $val, $match))
+				{
+					$val = 'CASE WHEN ' . $var . ' <= ' . abs($match[2]) . ' THEN 0 ELSE ' . $val . ' END';
+					$type = 'raw';
+				}
+			}
+		}
+
+		$setString .= ' ' . $var . ' = {' . $type . ':p_' . $var . '},';
+		$parameters['p_' . $var] = $val;
 	}
 
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}members
 		SET' . substr($setString, 0, -1) . '
 		WHERE ' . $condition,
-		array(
-		)
+		$parameters
 	);
 
 	updateStats('postgroups', $condition, array_keys($data));
@@ -2543,7 +2570,7 @@ function writeLog($force = false)
 			$_SESSION['timeOnlineUpdated'] = time();
 
 		$user_settings['total_time_logged_in'] += time() - $_SESSION['timeOnlineUpdated'];
-		updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'member_ip2' => '\'' . $_SERVER['BAN_CHECK_IP'] . '\'', 'total_time_logged_in' => $user_settings['total_time_logged_in']));
+		updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => $user_info['ip'], 'member_ip2' => $_SERVER['BAN_CHECK_IP'], 'total_time_logged_in' => $user_settings['total_time_logged_in']));
 
 		if (!empty($modSettings['cache_enable']) && $modSettings['cache_enable'] >= 2)
 			cache_put_data('user_settings-' . $user_info['id'], $user_settings, 60);

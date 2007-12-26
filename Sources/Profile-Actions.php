@@ -61,7 +61,7 @@ function activateAccount($memID)
 			call_user_func($modSettings['integrate_activate'], $user_profile[$memID]['member_name']);
 
 		// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
-		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? '11' : '1', 'validation_code' => '\'\''));
+		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? 11 : 1, 'validation_code' => ''));
 
 		// If we are doing approval, update the stats for the member just in case.
 		if (in_array($user_profile[$memID]['is_activated'], array(3, 4, 13, 14)))

@@ -282,7 +282,7 @@ function smf_openID_return()
 		$user_settings['passwd'] = sha1(strtolower($user_settings['member_name']) . $secret);
 		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
 
-		updateMemberData($user_settings['id_member'], array('passwd' => '\'' . $user_settings['passwd'] . '\'', 'password_salt' => '\'' . $user_settings['password_salt'] . '\''));
+		updateMemberData($user_settings['id_member'], array('passwd' => $user_settings['passwd'], 'password_salt' => $user_settings['password_salt']));
 
 		// Cleanup on Aisle 5.
 		$_SESSION['openid'] = array(

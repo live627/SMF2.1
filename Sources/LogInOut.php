@@ -107,7 +107,7 @@ function Login2()
 			trigger_error('Login2(): Cannot be logged in without a session or cookie', E_USER_ERROR);
 
 		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
-		updateMemberData($user_info['id'], array('password_salt' => '\'' . $user_settings['password_salt'] . '\''));
+		updateMemberData($user_info['id'], array('password_salt' => $user_settings['password_salt']));
 
 		setLoginCookie($timeout - time(), $user_info['id'], sha1($user_settings['passwd'] . $user_settings['password_salt']));
 
@@ -326,7 +326,7 @@ function Login2()
 			$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
 
 			// Update the password and set up the hash.
-			updateMemberData($user_settings['id_member'], array('passwd' => '\'' . $user_settings['passwd'] . '\'', 'password_salt' => '\'' . $user_settings['password_salt'] . '\''));
+			updateMemberData($user_settings['id_member'], array('passwd' => $user_settings['passwd'], 'password_salt' => $user_settings['password_salt']));
 		}
 		// Okay, they for sure didn't enter the password!
 		else
@@ -352,7 +352,7 @@ function Login2()
 	elseif ($user_settings['password_salt'] == '')
 	{
 		$user_settings['password_salt'] = substr(md5(rand()), 0, 4);
-		updateMemberData($user_settings['id_member'], array('password_salt' => '\'' . $user_settings['password_salt'] . '\''));
+		updateMemberData($user_settings['id_member'], array('password_salt' => $user_settings['password_salt']));
 	}
 
 	// Check their activation status.
@@ -449,7 +449,7 @@ function DoLogin()
 	unset($_SESSION['id_theme']);
 
 	// You've logged in, haven't you?
-	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => '\'' . $user_info['ip'] . '\'', 'member_ip2' => '\'' . $_SERVER['BAN_CHECK_IP'] . '\''));
+	updateMemberData($user_info['id'], array('last_login' => time(), 'member_ip' => $user_info['ip'], 'member_ip2' => $_SERVER['BAN_CHECK_IP']));
 
 	// Get rid of the online entry for that old guest....
 	$smfFunc['db_query']('', '

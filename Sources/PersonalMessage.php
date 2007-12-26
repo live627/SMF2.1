@@ -2694,7 +2694,7 @@ function ManageLabels()
 		}
 
 		// Save the label status.
-		updateMemberData($user_info['id'], array('message_labels' => '\'' . implode(',', $the_labels) . '\''));
+		updateMemberData($user_info['id'], array('message_labels' => implode(',', $the_labels)));
 
 		// Update all the messages currently with any label changes in them!
 		if (!empty($message_changes))

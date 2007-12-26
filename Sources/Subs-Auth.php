@@ -669,10 +669,10 @@ function resetPassword($memID, $username = null)
 			fatal_error('(' . htmlspecialchars($user) . ') ' . $txt['name_in_use'], false);
 
 		// Update the database...
-		updateMemberData($memID, array('member_name' => '\'' . $user . '\'', 'passwd' => '\'' . $newPassword_sha1 . '\''));
+		updateMemberData($memID, array('member_name' => $user, 'passwd' => $newPassword_sha1));
 	}
 	else
-		updateMemberData($memID, array('passwd' => '\'' . $newPassword_sha1 . '\''));
+		updateMemberData($memID, array('passwd' => $newPassword_sha1));
 
 	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
 		call_user_func($modSettings['integrate_reset_pass'], $old_user, $user, $newPassword);

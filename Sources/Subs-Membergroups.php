@@ -162,7 +162,7 @@ function deleteMembergroups($groups)
 	$smfFunc['db_free_result']($request);
 
 	foreach ($updates as $additional_groups => $memberArray)
-		updateMemberData($memberArray, array('additional_groups' => '\'' . implode(',', array_diff(explode(',', $additional_groups), $groups)) . '\''));
+		updateMemberData($memberArray, array('additional_groups' => implode(',', array_diff(explode(',', $additional_groups), $groups))));
 
 	// No boards can provide access to these membergroups anymore.
 	$request = $smfFunc['db_query']('', '

@@ -1021,7 +1021,7 @@ function BuddyListToggle()
 		$user_info['buddies'][] = (int) $_REQUEST['u'];
 
 	// Update the settings.
-	updateMemberData($user_info['id'], array('buddy_list' => '\'' . implode(',', $user_info['buddies']) . '\''));
+	updateMemberData($user_info['id'], array('buddy_list' => implode(',', $user_info['buddies'])));
 
 	// Redirect back to the profile
 	redirectexit('action=profile;u=' . $_REQUEST['u']);

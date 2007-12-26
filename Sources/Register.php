@@ -549,7 +549,7 @@ function Activate()
 			fatal_lang_error('email_in_use', false, array(htmlspecialchars($_POST['new_email'])));
 		$smfFunc['db_free_result']($request);
 
-		updateMemberData($row['id_member'], array('email_address' => '\'' . $_POST['new_email'] . '\''));
+		updateMemberData($row['id_member'], array('email_address' => $_POST['new_email']));
 		$row['email_address'] = $smfFunc['db_unescape_string']($_POST['new_email']);
 
 		$email_change = true;
@@ -602,7 +602,7 @@ function Activate()
 		call_user_func($modSettings['integrate_activate'], $row['member_name']);
 
 	// Validation complete - update the database!
-	updateMemberData($row['id_member'], array('is_activated' => 1, 'validation_code' => '\'\''));
+	updateMemberData($row['id_member'], array('is_activated' => 1, 'validation_code' => ''));
 
 	// Also do a proper member stat re-evaluation.
 	updateStats('member', false);

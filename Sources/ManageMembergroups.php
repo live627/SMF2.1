@@ -716,7 +716,7 @@ function EditMembergroup()
 			$smfFunc['db_free_result']($request);
 
 			foreach ($updates as $additional_groups => $memberArray)
-				updateMemberData($memberArray, array('additional_groups' => '\'' . implode(',', array_diff(explode(',', $additional_groups), array((int) $_REQUEST['group']))) . '\''));
+				updateMemberData($memberArray, array('additional_groups' => implode(',', array_diff(explode(',', $additional_groups), array((int) $_REQUEST['group'])))));
 		}
 		elseif ($_REQUEST['group'] != 3)
 		{
@@ -739,7 +739,7 @@ function EditMembergroup()
 				$smfFunc['db_free_result']($request);
 
 				foreach ($updates as $additional_groups => $memberArray)
-					updateMemberData($memberArray, array('additional_groups' => '\'' . implode(',', array_merge(explode(',', $additional_groups), array((int) $_REQUEST['group']))) . '\''));
+					updateMemberData($memberArray, array('additional_groups' => implode(',', array_merge(explode(',', $additional_groups), array((int) $_REQUEST['group'])))));
 
 				$smfFunc['db_query']('', '
 					UPDATE {db_prefix}members

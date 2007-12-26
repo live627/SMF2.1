@@ -132,7 +132,7 @@ function RemindMail()
 	$password = substr(preg_replace('/\W/', '', md5(rand())), 0, 10);
 
 	// Set the password in the database.
-	updateMemberData($row['id_member'], array('validation_code' => '\'' . substr(md5($password), 0, 10) . '\''));
+	updateMemberData($row['id_member'], array('validation_code' => substr(md5($password), 0, 10)));
 
 	require_once($sourcedir . '/Subs-Post.php');
 
@@ -227,7 +227,7 @@ function setPassword2()
 		fatal_error($txt['invalid_activation_code'], false);
 
 	// User validated.  Update the database!
-	updateMemberData($_POST['u'], array('validation_code' => '\'\'', 'passwd' => '\'' . sha1(strtolower($username) . $_POST['passwrd1']) . '\''));
+	updateMemberData($_POST['u'], array('validation_code' => '', 'passwd' => sha1(strtolower($username) . $_POST['passwrd1'])));
 
 	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
 		call_user_func($modSettings['integrate_reset_pass'], $username, $username, $_POST['passwrd1']);
@@ -354,7 +354,7 @@ function secret_answer2()
 		fatal_lang_error('passwords_dont_match', false);
 
 	// Alright, so long as 'yer sure.
-	updateMemberData($row['id_member'], array('passwd' => '\'' . sha1(strtolower($row['member_name']) . $_POST['passwrd1']) . '\''));
+	updateMemberData($row['id_member'], array('passwd' => sha1(strtolower($row['member_name']) . $_POST['passwrd1'])));
 
 	if (isset($modSettings['integrate_reset_pass']) && function_exists($modSettings['integrate_reset_pass']))
 		call_user_func($modSettings['integrate_reset_pass'], $row['member_name'], $row['member_name'], $_POST['passwrd1']);

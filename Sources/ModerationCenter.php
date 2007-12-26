@@ -1285,7 +1285,7 @@ function ModerationSettings()
 
 		// Put it all together.
 		$mod_prefs = $show_reports . '|' . $mod_blocks . '|' . $pref_binary;
-		updateMemberData($user_info['id'], array('mod_prefs' => '\'' . $mod_prefs . '\''));
+		updateMemberData($user_info['id'], array('mod_prefs' => $mod_prefs));
 	}
 
 	// What blocks does the user currently have selected?

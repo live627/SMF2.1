@@ -212,7 +212,7 @@ function loadProfileFields($force_reload = false)
 				else
 					$value = \'0001-01-01\';
 
-				$profile_vars[\'birthdate\'] = "\'" . $value . "\'";
+				$profile_vars[\'birthdate\'] = $value;
 				$cur_profile[\'birthdate\'] = $value;
 				return false;
 			'),
@@ -231,7 +231,7 @@ function loadProfileFields($force_reload = false)
 				}
 				else
 				{
-					$value = "\'" . empty($cur_profile[\'birthdate\']) ? \'0004-01-01\' : $cur_profile[\'birthdate\'] . "\'";
+					$value = empty($cur_profile[\'birthdate\']) ? \'0004-01-01\' : $cur_profile[\'birthdate\'];
 					return false;
 				}
 			'),
@@ -247,7 +247,7 @@ function loadProfileFields($force_reload = false)
 				// Bad date!  Go try again - please?
 				if (($value = strtotime($value)) === -1)
 				{
-					$value = "\'" . $cur_profile[\'date_registered\'] . "\'";
+					$value = $cur_profile[\'date_registered\'];
 					return $txt[\'invalid_registration\'] . \' \' . strftime(\'%d %b %Y \' . (strpos($user_info[\'time_format\'], \'%H\') !== false ? \'%I:%M:%S %p\' : \'%H:%M:%S\'), forum_time(false));
 				}
 				// As long as it doesn\'t equal "N/A"...
@@ -406,7 +406,7 @@ function loadProfileFields($force_reload = false)
 				}
 				else
 				{
-					$value = "\'" . $cur_profile[\'lngfile\'] . "\'";
+					$value = $cur_profile[\'lngfile\'];
 					return false;
 				}
 			'),
@@ -938,7 +938,7 @@ function saveProfileFields()
 		if ($field['type'] != 'hidden' && (!isset($old_profile[$key]) || $_POST[$key] != $old_profile[$key]))
 		{
 			// Set the save variable.
-			$profile_vars[$db_key] = in_array($field['cast_type'], array('int', 'float', 'check')) ? $_POST[$key] : '\'' . $_POST[$key] . '\'';
+			$profile_vars[$db_key] = $_POST[$key];
 			// And update the user profile.
 			$cur_profile[$key] = $_POST[$key];
 		}
@@ -1031,13 +1031,13 @@ function saveProfileChanges(&$profile_vars, &$post_errors, $memID)
 				$profile_vars[$var] = empty($_POST[$var]) ? '0' : '1';
 		foreach ($profile_ints as $var)
 			if (isset($_POST[$var]))
-				$profile_vars[$var] = $_POST[$var] != '' ? (int) $_POST[$var] : '\'\'';
+				$profile_vars[$var] = $_POST[$var] != '' ? (int) $_POST[$var] : '';
 		foreach ($profile_floats as $var)
 			if (isset($_POST[$var]))
 				$profile_vars[$var] = (float) $_POST[$var];
 		foreach ($profile_strings as $var)
 			if (isset($_POST[$var]))
-				$profile_vars[$var] = '\'' . $_POST[$var] . '\'';
+				$profile_vars[$var] = $_POST[$var];
 	}
 }
 
@@ -1244,7 +1244,7 @@ function activateAccount($memID)
 			call_user_func($modSettings['integrate_activate'], $user_profile[$memID]['member_name']);
 
 		// Actually update this member now, as it guarantees the unapproved count can't get corrupted.
-		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? '11' : '1', 'validation_code' => '\'\''));
+		updateMemberData($context['id_member'], array('is_activated' => $user_profile[$memID]['is_activated'] >= 10 ? 11 : 1, 'validation_code' => ''));
 
 		// If we are doing approval, update the stats for the member just in case.
 		if (in_array($user_profile[$memID]['is_activated'], array(3, 4, 13, 14)))
@@ -1287,7 +1287,7 @@ function editBuddies($memID)
 
 		// Make the changes.
 		$user_profile[$memID]['buddy_list'] = implode(',', $buddiesArray);
-		updateMemberData($memID, array('buddy_list' => '\'' . $user_profile[$memID]['buddy_list'] . '\''));
+		updateMemberData($memID, array('buddy_list' => $user_profile[$memID]['buddy_list']));
 
 		// Redirect off the page because we don't like all this ugly query stuff to stick in the history.
 		redirectexit('action=profile;u=' . $memID . ';sa=editBuddies');
@@ -1326,7 +1326,7 @@ function editBuddies($memID)
 
 			// Now update the current users buddy list.
 			$user_profile[$memID]['buddy_list'] = implode(',', $buddiesArray);
-			updateMemberData($memID, array('buddy_list' => '\'' . $user_profile[$memID]['buddy_list'] . '\''));
+			updateMemberData($memID, array('buddy_list' => $user_profile[$memID]['buddy_list']));
 		}
 
 		// Back to the buddy list!
@@ -2177,7 +2177,7 @@ function profileSaveGroups(&$value)
 
 		if (implode(',', $_POST['additional_groups']) !== $old_profile['additional_groups'])
 		{
-			$profile_vars['additional_groups'] = '\'' . implode(',', $_POST['additional_groups']) . '\'';
+			$profile_vars['additional_groups'] = implode(',', $_POST['additional_groups']);
 			$cur_profile['additional_groups'] = implode(',', $_POST['additional_groups']);
 		}
 	}
@@ -2394,7 +2394,7 @@ function profileSaveAvatarData(&$value)
 	$cur_profile['avatar'] = $profile_vars['avatar'];
 
 	// If we're here we've done good - but don't save based on avatar_choice - skip it ;)
-	$profile_vars['avatar'] = '\'' . $profile_vars['avatar'] . '\'';
+	$profile_vars['avatar'] = $profile_vars['avatar'];
 	return false;
 }
 
@@ -2986,7 +2986,7 @@ function groupMembership2($profile_vars, $post_errors, $memID)
 	else
 		updateSettings(array('settings_updated' => time()));
 
-	updateMemberData($memID, array('id_group' => $newPrimary, 'additional_groups' => '\'' . $addGroups . '\''));
+	updateMemberData($memID, array('id_group' => $newPrimary, 'additional_groups' => $addGroups));
 
 	return $changeType;
 }

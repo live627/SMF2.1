@@ -379,7 +379,7 @@ function ModifyProfile($post_errors = array())
 
 		// Change the IP address in the database.
 		if ($context['user']['is_owner'])
-			$profile_vars['member_ip'] = '\'' . $user_info['ip'] . '\'';
+			$profile_vars['member_ip'] = $user_info['ip'];
 
 		// Now call the sub-action function...
 		if (isset($_REQUEST['sa']) && $_REQUEST['sa'] == 'activateAccount' && empty($post_errors))
