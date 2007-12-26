@@ -35,11 +35,18 @@ function getBoardList($boardListOptions = array())
 		trigger_error('getBoardList(): Setting both excluded_boards and included_boards is not allowed.', E_USER_ERROR);
 
 	$where = array();
+	$where_parameters = array();
 	if (isset($boardListOptions['excluded_boards']))
-		$where[] = 'b.id_board NOT IN (' . implode(', ', $boardListOptions['excluded_boards']) . ')';
+	{
+		$where[] = 'b.id_board NOT IN ({array_int:excluded_boards})';
+		$where_parameters['excluded_boards'] = $boardListOptions['excluded_boards'];
+	}
 
 	if (isset($boardListOptions['included_boards']))
-		$where[] = 'b.id_board IN (' . implode(', ', $boardListOptions['included_boards']) . ')';
+	{
+		$where[] = 'b.id_board IN ({array_int:included_boards})';
+		$where_parameters['included_boards'] = $boardListOptions['included_boards'];
+	}
 
 	if (!empty($boardListOptions['ignore_boards']))
 		$where[] = $user_info['query_wanna_see_board'];
@@ -48,7 +55,10 @@ function getBoardList($boardListOptions = array())
 		$where[] = $user_info['query_see_board'];
 
 	if (!empty($boardListOptions['not_redirection']))
-		$where[] = 'b.redirect = \'\'';
+	{
+		$where[] = 'b.redirect = {string:blank_redirect}';
+		$where_parameters['blank_redirect'] = '';
+	}
 
 
 	$request = $smfFunc['db_query']('', '
@@ -57,8 +67,7 @@ function getBoardList($boardListOptions = array())
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)' . (empty($where) ? '' : '
 		WHERE ' . implode('
 			AND ', $where)),
-		array(
-		)
+		$where_parameters
 	);
 
 	$return_value = array();
