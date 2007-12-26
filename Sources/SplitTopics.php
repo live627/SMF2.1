@@ -283,7 +283,7 @@ function SplitSelectTopics()
 	);
 
 	// Some stuff for our favorite template.
-	$context['new_subject'] = $smfFunc['db_unescape_string']($_REQUEST['subname']);
+	$context['new_subject'] = $_REQUEST['subname'];
 
 	// Using the "select" sub template.
 	$context['sub_template'] = isset($_REQUEST['xml']) ? 'split' : 'select';
@@ -1133,10 +1133,10 @@ function MergeExecute($topics = array())
 		$target_subject = $smfFunc['htmlspecialchars']($_POST['custom_subject']);
 	// A subject was selected from the list.
 	elseif (!empty($topic_data[(int) $_POST['subject']]['subject']))
-		$target_subject = $smfFunc['db_escape_string']($topic_data[(int) $_POST['subject']]['subject']);
+		$target_subject = $topic_data[(int) $_POST['subject']]['subject'];
 	// Nothing worked? Just take the subject of the first message.
 	else
-		$target_subject = $smfFunc['db_escape_string']($topic_data[$firstTopic]['subject']);
+		$target_subject = $topic_data[$firstTopic]['subject'];
 
 	// Get the first and last message and the number of messages....
 	$request = $smfFunc['db_query']('', '

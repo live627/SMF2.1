@@ -101,9 +101,9 @@ function MoveTopic()
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}categories AS c ON (c.id_cat = b.id_cat)
 		WHERE ' . $user_info['query_see_board'] . '
-			AND b.redirect = {string:inject_string_1}',
+			AND b.redirect = {string:blank_redirect}',
 		array(
-			'inject_string_1' => '',
+			'blank_redirect' => '',
 		)
 	);
 	$context['boards'] = array();
@@ -216,13 +216,13 @@ function MoveTopic2()
 			INNER JOIN {db_prefix}topics AS t ON (t.id_topic = {int:current_topic})
 			INNER JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
 		WHERE ' . $user_info['query_see_board'] . '
-			AND b.id_board = {int:inject_int_1}
-			AND b.redirect = {string:inject_string_1}
+			AND b.id_board = {int:to_board}
+			AND b.redirect = {string:blank_redirect}
 		LIMIT 1',
 		array(
 			'current_topic' => $topic,
-			'inject_int_1' => $_POST['toboard'],
-			'inject_string_1' => '',
+			'to_board' => $_POST['toboard'],
+			'blank_redirect' => '',
 		)
 	);
 	if ($smfFunc['db_num_rows']($request) == 0)
@@ -256,22 +256,22 @@ function MoveTopic2()
 
 			$smfFunc['db_query']('', '
 				UPDATE {db_prefix}messages
-				SET subject = {string:inject_string_1}
+				SET subject = {string:subject}
 				WHERE id_topic = {int:current_topic}',
 				array(
 					'current_topic' => $topic,
-					'inject_string_1' => $context['response_prefix'] . $_POST['custom_subject'],
+					'subject' => $context['response_prefix'] . $_POST['custom_subject'],
 				)
 			);
 		}
 
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}messages
-			SET subject = {string:inject_string_1}
-			WHERE id_msg = {int:inject_int_1}',
+			SET subject = {string:custom_subject}
+			WHERE id_msg = {int:id_first_msg}',
 			array(
-				'inject_int_1' => $id_first_msg,
-				'inject_string_1' => $_POST['custom_subject'],
+				'id_first_msg' => $id_first_msg,
+				'custom_subject' => $_POST['custom_subject'],
 			)
 		);
 
@@ -287,17 +287,17 @@ function MoveTopic2()
 		if ($user_info['language'] != $language)
 			loadLanguage('index', $language);
 
-		$_POST['reason'] = $smfFunc['db_escape_string']($smfFunc['htmlspecialchars']($smfFunc['db_unescape_string']($_POST['reason']), ENT_QUOTES));
+		$_POST['reason'] = $smfFunc['htmlspecialchars']($_POST['reason'], ENT_QUOTES);
 		preparsecode($_POST['reason']);
 
 		// Add a URL onto the message.
 		$_POST['reason'] = strtr($_POST['reason'], array(
-			$txt['movetopic_auto_board'] => '[url=' . $scripturl . '?board=' . $_POST['toboard'] . ']' . $smfFunc['db_escape_string']($board_name) . '[/url]',
+			$txt['movetopic_auto_board'] => '[url=' . $scripturl . '?board=' . $_POST['toboard'] . ']' . $board_name . '[/url]',
 			$txt['movetopic_auto_topic'] => '[iurl]' . $scripturl . '?topic=' . $topic . '.0[/iurl]'
 		));
 
 		$msgOptions = array(
-			'subject' => $smfFunc['db_escape_string']($txt['moved'] . ': ' . $subject),
+			'subject' => $txt['moved'] . ': ' . $subject,
 			'body' => $_POST['reason'],
 			'icon' => 'moved',
 			'smileys_enabled' => 1,
@@ -387,12 +387,7 @@ function moveTopics($topics, $toBoard)
 		return;
 	// Only a single topic.
 	elseif (is_numeric($topics))
-		$condition = '= ' . $topics;
-	elseif (count($topics) == 1)
-		$condition = '= ' . $topics[0];
-	// More than one topic.
-	else
-		$condition = 'IN (' . implode(', ', $topics) . ')';
+		$topics = array($topics);
 	$num_topics = count($topics);
 	$fromBoards = array();
 
@@ -405,9 +400,10 @@ function moveTopics($topics, $toBoard)
 		SELECT id_board, approved, COUNT(*) AS num_topics, SUM(unapproved_posts) AS unapproved_posts,
 			SUM(num_replies) AS num_replies
 		FROM {db_prefix}topics
-		WHERE id_topic ' . $condition . '
+		WHERE id_topic IN ({array_int:topics})
 		GROUP BY id_board, approved',
 		array(
+			'topics' => $topics,
 		)
 	);
 	// Num of rows = 0 -> no topics found. Num of rows > 1 -> topics are on multiple boards.
@@ -443,12 +439,13 @@ function moveTopics($topics, $toBoard)
 		SELECT lmr.id_member, lmr.id_msg, t.id_topic
 		FROM {db_prefix}topics AS t
 			INNER JOIN {db_prefix}log_mark_read AS lmr ON (lmr.id_board = t.id_board
-				AND lmr.id_msg > t.id_first_msg	AND lmr.id_msg > {int:inject_int_1})
+				AND lmr.id_msg > t.id_first_msg	AND lmr.id_msg > {int:protect_lmr_msg})
 			LEFT JOIN {db_prefix}log_topics AS lt ON (lt.id_topic = t.id_topic AND lt.id_member = lmr.id_member)
-		WHERE t.id_topic ' . $condition . '
+		WHERE t.id_topic IN ({array_int:topics})
 			AND lmr.id_msg > IFNULL(lt.id_msg, 0)',
 		array(
-			'inject_int_1' => $SaveAServer,
+			'protect_lmr_msg' => $SaveAServer,
+			'topics' => $topics,
 		)
 	);
 	$log_topics = array();
@@ -493,13 +490,17 @@ function moveTopics($topics, $toBoard)
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}boards
 			SET
-				num_posts = CASE WHEN ' . $stats['num_posts'] . ' > num_posts THEN 0 ELSE num_posts - ' . $stats['num_posts'] . ' END,
-				num_topics = CASE WHEN ' . $stats['num_topics'] . ' > num_topics THEN 0 ELSE num_topics - ' . $stats['num_topics'] . ' END,
-				unapproved_posts = CASE WHEN ' . $stats['unapproved_posts'] . ' > unapproved_posts THEN 0 ELSE unapproved_posts - ' . $stats['unapproved_posts'] . ' END,
-				unapproved_topics = CASE WHEN ' . $stats['unapproved_topics'] . ' > unapproved_topics THEN 0 ELSE unapproved_topics - ' . $stats['unapproved_topics'] . ' END
-			WHERE id_board = {int:inject_int_1}',
+				num_posts = CASE WHEN {int:num_posts} > num_posts THEN 0 ELSE num_posts - {int:num_posts} END,
+				num_topics = CASE WHEN {int:num_topics} > num_topics THEN 0 ELSE num_topics - {int:num_topics} END,
+				unapproved_posts = CASE WHEN {int:unapproved_posts} > unapproved_posts THEN 0 ELSE unapproved_posts - {int:unapproved_posts} END,
+				unapproved_topics = CASE WHEN {int:unapproved_topics} > unapproved_topics THEN 0 ELSE unapproved_topics - {int:unapproved_topics} END
+			WHERE id_board = {int:id_board}',
 			array(
-				'inject_int_1' => $stats['id_board'],
+				'id_board' => $stats['id_board'],
+				'num_posts' => $stats['num_posts'],
+				'num_topics' => $stats['num_topics'],
+				'unapproved_posts' => $stats['unapproved_posts'],
+				'unapproved_topics' => $stats['unapproved_topics'],
 			)
 		);
 		$totalTopics += $stats['num_topics'];
@@ -510,47 +511,55 @@ function moveTopics($topics, $toBoard)
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}boards
 		SET
-			num_topics = num_topics + ' . $totalTopics . ',
-			num_posts = num_posts + ' . $totalPosts . ',
-			unapproved_posts = unapproved_posts + ' . $totalUnapprovedPosts . ',
-			unapproved_topics = unapproved_topics + ' . $totalUnapprovedTopics . '
-		WHERE id_board = {int:inject_int_1}',
+			num_topics = num_topics + {int:total_topics},
+			num_posts = num_posts + {int:total_posts},
+			unapproved_posts = unapproved_posts + {int:total_unapproved_posts},
+			unapproved_topics = unapproved_topics + {int:total_unapproved_topics}
+		WHERE id_board = {int:id_board}',
 		array(
-			'inject_int_1' => $toBoard,
+			'id_board' => $toBoard,
+			'total_topics' => $totalTopics,
+			'total_posts' => $totalPosts,
+			'total_unapproved_topics' => $totalUnapprovedTopics,
+			'total_unapproved_posts' => $totalUnapprovedPosts,
 		)
 	);
 
 	// Move the topic.  Done.  :P
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}topics
-		SET id_board = {int:inject_int_1}
-		WHERE id_topic ' . $condition,
+		SET id_board = {int:id_board}
+		WHERE id_topic IN ({array_int:topics})',
 		array(
-			'inject_int_1' => $toBoard,
+			'id_board' => $toBoard,
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}messages
-		SET id_board = {int:inject_int_1}
-		WHERE id_topic ' . $condition,
+		SET id_board = {int:id_board}
+		WHERE id_topic IN ({array_int:topics})',
 		array(
-			'inject_int_1' => $toBoard,
+			'id_board' => $toBoard,
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}log_reported
-		SET id_board = {int:inject_int_1}
-		WHERE id_topic ' . $condition,
+		SET id_board = {int:id_board}
+		WHERE id_topic IN ({array_int:topics})',
 		array(
-			'inject_int_1' => $toBoard,
+			'id_board' => $toBoard,
+			'topics' => $topics,
 		)
 	);
 	$smfFunc['db_query']('', '
 		UPDATE {db_prefix}calendar
-		SET id_board = {int:inject_int_1}
-		WHERE id_topic ' . $condition,
+		SET id_board = {int:id_board}
+		WHERE id_topic IN ({array_int:topics})',
 		array(
-			'inject_int_1' => $toBoard,
+			'id_board' => $toBoard,
+			'topics' => $topics,
 		)
 	);
 
@@ -559,10 +568,10 @@ function moveTopics($topics, $toBoard)
 		SELECT (IFNULL(lb.id_msg, 0) >= b.id_msg_updated) AS isSeen
 		FROM {db_prefix}boards AS b
 			LEFT JOIN {db_prefix}log_boards AS lb ON (lb.id_board = b.id_board AND lb.id_member = {int:current_member})
-		WHERE b.id_board = {int:inject_int_1}',
+		WHERE b.id_board = {int:id_board}',
 		array(
 			'current_member' => $user_info['id'],
-			'inject_int_1' => $toBoard,
+			'id_board' => $toBoard,
 		)
 	);
 	list ($isSeen) = $smfFunc['db_fetch_row']($request);

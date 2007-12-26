@@ -189,10 +189,10 @@ function MLAll()
 			$request = $smfFunc['db_query']('', '
 				SELECT real_name
 				FROM {db_prefix}members
-				WHERE is_activated = {int:inject_int_1}
+				WHERE is_activated = {int:is_activated}
 				ORDER BY real_name',
 				array(
-					'inject_int_1' => 1,
+					'is_activated' => 1,
 				)
 			);
 
@@ -224,9 +224,9 @@ function MLAll()
 		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}members
-			WHERE is_activated = {int:inject_int_1}',
+			WHERE is_activated = {int:is_activated}',
 			array(
-				'inject_int_1' => 1,
+				'is_activated' => 1,
 			)
 		);
 		list ($context['num_members']) = $smfFunc['db_fetch_row']($request);
@@ -247,10 +247,11 @@ function MLAll()
 		$request = $smfFunc['db_query']('memberlist_find_page', '
 			SELECT COUNT(*)
 			FROM {db_prefix}members
-			WHERE LOWER(SUBSTRING(real_name, 1, 1)) < \'' . $_REQUEST['start'] . '\'
-				AND is_activated = {int:inject_int_1}',
+			WHERE LOWER(SUBSTRING(real_name, 1, 1)) < {string:first_letter}
+				AND is_activated = {int:is_activated}',
 			array(
-				'inject_int_1' => 1,
+				'is_activated' => 1,
+				'first_letter' => $_REQUEST['start'],
 			)
 		);
 		list ($_REQUEST['start']) = $smfFunc['db_fetch_row']($request);
@@ -340,13 +341,21 @@ function MLAll()
 	);
 
 	$limit = $_REQUEST['start'];
+	$query_parameters = array(
+		'regular_id_group' => 0,
+		'is_activated' => 1,
+		'sort' => $sort_methods[$_REQUEST['sort']][$context['sort_direction']],
+	);
 
 	// Using cache allows to narrow down the list to be retrieved.
 	if ($use_cache && $_REQUEST['sort'] === 'real_name' && !isset($_REQUEST['desc']))
 	{
 		$first_offset = $_REQUEST['start'] - ($_REQUEST['start'] % $cache_step_size);
 		$second_offset = ceil(($_REQUEST['start'] + $modSettings['defaultMaxMembers']) / $cache_step_size) * $cache_step_size;
-		$where = 'mem.real_name BETWEEN \'' . $smfFunc['db_escape_string']($memberlist_cache['index'][$first_offset]) . '\' AND \'' . $smfFunc['db_escape_string']($memberlist_cache['index'][$second_offset]) . '\'';
+
+		$where = 'mem.real_name BETWEEN {string:real_name_low} AND {string:real_name_high}';
+		$query_parameters['real_name_low'] = $memberlist_cache['index'][$first_offset];
+		$query_parameters['real_name_high'] = $memberlist_cache['index'][$second_offset];
 		$limit -= $first_offset;
 	}
 
@@ -357,7 +366,10 @@ function MLAll()
 		if ($first_offset < 0)
 			$first_offset = 0;
 		$second_offset = ceil(($memberlist_cache['num_members'] - $_REQUEST['start']) / $cache_step_size) * $cache_step_size;
-		$where = 'mem.real_name BETWEEN \'' . $smfFunc['db_escape_string']($memberlist_cache['index'][$first_offset]) . '\' AND \'' . $smfFunc['db_escape_string']($memberlist_cache['index'][$second_offset]) . '\'';
+
+		$where = 'mem.real_name BETWEEN {string:real_name_low} AND {string:real_name_high}';
+		$query_parameters['real_name_low'] = $memberlist_cache['index'][$first_offset];
+		$query_parameters['real_name_high'] = $memberlist_cache['index'][$second_offset];
 		$limit = $second_offset - ($memberlist_cache['num_members'] - $_REQUEST['start']) - ($second_offset > $memberlist_cache['num_members'] ? $cache_step_size - ($memberlist_cache['num_members'] % $cache_step_size) : 0);
 	}
 
@@ -366,15 +378,12 @@ function MLAll()
 		SELECT mem.id_member
 		FROM {db_prefix}members AS mem' . ($_REQUEST['sort'] === 'is_online' ? '
 			LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)' : '') . ($_REQUEST['sort'] === 'id_group' ? '
-			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)' : '') . '
-		WHERE mem.is_activated = {int:inject_int_2}' . (empty($where) ? '' : '
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:regular_id_group} THEN mem.id_post_group ELSE mem.id_group END)' : '') . '
+		WHERE mem.is_activated = {int:is_activated}' . (empty($where) ? '' : '
 			AND ' . $where) . '
-		ORDER BY ' . $sort_methods[$_REQUEST['sort']][$context['sort_direction']] . '
+		ORDER BY {string:sort}
 		LIMIT ' . $limit . ', ' . $modSettings['defaultMaxMembers'],
-		array(
-			'inject_int_1' => 0,
-			'inject_int_2' => 1,
-		)
+		$query_parameters
 	);
 	printMemberListRows($request);
 	$smfFunc['db_free_result']($request);
@@ -408,15 +417,16 @@ function MLSearch()
 	$request = $smfFunc['db_query']('', '
 		SELECT col_name, field_name, field_desc
 		FROM {db_prefix}custom_fields
-		WHERE active = {int:inject_int_1}
-			' . (allowedTo('admin_forum') ? '' : ' AND private != {int:inject_int_2}') . '
-			AND can_search = {int:inject_int_1}
-			AND (field_type = {string:inject_string_1} OR field_type = {string:inject_string_2})',
+		WHERE active = {int:active}
+			' . (allowedTo('admin_forum') ? '' : ' AND private != {int:private}') . '
+			AND can_search = {int:can_search}
+			AND (field_type = {string:field_type_text} OR field_type = {string:field_type_textarea})',
 		array(
-			'inject_int_1' => 1,
-			'inject_int_2' => 2,
-			'inject_string_1' => 'text',
-			'inject_string_2' => 'textarea',
+			'active' => 1,
+			'can_search' => 1,
+			'private' => 2,
+			'field_type_text' => 'text',
+			'field_type_textarea' => 'textarea',
 		)
 	);
 	$context['custom_search_fields'] = array();
@@ -441,6 +451,13 @@ function MLSearch()
 		if (empty($_POST['fields']))
 			$_POST['fields'] = array('name');
 
+		$query_parameters = array(
+			'regular_id_group' => 0,
+			'is_activated' => 1,
+			'blank_string' => '',
+			'search' => '%' . strtr($_POST['search'], array('_' => '\\_', '%' => '\\%', '*' => '%')) . '%',
+		);
+
 		// Search for a name?
 		if (in_array('name', $_POST['fields']))
 			$fields = array('member_name', 'real_name');
@@ -454,7 +471,7 @@ function MLSearch()
 			$fields += array(7 => 'website_title', 'website_url');
 		// Search for groups.
 		if (in_array('group', $_POST['fields']))
-			$fields += array(9 => 'IFNULL(group_name, \'\')');
+			$fields += array(9 => 'IFNULL(group_name, {string:blank_string})');
 		// Search for an email address?
 		if (in_array('email', $_POST['fields']))
 		{
@@ -472,25 +489,23 @@ function MLSearch()
 			$curField = substr($field, 5);
 			if (substr($field, 0, 5) == 'cust_' && isset($context['custom_search_fields'][$curField]))
 			{
-				$customJoin[] = 'LEFT JOIN ' . $db_prefix . 'themes AS t' . $curField . ' ON (t' . $curField . '.variable = \'' . $curField . '\' AND t' . $curField . '.id_theme = 1 AND t' . $curField . '.id_member = mem.id_member)';
-				$fields += array($customCount++ => 'IFNULL(t' . $curField . '.value, \'\')');
+				$customJoin[] = 'LEFT JOIN ' . $db_prefix . 'themes AS t' . $curField . ' ON (t' . $curField . '.variable = {string:t' . $curField . '} AND t' . $curField . '.id_theme = 1 AND t' . $curField . '.id_member = mem.id_member)';
+				$query_parameters['t' . $curField] = $curField;
+				$fields += array($customCount++ => 'IFNULL(t' . $curField . '.value, {string:blank_string})');
 			}
 		}
 
-		$query = $_POST['search'] == '' ? '= \'\'' : 'LIKE \'%' . strtr($_POST['search'], array('_' => '\\_', '%' => '\\%', '*' => '%')) . '%\'';
+		$query = $_POST['search'] == '' ? '= {string:blank_string}' : 'LIKE {string:search}';
 
 		$request = $smfFunc['db_query']('', '
 			SELECT COUNT(*)
 			FROM {db_prefix}members AS mem
-				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)' .
+				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:regular_id_group} THEN mem.id_post_group ELSE mem.id_group END)' .
 				(empty($customJoin) ? '' : implode('
 				', $customJoin)) . '
 			WHERE ' . implode( ' ' . $query . ' OR ', $fields) . ' ' . $query . $condition . '
-				AND mem.is_activated = {int:inject_int_2}',
-			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => 1,
-			)
+				AND mem.is_activated = {int:is_activated}',
+			$query_parameters
 		);
 		list ($numResults) = $smfFunc['db_fetch_row']($request);
 		$smfFunc['db_free_result']($request);
@@ -503,16 +518,13 @@ function MLSearch()
 			SELECT mem.id_member
 			FROM {db_prefix}members AS mem
 				LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
-				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:inject_int_1} THEN mem.id_post_group ELSE mem.id_group END)' .
+				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:regular_id_group} THEN mem.id_post_group ELSE mem.id_group END)' .
 				(empty($customJoin) ? '' : implode('
 				', $customJoin)) . '
 			WHERE ' . implode( ' ' . $query . ' OR ', $fields) . ' ' . $query . $condition . '
-				AND mem.is_activated = {int:inject_int_2}
+				AND mem.is_activated = {int:is_activated}
 			LIMIT ' . $_REQUEST['start'] . ', ' . $modSettings['defaultMaxMembers'],
-			array(
-				'inject_int_1' => 0,
-				'inject_int_2' => 1,
-			)
+			$query_parameters
 		);
 		printMemberListRows($request);
 		$smfFunc['db_free_result']($request);
