@@ -70,9 +70,10 @@ function ModifyKarma()
 	// Delete any older items from the log. (karmaWaitTime is by hour.)
 	$smfFunc['db_query']('', '
 		DELETE FROM {db_prefix}log_karma
-		WHERE ' . time() . ' - log_time > {int:inject_int_1}',
+		WHERE {int:current_time} - log_time > {int:wait_time}',
 		array(
-			'inject_int_1' => (int) ($modSettings['karmaWaitTime'] * 3600),
+			'wait_time' => (int) ($modSettings['karmaWaitTime'] * 3600),
+			'current_time' => time(),
 		)
 	);
 
@@ -86,12 +87,12 @@ function ModifyKarma()
 		$request = $smfFunc['db_query']('', '
 			SELECT action
 			FROM {db_prefix}log_karma
-			WHERE id_target = {int:inject_int_1}
+			WHERE id_target = {int:id_target}
 				AND id_executor = {int:current_member}
 			LIMIT 1',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $_REQUEST['uid'],
+				'id_target' => $_REQUEST['uid'],
 			)
 		);
 		if ($smfFunc['db_num_rows']($request) > 0)
@@ -122,14 +123,14 @@ function ModifyKarma()
 		// You decided to go back on your previous choice?
 		$smfFunc['db_query']('', '
 			UPDATE {db_prefix}log_karma
-			SET action = {int:inject_int_1}, log_time = {int:inject_int_2}
-			WHERE id_target = {int:inject_int_3}
+			SET action = {int:action}, log_time = {int:current_time}
+			WHERE id_target = {int:id_target}
 				AND id_executor = {int:current_member}',
 			array(
 				'current_member' => $user_info['id'],
-				'inject_int_1' => $dir,
-				'inject_int_2' => time(),
-				'inject_int_3' => $_REQUEST['uid'],
+				'action' => $dir,
+				'current_time' => time(),
+				'id_target' => $_REQUEST['uid'],
 			)
 		);
 
