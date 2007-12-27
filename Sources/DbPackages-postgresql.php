@@ -164,8 +164,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 		{
 			$smfFunc['db_query']('', '
 				CREATE SEQUENCE ' . $table_name . '_seq',
-				array(
-				)
+				'security_override'
 			);
 			$default = 'default nextval(\'' . $table_name . '_seq\')';
 		}
@@ -209,14 +208,12 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// Create the table!
 	$smfFunc['db_query']('', $table_query,
-		array(
-		)
+		'security_override'
 	);
 	// And the indexes...
 	foreach ($index_queries as $query)
 		$smfFunc['db_query']('', $query,
-		array(
-		)
+		'security_override'
 	);
 
 	// Go, go power rangers!
@@ -237,8 +234,7 @@ function smf_db_drop_table($table_name, $error = 'fatal')
 	{
 		$query = 'DROP TABLE ' . $table_name;
 		$smfFunc['db_query']('', $query,
-		array(
-		)
+		'security_override'
 	);
 
 		return true;
@@ -279,8 +275,7 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 		ALTER TABLE ' . $table_name . '
 		ADD COLUMN ' . $column_info['name'] . ' ' . $type;
 	$smfFunc['db_query']('', $query,
-		array(
-		)
+		'security_override'
 	);
 
 	// If there's more attributes they need to be done via a change on PostgreSQL.
@@ -306,15 +301,13 @@ function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
 			// If there is an auto we need remove it!
 			if ($column['auto'])
 				$smfFunc['db_query']('', 'DROP SEQUENCE ' . $table_name . '_seq',
-		array(
-		)
+				'security_override'
 	);
 
 			$smfFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP COLUMN ' . $column_name,
-				array(
-				)
+				'security_override'
 			);
 
 			return true;
@@ -346,8 +339,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			RENAME COLUMN ' . $old_column . ' TO ' . $column_info['name'],
-			array(
-			)
+			'security_override'
 		);
 	}
 	// Different default?
@@ -357,8 +349,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ALTER COLUMN ' . $column_info['name'] . ' ' . $action,
-			array(
-			)
+			'security_override'
 		);
 	}
 	// Is it null - or otherwise?
@@ -374,15 +365,13 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 				UPDATE ' . $table_name . '
 				SET ' . $column_info['name'] . ' = \'' . $setTo . '\'
 				WHERE ' . $column_info['name'] . ' = NULL',
-				array(
-				)
+				'security_override'
 			);
 		}
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ALTER COLUMN ' . $column_info['name'] . ' ' . $action . ' NOT NULL',
-			array(
-			)
+			'security_override'
 		);
 		$smfFunc['db_transaction']('commit');
 	}
@@ -399,26 +388,22 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD COLUMN ' . $column_info['name'] . '_tempxx ' . $type,
-			array(
-			)
+			'security_override'
 		);
 		$smfFunc['db_query']('', '
 			UPDATE ' . $table_name . '
 			SET ' . $column_info['name'] . '_tempxx = CAST(' . $column_info['name'] . ' AS ' . $type . ')',
-			array(
-			)
+			'security_override'
 		);
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			DROP COLUMN ' . $column_info['name'],
-			array(
-			)
+			'security_override'
 		);
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			RENAME COLUMN ' . $column_info['name'] . '_tempxx TO ' . $column_info['name'],
-			array(
-			)
+			'security_override'
 		);
 		$smfFunc['db_transaction']('commit');
 	}
@@ -432,13 +417,11 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 			$smfFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				ALTER COLUMN ' . $column_info['name'] . ' SET DEFAULT \'0\'',
-				array(
-				)
+				'security_override'
 			);
 			$smfFunc['db_query']('', '
 				DROP SEQUENCE ' . $table_name . '_seq',
-				array(
-				)
+				'security_override'
 			);
 		}
 		// Otherwise add it!
@@ -446,14 +429,12 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 		{
 			$smfFunc['db_query']('', '
 				CREATE SEQUENCE ' . $table_name . '_seq',
-				array(
-				)
+				'security_override'
 			);
 			$smfFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				ALTER COLUMN ' . $column_info['name'] . ' SET DEFAULT nextval(\'' . $table_name . '_seq\')',
-				array(
-				)
+				'security_override'
 			);
 		}
 	}
@@ -505,16 +486,14 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD PRIMARY KEY (' . $columns . ')',
-			array(
-			)
+			'security_override'
 		);
 	}
 	else
 	{
 		$smfFunc['db_query']('', '
 			CREATE ' . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : '') . ' INDEX ' . $index_info['name'] . ' ON ' . $table_name . ' (' . $columns . ')',
-			array(
-			)
+			'security_override'
 		);
 	}
 }
@@ -538,8 +517,7 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 			$smfFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP CONSTRAINT ' . $index['name'],
-				array(
-				)
+				'security_override'
 			);
 
 			return true;
@@ -549,8 +527,7 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 			// Drop the bugger...
 			$smfFunc['db_query']('', '
 				DROP INDEX ' . $index_name,
-				array(
-				)
+				'security_override'
 			);
 
 			return true;
@@ -622,8 +599,7 @@ function smf_db_list_columns($table_name, $detail = false)
 		FROM information_schema.columns
 		WHERE table_name = \'' . $table_name . '\'
 		ORDER BY ordinal_position',
-		array(
-		)
+		'security_override'
 	);
 	$columns = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -680,8 +656,7 @@ function smf_db_list_indexes($table_name, $detail = false)
 		WHERE c.relname = \'' . $table_name . '\'
 			AND c.oid = i.indrelid
 			AND i.indexrelid = c2.oid',
-		array(
-		)
+		'security_override'
 	);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))

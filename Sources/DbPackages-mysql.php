@@ -200,8 +200,7 @@ function smf_db_create_table($table_name, $columns, $indexes = array(), $paramet
 
 	// Create the table!
 	$smfFunc['db_query']('', $table_query,
-		array(
-		)
+		'security_override'
 	);
 }
 
@@ -219,8 +218,7 @@ function smf_db_drop_table($table_name, $error = 'fatal')
 	{
 		$query = 'DROP TABLE ' . $table_name;
 		$smfFunc['db_query']('', $query,
-		array(
-		)
+		'security_override'
 	);
 
 		return true;
@@ -263,8 +261,7 @@ function smf_db_add_column($table_name, $column_info, $if_exists = 'update', $er
 			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ';
 	$smfFunc['db_query']('', $query,
-		array(
-		)
+		'security_override'
 	);
 
 	return true;
@@ -283,8 +280,7 @@ function smf_db_remove_column($table_name, $column_name, $error = 'fatal')
 			$smfFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP COLUMN ' . $column_name,
-				array(
-				)
+				'security_override'
 			);
 
 			return true;
@@ -333,8 +329,7 @@ function smf_db_change_column($table_name, $old_column, $column_info, $error = '
 		CHANGE COLUMN ' . $old_column . ' ' . $column_info['name'] . ' ' . $type . ' ' . (empty($column_info['null']) ? 'NOT NULL' : '') . ' ' .
 			(empty($column_info['default']) ? '' : 'default \'' . $column_info['default'] . '\'') . ' ' .
 			(empty($column_info['auto']) ? '' : 'auto_increment') . ' ',
-		array(
-		)
+		'security_override'
 	);
 }
 
@@ -384,8 +379,7 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD PRIMARY KEY (' . $columns . ')',
-			array(
-			)
+			'security_override'
 		);
 	}
 	else
@@ -393,8 +387,7 @@ function smf_db_add_index($table_name, $index_info, $if_exists = 'update', $erro
 		$smfFunc['db_query']('', '
 			ALTER TABLE ' . $table_name . '
 			ADD ' . (isset($index_info['type']) && $index_info['type'] == 'unique' ? 'UNIQUE' : 'INDEX') . ' ' . $index_info['name'] . ' (' . $columns . ')',
-			array(
-			)
+			'security_override'
 		);
 	}
 }
@@ -416,8 +409,7 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 			$smfFunc['db_query']('', '
 				ALTER TABLE ' . $table_name . '
 				DROP PRIMARY KEY',
-				array(
-				)
+				'security_override'
 			);
 
 			return true;
@@ -427,8 +419,7 @@ function smf_db_remove_index($table_name, $index_name, $error = 'fatal')
 			// Drop the bugger...
 			$smfFunc['db_query']('', '
 				DROP INDEX ' . $index_name,
-				array(
-				)
+				'security_override'
 			);
 
 			return true;
@@ -466,8 +457,7 @@ function smf_db_list_columns($table_name, $detail = false)
 	$result = $smfFunc['db_query']('', '
 		SHOW FIELDS
 		FROM `' . $table_name . '`',
-		array(
-		)
+		'security_override'
 	);
 	$columns = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
@@ -516,8 +506,7 @@ function smf_db_list_indexes($table_name, $detail = false)
 	$result = $smfFunc['db_query']('', '
 		SHOW KEYS
 		FROM `' . $table_name . '`',
-		array(
-		)
+		'security_override'
 	);
 	$indexes = array();
 	while ($row = $smfFunc['db_fetch_assoc']($result))
